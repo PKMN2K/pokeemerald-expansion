@@ -231,6 +231,7 @@ struct PartyMenuBox
     u8 windowId;
     u8 monSpriteId;
     u8 itemSpriteId;
+    u8 pokeballSpriteId;
     u8 statusSpriteId;
 };
 
@@ -592,6 +593,10 @@ static void FieldCallback_RockClimb(void);
 static void SavePartyMenuStateForPC(void);
 void CB2_ReopenPartyMenuFromPC(void);
 #endif
+//Dynamic Poke Ball
+//Second attempt at implementing.
+static void CreatePartyMonPokeballSprite(struct Pokemon *mon, struct PartyMenuBox *menuBox, u8 slotId);
+static void UpdatePartyMonPokeballSprite(u8 oldSlotId, u8 newSlotId);
 // Multiuse item code from Kasen
 static void DisplayGiveHowManyMessage(void);
 static bool8 DoesItemIncreaseEV(u8 itemType);
@@ -1137,6 +1142,7 @@ static void SetUpSlideInTransition(void)
         struct PartyMenuBox *box = &sPartyMenuBoxes[i];
         if (box->monSpriteId != SPRITE_NONE)    gSprites[box->monSpriteId].x2 = slideOff;
         if (box->itemSpriteId != SPRITE_NONE)   gSprites[box->itemSpriteId].x2 = slideOff;
+        if (box->pokeballSpriteId != SPRITE_NONE)   gSprites[box->itemSpriteId].x2 = slideOff;
         if (box->statusSpriteId != SPRITE_NONE) gSprites[box->statusSpriteId].x2 = slideOff;
     }
 
@@ -1389,6 +1395,7 @@ static void LoadPartyMenuBoxes(enum PartyMenuLayout layout)
         sPartyMenuBoxes[i].windowId = i;
         sPartyMenuBoxes[i].monSpriteId = SPRITE_NONE;
         sPartyMenuBoxes[i].itemSpriteId = SPRITE_NONE;
+        sPartyMenuBoxes[i].pokeballSpriteId = SPRITE_NONE;
         sPartyMenuBoxes[i].statusSpriteId = SPRITE_NONE;
     }
 }
@@ -1784,6 +1791,7 @@ static void CreatePartyMonSprites(u8 slot)
             CreatePartyMonIconSprite(mon, &sPartyMenuBoxes[slot], slot);
             CreatePartyMonHeldItemSprite(mon, &sPartyMenuBoxes[slot]);
             CreatePartyMonStatusSprite(mon, &sPartyMenuBoxes[slot]);
+			CreatePartyMonPokeballSprite(mon, &sPartyMenuBoxes[slot], slot);
         }
     }
 }
@@ -2372,6 +2380,7 @@ static void UpdateCurrentPartySelection(s8 *slotPtr, s8 movementDir)
             UpdatePartyMoveWindows(*slotPtr);
 
         UpdatePartyMonSprite(*slotPtr);
+		UpdatePartyMonPokeballSprite(newSlotId, *slotPtr);
     }
 }
 
@@ -2995,7 +3004,8 @@ static const struct {
     [BUTTON_PROMPT_NONE]         = {BUTTON_NONE,    0,                    NULL,  0},
     [BUTTON_PROMPT_CONFIRM]      = {BUTTON_START,  25,       sMenuText_Confirm, 60},
     [BUTTON_PROMPT_SWITCH]       = {BUTTON_L,      15,        sMenuText_Switch, 45},
-    [BUTTON_PROMPT_BOXES]        = {BUTTON_R,      15,         sMenuText_Boxes, 41},
+    //[BUTTON_PROMPT_BOXES]        = {BUTTON_R,      15,         sMenuText_Boxes, 41},
+    [BUTTON_PROMPT_BOXES]        = {BUTTON_NONE,	0,					  NULL,  0}, //So if I remove this, the button promps at the bottom never appear. I don't get it.
     [BUTTON_PROMPT_VIEW_PARTNER] = {BUTTON_R,      15,                    NULL,  0},
     [BUTTON_PROMPT_VIEW_PLAYER]  = {BUTTON_R,      15,                    NULL,  0},
 };
@@ -3697,31 +3707,69 @@ static void SetPartyMonFieldSelectionActions(struct Pokemon *mons, u8 slotId)
     u8 i, j;
 
     sPartyMenuInternal->numActions = 0;
-    AppendToList(sPartyMenuInternal->actions, &sPartyMenuInternal->numActions, MENU_SUMMARY);
+    AppendToList(sPartyMenuInternal->actions, &sPartyMenuInternal->numActions, MENU_SUMMARY); //Adds Summary Button
 
-    // Add field moves to action list
-    for (i = 0; i < MAX_MON_MOVES; i++)
-    {
-        for (j = 0; j != FIELD_MOVES_COUNT; j++)
-        {
-            if (GetMonData(&mons[slotId], i + MON_DATA_MOVE1) == FieldMove_GetMoveId(j))
-            {
-                AppendToList(sPartyMenuInternal->actions, &sPartyMenuInternal->numActions, j + MENU_FIELD_MOVES);
-                break;
-            }
-        }
-    }
+	// Add field moves to action list
+	for (j = 0; j < FIELD_MOVES_COUNT; j++) //Go through the list of Field moves
+	{
+		u16 moveId = FieldMove_GetMoveId(j);
+		u16 hmItem = ITEM_NONE;
+		bool8 canUseMove = FALSE;
+		
+		//Forcably skip these moves since they can be done in the overworld by pressing the A or B buttons.
+		if (j == FIELD_MOVE_CUT || j == FIELD_MOVE_SURF || j == FIELD_MOVE_STRENGTH || j == FIELD_MOVE_ROCK_SMASH || j == FIELD_MOVE_WATERFALL || j == FIELD_MOVE_DIVE || j == FIELD_MOVE_SECRET_POWER)
+		{
+			continue;
+		}
+		
+		//Check bag for HM/TM
+		switch (j)
+		{
+			//Included them all just incase someone finds this useful.
+			//case FIELD_MOVE_CUT:        hmItem = ITEM_HM01; break;
+			case FIELD_MOVE_FLY:        hmItem = ITEM_HM02; break;
+			//case FIELD_MOVE_SURF:       hmItem = ITEM_HM03; break;
+			//case FIELD_MOVE_STRENGTH:   hmItem = ITEM_HM04; break;
+			case FIELD_MOVE_FLASH:      hmItem = ITEM_HM05; break;
+			//case FIELD_MOVE_ROCK_SMASH: hmItem = ITEM_HM06; break;
+			//case FIELD_MOVE_WATERFALL:  hmItem = ITEM_HM07; break;
+			//case FIELD_MOVE_DIVE:       hmItem = ITEM_HM08; break;
+			//case FIELD_MOVE_SECRET_POWER: hmItem = ITEM_TM43; break; 
+		}
+		
+		if (hmItem != ITEM_NONE)
+		{
+			//If the field move is given by HM/TM, check if the mon can learn it
+			if (CheckBagHasItem(hmItem, 1) && MonCanUseFldMove(&mons[slotId], moveId))
+			{
+				canUseMove = TRUE;
+			}
+		}
+		else
+		{
+			//Else, check if the mon can learn the move naturally (IE: Ralts learns Teleport at lvl 15)
+			for (i = 0; i < MAX_MON_MOVES; i++)
+			{
+				if (GetMonData(&mons[slotId], i + MON_DATA_MOVE1) == moveId)
+				{
+					canUseMove = TRUE;
+					break;
+				}
+			}
+		}
+		if (canUseMove) AppendToList(sPartyMenuInternal->actions, &sPartyMenuInternal->numActions, j + MENU_FIELD_MOVES); // Adds Field Move
+	}
 
     if (!InBattlePike())
     {
         if (GetMonData(&mons[1], MON_DATA_SPECIES) != SPECIES_NONE)
-            AppendToList(sPartyMenuInternal->actions, &sPartyMenuInternal->numActions, MENU_SWITCH);
+            AppendToList(sPartyMenuInternal->actions, &sPartyMenuInternal->numActions, MENU_SWITCH); //Adds Switch Action
         if (ItemIsMail(GetMonData(&mons[slotId], MON_DATA_HELD_ITEM)))
-            AppendToList(sPartyMenuInternal->actions, &sPartyMenuInternal->numActions, MENU_MAIL);
+            AppendToList(sPartyMenuInternal->actions, &sPartyMenuInternal->numActions, MENU_MAIL); //Adds Mail Action
         else
-            AppendToList(sPartyMenuInternal->actions, &sPartyMenuInternal->numActions, MENU_ITEM);
+            AppendToList(sPartyMenuInternal->actions, &sPartyMenuInternal->numActions, MENU_ITEM); //Adds Item Action
     }
-    AppendToList(sPartyMenuInternal->actions, &sPartyMenuInternal->numActions, MENU_CANCEL1);
+    AppendToList(sPartyMenuInternal->actions, &sPartyMenuInternal->numActions, MENU_CANCEL1); //Adds Cancel button
 }
 
 static u8 GetPartyMenuActionsType(struct Pokemon *mon)
@@ -4021,6 +4069,7 @@ static void MoveAndBufferPartySlot(const void *rectSrc, s16 x, s16 y, s16 width,
 static void MovePartyMenuBoxSprites(struct PartyMenuBox *menuBox, s16 offset)
 {
     gSprites[menuBox->itemSpriteId].x2 += offset * 8;
+    gSprites[menuBox->pokeballSpriteId].x2 += offset * 8;
     gSprites[menuBox->monSpriteId].x2 += offset * 8;
     gSprites[menuBox->statusSpriteId].x2 += offset * 8;
 }
@@ -4113,6 +4162,7 @@ static void SlideMultiBattlePartyBoxSprites(u8 slot, s16 tileOffset)
     s16 x2 = tileOffset * 8;
     if (box->monSpriteId != SPRITE_NONE) gSprites[box->monSpriteId].x2 = x2;
     if (box->itemSpriteId != SPRITE_NONE) gSprites[box->itemSpriteId].x2 = x2;
+    if (box->pokeballSpriteId != SPRITE_NONE) gSprites[box->pokeballSpriteId].x2 = x2;
     if (box->statusSpriteId != SPRITE_NONE) gSprites[box->statusSpriteId].x2 = x2;
 }
 
@@ -4327,6 +4377,7 @@ static void SwitchPartyMon(void)
     *mon2 = *monBuffer;
     Free(monBuffer);
     SwitchMenuBoxSprites(&menuBoxes[0]->itemSpriteId, &menuBoxes[1]->itemSpriteId);
+    SwitchMenuBoxSprites(&menuBoxes[0]->pokeballSpriteId, &menuBoxes[1]->pokeballSpriteId);
     SwitchMenuBoxSprites(&menuBoxes[0]->monSpriteId, &menuBoxes[1]->monSpriteId);
     SwitchMenuBoxSprites(&menuBoxes[0]->statusSpriteId, &menuBoxes[1]->statusSpriteId);
 }
@@ -9985,6 +10036,7 @@ static void SlideMultiPartyMenuBoxSpritesOneStep(u8 taskId)
         {
             MoveMultiPartyMenuBoxSprite(sPartyMenuBoxes[i].monSpriteId, tXPos - 8);
             MoveMultiPartyMenuBoxSprite(sPartyMenuBoxes[i].itemSpriteId, tXPos - 8);
+            MoveMultiPartyMenuBoxSprite(sPartyMenuBoxes[i].pokeballSpriteId, tXPos - 8);
             MoveMultiPartyMenuBoxSprite(sPartyMenuBoxes[i].statusSpriteId, tXPos - 8);
         }
         if (sAllSlotsTilemapBuffers[i] != NULL)
@@ -10739,4 +10791,99 @@ static void Task_FirstBattleEnterParty_WaitFadeNormal(u8 taskId)
         gTasks[taskId].func = Task_HandleChooseMonInput;
     }
 }
+
+void ItemUseCB_PokeBall(u8 taskId, TaskFunc task)
+{
+    struct Pokemon *mon = &gParties[B_TRAINER_PLAYER][gPartyMenu.slotId];
+    u16 currBall = GetMonData(mon, MON_DATA_POKEBALL);
+    u16 newBall = gSpecialVar_ItemId;
+    static const u8 sText_MonBallWasChanged[] = _("{STR_VAR_1} was put in the {STR_VAR_2}.{PAUSE_UNTIL_PRESS}");
+
+    if (currBall == newBall)
+    {
+        gPartyMenuUseExitCallback = FALSE;
+        DisplayPartyMenuMessage(gText_WontHaveEffect, TRUE);
+        ScheduleBgCopyTilemapToVram(2);
+        gTasks[taskId].func = task;
+    }
+    else
+    {
+        GetMonNickname(mon, gStringVar1);
+        CopyItemName(newBall, gStringVar2);
+        PlaySE(SE_SELECT);
+        gPartyMenuUseExitCallback = TRUE;
+        SetMonData(mon, MON_DATA_POKEBALL, &newBall);
+        StringExpandPlaceholders(gStringVar4, sText_MonBallWasChanged);
+        DisplayPartyMenuMessage(gStringVar4, TRUE);
+        ScheduleBgCopyTilemapToVram(2);
+        gTasks[taskId].func = task;
+        RemoveBagItem(newBall, 1);
+    }
+}
+
+static void CreatePartyMonPokeballSprite(struct Pokemon *mon, struct PartyMenuBox *menuBox, u8 slotId)
+{
+	struct CompressedSpriteSheet sheet;
+	u8 ballType;
+	u16 tileTag;
+	struct SpriteTemplate localTemplate;
+	
+	if (GetMonData(mon, MON_DATA_SPECIES) == SPECIES_NONE)
+		return;
+	
+	ballType = GetMonData(mon, MON_DATA_POKEBALL);
+	tileTag = BALL_TILE_TAG(ballType);
+	
+	sheet.data = sPartyBallGfxTable[ballType];
+	sheet.size = 0x400;
+	sheet.tag = tileTag;
+	LoadCompressedSpriteSheet(&sheet);
+	
+	LoadSpritePalette(&sSpritePalette_PartyBall);
+	
+	localTemplate = sSpriteTemplate_PartyBall;
+	localTemplate.tileTag = tileTag;
+	
+	s16 ballX = menuBox->spriteCoords[0] - 14;
+	s16 ballY = menuBox->spriteCoords[1] + 3;
+	
+	menuBox->pokeballSpriteId = CreateSprite(&localTemplate, ballX, ballY, 0);
+	
+	if(menuBox->pokeballSpriteId != MAX_SPRITES)
+	{
+		gSprites[menuBox->pokeballSpriteId].oam.priority = 1;
+		gSprites[menuBox->pokeballSpriteId].subpriority = 11;
+        
+		if (slotId == gPartyMenu.slotId)
+		{
+			StartSpriteAnim(&gSprites[menuBox->pokeballSpriteId], 1);
+		}
+		else 
+		{
+			StartSpriteAnim(&gSprites[menuBox->pokeballSpriteId], 0);
+		}
+	}
+}
+
+static void UpdatePartyMonPokeballSprite(u8 oldSlotId, u8 newSlotId)
+{
+    if (oldSlotId < PARTY_SIZE)
+    {
+        u8 oldSpriteId = sPartyMenuBoxes[oldSlotId].pokeballSpriteId;
+        if (oldSpriteId != MAX_SPRITES && gSprites[oldSpriteId].animNum != 0)
+        {
+            StartSpriteAnim(&gSprites[oldSpriteId], 0);
+        }
+    }
+
+    if (newSlotId < PARTY_SIZE)
+    {
+        u8 newSpriteId = sPartyMenuBoxes[newSlotId].pokeballSpriteId;
+        if (newSpriteId != MAX_SPRITES && gSprites[newSpriteId].animNum != 1)
+        {
+            StartSpriteAnim(&gSprites[newSpriteId], 1);
+        }
+    }
+}
+
 #endif // SWSH_PARTY_MENU
