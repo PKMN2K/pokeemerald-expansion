@@ -2061,6 +2061,8 @@ static void SavePartyMenuStateForPC(void)
 
 void CB2_ReopenPartyMenuFromPC(void)
 {
+    PokemonPC_SetReturnToPartyCallback(NULL);
+
     if (sSavedPartyTask == NULL)
         sSavedPartyTask = Task_HandleChooseMonInput;
     if (sSavedPartyExitCallback == NULL)
