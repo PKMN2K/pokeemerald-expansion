@@ -154,8 +154,8 @@ enum
 
 struct Subsprite
 {
-    s8 x; // was u16 in R/S
-    s8 y; // was u16 in R/S
+    s16 x; // was u16 in R/S, widened past 127 for the BW battle UI cursor
+    s16 y; // was u16 in R/S, widened past 127 for the BW battle UI cursor
     u16 shape:2;
     u16 size:2;
     u16 tileOffset:10;
@@ -215,8 +215,7 @@ struct Sprite
     /*0x3E*/ u16 inUse:1;                   //1
              u16 coordOffsetEnabled:1;      //2
              u16 invisible:1;               //4
-             // If set to TRUE a copy of the sprite's OAM is created with objMode set to ST_OAM_OBJ_WINDOW
-             u16 copyToObjWin:1;                 //8
+             u16 flags_3:1;                 //8
              // if nonzero, tile offset for usingSheet sprites
              // is (offset + 1) << sheetSpan;
              // (This allows using frame-based anim tables for sheet sprites)
@@ -326,7 +325,7 @@ u16 GetSpritePaletteTagByPaletteNum(u8 paletteNum);
 void FreeSpritePaletteByTag(u16 tag);
 void SetSubspriteTables(struct Sprite *sprite, const struct SubspriteTable *subspriteTables);
 bool8 AddSpriteToOamBuffer(struct Sprite *sprite, u8 *oamIndex);
-bool8 AddSubspritesToOamBuffer(struct Sprite *sprite, u8 *oamIndex);
+bool8 AddSubspritesToOamBuffer(struct Sprite *sprite, struct OamData *destOam, u8 *oamIndex);
 void CopyToSprites(u8 *src);
 void CopyFromSprites(u8 *dest);
 u8 SpriteTileAllocBitmapOp(u16 bit, u8 op);

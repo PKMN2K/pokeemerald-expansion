@@ -221,6 +221,8 @@ static const u8* const sBattleAnims_General[NUM_B_ANIMS_GENERAL] =
     [B_ANIM_MON_HIT]                = gBattleAnimGeneral_MonHit,
     [B_ANIM_ITEM_STEAL]             = gBattleAnimGeneral_ItemSteal,
     [B_ANIM_SNATCH_MOVE]            = gBattleAnimGeneral_SnatchMove,
+    [B_ANIM_FUTURE_SIGHT_HIT]       = gBattleAnimGeneral_FutureSightHit,
+    [B_ANIM_DOOM_DESIRE_HIT]        = gBattleAnimGeneral_DoomDesireHit,
     [B_ANIM_FOCUS_PUNCH_SETUP]      = gBattleAnimGeneral_FocusPunchSetUp,
     [B_ANIM_INGRAIN_HEAL]           = gBattleAnimGeneral_IngrainHeal,
     [B_ANIM_WISH_HEAL]              = gBattleAnimGeneral_WishHeal,
@@ -266,7 +268,6 @@ static const u8* const sBattleAnims_General[NUM_B_ANIMS_GENERAL] =
     [B_ANIM_ROCK_THROW]             = gBattleAnimGeneral_SafariRockThrow,
     [B_ANIM_SAFARI_REACTION]        = gBattleAnimGeneral_SafariReaction,
     [B_ANIM_HELD_ITEM_BERRY]        = gBattleAnimGeneral_HeldItemBerry,
-    [B_ANIM_PROTECTED_ITSELF]       = gBattleAnimGeneral_ProtectedItself,
 };
 
 static const u8* const sBattleAnims_Special[NUM_B_ANIMS_SPECIAL] =
@@ -383,6 +384,8 @@ void LaunchBattleAnimation(u32 animType, u32 animId)
         case B_ANIM_LEECH_SEED_DRAIN:
         case B_ANIM_MON_HIT:
         case B_ANIM_SNATCH_MOVE:
+        case B_ANIM_FUTURE_SIGHT_HIT:
+        case B_ANIM_DOOM_DESIRE_HIT:
         case B_ANIM_WISH_HEAL:
         case B_ANIM_MEGA_EVOLUTION:
         case B_ANIM_PRIMAL_REVERSION:
@@ -436,10 +439,28 @@ void LaunchBattleAnimation(u32 animType, u32 animId)
 
         if (sBattleAnimScriptPtr == gBattleAnimMove_SecretPower)
         {
-            if (gFieldTimers.terrain != B_TERRAIN_NONE)
-                sBattleAnimScriptPtr = gBattleTerrainInfo[gFieldTimers.terrain].secretPowerAnimation;
+            if (gFieldStatuses & STATUS_FIELD_TERRAIN_ANY)
+            {
+                switch (gFieldStatuses & STATUS_FIELD_TERRAIN_ANY)
+                {
+                case STATUS_FIELD_MISTY_TERRAIN:
+                    sBattleAnimScriptPtr = gBattleAnimMove_FairyWind;
+                    break;
+                case STATUS_FIELD_GRASSY_TERRAIN:
+                    sBattleAnimScriptPtr = gBattleAnimMove_NeedleArm;
+                    break;
+                case STATUS_FIELD_ELECTRIC_TERRAIN:
+                    sBattleAnimScriptPtr = gBattleAnimMove_ThunderShock;
+                    break;
+                case STATUS_FIELD_PSYCHIC_TERRAIN:
+                    sBattleAnimScriptPtr = gBattleAnimMove_Confusion;
+                    break;
+                }
+            }
             else
+            {
                 sBattleAnimScriptPtr = gBattleEnvironmentInfo[gBattleEnvironment].secretPowerAnimation;
+            }
         }
         break;
     case ANIM_TYPE_STATUS:
@@ -1215,9 +1236,9 @@ enum BattlerId GetAnimBattlerId(enum AnimBattler wantedBattler)
     case ANIM_TARGET:
         return gBattleAnimTarget;
     case ANIM_ATK_PARTNER:
-        return GetPartnerBattler(gBattleAnimAttacker);
+        return BATTLE_PARTNER(gBattleAnimAttacker);
     case ANIM_DEF_PARTNER:
-        return GetPartnerBattler(gBattleAnimTarget);
+        return BATTLE_PARTNER(gBattleAnimTarget);
     case ANIM_PLAYER_LEFT ... ANIM_OPPONENT_RIGHT:
         return wantedBattler - MAX_BATTLERS_COUNT;
     }
@@ -1251,20 +1272,23 @@ void MoveBattlerSpriteToBG(enum BattlerId battler, bool8 toBG_2, bool8 setSprite
     {
         enum BattlerPosition battlerPosition;
 
+        // The tile data cleared just below is tile 0 of the anim charset, so
+        // blank the tilemap with that rather than 0xFF. 0xFF only happened to
+        // be empty in the vanilla battle textbox tileset.
         if (IsContest() == TRUE)
         {
             RequestDma3Fill(0, (void *)(BG_SCREEN_ADDR(16)), 0x2000, 1);
-            RequestDma3Fill(0xFF, (void *)(BG_SCREEN_ADDR(30)), 0x1000, 0);
+            RequestDma3Fill(0, (void *)(BG_SCREEN_ADDR(30)), 0x1000, 0);
         }
         else
         {
             RequestDma3Fill(0, (void *)(BG_SCREEN_ADDR(8)), 0x2000, 1);
-            RequestDma3Fill(0xFF, (void *)(BG_SCREEN_ADDR(28)), 0x1000, 0);
+            RequestDma3Fill(0, (void *)(BG_SCREEN_ADDR(28)), 0x1000, 0);
         }
 
         GetBattleAnimBg1Data(&animBg);
         CpuFill16(0, animBg.bgTiles, 0x1000);
-        CpuFill16(0xFF, animBg.bgTilemap, 0x800);
+        CpuFill16(0, animBg.bgTilemap, 0x800);
 
         SetAnimBgAttribute(1, BG_ANIM_PRIORITY, 2);
         SetAnimBgAttribute(1, BG_ANIM_SCREEN_SIZE, 1);
@@ -1448,7 +1472,7 @@ static void Cmd_clearmonbg(void)
     if (sMonAnimTaskIdArray[0] != TASK_NONE)
         gSprites[gBattlerSpriteIds[battler]].invisible = FALSE;
     if (animBattlerId > 1 && sMonAnimTaskIdArray[1] != TASK_NONE)
-        gSprites[gBattlerSpriteIds[GetPartnerBattler(battler)]].invisible = FALSE;
+        gSprites[gBattlerSpriteIds[BATTLE_PARTNER(battler)]].invisible = FALSE;
     else
         animBattlerId = 0;
 
@@ -1555,8 +1579,8 @@ static void Cmd_clearmonbg_static(void)
 
     if (IsBattlerSpriteVisible(battler))
         gSprites[gBattlerSpriteIds[battler]].invisible = FALSE;
-    if (animBattlerId > 1 && IsBattlerSpriteVisible(GetPartnerBattler(battler)))
-        gSprites[gBattlerSpriteIds[GetPartnerBattler(battler)]].invisible = FALSE;
+    if (animBattlerId > 1 && IsBattlerSpriteVisible(BATTLE_PARTNER(battler)))
+        gSprites[gBattlerSpriteIds[BATTLE_PARTNER(battler)]].invisible = FALSE;
     else
         animBattlerId = 0;
 
@@ -1582,7 +1606,7 @@ static void Task_ClearMonBgStatic(u8 taskId)
 
         if (IsBattlerSpriteVisible(battler))
             ResetBattleAnimBg(toBG_2);
-        if (gTasks[taskId].data[0] > 1 && IsBattlerSpriteVisible(GetPartnerBattler(battler)))
+        if (gTasks[taskId].data[0] > 1 && IsBattlerSpriteVisible(BATTLE_PARTNER(battler)))
             ResetBattleAnimBg(toBG_2 ^ 1);
 
         DestroyTask(taskId);
@@ -1786,7 +1810,7 @@ static void LoadDefaultBg(void)
 {
     if (IsContest())
         LoadContestBgAfterMoveAnim();
-    else if (B_TERRAIN_BG_CHANGE == TRUE && gFieldTimers.terrain != B_TERRAIN_NONE)
+    else if (B_TERRAIN_BG_CHANGE == TRUE && gFieldStatuses & STATUS_FIELD_TERRAIN_ANY)
         DrawTerrainTypeBattleBackground();
     else
         DrawMainBattleBackground();

@@ -711,6 +711,14 @@ const u16 gBattleInterface_BallStatusBarPal[] = INCGFX_U16("graphics/battle_inte
 
 const u16 gBattleInterface_BallDisplayPal[] = INCGFX_U16("graphics/battle_interface/ball_display.png", ".gbapal");
 
+const u16 gBattleInterface_BwHealthboxPal[] = INCGFX_U16("graphics/battle_interface/bw_healthbox.pal", ".gbapal");
+const u16 gBattleInterface_BwHealthbarPal[] = INCGFX_U16("graphics/battle_interface/bw_healthbar.pal", ".gbapal");
+const u32 gBattleInterface_BwStatusSingleGfx[] = INCGFX_U32("graphics/battle_interface/bw_status_single.png", ".4bpp");
+const u32 gBattleInterface_BwStatusDoubleGfx[] = INCGFX_U32("graphics/battle_interface/bw_status_double.png", ".4bpp");
+const u32 gBattleInterface_BwNameFontGfx[] = INCGFX_U32("graphics/battle_interface/bw_name_font.png", ".4bpp");
+const u32 gBattleInterface_BwHpNumbersFontGfx[] = INCGFX_U32("graphics/battle_interface/bw_hp_numbers_font.png", ".4bpp");
+const u32 gBattleInterface_BwLevelLabelGfx[] = INCGFX_U32("graphics/battle_interface/bw_level_label.png", ".4bpp");
+
 const u8 gHealthboxElementsGfxTable[][32] = INCBIN_U8("graphics/battle_interface/hpbar.4bpp",
                                                   "graphics/battle_interface/expbar.4bpp",
                                                   "graphics/battle_interface/status.4bpp",
@@ -722,10 +730,8 @@ const u8 gHealthboxElementsGfxTable[][32] = INCBIN_U8("graphics/battle_interface
                                                   "graphics/battle_interface/status2.4bpp", // these three duplicate sets of graphics are for the opponent/partner Pokémon
                                                   "graphics/battle_interface/status3.4bpp",
                                                   "graphics/battle_interface/status4.4bpp",
-                                                  "graphics/battle_interface/healthbox_doubles_player_frameend.4bpp",
-                                                  "graphics/battle_interface/healthbox_doubles_player_frameend_bar.4bpp",
-                                                  "graphics/battle_interface/healthbox_doubles_opponent_frameend.4bpp",
-                                                  "graphics/battle_interface/healthbox_doubles_opponent_frameend_bar.4bpp");
+                                                  "graphics/battle_interface/healthbox_doubles_frameend.4bpp",
+                                                  "graphics/battle_interface/healthbox_doubles_frameend_bar.4bpp");
 const u32 gBattleInterfaceGfx_UnusedWindow3[] = INCGFX_U32("graphics/battle_interface/unused_window3.png", ".4bpp.smol");
 const u32 gBattleInterfaceGfx_UnusedWindow4[] = INCGFX_U32("graphics/battle_interface/unused_window4.png", ".4bpp.smol");
 
@@ -1002,7 +1008,6 @@ const u16 gBattleAnimSpritePal_Tendrils[] = INCGFX_U16("graphics/battle_anims/sp
 
 const u32 gHealthboxSinglesPlayerGfx[] = INCGFX_U32("graphics/battle_interface/healthbox_singles_player.png", ".4bpp.smol", "-mwidth 8 -mheight 8");
 const u32 gHealthboxSinglesOpponentGfx[] = INCGFX_U32("graphics/battle_interface/healthbox_singles_opponent.png", ".4bpp.smol", "-mwidth 8 -mheight 4");
-const u32 gHealthboxSinglesOpponentLargeGfx[] = INCGFX_U32("graphics/battle_interface/healthbox_singles_opponent_large.png", ".4bpp.smol", "-mwidth 8 -mheight 8");
 const u32 gHealthboxDoublesPlayerGfx[] = INCGFX_U32("graphics/battle_interface/healthbox_doubles_player.png", ".4bpp.smol", "-mwidth 8 -mheight 4");
 const u32 gHealthboxDoublesOpponentGfx[] = INCGFX_U32("graphics/battle_interface/healthbox_doubles_opponent.png", ".4bpp.smol", "-mwidth 8 -mheight 4");
 const u32 gHealthboxSafariGfx[] = INCGFX_U32("graphics/battle_interface/healthbox_safari.png", ".4bpp.smol", "-mwidth 8 -mheight 8");
@@ -2113,7 +2118,7 @@ const u32 gTitleScreenCloudsTilemap[]      = INCGFX_U32("graphics/title_screen/c
 const u32 gTitleScreenPokemonLogoGfx[]     = INCGFX_U32("graphics/title_screen/pokemon_logo.png", ".8bpp.smol");
 const u32 gTitleScreenEmeraldVersionGfx[]  = INCGFX_U32("graphics/title_screen/emerald_version.png", ".8bpp.smol", "-mwidth 8 -mheight 4");
 const u16 gTitleScreenPressStartPal[]      = INCGFX_U16("graphics/title_screen/press_start.png", ".gbapal");
-const u32 gTitleScreenPressStartGfx[]      = INCGFX_U32("graphics/title_screen/press_start.png", ".4bpp.smol", "-mwidth 4 -mheight 1 -num_tiles 48 -Wnum_tiles");
+const u32 gTitleScreenPressStartGfx[]      = INCGFX_U32("graphics/title_screen/press_start.png", ".4bpp.smol");
 const u32 gTitleScreenPokemonLogoTilemap[] = INCGFX_U32("graphics/title_screen/pokemon_logo.bin", ".smolTM");
 
 const u16 gFrontierPassBg_Pal[][16]                      = INCGFX_U16("graphics/frontier_pass/bg.png", ".gbapal"); // 8 x 16

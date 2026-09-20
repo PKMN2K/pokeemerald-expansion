@@ -43,6 +43,7 @@
 #include "union_room.h"
 #include "util.h"
 #include "window.h"
+#include "bw_battle_ui.h"
 #include "constants/contest.h"
 #include "constants/items.h"
 #include "constants/moves.h"
@@ -156,7 +157,7 @@ struct InGameTrade {
     u32 otId;
     u8 conditions[CONTEST_CATEGORIES_COUNT];
     u32 personality;
-    enum Item heldItem;
+    u16 heldItem;
     u8 mailNum;
     u8 otName[TRAINER_NAME_LENGTH + 1];
     u8 otGender;
@@ -289,7 +290,7 @@ static void ComputePartyTradeableFlags(u8);
 static void ComputePartyHPBarLevels(u8);
 static void SetTradePartyHPBarSprites(void);
 static void SaveTradeGiftRibbons(void);
-static enum CanTradeMon CanTradeSelectedMon(struct Pokemon *, int, int);
+static u32 CanTradeSelectedMon(struct Pokemon *, int, int);
 static void SpriteCB_LinkMonGlow(struct Sprite *);
 static void SpriteCB_LinkMonShadow(struct Sprite *);
 static void SpriteCB_CableEndSending(struct Sprite *);
@@ -2381,7 +2382,7 @@ static void SaveTradeGiftRibbons(void)
     }
 }
 
-static enum CanTradeMon CanTradeSelectedMon(struct Pokemon *playerParty, int partyCount, int monIdx)
+static u32 CanTradeSelectedMon(struct Pokemon *playerParty, int partyCount, int monIdx)
 {
     int i, numMonsLeft;
     struct LinkPlayer *partner;
@@ -2569,7 +2570,7 @@ int CanRegisterMonForTradingBoard(struct RfuGameCompatibilityData player, enum S
 
 // Spin Trade wasnt fully implemented, but this checks if a mon would be valid to Spin Trade
 // Unlike later generations, this version of Spin Trade isnt only for Eggs
-enum CanTradeMon CanSpinTradeMon(struct Pokemon *mon, u16 monIdx)
+int CanSpinTradeMon(struct Pokemon *mon, u16 monIdx)
 {
     int i, version, versions, canTradeAnyMon, numMonsLeft;
     enum Species speciesArray[PARTY_SIZE];
@@ -2949,9 +2950,9 @@ static void TradeAnimInit_LoadGfx(void)
     SetBgTilemapBuffer(3, Alloc(BG_SCREEN_SIZE));
     DeactivateAllTextPrinters();
     // Doing the graphics load.
-    DecompressAndLoadBgGfxUsingHeap(0, gBattleTextboxTiles, 0, 0, 0);
-    DecompressAndCopyToBgTilemapBuffer(0, gBattleTextboxTilemap, BG_SCREEN_SIZE, 0);
-    LoadPalette(gBattleTextboxPalette, BG_PLTT_ID(0), PLTT_SIZE_4BPP);
+    DecompressAndLoadBgGfxUsingHeap(0, BattleUI_GetTextboxTiles(), 0, 0, 0);
+    DecompressAndCopyToBgTilemapBuffer(0, BattleUI_GetTextboxTilemap(), BG_SCREEN_SIZE, 0);
+    LoadPalette(BattleUI_GetTextboxPalette(), BG_PLTT_ID(0), PLTT_SIZE_4BPP);
     InitWindows(sTradeSequenceWindowTemplates);
 }
 
