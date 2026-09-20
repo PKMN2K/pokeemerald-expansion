@@ -2506,7 +2506,7 @@ static const u8 sBattleUI_ImmuneIcon[] = _("{BIG_MULT_X}");
 
 const u8 *BattleUI_GetTypeEffectivenessSymbol(enum BattlerId battler, enum Move move)
 {
-    enum BattlerId battlerDef = BATTLE_OPPOSITE(battler);
+    enum BattlerId battlerDef = GetOppositeBattler(battler);
     struct DamageContext ctx = {0};
     uq4_12_t modifier;
 
