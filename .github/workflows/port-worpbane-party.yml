@@ -25,7 +25,7 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git remote add worpbane https://github.com/worpbane/pokeemerald-worped-ex.git
-          git fetch worpbane master
+          git fetch worpbane ui/swshparty
           git cherry-pick -m 1 14b0a7eef5
           git cherry-pick fc377762f3
           git cherry-pick eec9a9ca63
