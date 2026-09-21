@@ -61,7 +61,19 @@ If you use this branch, please credit myself and all of the above.
 
 **`pokeemerald-expansion`** offers hundreds of features from various [core series Pokémon games](https://bulbapedia.bulbagarden.net/wiki/Core_series), along with popular quality-of-life enhancements designed to streamline development and improve the player experience. A full list of those features can be found in [`FEATURES.md`](FEATURES.md).
 
+<<<<<<< HEAD
 # [Credits](CREDITS.md)
+=======
+### Gameplay Mechanics:
+* **QoL HMs:** HM moves don't need to be taught, as long as you have the HM, the Badge, and a mon who can use it, you can perform the field move. *(Custom Code)*
+* **Gen IV Poison:** Pokémon will survivie poison with 1 hp outside of battles. *(Expansion Setting)*
+### UI & Visuals:
+* **Modified Montblanc's [SwSh Party Menu](https://github.com/montmoguri/pokeemerald-expansion/tree/swsh_party_menu):** I really like how SMOOTH Mont's SwSh stuff is, so I gave his SwSh Party Menu a makeover to fit more with the Gen3/Gen4 look I go for. Also added a Dynamic PokéBall next to each Pokémon, displaying the correct ball they are in. I'm in love with how this looks and works. I also added a small tab that pokes out from under the PokéBall to indicate when a Pokémon is aflicted with Pokérus.
+* **Modified Montblanc's [SwSh Storage System](https://github.com/montmoguri/pokeemerald-expansion/tree/swsh_storage_system):** Another great feature that I liked the utility of. I've modified it quite a bit, visually matching it to my own FRLG inspired UI, adding an indicator for current cursor mode, and backporting the Platinum wallpapers. Due to how the Info Panel was coded, I wasn't able to modify that too much, but I also feel like the information it provides is really useful, so I did spice it up a little, even adding a Pokérus indicator to it so you can tell at a glance which Pokémon in your box are aflicted!!
+* **Text Decapitalization:** Working on making text accross the game decapped. *(WIP)*
+### Other QoL:
+* **PokéBall Swapping:** You can use Pokéballs in the bag to rehome your Pokémon. (Lunos)
+>>>>>>> 9445ef3621 (Finalizing SwSh-Style Party Menu & Storage Box)
 
  [![](https://img.shields.io/github/all-contributors/rh-hideout/pokeemerald-expansion/upcoming)](CREDITS.md)
 
