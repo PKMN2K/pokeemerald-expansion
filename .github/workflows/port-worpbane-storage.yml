@@ -26,12 +26,42 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git remote add worpbane https://github.com/worpbane/pokeemerald-worped-ex.git
           git fetch worpbane ui/swshbox
+
           git cherry-pick -m 1 a76fd48bd5
-          git cherry-pick 98a15fc083
-          git cherry-pick a56f429412
-          git cherry-pick 2b855bff1a
-          git cherry-pick e18ba78af1
-          git cherry-pick 9445ef3621
+
+          if ! git cherry-pick 98a15fc083; then
+            git checkout --ours README.md include/fonts.h src/debug.c
+            python3 - <<'PY'
+          from pathlib import Path
+          p=Path("include/fonts.h")
+          s=p.read_text()
+          needle="extern const u16 gFontShortNarrowerLatinGlyphs[];\n"
+          add="extern const u16 gFontNormalLatinGlyphs_FRLG[];\nextern const u8 gFontNormalLatinGlyphWidths_FRLG[];\n"
+          if "gFontNormalLatinGlyphs_FRLG" not in s:
+              s=s.replace(needle,needle+add)
+          p.write_text(s)
+          PY
+            git add README.md include/fonts.h src/debug.c
+            git cherry-pick --continue
+          fi
+
+          # Storage needs its own type icon sheet, but do not replace the global
+          # battle/type icon assets or type-info table used by the existing BW HUD.
+          git cherry-pick -n a56f429412
+          git restore --source=HEAD --staged --worktree graphics/types src/data/types_info.h
+          git commit -C a56f429412
+
+          for c in 2b855bff1a e18ba78af1 9445ef3621; do
+            if ! git cherry-pick "$c"; then
+              git checkout "$c" -- src/swsh_storage_system.c src/data/swsh_storage_system.h graphics/pokemon_storage/swsh
+              if git cat-file -e "$c":src/swsh_party_menu.c 2>/dev/null; then git checkout "$c" -- src/swsh_party_menu.c; fi
+              if git cat-file -e "$c":src/data/swsh_party_menu.h 2>/dev/null; then git checkout "$c" -- src/data/swsh_party_menu.h; fi
+              if git cat-file -e "$c":graphics/party_menu/swsh 2>/dev/null; then git checkout "$c" -- graphics/party_menu/swsh; fi
+              git add -A
+              git cherry-pick --continue
+            fi
+          done
+
           git rm .github/workflows/port-worpbane-storage.yml
           git commit -m "Remove temporary Storage UI port workflow"
           git push origin HEAD:worpbane-ui-no-battle-hud
