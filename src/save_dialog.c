@@ -1,6 +1,6 @@
 #include "global.h"
 
-#if IS_EMERALD
+#if !IS_FRLG
 #include "battle_pyramid.h"
 #include "bg.h"
 #include "constants/songs.h"
@@ -470,4 +470,4 @@ static bool8 BattlePyramidRetireReturnCallback(void)
     return FALSE;
 }
 
-#endif // IS_EMERALD
+#endif // !IS_FRLG
