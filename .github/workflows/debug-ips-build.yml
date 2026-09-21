@@ -1,0 +1,37 @@
+name: Debug IPS Build
+
+on:
+  push:
+    branches:
+      - debug-ips-build
+
+env:
+  GAME_REVISION: 0
+  GAME_LANGUAGE: ENGLISH
+  COMPARE: 0
+  UNUSED_ERROR: 1
+  DEPRECATED_ERROR: 1
+
+jobs:
+  build-debug-emerald:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install binutils
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends binutils-arm-none-eabi gcc-arm-none-eabi libnewlib-arm-none-eabi libpng-dev python3
+
+      - name: Build debug Emerald
+        env:
+          GAME_VERSION: EMERALD
+        run: make -j$(nproc) -O debug
+
+      - name: Upload debug ROM artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: pokeemerald-debug-ui
+          path: pokeemerald.gba
+          if-no-files-found: error
