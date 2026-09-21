@@ -702,6 +702,38 @@ s16 AllocSpriteTiles(u16 tileCount)
     return start;
 }
 
+s16 ReallocSpriteTiles(struct Sprite *sprite, u16 tileCount)
+{
+    u16 oldTileCount;
+    u16 oldTileStart;
+    s16 newTileStart;
+
+    if (sprite == NULL || !sprite->inUse || sprite->usingSheet || sprite->images == NULL)
+        return -1;
+
+    oldTileCount = sprite->images->size / TILE_SIZE_4BPP;
+    oldTileStart = sprite->oam.tileNum;
+
+    if (oldTileCount == tileCount)
+        return oldTileStart;
+
+    for (u32 i = oldTileStart; i < oldTileStart + oldTileCount; i++)
+        FREE_SPRITE_TILE(i);
+
+    newTileStart = AllocSpriteTiles(tileCount);
+    if (newTileStart < 0)
+    {
+        // Restore a valid allocation for the sprite if the resize could not fit.
+        newTileStart = AllocSpriteTiles(oldTileCount);
+        if (newTileStart >= 0)
+            sprite->oam.tileNum = newTileStart;
+        return -1;
+    }
+
+    sprite->oam.tileNum = newTileStart;
+    return newTileStart;
+}
+
 bool32 CanAllocSpriteTiles(u16 tileCount)
 {
     u16 i;
