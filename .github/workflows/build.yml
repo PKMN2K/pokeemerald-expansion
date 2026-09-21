@@ -50,7 +50,7 @@ jobs:
       - name: ROM (Emerald)
         env:
           GAME_VERSION: EMERALD
-        run: make -j$(nproc) -O debug
+        run: make -j$(nproc) -O all
 
       - name: Upload debug Emerald ROM
         uses: actions/upload-artifact@v4
