@@ -15,6 +15,7 @@
 #include "window.h"
 #include "gba/m4a_internal.h"
 #include "constants/rgb.h"
+#include "option_plus_menu.h"
 
 #define tMenuSelection data[0]
 #define tTextSpeed data[1]
@@ -167,6 +168,9 @@ static void VBlankCB(void)
 
 void CB2_InitOptionMenu(void)
 {
+    CB2_InitOptionPlusMenu();
+    return;
+
     switch (gMain.state)
     {
     default:
