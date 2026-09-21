@@ -43,6 +43,7 @@ static void SetBattleMonSpriteBufferSize(enum BattlerPosition position, u32 imag
 static u32 GetBattleMonSpriteImageSize(enum Species species, bool32 backPic);
 static void Load96x96BattlePic(enum Species species, bool32 backPic, void *dest);
 static const u16 *Get96x96BattlePalette(enum Species species, bool32 isShiny);
+static bool32 BattlerHasAllocatedMonSprite(enum BattlerId battler);
 
 // A 96x96 canvas is stored as nine contiguous 32x32 metatiles. The matching
 // PNG must be converted with "-mwidth 4 -mheight 4".
@@ -695,10 +696,21 @@ static const u16 *Get96x96BattlePalette(enum Species species, bool32 isShiny)
     return NULL;
 }
 
+static bool32 BattlerHasAllocatedMonSprite(enum BattlerId battler)
+{
+    u8 spriteId = gBattlerSpriteIds[battler];
+    enum BattlerPosition position = GetBattlerPosition(battler);
+
+    return spriteId < MAX_SPRITES
+        && gSprites[spriteId].inUse
+        && gMonSpritesGfxPtr != NULL
+        && gSprites[spriteId].images == gMonSpritesGfxPtr->frameImages[position];
+}
+
 void ConfigureBattlerSpriteForBattlePic(enum BattlerId battler, enum Species species)
 {
     u8 spriteId = gBattlerSpriteIds[battler];
-    if (spriteId >= MAX_SPRITES || !gSprites[spriteId].inUse)
+    if (!BattlerHasAllocatedMonSprite(battler))
         return;
 
     if (SpeciesUses96x96BattlePic(species, IsOnPlayerSide(battler)))
@@ -752,7 +764,7 @@ void BattleLoadMonSpriteGfx(struct Pokemon *mon, enum BattlerId battler)
 
     // If this is an in-place gfx reload (Transform, Illusion, Substitute return),
     // resize the existing OBJ allocation before changing frame metadata.
-    if (IsBattlerSpritePresent(battler))
+    if (BattlerHasAllocatedMonSprite(battler))
         ResizeSpriteTiles(&gSprites[gBattlerSpriteIds[battler]], imageSize);
 
     SetBattleMonSpriteBufferSize(position, imageSize);
@@ -803,7 +815,7 @@ void BattleLoadMonSpriteGfx(struct Pokemon *mon, enum BattlerId battler)
         CpuCopy32(gPlttBufferFaded + paletteOffset, gPlttBufferUnfaded + paletteOffset, PLTT_SIZEOF(16));
     }
 
-    if (IsBattlerSpritePresent(battler))
+    if (BattlerHasAllocatedMonSprite(battler))
         ConfigureBattlerSpriteForBattlePic(battler, species);
 }
 
@@ -1578,7 +1590,7 @@ void DecompressGhostFrontPic(enum BattlerId battler)
     u16 palOffset;
     enum BattlerPosition position = GetBattlerPosition(battler);
 
-    if (IsBattlerSpritePresent(battler))
+    if (BattlerHasAllocatedMonSprite(battler))
     {
         ResizeSpriteTiles(&gSprites[gBattlerSpriteIds[battler]], MON_PIC_SIZE);
         gSprites[gBattlerSpriteIds[battler]].subspriteTables = NULL;
