@@ -26,7 +26,42 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git remote add worpbane https://github.com/worpbane/pokeemerald-worped-ex.git
           git fetch worpbane ui/swshparty
-          git cherry-pick -m 1 14b0a7eef5
+
+          if ! git cherry-pick -m 1 14b0a7eef5; then
+            git checkout --ours include/pokemon.h include/pokemon_summary_screen.h
+            python3 - <<'PY'
+          from pathlib import Path
+
+          p = Path("include/pokemon.h")
+          s = p.read_text()
+          s = s.replace(
+              "bool8 PokemonUseItemEffects(struct Pokemon *mon, enum Item item, u8 partyIndex, u8 moveIndex, u8 usedByAI);",
+              "bool8 PokemonUseItemEffects(struct Pokemon *mon, enum Item item, u8 partyIndex, u8 moveIndex, bool8 usedByAI);"
+          )
+          s = s.replace(
+              "void PokemonSummaryDoMonAnimation(struct Sprite *sprite, enum Species species, bool8 oneFrame);",
+              "void PokemonSummaryDoMonAnimation(struct Sprite *sprite, enum Species species, bool8 oneFrame, bool32 isShadow);"
+          )
+          needle = "u8 GetFormIdFromFormSpeciesId(enum Species formSpeciesId);\n"
+          addition = (
+              "enum Species GetFormChangeTargetSpecies(struct Pokemon *mon, enum FormChanges method);\n"
+              "enum Species GetFormChangeTargetSpeciesBoxMon(struct BoxPokemon *boxMon, enum FormChanges method);\n"
+          )
+          if "GetFormChangeTargetSpecies(struct Pokemon *mon" not in s:
+              s = s.replace(needle, needle + addition)
+          p.write_text(s)
+
+          p = Path("include/pokemon_summary_screen.h")
+          s = p.read_text()
+          needle = "void SummaryScreen_SetAnimDelayTaskId(u8 taskId);\n"
+          if "void StopShadowAnimDelayTask(void);" not in s:
+              s = s.replace(needle, needle + "void StopShadowAnimDelayTask(void);\n")
+          p.write_text(s)
+          PY
+            git add include/pokemon.h include/pokemon_summary_screen.h
+            git cherry-pick --continue
+          fi
+
           git cherry-pick fc377762f3
           git cherry-pick eec9a9ca63
           git cherry-pick f08d673000
