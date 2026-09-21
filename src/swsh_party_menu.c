@@ -618,6 +618,7 @@ static const u8 sText_askText[] = _("Would you like to change {STR_VAR_1}'s\nabi
 static const u8 sText_doneText[] = _("{STR_VAR_1}'s ability became\n{STR_VAR_2}!{PAUSE_UNTIL_PRESS}");
 static const u8 sText_BasePointsResetToZero[] = _("{STR_VAR_1}'s base points\nwere all reset to zero!{PAUSE_UNTIL_PRESS}");
 static const u8 sText_CannotSendMonToBoxPartner[] = _("Cannot send a mon that doesn't\nbelong to you to the box.{PAUSE_UNTIL_PRESS}");
+static const u8 sText_SendThisMonToPC[] = _("Send {STR_VAR_1} to the PC?");
 
 #define tItemCount          data[5]
 #define tMaxItemQuantity    data[6]
