@@ -580,6 +580,52 @@ void DestroySprite(struct Sprite *sprite)
     }
 }
 
+void ResizeSpriteTiles(struct Sprite *sprite, u16 imageSize)
+{
+    if (sprite->usingSheet || sprite->images == NULL)
+        return;
+
+    u16 oldCount = sprite->images->size / TILE_SIZE_4BPP;
+    u16 newCount = imageSize / TILE_SIZE_4BPP;
+    if (oldCount == newCount)
+        return;
+
+    // Shrinking can keep the same tile base and simply release the tail.
+    if (newCount < oldCount)
+    {
+        for (u16 i = sprite->oam.tileNum + newCount; i < sprite->oam.tileNum + oldCount; i++)
+            FREE_SPRITE_TILE(i);
+        return;
+    }
+
+    // Prefer growing in-place so Transform/Illusion do not unnecessarily
+    // fragment OBJ VRAM.
+    bool32 canGrowInPlace = TRUE;
+    for (u16 i = sprite->oam.tileNum + oldCount; i < sprite->oam.tileNum + newCount; i++)
+    {
+        if (i >= TOTAL_OBJ_TILE_COUNT || SPRITE_TILE_IS_ALLOCATED(i))
+        {
+            canGrowInPlace = FALSE;
+            break;
+        }
+    }
+
+    if (canGrowInPlace)
+    {
+        for (u16 i = sprite->oam.tileNum + oldCount; i < sprite->oam.tileNum + newCount; i++)
+            ALLOC_SPRITE_TILE(i);
+        return;
+    }
+
+    s16 newStart = AllocSpriteTiles(newCount);
+    fatal_assertf(newStart >= 0, "Unable to resize sprite from %u to %u tiles", oldCount, newCount);
+
+    for (u16 i = sprite->oam.tileNum; i < sprite->oam.tileNum + oldCount; i++)
+        FREE_SPRITE_TILE(i);
+
+    sprite->oam.tileNum = newStart;
+}
+
 void ResetOamRange(u32 start, u32 end)
 {
     u32 i;
