@@ -228,7 +228,7 @@ int ProcessPlayerFieldInput(struct FieldInput *input)
     {
         FlagSet(FLAG_OPENED_START_MENU);
         PlaySE(SE_WIN_OPEN);
-#if IS_EMERALD
+#if !IS_FRLG
         Usm_InitStartMenu();
 #else
         ShowStartMenu();
@@ -1357,7 +1357,7 @@ static void Task_OpenStartMenu(u8 taskId)
         return;
 
     PlaySE(SE_WIN_OPEN);
-#if IS_EMERALD
+#if !IS_FRLG
     Usm_InitStartMenu();
 #else
     ShowStartMenu();
