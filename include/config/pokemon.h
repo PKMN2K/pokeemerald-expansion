@@ -47,6 +47,7 @@
 #define P_GBA_STYLE_SPECIES_GFX         FALSE       // By default, Pokémon sprites use Gen 4/5's style. This config can revert them back to GBA-style. NOTE: B_ENEMY_MON_SHADOW_STYLE is disabled when using these sprites for now.
 #define P_GBA_STYLE_SPECIES_ICONS       FALSE       // By default, Pokémon have their updated icons. This config can revert them back to GBA-style.
 #define P_GBA_STYLE_SPECIES_FOOTPRINTS  FALSE       // By default, Pokémon have their updated footprints. This config can revert them back to GBA-style.
+#define P_GEN5_STATIC_BATTLERS          TRUE        // Enables optional 96x96 static Gen 5-style front/back battlers in battle. Existing 64x64 species graphics remain the fallback.
 
 // Other settings
 #define P_CRIES_ENABLED                  TRUE        // If TRUE, Pokémon will have cries. Disabling this saves around a LOT of ROM space (over 25%!), but instead we recommend disabling individual unused Pokémon families in include/config/species_enabled.h.
