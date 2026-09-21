@@ -10,6 +10,7 @@
 #include "siirtc.h"
 #include "fpmath.h"
 #include "metaprogram.h"
+#include "constants/unbound_start_menu.h"
 #include "constants/global.h"
 #include "constants/flags.h"
 #include "constants/vars.h"
@@ -253,6 +254,11 @@ struct NPCFollower
 
 #include "constants/items.h"
 #define ITEM_FLAGS_COUNT ((ITEMS_COUNT / 8) + ((ITEMS_COUNT % 8) ? 1 : 0))
+
+struct PACKED Usm_SavedItems {
+    u8 items[USM_ICO_COUNT];
+    u8 count;
+};
 
 struct SaveBlock3
 {
@@ -602,8 +608,14 @@ struct SaveBlock2
              u16 optionsBattleStyle:1; // OPTIONS_BATTLE_STYLE_[SHIFT/SET]
              u16 optionsBattleSceneOff:1; // whether battle animations are disabled
              u16 regionMapZoom:1; // whether the map is zoomed in
-             //u16 padding1:4;
-             //u16 padding2;
+             // Use the remaining option padding for Worped UI preferences.
+             u16 w_opAutoRun:1;
+             u16 w_opDifficulty:2;
+             u16 w_opMatchCall:1;
+             u16 w_opBoxMode:1;
+             u16 w_opBallPrompt:1;
+             u16 w_opCatchMode:1;
+             u16 w_opFontType:1;
     /*0x18*/ struct Pokedex pokedex;
     /*0x90*/ u8 filler_90[0x8];
     /*0x98*/ struct Time localTimeOffset;

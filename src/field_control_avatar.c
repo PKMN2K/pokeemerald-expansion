@@ -34,6 +34,7 @@
 #include "start_menu.h"
 #include "trainer_see.h"
 #include "trainer_hill.h"
+#include "unbound_start_menu.h"
 #include "vs_seeker.h"
 #include "wild_encounter.h"
 #include "wild_encounter_ow.h"
@@ -227,7 +228,11 @@ int ProcessPlayerFieldInput(struct FieldInput *input)
     {
         FlagSet(FLAG_OPENED_START_MENU);
         PlaySE(SE_WIN_OPEN);
+#if !IS_FRLG
+        Usm_InitStartMenu();
+#else
         ShowStartMenu();
+#endif
         return TRUE;
     }
 
@@ -1352,7 +1357,11 @@ static void Task_OpenStartMenu(u8 taskId)
         return;
 
     PlaySE(SE_WIN_OPEN);
+#if !IS_FRLG
+    Usm_InitStartMenu();
+#else
     ShowStartMenu();
+#endif
     DestroyTask(taskId);
 }
 
