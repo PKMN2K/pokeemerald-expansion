@@ -1,4 +1,6 @@
 #include "global.h"
+
+#if IS_EMERALD
 #include "battle_pyramid.h"
 #include "bg.h"
 #include "constants/songs.h"
@@ -467,3 +469,5 @@ static bool8 BattlePyramidRetireReturnCallback(void)
     Usm_InitStartMenu();
     return FALSE;
 }
+
+#endif // IS_EMERALD
