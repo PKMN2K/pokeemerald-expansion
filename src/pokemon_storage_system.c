@@ -558,6 +558,7 @@ EWRAM_DATA static u8 sMovingMonOrigBoxPos = 0;
 EWRAM_DATA static bool8 sAutoActionOn = 0;
 EWRAM_DATA static bool8 sJustOpenedBag = 0;
 EWRAM_DATA static bool8 sRefreshDisplayMonGfx = FALSE;
+EWRAM_DATA static MainCallback sReturnToPartyCallback = NULL;
 
 // Main tasks
 static void Task_InitPokeStorage(u8);
@@ -1646,6 +1647,29 @@ static void FieldTask_ReturnToPcMenu(void)
     Task_PCMainMenu(taskId);
     SetVBlankCallback(vblankCb);
     FadeInFromBlack();
+}
+
+void PokemonPC_SetReturnToPartyCallback(MainCallback cb)
+{
+    sReturnToPartyCallback = cb;
+}
+
+bool8 PokemonPC_HasReturnToPartyCallback(void)
+{
+    return sReturnToPartyCallback != NULL;
+}
+
+void ShowPokemonPCFromParty(void)
+{
+    if (SWSH_STORAGE_SYSTEM)
+        ShowPokemonPCFromParty_SwSh();
+    else
+        EnterPokeStorage(OPTION_MOVE_MONS);
+}
+
+void CB2_ShowPokemonPCFromParty(void)
+{
+    ShowPokemonPCFromParty();
 }
 
 #undef tState
