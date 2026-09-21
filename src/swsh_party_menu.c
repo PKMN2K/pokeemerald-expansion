@@ -2404,22 +2404,25 @@ static u8 GetCurrentPartyCount(void)
 
 static void UpdatePartySelectionSingleLayout(s8 *slotPtr, s8 movementDir)
 {
+    enum BattleTrainer partyTrainer = (gPartyMenu.layout == PARTY_LAYOUT_MULTI_FULL_PARTNER) ? B_TRAINER_PARTNER : B_TRAINER_PLAYER;
     // PARTY_SIZE + 1 is Cancel, PARTY_SIZE is Confirm
-    u8 partyCount = GetCurrentPartyCount();
     switch (movementDir)
     {
     case MENU_DIR_UP:
         if (*slotPtr == 0)
         {
-            *slotPtr = partyCount - 1;
+            *slotPtr = PARTY_SIZE + 1;
         }
         else if (*slotPtr == PARTY_SIZE)
         {
-            *slotPtr = partyCount - 1;
+            *slotPtr = gPartiesCount[partyTrainer] - 1;
         }
         else if (*slotPtr == PARTY_SIZE + 1)
         {
-            *slotPtr = partyCount - 1;
+            if (sPartyMenuInternal->chooseHalf)
+                *slotPtr = PARTY_SIZE;
+            else
+                *slotPtr = gPartiesCount[partyTrainer] - 1;
         }
         else
         {
@@ -2433,14 +2436,33 @@ static void UpdatePartySelectionSingleLayout(s8 *slotPtr, s8 movementDir)
         }
         else
         {
-            if (*slotPtr == partyCount - 1)
+            if (*slotPtr == gPartiesCount[partyTrainer] - 1)
             {
-                *slotPtr = 0;
+                if (sPartyMenuInternal->chooseHalf)
+                    *slotPtr = PARTY_SIZE;
+                else
+                    *slotPtr = PARTY_SIZE + 1;
             }
             else
             {
                 (*slotPtr)++;
             }
+        }
+        break;
+    case MENU_DIR_RIGHT:
+        if (gPartiesCount[partyTrainer] != 1 && *slotPtr == 0)
+        {
+            if (sPartyMenuInternal->lastSelectedSlot == 0)
+                *slotPtr = 1;
+            else
+                *slotPtr = sPartyMenuInternal->lastSelectedSlot;
+        }
+        break;
+    case MENU_DIR_LEFT:
+        if (*slotPtr != 0 && *slotPtr != PARTY_SIZE && *slotPtr != PARTY_SIZE + 1)
+        {
+            sPartyMenuInternal->lastSelectedSlot = *slotPtr;
+            *slotPtr = 0;
         }
         break;
     }
