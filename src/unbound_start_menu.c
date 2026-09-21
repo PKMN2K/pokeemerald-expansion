@@ -1,6 +1,6 @@
 #include "global.h"
 
-#if IS_EMERALD
+#if !IS_FRLG
 #include "assertf.h"
 #include "battle_pyramid.h"
 #include "battle_pyramid_bag.h"
@@ -1399,4 +1399,4 @@ static bool32 shouldIconsObjWinMask(void)
     else return FALSE;
 }
 
-#endif // IS_EMERALD
+#endif // !IS_FRLG
