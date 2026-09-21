@@ -168,7 +168,7 @@ static void VBlankCB(void)
 
 void CB2_InitOptionMenu(void)
 {
-#if IS_EMERALD
+#if !IS_FRLG
     CB2_InitOptionPlusMenu();
     return;
 #endif
