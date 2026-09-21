@@ -1056,16 +1056,28 @@ void HandleSpeciesGfxDataChange(enum BattlerId battlerAtk, enum BattlerId battle
             personalityValue = GetMonData(monAtk, MON_DATA_PERSONALITY);
             isShiny = GetMonData(monAtk, MON_DATA_IS_SHINY);
         }
-        HandleLoadSpecialPokePic(!IsOnPlayerSide(battlerAtk),
-                                 gMonSpritesGfxPtr->spritesGfx[position],
-                                 targetSpecies,
-                                 personalityValue);
+        bool32 backPic = IsOnPlayerSide(battlerAtk);
+        u32 imageSize = GetBattleMonSpriteImageSize(targetSpecies, backPic);
+
+        ResizeSpriteTiles(&gSprites[gBattlerSpriteIds[battlerAtk]], imageSize);
+        SetBattleMonSpriteBufferSize(position, imageSize);
+
+        if (SpeciesUses96x96BattlePic(targetSpecies, backPic))
+            Load96x96BattlePic(targetSpecies, backPic, gMonSpritesGfxPtr->spritesGfx[position]);
+        else
+            HandleLoadSpecialPokePic(!backPic,
+                                     gMonSpritesGfxPtr->spritesGfx[position],
+                                     targetSpecies,
+                                     personalityValue);
     }
     src = gMonSpritesGfxPtr->spritesGfx[position];
-    dst = (void *)(OBJ_VRAM0 + gSprites[gBattlerSpriteIds[battlerAtk]].oam.tileNum * 32);
-    DmaCopy32(3, src, dst, MON_PIC_SIZE);
+    dst = (void *)(OBJ_VRAM0 + gSprites[gBattlerSpriteIds[battlerAtk]].oam.tileNum * TILE_SIZE_4BPP);
+    u32 imageSize = IsContest() ? MON_PIC_SIZE : GetBattleMonSpriteImageSize(targetSpecies, IsOnPlayerSide(battlerAtk));
+    DmaCopy32(3, src, dst, imageSize);
     paletteOffset = OBJ_PLTT_ID(battlerAtk);
-    paletteData = GetMonSpritePalFromSpeciesAndPersonality(targetSpecies, isShiny, personalityValue);
+    paletteData = IsContest() ? NULL : Get96x96BattlePalette(targetSpecies, isShiny);
+    if (paletteData == NULL)
+        paletteData = GetMonSpritePalFromSpeciesAndPersonality(targetSpecies, isShiny, personalityValue);
     LoadPalette(paletteData, paletteOffset, PLTT_SIZE_4BPP);
 
     if (changeType == SPECIES_GFX_CHANGE_GHOST_UNVEIL)
@@ -1098,6 +1110,9 @@ void HandleSpeciesGfxDataChange(enum BattlerId battlerAtk, enum BattlerId battle
         CpuCopy32(gPlttBufferFaded + paletteOffset, gPlttBufferUnfaded + paletteOffset, PLTT_SIZEOF(16));
     }
 
+    if (!IsContest())
+        ConfigureBattlerSpriteForBattlePic(battlerAtk, targetSpecies);
+
     gSprites[gBattlerSpriteIds[battlerAtk]].y = GetBattlerSpriteDefault_Y(battlerAtk);
     StartSpriteAnim(&gSprites[gBattlerSpriteIds[battlerAtk]], 0);
 }
@@ -1113,6 +1128,14 @@ void BattleLoadSubstituteOrMonSpriteGfx(enum BattlerId battler, bool8 loadMonSpr
             position = B_POSITION_PLAYER_LEFT;
         else
             position = GetBattlerPosition(battler);
+
+        if (!IsContest() && IsBattlerSpritePresent(battler))
+        {
+            ResizeSpriteTiles(&gSprites[gBattlerSpriteIds[battler]], MON_PIC_SIZE);
+            gSprites[gBattlerSpriteIds[battler]].subspriteTables = NULL;
+            gSprites[gBattlerSpriteIds[battler]].subspriteMode = SUBSPRITES_OFF;
+        }
+        SetBattleMonSpriteBufferSize(position, MON_PIC_SIZE);
 
         if (IsContest())
             DecompressDataWithHeaderVram(gBattleAnimSpriteGfx_SubstituteBack, gMonSpritesGfxPtr->spritesGfx[position]);
@@ -1555,6 +1578,13 @@ void DecompressGhostFrontPic(enum BattlerId battler)
     u16 palOffset;
     enum BattlerPosition position = GetBattlerPosition(battler);
 
+    if (IsBattlerSpritePresent(battler))
+    {
+        ResizeSpriteTiles(&gSprites[gBattlerSpriteIds[battler]], MON_PIC_SIZE);
+        gSprites[gBattlerSpriteIds[battler]].subspriteTables = NULL;
+        gSprites[gBattlerSpriteIds[battler]].subspriteMode = SUBSPRITES_OFF;
+    }
+    SetBattleMonSpriteBufferSize(position, MON_PIC_SIZE);
     DecompressDataWithHeaderWram(gGhostFrontPic, gMonSpritesGfxPtr->spritesGfx[position]);
     palOffset = OBJ_PLTT_ID(battler);
     LoadPalette(gGhostPalette, palOffset, PLTT_SIZE_4BPP);
