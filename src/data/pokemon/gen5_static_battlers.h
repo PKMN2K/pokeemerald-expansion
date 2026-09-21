@@ -4,8 +4,5 @@
 // First declare its four assets in:
 //   src/data/graphics/gen5_static_battlers.h
 //
-// Then add one line here:
-//
-// GEN5_STATIC_BATTLER(BULBASAUR)
-//
-// Keep this list empty until the corresponding assets have been added.
+// Then add one line here for each species.
+GEN5_STATIC_BATTLER(BULBASAUR)
