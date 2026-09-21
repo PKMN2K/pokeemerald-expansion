@@ -362,7 +362,7 @@ static u8 SaveConfirmSaveCallback(void)
 {
     ShowSaveInfoWindow();
 
-    if (InBattlePyramid_()) {
+    if (InBattlePyramid()) {
         ShowSaveMessage(gText_BattlePyramidConfirmRest, SaveYesNoCallback);
     }
     else {
