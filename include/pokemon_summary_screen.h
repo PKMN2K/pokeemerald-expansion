@@ -40,7 +40,7 @@ enum PokemonSummaryScreenPage
     PSS_PAGE_SKILLS,
     PSS_PAGE_BATTLE_MOVES,
     PSS_PAGE_CONTEST_MOVES,
-#if IS_EMERALD
+#if !IS_FRLG
     PSS_PAGE_CONDITIONS,
 #endif
     PSS_PAGE_COUNT,
