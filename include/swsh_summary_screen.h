@@ -4,7 +4,7 @@
 #include "main.h"
 
 // turn on and off the SwSh summary screen
-#define SWSH_SUMMARY_SCREEN                           IS_EMERALD
+#define SWSH_SUMMARY_SCREEN                           !IS_FRLG
 
 // constants
 #define SWSH_MAX_MOVE_DESCRIPTION_LENGTH              100       // this only needs to be updated if you use auto-formatting
