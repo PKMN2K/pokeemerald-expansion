@@ -52,6 +52,14 @@ jobs:
           GAME_VERSION: EMERALD
         run: make -j$(nproc) -O all
 
+      - name: Upload Emerald runtime test ROM
+        uses: actions/upload-artifact@v4
+        with:
+          name: emerald-gen5-static-runtime-test
+          path: pokeemerald.gba
+          if-no-files-found: error
+          retention-days: 7
+
   build-firered:
     if: github.actor != 'allcontributors[bot]'
     runs-on: ubuntu-latest
