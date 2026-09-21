@@ -1,4 +1,6 @@
 #include "global.h"
+
+#if IS_EMERALD
 #include "assertf.h"
 #include "battle_pyramid.h"
 #include "battle_pyramid_bag.h"
@@ -1396,3 +1398,5 @@ static bool32 shouldIconsObjWinMask(void)
     else if (CurrentBattlePyramidLocation() != PYRAMID_LOCATION_NONE) return TRUE;
     else return FALSE;
 }
+
+#endif // IS_EMERALD
