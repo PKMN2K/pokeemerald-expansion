@@ -656,7 +656,7 @@ static bool32 ConfigureBattlerPicLayout(enum BattlerId battler, enum BattlerPosi
     {
         sprite = &gSprites[gBattlerSpriteIds[battler]];
         if (sprite->images->size != desiredSize
-         && ReallocSpriteTiles(sprite, desiredSize / TILE_SIZE_4BPP) < 0)
+         && ResizeDynamicSpriteTiles(sprite, desiredSize / TILE_SIZE_4BPP) < 0)
             return FALSE;
     }
 
