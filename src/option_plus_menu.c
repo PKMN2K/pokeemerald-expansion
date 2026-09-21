@@ -1,6 +1,6 @@
 #include "global.h"
 
-#if IS_EMERALD
+#if !IS_FRLG
 #include "option_plus_menu.h"
 #include "main.h"
 #include "menu.h"
@@ -1395,4 +1395,4 @@ static void DrawBgWindowFrames(void)
     CopyBgTilemapBufferToVram(1);
 }
 
-#endif // IS_EMERALD
+#endif // !IS_FRLG
