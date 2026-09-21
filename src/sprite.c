@@ -702,7 +702,7 @@ s16 AllocSpriteTiles(u16 tileCount)
     return start;
 }
 
-s16 ReallocSpriteTiles(struct Sprite *sprite, u16 tileCount)
+s16 ResizeDynamicSpriteTiles(struct Sprite *sprite, u16 tileCount)
 {
     u16 oldTileCount;
     u16 oldTileStart;
