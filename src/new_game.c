@@ -106,6 +106,13 @@ static void SetDefaultOptions(void)
     gSaveBlock2Ptr->optionsBattleStyle = OPTIONS_BATTLE_STYLE_SHIFT;
     gSaveBlock2Ptr->optionsBattleSceneOff = FALSE;
     gSaveBlock2Ptr->regionMapZoom = FALSE;
+    gSaveBlock2Ptr->w_opAutoRun = 0;
+    gSaveBlock2Ptr->w_opDifficulty = 1;
+    gSaveBlock2Ptr->w_opMatchCall = 1;
+    gSaveBlock2Ptr->w_opBoxMode = 0;
+    gSaveBlock2Ptr->w_opBallPrompt = 1;
+    gSaveBlock2Ptr->w_opCatchMode = 0;
+    gSaveBlock2Ptr->w_opFontType = 0;
 }
 
 static void ClearPokedexFlags(void)
