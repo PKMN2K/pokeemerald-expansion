@@ -310,6 +310,7 @@ u16 LoadSpriteSheet(const struct SpriteSheet *sheet);
 u16 LoadSpriteSheetByTemplate(const struct SpriteTemplate *template, u32 frame, s32 offset);
 void LoadSpriteSheets(const struct SpriteSheet *sheets);
 s16 AllocSpriteTiles(u16 tileCount);
+s16 ReallocSpriteTiles(struct Sprite *sprite, u16 tileCount);
 bool32 CanAllocSpriteTiles(u16 tileCount);
 void FreeSpriteTilesByTag(u16 tag);
 void FreeSpriteTileRanges(void);
