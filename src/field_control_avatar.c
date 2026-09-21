@@ -228,7 +228,11 @@ int ProcessPlayerFieldInput(struct FieldInput *input)
     {
         FlagSet(FLAG_OPENED_START_MENU);
         PlaySE(SE_WIN_OPEN);
+#if IS_EMERALD
         Usm_InitStartMenu();
+#else
+        ShowStartMenu();
+#endif
         return TRUE;
     }
 
@@ -1353,7 +1357,11 @@ static void Task_OpenStartMenu(u8 taskId)
         return;
 
     PlaySE(SE_WIN_OPEN);
+#if IS_EMERALD
     Usm_InitStartMenu();
+#else
+    ShowStartMenu();
+#endif
     DestroyTask(taskId);
 }
 
