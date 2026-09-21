@@ -50,7 +50,7 @@ jobs:
           git cherry-pick fc377762f3
 
           if ! git cherry-pick eec9a9ca63; then
-            git checkout eec9a9ca63 -- src/swsh_party_menu.c src/data/swsh_party_menu.h graphics/party_menu/wPartyBalls graphics/party_menu/swsh/pokeballs_sheet.pal
+            git checkout eec9a9ca63 -- src/swsh_party_menu.c src/data/swsh_party_menu.h graphics/party_menu/wPartyBalls
             git add -A
             git cherry-pick --continue
           fi
