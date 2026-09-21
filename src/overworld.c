@@ -2081,7 +2081,11 @@ void CB2_ReturnToFieldFromMultiplayer(void)
 void CB2_ReturnToFieldWithOpenMenu(void)
 {
     FieldClearVBlankHBlankCallbacks();
+#if IS_EMERALD
     gFieldCallback2 = FieldCB_ReturnToFieldUsm;
+#else
+    gFieldCallback2 = FieldCB_ReturnToFieldOpenStartMenu;
+#endif
     CB2_ReturnToField();
 }
 
