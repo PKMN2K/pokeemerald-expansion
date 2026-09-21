@@ -1141,7 +1141,7 @@ void BattleLoadSubstituteOrMonSpriteGfx(enum BattlerId battler, bool8 loadMonSpr
         else
             position = GetBattlerPosition(battler);
 
-        if (!IsContest() && IsBattlerSpritePresent(battler))
+        if (!IsContest() && BattlerHasAllocatedMonSprite(battler))
         {
             ResizeSpriteTiles(&gSprites[gBattlerSpriteIds[battler]], MON_PIC_SIZE);
             gSprites[gBattlerSpriteIds[battler]].subspriteTables = NULL;
