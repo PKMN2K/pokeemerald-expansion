@@ -2,6 +2,7 @@
 #include "battle.h"
 #include "battle_anim.h"
 #include "battle_interface.h"
+#include "battle_gfx_sfx_util.h"
 #include "bg.h"
 #include "contest.h"
 #include "data.h"
@@ -197,6 +198,12 @@ u8 GetBattlerSpriteFinal_Y(enum BattlerId battler, enum Species species, bool32 
         offset -= GetBattlerElevation(battler, species);
     }
     y = offset + sBattlerCoords[GetBattlerCoordsIndex(battler)][GetBattlerPosition(battler)].y;
+
+    // Preserve the original 64x64 ground line when the battle-only canvas is
+    // expanded to 96x96.
+    if (!IsContest() && SpeciesUses96x96BattlePic(species, IsOnPlayerSide(battler)))
+        y -= (MON_PIC_HEIGHT_96 - MON_PIC_HEIGHT) / 2;
+
     if (a3)
     {
         if (IsOnPlayerSide(battler))
