@@ -47,9 +47,11 @@ jobs:
 
           # Storage needs its own type icon sheet, but do not replace the global
           # battle/type icon assets or type-info table used by the existing BW HUD.
-          git cherry-pick -n a56f429412
-          git restore --source=HEAD --staged --worktree graphics/types src/data/types_info.h
-          git commit -C a56f429412
+          if ! git cherry-pick a56f429412; then
+            git restore --source=HEAD --staged --worktree graphics/types src/data/types_info.h
+            git add -A
+            git cherry-pick --continue
+          fi
 
           for c in 2b855bff1a e18ba78af1 9445ef3621; do
             if ! git cherry-pick "$c"; then
