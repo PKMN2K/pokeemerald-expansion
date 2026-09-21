@@ -3,7 +3,7 @@
 
 #include "constants/form_change_types.h"
 
-#define SWSH_STORAGE_SYSTEM IS_EMERALD
+#define SWSH_STORAGE_SYSTEM !IS_FRLG
 
 void ShowPokemonStorageSystemPC_SwSh(void);
 void ShowPokemonPCFromParty_SwSh(void);
