@@ -109,6 +109,42 @@ u8 (*const gPlayerPartyCountPtr) = &gPartiesCount[B_TRAINER_PLAYER];
 struct Pokemon (*const gEnemyPartyPtr)[6] = &gParties[B_TRAINER_OPPONENT_A];
 u8 (*const gEnemyPartyCountPtr) = &gPartiesCount[B_TRAINER_OPPONENT_A];
 
+struct Gen5BattleSpriteInfo
+{
+    const u32 *frontPic;
+    const u32 *backPic;
+};
+
+#define GEN5_BATTLE_SPRITE(species, folder) \
+    static const u32 sGen5BattleFront_##species[] = INCBIN_U32("graphics/pokemon_gen5/" #folder "/front.4bpp.lz"); \
+    static const u32 sGen5BattleBack_##species[] = INCBIN_U32("graphics/pokemon_gen5/" #folder "/back.4bpp.lz");
+#include "data/pokemon/gen5_battle_sprite_registry.h"
+#undef GEN5_BATTLE_SPRITE
+
+static const struct Gen5BattleSpriteInfo sGen5BattleSprites[NUM_SPECIES] =
+{
+#define GEN5_BATTLE_SPRITE(species, folder) \
+    [species] = {sGen5BattleFront_##species, sGen5BattleBack_##species},
+#include "data/pokemon/gen5_battle_sprite_registry.h"
+#undef GEN5_BATTLE_SPRITE
+};
+
+bool32 HasGen5BattleSprite(enum Species species)
+{
+    species = SanitizeSpeciesId(species);
+    return sGen5BattleSprites[species].frontPic != NULL
+        && sGen5BattleSprites[species].backPic != NULL;
+}
+
+const u32 *GetGen5BattleSpritePic(enum Species species, bool32 frontPic)
+{
+    species = SanitizeSpeciesId(species);
+    if (!HasGen5BattleSprite(species))
+        return NULL;
+
+    return frontPic ? sGen5BattleSprites[species].frontPic : sGen5BattleSprites[species].backPic;
+}
+
 #include "data/abilities.h"
 
 // Used in an unreferenced function in RS.
@@ -1834,6 +1870,8 @@ enum Species GetUnownSpeciesId(u32 personality)
 
 void SetMultiuseSpriteTemplateToPokemon(enum Species speciesTag, enum BattlerPosition battlerPosition)
 {
+    enum Species gfxSpecies = speciesTag;
+
     if (gMonSpritesGfxPtr != NULL)
         gMultiuseSpriteTemplate = gMonSpritesGfxPtr->templates[battlerPosition];
     else if (sMonSpritesGfxManagers[MON_SPR_GFX_MANAGER_A])
@@ -1844,19 +1882,20 @@ void SetMultiuseSpriteTemplateToPokemon(enum Species speciesTag, enum BattlerPos
         gMultiuseSpriteTemplate = gBattlerSpriteTemplates[battlerPosition];
 
     gMultiuseSpriteTemplate.paletteTag = speciesTag;
-    if (battlerPosition == B_POSITION_PLAYER_LEFT || battlerPosition == B_POSITION_PLAYER_RIGHT)
-        gMultiuseSpriteTemplate.anims = gAnims_MonPic;
-    else
-    {
-        if (speciesTag > SPECIES_SHINY_TAG)
-            speciesTag = speciesTag - SPECIES_SHINY_TAG;
 
-        speciesTag = SanitizeSpeciesId(speciesTag);
-        if (gSpeciesInfo[speciesTag].frontAnimFrames != NULL)
-            gMultiuseSpriteTemplate.anims = gSpeciesInfo[speciesTag].frontAnimFrames;
-        else
-            gMultiuseSpriteTemplate.anims = gSpeciesInfo[SPECIES_NONE].frontAnimFrames;
-    }
+    if (gfxSpecies > SPECIES_SHINY_TAG)
+        gfxSpecies = gfxSpecies - SPECIES_SHINY_TAG;
+    gfxSpecies = SanitizeSpeciesId(gfxSpecies);
+
+    // 96x96 Gen 5 battlers are intentionally one static frame.
+    if (HasGen5BattleSprite(gfxSpecies))
+        gMultiuseSpriteTemplate.anims = gDummySpriteAnimTable;
+    else if (battlerPosition == B_POSITION_PLAYER_LEFT || battlerPosition == B_POSITION_PLAYER_RIGHT)
+        gMultiuseSpriteTemplate.anims = gAnims_MonPic;
+    else if (gSpeciesInfo[gfxSpecies].frontAnimFrames != NULL)
+        gMultiuseSpriteTemplate.anims = gSpeciesInfo[gfxSpecies].frontAnimFrames;
+    else
+        gMultiuseSpriteTemplate.anims = gSpeciesInfo[SPECIES_NONE].frontAnimFrames;
 }
 
 void SetMultiuseSpriteTemplateToTrainerBack(enum TrainerPicID trainerPicId, enum BattlerPosition battlerPosition)
