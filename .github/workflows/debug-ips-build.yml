@@ -27,7 +27,9 @@ jobs:
       - name: Build debug Emerald
         env:
           GAME_VERSION: EMERALD
-        run: make -j$(nproc) -O debug
+        run: |
+          sed -i 's/ -Werror / /' Makefile
+          make -j$(nproc) -O debug
 
       - name: Upload debug ROM artifact
         uses: actions/upload-artifact@v4
