@@ -1,17 +1,11 @@
 #include "global.h"
 #include "gen5_static_battlers.h"
 
-#define GEN5_STATIC_BATTLER(species, folder) \
-    static const u32 sGen5StaticFront_##species[] = INCGFX_U32("graphics/pokemon_gen5_static/" #folder "/front.png", ".4bpp.smol"); \
-    static const u32 sGen5StaticBack_##species[] = INCGFX_U32("graphics/pokemon_gen5_static/" #folder "/back.png", ".4bpp.smol"); \
-    static const u16 sGen5StaticPalette_##species[] = INCGFX_U16("graphics/pokemon_gen5_static/" #folder "/normal.pal", ".gbapal"); \
-    static const u16 sGen5StaticShinyPalette_##species[] = INCGFX_U16("graphics/pokemon_gen5_static/" #folder "/shiny.pal", ".gbapal");
-#include "data/pokemon/gen5_static_battlers.h"
-#undef GEN5_STATIC_BATTLER
+#include "data/graphics/gen5_static_battlers.h"
 
 const struct Gen5StaticBattlerInfo gGen5StaticBattlerInfo[NUM_SPECIES] =
 {
-#define GEN5_STATIC_BATTLER(species, folder) \
+#define GEN5_STATIC_BATTLER(species) \
     [SPECIES_##species] = \
     { \
         .frontPic = sGen5StaticFront_##species, \
