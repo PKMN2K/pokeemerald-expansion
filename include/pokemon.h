@@ -444,6 +444,15 @@ struct SpeciesInfo /*0xC4*/
     const u16 *palette;
     const u16 *shinyPalette;
     const u8 *iconSprite;
+
+    // Optional battle-only graphics. When battlePicSize is MON_BATTLE_PIC_96,
+    // these pointers may provide static 96x96 Gen 5 style front/back sprites.
+    // Non-battle screens continue using frontPic/backPic above.
+    const u32 *battleFrontPic;
+    const u32 *battleBackPic;
+    const u16 *battlePalette;
+    const u16 *battleShinyPalette;
+    u8 battlePicSize;
 #if P_GENDER_DIFFERENCES
     const u32 *frontPicFemale;
     const u32 *backPicFemale;
