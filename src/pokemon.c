@@ -109,42 +109,6 @@ u8 (*const gPlayerPartyCountPtr) = &gPartiesCount[B_TRAINER_PLAYER];
 struct Pokemon (*const gEnemyPartyPtr)[6] = &gParties[B_TRAINER_OPPONENT_A];
 u8 (*const gEnemyPartyCountPtr) = &gPartiesCount[B_TRAINER_OPPONENT_A];
 
-struct Gen5BattleSpriteInfo
-{
-    const u32 *frontPic;
-    const u32 *backPic;
-};
-
-#define GEN5_BATTLE_SPRITE(species, folder) \
-    static const u32 sGen5BattleFront_##species[] = INCBIN_U32("graphics/pokemon_gen5/" #folder "/front.4bpp.lz"); \
-    static const u32 sGen5BattleBack_##species[] = INCBIN_U32("graphics/pokemon_gen5/" #folder "/back.4bpp.lz");
-#include "data/pokemon/gen5_battle_sprite_registry.h"
-#undef GEN5_BATTLE_SPRITE
-
-static const struct Gen5BattleSpriteInfo sGen5BattleSprites[NUM_SPECIES] =
-{
-#define GEN5_BATTLE_SPRITE(species, folder) \
-    [species] = {sGen5BattleFront_##species, sGen5BattleBack_##species},
-#include "data/pokemon/gen5_battle_sprite_registry.h"
-#undef GEN5_BATTLE_SPRITE
-};
-
-bool32 HasGen5BattleSprite(enum Species species)
-{
-    species = SanitizeSpeciesId(species);
-    return sGen5BattleSprites[species].frontPic != NULL
-        && sGen5BattleSprites[species].backPic != NULL;
-}
-
-const u32 *GetGen5BattleSpritePic(enum Species species, bool32 frontPic)
-{
-    species = SanitizeSpeciesId(species);
-    if (!HasGen5BattleSprite(species))
-        return NULL;
-
-    return frontPic ? sGen5BattleSprites[species].frontPic : sGen5BattleSprites[species].backPic;
-}
-
 #include "data/abilities.h"
 
 // Used in an unreferenced function in RS.
