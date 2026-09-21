@@ -889,7 +889,7 @@ static void Usm_InjectAfter(enum Usm_Icons newIcon, enum Usm_Icons anchorIcon) /
 
 static void Usm_BuildMenuItems(void)
 {
-    struct Usm_SavedItems* saved = &gSaveBlock3Ptr->usmSaved;
+    struct Usm_SavedItems* saved = (struct Usm_SavedItems *)gSaveBlock1Ptr->filler1;
 
     sUsmState->itemCount = 0;
 
@@ -1088,7 +1088,7 @@ static void Usm_ExitStartMenu(void)
 
 static void Usm_SaveItems(void)
 {
-    struct Usm_SavedItems* saved = &gSaveBlock3Ptr->usmSaved;
+    struct Usm_SavedItems* saved = (struct Usm_SavedItems *)gSaveBlock1Ptr->filler1;
 
     u8 count = sUsmState->itemCount;
 
