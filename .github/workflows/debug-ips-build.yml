@@ -18,7 +18,7 @@ jobs:
           sudo apt-get install -y build-essential gcc-arm-none-eabi binutils-arm-none-eabi libnewlib-arm-none-eabi libpng-dev python3
 
       - name: Build debug ROM
-        run: make debug -j2
+        run: make -j$(nproc) -O all
 
       - name: Upload debug ROM
         uses: actions/upload-artifact@v4
