@@ -2045,6 +2045,7 @@ void StartSendOutAnim(enum BattlerId battler, bool32 dontClearTransform, bool32 
     gSprites[gBattlerSpriteIds[battler]].data[0] = battler;
     gSprites[gBattlerSpriteIds[battler]].data[2] = species;
     gSprites[gBattlerSpriteIds[battler]].oam.paletteNum = battler;
+    SetupBattlerSpriteForSpecies(battler, species);
     StartSpriteAnim(&gSprites[gBattlerSpriteIds[battler]], 0);
     gSprites[gBattlerSpriteIds[battler]].invisible = TRUE;
     gSprites[gBattlerSpriteIds[battler]].callback = SpriteCallbackDummy;
@@ -2383,6 +2384,7 @@ void BtlController_HandleLoadMonSprite(enum BattlerId battler)
     gSprites[gBattlerSpriteIds[battler]].data[0] = battler;
     gSprites[gBattlerSpriteIds[battler]].data[2] = species;
     gSprites[gBattlerSpriteIds[battler]].oam.paletteNum = battler;
+    SetupBattlerSpriteForSpecies(battler, species);
     StartSpriteAnim(&gSprites[gBattlerSpriteIds[battler]], 0);
 
     if (!(gBattleTypeFlags & BATTLE_TYPE_GHOST))
