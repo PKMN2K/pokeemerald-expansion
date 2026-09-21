@@ -51,7 +51,6 @@ static const u8 sMenuText_Use[]                             = _("Use");
 static const u8 sMenuText_Cancel[]                          = _("Cancel");
 static const u8 sMenuText_ViewPartnerParty[]                = _("{STR_VAR_1}'s party"); //Unused
 static const u8 sMenuText_ViewPlayerParty[]                 = _("Your party"); //Unused
-static const u8 sText_SendThisMonToPC[]                     = _("Send {STR_VAR_1} to the PC?");
 
 static const struct BgTemplate sPartyMenuBgTemplates[] =
 {
@@ -1088,7 +1087,7 @@ static const u8 *const sActionStringTable[] =
     [PARTY_MSG_UNUSED]                 = gText_EmptyString2,
     [PARTY_MSG_DO_WHAT_WITH_MON]       = gText_DoWhatWithPokemon,
     [PARTY_MSG_RESTORE_WHICH_MOVE]     = gText_RestoreWhichMove, //TODO: set cursor on move slots
-    [PARTY_MSG_BOOST_PP_WHICH_MOVE]    = gText_BoostPp,
+    [PARTY_MSG_BOOST_PP_WHICH_MOVE]    = gText_BoostPP,
     [PARTY_MSG_DO_WHAT_WITH_ITEM]      = gText_DoWhatWithItem,
     [PARTY_MSG_DO_WHAT_WITH_MAIL]      = gText_DoWhatWithMail,
     [PARTY_MSG_ALREADY_HOLDING_ONE]    = gText_AlreadyHoldingOne,
@@ -1096,7 +1095,6 @@ static const u8 *const sActionStringTable[] =
     [PARTY_MSG_CHOOSE_SECOND_FUSION]   = gText_NextFusionMon,
     [PARTY_MSG_NO_POKEMON]             = COMPOUND_STRING("You have no POKéMON."),
     [PARTY_MSG_CHOOSE_MON_FOR_BOX]     = gText_SendWhichMonToPC,
-    [PARTY_MSG_SEND_MON_TO_BOX]        = sText_SendThisMonToPC,
     [PARTY_MSG_MOVE_ITEM_WHERE]        = gText_MoveItemWhere,
 };
 
