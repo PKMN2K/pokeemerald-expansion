@@ -392,9 +392,20 @@ enum GeneratedMonOrigin
     GIFTMON_ORIGIN
 };
 
+// Standard Pokémon battle/summary sprite canvas.
 #define MON_PIC_WIDTH 64
 #define MON_PIC_HEIGHT 64
 #define MON_PIC_SIZE (MON_PIC_WIDTH * MON_PIC_HEIGHT / 2)
+
+// Optional battle-only Gen 5 style canvas. 96x96 cannot be represented by one
+// GBA OBJ, so battle code renders it as a 3x3 grid of 32x32 subsprites.
+#define MON_PIC_WIDTH_96 96
+#define MON_PIC_HEIGHT_96 96
+#define MON_PIC_SIZE_96 (MON_PIC_WIDTH_96 * MON_PIC_HEIGHT_96 / 2)
+#define MON_PIC_SIZE_MAX MON_PIC_SIZE_96
+
+#define MON_BATTLE_PIC_64 0
+#define MON_BATTLE_PIC_96 1
 
 // Most Pokémon have 2 frames (a default and an alternate for their animation).
 // There are 4 exceptions:
