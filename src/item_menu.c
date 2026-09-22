@@ -2228,7 +2228,7 @@ static void ItemMenu_UseOutOfBattle(u8 taskId)
         }
         else
         {
-            FillWindowPixelBuffer(WIN_DESCRIPTION, PIXEL_FILL(0));
+            PrepareHgssBagDescriptionPanel();
             ScheduleBgCopyTilemapToVram(0);
             if (gBagPosition.pocket != POCKET_BERRIES)
                 GetItemFieldFunc(gSpecialVar_ItemId)(taskId);
