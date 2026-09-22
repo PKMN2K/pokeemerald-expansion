@@ -2076,10 +2076,14 @@ static void DrawHgssBagContextMenuCursor(u8 windowId, u8 cursorPos, u8 columns, 
         }
     }
 
-    FillWindowPixelRect(windowId, PIXEL_FILL(TEXT_COLOR_RED),
-                        (cursorPos % columns) * 56 + 2,
-                        3 + (cursorPos / columns) * 16,
-                        4, 11);
+    {
+        u8 cursorX = (cursorPos % columns) * 56 + 2;
+        u8 cursorY = 3 + (cursorPos / columns) * 16;
+
+        FillWindowPixelRect(windowId, PIXEL_FILL(TEXT_COLOR_RED), cursorX + 1, cursorY, 2, 1);
+        FillWindowPixelRect(windowId, PIXEL_FILL(TEXT_COLOR_RED), cursorX, cursorY + 1, 4, 9);
+        FillWindowPixelRect(windowId, PIXEL_FILL(TEXT_COLOR_RED), cursorX + 1, cursorY + 10, 2, 1);
+    }
     CopyWindowToVram(windowId, COPYWIN_GFX);
 }
 
