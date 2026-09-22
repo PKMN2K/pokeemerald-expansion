@@ -3123,12 +3123,13 @@ static void RemoveMoneyWindow(void)
 
 static void PrepareTMHMMoveWindow(void)
 {
+    u8 width = GetWindowAttribute(WIN_TMHM_INFO_ICONS, WINDOW_WIDTH) * 8;
     u8 height = GetWindowAttribute(WIN_TMHM_INFO_ICONS, WINDOW_HEIGHT) * 8;
 
     FillWindowPixelBuffer(WIN_TMHM_INFO_ICONS, PIXEL_FILL(0));
-    FillWindowPixelRect(WIN_TMHM_INFO_ICONS, PIXEL_FILL(TEXT_DYNAMIC_COLOR_5), 1, 0,
-                        GetWindowAttribute(WIN_TMHM_INFO_ICONS, WINDOW_WIDTH) * 8 - 2, 1);
+    FillWindowPixelRect(WIN_TMHM_INFO_ICONS, PIXEL_FILL(TEXT_DYNAMIC_COLOR_5), 1, 0, width - 2, 1);
     FillWindowPixelRect(WIN_TMHM_INFO_ICONS, PIXEL_FILL(TEXT_DYNAMIC_COLOR_5), 0, 1, 1, height - 2);
+    FillWindowPixelRect(WIN_TMHM_INFO_ICONS, PIXEL_FILL(TEXT_DYNAMIC_COLOR_5), width - 1, 1, 1, height - 2);
     BlitMenuInfoIcon(WIN_TMHM_INFO_ICONS, MENU_INFO_ICON_TYPE, 2, 0);
     BlitMenuInfoIcon(WIN_TMHM_INFO_ICONS, MENU_INFO_ICON_POWER, 2, 12);
     BlitMenuInfoIcon(WIN_TMHM_INFO_ICONS, MENU_INFO_ICON_ACCURACY, 2, 24);
