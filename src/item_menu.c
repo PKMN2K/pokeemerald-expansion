@@ -1462,20 +1462,36 @@ static void AddItemQuantityWindow(u8 windowType)
     PrintItemQuantity(BagMenu_AddWindow(windowType), 1);
 }
 
+static void PrepareHgssBagQuantityPanel(u8 windowId)
+{
+    u8 width = GetWindowAttribute(windowId, WINDOW_WIDTH) * 8;
+    u8 height = GetWindowAttribute(windowId, WINDOW_HEIGHT) * 8;
+
+    FillWindowPixelBuffer(windowId, PIXEL_FILL(1));
+    FillWindowPixelRect(windowId, PIXEL_FILL(TEXT_COLOR_RED), 0, 0, width, 1);
+    FillWindowPixelRect(windowId, PIXEL_FILL(TEXT_COLOR_RED), 0, height - 1, width, 1);
+}
+
 static void PrintItemQuantity(u8 windowId, s16 quantity)
 {
+    PrepareHgssBagQuantityPanel(windowId);
     ConvertIntToDecimalStringN(gStringVar1, quantity, STR_CONV_MODE_LEADING_ZEROS, MAX_ITEM_DIGITS);
     StringExpandPlaceholders(gStringVar4, gText_xVar1);
-    AddTextPrinterParameterized(windowId, FONT_NORMAL, gStringVar4, GetStringCenterAlignXOffset(FONT_NORMAL, gStringVar4, 0x28), 2, 0, 0);
+    BagMenu_Print(windowId, FONT_NORMAL, gStringVar4,
+                  GetStringCenterAlignXOffset(FONT_NORMAL, gStringVar4, 0x28), 1,
+                  0, 0, TEXT_SKIP_DRAW, COLORID_POCKET_NAME);
+    CopyWindowToVram(windowId, COPYWIN_GFX);
 }
 
 // Prints the quantity of items to be sold and the amount that would be earned
 static void PrintItemSoldAmount(int windowId, int numSold, int moneyEarned)
 {
+    PrepareHgssBagQuantityPanel(windowId);
     ConvertIntToDecimalStringN(gStringVar1, numSold, STR_CONV_MODE_LEADING_ZEROS, MAX_ITEM_DIGITS);
     StringExpandPlaceholders(gStringVar4, gText_xVar1);
-    AddTextPrinterParameterized(windowId, FONT_NORMAL, gStringVar4, 0, 1, TEXT_SKIP_DRAW, 0);
+    BagMenu_Print(windowId, FONT_NORMAL, gStringVar4, 2, 1, 0, 0, TEXT_SKIP_DRAW, COLORID_POCKET_NAME);
     PrintMoneyAmount(windowId, CalculateMoneyTextHorizontalPosition(moneyEarned), 1, moneyEarned, 0);
+    CopyWindowToVram(windowId, COPYWIN_GFX);
 }
 
 static void Task_BagMenu_HandleInput(u8 taskId)
@@ -2888,7 +2904,9 @@ static bool8 IsHgssBagActionWindow(u8 windowType)
 {
     return windowType <= ITEMWIN_2x3
         || windowType == ITEMWIN_YESNO_LOW
-        || windowType == ITEMWIN_YESNO_HIGH;
+        || windowType == ITEMWIN_YESNO_HIGH
+        || windowType == ITEMWIN_QUANTITY
+        || windowType == ITEMWIN_QUANTITY_WIDE;
 }
 
 static u8 BagMenu_AddWindow(u8 windowType)
