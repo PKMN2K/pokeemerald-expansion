@@ -3038,7 +3038,13 @@ static void DrawHgssBagYesNoMenu(void)
     FillWindowPixelRect(windowId, PIXEL_FILL(TEXT_COLOR_RED), 0, 1, 1, height - 2);
     FillWindowPixelRect(windowId, PIXEL_FILL(TEXT_COLOR_RED), width - 1, 1, 1, height - 2);
     BagMenu_Print(windowId, FONT_NARROW, gText_YesNo, 8, 1, 0, 0, TEXT_SKIP_DRAW, COLORID_POCKET_NAME);
-    FillWindowPixelRect(windowId, PIXEL_FILL(TEXT_COLOR_RED), 2, 3 + sHgssBagYesNoChoice * 16, 4, 11);
+    {
+        u8 cursorY = 3 + sHgssBagYesNoChoice * 16;
+
+        FillWindowPixelRect(windowId, PIXEL_FILL(TEXT_COLOR_RED), 3, cursorY, 2, 1);
+        FillWindowPixelRect(windowId, PIXEL_FILL(TEXT_COLOR_RED), 2, cursorY + 1, 4, 9);
+        FillWindowPixelRect(windowId, PIXEL_FILL(TEXT_COLOR_RED), 3, cursorY + 10, 2, 1);
+    }
     CopyWindowToVram(windowId, COPYWIN_GFX);
 }
 
