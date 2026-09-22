@@ -3177,7 +3177,9 @@ static void PrintTMHMMoveData(enum Item itemId)
     if (itemId == ITEM_NONE)
     {
         for (i = 0; i < 4; i++)
-            BagMenu_Print(WIN_TMHM_INFO, FONT_NORMAL, gText_ThreeDashes, 7, i * 12, 0, 0, TEXT_SKIP_DRAW, COLORID_TMHM_INFO);
+            BagMenu_Print(WIN_TMHM_INFO, FONT_NORMAL, gText_ThreeDashes,
+                          1 + GetStringCenterAlignXOffset(FONT_NORMAL, gText_ThreeDashes, width - 2), i * 12,
+                          0, 0, TEXT_SKIP_DRAW, COLORID_TMHM_INFO);
     }
     else
     {
@@ -3195,7 +3197,9 @@ static void PrintTMHMMoveData(enum Item itemId)
             ConvertIntToDecimalStringN(gStringVar1, power, STR_CONV_MODE_RIGHT_ALIGN, 3);
             text = gStringVar1;
         }
-        BagMenu_Print(WIN_TMHM_INFO, FONT_NORMAL, text, 7, 12, 0, 0, TEXT_SKIP_DRAW, COLORID_TMHM_INFO);
+        BagMenu_Print(WIN_TMHM_INFO, FONT_NORMAL, text,
+                      1 + GetStringCenterAlignXOffset(FONT_NORMAL, text, width - 2), 12,
+                      0, 0, TEXT_SKIP_DRAW, COLORID_TMHM_INFO);
 
         u32 accuracy = GetMoveAccuracy(move);
         // Print TMHM accuracy
@@ -3208,11 +3212,15 @@ static void PrintTMHMMoveData(enum Item itemId)
             ConvertIntToDecimalStringN(gStringVar1, accuracy, STR_CONV_MODE_RIGHT_ALIGN, 3);
             text = gStringVar1;
         }
-        BagMenu_Print(WIN_TMHM_INFO, FONT_NORMAL, text, 7, 24, 0, 0, TEXT_SKIP_DRAW, COLORID_TMHM_INFO);
+        BagMenu_Print(WIN_TMHM_INFO, FONT_NORMAL, text,
+                      1 + GetStringCenterAlignXOffset(FONT_NORMAL, text, width - 2), 24,
+                      0, 0, TEXT_SKIP_DRAW, COLORID_TMHM_INFO);
 
         // Print TMHM pp
         ConvertIntToDecimalStringN(gStringVar1, GetMovePP(move), STR_CONV_MODE_RIGHT_ALIGN, 3);
-        BagMenu_Print(WIN_TMHM_INFO, FONT_NORMAL, gStringVar1, 7, 36, 0, 0, TEXT_SKIP_DRAW, COLORID_TMHM_INFO);
+        BagMenu_Print(WIN_TMHM_INFO, FONT_NORMAL, gStringVar1,
+                      1 + GetStringCenterAlignXOffset(FONT_NORMAL, gStringVar1, width - 2), 36,
+                      0, 0, TEXT_SKIP_DRAW, COLORID_TMHM_INFO);
 
     }
 
