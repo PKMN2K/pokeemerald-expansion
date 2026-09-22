@@ -9,10 +9,10 @@
 //
 // The healthboxes are a separate port and are not controlled from here.
 
-#define BW_BATTLE_UI                (TRUE)
+#define BW_BATTLE_UI                (FALSE)
 
-#define BW_BATTLE_UI_TEXTBOX        (TRUE)  // BW1-styled textbox. With BW_BATTLE_UI_INPUTBOX off, the gen3 navigation menu is kept.
-#define BW_BATTLE_UI_INPUTBOX       (TRUE)  // Action box, move box and cursor. Requires BW_BATTLE_UI_TEXTBOX.
+#define BW_BATTLE_UI_TEXTBOX        (FALSE)  // BW1-styled textbox. With BW_BATTLE_UI_INPUTBOX off, the gen3 navigation menu is kept.
+#define BW_BATTLE_UI_INPUTBOX       (FALSE)  // Action box, move box and cursor. Requires BW_BATTLE_UI_TEXTBOX.
 
 // Config safeguards, do not delete unless you know what you're doing!
 #if (B_MOVE_REARRANGEMENT_IN_BATTLE < GEN_4)
