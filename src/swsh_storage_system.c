@@ -845,6 +845,7 @@ static void ClearMonInfoPanel(void);
 static u16 GetTargetBg0Y(void);
 static void DrawHgssStorageStatRows(u8 windowId);
 static void PrintDisplayMonStats(u8);
+static void DrawHgssStorageDetailRow(u8 windowId);
 static void PrintDisplayMonAbility(u8);
 static void PrintDisplayMonHeldItem(u8);
 static void DrawHgssStorageMonHeaderCell(u8 windowId);
@@ -3982,12 +3983,27 @@ static void BufferAndPrintStat(u8 windowId, u8 font, u8 xOffset, u8 y, u16 statV
     AddTextPrinterParameterized4(windowId, font, xOffset - statWidth, y, 0, 0, sTextColors[0], 0, statStr);
 }
 
+static void DrawHgssStorageDetailRow(u8 windowId)
+{
+    u8 width = GetWindowAttribute(windowId, WINDOW_WIDTH) * 8;
+    u8 height = GetWindowAttribute(windowId, WINDOW_HEIGHT) * 8;
+
+    if (width < 12 || height < 8)
+        return;
+
+    // Compact HGSS information row with softened one-pixel corners.
+    FillWindowPixelRect(windowId, PIXEL_FILL(2), 1, 0, width - 2, 1);
+    FillWindowPixelRect(windowId, PIXEL_FILL(3), 1, height - 1, width - 2, 1);
+    FillWindowPixelRect(windowId, PIXEL_FILL(2), 0, 1, 1, height - 2);
+    FillWindowPixelRect(windowId, PIXEL_FILL(2), width - 1, 1, 1, height - 2);
+}
+
 static void PrintDisplayMonAbility(u8 font)
 {
     u8 windowId;
     const u8 *abilityName;
-    u8 windowWidthPx = 72;
-    u8 xPos = 0;
+    u8 windowWidthPx = 68;
+    u8 xPos = 3;
     u8 fontId;
 
     if (sStorage->monInfoTilemapId == 0)
@@ -4007,7 +4023,8 @@ static void PrintDisplayMonAbility(u8 font)
     abilityName = gAbilitiesInfo[sStorage->displayMon.ability].name;
     fontId = GetFontIdToFit(abilityName, font, 0, windowWidthPx - 2);
 
-    AddTextPrinterParameterized4(windowId, fontId, xPos, 0, 0, 0, sTextColors[0], 0, abilityName);
+    AddTextPrinterParameterized4(windowId, fontId, xPos, 1, 0, 0, sTextColors[0], 0, abilityName);
+    DrawHgssStorageDetailRow(windowId);
     PutWindowTilemap(windowId);
     CopyWindowToVram(windowId, COPYWIN_FULL);
 }
@@ -4016,8 +4033,8 @@ static void PrintDisplayMonHeldItem(u8 font)
 {
     u8 windowId;
     const u8 *itemName;
-    u8 windowWidthPx = 72;
-    u8 xPos = 0;
+    u8 windowWidthPx = 68;
+    u8 xPos = 3;
     u8 fontId;
 
     if (sStorage->monInfoTilemapId == 0)
@@ -4040,7 +4057,8 @@ static void PrintDisplayMonHeldItem(u8 font)
         itemName = GetItemName(sStorage->displayMon.heldItem);
     fontId = GetFontIdToFit(itemName, font, 0, windowWidthPx - 2);
 
-    AddTextPrinterParameterized4(windowId, fontId, xPos, 0, 0, 0, sTextColors[0], 0, itemName);
+    AddTextPrinterParameterized4(windowId, fontId, xPos, 1, 0, 0, sTextColors[0], 0, itemName);
+    DrawHgssStorageDetailRow(windowId);
     PutWindowTilemap(windowId);
     CopyWindowToVram(windowId, COPYWIN_FULL);
 }
