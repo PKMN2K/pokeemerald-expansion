@@ -244,6 +244,7 @@ static void LoadPartyMenuBoxes(enum PartyMenuLayout);
 static void LoadPartyMenuPokeballGfx(void);
 static bool8 CreatePartyMonSpritesLoop(void);
 static bool8 RenderPartyMenuBoxes(void);
+static void DrawHgssPartySlotFrame(u8 slot);
 static void CreateCancelConfirmPokeballSprites(void);
 static void CreateCancelConfirmWindows(u8);
 static void Task_ExitPartyMenu(u8);
@@ -1235,9 +1236,30 @@ static void DisplayPartyPokemonDataForMultiBattle(u8 slot)
     }
 }
 
+static void DrawHgssPartySlotFrame(u8 slot)
+{
+    u8 windowId = sPartyMenuBoxes[slot].windowId;
+    u8 width = GetWindowAttribute(windowId, WINDOW_WIDTH) * 8;
+    u8 height = GetWindowAttribute(windowId, WINDOW_HEIGHT) * 8;
+
+    // HGSS-style softened slot outline: clipped one-pixel corners with a light inner top edge.
+    FillWindowPixelRect(windowId, PIXEL_FILL(TEXT_COLOR_DARK_GRAY), 1, 0, width - 2, 1);
+    FillWindowPixelRect(windowId, PIXEL_FILL(TEXT_COLOR_DARK_GRAY), 1, height - 1, width - 2, 1);
+    FillWindowPixelRect(windowId, PIXEL_FILL(TEXT_COLOR_DARK_GRAY), 0, 1, 1, height - 2);
+    FillWindowPixelRect(windowId, PIXEL_FILL(TEXT_COLOR_DARK_GRAY), width - 1, 1, 1, height - 2);
+
+    if (width > 4 && height > 3)
+        FillWindowPixelRect(windowId, PIXEL_FILL(TEXT_COLOR_LIGHT_GRAY), 2, 1, width - 4, 1);
+}
+
 static bool8 RenderPartyMenuBoxes(void)
 {
-    RenderPartyMenuBox(sPartyMenuInternal->data[0]);
+    u8 slot = sPartyMenuInternal->data[0];
+
+    RenderPartyMenuBox(slot);
+    DrawHgssPartySlotFrame(slot);
+    CopyWindowToVram(sPartyMenuBoxes[slot].windowId, COPYWIN_GFX);
+
     if (++sPartyMenuInternal->data[0] == PARTY_SIZE)
         return TRUE;
     else
