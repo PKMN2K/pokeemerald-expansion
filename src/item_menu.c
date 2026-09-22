@@ -1559,6 +1559,8 @@ static void PrintItemQuantity(u8 windowId, s16 quantity)
 static void PrintItemSoldAmount(int windowId, int numSold, int moneyEarned)
 {
     PrepareHgssBagQuantityPanel(windowId);
+    FillWindowPixelRect(windowId, PIXEL_FILL(TEXT_COLOR_RED), 24, 2, 1,
+                        GetWindowAttribute(windowId, WINDOW_HEIGHT) * 8 - 4);
     ConvertIntToDecimalStringN(gStringVar1, numSold, STR_CONV_MODE_LEADING_ZEROS, MAX_ITEM_DIGITS);
     StringExpandPlaceholders(gStringVar4, gText_xVar1);
     BagMenu_Print(windowId, FONT_NORMAL, gStringVar4, 2, 1, 0, 0, TEXT_SKIP_DRAW, COLORID_POCKET_NAME);
