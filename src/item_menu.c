@@ -576,7 +576,7 @@ static const struct WindowTemplate sDefaultBagWindows[] =
         .bg = 0,
         .tilemapLeft = 1,
         .tilemapTop = 13,
-        .width = 5,
+        .width = 6,
         .height = 6,
         .paletteNum = 12,
         .baseBlock = 0x16B,
@@ -588,7 +588,7 @@ static const struct WindowTemplate sDefaultBagWindows[] =
         .width = 4,
         .height = 6,
         .paletteNum = 12,
-        .baseBlock = 0x189,
+        .baseBlock = 0x18F,
     },
     [WIN_MESSAGE] = {
         .bg = 1,
@@ -3169,12 +3169,12 @@ static void PrepareTMHMMoveWindow(void)
     u8 height = GetWindowAttribute(WIN_TMHM_INFO_ICONS, WINDOW_HEIGHT) * 8;
 
     FillWindowPixelBuffer(WIN_TMHM_INFO_ICONS, PIXEL_FILL(0));
-    BlitMenuInfoIcon(WIN_TMHM_INFO_ICONS, MENU_INFO_ICON_TYPE, 0, 0);
-    BlitMenuInfoIcon(WIN_TMHM_INFO_ICONS, MENU_INFO_ICON_POWER, 0, 12);
-    BlitMenuInfoIcon(WIN_TMHM_INFO_ICONS, MENU_INFO_ICON_ACCURACY, 0, 24);
-    BlitMenuInfoIcon(WIN_TMHM_INFO_ICONS, MENU_INFO_ICON_PP, 0, 36);
+    BlitMenuInfoIcon(WIN_TMHM_INFO_ICONS, MENU_INFO_ICON_TYPE, 3, 0);
+    BlitMenuInfoIcon(WIN_TMHM_INFO_ICONS, MENU_INFO_ICON_POWER, 3, 12);
+    BlitMenuInfoIcon(WIN_TMHM_INFO_ICONS, MENU_INFO_ICON_ACCURACY, 3, 24);
+    BlitMenuInfoIcon(WIN_TMHM_INFO_ICONS, MENU_INFO_ICON_PP, 3, 36);
 
-    // The 42 px labels are clipped by this 40 px window, so restore the HGSS frame after blitting them.
+    // Center the 42 px labels inside the widened HGSS panel, then restore its frame.
     FillWindowPixelRect(WIN_TMHM_INFO_ICONS, PIXEL_FILL(TEXT_DYNAMIC_COLOR_5), 1, 0, width - 2, 1);
     FillWindowPixelRect(WIN_TMHM_INFO_ICONS, PIXEL_FILL(TEXT_DYNAMIC_COLOR_5), 0, 1, 1, height - 2);
     FillWindowPixelRect(WIN_TMHM_INFO_ICONS, PIXEL_FILL(TEXT_DYNAMIC_COLOR_5), width - 1, 1, 1, height - 2);
