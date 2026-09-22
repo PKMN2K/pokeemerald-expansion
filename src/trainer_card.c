@@ -1121,7 +1121,7 @@ static void PrintMoneyOnCard(void)
     }
     else
     {
-        xOffset = GetStringRightAlignXOffset(FONT_NORMAL, gStringVar4, 128);
+        xOffset = GetStringRightAlignXOffset(FONT_NORMAL, gStringVar4, 144);
         top = 57;
     }
     AddTextPrinterParameterized3(WIN_CARD_TEXT, FONT_NORMAL, xOffset, top, sTrainerCardTextColors, TEXT_SKIP_DRAW, gStringVar4);
@@ -1153,7 +1153,7 @@ static void PrintPokedexOnCard(void)
         }
         else
         {
-            xOffset = GetStringRightAlignXOffset(FONT_NORMAL, gStringVar4, 128);
+            xOffset = GetStringRightAlignXOffset(FONT_NORMAL, gStringVar4, 144);
             top = 73;
         }
         AddTextPrinterParameterized3(WIN_CARD_TEXT, FONT_NORMAL, xOffset, top, sTrainerCardTextColors, TEXT_SKIP_DRAW, gStringVar4);
@@ -1198,7 +1198,7 @@ static void PrintTimeOnCard(void)
     }
     else
     {
-        x = 128;
+        x = 144;
         y = 89;
     }
     totalWidth = width + 30;
