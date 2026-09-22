@@ -818,6 +818,7 @@ static void UpdateMonInfoTilemap(void);
 
 // Misc
 static void CreateMainMenu(u8, s16 *);
+static void DrawHgssStorageMainMenuRows(u8 windowId);
 static void EnterPokeStorage(u8 boxOption);
 static u8 GetCurrentBoxOption(void);
 //static void ScrollBackground(void);
@@ -1099,8 +1100,29 @@ static void CreateMainMenu(u8 whichMenu, s16 *windowIdPtr)
 
     DrawStdWindowFrame(windowId, FALSE);
     PrintMenuTable(windowId, OPTIONS_COUNT, (void *)sMainMenuTexts);
+    DrawHgssStorageMainMenuRows(windowId);
     InitMenuInUpperLeftCornerNormal(windowId, OPTIONS_COUNT, whichMenu);
     *windowIdPtr = windowId;
+}
+
+static void DrawHgssStorageMainMenuRows(u8 windowId)
+{
+    u8 width = GetWindowAttribute(windowId, WINDOW_WIDTH) * 8;
+    u8 height = GetWindowAttribute(windowId, WINDOW_HEIGHT) * 8;
+    u8 y;
+
+    if (width < 16 || height < 32)
+        return;
+
+    // Preserve the selector gutter and turn the option list into HGSS-style stacked cells.
+    FillWindowPixelRect(windowId, PIXEL_FILL(2), 8, 0, width - 9, 1);
+    FillWindowPixelRect(windowId, PIXEL_FILL(2), 8, height - 1, width - 9, 1);
+    FillWindowPixelRect(windowId, PIXEL_FILL(2), width - 1, 2, 1, height - 4);
+
+    for (y = 16; y < height; y += 16)
+        FillWindowPixelRect(windowId, PIXEL_FILL(2), 8, y, width - 9, 1);
+
+    FillWindowPixelRect(windowId, PIXEL_FILL(1), 10, 2, width - 13, 1);
 }
 
 static void CB2_ExitPokeStorage(void)
