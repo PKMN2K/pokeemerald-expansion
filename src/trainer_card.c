@@ -129,6 +129,7 @@ static void InitTrainerCardData(void);
 static u8 GetSetCardType(void);
 static void DrawHgssTrainerCardIdentityHeader(void);
 static void DrawHgssTrainerCardInfoRows(void);
+static void DrawHgssTrainerCardProfilePanel(void);
 static void PrintNameOnCardFront(void);
 static void PrintIdOnCard(void);
 static void PrintMoneyOnCard(void);
@@ -1205,6 +1206,35 @@ static void PrintTimeOnCard(void)
     AddTextPrinterParameterized3(WIN_CARD_TEXT, FONT_NORMAL, x, y, sTrainerCardTextColors, TEXT_SKIP_DRAW, gStringVar4);
 }
 
+static void DrawHgssTrainerCardProfilePanel(void)
+{
+    const u8 left = 4;
+    const u8 width = 148;
+    u8 top;
+    u8 height;
+    u8 separatorY;
+
+    if (sData->isHoenn)
+    {
+        top = 100;
+        height = 36;
+        separatorY = 119;
+    }
+    else
+    {
+        top = 109;
+        height = 35;
+        separatorY = 128;
+    }
+
+    FillWindowPixelRect(WIN_CARD_TEXT, PIXEL_FILL(1), left + 1, top, width - 2, 1);
+    FillWindowPixelRect(WIN_CARD_TEXT, PIXEL_FILL(1), left + 1, top + height - 1, width - 2, 1);
+    FillWindowPixelRect(WIN_CARD_TEXT, PIXEL_FILL(1), left, top + 1, 1, height - 2);
+    FillWindowPixelRect(WIN_CARD_TEXT, PIXEL_FILL(1), left + width - 1, top + 1, 1, height - 2);
+    FillWindowPixelRect(WIN_CARD_TEXT, PIXEL_FILL(2), left + 3, separatorY, width - 6, 1);
+    FillWindowPixelRect(WIN_CARD_TEXT, PIXEL_FILL(2), left + 4, top + 2, width - 8, 1);
+}
+
 static void PrintProfilePhraseOnCard(void)
 {
     static const u8 yOffsetsLine1[] = {113, 104};
@@ -1212,6 +1242,7 @@ static void PrintProfilePhraseOnCard(void)
 
     if (sData->isLink)
     {
+        DrawHgssTrainerCardProfilePanel();
         AddTextPrinterParameterized3(WIN_CARD_TEXT, FONT_NORMAL, 8, yOffsetsLine1[sData->isHoenn], sTrainerCardTextColors, TEXT_SKIP_DRAW, sData->easyChatProfile[0]);
         AddTextPrinterParameterized3(WIN_CARD_TEXT, FONT_NORMAL, GetStringWidth(FONT_NORMAL, sData->easyChatProfile[0], 0) + 14, yOffsetsLine1[sData->isHoenn], sTrainerCardTextColors, TEXT_SKIP_DRAW, sData->easyChatProfile[1]);
         AddTextPrinterParameterized3(WIN_CARD_TEXT, FONT_NORMAL, 8, yOffsetsLine2[sData->isHoenn], sTrainerCardTextColors, TEXT_SKIP_DRAW, sData->easyChatProfile[2]);
