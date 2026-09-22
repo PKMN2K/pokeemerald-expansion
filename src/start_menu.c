@@ -272,6 +272,7 @@ static u8 RunSaveCallback(void);
 static void ShowSaveMessage(const u8 *message, u8 (*saveCallback)(void));
 static void DrawHgssSaveMessageAccent(u8 windowId);
 static void DrawHgssSaveYesNo(void);
+static void DrawHgssLinkSavePanel(u8 windowId);
 static void HideSaveMessageWindow(void);
 static void HideSaveInfoWindow(void);
 static void SaveStartTimer(void);
@@ -1106,6 +1107,20 @@ static void DrawHgssSaveYesNo(void)
     CopyWindowToVram(windowId, COPYWIN_GFX);
 }
 
+static void DrawHgssLinkSavePanel(u8 windowId)
+{
+    u8 width = GetWindowAttribute(windowId, WINDOW_WIDTH) * 8;
+    u8 height = GetWindowAttribute(windowId, WINDOW_HEIGHT) * 8;
+
+    if (width < 16 || height < 16)
+        return;
+
+    // Keep these accents outside the two-line save text area.
+    FillWindowPixelRect(windowId, PIXEL_FILL(2), 4, 0, width - 8, 1);
+    FillWindowPixelRect(windowId, PIXEL_FILL(2), 4, height - 1, width - 8, 1);
+    FillWindowPixelRect(windowId, PIXEL_FILL(1), 8, 2, width - 16, 1);
+}
+
 static void SaveGameTask(u8 taskId)
 {
     u8 status = RunSaveCallback();
@@ -1476,6 +1491,7 @@ static void Task_SaveAfterLinkBattle(u8 taskId)
                                         TEXT_COLOR_DARK_GRAY,
                                         TEXT_COLOR_WHITE,
                                         TEXT_COLOR_LIGHT_GRAY);
+            DrawHgssLinkSavePanel(0);
             DrawTextBorderOuter(0, 8, 14);
             PutWindowTilemap(0);
             CopyWindowToVram(0, COPYWIN_FULL);
