@@ -3014,6 +3014,16 @@ static void CB2_QuizLadyExitBagMenu(void)
     SetMainCallback2(CB2_ReturnToField);
 }
 
+static void DrawHgssBagPocketTitleTab(u8 windowId, u8 left)
+{
+    // Mirror the existing two-pixel underline with a light HGSS-style tab enclosure.
+    FillWindowPixelRect(windowId, PIXEL_FILL(HGSS_BAG_CELL_ACTIVE_COLOR), left + 8, 0, 48, 1);
+    FillWindowPixelRect(windowId, PIXEL_FILL(HGSS_BAG_CELL_NORMAL_COLOR), left + 7, 1, 1, 12);
+    FillWindowPixelRect(windowId, PIXEL_FILL(HGSS_BAG_CELL_NORMAL_COLOR), left + 56, 1, 1, 12);
+    FillWindowPixelRect(windowId, PIXEL_FILL(HGSS_BAG_CELL_ACTIVE_COLOR), left + 8, 14, 48, 1);
+    FillWindowPixelRect(windowId, PIXEL_FILL(HGSS_BAG_CELL_ACTIVE_COLOR), left + 10, 15, 44, 1);
+}
+
 static void PrintPocketNames(const u8 *pocketName1, const u8 *pocketName2)
 {
     struct WindowTemplate window = {0};
@@ -3026,14 +3036,12 @@ static void PrintPocketNames(const u8 *pocketName1, const u8 *pocketName2)
     FillWindowPixelBuffer(windowId, PIXEL_FILL(0));
     offset = GetStringCenterAlignXOffset(FONT_SMALL, pocketName1, 0x40);
     BagMenu_Print(windowId, FONT_SMALL, pocketName1, offset, 1, 0, 0, TEXT_SKIP_DRAW, COLORID_POCKET_TITLE);
-    FillWindowPixelRect(windowId, PIXEL_FILL(HGSS_BAG_CELL_ACTIVE_COLOR), 8, 14, 48, 1);
-    FillWindowPixelRect(windowId, PIXEL_FILL(HGSS_BAG_CELL_ACTIVE_COLOR), 10, 15, 44, 1);
+    DrawHgssBagPocketTitleTab(windowId, 0);
     if (pocketName2)
     {
         offset = GetStringCenterAlignXOffset(FONT_SMALL, pocketName2, 0x40);
         BagMenu_Print(windowId, FONT_SMALL, pocketName2, offset + 0x40, 1, 0, 0, TEXT_SKIP_DRAW, COLORID_POCKET_TITLE);
-        FillWindowPixelRect(windowId, PIXEL_FILL(HGSS_BAG_CELL_ACTIVE_COLOR), 72, 14, 48, 1);
-        FillWindowPixelRect(windowId, PIXEL_FILL(HGSS_BAG_CELL_ACTIVE_COLOR), 74, 15, 44, 1);
+        DrawHgssBagPocketTitleTab(windowId, 64);
     }
     CpuCopy32((u8 *)GetWindowAttribute(windowId, WINDOW_TILE_DATA), gBagMenu->pocketNameBuffer, sizeof(gBagMenu->pocketNameBuffer));
     RemoveWindow(windowId);
