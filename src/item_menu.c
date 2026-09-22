@@ -1134,6 +1134,14 @@ static void BagMenu_MoveCursorCallback(s32 itemIndex, bool8 onInit, struct ListM
 
 static void BagMenu_ItemPrintCallback(u8 windowId, u32 itemIndex, u8 y)
 {
+    // Separate the six HGSS-style touch cells while leaving the selector column clear.
+    if (y + 17 < GetWindowAttribute(windowId, WINDOW_HEIGHT) * 8)
+    {
+        FillWindowPixelRect(windowId, PIXEL_FILL(3),
+                            HGSS_BAG_LIST_CURSOR_WIDTH, y + 17,
+                            GetWindowAttribute(windowId, WINDOW_WIDTH) * 8 - HGSS_BAG_LIST_CURSOR_WIDTH, 1);
+    }
+
     if (itemIndex != LIST_CANCEL)
     {
         s32 offset;
