@@ -1264,15 +1264,20 @@ static void BagMenu_ItemPrintCallback(u8 windowId, u32 itemIndex, u8 y)
     }
 }
 
-static void PrepareHgssBagDescriptionPanel(void)
+static void DrawHgssBagDescriptionPanelFrame(void)
 {
     u8 width = GetWindowAttribute(WIN_DESCRIPTION, WINDOW_WIDTH) * 8;
     u8 height = GetWindowAttribute(WIN_DESCRIPTION, WINDOW_HEIGHT) * 8;
 
-    FillWindowPixelBuffer(WIN_DESCRIPTION, PIXEL_FILL(0));
     FillWindowPixelRect(WIN_DESCRIPTION, PIXEL_FILL(HGSS_BAG_CELL_ACTIVE_COLOR), 1, 0, width - 2, 1);
     FillWindowPixelRect(WIN_DESCRIPTION, PIXEL_FILL(HGSS_BAG_CELL_NORMAL_COLOR), 0, 1, 1, height - 1);
     FillWindowPixelRect(WIN_DESCRIPTION, PIXEL_FILL(HGSS_BAG_CELL_NORMAL_COLOR), width - 1, 1, 1, height - 1);
+}
+
+static void PrepareHgssBagDescriptionPanel(void)
+{
+    FillWindowPixelBuffer(WIN_DESCRIPTION, PIXEL_FILL(0));
+    DrawHgssBagDescriptionPanelFrame();
 }
 
 static void PrintItemDescription(int itemIndex)
@@ -1291,6 +1296,7 @@ static void PrintItemDescription(int itemIndex)
     }
     PrepareHgssBagDescriptionPanel();
     BagMenu_Print(WIN_DESCRIPTION, FONT_NORMAL, str, 3, 1, 0, 0, 0, COLORID_NORMAL);
+    DrawHgssBagDescriptionPanelFrame();
 }
 
 static void BagMenu_PrintCursor(u8 listTaskId, u8 colorIndex)
