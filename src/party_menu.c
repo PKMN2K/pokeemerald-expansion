@@ -279,6 +279,7 @@ static void DisplayPartyPokemonGender(u8, enum Species, u8 *, struct PartyMenuBo
 static void DisplayPartyPokemonHP(u16 hp, u16 maxHp, struct PartyMenuBox *menuBox);
 static void DisplayPartyPokemonMaxHP(u16, struct PartyMenuBox *);
 static void DisplayPartyPokemonHPBar(u16, u16, struct PartyMenuBox *);
+static void DrawHgssPartyHpRail(struct PartyMenuBox *);
 static void CreatePartyMonIconSpriteParameterized(enum Species species, u32 pid, bool32 isEgg, struct PartyMenuBox *menuBox, u8 priority);
 static void CreatePartyMonHeldItemSpriteParameterized(enum Species, enum Item, struct PartyMenuBox *);
 static void CreatePartyMonPokeballSpriteParameterized(enum Species, struct PartyMenuBox *);
@@ -2777,6 +2778,18 @@ static void DisplayPartyPokemonHPBarCheck(struct Pokemon *mon, struct PartyMenuB
         DisplayPartyPokemonHPBar(GetMonData(mon, MON_DATA_HP), GetMonData(mon, MON_DATA_MAX_HP), menuBox);
 }
 
+static void DrawHgssPartyHpRail(struct PartyMenuBox *menuBox)
+{
+    u8 x = menuBox->infoRects->dimensions[20];
+    u8 y = menuBox->infoRects->dimensions[21];
+    u8 width = menuBox->infoRects->dimensions[22];
+
+    FillWindowPixelRect(menuBox->windowId, PIXEL_FILL(4), x - 1, y - 1, width + 2, 1);
+    FillWindowPixelRect(menuBox->windowId, PIXEL_FILL(4), x - 1, y + 3, width + 2, 1);
+    FillWindowPixelRect(menuBox->windowId, PIXEL_FILL(4), x - 1, y, 1, 3);
+    FillWindowPixelRect(menuBox->windowId, PIXEL_FILL(4), x + width, y, 1, 3);
+}
+
 static void DisplayPartyPokemonHPBar(u16 hp, u16 maxhp, struct PartyMenuBox *menuBox)
 {
     u8 palOffset = BG_PLTT_ID(GetWindowAttribute(menuBox->windowId, WINDOW_PALETTE_NUM));
@@ -2808,6 +2821,7 @@ static void DisplayPartyPokemonHPBar(u16 hp, u16 maxhp, struct PartyMenuBox *men
         FillWindowPixelRect(menuBox->windowId, 0x0D, menuBox->infoRects->dimensions[20] + hpFraction, menuBox->infoRects->dimensions[21], menuBox->infoRects->dimensions[22] - hpFraction, 1);
         FillWindowPixelRect(menuBox->windowId, 0x02, menuBox->infoRects->dimensions[20] + hpFraction, menuBox->infoRects->dimensions[21] + 1, menuBox->infoRects->dimensions[22] - hpFraction, 2);
     }
+    DrawHgssPartyHpRail(menuBox);
     CopyWindowToVram(menuBox->windowId, COPYWIN_GFX);
 }
 
