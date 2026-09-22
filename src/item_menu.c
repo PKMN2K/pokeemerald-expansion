@@ -1247,9 +1247,9 @@ static void PrepareHgssBagDescriptionPanel(void)
     u8 height = GetWindowAttribute(WIN_DESCRIPTION, WINDOW_HEIGHT) * 8;
 
     FillWindowPixelBuffer(WIN_DESCRIPTION, PIXEL_FILL(0));
-    FillWindowPixelRect(WIN_DESCRIPTION, PIXEL_FILL(HGSS_BAG_CELL_ACTIVE_COLOR), 0, 0, width, 1);
-    FillWindowPixelRect(WIN_DESCRIPTION, PIXEL_FILL(HGSS_BAG_CELL_NORMAL_COLOR), 0, 0, 1, height);
-    FillWindowPixelRect(WIN_DESCRIPTION, PIXEL_FILL(HGSS_BAG_CELL_NORMAL_COLOR), width - 1, 0, 1, height);
+    FillWindowPixelRect(WIN_DESCRIPTION, PIXEL_FILL(HGSS_BAG_CELL_ACTIVE_COLOR), 1, 0, width - 2, 1);
+    FillWindowPixelRect(WIN_DESCRIPTION, PIXEL_FILL(HGSS_BAG_CELL_NORMAL_COLOR), 0, 1, 1, height - 1);
+    FillWindowPixelRect(WIN_DESCRIPTION, PIXEL_FILL(HGSS_BAG_CELL_NORMAL_COLOR), width - 1, 1, 1, height - 1);
 }
 
 static void PrintItemDescription(int itemIndex)
