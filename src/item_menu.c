@@ -3148,8 +3148,8 @@ static void DisplayCurrentMoneyWindow(void)
     PrepareHgssBagQuantityPanel(windowId);
     FillWindowPixelRect(windowId, PIXEL_FILL(TEXT_COLOR_RED), 44, 2, 1,
                         GetWindowAttribute(windowId, WINDOW_HEIGHT) * 8 - 4);
-    BagMenu_Print(windowId, FONT_NARROW, sText_Money,
-                  1 + GetStringCenterAlignXOffset(FONT_NARROW, sText_Money, 43), 1,
+    BagMenu_Print(windowId, FONT_SMALL, sText_Money,
+                  1 + GetStringCenterAlignXOffset(FONT_SMALL, sText_Money, 43), 2,
                   0, 0, TEXT_SKIP_DRAW, COLORID_POCKET_NAME);
     PrintMoneyAmount(windowId, 48, 1, GetMoney(&gSaveBlock1Ptr->money), 0);
     FillWindowPixelRect(windowId, PIXEL_FILL(TEXT_COLOR_RED), 44, 2, 1,
