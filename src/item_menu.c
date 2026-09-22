@@ -1290,6 +1290,8 @@ static void Task_BagMenu_HandleInput(u8 taskId)
     u16 *cursorPos = &gBagPosition.cursorPosition[gBagPosition.pocket];
     s32 listPosition;
 
+    ChangeBgY(3, 128, BG_COORD_ADD);
+
     if (MenuHelpers_ShouldWaitForLinkRecv() != TRUE && !gPaletteFade.active)
     {
         switch (GetSwitchBagPocketDirection())
@@ -1426,6 +1428,8 @@ static void SwitchBagPocket(u8 taskId, s16 deltaBagPocketId, bool16 skipEraseLis
     s16 *data = gTasks[taskId].data;
     u8 newPocket;
 
+    ChangeBgY(3, 128, BG_COORD_ADD);
+
     tPocketSwitchState = 0;
     tPocketSwitchTimer = 0;
     tPocketSwitchDir = deltaBagPocketId;
@@ -1558,6 +1562,8 @@ static void StartItemSwap(u8 taskId)
 static void Task_HandleSwappingItemsInput(u8 taskId)
 {
     s16 *data = gTasks[taskId].data;
+
+    ChangeBgY(3, 128, BG_COORD_ADD);
 
     if (MenuHelpers_ShouldWaitForLinkRecv() != TRUE)
     {
@@ -1804,6 +1810,8 @@ static void Task_ItemContext_Normal(u8 taskId)
 
 static void Task_ItemContext_SingleRow(u8 taskId)
 {
+    ChangeBgY(3, 128, BG_COORD_ADD);
+
     if (MenuHelpers_ShouldWaitForLinkRecv() != TRUE)
     {
         s8 selection = Menu_ProcessInputNoWrap();
@@ -1825,6 +1833,8 @@ static void Task_ItemContext_SingleRow(u8 taskId)
 
 static void Task_ItemContext_MultipleRows(u8 taskId)
 {
+    ChangeBgY(3, 128, BG_COORD_ADD);
+
     if (MenuHelpers_ShouldWaitForLinkRecv() != TRUE)
     {
         s8 cursorPos = Menu_GetCursorPos();
