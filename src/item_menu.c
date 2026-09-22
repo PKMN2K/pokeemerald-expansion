@@ -3080,7 +3080,7 @@ static void DrawHgssBagYesNoMenu(void)
     u8 height = GetWindowAttribute(windowId, WINDOW_HEIGHT) * 8;
 
     FillWindowPixelBuffer(windowId, PIXEL_FILL(1));
-    BagMenu_Print(windowId, FONT_NARROW, gText_YesNo, 8, 1, 0, 0, TEXT_SKIP_DRAW, COLORID_POCKET_NAME);
+    BagMenu_Print(windowId, FONT_SMALL, gText_YesNo, 8, 2, 0, 4, TEXT_SKIP_DRAW, COLORID_POCKET_NAME);
     {
         u8 cursorY = 3 + sHgssBagYesNoChoice * 16;
 
@@ -3089,7 +3089,7 @@ static void DrawHgssBagYesNoMenu(void)
         FillWindowPixelRect(windowId, PIXEL_FILL(TEXT_COLOR_RED), 3, cursorY + 10, 2, 1);
     }
 
-    // Keep the HGSS frame above both 16 px text rows.
+    // Keep the HGSS frame above both choice labels.
     FillWindowPixelRect(windowId, PIXEL_FILL(TEXT_COLOR_RED), 1, 0, width - 2, 1);
     FillWindowPixelRect(windowId, PIXEL_FILL(TEXT_COLOR_RED), 1, height - 1, width - 2, 1);
     FillWindowPixelRect(windowId, PIXEL_FILL(TEXT_COLOR_RED), 0, 1, 1, height - 2);
