@@ -246,6 +246,7 @@ static void DrawContestMoveHearts(enum Move move);
 static void LimitEggSummaryPageDisplay(void);
 static void ResetWindows(void);
 static void DrawHgssSummaryInfoStrip(u8 windowId);
+static void DrawHgssSummaryMemoPanel(u8 windowId);
 static void PrintMonInfo(void);
 static void PrintNotEggInfo(void);
 static void PrintEggInfo(void);
@@ -3206,6 +3207,21 @@ static void DrawHgssSummaryInfoStrip(u8 windowId)
     FillWindowPixelRect(windowId, PIXEL_FILL(4), 3, 1, width - 6, 1);
 }
 
+static void DrawHgssSummaryMemoPanel(u8 windowId)
+{
+    u8 width = WindowWidthPx(windowId);
+    u8 height = GetWindowAttribute(windowId, WINDOW_HEIGHT) * 8;
+
+    if (width < 8 || height < 8)
+        return;
+
+    FillWindowPixelRect(windowId, PIXEL_FILL(3), 1, 0, width - 2, 1);
+    FillWindowPixelRect(windowId, PIXEL_FILL(3), 1, height - 1, width - 2, 1);
+    FillWindowPixelRect(windowId, PIXEL_FILL(3), 0, 1, 1, height - 2);
+    FillWindowPixelRect(windowId, PIXEL_FILL(3), width - 1, 1, 1, height - 2);
+    FillWindowPixelRect(windowId, PIXEL_FILL(4), 1, 3, 1, height - 6);
+}
+
 static void PrintMonInfo(void)
 {
     FillWindowPixelBuffer(PSS_LABEL_WINDOW_PORTRAIT_DEX_NUMBER, PIXEL_FILL(0));
@@ -3705,7 +3721,10 @@ static void BufferMonTrainerMemo(void)
 
 static void PrintMonTrainerMemo(void)
 {
-    PrintTextOnWindow(AddWindowFromTemplateList(sPageInfoTemplate, PSS_DATA_WINDOW_INFO_MEMO), gStringVar4, 0, 1, 0, 0);
+    u8 windowId = AddWindowFromTemplateList(sPageInfoTemplate, PSS_DATA_WINDOW_INFO_MEMO);
+
+    DrawHgssSummaryMemoPanel(windowId);
+    PrintTextOnWindow(windowId, gStringVar4, 2, 1, 0, 0);
 }
 
 static void BufferNatureString(void)
@@ -3841,7 +3860,12 @@ static void PrintEggMemo(void)
         text = gText_OddEggFoundByCouple;
     }
 
-    PrintTextOnWindow(AddWindowFromTemplateList(sPageInfoTemplate, PSS_DATA_WINDOW_INFO_MEMO), text, 0, 1, 0, 0);
+    {
+        u8 windowId = AddWindowFromTemplateList(sPageInfoTemplate, PSS_DATA_WINDOW_INFO_MEMO);
+
+        DrawHgssSummaryMemoPanel(windowId);
+        PrintTextOnWindow(windowId, text, 2, 1, 0, 0);
+    }
 }
 
 static void PrintSkillsPageText(void)
