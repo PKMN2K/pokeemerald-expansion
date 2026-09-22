@@ -3105,6 +3105,8 @@ static void DisplayCurrentMoneyWindow(void)
     u8 windowId = BagMenu_AddWindow(ITEMWIN_MONEY);
 
     PrepareHgssBagQuantityPanel(windowId);
+    FillWindowPixelRect(windowId, PIXEL_FILL(TEXT_COLOR_RED), 44, 2, 1,
+                        GetWindowAttribute(windowId, WINDOW_HEIGHT) * 8 - 4);
     BagMenu_Print(windowId, FONT_NARROW, sText_Money,
                   GetStringCenterAlignXOffset(FONT_NARROW, sText_Money, 44), 1,
                   0, 0, TEXT_SKIP_DRAW, COLORID_POCKET_NAME);
