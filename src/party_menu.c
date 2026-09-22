@@ -1242,14 +1242,15 @@ static void DrawHgssPartySlotFrame(u8 slot)
     u8 width = GetWindowAttribute(windowId, WINDOW_WIDTH) * 8;
     u8 height = GetWindowAttribute(windowId, WINDOW_HEIGHT) * 8;
 
-    // HGSS-style softened slot outline: clipped one-pixel corners with a light inner top edge.
-    FillWindowPixelRect(windowId, PIXEL_FILL(TEXT_COLOR_DARK_GRAY), 1, 0, width - 2, 1);
-    FillWindowPixelRect(windowId, PIXEL_FILL(TEXT_COLOR_DARK_GRAY), 1, height - 1, width - 2, 1);
-    FillWindowPixelRect(windowId, PIXEL_FILL(TEXT_COLOR_DARK_GRAY), 0, 1, 1, height - 2);
-    FillWindowPixelRect(windowId, PIXEL_FILL(TEXT_COLOR_DARK_GRAY), width - 1, 1, 1, height - 2);
+    // Use the party slot's dynamic palette entries so the frame follows the selected/unselected state.
+    // Palette entries 4-6 are already swapped by LoadPartyBoxPalette when the cursor moves.
+    FillWindowPixelRect(windowId, PIXEL_FILL(4), 1, 0, width - 2, 1);
+    FillWindowPixelRect(windowId, PIXEL_FILL(4), 1, height - 1, width - 2, 1);
+    FillWindowPixelRect(windowId, PIXEL_FILL(4), 0, 1, 1, height - 2);
+    FillWindowPixelRect(windowId, PIXEL_FILL(4), width - 1, 1, 1, height - 2);
 
     if (width > 4 && height > 3)
-        FillWindowPixelRect(windowId, PIXEL_FILL(TEXT_COLOR_LIGHT_GRAY), 2, 1, width - 4, 1);
+        FillWindowPixelRect(windowId, PIXEL_FILL(5), 2, 1, width - 4, 1);
 }
 
 static bool8 RenderPartyMenuBoxes(void)
