@@ -390,6 +390,11 @@ void DisplayYesNoMenuWithDefault(u8 initialCursorPos)
     CreateYesNoMenu(&sYesNo_WindowTemplates, STD_WINDOW_BASE_TILE_NUM, STD_WINDOW_PALETTE_NUM, initialCursorPos);
 }
 
+u8 GetYesNoWindowId(void)
+{
+    return sYesNoWindowId;
+}
+
 u8 AddStartMenuWindow(u8 numActions)
 {
     if (sStartMenuWindowId == WINDOW_NONE)

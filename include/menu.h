@@ -108,6 +108,7 @@ u8 InitMenuNormal(u8 windowId, u8 fontId, u8 left, u8 top, u8 cursorHeight, u8 n
 void LoadMessageBoxAndFrameGfx(u8 windowId, bool8 copyToVram);
 void RemoveStartMenuWindow(void);
 void DisplayYesNoMenuWithDefault(u8 initialCursorPos);
+u8 GetYesNoWindowId(void);
 void BufferSaveMenuText(u8 textId, u8 *dest, u8 color);
 void RemoveMapNamePopUpWindow(void);
 u8 GetMapNamePopUpWindowId(void);

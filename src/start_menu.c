@@ -270,6 +270,8 @@ static void CreateStartMenuTask(TaskFunc followupFunc);
 static void InitSave(void);
 static u8 RunSaveCallback(void);
 static void ShowSaveMessage(const u8 *message, u8 (*saveCallback)(void));
+static void DrawHgssSaveMessageAccent(u8 windowId);
+static void DrawHgssSaveYesNo(void);
 static void HideSaveMessageWindow(void);
 static void HideSaveInfoWindow(void);
 static void SaveStartTimer(void);
@@ -1069,9 +1071,39 @@ static void ShowSaveMessage(const u8 *message, u8 (*saveCallback)(void))
 {
     StringExpandPlaceholders(gStringVar4, message);
     LoadMessageBoxAndFrameGfx(0, TRUE);
+    DrawHgssSaveMessageAccent(0);
     AddTextPrinterForMessage(TRUE);
     sSavingComplete = TRUE;
     sSaveDialogCallback = saveCallback;
+}
+
+static void DrawHgssSaveMessageAccent(u8 windowId)
+{
+    u8 width = GetWindowAttribute(windowId, WINDOW_WIDTH) * 8;
+
+    if (width < 12)
+        return;
+
+    // Keep the accent above the message glyph area so multi-line save text remains untouched.
+    FillWindowPixelRect(windowId, PIXEL_FILL(2), 4, 0, width - 8, 1);
+    CopyWindowToVram(windowId, COPYWIN_GFX);
+}
+
+static void DrawHgssSaveYesNo(void)
+{
+    u8 windowId = GetYesNoWindowId();
+    u8 width = GetWindowAttribute(windowId, WINDOW_WIDTH) * 8;
+    u8 height = GetWindowAttribute(windowId, WINDOW_HEIGHT) * 8;
+
+    if (width < 12 || height < 24)
+        return;
+
+    // HGSS-style two-row choice panel; the existing selector arrow remains the active-state cue.
+    FillWindowPixelRect(windowId, PIXEL_FILL(2), 2, 0, width - 4, 1);
+    FillWindowPixelRect(windowId, PIXEL_FILL(2), 0, 2, 1, height - 4);
+    FillWindowPixelRect(windowId, PIXEL_FILL(2), width - 1, 2, 1, height - 4);
+    FillWindowPixelRect(windowId, PIXEL_FILL(2), 2, 16, width - 4, 1);
+    CopyWindowToVram(windowId, COPYWIN_GFX);
 }
 
 static void SaveGameTask(u8 taskId)
@@ -1162,6 +1194,7 @@ static u8 SaveConfirmSaveCallback(void)
 static u8 SaveYesNoCallback(void)
 {
     DisplayYesNoMenuDefaultYes(); // Show Yes/No menu
+    DrawHgssSaveYesNo();
     sSaveDialogCallback = SaveConfirmInputCallback;
     return SAVE_IN_PROGRESS;
 }
@@ -1218,6 +1251,7 @@ static u8 SaveFileExistsCallback(void)
 static u8 SaveConfirmOverwriteDefaultNoCallback(void)
 {
     DisplayYesNoMenuWithDefault(1); // Show Yes/No menu (No selected as default)
+    DrawHgssSaveYesNo();
     sSaveDialogCallback = SaveOverwriteInputCallback;
     return SAVE_IN_PROGRESS;
 }
@@ -1225,6 +1259,7 @@ static u8 SaveConfirmOverwriteDefaultNoCallback(void)
 static u8 SaveConfirmOverwriteCallback(void)
 {
     DisplayYesNoMenuDefaultYes(); // Show Yes/No menu
+    DrawHgssSaveYesNo();
     sSaveDialogCallback = SaveOverwriteInputCallback;
     return SAVE_IN_PROGRESS;
 }
@@ -1344,6 +1379,7 @@ static u8 BattlePyramidConfirmRetireCallback(void)
 static u8 BattlePyramidRetireYesNoCallback(void)
 {
     DisplayYesNoMenuWithDefault(1); // Show Yes/No menu (No selected as default)
+    DrawHgssSaveYesNo();
     sSaveDialogCallback = BattlePyramidRetireInputCallback;
 
     return SAVE_IN_PROGRESS;
