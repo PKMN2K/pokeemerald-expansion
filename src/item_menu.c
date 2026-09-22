@@ -1607,6 +1607,15 @@ static void PrintItemQuantity(u8 windowId, s16 quantity)
     CopyWindowToVram(windowId, COPYWIN_GFX);
 }
 
+static void PrintHgssBagMoneyAmount(u8 windowId, u8 left, u8 width, int amount)
+{
+    ConvertIntToDecimalStringN(gStringVar1, amount, STR_CONV_MODE_LEFT_ALIGN, MAX_MONEY_DIGITS);
+    StringExpandPlaceholders(gStringVar4, gText_PokedollarVar1);
+    BagMenu_Print(windowId, FONT_SMALL, gStringVar4,
+                  left + GetStringRightAlignXOffset(FONT_SMALL, gStringVar4, width), 2,
+                  0, 0, TEXT_SKIP_DRAW, COLORID_POCKET_NAME);
+}
+
 // Prints the quantity of items to be sold and the amount that would be earned
 static void PrintItemSoldAmount(int windowId, int numSold, int moneyEarned)
 {
@@ -1618,7 +1627,7 @@ static void PrintItemSoldAmount(int windowId, int numSold, int moneyEarned)
     BagMenu_Print(windowId, FONT_SMALL, gStringVar4,
                   1 + GetStringCenterAlignXOffset(FONT_SMALL, gStringVar4, 23), 2,
                   0, 0, TEXT_SKIP_DRAW, COLORID_POCKET_NAME);
-    PrintMoneyAmount(windowId, CalculateMoneyTextHorizontalPosition(moneyEarned), 1, moneyEarned, 0);
+    PrintHgssBagMoneyAmount(windowId, 25, 54, moneyEarned);
     FillWindowPixelRect(windowId, PIXEL_FILL(TEXT_COLOR_RED), 24, 2, 1,
                         GetWindowAttribute(windowId, WINDOW_HEIGHT) * 8 - 4);
     DrawHgssBagQuantityPanelFrame(windowId);
@@ -3164,7 +3173,7 @@ static void DisplayCurrentMoneyWindow(void)
     BagMenu_Print(windowId, FONT_SMALL, sText_Money,
                   1 + GetStringCenterAlignXOffset(FONT_SMALL, sText_Money, 43), 2,
                   0, 0, TEXT_SKIP_DRAW, COLORID_POCKET_NAME);
-    PrintMoneyAmount(windowId, 48, 1, GetMoney(&gSaveBlock1Ptr->money), 0);
+    PrintHgssBagMoneyAmount(windowId, 45, 58, GetMoney(&gSaveBlock1Ptr->money));
     FillWindowPixelRect(windowId, PIXEL_FILL(TEXT_COLOR_RED), 44, 2, 1,
                         GetWindowAttribute(windowId, WINDOW_HEIGHT) * 8 - 4);
     DrawHgssBagQuantityPanelFrame(windowId);
