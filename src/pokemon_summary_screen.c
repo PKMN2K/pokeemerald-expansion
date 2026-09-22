@@ -3245,7 +3245,14 @@ static void PrintNotEggInfo(void)
         PrintTextOnWindowWithFont(PSS_LABEL_WINDOW_PORTRAIT_NICKNAME, gStringVar1, nicknameX, 1, 0, 1, fontId);
     }
     PrintTextOnWindow(PSS_LABEL_WINDOW_PORTRAIT_SPECIES, gText_Slash, 0, 1, 0, 1);
-    PrintTextOnWindowToFitPx(PSS_LABEL_WINDOW_PORTRAIT_SPECIES, GetSpeciesName(summary->species2), 6, 1, 0, 1, WindowWidthPx(PSS_LABEL_WINDOW_PORTRAIT_SPECIES) - 9);
+    {
+        const u8 *speciesName = GetSpeciesName(summary->species2);
+        u32 speciesWidth = WindowWidthPx(PSS_LABEL_WINDOW_PORTRAIT_SPECIES) - 9;
+        u32 fontId = GetFontIdToFit(speciesName, FONT_NORMAL, 0, speciesWidth);
+        u8 speciesX = 6 + GetStringCenterAlignXOffset(fontId, speciesName, speciesWidth);
+
+        PrintTextOnWindowWithFont(PSS_LABEL_WINDOW_PORTRAIT_SPECIES, speciesName, speciesX, 1, 0, 1, fontId);
+    }
     PrintGenderSymbol(mon, summary->species2);
     PutWindowTilemap(PSS_LABEL_WINDOW_PORTRAIT_NICKNAME);
     PutWindowTilemap(PSS_LABEL_WINDOW_PORTRAIT_SPECIES);
