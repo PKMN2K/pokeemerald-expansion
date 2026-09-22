@@ -133,6 +133,7 @@ static void DrawHgssTrainerCardProfilePanel(void);
 static void DrawHgssTrainerCardBackHeader(void);
 static void DrawHgssTrainerCardBackCoreStats(void);
 static void DrawHgssTrainerCardBackExtraStats(void);
+static void DrawHgssTrainerCardPartyDock(void);
 static void PrintNameOnCardFront(void);
 static void PrintIdOnCard(void);
 static void PrintMoneyOnCard(void);
@@ -1004,6 +1005,7 @@ static bool8 PrintAllOnCardBack(void)
         DrawHgssTrainerCardBackHeader();
         DrawHgssTrainerCardBackCoreStats();
         DrawHgssTrainerCardBackExtraStats();
+        DrawHgssTrainerCardPartyDock();
         sData->printState = 0;
         return TRUE;
     }
@@ -1328,6 +1330,39 @@ static void DrawHgssTrainerCardBackExtraStats(void)
     if (hasRow5)
         FillWindowPixelRect(WIN_CARD_TEXT, PIXEL_FILL(2), left + 3, 112, width - 6, 1);
 
+    FillWindowPixelRect(WIN_CARD_TEXT, PIXEL_FILL(2), left + 4, top + 2, width - 8, 1);
+}
+
+static void DrawHgssTrainerCardPartyDock(void)
+{
+    const u8 left = 20;
+    const u8 top = 111;
+    const u8 width = 184;
+    const u8 height = 33;
+    bool8 hasPartyIcon = FALSE;
+    u8 i;
+
+    if (sData->cardType != CARD_TYPE_FRLG)
+        return;
+
+    for (i = 0; i < PARTY_SIZE; i++)
+    {
+        if (sData->trainerCard.monSpecies[i] != SPECIES_NONE)
+        {
+            hasPartyIcon = TRUE;
+            break;
+        }
+    }
+
+    if (!hasPartyIcon)
+        return;
+
+    // The FRLG party icons occupy BG3's bottom 4-tile band. This BG1 frame sits above it
+    // and turns that band into a compact HGSS-style party dock without altering icon gfx.
+    FillWindowPixelRect(WIN_CARD_TEXT, PIXEL_FILL(1), left + 1, top, width - 2, 1);
+    FillWindowPixelRect(WIN_CARD_TEXT, PIXEL_FILL(1), left + 1, top + height - 1, width - 2, 1);
+    FillWindowPixelRect(WIN_CARD_TEXT, PIXEL_FILL(1), left, top + 1, 1, height - 2);
+    FillWindowPixelRect(WIN_CARD_TEXT, PIXEL_FILL(1), left + width - 1, top + 1, 1, height - 2);
     FillWindowPixelRect(WIN_CARD_TEXT, PIXEL_FILL(2), left + 4, top + 2, width - 8, 1);
 }
 
