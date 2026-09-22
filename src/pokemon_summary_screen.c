@@ -3237,7 +3237,13 @@ static void PrintNotEggInfo(void)
     StringAppend(gStringVar1, gStringVar2);
     PrintTextOnWindow(PSS_LABEL_WINDOW_PORTRAIT_SPECIES, gStringVar1, 24, 17, 0, 1);
     GetMonNickname(mon, gStringVar1);
-    PrintTextOnWindowToFitPx(PSS_LABEL_WINDOW_PORTRAIT_NICKNAME, gStringVar1, 0, 1, 0, 1, WindowWidthPx(PSS_LABEL_WINDOW_PORTRAIT_NICKNAME) - 9);
+    {
+        u32 nicknameWidth = WindowWidthPx(PSS_LABEL_WINDOW_PORTRAIT_NICKNAME);
+        u32 fontId = GetFontIdToFit(gStringVar1, FONT_NORMAL, 0, nicknameWidth - 8);
+        u8 nicknameX = GetStringCenterAlignXOffset(fontId, gStringVar1, nicknameWidth);
+
+        PrintTextOnWindowWithFont(PSS_LABEL_WINDOW_PORTRAIT_NICKNAME, gStringVar1, nicknameX, 1, 0, 1, fontId);
+    }
     PrintTextOnWindow(PSS_LABEL_WINDOW_PORTRAIT_SPECIES, gText_Slash, 0, 1, 0, 1);
     PrintTextOnWindowToFitPx(PSS_LABEL_WINDOW_PORTRAIT_SPECIES, GetSpeciesName(summary->species2), 6, 1, 0, 1, WindowWidthPx(PSS_LABEL_WINDOW_PORTRAIT_SPECIES) - 9);
     PrintGenderSymbol(mon, summary->species2);
@@ -3247,8 +3253,15 @@ static void PrintNotEggInfo(void)
 
 static void PrintEggInfo(void)
 {
+    u32 nicknameWidth;
+    u32 fontId;
+    u8 nicknameX;
+
     GetMonNickname(&sMonSummaryScreen->currentMon, gStringVar1);
-    PrintTextOnWindow(PSS_LABEL_WINDOW_PORTRAIT_NICKNAME, gStringVar1, 0, 1, 0, 1);
+    nicknameWidth = WindowWidthPx(PSS_LABEL_WINDOW_PORTRAIT_NICKNAME);
+    fontId = GetFontIdToFit(gStringVar1, FONT_NORMAL, 0, nicknameWidth - 8);
+    nicknameX = GetStringCenterAlignXOffset(fontId, gStringVar1, nicknameWidth);
+    PrintTextOnWindowWithFont(PSS_LABEL_WINDOW_PORTRAIT_NICKNAME, gStringVar1, nicknameX, 1, 0, 1, fontId);
     PutWindowTilemap(PSS_LABEL_WINDOW_PORTRAIT_NICKNAME);
     ClearWindowTilemap(PSS_LABEL_WINDOW_PORTRAIT_DEX_NUMBER);
     ClearWindowTilemap(PSS_LABEL_WINDOW_PORTRAIT_SPECIES);
