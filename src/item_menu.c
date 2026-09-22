@@ -415,7 +415,7 @@ static const struct YesNoFuncTable sYesNoTossFunctions = {ConfirmToss, CancelTos
 
 static const struct YesNoFuncTable sYesNoSellItemFunctions = {ConfirmSell, CancelSell};
 
-static const u8 sRegisteredSelect_Gfx[] = INCGFX_U8("graphics/bag/select_button.png", ".4bpp");
+static const u8 sText_Registered[] = _("REG");
 
 // Bag-only HGSS-style page chevron. The bottom indicator reuses this graphic vertically flipped.
 static const ALIGNED(4) u8 sHgssBagScrollArrow_Gfx[] =
@@ -1128,6 +1128,22 @@ static void DrawHgssBagItemCellFrame(u8 windowId, u8 y, u8 color)
     }
 }
 
+static void DrawHgssBagRegisteredMarker(u8 windowId, u8 y)
+{
+    const u8 left = 96;
+    const u8 top = y + 2;
+    const u8 width = 23;
+    const u8 height = 12;
+
+    // Compact HGSS-style registration tab, replacing Emerald's SELECT-button badge.
+    FillWindowPixelRect(windowId, PIXEL_FILL(HGSS_BAG_CELL_ACTIVE_COLOR), left + 1, top, width - 2, 1);
+    FillWindowPixelRect(windowId, PIXEL_FILL(HGSS_BAG_CELL_ACTIVE_COLOR), left + 1, top + height - 1, width - 2, 1);
+    FillWindowPixelRect(windowId, PIXEL_FILL(HGSS_BAG_CELL_ACTIVE_COLOR), left, top + 1, 1, height - 2);
+    FillWindowPixelRect(windowId, PIXEL_FILL(HGSS_BAG_CELL_ACTIVE_COLOR), left + width - 1, top + 1, 1, height - 2);
+    BagMenu_Print(windowId, FONT_NARROW, sText_Registered, left + 2, y + 1,
+                  0, 0, TEXT_SKIP_DRAW, COLORID_POCKET_TITLE);
+}
+
 static void BagMenu_MoveCursorCallback(s32 itemIndex, bool8 onInit, struct ListMenu *list)
 {
     u8 cursorY = list->selectedRow * (GetFontAttribute(list->template.fontId, FONTATTR_MAX_LETTER_HEIGHT)
@@ -1220,7 +1236,7 @@ static void BagMenu_ItemPrintCallback(u8 windowId, u32 itemIndex, u8 y)
         {
             // Print registered icon
             if (gSaveBlock1Ptr->registeredItem != ITEM_NONE && gSaveBlock1Ptr->registeredItem == itemSlot.itemId)
-                BlitBitmapToWindow(windowId, sRegisteredSelect_Gfx, 96, y, 24, 16);
+                DrawHgssBagRegisteredMarker(windowId, y);
         }
     }
 }
