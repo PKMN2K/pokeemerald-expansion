@@ -846,6 +846,7 @@ static u16 GetTargetBg0Y(void);
 static void PrintDisplayMonStats(u8);
 static void PrintDisplayMonAbility(u8);
 static void PrintDisplayMonHeldItem(u8);
+static void DrawHgssStorageMonHeaderCell(u8 windowId);
 static void PrintDisplayMonNickname(u8);
 static void PrintDisplayMonLevel(u8);
 static bool8 PrintDisplayMonInfo(void);
@@ -4086,6 +4087,21 @@ static void PrintDisplayMonStats(u8 font)
     CopyWindowToVram(col2WindowId, COPYWIN_FULL);
 }
 
+static void DrawHgssStorageMonHeaderCell(u8 windowId)
+{
+    u8 width = GetWindowAttribute(windowId, WINDOW_WIDTH) * 8;
+    u8 height = GetWindowAttribute(windowId, WINDOW_HEIGHT) * 8;
+
+    if (width < 8 || height < 8)
+        return;
+
+    // Soft-corner HGSS header chip. Keep all lines on the outermost pixels so text stays untouched.
+    FillWindowPixelRect(windowId, PIXEL_FILL(2), 1, 0, width - 2, 1);
+    FillWindowPixelRect(windowId, PIXEL_FILL(5), 1, height - 1, width - 2, 1);
+    FillWindowPixelRect(windowId, PIXEL_FILL(2), 0, 1, 1, height - 2);
+    FillWindowPixelRect(windowId, PIXEL_FILL(2), width - 1, 1, 1, height - 2);
+}
+
 static void PrintDisplayMonNickname(u8 font)
 {
     u8 windowId;
@@ -4100,6 +4116,7 @@ static void PrintDisplayMonNickname(u8 font)
 
         u8 fontId = GetFontIdToFit(sStorage->displayMon.nickname, font, 0, 58);
         AddTextPrinterParameterized4(windowId, fontId, 6, 1, 0, 0, sTextColors[1], 0, sStorage->displayMon.nickname);
+        DrawHgssStorageMonHeaderCell(windowId);
         PutWindowTilemap(windowId);
         CopyWindowToVram(windowId, COPYWIN_FULL);
     }
@@ -4129,6 +4146,7 @@ static void PrintDisplayMonLevel(u8 font)
 
         AddTextPrinterParameterized4(windowId, FONT_SHORT_NARROWER, lvStartX, 1, 0, 0, sTextColors[1], 0, sText_Lv);
         AddTextPrinterParameterized4(windowId, font, lvStartX + lvWidth, 1, 0, 0, sTextColors[1], 0, levelStr);
+        DrawHgssStorageMonHeaderCell(windowId);
         PutWindowTilemap(windowId);
         CopyWindowToVram(windowId, COPYWIN_FULL);
     }
