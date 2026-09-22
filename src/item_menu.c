@@ -1546,11 +1546,13 @@ static void PrepareHgssBagQuantityPanel(u8 windowId)
 
 static void PrintItemQuantity(u8 windowId, s16 quantity)
 {
+    u8 width = GetWindowAttribute(windowId, WINDOW_WIDTH) * 8;
+
     PrepareHgssBagQuantityPanel(windowId);
     ConvertIntToDecimalStringN(gStringVar1, quantity, STR_CONV_MODE_LEADING_ZEROS, MAX_ITEM_DIGITS);
     StringExpandPlaceholders(gStringVar4, gText_xVar1);
     BagMenu_Print(windowId, FONT_NORMAL, gStringVar4,
-                  GetStringCenterAlignXOffset(FONT_NORMAL, gStringVar4, 0x28), 1,
+                  1 + GetStringCenterAlignXOffset(FONT_NORMAL, gStringVar4, width - 2), 1,
                   0, 0, TEXT_SKIP_DRAW, COLORID_POCKET_NAME);
     CopyWindowToVram(windowId, COPYWIN_GFX);
 }
