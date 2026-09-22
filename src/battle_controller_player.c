@@ -94,57 +94,6 @@ static void PrintLinkStandbyMsg(void);
 static void ReloadMoveNames(enum BattlerId battler);
 static u32 CheckTypeEffectiveness(enum BattlerId battlerAtk, enum BattlerId battlerDef);
 static u32 CheckTargetTypeEffectiveness(enum BattlerId battler);
-static const u8 sBattleUI_NoEffectivenessIcon[] = _("");
-static const u8 sBattleUI_EffectiveIcon[] = _("{CIRCLE_HOLLOW}");
-static const u8 sBattleUI_ExtremelyEffectiveIcon[] = _("{STAR}");
-static const u8 sBattleUI_SuperEffectiveIcon[] = _("{CIRCLE_DOT}");
-static const u8 sBattleUI_NotVeryEffectiveIcon[] = _("{TRIANGLE}");
-static const u8 sBattleUI_MostlyIneffectiveIcon[] = _("{TRIANGLE_UPSIDE_DOWN}");
-static const u8 sBattleUI_ImmuneIcon[] = _("{BIG_MULT_X}");
-
-const u8 *BattleUI_GetTypeEffectivenessSymbol(enum BattlerId battler, enum Move move)
-{
-    enum BattlerId battlerDef = GetOppositeBattler(battler);
-    struct DamageContext ctx = {0};
-    uq4_12_t modifier;
-
-    if (IsBattleMoveStatus(move))
-        return sBattleUI_NoEffectivenessIcon;
-
-    if (GetBattlerCoordsIndex(battlerDef) == BATTLE_COORDS_DOUBLES)
-        battlerDef = gMultiUsePlayerCursor;
-
-    if (battlerDef == 0xFF || !ShouldShowTypeEffectiveness(battlerDef))
-        return sBattleUI_NoEffectivenessIcon;
-
-    ctx.battlerAtk = battler;
-    ctx.battlerDef = battlerDef;
-    ctx.move = move;
-    ctx.moveType = CheckDynamicMoveType(GetBattlerMon(battler), move, battler, MON_IN_BATTLE);
-    ctx.updateFlags = FALSE;
-    ctx.weather = GetWeather();
-    ctx.terrain = gFieldTimers.terrain;
-    ctx.abilities[battler] = GetBattlerAbility(battler);
-    ctx.abilities[battlerDef] = GetBattlerAbility(battlerDef);
-    ctx.holdEffects[battler] = GetBattlerHoldEffect(battler);
-    ctx.holdEffects[battlerDef] = GetBattlerHoldEffect(battlerDef);
-
-    modifier = CalcTypeEffectivenessMultiplier(&ctx);
-
-    if (modifier == UQ_4_12(0.0))
-        return sBattleUI_ImmuneIcon;
-    else if (modifier <= UQ_4_12(0.25))
-        return sBattleUI_MostlyIneffectiveIcon;
-    else if (modifier <= UQ_4_12(0.5))
-        return sBattleUI_NotVeryEffectiveIcon;
-    else if (modifier >= UQ_4_12(4.0))
-        return sBattleUI_ExtremelyEffectiveIcon;
-    else if (modifier >= UQ_4_12(2.0))
-        return sBattleUI_SuperEffectiveIcon;
-
-    return sBattleUI_EffectiveIcon;
-}
-
 static void MoveSelectionDisplayMoveEffectiveness(u32 foeEffectiveness, enum BattlerId battler);
 
 static void (*const sPlayerBufferCommands[CONTROLLER_CMDS_COUNT])(enum BattlerId battler) =
@@ -2424,6 +2373,58 @@ static bool32 ShouldShowTypeEffectiveness(u32 targetId)
 
     return TRUE;
 }
+
+static const u8 sBattleUI_NoEffectivenessIcon[] = _("");
+static const u8 sBattleUI_EffectiveIcon[] = _("{CIRCLE_HOLLOW}");
+static const u8 sBattleUI_ExtremelyEffectiveIcon[] = _("{STAR}");
+static const u8 sBattleUI_SuperEffectiveIcon[] = _("{CIRCLE_DOT}");
+static const u8 sBattleUI_NotVeryEffectiveIcon[] = _("{TRIANGLE}");
+static const u8 sBattleUI_MostlyIneffectiveIcon[] = _("{TRIANGLE_UPSIDE_DOWN}");
+static const u8 sBattleUI_ImmuneIcon[] = _("{BIG_MULT_X}");
+
+const u8 *BattleUI_GetTypeEffectivenessSymbol(enum BattlerId battler, enum Move move)
+{
+    enum BattlerId battlerDef = GetOppositeBattler(battler);
+    struct DamageContext ctx = {0};
+    uq4_12_t modifier;
+
+    if (IsBattleMoveStatus(move))
+        return sBattleUI_NoEffectivenessIcon;
+
+    if (GetBattlerCoordsIndex(battlerDef) == BATTLE_COORDS_DOUBLES)
+        battlerDef = gMultiUsePlayerCursor;
+
+    if (battlerDef == 0xFF || !ShouldShowTypeEffectiveness(battlerDef))
+        return sBattleUI_NoEffectivenessIcon;
+
+    ctx.battlerAtk = battler;
+    ctx.battlerDef = battlerDef;
+    ctx.move = move;
+    ctx.moveType = CheckDynamicMoveType(GetBattlerMon(battler), move, battler, MON_IN_BATTLE);
+    ctx.updateFlags = FALSE;
+    ctx.weather = GetWeather();
+    ctx.terrain = gFieldTimers.terrain;
+    ctx.abilities[battler] = GetBattlerAbility(battler);
+    ctx.abilities[battlerDef] = GetBattlerAbility(battlerDef);
+    ctx.holdEffects[battler] = GetBattlerHoldEffect(battler);
+    ctx.holdEffects[battlerDef] = GetBattlerHoldEffect(battlerDef);
+
+    modifier = CalcTypeEffectivenessMultiplier(&ctx);
+
+    if (modifier == UQ_4_12(0.0))
+        return sBattleUI_ImmuneIcon;
+    else if (modifier <= UQ_4_12(0.25))
+        return sBattleUI_MostlyIneffectiveIcon;
+    else if (modifier <= UQ_4_12(0.5))
+        return sBattleUI_NotVeryEffectiveIcon;
+    else if (modifier >= UQ_4_12(4.0))
+        return sBattleUI_ExtremelyEffectiveIcon;
+    else if (modifier >= UQ_4_12(2.0))
+        return sBattleUI_SuperEffectiveIcon;
+
+    return sBattleUI_EffectiveIcon;
+}
+
 
 static u32 CheckTypeEffectiveness(enum BattlerId battlerAtk, enum BattlerId battlerDef)
 {
