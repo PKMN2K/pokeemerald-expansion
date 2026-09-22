@@ -3143,7 +3143,14 @@ static void DrawHgssBagYesNoMenu(void)
                   8 + GetStringCenterAlignXOffset(FONT_SMALL, gText_No, width - 10), 18,
                   0, 0, TEXT_SKIP_DRAW, COLORID_POCKET_NAME);
     {
-        u8 cursorY = 3 + sHgssBagYesNoChoice * 16;
+        u8 cellTop = sHgssBagYesNoChoice * 16;
+        u8 cursorY = cellTop + 3;
+
+        // Match the action menu with an inset HGSS-style frame around the active choice.
+        FillWindowPixelRect(windowId, PIXEL_FILL(TEXT_COLOR_RED), 2, cellTop + 1, width - 4, 1);
+        FillWindowPixelRect(windowId, PIXEL_FILL(TEXT_COLOR_RED), 2, cellTop + 14, width - 4, 1);
+        FillWindowPixelRect(windowId, PIXEL_FILL(TEXT_COLOR_RED), 1, cellTop + 2, 1, 12);
+        FillWindowPixelRect(windowId, PIXEL_FILL(TEXT_COLOR_RED), width - 2, cellTop + 2, 1, 12);
 
         FillWindowPixelRect(windowId, PIXEL_FILL(TEXT_COLOR_RED), 3, cursorY, 2, 1);
         FillWindowPixelRect(windowId, PIXEL_FILL(TEXT_COLOR_RED), 2, cursorY + 1, 4, 9);
