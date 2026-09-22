@@ -3114,7 +3114,12 @@ static void DrawHgssBagYesNoMenu(void)
     u8 height = GetWindowAttribute(windowId, WINDOW_HEIGHT) * 8;
 
     FillWindowPixelBuffer(windowId, PIXEL_FILL(1));
-    BagMenu_Print(windowId, FONT_SMALL, gText_YesNo, 8, 2, 0, 4, TEXT_SKIP_DRAW, COLORID_POCKET_NAME);
+    BagMenu_Print(windowId, FONT_SMALL, gText_Yes,
+                  8 + GetStringCenterAlignXOffset(FONT_SMALL, gText_Yes, width - 10), 2,
+                  0, 0, TEXT_SKIP_DRAW, COLORID_POCKET_NAME);
+    BagMenu_Print(windowId, FONT_SMALL, gText_No,
+                  8 + GetStringCenterAlignXOffset(FONT_SMALL, gText_No, width - 10), 18,
+                  0, 0, TEXT_SKIP_DRAW, COLORID_POCKET_NAME);
     {
         u8 cursorY = 3 + sHgssBagYesNoChoice * 16;
 
