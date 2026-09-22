@@ -306,7 +306,7 @@ static const struct ListMenuTemplate sItemListMenu =
     .fillValue = 0,
     .cursorShadowPal = 3,
     .lettersSpacing = 0,
-    .itemVerticalPadding = 0,
+    .itemVerticalPadding = 4,
     .scrollMultiple = LIST_NO_MULTIPLE_SCROLL,
     .fontId = FONT_NARROW,
     .cursorKind = CURSOR_INVISIBLE
@@ -1692,7 +1692,7 @@ static void StartItemSwap(u8 taskId)
     StringExpandPlaceholders(gStringVar4, gText_MoveVar1Where);
     FillWindowPixelBuffer(WIN_DESCRIPTION, PIXEL_FILL(0));
     BagMenu_Print(WIN_DESCRIPTION, FONT_NORMAL, gStringVar4, 3, 1, 0, 0, 0, COLORID_NORMAL);
-    UpdateItemMenuSwapLinePos(tListPosition);
+    UpdateItemMenuSwapLinePos(gBagPosition.cursorPosition[gBagPosition.pocket]);
     BagMenu_PrintCursor(tListTaskId, COLORID_GRAY_CURSOR);
     gTasks[taskId].func = Task_HandleSwappingItemsInput;
 }

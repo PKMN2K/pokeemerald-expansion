@@ -410,7 +410,8 @@ void SetItemMenuSwapLineInvisibility(bool8 invisible)
 
 void UpdateItemMenuSwapLinePos(u8 y)
 {
-    UpdateSwapLineSpritesPos(&gBagMenu->spriteIds[ITEMMENUSPRITE_SWAP_LINE], ITEMMENU_SWAP_LINE_LENGTH | SWAP_LINE_HAS_MARGIN, 120, (y + 1) * 16);
+    // The HGSS-inspired Bag uses 20 px item rows (16 px font + 4 px padding).
+    UpdateSwapLineSpritesPos(&gBagMenu->spriteIds[ITEMMENUSPRITE_SWAP_LINE], ITEMMENU_SWAP_LINE_LENGTH | SWAP_LINE_HAS_MARGIN, 120, 16 + y * 20);
 }
 
 static void ArrangeBerryGfx(void *src, void *dest)
