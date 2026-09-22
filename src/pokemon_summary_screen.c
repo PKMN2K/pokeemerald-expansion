@@ -251,6 +251,7 @@ static void DrawHgssSummaryMoveRows(u8 windowId);
 static void DrawHgssSummaryMovePPRows(u8 windowId);
 static void DrawHgssSummaryMoveStatPanel(u8 windowId);
 static void DrawHgssSummaryMoveDescriptionPanel(u8 windowId);
+static void DrawHgssSummaryRelearnFrame(u8 windowId);
 static void PrintMonInfo(void);
 static void PrintNotEggInfo(void);
 static void PrintEggInfo(void);
@@ -3483,7 +3484,9 @@ static void PrintPageNamesAndStats(void)
     DrawHgssSummaryStatRows(PSS_LABEL_WINDOW_POKEMON_SKILLS_EXP);
     PrintTextOnWindow(PSS_LABEL_WINDOW_POKEMON_SKILLS_EXP, gText_ExpPoints, 6, 1, 0, 1);
     PrintTextOnWindow(PSS_LABEL_WINDOW_POKEMON_SKILLS_EXP, gText_NextLv, 6, 17, 0, 1);
-    PrintTextOnWindow(PSS_LABEL_WINDOW_POKEMON_SKILLS_STATUS, gText_Status, 2, 1, 0, 1);
+    DrawHgssSummaryInfoStrip(PSS_LABEL_WINDOW_POKEMON_SKILLS_STATUS);
+    statsXPos = GetStringCenterAlignXOffset(FONT_NORMAL, gText_Status, WindowWidthPx(PSS_LABEL_WINDOW_POKEMON_SKILLS_STATUS));
+    PrintTextOnWindow(PSS_LABEL_WINDOW_POKEMON_SKILLS_STATUS, gText_Status, statsXPos, 1, 0, 1);
     PrintTextOnWindow(PSS_LABEL_WINDOW_MOVES_POWER_ACC, gText_Power, 0, 1, 0, 1);
     PrintTextOnWindow(PSS_LABEL_WINDOW_MOVES_POWER_ACC, gText_Accuracy2, 0, 17, 0, 1);
     DrawHgssSummaryMoveStatPanel(PSS_LABEL_WINDOW_MOVES_APPEAL_JAM);
@@ -5104,17 +5107,35 @@ static inline void ShowUtilityPrompt(s16 mode)
     PrintTextOnWindow(PSS_LABEL_WINDOW_PROMPT_UTILITY, promptText, stringXPos, 1, 0, 0);
 }
 
+static void DrawHgssSummaryRelearnFrame(u8 windowId)
+{
+    u8 width = WindowWidthPx(windowId);
+    u8 height = GetWindowAttribute(windowId, WINDOW_HEIGHT) * 8;
+
+    if (width < 8 || height < 8)
+        return;
+
+    // This window uses palette 15, so keep its frame on neutral entries in that palette.
+    FillWindowPixelRect(windowId, PIXEL_FILL(1), 2, 0, width - 4, 1);
+    FillWindowPixelRect(windowId, PIXEL_FILL(1), 2, height - 1, width - 4, 1);
+    FillWindowPixelRect(windowId, PIXEL_FILL(1), 1, 1, 1, height - 2);
+    FillWindowPixelRect(windowId, PIXEL_FILL(1), width - 2, 1, 1, height - 2);
+    FillWindowPixelRect(windowId, PIXEL_FILL(2), 3, 1, width - 6, 1);
+}
+
 static void UpdateRelearnPrompt(void)
 {
+    u32 promptWidth;
+    s32 relearnTextXPos;
+
     FillWindowPixelBuffer(PSS_LABEL_WINDOW_PROMPT_RELEARN, PIXEL_FILL(0));
     if (!sMonSummaryScreen->hasRelearnableMoves)
         return;
 
-    const u8 *relearnText;
-    relearnText = sText_Relearn;
-
-    s32 relearnTextXPos = GetStringRightAlignXOffset(FONT_SMALL, relearnText, TILE_WIDTH * sSummaryTemplate[PSS_LABEL_WINDOW_PROMPT_RELEARN].width);
-    PrintTextOnWindowWithFont(PSS_LABEL_WINDOW_PROMPT_RELEARN, relearnText, relearnTextXPos, 4, 0, 0, FONT_SMALL);
+    DrawHgssSummaryRelearnFrame(PSS_LABEL_WINDOW_PROMPT_RELEARN);
+    promptWidth = WindowWidthPx(PSS_LABEL_WINDOW_PROMPT_RELEARN) - 8;
+    relearnTextXPos = 4 + GetStringCenterAlignXOffset(FONT_SMALL, sText_Relearn, promptWidth);
+    PrintTextOnWindowWithFont(PSS_LABEL_WINDOW_PROMPT_RELEARN, sText_Relearn, relearnTextXPos, 4, 0, 0, FONT_SMALL);
 }
 
 static void CB2_ReturnToSummaryScreenFromNamingScreen(void)
