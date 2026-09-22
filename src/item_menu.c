@@ -1539,8 +1539,10 @@ static void PrepareHgssBagQuantityPanel(u8 windowId)
     u8 height = GetWindowAttribute(windowId, WINDOW_HEIGHT) * 8;
 
     FillWindowPixelBuffer(windowId, PIXEL_FILL(1));
-    FillWindowPixelRect(windowId, PIXEL_FILL(TEXT_COLOR_RED), 0, 0, width, 1);
-    FillWindowPixelRect(windowId, PIXEL_FILL(TEXT_COLOR_RED), 0, height - 1, width, 1);
+    FillWindowPixelRect(windowId, PIXEL_FILL(TEXT_COLOR_RED), 1, 0, width - 2, 1);
+    FillWindowPixelRect(windowId, PIXEL_FILL(TEXT_COLOR_RED), 1, height - 1, width - 2, 1);
+    FillWindowPixelRect(windowId, PIXEL_FILL(TEXT_COLOR_RED), 0, 1, 1, height - 2);
+    FillWindowPixelRect(windowId, PIXEL_FILL(TEXT_COLOR_RED), width - 1, 1, 1, height - 2);
 }
 
 static void PrintItemQuantity(u8 windowId, s16 quantity)
