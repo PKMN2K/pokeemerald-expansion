@@ -3126,6 +3126,8 @@ static void PrepareTMHMMoveWindow(void)
     u8 height = GetWindowAttribute(WIN_TMHM_INFO_ICONS, WINDOW_HEIGHT) * 8;
 
     FillWindowPixelBuffer(WIN_TMHM_INFO_ICONS, PIXEL_FILL(0));
+    FillWindowPixelRect(WIN_TMHM_INFO_ICONS, PIXEL_FILL(TEXT_DYNAMIC_COLOR_5), 1, 0,
+                        GetWindowAttribute(WIN_TMHM_INFO_ICONS, WINDOW_WIDTH) * 8 - 2, 1);
     FillWindowPixelRect(WIN_TMHM_INFO_ICONS, PIXEL_FILL(TEXT_DYNAMIC_COLOR_5), 0, 1, 1, height - 2);
     BlitMenuInfoIcon(WIN_TMHM_INFO_ICONS, MENU_INFO_ICON_TYPE, 2, 0);
     BlitMenuInfoIcon(WIN_TMHM_INFO_ICONS, MENU_INFO_ICON_POWER, 2, 12);
@@ -3141,6 +3143,8 @@ static void PrintTMHMMoveData(enum Item itemId)
     const u8 *text;
 
     FillWindowPixelBuffer(WIN_TMHM_INFO, PIXEL_FILL(0));
+    FillWindowPixelRect(WIN_TMHM_INFO, PIXEL_FILL(TEXT_DYNAMIC_COLOR_1), 1, 0,
+                        GetWindowAttribute(WIN_TMHM_INFO, WINDOW_WIDTH) * 8 - 2, 1);
     FillWindowPixelRect(WIN_TMHM_INFO, PIXEL_FILL(TEXT_DYNAMIC_COLOR_1), 0, 1, 1,
                         GetWindowAttribute(WIN_TMHM_INFO, WINDOW_HEIGHT) * 8 - 2);
     FillWindowPixelRect(WIN_TMHM_INFO, PIXEL_FILL(TEXT_DYNAMIC_COLOR_1),
