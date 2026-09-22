@@ -1242,7 +1242,7 @@ static void BagMenu_ItemPrintCallback(u8 windowId, u32 itemIndex, u8 y)
 
         // Draw HM icon
         if (gBagPosition.pocket == POCKET_TM_HM && GetItemTMHMIndex(itemSlot.itemId) > NUM_TECHNICAL_MACHINES)
-            BlitBitmapToWindow(windowId, gBagMenuHMIcon_Gfx, 8, y, 16, 16);
+            BlitBitmapToWindow(windowId, gBagMenuHMIcon_Gfx, 10, y, 16, 16);
 
         if (gBagPosition.pocket != POCKET_KEY_ITEMS && GetItemImportance(itemSlot.itemId) == FALSE)
         {
