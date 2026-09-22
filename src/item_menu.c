@@ -63,8 +63,8 @@
                             max(BAG_KEYITEMS_COUNT,          \
                                 BAG_POKEBALLS_COUNT))))) + 1)
 
-// Up to 8 item slots can be visible at a time
-#define MAX_ITEMS_SHOWN 8
+// HGSS presents Bag contents in six-item pages.
+#define MAX_ITEMS_SHOWN 6
 
 enum {
     SWITCH_POCKET_NONE,
