@@ -1049,9 +1049,8 @@ static void LoadBagItemListBuffers(u8 pocketId)
             subBuffer[i].name = sListBuffer2->name[i];
             subBuffer[i].id = i;
         }
-        StringCopy(sListBuffer2->name[i], gText_CloseBag);
         subBuffer = sListBuffer1->subBuffers;
-        subBuffer[i].name = sListBuffer2->name[i];
+        subBuffer[i].name = gText_EmptyString2;
         subBuffer[i].id = LIST_CANCEL;
     }
     else
@@ -1217,7 +1216,12 @@ static void BagMenu_ItemPrintCallback(u8 windowId, u32 itemIndex, u8 y)
     DrawHgssBagItemCellFrame(windowId, y,
                              itemIndex == LIST_CANCEL ? HGSS_BAG_CELL_CLOSE_COLOR : HGSS_BAG_CELL_NORMAL_COLOR);
 
-    if (itemIndex != LIST_CANCEL)
+    if (itemIndex == LIST_CANCEL)
+    {
+        BagMenu_Print(windowId, FONT_NARROW, gText_CloseBag, 12, y,
+                      0, 0, TEXT_SKIP_DRAW, COLORID_QUANTITY);
+    }
+    else
     {
         s32 offset;
 
