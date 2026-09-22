@@ -252,6 +252,7 @@ static void PrintEggInfo(void);
 static void PrintGenderSymbol(struct Pokemon *, enum Species);
 static void PrintPageNamesAndStats(void);
 static void DrawHgssSummaryTitleTab(u8 windowId);
+static void DrawHgssSummaryStatRows(u8 windowId);
 static void PutPageWindowTilemaps(u8);
 static void ClearPageWindowTilemaps(u8);
 static void RemoveWindowByIndex(u8);
@@ -3339,6 +3340,22 @@ static void DrawHgssSummaryTitleTab(u8 windowId)
     FillWindowPixelRect(windowId, PIXEL_FILL(4), 4, height - 1, width - 8, 1);
 }
 
+static void DrawHgssSummaryStatRows(u8 windowId)
+{
+    u8 width = WindowWidthPx(windowId);
+    u8 height = GetWindowAttribute(windowId, WINDOW_HEIGHT) * 8;
+    u8 y;
+
+    if (width < 4 || height < 16)
+        return;
+
+    FillWindowPixelRect(windowId, PIXEL_FILL(3), 0, 0, width, 1);
+    FillWindowPixelRect(windowId, PIXEL_FILL(3), 0, height - 1, width, 1);
+
+    for (y = 16; y < height; y += 16)
+        FillWindowPixelRect(windowId, PIXEL_FILL(4), 0, y, width, 1);
+}
+
 static void PrintPageNamesAndStats(void)
 {
     int statsXPos;
@@ -3374,6 +3391,8 @@ static void PrintPageNamesAndStats(void)
     PrintTextOnWindow(PSS_LABEL_WINDOW_POKEMON_SKILLS_STATS_RIGHT, gText_SpDef4, statsXPos, 17, 0, 1);
     statsXPos = 2 + GetStringCenterAlignXOffset(FONT_NORMAL, gText_Speed2, 36);
     PrintTextOnWindow(PSS_LABEL_WINDOW_POKEMON_SKILLS_STATS_RIGHT, gText_Speed2, statsXPos, 33, 0, 1);
+    DrawHgssSummaryStatRows(PSS_LABEL_WINDOW_POKEMON_SKILLS_STATS_LEFT);
+    DrawHgssSummaryStatRows(PSS_LABEL_WINDOW_POKEMON_SKILLS_STATS_RIGHT);
     PrintTextOnWindow(PSS_LABEL_WINDOW_POKEMON_SKILLS_EXP, gText_ExpPoints, 6, 1, 0, 1);
     PrintTextOnWindow(PSS_LABEL_WINDOW_POKEMON_SKILLS_EXP, gText_NextLv, 6, 17, 0, 1);
     PrintTextOnWindow(PSS_LABEL_WINDOW_POKEMON_SKILLS_STATUS, gText_Status, 2, 1, 0, 1);
@@ -4002,6 +4021,7 @@ static void BufferLeftColumnIvEvStats(void)
 
 static void PrintLeftColumnStats(void)
 {
+    u8 windowId;
     int x;
 
     if (sMonSummaryScreen->skillsPageMode == SUMMARY_SKILLS_MODE_IVS && !P_SUMMARY_SCREEN_IV_EV_VALUES)
@@ -4009,7 +4029,9 @@ static void PrintLeftColumnStats(void)
     else
         x = 4;
 
-    PrintTextOnWindow(AddWindowFromTemplateList(sPageSkillsTemplate, PSS_DATA_WINDOW_SKILLS_STATS_LEFT), gStringVar4, x, 1, 0, 0);
+    windowId = AddWindowFromTemplateList(sPageSkillsTemplate, PSS_DATA_WINDOW_SKILLS_STATS_LEFT);
+    DrawHgssSummaryStatRows(windowId);
+    PrintTextOnWindow(windowId, gStringVar4, x, 1, 0, 0);
 }
 
 static void BufferRightColumnStats(void)
@@ -4025,6 +4047,7 @@ static void BufferRightColumnStats(void)
 
 static void PrintRightColumnStats(void)
 {
+    u8 windowId;
     int x;
 
     if (sMonSummaryScreen->skillsPageMode == SUMMARY_SKILLS_MODE_IVS && !P_SUMMARY_SCREEN_IV_EV_VALUES)
@@ -4032,7 +4055,9 @@ static void PrintRightColumnStats(void)
     else
         x = 2;
 
-    PrintTextOnWindow(AddWindowFromTemplateList(sPageSkillsTemplate, PSS_DATA_WINDOW_SKILLS_STATS_RIGHT), gStringVar4, x, 1, 0, 0);
+    windowId = AddWindowFromTemplateList(sPageSkillsTemplate, PSS_DATA_WINDOW_SKILLS_STATS_RIGHT);
+    DrawHgssSummaryStatRows(windowId);
+    PrintTextOnWindow(windowId, gStringVar4, x, 1, 0, 0);
 }
 
 static void PrintExpPointsNextLevel(void)
