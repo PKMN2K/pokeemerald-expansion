@@ -1554,16 +1554,21 @@ static void AddItemQuantityWindow(u8 windowType)
     PrintItemQuantity(BagMenu_AddWindow(windowType), 1);
 }
 
-static void PrepareHgssBagQuantityPanel(u8 windowId)
+static void DrawHgssBagQuantityPanelFrame(u8 windowId)
 {
     u8 width = GetWindowAttribute(windowId, WINDOW_WIDTH) * 8;
     u8 height = GetWindowAttribute(windowId, WINDOW_HEIGHT) * 8;
 
-    FillWindowPixelBuffer(windowId, PIXEL_FILL(1));
     FillWindowPixelRect(windowId, PIXEL_FILL(TEXT_COLOR_RED), 1, 0, width - 2, 1);
     FillWindowPixelRect(windowId, PIXEL_FILL(TEXT_COLOR_RED), 1, height - 1, width - 2, 1);
     FillWindowPixelRect(windowId, PIXEL_FILL(TEXT_COLOR_RED), 0, 1, 1, height - 2);
     FillWindowPixelRect(windowId, PIXEL_FILL(TEXT_COLOR_RED), width - 1, 1, 1, height - 2);
+}
+
+static void PrepareHgssBagQuantityPanel(u8 windowId)
+{
+    FillWindowPixelBuffer(windowId, PIXEL_FILL(1));
+    DrawHgssBagQuantityPanelFrame(windowId);
 }
 
 static void PrintItemQuantity(u8 windowId, s16 quantity)
@@ -1576,6 +1581,7 @@ static void PrintItemQuantity(u8 windowId, s16 quantity)
     BagMenu_Print(windowId, FONT_NORMAL, gStringVar4,
                   1 + GetStringCenterAlignXOffset(FONT_NORMAL, gStringVar4, width - 2), 1,
                   0, 0, TEXT_SKIP_DRAW, COLORID_POCKET_NAME);
+    DrawHgssBagQuantityPanelFrame(windowId);
     CopyWindowToVram(windowId, COPYWIN_GFX);
 }
 
@@ -1591,6 +1597,7 @@ static void PrintItemSoldAmount(int windowId, int numSold, int moneyEarned)
                   1 + GetStringCenterAlignXOffset(FONT_NORMAL, gStringVar4, 23), 1,
                   0, 0, TEXT_SKIP_DRAW, COLORID_POCKET_NAME);
     PrintMoneyAmount(windowId, CalculateMoneyTextHorizontalPosition(moneyEarned), 1, moneyEarned, 0);
+    DrawHgssBagQuantityPanelFrame(windowId);
     CopyWindowToVram(windowId, COPYWIN_GFX);
 }
 
@@ -3139,6 +3146,7 @@ static void DisplayCurrentMoneyWindow(void)
                   1 + GetStringCenterAlignXOffset(FONT_NARROW, sText_Money, 43), 1,
                   0, 0, TEXT_SKIP_DRAW, COLORID_POCKET_NAME);
     PrintMoneyAmount(windowId, 48, 1, GetMoney(&gSaveBlock1Ptr->money), 0);
+    DrawHgssBagQuantityPanelFrame(windowId);
     CopyWindowToVram(windowId, COPYWIN_GFX);
 }
 
