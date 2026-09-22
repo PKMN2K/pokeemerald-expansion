@@ -3906,9 +3906,14 @@ static void PrintHeldItemName(void)
         text = gStringVar1;
     }
 
-    fontId = GetFontIdToFit(text, FONT_NORMAL, 0, WindowTemplateWidthPx(&sPageSkillsTemplate[PSS_DATA_WINDOW_SKILLS_HELD_ITEM]) - 8);
-    x = GetStringCenterAlignXOffset(fontId, text, 72) + 6;
-    PrintTextOnWindowWithFont(AddWindowFromTemplateList(sPageSkillsTemplate, PSS_DATA_WINDOW_SKILLS_HELD_ITEM), text, x, 1, 0, 0, fontId);
+    {
+        u8 windowId = AddWindowFromTemplateList(sPageSkillsTemplate, PSS_DATA_WINDOW_SKILLS_HELD_ITEM);
+
+        DrawHgssSummaryInfoStrip(windowId);
+        fontId = GetFontIdToFit(text, FONT_NORMAL, 0, WindowTemplateWidthPx(&sPageSkillsTemplate[PSS_DATA_WINDOW_SKILLS_HELD_ITEM]) - 8);
+        x = GetStringCenterAlignXOffset(fontId, text, 72) + 6;
+        PrintTextOnWindowWithFont(windowId, text, x, 1, 0, 0, fontId);
+    }
 }
 
 static void PrintRibbonCount(void)
@@ -3927,8 +3932,13 @@ static void PrintRibbonCount(void)
         text = gStringVar4;
     }
 
-    x = GetStringCenterAlignXOffset(FONT_NORMAL, text, 70) + 6;
-    PrintTextOnWindow(AddWindowFromTemplateList(sPageSkillsTemplate, PSS_DATA_WINDOW_SKILLS_RIBBON_COUNT), text, x, 1, 0, 0);
+    {
+        u8 windowId = AddWindowFromTemplateList(sPageSkillsTemplate, PSS_DATA_WINDOW_SKILLS_RIBBON_COUNT);
+
+        DrawHgssSummaryInfoStrip(windowId);
+        x = GetStringCenterAlignXOffset(FONT_NORMAL, text, 70) + 6;
+        PrintTextOnWindow(windowId, text, x, 1, 0, 0);
+    }
 }
 
 static void BufferStat(u8 *dst, enum Stat statIndex, u32 stat, u32 strId, u32 n)
