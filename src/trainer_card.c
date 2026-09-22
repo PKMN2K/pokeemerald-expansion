@@ -130,6 +130,8 @@ static u8 GetSetCardType(void);
 static void DrawHgssTrainerCardIdentityHeader(void);
 static void DrawHgssTrainerCardInfoRows(void);
 static void DrawHgssTrainerCardProfilePanel(void);
+static void DrawHgssTrainerCardBackHeader(void);
+static void DrawHgssTrainerCardBackCoreStats(void);
 static void PrintNameOnCardFront(void);
 static void PrintIdOnCard(void);
 static void PrintMoneyOnCard(void);
@@ -998,6 +1000,8 @@ static bool8 PrintAllOnCardBack(void)
         PrintStickersOnCard();
         break;
     default:
+        DrawHgssTrainerCardBackHeader();
+        DrawHgssTrainerCardBackCoreStats();
         sData->printState = 0;
         return TRUE;
     }
@@ -1248,6 +1252,40 @@ static void PrintProfilePhraseOnCard(void)
         AddTextPrinterParameterized3(WIN_CARD_TEXT, FONT_NORMAL, 8, yOffsetsLine2[sData->isHoenn], sTrainerCardTextColors, TEXT_SKIP_DRAW, sData->easyChatProfile[2]);
         AddTextPrinterParameterized3(WIN_CARD_TEXT, FONT_NORMAL, GetStringWidth(FONT_NORMAL, sData->easyChatProfile[2], 0) + 14, yOffsetsLine2[sData->isHoenn], sTrainerCardTextColors, TEXT_SKIP_DRAW, sData->easyChatProfile[3]);
     }
+}
+
+static void DrawHgssTrainerCardBackHeader(void)
+{
+    const u8 left = 8;
+    const u8 top = 4;
+    const u8 width = 208;
+    const u8 height = 21;
+
+    FillWindowPixelRect(WIN_CARD_TEXT, PIXEL_FILL(1), left + 1, top, width - 2, 1);
+    FillWindowPixelRect(WIN_CARD_TEXT, PIXEL_FILL(1), left + 1, top + height - 1, width - 2, 1);
+    FillWindowPixelRect(WIN_CARD_TEXT, PIXEL_FILL(1), left, top + 1, 1, height - 2);
+    FillWindowPixelRect(WIN_CARD_TEXT, PIXEL_FILL(1), left + width - 1, top + 1, 1, height - 2);
+    FillWindowPixelRect(WIN_CARD_TEXT, PIXEL_FILL(2), left + 4, top + 2, width - 8, 1);
+}
+
+static void DrawHgssTrainerCardBackCoreStats(void)
+{
+    const u8 left = 4;
+    const u8 top = 29;
+    const u8 width = 216;
+    const u8 height = 52;
+
+    // Keep the original optional-row behavior; this panel simply organizes the first three slots.
+    if (!sData->hasHofResult && !sData->hasLinkResults && !sData->hasTrades)
+        return;
+
+    FillWindowPixelRect(WIN_CARD_TEXT, PIXEL_FILL(1), left + 1, top, width - 2, 1);
+    FillWindowPixelRect(WIN_CARD_TEXT, PIXEL_FILL(1), left + 1, top + height - 1, width - 2, 1);
+    FillWindowPixelRect(WIN_CARD_TEXT, PIXEL_FILL(1), left, top + 1, 1, height - 2);
+    FillWindowPixelRect(WIN_CARD_TEXT, PIXEL_FILL(1), left + width - 1, top + 1, 1, height - 2);
+    FillWindowPixelRect(WIN_CARD_TEXT, PIXEL_FILL(2), left + 3, 48, width - 6, 1);
+    FillWindowPixelRect(WIN_CARD_TEXT, PIXEL_FILL(2), left + 3, 64, width - 6, 1);
+    FillWindowPixelRect(WIN_CARD_TEXT, PIXEL_FILL(2), left + 4, top + 2, width - 8, 1);
 }
 
 static void BufferNameForCardBack(void)
