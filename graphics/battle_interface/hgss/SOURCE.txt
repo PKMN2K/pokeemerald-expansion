@@ -1,0 +1,6 @@
+HGSS battle interface source assets
+
+Source repository: PokemonHnS-Development/pokemonHnS
+Source commit: c3c78d3e846c73ea45547d1255aeadb7d9d9eb9e ("changing battle UI to hgss")
+
+These assets are staged under graphics/battle_interface/hgss/ and are not wired into the engine yet.
