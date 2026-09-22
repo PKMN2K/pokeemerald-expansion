@@ -489,6 +489,9 @@ static const struct SpriteTemplate sHgssBagScrollArrowSpriteTemplate =
 
 #define HGSS_BAG_LIST_CURSOR_WIDTH  8
 #define HGSS_BAG_LIST_CURSOR_HEIGHT 14
+#define HGSS_BAG_ITEM_CELL_HEIGHT   20
+#define HGSS_BAG_CELL_NORMAL_COLOR  3
+#define HGSS_BAG_CELL_ACTIVE_COLOR  15
 
 // HGSS adaption: use a touch-style selection tab instead of Emerald's text arrow.
 // Pixel values reference the Bag window palette: 13 = light blue, 6 = gray, 2 = light border.
@@ -1090,6 +1093,18 @@ static void GetItemNameFromPocket(u8 *dest, enum Item itemId)
     }
 }
 
+static void DrawHgssBagItemCellFrame(u8 windowId, u8 y, u8 color)
+{
+    u8 top = y - 2;
+    u8 left = HGSS_BAG_LIST_CURSOR_WIDTH;
+    u8 width = GetWindowAttribute(windowId, WINDOW_WIDTH) * 8 - left;
+
+    FillWindowPixelRect(windowId, PIXEL_FILL(color), left, top, width, 1);
+    FillWindowPixelRect(windowId, PIXEL_FILL(color), left, top + HGSS_BAG_ITEM_CELL_HEIGHT - 1, width, 1);
+    FillWindowPixelRect(windowId, PIXEL_FILL(color), left, top, 1, HGSS_BAG_ITEM_CELL_HEIGHT);
+    FillWindowPixelRect(windowId, PIXEL_FILL(color), left + width - 1, top, 1, HGSS_BAG_ITEM_CELL_HEIGHT);
+}
+
 static void BagMenu_MoveCursorCallback(s32 itemIndex, bool8 onInit, struct ListMenu *list)
 {
     u8 cursorY = list->selectedRow * (GetFontAttribute(list->template.fontId, FONTATTR_MAX_LETTER_HEIGHT)
@@ -1100,6 +1115,16 @@ static void BagMenu_MoveCursorCallback(s32 itemIndex, bool8 onInit, struct ListM
     FillWindowPixelRect(WIN_ITEM_LIST, PIXEL_FILL(0), 0, 0,
                         HGSS_BAG_LIST_CURSOR_WIDTH,
                         GetWindowAttribute(WIN_ITEM_LIST, WINDOW_HEIGHT) * 8);
+
+    // Reset all visible cell frames before highlighting the current selection.
+    for (u8 row = 0; row < list->template.maxShowed; row++)
+    {
+        u8 rowY = row * (GetFontAttribute(list->template.fontId, FONTATTR_MAX_LETTER_HEIGHT)
+                       + list->template.itemVerticalPadding)
+                + list->template.upText_Y;
+        DrawHgssBagItemCellFrame(WIN_ITEM_LIST, rowY, HGSS_BAG_CELL_NORMAL_COLOR);
+    }
+    DrawHgssBagItemCellFrame(WIN_ITEM_LIST, cursorY, HGSS_BAG_CELL_ACTIVE_COLOR);
 
     // Preserve the source marker while moving an item, then draw the current selection on top.
     if (gBagMenu->toSwapPos != NOT_SWAPPING
@@ -1134,13 +1159,7 @@ static void BagMenu_MoveCursorCallback(s32 itemIndex, bool8 onInit, struct ListM
 
 static void BagMenu_ItemPrintCallback(u8 windowId, u32 itemIndex, u8 y)
 {
-    // Separate the six HGSS-style touch cells while leaving the selector column clear.
-    if (y + 17 < GetWindowAttribute(windowId, WINDOW_HEIGHT) * 8)
-    {
-        FillWindowPixelRect(windowId, PIXEL_FILL(3),
-                            HGSS_BAG_LIST_CURSOR_WIDTH, y + 17,
-                            GetWindowAttribute(windowId, WINDOW_WIDTH) * 8 - HGSS_BAG_LIST_CURSOR_WIDTH, 1);
-    }
+    DrawHgssBagItemCellFrame(windowId, y, HGSS_BAG_CELL_NORMAL_COLOR);
 
     if (itemIndex != LIST_CANCEL)
     {
