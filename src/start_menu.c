@@ -261,6 +261,7 @@ static void BuildBattlePyramidStartMenu(void);
 static void BuildMultiPartnerRoomStartMenu(void);
 static void ShowSafariBallsWindow(void);
 static void ShowPyramidFloorWindow(void);
+static void DrawHgssStartMenuAuxShell(u8 windowId);
 static void RemoveExtraStartMenuWindows(void);
 static bool32 PrintStartMenuActions(s8 *pIndex, u32 count);
 static bool32 InitStartMenuStep(void);
@@ -450,6 +451,7 @@ static void ShowSafariBallsWindow(void)
         StringExpandPlaceholders(gStringVar4, gText_SafariBallStock);
         AddTextPrinterParameterized(sSafariBallsWindowId, FONT_NORMAL, gStringVar4, 0, 1, TEXT_SKIP_DRAW, NULL);
     }
+    DrawHgssStartMenuAuxShell(sSafariBallsWindowId);
     CopyWindowToVram(sSafariBallsWindowId, COPYWIN_GFX);
 }
 
@@ -465,7 +467,26 @@ static void ShowPyramidFloorWindow(void)
     StringCopy(gStringVar1, sPyramidFloorNames[gSaveBlock2Ptr->frontier.curChallengeBattleNum]);
     StringExpandPlaceholders(gStringVar4, gText_BattlePyramidFloor);
     AddTextPrinterParameterized(sBattlePyramidFloorWindowId, FONT_NORMAL, gStringVar4, 0, 1, TEXT_SKIP_DRAW, NULL);
+    DrawHgssStartMenuAuxShell(sBattlePyramidFloorWindowId);
     CopyWindowToVram(sBattlePyramidFloorWindowId, COPYWIN_GFX);
+}
+
+static void DrawHgssStartMenuAuxShell(u8 windowId)
+{
+    u8 width = GetWindowAttribute(windowId, WINDOW_WIDTH) * 8;
+    u8 height = GetWindowAttribute(windowId, WINDOW_HEIGHT) * 8;
+
+    if (width < 12 || height < 12)
+        return;
+
+    // Compact version of the main Start-menu shell for Safari/Pyramid status popups.
+    FillWindowPixelRect(windowId, PIXEL_FILL(2), 2, 0, width - 4, 1);
+    FillWindowPixelRect(windowId, PIXEL_FILL(2), 2, height - 1, width - 4, 1);
+    FillWindowPixelRect(windowId, PIXEL_FILL(2), 0, 2, 1, height - 4);
+    FillWindowPixelRect(windowId, PIXEL_FILL(2), width - 1, 2, 1, height - 4);
+
+    // Short lower accent avoids crossing the one-line Pyramid text near the top.
+    FillWindowPixelRect(windowId, PIXEL_FILL(1), 4, height - 3, width - 8, 1);
 }
 
 static void RemoveExtraStartMenuWindows(void)
