@@ -1477,9 +1477,9 @@ static void PrepareHgssBagMessagePanel(u8 windowId)
     u8 height = GetWindowAttribute(windowId, WINDOW_HEIGHT) * 8;
 
     FillWindowPixelBuffer(windowId, PIXEL_FILL(1));
-    FillWindowPixelRect(windowId, PIXEL_FILL(TEXT_COLOR_RED), 0, 0, width, 1);
-    FillWindowPixelRect(windowId, PIXEL_FILL(TEXT_COLOR_LIGHT_GRAY), 0, 0, 1, height);
-    FillWindowPixelRect(windowId, PIXEL_FILL(TEXT_COLOR_LIGHT_GRAY), width - 1, 0, 1, height);
+    FillWindowPixelRect(windowId, PIXEL_FILL(TEXT_COLOR_RED), 1, 0, width - 2, 1);
+    FillWindowPixelRect(windowId, PIXEL_FILL(TEXT_COLOR_LIGHT_GRAY), 0, 1, 1, height - 1);
+    FillWindowPixelRect(windowId, PIXEL_FILL(TEXT_COLOR_LIGHT_GRAY), width - 1, 1, 1, height - 1);
 }
 
 static void Task_HgssBagContinueMessage(u8 taskId)
