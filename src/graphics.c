@@ -707,9 +707,9 @@ const u32 gUnusedTilemap_BasicFrame[] = INCGFX_U32("graphics/unused/basic_frame.
 
 // Battle Interface
 
-const u16 gBattleInterface_BallStatusBarPal[] = INCGFX_U16("graphics/battle_interface/ball_status_bar.png", ".gbapal");
+const u16 gBattleInterface_BallStatusBarPal[] = INCGFX_U16("graphics/battle_interface/hgss/ball_status_bar.png", ".gbapal");
 
-const u16 gBattleInterface_BallDisplayPal[] = INCGFX_U16("graphics/battle_interface/ball_display.png", ".gbapal");
+const u16 gBattleInterface_BallDisplayPal[] = INCGFX_U16("graphics/battle_interface/hgss/ball_display.png", ".gbapal");
 
 const u16 gBattleInterface_BwHealthboxPal[] = INCGFX_U16("graphics/battle_interface/bw_healthbox.pal", ".gbapal");
 const u16 gBattleInterface_BwHealthbarPal[] = INCGFX_U16("graphics/battle_interface/bw_healthbar.pal", ".gbapal");
@@ -719,17 +719,17 @@ const u32 gBattleInterface_BwNameFontGfx[] = INCGFX_U32("graphics/battle_interfa
 const u32 gBattleInterface_BwHpNumbersFontGfx[] = INCGFX_U32("graphics/battle_interface/bw_hp_numbers_font.png", ".4bpp");
 const u32 gBattleInterface_BwLevelLabelGfx[] = INCGFX_U32("graphics/battle_interface/bw_level_label.png", ".4bpp");
 
-const u8 gHealthboxElementsGfxTable[][32] = INCBIN_U8("graphics/battle_interface/hpbar.4bpp",
-                                                  "graphics/battle_interface/expbar.4bpp",
-                                                  "graphics/battle_interface/status.4bpp",
-                                                  "graphics/battle_interface/misc.4bpp",
-                                                  "graphics/battle_interface/hpbar_anim.4bpp",
-                                                  "graphics/battle_interface/misc_frameend.4bpp",
-                                                  "graphics/battle_interface/ball_display.4bpp",
-                                                  "graphics/battle_interface/ball_caught_indicator.4bpp",
-                                                  "graphics/battle_interface/status2.4bpp", // these three duplicate sets of graphics are for the opponent/partner Pokémon
-                                                  "graphics/battle_interface/status3.4bpp",
-                                                  "graphics/battle_interface/status4.4bpp",
+const u8 gHealthboxElementsGfxTable[][32] = INCBIN_U8("graphics/battle_interface/hgss/hpbar.4bpp",
+                                                  "graphics/battle_interface/hgss/expbar.4bpp",
+                                                  "graphics/battle_interface/hgss/status.4bpp",
+                                                  "graphics/battle_interface/hgss/misc.4bpp",
+                                                  "graphics/battle_interface/hgss/hpbar_anim.4bpp",
+                                                  "graphics/battle_interface/hgss/misc_frameend.4bpp",
+                                                  "graphics/battle_interface/hgss/ball_display.4bpp",
+                                                  "graphics/battle_interface/hgss/ball_caught_indicator.4bpp",
+                                                  "graphics/battle_interface/hgss/status2.4bpp", // these three duplicate sets of graphics are for the opponent/partner Pokémon
+                                                  "graphics/battle_interface/hgss/status3.4bpp",
+                                                  "graphics/battle_interface/hgss/status4.4bpp",
                                                   "graphics/battle_interface/healthbox_doubles_player_frameend.4bpp",
                                                   "graphics/battle_interface/healthbox_doubles_player_frameend_bar.4bpp",
                                                   "graphics/battle_interface/healthbox_doubles_opponent_frameend.4bpp",
@@ -1433,7 +1433,7 @@ const u16 gBattleAnimBackgroundImageMuddyWater_Pal[] = INCGFX_U16("graphics/batt
 const u32 gEnemyMonShadow_Gfx[] = INCGFX_U32("graphics/battle_interface/enemy_mon_shadow.png", ".4bpp.smol");
 const u32 gEnemyMonShadowsSized_Gfx[] = INCGFX_U32("graphics/battle_interface/enemy_mon_shadows_sized.png", ".4bpp.smol");
 
-const u32 gBattleInterface_BallStatusBarGfx[] = INCGFX_U32("graphics/battle_interface/ball_status_bar.png", ".4bpp.smol");
+const u32 gBattleInterface_BallStatusBarGfx[] = INCGFX_U32("graphics/battle_interface/hgss/ball_status_bar.png", ".4bpp.smol");
 
 const u32 gBattleAnimBgImage_Ghost[] = INCGFX_U32("graphics/battle_anims/backgrounds/ghost.png", ".4bpp.smol");
 const u16 gBattleAnimBgPalette_Ghost[] = INCGFX_U16("graphics/battle_anims/backgrounds/ghost.png", ".gbapal");
