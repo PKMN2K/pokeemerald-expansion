@@ -132,6 +132,7 @@ static void DrawHgssTrainerCardInfoRows(void);
 static void DrawHgssTrainerCardProfilePanel(void);
 static void DrawHgssTrainerCardBackHeader(void);
 static void DrawHgssTrainerCardBackCoreStats(void);
+static void DrawHgssTrainerCardBackExtraStats(void);
 static void PrintNameOnCardFront(void);
 static void PrintIdOnCard(void);
 static void PrintMoneyOnCard(void);
@@ -1002,6 +1003,7 @@ static bool8 PrintAllOnCardBack(void)
     default:
         DrawHgssTrainerCardBackHeader();
         DrawHgssTrainerCardBackCoreStats();
+        DrawHgssTrainerCardBackExtraStats();
         sData->printState = 0;
         return TRUE;
     }
@@ -1285,6 +1287,47 @@ static void DrawHgssTrainerCardBackCoreStats(void)
     FillWindowPixelRect(WIN_CARD_TEXT, PIXEL_FILL(1), left + width - 1, top + 1, 1, height - 2);
     FillWindowPixelRect(WIN_CARD_TEXT, PIXEL_FILL(2), left + 3, 48, width - 6, 1);
     FillWindowPixelRect(WIN_CARD_TEXT, PIXEL_FILL(2), left + 3, 64, width - 6, 1);
+    FillWindowPixelRect(WIN_CARD_TEXT, PIXEL_FILL(2), left + 4, top + 2, width - 8, 1);
+}
+
+static void DrawHgssTrainerCardBackExtraStats(void)
+{
+    const u8 left = 4;
+    const u8 top = 77;
+    const u8 width = 216;
+    bool8 hasRow3;
+    bool8 hasRow4;
+    bool8 hasRow5;
+    u8 height;
+
+    if (sData->cardType == CARD_TYPE_FRLG)
+    {
+        hasRow3 = sData->trainerCard.unionRoomNum != 0;
+        hasRow4 = sData->trainerCard.linkPoints.berryCrush != 0;
+        hasRow5 = FALSE;
+    }
+    else
+    {
+        hasRow3 = sData->trainerCard.pokeblocksWithFriends != 0;
+        hasRow4 = sData->trainerCard.contestsWithFriends != 0;
+        hasRow5 = (sData->cardType == CARD_TYPE_RS && sData->hasBattleTowerWins)
+               || (sData->cardType == CARD_TYPE_EMERALD && sData->trainerCard.frontierBP != 0);
+    }
+
+    if (!hasRow3 && !hasRow4 && !hasRow5)
+        return;
+
+    height = hasRow5 ? 52 : 36;
+
+    FillWindowPixelRect(WIN_CARD_TEXT, PIXEL_FILL(1), left + 1, top, width - 2, 1);
+    FillWindowPixelRect(WIN_CARD_TEXT, PIXEL_FILL(1), left + 1, top + height - 1, width - 2, 1);
+    FillWindowPixelRect(WIN_CARD_TEXT, PIXEL_FILL(1), left, top + 1, 1, height - 2);
+    FillWindowPixelRect(WIN_CARD_TEXT, PIXEL_FILL(1), left + width - 1, top + 1, 1, height - 2);
+    FillWindowPixelRect(WIN_CARD_TEXT, PIXEL_FILL(2), left + 3, 96, width - 6, 1);
+
+    if (hasRow5)
+        FillWindowPixelRect(WIN_CARD_TEXT, PIXEL_FILL(2), left + 3, 112, width - 6, 1);
+
     FillWindowPixelRect(WIN_CARD_TEXT, PIXEL_FILL(2), left + 4, top + 2, width - 8, 1);
 }
 
