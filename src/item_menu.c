@@ -2969,11 +2969,14 @@ static void RemoveMoneyWindow(void)
 
 static void PrepareTMHMMoveWindow(void)
 {
+    u8 height = GetWindowAttribute(WIN_TMHM_INFO_ICONS, WINDOW_HEIGHT) * 8;
+
     FillWindowPixelBuffer(WIN_TMHM_INFO_ICONS, PIXEL_FILL(0));
-    BlitMenuInfoIcon(WIN_TMHM_INFO_ICONS, MENU_INFO_ICON_TYPE, 0, 0);
-    BlitMenuInfoIcon(WIN_TMHM_INFO_ICONS, MENU_INFO_ICON_POWER, 0, 12);
-    BlitMenuInfoIcon(WIN_TMHM_INFO_ICONS, MENU_INFO_ICON_ACCURACY, 0, 24);
-    BlitMenuInfoIcon(WIN_TMHM_INFO_ICONS, MENU_INFO_ICON_PP, 0, 36);
+    FillWindowPixelRect(WIN_TMHM_INFO_ICONS, PIXEL_FILL(TEXT_DYNAMIC_COLOR_5), 0, 0, 1, height);
+    BlitMenuInfoIcon(WIN_TMHM_INFO_ICONS, MENU_INFO_ICON_TYPE, 2, 0);
+    BlitMenuInfoIcon(WIN_TMHM_INFO_ICONS, MENU_INFO_ICON_POWER, 2, 12);
+    BlitMenuInfoIcon(WIN_TMHM_INFO_ICONS, MENU_INFO_ICON_ACCURACY, 2, 24);
+    BlitMenuInfoIcon(WIN_TMHM_INFO_ICONS, MENU_INFO_ICON_PP, 2, 36);
     CopyWindowToVram(WIN_TMHM_INFO_ICONS, COPYWIN_GFX);
 }
 
@@ -2984,6 +2987,11 @@ static void PrintTMHMMoveData(enum Item itemId)
     const u8 *text;
 
     FillWindowPixelBuffer(WIN_TMHM_INFO, PIXEL_FILL(0));
+    FillWindowPixelRect(WIN_TMHM_INFO, PIXEL_FILL(TEXT_DYNAMIC_COLOR_1), 0, 0, 1,
+                        GetWindowAttribute(WIN_TMHM_INFO, WINDOW_HEIGHT) * 8);
+    FillWindowPixelRect(WIN_TMHM_INFO, PIXEL_FILL(TEXT_DYNAMIC_COLOR_1),
+                        GetWindowAttribute(WIN_TMHM_INFO, WINDOW_WIDTH) * 8 - 1, 0, 1,
+                        GetWindowAttribute(WIN_TMHM_INFO, WINDOW_HEIGHT) * 8);
     if (itemId == ITEM_NONE)
     {
         for (i = 0; i < 4; i++)
@@ -2993,7 +3001,7 @@ static void PrintTMHMMoveData(enum Item itemId)
     else
     {
         move = ItemIdToBattleMoveId(itemId);
-        BlitMenuInfoIcon(WIN_TMHM_INFO, GetMoveType(move) + 1, 0, 0);
+        BlitMenuInfoIcon(WIN_TMHM_INFO, GetMoveType(move) + 1, 2, 0);
 
         // Print TMHM power
         u32 power = GetMovePower(move);
