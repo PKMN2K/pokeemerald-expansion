@@ -2939,31 +2939,14 @@ static u8 UNUSED BagMenu_GetWindowId(u8 windowType)
     return gBagMenu->windowIds[windowType];
 }
 
-static bool8 IsHgssBagActionWindow(u8 windowType)
-{
-    return windowType <= ITEMWIN_2x3
-        || windowType == ITEMWIN_YESNO_LOW
-        || windowType == ITEMWIN_YESNO_HIGH
-        || windowType == ITEMWIN_QUANTITY
-        || windowType == ITEMWIN_QUANTITY_WIDE
-        || windowType == ITEMWIN_MONEY;
-}
-
 static u8 BagMenu_AddWindow(u8 windowType)
 {
     u8 *windowId = &gBagMenu->windowIds[windowType];
     if (*windowId == WINDOW_NONE)
     {
         *windowId = AddWindow(&sContextMenuWindowTemplates[windowType]);
-        if (IsHgssBagActionWindow(windowType))
-        {
-            FillWindowPixelBuffer(*windowId, PIXEL_FILL(1));
-            PutWindowTilemap(*windowId);
-        }
-        else
-        {
-            DrawStdFrameWithCustomTileAndPalette(*windowId, FALSE, 1, 14);
-        }
+        FillWindowPixelBuffer(*windowId, PIXEL_FILL(1));
+        PutWindowTilemap(*windowId);
         ScheduleBgCopyTilemapToVram(1);
     }
     return *windowId;
@@ -2974,16 +2957,8 @@ static void BagMenu_RemoveWindow(u8 windowType)
     u8 *windowId = &gBagMenu->windowIds[windowType];
     if (*windowId != WINDOW_NONE)
     {
-        if (IsHgssBagActionWindow(windowType))
-        {
-            FillWindowPixelBuffer(*windowId, PIXEL_FILL(0));
-            ClearWindowTilemap(*windowId);
-        }
-        else
-        {
-            ClearStdWindowAndFrameToTransparent(*windowId, FALSE);
-            ClearWindowTilemap(*windowId);
-        }
+        FillWindowPixelBuffer(*windowId, PIXEL_FILL(0));
+        ClearWindowTilemap(*windowId);
         RemoveWindow(*windowId);
         ScheduleBgCopyTilemapToVram(1);
         *windowId = WINDOW_NONE;
