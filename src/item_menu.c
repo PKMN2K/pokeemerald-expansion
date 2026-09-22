@@ -695,6 +695,9 @@ static EWRAM_DATA struct ListBuffer1 *sListBuffer1 = 0;
 static EWRAM_DATA struct ListBuffer2 *sListBuffer2 = 0;
 EWRAM_DATA enum Item gSpecialVar_ItemId = 0;
 static EWRAM_DATA struct TempWallyBag *sTempWallyBag = 0;
+static EWRAM_DATA struct YesNoFuncTable sHgssBagYesNoFuncs = {0};
+static EWRAM_DATA u8 sHgssBagYesNoWindowType = ITEMWIN_YESNO_LOW;
+static EWRAM_DATA u8 sHgssBagYesNoChoice = 0;
 
 void ResetBagScrollPositions(void)
 {
@@ -2883,7 +2886,9 @@ static u8 UNUSED BagMenu_GetWindowId(u8 windowType)
 
 static bool8 IsHgssBagActionWindow(u8 windowType)
 {
-    return windowType <= ITEMWIN_2x3;
+    return windowType <= ITEMWIN_2x3
+        || windowType == ITEMWIN_YESNO_LOW
+        || windowType == ITEMWIN_YESNO_HIGH;
 }
 
 static u8 BagMenu_AddWindow(u8 windowType)
@@ -2949,9 +2954,59 @@ static void RemoveItemMessageWindow(u8 windowType)
     }
 }
 
+static void DrawHgssBagYesNoMenu(void)
+{
+    u8 windowId = gBagMenu->windowIds[sHgssBagYesNoWindowType];
+    u8 width = GetWindowAttribute(windowId, WINDOW_WIDTH) * 8;
+    u8 height = GetWindowAttribute(windowId, WINDOW_HEIGHT) * 8;
+
+    FillWindowPixelBuffer(windowId, PIXEL_FILL(1));
+    FillWindowPixelRect(windowId, PIXEL_FILL(TEXT_COLOR_RED), 0, 0, width, 1);
+    FillWindowPixelRect(windowId, PIXEL_FILL(TEXT_COLOR_RED), 0, height - 1, width, 1);
+    BagMenu_Print(windowId, FONT_NARROW, gText_YesNo, 8, 1, 0, 0, TEXT_SKIP_DRAW, COLORID_POCKET_NAME);
+    FillWindowPixelRect(windowId, PIXEL_FILL(TEXT_COLOR_RED), 2, 3 + sHgssBagYesNoChoice * 16, 4, 11);
+    CopyWindowToVram(windowId, COPYWIN_GFX);
+}
+
+static void Task_HgssBagYesNo(u8 taskId)
+{
+    if (JOY_NEW(DPAD_UP) && sHgssBagYesNoChoice != 0)
+    {
+        PlaySE(SE_SELECT);
+        sHgssBagYesNoChoice = 0;
+        DrawHgssBagYesNoMenu();
+    }
+    else if (JOY_NEW(DPAD_DOWN) && sHgssBagYesNoChoice != 1)
+    {
+        PlaySE(SE_SELECT);
+        sHgssBagYesNoChoice = 1;
+        DrawHgssBagYesNoMenu();
+    }
+    else if (JOY_NEW(A_BUTTON))
+    {
+        TaskFunc callback = sHgssBagYesNoChoice == 0 ? sHgssBagYesNoFuncs.yesFunc : sHgssBagYesNoFuncs.noFunc;
+
+        PlaySE(SE_SELECT);
+        BagMenu_RemoveWindow(sHgssBagYesNoWindowType);
+        callback(taskId);
+    }
+    else if (JOY_NEW(B_BUTTON))
+    {
+        PlaySE(SE_SELECT);
+        BagMenu_RemoveWindow(sHgssBagYesNoWindowType);
+        sHgssBagYesNoFuncs.noFunc(taskId);
+    }
+}
+
 void BagMenu_YesNo(u8 taskId, u8 windowType, const struct YesNoFuncTable *funcTable)
 {
-    CreateYesNoMenuWithCallbacks(taskId, &sContextMenuWindowTemplates[windowType], 1, 0, 2, 1, 14, funcTable);
+    sHgssBagYesNoFuncs = *funcTable;
+    sHgssBagYesNoWindowType = windowType;
+    sHgssBagYesNoChoice = 0;
+
+    BagMenu_AddWindow(windowType);
+    DrawHgssBagYesNoMenu();
+    gTasks[taskId].func = Task_HgssBagYesNo;
 }
 
 static void DisplayCurrentMoneyWindow(void)
