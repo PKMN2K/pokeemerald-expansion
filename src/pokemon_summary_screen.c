@@ -3284,10 +3284,14 @@ static void PrintPageNamesAndStats(void)
 {
     int statsXPos;
 
-    PrintTextOnWindow(PSS_LABEL_WINDOW_POKEMON_INFO_TITLE, gText_PkmnInfo, 2, 1, 0, 1);
-    PrintTextOnWindow(PSS_LABEL_WINDOW_POKEMON_SKILLS_TITLE, gText_PkmnSkills, 2, 1, 0, 1);
-    PrintTextOnWindow(PSS_LABEL_WINDOW_BATTLE_MOVES_TITLE, gText_BattleMoves, 2, 1, 0, 1);
-    PrintTextOnWindow(PSS_LABEL_WINDOW_CONTEST_MOVES_TITLE, gText_ContestMoves, 2, 1, 0, 1);
+    PrintTextOnWindow(PSS_LABEL_WINDOW_POKEMON_INFO_TITLE, gText_PkmnInfo,
+                      GetStringCenterAlignXOffset(FONT_NORMAL, gText_PkmnInfo, WindowWidthPx(PSS_LABEL_WINDOW_POKEMON_INFO_TITLE)), 1, 0, 1);
+    PrintTextOnWindow(PSS_LABEL_WINDOW_POKEMON_SKILLS_TITLE, gText_PkmnSkills,
+                      GetStringCenterAlignXOffset(FONT_NORMAL, gText_PkmnSkills, WindowWidthPx(PSS_LABEL_WINDOW_POKEMON_SKILLS_TITLE)), 1, 0, 1);
+    PrintTextOnWindow(PSS_LABEL_WINDOW_BATTLE_MOVES_TITLE, gText_BattleMoves,
+                      GetStringCenterAlignXOffset(FONT_NORMAL, gText_BattleMoves, WindowWidthPx(PSS_LABEL_WINDOW_BATTLE_MOVES_TITLE)), 1, 0, 1);
+    PrintTextOnWindow(PSS_LABEL_WINDOW_CONTEST_MOVES_TITLE, gText_ContestMoves,
+                      GetStringCenterAlignXOffset(FONT_NORMAL, gText_ContestMoves, WindowWidthPx(PSS_LABEL_WINDOW_CONTEST_MOVES_TITLE)), 1, 0, 1);
 
     ShowUtilityPrompt(SUMMARY_MODE_NORMAL);
 
