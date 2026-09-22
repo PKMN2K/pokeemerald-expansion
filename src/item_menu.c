@@ -570,7 +570,7 @@ static const struct WindowTemplate sDefaultBagWindows[] =
         .width = 8,
         .height = 2,
         .paletteNum = 1,
-        .baseBlock = 0x1A1,
+        .baseBlock = 0x273,
     },
     [WIN_TMHM_INFO_ICONS] = {
         .bg = 0,
