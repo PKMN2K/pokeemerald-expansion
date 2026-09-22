@@ -1167,6 +1167,17 @@ static void BagMenu_MoveCursorCallback(s32 itemIndex, bool8 onInit, struct ListM
         DrawHgssBagItemCellFrame(WIN_ITEM_LIST, rowY, frameColor);
     }
     DrawHgssBagItemCellFrame(WIN_ITEM_LIST, cursorY, HGSS_BAG_CELL_ACTIVE_COLOR);
+    if (itemIndex == LIST_CANCEL)
+    {
+        u8 closeTop = cursorY - 2;
+        u8 closeLeft = HGSS_BAG_LIST_CURSOR_WIDTH;
+        u8 closeWidth = GetWindowAttribute(WIN_ITEM_LIST, WINDOW_WIDTH) * 8 - closeLeft;
+
+        // Keep the close row visually distinct even while it carries the active selection frame.
+        FillWindowPixelRect(WIN_ITEM_LIST, PIXEL_FILL(HGSS_BAG_CELL_CLOSE_COLOR),
+                            closeLeft + 2, closeTop + HGSS_BAG_ITEM_CELL_HEIGHT - 2,
+                            closeWidth - 4, 1);
+    }
 
     // Preserve the source marker while moving an item, then draw the current selection on top.
     if (gBagMenu->toSwapPos != NOT_SWAPPING
