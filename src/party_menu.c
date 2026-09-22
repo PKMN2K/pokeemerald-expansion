@@ -2930,9 +2930,18 @@ static u8 DisplaySelectionWindow(u8 windowType)
 
     InitMenuInUpperLeftCorner(sPartyMenuInternal->windowId[0], sPartyMenuInternal->numActions, 0, TRUE);
 
-    // Divide the action list into clean HGSS-style choice cells.
+    // Divide the action list into clean HGSS-style choice cells and soften the panel edges.
     {
         u8 width = GetWindowAttribute(sPartyMenuInternal->windowId[0], WINDOW_WIDTH) * 8;
+        u8 height = GetWindowAttribute(sPartyMenuInternal->windowId[0], WINDOW_HEIGHT) * 8;
+
+        FillWindowPixelRect(sPartyMenuInternal->windowId[0], PIXEL_FILL(TEXT_COLOR_DARK_GRAY), 1, 0, width - 2, 1);
+        FillWindowPixelRect(sPartyMenuInternal->windowId[0], PIXEL_FILL(TEXT_COLOR_DARK_GRAY), 1, height - 1, width - 2, 1);
+        FillWindowPixelRect(sPartyMenuInternal->windowId[0], PIXEL_FILL(TEXT_COLOR_DARK_GRAY), 0, 1, 1, height - 2);
+        FillWindowPixelRect(sPartyMenuInternal->windowId[0], PIXEL_FILL(TEXT_COLOR_DARK_GRAY), width - 1, 1, 1, height - 2);
+
+        if (width > 4)
+            FillWindowPixelRect(sPartyMenuInternal->windowId[0], PIXEL_FILL(TEXT_COLOR_LIGHT_GRAY), 2, 1, width - 4, 1);
 
         for (i = 1; i < sPartyMenuInternal->numActions; i++)
             FillWindowPixelRect(sPartyMenuInternal->windowId[0], PIXEL_FILL(TEXT_COLOR_LIGHT_GRAY), 1, i * 16, width - 2, 1);
