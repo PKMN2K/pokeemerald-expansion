@@ -16,8 +16,7 @@
 
 enum {
     TAG_BAG_GFX = 100,
-    TAG_ROTATING_BALL_GFX,
-    TAG_ITEM_ICON,
+    TAG_ITEM_ICON = 102,
     TAG_ITEM_ICON_ALT,
 };
 #define TAG_BERRY_CHECK_CIRCLE_GFX 10000
@@ -26,12 +25,8 @@ enum {
 // this file's functions
 static void SpriteCB_BagVisualSwitchingPockets(struct Sprite *sprite);
 static void SpriteCB_ShakeBagSprite(struct Sprite *sprite);
-static void SpriteCB_SwitchPocketRotatingBallInit(struct Sprite *sprite);
-static void SpriteCB_SwitchPocketRotatingBallContinue(struct Sprite *sprite);
 
 // static const rom data
-static const u16 sRotatingBall_Pal[] = INCGFX_U16("graphics/bag/rotating_ball.png", ".gbapal");
-static const u8 sRotatingBall_Gfx[] = INCGFX_U8("graphics/bag/rotating_ball.png", ".4bpp");
 static const u8 sCherryUnused[] = INCGFX_U8("graphics/unused/cherry.png", ".4bpp");
 static const u16 sCherryUnused_Pal[] = INCGFX_U16("graphics/unused/cherry.png", ".gbapal");
 
@@ -151,76 +146,6 @@ static const struct SpriteTemplate sBagSpriteTemplate =
     .oam = &sBagOamData,
     .anims = sBagSpriteAnimTable,
     .affineAnims = sBagAffineAnimCmds,
-};
-
-static const struct OamData sRotatingBallOamData =
-{
-    .y = 0,
-    .affineMode = ST_OAM_AFFINE_OFF,
-    .objMode = ST_OAM_OBJ_NORMAL,
-    .mosaic = FALSE,
-    .bpp = ST_OAM_4BPP,
-    .shape = SPRITE_SHAPE(16x16),
-    .x = 0,
-    .matrixNum = 4,
-    .size = SPRITE_SIZE(16x16),
-    .tileNum = 0,
-    .priority = 2,
-    .paletteNum = 0,
-    .affineParam = 0
-};
-
-static const union AnimCmd sSpriteAffineAnim_RotatingBallStationary[] =
-{
-    ANIMCMD_FRAME(0, 0),
-    ANIMCMD_END
-};
-
-static const union AnimCmd *const sRotatingBallSpriteAnimTable[] =
-{
-    sSpriteAffineAnim_RotatingBallStationary
-};
-
-static const union AffineAnimCmd sSpriteAffineAnim_RotatingBallRotation1[] =
-{
-    AFFINEANIMCMD_FRAME(0, 0, 8, 16),
-    AFFINEANIMCMD_END
-};
-
-static const union AffineAnimCmd sSpriteAffineAnim_RotatingBallRotation2[] =
-{
-    AFFINEANIMCMD_FRAME(0, 0, 248, 16),
-    AFFINEANIMCMD_END
-};
-
-static const union AffineAnimCmd *const sRotatingBallAnimCmds[] =
-{
-    sSpriteAffineAnim_RotatingBallRotation1,
-};
-
-static const union AffineAnimCmd *const sRotatingBallAnimCmds_FullRotation[] =
-{
-    sSpriteAffineAnim_RotatingBallRotation2,
-};
-
-static const struct SpriteSheet sRotatingBallTable =
-{
-    sRotatingBall_Gfx, sizeof(sRotatingBall_Gfx), TAG_ROTATING_BALL_GFX
-};
-
-static const struct SpritePalette sRotatingBallPaletteTable =
-{
-    sRotatingBall_Pal, TAG_ROTATING_BALL_GFX
-};
-
-static const struct SpriteTemplate sRotatingBallSpriteTemplate =
-{
-    .tileTag = TAG_ROTATING_BALL_GFX,
-    .paletteTag = TAG_ROTATING_BALL_GFX,
-    .oam = &sRotatingBallOamData,
-    .anims = sRotatingBallSpriteAnimTable,
-    .affineAnims = sRotatingBallAnimCmds,
-    .callback = SpriteCB_SwitchPocketRotatingBallInit,
 };
 
 static const struct OamData sBerryPicOamData =
@@ -431,44 +356,6 @@ static void SpriteCB_ShakeBagSprite(struct Sprite *sprite)
         StartSpriteAffineAnim(sprite, ANIM_BAG_NORMAL);
         sprite->callback = SpriteCallbackDummy;
     }
-}
-
-void AddSwitchPocketRotatingBallSprite(s16 rotationDirection)
-{
-    u8 *spriteId = &gBagMenu->spriteIds[ITEMMENUSPRITE_BALL];
-    LoadSpriteSheet(&sRotatingBallTable);
-    LoadSpritePalette(&sRotatingBallPaletteTable);
-    *spriteId = CreateSprite(&sRotatingBallSpriteTemplate, 16, 16, 0);
-    gSprites[*spriteId].data[0] = rotationDirection;
-}
-
-static void UpdateSwitchPocketRotatingBallCoords(struct Sprite *sprite)
-{
-    sprite->centerToCornerVecX = sprite->data[1] - ((sprite->data[3] + 1) & 1);
-    sprite->centerToCornerVecY = sprite->data[1] - ((sprite->data[3] + 1) & 1);
-}
-
-static void SpriteCB_SwitchPocketRotatingBallInit(struct Sprite *sprite)
-{
-    sprite->oam.affineMode = ST_OAM_AFFINE_NORMAL;
-    if (sprite->data[0] == -1)
-        sprite->affineAnims = sRotatingBallAnimCmds;
-    else
-        sprite->affineAnims = sRotatingBallAnimCmds_FullRotation;
-
-    InitSpriteAffineAnim(sprite);
-    sprite->data[1] = sprite->centerToCornerVecX;
-    sprite->data[1] = sprite->centerToCornerVecY;
-    UpdateSwitchPocketRotatingBallCoords(sprite);
-    sprite->callback = SpriteCB_SwitchPocketRotatingBallContinue;
-}
-
-static void SpriteCB_SwitchPocketRotatingBallContinue(struct Sprite *sprite)
-{
-    sprite->data[3]++;
-    UpdateSwitchPocketRotatingBallCoords(sprite);
-    if (sprite->data[3] == 16)
-        RemoveBagSprite(ITEMMENUSPRITE_BALL);
 }
 
 void AddBagItemIconSprite(enum Item itemId, u8 id)
