@@ -3486,8 +3486,11 @@ static void PrintPageNamesAndStats(void)
     PrintTextOnWindow(PSS_LABEL_WINDOW_POKEMON_SKILLS_STATUS, gText_Status, 2, 1, 0, 1);
     PrintTextOnWindow(PSS_LABEL_WINDOW_MOVES_POWER_ACC, gText_Power, 0, 1, 0, 1);
     PrintTextOnWindow(PSS_LABEL_WINDOW_MOVES_POWER_ACC, gText_Accuracy2, 0, 17, 0, 1);
-    PrintTextOnWindow(PSS_LABEL_WINDOW_MOVES_APPEAL_JAM, gText_Appeal, 0, 1, 0, 1);
-    PrintTextOnWindow(PSS_LABEL_WINDOW_MOVES_APPEAL_JAM, gText_Jam, 0, 17, 0, 1);
+    DrawHgssSummaryMoveStatPanel(PSS_LABEL_WINDOW_MOVES_APPEAL_JAM);
+    statsXPos = GetStringCenterAlignXOffset(FONT_NORMAL, gText_Appeal, WindowWidthPx(PSS_LABEL_WINDOW_MOVES_APPEAL_JAM));
+    PrintTextOnWindow(PSS_LABEL_WINDOW_MOVES_APPEAL_JAM, gText_Appeal, statsXPos, 1, 0, 1);
+    statsXPos = GetStringCenterAlignXOffset(FONT_NORMAL, gText_Jam, WindowWidthPx(PSS_LABEL_WINDOW_MOVES_APPEAL_JAM));
+    PrintTextOnWindow(PSS_LABEL_WINDOW_MOVES_APPEAL_JAM, gText_Jam, statsXPos, 17, 0, 1);
 }
 
 static void PutPageWindowTilemaps(u8 page)
