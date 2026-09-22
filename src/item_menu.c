@@ -1128,9 +1128,9 @@ static void DrawHgssBagItemCellFrame(u8 windowId, u8 y, u8 color)
 static void DrawHgssBagRegisteredMarker(u8 windowId, u8 y)
 {
     const u8 left = 95;
-    const u8 top = y + 2;
+    const u8 top = y;
     const u8 width = 23;
-    const u8 height = 12;
+    const u8 height = 16;
 
     // Compact HGSS-style registration tab, replacing Emerald's SELECT-button badge.
     FillWindowPixelRect(windowId, PIXEL_FILL(HGSS_BAG_CELL_ACTIVE_COLOR), left + 1, top, width - 2, 1);
