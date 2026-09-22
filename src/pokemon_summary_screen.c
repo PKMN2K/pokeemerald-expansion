@@ -245,6 +245,7 @@ static void DrawExperienceProgressBar(struct Pokemon *);
 static void DrawContestMoveHearts(enum Move move);
 static void LimitEggSummaryPageDisplay(void);
 static void ResetWindows(void);
+static void DrawHgssSummaryPortraitStrip(u8 windowId);
 static void PrintMonInfo(void);
 static void PrintNotEggInfo(void);
 static void PrintEggInfo(void);
@@ -3188,11 +3189,28 @@ static void PrintTextOnWindowToFit(u8 windowId, const u8 *string, u8 x, u8 y, u8
     PrintTextOnWindowToFitPx(windowId, string, x, y, lineSpacing, colorId, WindowWidthPx(windowId));
 }
 
+static void DrawHgssSummaryPortraitStrip(u8 windowId)
+{
+    u8 width = WindowWidthPx(windowId);
+    u8 height = GetWindowAttribute(windowId, WINDOW_HEIGHT) * 8;
+
+    if (width < 8 || height < 8)
+        return;
+
+    FillWindowPixelRect(windowId, PIXEL_FILL(3), 2, 0, width - 4, 1);
+    FillWindowPixelRect(windowId, PIXEL_FILL(3), 2, height - 1, width - 4, 1);
+    FillWindowPixelRect(windowId, PIXEL_FILL(3), 1, 1, 1, height - 2);
+    FillWindowPixelRect(windowId, PIXEL_FILL(3), width - 2, 1, 1, height - 2);
+    FillWindowPixelRect(windowId, PIXEL_FILL(4), 3, 1, width - 6, 1);
+}
+
 static void PrintMonInfo(void)
 {
     FillWindowPixelBuffer(PSS_LABEL_WINDOW_PORTRAIT_DEX_NUMBER, PIXEL_FILL(0));
     FillWindowPixelBuffer(PSS_LABEL_WINDOW_PORTRAIT_NICKNAME, PIXEL_FILL(0));
     FillWindowPixelBuffer(PSS_LABEL_WINDOW_PORTRAIT_SPECIES, PIXEL_FILL(0));
+    DrawHgssSummaryPortraitStrip(PSS_LABEL_WINDOW_PORTRAIT_NICKNAME);
+    DrawHgssSummaryPortraitStrip(PSS_LABEL_WINDOW_PORTRAIT_SPECIES);
     if (!sMonSummaryScreen->summary.isEgg)
         PrintNotEggInfo();
     else
