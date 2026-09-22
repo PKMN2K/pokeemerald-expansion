@@ -132,8 +132,8 @@ static void AllocateBagItemListBuffers(void);
 static void LoadBagItemListBuffers(u8);
 static void PrintPocketNames(const u8 *, const u8 *);
 static void CopyPocketNameToWindow(u32);
-static void DrawPocketIndicatorSquare(u8, bool8);
-static void DrawPocketIndicatorSquares(u8);
+static void DrawPocketIndicatorIcon(u8, bool8);
+static void DrawPocketIndicatorIcons(u8);
 static void CreatePocketScrollArrowPair(void);
 static void PrepareTMHMMoveWindow(void);
 static bool8 IsWallysBag(void);
@@ -151,19 +151,21 @@ static void PrintItemQuantity(u8, s16);
 static u8 BagMenu_AddWindow(u8);
 static u8 GetSwitchBagPocketDirection(void);
 static void SwitchBagPocket(u8, s16, bool16);
-static void DrawPocketIndicatorSquare(u8 pocket, bool8 isCurrentPocket)
+static void DrawPocketIndicatorIcon(u8 pocket, bool8 isCurrentPocket)
 {
     static const u8 sPocketIndicatorXOffset = 4;
-    u16 tile = isCurrentPocket ? 0x34 : 0x0C;
+    static const u16 sPocketIndicatorInactiveTile = 0x34;
+    static const u16 sPocketIndicatorActiveTile = 0x39;
+    u16 tile = (isCurrentPocket ? sPocketIndicatorActiveTile : sPocketIndicatorInactiveTile) + pocket;
 
     FillBgTilemapBufferRect(2, tile, pocket + sPocketIndicatorXOffset, 3, 1, 1, 0);
     ScheduleBgCopyTilemapToVram(2);
 }
 
-static void DrawPocketIndicatorSquares(u8 currentPocket)
+static void DrawPocketIndicatorIcons(u8 currentPocket)
 {
     for (u8 i = 0; i < POCKETS_COUNT; i++)
-        DrawPocketIndicatorSquare(i, i == currentPocket);
+        DrawPocketIndicatorIcon(i, i == currentPocket);
 }
 
 static bool8 CanSwapItems(void);
@@ -792,7 +794,7 @@ static bool8 SetupBagMenu(void)
     case 13:
         PrintPocketNames(gPocketNamesStringsTable[gBagPosition.pocket], 0);
         CopyPocketNameToWindow(0);
-        DrawPocketIndicatorSquares(gBagPosition.pocket);
+        DrawPocketIndicatorIcons(gBagPosition.pocket);
         gMain.state++;
         break;
     case 14:
@@ -1434,8 +1436,8 @@ static void SwitchBagPocket(u8 taskId, s16 deltaBagPocketId, bool16 skipEraseLis
         PrintPocketNames(gPocketNamesStringsTable[newPocket], gPocketNamesStringsTable[gBagPosition.pocket]);
         CopyPocketNameToWindow(8);
     }
-    DrawPocketIndicatorSquare(gBagPosition.pocket, FALSE);
-    DrawPocketIndicatorSquare(newPocket, TRUE);
+    DrawPocketIndicatorIcon(gBagPosition.pocket, FALSE);
+    DrawPocketIndicatorIcon(newPocket, TRUE);
     FillBgTilemapBufferRect_Palette0(2, 11, 14, 2, 15, 16);
     ScheduleBgCopyTilemapToVram(2);
     SetBagVisualPocketId(newPocket, TRUE);
