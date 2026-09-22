@@ -1284,7 +1284,7 @@ static void CreatePocketScrollArrowPair(void)
     LoadSpritePalette(&sHgssBagScrollArrowSpritePalette);
 
     topSpriteId = CreateSprite(&sHgssBagScrollArrowSpriteTemplate, 108, 24, 0);
-    bottomSpriteId = CreateSprite(&sHgssBagScrollArrowSpriteTemplate, 108, 104, 0);
+    bottomSpriteId = CreateSprite(&sHgssBagScrollArrowSpriteTemplate, 108, 136, 0);
     if (topSpriteId == MAX_SPRITES || bottomSpriteId == MAX_SPRITES)
     {
         if (topSpriteId != MAX_SPRITES)
