@@ -3034,13 +3034,13 @@ static void PrintPocketNames(const u8 *pocketName1, const u8 *pocketName2)
     window.height = 2;
     windowId = AddWindow(&window);
     FillWindowPixelBuffer(windowId, PIXEL_FILL(0));
-    offset = GetStringCenterAlignXOffset(FONT_SMALL, pocketName1, 0x40);
+    offset = 8 + GetStringCenterAlignXOffset(FONT_SMALL, pocketName1, 48);
     BagMenu_Print(windowId, FONT_SMALL, pocketName1, offset, 1, 0, 0, TEXT_SKIP_DRAW, COLORID_POCKET_TITLE);
     DrawHgssBagPocketTitleTab(windowId, 0);
     if (pocketName2)
     {
-        offset = GetStringCenterAlignXOffset(FONT_SMALL, pocketName2, 0x40);
-        BagMenu_Print(windowId, FONT_SMALL, pocketName2, offset + 0x40, 1, 0, 0, TEXT_SKIP_DRAW, COLORID_POCKET_TITLE);
+        offset = 72 + GetStringCenterAlignXOffset(FONT_SMALL, pocketName2, 48);
+        BagMenu_Print(windowId, FONT_SMALL, pocketName2, offset, 1, 0, 0, TEXT_SKIP_DRAW, COLORID_POCKET_TITLE);
         DrawHgssBagPocketTitleTab(windowId, 64);
     }
     CpuCopy32((u8 *)GetWindowAttribute(windowId, WINDOW_TILE_DATA), gBagMenu->pocketNameBuffer, sizeof(gBagMenu->pocketNameBuffer));
