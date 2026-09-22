@@ -2137,7 +2137,9 @@ static void DrawHgssBagContextMenuCursor(u8 windowId, u8 cursorPos, u8 columns, 
     {
         for (u8 column = 0; column < columns; column++)
         {
-            u8 clearX = column * 56;
+            u8 cellLeft = column * 56;
+            u8 cellTop = row * 16;
+            u8 clearX = cellLeft;
             u8 clearWidth = 8;
             u8 clearHeight = (row == rows - 1) ? 14 : 15;
 
@@ -2148,17 +2150,31 @@ static void DrawHgssBagContextMenuCursor(u8 windowId, u8 cursorPos, u8 columns, 
                 clearWidth--;
             }
             FillWindowPixelRect(windowId, PIXEL_FILL(1),
-                                clearX, 1 + row * 16,
+                                clearX, 1 + cellTop,
                                 clearWidth, clearHeight);
+
+            // Remove the previous selected-cell outline without touching its label.
+            FillWindowPixelRect(windowId, PIXEL_FILL(1), cellLeft + 1, cellTop + 1, 54, 1);
+            FillWindowPixelRect(windowId, PIXEL_FILL(1), cellLeft + 1, cellTop + 14, 54, 1);
+            FillWindowPixelRect(windowId, PIXEL_FILL(1), cellLeft + 1, cellTop + 2, 1, 12);
+            FillWindowPixelRect(windowId, PIXEL_FILL(1), cellLeft + 54, cellTop + 2, 1, 12);
         }
     }
 
-    // The stock menu engine redraws its Emerald arrow first; restore the HGSS frame over any edge pixels it leaves behind.
+    // The stock menu engine redraws its Emerald arrow first; restore the HGSS frame and cell dividers over it.
     DrawHgssBagContextMenuAccent(windowId, columns, rows);
 
     {
-        u8 cursorX = (cursorPos % columns) * 56 + 2;
-        u8 cursorY = 3 + (cursorPos / columns) * 16;
+        u8 cellLeft = (cursorPos % columns) * 56;
+        u8 cellTop = (cursorPos / columns) * 16;
+        u8 cursorX = cellLeft + 2;
+        u8 cursorY = cellTop + 3;
+
+        // HGSS-style selected action cell: a second inset accent frame around the active choice.
+        FillWindowPixelRect(windowId, PIXEL_FILL(TEXT_COLOR_RED), cellLeft + 2, cellTop + 1, 52, 1);
+        FillWindowPixelRect(windowId, PIXEL_FILL(TEXT_COLOR_RED), cellLeft + 2, cellTop + 14, 52, 1);
+        FillWindowPixelRect(windowId, PIXEL_FILL(TEXT_COLOR_RED), cellLeft + 1, cellTop + 2, 1, 12);
+        FillWindowPixelRect(windowId, PIXEL_FILL(TEXT_COLOR_RED), cellLeft + 54, cellTop + 2, 1, 12);
 
         FillWindowPixelRect(windowId, PIXEL_FILL(TEXT_COLOR_RED), cursorX + 1, cursorY, 2, 1);
         FillWindowPixelRect(windowId, PIXEL_FILL(TEXT_COLOR_RED), cursorX, cursorY + 1, 4, 9);
