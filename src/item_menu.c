@@ -1028,7 +1028,7 @@ static void BagMenu_MoveCursorCallback(s32 itemIndex, bool8 onInit, struct ListM
     // The list engine no longer draws an Emerald arrow, so refresh the Bag-specific selector column here.
     FillWindowPixelRect(WIN_ITEM_LIST, PIXEL_FILL(0), 0, 0,
                         HGSS_BAG_LIST_CURSOR_WIDTH,
-                        GetWindowAttribute(WIN_ITEM_LIST, WINDOW_HEIGHT) * TILE_SIZE_1BPP);
+                        GetWindowAttribute(WIN_ITEM_LIST, WINDOW_HEIGHT) * 8);
 
     // Preserve the source marker while moving an item, then draw the current selection on top.
     if (gBagMenu->toSwapPos != NOT_SWAPPING
