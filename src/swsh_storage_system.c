@@ -854,6 +854,9 @@ static void PrintDisplayMonLevel(u8);
 static bool8 PrintDisplayMonInfo(void);
 static void FreePokeStorageData(void);
 static bool8 InitPokeStorageWindows(void);
+static void DrawHgssStorageContextMenuRows(u8 windowId);
+static void DrawHgssStorageMessageAccent(u8 windowId);
+static void DrawHgssStorageYesNo(void);
 static void ShowYesNoWindow(s8);
 static void PrintMessage(u8 id);
 static void CreateMessageWindowSprite(void);
@@ -4386,6 +4389,54 @@ static void ClearMonInfoPanel(void)
     SetGpuReg(REG_OFFSET_BG0VOFS, 0);
 }
 
+static void DrawHgssStorageContextMenuRows(u8 windowId)
+{
+    u8 width = GetWindowAttribute(windowId, WINDOW_WIDTH) * 8;
+    u8 height = GetWindowAttribute(windowId, WINDOW_HEIGHT) * 8;
+    u8 y;
+
+    if (width < 16 || height < 16)
+        return;
+
+    // Preserve the selector gutter and frame each context action as an HGSS-style cell.
+    FillWindowPixelRect(windowId, PIXEL_FILL(2), 8, 0, width - 9, 1);
+    FillWindowPixelRect(windowId, PIXEL_FILL(2), 8, height - 1, width - 9, 1);
+    FillWindowPixelRect(windowId, PIXEL_FILL(2), width - 1, 1, 1, height - 2);
+
+    for (y = 16; y < height; y += 16)
+        FillWindowPixelRect(windowId, PIXEL_FILL(3), 8, y, width - 9, 1);
+}
+
+static void DrawHgssStorageMessageAccent(u8 windowId)
+{
+    u8 width = GetWindowAttribute(windowId, WINDOW_WIDTH) * 8;
+    u8 height = GetWindowAttribute(windowId, WINDOW_HEIGHT) * 8;
+
+    if (width < 16 || height < 8)
+        return;
+
+    // Keep the center of the one-line message clear; accents sit on its outer edges only.
+    FillWindowPixelRect(windowId, PIXEL_FILL(2), 4, 0, width - 8, 1);
+    FillWindowPixelRect(windowId, PIXEL_FILL(2), 4, height - 1, width - 8, 1);
+}
+
+static void DrawHgssStorageYesNo(void)
+{
+    u8 windowId = GetYesNoWindowId();
+    u8 width = GetWindowAttribute(windowId, WINDOW_WIDTH) * 8;
+    u8 height = GetWindowAttribute(windowId, WINDOW_HEIGHT) * 8;
+
+    if (width < 16 || height < 24)
+        return;
+
+    // Leave the left selector gutter untouched and separate YES / NO into two HGSS cells.
+    FillWindowPixelRect(windowId, PIXEL_FILL(2), 8, 0, width - 9, 1);
+    FillWindowPixelRect(windowId, PIXEL_FILL(2), 8, height - 1, width - 9, 1);
+    FillWindowPixelRect(windowId, PIXEL_FILL(2), width - 1, 1, 1, height - 2);
+    FillWindowPixelRect(windowId, PIXEL_FILL(3), 8, 16, width - 9, 1);
+    CopyWindowToVram(windowId, COPYWIN_GFX);
+}
+
 static void PrintMessage(u8 id)
 {
     u8 *txtPtr;
@@ -4424,6 +4475,7 @@ static void PrintMessage(u8 id)
     CreateMessageWindowSprite();
     FillWindowPixelBuffer(WIN_MESSAGE, PIXEL_FILL(0));
     AddTextPrinterParameterized4(WIN_MESSAGE, FONT_NORMAL, 0, 1, 0, 0, sTextColors[3], TEXT_SKIP_DRAW, sStorage->messageText);
+    DrawHgssStorageMessageAccent(WIN_MESSAGE);
     PutWindowTilemap(WIN_MESSAGE);
     CopyWindowToVram(WIN_MESSAGE, COPYWIN_GFX);
     ScheduleBgCopyTilemapToVram(0);
@@ -4434,6 +4486,7 @@ static void ShowYesNoWindow(s8 cursorPos)
     ClearMonInfoTilemap();
     CreateYesNoMenu(&sYesNoWindowTemplate, 192, 14, 0);
     Menu_MoveCursorNoWrapAround(cursorPos);
+    DrawHgssStorageYesNo();
 }
 
 static void ClearBottomWindow(void)
@@ -8041,6 +8094,7 @@ static void AddMenu(void)
     ClearWindowTilemap(sStorage->menuWindowId);
     DrawStdFrameWithCustomTileAndPalette(sStorage->menuWindowId, FALSE, 192, 14);
     PrintMenuTable(sStorage->menuWindowId, sStorage->menuItemsCount, (void *)sStorage->menuItems);
+    DrawHgssStorageContextMenuRows(sStorage->menuWindowId);
     InitMenuInUpperLeftCornerNormal(sStorage->menuWindowId, sStorage->menuItemsCount, 0);
     ScheduleBgCopyTilemapToVram(0);
 }
