@@ -805,6 +805,7 @@ static void SetBoxWallpaper(u8, u8);
 // General box
 static void CreateInitBoxTask(u8);
 static bool8 IsInitBoxActive(void);
+static void DrawHgssStorageBoxGrid(void);
 static void Task_InitBox(u8);
 static void SetUpScrollToBox(u8);
 static bool8 ScrollToBox(void);
@@ -5400,6 +5401,86 @@ static bool8 IsInitBoxActive(void)
     return FuncIsActiveTask(Task_InitBox);
 }
 
+static void DrawHgssStorageBoxGrid(void)
+{
+    enum
+    {
+        GRID_TILE_VERTICAL,
+        GRID_TILE_HORIZONTAL,
+        GRID_TILE_CROSS,
+        GRID_TILE_TOP_CROSS,
+        GRID_TILE_BOTTOM_CROSS,
+        GRID_TILE_COUNT,
+    };
+    static const u8 sGridColumns[] = {10, 13, 16, 19, 22, 25, 28};
+    static const u8 sGridRows[] = {3, 6, 9, 12, 15, 18};
+    u8 gridTiles[GRID_TILE_COUNT * TILE_SIZE_4BPP] = {0};
+    u32 gfxSize = GetDecompressedDataSize(sSwShStorage_Gfx);
+    u16 baseTile = (gfxSize + TILE_SIZE_4BPP - 1) / TILE_SIZE_4BPP;
+    u16 paletteBits = 15 << 12;
+    u16 row, col;
+    u8 i;
+
+    // BG1 and BG2 share charbase 2; append a few tiny transparent line tiles after the storage UI gfx.
+    if (baseTile + GRID_TILE_COUNT >= 512)
+        return;
+
+    for (i = 0; i < 8; i++)
+    {
+        gridTiles[GRID_TILE_VERTICAL * TILE_SIZE_4BPP + i * 4] = 0x02;
+        gridTiles[GRID_TILE_CROSS * TILE_SIZE_4BPP + i * 4] = 0x02;
+        if (i >= 4)
+            gridTiles[GRID_TILE_TOP_CROSS * TILE_SIZE_4BPP + i * 4] = 0x02;
+        if (i <= 4)
+            gridTiles[GRID_TILE_BOTTOM_CROSS * TILE_SIZE_4BPP + i * 4] = 0x02;
+    }
+
+    for (i = 0; i < 4; i++)
+    {
+        gridTiles[GRID_TILE_HORIZONTAL * TILE_SIZE_4BPP + 16 + i] = 0x22;
+        gridTiles[GRID_TILE_CROSS * TILE_SIZE_4BPP + 16 + i] = 0x22;
+        gridTiles[GRID_TILE_TOP_CROSS * TILE_SIZE_4BPP + 16 + i] = 0x22;
+        gridTiles[GRID_TILE_BOTTOM_CROSS * TILE_SIZE_4BPP + 16 + i] = 0x22;
+    }
+    gridTiles[GRID_TILE_CROSS * TILE_SIZE_4BPP + 16] = 0x22;
+    gridTiles[GRID_TILE_TOP_CROSS * TILE_SIZE_4BPP + 16] = 0x22;
+    gridTiles[GRID_TILE_BOTTOM_CROSS * TILE_SIZE_4BPP + 16] = 0x22;
+
+    LoadBgTiles(2, gridTiles, sizeof(gridTiles), baseTile);
+
+    // The wallpaper loader reuses this RAM buffer for BG3, so rebuild a clean transparent BG2 overlay here.
+    CpuFill16(0, sStorage->wallpaperBgTilemapBuffer, sizeof(sStorage->wallpaperBgTilemapBuffer));
+
+    for (row = 3; row <= 18; row++)
+    {
+        bool32 isBoundaryRow = FALSE;
+        u16 boundaryTile = GRID_TILE_VERTICAL;
+
+        for (i = 0; i < ARRAY_COUNT(sGridRows); i++)
+        {
+            if (row == sGridRows[i])
+            {
+                isBoundaryRow = TRUE;
+                boundaryTile = (i == 0) ? GRID_TILE_TOP_CROSS
+                             : (i == ARRAY_COUNT(sGridRows) - 1) ? GRID_TILE_BOTTOM_CROSS
+                             : GRID_TILE_CROSS;
+                break;
+            }
+        }
+
+        if (isBoundaryRow)
+        {
+            for (col = 10; col <= 28; col++)
+                sStorage->wallpaperBgTilemapBuffer[row * 32 + col] = paletteBits | (baseTile + GRID_TILE_HORIZONTAL);
+        }
+
+        for (i = 0; i < ARRAY_COUNT(sGridColumns); i++)
+            sStorage->wallpaperBgTilemapBuffer[row * 32 + sGridColumns[i]] = paletteBits | (baseTile + boundaryTile);
+    }
+
+    ScheduleBgCopyTilemapToVram(2);
+}
+
 static void Task_InitBox(u8 taskId)
 {
     struct Task *task = &gTasks[taskId];
@@ -5431,6 +5512,7 @@ static void Task_InitBox(u8 taskId)
         InitBoxTitle(task->tBoxId);
         CreateBoxScrollArrows();
         InitBoxMonSprites(task->tBoxId);
+        DrawHgssStorageBoxGrid();
         SetGpuReg(REG_OFFSET_BG2CNT, BGCNT_PRIORITY(2) | BGCNT_CHARBASE(2) | BGCNT_SCREENBASE(27) | BGCNT_TXT256x256);
         break;
     case 4:
