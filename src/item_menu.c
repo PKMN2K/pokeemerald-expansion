@@ -3200,7 +3200,7 @@ static void PrintTMHMMoveData(enum Item itemId)
     else
     {
         move = ItemIdToBattleMoveId(itemId);
-        BlitMenuInfoIcon(WIN_TMHM_INFO, GetMoveType(move) + 1, 2, 0);
+        BlitMenuInfoIcon(WIN_TMHM_INFO, GetMoveType(move) + 1, 0, 0);
 
         // Print TMHM power
         u32 power = GetMovePower(move);
