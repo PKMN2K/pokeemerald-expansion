@@ -249,6 +249,8 @@ static void DrawHgssSummaryInfoStrip(u8 windowId);
 static void DrawHgssSummaryMemoPanel(u8 windowId);
 static void DrawHgssSummaryMoveRows(u8 windowId);
 static void DrawHgssSummaryMovePPRows(u8 windowId);
+static void DrawHgssSummaryMoveStatPanel(u8 windowId);
+static void DrawHgssSummaryMoveDescriptionPanel(u8 windowId);
 static void PrintMonInfo(void);
 static void PrintNotEggInfo(void);
 static void PrintEggInfo(void);
@@ -3261,6 +3263,36 @@ static void DrawHgssSummaryMovePPRows(u8 windowId)
         FillWindowPixelRect(windowId, PIXEL_FILL(2), 2, y, width - 4, 1);
 }
 
+static void DrawHgssSummaryMoveStatPanel(u8 windowId)
+{
+    u8 width = WindowWidthPx(windowId);
+    u8 height = GetWindowAttribute(windowId, WINDOW_HEIGHT) * 8;
+
+    if (width < 8 || height < 16)
+        return;
+
+    FillWindowPixelRect(windowId, PIXEL_FILL(3), 1, 0, width - 2, 1);
+    FillWindowPixelRect(windowId, PIXEL_FILL(3), 1, height - 1, width - 2, 1);
+    FillWindowPixelRect(windowId, PIXEL_FILL(3), 0, 1, 1, height - 2);
+    FillWindowPixelRect(windowId, PIXEL_FILL(3), width - 1, 1, 1, height - 2);
+    FillWindowPixelRect(windowId, PIXEL_FILL(4), 2, 16, width - 4, 1);
+}
+
+static void DrawHgssSummaryMoveDescriptionPanel(u8 windowId)
+{
+    u8 width = WindowWidthPx(windowId);
+    u8 height = GetWindowAttribute(windowId, WINDOW_HEIGHT) * 8;
+
+    if (width < 8 || height < 8)
+        return;
+
+    FillWindowPixelRect(windowId, PIXEL_FILL(3), 1, 0, width - 2, 1);
+    FillWindowPixelRect(windowId, PIXEL_FILL(3), 1, height - 1, width - 2, 1);
+    FillWindowPixelRect(windowId, PIXEL_FILL(3), 0, 1, 1, height - 2);
+    FillWindowPixelRect(windowId, PIXEL_FILL(3), width - 1, 1, 1, height - 2);
+    FillWindowPixelRect(windowId, PIXEL_FILL(4), 3, 2, width - 6, 1);
+}
+
 static void PrintMonInfo(void)
 {
     FillWindowPixelBuffer(PSS_LABEL_WINDOW_PORTRAIT_DEX_NUMBER, PIXEL_FILL(0));
@@ -4277,6 +4309,7 @@ static void PrintMovePowerAndAccuracy(enum Move moveIndex)
     if (moveIndex != MOVE_NONE)
     {
         FillWindowPixelRect(PSS_LABEL_WINDOW_MOVES_POWER_ACC, PIXEL_FILL(0), 53, 0, 19, 32);
+        DrawHgssSummaryMoveStatPanel(PSS_LABEL_WINDOW_MOVES_POWER_ACC);
 
         u32 power = GetMovePower(moveIndex);
         if (power < 2)
@@ -4368,7 +4401,9 @@ static void PrintContestMoveDescription(u8 moveSlot)
     if (move != MOVE_NONE)
     {
         u8 windowId = AddWindowFromTemplateList(sPageMovesTemplate, PSS_DATA_WINDOW_MOVE_DESCRIPTION);
-        PrintTextOnWindowToFit(windowId, gContestEffects[GetMoveContestEffect(move)].description, 6, 1, 0, 0);
+
+        DrawHgssSummaryMoveDescriptionPanel(windowId);
+        PrintTextOnWindowToFitPx(windowId, gContestEffects[GetMoveContestEffect(move)].description, 6, 3, 0, 0, WindowWidthPx(windowId) - 12);
     }
 }
 
@@ -4378,16 +4413,17 @@ static void PrintMoveDetails(enum Move move)
     FillWindowPixelBuffer(windowId, PIXEL_FILL(0));
     if (move != MOVE_NONE)
     {
+        DrawHgssSummaryMoveDescriptionPanel(windowId);
         if (sMonSummaryScreen->currPageIndex == PSS_PAGE_BATTLE_MOVES)
         {
             if (B_SHOW_CATEGORY_ICON == TRUE)
                 ShowCategoryIcon(GetBattleMoveCategory(move));
             PrintMovePowerAndAccuracy(move);
-            PrintTextOnWindowToFit(windowId, GetMoveDescription(move), 6, 1, 0, 0);
+            PrintTextOnWindowToFitPx(windowId, GetMoveDescription(move), 6, 3, 0, 0, WindowWidthPx(windowId) - 12);
         }
         else
         {
-            PrintTextOnWindowToFit(windowId, gContestEffects[GetMoveContestEffect(move)].description, 6, 1, 0, 0);
+            PrintTextOnWindowToFitPx(windowId, gContestEffects[GetMoveContestEffect(move)].description, 6, 3, 0, 0, WindowWidthPx(windowId) - 12);
         }
         PutWindowTilemap(windowId);
     }
@@ -4456,7 +4492,8 @@ static void PrintHMMovesCantBeForgotten(void)
 {
     u8 windowId = AddWindowFromTemplateList(sPageMovesTemplate, PSS_DATA_WINDOW_MOVE_DESCRIPTION);
     FillWindowPixelBuffer(windowId, PIXEL_FILL(0));
-    PrintTextOnWindow(windowId, gText_HMMovesCantBeForgotten2, 6, 1, 0, 0);
+    DrawHgssSummaryMoveDescriptionPanel(windowId);
+    PrintTextOnWindowToFitPx(windowId, gText_HMMovesCantBeForgotten2, 6, 3, 0, 0, WindowWidthPx(windowId) - 12);
 }
 
 static void ResetSpriteIds(void)
