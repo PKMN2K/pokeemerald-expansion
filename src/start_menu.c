@@ -248,6 +248,7 @@ static const struct WindowTemplate sSaveInfoWindowTemplate = {
 // Local functions
 static void BuildStartMenuActions(void);
 static void DrawHgssStartMenuRows(void);
+static void DrawHgssStartMenuSelection(u8 row, bool8 selected);
 static void AddStartMenuAction(u8 action);
 static void BuildNormalStartMenu(void);
 static void BuildDebugStartMenu(void);
@@ -491,14 +492,33 @@ static void DrawHgssStartMenuRows(void)
     if (width < 8 || height < 16)
         return;
 
-    // Keep the existing standard outer frame and divide the interior into HGSS-style rows.
-    for (y = 16; y < height - 8; y += 16)
+    // Menu text begins at y=9 and advances in 16-pixel rows, so the first divider is y=24.
+    for (y = 24; y < height - 8; y += 16)
         FillWindowPixelRect(windowId, PIXEL_FILL(2), 2, y, width - 4, 1);
 
     // A short top accent keeps the list visually consistent with the other HGSS panels.
     FillWindowPixelRect(windowId, PIXEL_FILL(2), 4, 2, width - 8, 1);
 
     CopyWindowToVram(windowId, COPYWIN_GFX);
+}
+
+static void DrawHgssStartMenuSelection(u8 row, bool8 selected)
+{
+    u8 windowId = GetStartMenuWindowId();
+    u8 width = GetWindowAttribute(windowId, WINDOW_WIDTH) * 8;
+    u8 top = (row << 4) + 8;
+    u8 color = selected ? 2 : 1;
+
+    if (width < 16)
+        return;
+
+    // Leave the left cursor gutter open; box the text field on its other three sides.
+    FillWindowPixelRect(windowId, PIXEL_FILL(color), 9, top, width - 10, 1);
+    FillWindowPixelRect(windowId, PIXEL_FILL(color), 9, top + 15, width - 10, 1);
+    FillWindowPixelRect(windowId, PIXEL_FILL(color), width - 1, top + 1, 1, 14);
+
+    if (!selected && row > 0)
+        FillWindowPixelRect(windowId, PIXEL_FILL(2), 2, top, width - 4, 1);
 }
 
 static bool32 PrintStartMenuActions(s8 *pIndex, u32 count)
@@ -567,7 +587,8 @@ static bool32 InitStartMenuStep(void)
         break;
     case 5:
         sStartMenuCursorPos = InitMenuNormal(GetStartMenuWindowId(), FONT_NORMAL, 0, 9, 16, sNumStartMenuActions, sStartMenuCursorPos);
-        CopyWindowToVram(GetStartMenuWindowId(), COPYWIN_MAP);
+        DrawHgssStartMenuSelection(sStartMenuCursorPos, TRUE);
+        CopyWindowToVram(GetStartMenuWindowId(), COPYWIN_FULL);
         return TRUE;
     }
 
@@ -653,13 +674,19 @@ static bool8 HandleStartMenuInput(void)
     if (JOY_NEW(DPAD_UP))
     {
         PlaySE(SE_SELECT);
+        DrawHgssStartMenuSelection(sStartMenuCursorPos, FALSE);
         sStartMenuCursorPos = Menu_MoveCursor(-1);
+        DrawHgssStartMenuSelection(sStartMenuCursorPos, TRUE);
+        CopyWindowToVram(GetStartMenuWindowId(), COPYWIN_GFX);
     }
 
     if (JOY_NEW(DPAD_DOWN))
     {
         PlaySE(SE_SELECT);
+        DrawHgssStartMenuSelection(sStartMenuCursorPos, FALSE);
         sStartMenuCursorPos = Menu_MoveCursor(1);
+        DrawHgssStartMenuSelection(sStartMenuCursorPos, TRUE);
+        CopyWindowToVram(GetStartMenuWindowId(), COPYWIN_GFX);
     }
 
     if (JOY_NEW(A_BUTTON))
