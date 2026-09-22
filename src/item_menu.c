@@ -416,6 +416,77 @@ static const struct YesNoFuncTable sYesNoSellItemFunctions = {ConfirmSell, Cance
 
 static const u8 sRegisteredSelect_Gfx[] = INCGFX_U8("graphics/bag/select_button.png", ".4bpp");
 
+// Bag-only HGSS-style page chevron. The bottom indicator reuses this graphic vertically flipped.
+static const u8 sHgssBagScrollArrow_Gfx[] =
+{
+    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x30, 0x00, 0x00, 0x00, 0x31,
+    0x00, 0x00, 0x10, 0x22, 0x00, 0x00, 0x21, 0x01, 0x00, 0x10, 0x12, 0x00, 0x00, 0x21, 0x01, 0x00,
+    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x03, 0x00, 0x00, 0x00, 0x13, 0x00, 0x00, 0x00,
+    0x22, 0x01, 0x00, 0x00, 0x10, 0x12, 0x00, 0x00, 0x00, 0x21, 0x01, 0x00, 0x00, 0x10, 0x12, 0x00,
+    0x00, 0x11, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+    0x00, 0x00, 0x11, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+};
+
+static const u16 sHgssBagScrollArrow_Pal[] =
+{
+    RGB(0, 0, 0), RGB(6, 8, 15), RGB(18, 23, 31), RGB(28, 30, 31),
+    RGB(0, 0, 0), RGB(0, 0, 0), RGB(0, 0, 0), RGB(0, 0, 0),
+    RGB(0, 0, 0), RGB(0, 0, 0), RGB(0, 0, 0), RGB(0, 0, 0),
+    RGB(0, 0, 0), RGB(0, 0, 0), RGB(0, 0, 0), RGB(0, 0, 0),
+};
+
+static const struct SpriteSheet sHgssBagScrollArrowSpriteSheet =
+{
+    .data = sHgssBagScrollArrow_Gfx,
+    .size = sizeof(sHgssBagScrollArrow_Gfx),
+    .tag = TAG_POCKET_SCROLL_ARROW,
+};
+
+static const struct SpritePalette sHgssBagScrollArrowSpritePalette =
+{
+    .data = sHgssBagScrollArrow_Pal,
+    .tag = TAG_POCKET_SCROLL_ARROW,
+};
+
+static const struct OamData sHgssBagScrollArrowOam =
+{
+    .y = 0,
+    .affineMode = ST_OAM_AFFINE_OFF,
+    .objMode = ST_OAM_OBJ_NORMAL,
+    .mosaic = FALSE,
+    .bpp = ST_OAM_4BPP,
+    .shape = SPRITE_SHAPE(16x16),
+    .x = 0,
+    .matrixNum = 0,
+    .size = SPRITE_SIZE(16x16),
+    .tileNum = 0,
+    .priority = 0,
+    .paletteNum = 0,
+    .affineParam = 0,
+};
+
+static const union AnimCmd sHgssBagScrollArrowAnim[] =
+{
+    ANIMCMD_FRAME(0, 0),
+    ANIMCMD_END
+};
+
+static const union AnimCmd *const sHgssBagScrollArrowAnimTable[] =
+{
+    sHgssBagScrollArrowAnim
+};
+
+static const struct SpriteTemplate sHgssBagScrollArrowSpriteTemplate =
+{
+    .tileTag = TAG_POCKET_SCROLL_ARROW,
+    .paletteTag = TAG_POCKET_SCROLL_ARROW,
+    .oam = &sHgssBagScrollArrowOam,
+    .anims = sHgssBagScrollArrowAnimTable,
+    .callback = SpriteCallbackDummy,
+};
+
 #define HGSS_BAG_LIST_CURSOR_WIDTH  8
 #define HGSS_BAG_LIST_CURSOR_HEIGHT 14
 
@@ -1135,28 +1206,73 @@ static void BagMenu_PrintCursorAtPos(u8 y, u8 colorIndex)
                            HGSS_BAG_LIST_CURSOR_WIDTH, HGSS_BAG_LIST_CURSOR_HEIGHT);
 }
 
+#define tTopArrowSpriteId    data[0]
+#define tBottomArrowSpriteId data[1]
+
+static void Task_HgssBagScrollArrowPair(u8 taskId)
+{
+    s16 *data = gTasks[taskId].data;
+    u8 pocket = gBagPosition.pocket;
+    u16 scroll = gBagPosition.scrollPosition[pocket];
+    u16 maxScroll = 0;
+
+    if (gBagMenu->numItemStacks[pocket] > gBagMenu->numShownItems[pocket])
+        maxScroll = gBagMenu->numItemStacks[pocket] - gBagMenu->numShownItems[pocket];
+
+    gSprites[tTopArrowSpriteId].invisible = (scroll == 0);
+    gSprites[tBottomArrowSpriteId].invisible = (scroll >= maxScroll);
+}
+
 static void CreatePocketScrollArrowPair(void)
 {
-    if (gBagMenu->pocketScrollArrowsTask == TASK_NONE)
-        gBagMenu->pocketScrollArrowsTask = AddScrollIndicatorArrowPairParameterized(
-            SCROLL_ARROW_UP,
-            172,
-            12,
-            148,
-            gBagMenu->numItemStacks[gBagPosition.pocket] - gBagMenu->numShownItems[gBagPosition.pocket],
-            TAG_POCKET_SCROLL_ARROW,
-            TAG_POCKET_SCROLL_ARROW,
-            &gBagPosition.scrollPosition[gBagPosition.pocket]);
+    s16 *data;
+    u8 topSpriteId;
+    u8 bottomSpriteId;
+
+    if (gBagMenu->pocketScrollArrowsTask != TASK_NONE)
+        return;
+
+    LoadSpriteSheet(&sHgssBagScrollArrowSpriteSheet);
+    LoadSpritePalette(&sHgssBagScrollArrowSpritePalette);
+
+    topSpriteId = CreateSprite(&sHgssBagScrollArrowSpriteTemplate, 108, 24, 0);
+    bottomSpriteId = CreateSprite(&sHgssBagScrollArrowSpriteTemplate, 108, 104, 0);
+    if (topSpriteId == MAX_SPRITES || bottomSpriteId == MAX_SPRITES)
+    {
+        if (topSpriteId != MAX_SPRITES)
+            DestroySprite(&gSprites[topSpriteId]);
+        if (bottomSpriteId != MAX_SPRITES)
+            DestroySprite(&gSprites[bottomSpriteId]);
+        FreeSpriteTilesByTag(TAG_POCKET_SCROLL_ARROW);
+        FreeSpritePaletteByTag(TAG_POCKET_SCROLL_ARROW);
+        return;
+    }
+
+    SetSpriteOamFlipBits(&gSprites[bottomSpriteId], FALSE, TRUE);
+    gBagMenu->pocketScrollArrowsTask = CreateTask(Task_HgssBagScrollArrowPair, 0);
+    data = gTasks[gBagMenu->pocketScrollArrowsTask].data;
+    tTopArrowSpriteId = topSpriteId;
+    tBottomArrowSpriteId = bottomSpriteId;
+    Task_HgssBagScrollArrowPair(gBagMenu->pocketScrollArrowsTask);
 }
 
 void BagDestroyPocketScrollArrowPair(void)
 {
     if (gBagMenu->pocketScrollArrowsTask != TASK_NONE)
     {
-        RemoveScrollIndicatorArrowPair(gBagMenu->pocketScrollArrowsTask);
+        s16 *data = gTasks[gBagMenu->pocketScrollArrowsTask].data;
+
+        DestroySprite(&gSprites[tTopArrowSpriteId]);
+        DestroySprite(&gSprites[tBottomArrowSpriteId]);
+        DestroyTask(gBagMenu->pocketScrollArrowsTask);
+        FreeSpriteTilesByTag(TAG_POCKET_SCROLL_ARROW);
+        FreeSpritePaletteByTag(TAG_POCKET_SCROLL_ARROW);
         gBagMenu->pocketScrollArrowsTask = TASK_NONE;
     }
 }
+
+#undef tTopArrowSpriteId
+#undef tBottomArrowSpriteId
 
 static void FreeBagMenu(void)
 {
