@@ -128,6 +128,7 @@ static void SetUpTrainerCardTask(void);
 static void InitTrainerCardData(void);
 static u8 GetSetCardType(void);
 static void DrawHgssTrainerCardIdentityHeader(void);
+static void DrawHgssTrainerCardInfoRows(void);
 static void PrintNameOnCardFront(void);
 static void PrintIdOnCard(void);
 static void PrintMoneyOnCard(void);
@@ -956,6 +957,7 @@ static bool8 PrintAllOnCardFront(void)
         break;
     default:
         DrawHgssTrainerCardIdentityHeader();
+        DrawHgssTrainerCardInfoRows();
         sData->printState = 0;
         return TRUE;
     }
@@ -1032,6 +1034,27 @@ static void DrawHgssTrainerCardIdentityHeader(void)
     FillWindowPixelRect(WIN_CARD_TEXT, PIXEL_FILL(2), left + 3, top + 23, width - 6, 1);
 
     // Small inset highlight along the top edge for the HGSS card-panel look.
+    FillWindowPixelRect(WIN_CARD_TEXT, PIXEL_FILL(2), left + 4, top + 2, width - 8, 1);
+}
+
+static void DrawHgssTrainerCardInfoRows(void)
+{
+    const u8 left = 8;
+    const u8 top = 51;
+    const u8 width = 144;
+    const u8 height = 55;
+
+    // Keep the information stack entirely to the left of the trainer portrait.
+    FillWindowPixelRect(WIN_CARD_TEXT, PIXEL_FILL(1), left + 1, top, width - 2, 1);
+    FillWindowPixelRect(WIN_CARD_TEXT, PIXEL_FILL(1), left + 1, top + height - 1, width - 2, 1);
+    FillWindowPixelRect(WIN_CARD_TEXT, PIXEL_FILL(1), left, top + 1, 1, height - 2);
+    FillWindowPixelRect(WIN_CARD_TEXT, PIXEL_FILL(1), left + width - 1, top + 1, 1, height - 2);
+
+    // The separators sit between the Money, Pokédex, and Play Time text baselines.
+    FillWindowPixelRect(WIN_CARD_TEXT, PIXEL_FILL(2), left + 3, 68, width - 6, 1);
+    FillWindowPixelRect(WIN_CARD_TEXT, PIXEL_FILL(2), left + 3, 84, width - 6, 1);
+
+    // Small HGSS-style cap accent. The lower edge is below PrintTimeOnCard's blink-clear region.
     FillWindowPixelRect(WIN_CARD_TEXT, PIXEL_FILL(2), left + 4, top + 2, width - 8, 1);
 }
 
