@@ -325,6 +325,7 @@ static void BufferLeftColumnIvEvStats(void);
 static void CB2_ReturnToSummaryScreenFromNamingScreen(void);
 static void CB2_PssChangePokemonNickname(void);
 static void ShowUtilityPrompt(s16 mode);
+static void DrawHgssSummaryUtilityFrame(u8 windowId);
 static void ShowMonSkillsInfo(u8 taskId, s16 mode);
 static void WriteToStatsTilemapBuffer(u32 length, u32 block, u32 statsCoordX, u32 statsCoordY);
 void ExtractMonSkillStatsData(struct Pokemon *mon, struct PokeSummary *sum);
@@ -4861,6 +4862,21 @@ static inline bool32 ShouldShowIvEvPrompt(void)
     return FALSE;
 }
 
+static void DrawHgssSummaryUtilityFrame(u8 windowId)
+{
+    u8 width = WindowWidthPx(windowId);
+    u8 height = GetWindowAttribute(windowId, WINDOW_HEIGHT) * 8;
+
+    if (width < 8 || height < 8)
+        return;
+
+    FillWindowPixelRect(windowId, PIXEL_FILL(1), 2, 0, width - 4, 1);
+    FillWindowPixelRect(windowId, PIXEL_FILL(1), 2, height - 1, width - 4, 1);
+    FillWindowPixelRect(windowId, PIXEL_FILL(1), 1, 1, 1, height - 2);
+    FillWindowPixelRect(windowId, PIXEL_FILL(1), width - 2, 1, 1, height - 2);
+    FillWindowPixelRect(windowId, PIXEL_FILL(2), 3, 1, width - 6, 1);
+}
+
 static inline void ShowUtilityPrompt(s16 mode)
 {
     const u8* promptText = NULL;
@@ -4917,6 +4933,7 @@ static inline void ShowUtilityPrompt(s16 mode)
     }
 
     FillWindowPixelBuffer(PSS_LABEL_WINDOW_PROMPT_UTILITY, PIXEL_FILL(0));
+    DrawHgssSummaryUtilityFrame(PSS_LABEL_WINDOW_PROMPT_UTILITY);
     PutWindowTilemap(PSS_LABEL_WINDOW_PROMPT_UTILITY);
 
     int stringXPos = GetStringRightAlignXOffset(FONT_NORMAL, promptText, 62);
