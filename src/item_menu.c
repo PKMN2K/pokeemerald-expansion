@@ -923,7 +923,6 @@ static bool8 SetupBagMenu(void)
         gMain.state++;
         break;
     case 16:
-        CreateItemMenuSwapLine();
         gMain.state++;
         break;
     case 17:
@@ -1014,7 +1013,6 @@ static bool8 LoadBagMenu_Graphics(void)
         gBagMenu->graphicsLoadState++;
         break;
     default:
-        LoadListMenuSwapLineGfx();
         gBagMenu->graphicsLoadState = 0;
         return TRUE;
     }
@@ -1825,7 +1823,6 @@ static void StartItemSwap(u8 taskId)
     StringExpandPlaceholders(gStringVar4, gText_MoveVar1Where);
     PrepareHgssBagDescriptionPanel();
     BagMenu_Print(WIN_DESCRIPTION, FONT_NORMAL, gStringVar4, 3, 1, 0, 0, 0, COLORID_NORMAL);
-    UpdateItemMenuSwapLinePos(gBagPosition.cursorPosition[gBagPosition.pocket]);
     BagMenu_PrintCursor(tListTaskId, COLORID_GRAY_CURSOR);
     gTasks[taskId].func = Task_HandleSwappingItemsInput;
 }
@@ -1849,8 +1846,6 @@ static void Task_HandleSwappingItemsInput(u8 taskId)
             s32 input = ListMenu_ProcessInput(tListTaskId);
             ListMenuGetScrollAndRow(tListTaskId, &gBagPosition.scrollPosition[gBagPosition.pocket], &gBagPosition.cursorPosition[gBagPosition.pocket]);
             // The HGSS source marker and active cell border replace Emerald's horizontal swap line.
-            SetItemMenuSwapLineInvisibility(TRUE);
-            UpdateItemMenuSwapLinePos(gBagPosition.cursorPosition[gBagPosition.pocket]);
             switch (input)
             {
             case LIST_NOTHING_CHOSEN:
@@ -1892,7 +1887,6 @@ static void DoItemSwap(u8 taskId)
             gBagPosition.cursorPosition[gBagPosition.pocket]--;
         LoadBagItemListBuffers(gBagPosition.pocket);
         tListTaskId = ListMenuInit(&gMultiuseListMenuTemplate, *scrollPos, *cursorPos);
-        SetItemMenuSwapLineInvisibility(TRUE);
         gTasks[taskId].func = Task_BagMenu_HandleInput;
     }
 }
@@ -1909,7 +1903,6 @@ static void CancelItemSwap(u8 taskId)
         gBagPosition.cursorPosition[gBagPosition.pocket]--;
     LoadBagItemListBuffers(gBagPosition.pocket);
     tListTaskId = ListMenuInit(&gMultiuseListMenuTemplate, *scrollPos, *cursorPos);
-    SetItemMenuSwapLineInvisibility(TRUE);
     gTasks[taskId].func = Task_BagMenu_HandleInput;
 }
 
