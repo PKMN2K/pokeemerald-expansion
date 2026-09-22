@@ -1175,6 +1175,8 @@ static void BagMenu_MoveCursorCallback(s32 itemIndex, bool8 onInit, struct ListM
 
         // Keep the close row visually distinct even while it carries the active selection frame.
         FillWindowPixelRect(WIN_ITEM_LIST, PIXEL_FILL(HGSS_BAG_CELL_CLOSE_COLOR),
+                            closeLeft + 2, closeTop + 1, closeWidth - 4, 1);
+        FillWindowPixelRect(WIN_ITEM_LIST, PIXEL_FILL(HGSS_BAG_CELL_CLOSE_COLOR),
                             closeLeft + 2, closeTop + HGSS_BAG_ITEM_CELL_HEIGHT - 2,
                             closeWidth - 4, 1);
     }
