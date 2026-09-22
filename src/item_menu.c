@@ -688,10 +688,10 @@ static const struct WindowTemplate sContextMenuWindowTemplates[] =
         .bg = 1,
         .tilemapLeft = 1,
         .tilemapTop = 1,
-        .width = 10,
+        .width = 13,
         .height = 2,
         .paletteNum = 15,
-        .baseBlock = 0x231,
+        .baseBlock = 0x259,
     },
 };
 
@@ -2631,7 +2631,7 @@ static void SellItem(u8 taskId)
     LoadBagItemListBuffers(gBagPosition.pocket);
     tListTaskId = ListMenuInit(&gMultiuseListMenuTemplate, *scrollPos, *cursorPos);
     BagMenu_PrintCursor(tListTaskId, COLORID_GRAY_CURSOR);
-    PrintMoneyAmountInMoneyBox(gBagMenu->windowIds[ITEMWIN_MONEY], GetMoney(&gSaveBlock1Ptr->money), 0);
+    PrintMoneyAmount(gBagMenu->windowIds[ITEMWIN_MONEY], 48, 1, GetMoney(&gSaveBlock1Ptr->money), 0);
     gTasks[taskId].func = WaitAfterItemSell;
 }
 
@@ -3068,18 +3068,18 @@ void BagMenu_YesNo(u8 taskId, u8 windowType, const struct YesNoFuncTable *funcTa
 
 static void DisplayCurrentMoneyWindow(void)
 {
+    static const u8 sText_Money[] = _("MONEY");
     u8 windowId = BagMenu_AddWindow(ITEMWIN_MONEY);
 
     PrepareHgssBagQuantityPanel(windowId);
-    PrintMoneyAmountInMoneyBox(windowId, GetMoney(&gSaveBlock1Ptr->money), 0);
+    BagMenu_Print(windowId, FONT_NARROW, sText_Money, 4, 1, 0, 0, TEXT_SKIP_DRAW, COLORID_POCKET_NAME);
+    PrintMoneyAmount(windowId, 48, 1, GetMoney(&gSaveBlock1Ptr->money), 0);
     CopyWindowToVram(windowId, COPYWIN_GFX);
-    AddMoneyLabelObject(19, 11);
 }
 
 static void RemoveMoneyWindow(void)
 {
     BagMenu_RemoveWindow(ITEMWIN_MONEY);
-    RemoveMoneyLabelObject();
 }
 
 static void PrepareTMHMMoveWindow(void)
