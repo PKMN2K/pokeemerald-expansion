@@ -490,15 +490,27 @@ static void DrawHgssStartMenuRows(void)
     u8 height = GetWindowAttribute(windowId, WINDOW_HEIGHT) * 8;
     u8 y;
 
-    if (width < 8 || height < 16)
+    if (width < 12 || height < 20)
         return;
+
+    // Use the existing top/bottom padding as a compact HGSS-style inner shell.
+    FillWindowPixelRect(windowId, PIXEL_FILL(2), 3, 5, width - 6, 1);
+    FillWindowPixelRect(windowId, PIXEL_FILL(2), 3, height - 6, width - 6, 1);
+    FillWindowPixelRect(windowId, PIXEL_FILL(2), 1, 7, 1, height - 14);
+    FillWindowPixelRect(windowId, PIXEL_FILL(2), width - 2, 7, 1, height - 14);
+
+    // Softened cap corners keep the inset panel distinct from Emerald's outer frame.
+    FillWindowPixelRect(windowId, PIXEL_FILL(1), 2, 6, 1, 1);
+    FillWindowPixelRect(windowId, PIXEL_FILL(1), width - 3, 6, 1, 1);
+    FillWindowPixelRect(windowId, PIXEL_FILL(1), 2, height - 7, 1, 1);
+    FillWindowPixelRect(windowId, PIXEL_FILL(1), width - 3, height - 7, 1, 1);
 
     // Menu text begins at y=9 and advances in 16-pixel rows, so the first divider is y=24.
     for (y = 24; y < height - 8; y += 16)
-        FillWindowPixelRect(windowId, PIXEL_FILL(2), 2, y, width - 4, 1);
+        FillWindowPixelRect(windowId, PIXEL_FILL(2), 3, y, width - 6, 1);
 
-    // A short top accent keeps the list visually consistent with the other HGSS panels.
-    FillWindowPixelRect(windowId, PIXEL_FILL(2), 4, 2, width - 8, 1);
+    // Short inset highlight just beneath the top cap.
+    FillWindowPixelRect(windowId, PIXEL_FILL(1), 5, 7, width - 10, 1);
 
     CopyWindowToVram(windowId, COPYWIN_GFX);
 }
@@ -513,13 +525,13 @@ static void DrawHgssStartMenuSelection(u8 row, bool8 selected)
     if (width < 16)
         return;
 
-    // Leave the left cursor gutter open; box the text field on its other three sides.
-    FillWindowPixelRect(windowId, PIXEL_FILL(color), 9, top, width - 10, 1);
-    FillWindowPixelRect(windowId, PIXEL_FILL(color), 9, top + 15, width - 10, 1);
-    FillWindowPixelRect(windowId, PIXEL_FILL(color), width - 1, top + 1, 1, 14);
+    // Leave the left cursor gutter open and nest the active cell inside the HGSS shell.
+    FillWindowPixelRect(windowId, PIXEL_FILL(color), 9, top, width - 13, 1);
+    FillWindowPixelRect(windowId, PIXEL_FILL(color), 9, top + 15, width - 13, 1);
+    FillWindowPixelRect(windowId, PIXEL_FILL(color), width - 4, top + 1, 1, 14);
 
     if (!selected && row > 0)
-        FillWindowPixelRect(windowId, PIXEL_FILL(2), 2, top, width - 4, 1);
+        FillWindowPixelRect(windowId, PIXEL_FILL(2), 3, top, width - 6, 1);
 }
 
 static u8 GetHgssStartMenuTextX(const u8 *text)
@@ -533,7 +545,7 @@ static u8 GetHgssStartMenuTextX(const u8 *text)
     if (width <= left + 2)
         return left;
 
-    fieldWidth = width - left - 2;
+    fieldWidth = width - left - 5;
     textWidth = GetStringWidth(FONT_NORMAL, text, 0);
 
     if (textWidth >= fieldWidth)
