@@ -2673,7 +2673,7 @@ static void SellItem(u8 taskId)
     LoadBagItemListBuffers(gBagPosition.pocket);
     tListTaskId = ListMenuInit(&gMultiuseListMenuTemplate, *scrollPos, *cursorPos);
     BagMenu_PrintCursor(tListTaskId, COLORID_GRAY_CURSOR);
-    PrintMoneyAmount(gBagMenu->windowIds[ITEMWIN_MONEY], 48, 1, GetMoney(&gSaveBlock1Ptr->money), 0);
+    DisplayCurrentMoneyWindow();
     gTasks[taskId].func = WaitAfterItemSell;
 }
 
