@@ -52,7 +52,6 @@
 #include "constants/songs.h"
 
 #define TAG_POCKET_SCROLL_ARROW 110
-#define TAG_BAG_SCROLL_ARROW    111
 
 // The buffer for the bag item list needs to be large enough to hold the maximum
 // number of item slots that could fit in a single pocket, + 1 for Cancel.
@@ -134,8 +133,6 @@ static void LoadBagItemListBuffers(u8);
 static void PrintPocketNames(const u8 *, const u8 *);
 static void CopyPocketNameToWindow(u32);
 static void CreatePocketScrollArrowPair(void);
-static void CreatePocketSwitchArrowPair(void);
-static void DestroyPocketSwitchArrowPair(void);
 static void PrepareTMHMMoveWindow(void);
 static bool8 IsWallysBag(void);
 static void Task_WallyTutorialBagMenu(u8);
@@ -397,20 +394,6 @@ static const TaskFunc sContextMenuFuncs[] =
 static const struct YesNoFuncTable sYesNoTossFunctions = {ConfirmToss, CancelToss};
 
 static const struct YesNoFuncTable sYesNoSellItemFunctions = {ConfirmSell, CancelSell};
-
-static const struct ScrollArrowsTemplate sBagScrollArrowsTemplate = {
-    .firstArrowType = SCROLL_ARROW_LEFT,
-    .firstX = 28,
-    .firstY = 16,
-    .secondArrowType = SCROLL_ARROW_RIGHT,
-    .secondX = 100,
-    .secondY = 16,
-    .fullyUpThreshold = -1,
-    .fullyDownThreshold = -1,
-    .tileTag = TAG_BAG_SCROLL_ARROW,
-    .palTag = TAG_BAG_SCROLL_ARROW,
-    .palNum = 0,
-};
 
 static const u8 sRegisteredSelect_Gfx[] = INCGFX_U8("graphics/bag/select_button.png", ".4bpp");
 
@@ -812,7 +795,6 @@ static bool8 SetupBagMenu(void)
         break;
     case 17:
         CreatePocketScrollArrowPair();
-        CreatePocketSwitchArrowPair();
         gMain.state++;
         break;
     case 18:
@@ -1102,22 +1084,6 @@ void BagDestroyPocketScrollArrowPair(void)
         RemoveScrollIndicatorArrowPair(gBagMenu->pocketScrollArrowsTask);
         gBagMenu->pocketScrollArrowsTask = TASK_NONE;
     }
-    DestroyPocketSwitchArrowPair();
-}
-
-static void CreatePocketSwitchArrowPair(void)
-{
-    if (gBagMenu->pocketSwitchDisabled != TRUE && gBagMenu->pocketSwitchArrowsTask == TASK_NONE)
-        gBagMenu->pocketSwitchArrowsTask = AddScrollIndicatorArrowPair(&sBagScrollArrowsTemplate, &gBagPosition.pocketSwitchArrowPos);
-}
-
-static void DestroyPocketSwitchArrowPair(void)
-{
-    if (gBagMenu->pocketSwitchArrowsTask != TASK_NONE)
-    {
-        RemoveScrollIndicatorArrowPair(gBagMenu->pocketSwitchArrowsTask);
-        gBagMenu->pocketSwitchArrowsTask = TASK_NONE;
-    }
 }
 
 static void FreeBagMenu(void)
@@ -1380,7 +1346,6 @@ static void Task_BagMenu_HandleInput(u8 taskId)
 static void ReturnToItemList(u8 taskId)
 {
     CreatePocketScrollArrowPair();
-    CreatePocketSwitchArrowPair();
     ClearWindowTilemap(WIN_TMHM_INFO_ICONS);
     ClearWindowTilemap(WIN_TMHM_INFO);
     PutWindowTilemap(WIN_DESCRIPTION);
@@ -1500,7 +1465,6 @@ static void Task_SwitchBagPocket(u8 taskId)
         PutWindowTilemap(WIN_POCKET_NAME);
         ScheduleBgCopyTilemapToVram(0);
         CreatePocketScrollArrowPair();
-        CreatePocketSwitchArrowPair();
         SwitchTaskToFollowupFunc(taskId);
     }
 }
@@ -1539,7 +1503,6 @@ static void StartItemSwap(u8 taskId)
     FillWindowPixelBuffer(WIN_DESCRIPTION, PIXEL_FILL(0));
     BagMenu_Print(WIN_DESCRIPTION, FONT_NORMAL, gStringVar4, 3, 1, 0, 0, 0, COLORID_NORMAL);
     UpdateItemMenuSwapLinePos(tListPosition);
-    DestroyPocketSwitchArrowPair();
     BagMenu_PrintCursor(tListTaskId, COLORID_GRAY_CURSOR);
     gTasks[taskId].func = Task_HandleSwappingItemsInput;
 }
@@ -1606,7 +1569,6 @@ static void DoItemSwap(u8 taskId)
         LoadBagItemListBuffers(gBagPosition.pocket);
         tListTaskId = ListMenuInit(&gMultiuseListMenuTemplate, *scrollPos, *cursorPos);
         SetItemMenuSwapLineInvisibility(TRUE);
-        CreatePocketSwitchArrowPair();
         gTasks[taskId].func = Task_BagMenu_HandleInput;
     }
 }
@@ -1624,7 +1586,6 @@ static void CancelItemSwap(u8 taskId)
     LoadBagItemListBuffers(gBagPosition.pocket);
     tListTaskId = ListMenuInit(&gMultiuseListMenuTemplate, *scrollPos, *cursorPos);
     SetItemMenuSwapLineInvisibility(TRUE);
-    CreatePocketSwitchArrowPair();
     gTasks[taskId].func = Task_BagMenu_HandleInput;
 }
 
