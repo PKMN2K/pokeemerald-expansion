@@ -806,6 +806,7 @@ static void SetBoxWallpaper(u8, u8);
 static void CreateInitBoxTask(u8);
 static bool8 IsInitBoxActive(void);
 static void DrawHgssStorageBoxGrid(void);
+static void DrawHgssStoragePartySlots(void);
 static void Task_InitBox(u8);
 static void SetUpScrollToBox(u8);
 static bool8 ScrollToBox(void);
@@ -5401,20 +5402,21 @@ static bool8 IsInitBoxActive(void)
     return FuncIsActiveTask(Task_InitBox);
 }
 
+enum
+{
+    HGSS_HGSS_GRID_TILE_VERTICAL,
+    HGSS_HGSS_GRID_TILE_HORIZONTAL,
+    HGSS_HGSS_GRID_TILE_CROSS,
+    HGSS_HGSS_GRID_TILE_TOP_CROSS,
+    HGSS_HGSS_GRID_TILE_BOTTOM_CROSS,
+    HGSS_HGSS_GRID_TILE_COUNT,
+};
+
 static void DrawHgssStorageBoxGrid(void)
 {
-    enum
-    {
-        GRID_TILE_VERTICAL,
-        GRID_TILE_HORIZONTAL,
-        GRID_TILE_CROSS,
-        GRID_TILE_TOP_CROSS,
-        GRID_TILE_BOTTOM_CROSS,
-        GRID_TILE_COUNT,
-    };
     static const u8 sGridColumns[] = {10, 13, 16, 19, 22, 25, 28};
     static const u8 sGridRows[] = {3, 6, 9, 12, 15, 18};
-    u8 gridTiles[GRID_TILE_COUNT * TILE_SIZE_4BPP] = {0};
+    u8 gridTiles[HGSS_GRID_TILE_COUNT * TILE_SIZE_4BPP] = {0};
     u32 gfxSize = GetDecompressedDataSize(sSwShStorage_Gfx);
     u16 baseTile = (gfxSize + TILE_SIZE_4BPP - 1) / TILE_SIZE_4BPP;
     u16 paletteBits = 15 << 12;
@@ -5422,29 +5424,29 @@ static void DrawHgssStorageBoxGrid(void)
     u8 i;
 
     // BG1 and BG2 share charbase 2; append a few tiny transparent line tiles after the storage UI gfx.
-    if (baseTile + GRID_TILE_COUNT >= 512)
+    if (baseTile + HGSS_GRID_TILE_COUNT >= 512)
         return;
 
     for (i = 0; i < 8; i++)
     {
-        gridTiles[GRID_TILE_VERTICAL * TILE_SIZE_4BPP + i * 4] = 0x02;
-        gridTiles[GRID_TILE_CROSS * TILE_SIZE_4BPP + i * 4] = 0x02;
+        gridTiles[HGSS_GRID_TILE_VERTICAL * TILE_SIZE_4BPP + i * 4] = 0x02;
+        gridTiles[HGSS_GRID_TILE_CROSS * TILE_SIZE_4BPP + i * 4] = 0x02;
         if (i >= 4)
-            gridTiles[GRID_TILE_TOP_CROSS * TILE_SIZE_4BPP + i * 4] = 0x02;
+            gridTiles[HGSS_GRID_TILE_TOP_CROSS * TILE_SIZE_4BPP + i * 4] = 0x02;
         if (i <= 4)
-            gridTiles[GRID_TILE_BOTTOM_CROSS * TILE_SIZE_4BPP + i * 4] = 0x02;
+            gridTiles[HGSS_GRID_TILE_BOTTOM_CROSS * TILE_SIZE_4BPP + i * 4] = 0x02;
     }
 
     for (i = 0; i < 4; i++)
     {
-        gridTiles[GRID_TILE_HORIZONTAL * TILE_SIZE_4BPP + 16 + i] = 0x22;
-        gridTiles[GRID_TILE_CROSS * TILE_SIZE_4BPP + 16 + i] = 0x22;
-        gridTiles[GRID_TILE_TOP_CROSS * TILE_SIZE_4BPP + 16 + i] = 0x22;
-        gridTiles[GRID_TILE_BOTTOM_CROSS * TILE_SIZE_4BPP + 16 + i] = 0x22;
+        gridTiles[HGSS_GRID_TILE_HORIZONTAL * TILE_SIZE_4BPP + 16 + i] = 0x22;
+        gridTiles[HGSS_GRID_TILE_CROSS * TILE_SIZE_4BPP + 16 + i] = 0x22;
+        gridTiles[HGSS_GRID_TILE_TOP_CROSS * TILE_SIZE_4BPP + 16 + i] = 0x22;
+        gridTiles[HGSS_GRID_TILE_BOTTOM_CROSS * TILE_SIZE_4BPP + 16 + i] = 0x22;
     }
-    gridTiles[GRID_TILE_CROSS * TILE_SIZE_4BPP + 16] = 0x22;
-    gridTiles[GRID_TILE_TOP_CROSS * TILE_SIZE_4BPP + 16] = 0x22;
-    gridTiles[GRID_TILE_BOTTOM_CROSS * TILE_SIZE_4BPP + 16] = 0x22;
+    gridTiles[HGSS_GRID_TILE_CROSS * TILE_SIZE_4BPP + 16] = 0x22;
+    gridTiles[HGSS_GRID_TILE_TOP_CROSS * TILE_SIZE_4BPP + 16] = 0x22;
+    gridTiles[HGSS_GRID_TILE_BOTTOM_CROSS * TILE_SIZE_4BPP + 16] = 0x22;
 
     LoadBgTiles(2, gridTiles, sizeof(gridTiles), baseTile);
 
@@ -5454,16 +5456,16 @@ static void DrawHgssStorageBoxGrid(void)
     for (row = 3; row <= 18; row++)
     {
         bool32 isBoundaryRow = FALSE;
-        u16 boundaryTile = GRID_TILE_VERTICAL;
+        u16 boundaryTile = HGSS_GRID_TILE_VERTICAL;
 
         for (i = 0; i < ARRAY_COUNT(sGridRows); i++)
         {
             if (row == sGridRows[i])
             {
                 isBoundaryRow = TRUE;
-                boundaryTile = (i == 0) ? GRID_TILE_TOP_CROSS
-                             : (i == ARRAY_COUNT(sGridRows) - 1) ? GRID_TILE_BOTTOM_CROSS
-                             : GRID_TILE_CROSS;
+                boundaryTile = (i == 0) ? HGSS_GRID_TILE_TOP_CROSS
+                             : (i == ARRAY_COUNT(sGridRows) - 1) ? HGSS_GRID_TILE_BOTTOM_CROSS
+                             : HGSS_GRID_TILE_CROSS;
                 break;
             }
         }
@@ -5471,7 +5473,7 @@ static void DrawHgssStorageBoxGrid(void)
         if (isBoundaryRow)
         {
             for (col = 10; col <= 28; col++)
-                sStorage->wallpaperBgTilemapBuffer[row * 32 + col] = paletteBits | (baseTile + GRID_TILE_HORIZONTAL);
+                sStorage->wallpaperBgTilemapBuffer[row * 32 + col] = paletteBits | (baseTile + HGSS_GRID_TILE_HORIZONTAL);
         }
 
         for (i = 0; i < ARRAY_COUNT(sGridColumns); i++)
@@ -5479,6 +5481,50 @@ static void DrawHgssStorageBoxGrid(void)
     }
 
     ScheduleBgCopyTilemapToVram(2);
+}
+
+static void DrawHgssStoragePartySlots(void)
+{
+    static const u8 sPartyRows[] = {0, 3, 6, 9, 12, 15, 18};
+    u16 *tilemap = (u16 *)sStorage->displayMenuTilemapBuffer;
+    u32 gfxSize = GetDecompressedDataSize(sSwShStorage_Gfx);
+    u16 baseTile = (gfxSize + TILE_SIZE_4BPP - 1) / TILE_SIZE_4BPP;
+    u16 paletteBits = 15 << 12;
+    u16 row, col;
+    u8 i;
+
+    if (baseTile + HGSS_GRID_TILE_COUNT >= 512)
+        return;
+
+    // Six 48x24 cells centered on the existing party icon/cursor positions.
+    for (row = 0; row <= 18; row++)
+    {
+        bool32 isBoundaryRow = FALSE;
+        u16 boundaryTile = HGSS_GRID_TILE_VERTICAL;
+
+        for (i = 0; i < ARRAY_COUNT(sPartyRows); i++)
+        {
+            if (row == sPartyRows[i])
+            {
+                isBoundaryRow = TRUE;
+                boundaryTile = (i == 0) ? HGSS_GRID_TILE_TOP_CROSS
+                             : (i == ARRAY_COUNT(sPartyRows) - 1) ? HGSS_GRID_TILE_BOTTOM_CROSS
+                             : HGSS_GRID_TILE_CROSS;
+                break;
+            }
+        }
+
+        if (isBoundaryRow)
+        {
+            for (col = 2; col <= 8; col++)
+                tilemap[row * 32 + col] = paletteBits | (baseTile + HGSS_GRID_TILE_HORIZONTAL);
+        }
+
+        tilemap[row * 32 + 2] = paletteBits | (baseTile + boundaryTile);
+        tilemap[row * 32 + 8] = paletteBits | (baseTile + boundaryTile);
+    }
+
+    ScheduleBgCopyTilemapToVram(1);
 }
 
 static void Task_InitBox(u8 taskId)
@@ -5513,6 +5559,7 @@ static void Task_InitBox(u8 taskId)
         CreateBoxScrollArrows();
         InitBoxMonSprites(task->tBoxId);
         DrawHgssStorageBoxGrid();
+        DrawHgssStoragePartySlots();
         SetGpuReg(REG_OFFSET_BG2CNT, BGCNT_PRIORITY(2) | BGCNT_CHARBASE(2) | BGCNT_SCREENBASE(27) | BGCNT_TXT256x256);
         break;
     case 4:
