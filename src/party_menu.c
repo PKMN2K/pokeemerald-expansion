@@ -247,6 +247,7 @@ static bool8 RenderPartyMenuBoxes(void);
 static void DrawHgssPartySlotFrame(u8 slot);
 static void CreateCancelConfirmPokeballSprites(void);
 static void DrawHgssPartyButtonFrame(u8 windowId);
+static void DrawHgssPartyMessageFrame(u8 windowId);
 static void CreateCancelConfirmWindows(u8);
 static void Task_ExitPartyMenu(u8);
 static void FreePartyPointers(void);
@@ -2434,6 +2435,20 @@ static void DrawHgssPartyButtonFrame(u8 windowId)
         FillWindowPixelRect(windowId, PIXEL_FILL(TEXT_COLOR_LIGHT_GRAY), 2, height - 2, width - 4, 1);
 }
 
+static void DrawHgssPartyMessageFrame(u8 windowId)
+{
+    u8 width = GetWindowAttribute(windowId, WINDOW_WIDTH) * 8;
+    u8 height = GetWindowAttribute(windowId, WINDOW_HEIGHT) * 8;
+
+    FillWindowPixelRect(windowId, PIXEL_FILL(TEXT_COLOR_DARK_GRAY), 1, 0, width - 2, 1);
+    FillWindowPixelRect(windowId, PIXEL_FILL(TEXT_COLOR_DARK_GRAY), 1, height - 1, width - 2, 1);
+    FillWindowPixelRect(windowId, PIXEL_FILL(TEXT_COLOR_DARK_GRAY), 0, 1, 1, height - 2);
+    FillWindowPixelRect(windowId, PIXEL_FILL(TEXT_COLOR_DARK_GRAY), width - 1, 1, 1, height - 2);
+
+    if (width > 4 && height > 3)
+        FillWindowPixelRect(windowId, PIXEL_FILL(TEXT_COLOR_LIGHT_GRAY), 2, 1, width - 4, 1);
+}
+
 static void CreateCancelConfirmWindows(bool8 chooseHalf)
 {
     u8 confirmWindowId;
@@ -2973,6 +2988,7 @@ static u8 DisplaySelectionWindow(u8 windowType)
 static void PrintMessage(const u8 *text)
 {
     DrawStdFrameWithCustomTileAndPalette(WIN_MSG, FALSE, 0x4F, 13);
+    DrawHgssPartyMessageFrame(WIN_MSG);
     gTextFlags.canABSpeedUpPrint = TRUE;
     AddTextPrinterParameterized2(WIN_MSG, FONT_NORMAL, text, GetPlayerTextSpeedDelay(), 0, TEXT_COLOR_DARK_GRAY, TEXT_COLOR_WHITE, TEXT_COLOR_LIGHT_GRAY);
 }
