@@ -2677,10 +2677,16 @@ static void DisplayPartyPokemonLevelCheck(struct Pokemon *mon, struct PartyMenuB
 
 static void DisplayPartyPokemonLevel(u8 level, struct PartyMenuBox *menuBox)
 {
+    u8 align[4];
+    u8 width = menuBox->infoRects->dimensions[6];
+
     ConvertIntToDecimalStringN(gStringVar2, level, STR_CONV_MODE_LEFT_ALIGN, 3);
     StringCopy(gStringVar1, gText_LevelSymbol);
     StringAppend(gStringVar1, gStringVar2);
-    DisplayPartyPokemonBarDetail(menuBox->windowId, gStringVar1, 0, &menuBox->infoRects->dimensions[4]);
+
+    memcpy(align, &menuBox->infoRects->dimensions[4], sizeof(align));
+    align[0] += GetStringCenterAlignXOffset(FONT_SMALL, gStringVar1, width);
+    DisplayPartyPokemonBarDetail(menuBox->windowId, gStringVar1, 0, align);
 }
 
 static void DisplayPartyPokemonGenderNidoranCheck(struct Pokemon *mon, struct PartyMenuBox *menuBox, u8 c)
