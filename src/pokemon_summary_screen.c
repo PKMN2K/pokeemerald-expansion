@@ -248,6 +248,7 @@ static void ResetWindows(void);
 static void DrawHgssSummaryInfoStrip(u8 windowId);
 static void DrawHgssSummaryMemoPanel(u8 windowId);
 static void DrawHgssSummaryMoveRows(u8 windowId);
+static void DrawHgssSummaryMovePPRows(u8 windowId);
 static void PrintMonInfo(void);
 static void PrintNotEggInfo(void);
 static void PrintEggInfo(void);
@@ -3241,6 +3242,25 @@ static void DrawHgssSummaryMoveRows(u8 windowId)
         FillWindowPixelRect(windowId, PIXEL_FILL(4), 2, y, width - 4, 1);
 }
 
+static void DrawHgssSummaryMovePPRows(u8 windowId)
+{
+    u8 width = WindowWidthPx(windowId);
+    u8 height = GetWindowAttribute(windowId, WINDOW_HEIGHT) * 8;
+    u8 y;
+
+    if (width < 8 || height < 16)
+        return;
+
+    // The PP window uses palette 8, so keep its frame on that palette's neutral entries.
+    FillWindowPixelRect(windowId, PIXEL_FILL(1), 1, 0, width - 2, 1);
+    FillWindowPixelRect(windowId, PIXEL_FILL(1), 1, height - 1, width - 2, 1);
+    FillWindowPixelRect(windowId, PIXEL_FILL(1), 0, 1, 1, height - 2);
+    FillWindowPixelRect(windowId, PIXEL_FILL(1), width - 1, 1, 1, height - 2);
+
+    for (y = 16; y < height; y += 16)
+        FillWindowPixelRect(windowId, PIXEL_FILL(2), 2, y, width - 4, 1);
+}
+
 static void PrintMonInfo(void)
 {
     FillWindowPixelBuffer(PSS_LABEL_WINDOW_PORTRAIT_DEX_NUMBER, PIXEL_FILL(0));
@@ -4224,6 +4244,7 @@ static void PrintMoveNameAndPP(u8 moveIndex)
     enum Move move = summary->moves[moveIndex];
 
     DrawHgssSummaryMoveRows(moveNameWindowId);
+    DrawHgssSummaryMovePPRows(ppValueWindowId);
 
     if (move != 0)
     {
@@ -4237,14 +4258,14 @@ static void PrintMoveNameAndPP(u8 moveIndex)
         DynamicPlaceholderTextUtil_ExpandPlaceholders(gStringVar4, sMovesPPLayout);
         text = gStringVar4;
         ppState = GetCurrentPPToMaxPPState(summary->pp[moveIndex], pp) + 9;
-        x = GetStringRightAlignXOffset(FONT_NORMAL, text, 44);
+        x = 4 + GetStringRightAlignXOffset(FONT_NORMAL, text, WindowWidthPx(ppValueWindowId) - 8);
     }
     else
     {
         PrintTextOnWindow(moveNameWindowId, gText_OneDash, 4, moveIndex * 16 + 1, 0, 1);
         text = gText_TwoDashes;
         ppState = 12;
-        x = GetStringCenterAlignXOffset(FONT_NORMAL, text, 44);
+        x = 4 + GetStringCenterAlignXOffset(FONT_NORMAL, text, WindowWidthPx(ppValueWindowId) - 8);
     }
 
     PrintTextOnWindow(ppValueWindowId, text, x, moveIndex * 16 + 1, 0, ppState);
@@ -4384,6 +4405,7 @@ static void PrintNewMoveDetailsOrCancelText(void)
     u8 windowId2 = AddWindowFromTemplateList(sPageMovesTemplate, PSS_DATA_WINDOW_MOVE_PP);
 
     DrawHgssSummaryMoveRows(windowId1);
+    DrawHgssSummaryMovePPRows(windowId2);
 
     if (sMonSummaryScreen->newMove == MOVE_NONE)
     {
@@ -4403,7 +4425,7 @@ static void PrintNewMoveDetailsOrCancelText(void)
         DynamicPlaceholderTextUtil_SetPlaceholderPtr(0, gStringVar1);
         DynamicPlaceholderTextUtil_SetPlaceholderPtr(1, gStringVar1);
         DynamicPlaceholderTextUtil_ExpandPlaceholders(gStringVar4, sMovesPPLayout);
-        PrintTextOnWindow(windowId2, gStringVar4, GetStringRightAlignXOffset(FONT_NORMAL, gStringVar4, 44), 65, 0, 12);
+        PrintTextOnWindow(windowId2, gStringVar4, 4 + GetStringRightAlignXOffset(FONT_NORMAL, gStringVar4, WindowWidthPx(windowId2) - 8), 65, 0, 12);
     }
 }
 
