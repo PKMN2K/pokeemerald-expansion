@@ -3134,6 +3134,9 @@ static void DrawHgssBagYesNoMenu(void)
         FillWindowPixelRect(windowId, PIXEL_FILL(TEXT_COLOR_RED), 3, cursorY + 10, 2, 1);
     }
 
+    // Separate YES and NO into distinct HGSS-style choice cells.
+    FillWindowPixelRect(windowId, PIXEL_FILL(TEXT_COLOR_LIGHT_GRAY), 1, 16, width - 2, 1);
+
     // Keep the HGSS frame above both choice labels.
     FillWindowPixelRect(windowId, PIXEL_FILL(TEXT_COLOR_RED), 1, 0, width - 2, 1);
     FillWindowPixelRect(windowId, PIXEL_FILL(TEXT_COLOR_RED), 1, height - 1, width - 2, 1);
