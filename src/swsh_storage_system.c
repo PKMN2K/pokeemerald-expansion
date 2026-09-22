@@ -843,6 +843,7 @@ static void UpdatePokerusIconSprite(void);
 static void HideInfoPanelSprites(void);
 static void ClearMonInfoPanel(void);
 static u16 GetTargetBg0Y(void);
+static void DrawHgssStorageStatRows(u8 windowId);
 static void PrintDisplayMonStats(u8);
 static void PrintDisplayMonAbility(u8);
 static void PrintDisplayMonHeldItem(u8);
@@ -4044,6 +4045,23 @@ static void PrintDisplayMonHeldItem(u8 font)
     CopyWindowToVram(windowId, COPYWIN_FULL);
 }
 
+static void DrawHgssStorageStatRows(u8 windowId)
+{
+    u8 width = GetWindowAttribute(windowId, WINDOW_WIDTH) * 8;
+    u8 height = GetWindowAttribute(windowId, WINDOW_HEIGHT) * 8;
+
+    if (width < 8 || height < 32)
+        return;
+
+    // One compact HGSS-style stack: strong outer rails with 16-pixel row separators.
+    FillWindowPixelRect(windowId, PIXEL_FILL(2), 1, 0, width - 2, 1);
+    FillWindowPixelRect(windowId, PIXEL_FILL(2), 1, height - 1, width - 2, 1);
+    FillWindowPixelRect(windowId, PIXEL_FILL(2), 0, 1, 1, height - 2);
+    FillWindowPixelRect(windowId, PIXEL_FILL(2), width - 1, 1, 1, height - 2);
+    FillWindowPixelRect(windowId, PIXEL_FILL(3), 1, 16, width - 2, 1);
+    FillWindowPixelRect(windowId, PIXEL_FILL(3), 1, 32, width - 2, 1);
+}
+
 static void PrintDisplayMonStats(u8 font)
 {
     u8 col1WindowId, col2WindowId;
@@ -4081,6 +4099,8 @@ static void PrintDisplayMonStats(u8 font)
     BufferAndPrintStat(col2WindowId, font, windowWidth - 5, 20, sStorage->displayMon.spatk);
     BufferAndPrintStat(col2WindowId, font, windowWidth - 5, 36, sStorage->displayMon.speed);
 
+    DrawHgssStorageStatRows(col1WindowId);
+    DrawHgssStorageStatRows(col2WindowId);
     PutWindowTilemap(col1WindowId);
     PutWindowTilemap(col2WindowId);
     CopyWindowToVram(col1WindowId, COPYWIN_FULL);
