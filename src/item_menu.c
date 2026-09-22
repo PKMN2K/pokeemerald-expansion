@@ -3105,7 +3105,9 @@ static void DisplayCurrentMoneyWindow(void)
     u8 windowId = BagMenu_AddWindow(ITEMWIN_MONEY);
 
     PrepareHgssBagQuantityPanel(windowId);
-    BagMenu_Print(windowId, FONT_NARROW, sText_Money, 4, 1, 0, 0, TEXT_SKIP_DRAW, COLORID_POCKET_NAME);
+    BagMenu_Print(windowId, FONT_NARROW, sText_Money,
+                  GetStringCenterAlignXOffset(FONT_NARROW, sText_Money, 44), 1,
+                  0, 0, TEXT_SKIP_DRAW, COLORID_POCKET_NAME);
     PrintMoneyAmount(windowId, 48, 1, GetMoney(&gSaveBlock1Ptr->money), 0);
     CopyWindowToVram(windowId, COPYWIN_GFX);
 }
