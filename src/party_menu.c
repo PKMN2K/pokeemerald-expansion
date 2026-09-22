@@ -2641,7 +2641,10 @@ static void DisplayPartyPokemonBarDetail(u8 windowId, const u8 *str, u8 color, c
 
 static void DisplayPartyPokemonBarDetailToFit(u8 windowId, const u8 *str, u8 color, const u8 *align, u32 width)
 {
-    AddTextPrinterParameterized3(windowId, GetFontIdToFit(str, FONT_SMALL, 0, width), align[0], align[1], sFontColorTable[color], 0, str);
+    u8 fontId = GetFontIdToFit(str, FONT_SMALL, 0, width);
+    u8 x = align[0] + GetStringCenterAlignXOffset(fontId, str, width);
+
+    AddTextPrinterParameterized3(windowId, fontId, x, align[1], sFontColorTable[color], 0, str);
 }
 
 static void DisplayPartyPokemonNickname(struct Pokemon *mon, struct PartyMenuBox *menuBox, u8 c)
