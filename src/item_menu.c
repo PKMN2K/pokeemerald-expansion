@@ -1218,7 +1218,11 @@ static void BagMenu_ItemPrintCallback(u8 windowId, u32 itemIndex, u8 y)
 
     if (itemIndex == LIST_CANCEL)
     {
-        BagMenu_Print(windowId, FONT_NARROW, gText_CloseBag, 12, y,
+        u8 closeLeft = HGSS_BAG_LIST_CURSOR_WIDTH + 1;
+        u8 closeWidth = GetWindowAttribute(windowId, WINDOW_WIDTH) * 8 - closeLeft - 1;
+
+        BagMenu_Print(windowId, FONT_NARROW, gText_CloseBag,
+                      closeLeft + GetStringCenterAlignXOffset(FONT_NARROW, gText_CloseBag, closeWidth), y,
                       0, 0, TEXT_SKIP_DRAW, COLORID_QUANTITY);
     }
     else
