@@ -670,7 +670,6 @@ void GoToBagMenu(u8 location, u8 pocket, MainCallback exitCallback)
         gBagMenu->newScreenCallback = NULL;
         gBagMenu->toSwapPos = NOT_SWAPPING;
         gBagMenu->pocketScrollArrowsTask = TASK_NONE;
-        gBagMenu->pocketSwitchArrowsTask = TASK_NONE;
         memset(gBagMenu->spriteIds, SPRITE_NONE, sizeof(gBagMenu->spriteIds));
         memset(gBagMenu->windowIds, WINDOW_NONE, sizeof(gBagMenu->windowIds));
         SetMainCallback2(CB2_Bag);

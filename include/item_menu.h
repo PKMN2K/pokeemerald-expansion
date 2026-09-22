@@ -62,7 +62,6 @@ struct BagPosition
     MainCallback exitCallback;
     u8 location;
     u8 pocket;
-    u16 pocketSwitchArrowPos;
     u16 cursorPosition[POCKETS_COUNT];
     u16 scrollPosition[POCKETS_COUNT];
 };
@@ -89,7 +88,6 @@ struct BagMenu
     u8 hideCloseBagText:1;
     u8 unused1[2];
     u8 pocketScrollArrowsTask;
-    u8 pocketSwitchArrowsTask;
     const u8 *contextMenuItemsPtr;
     u8 contextMenuItemsBuffer[4];
     u8 contextMenuNumItems;
