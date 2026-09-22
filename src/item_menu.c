@@ -1112,18 +1112,19 @@ static void DrawHgssBagItemCellFrame(u8 windowId, u8 y, u8 color)
     u8 left = HGSS_BAG_LIST_CURSOR_WIDTH;
     u8 width = GetWindowAttribute(windowId, WINDOW_WIDTH) * 8 - left;
 
-    FillWindowPixelRect(windowId, PIXEL_FILL(color), left, top, width, 1);
-    FillWindowPixelRect(windowId, PIXEL_FILL(color), left, top + HGSS_BAG_ITEM_CELL_HEIGHT - 1, width, 1);
-    FillWindowPixelRect(windowId, PIXEL_FILL(color), left, top, 1, HGSS_BAG_ITEM_CELL_HEIGHT);
-    FillWindowPixelRect(windowId, PIXEL_FILL(color), left + width - 1, top, 1, HGSS_BAG_ITEM_CELL_HEIGHT);
+    // HGSS list cells use softened one-pixel corners instead of a hard rectangular box.
+    FillWindowPixelRect(windowId, PIXEL_FILL(color), left + 1, top, width - 2, 1);
+    FillWindowPixelRect(windowId, PIXEL_FILL(color), left + 1, top + HGSS_BAG_ITEM_CELL_HEIGHT - 1, width - 2, 1);
+    FillWindowPixelRect(windowId, PIXEL_FILL(color), left, top + 1, 1, HGSS_BAG_ITEM_CELL_HEIGHT - 2);
+    FillWindowPixelRect(windowId, PIXEL_FILL(color), left + width - 1, top + 1, 1, HGSS_BAG_ITEM_CELL_HEIGHT - 2);
 
     // HGSS gives the selected touch cell a bright inner edge inside its stronger accent border.
     if (color == HGSS_BAG_CELL_ACTIVE_COLOR)
     {
-        FillWindowPixelRect(windowId, PIXEL_FILL(2), left + 1, top + 1, width - 2, 1);
-        FillWindowPixelRect(windowId, PIXEL_FILL(2), left + 1, top + HGSS_BAG_ITEM_CELL_HEIGHT - 2, width - 2, 1);
-        FillWindowPixelRect(windowId, PIXEL_FILL(2), left + 1, top + 1, 1, HGSS_BAG_ITEM_CELL_HEIGHT - 2);
-        FillWindowPixelRect(windowId, PIXEL_FILL(2), left + width - 2, top + 1, 1, HGSS_BAG_ITEM_CELL_HEIGHT - 2);
+        FillWindowPixelRect(windowId, PIXEL_FILL(2), left + 2, top + 1, width - 4, 1);
+        FillWindowPixelRect(windowId, PIXEL_FILL(2), left + 2, top + HGSS_BAG_ITEM_CELL_HEIGHT - 2, width - 4, 1);
+        FillWindowPixelRect(windowId, PIXEL_FILL(2), left + 1, top + 2, 1, HGSS_BAG_ITEM_CELL_HEIGHT - 4);
+        FillWindowPixelRect(windowId, PIXEL_FILL(2), left + width - 2, top + 2, 1, HGSS_BAG_ITEM_CELL_HEIGHT - 4);
     }
 }
 
