@@ -1949,15 +1949,40 @@ static void OpenContextMenu(u8 taskId)
         PrintContextMenuItemGrid(BagMenu_AddWindow(ITEMWIN_2x3), 2, 3);
 }
 
+static void DrawHgssBagContextMenuAccent(u8 windowId)
+{
+    u8 width = GetWindowAttribute(windowId, WINDOW_WIDTH) * 8;
+    u8 height = GetWindowAttribute(windowId, WINDOW_HEIGHT) * 8;
+
+    FillWindowPixelRect(windowId, PIXEL_FILL(TEXT_COLOR_RED), 0, 0, width, 1);
+    FillWindowPixelRect(windowId, PIXEL_FILL(TEXT_COLOR_RED), 0, height - 1, width, 1);
+}
+
 static void PrintContextMenuItems(u8 windowId)
 {
-    PrintMenuActionTexts(windowId, FONT_NARROW, 8, 1, 0, 16, gBagMenu->contextMenuNumItems, sItemMenuActions, gBagMenu->contextMenuItemsPtr);
+    DrawHgssBagContextMenuAccent(windowId);
+    for (u8 i = 0; i < gBagMenu->contextMenuNumItems; i++)
+    {
+        u8 actionId = gBagMenu->contextMenuItemsPtr[i];
+        if (actionId != ACTION_DUMMY)
+            BagMenu_Print(windowId, FONT_NARROW, sItemMenuActions[actionId].text, 8, 1 + i * 16, 0, 0, TEXT_SKIP_DRAW, COLORID_POCKET_NAME);
+    }
     InitMenuInUpperLeftCornerNormal(windowId, gBagMenu->contextMenuNumItems, 0);
 }
 
 static void PrintContextMenuItemGrid(u8 windowId, u8 columns, u8 rows)
 {
-    PrintMenuActionGrid(windowId, FONT_NARROW, 8, 1, 56, columns, rows, sItemMenuActions, gBagMenu->contextMenuItemsPtr);
+    DrawHgssBagContextMenuAccent(windowId);
+    for (u8 row = 0; row < rows; row++)
+    {
+        for (u8 column = 0; column < columns; column++)
+        {
+            u8 index = row * columns + column;
+            u8 actionId = gBagMenu->contextMenuItemsPtr[index];
+            if (actionId != ACTION_DUMMY)
+                BagMenu_Print(windowId, FONT_NARROW, sItemMenuActions[actionId].text, 8 + column * 56, 1 + row * 16, 0, 0, TEXT_SKIP_DRAW, COLORID_POCKET_NAME);
+        }
+    }
     InitMenuActionGrid(windowId, 56, columns, rows, 0);
 }
 
