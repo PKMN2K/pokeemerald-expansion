@@ -2906,7 +2906,8 @@ static bool8 IsHgssBagActionWindow(u8 windowType)
         || windowType == ITEMWIN_YESNO_LOW
         || windowType == ITEMWIN_YESNO_HIGH
         || windowType == ITEMWIN_QUANTITY
-        || windowType == ITEMWIN_QUANTITY_WIDE;
+        || windowType == ITEMWIN_QUANTITY_WIDE
+        || windowType == ITEMWIN_MONEY;
 }
 
 static u8 BagMenu_AddWindow(u8 windowType)
@@ -3030,7 +3031,10 @@ void BagMenu_YesNo(u8 taskId, u8 windowType, const struct YesNoFuncTable *funcTa
 static void DisplayCurrentMoneyWindow(void)
 {
     u8 windowId = BagMenu_AddWindow(ITEMWIN_MONEY);
-    PrintMoneyAmountInMoneyBoxWithBorder(windowId, 1, 14, GetMoney(&gSaveBlock1Ptr->money));
+
+    PrepareHgssBagQuantityPanel(windowId);
+    PrintMoneyAmountInMoneyBox(windowId, GetMoney(&gSaveBlock1Ptr->money), 0);
+    CopyWindowToVram(windowId, COPYWIN_GFX);
     AddMoneyLabelObject(19, 11);
 }
 
