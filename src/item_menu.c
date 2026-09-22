@@ -493,6 +493,7 @@ static const struct SpriteTemplate sHgssBagScrollArrowSpriteTemplate =
 #define HGSS_BAG_ITEM_CELL_HEIGHT   20
 #define HGSS_BAG_CELL_NORMAL_COLOR  3
 #define HGSS_BAG_CELL_ACTIVE_COLOR  4
+#define HGSS_BAG_CELL_CLOSE_COLOR   6
 
 // HGSS adaption: use a touch-style selection tab instead of Emerald's text arrow.
 // Pixel values reference the gender-specific Bag palette:
@@ -1134,7 +1135,11 @@ static void BagMenu_MoveCursorCallback(s32 itemIndex, bool8 onInit, struct ListM
         u8 rowY = row * (GetFontAttribute(list->template.fontId, FONTATTR_MAX_LETTER_HEIGHT)
                        + list->template.itemVerticalPadding)
                 + list->template.upText_Y;
-        DrawHgssBagItemCellFrame(WIN_ITEM_LIST, rowY, HGSS_BAG_CELL_NORMAL_COLOR);
+        u8 frameColor = list->template.items[list->scrollOffset + row].id == LIST_CANCEL
+                      ? HGSS_BAG_CELL_CLOSE_COLOR
+                      : HGSS_BAG_CELL_NORMAL_COLOR;
+
+        DrawHgssBagItemCellFrame(WIN_ITEM_LIST, rowY, frameColor);
     }
     DrawHgssBagItemCellFrame(WIN_ITEM_LIST, cursorY, HGSS_BAG_CELL_ACTIVE_COLOR);
 
@@ -1171,7 +1176,8 @@ static void BagMenu_MoveCursorCallback(s32 itemIndex, bool8 onInit, struct ListM
 
 static void BagMenu_ItemPrintCallback(u8 windowId, u32 itemIndex, u8 y)
 {
-    DrawHgssBagItemCellFrame(windowId, y, HGSS_BAG_CELL_NORMAL_COLOR);
+    DrawHgssBagItemCellFrame(windowId, y,
+                             itemIndex == LIST_CANCEL ? HGSS_BAG_CELL_CLOSE_COLOR : HGSS_BAG_CELL_NORMAL_COLOR);
 
     if (itemIndex != LIST_CANCEL)
     {
