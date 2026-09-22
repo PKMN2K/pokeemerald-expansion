@@ -1134,11 +1134,11 @@ static void DrawHgssBagRegisteredMarker(u8 windowId, u8 y)
     const u8 height = 16;
 
     // Compact HGSS-style registration tab, replacing Emerald's SELECT-button badge.
-    BagMenu_Print(windowId, FONT_NARROW, sText_Registered,
-                  left + 1 + GetStringCenterAlignXOffset(FONT_NARROW, sText_Registered, width - 2), y,
+    BagMenu_Print(windowId, FONT_SMALL, sText_Registered,
+                  left + 1 + GetStringCenterAlignXOffset(FONT_SMALL, sText_Registered, width - 2), y + 2,
                   0, 0, TEXT_SKIP_DRAW, COLORID_POCKET_TITLE);
 
-    // Restore the tab frame above the full-height label.
+    // Restore the tab frame above the label.
     FillWindowPixelRect(windowId, PIXEL_FILL(HGSS_BAG_CELL_ACTIVE_COLOR), left + 1, top, width - 2, 1);
     FillWindowPixelRect(windowId, PIXEL_FILL(HGSS_BAG_CELL_ACTIVE_COLOR), left + 1, top + height - 1, width - 2, 1);
     FillWindowPixelRect(windowId, PIXEL_FILL(HGSS_BAG_CELL_ACTIVE_COLOR), left, top + 1, 1, height - 2);
