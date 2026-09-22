@@ -1597,6 +1597,8 @@ static void PrintItemSoldAmount(int windowId, int numSold, int moneyEarned)
                   1 + GetStringCenterAlignXOffset(FONT_NORMAL, gStringVar4, 23), 1,
                   0, 0, TEXT_SKIP_DRAW, COLORID_POCKET_NAME);
     PrintMoneyAmount(windowId, CalculateMoneyTextHorizontalPosition(moneyEarned), 1, moneyEarned, 0);
+    FillWindowPixelRect(windowId, PIXEL_FILL(TEXT_COLOR_RED), 24, 2, 1,
+                        GetWindowAttribute(windowId, WINDOW_HEIGHT) * 8 - 4);
     DrawHgssBagQuantityPanelFrame(windowId);
     CopyWindowToVram(windowId, COPYWIN_GFX);
 }
@@ -3146,6 +3148,8 @@ static void DisplayCurrentMoneyWindow(void)
                   1 + GetStringCenterAlignXOffset(FONT_NARROW, sText_Money, 43), 1,
                   0, 0, TEXT_SKIP_DRAW, COLORID_POCKET_NAME);
     PrintMoneyAmount(windowId, 48, 1, GetMoney(&gSaveBlock1Ptr->money), 0);
+    FillWindowPixelRect(windowId, PIXEL_FILL(TEXT_COLOR_RED), 44, 2, 1,
+                        GetWindowAttribute(windowId, WINDOW_HEIGHT) * 8 - 4);
     DrawHgssBagQuantityPanelFrame(windowId);
     CopyWindowToVram(windowId, COPYWIN_GFX);
 }
