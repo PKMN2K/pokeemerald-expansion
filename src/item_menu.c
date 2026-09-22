@@ -2087,6 +2087,9 @@ static void DrawHgssBagContextMenuCursor(u8 windowId, u8 cursorPos, u8 columns, 
         }
     }
 
+    // The stock menu engine redraws its Emerald arrow first; restore the HGSS frame over any edge pixels it leaves behind.
+    DrawHgssBagContextMenuAccent(windowId);
+
     {
         u8 cursorX = (cursorPos % columns) * 56 + 2;
         u8 cursorY = 3 + (cursorPos / columns) * 16;
