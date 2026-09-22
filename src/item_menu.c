@@ -1848,7 +1848,8 @@ static void Task_HandleSwappingItemsInput(u8 taskId)
         {
             s32 input = ListMenu_ProcessInput(tListTaskId);
             ListMenuGetScrollAndRow(tListTaskId, &gBagPosition.scrollPosition[gBagPosition.pocket], &gBagPosition.cursorPosition[gBagPosition.pocket]);
-            SetItemMenuSwapLineInvisibility(FALSE);
+            // The HGSS source marker and active cell border replace Emerald's horizontal swap line.
+            SetItemMenuSwapLineInvisibility(TRUE);
             UpdateItemMenuSwapLinePos(gBagPosition.cursorPosition[gBagPosition.pocket]);
             switch (input)
             {
