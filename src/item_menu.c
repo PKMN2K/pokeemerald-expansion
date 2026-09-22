@@ -42,6 +42,7 @@
 #include "strings.h"
 #include "string_util.h"
 #include "task.h"
+#include "text.h"
 #include "text_window.h"
 #include "menu_helpers.h"
 #include "window.h"
@@ -698,6 +699,7 @@ static EWRAM_DATA struct TempWallyBag *sTempWallyBag = 0;
 static EWRAM_DATA struct YesNoFuncTable sHgssBagYesNoFuncs = {0};
 static EWRAM_DATA u8 sHgssBagYesNoWindowType = ITEMWIN_YESNO_LOW;
 static EWRAM_DATA u8 sHgssBagYesNoChoice = 0;
+static EWRAM_DATA TaskFunc sHgssBagMessageCallback = NULL;
 
 void ResetBagScrollPositions(void)
 {
@@ -1432,14 +1434,46 @@ u8 GetItemListPosition(u8 pocketId)
     return gBagPosition.scrollPosition[pocketId] + gBagPosition.cursorPosition[pocketId];
 }
 
-void DisplayItemMessage(u8 taskId, u8 fontId, const u8 *str, TaskFunc callback)
+static void PrepareHgssBagMessagePanel(u8 windowId)
+{
+    u8 width = GetWindowAttribute(windowId, WINDOW_WIDTH) * 8;
+    u8 height = GetWindowAttribute(windowId, WINDOW_HEIGHT) * 8;
+
+    FillWindowPixelBuffer(windowId, PIXEL_FILL(1));
+    FillWindowPixelRect(windowId, PIXEL_FILL(TEXT_COLOR_RED), 0, 0, width, 1);
+    FillWindowPixelRect(windowId, PIXEL_FILL(TEXT_COLOR_LIGHT_GRAY), 0, 0, 1, height);
+    FillWindowPixelRect(windowId, PIXEL_FILL(TEXT_COLOR_LIGHT_GRAY), width - 1, 0, 1, height);
+}
+
+static void Task_HgssBagContinueMessage(u8 taskId)
 {
     s16 *data = gTasks[taskId].data;
 
+    if (!RunTextPrintersRetIsActive(tMsgWindowId))
+        sHgssBagMessageCallback(taskId);
+}
+
+void DisplayItemMessage(u8 taskId, u8 fontId, const u8 *str, TaskFunc callback)
+{
+    s16 *data = gTasks[taskId].data;
+    const u8 *text = str;
+
     tMsgWindowId = AddItemMessageWindow(ITEMWIN_MESSAGE);
-    FillWindowPixelBuffer(tMsgWindowId, PIXEL_FILL(1));
-    DisplayMessageAndContinueTask(taskId, tMsgWindowId, 10, 13, fontId, GetPlayerTextSpeedDelay(), str, callback);
+    PrepareHgssBagMessagePanel(tMsgWindowId);
+
+    if (str != gStringVar4)
+    {
+        StringExpandPlaceholders(gStringVar4, str);
+        text = gStringVar4;
+    }
+
+    gTextFlags.canABSpeedUpPrint = 1;
+    sHgssBagMessageCallback = callback;
+    BagMenu_Print(tMsgWindowId, fontId, text, 4, 1, 0, 0,
+                  GetPlayerTextSpeedDelay(), COLORID_POCKET_NAME);
+    CopyWindowToVram(tMsgWindowId, COPYWIN_GFX);
     ScheduleBgCopyTilemapToVram(1);
+    gTasks[taskId].func = Task_HgssBagContinueMessage;
 }
 
 void CloseItemMessage(u8 taskId)
@@ -2964,8 +2998,7 @@ static void RemoveItemMessageWindow(u8 windowType)
     u8 *windowId = &gBagMenu->windowIds[windowType];
     if (*windowId != WINDOW_NONE)
     {
-        ClearDialogWindowAndFrameToTransparent(*windowId, FALSE);
-        // This ClearWindowTilemap call is redundant, since ClearDialogWindowAndFrameToTransparent already calls it.
+        FillWindowPixelBuffer(*windowId, PIXEL_FILL(0));
         ClearWindowTilemap(*windowId);
         RemoveWindow(*windowId);
         ScheduleBgCopyTilemapToVram(1);
