@@ -247,6 +247,7 @@ static const struct WindowTemplate sSaveInfoWindowTemplate = {
 
 // Local functions
 static void BuildStartMenuActions(void);
+static void DrawHgssStartMenuRows(void);
 static void AddStartMenuAction(u8 action);
 static void BuildNormalStartMenu(void);
 static void BuildDebugStartMenu(void);
@@ -480,6 +481,26 @@ static void RemoveExtraStartMenuWindows(void)
     }
 }
 
+static void DrawHgssStartMenuRows(void)
+{
+    u8 windowId = GetStartMenuWindowId();
+    u8 width = GetWindowAttribute(windowId, WINDOW_WIDTH) * 8;
+    u8 height = GetWindowAttribute(windowId, WINDOW_HEIGHT) * 8;
+    u8 y;
+
+    if (width < 8 || height < 16)
+        return;
+
+    // Keep the existing standard outer frame and divide the interior into HGSS-style rows.
+    for (y = 16; y < height - 8; y += 16)
+        FillWindowPixelRect(windowId, PIXEL_FILL(2), 2, y, width - 4, 1);
+
+    // A short top accent keeps the list visually consistent with the other HGSS panels.
+    FillWindowPixelRect(windowId, PIXEL_FILL(2), 4, 2, width - 8, 1);
+
+    CopyWindowToVram(windowId, COPYWIN_GFX);
+}
+
 static bool32 PrintStartMenuActions(s8 *pIndex, u32 count)
 {
     s8 index = *pIndex;
@@ -539,7 +560,10 @@ static bool32 InitStartMenuStep(void)
         break;
     case 4:
         if (PrintStartMenuActions(&sInitStartMenuData[1], 2))
+        {
+            DrawHgssStartMenuRows();
             sInitStartMenuData[0]++;
+        }
         break;
     case 5:
         sStartMenuCursorPos = InitMenuNormal(GetStartMenuWindowId(), FONT_NORMAL, 0, 9, 16, sNumStartMenuActions, sStartMenuCursorPos);
