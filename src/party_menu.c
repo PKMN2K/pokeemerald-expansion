@@ -2929,6 +2929,16 @@ static u8 DisplaySelectionWindow(u8 windowType)
     }
 
     InitMenuInUpperLeftCorner(sPartyMenuInternal->windowId[0], sPartyMenuInternal->numActions, 0, TRUE);
+
+    // Divide the action list into clean HGSS-style choice cells.
+    {
+        u8 width = GetWindowAttribute(sPartyMenuInternal->windowId[0], WINDOW_WIDTH) * 8;
+
+        for (i = 1; i < sPartyMenuInternal->numActions; i++)
+            FillWindowPixelRect(sPartyMenuInternal->windowId[0], PIXEL_FILL(TEXT_COLOR_LIGHT_GRAY), 1, i * 16, width - 2, 1);
+    }
+
+    CopyWindowToVram(sPartyMenuInternal->windowId[0], COPYWIN_GFX);
     ScheduleBgCopyTilemapToVram(2);
 
     return sPartyMenuInternal->windowId[0];
