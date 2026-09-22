@@ -301,7 +301,7 @@ static const struct ListMenuTemplate sItemListMenu =
     .header_X = 0,
     .item_X = 12,
     .cursor_X = 0,
-    .upText_Y = 1,
+    .upText_Y = 2,
     .cursorPal = 1,
     .fillValue = 0,
     .cursorShadowPal = 3,
@@ -1151,7 +1151,7 @@ static void BagMenu_ItemPrintCallback(u8 windowId, u32 itemIndex, u8 y)
 
         // Draw HM icon
         if (gBagPosition.pocket == POCKET_TM_HM && GetItemTMHMIndex(itemSlot.itemId) > NUM_TECHNICAL_MACHINES)
-            BlitBitmapToWindow(windowId, gBagMenuHMIcon_Gfx, 8, y - 1, 16, 16);
+            BlitBitmapToWindow(windowId, gBagMenuHMIcon_Gfx, 8, y, 16, 16);
 
         if (gBagPosition.pocket != POCKET_KEY_ITEMS && GetItemImportance(itemSlot.itemId) == FALSE)
         {
@@ -1165,7 +1165,7 @@ static void BagMenu_ItemPrintCallback(u8 windowId, u32 itemIndex, u8 y)
         {
             // Print registered icon
             if (gSaveBlock1Ptr->registeredItem != ITEM_NONE && gSaveBlock1Ptr->registeredItem == itemSlot.itemId)
-                BlitBitmapToWindow(windowId, sRegisteredSelect_Gfx, 96, y - 1, 24, 16);
+                BlitBitmapToWindow(windowId, sRegisteredSelect_Gfx, 96, y, 24, 16);
         }
     }
 }
