@@ -249,6 +249,7 @@ static const struct WindowTemplate sSaveInfoWindowTemplate = {
 static void BuildStartMenuActions(void);
 static void DrawHgssStartMenuRows(void);
 static void DrawHgssStartMenuSelection(u8 row, bool8 selected);
+static u8 GetHgssStartMenuTextX(const u8 *text);
 static void AddStartMenuAction(u8 action);
 static void BuildNormalStartMenu(void);
 static void BuildDebugStartMenu(void);
@@ -521,21 +522,42 @@ static void DrawHgssStartMenuSelection(u8 row, bool8 selected)
         FillWindowPixelRect(windowId, PIXEL_FILL(2), 2, top, width - 4, 1);
 }
 
+static u8 GetHgssStartMenuTextX(const u8 *text)
+{
+    u8 windowId = GetStartMenuWindowId();
+    u8 width = GetWindowAttribute(windowId, WINDOW_WIDTH) * 8;
+    const u8 left = 10;
+    u8 fieldWidth;
+    u32 textWidth;
+
+    if (width <= left + 2)
+        return left;
+
+    fieldWidth = width - left - 2;
+    textWidth = GetStringWidth(FONT_NORMAL, text, 0);
+
+    if (textWidth >= fieldWidth)
+        return left;
+
+    return left + GetStringCenterAlignXOffset(FONT_NORMAL, text, fieldWidth);
+}
+
 static bool32 PrintStartMenuActions(s8 *pIndex, u32 count)
 {
     s8 index = *pIndex;
 
     do
     {
-        if (sStartMenuItems[sCurrentStartMenuActions[index]].func.u8_void == StartMenuPlayerNameCallback)
-        {
-            PrintPlayerNameOnWindow(GetStartMenuWindowId(), sStartMenuItems[sCurrentStartMenuActions[index]].text, 8, (index << 4) + 9);
-        }
+        u8 action = sCurrentStartMenuActions[index];
+        u8 textX;
+
+        StringExpandPlaceholders(gStringVar4, sStartMenuItems[action].text);
+        textX = GetHgssStartMenuTextX(gStringVar4);
+
+        if (sStartMenuItems[action].func.u8_void == StartMenuPlayerNameCallback)
+            PrintPlayerNameOnWindow(GetStartMenuWindowId(), sStartMenuItems[action].text, textX, (index << 4) + 9);
         else
-        {
-            StringExpandPlaceholders(gStringVar4, sStartMenuItems[sCurrentStartMenuActions[index]].text);
-            AddTextPrinterParameterized(GetStartMenuWindowId(), FONT_NORMAL, gStringVar4, 8, (index << 4) + 9, TEXT_SKIP_DRAW, NULL);
-        }
+            AddTextPrinterParameterized(GetStartMenuWindowId(), FONT_NORMAL, gStringVar4, textX, (index << 4) + 9, TEXT_SKIP_DRAW, NULL);
 
         index++;
         if (index >= sNumStartMenuActions)
