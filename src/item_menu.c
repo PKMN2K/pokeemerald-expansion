@@ -1127,7 +1127,7 @@ static void DrawHgssBagItemCellFrame(u8 windowId, u8 y, u8 color)
 
 static void DrawHgssBagRegisteredMarker(u8 windowId, u8 y)
 {
-    const u8 left = 96;
+    const u8 left = 95;
     const u8 top = y + 2;
     const u8 width = 23;
     const u8 height = 12;
