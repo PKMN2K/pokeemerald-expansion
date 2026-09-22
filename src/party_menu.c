@@ -1267,6 +1267,13 @@ static void DrawHgssPartySlotFrame(u8 slot)
             FillWindowPixelRect(windowId, PIXEL_FILL(5), nameX - 1, nameY + 3, 1, nameHeight - 6);
         }
     }
+
+    // Compact lower-right accent, clear of the slot's data fields.
+    if (width > 8 && height > 6)
+    {
+        FillWindowPixelRect(windowId, PIXEL_FILL(4), width - 6, height - 3, 4, 1);
+        FillWindowPixelRect(windowId, PIXEL_FILL(5), width - 4, height - 2, 2, 1);
+    }
 }
 
 static bool8 RenderPartyMenuBoxes(void)
