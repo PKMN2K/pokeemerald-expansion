@@ -3212,15 +3212,19 @@ static void PrintNotEggInfo(void)
         StringCopy(gStringVar1, &gText_NumberClear01[0]);
         ConvertIntToDecimalStringN(gStringVar2, dexNum, STR_CONV_MODE_LEADING_ZEROS, digitCount);
         StringAppend(gStringVar1, gStringVar2);
-        if (!IsMonShiny(mon))
         {
-            PrintTextOnWindow(PSS_LABEL_WINDOW_PORTRAIT_DEX_NUMBER, gStringVar1, 0, 1, 0, 1);
-            SetMonPicBackgroundPalette(FALSE);
-        }
-        else
-        {
-            PrintTextOnWindow(PSS_LABEL_WINDOW_PORTRAIT_DEX_NUMBER, gStringVar1, 0, 1, 0, 7);
-            SetMonPicBackgroundPalette(TRUE);
+            u8 dexX = GetStringCenterAlignXOffset(FONT_NORMAL, gStringVar1, WindowWidthPx(PSS_LABEL_WINDOW_PORTRAIT_DEX_NUMBER));
+
+            if (!IsMonShiny(mon))
+            {
+                PrintTextOnWindow(PSS_LABEL_WINDOW_PORTRAIT_DEX_NUMBER, gStringVar1, dexX, 1, 0, 1);
+                SetMonPicBackgroundPalette(FALSE);
+            }
+            else
+            {
+                PrintTextOnWindow(PSS_LABEL_WINDOW_PORTRAIT_DEX_NUMBER, gStringVar1, dexX, 1, 0, 7);
+                SetMonPicBackgroundPalette(TRUE);
+            }
         }
         PutWindowTilemap(PSS_LABEL_WINDOW_PORTRAIT_DEX_NUMBER);
     }
