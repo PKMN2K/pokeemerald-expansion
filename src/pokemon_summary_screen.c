@@ -247,6 +247,7 @@ static void LimitEggSummaryPageDisplay(void);
 static void ResetWindows(void);
 static void DrawHgssSummaryInfoStrip(u8 windowId);
 static void DrawHgssSummaryMemoPanel(u8 windowId);
+static void DrawHgssSummaryMoveRows(u8 windowId);
 static void PrintMonInfo(void);
 static void PrintNotEggInfo(void);
 static void PrintEggInfo(void);
@@ -3222,6 +3223,24 @@ static void DrawHgssSummaryMemoPanel(u8 windowId)
     FillWindowPixelRect(windowId, PIXEL_FILL(4), 1, 3, 1, height - 6);
 }
 
+static void DrawHgssSummaryMoveRows(u8 windowId)
+{
+    u8 width = WindowWidthPx(windowId);
+    u8 height = GetWindowAttribute(windowId, WINDOW_HEIGHT) * 8;
+    u8 y;
+
+    if (width < 8 || height < 16)
+        return;
+
+    FillWindowPixelRect(windowId, PIXEL_FILL(3), 1, 0, width - 2, 1);
+    FillWindowPixelRect(windowId, PIXEL_FILL(3), 1, height - 1, width - 2, 1);
+    FillWindowPixelRect(windowId, PIXEL_FILL(3), 0, 1, 1, height - 2);
+    FillWindowPixelRect(windowId, PIXEL_FILL(3), width - 1, 1, 1, height - 2);
+
+    for (y = 16; y < height; y += 16)
+        FillWindowPixelRect(windowId, PIXEL_FILL(4), 2, y, width - 4, 1);
+}
+
 static void PrintMonInfo(void)
 {
     FillWindowPixelBuffer(PSS_LABEL_WINDOW_PORTRAIT_DEX_NUMBER, PIXEL_FILL(0));
@@ -4204,10 +4223,12 @@ static void PrintMoveNameAndPP(u8 moveIndex)
     u8 ppValueWindowId = AddWindowFromTemplateList(sPageMovesTemplate, PSS_DATA_WINDOW_MOVE_PP);
     enum Move move = summary->moves[moveIndex];
 
+    DrawHgssSummaryMoveRows(moveNameWindowId);
+
     if (move != 0)
     {
         pp = CalculatePPWithBonus(move, summary->ppBonuses, moveIndex);
-        PrintTextOnWindowToFit(moveNameWindowId, GetMoveName(move), 0, moveIndex * 16 + 1, 0, 1);
+        PrintTextOnWindowToFitPx(moveNameWindowId, GetMoveName(move), 4, moveIndex * 16 + 1, 0, 1, WindowWidthPx(moveNameWindowId) - 8);
         ConvertIntToDecimalStringN(gStringVar1, summary->pp[moveIndex], STR_CONV_MODE_RIGHT_ALIGN, 2);
         ConvertIntToDecimalStringN(gStringVar2, pp, STR_CONV_MODE_RIGHT_ALIGN, 2);
         DynamicPlaceholderTextUtil_Reset();
@@ -4220,7 +4241,7 @@ static void PrintMoveNameAndPP(u8 moveIndex)
     }
     else
     {
-        PrintTextOnWindow(moveNameWindowId, gText_OneDash, 0, moveIndex * 16 + 1, 0, 1);
+        PrintTextOnWindow(moveNameWindowId, gText_OneDash, 4, moveIndex * 16 + 1, 0, 1);
         text = gText_TwoDashes;
         ppState = 12;
         x = GetStringCenterAlignXOffset(FONT_NORMAL, text, 44);
@@ -4362,18 +4383,20 @@ static void PrintNewMoveDetailsOrCancelText(void)
     u8 windowId1 = AddWindowFromTemplateList(sPageMovesTemplate, PSS_DATA_WINDOW_MOVE_NAMES);
     u8 windowId2 = AddWindowFromTemplateList(sPageMovesTemplate, PSS_DATA_WINDOW_MOVE_PP);
 
+    DrawHgssSummaryMoveRows(windowId1);
+
     if (sMonSummaryScreen->newMove == MOVE_NONE)
     {
-        PrintTextOnWindow(windowId1, gText_Cancel, 0, 65, 0, 1);
+        PrintTextOnWindow(windowId1, gText_Cancel, 4, 65, 0, 1);
     }
     else
     {
         enum Move move = sMonSummaryScreen->newMove;
 
         if (sMonSummaryScreen->currPageIndex == PSS_PAGE_BATTLE_MOVES)
-            PrintTextOnWindowToFit(windowId1, GetMoveName(move), 0, 65, 0, 6);
+            PrintTextOnWindowToFitPx(windowId1, GetMoveName(move), 4, 65, 0, 6, WindowWidthPx(windowId1) - 8);
         else
-            PrintTextOnWindowToFit(windowId1, GetMoveName(move), 0, 65, 0, 5);
+            PrintTextOnWindowToFitPx(windowId1, GetMoveName(move), 4, 65, 0, 5, WindowWidthPx(windowId1) - 8);
 
         ConvertIntToDecimalStringN(gStringVar1, GetMovePP(move), STR_CONV_MODE_RIGHT_ALIGN, 2);
         DynamicPlaceholderTextUtil_Reset();
@@ -4388,6 +4411,7 @@ static void AddAndFillMoveNamesWindow(void)
 {
     u8 windowId = AddWindowFromTemplateList(sPageMovesTemplate, PSS_DATA_WINDOW_MOVE_NAMES);
     FillWindowPixelRect(windowId, PIXEL_FILL(0), 0, 66, 72, 16);
+    DrawHgssSummaryMoveRows(windowId);
     CopyWindowToVram(windowId, COPYWIN_GFX);
 }
 
