@@ -309,7 +309,7 @@ static const struct ListMenuTemplate sItemListMenu =
     .itemVerticalPadding = 0,
     .scrollMultiple = LIST_NO_MULTIPLE_SCROLL,
     .fontId = FONT_NARROW,
-    .cursorKind = CURSOR_BLACK_ARROW
+    .cursorKind = CURSOR_INVISIBLE
 };
 
 static const u8 sText_NothingToSort[] = _("There's nothing to sort!");
@@ -415,6 +415,33 @@ static const struct YesNoFuncTable sYesNoTossFunctions = {ConfirmToss, CancelTos
 static const struct YesNoFuncTable sYesNoSellItemFunctions = {ConfirmSell, CancelSell};
 
 static const u8 sRegisteredSelect_Gfx[] = INCGFX_U8("graphics/bag/select_button.png", ".4bpp");
+
+#define HGSS_BAG_LIST_CURSOR_WIDTH  8
+#define HGSS_BAG_LIST_CURSOR_HEIGHT 14
+
+// HGSS adaption: use a touch-style selection tab instead of Emerald's text arrow.
+// Pixel values reference the Bag window palette: 13 = light blue, 6 = gray, 2 = light border.
+static const u8 sHgssBagListCursor_Gfx[] =
+{
+    0x00, 0x00, 0x00, 0x00, 0x00, 0x22, 0x22, 0x00,
+    0x20, 0xDD, 0xDD, 0x02, 0xD2, 0xDD, 0xDD, 0x2D,
+    0xD2, 0xDD, 0xDD, 0x2D, 0xD2, 0xDD, 0xDD, 0x2D,
+    0xD2, 0xDD, 0xDD, 0x2D, 0xD2, 0xDD, 0xDD, 0x2D,
+    0xD2, 0xDD, 0xDD, 0x2D, 0xD2, 0xDD, 0xDD, 0x2D,
+    0xD2, 0xDD, 0xDD, 0x2D, 0x20, 0xDD, 0xDD, 0x02,
+    0x00, 0x22, 0x22, 0x00, 0x00, 0x00, 0x00, 0x00,
+};
+
+static const u8 sHgssBagListCursorGray_Gfx[] =
+{
+    0x00, 0x00, 0x00, 0x00, 0x00, 0x22, 0x22, 0x00,
+    0x20, 0x66, 0x66, 0x02, 0x62, 0x66, 0x66, 0x26,
+    0x62, 0x66, 0x66, 0x26, 0x62, 0x66, 0x66, 0x26,
+    0x62, 0x66, 0x66, 0x26, 0x62, 0x66, 0x66, 0x26,
+    0x62, 0x66, 0x66, 0x26, 0x62, 0x66, 0x66, 0x26,
+    0x62, 0x66, 0x66, 0x26, 0x20, 0x66, 0x66, 0x02,
+    0x00, 0x22, 0x22, 0x00, 0x00, 0x00, 0x00, 0x00,
+};
 
 enum {
     COLORID_NORMAL,
@@ -994,6 +1021,28 @@ static void GetItemNameFromPocket(u8 *dest, enum Item itemId)
 
 static void BagMenu_MoveCursorCallback(s32 itemIndex, bool8 onInit, struct ListMenu *list)
 {
+    u8 cursorY = list->selectedRow * (GetFontAttribute(list->template.fontId, FONTATTR_MAX_LETTER_HEIGHT)
+                                   + list->template.itemVerticalPadding)
+               + list->template.upText_Y;
+
+    // The list engine no longer draws an Emerald arrow, so refresh the Bag-specific selector column here.
+    FillWindowPixelRect(WIN_ITEM_LIST, PIXEL_FILL(0), 0, 0,
+                        HGSS_BAG_LIST_CURSOR_WIDTH,
+                        GetWindowAttribute(WIN_ITEM_LIST, WINDOW_HEIGHT) * TILE_SIZE_1BPP);
+
+    // Preserve the source marker while moving an item, then draw the current selection on top.
+    if (gBagMenu->toSwapPos != NOT_SWAPPING
+     && gBagMenu->toSwapPos >= list->scrollOffset
+     && gBagMenu->toSwapPos < list->scrollOffset + list->template.maxShowed)
+    {
+        u8 swapRow = gBagMenu->toSwapPos - list->scrollOffset;
+        u8 swapY = swapRow * (GetFontAttribute(list->template.fontId, FONTATTR_MAX_LETTER_HEIGHT)
+                            + list->template.itemVerticalPadding)
+                 + list->template.upText_Y;
+        BagMenu_PrintCursorAtPos(swapY, COLORID_GRAY_CURSOR);
+    }
+    BagMenu_PrintCursorAtPos(cursorY, COLORID_NORMAL);
+
     if (onInit != TRUE)
     {
         PlaySE(SE_SELECT);
@@ -1075,11 +1124,15 @@ static void BagMenu_PrintCursor(u8 listTaskId, u8 colorIndex)
 
 static void BagMenu_PrintCursorAtPos(u8 y, u8 colorIndex)
 {
-    if (colorIndex == COLORID_NONE)
-        FillWindowPixelRect(WIN_ITEM_LIST, PIXEL_FILL(0), 0, y, GetMenuCursorDimensionByFont(FONT_NORMAL, 0), GetMenuCursorDimensionByFont(FONT_NORMAL, 1));
-    else
-        BagMenu_Print(WIN_ITEM_LIST, FONT_NORMAL, gText_SelectorArrow2, 0, y, 0, 0, 0, colorIndex);
+    FillWindowPixelRect(WIN_ITEM_LIST, PIXEL_FILL(0), 0, y,
+                        HGSS_BAG_LIST_CURSOR_WIDTH, HGSS_BAG_LIST_CURSOR_HEIGHT);
 
+    if (colorIndex == COLORID_GRAY_CURSOR)
+        BlitBitmapToWindow(WIN_ITEM_LIST, sHgssBagListCursorGray_Gfx, 0, y,
+                           HGSS_BAG_LIST_CURSOR_WIDTH, HGSS_BAG_LIST_CURSOR_HEIGHT);
+    else if (colorIndex != COLORID_NONE)
+        BlitBitmapToWindow(WIN_ITEM_LIST, sHgssBagListCursor_Gfx, 0, y,
+                           HGSS_BAG_LIST_CURSOR_WIDTH, HGSS_BAG_LIST_CURSOR_HEIGHT);
 }
 
 static void CreatePocketScrollArrowPair(void)
