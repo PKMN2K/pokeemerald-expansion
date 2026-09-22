@@ -2073,8 +2073,9 @@ static void DrawHgssBagContextMenuCursor(u8 windowId, u8 cursorPos, u8 columns, 
         {
             u8 clearX = column * 56;
             u8 clearWidth = 8;
+            u8 clearHeight = (row == rows - 1) ? 14 : 15;
 
-            // Preserve the chamfered panel's left edge while erasing the old cursor.
+            // Preserve the chamfered panel edges while erasing the old cursor.
             if (column == 0)
             {
                 clearX++;
@@ -2082,7 +2083,7 @@ static void DrawHgssBagContextMenuCursor(u8 windowId, u8 cursorPos, u8 columns, 
             }
             FillWindowPixelRect(windowId, PIXEL_FILL(1),
                                 clearX, 1 + row * 16,
-                                clearWidth, 15);
+                                clearWidth, clearHeight);
         }
     }
 
