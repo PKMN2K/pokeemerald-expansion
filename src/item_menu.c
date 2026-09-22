@@ -2113,7 +2113,7 @@ static void OpenContextMenu(u8 taskId)
         PrintContextMenuItemGrid(BagMenu_AddWindow(ITEMWIN_2x3), 2, 3);
 }
 
-static void DrawHgssBagContextMenuAccent(u8 windowId)
+static void DrawHgssBagContextMenuAccent(u8 windowId, u8 columns, u8 rows)
 {
     u8 width = GetWindowAttribute(windowId, WINDOW_WIDTH) * 8;
     u8 height = GetWindowAttribute(windowId, WINDOW_HEIGHT) * 8;
@@ -2123,6 +2123,12 @@ static void DrawHgssBagContextMenuAccent(u8 windowId)
     FillWindowPixelRect(windowId, PIXEL_FILL(TEXT_COLOR_RED), 1, height - 1, width - 2, 1);
     FillWindowPixelRect(windowId, PIXEL_FILL(TEXT_COLOR_RED), 0, 1, 1, height - 2);
     FillWindowPixelRect(windowId, PIXEL_FILL(TEXT_COLOR_RED), width - 1, 1, 1, height - 2);
+
+    // Divide the panel into distinct HGSS-style action cells.
+    for (u8 row = 1; row < rows; row++)
+        FillWindowPixelRect(windowId, PIXEL_FILL(TEXT_COLOR_LIGHT_GRAY), 1, row * 16, width - 2, 1);
+    for (u8 column = 1; column < columns; column++)
+        FillWindowPixelRect(windowId, PIXEL_FILL(TEXT_COLOR_LIGHT_GRAY), column * 56, 1, 1, height - 2);
 }
 
 static void DrawHgssBagContextMenuCursor(u8 windowId, u8 cursorPos, u8 columns, u8 rows)
@@ -2148,7 +2154,7 @@ static void DrawHgssBagContextMenuCursor(u8 windowId, u8 cursorPos, u8 columns, 
     }
 
     // The stock menu engine redraws its Emerald arrow first; restore the HGSS frame over any edge pixels it leaves behind.
-    DrawHgssBagContextMenuAccent(windowId);
+    DrawHgssBagContextMenuAccent(windowId, columns, rows);
 
     {
         u8 cursorX = (cursorPos % columns) * 56 + 2;
@@ -2163,7 +2169,7 @@ static void DrawHgssBagContextMenuCursor(u8 windowId, u8 cursorPos, u8 columns, 
 
 static void PrintContextMenuItems(u8 windowId)
 {
-    DrawHgssBagContextMenuAccent(windowId);
+    DrawHgssBagContextMenuAccent(windowId, 1, gBagMenu->contextMenuNumItems);
     for (u8 i = 0; i < gBagMenu->contextMenuNumItems; i++)
     {
         u8 actionId = gBagMenu->contextMenuItemsPtr[i];
@@ -2181,7 +2187,7 @@ static void PrintContextMenuItems(u8 windowId)
 
 static void PrintContextMenuItemGrid(u8 windowId, u8 columns, u8 rows)
 {
-    DrawHgssBagContextMenuAccent(windowId);
+    DrawHgssBagContextMenuAccent(windowId, columns, rows);
     for (u8 row = 0; row < rows; row++)
     {
         for (u8 column = 0; column < columns; column++)
