@@ -1958,6 +1958,25 @@ static void DrawHgssBagContextMenuAccent(u8 windowId)
     FillWindowPixelRect(windowId, PIXEL_FILL(TEXT_COLOR_RED), 0, height - 1, width, 1);
 }
 
+static void DrawHgssBagContextMenuCursor(u8 windowId, u8 cursorPos, u8 columns, u8 rows)
+{
+    for (u8 row = 0; row < rows; row++)
+    {
+        for (u8 column = 0; column < columns; column++)
+        {
+            FillWindowPixelRect(windowId, PIXEL_FILL(1),
+                                column * 56, 1 + row * 16,
+                                8, 15);
+        }
+    }
+
+    FillWindowPixelRect(windowId, PIXEL_FILL(TEXT_COLOR_RED),
+                        (cursorPos % columns) * 56 + 2,
+                        3 + (cursorPos / columns) * 16,
+                        4, 11);
+    CopyWindowToVram(windowId, COPYWIN_GFX);
+}
+
 static void PrintContextMenuItems(u8 windowId)
 {
     DrawHgssBagContextMenuAccent(windowId);
@@ -1968,6 +1987,7 @@ static void PrintContextMenuItems(u8 windowId)
             BagMenu_Print(windowId, FONT_NARROW, sItemMenuActions[actionId].text, 8, 1 + i * 16, 0, 0, TEXT_SKIP_DRAW, COLORID_POCKET_NAME);
     }
     InitMenuInUpperLeftCornerNormal(windowId, gBagMenu->contextMenuNumItems, 0);
+    DrawHgssBagContextMenuCursor(windowId, 0, 1, gBagMenu->contextMenuNumItems);
 }
 
 static void PrintContextMenuItemGrid(u8 windowId, u8 columns, u8 rows)
@@ -1984,6 +2004,7 @@ static void PrintContextMenuItemGrid(u8 windowId, u8 columns, u8 rows)
         }
     }
     InitMenuActionGrid(windowId, 56, columns, rows, 0);
+    DrawHgssBagContextMenuCursor(windowId, 0, columns, rows);
 }
 
 static void Task_ItemContext_Normal(u8 taskId)
@@ -2008,6 +2029,9 @@ static void Task_ItemContext_SingleRow(u8 taskId)
         switch (selection)
         {
         case MENU_NOTHING_CHOSEN:
+            DrawHgssBagContextMenuCursor(
+                gBagMenu->contextMenuNumItems == 1 ? gBagMenu->windowIds[ITEMWIN_1x1] : gBagMenu->windowIds[ITEMWIN_1x2],
+                Menu_GetCursorPos(), 1, gBagMenu->contextMenuNumItems);
             break;
         case MENU_B_PRESSED:
             PlaySE(SE_SELECT);
@@ -2034,6 +2058,9 @@ static void Task_ItemContext_MultipleRows(u8 taskId)
             {
                 PlaySE(SE_SELECT);
                 ChangeMenuGridCursorPosition(MENU_CURSOR_DELTA_NONE, MENU_CURSOR_DELTA_UP);
+                DrawHgssBagContextMenuCursor(
+                    gBagMenu->contextMenuNumItems == 4 ? gBagMenu->windowIds[ITEMWIN_2x2] : gBagMenu->windowIds[ITEMWIN_2x3],
+                    Menu_GetCursorPos(), 2, gBagMenu->contextMenuNumItems / 2);
             }
         }
         else if (JOY_NEW(DPAD_DOWN))
@@ -2042,6 +2069,9 @@ static void Task_ItemContext_MultipleRows(u8 taskId)
             {
                 PlaySE(SE_SELECT);
                 ChangeMenuGridCursorPosition(MENU_CURSOR_DELTA_NONE, MENU_CURSOR_DELTA_DOWN);
+                DrawHgssBagContextMenuCursor(
+                    gBagMenu->contextMenuNumItems == 4 ? gBagMenu->windowIds[ITEMWIN_2x2] : gBagMenu->windowIds[ITEMWIN_2x3],
+                    Menu_GetCursorPos(), 2, gBagMenu->contextMenuNumItems / 2);
             }
         }
         else if (JOY_NEW(DPAD_LEFT) || GetLRKeysPressed() == MENU_L_PRESSED)
@@ -2050,6 +2080,9 @@ static void Task_ItemContext_MultipleRows(u8 taskId)
             {
                 PlaySE(SE_SELECT);
                 ChangeMenuGridCursorPosition(MENU_CURSOR_DELTA_LEFT, MENU_CURSOR_DELTA_NONE);
+                DrawHgssBagContextMenuCursor(
+                    gBagMenu->contextMenuNumItems == 4 ? gBagMenu->windowIds[ITEMWIN_2x2] : gBagMenu->windowIds[ITEMWIN_2x3],
+                    Menu_GetCursorPos(), 2, gBagMenu->contextMenuNumItems / 2);
             }
         }
         else if (JOY_NEW(DPAD_RIGHT) || GetLRKeysPressed() == MENU_R_PRESSED)
@@ -2058,6 +2091,9 @@ static void Task_ItemContext_MultipleRows(u8 taskId)
             {
                 PlaySE(SE_SELECT);
                 ChangeMenuGridCursorPosition(MENU_CURSOR_DELTA_RIGHT, MENU_CURSOR_DELTA_NONE);
+                DrawHgssBagContextMenuCursor(
+                    gBagMenu->contextMenuNumItems == 4 ? gBagMenu->windowIds[ITEMWIN_2x2] : gBagMenu->windowIds[ITEMWIN_2x3],
+                    Menu_GetCursorPos(), 2, gBagMenu->contextMenuNumItems / 2);
             }
         }
         else if (JOY_NEW(A_BUTTON))
