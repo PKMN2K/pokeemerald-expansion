@@ -250,6 +250,7 @@ static void PrintNotEggInfo(void);
 static void PrintEggInfo(void);
 static void PrintGenderSymbol(struct Pokemon *, enum Species);
 static void PrintPageNamesAndStats(void);
+static void DrawHgssSummaryTitleTab(u8 windowId);
 static void PutPageWindowTilemaps(u8);
 static void ClearPageWindowTilemaps(u8);
 static void RemoveWindowByIndex(u8);
@@ -3280,6 +3281,21 @@ static void PrintAOrBButtonIcon(u8 windowId, bool8 bButton, u32 x)
     BlitBitmapToWindow(windowId, button, x, 0, 16, 16);
 }
 
+static void DrawHgssSummaryTitleTab(u8 windowId)
+{
+    u8 width = WindowWidthPx(windowId);
+    u8 height = GetWindowAttribute(windowId, WINDOW_HEIGHT) * 8;
+
+    if (width < 8 || height < 8)
+        return;
+
+    FillWindowPixelRect(windowId, PIXEL_FILL(3), 0, 2, 1, height - 4);
+    FillWindowPixelRect(windowId, PIXEL_FILL(4), 1, 3, 1, height - 6);
+    FillWindowPixelRect(windowId, PIXEL_FILL(3), width - 1, 2, 1, height - 4);
+    FillWindowPixelRect(windowId, PIXEL_FILL(4), width - 2, 3, 1, height - 6);
+    FillWindowPixelRect(windowId, PIXEL_FILL(4), 4, height - 1, width - 8, 1);
+}
+
 static void PrintPageNamesAndStats(void)
 {
     int statsXPos;
@@ -3292,6 +3308,11 @@ static void PrintPageNamesAndStats(void)
                       GetStringCenterAlignXOffset(FONT_NORMAL, gText_BattleMoves, WindowWidthPx(PSS_LABEL_WINDOW_BATTLE_MOVES_TITLE)), 1, 0, 1);
     PrintTextOnWindow(PSS_LABEL_WINDOW_CONTEST_MOVES_TITLE, gText_ContestMoves,
                       GetStringCenterAlignXOffset(FONT_NORMAL, gText_ContestMoves, WindowWidthPx(PSS_LABEL_WINDOW_CONTEST_MOVES_TITLE)), 1, 0, 1);
+
+    DrawHgssSummaryTitleTab(PSS_LABEL_WINDOW_POKEMON_INFO_TITLE);
+    DrawHgssSummaryTitleTab(PSS_LABEL_WINDOW_POKEMON_SKILLS_TITLE);
+    DrawHgssSummaryTitleTab(PSS_LABEL_WINDOW_BATTLE_MOVES_TITLE);
+    DrawHgssSummaryTitleTab(PSS_LABEL_WINDOW_CONTEST_MOVES_TITLE);
 
     ShowUtilityPrompt(SUMMARY_MODE_NORMAL);
 
