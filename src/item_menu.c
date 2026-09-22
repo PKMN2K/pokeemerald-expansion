@@ -2139,7 +2139,7 @@ static void PrintContextMenuItems(u8 windowId)
     {
         u8 actionId = gBagMenu->contextMenuItemsPtr[i];
         if (actionId != ACTION_DUMMY)
-            BagMenu_Print(windowId, FONT_NARROW, sItemMenuActions[actionId].text, 8, 1 + i * 16, 0, 0, TEXT_SKIP_DRAW, COLORID_POCKET_NAME);
+            BagMenu_Print(windowId, FONT_SMALL, sItemMenuActions[actionId].text, 8, 2 + i * 16, 0, 0, TEXT_SKIP_DRAW, COLORID_POCKET_NAME);
     }
     InitMenuInUpperLeftCornerNormal(windowId, gBagMenu->contextMenuNumItems, 0);
     DrawHgssBagContextMenuCursor(windowId, 0, 1, gBagMenu->contextMenuNumItems);
@@ -2155,7 +2155,7 @@ static void PrintContextMenuItemGrid(u8 windowId, u8 columns, u8 rows)
             u8 index = row * columns + column;
             u8 actionId = gBagMenu->contextMenuItemsPtr[index];
             if (actionId != ACTION_DUMMY)
-                BagMenu_Print(windowId, FONT_NARROW, sItemMenuActions[actionId].text, 8 + column * 56, 1 + row * 16, 0, 0, TEXT_SKIP_DRAW, COLORID_POCKET_NAME);
+                BagMenu_Print(windowId, FONT_SMALL, sItemMenuActions[actionId].text, 8 + column * 56, 2 + row * 16, 0, 0, TEXT_SKIP_DRAW, COLORID_POCKET_NAME);
         }
     }
     InitMenuActionGrid(windowId, 56, columns, rows, 0);
