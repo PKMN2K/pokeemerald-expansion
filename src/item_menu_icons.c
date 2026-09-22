@@ -7,7 +7,6 @@
 #include "item_icon.h"
 #include "item_menu_icons.h"
 #include "malloc.h"
-#include "menu_helpers.h"
 #include "menu.h"
 #include "sprite.h"
 #include "window.h"
