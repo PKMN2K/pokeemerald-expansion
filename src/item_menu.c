@@ -2970,14 +2970,14 @@ static void PrintPocketNames(const u8 *pocketName1, const u8 *pocketName2)
     window.height = 2;
     windowId = AddWindow(&window);
     FillWindowPixelBuffer(windowId, PIXEL_FILL(0));
-    offset = GetStringCenterAlignXOffset(FONT_NORMAL, pocketName1, 0x40);
-    BagMenu_Print(windowId, FONT_NORMAL, pocketName1, offset, 1, 0, 0, TEXT_SKIP_DRAW, COLORID_POCKET_TITLE);
+    offset = GetStringCenterAlignXOffset(FONT_SMALL, pocketName1, 0x40);
+    BagMenu_Print(windowId, FONT_SMALL, pocketName1, offset, 1, 0, 0, TEXT_SKIP_DRAW, COLORID_POCKET_TITLE);
     FillWindowPixelRect(windowId, PIXEL_FILL(HGSS_BAG_CELL_ACTIVE_COLOR), 8, 14, 48, 1);
     FillWindowPixelRect(windowId, PIXEL_FILL(HGSS_BAG_CELL_ACTIVE_COLOR), 10, 15, 44, 1);
     if (pocketName2)
     {
-        offset = GetStringCenterAlignXOffset(FONT_NORMAL, pocketName2, 0x40);
-        BagMenu_Print(windowId, FONT_NORMAL, pocketName2, offset + 0x40, 1, 0, 0, TEXT_SKIP_DRAW, COLORID_POCKET_TITLE);
+        offset = GetStringCenterAlignXOffset(FONT_SMALL, pocketName2, 0x40);
+        BagMenu_Print(windowId, FONT_SMALL, pocketName2, offset + 0x40, 1, 0, 0, TEXT_SKIP_DRAW, COLORID_POCKET_TITLE);
         FillWindowPixelRect(windowId, PIXEL_FILL(HGSS_BAG_CELL_ACTIVE_COLOR), 72, 14, 48, 1);
         FillWindowPixelRect(windowId, PIXEL_FILL(HGSS_BAG_CELL_ACTIVE_COLOR), 74, 15, 44, 1);
     }
