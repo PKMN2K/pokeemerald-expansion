@@ -398,22 +398,6 @@ void RemoveBagItemIconSprite(u8 id)
 #endif
 }
 
-void CreateItemMenuSwapLine(void)
-{
-    CreateSwapLineSprites(&gBagMenu->spriteIds[ITEMMENUSPRITE_SWAP_LINE], ITEMMENU_SWAP_LINE_LENGTH);
-}
-
-void SetItemMenuSwapLineInvisibility(bool8 invisible)
-{
-    SetSwapLineSpritesInvisibility(&gBagMenu->spriteIds[ITEMMENUSPRITE_SWAP_LINE], ITEMMENU_SWAP_LINE_LENGTH, invisible);
-}
-
-void UpdateItemMenuSwapLinePos(u8 y)
-{
-    // The HGSS-inspired Bag uses 20 px item rows (16 px font + 4 px padding).
-    UpdateSwapLineSpritesPos(&gBagMenu->spriteIds[ITEMMENUSPRITE_SWAP_LINE], ITEMMENU_SWAP_LINE_LENGTH | SWAP_LINE_HAS_MARGIN, 120, 16 + y * 20);
-}
-
 static void ArrangeBerryGfx(void *src, void *dest)
 {
     u8 i, j;
