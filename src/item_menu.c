@@ -585,7 +585,7 @@ static const struct WindowTemplate sDefaultBagWindows[] =
         .bg = 0,
         .tilemapLeft = 7,
         .tilemapTop = 13,
-        .width = 4,
+        .width = 5,
         .height = 6,
         .paletteNum = 12,
         .baseBlock = 0x18F,
@@ -3200,7 +3200,7 @@ static void PrintTMHMMoveData(enum Item itemId)
     else
     {
         move = ItemIdToBattleMoveId(itemId);
-        BlitMenuInfoIcon(WIN_TMHM_INFO, GetMoveType(move) + 1, 0, 0);
+        BlitMenuInfoIcon(WIN_TMHM_INFO, GetMoveType(move) + 1, 4, 0);
 
         // Print TMHM power
         u32 power = GetMovePower(move);
