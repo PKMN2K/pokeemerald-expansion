@@ -703,7 +703,7 @@ static EWRAM_DATA struct ListBuffer2 *sListBuffer2 = 0;
 EWRAM_DATA enum Item gSpecialVar_ItemId = 0;
 static EWRAM_DATA struct TempWallyBag *sTempWallyBag = 0;
 static EWRAM_DATA struct YesNoFuncTable sHgssBagYesNoFuncs = {0};
-static EWRAM_DATA u8 sHgssBagYesNoWindowType = ITEMWIN_YESNO_LOW;
+static EWRAM_DATA u8 sHgssBagYesNoWindowType = 0;
 static EWRAM_DATA u8 sHgssBagYesNoChoice = 0;
 static EWRAM_DATA TaskFunc sHgssBagMessageCallback = NULL;
 
