@@ -1199,6 +1199,17 @@ static void BagMenu_ItemPrintCallback(u8 windowId, u32 itemIndex, u8 y)
     }
 }
 
+static void PrepareHgssBagDescriptionPanel(void)
+{
+    u8 width = GetWindowAttribute(WIN_DESCRIPTION, WINDOW_WIDTH) * 8;
+    u8 height = GetWindowAttribute(WIN_DESCRIPTION, WINDOW_HEIGHT) * 8;
+
+    FillWindowPixelBuffer(WIN_DESCRIPTION, PIXEL_FILL(0));
+    FillWindowPixelRect(WIN_DESCRIPTION, PIXEL_FILL(HGSS_BAG_CELL_ACTIVE_COLOR), 0, 0, width, 1);
+    FillWindowPixelRect(WIN_DESCRIPTION, PIXEL_FILL(HGSS_BAG_CELL_NORMAL_COLOR), 0, 0, 1, height);
+    FillWindowPixelRect(WIN_DESCRIPTION, PIXEL_FILL(HGSS_BAG_CELL_NORMAL_COLOR), width - 1, 0, 1, height);
+}
+
 static void PrintItemDescription(int itemIndex)
 {
     const u8 *str;
@@ -1213,7 +1224,7 @@ static void PrintItemDescription(int itemIndex)
         StringExpandPlaceholders(gStringVar4, gText_ReturnToVar1);
         str = gStringVar4;
     }
-    FillWindowPixelBuffer(WIN_DESCRIPTION, PIXEL_FILL(0));
+    PrepareHgssBagDescriptionPanel();
     BagMenu_Print(WIN_DESCRIPTION, FONT_NORMAL, str, 3, 1, 0, 0, 0, COLORID_NORMAL);
 }
 
@@ -1719,7 +1730,7 @@ static void StartItemSwap(u8 taskId)
     gBagMenu->toSwapPos = tListPosition;
     CopyItemName(GetBagItemId(gBagPosition.pocket, tListPosition), gStringVar1);
     StringExpandPlaceholders(gStringVar4, gText_MoveVar1Where);
-    FillWindowPixelBuffer(WIN_DESCRIPTION, PIXEL_FILL(0));
+    PrepareHgssBagDescriptionPanel();
     BagMenu_Print(WIN_DESCRIPTION, FONT_NORMAL, gStringVar4, 3, 1, 0, 0, 0, COLORID_NORMAL);
     UpdateItemMenuSwapLinePos(gBagPosition.cursorPosition[gBagPosition.pocket]);
     BagMenu_PrintCursor(tListTaskId, COLORID_GRAY_CURSOR);
@@ -1936,7 +1947,7 @@ static void OpenContextMenu(u8 taskId)
         u8 *end = CopyItemName(gSpecialVar_ItemId, gStringVar1);
         WrapFontIdToFit(gStringVar1, end, FONT_NORMAL, WindowWidthPx(WIN_DESCRIPTION) - 10 - 6);
         StringExpandPlaceholders(gStringVar4, gText_Var1IsSelected);
-        FillWindowPixelBuffer(WIN_DESCRIPTION, PIXEL_FILL(0));
+        PrepareHgssBagDescriptionPanel();
         BagMenu_Print(WIN_DESCRIPTION, FONT_NORMAL, gStringVar4, 3, 1, 0, 0, 0, COLORID_NORMAL);
     }
     if (gBagMenu->contextMenuNumItems == 1)
@@ -2168,7 +2179,7 @@ static void ItemMenu_Toss(u8 taskId)
         u8 *end = CopyItemNameHandlePlural(gSpecialVar_ItemId, gStringVar1, 2);
         WrapFontIdToFit(gStringVar1, end, FONT_NORMAL, WindowWidthPx(WIN_DESCRIPTION) - 10 - 6);
         StringExpandPlaceholders(gStringVar4, gText_TossHowManyVar1s);
-        FillWindowPixelBuffer(WIN_DESCRIPTION, PIXEL_FILL(0));
+        PrepareHgssBagDescriptionPanel();
         BagMenu_Print(WIN_DESCRIPTION, FONT_NORMAL, gStringVar4, 3, 1, 0, 0, 0, COLORID_NORMAL);
         AddItemQuantityWindow(ITEMWIN_QUANTITY);
         gTasks[taskId].func = Task_ChooseHowManyToToss;
@@ -2183,7 +2194,7 @@ static void AskTossItems(u8 taskId)
     WrapFontIdToFit(gStringVar1, end, FONT_NORMAL, WindowWidthPx(WIN_DESCRIPTION) - 10 - 6);
     ConvertIntToDecimalStringN(gStringVar2, tItemCount, STR_CONV_MODE_LEFT_ALIGN, MAX_ITEM_DIGITS);
     StringExpandPlaceholders(gStringVar4, gText_ConfirmTossItems);
-    FillWindowPixelBuffer(WIN_DESCRIPTION, PIXEL_FILL(0));
+    PrepareHgssBagDescriptionPanel();
     BagMenu_Print(WIN_DESCRIPTION, FONT_NORMAL, gStringVar4, 3, 1, 0, 0, 0, COLORID_NORMAL);
     BagMenu_YesNo(taskId, ITEMWIN_YESNO_LOW, &sYesNoTossFunctions);
 }
@@ -2227,7 +2238,7 @@ static void ConfirmToss(u8 taskId)
     WrapFontIdToFit(gStringVar1, end, FONT_NORMAL, WindowWidthPx(WIN_DESCRIPTION) - 10 - 6);
     ConvertIntToDecimalStringN(gStringVar2, tItemCount, STR_CONV_MODE_LEFT_ALIGN, MAX_ITEM_DIGITS);
     StringExpandPlaceholders(gStringVar4, gText_ThrewAwayVar2Var1s);
-    FillWindowPixelBuffer(WIN_DESCRIPTION, PIXEL_FILL(0));
+    PrepareHgssBagDescriptionPanel();
     BagMenu_Print(WIN_DESCRIPTION, FONT_NORMAL, gStringVar4, 3, 1, 0, 0, 0, COLORID_NORMAL);
     if (CurrentBattlePyramidLocation() != PYRAMID_LOCATION_NONE || FlagGet(FLAG_STORING_ITEMS_IN_PYRAMID_BAG) == TRUE)
         gTasks[taskId].func = Task_RemoveItemFromBag;
@@ -2590,7 +2601,7 @@ static void Task_ItemContext_Deposit(u8 taskId)
         u8 *end = CopyItemNameHandlePlural(gSpecialVar_ItemId, gStringVar1, 2);
         WrapFontIdToFit(gStringVar1, end, FONT_NORMAL, WindowWidthPx(WIN_DESCRIPTION) - 10 - 6);
         StringExpandPlaceholders(gStringVar4, sText_DepositHowManyVar1);
-        FillWindowPixelBuffer(WIN_DESCRIPTION, PIXEL_FILL(0));
+        PrepareHgssBagDescriptionPanel();
         BagMenu_Print(WIN_DESCRIPTION, FONT_NORMAL, gStringVar4, 3, 1, 0, 0, 0, COLORID_NORMAL);
         AddItemQuantityWindow(ITEMWIN_QUANTITY);
         gTasks[taskId].func = Task_ChooseHowManyToDeposit;
@@ -2625,7 +2636,7 @@ static void TryDepositItem(u8 taskId)
 {
     s16 *data = gTasks[taskId].data;
 
-    FillWindowPixelBuffer(WIN_DESCRIPTION, PIXEL_FILL(0));
+    PrepareHgssBagDescriptionPanel();
     if (GetItemImportance(gSpecialVar_ItemId))
     {
         // Can't deposit important items
