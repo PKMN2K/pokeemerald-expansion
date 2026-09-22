@@ -1098,7 +1098,8 @@ static void GetItemNameFromPocket(u8 *dest, enum Item itemId)
         break;
     default:
         end = CopyItemName(itemId, dest);
-        PrependFontIdToFit(dest, end, FONT_NARROW, 84);
+        PrependFontIdToFit(dest, end, FONT_NARROW,
+                           (gBagPosition.pocket == POCKET_KEY_ITEMS || GetItemImportance(itemId)) ? 82 : 84);
         break;
     }
 }
