@@ -1254,6 +1254,19 @@ static void DrawHgssPartySlotFrame(u8 slot)
 
     if (width > 4 && height > 3)
         FillWindowPixelRect(windowId, PIXEL_FILL(5), 2, 1, width - 4, 1);
+
+    // Small HGSS-style name tab, kept clear of the nickname and icon areas.
+    {
+        u8 nameX = sPartyMenuBoxes[slot].infoRects->dimensions[0];
+        u8 nameY = sPartyMenuBoxes[slot].infoRects->dimensions[1];
+        u8 nameHeight = sPartyMenuBoxes[slot].infoRects->dimensions[3];
+
+        if (nameX >= 3 && nameHeight > 4)
+        {
+            FillWindowPixelRect(windowId, PIXEL_FILL(4), nameX - 3, nameY + 2, 2, nameHeight - 4);
+            FillWindowPixelRect(windowId, PIXEL_FILL(5), nameX - 1, nameY + 3, 1, nameHeight - 6);
+        }
+    }
 }
 
 static bool8 RenderPartyMenuBoxes(void)
