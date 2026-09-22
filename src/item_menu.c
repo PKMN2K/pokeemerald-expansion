@@ -1139,7 +1139,7 @@ static void DrawHgssBagRegisteredMarker(u8 windowId, u8 y)
     FillWindowPixelRect(windowId, PIXEL_FILL(HGSS_BAG_CELL_ACTIVE_COLOR), left, top + 1, 1, height - 2);
     FillWindowPixelRect(windowId, PIXEL_FILL(HGSS_BAG_CELL_ACTIVE_COLOR), left + width - 1, top + 1, 1, height - 2);
     BagMenu_Print(windowId, FONT_NARROW, sText_Registered,
-                  left + GetStringCenterAlignXOffset(FONT_NARROW, sText_Registered, width), y,
+                  left + 1 + GetStringCenterAlignXOffset(FONT_NARROW, sText_Registered, width - 2), y,
                   0, 0, TEXT_SKIP_DRAW, COLORID_POCKET_TITLE);
 }
 
