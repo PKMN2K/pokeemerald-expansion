@@ -3114,7 +3114,7 @@ static void DisplayCurrentMoneyWindow(void)
     FillWindowPixelRect(windowId, PIXEL_FILL(TEXT_COLOR_RED), 44, 2, 1,
                         GetWindowAttribute(windowId, WINDOW_HEIGHT) * 8 - 4);
     BagMenu_Print(windowId, FONT_NARROW, sText_Money,
-                  GetStringCenterAlignXOffset(FONT_NARROW, sText_Money, 44), 1,
+                  1 + GetStringCenterAlignXOffset(FONT_NARROW, sText_Money, 43), 1,
                   0, 0, TEXT_SKIP_DRAW, COLORID_POCKET_NAME);
     PrintMoneyAmount(windowId, 48, 1, GetMoney(&gSaveBlock1Ptr->money), 0);
     CopyWindowToVram(windowId, COPYWIN_GFX);
