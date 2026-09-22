@@ -3168,22 +3168,16 @@ static void PrepareTMHMMoveWindow(void)
 static void PrintTMHMMoveData(enum Item itemId)
 {
     u8 i;
+    u8 width = GetWindowAttribute(WIN_TMHM_INFO, WINDOW_WIDTH) * 8;
+    u8 height = GetWindowAttribute(WIN_TMHM_INFO, WINDOW_HEIGHT) * 8;
     enum Move move;
     const u8 *text;
 
     FillWindowPixelBuffer(WIN_TMHM_INFO, PIXEL_FILL(0));
-    FillWindowPixelRect(WIN_TMHM_INFO, PIXEL_FILL(TEXT_DYNAMIC_COLOR_1), 1, 0,
-                        GetWindowAttribute(WIN_TMHM_INFO, WINDOW_WIDTH) * 8 - 2, 1);
-    FillWindowPixelRect(WIN_TMHM_INFO, PIXEL_FILL(TEXT_DYNAMIC_COLOR_1), 0, 1, 1,
-                        GetWindowAttribute(WIN_TMHM_INFO, WINDOW_HEIGHT) * 8 - 2);
-    FillWindowPixelRect(WIN_TMHM_INFO, PIXEL_FILL(TEXT_DYNAMIC_COLOR_1),
-                        GetWindowAttribute(WIN_TMHM_INFO, WINDOW_WIDTH) * 8 - 1, 1, 1,
-                        GetWindowAttribute(WIN_TMHM_INFO, WINDOW_HEIGHT) * 8 - 2);
     if (itemId == ITEM_NONE)
     {
         for (i = 0; i < 4; i++)
             BagMenu_Print(WIN_TMHM_INFO, FONT_NORMAL, gText_ThreeDashes, 7, i * 12, 0, 0, TEXT_SKIP_DRAW, COLORID_TMHM_INFO);
-        CopyWindowToVram(WIN_TMHM_INFO, COPYWIN_GFX);
     }
     else
     {
@@ -3220,8 +3214,13 @@ static void PrintTMHMMoveData(enum Item itemId)
         ConvertIntToDecimalStringN(gStringVar1, GetMovePP(move), STR_CONV_MODE_RIGHT_ALIGN, 3);
         BagMenu_Print(WIN_TMHM_INFO, FONT_NORMAL, gStringVar1, 7, 36, 0, 0, TEXT_SKIP_DRAW, COLORID_TMHM_INFO);
 
-        CopyWindowToVram(WIN_TMHM_INFO, COPYWIN_GFX);
     }
+
+    // Keep the HGSS frame above the type badge and top-row placeholder text.
+    FillWindowPixelRect(WIN_TMHM_INFO, PIXEL_FILL(TEXT_DYNAMIC_COLOR_1), 1, 0, width - 2, 1);
+    FillWindowPixelRect(WIN_TMHM_INFO, PIXEL_FILL(TEXT_DYNAMIC_COLOR_1), 0, 1, 1, height - 2);
+    FillWindowPixelRect(WIN_TMHM_INFO, PIXEL_FILL(TEXT_DYNAMIC_COLOR_1), width - 1, 1, 1, height - 2);
+    CopyWindowToVram(WIN_TMHM_INFO, COPYWIN_GFX);
 }
 
 static const u8 sText_SortItemsHow[] = _("Sort items how?");
