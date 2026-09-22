@@ -246,6 +246,7 @@ static bool8 CreatePartyMonSpritesLoop(void);
 static bool8 RenderPartyMenuBoxes(void);
 static void DrawHgssPartySlotFrame(u8 slot);
 static void CreateCancelConfirmPokeballSprites(void);
+static void DrawHgssPartyButtonFrame(u8 windowId);
 static void CreateCancelConfirmWindows(u8);
 static void Task_ExitPartyMenu(u8);
 static void FreePartyPointers(void);
@@ -2419,6 +2420,20 @@ static void LoadPartyMenuWindows(void)
     LoadPalette(gStandardMenuPalette, BG_PLTT_ID(15), PLTT_SIZE_4BPP);
 }
 
+static void DrawHgssPartyButtonFrame(u8 windowId)
+{
+    u8 width = GetWindowAttribute(windowId, WINDOW_WIDTH) * 8;
+    u8 height = GetWindowAttribute(windowId, WINDOW_HEIGHT) * 8;
+
+    FillWindowPixelRect(windowId, PIXEL_FILL(TEXT_COLOR_DARK_GRAY), 1, 0, width - 2, 1);
+    FillWindowPixelRect(windowId, PIXEL_FILL(TEXT_COLOR_DARK_GRAY), 1, height - 1, width - 2, 1);
+    FillWindowPixelRect(windowId, PIXEL_FILL(TEXT_COLOR_DARK_GRAY), 0, 1, 1, height - 2);
+    FillWindowPixelRect(windowId, PIXEL_FILL(TEXT_COLOR_DARK_GRAY), width - 1, 1, 1, height - 2);
+
+    if (width > 4 && height > 3)
+        FillWindowPixelRect(windowId, PIXEL_FILL(TEXT_COLOR_LIGHT_GRAY), 2, height - 2, width - 4, 1);
+}
+
 static void CreateCancelConfirmWindows(bool8 chooseHalf)
 {
     u8 confirmWindowId;
@@ -2435,6 +2450,7 @@ static void CreateCancelConfirmWindows(bool8 chooseHalf)
             FillWindowPixelBuffer(confirmWindowId, PIXEL_FILL(0));
             mainOffset = GetStringCenterAlignXOffset(FONT_SMALL, gMenuText_Confirm, 48);
             AddTextPrinterParameterized4(confirmWindowId, FONT_SMALL, mainOffset, 1, 0, 0, sFontColorTable[0], TEXT_SKIP_DRAW, gMenuText_Confirm);
+            DrawHgssPartyButtonFrame(confirmWindowId);
             PutWindowTilemap(confirmWindowId);
             CopyWindowToVram(confirmWindowId, COPYWIN_GFX);
             cancelWindowId = AddWindow(&sMultiCancelButtonWindowTemplate);
@@ -2458,6 +2474,7 @@ static void CreateCancelConfirmWindows(bool8 chooseHalf)
             mainOffset = GetStringCenterAlignXOffset(FONT_SMALL, gText_Cancel2, 48);
             AddTextPrinterParameterized3(cancelWindowId, FONT_SMALL, mainOffset + offset, 1, sFontColorTable[0], TEXT_SKIP_DRAW, gText_Cancel2);
         }
+        DrawHgssPartyButtonFrame(cancelWindowId);
         PutWindowTilemap(cancelWindowId);
         CopyWindowToVram(cancelWindowId, COPYWIN_GFX);
         ScheduleBgCopyTilemapToVram(0);
