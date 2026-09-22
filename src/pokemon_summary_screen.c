@@ -245,7 +245,7 @@ static void DrawExperienceProgressBar(struct Pokemon *);
 static void DrawContestMoveHearts(enum Move move);
 static void LimitEggSummaryPageDisplay(void);
 static void ResetWindows(void);
-static void DrawHgssSummaryPortraitStrip(u8 windowId);
+static void DrawHgssSummaryInfoStrip(u8 windowId);
 static void PrintMonInfo(void);
 static void PrintNotEggInfo(void);
 static void PrintEggInfo(void);
@@ -3190,7 +3190,7 @@ static void PrintTextOnWindowToFit(u8 windowId, const u8 *string, u8 x, u8 y, u8
     PrintTextOnWindowToFitPx(windowId, string, x, y, lineSpacing, colorId, WindowWidthPx(windowId));
 }
 
-static void DrawHgssSummaryPortraitStrip(u8 windowId)
+static void DrawHgssSummaryInfoStrip(u8 windowId)
 {
     u8 width = WindowWidthPx(windowId);
     u8 height = GetWindowAttribute(windowId, WINDOW_HEIGHT) * 8;
@@ -3210,8 +3210,8 @@ static void PrintMonInfo(void)
     FillWindowPixelBuffer(PSS_LABEL_WINDOW_PORTRAIT_DEX_NUMBER, PIXEL_FILL(0));
     FillWindowPixelBuffer(PSS_LABEL_WINDOW_PORTRAIT_NICKNAME, PIXEL_FILL(0));
     FillWindowPixelBuffer(PSS_LABEL_WINDOW_PORTRAIT_SPECIES, PIXEL_FILL(0));
-    DrawHgssSummaryPortraitStrip(PSS_LABEL_WINDOW_PORTRAIT_NICKNAME);
-    DrawHgssSummaryPortraitStrip(PSS_LABEL_WINDOW_PORTRAIT_SPECIES);
+    DrawHgssSummaryInfoStrip(PSS_LABEL_WINDOW_PORTRAIT_NICKNAME);
+    DrawHgssSummaryInfoStrip(PSS_LABEL_WINDOW_PORTRAIT_SPECIES);
     if (!sMonSummaryScreen->summary.isEgg)
         PrintNotEggInfo();
     else
@@ -3360,7 +3360,8 @@ static void PrintPageNamesAndStats(void)
     ShowUtilityPrompt(SUMMARY_MODE_NORMAL);
 
     PrintTextOnWindow(PSS_LABEL_WINDOW_POKEMON_INFO_RENTAL, gText_RentalPkmn, 0, 1, 0, 1);
-    PrintTextOnWindow(PSS_LABEL_WINDOW_POKEMON_INFO_TYPE, gText_TypeSlash, 0, 1, 0, 0);
+    DrawHgssSummaryInfoStrip(PSS_LABEL_WINDOW_POKEMON_INFO_TYPE);
+    PrintTextOnWindow(PSS_LABEL_WINDOW_POKEMON_INFO_TYPE, gText_TypeSlash, 4, 1, 0, 0);
     statsXPos = 6 + GetStringCenterAlignXOffset(FONT_NORMAL, gText_HP4, 42);
     PrintTextOnWindow(PSS_LABEL_WINDOW_POKEMON_SKILLS_STATS_LEFT, gText_HP4, statsXPos, 1, 0, 1);
     statsXPos = 6 + GetStringCenterAlignXOffset(FONT_NORMAL, gText_Attack3, 42);
