@@ -31,9 +31,11 @@
 
 #define NUM_OPTION_SUBSPRITES 4
 
-#define OPTION_DEFAULT_X   140
-#define OPTION_SELECTED_X  130
-#define OPTION_EXIT_X      (DISPLAY_WIDTH + 16)
+#define OPTION_DEFAULT_X          140
+#define OPTION_SELECTED_X         130
+#define POKEGEAR_OPTION_DEFAULT_X 100
+#define POKEGEAR_OPTION_SELECTED_X 92
+#define OPTION_EXIT_X             (DISPLAY_WIDTH + 16)
 
 struct Pokenav_MenuGfx
 {
@@ -67,6 +69,9 @@ static void CreateMenuOptionSprites(void);
 static void DestroyMenuOptionSprites(void);
 static void DrawCurrentMenuOptionLabels(void);
 static void DrawOptionLabelGfx(const u16 *const *, s32, s32);
+static bool32 IsPokeGearMainMenu(void);
+static s32 GetOptionDefaultX(void);
+static s32 GetOptionSelectedX(void);
 static void StartOptionAnimations_Enter(void);
 static void StartOptionAnimations_CursorMoved(void);
 static void StartOptionAnimations_Exit(void);
@@ -273,10 +278,10 @@ static const u8 *const sPageDescriptions[] =
     [POKENAV_MENUITEM_CONDITION]               = COMPOUND_STRING("Check POKéMON in detail."),
     [POKENAV_MENUITEM_MATCH_CALL]              = COMPOUND_STRING("Call a registered TRAINER."),
     [POKENAV_MENUITEM_RIBBONS]                 = COMPOUND_STRING("Check obtained RIBBONS."),
-    [POKENAV_MENUITEM_SWITCH_OFF]              = COMPOUND_STRING("Put away the POKéNAV."),
+    [POKENAV_MENUITEM_SWITCH_OFF]              = COMPOUND_STRING("Put away the POKéGEAR."),
     [POKENAV_MENUITEM_CONDITION_PARTY]         = COMPOUND_STRING("Check party POKéMON in detail."),
     [POKENAV_MENUITEM_CONDITION_SEARCH]        = COMPOUND_STRING("Check all POKéMON in detail."),
-    [POKENAV_MENUITEM_CONDITION_CANCEL]        = COMPOUND_STRING("Return to the POKéNAV menu."),
+    [POKENAV_MENUITEM_CONDITION_CANCEL]        = COMPOUND_STRING("Return to the POKéGEAR menu."),
     [POKENAV_MENUITEM_CONDITION_SEARCH_COOL]   = COMPOUND_STRING("Find cool POKéMON."),
     [POKENAV_MENUITEM_CONDITION_SEARCH_BEAUTY] = COMPOUND_STRING("Find beautiful POKéMON."),
     [POKENAV_MENUITEM_CONDITION_SEARCH_CUTE]   = COMPOUND_STRING("Find cute POKéMON."),
@@ -845,7 +850,17 @@ static void DestroyMenuOptionSprites(void)
 static void DrawCurrentMenuOptionLabels(void)
 {
     s32 menuType = GetPokenavMenuType();
-    DrawOptionLabelGfx(sPokenavMenuOptionLabelGfx[menuType].gfx, sPokenavMenuOptionLabelGfx[menuType].yStart, sPokenavMenuOptionLabelGfx[menuType].deltaY);
+    s32 yStart = sPokenavMenuOptionLabelGfx[menuType].yStart;
+    s32 deltaY = sPokenavMenuOptionLabelGfx[menuType].deltaY;
+
+    // Top-level PokéGear apps sit farther into the device face with roomier spacing.
+    if (IsPokeGearMainMenu())
+    {
+        yStart = 36;
+        deltaY = 22;
+    }
+
+    DrawOptionLabelGfx(sPokenavMenuOptionLabelGfx[menuType].gfx, yStart, deltaY);
 }
 
 static void DrawOptionLabelGfx(const u16 *const *optionGfx, s32 yPos, s32 deltaY)
@@ -881,12 +896,37 @@ static void DrawOptionLabelGfx(const u16 *const *optionGfx, s32 yPos, s32 deltaY
     }
 }
 
+static bool32 IsPokeGearMainMenu(void)
+{
+    switch (GetPokenavMenuType())
+    {
+    case POKENAV_MENU_TYPE_DEFAULT:
+    case POKENAV_MENU_TYPE_UNLOCK_MC:
+    case POKENAV_MENU_TYPE_UNLOCK_MC_RIBBONS:
+        return TRUE;
+    default:
+        return FALSE;
+    }
+}
+
+static s32 GetOptionDefaultX(void)
+{
+    return IsPokeGearMainMenu() ? POKEGEAR_OPTION_DEFAULT_X : OPTION_DEFAULT_X;
+}
+
+static s32 GetOptionSelectedX(void)
+{
+    return IsPokeGearMainMenu() ? POKEGEAR_OPTION_SELECTED_X : OPTION_SELECTED_X;
+}
+
 static void StartOptionAnimations_Enter(void)
 {
     s32 i;
     struct Pokenav_MenuGfx *gfx = GetSubstructPtr(POKENAV_SUBSTRUCT_MENU_GFX);
     s32 cursorPos = GetPokenavCursorPos();
     s32 iconCount = 0;
+    s32 defaultX = GetOptionDefaultX();
+    s32 selectedX = GetOptionSelectedX();
     s32 x;
 
     for (i = 0; i < MAX_POKENAV_MENUITEMS; i++)
@@ -895,13 +935,13 @@ static void StartOptionAnimations_Enter(void)
         {
             if (iconCount++ == cursorPos)
             {
-                x = OPTION_SELECTED_X;
+                x = selectedX;
                 gfx->cursorPos = i;
             }
             else
             {
                 // Not selected, set default position
-                x = OPTION_DEFAULT_X;
+                x = defaultX;
             }
 
             // Slide new options in
@@ -921,6 +961,8 @@ static void StartOptionAnimations_CursorMoved(void)
     struct Pokenav_MenuGfx *gfx = GetSubstructPtr(POKENAV_SUBSTRUCT_MENU_GFX);
     s32 prevPos = GetPokenavCursorPos();
     s32 newPos;
+    s32 defaultX = GetOptionDefaultX();
+    s32 selectedX = GetOptionSelectedX();
 
     // Get the index of the next visible option
     for (i = 0, newPos = 0; i < MAX_POKENAV_MENUITEMS; i++)
@@ -938,14 +980,15 @@ static void StartOptionAnimations_CursorMoved(void)
 
     // The selected option slides out a bit and the previously
     // selected option slides back to its original position.
-    StartOptionSlide(gfx->iconSprites[gfx->cursorPos], OPTION_SELECTED_X, OPTION_DEFAULT_X, 4);
-    StartOptionSlide(gfx->iconSprites[newPos], OPTION_DEFAULT_X, OPTION_SELECTED_X, 4);
+    StartOptionSlide(gfx->iconSprites[gfx->cursorPos], selectedX, defaultX, 4);
+    StartOptionSlide(gfx->iconSprites[newPos], defaultX, selectedX, 4);
     gfx->cursorPos = newPos;
 }
 
 static void StartOptionAnimations_Exit(void)
 {
     s32 i;
+    s32 defaultX = GetOptionDefaultX();
     struct Pokenav_MenuGfx *gfx = GetSubstructPtr(POKENAV_SUBSTRUCT_MENU_GFX);
 
     for (i = 0; i < MAX_POKENAV_MENUITEMS; i++)
@@ -955,7 +998,7 @@ static void StartOptionAnimations_Exit(void)
             // Unselected options slide out,
             // selected option zooms in
             if (gfx->cursorPos != i)
-                StartOptionSlide(gfx->iconSprites[i], OPTION_DEFAULT_X, OPTION_EXIT_X, 8);
+                StartOptionSlide(gfx->iconSprites[i], defaultX, OPTION_EXIT_X, 8);
             else
                 StartOptionZoom(gfx->iconSprites[i]);
         }
