@@ -807,6 +807,7 @@ static void CreateInitBoxTask(u8);
 static bool8 IsInitBoxActive(void);
 static void DrawHgssStorageBoxGrid(void);
 static void DrawHgssStoragePartySlots(void);
+static void UpdateHgssStorageSlotHighlight(void);
 static void Task_InitBox(u8);
 static void SetUpScrollToBox(u8);
 static bool8 ScrollToBox(void);
@@ -5409,6 +5410,9 @@ enum
     HGSS_GRID_TILE_CROSS,
     HGSS_GRID_TILE_TOP_CROSS,
     HGSS_GRID_TILE_BOTTOM_CROSS,
+    HGSS_GRID_TILE_SELECTED_VERTICAL,
+    HGSS_GRID_TILE_SELECTED_HORIZONTAL,
+    HGSS_GRID_TILE_SELECTED_CROSS,
     HGSS_GRID_TILE_COUNT,
 };
 
@@ -5431,6 +5435,8 @@ static void DrawHgssStorageBoxGrid(void)
     {
         gridTiles[HGSS_GRID_TILE_VERTICAL * TILE_SIZE_4BPP + i * 4] = 0x02;
         gridTiles[HGSS_GRID_TILE_CROSS * TILE_SIZE_4BPP + i * 4] = 0x02;
+        gridTiles[HGSS_GRID_TILE_SELECTED_VERTICAL * TILE_SIZE_4BPP + i * 4] = 0x22;
+        gridTiles[HGSS_GRID_TILE_SELECTED_CROSS * TILE_SIZE_4BPP + i * 4] = 0x22;
         if (i >= 4)
             gridTiles[HGSS_GRID_TILE_TOP_CROSS * TILE_SIZE_4BPP + i * 4] = 0x02;
         if (i <= 4)
@@ -5443,6 +5449,10 @@ static void DrawHgssStorageBoxGrid(void)
         gridTiles[HGSS_GRID_TILE_CROSS * TILE_SIZE_4BPP + 16 + i] = 0x22;
         gridTiles[HGSS_GRID_TILE_TOP_CROSS * TILE_SIZE_4BPP + 16 + i] = 0x22;
         gridTiles[HGSS_GRID_TILE_BOTTOM_CROSS * TILE_SIZE_4BPP + 16 + i] = 0x22;
+        gridTiles[HGSS_GRID_TILE_SELECTED_HORIZONTAL * TILE_SIZE_4BPP + 12 + i] = 0x22;
+        gridTiles[HGSS_GRID_TILE_SELECTED_HORIZONTAL * TILE_SIZE_4BPP + 16 + i] = 0x22;
+        gridTiles[HGSS_GRID_TILE_SELECTED_CROSS * TILE_SIZE_4BPP + 12 + i] = 0x22;
+        gridTiles[HGSS_GRID_TILE_SELECTED_CROSS * TILE_SIZE_4BPP + 16 + i] = 0x22;
     }
     gridTiles[HGSS_GRID_TILE_CROSS * TILE_SIZE_4BPP + 16] = 0x22;
     gridTiles[HGSS_GRID_TILE_TOP_CROSS * TILE_SIZE_4BPP + 16] = 0x22;
@@ -5527,6 +5537,83 @@ static void DrawHgssStoragePartySlots(void)
     ScheduleBgCopyTilemapToVram(1);
 }
 
+static void UpdateHgssStorageSlotHighlight(void)
+{
+    u32 gfxSize;
+    u16 baseTile;
+    u16 paletteBits = 15 << 12;
+    u16 *tilemap;
+    u16 left, right, top, bottom, x, y;
+
+    if (sCursorArea == CURSOR_AREA_IN_CHOOSE_BOX)
+        return;
+
+    DrawHgssStorageBoxGrid();
+    DrawHgssStoragePartySlots();
+
+    if (sCursorArea != CURSOR_AREA_IN_BOX && sCursorArea != CURSOR_AREA_IN_PARTY)
+        return;
+
+    gfxSize = GetDecompressedDataSize(sSwShStorage_Gfx);
+    baseTile = (gfxSize + TILE_SIZE_4BPP - 1) / TILE_SIZE_4BPP;
+    if (baseTile + HGSS_GRID_TILE_COUNT >= 512)
+        return;
+
+    if (sCursorArea == CURSOR_AREA_IN_BOX)
+    {
+        u8 column = sCursorPosition % IN_BOX_COLUMNS;
+        u8 row = sCursorPosition / IN_BOX_COLUMNS;
+
+        tilemap = (u16 *)sStorage->wallpaperBgTilemapBuffer;
+        left = 10 + column * 3;
+        right = left + 3;
+        top = 3 + row * 3;
+        bottom = top + 3;
+
+        for (x = left + 1; x < right; x++)
+        {
+            tilemap[top * 32 + x] = paletteBits | (baseTile + HGSS_GRID_TILE_SELECTED_HORIZONTAL);
+            tilemap[bottom * 32 + x] = paletteBits | (baseTile + HGSS_GRID_TILE_SELECTED_HORIZONTAL);
+        }
+        for (y = top + 1; y < bottom; y++)
+        {
+            tilemap[y * 32 + left] = paletteBits | (baseTile + HGSS_GRID_TILE_SELECTED_VERTICAL);
+            tilemap[y * 32 + right] = paletteBits | (baseTile + HGSS_GRID_TILE_SELECTED_VERTICAL);
+        }
+
+        tilemap[top * 32 + left] = paletteBits | (baseTile + HGSS_GRID_TILE_SELECTED_CROSS);
+        tilemap[top * 32 + right] = paletteBits | (baseTile + HGSS_GRID_TILE_SELECTED_CROSS);
+        tilemap[bottom * 32 + left] = paletteBits | (baseTile + HGSS_GRID_TILE_SELECTED_CROSS);
+        tilemap[bottom * 32 + right] = paletteBits | (baseTile + HGSS_GRID_TILE_SELECTED_CROSS);
+        ScheduleBgCopyTilemapToVram(2);
+    }
+    else
+    {
+        tilemap = (u16 *)sStorage->displayMenuTilemapBuffer;
+        left = 2;
+        right = 8;
+        top = sCursorPosition * 3;
+        bottom = top + 3;
+
+        for (x = left + 1; x < right; x++)
+        {
+            tilemap[top * 32 + x] = paletteBits | (baseTile + HGSS_GRID_TILE_SELECTED_HORIZONTAL);
+            tilemap[bottom * 32 + x] = paletteBits | (baseTile + HGSS_GRID_TILE_SELECTED_HORIZONTAL);
+        }
+        for (y = top + 1; y < bottom; y++)
+        {
+            tilemap[y * 32 + left] = paletteBits | (baseTile + HGSS_GRID_TILE_SELECTED_VERTICAL);
+            tilemap[y * 32 + right] = paletteBits | (baseTile + HGSS_GRID_TILE_SELECTED_VERTICAL);
+        }
+
+        tilemap[top * 32 + left] = paletteBits | (baseTile + HGSS_GRID_TILE_SELECTED_CROSS);
+        tilemap[top * 32 + right] = paletteBits | (baseTile + HGSS_GRID_TILE_SELECTED_CROSS);
+        tilemap[bottom * 32 + left] = paletteBits | (baseTile + HGSS_GRID_TILE_SELECTED_CROSS);
+        tilemap[bottom * 32 + right] = paletteBits | (baseTile + HGSS_GRID_TILE_SELECTED_CROSS);
+        ScheduleBgCopyTilemapToVram(1);
+    }
+}
+
 static void Task_InitBox(u8 taskId)
 {
     struct Task *task = &gTasks[taskId];
@@ -5558,8 +5645,7 @@ static void Task_InitBox(u8 taskId)
         InitBoxTitle(task->tBoxId);
         CreateBoxScrollArrows();
         InitBoxMonSprites(task->tBoxId);
-        DrawHgssStorageBoxGrid();
-        DrawHgssStoragePartySlots();
+        UpdateHgssStorageSlotHighlight();
         SetGpuReg(REG_OFFSET_BG2CNT, BGCNT_PRIORITY(2) | BGCNT_CHARBASE(2) | BGCNT_SCREENBASE(27) | BGCNT_TXT256x256);
         break;
     case 4:
@@ -6309,6 +6395,8 @@ static void DoCursorNewPosUpdate(void)
         }
         break;
     }
+
+    UpdateHgssStorageSlotHighlight();
 }
 
 static void SetCursorInParty(void)
