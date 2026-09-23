@@ -195,7 +195,7 @@ static const struct CompressedSpriteSheetNoSize sPokenavSubMenuLeftHeaderSpriteS
     },
     [POKENAV_GFX_TOUGH_MENU - POKENAV_GFX_SUBMENUS_START] = {
         .data = gPokenavLeftHeaderTough_Gfx,
-        .tag = 0
+        .tag = 3
     }
 };
 
