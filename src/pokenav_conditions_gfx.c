@@ -150,6 +150,7 @@ static u32 GetConditionGraphMenuLoopedTaskActive(void);
 static void CreateConditionMonPic(u8);
 static void CreateMonMarkingsOrPokeballIndicators(void);
 static void CopyUnusedConditionWindowsToVram(void);
+static void DrawPokeGearStatusInfoCard(u8, bool8);
 static bool32 UpdateConditionGraphMenuWindows(u8, u16, bool8);
 static void VBlankCB_PokenavConditionGraph(void);
 static void DoConditionGraphEnterTransition(void);
@@ -558,6 +559,31 @@ static u8 UNUSED *UnusedPrintNumberString(u8 *dst, u16 num)
     return txtPtr;
 }
 
+static void DrawPokeGearStatusInfoCard(u8 windowId, bool8 compact)
+{
+    u8 width = GetWindowAttribute(windowId, WINDOW_WIDTH) * 8;
+    u8 height = GetWindowAttribute(windowId, WINDOW_HEIGHT) * 8;
+
+    FillWindowPixelBuffer(windowId, PIXEL_FILL(9));
+
+    if (width < 16 || height < 8)
+        return;
+
+    // Gen 4/HGSS-style inset LCD card: cyan lit edge, dark lower bevel.
+    FillWindowPixelRect(windowId, PIXEL_FILL(4), 3, 0, width - 6, 1);
+    FillWindowPixelRect(windowId, PIXEL_FILL(4), 0, 3, 1, height - 6);
+    FillWindowPixelRect(windowId, PIXEL_FILL(5), 3, height - 1, width - 6, 1);
+    FillWindowPixelRect(windowId, PIXEL_FILL(5), width - 1, 3, 1, height - 6);
+    FillWindowPixelRect(windowId, PIXEL_FILL(3), 3, 2, width - 6, 1);
+
+    if (!compact && height >= 24)
+    {
+        // Separate nickname/gender from location like an HGSS summary/status card.
+        FillWindowPixelRect(windowId, PIXEL_FILL(3), 6, 15, width - 12, 1);
+        FillWindowPixelRect(windowId, PIXEL_FILL(4), 3, 5, 2, height - 10);
+    }
+}
+
 static bool32 UpdateConditionGraphMenuWindows(u8 mode, u16 bufferIndex, bool8 winMode)
 {
     u8 text[32];
@@ -567,15 +593,15 @@ static bool32 UpdateConditionGraphMenuWindows(u8 mode, u16 bufferIndex, bool8 wi
     switch (mode)
     {
     case 0:
-        FillWindowPixelBuffer(menu->nameGenderWindowId, 0);
+        DrawPokeGearStatusInfoCard(menu->nameGenderWindowId, FALSE);
         if (IsConditionMenuSearchMode() == TRUE)
-            FillWindowPixelBuffer(menu->listIndexWindowId, 0);
+            DrawPokeGearStatusInfoCard(menu->listIndexWindowId, TRUE);
         break;
     case 1:
         if (GetConditionGraphCurrentListIndex() != GetMonListCount() - 1 || IsConditionMenuSearchMode() == TRUE)
         {
             str = GetConditionMonNameText(bufferIndex);
-            AddTextPrinterParameterized(menu->nameGenderWindowId, FONT_NORMAL, str, 0, 1, 0, NULL);
+            AddTextPrinterParameterized(menu->nameGenderWindowId, FONT_NORMAL, str, 6, 1, 0, NULL);
         }
         break;
     case 2:
@@ -583,7 +609,7 @@ static bool32 UpdateConditionGraphMenuWindows(u8 mode, u16 bufferIndex, bool8 wi
         {
             u32 i = 0;
             str = GetConditionMonLocationText(bufferIndex);
-            AddTextPrinterParameterized(menu->nameGenderWindowId, FONT_NORMAL, str, 0, 17, 0, NULL);
+            AddTextPrinterParameterized(menu->nameGenderWindowId, FONT_NORMAL, str, 6, 17, 0, NULL);
             text[i++] = EXT_CTRL_CODE_BEGIN;
             text[i++] = EXT_CTRL_CODE_BACKGROUND;
             text[i++] = TEXT_COLOR_TRANSPARENT;
@@ -593,9 +619,9 @@ static bool32 UpdateConditionGraphMenuWindows(u8 mode, u16 bufferIndex, bool8 wi
             text[i++] = TEXT_COLOR_LIGHT_BLUE;
             text[i++] = TEXT_COLOR_TRANSPARENT;
             StringCopy(&text[i], gText_Number2);
-            AddTextPrinterParameterized(menu->listIndexWindowId, FONT_NORMAL, text, 4, 1, 0, NULL);
+            AddTextPrinterParameterized(menu->listIndexWindowId, FONT_NORMAL, text, 7, 1, 0, NULL);
             ConvertIntToDecimalStringN(&text[i], GetConditionMonDataBuffer(), STR_CONV_MODE_RIGHT_ALIGN, 4);
-            AddTextPrinterParameterized(menu->listIndexWindowId, FONT_NORMAL, text, 28, 1, 0, NULL);
+            AddTextPrinterParameterized(menu->listIndexWindowId, FONT_NORMAL, text, 31, 1, 0, NULL);
         }
         break;
     case 3:
