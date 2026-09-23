@@ -152,6 +152,7 @@ struct OptionMenu
 static void MainCB2(void);
 static void VBlankCB(void);
 static void DrawTopBarText(void); //top Option text
+static void DrawHgssOptionTabs(void);
 static void DrawLeftSideOptionText(int selection, int y);
 static void DrawRightSideChoiceText(const u8 *str, int x, int y, bool8 choosen, bool8 active);
 static void DrawOptionMenuTexts(void); //left side text;
@@ -512,6 +513,39 @@ static const u8 sText_TopBar_Main[]         = _("Game Options");
 static const u8 sText_TopBar_Main_Right[]   = _("{R_BUTTON} System");
 static const u8 sText_TopBar_Custom[]       = _("System Config");
 static const u8 sText_TopBar_Custom_Left[]  = _("{L_BUTTON} Options");
+
+static void DrawHgssOptionTabs(void)
+{
+    u8 width = GetWindowAttribute(WIN_TOPBAR, WINDOW_WIDTH) * 8;
+    u8 height = GetWindowAttribute(WIN_TOPBAR, WINDOW_HEIGHT) * 8;
+
+    if (width < 120 || height < 8)
+        return;
+
+    // Strong center tab for the current page.
+    FillWindowPixelRect(WIN_TOPBAR, PIXEL_FILL(2), 57, 0, 126, 1);
+    FillWindowPixelRect(WIN_TOPBAR, PIXEL_FILL(2), 57, height - 1, 126, 1);
+    FillWindowPixelRect(WIN_TOPBAR, PIXEL_FILL(2), 56, 1, 1, height - 2);
+    FillWindowPixelRect(WIN_TOPBAR, PIXEL_FILL(2), 183, 1, 1, height - 2);
+    FillWindowPixelRect(WIN_TOPBAR, PIXEL_FILL(4), 61, height - 2, 118, 1);
+
+    // The opposite page is presented as a lighter navigation wing.
+    if (sOptions->submenu == MENU_MAIN)
+    {
+        FillWindowPixelRect(WIN_TOPBAR, PIXEL_FILL(4), 187, 0, width - 188, 1);
+        FillWindowPixelRect(WIN_TOPBAR, PIXEL_FILL(4), 187, height - 1, width - 188, 1);
+        FillWindowPixelRect(WIN_TOPBAR, PIXEL_FILL(4), 186, 1, 1, height - 2);
+        FillWindowPixelRect(WIN_TOPBAR, PIXEL_FILL(4), width - 1, 1, 1, height - 2);
+    }
+    else
+    {
+        FillWindowPixelRect(WIN_TOPBAR, PIXEL_FILL(4), 1, 0, 54, 1);
+        FillWindowPixelRect(WIN_TOPBAR, PIXEL_FILL(4), 1, height - 1, 54, 1);
+        FillWindowPixelRect(WIN_TOPBAR, PIXEL_FILL(4), 0, 1, 1, height - 2);
+        FillWindowPixelRect(WIN_TOPBAR, PIXEL_FILL(4), 55, 1, 1, height - 2);
+    }
+}
+
 static void DrawTopBarText(void)
 {
     FillWindowPixelBuffer(WIN_TOPBAR, PIXEL_FILL(0));
@@ -526,6 +560,7 @@ static void DrawTopBarText(void)
             AddTextPrinterParameterized3(WIN_TOPBAR, FONT_SMALL, 3, 1, wTextColors[1], 0, sText_TopBar_Custom_Left);
             break;
     }
+    DrawHgssOptionTabs();
     PutWindowTilemap(WIN_TOPBAR);
     CopyWindowToVram(WIN_TOPBAR, COPYWIN_FULL);
 }
