@@ -157,6 +157,7 @@ static void DrawLeftSideOptionText(int selection, int y);
 static void DrawRightSideChoiceText(const u8 *str, int x, int y, bool8 choosen, bool8 active);
 static void DrawOptionMenuTexts(void); //left side text;
 static void DrawHgssOptionRows(void);
+static void DrawHgssOptionFooter(void);
 static void DrawHgssOptionSelection(void);
 static void DrawHgssOptionDescription(void);
 static void DrawChoices(u32 id, int y); //right side draw function
@@ -591,6 +592,37 @@ static void DrawHgssOptionRows(void)
 
     for (y = Y_DIFF; y < height - 1; y += Y_DIFF)
         FillWindowPixelRect(WIN_OPTIONS, PIXEL_FILL(4), 4, y, width - 8, 1);
+
+    DrawHgssOptionFooter();
+}
+
+static void DrawHgssOptionFooter(void)
+{
+    u8 width = GetWindowAttribute(WIN_OPTIONS, WINDOW_WIDTH) * 8;
+    u8 firstVisible = sOptions->menuCursor[sOptions->submenu] - sOptions->visibleCursor[sOptions->submenu];
+    u8 saveItem = MenuItemCancel();
+    s16 visibleRow = saveItem - firstVisible;
+    u8 top;
+    u8 bottom;
+    u8 left;
+    u8 right;
+
+    if (visibleRow < 0 || visibleRow >= OPTIONS_ON_SCREEN || width < 96)
+        return;
+
+    top = visibleRow * Y_DIFF;
+    bottom = top + Y_DIFF;
+    if (bottom >= GetWindowAttribute(WIN_OPTIONS, WINDOW_HEIGHT) * 8)
+        bottom = GetWindowAttribute(WIN_OPTIONS, WINDOW_HEIGHT) * 8 - 1;
+
+    left = (width - 80) / 2;
+    right = left + 79;
+
+    // Centered HGSS footer button, visually separate from setting rows.
+    FillWindowPixelRect(WIN_OPTIONS, PIXEL_FILL(2), left + 2, top, 76, 1);
+    FillWindowPixelRect(WIN_OPTIONS, PIXEL_FILL(4), left + 2, bottom, 76, 1);
+    FillWindowPixelRect(WIN_OPTIONS, PIXEL_FILL(2), left, top + 2, 1, bottom - top - 3);
+    FillWindowPixelRect(WIN_OPTIONS, PIXEL_FILL(2), right, top + 2, 1, bottom - top - 3);
 }
 
 static void DrawHgssOptionSelection(void)
@@ -640,10 +672,19 @@ static void DrawDescriptionText(void)
 
 static void DrawLeftSideOptionText(int selection, int y)
 {
+    const u8 *text = OptionTextRight(selection);
+    u8 x = 0;
+
+    if (selection == MenuItemCancel())
+    {
+        u8 width = GetWindowAttribute(WIN_OPTIONS, WINDOW_WIDTH) * 8;
+        x = (width - GetStringWidth(FONT_NORMAL, text, 0)) / 2;
+    }
+
     if (CheckConditions(selection))
-        AddTextPrinterParameterized4(WIN_OPTIONS, FONT_NORMAL, 0, y, 0, 0, wTextColors[1], TEXT_SKIP_DRAW, OptionTextRight(selection));
+        AddTextPrinterParameterized4(WIN_OPTIONS, FONT_NORMAL, x, y, 0, 0, wTextColors[1], TEXT_SKIP_DRAW, text);
     else
-        AddTextPrinterParameterized4(WIN_OPTIONS, FONT_NORMAL, 0, y, 0, 0, wTextColors[3], TEXT_SKIP_DRAW, OptionTextRight(selection));
+        AddTextPrinterParameterized4(WIN_OPTIONS, FONT_NORMAL, x, y, 0, 0, wTextColors[3], TEXT_SKIP_DRAW, text);
 }
 
 static void DrawRightSideChoiceText(const u8 *text, int x, int y, bool8 choosen, bool8 active)
