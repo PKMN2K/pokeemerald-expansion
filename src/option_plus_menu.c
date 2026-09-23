@@ -157,6 +157,7 @@ static void DrawLeftSideOptionText(int selection, int y);
 static void DrawRightSideChoiceText(const u8 *str, int x, int y, bool8 choosen, bool8 active);
 static void DrawOptionMenuTexts(void); //left side text;
 static void DrawHgssOptionRows(void);
+static void DrawHgssOptionSelection(void);
 static void DrawHgssOptionDescription(void);
 static void DrawChoices(u32 id, int y); //right side draw function
 static void HighlightOptionMenuItem(void);
@@ -592,6 +593,25 @@ static void DrawHgssOptionRows(void)
         FillWindowPixelRect(WIN_OPTIONS, PIXEL_FILL(4), 4, y, width - 8, 1);
 }
 
+static void DrawHgssOptionSelection(void)
+{
+    u8 width = GetWindowAttribute(WIN_OPTIONS, WINDOW_WIDTH) * 8;
+    u8 height = GetWindowAttribute(WIN_OPTIONS, WINDOW_HEIGHT) * 8;
+    u8 cursor = sOptions->visibleCursor[sOptions->submenu];
+    u8 top = cursor * Y_DIFF;
+    u8 bottom = top + Y_DIFF - 1;
+
+    if (width < 16 || bottom >= height)
+        return;
+
+    // Repaint the viewport rails first so the previous active row is restored.
+    DrawHgssOptionRows();
+
+    // Selected HGSS row: use the existing selected-text palette entry as a paired rail.
+    FillWindowPixelRect(WIN_OPTIONS, PIXEL_FILL(5), 4, top, width - 8, 1);
+    FillWindowPixelRect(WIN_OPTIONS, PIXEL_FILL(5), 4, bottom, width - 8, 1);
+}
+
 static void DrawHgssOptionDescription(void)
 {
     u8 width = GetWindowAttribute(WIN_DESCRIPTION, WINDOW_WIDTH) * 8;
@@ -661,6 +681,8 @@ static void HighlightOptionMenuItem(void)
 {
     int cursor = sOptions->visibleCursor[sOptions->submenu];
 
+    DrawHgssOptionSelection();
+    CopyWindowToVram(WIN_OPTIONS, COPYWIN_GFX);
     SetGpuReg(REG_OFFSET_WIN0H, WIN_RANGE(8, 232));
     SetGpuReg(REG_OFFSET_WIN0V, WIN_RANGE(cursor * Y_DIFF + 24, cursor * Y_DIFF + 40));
 }
