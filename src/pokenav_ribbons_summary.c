@@ -63,6 +63,7 @@ struct Pokenav_RibbonsSummaryMenu
     u16 nameWindowId;
     u16 ribbonCountWindowId;
     u16 listIdxWindowId;
+    u16 gridFrameWindowId;
     u16 unusedWindowId;
     u16 monSpriteId;
     struct Sprite *bigRibbonSprite;
@@ -77,6 +78,10 @@ static u32 sRibbonDraw_Current;
 static void PrintCurrentMonRibbonCount(struct Pokenav_RibbonsSummaryMenu *);
 static void PrintRibbbonsSummaryMonInfo(struct Pokenav_RibbonsSummaryMenu *);
 static void PrintRibbonsMonListIndex(struct Pokenav_RibbonsSummaryMenu *);
+static void DrawPokeGearRibbonGridFrame(u16);
+static void DrawPokeGearRibbonDetailPanel(u16);
+static void DrawPokeGearRibbonMonCard(u16);
+static void DrawPokeGearRibbonIndexCard(u16);
 static void ZoomOutSelectedRibbon(struct Pokenav_RibbonsSummaryMenu *);
 static void UpdateAndZoomInSelectedRibbon(struct Pokenav_RibbonsSummaryMenu *);
 static void PrintRibbonNameAndDescription(struct Pokenav_RibbonsSummaryMenu *);
@@ -86,6 +91,7 @@ static void DestroyRibbonsMonFrontPic(struct Pokenav_RibbonsSummaryMenu *);
 static void SlideMonSpriteOff(struct Pokenav_RibbonsSummaryMenu *);
 static void SlideMonSpriteOn(struct Pokenav_RibbonsSummaryMenu *);
 static void AddRibbonCountWindow(struct Pokenav_RibbonsSummaryMenu *);
+static void AddRibbonGridFrameWindow(struct Pokenav_RibbonsSummaryMenu *);
 static void CreateBigRibbonSprite(struct Pokenav_RibbonsSummaryMenu *);
 static void AddRibbonSummaryMonNameWindow(struct Pokenav_RibbonsSummaryMenu *);
 static void DrawAllRibbonsSmall(struct Pokenav_RibbonsSummaryMenu *);
@@ -544,6 +550,7 @@ void FreeRibbonsSummaryScreen2(void)
     RemoveWindow(menu->ribbonCountWindowId);
     RemoveWindow(menu->nameWindowId);
     RemoveWindow(menu->listIdxWindowId);
+    RemoveWindow(menu->gridFrameWindowId);
 #ifndef BUGFIX
     RemoveWindow(menu->unusedWindowId); // Removing window, but window id is never set
 #endif
@@ -598,6 +605,7 @@ static u32 LoopedTask_OpenRibbonsSummaryMenu(s32 state)
     case 2:
         if (!FreeTempTileDataBuffersIfPossible())
         {
+            AddRibbonGridFrameWindow(menu);
             AddRibbonCountWindow(menu);
             return LT_INC_AND_PAUSE;
         }
@@ -789,6 +797,101 @@ static u32 LoopedTask_ShrinkExpandedRibbon(s32 state)
     return LT_FINISH;
 }
 
+static const struct WindowTemplate sRibbonGridFrameWindowTemplate =
+{
+    .bg = 2,
+    .tilemapLeft = 10,
+    .tilemapTop = 3,
+    .width = 20,
+    .height = 10,
+    .paletteNum = 1,
+    .baseBlock = 0x7C,
+};
+
+static void DrawPokeGearRibbonGridFrame(u16 windowId)
+{
+    u8 width = GetWindowAttribute(windowId, WINDOW_WIDTH) * 8;
+    u8 height = GetWindowAttribute(windowId, WINDOW_HEIGHT) * 8;
+    u32 x;
+    u32 y;
+
+    FillWindowPixelBuffer(windowId, PIXEL_FILL(4));
+
+    // HGSS-style medal case: bright upper/left edge with darker lower/right bevel.
+    FillWindowPixelRect(windowId, PIXEL_FILL(1), 4, 0, width - 8, 2);
+    FillWindowPixelRect(windowId, PIXEL_FILL(1), 0, 4, 2, height - 8);
+    FillWindowPixelRect(windowId, PIXEL_FILL(5), 4, height - 2, width - 8, 2);
+    FillWindowPixelRect(windowId, PIXEL_FILL(5), width - 2, 4, 2, height - 8);
+    FillWindowPixelRect(windowId, PIXEL_FILL(9), 6, 4, width - 12, 1);
+    FillWindowPixelRect(windowId, PIXEL_FILL(9), 4, 6, 1, height - 12);
+
+    // Subtle 16x16 medal slots aligned with the existing ribbon icon positions.
+    for (x = 8; x < 152; x += 16)
+    {
+        FillWindowPixelRect(windowId, PIXEL_FILL(10), x, 8, 1, height - 16);
+        if (x + 15 < width)
+            FillWindowPixelRect(windowId, PIXEL_FILL(3), x + 15, 8, 1, height - 16);
+    }
+
+    for (y = 8; y < height - 8; y += 16)
+    {
+        FillWindowPixelRect(windowId, PIXEL_FILL(10), 8, y, width - 16, 1);
+        if (y + 15 < height)
+            FillWindowPixelRect(windowId, PIXEL_FILL(3), 8, y + 15, width - 16, 1);
+    }
+
+    // Gold status LED / medal accent.
+    FillWindowPixelRect(windowId, PIXEL_FILL(6), width - 10, 4, 5, 2);
+}
+
+static void DrawPokeGearRibbonDetailPanel(u16 windowId)
+{
+    u8 width = GetWindowAttribute(windowId, WINDOW_WIDTH) * 8;
+    u8 height = GetWindowAttribute(windowId, WINDOW_HEIGHT) * 8;
+
+    FillWindowPixelBuffer(windowId, PIXEL_FILL(4));
+    FillWindowPixelRect(windowId, PIXEL_FILL(1), 3, 0, width - 6, 1);
+    FillWindowPixelRect(windowId, PIXEL_FILL(1), 0, 3, 1, height - 6);
+    FillWindowPixelRect(windowId, PIXEL_FILL(5), 3, height - 1, width - 6, 1);
+    FillWindowPixelRect(windowId, PIXEL_FILL(5), width - 1, 3, 1, height - 6);
+    FillWindowPixelRect(windowId, PIXEL_FILL(6), 5, 4, 3, height - 8);
+    FillWindowPixelRect(windowId, PIXEL_FILL(9), 10, 3, width - 15, 1);
+}
+
+static void DrawPokeGearRibbonMonCard(u16 windowId)
+{
+    u8 width = GetWindowAttribute(windowId, WINDOW_WIDTH) * 8;
+    u8 height = GetWindowAttribute(windowId, WINDOW_HEIGHT) * 8;
+
+    FillWindowPixelBuffer(windowId, PIXEL_FILL(1));
+    FillWindowPixelRect(windowId, PIXEL_FILL(5), 3, 0, width - 6, 1);
+    FillWindowPixelRect(windowId, PIXEL_FILL(5), 0, 3, 1, height - 6);
+    FillWindowPixelRect(windowId, PIXEL_FILL(6), 3, height - 1, width - 6, 1);
+    FillWindowPixelRect(windowId, PIXEL_FILL(6), width - 1, 3, 1, height - 6);
+    FillWindowPixelRect(windowId, PIXEL_FILL(3), 5, 2, width - 10, 1);
+}
+
+static void DrawPokeGearRibbonIndexCard(u16 windowId)
+{
+    u8 width = GetWindowAttribute(windowId, WINDOW_WIDTH) * 8;
+    u8 height = GetWindowAttribute(windowId, WINDOW_HEIGHT) * 8;
+
+    FillWindowPixelBuffer(windowId, PIXEL_FILL(4));
+    FillWindowPixelRect(windowId, PIXEL_FILL(1), 3, 0, width - 6, 1);
+    FillWindowPixelRect(windowId, PIXEL_FILL(1), 0, 3, 1, height - 6);
+    FillWindowPixelRect(windowId, PIXEL_FILL(5), 3, height - 1, width - 6, 1);
+    FillWindowPixelRect(windowId, PIXEL_FILL(5), width - 1, 3, 1, height - 6);
+    FillWindowPixelRect(windowId, PIXEL_FILL(6), 4, 3, 2, height - 6);
+}
+
+static void AddRibbonGridFrameWindow(struct Pokenav_RibbonsSummaryMenu *menu)
+{
+    menu->gridFrameWindowId = AddWindow(&sRibbonGridFrameWindowTemplate);
+    DrawPokeGearRibbonGridFrame(menu->gridFrameWindowId);
+    PutWindowTilemap(menu->gridFrameWindowId);
+    CopyWindowToVram(menu->gridFrameWindowId, COPYWIN_FULL);
+}
+
 static const struct WindowTemplate sRibbonCountWindowTemplate =
 {
     .bg = 2,
@@ -815,8 +918,8 @@ static void PrintCurrentMonRibbonCount(struct Pokenav_RibbonsSummaryMenu *menu)
     DynamicPlaceholderTextUtil_Reset();
     DynamicPlaceholderTextUtil_SetPlaceholderPtr(0, gStringVar1);
     DynamicPlaceholderTextUtil_ExpandPlaceholders(gStringVar4, gText_RibbonsF700);
-    FillWindowPixelBuffer(menu->ribbonCountWindowId, PIXEL_FILL(4));
-    AddTextPrinterParameterized3(menu->ribbonCountWindowId, FONT_NORMAL, 0, 1, color, TEXT_SKIP_DRAW, gStringVar4);
+    DrawPokeGearRibbonDetailPanel(menu->ribbonCountWindowId);
+    AddTextPrinterParameterized3(menu->ribbonCountWindowId, FONT_NORMAL, 12, 1, color, TEXT_SKIP_DRAW, gStringVar4);
     CopyWindowToVram(menu->ribbonCountWindowId, COPYWIN_GFX);
 }
 
@@ -826,12 +929,12 @@ static void PrintRibbonNameAndDescription(struct Pokenav_RibbonsSummaryMenu *men
     u32 ribbonId = GetRibbonId();
     u8 color[] = {TEXT_COLOR_RED, TEXT_COLOR_DARK_GRAY, TEXT_COLOR_LIGHT_GRAY};
 
-    FillWindowPixelBuffer(menu->ribbonCountWindowId, PIXEL_FILL(4));
+    DrawPokeGearRibbonDetailPanel(menu->ribbonCountWindowId);
     if (ribbonId < FIRST_GIFT_RIBBON)
     {
         // Print normal ribbon name/description
         for (i = 0; i < 2; i++)
-            AddTextPrinterParameterized3(menu->ribbonCountWindowId, FONT_NORMAL, 0, (i * 16) + 1, color, TEXT_SKIP_DRAW, gRibbonDescriptionPointers[ribbonId][i]);
+            AddTextPrinterParameterized3(menu->ribbonCountWindowId, FONT_NORMAL, 12, (i * 16) + 1, color, TEXT_SKIP_DRAW, gRibbonDescriptionPointers[ribbonId][i]);
     }
     else
     {
@@ -847,7 +950,7 @@ static void PrintRibbonNameAndDescription(struct Pokenav_RibbonsSummaryMenu *men
         // Print gift ribbon name/description
         ribbonId--;
         for (i = 0; i < 2; i++)
-            AddTextPrinterParameterized3(menu->ribbonCountWindowId, FONT_NORMAL, 0, (i * 16) + 1, color, TEXT_SKIP_DRAW, gGiftRibbonDescriptionPointers[ribbonId][i]);
+            AddTextPrinterParameterized3(menu->ribbonCountWindowId, FONT_NORMAL, 12, (i * 16) + 1, color, TEXT_SKIP_DRAW, gGiftRibbonDescriptionPointers[ribbonId][i]);
     }
 
     CopyWindowToVram(menu->ribbonCountWindowId, COPYWIN_GFX);
@@ -882,7 +985,7 @@ static void PrintRibbbonsSummaryMonInfo(struct Pokenav_RibbonsSummaryMenu *menu)
     u8 level, gender;
     u16 windowId = menu->nameWindowId;
 
-    FillWindowPixelBuffer(windowId, PIXEL_FILL(1));
+    DrawPokeGearRibbonMonCard(windowId);
     GetMonNicknameLevelGender(gStringVar3, &level, &gender);
     switch (gender)
     {
@@ -896,14 +999,14 @@ static void PrintRibbbonsSummaryMonInfo(struct Pokenav_RibbonsSummaryMenu *menu)
         genderTxt = sText_NoGenderSymbol;
         break;
     }
-    AddTextPrinterParameterized(windowId, GetFontIdToFit(gStringVar3, FONT_NORMAL, 0, 60), gStringVar3, 0, 1, TEXT_SKIP_DRAW, NULL);
+    AddTextPrinterParameterized(windowId, GetFontIdToFit(gStringVar3, FONT_NORMAL, 0, 56), gStringVar3, 6, 1, TEXT_SKIP_DRAW, NULL);
 
     txtPtr = StringCopy(gStringVar1, genderTxt);
     *(txtPtr++) = CHAR_SLASH;
     *(txtPtr++) = CHAR_EXTRA_SYMBOL;
     *(txtPtr++) = CHAR_LV_2;
     ConvertIntToDecimalStringN(txtPtr, level, STR_CONV_MODE_LEFT_ALIGN, 3);
-    AddTextPrinterParameterized(windowId, FONT_NORMAL, gStringVar1, 60, 1, TEXT_SKIP_DRAW, NULL);
+    AddTextPrinterParameterized(windowId, FONT_NORMAL, gStringVar1, 64, 1, TEXT_SKIP_DRAW, NULL);
     CopyWindowToVram(windowId, COPYWIN_GFX);
 }
 
@@ -924,7 +1027,7 @@ static const struct WindowTemplate sRibbonMonListIndexWindowTemplate[] =
 static void AddRibbonListIndexWindow(struct Pokenav_RibbonsSummaryMenu *menu)
 {
     menu->listIdxWindowId = AddWindow(sRibbonMonListIndexWindowTemplate);
-    FillWindowPixelBuffer(menu->listIdxWindowId, PIXEL_FILL(1));
+    DrawPokeGearRibbonIndexCard(menu->listIdxWindowId);
     PutWindowTilemap(menu->listIdxWindowId);
     PrintRibbonsMonListIndex(menu);
 }
@@ -936,6 +1039,7 @@ static void PrintRibbonsMonListIndex(struct Pokenav_RibbonsSummaryMenu *menu)
     u32 id = GetRibbonsSummaryCurrentIndex() + 1;
     u32 count = GetRibbonsSummaryMonListCount();
 
+    DrawPokeGearRibbonIndexCard(menu->listIdxWindowId);
     txtPtr = ConvertIntToDecimalStringN(gStringVar1, id, STR_CONV_MODE_RIGHT_ALIGN, 3);
     *(txtPtr++) = CHAR_SLASH;
     ConvertIntToDecimalStringN(txtPtr, count, STR_CONV_MODE_RIGHT_ALIGN, 3);
