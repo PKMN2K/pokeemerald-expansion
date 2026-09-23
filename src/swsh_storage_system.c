@@ -2743,6 +2743,9 @@ static void Task_ReleaseMon(u8 taskId)
 static void OpenMonMarkingsMenu_SwSh(u8 markings, s16 x, s16 y)
 {
     u8 i, spriteId;
+    s16 panelLeft = x - 16;
+    s16 markStartX = panelLeft + 12;
+    s16 cursorStartX = panelLeft;
 
     sMarkMenu->cursorPos = 0;
     sMarkMenu->markings = markings;
@@ -2767,7 +2770,7 @@ static void OpenMonMarkingsMenu_SwSh(u8 markings, s16 x, s16 y)
 
     for (i = 0; i < NUM_MON_MARKINGS; i++)
     {
-        spriteId = CreateSprite(&sSpriteTemplate_MarkingsMenu_Marks, 108 + i * 24, 80, 2);
+        spriteId = CreateSprite(&sSpriteTemplate_MarkingsMenu_Marks, markStartX + i * 24, y, 2);
         if (spriteId != MAX_SPRITES)
         {
             sMarkMenu->markingSprites[i] = &gSprites[spriteId];
@@ -2779,7 +2782,7 @@ static void OpenMonMarkingsMenu_SwSh(u8 markings, s16 x, s16 y)
         }
     }
 
-    spriteId = CreateSprite(&sSpriteTemplate_MarkingsMenu_Cursor, 96, 80, 1);
+    spriteId = CreateSprite(&sSpriteTemplate_MarkingsMenu_Cursor, cursorStartX, y, 1);
     if (spriteId != MAX_SPRITES)
     {
         sMarkMenu->cursorSprite = &gSprites[spriteId];
@@ -2800,7 +2803,7 @@ static bool8 HandleMonMarkingsMenuInput_SwSh(void)
         PlaySE(SE_SELECT);
         if (--sMarkMenu->cursorPos < 0)
             sMarkMenu->cursorPos = NUM_MON_MARKINGS - 1;
-        sMarkMenu->cursorSprite->x = 96 + sMarkMenu->cursorPos * 24;
+        sMarkMenu->cursorSprite->x = 72 + sMarkMenu->cursorPos * 24;
         return TRUE;
     }
     if (JOY_NEW(DPAD_RIGHT))
@@ -2808,7 +2811,7 @@ static bool8 HandleMonMarkingsMenuInput_SwSh(void)
         PlaySE(SE_SELECT);
         if (++sMarkMenu->cursorPos >= NUM_MON_MARKINGS)
             sMarkMenu->cursorPos = 0;
-        sMarkMenu->cursorSprite->x = 96 + sMarkMenu->cursorPos * 24;
+        sMarkMenu->cursorSprite->x = 72 + sMarkMenu->cursorPos * 24;
         return TRUE;
     }
 
@@ -2872,7 +2875,8 @@ static void Task_ShowMarkMenu(u8 taskId)
         sMarkMenu = &sStorage->markMenuSwSh;
         sMarkMenu->markings = sStorage->displayMon.markings;
         HideInfoPanelSprites();
-        OpenMonMarkingsMenu_SwSh(sStorage->displayMon.markings, 112, 80);
+        // Center the 96x32 markings strip as a compact modal over the storage screen.
+        OpenMonMarkingsMenu_SwSh(sStorage->displayMon.markings, 88, 80);
         sStorage->state++;
         break;
     case 1:
