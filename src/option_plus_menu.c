@@ -156,6 +156,7 @@ static void DrawLeftSideOptionText(int selection, int y);
 static void DrawRightSideChoiceText(const u8 *str, int x, int y, bool8 choosen, bool8 active);
 static void DrawOptionMenuTexts(void); //left side text;
 static void DrawHgssOptionRows(void);
+static void DrawHgssOptionDescription(void);
 static void DrawChoices(u32 id, int y); //right side draw function
 static void HighlightOptionMenuItem(void);
 static void Task_OptionMenuFadeIn(u8 taskId);
@@ -556,10 +557,26 @@ static void DrawHgssOptionRows(void)
         FillWindowPixelRect(WIN_OPTIONS, PIXEL_FILL(4), 4, y, width - 8, 1);
 }
 
+static void DrawHgssOptionDescription(void)
+{
+    u8 width = GetWindowAttribute(WIN_DESCRIPTION, WINDOW_WIDTH) * 8;
+    u8 height = GetWindowAttribute(WIN_DESCRIPTION, WINDOW_HEIGHT) * 8;
+
+    if (width < 16 || height < 16)
+        return;
+
+    // Soft-corner HGSS information box. Keep the text area clear.
+    FillWindowPixelRect(WIN_DESCRIPTION, PIXEL_FILL(2), 1, 0, width - 2, 1);
+    FillWindowPixelRect(WIN_DESCRIPTION, PIXEL_FILL(4), 1, height - 1, width - 2, 1);
+    FillWindowPixelRect(WIN_DESCRIPTION, PIXEL_FILL(2), 0, 1, 1, height - 2);
+    FillWindowPixelRect(WIN_DESCRIPTION, PIXEL_FILL(2), width - 1, 1, 1, height - 2);
+}
+
 static void DrawDescriptionText(void)
 {
     FillWindowPixelBuffer(WIN_DESCRIPTION, PIXEL_FILL(1));
     AddTextPrinterParameterized4(WIN_DESCRIPTION, FONT_NORMAL, 2, 1, 0, 0, wTextColors[0], TEXT_SKIP_DRAW, OptionTextDescription());
+    DrawHgssOptionDescription();
     CopyWindowToVram(WIN_DESCRIPTION, COPYWIN_FULL);
 }
 
