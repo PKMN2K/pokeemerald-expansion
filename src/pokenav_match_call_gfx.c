@@ -60,6 +60,7 @@ static void DestroyMatchCallList(void);
 static void FreeMatchCallSprites(void);
 static void LoadCallWindowAndFade(struct Pokenav_MatchCallGfx *);
 static void DrawMatchCallLeftColumnWindows(struct Pokenav_MatchCallGfx *);
+static void DrawPokeGearPhonePanel(u16);
 static void UpdateMatchCallInfoBox(struct Pokenav_MatchCallGfx *);
 static void PrintMatchCallLocation(struct Pokenav_MatchCallGfx *, int);
 static void AllocMatchCallSprites(void);
@@ -957,16 +958,40 @@ static void DrawMatchCallLeftColumnWindows(struct Pokenav_MatchCallGfx *gfx)
 {
     gfx->locWindowId = AddWindow(&sMatchCallLocationWindowTemplate);
     gfx->infoBoxWindowId = AddWindow(&sMatchCallInfoBoxWindowTemplate);
-    FillWindowPixelBuffer(gfx->locWindowId, PIXEL_FILL(1));
+    DrawPokeGearPhonePanel(gfx->locWindowId);
     PutWindowTilemap(gfx->locWindowId);
-    FillWindowPixelBuffer(gfx->infoBoxWindowId, PIXEL_FILL(1));
+    DrawPokeGearPhonePanel(gfx->infoBoxWindowId);
     PutWindowTilemap(gfx->infoBoxWindowId);
-    CopyWindowToVram(gfx->locWindowId, COPYWIN_MAP);
+    CopyWindowToVram(gfx->locWindowId, COPYWIN_FULL);
+    CopyWindowToVram(gfx->infoBoxWindowId, COPYWIN_FULL);
+}
+
+static void DrawPokeGearPhonePanel(u16 windowId)
+{
+    u8 width = GetWindowAttribute(windowId, WINDOW_WIDTH) * 8;
+    u8 height = GetWindowAttribute(windowId, WINDOW_HEIGHT) * 8;
+
+    FillWindowPixelBuffer(windowId, PIXEL_FILL(1));
+
+    if (width < 16 || height < 8)
+        return;
+
+    // PokéGear Phone card: bright upper/left edge, darker lower/right edge.
+    FillWindowPixelRect(windowId, PIXEL_FILL(5), 2, 0, width - 4, 1);
+    FillWindowPixelRect(windowId, PIXEL_FILL(5), 0, 2, 1, height - 4);
+    FillWindowPixelRect(windowId, PIXEL_FILL(4), 2, height - 1, width - 4, 1);
+    FillWindowPixelRect(windowId, PIXEL_FILL(4), width - 1, 2, 1, height - 4);
+
+    if (height >= 48)
+    {
+        FillWindowPixelRect(windowId, PIXEL_FILL(5), 5, 31, width - 10, 1);
+        FillWindowPixelRect(windowId, PIXEL_FILL(4), 5, 32, width - 10, 1);
+    }
 }
 
 static void UpdateMatchCallInfoBox(struct Pokenav_MatchCallGfx *gfx)
 {
-    FillWindowPixelBuffer(gfx->infoBoxWindowId, PIXEL_FILL(1));
+    DrawPokeGearPhonePanel(gfx->infoBoxWindowId);
     PrintNumberRegisteredLabel(gfx->infoBoxWindowId);
     PrintNumberRegistered(gfx->infoBoxWindowId);
     PrintNumberOfBattlesLabel(gfx->infoBoxWindowId);
@@ -1027,15 +1052,16 @@ static void PrintMatchCallLocation(struct Pokenav_MatchCallGfx *gfx, int delta)
         StringCopy(mapName, gText_Unknown);
 
     x = GetStringCenterAlignXOffset(FONT_NARROW, mapName, 88);
-    FillWindowPixelBuffer(gfx->locWindowId, PIXEL_FILL(1));
+    DrawPokeGearPhonePanel(gfx->locWindowId);
     AddTextPrinterParameterized(gfx->locWindowId, FONT_NARROW, mapName, x, 1, 0, NULL);
+    CopyWindowToVram(gfx->locWindowId, COPYWIN_GFX);
 }
 
 static void PrintMatchCallSelectionOptions(struct Pokenav_MatchCallGfx *gfx)
 {
     u32 i;
 
-    FillWindowPixelBuffer(gfx->infoBoxWindowId, PIXEL_FILL(1));
+    DrawPokeGearPhonePanel(gfx->infoBoxWindowId);
     for (i = 0; i < MATCH_CALL_OPTION_COUNT; i++)
     {
         int optionText = GetMatchCallOptionId(i);
