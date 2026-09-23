@@ -65,6 +65,8 @@ static void InsertMonListItem(struct Pokenav_SearchResults *, struct PokenavMonL
 static bool32 GetSearchResultCurrentLoopedTaskActive(void);
 static u32 LoopedTask_OpenConditionSearchResults(s32);
 static void AddSearchResultListMenuWindow(struct Pokenav_SearchResultsGfx *);
+static void DrawPokeGearStatusRankCard(u16);
+static void DrawPokeGearStatusSearchRow(u16, u32, u32);
 static void PrintSearchResultListMenuItems(struct Pokenav_SearchResultsGfx *);
 static void CreateSearchResultsList(void);
 static void BufferSearchMonListItem(struct PokenavMonListItem *, u8 *);
@@ -663,21 +665,57 @@ static u32 LoopedTask_SelectSearchResult(s32 state)
 static void AddSearchResultListMenuWindow(struct Pokenav_SearchResultsGfx *gfx)
 {
     gfx->winid = AddWindow(&sSearchResultListMenuWindowTemplate);
+    DrawPokeGearStatusRankCard(gfx->winid);
     PutWindowTilemap(gfx->winid);
-    CopyWindowToVram(gfx->winid, COPYWIN_MAP);
+    CopyWindowToVram(gfx->winid, COPYWIN_FULL);
     PrintSearchResultListMenuItems(gfx);
+}
+
+static void DrawPokeGearStatusRankCard(u16 windowId)
+{
+    u8 width = GetWindowAttribute(windowId, WINDOW_WIDTH) * 8;
+    u8 height = GetWindowAttribute(windowId, WINDOW_HEIGHT) * 8;
+
+    FillWindowPixelBuffer(windowId, PIXEL_FILL(2));
+
+    if (width < 16 || height < 8)
+        return;
+
+    // Compact Gen 4/HGSS-style rank badge.
+    FillWindowPixelRect(windowId, PIXEL_FILL(5), 3, 0, width - 6, 1);
+    FillWindowPixelRect(windowId, PIXEL_FILL(5), 0, 3, 1, height - 6);
+    FillWindowPixelRect(windowId, PIXEL_FILL(3), 3, height - 1, width - 6, 1);
+    FillWindowPixelRect(windowId, PIXEL_FILL(3), width - 1, 3, 1, height - 6);
+    FillWindowPixelRect(windowId, PIXEL_FILL(1), 5, 2, width - 10, 1);
+}
+
+static void DrawPokeGearStatusSearchRow(u16 windowId, u32 itemId, u32 tileOffset)
+{
+    u8 width = GetWindowAttribute(windowId, WINDOW_WIDTH) * 8;
+    u8 y = (tileOffset & 0xF) * 16;
+
+    // Recessed HGSS list card behind each search result.
+    FillWindowPixelRect(windowId, PIXEL_FILL(2), 0, y, width, 16);
+    FillWindowPixelRect(windowId, PIXEL_FILL(5), 3, y, width - 6, 1);
+    FillWindowPixelRect(windowId, PIXEL_FILL(3), 3, y + 15, width - 6, 1);
+    FillWindowPixelRect(windowId, PIXEL_FILL(1), 1, y + 4, 2, 8);
+
+    if ((itemId & 1) != 0)
+        FillWindowPixelRect(windowId, PIXEL_FILL(9), width - 4, y + 6, 2, 4);
 }
 
 static void PrintSearchResultListMenuItems(struct Pokenav_SearchResultsGfx *gfx)
 {
     s32 rank = GetSearchResultsSelectedMonRank();
+
+    DrawPokeGearStatusRankCard(gfx->winid);
     DynamicPlaceholderTextUtil_Reset();
     DynamicPlaceholderTextUtil_SetPlaceholderPtr(0, gStringVar1);
     *gStringVar1 = EOS;
     DynamicPlaceholderTextUtil_ExpandPlaceholders(gStringVar2, gText_NumberIndex);
-    AddTextPrinterParameterized(gfx->winid, FONT_NORMAL, gStringVar2, 4, 1, TEXT_SKIP_DRAW, NULL);
+    AddTextPrinterParameterized(gfx->winid, FONT_NORMAL, gStringVar2, 6, 1, TEXT_SKIP_DRAW, NULL);
     ConvertIntToDecimalStringN(gStringVar1, rank, STR_CONV_MODE_RIGHT_ALIGN, 3);
-    AddTextPrinterParameterized(gfx->winid, FONT_NORMAL, gStringVar1, 34, 1, TEXT_SKIP_DRAW, NULL);
+    AddTextPrinterParameterized(gfx->winid, FONT_NORMAL, gStringVar1, 36, 1, TEXT_SKIP_DRAW, NULL);
     CopyWindowToVram(gfx->winid, COPYWIN_GFX);
 }
 
@@ -696,7 +734,7 @@ static void CreateSearchResultsList(void)
     template.fillValue = 2;
     template.fontId = FONT_NORMAL;
     template.bufferItemFunc = (PokenavListBufferItemFunc)BufferSearchMonListItem;
-    template.iconDrawFunc = NULL;
+    template.iconDrawFunc = DrawPokeGearStatusSearchRow;
     CreatePokenavList(&sConditionSearchResultBgTemplates[1], &template, 0);
 }
 
