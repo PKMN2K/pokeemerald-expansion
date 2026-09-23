@@ -26,6 +26,26 @@ static u8 sInitialLoadId; // Never read
 
 const u16 gConditionGraphData_Pal[] = INCGFX_U16("graphics/pokenav/condition/graph_data.pal", ".gbapal");
 const u16 gConditionText_Pal[] = INCGFX_U16("graphics/pokenav/condition/text.pal", ".gbapal");
+
+static const u16 sPokeGearStatusMarkingsFramePal[] =
+{
+    RGB(0, 0, 0),
+    RGB(31, 31, 31),
+    RGB(26, 30, 31),
+    RGB(18, 27, 31),
+    RGB(8, 18, 27),
+    RGB(3, 9, 15),
+    RGB(31, 27, 10),
+    RGB(21, 25, 28),
+    RGB(15, 20, 24),
+    RGB(10, 15, 19),
+    RGB(6, 11, 15),
+    RGB(23, 28, 31),
+    RGB(13, 22, 28),
+    RGB(29, 31, 31),
+    RGB(9, 24, 30),
+    RGB(0, 0, 0),
+};
 static const u32 sConditionGraphData_Gfx[] = INCGFX_U32("graphics/pokenav/condition/graph_data.png", ".4bpp.smol");
 static const u32 sConditionGraphData_Tilemap[] = INCGFX_U32("graphics/pokenav/condition/graph_data.bin", ".smolTM");
 static const u16 sMonMarkings_Pal[] = INCGFX_U16("graphics/pokenav/condition/mon_markings.pal", ".gbapal");
@@ -330,8 +350,7 @@ static u32 LoopedTask_OpenConditionGraphMenu(s32 state)
         ShowBg(1);
         HideBg(2);
         ShowBg(3);
-        if (IsConditionMenuSearchMode() == TRUE)
-            PrintHelpBarText(HELPBAR_CONDITION_MON_STATUS);
+        PrintHelpBarText(HELPBAR_CONDITION_MON_STATUS);
         return LT_INC_AND_PAUSE;
     case 15:
         PokenavFadeScreen(POKENAV_FADE_FROM_BLACK);
@@ -552,7 +571,7 @@ static u32 LoopedTask_OpenMonMarkingsWindow(s32 state)
     switch (state)
     {
     case 0:
-        OpenMonMarkingsMenu(TryGetMonMarkId(), 176, 32);
+        OpenMonMarkingsMenu(TryGetMonMarkId(), 168, 16);
         return LT_INC_AND_CONTINUE;
     case 1:
         PrintHelpBarText(HELPBAR_CONDITION_MARKINGS);
@@ -784,6 +803,8 @@ static void CreateMonMarkingsOrPokeballIndicators(void)
         menu->marksMenu.basePaletteTag = TAG_CONDITION_MARKINGS_MENU;
         InitMonMarkingsMenu(&menu->marksMenu);
         BufferMonMarkingsMenuTiles();
+        // Override only this Status app's popup frame with the HGSS-style LCD palette.
+        menu->marksMenu.framePalette = sPokeGearStatusMarkingsFramePal;
         sprite = CreateMonMarkingAllCombosSprite(TAG_CONDITION_MON_MARKINGS, TAG_CONDITION_MON_MARKINGS, sMonMarkings_Pal);
         sprite->oam.priority = 3;
         sprite->x = 192;
