@@ -155,6 +155,7 @@ static void DrawTopBarText(void); //top Option text
 static void DrawLeftSideOptionText(int selection, int y);
 static void DrawRightSideChoiceText(const u8 *str, int x, int y, bool8 choosen, bool8 active);
 static void DrawOptionMenuTexts(void); //left side text;
+static void DrawHgssOptionRows(void);
 static void DrawChoices(u32 id, int y); //right side draw function
 static void HighlightOptionMenuItem(void);
 static void Task_OptionMenuFadeIn(u8 taskId);
@@ -538,6 +539,23 @@ static void DrawOptionMenuTexts(void) //left side text
     CopyWindowToVram(WIN_OPTIONS, COPYWIN_FULL);
 }
 
+static void DrawHgssOptionRows(void)
+{
+    u8 width = GetWindowAttribute(WIN_OPTIONS, WINDOW_WIDTH) * 8;
+    u8 height = GetWindowAttribute(WIN_OPTIONS, WINDOW_HEIGHT) * 8;
+    u8 y;
+
+    if (width < 16 || height < Y_DIFF)
+        return;
+
+    // Five-row HGSS viewport: strong outer rails and subtler row separators.
+    FillWindowPixelRect(WIN_OPTIONS, PIXEL_FILL(2), 4, 0, width - 8, 1);
+    FillWindowPixelRect(WIN_OPTIONS, PIXEL_FILL(2), 4, height - 1, width - 8, 1);
+
+    for (y = Y_DIFF; y < height - 1; y += Y_DIFF)
+        FillWindowPixelRect(WIN_OPTIONS, PIXEL_FILL(4), 4, y, width - 8, 1);
+}
+
 static void DrawDescriptionText(void)
 {
     FillWindowPixelBuffer(WIN_DESCRIPTION, PIXEL_FILL(1));
@@ -749,6 +767,7 @@ void CB2_InitOptionPlusMenu(void)
             for (i = 0; i < min(OPTIONS_ON_SCREEN, MenuItemCount()); i++)
                 DrawChoices(i, i * Y_DIFF);
 
+            DrawHgssOptionRows();
             HighlightOptionMenuItem();
 
             CopyWindowToVram(WIN_OPTIONS, COPYWIN_FULL);
@@ -991,6 +1010,7 @@ static void ScrollMenu(int direction)
     // Print
     DrawChoices(menuItem, pos * Y_DIFF);
     DrawLeftSideOptionText(menuItem, (pos * Y_DIFF) + 1);
+    DrawHgssOptionRows();
     CopyWindowToVram(WIN_OPTIONS, COPYWIN_GFX);
 }
 static void ScrollAll(int direction) // to bottom or top
@@ -1028,6 +1048,7 @@ static void ScrollAll(int direction) // to bottom or top
         DrawChoices(menuItem, pos * Y_DIFF);
         DrawLeftSideOptionText(menuItem, (pos * Y_DIFF) + 1);
     }
+    DrawHgssOptionRows();
     CopyWindowToVram(WIN_OPTIONS, COPYWIN_GFX);
 }
 
@@ -1172,6 +1193,7 @@ static void ReDrawAll(void)
         DrawChoices(menuItem+i, i * Y_DIFF);
         DrawLeftSideOptionText(menuItem+i, (i * Y_DIFF) + 1);
     }
+    DrawHgssOptionRows();
     CopyWindowToVram(WIN_OPTIONS, COPYWIN_GFX);
 }
 //Gameplay Draw Choices
