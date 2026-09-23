@@ -60,6 +60,8 @@ static u32 LoopedTask_RibbonsListMovePageDown(s32);
 static u32 LoopedTask_RibbonsListReturnToMainMenu(s32);
 static u32 LoopedTask_RibbonsListOpenSummary(s32);
 static void DrawListIndexNumber(s32, s32, s32);
+static void DrawPokeGearRibbonCountCard(u16);
+static void DrawPokeGearRibbonOwnerRow(u16, u32, u32);
 static void AddRibbonsMonListWindow(struct Pokenav_RibbonsMonMenu *);
 static void UpdateIndexNumberDisplay(struct Pokenav_RibbonsMonMenu *);
 static void CreateRibbonMonsList(void);
@@ -663,12 +665,55 @@ static void UpdateIndexNumberDisplay(struct Pokenav_RibbonsMonMenu *menu)
     CopyWindowToVram(menu->winid, COPYWIN_GFX);
 }
 
+static void DrawPokeGearRibbonCountCard(u16 windowId)
+{
+    u8 width = GetWindowAttribute(windowId, WINDOW_WIDTH) * 8;
+    u8 height = GetWindowAttribute(windowId, WINDOW_HEIGHT) * 8;
+
+    FillWindowPixelBuffer(windowId, PIXEL_FILL(2));
+
+    if (width < 16 || height < 8)
+        return;
+
+    // Compact Gen 4/HGSS-style counter card.
+    FillWindowPixelRect(windowId, PIXEL_FILL(1), 3, 0, width - 6, 1);
+    FillWindowPixelRect(windowId, PIXEL_FILL(1), 0, 3, 1, height - 6);
+    FillWindowPixelRect(windowId, PIXEL_FILL(3), 3, height - 1, width - 6, 1);
+    FillWindowPixelRect(windowId, PIXEL_FILL(3), width - 1, 3, 1, height - 6);
+    FillWindowPixelRect(windowId, PIXEL_FILL(5), 4, 3, 2, height - 6);
+    FillWindowPixelRect(windowId, PIXEL_FILL(9), 8, 3, width - 12, 1);
+}
+
+static void DrawPokeGearRibbonOwnerRow(u16 windowId, u32 itemId, u32 tileOffset)
+{
+    u8 width = GetWindowAttribute(windowId, WINDOW_WIDTH) * 8;
+    u8 y = (tileOffset & 0xF) * 16;
+
+    // Recessed owner card with a gold ribbon-count pocket at the right.
+    FillWindowPixelRect(windowId, PIXEL_FILL(2), 0, y, width, 16);
+    FillWindowPixelRect(windowId, PIXEL_FILL(1), 3, y, width - 6, 1);
+    FillWindowPixelRect(windowId, PIXEL_FILL(3), 3, y + 15, width - 6, 1);
+    FillWindowPixelRect(windowId, PIXEL_FILL(6), 1, y + 4, 2, 8);
+
+    FillWindowPixelRect(windowId, PIXEL_FILL(9), width - 23, y + 3, 19, 10);
+    FillWindowPixelRect(windowId, PIXEL_FILL(5), width - 23, y + 3, 19, 1);
+    FillWindowPixelRect(windowId, PIXEL_FILL(3), width - 23, y + 12, 19, 1);
+    FillWindowPixelRect(windowId, PIXEL_FILL(5), width - 23, y + 5, 2, 6);
+
+    // Small alternating DS-era locator tick, decorative only.
+    if ((itemId & 1) != 0)
+        FillWindowPixelRect(windowId, PIXEL_FILL(1), width - 5, y + 6, 1, 4);
+}
+
 static void DrawListIndexNumber(s32 windowId, s32 index, s32 max)
 {
     u8 strbuf[16];
     u32 x;
+    u8 *ptr;
 
-    u8 *ptr = strbuf;
+    DrawPokeGearRibbonCountCard(windowId);
+
+    ptr = strbuf;
     ptr = ConvertIntToDecimalStringN(ptr, index, STR_CONV_MODE_RIGHT_ALIGN, 3);
     *ptr++ = CHAR_SLASH;
     ConvertIntToDecimalStringN(ptr, max, STR_CONV_MODE_RIGHT_ALIGN, 3);
@@ -690,7 +735,7 @@ static void CreateRibbonMonsList(void)
     template.fillValue = 2;
     template.fontId = FONT_NORMAL;
     template.bufferItemFunc = BufferRibbonMonInfoText;
-    template.iconDrawFunc = NULL;
+    template.iconDrawFunc = DrawPokeGearRibbonOwnerRow;
     CreatePokenavList(&sMonRibbonListBgTemplates[1], &template, 0);
 }
 
