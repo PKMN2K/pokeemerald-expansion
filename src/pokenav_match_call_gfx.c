@@ -86,6 +86,7 @@ static void LoadCheckPageTrainerPic(struct Pokenav_MatchCallGfx *);
 static bool32 WaitForTrainerPic(struct Pokenav_MatchCallGfx *);
 static void TrainerPicSlideOffscreen(struct Pokenav_MatchCallGfx *);
 static void Task_FlashPokeballIcons(u8);
+static void DrawPokeGearPhoneContactRow(u16, u32);
 static void TryDrawRematchPokeballIcon(u16, u32, u32);
 static void PrintNumberRegisteredLabel(u16);
 static void PrintNumberRegistered(u16);
@@ -923,25 +924,43 @@ static void Task_FlashPokeballIcons(u8 taskId)
 #undef tActive
 
 enum {
-    POKEBALL_ICON_TOP = 0x5000,
-    POKEBALL_ICON_BOTTOM,
-    POKEBALL_ICON_EMPTY,
+    PHONE_ALERT_ICON_TOP = 0x5000,
+    PHONE_ALERT_ICON_BOTTOM,
+    PHONE_ALERT_ICON_EMPTY,
 };
+
+static void DrawPokeGearPhoneContactRow(u16 windowId, u32 row)
+{
+    u8 width = GetWindowAttribute(windowId, WINDOW_WIDTH) * 8;
+    u8 y = (row & 0xF) * 16;
+
+    if (width < 16)
+        return;
+
+    // PokéGear contact card: recessed row with a slim status accent.
+    FillWindowPixelRect(windowId, PIXEL_FILL(1), 0, y, width, 16);
+    FillWindowPixelRect(windowId, PIXEL_FILL(3), 2, y, width - 4, 1);
+    FillWindowPixelRect(windowId, PIXEL_FILL(5), 2, y + 15, width - 4, 1);
+    FillWindowPixelRect(windowId, PIXEL_FILL(4), 0, y + 3, 1, 10);
+}
 
 static void TryDrawRematchPokeballIcon(u16 windowId, u32 rematchId, u32 tileOffset)
 {
     u8 bg = GetWindowAttribute(windowId, WINDOW_BG);
     u16 *tilemap = GetBgTilemapBuffer(bg);
+
+    DrawPokeGearPhoneContactRow(windowId, tileOffset);
+
     tilemap += tileOffset * 64 + 0x1D;
     if (ShouldDrawRematchPokeballIcon(rematchId))
     {
-        tilemap[0] = POKEBALL_ICON_TOP;
-        tilemap[0x20] = POKEBALL_ICON_BOTTOM;
+        tilemap[0] = PHONE_ALERT_ICON_TOP;
+        tilemap[0x20] = PHONE_ALERT_ICON_BOTTOM;
     }
     else
     {
-        tilemap[0] = POKEBALL_ICON_EMPTY;
-        tilemap[0x20] = POKEBALL_ICON_EMPTY;
+        tilemap[0] = PHONE_ALERT_ICON_EMPTY;
+        tilemap[0x20] = PHONE_ALERT_ICON_EMPTY;
     }
 }
 
@@ -950,8 +969,8 @@ void ClearRematchPokeballIcon(u16 windowId, u32 tileOffset)
     u8 bg = GetWindowAttribute(windowId, WINDOW_BG);
     u16 *tilemap = GetBgTilemapBuffer(bg);
     tilemap += tileOffset * 64 + 0x1D;
-    tilemap[0] = POKEBALL_ICON_EMPTY;
-    tilemap[0x20] = POKEBALL_ICON_EMPTY;
+    tilemap[0] = PHONE_ALERT_ICON_EMPTY;
+    tilemap[0x20] = PHONE_ALERT_ICON_EMPTY;
 }
 
 static void DrawMatchCallLeftColumnWindows(struct Pokenav_MatchCallGfx *gfx)
