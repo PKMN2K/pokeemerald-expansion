@@ -691,9 +691,30 @@ static void DrawRightSideChoiceText(const u8 *text, int x, int y, bool8 choosen,
 {
     const u8 *colorPtr;
 
-   if (active && choosen)
+    if (active && choosen)
     {
+        u16 windowWidth = GetWindowAttribute(WIN_OPTIONS, WINDOW_WIDTH) * 8;
+        u16 windowHeight = GetWindowAttribute(WIN_OPTIONS, WINDOW_HEIGHT) * 8;
+        s16 accentX = x - 2;
+        u16 accentWidth = GetStringWidth(FONT_NORMAL, text, 0) + 4;
+        u16 accentY = y + 13;
+
         colorPtr = wTextColors[2];
+
+        if (accentX < 0)
+        {
+            accentWidth += accentX;
+            accentX = 0;
+        }
+        if (accentX + accentWidth > windowWidth)
+            accentWidth = windowWidth - accentX;
+
+        // Selected HGSS choice: a compact two-tone underline fitted to the label.
+        if (accentWidth > 2 && accentY + 1 < windowHeight)
+        {
+            FillWindowPixelRect(WIN_OPTIONS, PIXEL_FILL(5), accentX, accentY, accentWidth, 1);
+            FillWindowPixelRect(WIN_OPTIONS, PIXEL_FILL(6), accentX + 1, accentY + 1, accentWidth - 2, 1);
+        }
     }
     else if (active && !choosen)
     {
