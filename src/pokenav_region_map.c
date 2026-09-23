@@ -69,6 +69,7 @@ static bool32 IsDma3ManagerBusyWithBgCopy_(struct Pokenav_RegionMapGfx *);
 static void ChangeBgYForZoom(bool32);
 static bool32 IsChangeBgYForZoomActive(void);
 static void CreateCityZoomTextSprites(void);
+static void DrawPokeGearCityPreviewFrame(void);
 static void DrawCityMap(struct Pokenav_RegionMapGfx *, mapsec_s32_t, int);
 static void PrintLandmarkNames(struct Pokenav_RegionMapGfx *, mapsec_s32_t, int);
 static void SetCityZoomTextInvisibility(bool32);
@@ -550,6 +551,8 @@ static void LoadPokenavRegionMapGfx(struct Pokenav_RegionMapGfx *state)
 {
     BgDmaFill(1, PIXEL_FILL(0), 0x40, 1);
     BgDmaFill(1, PIXEL_FILL(1), 0x41, 1);
+    BgDmaFill(1, PIXEL_FILL(3), 0x42, 1);
+    BgDmaFill(1, PIXEL_FILL(2), 0x43, 1);
     CpuFill16(0x1040, state->tilemapBuffer, 0x800);
     SetBgTilemapBuffer(1, state->tilemapBuffer);
     state->infoWindowId = AddWindow(&sMapSecInfoWindowTemplate);
@@ -631,6 +634,7 @@ static void UpdateMapSecInfoWindow(struct Pokenav_RegionMapGfx *state)
         PutWindowRectTilemap(state->infoWindowId, 0, 0, 12, 2);
         AddTextPrinterParameterized(state->infoWindowId, FONT_NARROW, regionMap->mapSecName, 4, 1, TEXT_SKIP_DRAW, NULL);
         FillBgTilemapBufferRect(1, 0x1041, 17, 6, 12, 11, 17);
+        DrawPokeGearCityPreviewFrame();
         CopyWindowToVram(state->infoWindowId, COPYWIN_FULL);
         SetCityZoomTextInvisibility(TRUE);
         break;
@@ -717,6 +721,15 @@ static u32 LoopedTask_DecompressCityMaps(s32 taskState)
     return LT_FINISH;
 }
 
+static void DrawPokeGearCityPreviewFrame(void)
+{
+    // Two-tone bezel surrounding the existing 10x10 city preview.
+    FillBgTilemapBufferRect(1, 0x1042, 17, 5, 12, 1, 17);
+    FillBgTilemapBufferRect(1, 0x1042, 17, 6, 1, 10, 17);
+    FillBgTilemapBufferRect(1, 0x1043, 28, 6, 1, 10, 17);
+    FillBgTilemapBufferRect(1, 0x1043, 17, 16, 12, 1, 17);
+}
+
 static void DrawCityMap(struct Pokenav_RegionMapGfx *state, mapsec_s32_t mapSecId, int pos)
 {
     int i;
@@ -728,6 +741,7 @@ static void DrawCityMap(struct Pokenav_RegionMapGfx *state, mapsec_s32_t mapSecI
 
     FillBgTilemapBufferRect_Palette0(1, 0x1041, 17, 6, 12, 11);
     CopyToBgTilemapBufferRect(1, state->cityZoomPics[i], 18, 6, 10, 10);
+    DrawPokeGearCityPreviewFrame();
 }
 
 static void PrintLandmarkNames(struct Pokenav_RegionMapGfx *state, mapsec_s32_t mapSecId, int pos)
@@ -752,15 +766,16 @@ static void CreateCityZoomTextSprites(void)
     struct Sprite *sprite;
     struct Pokenav_RegionMapGfx *state = GetSubstructPtr(POKENAV_SUBSTRUCT_REGION_MAP_ZOOM);
 
-    // When not zoomed in the text is still created but its pushed off screen
+    // When not zoomed in the text is still created but its pushed off screen.
+    // Zoomed mode docks the cycling legend against the PokéGear info card.
     if (!IsRegionMapZoomed())
         y = 228;
     else
-        y = 132;
+        y = 128;
 
     for (i = 0; i < (int)ARRAY_COUNT(state->cityZoomTextSprites); i++)
     {
-        u8 spriteId = CreateSprite(&sCityZoomTextSpriteTemplate, 152 + i * 32, y, 8);
+        u8 spriteId = CreateSprite(&sCityZoomTextSpriteTemplate, 148 + i * 32, y, 8);
         sprite = &gSprites[spriteId];
         sprite->data[0] = 0;
         sprite->data[1] = i * 4;
@@ -811,7 +826,7 @@ static void UpdateCityZoomTextPosition(void)
 {
     int i;
     struct Pokenav_RegionMapGfx *state = GetSubstructPtr(POKENAV_SUBSTRUCT_REGION_MAP_ZOOM);
-    int y = 132 - (GetBgY(1) >> 8);
+    int y = 128 - (GetBgY(1) >> 8);
     for (i = 0; i < (int)ARRAY_COUNT(state->cityZoomTextSprites); i++)
         state->cityZoomTextSprites[i]->y = y;
 }
