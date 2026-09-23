@@ -564,8 +564,21 @@ bool32 WaitForHelpBar(void)
 
 static void DrawHelpBar(u32 windowId)
 {
+    u8 width = GetWindowAttribute(windowId, WINDOW_WIDTH) * 8;
+    u8 height = GetWindowAttribute(windowId, WINDOW_HEIGHT) * 8;
+
     FillWindowPixelBuffer(windowId, PIXEL_FILL(4));
-    FillWindowPixelRect(windowId, PIXEL_FILL(5), 0, 0, 0x80, 1);
+
+    if (width < 16 || height < 8)
+        return;
+
+    // HGSS PokéGear-style beveled control strip.
+    FillWindowPixelRect(windowId, PIXEL_FILL(5), 2, 0, width - 4, 1);
+    FillWindowPixelRect(windowId, PIXEL_FILL(5), 0, 2, 1, height - 4);
+    FillWindowPixelRect(windowId, PIXEL_FILL(1), 2, height - 1, width - 4, 1);
+    FillWindowPixelRect(windowId, PIXEL_FILL(1), width - 1, 2, 1, height - 4);
+    FillWindowPixelRect(windowId, PIXEL_FILL(5), 5, 2, width - 10, 1);
+    FillWindowPixelRect(windowId, PIXEL_FILL(1), 5, height - 3, width - 10, 1);
 }
 
 static void InitPokenavMainMenuResources(void)
