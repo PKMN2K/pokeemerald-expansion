@@ -86,6 +86,7 @@ static void CreateMatchCallBlueLightSprite(void);
 static void SpriteCB_BlinkingBlueLight(struct Sprite *);
 static void DestroyRematchBlueLightSprite(void);
 static void AddOptionDescriptionWindow(void);
+static void DrawPokeGearDescriptionPanel(u32 windowId);
 static void PrintCurrentOptionDescription(void);
 static void PrintNoRibbonWinners(void);
 static bool32 IsDma3ManagerBusyWithBgCopy_(void);
@@ -1256,8 +1257,26 @@ static void AddOptionDescriptionWindow(void)
 
     gfx->optionDescWindowId = AddWindow(&sOptionDescWindowTemplate);
     PutWindowTilemap(gfx->optionDescWindowId);
-    FillWindowPixelBuffer(gfx->optionDescWindowId, PIXEL_FILL(6));
+    DrawPokeGearDescriptionPanel(gfx->optionDescWindowId);
     CopyWindowToVram(gfx->optionDescWindowId, COPYWIN_FULL);
+}
+
+static void DrawPokeGearDescriptionPanel(u32 windowId)
+{
+    u8 width = GetWindowAttribute(windowId, WINDOW_WIDTH) * 8;
+    u8 height = GetWindowAttribute(windowId, WINDOW_HEIGHT) * 8;
+
+    FillWindowPixelBuffer(windowId, PIXEL_FILL(6));
+
+    if (width < 16 || height < 8)
+        return;
+
+    // HGSS PokéGear information strip: light upper bevel, dark lower edge.
+    FillWindowPixelRect(windowId, PIXEL_FILL(5), 2, 0, width - 4, 1);
+    FillWindowPixelRect(windowId, PIXEL_FILL(5), 0, 2, 1, height - 4);
+    FillWindowPixelRect(windowId, PIXEL_FILL(4), 2, height - 1, width - 4, 1);
+    FillWindowPixelRect(windowId, PIXEL_FILL(4), width - 1, 2, 1, height - 4);
+    FillWindowPixelRect(windowId, PIXEL_FILL(5), 6, 2, width - 12, 1);
 }
 
 static void PrintCurrentOptionDescription(void)
@@ -1265,9 +1284,12 @@ static void PrintCurrentOptionDescription(void)
     struct Pokenav_MenuGfx *gfx = GetSubstructPtr(POKENAV_SUBSTRUCT_MENU_GFX);
     int menuItem = GetCurrentMenuItemId();
     const u8 *desc = sPageDescriptions[menuItem];
+    u32 windowWidth = GetWindowAttribute(gfx->optionDescWindowId, WINDOW_WIDTH) * 8;
     u32 width = GetStringWidth(FONT_NORMAL, desc, -1);
-    FillWindowPixelBuffer(gfx->optionDescWindowId, PIXEL_FILL(6));
-    AddTextPrinterParameterized3(gfx->optionDescWindowId, FONT_NORMAL, (192 - width) / 2, 1, sOptionDescTextColors, 0, desc);
+
+    DrawPokeGearDescriptionPanel(gfx->optionDescWindowId);
+    AddTextPrinterParameterized3(gfx->optionDescWindowId, FONT_NORMAL, (windowWidth - width) / 2, 1, sOptionDescTextColors, 0, desc);
+    CopyWindowToVram(gfx->optionDescWindowId, COPYWIN_GFX);
 }
 
 // Printed when Ribbons is selected if no PC/party mons have ribbons
@@ -1276,9 +1298,12 @@ static void PrintNoRibbonWinners(void)
 {
     struct Pokenav_MenuGfx *gfx = GetSubstructPtr(POKENAV_SUBSTRUCT_MENU_GFX);
     const u8 *s = gText_NoRibbonWinners;
+    u32 windowWidth = GetWindowAttribute(gfx->optionDescWindowId, WINDOW_WIDTH) * 8;
     u32 width = GetStringWidth(FONT_NORMAL, s, -1);
-    FillWindowPixelBuffer(gfx->optionDescWindowId, PIXEL_FILL(6));
-    AddTextPrinterParameterized3(gfx->optionDescWindowId, FONT_NORMAL, (192 - width) / 2, 1, sOptionDescTextColors2, 0, s);
+
+    DrawPokeGearDescriptionPanel(gfx->optionDescWindowId);
+    AddTextPrinterParameterized3(gfx->optionDescWindowId, FONT_NORMAL, (windowWidth - width) / 2, 1, sOptionDescTextColors2, 0, s);
+    CopyWindowToVram(gfx->optionDescWindowId, COPYWIN_GFX);
 }
 
 static bool32 IsDma3ManagerBusyWithBgCopy_(void)
