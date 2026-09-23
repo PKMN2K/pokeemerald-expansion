@@ -60,6 +60,7 @@ static void DestroyMatchCallList(void);
 static void FreeMatchCallSprites(void);
 static void LoadCallWindowAndFade(struct Pokenav_MatchCallGfx *);
 static void DrawPokeGearPhoneCallPanel(u16);
+static void DrawPokeGearPhonePortraitPanel(u16);
 static void DrawMatchCallLeftColumnWindows(struct Pokenav_MatchCallGfx *);
 static void DrawPokeGearPhonePanel(u16);
 static void UpdateMatchCallInfoBox(struct Pokenav_MatchCallGfx *);
@@ -1143,11 +1144,31 @@ static bool32 IsDma3ManagerBusyWithBgCopy1(struct Pokenav_MatchCallGfx *gfx)
     return IsDma3ManagerBusyWithBgCopy();
 }
 
+static void DrawPokeGearPhonePortraitPanel(u16 windowId)
+{
+    u8 width = GetWindowAttribute(windowId, WINDOW_WIDTH) * 8;
+    u8 height = GetWindowAttribute(windowId, WINDOW_HEIGHT) * 8;
+
+    FillWindowPixelBuffer(windowId, PIXEL_FILL(1));
+
+    if (width < 24 || height < 24)
+        return;
+
+    // Contact portrait bay around the existing 64x64 trainer sprite.
+    FillWindowPixelRect(windowId, PIXEL_FILL(5), 2, 0, width - 4, 1);
+    FillWindowPixelRect(windowId, PIXEL_FILL(5), 0, 2, 1, height - 4);
+    FillWindowPixelRect(windowId, PIXEL_FILL(4), 2, height - 1, width - 4, 1);
+    FillWindowPixelRect(windowId, PIXEL_FILL(4), width - 1, 2, 1, height - 4);
+    FillWindowPixelRect(windowId, PIXEL_FILL(5), 8, 4, 1, height - 8);
+    FillWindowPixelRect(windowId, PIXEL_FILL(4), width - 9, 4, 1, height - 8);
+    FillWindowPixelRect(windowId, PIXEL_FILL(4), width - 7, 4, 3, 3);
+}
+
 static void UpdateWindowsToShowCheckPage(struct Pokenav_MatchCallGfx *gfx)
 {
     CloseMatchCallSelectOptionsWindow(gfx);
-    FillWindowPixelBuffer(gfx->infoBoxWindowId, PIXEL_FILL(1));
-    CopyWindowToVram(gfx->infoBoxWindowId, COPYWIN_GFX);
+    DrawPokeGearPhonePortraitPanel(gfx->infoBoxWindowId);
+    CopyWindowToVram(gfx->infoBoxWindowId, COPYWIN_FULL);
 }
 
 static void LoadCallWindowAndFade(struct Pokenav_MatchCallGfx *gfx)

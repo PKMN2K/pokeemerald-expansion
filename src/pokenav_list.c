@@ -76,6 +76,7 @@ static void LoadListArrowGfx(void);
 static void PrintMatchCallFlavorText(struct PokenavListWindowState *, struct PokenavList *, u32);
 static void PrintMatchCallFieldNames(struct PokenavList *, u32);
 static void PrintMatchCallListTrainerName(struct PokenavListWindowState *, struct PokenavList *);
+static void DrawPokeGearPhoneCheckRow(struct PokenavList *, u32, bool32);
 static void PrintCheckPageTrainerName(struct PokenavListWindowState *, struct PokenavList *);
 static void EraseListEntry(struct PokenavListMenuWindow *, s32, s32);
 static void CreateMoveListWindowTask(s32, struct PokenavList *);
@@ -700,24 +701,35 @@ static void SetListMarginTile(struct PokenavListMenuWindow *listWindow, bool32 d
     tilemapBuffer[0x20] = var;
 }
 
+static void DrawPokeGearPhoneCheckRow(struct PokenavList *list, u32 row, bool32 title)
+{
+    u32 width = list->listWindow.width * 8;
+    u32 y = (row & 0xF) * 16;
+
+    FillWindowPixelRect(list->listWindow.windowId, PIXEL_FILL(1), 0, y, width, 16);
+    FillWindowPixelRect(list->listWindow.windowId, PIXEL_FILL(3), 2, y, width - 4, 1);
+    FillWindowPixelRect(list->listWindow.windowId, PIXEL_FILL(5), 2, y + 15, width - 4, 1);
+    FillWindowPixelRect(list->listWindow.windowId, PIXEL_FILL(4), 0, y + 3, title ? 3 : 1, 10);
+}
+
 // Print the trainer's name and title at the top of their check page
 static void PrintCheckPageTrainerName(struct PokenavListWindowState *state, struct PokenavList *list)
 {
-    u8 colors[3] = {TEXT_COLOR_TRANSPARENT, TEXT_COLOR_DARK_GRAY, TEXT_COLOR_LIGHT_RED};
+    u8 colors[3] = {TEXT_COLOR_TRANSPARENT, TEXT_COLOR_DARK_GRAY, TEXT_COLOR_WHITE};
 
     list->bufferItemFunc(state->listPtr + state->listItemSize * state->windowTopIndex, list->itemTextBuffer);
-    list->iconDrawFunc(list->listWindow.windowId, state->windowTopIndex, list->listWindow.unkA);
-    FillWindowPixelRect(list->listWindow.windowId, PIXEL_FILL(4), 0, list->listWindow.unkA * 16, list->listWindow.width * 8, 16);
+    DrawPokeGearPhoneCheckRow(list, list->listWindow.unkA, TRUE);
     AddTextPrinterParameterized3(list->listWindow.windowId, list->listWindow.fontId, 8, (list->listWindow.unkA * 16) + 1, colors, TEXT_SKIP_DRAW, list->itemTextBuffer);
     SetListMarginTile(&list->listWindow, TRUE);
     CopyWindowRectToVram(list->listWindow.windowId, COPYWIN_FULL, 0, list->listWindow.unkA * 2, list->listWindow.width, 2);
 }
 
-// Print the trainer's name and title for the list (to replace the check page name and title, which has a red background)
+// Print the trainer's name and title for the list after leaving the contact profile.
 static void PrintMatchCallListTrainerName(struct PokenavListWindowState *state, struct PokenavList *list)
 {
     list->bufferItemFunc(state->listPtr + state->listItemSize * state->windowTopIndex, list->itemTextBuffer);
-    FillWindowPixelRect(list->listWindow.windowId, PIXEL_FILL(1), 0, list->listWindow.unkA * 16, list->listWindow.width * 8, 16);
+    if (list->iconDrawFunc != NULL)
+        list->iconDrawFunc(list->listWindow.windowId, state->windowTopIndex, list->listWindow.unkA);
     AddTextPrinterParameterized(list->listWindow.windowId, list->listWindow.fontId, list->itemTextBuffer, 8, list->listWindow.unkA * 16 + 1, TEXT_SKIP_DRAW, NULL);
     SetListMarginTile(&list->listWindow, FALSE);
     CopyWindowToVram(list->listWindow.windowId, COPYWIN_FULL);
@@ -730,11 +742,11 @@ static void PrintMatchCallFieldNames(struct PokenavList *list, u32 fieldId)
         gText_PokenavMatchCall_TrainerPokemon,
         gText_PokenavMatchCall_SelfIntroduction
     };
-    u8 colors[3] = {TEXT_COLOR_WHITE, TEXT_COLOR_RED, TEXT_COLOR_LIGHT_RED};
+    u8 colors[3] = {TEXT_COLOR_TRANSPARENT, TEXT_COLOR_DARK_GRAY, TEXT_COLOR_WHITE};
     u32 top = (list->listWindow.unkA + 1 + (fieldId * 2)) & 0xF;
 
-    FillWindowPixelRect(list->listWindow.windowId, PIXEL_FILL(1), 0, top << 4, list->listWindow.width, 16);
-    AddTextPrinterParameterized3(list->listWindow.windowId, FONT_NARROW, 2, (top << 4) + 1, colors, TEXT_SKIP_DRAW, fieldNames[fieldId]);
+    DrawPokeGearPhoneCheckRow(list, top, FALSE);
+    AddTextPrinterParameterized3(list->listWindow.windowId, FONT_NARROW, 6, (top << 4) + 1, colors, TEXT_SKIP_DRAW, fieldNames[fieldId]);
     CopyWindowRectToVram(list->listWindow.windowId, COPYWIN_GFX, 0, top << 1, list->listWindow.width, 2);
 }
 
@@ -750,11 +762,13 @@ static void PrintMatchCallFlavorText(struct PokenavListWindowState *windowState,
 
     u32 r6 = (list->listWindow.unkA + lineOffsets[checkPageEntry]) & 0xF;
     const u8 *str = GetMatchCallFlavorText(windowState->windowTopIndex, checkPageEntry);
+    u32 width = list->listWindow.width * 8;
 
     if (str != NULL)
     {
-        FillWindowTilesByRow(list->listWindow.windowId, 1, r6 * 2, list->listWindow.width - 1, 2);
-        AddTextPrinterParameterized(list->listWindow.windowId, FONT_NARROW, str, 2, (r6 << 4) + 1, TEXT_SKIP_DRAW, NULL);
+        FillWindowPixelRect(list->listWindow.windowId, PIXEL_FILL(1), 0, r6 << 4, width, 16);
+        FillWindowPixelRect(list->listWindow.windowId, PIXEL_FILL(3), 4, r6 << 4, 1, 16);
+        AddTextPrinterParameterized(list->listWindow.windowId, FONT_NARROW, str, 8, (r6 << 4) + 1, TEXT_SKIP_DRAW, NULL);
         CopyWindowRectToVram(list->listWindow.windowId, COPYWIN_GFX, 0, r6 * 2, list->listWindow.width, 2);
     }
 }
