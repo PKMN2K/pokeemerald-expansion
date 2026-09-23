@@ -59,6 +59,7 @@ static void CreateMatchCallList(void);
 static void DestroyMatchCallList(void);
 static void FreeMatchCallSprites(void);
 static void LoadCallWindowAndFade(struct Pokenav_MatchCallGfx *);
+static void DrawPokeGearPhoneCallPanel(u16);
 static void DrawMatchCallLeftColumnWindows(struct Pokenav_MatchCallGfx *);
 static void DrawPokeGearPhonePanel(u16);
 static void UpdateMatchCallInfoBox(struct Pokenav_MatchCallGfx *);
@@ -1156,27 +1157,51 @@ static void LoadCallWindowAndFade(struct Pokenav_MatchCallGfx *gfx)
     FadeToBlackExceptPrimary();
 }
 
+static void DrawPokeGearPhoneCallPanel(u16 windowId)
+{
+    u8 width = GetWindowAttribute(windowId, WINDOW_WIDTH) * 8;
+    u8 height = GetWindowAttribute(windowId, WINDOW_HEIGHT) * 8;
+
+    FillWindowPixelBuffer(windowId, PIXEL_FILL(1));
+
+    if (width < 48 || height < 24)
+        return;
+
+    // PokéGear Phone call display: recessed shell with a dedicated status bay.
+    FillWindowPixelRect(windowId, PIXEL_FILL(3), 2, 0, width - 4, 1);
+    FillWindowPixelRect(windowId, PIXEL_FILL(3), 0, 2, 1, height - 4);
+    FillWindowPixelRect(windowId, PIXEL_FILL(2), 2, height - 1, width - 4, 1);
+    FillWindowPixelRect(windowId, PIXEL_FILL(2), width - 1, 2, 1, height - 4);
+    FillWindowPixelRect(windowId, PIXEL_FILL(3), 28, 3, 1, height - 6);
+    FillWindowPixelRect(windowId, PIXEL_FILL(2), 29, 3, 1, height - 6);
+
+    // Block-built handset.
+    FillWindowPixelRect(windowId, PIXEL_FILL(2), 7, 8, 3, 7);
+    FillWindowPixelRect(windowId, PIXEL_FILL(2), 9, 13, 8, 3);
+    FillWindowPixelRect(windowId, PIXEL_FILL(2), 15, 8, 3, 7);
+    FillWindowPixelRect(windowId, PIXEL_FILL(3), 9, 7, 3, 2);
+    FillWindowPixelRect(windowId, PIXEL_FILL(3), 14, 14, 3, 2);
+
+    // Signal bars and alert LED.
+    FillWindowPixelRect(windowId, PIXEL_FILL(3), 20, 14, 2, 3);
+    FillWindowPixelRect(windowId, PIXEL_FILL(3), 23, 11, 2, 6);
+    FillWindowPixelRect(windowId, PIXEL_FILL(4), 22, 5, 3, 3);
+}
+
 static void DrawMsgBoxForMatchCallMsg(struct Pokenav_MatchCallGfx *gfx)
 {
-    struct Sprite *sprite;
-    LoadMatchCallWindowGfx(gfx->msgBoxWindowId, 1, 4);
-    DrawMatchCallTextBoxBorder(gfx->msgBoxWindowId, 1, 4);
-    FillWindowPixelBuffer(gfx->msgBoxWindowId, PIXEL_FILL(1));
+    DrawPokeGearPhoneCallPanel(gfx->msgBoxWindowId);
     PutWindowTilemap(gfx->msgBoxWindowId);
     CopyWindowToVram(gfx->msgBoxWindowId, COPYWIN_FULL);
-    sprite = GetSpinningPokenavSprite();
-    sprite->x = 24;
-    sprite->y = 112;
-    sprite->y2 = 0;
+    HideSpinningPokenavSprite();
 }
 
 static void DrawMsgBoxForCloseByMsg(struct Pokenav_MatchCallGfx *gfx)
 {
-    LoadUserWindowBorderGfx(gfx->msgBoxWindowId, 1, BG_PLTT_ID(4));
-    DrawTextBorderOuter(gfx->msgBoxWindowId, 1, 4);
-    FillWindowPixelBuffer(gfx->msgBoxWindowId, PIXEL_FILL(1));
+    DrawPokeGearPhoneCallPanel(gfx->msgBoxWindowId);
     PutWindowTilemap(gfx->msgBoxWindowId);
     CopyWindowToVram(gfx->msgBoxWindowId, COPYWIN_FULL);
+    HideSpinningPokenavSprite();
 }
 
 static bool32 IsDma3ManagerBusyWithBgCopy2(struct Pokenav_MatchCallGfx *gfx)
