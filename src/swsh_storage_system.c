@@ -626,6 +626,7 @@ static bool8 SetMenuTexts_Item(void);
 
 // Choose box menu
 static void ChooseBoxMenu_CreateSprites(u8);
+static void DrawHgssChooseBoxGrid(void);
 static void ChooseBoxMenu_DestroySprites(void);
 static void ChooseBoxMenu_MoveCursor(s8, s8);
 static void ChooseBoxMenu_UpdateHover(void);
@@ -1242,6 +1243,52 @@ static u8 HandleChooseBoxMenuInput(void)
     return BOXID_NONE_CHOSEN;
 }
 
+static void DrawHgssChooseBoxGrid(void)
+{
+    u16 *tilemap = (u16 *)sStorage->displayMenuTilemapBuffer;
+    u32 gfxSize = GetDecompressedDataSize(sSwShStorage_Gfx);
+    u16 baseTile = (gfxSize + TILE_SIZE_4BPP - 1) / TILE_SIZE_4BPP;
+    u16 paletteBits = 15 << 12;
+    u8 boxId;
+
+    if (baseTile + HGSS_GRID_TILE_COUNT >= 512)
+        return;
+
+    for (boxId = 0; boxId < TOTAL_BOXES_COUNT; boxId++)
+    {
+        u8 col = boxId % 5;
+        u8 row = boxId / 5;
+        u8 left = CHOOSE_BOX_GRID_TILE_COL + col * 4;
+        u8 top = CHOOSE_BOX_GRID_TILE_ROW + row * 4;
+        u8 right = left + 3;
+        u8 bottom = top + 3;
+        bool32 selected = boxId == sChooseBoxMenu->curBox;
+        u16 horizontal = baseTile + (selected ? HGSS_GRID_TILE_SELECTED_HORIZONTAL : HGSS_GRID_TILE_HORIZONTAL);
+        u16 vertical = baseTile + (selected ? HGSS_GRID_TILE_SELECTED_VERTICAL : HGSS_GRID_TILE_VERTICAL);
+        u16 cross = baseTile + (selected ? HGSS_GRID_TILE_SELECTED_CROSS : HGSS_GRID_TILE_CROSS);
+        u8 x, y;
+
+        for (x = left + 1; x < right; x++)
+        {
+            tilemap[top * 32 + x] = paletteBits | horizontal;
+            tilemap[bottom * 32 + x] = paletteBits | horizontal;
+        }
+
+        for (y = top + 1; y < bottom; y++)
+        {
+            tilemap[y * 32 + left] = paletteBits | vertical;
+            tilemap[y * 32 + right] = paletteBits | vertical;
+        }
+
+        tilemap[top * 32 + left] = paletteBits | cross;
+        tilemap[top * 32 + right] = paletteBits | cross;
+        tilemap[bottom * 32 + left] = paletteBits | cross;
+        tilemap[bottom * 32 + right] = paletteBits | cross;
+    }
+
+    CopyBgTilemapBufferToVram(1);
+}
+
 static void ChooseBoxMenu_CreateSprites(u8 curBox)
 {
     u8 boxId;
@@ -1262,7 +1309,7 @@ static void ChooseBoxMenu_CreateSprites(u8 curBox)
             for (tx = 0; tx < 4; tx++)
                 tilemap[(CHOOSE_BOX_GRID_TILE_ROW + row * 4 + ty) * 32 + (CHOOSE_BOX_GRID_TILE_COL + col * 4 + tx)] = CHOOSE_BOX_BG_TILE_BASE + ty * 4 + tx;
     }
-    CopyBgTilemapBufferToVram(1);
+    DrawHgssChooseBoxGrid();
 
     col = curBox % 5;
     row = curBox / 5;
@@ -1426,6 +1473,7 @@ static void ChooseBoxMenu_UpdateHover(void)
         SetCursorPosition(CURSOR_AREA_IN_CHOOSE_BOX, sChooseBoxMenu->curBox);
     }
 
+    DrawHgssChooseBoxGrid();
     ChooseBoxMenu_PrintInfo();
 }
 
