@@ -4660,6 +4660,7 @@ static void AddWallpaperMenu(void)
     sStorage->listMenuTemplate.cursorKind = 0;
 
     sStorage->listMenuTaskId = ListMenuInit(&sStorage->listMenuTemplate, 0, sStorage->listMenuSelectedRow);
+    DrawHgssStorageContextMenuRows(sStorage->menuWindowId);
     sStorage->listMenuScrollArrowTaskId = AddScrollIndicatorArrowPairParameterized(
         SCROLL_ARROW_LEFT, 80, 168, 232, maxPage,
         GFXTAG_LIST_MENU_ARROW, PALTAG_LIST_MENU_SCROLL_ARROW, &sStorage->listMenuScrollRow);
@@ -6058,6 +6059,7 @@ static void RenderBoxTitleCentered(const u8 *boxName)
     FillWindowPixelRect(windowId, PIXEL_FILL(13), 2, 15, 60, 1);
     FillWindowPixelRect(windowId, PIXEL_FILL(13), 0, 2, 1, 12);
     FillWindowPixelRect(windowId, PIXEL_FILL(13), 63, 2, 1, 12);
+    FillWindowPixelRect(windowId, PIXEL_FILL(14), 4, 14, 56, 1);
 
     tileData1 = (u8 *)GetWindowAttribute(windowId, WINDOW_TILE_DATA);
     tileData2 = tileData1 + winTemplate.width * TILE_SIZE_4BPP;
