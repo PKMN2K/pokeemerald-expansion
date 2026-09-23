@@ -599,10 +599,13 @@ static void DrawHgssOptionSelection(void)
     u8 height = GetWindowAttribute(WIN_OPTIONS, WINDOW_HEIGHT) * 8;
     u8 cursor = sOptions->visibleCursor[sOptions->submenu];
     u8 top = cursor * Y_DIFF;
-    u8 bottom = top + Y_DIFF - 1;
+    u8 bottom = top + Y_DIFF;
 
-    if (width < 16 || bottom >= height)
+    if (width < 16 || top >= height)
         return;
+
+    if (bottom >= height)
+        bottom = height - 1;
 
     // Repaint the viewport rails first so the previous active row is restored.
     DrawHgssOptionRows();
