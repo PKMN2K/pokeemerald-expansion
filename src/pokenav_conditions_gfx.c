@@ -107,6 +107,28 @@ static const struct WindowTemplate sUnusedWindowTemplate2 =
     .baseBlock = 0x44
 };
 
+static const struct WindowTemplate sPokeGearGraphFrameWindowTemplate =
+{
+    .bg = 1,
+    .tilemapLeft = 14,
+    .tilemapTop = 6,
+    .width = 11,
+    .height = 10,
+    .paletteNum = 15,
+    .baseBlock = 0x80
+};
+
+static const struct WindowTemplate sPokeGearPartyRailWindowTemplate =
+{
+    .bg = 1,
+    .tilemapLeft = 27,
+    .tilemapTop = 0,
+    .width = 3,
+    .height = 18,
+    .paletteNum = 15,
+    .baseBlock = 0xF0
+};
+
 static const LoopedTask sLoopedTaskFuncs[] =
 {
     [CONDITION_FUNC_NONE]           = NULL,
@@ -136,6 +158,8 @@ struct Pokenav_ConditionMenuGfx
     u8 listIndexWindowId;
     u8 unusedWindowId1;
     u8 unusedWindowId2;
+    u8 graphFrameWindowId;
+    u8 partyRailWindowId;
     struct MonMarkingsMenu marksMenu;
     struct Sprite *monMarksSprite;
     struct Sprite *conditionSparkleSprites[MAX_CONDITION_SPARKLES];
@@ -151,6 +175,8 @@ static void CreateConditionMonPic(u8);
 static void CreateMonMarkingsOrPokeballIndicators(void);
 static void CopyUnusedConditionWindowsToVram(void);
 static void DrawPokeGearStatusInfoCard(u8, bool8);
+static void DrawPokeGearStatusGraphFrame(u8);
+static void DrawPokeGearStatusPartyRail(u8, bool8);
 static bool32 UpdateConditionGraphMenuWindows(u8, u16, bool8);
 static void VBlankCB_PokenavConditionGraph(void);
 static void DoConditionGraphEnterTransition(void);
@@ -254,6 +280,10 @@ static u32 LoopedTask_OpenConditionGraphMenu(s32 state)
             return LT_PAUSE;
 
         menu->nameGenderWindowId = AddWindow(&sMonNameGenderWindowTemplate);
+        menu->graphFrameWindowId = AddWindow(&sPokeGearGraphFrameWindowTemplate);
+        menu->partyRailWindowId = AddWindow(&sPokeGearPartyRailWindowTemplate);
+        DrawPokeGearStatusGraphFrame(menu->graphFrameWindowId);
+        DrawPokeGearStatusPartyRail(menu->partyRailWindowId, !IsConditionMenuSearchMode());
         if (IsConditionMenuSearchMode() == TRUE)
         {
             menu->listIndexWindowId = AddWindow(&sListIndexWindowTemplate);
@@ -285,6 +315,10 @@ static u32 LoopedTask_OpenConditionGraphMenu(s32 state)
         if (UpdateConditionGraphMenuWindows(3, GetConditionGraphMenuCurrentLoadIndex(), TRUE) != TRUE)
             return LT_PAUSE;
         PutWindowTilemap(menu->nameGenderWindowId);
+        PutWindowTilemap(menu->graphFrameWindowId);
+        PutWindowTilemap(menu->partyRailWindowId);
+        CopyWindowToVram(menu->graphFrameWindowId, COPYWIN_FULL);
+        CopyWindowToVram(menu->partyRailWindowId, COPYWIN_FULL);
         if (IsConditionMenuSearchMode() == TRUE)
         {
             PutWindowTilemap(menu->listIndexWindowId);
@@ -584,6 +618,52 @@ static void DrawPokeGearStatusInfoCard(u8 windowId, bool8 compact)
     }
 }
 
+static void DrawPokeGearStatusGraphFrame(u8 windowId)
+{
+    u8 width = GetWindowAttribute(windowId, WINDOW_WIDTH) * 8;
+    u8 height = GetWindowAttribute(windowId, WINDOW_HEIGHT) * 8;
+
+    FillWindowPixelBuffer(windowId, PIXEL_FILL(0));
+
+    // Precise bezel around the hardware radar band (Y 56-121, centered X 155).
+    FillWindowPixelRect(windowId, PIXEL_FILL(4), 5, 0, width - 10, 2);
+    FillWindowPixelRect(windowId, PIXEL_FILL(4), 0, 5, 2, height - 10);
+    FillWindowPixelRect(windowId, PIXEL_FILL(5), 5, height - 2, width - 10, 2);
+    FillWindowPixelRect(windowId, PIXEL_FILL(5), width - 2, 5, 2, height - 10);
+    FillWindowPixelRect(windowId, PIXEL_FILL(3), 7, 4, width - 14, 1);
+    FillWindowPixelRect(windowId, PIXEL_FILL(3), 4, 7, 1, height - 14);
+
+    // Small Gen 4-style corner notches.
+    FillWindowPixelRect(windowId, PIXEL_FILL(4), 2, 2, 5, 2);
+    FillWindowPixelRect(windowId, PIXEL_FILL(5), width - 7, height - 4, 5, 2);
+}
+
+static void DrawPokeGearStatusPartyRail(u8 windowId, bool8 show)
+{
+    u8 width = GetWindowAttribute(windowId, WINDOW_WIDTH) * 8;
+    u8 height = GetWindowAttribute(windowId, WINDOW_HEIGHT) * 8;
+    u32 y;
+
+    FillWindowPixelBuffer(windowId, PIXEL_FILL(0));
+
+    if (!show)
+        return;
+
+    // HGSS-like segmented vertical selector track behind the party status tabs.
+    FillWindowPixelRect(windowId, PIXEL_FILL(4), 2, 3, 2, height - 6);
+    FillWindowPixelRect(windowId, PIXEL_FILL(5), width - 4, 3, 2, height - 6);
+
+    for (y = 19; y < 120; y += 20)
+    {
+        FillWindowPixelRect(windowId, PIXEL_FILL(3), 5, y, width - 10, 1);
+        FillWindowPixelRect(windowId, PIXEL_FILL(5), 7, y + 1, width - 14, 1);
+    }
+
+    // Bottom soft-key dock for BACK.
+    FillWindowPixelRect(windowId, PIXEL_FILL(4), 3, 121, width - 6, 1);
+    FillWindowPixelRect(windowId, PIXEL_FILL(5), 3, 141, width - 6, 1);
+}
+
 static bool32 UpdateConditionGraphMenuWindows(u8 mode, u16 bufferIndex, bool8 winMode)
 {
     u8 text[32];
@@ -721,7 +801,7 @@ static void CreateMonMarkingsOrPokeballIndicators(void)
         // Add icons for occupied slots
         for (i = 0; i < GetMonListCount() - 1; i++)
         {
-            spriteId = CreateSpriteUnchecked(&sprTemplate, 226, (i * 20) + 8, 0);
+            spriteId = CreateSpriteUnchecked(&sprTemplate, 228, (i * 20) + 8, 0);
             if (spriteId != MAX_SPRITES)
             {
                 menu->partyPokeballSpriteIds[i] = spriteId;
@@ -739,7 +819,7 @@ static void CreateMonMarkingsOrPokeballIndicators(void)
         sprTemplate.callback = SpriteCallbackDummy;
         for (; i < PARTY_SIZE; i++)
         {
-            spriteId = CreateSpriteUnchecked(&sprTemplate, 230, (i * 20) + 8, 0);
+            spriteId = CreateSpriteUnchecked(&sprTemplate, 228, (i * 20) + 8, 0);
             if (spriteId != MAX_SPRITES)
             {
                 menu->partyPokeballSpriteIds[i] = spriteId;
@@ -754,7 +834,7 @@ static void CreateMonMarkingsOrPokeballIndicators(void)
         // Add cancel icon
         sprTemplate.tileTag = TAG_CONDITION_CANCEL;
         sprTemplate.callback = HighlightCurrentPartyIndexPokeball;
-        spriteId = CreateSpriteUnchecked(&sprTemplate, 222, (i * 20) + 8, 0);
+        spriteId = CreateSpriteUnchecked(&sprTemplate, 224, (i * 20) + 8, 0);
         if (spriteId != MAX_SPRITES)
         {
             menu->partyPokeballSpriteIds[i] = spriteId;
@@ -810,6 +890,8 @@ void FreeConditionGraphMenuSubstruct2(void)
     struct Pokenav_ConditionMenuGfx *menu = GetSubstructPtr(POKENAV_SUBSTRUCT_CONDITION_GRAPH_MENU_GFX);
 
     RemoveWindow(menu->nameGenderWindowId);
+    RemoveWindow(menu->graphFrameWindowId);
+    RemoveWindow(menu->partyRailWindowId);
     if (IsConditionMenuSearchMode() == TRUE)
     {
         RemoveWindow(menu->listIndexWindowId);
