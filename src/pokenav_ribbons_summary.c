@@ -79,6 +79,7 @@ static void PrintCurrentMonRibbonCount(struct Pokenav_RibbonsSummaryMenu *);
 static void PrintRibbbonsSummaryMonInfo(struct Pokenav_RibbonsSummaryMenu *);
 static void PrintRibbonsMonListIndex(struct Pokenav_RibbonsSummaryMenu *);
 static void DrawPokeGearRibbonGridFrame(u16);
+static void DrawPokeGearRibbonSelectionFocus(struct Pokenav_RibbonsSummaryMenu *, bool8);
 static void DrawPokeGearRibbonDetailPanel(u16);
 static void DrawPokeGearRibbonMonCard(u16);
 static void DrawPokeGearRibbonIndexCard(u16);
@@ -844,6 +845,32 @@ static void DrawPokeGearRibbonGridFrame(u16 windowId)
     FillWindowPixelRect(windowId, PIXEL_FILL(6), width - 10, 4, 5, 2);
 }
 
+static void DrawPokeGearRibbonSelectionFocus(struct Pokenav_RibbonsSummaryMenu *menu, bool8 show)
+{
+    u32 position = GetSelectedPosition();
+    u8 x = (position % RIBBONS_PER_ROW) * 16 + 8;
+    u8 y = (position / RIBBONS_PER_ROW) * 16 + 8;
+    u16 windowId = menu->gridFrameWindowId;
+
+    DrawPokeGearRibbonGridFrame(windowId);
+
+    if (show)
+    {
+        // Gen 4 inspection focus: gold corner brackets with a cyan locator tick.
+        FillWindowPixelRect(windowId, PIXEL_FILL(6), x, y, 6, 2);
+        FillWindowPixelRect(windowId, PIXEL_FILL(6), x, y, 2, 6);
+        FillWindowPixelRect(windowId, PIXEL_FILL(6), x + 10, y, 6, 2);
+        FillWindowPixelRect(windowId, PIXEL_FILL(6), x + 14, y, 2, 6);
+        FillWindowPixelRect(windowId, PIXEL_FILL(6), x, y + 14, 6, 2);
+        FillWindowPixelRect(windowId, PIXEL_FILL(6), x, y + 10, 2, 6);
+        FillWindowPixelRect(windowId, PIXEL_FILL(6), x + 10, y + 14, 6, 2);
+        FillWindowPixelRect(windowId, PIXEL_FILL(6), x + 14, y + 10, 2, 6);
+        FillWindowPixelRect(windowId, PIXEL_FILL(0), x + 7, y - 2, 2, 2);
+    }
+
+    CopyWindowToVram(windowId, COPYWIN_GFX);
+}
+
 static void DrawPokeGearRibbonDetailPanel(u16 windowId)
 {
     u8 width = GetWindowAttribute(windowId, WINDOW_WIDTH) * 8;
@@ -1345,6 +1372,7 @@ static void UpdateAndZoomInSelectedRibbon(struct Pokenav_RibbonsSummaryMenu *men
 
     menu->bigRibbonSprite->x = x;
     menu->bigRibbonSprite->y = y;
+    DrawPokeGearRibbonSelectionFocus(menu, TRUE);
 
     // Set new selected ribbon's gfx data
     ribbonId = GetRibbonId();
@@ -1361,6 +1389,7 @@ static void UpdateAndZoomInSelectedRibbon(struct Pokenav_RibbonsSummaryMenu *men
 // Start animation to zoom out of selected ribbon
 static void ZoomOutSelectedRibbon(struct Pokenav_RibbonsSummaryMenu *menu)
 {
+    DrawPokeGearRibbonSelectionFocus(menu, FALSE);
     menu->bigRibbonSprite->sInvisibleWhenDone = TRUE;
     StartSpriteAffineAnim(menu->bigRibbonSprite, RIBBONANIM_ZOOM_OUT);
     menu->bigRibbonSprite->callback = SpriteCB_WaitForRibbonAnimation;
