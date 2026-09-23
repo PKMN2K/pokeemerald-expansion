@@ -1188,6 +1188,19 @@ static s16 UNUSED StorageSystemGetNextMonIndex(struct BoxPokemon *box, s8 startI
 #define CHOOSE_BOX_GRID_TILE_COL 9
 #define CHOOSE_BOX_GRID_TILE_ROW 6
 
+enum
+{
+    HGSS_GRID_TILE_VERTICAL,
+    HGSS_GRID_TILE_HORIZONTAL,
+    HGSS_GRID_TILE_CROSS,
+    HGSS_GRID_TILE_TOP_CROSS,
+    HGSS_GRID_TILE_BOTTOM_CROSS,
+    HGSS_GRID_TILE_SELECTED_VERTICAL,
+    HGSS_GRID_TILE_SELECTED_HORIZONTAL,
+    HGSS_GRID_TILE_SELECTED_CROSS,
+    HGSS_GRID_TILE_COUNT,
+};
+
 static void LoadChooseBoxMenuGfx(struct ChooseBoxMenu *menu, u16 tileTag, u16 palTag, bool32 loadPal)
 {
     LoadCompressedSpriteSheet(&sSpriteSheet_ChooseBoxMenu);
@@ -5450,19 +5463,6 @@ static bool8 IsInitBoxActive(void)
 {
     return FuncIsActiveTask(Task_InitBox);
 }
-
-enum
-{
-    HGSS_GRID_TILE_VERTICAL,
-    HGSS_GRID_TILE_HORIZONTAL,
-    HGSS_GRID_TILE_CROSS,
-    HGSS_GRID_TILE_TOP_CROSS,
-    HGSS_GRID_TILE_BOTTOM_CROSS,
-    HGSS_GRID_TILE_SELECTED_VERTICAL,
-    HGSS_GRID_TILE_SELECTED_HORIZONTAL,
-    HGSS_GRID_TILE_SELECTED_CROSS,
-    HGSS_GRID_TILE_COUNT,
-};
 
 static void DrawHgssStorageBoxGrid(void)
 {
