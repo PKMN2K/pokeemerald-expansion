@@ -129,8 +129,8 @@ static const u16 sListWindow_Pal[] = INCGFX_U16("graphics/pokenav/match_call/lis
 static const u16 sPokeball_Pal[] = INCGFX_U16("graphics/pokenav/match_call/pokeball.pal", ".gbapal");
 static const u32 sPokeball_Gfx[] = INCGFX_U32("graphics/pokenav/match_call/pokeball.png", ".4bpp.smol");
 
-static const u8 gText_NumberRegistered[] = _("No. registered");
-static const u8 gText_NumberOfBattles[] = _("No. of battles");
+static const u8 gText_NumberRegistered[] = _("CONTACTS");
+static const u8 gText_NumberOfBattles[] = _("BATTLES");
 static const u8 gText_TrainerCloseBy[] = _("That TRAINER is close by.\nTalk to the TRAINER in person!");
 static const u8 gText_Unknown[] = _("UNKNOWN");
 
@@ -215,7 +215,7 @@ static const u8 *const sMatchCallOptionTexts[MATCH_CALL_OPTION_COUNT] =
 };
 
 // The series of 5 dots that appear when someone is called with Match Call
-static const u8 sText_CallingDots[] = _("·{PAUSE 4}·{PAUSE 4}·{PAUSE 4}·{PAUSE 4}·\p");
+static const u8 sText_CallingDots[] = _("CALLING{PAUSE 4}·{PAUSE 4}·{PAUSE 4}·{PAUSE 4}·\p");
 
 static const struct WindowTemplate sCallMsgBoxWindowTemplate =
 {
@@ -601,6 +601,7 @@ static u32 DoMatchCallMessage(s32 state)
     {
     case 0:
         PokenavList_ToggleVerticalArrows(TRUE);
+        PrintHelpBarText(HELPBAR_NONE);
         DrawMsgBoxForMatchCallMsg(gfx);
         return LT_INC_AND_PAUSE;
     case 1:
@@ -633,6 +634,7 @@ static u32 DoTrainerCloseByMessage(s32 state)
     {
     case 0:
         PlaySE(SE_SELECT);
+        PrintHelpBarText(HELPBAR_NONE);
         DrawMsgBoxForCloseByMsg(gfx);
         PokenavList_ToggleVerticalArrows(TRUE);
         gfx->skipHangUpSE = TRUE;
