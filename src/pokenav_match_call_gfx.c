@@ -65,6 +65,7 @@ static void UpdateMatchCallInfoBox(struct Pokenav_MatchCallGfx *);
 static void PrintMatchCallLocation(struct Pokenav_MatchCallGfx *, int);
 static void AllocMatchCallSprites(void);
 static void SetPokeballIconsFlashing(bool32);
+static void DrawPokeGearPhoneActionPad(u16);
 static void PrintMatchCallSelectionOptions(struct Pokenav_MatchCallGfx *);
 static bool32 ShowOptionsCursor(struct Pokenav_MatchCallGfx *);
 static void UpdateCursorGfxPos(struct Pokenav_MatchCallGfx *, int);
@@ -1076,18 +1077,44 @@ static void PrintMatchCallLocation(struct Pokenav_MatchCallGfx *gfx, int delta)
     CopyWindowToVram(gfx->locWindowId, COPYWIN_GFX);
 }
 
+static void DrawPokeGearPhoneActionPad(u16 windowId)
+{
+    u8 width = GetWindowAttribute(windowId, WINDOW_WIDTH) * 8;
+    u32 i;
+
+    FillWindowPixelBuffer(windowId, PIXEL_FILL(1));
+
+    if (width < 32)
+        return;
+
+    for (i = 0; i < MATCH_CALL_OPTION_COUNT; i++)
+    {
+        u8 y = i * 16;
+
+        // Three recessed PokéGear Phone soft keys.
+        FillWindowPixelRect(windowId, PIXEL_FILL(3), 7, y, width - 14, 1);
+        FillWindowPixelRect(windowId, PIXEL_FILL(5), 7, y + 14, width - 14, 1);
+        FillWindowPixelRect(windowId, PIXEL_FILL(4), 5, y + 3, 1, 9);
+        FillWindowPixelRect(windowId, PIXEL_FILL(4), width - 6, y + 3, 1, 9);
+    }
+}
+
 static void PrintMatchCallSelectionOptions(struct Pokenav_MatchCallGfx *gfx)
 {
     u32 i;
+    u8 width = GetWindowAttribute(gfx->infoBoxWindowId, WINDOW_WIDTH) * 8;
 
-    DrawPokeGearPhonePanel(gfx->infoBoxWindowId);
+    DrawPokeGearPhoneActionPad(gfx->infoBoxWindowId);
     for (i = 0; i < MATCH_CALL_OPTION_COUNT; i++)
     {
         int optionText = GetMatchCallOptionId(i);
+        int x;
+
         if (optionText == MATCH_CALL_OPTION_COUNT)
             break;
 
-        AddTextPrinterParameterized(gfx->infoBoxWindowId, FONT_NARROW, sMatchCallOptionTexts[optionText], 16, i * 16 + 1, TEXT_SKIP_DRAW, NULL);
+        x = (width - GetStringWidth(FONT_NARROW, sMatchCallOptionTexts[optionText], 0)) / 2;
+        AddTextPrinterParameterized(gfx->infoBoxWindowId, FONT_NARROW, sMatchCallOptionTexts[optionText], x, i * 16 + 1, TEXT_SKIP_DRAW, NULL);
     }
 
     CopyWindowToVram(gfx->infoBoxWindowId, COPYWIN_GFX);
@@ -1252,7 +1279,7 @@ static void CreateOptionsCursorSprite(struct Pokenav_MatchCallGfx *gfx, int top)
 {
     if (!gfx->optionsCursorSprite)
     {
-        u8 spriteId = CreateSprite(&sOptionsCursorSpriteTemplate, 4, 80, 5);
+        u8 spriteId = CreateSprite(&sOptionsCursorSpriteTemplate, 8, 80, 5);
         gfx->optionsCursorSprite = &gSprites[spriteId];
         UpdateCursorGfxPos(gfx, top);
     }
