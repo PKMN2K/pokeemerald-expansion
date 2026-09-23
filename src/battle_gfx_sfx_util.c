@@ -10,6 +10,7 @@
 #include "dma3.h"
 #include "malloc.h"
 #include "graphics.h"
+#include "gen5_static_battlers.h"
 #include "random.h"
 #include "util.h"
 #include "pokemon.h"
@@ -122,6 +123,39 @@ const struct SpriteTemplate gSpriteTemplate_EnemyShadow =
     .tileTag = TAG_SHADOW_TILE,
     .paletteTag = TAG_SHADOW_PAL,
     .oam = &sOamData_EnemyShadow,
+};
+
+
+static const struct Subsprite sGen5StaticBattlerSubsprites[] =
+{
+    {
+        .x = -48, .y = -48,
+        .shape = SPRITE_SHAPE(64x64), .size = SPRITE_SIZE(64x64),
+        .tileOffset = 0, .priority = 2,
+    },
+    {
+        .x = 16, .y = -48,
+        .shape = SPRITE_SHAPE(32x64), .size = SPRITE_SIZE(32x64),
+        .tileOffset = 64, .priority = 2,
+    },
+    {
+        .x = -48, .y = 16,
+        .shape = SPRITE_SHAPE(64x32), .size = SPRITE_SIZE(64x32),
+        .tileOffset = 96, .priority = 2,
+    },
+    {
+        .x = 16, .y = 16,
+        .shape = SPRITE_SHAPE(32x32), .size = SPRITE_SIZE(32x32),
+        .tileOffset = 128, .priority = 2,
+    },
+};
+
+static const struct SubspriteTable sGen5StaticBattlerSubspriteTable[] =
+{
+    {
+        .subspriteCount = ARRAY_COUNT(sGen5StaticBattlerSubsprites),
+        .subsprites = sGen5StaticBattlerSubsprites,
+    },
 };
 
 // code
@@ -621,6 +655,99 @@ bool8 IsBattleSEPlaying(enum BattlerId battler)
     return TRUE;
 }
 
+static void ResetBattleMonFrameImages(enum BattlerPosition position)
+{
+    u8 *base = gMonSpritesGfxPtr->spritesGfx[position];
+
+    gMonSpritesGfxPtr->frameImages[position][0].data = base;
+    gMonSpritesGfxPtr->frameImages[position][0].size = MON_PIC_SIZE;
+    gMonSpritesGfxPtr->frameImages[position][0].relativeFrames = FALSE;
+    gMonSpritesGfxPtr->frameImages[position][1].data = base + MON_PIC_SIZE;
+    gMonSpritesGfxPtr->frameImages[position][1].size = MON_PIC_SIZE;
+    gMonSpritesGfxPtr->frameImages[position][1].relativeFrames = FALSE;
+}
+
+static void RepackGen5StaticBattlerPic(enum BattlerPosition position)
+{
+    const u8 *src = (const u8 *)gMonSpritesGfxPtr->buffer;
+    u8 *dst = gMonSpritesGfxPtr->spritesGfx[position];
+    u32 outTile = 0;
+
+    // 96x96 is a 12x12 tile image. Store it as four contiguous hardware
+    // OBJ chunks: 64x64, 32x64, 64x32, then 32x32.
+    for (u32 y = 0; y < 8; y++)
+        for (u32 x = 0; x < 8; x++)
+            CpuCopy32(src + (y * 12 + x) * TILE_SIZE_4BPP, dst + outTile++ * TILE_SIZE_4BPP, TILE_SIZE_4BPP);
+
+    for (u32 y = 0; y < 8; y++)
+        for (u32 x = 8; x < 12; x++)
+            CpuCopy32(src + (y * 12 + x) * TILE_SIZE_4BPP, dst + outTile++ * TILE_SIZE_4BPP, TILE_SIZE_4BPP);
+
+    for (u32 y = 8; y < 12; y++)
+        for (u32 x = 0; x < 8; x++)
+            CpuCopy32(src + (y * 12 + x) * TILE_SIZE_4BPP, dst + outTile++ * TILE_SIZE_4BPP, TILE_SIZE_4BPP);
+
+    for (u32 y = 8; y < 12; y++)
+        for (u32 x = 8; x < 12; x++)
+            CpuCopy32(src + (y * 12 + x) * TILE_SIZE_4BPP, dst + outTile++ * TILE_SIZE_4BPP, TILE_SIZE_4BPP);
+
+    gMonSpritesGfxPtr->frameImages[position][0].data = dst;
+    gMonSpritesGfxPtr->frameImages[position][0].size = GEN5_STATIC_MON_PIC_SIZE;
+    // Static battlers deliberately expose the same image for frame 1 as a
+    // safety net for callers that request a second frame.
+    gMonSpritesGfxPtr->frameImages[position][1].data = dst;
+    gMonSpritesGfxPtr->frameImages[position][1].size = GEN5_STATIC_MON_PIC_SIZE;
+}
+
+static bool32 TryLoadGen5StaticBattlerPic(enum Species species, enum BattlerId battler, bool32 allowLargeGfx)
+{
+    bool32 frontPic = !IsOnPlayerSide(battler);
+    const u32 *pic;
+
+    if (!allowLargeGfx || IsContest() || gMonSpritesGfxPtr->buffer == NULL)
+        return FALSE;
+    if (!HasGen5StaticBattler(species, frontPic))
+        return FALSE;
+
+    pic = GetGen5StaticBattlerPic(species, frontPic);
+    DecompressDataWithHeaderWram(pic, gMonSpritesGfxPtr->buffer);
+    RepackGen5StaticBattlerPic(GetBattlerPosition(battler));
+    return TRUE;
+}
+
+bool32 BattleMonUsesGen5StaticGfx(enum BattlerId battler)
+{
+    return gBattleSpritesDataPtr != NULL
+        && gBattleSpritesDataPtr->battlerData[battler].usesGen5StaticGfx;
+}
+
+void ConfigureBattleMonSpriteGfx(enum BattlerId battler)
+{
+    struct Sprite *sprite;
+
+    if (gBattlerSpriteIds[battler] >= MAX_SPRITES)
+        return;
+
+    sprite = &gSprites[gBattlerSpriteIds[battler]];
+    if (!sprite->inUse)
+        return;
+
+    if (BattleMonUsesGen5StaticGfx(battler))
+    {
+        SetSubspriteTables(sprite, sGen5StaticBattlerSubspriteTable);
+        sprite->subspriteMode = SUBSPRITES_STATIC_COMPOSITE;
+        sprite->anims = gAnims_MonPic;
+        // Preserve the same bottom baseline as a 64x64 battler.
+        sprite->y = GetBattlerSpriteDefault_Y(battler)
+                  - (GEN5_STATIC_MON_PIC_HEIGHT - MON_PIC_HEIGHT) / 2;
+    }
+    else
+    {
+        sprite->subspriteMode = SUBSPRITES_OFF;
+        sprite->subspriteTables = NULL;
+    }
+}
+
 void BattleLoadMonSpriteGfx(struct Pokemon *mon, enum BattlerId battler)
 {
     u32 personalityValue, paletteOffset;
@@ -654,15 +781,47 @@ void BattleLoadMonSpriteGfx(struct Pokemon *mon, enum BattlerId battler)
     }
 
     position = GetBattlerPosition(battler);
-    HandleLoadSpecialPokePic(!IsOnPlayerSide(battler),
-                             gMonSpritesGfxPtr->spritesGfx[position],
-                             species, personalityValue);
+    bool32 existingMonSprite = gBattlerSpriteIds[battler] < MAX_SPRITES
+                            && gSprites[gBattlerSpriteIds[battler]].inUse
+                            && gSprites[gBattlerSpriteIds[battler]].images == gMonSpritesGfxPtr->frameImages[position];
+
+    ResetBattleMonFrameImages(position);
+    gBattleSpritesDataPtr->battlerData[battler].usesGen5StaticGfx = FALSE;
+
+    if (!existingMonSprite)
+        gBattleSpritesDataPtr->battlerData[battler].largeBattlerGfxAllocated = FALSE;
+
+    bool32 allowLargeGfx = !existingMonSprite
+                        || gBattleSpritesDataPtr->battlerData[battler].largeBattlerGfxAllocated;
+
+    if (TryLoadGen5StaticBattlerPic(species, battler, allowLargeGfx))
+    {
+        gBattleSpritesDataPtr->battlerData[battler].usesGen5StaticGfx = TRUE;
+        if (!existingMonSprite)
+            gBattleSpritesDataPtr->battlerData[battler].largeBattlerGfxAllocated = TRUE;
+    }
+    else
+    {
+        HandleLoadSpecialPokePic(!IsOnPlayerSide(battler),
+                                 gMonSpritesGfxPtr->spritesGfx[position],
+                                 species, personalityValue);
+    }
+
+    // DestroySprite frees dynamic OBJ tiles using frame 0's size. Keep the
+    // allocation size large even while a large battler temporarily displays
+    // a normal 64x64 image (Transform/Substitute).
+    if (gBattleSpritesDataPtr->battlerData[battler].largeBattlerGfxAllocated)
+        gMonSpritesGfxPtr->frameImages[position][0].size = GEN5_STATIC_MON_PIC_SIZE;
 
     paletteOffset = OBJ_PLTT_ID(battler);
 
-    if (gBattleSpritesDataPtr->battlerData[battler].transformSpecies == SPECIES_NONE)
+    paletteData = NULL;
+    if (BattleMonUsesGen5StaticGfx(battler))
+        paletteData = GetGen5StaticBattlerPalette(species, isShiny);
+
+    if (paletteData == NULL && gBattleSpritesDataPtr->battlerData[battler].transformSpecies == SPECIES_NONE)
         paletteData = GetMonFrontSpritePal(mon);
-    else
+    else if (paletteData == NULL)
         paletteData = GetMonSpritePalFromSpeciesAndPersonality(species, isShiny, personalityValue);
 
     LoadPalette(paletteData, paletteOffset, PLTT_SIZE_4BPP);
@@ -908,6 +1067,7 @@ void HandleSpeciesGfxDataChange(enum BattlerId battlerAtk, enum BattlerId battle
         personalityValue = gContestResources->moveAnim->personality;
         isShiny = gContestResources->moveAnim->isShiny;
 
+        ResetBattleMonFrameImages(position);
         HandleLoadSpecialPokePic(FALSE,
                                  gMonSpritesGfxPtr->spritesGfx[position],
                                  targetSpecies,
@@ -942,16 +1102,33 @@ void HandleSpeciesGfxDataChange(enum BattlerId battlerAtk, enum BattlerId battle
             personalityValue = GetMonData(monAtk, MON_DATA_PERSONALITY);
             isShiny = GetMonData(monAtk, MON_DATA_IS_SHINY);
         }
-        HandleLoadSpecialPokePic(!IsOnPlayerSide(battlerAtk),
-                                 gMonSpritesGfxPtr->spritesGfx[position],
-                                 targetSpecies,
-                                 personalityValue);
+        ResetBattleMonFrameImages(position);
+        gBattleSpritesDataPtr->battlerData[battlerAtk].usesGen5StaticGfx = FALSE;
+        if (TryLoadGen5StaticBattlerPic(targetSpecies, battlerAtk,
+                                       gBattleSpritesDataPtr->battlerData[battlerAtk].largeBattlerGfxAllocated))
+        {
+            gBattleSpritesDataPtr->battlerData[battlerAtk].usesGen5StaticGfx = TRUE;
+        }
+        else
+        {
+            HandleLoadSpecialPokePic(!IsOnPlayerSide(battlerAtk),
+                                     gMonSpritesGfxPtr->spritesGfx[position],
+                                     targetSpecies,
+                                     personalityValue);
+        }
+
+        if (gBattleSpritesDataPtr->battlerData[battlerAtk].largeBattlerGfxAllocated)
+            gMonSpritesGfxPtr->frameImages[position][0].size = GEN5_STATIC_MON_PIC_SIZE;
     }
     src = gMonSpritesGfxPtr->spritesGfx[position];
     dst = (void *)(OBJ_VRAM0 + gSprites[gBattlerSpriteIds[battlerAtk]].oam.tileNum * 32);
-    DmaCopy32(3, src, dst, MON_PIC_SIZE);
+    DmaCopy32(3, src, dst, gMonSpritesGfxPtr->frameImages[position][0].size);
     paletteOffset = OBJ_PLTT_ID(battlerAtk);
-    paletteData = GetMonSpritePalFromSpeciesAndPersonality(targetSpecies, isShiny, personalityValue);
+    paletteData = NULL;
+    if (BattleMonUsesGen5StaticGfx(battlerAtk))
+        paletteData = GetGen5StaticBattlerPalette(targetSpecies, isShiny);
+    if (paletteData == NULL)
+        paletteData = GetMonSpritePalFromSpeciesAndPersonality(targetSpecies, isShiny, personalityValue);
     LoadPalette(paletteData, paletteOffset, PLTT_SIZE_4BPP);
 
     if (changeType == SPECIES_GFX_CHANGE_GHOST_UNVEIL)
@@ -985,6 +1162,7 @@ void HandleSpeciesGfxDataChange(enum BattlerId battlerAtk, enum BattlerId battle
     }
 
     gSprites[gBattlerSpriteIds[battlerAtk]].y = GetBattlerSpriteDefault_Y(battlerAtk);
+    ConfigureBattleMonSpriteGfx(battlerAtk);
     StartSpriteAnim(&gSprites[gBattlerSpriteIds[battlerAtk]], 0);
 }
 
@@ -1000,6 +1178,9 @@ void BattleLoadSubstituteOrMonSpriteGfx(enum BattlerId battler, bool8 loadMonSpr
         else
             position = GetBattlerPosition(battler);
 
+        ResetBattleMonFrameImages(position);
+        gBattleSpritesDataPtr->battlerData[battler].usesGen5StaticGfx = FALSE;
+
         if (IsContest())
             DecompressDataWithHeaderVram(gBattleAnimSpriteGfx_SubstituteBack, gMonSpritesGfxPtr->spritesGfx[position]);
         else if (!IsOnPlayerSide(battler))
@@ -1011,6 +1192,9 @@ void BattleLoadSubstituteOrMonSpriteGfx(enum BattlerId battler, bool8 loadMonSpr
         {
             Dma3CopyLarge32_(gMonSpritesGfxPtr->spritesGfx[position], &gMonSpritesGfxPtr->spritesGfx[position][MON_PIC_SIZE * i], MON_PIC_SIZE);
         }
+
+        if (gBattleSpritesDataPtr->battlerData[battler].largeBattlerGfxAllocated)
+            gMonSpritesGfxPtr->frameImages[position][0].size = GEN5_STATIC_MON_PIC_SIZE;
 
         palOffset = OBJ_PLTT_ID(battler);
         LoadPalette(gBattleAnimSpritePal_Substitute, palOffset, PLTT_SIZE_4BPP);
@@ -1028,9 +1212,16 @@ void LoadBattleMonGfxAndAnimate(enum BattlerId battler, bool8 loadMonSprite, u8 
     StartSpriteAnim(&gSprites[spriteId], 0);
 
     if (!loadMonSprite)
+    {
         gSprites[spriteId].y = GetSubstituteSpriteDefault_Y(battler);
+        gSprites[spriteId].subspriteMode = SUBSPRITES_OFF;
+        gSprites[spriteId].subspriteTables = NULL;
+    }
     else
+    {
         gSprites[spriteId].y = GetBattlerSpriteDefault_Y(battler);
+        ConfigureBattleMonSpriteGfx(battler);
+    }
 }
 
 void TrySetBehindSubstituteSpriteBit(enum BattlerId battler, enum Move move)
@@ -1381,11 +1572,12 @@ void AllocateMonSpritesGfx(void)
 {
     gMonSpritesGfxPtr = NULL;
     gMonSpritesGfxPtr = AllocZeroed(sizeof(*gMonSpritesGfxPtr));
-    gMonSpritesGfxPtr->firstDecompressed = AllocZeroed(MON_PIC_SIZE * MAX_MON_PIC_FRAMES * MAX_BATTLERS_COUNT);
+    gMonSpritesGfxPtr->firstDecompressed = AllocZeroed(BATTLE_MON_GFX_BUFFER_SIZE * MAX_BATTLERS_COUNT);
+    gMonSpritesGfxPtr->buffer = AllocZeroed(GEN5_STATIC_MON_PIC_SIZE);
 
     for (u32 i = 0; i < MAX_BATTLERS_COUNT; i++)
     {
-        gMonSpritesGfxPtr->spritesGfx[i] = gMonSpritesGfxPtr->firstDecompressed + (i * MON_PIC_SIZE * MAX_MON_PIC_FRAMES);
+        gMonSpritesGfxPtr->spritesGfx[i] = gMonSpritesGfxPtr->firstDecompressed + (i * BATTLE_MON_GFX_BUFFER_SIZE);
         gMonSpritesGfxPtr->templates[i] = gBattlerSpriteTemplates[i];
 
         for (u32 j = 0; j < MAX_MON_PIC_FRAMES; j++)

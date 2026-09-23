@@ -1774,8 +1774,19 @@ bool8 AddSubspritesToOamBuffer(struct Sprite *sprite, u8 *oamIndex)
         u8 vFlip;
         tileNum = oam->tileNum;
         subspriteCount = subspriteTable->subspriteCount;
-        hFlip = ((s32)oam->matrixNum >> 3) & 1;
-        vFlip = ((s32)oam->matrixNum >> 4) & 1;
+        if (sprite->subspriteMode == SUBSPRITES_STATIC_COMPOSITE)
+        {
+            // A 96x96 battler is four hardware OBJs. Let the logical battler
+            // continue running its affine state for battle timing, but render
+            // the pieces non-affine so they remain locked together.
+            hFlip = FALSE;
+            vFlip = FALSE;
+        }
+        else
+        {
+            hFlip = ((s32)oam->matrixNum >> 3) & 1;
+            vFlip = ((s32)oam->matrixNum >> 4) & 1;
+        }
         baseX = oam->x - sprite->centerToCornerVecX;
         baseY = oam->y - sprite->centerToCornerVecY;
 
@@ -1811,6 +1822,11 @@ bool8 AddSubspritesToOamBuffer(struct Sprite *sprite, u8 *oamIndex)
             struct OamData subspriteOam = *oam;
             subspriteOam.shape = subspriteTable->subsprites[i].shape;
             subspriteOam.size = subspriteTable->subsprites[i].size;
+            if (sprite->subspriteMode == SUBSPRITES_STATIC_COMPOSITE)
+            {
+                subspriteOam.affineMode = ST_OAM_AFFINE_OFF;
+                subspriteOam.matrixNum = 0;
+            }
             subspriteOam.x = (s16)baseX + (s16)x;
             subspriteOam.y = baseY + y;
             subspriteOam.tileNum = tileNum + subspriteTable->subsprites[i].tileOffset;

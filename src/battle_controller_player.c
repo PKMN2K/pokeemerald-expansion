@@ -1863,6 +1863,7 @@ static void PrintLinkStandbyMsg(void)
 static void PlayerHandleLoadMonSprite(enum BattlerId battler)
 {
     BattleLoadMonSpriteGfx(GetBattlerMon(battler), battler);
+    ConfigureBattleMonSpriteGfx(battler);
     gSprites[gBattlerSpriteIds[battler]].oam.paletteNum = battler;
     gBattlerControllerFuncs[battler] = CompleteOnBattlerSpritePosX_0;
 }

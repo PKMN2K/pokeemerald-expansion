@@ -897,6 +897,8 @@ struct BattleSpriteInfo
     u16 behindSubstitute:1; // 0x4
     u16 flag_x8:1; // 0x8
     u16 hpNumbersNoBars:1; // 0x10
+    u16 largeBattlerGfxAllocated:1; // OBJ tiles were allocated for a 96x96 composite battler
+    u16 usesGen5StaticGfx:1; // current visible mon gfx uses the 96x96 composite format
     enum Species transformSpecies;
 };
 

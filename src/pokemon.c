@@ -25,6 +25,7 @@
 #include "follower_npc.h"
 #include "frontier_util.h"
 #include "graphics.h"
+#include "gen5_static_battlers.h"
 #include "item.h"
 #include "link.h"
 #include "m4a.h"
@@ -1852,7 +1853,9 @@ void SetMultiuseSpriteTemplateToPokemon(enum Species speciesTag, enum BattlerPos
             speciesTag = speciesTag - SPECIES_SHINY_TAG;
 
         speciesTag = SanitizeSpeciesId(speciesTag);
-        if (gSpeciesInfo[speciesTag].frontAnimFrames != NULL)
+        if (gMonSpritesGfxPtr != NULL && HasGen5StaticBattler(speciesTag, TRUE))
+            gMultiuseSpriteTemplate.anims = gAnims_MonPic;
+        else if (gSpeciesInfo[speciesTag].frontAnimFrames != NULL)
             gMultiuseSpriteTemplate.anims = gSpeciesInfo[speciesTag].frontAnimFrames;
         else
             gMultiuseSpriteTemplate.anims = gSpeciesInfo[SPECIES_NONE].frontAnimFrames;
@@ -5699,6 +5702,7 @@ void HandleSetPokedexFlagFromMon(struct Pokemon *mon, u32 caseId)
 bool8 HasTwoFramesAnimation(enum Species species)
 {
     return P_TWO_FRAME_FRONT_SPRITES
+        && !(gMonSpritesGfxPtr != NULL && HasGen5StaticBattler(species, TRUE))
         && gSpeciesInfo[species].frontAnimFrames != sAnims_SingleFramePlaceHolder
         && species != SPECIES_UNOWN
         && !gTestRunnerHeadless;
