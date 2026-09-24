@@ -980,6 +980,7 @@ struct MonSpritesGfx
     u8 *spritesGfx[MAX_BATTLERS_COUNT];
     struct SpriteTemplate templates[MAX_BATTLERS_COUNT];
     struct SpriteFrameImage frameImages[MAX_BATTLERS_COUNT][MAX_MON_PIC_FRAMES];
+    u8 *largeSpriteBuffer; // temporary raw 96x96 buffer used before OBJ-piece packing
     u8 *barFontGfx;
     u16 *buffer;
 };
