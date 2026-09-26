@@ -291,3 +291,29 @@ sliding START-menu assets at tile 768.
 
 The old normal and decapped list tilesets and `tilemap_list_screen.bin` are
 no longer referenced by the HGSS list code.
+
+
+## Authentic HGSS Search functional overlay
+
+The live Search screen no longer uses the adapted
+`tileset_menu_search*.png` graphics or the Hoenn/National search tilemaps.
+
+BG1 is now generated directly from authentic HGSS Pokédex member 068 in 4bpp.
+Its four interactive palette states occupy banks 4-7:
+
+- bank 4: selected
+- bank 5: normal, matching the authentic HGSS colors
+- bank 6: selected + disabled
+- bank 7: disabled
+
+The existing Search highlight code still changes tilemap palette-bank bits, but
+the HGSS path now offsets its flags into banks 4-7. BG2 retains the legacy
+bank-0 text palette only, so printed filter labels and descriptions are isolated
+from the authentic highlight colors.
+
+The filter-option popup no longer writes hard-coded old Search tile IDs.
+Opening a parameter list brightens the authentic member-068 pixels in its
+right-side region; closing the popup restores those entries from the canonical
+generated tilemap. Search/Shift/Cancel, Name, Color, both Type selectors, Order,
+Mode, OK, disabled states, selector arrows, scroll arrows, and all input logic
+remain unchanged.
