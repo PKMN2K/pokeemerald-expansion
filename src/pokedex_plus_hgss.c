@@ -351,8 +351,15 @@ static const u32 sPokedexPlusHGSS_Menu_2_Gfx[] = INCGFX_U32("graphics/pokedex/hg
 static const u32 sPokedexPlusHGSS_Menu_3_Gfx[] = INCGFX_U32("graphics/pokedex/hgss/tileset_menu3.png", ".4bpp.smol");
 static const u32 sPokedexPlusHGSS_MenuSearch_Gfx[] = INCGFX_U32("graphics/pokedex/hgss/tileset_menu_search.png", ".4bpp.smol");
 static const u32 sPokedexPlusHGSS_MenuSearch_DECA_Gfx[] = INCGFX_U32("graphics/pokedex/hgss/tileset_menu_search_DECA.png", ".4bpp.smol");
-static const u32 sPokedexPlusHGSS_StartMenuMain_Tilemap[] = INCGFX_U32("graphics/pokedex/hgss/tilemap_start_menu.bin", ".smolTM");
-static const u32 sPokedexPlusHGSS_StartMenuSearchResults_Tilemap[] = INCGFX_U32("graphics/pokedex/hgss/tilemap_start_menu_search_results.bin", ".smolTM");
+#define GEN4_UI_HGSS_START_MENU_BASE_TILE 768
+#define GEN4_UI_HGSS_START_MENU_PAL_SLOT 12
+#define GEN4_UI_HGSS_START_MENU_TILEMAP_OFFSET 0x280
+
+static const u8 sPokedexPlusHGSS_Gen4StartMenuMainTiles[] = INCBIN_U8("graphics/gen4_ui/hgss_pokedex_start_menu_main.tiles.bin");
+static const u16 sPokedexPlusHGSS_Gen4StartMenuMainTilemap[] = INCBIN_U16("graphics/gen4_ui/hgss_pokedex_start_menu_main.tilemap.bin");
+static const u8 sPokedexPlusHGSS_Gen4StartMenuResultsTiles[] = INCBIN_U8("graphics/gen4_ui/hgss_pokedex_start_menu_results.tiles.bin");
+static const u16 sPokedexPlusHGSS_Gen4StartMenuResultsTilemap[] = INCBIN_U16("graphics/gen4_ui/hgss_pokedex_start_menu_results.tilemap.bin");
+static const u16 sPokedexPlusHGSS_Gen4StartMenuPalette[] = INCBIN_U16("graphics/gen4_ui/hgss_pokedex_start_menu.palette.bin");
 static const u32 sPokedexPlusHGSS_ScreenList_Tilemap[] = INCGFX_U32("graphics/pokedex/hgss/tilemap_list_screen.bin", ".smolTM");
 static const u32 sPokedexPlusHGSS_ScreenListUnderlay_Tilemap[] = INCGFX_U32("graphics/pokedex/hgss/tilemap_list_screen_underlay.bin", ".smolTM");
 static const u32 sPokedexPlusHGSS_ScreenInfo_Tilemap[] = INCGFX_U32("graphics/pokedex/hgss/tilemap_info_screen.bin", ".smolTM");
@@ -381,6 +388,7 @@ extern EWRAM_DATA struct PokedexListItem *sPokedexListItem;
 static bool8 LoadPokedexListPage(u8);
 static void RestoreLegacyPokedexBg3(void);
 static void CreateInterfaceSprites(u8);
+static void LoadGen4StartMenu(u8 page);
 static void LoadScreenSelectBarMain(u16);
 static void PrintMonInfo(u32 num, u32, u32 owned, u32 newEntry);
 static void SetSpriteInvisibility(u8 spriteArrayId, bool8 invisible);
@@ -831,10 +839,7 @@ static bool8 LoadPokedexListPage(u8 page)
             RestoreLegacyPokedexBg3();
             CopyToBgTilemapBuffer(3, sPokedexPlusHGSS_ScreenListUnderlay_Tilemap, 0, 0);
         }
-        if (page == PAGE_MAIN)
-            CopyToBgTilemapBuffer(0, sPokedexPlusHGSS_StartMenuMain_Tilemap, 0, 0x280);
-        else
-            CopyToBgTilemapBuffer(0, sPokedexPlusHGSS_StartMenuSearchResults_Tilemap, 0, 0x280);
+        LoadGen4StartMenu(page);
         ResetPaletteFade();
         if (page == PAGE_MAIN)
             sPokedexView->isSearchResults = FALSE;
@@ -916,6 +921,36 @@ static bool8 LoadPokedexListPage(u8 page)
         break;
     }
     return FALSE;
+}
+
+static void LoadGen4StartMenu(u8 page)
+{
+    LoadPalette(sPokedexPlusHGSS_Gen4StartMenuPalette,
+                BG_PLTT_ID(GEN4_UI_HGSS_START_MENU_PAL_SLOT),
+                sizeof(sPokedexPlusHGSS_Gen4StartMenuPalette));
+
+    if (page == PAGE_MAIN)
+    {
+        LoadBgTiles(0,
+                    sPokedexPlusHGSS_Gen4StartMenuMainTiles,
+                    sizeof(sPokedexPlusHGSS_Gen4StartMenuMainTiles),
+                    GEN4_UI_HGSS_START_MENU_BASE_TILE);
+        CopyToBgTilemapBuffer(0,
+                              sPokedexPlusHGSS_Gen4StartMenuMainTilemap,
+                              sizeof(sPokedexPlusHGSS_Gen4StartMenuMainTilemap),
+                              GEN4_UI_HGSS_START_MENU_TILEMAP_OFFSET);
+    }
+    else
+    {
+        LoadBgTiles(0,
+                    sPokedexPlusHGSS_Gen4StartMenuResultsTiles,
+                    sizeof(sPokedexPlusHGSS_Gen4StartMenuResultsTiles),
+                    GEN4_UI_HGSS_START_MENU_BASE_TILE);
+        CopyToBgTilemapBuffer(0,
+                              sPokedexPlusHGSS_Gen4StartMenuResultsTilemap,
+                              sizeof(sPokedexPlusHGSS_Gen4StartMenuResultsTilemap),
+                              GEN4_UI_HGSS_START_MENU_TILEMAP_OFFSET);
+    }
 }
 
 // u16 ignored is passed but never used
