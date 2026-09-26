@@ -342,9 +342,9 @@ static const u8 sPokedexPlusHGSS_Gen4SearchOverlayTiles[] = INCBIN_U8("graphics/
 static const u16 sPokedexPlusHGSS_Gen4SearchOverlayTilemap[] = INCBIN_U16("graphics/gen4_ui/hgss_pokedex_search_overlay.tilemap.bin");
 static const u16 sPokedexPlusHGSS_Gen4SearchOverlayPalette[] = INCBIN_U16("graphics/gen4_ui/hgss_pokedex_search_overlay.palette.bin");
 
-static const u16 sPokedexPlusHGSS_Default_Pal[] = INCGFX_U16("graphics/pokedex/hgss/palette_default.pal", ".gbapal");
+static const u16 sPokedexPlusHGSS_Counter_Pal[] = INCGFX_U16("graphics/gen4_ui/hgss_pokedex_counter.pal", ".gbapal");
 static const u16 sPokedexPlusHGSS_MenuSearch_Pal[] = INCGFX_U16("graphics/pokedex/hgss/palette_search_menu.pal", ".gbapal");
-static const u16 sPokedexPlusHGSS_Default_dark_Pal[] = INCGFX_U16("graphics/pokedex/hgss/palette_default_dark.pal", ".gbapal");
+static const u16 sPokedexPlusHGSS_CounterDark_Pal[] = INCGFX_U16("graphics/gen4_ui/hgss_pokedex_counter_dark.pal", ".gbapal");
 static const u16 sPokedexPlusHGSS_MenuSearch_dark_Pal[] = INCGFX_U16("graphics/pokedex/hgss/palette_search_menu_dark.pal", ".gbapal");
 
 // Only BG palette bank 0 is still live on the scrolling list. The authentic
@@ -756,8 +756,8 @@ static const struct SpriteSheet sHGSSCounterSpriteSheet[] =
 
 static const struct SpritePalette sHGSSCounterSpritePalette[] =
 {
-    {sPokedexPlusHGSS_Default_Pal, TAG_DEX_HGSS_COUNTER},
-    {sPokedexPlusHGSS_Default_dark_Pal, TAG_DEX_HGSS_COUNTER},
+    {sPokedexPlusHGSS_Counter_Pal, TAG_DEX_HGSS_COUNTER},
+    {sPokedexPlusHGSS_CounterDark_Pal, TAG_DEX_HGSS_COUNTER},
 };
 
 static const u8 sPokedexPlusHGSS_ScrollControlTiles[] = INCBIN_U8("graphics/gen4_ui/hgss_pokedex_scroll_controls.tiles.bin");
@@ -5573,16 +5573,16 @@ bool32 TryHandleCaughtMonPageFlicker_HGSS(u8 taskId)
     // if (++gTasks[taskId].tPalTimer & 16)
     // {
     //     if (!HGSS_DARK_MODE)
-    //         LoadPalette(sPokedexPlusHGSS_Default_Pal + 1, BG_PLTT_ID(3) + 1, PLTT_SIZEOF(7));
+    //         LoadPalette(sPokedexPlusHGSS_Counter_Pal + 1, BG_PLTT_ID(3) + 1, PLTT_SIZEOF(7));
     //     else
-    //         LoadPalette(sPokedexPlusHGSS_Default_dark_Pal + 1, BG_PLTT_ID(3) + 1, PLTT_SIZEOF(7));
+    //         LoadPalette(sPokedexPlusHGSS_CounterDark_Pal + 1, BG_PLTT_ID(3) + 1, PLTT_SIZEOF(7));
     // }
     // else
     // {
     //     if (!HGSS_DARK_MODE)
-    //         LoadPalette(sPokedexPlusHGSS_Default_Pal + 1, BG_PLTT_ID(3) + 1, PLTT_SIZEOF(7));
+    //         LoadPalette(sPokedexPlusHGSS_Counter_Pal + 1, BG_PLTT_ID(3) + 1, PLTT_SIZEOF(7));
     //     else
-    //         LoadPalette(sPokedexPlusHGSS_Default_dark_Pal + 1, BG_PLTT_ID(3) + 1, PLTT_SIZEOF(7));
+    //         LoadPalette(sPokedexPlusHGSS_CounterDark_Pal + 1, BG_PLTT_ID(3) + 1, PLTT_SIZEOF(7));
     // }
 
     return TRUE;

@@ -414,3 +414,19 @@ This removes the final `tileset_interface*.png` runtime dependency from
 Pokédex implementation in `pokedex.c`, but the HGSS path now uses only its
 dedicated Gen 4 OBJ assets.
 
+## Dedicated HGSS counter palettes
+
+The compact right-side counter OBJ sheet no longer points at the old 48-color
+`palette_default*.pal` files.
+
+Its light and dark palettes are now dedicated 16-color assets under
+`graphics/gen4_ui/`. They preserve the exact first sprite palette bank that
+the counter artwork already used, so this is intentionally a zero-visual-change
+migration: counter colors, dark mode, transparency, and sprite behavior remain
+identical.
+
+This isolates the last compatibility counter graphics from the old HGSS-Plus
+interface palette bundle. Future replacement of the labels or digits with
+authentic HGSS-derived glyphs can now change their OBJ palette without affecting
+any other Pokédex screen.
+
