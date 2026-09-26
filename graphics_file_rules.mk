@@ -25,6 +25,7 @@ GEN4UIHGSSAREA := tools/gen4_ui/make_hgss_pokedex_area_chrome.py
 GEN4UIHGSSSEARCH := tools/gen4_ui/make_hgss_pokedex_search.py
 GEN4UIHGSSSEARCHOVERLAY := tools/gen4_ui/make_hgss_pokedex_search_overlay.py
 GEN4UIHGSSSTART := tools/gen4_ui/make_hgss_pokedex_start_menu.py
+GEN4UIHGSSSCROLL := tools/gen4_ui/make_hgss_pokedex_scroll_controls.py
 
 types := none normal fight flying poison ground rock bug ghost steel mystery fire water grass electric psychic ice dragon dark fairy stellar
 contest_types := cool beauty cute smart tough
@@ -476,3 +477,10 @@ $(GEN4UIGFXDIR)/hgss_pokedex_search_overlay.tilemap.bin: $(GEN4UIHGSSSEARCHOVERL
 
 $(GEN4UIGFXDIR)/hgss_pokedex_search_overlay.palette.bin: $(GEN4UIHGSSSEARCHOVERLAY) $(GEN4UIHGSSSEARCH)
 	python3 $(GEN4UIHGSSSEARCHOVERLAY) --palette $@
+
+
+$(GEN4UIGFXDIR)/hgss_pokedex_scroll_controls.tiles.bin: $(GEN4UIHGSSSCROLL) $(GEN4UIHGSSLIST)
+	python3 $(GEN4UIHGSSSCROLL) --tiles $@
+
+$(GEN4UIGFXDIR)/hgss_pokedex_scroll_controls.palette.bin: $(GEN4UIHGSSSCROLL) $(GEN4UIHGSSLIST)
+	python3 $(GEN4UIHGSSSCROLL) --palette $@
