@@ -5322,27 +5322,18 @@ void LoadSearchMenu_HGSS(u8 taskId)
 
 #undef sIsDownArrow
 
-void HandleDestroyStatBars_HGSS(void)
+void DestroyPokedexStatBars(void)
 {
-    if (!POKEDEX_PLUS_HGSS)
-        return;
-
     TryDestroyStatBars();
 }
 
-void HandleDestroyStatBarsBg_HGSS(void)
+void DestroyPokedexStatBarsBg(void)
 {
-    if (!POKEDEX_PLUS_HGSS)
-        return;
-
     TryDestroyStatBarsBg();
 }
 
-void HandleCreateStatBars_HGSS(void)
+void CreatePokedexStatBarsAfterMenu(void)
 {
-    if (!POKEDEX_PLUS_HGSS)
-        return;
-
     if (sPokedexView->menuIsOpen == FALSE && sPokedexView->menuY == 8)
     {
         CreateStatBars(&sPokedexView->pokedexList[sPokedexView->selectedPokemon]);
@@ -5350,11 +5341,8 @@ void HandleCreateStatBars_HGSS(void)
     }
 }
 
-void HandleCreateStatBarsDPAD_HGSS(void)
+void CreatePokedexStatBarsAfterScroll(void)
 {
-    if (!POKEDEX_PLUS_HGSS)
-        return;
-
     if (!sPokedexView->scrollTimer && !sPokedexView->scrollSpeed &&sPokedexView->justScrolled)
         CreateStatBars(&sPokedexView->pokedexList[sPokedexView->selectedPokemon]);
 }

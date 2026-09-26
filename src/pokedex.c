@@ -1473,13 +1473,13 @@ void Task_HandlePokedexInput(u8 taskId)
     if (sPokedexView->menuY)
     {
         sPokedexView->menuY -= 8;
-        HandleCreateStatBars_HGSS();
+        CreatePokedexStatBarsAfterMenu();
     }
     else
     {
         if (JOY_NEW(A_BUTTON) && sPokedexView->pokedexList[sPokedexView->selectedPokemon].seen)
         {
-            HandleDestroyStatBars_HGSS();
+            DestroyPokedexStatBars();
             UpdateSelectedMonSpriteId();
             BeginNormalPaletteFade(~(1 << (gSprites[sPokedexView->selectedMonSpriteId].oam.paletteNum + 16)), 0, 0, 0x10, RGB_BLACK);
             gSprites[sPokedexView->selectedMonSpriteId].callback = SpriteCB_MoveMonForInfoScreen;
@@ -1489,8 +1489,8 @@ void Task_HandlePokedexInput(u8 taskId)
         }
         else if (JOY_NEW(START_BUTTON))
         {
-            HandleDestroyStatBars_HGSS();
-            HandleDestroyStatBarsBg_HGSS();
+            DestroyPokedexStatBars();
+            DestroyPokedexStatBarsBg();
             sPokedexView->menuY = 0;
             sPokedexView->menuIsOpen = TRUE;
             sPokedexView->menuCursorPos = 0;
@@ -1513,7 +1513,7 @@ void Task_HandlePokedexInput(u8 taskId)
         }
         else if (JOY_NEW(B_BUTTON))
         {
-            HandleDestroyStatBars_HGSS();
+            DestroyPokedexStatBars();
             BeginNormalPaletteFade(PALETTES_ALL, 0, 0, 0x10, RGB_BLACK);
             gTasks[taskId].func = Task_ClosePokedex;
             PlaySE(SE_PC_OFF);
@@ -1524,14 +1524,14 @@ void Task_HandlePokedexInput(u8 taskId)
             sPokedexView->selectedPokemon = TryDoPokedexScroll(sPokedexView->selectedPokemon, 0xE);
             if (sPokedexView->scrollTimer)
                 gTasks[taskId].func = Task_WaitForScroll;
-            HandleCreateStatBarsDPAD_HGSS();
+            CreatePokedexStatBarsAfterScroll();
         }
     }
 }
 
 static void Task_WaitForScroll(u8 taskId)
 {
-    HandleDestroyStatBars_HGSS();
+    DestroyPokedexStatBars();
     if (UpdateDexListScroll(sPokedexView->scrollDirection, sPokedexView->scrollMonIncrement, sPokedexView->maxScrollTimer))
         gTasks[taskId].func = Task_HandlePokedexInput;
 }
@@ -1630,8 +1630,8 @@ static void Task_WaitForExitSearch(u8 taskId)
     if (!gTasks[gTasks[taskId].tLoadScreenTaskId].isActive)
     {
         ClearMonSprites();
-        HandleDestroyStatBars_HGSS();
-        HandleDestroyStatBarsBg_HGSS();
+        DestroyPokedexStatBars();
+        DestroyPokedexStatBarsBg();
 
         // Search produced results
         if (sPokedexView->screenSwitchState != 0)
@@ -1688,7 +1688,7 @@ static void Task_HandleSearchResultsInput(u8 taskId)
     if (sPokedexView->menuY)
     {
         sPokedexView->menuY -= 8;
-        HandleCreateStatBars_HGSS();
+        CreatePokedexStatBarsAfterMenu();
     }
     else
     {
@@ -1696,7 +1696,7 @@ static void Task_HandleSearchResultsInput(u8 taskId)
         {
             u32 a;
 
-            HandleDestroyStatBars_HGSS();
+            DestroyPokedexStatBars();
             UpdateSelectedMonSpriteId();
             a = (1 << (gSprites[sPokedexView->selectedMonSpriteId].oam.paletteNum + 16));
             gSprites[sPokedexView->selectedMonSpriteId].callback = SpriteCB_MoveMonForInfoScreen;
@@ -1707,8 +1707,8 @@ static void Task_HandleSearchResultsInput(u8 taskId)
         }
         else if (JOY_NEW(START_BUTTON))
         {
-            HandleDestroyStatBars_HGSS();
-            HandleDestroyStatBarsBg_HGSS();
+            DestroyPokedexStatBars();
+            DestroyPokedexStatBarsBg();
             sPokedexView->menuY = 0;
             sPokedexView->menuIsOpen = TRUE;
             sPokedexView->menuCursorPos = 0;
@@ -1726,7 +1726,7 @@ static void Task_HandleSearchResultsInput(u8 taskId)
         }
         else if (JOY_NEW(B_BUTTON))
         {
-            HandleDestroyStatBars_HGSS();
+            DestroyPokedexStatBars();
             BeginNormalPaletteFade(PALETTES_ALL, 0, 0, 0x10, RGB_BLACK);
             gTasks[taskId].func = Task_ReturnToPokedexFromSearchResults;
             PlaySE(SE_PC_OFF);
@@ -1737,14 +1737,14 @@ static void Task_HandleSearchResultsInput(u8 taskId)
             sPokedexView->selectedPokemon = TryDoPokedexScroll(sPokedexView->selectedPokemon, 0xE);
             if (sPokedexView->scrollTimer)
                 gTasks[taskId].func = Task_WaitForSearchResultsScroll;
-            HandleCreateStatBarsDPAD_HGSS();
+            CreatePokedexStatBarsAfterScroll();
         }
     }
 }
 
 static void Task_WaitForSearchResultsScroll(u8 taskId)
 {
-    HandleDestroyStatBars_HGSS();
+    DestroyPokedexStatBars();
     if (UpdateDexListScroll(sPokedexView->scrollDirection, sPokedexView->scrollMonIncrement, sPokedexView->maxScrollTimer))
         gTasks[taskId].func = Task_HandleSearchResultsInput;
 }

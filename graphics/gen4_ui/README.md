@@ -610,3 +610,12 @@ Forms, evolution, footprint, and other shared Pokédex consumers.
 When no form is selected, the function still falls back to the normal National
 Dex species exactly as before.
 
+## Primary Gen 4 Pokédex stat bars
+
+The main-list and Search Results stat-bar helpers are now canonical Pokédex
+operations rather than `_HGSS` compatibility wrappers. Their legacy
+`POKEDEX_PLUS_HGSS` early-return checks have been removed.
+
+The list now always creates and destroys the Gen 4 stat bars during menu
+transitions and completed D-pad scrolling, matching the permanent HGSS renderer.
+

@@ -17,10 +17,10 @@ void Task_SwitchScreensFromCryScreen_HGSS(u8 taskId);
 void Task_LoadSizeScreen_HGSS(u8 taskId);
 void LoadPlayArrowPalette_HGSS(bool8 cryPlaying);
 void LoadSearchMenu_HGSS(u8 taskId);
-void HandleDestroyStatBars_HGSS(void);
-void HandleDestroyStatBarsBg_HGSS(void);
-void HandleCreateStatBars_HGSS(void);
-void HandleCreateStatBarsDPAD_HGSS(void);
+void DestroyPokedexStatBars(void);
+void DestroyPokedexStatBarsBg(void);
+void CreatePokedexStatBarsAfterMenu(void);
+void CreatePokedexStatBarsAfterScroll(void);
 void HideCaughtMonPageTypeIcons(void);
 
 #endif // GUARD_POKEDEX_PLUS_HGSS_H
