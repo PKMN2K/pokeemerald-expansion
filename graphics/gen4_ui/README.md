@@ -20,3 +20,14 @@ tile by setting the GBA tilemap flip bits instead of storing another tile.
 
 True-color PNG quantization is not part of this first path; convert RGB/RGBA
 sources to an indexed palette before importing them.
+
+
+## Renderer test fixture
+
+`renderer_test.png` is a 256x192 indexed test fixture used by the temporary
+Debug > Utilities > Gen 4 UI test screen. It deliberately places markers in the
+rightmost 16 pixels and bottom 32 pixels, outside the 240x160 GBA viewport.
+Use the D-pad to scroll those areas into view; B returns to the field.
+
+The fixture is only for renderer validation and will be replaced by imported
+HGSS/DPPt source artwork screen by screen.
