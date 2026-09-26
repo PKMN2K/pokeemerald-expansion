@@ -2309,9 +2309,7 @@ static void CreateScrollingPokemonSprite(u8 direction, u16 selectedMon)
 {
     u16 dexNum;
     u8 spriteId;
-    u32 scrollingMonX = 0x60;
-    if (POKEDEX_PLUS_HGSS)
-        scrollingMonX = 0x92;
+    const u32 scrollingMonX = 0x92;
 
     sPokedexView->listMovingVOffset = sPokedexView->listVOffset;
     switch (direction)

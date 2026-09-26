@@ -582,3 +582,12 @@ The old Emerald BG3 highlight path and its low-numbered palette-bank branch have
 been removed. BG1 is always uploaded after a highlight update while BG3 remains
 the authentic 8bpp HGSS Search background.
 
+## Primary Gen 4 scrolling-list Pokémon position
+
+The scrolling list now creates incoming Pokémon sprites at the HGSS X position
+unconditionally. `CreateScrollingPokemonSprite` no longer switches between the
+Emerald `0x60` coordinate and the Gen 4 `0x92` coordinate.
+
+This completes the list sprite-position cleanup started when the main list row
+renderer was made primary.
+
