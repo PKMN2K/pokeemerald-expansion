@@ -530,3 +530,13 @@ already did.
 The former feature-gated type-icon/flicker compatibility helpers were reduced to
 a direct `HideCaughtMonPageTypeIcons` cleanup helper.
 
+## Primary Gen 4 Pokédex palette path
+
+`LoadPokedexBgPalette` is now implemented directly by the HGSS/Gen 4 module.
+The old `TryLoadPokedexBgPalette_HGSS` compatibility hook and the Emerald
+Hoenn/National/Search-results palette-selection fallback have been removed.
+
+Every Pokédex screen that calls the shared palette function now receives the
+Gen 4 list/search text palette and textbox palette unconditionally, with the
+existing HGSS dark-mode selection preserved.
+

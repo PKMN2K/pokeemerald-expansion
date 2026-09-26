@@ -3,7 +3,6 @@
 
 void InitInfoScreenWindows_HGSS(void);
 bool8 LoadPokedexListPage_HGSS(u8 page);
-bool32 TryLoadPokedexBgPalette_HGSS(bool8 isSearchResults);
 bool32 TryCreateMonListEntry_HGSS(u8 position, u16 b, u16 ignored);
 bool32 TryMoveMonForInfoScreen_HGSS(struct Sprite *sprite);
 void Task_LoadInfoScreen_HGSS(u8 taskId);

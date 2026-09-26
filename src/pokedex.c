@@ -1872,21 +1872,7 @@ static void Task_ClosePokedexFromSearchResultsStartMenu(u8 taskId)
 
 #undef tLoadScreenTaskId
 
-// List and search-results rendering is owned by the HGSS/Gen 4 renderer.
-void LoadPokedexBgPalette(bool8 isSearchResults)
-{
-    if (TryLoadPokedexBgPalette_HGSS(isSearchResults))
-        return;
-
-    if (isSearchResults == TRUE)
-        LoadPalette(gPokedexSearchResults_Pal + 1, BG_PLTT_ID(0) + 1, PLTT_SIZEOF(6 * 16 - 1));
-    else if (!IsNationalPokedexEnabled())
-        LoadPalette(gPokedexBgHoenn_Pal + 1, BG_PLTT_ID(0) + 1, PLTT_SIZEOF(6 * 16 - 1));
-    else
-        LoadPalette(gPokedexBgNational_Pal + 1, BG_PLTT_ID(0) + 1, PLTT_SIZEOF(6 * 16 - 1));
-    LoadPalette(GetOverworldTextboxPalettePtr(), BG_PLTT_ID(15), PLTT_SIZE_4BPP);
-}
-
+// Pokédex background palettes are owned by the primary HGSS/Gen 4 renderer.
 static void FreeWindowAndBgBuffers(void)
 {
     void *tilemapBuffer;
