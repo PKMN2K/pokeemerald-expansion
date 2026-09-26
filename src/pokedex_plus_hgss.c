@@ -162,9 +162,9 @@ static const u8 sText_PlusSymbol[] = _("+");
 #define GEN4_UI_HGSS_INFO_PAL_SLOT 8
 #define GEN4_UI_HGSS_INFO_COLORS 13
 
-static const u8 sPokedexPlusHGSS_Gen4InfoTiles[] = INCBIN_U8("graphics/gen4_ui/hgss_pokedex_member_020.tiles.8bpp");
-static const u16 sPokedexPlusHGSS_Gen4InfoTilemap[] = INCBIN_U16("graphics/gen4_ui/hgss_pokedex_member_020.tilemap.bin");
-static const u16 sPokedexPlusHGSS_Gen4InfoPalette[] = INCBIN_U16("graphics/gen4_ui/hgss_pokedex_member_020.gbapal");
+static const u8 sPokedexPlusHGSS_Gen4InfoTiles[] = INCBIN_U8("graphics/gen4_ui/hgss_pokedex_info_gba.tiles.8bpp");
+static const u16 sPokedexPlusHGSS_Gen4InfoTilemap[] = INCBIN_U16("graphics/gen4_ui/hgss_pokedex_info_gba.tilemap.bin");
+static const u16 sPokedexPlusHGSS_Gen4InfoPalette[] = INCBIN_U16("graphics/gen4_ui/hgss_pokedex_info_gba.gbapal");
 
 static const struct Gen4UiBgAsset sPokedexPlusHGSS_Gen4InfoAsset =
 {
@@ -402,8 +402,8 @@ static const struct WindowTemplate sInfoScreen_WindowTemplates[] =
     [WIN_FOOTPRINT] =
     {
         .bg = 2,
-        .tilemapLeft = 15, //HGSSS_Ui
-        .tilemapTop = 7, //HGSSS_Ui
+        .tilemapLeft = 14, // authentic HGSS footprint box
+        .tilemapTop = 9
         .width = 2,
         .height = 2,
         .paletteNum = 15,
@@ -1802,7 +1802,7 @@ static void PrintMonInfo(u32 num, u32 value, u32 owned, u32 newEntry)
         description = GetSpeciesPokedexDescription(species);
     else
         description = sExpandedPlaceholder_PokedexDescription;
-    PrintInfoScreenText(description, GetStringCenterAlignXOffset(FONT_NORMAL, description, 0xF0), 93);
+    PrintInfoScreenText(description, GetStringCenterAlignXOffset(FONT_NORMAL, description, 0xF0), 132);
 
     //Type Icon(s)
     if (owned)
@@ -1848,8 +1848,8 @@ static void LoadTilesetTilemapHGSS(u8 page)
     switch (page)
     {
     case INFO_SCREEN:
-        // Authentic HGSS layer on BG3. Charblock 3 is free on this screen and
-        // palette entries 128..140 are reserved for its 13 source colors.
+        // Authentic HGSS-derived 240x160 production layout on BG3. It keeps
+        // source pixels 1:1 while compacting only empty interior strips.
         SetBgAttribute(3, BG_ATTR_CHARBASEINDEX, 3);
         SetBgAttribute(3, BG_ATTR_PALETTEMODE, GEN4_UI_PALETTE_8BPP);
         if (Gen4UiLoadBgAsset(3, &sPokedexPlusHGSS_Gen4InfoAsset))
