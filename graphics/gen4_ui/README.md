@@ -629,3 +629,12 @@ Actual HGSS behavior preferences remain configurable, including decapped text,
 dark mode, evolution visibility, TM sorting, and evolved-Pokémon Egg Move
 display.
 
+## Removed the main-list legacy background fallback
+
+The primary Pokédex list loader no longer restores the old Emerald-style BG3
+graphics or loads the adapted list-underlay tilemap when the authentic Gen 4
+asset load fails. The list now has only the Gen 4 background path.
+
+The now-unused `sPokedexPlusHGSS_ScreenListUnderlay_Tilemap` declaration was
+removed as part of the same cleanup.
+
