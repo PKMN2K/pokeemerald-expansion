@@ -37,6 +37,19 @@ def load_raw_tiles(path, width, height):
     return [raw[i:i + TILE_BYTES] for i in range(0, len(raw), TILE_BYTES)]
 
 
+def apply_palette_base(source_tiles, palette_base):
+    if palette_base == 0:
+        return source_tiles
+
+    max_index = max(max(tile) for tile in source_tiles)
+    if max_index + palette_base > 255:
+        raise ValueError(
+            f"palette base {palette_base} + source index {max_index} exceeds 255"
+        )
+
+    return [bytes(pixel + palette_base for pixel in tile) for tile in source_tiles]
+
+
 def pack(source_tiles, tiles_wide, tiles_high, max_tiles):
     blank = bytes(TILE_BYTES)
     unique = [blank]
@@ -91,12 +104,15 @@ def main():
     p.add_argument("--tiles")
     p.add_argument("--tilemap")
     p.add_argument("--max-tiles", type=int, default=769)
+    p.add_argument("--palette-base", type=int, default=0)
     args = p.parse_args()
 
     if not args.tiles and not args.tilemap:
         p.error("request --tiles and/or --tilemap")
     if not 1 <= args.max_tiles <= 1023:
         p.error("--max-tiles must be in 1..1023")
+    if not 0 <= args.palette_base <= 255:
+        p.error("--palette-base must be in 0..255")
 
     width, height = png_size(args.png)
     if width % 8 or height % 8:
@@ -108,6 +124,7 @@ def main():
         )
 
     source_tiles = load_raw_tiles(args.raw8bpp, width, height)
+    source_tiles = apply_palette_base(source_tiles, args.palette_base)
     tiles, tilemap = pack(source_tiles, tiles_wide, tiles_high, args.max_tiles)
 
     if args.tiles:
@@ -117,7 +134,8 @@ def main():
 
     print(
         f"{args.png}: {width}x{height}, {len(source_tiles)} source tiles -> "
-        f"{len(tiles)} unique tiles ({len(tiles) * TILE_BYTES} bytes)"
+        f"{len(tiles)} unique tiles ({len(tiles) * TILE_BYTES} bytes), "
+        f"palette base {args.palette_base}"
     )
 
 
