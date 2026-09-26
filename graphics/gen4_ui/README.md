@@ -668,3 +668,12 @@ Both obsolete fallback assets,
 `graphics/pokedex/hgss/tilemap_evo_screen.bin` and
 `graphics/pokedex/hgss/tilemap_evo_screen_PE.bin`, were deleted.
 
+## Removed the Forms-screen legacy background fallback
+
+The Pokédex Forms screen no longer restores 4bpp legacy BG3 graphics or loads
+the adapted Forms fallback tilemap. Forms now has only its Gen 4/HGSS-composed
+background path.
+
+The obsolete `graphics/pokedex/hgss/tilemap_forms_screen.bin` fallback asset
+was deleted.
+
