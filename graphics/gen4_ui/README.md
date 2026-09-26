@@ -735,3 +735,24 @@ Deleted assets:
 
 The live Search-menu palettes remain in place because the Search overlay still
 loads them.
+
+## Removed obsolete legacy Pokédex list/interface assets
+
+The authentic HGSS list overlay, sliding START menus, dedicated scroll controls,
+dedicated START-menu cursor, compact counter sheet, and direct BG clearing have
+fully replaced the remaining adapted list/interface resources.
+
+Deleted assets:
+- `graphics/pokedex/hgss/SelectBar.bin`
+- `graphics/pokedex/hgss/SelectBar_clear.bin`
+- `graphics/pokedex/hgss/tilemap_list_screen.bin`
+- `graphics/pokedex/hgss/tilemap_start_menu.bin`
+- `graphics/pokedex/hgss/tilemap_start_menu_search_results.bin`
+- `graphics/pokedex/hgss/tileset_interface.png`
+- `graphics/pokedex/hgss/tileset_interface_DECA.png`
+- `graphics/pokedex/hgss/tileset_menu_list.png`
+- `graphics/pokedex/hgss/tileset_menu_list_DECA.png`
+
+At this point, the legacy `graphics/pokedex/hgss` directory contains only the
+two Search-menu palettes still loaded by the active Search overlay and the live
+stat-bar graphic.
