@@ -563,3 +563,12 @@ The old Emerald popup renderer, including its hard-coded tile IDs on BG3, has
 been removed. Closing the popup restores the canonical HGSS overlay tiles
 directly.
 
+## Primary Gen 4 list-to-Info sprite transition
+
+`SpriteCB_MoveMonForInfoScreen` now contains the Gen 4 transition geometry
+directly. The selected Pokémon moves toward the Info-page position in four-pixel
+steps and clamps cleanly at the target coordinates.
+
+The former `TryMoveMonForInfoScreen_HGSS` compatibility helper and the slower
+one-pixel Emerald fallback movement have been removed.
+

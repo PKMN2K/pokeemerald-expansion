@@ -7,7 +7,6 @@ extern const u16 sPokedexPlusHGSS_Gen4SearchOverlayTilemap[];
 
 void InitInfoScreenWindows_HGSS(void);
 bool8 LoadPokedexListPage_HGSS(u8 page);
-bool32 TryMoveMonForInfoScreen_HGSS(struct Sprite *sprite);
 void Task_LoadInfoScreen_HGSS(u8 taskId);
 void HandleInfoScreenInput_HGSS(u8 taskId);
 void Task_LoadAreaScreen_HGSS(u8 taskId);

@@ -1626,25 +1626,6 @@ static void CreateInterfaceSprites(u8 page)
     }
 }
 
-bool32 TryMoveMonForInfoScreen_HGSS(struct Sprite *sprite)
-{
-    if (!POKEDEX_PLUS_HGSS)
-        return FALSE;
-
-    if (sprite->x > MON_PAGE_X)
-        sprite->x -= 4;
-    if (sprite->x < MON_PAGE_X)
-        sprite->x = MON_PAGE_X;
-
-    if (sprite->y > MON_PAGE_Y)
-        sprite->y -= 4;
-    if (sprite->y < MON_PAGE_Y)
-        sprite->y = MON_PAGE_Y;
-
-    return TRUE;
-}
-
-
 
 //************************************
 //*                                  *

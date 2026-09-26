@@ -2809,20 +2809,18 @@ void SpriteCB_MoveMonForInfoScreen(struct Sprite *sprite)
     sprite->oam.affineMode = ST_OAM_AFFINE_OFF;
     sprite->x2 = 0;
     sprite->y2 = 0;
+
     if (sprite->x != MON_PAGE_X || sprite->y != MON_PAGE_Y)
     {
-        if (TryMoveMonForInfoScreen_HGSS(sprite))
-            return;
-
         if (sprite->x > MON_PAGE_X)
-            sprite->x--;
+            sprite->x -= 4;
         if (sprite->x < MON_PAGE_X)
-            sprite->x++;
+            sprite->x = MON_PAGE_X;
 
         if (sprite->y > MON_PAGE_Y)
-            sprite->y--;
+            sprite->y -= 4;
         if (sprite->y < MON_PAGE_Y)
-            sprite->y++;
+            sprite->y = MON_PAGE_Y;
     }
     else
     {
