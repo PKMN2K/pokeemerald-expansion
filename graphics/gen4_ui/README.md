@@ -184,3 +184,20 @@ scale matrices and vertical offset calculations are unchanged.
 The background uses 13 colors in the reserved 8bpp palette range beginning at
 entry 128. The previous adapted Size background remains the fallback if the
 Gen 4 asset loader fails.
+
+
+## Authentic HGSS Search interface
+
+The live Search menu now uses authentic HGSS Pokédex member 068 as its 8bpp
+BG3 backdrop. The GBA composition is the direct top-left 240x160 crop of the
+256x192 DS source; no source pixel is scaled or redrawn.
+
+The existing functional HGSS search controls remain as a 4bpp BG1 overlay.
+This preserves the current SEARCH / SHIFT / CANCEL top bar, Name, Color, Type,
+Order, Mode and OK controls, disabled-state styling, cursor/highlight behavior,
+scrollable parameter list, selector arrow, descriptions, and all search logic.
+
+For this layered layout, BG2 remains the text/window layer, BG1 carries the
+legacy interactive control/highlight tiles, and BG3 carries the authentic
+member 068 background. The HGSS search highlight helpers route their tilemap
+updates to BG1 while non-HGSS behavior still uses BG3.
