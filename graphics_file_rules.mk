@@ -10,9 +10,127 @@ PKNAVOPTIONSGFXDIR := graphics/pokenav/options
 WALLPAPERGFXDIR := graphics/pokemon_storage/wallpapers
 JPCONTESTGFXDIR := graphics/contest/japanese
 TITLESCREENGFXDIR := graphics/title_screen
+GEN4UIGFXDIR := graphics/gen4_ui
+GEN4UIPACK := tools/gen4_ui/pack_gen4_ui.py
+GEN4UITESTFIXTURE := tools/gen4_ui/make_test_fixture.py
+GEN4UIHGSSDEX := tools/gen4_ui/make_hgss_pokedex_member_020.py
+GEN4UIHGSSLIST := tools/gen4_ui/make_hgss_pokedex_list_member_000.py
+GEN4UIHGSSLISTOVERLAY := tools/gen4_ui/make_hgss_pokedex_list_overlay.py
+GEN4UIHGSSSTATS := tools/gen4_ui/make_hgss_pokedex_stats.py
+GEN4UIHGSSEVO := tools/gen4_ui/make_hgss_pokedex_evolution.py
+GEN4UIHGSSFORMS := tools/gen4_ui/make_hgss_pokedex_forms.py
+GEN4UIHGSSCRY := tools/gen4_ui/make_hgss_pokedex_cry.py
+GEN4UIHGSSSIZE := tools/gen4_ui/make_hgss_pokedex_size.py
+GEN4UIHGSSAREA := tools/gen4_ui/make_hgss_pokedex_area_chrome.py
+GEN4UIHGSSSEARCH := tools/gen4_ui/make_hgss_pokedex_search.py
+GEN4UIHGSSSEARCHOVERLAY := tools/gen4_ui/make_hgss_pokedex_search_overlay.py
+GEN4UIHGSSSTART := tools/gen4_ui/make_hgss_pokedex_start_menu.py
+GEN4UIHGSSSCROLL := tools/gen4_ui/make_hgss_pokedex_scroll_controls.py
+GEN4UIHGSSSTARTCURSOR := tools/gen4_ui/make_hgss_pokedex_start_cursor.py
+GEN4UIHGSSCOUNTERS := tools/gen4_ui/make_hgss_pokedex_counters.py
 
 types := none normal fight flying poison ground rock bug ghost steel mystery fire water grass electric psychic ice dragon dark fairy stellar
 contest_types := cool beauty cute smart tough
+
+
+### Gen 4 UI ###
+
+$(GEN4UIGFXDIR)/renderer_test.png: $(GEN4UITESTFIXTURE)
+	python3 $< $@
+
+$(GEN4UIGFXDIR)/hgss_pokedex_member_020.png: $(GEN4UIHGSSDEX)
+	python3 $< $@
+
+$(GEN4UIGFXDIR)/hgss_pokedex_info_gba.png: $(GEN4UIHGSSDEX)
+	python3 $< --gba-layout $@
+
+$(GEN4UIGFXDIR)/hgss_pokedex_list_gba.png: $(GEN4UIHGSSLIST)
+	python3 $< $@
+
+$(GEN4UIGFXDIR)/hgss_pokedex_stats_gba.png: $(GEN4UIHGSSSTATS)
+	python3 $< $@
+
+$(GEN4UIGFXDIR)/hgss_pokedex_evolution_gba.png: $(GEN4UIHGSSEVO)
+	python3 $< $@
+
+$(GEN4UIGFXDIR)/hgss_pokedex_forms_gba.png: $(GEN4UIHGSSFORMS)
+	python3 $< $@
+
+$(GEN4UIGFXDIR)/hgss_pokedex_cry_gba.png: $(GEN4UIHGSSCRY)
+	python3 $< $@
+
+$(GEN4UIGFXDIR)/hgss_pokedex_size_gba.png: $(GEN4UIHGSSSIZE)
+	python3 $< $@
+
+$(GEN4UIGFXDIR)/hgss_pokedex_search_gba.png: $(GEN4UIHGSSSEARCH)
+	python3 $< $@
+
+# The live HGSS Pokédex background reserves BG palette entries 128..140.
+# Shifting tile pixel indices keeps the legacy Pokédex palettes (0..95 and 240..255)
+# available for text, windows, and other existing layers.
+$(GEN4UIGFXDIR)/hgss_pokedex_member_020.tiles.8bpp: $(GEN4UIGFXDIR)/hgss_pokedex_member_020.8bpp $(GEN4UIGFXDIR)/hgss_pokedex_member_020.png $(GEN4UIPACK)
+	python3 $(GEN4UIPACK) $(word 2,$^) $< --tiles $@ --palette-base 128
+
+$(GEN4UIGFXDIR)/hgss_pokedex_member_020.tilemap.bin: $(GEN4UIGFXDIR)/hgss_pokedex_member_020.8bpp $(GEN4UIGFXDIR)/hgss_pokedex_member_020.png $(GEN4UIPACK)
+	python3 $(GEN4UIPACK) $(word 2,$^) $< --tilemap $@ --palette-base 128
+
+$(GEN4UIGFXDIR)/hgss_pokedex_info_gba.tiles.8bpp: $(GEN4UIGFXDIR)/hgss_pokedex_info_gba.8bpp $(GEN4UIGFXDIR)/hgss_pokedex_info_gba.png $(GEN4UIPACK)
+	python3 $(GEN4UIPACK) $(word 2,$^) $< --tiles $@ --palette-base 128
+
+$(GEN4UIGFXDIR)/hgss_pokedex_info_gba.tilemap.bin: $(GEN4UIGFXDIR)/hgss_pokedex_info_gba.8bpp $(GEN4UIGFXDIR)/hgss_pokedex_info_gba.png $(GEN4UIPACK)
+	python3 $(GEN4UIPACK) $(word 2,$^) $< --tilemap $@ --palette-base 128
+
+$(GEN4UIGFXDIR)/hgss_pokedex_list_gba.tiles.8bpp: $(GEN4UIGFXDIR)/hgss_pokedex_list_gba.8bpp $(GEN4UIGFXDIR)/hgss_pokedex_list_gba.png $(GEN4UIPACK)
+	python3 $(GEN4UIPACK) $(word 2,$^) $< --tiles $@ --palette-base 128
+
+$(GEN4UIGFXDIR)/hgss_pokedex_list_gba.tilemap.bin: $(GEN4UIGFXDIR)/hgss_pokedex_list_gba.8bpp $(GEN4UIGFXDIR)/hgss_pokedex_list_gba.png $(GEN4UIPACK)
+	python3 $(GEN4UIPACK) $(word 2,$^) $< --tilemap $@ --palette-base 128
+
+$(GEN4UIGFXDIR)/hgss_pokedex_stats_gba.tiles.8bpp: $(GEN4UIGFXDIR)/hgss_pokedex_stats_gba.8bpp $(GEN4UIGFXDIR)/hgss_pokedex_stats_gba.png $(GEN4UIPACK)
+	python3 $(GEN4UIPACK) $(word 2,$^) $< --tiles $@ --palette-base 128
+
+$(GEN4UIGFXDIR)/hgss_pokedex_stats_gba.tilemap.bin: $(GEN4UIGFXDIR)/hgss_pokedex_stats_gba.8bpp $(GEN4UIGFXDIR)/hgss_pokedex_stats_gba.png $(GEN4UIPACK)
+	python3 $(GEN4UIPACK) $(word 2,$^) $< --tilemap $@ --palette-base 128
+
+$(GEN4UIGFXDIR)/hgss_pokedex_evolution_gba.tiles.8bpp: $(GEN4UIGFXDIR)/hgss_pokedex_evolution_gba.8bpp $(GEN4UIGFXDIR)/hgss_pokedex_evolution_gba.png $(GEN4UIPACK)
+	python3 $(GEN4UIPACK) $(word 2,$^) $< --tiles $@ --palette-base 128
+
+$(GEN4UIGFXDIR)/hgss_pokedex_evolution_gba.tilemap.bin: $(GEN4UIGFXDIR)/hgss_pokedex_evolution_gba.8bpp $(GEN4UIGFXDIR)/hgss_pokedex_evolution_gba.png $(GEN4UIPACK)
+	python3 $(GEN4UIPACK) $(word 2,$^) $< --tilemap $@ --palette-base 128
+
+$(GEN4UIGFXDIR)/hgss_pokedex_forms_gba.tiles.8bpp: $(GEN4UIGFXDIR)/hgss_pokedex_forms_gba.8bpp $(GEN4UIGFXDIR)/hgss_pokedex_forms_gba.png $(GEN4UIPACK)
+	python3 $(GEN4UIPACK) $(word 2,$^) $< --tiles $@ --palette-base 128
+
+$(GEN4UIGFXDIR)/hgss_pokedex_forms_gba.tilemap.bin: $(GEN4UIGFXDIR)/hgss_pokedex_forms_gba.8bpp $(GEN4UIGFXDIR)/hgss_pokedex_forms_gba.png $(GEN4UIPACK)
+	python3 $(GEN4UIPACK) $(word 2,$^) $< --tilemap $@ --palette-base 128
+
+$(GEN4UIGFXDIR)/hgss_pokedex_cry_gba.tiles.8bpp: $(GEN4UIGFXDIR)/hgss_pokedex_cry_gba.8bpp $(GEN4UIGFXDIR)/hgss_pokedex_cry_gba.png $(GEN4UIPACK)
+	python3 $(GEN4UIPACK) $(word 2,$^) $< --tiles $@ --palette-base 128
+
+$(GEN4UIGFXDIR)/hgss_pokedex_cry_gba.tilemap.bin: $(GEN4UIGFXDIR)/hgss_pokedex_cry_gba.8bpp $(GEN4UIGFXDIR)/hgss_pokedex_cry_gba.png $(GEN4UIPACK)
+	python3 $(GEN4UIPACK) $(word 2,$^) $< --tilemap $@ --palette-base 128
+
+$(GEN4UIGFXDIR)/hgss_pokedex_size_gba.tiles.8bpp: $(GEN4UIGFXDIR)/hgss_pokedex_size_gba.8bpp $(GEN4UIGFXDIR)/hgss_pokedex_size_gba.png $(GEN4UIPACK)
+	python3 $(GEN4UIPACK) $(word 2,$^) $< --tiles $@ --palette-base 128
+
+$(GEN4UIGFXDIR)/hgss_pokedex_size_gba.tilemap.bin: $(GEN4UIGFXDIR)/hgss_pokedex_size_gba.8bpp $(GEN4UIGFXDIR)/hgss_pokedex_size_gba.png $(GEN4UIPACK)
+	python3 $(GEN4UIPACK) $(word 2,$^) $< --tilemap $@ --palette-base 128
+
+$(GEN4UIGFXDIR)/hgss_pokedex_search_gba.tiles.8bpp: $(GEN4UIGFXDIR)/hgss_pokedex_search_gba.8bpp $(GEN4UIGFXDIR)/hgss_pokedex_search_gba.png $(GEN4UIPACK)
+	python3 $(GEN4UIPACK) $(word 2,$^) $< --tiles $@ --palette-base 128
+
+$(GEN4UIGFXDIR)/hgss_pokedex_search_gba.tilemap.bin: $(GEN4UIGFXDIR)/hgss_pokedex_search_gba.8bpp $(GEN4UIGFXDIR)/hgss_pokedex_search_gba.png $(GEN4UIPACK)
+	python3 $(GEN4UIPACK) $(word 2,$^) $< --tilemap $@ --palette-base 128
+
+# gbagfx first converts the indexed source PNG into a full 8bpp tile stream.
+# This second stage deduplicates identical/flipped tiles and emits a standard
+# 32x32 text-BG tilemap suitable for Gen4UiLoadBgAsset.
+$(GEN4UIGFXDIR)/%.tiles.8bpp: $(GEN4UIGFXDIR)/%.8bpp $(GEN4UIGFXDIR)/%.png $(GEN4UIPACK)
+	python3 $(GEN4UIPACK) $(word 2,$^) $< --tiles $@
+
+$(GEN4UIGFXDIR)/%.tilemap.bin: $(GEN4UIGFXDIR)/%.8bpp $(GEN4UIGFXDIR)/%.png $(GEN4UIPACK)
+	python3 $(GEN4UIPACK) $(word 2,$^) $< --tilemap $@
+
 
 ### Miscellaneous ###
 
@@ -315,3 +433,68 @@ $(PKNAVOPTIONSGFXDIR)/options.4bpp: $(PKNAVOPTIONSGFXDIR)/hoenn_map.4bpp \
                                     $(PKNAVOPTIONSGFXDIR)/tough.4bpp \
                                     $(PKNAVOPTIONSGFXDIR)/cancel.4bpp
 	@cat $^ >$@
+
+
+$(GEN4UIGFXDIR)/hgss_pokedex_area_chrome.tiles.bin: $(GEN4UIHGSSAREA)
+	python3 $< --tiles $@
+
+$(GEN4UIGFXDIR)/hgss_pokedex_area_chrome.tilemap.bin: $(GEN4UIHGSSAREA)
+	python3 $< --tilemap $@
+
+$(GEN4UIGFXDIR)/hgss_pokedex_area_chrome.palette.bin: $(GEN4UIHGSSAREA)
+	python3 $< --palette $@
+
+
+$(GEN4UIGFXDIR)/hgss_pokedex_start_menu_main.tiles.bin: $(GEN4UIHGSSSTART) $(GEN4UIHGSSSTATS)
+	python3 $(GEN4UIHGSSSTART) --variant main --tiles $@
+
+$(GEN4UIGFXDIR)/hgss_pokedex_start_menu_main.tilemap.bin: $(GEN4UIHGSSSTART) $(GEN4UIHGSSSTATS)
+	python3 $(GEN4UIHGSSSTART) --variant main --tilemap $@
+
+$(GEN4UIGFXDIR)/hgss_pokedex_start_menu_results.tiles.bin: $(GEN4UIHGSSSTART) $(GEN4UIHGSSSTATS)
+	python3 $(GEN4UIHGSSSTART) --variant search-results --tiles $@
+
+$(GEN4UIGFXDIR)/hgss_pokedex_start_menu_results.tilemap.bin: $(GEN4UIHGSSSTART) $(GEN4UIHGSSSTATS)
+	python3 $(GEN4UIHGSSSTART) --variant search-results --tilemap $@
+
+$(GEN4UIGFXDIR)/hgss_pokedex_start_menu.palette.bin: $(GEN4UIHGSSSTART) $(GEN4UIHGSSSTATS)
+	python3 $(GEN4UIHGSSSTART) --palette $@
+
+
+$(GEN4UIGFXDIR)/hgss_pokedex_list_overlay.tiles.bin: $(GEN4UIHGSSLISTOVERLAY) $(GEN4UIHGSSLIST)
+	python3 $(GEN4UIHGSSLISTOVERLAY) --tiles $@
+
+$(GEN4UIGFXDIR)/hgss_pokedex_list_overlay.tilemap.bin: $(GEN4UIHGSSLISTOVERLAY) $(GEN4UIHGSSLIST)
+	python3 $(GEN4UIHGSSLISTOVERLAY) --tilemap $@
+
+$(GEN4UIGFXDIR)/hgss_pokedex_list_overlay.palette.bin: $(GEN4UIHGSSLISTOVERLAY) $(GEN4UIHGSSLIST)
+	python3 $(GEN4UIHGSSLISTOVERLAY) --palette $@
+
+
+$(GEN4UIGFXDIR)/hgss_pokedex_search_overlay.tiles.bin: $(GEN4UIHGSSSEARCHOVERLAY) $(GEN4UIHGSSSEARCH)
+	python3 $(GEN4UIHGSSSEARCHOVERLAY) --tiles $@
+
+$(GEN4UIGFXDIR)/hgss_pokedex_search_overlay.tilemap.bin: $(GEN4UIHGSSSEARCHOVERLAY) $(GEN4UIHGSSSEARCH)
+	python3 $(GEN4UIHGSSSEARCHOVERLAY) --tilemap $@
+
+$(GEN4UIGFXDIR)/hgss_pokedex_search_overlay.palette.bin: $(GEN4UIHGSSSEARCHOVERLAY) $(GEN4UIHGSSSEARCH)
+	python3 $(GEN4UIHGSSSEARCHOVERLAY) --palette $@
+
+
+$(GEN4UIGFXDIR)/hgss_pokedex_scroll_controls.tiles.bin: $(GEN4UIHGSSSCROLL) $(GEN4UIHGSSLIST)
+	python3 $(GEN4UIHGSSSCROLL) --tiles $@
+
+$(GEN4UIGFXDIR)/hgss_pokedex_scroll_controls.palette.bin: $(GEN4UIHGSSSCROLL) $(GEN4UIHGSSLIST)
+	python3 $(GEN4UIHGSSSCROLL) --palette $@
+
+$(GEN4UIGFXDIR)/hgss_pokedex_start_cursor.tiles.bin: $(GEN4UIHGSSSTARTCURSOR) $(GEN4UIHGSSSTATS)
+	python3 $(GEN4UIHGSSSTARTCURSOR) --tiles $@
+
+$(GEN4UIGFXDIR)/hgss_pokedex_start_cursor.palette.bin: $(GEN4UIHGSSSTARTCURSOR) $(GEN4UIHGSSSTATS)
+	python3 $(GEN4UIHGSSSTARTCURSOR) --palette $@
+
+$(GEN4UIGFXDIR)/hgss_pokedex_counters.tiles.bin: graphics/pokedex/hgss/tileset_interface.png $(GEN4UIHGSSCOUNTERS)
+	python3 $(GEN4UIHGSSCOUNTERS) $< $@
+
+$(GEN4UIGFXDIR)/hgss_pokedex_counters_deca.tiles.bin: graphics/pokedex/hgss/tileset_interface_DECA.png $(GEN4UIHGSSCOUNTERS)
+	python3 $(GEN4UIHGSSCOUNTERS) $< $@

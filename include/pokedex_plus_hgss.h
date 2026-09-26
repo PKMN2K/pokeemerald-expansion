@@ -1,26 +1,26 @@
 #ifndef GUARD_POKEDEX_PLUS_HGSS_H
 #define GUARD_POKEDEX_PLUS_HGSS_H
 
-bool32 TryInitWindows_HGSS(void);
-bool32 TryOpenPokedexPage_HGSS(u8, u8);
-bool32 TryLoadPokedexBgPalette_HGSS(bool8 isSearchResults);
-bool32 TryCreateMonListEntry_HGSS(u8 position, u16 b, u16 ignored);
-bool32 TryMoveMonForInfoScreen_HGSS(struct Sprite *sprite);
-bool32 Task_TryLoadInfoScreen_HGSS(u8);
-bool32 TryHandleInfoScreenInput_HGSS(u8 taskId);
-bool32 TryLoadAreaScreen_HGSS(u8 taskId);
-bool32 TrySwitchScreensFromAreaScreen_HGSS(u8 taskId);
-void Task_DisplayCaughtMonDexPageHGSS(u8);
-bool32 TryLoadCryScreen_HGSS(u8 taskId);
-bool32 TrySwitchScreensFromCryScreen_HGSS(u8 taskId);
-bool32 TryLoadSizeScreen_HGSS(u8 taskId);
-bool32 TryLoadPlayArrowPalette_HGSS(bool8 cryPlaying);
-bool32 TryLoadSearchMenu_HGSS(u8 taskId);
+#define GEN4_UI_HGSS_SEARCH_SELECTED_PAL_SLOT 4
+
+extern const u16 sPokedexPlusHGSS_Gen4SearchOverlayTilemap[];
+
+void InitInfoScreenWindows_HGSS(void);
+bool8 LoadPokedexListPage_HGSS(u8 page);
+void Task_LoadInfoScreen_HGSS(u8 taskId);
+void HandleInfoScreenInput_HGSS(u8 taskId);
+void Task_LoadAreaScreen_HGSS(u8 taskId);
+void Task_SwitchScreensFromAreaScreen_HGSS(u8 taskId);
+void Task_DisplayCaughtMonDexPage(u8 taskId);
+void Task_LoadCryScreen_HGSS(u8 taskId);
+void Task_SwitchScreensFromCryScreen_HGSS(u8 taskId);
+void Task_LoadSizeScreen_HGSS(u8 taskId);
+void LoadPlayArrowPalette_HGSS(bool8 cryPlaying);
+void LoadSearchMenu_HGSS(u8 taskId);
 void HandleDestroyStatBars_HGSS(void);
 void HandleDestroyStatBarsBg_HGSS(void);
 void HandleCreateStatBars_HGSS(void);
 void HandleCreateStatBarsDPAD_HGSS(void);
-void HandleCaughtMonPageTypeIcons_HGSS(void);
-bool32 TryHandleCaughtMonPageFlicker_HGSS(u8 taskId);
+void HideCaughtMonPageTypeIcons(void);
 
 #endif // GUARD_POKEDEX_PLUS_HGSS_H

@@ -1545,8 +1545,8 @@ enum KantoDexOrder
 #define DEX_MEASUREMENT_X              129
 
 #define DEX_HGSS_HEADER_X_PADDING      59
-#define DEX_HGSS_Y_TOP_PADDING         7
-#define DEX_HGSS_Y_BOTTOM_PADDING      4
+#define DEX_HGSS_Y_TOP_PADDING         34
+#define DEX_HGSS_Y_BOTTOM_PADDING      33
 #define DEX_HGSS_MEASUREMENT_X_PADDING 51
 
 enum

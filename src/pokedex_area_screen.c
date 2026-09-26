@@ -143,8 +143,14 @@ bool32 ShouldShowAreaUnknownLabel(void);
 static const u32 sAreaGlow_Pal[] = INCGFX_U32("graphics/pokedex/area_glow.png", ".gbapal");
 static const u32 sAreaGlow_Gfx[] = INCGFX_U32("graphics/pokedex/area_glow.png", ".4bpp.smol");
 
-static const u32 sPokedexPlusHGSS_ScreenSelectBarSubmenu_Tilemap[] = INCGFX_U32("graphics/pokedex/hgss/SelectBar.bin", ".smolTM");
-static void LoadHGSSScreenSelectBarSubmenu(void);
+#define GEN4_UI_HGSS_AREA_BASE_TILE 640
+#define GEN4_UI_HGSS_AREA_PAL_SLOT 12
+
+static const u8 sPokedexPlusHGSS_AreaChromeTiles[] = INCBIN_U8("graphics/gen4_ui/hgss_pokedex_area_chrome.tiles.bin");
+static const u16 sPokedexPlusHGSS_AreaChromeTilemap[] = INCBIN_U16("graphics/gen4_ui/hgss_pokedex_area_chrome.tilemap.bin");
+static const u16 sPokedexPlusHGSS_AreaChromePalette[] = INCBIN_U16("graphics/gen4_ui/hgss_pokedex_area_chrome.palette.bin");
+
+static void LoadHGSSAreaChrome(void);
 
 static const enum Species sSpeciesHiddenFromAreaScreen[] = { SPECIES_WYNAUT };
 
@@ -786,7 +792,7 @@ static void Task_ShowPokedexAreaScreen(u8 taskId)
             DoScheduledBgTilemapCopiesToVram();
         }
         if (POKEDEX_PLUS_HGSS)
-            LoadHGSSScreenSelectBarSubmenu();
+            LoadHGSSAreaChrome();
         ShowBg(2);
         ShowBg(3); // TryShowPokedexAreaMap will have done this already
         SetGpuRegBits(REG_OFFSET_DISPCNT, DISPCNT_OBJ_ON);
@@ -836,6 +842,8 @@ static void Task_UpdatePokedexAreaScreen(u8 taskId)
     case 5:
         SetGpuReg(REG_OFFSET_BLDCNT, BLDCNT_TGT1_BG0 | BLDCNT_EFFECT_BLEND | BLDCNT_TGT2_BG0 | BLDCNT_TGT2_ALL);
         StartAreaGlow();
+        if (POKEDEX_PLUS_HGSS)
+            LoadHGSSAreaChrome();
         AddTimeOfDayLabels();
         ShowEncounterInfoLabel();
         if (ShouldShowAreaUnknownLabel())
@@ -1033,8 +1041,18 @@ static void CreateAreaUnknownSprites(void)
     }
 }
 
-static void LoadHGSSScreenSelectBarSubmenu(void)
+static void LoadHGSSAreaChrome(void)
 {
-    CopyToBgTilemapBuffer(1, sPokedexPlusHGSS_ScreenSelectBarSubmenu_Tilemap, 0, 0);
+    // BG3 is the live region map and BG2 is the animated encounter glow.
+    // Keep those untouched and use transparent BG1 pixels only for HGSS chrome.
+    LoadPalette(sPokedexPlusHGSS_AreaChromePalette,
+                BG_PLTT_ID(GEN4_UI_HGSS_AREA_PAL_SLOT),
+                sizeof(sPokedexPlusHGSS_AreaChromePalette));
+    LoadBgTiles(1, sPokedexPlusHGSS_AreaChromeTiles,
+                sizeof(sPokedexPlusHGSS_AreaChromeTiles),
+                GEN4_UI_HGSS_AREA_BASE_TILE);
+    CopyToBgTilemapBuffer(1, sPokedexPlusHGSS_AreaChromeTilemap,
+                          sizeof(sPokedexPlusHGSS_AreaChromeTilemap), 0);
     CopyBgTilemapBufferToVram(1);
 }
+
