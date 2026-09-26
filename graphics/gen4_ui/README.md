@@ -150,3 +150,19 @@ The live page therefore preserves form icons, Unown vertical adjustment,
 selection-arrow movement, A-button form opening, START return to Evolutions,
 B-button submenu behavior, and all existing navigation while BG3 supplies
 authentic HGSS framing.
+
+
+## Authentic HGSS Cry page
+
+The live Cry page now uses the top-left 240x160 region of authentic HGSS
+Pokédex member 066 as its BG3 background. This is a direct 1:1 crop from the
+256x192 DS source: no source pixel is scaled or redrawn.
+
+The existing GBA-side cry systems remain live overlays. The Pokémon sprite,
+"Cry of" species text, waveform window, VU meter, cry playback state, and
+screen-switch input logic are unchanged. The member 066 background supplies
+the HGSS header, grid, and separator structure underneath those components.
+
+The source uses 10 colors, loaded into the reserved 8bpp BG palette range
+beginning at entry 128. The original adapted Cry background remains the
+fallback if the Gen 4 asset loader fails.
