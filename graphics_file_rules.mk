@@ -22,6 +22,7 @@ GEN4UIHGSSCRY := tools/gen4_ui/make_hgss_pokedex_cry.py
 GEN4UIHGSSSIZE := tools/gen4_ui/make_hgss_pokedex_size.py
 GEN4UIHGSSAREA := tools/gen4_ui/make_hgss_pokedex_area_chrome.py
 GEN4UIHGSSSEARCH := tools/gen4_ui/make_hgss_pokedex_search.py
+GEN4UIHGSSSTART := tools/gen4_ui/make_hgss_pokedex_start_menu.py
 
 types := none normal fight flying poison ground rock bug ghost steel mystery fire water grass electric psychic ice dragon dark fairy stellar
 contest_types := cool beauty cute smart tough
@@ -437,3 +438,19 @@ $(GEN4UIGFXDIR)/hgss_pokedex_area_chrome.tilemap.bin: $(GEN4UIHGSSAREA)
 
 $(GEN4UIGFXDIR)/hgss_pokedex_area_chrome.palette.bin: $(GEN4UIHGSSAREA)
 	python3 $< --palette $@
+
+
+$(GEN4UIGFXDIR)/hgss_pokedex_start_menu_main.tiles.bin: $(GEN4UIHGSSSTART) $(GEN4UIHGSSSTATS)
+	python3 $(GEN4UIHGSSSTART) --variant main --tiles $@
+
+$(GEN4UIGFXDIR)/hgss_pokedex_start_menu_main.tilemap.bin: $(GEN4UIHGSSSTART) $(GEN4UIHGSSSTATS)
+	python3 $(GEN4UIHGSSSTART) --variant main --tilemap $@
+
+$(GEN4UIGFXDIR)/hgss_pokedex_start_menu_results.tiles.bin: $(GEN4UIHGSSSTART) $(GEN4UIHGSSSTATS)
+	python3 $(GEN4UIHGSSSTART) --variant search-results --tiles $@
+
+$(GEN4UIGFXDIR)/hgss_pokedex_start_menu_results.tilemap.bin: $(GEN4UIHGSSSTART) $(GEN4UIHGSSSTATS)
+	python3 $(GEN4UIHGSSSTART) --variant search-results --tilemap $@
+
+$(GEN4UIGFXDIR)/hgss_pokedex_start_menu.palette.bin: $(GEN4UIHGSSSTART) $(GEN4UIHGSSSTATS)
+	python3 $(GEN4UIHGSSSTART) --palette $@
