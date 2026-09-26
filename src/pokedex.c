@@ -4683,8 +4683,8 @@ void SetSearchRectHighlight(u8 flags, u8 x, u8 y, u8 width)
 {
     u16 i;
     u16 temp; //should be a pointer, but does not match as one
-    u8 paletteBank = POKEDEX_PLUS_HGSS ? 4 + flags : flags;
-    u32 bg = POKEDEX_PLUS_HGSS ? 1 : 3;
+    const u8 paletteBank = GEN4_UI_HGSS_SEARCH_SELECTED_PAL_SLOT + flags;
+    const u32 bg = 1;
     u32 ptr = (u32)GetBgTilemapBuffer(bg); //same as above
 
     for (i = 0; i < width; i++)
@@ -4700,10 +4700,9 @@ void SetSearchRectHighlight(u8 flags, u8 x, u8 y, u8 width)
         *(u16 *)(ptr + (y + 1) * 64 + (x + i) * 2) = temp;
     }
 
-    // HGSS Search keeps its interactive 4bpp highlight layer on BG1 while
-    // BG3 carries the authentic 8bpp DS background.
-    if (POKEDEX_PLUS_HGSS)
-        CopyBgTilemapBufferToVram(1);
+    // The interactive 4bpp Search highlight layer is permanently BG1;
+    // BG3 carries the authentic 8bpp HGSS background.
+    CopyBgTilemapBufferToVram(1);
 }
 
 #define SEARCH_BG_SEARCH                SEARCH_TOPBAR_SEARCH

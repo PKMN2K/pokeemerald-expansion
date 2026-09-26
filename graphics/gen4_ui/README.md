@@ -572,3 +572,13 @@ steps and clamps cleanly at the target coordinates.
 The former `TryMoveMonForInfoScreen_HGSS` compatibility helper and the slower
 one-pixel Emerald fallback movement have been removed.
 
+## Primary Gen 4 Search highlight layer
+
+`SetSearchRectHighlight` no longer chooses between Emerald and HGSS geometry.
+Search highlights now always use BG1 and the HGSS palette-bank range beginning at
+`GEN4_UI_HGSS_SEARCH_SELECTED_PAL_SLOT`.
+
+The old Emerald BG3 highlight path and its low-numbered palette-bank branch have
+been removed. BG1 is always uploaded after a highlight update while BG3 remains
+the authentic 8bpp HGSS Search background.
+
