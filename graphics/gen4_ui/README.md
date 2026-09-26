@@ -378,3 +378,24 @@ The Seen/Owned labels and number digits intentionally remain on the shared
 interface sheet for now; they still reference high tile indices and will be
 migrated separately rather than risk remapping live counters in this step.
 
+## Compact HGSS Pokédex counter OBJ sheet
+
+The HGSS scrolling-list path no longer loads the full 8 KB mixed
+`tileset_interface*.png` sprite sheet just to draw its right-side counters.
+
+The remaining live list counter graphics are extracted losslessly into a
+dedicated 100-tile / 3,200-byte OBJ sheet:
+
+- SEEN and OWN label frames
+- HOENN and NATIONAL label frames
+- decimal digits 0-9 used by the live seen/owned counters
+
+Normal and decapped variants are generated from their existing interface PNGs,
+so capitalization, dark-mode palette selection, positions, values, and sprite
+lifecycle behavior remain unchanged. Their old sparse tile indices are remapped
+to compact local indices under sprite tag `0xD5A2`.
+
+The Search screen still loads the mixed interface sheet for its own remaining
+legacy OBJ controls; this change intentionally affects only the scrolling-list
+path. That keeps this migration step isolated and build-safe.
+

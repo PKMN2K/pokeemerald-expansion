@@ -27,6 +27,7 @@ GEN4UIHGSSSEARCHOVERLAY := tools/gen4_ui/make_hgss_pokedex_search_overlay.py
 GEN4UIHGSSSTART := tools/gen4_ui/make_hgss_pokedex_start_menu.py
 GEN4UIHGSSSCROLL := tools/gen4_ui/make_hgss_pokedex_scroll_controls.py
 GEN4UIHGSSSTARTCURSOR := tools/gen4_ui/make_hgss_pokedex_start_cursor.py
+GEN4UIHGSSCOUNTERS := tools/gen4_ui/make_hgss_pokedex_counters.py
 
 types := none normal fight flying poison ground rock bug ghost steel mystery fire water grass electric psychic ice dragon dark fairy stellar
 contest_types := cool beauty cute smart tough
@@ -491,3 +492,9 @@ $(GEN4UIGFXDIR)/hgss_pokedex_start_cursor.tiles.bin: $(GEN4UIHGSSSTARTCURSOR) $(
 
 $(GEN4UIGFXDIR)/hgss_pokedex_start_cursor.palette.bin: $(GEN4UIHGSSSTARTCURSOR) $(GEN4UIHGSSSTATS)
 	python3 $(GEN4UIHGSSSTARTCURSOR) --palette $@
+
+$(GEN4UIGFXDIR)/hgss_pokedex_counters.tiles.bin: graphics/pokedex/hgss/tileset_interface.png $(GEN4UIHGSSCOUNTERS)
+	python3 $(GEN4UIHGSSCOUNTERS) $< $@
+
+$(GEN4UIGFXDIR)/hgss_pokedex_counters_deca.tiles.bin: graphics/pokedex/hgss/tileset_interface_DECA.png $(GEN4UIHGSSCOUNTERS)
+	python3 $(GEN4UIHGSSCOUNTERS) $< $@
