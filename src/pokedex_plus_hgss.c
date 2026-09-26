@@ -403,7 +403,7 @@ static const struct WindowTemplate sInfoScreen_WindowTemplates[] =
     {
         .bg = 2,
         .tilemapLeft = 14, // authentic HGSS footprint box
-        .tilemapTop = 9
+        .tilemapTop = 9,
         .width = 2,
         .height = 2,
         .paletteNum = 15,
