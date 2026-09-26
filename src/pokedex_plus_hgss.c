@@ -639,12 +639,16 @@ static const struct SpritePalette sInterfaceSpritePalette[] =
 
 
 #define TAG_DEX_HGSS_SCROLL 0xD5A0
+#define TAG_DEX_HGSS_START_CURSOR 0xD5A1
 
 static const u8 sPokedexPlusHGSS_ScrollControlTiles[] = INCBIN_U8("graphics/gen4_ui/hgss_pokedex_scroll_controls.tiles.bin");
 static const u16 sPokedexPlusHGSS_ScrollControlPalette[] = INCBIN_U16("graphics/gen4_ui/hgss_pokedex_scroll_controls.palette.bin");
+static const u8 sPokedexPlusHGSS_StartCursorTiles[] = INCBIN_U8("graphics/gen4_ui/hgss_pokedex_start_cursor.tiles.bin");
+static const u16 sPokedexPlusHGSS_StartCursorPalette[] = INCBIN_U16("graphics/gen4_ui/hgss_pokedex_start_cursor.palette.bin");
 
 static void SpriteCB_HGSSScrollBar(struct Sprite *sprite);
 static void SpriteCB_HGSSScrollArrow(struct Sprite *sprite);
+static void SpriteCB_HGSSStartMenuCursor(struct Sprite *sprite);
 
 static const struct OamData sOamData_HGSSScrollBar =
 {
@@ -731,6 +735,56 @@ static const struct SpritePalette sHGSSScrollControlSpritePalette =
 {
     sPokedexPlusHGSS_ScrollControlPalette,
     TAG_DEX_HGSS_SCROLL
+};
+
+static const struct OamData sOamData_HGSSStartMenuCursor =
+{
+    .y = DISPLAY_HEIGHT,
+    .affineMode = ST_OAM_AFFINE_OFF,
+    .objMode = ST_OAM_OBJ_NORMAL,
+    .mosaic = FALSE,
+    .bpp = ST_OAM_4BPP,
+    .shape = SPRITE_SHAPE(8x16),
+    .x = 0,
+    .matrixNum = 0,
+    .size = SPRITE_SIZE(8x16),
+    .tileNum = 0,
+    .priority = 0,
+    .paletteNum = 0,
+    .affineParam = 0
+};
+
+static const union AnimCmd sSpriteAnim_HGSSStartMenuCursor[] =
+{
+    ANIMCMD_FRAME(0, 30),
+    ANIMCMD_END
+};
+
+static const union AnimCmd *const sSpriteAnimTable_HGSSStartMenuCursor[] =
+{
+    sSpriteAnim_HGSSStartMenuCursor
+};
+
+static const struct SpriteTemplate sHGSSStartMenuCursorSpriteTemplate =
+{
+    .tileTag = TAG_DEX_HGSS_START_CURSOR,
+    .paletteTag = TAG_DEX_HGSS_START_CURSOR,
+    .oam = &sOamData_HGSSStartMenuCursor,
+    .anims = sSpriteAnimTable_HGSSStartMenuCursor,
+    .callback = SpriteCB_HGSSStartMenuCursor,
+};
+
+static const struct SpriteSheet sHGSSStartMenuCursorSpriteSheet =
+{
+    sPokedexPlusHGSS_StartCursorTiles,
+    sizeof(sPokedexPlusHGSS_StartCursorTiles),
+    TAG_DEX_HGSS_START_CURSOR
+};
+
+static const struct SpritePalette sHGSSStartMenuCursorSpritePalette =
+{
+    sPokedexPlusHGSS_StartCursorPalette,
+    TAG_DEX_HGSS_START_CURSOR
 };
 
 static const struct WindowTemplate sInfoScreen_WindowTemplates[] =
@@ -1040,6 +1094,8 @@ static bool8 LoadPokedexListPage(u8 page)
         LoadSpritePalettes(sStatBarSpritePal);
         LoadSpriteSheet(&sHGSSScrollControlSpriteSheet);
         LoadSpritePalette(&sHGSSScrollControlSpritePalette);
+        LoadSpriteSheet(&sHGSSStartMenuCursorSpriteSheet);
+        LoadSpritePalette(&sHGSSStartMenuCursorSpritePalette);
         CreateInterfaceSprites(page);
         gMain.state++;
         break;
@@ -1295,6 +1351,30 @@ static void SpriteCB_HGSSScrollArrow(struct Sprite *sprite)
     }
 }
 
+static void SpriteCB_HGSSStartMenuCursor(struct Sprite *sprite)
+{
+    if (sPokedexView->currentPage != PAGE_MAIN && sPokedexView->currentPage != PAGE_SEARCH_RESULTS)
+    {
+        DestroySprite(sprite);
+    }
+    else
+    {
+        u16 menuHeight = sPokedexView->currentPage == PAGE_MAIN ? 80 : 96;
+
+        if (sPokedexView->menuIsOpen && sPokedexView->menuY == menuHeight)
+        {
+            sprite->invisible = FALSE;
+            sprite->y2 = sPokedexView->menuCursorPos * 16;
+            sprite->x2 = gSineTable[(u8)sprite->data[2]] / 64;
+            sprite->data[2] += 8;
+        }
+        else
+        {
+            sprite->invisible = TRUE;
+        }
+    }
+}
+
 #define sIsDownArrow data[1]
 #define LIST_RIGHT_SIDE_TEXT_X 188
 #define LIST_RIGHT_SIDE_TEXT_X_OFFSET 13
@@ -1517,12 +1597,12 @@ static void CreateInterfaceSprites(u8 page)
 
     if (page == PAGE_MAIN)
     {
-        spriteId = CreateSprite(&sDexListStartMenuCursorSpriteTemplate, 136, 96, 1);
+        spriteId = CreateSprite(&sHGSSStartMenuCursorSpriteTemplate, 136, 96, 1);
         gSprites[spriteId].invisible = TRUE;
     }
     else // PAGE_SEARCH_RESULTS
     {
-        spriteId = CreateSprite(&sDexListStartMenuCursorSpriteTemplate, 136, 80, 1);
+        spriteId = CreateSprite(&sHGSSStartMenuCursorSpriteTemplate, 136, 80, 1);
         gSprites[spriteId].invisible = TRUE;
     }
 }

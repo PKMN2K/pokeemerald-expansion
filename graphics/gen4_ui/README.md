@@ -361,3 +361,20 @@ position calculation are unchanged.
 
 The shared interface sheet remains loaded for the Seen/Owned counters, digits,
 and START-menu cursor until those pieces are migrated separately.
+
+## Authentic HGSS START-menu cursor
+
+The sliding main-list and search-results START menus no longer use the cursor
+tile from the mixed legacy `tileset_interface*.png` OBJ sheet.
+
+A dedicated 8x16 OBJ keeps the existing cursor geometry exactly, but its visible
+pointer is copied 1:1 from the lavender list pointer in authentic HGSS Pokédex
+member 057. The pointer occupies the center eight rows of the original 8x16
+bounding box, so the existing menu positions, 16-pixel row spacing, horizontal
+bob animation, visibility timing, and menu input logic are unchanged.
+
+The new cursor uses sprite tag `0xD5A1` and a dedicated two-color OBJ palette.
+The Seen/Owned labels and number digits intentionally remain on the shared
+interface sheet for now; they still reference high tile indices and will be
+migrated separately rather than risk remapping live counters in this step.
+

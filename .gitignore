@@ -121,3 +121,7 @@ __pycache__
 /graphics/gen4_ui/hgss_pokedex_scroll_controls.tiles.bin
 
 /graphics/gen4_ui/hgss_pokedex_scroll_controls.palette.bin
+
+/graphics/gen4_ui/hgss_pokedex_start_cursor.tiles.bin
+
+/graphics/gen4_ui/hgss_pokedex_start_cursor.palette.bin
