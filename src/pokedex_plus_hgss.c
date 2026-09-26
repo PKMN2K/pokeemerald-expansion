@@ -335,11 +335,10 @@ static const struct Gen4UiBgAsset sPokedexPlusHGSS_Gen4SearchAsset =
 };
 
 #define GEN4_UI_HGSS_SEARCH_OVERLAY_PAL_SLOT 4
-#define GEN4_UI_HGSS_SEARCH_SELECTED_PAL_SLOT 4
 #define GEN4_UI_HGSS_SEARCH_NORMAL_PAL_SLOT 5
 
 static const u8 sPokedexPlusHGSS_Gen4SearchOverlayTiles[] = INCBIN_U8("graphics/gen4_ui/hgss_pokedex_search_overlay.tiles.bin");
-static const u16 sPokedexPlusHGSS_Gen4SearchOverlayTilemap[] = INCBIN_U16("graphics/gen4_ui/hgss_pokedex_search_overlay.tilemap.bin");
+const u16 sPokedexPlusHGSS_Gen4SearchOverlayTilemap[] = INCBIN_U16("graphics/gen4_ui/hgss_pokedex_search_overlay.tilemap.bin");
 static const u16 sPokedexPlusHGSS_Gen4SearchOverlayPalette[] = INCBIN_U16("graphics/gen4_ui/hgss_pokedex_search_overlay.palette.bin");
 
 static const u16 sPokedexPlusHGSS_Counter_Pal[] = INCGFX_U16("graphics/gen4_ui/hgss_pokedex_counter.pal", ".gbapal");
@@ -5341,40 +5340,6 @@ void LoadSearchMenu_HGSS(u8 taskId)
 }
 
 #undef sIsDownArrow
-
-bool32 TryDrawOrEraseSearchParameterBox_HGSS(bool8 erase)
-{
-    u32 x;
-    u32 y;
-    u16 *tilemap;
-
-    if (!POKEDEX_PLUS_HGSS)
-        return FALSE;
-
-    tilemap = GetBgTilemapBuffer(1);
-    if (tilemap == NULL)
-        return TRUE;
-
-    // The old popup wrote hard-coded adapted-search tile IDs. The authentic
-    // path instead highlights the existing member-068 pixels, then restores
-    // the canonical tilemap when the popup closes.
-    for (y = 0; y < 14; y++)
-    {
-        for (x = 17; x <= 30; x++)
-        {
-            u32 index = y * 32 + x;
-
-            if (erase)
-                tilemap[index] = sPokedexPlusHGSS_Gen4SearchOverlayTilemap[index];
-            else
-                tilemap[index] = (tilemap[index] & 0x0FFF)
-                               | (GEN4_UI_HGSS_SEARCH_SELECTED_PAL_SLOT << 12);
-        }
-    }
-
-    CopyBgTilemapBufferToVram(1);
-    return TRUE;
-}
 
 void HandleDestroyStatBars_HGSS(void)
 {

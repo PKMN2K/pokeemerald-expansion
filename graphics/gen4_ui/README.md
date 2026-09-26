@@ -552,3 +552,14 @@ Pokédex-number and name offsets, caught-ball spacing, row clearing, number
 formatting, and the scrolling Pokémon X position now use the Gen 4 layout
 unconditionally.
 
+## Primary Gen 4 Search parameter popup
+
+The Search parameter popup no longer calls
+`TryDrawOrEraseSearchParameterBox_HGSS`. Its canonical renderer now edits BG1
+directly using the authentic HGSS Search overlay tilemap and selected palette
+bank.
+
+The old Emerald popup renderer, including its hard-coded tile IDs on BG3, has
+been removed. Closing the popup restores the canonical HGSS overlay tiles
+directly.
+

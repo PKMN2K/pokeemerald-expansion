@@ -4868,41 +4868,30 @@ void PrintSelectedSearchParameters(u8 taskId)
 
 static void DrawOrEraseSearchParameterBox(bool8 erase)
 {
-    u16 i;
-    u16 j;
-    u16 *ptr;
+    u32 x;
+    u32 y;
+    u16 *tilemap = GetBgTilemapBuffer(1);
 
-    if (TryDrawOrEraseSearchParameterBox_HGSS(erase))
+    if (tilemap == NULL)
         return;
 
-    ptr = GetBgTilemapBuffer(3);
+    // Highlight the authentic member-068 Search overlay in-place, then restore
+    // its canonical tiles when the parameter popup closes.
+    for (y = 0; y < 14; y++)
+    {
+        for (x = 17; x <= 30; x++)
+        {
+            u32 index = y * 32 + x;
 
-    if (!erase)
-    {
-        *(ptr + 0x11) = 0xC0B;
-        for (i = 0x12; i < 0x1F; i++)
-            *(ptr + i) = 0x80D;
-        for (j = 1; j < 13; j++)
-        {
-            *(ptr + 0x11 + j * 32) = 0x40A;
-            for (i = 0x12; i < 0x1F; i++)
-                *(ptr + j * 32 + i) = 2;
-        }
-        *(ptr + 0x1B1) = 0x40B;
-        for (i = 0x12; i < 0x1F; i++)
-            *(ptr + 0x1A0 + i) = 0xD;
-    }
-    else
-    {
-        for (j = 0; j < 14; j++)
-        {
-            for (i = 0x11; i < 0x1E; i++)
-            {
-                *(ptr + j * 32 + i) = 0x4F;
-            }
+            if (erase)
+                tilemap[index] = sPokedexPlusHGSS_Gen4SearchOverlayTilemap[index];
+            else
+                tilemap[index] = (tilemap[index] & 0x0FFF)
+                               | (GEN4_UI_HGSS_SEARCH_SELECTED_PAL_SLOT << 12);
         }
     }
 
+    CopyBgTilemapBufferToVram(1);
 }
 
 // Prints the currently viewable search parameter titles in the right-hand text box
