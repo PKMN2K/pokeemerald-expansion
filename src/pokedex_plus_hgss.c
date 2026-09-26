@@ -334,6 +334,14 @@ static const struct Gen4UiBgAsset sPokedexPlusHGSS_Gen4SearchAsset =
     .paletteMode = GEN4_UI_PALETTE_8BPP,
 };
 
+#define GEN4_UI_HGSS_SEARCH_OVERLAY_PAL_SLOT 4
+#define GEN4_UI_HGSS_SEARCH_SELECTED_PAL_SLOT 4
+#define GEN4_UI_HGSS_SEARCH_NORMAL_PAL_SLOT 5
+
+static const u8 sPokedexPlusHGSS_Gen4SearchOverlayTiles[] = INCBIN_U8("graphics/gen4_ui/hgss_pokedex_search_overlay.tiles.bin");
+static const u16 sPokedexPlusHGSS_Gen4SearchOverlayTilemap[] = INCBIN_U16("graphics/gen4_ui/hgss_pokedex_search_overlay.tilemap.bin");
+static const u16 sPokedexPlusHGSS_Gen4SearchOverlayPalette[] = INCBIN_U16("graphics/gen4_ui/hgss_pokedex_search_overlay.palette.bin");
+
 static const u16 sPokedexPlusHGSS_Default_Pal[] = INCGFX_U16("graphics/pokedex/hgss/palette_default.pal", ".gbapal");
 static const u16 sPokedexPlusHGSS_National_Pal[] = INCGFX_U16("graphics/pokedex/hgss/palette_national.pal", ".gbapal");
 static const u16 sPokedexPlusHGSS_MenuSearch_Pal[] = INCGFX_U16("graphics/pokedex/hgss/palette_search_menu.pal", ".gbapal");
@@ -347,8 +355,6 @@ static const u32 sPokedexPlusHGSS_Interface_DECA_Gfx[] = INCGFX_U32("graphics/po
 static const u32 sPokedexPlusHGSS_Menu_1_Gfx[] = INCGFX_U32("graphics/pokedex/hgss/tileset_menu1.png", ".4bpp.smol");
 static const u32 sPokedexPlusHGSS_Menu_2_Gfx[] = INCGFX_U32("graphics/pokedex/hgss/tileset_menu2.png", ".4bpp.smol");
 static const u32 sPokedexPlusHGSS_Menu_3_Gfx[] = INCGFX_U32("graphics/pokedex/hgss/tileset_menu3.png", ".4bpp.smol");
-static const u32 sPokedexPlusHGSS_MenuSearch_Gfx[] = INCGFX_U32("graphics/pokedex/hgss/tileset_menu_search.png", ".4bpp.smol");
-static const u32 sPokedexPlusHGSS_MenuSearch_DECA_Gfx[] = INCGFX_U32("graphics/pokedex/hgss/tileset_menu_search_DECA.png", ".4bpp.smol");
 #define GEN4_UI_HGSS_START_MENU_BASE_TILE 768
 #define GEN4_UI_HGSS_START_MENU_PAL_SLOT 12
 #define GEN4_UI_HGSS_START_MENU_TILEMAP_OFFSET 0x280
@@ -373,8 +379,6 @@ static const u32 sPokedexPlusHGSS_ScreenEvolution_Tilemap_PE[] = INCGFX_U32("gra
 static const u32 sPokedexPlusHGSS_ScreenForms_Tilemap[] = INCGFX_U32("graphics/pokedex/hgss/tilemap_forms_screen.bin", ".smolTM");
 static const u32 sPokedexPlusHGSS_ScreenCry_Tilemap[] = INCGFX_U32("graphics/pokedex/hgss/tilemap_cry_screen.bin", ".smolTM");
 static const u32 sPokedexPlusHGSS_ScreenSize_Tilemap[] = INCGFX_U32("graphics/pokedex/hgss/tilemap_size_screen.bin", ".smolTM");
-static const u32 sPokedexPlusHGSS_ScreenSearchHoenn_Tilemap[] = INCGFX_U32("graphics/pokedex/hgss/tilemap_search_screen_hoenn.bin", ".smolTM");
-static const u32 sPokedexPlusHGSS_ScreenSearchNational_Tilemap[] = INCGFX_U32("graphics/pokedex/hgss/tilemap_search_screen_national.bin", ".smolTM");
 
 #define MAX_EVOLUTION_ICONS 8
 
@@ -394,6 +398,7 @@ static void RestoreLegacyPokedexBg3(void);
 static void CreateInterfaceSprites(u8);
 static void LoadGen4ListOverlay(void);
 static void LoadGen4StartMenu(u8 page);
+static void LoadGen4SearchOverlay(void);
 static void LoadScreenSelectBarMain(u16);
 static void PrintMonInfo(u32 num, u32, u32 owned, u32 newEntry);
 static void SetSpriteInvisibility(u8 spriteArrayId, bool8 invisible);
@@ -938,6 +943,21 @@ static void LoadGen4ListOverlay(void)
     CopyToBgTilemapBuffer(1,
                           sPokedexPlusHGSS_Gen4ListOverlayTilemap,
                           sizeof(sPokedexPlusHGSS_Gen4ListOverlayTilemap),
+                          0);
+}
+
+static void LoadGen4SearchOverlay(void)
+{
+    LoadPalette(sPokedexPlusHGSS_Gen4SearchOverlayPalette,
+                BG_PLTT_ID(GEN4_UI_HGSS_SEARCH_OVERLAY_PAL_SLOT),
+                sizeof(sPokedexPlusHGSS_Gen4SearchOverlayPalette));
+    LoadBgTiles(1,
+                sPokedexPlusHGSS_Gen4SearchOverlayTiles,
+                sizeof(sPokedexPlusHGSS_Gen4SearchOverlayTiles),
+                0);
+    CopyToBgTilemapBuffer(1,
+                          sPokedexPlusHGSS_Gen4SearchOverlayTilemap,
+                          sizeof(sPokedexPlusHGSS_Gen4SearchOverlayTilemap),
                           0);
 }
 
@@ -4979,15 +4999,9 @@ bool32 TryLoadSearchMenu_HGSS(u8 taskId)
             SetBgAttribute(2, BG_ATTR_PRIORITY, 1);
             SetBgAttribute(3, BG_ATTR_PRIORITY, 3);
 
-            if (!HGSS_DECAPPED)
-                DecompressAndLoadBgGfxUsingHeap(1, sPokedexPlusHGSS_MenuSearch_Gfx, 0x2000, 0, 0);
-            else
-                DecompressAndLoadBgGfxUsingHeap(1, sPokedexPlusHGSS_MenuSearch_DECA_Gfx, 0x2000, 0, 0);
-
-            if (!IsNationalPokedexEnabled())
-                CopyToBgTilemapBuffer(1, sPokedexPlusHGSS_ScreenSearchHoenn_Tilemap, 0, 0);
-            else
-                CopyToBgTilemapBuffer(1, sPokedexPlusHGSS_ScreenSearchNational_Tilemap, 0, 0);
+            // BG1 now mirrors authentic member 068 in 4bpp. Palette banks
+            // 4-7 provide selected/normal/disabled highlight states.
+            LoadGen4SearchOverlay();
 
             SetBgAttribute(3, BG_ATTR_CHARBASEINDEX, 3);
             SetBgAttribute(3, BG_ATTR_PALETTEMODE, GEN4_UI_PALETTE_8BPP);
@@ -4997,10 +5011,12 @@ bool32 TryLoadSearchMenu_HGSS(u8 taskId)
                                       sizeof(sPokedexPlusHGSS_Gen4SearchTilemap), 0);
             }
 
+            // Keep only the legacy bank-0 text colors. BG1 highlight colors
+            // now live independently in authentic HGSS banks 4-7.
             if (!HGSS_DARK_MODE)
-                LoadPalette(sPokedexPlusHGSS_MenuSearch_Pal + 1, BG_PLTT_ID(0) + 1, PLTT_SIZEOF(4 * 16 - 1));
+                LoadPalette(sPokedexPlusHGSS_MenuSearch_Pal, BG_PLTT_ID(0), PLTT_SIZE_4BPP);
             else
-                LoadPalette(sPokedexPlusHGSS_MenuSearch_dark_Pal + 1, BG_PLTT_ID(0) + 1, PLTT_SIZEOF(4 * 16 - 1));
+                LoadPalette(sPokedexPlusHGSS_MenuSearch_dark_Pal, BG_PLTT_ID(0), PLTT_SIZE_4BPP);
             gMain.state = 1;
         }
         break;
@@ -5050,6 +5066,40 @@ bool32 TryLoadSearchMenu_HGSS(u8 taskId)
 }
 
 #undef sIsDownArrow
+
+bool32 TryDrawOrEraseSearchParameterBox_HGSS(bool8 erase)
+{
+    u32 x;
+    u32 y;
+    u16 *tilemap;
+
+    if (!POKEDEX_PLUS_HGSS)
+        return FALSE;
+
+    tilemap = GetBgTilemapBuffer(1);
+    if (tilemap == NULL)
+        return TRUE;
+
+    // The old popup wrote hard-coded adapted-search tile IDs. The authentic
+    // path instead highlights the existing member-068 pixels, then restores
+    // the canonical tilemap when the popup closes.
+    for (y = 0; y < 14; y++)
+    {
+        for (x = 17; x <= 30; x++)
+        {
+            u32 index = y * 32 + x;
+
+            if (erase)
+                tilemap[index] = sPokedexPlusHGSS_Gen4SearchOverlayTilemap[index];
+            else
+                tilemap[index] = (tilemap[index] & 0x0FFF)
+                               | (GEN4_UI_HGSS_SEARCH_SELECTED_PAL_SLOT << 12);
+        }
+    }
+
+    CopyBgTilemapBufferToVram(1);
+    return TRUE;
+}
 
 void HandleDestroyStatBars_HGSS(void)
 {
