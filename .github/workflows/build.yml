@@ -96,7 +96,10 @@ jobs:
             graphics/gen4_ui/renderer_test.tilemap.bin \
             graphics/gen4_ui/hgss_pokedex_member_020.gbapal \
             graphics/gen4_ui/hgss_pokedex_member_020.tiles.8bpp \
-            graphics/gen4_ui/hgss_pokedex_member_020.tilemap.bin
+            graphics/gen4_ui/hgss_pokedex_member_020.tilemap.bin \
+            graphics/gen4_ui/hgss_pokedex_info_gba.gbapal \
+            graphics/gen4_ui/hgss_pokedex_info_gba.tiles.8bpp \
+            graphics/gen4_ui/hgss_pokedex_info_gba.tilemap.bin
 
       - name: Compile Gen 4 UI renderer
         env:
