@@ -95,3 +95,13 @@ __pycache__
 /graphics/gen4_ui/hgss_pokedex_area_chrome.tiles.bin
 
 /graphics/gen4_ui/hgss_pokedex_area_chrome.palette.bin
+
+/graphics/gen4_ui/hgss_pokedex_start_menu_main.tiles.bin
+
+/graphics/gen4_ui/hgss_pokedex_start_menu_main.tilemap.bin
+
+/graphics/gen4_ui/hgss_pokedex_start_menu_results.tiles.bin
+
+/graphics/gen4_ui/hgss_pokedex_start_menu_results.tilemap.bin
+
+/graphics/gen4_ui/hgss_pokedex_start_menu.palette.bin
