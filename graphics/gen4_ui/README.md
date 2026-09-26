@@ -648,3 +648,13 @@ The now-unused `graphics/pokedex/hgss/tilemap_info_screen.bin` fallback asset
 was deleted. The shared old menu tileset is retained for now because other
 screens still reference their own legacy fallbacks.
 
+## Removed the Stats-screen legacy background fallback
+
+The Pokédex Stats screen no longer restores 4bpp legacy BG3 graphics or loads
+the adapted fallback Stats tilemap when the Gen 4 background asset load fails.
+Stats now has only the Gen 4/HGSS-composed background path.
+
+The now-unused `graphics/pokedex/hgss/tilemap_stats_screen.bin` fallback asset
+was deleted. Shared legacy menu graphics remain temporarily because other
+Pokédex screens still reference their own fallbacks.
+
