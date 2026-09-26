@@ -10,7 +10,7 @@ void Task_LoadInfoScreen_HGSS(u8 taskId);
 void HandleInfoScreenInput_HGSS(u8 taskId);
 void Task_LoadAreaScreen_HGSS(u8 taskId);
 void Task_SwitchScreensFromAreaScreen_HGSS(u8 taskId);
-void Task_DisplayCaughtMonDexPageHGSS(u8);
+void Task_DisplayCaughtMonDexPage(u8 taskId);
 void Task_LoadCryScreen_HGSS(u8 taskId);
 void Task_SwitchScreensFromCryScreen_HGSS(u8 taskId);
 void Task_LoadSizeScreen_HGSS(u8 taskId);
@@ -21,7 +21,6 @@ void HandleDestroyStatBars_HGSS(void);
 void HandleDestroyStatBarsBg_HGSS(void);
 void HandleCreateStatBars_HGSS(void);
 void HandleCreateStatBarsDPAD_HGSS(void);
-void HandleCaughtMonPageTypeIcons_HGSS(void);
-bool32 TryHandleCaughtMonPageFlicker_HGSS(u8 taskId);
+void HideCaughtMonPageTypeIcons(void);
 
 #endif // GUARD_POKEDEX_PLUS_HGSS_H

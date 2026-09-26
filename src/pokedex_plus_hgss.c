@@ -2162,7 +2162,6 @@ static void LoadScreenSelectBarMain(u16 unused)
 //************************************
 #define tState         data[0]
 #define tSpecies       data[1]
-#define tPalTimer      data[2]
 #define tMonSpriteId   data[3]
 #define tOtIdLo        data[12]
 #define tOtIdHi        data[13]
@@ -2175,14 +2174,11 @@ static void LoadScreenSelectBarMain(u16 unused)
 // Caught mon palette slot: 15
 #define TYPE_INFO_PALETTE_NUM_OFFSET -1
 
-void Task_DisplayCaughtMonDexPageHGSS(u8 taskId)
+void Task_DisplayCaughtMonDexPage(u8 taskId)
 {
     u8 spriteId;
     enum Species species;
     enum NationalDexOrder dexNum;
-
-    if (!POKEDEX_PLUS_HGSS) return; // prevents the compiler from emitting static .rodata
-                                    // if the feature is disabled
 
     species = gTasks[taskId].tSpecies;
     dexNum = SpeciesToNationalPokedexNum(species);
@@ -2262,7 +2258,6 @@ void Task_DisplayCaughtMonDexPageHGSS(u8 taskId)
         if (!gPaletteFade.active)
         {
             PlayCry_Normal(species, 0);
-            gTasks[taskId].tPalTimer = 0;
             gTasks[taskId].func = Task_HandleCaughtMonPageInput;
         }
         break;
@@ -2271,7 +2266,6 @@ void Task_DisplayCaughtMonDexPageHGSS(u8 taskId)
 
 #undef tState
 #undef tDexNum
-#undef tPalTimer
 #undef tMonSpriteId
 #undef tOtIdLo
 #undef tOtIdHi
@@ -5514,39 +5508,10 @@ void HandleCreateStatBarsDPAD_HGSS(void)
         CreateStatBars(&sPokedexView->pokedexList[sPokedexView->selectedPokemon]);
 }
 
-void HandleCaughtMonPageTypeIcons_HGSS(void)
+void HideCaughtMonPageTypeIcons(void)
 {
-    if (!POKEDEX_PLUS_HGSS)
-        return;
-
     SetSpriteInvisibility(0, TRUE);
     SetSpriteInvisibility(1, TRUE);
-}
-
-bool32 TryHandleCaughtMonPageFlicker_HGSS(u8 taskId)
-{
-    if (!POKEDEX_PLUS_HGSS)
-        return FALSE;
-
-    // Implementation of HGSS screen flickering like vanilla did not
-    // work. However, it is preserved in case it is to be implemented.
-
-    // if (++gTasks[taskId].tPalTimer & 16)
-    // {
-    //     if (!HGSS_DARK_MODE)
-    //         LoadPalette(sPokedexPlusHGSS_Counter_Pal + 1, BG_PLTT_ID(3) + 1, PLTT_SIZEOF(7));
-    //     else
-    //         LoadPalette(sPokedexPlusHGSS_CounterDark_Pal + 1, BG_PLTT_ID(3) + 1, PLTT_SIZEOF(7));
-    // }
-    // else
-    // {
-    //     if (!HGSS_DARK_MODE)
-    //         LoadPalette(sPokedexPlusHGSS_Counter_Pal + 1, BG_PLTT_ID(3) + 1, PLTT_SIZEOF(7));
-    //     else
-    //         LoadPalette(sPokedexPlusHGSS_CounterDark_Pal + 1, BG_PLTT_ID(3) + 1, PLTT_SIZEOF(7));
-    // }
-
-    return TRUE;
 }
 
 static void TryLoadDarkModeArrowPalette(void)

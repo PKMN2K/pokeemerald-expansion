@@ -516,3 +516,17 @@ and cleanup remain shared because they are functional Size-page mechanics rather
 than alternate UI renderers. All transitions into the page now target the HGSS
 renderer.
 
+## Primary Gen 4 caught/new-entry Pokédex page
+
+The newly caught Pokémon Pokédex page no longer chooses between an Emerald task
+and an HGSS task. `DisplayCaughtMonDexPage` now creates the Gen 4 renderer
+directly through the canonical `Task_DisplayCaughtMonDexPage` entry point.
+
+The original Emerald caught-page renderer has been deleted, along with its
+Hoenn palette-flicker branch. The current HGSS behavior intentionally keeps the
+page stable rather than flickering, exactly as the previously enabled HGSS path
+already did.
+
+The former feature-gated type-icon/flicker compatibility helpers were reduced to
+a direct `HideCaughtMonPageTypeIcons` cleanup helper.
+

@@ -116,7 +116,6 @@ static void LoadScreenSelectBarMain(u16);
 static void LoadScreenSelectBarSubmenu(u16);
 static void HighlightScreenSelectBarItem(u8, u16);
 static void HighlightSubmenuScreenSelectBarItem(u8, u16);
-static void Task_DisplayCaughtMonDexPage(u8);
 static void Task_ExitCaughtMonPage(u8);
 static void SpriteCB_SlideCaughtMonToCenter(struct Sprite *sprite);
 static void PrintMonInfo(u32 num, u32, u32 owned, u32 newEntry);
@@ -3341,7 +3340,6 @@ static void HighlightSubmenuScreenSelectBarItem(u8 a, u16 b)
 
 #define tState         data[0]
 #define tSpecies        data[1]
-#define tPalTimer      data[2]
 #define tMonSpriteId   data[3]
 #define tIsShiny       data[13]
 #define tPersonalityLo 14
@@ -3349,11 +3347,7 @@ static void HighlightSubmenuScreenSelectBarItem(u8 a, u16 b)
 
 u8 DisplayCaughtMonDexPage(enum Species species, bool32 isShiny, u32 personality)
 {
-    u8 taskId = 0;
-    if (POKEDEX_PLUS_HGSS)
-        taskId = CreateTask(Task_DisplayCaughtMonDexPageHGSS, 0);
-    else
-        taskId = CreateTask(Task_DisplayCaughtMonDexPage, 0);
+    u8 taskId = CreateTask(Task_DisplayCaughtMonDexPage, 0);
 
     gTasks[taskId].tState = 0;
     gTasks[taskId].tSpecies = species;
@@ -3381,81 +3375,7 @@ u32 Pokedex_CreateCaughtMonSprite(enum Species species, s32 x, s32 y)
     return spriteId;
 }
 
-static void Task_DisplayCaughtMonDexPage(u8 taskId)
-{
-    u8 spriteId;
-    enum Species species = gTasks[taskId].tSpecies;
-    enum NationalDexOrder dexNum = SpeciesToNationalPokedexNum(species);
-
-    switch (gTasks[taskId].tState)
-    {
-    case 0:
-    default:
-        if (!gPaletteFade.active)
-        {
-            gPokedexVBlankCB = gMain.vblankCallback;
-            SetVBlankCallback(NULL);
-            ResetOtherVideoRegisters(DISPCNT_BG0_ON);
-            ResetBgsAndClearDma3BusyFlags(0);
-            InitBgsFromTemplates(0, sNewEntryInfoScreen_BgTemplate, ARRAY_COUNT(sNewEntryInfoScreen_BgTemplate));
-            SetBgTilemapBuffer(3, AllocZeroed(BG_SCREEN_SIZE));
-            SetBgTilemapBuffer(2, AllocZeroed(BG_SCREEN_SIZE));
-            InitWindows(sNewEntryInfoScreen_WindowTemplates);
-            DeactivateAllTextPrinters();
-            gTasks[taskId].tState = 1;
-        }
-        break;
-    case 1:
-        DecompressAndLoadBgGfxUsingHeap(3, gPokedexMenu_Gfx, 0x2000, 0, 0);
-        CopyToBgTilemapBuffer(3, gPokedexInfoScreen_Tilemap, 0, 0);
-        FillWindowPixelBuffer(WIN_INFO, PIXEL_FILL(0));
-        PutWindowTilemap(WIN_INFO);
-        PutWindowTilemap(WIN_FOOTPRINT);
-        DrawFootprint(WIN_FOOTPRINT, species);
-        CopyWindowToVram(WIN_FOOTPRINT, COPYWIN_GFX);
-        ResetPaletteFade();
-        LoadPokedexBgPalette(FALSE);
-        gTasks[taskId].tState++;
-        break;
-    case 2:
-        gTasks[taskId].tState++;
-        break;
-    case 3:
-        PrintMonInfo(dexNum, IsNationalPokedexEnabled(), 1, 1);
-        CopyWindowToVram(WIN_INFO, COPYWIN_FULL);
-        CopyBgTilemapBufferToVram(2);
-        CopyBgTilemapBufferToVram(3);
-        gTasks[taskId].tState++;
-        break;
-    case 4:
-        // We're using a different mon sprite creation method, because we don't have enough memory to safely use CreateMonPicSprite.
-        spriteId = Pokedex_CreateCaughtMonSprite(species, MON_PAGE_X, MON_PAGE_Y);
-        gTasks[taskId].tMonSpriteId = spriteId;
-        LoadDexMonPalette(taskId, FALSE);
-        gSprites[spriteId].oam.priority = 0;
-        BeginNormalPaletteFade(PALETTES_ALL, 0, 0x10, 0, RGB_BLACK);
-        SetVBlankCallback(gPokedexVBlankCB);
-        gTasks[taskId].tState++;
-        break;
-    case 5:
-        SetGpuReg(REG_OFFSET_BLDCNT, 0);
-        SetGpuReg(REG_OFFSET_BLDALPHA, 0);
-        SetGpuReg(REG_OFFSET_BLDY, 0);
-        SetGpuReg(REG_OFFSET_DISPCNT, DISPCNT_OBJ_1D_MAP | DISPCNT_OBJ_ON);
-        ShowBg(2);
-        ShowBg(3);
-        gTasks[taskId].tState++;
-        break;
-    case 6:
-        if (!gPaletteFade.active)
-        {
-            PlayCry_Normal(species, 0);
-            gTasks[taskId].tPalTimer = 0;
-            gTasks[taskId].func = Task_HandleCaughtMonPageInput;
-        }
-        break;
-    }
-}
+// Caught/new-entry rendering is owned by the primary Gen 4 Pokédex task.
 
 void Task_HandleCaughtMonPageInput(u8 taskId)
 {
@@ -3464,20 +3384,7 @@ void Task_HandleCaughtMonPageInput(u8 taskId)
         BeginNormalPaletteFade(PALETTES_BG, 0, 0, 16, RGB_BLACK);
         gSprites[gTasks[taskId].tMonSpriteId].callback = SpriteCB_SlideCaughtMonToCenter;
         gTasks[taskId].func = Task_ExitCaughtMonPage;
-        HandleCaughtMonPageTypeIcons_HGSS();
-    }
-    else if (TryHandleCaughtMonPageFlicker_HGSS(taskId))
-    {
-        return;
-    }
-    // Flicker caught screen color
-    else if (++gTasks[taskId].tPalTimer & 16)
-    {
-        LoadPalette(gPokedexBgHoenn_Pal + 1, BG_PLTT_ID(3) + 1, PLTT_SIZEOF(7));
-    }
-    else
-    {
-        LoadPalette(gPokedexBgHoenn_Pal + 49, BG_PLTT_ID(3) + 1, PLTT_SIZEOF(7));
+        HideCaughtMonPageTypeIcons();
     }
 }
 
@@ -3525,7 +3432,6 @@ static void SpriteCB_SlideCaughtMonToCenter(struct Sprite *sprite)
 
 #undef tState
 #undef tSpecies
-#undef tPalTimer
 #undef tMonSpriteId
 #undef tOtIdLo
 #undef tOtIdHi
