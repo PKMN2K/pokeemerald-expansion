@@ -705,3 +705,16 @@ been removed. Their declarations and source assets were deleted.
 This leaves those Pokédex pages dependent only on their Gen 4/HGSS background
 assets rather than retaining unused Emerald-era compatibility artwork.
 
+## Removed obsolete legacy Pokédex Search backgrounds
+
+The active Search screen already uses the Gen 4 member-068 background plus the
+current Search overlay and text palettes. The older Hoenn/National Search
+tilemaps and their 4bpp menu-search tilesets were no longer referenced by the
+renderer, so those dead fallback assets were removed.
+
+Deleted assets:
+- `graphics/pokedex/hgss/tilemap_search_screen_hoenn.bin`
+- `graphics/pokedex/hgss/tilemap_search_screen_national.bin`
+- `graphics/pokedex/hgss/tileset_menu_search.png`
+- `graphics/pokedex/hgss/tileset_menu_search_DECA.png`
+
