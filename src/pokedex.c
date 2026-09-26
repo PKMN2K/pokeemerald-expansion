@@ -111,8 +111,6 @@ static u8 LoadInfoScreen(struct PokedexListItem *, u8 monSpriteId);
 static bool8 IsInfoScreenScrolling(u8);
 static u8 StartInfoScreenScroll(struct PokedexListItem *, u8);
 static void Task_ExitInfoScreen(u8);
-static void Task_SwitchScreensFromCryScreen(u8);
-static void LoadPlayArrowPalette(bool8);
 static void Task_SwitchScreensFromSizeScreen(u8);
 static void LoadScreenSelectBarMain(u16);
 static void LoadScreenSelectBarSubmenu(u16);
@@ -3112,7 +3110,7 @@ void Task_SwitchScreensFromInfoScreen(u8 taskId)
             gTasks[taskId].func = Task_LoadAreaScreen_HGSS;
             break;
         case 2:
-            gTasks[taskId].func = Task_LoadCryScreen;
+            gTasks[taskId].func = Task_LoadCryScreen_HGSS;
             break;
         case 3:
             gTasks[taskId].func = Task_LoadSizeScreen;
@@ -3171,125 +3169,20 @@ void Task_WaitForAreaScreenInput(u8 taskId)
         gTasks[taskId].func = Task_SwitchScreensFromAreaScreen_HGSS;
 }
 
-void Task_LoadCryScreen(u8 taskId)
-{
-    if (TryLoadCryScreen_HGSS(taskId))
-        return;
-
-    switch (gMain.state)
-    {
-    case 0:
-    default:
-        if (!gPaletteFade.active)
-        {
-            m4aMPlayStop(&gMPlayInfo_BGM);
-            sPokedexView->currentPage = PAGE_CRY;
-            gPokedexVBlankCB = gMain.vblankCallback;
-            SetVBlankCallback(NULL);
-            ResetOtherVideoRegisters(DISPCNT_BG1_ON);
-            sPokedexView->selectedScreen = CRY_SCREEN;
-            gMain.state = 1;
-        }
-        break;
-    case 1:
-        DecompressAndLoadBgGfxUsingHeap(3, &gPokedexMenu_Gfx, 0x2000, 0, 0);
-        CopyToBgTilemapBuffer(3, &gPokedexCryScreen_Tilemap, 0, 0);
-        FillWindowPixelBuffer(WIN_INFO, PIXEL_FILL(0));
-        PutWindowTilemap(WIN_INFO);
-        PutWindowTilemap(WIN_VU_METER);
-        PutWindowTilemap(WIN_CRY_WAVE);
-        gMain.state++;
-        break;
-    case 2:
-        LoadScreenSelectBarSubmenu(0xD);
-        HighlightSubmenuScreenSelectBarItem(1, 0xD);
-        LoadPokedexBgPalette(sPokedexView->isSearchResults);
-        gMain.state++;
-        break;
-    case 3:
-        ResetPaletteFade();
-        gMain.state++;
-        break;
-    case 4:
-        PrintInfoScreenText(gText_CryOf, 82, 33);
-        PrintCryScreenSpeciesName(0, sPokedexListItem->dexNum, 82, 49);
-        gMain.state++;
-        break;
-    case 5:
-        gTasks[taskId].tMonSpriteId = CreateMonSpriteFromNationalDexNumber(sPokedexListItem->dexNum, MON_PAGE_X, MON_PAGE_Y, 0);
-        gSprites[gTasks[taskId].tMonSpriteId].oam.priority = 0;
-        gDexCryScreenState = 0;
-        gMain.state++;
-        break;
-    case 6:
-        {
-            struct CryScreenWindow waveformWindow;
-
-            waveformWindow.unk0 = 0x4020;
-            waveformWindow.unk2 = 31;
-            waveformWindow.paletteNo = 8;
-            waveformWindow.yPos = 30;
-            waveformWindow.xPos = 12;
-            if (LoadCryWaveformWindow(&waveformWindow, 2))
-            {
-                gMain.state++;
-                gDexCryScreenState = 0;
-            }
-        }
-        break;
-    case 7:
-        {
-            struct CryScreenWindow cryMeter;
-
-            cryMeter.paletteNo = 9;
-            cryMeter.xPos = 18;
-            cryMeter.yPos = 3;
-            if (LoadCryMeter(&cryMeter, 3))
-                gMain.state++;
-            CopyWindowToVram(WIN_VU_METER, COPYWIN_GFX);
-            CopyWindowToVram(WIN_INFO, COPYWIN_FULL);
-            CopyBgTilemapBufferToVram(0);
-            CopyBgTilemapBufferToVram(1);
-            CopyBgTilemapBufferToVram(2);
-            CopyBgTilemapBufferToVram(3);
-        }
-        break;
-    case 8:
-        BeginNormalPaletteFade(PALETTES_ALL & ~(0x14), 0, 0x10, 0, RGB_BLACK);
-        SetVBlankCallback(gPokedexVBlankCB);
-        gMain.state++;
-        break;
-    case 9:
-        SetGpuReg(REG_OFFSET_BLDCNT, 0);
-        SetGpuReg(REG_OFFSET_BLDALPHA, 0);
-        SetGpuReg(REG_OFFSET_BLDY, 0);
-        SetGpuReg(REG_OFFSET_DISPCNT, DISPCNT_OBJ_1D_MAP | DISPCNT_OBJ_ON);
-        ShowBg(0);
-        ShowBg(1);
-        ShowBg(2);
-        ShowBg(3);
-        gMain.state++;
-        break;
-    case 10:
-        sPokedexView->screenSwitchState = 0;
-        gMain.state = 0;
-        gTasks[taskId].func = Task_HandleCryScreenInput;
-        break;
-    }
-}
+// Cry rendering is owned directly by the HGSS/Gen 4 loader.
 
 void Task_HandleCryScreenInput(u8 taskId)
 {
     UpdateCryWaveformWindow(2);
 
     if (IsCryPlaying())
-        LoadPlayArrowPalette(TRUE);
+        LoadPlayArrowPalette_HGSS(TRUE);
     else
-        LoadPlayArrowPalette(FALSE);
+        LoadPlayArrowPalette_HGSS(FALSE);
 
     if (JOY_NEW(A_BUTTON))
     {
-        LoadPlayArrowPalette(TRUE);
+        LoadPlayArrowPalette_HGSS(TRUE);
         CryScreenPlayButton(NationalPokedexNumToSpeciesForm(sPokedexListItem->dexNum));
         return;
     }
@@ -3300,7 +3193,7 @@ void Task_HandleCryScreenInput(u8 taskId)
             BeginNormalPaletteFade(PALETTES_ALL & ~(0x14), 0, 0, 0x10, RGB_BLACK);
             m4aMPlayContinue(&gMPlayInfo_BGM);
             sPokedexView->screenSwitchState = 1;
-            gTasks[taskId].func = Task_SwitchScreensFromCryScreen;
+            gTasks[taskId].func = Task_SwitchScreensFromCryScreen_HGSS;
             PlaySE(SE_PC_OFF);
             return;
         }
@@ -3310,7 +3203,7 @@ void Task_HandleCryScreenInput(u8 taskId)
             BeginNormalPaletteFade(PALETTES_ALL & ~(0x14), 0, 0, 0x10, RGB_BLACK);
             m4aMPlayContinue(&gMPlayInfo_BGM);
             sPokedexView->screenSwitchState = 2;
-            gTasks[taskId].func = Task_SwitchScreensFromCryScreen;
+            gTasks[taskId].func = Task_SwitchScreensFromCryScreen_HGSS;
             PlaySE(SE_DEX_PAGE);
             return;
         }
@@ -3326,52 +3219,12 @@ void Task_HandleCryScreenInput(u8 taskId)
                 BeginNormalPaletteFade(PALETTES_ALL & ~(0x14), 0, 0, 0x10, RGB_BLACK);
                 m4aMPlayContinue(&gMPlayInfo_BGM);
                 sPokedexView->screenSwitchState = 3;
-                gTasks[taskId].func = Task_SwitchScreensFromCryScreen;
+                gTasks[taskId].func = Task_SwitchScreensFromCryScreen_HGSS;
                 PlaySE(SE_DEX_PAGE);
             }
             return;
         }
     }
-}
-
-static void Task_SwitchScreensFromCryScreen(u8 taskId)
-{
-    if (!gPaletteFade.active)
-    {
-        FreeCryScreen();
-        FreeAndDestroyMonPicSprite(gTasks[taskId].tMonSpriteId);
-
-        if (TrySwitchScreensFromCryScreen_HGSS(taskId))
-            return;
-
-        switch (sPokedexView->screenSwitchState)
-        {
-        default:
-        case 1:
-            gTasks[taskId].func = Task_LoadInfoScreen_HGSS;
-            break;
-        case 2:
-            gTasks[taskId].func = Task_LoadAreaScreen_HGSS;
-            break;
-        case 3:
-            gTasks[taskId].func = Task_LoadSizeScreen;
-            break;
-        }
-    }
-}
-
-static void LoadPlayArrowPalette(bool8 cryPlaying)
-{
-    if (TryLoadPlayArrowPalette_HGSS(cryPlaying))
-        return;
-
-    u16 color;
-
-    if (cryPlaying)
-        color = RGB(18, 28, 0);
-    else
-        color = RGB(15, 21, 0);
-    LoadPalette(&color, BG_PLTT_ID(5) + 13, PLTT_SIZEOF(1));
 }
 
 void Task_LoadSizeScreen(u8 taskId)
@@ -3507,7 +3360,7 @@ static void Task_SwitchScreensFromSizeScreen(u8 taskId)
             gTasks[taskId].func = Task_LoadInfoScreen_HGSS;
             break;
         case 2:
-            gTasks[taskId].func = Task_LoadCryScreen;
+            gTasks[taskId].func = Task_LoadCryScreen_HGSS;
             break;
         }
     }

@@ -491,3 +491,17 @@ palette-fade guard.
 The shared `Task_ReloadAreaScreen` refresh remains because it updates the
 area-map subsystem rather than selecting between legacy and HGSS renderers.
 
+## Primary HGSS Pokédex Cry renderer
+
+The Pokédex Cry page now loads through `Task_LoadCryScreen_HGSS` directly.
+The complete Emerald Cry renderer has been removed from `src/pokedex.c`;
+waveform and cry-meter behavior remain shared.
+
+Cry-page navigation now points directly to
+`Task_SwitchScreensFromCryScreen_HGSS`. That task owns cleanup and the HGSS
+Info / Evolution / Size destinations without a compatibility wrapper.
+
+The play-button arrow palette is also now permanently supplied by
+`LoadPlayArrowPalette_HGSS`; the old Emerald palette fallback has been
+deleted.
+

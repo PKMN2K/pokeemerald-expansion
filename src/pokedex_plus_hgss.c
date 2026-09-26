@@ -3716,7 +3716,7 @@ static void Task_SwitchScreensFromStatsScreen(u8 taskId)
             gTasks[taskId].func = Task_LoadAreaScreen_HGSS;
             break;
         case 2:
-            gTasks[taskId].func = Task_LoadCryScreen;
+            gTasks[taskId].func = Task_LoadCryScreen_HGSS;
             break;
         case 3:
             FreeAllWindowBuffers();
@@ -4707,7 +4707,7 @@ static void Task_SwitchScreensFromEvolutionScreen(u8 taskId)
             gTasks[taskId].func = Task_LoadStatsScreen;
             break;
         case 2:
-            gTasks[taskId].func = Task_LoadCryScreen;
+            gTasks[taskId].func = Task_LoadCryScreen_HGSS;
             break;
         case 3:
             gTasks[taskId].func = Task_LoadFormsScreen;
@@ -5055,11 +5055,8 @@ static void Task_ExitFormsScreen(u8 taskId)
 #define tMonSpriteId     data[4]
 #define tTrainerSpriteId data[5]
 
-bool32 TryLoadCryScreen_HGSS(u8 taskId)
+void Task_LoadCryScreen_HGSS(u8 taskId)
 {
-    if (!POKEDEX_PLUS_HGSS)
-        return FALSE;
-
     switch (gMain.state)
     {
     case 0:
@@ -5160,13 +5157,15 @@ bool32 TryLoadCryScreen_HGSS(u8 taskId)
         break;
     }
 
-    return TRUE;
 }
 
-bool32 TrySwitchScreensFromCryScreen_HGSS(u8 taskId)
+void Task_SwitchScreensFromCryScreen_HGSS(u8 taskId)
 {
-    if (!POKEDEX_PLUS_HGSS)
-        return FALSE;
+    if (gPaletteFade.active)
+        return;
+
+    FreeCryScreen();
+    FreeAndDestroyMonPicSprite(gTasks[taskId].tMonSpriteId);
 
     switch (sPokedexView->screenSwitchState)
     {
@@ -5182,7 +5181,6 @@ bool32 TrySwitchScreensFromCryScreen_HGSS(u8 taskId)
         break;
     }
 
-    return TRUE;
 }
 
 
@@ -5292,11 +5290,8 @@ bool32 TryLoadSizeScreen_HGSS(u8 taskId)
     return TRUE;
 }
 
-bool32 TryLoadPlayArrowPalette_HGSS(bool8 cryPlaying)
+void LoadPlayArrowPalette_HGSS(bool8 cryPlaying)
 {
-    if (!POKEDEX_PLUS_HGSS)
-        return FALSE;
-
     u16 color;
 
     if (!HGSS_DARK_MODE)
@@ -5315,7 +5310,6 @@ bool32 TryLoadPlayArrowPalette_HGSS(bool8 cryPlaying)
     }
 
     LoadPalette(&color, BG_PLTT_ID(0) + 11, PLTT_SIZEOF(1));
-    return TRUE;
 }
 
 #undef tScrolling
