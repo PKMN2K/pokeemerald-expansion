@@ -432,7 +432,6 @@ static const u8 sPokedexPlusHGSS_CounterTiles[] = INCBIN_U8("graphics/gen4_ui/hg
 static const u8 sPokedexPlusHGSS_CounterDecappedTiles[] = INCBIN_U8("graphics/gen4_ui/hgss_pokedex_counters_deca.tiles.bin");
 static const u32 sPokedexPlusHGSS_Menu_1_Gfx[] = INCGFX_U32("graphics/pokedex/hgss/tileset_menu1.png", ".4bpp.smol");
 static const u32 sPokedexPlusHGSS_Menu_2_Gfx[] = INCGFX_U32("graphics/pokedex/hgss/tileset_menu2.png", ".4bpp.smol");
-static const u32 sPokedexPlusHGSS_Menu_3_Gfx[] = INCGFX_U32("graphics/pokedex/hgss/tileset_menu3.png", ".4bpp.smol");
 #define GEN4_UI_HGSS_START_MENU_BASE_TILE 768
 #define GEN4_UI_HGSS_START_MENU_PAL_SLOT 12
 #define GEN4_UI_HGSS_START_MENU_TILEMAP_OFFSET 0x280
@@ -449,7 +448,6 @@ static const u16 sPokedexPlusHGSS_Gen4StartMenuMainTilemap[] = INCBIN_U16("graph
 static const u8 sPokedexPlusHGSS_Gen4StartMenuResultsTiles[] = INCBIN_U8("graphics/gen4_ui/hgss_pokedex_start_menu_results.tiles.bin");
 static const u16 sPokedexPlusHGSS_Gen4StartMenuResultsTilemap[] = INCBIN_U16("graphics/gen4_ui/hgss_pokedex_start_menu_results.tilemap.bin");
 static const u16 sPokedexPlusHGSS_Gen4StartMenuPalette[] = INCBIN_U16("graphics/gen4_ui/hgss_pokedex_start_menu.palette.bin");
-static const u32 sPokedexPlusHGSS_ScreenSize_Tilemap[] = INCGFX_U32("graphics/pokedex/hgss/tilemap_size_screen.bin", ".smolTM");
 
 #define MAX_EVOLUTION_ICONS 8
 
@@ -465,7 +463,6 @@ extern EWRAM_DATA struct PokedexListItem *sPokedexListItem;
 
 
 static bool8 LoadPokedexListPage(u8);
-static void RestoreLegacyPokedexBg3(void);
 static void CreateInterfaceSprites(u8);
 static void LoadGen4ListOverlay(void);
 static void LoadGen4StartMenu(u8 page);
@@ -2338,12 +2335,6 @@ static u32 GetPokedexMonPersonality(enum Species species)
 //*        HGSS                      *
 //*                                  *
 //************************************
-static void RestoreLegacyPokedexBg3(void)
-{
-    SetBgAttribute(3, BG_ATTR_CHARBASEINDEX, 0);
-    SetBgAttribute(3, BG_ATTR_PALETTEMODE, GEN4_UI_PALETTE_4BPP);
-}
-
 static void LoadTilesetTilemapHGSS(u8 page)
 {
     switch (page)
@@ -2413,12 +2404,6 @@ static void LoadTilesetTilemapHGSS(u8 page)
         {
             CopyToBgTilemapBuffer(3, sPokedexPlusHGSS_Gen4SizeTilemap,
                                   sizeof(sPokedexPlusHGSS_Gen4SizeTilemap), 0);
-        }
-        else
-        {
-            RestoreLegacyPokedexBg3();
-            DecompressAndLoadBgGfxUsingHeap(3, sPokedexPlusHGSS_Menu_3_Gfx, 0x2000, 0, 0);
-            CopyToBgTilemapBuffer(3, sPokedexPlusHGSS_ScreenSize_Tilemap, 0, 0);
         }
         break;
     }

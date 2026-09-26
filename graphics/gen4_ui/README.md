@@ -686,3 +686,13 @@ background path while retaining the live waveform and VU-meter behavior.
 The obsolete `graphics/pokedex/hgss/tilemap_cry_screen.bin` fallback asset
 was deleted.
 
+## Removed the Size-screen legacy background fallback
+
+The Pokédex Size screen no longer restores 4bpp legacy BG3 graphics or loads the
+adapted Size fallback tilemap. Size now has only its authentic Gen 4/HGSS
+background path while retaining the live silhouette-scaling logic.
+
+Because Size held the final page-level legacy BG3 fallback, the now-unused
+`RestoreLegacyPokedexBg3` helper and the old `tileset_menu3.png` fallback
+graphic were removed as well.
+
