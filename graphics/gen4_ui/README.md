@@ -540,3 +540,15 @@ Every Pokédex screen that calls the shared palette function now receives the
 Gen 4 list/search text palette and textbox palette unconditionally, with the
 existing HGSS dark-mode selection preserved.
 
+## Primary Gen 4 Pokédex list-entry renderer
+
+The scrolling Pokédex rows no longer call a `TryCreateMonListEntry_HGSS`
+override. The HGSS row implementation is now the canonical
+`CreateMonListEntry` renderer in `src/pokedex.c`, and the duplicate Emerald
+row renderer has been removed.
+
+The small geometry switches surrounding the row renderer are also gone:
+Pokédex-number and name offsets, caught-ball spacing, row clearing, number
+formatting, and the scrolling Pokémon X position now use the Gen 4 layout
+unconditionally.
+
