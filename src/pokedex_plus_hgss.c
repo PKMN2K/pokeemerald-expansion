@@ -343,13 +343,92 @@ static const u16 sPokedexPlusHGSS_Gen4SearchOverlayTilemap[] = INCBIN_U16("graph
 static const u16 sPokedexPlusHGSS_Gen4SearchOverlayPalette[] = INCBIN_U16("graphics/gen4_ui/hgss_pokedex_search_overlay.palette.bin");
 
 static const u16 sPokedexPlusHGSS_Default_Pal[] = INCGFX_U16("graphics/pokedex/hgss/palette_default.pal", ".gbapal");
-static const u16 sPokedexPlusHGSS_National_Pal[] = INCGFX_U16("graphics/pokedex/hgss/palette_national.pal", ".gbapal");
 static const u16 sPokedexPlusHGSS_MenuSearch_Pal[] = INCGFX_U16("graphics/pokedex/hgss/palette_search_menu.pal", ".gbapal");
-static const u16 sPokedexPlusHGSS_SearchResults_Pal[] = INCGFX_U16("graphics/pokedex/hgss/palette_search_results.pal", ".gbapal");
 static const u16 sPokedexPlusHGSS_Default_dark_Pal[] = INCGFX_U16("graphics/pokedex/hgss/palette_default_dark.pal", ".gbapal");
-static const u16 sPokedexPlusHGSS_National_dark_Pal[] = INCGFX_U16("graphics/pokedex/hgss/palette_national_dark.pal", ".gbapal");
 static const u16 sPokedexPlusHGSS_MenuSearch_dark_Pal[] = INCGFX_U16("graphics/pokedex/hgss/palette_search_menu_dark.pal", ".gbapal");
-static const u16 sPokedexPlusHGSS_SearchResults_dark_Pal[] = INCGFX_U16("graphics/pokedex/hgss/palette_search_results_dark.pal", ".gbapal");
+
+// Only BG palette bank 0 is still live on the scrolling list. The authentic
+// BG1/BG3/START-menu layers own their own palette ranges, so keep a compact
+// text bank instead of reloading the old six-bank GBA-adapted palettes.
+static const u16 sPokedexPlusHGSS_ListText_Pal[16] =
+{
+    RGB2GBA(193, 33, 177),
+    RGB2GBA(249, 249, 249),
+    RGB2GBA(225, 225, 225),
+    RGB2GBA(201, 201, 201),
+    RGB2GBA(169, 169, 169),
+    RGB2GBA(129, 129, 129),
+    RGB2GBA(249, 153, 161),
+    RGB2GBA(233, 49, 49),
+    RGB2GBA(193, 33, 41),
+    RGB2GBA(145, 17, 33),
+    RGB2GBA(249, 153, 161),
+    RGB2GBA(193, 33, 41),
+    RGB2GBA(141, 251, 184),
+    RGB2GBA(52, 66, 162),
+    RGB2GBA(0, 0, 0),
+    RGB2GBA(0, 0, 0),
+};
+
+static const u16 sPokedexPlusHGSS_SearchResultsText_Pal[16] =
+{
+    RGB2GBA(193, 33, 177),
+    RGB2GBA(249, 249, 249),
+    RGB2GBA(225, 225, 225),
+    RGB2GBA(201, 201, 201),
+    RGB2GBA(169, 169, 169),
+    RGB2GBA(129, 129, 129),
+    RGB2GBA(249, 153, 161),
+    RGB2GBA(233, 49, 49),
+    RGB2GBA(193, 33, 41),
+    RGB2GBA(145, 17, 33),
+    RGB2GBA(249, 153, 161),
+    RGB2GBA(193, 33, 41),
+    RGB2GBA(141, 251, 184),
+    RGB2GBA(52, 66, 162),
+    RGB2GBA(194, 181, 66),
+    RGB2GBA(0, 0, 0),
+};
+
+static const u16 sPokedexPlusHGSS_ListTextDark_Pal[16] =
+{
+    RGB2GBA(193, 33, 177),
+    RGB2GBA(249, 249, 249),
+    RGB2GBA(225, 225, 225),
+    RGB2GBA(201, 201, 201),
+    RGB2GBA(169, 169, 169),
+    RGB2GBA(129, 129, 129),
+    RGB2GBA(106, 106, 106),
+    RGB2GBA(37, 37, 37),
+    RGB2GBA(106, 106, 106),
+    RGB2GBA(0, 0, 0),
+    RGB2GBA(106, 106, 106),
+    RGB2GBA(193, 33, 41),
+    RGB2GBA(141, 251, 184),
+    RGB2GBA(52, 66, 162),
+    RGB2GBA(74, 74, 74),
+    RGB2GBA(0, 0, 0),
+};
+
+static const u16 sPokedexPlusHGSS_SearchResultsTextDark_Pal[16] =
+{
+    RGB2GBA(193, 33, 177),
+    RGB2GBA(249, 249, 249),
+    RGB2GBA(225, 225, 225),
+    RGB2GBA(201, 201, 201),
+    RGB2GBA(169, 169, 169),
+    RGB2GBA(129, 129, 129),
+    RGB2GBA(106, 106, 106),
+    RGB2GBA(37, 37, 37),
+    RGB2GBA(106, 106, 106),
+    RGB2GBA(0, 0, 0),
+    RGB2GBA(106, 106, 106),
+    RGB2GBA(193, 33, 41),
+    RGB2GBA(141, 251, 184),
+    RGB2GBA(52, 66, 162),
+    RGB2GBA(194, 181, 66),
+    RGB2GBA(0, 0, 0),
+};
 static const u32 sPokedexPlusHGSS_Interface_Gfx[] = INCGFX_U32("graphics/pokedex/hgss/tileset_interface.png", ".4bpp.smol");
 static const u32 sPokedexPlusHGSS_Interface_DECA_Gfx[] = INCGFX_U32("graphics/pokedex/hgss/tileset_interface_DECA.png", ".4bpp.smol");
 static const u32 sPokedexPlusHGSS_Menu_1_Gfx[] = INCGFX_U32("graphics/pokedex/hgss/tileset_menu1.png", ".4bpp.smol");
@@ -781,21 +860,17 @@ bool32 TryLoadPokedexBgPalette_HGSS(bool8 isSearchResults)
 
     if (!HGSS_DARK_MODE)
     {
-        if (isSearchResults == TRUE)
-            LoadPalette(sPokedexPlusHGSS_SearchResults_Pal + 1, BG_PLTT_ID(0) + 1, PLTT_SIZEOF(6 * 16 - 1));
-        else if (!IsNationalPokedexEnabled())
-            LoadPalette(sPokedexPlusHGSS_Default_Pal + 1, BG_PLTT_ID(0) + 1, PLTT_SIZEOF(6 * 16 - 1));
+        if (isSearchResults)
+            LoadPalette(sPokedexPlusHGSS_SearchResultsText_Pal, BG_PLTT_ID(0), PLTT_SIZE_4BPP);
         else
-            LoadPalette(sPokedexPlusHGSS_National_Pal + 1, BG_PLTT_ID(0) + 1, PLTT_SIZEOF(6 * 16 - 1));
+            LoadPalette(sPokedexPlusHGSS_ListText_Pal, BG_PLTT_ID(0), PLTT_SIZE_4BPP);
     }
     else
     {
-        if (isSearchResults == TRUE)
-            LoadPalette(sPokedexPlusHGSS_SearchResults_dark_Pal + 1, BG_PLTT_ID(0) + 1, PLTT_SIZEOF(6 * 16 - 1));
-        else if (!IsNationalPokedexEnabled())
-            LoadPalette(sPokedexPlusHGSS_Default_dark_Pal + 1, BG_PLTT_ID(0) + 1, PLTT_SIZEOF(6 * 16 - 1));
+        if (isSearchResults)
+            LoadPalette(sPokedexPlusHGSS_SearchResultsTextDark_Pal, BG_PLTT_ID(0), PLTT_SIZE_4BPP);
         else
-            LoadPalette(sPokedexPlusHGSS_National_dark_Pal + 1, BG_PLTT_ID(0) + 1, PLTT_SIZEOF(6 * 16 - 1));
+            LoadPalette(sPokedexPlusHGSS_ListTextDark_Pal, BG_PLTT_ID(0), PLTT_SIZE_4BPP);
     }
 
     LoadPalette(GetOverworldTextboxPalettePtr(), BG_PLTT_ID(15), PLTT_SIZE_4BPP);
