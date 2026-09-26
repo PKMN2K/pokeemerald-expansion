@@ -5869,20 +5869,25 @@ static void SpriteCB_SearchParameterScrollArrow(struct Sprite *sprite)
     }
 }
 
-void CreateSearchParameterScrollArrows(u8 taskId)
+void CreateSearchParameterScrollArrowsWithTemplate(u8 taskId, const struct SpriteTemplate *spriteTemplate)
 {
     u8 spriteId;
 
-    spriteId = CreateSprite(&sScrollArrowSpriteTemplate, 184, 4, 0);
+    spriteId = CreateSprite(spriteTemplate, 184, 4, 0);
     gSprites[spriteId].sTaskId = taskId;
     gSprites[spriteId].sIsDownArrow = FALSE;
     gSprites[spriteId].callback = SpriteCB_SearchParameterScrollArrow;
 
-    spriteId = CreateSprite(&sScrollArrowSpriteTemplate, 184, 108, 0);
+    spriteId = CreateSprite(spriteTemplate, 184, 108, 0);
     gSprites[spriteId].sTaskId = taskId;
     gSprites[spriteId].sIsDownArrow = TRUE;
     gSprites[spriteId].vFlip = TRUE;
     gSprites[spriteId].callback = SpriteCB_SearchParameterScrollArrow;
+}
+
+void CreateSearchParameterScrollArrows(u8 taskId)
+{
+    CreateSearchParameterScrollArrowsWithTemplate(taskId, &sScrollArrowSpriteTemplate);
 }
 
 #undef sTaskId

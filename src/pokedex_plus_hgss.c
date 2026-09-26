@@ -429,8 +429,6 @@ static const u16 sPokedexPlusHGSS_SearchResultsTextDark_Pal[16] =
     RGB2GBA(194, 181, 66),
     RGB2GBA(0, 0, 0),
 };
-static const u32 sPokedexPlusHGSS_Interface_Gfx[] = INCGFX_U32("graphics/pokedex/hgss/tileset_interface.png", ".4bpp.smol");
-static const u32 sPokedexPlusHGSS_Interface_DECA_Gfx[] = INCGFX_U32("graphics/pokedex/hgss/tileset_interface_DECA.png", ".4bpp.smol");
 static const u8 sPokedexPlusHGSS_CounterTiles[] = INCBIN_U8("graphics/gen4_ui/hgss_pokedex_counters.tiles.bin");
 static const u8 sPokedexPlusHGSS_CounterDecappedTiles[] = INCBIN_U8("graphics/gen4_ui/hgss_pokedex_counters_deca.tiles.bin");
 static const u32 sPokedexPlusHGSS_Menu_1_Gfx[] = INCGFX_U32("graphics/pokedex/hgss/tileset_menu1.png", ".4bpp.smol");
@@ -624,21 +622,6 @@ static const struct SpritePalette sStatBarSpritePal[] = //{sStatBarPalette, TAG_
     {sStatBarPalette, TAG_STAT_BAR_BG},
     {0}
 };
-
-static const struct CompressedSpriteSheet sInterfaceSpriteSheet[] =
-{
-    {sPokedexPlusHGSS_Interface_Gfx, 0x2000, TAG_DEX_INTERFACE},
-    {sPokedexPlusHGSS_Interface_DECA_Gfx, 0x2000, TAG_DEX_INTERFACE},
-    {0}
-};
-
-static const struct SpritePalette sInterfaceSpritePalette[] =
-{
-    {sPokedexPlusHGSS_Default_Pal, TAG_DEX_INTERFACE},
-    {sPokedexPlusHGSS_Default_dark_Pal, TAG_DEX_INTERFACE},
-    {0}
-};
-
 
 #define TAG_DEX_HGSS_SCROLL 0xD5A0
 #define TAG_DEX_HGSS_START_CURSOR 0xD5A1
@@ -5453,10 +5436,10 @@ bool32 TryLoadSearchMenu_HGSS(u8 taskId)
         }
         break;
     case 1:
-        LoadCompressedSpriteSheet(&sInterfaceSpriteSheet[HGSS_DECAPPED]);
-        LoadSpritePalette(&sInterfaceSpritePalette[HGSS_DARK_MODE]);
+        LoadSpriteSheet(&sHGSSScrollControlSpriteSheet);
+        LoadSpritePalette(&sHGSSScrollControlSpritePalette);
         LoadSpritePalettes(sStatBarSpritePal);
-        CreateSearchParameterScrollArrows(taskId);
+        CreateSearchParameterScrollArrowsWithTemplate(taskId, &sHGSSScrollArrowSpriteTemplate);
         for (i = 0; i < NUM_TASK_DATA; i++)
             gTasks[taskId].data[i] = 0;
         SetDefaultSearchModeAndOrder(taskId);

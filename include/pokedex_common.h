@@ -270,6 +270,7 @@ void HighlightSelectedSearchTopBarItem(u8);
 void PrintSelectedSearchParameters(u8);
 void SetDefaultSearchModeAndOrder(u8);
 void CreateSearchParameterScrollArrows(u8);
+void CreateSearchParameterScrollArrowsWithTemplate(u8 taskId, const struct SpriteTemplate *spriteTemplate);
 u32 Pokedex_CreateCaughtMonSprite(enum Species species, s32 x, s32 y);
 
 void VBlankCB_Pokedex(void);

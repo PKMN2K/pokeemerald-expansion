@@ -399,3 +399,18 @@ The Search screen still loads the mixed interface sheet for its own remaining
 legacy OBJ controls; this change intentionally affects only the scrolling-list
 path. That keeps this migration step isolated and build-safe.
 
+## Authentic HGSS Search parameter scroll arrows
+
+The Search screen no longer loads the mixed legacy Pokédex interface OBJ sheet.
+
+Its two parameter-list arrows now use the same dedicated authentic HGSS member
+000 arrow tiles already used by the scrolling Pokédex list. The generic Search
+arrow behavior was factored into a template-aware helper, so the original
+visibility rules, up/down flipping, sine-wave bobbing, task ownership, and
+coordinates are unchanged.
+
+This removes the final `tileset_interface*.png` runtime dependency from
+`pokedex_plus_hgss.c`. The legacy sheet remains available to the non-HGSS
+Pokédex implementation in `pokedex.c`, but the HGSS path now uses only its
+dedicated Gen 4 OBJ assets.
+
