@@ -20,6 +20,7 @@ GEN4UIHGSSEVO := tools/gen4_ui/make_hgss_pokedex_evolution.py
 GEN4UIHGSSFORMS := tools/gen4_ui/make_hgss_pokedex_forms.py
 GEN4UIHGSSCRY := tools/gen4_ui/make_hgss_pokedex_cry.py
 GEN4UIHGSSSIZE := tools/gen4_ui/make_hgss_pokedex_size.py
+GEN4UIHGSSAREA := tools/gen4_ui/make_hgss_pokedex_area_chrome.py
 GEN4UIHGSSSEARCH := tools/gen4_ui/make_hgss_pokedex_search.py
 
 types := none normal fight flying poison ground rock bug ghost steel mystery fire water grass electric psychic ice dragon dark fairy stellar
@@ -426,3 +427,13 @@ $(PKNAVOPTIONSGFXDIR)/options.4bpp: $(PKNAVOPTIONSGFXDIR)/hoenn_map.4bpp \
                                     $(PKNAVOPTIONSGFXDIR)/tough.4bpp \
                                     $(PKNAVOPTIONSGFXDIR)/cancel.4bpp
 	@cat $^ >$@
+
+
+$(GEN4UIGFXDIR)/hgss_pokedex_area_chrome.tiles.bin: $(GEN4UIHGSSAREA)
+	python3 $< --tiles $@
+
+$(GEN4UIGFXDIR)/hgss_pokedex_area_chrome.tilemap.bin: $(GEN4UIHGSSAREA)
+	python3 $< --tilemap $@
+
+$(GEN4UIGFXDIR)/hgss_pokedex_area_chrome.palette.bin: $(GEN4UIHGSSAREA)
+	python3 $< --palette $@
