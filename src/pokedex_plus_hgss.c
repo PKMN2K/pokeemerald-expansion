@@ -290,6 +290,28 @@ static const struct Gen4UiBgAsset sPokedexPlusHGSS_Gen4CryAsset =
     .paletteMode = GEN4_UI_PALETTE_8BPP,
 };
 
+
+#define GEN4_UI_HGSS_SIZE_PAL_SLOT 8
+#define GEN4_UI_HGSS_SIZE_COLORS 13
+
+static const u8 sPokedexPlusHGSS_Gen4SizeTiles[] = INCBIN_U8("graphics/gen4_ui/hgss_pokedex_size_gba.tiles.8bpp");
+static const u16 sPokedexPlusHGSS_Gen4SizeTilemap[] = INCBIN_U16("graphics/gen4_ui/hgss_pokedex_size_gba.tilemap.bin");
+static const u16 sPokedexPlusHGSS_Gen4SizePalette[] = INCBIN_U16("graphics/gen4_ui/hgss_pokedex_size_gba.gbapal");
+
+static const struct Gen4UiBgAsset sPokedexPlusHGSS_Gen4SizeAsset =
+{
+    .tiles = sPokedexPlusHGSS_Gen4SizeTiles,
+    .tilemap = sPokedexPlusHGSS_Gen4SizeTilemap,
+    .palette = sPokedexPlusHGSS_Gen4SizePalette,
+    .tilesSize = sizeof(sPokedexPlusHGSS_Gen4SizeTiles),
+    .tilemapSize = sizeof(sPokedexPlusHGSS_Gen4SizeTilemap),
+    .paletteOffset = BG_PLTT_ID(GEN4_UI_HGSS_SIZE_PAL_SLOT),
+    .paletteSize = PLTT_SIZEOF(GEN4_UI_HGSS_SIZE_COLORS),
+    .baseTile = 0,
+    .tilemapOffset = 0,
+    .paletteMode = GEN4_UI_PALETTE_8BPP,
+};
+
 static const u16 sPokedexPlusHGSS_Default_Pal[] = INCGFX_U16("graphics/pokedex/hgss/palette_default.pal", ".gbapal");
 static const u16 sPokedexPlusHGSS_National_Pal[] = INCGFX_U16("graphics/pokedex/hgss/palette_national.pal", ".gbapal");
 static const u16 sPokedexPlusHGSS_MenuSearch_Pal[] = INCGFX_U16("graphics/pokedex/hgss/palette_search_menu.pal", ".gbapal");
@@ -2060,9 +2082,21 @@ static void LoadTilesetTilemapHGSS(u8 page)
         }
         break;
     case SIZE_SCREEN:
-        RestoreLegacyPokedexBg3();
-        DecompressAndLoadBgGfxUsingHeap(3, sPokedexPlusHGSS_Menu_3_Gfx, 0x2000, 0, 0);
-        CopyToBgTilemapBuffer(3, sPokedexPlusHGSS_ScreenSize_Tilemap, 0, 0);
+        // Member 097 already contains authentic twin comparison frames.
+        // Keep the live silhouette scaling logic and replace only BG3.
+        SetBgAttribute(3, BG_ATTR_CHARBASEINDEX, 3);
+        SetBgAttribute(3, BG_ATTR_PALETTEMODE, GEN4_UI_PALETTE_8BPP);
+        if (Gen4UiLoadBgAsset(3, &sPokedexPlusHGSS_Gen4SizeAsset))
+        {
+            CopyToBgTilemapBuffer(3, sPokedexPlusHGSS_Gen4SizeTilemap,
+                                  sizeof(sPokedexPlusHGSS_Gen4SizeTilemap), 0);
+        }
+        else
+        {
+            RestoreLegacyPokedexBg3();
+            DecompressAndLoadBgGfxUsingHeap(3, sPokedexPlusHGSS_Menu_3_Gfx, 0x2000, 0, 0);
+            CopyToBgTilemapBuffer(3, sPokedexPlusHGSS_ScreenSize_Tilemap, 0, 0);
+        }
         break;
     }
 }
@@ -4709,7 +4743,7 @@ bool32 TryLoadSizeScreen_HGSS(u8 taskId)
 
         StringCopy(string, gText_SizeComparedTo);
         StringAppend(string, gSaveBlock2Ptr->playerName);
-        PrintInfoScreenText(string, GetStringCenterAlignXOffset(FONT_NORMAL, string, 0xF0), 0x79);
+        PrintInfoScreenText(string, GetStringCenterAlignXOffset(FONT_NORMAL, string, 0xF0), 44);
         gMain.state++;
         break;
     }
@@ -4718,7 +4752,7 @@ bool32 TryLoadSizeScreen_HGSS(u8 taskId)
         gMain.state++;
         break;
     case 5:
-        spriteId = CreateSizeScreenTrainerPic(PlayerGenderToFrontTrainerPicId(gSaveBlock2Ptr->playerGender), 152, 56, 0);
+        spriteId = CreateSizeScreenTrainerPic(PlayerGenderToFrontTrainerPicId(gSaveBlock2Ptr->playerGender), 192, 108, 0);
         gSprites[spriteId].oam.affineMode = ST_OAM_AFFINE_NORMAL;
         gSprites[spriteId].oam.matrixNum = 1;
         gSprites[spriteId].oam.priority = 0;
@@ -4729,7 +4763,7 @@ bool32 TryLoadSizeScreen_HGSS(u8 taskId)
         gMain.state++;
         break;
     case 6:
-        spriteId = CreateMonSpriteFromNationalDexNumber(sPokedexListItem->dexNum, 88, 56, 1);
+        spriteId = CreateMonSpriteFromNationalDexNumber(sPokedexListItem->dexNum, 64, 108, 1);
         gSprites[spriteId].oam.affineMode = ST_OAM_AFFINE_NORMAL;
         gSprites[spriteId].oam.matrixNum = 2;
         gSprites[spriteId].oam.priority = 0;
