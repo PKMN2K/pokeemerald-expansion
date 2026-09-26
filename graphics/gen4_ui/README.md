@@ -63,3 +63,21 @@ shows the 240x160 top-left viewport while text, Pokémon sprites, selectors,
 and input logic remain separate overlays. A later layout pass can reposition
 authentic components into a final 240x160 composition without scaling or
 redrawing the original pixels.
+
+
+## 240x160 production composition
+
+The live Pokédex Info page now uses `hgss_pokedex_info_gba.png`, generated
+from the untouched 256x192 member 020 source.
+
+No artwork is scaled or redrawn. The generator preserves HGSS pixels at 1:1
+and fits the DS layout to the GBA by removing only empty interior strips:
+
+- 10 flat interior pixels from the long top ribbon and right-side frames.
+- 10 empty interior columns and 20 empty interior rows from the description box.
+- The full description frame is then moved upward to y=126 so it fits in 160 px.
+
+The Pokémon sprite and upper name/type layout keep their established positions.
+The footprint is centered in its authentic small frame, height/weight text is
+moved into the authentic measurement frame, and the Pokédex description is
+moved into the compacted bottom frame.
