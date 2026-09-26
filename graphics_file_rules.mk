@@ -16,6 +16,7 @@ GEN4UITESTFIXTURE := tools/gen4_ui/make_test_fixture.py
 GEN4UIHGSSDEX := tools/gen4_ui/make_hgss_pokedex_member_020.py
 GEN4UIHGSSLIST := tools/gen4_ui/make_hgss_pokedex_list_member_000.py
 GEN4UIHGSSSTATS := tools/gen4_ui/make_hgss_pokedex_stats.py
+GEN4UIHGSSEVO := tools/gen4_ui/make_hgss_pokedex_evolution.py
 
 types := none normal fight flying poison ground rock bug ghost steel mystery fire water grass electric psychic ice dragon dark fairy stellar
 contest_types := cool beauty cute smart tough
@@ -36,6 +37,9 @@ $(GEN4UIGFXDIR)/hgss_pokedex_list_gba.png: $(GEN4UIHGSSLIST)
 	python3 $< $@
 
 $(GEN4UIGFXDIR)/hgss_pokedex_stats_gba.png: $(GEN4UIHGSSSTATS)
+	python3 $< $@
+
+$(GEN4UIGFXDIR)/hgss_pokedex_evolution_gba.png: $(GEN4UIHGSSEVO)
 	python3 $< $@
 
 # The live HGSS Pokédex background reserves BG palette entries 128..140.
@@ -63,6 +67,12 @@ $(GEN4UIGFXDIR)/hgss_pokedex_stats_gba.tiles.8bpp: $(GEN4UIGFXDIR)/hgss_pokedex_
 	python3 $(GEN4UIPACK) $(word 2,$^) $< --tiles $@ --palette-base 128
 
 $(GEN4UIGFXDIR)/hgss_pokedex_stats_gba.tilemap.bin: $(GEN4UIGFXDIR)/hgss_pokedex_stats_gba.8bpp $(GEN4UIGFXDIR)/hgss_pokedex_stats_gba.png $(GEN4UIPACK)
+	python3 $(GEN4UIPACK) $(word 2,$^) $< --tilemap $@ --palette-base 128
+
+$(GEN4UIGFXDIR)/hgss_pokedex_evolution_gba.tiles.8bpp: $(GEN4UIGFXDIR)/hgss_pokedex_evolution_gba.8bpp $(GEN4UIGFXDIR)/hgss_pokedex_evolution_gba.png $(GEN4UIPACK)
+	python3 $(GEN4UIPACK) $(word 2,$^) $< --tiles $@ --palette-base 128
+
+$(GEN4UIGFXDIR)/hgss_pokedex_evolution_gba.tilemap.bin: $(GEN4UIGFXDIR)/hgss_pokedex_evolution_gba.8bpp $(GEN4UIGFXDIR)/hgss_pokedex_evolution_gba.png $(GEN4UIPACK)
 	python3 $(GEN4UIPACK) $(word 2,$^) $< --tilemap $@ --palette-base 128
 
 # gbagfx first converts the indexed source PNG into a full 8bpp tile stream.
