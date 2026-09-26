@@ -815,3 +815,18 @@ its HGSS Area chrome is loaded unconditionally.
 
 This cleanup removes the compiler errors and unused-function warnings exposed
 by the permanent-HGSS conversion rather than suppressing them.
+
+## Repaired malformed PokéNav option PNGs
+
+Five HGSS/PokéNav option graphics had incorrect PLTE length/CRC metadata even
+though their indexed pixel and IDAT data were intact. Their PNG containers were
+repaired in place without redrawing or changing the compressed image payloads:
+
+- `graphics/pokenav/options/condition.png`
+- `graphics/pokenav/options/hoenn_map.png`
+- `graphics/pokenav/options/match_call.png`
+- `graphics/pokenav/options/ribbons.png`
+- `graphics/pokenav/options/switch_off.png`
+
+The remaining option PNGs were audited and already had valid chunk structure and
+CRCs.
