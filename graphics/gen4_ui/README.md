@@ -317,3 +317,23 @@ right-side region; closing the popup restores those entries from the canonical
 generated tilemap. Search/Shift/Cancel, Name, Color, both Type selectors, Order,
 Mode, OK, disabled states, selector arrows, scroll arrows, and all input logic
 remain unchanged.
+
+
+## Compact live Pokédex text palettes
+
+After the authentic List and Search migrations, the scrolling-list renderer no
+longer needs the old six-bank HGSS background palettes. BG1, BG3, and the
+sliding START menu now load their own dedicated palette ranges.
+
+The live list path therefore loads only one 16-color BG text bank:
+
+- main Hoenn/National list: shared light/dark text bank
+- search-results list: matching light/dark bank with the results accent color
+
+The old National palette variants were byte-for-byte equivalent in their live
+text bank and are no longer referenced. The old Search Results multi-bank
+palettes are also no longer referenced. This prevents the list loader from
+overwriting five unused BG palette banks every time the Pokédex opens.
+
+The Default light/dark palette files remain only because the shared interface
+OBJ sheet still uses their first sprite palette.
