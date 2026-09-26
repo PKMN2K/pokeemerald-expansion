@@ -133,3 +133,20 @@ starting position, and the lower separator leaves the navigation strip clear.
 The live page therefore keeps pre-evolutions, branch evolutions, species names,
 caught markers, evolution conditions, selection arrow, A-button target jumps,
 and navigation behavior as overlays while BG3 supplies authentic HGSS framing.
+
+
+## HGSS-derived Forms page
+
+HeartGold/SoulSilver does not contain the expansion's generalized Forms grid,
+so the Forms background is assembled from authentic HGSS Pokédex pixels while
+leaving the existing form-selection logic untouched.
+
+`hgss_pokedex_forms_gba.png` uses member 059's native HGSS grid as the
+240x160 canvas and member 065's rounded header plus rule separators. The rules
+are placed around the existing two-row, 34-pixel form-icon grid and above the
+navigation strip. No source pixel is scaled or redrawn.
+
+The live page therefore preserves form icons, Unown vertical adjustment,
+selection-arrow movement, A-button form opening, START return to Evolutions,
+B-button submenu behavior, and all existing navigation while BG3 supplies
+authentic HGSS framing.
