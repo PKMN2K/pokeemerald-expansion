@@ -24,10 +24,12 @@ sources to an indexed palette before importing them.
 
 ## Renderer test fixture
 
-`renderer_test.png` is a 256x192 indexed test fixture used by the temporary
+`renderer_test.png` is a generated 256x192 indexed test fixture used by the temporary
 Debug > Utilities > Gen 4 UI test screen. It deliberately places markers in the
 rightmost 16 pixels and bottom 32 pixels, outside the 240x160 GBA viewport.
 Use the D-pad to scroll those areas into view; B returns to the field.
 
 The fixture is only for renderer validation and will be replaced by imported
 HGSS/DPPt source artwork screen by screen.
+
+The fixture PNG is generated at build time by `tools/gen4_ui/make_test_fixture.py`; it is not stored as binary source in Git.

@@ -70,3 +70,6 @@ __pycache__
 # Generated Gen 4 UI text-BG tilemaps
 /graphics/gen4_ui/*.tilemap.bin
 /graphics/gen4_ui/**/*.tilemap.bin
+
+# Generated Gen 4 UI renderer fixture
+/graphics/gen4_ui/renderer_test.png

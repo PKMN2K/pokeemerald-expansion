@@ -12,12 +12,16 @@ JPCONTESTGFXDIR := graphics/contest/japanese
 TITLESCREENGFXDIR := graphics/title_screen
 GEN4UIGFXDIR := graphics/gen4_ui
 GEN4UIPACK := tools/gen4_ui/pack_gen4_ui.py
+GEN4UITESTFIXTURE := tools/gen4_ui/make_test_fixture.py
 
 types := none normal fight flying poison ground rock bug ghost steel mystery fire water grass electric psychic ice dragon dark fairy stellar
 contest_types := cool beauty cute smart tough
 
 
 ### Gen 4 UI ###
+
+$(GEN4UIGFXDIR)/renderer_test.png: $(GEN4UITESTFIXTURE)
+	python3 $< $@
 
 # gbagfx first converts the indexed source PNG into a full 8bpp tile stream.
 # This second stage deduplicates identical/flipped tiles and emits a standard
