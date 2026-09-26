@@ -180,6 +180,28 @@ static const struct Gen4UiBgAsset sPokedexPlusHGSS_Gen4InfoAsset =
     .paletteMode = GEN4_UI_PALETTE_8BPP,
 };
 
+
+#define GEN4_UI_HGSS_LIST_PAL_SLOT 8
+#define GEN4_UI_HGSS_LIST_COLORS 16
+
+static const u8 sPokedexPlusHGSS_Gen4ListTiles[] = INCBIN_U8("graphics/gen4_ui/hgss_pokedex_list_gba.tiles.8bpp");
+static const u16 sPokedexPlusHGSS_Gen4ListTilemap[] = INCBIN_U16("graphics/gen4_ui/hgss_pokedex_list_gba.tilemap.bin");
+static const u16 sPokedexPlusHGSS_Gen4ListPalette[] = INCBIN_U16("graphics/gen4_ui/hgss_pokedex_list_gba.gbapal");
+
+static const struct Gen4UiBgAsset sPokedexPlusHGSS_Gen4ListAsset =
+{
+    .tiles = sPokedexPlusHGSS_Gen4ListTiles,
+    .tilemap = sPokedexPlusHGSS_Gen4ListTilemap,
+    .palette = sPokedexPlusHGSS_Gen4ListPalette,
+    .tilesSize = sizeof(sPokedexPlusHGSS_Gen4ListTiles),
+    .tilemapSize = sizeof(sPokedexPlusHGSS_Gen4ListTilemap),
+    .paletteOffset = BG_PLTT_ID(GEN4_UI_HGSS_LIST_PAL_SLOT),
+    .paletteSize = PLTT_SIZEOF(GEN4_UI_HGSS_LIST_COLORS),
+    .baseTile = 0,
+    .tilemapOffset = 0,
+    .paletteMode = GEN4_UI_PALETTE_8BPP,
+};
+
 static const u16 sPokedexPlusHGSS_Default_Pal[] = INCGFX_U16("graphics/pokedex/hgss/palette_default.pal", ".gbapal");
 static const u16 sPokedexPlusHGSS_National_Pal[] = INCGFX_U16("graphics/pokedex/hgss/palette_national.pal", ".gbapal");
 static const u16 sPokedexPlusHGSS_MenuSearch_Pal[] = INCGFX_U16("graphics/pokedex/hgss/palette_search_menu.pal", ".gbapal");
@@ -227,6 +249,7 @@ extern EWRAM_DATA struct PokedexListItem *sPokedexListItem;
 
 
 static bool8 LoadPokedexListPage(u8);
+static void RestoreLegacyPokedexBg3(void);
 static void CreateInterfaceSprites(u8);
 static void LoadScreenSelectBarMain(u16);
 static void PrintMonInfo(u32 num, u32, u32 owned, u32 newEntry);
@@ -657,12 +680,27 @@ static bool8 LoadPokedexListPage(u8 page)
         SetBgTilemapBuffer(2, AllocZeroed(BG_SCREEN_SIZE));
         SetBgTilemapBuffer(1, AllocZeroed(BG_SCREEN_SIZE));
         SetBgTilemapBuffer(0, AllocZeroed(BG_SCREEN_SIZE));
+        // BG1 keeps the existing functional list overlay, but BG3 now uses
+        // the authentic HGSS member 000 background at 1:1 pixel scale.
         if (!HGSS_DECAPPED)
-            DecompressAndLoadBgGfxUsingHeap(3, sPokedexPlusHGSS_MenuList_Gfx, 0x2000, 0, 0);
+            DecompressAndLoadBgGfxUsingHeap(1, sPokedexPlusHGSS_MenuList_Gfx, 0x2000, 0, 0);
         else
-            DecompressAndLoadBgGfxUsingHeap(3, sPokedexPlusHGSS_MenuList_DECA_Gfx, 0x2000, 0, 0);
+            DecompressAndLoadBgGfxUsingHeap(1, sPokedexPlusHGSS_MenuList_DECA_Gfx, 0x2000, 0, 0);
         CopyToBgTilemapBuffer(1, sPokedexPlusHGSS_ScreenList_Tilemap, 0, 0);
-        CopyToBgTilemapBuffer(3, sPokedexPlusHGSS_ScreenListUnderlay_Tilemap, 0, 0);
+
+        SetBgAttribute(3, BG_ATTR_CHARBASEINDEX, 3);
+        SetBgAttribute(3, BG_ATTR_PALETTEMODE, GEN4_UI_PALETTE_8BPP);
+        if (Gen4UiLoadBgAsset(3, &sPokedexPlusHGSS_Gen4ListAsset))
+        {
+            // The list loader later copies its WRAM BG3 tilemap to VRAM.
+            CopyToBgTilemapBuffer(3, sPokedexPlusHGSS_Gen4ListTilemap,
+                                  sizeof(sPokedexPlusHGSS_Gen4ListTilemap), 0);
+        }
+        else
+        {
+            RestoreLegacyPokedexBg3();
+            CopyToBgTilemapBuffer(3, sPokedexPlusHGSS_ScreenListUnderlay_Tilemap, 0, 0);
+        }
         if (page == PAGE_MAIN)
             CopyToBgTilemapBuffer(0, sPokedexPlusHGSS_StartMenuMain_Tilemap, 0, 0x280);
         else
@@ -845,7 +883,7 @@ bool32 TryCreateMonListEntry_HGSS(u8 position, u16 b, u16 ignored)
 }
 
 #define sIsDownArrow data[1]
-#define LIST_RIGHT_SIDE_TEXT_X 204
+#define LIST_RIGHT_SIDE_TEXT_X 188
 #define LIST_RIGHT_SIDE_TEXT_X_OFFSET 13
 #define LIST_RIGHT_SIDE_TEXT_Y_OFFSET 13
 static void CreateInterfaceSprites(u8 page)
@@ -1208,7 +1246,7 @@ void TryDestroyStatBarsBg(void)
 }
 static void CreateStatBars(struct PokedexListItem *dexMon)
 {
-    u8 offset_x = 184; //Moves the complete stat box left/right
+    u8 offset_x = 168; // shifted with compacted authentic HGSS right side
     u8 offset_y = 16; //Moves the complete stat box up/down
     TryDestroyStatBars();
 
@@ -1262,7 +1300,7 @@ static void CreateStatBars(struct PokedexListItem *dexMon)
 static void CreateStatBarsBg(void) //stat bars background text
 {
     static const struct SpriteSheet sheetStatBarsBg = {sStatBarsGfx, 64 * 64, TAG_STAT_BAR_BG};
-    u8 offset_x = 184; //Moves the complete stat box left/right
+    u8 offset_x = 168; // shifted with compacted authentic HGSS right side
     u8 offset_y = 16; //Moves the complete stat box up/down
 
     TryDestroyStatBarsBg();
