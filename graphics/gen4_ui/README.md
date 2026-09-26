@@ -841,3 +841,15 @@ Its image payload was intact, but the PLTE chunk declared 768 bytes while the
 actual palette data ended at 756 bytes, and the stored PLTE CRC did not match.
 The container metadata is now corrected in place; IHDR, palette bytes, IDAT
 payload, and IEND data remain otherwise unchanged.
+
+
+## Repaired Match Call Poké Ball PNG
+
+The Match Call asset audit found one additional malformed indexed PNG:
+`graphics/pokenav/match_call/pokeball.png`.
+
+Its PLTE length and palette bytes were already correct at 768 bytes, but 108
+zero bytes had been inserted between the PLTE payload and its valid CRC. The
+repair removes only that stray padding, restoring normal PNG chunk alignment
+while preserving the complete palette, compressed IDAT payload, dimensions,
+and pixel data.
