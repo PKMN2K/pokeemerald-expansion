@@ -244,3 +244,28 @@ The next cleanup target is the live BG0 start-menu strip used by the main list
 and search-results list (`tilemap_start_menu*.bin`), followed by the remaining
 list/search functional overlay graphics once equivalent authentic interactive
 layers are ready.
+
+
+## Authentic HGSS sliding start menu
+
+The main-list and search-results START menus no longer use
+`graphics/pokedex/hgss/tilemap_start_menu*.bin`.
+
+The replacement preserves the existing BG0 animation geometry exactly: the
+panel is 14 tiles (112 px) wide at tile x=16 and is preloaded below the GBA
+viewport at tilemap row 20. The main-list menu remains 80 px tall and slides
+up by 80 px; the search-results menu remains 96 px tall and slides up by
+96 px. The existing 8-pixel-per-frame motion, menu state/input code, and
+separate cursor sprite positions are unchanged.
+
+The panel is generated from authentic HGSS Pokédex member 057 pixels at 1:1
+scale. It uses member 057's pale-blue list interior and genuine orange/purple
+rule pixels, with palette index 0 reserved for transparency. The existing
+English menu labels are preserved as compact pixel masks in the generator,
+so the old adapted start-menu tilemaps are no longer runtime or build
+dependencies.
+
+Both menus are 4bpp in BG palette bank 12 and use charblock-0 tiles beginning
+at tile 768, safely above the live list overlay graphics. The main menu packs
+to 60 unique tiles (1,920 bytes); the search-results menu packs to 76 unique
+tiles (2,432 bytes).
