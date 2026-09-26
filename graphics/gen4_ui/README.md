@@ -116,3 +116,20 @@ No component is scaled or redrawn. The live Stats page keeps the existing
 dynamic name, number, gender, base stats/EV toggle, move data, move description,
 abilities, icons, navigation text, and input logic as overlays on BG2/OBJ while
 the new authentic composition is loaded as an 8bpp BG3 background.
+
+
+## HGSS-derived Evolution page
+
+HeartGold/SoulSilver does not contain this fork's generalized evolution-tree
+page, so its production background is composed from authentic HGSS Pokédex
+pixels while preserving all dynamic evolution logic.
+
+`hgss_pokedex_evolution_gba.png` uses member 059's native HGSS grid as the
+240x160 canvas and member 065's rounded header and double-rule separators.
+Nothing is scaled or redrawn. The existing evolution-chain icons stay on their
+current top row, the dynamically generated method list keeps its current
+starting position, and the lower separator leaves the navigation strip clear.
+
+The live page therefore keeps pre-evolutions, branch evolutions, species names,
+caught markers, evolution conditions, selection arrow, A-button target jumps,
+and navigation behavior as overlays while BG3 supplies authentic HGSS framing.
