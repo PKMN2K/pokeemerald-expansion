@@ -2085,11 +2085,8 @@ void HandleInfoScreenInput_HGSS(u8 taskId)
 //*        Area screen               *
 //*                                  *
 //************************************
-bool32 TryLoadAreaScreen_HGSS(u8 taskId)
+void Task_LoadAreaScreen_HGSS(u8 taskId)
 {
-    if (!POKEDEX_PLUS_HGSS)
-        return FALSE;
-
     switch (gMain.state)
     {
     case 0:
@@ -2117,14 +2114,12 @@ bool32 TryLoadAreaScreen_HGSS(u8 taskId)
         gTasks[taskId].func = Task_WaitForAreaScreenInput;
         break;
     }
-
-    return TRUE;
 }
 
-bool32 TrySwitchScreensFromAreaScreen_HGSS(u8 taskId)
+void Task_SwitchScreensFromAreaScreen_HGSS(u8 taskId)
 {
-    if (!POKEDEX_PLUS_HGSS)
-        return FALSE;
+    if (gPaletteFade.active)
+        return;
 
     switch (sPokedexView->screenSwitchState)
     {
@@ -2142,8 +2137,6 @@ bool32 TrySwitchScreensFromAreaScreen_HGSS(u8 taskId)
         gTasks[taskId].func = Task_ReloadAreaScreen;
         break;
     }
-
-    return TRUE;
 }
 
 
@@ -3720,7 +3713,7 @@ static void Task_SwitchScreensFromStatsScreen(u8 taskId)
         case 1:
             FreeAllWindowBuffers();
             InitWindows(sInfoScreen_WindowTemplates);
-            gTasks[taskId].func = Task_LoadAreaScreen;
+            gTasks[taskId].func = Task_LoadAreaScreen_HGSS;
             break;
         case 2:
             gTasks[taskId].func = Task_LoadCryScreen;

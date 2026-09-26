@@ -249,7 +249,6 @@ void SpriteCB_MoveMonForInfoScreen(struct Sprite *sprite);
 void Task_HandleInfoScreenInput(u8);
 void Task_SwitchScreensFromInfoScreen(u8);
 void Task_LoadInfoScreenWaitForFade(u8);
-void Task_LoadAreaScreen(u8 taskId);
 void Task_ReloadAreaScreen(u8 taskId);
 void Task_WaitForAreaScreenInput(u8 taskId);
 void Task_LoadCryScreen(u8);

@@ -477,3 +477,17 @@ hooks are gone.
 Shared scrolling and B-button exit behavior remains in `pokedex.c`; the
 screen-specific input behavior is now handed directly to the HGSS handler.
 
+## Primary HGSS Pokédex Area renderer
+
+The Pokédex Area page now enters through `Task_LoadAreaScreen_HGSS` directly.
+The original Emerald Area loader in `src/pokedex.c` has been removed, including
+its legacy SelectBar setup.
+
+Area-page exits now route directly to `Task_SwitchScreensFromAreaScreen_HGSS`
+instead of passing through a compatibility wrapper. The HGSS transition logic
+owns the Info / Stats / Area-return destinations and performs its own
+palette-fade guard.
+
+The shared `Task_ReloadAreaScreen` refresh remains because it updates the
+area-map subsystem rather than selecting between legacy and HGSS renderers.
+

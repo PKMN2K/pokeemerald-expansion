@@ -111,7 +111,6 @@ static u8 LoadInfoScreen(struct PokedexListItem *, u8 monSpriteId);
 static bool8 IsInfoScreenScrolling(u8);
 static u8 StartInfoScreenScroll(struct PokedexListItem *, u8);
 static void Task_ExitInfoScreen(u8);
-static void Task_SwitchScreensFromAreaScreen(u8);
 static void Task_SwitchScreensFromCryScreen(u8);
 static void LoadPlayArrowPalette(bool8);
 static void Task_SwitchScreensFromSizeScreen(u8);
@@ -3110,7 +3109,7 @@ void Task_SwitchScreensFromInfoScreen(u8 taskId)
         {
         case 1:
         default:
-            gTasks[taskId].func = Task_LoadAreaScreen;
+            gTasks[taskId].func = Task_LoadAreaScreen_HGSS;
             break;
         case 2:
             gTasks[taskId].func = Task_LoadCryScreen;
@@ -3141,41 +3140,7 @@ static void Task_ExitInfoScreen(u8 taskId)
     }
 }
 
-void Task_LoadAreaScreen(u8 taskId)
-{
-    if (TryLoadAreaScreen_HGSS(taskId))
-        return;
-
-    switch (gMain.state)
-    {
-    case 0:
-    default:
-        if (!gPaletteFade.active)
-        {
-            sPokedexView->currentPage = PAGE_AREA;
-            gPokedexVBlankCB = gMain.vblankCallback;
-            SetVBlankCallback(NULL);
-            ResetOtherVideoRegisters(DISPCNT_BG1_ON);
-            sPokedexView->selectedScreen = AREA_SCREEN;
-            gMain.state = 1;
-        }
-        break;
-    case 1:
-        LoadScreenSelectBarSubmenu(0xD);
-        HighlightSubmenuScreenSelectBarItem(0, 0xD);
-        LoadPokedexBgPalette(sPokedexView->isSearchResults);
-        SetGpuReg(REG_OFFSET_BG1CNT, BGCNT_PRIORITY(0) | BGCNT_CHARBASE(0) | BGCNT_SCREENBASE(13) | BGCNT_16COLOR | BGCNT_TXT256x256);
-        gMain.state++;
-        break;
-    case 2:
-        DisplayPokedexAreaScreen(NationalPokedexNumToSpeciesForm(sPokedexListItem->dexNum), &sPokedexView->screenSwitchState, gAreaTimeOfDay, DEX_SHOW_AREA_SCREEN);
-        SetVBlankCallback(gPokedexVBlankCB);
-        sPokedexView->screenSwitchState = 0;
-        gMain.state = 0;
-        gTasks[taskId].func = Task_WaitForAreaScreenInput;
-        break;
-    }
-}
+// Area rendering is owned directly by the HGSS/Gen 4 loader.
 
 void Task_ReloadAreaScreen(u8 taskId)
 {
@@ -3203,30 +3168,7 @@ void Task_WaitForAreaScreenInput(u8 taskId)
 {
 // See Task_HandlePokedexAreaScreenInput() in pokedex_area_screen.c
     if (sPokedexView->screenSwitchState != 0)
-        gTasks[taskId].func = Task_SwitchScreensFromAreaScreen;
-}
-
-static void Task_SwitchScreensFromAreaScreen(u8 taskId)
-{
-    if (!gPaletteFade.active)
-    {
-        if (TrySwitchScreensFromAreaScreen_HGSS(taskId))
-            return;
-
-        switch (sPokedexView->screenSwitchState)
-        {
-        case 1:
-        default:
-            gTasks[taskId].func = Task_LoadInfoScreen_HGSS;
-            break;
-        case 2:
-            gTasks[taskId].func = Task_LoadCryScreen;
-            break;
-        case 3:
-            gTasks[taskId].func = Task_ReloadAreaScreen;
-            break;
-        }
-    }
+        gTasks[taskId].func = Task_SwitchScreensFromAreaScreen_HGSS;
 }
 
 void Task_LoadCryScreen(u8 taskId)
@@ -3409,7 +3351,7 @@ static void Task_SwitchScreensFromCryScreen(u8 taskId)
             gTasks[taskId].func = Task_LoadInfoScreen_HGSS;
             break;
         case 2:
-            gTasks[taskId].func = Task_LoadAreaScreen;
+            gTasks[taskId].func = Task_LoadAreaScreen_HGSS;
             break;
         case 3:
             gTasks[taskId].func = Task_LoadSizeScreen;
