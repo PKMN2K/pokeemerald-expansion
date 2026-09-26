@@ -143,8 +143,6 @@ bool32 ShouldShowAreaUnknownLabel(void);
 static const u32 sAreaGlow_Pal[] = INCGFX_U32("graphics/pokedex/area_glow.png", ".gbapal");
 static const u32 sAreaGlow_Gfx[] = INCGFX_U32("graphics/pokedex/area_glow.png", ".4bpp.smol");
 
-static const u32 sPokedexPlusHGSS_ScreenSelectBarSubmenu_Tilemap[] = INCGFX_U32("graphics/pokedex/hgss/SelectBar.bin", ".smolTM");
-
 #define GEN4_UI_HGSS_AREA_BASE_TILE 640
 #define GEN4_UI_HGSS_AREA_PAL_SLOT 12
 
@@ -153,7 +151,6 @@ static const u16 sPokedexPlusHGSS_AreaChromeTilemap[] = INCBIN_U16("graphics/gen
 static const u16 sPokedexPlusHGSS_AreaChromePalette[] = INCBIN_U16("graphics/gen4_ui/hgss_pokedex_area_chrome.palette.bin");
 
 static void LoadHGSSAreaChrome(void);
-static void LoadHGSSScreenSelectBarSubmenu(void);
 
 static const enum Species sSpeciesHiddenFromAreaScreen[] = { SPECIES_WYNAUT };
 
@@ -795,10 +792,7 @@ static void Task_ShowPokedexAreaScreen(u8 taskId)
             DoScheduledBgTilemapCopiesToVram();
         }
         if (POKEDEX_PLUS_HGSS)
-        {
             LoadHGSSAreaChrome();
-            LoadHGSSScreenSelectBarSubmenu();
-        }
         ShowBg(2);
         ShowBg(3); // TryShowPokedexAreaMap will have done this already
         SetGpuRegBits(REG_OFFSET_DISPCNT, DISPCNT_OBJ_ON);
@@ -849,10 +843,7 @@ static void Task_UpdatePokedexAreaScreen(u8 taskId)
         SetGpuReg(REG_OFFSET_BLDCNT, BLDCNT_TGT1_BG0 | BLDCNT_EFFECT_BLEND | BLDCNT_TGT2_BG0 | BLDCNT_TGT2_ALL);
         StartAreaGlow();
         if (POKEDEX_PLUS_HGSS)
-        {
             LoadHGSSAreaChrome();
-            LoadHGSSScreenSelectBarSubmenu();
-        }
         AddTimeOfDayLabels();
         ShowEncounterInfoLabel();
         if (ShouldShowAreaUnknownLabel())
@@ -1065,8 +1056,3 @@ static void LoadHGSSAreaChrome(void)
     CopyBgTilemapBufferToVram(1);
 }
 
-static void LoadHGSSScreenSelectBarSubmenu(void)
-{
-    CopyToBgTilemapBuffer(1, sPokedexPlusHGSS_ScreenSelectBarSubmenu_Tilemap, 0, 0);
-    CopyBgTilemapBufferToVram(1);
-}
