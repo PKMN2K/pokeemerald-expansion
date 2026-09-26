@@ -459,3 +459,21 @@ Search filtering, parameter input, highlights, result generation, and exit logic
 remain shared gameplay/UI behavior; only the obsolete Emerald rendering path was
 removed in this step.
 
+## Primary HGSS Pokédex Info renderer
+
+The Pokémon Info page is now a permanent HGSS/Gen 4 screen rather than a
+conditional override.
+
+Initial opening, species-to-species scrolling, and returns from the connected
+Pokédex subpages now route to `Task_LoadInfoScreen_HGSS` directly. The
+original Emerald Info renderer has been deleted from `src/pokedex.c`.
+
+The Info window setup is also unconditional: the old Emerald
+`sInfoScreen_WindowTemplates` definition has been removed and the screen uses
+the HGSS window layout directly. The former `Task_TryLoadInfoScreen_HGSS`,
+`TryInitWindows_HGSS`, and `TryHandleInfoScreenInput_HGSS` compatibility
+hooks are gone.
+
+Shared scrolling and B-button exit behavior remains in `pokedex.c`; the
+screen-specific input behavior is now handed directly to the HGSS handler.
+

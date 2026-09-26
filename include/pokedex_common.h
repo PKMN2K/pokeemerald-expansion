@@ -246,7 +246,6 @@ u8 CreateMonName(u16, u8, u8);
 void ClearMonListEntry(u8 x, u8 y, u16 unused);
 void CreateMonSpritesAtPos(u16, u16);
 void SpriteCB_MoveMonForInfoScreen(struct Sprite *sprite);
-void Task_LoadInfoScreen(u8);
 void Task_HandleInfoScreenInput(u8);
 void Task_SwitchScreensFromInfoScreen(u8);
 void Task_LoadInfoScreenWaitForFade(u8);

@@ -962,13 +962,9 @@ static const struct WindowTemplate sInfoScreen_WindowTemplates[] =
     DUMMY_WIN_TEMPLATE
 };
 
-bool32 TryInitWindows_HGSS(void)
+void InitInfoScreenWindows_HGSS(void)
 {
-    if (!POKEDEX_PLUS_HGSS)
-        return FALSE;
-
     InitWindows(sInfoScreen_WindowTemplates);
-    return TRUE;
 }
 
 enum
@@ -1964,11 +1960,8 @@ static void SpriteCB_StatBarsBg(struct Sprite *sprite)
 #define tMonSpriteId     data[4]
 #define tTrainerSpriteId data[5]
 
-bool32 Task_TryLoadInfoScreen_HGSS(u8 taskId)
+void Task_LoadInfoScreen_HGSS(u8 taskId)
 {
-    if (!POKEDEX_PLUS_HGSS)
-        return FALSE;
-
     switch (gMain.state)
     {
     case 0:
@@ -2070,15 +2063,11 @@ bool32 Task_TryLoadInfoScreen_HGSS(u8 taskId)
         break;
     }
 
-    return TRUE;
 }
 
-bool32 TryHandleInfoScreenInput_HGSS(u8 taskId)
+void HandleInfoScreenInput_HGSS(u8 taskId)
 {
-    if (!POKEDEX_PLUS_HGSS)
-        return FALSE;
-
-    if (POKEDEX_PLUS_HGSS && ((JOY_NEW(DPAD_RIGHT) || (JOY_NEW(R_BUTTON) && gSaveBlock2Ptr->optionsButtonMode == OPTIONS_BUTTON_MODE_LR))))
+    if ((JOY_NEW(DPAD_RIGHT) || (JOY_NEW(R_BUTTON) && gSaveBlock2Ptr->optionsButtonMode == OPTIONS_BUTTON_MODE_LR)))
     {
         sPokedexView->selectedScreen = AREA_SCREEN;
         BeginNormalPaletteFade(0xFFFFFFEB, 0, 0, 0x10, RGB_BLACK);
@@ -2087,7 +2076,6 @@ bool32 TryHandleInfoScreenInput_HGSS(u8 taskId)
         PlaySE(SE_PIN);
     }
 
-    return TRUE;
 }
 
 #undef tMonSpriteId
@@ -2142,7 +2130,7 @@ bool32 TrySwitchScreensFromAreaScreen_HGSS(u8 taskId)
     {
     case 1:
     default:
-        gTasks[taskId].func = Task_LoadInfoScreen;
+        gTasks[taskId].func = Task_LoadInfoScreen_HGSS;
         break;
     case 2:
         if (sPokedexListItem->owned)
@@ -3743,7 +3731,7 @@ static void Task_SwitchScreensFromStatsScreen(u8 taskId)
             gTasks[taskId].func = Task_LoadEvolutionScreen;
             break;
         default:
-            gTasks[taskId].func = Task_LoadInfoScreen;
+            gTasks[taskId].func = Task_LoadInfoScreen_HGSS;
             break;
         }
     }
@@ -4732,7 +4720,7 @@ static void Task_SwitchScreensFromEvolutionScreen(u8 taskId)
             gTasks[taskId].func = Task_LoadFormsScreen;
             break;
         default:
-            gTasks[taskId].func = Task_LoadInfoScreen;
+            gTasks[taskId].func = Task_LoadInfoScreen_HGSS;
             break;
         }
     }
@@ -5035,7 +5023,7 @@ static void Task_SwitchScreensFromFormsScreen(u8 taskId)
             gTasks[taskId].func = Task_LoadEvolutionScreen;
             break;
         default:
-            gTasks[taskId].func = Task_LoadInfoScreen;
+            gTasks[taskId].func = Task_LoadInfoScreen_HGSS;
             break;
         }
     }
@@ -5191,7 +5179,7 @@ bool32 TrySwitchScreensFromCryScreen_HGSS(u8 taskId)
     {
     default:
     case 1:
-        gTasks[taskId].func = Task_LoadInfoScreen;
+        gTasks[taskId].func = Task_LoadInfoScreen_HGSS;
         break;
     case 2:
         gTasks[taskId].func = Task_LoadEvolutionScreen;
