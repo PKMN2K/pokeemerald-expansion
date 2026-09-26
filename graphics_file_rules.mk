@@ -27,6 +27,15 @@ $(GEN4UIGFXDIR)/renderer_test.png: $(GEN4UITESTFIXTURE)
 $(GEN4UIGFXDIR)/hgss_pokedex_member_020.png: $(GEN4UIHGSSDEX)
 	python3 $< $@
 
+# The live HGSS Pokédex background reserves BG palette entries 128..140.
+# Shifting tile pixel indices keeps the legacy Pokédex palettes (0..95 and 240..255)
+# available for text, windows, and other existing layers.
+$(GEN4UIGFXDIR)/hgss_pokedex_member_020.tiles.8bpp: $(GEN4UIGFXDIR)/hgss_pokedex_member_020.8bpp $(GEN4UIGFXDIR)/hgss_pokedex_member_020.png $(GEN4UIPACK)
+	python3 $(GEN4UIPACK) $(word 2,$^) $< --tiles $@ --palette-base 128
+
+$(GEN4UIGFXDIR)/hgss_pokedex_member_020.tilemap.bin: $(GEN4UIGFXDIR)/hgss_pokedex_member_020.8bpp $(GEN4UIGFXDIR)/hgss_pokedex_member_020.png $(GEN4UIPACK)
+	python3 $(GEN4UIPACK) $(word 2,$^) $< --tilemap $@ --palette-base 128
+
 # gbagfx first converts the indexed source PNG into a full 8bpp tile stream.
 # This second stage deduplicates identical/flipped tiles and emits a standard
 # 32x32 text-BG tilemap suitable for Gen4UiLoadBgAsset.
