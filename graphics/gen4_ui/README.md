@@ -619,3 +619,13 @@ operations rather than `_HGSS` compatibility wrappers. Their legacy
 The list now always creates and destroys the Gen 4 stat bars during menu
 transitions and completed D-pad scrolling, matching the permanent HGSS renderer.
 
+## Removed the legacy HGSS enable switch
+
+The obsolete `POKEDEX_PLUS_HGSS` configuration flag has been deleted. The
+Gen 4/HGSS Pokédex is now the only Pokédex UI implementation, so there is no
+longer a runtime or compile-time option to fall back to the Emerald renderer.
+
+Actual HGSS behavior preferences remain configurable, including decapped text,
+dark mode, evolution visibility, TM sorting, and evolved-Pokémon Egg Move
+display.
+
