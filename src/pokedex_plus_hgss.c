@@ -637,6 +637,102 @@ static const struct SpritePalette sInterfaceSpritePalette[] =
     {0}
 };
 
+
+#define TAG_DEX_HGSS_SCROLL 0xD5A0
+
+static const u8 sPokedexPlusHGSS_ScrollControlTiles[] = INCBIN_U8("graphics/gen4_ui/hgss_pokedex_scroll_controls.tiles.bin");
+static const u16 sPokedexPlusHGSS_ScrollControlPalette[] = INCBIN_U16("graphics/gen4_ui/hgss_pokedex_scroll_controls.palette.bin");
+
+static void SpriteCB_HGSSScrollBar(struct Sprite *sprite);
+static void SpriteCB_HGSSScrollArrow(struct Sprite *sprite);
+
+static const struct OamData sOamData_HGSSScrollBar =
+{
+    .y = DISPLAY_HEIGHT,
+    .affineMode = ST_OAM_AFFINE_OFF,
+    .objMode = ST_OAM_OBJ_NORMAL,
+    .mosaic = FALSE,
+    .bpp = ST_OAM_4BPP,
+    .shape = SPRITE_SHAPE(8x8),
+    .x = 0,
+    .matrixNum = 0,
+    .size = SPRITE_SIZE(8x8),
+    .tileNum = 0,
+    .priority = 1,
+    .paletteNum = 0,
+    .affineParam = 0
+};
+
+static const struct OamData sOamData_HGSSScrollArrow =
+{
+    .y = DISPLAY_HEIGHT,
+    .affineMode = ST_OAM_AFFINE_OFF,
+    .objMode = ST_OAM_OBJ_NORMAL,
+    .mosaic = FALSE,
+    .bpp = ST_OAM_4BPP,
+    .shape = SPRITE_SHAPE(16x8),
+    .x = 0,
+    .matrixNum = 0,
+    .size = SPRITE_SIZE(16x8),
+    .tileNum = 0,
+    .priority = 0,
+    .paletteNum = 0,
+    .affineParam = 0
+};
+
+static const union AnimCmd sSpriteAnim_HGSSScrollBar[] =
+{
+    ANIMCMD_FRAME(2, 30),
+    ANIMCMD_END
+};
+
+static const union AnimCmd sSpriteAnim_HGSSScrollArrow[] =
+{
+    ANIMCMD_FRAME(0, 30),
+    ANIMCMD_END
+};
+
+static const union AnimCmd *const sSpriteAnimTable_HGSSScrollBar[] =
+{
+    sSpriteAnim_HGSSScrollBar
+};
+
+static const union AnimCmd *const sSpriteAnimTable_HGSSScrollArrow[] =
+{
+    sSpriteAnim_HGSSScrollArrow
+};
+
+static const struct SpriteTemplate sHGSSScrollBarSpriteTemplate =
+{
+    .tileTag = TAG_DEX_HGSS_SCROLL,
+    .paletteTag = TAG_DEX_HGSS_SCROLL,
+    .oam = &sOamData_HGSSScrollBar,
+    .anims = sSpriteAnimTable_HGSSScrollBar,
+    .callback = SpriteCB_HGSSScrollBar,
+};
+
+static const struct SpriteTemplate sHGSSScrollArrowSpriteTemplate =
+{
+    .tileTag = TAG_DEX_HGSS_SCROLL,
+    .paletteTag = TAG_DEX_HGSS_SCROLL,
+    .oam = &sOamData_HGSSScrollArrow,
+    .anims = sSpriteAnimTable_HGSSScrollArrow,
+    .callback = SpriteCB_HGSSScrollArrow,
+};
+
+static const struct SpriteSheet sHGSSScrollControlSpriteSheet =
+{
+    sPokedexPlusHGSS_ScrollControlTiles,
+    sizeof(sPokedexPlusHGSS_ScrollControlTiles),
+    TAG_DEX_HGSS_SCROLL
+};
+
+static const struct SpritePalette sHGSSScrollControlSpritePalette =
+{
+    sPokedexPlusHGSS_ScrollControlPalette,
+    TAG_DEX_HGSS_SCROLL
+};
+
 static const struct WindowTemplate sInfoScreen_WindowTemplates[] =
 {
     [WIN_INFO] =
@@ -942,6 +1038,8 @@ static bool8 LoadPokedexListPage(u8 page)
         LoadCompressedSpriteSheet(&sInterfaceSpriteSheet[HGSS_DECAPPED]);
         LoadSpritePalette(&sInterfaceSpritePalette[HGSS_DARK_MODE]);
         LoadSpritePalettes(sStatBarSpritePal);
+        LoadSpriteSheet(&sHGSSScrollControlSpriteSheet);
+        LoadSpritePalette(&sHGSSScrollControlSpritePalette);
         CreateInterfaceSprites(page);
         gMain.state++;
         break;
@@ -1160,6 +1258,43 @@ bool32 TryCreateMonListEntry_HGSS(u8 position, u16 b, u16 ignored)
     return TRUE;
 }
 
+static void SpriteCB_HGSSScrollBar(struct Sprite *sprite)
+{
+    if (sPokedexView->currentPage != PAGE_MAIN && sPokedexView->currentPage != PAGE_SEARCH_RESULTS)
+        DestroySprite(sprite);
+    else
+        sprite->y2 = sPokedexView->selectedPokemon * 120 / (sPokedexView->pokemonListCount - 1);
+}
+
+static void SpriteCB_HGSSScrollArrow(struct Sprite *sprite)
+{
+    if (sPokedexView->currentPage != PAGE_MAIN && sPokedexView->currentPage != PAGE_SEARCH_RESULTS)
+    {
+        DestroySprite(sprite);
+    }
+    else
+    {
+        u8 phase;
+
+        if (sprite->data[1])
+        {
+            sprite->invisible = (sPokedexView->selectedPokemon == sPokedexView->pokemonListCount - 1);
+            phase = sprite->data[2];
+        }
+        else
+        {
+            sprite->invisible = (sPokedexView->selectedPokemon == 0);
+            phase = sprite->data[2] - 128;
+        }
+
+        sprite->y2 = gSineTable[phase] / 64;
+        sprite->data[2] += 8;
+
+        if (sPokedexView->menuIsOpen || sPokedexView->menuY != 0)
+            sprite->invisible = TRUE;
+    }
+}
+
 #define sIsDownArrow data[1]
 #define LIST_RIGHT_SIDE_TEXT_X 188
 #define LIST_RIGHT_SIDE_TEXT_X_OFFSET 13
@@ -1171,13 +1306,13 @@ static void CreateInterfaceSprites(u8 page)
     bool32 drawNextDigit;
 
     // Scroll arrows
-    spriteId = CreateSprite(&sScrollArrowSpriteTemplate, 10, 4, 0);
+    spriteId = CreateSprite(&sHGSSScrollArrowSpriteTemplate, 10, 4, 0);
     gSprites[spriteId].sIsDownArrow = FALSE;
-    spriteId = CreateSprite(&sScrollArrowSpriteTemplate, 10, 156, 0);
+    spriteId = CreateSprite(&sHGSSScrollArrowSpriteTemplate, 10, 156, 0);
     gSprites[spriteId].sIsDownArrow = TRUE;
     gSprites[spriteId].vFlip = TRUE;
 
-    CreateSprite(&sScrollBarSpriteTemplate, 6, 20, 0);
+    CreateSprite(&sHGSSScrollBarSpriteTemplate, 6, 20, 0);
 
     if (!IsNationalPokedexEnabled() && page == PAGE_MAIN)
     {
