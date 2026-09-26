@@ -201,3 +201,21 @@ For this layered layout, BG2 remains the text/window layer, BG1 carries the
 legacy interactive control/highlight tiles, and BG3 carries the authentic
 member 068 background. The HGSS search highlight helpers route their tilemap
 updates to BG1 while non-HGSS behavior still uses BG3.
+
+
+## Authentic HGSS Area chrome
+
+The Area page keeps its live map renderer intact: BG3 remains the region map,
+BG2 remains the animated encounter glow, and the marker sprites/time-of-day
+logic are unchanged. Authentic HGSS framing is therefore added as a sparse
+transparent BG1 overlay instead of replacing the map.
+
+The overlay is built from member 065's genuine rounded header and rule bands.
+Source pixels remain 1:1. Palette index 0 is reserved for transparency and the
+15 authentic HGSS colors are shifted to indices 1..15 in BG palette bank 12.
+
+The 240x160 overlay occupies only 27 unique 4bpp tiles (864 bytes) at base tile
+640, leaving the existing BG1 window/select-bar tile ranges untouched. The
+center of the screen is transparent, so the live region map, encounter glow,
+special-area markers, player marker, time-of-day selector, and AREA UNKNOWN
+label continue rendering normally underneath it.
