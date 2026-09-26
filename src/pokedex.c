@@ -5504,7 +5504,8 @@ void SetSearchRectHighlight(u8 flags, u8 x, u8 y, u8 width)
 {
     u16 i;
     u16 temp; //should be a pointer, but does not match as one
-    u32 ptr = (u32)GetBgTilemapBuffer(3); //same as above
+    u32 bg = POKEDEX_PLUS_HGSS ? 1 : 3;
+    u32 ptr = (u32)GetBgTilemapBuffer(bg); //same as above
 
     for (i = 0; i < width; i++)
     {
@@ -5518,6 +5519,11 @@ void SetSearchRectHighlight(u8 flags, u8 x, u8 y, u8 width)
         temp |= (flags << 12);
         *(u16 *)(ptr + (y + 1) * 64 + (x + i) * 2) = temp;
     }
+
+    // HGSS Search keeps its interactive 4bpp highlight layer on BG1 while
+    // BG3 carries the authentic 8bpp DS background.
+    if (POKEDEX_PLUS_HGSS)
+        CopyBgTilemapBufferToVram(1);
 }
 
 #define SEARCH_BG_SEARCH                SEARCH_TOPBAR_SEARCH
@@ -5682,7 +5688,8 @@ static void DrawOrEraseSearchParameterBox(bool8 erase)
 {
     u16 i;
     u16 j;
-    u16 *ptr = GetBgTilemapBuffer(3);
+    u32 bg = POKEDEX_PLUS_HGSS ? 1 : 3;
+    u16 *ptr = GetBgTilemapBuffer(bg);
 
     if (!erase)
     {
@@ -5709,6 +5716,9 @@ static void DrawOrEraseSearchParameterBox(bool8 erase)
             }
         }
     }
+
+    if (POKEDEX_PLUS_HGSS)
+        CopyBgTilemapBufferToVram(1);
 }
 
 // Prints the currently viewable search parameter titles in the right-hand text box
