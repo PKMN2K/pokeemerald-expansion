@@ -600,3 +600,13 @@ measurement, and vertical padding constants.
 This makes the height/weight labels and values permanently align to the Gen 4
 Info-page layout.
 
+## Primary Gen 4 Pokédex form resolution
+
+`NationalPokedexNumToSpeciesForm` no longer checks the legacy
+`POKEDEX_PLUS_HGSS` feature switch. Whenever the Pokédex has an active
+`formSpecies`, that selected form is now used directly by Info, Area, Cry,
+Forms, evolution, footprint, and other shared Pokédex consumers.
+
+When no form is selected, the function still falls back to the normal National
+Dex species exactly as before.
+

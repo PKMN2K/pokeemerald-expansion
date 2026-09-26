@@ -5083,7 +5083,7 @@ static void ClearSearchParameterBoxText(void)
 
 enum Species NationalPokedexNumToSpeciesForm(enum NationalDexOrder nationalNum)
 {
-    if (POKEDEX_PLUS_HGSS && nationalNum && sPokedexView && sPokedexView->formSpecies)
+    if (nationalNum && sPokedexView && sPokedexView->formSpecies)
         return sPokedexView->formSpecies;
 
     return NationalPokedexNumToSpecies(nationalNum);
