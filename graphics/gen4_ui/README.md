@@ -801,3 +801,17 @@ The obsolete `make_hgss_pokedex_counters.py` generator and its
 `graphics_file_rules.mk` rules were removed. This fixes the build dependency
 that still referenced the deleted `graphics/pokedex/hgss/tileset_interface*.png`
 files while preserving the exact counter tile bytes used before the cleanup.
+
+## Removed stale Emerald Pokédex interface code
+
+After the HGSS renderer became the permanent Pokédex path, the remaining
+Emerald list-interface implementation in `src/pokedex.c` was unreachable but
+still compiled. Its old OAM/animation/template data, interface creation
+function, list scrollbar/cursor callbacks, screen-select tilemap helpers, and
+legacy `PrintMonInfo` renderer have now been removed.
+
+The Area screen also no longer checks the deleted `POKEDEX_PLUS_HGSS` flag;
+its HGSS Area chrome is loaded unconditionally.
+
+This cleanup removes the compiler errors and unused-function warnings exposed
+by the permanent-HGSS conversion rather than suppressing them.

@@ -791,8 +791,7 @@ static void Task_ShowPokedexAreaScreen(u8 taskId)
                 ShowAreaUnknownLabel();
             DoScheduledBgTilemapCopiesToVram();
         }
-        if (POKEDEX_PLUS_HGSS)
-            LoadHGSSAreaChrome();
+        LoadHGSSAreaChrome();
         ShowBg(2);
         ShowBg(3); // TryShowPokedexAreaMap will have done this already
         SetGpuRegBits(REG_OFFSET_DISPCNT, DISPCNT_OBJ_ON);
@@ -842,8 +841,7 @@ static void Task_UpdatePokedexAreaScreen(u8 taskId)
     case 5:
         SetGpuReg(REG_OFFSET_BLDCNT, BLDCNT_TGT1_BG0 | BLDCNT_EFFECT_BLEND | BLDCNT_TGT2_BG0 | BLDCNT_TGT2_ALL);
         StartAreaGlow();
-        if (POKEDEX_PLUS_HGSS)
-            LoadHGSSAreaChrome();
+        LoadHGSSAreaChrome();
         AddTimeOfDayLabels();
         ShowEncounterInfoLabel();
         if (ShouldShowAreaUnknownLabel())
