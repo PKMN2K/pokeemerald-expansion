@@ -81,3 +81,21 @@ The Pokémon sprite and upper name/type layout keep their established positions.
 The footprint is centered in its authentic small frame, height/weight text is
 moved into the authentic measurement frame, and the Pokédex description is
 moved into the compacted bottom frame.
+
+
+## Live Pokédex list integration
+
+The main scrolling Pokédex list now uses an authentic HGSS background rebuilt
+from archive member 000 (tiles 001, palette 002). The generator preserves the
+left 256x192 DS screen exactly and derives a 240x160 GBA composition from it.
+
+No pixels are scaled or redrawn. The GBA composition removes a 16-pixel flat
+interior strip at x=208..223 and crops the bottom 32 pixels of continuing list
+space. This preserves the left INFO tab, top NATIONAL POKÉDEX header, list
+viewport, and right red edge at 1:1 pixel scale.
+
+BG3 carries the authentic 8bpp background in charblock 3 while BG1 retains the
+existing functional list overlay. Pokémon names/numbers, selected-mon sprite,
+scrolling behavior, counters, stat bars, and menu logic remain live overlays.
+Right-side counters and stat bars move left 16 pixels to match the compacted
+background.
