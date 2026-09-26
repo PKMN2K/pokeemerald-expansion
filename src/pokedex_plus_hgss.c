@@ -353,8 +353,6 @@ static const u32 sPokedexPlusHGSS_MenuSearch_Gfx[] = INCGFX_U32("graphics/pokede
 static const u32 sPokedexPlusHGSS_MenuSearch_DECA_Gfx[] = INCGFX_U32("graphics/pokedex/hgss/tileset_menu_search_DECA.png", ".4bpp.smol");
 static const u32 sPokedexPlusHGSS_StartMenuMain_Tilemap[] = INCGFX_U32("graphics/pokedex/hgss/tilemap_start_menu.bin", ".smolTM");
 static const u32 sPokedexPlusHGSS_StartMenuSearchResults_Tilemap[] = INCGFX_U32("graphics/pokedex/hgss/tilemap_start_menu_search_results.bin", ".smolTM");
-static const u32 sPokedexPlusHGSS_ScreenSelectBarSubmenu_Tilemap[] = INCGFX_U32("graphics/pokedex/hgss/SelectBar.bin", ".smolTM");
-static const u32 sPokedexPlusHGSS_ScreenSelectBarSubmenu_Tilemap_Clear[] = INCGFX_U32("graphics/pokedex/hgss/SelectBar_clear.bin", ".smolTM");
 static const u32 sPokedexPlusHGSS_ScreenList_Tilemap[] = INCGFX_U32("graphics/pokedex/hgss/tilemap_list_screen.bin", ".smolTM");
 static const u32 sPokedexPlusHGSS_ScreenListUnderlay_Tilemap[] = INCGFX_U32("graphics/pokedex/hgss/tilemap_list_screen_underlay.bin", ".smolTM");
 static const u32 sPokedexPlusHGSS_ScreenInfo_Tilemap[] = INCGFX_U32("graphics/pokedex/hgss/tilemap_info_screen.bin", ".smolTM");
@@ -1687,7 +1685,10 @@ bool32 TrySwitchScreensFromAreaScreen_HGSS(u8 taskId)
 //************************************
 static void LoadScreenSelectBarMain(u16 unused)
 {
-    CopyToBgTilemapBuffer(1, sPokedexPlusHGSS_ScreenSelectBarSubmenu_Tilemap_Clear, 0, 0);
+    // The legacy SelectBar_clear.bin only blanked BG1 on detail pages.
+    // Clear the tilemap directly so those pages no longer depend on the
+    // GBA-adapted SelectBar asset at all.
+    FillBgTilemapBufferRect(1, 0, 0, 0, 32, 32, 0);
     CopyBgTilemapBufferToVram(1);
 }
 
