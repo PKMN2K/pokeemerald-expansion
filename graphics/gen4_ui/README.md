@@ -99,3 +99,20 @@ existing functional list overlay. Pokémon names/numbers, selected-mon sprite,
 scrolling behavior, counters, stat bars, and menu logic remain live overlays.
 Right-side counters and stat bars move left 16 pixels to match the compacted
 background.
+
+
+## HGSS-derived Stats page
+
+HeartGold/SoulSilver does not contain the custom base-stats / moves / abilities
+page used by this fork, so the production Stats background is composed entirely
+from authentic HGSS Pokédex panels instead of inventing new DS-style artwork.
+
+`hgss_pokedex_stats_gba.png` combines 1:1 pixel regions from members 057,
+059, 062, and 065, which share the same HGSS Pokédex UI family. The generator
+uses member 059's authentic grid as the canvas, member 065's rounded header,
+member 062's paired stat rows, and member 057's move/description/ability framing.
+
+No component is scaled or redrawn. The live Stats page keeps the existing
+dynamic name, number, gender, base stats/EV toggle, move data, move description,
+abilities, icons, navigation text, and input logic as overlays on BG2/OBJ while
+the new authentic composition is loaded as an 8bpp BG3 background.
