@@ -2,7 +2,7 @@
 #define GUARD_POKEDEX_PLUS_HGSS_H
 
 bool32 TryInitWindows_HGSS(void);
-bool32 TryOpenPokedexPage_HGSS(u8, u8);
+bool8 LoadPokedexListPage_HGSS(u8 page);
 bool32 TryLoadPokedexBgPalette_HGSS(bool8 isSearchResults);
 bool32 TryCreateMonListEntry_HGSS(u8 position, u16 b, u16 ignored);
 bool32 TryMoveMonForInfoScreen_HGSS(struct Sprite *sprite);

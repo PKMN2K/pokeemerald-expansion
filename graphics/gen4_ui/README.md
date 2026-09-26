@@ -430,3 +430,18 @@ interface palette bundle. Future replacement of the labels or digits with
 authentic HGSS-derived glyphs can now change their OBJ palette without affecting
 any other Pokédex screen.
 
+## Primary HGSS Pokédex list renderer
+
+The main Pokédex list and search-results list no longer choose between an HGSS
+renderer and the original Emerald renderer.
+
+`Task_OpenPokedexMainPage` and `Task_OpenSearchResults` now call the HGSS
+list-page loader directly. The old Emerald `LoadPokedexListPage` implementation
+has been deleted from `src/pokedex.c`, including its legacy list background,
+tilemap, START-menu, and interface-sheet loading path.
+
+The two screens still retain their distinct input handlers after loading; only
+the rendering path has been made permanent in this step. Remaining
+`Try..._HGSS` compatibility routes belong to other Pokédex screens and will be
+removed as those screens are collapsed into the primary Gen 4 implementation.
+

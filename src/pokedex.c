@@ -91,7 +91,6 @@ static void Task_OpenSearchResultsInfoScreenAfterMonMovement(u8);
 static void Task_WaitForExitSearchResultsInfoScreen(u8);
 static void Task_ReturnToPokedexFromSearchResults(u8);
 static void Task_ClosePokedexFromSearchResultsStartMenu(u8);
-static bool8 LoadPokedexListPage(u8);
 static void FreeWindowAndBgBuffers(void);
 static bool8 UpdateDexListScroll(u8, u8, u8);
 static u16 TryDoPokedexScroll(u16, u16);
@@ -1511,10 +1510,7 @@ static void Task_OpenPokedexMainPage(u8 taskId)
     sPokedexView->sEvoScreenData.fromEvoPage = FALSE;
     sPokedexView->formSpecies = 0;
 
-    if (TryOpenPokedexPage_HGSS(taskId, PAGE_MAIN))
-        return;
-
-    if (LoadPokedexListPage(PAGE_MAIN))
+    if (LoadPokedexListPage_HGSS(PAGE_MAIN))
         gTasks[taskId].func = Task_HandlePokedexInput;
 }
 
@@ -1731,10 +1727,7 @@ static void Task_OpenSearchResults(u8 taskId)
     sPokedexView->sEvoScreenData.fromEvoPage = FALSE;
     sPokedexView->formSpecies = 0;
 
-    if (TryOpenPokedexPage_HGSS(taskId, PAGE_SEARCH_RESULTS))
-        return;
-
-    if (LoadPokedexListPage(PAGE_SEARCH_RESULTS))
+    if (LoadPokedexListPage_HGSS(PAGE_SEARCH_RESULTS))
         gTasks[taskId].func = Task_HandleSearchResultsInput;
 }
 
@@ -1929,101 +1922,7 @@ static void Task_ClosePokedexFromSearchResultsStartMenu(u8 taskId)
 
 #undef tLoadScreenTaskId
 
-// For loading main pokedex page or Pokédex search results
-static bool8 LoadPokedexListPage(u8 page)
-{
-    switch (gMain.state)
-    {
-    case 0:
-    default:
-        if (gPaletteFade.active)
-            return 0;
-        SetVBlankCallback(NULL);
-        sPokedexView->currentPage = page;
-        ResetOtherVideoRegisters(0);
-        SetGpuReg(REG_OFFSET_BG2VOFS, sPokedexView->initialVOffset);
-        ResetBgsAndClearDma3BusyFlags(0);
-        InitBgsFromTemplates(0, sPokedex_BgTemplate, ARRAY_COUNT(sPokedex_BgTemplate));
-        SetBgTilemapBuffer(3, AllocZeroed(BG_SCREEN_SIZE));
-        SetBgTilemapBuffer(2, AllocZeroed(BG_SCREEN_SIZE));
-        SetBgTilemapBuffer(1, AllocZeroed(BG_SCREEN_SIZE));
-        SetBgTilemapBuffer(0, AllocZeroed(BG_SCREEN_SIZE));
-        DecompressAndLoadBgGfxUsingHeap(3, gPokedexMenu_Gfx, 0x2000, 0, 0);
-        CopyToBgTilemapBuffer(1, gPokedexList_Tilemap, 0, 0);
-        CopyToBgTilemapBuffer(3, gPokedexListUnderlay_Tilemap, 0, 0);
-        if (page == PAGE_MAIN)
-            CopyToBgTilemapBuffer(0, gPokedexStartMenuMain_Tilemap, 0, 0x280);
-        else
-            CopyToBgTilemapBuffer(0, gPokedexStartMenuSearchResults_Tilemap, 0, 0x280);
-        ResetPaletteFade();
-        if (page == PAGE_MAIN)
-            sPokedexView->isSearchResults = FALSE;
-        else
-            sPokedexView->isSearchResults = TRUE;
-        LoadPokedexBgPalette(sPokedexView->isSearchResults);
-        InitWindows(sPokemonList_WindowTemplate);
-        DeactivateAllTextPrinters();
-        PutWindowTilemap(0);
-        CopyWindowToVram(0, COPYWIN_FULL);
-        gMain.state = 1;
-        break;
-    case 1:
-        ResetSpriteData();
-        FreeAllSpritePalettes();
-        gReservedSpritePaletteCount = 8;
-        LoadCompressedSpriteSheet(&sInterfaceSpriteSheet[0]);
-        LoadSpritePalettes(sInterfaceSpritePalette);
-        CreateInterfaceSprites(page);
-        gMain.state++;
-        break;
-    case 2:
-        gMain.state++;
-        break;
-    case 3:
-        if (page == PAGE_MAIN)
-            CreatePokedexList(sPokedexView->dexMode, sPokedexView->dexOrder);
-        CreateMonSpritesAtPos(sPokedexView->selectedPokemon, 0xE);
-        sPokedexView->menuIsOpen = FALSE;
-        sPokedexView->menuY = 0;
-        CopyBgTilemapBufferToVram(0);
-        CopyBgTilemapBufferToVram(1);
-        CopyBgTilemapBufferToVram(2);
-        CopyBgTilemapBufferToVram(3);
-        gMain.state++;
-        break;
-    case 4:
-        BeginNormalPaletteFade(PALETTES_ALL, 0, 0x10, 0, RGB_BLACK);
-        SetVBlankCallback(VBlankCB_Pokedex);
-        gMain.state++;
-        break;
-    case 5:
-        SetGpuReg(REG_OFFSET_WININ, WININ_WIN0_ALL | WININ_WIN1_ALL);
-        SetGpuReg(REG_OFFSET_WINOUT, WINOUT_WIN01_ALL | WINOUT_WINOBJ_BG0 | WINOUT_WINOBJ_BG2 | WINOUT_WINOBJ_BG3 | WINOUT_WINOBJ_OBJ);
-        SetGpuReg(REG_OFFSET_WIN0H, 0);
-        SetGpuReg(REG_OFFSET_WIN0V, 0);
-        SetGpuReg(REG_OFFSET_WIN1H, 0);
-        SetGpuReg(REG_OFFSET_WIN1V, 0);
-        SetGpuReg(REG_OFFSET_BLDCNT, 0);
-        SetGpuReg(REG_OFFSET_BLDALPHA, 0);
-        SetGpuReg(REG_OFFSET_BLDY, 0);
-        SetGpuReg(REG_OFFSET_DISPCNT, DISPCNT_MODE_0 | DISPCNT_OBJ_1D_MAP | DISPCNT_OBJ_ON | DISPCNT_OBJWIN_ON);
-        ShowBg(0);
-        ShowBg(1);
-        ShowBg(2);
-        ShowBg(3);
-        gMain.state++;
-        break;
-    case 6:
-        if (!gPaletteFade.active)
-        {
-            gMain.state = 0;
-            return TRUE;
-        }
-        break;
-    }
-    return FALSE;
-}
-
+// List and search-results rendering is owned by the HGSS/Gen 4 renderer.
 void LoadPokedexBgPalette(bool8 isSearchResults)
 {
     if (TryLoadPokedexBgPalette_HGSS(isSearchResults))

@@ -1109,15 +1109,9 @@ static const struct WindowTemplate sNewEntryInfoScreen_WindowTemplates[] =
 //*        MAIN                      *
 //*                                  *
 //************************************
-bool32 TryOpenPokedexPage_HGSS(u8 taskId, u8 page)
+bool8 LoadPokedexListPage_HGSS(u8 page)
 {
-    if (!POKEDEX_PLUS_HGSS)
-        return FALSE;
-    
-    if (LoadPokedexListPage(page))
-        gTasks[taskId].func = Task_HandlePokedexInput;
-
-    return TRUE;
+    return LoadPokedexListPage(page);
 }
 
 #define tLoadScreenTaskId data[0]
