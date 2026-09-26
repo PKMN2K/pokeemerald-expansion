@@ -5504,6 +5504,7 @@ void SetSearchRectHighlight(u8 flags, u8 x, u8 y, u8 width)
 {
     u16 i;
     u16 temp; //should be a pointer, but does not match as one
+    u8 paletteBank = POKEDEX_PLUS_HGSS ? 4 + flags : flags;
     u32 bg = POKEDEX_PLUS_HGSS ? 1 : 3;
     u32 ptr = (u32)GetBgTilemapBuffer(bg); //same as above
 
@@ -5511,12 +5512,12 @@ void SetSearchRectHighlight(u8 flags, u8 x, u8 y, u8 width)
     {
         temp = *(u16 *)(ptr + (y + 0) * 64 + (x + i) * 2);
         temp &= 0x0fff;
-        temp |= (flags << 12);
+        temp |= (paletteBank << 12);
         *(u16 *)(ptr + (y + 0) * 64 + (x + i) * 2) = temp;
 
         temp = *(u16 *)(ptr + (y + 1) * 64 + (x + i) * 2);
         temp &= 0x0fff;
-        temp |= (flags << 12);
+        temp |= (paletteBank << 12);
         *(u16 *)(ptr + (y + 1) * 64 + (x + i) * 2) = temp;
     }
 
@@ -5688,8 +5689,12 @@ static void DrawOrEraseSearchParameterBox(bool8 erase)
 {
     u16 i;
     u16 j;
-    u32 bg = POKEDEX_PLUS_HGSS ? 1 : 3;
-    u16 *ptr = GetBgTilemapBuffer(bg);
+    u16 *ptr;
+
+    if (TryDrawOrEraseSearchParameterBox_HGSS(erase))
+        return;
+
+    ptr = GetBgTilemapBuffer(3);
 
     if (!erase)
     {
@@ -5717,8 +5722,6 @@ static void DrawOrEraseSearchParameterBox(bool8 erase)
         }
     }
 
-    if (POKEDEX_PLUS_HGSS)
-        CopyBgTilemapBufferToVram(1);
 }
 
 // Prints the currently viewable search parameter titles in the right-hand text box
