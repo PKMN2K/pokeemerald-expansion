@@ -342,8 +342,6 @@ static const u16 sPokedexPlusHGSS_Default_dark_Pal[] = INCGFX_U16("graphics/poke
 static const u16 sPokedexPlusHGSS_National_dark_Pal[] = INCGFX_U16("graphics/pokedex/hgss/palette_national_dark.pal", ".gbapal");
 static const u16 sPokedexPlusHGSS_MenuSearch_dark_Pal[] = INCGFX_U16("graphics/pokedex/hgss/palette_search_menu_dark.pal", ".gbapal");
 static const u16 sPokedexPlusHGSS_SearchResults_dark_Pal[] = INCGFX_U16("graphics/pokedex/hgss/palette_search_results_dark.pal", ".gbapal");
-static const u32 sPokedexPlusHGSS_MenuList_Gfx[] = INCGFX_U32("graphics/pokedex/hgss/tileset_menu_list.png", ".4bpp.smol");
-static const u32 sPokedexPlusHGSS_MenuList_DECA_Gfx[] = INCGFX_U32("graphics/pokedex/hgss/tileset_menu_list_DECA.png", ".4bpp.smol");
 static const u32 sPokedexPlusHGSS_Interface_Gfx[] = INCGFX_U32("graphics/pokedex/hgss/tileset_interface.png", ".4bpp.smol");
 static const u32 sPokedexPlusHGSS_Interface_DECA_Gfx[] = INCGFX_U32("graphics/pokedex/hgss/tileset_interface_DECA.png", ".4bpp.smol");
 static const u32 sPokedexPlusHGSS_Menu_1_Gfx[] = INCGFX_U32("graphics/pokedex/hgss/tileset_menu1.png", ".4bpp.smol");
@@ -355,12 +353,18 @@ static const u32 sPokedexPlusHGSS_MenuSearch_DECA_Gfx[] = INCGFX_U32("graphics/p
 #define GEN4_UI_HGSS_START_MENU_PAL_SLOT 12
 #define GEN4_UI_HGSS_START_MENU_TILEMAP_OFFSET 0x280
 
+#define GEN4_UI_HGSS_LIST_OVERLAY_BASE_TILE 512
+#define GEN4_UI_HGSS_LIST_OVERLAY_PAL_SLOT 11
+
+static const u8 sPokedexPlusHGSS_Gen4ListOverlayTiles[] = INCBIN_U8("graphics/gen4_ui/hgss_pokedex_list_overlay.tiles.bin");
+static const u16 sPokedexPlusHGSS_Gen4ListOverlayTilemap[] = INCBIN_U16("graphics/gen4_ui/hgss_pokedex_list_overlay.tilemap.bin");
+static const u16 sPokedexPlusHGSS_Gen4ListOverlayPalette[] = INCBIN_U16("graphics/gen4_ui/hgss_pokedex_list_overlay.palette.bin");
+
 static const u8 sPokedexPlusHGSS_Gen4StartMenuMainTiles[] = INCBIN_U8("graphics/gen4_ui/hgss_pokedex_start_menu_main.tiles.bin");
 static const u16 sPokedexPlusHGSS_Gen4StartMenuMainTilemap[] = INCBIN_U16("graphics/gen4_ui/hgss_pokedex_start_menu_main.tilemap.bin");
 static const u8 sPokedexPlusHGSS_Gen4StartMenuResultsTiles[] = INCBIN_U8("graphics/gen4_ui/hgss_pokedex_start_menu_results.tiles.bin");
 static const u16 sPokedexPlusHGSS_Gen4StartMenuResultsTilemap[] = INCBIN_U16("graphics/gen4_ui/hgss_pokedex_start_menu_results.tilemap.bin");
 static const u16 sPokedexPlusHGSS_Gen4StartMenuPalette[] = INCBIN_U16("graphics/gen4_ui/hgss_pokedex_start_menu.palette.bin");
-static const u32 sPokedexPlusHGSS_ScreenList_Tilemap[] = INCGFX_U32("graphics/pokedex/hgss/tilemap_list_screen.bin", ".smolTM");
 static const u32 sPokedexPlusHGSS_ScreenListUnderlay_Tilemap[] = INCGFX_U32("graphics/pokedex/hgss/tilemap_list_screen_underlay.bin", ".smolTM");
 static const u32 sPokedexPlusHGSS_ScreenInfo_Tilemap[] = INCGFX_U32("graphics/pokedex/hgss/tilemap_info_screen.bin", ".smolTM");
 static const u32 sPokedexPlusHGSS_ScreenStats_Tilemap[] = INCGFX_U32("graphics/pokedex/hgss/tilemap_stats_screen.bin", ".smolTM");
@@ -388,6 +392,7 @@ extern EWRAM_DATA struct PokedexListItem *sPokedexListItem;
 static bool8 LoadPokedexListPage(u8);
 static void RestoreLegacyPokedexBg3(void);
 static void CreateInterfaceSprites(u8);
+static void LoadGen4ListOverlay(void);
 static void LoadGen4StartMenu(u8 page);
 static void LoadScreenSelectBarMain(u16);
 static void PrintMonInfo(u32 num, u32, u32 owned, u32 newEntry);
@@ -818,13 +823,11 @@ static bool8 LoadPokedexListPage(u8 page)
         SetBgTilemapBuffer(2, AllocZeroed(BG_SCREEN_SIZE));
         SetBgTilemapBuffer(1, AllocZeroed(BG_SCREEN_SIZE));
         SetBgTilemapBuffer(0, AllocZeroed(BG_SCREEN_SIZE));
-        // BG1 keeps the existing functional list overlay, but BG3 now uses
-        // the authentic HGSS member 000 background at 1:1 pixel scale.
-        if (!HGSS_DECAPPED)
-            DecompressAndLoadBgGfxUsingHeap(1, sPokedexPlusHGSS_MenuList_Gfx, 0x2000, 0, 0);
-        else
-            DecompressAndLoadBgGfxUsingHeap(1, sPokedexPlusHGSS_MenuList_DECA_Gfx, 0x2000, 0, 0);
-        CopyToBgTilemapBuffer(1, sPokedexPlusHGSS_ScreenList_Tilemap, 0, 0);
+        // BG2 owns the live scrolling text and OBJ owns Pokémon/stat graphics.
+        // BG1 is now a sparse authentic member-000 overlay that leaves the
+        // dynamic species-list column transparent.
+        SetBgAttribute(1, BG_ATTR_PRIORITY, 3);
+        LoadGen4ListOverlay();
 
         SetBgAttribute(3, BG_ATTR_CHARBASEINDEX, 3);
         SetBgAttribute(3, BG_ATTR_PALETTEMODE, GEN4_UI_PALETTE_8BPP);
@@ -921,6 +924,21 @@ static bool8 LoadPokedexListPage(u8 page)
         break;
     }
     return FALSE;
+}
+
+static void LoadGen4ListOverlay(void)
+{
+    LoadPalette(sPokedexPlusHGSS_Gen4ListOverlayPalette,
+                BG_PLTT_ID(GEN4_UI_HGSS_LIST_OVERLAY_PAL_SLOT),
+                sizeof(sPokedexPlusHGSS_Gen4ListOverlayPalette));
+    LoadBgTiles(1,
+                sPokedexPlusHGSS_Gen4ListOverlayTiles,
+                sizeof(sPokedexPlusHGSS_Gen4ListOverlayTiles),
+                GEN4_UI_HGSS_LIST_OVERLAY_BASE_TILE);
+    CopyToBgTilemapBuffer(1,
+                          sPokedexPlusHGSS_Gen4ListOverlayTilemap,
+                          sizeof(sPokedexPlusHGSS_Gen4ListOverlayTilemap),
+                          0);
 }
 
 static void LoadGen4StartMenu(u8 page)
