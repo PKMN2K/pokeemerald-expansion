@@ -5177,7 +5177,7 @@ void Task_SwitchScreensFromCryScreen_HGSS(u8 taskId)
         gTasks[taskId].func = Task_LoadEvolutionScreen;
         break;
     case 3:
-        gTasks[taskId].func = Task_LoadSizeScreen;
+        gTasks[taskId].func = Task_LoadSizeScreen_HGSS;
         break;
     }
 
@@ -5189,11 +5189,8 @@ void Task_SwitchScreensFromCryScreen_HGSS(u8 taskId)
 //*        Size screen               *
 //*                                  *
 //************************************
-bool32 TryLoadSizeScreen_HGSS(u8 taskId)
+void Task_LoadSizeScreen_HGSS(u8 taskId)
 {
-    if (!POKEDEX_PLUS_HGSS)
-        return FALSE;
-
     u8 spriteId;
 
     switch (gMain.state)
@@ -5287,7 +5284,6 @@ bool32 TryLoadSizeScreen_HGSS(u8 taskId)
         break;
     }
 
-    return TRUE;
 }
 
 void LoadPlayArrowPalette_HGSS(bool8 cryPlaying)

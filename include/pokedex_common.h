@@ -252,7 +252,6 @@ void Task_LoadInfoScreenWaitForFade(u8);
 void Task_ReloadAreaScreen(u8 taskId);
 void Task_WaitForAreaScreenInput(u8 taskId);
 void Task_HandleCryScreenInput(u8);
-void Task_LoadSizeScreen(u8);
 void Task_HandleSizeScreenInput(u8);
 void Task_HandleCaughtMonPageInput(u8);
 void ResetOtherVideoRegisters(u16);

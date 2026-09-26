@@ -13,7 +13,7 @@ void Task_SwitchScreensFromAreaScreen_HGSS(u8 taskId);
 void Task_DisplayCaughtMonDexPageHGSS(u8);
 void Task_LoadCryScreen_HGSS(u8 taskId);
 void Task_SwitchScreensFromCryScreen_HGSS(u8 taskId);
-bool32 TryLoadSizeScreen_HGSS(u8 taskId);
+void Task_LoadSizeScreen_HGSS(u8 taskId);
 void LoadPlayArrowPalette_HGSS(bool8 cryPlaying);
 void LoadSearchMenu_HGSS(u8 taskId);
 bool32 TryDrawOrEraseSearchParameterBox_HGSS(bool8 erase);

@@ -505,3 +505,14 @@ The play-button arrow palette is also now permanently supplied by
 `LoadPlayArrowPalette_HGSS`; the old Emerald palette fallback has been
 deleted.
 
+## Primary HGSS Pokédex Size renderer
+
+The Pokédex Size page now enters through `Task_LoadSizeScreen_HGSS` directly.
+The original Emerald Size renderer has been removed from `src/pokedex.c`, so
+the screen no longer has an Emerald background/tilemap fallback.
+
+The trainer/Pokémon silhouette creation, affine scaling, offsets, input handling,
+and cleanup remain shared because they are functional Size-page mechanics rather
+than alternate UI renderers. All transitions into the page now target the HGSS
+renderer.
+
