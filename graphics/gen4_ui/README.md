@@ -830,3 +830,14 @@ repaired in place without redrawing or changing the compressed image payloads:
 
 The remaining option PNGs were audited and already had valid chunk structure and
 CRCs.
+
+
+## Repaired Match Call cursor PNG
+
+The next full Emerald CI build reached the Match Call graphics and exposed one
+more malformed indexed PNG container: `graphics/pokenav/match_call/options_cursor.png`.
+
+Its image payload was intact, but the PLTE chunk declared 768 bytes while the
+actual palette data ended at 756 bytes, and the stored PLTE CRC did not match.
+The container metadata is now corrected in place; IHDR, palette bytes, IDAT
+payload, and IEND data remain otherwise unchanged.
