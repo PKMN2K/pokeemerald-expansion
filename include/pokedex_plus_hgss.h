@@ -16,6 +16,7 @@ bool32 TrySwitchScreensFromCryScreen_HGSS(u8 taskId);
 bool32 TryLoadSizeScreen_HGSS(u8 taskId);
 bool32 TryLoadPlayArrowPalette_HGSS(bool8 cryPlaying);
 bool32 TryLoadSearchMenu_HGSS(u8 taskId);
+bool32 TryDrawOrEraseSearchParameterBox_HGSS(bool8 erase);
 void HandleDestroyStatBars_HGSS(void);
 void HandleDestroyStatBarsBg_HGSS(void);
 void HandleCreateStatBars_HGSS(void);
