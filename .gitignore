@@ -66,3 +66,7 @@ tools/aif2pcm/aif2pcm
 *.smolTM
 __pycache__
 .map_version
+
+# Generated Gen 4 UI text-BG tilemaps
+/graphics/gen4_ui/*.tilemap.bin
+/graphics/gen4_ui/**/*.tilemap.bin

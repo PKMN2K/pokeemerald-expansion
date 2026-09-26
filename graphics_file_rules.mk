@@ -10,9 +10,24 @@ PKNAVOPTIONSGFXDIR := graphics/pokenav/options
 WALLPAPERGFXDIR := graphics/pokemon_storage/wallpapers
 JPCONTESTGFXDIR := graphics/contest/japanese
 TITLESCREENGFXDIR := graphics/title_screen
+GEN4UIGFXDIR := graphics/gen4_ui
+GEN4UIPACK := tools/gen4_ui/pack_gen4_ui.py
 
 types := none normal fight flying poison ground rock bug ghost steel mystery fire water grass electric psychic ice dragon dark fairy stellar
 contest_types := cool beauty cute smart tough
+
+
+### Gen 4 UI ###
+
+# gbagfx first converts the indexed source PNG into a full 8bpp tile stream.
+# This second stage deduplicates identical/flipped tiles and emits a standard
+# 32x32 text-BG tilemap suitable for Gen4UiLoadBgAsset.
+$(GEN4UIGFXDIR)/%.tiles.8bpp: $(GEN4UIGFXDIR)/%.8bpp $(GEN4UIGFXDIR)/%.png $(GEN4UIPACK)
+	python3 $(GEN4UIPACK) $(word 2,$^) $< --tiles $@
+
+$(GEN4UIGFXDIR)/%.tilemap.bin: $(GEN4UIGFXDIR)/%.8bpp $(GEN4UIGFXDIR)/%.png $(GEN4UIPACK)
+	python3 $(GEN4UIPACK) $(word 2,$^) $< --tilemap $@
+
 
 ### Miscellaneous ###
 
