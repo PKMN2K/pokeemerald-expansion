@@ -49,3 +49,17 @@ Because the source is 256x192, the D-pad test still exposes the native DS area
 outside the GBA's 240x160 viewport instead of scaling the image down.
 
 Its exact 13-color palette and extracted pixel indices are preserved in `tools/gen4_ui/make_hgss_pokedex_member_020.py`, with a SHA-256 check on the 49,152 source pixels.
+
+
+## Live Pokédex integration
+
+The HGSS Pokédex Info page now uses the authentic member 020 layer on BG3.
+The background remains 8bpp and uses charblock 3. Its 13 source colors are
+loaded into BG palette entries 128..140, which preserves the legacy Pokédex
+palette ranges used by text, windows, and other overlay layers.
+
+This first live pass keeps the original 256x192 geometry. The GBA therefore
+shows the 240x160 top-left viewport while text, Pokémon sprites, selectors,
+and input logic remain separate overlays. A later layout pass can reposition
+authentic components into a final 240x160 composition without scaling or
+redrawing the original pixels.
