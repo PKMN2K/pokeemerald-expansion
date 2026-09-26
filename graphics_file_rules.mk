@@ -23,6 +23,7 @@ GEN4UIHGSSCRY := tools/gen4_ui/make_hgss_pokedex_cry.py
 GEN4UIHGSSSIZE := tools/gen4_ui/make_hgss_pokedex_size.py
 GEN4UIHGSSAREA := tools/gen4_ui/make_hgss_pokedex_area_chrome.py
 GEN4UIHGSSSEARCH := tools/gen4_ui/make_hgss_pokedex_search.py
+GEN4UIHGSSSEARCHOVERLAY := tools/gen4_ui/make_hgss_pokedex_search_overlay.py
 GEN4UIHGSSSTART := tools/gen4_ui/make_hgss_pokedex_start_menu.py
 
 types := none normal fight flying poison ground rock bug ghost steel mystery fire water grass electric psychic ice dragon dark fairy stellar
@@ -465,3 +466,13 @@ $(GEN4UIGFXDIR)/hgss_pokedex_list_overlay.tilemap.bin: $(GEN4UIHGSSLISTOVERLAY) 
 
 $(GEN4UIGFXDIR)/hgss_pokedex_list_overlay.palette.bin: $(GEN4UIHGSSLISTOVERLAY) $(GEN4UIHGSSLIST)
 	python3 $(GEN4UIHGSSLISTOVERLAY) --palette $@
+
+
+$(GEN4UIGFXDIR)/hgss_pokedex_search_overlay.tiles.bin: $(GEN4UIHGSSSEARCHOVERLAY) $(GEN4UIHGSSSEARCH)
+	python3 $(GEN4UIHGSSSEARCHOVERLAY) --tiles $@
+
+$(GEN4UIGFXDIR)/hgss_pokedex_search_overlay.tilemap.bin: $(GEN4UIHGSSSEARCHOVERLAY) $(GEN4UIHGSSSEARCH)
+	python3 $(GEN4UIHGSSSEARCHOVERLAY) --tilemap $@
+
+$(GEN4UIGFXDIR)/hgss_pokedex_search_overlay.palette.bin: $(GEN4UIHGSSSEARCHOVERLAY) $(GEN4UIHGSSSEARCH)
+	python3 $(GEN4UIHGSSSEARCHOVERLAY) --palette $@
