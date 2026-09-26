@@ -337,3 +337,27 @@ overwriting five unused BG palette banks every time the Pokédex opens.
 
 The Default light/dark palette files remain only because the shared interface
 OBJ sheet still uses their first sprite palette.
+
+
+## Authentic HGSS OBJ scroll controls
+
+The main Pokédex list's live scroll arrows and moving scrollbar marker no
+longer use their tiles from the mixed `tileset_interface*.png` sheet.
+
+A dedicated 3-tile OBJ sheet is generated directly from authentic HGSS
+Pokédex member 000 at 1:1 scale:
+
+- tiles 0-1: the native 16x8 upper-right HGSS control arrow
+- tile 2: an 8x8 marker cropped from the same authentic arrow pixels
+
+Member-000's red screen background becomes OBJ transparency; the original
+pink-edge, white, and black arrow colors are preserved in a dedicated
+16-color sprite palette.
+
+The HGSS list now loads these controls under sprite tag `0xD5A0` and uses
+HGSS-only sprite templates/callbacks. Their existing positions, bobbing
+animation, visibility-at-list-ends behavior, menu hiding, and scrollbar
+position calculation are unchanged.
+
+The shared interface sheet remains loaded for the Seen/Owned counters, digits,
+and START-menu cursor until those pieces are migrated separately.
