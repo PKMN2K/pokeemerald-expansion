@@ -756,3 +756,21 @@ Deleted assets:
 At this point, the legacy `graphics/pokedex/hgss` directory contains only the
 two Search-menu palettes still loaded by the active Search overlay and the live
 stat-bar graphic.
+
+## Compact primary Search text palette
+
+The Search screen no longer loads the old 64-color
+`palette_search_menu*.pal` files from `graphics/pokedex/hgss`.
+
+Those light and dark files were byte-for-byte identical, and the active Search
+renderer only loaded their first 16-color bank for BG2 text. That bank now
+lives directly in `pokedex_plus_hgss.c` as a compact dedicated Search text
+palette, while the authentic Search highlight overlay continues to own palette
+banks 4-7.
+
+Deleted assets:
+- `graphics/pokedex/hgss/palette_search_menu.pal`
+- `graphics/pokedex/hgss/palette_search_menu_dark.pal`
+
+This leaves `stat_bars.png` as the only live file in the old
+`graphics/pokedex/hgss` directory.

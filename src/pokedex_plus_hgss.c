@@ -342,9 +342,30 @@ const u16 sPokedexPlusHGSS_Gen4SearchOverlayTilemap[] = INCBIN_U16("graphics/gen
 static const u16 sPokedexPlusHGSS_Gen4SearchOverlayPalette[] = INCBIN_U16("graphics/gen4_ui/hgss_pokedex_search_overlay.palette.bin");
 
 static const u16 sPokedexPlusHGSS_Counter_Pal[] = INCGFX_U16("graphics/gen4_ui/hgss_pokedex_counter.pal", ".gbapal");
-static const u16 sPokedexPlusHGSS_MenuSearch_Pal[] = INCGFX_U16("graphics/pokedex/hgss/palette_search_menu.pal", ".gbapal");
 static const u16 sPokedexPlusHGSS_CounterDark_Pal[] = INCGFX_U16("graphics/gen4_ui/hgss_pokedex_counter_dark.pal", ".gbapal");
-static const u16 sPokedexPlusHGSS_MenuSearch_dark_Pal[] = INCGFX_U16("graphics/pokedex/hgss/palette_search_menu_dark.pal", ".gbapal");
+
+// Search text is isolated on BG palette bank 0. The old light/dark Search
+// palette files were identical and only their first 16 colors were loaded, so
+// keep that live bank directly with the primary Gen 4 renderer.
+static const u16 sPokedexPlusHGSS_SearchText_Pal[16] =
+{
+    RGB2GBA(123, 131, 0),
+    RGB2GBA(0, 0, 0),
+    RGB2GBA(172, 172, 172),
+    RGB2GBA(255, 255, 255),
+    RGB2GBA(255, 255, 255),
+    RGB2GBA(98, 98, 115),
+    RGB2GBA(57, 57, 57),
+    RGB2GBA(123, 115, 74),
+    RGB2GBA(156, 230, 0),
+    RGB2GBA(57, 115, 0),
+    RGB2GBA(255, 172, 0),
+    RGB2GBA(131, 32, 32),
+    RGB2GBA(82, 189, 90),
+    RGB2GBA(24, 131, 32),
+    RGB2GBA(255, 32, 32),
+    RGB2GBA(0, 0, 0),
+};
 
 // Only BG palette bank 0 is still live on the scrolling list. The authentic
 // BG1/BG3/START-menu layers own their own palette ranges, so keep a compact
@@ -5208,12 +5229,9 @@ void LoadSearchMenu_HGSS(u8 taskId)
                                       sizeof(sPokedexPlusHGSS_Gen4SearchTilemap), 0);
             }
 
-            // Keep only the legacy bank-0 text colors. BG1 highlight colors
-            // now live independently in authentic HGSS banks 4-7.
-            if (!HGSS_DARK_MODE)
-                LoadPalette(sPokedexPlusHGSS_MenuSearch_Pal, BG_PLTT_ID(0), PLTT_SIZE_4BPP);
-            else
-                LoadPalette(sPokedexPlusHGSS_MenuSearch_dark_Pal, BG_PLTT_ID(0), PLTT_SIZE_4BPP);
+            // Search text uses a compact dedicated bank. BG1 highlight colors
+            // live independently in authentic HGSS banks 4-7.
+            LoadPalette(sPokedexPlusHGSS_SearchText_Pal, BG_PLTT_ID(0), PLTT_SIZE_4BPP);
             gMain.state = 1;
         }
         break;
