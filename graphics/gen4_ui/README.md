@@ -166,3 +166,21 @@ the HGSS header, grid, and separator structure underneath those components.
 The source uses 10 colors, loaded into the reserved 8bpp BG palette range
 beginning at entry 128. The original adapted Cry background remains the
 fallback if the Gen 4 asset loader fails.
+
+
+## Authentic HGSS Size page
+
+The live Size comparison page now uses HGSS Pokédex member 097, which already
+contains two large framed comparison panels. The GBA composition keeps those
+pixels at 1:1 scale and removes only one empty 8-pixel grid strip above the
+panels so both lower borders fit within the 160-pixel display height.
+
+The dynamic comparison system remains intact. The Pokémon silhouette is moved
+into the left authentic frame at x=64, the player silhouette into the right
+frame at x=192, and the existing "Size compared to <player>" caption is moved
+into member 097's authentic horizontal title bar. The existing species/trainer
+scale matrices and vertical offset calculations are unchanged.
+
+The background uses 13 colors in the reserved 8bpp palette range beginning at
+entry 128. The previous adapted Size background remains the fallback if the
+Gen 4 asset loader fails.
