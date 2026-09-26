@@ -15,6 +15,7 @@ GEN4UIPACK := tools/gen4_ui/pack_gen4_ui.py
 GEN4UITESTFIXTURE := tools/gen4_ui/make_test_fixture.py
 GEN4UIHGSSDEX := tools/gen4_ui/make_hgss_pokedex_member_020.py
 GEN4UIHGSSLIST := tools/gen4_ui/make_hgss_pokedex_list_member_000.py
+GEN4UIHGSSLISTOVERLAY := tools/gen4_ui/make_hgss_pokedex_list_overlay.py
 GEN4UIHGSSSTATS := tools/gen4_ui/make_hgss_pokedex_stats.py
 GEN4UIHGSSEVO := tools/gen4_ui/make_hgss_pokedex_evolution.py
 GEN4UIHGSSFORMS := tools/gen4_ui/make_hgss_pokedex_forms.py
@@ -454,3 +455,13 @@ $(GEN4UIGFXDIR)/hgss_pokedex_start_menu_results.tilemap.bin: $(GEN4UIHGSSSTART) 
 
 $(GEN4UIGFXDIR)/hgss_pokedex_start_menu.palette.bin: $(GEN4UIHGSSSTART) $(GEN4UIHGSSSTATS)
 	python3 $(GEN4UIHGSSSTART) --palette $@
+
+
+$(GEN4UIGFXDIR)/hgss_pokedex_list_overlay.tiles.bin: $(GEN4UIHGSSLISTOVERLAY) $(GEN4UIHGSSLIST)
+	python3 $(GEN4UIHGSSLISTOVERLAY) --tiles $@
+
+$(GEN4UIGFXDIR)/hgss_pokedex_list_overlay.tilemap.bin: $(GEN4UIHGSSLISTOVERLAY) $(GEN4UIHGSSLIST)
+	python3 $(GEN4UIHGSSLISTOVERLAY) --tilemap $@
+
+$(GEN4UIGFXDIR)/hgss_pokedex_list_overlay.palette.bin: $(GEN4UIHGSSLISTOVERLAY) $(GEN4UIHGSSLIST)
+	python3 $(GEN4UIHGSSLISTOVERLAY) --palette $@
