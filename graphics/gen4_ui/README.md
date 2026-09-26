@@ -718,3 +718,20 @@ Deleted assets:
 - `graphics/pokedex/hgss/tileset_menu_search.png`
 - `graphics/pokedex/hgss/tileset_menu_search_DECA.png`
 
+## Removed obsolete legacy Pokédex list/search-result palettes
+
+The scrolling list and Search Results screens now use the compact live text
+palette banks defined by the HGSS renderer. The older GBA-adapted default,
+National, and Search Results palette files were no longer referenced and have
+been removed.
+
+Deleted assets:
+- `graphics/pokedex/hgss/palette_default.pal`
+- `graphics/pokedex/hgss/palette_default_dark.pal`
+- `graphics/pokedex/hgss/palette_national.pal`
+- `graphics/pokedex/hgss/palette_national_dark.pal`
+- `graphics/pokedex/hgss/palette_search_results.pal`
+- `graphics/pokedex/hgss/palette_search_results_dark.pal`
+
+The live Search-menu palettes remain in place because the Search overlay still
+loads them.
