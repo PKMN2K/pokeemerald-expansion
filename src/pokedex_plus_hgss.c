@@ -10,6 +10,7 @@
 #include "decompress.h"
 #include "event_data.h"
 #include "gpu_regs.h"
+#include "gen4_ui.h"
 #include "graphics.h"
 #include "international_string_util.h"
 #include "item.h"
@@ -157,6 +158,27 @@ static const u8 sText_FORMS_NONE[] = _("{STR_VAR_1} has no alternate forms.");
 static const u8 sText_PlusSymbol[] = _("+");
 
 // static .rodata graphics
+
+#define GEN4_UI_HGSS_INFO_PAL_SLOT 8
+#define GEN4_UI_HGSS_INFO_COLORS 13
+
+static const u8 sPokedexPlusHGSS_Gen4InfoTiles[] = INCBIN_U8("graphics/gen4_ui/hgss_pokedex_member_020.tiles.8bpp");
+static const u16 sPokedexPlusHGSS_Gen4InfoTilemap[] = INCBIN_U16("graphics/gen4_ui/hgss_pokedex_member_020.tilemap.bin");
+static const u16 sPokedexPlusHGSS_Gen4InfoPalette[] = INCBIN_U16("graphics/gen4_ui/hgss_pokedex_member_020.gbapal");
+
+static const struct Gen4UiBgAsset sPokedexPlusHGSS_Gen4InfoAsset =
+{
+    .tiles = sPokedexPlusHGSS_Gen4InfoTiles,
+    .tilemap = sPokedexPlusHGSS_Gen4InfoTilemap,
+    .palette = sPokedexPlusHGSS_Gen4InfoPalette,
+    .tilesSize = sizeof(sPokedexPlusHGSS_Gen4InfoTiles),
+    .tilemapSize = sizeof(sPokedexPlusHGSS_Gen4InfoTilemap),
+    .paletteOffset = BG_PLTT_ID(GEN4_UI_HGSS_INFO_PAL_SLOT),
+    .paletteSize = PLTT_SIZEOF(GEN4_UI_HGSS_INFO_COLORS),
+    .baseTile = 0,
+    .tilemapOffset = 0,
+    .paletteMode = GEN4_UI_PALETTE_8BPP,
+};
 
 static const u16 sPokedexPlusHGSS_Default_Pal[] = INCGFX_U16("graphics/pokedex/hgss/palette_default.pal", ".gbapal");
 static const u16 sPokedexPlusHGSS_National_Pal[] = INCGFX_U16("graphics/pokedex/hgss/palette_national.pal", ".gbapal");
@@ -1815,31 +1837,56 @@ static u32 GetPokedexMonPersonality(enum Species species)
 //*        HGSS                      *
 //*                                  *
 //************************************
+static void RestoreLegacyPokedexBg3(void)
+{
+    SetBgAttribute(3, BG_ATTR_CHARBASEINDEX, 0);
+    SetBgAttribute(3, BG_ATTR_PALETTEMODE, GEN4_UI_PALETTE_4BPP);
+}
+
 static void LoadTilesetTilemapHGSS(u8 page)
 {
     switch (page)
     {
     case INFO_SCREEN:
-        DecompressAndLoadBgGfxUsingHeap(3, sPokedexPlusHGSS_Menu_1_Gfx, 0x2000, 0, 0);
-        CopyToBgTilemapBuffer(3, sPokedexPlusHGSS_ScreenInfo_Tilemap, 0, 0);
+        // Authentic HGSS layer on BG3. Charblock 3 is free on this screen and
+        // palette entries 128..140 are reserved for its 13 source colors.
+        SetBgAttribute(3, BG_ATTR_CHARBASEINDEX, 3);
+        SetBgAttribute(3, BG_ATTR_PALETTEMODE, GEN4_UI_PALETTE_8BPP);
+        if (Gen4UiLoadBgAsset(3, &sPokedexPlusHGSS_Gen4InfoAsset))
+        {
+            // This page later copies its WRAM tilemap buffer back to VRAM.
+            CopyToBgTilemapBuffer(3, sPokedexPlusHGSS_Gen4InfoTilemap,
+                                  sizeof(sPokedexPlusHGSS_Gen4InfoTilemap), 0);
+        }
+        else
+        {
+            RestoreLegacyPokedexBg3();
+            DecompressAndLoadBgGfxUsingHeap(3, sPokedexPlusHGSS_Menu_1_Gfx, 0x2000, 0, 0);
+            CopyToBgTilemapBuffer(3, sPokedexPlusHGSS_ScreenInfo_Tilemap, 0, 0);
+        }
         break;
     case STATS_SCREEN:
+        RestoreLegacyPokedexBg3();
         DecompressAndLoadBgGfxUsingHeap(3, sPokedexPlusHGSS_Menu_1_Gfx, 0x2000, 0, 0);
         CopyToBgTilemapBuffer(3, sPokedexPlusHGSS_ScreenStats_Tilemap, 0, 0);
         break;
     case EVO_SCREEN:
+        RestoreLegacyPokedexBg3();
         DecompressAndLoadBgGfxUsingHeap(3, sPokedexPlusHGSS_Menu_2_Gfx, 0x2000, 0, 0);
         CopyToBgTilemapBuffer(3, sPokedexPlusHGSS_ScreenEvolution_Tilemap_PE, 0, 0);
         break;
     case FORMS_SCREEN:
+        RestoreLegacyPokedexBg3();
         DecompressAndLoadBgGfxUsingHeap(3, sPokedexPlusHGSS_Menu_2_Gfx, 0x2000, 0, 0);
         CopyToBgTilemapBuffer(3, sPokedexPlusHGSS_ScreenForms_Tilemap, 0, 0);
         break;
     case CRY_SCREEN:
+        RestoreLegacyPokedexBg3();
         DecompressAndLoadBgGfxUsingHeap(3, sPokedexPlusHGSS_Menu_3_Gfx, 0x2000, 0, 0);
         CopyToBgTilemapBuffer(3, sPokedexPlusHGSS_ScreenCry_Tilemap, 0, 0);
         break;
     case SIZE_SCREEN:
+        RestoreLegacyPokedexBg3();
         DecompressAndLoadBgGfxUsingHeap(3, sPokedexPlusHGSS_Menu_3_Gfx, 0x2000, 0, 0);
         CopyToBgTilemapBuffer(3, sPokedexPlusHGSS_ScreenSize_Tilemap, 0, 0);
         break;
