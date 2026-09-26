@@ -117,3 +117,7 @@ __pycache__
 /graphics/gen4_ui/hgss_pokedex_search_overlay.tilemap.bin
 
 /graphics/gen4_ui/hgss_pokedex_search_overlay.palette.bin
+
+/graphics/gen4_ui/hgss_pokedex_scroll_controls.tiles.bin
+
+/graphics/gen4_ui/hgss_pokedex_scroll_controls.palette.bin
