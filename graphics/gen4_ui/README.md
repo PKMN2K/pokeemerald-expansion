@@ -269,3 +269,25 @@ Both menus are 4bpp in BG palette bank 12 and use charblock-0 tiles beginning
 at tile 768, safely above the live list overlay graphics. The main menu packs
 to 60 unique tiles (1,920 bytes); the search-results menu packs to 76 unique
 tiles (2,432 bytes).
+
+
+## Authentic HGSS main-list overlay
+
+The main Pokédex list no longer uses the adapted
+`tileset_menu_list*.png` + `tilemap_list_screen.bin` BG1 layer.
+
+The replacement is generated directly from the authentic member-000 list
+screen already used by BG3. BG1 now keeps only safe authentic pixels: the
+left 8-pixel rail and the right-side frame/counter region from x=108 onward.
+The dynamic species-list column remains transparent.
+
+This matches the actual live renderer: scrolling dex numbers, caught markers,
+and names are drawn into BG2, while Pokémon and stat bars are OBJ sprites.
+BG1 is lowered to priority 3, beneath BG2, so it cannot cover live list text.
+
+The overlay uses palette bank 11 and charblock-0 tiles starting at tile 512.
+It packs to 50 unique 4bpp tiles (1,600 bytes), leaving a wide gap before the
+sliding START-menu assets at tile 768.
+
+The old normal and decapped list tilesets and `tilemap_list_screen.bin` are
+no longer referenced by the HGSS list code.
