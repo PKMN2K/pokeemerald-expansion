@@ -787,3 +787,17 @@ Moved:
 The renderer now includes the new Gen 4 UI path directly. With this move,
 `graphics/pokedex/hgss` no longer contains any live assets and can disappear
 from the tree entirely.
+
+## Primary committed Pokédex counter sheets
+
+The compact Seen/Owned counter OBJ sheets are now committed primary Gen 4 UI
+assets rather than build-time extracts from the deleted legacy interface PNGs.
+
+Committed assets:
+- `graphics/gen4_ui/hgss_pokedex_counters.tiles.bin`
+- `graphics/gen4_ui/hgss_pokedex_counters_deca.tiles.bin`
+
+The obsolete `make_hgss_pokedex_counters.py` generator and its
+`graphics_file_rules.mk` rules were removed. This fixes the build dependency
+that still referenced the deleted `graphics/pokedex/hgss/tileset_interface*.png`
+files while preserving the exact counter tile bytes used before the cleanup.
