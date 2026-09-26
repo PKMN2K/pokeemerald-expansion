@@ -11,9 +11,9 @@
 #define GEN4_UI_TEST_MAX_X 16
 #define GEN4_UI_TEST_MAX_Y 32
 
-static const u8 sGen4UiTestTiles[] = INCBIN_U8("graphics/gen4_ui/renderer_test.tiles.8bpp");
-static const u16 sGen4UiTestTilemap[] = INCBIN_U16("graphics/gen4_ui/renderer_test.tilemap.bin");
-static const u16 sGen4UiTestPalette[] = INCBIN_U16("graphics/gen4_ui/renderer_test.gbapal");
+static const u8 sGen4UiTestTiles[] = INCBIN_U8("graphics/gen4_ui/hgss_pokedex_member_020.tiles.8bpp");
+static const u16 sGen4UiTestTilemap[] = INCBIN_U16("graphics/gen4_ui/hgss_pokedex_member_020.tilemap.bin");
+static const u16 sGen4UiTestPalette[] = INCBIN_U16("graphics/gen4_ui/hgss_pokedex_member_020.gbapal");
 
 static s16 sGen4UiTestX;
 static s16 sGen4UiTestY;

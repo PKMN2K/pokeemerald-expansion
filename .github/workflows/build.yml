@@ -93,7 +93,10 @@ jobs:
           make -j$(nproc) -O \
             graphics/gen4_ui/renderer_test.gbapal \
             graphics/gen4_ui/renderer_test.tiles.8bpp \
-            graphics/gen4_ui/renderer_test.tilemap.bin
+            graphics/gen4_ui/renderer_test.tilemap.bin \
+            graphics/gen4_ui/hgss_pokedex_member_020.gbapal \
+            graphics/gen4_ui/hgss_pokedex_member_020.tiles.8bpp \
+            graphics/gen4_ui/hgss_pokedex_member_020.tilemap.bin
 
       - name: Compile Gen 4 UI renderer
         env:

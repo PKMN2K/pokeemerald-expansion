@@ -33,3 +33,17 @@ The fixture is only for renderer validation and will be replaced by imported
 HGSS/DPPt source artwork screen by screen.
 
 The fixture PNG is generated at build time by `tools/gen4_ui/make_test_fixture.py`; it is not stored as binary source in Git.
+
+
+## Authentic HGSS renderer proof
+
+`hgss_pokedex_member_020.png` is a losslessly indexed 256x192 reconstruction
+from the user's HeartGold Pokédex extraction. It corresponds to archive
+`a/0/6/8`, member 20 NSCR + member 19 NCGR + member 18 NCLR.
+
+The source contains 13 colors. The RGBA extraction was converted to an indexed
+PNG without changing any RGB pixel values. The temporary Debug > Utilities >
+Gen 4 UI test screen now loads this asset through the new 8bpp Gen 4 pipeline.
+
+Because the source is 256x192, the D-pad test still exposes the native DS area
+outside the GBA's 240x160 viewport instead of scaling the image down.
