@@ -638,3 +638,13 @@ asset load fails. The list now has only the Gen 4 background path.
 The now-unused `sPokedexPlusHGSS_ScreenListUnderlay_Tilemap` declaration was
 removed as part of the same cleanup.
 
+## Removed the Info-screen legacy background fallback
+
+The Pokédex Info screen no longer restores 4bpp legacy BG3 graphics or loads the
+adapted HGSS-era fallback tilemap when the authentic Gen 4 asset load fails.
+The Info page now has only the Gen 4 background path.
+
+The now-unused `graphics/pokedex/hgss/tilemap_info_screen.bin` fallback asset
+was deleted. The shared old menu tileset is retained for now because other
+screens still reference their own legacy fallbacks.
+

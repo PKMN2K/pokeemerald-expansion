@@ -449,7 +449,6 @@ static const u16 sPokedexPlusHGSS_Gen4StartMenuMainTilemap[] = INCBIN_U16("graph
 static const u8 sPokedexPlusHGSS_Gen4StartMenuResultsTiles[] = INCBIN_U8("graphics/gen4_ui/hgss_pokedex_start_menu_results.tiles.bin");
 static const u16 sPokedexPlusHGSS_Gen4StartMenuResultsTilemap[] = INCBIN_U16("graphics/gen4_ui/hgss_pokedex_start_menu_results.tilemap.bin");
 static const u16 sPokedexPlusHGSS_Gen4StartMenuPalette[] = INCBIN_U16("graphics/gen4_ui/hgss_pokedex_start_menu.palette.bin");
-static const u32 sPokedexPlusHGSS_ScreenInfo_Tilemap[] = INCGFX_U32("graphics/pokedex/hgss/tilemap_info_screen.bin", ".smolTM");
 static const u32 sPokedexPlusHGSS_ScreenStats_Tilemap[] = INCGFX_U32("graphics/pokedex/hgss/tilemap_stats_screen.bin", ".smolTM");
 static const u32 sPokedexPlusHGSS_ScreenEvolution_Tilemap[] = INCGFX_U32("graphics/pokedex/hgss/tilemap_evo_screen.bin", ".smolTM");
 static const u32 sPokedexPlusHGSS_ScreenEvolution_Tilemap_PE[] = INCGFX_U32("graphics/pokedex/hgss/tilemap_evo_screen_PE.bin", ".smolTM");
@@ -2364,12 +2363,6 @@ static void LoadTilesetTilemapHGSS(u8 page)
             // This page later copies its WRAM tilemap buffer back to VRAM.
             CopyToBgTilemapBuffer(3, sPokedexPlusHGSS_Gen4InfoTilemap,
                                   sizeof(sPokedexPlusHGSS_Gen4InfoTilemap), 0);
-        }
-        else
-        {
-            RestoreLegacyPokedexBg3();
-            DecompressAndLoadBgGfxUsingHeap(3, sPokedexPlusHGSS_Menu_1_Gfx, 0x2000, 0, 0);
-            CopyToBgTilemapBuffer(3, sPokedexPlusHGSS_ScreenInfo_Tilemap, 0, 0);
         }
         break;
     case STATS_SCREEN:
