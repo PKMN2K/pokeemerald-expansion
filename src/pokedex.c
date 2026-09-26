@@ -139,7 +139,6 @@ static u8* ConvertMeasurementToMetricString(u32 num, u32* index);
 static void PrintDecimalNum(u8 windowId, u16 num, u8 left, u8 top);
 static u16 GetNextPosition(u8, u16, u16, u16);
 static u8 LoadSearchMenu(void);
-static void Task_LoadSearchMenu(u8);
 static void Task_HandleSearchTopBarInput(u8);
 static void Task_SwitchToSearchMenu(u8);
 static void Task_HandleSearchMenuInput(u8);
@@ -1286,7 +1285,7 @@ static const enum Type sDexSearchTypeIds[NUMBER_OF_MON_TYPES] =
 };
 
 // Number pairs are the task data for tracking the cursor pos and scroll offset of each option list
-// See task data defines above Task_LoadSearchMenu
+// See the Search task data defines near the primary HGSS Search loader.
 static const struct SearchOption sSearchOptions[] =
 {
     [SEARCH_NAME]       = {sDexSearchNameOptions,  6,  7, ARRAY_COUNT(sDexSearchNameOptions) - 1},
@@ -4927,7 +4926,7 @@ static int DoPokedexSearch(u8 dexMode, u8 order, u8 abcGroup, enum BodyColor bod
 
 static u8 LoadSearchMenu(void)
 {
-    return CreateTask(Task_LoadSearchMenu, 0);
+    return CreateTask(LoadSearchMenu_HGSS, 0);
 }
 
 static void PrintSearchTextToFit(const u8 *str, u32 x, u32 y, u32 width)
@@ -4966,79 +4965,7 @@ static void ClearSearchMenuRect(u32 x, u32 y, u32 width, u32 height)
 #define tCursorPos              data[14]
 #define tScrollOffset           data[15]
 
-static void Task_LoadSearchMenu(u8 taskId)
-{
-    if (TryLoadSearchMenu_HGSS(taskId))
-        return;
-
-    u16 i;
-
-    switch (gMain.state)
-    {
-    default:
-    case 0:
-        if (!gPaletteFade.active)
-        {
-            sPokedexView->currentPage = PAGE_SEARCH;
-            ResetOtherVideoRegisters(0);
-            ResetBgsAndClearDma3BusyFlags(0);
-            InitBgsFromTemplates(0, sSearchMenu_BgTemplate, ARRAY_COUNT(sSearchMenu_BgTemplate));
-            SetBgTilemapBuffer(3, AllocZeroed(BG_SCREEN_SIZE));
-            SetBgTilemapBuffer(2, AllocZeroed(BG_SCREEN_SIZE));
-            SetBgTilemapBuffer(1, AllocZeroed(BG_SCREEN_SIZE));
-            SetBgTilemapBuffer(0, AllocZeroed(BG_SCREEN_SIZE));
-            InitWindows(sSearchMenu_WindowTemplate);
-            DeactivateAllTextPrinters();
-            PutWindowTilemap(0);
-            DecompressAndLoadBgGfxUsingHeap(3, gPokedexSearchMenu_Gfx, 0x2000, 0, 0);
-
-            if (!IsNationalPokedexEnabled())
-                CopyToBgTilemapBuffer(3, gPokedexSearchMenuHoenn_Tilemap, 0, 0);
-            else
-                CopyToBgTilemapBuffer(3, gPokedexSearchMenuNational_Tilemap, 0, 0);
-            LoadPalette(gPokedexSearchMenu_Pal + 1, BG_PLTT_ID(0) + 1, PLTT_SIZEOF(4 * 16 - 1));
-            gMain.state = 1;
-        }
-        break;
-    case 1:
-        LoadCompressedSpriteSheet(sInterfaceSpriteSheet);
-        LoadSpritePalettes(sInterfaceSpritePalette);
-        CreateSearchParameterScrollArrows(taskId);
-        for (i = 0; i < NUM_TASK_DATA; i++)
-            gTasks[taskId].data[i] = 0;
-        SetDefaultSearchModeAndOrder(taskId);
-        HighlightSelectedSearchTopBarItem(SEARCH_TOPBAR_SEARCH);
-        PrintSelectedSearchParameters(taskId);
-        CopyWindowToVram(0, COPYWIN_FULL);
-        CopyBgTilemapBufferToVram(1);
-        CopyBgTilemapBufferToVram(2);
-        CopyBgTilemapBufferToVram(3);
-        gMain.state++;
-        break;
-    case 2:
-        BeginNormalPaletteFade(PALETTES_ALL, 0, 16, 0, RGB_BLACK);
-        gMain.state++;
-        break;
-    case 3:
-        SetGpuReg(REG_OFFSET_BLDCNT, 0);
-        SetGpuReg(REG_OFFSET_BLDALPHA, 0);
-        SetGpuReg(REG_OFFSET_BLDY, 0);
-        SetGpuReg(REG_OFFSET_DISPCNT, DISPCNT_OBJ_1D_MAP | DISPCNT_OBJ_ON);
-        HideBg(0);
-        ShowBg(1);
-        ShowBg(2);
-        ShowBg(3);
-        gMain.state++;
-        break;
-    case 4:
-        if (!gPaletteFade.active)
-        {
-            gTasks[taskId].func = Task_SwitchToSearchMenuTopBar;
-            gMain.state = 0;
-        }
-        break;
-    }
-}
+// Search rendering is owned directly by the HGSS/Gen 4 loader.
 
 static void FreeSearchWindowAndBgBuffers(void)
 {

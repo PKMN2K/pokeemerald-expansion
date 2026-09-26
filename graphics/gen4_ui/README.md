@@ -445,3 +445,17 @@ the rendering path has been made permanent in this step. Remaining
 `Try..._HGSS` compatibility routes belong to other Pokédex screens and will be
 removed as those screens are collapsed into the primary Gen 4 implementation.
 
+## Primary HGSS Pokédex Search renderer
+
+The Pokédex Search screen is now created directly with
+`LoadSearchMenu_HGSS` as its task function.
+
+The former `Task_LoadSearchMenu` wrapper and its complete Emerald Search
+renderer have been removed from `src/pokedex.c`. There is no
+`TryLoadSearchMenu_HGSS` branch and no runtime fallback decision for this
+screen anymore.
+
+Search filtering, parameter input, highlights, result generation, and exit logic
+remain shared gameplay/UI behavior; only the obsolete Emerald rendering path was
+removed in this step.
+

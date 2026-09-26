@@ -5378,11 +5378,8 @@ bool32 TryLoadPlayArrowPalette_HGSS(bool8 cryPlaying)
 #define tCursorPos              data[14]
 #define tScrollOffset           data[15]
 
-bool32 TryLoadSearchMenu_HGSS(u8 taskId)
+void LoadSearchMenu_HGSS(u8 taskId)
 {
-    if (!POKEDEX_PLUS_HGSS)
-        return FALSE;
-
     u16 i;
 
     switch (gMain.state)
@@ -5471,7 +5468,6 @@ bool32 TryLoadSearchMenu_HGSS(u8 taskId)
         break;
     }
 
-    return TRUE;
 }
 
 #undef sIsDownArrow
