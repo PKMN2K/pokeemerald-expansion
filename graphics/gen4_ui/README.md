@@ -658,3 +658,13 @@ The now-unused `graphics/pokedex/hgss/tilemap_stats_screen.bin` fallback asset
 was deleted. Shared legacy menu graphics remain temporarily because other
 Pokédex screens still reference their own fallbacks.
 
+## Removed the Evolution-screen legacy background fallback
+
+The Pokédex Evolution screen no longer restores 4bpp legacy BG3 graphics or
+loads the adapted evolution fallback tilemap. Evolution now has only its
+Gen 4/HGSS-composed background path.
+
+Both obsolete fallback assets,
+`graphics/pokedex/hgss/tilemap_evo_screen.bin` and
+`graphics/pokedex/hgss/tilemap_evo_screen_PE.bin`, were deleted.
+
