@@ -696,3 +696,12 @@ Because Size held the final page-level legacy BG3 fallback, the now-unused
 `RestoreLegacyPokedexBg3` helper and the old `tileset_menu3.png` fallback
 graphic were removed as well.
 
+## Removed obsolete legacy Pokédex menu tilesets
+
+The old 4bpp `tileset_menu1.png` and `tileset_menu2.png` graphics are no
+longer referenced now that the Info, Stats, Evolution, and Forms fallbacks have
+been removed. Their declarations and source assets were deleted.
+
+This leaves those Pokédex pages dependent only on their Gen 4/HGSS background
+assets rather than retaining unused Emerald-era compatibility artwork.
+

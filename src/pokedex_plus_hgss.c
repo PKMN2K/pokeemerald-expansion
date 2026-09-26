@@ -430,8 +430,6 @@ static const u16 sPokedexPlusHGSS_SearchResultsTextDark_Pal[16] =
 };
 static const u8 sPokedexPlusHGSS_CounterTiles[] = INCBIN_U8("graphics/gen4_ui/hgss_pokedex_counters.tiles.bin");
 static const u8 sPokedexPlusHGSS_CounterDecappedTiles[] = INCBIN_U8("graphics/gen4_ui/hgss_pokedex_counters_deca.tiles.bin");
-static const u32 sPokedexPlusHGSS_Menu_1_Gfx[] = INCGFX_U32("graphics/pokedex/hgss/tileset_menu1.png", ".4bpp.smol");
-static const u32 sPokedexPlusHGSS_Menu_2_Gfx[] = INCGFX_U32("graphics/pokedex/hgss/tileset_menu2.png", ".4bpp.smol");
 #define GEN4_UI_HGSS_START_MENU_BASE_TILE 768
 #define GEN4_UI_HGSS_START_MENU_PAL_SLOT 12
 #define GEN4_UI_HGSS_START_MENU_TILEMAP_OFFSET 0x280
