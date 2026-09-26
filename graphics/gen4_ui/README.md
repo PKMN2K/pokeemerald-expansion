@@ -37,7 +37,7 @@ The fixture PNG is generated at build time by `tools/gen4_ui/make_test_fixture.p
 
 ## Authentic HGSS renderer proof
 
-`hgss_pokedex_member_020.png` is a losslessly indexed 256x192 reconstruction
+`hgss_pokedex_member_020.png` is a build-generated, losslessly indexed 256x192 reconstruction
 from the user's HeartGold Pokédex extraction. It corresponds to archive
 `a/0/6/8`, member 20 NSCR + member 19 NCGR + member 18 NCLR.
 
@@ -47,3 +47,5 @@ Gen 4 UI test screen now loads this asset through the new 8bpp Gen 4 pipeline.
 
 Because the source is 256x192, the D-pad test still exposes the native DS area
 outside the GBA's 240x160 viewport instead of scaling the image down.
+
+Its exact 13-color palette and extracted pixel indices are preserved in `tools/gen4_ui/make_hgss_pokedex_member_020.py`, with a SHA-256 check on the 49,152 source pixels.
