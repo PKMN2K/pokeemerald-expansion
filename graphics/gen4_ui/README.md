@@ -591,3 +591,12 @@ Emerald `0x60` coordinate and the Gen 4 `0x92` coordinate.
 This completes the list sprite-position cleanup started when the main list row
 renderer was made primary.
 
+## Primary Gen 4 Pokédex measurement layout
+
+The Info-page height and weight text positioning no longer falls back to Emerald
+coordinates. `GetMeasurementTextPositions` now always applies the HGSS header,
+measurement, and vertical padding constants.
+
+This makes the height/weight labels and values permanently align to the Gen 4
+Info-page layout.
+

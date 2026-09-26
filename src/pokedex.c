@@ -3466,9 +3466,6 @@ void PrintMonMeasurements(enum Species species, u32 owned)
 
 static u32 GetMeasurementTextPositions(u32 textElement)
 {
-    if (!POKEDEX_PLUS_HGSS)
-        return textElement;
-
     switch (textElement)
     {
     case DEX_HEADER_X:
