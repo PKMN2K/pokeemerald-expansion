@@ -598,7 +598,7 @@ enum
     COLOR_BAD, // Orange
     COLOR_WORST, // Red
 };
-static const u8 sStatBarsGfx[] = INCGFX_U8("graphics/pokedex/hgss/stat_bars.png", ".4bpp");
+static const u8 sStatBarsGfx[] = INCGFX_U8("graphics/gen4_ui/hgss_pokedex_stat_bars.png", ".4bpp");
 static const u16 sStatBarPalette[16] = {
     [COLOR_ID_ALPHA] = RGB(0, 0, 10),
     [COLOR_ID_BAR_WHITE] = RGB_WHITE,

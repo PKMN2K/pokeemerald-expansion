@@ -774,3 +774,16 @@ Deleted assets:
 
 This leaves `stat_bars.png` as the only live file in the old
 `graphics/pokedex/hgss` directory.
+
+## Final legacy HGSS asset-directory migration
+
+The live Pokédex stat-bar graphic has been moved into the primary Gen 4 UI
+asset directory without altering its pixel data.
+
+Moved:
+- `graphics/pokedex/hgss/stat_bars.png`
+  → `graphics/gen4_ui/hgss_pokedex_stat_bars.png`
+
+The renderer now includes the new Gen 4 UI path directly. With this move,
+`graphics/pokedex/hgss` no longer contains any live assets and can disappear
+from the tree entirely.
