@@ -677,3 +677,12 @@ background path.
 The obsolete `graphics/pokedex/hgss/tilemap_forms_screen.bin` fallback asset
 was deleted.
 
+## Removed the Cry-screen legacy background fallback
+
+The Pokédex Cry screen no longer restores 4bpp legacy BG3 graphics or loads the
+adapted Cry fallback tilemap. Cry now has only its authentic Gen 4/HGSS
+background path while retaining the live waveform and VU-meter behavior.
+
+The obsolete `graphics/pokedex/hgss/tilemap_cry_screen.bin` fallback asset
+was deleted.
+

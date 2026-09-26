@@ -449,7 +449,6 @@ static const u16 sPokedexPlusHGSS_Gen4StartMenuMainTilemap[] = INCBIN_U16("graph
 static const u8 sPokedexPlusHGSS_Gen4StartMenuResultsTiles[] = INCBIN_U8("graphics/gen4_ui/hgss_pokedex_start_menu_results.tiles.bin");
 static const u16 sPokedexPlusHGSS_Gen4StartMenuResultsTilemap[] = INCBIN_U16("graphics/gen4_ui/hgss_pokedex_start_menu_results.tilemap.bin");
 static const u16 sPokedexPlusHGSS_Gen4StartMenuPalette[] = INCBIN_U16("graphics/gen4_ui/hgss_pokedex_start_menu.palette.bin");
-static const u32 sPokedexPlusHGSS_ScreenCry_Tilemap[] = INCGFX_U32("graphics/pokedex/hgss/tilemap_cry_screen.bin", ".smolTM");
 static const u32 sPokedexPlusHGSS_ScreenSize_Tilemap[] = INCGFX_U32("graphics/pokedex/hgss/tilemap_size_screen.bin", ".smolTM");
 
 #define MAX_EVOLUTION_ICONS 8
@@ -2403,12 +2402,6 @@ static void LoadTilesetTilemapHGSS(u8 page)
         {
             CopyToBgTilemapBuffer(3, sPokedexPlusHGSS_Gen4CryTilemap,
                                   sizeof(sPokedexPlusHGSS_Gen4CryTilemap), 0);
-        }
-        else
-        {
-            RestoreLegacyPokedexBg3();
-            DecompressAndLoadBgGfxUsingHeap(3, sPokedexPlusHGSS_Menu_3_Gfx, 0x2000, 0, 0);
-            CopyToBgTilemapBuffer(3, sPokedexPlusHGSS_ScreenCry_Tilemap, 0, 0);
         }
         break;
     case SIZE_SCREEN:
