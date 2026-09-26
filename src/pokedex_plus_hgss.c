@@ -202,6 +202,28 @@ static const struct Gen4UiBgAsset sPokedexPlusHGSS_Gen4ListAsset =
     .paletteMode = GEN4_UI_PALETTE_8BPP,
 };
 
+
+#define GEN4_UI_HGSS_STATS_PAL_SLOT 8
+#define GEN4_UI_HGSS_STATS_COLORS 15
+
+static const u8 sPokedexPlusHGSS_Gen4StatsTiles[] = INCBIN_U8("graphics/gen4_ui/hgss_pokedex_stats_gba.tiles.8bpp");
+static const u16 sPokedexPlusHGSS_Gen4StatsTilemap[] = INCBIN_U16("graphics/gen4_ui/hgss_pokedex_stats_gba.tilemap.bin");
+static const u16 sPokedexPlusHGSS_Gen4StatsPalette[] = INCBIN_U16("graphics/gen4_ui/hgss_pokedex_stats_gba.gbapal");
+
+static const struct Gen4UiBgAsset sPokedexPlusHGSS_Gen4StatsAsset =
+{
+    .tiles = sPokedexPlusHGSS_Gen4StatsTiles,
+    .tilemap = sPokedexPlusHGSS_Gen4StatsTilemap,
+    .palette = sPokedexPlusHGSS_Gen4StatsPalette,
+    .tilesSize = sizeof(sPokedexPlusHGSS_Gen4StatsTiles),
+    .tilemapSize = sizeof(sPokedexPlusHGSS_Gen4StatsTilemap),
+    .paletteOffset = BG_PLTT_ID(GEN4_UI_HGSS_STATS_PAL_SLOT),
+    .paletteSize = PLTT_SIZEOF(GEN4_UI_HGSS_STATS_COLORS),
+    .baseTile = 0,
+    .tilemapOffset = 0,
+    .paletteMode = GEN4_UI_PALETTE_8BPP,
+};
+
 static const u16 sPokedexPlusHGSS_Default_Pal[] = INCGFX_U16("graphics/pokedex/hgss/palette_default.pal", ".gbapal");
 static const u16 sPokedexPlusHGSS_National_Pal[] = INCGFX_U16("graphics/pokedex/hgss/palette_national.pal", ".gbapal");
 static const u16 sPokedexPlusHGSS_MenuSearch_Pal[] = INCGFX_U16("graphics/pokedex/hgss/palette_search_menu.pal", ".gbapal");
@@ -1904,9 +1926,21 @@ static void LoadTilesetTilemapHGSS(u8 page)
         }
         break;
     case STATS_SCREEN:
-        RestoreLegacyPokedexBg3();
-        DecompressAndLoadBgGfxUsingHeap(3, sPokedexPlusHGSS_Menu_1_Gfx, 0x2000, 0, 0);
-        CopyToBgTilemapBuffer(3, sPokedexPlusHGSS_ScreenStats_Tilemap, 0, 0);
+        // This page is expansion-only, so its background is composed from
+        // authentic HGSS Pokédex panels instead of inventing new DS artwork.
+        SetBgAttribute(3, BG_ATTR_CHARBASEINDEX, 3);
+        SetBgAttribute(3, BG_ATTR_PALETTEMODE, GEN4_UI_PALETTE_8BPP);
+        if (Gen4UiLoadBgAsset(3, &sPokedexPlusHGSS_Gen4StatsAsset))
+        {
+            CopyToBgTilemapBuffer(3, sPokedexPlusHGSS_Gen4StatsTilemap,
+                                  sizeof(sPokedexPlusHGSS_Gen4StatsTilemap), 0);
+        }
+        else
+        {
+            RestoreLegacyPokedexBg3();
+            DecompressAndLoadBgGfxUsingHeap(3, sPokedexPlusHGSS_Menu_1_Gfx, 0x2000, 0, 0);
+            CopyToBgTilemapBuffer(3, sPokedexPlusHGSS_ScreenStats_Tilemap, 0, 0);
+        }
         break;
     case EVO_SCREEN:
         RestoreLegacyPokedexBg3();
