@@ -219,3 +219,28 @@ The 240x160 overlay occupies only 27 unique 4bpp tiles (864 bytes) at base tile
 center of the screen is transparent, so the live region map, encounter glow,
 special-area markers, player marker, time-of-day selector, and AREA UNKNOWN
 label continue rendering normally underneath it.
+
+
+## Legacy HGSS asset audit
+
+After converting the main Pokédex pages, the old SelectBar assets were audited
+and removed from live code paths.
+
+- `SelectBar_clear.bin` was only being used to blank BG1 on detail pages.
+  `LoadScreenSelectBarMain` now clears BG1 directly with
+  `FillBgTilemapBufferRect`, so no legacy graphic is required.
+- `SelectBar.bin` was still visibly drawn on the Area page. It is no longer
+  loaded; the authentic transparent Area chrome now supplies that framing.
+
+The remaining old HGSS resources fall into two intentional groups:
+
+1. Functional control overlays still needed by the current list/search code:
+   `tileset_menu_list*` + `tilemap_list_screen.bin`, and
+   `tileset_menu_search*` + the Hoenn/National search tilemaps.
+2. Legacy fallback-only assets for Info, Stats, Evolutions, Forms, Cry, and
+   Size. They are loaded only if the new Gen 4 asset loader reports failure.
+
+The next cleanup target is the live BG0 start-menu strip used by the main list
+and search-results list (`tilemap_start_menu*.bin`), followed by the remaining
+list/search functional overlay graphics once equivalent authentic interactive
+layers are ready.
