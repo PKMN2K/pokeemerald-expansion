@@ -230,6 +230,25 @@ Storage BG0. No Storage context-menu code depends on the legacy Emerald border
 tiles. This completes the full authentic asset → wire live → remove legacy
 equivalent sequence for the Storage context-menu frame.
 
+The authentic HGSS Storage wallpaper set is now fully identified and imported at
+the asset layer. HGSS uses one shared 21x20-tile NSCR (member 15), with 24
+matching NCGR members 16-39 and 24 matching NCLR members 40-63. Wallpaper 01
+was already checked in and live; `verified/wallpaper_02.png` through
+`verified/wallpaper_24.png` now complete the native 24-wallpaper set.
+
+Every imported wallpaper is a compact 4bpp-compatible indexed repack of the
+user's extracted HGSS composition at the original 168x160 pixel dimensions.
+No wallpaper is cropped, redrawn, rescaled, recolored, or synthesized.
+`verified/wallpaper_set.json` records the archive hash, shared NSCR hash,
+per-wallpaper NCGR/NCLR raw and decoded hashes, extracted PNG hashes, and the
+exact checked-in Git blob IDs.
+
+This completes only the authentic-asset phase for the wallpaper set. Runtime
+mapping is intentionally unchanged: Wallpaper 01 remains the only verified
+wallpaper currently drawn live, while other Storage wallpaper IDs continue to
+render blank rather than falling back to non-authentic SWSH art. The next phase
+will wire all 24 native HGSS wallpapers into the live wallpaper selection.
+
 Do not restore compatibility fallbacks that draw approximated HGSS chrome.
 If an authentic role is not available yet, leave that HGSS layer empty and
 preserve only the underlying functional UI until the real asset is identified.
