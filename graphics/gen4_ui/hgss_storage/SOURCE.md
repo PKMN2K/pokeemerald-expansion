@@ -243,11 +243,24 @@ No wallpaper is cropped, redrawn, rescaled, recolored, or synthesized.
 per-wallpaper NCGR/NCLR raw and decoded hashes, extracted PNG hashes, and the
 exact checked-in Git blob IDs.
 
-This completes only the authentic-asset phase for the wallpaper set. Runtime
-mapping is intentionally unchanged: Wallpaper 01 remains the only verified
-wallpaper currently drawn live, while other Storage wallpaper IDs continue to
-render blank rather than falling back to non-authentic SWSH art. The next phase
-will wire all 24 native HGSS wallpapers into the live wallpaper selection.
+The complete 24-wallpaper set is now wired live through the same BG3 path that
+was established for Wallpaper 01. Storage wallpaper IDs 0-23 map sequentially
+to the authenticated native HGSS compositions 01-24. Each change loads exactly
+one 21x20 / 168x160 4bpp composition into BG3 charblock 3 at tile 1, uses palette
+bank 1, and rebuilds the 21x20 tilemap at x=9,y=0. The source pixels remain 1:1;
+there is no crop, redraw, rescale, palette approximation, tile deduplication, or
+legacy-art fallback.
+
+The wallpaper picker now exposes all 24 IDs over five pages. The first sixteen
+labels follow the established native normal-wallpaper order (Forest through
+Simple). The final eight authenticated special wallpapers are deliberately named
+Special 1 through Special 8 in the picker rather than assigning guessed theme or
+Pokemon names that are not established by the asset extraction.
+
+This completes the wire-live phase only. Legacy SWSH wallpaper declarations,
+graphics, and obsolete wallpaper-loading plumbing have intentionally not been
+deleted in this commit; that removal is the next required phase of the
+authentic HGSS asset -> wire live -> remove legacy equivalent sequence.
 
 Do not restore compatibility fallbacks that draw approximated HGSS chrome.
 If an authentic role is not available yet, leave that HGSS layer empty and

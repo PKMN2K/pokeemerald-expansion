@@ -151,12 +151,16 @@ enum {
     MENU_SKY, 			//Sky
     MENU_COMPUTA, 		//PC
     MENU_CUTE, 			//Cute (Cross Stitch)
-	//Wallpapers Page 4
-    MENU_SPACE,			// Spaic
-    MENU_DAYCARE,		// Daycare
-    MENU_CONTEST,		// Contest Stage
-    MENU_CLASSIC,		// Classic
-    MENU_CLASSIC2,		// Classic 2
+	// Wallpapers 16-24
+    MENU_SPACE,
+    MENU_DAYCARE,
+    MENU_CONTEST,
+    MENU_CLASSIC,
+    MENU_CLASSIC2,
+    MENU_SPECIAL_5,
+    MENU_SPECIAL_6,
+    MENU_SPECIAL_7,
+    MENU_SPECIAL_8,
     MENU_COUNT,
 };
 
@@ -3428,27 +3432,23 @@ static bool32 LoadHgssStorageWallpaper(u8 wallpaperId)
     u16 *tilemap = sStorage->hgssWallpaperTilemapBuffer;
     static const ALIGNED(4) u8 sBlankTile[32] = {0};
 
+    if (wallpaperId >= WALLPAPER_COUNT)
+        wallpaperId = WALLPAPER_BASE;
+
     CpuFill16(0, tilemap, sizeof(sStorage->hgssWallpaperTilemapBuffer));
     SetBgTilemapBuffer(3, tilemap);
 
-    // Wallpaper 01 is the first verified /a/0/1/9 import. Other semantic
-    // wallpaper IDs remain blank until their authentic HGSS counterparts are
-    // imported through the same verified pipeline.
-    if (wallpaperId != WALLPAPER_BASE)
-    {
-        ShowBg(3);
-        ScheduleBgCopyTilemapToVram(3);
-        return FALSE;
-    }
-
+    // One complete authentic HGSS composition occupies 420 4bpp tiles.
+    // BG3 charblock 3 has room for tiles 0-447 before screenblock 31, so the
+    // full 21x20 source fits at 1:1 scale with no crop, deduplication, or redraw.
     LoadBgTiles(3, sBlankTile, sizeof(sBlankTile), 0);
     LoadBgTiles(
         3,
-        sHgssStorageWallpaper01_Gfx,
+        sHgssStorageWallpaperGfx[wallpaperId],
         sizeof(sHgssStorageWallpaper01_Gfx),
         HGSS_STORAGE_WALLPAPER_BASE_TILE);
     LoadPalette(
-        sHgssStorageWallpaper01_Pal,
+        sHgssStorageWallpaperPal[wallpaperId],
         BG_PLTT_ID(HGSS_STORAGE_WALLPAPER_PAL_BANK),
         PLTT_SIZE_4BPP);
 
@@ -5861,8 +5861,9 @@ static void StartLoadWallpaperGfx(u8 boxId, s8 direction)
     (void)boxId;
     (void)direction;
 
-    // Preserve the wallpaper-selection data and state machine, but do not load
-    // non-authentic SWSH artwork while the verified HGSS role is unpopulated.
+    // The live wallpaper is now supplied entirely by the verified HGSS BG3
+    // loader. Keep this allocation guard until the legacy wallpaper storage
+    // plumbing is removed in the following cleanup phase.
     if (sStorage->wallpaperTiles != NULL)
     {
         Free(sStorage->wallpaperTiles);

@@ -22,14 +22,25 @@ enum {
     WALLPAPER_SKY, 			//Sky
     WALLPAPER_COMPUTA, 		//PC
     WALLPAPER_CUTE, 		//Cute (Cross Stitch)
-	//Wallpapers Page 4
-    WALLPAPER_SPACE,		// Spaic
-    WALLPAPER_DAYCARE,		// Daycare
-    WALLPAPER_CONTEST,		// Contest Stage
-    WALLPAPER_CLASSIC,		// Classic
-    WALLPAPER_CLASSIC2,		// Classic 2
+	// Wallpapers 16-24. Keep the legacy symbol names for IDs 15-19 so
+	// existing saves/source references retain their numeric values; the live
+	// HGSS menu labels below reflect the authenticated native wallpaper order.
+    WALLPAPER_SPACE,
+    WALLPAPER_DAYCARE,
+    WALLPAPER_CONTEST,
+    WALLPAPER_CLASSIC,
+    WALLPAPER_CLASSIC2,
+    WALLPAPER_SPECIAL_5,
+    WALLPAPER_SPECIAL_6,
+    WALLPAPER_SPECIAL_7,
+    WALLPAPER_SPECIAL_8,
     WALLPAPER_COUNT
 };
+
+#define WALLPAPER_SPECIAL_1 WALLPAPER_DAYCARE
+#define WALLPAPER_SPECIAL_2 WALLPAPER_CONTEST
+#define WALLPAPER_SPECIAL_3 WALLPAPER_CLASSIC
+#define WALLPAPER_SPECIAL_4 WALLPAPER_CLASSIC2
 #define MAX_DEFAULT_WALLPAPER WALLPAPER_FLYING
 
 // ============================================================================
@@ -71,10 +82,114 @@ static const u16 sTextWindows_Pal[]           = INCGFX_U16("graphics/pokemon_sto
 // Generated from a visually verified HGSS /a/0/1/9 role binding.
 #include "hgss_storage_party_panel.inc.h"
 
-// Verified authentic HGSS PC wallpaper 01.
-// /a/0/1/9: NSCR 15 + NCGR 16 + NCLR 40; pixels preserved 1:1.
+// Verified authentic HGSS PC wallpaper set.
+// /a/0/1/9: shared NSCR 15 + NCGR 16-39 + NCLR 40-63.
+// Every source is the 1:1 168x160 verified PNG; no legacy wallpaper art is used
+// by the live BG3 loader once a valid wallpaper ID is selected.
 static const u32 sHgssStorageWallpaper01_Gfx[] = INCGFX_U32("graphics/gen4_ui/hgss_storage/verified/wallpaper_01.png", ".4bpp");
 static const u16 sHgssStorageWallpaper01_Pal[] = INCGFX_U16("graphics/gen4_ui/hgss_storage/verified/wallpaper_01.png", ".gbapal");
+static const u32 sHgssStorageWallpaper02_Gfx[] = INCGFX_U32("graphics/gen4_ui/hgss_storage/verified/wallpaper_02.png", ".4bpp");
+static const u16 sHgssStorageWallpaper02_Pal[] = INCGFX_U16("graphics/gen4_ui/hgss_storage/verified/wallpaper_02.png", ".gbapal");
+static const u32 sHgssStorageWallpaper03_Gfx[] = INCGFX_U32("graphics/gen4_ui/hgss_storage/verified/wallpaper_03.png", ".4bpp");
+static const u16 sHgssStorageWallpaper03_Pal[] = INCGFX_U16("graphics/gen4_ui/hgss_storage/verified/wallpaper_03.png", ".gbapal");
+static const u32 sHgssStorageWallpaper04_Gfx[] = INCGFX_U32("graphics/gen4_ui/hgss_storage/verified/wallpaper_04.png", ".4bpp");
+static const u16 sHgssStorageWallpaper04_Pal[] = INCGFX_U16("graphics/gen4_ui/hgss_storage/verified/wallpaper_04.png", ".gbapal");
+static const u32 sHgssStorageWallpaper05_Gfx[] = INCGFX_U32("graphics/gen4_ui/hgss_storage/verified/wallpaper_05.png", ".4bpp");
+static const u16 sHgssStorageWallpaper05_Pal[] = INCGFX_U16("graphics/gen4_ui/hgss_storage/verified/wallpaper_05.png", ".gbapal");
+static const u32 sHgssStorageWallpaper06_Gfx[] = INCGFX_U32("graphics/gen4_ui/hgss_storage/verified/wallpaper_06.png", ".4bpp");
+static const u16 sHgssStorageWallpaper06_Pal[] = INCGFX_U16("graphics/gen4_ui/hgss_storage/verified/wallpaper_06.png", ".gbapal");
+static const u32 sHgssStorageWallpaper07_Gfx[] = INCGFX_U32("graphics/gen4_ui/hgss_storage/verified/wallpaper_07.png", ".4bpp");
+static const u16 sHgssStorageWallpaper07_Pal[] = INCGFX_U16("graphics/gen4_ui/hgss_storage/verified/wallpaper_07.png", ".gbapal");
+static const u32 sHgssStorageWallpaper08_Gfx[] = INCGFX_U32("graphics/gen4_ui/hgss_storage/verified/wallpaper_08.png", ".4bpp");
+static const u16 sHgssStorageWallpaper08_Pal[] = INCGFX_U16("graphics/gen4_ui/hgss_storage/verified/wallpaper_08.png", ".gbapal");
+static const u32 sHgssStorageWallpaper09_Gfx[] = INCGFX_U32("graphics/gen4_ui/hgss_storage/verified/wallpaper_09.png", ".4bpp");
+static const u16 sHgssStorageWallpaper09_Pal[] = INCGFX_U16("graphics/gen4_ui/hgss_storage/verified/wallpaper_09.png", ".gbapal");
+static const u32 sHgssStorageWallpaper10_Gfx[] = INCGFX_U32("graphics/gen4_ui/hgss_storage/verified/wallpaper_10.png", ".4bpp");
+static const u16 sHgssStorageWallpaper10_Pal[] = INCGFX_U16("graphics/gen4_ui/hgss_storage/verified/wallpaper_10.png", ".gbapal");
+static const u32 sHgssStorageWallpaper11_Gfx[] = INCGFX_U32("graphics/gen4_ui/hgss_storage/verified/wallpaper_11.png", ".4bpp");
+static const u16 sHgssStorageWallpaper11_Pal[] = INCGFX_U16("graphics/gen4_ui/hgss_storage/verified/wallpaper_11.png", ".gbapal");
+static const u32 sHgssStorageWallpaper12_Gfx[] = INCGFX_U32("graphics/gen4_ui/hgss_storage/verified/wallpaper_12.png", ".4bpp");
+static const u16 sHgssStorageWallpaper12_Pal[] = INCGFX_U16("graphics/gen4_ui/hgss_storage/verified/wallpaper_12.png", ".gbapal");
+static const u32 sHgssStorageWallpaper13_Gfx[] = INCGFX_U32("graphics/gen4_ui/hgss_storage/verified/wallpaper_13.png", ".4bpp");
+static const u16 sHgssStorageWallpaper13_Pal[] = INCGFX_U16("graphics/gen4_ui/hgss_storage/verified/wallpaper_13.png", ".gbapal");
+static const u32 sHgssStorageWallpaper14_Gfx[] = INCGFX_U32("graphics/gen4_ui/hgss_storage/verified/wallpaper_14.png", ".4bpp");
+static const u16 sHgssStorageWallpaper14_Pal[] = INCGFX_U16("graphics/gen4_ui/hgss_storage/verified/wallpaper_14.png", ".gbapal");
+static const u32 sHgssStorageWallpaper15_Gfx[] = INCGFX_U32("graphics/gen4_ui/hgss_storage/verified/wallpaper_15.png", ".4bpp");
+static const u16 sHgssStorageWallpaper15_Pal[] = INCGFX_U16("graphics/gen4_ui/hgss_storage/verified/wallpaper_15.png", ".gbapal");
+static const u32 sHgssStorageWallpaper16_Gfx[] = INCGFX_U32("graphics/gen4_ui/hgss_storage/verified/wallpaper_16.png", ".4bpp");
+static const u16 sHgssStorageWallpaper16_Pal[] = INCGFX_U16("graphics/gen4_ui/hgss_storage/verified/wallpaper_16.png", ".gbapal");
+static const u32 sHgssStorageWallpaper17_Gfx[] = INCGFX_U32("graphics/gen4_ui/hgss_storage/verified/wallpaper_17.png", ".4bpp");
+static const u16 sHgssStorageWallpaper17_Pal[] = INCGFX_U16("graphics/gen4_ui/hgss_storage/verified/wallpaper_17.png", ".gbapal");
+static const u32 sHgssStorageWallpaper18_Gfx[] = INCGFX_U32("graphics/gen4_ui/hgss_storage/verified/wallpaper_18.png", ".4bpp");
+static const u16 sHgssStorageWallpaper18_Pal[] = INCGFX_U16("graphics/gen4_ui/hgss_storage/verified/wallpaper_18.png", ".gbapal");
+static const u32 sHgssStorageWallpaper19_Gfx[] = INCGFX_U32("graphics/gen4_ui/hgss_storage/verified/wallpaper_19.png", ".4bpp");
+static const u16 sHgssStorageWallpaper19_Pal[] = INCGFX_U16("graphics/gen4_ui/hgss_storage/verified/wallpaper_19.png", ".gbapal");
+static const u32 sHgssStorageWallpaper20_Gfx[] = INCGFX_U32("graphics/gen4_ui/hgss_storage/verified/wallpaper_20.png", ".4bpp");
+static const u16 sHgssStorageWallpaper20_Pal[] = INCGFX_U16("graphics/gen4_ui/hgss_storage/verified/wallpaper_20.png", ".gbapal");
+static const u32 sHgssStorageWallpaper21_Gfx[] = INCGFX_U32("graphics/gen4_ui/hgss_storage/verified/wallpaper_21.png", ".4bpp");
+static const u16 sHgssStorageWallpaper21_Pal[] = INCGFX_U16("graphics/gen4_ui/hgss_storage/verified/wallpaper_21.png", ".gbapal");
+static const u32 sHgssStorageWallpaper22_Gfx[] = INCGFX_U32("graphics/gen4_ui/hgss_storage/verified/wallpaper_22.png", ".4bpp");
+static const u16 sHgssStorageWallpaper22_Pal[] = INCGFX_U16("graphics/gen4_ui/hgss_storage/verified/wallpaper_22.png", ".gbapal");
+static const u32 sHgssStorageWallpaper23_Gfx[] = INCGFX_U32("graphics/gen4_ui/hgss_storage/verified/wallpaper_23.png", ".4bpp");
+static const u16 sHgssStorageWallpaper23_Pal[] = INCGFX_U16("graphics/gen4_ui/hgss_storage/verified/wallpaper_23.png", ".gbapal");
+static const u32 sHgssStorageWallpaper24_Gfx[] = INCGFX_U32("graphics/gen4_ui/hgss_storage/verified/wallpaper_24.png", ".4bpp");
+static const u16 sHgssStorageWallpaper24_Pal[] = INCGFX_U16("graphics/gen4_ui/hgss_storage/verified/wallpaper_24.png", ".gbapal");
+
+static const u32 *const sHgssStorageWallpaperGfx[WALLPAPER_COUNT] =
+{
+    [WALLPAPER_BASE] = sHgssStorageWallpaper01_Gfx,
+    [WALLPAPER_PLAINS] = sHgssStorageWallpaper02_Gfx,
+    [WALLPAPER_CITY] = sHgssStorageWallpaper03_Gfx,
+    [WALLPAPER_DESERT] = sHgssStorageWallpaper04_Gfx,
+    [WALLPAPER_CENTER] = sHgssStorageWallpaper05_Gfx,
+    [WALLPAPER_SHORE] = sHgssStorageWallpaper06_Gfx,
+    [WALLPAPER_OCEAN] = sHgssStorageWallpaper07_Gfx,
+    [WALLPAPER_MOUNTAIN] = sHgssStorageWallpaper08_Gfx,
+    [WALLPAPER_VOLCANO] = sHgssStorageWallpaper09_Gfx,
+    [WALLPAPER_CAVE] = sHgssStorageWallpaper10_Gfx,
+    [WALLPAPER_BEACH] = sHgssStorageWallpaper11_Gfx,
+    [WALLPAPER_SNOW] = sHgssStorageWallpaper12_Gfx,
+    [WALLPAPER_SKY] = sHgssStorageWallpaper13_Gfx,
+    [WALLPAPER_COMPUTA] = sHgssStorageWallpaper14_Gfx,
+    [WALLPAPER_CUTE] = sHgssStorageWallpaper15_Gfx,
+    [WALLPAPER_SPACE] = sHgssStorageWallpaper16_Gfx,
+    [WALLPAPER_DAYCARE] = sHgssStorageWallpaper17_Gfx,
+    [WALLPAPER_CONTEST] = sHgssStorageWallpaper18_Gfx,
+    [WALLPAPER_CLASSIC] = sHgssStorageWallpaper19_Gfx,
+    [WALLPAPER_CLASSIC2] = sHgssStorageWallpaper20_Gfx,
+    [WALLPAPER_SPECIAL_5] = sHgssStorageWallpaper21_Gfx,
+    [WALLPAPER_SPECIAL_6] = sHgssStorageWallpaper22_Gfx,
+    [WALLPAPER_SPECIAL_7] = sHgssStorageWallpaper23_Gfx,
+    [WALLPAPER_SPECIAL_8] = sHgssStorageWallpaper24_Gfx,
+};
+
+static const u16 *const sHgssStorageWallpaperPal[WALLPAPER_COUNT] =
+{
+    [WALLPAPER_BASE] = sHgssStorageWallpaper01_Pal,
+    [WALLPAPER_PLAINS] = sHgssStorageWallpaper02_Pal,
+    [WALLPAPER_CITY] = sHgssStorageWallpaper03_Pal,
+    [WALLPAPER_DESERT] = sHgssStorageWallpaper04_Pal,
+    [WALLPAPER_CENTER] = sHgssStorageWallpaper05_Pal,
+    [WALLPAPER_SHORE] = sHgssStorageWallpaper06_Pal,
+    [WALLPAPER_OCEAN] = sHgssStorageWallpaper07_Pal,
+    [WALLPAPER_MOUNTAIN] = sHgssStorageWallpaper08_Pal,
+    [WALLPAPER_VOLCANO] = sHgssStorageWallpaper09_Pal,
+    [WALLPAPER_CAVE] = sHgssStorageWallpaper10_Pal,
+    [WALLPAPER_BEACH] = sHgssStorageWallpaper11_Pal,
+    [WALLPAPER_SNOW] = sHgssStorageWallpaper12_Pal,
+    [WALLPAPER_SKY] = sHgssStorageWallpaper13_Pal,
+    [WALLPAPER_COMPUTA] = sHgssStorageWallpaper14_Pal,
+    [WALLPAPER_CUTE] = sHgssStorageWallpaper15_Pal,
+    [WALLPAPER_SPACE] = sHgssStorageWallpaper16_Pal,
+    [WALLPAPER_DAYCARE] = sHgssStorageWallpaper17_Pal,
+    [WALLPAPER_CONTEST] = sHgssStorageWallpaper18_Pal,
+    [WALLPAPER_CLASSIC] = sHgssStorageWallpaper19_Pal,
+    [WALLPAPER_CLASSIC2] = sHgssStorageWallpaper20_Pal,
+    [WALLPAPER_SPECIAL_5] = sHgssStorageWallpaper21_Pal,
+    [WALLPAPER_SPECIAL_6] = sHgssStorageWallpaper22_Pal,
+    [WALLPAPER_SPECIAL_7] = sHgssStorageWallpaper23_Pal,
+    [WALLPAPER_SPECIAL_8] = sHgssStorageWallpaper24_Pal,
+};
 
 // Authentic HGSS Choose Box navigation controls.
 // /a/0/1/9 members 66-69; four verified 24x24 frames preserved 1:1.
@@ -150,30 +265,33 @@ static const u8 *const sMenuTexts[] =
     [MENU_SWITCH]     = COMPOUND_STRING("Switch"),
     [MENU_BAG]        = COMPOUND_STRING("Bag"),
     [MENU_SELECT]     = COMPOUND_STRING("Select"),
-    //Wallpapers Page 1
-    [MENU_BASE]       = COMPOUND_STRING("Default"),
-    [MENU_PLAINS]     = COMPOUND_STRING("Plains"),
-    [MENU_CITY]       = COMPOUND_STRING("City"),
-    [MENU_DESERT]     = COMPOUND_STRING("Desert"),
-    [MENU_CENTER]     = COMPOUND_STRING("Center"),
-    //Wallpapers Page 2
-    [MENU_SHORE]      = COMPOUND_STRING("River"),
-    [MENU_OCEAN]      = COMPOUND_STRING("Seabed"),
-    [MENU_MOUNTAIN]   = COMPOUND_STRING("Mountain"),
-    [MENU_VOLCANO]    = COMPOUND_STRING("Volcano"),
-    [MENU_CAVE]       = COMPOUND_STRING("Cave"),
-	//Wallpapers Page 3
-    [MENU_BEACH]      = COMPOUND_STRING("Beach"),
-    [MENU_SNOW]       = COMPOUND_STRING("Snow"),
-    [MENU_SKY]        = COMPOUND_STRING("Sky"),
-    [MENU_COMPUTA]    = COMPOUND_STRING("Machine"),
-    [MENU_CUTE]       = COMPOUND_STRING("Checks"),
-	//Wallpapers Page 4
-    [MENU_SPACE]      = COMPOUND_STRING("Space"),
-    [MENU_DAYCARE]    = COMPOUND_STRING("Daycare"),
-    [MENU_CONTEST]   = COMPOUND_STRING("Contest"),
-    [MENU_CLASSIC]    = COMPOUND_STRING("Classic"),
-    [MENU_CLASSIC2]   = COMPOUND_STRING("Classic 2"),
+    // Authentic HGSS normal wallpaper order: /a/0/1/9 members 16-31.
+    [MENU_BASE]       = COMPOUND_STRING("Forest"),
+    [MENU_PLAINS]     = COMPOUND_STRING("City"),
+    [MENU_CITY]       = COMPOUND_STRING("Desert"),
+    [MENU_DESERT]     = COMPOUND_STRING("Savanna"),
+    [MENU_CENTER]     = COMPOUND_STRING("Crag"),
+    [MENU_SHORE]      = COMPOUND_STRING("Volcano"),
+    [MENU_OCEAN]      = COMPOUND_STRING("Snow"),
+    [MENU_MOUNTAIN]   = COMPOUND_STRING("Cave"),
+    [MENU_VOLCANO]    = COMPOUND_STRING("Beach"),
+    [MENU_CAVE]       = COMPOUND_STRING("Seafloor"),
+    [MENU_BEACH]      = COMPOUND_STRING("River"),
+    [MENU_SNOW]       = COMPOUND_STRING("Sky"),
+    [MENU_SKY]        = COMPOUND_STRING("Polkadot"),
+    [MENU_COMPUTA]    = COMPOUND_STRING("PokéCenter"),
+    [MENU_CUTE]       = COMPOUND_STRING("Machine"),
+    [MENU_SPACE]      = COMPOUND_STRING("Simple"),
+    // The final eight are authenticated special HGSS wallpapers. Their art is
+    // wired in native order; neutral labels avoid inventing unsupported names.
+    [MENU_DAYCARE]    = COMPOUND_STRING("Special 1"),
+    [MENU_CONTEST]    = COMPOUND_STRING("Special 2"),
+    [MENU_CLASSIC]    = COMPOUND_STRING("Special 3"),
+    [MENU_CLASSIC2]   = COMPOUND_STRING("Special 4"),
+    [MENU_SPECIAL_5]  = COMPOUND_STRING("Special 5"),
+    [MENU_SPECIAL_6]  = COMPOUND_STRING("Special 6"),
+    [MENU_SPECIAL_7]  = COMPOUND_STRING("Special 7"),
+    [MENU_SPECIAL_8]  = COMPOUND_STRING("Special 8"),
     [MENU_COUNT]      = gText_EmptyString2,
 };
 
