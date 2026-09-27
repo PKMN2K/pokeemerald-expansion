@@ -1,0 +1,26 @@
+{
+  "role": "party_panel",
+  "source_archive": "/a/0/1/9",
+  "source_kind": "nds_rom",
+  "archive_sha256": "f7a1a97638959a685719049a0b780686edb68704777fead790b230e10ed1df4a",
+  "members": {
+    "ncgr": {
+      "index": 14,
+      "sha256_decoded": "afbfab4897a5f39aa96b6030877d243d0a67d8bd18f9a7295385f2c7feeb0651"
+    },
+    "nclr": {
+      "index": 4,
+      "sha256_decoded": "aff0f6a18a333e68f1d6094d06e161fa41192b882f432ae615537c37f164b20b"
+    },
+    "nscr": {
+      "index": 8,
+      "sha256_decoded": "1deba1ec61d8d90e5c83e43a555c56fbe97eb7b35c812b1fd7d397ae2f5218cb"
+    }
+  },
+  "rendered_source_size": [88, 144],
+  "crop": null,
+  "output_size": [88, 144],
+  "unique_rgb_colors": 8,
+  "output_png": "party_panel.png",
+  "conversion_rule": "Exact NCGR+NCLR+NSCR reconstruction; no crop, redrawing, resampling, or synthetic replacement pixels."
+}

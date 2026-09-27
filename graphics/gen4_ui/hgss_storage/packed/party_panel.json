@@ -1,0 +1,36 @@
+{
+  "role": "party_panel",
+  "archive_sha256": "f7a1a97638959a685719049a0b780686edb68704777fead790b230e10ed1df4a",
+  "members": {
+    "ncgr": {
+      "index": 14,
+      "sha256_decoded": "afbfab4897a5f39aa96b6030877d243d0a67d8bd18f9a7295385f2c7feeb0651"
+    },
+    "nclr": {
+      "index": 4,
+      "sha256_decoded": "aff0f6a18a333e68f1d6094d06e161fa41192b882f432ae615537c37f164b20b"
+    },
+    "nscr": {
+      "index": 8,
+      "sha256_decoded": "1deba1ec61d8d90e5c83e43a555c56fbe97eb7b35c812b1fd7d397ae2f5218cb"
+    }
+  },
+  "crop": [0, 0, 88, 144],
+  "width_tiles": 11,
+  "height_tiles": 18,
+  "tile_count": 23,
+  "tile_bytes": 736,
+  "tilemap_entries": 198,
+  "tilemap_bytes": 396,
+  "source_palette_banks": [1, 2],
+  "palette_bank_remap": {
+    "1": 0,
+    "2": 1
+  },
+  "packed_palette_banks": 2,
+  "palette_bytes": 64,
+  "tiles_file": "party_panel.tiles.4bpp",
+  "tilemap_file": "party_panel.tilemap.bin",
+  "palette_file": "party_panel.palette.bin",
+  "packing_rule": "Lossless indexed 4bpp conversion: source NCGR pixels and BGR555 colors preserved; tile indices and palette banks compacted only."
+}
