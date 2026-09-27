@@ -30,7 +30,7 @@
   },
   "export": {
     "file": "markings_menu.png",
-    "sha256": "ab6c039908227c839291d8d001004a268f73f26c5d7c8d739668117186ac2d44",
+    "sha256": "81e2c02831b2b1aecc278bfeea43d3c888e5f354a194e5ee7bf9ce034572907d",
     "size": [
       88,
       144
@@ -38,7 +38,9 @@
     "png_color_type": "indexed_palette",
     "colors": 9,
     "pixel_rule": "Lossless 1:1 composite from NSCR 10 + NCGR 14 + NCLR 4; re-indexed only for GBA 4bpp compatibility, with no redraw, resampling, or color changes.",
-    "png_crc_valid": true
+    "png_crc_valid": true,
+    "png_bit_depth": 4,
+    "repack_note": "Pixel-identical compact 4-bit indexed PNG repack of the verified 88x144 composition; only PNG container/palette encoding changed to eliminate the malformed PLTE CRC."
   },
   "status": "complete: authentic HGSS markings panel and controls live; legacy SWSH markings-menu equivalent removed",
   "next": "Continue to the next remaining Storage UI role using authentic HGSS asset -> wire live -> remove legacy equivalent.",

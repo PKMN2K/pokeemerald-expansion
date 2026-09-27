@@ -128,8 +128,8 @@ action bars), omitting only the unsupported star/diamond row without redrawing
 or resampling any pixels. The legacy SWSH markings-menu sheet and all of its
 window/mark/cursor sprites are now removed. Enabled markings use the authentic
 member-4 NCLR bank-3 colors on the native button tiles, while navigation reuses
-the verified authentic HGSS storage hand cursor. The verified PNG was also
-replaced with the CRC-valid local export matching its recorded SHA-256.
+the verified authentic HGSS storage hand cursor. The verified PNG was also repacked pixel-identically as a compact CRC-valid
+4-bit indexed PNG; only the PNG container/palette encoding changed.
 The machine-readable record is `verified/markings_menu.json`.
 
 Do not restore compatibility fallbacks that draw approximated HGSS chrome.
