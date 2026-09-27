@@ -91,8 +91,8 @@
     "layout": "2 horizontal frames: animation 14 cell 13, then cell 14",
     "pixel_rule": "Exact NCGR+NCER+NCLR composite at 1:1 DS pixel scale using CEBK shift=1; no redraw, resampling, recoloring, or synthetic pixels."
   },
-  "status": "wired live as the normal Storage cursor; legacy SWSH cursor declarations retained pending removal",
-  "next": "Remove the legacy SWSH cursor sheet/palette declarations and any now-unused equivalent code after the authentic live binding passes CI.",
+  "status": "complete: authentic HGSS storage cursor is live and the legacy SWSH cursor equivalent is removed",
+  "next": "Continue to the next remaining storage UI role using authentic HGSS asset -> wire live -> remove legacy equivalent.",
   "live_integration": {
     "renderer": "GBA OBJ sprite",
     "source_frame_size": [
@@ -117,6 +117,15 @@
       ],
       "logical_cursor_coordinates_unchanged": true
     },
-    "legacy_asset_removed": false
+    "legacy_asset_removed": true,
+    "legacy_equivalent_removed": [
+      "graphics/pokemon_storage/swsh/cursor.png",
+      "sCursor_Gfx",
+      "sCursor_Pal",
+      "sSpriteSheet_Cursor",
+      "sSpritePal_Cursor",
+      "multimove PALTAG_MISC_3 cursor recolor override"
+    ],
+    "unrelated_palette_dependency_resolution": "PALTAG_MISC_1/2/3 remain for stat-label/title roles but now load the palette from stat_labels.png; no legacy cursor pixels or palette data remain."
   }
 }

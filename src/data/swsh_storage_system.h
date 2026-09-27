@@ -72,16 +72,13 @@ static const u16 sHgssChooseBoxNav_Pal[] = INCGFX_U16("graphics/gen4_ui/hgss_sto
 static const u32 sHgssStorageCursor_Gfx[] = INCGFX_U32("graphics/gen4_ui/hgss_storage/verified/cursor.png", ".4bpp");
 static const u16 sHgssStorageCursor_Pal[] = INCGFX_U16("graphics/gen4_ui/hgss_storage/verified/cursor.png", ".gbapal");
 
-// Legacy SWSH cursor declarations are intentionally retained until the next
-// pipeline step removes the old equivalent after live HGSS verification.
-static const u32 sCursor_Gfx[]                = INCGFX_U32("graphics/pokemon_storage/swsh/cursor.png", ".4bpp.smol");
-static const u16 sCursor_Pal[]                = INCGFX_U16("graphics/pokemon_storage/swsh/cursor.png", ".gbapal");
 static const u32 sGenderIcons_Gfx[]           = INCGFX_U32("graphics/pokemon_storage/swsh/gender_icons.png", ".4bpp.smol");
 static const u16 sMarkings_Pal[]              = INCGFX_U16("graphics/pokemon_storage/swsh/markings.pal", ".gbapal");
 static const u32 sMarkingsMenu_Gfx[]          = INCGFX_U32("graphics/pokemon_storage/swsh/markings_menu.png", ".4bpp.smol");
 static const u32 sShinyIcon_Gfx[]             = INCGFX_U32("graphics/pokemon_storage/swsh/shiny_icon.png", ".4bpp.smol");
 static const u32 sPokerusIcon_Gfx[]           = INCGFX_U32("graphics/pokemon_storage/swsh/pokerus_icon.png", ".4bpp.smol");
 static const u32 sStatLabels_Gfx[]            = INCGFX_U32("graphics/pokemon_storage/swsh/stat_labels.png", ".4bpp.smol");
+static const u16 sStatLabels_Pal[]             = INCGFX_U16("graphics/pokemon_storage/swsh/stat_labels.png", ".gbapal");
 static const ALIGNED(4) u8 sTypeIcons_Gfx[]   = INCGFX_U8("graphics/pokemon_storage/swsh/type_icons.png", ".4bpp");
 static const u16 sTypeIcons_Pal[]             = INCGFX_U16("graphics/pokemon_storage/swsh/type_icons.png", ".gbapal");
 
@@ -532,28 +529,21 @@ static const struct SpriteTemplate sSpriteTemplate_BoxTitle =
 // Cursor Sprites
 // ============================================================================
 
-static const struct CompressedSpriteSheet sSpriteSheet_Cursor[] =
+// PALTAG_MISC_1/2/3 still serve unrelated stat-label/title roles. Their
+// colors now come from the stat-label asset itself, not from the removed
+// legacy cursor sheet.
+static const struct SpritePalette sSpritePal_StatLabels[] =
 {
     {
-        .data = sCursor_Gfx,
-        .size = (16 * 16 * 3) / 2,
-        .tag = GFXTAG_CURSOR,
-    },
-    {},
-};
-
-static const struct SpritePalette sSpritePal_Cursor[] =
-{
-    {
-        .data = sCursor_Pal,
+        .data = sStatLabels_Pal,
         .tag = PALTAG_MISC_1,
     },
     {
-        .data = sCursor_Pal + 16,
+        .data = sStatLabels_Pal + 16,
         .tag = PALTAG_MISC_2,
     },
     {
-        .data = sCursor_Pal + 32,
+        .data = sStatLabels_Pal + 32,
         .tag = PALTAG_MISC_3,
     },
     {},

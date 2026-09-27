@@ -108,10 +108,12 @@ GBA OBJ frames at runtime, preserving the HGSS pixels and 20-tick animation.
 The NCER origin is preserved with an OBJ-only (+6,+10) visual offset, leaving
 logical cursor, held-Pokemon, and held-item coordinates unchanged. All cursor
 interaction modes use the authentic HGSS palette; mode identity remains on the
-existing functional mode indicator rather than recoloring the hand. The legacy
-SWSH cursor declarations/assets are deliberately still present for the next
-pipeline step, where they can be removed after this live binding is verified.
-The machine-readable record is `verified/cursor.json`.
+existing functional mode indicator rather than recoloring the hand. The legacy SWSH cursor equivalent has now been removed completely. The old
+`graphics/pokemon_storage/swsh/cursor.png` file, compressed cursor sheet,
+cursor palette bank, and the last multimove recolor override are gone. The
+unrelated stat-label/title users of `PALTAG_MISC_1/2/3` now source their
+palette from `stat_labels.png`, so no cursor data is retained under another
+name. The machine-readable record is `verified/cursor.json`.
 
 Do not restore compatibility fallbacks that draw approximated HGSS chrome.
 If an authentic role is not available yet, leave that HGSS layer empty and

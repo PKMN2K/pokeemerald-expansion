@@ -3487,7 +3487,7 @@ static bool8 InitPalettesAndSprites(void)
         sStorage->graphicsLoadState++;
         break;
     case 8:
-        LoadSpritePalettes(sSpritePal_Cursor);
+        LoadSpritePalettes(sSpritePal_StatLabels);
         sStorage->graphicsLoadState++;
         break;
     case 9:
@@ -5548,7 +5548,7 @@ static void InitBoxTitle(u8 boxId)
     u16 i;
     struct SpriteSheet spriteSheet = {sStorage->boxTitleTiles, 0x200, GFXTAG_BOX_TITLE};
 
-    CpuCopy16(sCursor_Pal, sStorage->boxTitlePal, sizeof(sStorage->boxTitlePal));
+    CpuCopy16(sStatLabels_Pal, sStorage->boxTitlePal, sizeof(sStorage->boxTitlePal));
 
     if (sCursorArea == CURSOR_AREA_BOX_TITLE || (sChooseBoxMenu != NULL && sChooseBoxMenu->active))
     {
@@ -8066,7 +8066,7 @@ static bool8 MultiMove_Start(void)
         CopyWindowToVram8Bit(sStorage->multiMoveWindowId, COPYWIN_FULL);
         BlendPalettes(0x3F00, MULTIMOVE_TINT_COEFF, MULTIMOVE_TINT_COLOR);
         StartCursorAnim(CURSOR_ANIM_MAIN);
-        sStorage->cursorSprite->oam.paletteNum = IndexOfSpritePaletteTag(PALTAG_MISC_3);
+        sStorage->cursorSprite->oam.paletteNum = IndexOfSpritePaletteTag(PALTAG_HGSS_STORAGE_CURSOR);
         sMultiMove->state++;
         break;
     case 3:
