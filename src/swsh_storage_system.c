@@ -546,7 +546,7 @@ struct PokemonStorageSystemData
     u16 *typeIconTilesPtr[2];
     u8 ALIGNED(4) tileBuffer[MON_PIC_SIZE * MAX_MON_PIC_FRAMES];
     u8 ALIGNED(4) itemIconBuffer[0x800];
-    u8 wallpaperBgTilemapBuffer[0x800];
+    u16 wallpaperBgTilemapBuffer[0x400];
     u8 displayMenuTilemapBuffer[0x800];
     u16 infoTilemapBuffer[0x800];
     u16 bg0_Y;
