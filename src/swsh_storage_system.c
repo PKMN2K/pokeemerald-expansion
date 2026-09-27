@@ -1088,38 +1088,6 @@ static void CB2_ExitPokeStorage(void)
     SetMainCallback2(CB2_ReturnToField);
 }
 
-static s16 UNUSED StorageSystemGetNextMonIndex(struct BoxPokemon *box, s8 startIdx, u8 stopIdx, u8 mode)
-{
-    s16 i;
-    s16 direction;
-    if (mode == 0 || mode == 1)
-    {
-        direction = 1;
-    }
-    else
-    {
-        direction = -1;
-    }
-    if (mode == 1 || mode == 3)
-    {
-        for (i = startIdx + direction; i >= 0 && i <= stopIdx; i += direction)
-        {
-            if (GetBoxMonData(box + i, MON_DATA_SPECIES) != 0)
-                return i;
-        }
-    }
-    else
-    {
-        for (i = startIdx + direction; i >= 0 && i <= stopIdx; i += direction)
-        {
-            if (GetBoxMonData(box + i, MON_DATA_SPECIES) != 0 && !GetBoxMonData(box + i, MON_DATA_IS_EGG))
-                return i;
-        }
-    }
-    return -1;
-}
-
-
 //------------------------------------------------------------------------------
 //  SECTION: Choose Box menu
 //
