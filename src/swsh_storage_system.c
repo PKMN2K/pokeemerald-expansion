@@ -555,6 +555,17 @@ struct PokemonStorageSystemData
 
 static void SpriteCB_Arrow(struct Sprite *);
 
+struct HgssStorageBgAsset
+{
+    const u8 *tiles;
+    const u16 *tilemap;
+    const u16 *palette;
+    u16 tileCount;
+    u8 widthTiles;
+    u8 heightTiles;
+    u8 paletteBankCount;
+};
+
 #include "data/swsh_storage_system.h"
 
 static u32 sItemIconGfxBuffer[98];
@@ -802,6 +813,9 @@ static void SetBoxWallpaper(u8, u8);
 // General box
 static void CreateInitBoxTask(u8);
 static bool8 IsInitBoxActive(void);
+static bool32 LoadHgssStorageBgAsset(const struct HgssStorageBgAsset *, u8, u16, u8, u16 *, u8, u8);
+static bool32 HasVerifiedHgssStorageBoxGrid(void);
+static void DrawHgssStorageBoxGridFallback(u16);
 static void DrawHgssStorageBoxGrid(void);
 static void DrawHgssStoragePartySlots(void);
 static void UpdateHgssStorageSlotHighlight(void);
@@ -5379,21 +5393,81 @@ static bool8 IsInitBoxActive(void)
     return FuncIsActiveTask(Task_InitBox);
 }
 
-static void DrawHgssStorageBoxGrid(void)
+static bool32 LoadHgssStorageBgAsset(
+    const struct HgssStorageBgAsset *asset,
+    u8 bg,
+    u16 baseTile,
+    u8 basePalette,
+    u16 *dstTilemap,
+    u8 dstLeft,
+    u8 dstTop)
+{
+    u8 x, y;
+
+    if (asset == NULL
+     || asset->tiles == NULL
+     || asset->tilemap == NULL
+     || asset->palette == NULL
+     || asset->tileCount == 0
+     || asset->widthTiles == 0
+     || asset->heightTiles == 0
+     || asset->paletteBankCount == 0)
+        return FALSE;
+
+    // Storage BG1/BG2 share charbase 2. Keep authentic role tiles inside it.
+    if (baseTile + asset->tileCount > 512)
+        return FALSE;
+    if (basePalette + asset->paletteBankCount > 16)
+        return FALSE;
+    if (dstLeft + asset->widthTiles > 32 || dstTop + asset->heightTiles > 32)
+        return FALSE;
+
+    LoadBgTiles(bg, asset->tiles, asset->tileCount * TILE_SIZE_4BPP, baseTile);
+    LoadPalette(
+        asset->palette,
+        BG_PLTT_ID(basePalette),
+        asset->paletteBankCount * PLTT_SIZE_4BPP);
+
+    for (y = 0; y < asset->heightTiles; y++)
+    {
+        for (x = 0; x < asset->widthTiles; x++)
+        {
+            u16 src = asset->tilemap[y * asset->widthTiles + x];
+            u16 tile = (src & 0x03FF) + baseTile;
+            u16 palette = ((src >> 12) & 0x0F) + basePalette;
+
+            if (tile >= 1024 || palette >= 16)
+                return FALSE;
+
+            dstTilemap[(dstTop + y) * 32 + dstLeft + x] =
+                tile | (src & 0x0C00) | (palette << 12);
+        }
+    }
+
+    return TRUE;
+}
+
+static bool32 HasVerifiedHgssStorageBoxGrid(void)
+{
+    return sHgssStorageBoxGridAsset.tiles != NULL
+        && sHgssStorageBoxGridAsset.tilemap != NULL
+        && sHgssStorageBoxGridAsset.palette != NULL
+        && sHgssStorageBoxGridAsset.tileCount != 0;
+}
+
+static void DrawHgssStorageBoxGridFallback(u16 baseTile)
 {
     static const u8 sGridColumns[] = {10, 13, 16, 19, 22, 25, 28};
     static const u8 sGridRows[] = {3, 6, 9, 12, 15, 18};
     u8 gridTiles[HGSS_GRID_TILE_COUNT * TILE_SIZE_4BPP] = {0};
-    u32 gfxSize = GetDecompressedDataSize(sSwShStorage_Gfx);
-    u16 baseTile = (gfxSize + TILE_SIZE_4BPP - 1) / TILE_SIZE_4BPP;
     u16 paletteBits = 15 << 12;
     u16 row, col;
     u8 i;
 
-    // BG1 and BG2 share charbase 2; append a few tiny transparent line tiles after the storage UI gfx.
     if (baseTile + HGSS_GRID_TILE_COUNT >= 512)
         return;
 
+    // Temporary compatibility fallback. This is not canonical HGSS artwork.
     for (i = 0; i < 8; i++)
     {
         gridTiles[HGSS_GRID_TILE_VERTICAL * TILE_SIZE_4BPP + i * 4] = 0x02;
@@ -5423,9 +5497,6 @@ static void DrawHgssStorageBoxGrid(void)
 
     LoadBgTiles(2, gridTiles, sizeof(gridTiles), baseTile);
 
-    // The wallpaper loader reuses this RAM buffer for BG3, so rebuild a clean transparent BG2 overlay here.
-    CpuFill16(0, sStorage->wallpaperBgTilemapBuffer, sizeof(sStorage->wallpaperBgTilemapBuffer));
-
     for (row = 3; row <= 18; row++)
     {
         bool32 isBoundaryRow = FALSE;
@@ -5446,11 +5517,37 @@ static void DrawHgssStorageBoxGrid(void)
         if (isBoundaryRow)
         {
             for (col = 10; col <= 28; col++)
-                sStorage->wallpaperBgTilemapBuffer[row * 32 + col] = paletteBits | (baseTile + HGSS_GRID_TILE_HORIZONTAL);
+                sStorage->wallpaperBgTilemapBuffer[row * 32 + col] =
+                    paletteBits | (baseTile + HGSS_GRID_TILE_HORIZONTAL);
         }
 
         for (i = 0; i < ARRAY_COUNT(sGridColumns); i++)
-            sStorage->wallpaperBgTilemapBuffer[row * 32 + sGridColumns[i]] = paletteBits | (baseTile + boundaryTile);
+            sStorage->wallpaperBgTilemapBuffer[row * 32 + sGridColumns[i]] =
+                paletteBits | (baseTile + boundaryTile);
+    }
+}
+
+static void DrawHgssStorageBoxGrid(void)
+{
+    u32 gfxSize = GetDecompressedDataSize(sSwShStorage_Gfx);
+    u16 baseTile = (gfxSize + TILE_SIZE_4BPP - 1) / TILE_SIZE_4BPP;
+
+    // The wallpaper loader reuses this RAM buffer for BG3, so rebuild a clean
+    // transparent BG2 overlay before drawing either path.
+    CpuFill16(0, sStorage->wallpaperBgTilemapBuffer, sizeof(sStorage->wallpaperBgTilemapBuffer));
+
+    // Palette banks 0 and 1 belong to the storage chrome/wallpaper; 15 belongs
+    // to text windows. Verified HGSS storage roles begin at bank 2.
+    if (!LoadHgssStorageBgAsset(
+            &sHgssStorageBoxGridAsset,
+            2,
+            baseTile,
+            2,
+            sStorage->wallpaperBgTilemapBuffer,
+            10,
+            3))
+    {
+        DrawHgssStorageBoxGridFallback(baseTile);
     }
 
     ScheduleBgCopyTilemapToVram(2);
@@ -5515,6 +5612,11 @@ static void UpdateHgssStorageSlotHighlight(void)
     DrawHgssStoragePartySlots();
 
     if (sCursorArea != CURSOR_AREA_IN_BOX && sCursorArea != CURSOR_AREA_IN_PARTY)
+        return;
+
+    // Authentic HGSS grid art is not decorated with the old generated
+    // selected-line tiles. Cursor/highlight art will be migrated separately.
+    if (sCursorArea == CURSOR_AREA_IN_BOX && HasVerifiedHgssStorageBoxGrid())
         return;
 
     gfxSize = GetDecompressedDataSize(sSwShStorage_Gfx);
