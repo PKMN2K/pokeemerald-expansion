@@ -255,7 +255,6 @@ enum {
     GFXTAG_BOX_SELECTION_PER_30,
     GFXTAG_LIST_MENU_ARROW,
     GFXTAG_MARKING_MENU,
-    GFXTAG_MESSAGE_WINDOW,
     GFXTAG_MARKING_COMBO,
     GFXTAG_MON_ICON,
 	GFXTAG_PKRS_ICON,
@@ -578,7 +577,6 @@ EWRAM_DATA static u8 sMovingMonOrigBoxPos = 0;
 EWRAM_DATA static u8 sCursorMode = 0;
 EWRAM_DATA static bool8 sJustOpenedBag = 0;
 EWRAM_DATA static bool8 sRefreshDisplayMonGfx = FALSE;
-EWRAM_DATA static u8 sMessageWindowSpriteIds[6] = {0};
 EWRAM_DATA static struct MarkingsMenuSwSh *sMarkMenu = NULL;
 
 // Main tasks
@@ -851,8 +849,6 @@ static void FreePokeStorageData(void);
 static bool8 InitPokeStorageWindows(void);
 static void ShowYesNoWindow(s8);
 static void PrintMessage(u8 id);
-static void CreateMessageWindowSprite(void);
-static void DestroyMessageWindowSprite(void);
 
 // Tilemap utility
 static void TilemapUtil_Move(u8, u8, s8);
@@ -1487,7 +1483,6 @@ static void Task_InitPokeStorage(u8 taskId)
         SetGpuReg(REG_OFFSET_DISPCNT, 0);
         CpuFill32(0, (void *)VRAM, VRAM_SIZE);
         ResetForPokeStorage();
-        memset(sMessageWindowSpriteIds, MAX_SPRITES, sizeof(sMessageWindowSpriteIds));
         if (sStorage->isReopening)
         {
             switch (sWhichToReshow)
@@ -4236,7 +4231,6 @@ static void PrintMessage(u8 id)
     }
 
     DynamicPlaceholderTextUtil_ExpandPlaceholders(sStorage->messageText, sMessages[id].text);
-    CreateMessageWindowSprite();
     FillWindowPixelBuffer(WIN_MESSAGE, PIXEL_FILL(0));
     AddTextPrinterParameterized4(WIN_MESSAGE, FONT_NORMAL, 0, 1, 0, 0, sTextColors[3], TEXT_SKIP_DRAW, sStorage->messageText);
     PutWindowTilemap(WIN_MESSAGE);
@@ -4253,49 +4247,12 @@ static void ShowYesNoWindow(s8 cursorPos)
 
 static void ClearBottomWindow(void)
 {
-    DestroyMessageWindowSprite();
     ClearStdWindowAndFrameToTransparent(WIN_MESSAGE, FALSE);
 	//Reintialize Info Panel gfx
 	DecompressAndLoadBgGfxUsingHeap(0, sMonInfo_Gfx, 0, 0, 0);
     DecompressDataWithHeaderWram(sMonInfo_Tilemap, sStorage->infoTilemapBuffer);
     UpdateMonInfoTilemap();
     ScheduleBgCopyTilemapToVram(0);
-}
-
-static void CreateMessageWindowSprite(void)
-{
-    u8 i;
-
-    if (sMessageWindowSpriteIds[0] != MAX_SPRITES)
-        return;
-
-    LoadCompressedSpriteSheet(&sSpriteSheet_MessageWindow);
-    for (i = 0; i < ARRAY_COUNT(sMessageWindowSpriteIds); i++)
-    {
-        u8 spriteId = CreateSprite(&sSpriteTemplate_MessageWindow, 72 + i * 32, 144, 0);
-        if (spriteId != MAX_SPRITES)
-        {
-            StartSpriteAnim(&gSprites[spriteId], sMessageWindowAnims[i]);
-            gSprites[spriteId].oam.priority = 1;
-            gSprites[spriteId].subpriority = 0;
-        }
-        sMessageWindowSpriteIds[i] = spriteId;
-    }
-}
-
-static void DestroyMessageWindowSprite(void)
-{
-    u8 i;
-
-    for (i = 0; i < ARRAY_COUNT(sMessageWindowSpriteIds); i++)
-    {
-        if (sMessageWindowSpriteIds[i] != MAX_SPRITES)
-        {
-            DestroySprite(&gSprites[sMessageWindowSpriteIds[i]]);
-            sMessageWindowSpriteIds[i] = MAX_SPRITES;
-        }
-    }
-    FreeSpriteTilesByTag(GFXTAG_MESSAGE_WINDOW);
 }
 
 static void AddWallpaperMenu(void)
