@@ -48,24 +48,25 @@ loads that generated descriptor into the live BG1 party-panel region. The
 legacy SWSH BG1 tilemap cells at columns 2-12, rows 0-17 are zeroed at source,
 so no SWSH party-panel fallback remains underneath the authentic HGSS art.
 
-Choose Box verification is now complete at the asset-identification layer.
-The 87-member /a/0/1/9 inventory and the HGSS PC overlay call sites do not
-expose a standalone NCGR+NCLR+NSCR "Choose Box grid" equivalent to the current
-pokeemerald popup. HGSS composes box selection/navigation dynamically from the
-normal box presentation, runtime text/count windows, and sprite-driven controls.
+Choose Box verification does not expose a standalone
+NCGR+NCLR+NSCR full-screen "Choose Box grid", but later sprite/runtime tracing
+does prove a native six-at-a-time box-overview layer. The current title-level
+carousel therefore remains only a temporary live implementation until that
+authenticated dynamic thumbnail layer is wired.
 
-Members 70-73 and 74-77 are specifically excluded from the Choose Box role.
-Overlay 14 loads those sprite bundles in the wallpaper-selection path; the same
-path reads the selected box wallpaper and rearranges those resources when the
-wallpaper choice changes. Members 85 and 86 are auxiliary NSCR window/frame
-surfaces, not an all-box chooser background.
+Members 70-73 are the box-overview thumbnail bundle, not wallpaper-selector
+controls. HGSS rebuilds an individual 32x32 thumbnail from NCGR 70 whenever a
+box changes, generates all 18 thumbnails during Storage initialization, and
+uploads the six thumbnails belonging to the currently visible group. Members
+74-77 remain the separate four-swatch wallpaper-selector bundle. Members 85
+and 86 are auxiliary NSCR window/frame surfaces, not an all-box chooser
+background.
 
-Accordingly, the static role binder no longer accepts `choose_box` (or the
-already-invalid `box_grid` role). The obsolete static Choose Box descriptor
-has now been removed from the live build. The chooser reuses the authenticated
-normal box presentation and acts as a title-level left/right carousel: the
-candidate box name and runtime count update while the HGSS wallpaper/box scene
-remains visible. No synthetic all-box grid is painted or erased.
+The static role binder still does not accept a fabricated `choose_box` or
+`box_grid` background, because the authentic overview is sprite-driven.
+Until the native thumbnail presentation is live, the existing carousel must
+remain intact; it may be removed only after the authenticated replacement is
+proven functional.
 
 The native composition now includes live candidate previews. Left/right uses
 the existing storage box-scroll path to transition the real candidate wallpaper
@@ -441,3 +442,30 @@ This completes the required sequence for the wallpaper selector: authentic
 HGSS asset -> wire live -> remove legacy equivalent. The corrected member
 70/71/72/73 bundle remains preserved as the authentic box-content thumbnail
 base for a later role.
+
+
+## Authentic HGSS box-overview thumbnails — phase 1
+
+The next Storage role is the native dynamic box-overview thumbnail layer.
+Structural tracing of HGSS overlay 14 binds this role to `/a/0/1/9` members
+70 NCGR + 71 NCLR + 72 NCER + 73 NANR. Member 70 is an 8bpp 32x32 character
+surface; NCER 72 contains one 32x32, one-OAM cell; NANR 73 animation 0 displays
+that cell as a single four-tick frame.
+
+`ov14_021F4958` copies the member-70 base for one box and rewrites its pixels
+from the contents of all 30 box slots. `ov14_021F49C8` performs that rebuild
+for all 18 boxes at Storage initialization. `ov14_021F49E0` then uploads six
+consecutive thumbnails for the active group, and `ov14_021F4A20` refreshes
+an affected thumbnail after box-content changes. The corresponding overview
+input state handles six box choices plus previous/next group controls.
+
+`verified/box_thumbnail_base.png` is the already-preserved byte-for-byte
+32x32 extraction of member 70, now formally bound to this role. No redraw,
+resampling, recoloring, runtime wiring, or legacy removal is performed in this
+phase. The machine-readable record is
+`verified/box_thumbnail_base.json`.
+
+Phase 2 must wire the authentic six-thumbnail overview live while retaining the
+current title-level chooser as a fallback underneath it. Only after that native
+overview is proven functional may the non-native chooser presentation be
+removed in phase 3.

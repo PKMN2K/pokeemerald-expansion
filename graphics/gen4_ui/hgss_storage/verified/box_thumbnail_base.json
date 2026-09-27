@@ -1,0 +1,73 @@
+{
+  "role": "box_overview_thumbnail_base",
+  "classification": "dynamic_six_at_a_time_box_overview",
+  "source_archive": "/a/0/1/9",
+  "source_kind": "user_preserved_hgss_extraction",
+  "archive_sha256": "f7a1a97638959a685719049a0b780686edb68704777fead790b230e10ed1df4a",
+  "members": {
+    "ncgr": 70,
+    "nclr": 71,
+    "ncer": 72,
+    "nanr": 73
+  },
+  "member_hashes": {
+    "70": {
+      "raw_sha256": "f1356607fbc74720ce41b5c755288a0c54e496194542161269431479ab22f8aa",
+      "decoded_sha256": "f1356607fbc74720ce41b5c755288a0c54e496194542161269431479ab22f8aa",
+      "decoded_size": 1072
+    },
+    "71": {
+      "raw_sha256": "9c732d87b6e28a50d36122e2364e53fd557b03a809d818fa9588d7cb386ea950",
+      "decoded_sha256": "9c732d87b6e28a50d36122e2364e53fd557b03a809d818fa9588d7cb386ea950",
+      "decoded_size": 552
+    },
+    "72": {
+      "raw_sha256": "750ac25c29709912bb74cf33975c655100231798f8e7f2eeaadec54415d8dd19",
+      "decoded_sha256": "2761ed2b944e416deac312204af621d1d782ba2b9597763548f43ae5f10abf33",
+      "decoded_size": 107
+    },
+    "73": {
+      "raw_sha256": "0fc29c9a52929550960f55d56f45ebc819228da7e81845234bc06edd8685bd75",
+      "decoded_sha256": "02501a6a5ce892afbfaf7aaf1ac388045db6e55ade71548a00cc3a91b7fb3f37",
+      "decoded_size": 111
+    }
+  },
+  "export": {
+    "file": "box_thumbnail_base.png",
+    "sha256": "b485fc0bff1567facca345fe496a9093b431ed07bc0a5936fd9301e833c1a197",
+    "size": [
+      32,
+      32
+    ],
+    "source": "member_070_tiles.png",
+    "pixel_rule": "Byte-for-byte copy of the user-preserved HeartGold extraction; no redraw, crop, resampling, recoloring, or synthetic pixels."
+  },
+  "nitro_geometry": {
+    "ncgr_bpp": 8,
+    "ncgr_character_bytes": 1024,
+    "ncer_cells": 1,
+    "source_cell": 0,
+    "cell_size": [
+      32,
+      32
+    ],
+    "oam_objects": 1,
+    "nanr_animation": 0,
+    "nanr_cell": 0,
+    "frame_duration": 4
+  },
+  "decomp_verification": {
+    "repository": "pret/pokeheartgold",
+    "path": "asm/overlay_14.s",
+    "resource_loader": "ov14_021F41E4",
+    "rebuild_one_box": "ov14_021F4958",
+    "rebuild_all_boxes": "ov14_021F49C8",
+    "upload_visible_six": "ov14_021F49E0",
+    "incremental_refresh": "ov14_021F4A20",
+    "overview_entry": "ov14_021EE338",
+    "overview_input": "ov14_021EE3C8",
+    "behavior": "HGSS builds 18 content-sensitive 32x32 box thumbnails and presents six at a time with group navigation."
+  },
+  "status": "phase 1 complete: authentic HGSS box-overview thumbnail base is classified and documented; no runtime wiring or legacy removal",
+  "next": "Wire the authentic six-thumbnail overview live while retaining the current title-level chooser. Remove the non-native chooser presentation only in a later phase after the native overview is proven functional."
+}
