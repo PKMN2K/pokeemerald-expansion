@@ -81,16 +81,16 @@
     }
   ],
   "integration_rule": "Do not synthesize or bind a static choose_box background. Recreate the HGSS interaction from verified dynamic components and runtime layout behavior.",
-  "status": "native composition stage 3 live: authentic members 66-69 navigation controls wired with verified press/release frames",
+  "status": "native composition stage 4 complete: authentic HGSS Choose Box controls live and legacy chooser cursor/control path removed",
   "integration_stage": {
-    "stage": 3,
+    "stage": 4,
     "behavior": [
-      "Left/right controls use the verified /a/0/1/9 members 66-69 navigation artwork.",
-      "Visible 24x24 HGSS pixels are preserved 1:1; only transparent GBA OBJ padding is added at runtime.",
-      "Left/right input plays the verified pressed frame and returns to the corresponding normal frame.",
-      "Candidate wallpaper/icon previews and confirm/cancel behavior remain unchanged."
+      "Verified /a/0/1/9 members 66-69 remain the only visible left/right Choose Box controls.",
+      "The normal storage cursor is hidden without being moved or repurposed while the Choose Box interaction is active.",
+      "The synthetic CURSOR_AREA_IN_CHOOSE_BOX state and its movement/coordinate/priority paths are removed.",
+      "Normal storage cursor visibility and logical position are preserved and restored when the chooser closes."
     ],
-    "next": "Remove the remaining legacy chooser cursor/control equivalent now that authentic HGSS navigation is live."
+    "next": "Choose Box control replacement is complete; continue with the next remaining storage UI role using authentic asset -> wire live -> remove legacy equivalent."
   },
   "navigation_controls": {
     "source_members": {
@@ -117,6 +117,6 @@
     "right_template": "ov14_021F81DC: x=156, y=28, animation=3",
     "export": "verified/choose_box_nav.png",
     "metadata": "verified/choose_box_nav.json",
-    "status": "wired live; legacy chooser cursor/control equivalent intentionally remains for the next cleanup step"
+    "status": "wired live; legacy chooser cursor/control equivalent removed"
   }
 }

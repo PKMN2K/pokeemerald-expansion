@@ -94,7 +94,7 @@
     ],
     "pixel_rule": "Exact NCGR+NCER+NCLR composite at 1:1 DS pixel scale; no redraw, resampling, recoloring, or synthetic pixels."
   },
-  "status": "wired live with verified normal and pressed/release animations",
+  "status": "wired live; legacy chooser cursor/control equivalent removed",
   "live_integration": {
     "renderer": "GBA OBJ sprites",
     "source_frame_size": [
@@ -118,6 +118,11 @@
     },
     "visible_bounds_match_hgss_templates": true,
     "input_behavior": "DPAD left/right starts the verified pressed frame, then returns to the corresponding normal frame.",
-    "cleanup_pending": "Remove the legacy chooser cursor/control equivalent in the next sequence step."
+    "legacy_equivalent_removed": [
+      "synthetic CURSOR_AREA_IN_CHOOSE_BOX state",
+      "legacy storage cursor movement to the box title",
+      "chooser-specific legacy cursor coordinate and priority handling",
+      "chooser input dependency on legacy cursor movement completion"
+    ]
   }
 }

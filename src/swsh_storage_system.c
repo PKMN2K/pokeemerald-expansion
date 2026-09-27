@@ -210,7 +210,6 @@ enum {
     CURSOR_AREA_IN_BOX,
     CURSOR_AREA_IN_PARTY,
     CURSOR_AREA_BOX_TITLE,
-    CURSOR_AREA_IN_CHOOSE_BOX,
 };
 #define CURSOR_AREA_IN_HAND CURSOR_AREA_BOX_TITLE // Alt name for cursor area used by Move Items
 
@@ -372,8 +371,8 @@ struct ChooseBoxMenu
     struct Sprite *monCountSprite;
     struct Sprite *navSprites[2];
     u8 curBox;
-    s8 savedCursorArea;
-    s8 savedCursorPosition;
+    bool8 active;
+    bool8 savedCursorInvisible;
     bool8 previewActive;
     bool8 cancelPending;
     u8 ALIGNED(4) monCountTiles[256];
@@ -1133,9 +1132,6 @@ static void FreeChooseBoxMenu(void)
 
 static u8 HandleChooseBoxMenuInput(void)
 {
-    if (UpdateCursorPos())
-        return BOXID_NONE_CHOSEN;
-
     if (sChooseBoxMenu->previewActive)
     {
         if (ScrollToBox())
@@ -1195,6 +1191,7 @@ static void ChooseBoxMenu_CreateSprites(u8 curBox)
     u8 spriteId;
 
     sChooseBoxMenu->curBox = curBox;
+    sChooseBoxMenu->active = TRUE;
     sChooseBoxMenu->previewActive = FALSE;
     sChooseBoxMenu->cancelPending = FALSE;
 
@@ -1215,10 +1212,13 @@ static void ChooseBoxMenu_CreateSprites(u8 curBox)
         StartSpriteAnim(sChooseBoxMenu->navSprites[1], HGSS_CHOOSE_BOX_NAV_RIGHT_NORMAL);
     }
 
+    // The old storage cursor is not part of HGSS's Choose Box controls.
+    // Keep its logical position intact and hide only its legacy visual while
+    // the authenticated HGSS left/right controls own this interaction.
     if (sStorage->cursorSprite)
     {
-        sStorage->cursorSprite->oam.priority = 1;
-        sStorage->cursorSprite->subpriority = 0;
+        sChooseBoxMenu->savedCursorInvisible = sStorage->cursorSprite->invisible;
+        sStorage->cursorSprite->invisible = TRUE;
     }
 
     if (sStorage->movingMonSprite)
@@ -1227,16 +1227,14 @@ static void ChooseBoxMenu_CreateSprites(u8 curBox)
         sStorage->movingMonSprite->subpriority = 1;
     }
 
-    sChooseBoxMenu->savedCursorArea = sCursorArea;
-    sChooseBoxMenu->savedCursorPosition = sCursorPosition;
-    sCursorArea = CURSOR_AREA_IN_CHOOSE_BOX;
-
     ChooseBoxMenu_UpdateHover();
 }
 
 static void ChooseBoxMenu_DestroySprites(void)
 {
     u8 i;
+
+    sChooseBoxMenu->active = FALSE;
 
     for (i = 0; i < ARRAY_COUNT(sChooseBoxMenu->navSprites); i++)
     {
@@ -1253,19 +1251,7 @@ static void ChooseBoxMenu_DestroySprites(void)
         sChooseBoxMenu->monCountSprite = NULL;
     }
     if (sStorage->cursorSprite)
-    {
-        sStorage->cursorSprite->oam.priority = 1;
-        sStorage->cursorSprite->subpriority = 2;
-
-        sCursorArea = sChooseBoxMenu->savedCursorArea;
-        sCursorPosition = sChooseBoxMenu->savedCursorPosition;
-        sStorage->cursorVerticalWrap = 0;
-        sStorage->cursorHorizontalWrap = 0;
-        sStorage->cursorFlipTimer = 0;
-        InitNewCursorPos(sCursorArea, sCursorPosition);
-        InitCursorMove();
-        StartSpriteAnim(sStorage->cursorSprite, CURSOR_ANIM_MAIN);
-    }
+        sStorage->cursorSprite->invisible = sChooseBoxMenu->savedCursorInvisible;
     if (sStorage->movingMonSprite)
     {
         sStorage->movingMonSprite->callback = SpriteCB_HeldMon;
@@ -1303,14 +1289,6 @@ static void ChooseBoxMenu_MoveCursor(s8 delta)
 
 static void ChooseBoxMenu_UpdateHover(void)
 {
-    if (sStorage->cursorSprite)
-    {
-        sStorage->cursorVerticalWrap = 0;
-        sStorage->cursorHorizontalWrap = 0;
-        sStorage->cursorFlipTimer = 0;
-        SetCursorPosition(CURSOR_AREA_IN_CHOOSE_BOX, sChooseBoxMenu->curBox);
-    }
-
     ChooseBoxMenu_PrintInfo();
 }
 
@@ -5267,7 +5245,7 @@ static void DrawHgssStoragePartySlots(void)
 
 static void UpdateHgssStorageSlotHighlight(void)
 {
-    if (sCursorArea == CURSOR_AREA_IN_CHOOSE_BOX)
+    if (sChooseBoxMenu != NULL && sChooseBoxMenu->active)
         return;
 
     DrawHgssStoragePartySlots();
@@ -5358,7 +5336,7 @@ static void UpdateBoxTitle(u8 boxId)
     RenderBoxTitleCentered(GetBoxNamePtr(boxId));
     LoadSpriteSheet(&spriteSheet);
 
-    if (sCursorArea == CURSOR_AREA_BOX_TITLE || sCursorArea == CURSOR_AREA_IN_CHOOSE_BOX)
+    if (sCursorArea == CURSOR_AREA_BOX_TITLE || (sChooseBoxMenu != NULL && sChooseBoxMenu->active))
     {
         colors[0] = BOX_TITLE_SHADOW_HOVER;
         colors[1] = BOX_TITLE_TEXT_HOVER;
@@ -5573,7 +5551,7 @@ static void InitBoxTitle(u8 boxId)
 
     CpuCopy16(sCursor_Pal, sStorage->boxTitlePal, sizeof(sStorage->boxTitlePal));
 
-    if (sCursorArea == CURSOR_AREA_BOX_TITLE || sCursorArea == CURSOR_AREA_IN_CHOOSE_BOX)
+    if (sCursorArea == CURSOR_AREA_BOX_TITLE || (sChooseBoxMenu != NULL && sChooseBoxMenu->active))
     {
         sStorage->boxTitlePal[13] = BOX_TITLE_FRAME_HOVER;
         sStorage->boxTitlePal[14] = BOX_TITLE_SHADOW_HOVER;
@@ -5611,7 +5589,7 @@ static void InitBoxTitle(u8 boxId)
 static void UpdateBoxTitlePalette(void)
 {
     u16 colors[3];
-    if (sCursorArea == CURSOR_AREA_BOX_TITLE || sCursorArea == CURSOR_AREA_IN_CHOOSE_BOX)
+    if (sCursorArea == CURSOR_AREA_BOX_TITLE || (sChooseBoxMenu != NULL && sChooseBoxMenu->active))
     {
         colors[0] = BOX_TITLE_FRAME_HOVER;
         colors[1] = BOX_TITLE_SHADOW_HOVER;
@@ -5718,11 +5696,6 @@ static void GetCursorCoordsByPos(u8 cursorArea, u8 cursorPosition, u16 *x, u16 *
         *y = cursorPosition * 24 + 8;
         break;
     case CURSOR_AREA_BOX_TITLE:
-        *x = 152;
-        *y = 10;
-        break;
-    case CURSOR_AREA_IN_CHOOSE_BOX:
-        // HGSS destination selection is title-level rather than an all-box grid.
         *x = 152;
         *y = 10;
         break;
@@ -5902,7 +5875,6 @@ static void SetCursorPosition(u8 newCursorArea, u8 newCursorPosition)
     {
     case CURSOR_AREA_IN_PARTY:
     case CURSOR_AREA_BOX_TITLE:
-    case CURSOR_AREA_IN_CHOOSE_BOX:
         sStorage->cursorSprite->oam.priority = 1;
         break;
     case CURSOR_AREA_IN_BOX:
@@ -5937,8 +5909,6 @@ static void DoCursorNewPosUpdate(void)
 
     switch (sCursorArea)
     {
-    case CURSOR_AREA_IN_CHOOSE_BOX:
-        break;
     case CURSOR_AREA_BOX_TITLE:
         TryRefreshDisplayMon();
         UpdateBoxTitlePalette();

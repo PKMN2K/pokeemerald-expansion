@@ -86,11 +86,12 @@ animation 2 to cell 1 then cell 0 (left press/release), animation 3 to cell 2
 `verified/choose_box_nav.png` is a lossless 1:1 four-frame export of those
 24x24 authentic HGSS cells in the order left-normal, left-pressed,
 right-normal, right-pressed. No redraw, resampling, recoloring, or synthetic
-pixels are present. The verified controls are now wired live as GBA OBJ sprites. The four 24x24
-HGSS frames are copied 1:1 into transparent 32x32 hardware cells; left/right
-input uses the verified press/release frames. Removal of the remaining legacy
-chooser cursor/control equivalent is intentionally deferred to the next
-sequence step.
+pixels are present. The verified controls are wired live as GBA OBJ sprites. The four 24x24 HGSS
+frames are copied 1:1 into transparent 32x32 hardware cells; left/right input
+uses the verified press/release frames. The former synthetic Choose Box cursor
+area and the repurposed legacy storage cursor path have now been removed. The
+normal storage cursor is only hidden/restored around this interaction and is no
+longer used as Choose Box control chrome.
 The machine-readable records are `verified/choose_box_native.json` and
 `verified/choose_box_nav.json`.
 
