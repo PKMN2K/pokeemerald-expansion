@@ -43,6 +43,25 @@
     "asset": "graphics/pokemon_storage/swsh/markings_menu.png",
     "live_code": "OpenMonMarkingsMenu_SwSh / sSpriteSheet_MarkingsMenu"
   },
-  "status": "authentic HGSS markings menu identified and imported; live wiring deferred",
-  "next": "Wire verified/markings_menu.png live in place of the SWSH markings menu, then remove the legacy markings-menu asset/equivalent."
+  "status": "wired live: authentic HGSS markings panel is the modal background; legacy SWSH mark-state/cursor sprites remain pending cleanup",
+  "next": "Remove/replace remaining SWSH markings-menu mark-state and cursor sprites while preserving the four-bit markings behavior.",
+  "live_integration": {
+    "renderer": "BG0 tile composition",
+    "destination": {
+      "left_tile": 19,
+      "top_tile": 2,
+      "width_tiles": 11,
+      "height_tiles": 15
+    },
+    "base_tile": 256,
+    "palette_bank": 15,
+    "source_rows": [
+      "0-6",
+      "10-17"
+    ],
+    "omitted_native_rows": "7-9 (star/diamond), because BoxPokemon persists four marking bits",
+    "pixel_rule": "whole authentic 8x8 source tiles copied 1:1; no redraw, resampling, recoloring, or synthetic chrome",
+    "legacy_window_sprites_drawn": false,
+    "legacy_dynamic_mark_cursor_sprites_drawn": true
+  }
 }

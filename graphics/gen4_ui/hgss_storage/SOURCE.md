@@ -121,9 +121,13 @@ verification against the user's extracted `/a/0/1/9` gallery shows the native
 88x144 panel with the six HGSS marking buttons and the two action bars.
 `verified/markings_menu.png` is a lossless 1:1 composite re-indexed to a
 4bpp-compatible PNG without redrawing, resampling, or color changes. The current
-SWSH markings menu remains live intentionally; wiring this authentic panel is
-the next sequence step, and the legacy equivalent will not be removed until the
-HGSS panel is live.
+The authentic panel is now wired live on BG0. Because the current BoxPokemon
+layout persists four marking bits, the live composition uses authentic source
+rows 0-6 (circle/triangle and square/heart) plus authentic rows 10-17 (the two
+action bars), omitting only the unsupported star/diamond row without redrawing
+or resampling any pixels. The old SWSH window sprites are no longer drawn, but
+the legacy SWSH mark-state and cursor sprites remain temporarily on top for the
+next cleanup step.
 The machine-readable record is `verified/markings_menu.json`.
 
 Do not restore compatibility fallbacks that draw approximated HGSS chrome.

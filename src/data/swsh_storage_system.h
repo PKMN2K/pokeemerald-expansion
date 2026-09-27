@@ -74,6 +74,12 @@ static const u16 sHgssStorageCursor_Pal[] = INCGFX_U16("graphics/gen4_ui/hgss_st
 
 static const u32 sGenderIcons_Gfx[]           = INCGFX_U32("graphics/pokemon_storage/swsh/gender_icons.png", ".4bpp.smol");
 static const u16 sMarkings_Pal[]              = INCGFX_U16("graphics/pokemon_storage/swsh/markings.pal", ".gbapal");
+
+// Authentic HGSS markings panel: /a/0/1/9 NSCR 10 + NCGR 14 + NCLR 4.
+static const u32 sHgssMarkingsMenu_Gfx[]       = INCGFX_U32("graphics/gen4_ui/hgss_storage/verified/markings_menu.png", ".4bpp");
+static const u16 sHgssMarkingsMenu_Pal[]       = INCGFX_U16("graphics/gen4_ui/hgss_storage/verified/markings_menu.png", ".gbapal");
+
+// Legacy dynamic controls remain until the following cleanup step.
 static const u32 sMarkingsMenu_Gfx[]          = INCGFX_U32("graphics/pokemon_storage/swsh/markings_menu.png", ".4bpp.smol");
 static const u32 sShinyIcon_Gfx[]             = INCGFX_U32("graphics/pokemon_storage/swsh/shiny_icon.png", ".4bpp.smol");
 static const u32 sPokerusIcon_Gfx[]           = INCGFX_U32("graphics/pokemon_storage/swsh/pokerus_icon.png", ".4bpp.smol");
