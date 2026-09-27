@@ -96,6 +96,17 @@ longer used as Choose Box control chrome.
 The machine-readable records are `verified/choose_box_native.json` and
 `verified/choose_box_nav.json`.
 
+The normal HGSS Storage hand pointer has now been identified at the asset
+layer from the same members 66-69 sprite bundle. Overlay 14 drives sprite slot
+9 with NANR animation 14 while the cursor is over the six box columns. That
+animation alternates NCER cells 13 and 14 for 20 ticks each. The NCER CEBK
+declares `shift=1`, so the OAM tile indices are shifted before reading NCGR
+member 66. `verified/cursor.png` is an indexed 64x32 two-frame export of those
+two native 32x32 cells. Live replacement of the remaining SWSH storage cursor
+is intentionally deferred to the next sequence step; the legacy cursor is not
+removed until the authentic pointer is live.
+The machine-readable record is `verified/cursor.json`.
+
 Do not restore compatibility fallbacks that draw approximated HGSS chrome.
 If an authentic role is not available yet, leave that HGSS layer empty and
 preserve only the underlying functional UI until the real asset is identified.
