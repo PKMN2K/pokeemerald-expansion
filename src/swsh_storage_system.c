@@ -242,7 +242,6 @@ enum {
     PALTAG_ITEM_ICON_0,
     PALTAG_ITEM_ICON_1, // Used implicitly in CreateItemIconSprites
     PALTAG_ITEM_ICON_2, // Used implicitly in CreateItemIconSprites
-    PALTAG_MARKING_MENU,
     PALTAG_LIST_MENU_SCROLL_ARROW,
     PALTAG_HGSS_CHOOSE_BOX_NAV,
     PALTAG_HGSS_STORAGE_CURSOR,
@@ -260,7 +259,6 @@ enum {
     GFXTAG_ITEM_ICON_2, // Used implicitly in CreateItemIconSprites
     GFXTAG_BOX_SELECTION_PER_30,
     GFXTAG_LIST_MENU_ARROW,
-    GFXTAG_MARKING_MENU,
     GFXTAG_MARKING_COMBO,
     GFXTAG_MON_ICON,
 	GFXTAG_PKRS_ICON,
@@ -417,13 +415,12 @@ struct DisplayMonInfo
 	bool32 hasPokerus;
 };
 
-struct MarkingsMenuSwSh
+struct HgssMarkingsMenu
 {
-    u8 markings; // bit flags
-    s8 cursorPos; // 0-3 for the 4 markings
+    u8 markings;
+    s8 cursorPos;
     bool8 markingsArray[NUM_MON_MARKINGS];
-    struct Sprite *windowSprites[3]; // left, middle, right
-    struct Sprite *markingSprites[NUM_MON_MARKINGS];
+    bool8 savedStorageCursorInvisible;
     struct Sprite *cursorSprite;
 };
 
@@ -509,7 +506,7 @@ struct PokemonStorageSystemData
     u8 shiftBoxId;
     struct Sprite *markingComboSprite;
     u16 *markingComboTilesPtr;
-    struct MarkingsMenuSwSh markMenuSwSh; // SwSh-style horizontal marking menu
+    struct HgssMarkingsMenu markMenuHgss;
     struct ChooseBoxMenu chooseBoxMenu;
     struct Pokemon movingMon;
     struct Pokemon tempMon;
@@ -592,7 +589,7 @@ EWRAM_DATA static u8 sMovingMonOrigBoxPos = 0;
 EWRAM_DATA static u8 sCursorMode = 0;
 EWRAM_DATA static bool8 sJustOpenedBag = 0;
 EWRAM_DATA static bool8 sRefreshDisplayMonGfx = FALSE;
-EWRAM_DATA static struct MarkingsMenuSwSh *sMarkMenu = NULL;
+EWRAM_DATA static struct HgssMarkingsMenu *sMarkMenu = NULL;
 
 // Main tasks
 static void Task_InitPokeStorage(u8);
@@ -2538,17 +2535,49 @@ static void Task_ReleaseMon(u8 taskId)
 }
 
 // ============================================================================
-// SwSh-style horizontal markings menu
+// Authentic HGSS markings menu
 // ============================================================================
 
-#define HGSS_MARKINGS_MENU_LEFT       19
-#define HGSS_MARKINGS_MENU_TOP        2
-#define HGSS_MARKINGS_MENU_WIDTH      11
-#define HGSS_MARKINGS_MENU_BASE_TILE  256
-#define HGSS_MARKINGS_MENU_PAL_BANK   15
+#define HGSS_MARKINGS_MENU_LEFT              19
+#define HGSS_MARKINGS_MENU_TOP               2
+#define HGSS_MARKINGS_MENU_WIDTH             11
+#define HGSS_MARKINGS_MENU_BASE_TILE         256
+#define HGSS_MARKINGS_MENU_PAL_BANK          15
+#define HGSS_MARKINGS_MENU_SELECTED_PAL_BANK 12
 
 static const u8 sHgssMarkingsMenuMarkX[NUM_MON_MARKINGS] = {180, 180, 212, 212};
 static const u8 sHgssMarkingsMenuMarkY[NUM_MON_MARKINGS] = {36, 60, 36, 60};
+static const u8 sHgssMarkingsMenuButtonLeft[NUM_MON_MARKINGS] = {1, 1, 6, 6};
+static const u8 sHgssMarkingsMenuButtonTop[NUM_MON_MARKINGS] = {1, 4, 1, 4};
+
+static void UpdateHgssMarkingsMenuStates(void)
+{
+    u16 *tilemap = sStorage->infoTilemapBuffer;
+    u8 i;
+    u8 x;
+    u8 y;
+
+    for (i = 0; i < NUM_MON_MARKINGS; i++)
+    {
+        u16 palette = sMarkMenu->markingsArray[i]
+                    ? HGSS_MARKINGS_MENU_SELECTED_PAL_BANK
+                    : HGSS_MARKINGS_MENU_PAL_BANK;
+
+        for (y = 0; y < 3; y++)
+        {
+            for (x = 0; x < 4; x++)
+            {
+                u16 *entry = &tilemap[
+                    (HGSS_MARKINGS_MENU_TOP + sHgssMarkingsMenuButtonTop[i] + y) * 32
+                    + HGSS_MARKINGS_MENU_LEFT + sHgssMarkingsMenuButtonLeft[i] + x];
+
+                *entry = (*entry & 0x0FFF) | (palette << 12);
+            }
+        }
+    }
+
+    ScheduleBgCopyTilemapToVram(0);
+}
 
 static void DrawHgssMarkingsMenuPanel(void)
 {
@@ -2559,10 +2588,12 @@ static void DrawHgssMarkingsMenuPanel(void)
 
     LoadBgTiles(0, sHgssMarkingsMenu_Gfx, sizeof(sHgssMarkingsMenu_Gfx), HGSS_MARKINGS_MENU_BASE_TILE);
     LoadPalette(sHgssMarkingsMenu_Pal, BG_PLTT_ID(HGSS_MARKINGS_MENU_PAL_BANK), PLTT_SIZE_4BPP);
+    LoadPalette(sHgssMarkingsMenuSelected_Pal,
+                BG_PLTT_ID(HGSS_MARKINGS_MENU_SELECTED_PAL_BANK),
+                PLTT_SIZE_4BPP);
 
-    // BoxPokemon persists four marking bits. Recompose only authentic whole
-    // tiles: rows 0-6 contain circle/triangle + square/heart; rows 10-17 are
-    // the two HGSS action bars. Rows 7-9 (star/diamond) remain unsupported.
+    // BoxPokemon persists four marking bits. Use only complete authentic rows:
+    // 0-6 contain circle/triangle + square/heart; 10-17 are the action bars.
     for (srcRow = 0; srcRow <= 6; srcRow++, dstRow++)
     {
         for (x = 0; x < HGSS_MARKINGS_MENU_WIDTH; x++)
@@ -2579,6 +2610,7 @@ static void DrawHgssMarkingsMenuPanel(void)
                 | (HGSS_MARKINGS_MENU_PAL_BANK << 12);
     }
 
+    UpdateHgssMarkingsMenuStates();
     sStorage->inMenuInteraction = TRUE;
     sStorage->bg0_Y = 0;
     SetGpuReg(REG_OFFSET_BG0VOFS, 0);
@@ -2599,58 +2631,47 @@ static void SetHgssMarkingsMenuCursorPos(void)
 {
     if (sMarkMenu->cursorSprite != NULL)
     {
-        sMarkMenu->cursorSprite->x = sHgssMarkingsMenuMarkX[sMarkMenu->cursorPos] - 12;
-        sMarkMenu->cursorSprite->y = sHgssMarkingsMenuMarkY[sMarkMenu->cursorPos];
+        // The verified HGSS storage hand points left; place it immediately to
+        // the right of the active native marking button.
+        sMarkMenu->cursorSprite->x = sHgssMarkingsMenuMarkX[sMarkMenu->cursorPos] + 12;
+        sMarkMenu->cursorSprite->y = sHgssMarkingsMenuMarkY[sMarkMenu->cursorPos] - 4;
     }
 }
 
-static void OpenMonMarkingsMenu_SwSh(u8 markings, s16 x, s16 y)
+static void OpenMonMarkingsMenu_Hgss(u8 markings)
 {
-    u8 i, spriteId;
-
-    (void)x;
-    (void)y;
+    u8 i;
+    u8 spriteId;
 
     sMarkMenu->cursorPos = 0;
     sMarkMenu->markings = markings;
     for (i = 0; i < NUM_MON_MARKINGS; i++)
         sMarkMenu->markingsArray[i] = (markings >> i) & 1;
 
-    DrawHgssMarkingsMenuPanel();
-
-    // The HGSS panel is now the live window. The old SWSH sheet remains only
-    // for its mark-state and cursor sprites until the next cleanup step.
-    LoadCompressedSpriteSheet(&sSpriteSheet_MarkingsMenu);
-    for (i = 0; i < ARRAY_COUNT(sMarkMenu->windowSprites); i++)
-        sMarkMenu->windowSprites[i] = NULL;
-
-    for (i = 0; i < NUM_MON_MARKINGS; i++)
+    sMarkMenu->savedStorageCursorInvisible = TRUE;
+    if (sStorage->cursorSprite != NULL)
     {
-        spriteId = CreateSprite(&sSpriteTemplate_MarkingsMenu_Marks,
-                                sHgssMarkingsMenuMarkX[i],
-                                sHgssMarkingsMenuMarkY[i], 2);
-        if (spriteId != MAX_SPRITES)
-        {
-            sMarkMenu->markingSprites[i] = &gSprites[spriteId];
-            StartSpriteAnim(&gSprites[spriteId], i * 2 + sMarkMenu->markingsArray[i]);
-        }
-        else
-            sMarkMenu->markingSprites[i] = NULL;
+        sMarkMenu->savedStorageCursorInvisible = sStorage->cursorSprite->invisible;
+        sStorage->cursorSprite->invisible = TRUE;
     }
 
-    spriteId = CreateSprite(&sSpriteTemplate_MarkingsMenu_Cursor,
-                            sHgssMarkingsMenuMarkX[0] - 12,
-                            sHgssMarkingsMenuMarkY[0], 1);
+    DrawHgssMarkingsMenuPanel();
+
+    spriteId = CreateSprite(&sSpriteTemplate_Cursor, 0, 0, 1);
     if (spriteId != MAX_SPRITES)
     {
         sMarkMenu->cursorSprite = &gSprites[spriteId];
-        StartSpriteAnim(&gSprites[spriteId], 0);
+        sMarkMenu->cursorSprite->oam.paletteNum = IndexOfSpritePaletteTag(PALTAG_HGSS_STORAGE_CURSOR);
+        sMarkMenu->cursorSprite->x2 = 6;
+        sMarkMenu->cursorSprite->y2 = 10;
+        StartSpriteAnim(sMarkMenu->cursorSprite, CURSOR_ANIM_MAIN);
+        SetHgssMarkingsMenuCursorPos();
     }
     else
         sMarkMenu->cursorSprite = NULL;
 }
 
-static bool8 HandleMonMarkingsMenuInput_SwSh(void)
+static bool8 HandleMonMarkingsMenuInput_Hgss(void)
 {
     u8 i;
 
@@ -2673,8 +2694,7 @@ static bool8 HandleMonMarkingsMenuInput_SwSh(void)
     {
         PlaySE(SE_SELECT);
         sMarkMenu->markingsArray[sMarkMenu->cursorPos] = !sMarkMenu->markingsArray[sMarkMenu->cursorPos];
-        StartSpriteAnim(sMarkMenu->markingSprites[sMarkMenu->cursorPos], 
-                       sMarkMenu->cursorPos * 2 + sMarkMenu->markingsArray[sMarkMenu->cursorPos]);
+        UpdateHgssMarkingsMenuStates();
         return TRUE;
     }
 
@@ -2684,41 +2704,22 @@ static bool8 HandleMonMarkingsMenuInput_SwSh(void)
         sMarkMenu->markings = 0;
         for (i = 0; i < NUM_MON_MARKINGS; i++)
             sMarkMenu->markings |= sMarkMenu->markingsArray[i] << i;
-        
         return FALSE;
     }
 
     return TRUE;
 }
 
-static void FreeMonMarkingsMenu_SwSh(void)
+static void FreeMonMarkingsMenu_Hgss(void)
 {
-    u8 i;
-    FreeSpriteTilesByTag(GFXTAG_MARKING_MENU);
-
-    for (i = 0; i < 3; i++)
-    {
-        if (sMarkMenu->windowSprites[i])
-        {
-            DestroySprite(sMarkMenu->windowSprites[i]);
-            sMarkMenu->windowSprites[i] = NULL;
-        }
-    }
-
-    for (i = 0; i < NUM_MON_MARKINGS; i++)
-    {
-        if (sMarkMenu->markingSprites[i])
-        {
-            DestroySprite(sMarkMenu->markingSprites[i]);
-            sMarkMenu->markingSprites[i] = NULL;
-        }
-    }
-
-    if (sMarkMenu->cursorSprite)
+    if (sMarkMenu->cursorSprite != NULL)
     {
         DestroySprite(sMarkMenu->cursorSprite);
         sMarkMenu->cursorSprite = NULL;
     }
+
+    if (sStorage->cursorSprite != NULL)
+        sStorage->cursorSprite->invisible = sMarkMenu->savedStorageCursorInvisible;
 }
 
 static void Task_ShowMarkMenu(u8 taskId)
@@ -2726,17 +2727,16 @@ static void Task_ShowMarkMenu(u8 taskId)
     switch (sStorage->state)
     {
     case 0:
-        sMarkMenu = &sStorage->markMenuSwSh;
+        sMarkMenu = &sStorage->markMenuHgss;
         sMarkMenu->markings = sStorage->displayMon.markings;
         HideInfoPanelSprites();
-        // Authentic HGSS panel placement is fixed by DrawHgssMarkingsMenuPanel.
-        OpenMonMarkingsMenu_SwSh(sStorage->displayMon.markings, 0, 0);
+        OpenMonMarkingsMenu_Hgss(sStorage->displayMon.markings);
         sStorage->state++;
         break;
     case 1:
-        if (!HandleMonMarkingsMenuInput_SwSh())
+        if (!HandleMonMarkingsMenuInput_Hgss())
         {
-            FreeMonMarkingsMenu_SwSh();
+            FreeMonMarkingsMenu_Hgss();
             SetMonMarkings(sMarkMenu->markings);
             RefreshDisplayMonData();
             RestoreHgssMarkingsMenuPanel();

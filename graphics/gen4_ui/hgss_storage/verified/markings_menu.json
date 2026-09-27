@@ -37,16 +37,13 @@
     ],
     "png_color_type": "indexed_palette",
     "colors": 9,
-    "pixel_rule": "Lossless 1:1 composite from NSCR 10 + NCGR 14 + NCLR 4; re-indexed only for GBA 4bpp compatibility, with no redraw, resampling, or color changes."
+    "pixel_rule": "Lossless 1:1 composite from NSCR 10 + NCGR 14 + NCLR 4; re-indexed only for GBA 4bpp compatibility, with no redraw, resampling, or color changes.",
+    "png_crc_valid": true
   },
-  "current_legacy_equivalent": {
-    "asset": "graphics/pokemon_storage/swsh/markings_menu.png",
-    "live_code": "OpenMonMarkingsMenu_SwSh / sSpriteSheet_MarkingsMenu"
-  },
-  "status": "wired live: authentic HGSS markings panel is the modal background; legacy SWSH mark-state/cursor sprites remain pending cleanup",
-  "next": "Remove/replace remaining SWSH markings-menu mark-state and cursor sprites while preserving the four-bit markings behavior.",
+  "status": "complete: authentic HGSS markings panel and controls live; legacy SWSH markings-menu equivalent removed",
+  "next": "Continue to the next remaining Storage UI role using authentic HGSS asset -> wire live -> remove legacy equivalent.",
   "live_integration": {
-    "renderer": "BG0 tile composition",
+    "renderer": "BG0 tile composition plus verified HGSS storage-hand OBJ cursor",
     "destination": {
       "left_tile": 19,
       "top_tile": 2,
@@ -54,14 +51,25 @@
       "height_tiles": 15
     },
     "base_tile": 256,
-    "palette_bank": 15,
+    "base_palette_bank": 15,
+    "active_mark_palette_bank": 12,
+    "active_mark_palette_source": "authentic /a/0/1/9 member 4 NCLR bank 3, reordered only to match verified PNG palette indices",
     "source_rows": [
       "0-6",
       "10-17"
     ],
-    "omitted_native_rows": "7-9 (star/diamond), because BoxPokemon persists four marking bits",
+    "omitted_native_rows": "7-9 star/diamond; current BoxPokemon persists four marking bits",
     "pixel_rule": "whole authentic 8x8 source tiles copied 1:1; no redraw, resampling, recoloring, or synthetic chrome",
-    "legacy_window_sprites_drawn": false,
-    "legacy_dynamic_mark_cursor_sprites_drawn": true
+    "cursor": "verified authentic HGSS storage hand from /a/0/1/9 members 66-69",
+    "legacy_asset_removed": true,
+    "legacy_equivalent_removed": [
+      "graphics/pokemon_storage/swsh/markings_menu.png",
+      "legacy markings menu sprite sheet",
+      "legacy markings window sprites",
+      "legacy marking-state sprites",
+      "legacy markings cursor sprite/template",
+      "GFXTAG_MARKING_MENU",
+      "PALTAG_MARKING_MENU"
+    ]
   }
 }
