@@ -61,10 +61,9 @@ static const u32 sMonInfo_Gfx[]               = INCGFX_U32("graphics/pokemon_sto
 static const u32 sMonInfo_Tilemap[]           = INCGFX_U32("graphics/pokemon_storage/swsh/mon_info.bin", ".smolTM");
 static const u16 sTextWindows_Pal[]           = INCGFX_U16("graphics/pokemon_storage/swsh/text_windows.pal", ".gbapal");
 
-// Authentic HGSS role assets are populated only after visual verification of
-// the user's /a/0/1/9 archive. A zero descriptor keeps the compatibility
-// fallback active without inventing or redistributing Nintendo asset data.
-static const struct HgssStorageBgAsset sHgssStorageBoxGridAsset = {0};
+// Generated from a visually verified HGSS /a/0/1/9 role binding.
+// The checked-in placeholder contains a zero descriptor until that verification exists.
+#include "data/hgss_storage_box_grid.inc.h"
 
 static const u32 sBoxTitleArrow_Gfx[]         = INCGFX_U32("graphics/pokemon_storage/swsh/box_title_arrow.png", ".4bpp.smol");
 static const u32 sChooseBoxMenu_Gfx[]         = INCGFX_U32("graphics/pokemon_storage/swsh/choose_box_menu.png", ".4bpp.smol");
