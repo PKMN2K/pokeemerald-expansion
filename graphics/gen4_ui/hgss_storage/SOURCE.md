@@ -162,11 +162,16 @@ The GBA display exposes 30 tile columns rather than the DS screen's 32. The live
 renderer therefore preserves source columns 0 and 31 (both native rounded edges)
 and uses 28 of the identical interior source columns, omitting only two repeated
 interior columns. No source pixel is redrawn, resampled, recolored, or
-approximated. `WIN_MESSAGE` now overlays text inside that authentic panel using
-the panel's own cream/dark/gray palette indices. The separate yes/no role is
-unchanged. The stale SWSH `message_window.png` remains in the tree and the
-Emerald standard border tiles remain loaded for the still-unconverted yes/no
-window; removal is intentionally deferred to the next pipeline phase.
+approximated. `WIN_MESSAGE` overlays text inside that authentic panel using the
+panel's own cream/dark/gray palette indices.
+
+The stale SWSH `graphics/pokemon_storage/swsh/message_window.png` file is now
+deleted, and `WIN_MESSAGE` no longer loads or clears an Emerald standard frame.
+The standard frame tiles at base tile 192 / palette 14 are still loaded directly
+onto BG0 because the separate yes/no and generic context-menu roles have not yet
+been converted; they are no longer associated with the HGSS message-window path.
+This completes the full authentic asset → wire live → remove legacy equivalent
+sequence for the Storage message window.
 
 Do not restore compatibility fallbacks that draw approximated HGSS chrome.
 If an authentic role is not available yet, leave that HGSS layer empty and

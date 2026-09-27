@@ -4292,7 +4292,9 @@ static void InitPokeStorageBg0(void)
 {
     SetGpuReg(REG_OFFSET_BG0CNT, BGCNT_PRIORITY(0) | BGCNT_CHARBASE(0) | BGCNT_SCREENBASE(29) | BGCNT_TXT256x512);
     SetBgTilemapBuffer(0, sStorage->infoTilemapBuffer);
-    LoadUserWindowBorderGfx(WIN_MESSAGE, 192, BG_PLTT_ID(14));
+    // Standard frame tiles remain only for the still-unconverted yes/no and
+    // generic context menus. The HGSS WIN_MESSAGE path does not use them.
+    LoadUserWindowBorderGfxOnBg(0, 192, BG_PLTT_ID(14));
     RestoreHgssMonInfoPanel();
     sStorage->bg0_Y = 0;
     UpdateMonInfoTilemap();
@@ -4453,7 +4455,7 @@ static void ShowYesNoWindow(s8 cursorPos)
 
 static void ClearBottomWindow(void)
 {
-    ClearStdWindowAndFrameToTransparent(WIN_MESSAGE, FALSE);
+    ClearWindowTilemap(WIN_MESSAGE);
 	// Reinitialize the authentic HGSS info-panel surface.
     RestoreHgssMonInfoPanel();
     UpdateMonInfoTilemap();

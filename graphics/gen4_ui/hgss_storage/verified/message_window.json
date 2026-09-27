@@ -43,13 +43,14 @@
     "pixel_rule": "Lossless 1:1 re-index of the verified NSCR 11 + NCGR 14 + NCLR 4 composite; no crop, redraw, resampling, or color changes."
   },
   "current_live_equivalent": {
-    "code": "WIN_MESSAGE -> LoadUserWindowBorderGfx(WIN_MESSAGE, 192, BG_PLTT_ID(14)) -> PrintMessage()",
-    "visual_source": "engine-standard Emerald window frame tiles",
+    "status": "removed",
+    "former_code": "WIN_MESSAGE -> LoadUserWindowBorderGfx(WIN_MESSAGE, 192, BG_PLTT_ID(14))",
+    "former_visual_source": "engine-standard Emerald window frame tiles",
     "stale_swsh_asset": "graphics/pokemon_storage/swsh/message_window.png",
-    "stale_swsh_asset_live": false
+    "stale_swsh_asset_status": "removed"
   },
-  "status": "wired live: authentic HGSS Storage message bar now renders behind WIN_MESSAGE; legacy cleanup deferred",
-  "next": "Remove the stale SWSH graphics/pokemon_storage/swsh/message_window.png and detach WIN_MESSAGE from the Emerald-standard frame path without changing the separate yes/no window role.",
+  "status": "complete: authentic HGSS Storage message bar live; stale SWSH message asset and WIN_MESSAGE Emerald-frame dependency removed",
+  "next": "Continue to the next remaining Storage UI role using authentic HGSS asset -> wire live -> remove legacy equivalent.",
   "live_integration": {
     "renderer": "BG0 tile composition + WIN_MESSAGE text overlay",
     "source": "verified/message_window.png (NSCR 11 + NCGR 14 + NCLR 4)",
@@ -80,7 +81,9 @@
     },
     "yes_no_role_unchanged": true,
     "emerald_border_tiles_still_loaded_for_yes_no": true,
-    "stale_swsh_message_asset_still_present": true,
-    "stale_swsh_message_asset_live": false
+    "stale_swsh_message_asset_still_present": false,
+    "stale_swsh_message_asset_live": false,
+    "emerald_border_loader": "LoadUserWindowBorderGfxOnBg(0, 192, BG_PLTT_ID(14)) for yes/no and generic context menus only",
+    "win_message_uses_emerald_frame": false
   }
 }
