@@ -1,0 +1,54 @@
+{
+  "role": "yes_no",
+  "classification": "static_ncgr_nclr_nscr_composition",
+  "source_archive": "/a/0/1/9",
+  "source_kind": "nds_rom",
+  "archive_sha256": "f7a1a97638959a685719049a0b780686edb68704777fead790b230e10ed1df4a",
+  "source_members": {
+    "nscr": {
+      "index": 12,
+      "raw_sha256": "a120fe4187aafb38a30224584702b862f0bc09f6141d7b0be256b5e9917a8e1c",
+      "decoded_sha256": "2a740f145784ca5ea5957c8b8940a3b9aae56444913a3dbacdab8c48e549e4de"
+    },
+    "ncgr": {
+      "index": 14,
+      "raw_sha256": "ee815971b93b9f2ad99009fef4b7e2313eb6564b1ba0b570b612aaa4969453af",
+      "decoded_sha256": "afbfab4897a5f39aa96b6030877d243d0a67d8bd18f9a7295385f2c7feeb0651"
+    },
+    "nclr": {
+      "index": 4,
+      "raw_sha256": "aff0f6a18a333e68f1d6094d06e161fa41192b882f432ae615537c37f164b20b",
+      "decoded_sha256": "aff0f6a18a333e68f1d6094d06e161fa41192b882f432ae615537c37f164b20b"
+    }
+  },
+  "visual_verification": {
+    "extracted_reference": "PC_Box/screens/member_012_screen__tiles_014__pal_004.png",
+    "reference_png_sha256": "bc90a30e9e35f0097f552f34b99cfa1240f2492512b7dab390292048900311a8",
+    "dimensions": [
+      256,
+      56
+    ],
+    "content": "native HGSS Storage rounded full-width confirmation/choice panel with blank interior for runtime text/options",
+    "binding_basis": "visual + structural: follows the verified message-bar NSCR 11 in the same NCGR 14/NCLR 4 family, expands to the 7-tile-high confirmation surface, and contains no baked labels so Yes/No text remains runtime-rendered"
+  },
+  "export": {
+    "file": "yes_no.png",
+    "sha256": "d87ce52c9eef2f9da5f3ab580cf9d1d9ffbed34852c9d72194fd0c31010c6f92",
+    "size": [
+      256,
+      56
+    ],
+    "png_color_type": "indexed_palette",
+    "colors": 5,
+    "png_bit_depth": 4,
+    "pixel_rule": "Lossless 1:1 re-index of NSCR 12 + NCGR 14 + NCLR 4; no crop, redraw, resampling, or color changes."
+  },
+  "current_live_equivalent": {
+    "code": "ShowYesNoWindow() -> CreateYesNoMenu(&sYesNoWindowTemplate, 192, 14, 0)",
+    "visual_source": "engine-standard Emerald frame tiles at BG tile 192 / palette 14",
+    "shared_with": "generic Storage context menus",
+    "status": "still live"
+  },
+  "status": "authentic HGSS yes/no confirmation panel identified and imported; live wiring deferred",
+  "next": "Wire verified/yes_no.png live for ShowYesNoWindow while leaving generic context menus on their existing frame path; then detach the yes/no role from the Emerald frame equivalent."
+}

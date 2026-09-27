@@ -173,6 +173,22 @@ been converted; they are no longer associated with the HGSS message-window path.
 This completes the full authentic asset → wire live → remove legacy equivalent
 sequence for the Storage message window.
 
+The next verified static role is the native HGSS Storage confirmation /
+Yes-No panel. Visual and structural verification of the extracted
+`/a/0/1/9` family identifies NSCR 12 + NCGR 14 + NCLR 4 as the 256x56
+rounded full-width choice surface immediately following the verified NSCR 11
+message bar. Its interior is intentionally blank because the choice labels are
+runtime-rendered. `verified/yes_no.png` preserves the exact source pixels and
+five source colors as a 4bpp-compatible indexed PNG with no crop, redraw,
+resampling, or recoloring. The binding basis and archive/member hashes are
+recorded in `verified/yes_no.json`.
+
+This completes only the authentic-asset phase. The live
+`ShowYesNoWindow() -> CreateYesNoMenu(..., 192, 14, ...)` path still uses the
+Emerald-standard frame tiles, which are also shared by generic Storage context
+menus. Nothing in that live path is removed or changed until the next
+wire-live phase.
+
 Do not restore compatibility fallbacks that draw approximated HGSS chrome.
 If an authentic role is not available yet, leave that HGSS layer empty and
 preserve only the underlying functional UI until the real asset is identified.
