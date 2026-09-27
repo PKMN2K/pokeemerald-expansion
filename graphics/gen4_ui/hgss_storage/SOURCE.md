@@ -219,11 +219,16 @@ authentic top/bottom bands on-screen.
 
 The existing menu text, cursor, list-menu, and input systems remain functional.
 Their palette indices are mapped to RGB colors taken directly from NSCR 86's
-authentic palette; no new colors are introduced. For this wire-live phase the
-Emerald `DrawStdFrameWithCustomTileAndPalette(..., 192, 14)` call still runs
-first and its frame is immediately overwritten before presentation. The matching
-standard-frame clear and border resource loader are likewise retained until the
-next cleanup phase.
+authentic palette; no new colors are introduced.
+
+The Storage context-menu role is now fully detached from Emerald standard-frame
+plumbing. Both hidden `DrawStdFrameWithCustomTileAndPalette(..., 192, 14)`
+calls are removed, `RemoveMenu` clears the authentic HGSS footprint directly
+instead of calling the standard-frame eraser, and
+`LoadUserWindowBorderGfxOnBg(0, 192, BG_PLTT_ID(14))` is no longer loaded by
+Storage BG0. No Storage context-menu code depends on the legacy Emerald border
+tiles. This completes the full authentic asset → wire live → remove legacy
+equivalent sequence for the Storage context-menu frame.
 
 Do not restore compatibility fallbacks that draw approximated HGSS chrome.
 If an authentic role is not available yet, leave that HGSS layer empty and

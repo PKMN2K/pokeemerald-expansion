@@ -44,16 +44,17 @@
     "pixel_rule": "Lossless 1:1 re-index of NSCR 86 + NCGR 14 + NCLR 4; every RGB pixel preserved with no crop, redraw, resampling, or color changes."
   },
   "current_live_equivalent": {
-    "code": [
-      "CreateMainMenu(): DrawStdFrameWithCustomTileAndPalette(sStorage->menuWindowId, FALSE, 192, 14)",
-      "LoadMenu(): DrawStdFrameWithCustomTileAndPalette(sStorage->menuWindowId, FALSE, 192, 14)"
+    "status": "removed from Storage context-menu role",
+    "former_code": [
+      "DrawStdFrameWithCustomTileAndPalette(sStorage->menuWindowId, FALSE, 192, 14)",
+      "ClearStdWindowAndFrameToTransparent(sStorage->menuWindowId, TRUE)",
+      "LoadUserWindowBorderGfxOnBg(0, 192, BG_PLTT_ID(14))"
     ],
-    "visual_source": "engine-standard Emerald frame tiles at BG tile 192 / palette 14",
-    "frame_resource_loader": "LoadUserWindowBorderGfxOnBg(0, 192, BG_PLTT_ID(14))",
-    "status": "visually replaced; legacy frame draw/clear retained only for next cleanup phase"
+    "former_visual_source": "engine-standard Emerald frame tiles at BG tile 192 / palette 14",
+    "remaining_storage_users": "none"
   },
-  "status": "wired live: authentic HGSS Storage context-menu frame now replaces the visible Emerald frame in dynamic Storage menus; legacy standard-frame plumbing retained for cleanup",
-  "next": "Remove DrawStdFrameWithCustomTileAndPalette / ClearStdWindowAndFrameToTransparent and the now-context-only standard border loader from the Storage context-menu paths while preserving menu behavior.",
+  "status": "complete: authentic HGSS Storage context-menu frame live; Emerald standard-frame draw/clear and Storage border-resource loader removed",
+  "next": "Continue to the next remaining Storage UI role using authentic HGSS asset -> wire live -> remove legacy equivalent.",
   "live_integration": {
     "renderer": "dynamic BG0 composition from verified NSCR 86 tiles + existing window text/cursor",
     "source": "verified/context_menu.png (NSCR 86 + NCGR 14 + NCLR 4)",
@@ -78,8 +79,10 @@
       "wallpaper_menu": "existing right alignment retained"
     },
     "legacy_standard_frame_visible": false,
-    "legacy_standard_frame_plumbing_still_present": true,
+    "legacy_standard_frame_plumbing_still_present": false,
     "menu_text_input_behavior": "unchanged",
-    "main_field_pc_menu": "not part of this Storage-overlay role; unchanged"
+    "main_field_pc_menu": "not part of this Storage-overlay role; unchanged",
+    "storage_border_resource_loader_removed": true,
+    "cleanup": "authentic frame footprint cleared directly; functional window tilemap cleared/removed without standard-frame eraser"
   }
 }

@@ -4440,9 +4440,7 @@ static void InitPokeStorageBg0(void)
 {
     SetGpuReg(REG_OFFSET_BG0CNT, BGCNT_PRIORITY(0) | BGCNT_CHARBASE(0) | BGCNT_SCREENBASE(29) | BGCNT_TXT256x512);
     SetBgTilemapBuffer(0, sStorage->infoTilemapBuffer);
-    // Standard frame tiles remain only for still-unconverted generic context
-    // menus. HGSS message and Yes/No roles no longer use this frame path.
-    LoadUserWindowBorderGfxOnBg(0, 192, BG_PLTT_ID(14));
+    // Storage BG0 chrome is now sourced from verified HGSS assets only.
     RestoreHgssMonInfoPanel();
     sStorage->bg0_Y = 0;
     UpdateMonInfoTilemap();
@@ -4695,7 +4693,6 @@ static void AddWallpaperMenu(void)
     sStorage->menuWindow.tilemapTop = 5;
     sStorage->menuWindowId = AddWindow(&sStorage->menuWindow);
     ClearMonInfoTilemap();
-    DrawStdFrameWithCustomTileAndPalette(sStorage->menuWindowId, FALSE, 192, 14);
     DrawHgssContextMenuFrame(sStorage->menuWindowId);
     PutWindowTilemap(sStorage->menuWindowId);
 
@@ -8254,7 +8251,6 @@ static void AddMenu(void)
     sStorage->menuWindowId = AddWindow(&sStorage->menuWindow);
     ClearMonInfoTilemap();
     ClearWindowTilemap(sStorage->menuWindowId);
-    DrawStdFrameWithCustomTileAndPalette(sStorage->menuWindowId, FALSE, 192, 14);
     DrawHgssContextMenuFrame(sStorage->menuWindowId);
     FillWindowPixelBuffer(sStorage->menuWindowId, PIXEL_FILL(1));
     PutWindowTilemap(sStorage->menuWindowId);
@@ -8312,9 +8308,10 @@ static s16 HandleMenuInput(void)
 static void RemoveMenu(void)
 {
     ClearHgssContextMenuFrame(sStorage->menuWindowId);
-    ClearStdWindowAndFrameToTransparent(sStorage->menuWindowId, TRUE);
+    ClearWindowTilemap(sStorage->menuWindowId);
     RemoveWindow(sStorage->menuWindowId);
     LoadPalette(sTextWindows_Pal, BG_PLTT_ID(15), sizeof(sTextWindows_Pal));
+    ScheduleBgCopyTilemapToVram(0);
     UpdateMonInfoTilemap();
 }
 
