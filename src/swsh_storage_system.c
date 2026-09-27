@@ -823,6 +823,7 @@ static struct BoxPokemon *GetCursorBoxMon(void);
 // Mon info panel
 static void ClearMonInfoTilemap(void);
 static void UpdateMonInfoTilemap(void);
+static void RestoreHgssMonInfoPanel(void);
 
 // Misc
 static void CreateMainMenu(u8, s16 *);
