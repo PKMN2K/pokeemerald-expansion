@@ -81,7 +81,7 @@
     }
   ],
   "integration_rule": "Do not synthesize or bind a static choose_box background. Recreate the HGSS interaction from verified dynamic components and runtime layout behavior.",
-  "status": "native composition stage 2 wired: candidate wallpaper/icon previews are live and commit only on confirmation",
+  "status": "native composition stage 2 live; authentic navigation/control asset identified and imported",
   "integration_stage": {
     "stage": 2,
     "behavior": [
@@ -90,6 +90,33 @@
       "A commits the already-previewed box without replaying the transition.",
       "B restores the original current box visually before canceling."
     ],
-    "next": "Bind authentic HGSS navigation/control chrome for the Choose Box interaction."
+    "next": "Wire verified members 66-69 navigation frames live, then remove the remaining legacy cursor/control equivalent."
+  },
+  "navigation_controls": {
+    "source_members": {
+      "ncgr": {
+        "index": 66,
+        "sha256": "3989d3a74bf444379b55cf3a2d04ff3c2d145a076f0481fa72972fe4de109092"
+      },
+      "ncer": {
+        "index": 67,
+        "sha256": "98b99b5e454bb519ef4535f74df541a2ee4a9291b98a7d2db700bff64208145b"
+      },
+      "nanr": {
+        "index": 68,
+        "sha256": "a0c7f45c4bb50965b23546c30eb6aefaf9a8bce691aac9bcf0f91cbef18ec55c"
+      },
+      "nclr": {
+        "index": 69,
+        "sha256": "c30d6010bff96c1bda391470f7a50a52ab7aa559669e5f1e916bd572c0ea4b14"
+      }
+    },
+    "loader": "ov14_021F3DE8",
+    "creator": "ov14_021F3E70",
+    "left_template": "ov14_021F81A8: x=12, y=28, animation=1",
+    "right_template": "ov14_021F81DC: x=156, y=28, animation=3",
+    "export": "verified/choose_box_nav.png",
+    "metadata": "verified/choose_box_nav.json",
+    "status": "identified and imported; live wiring deferred"
   }
 }

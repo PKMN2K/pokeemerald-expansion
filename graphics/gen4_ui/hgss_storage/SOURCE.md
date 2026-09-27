@@ -75,8 +75,21 @@ back to the saved current box and then cancels. This prevents a preview from
 silently changing save-state selection and avoids replaying the transition after
 confirmation.
 
-The remaining Choose Box work is the authentic HGSS navigation/control chrome.
-The machine-readable verification record is `verified/choose_box_native.json`.
+The authentic Choose Box navigation/control chrome is now identified and
+imported. HGSS overlay 14 loads /a/0/1/9 members 66-69 as one sprite bundle:
+NCGR 66, NCER 67, NANR 68, and NCLR 69. The native templates place the left
+control at x=12,y=28 with animation 1 and the right control at x=156,y=28 with
+animation 3. NANR verification maps animation 1 to cell 0 (left normal),
+animation 2 to cell 1 then cell 0 (left press/release), animation 3 to cell 2
+(right normal), and animation 4 to cell 3 then cell 2 (right press/release).
+
+`verified/choose_box_nav.png` is a lossless 1:1 four-frame export of those
+24x24 authentic HGSS cells in the order left-normal, left-pressed,
+right-normal, right-pressed. No redraw, resampling, recoloring, or synthetic
+pixels are present. Live wiring and removal of the remaining legacy
+cursor/control equivalent are intentionally deferred to the next sequence step.
+The machine-readable records are `verified/choose_box_native.json` and
+`verified/choose_box_nav.json`.
 
 Do not restore compatibility fallbacks that draw approximated HGSS chrome.
 If an authentic role is not available yet, leave that HGSS layer empty and

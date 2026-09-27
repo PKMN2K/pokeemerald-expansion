@@ -1,0 +1,98 @@
+{
+  "role": "choose_box_navigation_controls",
+  "source_archive": "/a/0/1/9",
+  "archive_sha256": "f7a1a97638959a685719049a0b780686edb68704777fead790b230e10ed1df4a",
+  "source_members": {
+    "ncgr": {
+      "index": 66,
+      "sha256": "3989d3a74bf444379b55cf3a2d04ff3c2d145a076f0481fa72972fe4de109092"
+    },
+    "ncer": {
+      "index": 67,
+      "sha256": "98b99b5e454bb519ef4535f74df541a2ee4a9291b98a7d2db700bff64208145b"
+    },
+    "nanr": {
+      "index": 68,
+      "sha256": "a0c7f45c4bb50965b23546c30eb6aefaf9a8bce691aac9bcf0f91cbef18ec55c"
+    },
+    "nclr": {
+      "index": 69,
+      "sha256": "c30d6010bff96c1bda391470f7a50a52ab7aa559669e5f1e916bd572c0ea4b14"
+    }
+  },
+  "decomp_evidence": {
+    "repository": "pret/pokeheartgold",
+    "path": "asm/overlay_14.s",
+    "loader": "ov14_021F3DE8",
+    "creator": "ov14_021F3E70",
+    "left_template": "ov14_021F81A8 at x=12,y=28, animation=1",
+    "right_template": "ov14_021F81DC at x=156,y=28, animation=3"
+  },
+  "nanr_sequence_cells": {
+    "1_left_normal": [
+      [
+        0,
+        4
+      ]
+    ],
+    "2_left_pressed_then_normal": [
+      [
+        1,
+        4
+      ],
+      [
+        0,
+        4
+      ]
+    ],
+    "3_right_normal": [
+      [
+        2,
+        4
+      ]
+    ],
+    "4_right_pressed_then_normal": [
+      [
+        3,
+        4
+      ],
+      [
+        2,
+        4
+      ]
+    ]
+  },
+  "export": {
+    "file": "choose_box_nav.png",
+    "sha256": "2ea74d90ed7f325044dd6fb3f69f09076f4ec8d1b18c38e7fff8d4ef6cc4f0c4",
+    "size": [
+      96,
+      24
+    ],
+    "layout": "4 horizontal 24x24 frames",
+    "frames": [
+      {
+        "index": 0,
+        "source_cell": 0,
+        "meaning": "left_normal"
+      },
+      {
+        "index": 1,
+        "source_cell": 1,
+        "meaning": "left_pressed"
+      },
+      {
+        "index": 2,
+        "source_cell": 2,
+        "meaning": "right_normal"
+      },
+      {
+        "index": 3,
+        "source_cell": 3,
+        "meaning": "right_pressed"
+      }
+    ],
+    "pixel_rule": "Exact NCGR+NCER+NCLR composite at 1:1 DS pixel scale; no redraw, resampling, recoloring, or synthetic pixels."
+  },
+  "status": "authentic navigation/control asset identified and imported; live wiring deferred"
+}
