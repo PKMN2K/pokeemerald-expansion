@@ -246,7 +246,6 @@ enum {
     PALTAG_ITEM_ICON_0,
     PALTAG_ITEM_ICON_1, // Used implicitly in CreateItemIconSprites
     PALTAG_ITEM_ICON_2, // Used implicitly in CreateItemIconSprites
-    PALTAG_LIST_MENU_SCROLL_ARROW,
     PALTAG_HGSS_CHOOSE_BOX_NAV,
     PALTAG_HGSS_WALLPAPER_SELECTOR,
     PALTAG_HGSS_STORAGE_CURSOR,
@@ -263,7 +262,6 @@ enum {
     GFXTAG_ITEM_ICON_1, // Used implicitly in CreateItemIconSprites
     GFXTAG_ITEM_ICON_2, // Used implicitly in CreateItemIconSprites
     GFXTAG_BOX_SELECTION_PER_30,
-    GFXTAG_LIST_MENU_ARROW,
     GFXTAG_MARKING_COMBO,
     GFXTAG_MON_ICON,
 	GFXTAG_PKRS_ICON,
@@ -484,7 +482,6 @@ struct PokemonStorageSystemData
     u16 listMenuScrollRow;
     u16 listMenuSelectedRow;
     u8 listMenuTaskId;
-    u8 listMenuScrollArrowTaskId;
     u8 menuItemsCount;
     u8 menuWidth;
     u16 menuWindowId;
@@ -3094,7 +3091,6 @@ static void Task_HandleWallpapers(u8 taskId)
             sStorage->listMenuScrollRow--;
             sStorage->listMenuSelectedRow = 0;
             DestroyListMenuTask(sStorage->listMenuTaskId, NULL, NULL);
-            RemoveScrollIndicatorArrowPair(sStorage->listMenuScrollArrowTaskId);
             FreeHgssWallpaperSelectorSprites();
             RemoveMenu();
             AddWallpaperMenu();
@@ -3105,7 +3101,6 @@ static void Task_HandleWallpapers(u8 taskId)
             sStorage->listMenuScrollRow++;
             sStorage->listMenuSelectedRow = 0;
             DestroyListMenuTask(sStorage->listMenuTaskId, NULL, NULL);
-            RemoveScrollIndicatorArrowPair(sStorage->listMenuScrollArrowTaskId);
             FreeHgssWallpaperSelectorSprites();
             RemoveMenu();
             AddWallpaperMenu();
@@ -3119,7 +3114,6 @@ static void Task_HandleWallpapers(u8 taskId)
                 if (input == LIST_CANCEL)
                 {
                     DestroyListMenuTask(sStorage->listMenuTaskId, NULL, NULL);
-                    RemoveScrollIndicatorArrowPair(sStorage->listMenuScrollArrowTaskId);
                     FreeHgssWallpaperSelectorSprites();
                     RemoveMenu();
                     ClearBottomWindow();
@@ -3129,7 +3123,6 @@ static void Task_HandleWallpapers(u8 taskId)
                 {
                     PlaySE(SE_SELECT);
                     DestroyListMenuTask(sStorage->listMenuTaskId, NULL, NULL);
-                    RemoveScrollIndicatorArrowPair(sStorage->listMenuScrollArrowTaskId);
                     FreeHgssWallpaperSelectorSprites();
                     RemoveMenu();
                     sStorage->wallpaperId = input - MENU_BASE;
@@ -4761,7 +4754,6 @@ static void AddWallpaperMenu(void)
     u16 i;
     u8 currentPage = sStorage->listMenuScrollRow;
     u8 itemsPerPage = HGSS_WALLPAPER_SELECTOR_ITEMS_PER_PAGE;
-    u8 maxPage = (MENU_COUNT - MENU_BASE - 1) / itemsPerPage;
     u8 startIdx = MENU_BASE + (currentPage * itemsPerPage);
     u8 endIdx = startIdx + itemsPerPage;
     u8 maxWidth = 0;
@@ -4814,15 +4806,9 @@ static void AddWallpaperMenu(void)
     sStorage->listMenuTemplate.itemVerticalPadding = 0;
     sStorage->listMenuTemplate.scrollMultiple = LIST_NO_MULTIPLE_SCROLL;
     sStorage->listMenuTemplate.fontId = FONT_NORMAL;
-    sStorage->listMenuTemplate.cursorKind = 0;
+    sStorage->listMenuTemplate.cursorKind = CURSOR_INVISIBLE;
 
     sStorage->listMenuTaskId = ListMenuInit(&sStorage->listMenuTemplate, 0, sStorage->listMenuSelectedRow);
-
-    // Phase 2 keeps the old list-menu scroll arrows underneath the new HGSS
-    // controls. They are the legacy equivalent reserved for phase-3 removal.
-    sStorage->listMenuScrollArrowTaskId = AddScrollIndicatorArrowPairParameterized(
-        SCROLL_ARROW_LEFT, 80, 168, 232, maxPage,
-        GFXTAG_LIST_MENU_ARROW, PALTAG_LIST_MENU_SCROLL_ARROW, &sStorage->listMenuScrollRow);
 
     LoadHgssWallpaperSelectorSprites();
     ScheduleBgCopyTilemapToVram(0);

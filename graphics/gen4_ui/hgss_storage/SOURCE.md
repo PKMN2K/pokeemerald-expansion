@@ -420,3 +420,24 @@ of four choices, matching HGSS's 24-wallpaper four-at-a-time selector behavior.
 This is phase 2 only. The existing standard ListMenu cursor and scroll-arrow
 pair remain live underneath/alongside the authentic HGSS swatches and are
 reserved for the next cleanup phase.
+
+
+## Authentic HGSS wallpaper selector — phase 3
+
+The legacy wallpaper-selector presentation has now been removed after the
+authentic member-74 selector was proven live. The generic ListMenu black-arrow
+cursor is disabled with `CURSOR_INVISIBLE`, while ListMenu remains only as the
+input/text-selection engine. The generic
+`AddScrollIndicatorArrowPairParameterized` left/right arrow pair, its
+wallpaper-only tags, task field, creation path, and cleanup calls are removed.
+
+Wallpaper behavior is unchanged: Up/Down still chooses one of the four
+wallpapers on the current HGSS selector page, Left/Right still changes among
+the six four-choice pages, and A/B retain their existing select/cancel
+semantics. The only visible selector controls are now the authenticated HGSS
+member 74/75/76/77 swatches.
+
+This completes the required sequence for the wallpaper selector: authentic
+HGSS asset -> wire live -> remove legacy equivalent. The corrected member
+70/71/72/73 bundle remains preserved as the authentic box-content thumbnail
+base for a later role.

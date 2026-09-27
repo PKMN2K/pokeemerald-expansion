@@ -37,8 +37,8 @@
     "behavior": "ov14_021F4380 creates four member-74 selector sprites 46 px apart; ov14_021F462C reloads/recolors the member-74 graphics when the wallpaper group changes. ov14_021F4958 instead uses member 70 to build box-content thumbnails."
   },
   "pixel_rule": "The committed PNGs are byte-for-byte copies of the user-preserved HeartGold PC Box extraction. No redraw, crop, resampling, recoloring, or synthetic pixels.",
-  "status": "phase 2 complete: authentic HGSS member-74 wallpaper selector swatches are wired live; legacy list cursor/scroll-arrow equivalents intentionally retained for phase 3",
-  "next": "Remove the remaining legacy wallpaper-selector equivalents only: the standard ListMenu cursor/scroll-arrow presentation, replacing navigation feedback with the now-live HGSS selector controls without changing wallpaper selection behavior.",
+  "status": "phase 3 complete: authentic HGSS member-74 wallpaper selector is live and the legacy ListMenu cursor/scroll-arrow presentation has been removed",
+  "next": "Proceed to the next unconverted Storage role using the same sequence. The corrected authentic member 70/71/72/73 bundle is preserved as the box-content thumbnail base candidate.",
   "export": {
     "file": "wallpaper_selector_swatch.png",
     "sha256": "1adc4f10d3c98d5331901fecdf74b0d320e93455a4af80d9a5b0306ddfd1295a",
@@ -73,10 +73,13 @@
     "gba_adaptation": "Each 24x24 authentic cell is transparent-padded to a 32x32 hardware OBJ. Four copies share one 4bpp palette; the binary placeholder mask is remapped to palette entries 1-4 without altering visible geometry.",
     "normal_color_mapping": "Wallpaper IDs 0-15 use exact NCLR 75 colors 16-31, matching ov14_021F46B0's native normal-wallpaper replacement indices.",
     "special_color_mapping": "Wallpaper IDs 16-23 use the remaining first eight authentic NCLR 75 colors as a compact GBA continuation; no synthetic colors are introduced.",
-    "legacy_equivalent_removed": false,
-    "legacy_equivalent_still_live": [
-      "ListMenu standard cursor",
-      "AddScrollIndicatorArrowPairParameterized wallpaper page arrows"
-    ]
+    "legacy_equivalent_removed": true,
+    "legacy_equivalent_still_live": [],
+    "removed_legacy_equivalents": [
+      "ListMenu standard black-arrow cursor presentation",
+      "AddScrollIndicatorArrowPairParameterized wallpaper page arrows",
+      "wallpaper-only legacy scroll-arrow gfx/palette tags and task storage"
+    ],
+    "selection_behavior": "ListMenu remains as a non-visual input/text engine with CURSOR_INVISIBLE; Up/Down selection, Left/Right page switching, A select, and B cancel are unchanged."
   }
 }
