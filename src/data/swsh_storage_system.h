@@ -60,12 +60,16 @@ static const u16 sTextWindows_Pal[]           = INCGFX_U16("graphics/pokemon_sto
 #include "data/hgss_storage_party_panel.inc.h"
 #include "data/hgss_storage_choose_box.inc.h"
 
+// Verified authentic HGSS PC wallpaper 01.
+// /a/0/1/9: NSCR 15 + NCGR 16 + NCLR 40; pixels preserved 1:1.
+static const u32 sHgssStorageWallpaper01_Gfx[] = INCGFX_U32("graphics/gen4_ui/hgss_storage/verified/wallpaper_01.png", ".4bpp");
+static const u16 sHgssStorageWallpaper01_Pal[] = INCGFX_U16("graphics/gen4_ui/hgss_storage/verified/wallpaper_01.png", ".gbapal");
+
 static const u32 sCursor_Gfx[]                = INCGFX_U32("graphics/pokemon_storage/swsh/cursor.png", ".4bpp.smol");
 static const u16 sCursor_Pal[]                = INCGFX_U16("graphics/pokemon_storage/swsh/cursor.png", ".gbapal");
 static const u32 sGenderIcons_Gfx[]           = INCGFX_U32("graphics/pokemon_storage/swsh/gender_icons.png", ".4bpp.smol");
 static const u16 sMarkings_Pal[]              = INCGFX_U16("graphics/pokemon_storage/swsh/markings.pal", ".gbapal");
 static const u32 sMarkingsMenu_Gfx[]          = INCGFX_U32("graphics/pokemon_storage/swsh/markings_menu.png", ".4bpp.smol");
-static const u32 sMessageWindow_Gfx[]         = INCGFX_U32("graphics/pokemon_storage/swsh/message_window.png", ".4bpp.smol");
 static const u32 sShinyIcon_Gfx[]             = INCGFX_U32("graphics/pokemon_storage/swsh/shiny_icon.png", ".4bpp.smol");
 static const u32 sPokerusIcon_Gfx[]           = INCGFX_U32("graphics/pokemon_storage/swsh/pokerus_icon.png", ".4bpp.smol");
 static const u32 sStatLabels_Gfx[]            = INCGFX_U32("graphics/pokemon_storage/swsh/stat_labels.png", ".4bpp.smol");
