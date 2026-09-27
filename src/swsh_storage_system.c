@@ -819,7 +819,6 @@ static void Task_InitBox(u8);
 static void SetUpScrollToBox(u8);
 static void SetUpScrollToBoxFrom(u8, u8);
 static bool8 ScrollToBox(void);
-static s8 DetermineBoxScrollDirection(u8);
 static s8 DetermineBoxScrollDirectionFrom(u8, u8);
 static void SetCurrentBox(u8);
 static struct BoxPokemon *GetCursorBoxMon(void);
@@ -5438,11 +5437,6 @@ static bool8 ScrollToBox(void)
 
     sStorage->scrollState++;
     return TRUE;
-}
-
-static s8 DetermineBoxScrollDirection(u8 boxId)
-{
-    return DetermineBoxScrollDirectionFrom(StorageGetCurrentBox(), boxId);
 }
 
 static s8 DetermineBoxScrollDirectionFrom(u8 currentBox, u8 boxId)
