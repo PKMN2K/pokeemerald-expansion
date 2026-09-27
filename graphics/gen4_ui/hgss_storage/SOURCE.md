@@ -152,17 +152,21 @@ panel uses BG palette bank 11 so the multi-move text-palette restore on bank 13
 cannot recolor the HGSS art. This completes the full authentic asset → wire live
 → remove legacy equivalent sequence for the Pokémon information panel.
 
-The next verified static role is the native HGSS Storage message window.
+The native HGSS Storage message window is verified and wired live.
 Visual verification of the user's extracted `/a/0/1/9` gallery identifies
 NSCR 11 + NCGR 14 + NCLR 4 as the full-width 256x48 rounded message bar.
-`verified/message_window.png` is a lossless 1:1 4bpp-compatible indexed export:
-all five source colors and every source pixel are preserved with no crop,
-redrawing, resampling, or color changes. Its archive/member provenance is recorded
-in `verified/message_window.json`. This completes only the authentic-asset
-phase. The live Storage `WIN_MESSAGE` path still uses the engine-standard
-Emerald window frame, and the stale SWSH
-`graphics/pokemon_storage/swsh/message_window.png` file is deliberately left
-untouched until the later wire-live and remove-legacy phases.
+`verified/message_window.png` remains a lossless 1:1 4bpp-compatible indexed
+export with all five source colors and every source pixel preserved.
+
+The GBA display exposes 30 tile columns rather than the DS screen's 32. The live
+renderer therefore preserves source columns 0 and 31 (both native rounded edges)
+and uses 28 of the identical interior source columns, omitting only two repeated
+interior columns. No source pixel is redrawn, resampled, recolored, or
+approximated. `WIN_MESSAGE` now overlays text inside that authentic panel using
+the panel's own cream/dark/gray palette indices. The separate yes/no role is
+unchanged. The stale SWSH `message_window.png` remains in the tree and the
+Emerald standard border tiles remain loaded for the still-unconverted yes/no
+window; removal is intentionally deferred to the next pipeline phase.
 
 Do not restore compatibility fallbacks that draw approximated HGSS chrome.
 If an authentic role is not available yet, leave that HGSS layer empty and

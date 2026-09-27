@@ -824,6 +824,7 @@ static struct BoxPokemon *GetCursorBoxMon(void);
 static void ClearMonInfoTilemap(void);
 static void UpdateMonInfoTilemap(void);
 static void RestoreHgssMonInfoPanel(void);
+static void DrawHgssMessageWindow(void);
 
 // Misc
 static void CreateMainMenu(u8, s16 *);
@@ -4246,6 +4247,47 @@ static void RestoreHgssMonInfoPanel(void)
     DrawHgssMonInfoPanelTilemaps();
 }
 
+#define HGSS_MESSAGE_WINDOW_BASE_TILE      712
+#define HGSS_MESSAGE_WINDOW_PAL_BANK       10
+#define HGSS_MESSAGE_WINDOW_SRC_WIDTH      32
+#define HGSS_MESSAGE_WINDOW_WIDTH          30
+#define HGSS_MESSAGE_WINDOW_HEIGHT         6
+#define HGSS_MESSAGE_WINDOW_TOP            14
+
+static void DrawHgssMessageWindow(void)
+{
+    u16 *tilemap = sStorage->infoTilemapBuffer;
+    u8 x;
+    u8 y;
+
+    LoadBgTiles(0,
+                sHgssMessageWindow_Gfx,
+                sizeof(sHgssMessageWindow_Gfx),
+                HGSS_MESSAGE_WINDOW_BASE_TILE);
+    LoadPalette(sHgssMessageWindow_Pal,
+                BG_PLTT_ID(HGSS_MESSAGE_WINDOW_PAL_BANK),
+                PLTT_SIZE_4BPP);
+
+    for (y = 0; y < HGSS_MESSAGE_WINDOW_HEIGHT; y++)
+    {
+        for (x = 0; x < HGSS_MESSAGE_WINDOW_WIDTH; x++)
+        {
+            // Source columns 1-30 are identical interior repeats on each row.
+            // Keep source column 0, use 28 untouched interior columns, and keep
+            // source column 31 so both native HGSS rounded edges survive 1:1.
+            u8 srcX = (x == HGSS_MESSAGE_WINDOW_WIDTH - 1)
+                    ? HGSS_MESSAGE_WINDOW_SRC_WIDTH - 1
+                    : x;
+            u16 tile = HGSS_MESSAGE_WINDOW_BASE_TILE
+                     + y * HGSS_MESSAGE_WINDOW_SRC_WIDTH
+                     + srcX;
+
+            tilemap[(HGSS_MESSAGE_WINDOW_TOP + y) * 32 + x]
+                = tile | (HGSS_MESSAGE_WINDOW_PAL_BANK << 12);
+        }
+    }
+}
+
 static void InitPokeStorageBg0(void)
 {
     SetGpuReg(REG_OFFSET_BG0CNT, BGCNT_PRIORITY(0) | BGCNT_CHARBASE(0) | BGCNT_SCREENBASE(29) | BGCNT_TXT256x512);
@@ -4394,6 +4436,7 @@ static void PrintMessage(u8 id)
     }
 
     DynamicPlaceholderTextUtil_ExpandPlaceholders(sStorage->messageText, sMessages[id].text);
+    DrawHgssMessageWindow();
     FillWindowPixelBuffer(WIN_MESSAGE, PIXEL_FILL(0));
     AddTextPrinterParameterized4(WIN_MESSAGE, FONT_NORMAL, 0, 1, 0, 0, sTextColors[3], TEXT_SKIP_DRAW, sStorage->messageText);
     PutWindowTilemap(WIN_MESSAGE);

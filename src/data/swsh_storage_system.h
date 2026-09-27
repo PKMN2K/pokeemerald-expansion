@@ -54,6 +54,10 @@ static const u32 sSwShStorage_BG2_Tilemap[]   = INCGFX_U32("graphics/pokemon_sto
 static const u32 sHgssMonInfoPanel_Gfx[]       = INCGFX_U32("graphics/gen4_ui/hgss_storage/verified/mon_info_panel.png", ".4bpp");
 static const u16 sHgssMonInfoPanel_Pal[]       = INCGFX_U16("graphics/gen4_ui/hgss_storage/verified/mon_info_panel.png", ".gbapal");
 
+// Authentic HGSS Storage message bar: /a/0/1/9 NSCR 11 + NCGR 14 + NCLR 4.
+static const u32 sHgssMessageWindow_Gfx[]       = INCGFX_U32("graphics/gen4_ui/hgss_storage/verified/message_window.png", ".4bpp");
+static const u16 sHgssMessageWindow_Pal[]       = INCGFX_U16("graphics/gen4_ui/hgss_storage/verified/message_window.png", ".gbapal");
+
 static const u16 sTextWindows_Pal[]           = INCGFX_U16("graphics/pokemon_storage/swsh/text_windows.pal", ".gbapal");
 
 // Generated from a visually verified HGSS /a/0/1/9 role binding.
@@ -232,11 +236,11 @@ static const struct WindowTemplate sWindowTemplates[] =
 {
     [WIN_MESSAGE] = {
         .bg = 0,
-        .tilemapLeft = 9,
-        .tilemapTop = 17,
-        .width = 20,
+        .tilemapLeft = 1,
+        .tilemapTop = 16,
+        .width = 28,
         .height = 2,
-        .paletteNum = 15,
+        .paletteNum = 10,
         .baseBlock = 44,
     },
     [WIN_ITEM_DESC] = {
@@ -364,7 +368,7 @@ static const u8 sTextColors[][3] =
     {1, 2, 3}, // Standard menus, mon info (stats, ability, item)
     {4, 2, 5}, // Mon info (nickname and level) (grey BG)
     {0, 4, 7}, // Choose box menu - actually uses PALTAG_MISC_3 and not bg pal 15
-    {0, 1, 6}, // Main message window
+    {0, 2, 3}, // HGSS Storage message window (cream / dark / gray)
 };
 
 

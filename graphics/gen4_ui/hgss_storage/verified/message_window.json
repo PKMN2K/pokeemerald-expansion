@@ -48,6 +48,39 @@
     "stale_swsh_asset": "graphics/pokemon_storage/swsh/message_window.png",
     "stale_swsh_asset_live": false
   },
-  "status": "authentic HGSS message-window asset identified and imported; live wiring deferred",
-  "next": "Wire verified/message_window.png live for WIN_MESSAGE without touching the yes/no role, then remove the Storage message window's legacy Emerald/SWSH equivalents."
+  "status": "wired live: authentic HGSS Storage message bar now renders behind WIN_MESSAGE; legacy cleanup deferred",
+  "next": "Remove the stale SWSH graphics/pokemon_storage/swsh/message_window.png and detach WIN_MESSAGE from the Emerald-standard frame path without changing the separate yes/no window role.",
+  "live_integration": {
+    "renderer": "BG0 tile composition + WIN_MESSAGE text overlay",
+    "source": "verified/message_window.png (NSCR 11 + NCGR 14 + NCLR 4)",
+    "source_dimensions": [
+      256,
+      48
+    ],
+    "gba_visible_composition": {
+      "width_tiles": 30,
+      "height_tiles": 6,
+      "top_tile": 14,
+      "source_columns": "0, 1-28, 31",
+      "adaptation": "two repeated interior source columns omitted; both native HGSS edge/corner columns preserved pixel-identically"
+    },
+    "base_tile": 712,
+    "palette_bank": 10,
+    "text_window": {
+      "tilemapLeft": 1,
+      "tilemapTop": 16,
+      "width": 28,
+      "height": 2,
+      "paletteNum": 10,
+      "text_colors": [
+        0,
+        2,
+        3
+      ]
+    },
+    "yes_no_role_unchanged": true,
+    "emerald_border_tiles_still_loaded_for_yes_no": true,
+    "stale_swsh_message_asset_still_present": true,
+    "stale_swsh_message_asset_live": false
+  }
 }
