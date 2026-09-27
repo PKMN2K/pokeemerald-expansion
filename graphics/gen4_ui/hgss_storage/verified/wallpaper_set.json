@@ -37,7 +37,8 @@
       },
       "source_png_sha256": "29164402b64565e2a3b1c218135847c1689d6ea1f6f7ca87449428764480927c",
       "checked_in_path": "wallpaper_01.png",
-      "git_blob_sha1": null
+      "git_blob_sha1": "8873a04f5f67c7b75abc6a2f0be5ca97b35fa4b3",
+      "checked_in_png_sha256": "8893f405cbcbf3844ab1e681c3f88942456ee405ab8df1474016445b2cfb1218"
     },
     {
       "wallpaper": 2,
@@ -54,7 +55,8 @@
       },
       "source_png_sha256": "4fbd1be0a25f25d2b7519900d9466f8d299c607654a000995c01858b4abe8d11",
       "checked_in_path": "wallpaper_02.png",
-      "git_blob_sha1": "354dfb00aa388582ed4841e94dc2f37b92a601b4"
+      "git_blob_sha1": "7ca46c613149c5c762780d26f98b4053da0206cc",
+      "checked_in_png_sha256": "93e0297b71a8ace3b26f65a42fb88293dd2f3f81f198410c0f01c157f5c4bf4c"
     },
     {
       "wallpaper": 3,
@@ -71,7 +73,8 @@
       },
       "source_png_sha256": "c495454d4855d27afbb8ebffb61212c6538515b5a1c7f438b79119cf838fab69",
       "checked_in_path": "wallpaper_03.png",
-      "git_blob_sha1": "dc3513ad92f8e8d198fc4b11e063d77526c2eefb"
+      "git_blob_sha1": "f2c958ea3c188cdcba0bb1e23a0369b9b5d21628",
+      "checked_in_png_sha256": "06b23279aa154af858fc4e572ec5562aa0081ce82bbf467eb44136f3dc7f9875"
     },
     {
       "wallpaper": 4,
@@ -89,8 +92,7 @@
       "source_png_sha256": "13b64d1e107f4c2e8a158ab1542b5ef30fc355692b934a7faa3642f384f386d1",
       "checked_in_path": "wallpaper_04.png",
       "git_blob_sha1": "c2234d30e6846e12dd7f65542e5d25857ab36ac3",
-      "checked_in_png_sha256": "f57c28114613c17a7d85bd2b94cdb23701f22df9d6ebc3e70285d7602c7547f1",
-      "repair_note": "Re-encoded from verified NSCR 15 + NCGR 19 + NCLR 43 as valid indexed 4bpp PNG after CI detected an IDAT CRC error; source pixels/palette preserved."
+      "checked_in_png_sha256": "f57c28114613c17a7d85bd2b94cdb23701f22df9d6ebc3e70285d7602c7547f1"
     },
     {
       "wallpaper": 5,
@@ -107,7 +109,8 @@
       },
       "source_png_sha256": "1085e7631c4623c133febd41fe90768d257a87f4834e3fdbcd2a69deaa162015",
       "checked_in_path": "wallpaper_05.png",
-      "git_blob_sha1": "cc144194c88330e8dc53bb2d6a6a435bd0070438"
+      "git_blob_sha1": "da604f0ebc94aaa50305da19f5a6b83e3cdbfb6d",
+      "checked_in_png_sha256": "51f71bf2f719f39c9a97320ef502d4147bc3a80e6a8d1540d563cac11e6fde97"
     },
     {
       "wallpaper": 6,
@@ -124,7 +127,8 @@
       },
       "source_png_sha256": "31c32071cd4426bc695ec8c2af0e8a1013dc02585bab5132be89a711b3bfe17c",
       "checked_in_path": "wallpaper_06.png",
-      "git_blob_sha1": "91828c8ba68ed6ea6f182f9a32c7985a2b9714ac"
+      "git_blob_sha1": "b36459d73fe37087e62614a62f304cfcf1c2df9b",
+      "checked_in_png_sha256": "c2044c92a43c8edf8c75e674a5bda19f13a3732e0fe7ad957c01e8f2829c94c3"
     },
     {
       "wallpaper": 7,
@@ -141,7 +145,8 @@
       },
       "source_png_sha256": "398adcfb916d1b692c7913643041bff639fcf87cf7edb07c44b52246644d7baf",
       "checked_in_path": "wallpaper_07.png",
-      "git_blob_sha1": "06eafceec2516201c13f4f2df9ade18f73ac1a24"
+      "git_blob_sha1": "27fc57b85578dbee92e05f377fd97e622683044f",
+      "checked_in_png_sha256": "a653724e35858ec78bd7f26557c9382d89af41c1bb94ae951b8a5d327b9857f0"
     },
     {
       "wallpaper": 8,
@@ -158,7 +163,8 @@
       },
       "source_png_sha256": "bc4cb5615763b7541cbd93e6bdeed153f0ca9828e84a216c0956d265bc2bf527",
       "checked_in_path": "wallpaper_08.png",
-      "git_blob_sha1": "85e3d5e13c5a94da962b4397fff6e810d9bd4036"
+      "git_blob_sha1": "ca8a256bdad010c3fae4866ecc256941a6c83e47",
+      "checked_in_png_sha256": "cc831ada0f7c83e0635a946fb67abc6115c567b7bb99548836660cd78b8ef11c"
     },
     {
       "wallpaper": 9,
@@ -175,7 +181,8 @@
       },
       "source_png_sha256": "ec14b5b1244f70302e75f20c8c0055c212c89e2c52986f3b50c0235bf5b6b1e0",
       "checked_in_path": "wallpaper_09.png",
-      "git_blob_sha1": "1d3cc9856d10ee14049030ca5bd40e2f2931e8bd"
+      "git_blob_sha1": "ae25e87bca93bcfd8d3bd84b96ae1b6b92a15090",
+      "checked_in_png_sha256": "4fd7e6bb40298e58216bd397700f5efbeafb6f31a766c2e35739aba2c01e296e"
     },
     {
       "wallpaper": 10,
@@ -192,7 +199,8 @@
       },
       "source_png_sha256": "476e00cb955114bcaa4541c323ebbee58689b5368c3c6a022327aa410bd02a3d",
       "checked_in_path": "wallpaper_10.png",
-      "git_blob_sha1": "dd2aa807e9dcbae7c81fcfa13550e65bbc0d0dbd"
+      "git_blob_sha1": "03a0faafd977ca6f0965a7edcd62eb4aeaddbeb9",
+      "checked_in_png_sha256": "2886185c86d5da9b6160dc6483d5441f92d92a4621bad3f0b41650c1ff3cb3ee"
     },
     {
       "wallpaper": 11,
@@ -209,7 +217,8 @@
       },
       "source_png_sha256": "12000fd2db8c0a34a8dc84357694cb61cda92992119412b0018883b9137cc05c",
       "checked_in_path": "wallpaper_11.png",
-      "git_blob_sha1": "bef603928a9a85b170ea4a8608481501e7b31ad8"
+      "git_blob_sha1": "18a9f02ebd9b0a8e1d6717e34dc0e73e91d3576a",
+      "checked_in_png_sha256": "6f247400dcf8267cb1437934b93db2559a4596e5a3e76083f28d9c2fc03600de"
     },
     {
       "wallpaper": 12,
@@ -226,7 +235,8 @@
       },
       "source_png_sha256": "bda2c12c286226034bb7f604d7ab4144eb897369cb308aecdb686c62dd26546d",
       "checked_in_path": "wallpaper_12.png",
-      "git_blob_sha1": "9de5c06af3ad97f7bd9923d4bcde30951df1dda4"
+      "git_blob_sha1": "400ca7074258a75afb65eeda0b9bdd96131d04d4",
+      "checked_in_png_sha256": "72692be7843cb1b81ee0361ecc5aa851b1dbe55824b15297feafb9de17326771"
     },
     {
       "wallpaper": 13,
@@ -243,7 +253,8 @@
       },
       "source_png_sha256": "de5226e2ae16e4acb7bb501685ed772477a46becc28a6abf741aad988da9d232",
       "checked_in_path": "wallpaper_13.png",
-      "git_blob_sha1": "b60b8b49e278b781d529d10d458e95ecaee3e8c0"
+      "git_blob_sha1": "af8f4d35e01c3cdb2022d809af8024f4cb00b509",
+      "checked_in_png_sha256": "d007a10841cded06a972844841f2891cfe6dab96362249d3589ac3c6535bb204"
     },
     {
       "wallpaper": 14,
@@ -260,7 +271,8 @@
       },
       "source_png_sha256": "048f54cef60abb17ccc96e069f80b623fc318f1eb1cef5ca88e3dd5085b49443",
       "checked_in_path": "wallpaper_14.png",
-      "git_blob_sha1": "8c2a72dfb5120d3b146bb0a3ee6192d031ab6f82"
+      "git_blob_sha1": "80a49a036167db6daa2c6b4dfe80badfc57f54da",
+      "checked_in_png_sha256": "7c8683858c19281e03d5b932d89504f340593aa5019bdc1062205643a7422d11"
     },
     {
       "wallpaper": 15,
@@ -277,7 +289,8 @@
       },
       "source_png_sha256": "02f38c9c9fa2e6eedd60e45930026b6a2ab3625f4cc20555a5fb2fa41f0a4f15",
       "checked_in_path": "wallpaper_15.png",
-      "git_blob_sha1": "092376660e2fd928bdd234290d82f46a133f3448"
+      "git_blob_sha1": "5a78ebd806a796b666c5044edb45f8baa9c7f476",
+      "checked_in_png_sha256": "22ad6acb2373a2f7da5e84488f94f74d3f5111e9b4bd70dff5b040434fc36892"
     },
     {
       "wallpaper": 16,
@@ -294,7 +307,8 @@
       },
       "source_png_sha256": "84842e0e805e89efc2418a375bc52cc81fa27affae4200cab41bdcae13d3b862",
       "checked_in_path": "wallpaper_16.png",
-      "git_blob_sha1": "6911d503a5e0115c587a0ca5c28d3f0d4fabd46a"
+      "git_blob_sha1": "6957fde152641bb36bc90d8e68ad9d11f3ecc84b",
+      "checked_in_png_sha256": "2a08a401534d23a7c78b863f743ea4506b0062a8c496917ffac52db5dedf8236"
     },
     {
       "wallpaper": 17,
@@ -311,7 +325,8 @@
       },
       "source_png_sha256": "c523c9707c4e5297e9262c74c9017427be1ab3e415caa3fbd1b83ca9ebb66b36",
       "checked_in_path": "wallpaper_17.png",
-      "git_blob_sha1": "60e5aeeccc53e04a8ec65e9a85027b233070d270"
+      "git_blob_sha1": "2aee3a10357a2092ceccb6cbc6a626fb433cb9b3",
+      "checked_in_png_sha256": "dcdebc7b4f9e793db77a58ad850229b34f5e656003391245574ce8132f112c1f"
     },
     {
       "wallpaper": 18,
@@ -328,7 +343,8 @@
       },
       "source_png_sha256": "77ee8580087c85c60306fc4eeb1feb64193d64c8b8e68b2a264c4d4f369e35f2",
       "checked_in_path": "wallpaper_18.png",
-      "git_blob_sha1": "24bc6e2ffc895b77b0b5a11907d30c0ab49de2c5"
+      "git_blob_sha1": "5f5362ee98d776e5150a8c7fc362bbd01decb410",
+      "checked_in_png_sha256": "8c18619ebb68fe9f585a34f9a2f0b347ce016c20cc7279d18439c95ca34caef6"
     },
     {
       "wallpaper": 19,
@@ -345,7 +361,8 @@
       },
       "source_png_sha256": "9e9f98149423d612ee42f13ccbd36651fc8e51d747cb0e4ba5d1641940ed9947",
       "checked_in_path": "wallpaper_19.png",
-      "git_blob_sha1": "4ab6d2ff9cbefccaa29134fbe692a7e456c331b9"
+      "git_blob_sha1": "5965b4bdae796d720e5746a077736ed9d0332464",
+      "checked_in_png_sha256": "6a0c6ea9bff889354a79ed9168d1e87c631c2ca6ffd1ab63c6f2ae9f2f4c3866"
     },
     {
       "wallpaper": 20,
@@ -362,7 +379,8 @@
       },
       "source_png_sha256": "343cbbf93ef4c45365c9d3698127f3ef254ad6b8efed6f6947b8f0fc3bfacbd0",
       "checked_in_path": "wallpaper_20.png",
-      "git_blob_sha1": "0677e7e25d09f09dedf78102cb77be4c71e2ac1e"
+      "git_blob_sha1": "6da449eb3f067ab967be231caa2da1f55029b770",
+      "checked_in_png_sha256": "e75564d2ebdae70fe4e9aeb33c963c17830bb025527dd25c5d37d4673d27c9f9"
     },
     {
       "wallpaper": 21,
@@ -379,7 +397,8 @@
       },
       "source_png_sha256": "346119d5f1d57bdb587c92aff8702c850b55522649aae9ece8e231aae4f5efc1",
       "checked_in_path": "wallpaper_21.png",
-      "git_blob_sha1": "d5aa3a094f727a9e18645c63164626a994234df6"
+      "git_blob_sha1": "3b3bfeab7b693c91a0245b0006d27e08a4f11fea",
+      "checked_in_png_sha256": "888adb6620d64d05840493b496e9240e26b4554f7d605ef326808b4503827271"
     },
     {
       "wallpaper": 22,
@@ -396,7 +415,8 @@
       },
       "source_png_sha256": "4940fde8749b11d58cf22bfd8464d199a4c0b70531425d56d089d2a0eaf381cb",
       "checked_in_path": "wallpaper_22.png",
-      "git_blob_sha1": "628b440362f258ed82c581dcd38a5510d97a50a7"
+      "git_blob_sha1": "567204b6ea2bbee15059d411f4621cd0690d5c08",
+      "checked_in_png_sha256": "0b1a45ee89a3ba2d9fd2a592d8a177323536dd52ba18e55a8170c89303578012"
     },
     {
       "wallpaper": 23,
@@ -413,7 +433,8 @@
       },
       "source_png_sha256": "c469416db4c741bf837b4916984142a2732ef4091f800dbacdd98bb346286247",
       "checked_in_path": "wallpaper_23.png",
-      "git_blob_sha1": "c45172d35462e61c207bc21c0403dc95d87c050e"
+      "git_blob_sha1": "c9cb68ad0246fd495f03efac6a96cf0750ab8994",
+      "checked_in_png_sha256": "89f0b0617e011b0b1796e0b5a61f3c3d2547f64bc1b1fa8addb830a166b2495c"
     },
     {
       "wallpaper": 24,
@@ -430,7 +451,14 @@
       },
       "source_png_sha256": "99351603e72666116424f86bb5ac1bf4b807045586517d62eccb8eb4f8ddf1df",
       "checked_in_path": "wallpaper_24.png",
-      "git_blob_sha1": "7907d14f29665f2e31b1fabf6e3ca3af0519dce8"
+      "git_blob_sha1": "fbcddfb7e90d8c3413c2ad01b336459fe320c8e9",
+      "checked_in_png_sha256": "a0d3f516b29770a0d206bdf2c50b2a6b3e9936691fc61bd22b0c0359efb7bb8c"
     }
-  ]
+  ],
+  "verification_repack": {
+    "reason": "CI detected invalid IDAT CRCs in previously checked-in authentic HGSS wallpaper PNG containers (first wallpaper_04, then wallpaper_11).",
+    "action": "Regenerated all 24 wallpaper PNG containers from the verified /a/0/1/9 source mapping instead of repairing files individually.",
+    "fidelity": "Each file is indexed 4bpp at 168x160 and preserves the authentic NSCR layout, NCGR palette indices, and NCLR BGR555 colors at 1:1 pixel scale. No redraw, resampling, recoloring, or synthetic pixels.",
+    "source_mapping": "NSCR 15 + NCGR (15+N) + NCLR (39+N)."
+  }
 }
