@@ -40,9 +40,15 @@ positioned dynamically over it. The obsolete `box_grid` placeholder and
 renderer hook have therefore been removed rather than populated with invented
 art.
 
-The party panel and Choose Box paths still accept verified assets only. Their
-generated include files intentionally remain zero descriptors until the
-corresponding authentic HGSS members are visually verified and bound.
+The party panel is now a verified authentic HGSS role: NSCR 8 + NCGR 14 +
+NCLR 4 reconstruct an 88x144 panel that matches the extracted reference
+pixel-for-pixel. The lossless GBA pack preserves the source indexed 4bpp tile
+pixels, flip flags, and BGR555 palette values; the existing Storage renderer
+loads that generated descriptor directly over the legacy party-panel region.
+
+The Choose Box path still accepts verified assets only. Its generated include
+remains a zero descriptor until the corresponding authentic HGSS members are
+visually verified and bound.
 
 Do not restore compatibility fallbacks that draw approximated HGSS chrome.
 If an authentic role is not available yet, leave that HGSS layer empty and
