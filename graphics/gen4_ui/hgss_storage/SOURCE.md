@@ -198,6 +198,22 @@ the still-unconverted generic Storage context menus, whose behavior is unchanged
 This completes the full authentic asset → wire live → remove legacy equivalent
 sequence for the Storage Yes/No confirmation panel.
 
+The next verified static role is the native HGSS Storage context-menu frame.
+Visual and geometric verification of the extracted `/a/0/1/9` gallery
+identifies NSCR 86 + NCGR 14 + NCLR 4 as a compact 96x80 (12x10-tile)
+bordered vertical menu surface with the authentic cream interior and dotted
+top/bottom trim. `verified/context_menu.png` is a lossless 1:1 indexed
+repack: all seven source RGB colors and every source pixel are preserved with
+no crop, redraw, resampling, or recoloring. Its archive/member hashes and role
+binding are recorded in `verified/context_menu.json`.
+
+This completes only the authentic-asset phase. The live dynamic Storage menus
+still use `DrawStdFrameWithCustomTileAndPalette(..., 192, 14)` and the
+engine-standard Emerald border tiles. Those paths remain untouched until the
+next wire-live phase; the compact HGSS frame will then be composed dynamically
+from its authentic edge/interior tiles to fit the existing variable menu
+widths/heights.
+
 Do not restore compatibility fallbacks that draw approximated HGSS chrome.
 If an authentic role is not available yet, leave that HGSS layer empty and
 preserve only the underlying functional UI until the real asset is identified.

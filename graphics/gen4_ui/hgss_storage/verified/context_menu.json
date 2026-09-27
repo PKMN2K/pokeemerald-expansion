@@ -1,0 +1,57 @@
+{
+  "role": "context_menu",
+  "classification": "static_ncgr_nclr_nscr_composition",
+  "source_archive": "/a/0/1/9",
+  "source_kind": "nds_rom",
+  "archive_sha256": "f7a1a97638959a685719049a0b780686edb68704777fead790b230e10ed1df4a",
+  "source_members": {
+    "nscr": {
+      "index": 86,
+      "raw_sha256": "c006ba6537b01d1f356c49a0b4dd5e19ccb58c19cc5d8b626fad2e8e3515572b",
+      "decoded_sha256": "2d4d2489e35487de6f32c5b76d6dacd7363372b701a12b947ae644e0e5262c09"
+    },
+    "ncgr": {
+      "index": 14,
+      "raw_sha256": "ee815971b93b9f2ad99009fef4b7e2313eb6564b1ba0b570b612aaa4969453af",
+      "decoded_sha256": "afbfab4897a5f39aa96b6030877d243d0a67d8bd18f9a7295385f2c7feeb0651"
+    },
+    "nclr": {
+      "index": 4,
+      "raw_sha256": "aff0f6a18a333e68f1d6094d06e161fa41192b882f432ae615537c37f164b20b",
+      "decoded_sha256": "aff0f6a18a333e68f1d6094d06e161fa41192b882f432ae615537c37f164b20b"
+    }
+  },
+  "visual_verification": {
+    "extracted_reference": "PC_Box/screens/member_086_screen__tiles_014__pal_004.png",
+    "reference_png_sha256": "46b7b3c2d79e2d4690fb5da0f96e02e9199c73bf8a7a3a5a744f4022db1226c2",
+    "dimensions": [
+      96,
+      80
+    ],
+    "content": "native HGSS Pokemon Storage bordered vertical menu frame with cream interior and dotted top/bottom trim",
+    "binding_basis": "visual + geometry: 12x10-tile standalone framed menu surface matching the remaining dynamic Storage context-menu role; unlike NSCR 11/12 it is a compact menu frame rather than a full-width message/confirmation bar"
+  },
+  "export": {
+    "file": "context_menu.png",
+    "sha256": "8eaaa75cca6c9b610b48c7265337b8da6d8b25303ab5e285e23bd3805c610a3c",
+    "size": [
+      96,
+      80
+    ],
+    "png_color_type": "indexed_palette",
+    "colors": 7,
+    "png_bit_depth": 4,
+    "pixel_rule": "Lossless 1:1 re-index of NSCR 86 + NCGR 14 + NCLR 4; every RGB pixel preserved with no crop, redraw, resampling, or color changes."
+  },
+  "current_live_equivalent": {
+    "code": [
+      "CreateMainMenu(): DrawStdFrameWithCustomTileAndPalette(sStorage->menuWindowId, FALSE, 192, 14)",
+      "LoadMenu(): DrawStdFrameWithCustomTileAndPalette(sStorage->menuWindowId, FALSE, 192, 14)"
+    ],
+    "visual_source": "engine-standard Emerald frame tiles at BG tile 192 / palette 14",
+    "frame_resource_loader": "LoadUserWindowBorderGfxOnBg(0, 192, BG_PLTT_ID(14))",
+    "status": "still live"
+  },
+  "status": "authentic HGSS Storage context-menu panel identified and imported; live wiring deferred",
+  "next": "Wire verified/context_menu.png into the dynamic Storage context-menu windows by composing from its authentic edge/interior tiles, then remove the Emerald standard-frame equivalent."
+}
