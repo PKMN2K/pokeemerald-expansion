@@ -341,8 +341,6 @@ static const u8 sPokedexPlusHGSS_Gen4SearchOverlayTiles[] = INCBIN_U8("graphics/
 const u16 sPokedexPlusHGSS_Gen4SearchOverlayTilemap[] = INCBIN_U16("graphics/gen4_ui/hgss_pokedex_search_overlay.tilemap.bin");
 static const u16 sPokedexPlusHGSS_Gen4SearchOverlayPalette[] = INCBIN_U16("graphics/gen4_ui/hgss_pokedex_search_overlay.palette.bin");
 
-static const u16 sPokedexPlusHGSS_Counter_Pal[] = INCGFX_U16("graphics/gen4_ui/hgss_pokedex_counter.pal", ".gbapal");
-static const u16 sPokedexPlusHGSS_CounterDark_Pal[] = INCGFX_U16("graphics/gen4_ui/hgss_pokedex_counter_dark.pal", ".gbapal");
 
 // Search text is isolated on BG palette bank 0. The old light/dark Search
 // palette files were identical and only their first 16 colors were loaded, so
@@ -449,8 +447,6 @@ static const u16 sPokedexPlusHGSS_SearchResultsTextDark_Pal[16] =
     RGB2GBA(194, 181, 66),
     RGB2GBA(0, 0, 0),
 };
-static const u8 sPokedexPlusHGSS_CounterTiles[] = INCBIN_U8("graphics/gen4_ui/hgss_pokedex_counters.tiles.bin");
-static const u8 sPokedexPlusHGSS_CounterDecappedTiles[] = INCBIN_U8("graphics/gen4_ui/hgss_pokedex_counters_deca.tiles.bin");
 #define GEN4_UI_HGSS_START_MENU_BASE_TILE 768
 #define GEN4_UI_HGSS_START_MENU_PAL_SLOT 12
 #define GEN4_UI_HGSS_START_MENU_TILEMAP_OFFSET 0x280
@@ -547,84 +543,6 @@ static void FillCryMeterWindowTilemapWithBg(void);
 //Stat bars by DizzyEgg
 #define TAG_STAT_BAR 4097
 #define TAG_STAT_BAR_BG 4098
-static const struct OamData sOamData_StatBar =
-{
-    .y = 160,
-    .affineMode = ST_OAM_AFFINE_OFF,
-    .objMode = ST_OAM_OBJ_NORMAL,
-    .bpp = ST_OAM_4BPP,
-    .shape = SPRITE_SHAPE(64x64),
-    .size = SPRITE_SIZE(64x64),
-};
-static const struct OamData sOamData_StatBarBg =
-{
-    .y = 160,
-    .affineMode = ST_OAM_AFFINE_OFF,
-    .objMode = ST_OAM_OBJ_NORMAL,
-    .bpp = ST_OAM_4BPP,
-    .shape = SPRITE_SHAPE(64x64),
-    .size = SPRITE_SIZE(64x64),
-};
-static const struct SpriteTemplate sStatBarSpriteTemplate =
-{
-    .tileTag = TAG_STAT_BAR,
-    .paletteTag = TAG_STAT_BAR,
-    .oam = &sOamData_StatBar,
-    .callback = SpriteCB_StatBars,
-};
-static const struct SpriteTemplate sStatBarBgSpriteTemplate =
-{
-    .tileTag = TAG_STAT_BAR_BG,
-    .paletteTag = TAG_STAT_BAR_BG,
-    .oam = &sOamData_StatBarBg,
-    .callback = SpriteCB_StatBarsBg,
-};
-enum
-{
-    COLOR_ID_ALPHA,
-    COLOR_ID_BAR_WHITE,
-    // These are repeated 6 times
-    COLOR_ID_FILL,
-    COLOR_ID_FILL_SHADOW,
-    COLOR_ID_FONT = 14,
-    COLOR_ID_FONT_SHADOW = 15,
-};
-enum
-{
-    COLOR_BEST, // Light blue
-    COLOR_VERY_GOOD, // Green
-    COLOR_GOOD, // Light Green
-    COLOR_AVERAGE, // Yellow
-    COLOR_BAD, // Orange
-    COLOR_WORST, // Red
-};
-static const u8 sStatBarsGfx[] = INCGFX_U8("graphics/gen4_ui/hgss_pokedex_stat_bars.png", ".4bpp");
-static const u16 sStatBarPalette[16] = {
-    [COLOR_ID_ALPHA] = RGB(0, 0, 10),
-    [COLOR_ID_BAR_WHITE] = RGB_WHITE,
-
-    [COLOR_ID_FILL + COLOR_BEST * 2] = RGB(2, 25, 25),
-    [COLOR_ID_FILL_SHADOW + COLOR_BEST * 2] = RGB(13, 27, 27),
-
-    [COLOR_ID_FILL + COLOR_VERY_GOOD * 2] = RGB(11, 25, 2),
-    [COLOR_ID_FILL_SHADOW + COLOR_VERY_GOOD * 2] = RGB(19, 27, 13),
-
-    [COLOR_ID_FILL + COLOR_GOOD * 2] = RGB(22, 25, 2),
-    [COLOR_ID_FILL_SHADOW + COLOR_GOOD * 2] = RGB(26, 27, 13),
-
-    [COLOR_ID_FILL + COLOR_AVERAGE * 2] = RGB(25, 22, 2),
-    [COLOR_ID_FILL_SHADOW + COLOR_AVERAGE * 2] = RGB(27, 26, 13),
-
-    [COLOR_ID_FILL + COLOR_BAD * 2] = RGB(25, 17, 2),
-    [COLOR_ID_FILL_SHADOW + COLOR_BAD * 2] = RGB(27, 22, 13),
-
-    [COLOR_ID_FILL + COLOR_WORST * 2] = RGB(25, 4, 2),
-    [COLOR_ID_FILL_SHADOW + COLOR_WORST * 2] = RGB(27, 15, 13),
-
-    [COLOR_ID_FONT] = RGB_BLACK,
-    [COLOR_ID_FONT_SHADOW] = RGB(22, 22, 22),
-};
-static const struct SpritePalette sStatBarSpritePal[] = //{sStatBarPalette, TAG_STAT_BAR};
 {
     {sStatBarPalette, TAG_STAT_BAR},
     {sStatBarPalette, TAG_STAT_BAR_BG},
@@ -633,140 +551,8 @@ static const struct SpritePalette sStatBarSpritePal[] = //{sStatBarPalette, TAG_
 
 #define TAG_DEX_HGSS_SCROLL 0xD5A0
 #define TAG_DEX_HGSS_START_CURSOR 0xD5A1
-#define TAG_DEX_HGSS_COUNTER 0xD5A2
 
 static void SpriteCB_HGSSCounterInfo(struct Sprite *sprite);
-
-static const struct OamData sOamData_HGSSCounterLabel =
-{
-    .y = DISPLAY_HEIGHT,
-    .affineMode = ST_OAM_AFFINE_OFF,
-    .objMode = ST_OAM_OBJ_NORMAL,
-    .mosaic = FALSE,
-    .bpp = ST_OAM_4BPP,
-    .shape = SPRITE_SHAPE(64x32),
-    .x = 0,
-    .matrixNum = 0,
-    .size = SPRITE_SIZE(64x32),
-    .tileNum = 0,
-    .priority = 0,
-    .paletteNum = 0,
-    .affineParam = 0
-};
-
-static const struct OamData sOamData_HGSSCounterMode =
-{
-    .y = DISPLAY_HEIGHT,
-    .affineMode = ST_OAM_AFFINE_OFF,
-    .objMode = ST_OAM_OBJ_NORMAL,
-    .mosaic = FALSE,
-    .bpp = ST_OAM_4BPP,
-    .shape = SPRITE_SHAPE(32x16),
-    .x = 0,
-    .matrixNum = 0,
-    .size = SPRITE_SIZE(32x16),
-    .tileNum = 0,
-    .priority = 0,
-    .paletteNum = 0,
-    .affineParam = 0
-};
-
-static const struct OamData sOamData_HGSSCounterDigit =
-{
-    .y = DISPLAY_HEIGHT,
-    .affineMode = ST_OAM_AFFINE_OFF,
-    .objMode = ST_OAM_OBJ_NORMAL,
-    .mosaic = FALSE,
-    .bpp = ST_OAM_4BPP,
-    .shape = SPRITE_SHAPE(8x16),
-    .x = 0,
-    .matrixNum = 0,
-    .size = SPRITE_SIZE(8x16),
-    .tileNum = 0,
-    .priority = 0,
-    .paletteNum = 0,
-    .affineParam = 0
-};
-
-static const union AnimCmd sSpriteAnim_HGSSSeenText[] = { ANIMCMD_FRAME(0, 30), ANIMCMD_END };
-static const union AnimCmd sSpriteAnim_HGSSOwnText[] = { ANIMCMD_FRAME(32, 30), ANIMCMD_END };
-static const union AnimCmd sSpriteAnim_HGSSHoennText[] = { ANIMCMD_FRAME(64, 30), ANIMCMD_END };
-static const union AnimCmd sSpriteAnim_HGSSNationalText[] = { ANIMCMD_FRAME(72, 30), ANIMCMD_END };
-static const union AnimCmd sSpriteAnim_HGSSCounterDigit0[] = { ANIMCMD_FRAME(80, 30), ANIMCMD_END };
-static const union AnimCmd sSpriteAnim_HGSSCounterDigit1[] = { ANIMCMD_FRAME(82, 30), ANIMCMD_END };
-static const union AnimCmd sSpriteAnim_HGSSCounterDigit2[] = { ANIMCMD_FRAME(84, 30), ANIMCMD_END };
-static const union AnimCmd sSpriteAnim_HGSSCounterDigit3[] = { ANIMCMD_FRAME(86, 30), ANIMCMD_END };
-static const union AnimCmd sSpriteAnim_HGSSCounterDigit4[] = { ANIMCMD_FRAME(88, 30), ANIMCMD_END };
-static const union AnimCmd sSpriteAnim_HGSSCounterDigit5[] = { ANIMCMD_FRAME(90, 30), ANIMCMD_END };
-static const union AnimCmd sSpriteAnim_HGSSCounterDigit6[] = { ANIMCMD_FRAME(92, 30), ANIMCMD_END };
-static const union AnimCmd sSpriteAnim_HGSSCounterDigit7[] = { ANIMCMD_FRAME(94, 30), ANIMCMD_END };
-static const union AnimCmd sSpriteAnim_HGSSCounterDigit8[] = { ANIMCMD_FRAME(96, 30), ANIMCMD_END };
-static const union AnimCmd sSpriteAnim_HGSSCounterDigit9[] = { ANIMCMD_FRAME(98, 30), ANIMCMD_END };
-
-static const union AnimCmd *const sSpriteAnimTable_HGSSSeenOwnText[] =
-{
-    sSpriteAnim_HGSSSeenText,
-    sSpriteAnim_HGSSOwnText
-};
-
-static const union AnimCmd *const sSpriteAnimTable_HGSSHoennNationalText[] =
-{
-    sSpriteAnim_HGSSHoennText,
-    sSpriteAnim_HGSSNationalText
-};
-
-static const union AnimCmd *const sSpriteAnimTable_HGSSCounterDigits[] =
-{
-    sSpriteAnim_HGSSCounterDigit0,
-    sSpriteAnim_HGSSCounterDigit1,
-    sSpriteAnim_HGSSCounterDigit2,
-    sSpriteAnim_HGSSCounterDigit3,
-    sSpriteAnim_HGSSCounterDigit4,
-    sSpriteAnim_HGSSCounterDigit5,
-    sSpriteAnim_HGSSCounterDigit6,
-    sSpriteAnim_HGSSCounterDigit7,
-    sSpriteAnim_HGSSCounterDigit8,
-    sSpriteAnim_HGSSCounterDigit9
-};
-
-static const struct SpriteTemplate sHGSSSeenOwnTextSpriteTemplate =
-{
-    .tileTag = TAG_DEX_HGSS_COUNTER,
-    .paletteTag = TAG_DEX_HGSS_COUNTER,
-    .oam = &sOamData_HGSSCounterLabel,
-    .anims = sSpriteAnimTable_HGSSSeenOwnText,
-    .callback = SpriteCB_HGSSCounterInfo,
-};
-
-static const struct SpriteTemplate sHGSSHoennNationalTextSpriteTemplate =
-{
-    .tileTag = TAG_DEX_HGSS_COUNTER,
-    .paletteTag = TAG_DEX_HGSS_COUNTER,
-    .oam = &sOamData_HGSSCounterMode,
-    .anims = sSpriteAnimTable_HGSSHoennNationalText,
-    .callback = SpriteCB_HGSSCounterInfo,
-};
-
-static const struct SpriteTemplate sHGSSCounterDigitSpriteTemplate =
-{
-    .tileTag = TAG_DEX_HGSS_COUNTER,
-    .paletteTag = TAG_DEX_HGSS_COUNTER,
-    .oam = &sOamData_HGSSCounterDigit,
-    .anims = sSpriteAnimTable_HGSSCounterDigits,
-    .callback = SpriteCB_HGSSCounterInfo,
-};
-
-static const struct SpriteSheet sHGSSCounterSpriteSheet[] =
-{
-    {sPokedexPlusHGSS_CounterTiles, sizeof(sPokedexPlusHGSS_CounterTiles), TAG_DEX_HGSS_COUNTER},
-    {sPokedexPlusHGSS_CounterDecappedTiles, sizeof(sPokedexPlusHGSS_CounterDecappedTiles), TAG_DEX_HGSS_COUNTER},
-};
-
-static const struct SpritePalette sHGSSCounterSpritePalette[] =
-{
-    {sPokedexPlusHGSS_Counter_Pal, TAG_DEX_HGSS_COUNTER},
-    {sPokedexPlusHGSS_CounterDark_Pal, TAG_DEX_HGSS_COUNTER},
-};
 
 static const u8 sPokedexPlusHGSS_ScrollControlTiles[] = INCBIN_U8("graphics/gen4_ui/hgss_pokedex_scroll_controls.tiles.bin");
 static const u16 sPokedexPlusHGSS_ScrollControlPalette[] = INCBIN_U16("graphics/gen4_ui/hgss_pokedex_scroll_controls.palette.bin");
@@ -1197,9 +983,6 @@ static bool8 LoadPokedexListPage(u8 page)
         ResetSpriteData();
         FreeAllSpritePalettes();
         gReservedSpritePaletteCount = 8;
-        LoadSpriteSheet(&sHGSSCounterSpriteSheet[HGSS_DECAPPED]);
-        LoadSpritePalette(&sHGSSCounterSpritePalette[HGSS_DARK_MODE]);
-        LoadSpritePalettes(sStatBarSpritePal);
         LoadSpriteSheet(&sHGSSScrollControlSpriteSheet);
         LoadSpritePalette(&sHGSSScrollControlSpritePalette);
         LoadSpriteSheet(&sHGSSStartMenuCursorSpriteSheet);
@@ -1368,12 +1151,6 @@ static void SpriteCB_HGSSScrollArrow(struct Sprite *sprite)
     }
 }
 
-static void SpriteCB_HGSSCounterInfo(struct Sprite *sprite)
-{
-    if (sPokedexView->currentPage != PAGE_MAIN)
-        DestroySprite(sprite);
-}
-
 static void SpriteCB_HGSSStartMenuCursor(struct Sprite *sprite)
 {
     if (sPokedexView->currentPage != PAGE_MAIN && sPokedexView->currentPage != PAGE_SEARCH_RESULTS)
@@ -1405,231 +1182,18 @@ static void SpriteCB_HGSSStartMenuCursor(struct Sprite *sprite)
 static void CreateInterfaceSprites(u8 page)
 {
     u8 spriteId;
-    u16 digitNum;
-    bool32 drawNextDigit;
 
-    // Scroll arrows
+    // Only verified HGSS-derived scroll controls remain here. The former
+    // custom "HGSS" counter labels/digits were not extracted HGSS assets.
     spriteId = CreateSprite(&sHGSSScrollArrowSpriteTemplate, 10, 4, 0);
     gSprites[spriteId].sIsDownArrow = FALSE;
+
     spriteId = CreateSprite(&sHGSSScrollArrowSpriteTemplate, 10, 156, 0);
     gSprites[spriteId].sIsDownArrow = TRUE;
     gSprites[spriteId].vFlip = TRUE;
 
     CreateSprite(&sHGSSScrollBarSpriteTemplate, 6, 20, 0);
-
-    if (!IsNationalPokedexEnabled() && page == PAGE_MAIN)
-    {
-        // Hoenn text
-        CreateSprite(&sHGSSHoennNationalTextSpriteTemplate, LIST_RIGHT_SIDE_TEXT_X, 40 - LIST_RIGHT_SIDE_TEXT_Y_OFFSET - 6, 1);
-        // Hoenn seen
-        CreateSprite(&sHGSSSeenOwnTextSpriteTemplate, LIST_RIGHT_SIDE_TEXT_X, 45 - LIST_RIGHT_SIDE_TEXT_Y_OFFSET + 6, 1);
-        // Hoenn own
-        spriteId = CreateSprite(&sHGSSSeenOwnTextSpriteTemplate, LIST_RIGHT_SIDE_TEXT_X, 55 - LIST_RIGHT_SIDE_TEXT_Y_OFFSET + 7, 1);
-        StartSpriteAnim(&gSprites[spriteId], 1);
-
-        // Hoenn seen value - 100s
-        drawNextDigit = FALSE;
-        spriteId = CreateSprite(&sHGSSCounterDigitSpriteTemplate, LIST_RIGHT_SIDE_TEXT_X + LIST_RIGHT_SIDE_TEXT_X_OFFSET, 45 - LIST_RIGHT_SIDE_TEXT_Y_OFFSET, 1);
-        digitNum = sPokedexView->seenCount / 100;
-        StartSpriteAnim(&gSprites[spriteId], digitNum);
-        if (digitNum != 0)
-            drawNextDigit = TRUE;
-        else
-            gSprites[spriteId].invisible = TRUE;
-
-        // Hoenn seen value - 10s
-        spriteId = CreateSprite(&sHGSSCounterDigitSpriteTemplate, LIST_RIGHT_SIDE_TEXT_X + LIST_RIGHT_SIDE_TEXT_X_OFFSET + 8, 45 - LIST_RIGHT_SIDE_TEXT_Y_OFFSET, 1);
-        digitNum = (sPokedexView->seenCount % 100) / 10;
-        if (digitNum != 0 || drawNextDigit)
-            StartSpriteAnim(&gSprites[spriteId], digitNum);
-        else
-            gSprites[spriteId].invisible = TRUE;
-
-        // Hoenn seen value - 1s
-        spriteId = CreateSprite(&sHGSSCounterDigitSpriteTemplate, LIST_RIGHT_SIDE_TEXT_X + LIST_RIGHT_SIDE_TEXT_X_OFFSET + 16, 45 - LIST_RIGHT_SIDE_TEXT_Y_OFFSET, 1);
-        digitNum = (sPokedexView->seenCount % 100) % 10;
-        StartSpriteAnim(&gSprites[spriteId], digitNum);
-
-
-        // Hoenn owned value - 100s
-        drawNextDigit = FALSE;
-        spriteId = CreateSprite(&sHGSSCounterDigitSpriteTemplate, LIST_RIGHT_SIDE_TEXT_X + LIST_RIGHT_SIDE_TEXT_X_OFFSET, 55 - LIST_RIGHT_SIDE_TEXT_Y_OFFSET, 1);
-        digitNum = sPokedexView->ownCount / 100;
-        StartSpriteAnim(&gSprites[spriteId], digitNum);
-        if (digitNum != 0)
-            drawNextDigit = TRUE;
-        else
-            gSprites[spriteId].invisible = TRUE;
-
-        // Hoenn owned value - 10s
-        spriteId = CreateSprite(&sHGSSCounterDigitSpriteTemplate, LIST_RIGHT_SIDE_TEXT_X + LIST_RIGHT_SIDE_TEXT_X_OFFSET + 8, 55 - LIST_RIGHT_SIDE_TEXT_Y_OFFSET, 1);
-        digitNum = (sPokedexView->ownCount % 100) / 10;
-        if (digitNum != 0 || drawNextDigit)
-            StartSpriteAnim(&gSprites[spriteId], digitNum);
-        else
-            gSprites[spriteId].invisible = TRUE;
-
-        // Hoenn owned value - 1s
-        spriteId = CreateSprite(&sHGSSCounterDigitSpriteTemplate, LIST_RIGHT_SIDE_TEXT_X + LIST_RIGHT_SIDE_TEXT_X_OFFSET + 16, 55 - LIST_RIGHT_SIDE_TEXT_Y_OFFSET, 1);
-        digitNum = (sPokedexView->ownCount % 100) % 10;
-        StartSpriteAnim(&gSprites[spriteId], digitNum);
-    }
-    else if (page == PAGE_MAIN)
-    {
-        u16 seenOwnedCount;
-        u8 counterXDist  = 6;
-        u8 counterX1s    = LIST_RIGHT_SIDE_TEXT_X + LIST_RIGHT_SIDE_TEXT_X_OFFSET + 16 - (sPokedexView->seenCount > 999 ? 0 : 1);
-        u8 counterX10s   = counterX1s - counterXDist;
-        u8 counterX100s  = counterX10s - counterXDist;
-        u8 counterX1000s = counterX100s - counterXDist;
-
-        // Hoenn text
-        CreateSprite(&sHGSSHoennNationalTextSpriteTemplate, LIST_RIGHT_SIDE_TEXT_X, 40 - LIST_RIGHT_SIDE_TEXT_Y_OFFSET - 6, 1);
-        // Hoenn seen
-        CreateSprite(&sHGSSSeenOwnTextSpriteTemplate, LIST_RIGHT_SIDE_TEXT_X, 45 - LIST_RIGHT_SIDE_TEXT_Y_OFFSET + 6, 1);
-        // Hoenn own
-        spriteId = CreateSprite(&sHGSSSeenOwnTextSpriteTemplate, LIST_RIGHT_SIDE_TEXT_X, 55 - LIST_RIGHT_SIDE_TEXT_Y_OFFSET + 7, 1);
-        StartSpriteAnim(&gSprites[spriteId], 1);
-
-        // National text
-        spriteId = CreateSprite(&sHGSSHoennNationalTextSpriteTemplate, LIST_RIGHT_SIDE_TEXT_X, 73 - LIST_RIGHT_SIDE_TEXT_Y_OFFSET - 6, 1);
-        StartSpriteAnim(&gSprites[spriteId], 1);
-        // National seen
-        CreateSprite(&sHGSSSeenOwnTextSpriteTemplate, LIST_RIGHT_SIDE_TEXT_X, 78 - LIST_RIGHT_SIDE_TEXT_Y_OFFSET + 6, 1);
-        // National own
-        spriteId = CreateSprite(&sHGSSSeenOwnTextSpriteTemplate, LIST_RIGHT_SIDE_TEXT_X, 88 - LIST_RIGHT_SIDE_TEXT_Y_OFFSET + 6, 1);
-        StartSpriteAnim(&gSprites[spriteId], 1);
-
-        // Hoenn seen value - 100s
-        seenOwnedCount = GetRegionalPokedexCount(FLAG_GET_SEEN);
-        drawNextDigit = FALSE;
-        spriteId = CreateSprite(&sHGSSCounterDigitSpriteTemplate, counterX100s, 45 - LIST_RIGHT_SIDE_TEXT_Y_OFFSET, 1);
-        digitNum = seenOwnedCount / 100;
-        StartSpriteAnim(&gSprites[spriteId], digitNum);
-        if (digitNum != 0)
-            drawNextDigit = TRUE;
-        else
-            gSprites[spriteId].invisible = TRUE;
-
-        // Hoenn seen value - 10s
-        spriteId = CreateSprite(&sHGSSCounterDigitSpriteTemplate, counterX10s, 45 - LIST_RIGHT_SIDE_TEXT_Y_OFFSET, 1);
-        digitNum = (seenOwnedCount % 100) / 10;
-        if (digitNum != 0 || drawNextDigit)
-            StartSpriteAnim(&gSprites[spriteId], digitNum);
-        else
-            gSprites[spriteId].invisible = TRUE;
-
-        // Hoenn seen value - 1s
-        spriteId = CreateSprite(&sHGSSCounterDigitSpriteTemplate, counterX1s, 45 - LIST_RIGHT_SIDE_TEXT_Y_OFFSET, 1);
-        digitNum = (seenOwnedCount % 100) % 10;
-        StartSpriteAnim(&gSprites[spriteId], digitNum);
-
-        seenOwnedCount = GetRegionalPokedexCount(FLAG_GET_CAUGHT);
-        // Hoenn owned value - 100s
-        drawNextDigit = FALSE;
-        spriteId = CreateSprite(&sHGSSCounterDigitSpriteTemplate, counterX100s, 55 - LIST_RIGHT_SIDE_TEXT_Y_OFFSET, 1);
-        digitNum = seenOwnedCount / 100;
-        StartSpriteAnim(&gSprites[spriteId], digitNum);
-        if (digitNum != 0)
-            drawNextDigit = TRUE;
-        else
-            gSprites[spriteId].invisible = TRUE;
-
-        // Hoenn owned value - 10s
-        spriteId = CreateSprite(&sHGSSCounterDigitSpriteTemplate, counterX10s, 55 - LIST_RIGHT_SIDE_TEXT_Y_OFFSET, 1);
-        digitNum = (seenOwnedCount % 100) / 10;
-        if (digitNum != 0 || drawNextDigit)
-            StartSpriteAnim(&gSprites[spriteId], digitNum);
-        else
-            gSprites[spriteId].invisible = TRUE;
-
-        // Hoenn owned value - 1s
-        spriteId = CreateSprite(&sHGSSCounterDigitSpriteTemplate, counterX1s, 55 - LIST_RIGHT_SIDE_TEXT_Y_OFFSET, 1);
-        digitNum = (seenOwnedCount % 100) % 10;
-        StartSpriteAnim(&gSprites[spriteId], digitNum);
-
-        //****************************
-        // National seen value - 1000s
-        drawNextDigit = FALSE;
-        spriteId = CreateSprite(&sHGSSCounterDigitSpriteTemplate, counterX1000s, 78 - LIST_RIGHT_SIDE_TEXT_Y_OFFSET, 1);
-        digitNum = sPokedexView->seenCount / 1000;
-        StartSpriteAnim(&gSprites[spriteId], digitNum);
-        if (digitNum != 0)
-            drawNextDigit = TRUE;
-        else
-            gSprites[spriteId].invisible = TRUE;
-
-        // National seen value - 100s
-        spriteId = CreateSprite(&sHGSSCounterDigitSpriteTemplate, counterX100s, 78 - LIST_RIGHT_SIDE_TEXT_Y_OFFSET, 1);
-        digitNum = (sPokedexView->seenCount % 1000) / 100;
-        if (digitNum != 0 || drawNextDigit)
-        {
-            drawNextDigit = TRUE;
-            StartSpriteAnim(&gSprites[spriteId], digitNum);
-        }
-        else
-            gSprites[spriteId].invisible = TRUE;
-
-        // National seen value - 10s
-        spriteId = CreateSprite(&sHGSSCounterDigitSpriteTemplate, counterX10s, 78 - LIST_RIGHT_SIDE_TEXT_Y_OFFSET, 1);
-        digitNum = ((sPokedexView->seenCount % 1000) % 100) / 10;
-        if (digitNum != 0 || drawNextDigit)
-            StartSpriteAnim(&gSprites[spriteId], digitNum);
-        else
-            gSprites[spriteId].invisible = TRUE;
-
-        // National seen value - 1s
-        spriteId = CreateSprite(&sHGSSCounterDigitSpriteTemplate, counterX1s, 78 - LIST_RIGHT_SIDE_TEXT_Y_OFFSET, 1);
-        digitNum = ((sPokedexView->seenCount % 1000) % 100) % 10;
-        StartSpriteAnim(&gSprites[spriteId], digitNum);
-
-        // National owned value - 1000s
-        drawNextDigit = FALSE;
-        spriteId = CreateSprite(&sHGSSCounterDigitSpriteTemplate, counterX1000s, 88 - LIST_RIGHT_SIDE_TEXT_Y_OFFSET, 1);
-        digitNum = sPokedexView->ownCount / 1000;
-        StartSpriteAnim(&gSprites[spriteId], digitNum);
-        if (digitNum != 0)
-            drawNextDigit = TRUE;
-        else
-            gSprites[spriteId].invisible = TRUE;
-
-        // National owned value - 100s
-        spriteId = CreateSprite(&sHGSSCounterDigitSpriteTemplate, counterX100s, 88 - LIST_RIGHT_SIDE_TEXT_Y_OFFSET, 1);
-        digitNum = (sPokedexView->ownCount % 1000) / 100;
-        if (digitNum != 0 || drawNextDigit)
-        {
-            drawNextDigit = TRUE;
-            StartSpriteAnim(&gSprites[spriteId], digitNum);
-        }
-        else
-            gSprites[spriteId].invisible = TRUE;
-
-        // National owned value - 10s
-        spriteId = CreateSprite(&sHGSSCounterDigitSpriteTemplate, counterX10s, 88 - LIST_RIGHT_SIDE_TEXT_Y_OFFSET, 1);
-        digitNum = ((sPokedexView->ownCount % 1000) % 100) / 10;
-        if (digitNum != 0 || drawNextDigit)
-            StartSpriteAnim(&gSprites[spriteId], digitNum);
-        else
-            gSprites[spriteId].invisible = TRUE;
-
-        // National owned value - 1s
-        spriteId = CreateSprite(&sHGSSCounterDigitSpriteTemplate, counterX1s, 88 - LIST_RIGHT_SIDE_TEXT_Y_OFFSET, 1);
-        digitNum = ((sPokedexView->ownCount % 1000) % 100) % 10;
-        StartSpriteAnim(&gSprites[spriteId], digitNum);
-    }
-
-    if (page == PAGE_MAIN)
-    {
-        spriteId = CreateSprite(&sHGSSStartMenuCursorSpriteTemplate, 136, 96, 1);
-        gSprites[spriteId].invisible = TRUE;
-    }
-    else // PAGE_SEARCH_RESULTS
-    {
-        spriteId = CreateSprite(&sHGSSStartMenuCursorSpriteTemplate, 136, 80, 1);
-        gSprites[spriteId].invisible = TRUE;
-    }
 }
-
 
 //************************************
 //*                                  *
@@ -1662,181 +1226,28 @@ static inline void WritePixel(u8 *dst, u32 x, u32 y, u32 value)
     }
 }
 #define STAT_BAR_X_OFFSET 10
-static void CreateStatBar(u8 *dst, u32 y, u32 width)
-{
-    u32 i, color;
-
-    switch (width)
-    {
-    case 0 ... 5:
-        color = COLOR_WORST;
-        break;
-    case 6 ... 15:
-        color = COLOR_BAD;
-        break;
-    case 16 ... 25:
-        color = COLOR_AVERAGE;
-        break;
-    case 26 ... 31:
-        color = COLOR_GOOD;
-        break;
-    case 32 ... 37:
-        color = COLOR_VERY_GOOD;
-        break;
-    default:
-        color = COLOR_BEST;
-        break;
-    }
-
-    // white pixes left side
-    WritePixel(dst, STAT_BAR_X_OFFSET, y + 0, COLOR_ID_BAR_WHITE);
-    WritePixel(dst, STAT_BAR_X_OFFSET, y + 1, COLOR_ID_BAR_WHITE);
-    WritePixel(dst, STAT_BAR_X_OFFSET, y + 2, COLOR_ID_BAR_WHITE);
-    WritePixel(dst, STAT_BAR_X_OFFSET, y + 3, COLOR_ID_BAR_WHITE);
-    WritePixel(dst, STAT_BAR_X_OFFSET, y + 4, COLOR_ID_BAR_WHITE);
-
-    // white pixels right side
-    WritePixel(dst, STAT_BAR_X_OFFSET + width - 1, y + 0, COLOR_ID_BAR_WHITE);
-    WritePixel(dst, STAT_BAR_X_OFFSET + width - 1, y + 1, COLOR_ID_BAR_WHITE);
-    WritePixel(dst, STAT_BAR_X_OFFSET + width - 1, y + 2, COLOR_ID_BAR_WHITE);
-    WritePixel(dst, STAT_BAR_X_OFFSET + width - 1, y + 3, COLOR_ID_BAR_WHITE);
-    WritePixel(dst, STAT_BAR_X_OFFSET + width - 1, y + 4, COLOR_ID_BAR_WHITE);
-
-    // Fill
-    for (i = 1; i < width - 1; i++)
-    {
-        WritePixel(dst, STAT_BAR_X_OFFSET + i, y + 0, COLOR_ID_BAR_WHITE);
-        WritePixel(dst, STAT_BAR_X_OFFSET + i, y + 1, COLOR_ID_FILL_SHADOW + color * 2);
-        WritePixel(dst, STAT_BAR_X_OFFSET + i, y + 2, COLOR_ID_FILL + color * 2);
-        WritePixel(dst, STAT_BAR_X_OFFSET + i, y + 3, COLOR_ID_FILL + color * 2);
-        WritePixel(dst, STAT_BAR_X_OFFSET + i, y + 4, COLOR_ID_BAR_WHITE);
-    }
-}
-static const u8 sBaseStatOffsets[] =
-{
-    offsetof(struct SpeciesInfo, baseHP),
-    offsetof(struct SpeciesInfo, baseAttack),
-    offsetof(struct SpeciesInfo, baseDefense),
-    offsetof(struct SpeciesInfo, baseSpAttack),
-    offsetof(struct SpeciesInfo, baseSpDefense),
-    offsetof(struct SpeciesInfo, baseSpeed),
-};
 void TryDestroyStatBars(void)
 {
-    if (sPokedexView->statBarsSpriteId != 0xFF)
-    {
-        FreeSpriteTilesByTag(TAG_STAT_BAR);
-        //FreeSpriteOamMatrix(&gSprites[sPokedexView->statBarsSpriteId]);
-        DestroySprite(&gSprites[sPokedexView->statBarsSpriteId]);
-        sPokedexView->statBarsSpriteId = 0xFF;
-    }
+    sPokedexView->statBarsSpriteId = 0xFF;
 }
+
 void TryDestroyStatBarsBg(void)
 {
-    if (sPokedexView->statBarsBgSpriteId != 0xFF)
-    {
-        FreeSpriteTilesByTag(TAG_STAT_BAR_BG);
-        //FreeSpriteOamMatrix(&gSprites[sPokedexView->statBarsBgSpriteId]);
-        DestroySprite(&gSprites[sPokedexView->statBarsBgSpriteId]);
-        sPokedexView->statBarsBgSpriteId = 0xFF;
-    }
+    sPokedexView->statBarsBgSpriteId = 0xFF;
 }
+
 static void CreateStatBars(struct PokedexListItem *dexMon)
 {
-    u8 offset_x = 168; // shifted with compacted authentic HGSS right side
-    u8 offset_y = 16; //Moves the complete stat box up/down
-    TryDestroyStatBars();
-
     sPokedexView->justScrolled = FALSE;
-
-    if (dexMon->owned) // Show filed bars
-    {
-        u8 i;
-        u32 width, statValue;
-        u8 *gfx = Alloc(64 * 64);
-        static const u8 sBarsYOffset[] = {3, 13, 23, 33, 43, 53};
-        struct SpriteSheet sheet = {gfx, 64 * 64, TAG_STAT_BAR};
-        enum Species species = NationalPokedexNumToSpecies(dexMon->dexNum);
-
-        memcpy(gfx, sStatBarsGfx, sizeof(sStatBarsGfx));
-        for (i = 0; i < NUM_STATS; i++)
-        {
-            statValue = *((u8*)(&gSpeciesInfo[species]) + sBaseStatOffsets[i]);
-            if (statValue <= 100)
-            {
-                width = statValue / 3;
-                if (width >= 33)
-                    width -= 1;
-            }
-            else
-                width = (100 / 3) + ((statValue - 100) / 14);
-
-            if (width > 39) // Max pixels
-                width = 39;
-            if (width < 3)
-                width = 3;
-
-            CreateStatBar(gfx, sBarsYOffset[i], width);
-        }
-
-        LoadSpriteSheet(&sheet);
-        Free(gfx);
-    }
-    else if (dexMon->seen) // Just HP/ATK/DEF
-    {
-        static const struct SpriteSheet sheet = {sStatBarsGfx, 64 * 64, TAG_STAT_BAR};
-
-        LoadSpriteSheet(&sheet);
-    }
-    else // neither seen nor owned
-    {
-        return;
-    }
-    sPokedexView->statBarsSpriteId = CreateSprite(&sStatBarSpriteTemplate, 36+offset_x, 107+offset_y, 10);
+    sPokedexView->statBarsSpriteId = 0xFF;
 }
-static void CreateStatBarsBg(void) //stat bars background text
+
+static void CreateStatBarsBg(void)
 {
-    static const struct SpriteSheet sheetStatBarsBg = {sStatBarsGfx, 64 * 64, TAG_STAT_BAR_BG};
-    u8 offset_x = 168; // shifted with compacted authentic HGSS right side
-    u8 offset_y = 16; //Moves the complete stat box up/down
-
-    TryDestroyStatBarsBg();
-
-    LoadSpriteSheet(&sheetStatBarsBg);
-    sPokedexView->statBarsBgSpriteId = CreateSprite(&sStatBarBgSpriteTemplate, 36+offset_x, 107+offset_y, 0);
+    sPokedexView->statBarsBgSpriteId = 0xFF;
 }
+
 // Hack to destroy sprites when a Pokémon data is being loaded in
-static bool32 IsMonInfoBeingLoaded(void)
-{
-    return (gSprites[sPokedexView->selectedMonSpriteId].callback == SpriteCB_MoveMonForInfoScreen);
-}
-static void SpriteCB_StatBars(struct Sprite *sprite)
-{
-    if (IsMonInfoBeingLoaded())
-        sprite->invisible = TRUE;
-    if (sPokedexView->currentPage != PAGE_MAIN && sPokedexView->currentPage != PAGE_SEARCH_RESULTS)
-    {
-        FreeSpriteTilesByTag(TAG_STAT_BAR);
-        FreeSpriteOamMatrix(&gSprites[sPokedexView->statBarsSpriteId]);
-        DestroySprite(&gSprites[sPokedexView->statBarsSpriteId]);
-        sPokedexView->statBarsSpriteId = 0xFF;
-    }
-}
-static void SpriteCB_StatBarsBg(struct Sprite *sprite)
-{
-    if (IsMonInfoBeingLoaded())
-        sprite->invisible = TRUE;
-    if (sPokedexView->currentPage != PAGE_MAIN && sPokedexView->currentPage != PAGE_SEARCH_RESULTS)
-    {
-        FreeSpriteTilesByTag(TAG_STAT_BAR_BG);
-        FreeSpriteOamMatrix(&gSprites[sPokedexView->statBarsBgSpriteId]);
-        DestroySprite(&gSprites[sPokedexView->statBarsBgSpriteId]);
-        sPokedexView->statBarsBgSpriteId = 0xFF;
-    }
-}
-
-
-
 //************************************
 //*                                  *
 //*        Info screen               *
@@ -5238,7 +4649,6 @@ void LoadSearchMenu_HGSS(u8 taskId)
     case 1:
         LoadSpriteSheet(&sHGSSScrollControlSpriteSheet);
         LoadSpritePalette(&sHGSSScrollControlSpritePalette);
-        LoadSpritePalettes(sStatBarSpritePal);
         CreateSearchParameterScrollArrowsWithTemplate(taskId, &sHGSSScrollArrowSpriteTemplate);
         for (i = 0; i < NUM_TASK_DATA; i++)
             gTasks[taskId].data[i] = 0;
