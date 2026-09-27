@@ -1081,7 +1081,6 @@ static void CB2_ExitPokeStorage(void)
 //------------------------------------------------------------------------------
 
 // First tile index (local to char block 2) of the 4x4 box icon tile block
-#define CHOOSE_BOX_BG_TILE_BASE  47
 // Top-left tilemap column/row of the choose-box grid (pixels 88,64 / 8)
 #define CHOOSE_BOX_GRID_TILE_COL 9
 #define CHOOSE_BOX_GRID_TILE_ROW 6
@@ -1160,24 +1159,15 @@ static void DrawHgssChooseBoxGrid(void)
 
 static void ChooseBoxMenu_CreateSprites(u8 curBox)
 {
-    u8 boxId;
     u8 col;
     u8 row;
     u8 tx;
-    u8 ty;
     u8 spriteId;
-    u16 *tilemap = (u16 *)sStorage->displayMenuTilemapBuffer;
 
     sChooseBoxMenu->curBox = curBox;
 
-    for (boxId = 0; boxId < TOTAL_BOXES_COUNT; boxId++)
-    {
-        col = boxId % 5;
-        row = boxId / 5;
-        for (ty = 0; ty < 4; ty++)
-            for (tx = 0; tx < 4; tx++)
-                tilemap[(CHOOSE_BOX_GRID_TILE_ROW + row * 4 + ty) * 32 + (CHOOSE_BOX_GRID_TILE_COL + col * 4 + tx)] = CHOOSE_BOX_BG_TILE_BASE + ty * 4 + tx;
-    }
+    // Do not paint the legacy 4x4-per-box chrome here. The Choose Box
+    // background is supplied only by a verified HGSS asset descriptor.
     DrawHgssChooseBoxGrid();
 
     col = curBox % 5;
