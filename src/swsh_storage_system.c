@@ -812,6 +812,7 @@ static void SetBoxWallpaper(u8, u8);
 static void CreateInitBoxTask(u8);
 static bool8 IsInitBoxActive(void);
 static bool32 LoadHgssStorageBgAsset(const struct HgssStorageBgAsset *, u8, u16, u8, u16 *, u8, u8);
+static void DrawHgssStorageMainFrame(void);
 static void DrawHgssStoragePartySlots(void);
 static void UpdateHgssStorageSlotHighlight(void);
 static void Task_InitBox(u8);
@@ -3486,6 +3487,7 @@ static void LoadPokeStorageMenuGfx(void)
     DecompressAndLoadBgGfxUsingHeap(1, sSwShStorage_Gfx, 0, 0, 0);
     DecompressDataWithHeaderWram(sSwShStorage_BG1_Tilemap, sStorage->displayMenuTilemapBuffer);
     SetBgTilemapBuffer(1, sStorage->displayMenuTilemapBuffer);
+    DrawHgssStorageMainFrame();
     ShowBg(1);
     ScheduleBgCopyTilemapToVram(1);
 
@@ -5567,11 +5569,31 @@ static bool32 LoadHgssStorageBgAsset(
     return TRUE;
 }
 
+static void DrawHgssStorageMainFrame(void)
+{
+    u16 *tilemap = (u16 *)sStorage->displayMenuTilemapBuffer;
+    u32 legacyGfxSize = GetDecompressedDataSize(sSwShStorage_Gfx);
+    u16 baseTile = (legacyGfxSize + TILE_SIZE_4BPP - 1) / TILE_SIZE_4BPP;
+
+    // Phase 2: the authentic HGSS frame is drawn over the still-loaded legacy
+    // base. Only whole 1:1 source tiles are used; transparent cells leave the
+    // wallpaper and party-panel regions available to their own authentic layers.
+    LoadHgssStorageBgAsset(
+        &sHgssStorageMainFrameAsset,
+        1,
+        baseTile,
+        4,
+        tilemap,
+        0,
+        0);
+}
+
 static void DrawHgssStoragePartySlots(void)
 {
     u16 *tilemap = (u16 *)sStorage->displayMenuTilemapBuffer;
-    u32 gfxSize = GetDecompressedDataSize(sSwShStorage_Gfx);
-    u16 baseTile = (gfxSize + TILE_SIZE_4BPP - 1) / TILE_SIZE_4BPP;
+    u32 legacyGfxSize = GetDecompressedDataSize(sSwShStorage_Gfx);
+    u16 baseTile = (legacyGfxSize + TILE_SIZE_4BPP - 1) / TILE_SIZE_4BPP
+                 + sHgssStorageMainFrameAsset.tileCount;
 
     LoadHgssStorageBgAsset(
         &sHgssStoragePartyPanelAsset,

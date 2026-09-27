@@ -339,3 +339,23 @@ This commit is deliberately asset-only. The legacy
 the verified HGSS frame is wired in the next phase. Legacy removal must occur
 only after that live replacement is complete. The machine-readable record is
 `verified/main_frame.json`.
+
+
+The authentic HGSS main Storage frame is now wired live (phase 2).
+The verified NSCR 2 + NCGR 3 + NCLR 4 composition is packed into a sparse
+240x160 BG1 overlay made exclusively from whole 1:1 authentic source tiles.
+To fit the GBA viewport, source columns 13-14 and source rows 18-21 are omitted;
+no retained pixel is redrawn, resampled, or recolored. Palette index 0 is used
+only for transparent composition cells, while all nine HGSS source colors are
+losslessly remapped to indices 1-9.
+
+The live footprint deliberately mirrors and fully covers the remaining legacy
+BG1 chrome: the left edge, title/header band, right edge, and bottom band.
+Interior cells are transparent so the authenticated HGSS wallpaper and party
+panel remain visible. The authentic party panel now loads immediately after the
+main-frame tile block in BG1 VRAM, preventing tile overlap.
+
+This is the wiring phase only. `graphics/pokemon_storage/swsh/tiles.png` and
+`bg1.bin` are intentionally still loaded underneath the authentic frame and
+must not be deleted until the next cleanup commit. Their visible frame role is
+already covered by the authentic HGSS composition.

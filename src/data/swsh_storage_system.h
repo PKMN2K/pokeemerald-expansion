@@ -72,7 +72,8 @@ static const u16 sHgssContextMenu_Pal[]          = INCGFX_U16("graphics/gen4_ui/
 
 static const u16 sTextWindows_Pal[]           = INCGFX_U16("graphics/pokemon_storage/swsh/text_windows.pal", ".gbapal");
 
-// Generated from a visually verified HGSS /a/0/1/9 role binding.
+// Generated from visually verified HGSS /a/0/1/9 role bindings.
+#include "hgss_storage_main_frame.inc.h"
 #include "hgss_storage_party_panel.inc.h"
 
 // Verified authentic HGSS PC wallpaper set.
