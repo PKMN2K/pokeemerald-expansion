@@ -32,9 +32,14 @@ If HGSS has no equivalent for an expansion-only function, first document that ab
 
 ## Current status
 
-The existing `src/swsh_storage_system.c` contains several synthetic `DrawHgss...` helpers from an earlier approximation pass. These are temporary migration targets, not canonical HGSS art.
+Synthetic HGSS-style Storage drawing has been removed. The box grid, party
+panel, and Choose Box paths now accept verified assets only. Their generated
+include files intentionally contain zero descriptors until a user-provided
+`/a/0/1/9` extraction has been visually verified and bound to each role.
 
-Before replacing them, extract and identify the members of `/a/0/1/9`, then map each member to the corresponding PC/Storage screen component.
+Do not restore compatibility fallbacks that draw approximated HGSS chrome.
+If an authentic role is not available yet, leave that HGSS layer empty and
+preserve only the underlying functional UI until the real asset is identified.
 
 
 ## Member mapping workflow
