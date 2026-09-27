@@ -815,8 +815,10 @@ static void CreateInitBoxTask(u8);
 static bool8 IsInitBoxActive(void);
 static bool32 LoadHgssStorageBgAsset(const struct HgssStorageBgAsset *, u8, u16, u8, u16 *, u8, u8);
 static bool32 HasVerifiedHgssStorageBoxGrid(void);
+static bool32 HasVerifiedHgssStoragePartyPanel(void);
 static void DrawHgssStorageBoxGridFallback(u16);
 static void DrawHgssStorageBoxGrid(void);
+static void DrawHgssStoragePartySlotsFallback(u16);
 static void DrawHgssStoragePartySlots(void);
 static void UpdateHgssStorageSlotHighlight(void);
 static void Task_InitBox(u8);
@@ -5455,6 +5457,14 @@ static bool32 HasVerifiedHgssStorageBoxGrid(void)
         && sHgssStorageBoxGridAsset.tileCount != 0;
 }
 
+static bool32 HasVerifiedHgssStoragePartyPanel(void)
+{
+    return sHgssStoragePartyPanelAsset.tiles != NULL
+        && sHgssStoragePartyPanelAsset.tilemap != NULL
+        && sHgssStoragePartyPanelAsset.palette != NULL
+        && sHgssStoragePartyPanelAsset.tileCount != 0;
+}
+
 static void DrawHgssStorageBoxGridFallback(u16 baseTile)
 {
     static const u8 sGridColumns[] = {10, 13, 16, 19, 22, 25, 28};
@@ -5553,12 +5563,10 @@ static void DrawHgssStorageBoxGrid(void)
     ScheduleBgCopyTilemapToVram(2);
 }
 
-static void DrawHgssStoragePartySlots(void)
+static void DrawHgssStoragePartySlotsFallback(u16 baseTile)
 {
     static const u8 sPartyRows[] = {0, 3, 6, 9, 12, 15, 18};
     u16 *tilemap = (u16 *)sStorage->displayMenuTilemapBuffer;
-    u32 gfxSize = GetDecompressedDataSize(sSwShStorage_Gfx);
-    u16 baseTile = (gfxSize + TILE_SIZE_4BPP - 1) / TILE_SIZE_4BPP;
     u16 paletteBits = 15 << 12;
     u16 row, col;
     u8 i;
@@ -5566,7 +5574,7 @@ static void DrawHgssStoragePartySlots(void)
     if (baseTile + HGSS_GRID_TILE_COUNT >= 512)
         return;
 
-    // Six 48x24 cells centered on the existing party icon/cursor positions.
+    // Temporary compatibility fallback. This is not canonical HGSS artwork.
     for (row = 0; row <= 18; row++)
     {
         bool32 isBoundaryRow = FALSE;
@@ -5587,11 +5595,31 @@ static void DrawHgssStoragePartySlots(void)
         if (isBoundaryRow)
         {
             for (col = 2; col <= 8; col++)
-                tilemap[row * 32 + col] = paletteBits | (baseTile + HGSS_GRID_TILE_HORIZONTAL);
+                tilemap[row * 32 + col] =
+                    paletteBits | (baseTile + HGSS_GRID_TILE_HORIZONTAL);
         }
 
         tilemap[row * 32 + 2] = paletteBits | (baseTile + boundaryTile);
         tilemap[row * 32 + 8] = paletteBits | (baseTile + boundaryTile);
+    }
+}
+
+static void DrawHgssStoragePartySlots(void)
+{
+    u16 *tilemap = (u16 *)sStorage->displayMenuTilemapBuffer;
+    u32 gfxSize = GetDecompressedDataSize(sSwShStorage_Gfx);
+    u16 baseTile = (gfxSize + TILE_SIZE_4BPP - 1) / TILE_SIZE_4BPP;
+
+    if (!LoadHgssStorageBgAsset(
+            &sHgssStoragePartyPanelAsset,
+            1,
+            baseTile,
+            2,
+            tilemap,
+            2,
+            0))
+    {
+        DrawHgssStoragePartySlotsFallback(baseTile);
     }
 
     ScheduleBgCopyTilemapToVram(1);
@@ -5614,9 +5642,11 @@ static void UpdateHgssStorageSlotHighlight(void)
     if (sCursorArea != CURSOR_AREA_IN_BOX && sCursorArea != CURSOR_AREA_IN_PARTY)
         return;
 
-    // Authentic HGSS grid art is not decorated with the old generated
+    // Authentic HGSS role art is not decorated with the old generated
     // selected-line tiles. Cursor/highlight art will be migrated separately.
     if (sCursorArea == CURSOR_AREA_IN_BOX && HasVerifiedHgssStorageBoxGrid())
+        return;
+    if (sCursorArea == CURSOR_AREA_IN_PARTY && HasVerifiedHgssStoragePartyPanel())
         return;
 
     gfxSize = GetDecompressedDataSize(sSwShStorage_Gfx);
