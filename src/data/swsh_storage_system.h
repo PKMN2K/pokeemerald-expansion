@@ -55,9 +55,7 @@ static const u32 sMonInfo_Tilemap[]           = INCGFX_U32("graphics/pokemon_sto
 static const u16 sTextWindows_Pal[]           = INCGFX_U16("graphics/pokemon_storage/swsh/text_windows.pal", ".gbapal");
 
 // Generated from a visually verified HGSS /a/0/1/9 role binding.
-// The checked-in placeholder contains a zero descriptor until that verification exists.
 #include "hgss_storage_party_panel.inc.h"
-#include "hgss_storage_choose_box.inc.h"
 
 // Verified authentic HGSS PC wallpaper 01.
 // /a/0/1/9: NSCR 15 + NCGR 16 + NCLR 40; pixels preserved 1:1.

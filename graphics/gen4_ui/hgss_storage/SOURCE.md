@@ -61,11 +61,16 @@ wallpaper choice changes. Members 85 and 86 are auxiliary NSCR window/frame
 surfaces, not an all-box chooser background.
 
 Accordingly, the static role binder no longer accepts `choose_box` (or the
-already-invalid `box_grid` role). The generated Choose Box include remains a
-zero transition descriptor only until the live storage code is rewritten to
-follow HGSS's native dynamic composition. Do not populate it from an unrelated
-screen or a hand-drawn substitute. The machine-readable verification record is
-`verified/choose_box_native.json`.
+already-invalid `box_grid` role). The obsolete static Choose Box descriptor
+has now been removed from the live build. The chooser reuses the authenticated
+normal box presentation and acts as a title-level left/right carousel: the
+candidate box name and runtime count update while the HGSS wallpaper/box scene
+remains visible. No synthetic all-box grid is painted or erased.
+
+This is the first native-composition wiring stage. The next stage is to make a
+hovered candidate transition the live box preview (wallpaper/icons) through the
+existing box-scroll path, then bind the authentic navigation controls. The
+machine-readable verification record is `verified/choose_box_native.json`.
 
 Do not restore compatibility fallbacks that draw approximated HGSS chrome.
 If an authentic role is not available yet, leave that HGSS layer empty and

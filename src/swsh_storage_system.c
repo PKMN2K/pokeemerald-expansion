@@ -623,11 +623,9 @@ static bool8 SetMenuTexts_Item(void);
 
 // Choose box menu
 static void ChooseBoxMenu_CreateSprites(u8);
-static void DrawHgssChooseBoxGrid(void);
 static void ChooseBoxMenu_DestroySprites(void);
-static void ChooseBoxMenu_MoveCursor(s8, s8);
+static void ChooseBoxMenu_MoveCursor(s8);
 static void ChooseBoxMenu_UpdateHover(void);
-static u8 ChooseBoxMenu_GetRowLength(u8);
 static void ChooseBoxMenu_PrintInfo(void);
 
 // Options menus
@@ -1058,20 +1056,16 @@ static void CB2_ExitPokeStorage(void)
 //------------------------------------------------------------------------------
 //  SECTION: Choose Box menu
 //
-//  The below functions handle the popup menu that allows the player to cycle
-//  through the boxes and select one. Used when storing Pokémon in Deposit mode
-//  and for the Jump feature.
+//  HGSS does not use a standalone all-box grid for this interaction. Keep the
+//  authenticated normal box presentation visible and select the destination as
+//  a title-level carousel. Left/right changes the candidate box; A confirms and
+//  B cancels. Runtime title/count data is updated without replacement chrome.
 //------------------------------------------------------------------------------
-
-// First tile index (local to char block 2) of the 4x4 box icon tile block
-// Top-left tilemap column/row of the choose-box grid (pixels 88,64 / 8)
-#define CHOOSE_BOX_GRID_TILE_COL 9
-#define CHOOSE_BOX_GRID_TILE_ROW 6
 
 static void LoadChooseBoxMenuGfx(struct ChooseBoxMenu *menu)
 {
-    // Authentic HGSS Choose Box chrome is loaded through DrawHgssChooseBoxGrid.
-    // The old SWSH 32x32 selection-square sheet is intentionally not loaded.
+    // No separate graphics load is required. The chooser reuses the live HGSS
+    // storage wallpaper/title composition already on screen.
     sChooseBoxMenu = menu;
 }
 
@@ -1083,68 +1077,34 @@ static void FreeChooseBoxMenu(void)
 
 static u8 HandleChooseBoxMenuInput(void)
 {
-    if (UpdateCursorPos()) {
+    if (UpdateCursorPos())
         return BOXID_NONE_CHOSEN;
-    }
+
     if (JOY_NEW(B_BUTTON))
     {
         PlaySE(SE_SELECT);
         return BOXID_CANCELED;
     }
     if (JOY_NEW(A_BUTTON))
-    {
         return sChooseBoxMenu->curBox;
-    }
+
     if (JOY_REPEAT(DPAD_LEFT))
     {
         PlaySE(SE_SELECT);
-        ChooseBoxMenu_MoveCursor(-1, 0);
+        ChooseBoxMenu_MoveCursor(-1);
     }
     else if (JOY_REPEAT(DPAD_RIGHT))
     {
         PlaySE(SE_SELECT);
-        ChooseBoxMenu_MoveCursor(1, 0);
+        ChooseBoxMenu_MoveCursor(1);
     }
-    else if (JOY_REPEAT(DPAD_UP))
-    {
-        PlaySE(SE_SELECT);
-        ChooseBoxMenu_MoveCursor(0, -1);
-    }
-    else if (JOY_REPEAT(DPAD_DOWN))
-    {
-        PlaySE(SE_SELECT);
-        ChooseBoxMenu_MoveCursor(0, 1);
-    }
+
     return BOXID_NONE_CHOSEN;
-}
-
-static void DrawHgssChooseBoxGrid(void)
-{
-    u16 *tilemap = (u16 *)sStorage->displayMenuTilemapBuffer;
-    u32 gfxSize = GetDecompressedDataSize(sSwShStorage_Gfx);
-    u16 baseTile = (gfxSize + TILE_SIZE_4BPP - 1) / TILE_SIZE_4BPP;
-
-    if (LoadHgssStorageBgAsset(
-            &sHgssStorageChooseBoxAsset,
-            1,
-            baseTile,
-            2,
-            tilemap,
-            CHOOSE_BOX_GRID_TILE_COL,
-            CHOOSE_BOX_GRID_TILE_ROW))
-        CopyBgTilemapBufferToVram(1);
 }
 
 static void ChooseBoxMenu_CreateSprites(u8 curBox)
 {
-    u8 tx;
-
     sChooseBoxMenu->curBox = curBox;
-
-    // Do not paint legacy Choose Box chrome here. The background is supplied
-    // only by a verified HGSS asset descriptor. The normal storage cursor
-    // remains the live selection indicator.
-    DrawHgssChooseBoxGrid();
 
     if (sStorage->cursorSprite)
     {
@@ -1158,12 +1118,6 @@ static void ChooseBoxMenu_CreateSprites(u8 curBox)
         sStorage->movingMonSprite->subpriority = 1;
     }
 
-    for (tx = 0; tx < IN_BOX_COUNT; tx++)
-    {
-        if (sStorage->boxMonsSprites[tx])
-            sStorage->boxMonsSprites[tx]->oam.priority = 2;
-    }
-
     sChooseBoxMenu->savedCursorArea = sCursorArea;
     sChooseBoxMenu->savedCursorPosition = sCursorPosition;
     sCursorArea = CURSOR_AREA_IN_CHOOSE_BOX;
@@ -1173,32 +1127,10 @@ static void ChooseBoxMenu_CreateSprites(u8 curBox)
 
 static void ChooseBoxMenu_DestroySprites(void)
 {
-    u8 boxId;
-    u8 col;
-    u8 row;
-    u8 tx;
-    u8 ty;
-    u16 *tilemap = (u16 *)sStorage->displayMenuTilemapBuffer;
-
-    for (boxId = 0; boxId < TOTAL_BOXES_COUNT; boxId++)
-    {
-        col = boxId % 5;
-        row = boxId / 5;
-        for (ty = 0; ty < 4; ty++)
-            for (tx = 0; tx < 4; tx++)
-                tilemap[(CHOOSE_BOX_GRID_TILE_ROW + row * 4 + ty) * 32 + (CHOOSE_BOX_GRID_TILE_COL + col * 4 + tx)] = 0;
-    }
-    CopyBgTilemapBufferToVram(1);
-
     if (sChooseBoxMenu->monCountSprite)
     {
         DestroySprite(sChooseBoxMenu->monCountSprite);
         sChooseBoxMenu->monCountSprite = NULL;
-    }
-    for (tx = 0; tx < IN_BOX_COUNT; tx++)
-    {
-        if (sStorage->boxMonsSprites[tx])
-            sStorage->boxMonsSprites[tx]->oam.priority = 1;
     }
     if (sStorage->cursorSprite)
     {
@@ -1229,45 +1161,16 @@ static void ChooseBoxMenu_DestroySprites(void)
     UpdateBoxTitlePalette();
 }
 
-static void ChooseBoxMenu_MoveCursor(s8 dcol, s8 drow)
+static void ChooseBoxMenu_MoveCursor(s8 delta)
 {
-    u8 row = sChooseBoxMenu->curBox / 5;
-    u8 col = sChooseBoxMenu->curBox % 5;
-    u8 numRows = (TOTAL_BOXES_COUNT + 4) / 5;
-    u8 targetRow;
-    u8 targetLength;
+    if (delta < 0)
+        sChooseBoxMenu->curBox = (sChooseBoxMenu->curBox == 0)
+            ? TOTAL_BOXES_COUNT - 1
+            : sChooseBoxMenu->curBox - 1;
+    else if (delta > 0)
+        sChooseBoxMenu->curBox = (sChooseBoxMenu->curBox + 1) % TOTAL_BOXES_COUNT;
 
-    if (drow != 0)
-    {
-        if (drow < 0)
-            targetRow = row == 0 ? numRows - 1 : row - 1;
-        else
-            targetRow = row + 1 >= numRows ? 0 : row + 1;
-
-        targetLength = ChooseBoxMenu_GetRowLength(targetRow);
-        if (col >= targetLength)
-            col = targetLength - 1;
-        sChooseBoxMenu->curBox = targetRow * 5 + col;
-    }
-    else
-    {
-        u8 rowStart = row * 5;
-        u8 rowLength = ChooseBoxMenu_GetRowLength(row);
-
-        if (dcol > 0)
-            col = (col + 1) % rowLength;
-        else
-            col = (col + rowLength - 1) % rowLength;
-        sChooseBoxMenu->curBox = rowStart + col;
-    }
     ChooseBoxMenu_UpdateHover();
-}
-
-static u8 ChooseBoxMenu_GetRowLength(u8 row)
-{
-    u8 rowStart = row * 5;
-    u8 remaining = TOTAL_BOXES_COUNT - rowStart;
-    return remaining >= 5 ? 5 : remaining;
 }
 
 static void ChooseBoxMenu_UpdateHover(void)
@@ -1280,7 +1183,6 @@ static void ChooseBoxMenu_UpdateHover(void)
         SetCursorPosition(CURSOR_AREA_IN_CHOOSE_BOX, sChooseBoxMenu->curBox);
     }
 
-    DrawHgssChooseBoxGrid();
     ChooseBoxMenu_PrintInfo();
 }
 
@@ -1292,10 +1194,7 @@ static void ChooseBoxMenu_PrintInfo(void)
     u8 windowId;
     u8 numInBox = CountMonsInBox(sChooseBoxMenu->curBox);
     u32 winTileData;
-    s16 x;
     u8 spriteId;
-    u8 col = sChooseBoxMenu->curBox % 5;
-    u8 row = sChooseBoxMenu->curBox / 5;
 
     if (sChooseBoxMenu->monCountSprite)
     {
@@ -1322,10 +1221,7 @@ static void ChooseBoxMenu_PrintInfo(void)
     FreeSpriteTilesByTag(GFXTAG_BOX_SELECTION_PER_30);
     spriteSheet = (struct SpriteSheet){sChooseBoxMenu->monCountTiles, 0x100, GFXTAG_BOX_SELECTION_PER_30};
     LoadSpriteSheet(&spriteSheet);
-    x = 90 + col * 32;
-    if (numInBox < 10)
-        x -= 3;
-    spriteId = CreateSprite(&sSpriteTemplate_ChooseBoxMenu_MonCount, x, 66 + row * 32, 2);
+    spriteId = CreateSprite(&sSpriteTemplate_ChooseBoxMenu_MonCount, 220, 21, 2);
     if (spriteId != MAX_SPRITES)
     {
         sChooseBoxMenu->monCountSprite = &gSprites[spriteId];
@@ -5323,7 +5219,7 @@ static void UpdateBoxTitle(u8 boxId)
     RenderBoxTitleCentered(GetBoxNamePtr(boxId));
     LoadSpriteSheet(&spriteSheet);
 
-    if (sCursorArea == CURSOR_AREA_BOX_TITLE)
+    if (sCursorArea == CURSOR_AREA_BOX_TITLE || sCursorArea == CURSOR_AREA_IN_CHOOSE_BOX)
     {
         colors[0] = BOX_TITLE_SHADOW_HOVER;
         colors[1] = BOX_TITLE_TEXT_HOVER;
@@ -5534,7 +5430,7 @@ static void InitBoxTitle(u8 boxId)
 
     CpuCopy16(sCursor_Pal, sStorage->boxTitlePal, sizeof(sStorage->boxTitlePal));
 
-    if (sCursorArea == CURSOR_AREA_BOX_TITLE)
+    if (sCursorArea == CURSOR_AREA_BOX_TITLE || sCursorArea == CURSOR_AREA_IN_CHOOSE_BOX)
     {
         sStorage->boxTitlePal[13] = BOX_TITLE_FRAME_HOVER;
         sStorage->boxTitlePal[14] = BOX_TITLE_SHADOW_HOVER;
@@ -5572,7 +5468,7 @@ static void InitBoxTitle(u8 boxId)
 static void UpdateBoxTitlePalette(void)
 {
     u16 colors[3];
-    if (sCursorArea == CURSOR_AREA_BOX_TITLE)
+    if (sCursorArea == CURSOR_AREA_BOX_TITLE || sCursorArea == CURSOR_AREA_IN_CHOOSE_BOX)
     {
         colors[0] = BOX_TITLE_FRAME_HOVER;
         colors[1] = BOX_TITLE_SHADOW_HOVER;
@@ -5683,10 +5579,9 @@ static void GetCursorCoordsByPos(u8 cursorArea, u8 cursorPosition, u16 *x, u16 *
         *y = 10;
         break;
     case CURSOR_AREA_IN_CHOOSE_BOX:
-        *x = 88 + (cursorPosition % 5) * 32;
-        *y = 50 + (cursorPosition / 5) * 32;
-        if (sIsMonBeingMoved)
-            *y -= 8;
+        // HGSS destination selection is title-level rather than an all-box grid.
+        *x = 152;
+        *y = 10;
         break;
     case 4:
         *x = 160;

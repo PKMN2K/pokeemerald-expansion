@@ -81,5 +81,15 @@
     }
   ],
   "integration_rule": "Do not synthesize or bind a static choose_box background. Recreate the HGSS interaction from verified dynamic components and runtime layout behavior.",
-  "status": "asset identification complete; live wiring intentionally deferred to the next step"
+  "status": "native composition stage 1 wired: static grid removed; title-level left/right carousel active",
+  "integration_stage": {
+    "stage": 1,
+    "behavior": [
+      "Reuses the live authenticated HGSS box presentation.",
+      "Left/right cycles the candidate box at the box-title position.",
+      "Candidate box title and runtime count update dynamically.",
+      "No standalone Choose Box background is loaded, painted, or erased."
+    ],
+    "next": "Make candidate changes drive the live HGSS box-scroll preview, then bind authentic navigation controls."
+  }
 }
