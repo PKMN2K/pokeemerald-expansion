@@ -1,27 +1,11 @@
 {
   "role": "wallpaper_selector_controls",
-  "classification": "dynamic_sprite_bundles",
+  "classification": "dynamic_ncer_swatch_controls",
   "source_archive": "/a/0/1/9",
   "source_kind": "user_preserved_hgss_extraction",
   "archive_sha256": "f7a1a97638959a685719049a0b780686edb68704777fead790b230e10ed1df4a",
   "bundles": {
-    "primary": {
-      "members": {
-        "ncgr": 70,
-        "nclr": 71,
-        "ncer": 72,
-        "nanr": 73
-      },
-      "decomp_loader": "ov14_021F41E4",
-      "extracted_reference": "PC_Box/tilesheets/member_070_tiles.png",
-      "export": "wallpaper_selector_primary.png",
-      "export_size": [
-        32,
-        32
-      ],
-      "export_sha256": "b485fc0bff1567facca345fe496a9093b431ed07bc0a5936fd9301e833c1a197"
-    },
-    "secondary": {
+    "selector": {
       "members": {
         "ncgr": 74,
         "nclr": 75,
@@ -29,22 +13,70 @@
         "nanr": 77
       },
       "decomp_loader": "ov14_021F42EC",
-      "runtime_member_use": "ov14_021F462C reads NCGR member 74 while wallpaper choices change",
-      "extracted_reference": "PC_Box/tilesheets/member_074_tiles.png",
-      "export": "wallpaper_selector_secondary.png",
-      "export_size": [
-        32,
-        24
-      ],
-      "export_sha256": "adb81893336c0f8693effdc331cafce68c92f8fe748165c0c04633efc721d45a"
+      "decomp_creator": "ov14_021F4380",
+      "runtime_update": "ov14_021F462C",
+      "source_tilesheet": "verified/wallpaper_selector_tiles.png",
+      "reconstructed_cell": "verified/wallpaper_selector_swatch.png"
+    },
+    "related_box_thumbnail_base": {
+      "members": {
+        "ncgr": 70,
+        "nclr": 71,
+        "ncer": 72,
+        "nanr": 73
+      },
+      "decomp_loader": "ov14_021F41E4",
+      "runtime_update": "ov14_021F4958",
+      "source_tilesheet": "verified/box_thumbnail_base.png",
+      "classification_correction": "Phase-1 incorrectly grouped this bundle with the selector. Decomp/runtime tracing shows member 70 is the six-box thumbnail base updated from box contents, not the wallpaper selector."
     }
   },
   "decomp_verification": {
     "repository": "pret/pokeheartgold",
     "path": "asm/overlay_14.s",
-    "behavior": "Members 70-73 and 74-77 are the two sprite bundles used by the native HGSS PC Box wallpaper-selection path; member 74 is also copied during wallpaper-choice changes."
+    "behavior": "ov14_021F4380 creates four member-74 selector sprites 46 px apart; ov14_021F462C reloads/recolors the member-74 graphics when the wallpaper group changes. ov14_021F4958 instead uses member 70 to build box-content thumbnails."
   },
   "pixel_rule": "The committed PNGs are byte-for-byte copies of the user-preserved HeartGold PC Box extraction. No redraw, crop, resampling, recoloring, or synthetic pixels.",
-  "status": "phase 1 complete: authentic HGSS wallpaper-selector control sprite sheets imported; not yet wired",
-  "next": "Reconstruct the verified NCER/NANR frames from the two native bundles and wire them into the live Storage wallpaper-selection interaction. Do not remove the current live selector equivalent until the HGSS controls are proven live."
+  "status": "phase 2 complete: authentic HGSS member-74 wallpaper selector swatches are wired live; legacy list cursor/scroll-arrow equivalents intentionally retained for phase 3",
+  "next": "Remove the remaining legacy wallpaper-selector equivalents only: the standard ListMenu cursor/scroll-arrow presentation, replacing navigation feedback with the now-live HGSS selector controls without changing wallpaper selection behavior.",
+  "export": {
+    "file": "wallpaper_selector_swatch.png",
+    "sha256": "1adc4f10d3c98d5331901fecdf74b0d320e93455a4af80d9a5b0306ddfd1295a",
+    "size": [
+      24,
+      24
+    ],
+    "source_cell": "NCER 76 cell 0",
+    "source_oam_tiles": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8
+    ],
+    "opaque_pixel_count": 224,
+    "visible_bbox": [
+      4,
+      5,
+      20,
+      19
+    ],
+    "pixel_rule": "Exact member-74 NCER composition at 1:1 pixel scale. Source 8bpp pixels use only transparent index 0 and placeholder index 30; the GBA export losslessly compacts that binary mask to 4bpp. No visible pixel is redrawn, resampled, or moved."
+  },
+  "live_integration": {
+    "renderer": "four GBA OBJ sprites using the verified HGSS NCER 76 cell",
+    "layout": "four wallpaper choices per page, six pages, matching the native HGSS 24-wallpaper grouping",
+    "gba_adaptation": "Each 24x24 authentic cell is transparent-padded to a 32x32 hardware OBJ. Four copies share one 4bpp palette; the binary placeholder mask is remapped to palette entries 1-4 without altering visible geometry.",
+    "normal_color_mapping": "Wallpaper IDs 0-15 use exact NCLR 75 colors 16-31, matching ov14_021F46B0's native normal-wallpaper replacement indices.",
+    "special_color_mapping": "Wallpaper IDs 16-23 use the remaining first eight authentic NCLR 75 colors as a compact GBA continuation; no synthetic colors are introduced.",
+    "legacy_equivalent_removed": false,
+    "legacy_equivalent_still_live": [
+      "ListMenu standard cursor",
+      "AddScrollIndicatorArrowPairParameterized wallpaper page arrows"
+    ]
+  }
 }

@@ -248,6 +248,7 @@ enum {
     PALTAG_ITEM_ICON_2, // Used implicitly in CreateItemIconSprites
     PALTAG_LIST_MENU_SCROLL_ARROW,
     PALTAG_HGSS_CHOOSE_BOX_NAV,
+    PALTAG_HGSS_WALLPAPER_SELECTOR,
     PALTAG_HGSS_STORAGE_CURSOR,
 };
 
@@ -267,6 +268,7 @@ enum {
     GFXTAG_MON_ICON,
 	GFXTAG_PKRS_ICON,
     GFXTAG_HGSS_CHOOSE_BOX_NAV,
+    GFXTAG_HGSS_WALLPAPER_SELECTOR,
 };
 
 // The maximum number of Pokémon icons that can appear on-screen.
@@ -486,6 +488,8 @@ struct PokemonStorageSystemData
     u8 menuItemsCount;
     u8 menuWidth;
     u16 menuWindowId;
+    struct Sprite *wallpaperSelectorSprites[4];
+    u8 ALIGNED(4) wallpaperSelectorTiles[4 * 32 * 32 / 2];
     struct Sprite *cursorSprite;
     s32 cursorNewX;
     s32 cursorNewY;
@@ -651,6 +655,8 @@ static void AddMenu(void);
 static bool8 IsMenuLoading(void);
 static s16 HandleMenuInput(void);
 static void RemoveMenu(void);
+static void LoadHgssWallpaperSelectorSprites(void);
+static void FreeHgssWallpaperSelectorSprites(void);
 
 // Pokémon sprites
 static void InitMonIconFields(void);
@@ -3071,7 +3077,7 @@ static void Task_HandleBoxOptions(u8 taskId)
 static void Task_HandleWallpapers(u8 taskId)
 {
     s32 input;
-    u8 maxPage = (MENU_COUNT - MENU_BASE - 1) / 5;
+    u8 maxPage = (MENU_COUNT - MENU_BASE - 1) / HGSS_WALLPAPER_SELECTOR_ITEMS_PER_PAGE;
 
     switch (sStorage->state)
     {
@@ -3089,6 +3095,7 @@ static void Task_HandleWallpapers(u8 taskId)
             sStorage->listMenuSelectedRow = 0;
             DestroyListMenuTask(sStorage->listMenuTaskId, NULL, NULL);
             RemoveScrollIndicatorArrowPair(sStorage->listMenuScrollArrowTaskId);
+            FreeHgssWallpaperSelectorSprites();
             RemoveMenu();
             AddWallpaperMenu();
         }
@@ -3099,6 +3106,7 @@ static void Task_HandleWallpapers(u8 taskId)
             sStorage->listMenuSelectedRow = 0;
             DestroyListMenuTask(sStorage->listMenuTaskId, NULL, NULL);
             RemoveScrollIndicatorArrowPair(sStorage->listMenuScrollArrowTaskId);
+            FreeHgssWallpaperSelectorSprites();
             RemoveMenu();
             AddWallpaperMenu();
         }
@@ -3112,6 +3120,7 @@ static void Task_HandleWallpapers(u8 taskId)
                 {
                     DestroyListMenuTask(sStorage->listMenuTaskId, NULL, NULL);
                     RemoveScrollIndicatorArrowPair(sStorage->listMenuScrollArrowTaskId);
+                    FreeHgssWallpaperSelectorSprites();
                     RemoveMenu();
                     ClearBottomWindow();
                     SetPokeStorageTask(Task_PokeStorageMain);
@@ -3121,6 +3130,7 @@ static void Task_HandleWallpapers(u8 taskId)
                     PlaySE(SE_SELECT);
                     DestroyListMenuTask(sStorage->listMenuTaskId, NULL, NULL);
                     RemoveScrollIndicatorArrowPair(sStorage->listMenuScrollArrowTaskId);
+                    FreeHgssWallpaperSelectorSprites();
                     RemoveMenu();
                     sStorage->wallpaperId = input - MENU_BASE;
                     SetWallpaperForCurrentBox(sStorage->wallpaperId);
@@ -4649,11 +4659,108 @@ static void ClearBottomWindow(void)
     ScheduleBgCopyTilemapToVram(0);
 }
 
+#define HGSS_WALLPAPER_SELECTOR_ITEMS_PER_PAGE 4
+
+static void FreeHgssWallpaperSelectorSprites(void)
+{
+    u8 i;
+
+    for (i = 0; i < ARRAY_COUNT(sStorage->wallpaperSelectorSprites); i++)
+    {
+        if (sStorage->wallpaperSelectorSprites[i] != NULL)
+        {
+            DestroySprite(sStorage->wallpaperSelectorSprites[i]);
+            sStorage->wallpaperSelectorSprites[i] = NULL;
+        }
+    }
+
+    FreeSpriteTilesByTag(GFXTAG_HGSS_WALLPAPER_SELECTOR);
+    FreeSpritePaletteByTag(PALTAG_HGSS_WALLPAPER_SELECTOR);
+}
+
+static void LoadHgssWallpaperSelectorSprites(void)
+{
+    const u8 *srcTiles = (const u8 *)sHgssWallpaperSelectorSwatch_Gfx;
+    struct SpriteSheet spriteSheet =
+    {
+        .data = sStorage->wallpaperSelectorTiles,
+        .size = sizeof(sStorage->wallpaperSelectorTiles),
+        .tag = GFXTAG_HGSS_WALLPAPER_SELECTOR,
+    };
+    u16 palette[16] = {0};
+    struct SpritePalette spritePalette =
+    {
+        .data = palette,
+        .tag = PALTAG_HGSS_WALLPAPER_SELECTOR,
+    };
+    const u8 page = sStorage->listMenuScrollRow;
+    const s16 x = sStorage->menuWindow.tilemapLeft * 8 + 20;
+    const s16 top = sStorage->menuWindow.tilemapTop * 8;
+    u8 item;
+    u8 row;
+    u8 col;
+    u8 byte;
+
+    // The verified HGSS cell is 24x24. GBA OBJ has no 24x24 shape, so each
+    // authentic cell is copied 1:1 into the upper-left 24x24 of a transparent
+    // 32x32 hardware cell. The four copies share one 4bpp palette; only the
+    // nonzero mask index is remapped per copy so each swatch can use its
+    // authentic HGSS member-75 color.
+    CpuFill32(0, sStorage->wallpaperSelectorTiles, sizeof(sStorage->wallpaperSelectorTiles));
+
+    for (item = 0; item < HGSS_WALLPAPER_SELECTOR_ITEMS_PER_PAGE; item++)
+    {
+        const u8 colorIndex = item + 1;
+        const u8 wallpaperId = page * HGSS_WALLPAPER_SELECTOR_ITEMS_PER_PAGE + item;
+
+        palette[colorIndex] = sHgssWallpaperSelectorColors[wallpaperId];
+
+        for (row = 0; row < 3; row++)
+        {
+            for (col = 0; col < 3; col++)
+            {
+                const u32 srcTile = row * 3 + col;
+                const u32 dstTile = item * 16 + row * 4 + col;
+                const u8 *src = srcTiles + srcTile * TILE_SIZE_4BPP;
+                u8 *dst = sStorage->wallpaperSelectorTiles + dstTile * TILE_SIZE_4BPP;
+
+                for (byte = 0; byte < TILE_SIZE_4BPP; byte++)
+                {
+                    const u8 value = src[byte];
+                    const u8 lo = (value & 0x0F) ? colorIndex : 0;
+                    const u8 hi = (value & 0xF0) ? colorIndex : 0;
+                    dst[byte] = lo | (hi << 4);
+                }
+            }
+        }
+    }
+
+    FreeSpriteTilesByTag(GFXTAG_HGSS_WALLPAPER_SELECTOR);
+    FreeSpritePaletteByTag(PALTAG_HGSS_WALLPAPER_SELECTOR);
+    LoadSpriteSheet(&spriteSheet);
+    LoadSpritePalette(&spritePalette);
+
+    for (item = 0; item < HGSS_WALLPAPER_SELECTOR_ITEMS_PER_PAGE; item++)
+    {
+        const u8 spriteId = CreateSprite(
+            &sSpriteTemplate_HgssWallpaperSelector,
+            x,
+            top + 12 + item * 16,
+            0);
+
+        if (spriteId != MAX_SPRITES)
+        {
+            sStorage->wallpaperSelectorSprites[item] = &gSprites[spriteId];
+            StartSpriteAnim(sStorage->wallpaperSelectorSprites[item], item);
+        }
+    }
+}
+
 static void AddWallpaperMenu(void)
 {
     u16 i;
     u8 currentPage = sStorage->listMenuScrollRow;
-    u8 itemsPerPage = 5;
+    u8 itemsPerPage = HGSS_WALLPAPER_SELECTOR_ITEMS_PER_PAGE;
     u8 maxPage = (MENU_COUNT - MENU_BASE - 1) / itemsPerPage;
     u8 startIdx = MENU_BASE + (currentPage * itemsPerPage);
     u8 endIdx = startIdx + itemsPerPage;
@@ -4672,17 +4779,17 @@ static void AddWallpaperMenu(void)
 
     InitMenu();
     for (i = startIdx; i < endIdx; i++)
-    {
         SetMenuText(i);
-    }
+
     sStorage->menuItems[sStorage->menuItemsCount].text = NULL;
     sStorage->menuItems[sStorage->menuItemsCount].textId = 0;
 
-    sStorage->menuWindow.width = (8 + maxWidth + 8 + 7) / 8;
+    // Reserve the first 32 px for the authentic HGSS selector swatch.
+    sStorage->menuWindow.width = (32 + maxWidth + 8 + 7) / 8;
     if (sStorage->menuWindow.width > 28)
         sStorage->menuWindow.width = 28;
 
-    sStorage->menuWindow.height = 10;
+    sStorage->menuWindow.height = 8;
     sStorage->menuWindow.tilemapLeft = 29 - sStorage->menuWindow.width;
     sStorage->menuWindow.tilemapTop = 5;
     sStorage->menuWindowId = AddWindow(&sStorage->menuWindow);
@@ -4697,11 +4804,11 @@ static void AddWallpaperMenu(void)
     sStorage->listMenuTemplate.maxShowed = sStorage->menuItemsCount;
     sStorage->listMenuTemplate.windowId = sStorage->menuWindowId;
     sStorage->listMenuTemplate.header_X = 0;
-    sStorage->listMenuTemplate.item_X = 8;
-    sStorage->listMenuTemplate.cursor_X = 0;
+    sStorage->listMenuTemplate.item_X = 32;
+    sStorage->listMenuTemplate.cursor_X = 24;
     sStorage->listMenuTemplate.upText_Y = 1;
     sStorage->listMenuTemplate.cursorPal = 2;
-    sStorage->listMenuTemplate.fillValue = 1; // authentic cream in the HGSS-remapped text palette
+    sStorage->listMenuTemplate.fillValue = 1;
     sStorage->listMenuTemplate.cursorShadowPal = 3;
     sStorage->listMenuTemplate.lettersSpacing = 1;
     sStorage->listMenuTemplate.itemVerticalPadding = 0;
@@ -4710,10 +4817,14 @@ static void AddWallpaperMenu(void)
     sStorage->listMenuTemplate.cursorKind = 0;
 
     sStorage->listMenuTaskId = ListMenuInit(&sStorage->listMenuTemplate, 0, sStorage->listMenuSelectedRow);
+
+    // Phase 2 keeps the old list-menu scroll arrows underneath the new HGSS
+    // controls. They are the legacy equivalent reserved for phase-3 removal.
     sStorage->listMenuScrollArrowTaskId = AddScrollIndicatorArrowPairParameterized(
         SCROLL_ARROW_LEFT, 80, 168, 232, maxPage,
         GFXTAG_LIST_MENU_ARROW, PALTAG_LIST_MENU_SCROLL_ARROW, &sStorage->listMenuScrollRow);
 
+    LoadHgssWallpaperSelectorSprites();
     ScheduleBgCopyTilemapToVram(0);
 }
 

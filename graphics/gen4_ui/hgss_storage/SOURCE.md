@@ -395,3 +395,28 @@ The next phase must reconstruct the native NCER/NANR frames and wire those
 verified frames into the live wallpaper-selection interaction before any
 existing selector equivalent is removed. The machine-readable record is
 `verified/wallpaper_selector.json`.
+
+
+## Authentic HGSS wallpaper selector — phase 2
+
+Runtime tracing corrects one phase-1 classification before live wiring: member 70
+is not a wallpaper-selector control. `ov14_021F4958` uses it as the base for
+six box-content thumbnail images. That authentic extraction is retained under
+`verified/box_thumbnail_base.png` for its proper future role.
+
+The selector itself is the member 74/75/76/77 bundle. `ov14_021F4380`
+creates four copies of its cell, spaced 46 pixels apart, and
+`ov14_021F462C` rewrites the member-74 placeholder pixels whenever the
+wallpaper group changes. The verified NCER 76 cell reconstructs to a 24x24
+binary mask with 224 opaque pixels and visible bounds x=4..19, y=5..18.
+
+`verified/wallpaper_selector_swatch.png` is the exact 1:1 NCER-composed
+shape. Its source is 8bpp but uses only transparent index 0 and placeholder
+index 30, so the GBA pack losslessly compacts the mask to 4bpp. Runtime copies
+that cell into four transparent-padded 32x32 OBJ cells and assigns authentic
+member-75 BGR555 colors. The live wallpaper picker is now grouped as six pages
+of four choices, matching HGSS's 24-wallpaper four-at-a-time selector behavior.
+
+This is phase 2 only. The existing standard ListMenu cursor and scroll-arrow
+pair remain live underneath/alongside the authentic HGSS swatches and are
+reserved for the next cleanup phase.

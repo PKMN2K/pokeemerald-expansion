@@ -67,6 +67,44 @@ static const u16 sHgssYesNo_Pal[]               = INCGFX_U16("graphics/gen4_ui/h
 static const u32 sHgssContextMenu_Gfx[]          = INCGFX_U32("graphics/gen4_ui/hgss_storage/verified/context_menu.png", ".4bpp");
 static const u16 sHgssContextMenu_Pal[]          = INCGFX_U16("graphics/gen4_ui/hgss_storage/verified/context_menu.png", ".gbapal");
 
+// Authentic HGSS Storage wallpaper-selector swatch.
+// /a/0/1/9 NCGR 74 + NCLR 75 + NCER 76 + NANR 77.
+// The 24x24 export is the exact static NCER cell, compacted losslessly from
+// 8bpp {transparent, placeholder} pixels to a 4bpp mask for GBA OBJ use.
+static const u32 sHgssWallpaperSelectorSwatch_Gfx[] = INCGFX_U32("graphics/gen4_ui/hgss_storage/verified/wallpaper_selector_swatch.png", ".4bpp");
+
+// Exact BGR555 colors from HGSS /a/0/1/9 NCLR member 75.
+// IDs 0-15 use the directly verified native selector indices 16-31.
+// IDs 16-23 use the remaining authentic first eight member-75 colors as the
+// compact GBA continuation; no synthetic colors are introduced.
+static const u16 sHgssWallpaperSelectorColors[WALLPAPER_COUNT] =
+{
+    [WALLPAPER_BASE]      = 0x523F,
+    [WALLPAPER_PLAINS]    = 0x7A2C,
+    [WALLPAPER_CITY]      = 0x43B3,
+    [WALLPAPER_DESERT]    = 0x7B71,
+    [WALLPAPER_CENTER]    = 0x4EDC,
+    [WALLPAPER_SHORE]     = 0x3F9F,
+    [WALLPAPER_OCEAN]     = 0x4E19,
+    [WALLPAPER_MOUNTAIN]  = 0x327E,
+    [WALLPAPER_VOLCANO]   = 0x0000,
+    [WALLPAPER_CAVE]      = 0x761F,
+    [WALLPAPER_BEACH]     = 0x7BDE,
+    [WALLPAPER_SNOW]      = 0x5ED6,
+    [WALLPAPER_SKY]       = 0x1A1A,
+    [WALLPAPER_COMPUTA]   = 0x41CE,
+    [WALLPAPER_CUTE]      = 0x18DC,
+    [WALLPAPER_SPACE]     = 0x7528,
+    [WALLPAPER_DAYCARE]   = 0x3F0F,
+    [WALLPAPER_CONTEST]   = 0x5294,
+    [WALLPAPER_CLASSIC]   = 0x3B38,
+    [WALLPAPER_CLASSIC2]  = 0x2EF5,
+    [WALLPAPER_SPECIAL_5] = 0x6658,
+    [WALLPAPER_SPECIAL_6] = 0x427B,
+    [WALLPAPER_SPECIAL_7] = 0x7BBA,
+    [WALLPAPER_SPECIAL_8] = 0x4A76,
+};
+
 static const u16 sTextWindows_Pal[]           = INCGFX_U16("graphics/pokemon_storage/swsh/text_windows.pal", ".gbapal");
 
 // Generated from visually verified HGSS /a/0/1/9 role bindings.
@@ -584,6 +622,57 @@ static const struct SpriteTemplate sSpriteTemplate_HgssChooseBoxNav =
     .paletteTag = PALTAG_HGSS_CHOOSE_BOX_NAV,
     .oam = &sOamData_HgssChooseBoxNav,
     .anims = sAnims_HgssChooseBoxNav,
+};
+
+// ============================================================================
+// Authentic HGSS Wallpaper Selector Swatches
+// ============================================================================
+
+static const struct OamData sOamData_HgssWallpaperSelector =
+{
+    .shape = SPRITE_SHAPE(32x32),
+    .size = SPRITE_SIZE(32x32),
+    .priority = 0,
+};
+
+static const union AnimCmd sAnim_HgssWallpaperSelector0[] =
+{
+    ANIMCMD_FRAME(0, 0),
+    ANIMCMD_END
+};
+
+static const union AnimCmd sAnim_HgssWallpaperSelector1[] =
+{
+    ANIMCMD_FRAME(16, 0),
+    ANIMCMD_END
+};
+
+static const union AnimCmd sAnim_HgssWallpaperSelector2[] =
+{
+    ANIMCMD_FRAME(32, 0),
+    ANIMCMD_END
+};
+
+static const union AnimCmd sAnim_HgssWallpaperSelector3[] =
+{
+    ANIMCMD_FRAME(48, 0),
+    ANIMCMD_END
+};
+
+static const union AnimCmd *const sAnims_HgssWallpaperSelector[] =
+{
+    sAnim_HgssWallpaperSelector0,
+    sAnim_HgssWallpaperSelector1,
+    sAnim_HgssWallpaperSelector2,
+    sAnim_HgssWallpaperSelector3,
+};
+
+static const struct SpriteTemplate sSpriteTemplate_HgssWallpaperSelector =
+{
+    .tileTag = GFXTAG_HGSS_WALLPAPER_SELECTOR,
+    .paletteTag = PALTAG_HGSS_WALLPAPER_SELECTOR,
+    .oam = &sOamData_HgssWallpaperSelector,
+    .anims = sAnims_HgssWallpaperSelector,
 };
 
 // ============================================================================
