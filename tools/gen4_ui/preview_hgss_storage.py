@@ -8,8 +8,9 @@ extracted /a/0/1/9 NARC as map_hgss_storage_narc.py. It:
 1. extracts and decodes all archive members;
 2. parses every NCGR, NCLR and NSCR member;
 3. forms only structurally compatible NCGR+NCLR+NSCR combinations;
-4. renders the best candidates for each NSCR;
-5. writes a JSON index and an HTML contact sheet.
+4. writes the detailed archive/member manifest used by the standalone mapper;
+5. renders the best candidates for each NSCR;
+6. writes a JSON gallery index and an HTML contact sheet.
 
 No semantic names are assigned automatically. The gallery exists so a human can
 verify which authentic HGSS member is the box background, header, arrows, etc.
@@ -29,17 +30,44 @@ import render_hgss_nitro as nitro
 def decoded_members(source: storage_map.InputArchive):
     members = storage_map.parse_narc(source.data)
     out = []
+    records = []
     for member in members:
-        decoded, compression = storage_map.maybe_decompress(member.data)
+        record, decoded = storage_map.member_record(member)
+        records.append(record)
         out.append(
             {
                 "index": member.index,
                 "decoded": decoded,
-                "compression": compression,
-                "type": storage_map.classify(decoded),
+                "compression": record["compression"],
+                "type": record["type"],
             }
         )
-    return out
+    return out, records
+
+
+def build_member_manifest(
+    source: storage_map.InputArchive,
+    records,
+) -> dict[str, object]:
+    manifest: dict[str, object] = {
+        "source_archive": f"/{storage_map.HGSS_STORAGE_PATH}",
+        "source_kind": source.source_kind,
+        "source_file": source.source_path,
+        "archive_sha256": storage_map.hashlib.sha256(source.data).hexdigest(),
+        "member_count": len(records),
+        "expected_hgss_member_count": 87,
+        "count_matches_expected": len(records) == 87,
+        "members": records,
+    }
+
+    if source.source_kind == "nds_rom":
+        manifest["rom_title"] = source.rom_title
+        manifest["rom_game_code"] = source.rom_game_code
+        manifest["rom_file_id"] = source.rom_file_id
+        manifest["rom_archive_offset_start"] = source.rom_offset_start
+        manifest["rom_archive_offset_end"] = source.rom_offset_end
+
+    return manifest
 
 
 def write_member_files(members, member_dir: Path) -> dict[int, Path]:
@@ -346,7 +374,7 @@ def main() -> int:
         parser.error("--max-pairs-per-screen must be positive")
 
     source = storage_map.read_input_archive(args.input)
-    members = decoded_members(source)
+    members, member_records = decoded_members(source)
 
     if len(members) != 87:
         raise SystemExit(
@@ -365,11 +393,18 @@ def main() -> int:
         args.max_pairs_per_screen,
     )
 
+    manifest = build_member_manifest(source, member_records)
+    manifest_path = args.output / "manifest.json"
+    manifest_path.write_text(
+        json.dumps(manifest, indent=2) + "\n",
+        encoding="utf-8",
+    )
+
     index = {
-        "source_archive": f"/{storage_map.HGSS_STORAGE_PATH}",
-        "source_kind": source.source_kind,
-        "source_file": source.source_path,
-        "archive_sha256": storage_map.hashlib.sha256(source.data).hexdigest(),
+        "source_archive": manifest["source_archive"],
+        "source_kind": manifest["source_kind"],
+        "source_file": manifest["source_file"],
+        "archive_sha256": manifest["archive_sha256"],
         "member_count": len(members),
         "format_counts": {
             "NCGR": len(ncgrs),
@@ -398,6 +433,7 @@ def main() -> int:
         f"and {len(nscrs)} NSCR members"
     )
     print(f"Rendered {preview_count} structurally valid candidate previews")
+    print(f"Manifest: {manifest_path}")
     print(f"Gallery: {args.output / 'index.html'}")
     print(f"Index: {args.output / 'index.json'}")
     return 0
