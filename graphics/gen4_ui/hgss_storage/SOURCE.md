@@ -67,10 +67,16 @@ normal box presentation and acts as a title-level left/right carousel: the
 candidate box name and runtime count update while the HGSS wallpaper/box scene
 remains visible. No synthetic all-box grid is painted or erased.
 
-This is the first native-composition wiring stage. The next stage is to make a
-hovered candidate transition the live box preview (wallpaper/icons) through the
-existing box-scroll path, then bind the authentic navigation controls. The
-machine-readable verification record is `verified/choose_box_native.json`.
+The native composition now includes live candidate previews. Left/right uses
+the existing storage box-scroll path to transition the real candidate wallpaper
+and Pokemon icons while `gPokemonStoragePtr->currentBox` remains unchanged.
+A commits the already-previewed candidate; B first scrolls the visual preview
+back to the saved current box and then cancels. This prevents a preview from
+silently changing save-state selection and avoids replaying the transition after
+confirmation.
+
+The remaining Choose Box work is the authentic HGSS navigation/control chrome.
+The machine-readable verification record is `verified/choose_box_native.json`.
 
 Do not restore compatibility fallbacks that draw approximated HGSS chrome.
 If an authentic role is not available yet, leave that HGSS layer empty and

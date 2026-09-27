@@ -81,15 +81,15 @@
     }
   ],
   "integration_rule": "Do not synthesize or bind a static choose_box background. Recreate the HGSS interaction from verified dynamic components and runtime layout behavior.",
-  "status": "native composition stage 1 wired: static grid removed; title-level left/right carousel active",
+  "status": "native composition stage 2 wired: candidate wallpaper/icon previews are live and commit only on confirmation",
   "integration_stage": {
-    "stage": 1,
+    "stage": 2,
     "behavior": [
-      "Reuses the live authenticated HGSS box presentation.",
-      "Left/right cycles the candidate box at the box-title position.",
-      "Candidate box title and runtime count update dynamically.",
-      "No standalone Choose Box background is loaded, painted, or erased."
+      "Left/right drives the existing box-scroll renderer from the currently visible candidate to the next candidate.",
+      "Candidate wallpaper and Pokemon icons are previewed live without changing the saved current box.",
+      "A commits the already-previewed box without replaying the transition.",
+      "B restores the original current box visually before canceling."
     ],
-    "next": "Make candidate changes drive the live HGSS box-scroll preview, then bind authentic navigation controls."
+    "next": "Bind authentic HGSS navigation/control chrome for the Choose Box interaction."
   }
 }
