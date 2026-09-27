@@ -115,6 +115,17 @@ unrelated stat-label/title users of `PALTAG_MISC_1/2/3` now source their
 palette from `stat_labels.png`, so no cursor data is retained under another
 name. The machine-readable record is `verified/cursor.json`.
 
+The next verified static role is the native HGSS Pokémon markings menu. The
+archive composition is NSCR member 10 + NCGR member 14 + NCLR member 4. Visual
+verification against the user's extracted `/a/0/1/9` gallery shows the native
+88x144 panel with the six HGSS marking buttons and the two action bars.
+`verified/markings_menu.png` is a lossless 1:1 composite re-indexed to a
+4bpp-compatible PNG without redrawing, resampling, or color changes. The current
+SWSH markings menu remains live intentionally; wiring this authentic panel is
+the next sequence step, and the legacy equivalent will not be removed until the
+HGSS panel is live.
+The machine-readable record is `verified/markings_menu.json`.
+
 Do not restore compatibility fallbacks that draw approximated HGSS chrome.
 If an authentic role is not available yet, leave that HGSS layer empty and
 preserve only the underlying functional UI until the real asset is identified.

@@ -45,6 +45,7 @@ ALLOWED_ROLES = {
     "message_window",
     "yes_no",
     "cursor",
+    "markings_menu",
 }
 
 

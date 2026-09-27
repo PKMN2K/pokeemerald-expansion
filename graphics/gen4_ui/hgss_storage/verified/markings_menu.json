@@ -1,0 +1,48 @@
+{
+  "role": "markings_menu",
+  "classification": "static_ncgr_nclr_nscr_composition",
+  "source_archive": "/a/0/1/9",
+  "archive_sha256": "f7a1a97638959a685719049a0b780686edb68704777fead790b230e10ed1df4a",
+  "source_members": {
+    "nscr": {
+      "index": 10,
+      "raw_sha256": "e66426a8ec58f76b86ff5d865a25e01a0c5eaceacdcfd8ffa2f4e0a4d8669980",
+      "decoded_sha256": "c08484b40318ebff0a42fe3902c9973a03e2ad182636c2a10d522af1b331fc63"
+    },
+    "ncgr": {
+      "index": 14,
+      "raw_sha256": "ee815971b93b9f2ad99009fef4b7e2313eb6564b1ba0b570b612aaa4969453af",
+      "decoded_sha256": "afbfab4897a5f39aa96b6030877d243d0a67d8bd18f9a7295385f2c7feeb0651"
+    },
+    "nclr": {
+      "index": 4,
+      "raw_sha256": "aff0f6a18a333e68f1d6094d06e161fa41192b882f432ae615537c37f164b20b",
+      "decoded_sha256": "aff0f6a18a333e68f1d6094d06e161fa41192b882f432ae615537c37f164b20b"
+    }
+  },
+  "visual_verification": {
+    "extracted_reference": "PC_Box/screens/member_010_screen__tiles_014__pal_004.png",
+    "dimensions": [
+      88,
+      144
+    ],
+    "content": "native HGSS markings panel with six marking buttons and two action bars"
+  },
+  "export": {
+    "file": "markings_menu.png",
+    "sha256": "ab6c039908227c839291d8d001004a268f73f26c5d7c8d739668117186ac2d44",
+    "size": [
+      88,
+      144
+    ],
+    "png_color_type": "indexed_palette",
+    "colors": 9,
+    "pixel_rule": "Lossless 1:1 composite from NSCR 10 + NCGR 14 + NCLR 4; re-indexed only for GBA 4bpp compatibility, with no redraw, resampling, or color changes."
+  },
+  "current_legacy_equivalent": {
+    "asset": "graphics/pokemon_storage/swsh/markings_menu.png",
+    "live_code": "OpenMonMarkingsMenu_SwSh / sSpriteSheet_MarkingsMenu"
+  },
+  "status": "authentic HGSS markings menu identified and imported; live wiring deferred",
+  "next": "Wire verified/markings_menu.png live in place of the SWSH markings menu, then remove the legacy markings-menu asset/equivalent."
+}
