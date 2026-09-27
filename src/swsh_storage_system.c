@@ -814,11 +814,7 @@ static void SetBoxWallpaper(u8, u8);
 static void CreateInitBoxTask(u8);
 static bool8 IsInitBoxActive(void);
 static bool32 LoadHgssStorageBgAsset(const struct HgssStorageBgAsset *, u8, u16, u8, u16 *, u8, u8);
-static bool32 HasVerifiedHgssStorageBoxGrid(void);
-static bool32 HasVerifiedHgssStoragePartyPanel(void);
-static void DrawHgssStorageBoxGridFallback(u16);
 static void DrawHgssStorageBoxGrid(void);
-static void DrawHgssStoragePartySlotsFallback(u16);
 static void DrawHgssStoragePartySlots(void);
 static void UpdateHgssStorageSlotHighlight(void);
 static void Task_InitBox(u8);
@@ -834,7 +830,6 @@ static void UpdateMonInfoTilemap(void);
 
 // Misc
 static void CreateMainMenu(u8, s16 *);
-static void DrawHgssStorageMainMenuRows(u8 windowId);
 static void EnterPokeStorage(u8 boxOption);
 static u8 GetCurrentBoxOption(void);
 //static void ScrollBackground(void);
@@ -859,20 +854,14 @@ static void UpdatePokerusIconSprite(void);
 static void HideInfoPanelSprites(void);
 static void ClearMonInfoPanel(void);
 static u16 GetTargetBg0Y(void);
-static void DrawHgssStorageStatRows(u8 windowId);
 static void PrintDisplayMonStats(u8);
-static void DrawHgssStorageDetailRow(u8 windowId);
 static void PrintDisplayMonAbility(u8);
 static void PrintDisplayMonHeldItem(u8);
-static void DrawHgssStorageMonHeaderCell(u8 windowId);
 static void PrintDisplayMonNickname(u8);
 static void PrintDisplayMonLevel(u8);
 static bool8 PrintDisplayMonInfo(void);
 static void FreePokeStorageData(void);
 static bool8 InitPokeStorageWindows(void);
-static void DrawHgssStorageContextMenuRows(u8 windowId);
-static void DrawHgssStorageMessageAccent(u8 windowId);
-static void DrawHgssStorageYesNo(void);
 static void ShowYesNoWindow(s8);
 static void PrintMessage(u8 id);
 static void CreateMessageWindowSprite(void);
@@ -1072,29 +1061,8 @@ static void CreateMainMenu(u8 whichMenu, s16 *windowIdPtr)
 
     DrawStdWindowFrame(windowId, FALSE);
     PrintMenuTable(windowId, OPTIONS_COUNT, (void *)sMainMenuTexts);
-    DrawHgssStorageMainMenuRows(windowId);
     InitMenuInUpperLeftCornerNormal(windowId, OPTIONS_COUNT, whichMenu);
     *windowIdPtr = windowId;
-}
-
-static void DrawHgssStorageMainMenuRows(u8 windowId)
-{
-    u8 width = GetWindowAttribute(windowId, WINDOW_WIDTH) * 8;
-    u8 height = GetWindowAttribute(windowId, WINDOW_HEIGHT) * 8;
-    u8 y;
-
-    if (width < 16 || height < 32)
-        return;
-
-    // Preserve the selector gutter and turn the option list into HGSS-style stacked cells.
-    FillWindowPixelRect(windowId, PIXEL_FILL(2), 8, 0, width - 9, 1);
-    FillWindowPixelRect(windowId, PIXEL_FILL(2), 8, height - 1, width - 9, 1);
-    FillWindowPixelRect(windowId, PIXEL_FILL(2), width - 1, 2, 1, height - 4);
-
-    for (y = 16; y < height; y += 16)
-        FillWindowPixelRect(windowId, PIXEL_FILL(2), 8, y, width - 9, 1);
-
-    FillWindowPixelRect(windowId, PIXEL_FILL(1), 10, 2, width - 13, 1);
 }
 
 static void CB2_ExitPokeStorage(void)
@@ -1117,19 +1085,6 @@ static void CB2_ExitPokeStorage(void)
 // Top-left tilemap column/row of the choose-box grid (pixels 88,64 / 8)
 #define CHOOSE_BOX_GRID_TILE_COL 9
 #define CHOOSE_BOX_GRID_TILE_ROW 6
-
-enum
-{
-    HGSS_GRID_TILE_VERTICAL,
-    HGSS_GRID_TILE_HORIZONTAL,
-    HGSS_GRID_TILE_CROSS,
-    HGSS_GRID_TILE_TOP_CROSS,
-    HGSS_GRID_TILE_BOTTOM_CROSS,
-    HGSS_GRID_TILE_SELECTED_VERTICAL,
-    HGSS_GRID_TILE_SELECTED_HORIZONTAL,
-    HGSS_GRID_TILE_SELECTED_CROSS,
-    HGSS_GRID_TILE_COUNT,
-};
 
 static void LoadChooseBoxMenuGfx(struct ChooseBoxMenu *menu, u16 tileTag, u16 palTag, bool32 loadPal)
 {
@@ -1191,45 +1146,16 @@ static void DrawHgssChooseBoxGrid(void)
     u16 *tilemap = (u16 *)sStorage->displayMenuTilemapBuffer;
     u32 gfxSize = GetDecompressedDataSize(sSwShStorage_Gfx);
     u16 baseTile = (gfxSize + TILE_SIZE_4BPP - 1) / TILE_SIZE_4BPP;
-    u16 paletteBits = 15 << 12;
-    u8 boxId;
 
-    if (baseTile + HGSS_GRID_TILE_COUNT >= 512)
-        return;
-
-    for (boxId = 0; boxId < TOTAL_BOXES_COUNT; boxId++)
-    {
-        u8 col = boxId % 5;
-        u8 row = boxId / 5;
-        u8 left = CHOOSE_BOX_GRID_TILE_COL + col * 4;
-        u8 top = CHOOSE_BOX_GRID_TILE_ROW + row * 4;
-        u8 right = left + 3;
-        u8 bottom = top + 3;
-        bool32 selected = boxId == sChooseBoxMenu->curBox;
-        u16 horizontal = baseTile + (selected ? HGSS_GRID_TILE_SELECTED_HORIZONTAL : HGSS_GRID_TILE_HORIZONTAL);
-        u16 vertical = baseTile + (selected ? HGSS_GRID_TILE_SELECTED_VERTICAL : HGSS_GRID_TILE_VERTICAL);
-        u16 cross = baseTile + (selected ? HGSS_GRID_TILE_SELECTED_CROSS : HGSS_GRID_TILE_CROSS);
-        u8 x, y;
-
-        for (x = left + 1; x < right; x++)
-        {
-            tilemap[top * 32 + x] = paletteBits | horizontal;
-            tilemap[bottom * 32 + x] = paletteBits | horizontal;
-        }
-
-        for (y = top + 1; y < bottom; y++)
-        {
-            tilemap[y * 32 + left] = paletteBits | vertical;
-            tilemap[y * 32 + right] = paletteBits | vertical;
-        }
-
-        tilemap[top * 32 + left] = paletteBits | cross;
-        tilemap[top * 32 + right] = paletteBits | cross;
-        tilemap[bottom * 32 + left] = paletteBits | cross;
-        tilemap[bottom * 32 + right] = paletteBits | cross;
-    }
-
-    CopyBgTilemapBufferToVram(1);
+    if (LoadHgssStorageBgAsset(
+            &sHgssStorageChooseBoxAsset,
+            1,
+            baseTile,
+            2,
+            tilemap,
+            CHOOSE_BOX_GRID_TILE_COL,
+            CHOOSE_BOX_GRID_TILE_ROW))
+        CopyBgTilemapBufferToVram(1);
 }
 
 static void ChooseBoxMenu_CreateSprites(u8 curBox)
@@ -3980,21 +3906,6 @@ static void BufferAndPrintStat(u8 windowId, u8 font, u8 xOffset, u8 y, u16 statV
     AddTextPrinterParameterized4(windowId, font, xOffset - statWidth, y, 0, 0, sTextColors[0], 0, statStr);
 }
 
-static void DrawHgssStorageDetailRow(u8 windowId)
-{
-    u8 width = GetWindowAttribute(windowId, WINDOW_WIDTH) * 8;
-    u8 height = GetWindowAttribute(windowId, WINDOW_HEIGHT) * 8;
-
-    if (width < 12 || height < 8)
-        return;
-
-    // Compact HGSS information row with softened one-pixel corners.
-    FillWindowPixelRect(windowId, PIXEL_FILL(2), 1, 0, width - 2, 1);
-    FillWindowPixelRect(windowId, PIXEL_FILL(3), 1, height - 1, width - 2, 1);
-    FillWindowPixelRect(windowId, PIXEL_FILL(2), 0, 1, 1, height - 2);
-    FillWindowPixelRect(windowId, PIXEL_FILL(2), width - 1, 1, 1, height - 2);
-}
-
 static void PrintDisplayMonAbility(u8 font)
 {
     u8 windowId;
@@ -4021,7 +3932,6 @@ static void PrintDisplayMonAbility(u8 font)
     fontId = GetFontIdToFit(abilityName, font, 0, windowWidthPx - 2);
 
     AddTextPrinterParameterized4(windowId, fontId, xPos, 1, 0, 0, sTextColors[0], 0, abilityName);
-    DrawHgssStorageDetailRow(windowId);
     PutWindowTilemap(windowId);
     CopyWindowToVram(windowId, COPYWIN_FULL);
 }
@@ -4055,26 +3965,8 @@ static void PrintDisplayMonHeldItem(u8 font)
     fontId = GetFontIdToFit(itemName, font, 0, windowWidthPx - 2);
 
     AddTextPrinterParameterized4(windowId, fontId, xPos, 1, 0, 0, sTextColors[0], 0, itemName);
-    DrawHgssStorageDetailRow(windowId);
     PutWindowTilemap(windowId);
     CopyWindowToVram(windowId, COPYWIN_FULL);
-}
-
-static void DrawHgssStorageStatRows(u8 windowId)
-{
-    u8 width = GetWindowAttribute(windowId, WINDOW_WIDTH) * 8;
-    u8 height = GetWindowAttribute(windowId, WINDOW_HEIGHT) * 8;
-
-    if (width < 8 || height < 32)
-        return;
-
-    // One compact HGSS-style stack: strong outer rails with 16-pixel row separators.
-    FillWindowPixelRect(windowId, PIXEL_FILL(2), 1, 0, width - 2, 1);
-    FillWindowPixelRect(windowId, PIXEL_FILL(2), 1, height - 1, width - 2, 1);
-    FillWindowPixelRect(windowId, PIXEL_FILL(2), 0, 1, 1, height - 2);
-    FillWindowPixelRect(windowId, PIXEL_FILL(2), width - 1, 1, 1, height - 2);
-    FillWindowPixelRect(windowId, PIXEL_FILL(3), 1, 16, width - 2, 1);
-    FillWindowPixelRect(windowId, PIXEL_FILL(3), 1, 32, width - 2, 1);
 }
 
 static void PrintDisplayMonStats(u8 font)
@@ -4114,27 +4006,10 @@ static void PrintDisplayMonStats(u8 font)
     BufferAndPrintStat(col2WindowId, font, windowWidth - 5, 20, sStorage->displayMon.spatk);
     BufferAndPrintStat(col2WindowId, font, windowWidth - 5, 36, sStorage->displayMon.speed);
 
-    DrawHgssStorageStatRows(col1WindowId);
-    DrawHgssStorageStatRows(col2WindowId);
     PutWindowTilemap(col1WindowId);
     PutWindowTilemap(col2WindowId);
     CopyWindowToVram(col1WindowId, COPYWIN_FULL);
     CopyWindowToVram(col2WindowId, COPYWIN_FULL);
-}
-
-static void DrawHgssStorageMonHeaderCell(u8 windowId)
-{
-    u8 width = GetWindowAttribute(windowId, WINDOW_WIDTH) * 8;
-    u8 height = GetWindowAttribute(windowId, WINDOW_HEIGHT) * 8;
-
-    if (width < 8 || height < 8)
-        return;
-
-    // Soft-corner HGSS header chip. Keep all lines on the outermost pixels so text stays untouched.
-    FillWindowPixelRect(windowId, PIXEL_FILL(2), 1, 0, width - 2, 1);
-    FillWindowPixelRect(windowId, PIXEL_FILL(5), 1, height - 1, width - 2, 1);
-    FillWindowPixelRect(windowId, PIXEL_FILL(2), 0, 1, 1, height - 2);
-    FillWindowPixelRect(windowId, PIXEL_FILL(2), width - 1, 1, 1, height - 2);
 }
 
 static void PrintDisplayMonNickname(u8 font)
@@ -4151,7 +4026,6 @@ static void PrintDisplayMonNickname(u8 font)
 
         u8 fontId = GetFontIdToFit(sStorage->displayMon.nickname, font, 0, 58);
         AddTextPrinterParameterized4(windowId, fontId, 6, 1, 0, 0, sTextColors[1], 0, sStorage->displayMon.nickname);
-        DrawHgssStorageMonHeaderCell(windowId);
         PutWindowTilemap(windowId);
         CopyWindowToVram(windowId, COPYWIN_FULL);
     }
@@ -4181,7 +4055,6 @@ static void PrintDisplayMonLevel(u8 font)
 
         AddTextPrinterParameterized4(windowId, FONT_SHORT_NARROWER, lvStartX, 1, 0, 0, sTextColors[1], 0, sText_Lv);
         AddTextPrinterParameterized4(windowId, font, lvStartX + lvWidth, 1, 0, 0, sTextColors[1], 0, levelStr);
-        DrawHgssStorageMonHeaderCell(windowId);
         PutWindowTilemap(windowId);
         CopyWindowToVram(windowId, COPYWIN_FULL);
     }
@@ -4383,54 +4256,6 @@ static void ClearMonInfoPanel(void)
     SetGpuReg(REG_OFFSET_BG0VOFS, 0);
 }
 
-static void DrawHgssStorageContextMenuRows(u8 windowId)
-{
-    u8 width = GetWindowAttribute(windowId, WINDOW_WIDTH) * 8;
-    u8 height = GetWindowAttribute(windowId, WINDOW_HEIGHT) * 8;
-    u8 y;
-
-    if (width < 16 || height < 16)
-        return;
-
-    // Preserve the selector gutter and frame each context action as an HGSS-style cell.
-    FillWindowPixelRect(windowId, PIXEL_FILL(2), 8, 0, width - 9, 1);
-    FillWindowPixelRect(windowId, PIXEL_FILL(2), 8, height - 1, width - 9, 1);
-    FillWindowPixelRect(windowId, PIXEL_FILL(2), width - 1, 1, 1, height - 2);
-
-    for (y = 16; y < height; y += 16)
-        FillWindowPixelRect(windowId, PIXEL_FILL(3), 8, y, width - 9, 1);
-}
-
-static void DrawHgssStorageMessageAccent(u8 windowId)
-{
-    u8 width = GetWindowAttribute(windowId, WINDOW_WIDTH) * 8;
-    u8 height = GetWindowAttribute(windowId, WINDOW_HEIGHT) * 8;
-
-    if (width < 16 || height < 8)
-        return;
-
-    // Keep the center of the one-line message clear; accents sit on its outer edges only.
-    FillWindowPixelRect(windowId, PIXEL_FILL(2), 4, 0, width - 8, 1);
-    FillWindowPixelRect(windowId, PIXEL_FILL(2), 4, height - 1, width - 8, 1);
-}
-
-static void DrawHgssStorageYesNo(void)
-{
-    u8 windowId = GetYesNoWindowId();
-    u8 width = GetWindowAttribute(windowId, WINDOW_WIDTH) * 8;
-    u8 height = GetWindowAttribute(windowId, WINDOW_HEIGHT) * 8;
-
-    if (width < 16 || height < 24)
-        return;
-
-    // Leave the left selector gutter untouched and separate YES / NO into two HGSS cells.
-    FillWindowPixelRect(windowId, PIXEL_FILL(2), 8, 0, width - 9, 1);
-    FillWindowPixelRect(windowId, PIXEL_FILL(2), 8, height - 1, width - 9, 1);
-    FillWindowPixelRect(windowId, PIXEL_FILL(2), width - 1, 1, 1, height - 2);
-    FillWindowPixelRect(windowId, PIXEL_FILL(3), 8, 16, width - 9, 1);
-    CopyWindowToVram(windowId, COPYWIN_GFX);
-}
-
 static void PrintMessage(u8 id)
 {
     u8 *txtPtr;
@@ -4469,7 +4294,6 @@ static void PrintMessage(u8 id)
     CreateMessageWindowSprite();
     FillWindowPixelBuffer(WIN_MESSAGE, PIXEL_FILL(0));
     AddTextPrinterParameterized4(WIN_MESSAGE, FONT_NORMAL, 0, 1, 0, 0, sTextColors[3], TEXT_SKIP_DRAW, sStorage->messageText);
-    DrawHgssStorageMessageAccent(WIN_MESSAGE);
     PutWindowTilemap(WIN_MESSAGE);
     CopyWindowToVram(WIN_MESSAGE, COPYWIN_GFX);
     ScheduleBgCopyTilemapToVram(0);
@@ -4480,7 +4304,6 @@ static void ShowYesNoWindow(s8 cursorPos)
     ClearMonInfoTilemap();
     CreateYesNoMenu(&sYesNoWindowTemplate, 192, 14, 0);
     Menu_MoveCursorNoWrapAround(cursorPos);
-    DrawHgssStorageYesNo();
 }
 
 static void ClearBottomWindow(void)
@@ -4590,7 +4413,6 @@ static void AddWallpaperMenu(void)
     sStorage->listMenuTemplate.cursorKind = 0;
 
     sStorage->listMenuTaskId = ListMenuInit(&sStorage->listMenuTemplate, 0, sStorage->listMenuSelectedRow);
-    DrawHgssStorageContextMenuRows(sStorage->menuWindowId);
     sStorage->listMenuScrollArrowTaskId = AddScrollIndicatorArrowPairParameterized(
         SCROLL_ARROW_LEFT, 80, 168, 232, maxPage,
         GFXTAG_LIST_MENU_ARROW, PALTAG_LIST_MENU_SCROLL_ARROW, &sStorage->listMenuScrollRow);
@@ -5449,159 +5271,23 @@ static bool32 LoadHgssStorageBgAsset(
     return TRUE;
 }
 
-static bool32 HasVerifiedHgssStorageBoxGrid(void)
-{
-    return sHgssStorageBoxGridAsset.tiles != NULL
-        && sHgssStorageBoxGridAsset.tilemap != NULL
-        && sHgssStorageBoxGridAsset.palette != NULL
-        && sHgssStorageBoxGridAsset.tileCount != 0;
-}
-
-static bool32 HasVerifiedHgssStoragePartyPanel(void)
-{
-    return sHgssStoragePartyPanelAsset.tiles != NULL
-        && sHgssStoragePartyPanelAsset.tilemap != NULL
-        && sHgssStoragePartyPanelAsset.palette != NULL
-        && sHgssStoragePartyPanelAsset.tileCount != 0;
-}
-
-static void DrawHgssStorageBoxGridFallback(u16 baseTile)
-{
-    static const u8 sGridColumns[] = {10, 13, 16, 19, 22, 25, 28};
-    static const u8 sGridRows[] = {3, 6, 9, 12, 15, 18};
-    u8 gridTiles[HGSS_GRID_TILE_COUNT * TILE_SIZE_4BPP] = {0};
-    u16 paletteBits = 15 << 12;
-    u16 row, col;
-    u8 i;
-
-    if (baseTile + HGSS_GRID_TILE_COUNT >= 512)
-        return;
-
-    // Temporary compatibility fallback. This is not canonical HGSS artwork.
-    for (i = 0; i < 8; i++)
-    {
-        gridTiles[HGSS_GRID_TILE_VERTICAL * TILE_SIZE_4BPP + i * 4] = 0x02;
-        gridTiles[HGSS_GRID_TILE_CROSS * TILE_SIZE_4BPP + i * 4] = 0x02;
-        gridTiles[HGSS_GRID_TILE_SELECTED_VERTICAL * TILE_SIZE_4BPP + i * 4] = 0x22;
-        gridTiles[HGSS_GRID_TILE_SELECTED_CROSS * TILE_SIZE_4BPP + i * 4] = 0x22;
-        if (i >= 4)
-            gridTiles[HGSS_GRID_TILE_TOP_CROSS * TILE_SIZE_4BPP + i * 4] = 0x02;
-        if (i <= 4)
-            gridTiles[HGSS_GRID_TILE_BOTTOM_CROSS * TILE_SIZE_4BPP + i * 4] = 0x02;
-    }
-
-    for (i = 0; i < 4; i++)
-    {
-        gridTiles[HGSS_GRID_TILE_HORIZONTAL * TILE_SIZE_4BPP + 16 + i] = 0x22;
-        gridTiles[HGSS_GRID_TILE_CROSS * TILE_SIZE_4BPP + 16 + i] = 0x22;
-        gridTiles[HGSS_GRID_TILE_TOP_CROSS * TILE_SIZE_4BPP + 16 + i] = 0x22;
-        gridTiles[HGSS_GRID_TILE_BOTTOM_CROSS * TILE_SIZE_4BPP + 16 + i] = 0x22;
-        gridTiles[HGSS_GRID_TILE_SELECTED_HORIZONTAL * TILE_SIZE_4BPP + 12 + i] = 0x22;
-        gridTiles[HGSS_GRID_TILE_SELECTED_HORIZONTAL * TILE_SIZE_4BPP + 16 + i] = 0x22;
-        gridTiles[HGSS_GRID_TILE_SELECTED_CROSS * TILE_SIZE_4BPP + 12 + i] = 0x22;
-        gridTiles[HGSS_GRID_TILE_SELECTED_CROSS * TILE_SIZE_4BPP + 16 + i] = 0x22;
-    }
-    gridTiles[HGSS_GRID_TILE_CROSS * TILE_SIZE_4BPP + 16] = 0x22;
-    gridTiles[HGSS_GRID_TILE_TOP_CROSS * TILE_SIZE_4BPP + 16] = 0x22;
-    gridTiles[HGSS_GRID_TILE_BOTTOM_CROSS * TILE_SIZE_4BPP + 16] = 0x22;
-
-    LoadBgTiles(2, gridTiles, sizeof(gridTiles), baseTile);
-
-    for (row = 3; row <= 18; row++)
-    {
-        bool32 isBoundaryRow = FALSE;
-        u16 boundaryTile = HGSS_GRID_TILE_VERTICAL;
-
-        for (i = 0; i < ARRAY_COUNT(sGridRows); i++)
-        {
-            if (row == sGridRows[i])
-            {
-                isBoundaryRow = TRUE;
-                boundaryTile = (i == 0) ? HGSS_GRID_TILE_TOP_CROSS
-                             : (i == ARRAY_COUNT(sGridRows) - 1) ? HGSS_GRID_TILE_BOTTOM_CROSS
-                             : HGSS_GRID_TILE_CROSS;
-                break;
-            }
-        }
-
-        if (isBoundaryRow)
-        {
-            for (col = 10; col <= 28; col++)
-                sStorage->wallpaperBgTilemapBuffer[row * 32 + col] =
-                    paletteBits | (baseTile + HGSS_GRID_TILE_HORIZONTAL);
-        }
-
-        for (i = 0; i < ARRAY_COUNT(sGridColumns); i++)
-            sStorage->wallpaperBgTilemapBuffer[row * 32 + sGridColumns[i]] =
-                paletteBits | (baseTile + boundaryTile);
-    }
-}
-
 static void DrawHgssStorageBoxGrid(void)
 {
     u32 gfxSize = GetDecompressedDataSize(sSwShStorage_Gfx);
     u16 baseTile = (gfxSize + TILE_SIZE_4BPP - 1) / TILE_SIZE_4BPP;
 
-    // The wallpaper loader reuses this RAM buffer for BG3, so rebuild a clean
-    // transparent BG2 overlay before drawing either path.
     CpuFill16(0, sStorage->wallpaperBgTilemapBuffer, sizeof(sStorage->wallpaperBgTilemapBuffer));
 
-    // Palette banks 0 and 1 belong to the storage chrome/wallpaper; 15 belongs
-    // to text windows. Verified HGSS storage roles begin at bank 2.
-    if (!LoadHgssStorageBgAsset(
-            &sHgssStorageBoxGridAsset,
-            2,
-            baseTile,
-            2,
-            sStorage->wallpaperBgTilemapBuffer,
-            10,
-            3))
-    {
-        DrawHgssStorageBoxGridFallback(baseTile);
-    }
+    LoadHgssStorageBgAsset(
+        &sHgssStorageBoxGridAsset,
+        2,
+        baseTile,
+        2,
+        sStorage->wallpaperBgTilemapBuffer,
+        10,
+        3);
 
     ScheduleBgCopyTilemapToVram(2);
-}
-
-static void DrawHgssStoragePartySlotsFallback(u16 baseTile)
-{
-    static const u8 sPartyRows[] = {0, 3, 6, 9, 12, 15, 18};
-    u16 *tilemap = (u16 *)sStorage->displayMenuTilemapBuffer;
-    u16 paletteBits = 15 << 12;
-    u16 row, col;
-    u8 i;
-
-    if (baseTile + HGSS_GRID_TILE_COUNT >= 512)
-        return;
-
-    // Temporary compatibility fallback. This is not canonical HGSS artwork.
-    for (row = 0; row <= 18; row++)
-    {
-        bool32 isBoundaryRow = FALSE;
-        u16 boundaryTile = HGSS_GRID_TILE_VERTICAL;
-
-        for (i = 0; i < ARRAY_COUNT(sPartyRows); i++)
-        {
-            if (row == sPartyRows[i])
-            {
-                isBoundaryRow = TRUE;
-                boundaryTile = (i == 0) ? HGSS_GRID_TILE_TOP_CROSS
-                             : (i == ARRAY_COUNT(sPartyRows) - 1) ? HGSS_GRID_TILE_BOTTOM_CROSS
-                             : HGSS_GRID_TILE_CROSS;
-                break;
-            }
-        }
-
-        if (isBoundaryRow)
-        {
-            for (col = 2; col <= 8; col++)
-                tilemap[row * 32 + col] =
-                    paletteBits | (baseTile + HGSS_GRID_TILE_HORIZONTAL);
-        }
-
-        tilemap[row * 32 + 2] = paletteBits | (baseTile + boundaryTile);
-        tilemap[row * 32 + 8] = paletteBits | (baseTile + boundaryTile);
-    }
 }
 
 static void DrawHgssStoragePartySlots(void)
@@ -5610,103 +5296,25 @@ static void DrawHgssStoragePartySlots(void)
     u32 gfxSize = GetDecompressedDataSize(sSwShStorage_Gfx);
     u16 baseTile = (gfxSize + TILE_SIZE_4BPP - 1) / TILE_SIZE_4BPP;
 
-    if (!LoadHgssStorageBgAsset(
-            &sHgssStoragePartyPanelAsset,
-            1,
-            baseTile,
-            2,
-            tilemap,
-            2,
-            0))
-    {
-        DrawHgssStoragePartySlotsFallback(baseTile);
-    }
+    LoadHgssStorageBgAsset(
+        &sHgssStoragePartyPanelAsset,
+        1,
+        baseTile,
+        2,
+        tilemap,
+        2,
+        0);
 
     ScheduleBgCopyTilemapToVram(1);
 }
 
 static void UpdateHgssStorageSlotHighlight(void)
 {
-    u32 gfxSize;
-    u16 baseTile;
-    u16 paletteBits = 15 << 12;
-    u16 *tilemap;
-    u16 left, right, top, bottom, x, y;
-
     if (sCursorArea == CURSOR_AREA_IN_CHOOSE_BOX)
         return;
 
     DrawHgssStorageBoxGrid();
     DrawHgssStoragePartySlots();
-
-    if (sCursorArea != CURSOR_AREA_IN_BOX && sCursorArea != CURSOR_AREA_IN_PARTY)
-        return;
-
-    // Authentic HGSS role art is not decorated with the old generated
-    // selected-line tiles. Cursor/highlight art will be migrated separately.
-    if (sCursorArea == CURSOR_AREA_IN_BOX && HasVerifiedHgssStorageBoxGrid())
-        return;
-    if (sCursorArea == CURSOR_AREA_IN_PARTY && HasVerifiedHgssStoragePartyPanel())
-        return;
-
-    gfxSize = GetDecompressedDataSize(sSwShStorage_Gfx);
-    baseTile = (gfxSize + TILE_SIZE_4BPP - 1) / TILE_SIZE_4BPP;
-    if (baseTile + HGSS_GRID_TILE_COUNT >= 512)
-        return;
-
-    if (sCursorArea == CURSOR_AREA_IN_BOX)
-    {
-        u8 column = sCursorPosition % IN_BOX_COLUMNS;
-        u8 row = sCursorPosition / IN_BOX_COLUMNS;
-
-        tilemap = (u16 *)sStorage->wallpaperBgTilemapBuffer;
-        left = 10 + column * 3;
-        right = left + 3;
-        top = 3 + row * 3;
-        bottom = top + 3;
-
-        for (x = left + 1; x < right; x++)
-        {
-            tilemap[top * 32 + x] = paletteBits | (baseTile + HGSS_GRID_TILE_SELECTED_HORIZONTAL);
-            tilemap[bottom * 32 + x] = paletteBits | (baseTile + HGSS_GRID_TILE_SELECTED_HORIZONTAL);
-        }
-        for (y = top + 1; y < bottom; y++)
-        {
-            tilemap[y * 32 + left] = paletteBits | (baseTile + HGSS_GRID_TILE_SELECTED_VERTICAL);
-            tilemap[y * 32 + right] = paletteBits | (baseTile + HGSS_GRID_TILE_SELECTED_VERTICAL);
-        }
-
-        tilemap[top * 32 + left] = paletteBits | (baseTile + HGSS_GRID_TILE_SELECTED_CROSS);
-        tilemap[top * 32 + right] = paletteBits | (baseTile + HGSS_GRID_TILE_SELECTED_CROSS);
-        tilemap[bottom * 32 + left] = paletteBits | (baseTile + HGSS_GRID_TILE_SELECTED_CROSS);
-        tilemap[bottom * 32 + right] = paletteBits | (baseTile + HGSS_GRID_TILE_SELECTED_CROSS);
-        ScheduleBgCopyTilemapToVram(2);
-    }
-    else
-    {
-        tilemap = (u16 *)sStorage->displayMenuTilemapBuffer;
-        left = 2;
-        right = 8;
-        top = sCursorPosition * 3;
-        bottom = top + 3;
-
-        for (x = left + 1; x < right; x++)
-        {
-            tilemap[top * 32 + x] = paletteBits | (baseTile + HGSS_GRID_TILE_SELECTED_HORIZONTAL);
-            tilemap[bottom * 32 + x] = paletteBits | (baseTile + HGSS_GRID_TILE_SELECTED_HORIZONTAL);
-        }
-        for (y = top + 1; y < bottom; y++)
-        {
-            tilemap[y * 32 + left] = paletteBits | (baseTile + HGSS_GRID_TILE_SELECTED_VERTICAL);
-            tilemap[y * 32 + right] = paletteBits | (baseTile + HGSS_GRID_TILE_SELECTED_VERTICAL);
-        }
-
-        tilemap[top * 32 + left] = paletteBits | (baseTile + HGSS_GRID_TILE_SELECTED_CROSS);
-        tilemap[top * 32 + right] = paletteBits | (baseTile + HGSS_GRID_TILE_SELECTED_CROSS);
-        tilemap[bottom * 32 + left] = paletteBits | (baseTile + HGSS_GRID_TILE_SELECTED_CROSS);
-        tilemap[bottom * 32 + right] = paletteBits | (baseTile + HGSS_GRID_TILE_SELECTED_CROSS);
-        ScheduleBgCopyTilemapToVram(1);
-    }
 }
 
 static void Task_InitBox(u8 taskId)
@@ -8393,7 +8001,6 @@ static void AddMenu(void)
     ClearWindowTilemap(sStorage->menuWindowId);
     DrawStdFrameWithCustomTileAndPalette(sStorage->menuWindowId, FALSE, 192, 14);
     PrintMenuTable(sStorage->menuWindowId, sStorage->menuItemsCount, (void *)sStorage->menuItems);
-    DrawHgssStorageContextMenuRows(sStorage->menuWindowId);
     InitMenuInUpperLeftCornerNormal(sStorage->menuWindowId, sStorage->menuItemsCount, 0);
     ScheduleBgCopyTilemapToVram(0);
 }
