@@ -65,6 +65,7 @@ static const u16 sTextWindows_Pal[]           = INCGFX_U16("graphics/pokemon_sto
 // The checked-in placeholder contains a zero descriptor until that verification exists.
 #include "data/hgss_storage_box_grid.inc.h"
 #include "data/hgss_storage_party_panel.inc.h"
+#include "data/hgss_storage_choose_box.inc.h"
 
 static const u32 sBoxTitleArrow_Gfx[]         = INCGFX_U32("graphics/pokemon_storage/swsh/box_title_arrow.png", ".4bpp.smol");
 static const u32 sChooseBoxMenu_Gfx[]         = INCGFX_U32("graphics/pokemon_storage/swsh/choose_box_menu.png", ".4bpp.smol");
