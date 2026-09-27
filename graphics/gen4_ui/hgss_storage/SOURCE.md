@@ -32,10 +32,17 @@ If HGSS has no equivalent for an expansion-only function, first document that ab
 
 ## Current status
 
-Synthetic HGSS-style Storage drawing has been removed. The box grid, party
-panel, and Choose Box paths now accept verified assets only. Their generated
-include files intentionally contain zero descriptors until a user-provided
-`/a/0/1/9` extraction has been visually verified and bound to each role.
+Synthetic HGSS-style Storage drawing has been removed. Visual verification of
+the user's authentic `/a/0/1/9` extraction established that the normal 6x5
+box area does not use a separate visible "box grid" chrome layer: the authentic
+wallpaper composition supplies the box frame/background and Pokemon icons are
+positioned dynamically over it. The obsolete `box_grid` placeholder and
+renderer hook have therefore been removed rather than populated with invented
+art.
+
+The party panel and Choose Box paths still accept verified assets only. Their
+generated include files intentionally remain zero descriptors until the
+corresponding authentic HGSS members are visually verified and bound.
 
 Do not restore compatibility fallbacks that draw approximated HGSS chrome.
 If an authentic role is not available yet, leave that HGSS layer empty and
@@ -72,12 +79,12 @@ NCGR/NCLR/NSCR combination, bind that composition to a semantic role with:
 ```sh
 python tools/gen4_ui/bind_hgss_storage_role.py \
   build/hgss_storage \
-  --role box_grid \
+  --role <verified-role> \
   --ncgr <verified NCGR member> \
   --nclr <verified NCLR member> \
   --nscr <verified NSCR member> \
   --crop <x> <y> <width> <height> \
-  --output graphics/gen4_ui/hgss_storage/verified/box_grid
+  --output graphics/gen4_ui/hgss_storage/verified/<verified-role>
 ```
 
 The binder rejects mismatched member types and mismatched archive manifests. Its
@@ -85,6 +92,7 @@ JSON sidecar records the archive SHA-256 and decoded member hashes so the GBA
 asset remains traceable to the user's own HGSS source without committing the
 ROM or NARC.
 
-The first migration target is `box_grid`, replacing the synthetic line/cross
-tile construction in `DrawHgssStorageBoxGrid`. Do not wire that renderer to
-a member triple until the gallery has visually verified the role.
+Do not create a standalone `box_grid` role for the normal 6x5 box screen.
+The authentic wallpaper assets are the verified visual source for that area.
+Only bind additional roles when the extraction gallery shows a real HGSS layer
+with that function.
