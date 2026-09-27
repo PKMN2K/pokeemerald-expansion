@@ -4195,10 +4195,9 @@ static void UpdateBoxToSendMons(void)
 
 #define HGSS_MON_INFO_PANEL_BASE_TILE      512
 #define HGSS_MON_INFO_PANEL_BLANK_TILE     710
-#define HGSS_MON_INFO_PANEL_PAL_BANK       13
+#define HGSS_MON_INFO_PANEL_PAL_BANK       11
 #define HGSS_MON_INFO_PANEL_WIDTH          11
 #define HGSS_MON_INFO_PANEL_HEIGHT         18
-#define HGSS_MON_INFO_LEGACY_WIDTH         13
 #define HGSS_MON_INFO_LEFT                 0
 #define HGSS_MON_INFO_RIGHT                17
 #define HGSS_MON_INFO_LEFT_TOP             20
@@ -4211,19 +4210,6 @@ static void DrawHgssMonInfoPanelTilemaps(void)
     u16 *tilemap = sStorage->infoTilemapBuffer;
     u8 x;
     u8 y;
-
-    // Erase the complete former 13-tile SWSH panel footprints first so the
-    // narrower native 11-tile HGSS panels never leave legacy edge columns.
-    for (y = 0; y < HGSS_MON_INFO_PANEL_HEIGHT; y++)
-    {
-        for (x = 0; x < HGSS_MON_INFO_LEGACY_WIDTH; x++)
-        {
-            tilemap[(HGSS_MON_INFO_LEFT_TOP + y) * 32 + HGSS_MON_INFO_LEFT + x]
-                = HGSS_MON_INFO_PANEL_BLANK_TILE | (HGSS_MON_INFO_PANEL_PAL_BANK << 12);
-            tilemap[(HGSS_MON_INFO_RIGHT_TOP + y) * 32 + HGSS_MON_INFO_RIGHT + x]
-                = HGSS_MON_INFO_PANEL_BLANK_TILE | (HGSS_MON_INFO_PANEL_PAL_BANK << 12);
-        }
-    }
 
     // The verified PNG is the exact 88x144 NSCR 9 composition rendered 1:1.
     // grit emits its 11x18 tiles row-major, so both left/right virtual screens
@@ -4243,14 +4229,20 @@ static void DrawHgssMonInfoPanelTilemaps(void)
 
 static void RestoreHgssMonInfoPanel(void)
 {
-    // Keep the legacy base map/tiles only until the next cleanup step because
-    // unrelated BG0 runtime surfaces still share them. The visible info-panel
-    // footprints are always erased and replaced by the authentic HGSS panel.
-    DecompressAndLoadBgGfxUsingHeap(0, sMonInfo_Gfx, 0, 0, 0);
-    DecompressDataWithHeaderWram(sMonInfo_Tilemap, sStorage->infoTilemapBuffer);
+    u16 i;
+    const u16 blankEntry = HGSS_MON_INFO_PANEL_BLANK_TILE
+                         | (HGSS_MON_INFO_PANEL_PAL_BANK << 12);
+
+    // The legacy SWSH mon-info tiles and shared base tilemap are gone. Build BG0
+    // from a known transparent tile so message/menu windows can layer onto a
+    // deterministic blank surface without retaining any legacy visual data.
     LoadBgTiles(0, sHgssMonInfoPanel_Gfx, sizeof(sHgssMonInfoPanel_Gfx), HGSS_MON_INFO_PANEL_BASE_TILE);
     LoadBgTiles(0, sHgssMonInfoBlankTile, sizeof(sHgssMonInfoBlankTile), HGSS_MON_INFO_PANEL_BLANK_TILE);
     LoadPalette(sHgssMonInfoPanel_Pal, BG_PLTT_ID(HGSS_MON_INFO_PANEL_PAL_BANK), PLTT_SIZE_4BPP);
+
+    for (i = 0; i < ARRAY_COUNT(sStorage->infoTilemapBuffer); i++)
+        sStorage->infoTilemapBuffer[i] = blankEntry;
+
     DrawHgssMonInfoPanelTilemaps();
 }
 

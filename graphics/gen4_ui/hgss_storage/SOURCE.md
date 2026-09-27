@@ -141,14 +141,16 @@ the seven authentic RGB colors and every source pixel are preserved with no crop
 redraw, resampling, or color changes. The source archive SHA-256 and decoded
 member hashes are recorded in `verified/mon_info_panel.json`.
 
-The verified 11x18-tile panel now occupies both BG0 virtual info-screen positions.
-Before drawing it, the code clears the complete former 13x18 SWSH panel
-footprints so no legacy edge columns remain visible. Dynamic Pokémon text/icons
-are retained functionally and tightened to the native 88-pixel panel width.
-The legacy `mon_info.png` / `mon_info.bin` files remain in the tree only for
-the following cleanup phase; they no longer provide the visible info-panel
-surface. The next sequence step is to remove that legacy equivalent and replace
-the remaining shared BG0 base-map dependency without changing the live HGSS art.
+The verified 11x18-tile panel occupies both BG0 virtual info-screen positions.
+Dynamic Pokémon text/icons are retained functionally and tightened to the native
+88-pixel panel width. The legacy SWSH `mon_info.png` and `mon_info.bin`
+equivalents, their C declarations, and the last shared base-map dependency have
+now been removed. BG0 is initialized from an explicit transparent runtime tile
+and blank tilemap, then the authentic HGSS panel is drawn over it; transient
+message/menu windows continue to layer onto that functional blank surface. The
+panel uses BG palette bank 11 so the multi-move text-palette restore on bank 13
+cannot recolor the HGSS art. This completes the full authentic asset → wire live
+→ remove legacy equivalent sequence for the Pokémon information panel.
 
 Do not restore compatibility fallbacks that draw approximated HGSS chrome.
 If an authentic role is not available yet, leave that HGSS layer empty and
