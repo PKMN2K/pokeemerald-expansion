@@ -825,6 +825,7 @@ static void ClearMonInfoTilemap(void);
 static void UpdateMonInfoTilemap(void);
 static void RestoreHgssMonInfoPanel(void);
 static void DrawHgssMessageWindow(void);
+static void DrawHgssYesNoPanel(void);
 
 // Misc
 static void CreateMainMenu(u8, s16 *);
@@ -4288,6 +4289,47 @@ static void DrawHgssMessageWindow(void)
     }
 }
 
+#define HGSS_YES_NO_BASE_TILE              256
+#define HGSS_YES_NO_PAL_BANK               10
+#define HGSS_YES_NO_SRC_WIDTH              32
+#define HGSS_YES_NO_WIDTH                  30
+#define HGSS_YES_NO_HEIGHT                 7
+#define HGSS_YES_NO_TOP                    13
+
+static void DrawHgssYesNoPanel(void)
+{
+    u16 *tilemap = sStorage->infoTilemapBuffer;
+    u8 x;
+    u8 y;
+
+    LoadBgTiles(0,
+                sHgssYesNo_Gfx,
+                sizeof(sHgssYesNo_Gfx),
+                HGSS_YES_NO_BASE_TILE);
+    LoadPalette(sHgssYesNo_Pal,
+                BG_PLTT_ID(HGSS_YES_NO_PAL_BANK),
+                PLTT_SIZE_4BPP);
+
+    for (y = 0; y < HGSS_YES_NO_HEIGHT; y++)
+    {
+        for (x = 0; x < HGSS_YES_NO_WIDTH; x++)
+        {
+            // NSCR 12 has identical repeated interior columns 1-30.
+            // Preserve both native rounded edges (0 and 31) and omit only two
+            // repeated interior columns to fit the GBA's 30-tile display.
+            u8 srcX = (x == HGSS_YES_NO_WIDTH - 1)
+                    ? HGSS_YES_NO_SRC_WIDTH - 1
+                    : x;
+            u16 tile = HGSS_YES_NO_BASE_TILE
+                     + y * HGSS_YES_NO_SRC_WIDTH
+                     + srcX;
+
+            tilemap[(HGSS_YES_NO_TOP + y) * 32 + x]
+                = tile | (HGSS_YES_NO_PAL_BANK << 12);
+        }
+    }
+}
+
 static void InitPokeStorageBg0(void)
 {
     SetGpuReg(REG_OFFSET_BG0CNT, BGCNT_PRIORITY(0) | BGCNT_CHARBASE(0) | BGCNT_SCREENBASE(29) | BGCNT_TXT256x512);
@@ -4448,9 +4490,40 @@ static void PrintMessage(u8 id)
 
 static void ShowYesNoWindow(s8 cursorPos)
 {
+    u8 yesNoWindowId;
+
     ClearMonInfoTilemap();
+
+    // Keep the existing menu state/input plumbing for this phase. Its standard
+    // frame is legacy-only and is overwritten immediately by the authentic
+    // HGSS confirmation panel below.
     CreateYesNoMenu(&sYesNoWindowTemplate, 192, 14, 0);
     Menu_MoveCursorNoWrapAround(cursorPos);
+    yesNoWindowId = GetYesNoWindowId();
+
+    DrawHgssYesNoPanel();
+
+    // NSCR 12 uses palette index 1 for its cream interior (unlike NSCR 11,
+    // whose exported message panel uses index 0). Re-render the question text
+    // against the Yes/No palette so the full confirmation remains readable.
+    FillWindowPixelBuffer(WIN_MESSAGE, PIXEL_FILL(1));
+    AddTextPrinterParameterized4(WIN_MESSAGE,
+                                 FONT_NORMAL,
+                                 0,
+                                 1,
+                                 0,
+                                 0,
+                                 sTextColors[0],
+                                 TEXT_SKIP_DRAW,
+                                 sStorage->messageText);
+    PutWindowTilemap(WIN_MESSAGE);
+    CopyWindowToVram(WIN_MESSAGE, COPYWIN_GFX);
+
+    // Reassert the choice window tilemap after the HGSS panel replaced the
+    // legacy frame cells. Its existing Yes/No text and cursor remain intact.
+    PutWindowTilemap(yesNoWindowId);
+    CopyWindowToVram(yesNoWindowId, COPYWIN_GFX);
+    ScheduleBgCopyTilemapToVram(0);
 }
 
 static void ClearBottomWindow(void)

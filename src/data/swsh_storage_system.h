@@ -58,6 +58,10 @@ static const u16 sHgssMonInfoPanel_Pal[]       = INCGFX_U16("graphics/gen4_ui/hg
 static const u32 sHgssMessageWindow_Gfx[]       = INCGFX_U32("graphics/gen4_ui/hgss_storage/verified/message_window.png", ".4bpp");
 static const u16 sHgssMessageWindow_Pal[]       = INCGFX_U16("graphics/gen4_ui/hgss_storage/verified/message_window.png", ".gbapal");
 
+// Authentic HGSS Storage Yes/No panel: /a/0/1/9 NSCR 12 + NCGR 14 + NCLR 4.
+static const u32 sHgssYesNo_Gfx[]               = INCGFX_U32("graphics/gen4_ui/hgss_storage/verified/yes_no.png", ".4bpp");
+static const u16 sHgssYesNo_Pal[]               = INCGFX_U16("graphics/gen4_ui/hgss_storage/verified/yes_no.png", ".gbapal");
+
 static const u16 sTextWindows_Pal[]           = INCGFX_U16("graphics/pokemon_storage/swsh/text_windows.pal", ".gbapal");
 
 // Generated from a visually verified HGSS /a/0/1/9 role binding.
@@ -214,10 +218,10 @@ static const struct WindowTemplate sYesNoWindowTemplate =
 {
     .bg = 0,
     .tilemapLeft = 24,
-    .tilemapTop = 11,
+    .tilemapTop = 14,
     .width = 5,
     .height = 4,
-    .paletteNum = 15,
+    .paletteNum = 10,
     .baseBlock = 0x5C,
 };
 

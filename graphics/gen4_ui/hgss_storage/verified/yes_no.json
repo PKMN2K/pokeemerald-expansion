@@ -49,6 +49,36 @@
     "shared_with": "generic Storage context menus",
     "status": "still live"
   },
-  "status": "authentic HGSS yes/no confirmation panel identified and imported; live wiring deferred",
-  "next": "Wire verified/yes_no.png live for ShowYesNoWindow while leaving generic context menus on their existing frame path; then detach the yes/no role from the Emerald frame equivalent."
+  "status": "wired live: authentic HGSS Storage Yes/No confirmation panel now replaces the visible standard frame; legacy menu-frame plumbing retained only for the next cleanup phase",
+  "next": "Detach ShowYesNoWindow from CreateYesNoMenu's Emerald standard-frame rendering while preserving identical input/cursor behavior and leaving generic context menus on their existing frame path.",
+  "live_integration": {
+    "renderer": "BG0 tile composition + existing WIN_MESSAGE question text + existing Yes/No menu window",
+    "source": "verified/yes_no.png (NSCR 12 + NCGR 14 + NCLR 4)",
+    "source_dimensions": [
+      256,
+      56
+    ],
+    "gba_visible_composition": {
+      "width_tiles": 30,
+      "height_tiles": 7,
+      "top_tile": 13,
+      "source_columns": "0, 1-28, 31",
+      "adaptation": "two identical repeated interior columns omitted; both native rounded edge columns preserved pixel-identically"
+    },
+    "base_tile": 256,
+    "base_tile_reuse": "transient markings-menu tile region; roles are mutually exclusive and reload their own verified tiles",
+    "palette_bank": 10,
+    "palette_note": "NSCR 12 export uses index 1 for cream interior; question text is re-rendered with {1,2,3} colors while confirmation is active",
+    "yes_no_window": {
+      "tilemapLeft": 24,
+      "tilemapTop": 14,
+      "width": 5,
+      "height": 4,
+      "paletteNum": 10
+    },
+    "input_cursor_behavior": "unchanged; CreateYesNoMenu + Menu_MoveCursorNoWrapAround remain temporarily",
+    "legacy_standard_frame_visible": false,
+    "legacy_standard_frame_plumbing_still_present": true,
+    "generic_context_menus_unchanged": true
+  }
 }

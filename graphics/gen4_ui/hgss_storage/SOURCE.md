@@ -173,21 +173,24 @@ been converted; they are no longer associated with the HGSS message-window path.
 This completes the full authentic asset → wire live → remove legacy equivalent
 sequence for the Storage message window.
 
-The next verified static role is the native HGSS Storage confirmation /
-Yes-No panel. Visual and structural verification of the extracted
-`/a/0/1/9` family identifies NSCR 12 + NCGR 14 + NCLR 4 as the 256x56
-rounded full-width choice surface immediately following the verified NSCR 11
-message bar. Its interior is intentionally blank because the choice labels are
-runtime-rendered. `verified/yes_no.png` preserves the exact source pixels and
-five source colors as a 4bpp-compatible indexed PNG with no crop, redraw,
-resampling, or recoloring. The binding basis and archive/member hashes are
-recorded in `verified/yes_no.json`.
+The native HGSS Storage confirmation / Yes-No panel is verified and wired
+live. NSCR 12 + NCGR 14 + NCLR 4 provides the 256x56 rounded full-width choice
+surface immediately following the verified NSCR 11 message bar.
+`verified/yes_no.png` preserves the exact source pixels and five source colors.
 
-This completes only the authentic-asset phase. The live
-`ShowYesNoWindow() -> CreateYesNoMenu(..., 192, 14, ...)` path still uses the
-Emerald-standard frame tiles, which are also shared by generic Storage context
-menus. Nothing in that live path is removed or changed until the next
-wire-live phase.
+As with the HGSS message bar, the GBA display uses source columns 0 and 31 for
+the native rounded edges plus 28 unchanged repeated interior columns; only two
+identical interior repeats are omitted to fit 240 pixels. The confirmation
+question is re-rendered over the panel using NSCR 12's cream/dark/gray palette,
+and the existing Yes/No text/cursor window is placed inside the panel at the
+right. Input and cursor behavior are unchanged.
+
+For this wire-live phase only, `CreateYesNoMenu` still initializes the menu and
+therefore still executes its Emerald standard-frame drawing internally. That
+frame is completely overwritten before BG0 is presented, so no legacy frame is
+visible. Generic Storage context menus remain untouched on their existing frame
+path. The next phase removes the Yes/No role's legacy frame plumbing without
+changing those context menus.
 
 Do not restore compatibility fallbacks that draw approximated HGSS chrome.
 If an authentic role is not available yet, leave that HGSS layer empty and
