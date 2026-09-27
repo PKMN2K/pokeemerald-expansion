@@ -249,7 +249,6 @@ enum {
     GFXTAG_SHINY_ICON,
     GFXTAG_STAT_LABELS,
     GFXTAG_BOX_TITLE,
-    GFXTAG_BOX_TITLE_ARROW,
     GFXTAG_ITEM_ICON_0,
     GFXTAG_ITEM_ICON_1, // Used implicitly in CreateItemIconSprites
     GFXTAG_ITEM_ICON_2, // Used implicitly in CreateItemIconSprites
@@ -438,7 +437,6 @@ struct PokemonStorageSystemData
     u16 boxTitleAltPalOffset;
     struct Sprite *curBoxTitleSprites[2];
     struct Sprite *nextBoxTitleSprites[2];
-    struct Sprite *arrowSprites[2];
     u32 wallpaperPalBits;
     s16 wallpaperSetId;
     s16 wallpaperId;
@@ -547,8 +545,6 @@ struct PokemonStorageSystemData
     u8 displayMonInfoLoadState;
     u8 graphicsLoadState;
 };
-
-static void SpriteCB_Arrow(struct Sprite *);
 
 struct HgssStorageBgAsset
 {
@@ -781,13 +777,9 @@ static bool8 MonPlaceChange_CursorUp(void);
 static void TrySetCursorFistAnim(void);
 static bool8 IsCursorOnBoxTitle(void);
 
-// Box name & Scroll arrows
-static void CreateBoxScrollArrows(void);
-static void TriggerArrowAnimation(struct Sprite *);
-static void AnimateBoxScrollArrow(s8);
+// Box name
 static void UpdateBoxTitle(u8);
 static void UpdateBoxTitlePalette(void);
-static void SpriteCB_Arrow(struct Sprite *);
 
 // Box title
 static void InitBoxTitle(u8);
@@ -3450,10 +3442,6 @@ static bool8 InitPalettesAndSprites(void)
         break;
     case 9:
         LoadCompressedSpriteSheet(&sSpriteSheet_PokerusIcon);
-        sStorage->graphicsLoadState++;
-        break;
-    case 10:
-        LoadCompressedSpriteSheet(&sSpriteSheet_BoxTitleArrow);
         sStorage->graphicsLoadState = 0;
         return TRUE;
     }
@@ -5304,7 +5292,6 @@ static void Task_InitBox(u8 taskId)
             sStorage->wallpaperTiles = NULL;
         }
         InitBoxTitle(task->tBoxId);
-        CreateBoxScrollArrows();
         InitBoxMonSprites(task->tBoxId);
         UpdateHgssStorageSlotHighlight();
         SetGpuReg(REG_OFFSET_BG2CNT, BGCNT_PRIORITY(2) | BGCNT_CHARBASE(2) | BGCNT_SCREENBASE(27) | BGCNT_TXT256x256);
@@ -5402,7 +5389,6 @@ static bool8 ScrollToBox(void)
         }
 		
         InitBoxMonIconScroll(sStorage->scrollToBoxId, sStorage->scrollDirection);
-        AnimateBoxScrollArrow(sStorage->scrollDirection);
 		
 		StartLoadWallpaperGfx(sStorage->scrollToBoxId, 0);
 		UpdateWallpaperGfx(sStorage->scrollToBoxId, 0);
@@ -5664,78 +5650,6 @@ static void RenderBoxTitleCentered(const u8 *boxName)
     RemoveWindow(windowId);
 }
 
-
-//------------------------------------------------------------------------------
-//  SECTION: Scroll arrows
-//------------------------------------------------------------------------------
-
-
-// Sprite data for box scroll arrows
-#define sState data[0]
-#define sTimer data[1]
-#define sSpeed data[3]
-
-static void CreateBoxScrollArrows(void)
-{
-    u16 i;
-    static const u8 arrowXPositions[] = {108, 196};
-
-    for (i = 0; i < 2; i++)
-    {
-        u8 spriteId = CreateSprite(&sSpriteTemplate_BoxTitleArrow, arrowXPositions[i], 23, 24);
-        if (spriteId != MAX_SPRITES)
-        {
-            struct Sprite *sprite = &gSprites[spriteId];
-            StartSpriteAnim(sprite, i);
-            sprite->sSpeed = (i == 0) ? -1 : 1;
-            sprite->sState = 0;
-            sStorage->arrowSprites[i] = sprite;
-        }
-    }
-}
-
-static void TriggerArrowAnimation(struct Sprite *sprite)
-{
-    if (sprite)
-    {
-        sprite->x2 = 0;
-        sprite->sState = 1;
-        sprite->sTimer = 0;
-        sprite->data[2] = 0;
-    }
-}
-
-static void AnimateBoxScrollArrow(s8 direction)
-{
-    u8 arrowIdx = (direction < 0) ? 0 : 1; // 0 = Left, 1 = Right
-    TriggerArrowAnimation(sStorage->arrowSprites[arrowIdx]);
-}
-
-static void SpriteCB_Arrow(struct Sprite *sprite)
-{
-    switch (sprite->sState)
-    {
-    case 0:
-        sprite->x2 = 0;
-        break;
-    case 1:
-        if (++sprite->sTimer > 2)
-        {
-            sprite->sTimer = 0;
-            sprite->x2 += sprite->sSpeed;
-            if (++sprite->data[2] > 3)
-            {
-                sprite->data[2] = 0;
-                sprite->x2 = 0;
-                sprite->sState = 0;
-            }
-        }
-        break;
-    }
-}
-
-#undef sState
-#undef sSpeed
 
 //------------------------------------------------------------------------------
 //  SECTION: Cursor movement
