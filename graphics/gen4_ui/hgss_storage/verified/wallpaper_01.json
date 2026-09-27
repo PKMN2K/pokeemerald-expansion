@@ -25,7 +25,8 @@
     "height": 160,
     "colors": 14,
     "rgb_sha256": "0ea4dd99729bea3b182890e10fcf9a9578be044aa44aae62598222466f05ab75",
-    "indexed_png_sha256": "c72d6f51ef031f3f5ebbd5b8ef5ac8273763a86969adf4a0cb2b98b25b9b0f86"
+    "source_indexed_png_sha256": "c72d6f51ef031f3f5ebbd5b8ef5ac8273763a86969adf4a0cb2b98b25b9b0f86",
+    "checked_in_png_sha256": "39ccec912da07a7cd6845dda0431ec6a6bf503fbc76a82a275c373c505e5e980"
   },
-  "conversion": "Indexed PNG conversion only; RGB pixels preserved exactly at 1:1 scale. No redraw, scaling, recoloring, or synthetic chrome."
+  "conversion": "PNG container was re-encoded to a compact 4-bit indexed PNG for gbagfx compatibility. RGB pixels are byte-identical to the extracted HGSS image at 1:1 scale; no redraw, scaling, recoloring, or synthetic chrome."
 }
