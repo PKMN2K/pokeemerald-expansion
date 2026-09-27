@@ -879,30 +879,6 @@ void UpdateSpeciesSpritePSS(struct BoxPokemon *boxmon);
 //  SECTION: Misc utility
 //------------------------------------------------------------------------------
 
-static void UNUSED UnusedDrawTextWindow(const u8 *string, void *dst, u16 offset, u8 bgColor, u8 fgColor, u8 shadowColor)
-{
-    u32 tilesSize;
-    u8 windowId;
-    u8 txtColor[3];
-    u8 *tileData1, *tileData2;
-    struct WindowTemplate winTemplate = {0};
-
-    winTemplate.width = StringLength_Multibyte(string);
-    winTemplate.height = 2;
-    tilesSize = winTemplate.width * TILE_SIZE_4BPP;
-    windowId = AddWindow(&winTemplate);
-    FillWindowPixelBuffer(windowId, PIXEL_FILL(bgColor));
-    tileData1 = (u8 *) GetWindowAttribute(windowId, WINDOW_TILE_DATA);
-    tileData2 = (winTemplate.width * TILE_SIZE_4BPP) + tileData1;
-    txtColor[0] = bgColor;
-    txtColor[1] = fgColor;
-    txtColor[2] = shadowColor;
-    AddTextPrinterParameterized4(windowId, FONT_NORMAL, 0, 2, 0, 0, txtColor, TEXT_SKIP_DRAW, string);
-    CpuCopy16(tileData1, dst, tilesSize);
-    CpuCopy16(tileData2, dst + offset, tilesSize);
-    RemoveWindow(windowId);
-}
-
 static void UNUSED UnusedWriteRectCpu(u16 *dest, u16 dest_left, u16 dest_top, const u16 *src, u16 src_left, u16 src_top, u16 dest_width, u16 dest_height, u16 src_width)
 {
     u16 i;
