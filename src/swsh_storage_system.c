@@ -388,7 +388,9 @@ struct ChooseBoxMenu
     u8 ALIGNED(4) monCountTiles[256];
     u8 ALIGNED(4) navTiles[4 * 32 * 32 / 2];
     u8 ALIGNED(4) overviewBaseTiles[6 * 32 * 32 / 2];
-    u8 ALIGNED(4) overviewMarkerTiles[6 * 32 * 32 / 2];
+    // All native occupancy pixels fit in the centered 16x16 region of each
+    // 32x32 thumbnail (base-local x=8..23, y=8..23).
+    u8 ALIGNED(4) overviewMarkerTiles[6 * 16 * 16 / 2];
     u16 ALIGNED(4) overviewBasePal[16];
     u16 ALIGNED(4) overviewMarkerPal[16];
 };
@@ -1116,9 +1118,9 @@ static u8 ChooseBoxMenu_Get4bppPixel(const u8 *tiles, u8 x, u8 y)
     return (x & 1) ? packed >> 4 : packed & 0xF;
 }
 
-static void ChooseBoxMenu_Set4bppPixel(u8 *tiles, u8 x, u8 y, u8 color)
+static void ChooseBoxMenu_Set4bppPixel(u8 *tiles, u8 widthTiles, u8 x, u8 y, u8 color)
 {
-    u32 tile = (y / 8) * 4 + x / 8;
+    u32 tile = (y / 8) * widthTiles + x / 8;
     u32 offset = tile * TILE_SIZE_4BPP + (y & 7) * 4 + ((x & 7) / 2);
 
     if (x & 1)
@@ -1165,7 +1167,7 @@ static void ChooseBoxMenu_BuildOverviewGroup(u8 groupBase)
     {
         u8 boxId = groupBase + frame;
         u8 *baseFrame = sChooseBoxMenu->overviewBaseTiles + frame * (32 * 32 / 2);
-        u8 *markerFrame = sChooseBoxMenu->overviewMarkerTiles + frame * (32 * 32 / 2);
+        u8 *markerFrame = sChooseBoxMenu->overviewMarkerTiles + frame * (16 * 16 / 2);
         u8 wallpaperId;
         u16 wallpaperColor;
         u8 x;
@@ -1203,7 +1205,7 @@ static void ChooseBoxMenu_BuildOverviewGroup(u8 groupBase)
                     sChooseBoxMenu->overviewBasePal,
                     &baseColorCount,
                     color);
-                ChooseBoxMenu_Set4bppPixel(baseFrame, x, y, destIndex);
+                ChooseBoxMenu_Set4bppPixel(baseFrame, 4, x, y, destIndex);
             }
         }
 
@@ -1228,10 +1230,14 @@ static void ChooseBoxMenu_BuildOverviewGroup(u8 groupBase)
                 bodyColor = BODY_COLOR_WHITE;
 
             markerIndex = bodyColor + 1;
-            x = 10 + 2 * (slot % IN_BOX_COLUMNS);
-            y = 11 + 2 * (slot / IN_BOX_COLUMNS);
-            ChooseBoxMenu_Set4bppPixel(markerFrame, x, y, markerIndex);
-            ChooseBoxMenu_Set4bppPixel(markerFrame, x + 1, y, markerIndex);
+
+            // The marker OBJ is centered on the 32x32 base but only stores its
+            // occupied 16x16 middle. Local (2,3) therefore lands at native
+            // base-local (10,11), preserving ov14_021F4A64 exactly.
+            x = 2 + 2 * (slot % IN_BOX_COLUMNS);
+            y = 3 + 2 * (slot / IN_BOX_COLUMNS);
+            ChooseBoxMenu_Set4bppPixel(markerFrame, 2, x, y, markerIndex);
+            ChooseBoxMenu_Set4bppPixel(markerFrame, 2, x + 1, y, markerIndex);
         }
     }
 }
@@ -1311,8 +1317,9 @@ static void ChooseBoxMenu_LoadOverviewGroup(u8 groupBase)
             sChooseBoxMenu->overviewSprites[i]->data[0] = boxId;
         }
 
-        // Same native cell bounds. Lower subpriority places the marker OBJ
-        // earlier in OAM, above the coincident base OBJ at equal OBJ priority.
+        // The compact 16x16 marker OBJ shares the 32x32 base center, so its
+        // visible pixels land at the exact native base-local coordinates.
+        // Lower subpriority places it earlier in OAM, above the base OBJ.
         spriteId = CreateSprite(&sSpriteTemplate_HgssBoxThumbnailMarkers, 43 + 34 * i, 84, 0);
         if (spriteId != MAX_SPRITES)
         {

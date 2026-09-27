@@ -64,9 +64,10 @@ with the box's authenticated member-75 wallpaper color, and each occupied slot
 gets the exact ov14_021F8080/member-75 body-color marker. The native marker
 geometry is six columns by five rows, with 2x1 markers at x=10..20 and y=11..19
 in two-pixel steps. Because GBA 4bpp cannot address HGSS's 0x20+ marker indices
-inside the same OBJ palette, the live thumbnail is losslessly split into
-coincident base/wallpaper and marker OBJ layers; visible pixels and BGR555
-colors remain unchanged. Members 74-77 remain the separate four-swatch
+inside the same OBJ palette, the live thumbnail is losslessly split into a
+32x32 base/wallpaper OBJ and a centered 16x16 marker OBJ containing the native
+occupied middle region. This reduces OBJ VRAM without changing any visible
+pixel position or BGR555 color. Members 74-77 remain the separate four-swatch
 wallpaper-selector bundle. Members 85 and 86 are auxiliary NSCR window/frame
 surfaces, not an all-box chooser background.
 

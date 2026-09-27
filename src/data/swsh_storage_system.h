@@ -711,12 +711,65 @@ static const struct SpriteTemplate sSpriteTemplate_HgssBoxThumbnail =
     .anims = sAnims_HgssBoxThumbnail,
 };
 
+static const struct OamData sOamData_HgssBoxThumbnailMarkers =
+{
+    .shape = SPRITE_SHAPE(16x16),
+    .size = SPRITE_SIZE(16x16),
+    .priority = 1,
+};
+
+static const union AnimCmd sAnim_HgssBoxThumbnailMarkers0[] =
+{
+    ANIMCMD_FRAME(0, 4),
+    ANIMCMD_END
+};
+
+static const union AnimCmd sAnim_HgssBoxThumbnailMarkers1[] =
+{
+    ANIMCMD_FRAME(4, 4),
+    ANIMCMD_END
+};
+
+static const union AnimCmd sAnim_HgssBoxThumbnailMarkers2[] =
+{
+    ANIMCMD_FRAME(8, 4),
+    ANIMCMD_END
+};
+
+static const union AnimCmd sAnim_HgssBoxThumbnailMarkers3[] =
+{
+    ANIMCMD_FRAME(12, 4),
+    ANIMCMD_END
+};
+
+static const union AnimCmd sAnim_HgssBoxThumbnailMarkers4[] =
+{
+    ANIMCMD_FRAME(16, 4),
+    ANIMCMD_END
+};
+
+static const union AnimCmd sAnim_HgssBoxThumbnailMarkers5[] =
+{
+    ANIMCMD_FRAME(20, 4),
+    ANIMCMD_END
+};
+
+static const union AnimCmd *const sAnims_HgssBoxThumbnailMarkers[] =
+{
+    sAnim_HgssBoxThumbnailMarkers0,
+    sAnim_HgssBoxThumbnailMarkers1,
+    sAnim_HgssBoxThumbnailMarkers2,
+    sAnim_HgssBoxThumbnailMarkers3,
+    sAnim_HgssBoxThumbnailMarkers4,
+    sAnim_HgssBoxThumbnailMarkers5,
+};
+
 static const struct SpriteTemplate sSpriteTemplate_HgssBoxThumbnailMarkers =
 {
     .tileTag = GFXTAG_HGSS_BOX_THUMBNAIL_MARKERS,
     .paletteTag = PALTAG_HGSS_BOX_THUMBNAIL_MARKERS,
-    .oam = &sOamData_HgssBoxThumbnail,
-    .anims = sAnims_HgssBoxThumbnail,
+    .oam = &sOamData_HgssBoxThumbnailMarkers,
+    .anims = sAnims_HgssBoxThumbnailMarkers,
 };
 
 // ============================================================================

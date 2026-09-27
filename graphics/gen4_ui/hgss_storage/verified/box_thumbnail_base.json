@@ -74,7 +74,7 @@
     "wired_base": true,
     "dynamic_content_wired": true,
     "legacy_equivalent_removed": false,
-    "renderer": "six 32x32 HGSS overview cells rebuilt per visible group; GBA 4bpp adaptation uses coincident base/wallpaper and marker OBJ layers with exact source pixels/colors",
+    "renderer": "six 32x32 HGSS overview cells rebuilt per visible group; GBA 4bpp adaptation uses 32x32 base/wallpaper OBJ cells plus centered 16x16 marker OBJ cells with exact source pixels/colors",
     "native_positions": [
       [
         43,
@@ -134,6 +134,6 @@
       "body_color_lookup": "ov14_021F8080 + member-75 first palette bank",
       "egg_rule": "Manaphy eggs use BLUE; all other eggs use WHITE"
     },
-    "gba_palette_adaptation": "HGSS 8bpp base/wallpaper and 0x20+ marker indices are split into two coincident 4bpp OBJ layers. Palette indices are repacked only; BGR555 colors and visible pixel positions are unchanged."
+    "gba_palette_adaptation": "HGSS 8bpp base/wallpaper and 0x20+ marker indices are split into two centered 4bpp OBJ layers. The marker layer stores only the native occupied middle region (base-local x=8..23,y=8..23), reducing OBJ VRAM while leaving every visible BGR555 color and pixel position unchanged."
   }
 }
