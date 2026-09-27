@@ -44,12 +44,12 @@
   "legacy_equivalent": {
     "asset_gfx": "graphics/pokemon_storage/swsh/tiles.png",
     "asset_tilemap": "graphics/pokemon_storage/swsh/bg1.bin",
-    "status": "still present and loaded beneath the authentic HGSS frame during phase 2; removal deferred to phase 3"
+    "status": "removed in phase 3 after the authentic HGSS frame was live"
   },
-  "status": "phase 2 complete: authentic HGSS main Storage frame wired live; legacy SWSH frame equivalent retained only underneath for the next cleanup step",
-  "next": "Remove graphics/pokemon_storage/swsh/tiles.png and bg1.bin plus their declarations/load path, then rebase the authentic main-frame/party-panel tile allocation on an explicit transparent BG1 base.",
+  "status": "phase 3 complete: authentic HGSS main Storage frame is live on a transparent BG1 base; legacy SWSH frame assets and load path removed",
+  "next": "Proceed to the next Storage UI role using the same authentic HGSS asset -> wire live -> remove legacy equivalent sequence.",
   "live_integration": {
-    "renderer": "BG1 sparse authentic-tile composition layered above the still-loaded legacy base",
+    "renderer": "BG1 sparse authentic-HGSS tile composition on an explicitly cleared transparent tilemap",
     "source": "verified/main_frame.png (/a/0/1/9 NSCR 2 + NCGR 3 + NCLR 4)",
     "destination": {
       "left_tile": 0,
@@ -57,7 +57,7 @@
       "width_tiles": 30,
       "height_tiles": 20
     },
-    "base_tile": "immediately after decompressed legacy SWSH BG1 tiles during phase 2",
+    "base_tile": 0,
     "palette_bank": 4,
     "gba_adaptation": {
       "horizontal": "destination columns 0-12 use source 0-12; destination 13-29 use source 15-31, omitting source columns 13-14",
@@ -65,8 +65,8 @@
       "visible_footprint": "left two columns, rightmost column, top two rows from column 13 rightward, and full bottom two rows; all other cells transparent"
     },
     "transparency_rule": "palette index 0 is reserved for transparent composition cells; all nine authentic HGSS colors are remapped losslessly to indices 1-9",
-    "party_panel_tile_base": "placed immediately after the authentic main-frame tile block so the two verified BG1 assets cannot overwrite one another",
+    "party_panel_tile_base": "immediately after the authentic main-frame tile block",
     "legacy_visible_in_frame_role": false,
-    "legacy_assets_removed": false
+    "legacy_assets_removed": true
   }
 }

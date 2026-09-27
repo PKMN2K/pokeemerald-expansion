@@ -3484,8 +3484,11 @@ static void ScrollBackground(void)
 static void LoadPokeStorageMenuGfx(void)
 {
     InitBgsFromTemplates(0, sBgTemplates, ARRAY_COUNT(sBgTemplates));
-    DecompressAndLoadBgGfxUsingHeap(1, sSwShStorage_Gfx, 0, 0, 0);
-    DecompressDataWithHeaderWram(sSwShStorage_BG1_Tilemap, sStorage->displayMenuTilemapBuffer);
+
+    // The authentic HGSS Storage composition owns BG1 now. Start from an
+    // explicit transparent tilemap instead of decompressing the removed SWSH
+    // frame underneath it.
+    CpuFill16(0, sStorage->displayMenuTilemapBuffer, sizeof(sStorage->displayMenuTilemapBuffer));
     SetBgTilemapBuffer(1, sStorage->displayMenuTilemapBuffer);
     DrawHgssStorageMainFrame();
     ShowBg(1);
@@ -3511,42 +3514,38 @@ static bool8 InitPalettesAndSprites(void)
     switch (sStorage->graphicsLoadState)
     {
     case 0:
-        LoadPalette(sSwShStorage_Pal, BG_PLTT_ID(0), sizeof(sSwShStorage_Pal));
-        sStorage->graphicsLoadState++;
-        break;
-    case 1:
         LoadPalette(sTextWindows_Pal, BG_PLTT_ID(15), sizeof(sTextWindows_Pal));
         sStorage->graphicsLoadState++;
         break;
-    case 2:
+    case 1:
         LoadPalette(sTypeIcons_Pal, OBJ_PLTT_ID(13), 3 * PLTT_SIZE_4BPP);
         sStorage->graphicsLoadState++;
         break;
-    case 3:
+    case 2:
         LoadSpriteSheet(&sSpriteSheet_TypeIcons);
         sStorage->graphicsLoadState++;
         break;
-    case 4:
+    case 3:
         LoadCompressedSpriteSheet(&sSpriteSheet_StatLabels);
         sStorage->graphicsLoadState++;
         break;
-    case 5:
+    case 4:
         LoadCompressedSpriteSheet(&sSpriteSheet_GenderIcons);
         sStorage->graphicsLoadState++;
         break;
-    case 6:
+    case 5:
         LoadCompressedSpriteSheet(&sSpriteSheet_ShinyIcon);
         sStorage->graphicsLoadState++;
         break;
-    case 7:
+    case 6:
         LoadHgssStorageCursorGfx();
         sStorage->graphicsLoadState++;
         break;
-    case 8:
+    case 7:
         LoadSpritePalettes(sSpritePal_StatLabels);
         sStorage->graphicsLoadState++;
         break;
-    case 9:
+    case 8:
         LoadCompressedSpriteSheet(&sSpriteSheet_PokerusIcon);
         sStorage->graphicsLoadState = 0;
         return TRUE;
@@ -5572,16 +5571,13 @@ static bool32 LoadHgssStorageBgAsset(
 static void DrawHgssStorageMainFrame(void)
 {
     u16 *tilemap = (u16 *)sStorage->displayMenuTilemapBuffer;
-    u32 legacyGfxSize = GetDecompressedDataSize(sSwShStorage_Gfx);
-    u16 baseTile = (legacyGfxSize + TILE_SIZE_4BPP - 1) / TILE_SIZE_4BPP;
 
-    // Phase 2: the authentic HGSS frame is drawn over the still-loaded legacy
-    // base. Only whole 1:1 source tiles are used; transparent cells leave the
-    // wallpaper and party-panel regions available to their own authentic layers.
+    // Phase 3: BG1 is an authentic-HGSS-only composition. Tile 0 is the
+    // transparent tile carried by the verified main-frame pack.
     LoadHgssStorageBgAsset(
         &sHgssStorageMainFrameAsset,
         1,
-        baseTile,
+        0,
         4,
         tilemap,
         0,
@@ -5591,9 +5587,7 @@ static void DrawHgssStorageMainFrame(void)
 static void DrawHgssStoragePartySlots(void)
 {
     u16 *tilemap = (u16 *)sStorage->displayMenuTilemapBuffer;
-    u32 legacyGfxSize = GetDecompressedDataSize(sSwShStorage_Gfx);
-    u16 baseTile = (legacyGfxSize + TILE_SIZE_4BPP - 1) / TILE_SIZE_4BPP
-                 + sHgssStorageMainFrameAsset.tileCount;
+    u16 baseTile = sHgssStorageMainFrameAsset.tileCount;
 
     LoadHgssStorageBgAsset(
         &sHgssStoragePartyPanelAsset,

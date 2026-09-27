@@ -359,3 +359,15 @@ This is the wiring phase only. `graphics/pokemon_storage/swsh/tiles.png` and
 `bg1.bin` are intentionally still loaded underneath the authentic frame and
 must not be deleted until the next cleanup commit. Their visible frame role is
 already covered by the authentic HGSS composition.
+
+
+Phase 3 is complete for the main Storage frame. The legacy SWSH
+`graphics/pokemon_storage/swsh/tiles.png` and `bg1.bin` assets, their
+declarations, the decompression path, and the palette-0 load sourced from the
+legacy tiles have been removed. BG1 now starts from an explicitly cleared
+transparent tilemap; the authentic HGSS main-frame pack begins at tile 0 and
+the verified HGSS party panel follows immediately after its tile block.
+
+No legacy SWSH frame pixels remain underneath the HGSS composition. This
+finishes the required sequence for this role: authentic HGSS asset -> wire
+live -> remove legacy equivalent.
