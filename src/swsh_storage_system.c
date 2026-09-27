@@ -535,6 +535,7 @@ struct PokemonStorageSystemData
     u8 ALIGNED(4) tileBuffer[MON_PIC_SIZE * MAX_MON_PIC_FRAMES];
     u8 ALIGNED(4) itemIconBuffer[0x800];
     u16 wallpaperBgTilemapBuffer[0x400];
+    u16 hgssWallpaperTilemapBuffer[0x400];
     u8 displayMenuTilemapBuffer[0x800];
     u16 infoTilemapBuffer[0x800];
     u16 bg0_Y;
@@ -3350,12 +3351,64 @@ static void FreePokeStorageData(void)
 //------------------------------------------------------------------------------
 
 
+#define HGSS_STORAGE_WALLPAPER_LEFT       9
+#define HGSS_STORAGE_WALLPAPER_TOP        0
+#define HGSS_STORAGE_WALLPAPER_WIDTH      21
+#define HGSS_STORAGE_WALLPAPER_HEIGHT     20
+#define HGSS_STORAGE_WALLPAPER_BASE_TILE  1
+#define HGSS_STORAGE_WALLPAPER_PAL_BANK   1
+
+static bool32 LoadHgssStorageWallpaper(u8 wallpaperId)
+{
+    u8 x, y;
+    u16 *tilemap = sStorage->hgssWallpaperTilemapBuffer;
+    static const ALIGNED(4) u8 sBlankTile[32] = {0};
+
+    CpuFill16(0, tilemap, sizeof(sStorage->hgssWallpaperTilemapBuffer));
+    SetBgTilemapBuffer(3, tilemap);
+
+    // Wallpaper 01 is the first verified /a/0/1/9 import. Other semantic
+    // wallpaper IDs remain blank until their authentic HGSS counterparts are
+    // imported through the same verified pipeline.
+    if (wallpaperId != WALLPAPER_BASE)
+    {
+        ShowBg(3);
+        ScheduleBgCopyTilemapToVram(3);
+        return FALSE;
+    }
+
+    LoadBgTiles(3, sBlankTile, sizeof(sBlankTile), 0);
+    LoadBgTiles(
+        3,
+        sHgssStorageWallpaper01_Gfx,
+        sizeof(sHgssStorageWallpaper01_Gfx),
+        HGSS_STORAGE_WALLPAPER_BASE_TILE);
+    LoadPalette(
+        sHgssStorageWallpaper01_Pal,
+        BG_PLTT_ID(HGSS_STORAGE_WALLPAPER_PAL_BANK),
+        PLTT_SIZE_4BPP);
+
+    for (y = 0; y < HGSS_STORAGE_WALLPAPER_HEIGHT; y++)
+    {
+        for (x = 0; x < HGSS_STORAGE_WALLPAPER_WIDTH; x++)
+        {
+            tilemap[(HGSS_STORAGE_WALLPAPER_TOP + y) * 32
+                  + HGSS_STORAGE_WALLPAPER_LEFT + x] =
+                (HGSS_STORAGE_WALLPAPER_BASE_TILE
+                 + y * HGSS_STORAGE_WALLPAPER_WIDTH + x)
+                | (HGSS_STORAGE_WALLPAPER_PAL_BANK << 12);
+        }
+    }
+
+    ShowBg(3);
+    ScheduleBgCopyTilemapToVram(3);
+    return TRUE;
+}
+
 static void SetScrollingBackground(void)
 {
-    // Authenticity-only HGSS path: do not render the legacy SWSH wallpaper.
-    // Keep BG3 reserved for a future verified HGSS wallpaper composition.
     SetGpuReg(REG_OFFSET_BG3CNT, BGCNT_PRIORITY(3) | BGCNT_CHARBASE(3) | BGCNT_16COLOR | BGCNT_SCREENBASE(31));
-    CpuFill16(0, (void *)BG_SCREEN_ADDR(31), 0x800);
+    LoadHgssStorageWallpaper(GetBoxWallpaper(StorageGetCurrentBox()));
 }
 
 /*
@@ -5487,13 +5540,8 @@ static void StartLoadWallpaperGfx(u8 boxId, s8 direction)
 
 static void UpdateWallpaperGfx(u8 boxId, s8 direction)
 {
-    (void)boxId;
     (void)direction;
-
-    // Clear the legacy wallpaper layer. The semantic wallpaper choice remains
-    // stored so it can later map to verified HGSS wallpaper assets.
-    CpuFill16(0, sStorage->wallpaperBgTilemapBuffer, sizeof(sStorage->wallpaperBgTilemapBuffer));
-    RequestDma3Copy(sStorage->wallpaperBgTilemapBuffer, (void *)BG_SCREEN_ADDR(31), 0x800, 1);
+    LoadHgssStorageWallpaper(GetBoxWallpaper(boxId));
 }
 
 static bool32 WaitForWallpaperGfxLoad(void)
