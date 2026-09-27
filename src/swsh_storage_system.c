@@ -800,7 +800,6 @@ static void SetBoxWallpaper(u8, u8);
 static void CreateInitBoxTask(u8);
 static bool8 IsInitBoxActive(void);
 static bool32 LoadHgssStorageBgAsset(const struct HgssStorageBgAsset *, u8, u16, u8, u16 *, u8, u8);
-static void DrawHgssStorageBoxGrid(void);
 static void DrawHgssStoragePartySlots(void);
 static void UpdateHgssStorageSlotHighlight(void);
 static void Task_InitBox(u8);
@@ -5226,25 +5225,6 @@ static bool32 LoadHgssStorageBgAsset(
     return TRUE;
 }
 
-static void DrawHgssStorageBoxGrid(void)
-{
-    u32 gfxSize = GetDecompressedDataSize(sSwShStorage_Gfx);
-    u16 baseTile = (gfxSize + TILE_SIZE_4BPP - 1) / TILE_SIZE_4BPP;
-
-    CpuFill16(0, sStorage->wallpaperBgTilemapBuffer, sizeof(sStorage->wallpaperBgTilemapBuffer));
-
-    LoadHgssStorageBgAsset(
-        &sHgssStorageBoxGridAsset,
-        2,
-        baseTile,
-        2,
-        sStorage->wallpaperBgTilemapBuffer,
-        10,
-        3);
-
-    ScheduleBgCopyTilemapToVram(2);
-}
-
 static void DrawHgssStoragePartySlots(void)
 {
     u16 *tilemap = (u16 *)sStorage->displayMenuTilemapBuffer;
@@ -5268,7 +5248,6 @@ static void UpdateHgssStorageSlotHighlight(void)
     if (sCursorArea == CURSOR_AREA_IN_CHOOSE_BOX)
         return;
 
-    DrawHgssStorageBoxGrid();
     DrawHgssStoragePartySlots();
 }
 
