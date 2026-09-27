@@ -245,6 +245,7 @@ enum {
     PALTAG_MARKING_MENU,
     PALTAG_LIST_MENU_SCROLL_ARROW,
     PALTAG_HGSS_CHOOSE_BOX_NAV,
+    PALTAG_HGSS_STORAGE_CURSOR,
 };
 
 enum {
@@ -573,6 +574,9 @@ static u32 sItemIconGfxBuffer[98];
 
 EWRAM_DATA static u8 sPreviousBoxOption = 0;
 EWRAM_DATA static struct ChooseBoxMenu *sChooseBoxMenu = NULL;
+// Two authentic HGSS 32x32 cursor frames, repacked from the verified 64x32
+// source strip into contiguous GBA OBJ cells at runtime.
+EWRAM_DATA static u32 sHgssStorageCursorTiles[(2 * 32 * 32 / 2) / sizeof(u32)] = {0};
 EWRAM_DATA static struct PokemonStorageSystemData *sStorage = NULL;
 EWRAM_DATA static u8 sCurrentBoxOption = 0;
 EWRAM_DATA static u8 sWhichToReshow = 0;
@@ -753,6 +757,7 @@ static void SpriteCB_ItemIcon_HideParty(struct Sprite *);
 static void SpriteCB_ItemIcon_SwapToMon(struct Sprite *);
 
 // Cursor
+static void LoadHgssStorageCursorGfx(void);
 static void CreateCursorSprites(void);
 static void ToggleCursorAutoAction(void);
 static u8 GetCursorPosition(void);
@@ -3479,7 +3484,7 @@ static bool8 InitPalettesAndSprites(void)
         sStorage->graphicsLoadState++;
         break;
     case 7:
-        LoadCompressedSpriteSheet(sSpriteSheet_Cursor);
+        LoadHgssStorageCursorGfx();
         sStorage->graphicsLoadState++;
         break;
     case 8:
@@ -7623,14 +7628,61 @@ static bool8 SetMenuTexts_Item(void)
 //------------------------------------------------------------------------------
 
 
+static void LoadHgssStorageCursorGfx(void)
+{
+    const u8 *srcTiles = (const u8 *)sHgssStorageCursor_Gfx;
+    u8 *dstTiles = (u8 *)sHgssStorageCursorTiles;
+    struct SpriteSheet spriteSheet =
+    {
+        .data = dstTiles,
+        .size = sizeof(sHgssStorageCursorTiles),
+        .tag = GFXTAG_CURSOR,
+    };
+    struct SpritePalette spritePalette =
+    {
+        .data = sHgssStorageCursor_Pal,
+        .tag = PALTAG_HGSS_STORAGE_CURSOR,
+    };
+    u8 frame;
+    u8 row;
+    u8 col;
+
+    // verified/cursor.png is two horizontal 32x32 frames (64x32 total).
+    // gbagfx stores tiles row-major across the full image, while a 32x32 OBJ
+    // frame needs its 16 tiles contiguous. Repack only tile order; every visible
+    // HGSS pixel and palette index remains unchanged.
+    CpuFill32(0, dstTiles, sizeof(sHgssStorageCursorTiles));
+    for (frame = 0; frame < 2; frame++)
+    {
+        for (row = 0; row < 4; row++)
+        {
+            for (col = 0; col < 4; col++)
+            {
+                u32 srcTile = row * 8 + frame * 4 + col;
+                u32 dstTile = frame * 16 + row * 4 + col;
+
+                CpuCopy32(
+                    srcTiles + srcTile * TILE_SIZE_4BPP,
+                    dstTiles + dstTile * TILE_SIZE_4BPP,
+                    TILE_SIZE_4BPP);
+            }
+        }
+    }
+
+    FreeSpriteTilesByTag(GFXTAG_CURSOR);
+    FreeSpritePaletteByTag(PALTAG_HGSS_STORAGE_CURSOR);
+    LoadSpriteSheet(&spriteSheet);
+    LoadSpritePalette(&spritePalette);
+}
+
 static void CreateCursorSprites(void)
 {
     u16 x, y;
     u8 spriteId;
 
-    sStorage->cursorPalNums[CURSOR_MODE_NORMAL]      = IndexOfSpritePaletteTag(PALTAG_MISC_1); // Red cursor
-    sStorage->cursorPalNums[CURSOR_MODE_AUTO_ACTION] = IndexOfSpritePaletteTag(PALTAG_MISC_2); // Blue cursor
-    sStorage->cursorPalNums[CURSOR_MODE_MULTI_MOVE]  = IndexOfSpritePaletteTag(PALTAG_MISC_3); // Green cursor
+    sStorage->cursorPalNums[CURSOR_MODE_NORMAL]       = IndexOfSpritePaletteTag(PALTAG_HGSS_STORAGE_CURSOR);
+    sStorage->cursorPalNums[CURSOR_MODE_AUTO_ACTION] = IndexOfSpritePaletteTag(PALTAG_HGSS_STORAGE_CURSOR);
+    sStorage->cursorPalNums[CURSOR_MODE_MULTI_MOVE]  = IndexOfSpritePaletteTag(PALTAG_HGSS_STORAGE_CURSOR);
 
     GetCursorCoordsByPos(sCursorArea, sCursorPosition, &x, &y);
     spriteId = CreateSprite(&sSpriteTemplate_Cursor, x, y, 2);
@@ -7639,6 +7691,12 @@ static void CreateCursorSprites(void)
         sStorage->cursorSprite = &gSprites[spriteId];
         sStorage->cursorSprite->oam.paletteNum = sStorage->cursorPalNums[sCursorMode];
         sStorage->cursorSprite->oam.priority = 1;
+        // NCER cells 13/14 have bounds x=-10..21, y=-6..25. The verified
+        // export normalizes those bounds to a 32x32 frame, so offset only the
+        // visual OBJ center (+6,+10) to keep the native origin on the existing
+        // logical cursor coordinate. Held Pokemon/items still follow x/y.
+        sStorage->cursorSprite->x2 = 6;
+        sStorage->cursorSprite->y2 = 10;
         if (sIsMonBeingMoved)
             StartSpriteAnim(sStorage->cursorSprite, CURSOR_ANIM_MAIN);
     }

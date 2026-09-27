@@ -102,9 +102,15 @@ layer from the same members 66-69 sprite bundle. Overlay 14 drives sprite slot
 animation alternates NCER cells 13 and 14 for 20 ticks each. The NCER CEBK
 declares `shift=1`, so the OAM tile indices are shifted before reading NCGR
 member 66. `verified/cursor.png` is an indexed 64x32 two-frame export of those
-two native 32x32 cells. Live replacement of the remaining SWSH storage cursor
-is intentionally deferred to the next sequence step; the legacy cursor is not
-removed until the authentic pointer is live.
+two native 32x32 cells. The authentic pointer is now wired live as the normal Storage OBJ cursor. The
+verified 64x32 source strip is repacked tile-for-tile into two contiguous 32x32
+GBA OBJ frames at runtime, preserving the HGSS pixels and 20-tick animation.
+The NCER origin is preserved with an OBJ-only (+6,+10) visual offset, leaving
+logical cursor, held-Pokemon, and held-item coordinates unchanged. All cursor
+interaction modes use the authentic HGSS palette; mode identity remains on the
+existing functional mode indicator rather than recoloring the hand. The legacy
+SWSH cursor declarations/assets are deliberately still present for the next
+pipeline step, where they can be removed after this live binding is verified.
 The machine-readable record is `verified/cursor.json`.
 
 Do not restore compatibility fallbacks that draw approximated HGSS chrome.

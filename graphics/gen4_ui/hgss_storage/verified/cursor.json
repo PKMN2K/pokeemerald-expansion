@@ -91,6 +91,32 @@
     "layout": "2 horizontal frames: animation 14 cell 13, then cell 14",
     "pixel_rule": "Exact NCGR+NCER+NCLR composite at 1:1 DS pixel scale using CEBK shift=1; no redraw, resampling, recoloring, or synthetic pixels."
   },
-  "status": "authentic HGSS storage cursor identified and imported; live wiring deferred",
-  "next": "Wire this verified animation live in place of the current SWSH storage cursor, then remove the legacy cursor asset/equivalent."
+  "status": "wired live as the normal Storage cursor; legacy SWSH cursor declarations retained pending removal",
+  "next": "Remove the legacy SWSH cursor sheet/palette declarations and any now-unused equivalent code after the authentic live binding passes CI.",
+  "live_integration": {
+    "renderer": "GBA OBJ sprite",
+    "source_frame_size": [
+      32,
+      32
+    ],
+    "source_layout": "two horizontal 32x32 verified HGSS frames",
+    "runtime_layout": "two contiguous 32x32 OBJ cells",
+    "runtime_repack": "tile-order only; visible pixels and palette indices unchanged",
+    "animation": "cell 13 for 20 ticks, cell 14 for 20 ticks, looping",
+    "palette": "dedicated PALTAG_HGSS_STORAGE_CURSOR; authentic palette used in all cursor modes",
+    "ncer_origin_preservation": {
+      "bounds": {
+        "min_x": -10,
+        "min_y": -6,
+        "max_x": 21,
+        "max_y": 25
+      },
+      "obj_visual_offset": [
+        6,
+        10
+      ],
+      "logical_cursor_coordinates_unchanged": true
+    },
+    "legacy_asset_removed": false
+  }
 }

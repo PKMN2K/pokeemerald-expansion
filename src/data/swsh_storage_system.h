@@ -67,6 +67,13 @@ static const u16 sHgssStorageWallpaper01_Pal[] = INCGFX_U16("graphics/gen4_ui/hg
 static const u32 sHgssChooseBoxNav_Gfx[] = INCGFX_U32("graphics/gen4_ui/hgss_storage/verified/choose_box_nav.png", ".4bpp");
 static const u16 sHgssChooseBoxNav_Pal[] = INCGFX_U16("graphics/gen4_ui/hgss_storage/verified/choose_box_nav.png", ".gbapal");
 
+// Authentic HGSS normal Storage hand pointer: NANR animation 14,
+// NCER cells 13 and 14, 20 ticks per frame.
+static const u32 sHgssStorageCursor_Gfx[] = INCGFX_U32("graphics/gen4_ui/hgss_storage/verified/cursor.png", ".4bpp");
+static const u16 sHgssStorageCursor_Pal[] = INCGFX_U16("graphics/gen4_ui/hgss_storage/verified/cursor.png", ".gbapal");
+
+// Legacy SWSH cursor declarations are intentionally retained until the next
+// pipeline step removes the old equivalent after live HGSS verification.
 static const u32 sCursor_Gfx[]                = INCGFX_U32("graphics/pokemon_storage/swsh/cursor.png", ".4bpp.smol");
 static const u16 sCursor_Pal[]                = INCGFX_U16("graphics/pokemon_storage/swsh/cursor.png", ".gbapal");
 static const u32 sGenderIcons_Gfx[]           = INCGFX_U32("graphics/pokemon_storage/swsh/gender_icons.png", ".4bpp.smol");
@@ -554,24 +561,26 @@ static const struct SpritePalette sSpritePal_Cursor[] =
 
 static const struct OamData sOamData_Cursor =
 {
-    .shape = SPRITE_SHAPE(16x16),
-    .size = SPRITE_SIZE(16x16),
+    .shape = SPRITE_SHAPE(32x32),
+    .size = SPRITE_SIZE(32x32),
     .priority = 1,
 };
 
+// HGSS NANR animation 14: cells 13 -> 14, 20 ticks each, looping.
+// Both existing pokeemerald cursor states use the native HGSS motion so no
+// legacy cursor frame is displayed during movement or normal interaction.
 static const union AnimCmd sAnim_Cursor_Bouncing[] =
 {
-    ANIMCMD_FRAME(0, 8),
-    ANIMCMD_FRAME(4, 8),
-    ANIMCMD_FRAME(8, 8),
-    ANIMCMD_FRAME(4, 8),
+    ANIMCMD_FRAME(0, 20),
+    ANIMCMD_FRAME(16, 20),
     ANIMCMD_JUMP(0)
 };
 
 static const union AnimCmd sAnim_Cursor_Main[] =
 {
-    ANIMCMD_FRAME(4, 0),
-    ANIMCMD_END
+    ANIMCMD_FRAME(0, 20),
+    ANIMCMD_FRAME(16, 20),
+    ANIMCMD_JUMP(0)
 };
 
 static const union AnimCmd *const sAnims_Cursor[] =
@@ -583,7 +592,7 @@ static const union AnimCmd *const sAnims_Cursor[] =
 static const struct SpriteTemplate sSpriteTemplate_Cursor =
 {
     .tileTag = GFXTAG_CURSOR,
-    .paletteTag = PALTAG_MISC_1,
+    .paletteTag = PALTAG_HGSS_STORAGE_CURSOR,
     .oam = &sOamData_Cursor,
     .anims = sAnims_Cursor,
 };
