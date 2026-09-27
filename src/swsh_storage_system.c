@@ -249,7 +249,6 @@ enum {
     GFXTAG_SHINY_ICON,
     GFXTAG_STAT_LABELS,
     GFXTAG_BOX_TITLE,
-    GFXTAG_RESERVED_6,
     GFXTAG_BOX_TITLE_ARROW,
     GFXTAG_ITEM_ICON_0,
     GFXTAG_ITEM_ICON_1, // Used implicitly in CreateItemIconSprites
