@@ -50,8 +50,36 @@
     ],
     "visual_source": "engine-standard Emerald frame tiles at BG tile 192 / palette 14",
     "frame_resource_loader": "LoadUserWindowBorderGfxOnBg(0, 192, BG_PLTT_ID(14))",
-    "status": "still live"
+    "status": "visually replaced; legacy frame draw/clear retained only for next cleanup phase"
   },
-  "status": "authentic HGSS Storage context-menu panel identified and imported; live wiring deferred",
-  "next": "Wire verified/context_menu.png into the dynamic Storage context-menu windows by composing from its authentic edge/interior tiles, then remove the Emerald standard-frame equivalent."
+  "status": "wired live: authentic HGSS Storage context-menu frame now replaces the visible Emerald frame in dynamic Storage menus; legacy standard-frame plumbing retained for cleanup",
+  "next": "Remove DrawStdFrameWithCustomTileAndPalette / ClearStdWindowAndFrameToTransparent and the now-context-only standard border loader from the Storage context-menu paths while preserving menu behavior.",
+  "live_integration": {
+    "renderer": "dynamic BG0 composition from verified NSCR 86 tiles + existing window text/cursor",
+    "source": "verified/context_menu.png (NSCR 86 + NCGR 14 + NCLR 4)",
+    "source_dimensions": [
+      96,
+      80
+    ],
+    "source_tile_geometry": {
+      "width_tiles": 12,
+      "height_tiles": 10,
+      "horizontal": "source column 0 = native left edge; source column 1 = repeated continuation/interior used through screen-right edge",
+      "vertical": "rows 0/1 and 8/9 preserved as authentic two-tile top/bottom bands; source row 2 repeated only for variable middle height"
+    },
+    "base_tile": 904,
+    "tile_range": "904-1023",
+    "frame_palette_bank": 10,
+    "text_palette_bank": 15,
+    "text_palette_rule": "authentic NSCR 86 colors reordered only so existing menu engine indices 1/2/3 remain background/foreground/shadow",
+    "layout": {
+      "horizontal": "dynamic context windows right-aligned so the HGSS open-right frame terminates at GBA tile column 29",
+      "vertical": "existing cursor-relative top retained and clamped to fit the authentic two-row top/bottom bands",
+      "wallpaper_menu": "existing right alignment retained"
+    },
+    "legacy_standard_frame_visible": false,
+    "legacy_standard_frame_plumbing_still_present": true,
+    "menu_text_input_behavior": "unchanged",
+    "main_field_pc_menu": "not part of this Storage-overlay role; unchanged"
+  }
 }

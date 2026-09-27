@@ -827,6 +827,8 @@ static void UpdateMonInfoTilemap(void);
 static void RestoreHgssMonInfoPanel(void);
 static void DrawHgssMessageWindow(void);
 static void DrawHgssYesNoPanel(void);
+static void DrawHgssContextMenuFrame(u8 windowId);
+static void ClearHgssContextMenuFrame(u8 windowId);
 
 // Misc
 static void CreateMainMenu(u8, s16 *);
@@ -4332,6 +4334,108 @@ static void DrawHgssYesNoPanel(void)
     }
 }
 
+#define HGSS_CONTEXT_MENU_BASE_TILE         904
+#define HGSS_CONTEXT_MENU_PAL_BANK          10
+#define HGSS_CONTEXT_MENU_SRC_WIDTH         12
+#define HGSS_CONTEXT_MENU_SRC_HEIGHT        10
+#define HGSS_CONTEXT_MENU_TOP_ROW_0         0
+#define HGSS_CONTEXT_MENU_TOP_ROW_1         1
+#define HGSS_CONTEXT_MENU_MIDDLE_ROW        2
+#define HGSS_CONTEXT_MENU_BOTTOM_ROW_0      8
+#define HGSS_CONTEXT_MENU_BOTTOM_ROW_1      9
+
+static void DrawHgssContextMenuFrame(u8 windowId)
+{
+    u16 *tilemap = sStorage->infoTilemapBuffer;
+    u16 textPal[16] = {0};
+    u8 left = GetWindowAttribute(windowId, WINDOW_TILEMAP_LEFT);
+    u8 top = GetWindowAttribute(windowId, WINDOW_TILEMAP_TOP);
+    u8 width = GetWindowAttribute(windowId, WINDOW_WIDTH);
+    u8 height = GetWindowAttribute(windowId, WINDOW_HEIGHT);
+    u8 frameLeft = left - 1;
+    u8 frameTop = top - 2;
+    u8 frameWidth = width + 2;
+    u8 frameHeight = height + 4;
+    u8 x;
+    u8 y;
+
+    LoadBgTiles(0,
+                sHgssContextMenu_Gfx,
+                sizeof(sHgssContextMenu_Gfx),
+                HGSS_CONTEXT_MENU_BASE_TILE);
+    LoadPalette(sHgssContextMenu_Pal,
+                BG_PLTT_ID(HGSS_CONTEXT_MENU_PAL_BANK),
+                PLTT_SIZE_4BPP);
+
+    // Menu text/cursor code assumes palette indices 1/2/3 are
+    // background/foreground/shadow. Reorder only authentic NSCR 86 colors into
+    // those slots; no new RGB value is introduced.
+    textPal[0] = sHgssContextMenu_Pal[0];
+    textPal[1] = sHgssContextMenu_Pal[0];
+    textPal[2] = sHgssContextMenu_Pal[1];
+    textPal[3] = sHgssContextMenu_Pal[2];
+    textPal[4] = sHgssContextMenu_Pal[3];
+    textPal[5] = sHgssContextMenu_Pal[4];
+    textPal[6] = sHgssContextMenu_Pal[5];
+    textPal[7] = sHgssContextMenu_Pal[6];
+    LoadPalette(textPal, BG_PLTT_ID(15), PLTT_SIZE_4BPP);
+
+    // NSCR 86 is screen-right open: column 0 is the native left edge and
+    // columns 1-11 are repeated interior/top/bottom continuation tiles. Keep
+    // that authentic geometry by right-aligning the dynamic menu and extending
+    // the final interior tile to the screen edge. Vertically, preserve both
+    // two-tile top and bottom bands while repeating only the verified middle row.
+    for (y = 0; y < frameHeight; y++)
+    {
+        u8 srcY;
+
+        if (y == 0)
+            srcY = HGSS_CONTEXT_MENU_TOP_ROW_0;
+        else if (y == 1)
+            srcY = HGSS_CONTEXT_MENU_TOP_ROW_1;
+        else if (y == frameHeight - 2)
+            srcY = HGSS_CONTEXT_MENU_BOTTOM_ROW_0;
+        else if (y == frameHeight - 1)
+            srcY = HGSS_CONTEXT_MENU_BOTTOM_ROW_1;
+        else
+            srcY = HGSS_CONTEXT_MENU_MIDDLE_ROW;
+
+        for (x = 0; x < frameWidth; x++)
+        {
+            u8 srcX = (x == 0) ? 0 : 1;
+            u16 tile = HGSS_CONTEXT_MENU_BASE_TILE
+                     + srcY * HGSS_CONTEXT_MENU_SRC_WIDTH
+                     + srcX;
+
+            tilemap[(frameTop + y) * 32 + frameLeft + x]
+                = tile | (HGSS_CONTEXT_MENU_PAL_BANK << 12);
+        }
+    }
+}
+
+static void ClearHgssContextMenuFrame(u8 windowId)
+{
+    u16 *tilemap = sStorage->infoTilemapBuffer;
+    const u16 blankEntry = HGSS_MON_INFO_PANEL_BLANK_TILE
+                         | (HGSS_MON_INFO_PANEL_PAL_BANK << 12);
+    u8 left = GetWindowAttribute(windowId, WINDOW_TILEMAP_LEFT);
+    u8 top = GetWindowAttribute(windowId, WINDOW_TILEMAP_TOP);
+    u8 width = GetWindowAttribute(windowId, WINDOW_WIDTH);
+    u8 height = GetWindowAttribute(windowId, WINDOW_HEIGHT);
+    u8 frameLeft = left - 1;
+    u8 frameTop = top - 2;
+    u8 frameWidth = width + 2;
+    u8 frameHeight = height + 4;
+    u8 x;
+    u8 y;
+
+    for (y = 0; y < frameHeight; y++)
+    {
+        for (x = 0; x < frameWidth; x++)
+            tilemap[(frameTop + y) * 32 + frameLeft + x] = blankEntry;
+    }
+}
+
 static void InitPokeStorageBg0(void)
 {
     SetGpuReg(REG_OFFSET_BG0CNT, BGCNT_PRIORITY(0) | BGCNT_CHARBASE(0) | BGCNT_SCREENBASE(29) | BGCNT_TXT256x512);
@@ -4592,6 +4696,8 @@ static void AddWallpaperMenu(void)
     sStorage->menuWindowId = AddWindow(&sStorage->menuWindow);
     ClearMonInfoTilemap();
     DrawStdFrameWithCustomTileAndPalette(sStorage->menuWindowId, FALSE, 192, 14);
+    DrawHgssContextMenuFrame(sStorage->menuWindowId);
+    PutWindowTilemap(sStorage->menuWindowId);
 
     sStorage->listMenuTemplate.items = (struct ListMenuItem *)sStorage->menuItems;
     sStorage->listMenuTemplate.moveCursorFunc = ListMenuDefaultCursorMoveFunc;
@@ -4604,7 +4710,7 @@ static void AddWallpaperMenu(void)
     sStorage->listMenuTemplate.cursor_X = 0;
     sStorage->listMenuTemplate.upText_Y = 1;
     sStorage->listMenuTemplate.cursorPal = 2;
-    sStorage->listMenuTemplate.fillValue = 1;
+    sStorage->listMenuTemplate.fillValue = 1; // authentic cream in the HGSS-remapped text palette
     sStorage->listMenuTemplate.cursorShadowPal = 3;
     sStorage->listMenuTemplate.lettersSpacing = 1;
     sStorage->listMenuTemplate.itemVerticalPadding = 0;
@@ -8132,13 +8238,26 @@ static void AddMenu(void)
     if (sStorage->menuWindow.width > 28)
         sStorage->menuWindow.width = 28;
     sStorage->menuWindow.height = 2 * sStorage->menuItemsCount;
-    GetMenuPosition(sCursorArea, sCursorPosition, &tilemapLeft, &tilemapTop);    
+    GetMenuPosition(sCursorArea, sCursorPosition, &tilemapLeft, &tilemapTop);
+
+    // NSCR 86 terminates at the screen edge rather than using a right border.
+    // Keep the existing vertical placement, but align the content window so the
+    // authentic repeated interior reaches tile 29 exactly.
+    tilemapLeft = 29 - sStorage->menuWindow.width;
+    if (tilemapTop < 2)
+        tilemapTop = 2;
+    if (tilemapTop + sStorage->menuWindow.height + 2 > 20)
+        tilemapTop = 18 - sStorage->menuWindow.height;
+
     sStorage->menuWindow.tilemapLeft = tilemapLeft;
     sStorage->menuWindow.tilemapTop = tilemapTop;
     sStorage->menuWindowId = AddWindow(&sStorage->menuWindow);
     ClearMonInfoTilemap();
     ClearWindowTilemap(sStorage->menuWindowId);
     DrawStdFrameWithCustomTileAndPalette(sStorage->menuWindowId, FALSE, 192, 14);
+    DrawHgssContextMenuFrame(sStorage->menuWindowId);
+    FillWindowPixelBuffer(sStorage->menuWindowId, PIXEL_FILL(1));
+    PutWindowTilemap(sStorage->menuWindowId);
     PrintMenuTable(sStorage->menuWindowId, sStorage->menuItemsCount, (void *)sStorage->menuItems);
     InitMenuInUpperLeftCornerNormal(sStorage->menuWindowId, sStorage->menuItemsCount, 0);
     ScheduleBgCopyTilemapToVram(0);
@@ -8192,8 +8311,10 @@ static s16 HandleMenuInput(void)
 
 static void RemoveMenu(void)
 {
+    ClearHgssContextMenuFrame(sStorage->menuWindowId);
     ClearStdWindowAndFrameToTransparent(sStorage->menuWindowId, TRUE);
     RemoveWindow(sStorage->menuWindowId);
+    LoadPalette(sTextWindows_Pal, BG_PLTT_ID(15), sizeof(sTextWindows_Pal));
     UpdateMonInfoTilemap();
 }
 

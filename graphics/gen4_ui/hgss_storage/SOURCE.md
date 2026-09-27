@@ -207,12 +207,23 @@ repack: all seven source RGB colors and every source pixel are preserved with
 no crop, redraw, resampling, or recoloring. Its archive/member hashes and role
 binding are recorded in `verified/context_menu.json`.
 
-This completes only the authentic-asset phase. The live dynamic Storage menus
-still use `DrawStdFrameWithCustomTileAndPalette(..., 192, 14)` and the
-engine-standard Emerald border tiles. Those paths remain untouched until the
-next wire-live phase; the compact HGSS frame will then be composed dynamically
-from its authentic edge/interior tiles to fit the existing variable menu
-widths/heights.
+The native HGSS Storage context-menu frame is now wired live. NSCR 86's
+actual geometry is preserved rather than approximated: source column 0 is the
+left edge, source continuation columns are repeated through the screen-right
+edge, source rows 0/1 and 8/9 remain the two-tile top/bottom bands, and only the
+verified middle row is repeated to accommodate variable menu heights. Dynamic
+Storage context windows are therefore right-aligned to the GBA's tile column 29,
+matching the source's open-right construction. The existing vertical
+cursor-relative placement is retained and clamped only as needed to keep both
+authentic top/bottom bands on-screen.
+
+The existing menu text, cursor, list-menu, and input systems remain functional.
+Their palette indices are mapped to RGB colors taken directly from NSCR 86's
+authentic palette; no new colors are introduced. For this wire-live phase the
+Emerald `DrawStdFrameWithCustomTileAndPalette(..., 192, 14)` call still runs
+first and its frame is immediately overwritten before presentation. The matching
+standard-frame clear and border resource loader are likewise retained until the
+next cleanup phase.
 
 Do not restore compatibility fallbacks that draw approximated HGSS chrome.
 If an authentic role is not available yet, leave that HGSS layer empty and
