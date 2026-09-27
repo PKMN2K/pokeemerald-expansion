@@ -879,17 +879,6 @@ void UpdateSpeciesSpritePSS(struct BoxPokemon *boxmon);
 //  SECTION: Misc utility
 //------------------------------------------------------------------------------
 
-static void UNUSED UnusedWriteRectDma(u16 *dest, u16 dest_left, u16 dest_top, u16 width, u16 height)
-{
-    u16 i;
-
-    dest += dest_top * 0x20 + dest_left;
-    width *= 2;
-    for (i = 0; i < height; dest += 0x20, i++)
-        Dma3FillLarge16_(0, dest, width);
-}
-
-
 //------------------------------------------------------------------------------
 //  SECTION: Main menu
 //
