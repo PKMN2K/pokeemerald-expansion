@@ -67,7 +67,6 @@ static const u16 sTextWindows_Pal[]           = INCGFX_U16("graphics/pokemon_sto
 #include "data/hgss_storage_party_panel.inc.h"
 #include "data/hgss_storage_choose_box.inc.h"
 
-static const u32 sBoxTitleArrow_Gfx[]         = INCGFX_U32("graphics/pokemon_storage/swsh/box_title_arrow.png", ".4bpp.smol");
 static const u32 sCursor_Gfx[]                = INCGFX_U32("graphics/pokemon_storage/swsh/cursor.png", ".4bpp.smol");
 static const u16 sCursor_Pal[]                = INCGFX_U16("graphics/pokemon_storage/swsh/cursor.png", ".gbapal");
 static const u32 sGenderIcons_Gfx[]           = INCGFX_U32("graphics/pokemon_storage/swsh/gender_icons.png", ".4bpp.smol");
@@ -538,58 +537,6 @@ static const struct SpriteTemplate sSpriteTemplate_ChooseBoxMenu_MonCount =
     .tileTag = GFXTAG_BOX_SELECTION_PER_30,
     .paletteTag = PALTAG_MISC_3,
     .oam = &sOamData_ChooseBoxMenu_MonCount,
-};
-
-// ============================================================================
-// Box Title Arrow Sprites
-// ============================================================================
-
-static const struct OamData sOamData_BoxTitleArrow =
-{
-    .y = 0,
-    .affineMode = ST_OAM_AFFINE_OFF,
-    .objMode = ST_OAM_OBJ_NORMAL,
-    .mosaic = FALSE,
-    .bpp = ST_OAM_4BPP,
-    .size = SPRITE_SIZE(8x8),
-    .x = 0,
-    .matrixNum = 0,
-    .shape = SPRITE_SHAPE(8x8),
-    .tileNum = 0,
-    .priority = 2,
-    .paletteNum = 0,
-    .affineParam = 0,
-};
-
-static const union AnimCmd sSpriteAnim_BoxTitleArrow_Left[] = {
-    ANIMCMD_FRAME(0, 0, FALSE, FALSE),
-    ANIMCMD_END
-};
-
-static const union AnimCmd sSpriteAnim_BoxTitleArrow_Right[] = {
-    ANIMCMD_FRAME(0, 0, TRUE, FALSE),
-    ANIMCMD_END
-};
-
-static const union AnimCmd *const sSpriteAnimTable_BoxTitleArrow[] = {
-    sSpriteAnim_BoxTitleArrow_Left,
-    sSpriteAnim_BoxTitleArrow_Right,
-};
-
-static const struct CompressedSpriteSheet sSpriteSheet_BoxTitleArrow =
-{
-    .data = sBoxTitleArrow_Gfx,
-    .size = (8 * 8) / 2,
-    .tag = GFXTAG_BOX_TITLE_ARROW,
-};
-
-static const struct SpriteTemplate sSpriteTemplate_BoxTitleArrow =
-{
-    .tileTag = GFXTAG_BOX_TITLE_ARROW,
-    .paletteTag = PALTAG_MISC_1,
-    .oam = &sOamData_BoxTitleArrow,
-    .anims = sSpriteAnimTable_BoxTitleArrow,
-    .callback = SpriteCB_Arrow,
 };
 
 // ============================================================================
