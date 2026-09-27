@@ -57,3 +57,29 @@ The mapper:
 - optionally writes decoded members with stable numeric filenames.
 
 Do not assign semantic names such as "box header", "cursor", or "wallpaper" until the decoded member has been visually or structurally verified.
+
+
+## Verified role binding
+
+After running `preview_hgss_storage.py` and visually confirming a real HGSS
+NCGR/NCLR/NSCR combination, bind that composition to a semantic role with:
+
+```sh
+python tools/gen4_ui/bind_hgss_storage_role.py \
+  build/hgss_storage \
+  --role box_grid \
+  --ncgr <verified NCGR member> \
+  --nclr <verified NCLR member> \
+  --nscr <verified NSCR member> \
+  --crop <x> <y> <width> <height> \
+  --output graphics/gen4_ui/hgss_storage/verified/box_grid
+```
+
+The binder rejects mismatched member types and mismatched archive manifests. Its
+JSON sidecar records the archive SHA-256 and decoded member hashes so the GBA
+asset remains traceable to the user's own HGSS source without committing the
+ROM or NARC.
+
+The first migration target is `box_grid`, replacing the synthetic line/cross
+tile construction in `DrawHgssStorageBoxGrid`. Do not wire that renderer to
+a member triple until the gallery has visually verified the role.
