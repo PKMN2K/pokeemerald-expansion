@@ -320,3 +320,22 @@ Do not create a standalone `box_grid` role for the normal 6x5 box screen.
 The authentic wallpaper assets are the verified visual source for that area.
 Only bind additional roles when the extraction gallery shows a real HGSS layer
 with that function.
+
+
+The next verified Storage role is the native HGSS main frame/background layer.
+Structural verification against `pret/pokeheartgold` overlay 14 identifies
+/a/0/1/9 NSCR member 2 + NCGR member 3 + NCLR member 4: `ov14_021E5C54`
+loads that character/screen pair into the same Storage background layer and
+loads palette member 4 for the composition.
+
+`verified/main_frame.png` is a pixel-identical 4-bit indexed repack of the
+user-preserved 256x192 extraction
+`PC_Box/screens/member_002_screen__tiles_003__pal_004.png`. All nine source
+RGB colors and every source pixel are preserved; there is no crop, redraw,
+resampling, recoloring, or synthetic replacement artwork.
+
+This commit is deliberately asset-only. The legacy
+`graphics/pokemon_storage/swsh/tiles.png` + `bg1.bin` frame remains live until
+the verified HGSS frame is wired in the next phase. Legacy removal must occur
+only after that live replacement is complete. The machine-readable record is
+`verified/main_frame.json`.

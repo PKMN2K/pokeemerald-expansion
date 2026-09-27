@@ -1,0 +1,51 @@
+{
+  "role": "main_frame",
+  "classification": "static_ncgr_nclr_nscr_composition",
+  "source_archive": "/a/0/1/9",
+  "archive_sha256": "f7a1a97638959a685719049a0b780686edb68704777fead790b230e10ed1df4a",
+  "source_members": {
+    "nscr": {
+      "index": 2
+    },
+    "ncgr": {
+      "index": 3
+    },
+    "nclr": {
+      "index": 4
+    }
+  },
+  "decomp_verification": {
+    "repository": "pret/pokeheartgold",
+    "path": "asm/overlay_14.s",
+    "loader": "ov14_021E5C54",
+    "behavior": "loads NCGR member 3 and NSCR member 2 into the same HGSS Storage background layer; NCLR member 4 supplies the matching palette"
+  },
+  "visual_verification": {
+    "extracted_reference": "PC_Box/screens/member_002_screen__tiles_003__pal_004.png",
+    "dimensions": [
+      256,
+      192
+    ],
+    "content": "native HGSS Storage blue outer frame/background with inset cream panel",
+    "source_png_sha256": "4e2c93c780178d1fee9b9a8d6d17fb13d8a9f573633d1490009692a45be700ea"
+  },
+  "export": {
+    "file": "main_frame.png",
+    "sha256": "7e26aef505d25265cd27877c479b39a2e378dbee92ab4d389c559b8b344d4b18",
+    "size": [
+      256,
+      192
+    ],
+    "png_color_type": "indexed_palette",
+    "colors": 9,
+    "png_bit_depth": 4,
+    "pixel_rule": "Pixel-identical 4-bit indexed repack of the user-preserved HGSS extraction; no crop, redraw, resampling, recoloring, or synthetic pixels."
+  },
+  "legacy_equivalent": {
+    "asset_gfx": "graphics/pokemon_storage/swsh/tiles.png",
+    "asset_tilemap": "graphics/pokemon_storage/swsh/bg1.bin",
+    "status": "still live; removal is deferred until the authentic frame is wired live in phase 2"
+  },
+  "status": "phase 1 complete: authentic HGSS main Storage frame imported; not yet wired",
+  "next": "Wire the verified HGSS main frame into the live Storage BG composition, preserving functional runtime text/sprites, then remove the legacy SWSH tiles/bg1 equivalent in the following cleanup phase."
+}
