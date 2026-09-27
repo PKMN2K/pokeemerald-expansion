@@ -1,0 +1,50 @@
+{
+  "role": "wallpaper_selector_controls",
+  "classification": "dynamic_sprite_bundles",
+  "source_archive": "/a/0/1/9",
+  "source_kind": "user_preserved_hgss_extraction",
+  "archive_sha256": "f7a1a97638959a685719049a0b780686edb68704777fead790b230e10ed1df4a",
+  "bundles": {
+    "primary": {
+      "members": {
+        "ncgr": 70,
+        "nclr": 71,
+        "ncer": 72,
+        "nanr": 73
+      },
+      "decomp_loader": "ov14_021F41E4",
+      "extracted_reference": "PC_Box/tilesheets/member_070_tiles.png",
+      "export": "wallpaper_selector_primary.png",
+      "export_size": [
+        32,
+        32
+      ],
+      "export_sha256": "b485fc0bff1567facca345fe496a9093b431ed07bc0a5936fd9301e833c1a197"
+    },
+    "secondary": {
+      "members": {
+        "ncgr": 74,
+        "nclr": 75,
+        "ncer": 76,
+        "nanr": 77
+      },
+      "decomp_loader": "ov14_021F42EC",
+      "runtime_member_use": "ov14_021F462C reads NCGR member 74 while wallpaper choices change",
+      "extracted_reference": "PC_Box/tilesheets/member_074_tiles.png",
+      "export": "wallpaper_selector_secondary.png",
+      "export_size": [
+        32,
+        24
+      ],
+      "export_sha256": "adb81893336c0f8693effdc331cafce68c92f8fe748165c0c04633efc721d45a"
+    }
+  },
+  "decomp_verification": {
+    "repository": "pret/pokeheartgold",
+    "path": "asm/overlay_14.s",
+    "behavior": "Members 70-73 and 74-77 are the two sprite bundles used by the native HGSS PC Box wallpaper-selection path; member 74 is also copied during wallpaper-choice changes."
+  },
+  "pixel_rule": "The committed PNGs are byte-for-byte copies of the user-preserved HeartGold PC Box extraction. No redraw, crop, resampling, recoloring, or synthetic pixels.",
+  "status": "phase 1 complete: authentic HGSS wallpaper-selector control sprite sheets imported; not yet wired",
+  "next": "Reconstruct the verified NCER/NANR frames from the two native bundles and wire them into the live Storage wallpaper-selection interaction. Do not remove the current live selector equivalent until the HGSS controls are proven live."
+}

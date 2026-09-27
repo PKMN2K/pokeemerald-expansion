@@ -371,3 +371,27 @@ the verified HGSS party panel follows immediately after its tile block.
 No legacy SWSH frame pixels remain underneath the HGSS composition. This
 finishes the required sequence for this role: authentic HGSS asset -> wire
 live -> remove legacy equivalent.
+
+
+## Authentic HGSS wallpaper-selector controls — phase 1
+
+The next verified Storage role is the native wallpaper-selection control layer.
+The preserved HeartGold PC Box extraction contains the exact source character
+sheets for the two sprite bundles used by this interaction:
+
+- `/a/0/1/9` members 70 NCGR + 71 NCLR + 72 NCER + 73 NANR, loaded by
+  `ov14_021F41E4`;
+- `/a/0/1/9` members 74 NCGR + 75 NCLR + 76 NCER + 77 NANR, loaded by
+  `ov14_021F42EC`. `ov14_021F462C` also reads member 74 while wallpaper
+  choices change.
+
+`verified/wallpaper_selector_primary.png` and
+`verified/wallpaper_selector_secondary.png` are byte-for-byte copies of the
+user-preserved `member_070_tiles.png` and `member_074_tiles.png` extraction
+outputs. They are imported as authentic source assets only in this phase; no
+runtime wiring or legacy selector removal is performed yet.
+
+The next phase must reconstruct the native NCER/NANR frames and wire those
+verified frames into the live wallpaper-selection interaction before any
+existing selector equivalent is removed. The machine-readable record is
+`verified/wallpaper_selector.json`.
