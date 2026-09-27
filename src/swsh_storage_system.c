@@ -5692,13 +5692,6 @@ static void RenderBoxTitleCentered(const u8 *boxName)
     windowId = AddWindow(&winTemplate);
     FillWindowPixelBuffer(windowId, PIXEL_FILL(0));
 
-    // The exported title strip is 64x16; use palette slot 13 for an HGSS-style tab frame.
-    FillWindowPixelRect(windowId, PIXEL_FILL(13), 2, 0, 60, 1);
-    FillWindowPixelRect(windowId, PIXEL_FILL(13), 2, 15, 60, 1);
-    FillWindowPixelRect(windowId, PIXEL_FILL(13), 0, 2, 1, 12);
-    FillWindowPixelRect(windowId, PIXEL_FILL(13), 63, 2, 1, 12);
-    FillWindowPixelRect(windowId, PIXEL_FILL(14), 4, 14, 56, 1);
-
     tileData1 = (u8 *)GetWindowAttribute(windowId, WINDOW_TILE_DATA);
     tileData2 = tileData1 + winTemplate.width * TILE_SIZE_4BPP;
     txtColor[0] = TEXT_COLOR_TRANSPARENT;
