@@ -3357,11 +3357,10 @@ static void FreePokeStorageData(void)
 
 static void SetScrollingBackground(void)
 {
-    u8 wallpaperId = GetBoxWallpaper(StorageGetCurrentBox());
+    // Authenticity-only HGSS path: do not render the legacy SWSH wallpaper.
+    // Keep BG3 reserved for a future verified HGSS wallpaper composition.
     SetGpuReg(REG_OFFSET_BG3CNT, BGCNT_PRIORITY(3) | BGCNT_CHARBASE(3) | BGCNT_16COLOR | BGCNT_SCREENBASE(31));
-    DecompressAndLoadBgGfxUsingHeap(3, sSwShWallpapers[wallpaperId].tiles, 0, 0, 0);
-    DecompressDataWithHeaderVram(sSwShWallpapers[wallpaperId].tilemap, (void *)BG_SCREEN_ADDR(31));
-    LoadPalette(sSwShWallpapers[wallpaperId].palettes, BG_PLTT_ID(1), PLTT_SIZE_4BPP);
+    CpuFill16(0, (void *)BG_SCREEN_ADDR(31), 0x800);
 }
 
 /*
@@ -5517,30 +5516,27 @@ static void LoadWallpaperGfx(u8 boxId, s8 direction)
 
 static void StartLoadWallpaperGfx(u8 boxId, s8 direction)
 {
-    u8 wallpaperId = GetBoxWallpaper(boxId);
-    const void *src = sSwShWallpapers[wallpaperId].tiles;
-    u32 size = GetDecompressedDataSize(src);
+    (void)boxId;
+    (void)direction;
 
+    // Preserve the wallpaper-selection data and state machine, but do not load
+    // non-authentic SWSH artwork while the verified HGSS role is unpopulated.
     if (sStorage->wallpaperTiles != NULL)
     {
         Free(sStorage->wallpaperTiles);
+        sStorage->wallpaperTiles = NULL;
     }
-    sStorage->wallpaperTiles = Alloc(size);
-    if (sStorage->wallpaperTiles != NULL)
-        DecompressDataWithHeaderWram(src, sStorage->wallpaperTiles);
 }
 
 static void UpdateWallpaperGfx(u8 boxId, s8 direction)
 {
-    u8 wallpaperId = GetBoxWallpaper(boxId);
-    if (sStorage->wallpaperTiles != NULL)
-    {
-        u32 size = GetDecompressedDataSize(sSwShWallpapers[wallpaperId].tiles);
-        LoadBgTiles(3, sStorage->wallpaperTiles, size, 0);
-    }
-    DecompressDataWithHeaderWram(sSwShWallpapers[wallpaperId].tilemap, sStorage->wallpaperBgTilemapBuffer);
+    (void)boxId;
+    (void)direction;
+
+    // Clear the legacy wallpaper layer. The semantic wallpaper choice remains
+    // stored so it can later map to verified HGSS wallpaper assets.
+    CpuFill16(0, sStorage->wallpaperBgTilemapBuffer, sizeof(sStorage->wallpaperBgTilemapBuffer));
     RequestDma3Copy(sStorage->wallpaperBgTilemapBuffer, (void *)BG_SCREEN_ADDR(31), 0x800, 1);
-    LoadPalette(sSwShWallpapers[wallpaperId].palettes, BG_PLTT_ID(1), PLTT_SIZE_4BPP);
 }
 
 static bool32 WaitForWallpaperGfxLoad(void)
