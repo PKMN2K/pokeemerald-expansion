@@ -1162,13 +1162,11 @@ static void SpriteCB_HGSSStartMenuCursor(struct Sprite *sprite)
 }
 
 #define sIsDownArrow data[1]
-#define LIST_RIGHT_SIDE_TEXT_X 188
-#define LIST_RIGHT_SIDE_TEXT_X_OFFSET 13
-#define LIST_RIGHT_SIDE_TEXT_Y_OFFSET 13
 static void CreateInterfaceSprites(u8 page)
 {
     u8 spriteId;
 
+    (void)page;
     // Only verified HGSS-derived scroll controls remain here. The former
     // custom "HGSS" counter labels/digits were not extracted HGSS assets.
     spriteId = CreateSprite(&sHGSSScrollArrowSpriteTemplate, 10, 4, 0);
@@ -1211,19 +1209,19 @@ static inline void WritePixel(u8 *dst, u32 x, u32 y, u32 value)
         dst[PIXEL_COORDS_TO_OFFSET(x, y)] |= (value);
     }
 }
-#define STAT_BAR_X_OFFSET 10
-void TryDestroyStatBars(void)
+static void TryDestroyStatBars(void)
 {
     sPokedexView->statBarsSpriteId = 0xFF;
 }
 
-void TryDestroyStatBarsBg(void)
+static void TryDestroyStatBarsBg(void)
 {
     sPokedexView->statBarsBgSpriteId = 0xFF;
 }
 
 static void CreateStatBars(struct PokedexListItem *dexMon)
 {
+    (void)dexMon;
     sPokedexView->justScrolled = FALSE;
     sPokedexView->statBarsSpriteId = 0xFF;
 }
