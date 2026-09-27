@@ -607,7 +607,7 @@ EWRAM_DATA static u8 sCursorMode = 0;
 EWRAM_DATA static bool8 sJustOpenedBag = 0;
 EWRAM_DATA static bool8 sRefreshDisplayMonGfx = FALSE;
 EWRAM_DATA static struct HgssMarkingsMenu *sMarkMenu = NULL;
-EWRAM_DATA static u8 sHgssYesNoWindowId = WINDOW_NONE;
+EWRAM_DATA static u8 sHgssYesNoWindowId = 0;
 
 #define HGSS_WALLPAPER_SELECTOR_ITEMS_PER_PAGE 4
 
@@ -1651,6 +1651,7 @@ static void CB2_PokeStorage(void)
 static void EnterPokeStorage(u8 boxOption)
 {
     ResetTasks();
+    sHgssYesNoWindowId = WINDOW_NONE;
     sCurrentBoxOption = boxOption;
     sStorage = AllocZeroed(sizeof(*sStorage));
     if (sStorage == NULL)
@@ -1675,6 +1676,7 @@ static void EnterPokeStorage(u8 boxOption)
 static void CB2_ReturnToPokeStorage(void)
 {
     ResetTasks();
+    sHgssYesNoWindowId = WINDOW_NONE;
     sStorage = AllocZeroed(sizeof(*sStorage));
     if (sStorage == NULL)
     {
