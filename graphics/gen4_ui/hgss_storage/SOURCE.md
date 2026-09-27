@@ -132,6 +132,18 @@ the verified authentic HGSS storage hand cursor. The verified PNG was also repac
 4-bit indexed PNG; only the PNG container/palette encoding changed.
 The machine-readable record is `verified/markings_menu.json`.
 
+The next verified static role is the native HGSS Pokémon information panel.
+Visual verification against the user's extracted `/a/0/1/9` gallery identifies
+NSCR 9 + NCGR 14 + NCLR 4 as the 88x144 information-panel surface immediately
+adjacent to the already-verified party (NSCR 8) and markings (NSCR 10) members.
+`verified/mon_info_panel.png` is a lossless 1:1, 4bpp-compatible indexed export:
+the seven authentic RGB colors and every source pixel are preserved with no crop,
+redraw, resampling, or color changes. The source archive SHA-256 and decoded
+member hashes are recorded in `verified/mon_info_panel.json`. This completes
+only the authentic-asset phase: the current SWSH `mon_info.png` /
+`mon_info.bin` surface remains live until the next wiring step, and it must not
+be removed before the HGSS panel is live.
+
 Do not restore compatibility fallbacks that draw approximated HGSS chrome.
 If an authentic role is not available yet, leave that HGSS layer empty and
 preserve only the underlying functional UI until the real asset is identified.

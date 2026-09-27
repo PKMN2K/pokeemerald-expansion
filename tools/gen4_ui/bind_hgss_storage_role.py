@@ -46,6 +46,7 @@ ALLOWED_ROLES = {
     "yes_no",
     "cursor",
     "markings_menu",
+    "mon_info_panel",
 }
 
 
