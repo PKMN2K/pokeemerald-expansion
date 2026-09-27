@@ -1,0 +1,31 @@
+{
+  "role": "wallpaper_01",
+  "game": "Pokemon HeartGold / SoulSilver",
+  "source_archive": "/a/0/1/9",
+  "archive_sha256": "f7a1a97638959a685719049a0b780686edb68704777fead790b230e10ed1df4a",
+  "members": {
+    "nscr": {
+      "index": 15,
+      "compressed_sha256": "82523f89488ceeadc92b8c9ed1b1cf84957ed8dc8c56e2aef1fc2c18dacfb6bf",
+      "decoded_sha256": "a0d9cb5f210008692851ab7ae1edf557433d6e4b00b7d13b5a3c86d3092d30df"
+    },
+    "ncgr": {
+      "index": 16,
+      "compressed_sha256": "e82a24ae68385139490739834721e5cce3228cff65b3fd8b62f5e3b2d22c0b20",
+      "decoded_sha256": "3a3b9873269be67969bb06f3ffc86c7b6173de9cc7947e50d8358ba16b2264b7"
+    },
+    "nclr": {
+      "index": 40,
+      "compressed_sha256": "db73f56f2b1bdd52d85ef82e7bb9968e9247b2919fbd112609310efee3a6a0fe",
+      "decoded_sha256": "db73f56f2b1bdd52d85ef82e7bb9968e9247b2919fbd112609310efee3a6a0fe"
+    }
+  },
+  "image": {
+    "width": 168,
+    "height": 160,
+    "colors": 14,
+    "rgb_sha256": "0ea4dd99729bea3b182890e10fcf9a9578be044aa44aae62598222466f05ab75",
+    "indexed_png_sha256": "c72d6f51ef031f3f5ebbd5b8ef5ac8273763a86969adf4a0cb2b98b25b9b0f86"
+  },
+  "conversion": "Indexed PNG conversion only; RGB pixels preserved exactly at 1:1 scale. No redraw, scaling, recoloring, or synthetic chrome."
+}
