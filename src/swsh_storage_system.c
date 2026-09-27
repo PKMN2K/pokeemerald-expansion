@@ -1137,8 +1137,6 @@ static void DrawHgssChooseBoxGrid(void)
 
 static void ChooseBoxMenu_CreateSprites(u8 curBox)
 {
-    u8 col;
-    u8 row;
     u8 tx;
 
     sChooseBoxMenu->curBox = curBox;
@@ -1147,9 +1145,6 @@ static void ChooseBoxMenu_CreateSprites(u8 curBox)
     // only by a verified HGSS asset descriptor. The normal storage cursor
     // remains the live selection indicator.
     DrawHgssChooseBoxGrid();
-
-    col = curBox % 5;
-    row = curBox / 5;
 
     if (sStorage->cursorSprite)
     {
@@ -1277,9 +1272,6 @@ static u8 ChooseBoxMenu_GetRowLength(u8 row)
 
 static void ChooseBoxMenu_UpdateHover(void)
 {
-    u8 col = sChooseBoxMenu->curBox % 5;
-    u8 row = sChooseBoxMenu->curBox / 5;
-
     if (sStorage->cursorSprite)
     {
         sStorage->cursorVerticalWrap = 0;
