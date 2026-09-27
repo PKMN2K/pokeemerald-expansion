@@ -48,9 +48,24 @@ loads that generated descriptor into the live BG1 party-panel region. The
 legacy SWSH BG1 tilemap cells at columns 2-12, rows 0-17 are zeroed at source,
 so no SWSH party-panel fallback remains underneath the authentic HGSS art.
 
-The Choose Box path still accepts verified assets only. Its generated include
-remains a zero descriptor until the corresponding authentic HGSS members are
-visually verified and bound.
+Choose Box verification is now complete at the asset-identification layer.
+The 87-member /a/0/1/9 inventory and the HGSS PC overlay call sites do not
+expose a standalone NCGR+NCLR+NSCR "Choose Box grid" equivalent to the current
+pokeemerald popup. HGSS composes box selection/navigation dynamically from the
+normal box presentation, runtime text/count windows, and sprite-driven controls.
+
+Members 70-73 and 74-77 are specifically excluded from the Choose Box role.
+Overlay 14 loads those sprite bundles in the wallpaper-selection path; the same
+path reads the selected box wallpaper and rearranges those resources when the
+wallpaper choice changes. Members 85 and 86 are auxiliary NSCR window/frame
+surfaces, not an all-box chooser background.
+
+Accordingly, the static role binder no longer accepts `choose_box` (or the
+already-invalid `box_grid` role). The generated Choose Box include remains a
+zero transition descriptor only until the live storage code is rewritten to
+follow HGSS's native dynamic composition. Do not populate it from an unrelated
+screen or a hand-drawn substitute. The machine-readable verification record is
+`verified/choose_box_native.json`.
 
 Do not restore compatibility fallbacks that draw approximated HGSS chrome.
 If an authentic role is not available yet, leave that HGSS layer empty and

@@ -1,0 +1,85 @@
+{
+  "role": "choose_box",
+  "classification": "dynamic_runtime_composition",
+  "standalone_bg_asset": false,
+  "source_archive": "/a/0/1/9",
+  "archive_sha256": "f7a1a97638959a685719049a0b780686edb68704777fead790b230e10ed1df4a",
+  "member_count": 87,
+  "nscr_members": [
+    0,
+    2,
+    5,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    15,
+    85,
+    86
+  ],
+  "decomp_source": {
+    "repository": "pret/pokeheartgold",
+    "path": "asm/overlay_14.s",
+    "archive_id": "NARC_a_0_1_9"
+  },
+  "excluded_false_matches": [
+    {
+      "members": [
+        70,
+        71,
+        72,
+        73
+      ],
+      "formats": [
+        "NCGR",
+        "NCLR",
+        "NCER",
+        "NANR"
+      ],
+      "loaded_by": "ov14_021F41E4",
+      "reason": "Sprite bundle is used by the wallpaper-selection path; it is not a Choose Box grid."
+    },
+    {
+      "members": [
+        74,
+        75,
+        76,
+        77
+      ],
+      "formats": [
+        "NCGR",
+        "NCLR",
+        "NCER",
+        "NANR"
+      ],
+      "loaded_by": "ov14_021F42EC",
+      "reason": "Companion wallpaper-selection sprite bundle; ov14_021F462C also reads member 74 while wallpaper choices change."
+    }
+  ],
+  "auxiliary_screen_members": [
+    {
+      "member": 85,
+      "format": "NSCR",
+      "decoded_sha256": "839d6afe01baf0c3bcd12d450feef08e8f7e428a221672f503a39c5e181232e6",
+      "rendered_size": [
+        256,
+        72
+      ],
+      "result": "Auxiliary frame/window surface, not an all-box chooser."
+    },
+    {
+      "member": 86,
+      "format": "NSCR",
+      "decoded_sha256": "2d4d2489e35487de6f32c5b76d6dacd7363372b701a12b947ae644e0e5262c09",
+      "rendered_size": [
+        96,
+        80
+      ],
+      "result": "Auxiliary bordered window surface, not an all-box chooser."
+    }
+  ],
+  "integration_rule": "Do not synthesize or bind a static choose_box background. Recreate the HGSS interaction from verified dynamic components and runtime layout behavior.",
+  "status": "asset identification complete; live wiring intentionally deferred to the next step"
+}

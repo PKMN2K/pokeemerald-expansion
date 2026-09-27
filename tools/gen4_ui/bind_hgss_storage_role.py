@@ -10,10 +10,9 @@ guessed from archive adjacency.
 Example:
     python tools/gen4_ui/bind_hgss_storage_role.py \
         build/hgss_storage \
-        --role box_grid \
-        --ncgr 12 --nclr 11 --nscr 13 \
-        --crop 0 0 240 160 \
-        --output graphics/gen4_ui/hgss_storage/verified/box_grid
+        --role party_panel \
+        --ncgr 14 --nclr 4 --nscr 8 \
+        --output graphics/gen4_ui/hgss_storage/verified/party_panel
 
 The command writes:
     <output>.png
@@ -33,12 +32,15 @@ from pathlib import Path
 import render_hgss_nitro as nitro
 
 
+# These are static NCGR+NCLR+NSCR composition roles only.
+# "box_grid" is intentionally absent because HGSS uses the wallpaper itself for
+# the normal box area. "choose_box" is intentionally absent because HGSS box
+# selection/navigation is a dynamic runtime composition rather than a standalone
+# background screen. See graphics/gen4_ui/hgss_storage/verified/choose_box_native.json.
 ALLOWED_ROLES = {
-    "box_grid",
     "box_header",
     "box_arrows",
     "party_panel",
-    "choose_box",
     "context_menu",
     "message_window",
     "yes_no",

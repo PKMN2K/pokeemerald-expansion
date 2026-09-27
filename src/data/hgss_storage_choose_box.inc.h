@@ -1,13 +1,17 @@
 /*
- * Placeholder for the verified HGSS Choose Box asset.
+ * Intentional transition sentinel for HGSS Choose Box.
  *
- * Generate the real include with:
- *   python tools/gen4_ui/emit_hgss_storage_c.py \
- *     graphics/gen4_ui/hgss_storage/packed/choose_box.json \
- *     --symbol HgssStorageChooseBox \
- *     --require-role choose_box \
- *     --output src/data/hgss_storage_choose_box.inc.h
+ * Verification of the complete 87-member /a/0/1/9 archive plus the HGSS PC
+ * overlay call sites found no standalone NCGR+NCLR+NSCR Choose Box background.
+ * HGSS builds this interaction dynamically from normal box presentation,
+ * runtime text/count windows, and sprite-driven controls.
  *
- * No approximate or hand-drawn HGSS data belongs here.
+ * Do not generate this descriptor from an unrelated NSCR or substitute
+ * hand-drawn "HGSS-style" artwork. The next integration step must replace the
+ * current static DrawHgssChooseBoxGrid path with the verified native
+ * composition. Until then, zero data is deliberate and fails closed.
+ *
+ * Verification record:
+ *   graphics/gen4_ui/hgss_storage/verified/choose_box_native.json
  */
 static const struct HgssStorageBgAsset sHgssStorageChooseBoxAsset = {0};
