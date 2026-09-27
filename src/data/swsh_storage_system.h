@@ -61,7 +61,6 @@ static const u32 sMonInfo_Gfx[]               = INCGFX_U32("graphics/pokemon_sto
 static const u32 sMonInfo_Tilemap[]           = INCGFX_U32("graphics/pokemon_storage/swsh/mon_info.bin", ".smolTM");
 static const u16 sTextWindows_Pal[]           = INCGFX_U16("graphics/pokemon_storage/swsh/text_windows.pal", ".gbapal");
 
-static const u32 sBoxTitleFrame_Gfx[]         = INCGFX_U32("graphics/pokemon_storage/swsh/box_title_frame.png", ".4bpp.smol");
 static const u32 sBoxTitleArrow_Gfx[]         = INCGFX_U32("graphics/pokemon_storage/swsh/box_title_arrow.png", ".4bpp.smol");
 static const u32 sChooseBoxMenu_Gfx[]         = INCGFX_U32("graphics/pokemon_storage/swsh/choose_box_menu.png", ".4bpp.smol");
 static const u32 sCursor_Gfx[]                = INCGFX_U32("graphics/pokemon_storage/swsh/cursor.png", ".4bpp.smol");
@@ -569,65 +568,6 @@ static const struct SpriteTemplate sSpriteTemplate_ChooseBoxMenu_MonCount =
     .tileTag = GFXTAG_BOX_SELECTION_PER_30,
     .paletteTag = PALTAG_MISC_3,
     .oam = &sOamData_ChooseBoxMenu_MonCount,
-};
-
-// ============================================================================
-// Box Title Frame Sprites
-// ============================================================================
-
-static const struct OamData sOamData_BoxTitleFrame =
-{
-    .y = 0,
-    .affineMode = ST_OAM_AFFINE_OFF,
-    .objMode = ST_OAM_OBJ_NORMAL,
-    .mosaic = FALSE,
-    .bpp = ST_OAM_4BPP,
-    .size = SPRITE_SIZE(32x16),
-    .x = 0,
-    .matrixNum = 0,
-    .shape = SPRITE_SHAPE(32x16),
-    .tileNum = 0,
-    .priority = 2,
-    .paletteNum = 0,
-    .affineParam = 0,
-};
-
-static const union AnimCmd sSpriteAnim_BoxTitleFrame_0[] = {
-    ANIMCMD_FRAME(0, 0, FALSE, FALSE),
-    ANIMCMD_END
-};
-
-static const union AnimCmd sSpriteAnim_BoxTitleFrame_1[] = {
-    ANIMCMD_FRAME(8, 0, FALSE, FALSE),
-    ANIMCMD_END
-};
-
-static const union AnimCmd sSpriteAnim_BoxTitleFrame_2[] = {
-    ANIMCMD_FRAME(0, 0, TRUE, FALSE),
-    ANIMCMD_END
-};
-
-static const union AnimCmd *const sSpriteAnimTable_BoxTitleFrame[] = {
-    sSpriteAnim_BoxTitleFrame_0,
-    sSpriteAnim_BoxTitleFrame_1,
-    sSpriteAnim_BoxTitleFrame_2,
-};
-
-static const u8 sBoxTitleFrameAnims[4] = {0, 1, 1, 2};
-
-static const struct CompressedSpriteSheet sSpriteSheet_BoxTitleFrame =
-{
-    .data = sBoxTitleFrame_Gfx,
-    .size = (32 * 16 * 2) / 2,
-    .tag = GFXTAG_BOX_TITLE_FRAME,
-};
-
-static const struct SpriteTemplate sSpriteTemplate_BoxTitleFrame =
-{
-    .tileTag = GFXTAG_BOX_TITLE_FRAME,
-    .paletteTag = PALTAG_MISC_1,
-    .oam = &sOamData_BoxTitleFrame,
-    .anims = sSpriteAnimTable_BoxTitleFrame,
 };
 
 // ============================================================================

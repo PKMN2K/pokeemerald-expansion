@@ -249,7 +249,7 @@ enum {
     GFXTAG_SHINY_ICON,
     GFXTAG_STAT_LABELS,
     GFXTAG_BOX_TITLE,
-    GFXTAG_BOX_TITLE_FRAME, //Unused
+    GFXTAG_RESERVED_6,
     GFXTAG_BOX_TITLE_ARROW,
     GFXTAG_ITEM_ICON_0,
     GFXTAG_ITEM_ICON_1, // Used implicitly in CreateItemIconSprites
@@ -446,7 +446,6 @@ struct PokemonStorageSystemData
     u16 boxTitleAltPalOffset;
     struct Sprite *curBoxTitleSprites[2];
     struct Sprite *nextBoxTitleSprites[2];
-    struct Sprite *boxTitleFrameSprites[4];
     struct Sprite *arrowSprites[2];
     u32 wallpaperPalBits;
     s16 wallpaperSetId;
@@ -3638,11 +3637,7 @@ static bool8 InitPalettesAndSprites(void)
         LoadCompressedSpriteSheet(&sSpriteSheet_PokerusIcon);
         sStorage->graphicsLoadState++;
         break;
-	case 10:
-        LoadCompressedSpriteSheet(&sSpriteSheet_BoxTitleFrame);
-        sStorage->graphicsLoadState++;
-        break;
-    case 11:
+    case 10:
         LoadCompressedSpriteSheet(&sSpriteSheet_BoxTitleArrow);
         sStorage->graphicsLoadState = 0;
         return TRUE;
@@ -5960,21 +5955,6 @@ static bool32 WaitForWallpaperGfxLoad(void)
 //  SECTION: Box Title
 //------------------------------------------------------------------------------
 
-/*
-static void CreateBoxTitleFrame(u8 boxId)
-{
-    u8 i;
-    struct SpriteTemplate template = sSpriteTemplate_BoxTitleFrame;
-    template.paletteTag = PALTAG_MISC_1;
-
-    for (i = 0; i < ARRAY_COUNT(sStorage->boxTitleFrameSprites); i++)
-    {
-        u8 spriteId = CreateSprite(&template, 100 + i * 32, 21, 25);
-        sStorage->boxTitleFrameSprites[i] = &gSprites[spriteId];
-        StartSpriteAnim(sStorage->boxTitleFrameSprites[i], sBoxTitleFrameAnims[i]);
-    }
-}
-*/
 static void InitBoxTitle(u8 boxId)
 {
     u8 tagIndex;
@@ -6016,7 +5996,6 @@ static void InitBoxTitle(u8 boxId)
         StartSpriteAnim(sStorage->curBoxTitleSprites[i], i);
     }
     sStorage->boxTitleCycleId = 0;
-    //CreateBoxTitleFrame(boxId);
 }
 
 static void UpdateBoxTitlePalette(void)
