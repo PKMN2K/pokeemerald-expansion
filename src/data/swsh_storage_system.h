@@ -994,63 +994,6 @@ static const struct SpriteTemplate sSpriteTemplate_MarkingsMenu_Cursor =
 };
 
 // ============================================================================
-// Message window sprites
-// ============================================================================
-
-static const struct OamData sOamData_MessageWindow =
-{
-    .y = 0,
-    .affineMode = ST_OAM_AFFINE_OFF,
-    .objMode = ST_OAM_OBJ_NORMAL,
-    .mosaic = FALSE,
-    .bpp = ST_OAM_4BPP,
-    .size = SPRITE_SIZE(32x32),
-    .x = 0,
-    .matrixNum = 0,
-    .shape = SPRITE_SHAPE(32x32),
-    .tileNum = 0,
-    .priority = 1,
-    .paletteNum = 0,
-    .affineParam = 0,
-};
-
-static const union AnimCmd sSpriteAnim_MessageWindow_0[] = {
-    ANIMCMD_FRAME(0, 0, FALSE, FALSE),
-    ANIMCMD_END
-};
-static const union AnimCmd sSpriteAnim_MessageWindow_1[] = {
-    ANIMCMD_FRAME(16, 0, FALSE, FALSE),
-    ANIMCMD_END
-};
-static const union AnimCmd sSpriteAnim_MessageWindow_2[] = {
-    ANIMCMD_FRAME(0, 0, TRUE, TRUE),
-    ANIMCMD_END
-};
-
-static const union AnimCmd *const sSpriteAnimTable_MessageWindow[] = {
-    sSpriteAnim_MessageWindow_0,
-    sSpriteAnim_MessageWindow_1,
-    sSpriteAnim_MessageWindow_2,
-};
-
-static const u8 sMessageWindowAnims[6] = {0, 1, 1, 1, 1, 2};
-
-static const struct CompressedSpriteSheet sSpriteSheet_MessageWindow =
-{
-    .data = sMessageWindow_Gfx,
-    .size = (32 * 32 * 2) / 2,
-    .tag = GFXTAG_MESSAGE_WINDOW,
-};
-
-static const struct SpriteTemplate sSpriteTemplate_MessageWindow =
-{
-    .tileTag = GFXTAG_MESSAGE_WINDOW,
-    .paletteTag = PALTAG_MISC_3,
-    .oam = &sOamData_MessageWindow,
-    .anims = sSpriteAnimTable_MessageWindow,
-};
-
-// ============================================================================
 // Item Icon Sprites
 // ============================================================================
 
