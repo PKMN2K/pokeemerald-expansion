@@ -14,6 +14,7 @@
 #include "string_util.h"
 #include "strings.h"
 #include "text.h"
+#include "constants/rgb.h"
 
 static u32 LoopedTask_TransitionMons(s32);
 static u32 LoopedTask_ExitConditionGraphMenu(s32);
