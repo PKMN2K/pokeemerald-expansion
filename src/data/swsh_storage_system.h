@@ -52,6 +52,12 @@ static const u32 sSwShStorage_BG1_Tilemap[]   = INCGFX_U32("graphics/pokemon_sto
 static const u32 sSwShStorage_BG2_Tilemap[]   = INCGFX_U32("graphics/pokemon_storage/swsh/bg2.bin", ".smolTM");
 static const u32 sMonInfo_Gfx[]               = INCGFX_U32("graphics/pokemon_storage/swsh/mon_info.png", ".4bpp.smol");
 static const u32 sMonInfo_Tilemap[]           = INCGFX_U32("graphics/pokemon_storage/swsh/mon_info.bin", ".smolTM");
+
+// Authentic HGSS Storage Pokemon-info panel: /a/0/1/9 NSCR 9 + NCGR 14 + NCLR 4.
+// Legacy mon_info assets stay declared until the following remove-legacy phase.
+static const u32 sHgssMonInfoPanel_Gfx[]       = INCGFX_U32("graphics/gen4_ui/hgss_storage/verified/mon_info_panel.png", ".4bpp");
+static const u16 sHgssMonInfoPanel_Pal[]       = INCGFX_U16("graphics/gen4_ui/hgss_storage/verified/mon_info_panel.png", ".gbapal");
+
 static const u16 sTextWindows_Pal[]           = INCGFX_U16("graphics/pokemon_storage/swsh/text_windows.pal", ".gbapal");
 
 // Generated from a visually verified HGSS /a/0/1/9 role binding.
@@ -250,14 +256,14 @@ static const struct WindowTemplate sWindowTemplates[] =
         .bg = 0,
         .tilemapLeft = 0,
         .tilemapTop = 23,
-        .width = 8,
+        .width = 7,
         .height = 2,
         .paletteNum = 15,
         .baseBlock = 202
     },
     [WIN_MON_INFO_LEVEL_LEFT] = {
         .bg = 0,
-        .tilemapLeft = 9,
+        .tilemapLeft = 7,
         .tilemapTop = 23,
         .width = 4,
         .height = 2,
@@ -275,7 +281,7 @@ static const struct WindowTemplate sWindowTemplates[] =
     },
     [WIN_MON_INFO_STATS_COL2_LEFT] = {
         .bg = 0,
-        .tilemapLeft = 10,
+        .tilemapLeft = 8,
         .tilemapTop = 27,
         .width = 3,
         .height = 6,
@@ -284,18 +290,18 @@ static const struct WindowTemplate sWindowTemplates[] =
     },
     [WIN_MON_INFO_ABILITY_LEFT] = {
         .bg = 0,
-        .tilemapLeft = 4,
+        .tilemapLeft = 1,
         .tilemapTop = 34,
-        .width = 9,
+        .width = 10,
         .height = 2,
         .paletteNum = 15,
         .baseBlock = 262
     },
     [WIN_MON_INFO_ITEM_LEFT] = {
         .bg = 0,
-        .tilemapLeft = 4,
+        .tilemapLeft = 1,
         .tilemapTop = 36,
-        .width = 9,
+        .width = 10,
         .height = 2,
         .paletteNum = 15,
         .baseBlock = 280
@@ -304,14 +310,14 @@ static const struct WindowTemplate sWindowTemplates[] =
         .bg = 0,
         .tilemapLeft = 17,
         .tilemapTop = 43,
-        .width = 8,
+        .width = 7,
         .height = 2,
         .paletteNum = 15,
         .baseBlock = 202
     },
     [WIN_MON_INFO_LEVEL_RIGHT] = {
         .bg = 0,
-        .tilemapLeft = 26,
+        .tilemapLeft = 24,
         .tilemapTop = 43,
         .width = 4,
         .height = 2,
@@ -329,7 +335,7 @@ static const struct WindowTemplate sWindowTemplates[] =
     },
     [WIN_MON_INFO_STATS_COL2_RIGHT] = {
         .bg = 0,
-        .tilemapLeft = 27,
+        .tilemapLeft = 25,
         .tilemapTop = 47,
         .width = 3,
         .height = 6,
@@ -338,18 +344,18 @@ static const struct WindowTemplate sWindowTemplates[] =
     },
     [WIN_MON_INFO_ABILITY_RIGHT] = {
         .bg = 0,
-        .tilemapLeft = 21,
+        .tilemapLeft = 18,
         .tilemapTop = 54,
-        .width = 9,
+        .width = 10,
         .height = 2,
         .paletteNum = 15,
         .baseBlock = 262
     },
     [WIN_MON_INFO_ITEM_RIGHT] = {
         .bg = 0,
-        .tilemapLeft = 21,
+        .tilemapLeft = 18,
         .tilemapTop = 56,
-        .width = 9,
+        .width = 10,
         .height = 2,
         .paletteNum = 15,
         .baseBlock = 280

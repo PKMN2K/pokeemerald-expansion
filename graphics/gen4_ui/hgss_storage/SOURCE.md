@@ -132,17 +132,23 @@ the verified authentic HGSS storage hand cursor. The verified PNG was also repac
 4-bit indexed PNG; only the PNG container/palette encoding changed.
 The machine-readable record is `verified/markings_menu.json`.
 
-The next verified static role is the native HGSS Pokémon information panel.
+The native HGSS Pokémon information panel is now verified and live.
 Visual verification against the user's extracted `/a/0/1/9` gallery identifies
 NSCR 9 + NCGR 14 + NCLR 4 as the 88x144 information-panel surface immediately
 adjacent to the already-verified party (NSCR 8) and markings (NSCR 10) members.
 `verified/mon_info_panel.png` is a lossless 1:1, 4bpp-compatible indexed export:
 the seven authentic RGB colors and every source pixel are preserved with no crop,
 redraw, resampling, or color changes. The source archive SHA-256 and decoded
-member hashes are recorded in `verified/mon_info_panel.json`. This completes
-only the authentic-asset phase: the current SWSH `mon_info.png` /
-`mon_info.bin` surface remains live until the next wiring step, and it must not
-be removed before the HGSS panel is live.
+member hashes are recorded in `verified/mon_info_panel.json`.
+
+The verified 11x18-tile panel now occupies both BG0 virtual info-screen positions.
+Before drawing it, the code clears the complete former 13x18 SWSH panel
+footprints so no legacy edge columns remain visible. Dynamic Pokémon text/icons
+are retained functionally and tightened to the native 88-pixel panel width.
+The legacy `mon_info.png` / `mon_info.bin` files remain in the tree only for
+the following cleanup phase; they no longer provide the visible info-panel
+surface. The next sequence step is to remove that legacy equivalent and replace
+the remaining shared BG0 base-map dependency without changing the live HGSS art.
 
 Do not restore compatibility fallbacks that draw approximated HGSS chrome.
 If an authentic role is not available yet, leave that HGSS layer empty and

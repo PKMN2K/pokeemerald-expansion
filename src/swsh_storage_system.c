@@ -2621,7 +2621,7 @@ static void DrawHgssMarkingsMenuPanel(void)
 static void RestoreHgssMarkingsMenuPanel(void)
 {
     LoadPalette(sTextWindows_Pal, BG_PLTT_ID(HGSS_MARKINGS_MENU_PAL_BANK), sizeof(sTextWindows_Pal));
-    DecompressDataWithHeaderWram(sMonInfo_Tilemap, sStorage->infoTilemapBuffer);
+    RestoreHgssMonInfoPanel();
     sStorage->inMenuInteraction = FALSE;
     UpdateMonInfoTilemap();
     ScheduleBgCopyTilemapToVram(0);
@@ -3666,7 +3666,7 @@ static void UpdateShinyIconSprite(void)
 
     if (sStorage->displayMon.isShiny && !sStorage->displayMon.isEgg)
     {
-        u8 spriteX = 95 + (136 * sStorage->monInfoTilemapId);
+        u8 spriteX = 82 + (136 * sStorage->monInfoTilemapId);
         u8 spriteY = 50;
 
         if (sStorage->shinyIconSprite == NULL)
@@ -3699,7 +3699,7 @@ static void UpdatePokerusIconSprite(void)
 
     if (sStorage->displayMon.hasPokerus && !sStorage->displayMon.isEgg)
     {
-		u8 spriteX = 86 + (136 * sStorage->monInfoTilemapId);
+		u8 spriteX = 72 + (136 * sStorage->monInfoTilemapId);
         u8 spriteY = 150;
 
         if (sStorage->pokerusIconSprite == NULL)
@@ -3851,7 +3851,7 @@ static void UpdateStatLabelsSprites(void)
     switch (natureUpStat)
     {
     case STAT_ATK:
-        upStatX = 64 + (136 * sStorage->monInfoTilemapId);
+        upStatX = 52 + (136 * sStorage->monInfoTilemapId);
         upStatY = 68;
         upStatAnimIndex = animIndexMap[STAT_ATK];
         break;
@@ -3861,7 +3861,7 @@ static void UpdateStatLabelsSprites(void)
         upStatAnimIndex = animIndexMap[STAT_DEF];
         break;
     case STAT_SPATK:
-        upStatX = 64 + (136 * sStorage->monInfoTilemapId);
+        upStatX = 52 + (136 * sStorage->monInfoTilemapId);
         upStatY = 84;
         upStatAnimIndex = animIndexMap[STAT_SPATK];
         break;
@@ -3871,7 +3871,7 @@ static void UpdateStatLabelsSprites(void)
         upStatAnimIndex = animIndexMap[STAT_SPDEF];
         break;
     case STAT_SPEED:
-        upStatX = 64 + (136 * sStorage->monInfoTilemapId);
+        upStatX = 52 + (136 * sStorage->monInfoTilemapId);
         upStatY = 100;
         upStatAnimIndex = animIndexMap[STAT_SPEED];
         break;
@@ -3882,7 +3882,7 @@ static void UpdateStatLabelsSprites(void)
     switch (natureDownStat)
     {
     case STAT_ATK:
-        downStatX = 64 + (136 * sStorage->monInfoTilemapId);
+        downStatX = 52 + (136 * sStorage->monInfoTilemapId);
         downStatY = 68;
         downStatAnimIndex = animIndexMap[STAT_ATK];
         break;
@@ -3892,7 +3892,7 @@ static void UpdateStatLabelsSprites(void)
         downStatAnimIndex = animIndexMap[STAT_DEF];
         break;
     case STAT_SPATK:
-        downStatX = 64 + (136 * sStorage->monInfoTilemapId);
+        downStatX = 52 + (136 * sStorage->monInfoTilemapId);
         downStatY = 84;
         downStatAnimIndex = animIndexMap[STAT_SPATK];
         break;
@@ -3902,7 +3902,7 @@ static void UpdateStatLabelsSprites(void)
         downStatAnimIndex = animIndexMap[STAT_SPDEF];
         break;
     case STAT_SPEED:
-        downStatX = 64 + (136 * sStorage->monInfoTilemapId);
+        downStatX = 52 + (136 * sStorage->monInfoTilemapId);
         downStatY = 100;
         downStatAnimIndex = animIndexMap[STAT_SPEED];
         break;
@@ -3960,7 +3960,7 @@ static void PrintDisplayMonAbility(u8 font)
 {
     u8 windowId;
     const u8 *abilityName;
-    u8 windowWidthPx = 68;
+    u8 windowWidthPx = 76;
     u8 xPos = 3;
     u8 fontId;
 
@@ -3990,7 +3990,7 @@ static void PrintDisplayMonHeldItem(u8 font)
 {
     u8 windowId;
     const u8 *itemName;
-    u8 windowWidthPx = 68;
+    u8 windowWidthPx = 76;
     u8 xPos = 3;
     u8 fontId;
 
@@ -4074,7 +4074,7 @@ static void PrintDisplayMonNickname(u8 font)
             windowId = WIN_MON_INFO_NICKNAME_RIGHT;
         FillWindowPixelBuffer(windowId, PIXEL_FILL(4));
 
-        u8 fontId = GetFontIdToFit(sStorage->displayMon.nickname, font, 0, 58);
+        u8 fontId = GetFontIdToFit(sStorage->displayMon.nickname, font, 0, 40);
         AddTextPrinterParameterized4(windowId, fontId, 6, 1, 0, 0, sTextColors[1], 0, sStorage->displayMon.nickname);
         PutWindowTilemap(windowId);
         CopyWindowToVram(windowId, COPYWIN_FULL);
@@ -4125,7 +4125,7 @@ static bool8 PrintDisplayMonInfo(void)
         switch (sStorage->displayMonInfoLoadState)
         {
         case 0:
-            u8 fontId = GetFontIdToFit(sStorage->displayMon.nickname, font, 0, 56);
+            u8 fontId = GetFontIdToFit(sStorage->displayMon.nickname, font, 0, 40);
             UpdateGenderIconSprite(fontId);
             sStorage->displayMonInfoLoadState++;
             break;
@@ -4192,13 +4192,73 @@ static void UpdateBoxToSendMons(void)
     }
 }
 
+#define HGSS_MON_INFO_PANEL_BASE_TILE      512
+#define HGSS_MON_INFO_PANEL_BLANK_TILE     710
+#define HGSS_MON_INFO_PANEL_PAL_BANK       13
+#define HGSS_MON_INFO_PANEL_WIDTH          11
+#define HGSS_MON_INFO_PANEL_HEIGHT         18
+#define HGSS_MON_INFO_LEGACY_WIDTH         13
+#define HGSS_MON_INFO_LEFT                 0
+#define HGSS_MON_INFO_RIGHT                17
+#define HGSS_MON_INFO_LEFT_TOP             20
+#define HGSS_MON_INFO_RIGHT_TOP            40
+
+static const u32 sHgssMonInfoBlankTile[8] = {0};
+
+static void DrawHgssMonInfoPanelTilemaps(void)
+{
+    u16 *tilemap = sStorage->infoTilemapBuffer;
+    u8 x;
+    u8 y;
+
+    // Erase the complete former 13-tile SWSH panel footprints first so the
+    // narrower native 11-tile HGSS panels never leave legacy edge columns.
+    for (y = 0; y < HGSS_MON_INFO_PANEL_HEIGHT; y++)
+    {
+        for (x = 0; x < HGSS_MON_INFO_LEGACY_WIDTH; x++)
+        {
+            tilemap[(HGSS_MON_INFO_LEFT_TOP + y) * 32 + HGSS_MON_INFO_LEFT + x]
+                = HGSS_MON_INFO_PANEL_BLANK_TILE | (HGSS_MON_INFO_PANEL_PAL_BANK << 12);
+            tilemap[(HGSS_MON_INFO_RIGHT_TOP + y) * 32 + HGSS_MON_INFO_RIGHT + x]
+                = HGSS_MON_INFO_PANEL_BLANK_TILE | (HGSS_MON_INFO_PANEL_PAL_BANK << 12);
+        }
+    }
+
+    // The verified PNG is the exact 88x144 NSCR 9 composition rendered 1:1.
+    // grit emits its 11x18 tiles row-major, so both left/right virtual screens
+    // can reference one authentic tile set without redrawing any pixels.
+    for (y = 0; y < HGSS_MON_INFO_PANEL_HEIGHT; y++)
+    {
+        for (x = 0; x < HGSS_MON_INFO_PANEL_WIDTH; x++)
+        {
+            u16 entry = (HGSS_MON_INFO_PANEL_BASE_TILE + y * HGSS_MON_INFO_PANEL_WIDTH + x)
+                      | (HGSS_MON_INFO_PANEL_PAL_BANK << 12);
+
+            tilemap[(HGSS_MON_INFO_LEFT_TOP + y) * 32 + HGSS_MON_INFO_LEFT + x] = entry;
+            tilemap[(HGSS_MON_INFO_RIGHT_TOP + y) * 32 + HGSS_MON_INFO_RIGHT + x] = entry;
+        }
+    }
+}
+
+static void RestoreHgssMonInfoPanel(void)
+{
+    // Keep the legacy base map/tiles only until the next cleanup step because
+    // unrelated BG0 runtime surfaces still share them. The visible info-panel
+    // footprints are always erased and replaced by the authentic HGSS panel.
+    DecompressAndLoadBgGfxUsingHeap(0, sMonInfo_Gfx, 0, 0, 0);
+    DecompressDataWithHeaderWram(sMonInfo_Tilemap, sStorage->infoTilemapBuffer);
+    LoadBgTiles(0, sHgssMonInfoPanel_Gfx, sizeof(sHgssMonInfoPanel_Gfx), HGSS_MON_INFO_PANEL_BASE_TILE);
+    LoadBgTiles(0, sHgssMonInfoBlankTile, sizeof(sHgssMonInfoBlankTile), HGSS_MON_INFO_PANEL_BLANK_TILE);
+    LoadPalette(sHgssMonInfoPanel_Pal, BG_PLTT_ID(HGSS_MON_INFO_PANEL_PAL_BANK), PLTT_SIZE_4BPP);
+    DrawHgssMonInfoPanelTilemaps();
+}
+
 static void InitPokeStorageBg0(void)
 {
     SetGpuReg(REG_OFFSET_BG0CNT, BGCNT_PRIORITY(0) | BGCNT_CHARBASE(0) | BGCNT_SCREENBASE(29) | BGCNT_TXT256x512);
     SetBgTilemapBuffer(0, sStorage->infoTilemapBuffer);
-    DecompressAndLoadBgGfxUsingHeap(0, sMonInfo_Gfx, 0, 0, 0);
     LoadUserWindowBorderGfx(WIN_MESSAGE, 192, BG_PLTT_ID(14));
-    DecompressDataWithHeaderWram(sMonInfo_Tilemap, sStorage->infoTilemapBuffer);
+    RestoreHgssMonInfoPanel();
     sStorage->bg0_Y = 0;
     UpdateMonInfoTilemap();
     CopyBgTilemapBufferToVram(0);
@@ -4358,9 +4418,8 @@ static void ShowYesNoWindow(s8 cursorPos)
 static void ClearBottomWindow(void)
 {
     ClearStdWindowAndFrameToTransparent(WIN_MESSAGE, FALSE);
-	//Reintialize Info Panel gfx
-	DecompressAndLoadBgGfxUsingHeap(0, sMonInfo_Gfx, 0, 0, 0);
-    DecompressDataWithHeaderWram(sMonInfo_Tilemap, sStorage->infoTilemapBuffer);
+	// Reinitialize the authentic HGSS info-panel surface.
+    RestoreHgssMonInfoPanel();
     UpdateMonInfoTilemap();
     ScheduleBgCopyTilemapToVram(0);
 }

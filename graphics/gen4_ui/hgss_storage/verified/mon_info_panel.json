@@ -47,6 +47,31 @@
     "asset_tilemap": "graphics/pokemon_storage/swsh/mon_info.bin",
     "live_code": "sMonInfo_Gfx / sMonInfo_Tilemap"
   },
-  "status": "authentic HGSS mon-info panel identified and imported; live wiring deferred",
-  "next": "Wire verified/mon_info_panel.png live in place of the SWSH mon-info surface, then remove the legacy mon_info.png/mon_info.bin equivalent."
+  "status": "wired live: authentic HGSS mon-info panel is the visible BG0 info surface; legacy SWSH mon-info assets retained only for the next cleanup phase",
+  "next": "Remove the legacy graphics/pokemon_storage/swsh/mon_info.png and mon_info.bin equivalent and replace the remaining shared-base-map dependency without altering the live HGSS panel.",
+  "live_integration": {
+    "renderer": "BG0 virtual-screen tile composition",
+    "destination": {
+      "left": {
+        "left_tile": 0,
+        "top_tile": 20,
+        "width_tiles": 11,
+        "height_tiles": 18
+      },
+      "right": {
+        "left_tile": 17,
+        "top_tile": 40,
+        "width_tiles": 11,
+        "height_tiles": 18
+      }
+    },
+    "base_tile": 512,
+    "blank_tile": 710,
+    "palette_bank": 13,
+    "source": "verified/mon_info_panel.png (NSCR 9 + NCGR 14 + NCLR 4)",
+    "runtime_content": "existing dynamic Pokemon data retained and narrowed/repositioned to the native 88px panel",
+    "legacy_visual_footprint": "former 13x18 left/right panel areas are cleared before the HGSS 11x18 composition is drawn",
+    "legacy_assets_still_present": true,
+    "legacy_assets_live_as_panel": false
+  }
 }
