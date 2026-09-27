@@ -3192,11 +3192,6 @@ static void PrintTextOnWindowToFitPx(u8 windowId, const u8 *string, u8 x, u8 y, 
     PrintTextOnWindowWithFont(windowId, string, x, y, lineSpacing, colorId, fontId);
 }
 
-static void PrintTextOnWindowToFit(u8 windowId, const u8 *string, u8 x, u8 y, u8 lineSpacing, u8 colorId)
-{
-    PrintTextOnWindowToFitPx(windowId, string, x, y, lineSpacing, colorId, WindowWidthPx(windowId));
-}
-
 static void DrawHgssSummaryInfoStrip(u8 windowId)
 {
     u8 width = WindowWidthPx(windowId);
