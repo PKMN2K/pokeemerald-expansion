@@ -561,7 +561,7 @@ struct PokemonStorageSystemData
     u8 ALIGNED(4) itemIconBuffer[0x800];
     u16 boxOverlayTilemapBuffer[0x400];
     u16 hgssWallpaperTilemapBuffer[0x400];
-    u8 displayMenuTilemapBuffer[0x800];
+    u16 ALIGNED(4) displayMenuTilemapBuffer[0x400];
     u16 infoTilemapBuffer[0x800];
     u16 bg0_Y;
     bool8 showMonInfo;
@@ -608,6 +608,8 @@ EWRAM_DATA static bool8 sJustOpenedBag = 0;
 EWRAM_DATA static bool8 sRefreshDisplayMonGfx = FALSE;
 EWRAM_DATA static struct HgssMarkingsMenu *sMarkMenu = NULL;
 EWRAM_DATA static u8 sHgssYesNoWindowId = WINDOW_NONE;
+
+#define HGSS_WALLPAPER_SELECTOR_ITEMS_PER_PAGE 4
 
 // Main tasks
 static void Task_InitPokeStorage(u8);
@@ -4917,7 +4919,6 @@ static void ClearBottomWindow(void)
     ScheduleBgCopyTilemapToVram(0);
 }
 
-#define HGSS_WALLPAPER_SELECTOR_ITEMS_PER_PAGE 4
 
 static void FreeHgssWallpaperSelectorSprites(void)
 {
