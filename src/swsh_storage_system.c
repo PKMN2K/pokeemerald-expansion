@@ -8136,11 +8136,6 @@ static void StartCursorAnim(u8 animNum)
     StartSpriteAnim(sStorage->cursorSprite, animNum);
 }
 
-static u8 UNUSED GetMovingMonOriginalBoxId(void)
-{
-    return sMovingMonOrigBoxId;
-}
-
 static void SetCursorPriorityTo1(void)
 {
     sStorage->cursorSprite->oam.priority = 1;
