@@ -35,3 +35,25 @@ If HGSS has no equivalent for an expansion-only function, first document that ab
 The existing `src/swsh_storage_system.c` contains several synthetic `DrawHgss...` helpers from an earlier approximation pass. These are temporary migration targets, not canonical HGSS art.
 
 Before replacing them, extract and identify the members of `/a/0/1/9`, then map each member to the corresponding PC/Storage screen component.
+
+
+## Member mapping workflow
+
+The public `pret/pokeheartgold` decomp currently identifies this archive as `NARC_a_0_1_9`, but does not check its 87 internal members into the repository as named source files. This means member roles must be derived from a user-provided extracted NARC rather than guessed from public filenames.
+
+Use:
+
+```sh
+python tools/gen4_ui/map_hgss_storage_narc.py path/to/a_0_1_9.narc --extract build/hgss_storage_members
+```
+
+The mapper:
+- validates the NARC structure,
+- expects 87 members,
+- decompresses LZ10 members,
+- classifies Nitro formats such as NCGR/NCLR/NSCR/NCER/NANR,
+- hashes both compressed and decoded bytes,
+- writes a JSON manifest,
+- optionally writes decoded members with stable numeric filenames.
+
+Do not assign semantic names such as "box header", "cursor", or "wallpaper" until the decoded member has been visually or structurally verified.
