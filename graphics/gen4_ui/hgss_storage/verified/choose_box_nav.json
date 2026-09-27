@@ -94,5 +94,30 @@
     ],
     "pixel_rule": "Exact NCGR+NCER+NCLR composite at 1:1 DS pixel scale; no redraw, resampling, recoloring, or synthetic pixels."
   },
-  "status": "authentic navigation/control asset identified and imported; live wiring deferred"
+  "status": "wired live with verified normal and pressed/release animations",
+  "live_integration": {
+    "renderer": "GBA OBJ sprites",
+    "source_frame_size": [
+      24,
+      24
+    ],
+    "hardware_cell_size": [
+      32,
+      32
+    ],
+    "padding_rule": "Transparent runtime padding only; visible HGSS pixels are copied 1:1 without redraw, resampling, or recoloring.",
+    "live_centers": {
+      "left": [
+        16,
+        32
+      ],
+      "right": [
+        160,
+        32
+      ]
+    },
+    "visible_bounds_match_hgss_templates": true,
+    "input_behavior": "DPAD left/right starts the verified pressed frame, then returns to the corresponding normal frame.",
+    "cleanup_pending": "Remove the legacy chooser cursor/control equivalent in the next sequence step."
+  }
 }

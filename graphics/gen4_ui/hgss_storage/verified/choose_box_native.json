@@ -81,16 +81,16 @@
     }
   ],
   "integration_rule": "Do not synthesize or bind a static choose_box background. Recreate the HGSS interaction from verified dynamic components and runtime layout behavior.",
-  "status": "native composition stage 2 live; authentic navigation/control asset identified and imported",
+  "status": "native composition stage 3 live: authentic members 66-69 navigation controls wired with verified press/release frames",
   "integration_stage": {
-    "stage": 2,
+    "stage": 3,
     "behavior": [
-      "Left/right drives the existing box-scroll renderer from the currently visible candidate to the next candidate.",
-      "Candidate wallpaper and Pokemon icons are previewed live without changing the saved current box.",
-      "A commits the already-previewed box without replaying the transition.",
-      "B restores the original current box visually before canceling."
+      "Left/right controls use the verified /a/0/1/9 members 66-69 navigation artwork.",
+      "Visible 24x24 HGSS pixels are preserved 1:1; only transparent GBA OBJ padding is added at runtime.",
+      "Left/right input plays the verified pressed frame and returns to the corresponding normal frame.",
+      "Candidate wallpaper/icon previews and confirm/cancel behavior remain unchanged."
     ],
-    "next": "Wire verified members 66-69 navigation frames live, then remove the remaining legacy cursor/control equivalent."
+    "next": "Remove the remaining legacy chooser cursor/control equivalent now that authentic HGSS navigation is live."
   },
   "navigation_controls": {
     "source_members": {
@@ -117,6 +117,6 @@
     "right_template": "ov14_021F81DC: x=156, y=28, animation=3",
     "export": "verified/choose_box_nav.png",
     "metadata": "verified/choose_box_nav.json",
-    "status": "identified and imported; live wiring deferred"
+    "status": "wired live; legacy chooser cursor/control equivalent intentionally remains for the next cleanup step"
   }
 }

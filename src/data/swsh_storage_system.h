@@ -62,6 +62,11 @@ static const u16 sTextWindows_Pal[]           = INCGFX_U16("graphics/pokemon_sto
 static const u32 sHgssStorageWallpaper01_Gfx[] = INCGFX_U32("graphics/gen4_ui/hgss_storage/verified/wallpaper_01.png", ".4bpp");
 static const u16 sHgssStorageWallpaper01_Pal[] = INCGFX_U16("graphics/gen4_ui/hgss_storage/verified/wallpaper_01.png", ".gbapal");
 
+// Authentic HGSS Choose Box navigation controls.
+// /a/0/1/9 members 66-69; four verified 24x24 frames preserved 1:1.
+static const u32 sHgssChooseBoxNav_Gfx[] = INCGFX_U32("graphics/gen4_ui/hgss_storage/verified/choose_box_nav.png", ".4bpp");
+static const u16 sHgssChooseBoxNav_Pal[] = INCGFX_U16("graphics/gen4_ui/hgss_storage/verified/choose_box_nav.png", ".gbapal");
+
 static const u32 sCursor_Gfx[]                = INCGFX_U32("graphics/pokemon_storage/swsh/cursor.png", ".4bpp.smol");
 static const u16 sCursor_Pal[]                = INCGFX_U16("graphics/pokemon_storage/swsh/cursor.png", ".gbapal");
 static const u32 sGenderIcons_Gfx[]           = INCGFX_U32("graphics/pokemon_storage/swsh/gender_icons.png", ".4bpp.smol");
@@ -386,6 +391,59 @@ static const struct BgTemplate sBgTemplates[] =
         .priority = 3,
         .baseTile = 0
     },
+};
+
+// ============================================================================
+// Authentic HGSS Choose Box Navigation Controls
+// ============================================================================
+
+static const struct OamData sOamData_HgssChooseBoxNav =
+{
+    .shape = SPRITE_SHAPE(32x32),
+    .size = SPRITE_SIZE(32x32),
+    .priority = 1,
+};
+
+static const union AnimCmd sAnim_HgssChooseBoxNav_LeftNormal[] =
+{
+    ANIMCMD_FRAME(0, 0),
+    ANIMCMD_END
+};
+
+static const union AnimCmd sAnim_HgssChooseBoxNav_LeftPressed[] =
+{
+    ANIMCMD_FRAME(16, 4),
+    ANIMCMD_FRAME(0, 0),
+    ANIMCMD_END
+};
+
+static const union AnimCmd sAnim_HgssChooseBoxNav_RightNormal[] =
+{
+    ANIMCMD_FRAME(32, 0),
+    ANIMCMD_END
+};
+
+static const union AnimCmd sAnim_HgssChooseBoxNav_RightPressed[] =
+{
+    ANIMCMD_FRAME(48, 4),
+    ANIMCMD_FRAME(32, 0),
+    ANIMCMD_END
+};
+
+static const union AnimCmd *const sAnims_HgssChooseBoxNav[] =
+{
+    sAnim_HgssChooseBoxNav_LeftNormal,
+    sAnim_HgssChooseBoxNav_LeftPressed,
+    sAnim_HgssChooseBoxNav_RightNormal,
+    sAnim_HgssChooseBoxNav_RightPressed,
+};
+
+static const struct SpriteTemplate sSpriteTemplate_HgssChooseBoxNav =
+{
+    .tileTag = GFXTAG_HGSS_CHOOSE_BOX_NAV,
+    .paletteTag = PALTAG_HGSS_CHOOSE_BOX_NAV,
+    .oam = &sOamData_HgssChooseBoxNav,
+    .anims = sAnims_HgssChooseBoxNav,
 };
 
 // ============================================================================

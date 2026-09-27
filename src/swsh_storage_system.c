@@ -223,6 +223,11 @@ enum {
 #define BOXID_NONE_CHOSEN 200
 #define BOXID_CANCELED    201
 
+#define HGSS_CHOOSE_BOX_NAV_LEFT_NORMAL   0
+#define HGSS_CHOOSE_BOX_NAV_LEFT_PRESSED  1
+#define HGSS_CHOOSE_BOX_NAV_RIGHT_NORMAL  2
+#define HGSS_CHOOSE_BOX_NAV_RIGHT_PRESSED 3
+
 enum {
     PALTAG_MON_ICON_0 = POKE_ICON_BASE_PAL_TAG,
     PALTAG_MON_ICON_1, // Used implicitly in CreateMonIconSprite
@@ -240,6 +245,7 @@ enum {
     PALTAG_ITEM_ICON_2, // Used implicitly in CreateItemIconSprites
     PALTAG_MARKING_MENU,
     PALTAG_LIST_MENU_SCROLL_ARROW,
+    PALTAG_HGSS_CHOOSE_BOX_NAV,
 };
 
 enum {
@@ -258,6 +264,7 @@ enum {
     GFXTAG_MARKING_COMBO,
     GFXTAG_MON_ICON,
 	GFXTAG_PKRS_ICON,
+    GFXTAG_HGSS_CHOOSE_BOX_NAV,
 };
 
 // The maximum number of Pokémon icons that can appear on-screen.
@@ -363,12 +370,14 @@ struct StorageMenu
 struct ChooseBoxMenu
 {
     struct Sprite *monCountSprite;
+    struct Sprite *navSprites[2];
     u8 curBox;
     s8 savedCursorArea;
     s8 savedCursorPosition;
     bool8 previewActive;
     bool8 cancelPending;
     u8 ALIGNED(4) monCountTiles[256];
+    u8 ALIGNED(4) navTiles[4 * 32 * 32 / 2];
 };
 
 struct ItemIcon
@@ -1068,14 +1077,57 @@ static void CB2_ExitPokeStorage(void)
 
 static void LoadChooseBoxMenuGfx(struct ChooseBoxMenu *menu)
 {
-    // No separate graphics load is required. The chooser reuses the live HGSS
-    // storage wallpaper/title composition already on screen.
+    const u8 *srcTiles = (const u8 *)sHgssChooseBoxNav_Gfx;
+    struct SpriteSheet spriteSheet =
+    {
+        .data = menu->navTiles,
+        .size = sizeof(menu->navTiles),
+        .tag = GFXTAG_HGSS_CHOOSE_BOX_NAV,
+    };
+    struct SpritePalette spritePalette =
+    {
+        .data = sHgssChooseBoxNav_Pal,
+        .tag = PALTAG_HGSS_CHOOSE_BOX_NAV,
+    };
+    u8 frame;
+    u8 row;
+    u8 col;
+
+    // The verified export is four 24x24 frames in one 96x24 strip. GBA OBJ
+    // hardware has no 24x24 shape, so repack each frame into the upper-left
+    // 24x24 of a transparent 32x32 cell. Visible HGSS pixels remain untouched
+    // and 1:1; the extra row/column are transparent hardware padding only.
+    CpuFill32(0, menu->navTiles, sizeof(menu->navTiles));
+    for (frame = 0; frame < 4; frame++)
+    {
+        for (row = 0; row < 3; row++)
+        {
+            for (col = 0; col < 3; col++)
+            {
+                u32 srcTile = row * 12 + frame * 3 + col;
+                u32 dstTile = frame * 16 + row * 4 + col;
+
+                CpuCopy32(
+                    srcTiles + srcTile * TILE_SIZE_4BPP,
+                    menu->navTiles + dstTile * TILE_SIZE_4BPP,
+                    TILE_SIZE_4BPP);
+            }
+        }
+    }
+
+    FreeSpriteTilesByTag(GFXTAG_HGSS_CHOOSE_BOX_NAV);
+    FreeSpritePaletteByTag(PALTAG_HGSS_CHOOSE_BOX_NAV);
+    LoadSpriteSheet(&spriteSheet);
+    LoadSpritePalette(&spritePalette);
+
     sChooseBoxMenu = menu;
 }
 
 static void FreeChooseBoxMenu(void)
 {
     FreeSpriteTilesByTag(GFXTAG_BOX_SELECTION_PER_30);
+    FreeSpriteTilesByTag(GFXTAG_HGSS_CHOOSE_BOX_NAV);
+    FreeSpritePaletteByTag(PALTAG_HGSS_CHOOSE_BOX_NAV);
     sChooseBoxMenu = NULL;
 }
 
@@ -1123,11 +1175,15 @@ static u8 HandleChooseBoxMenuInput(void)
     if (JOY_REPEAT(DPAD_LEFT))
     {
         PlaySE(SE_SELECT);
+        if (sChooseBoxMenu->navSprites[0])
+            StartSpriteAnim(sChooseBoxMenu->navSprites[0], HGSS_CHOOSE_BOX_NAV_LEFT_PRESSED);
         ChooseBoxMenu_MoveCursor(-1);
     }
     else if (JOY_REPEAT(DPAD_RIGHT))
     {
         PlaySE(SE_SELECT);
+        if (sChooseBoxMenu->navSprites[1])
+            StartSpriteAnim(sChooseBoxMenu->navSprites[1], HGSS_CHOOSE_BOX_NAV_RIGHT_PRESSED);
         ChooseBoxMenu_MoveCursor(1);
     }
 
@@ -1136,9 +1192,28 @@ static u8 HandleChooseBoxMenuInput(void)
 
 static void ChooseBoxMenu_CreateSprites(u8 curBox)
 {
+    u8 spriteId;
+
     sChooseBoxMenu->curBox = curBox;
     sChooseBoxMenu->previewActive = FALSE;
     sChooseBoxMenu->cancelPending = FALSE;
+
+    // HGSS native templates use centers x=12/y=28 and x=156/y=28 for 24x24
+    // cells. The live GBA objects are transparent-padded 32x32 cells, so shift
+    // their OBJ centers by +4/+4 to preserve those exact visible bounds.
+    spriteId = CreateSprite(&sSpriteTemplate_HgssChooseBoxNav, 16, 32, 1);
+    if (spriteId != MAX_SPRITES)
+    {
+        sChooseBoxMenu->navSprites[0] = &gSprites[spriteId];
+        StartSpriteAnim(sChooseBoxMenu->navSprites[0], HGSS_CHOOSE_BOX_NAV_LEFT_NORMAL);
+    }
+
+    spriteId = CreateSprite(&sSpriteTemplate_HgssChooseBoxNav, 160, 32, 1);
+    if (spriteId != MAX_SPRITES)
+    {
+        sChooseBoxMenu->navSprites[1] = &gSprites[spriteId];
+        StartSpriteAnim(sChooseBoxMenu->navSprites[1], HGSS_CHOOSE_BOX_NAV_RIGHT_NORMAL);
+    }
 
     if (sStorage->cursorSprite)
     {
@@ -1161,6 +1236,17 @@ static void ChooseBoxMenu_CreateSprites(u8 curBox)
 
 static void ChooseBoxMenu_DestroySprites(void)
 {
+    u8 i;
+
+    for (i = 0; i < ARRAY_COUNT(sChooseBoxMenu->navSprites); i++)
+    {
+        if (sChooseBoxMenu->navSprites[i])
+        {
+            DestroySprite(sChooseBoxMenu->navSprites[i]);
+            sChooseBoxMenu->navSprites[i] = NULL;
+        }
+    }
+
     if (sChooseBoxMenu->monCountSprite)
     {
         DestroySprite(sChooseBoxMenu->monCountSprite);
