@@ -253,7 +253,6 @@ enum {
     GFXTAG_ITEM_ICON_0,
     GFXTAG_ITEM_ICON_1, // Used implicitly in CreateItemIconSprites
     GFXTAG_ITEM_ICON_2, // Used implicitly in CreateItemIconSprites
-    GFXTAG_BOX_SELECTION,
     GFXTAG_BOX_SELECTION_PER_30,
     GFXTAG_LIST_MENU_ARROW,
     GFXTAG_MARKING_MENU,
@@ -365,11 +364,7 @@ struct StorageMenu
 
 struct ChooseBoxMenu
 {
-    struct Sprite *hoverSprite;
     struct Sprite *monCountSprite;
-    bool32 loadedPalette;
-    u16 tileTag;
-    u16 paletteTag;
     u8 curBox;
     s8 savedCursorArea;
     s8 savedCursorPosition;
@@ -1085,20 +1080,15 @@ static void CB2_ExitPokeStorage(void)
 #define CHOOSE_BOX_GRID_TILE_COL 9
 #define CHOOSE_BOX_GRID_TILE_ROW 6
 
-static void LoadChooseBoxMenuGfx(struct ChooseBoxMenu *menu, u16 tileTag, u16 palTag, bool32 loadPal)
+static void LoadChooseBoxMenuGfx(struct ChooseBoxMenu *menu)
 {
-    LoadCompressedSpriteSheet(&sSpriteSheet_ChooseBoxMenu);
+    // Authentic HGSS Choose Box chrome is loaded through DrawHgssChooseBoxGrid.
+    // The old SWSH 32x32 selection-square sheet is intentionally not loaded.
     sChooseBoxMenu = menu;
-    menu->tileTag = tileTag;
-    menu->paletteTag = palTag;
-    menu->loadedPalette = loadPal;
 }
 
 static void FreeChooseBoxMenu(void)
 {
-    if (sChooseBoxMenu->loadedPalette)
-        FreeSpritePaletteByTag(sChooseBoxMenu->paletteTag);
-    FreeSpriteTilesByTag(sChooseBoxMenu->tileTag);
     FreeSpriteTilesByTag(GFXTAG_BOX_SELECTION_PER_30);
     sChooseBoxMenu = NULL;
 }
@@ -1162,27 +1152,16 @@ static void ChooseBoxMenu_CreateSprites(u8 curBox)
     u8 col;
     u8 row;
     u8 tx;
-    u8 spriteId;
 
     sChooseBoxMenu->curBox = curBox;
 
-    // Do not paint the legacy 4x4-per-box chrome here. The Choose Box
-    // background is supplied only by a verified HGSS asset descriptor.
+    // Do not paint legacy Choose Box chrome here. The background is supplied
+    // only by a verified HGSS asset descriptor. The normal storage cursor
+    // remains the live selection indicator.
     DrawHgssChooseBoxGrid();
 
     col = curBox % 5;
     row = curBox / 5;
-    spriteId = CreateSprite(&sSpriteTemplate_ChooseBoxMenu, 88 + col * 32, 64 + row * 32, 3);
-    if (spriteId != MAX_SPRITES)
-    {
-        sChooseBoxMenu->hoverSprite = &gSprites[spriteId];
-        sChooseBoxMenu->hoverSprite->oam.priority = 1;
-        sChooseBoxMenu->hoverSprite->subpriority = 3;
-    }
-    else
-    {
-        sChooseBoxMenu->hoverSprite = NULL;
-    }
 
     if (sStorage->cursorSprite)
     {
@@ -1228,11 +1207,6 @@ static void ChooseBoxMenu_DestroySprites(void)
     }
     CopyBgTilemapBufferToVram(1);
 
-    if (sChooseBoxMenu->hoverSprite)
-    {
-        DestroySprite(sChooseBoxMenu->hoverSprite);
-        sChooseBoxMenu->hoverSprite = NULL;
-    }
     if (sChooseBoxMenu->monCountSprite)
     {
         DestroySprite(sChooseBoxMenu->monCountSprite);
@@ -1317,12 +1291,6 @@ static void ChooseBoxMenu_UpdateHover(void)
 {
     u8 col = sChooseBoxMenu->curBox % 5;
     u8 row = sChooseBoxMenu->curBox / 5;
-
-    if (sChooseBoxMenu->hoverSprite)
-    {
-        sChooseBoxMenu->hoverSprite->x = 88 + col * 32;
-        sChooseBoxMenu->hoverSprite->y = 64 + row * 32;
-    }
 
     if (sStorage->cursorSprite)
     {
@@ -2279,7 +2247,7 @@ static void Task_DepositMon(u8 taskId)
         }
         else
         {
-            LoadChooseBoxMenuGfx(&sStorage->chooseBoxMenu, GFXTAG_BOX_SELECTION, PALTAG_MISC_3, FALSE);
+            LoadChooseBoxMenuGfx(&sStorage->chooseBoxMenu);
             ChooseBoxMenu_CreateSprites(StorageGetCurrentBox());
             sStorage->state++;
         }
@@ -2401,7 +2369,7 @@ static void Task_DepositMon(u8 taskId)
         if (!DoMonPlaceChange())
         {
             SetMovingMonPriority(1);
-            LoadChooseBoxMenuGfx(&sStorage->chooseBoxMenu, GFXTAG_BOX_SELECTION, PALTAG_MISC_3, FALSE);
+            LoadChooseBoxMenuGfx(&sStorage->chooseBoxMenu);
             ChooseBoxMenu_CreateSprites(StorageGetCurrentBox());
             sStorage->state++;
         }
@@ -3130,7 +3098,7 @@ static void Task_JumpBox(u8 taskId)
     case 0:
         {
             u8 curBox = StorageGetCurrentBox();
-            LoadChooseBoxMenuGfx(&sStorage->chooseBoxMenu, GFXTAG_BOX_SELECTION, PALTAG_MISC_3, FALSE);
+            LoadChooseBoxMenuGfx(&sStorage->chooseBoxMenu);
             ChooseBoxMenu_CreateSprites(curBox);
         }
         sStorage->state++;
