@@ -41,7 +41,7 @@
   "next": "Proceed to the next unconverted Storage role using the same sequence. The corrected authentic member 70/71/72/73 bundle is preserved as the box-content thumbnail base candidate.",
   "export": {
     "file": "wallpaper_selector_swatch.png",
-    "sha256": "1adc4f10d3c98d5331901fecdf74b0d320e93455a4af80d9a5b0306ddfd1295a",
+    "sha256": "2e71be97579e1e81ac6a43a534c2baad1818b1eede7c4eb9e883841f33b72e04",
     "size": [
       24,
       24
@@ -65,7 +65,9 @@
       20,
       19
     ],
-    "pixel_rule": "Exact member-74 NCER composition at 1:1 pixel scale. Source 8bpp pixels use only transparent index 0 and placeholder index 30; the GBA export losslessly compacts that binary mask to 4bpp. No visible pixel is redrawn, resampled, or moved."
+    "pixel_rule": "Exact member-74 NCER composition at 1:1 pixel scale. Source 8bpp pixels use only transparent index 0 and placeholder index 30; the GBA export losslessly compacts that binary mask to 4bpp. No visible pixel is redrawn, resampled, or moved.",
+    "png_encoding": "indexed 4bpp mask; source member-74 indices {0,30} compacted losslessly to {0,1}",
+    "checked_in_size_bytes": 163
   },
   "live_integration": {
     "renderer": "four GBA OBJ sprites using the verified HGSS NCER 76 cell",
@@ -81,5 +83,32 @@
       "wallpaper-only legacy scroll-arrow gfx/palette tags and task storage"
     ],
     "selection_behavior": "ListMenu remains as a non-visual input/text engine with CURSOR_INVISIBLE; Up/Down selection, Left/Right page switching, A select, and B cancel are unchanged."
+  },
+  "verification_repair": {
+    "reason": "Emerald CI detected an invalid PLTE CRC in the previously checked-in wallpaper_selector_swatch.png container.",
+    "source": "/a/0/1/9 NCGR 74 + NCER 76 cell 0",
+    "reconstruction": "NCER cell 0 uses four OAM pieces covering source tiles 0-8 as [[0,1,4],[2,3,5],[6,7,8]]. Member 74 contains only transparent index 0 and placeholder index 30.",
+    "validation": {
+      "dimensions": [
+        24,
+        24
+      ],
+      "opaque_pixel_count": 224,
+      "visible_bbox": [
+        4,
+        5,
+        20,
+        19
+      ],
+      "source_indices": [
+        0,
+        30
+      ],
+      "compact_indices": [
+        0,
+        1
+      ]
+    },
+    "fidelity": "PNG container/palette repaired only. The 224 visible mask pixels remain at the exact native NCER positions; no redraw, resampling, recoloring, or synthetic pixels."
   }
 }

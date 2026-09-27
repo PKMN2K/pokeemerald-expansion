@@ -415,6 +415,8 @@ is not a wallpaper-selector control. `ov14_021F4958` uses it as the base for
 six box-content thumbnail images. That authentic extraction is retained under
 `verified/box_thumbnail_base.png` for its proper future role.
 
+`verified/wallpaper_selector_swatch.png` has also been regenerated as a valid indexed 4bpp PNG after CI detected a corrupt PLTE CRC in the old container. The repair is derived directly from NCGR 74 plus NCER 76 cell 0: its four OAM pieces compose source tiles 0-8 in the native 24x24 geometry, preserving the verified 224-pixel mask and visible bounding box [4,5,20,19]. Only source indices 0 and 30 exist; they are losslessly compacted to 0 and 1 for the GBA mask path. No visible pixel is moved or altered.
+
 The selector itself is the member 74/75/76/77 bundle. `ov14_021F4380`
 creates four copies of its cell, spaced 46 pixels apart, and
 `ov14_021F462C` rewrites the member-74 placeholder pixels whenever the
