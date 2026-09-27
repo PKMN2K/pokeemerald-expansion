@@ -230,6 +230,23 @@ static const u16 sHgssChooseBoxNav_Pal[] = INCGFX_U16("graphics/gen4_ui/hgss_sto
 static const u32 sHgssBoxThumbnailBase_Gfx[] = INCGFX_U32("graphics/gen4_ui/hgss_storage/verified/box_thumbnail_base.png", ".4bpp");
 static const u16 sHgssBoxThumbnailBase_Pal[] = INCGFX_U16("graphics/gen4_ui/hgss_storage/verified/box_thumbnail_base.png", ".gbapal");
 
+// ov14_021F4A64 maps HGSS body-color categories through ov14_021F8080, then
+// addresses member-75 palette indices 0x20-0x2F. These are the exact BGR555
+// colors after applying that native lookup table, ordered by enum BodyColor.
+static const u16 sHgssBoxThumbnailMarkerColors[10] =
+{
+    [BODY_COLOR_RED]    = 0x6E1D,
+    [BODY_COLOR_BLUE]   = 0x5FFB,
+    [BODY_COLOR_YELLOW] = 0x427B,
+    [BODY_COLOR_GREEN]  = 0x3B38,
+    [BODY_COLOR_BLACK]  = 0x5314,
+    [BODY_COLOR_BROWN]  = 0x53BE,
+    [BODY_COLOR_PURPLE] = 0x7BBA,
+    [BODY_COLOR_GRAY]   = 0x6ECD,
+    [BODY_COLOR_WHITE]  = 0x5AED,
+    [BODY_COLOR_PINK]   = 0x6E31,
+};
+
 // Authentic HGSS normal Storage hand pointer: NANR animation 14,
 // NCER cells 13 and 14, 20 ticks per frame.
 static const u32 sHgssStorageCursor_Gfx[] = INCGFX_U32("graphics/gen4_ui/hgss_storage/verified/cursor.png", ".4bpp");
@@ -640,21 +657,64 @@ static const struct OamData sOamData_HgssBoxThumbnail =
     .priority = 1,
 };
 
-static const union AnimCmd sAnim_HgssBoxThumbnail[] =
+static const union AnimCmd sAnim_HgssBoxThumbnail0[] =
 {
     ANIMCMD_FRAME(0, 4),
     ANIMCMD_END
 };
 
+static const union AnimCmd sAnim_HgssBoxThumbnail1[] =
+{
+    ANIMCMD_FRAME(16, 4),
+    ANIMCMD_END
+};
+
+static const union AnimCmd sAnim_HgssBoxThumbnail2[] =
+{
+    ANIMCMD_FRAME(32, 4),
+    ANIMCMD_END
+};
+
+static const union AnimCmd sAnim_HgssBoxThumbnail3[] =
+{
+    ANIMCMD_FRAME(48, 4),
+    ANIMCMD_END
+};
+
+static const union AnimCmd sAnim_HgssBoxThumbnail4[] =
+{
+    ANIMCMD_FRAME(64, 4),
+    ANIMCMD_END
+};
+
+static const union AnimCmd sAnim_HgssBoxThumbnail5[] =
+{
+    ANIMCMD_FRAME(80, 4),
+    ANIMCMD_END
+};
+
 static const union AnimCmd *const sAnims_HgssBoxThumbnail[] =
 {
-    sAnim_HgssBoxThumbnail,
+    sAnim_HgssBoxThumbnail0,
+    sAnim_HgssBoxThumbnail1,
+    sAnim_HgssBoxThumbnail2,
+    sAnim_HgssBoxThumbnail3,
+    sAnim_HgssBoxThumbnail4,
+    sAnim_HgssBoxThumbnail5,
 };
 
 static const struct SpriteTemplate sSpriteTemplate_HgssBoxThumbnail =
 {
     .tileTag = GFXTAG_HGSS_BOX_THUMBNAIL,
     .paletteTag = PALTAG_HGSS_BOX_THUMBNAIL,
+    .oam = &sOamData_HgssBoxThumbnail,
+    .anims = sAnims_HgssBoxThumbnail,
+};
+
+static const struct SpriteTemplate sSpriteTemplate_HgssBoxThumbnailMarkers =
+{
+    .tileTag = GFXTAG_HGSS_BOX_THUMBNAIL_MARKERS,
+    .paletteTag = PALTAG_HGSS_BOX_THUMBNAIL_MARKERS,
     .oam = &sOamData_HgssBoxThumbnail,
     .anims = sAnims_HgssBoxThumbnail,
 };

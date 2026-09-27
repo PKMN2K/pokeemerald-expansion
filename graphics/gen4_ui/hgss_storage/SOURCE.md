@@ -49,24 +49,33 @@ legacy SWSH BG1 tilemap cells at columns 2-12, rows 0-17 are zeroed at source,
 so no SWSH party-panel fallback remains underneath the authentic HGSS art.
 
 Choose Box verification does not expose a standalone
-NCGR+NCLR+NSCR full-screen "Choose Box grid", but later sprite/runtime tracing
-does prove a native six-at-a-time box-overview layer. The current title-level
-carousel therefore remains only a temporary live implementation until that
-authenticated dynamic thumbnail layer is wired.
+NCGR+NCLR+NSCR full-screen "Choose Box grid", but sprite/runtime tracing proves
+a native six-at-a-time box-overview layer. That dynamic layer is now wired live.
+The title-level carousel remains only as a temporary functional fallback until
+the authenticated overview interaction has been build/runtime-verified and can
+safely own the complete destination-selection flow.
 
 Members 70-73 are the box-overview thumbnail bundle, not wallpaper-selector
 controls. HGSS rebuilds an individual 32x32 thumbnail from NCGR 70 whenever a
 box changes, generates all 18 thumbnails during Storage initialization, and
-uploads the six thumbnails belonging to the currently visible group. Members
-74-77 remain the separate four-swatch wallpaper-selector bundle. Members 85
-and 86 are auxiliary NSCR window/frame surfaces, not an all-box chooser
-background.
+uploads the six thumbnails belonging to the currently visible group. The live
+GBA path now reproduces that mutation: member-70's source index 8 is replaced
+with the box's authenticated member-75 wallpaper color, and each occupied slot
+gets the exact ov14_021F8080/member-75 body-color marker. The native marker
+geometry is six columns by five rows, with 2x1 markers at x=10..20 and y=11..19
+in two-pixel steps. Because GBA 4bpp cannot address HGSS's 0x20+ marker indices
+inside the same OBJ palette, the live thumbnail is losslessly split into
+coincident base/wallpaper and marker OBJ layers; visible pixels and BGR555
+colors remain unchanged. Members 74-77 remain the separate four-swatch
+wallpaper-selector bundle. Members 85 and 86 are auxiliary NSCR window/frame
+surfaces, not an all-box chooser background.
 
 The static role binder still does not accept a fabricated `choose_box` or
 `box_grid` background, because the authentic overview is sprite-driven.
-Until the native thumbnail presentation is live, the existing carousel must
-remain intact; it may be removed only after the authenticated replacement is
-proven functional.
+Phase 2b now has the authenticated content-sensitive thumbnail presentation
+live. The existing carousel is deliberately retained for the verification gate;
+its legacy-equivalent removal is phase 3 and must happen only after the dynamic
+replacement is proven functional in build/runtime testing.
 
 The native composition now includes live candidate previews. Left/right uses
 the existing storage box-scroll path to transition the real candidate wallpaper

@@ -250,6 +250,7 @@ enum {
     PALTAG_HGSS_WALLPAPER_SELECTOR,
     PALTAG_HGSS_STORAGE_CURSOR,
     PALTAG_HGSS_BOX_THUMBNAIL,
+    PALTAG_HGSS_BOX_THUMBNAIL_MARKERS,
 };
 
 enum {
@@ -269,6 +270,7 @@ enum {
     GFXTAG_HGSS_CHOOSE_BOX_NAV,
     GFXTAG_HGSS_WALLPAPER_SELECTOR,
     GFXTAG_HGSS_BOX_THUMBNAIL,
+    GFXTAG_HGSS_BOX_THUMBNAIL_MARKERS,
 };
 
 // The maximum number of Pokémon icons that can appear on-screen.
@@ -376,13 +378,19 @@ struct ChooseBoxMenu
     struct Sprite *monCountSprite;
     struct Sprite *navSprites[2];
     struct Sprite *overviewSprites[6];
+    struct Sprite *overviewMarkerSprites[6];
     u8 curBox;
+    u8 overviewGroupBase;
     bool8 active;
     bool8 savedCursorInvisible;
     bool8 previewActive;
     bool8 cancelPending;
     u8 ALIGNED(4) monCountTiles[256];
     u8 ALIGNED(4) navTiles[4 * 32 * 32 / 2];
+    u8 ALIGNED(4) overviewBaseTiles[6 * 32 * 32 / 2];
+    u8 ALIGNED(4) overviewMarkerTiles[6 * 32 * 32 / 2];
+    u16 ALIGNED(4) overviewBasePal[16];
+    u16 ALIGNED(4) overviewMarkerPal[16];
 };
 
 struct ItemIcon
@@ -1091,6 +1099,232 @@ static void CB2_ExitPokeStorage(void)
 //  B cancels. Runtime title/count data is updated without replacement chrome.
 //------------------------------------------------------------------------------
 
+// HGSS ov14_021F4958 rebuilds each 32x32 overview cell from member 70. It
+// replaces source palette index 8 (BGR555 0x03E0) with the box wallpaper color,
+// then ov14_021F4A64 stamps one 2x1 body-color marker per occupied slot.
+//
+// GBA 4bpp OBJ cannot address HGSS's original 8bpp indices 0x20-0x2F in the
+// same sprite palette. Preserve the exact pixels/colors by splitting each live
+// cell into two coincident 4bpp OBJ layers: member-70 base/wallpaper below and
+// the authenticated member-75 marker colors above.
+static u8 ChooseBoxMenu_Get4bppPixel(const u8 *tiles, u8 x, u8 y)
+{
+    u32 tile = (y / 8) * 4 + x / 8;
+    u32 offset = tile * TILE_SIZE_4BPP + (y & 7) * 4 + ((x & 7) / 2);
+    u8 packed = tiles[offset];
+
+    return (x & 1) ? packed >> 4 : packed & 0xF;
+}
+
+static void ChooseBoxMenu_Set4bppPixel(u8 *tiles, u8 x, u8 y, u8 color)
+{
+    u32 tile = (y / 8) * 4 + x / 8;
+    u32 offset = tile * TILE_SIZE_4BPP + (y & 7) * 4 + ((x & 7) / 2);
+
+    if (x & 1)
+        tiles[offset] = (tiles[offset] & 0x0F) | (color << 4);
+    else
+        tiles[offset] = (tiles[offset] & 0xF0) | color;
+}
+
+static u8 ChooseBoxMenu_FindOrAddColor(u16 *palette, u8 *colorCount, u16 color)
+{
+    u8 i;
+
+    for (i = 1; i < *colorCount; i++)
+    {
+        if (palette[i] == color)
+            return i;
+    }
+
+    // The base uses three fixed visible member-70 colors plus at most six
+    // wallpaper colors in a visible HGSS group, so this cannot exhaust 4bpp.
+    if (*colorCount >= 16)
+        return 0;
+
+    palette[*colorCount] = color;
+    return (*colorCount)++;
+}
+
+static void ChooseBoxMenu_BuildOverviewGroup(u8 groupBase)
+{
+    const u8 *sourceTiles = (const u8 *)sHgssBoxThumbnailBase_Gfx;
+    u8 baseColorCount = 1;
+    u8 frame;
+    u8 bodyColor;
+
+    CpuFill32(0, sChooseBoxMenu->overviewBaseTiles, sizeof(sChooseBoxMenu->overviewBaseTiles));
+    CpuFill32(0, sChooseBoxMenu->overviewMarkerTiles, sizeof(sChooseBoxMenu->overviewMarkerTiles));
+    CpuFill32(0, sChooseBoxMenu->overviewBasePal, sizeof(sChooseBoxMenu->overviewBasePal));
+    CpuFill32(0, sChooseBoxMenu->overviewMarkerPal, sizeof(sChooseBoxMenu->overviewMarkerPal));
+
+    for (bodyColor = BODY_COLOR_RED; bodyColor <= BODY_COLOR_PINK; bodyColor++)
+        sChooseBoxMenu->overviewMarkerPal[bodyColor + 1] = sHgssBoxThumbnailMarkerColors[bodyColor];
+
+    for (frame = 0; frame < 6; frame++)
+    {
+        u8 boxId = groupBase + frame;
+        u8 *baseFrame = sChooseBoxMenu->overviewBaseTiles + frame * (32 * 32 / 2);
+        u8 *markerFrame = sChooseBoxMenu->overviewMarkerTiles + frame * (32 * 32 / 2);
+        u8 wallpaperId;
+        u16 wallpaperColor;
+        u8 x;
+        u8 y;
+        u8 slot;
+
+        if (boxId >= TOTAL_BOXES_COUNT)
+            continue;
+
+        // HGSS ov14_021E7930 folds bonus wallpaper ids 16-23 back to 0-7 for
+        // overview thumbnails before ov14_021F46B0 adds the member-75 +0x10
+        // palette offset.
+        wallpaperId = GetBoxWallpaper(boxId);
+        if (wallpaperId >= 16)
+            wallpaperId -= 16;
+        wallpaperColor = sHgssWallpaperSelectorColors[wallpaperId];
+
+        for (y = 0; y < 32; y++)
+        {
+            for (x = 0; x < 32; x++)
+            {
+                u8 sourceIndex = ChooseBoxMenu_Get4bppPixel(sourceTiles, x, y);
+                u16 color;
+                u8 destIndex;
+
+                // Member-70 source index 0 is transparent in the native OBJ.
+                if (sourceIndex == 0)
+                    continue;
+
+                color = sHgssBoxThumbnailBase_Pal[sourceIndex];
+                if (color == 0x03E0)
+                    color = wallpaperColor;
+
+                destIndex = ChooseBoxMenu_FindOrAddColor(
+                    sChooseBoxMenu->overviewBasePal,
+                    &baseColorCount,
+                    color);
+                ChooseBoxMenu_Set4bppPixel(baseFrame, x, y, destIndex);
+            }
+        }
+
+        // ov14_021F4A64 walks 5 rows x 6 columns. Markers are 2x1 pixels at
+        // x=10,12,14,16,18,20 and y=11,13,15,17,19.
+        for (slot = 0; slot < IN_BOX_COUNT; slot++)
+        {
+            enum Species species = GetBoxMonDataAt(boxId, slot, MON_DATA_SPECIES);
+            bool32 isEgg;
+            u8 markerIndex;
+
+            if (species == SPECIES_NONE)
+                continue;
+
+            isEgg = GetBoxMonDataAt(boxId, slot, MON_DATA_IS_EGG);
+            if (isEgg)
+                bodyColor = (species == SPECIES_MANAPHY) ? BODY_COLOR_BLUE : BODY_COLOR_WHITE;
+            else
+                bodyColor = gSpeciesInfo[species].bodyColor;
+
+            if (bodyColor > BODY_COLOR_PINK)
+                bodyColor = BODY_COLOR_WHITE;
+
+            markerIndex = bodyColor + 1;
+            x = 10 + 2 * (slot % IN_BOX_COLUMNS);
+            y = 11 + 2 * (slot / IN_BOX_COLUMNS);
+            ChooseBoxMenu_Set4bppPixel(markerFrame, x, y, markerIndex);
+            ChooseBoxMenu_Set4bppPixel(markerFrame, x + 1, y, markerIndex);
+        }
+    }
+}
+
+static void ChooseBoxMenu_DestroyOverviewSprites(void)
+{
+    u8 i;
+
+    for (i = 0; i < ARRAY_COUNT(sChooseBoxMenu->overviewSprites); i++)
+    {
+        if (sChooseBoxMenu->overviewSprites[i])
+        {
+            DestroySprite(sChooseBoxMenu->overviewSprites[i]);
+            sChooseBoxMenu->overviewSprites[i] = NULL;
+        }
+
+        if (sChooseBoxMenu->overviewMarkerSprites[i])
+        {
+            DestroySprite(sChooseBoxMenu->overviewMarkerSprites[i]);
+            sChooseBoxMenu->overviewMarkerSprites[i] = NULL;
+        }
+    }
+}
+
+static void ChooseBoxMenu_LoadOverviewGroup(u8 groupBase)
+{
+    struct SpriteSheet baseSheet =
+    {
+        .data = sChooseBoxMenu->overviewBaseTiles,
+        .size = sizeof(sChooseBoxMenu->overviewBaseTiles),
+        .tag = GFXTAG_HGSS_BOX_THUMBNAIL,
+    };
+    struct SpritePalette basePalette =
+    {
+        .data = sChooseBoxMenu->overviewBasePal,
+        .tag = PALTAG_HGSS_BOX_THUMBNAIL,
+    };
+    struct SpriteSheet markerSheet =
+    {
+        .data = sChooseBoxMenu->overviewMarkerTiles,
+        .size = sizeof(sChooseBoxMenu->overviewMarkerTiles),
+        .tag = GFXTAG_HGSS_BOX_THUMBNAIL_MARKERS,
+    };
+    struct SpritePalette markerPalette =
+    {
+        .data = sChooseBoxMenu->overviewMarkerPal,
+        .tag = PALTAG_HGSS_BOX_THUMBNAIL_MARKERS,
+    };
+    u8 i;
+
+    ChooseBoxMenu_DestroyOverviewSprites();
+    ChooseBoxMenu_BuildOverviewGroup(groupBase);
+
+    FreeSpriteTilesByTag(GFXTAG_HGSS_BOX_THUMBNAIL);
+    FreeSpritePaletteByTag(PALTAG_HGSS_BOX_THUMBNAIL);
+    FreeSpriteTilesByTag(GFXTAG_HGSS_BOX_THUMBNAIL_MARKERS);
+    FreeSpritePaletteByTag(PALTAG_HGSS_BOX_THUMBNAIL_MARKERS);
+    LoadSpriteSheet(&baseSheet);
+    LoadSpritePalette(&basePalette);
+    LoadSpriteSheet(&markerSheet);
+    LoadSpritePalette(&markerPalette);
+
+    for (i = 0; i < 6; i++)
+    {
+        u8 boxId = groupBase + i;
+        u8 spriteId;
+
+        if (boxId >= TOTAL_BOXES_COUNT)
+            continue;
+
+        // ov14_021F4278: six cells, x=43+34*i. ov14_021F4BC0: y=84.
+        spriteId = CreateSprite(&sSpriteTemplate_HgssBoxThumbnail, 43 + 34 * i, 84, 1);
+        if (spriteId != MAX_SPRITES)
+        {
+            sChooseBoxMenu->overviewSprites[i] = &gSprites[spriteId];
+            StartSpriteAnim(sChooseBoxMenu->overviewSprites[i], i);
+            sChooseBoxMenu->overviewSprites[i]->data[0] = boxId;
+        }
+
+        // Same native cell bounds. Lower subpriority places the marker OBJ
+        // earlier in OAM, above the coincident base OBJ at equal OBJ priority.
+        spriteId = CreateSprite(&sSpriteTemplate_HgssBoxThumbnailMarkers, 43 + 34 * i, 84, 0);
+        if (spriteId != MAX_SPRITES)
+        {
+            sChooseBoxMenu->overviewMarkerSprites[i] = &gSprites[spriteId];
+            StartSpriteAnim(sChooseBoxMenu->overviewMarkerSprites[i], i);
+            sChooseBoxMenu->overviewMarkerSprites[i]->data[0] = boxId;
+        }
+    }
+
+    sChooseBoxMenu->overviewGroupBase = groupBase;
+}
+
 static void LoadChooseBoxMenuGfx(struct ChooseBoxMenu *menu)
 {
     const u8 *srcTiles = (const u8 *)sHgssChooseBoxNav_Gfx;
@@ -1104,17 +1338,6 @@ static void LoadChooseBoxMenuGfx(struct ChooseBoxMenu *menu)
     {
         .data = sHgssChooseBoxNav_Pal,
         .tag = PALTAG_HGSS_CHOOSE_BOX_NAV,
-    };
-    struct SpriteSheet overviewSheet =
-    {
-        .data = sHgssBoxThumbnailBase_Gfx,
-        .size = sizeof(sHgssBoxThumbnailBase_Gfx),
-        .tag = GFXTAG_HGSS_BOX_THUMBNAIL,
-    };
-    struct SpritePalette overviewPalette =
-    {
-        .data = sHgssBoxThumbnailBase_Pal,
-        .tag = PALTAG_HGSS_BOX_THUMBNAIL,
     };
     u8 frame;
     u8 row;
@@ -1147,15 +1370,8 @@ static void LoadChooseBoxMenuGfx(struct ChooseBoxMenu *menu)
     LoadSpriteSheet(&spriteSheet);
     LoadSpritePalette(&spritePalette);
 
-    // Phase 2a: wire the verified member-70 32x32 base live at the exact
-    // six-at-a-time HGSS overview positions. Dynamic box-content pixels are
-    // deliberately not synthesized here; their native palette semantics are
-    // handled in the following wiring pass.
-    FreeSpriteTilesByTag(GFXTAG_HGSS_BOX_THUMBNAIL);
-    FreeSpritePaletteByTag(PALTAG_HGSS_BOX_THUMBNAIL);
-    LoadSpriteSheet(&overviewSheet);
-    LoadSpritePalette(&overviewPalette);
-
+    // The authentic overview is rebuilt dynamically after sChooseBoxMenu is
+    // assigned, matching HGSS's member-70/member-75 runtime mutation path.
     sChooseBoxMenu = menu;
 }
 
@@ -1166,6 +1382,8 @@ static void FreeChooseBoxMenu(void)
     FreeSpritePaletteByTag(PALTAG_HGSS_CHOOSE_BOX_NAV);
     FreeSpriteTilesByTag(GFXTAG_HGSS_BOX_THUMBNAIL);
     FreeSpritePaletteByTag(PALTAG_HGSS_BOX_THUMBNAIL);
+    FreeSpriteTilesByTag(GFXTAG_HGSS_BOX_THUMBNAIL_MARKERS);
+    FreeSpritePaletteByTag(PALTAG_HGSS_BOX_THUMBNAIL_MARKERS);
     sChooseBoxMenu = NULL;
 }
 
@@ -1233,16 +1451,8 @@ static void ChooseBoxMenu_CreateSprites(u8 curBox)
     sChooseBoxMenu->active = TRUE;
     sChooseBoxMenu->previewActive = FALSE;
     sChooseBoxMenu->cancelPending = FALSE;
+    sChooseBoxMenu->overviewGroupBase = 0xFF;
 
-    // Authentic HGSS six-at-a-time box overview. ov14_021F4278 spaces the
-    // member-70 cells by 0x22 (34) pixels from x=43, and ov14_021F4BC0
-    // places the live overview row at y=84.
-    for (u8 i = 0; i < ARRAY_COUNT(sChooseBoxMenu->overviewSprites); i++)
-    {
-        spriteId = CreateSprite(&sSpriteTemplate_HgssBoxThumbnail, 43 + 34 * i, 84, 1);
-        if (spriteId != MAX_SPRITES)
-            sChooseBoxMenu->overviewSprites[i] = &gSprites[spriteId];
-    }
     ChooseBoxMenu_UpdateOverviewGroup();
 
     // HGSS native templates use centers x=12/y=28 and x=156/y=28 for 24x24
@@ -1295,14 +1505,7 @@ static void ChooseBoxMenu_DestroySprites(void)
         }
     }
 
-    for (i = 0; i < ARRAY_COUNT(sChooseBoxMenu->overviewSprites); i++)
-    {
-        if (sChooseBoxMenu->overviewSprites[i])
-        {
-            DestroySprite(sChooseBoxMenu->overviewSprites[i]);
-            sChooseBoxMenu->overviewSprites[i] = NULL;
-        }
-    }
+    ChooseBoxMenu_DestroyOverviewSprites();
 
     if (sChooseBoxMenu->monCountSprite)
     {
@@ -1354,19 +1557,10 @@ static void ChooseBoxMenu_UpdateHover(void)
 
 static void ChooseBoxMenu_UpdateOverviewGroup(void)
 {
-    u8 i;
     u8 groupBase = (sChooseBoxMenu->curBox / 6) * 6;
 
-    for (i = 0; i < ARRAY_COUNT(sChooseBoxMenu->overviewSprites); i++)
-    {
-        if (sChooseBoxMenu->overviewSprites[i])
-        {
-            // Retain the exact six-slot native grouping in live state. The
-            // following dynamic-content pass will use this box id to rebuild
-            // the sprite pixels exactly as HGSS does.
-            sChooseBoxMenu->overviewSprites[i]->data[0] = groupBase + i;
-        }
-    }
+    if (sChooseBoxMenu->overviewGroupBase != groupBase)
+        ChooseBoxMenu_LoadOverviewGroup(groupBase);
 }
 
 static void ChooseBoxMenu_PrintInfo(void)

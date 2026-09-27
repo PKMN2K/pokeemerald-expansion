@@ -68,13 +68,13 @@
     "overview_input": "ov14_021EE3C8",
     "behavior": "HGSS builds 18 content-sensitive 32x32 box thumbnails and presents six at a time with group navigation."
   },
-  "status": "phase 2a complete: authentic member-70 32x32 thumbnail bases are live as six HGSS-positioned OBJ sprites; runtime content/palette mutation is not yet synthesized",
-  "next": "Phase 2b: reproduce ov14_021F4958/ov14_021F4A64 content-sensitive pixel mutation and authenticated palette mapping for the six live thumbnails. Retain the current title-level chooser until the full native overview is proven functional.",
+  "status": "phase 2b complete: authentic HGSS member-70 thumbnails now rebuild live with native wallpaper mutation and member-75 body-color occupancy markers",
+  "next": "Runtime/build verification of the dynamic six-at-a-time overview, then phase 3 removal of the temporary title-level chooser equivalent only after the authenticated replacement is proven functional.",
   "live_integration": {
     "wired_base": true,
-    "dynamic_content_wired": false,
+    "dynamic_content_wired": true,
     "legacy_equivalent_removed": false,
-    "renderer": "six 32x32 GBA OBJ sprites using the verified member-70 base PNG",
+    "renderer": "six 32x32 HGSS overview cells rebuilt per visible group; GBA 4bpp adaptation uses coincident base/wallpaper and marker OBJ layers with exact source pixels/colors",
     "native_positions": [
       [
         43,
@@ -101,7 +101,39 @@
         84
       ]
     ],
-    "grouping": "six consecutive boxes; group base = floor(candidate_box / 6) * 6",
-    "fidelity_guard": "No synthetic wallpaper tint, Pokemon marker color, or replacement pixel is introduced in phase 2a. Extended DS runtime palette mapping is deferred to phase 2b."
+    "grouping": "six consecutive boxes; group base = floor(candidate_box / 6) * 6; nonexistent trailing expansion box ids are left blank",
+    "fidelity_guard": "No synthetic thumbnail pixels or colors are introduced. Member-70 visible pixels, member-75 wallpaper colors, ov14_021F8080 marker colors, native six-cell positions, and ov14_021F4A64 marker geometry are preserved.",
+    "wallpaper_mutation": {
+      "hgss_routine": "ov14_021F4958 -> ov14_021F46B0",
+      "source_placeholder_index": 8,
+      "source_placeholder_bgr555": "0x03E0",
+      "mapping": "wallpaper ids 0-15 use exact member-75 indices 16-31; ids 16-23 fold to 0-7 exactly as ov14_021E7930 does for overview thumbnails"
+    },
+    "marker_mutation": {
+      "hgss_routine": "ov14_021F4A64",
+      "layout": "6 columns x 5 rows",
+      "x_positions": [
+        10,
+        12,
+        14,
+        16,
+        18,
+        20
+      ],
+      "y_positions": [
+        11,
+        13,
+        15,
+        17,
+        19
+      ],
+      "marker_size": [
+        2,
+        1
+      ],
+      "body_color_lookup": "ov14_021F8080 + member-75 first palette bank",
+      "egg_rule": "Manaphy eggs use BLUE; all other eggs use WHITE"
+    },
+    "gba_palette_adaptation": "HGSS 8bpp base/wallpaper and 0x20+ marker indices are split into two coincident 4bpp OBJ layers. Palette indices are repacked only; BGR555 colors and visible pixel positions are unchanged."
   }
 }
