@@ -853,3 +853,25 @@ zero bytes had been inserted between the PLTE payload and its valid CRC. The
 repair removes only that stray padding, restoring normal PNG chunk alignment
 while preserving the complete palette, compressed IDAT payload, dimensions,
 and pixel data.
+
+
+## Authenticity-only asset policy
+
+As of the HGSS authenticity sweep, assets described merely as "HGSS-style" are
+not accepted as production HGSS sources. A production HGSS visual must be
+traceable to HeartGold/SoulSilver extraction data or be a 1:1 crop/recomposition
+of those verified pixels.
+
+The sweep removed:
+- the unverified third-party `graphics/battle_interface/hgss/` asset set,
+- custom Pokédex counter label/digit sheets and palettes,
+- the custom Pokédex stat-bar artwork,
+- synthetic Storage grids, party-slot borders, menu-row separators, message
+  accents, Yes/No cells, selection borders, and the hand-drawn box-title frame.
+
+Verified HGSS-derived Pokédex generators remain because they preserve extracted
+HGSS pixels and record source members/checksums. Storage uses zero generated
+descriptors until the corresponding `/a/0/1/9` member composition is verified.
+
+When no authentic HGSS equivalent has been verified, leave the HGSS layer
+unpopulated rather than inventing a visual substitute.
