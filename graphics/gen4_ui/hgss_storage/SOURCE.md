@@ -83,10 +83,11 @@ animation 3. NANR verification maps animation 1 to cell 0 (left normal),
 animation 2 to cell 1 then cell 0 (left press/release), animation 3 to cell 2
 (right normal), and animation 4 to cell 3 then cell 2 (right press/release).
 
-`verified/choose_box_nav.png` is a lossless 1:1 four-frame export of those
+`verified/choose_box_nav.png` is a lossless 1:1 four-frame indexed export of those
 24x24 authentic HGSS cells in the order left-normal, left-pressed,
-right-normal, right-pressed. No redraw, resampling, recoloring, or synthetic
-pixels are present. The verified controls are wired live as GBA OBJ sprites. The four 24x24 HGSS
+right-normal, right-pressed. NCER CEBK `shift=1` is applied to the OAM tile
+indices before reading member 66, matching the native Nitro cell mapping. No
+redraw, resampling, recoloring, or synthetic pixels are present. The verified controls are wired live as GBA OBJ sprites. The four 24x24 HGSS
 frames are copied 1:1 into transparent 32x32 hardware cells; left/right input
 uses the verified press/release frames. The former synthetic Choose Box cursor
 area and the repurposed legacy storage cursor path have now been removed. The

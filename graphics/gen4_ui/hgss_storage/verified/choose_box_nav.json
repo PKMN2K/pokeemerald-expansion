@@ -64,7 +64,7 @@
   },
   "export": {
     "file": "choose_box_nav.png",
-    "sha256": "2ea74d90ed7f325044dd6fb3f69f09076f4ec8d1b18c38e7fff8d4ef6cc4f0c4",
+    "sha256": "52037729eccc16ee57afa16ac597fb8171d8147b70c8e44c22f2c2d4f7ccbf4e",
     "size": [
       96,
       24
@@ -92,7 +92,9 @@
         "meaning": "right_pressed"
       }
     ],
-    "pixel_rule": "Exact NCGR+NCER+NCLR composite at 1:1 DS pixel scale; no redraw, resampling, recoloring, or synthetic pixels."
+    "pixel_rule": "Exact NCGR+NCER+NCLR composite at 1:1 DS pixel scale using the NCER CEBK tile-index shift; indexed PNG only, with no redraw, resampling, recoloring, or synthetic pixels.",
+    "png_color_type": "indexed_palette",
+    "ncer_tile_index_shift": 1
   },
   "status": "wired live; legacy chooser cursor/control equivalent removed",
   "live_integration": {
@@ -124,5 +126,6 @@
       "chooser-specific legacy cursor coordinate and priority handling",
       "chooser input dependency on legacy cursor movement completion"
     ]
-  }
+  },
+  "verification_note": "Corrected export applies CEBK shift=1 before NCGR tile lookup. The earlier RGBA export omitted that native NCER shift and was rejected by gbagfx; this indexed replacement is the verified native composition."
 }
