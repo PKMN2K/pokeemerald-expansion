@@ -152,6 +152,18 @@ panel uses BG palette bank 11 so the multi-move text-palette restore on bank 13
 cannot recolor the HGSS art. This completes the full authentic asset → wire live
 → remove legacy equivalent sequence for the Pokémon information panel.
 
+The next verified static role is the native HGSS Storage message window.
+Visual verification of the user's extracted `/a/0/1/9` gallery identifies
+NSCR 11 + NCGR 14 + NCLR 4 as the full-width 256x48 rounded message bar.
+`verified/message_window.png` is a lossless 1:1 4bpp-compatible indexed export:
+all five source colors and every source pixel are preserved with no crop,
+redrawing, resampling, or color changes. Its archive/member provenance is recorded
+in `verified/message_window.json`. This completes only the authentic-asset
+phase. The live Storage `WIN_MESSAGE` path still uses the engine-standard
+Emerald window frame, and the stale SWSH
+`graphics/pokemon_storage/swsh/message_window.png` file is deliberately left
+untouched until the later wire-live and remove-legacy phases.
+
 Do not restore compatibility fallbacks that draw approximated HGSS chrome.
 If an authentic role is not available yet, leave that HGSS layer empty and
 preserve only the underlying functional UI until the real asset is identified.

@@ -1,0 +1,53 @@
+{
+  "role": "message_window",
+  "classification": "static_ncgr_nclr_nscr_composition",
+  "source_archive": "/a/0/1/9",
+  "source_kind": "nds_rom",
+  "archive_sha256": "f7a1a97638959a685719049a0b780686edb68704777fead790b230e10ed1df4a",
+  "source_members": {
+    "nscr": {
+      "index": 11,
+      "raw_sha256": "2e6a28c968ce7f8ee992b8e78205729ead397f410f3e55d91f43d40c07cabc9c",
+      "decoded_sha256": "7aa8336c9e8dee58b4f28ff4f6528cb9bddaef4e2e2f271bb3e59d3b72ae3d96"
+    },
+    "ncgr": {
+      "index": 14,
+      "raw_sha256": "ee815971b93b9f2ad99009fef4b7e2313eb6564b1ba0b570b612aaa4969453af",
+      "decoded_sha256": "afbfab4897a5f39aa96b6030877d243d0a67d8bd18f9a7295385f2c7feeb0651"
+    },
+    "nclr": {
+      "index": 4,
+      "raw_sha256": "aff0f6a18a333e68f1d6094d06e161fa41192b882f432ae615537c37f164b20b",
+      "decoded_sha256": "aff0f6a18a333e68f1d6094d06e161fa41192b882f432ae615537c37f164b20b"
+    }
+  },
+  "visual_verification": {
+    "extracted_reference": "PC_Box/screens/member_011_screen__tiles_014__pal_004.png",
+    "reference_png_sha256": "41ab3d183cf07e2fe3f082e3286eaed985bc3a166b6093eb09e99ed08c4b5852",
+    "dimensions": [
+      256,
+      48
+    ],
+    "content": "native HGSS Pokemon Storage full-width rounded message bar"
+  },
+  "export": {
+    "file": "message_window.png",
+    "sha256": "ba4f858ca2f535d70b609cfddcb0ab79e92a0178dbe302e988543e0097f1c621",
+    "size": [
+      256,
+      48
+    ],
+    "png_color_type": "indexed_palette",
+    "colors": 5,
+    "png_bit_depth": 4,
+    "pixel_rule": "Lossless 1:1 re-index of the verified NSCR 11 + NCGR 14 + NCLR 4 composite; no crop, redraw, resampling, or color changes."
+  },
+  "current_live_equivalent": {
+    "code": "WIN_MESSAGE -> LoadUserWindowBorderGfx(WIN_MESSAGE, 192, BG_PLTT_ID(14)) -> PrintMessage()",
+    "visual_source": "engine-standard Emerald window frame tiles",
+    "stale_swsh_asset": "graphics/pokemon_storage/swsh/message_window.png",
+    "stale_swsh_asset_live": false
+  },
+  "status": "authentic HGSS message-window asset identified and imported; live wiring deferred",
+  "next": "Wire verified/message_window.png live for WIN_MESSAGE without touching the yes/no role, then remove the Storage message window's legacy Emerald/SWSH equivalents."
+}
