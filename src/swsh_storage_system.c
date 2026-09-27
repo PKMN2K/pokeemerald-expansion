@@ -5952,12 +5952,24 @@ static void RenderBoxTitleCentered(const u8 *boxName)
     windowId = AddWindow(&winTemplate);
     FillWindowPixelBuffer(windowId, PIXEL_FILL(0));
 
-    // The exported title strip is 64x16; use palette slot 13 for an HGSS-style tab frame.
-    FillWindowPixelRect(windowId, PIXEL_FILL(13), 2, 0, 60, 1);
-    FillWindowPixelRect(windowId, PIXEL_FILL(13), 2, 15, 60, 1);
-    FillWindowPixelRect(windowId, PIXEL_FILL(13), 0, 2, 1, 12);
-    FillWindowPixelRect(windowId, PIXEL_FILL(13), 63, 2, 1, 12);
-    FillWindowPixelRect(windowId, PIXEL_FILL(14), 4, 14, 56, 1);
+    // Build a compact HGSS-style title tab directly into the 64x16 sprite strip.
+    // Slot 13 is the tab fill and slot 14 is the outline/shadow; the palette
+    // swaps these tones when the title itself is selected.
+    FillWindowPixelRect(windowId, PIXEL_FILL(13), 2, 2, 60, 12);
+    FillWindowPixelRect(windowId, PIXEL_FILL(13), 4, 1, 56, 14);
+
+    // Stepped corners keep the tab closer to the rounded Gen 4 PC header shape.
+    FillWindowPixelRect(windowId, PIXEL_FILL(14), 4, 0, 56, 1);
+    FillWindowPixelRect(windowId, PIXEL_FILL(14), 2, 1, 2, 1);
+    FillWindowPixelRect(windowId, PIXEL_FILL(14), 60, 1, 2, 1);
+    FillWindowPixelRect(windowId, PIXEL_FILL(14), 1, 2, 1, 12);
+    FillWindowPixelRect(windowId, PIXEL_FILL(14), 62, 2, 1, 12);
+    FillWindowPixelRect(windowId, PIXEL_FILL(14), 2, 14, 2, 1);
+    FillWindowPixelRect(windowId, PIXEL_FILL(14), 60, 14, 2, 1);
+    FillWindowPixelRect(windowId, PIXEL_FILL(14), 4, 15, 56, 1);
+
+    // Add the subtle lower lip used by HGSS interface tabs.
+    FillWindowPixelRect(windowId, PIXEL_FILL(14), 5, 13, 54, 1);
 
     tileData1 = (u8 *)GetWindowAttribute(windowId, WINDOW_TILE_DATA);
     tileData2 = tileData1 + winTemplate.width * TILE_SIZE_4BPP;
