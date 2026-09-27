@@ -68,7 +68,6 @@ static const u16 sTextWindows_Pal[]           = INCGFX_U16("graphics/pokemon_sto
 #include "data/hgss_storage_choose_box.inc.h"
 
 static const u32 sBoxTitleArrow_Gfx[]         = INCGFX_U32("graphics/pokemon_storage/swsh/box_title_arrow.png", ".4bpp.smol");
-static const u32 sChooseBoxMenu_Gfx[]         = INCGFX_U32("graphics/pokemon_storage/swsh/choose_box_menu.png", ".4bpp.smol");
 static const u32 sCursor_Gfx[]                = INCGFX_U32("graphics/pokemon_storage/swsh/cursor.png", ".4bpp.smol");
 static const u16 sCursor_Pal[]                = INCGFX_U16("graphics/pokemon_storage/swsh/cursor.png", ".gbapal");
 static const u32 sGenderIcons_Gfx[]           = INCGFX_U32("graphics/pokemon_storage/swsh/gender_icons.png", ".4bpp.smol");
@@ -511,41 +510,6 @@ static const struct BgTemplate sBgTemplates[] =
         .priority = 3,
         .baseTile = 0
     },
-};
-
-// ============================================================================
-// Choose Box Menu Sprites
-// ============================================================================
-
-static const struct OamData sOamData_ChooseBoxMenu =
-{
-    .y = 0,
-    .affineMode = ST_OAM_AFFINE_OFF,
-    .objMode = ST_OAM_OBJ_NORMAL,
-    .mosaic = FALSE,
-    .bpp = ST_OAM_4BPP,
-    .size = SPRITE_SIZE(32x32),
-    .x = 0,
-    .matrixNum = 0,
-    .shape = SPRITE_SHAPE(32x32),
-    .tileNum = 0,
-    .priority = 1,
-    .paletteNum = 0,
-    .affineParam = 0,
-};
-
-static const struct CompressedSpriteSheet sSpriteSheet_ChooseBoxMenu =
-{
-    .data = sChooseBoxMenu_Gfx,
-    .size = (32 * 32) / 2,
-    .tag = GFXTAG_BOX_SELECTION,
-};
-    
-static const struct SpriteTemplate sSpriteTemplate_ChooseBoxMenu =
-{
-    .tileTag = GFXTAG_BOX_SELECTION,
-    .paletteTag = PALTAG_MISC_3,
-    .oam = &sOamData_ChooseBoxMenu,
 };
 
 // ============================================================================
