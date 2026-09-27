@@ -44,7 +44,9 @@ The party panel is now a verified authentic HGSS role: NSCR 8 + NCGR 14 +
 NCLR 4 reconstruct an 88x144 panel that matches the extracted reference
 pixel-for-pixel. The lossless GBA pack preserves the source indexed 4bpp tile
 pixels, flip flags, and BGR555 palette values; the existing Storage renderer
-loads that generated descriptor directly over the legacy party-panel region.
+loads that generated descriptor into the live BG1 party-panel region. The
+legacy SWSH BG1 tilemap cells at columns 2-12, rows 0-17 are zeroed at source,
+so no SWSH party-panel fallback remains underneath the authentic HGSS art.
 
 The Choose Box path still accepts verified assets only. Its generated include
 remains a zero descriptor until the corresponding authentic HGSS members are
