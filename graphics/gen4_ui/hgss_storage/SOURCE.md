@@ -257,10 +257,16 @@ Simple). The final eight authenticated special wallpapers are deliberately named
 Special 1 through Special 8 in the picker rather than assigning guessed theme or
 Pokemon names that are not established by the asset extraction.
 
-This completes the wire-live phase only. Legacy SWSH wallpaper declarations,
-graphics, and obsolete wallpaper-loading plumbing have intentionally not been
-deleted in this commit; that removal is the next required phase of the
-authentic HGSS asset -> wire live -> remove legacy equivalent sequence.
+The wallpaper role has now completed the full authentic HGSS asset -> wire live
+-> remove legacy equivalent sequence. The obsolete SWSH wallpaper directory
+(20 PNG/BIN pairs) and its `bg2.bin` box-area tilemap are deleted. Storage no
+longer declares or loads that SWSH BG2 map, and the old heap-backed
+`wallpaperTiles` / StartLoadWallpaperGfx / UpdateWallpaperGfx plumbing is gone.
+
+BG2 remains only as an explicitly blank functional overlay used by the existing
+Storage transparency/blending behavior; it contains no SWSH wallpaper or box
+art. The live visual wallpaper layer is exclusively the authenticated HGSS BG3
+composition selected by wallpaper ID.
 
 Do not restore compatibility fallbacks that draw approximated HGSS chrome.
 If an authentic role is not available yet, leave that HGSS layer empty and

@@ -37,12 +37,6 @@ enum {
     WALLPAPER_COUNT
 };
 
-#define WALLPAPER_SPECIAL_1 WALLPAPER_DAYCARE
-#define WALLPAPER_SPECIAL_2 WALLPAPER_CONTEST
-#define WALLPAPER_SPECIAL_3 WALLPAPER_CLASSIC
-#define WALLPAPER_SPECIAL_4 WALLPAPER_CLASSIC2
-#define MAX_DEFAULT_WALLPAPER WALLPAPER_FLYING
-
 // ============================================================================
 // Structs
 // ============================================================================
@@ -60,7 +54,6 @@ struct StorageMessage
 static const u32 sSwShStorage_Gfx[]           = INCGFX_U32("graphics/pokemon_storage/swsh/tiles.png", ".4bpp.smol");
 static const u16 sSwShStorage_Pal[]           = INCGFX_U16("graphics/pokemon_storage/swsh/tiles.png", ".gbapal");
 static const u32 sSwShStorage_BG1_Tilemap[]   = INCGFX_U32("graphics/pokemon_storage/swsh/bg1.bin", ".smolTM");
-static const u32 sSwShStorage_BG2_Tilemap[]   = INCGFX_U32("graphics/pokemon_storage/swsh/bg2.bin", ".smolTM");
 // Authentic HGSS Storage Pokemon-info panel: /a/0/1/9 NSCR 9 + NCGR 14 + NCLR 4.
 static const u32 sHgssMonInfoPanel_Gfx[]       = INCGFX_U32("graphics/gen4_ui/hgss_storage/verified/mon_info_panel.png", ".4bpp");
 static const u16 sHgssMonInfoPanel_Pal[]       = INCGFX_U16("graphics/gen4_ui/hgss_storage/verified/mon_info_panel.png", ".gbapal");

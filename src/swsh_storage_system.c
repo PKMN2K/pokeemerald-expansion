@@ -456,7 +456,6 @@ struct PokemonStorageSystemData
     u8 scrollState;
     u8 scrollToBoxId;
     s8 scrollDirection;
-    u8 *wallpaperTiles;
     struct Sprite *movingMonSprite;
     struct Sprite *partySprites[PARTY_SIZE];
     struct Sprite *boxMonsSprites[IN_BOX_COUNT];
@@ -546,7 +545,7 @@ struct PokemonStorageSystemData
     u16 *typeIconTilesPtr[2];
     u8 ALIGNED(4) tileBuffer[MON_PIC_SIZE * MAX_MON_PIC_FRAMES];
     u8 ALIGNED(4) itemIconBuffer[0x800];
-    u16 wallpaperBgTilemapBuffer[0x400];
+    u16 boxOverlayTilemapBuffer[0x400];
     u16 hgssWallpaperTilemapBuffer[0x400];
     u8 displayMenuTilemapBuffer[0x800];
     u16 infoTilemapBuffer[0x800];
@@ -803,8 +802,6 @@ static void RenderBoxTitleCentered(const u8 *);
 static void SetWallpaperForCurrentBox(u8);
 static bool8 DoWallpaperGfxChange(void);
 static void LoadWallpaperGfx(u8, s8);
-static void StartLoadWallpaperGfx(u8, s8);
-static void UpdateWallpaperGfx(u8, s8);
 static bool32 WaitForWallpaperGfxLoad(void);
 static void AddWallpaperMenu(void);
 
@@ -3491,11 +3488,7 @@ static void LoadPokeStorageMenuGfx(void)
     SetBgTilemapBuffer(1, sStorage->displayMenuTilemapBuffer);
     ShowBg(1);
     ScheduleBgCopyTilemapToVram(1);
-	
-    DecompressDataWithHeaderWram(sSwShStorage_BG2_Tilemap, sStorage->wallpaperBgTilemapBuffer);
-    SetBgTilemapBuffer(2, sStorage->wallpaperBgTilemapBuffer);
-    ShowBg(2);
-    ScheduleBgCopyTilemapToVram(2);
+
 }
 
 static bool8 InitPokeStorageWindows(void)
@@ -5607,13 +5600,13 @@ static void Task_InitBox(u8 taskId)
     switch (task->tState)
     {
     case 0:
-        task->tDmaIdx = RequestDma3Fill(0, sStorage->wallpaperBgTilemapBuffer, sizeof(sStorage->wallpaperBgTilemapBuffer), 1);
+        task->tDmaIdx = RequestDma3Fill(0, sStorage->boxOverlayTilemapBuffer, sizeof(sStorage->boxOverlayTilemapBuffer), 1);
         break;
     case 1:
         if (CheckForSpaceForDma3Request(task->tDmaIdx) == -1)
             return;
 
-        SetBgTilemapBuffer(2, sStorage->wallpaperBgTilemapBuffer);
+        SetBgTilemapBuffer(2, sStorage->boxOverlayTilemapBuffer);
         ShowBg(2);
         break;
     case 2:
@@ -5623,11 +5616,6 @@ static void Task_InitBox(u8 taskId)
         if (!WaitForWallpaperGfxLoad())
             return;
 
-        if (sStorage->wallpaperTiles != NULL)
-        {
-            Free(sStorage->wallpaperTiles);
-            sStorage->wallpaperTiles = NULL;
-        }
         InitBoxTitle(task->tBoxId);
         InitBoxMonSprites(task->tBoxId);
         UpdateHgssStorageSlotHighlight();
@@ -5724,16 +5712,10 @@ static bool8 ScrollToBox(void)
         if (!WaitForWallpaperGfxLoad())
             return TRUE;
 
-        if (sStorage->wallpaperTiles != NULL)
-        {
-            Free(sStorage->wallpaperTiles);
-            sStorage->wallpaperTiles = NULL;
-        }
 		
         InitBoxMonIconScroll(sStorage->scrollToBoxId, sStorage->scrollDirection);
 		
-		StartLoadWallpaperGfx(sStorage->scrollToBoxId, 0);
-		UpdateWallpaperGfx(sStorage->scrollToBoxId, 0);
+		LoadWallpaperGfx(sStorage->scrollToBoxId, 0);
 		
 		BeginNormalPaletteFade(1 << 1, 0, 16, 0, RGB_WHITEALPHA);
 		
@@ -5764,11 +5746,6 @@ static bool8 ScrollToBox(void)
         if (!WaitForWallpaperGfxLoad())
             return TRUE;
 
-        if (sStorage->wallpaperTiles != NULL)
-        {
-            Free(sStorage->wallpaperTiles);
-            sStorage->wallpaperTiles = NULL;
-        }
 
         if (iconsScrolling)
             return TRUE;
@@ -5830,11 +5807,6 @@ static bool8 DoWallpaperGfxChange(void)
     case 2:
         if (WaitForWallpaperGfxLoad() == TRUE)
         {
-            if (sStorage->wallpaperTiles != NULL)
-            {
-                Free(sStorage->wallpaperTiles);
-                sStorage->wallpaperTiles = NULL;
-            }
             BeginNormalPaletteFade(1 << 1, 0, 16, 0, RGB_WHITEALPHA);
             sStorage->wallpaperChangeState++;
         }
@@ -5851,27 +5823,6 @@ static bool8 DoWallpaperGfxChange(void)
 }
 
 static void LoadWallpaperGfx(u8 boxId, s8 direction)
-{
-    StartLoadWallpaperGfx(boxId, direction);
-    UpdateWallpaperGfx(boxId, direction);
-}
-
-static void StartLoadWallpaperGfx(u8 boxId, s8 direction)
-{
-    (void)boxId;
-    (void)direction;
-
-    // The live wallpaper is now supplied entirely by the verified HGSS BG3
-    // loader. Keep this allocation guard until the legacy wallpaper storage
-    // plumbing is removed in the following cleanup phase.
-    if (sStorage->wallpaperTiles != NULL)
-    {
-        Free(sStorage->wallpaperTiles);
-        sStorage->wallpaperTiles = NULL;
-    }
-}
-
-static void UpdateWallpaperGfx(u8 boxId, s8 direction)
 {
     (void)direction;
     LoadHgssStorageWallpaper(GetBoxWallpaper(boxId));
