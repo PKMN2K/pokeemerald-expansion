@@ -185,12 +185,18 @@ question is re-rendered over the panel using NSCR 12's cream/dark/gray palette,
 and the existing Yes/No text/cursor window is placed inside the panel at the
 right. Input and cursor behavior are unchanged.
 
-For this wire-live phase only, `CreateYesNoMenu` still initializes the menu and
-therefore still executes its Emerald standard-frame drawing internally. That
-frame is completely overwritten before BG0 is presented, so no legacy frame is
-visible. Generic Storage context menus remain untouched on their existing frame
-path. The next phase removes the Yes/No role's legacy frame plumbing without
-changing those context menus.
+The Yes/No role is now fully detached from the Emerald standard-frame path.
+`ShowYesNoWindow` creates only its functional text/cursor window with
+`AddWindow`, prints the existing runtime Yes/No labels, and initializes the
+same two-choice menu cursor directly. Input continues through
+`Menu_ProcessInputNoWrap`; the local HGSS window is removed without calling
+the standard-frame eraser. No `CreateYesNoMenu`, standard-frame draw, or
+standard-frame clear remains in the Storage Yes/No path.
+
+The base tile 192 / palette 14 standard frame resources remain loaded solely for
+the still-unconverted generic Storage context menus, whose behavior is unchanged.
+This completes the full authentic asset → wire live → remove legacy equivalent
+sequence for the Storage Yes/No confirmation panel.
 
 Do not restore compatibility fallbacks that draw approximated HGSS chrome.
 If an authentic role is not available yet, leave that HGSS layer empty and

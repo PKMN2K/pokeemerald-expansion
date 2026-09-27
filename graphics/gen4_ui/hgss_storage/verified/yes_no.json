@@ -44,13 +44,13 @@
     "pixel_rule": "Lossless 1:1 re-index of NSCR 12 + NCGR 14 + NCLR 4; no crop, redraw, resampling, or color changes."
   },
   "current_live_equivalent": {
-    "code": "ShowYesNoWindow() -> CreateYesNoMenu(&sYesNoWindowTemplate, 192, 14, 0)",
-    "visual_source": "engine-standard Emerald frame tiles at BG tile 192 / palette 14",
-    "shared_with": "generic Storage context menus",
-    "status": "still live"
+    "status": "removed from Yes/No role",
+    "former_code": "ShowYesNoWindow() -> CreateYesNoMenu(&sYesNoWindowTemplate, 192, 14, ...)",
+    "former_visual_source": "engine-standard Emerald frame tiles at BG tile 192 / palette 14",
+    "remaining_users": "generic Storage context menus only"
   },
-  "status": "wired live: authentic HGSS Storage Yes/No confirmation panel now replaces the visible standard frame; legacy menu-frame plumbing retained only for the next cleanup phase",
-  "next": "Detach ShowYesNoWindow from CreateYesNoMenu's Emerald standard-frame rendering while preserving identical input/cursor behavior and leaving generic context menus on their existing frame path.",
+  "status": "complete: authentic HGSS Storage Yes/No panel live; Emerald standard-frame creation/erasure removed from the Yes/No role",
+  "next": "Continue to the next remaining Storage UI role using authentic HGSS asset -> wire live -> remove legacy equivalent.",
   "live_integration": {
     "renderer": "BG0 tile composition + existing WIN_MESSAGE question text + existing Yes/No menu window",
     "source": "verified/yes_no.png (NSCR 12 + NCGR 14 + NCLR 4)",
@@ -76,9 +76,11 @@
       "height": 4,
       "paletteNum": 10
     },
-    "input_cursor_behavior": "unchanged; CreateYesNoMenu + Menu_MoveCursorNoWrapAround remain temporarily",
+    "input_cursor_behavior": "preserved with InitMenuInUpperLeftCornerNormal + Menu_ProcessInputNoWrap",
     "legacy_standard_frame_visible": false,
-    "legacy_standard_frame_plumbing_still_present": true,
-    "generic_context_menus_unchanged": true
+    "legacy_standard_frame_plumbing_still_present": false,
+    "generic_context_menus_unchanged": true,
+    "window_lifecycle": "local sHgssYesNoWindowId; AddWindow/RemoveWindow without standard-frame draw or clear",
+    "standard_frame_tiles_remaining_for": "generic Storage context menus only"
   }
 }

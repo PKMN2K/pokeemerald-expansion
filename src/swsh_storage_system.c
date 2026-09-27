@@ -590,6 +590,7 @@ EWRAM_DATA static u8 sCursorMode = 0;
 EWRAM_DATA static bool8 sJustOpenedBag = 0;
 EWRAM_DATA static bool8 sRefreshDisplayMonGfx = FALSE;
 EWRAM_DATA static struct HgssMarkingsMenu *sMarkMenu = NULL;
+EWRAM_DATA static u8 sHgssYesNoWindowId = WINDOW_NONE;
 
 // Main tasks
 static void Task_InitPokeStorage(u8);
@@ -862,6 +863,7 @@ static bool8 PrintDisplayMonInfo(void);
 static void FreePokeStorageData(void);
 static bool8 InitPokeStorageWindows(void);
 static void ShowYesNoWindow(s8);
+static s8 ProcessHgssYesNoInput(void);
 static void PrintMessage(u8 id);
 
 // Tilemap utility
@@ -2417,7 +2419,7 @@ static void Task_ReleaseMon(u8 taskId)
         sStorage->state++;
         // fallthrough
     case 1:
-        switch (Menu_ProcessInputNoWrapClearOnChoose())
+        switch (ProcessHgssYesNoInput())
         {
         case MENU_B_PRESSED:
         case  1: // No
@@ -2935,7 +2937,7 @@ static void Task_CloseBoxWhileHoldingItem(u8 taskId)
         sStorage->state = 1;
         break;
     case 1:
-        switch (Menu_ProcessInputNoWrapClearOnChoose())
+        switch (ProcessHgssYesNoInput())
         {
         case MENU_B_PRESSED:
         case 1: // No
@@ -3294,7 +3296,7 @@ static void Task_OnBPressed(u8 taskId)
         }
         break;
     case 2:
-        switch (Menu_ProcessInputNoWrapClearOnChoose())
+        switch (ProcessHgssYesNoInput())
         {
         case 0:
             ClearBottomWindow();
@@ -4334,8 +4336,8 @@ static void InitPokeStorageBg0(void)
 {
     SetGpuReg(REG_OFFSET_BG0CNT, BGCNT_PRIORITY(0) | BGCNT_CHARBASE(0) | BGCNT_SCREENBASE(29) | BGCNT_TXT256x512);
     SetBgTilemapBuffer(0, sStorage->infoTilemapBuffer);
-    // Standard frame tiles remain only for the still-unconverted yes/no and
-    // generic context menus. The HGSS WIN_MESSAGE path does not use them.
+    // Standard frame tiles remain only for still-unconverted generic context
+    // menus. HGSS message and Yes/No roles no longer use this frame path.
     LoadUserWindowBorderGfxOnBg(0, 192, BG_PLTT_ID(14));
     RestoreHgssMonInfoPanel();
     sStorage->bg0_Y = 0;
@@ -4490,22 +4492,25 @@ static void PrintMessage(u8 id)
 
 static void ShowYesNoWindow(s8 cursorPos)
 {
-    u8 yesNoWindowId;
-
     ClearMonInfoTilemap();
 
-    // Keep the existing menu state/input plumbing for this phase. Its standard
-    // frame is legacy-only and is overwritten immediately by the authentic
-    // HGSS confirmation panel below.
-    CreateYesNoMenu(&sYesNoWindowTemplate, 192, 14, 0);
-    Menu_MoveCursorNoWrapAround(cursorPos);
-    yesNoWindowId = GetYesNoWindowId();
+    // Create only the functional text/cursor window. Do not call
+    // CreateYesNoMenu: that helper always draws an Emerald standard frame.
+    sHgssYesNoWindowId = AddWindow(&sYesNoWindowTemplate);
+    FillWindowPixelBuffer(sHgssYesNoWindowId, PIXEL_FILL(1));
+    AddTextPrinterParameterized(sHgssYesNoWindowId,
+                                FONT_NORMAL,
+                                gText_YesNo,
+                                8,
+                                1,
+                                TEXT_SKIP_DRAW,
+                                NULL);
+    InitMenuInUpperLeftCornerNormal(sHgssYesNoWindowId, 2, cursorPos);
 
     DrawHgssYesNoPanel();
 
-    // NSCR 12 uses palette index 1 for its cream interior (unlike NSCR 11,
-    // whose exported message panel uses index 0). Re-render the question text
-    // against the Yes/No palette so the full confirmation remains readable.
+    // NSCR 12 uses palette index 1 for its cream interior. Re-render the
+    // question text against the authentic panel palette.
     FillWindowPixelBuffer(WIN_MESSAGE, PIXEL_FILL(1));
     AddTextPrinterParameterized4(WIN_MESSAGE,
                                  FONT_NORMAL,
@@ -4519,11 +4524,24 @@ static void ShowYesNoWindow(s8 cursorPos)
     PutWindowTilemap(WIN_MESSAGE);
     CopyWindowToVram(WIN_MESSAGE, COPYWIN_GFX);
 
-    // Reassert the choice window tilemap after the HGSS panel replaced the
-    // legacy frame cells. Its existing Yes/No text and cursor remain intact.
-    PutWindowTilemap(yesNoWindowId);
-    CopyWindowToVram(yesNoWindowId, COPYWIN_GFX);
+    PutWindowTilemap(sHgssYesNoWindowId);
+    CopyWindowToVram(sHgssYesNoWindowId, COPYWIN_GFX);
     ScheduleBgCopyTilemapToVram(0);
+}
+
+static s8 ProcessHgssYesNoInput(void)
+{
+    s8 result = Menu_ProcessInputNoWrap();
+
+    if (result != MENU_NOTHING_CHOSEN && sHgssYesNoWindowId != WINDOW_NONE)
+    {
+        ClearWindowTilemap(sHgssYesNoWindowId);
+        RemoveWindow(sHgssYesNoWindowId);
+        sHgssYesNoWindowId = WINDOW_NONE;
+        ScheduleBgCopyTilemapToVram(0);
+    }
+
+    return result;
 }
 
 static void ClearBottomWindow(void)
