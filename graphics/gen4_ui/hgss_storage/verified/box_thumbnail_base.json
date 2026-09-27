@@ -34,13 +34,14 @@
   },
   "export": {
     "file": "box_thumbnail_base.png",
-    "sha256": "b485fc0bff1567facca345fe496a9093b431ed07bc0a5936fd9301e833c1a197",
+    "sha256": "6e85a338de8cc97049494b0b27a7e9b3318d2d00124bd6fdbd35d098c7441458",
     "size": [
       32,
       32
     ],
     "source": "member_070_tiles.png",
-    "pixel_rule": "Byte-for-byte copy of the user-preserved HeartGold extraction; no redraw, crop, resampling, recoloring, or synthetic pixels."
+    "pixel_rule": "Byte-for-byte copy of the user-preserved HeartGold extraction; no redraw, crop, resampling, recoloring, or synthetic pixels.",
+    "png_encoding": "indexed 4bpp palette; exact rendered RGBA pixels preserved; HGSS placeholder remains palette index 8"
   },
   "nitro_geometry": {
     "ncgr_bpp": 8,
