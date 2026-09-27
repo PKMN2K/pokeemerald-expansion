@@ -225,6 +225,11 @@ static const u16 *const sHgssStorageWallpaperPal[WALLPAPER_COUNT] =
 static const u32 sHgssChooseBoxNav_Gfx[] = INCGFX_U32("graphics/gen4_ui/hgss_storage/verified/choose_box_nav.png", ".4bpp");
 static const u16 sHgssChooseBoxNav_Pal[] = INCGFX_U16("graphics/gen4_ui/hgss_storage/verified/choose_box_nav.png", ".gbapal");
 
+// Authentic HGSS box-overview thumbnail base.
+// /a/0/1/9 members 70-73; verified NCER cell is exactly 32x32.
+static const u32 sHgssBoxThumbnailBase_Gfx[] = INCGFX_U32("graphics/gen4_ui/hgss_storage/verified/box_thumbnail_base.png", ".4bpp");
+static const u16 sHgssBoxThumbnailBase_Pal[] = INCGFX_U16("graphics/gen4_ui/hgss_storage/verified/box_thumbnail_base.png", ".gbapal");
+
 // Authentic HGSS normal Storage hand pointer: NANR animation 14,
 // NCER cells 13 and 14, 20 ticks per frame.
 static const u32 sHgssStorageCursor_Gfx[] = INCGFX_U32("graphics/gen4_ui/hgss_storage/verified/cursor.png", ".4bpp");
@@ -622,6 +627,36 @@ static const struct SpriteTemplate sSpriteTemplate_HgssChooseBoxNav =
     .paletteTag = PALTAG_HGSS_CHOOSE_BOX_NAV,
     .oam = &sOamData_HgssChooseBoxNav,
     .anims = sAnims_HgssChooseBoxNav,
+};
+
+// ============================================================================
+// Authentic HGSS Box-Overview Thumbnail Base
+// ============================================================================
+
+static const struct OamData sOamData_HgssBoxThumbnail =
+{
+    .shape = SPRITE_SHAPE(32x32),
+    .size = SPRITE_SIZE(32x32),
+    .priority = 1,
+};
+
+static const union AnimCmd sAnim_HgssBoxThumbnail[] =
+{
+    ANIMCMD_FRAME(0, 4),
+    ANIMCMD_END
+};
+
+static const union AnimCmd *const sAnims_HgssBoxThumbnail[] =
+{
+    sAnim_HgssBoxThumbnail,
+};
+
+static const struct SpriteTemplate sSpriteTemplate_HgssBoxThumbnail =
+{
+    .tileTag = GFXTAG_HGSS_BOX_THUMBNAIL,
+    .paletteTag = PALTAG_HGSS_BOX_THUMBNAIL,
+    .oam = &sOamData_HgssBoxThumbnail,
+    .anims = sAnims_HgssBoxThumbnail,
 };
 
 // ============================================================================

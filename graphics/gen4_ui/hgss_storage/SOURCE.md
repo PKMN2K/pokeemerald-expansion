@@ -469,3 +469,25 @@ Phase 2 must wire the authentic six-thumbnail overview live while retaining the
 current title-level chooser as a fallback underneath it. Only after that native
 overview is proven functional may the non-native chooser presentation be
 removed in phase 3.
+
+
+## Authentic HGSS box-overview thumbnails — phase 2a
+
+The verified member-70 thumbnail base is now live in the Choose Box interaction.
+Six 32x32 OBJ sprites use the untouched
+`verified/box_thumbnail_base.png` pixels and the verified PNG palette. Their
+centers use the exact HGSS runtime overview coordinates recovered from overlay
+14: x = 43 + 34*n for n=0..5, y = 84. The live objects are also assigned the
+native six-box group corresponding to the current candidate box.
+
+This is intentionally **phase 2a**, not the completed wiring phase. HGSS
+`ov14_021F4958` mutates the 8bpp member-70 working copy with wallpaper and
+Pokémon-content palette indices before upload. Those extended DS OBJ palette
+indices are not represented by the static NCLR 71 export alone, so this commit
+does not invent substitute colors or fake content markers. The current
+title-level chooser, navigation controls, title preview, and count remain live
+as the fallback underneath the authentic overview bases.
+
+The next step is phase 2b: reproduce the authenticated runtime thumbnail pixel
+mutation/palette mapping on GBA, then prove all six content-sensitive thumbnails
+live. No legacy chooser presentation may be removed before that is complete.

@@ -68,6 +68,40 @@
     "overview_input": "ov14_021EE3C8",
     "behavior": "HGSS builds 18 content-sensitive 32x32 box thumbnails and presents six at a time with group navigation."
   },
-  "status": "phase 1 complete: authentic HGSS box-overview thumbnail base is classified and documented; no runtime wiring or legacy removal",
-  "next": "Wire the authentic six-thumbnail overview live while retaining the current title-level chooser. Remove the non-native chooser presentation only in a later phase after the native overview is proven functional."
+  "status": "phase 2a complete: authentic member-70 32x32 thumbnail bases are live as six HGSS-positioned OBJ sprites; runtime content/palette mutation is not yet synthesized",
+  "next": "Phase 2b: reproduce ov14_021F4958/ov14_021F4A64 content-sensitive pixel mutation and authenticated palette mapping for the six live thumbnails. Retain the current title-level chooser until the full native overview is proven functional.",
+  "live_integration": {
+    "wired_base": true,
+    "dynamic_content_wired": false,
+    "legacy_equivalent_removed": false,
+    "renderer": "six 32x32 GBA OBJ sprites using the verified member-70 base PNG",
+    "native_positions": [
+      [
+        43,
+        84
+      ],
+      [
+        77,
+        84
+      ],
+      [
+        111,
+        84
+      ],
+      [
+        145,
+        84
+      ],
+      [
+        179,
+        84
+      ],
+      [
+        213,
+        84
+      ]
+    ],
+    "grouping": "six consecutive boxes; group base = floor(candidate_box / 6) * 6",
+    "fidelity_guard": "No synthetic wallpaper tint, Pokemon marker color, or replacement pixel is introduced in phase 2a. Extended DS runtime palette mapping is deferred to phase 2b."
+  }
 }

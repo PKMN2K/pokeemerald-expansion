@@ -249,6 +249,7 @@ enum {
     PALTAG_HGSS_CHOOSE_BOX_NAV,
     PALTAG_HGSS_WALLPAPER_SELECTOR,
     PALTAG_HGSS_STORAGE_CURSOR,
+    PALTAG_HGSS_BOX_THUMBNAIL,
 };
 
 enum {
@@ -267,6 +268,7 @@ enum {
 	GFXTAG_PKRS_ICON,
     GFXTAG_HGSS_CHOOSE_BOX_NAV,
     GFXTAG_HGSS_WALLPAPER_SELECTOR,
+    GFXTAG_HGSS_BOX_THUMBNAIL,
 };
 
 // The maximum number of Pokémon icons that can appear on-screen.
@@ -373,6 +375,7 @@ struct ChooseBoxMenu
 {
     struct Sprite *monCountSprite;
     struct Sprite *navSprites[2];
+    struct Sprite *overviewSprites[6];
     u8 curBox;
     bool8 active;
     bool8 savedCursorInvisible;
@@ -642,6 +645,7 @@ static void ChooseBoxMenu_CreateSprites(u8);
 static void ChooseBoxMenu_DestroySprites(void);
 static void ChooseBoxMenu_MoveCursor(s8);
 static void ChooseBoxMenu_UpdateHover(void);
+static void ChooseBoxMenu_UpdateOverviewGroup(void);
 static void ChooseBoxMenu_PrintInfo(void);
 
 // Options menus
@@ -1101,6 +1105,17 @@ static void LoadChooseBoxMenuGfx(struct ChooseBoxMenu *menu)
         .data = sHgssChooseBoxNav_Pal,
         .tag = PALTAG_HGSS_CHOOSE_BOX_NAV,
     };
+    struct SpriteSheet overviewSheet =
+    {
+        .data = sHgssBoxThumbnailBase_Gfx,
+        .size = sizeof(sHgssBoxThumbnailBase_Gfx),
+        .tag = GFXTAG_HGSS_BOX_THUMBNAIL,
+    };
+    struct SpritePalette overviewPalette =
+    {
+        .data = sHgssBoxThumbnailBase_Pal,
+        .tag = PALTAG_HGSS_BOX_THUMBNAIL,
+    };
     u8 frame;
     u8 row;
     u8 col;
@@ -1132,6 +1147,15 @@ static void LoadChooseBoxMenuGfx(struct ChooseBoxMenu *menu)
     LoadSpriteSheet(&spriteSheet);
     LoadSpritePalette(&spritePalette);
 
+    // Phase 2a: wire the verified member-70 32x32 base live at the exact
+    // six-at-a-time HGSS overview positions. Dynamic box-content pixels are
+    // deliberately not synthesized here; their native palette semantics are
+    // handled in the following wiring pass.
+    FreeSpriteTilesByTag(GFXTAG_HGSS_BOX_THUMBNAIL);
+    FreeSpritePaletteByTag(PALTAG_HGSS_BOX_THUMBNAIL);
+    LoadSpriteSheet(&overviewSheet);
+    LoadSpritePalette(&overviewPalette);
+
     sChooseBoxMenu = menu;
 }
 
@@ -1140,6 +1164,8 @@ static void FreeChooseBoxMenu(void)
     FreeSpriteTilesByTag(GFXTAG_BOX_SELECTION_PER_30);
     FreeSpriteTilesByTag(GFXTAG_HGSS_CHOOSE_BOX_NAV);
     FreeSpritePaletteByTag(PALTAG_HGSS_CHOOSE_BOX_NAV);
+    FreeSpriteTilesByTag(GFXTAG_HGSS_BOX_THUMBNAIL);
+    FreeSpritePaletteByTag(PALTAG_HGSS_BOX_THUMBNAIL);
     sChooseBoxMenu = NULL;
 }
 
@@ -1208,6 +1234,17 @@ static void ChooseBoxMenu_CreateSprites(u8 curBox)
     sChooseBoxMenu->previewActive = FALSE;
     sChooseBoxMenu->cancelPending = FALSE;
 
+    // Authentic HGSS six-at-a-time box overview. ov14_021F4278 spaces the
+    // member-70 cells by 0x22 (34) pixels from x=43, and ov14_021F4BC0
+    // places the live overview row at y=84.
+    for (u8 i = 0; i < ARRAY_COUNT(sChooseBoxMenu->overviewSprites); i++)
+    {
+        spriteId = CreateSprite(&sSpriteTemplate_HgssBoxThumbnail, 43 + 34 * i, 84, 1);
+        if (spriteId != MAX_SPRITES)
+            sChooseBoxMenu->overviewSprites[i] = &gSprites[spriteId];
+    }
+    ChooseBoxMenu_UpdateOverviewGroup();
+
     // HGSS native templates use centers x=12/y=28 and x=156/y=28 for 24x24
     // cells. The live GBA objects are transparent-padded 32x32 cells, so shift
     // their OBJ centers by +4/+4 to preserve those exact visible bounds.
@@ -1258,6 +1295,15 @@ static void ChooseBoxMenu_DestroySprites(void)
         }
     }
 
+    for (i = 0; i < ARRAY_COUNT(sChooseBoxMenu->overviewSprites); i++)
+    {
+        if (sChooseBoxMenu->overviewSprites[i])
+        {
+            DestroySprite(sChooseBoxMenu->overviewSprites[i]);
+            sChooseBoxMenu->overviewSprites[i] = NULL;
+        }
+    }
+
     if (sChooseBoxMenu->monCountSprite)
     {
         DestroySprite(sChooseBoxMenu->monCountSprite);
@@ -1302,7 +1348,25 @@ static void ChooseBoxMenu_MoveCursor(s8 delta)
 
 static void ChooseBoxMenu_UpdateHover(void)
 {
+    ChooseBoxMenu_UpdateOverviewGroup();
     ChooseBoxMenu_PrintInfo();
+}
+
+static void ChooseBoxMenu_UpdateOverviewGroup(void)
+{
+    u8 i;
+    u8 groupBase = (sChooseBoxMenu->curBox / 6) * 6;
+
+    for (i = 0; i < ARRAY_COUNT(sChooseBoxMenu->overviewSprites); i++)
+    {
+        if (sChooseBoxMenu->overviewSprites[i])
+        {
+            // Retain the exact six-slot native grouping in live state. The
+            // following dynamic-content pass will use this box id to rebuild
+            // the sprite pixels exactly as HGSS does.
+            sChooseBoxMenu->overviewSprites[i]->data[0] = groupBase + i;
+        }
+    }
 }
 
 static void ChooseBoxMenu_PrintInfo(void)
