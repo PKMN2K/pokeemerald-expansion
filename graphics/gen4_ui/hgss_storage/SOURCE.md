@@ -534,3 +534,37 @@ asset -> wire live -> remove legacy equivalent. No synthetic thumbnail pixels,
 legacy chooser preview, or repurposed Storage cursor remains in the Choose Box
 presentation.
 
+## Authentic HGSS gender indicator — phase 1
+
+The next unresolved Storage info-panel accessory is the Pokémon gender
+indicator. HGSS does **not** source this role from a standalone bitmap or from
+the PC Box graphics archive `/a/0/1/9`. Overlay 14 renders it through the
+normal text/font path, so the authentic replacement must preserve the original
+font glyph rather than invent a sprite equivalent.
+
+The provenance chain is now verified end-to-end. `ov14_021E5D78` opens Storage
+message bank 24; `files/msgdata/msg/msg_0024.gmm` entries 82 and 83 contain
+the special male/female characters `㊚` and `㊛`. `charmap.txt` maps those
+characters to codes 0x00EE and 0x00EF. Storage allocates font ID 4 in
+`ov14_021F4ED0`; HGSS `src/font.c` maps font ID 4 to
+`NARC_graphic_font` member 4. `ov14_021F5114` selects message 0x52 for male
+and 0x53 for female and sends it through `ov14_021F4F84`.
+
+The font-member header identifies 16x16 glyph cells with 64 compressed bytes
+per glyph. After the engine's exact `DecompressGlyphTile` mapping, both
+gender glyphs are 9 pixels wide. Male is glyph index 237 at byte offset 15184;
+female is glyph index 238 at byte offset 15248.
+
+`verified/gender_glyphs.png` is a native-resolution 32x16 indexed export:
+the left 16x16 cell is male and the right 16x16 cell is female. Its pixels are
+derived directly from `graphic/font` member 4 and use the original member-7
+font palette. No redraw, resampling, recoloring, or synthetic geometry is
+present. The HGSS text-color constants are preserved exactly: male
+`0x00070800` uses palette foreground 7 / shadow 8 / background 0, while
+female `0x00030400` uses foreground 3 / shadow 4 / background 0.
+
+This is phase 1 only. The current expansion `sGenderIcons_Gfx` path remains
+live until the exact HGSS font-derived glyph presentation is wired and verified.
+Only then may the legacy `graphics/pokemon_storage/swsh/gender_icons.png`
+equivalent and its sprite-specific path be removed.
+
