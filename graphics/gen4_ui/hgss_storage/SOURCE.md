@@ -73,18 +73,13 @@ surfaces, not an all-box chooser background.
 
 The static role binder still does not accept a fabricated `choose_box` or
 `box_grid` background, because the authentic overview is sprite-driven.
-Phase 2b now has the authenticated content-sensitive thumbnail presentation
-live. The existing carousel is deliberately retained for the verification gate;
-its legacy-equivalent removal is phase 3 and must happen only after the dynamic
-replacement is proven functional in build/runtime testing.
-
-The native composition now includes live candidate previews. Left/right uses
-the existing storage box-scroll path to transition the real candidate wallpaper
-and Pokemon icons while `gPokemonStoragePtr->currentBox` remains unchanged.
-A commits the already-previewed candidate; B first scrolls the visual preview
-back to the saved current box and then cancels. This prevents a preview from
-silently changing save-state selection and avoids replaying the transition after
-confirmation.
+Phase 3 is now complete after the full CI verification gate passed. The
+temporary title-carousel/live-preview fallback has been removed: browsing with
+the authenticated HGSS controls changes only the overview candidate, thumbnail
+group, title, and count. It no longer scrolls the underlying full Storage box
+for every candidate. A confirmed different box performs the normal Storage
+transition once after the chooser closes; B cancels immediately without a
+preview rollback.
 
 The authentic Choose Box navigation/control chrome is now identified and
 imported. HGSS overlay 14 loads /a/0/1/9 members 66-69 as one sprite bundle:
@@ -503,3 +498,39 @@ as the fallback underneath the authentic overview bases.
 The next step is phase 2b: reproduce the authenticated runtime thumbnail pixel
 mutation/palette mapping on GBA, then prove all six content-sensitive thumbnails
 live. No legacy chooser presentation may be removed before that is complete.
+
+## Authentic HGSS box-overview thumbnails — phase 2b
+
+The authenticated content-sensitive thumbnail renderer is live. Each visible
+member-70 base is rebuilt with the exact member-75 wallpaper color mutation and
+the native ov14_021F4A64 occupancy-marker geometry/body-color mapping. The GBA
+renderer keeps the 32x32 authentic base/wallpaper pixels and uses a centered
+16x16 marker OBJ only as a lossless hardware adaptation for HGSS marker palette
+indices above the GBA 4bpp range.
+
+The six thumbnails remain grouped at the native x=43+34*n, y=84 coordinates.
+The authentic members 66-69 navigation controls, box title, and box count stay
+live as functional HGSS/runtime information. During this phase the existing
+full-box preview scroll was retained only as a verification fallback.
+
+
+## Authentic HGSS box-overview thumbnails — phase 3
+
+The full CI verification gate passed across Emerald, FireRed, LeafGreen,
+release, Gen-4 UI validation/compile, documentation validation, and the general
+test job. The temporary title-carousel/live-candidate preview path is therefore
+removed.
+
+Left/Right now changes the candidate inside the authenticated six-at-a-time
+overview without scrolling the underlying wallpaper and Pokemon icon field.
+The obsolete `previewActive`/`cancelPending` state and preview-specific
+`SetUpScrollToBoxFrom` path are gone. A confirms the candidate; if it differs
+from the current box, the chooser closes and the normal Storage box transition
+runs once before committing the new current box. B cancels immediately, so no
+rollback scroll is necessary.
+
+This completes the required sequence for the box-overview role: authentic HGSS
+asset -> wire live -> remove legacy equivalent. No synthetic thumbnail pixels,
+legacy chooser preview, or repurposed Storage cursor remains in the Choose Box
+presentation.
+

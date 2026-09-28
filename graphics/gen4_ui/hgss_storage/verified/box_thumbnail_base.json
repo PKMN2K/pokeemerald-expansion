@@ -69,12 +69,12 @@
     "overview_input": "ov14_021EE3C8",
     "behavior": "HGSS builds 18 content-sensitive 32x32 box thumbnails and presents six at a time with group navigation."
   },
-  "status": "phase 2b complete: authentic HGSS member-70 thumbnails now rebuild live with native wallpaper mutation and member-75 body-color occupancy markers",
-  "next": "Runtime/build verification of the dynamic six-at-a-time overview, then phase 3 removal of the temporary title-level chooser equivalent only after the authenticated replacement is proven functional.",
+  "status": "phase 3 complete: authenticated HGSS six-at-a-time box overview owns destination browsing after the full CI verification gate passed",
+  "next": "Advance to the next Storage UI role audit using authentic HGSS asset -> wire live -> remove legacy equivalent.",
   "live_integration": {
     "wired_base": true,
     "dynamic_content_wired": true,
-    "legacy_equivalent_removed": false,
+    "legacy_equivalent_removed": true,
     "renderer": "six 32x32 HGSS overview cells rebuilt per visible group; GBA 4bpp adaptation uses 32x32 base/wallpaper OBJ cells plus centered 16x16 marker OBJ cells with exact source pixels/colors",
     "native_positions": [
       [
@@ -135,6 +135,8 @@
       "body_color_lookup": "ov14_021F8080 + member-75 first palette bank",
       "egg_rule": "Manaphy eggs use BLUE; all other eggs use WHITE"
     },
-    "gba_palette_adaptation": "HGSS 8bpp base/wallpaper and 0x20+ marker indices are split into two centered 4bpp OBJ layers. The marker layer stores only the native occupied middle region (base-local x=8..23,y=8..23), reducing OBJ VRAM while leaving every visible BGR555 color and pixel position unchanged."
+    "gba_palette_adaptation": "HGSS 8bpp base/wallpaper and 0x20+ marker indices are split into two centered 4bpp OBJ layers. The marker layer stores only the native occupied middle region (base-local x=8..23,y=8..23), reducing OBJ VRAM while leaving every visible BGR555 color and pixel position unchanged.",
+    "selection_flow": "Left/Right changes the authenticated overview candidate without full-box preview scrolling; A confirms and runs the normal Storage transition once if the destination differs; B cancels immediately.",
+    "verification_gate": "Full CI passed before phase-3 legacy removal: Emerald, FireRed, LeafGreen, release, Gen-4 UI, docs validation, and general test."
   }
 }

@@ -383,8 +383,6 @@ struct ChooseBoxMenu
     u8 overviewGroupBase;
     bool8 active;
     bool8 savedCursorInvisible;
-    bool8 previewActive;
-    bool8 cancelPending;
     u8 ALIGNED(4) monCountTiles[256];
     u8 ALIGNED(4) navTiles[4 * 32 * 32 / 2];
     u8 ALIGNED(4) overviewBaseTiles[6 * 32 * 32 / 2];
@@ -836,9 +834,8 @@ static void DrawHgssStoragePartySlots(void);
 static void UpdateHgssStorageSlotHighlight(void);
 static void Task_InitBox(u8);
 static void SetUpScrollToBox(u8);
-static void SetUpScrollToBoxFrom(u8, u8);
 static bool8 ScrollToBox(void);
-static s8 DetermineBoxScrollDirectionFrom(u8, u8);
+static s8 DetermineBoxScrollDirection(u8);
 static void SetCurrentBox(u8);
 static struct BoxPokemon *GetCursorBoxMon(void);
 
@@ -1398,36 +1395,9 @@ static void FreeChooseBoxMenu(void)
 
 static u8 HandleChooseBoxMenuInput(void)
 {
-    if (sChooseBoxMenu->previewActive)
-    {
-        if (ScrollToBox())
-            return BOXID_NONE_CHOSEN;
-
-        sChooseBoxMenu->previewActive = FALSE;
-        ChooseBoxMenu_PrintInfo();
-
-        if (sChooseBoxMenu->cancelPending)
-        {
-            sChooseBoxMenu->cancelPending = FALSE;
-            return BOXID_CANCELED;
-        }
-    }
-
     if (JOY_NEW(B_BUTTON))
     {
         PlaySE(SE_SELECT);
-
-        if (sChooseBoxMenu->curBox != StorageGetCurrentBox())
-        {
-            u8 fromBox = sChooseBoxMenu->curBox;
-            sChooseBoxMenu->curBox = StorageGetCurrentBox();
-            sChooseBoxMenu->cancelPending = TRUE;
-            sChooseBoxMenu->previewActive = TRUE;
-            SetUpScrollToBoxFrom(fromBox, sChooseBoxMenu->curBox);
-            ChooseBoxMenu_UpdateHover();
-            return BOXID_NONE_CHOSEN;
-        }
-
         return BOXID_CANCELED;
     }
 
@@ -1458,8 +1428,6 @@ static void ChooseBoxMenu_CreateSprites(u8 curBox)
 
     sChooseBoxMenu->curBox = curBox;
     sChooseBoxMenu->active = TRUE;
-    sChooseBoxMenu->previewActive = FALSE;
-    sChooseBoxMenu->cancelPending = FALSE;
     sChooseBoxMenu->overviewGroupBase = 0xFF;
 
     ChooseBoxMenu_UpdateOverviewGroup();
@@ -1540,20 +1508,12 @@ static void ChooseBoxMenu_DestroySprites(void)
 
 static void ChooseBoxMenu_MoveCursor(s8 delta)
 {
-    u8 fromBox = sChooseBoxMenu->curBox;
-
     if (delta < 0)
         sChooseBoxMenu->curBox = (sChooseBoxMenu->curBox == 0)
             ? TOTAL_BOXES_COUNT - 1
             : sChooseBoxMenu->curBox - 1;
     else if (delta > 0)
         sChooseBoxMenu->curBox = (sChooseBoxMenu->curBox + 1) % TOTAL_BOXES_COUNT;
-
-    if (sChooseBoxMenu->curBox != fromBox)
-    {
-        sChooseBoxMenu->previewActive = TRUE;
-        SetUpScrollToBoxFrom(fromBox, sChooseBoxMenu->curBox);
-    }
 
     ChooseBoxMenu_UpdateHover();
 }
@@ -3433,18 +3393,20 @@ static void Task_JumpBox(u8 taskId)
             break;
         default:
             if (sStorage->newCurrBoxId != BOXID_CANCELED)
-            {
                 PlaySE(SE_SELECT);
-
-                // The candidate is already the live preview. Commit it only on
-                // confirmation, then return directly to the main storage task.
-                SetCurrentBox(sStorage->newCurrBoxId);
-            }
 
             ClearBottomWindow();
             ChooseBoxMenu_DestroySprites();
             FreeChooseBoxMenu();
-            sStorage->state = 4;
+
+            // The authenticated HGSS overview owns candidate selection.
+            // Only a confirmed different box enters the normal Storage
+            // transition; browsing thumbnails never scrolls the legacy
+            // full-box presentation underneath the chooser.
+            if (sStorage->newCurrBoxId == BOXID_CANCELED || sStorage->newCurrBoxId == StorageGetCurrentBox())
+                sStorage->state = 4;
+            else
+                sStorage->state = 2;
             break;
         }
         break;
@@ -6019,12 +5981,7 @@ static void Task_InitBox(u8 taskId)
 
 static void SetUpScrollToBox(u8 boxId)
 {
-    SetUpScrollToBoxFrom(StorageGetCurrentBox(), boxId);
-}
-
-static void SetUpScrollToBoxFrom(u8 fromBoxId, u8 boxId)
-{
-    s8 direction = DetermineBoxScrollDirectionFrom(fromBoxId, boxId);
+    s8 direction = DetermineBoxScrollDirection(boxId);
 
     sStorage->scrollSpeed = (direction > 0) ? 6 : -6;
     sStorage->scrollTimer = 32;
@@ -6142,9 +6099,10 @@ static bool8 ScrollToBox(void)
     return TRUE;
 }
 
-static s8 DetermineBoxScrollDirectionFrom(u8 currentBox, u8 boxId)
+static s8 DetermineBoxScrollDirection(u8 boxId)
 {
     u8 i;
+    u8 currentBox = StorageGetCurrentBox();
 
     for (i = 0; currentBox != boxId; i++)
     {
