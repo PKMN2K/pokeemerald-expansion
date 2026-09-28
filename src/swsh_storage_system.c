@@ -249,6 +249,7 @@ enum {
     PALTAG_HGSS_CHOOSE_BOX_NAV,
     PALTAG_HGSS_WALLPAPER_SELECTOR,
     PALTAG_HGSS_STORAGE_CURSOR,
+    PALTAG_HGSS_GENDER_GLYPHS,
     PALTAG_HGSS_BOX_THUMBNAIL,
     PALTAG_HGSS_BOX_THUMBNAIL_MARKERS,
 };
@@ -3777,6 +3778,7 @@ static bool8 InitPalettesAndSprites(void)
         break;
     case 7:
         LoadSpritePalettes(sSpritePal_StatLabels);
+        LoadSpritePalettes(sSpritePal_HgssGenderGlyphs);
         sStorage->graphicsLoadState++;
         break;
     case 8:
@@ -3867,7 +3869,10 @@ static void UpdateGenderIconSprite(u8 fontId)
     if (sStorage->displayMon.gender != MON_GENDERLESS && !sStorage->displayMon.isEgg)
     {
         u16 nicknameWidth = GetStringWidth(fontId, sStorage->displayMon.nickname, 0);
-        u8 spriteX = 6 + nicknameWidth + 1 + 4 + (136 * sStorage->monInfoTilemapId);
+        // The old expansion symbol was 8 px wide. HGSS font ID 4 uses a
+        // 16x16 glyph cell, so keep the same left edge by moving the sprite
+        // center 4 px right.
+        u8 spriteX = 6 + nicknameWidth + 1 + 8 + (136 * sStorage->monInfoTilemapId);
         u8 spriteY = 32;
 
         if (sStorage->genderIconSprite == NULL)

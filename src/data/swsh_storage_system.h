@@ -252,7 +252,18 @@ static const u16 sHgssBoxThumbnailMarkerColors[10] =
 static const u32 sHgssStorageCursor_Gfx[] = INCGFX_U32("graphics/gen4_ui/hgss_storage/verified/cursor.png", ".4bpp");
 static const u16 sHgssStorageCursor_Pal[] = INCGFX_U16("graphics/gen4_ui/hgss_storage/verified/cursor.png", ".gbapal");
 
-static const u32 sGenderIcons_Gfx[]           = INCGFX_U32("graphics/pokemon_storage/swsh/gender_icons.png", ".4bpp.smol");
+// Authentic HGSS Storage gender symbols. HGSS renders message-bank entries
+// 82/83 through font ID 4; this OBJ sheet preserves those exact 16x16 glyph
+// pixels and member-7 colors, repacked vertically only for GBA 1D OBJ tile
+// order (male first, female second).
+static const u32 sGenderIcons_Gfx[] = INCGFX_U32("graphics/gen4_ui/hgss_storage/verified/gender_glyphs_obj.png", ".4bpp.smol");
+static const u16 sHgssGenderGlyphs_Pal[16] =
+{
+    0x3713, 0x296B, 0x5EF5, 0x089D,
+    0x5EBF, 0x0F45, 0x47B3, 0x7DC0,
+    0x76EF, 0x5E5F, 0x737F, 0x0000,
+    0x0000, 0x0000, 0x0000, 0x7FFF,
+};
 static const u16 sMarkings_Pal[]              = INCGFX_U16("graphics/pokemon_storage/swsh/markings.pal", ".gbapal");
 
 // Authentic HGSS markings panel: /a/0/1/9 NSCR 10 + NCGR 14 + NCLR 4.
@@ -922,6 +933,15 @@ static const struct SpritePalette sSpritePal_StatLabels[] =
     {},
 };
 
+static const struct SpritePalette sSpritePal_HgssGenderGlyphs[] =
+{
+    {
+        .data = sHgssGenderGlyphs_Pal,
+        .tag = PALTAG_HGSS_GENDER_GLYPHS,
+    },
+    {},
+};
+
 static const struct OamData sOamData_Cursor =
 {
     .shape = SPRITE_SHAPE(32x32),
@@ -1019,23 +1039,23 @@ static const struct OamData sOamData_GenderIcons =
     .objMode = ST_OAM_OBJ_NORMAL,
     .mosaic = FALSE,
     .bpp = ST_OAM_4BPP,
-    .shape = SPRITE_SHAPE(8x16),
+    .shape = SPRITE_SHAPE(16x16),
     .x = 0,
     .matrixNum = 0,
-    .size = SPRITE_SIZE(8x16),
+    .size = SPRITE_SIZE(16x16),
     .tileNum = 0,
     .priority = 0,
-    .paletteNum = 7,
+    .paletteNum = 0,
     .affineParam = 0,
 };
 
 static const union AnimCmd sSpriteAnim_GenderFemale[] = {
-    ANIMCMD_FRAME(0, 0, FALSE, FALSE),
+    ANIMCMD_FRAME(4, 0, FALSE, FALSE),
     ANIMCMD_END
 };
 
 static const union AnimCmd sSpriteAnim_GenderMale[] = {
-    ANIMCMD_FRAME(2, 0, FALSE, FALSE),
+    ANIMCMD_FRAME(0, 0, FALSE, FALSE),
     ANIMCMD_END
 };
 
@@ -1047,14 +1067,14 @@ static const union AnimCmd *const sSpriteAnimTable_GenderIcons[] = {
 static const struct CompressedSpriteSheet sSpriteSheet_GenderIcons =
 {
     .data = sGenderIcons_Gfx,
-    .size = (8 * 16 * 2) / 2,
+    .size = (16 * 16 * 2) / 2,
     .tag = GFXTAG_GENDER_ICON
 };
 
 static const struct SpriteTemplate sSpriteTemplate_GenderIcons =
 {
     .tileTag = GFXTAG_GENDER_ICON,
-    .paletteTag = PALTAG_MISC_2,
+    .paletteTag = PALTAG_HGSS_GENDER_GLYPHS,
     .oam = &sOamData_GenderIcons,
     .anims = sSpriteAnimTable_GenderIcons,
     .images = NULL,

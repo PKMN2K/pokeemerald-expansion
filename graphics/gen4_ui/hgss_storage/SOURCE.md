@@ -568,3 +568,25 @@ live until the exact HGSS font-derived glyph presentation is wired and verified.
 Only then may the legacy `graphics/pokemon_storage/swsh/gender_icons.png`
 equivalent and its sprite-specific path be removed.
 
+
+## Authentic HGSS gender indicator — phase 2
+
+The verified HGSS gender glyphs are now wired into the live Storage info panel.
+The live `sGenderIcons_Gfx` source is
+`verified/gender_glyphs_obj.png`, a GBA-OBJ packing derivative of
+`verified/gender_glyphs.png`. It contains the same exact two 16x16 HGSS font
+cells and palette indices; the only change is layout from horizontal
+male/female cells to vertical male/female frames so each 16x16 frame is
+contiguous in GBA 1D OBJ tile order.
+
+The live sprite now uses a 16x16 OAM cell and a dedicated
+`PALTAG_HGSS_GENDER_GLYPHS` palette containing the exact
+`graphic/font` member-7 BGR555 values. Female selects tile offset 4 and male
+selects tile offset 0. The sprite center is shifted four pixels right relative
+to the former 8x16 expansion icon so the visible left edge remains anchored
+after the nickname.
+
+This is phase 2 only. The old
+`graphics/pokemon_storage/swsh/gender_icons.png` file is deliberately retained
+as the legacy equivalent until the new HGSS glyph path passes build/runtime
+verification. Phase 3 is its removal.
