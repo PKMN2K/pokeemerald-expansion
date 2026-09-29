@@ -83,20 +83,30 @@
     "live": true,
     "gfx_live": false,
     "palette_live_for_stat_labels": false,
-    "palette_still_live_for_unrelated_roles": true,
-    "unrelated_palette_consumers": [
-      "PALTAG_MISC_1 box title",
-      "PALTAG_MISC_3 choose-box count",
-      "PALTAG_MISC_2 remains allocated through the shared legacy palette table"
-    ]
+    "palette_still_live_for_unrelated_roles": false,
+    "unrelated_palette_consumers": [],
+    "palette_dependency_resolved": true,
+    "file_still_present_for_verification": true,
+    "replacement_palette": {
+      "symbol": "sHgssFontMember7_Pal",
+      "source": "retail HGSS NARC_graphic_font member 7",
+      "source_git_blob_sha": "0a4e5fb8d4c7de046ffa7a164ad45fc0e45558b3",
+      "consumers": [
+        "PALTAG_MISC_1",
+        "PALTAG_MISC_2",
+        "PALTAG_MISC_3",
+        "HGSS gender glyph palette"
+      ]
+    }
   },
   "adaptation_rule": "Replace the legacy sprite-label presentation with dynamic text following HGSS Summary behavior. Use authentic HGSS font/text presentation and the verified Nature color-state semantics; do not draw HGSS-style stat-label sprites.",
-  "status": "phase 2 complete: authentic HGSS font-derived stat labels are live on BG0 with HGSS Nature color behavior; legacy stat-label graphics are no longer loaded or rendered; stat_labels.png remains temporarily because unrelated misc sprite palettes still depend on its palette data",
-  "next": "Verify the HGSS stat-label path in CI. Before phase-3 file deletion, replace the unrelated PALTAG_MISC_1/2/3 legacy palette dependency with authentic HGSS palettes for their own roles.",
+  "status": "phase 2 verified by gen4-ui CI #610; all runtime references to the legacy stat_labels.png graphics and palette are now removed. PALTAG_MISC_1/2/3 are seeded from the verified retail HGSS font member-7 palette. The legacy file remains in the repository only for one verification cycle before phase-3 deletion.",
+  "next": "Run CI on the palette-decoupling commit. If gen4-ui passes, delete graphics/pokemon_storage/swsh/stat_labels.png and mark the Nature stat-label pipeline phase 3 complete.",
   "pipeline": {
     "authentic_hgss_behavior_verified": true,
     "wired_live": true,
-    "legacy_equivalent_removed": false
+    "legacy_equivalent_removed": false,
+    "legacy_palette_dependency_resolved": true
   },
   "live_adaptation": {
     "asset": "graphics/gen4_ui/hgss_storage/verified/stat_labels_hgss_font.4bpp",

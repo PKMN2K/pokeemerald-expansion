@@ -1014,3 +1014,22 @@ to unrelated `PALTAG_MISC_1/2/3` consumers (box title / choose-box count).
 Deleting that file before those roles receive authentic HGSS palettes would
 break unrelated UI, so phase 3 must wait for that dependency to be replaced and
 verified.
+
+
+## Authentic HGSS Nature stat labels — palette decoupling
+
+CI #610's dedicated `gen4-ui` job passed the phase-2 stat-label renderer.
+The last obstacle to removing `graphics/pokemon_storage/swsh/stat_labels.png`
+was not the stat-label renderer itself, but the old file's palette being reused
+as a seed for unrelated `PALTAG_MISC_1/2/3` allocations.
+
+That coupling is now removed. The three misc palette tags are initialized from
+the exact retail HGSS font member-7 palette already verified for the Storage
+gender glyphs. The box-title palette buffer likewise starts from that authentic
+HGSS palette before its existing runtime role-specific entries are applied.
+
+No live C/header reference to `sStatLabels_Pal`,
+`sSpritePal_StatLabels`, or
+`graphics/pokemon_storage/swsh/stat_labels.png` remains. The file is deliberately
+left in the tree for one CI verification cycle only; phase 3 deletion follows
+once this decoupled path passes the dedicated Gen 4 UI gate.

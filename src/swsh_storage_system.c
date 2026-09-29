@@ -3780,7 +3780,7 @@ static bool8 InitPalettesAndSprites(void)
         sStorage->graphicsLoadState++;
         break;
     case 6:
-        LoadSpritePalettes(sSpritePal_StatLabels);
+        LoadSpritePalettes(sSpritePal_HgssFontShared);
         LoadSpritePalettes(sSpritePal_HgssGenderGlyphs);
         LoadSpritePalettes(sSpritePal_HgssShinyStar);
         LoadSpritePalettes(sSpritePal_HgssPokerusSymbol);
@@ -6182,7 +6182,7 @@ static void InitBoxTitle(u8 boxId)
     u16 i;
     struct SpriteSheet spriteSheet = {sStorage->boxTitleTiles, 0x200, GFXTAG_BOX_TITLE};
 
-    CpuCopy16(sStatLabels_Pal, sStorage->boxTitlePal, sizeof(sStorage->boxTitlePal));
+    CpuCopy16(sHgssFontMember7_Pal, sStorage->boxTitlePal, sizeof(sStorage->boxTitlePal));
 
     if (sCursorArea == CURSOR_AREA_BOX_TITLE || (sChooseBoxMenu != NULL && sChooseBoxMenu->active))
     {

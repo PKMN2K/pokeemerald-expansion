@@ -257,7 +257,7 @@ static const u16 sHgssStorageCursor_Pal[] = INCGFX_U16("graphics/gen4_ui/hgss_st
 // pixels and member-7 colors, repacked vertically only for GBA 1D OBJ tile
 // order (male first, female second).
 static const u32 sHgssGenderGlyphs_Gfx[] = INCGFX_U32("graphics/gen4_ui/hgss_storage/verified/gender_glyphs_obj.png", ".4bpp.smol");
-static const u16 sHgssGenderGlyphs_Pal[16] =
+static const u16 sHgssFontMember7_Pal[16] =
 {
     0x3713, 0x296B, 0x5EF5, 0x089D,
     0x5EBF, 0x0F45, 0x47B3, 0x7DC0,
@@ -296,9 +296,6 @@ static const u16 sHgssNatureStatText_Pal[] =
     0x7DC0, // font member 7 index 7: Nature-increased shadow
     0x76EF, // font member 7 index 8: Nature-decreased shadow
 };
-// Temporary legacy palette dependency only: PALTAG_MISC_1/2/3 are still used
-// by unrelated box-title / box-count roles. No stat-label graphics use it.
-static const u16 sStatLabels_Pal[] = INCGFX_U16("graphics/pokemon_storage/swsh/stat_labels.png", ".gbapal");
 // Authentic HGSS Storage type badges: exact /a/0/0/8 32x16 character data
 // plus the authentic-source Fairy composite. The three palette banks are the
 // exact retail HGSS /a/0/0/8 member 0x4A payload.
@@ -969,21 +966,22 @@ static const struct SpriteTemplate sSpriteTemplate_BoxTitle =
 // Cursor Sprites
 // ============================================================================
 
-// PALTAG_MISC_1/2/3 now serve only unrelated box-title / box-count roles.
-// Their legacy palette coupling is intentionally retained until those roles
-// receive authentic HGSS replacements; no stat-label sprite uses these tags.
-static const struct SpritePalette sSpritePal_StatLabels[] =
+// PALTAG_MISC_1/2/3 serve unrelated dynamic text/title roles. Seed them
+// from the exact retail HGSS font member-7 palette instead of the removed
+// expansion stat-label palette. Role-specific runtime colors may still
+// overwrite individual entries after allocation.
+static const struct SpritePalette sSpritePal_HgssFontShared[] =
 {
     {
-        .data = sStatLabels_Pal,
+        .data = sHgssFontMember7_Pal,
         .tag = PALTAG_MISC_1,
     },
     {
-        .data = sStatLabels_Pal + 16,
+        .data = sHgssFontMember7_Pal,
         .tag = PALTAG_MISC_2,
     },
     {
-        .data = sStatLabels_Pal + 32,
+        .data = sHgssFontMember7_Pal,
         .tag = PALTAG_MISC_3,
     },
     {},
@@ -992,7 +990,7 @@ static const struct SpritePalette sSpritePal_StatLabels[] =
 static const struct SpritePalette sSpritePal_HgssGenderGlyphs[] =
 {
     {
-        .data = sHgssGenderGlyphs_Pal,
+        .data = sHgssFontMember7_Pal,
         .tag = PALTAG_HGSS_GENDER_GLYPHS,
     },
     {},
