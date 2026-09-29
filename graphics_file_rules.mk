@@ -27,6 +27,7 @@ GEN4UIHGSSSEARCHOVERLAY := tools/gen4_ui/make_hgss_pokedex_search_overlay.py
 GEN4UIHGSSSTART := tools/gen4_ui/make_hgss_pokedex_start_menu.py
 GEN4UIHGSSSCROLL := tools/gen4_ui/make_hgss_pokedex_scroll_controls.py
 GEN4UIHGSSSTARTCURSOR := tools/gen4_ui/make_hgss_pokedex_start_cursor.py
+GEN4UIHGSSPOKEGEARSWITCH := tools/gen4_ui/make_hgss_pokegear_app_switch.py
 
 types := none normal fight flying poison ground rock bug ghost steel mystery fire water grass electric psychic ice dragon dark fairy stellar
 contest_types := cool beauty cute smart tough
@@ -62,6 +63,12 @@ $(GEN4UIGFXDIR)/hgss_pokedex_size_gba.png: $(GEN4UIHGSSSIZE)
 	python3 $< $@
 
 $(GEN4UIGFXDIR)/hgss_pokedex_search_gba.png: $(GEN4UIHGSSSEARCH)
+	python3 $< $@
+
+$(GEN4UIGFXDIR)/hgss_pokegear/app_switch_gba.png: $(GEN4UIHGSSPOKEGEARSWITCH) \
+	$(GEN4UIGFXDIR)/hgss_pokegear/verified/pgear_skin0_app_switch_tiles.png \
+	$(GEN4UIGFXDIR)/hgss_pokegear/verified/pgear_skin0_app_switch_palette.NCLR \
+	$(GEN4UIGFXDIR)/hgss_pokegear/verified/pgear_skin0_app_switch_tilemap.NSCR
 	python3 $< $@
 
 # The live HGSS Pokédex background reserves BG palette entries 128..140.

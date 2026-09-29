@@ -37,6 +37,11 @@
 #define POKEGEAR_OPTION_SELECTED_X 92
 #define OPTION_EXIT_X             (DISPLAY_WIDTH + 16)
 
+#define HGSS_POKEGEAR_APP_SWITCH_TILE_BASE 0x100
+#define HGSS_POKEGEAR_APP_SWITCH_PAL_BANK 14
+#define HGSS_POKEGEAR_APP_SWITCH_WIDTH_TILES 30
+#define HGSS_POKEGEAR_APP_SWITCH_HEIGHT_TILES 4
+
 struct Pokenav_MenuGfx
 {
     bool32 (*isTaskActiveCB)(void);
@@ -50,6 +55,7 @@ struct Pokenav_MenuGfx
     struct Sprite *blueLightSprite;
     struct Sprite *iconSprites[MAX_POKENAV_MENUITEMS][NUM_OPTION_SUBSPRITES];
     u8 bg1TilemapBuffer[BG_SCREEN_SIZE];
+    u16 hgssAppSwitchTilemap[32 * HGSS_POKEGEAR_APP_SWITCH_HEIGHT_TILES];
 };
 
 static struct Pokenav_MenuGfx * OpenPokenavMenu(void);
@@ -86,6 +92,7 @@ static void CreateMatchCallBlueLightSprite(void);
 static void SpriteCB_BlinkingBlueLight(struct Sprite *);
 static void DestroyRematchBlueLightSprite(void);
 static void AddOptionDescriptionWindow(void);
+static void LoadHgssPokegearAppSwitchChrome(void);
 static void DrawPokeGearDescriptionPanel(u32 windowId);
 static void PrintCurrentOptionDescription(void);
 static void PrintNoRibbonWinners(void);
@@ -113,6 +120,12 @@ static const u32 sPokenavDeviceBgTiles[] = INCGFX_U32("graphics/pokenav/device_o
 static const u32 sPokenavDeviceBgTilemap[] = INCGFX_U32("graphics/pokenav/device_outline_map.bin", ".smolTM");
 static const u16 sMatchCallBlueLightPal[] = INCGFX_U16("graphics/pokenav/blue_light.png", ".gbapal");
 static const u32 sMatchCallBlueLightTiles[] = INCGFX_U32("graphics/pokenav/blue_light.png", ".4bpp.smol");
+
+// Exact retail HGSS default-skin PokéGear app-switch pixels, reconstructed
+// losslessly from pgear_gra members 48 (NCGR), 30 (NCLR), and 54 (NSCR).
+// The 256-pixel DS strip is cropped only by its empty 8-pixel side margins.
+static const u16 sHgssPokegearAppSwitchPal[] = INCGFX_U16("graphics/gen4_ui/hgss_pokegear/app_switch_gba.png", ".gbapal");
+static const u32 sHgssPokegearAppSwitchTiles[] = INCGFX_U32("graphics/gen4_ui/hgss_pokegear/app_switch_gba.png", ".4bpp");
 
 static const u8 gText_NoRibbonWinners[] = _("There are no RIBBON winners.");
 
@@ -487,6 +500,7 @@ static u32 LoopedTask_OpenMenu(s32 state)
     case 3:
         if (FreeTempTileDataBuffersIfPossible())
             return LT_PAUSE;
+        LoadHgssPokegearAppSwitchChrome();
         AddOptionDescriptionWindow();
         CreateMovingBgDotsTask();
         return LT_INC_AND_CONTINUE;
@@ -846,6 +860,42 @@ static void DestroyMenuOptionSprites(void)
             DestroySprite(gfx->iconSprites[i][j]);
         }
     }
+}
+
+static void LoadHgssPokegearAppSwitchChrome(void)
+{
+    struct Pokenav_MenuGfx *gfx = GetSubstructPtr(POKENAV_SUBSTRUCT_MENU_GFX);
+    u32 x;
+    u32 y;
+
+    // Keep the existing PokéNav device artwork live underneath this verified
+    // retail layer for phase-2 validation.  The strip occupies the top four
+    // visible BG2 rows at 1:1 scale; all menu sprites/input remain unchanged.
+    LoadBgTiles(2, sHgssPokegearAppSwitchTiles, sizeof(sHgssPokegearAppSwitchTiles), HGSS_POKEGEAR_APP_SWITCH_TILE_BASE);
+    CopyPaletteIntoBufferUnfaded(
+        sHgssPokegearAppSwitchPal,
+        BG_PLTT_ID(HGSS_POKEGEAR_APP_SWITCH_PAL_BANK),
+        sizeof(sHgssPokegearAppSwitchPal));
+
+    for (y = 0; y < HGSS_POKEGEAR_APP_SWITCH_HEIGHT_TILES; y++)
+    {
+        for (x = 0; x < 32; x++)
+            gfx->hgssAppSwitchTilemap[y * 32 + x] = 0;
+
+        for (x = 0; x < HGSS_POKEGEAR_APP_SWITCH_WIDTH_TILES; x++)
+        {
+            gfx->hgssAppSwitchTilemap[y * 32 + x]
+                = (HGSS_POKEGEAR_APP_SWITCH_PAL_BANK << 12)
+                | (HGSS_POKEGEAR_APP_SWITCH_TILE_BASE
+                   + y * HGSS_POKEGEAR_APP_SWITCH_WIDTH_TILES
+                   + x);
+        }
+    }
+
+    // BG2's legacy device tilemap has already finished loading at this point.
+    // Overwrite only rows 0..3; the remaining device chrome stays untouched
+    // until the dedicated phase-3 removal step.
+    LoadBgTilemap(2, gfx->hgssAppSwitchTilemap, sizeof(gfx->hgssAppSwitchTilemap), 0);
 }
 
 static void DrawCurrentMenuOptionLabels(void)

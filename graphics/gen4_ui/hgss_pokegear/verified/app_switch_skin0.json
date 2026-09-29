@@ -1,6 +1,6 @@
 {
   "role": "pokegear_main_app_switch_surface",
-  "phase": "authentic_asset_import",
+  "phase": "wired_live",
   "source_game": "Pokemon HeartGold / SoulSilver",
   "source_repository": "pret/pokeheartgold",
   "source_revision": "9d8b7591f09b65804da2fb2dfd56f320633e0d36",
@@ -51,8 +51,41 @@
   },
   "pipeline": {
     "authentic_hgss_asset_ready": true,
-    "wired_live": false,
+    "wired_live": true,
     "legacy_equivalent_removed": false
   },
-  "next": "Phase 2: build a GBA-safe 1:1 composition from these verified retail HGSS app-switch pixels and wire it into the live PokéGear main-menu surface while retaining the current surface for verification."
+  "next": "Run CI on the live integration. If green, phase 3 removes the legacy/synthetic PokéGear chrome that is now superseded by the verified retail app-switch surface.",
+  "live_adaptation": {
+    "generator": "tools/gen4_ui/make_hgss_pokegear_app_switch.py",
+    "output": "graphics/gen4_ui/hgss_pokegear/app_switch_gba.png",
+    "dimensions": [
+      240,
+      32
+    ],
+    "source_geometry": [
+      256,
+      32
+    ],
+    "transformation": [
+      "reconstruct retail normal-state rows 0..3 through member-54 NSCR",
+      "apply member-30 NCLR palette banks exactly",
+      "remove only empty x=0..7 and x=248..255 margins",
+      "reindex exact retail colors into one 4bpp GBA palette"
+    ],
+    "scaling": false,
+    "redrawing": false,
+    "recoloring": false,
+    "interpolation": false,
+    "live_file": "src/pokenav_menu_handler_gfx.c",
+    "bg": 2,
+    "destination_rows": [
+      0,
+      3
+    ],
+    "tile_base": "0x100",
+    "palette_bank": 14,
+    "current_menu_logic_preserved": true,
+    "legacy_device_chrome_retained_for_verification": true
+  },
+  "status": "phase 2 complete: exact retail HGSS default-skin PokéGear app-switch strip is reconstructed losslessly and live on BG2; existing PokéNav device chrome remains underneath for verification"
 }
