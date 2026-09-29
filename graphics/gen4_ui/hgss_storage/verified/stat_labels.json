@@ -123,7 +123,7 @@
   },
   "live_adaptation": {
     "asset": "graphics/gen4_ui/hgss_storage/verified/stat_labels_hgss_font.4bpp",
-    "asset_git_blob_sha": "67feb8130dab5fa0ffdee5b8fb6be3cc141aa5c2",
+    "asset_git_blob_sha": "7a486ee8d6e4b57da10b71260503578f708600db",
     "dimensions": [
       16,
       288
@@ -151,12 +151,13 @@
       "source": "files/graphic/font/font_00000007.bin",
       "git_blob_sha": "0a4e5fb8d4c7de046ffa7a164ad45fc0e45558b3",
       "gba_bank": 15,
-      "slots": {
-        "8": "0x0000 (HGSS index 14 foreground)",
-        "9": "0x7FFF (HGSS index 15 neutral shadow)",
-        "10": "0x7DC0 (HGSS index 7 increased shadow)",
-        "11": "0x76EF (HGSS index 8 decreased shadow)"
-      }
+      "direct_native_indices": {
+        "7": "0x7DC0 Nature-increased shadow",
+        "8": "0x76EF Nature-decreased shadow",
+        "14": "0x0000 foreground",
+        "15": "0x7FFF neutral shadow"
+      },
+      "note": "The temporary 8..11 compatibility remap is removed. The atlas now encodes retail HGSS font-palette indices directly."
     }
   }
 }

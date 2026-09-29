@@ -42,22 +42,58 @@
   "current_legacy": {
     "file": "graphics/pokemon_storage/swsh/text_windows.pal",
     "symbol": "sTextWindows_Pal",
-    "live": true,
+    "live": false,
     "current_uses": [
       "BG palette bank 15 initialization for Storage text windows",
       "restoration after closing HGSS markings menu",
       "restoration after closing HGSS context menu"
-    ]
+    ],
+    "file_retained_for_phase_2_verification": true
   },
   "context": {
     "visible_window_art_already_hgss": true,
     "note": "Message, yes/no, context-menu, and mon-info panel chrome already use verified retail HGSS graphics and their own authentic palettes. The remaining legacy file is only the shared text/window palette seed for BG palette bank 15."
   },
-  "status": "phase 1 complete: the final live SWSH-era Storage asset reference is identified as text_windows.pal; the exact retail HGSS font palette used by Storage font ID 4 has been extracted and verified",
-  "next": "Phase 2: replace sTextWindows_Pal with the verified retail HGSS font palette, reconcile the GBA text-color index mapping against HGSS packed color 0x00010200 and existing mon-info text states, and retain text_windows.pal only for verification.",
+  "status": "phase 2 complete: exact retail HGSS font palette is live in BG palette bank 15; Storage mon-info text uses native HGSS background/foreground/shadow semantics; Nature labels now address the native retail palette indices directly; legacy text_windows.pal remains only for verification",
+  "next": "Verify the exact HGSS Storage text-palette path in CI. If gen4-ui passes, delete graphics/pokemon_storage/swsh/text_windows.pal and mark the final SWSH-era Storage asset conversion phase 3 complete.",
   "pipeline": {
     "authentic_hgss_asset_ready": true,
-    "wired_live": false,
+    "wired_live": true,
     "legacy_equivalent_removed": false
+  },
+  "live_integration": {
+    "symbol": "sHgssStorageText_Pal",
+    "file": "graphics/gen4_ui/hgss_storage/verified/text_windows_hgss.gbapal",
+    "palette_bank": 15,
+    "exact_palette_order": true,
+    "native_text_tuple": {
+      "hgss_packed": "0x00010200",
+      "hgss_macro": "MAKE_TEXT_COLOR(1, 2, 0)",
+      "hgss_semantics": {
+        "foreground": 1,
+        "shadow": 2,
+        "background": 0
+      },
+      "gba_printer_order": [
+        0,
+        1,
+        2
+      ]
+    },
+    "native_window_fill_index": 0,
+    "consumers": [
+      "Storage mon-info stat numbers",
+      "Storage mon-info ability",
+      "Storage mon-info held item",
+      "Storage mon-info nickname",
+      "Storage mon-info level",
+      "palette-15 restoration after markings/context overlays"
+    ],
+    "nature_label_native_indices": {
+      "foreground": 14,
+      "neutral_shadow": 15,
+      "increased_shadow": 7,
+      "decreased_shadow": 8
+    }
   }
 }

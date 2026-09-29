@@ -1166,3 +1166,35 @@ The old `text_windows.pal` remains live until phase 2.
 
 Machine-readable provenance is recorded in
 `verified/text_windows.json`.
+
+
+## Authentic HGSS Storage text palette — phase 2
+
+The exact retail HGSS font palette is now live as BG palette bank 15 via
+`verified/text_windows_hgss.gbapal`. The former `sTextWindows_Pal` path is no
+longer compiled or referenced.
+
+Retail HGSS Storage uses packed text color `0x00010200`, i.e.
+`MAKE_TEXT_COLOR(foreground=1, shadow=2, background=0)`. The GBA text printer
+expects background/foreground/shadow ordering, so the live mon-info tuple is
+exactly **{0, 1, 2}**. Stats, ability, held item, nickname, and level windows
+now use native background index 0 instead of the previous SWSH palette fills.
+
+The earlier Nature-stat adaptation temporarily copied four authentic HGSS
+colors into palette slots 8..11. That compatibility overlay is removed. The
+`stat_labels_hgss_font.4bpp` atlas has been palette-index-remapped only—no
+pixel geometry changed—so it now addresses the retail font palette directly:
+
+- foreground -> index 14 (`0x0000`)
+- neutral shadow -> index 15 (`0x7FFF`)
+- Nature-increased shadow -> index 7 (`0x7DC0`)
+- Nature-decreased shadow -> index 8 (`0x76EF`)
+
+Message, yes/no, and context-menu chrome continue to use their own verified
+HGSS palettes. Context menus temporarily remap only authentic HGSS colors into
+the GBA menu helper's expected indices, then restore the exact HGSS Storage
+font palette when closed.
+
+`graphics/pokemon_storage/swsh/text_windows.pal` remains in the repository only
+for the phase-2 verification cycle. It has no live code reference and must not
+be deleted until the dedicated Gen 4 UI CI gate passes.

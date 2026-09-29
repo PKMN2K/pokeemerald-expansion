@@ -105,7 +105,9 @@ static const u16 sHgssWallpaperSelectorColors[WALLPAPER_COUNT] =
     [WALLPAPER_SPECIAL_8] = 0x4A76,
 };
 
-static const u16 sTextWindows_Pal[]           = INCGFX_U16("graphics/pokemon_storage/swsh/text_windows.pal", ".gbapal");
+// Exact retail HGSS font-ID-4 palette loaded by Storage through
+// LoadFontPal0(4, 0x1E0, heap 10). Kept in native 0..15 index order.
+static const u16 sHgssStorageText_Pal[] = INCBIN_U16("graphics/gen4_ui/hgss_storage/verified/text_windows_hgss.gbapal");
 
 // Generated from visually verified HGSS /a/0/1/9 role bindings.
 #include "hgss_storage_main_frame.inc.h"
@@ -291,14 +293,9 @@ static const u16 sHgssPokerusSymbol_Pal[]      = INCGFX_U16("graphics/gen4_ui/hg
 // Exact HGSS font-ID-4 glyph pixels, composed without scaling into compact
 // Storage-sidebar abbreviations (HP / At / De / SA / SD / Sp). The bitmap
 // contains neutral / Nature-up / Nature-down variants and is blitted to BG0.
+// Pixel classes address native retail font-palette indices directly:
+// foreground=14, neutral shadow=15, Nature-up shadow=7, Nature-down shadow=8.
 static const ALIGNED(4) u8 sHgssNatureStatLabels_Gfx[] = INCBIN_U8("graphics/gen4_ui/hgss_storage/verified/stat_labels_hgss_font.4bpp");
-static const u16 sHgssNatureStatText_Pal[] =
-{
-    0x0000, // font member 7 index 14: foreground
-    0x7FFF, // font member 7 index 15: neutral shadow
-    0x7DC0, // font member 7 index 7: Nature-increased shadow
-    0x76EF, // font member 7 index 8: Nature-decreased shadow
-};
 // Authentic HGSS Storage type badges: exact /a/0/0/8 32x16 character data
 // plus the authentic-source Fairy composite. The three palette banks are the
 // exact retail HGSS /a/0/0/8 member 0x4A payload.
@@ -607,10 +604,14 @@ static const struct WindowTemplate sWindowTemplates[] =
     DUMMY_WIN_TEMPLATE
 };
 
+// GBA text-printer order is {background, foreground, shadow}; this is
+// retail HGSS Storage MAKE_TEXT_COLOR(1, 2, 0) in that ordering.
+static const u8 sHgssStorageTextColors[3] = {0, 1, 2};
+
 static const u8 sTextColors[][3] =
 {
-    {1, 2, 3}, // Standard menus, mon info (stats, ability, item)
-    {4, 2, 5}, // Mon info (nickname and level) (grey BG)
+    {1, 2, 3}, // Standard menus / temporary authentic-palette remaps
+    {4, 2, 5}, // Legacy non-Storage callers retaining their own palette mapping
     {0, 4, 7}, // Choose box menu - actually uses PALTAG_MISC_3 and not bg pal 15
     {0, 2, 3}, // HGSS Storage message window (cream / dark / gray)
 };

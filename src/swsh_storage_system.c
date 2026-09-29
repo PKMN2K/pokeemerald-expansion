@@ -2869,7 +2869,7 @@ static void DrawHgssMarkingsMenuPanel(void)
 
 static void RestoreHgssMarkingsMenuPanel(void)
 {
-    LoadPalette(sTextWindows_Pal, BG_PLTT_ID(HGSS_MARKINGS_MENU_PAL_BANK), sizeof(sTextWindows_Pal));
+    LoadPalette(sHgssStorageText_Pal, BG_PLTT_ID(HGSS_MARKINGS_MENU_PAL_BANK), sizeof(sHgssStorageText_Pal));
     RestoreHgssMonInfoPanel();
     sStorage->inMenuInteraction = FALSE;
     UpdateMonInfoTilemap();
@@ -3756,9 +3756,8 @@ static bool8 InitPalettesAndSprites(void)
     switch (sStorage->graphicsLoadState)
     {
     case 0:
-        LoadPalette(sTextWindows_Pal, BG_PLTT_ID(15), sizeof(sTextWindows_Pal));
-        LoadPalette(sHgssNatureStatText_Pal, BG_PLTT_ID(15) + 8, sizeof(sHgssNatureStatText_Pal));
-        sStorage->graphicsLoadState++;
+        LoadPalette(sHgssStorageText_Pal, BG_PLTT_ID(15), sizeof(sHgssStorageText_Pal));
+                sStorage->graphicsLoadState++;
         break;
     case 1:
         LoadPalette(sHgssTypeIcons_Pal, OBJ_PLTT_ID(13), 3 * PLTT_SIZE_4BPP);
@@ -4208,7 +4207,7 @@ static void BufferAndPrintStat(u8 windowId, u8 font, u8 xOffset, u8 y, u16 statV
 
     ConvertIntToDecimalStringN(statStr, statValue, STR_CONV_MODE_LEFT_ALIGN, 3);
     statWidth = GetStringWidth(font, statStr, 0);
-    AddTextPrinterParameterized4(windowId, font, xOffset - statWidth, y, 0, 0, sTextColors[0], 0, statStr);
+    AddTextPrinterParameterized4(windowId, font, xOffset - statWidth, y, 0, 0, sHgssStorageTextColors, 0, statStr);
 }
 
 static void PrintDisplayMonAbility(u8 font)
@@ -4223,7 +4222,7 @@ static void PrintDisplayMonAbility(u8 font)
         windowId = WIN_MON_INFO_ABILITY_LEFT;
     else
         windowId = WIN_MON_INFO_ABILITY_RIGHT;
-    FillWindowPixelBuffer(windowId, PIXEL_FILL(1));
+    FillWindowPixelBuffer(windowId, PIXEL_FILL(0));
 
     if (!sStorage->showMonInfo
         || (GetSpeciesAtCursorPosition() == SPECIES_NONE && !sIsMonBeingMoved)
@@ -4236,7 +4235,7 @@ static void PrintDisplayMonAbility(u8 font)
     abilityName = gAbilitiesInfo[sStorage->displayMon.ability].name;
     fontId = GetFontIdToFit(abilityName, font, 0, windowWidthPx - 2);
 
-    AddTextPrinterParameterized4(windowId, fontId, xPos, 1, 0, 0, sTextColors[0], 0, abilityName);
+    AddTextPrinterParameterized4(windowId, fontId, xPos, 1, 0, 0, sHgssStorageTextColors, 0, abilityName);
     PutWindowTilemap(windowId);
     CopyWindowToVram(windowId, COPYWIN_FULL);
 }
@@ -4253,7 +4252,7 @@ static void PrintDisplayMonHeldItem(u8 font)
         windowId = WIN_MON_INFO_ITEM_LEFT;
     else
         windowId = WIN_MON_INFO_ITEM_RIGHT;
-    FillWindowPixelBuffer(windowId, PIXEL_FILL(1));
+    FillWindowPixelBuffer(windowId, PIXEL_FILL(0));
 
     if (!sStorage->showMonInfo
         || (GetSpeciesAtCursorPosition() == SPECIES_NONE && !sIsMonBeingMoved)
@@ -4269,7 +4268,7 @@ static void PrintDisplayMonHeldItem(u8 font)
         itemName = GetItemName(sStorage->displayMon.heldItem);
     fontId = GetFontIdToFit(itemName, font, 0, windowWidthPx - 2);
 
-    AddTextPrinterParameterized4(windowId, fontId, xPos, 1, 0, 0, sTextColors[0], 0, itemName);
+    AddTextPrinterParameterized4(windowId, fontId, xPos, 1, 0, 0, sHgssStorageTextColors, 0, itemName);
     PutWindowTilemap(windowId);
     CopyWindowToVram(windowId, COPYWIN_FULL);
 }
@@ -4295,10 +4294,10 @@ static void PrintDisplayMonStats(u8 font)
         labelCol2WindowId = WIN_MON_INFO_STAT_LABELS_COL2_RIGHT;
     }
 
-    FillWindowPixelBuffer(col1WindowId, PIXEL_FILL(1));
-    FillWindowPixelBuffer(col2WindowId, PIXEL_FILL(1));
-    FillWindowPixelBuffer(labelCol1WindowId, PIXEL_FILL(1));
-    FillWindowPixelBuffer(labelCol2WindowId, PIXEL_FILL(1));
+    FillWindowPixelBuffer(col1WindowId, PIXEL_FILL(0));
+    FillWindowPixelBuffer(col2WindowId, PIXEL_FILL(0));
+    FillWindowPixelBuffer(labelCol1WindowId, PIXEL_FILL(0));
+    FillWindowPixelBuffer(labelCol2WindowId, PIXEL_FILL(0));
 
     if (!sStorage->showMonInfo
         || (GetSpeciesAtCursorPosition() == SPECIES_NONE && !sIsMonBeingMoved)
@@ -4347,10 +4346,10 @@ static void PrintDisplayMonNickname(u8 font)
             windowId = WIN_MON_INFO_NICKNAME_LEFT;
         else
             windowId = WIN_MON_INFO_NICKNAME_RIGHT;
-        FillWindowPixelBuffer(windowId, PIXEL_FILL(4));
+        FillWindowPixelBuffer(windowId, PIXEL_FILL(0));
 
         u8 fontId = GetFontIdToFit(sStorage->displayMon.nickname, font, 0, 40);
-        AddTextPrinterParameterized4(windowId, fontId, 6, 1, 0, 0, sTextColors[1], 0, sStorage->displayMon.nickname);
+        AddTextPrinterParameterized4(windowId, fontId, 6, 1, 0, 0, sHgssStorageTextColors, 0, sStorage->displayMon.nickname);
         PutWindowTilemap(windowId);
         CopyWindowToVram(windowId, COPYWIN_FULL);
     }
@@ -4368,7 +4367,7 @@ static void PrintDisplayMonLevel(u8 font)
             windowId = WIN_MON_INFO_LEVEL_LEFT;
         else
             windowId = WIN_MON_INFO_LEVEL_RIGHT;
-        FillWindowPixelBuffer(windowId, PIXEL_FILL(4));
+        FillWindowPixelBuffer(windowId, PIXEL_FILL(0));
 
         u8 levelStr[4];
         ConvertIntToDecimalStringN(levelStr, sStorage->displayMon.level, STR_CONV_MODE_LEFT_ALIGN, 3);
@@ -4378,8 +4377,8 @@ static void PrintDisplayMonLevel(u8 font)
         u16 totalWidth = lvWidth + numWidth;
         u16 lvStartX = 28 - totalWidth;
 
-        AddTextPrinterParameterized4(windowId, FONT_SHORT_NARROWER, lvStartX, 1, 0, 0, sTextColors[1], 0, sText_Lv);
-        AddTextPrinterParameterized4(windowId, font, lvStartX + lvWidth, 1, 0, 0, sTextColors[1], 0, levelStr);
+        AddTextPrinterParameterized4(windowId, FONT_SHORT_NARROWER, lvStartX, 1, 0, 0, sHgssStorageTextColors, 0, sText_Lv);
+        AddTextPrinterParameterized4(windowId, font, lvStartX + lvWidth, 1, 0, 0, sHgssStorageTextColors, 0, levelStr);
         PutWindowTilemap(windowId);
         CopyWindowToVram(windowId, COPYWIN_FULL);
     }
@@ -8638,7 +8637,7 @@ static void RemoveMenu(void)
     ClearHgssContextMenuFrame(sStorage->menuWindowId);
     ClearWindowTilemap(sStorage->menuWindowId);
     RemoveWindow(sStorage->menuWindowId);
-    LoadPalette(sTextWindows_Pal, BG_PLTT_ID(15), sizeof(sTextWindows_Pal));
+    LoadPalette(sHgssStorageText_Pal, BG_PLTT_ID(15), sizeof(sHgssStorageText_Pal));
     ScheduleBgCopyTilemapToVram(0);
     UpdateMonInfoTilemap();
 }
