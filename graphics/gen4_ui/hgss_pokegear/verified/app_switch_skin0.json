@@ -54,7 +54,7 @@
     "wired_live": true,
     "legacy_equivalent_removed": false
   },
-  "next": "Run CI on the live integration. If green, phase 3 removes the legacy/synthetic PokéGear chrome that is now superseded by the verified retail app-switch surface.",
+  "next": "Verify the corrected phase-2 live integration in CI. Only after it passes should phase 3 remove the superseded legacy app-switch chrome.",
   "live_adaptation": {
     "generator": "tools/gen4_ui/make_hgss_pokegear_app_switch.py",
     "output": "graphics/gen4_ui/hgss_pokegear/app_switch_gba.png",
@@ -85,7 +85,13 @@
     "tile_base": "0x100",
     "palette_bank": 14,
     "current_menu_logic_preserved": true,
-    "legacy_device_chrome_retained_for_verification": true
+    "legacy_device_chrome_retained_for_verification": true,
+    "generator_runtime": "Python standard library only; no Pillow/PIL dependency",
+    "ci_fix": {
+      "failed_run": 620,
+      "cause": "normal ROM/test jobs do not install Pillow, while the first generator revision imported PIL.Image",
+      "resolution": "replace Pillow use with a self-contained indexed-PNG decoder/encoder using struct, zlib, and CRC32; image reconstruction logic and retail source mapping are unchanged"
+    }
   },
-  "status": "phase 2 complete: exact retail HGSS default-skin PokéGear app-switch strip is reconstructed losslessly and live on BG2; existing PokéNav device chrome remains underneath for verification"
+  "status": "phase 2 integration corrected for all CI build environments; authentic HGSS app-switch reconstruction remains unchanged"
 }

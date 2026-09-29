@@ -49,3 +49,15 @@ unchanged.
 The previous PokéNav device chrome intentionally remains loaded underneath the
 retail strip for this phase-2 verification cycle. It is not removed until CI
 confirms the live integration.
+
+### Phase-2 build portability correction
+
+CI #620 showed that the general ROM/test jobs do not install Pillow. The
+app-switch generator therefore no longer depends on `PIL.Image`.
+
+The generator now decodes the committed 4-bit indexed member-48 PNG and writes
+the 240x32 indexed output using only Python's standard library
+(`struct`, `zlib`, and CRC32). The retail source members, NSCR reconstruction,
+BGR555 colors, 1:1 geometry, and empty-margin-only crop are unchanged.
+
+No legacy PokéGear artwork is removed by this correction.
