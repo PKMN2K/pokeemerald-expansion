@@ -743,3 +743,19 @@ The legacy
 retained but is no longer the live source. It remains only as the phase-2
 verification fallback. Phase 3 will remove it after the authentic HGSS path
 passes build/runtime verification.
+
+
+## Authentic HGSS Pokérus indicator — phase 3
+
+The phase-2 live HGSS Pokérus-symbol path passed the dedicated `gen4-ui` CI
+job in workflow run `36506180309`: Gen 4 UI tool validation, asset
+generation, and renderer compilation all succeeded.
+
+The former expansion asset
+`graphics/pokemon_storage/swsh/pokerus_icon.png` is therefore removed. The
+active Storage Pokérus indicator remains the authentic HGSS Summary 8x8 symbol
+from `verified/pokerus_symbol.png`, using its original HGSS palette through
+the dedicated `PALTAG_HGSS_POKERUS_SYMBOL` path.
+
+This completes the strict sequence for the Pokérus indicator:
+authentic HGSS asset -> wire live -> remove legacy equivalent.
