@@ -1,0 +1,71 @@
+{
+  "role": "pokegear_fixed_screen_shell",
+  "phase": "authentic_asset_import",
+  "source_game": "Pokemon HeartGold / SoulSilver",
+  "source_repository": "pret/pokeheartgold",
+  "source_revision": "9d8b7591f09b65804da2fb2dfd56f320633e0d36",
+  "retail_mapping_verification": {
+    "source_file": "src/application/pokegear/main/overlay_100_021E5900.c",
+    "function": "PokegearApp_LoadSkinGraphics",
+    "skin_index": 0,
+    "mapping": {
+      "character_graphics": "skinIdx + NARC_pgear_gra_pgear_gra_00000036_NCGR -> member 36",
+      "bg_palette": "skinIdx + NARC_pgear_gra_pgear_gra_00000024_NCLR -> member 24",
+      "screen_tilemap": "skinIdx + NARC_pgear_gra_pgear_gra_00000042_NSCR -> member 42"
+    },
+    "geometry": {
+      "character_graphics_png": [
+        256,
+        32
+      ],
+      "screen_tilemap": [
+        256,
+        192
+      ]
+    },
+    "runtime_note": "Retail PokegearApp_LoadSkinGraphics loads member 36 to GF_BG_LYR_SUB_0, member 24 to the SUB BG palette, and member 42 as that layer's screen data for skin 0."
+  },
+  "verified_assets": [
+    {
+      "file": "pgear_skin0_screen_shell_tiles.png",
+      "target_path": "graphics/gen4_ui/hgss_pokegear/verified/pgear_skin0_screen_shell_tiles.png",
+      "retail_source": "files/application/pokegear/pgear_gra/pgear_gra_00000036.png",
+      "retail_git_blob_sha": "163a4fa068fbffae472d1672947fad86647d110b",
+      "role": "Default-skin fixed PokéGear screen-shell character graphics (member 36)",
+      "byte_identity": "copied byte-for-byte from pret/pokeheartgold retail extraction"
+    },
+    {
+      "file": "pgear_skin0_screen_shell_palette.NCLR",
+      "target_path": "graphics/gen4_ui/hgss_pokegear/verified/pgear_skin0_screen_shell_palette.NCLR",
+      "retail_source": "files/application/pokegear/pgear_gra/pgear_gra_00000024.NCLR",
+      "retail_git_blob_sha": "f293e5f8760201fd109d77bb9cefcdcbb4682f67",
+      "role": "Default-skin fixed PokéGear screen-shell BG palette (member 24)",
+      "byte_identity": "copied byte-for-byte from pret/pokeheartgold retail extraction"
+    },
+    {
+      "file": "pgear_skin0_screen_shell_tilemap.NSCR",
+      "target_path": "graphics/gen4_ui/hgss_pokegear/verified/pgear_skin0_screen_shell_tilemap.NSCR",
+      "retail_source": "files/application/pokegear/pgear_gra/pgear_gra_00000042.NSCR",
+      "retail_git_blob_sha": "f0d5863b63fb82a6bc36c4f49c17859fea8d05aa",
+      "role": "Default-skin fixed PokéGear screen-shell tilemap (member 42)",
+      "byte_identity": "copied byte-for-byte from pret/pokeheartgold retail extraction"
+    }
+  ],
+  "current_project_gap": {
+    "module": "PokéGear/PokéNav main shell",
+    "live_files": [
+      "src/pokenav_menu_handler_gfx.c"
+    ],
+    "legacy_assets": [
+      "graphics/pokenav/device_outline.png",
+      "graphics/pokenav/device_outline_map.bin"
+    ],
+    "finding": "The app-switch strip is now authentic HGSS, but the lower/fixed device shell still comes from legacy PokéNav artwork. This source set establishes the verified retail HGSS fixed shell before any replacement."
+  },
+  "pipeline": {
+    "authentic_hgss_asset_ready": true,
+    "wired_live": false,
+    "legacy_equivalent_removed": false
+  },
+  "next": "Phase 2: adapt the verified member-36/member-24/member-42 fixed shell to the 240x160 GBA PokéGear composition at 1:1 pixel scale and wire it live without yet deleting the remaining legacy shell."
+}

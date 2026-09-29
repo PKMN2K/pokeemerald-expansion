@@ -85,3 +85,26 @@ legacy-equivalent sequence.
 The app-switch surface sequence is therefore complete:
 
 **authentic HGSS asset → wire live → remove legacy equivalent**
+
+## Fixed screen shell — phase 1
+
+With the app-switch strip complete, the next legacy surface is the remaining
+PokéNav device shell below it.
+
+Retail HGSS provides an exact default-skin source set for the fixed PokéGear
+screen layer in `PokegearApp_LoadSkinGraphics`:
+
+- member 36 character graphics,
+- member 24 BG palette,
+- member 42 NSCR screen/tilemap.
+
+For skin 0, those are loaded together on `GF_BG_LYR_SUB_0` in the retail
+PokéGear. Member 36 is a 256x32 indexed source sheet and member 42 defines a
+256x192 screen.
+
+The three files in `verified/` are copied byte-for-byte from
+`pret/pokeheartgold` revision `9d8b7591f09b65804da2fb2dfd56f320633e0d36`.
+
+This is **phase 1 only** for the fixed shell. The current lower PokéNav device
+artwork remains live until the verified retail shell is adapted and wired in a
+separate phase.
