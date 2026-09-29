@@ -130,3 +130,32 @@ the verified NCLR and loaded into BG palette bank 13.
 The authentic app-switch strip is loaded afterward and continues to own rows
 0..3. The old PokéNav device shell still loads first underneath the HGSS shell
 for this phase-2 verification cycle; its code and assets are not removed yet.
+
+
+## Fixed screen shell — phase 3
+
+CI #624 passed the phase-2 fixed-shell integration across the full workflow,
+including Gen 4 UI validation, Emerald, FireRed, LeafGreen, release, docs, and
+the general test suite.
+
+The superseded PokéNav device shell has therefore been removed from
+`src/pokenav_menu_handler_gfx.c`. Its palette/tile/tilemap declarations and
+the state-1 BG2 load are gone. State 1 remains only as a sequencing gate so the
+existing asynchronous load cadence is preserved before later layers are
+installed.
+
+A branch-wide check of the PokéNav source found `device_outline` referenced
+only by that main-menu graphics module. With its final live use removed, the
+now-unreferenced legacy source files are deleted as well:
+
+- `graphics/pokenav/device_outline.png`
+- `graphics/pokenav/device_outline_map.bin`
+
+The authentic retail HGSS member-36/member-24/member-42 shell is now the only
+live BG2 device-shell artwork. The already-authentic app-switch strip still
+loads afterward on rows 0..3. No other PokéGear/PokéNav surfaces are changed by
+this cleanup.
+
+The fixed screen-shell sequence is therefore complete:
+
+**authentic HGSS asset → wire live → remove legacy equivalent**

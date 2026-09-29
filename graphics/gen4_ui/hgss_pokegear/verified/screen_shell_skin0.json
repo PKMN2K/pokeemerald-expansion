@@ -1,6 +1,6 @@
 {
   "role": "pokegear_fixed_screen_shell",
-  "phase": "wired_live",
+  "phase": "legacy_equivalent_removed",
   "source_game": "Pokemon HeartGold / SoulSilver",
   "source_repository": "pret/pokeheartgold",
   "source_revision": "9d8b7591f09b65804da2fb2dfd56f320633e0d36",
@@ -60,14 +60,14 @@
       "graphics/pokenav/device_outline.png",
       "graphics/pokenav/device_outline_map.bin"
     ],
-    "finding": "The app-switch strip is now authentic HGSS, but the lower/fixed device shell still comes from legacy PokéNav artwork. This source set establishes the verified retail HGSS fixed shell before any replacement."
+    "finding": "Resolved in phase 3: CI #624 verified the authentic HGSS fixed shell live, so the superseded PokéNav device shell was removed from the loader and its now-unreferenced source assets were deleted."
   },
   "pipeline": {
     "authentic_hgss_asset_ready": true,
     "wired_live": true,
-    "legacy_equivalent_removed": false
+    "legacy_equivalent_removed": true
   },
-  "next": "Run CI on the fixed-shell live integration. If green, phase 3 removes the remaining legacy PokéNav device shell that is now superseded by the verified retail HGSS shell.",
+  "next": "Begin phase 1 for the next remaining non-authentic PokéGear surface: identify its exact retail HGSS source asset(s) before any live wiring or legacy removal.",
   "live_adaptation": {
     "generator": "tools/gen4_ui/make_hgss_pokegear_screen_shell.py",
     "outputs": [
@@ -99,7 +99,14 @@
     "tile_base": "0x40",
     "palette_bank": 13,
     "app_switch_layering": "The already-authentic HGSS app-switch strip loads after the shell and owns visible rows 0..3.",
-    "legacy_device_chrome_retained_for_verification": true
+    "legacy_device_chrome_retained_for_verification": false,
+    "legacy_device_chrome_removed": true
   },
-  "status": "phase 2 complete: authentic HGSS default-skin fixed screen shell is adapted at 1:1 tile/pixel scale and wired live; the legacy PokéNav shell remains loaded underneath pending phase-3 removal"
+  "status": "phase 3 complete: authentic HGSS default-skin fixed screen shell is the only live BG2 device shell; the superseded PokéNav device shell loader, declarations, and unreferenced source assets are removed",
+  "verification": {
+    "ci_run": 624,
+    "verified_commit": "9082a295df268313dbff1b93b3c9c94a0761a0f7",
+    "conclusion": "success",
+    "gate": "Full GitHub Actions CI completed successfully before phase-3 removal."
+  }
 }
