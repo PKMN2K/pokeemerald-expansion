@@ -590,3 +590,7 @@ This is phase 2 only. The old
 `graphics/pokemon_storage/swsh/gender_icons.png` file is deliberately retained
 as the legacy equivalent until the new HGSS glyph path passes build/runtime
 verification. Phase 3 is its removal.
+
+### Gender glyph OBJ container repair
+
+Build verification exposed a malformed PNG container in the phase-2 OBJ packing derivative (libpng rejected its PLTE chunk). The live `gender_glyphs_obj.png` has been regenerated directly from the verified `gender_glyphs.png` export. The two authentic 16x16 HGSS font cells and their original palette indices are unchanged; only their layout is repacked vertically for GBA 1D OBJ tile order. The repaired indexed PNG SHA-256 is `7ef910bc3bcc0ac04cf00805cffb9596ed231a7e5e9ad33fbdb4e8dc02d2e8c7`.

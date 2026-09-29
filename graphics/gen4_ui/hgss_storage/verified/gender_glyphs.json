@@ -130,7 +130,7 @@
   },
   "obj_export": {
     "file": "gender_glyphs_obj.png",
-    "sha256": "a9ae37db2aff6e1ba2092437b1deac0e6d274b66a2e2eab521911cbf83fd125c",
+    "sha256": "7ef910bc3bcc0ac04cf00805cffb9596ed231a7e5e9ad33fbdb4e8dc02d2e8c7",
     "size": [
       16,
       32
@@ -138,6 +138,7 @@
     "mode": "indexed 4bpp",
     "layout": "male 16x16 at y=0..15; female 16x16 at y=16..31",
     "purpose": "GBA 1D OBJ tile-order packing derivative of gender_glyphs.png",
-    "pixel_rule": "Exact phase-1 HGSS glyph pixels and original palette indices only; no redraw, resampling, recoloring, or geometry change."
+    "pixel_rule": "Exact phase-1 HGSS glyph pixels and original palette indices only; no redraw, resampling, recoloring, or geometry change.",
+    "container_repair": "Rebuilt from the verified 32x16 HGSS glyph export as a valid indexed PNG; only the two 16x16 cells were repacked vertically for GBA 1D OBJ order. Palette indices and glyph pixels are unchanged."
   }
 }
