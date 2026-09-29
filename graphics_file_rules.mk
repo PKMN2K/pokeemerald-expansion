@@ -29,6 +29,7 @@ GEN4UIHGSSSCROLL := tools/gen4_ui/make_hgss_pokedex_scroll_controls.py
 GEN4UIHGSSSTARTCURSOR := tools/gen4_ui/make_hgss_pokedex_start_cursor.py
 GEN4UIHGSSPOKEGEARSWITCH := tools/gen4_ui/make_hgss_pokegear_app_switch.py
 GEN4UIHGSSPOKEGEARSHELL := tools/gen4_ui/make_hgss_pokegear_screen_shell.py
+GEN4UIHGSSPOKEGEARCURSOR := tools/gen4_ui/make_hgss_pokegear_cursor.py
 
 types := none normal fight flying poison ground rock bug ghost steel mystery fire water grass electric psychic ice dragon dark fairy stellar
 contest_types := cool beauty cute smart tough
@@ -78,6 +79,18 @@ $(GEN4UIGFXDIR)/hgss_pokegear/screen_shell_gba.tilemap.bin: $(GEN4UIHGSSPOKEGEAR
 
 $(GEN4UIGFXDIR)/hgss_pokegear/screen_shell_gba.palette.bin: $(GEN4UIHGSSPOKEGEARSHELL) \
 	$(GEN4UIGFXDIR)/hgss_pokegear/verified/pgear_skin0_screen_shell_palette.NCLR
+	python3 $< --palette $@
+
+$(GEN4UIGFXDIR)/hgss_pokegear/cursor_corner.4bpp: $(GEN4UIHGSSPOKEGEARCURSOR) \
+	$(GEN4UIGFXDIR)/hgss_pokegear/verified/pgear_skin0_ui_sprites.png \
+	$(GEN4UIGFXDIR)/hgss_pokegear/verified/pgear_ui_cells.NCER \
+	$(GEN4UIGFXDIR)/hgss_pokegear/verified/pgear_ui_anims.NANR
+	python3 $< --tiles $@
+
+$(GEN4UIGFXDIR)/hgss_pokegear/cursor_corner.gbapal: $(GEN4UIHGSSPOKEGEARCURSOR) \
+	$(GEN4UIGFXDIR)/hgss_pokegear/verified/pgear_skin0_ui_palette.NCLR \
+	$(GEN4UIGFXDIR)/hgss_pokegear/verified/pgear_ui_cells.NCER \
+	$(GEN4UIGFXDIR)/hgss_pokegear/verified/pgear_ui_anims.NANR
 	python3 $< --palette $@
 
 # The live HGSS Pokédex background reserves BG palette entries 128..140.

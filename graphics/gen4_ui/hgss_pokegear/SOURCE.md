@@ -193,3 +193,33 @@ sprite/palette is removed.
 The next phase will adapt only the retail cells/frames that are useful on the
 240x160 GBA launcher and wire those authentic pixels live while retaining the
 legacy sprite layer underneath until CI passes.
+
+
+## Main UI selection cursor — phase 2
+
+Decoding the verified member-13 NANR and member-12 NCER narrows the direct
+retail equivalent for this phase to the PokéGear's four-corner selection
+cursor, rather than the functional PokéNav text labels themselves.
+
+Retail animation sequences 4, 5, 6, and 7 resolve to NCER cells 20, 21, 22,
+and 23. Each cell is one 16x16 OBJ using member-6 character tile 208 and
+member-0 palette bank 1. Cells 21..23 are only the V-flipped, H-flipped, and
+H+V-flipped forms of cell 20.
+
+`tools/gen4_ui/make_hgss_pokegear_cursor.py` validates that exact
+NANR/NCER relationship at build time. It then emits only the four consecutive
+8x8 tiles used by base cell 20 (128 bytes of GBA 4bpp) and the exact 16-color
+BGR555 palette bank used by the retail cell. No source pixel or palette color
+is redrawn, recolored, interpolated, or scaled.
+
+The live GBA launcher now instantiates four 16x16 sprites from that authentic
+cell and applies the same flip pattern as the four retail sequences. The
+corners are separated spatially to frame the existing 128x16 functional
+launcher label target; their pixels remain 1:1. The cursor is shown only on
+the top-level PokéGear menu and follows the live menu selection.
+
+For this phase-2 validation cycle, the previous scanline/lighten selection glow
+remains active underneath the authentic cursor. The legacy option-label
+graphics also remain untouched because they are a separate surface, not a
+pixel-equivalent of the retail cursor. If CI passes, phase 3 will remove the
+superseded top-level legacy selection glow while preserving submenu behavior.

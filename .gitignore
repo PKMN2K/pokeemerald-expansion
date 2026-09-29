@@ -132,3 +132,6 @@ __pycache__
 /graphics/gen4_ui/hgss_pokegear/app_switch_gba.png
 /graphics/gen4_ui/hgss_pokegear/screen_shell_gba.tilemap.bin
 /graphics/gen4_ui/hgss_pokegear/screen_shell_gba.palette.bin
+
+/graphics/gen4_ui/hgss_pokegear/cursor_corner.4bpp
+/graphics/gen4_ui/hgss_pokegear/cursor_corner.gbapal

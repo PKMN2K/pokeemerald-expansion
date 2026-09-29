@@ -17,10 +17,12 @@
 #include "constants/songs.h"
 #include "constants/rgb.h"
 
-#define GFXTAG_BLUE_LIGHT 1
-#define GFXTAG_OPTIONS    3
+#define GFXTAG_BLUE_LIGHT          1
+#define GFXTAG_HGSS_POKEGEAR_CURSOR 2
+#define GFXTAG_OPTIONS             3
 
-#define PALTAG_BLUE_LIGHT 3
+#define PALTAG_HGSS_POKEGEAR_CURSOR 2
+#define PALTAG_BLUE_LIGHT            3
 #define PALTAG_OPTIONS_DEFAULT 4 // Includes green for Smart/Region Map and yellow for Tough
 #define PALTAG_OPTIONS_BLUE 5
 #define PALTAG_OPTIONS_PINK 6
@@ -30,6 +32,7 @@
 #define PALTAG_OPTIONS_START PALTAG_OPTIONS_DEFAULT
 
 #define NUM_OPTION_SUBSPRITES 4
+#define NUM_HGSS_POKEGEAR_CURSOR_SPRITES 4
 
 #define OPTION_DEFAULT_X          140
 #define OPTION_SELECTED_X         130
@@ -57,6 +60,7 @@ struct Pokenav_MenuGfx
     bool8 pokenavAlreadyOpen;
     bool32 iconVisible[MAX_POKENAV_MENUITEMS];
     struct Sprite *blueLightSprite;
+    struct Sprite *hgssCursorSprites[NUM_HGSS_POKEGEAR_CURSOR_SPRITES];
     struct Sprite *iconSprites[MAX_POKENAV_MENUITEMS][NUM_OPTION_SUBSPRITES];
     u8 bg1TilemapBuffer[BG_SCREEN_SIZE];
     u16 hgssAppSwitchTilemap[32 * HGSS_POKEGEAR_APP_SWITCH_HEIGHT_TILES];
@@ -77,6 +81,10 @@ static void LoadPokenavOptionPalettes(void);
 static void FreeAndDestroyMainMenuSprites(void);
 static void CreateMenuOptionSprites(void);
 static void DestroyMenuOptionSprites(void);
+static void CreateHgssPokegearCursorSprites(void);
+static void DestroyHgssPokegearCursorSprites(void);
+static void SetHgssPokegearCursorVisible(bool32 visible);
+static void UpdateHgssPokegearCursor(void);
 static void DrawCurrentMenuOptionLabels(void);
 static void DrawOptionLabelGfx(const u16 *const *, s32, s32);
 static bool32 IsPokeGearMainMenu(void);
@@ -135,6 +143,13 @@ static const u16 sHgssPokegearScreenShellTilemap[] = INCBIN_U16("graphics/gen4_u
 // The 256-pixel DS strip is cropped only by its empty 8-pixel side margins.
 static const u16 sHgssPokegearAppSwitchPal[] = INCGFX_U16("graphics/gen4_ui/hgss_pokegear/app_switch_gba.png", ".gbapal");
 static const u32 sHgssPokegearAppSwitchTiles[] = INCGFX_U32("graphics/gen4_ui/hgss_pokegear/app_switch_gba.png", ".4bpp");
+
+// Exact retail HGSS PokéGear cursor-corner pixels. The build generator resolves
+// retail NANR sequences 4..7 -> NCER cells 20..23, whose four corners are one
+// 16x16 cell plus H/V flips. The base cell keeps its member-6 pixel indices
+// and member-0 palette bank 1 byte-for-byte.
+static const u32 sHgssPokegearCursorCornerTiles[] = INCBIN_U32("graphics/gen4_ui/hgss_pokegear/cursor_corner.4bpp");
+static const u16 sHgssPokegearCursorCornerPal[] = INCBIN_U16("graphics/gen4_ui/hgss_pokegear/cursor_corner.gbapal");
 
 static const u8 gText_NoRibbonWinners[] = _("There are no RIBBON winners.");
 
@@ -202,6 +217,19 @@ static const struct SpritePalette sPokenavOptionsSpritePalettes[] =
     {&gPokenavOptions_Pal[0x40], PALTAG_OPTIONS_RED},
     {sMatchCallBlueLightPal, PALTAG_BLUE_LIGHT},
     {}
+};
+
+static const struct SpriteSheet sHgssPokegearCursorSpriteSheet =
+{
+    .data = sHgssPokegearCursorCornerTiles,
+    .size = sizeof(sHgssPokegearCursorCornerTiles),
+    .tag = GFXTAG_HGSS_POKEGEAR_CURSOR,
+};
+
+static const struct SpritePalette sHgssPokegearCursorSpritePalette =
+{
+    .data = sHgssPokegearCursorCornerPal,
+    .tag = PALTAG_HGSS_POKEGEAR_CURSOR,
 };
 
 // Tile number, palette tag offset
@@ -355,6 +383,40 @@ static const struct SpriteTemplate sMenuOptionSpriteTemplate =
     .paletteTag = PALTAG_OPTIONS_START,
     .oam = &sOamData_MenuOption,
     .affineAnims = sAffineAnims_MenuOption,
+};
+
+static const struct OamData sOamData_HgssPokegearCursor =
+{
+    .y = 0,
+    .affineMode = ST_OAM_AFFINE_OFF,
+    .objMode = ST_OAM_OBJ_NORMAL,
+    .bpp = ST_OAM_4BPP,
+    .shape = SPRITE_SHAPE(16x16),
+    .x = 0,
+    .size = SPRITE_SIZE(16x16),
+    .tileNum = 0,
+    .priority = 2,
+    .paletteNum = 0,
+};
+
+static const union AnimCmd sAnim_HgssPokegearCursor[] =
+{
+    ANIMCMD_FRAME(0, 1),
+    ANIMCMD_END,
+};
+
+static const union AnimCmd *const sAnims_HgssPokegearCursor[] =
+{
+    sAnim_HgssPokegearCursor,
+};
+
+static const struct SpriteTemplate sHgssPokegearCursorSpriteTemplate =
+{
+    .tileTag = GFXTAG_HGSS_POKEGEAR_CURSOR,
+    .paletteTag = PALTAG_HGSS_POKEGEAR_CURSOR,
+    .oam = &sOamData_HgssPokegearCursor,
+    .anims = sAnims_HgssPokegearCursor,
+    .callback = SpriteCallbackDummy,
 };
 
 static const struct OamData sBlueLightOamData =
@@ -824,18 +886,25 @@ static void LoadPokenavOptionPalettes(void)
     for (i = 0; i < ARRAY_COUNT(sPokenavOptionsSpriteSheets); i++)
         LoadCompressedSpriteSheet(&sPokenavOptionsSpriteSheets[i]);
     Pokenav_AllocAndLoadPalettes(sPokenavOptionsSpritePalettes);
+
+    // Phase 2: the authentic retail HGSS cursor is live alongside the legacy
+    // selection glow. The glow stays until CI validates this integration.
+    LoadSpriteSheet(&sHgssPokegearCursorSpriteSheet);
+    LoadSpritePalette(&sHgssPokegearCursorSpritePalette);
 }
 
 static void FreeAndDestroyMainMenuSprites(void)
 {
     FreeSpriteTilesByTag(GFXTAG_OPTIONS);
     FreeSpriteTilesByTag(GFXTAG_BLUE_LIGHT);
+    FreeSpriteTilesByTag(GFXTAG_HGSS_POKEGEAR_CURSOR);
     FreeSpritePaletteByTag(PALTAG_OPTIONS_DEFAULT);
     FreeSpritePaletteByTag(PALTAG_OPTIONS_BLUE);
     FreeSpritePaletteByTag(PALTAG_OPTIONS_PINK);
     FreeSpritePaletteByTag(PALTAG_OPTIONS_BEIGE);
     FreeSpritePaletteByTag(PALTAG_OPTIONS_RED);
     FreeSpritePaletteByTag(PALTAG_BLUE_LIGHT);
+    FreeSpritePaletteByTag(PALTAG_HGSS_POKEGEAR_CURSOR);
     DestroyMenuOptionSprites();
     DestroyRematchBlueLightSprite();
 }
@@ -854,6 +923,8 @@ static void CreateMenuOptionSprites(void)
             gSprites[spriteId].x2 = 32 * j;
         }
     }
+
+    CreateHgssPokegearCursorSprites();
 }
 
 static void DestroyMenuOptionSprites(void)
@@ -869,6 +940,82 @@ static void DestroyMenuOptionSprites(void)
             DestroySprite(gfx->iconSprites[i][j]);
         }
     }
+
+    DestroyHgssPokegearCursorSprites();
+}
+
+static void CreateHgssPokegearCursorSprites(void)
+{
+    struct Pokenav_MenuGfx *gfx = GetSubstructPtr(POKENAV_SUBSTRUCT_MENU_GFX);
+    s32 i;
+
+    for (i = 0; i < NUM_HGSS_POKEGEAR_CURSOR_SPRITES; i++)
+    {
+        u8 spriteId = CreateSprite(&sHgssPokegearCursorSpriteTemplate, 0, 0, 2);
+        gfx->hgssCursorSprites[i] = &gSprites[spriteId];
+        gfx->hgssCursorSprites[i]->invisible = TRUE;
+    }
+
+    // Retail sequences 4..7 are, respectively: normal, V-flip, H-flip,
+    // H+V-flip of the same 16x16 corner cell.
+    SetSpriteOamFlipBits(gfx->hgssCursorSprites[0], FALSE, FALSE);
+    SetSpriteOamFlipBits(gfx->hgssCursorSprites[1], FALSE, TRUE);
+    SetSpriteOamFlipBits(gfx->hgssCursorSprites[2], TRUE, FALSE);
+    SetSpriteOamFlipBits(gfx->hgssCursorSprites[3], TRUE, TRUE);
+    UpdateHgssPokegearCursor();
+}
+
+static void DestroyHgssPokegearCursorSprites(void)
+{
+    struct Pokenav_MenuGfx *gfx = GetSubstructPtr(POKENAV_SUBSTRUCT_MENU_GFX);
+    s32 i;
+
+    for (i = 0; i < NUM_HGSS_POKEGEAR_CURSOR_SPRITES; i++)
+        DestroySprite(gfx->hgssCursorSprites[i]);
+}
+
+static void SetHgssPokegearCursorVisible(bool32 visible)
+{
+    struct Pokenav_MenuGfx *gfx = GetSubstructPtr(POKENAV_SUBSTRUCT_MENU_GFX);
+    s32 i;
+
+    for (i = 0; i < NUM_HGSS_POKEGEAR_CURSOR_SPRITES; i++)
+        gfx->hgssCursorSprites[i]->invisible = !visible;
+}
+
+static void UpdateHgssPokegearCursor(void)
+{
+    struct Pokenav_MenuGfx *gfx = GetSubstructPtr(POKENAV_SUBSTRUCT_MENU_GFX);
+    s32 cursorPos;
+    s32 rowY;
+    s32 leftX;
+    s32 rightX;
+
+    if (!IsPokeGearMainMenu())
+    {
+        SetHgssPokegearCursorVisible(FALSE);
+        return;
+    }
+
+    cursorPos = GetPokenavCursorPos();
+    rowY = 36 + 22 * cursorPos;
+
+    // The legacy labels are four untouched 32x16 functional sprites. Keep the
+    // HGSS 16x16 corner pixels at native size and only separate the corners to
+    // frame that 128x16 interaction target; no HGSS pixel is stretched.
+    leftX = POKEGEAR_OPTION_SELECTED_X - 16;
+    rightX = leftX + NUM_OPTION_SUBSPRITES * 32;
+
+    gfx->hgssCursorSprites[0]->x = leftX;
+    gfx->hgssCursorSprites[0]->y = rowY - 8;
+    gfx->hgssCursorSprites[1]->x = leftX;
+    gfx->hgssCursorSprites[1]->y = rowY + 8;
+    gfx->hgssCursorSprites[2]->x = rightX;
+    gfx->hgssCursorSprites[2]->y = rowY - 8;
+    gfx->hgssCursorSprites[3]->x = rightX;
+    gfx->hgssCursorSprites[3]->y = rowY + 8;
+
+    SetHgssPokegearCursorVisible(TRUE);
 }
 
 static void LoadHgssPokegearScreenShell(void)
@@ -1070,6 +1217,8 @@ static void StartOptionAnimations_Exit(void)
 {
     s32 i;
     s32 defaultX = GetOptionDefaultX();
+
+    SetHgssPokegearCursorVisible(FALSE);
     struct Pokenav_MenuGfx *gfx = GetSubstructPtr(POKENAV_SUBSTRUCT_MENU_GFX);
 
     for (i = 0; i < MAX_POKENAV_MENUITEMS; i++)
@@ -1513,6 +1662,9 @@ static void SetMenuOptionGlow(void)
     int menuType = GetPokenavMenuType();
     int cursorPos = GetPokenavCursorPos();
     int r4 = sPokenavMenuOptionLabelGfx[menuType].deltaY * cursorPos + sPokenavMenuOptionLabelGfx[menuType].yStart - 8;
+
+    UpdateHgssPokegearCursor();
+
     CpuFill16(0, gScanlineEffectRegBuffers[0], DISPLAY_HEIGHT * 2);
     CpuFill16(0, gScanlineEffectRegBuffers[1], DISPLAY_HEIGHT * 2);
     CpuFill16(RGB(16, 23, 28), &gScanlineEffectRegBuffers[0][r4], 0x20);
