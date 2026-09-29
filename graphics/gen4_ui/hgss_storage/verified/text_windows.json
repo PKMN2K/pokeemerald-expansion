@@ -1,0 +1,63 @@
+{
+  "role": "storage_text_windows_palette",
+  "classification": "native_hgss_font_palette",
+  "source_game": "Pokemon HeartGold / SoulSilver",
+  "decomp_verification": {
+    "repository": "pret/pokeheartgold",
+    "revision": "9d8b7591f09b65804da2fb2dfd56f320633e0d36",
+    "storage_overlay": "asm/overlay_14.s",
+    "init_function": "ov14_021E5DE0",
+    "font_allocation_function": "ov14_021F4ED0",
+    "font_id": 4,
+    "font_heap_id": 10,
+    "font_palette_load": "LoadFontPal0(fontId=4, paletteOffset=0x1E0, heapId=10)",
+    "normal_storage_text_color": "0x00010200",
+    "font_palette_source": "files/graphic/font/font_00000007.bin",
+    "font_palette_git_blob_sha": "0a4e5fb8d4c7de046ffa7a164ad45fc0e45558b3"
+  },
+  "verified_palette": {
+    "file": "text_windows_hgss.gbapal",
+    "git_blob_sha": "975495973ba86ed1e1d53104f6e2a4ef2fd6471d",
+    "bytes": 32,
+    "colors_bgr555": [
+      "0x3713",
+      "0x296B",
+      "0x5EF5",
+      "0x089D",
+      "0x5EBF",
+      "0x0F45",
+      "0x47B3",
+      "0x7DC0",
+      "0x76EF",
+      "0x5E5F",
+      "0x737F",
+      "0x0000",
+      "0x0000",
+      "0x0000",
+      "0x0000",
+      "0x7FFF"
+    ],
+    "extraction_rule": "Exact 16-color BGR555 payload from retail HGSS font_00000007.bin NCLR. No color edits, remapping, interpolation, or synthetic values."
+  },
+  "current_legacy": {
+    "file": "graphics/pokemon_storage/swsh/text_windows.pal",
+    "symbol": "sTextWindows_Pal",
+    "live": true,
+    "current_uses": [
+      "BG palette bank 15 initialization for Storage text windows",
+      "restoration after closing HGSS markings menu",
+      "restoration after closing HGSS context menu"
+    ]
+  },
+  "context": {
+    "visible_window_art_already_hgss": true,
+    "note": "Message, yes/no, context-menu, and mon-info panel chrome already use verified retail HGSS graphics and their own authentic palettes. The remaining legacy file is only the shared text/window palette seed for BG palette bank 15."
+  },
+  "status": "phase 1 complete: the final live SWSH-era Storage asset reference is identified as text_windows.pal; the exact retail HGSS font palette used by Storage font ID 4 has been extracted and verified",
+  "next": "Phase 2: replace sTextWindows_Pal with the verified retail HGSS font palette, reconcile the GBA text-color index mapping against HGSS packed color 0x00010200 and existing mon-info text states, and retain text_windows.pal only for verification.",
+  "pipeline": {
+    "authentic_hgss_asset_ready": true,
+    "wired_live": false,
+    "legacy_equivalent_removed": false
+  }
+}

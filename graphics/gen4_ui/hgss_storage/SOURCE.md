@@ -1132,3 +1132,37 @@ The active compact marking display is exclusively:
 
 This completes the strict sequence for the compact marking display:
 **authentic HGSS asset -> wire live -> remove legacy equivalent**.
+
+
+## Authentic HGSS Storage text palette — phase 1
+
+The post-marking scan leaves exactly one live SWSH-era Storage asset reference:
+`graphics/pokemon_storage/swsh/text_windows.pal` via `sTextWindows_Pal`.
+This file is **not** supplying the visible message/context/yes-no chrome; those
+surfaces already use verified retail HGSS graphics and their own authentic
+palettes. The remaining legacy role is only the shared BG palette-15 seed used
+by Storage text windows and restored after temporary menu overlays close.
+
+Retail HGSS Storage provides an exact replacement path. In
+`pret/pokeheartgold` `asm/overlay_14.s`, `ov14_021F4ED0` allocates font ID 4,
+and `ov14_021E5DE0` explicitly calls:
+
+`LoadFontPal0(fontId=4, paletteOffset=0x1E0, heapId=10)`.
+
+Normal Storage text is then rendered through the overlay text helper with the
+packed color argument `0x00010200`.
+
+The corresponding retail font palette is
+`files/graphic/font/font_00000007.bin`. Its exact 16-color BGR555 payload has
+been extracted losslessly to
+`verified/text_windows_hgss.gbapal`:
+
+`3713 296B 5EF5 089D 5EBF 0F45 47B3 7DC0 76EF 5E5F 737F 0000 0000 0000 0000 7FFF`.
+
+No colors were invented or altered. This phase does **not** wire the palette
+live yet because the current GBA windows use legacy text-color index tuples
+that must be reconciled deliberately with HGSS's packed text-color semantics.
+The old `text_windows.pal` remains live until phase 2.
+
+Machine-readable provenance is recorded in
+`verified/text_windows.json`.
