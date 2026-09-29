@@ -854,3 +854,34 @@ With Fairy now resolved through an authentic-HGSS-only composition and Stellar
 explicitly excluded by project design, there are no remaining expanded-type
 asset blockers before phase 2 live wiring. The legacy type atlas remains live
 until that wiring is completed and verified.
+
+
+## Authentic HGSS Storage Fairy badge — phase 1A revision
+
+The earlier Fairy composite used the retail Psychic badge as its structural base.
+That has been superseded by a cleaner provenance path using the **retail HGSS
+Mystery (???) badge itself**, which is HGSS type 9 and /a/0/0/8 member 236. The
+supplied Fairy-enabled HGSS hack also replaces this same native slot, making it
+the most appropriate authentic structural source.
+
+The revised `verified/type_icon_fairy_hgss_composite.4bpp` preserves the exact
+Mystery badge's 32x16 geometry. Its three type-specific palette indices are
+role-remapped without drawing new colors:
+
+- Mystery index A -> HGSS bank-1 index 8: #F85888
+- Mystery index B -> HGSS bank-1 index 9: #F8C0B0
+- Mystery index C -> HGSS bank-1 index A: #906060
+
+Those destination colors already exist in the unmodified retail HGSS type palette
+member 0x4A. Neutral/lettering indices remain the native shared HGSS values. The
+native ??? label is removed only from its central label field, and the previously
+verified retail-HGSS F/A/I/R/Y glyph pixels are placed over that field.
+
+Therefore the final Fairy badge is now:
+
+**retail HGSS Mystery geometry -> retail HGSS pink palette roles -> retail HGSS
+FAIRY glyph pixels**.
+
+No ROM-hack Fairy pixels, custom colors, redraw, resampling, or synthetic glyph
+geometry are present. The legacy Storage type atlas remains live; phase 2 wiring
+has still not begun.

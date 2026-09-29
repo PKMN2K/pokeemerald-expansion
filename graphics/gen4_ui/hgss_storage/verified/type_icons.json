@@ -40,7 +40,7 @@
       "file": "type_icon_fairy_hgss_composite.4bpp",
       "bytes": 256,
       "git_blob_sha": "5d85f0c4e4d7da7b50efb647a4d607f3e3dd06aa",
-      "layout": "One 32x16 4bpp badge composed only from verified retail HGSS /a/0/0/8 type-badge pixels; uses native palette bank 1 from type_icons_hgss_gen4.gbapal."
+      "layout": "One 32x16 4bpp Fairy badge derived from the verified retail HGSS Mystery/??? badge geometry. Native bank-2 type-color roles A/B/C are remapped to authentic bank-1 pink roles 8/9/A; FAIRY lettering is composed from untouched retail HGSS type-badge glyph pixels."
     }
   },
   "native_types": [
@@ -194,16 +194,36 @@
       "expansion_type": 19,
       "native_hgss_badge": false,
       "resolved": true,
-      "adaptation": "authentic_hgss_pixel_composite",
+      "adaptation": "authentic_hgss_mystery_badge_repalette_and_glyph_composite",
       "output": "type_icon_fairy_hgss_composite.4bpp",
       "palette_bank": 1,
       "base_badge": {
-        "name": "PSYCHIC",
-        "hgss_type": 14,
-        "expansion_type": 15,
-        "graphics_member": 223,
-        "rule": "Use the verified retail HGSS Psychic badge as the complete 32x16 base. Only its F/E label pixels in y=4..11 are cleared back to the badge's native base palette index 8; frame/background pixels are otherwise unchanged."
+        "name": "MYSTERY",
+        "hgss_type": 9,
+        "expansion_type": 10,
+        "graphics_member": 236,
+        "rule": "Use the verified retail HGSS Mystery/??? badge as the complete 32x16 geometry source."
       },
+      "palette_role_remap": [
+        {
+          "source_index": 10,
+          "source_role": "Mystery base",
+          "dest_index": 8,
+          "dest_color": "HGSS bank-1 pink #F85888"
+        },
+        {
+          "source_index": 11,
+          "source_role": "Mystery highlight",
+          "dest_index": 9,
+          "dest_color": "HGSS bank-1 light pink #F8C0B0"
+        },
+        {
+          "source_index": 12,
+          "source_role": "Mystery shadow/accent",
+          "dest_index": 10,
+          "dest_color": "HGSS bank-1 muted pink-brown #906060"
+        }
+      ],
       "glyph_donors": [
         {
           "letter": "F",
@@ -291,11 +311,11 @@
           }
         }
       ],
-      "pixel_rule": "Copy only retail HGSS palette-index F/E glyph pixels from the donor rectangles. No glyph is redrawn, scaled, recolored, or sourced from the ROM-hack Fairy art. All other pixels remain the verified retail HGSS Psychic badge.",
-      "palette_rule": "Use unchanged retail HGSS type palette member 0x4A bank 1; no Fairy-specific colors are added.",
+      "pixel_rule": "No custom colors or drawn geometry. The retail Mystery badge supplies all structural pixels; only its three type-specific palette indices are reassigned to existing retail HGSS bank-1 pink indices. The ??? label is replaced by retail HGSS F/E glyph pixels from native type badges.",
+      "palette_rule": "Use unchanged retail HGSS /a/0/0/8 member 0x4A bank 1. No palette entries are added or altered.",
       "hack_reference": {
-        "purpose": "layout/reference only",
-        "finding": "The ROM-hack Fairy member demonstrates the established 32x16 type-badge slot, but its lettering is not accepted wholesale: F and I match retail HGSS while at least A differs from the native HGSS A glyph.",
+        "purpose": "slot/layout reference only",
+        "finding": "The supplied Fairy-enabled HGSS hack replaces the native Mystery slot, reinforcing Mystery as the correct structural base. No hack Fairy pixels or custom palette colors are copied.",
         "pixels_copied": false
       }
     },
@@ -317,8 +337,8 @@
     "runtime_function": "UpdateTypeIconTiles",
     "live": true
   },
-  "status": "phase 1 complete: all native HGSS badges imported; Fairy resolved with an authentic-HGSS-only composite; Stellar intentionally unsupported, so no expanded-type presentation blocker remains before live wiring",
-  "next": "Phase 2: map expansion TYPE_NORMAL..TYPE_DARK plus TYPE_FAIRY to the verified HGSS badge resources, explicitly exclude TYPE_STELLAR from visible Storage presentation, and wire the authentic type presentation live while retaining the old atlas for verification.",
+  "status": "phase 1 complete: all native HGSS badges imported; Fairy resolved from the native Mystery badge using only retail HGSS palette roles and glyph pixels; Stellar intentionally unsupported; no asset blockers remain before live wiring",
+  "next": "Phase 2: map TYPE_NORMAL..TYPE_DARK plus TYPE_FAIRY to verified HGSS resources, explicitly exclude TYPE_STELLAR, and wire the authentic type presentation live while retaining the legacy atlas for verification.",
   "pipeline": {
     "authentic_hgss_native_assets_imported": true,
     "expanded_only_types_resolved": true,
