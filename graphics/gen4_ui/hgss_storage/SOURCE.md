@@ -759,3 +759,42 @@ the dedicated `PALTAG_HGSS_POKERUS_SYMBOL` path.
 
 This completes the strict sequence for the Pokérus indicator:
 authentic HGSS asset -> wire live -> remove legacy equivalent.
+
+
+## Authentic HGSS Storage type badges — phase 1
+
+The next unresolved native Storage presentation is the Pokémon type badge set.
+Unlike shiny/Pokérus, this role is directly present in HGSS Storage itself.
+`ov14_021F3D70` renders the two type slots and calls `ov14_021F3D0C` to
+replace each sprite's character data and select its palette. That helper uses
+`sub_020776B4` (NARC ID 8), `sub_02077678` (type -> character member), and
+`sub_0207769C` (type -> palette bank).
+
+NARC ID 8 is `/a/0/0/8`. For HGSS Pokémon types 0..17, every mapped NCGR
+decompresses to exactly 0x100 bytes of native 4bpp character data: eight
+8x8 tiles, matching a 32x16 badge. Storage loads palette member 0x4A from the
+same archive and uses three 16-color banks.
+
+Phase 1 imports those resources without redrawing or palette flattening:
+
+- `verified/type_icons_hgss_gen4.4bpp` — the 18 exact 0x100-byte character
+  blocks concatenated in HGSS type-ID order (Normal through Dark, including
+  the Gen-IV Mystery slot).
+- `verified/type_icons_hgss_gen4.gbapal` — the exact 96-byte three-bank
+  BGR555 palette payload from member 0x4A.
+- `verified/type_icons.json` — member IDs, palette-bank mapping, source
+  checksums, and expansion-ID mapping.
+
+The canonical HGSS filesystem SHA-1 for `/a/0/0/8` is
+`670ec02b1742a7b711caafea295113d5ab88b51b`.
+
+Our expansion numbers types one slot later because `TYPE_NONE = 0`, so the
+native HGSS badges map directly to expansion `TYPE_NORMAL = 1` through
+`TYPE_DARK = 18`. HGSS predates expansion `TYPE_FAIRY = 19` and
+`TYPE_STELLAR = 20`; those two are intentionally **not** fabricated in this
+phase. Per the project's authenticity rule, their phase-2 presentation must be
+built only from explicitly documented authentic HGSS source artwork before the
+legacy type atlas can be removed.
+
+The current `graphics/pokemon_storage/swsh/type_icons.png` path remains live.
+This is phase 1 only.

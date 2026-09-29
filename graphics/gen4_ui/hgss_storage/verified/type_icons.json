@@ -1,0 +1,213 @@
+{
+  "role": "type_icons",
+  "classification": "native_hgss_storage_type_badges",
+  "source_game": "Pokemon HeartGold / SoulSilver",
+  "decomp_verification": {
+    "repository": "pret/pokeheartgold",
+    "revision": "9d8b7591f09b65804da2fb2dfd56f320633e0d36",
+    "storage_overlay": "asm/overlay_14.s",
+    "setup": "ov14_021F3C08",
+    "renderer": "ov14_021F3D70",
+    "dynamic_loader": "ov14_021F3D0C",
+    "type_member_map_function": "sub_02077678",
+    "type_palette_map_function": "sub_0207769C",
+    "source_narc_function": "sub_020776B4",
+    "source_narc_id": 8,
+    "source_archive": "/a/0/0/8",
+    "palette_member": 74,
+    "palette_banks": 3,
+    "finding": "HGSS Storage dynamically loads each Pokemon type badge from NARC 8 and applies one of three palette banks. Each badge resolves to exactly 0x100 bytes of 4bpp character data (8 tiles = 32x16 pixels)."
+  },
+  "source_archive": {
+    "path": "/a/0/0/8",
+    "filesystem_sha1": "670ec02b1742a7b711caafea295113d5ab88b51b",
+    "git_blob_sha": "379a0012eaf5d5561d7555bc73baef4d62797cc9"
+  },
+  "exports": {
+    "graphics": {
+      "file": "type_icons_hgss_gen4.4bpp",
+      "bytes": 4608,
+      "git_blob_sha": "a194840d96b37ab5286657be8073d804ff9dd314",
+      "layout": "18 consecutive 0x100-byte native HGSS type badges in HGSS type-ID order 0..17; each entry retains original 4bpp tile bytes unchanged."
+    },
+    "palette": {
+      "file": "type_icons_hgss_gen4.gbapal",
+      "bytes": 96,
+      "git_blob_sha": "04efed17079c80ee3b9e8f124f1dbaf900669c30",
+      "layout": "Exact 3 x 16-color BGR555 palette banks from /a/0/0/8 member 0x4A."
+    }
+  },
+  "native_types": [
+    {
+      "name": "NORMAL",
+      "hgss_type": 0,
+      "expansion_type": 1,
+      "graphics_member": 234,
+      "graphics_member_hex": "0xEA",
+      "palette_bank": 0
+    },
+    {
+      "name": "FIGHTING",
+      "hgss_type": 1,
+      "expansion_type": 2,
+      "graphics_member": 225,
+      "graphics_member_hex": "0xE1",
+      "palette_bank": 0
+    },
+    {
+      "name": "FLYING",
+      "hgss_type": 2,
+      "expansion_type": 3,
+      "graphics_member": 227,
+      "graphics_member_hex": "0xE3",
+      "palette_bank": 1
+    },
+    {
+      "name": "POISON",
+      "hgss_type": 3,
+      "expansion_type": 4,
+      "graphics_member": 235,
+      "graphics_member_hex": "0xEB",
+      "palette_bank": 1
+    },
+    {
+      "name": "GROUND",
+      "hgss_type": 4,
+      "expansion_type": 5,
+      "graphics_member": 229,
+      "graphics_member_hex": "0xE5",
+      "palette_bank": 0
+    },
+    {
+      "name": "ROCK",
+      "hgss_type": 5,
+      "expansion_type": 6,
+      "graphics_member": 237,
+      "graphics_member_hex": "0xED",
+      "palette_bank": 0
+    },
+    {
+      "name": "BUG",
+      "hgss_type": 6,
+      "expansion_type": 7,
+      "graphics_member": 231,
+      "graphics_member_hex": "0xE7",
+      "palette_bank": 2
+    },
+    {
+      "name": "GHOST",
+      "hgss_type": 7,
+      "expansion_type": 8,
+      "graphics_member": 228,
+      "graphics_member_hex": "0xE4",
+      "palette_bank": 1
+    },
+    {
+      "name": "STEEL",
+      "hgss_type": 8,
+      "expansion_type": 9,
+      "graphics_member": 238,
+      "graphics_member_hex": "0xEE",
+      "palette_bank": 0
+    },
+    {
+      "name": "MYSTERY",
+      "hgss_type": 9,
+      "expansion_type": 10,
+      "graphics_member": 236,
+      "graphics_member_hex": "0xEC",
+      "palette_bank": 2
+    },
+    {
+      "name": "FIRE",
+      "hgss_type": 10,
+      "expansion_type": 11,
+      "graphics_member": 226,
+      "graphics_member_hex": "0xE2",
+      "palette_bank": 0
+    },
+    {
+      "name": "WATER",
+      "hgss_type": 11,
+      "expansion_type": 12,
+      "graphics_member": 241,
+      "graphics_member_hex": "0xF1",
+      "palette_bank": 1
+    },
+    {
+      "name": "GRASS",
+      "hgss_type": 12,
+      "expansion_type": 13,
+      "graphics_member": 233,
+      "graphics_member_hex": "0xE9",
+      "palette_bank": 2
+    },
+    {
+      "name": "ELECTRIC",
+      "hgss_type": 13,
+      "expansion_type": 14,
+      "graphics_member": 222,
+      "graphics_member_hex": "0xDE",
+      "palette_bank": 0
+    },
+    {
+      "name": "PSYCHIC",
+      "hgss_type": 14,
+      "expansion_type": 15,
+      "graphics_member": 223,
+      "graphics_member_hex": "0xDF",
+      "palette_bank": 1
+    },
+    {
+      "name": "ICE",
+      "hgss_type": 15,
+      "expansion_type": 16,
+      "graphics_member": 230,
+      "graphics_member_hex": "0xE6",
+      "palette_bank": 1
+    },
+    {
+      "name": "DRAGON",
+      "hgss_type": 16,
+      "expansion_type": 17,
+      "graphics_member": 221,
+      "graphics_member_hex": "0xDD",
+      "palette_bank": 2
+    },
+    {
+      "name": "DARK",
+      "hgss_type": 17,
+      "expansion_type": 18,
+      "graphics_member": 224,
+      "graphics_member_hex": "0xE0",
+      "palette_bank": 0
+    }
+  ],
+  "expanded_engine_gaps": {
+    "fairy": {
+      "expansion_type": 19,
+      "native_hgss_badge": false
+    },
+    "stellar": {
+      "expansion_type": 20,
+      "native_hgss_badge": false
+    },
+    "rule": "Do not fabricate HGSS-style badges. Before phase 2 completes, Fairy and Stellar must be filled only through explicitly documented repurposing/composition of authentic HGSS artwork, or otherwise kept on a clearly isolated fallback until an authentic-source adaptation is ready."
+  },
+  "current_expansion_legacy": {
+    "graphics": "graphics/pokemon_storage/swsh/type_icons.png",
+    "graphics_git_blob_sha": "dfc81e4ce9d3de960140d17b4478badffa493557",
+    "gfx_symbol": "sTypeIcons_Gfx",
+    "palette_symbol": "sTypeIcons_Pal",
+    "runtime_function": "UpdateTypeIconTiles",
+    "live": true
+  },
+  "status": "phase 1 complete: all 18 native HGSS Pokemon type badges and exact 3-bank palette imported losslessly; expansion Fairy/Stellar adaptations remain unresolved before live wiring",
+  "next": "Phase 2 preparation: build authentic-source Fairy/Stellar adaptations, then map expansion TYPE_NORMAL..TYPE_DARK to the imported HGSS pack and wire the complete type presentation live while retaining the old atlas for verification.",
+  "pipeline": {
+    "authentic_hgss_native_assets_imported": true,
+    "expanded_only_types_resolved": false,
+    "wired_live": false,
+    "legacy_equivalent_removed": false
+  }
+}
