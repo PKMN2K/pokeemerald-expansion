@@ -868,6 +868,8 @@ static void CreateMarkingComboSprite(void);
 static void UpdateMarkingComboSprite(void);
 static void ClearBottomWindow(void);
 static void UpdateGenderIconSprite(u8);
+static bool8 IsHgssStorageTypeSupported(enum Type);
+static u8 GetHgssStorageTypePaletteBank(enum Type);
 static void UpdateTypeIconTiles(u8, void *);
 static void SpriteCB_TypeIcon(struct Sprite *);
 static void UpdateTypeIconsSprite(void);
@@ -3755,7 +3757,7 @@ static bool8 InitPalettesAndSprites(void)
         sStorage->graphicsLoadState++;
         break;
     case 1:
-        LoadPalette(sTypeIcons_Pal, OBJ_PLTT_ID(13), 3 * PLTT_SIZE_4BPP);
+        LoadPalette(sHgssTypeIcons_Pal, OBJ_PLTT_ID(13), 3 * PLTT_SIZE_4BPP);
         sStorage->graphicsLoadState++;
         break;
     case 2:
@@ -3965,10 +3967,50 @@ static void UpdatePokerusIconSprite(void)
     }
 }
 
+static bool8 IsHgssStorageTypeSupported(enum Type type)
+{
+    // Stellar is intentionally unsupported in this project. Retail HGSS types
+    // map directly through Dark, with Fairy supplied by the verified
+    // authentic-source composite.
+    return type >= TYPE_NORMAL && type <= TYPE_FAIRY;
+}
+
+static u8 GetHgssStorageTypePaletteBank(enum Type type)
+{
+    // Exact palette-bank choices from HGSS sub_0207769C for native types.
+    // Fairy deliberately uses unchanged retail HGSS bank 1.
+    switch (type)
+    {
+    case TYPE_FLYING:
+    case TYPE_POISON:
+    case TYPE_GHOST:
+    case TYPE_WATER:
+    case TYPE_PSYCHIC:
+    case TYPE_ICE:
+    case TYPE_FAIRY:
+        return 1;
+    case TYPE_BUG:
+    case TYPE_MYSTERY:
+    case TYPE_GRASS:
+    case TYPE_DRAGON:
+        return 2;
+    default:
+        return 0;
+    }
+}
+
 static void UpdateTypeIconTiles(u8 typeId, void *dest)
 {
-    u32 offset = (typeId + 1) * 0x100; // +1 to skip placeholder tiles at start of graphics
-    RequestDma3Copy(&sTypeIcons_Gfx[offset], dest, 0x100, 0x10);
+    const u8 *src;
+
+    if (typeId >= TYPE_NORMAL && typeId <= TYPE_DARK)
+        src = &sHgssTypeIcons_Gfx[(typeId - TYPE_NORMAL) * 0x100];
+    else if (typeId == TYPE_FAIRY)
+        src = sHgssFairyTypeIcon_Gfx;
+    else
+        return;
+
+    RequestDma3Copy(src, dest, 0x100, 0x10);
 }
 
 static void SpriteCB_TypeIcon(struct Sprite *sprite)
@@ -4010,6 +4052,21 @@ static void UpdateTypeIconsSprite(void)
         type2 = gSpeciesInfo[species].types[1];
     }
 
+    // TYPE_STELLAR is retained by the expansion engine for compatibility but
+    // is not a gameplay type in this project. Never invent or display an HGSS
+    // badge for it. If it appears unexpectedly as the primary type, suppress
+    // the type presentation entirely; an unsupported secondary type is omitted.
+    if (!IsHgssStorageTypeSupported(type1))
+    {
+        if (sStorage->typeIconSprites[0] != NULL)
+            sStorage->typeIconSprites[0]->invisible = TRUE;
+        if (sStorage->typeIconSprites[1] != NULL)
+            sStorage->typeIconSprites[1]->invisible = TRUE;
+        return;
+    }
+    if (!IsHgssStorageTypeSupported(type2))
+        type2 = type1;
+
     spriteX1 = 20 + (136 * sStorage->monInfoTilemapId);
     spriteX2 = 56 + (136 * sStorage->monInfoTilemapId);
     spriteY = 50;
@@ -4027,8 +4084,7 @@ static void UpdateTypeIconsSprite(void)
         sStorage->typeIconSprites[0]->y = spriteY;
     }
 
-    if (type1 < NUMBER_OF_MON_TYPES)
-        sStorage->typeIconSprites[0]->oam.paletteNum = gTypesInfo[type1].palette;
+    sStorage->typeIconSprites[0]->oam.paletteNum = 13 + GetHgssStorageTypePaletteBank(type1);
     sStorage->typeIconSprites[0]->data[0] = type1;
     sStorage->typeIconSprites[0]->invisible = FALSE;
 
@@ -4048,8 +4104,7 @@ static void UpdateTypeIconsSprite(void)
             sStorage->typeIconSprites[1]->y = spriteY;
         }
 
-        if (type2 < NUMBER_OF_MON_TYPES)
-            sStorage->typeIconSprites[1]->oam.paletteNum = gTypesInfo[type2].palette;
+        sStorage->typeIconSprites[1]->oam.paletteNum = 13 + GetHgssStorageTypePaletteBank(type2);
         sStorage->typeIconSprites[1]->data[0] = type2;
         sStorage->typeIconSprites[1]->invisible = FALSE;
     }

@@ -335,17 +335,31 @@
     "gfx_symbol": "sTypeIcons_Gfx",
     "palette_symbol": "sTypeIcons_Pal",
     "runtime_function": "UpdateTypeIconTiles",
-    "live": true
+    "live": false,
+    "retained_for_phase_2_verification": true,
+    "live_replacement": {
+      "native_graphics": "graphics/gen4_ui/hgss_storage/verified/type_icons_hgss_gen4.4bpp",
+      "fairy_graphics": "graphics/gen4_ui/hgss_storage/verified/type_icon_fairy_hgss_composite.4bpp",
+      "palette": "graphics/gen4_ui/hgss_storage/verified/type_icons_hgss_gen4.gbapal",
+      "runtime_function": "UpdateTypeIconTiles"
+    }
   },
-  "status": "phase 1 complete: all native HGSS badges imported; Fairy resolved from the native Mystery badge using only retail HGSS palette roles and glyph pixels; Stellar intentionally unsupported; no asset blockers remain before live wiring",
-  "next": "Phase 2: map TYPE_NORMAL..TYPE_DARK plus TYPE_FAIRY to verified HGSS resources, explicitly exclude TYPE_STELLAR, and wire the authentic type presentation live while retaining the legacy atlas for verification.",
+  "status": "phase 2 complete in code: verified HGSS native badges and authentic-source Fairy are the live Storage type presentation; Stellar is suppressed; legacy type_icons.png is retained only for verification",
+  "next": "Verify the phase-2 HGSS type-badge path in CI/runtime. After successful verification, phase 3 removes graphics/pokemon_storage/swsh/type_icons.png and any remaining legacy-equivalent metadata.",
   "pipeline": {
     "authentic_hgss_native_assets_imported": true,
     "expanded_only_types_resolved": true,
-    "wired_live": false,
+    "wired_live": true,
     "legacy_equivalent_removed": false,
     "fairy_authentic_source_adaptation_resolved": true,
     "stellar_authentic_source_adaptation_resolved": false,
     "stellar_intentionally_unsupported": true
+  },
+  "live_mapping": {
+    "native_types": "TYPE_NORMAL..TYPE_DARK map directly to concatenated HGSS badge entries using (type - TYPE_NORMAL) * 0x100.",
+    "fairy": "TYPE_FAIRY uses type_icon_fairy_hgss_composite.4bpp and HGSS palette bank 1.",
+    "stellar": "TYPE_STELLAR is explicitly unsupported and suppressed from visible Storage presentation.",
+    "palette_base_obj_slot": 13,
+    "palette_banks": "Exact HGSS bank mapping from sub_0207769C; Fairy uses bank 1."
   }
 }

@@ -885,3 +885,35 @@ FAIRY glyph pixels**.
 No ROM-hack Fairy pixels, custom colors, redraw, resampling, or synthetic glyph
 geometry are present. The legacy Storage type atlas remains live; phase 2 wiring
 has still not begun.
+
+
+## Authentic HGSS Storage type badges — phase 2
+
+The verified HGSS type resources are now the live Storage presentation. The
+existing two-slot DMA renderer is retained because it already matches the role
+well: only the two visible 32x16 OBJ cells occupy VRAM, and each selected type
+badge is copied into its slot on demand.
+
+The live sources are now:
+
+- native types `TYPE_NORMAL` through `TYPE_DARK`:
+  `verified/type_icons_hgss_gen4.4bpp`, indexed directly by
+  `(type - TYPE_NORMAL) * 0x100`;
+- `TYPE_FAIRY`: `verified/type_icon_fairy_hgss_composite.4bpp`;
+- palette: the exact three retail HGSS banks in
+  `verified/type_icons_hgss_gen4.gbapal`.
+
+The renderer no longer uses `gTypesInfo[type].palette` for this Storage role.
+Instead it applies the exact HGSS `sub_0207769C` palette-bank mapping to OBJ
+palette slots 13..15. Fairy uses unchanged bank 1, matching its verified
+Mystery-geometry/pink-role composition.
+
+`TYPE_STELLAR` is explicitly excluded. If it is encountered unexpectedly as
+a primary type, the Storage type badges are hidden; if encountered only as an
+unsupported secondary type, that secondary badge is omitted. No Stellar art is
+invented.
+
+The former expansion atlas
+`graphics/pokemon_storage/swsh/type_icons.png` remains in the repository for
+phase-2 verification but is no longer compiled or referenced by the live
+Storage renderer. It must not be deleted until this path passes verification.

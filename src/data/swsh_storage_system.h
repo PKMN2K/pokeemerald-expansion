@@ -287,8 +287,12 @@ static const u32 sHgssPokerusSymbol_Gfx[]      = INCGFX_U32("graphics/gen4_ui/hg
 static const u16 sHgssPokerusSymbol_Pal[]      = INCGFX_U16("graphics/gen4_ui/hgss_storage/verified/pokerus_symbol.png", ".gbapal");
 static const u32 sStatLabels_Gfx[]            = INCGFX_U32("graphics/pokemon_storage/swsh/stat_labels.png", ".4bpp.smol");
 static const u16 sStatLabels_Pal[]             = INCGFX_U16("graphics/pokemon_storage/swsh/stat_labels.png", ".gbapal");
-static const ALIGNED(4) u8 sTypeIcons_Gfx[]   = INCGFX_U8("graphics/pokemon_storage/swsh/type_icons.png", ".4bpp");
-static const u16 sTypeIcons_Pal[]             = INCGFX_U16("graphics/pokemon_storage/swsh/type_icons.png", ".gbapal");
+// Authentic HGSS Storage type badges: exact /a/0/0/8 32x16 character data
+// plus the authentic-source Fairy composite. The three palette banks are the
+// exact retail HGSS /a/0/0/8 member 0x4A payload.
+static const ALIGNED(4) u8 sHgssTypeIcons_Gfx[] = INCBIN_U8("graphics/gen4_ui/hgss_storage/verified/type_icons_hgss_gen4.4bpp");
+static const ALIGNED(4) u8 sHgssFairyTypeIcon_Gfx[] = INCBIN_U8("graphics/gen4_ui/hgss_storage/verified/type_icon_fairy_hgss_composite.4bpp");
+static const u16 sHgssTypeIcons_Pal[] = INCBIN_U16("graphics/gen4_ui/hgss_storage/verified/type_icons_hgss_gen4.gbapal");
 
 // ============================================================================
 // Text Strings
@@ -1268,8 +1272,8 @@ static const struct OamData sOamData_TypeIcons =
 // Uncompressed sprite sheet (only 2 slots loaded to save VRAM)
 static const struct SpriteSheet sSpriteSheet_TypeIcons =
 {
-    .data = sTypeIcons_Gfx,
-    .size = 2 * 0x100, // Only load 2 type icon slots (saves 4.75 KB VRAM)
+    .data = sHgssTypeIcons_Gfx,
+    .size = 2 * 0x100, // Only load 2 type icon slots; live badges are DMA-swapped per slot.
     .tag = GFXTAG_TYPE_ICON,
 };
 
