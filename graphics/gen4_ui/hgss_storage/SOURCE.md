@@ -722,3 +722,24 @@ phase 3 will remove the legacy equivalent after verification.
 
 The machine-readable provenance record is
 `verified/pokerus_indicator.json`.
+
+
+## Authentic HGSS Pokérus indicator — phase 2
+
+The verified HGSS Summary Pokérus symbol is now the live Storage presentation.
+`sSpriteSheet_PokerusIcon` reads the exact 8x8 tile from
+`verified/pokerus_symbol.png` through `sHgssPokerusSymbol_Gfx`, and a
+dedicated `PALTAG_HGSS_POKERUS_SYMBOL` loads the original palette from that
+same indexed export.
+
+The live OAM geometry is changed from the expansion's 32x8 banner to the
+authentic HGSS symbol's 8x8 dimensions. `UpdatePokerusIconSprite` preserves
+the existing Storage indicator center at x=72 (+ the virtual-panel offset),
+y=150, so the adaptation changes the artwork/geometry without introducing a
+new arbitrary placement.
+
+The legacy
+`graphics/pokemon_storage/swsh/pokerus_icon.png` file is deliberately
+retained but is no longer the live source. It remains only as the phase-2
+verification fallback. Phase 3 will remove it after the authentic HGSS path
+passes build/runtime verification.

@@ -251,6 +251,7 @@ enum {
     PALTAG_HGSS_STORAGE_CURSOR,
     PALTAG_HGSS_GENDER_GLYPHS,
     PALTAG_HGSS_SHINY_STAR,
+    PALTAG_HGSS_POKERUS_SYMBOL,
     PALTAG_HGSS_BOX_THUMBNAIL,
     PALTAG_HGSS_BOX_THUMBNAIL_MARKERS,
 };
@@ -3781,6 +3782,7 @@ static bool8 InitPalettesAndSprites(void)
         LoadSpritePalettes(sSpritePal_StatLabels);
         LoadSpritePalettes(sSpritePal_HgssGenderGlyphs);
         LoadSpritePalettes(sSpritePal_HgssShinyStar);
+        LoadSpritePalettes(sSpritePal_HgssPokerusSymbol);
         sStorage->graphicsLoadState++;
         break;
     case 8:
@@ -3941,7 +3943,9 @@ static void UpdatePokerusIconSprite(void)
 
     if (sStorage->displayMon.hasPokerus && !sStorage->displayMon.isEgg)
     {
-		u8 spriteX = 72 + (136 * sStorage->monInfoTilemapId);
+        // Keep the prior Storage indicator center while reducing the live OBJ
+        // from the legacy 32x8 banner to the native HGSS 8x8 symbol.
+        u8 spriteX = 72 + (136 * sStorage->monInfoTilemapId);
         u8 spriteY = 150;
 
         if (sStorage->pokerusIconSprite == NULL)

@@ -94,13 +94,28 @@
       32,
       8
     ],
-    "live": true
+    "live": false,
+    "asset_retained_for_verification": true
   },
-  "status": "phase 1 complete: authentic HGSS Summary Pokerus symbol imported for Storage adaptation; legacy expansion Pokerus icon remains live",
-  "next": "Phase 2: wire verified/pokerus_symbol.png into the live Storage Pokerus path, adapting the legacy 32x8 sprite geometry to the authentic 8x8 HGSS symbol while retaining the legacy asset until verification.",
+  "status": "phase 2 complete: authentic HGSS Summary Pokerus symbol wired live in Storage; legacy expansion asset retained only for verification",
+  "next": "Phase 3: after build/runtime verification of the authentic live path, remove graphics/pokemon_storage/swsh/pokerus_icon.png and close remaining legacy-only Pokerus references.",
   "pipeline": {
     "authentic_hgss_asset_imported": true,
-    "wired_live": false,
+    "wired_live": true,
     "legacy_equivalent_removed": false
+  },
+  "live_integration": {
+    "graphics_symbol": "sHgssPokerusSymbol_Gfx",
+    "palette_symbol": "sHgssPokerusSymbol_Pal",
+    "sprite_sheet": "sSpriteSheet_PokerusIcon",
+    "sprite_template": "sSpriteTemplate_PokerusIcon",
+    "palette_tag": "PALTAG_HGSS_POKERUS_SYMBOL",
+    "runtime_function": "UpdatePokerusIconSprite",
+    "geometry": [
+      8,
+      8
+    ],
+    "position_rule": "Preserve existing Storage indicator center at x=72 + 136*panel, y=150; replace only legacy 32x8 presentation geometry with native HGSS 8x8 symbol.",
+    "note": "Displayed pixels and palette are now the exact HGSS Summary Pokerus resource imported in phase 1."
   }
 }

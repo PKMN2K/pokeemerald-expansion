@@ -282,7 +282,9 @@ static const u16 sHgssMarkingsMenuSelected_Pal[16] =
 // Authentic HGSS Summary shiny star: /a/0/3/9 member 58 tile 0 + /a/1/6/2 member 61 palette bank 0.
 static const u32 sHgssShinyStar_Gfx[]          = INCGFX_U32("graphics/gen4_ui/hgss_storage/verified/shiny_star.png", ".4bpp.smol");
 static const u16 sHgssShinyStar_Pal[]          = INCGFX_U16("graphics/gen4_ui/hgss_storage/verified/shiny_star.png", ".gbapal");
-static const u32 sPokerusIcon_Gfx[]           = INCGFX_U32("graphics/pokemon_storage/swsh/pokerus_icon.png", ".4bpp.smol");
+// Authentic HGSS Summary Pokerus symbol: /a/0/3/9 member 58 tile 1 + /a/1/6/2 member 61 palette bank 0.
+static const u32 sHgssPokerusSymbol_Gfx[]      = INCGFX_U32("graphics/gen4_ui/hgss_storage/verified/pokerus_symbol.png", ".4bpp.smol");
+static const u16 sHgssPokerusSymbol_Pal[]      = INCGFX_U16("graphics/gen4_ui/hgss_storage/verified/pokerus_symbol.png", ".gbapal");
 static const u32 sStatLabels_Gfx[]            = INCGFX_U32("graphics/pokemon_storage/swsh/stat_labels.png", ".4bpp.smol");
 static const u16 sStatLabels_Pal[]             = INCGFX_U16("graphics/pokemon_storage/swsh/stat_labels.png", ".gbapal");
 static const ALIGNED(4) u8 sTypeIcons_Gfx[]   = INCGFX_U8("graphics/pokemon_storage/swsh/type_icons.png", ".4bpp");
@@ -953,6 +955,15 @@ static const struct SpritePalette sSpritePal_HgssShinyStar[] =
     {},
 };
 
+static const struct SpritePalette sSpritePal_HgssPokerusSymbol[] =
+{
+    {
+        .data = sHgssPokerusSymbol_Pal,
+        .tag = PALTAG_HGSS_POKERUS_SYMBOL,
+    },
+    {},
+};
+
 static const struct OamData sOamData_Cursor =
 {
     .shape = SPRITE_SHAPE(32x32),
@@ -1137,10 +1148,10 @@ static const struct OamData sOamData_PokerusIcon =
     .objMode = ST_OAM_OBJ_NORMAL,
     .mosaic = FALSE,
     .bpp = ST_OAM_4BPP,
-    .shape = SPRITE_SHAPE(32x8),
+    .shape = SPRITE_SHAPE(8x8),
     .x = 0,
     .matrixNum = 0,
-    .size = SPRITE_SIZE(32x8),
+    .size = SPRITE_SIZE(8x8),
     .tileNum = 0,
     .priority = 0,
     .paletteNum = 0,
@@ -1149,15 +1160,15 @@ static const struct OamData sOamData_PokerusIcon =
 
 static const struct CompressedSpriteSheet sSpriteSheet_PokerusIcon =
 {
-    .data = sPokerusIcon_Gfx,
-    .size = (32 * 8) / 2,
+    .data = sHgssPokerusSymbol_Gfx,
+    .size = (8 * 8) / 2,
     .tag = GFXTAG_PKRS_ICON
 };
 
 static const struct SpriteTemplate sSpriteTemplate_PokerusIcon =
 {
     .tileTag = GFXTAG_PKRS_ICON,
-    .paletteTag = PALTAG_MISC_1,
+    .paletteTag = PALTAG_HGSS_POKERUS_SYMBOL,
     .oam = &sOamData_PokerusIcon,
 	.anims = gDummySpriteAnimTable,
     .images = NULL,
