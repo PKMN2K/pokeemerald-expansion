@@ -917,3 +917,28 @@ The former expansion atlas
 `graphics/pokemon_storage/swsh/type_icons.png` remains in the repository for
 phase-2 verification but is no longer compiled or referenced by the live
 Storage renderer. It must not be deleted until this path passes verification.
+
+
+## Authentic HGSS Storage type badges — phase 3
+
+The phase-2 live HGSS type-badge path passed the dedicated `gen4-ui` job in
+CI workflow run `36512969421` (#607). Gen 4 UI tool validation, asset
+generation, and renderer compilation all completed successfully.
+
+The former expansion atlas
+`graphics/pokemon_storage/swsh/type_icons.png` is therefore removed. No live
+renderer reference remains to the legacy `sTypeIcons_Gfx` / `sTypeIcons_Pal`
+path.
+
+The active Storage type presentation is now exclusively:
+
+- the 18 verified retail HGSS native badges in
+  `verified/type_icons_hgss_gen4.4bpp`;
+- the authentic-HGSS-only Fairy composite in
+  `verified/type_icon_fairy_hgss_composite.4bpp`;
+- the exact three retail HGSS palette banks in
+  `verified/type_icons_hgss_gen4.gbapal`;
+- explicit suppression of unsupported `TYPE_STELLAR`.
+
+This completes the strict sequence for Storage type badges:
+**authentic HGSS asset -> wire live -> remove legacy equivalent**.
