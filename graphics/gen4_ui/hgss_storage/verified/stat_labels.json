@@ -86,7 +86,7 @@
     "palette_still_live_for_unrelated_roles": false,
     "unrelated_palette_consumers": [],
     "palette_dependency_resolved": true,
-    "file_still_present_for_verification": true,
+    "file_still_present_for_verification": false,
     "replacement_palette": {
       "symbol": "sHgssFontMember7_Pal",
       "source": "retail HGSS NARC_graphic_font member 7",
@@ -97,15 +97,28 @@
         "PALTAG_MISC_3",
         "HGSS gender glyph palette"
       ]
+    },
+    "removed": true,
+    "removed_source": "graphics/pokemon_storage/swsh/stat_labels.png",
+    "removed_after_ci": {
+      "workflow_run": 36515493362,
+      "workflow_run_number": 611,
+      "job": "gen4-ui",
+      "conclusion": "success",
+      "verified_steps": [
+        "Validate Gen 4 UI tools",
+        "Build Gen 4 UI assets",
+        "Compile Gen 4 UI renderer"
+      ]
     }
   },
   "adaptation_rule": "Replace the legacy sprite-label presentation with dynamic text following HGSS Summary behavior. Use authentic HGSS font/text presentation and the verified Nature color-state semantics; do not draw HGSS-style stat-label sprites.",
-  "status": "phase 2 verified by gen4-ui CI #610; all runtime references to the legacy stat_labels.png graphics and palette are now removed. PALTAG_MISC_1/2/3 are seeded from the verified retail HGSS font member-7 palette. The legacy file remains in the repository only for one verification cycle before phase-3 deletion.",
-  "next": "Run CI on the palette-decoupling commit. If gen4-ui passes, delete graphics/pokemon_storage/swsh/stat_labels.png and mark the Nature stat-label pipeline phase 3 complete.",
+  "status": "phase 3 complete: authentic HGSS font-derived Nature stat labels are live; the legacy SWSH stat-label graphics/palette dependency has been removed after successful gen4-ui verification",
+  "next": "Nature stat-label conversion complete. Continue to the next remaining Storage UI role using authentic HGSS asset -> wire live -> remove legacy equivalent.",
   "pipeline": {
     "authentic_hgss_behavior_verified": true,
     "wired_live": true,
-    "legacy_equivalent_removed": false,
+    "legacy_equivalent_removed": true,
     "legacy_palette_dependency_resolved": true
   },
   "live_adaptation": {

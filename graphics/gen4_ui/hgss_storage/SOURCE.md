@@ -1033,3 +1033,26 @@ No live C/header reference to `sStatLabels_Pal`,
 `graphics/pokemon_storage/swsh/stat_labels.png` remains. The file is deliberately
 left in the tree for one CI verification cycle only; phase 3 deletion follows
 once this decoupled path passes the dedicated Gen 4 UI gate.
+
+
+## Authentic HGSS Nature stat labels — phase 3
+
+The palette-decoupling path passed the dedicated `gen4-ui` job in CI workflow
+run `36515493362` (#611). Tool validation, Gen 4 asset generation, and renderer
+compilation all succeeded.
+
+With no remaining live references to the old stat-label graphics or palette,
+`graphics/pokemon_storage/swsh/stat_labels.png` is now removed.
+
+The live Nature-stat presentation is exclusively:
+
+- exact retail HGSS font-ID-4 glyph pixels in
+  `verified/stat_labels_hgss_font.4bpp`;
+- exact retail HGSS font member-7 palette colors for neutral / increased /
+  decreased text states;
+- dynamic Nature-state selection following the verified HGSS Summary behavior;
+- compact 1:1 HGSS-glyph abbreviations adapted to the native 88px Storage
+  sidebar without redraw or scaling.
+
+This completes the strict sequence for Nature stat labels:
+**authentic HGSS behavior/asset -> wire live -> remove legacy equivalent**.
