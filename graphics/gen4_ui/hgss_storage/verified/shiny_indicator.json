@@ -88,14 +88,17 @@
     "gfx_symbol": "sShinyIcon_Gfx",
     "runtime_function": "UpdateShinyIconSprite",
     "live": false,
-    "asset_retained_for_verification": true
+    "asset_retained_for_verification": false,
+    "removed": true,
+    "removed_path": "graphics/pokemon_storage/swsh/shiny_icon.png",
+    "removed_git_blob_sha": "3fb4fa961ead8e853ad8d1250cae3c1830f77f0b"
   },
-  "status": "phase 2 complete: authentic HGSS Summary shiny star wired live in Storage; legacy expansion asset retained only for verification",
-  "next": "Phase 3: after build/runtime verification of the authentic live path, remove graphics/pokemon_storage/swsh/shiny_icon.png and any remaining legacy-only shiny references.",
+  "status": "phase 3 complete: authentic HGSS Summary shiny star live; legacy expansion shiny asset removed",
+  "next": "Continue to the next unresolved Storage UI element using the strict authentic HGSS asset -> wire live -> remove legacy equivalent sequence.",
   "pipeline": {
     "authentic_hgss_asset_imported": true,
     "wired_live": true,
-    "legacy_equivalent_removed": false
+    "legacy_equivalent_removed": true
   },
   "live_integration": {
     "graphics_symbol": "sHgssShinyStar_Gfx",
@@ -106,5 +109,15 @@
     "runtime_function": "UpdateShinyIconSprite",
     "storage_position_preserved": true,
     "note": "The Storage-specific status behavior and 8x8 placement are retained; the displayed pixels and palette now come from the authentic HGSS Summary shiny star."
+  },
+  "verification": {
+    "workflow_run_id": 36505275777,
+    "job": "gen4-ui",
+    "conclusion": "success",
+    "checks": [
+      "Validate Gen 4 UI tools",
+      "Build Gen 4 UI assets",
+      "Compile Gen 4 UI renderer"
+    ]
   }
 }

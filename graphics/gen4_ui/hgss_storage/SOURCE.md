@@ -662,3 +662,19 @@ The legacy
 but is no longer the live graphics source. It remains solely as the phase-2
 verification fallback. Phase 3 will delete it only after the newly wired HGSS
 asset passes build/runtime verification.
+
+
+## Authentic HGSS shiny indicator — phase 3
+
+The phase-2 live HGSS shiny-star path passed the dedicated `gen4-ui` CI job
+in workflow run `36505275777`: tool validation, Gen 4 UI asset generation,
+and renderer compilation all succeeded.
+
+The former expansion asset
+`graphics/pokemon_storage/swsh/shiny_icon.png` is therefore removed. The
+active Storage shiny indicator remains the authentic HGSS Summary 8x8 star
+from `verified/shiny_star.png` with its original HGSS palette, wired through
+the dedicated `PALTAG_HGSS_SHINY_STAR` path.
+
+This completes the strict sequence for the shiny indicator:
+authentic HGSS asset -> wire live -> remove legacy equivalent.
