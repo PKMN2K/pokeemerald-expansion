@@ -834,3 +834,23 @@ This is still pre-wiring work. The legacy
 `graphics/pokemon_storage/swsh/type_icons.png` remains live. Stellar is the
 remaining expansion-only type gap before the type-badge set can move to phase 2
 live wiring.
+
+
+## HGSS Storage type badges — Stellar project policy
+
+Stellar is intentionally **not a supported gameplay type** in this base/hack
+family. Although pokeemerald-expansion exposes `TYPE_STELLAR` for compatibility
+with later-generation mechanics, this project will not implement Terastal or
+Stellar gameplay and therefore does not need a visible Storage badge for that
+enum.
+
+Accordingly, no HGSS-style Stellar badge will be drawn or synthesized. The
+runtime type-badge path must explicitly exclude `TYPE_STELLAR` from normal
+visible Storage presentation. If the enum is ever encountered unexpectedly,
+it should be handled as an unsupported/fallback condition rather than inventing
+artwork.
+
+With Fairy now resolved through an authentic-HGSS-only composition and Stellar
+explicitly excluded by project design, there are no remaining expanded-type
+asset blockers before phase 2 live wiring. The legacy type atlas remains live
+until that wiring is completed and verified.

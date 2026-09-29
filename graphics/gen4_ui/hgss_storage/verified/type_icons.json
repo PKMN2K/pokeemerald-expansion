@@ -301,9 +301,13 @@
     },
     "stellar": {
       "expansion_type": 20,
-      "native_hgss_badge": false
+      "native_hgss_badge": false,
+      "resolved": true,
+      "policy": "intentionally_unsupported_in_project",
+      "visible_badge_required": false,
+      "rationale": "TYPE_STELLAR remains an engine-level compatibility enum only. This base/hack family will not implement Terastal/Stellar gameplay, so Storage must never require or render a Stellar badge."
     },
-    "rule": "Do not fabricate HGSS-style badges. Before phase 2 completes, Fairy and Stellar must be filled only through explicitly documented repurposing/composition of authentic HGSS artwork, or otherwise kept on a clearly isolated fallback until an authentic-source adaptation is ready."
+    "rule": "Do not fabricate HGSS-style badges. Fairy is resolved through a documented authentic-HGSS-only composite. Stellar is intentionally unsupported by project design and therefore requires no visible badge."
   },
   "current_expansion_legacy": {
     "graphics": "graphics/pokemon_storage/swsh/type_icons.png",
@@ -313,14 +317,15 @@
     "runtime_function": "UpdateTypeIconTiles",
     "live": true
   },
-  "status": "phase 1 preparation: all 18 native HGSS type badges imported and the expansion Fairy badge resolved through an authentic-HGSS-only pixel composite; Stellar remains unresolved before live wiring",
-  "next": "Resolve the expansion-only Stellar badge through authentic HGSS source artwork (or isolate its fallback explicitly), then begin phase 2 live type-badge wiring while retaining the legacy atlas for verification.",
+  "status": "phase 1 complete: all native HGSS badges imported; Fairy resolved with an authentic-HGSS-only composite; Stellar intentionally unsupported, so no expanded-type presentation blocker remains before live wiring",
+  "next": "Phase 2: map expansion TYPE_NORMAL..TYPE_DARK plus TYPE_FAIRY to the verified HGSS badge resources, explicitly exclude TYPE_STELLAR from visible Storage presentation, and wire the authentic type presentation live while retaining the old atlas for verification.",
   "pipeline": {
     "authentic_hgss_native_assets_imported": true,
-    "expanded_only_types_resolved": false,
+    "expanded_only_types_resolved": true,
     "wired_live": false,
     "legacy_equivalent_removed": false,
     "fairy_authentic_source_adaptation_resolved": true,
-    "stellar_authentic_source_adaptation_resolved": false
+    "stellar_authentic_source_adaptation_resolved": false,
+    "stellar_intentionally_unsupported": true
   }
 }
