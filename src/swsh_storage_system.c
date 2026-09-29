@@ -360,12 +360,16 @@ enum {
     WIN_MON_INFO_LEVEL_LEFT,
     WIN_MON_INFO_STATS_COL1_LEFT,
     WIN_MON_INFO_STATS_COL2_LEFT,
+    WIN_MON_INFO_STAT_LABELS_COL1_LEFT,
+    WIN_MON_INFO_STAT_LABELS_COL2_LEFT,
     WIN_MON_INFO_ABILITY_LEFT,
     WIN_MON_INFO_ITEM_LEFT,
     WIN_MON_INFO_NICKNAME_RIGHT,
     WIN_MON_INFO_LEVEL_RIGHT,
     WIN_MON_INFO_STATS_COL1_RIGHT,
     WIN_MON_INFO_STATS_COL2_RIGHT,
+    WIN_MON_INFO_STAT_LABELS_COL1_RIGHT,
+    WIN_MON_INFO_STAT_LABELS_COL2_RIGHT,
     WIN_MON_INFO_ABILITY_RIGHT,
     WIN_MON_INFO_ITEM_RIGHT,
 };
@@ -556,7 +560,6 @@ struct PokemonStorageSystemData
     struct Sprite *typeIconSprites[2];
     struct Sprite *shinyIconSprite;
     struct Sprite *pokerusIconSprite;
-    struct Sprite *statLabelSprites[2];
     u16 *typeIconTilesPtr[2];
     u8 ALIGNED(4) tileBuffer[MON_PIC_SIZE * MAX_MON_PIC_FRAMES];
     u8 ALIGNED(4) itemIconBuffer[0x800];
@@ -873,7 +876,6 @@ static u8 GetHgssStorageTypePaletteBank(enum Type);
 static void UpdateTypeIconTiles(u8, void *);
 static void SpriteCB_TypeIcon(struct Sprite *);
 static void UpdateTypeIconsSprite(void);
-static void UpdateStatLabelsSprites(void);
 static void UpdateShinyIconSprite(void);
 static void UpdatePokerusIconSprite(void);
 static void HideInfoPanelSprites(void);
@@ -3754,6 +3756,7 @@ static bool8 InitPalettesAndSprites(void)
     {
     case 0:
         LoadPalette(sTextWindows_Pal, BG_PLTT_ID(15), sizeof(sTextWindows_Pal));
+        LoadPalette(sHgssNatureStatText_Pal, BG_PLTT_ID(15) + 8, sizeof(sHgssNatureStatText_Pal));
         sStorage->graphicsLoadState++;
         break;
     case 1:
@@ -3765,29 +3768,25 @@ static bool8 InitPalettesAndSprites(void)
         sStorage->graphicsLoadState++;
         break;
     case 3:
-        LoadCompressedSpriteSheet(&sSpriteSheet_StatLabels);
-        sStorage->graphicsLoadState++;
-        break;
-    case 4:
         LoadCompressedSpriteSheet(&sSpriteSheet_GenderIcons);
         sStorage->graphicsLoadState++;
         break;
-    case 5:
+    case 4:
         LoadCompressedSpriteSheet(&sSpriteSheet_ShinyIcon);
         sStorage->graphicsLoadState++;
         break;
-    case 6:
+    case 5:
         LoadHgssStorageCursorGfx();
         sStorage->graphicsLoadState++;
         break;
-    case 7:
+    case 6:
         LoadSpritePalettes(sSpritePal_StatLabels);
         LoadSpritePalettes(sSpritePal_HgssGenderGlyphs);
         LoadSpritePalettes(sSpritePal_HgssShinyStar);
         LoadSpritePalettes(sSpritePal_HgssPokerusSymbol);
         sStorage->graphicsLoadState++;
         break;
-    case 8:
+    case 7:
         LoadCompressedSpriteSheet(&sSpriteSheet_PokerusIcon);
         sStorage->graphicsLoadState = 0;
         return TRUE;
@@ -3817,10 +3816,6 @@ static void HideInfoPanelSprites(void)
         sStorage->shinyIconSprite->invisible = TRUE;
 	if (sStorage->pokerusIconSprite != NULL)
         sStorage->pokerusIconSprite->invisible = TRUE;
-    if (sStorage->statLabelSprites[0] != NULL)
-        sStorage->statLabelSprites[0]->invisible = TRUE;
-    if (sStorage->statLabelSprites[1] != NULL)
-        sStorage->statLabelSprites[1]->invisible = TRUE;
     if (sStorage->markingComboSprite != NULL)
         sStorage->markingComboSprite->invisible = TRUE;
 }
@@ -4114,137 +4109,57 @@ static void UpdateTypeIconsSprite(void)
     }
 }
 
-static void UpdateStatLabelsSprites(void)
+enum HgssNatureStatLabel
 {
-    enum Species species = sStorage->displayMon.species;
-    u8 natureUpStat, natureDownStat;
-    u8 upStatAnimIndex, downStatAnimIndex;
-    u8 upStatX, upStatY, downStatX, downStatY;
-    u16 upStatPalTag, downStatPalTag;
-    u8 nature;
-    u8 animIndexMap[NUM_STATS] = {0, 0, 1, 4, 2, 3};
+    HGSS_STAT_LABEL_HP,
+    HGSS_STAT_LABEL_ATK,
+    HGSS_STAT_LABEL_DEF,
+    HGSS_STAT_LABEL_SPATK,
+    HGSS_STAT_LABEL_SPDEF,
+    HGSS_STAT_LABEL_SPEED,
+};
 
-    if (!sStorage->showMonInfo
-        || species == SPECIES_NONE
-        || sStorage->displayMon.isEgg
-        || (GetSpeciesAtCursorPosition() == SPECIES_NONE && !sIsMonBeingMoved))
-    {
-        if (sStorage->statLabelSprites[0] != NULL)
-            sStorage->statLabelSprites[0]->invisible = TRUE;
-        if (sStorage->statLabelSprites[1] != NULL)
-            sStorage->statLabelSprites[1]->invisible = TRUE;
-        return;
-    }
+enum HgssNatureStatState
+{
+    HGSS_STAT_NEUTRAL,
+    HGSS_STAT_INCREASED,
+    HGSS_STAT_DECREASED,
+};
 
-    nature = GetNatureFromPersonality(sStorage->displayMon.personality);
-    natureUpStat = gNaturesInfo[nature].statUp;
-    natureDownStat = gNaturesInfo[nature].statDown;
+#define HGSS_STAT_LABEL_WIDTH   16
+#define HGSS_STAT_LABEL_HEIGHT  16
+#define HGSS_STAT_LABEL_STATES  3
+#define HGSS_STAT_LABEL_ATLAS_HEIGHT (6 * HGSS_STAT_LABEL_STATES * HGSS_STAT_LABEL_HEIGHT)
 
-    if (natureUpStat == natureDownStat)
-    {
-        if (sStorage->statLabelSprites[0] != NULL)
-            sStorage->statLabelSprites[0]->invisible = TRUE;
-        if (sStorage->statLabelSprites[1] != NULL)
-            sStorage->statLabelSprites[1]->invisible = TRUE;
-        return;
-    }
+static u8 GetHgssNatureStatState(u8 stat)
+{
+    u8 nature = GetNatureFromPersonality(sStorage->displayMon.personality);
+    u8 statUp = gNaturesInfo[nature].statUp;
+    u8 statDown = gNaturesInfo[nature].statDown;
 
-    switch (natureUpStat)
-    {
-    case STAT_ATK:
-        upStatX = 52 + (136 * sStorage->monInfoTilemapId);
-        upStatY = 68;
-        upStatAnimIndex = animIndexMap[STAT_ATK];
-        break;
-    case STAT_DEF:
-        upStatX = 12 + (136 * sStorage->monInfoTilemapId);
-        upStatY = 84;
-        upStatAnimIndex = animIndexMap[STAT_DEF];
-        break;
-    case STAT_SPATK:
-        upStatX = 52 + (136 * sStorage->monInfoTilemapId);
-        upStatY = 84;
-        upStatAnimIndex = animIndexMap[STAT_SPATK];
-        break;
-    case STAT_SPDEF:
-        upStatX = 12 + (136 * sStorage->monInfoTilemapId);
-        upStatY = 100;
-        upStatAnimIndex = animIndexMap[STAT_SPDEF];
-        break;
-    case STAT_SPEED:
-        upStatX = 52 + (136 * sStorage->monInfoTilemapId);
-        upStatY = 100;
-        upStatAnimIndex = animIndexMap[STAT_SPEED];
-        break;
-    default:
-        return;
-    }
+    if (statUp == statDown)
+        return HGSS_STAT_NEUTRAL;
+    if (stat == statUp)
+        return HGSS_STAT_INCREASED;
+    if (stat == statDown)
+        return HGSS_STAT_DECREASED;
+    return HGSS_STAT_NEUTRAL;
+}
 
-    switch (natureDownStat)
-    {
-    case STAT_ATK:
-        downStatX = 52 + (136 * sStorage->monInfoTilemapId);
-        downStatY = 68;
-        downStatAnimIndex = animIndexMap[STAT_ATK];
-        break;
-    case STAT_DEF:
-        downStatX = 12 + (136 * sStorage->monInfoTilemapId);
-        downStatY = 84;
-        downStatAnimIndex = animIndexMap[STAT_DEF];
-        break;
-    case STAT_SPATK:
-        downStatX = 52 + (136 * sStorage->monInfoTilemapId);
-        downStatY = 84;
-        downStatAnimIndex = animIndexMap[STAT_SPATK];
-        break;
-    case STAT_SPDEF:
-        downStatX = 12 + (136 * sStorage->monInfoTilemapId);
-        downStatY = 100;
-        downStatAnimIndex = animIndexMap[STAT_SPDEF];
-        break;
-    case STAT_SPEED:
-        downStatX = 52 + (136 * sStorage->monInfoTilemapId);
-        downStatY = 100;
-        downStatAnimIndex = animIndexMap[STAT_SPEED];
-        break;
-    default:
-        return;
-    }
+static void BlitHgssNatureStatLabel(u8 windowId, u8 label, u8 state, u8 y)
+{
+    u16 srcY = (label * HGSS_STAT_LABEL_STATES + state) * HGSS_STAT_LABEL_HEIGHT;
 
-    upStatPalTag = PALTAG_MISC_1;
-    downStatPalTag = PALTAG_MISC_2;
-
-    if (sStorage->statLabelSprites[0] == NULL)
-    {
-        struct SpriteTemplate template = sSpriteTemplate_StatLabels;
-        template.paletteTag = upStatPalTag;
-        sStorage->statLabelSprites[0] = &gSprites[CreateSprite(&template, upStatX, upStatY, 0)];
-    }
-    else
-    {
-        sStorage->statLabelSprites[0]->x = upStatX;
-        sStorage->statLabelSprites[0]->y = upStatY;
-    }
-
-    StartSpriteAnim(sStorage->statLabelSprites[0], upStatAnimIndex);
-    sStorage->statLabelSprites[0]->oam.paletteNum = IndexOfSpritePaletteTag(upStatPalTag);
-    sStorage->statLabelSprites[0]->invisible = FALSE;
-
-    if (sStorage->statLabelSprites[1] == NULL)
-    {
-        struct SpriteTemplate template = sSpriteTemplate_StatLabels;
-        template.paletteTag = downStatPalTag;
-        sStorage->statLabelSprites[1] = &gSprites[CreateSprite(&template, downStatX, downStatY, 0)];
-    }
-    else
-    {
-        sStorage->statLabelSprites[1]->x = downStatX;
-        sStorage->statLabelSprites[1]->y = downStatY;
-    }
-
-    StartSpriteAnim(sStorage->statLabelSprites[1], downStatAnimIndex);
-    sStorage->statLabelSprites[1]->oam.paletteNum = IndexOfSpritePaletteTag(downStatPalTag);
-    sStorage->statLabelSprites[1]->invisible = FALSE;
+    BlitBitmapRectToWindow(windowId,
+                           sHgssNatureStatLabels_Gfx,
+                           0,
+                           srcY,
+                           HGSS_STAT_LABEL_WIDTH,
+                           HGSS_STAT_LABEL_ATLAS_HEIGHT,
+                           0,
+                           y,
+                           HGSS_STAT_LABEL_WIDTH,
+                           HGSS_STAT_LABEL_HEIGHT);
 }
 
 static void BufferAndPrintStat(u8 windowId, u8 font, u8 xOffset, u8 y, u16 statValue)
@@ -4323,20 +4238,28 @@ static void PrintDisplayMonHeldItem(u8 font)
 static void PrintDisplayMonStats(u8 font)
 {
     u8 col1WindowId, col2WindowId;
+    u8 labelCol1WindowId, labelCol2WindowId;
     u8 windowWidth = 3 * 8;
 
     if (sStorage->monInfoTilemapId == 0)
     {
         col1WindowId = WIN_MON_INFO_STATS_COL1_LEFT;
         col2WindowId = WIN_MON_INFO_STATS_COL2_LEFT;
+        labelCol1WindowId = WIN_MON_INFO_STAT_LABELS_COL1_LEFT;
+        labelCol2WindowId = WIN_MON_INFO_STAT_LABELS_COL2_LEFT;
     }
     else
     {
         col1WindowId = WIN_MON_INFO_STATS_COL1_RIGHT;
         col2WindowId = WIN_MON_INFO_STATS_COL2_RIGHT;
+        labelCol1WindowId = WIN_MON_INFO_STAT_LABELS_COL1_RIGHT;
+        labelCol2WindowId = WIN_MON_INFO_STAT_LABELS_COL2_RIGHT;
     }
+
     FillWindowPixelBuffer(col1WindowId, PIXEL_FILL(1));
     FillWindowPixelBuffer(col2WindowId, PIXEL_FILL(1));
+    FillWindowPixelBuffer(labelCol1WindowId, PIXEL_FILL(1));
+    FillWindowPixelBuffer(labelCol2WindowId, PIXEL_FILL(1));
 
     if (!sStorage->showMonInfo
         || (GetSpeciesAtCursorPosition() == SPECIES_NONE && !sIsMonBeingMoved)
@@ -4344,25 +4267,37 @@ static void PrintDisplayMonStats(u8 font)
     {
         CopyWindowToVram(col1WindowId, COPYWIN_FULL);
         CopyWindowToVram(col2WindowId, COPYWIN_FULL);
+        CopyWindowToVram(labelCol1WindowId, COPYWIN_FULL);
+        CopyWindowToVram(labelCol2WindowId, COPYWIN_FULL);
         return;
     }
 
-    // COL1: HP (y=4), Def (y=20), SpDef (y=36)
+    // HGSS renders Nature-modified stat names as text. The native Storage
+    // sidebar is only 88 px wide, so use compact, unscaled abbreviations
+    // composed solely from exact retail HGSS font-ID-4 glyph pixels.
+    BlitHgssNatureStatLabel(labelCol1WindowId, HGSS_STAT_LABEL_HP, HGSS_STAT_NEUTRAL, 0);
+    BlitHgssNatureStatLabel(labelCol1WindowId, HGSS_STAT_LABEL_DEF, GetHgssNatureStatState(STAT_DEF), 16);
+    BlitHgssNatureStatLabel(labelCol1WindowId, HGSS_STAT_LABEL_SPDEF, GetHgssNatureStatState(STAT_SPDEF), 32);
+    BlitHgssNatureStatLabel(labelCol2WindowId, HGSS_STAT_LABEL_ATK, GetHgssNatureStatState(STAT_ATK), 0);
+    BlitHgssNatureStatLabel(labelCol2WindowId, HGSS_STAT_LABEL_SPATK, GetHgssNatureStatState(STAT_SPATK), 16);
+    BlitHgssNatureStatLabel(labelCol2WindowId, HGSS_STAT_LABEL_SPEED, GetHgssNatureStatState(STAT_SPEED), 32);
+
     BufferAndPrintStat(col1WindowId, font, windowWidth - 1, 4, sStorage->displayMon.maxHP);
     BufferAndPrintStat(col1WindowId, font, windowWidth - 1, 20, sStorage->displayMon.def);
     BufferAndPrintStat(col1WindowId, font, windowWidth - 1, 36, sStorage->displayMon.spdef);
-
-    // COL2: Atk (y=4), SpAtk (y=20), Speed (y=36)
     BufferAndPrintStat(col2WindowId, font, windowWidth - 5, 4, sStorage->displayMon.atk);
     BufferAndPrintStat(col2WindowId, font, windowWidth - 5, 20, sStorage->displayMon.spatk);
     BufferAndPrintStat(col2WindowId, font, windowWidth - 5, 36, sStorage->displayMon.speed);
 
+    PutWindowTilemap(labelCol1WindowId);
+    PutWindowTilemap(labelCol2WindowId);
     PutWindowTilemap(col1WindowId);
     PutWindowTilemap(col2WindowId);
+    CopyWindowToVram(labelCol1WindowId, COPYWIN_FULL);
+    CopyWindowToVram(labelCol2WindowId, COPYWIN_FULL);
     CopyWindowToVram(col1WindowId, COPYWIN_FULL);
     CopyWindowToVram(col2WindowId, COPYWIN_FULL);
 }
-
 static void PrintDisplayMonNickname(u8 font)
 {
     u8 windowId;
@@ -4432,7 +4367,6 @@ static bool8 PrintDisplayMonInfo(void)
             break;
         case 1:
             UpdateTypeIconsSprite();
-            UpdateStatLabelsSprites();
             sStorage->displayMonInfoLoadState++;
             break;
         case 2:
@@ -4473,7 +4407,6 @@ static bool8 PrintDisplayMonInfo(void)
     {
         UpdateGenderIconSprite(font);
         UpdateTypeIconsSprite();
-        UpdateStatLabelsSprites();
         UpdateShinyIconSprite();
 		UpdatePokerusIconSprite();
         UpdateMarkingComboSprite();
@@ -4812,7 +4745,6 @@ static void UpdateMonInfoTilemap(void)
         sStorage->bg0_Y = 0;
         UpdateGenderIconSprite(FONT_SHORT_NARROW);
         UpdateTypeIconsSprite();
-        UpdateStatLabelsSprites();
         UpdateShinyIconSprite();
 		UpdatePokerusIconSprite();
         UpdateMarkingComboSprite();

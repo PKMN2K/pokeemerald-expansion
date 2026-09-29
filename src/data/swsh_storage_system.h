@@ -285,8 +285,20 @@ static const u16 sHgssShinyStar_Pal[]          = INCGFX_U16("graphics/gen4_ui/hg
 // Authentic HGSS Summary Pokerus symbol: /a/0/3/9 member 58 tile 1 + /a/1/6/2 member 61 palette bank 0.
 static const u32 sHgssPokerusSymbol_Gfx[]      = INCGFX_U32("graphics/gen4_ui/hgss_storage/verified/pokerus_symbol.png", ".4bpp.smol");
 static const u16 sHgssPokerusSymbol_Pal[]      = INCGFX_U16("graphics/gen4_ui/hgss_storage/verified/pokerus_symbol.png", ".gbapal");
-static const u32 sStatLabels_Gfx[]            = INCGFX_U32("graphics/pokemon_storage/swsh/stat_labels.png", ".4bpp.smol");
-static const u16 sStatLabels_Pal[]             = INCGFX_U16("graphics/pokemon_storage/swsh/stat_labels.png", ".gbapal");
+// Exact HGSS font-ID-4 glyph pixels, composed without scaling into compact
+// Storage-sidebar abbreviations (HP / At / De / SA / SD / Sp). The bitmap
+// contains neutral / Nature-up / Nature-down variants and is blitted to BG0.
+static const ALIGNED(4) u8 sHgssNatureStatLabels_Gfx[] = INCBIN_U8("graphics/gen4_ui/hgss_storage/verified/stat_labels_hgss_font.4bpp");
+static const u16 sHgssNatureStatText_Pal[] =
+{
+    0x0000, // font member 7 index 14: foreground
+    0x7FFF, // font member 7 index 15: neutral shadow
+    0x7DC0, // font member 7 index 7: Nature-increased shadow
+    0x76EF, // font member 7 index 8: Nature-decreased shadow
+};
+// Temporary legacy palette dependency only: PALTAG_MISC_1/2/3 are still used
+// by unrelated box-title / box-count roles. No stat-label graphics use it.
+static const u16 sStatLabels_Pal[] = INCGFX_U16("graphics/pokemon_storage/swsh/stat_labels.png", ".gbapal");
 // Authentic HGSS Storage type badges: exact /a/0/0/8 32x16 character data
 // plus the authentic-source Fairy composite. The three palette banks are the
 // exact retail HGSS /a/0/0/8 member 0x4A payload.
@@ -484,6 +496,24 @@ static const struct WindowTemplate sWindowTemplates[] =
         .paletteNum = 15,
         .baseBlock = 244
     },
+    [WIN_MON_INFO_STAT_LABELS_COL1_LEFT] = {
+        .bg = 0,
+        .tilemapLeft = 0,
+        .tilemapTop = 27,
+        .width = 2,
+        .height = 6,
+        .paletteNum = 15,
+        .baseBlock = 298
+    },
+    [WIN_MON_INFO_STAT_LABELS_COL2_LEFT] = {
+        .bg = 0,
+        .tilemapLeft = 5,
+        .tilemapTop = 27,
+        .width = 2,
+        .height = 6,
+        .paletteNum = 15,
+        .baseBlock = 310
+    },
     [WIN_MON_INFO_ABILITY_LEFT] = {
         .bg = 0,
         .tilemapLeft = 1,
@@ -537,6 +567,24 @@ static const struct WindowTemplate sWindowTemplates[] =
         .height = 6,
         .paletteNum = 15,
         .baseBlock = 244
+    },
+    [WIN_MON_INFO_STAT_LABELS_COL1_RIGHT] = {
+        .bg = 0,
+        .tilemapLeft = 17,
+        .tilemapTop = 47,
+        .width = 2,
+        .height = 6,
+        .paletteNum = 15,
+        .baseBlock = 298
+    },
+    [WIN_MON_INFO_STAT_LABELS_COL2_RIGHT] = {
+        .bg = 0,
+        .tilemapLeft = 22,
+        .tilemapTop = 47,
+        .width = 2,
+        .height = 6,
+        .paletteNum = 15,
+        .baseBlock = 310
     },
     [WIN_MON_INFO_ABILITY_RIGHT] = {
         .bg = 0,
@@ -921,9 +969,9 @@ static const struct SpriteTemplate sSpriteTemplate_BoxTitle =
 // Cursor Sprites
 // ============================================================================
 
-// PALTAG_MISC_1/2/3 still serve unrelated stat-label/title roles. Their
-// colors now come from the stat-label asset itself, not from the removed
-// legacy cursor sheet.
+// PALTAG_MISC_1/2/3 now serve only unrelated box-title / box-count roles.
+// Their legacy palette coupling is intentionally retained until those roles
+// receive authentic HGSS replacements; no stat-label sprite uses these tags.
 static const struct SpritePalette sSpritePal_StatLabels[] =
 {
     {
@@ -1178,73 +1226,6 @@ static const struct SpriteTemplate sSpriteTemplate_PokerusIcon =
     .images = NULL,
     .affineAnims = gDummySpriteAffineAnimTable,
     .callback = SpriteCallbackDummy,
-};
-
-// ============================================================================
-// Stat Label Sprites
-// ============================================================================
-
-static const struct OamData sOamData_StatLabels =
-{
-    .y = 0,
-    .affineMode = ST_OAM_AFFINE_OFF,
-    .objMode = ST_OAM_OBJ_NORMAL,
-    .mosaic = FALSE,
-    .bpp = ST_OAM_4BPP,
-    .shape = SPRITE_SHAPE(16x16),
-    .x = 0,
-    .matrixNum = 0,
-    .size = SPRITE_SIZE(16x16),
-    .tileNum = 0,
-    .priority = 0,
-};
-
-static const union AnimCmd sSpriteAnim_StatAtk[] = {
-    ANIMCMD_FRAME(0, 0, FALSE, FALSE),
-    ANIMCMD_END
-};
-
-static const union AnimCmd sSpriteAnim_StatDef[] = {
-    ANIMCMD_FRAME(4, 0, FALSE, FALSE),
-    ANIMCMD_END
-};
-
-static const union AnimCmd sSpriteAnim_StatSpAtk[] = {
-    ANIMCMD_FRAME(8, 0, FALSE, FALSE),
-    ANIMCMD_END
-};
-
-static const union AnimCmd sSpriteAnim_StatSpDef[] = {
-    ANIMCMD_FRAME(12, 0, FALSE, FALSE),
-    ANIMCMD_END
-};
-
-static const union AnimCmd sSpriteAnim_StatSpeed[] = {
-    ANIMCMD_FRAME(16, 0, FALSE, FALSE),
-    ANIMCMD_END
-};
-
-static const union AnimCmd *const sSpriteAnimTable_StatLabels[] = {
-    sSpriteAnim_StatAtk,
-    sSpriteAnim_StatDef,
-    sSpriteAnim_StatSpAtk,
-    sSpriteAnim_StatSpDef,
-    sSpriteAnim_StatSpeed,
-};
-
-static const struct CompressedSpriteSheet sSpriteSheet_StatLabels =
-{
-    .data = sStatLabels_Gfx,
-    .size = (16 * 16 * 5) / 2,
-    .tag = GFXTAG_STAT_LABELS
-};
-
-static const struct SpriteTemplate sSpriteTemplate_StatLabels =
-{
-    .tileTag = GFXTAG_STAT_LABELS,
-    .paletteTag = PALTAG_MISC_2,
-    .oam = &sOamData_StatLabels,
-    .anims = sSpriteAnimTable_StatLabels,
 };
 
 // ============================================================================

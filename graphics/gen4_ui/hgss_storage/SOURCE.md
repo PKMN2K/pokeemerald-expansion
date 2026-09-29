@@ -979,3 +979,38 @@ fallback.
 
 Machine-readable provenance is recorded in
 `verified/stat_labels.json`.
+
+
+## Authentic HGSS Nature stat labels — phase 2
+
+The legacy 16x16 OBJ stat-label graphics are no longer loaded or rendered.
+The live Storage panel now blits text-shaped bitmap data directly into BG0
+windows, following the retail HGSS Summary behavior established in phase 1.
+
+The 88px native HGSS Storage sidebar cannot contain the full retail Summary
+strings in two columns at their original font size. Rather than scale or
+redraw them, the GBA adaptation uses compact **HP / At / De / SA / SD / Sp**
+labels composed exclusively from the exact retail HGSS font-ID-4 glyph pixels.
+Every glyph remains 1:1; there is no resampling, smoothing, invented letterform,
+or "HGSS-style" recreation.
+
+The raw atlas is
+`verified/stat_labels_hgss_font.4bpp` (16x288, six labels x three Nature
+states). Each state preserves the retail HGSS font class semantics. BG palette
+15 entries 8..11 are populated directly from font palette member 7:
+
+- foreground: member-7 index 14 = `0x0000`;
+- neutral shadow: index 15 = `0x7FFF`;
+- Nature-increased shadow: index 7 = `0x7DC0`;
+- Nature-decreased shadow: index 8 = `0x76EF`.
+
+Runtime state selection uses the same Nature-up / Nature-down semantics as
+HGSS. HP is always neutral; Attack, Defense, Sp. Atk, Sp. Def, and Speed select
+neutral/increased/decreased independently.
+
+`graphics/pokemon_storage/swsh/stat_labels.png` is **not** used for stat-label
+graphics anymore. It remains temporarily because its palette is still coupled
+to unrelated `PALTAG_MISC_1/2/3` consumers (box title / choose-box count).
+Deleting that file before those roles receive authentic HGSS palettes would
+break unrelated UI, so phase 3 must wait for that dependency to be replaced and
+verified.
