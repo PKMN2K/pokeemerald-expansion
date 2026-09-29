@@ -1111,3 +1111,24 @@ slots 0 / 1 / 2 / 3. Save semantics are unchanged.
 a phase-2 verification fallback. It is no longer compiled or referenced by the
 Storage renderer and must not be deleted until this path passes the dedicated
 Gen 4 UI CI gate.
+
+
+## Authentic HGSS marking combo — phase 3
+
+The phase-2 HGSS marking-combo path passed the dedicated `gen4-ui` job in CI
+workflow run `36516622239` (#614). Tool validation, Gen 4 asset generation,
+and renderer compilation all succeeded.
+
+With no live references remaining to the expansion palette,
+`graphics/pokemon_storage/swsh/markings.pal` is now removed.
+
+The active compact marking display is exclusively:
+
+- exact HGSS circle / triangle / square / heart symbol pixels from
+  `verified/marking_combo_hgss.4bpp`;
+- the verified HGSS markings-panel palette from `/a/0/1/9` NCLR member 4;
+- runtime bit mapping that preserves existing save semantics while presenting
+  the native HGSS visual order.
+
+This completes the strict sequence for the compact marking display:
+**authentic HGSS asset -> wire live -> remove legacy equivalent**.

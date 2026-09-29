@@ -89,14 +89,27 @@
     "palette": "graphics/pokemon_storage/swsh/markings.pal",
     "runtime_function": "CreateMonMarkingComboSprite",
     "live": false,
-    "file_retained_for_phase_2_verification": true
+    "file_retained_for_phase_2_verification": false,
+    "removed": true,
+    "removed_source": "graphics/pokemon_storage/swsh/markings.pal",
+    "removed_after_ci": {
+      "workflow_run": 36516622239,
+      "workflow_run_number": 614,
+      "job": "gen4-ui",
+      "conclusion": "success",
+      "verified_steps": [
+        "Validate Gen 4 UI tools",
+        "Build Gen 4 UI assets",
+        "Compile Gen 4 UI renderer"
+      ]
+    }
   },
-  "status": "phase 2 complete: authentic HGSS circle/triangle/square/heart marking tiles and verified HGSS palette are live; the generic marking-combo helper and legacy markings.pal are no longer referenced by Storage; markings.pal remains in the tree for verification",
-  "next": "Verify the HGSS marking-combo path in CI. If gen4-ui passes, delete graphics/pokemon_storage/swsh/markings.pal and mark phase 3 complete.",
+  "status": "phase 3 complete: authentic HGSS circle/triangle/square/heart marking combo is live with the verified HGSS markings palette; the legacy SWSH markings palette has been removed after successful gen4-ui verification",
+  "next": "Marking-combo conversion complete. Continue to the next remaining Storage UI role using authentic HGSS asset -> wire live -> remove legacy equivalent.",
   "pipeline": {
     "authentic_hgss_asset_ready": true,
     "wired_live": true,
-    "legacy_equivalent_removed": false
+    "legacy_equivalent_removed": true
   },
   "live_integration": {
     "renderer": "32x8 OBJ sprite with four dynamically populated 8x8 slots",
