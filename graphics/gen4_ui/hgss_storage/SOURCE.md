@@ -1087,3 +1087,27 @@ The source button geometry is:
 This is phase 1 only. The existing generic marking-combo sprite and legacy
 `markings.pal` remain live until the compact HGSS asset is wired and verified.
 Machine-readable provenance is recorded in `verified/marking_combo.json`.
+
+
+## Authentic HGSS marking combo — phase 2
+
+The compact marking display is now live using the phase-1 authentic HGSS tiles.
+Storage no longer calls the generic `CreateMonMarkingComboSprite` or
+`UpdateMonMarkingTiles` path and no longer references `sMarkings_Pal`.
+
+The live object remains 32x8, preserving the existing info-panel footprint, but
+its four 8x8 slots are populated dynamically from
+`verified/marking_combo_hgss.4bpp`. Selected marks copy the exact retail HGSS
+symbol tile; unselected marks copy a transparent blank tile. The OBJ palette is
+the already-verified HGSS markings-panel palette derived from `/a/0/1/9` NCLR
+member 4.
+
+The engine persists marking bits as circle / square / triangle / heart, while
+the native HGSS panel presents them visually as circle / triangle / square /
+heart. The runtime mapping therefore uses bits **0 / 2 / 1 / 3** for display
+slots 0 / 1 / 2 / 3. Save semantics are unchanged.
+
+`graphics/pokemon_storage/swsh/markings.pal` remains in the repository only as
+a phase-2 verification fallback. It is no longer compiled or referenced by the
+Storage renderer and must not be deleted until this path passes the dedicated
+Gen 4 UI CI gate.

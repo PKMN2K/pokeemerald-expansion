@@ -264,11 +264,14 @@ static const u16 sHgssFontMember7_Pal[16] =
     0x76EF, 0x5E5F, 0x737F, 0x0000,
     0x0000, 0x0000, 0x0000, 0x7FFF,
 };
-static const u16 sMarkings_Pal[]              = INCGFX_U16("graphics/pokemon_storage/swsh/markings.pal", ".gbapal");
-
 // Authentic HGSS markings panel: /a/0/1/9 NSCR 10 + NCGR 14 + NCLR 4.
 static const u32 sHgssMarkingsMenu_Gfx[]       = INCGFX_U32("graphics/gen4_ui/hgss_storage/verified/markings_menu.png", ".4bpp");
 static const u16 sHgssMarkingsMenu_Pal[]       = INCGFX_U16("graphics/gen4_ui/hgss_storage/verified/markings_menu.png", ".gbapal");
+
+// Compact Storage marking display: exact circle / triangle / square / heart
+// symbol pixels extracted 1:1 from the verified HGSS markings panel.
+static const ALIGNED(4) u8 sHgssMarkingCombo_Gfx[] = INCBIN_U8("graphics/gen4_ui/hgss_storage/verified/marking_combo_hgss.4bpp");
+static const ALIGNED(4) u8 sHgssMarkingComboBlank_Gfx[0x80] = {0};
 
 // Authentic /a/0/1/9 member 4 NCLR bank 3, reordered only to the verified
 // markings_menu.png palette indices. This is the active-mark button state.
@@ -1098,6 +1101,53 @@ static const union AffineAnimCmd *const sAffineAnims_ReleaseMon[] =
 {
     [RELEASE_ANIM_RELEASE]   = sAffineAnim_ReleaseMon_Release,
     [RELEASE_ANIM_CAME_BACK] = sAffineAnim_ReleaseMon_CameBack
+};
+
+// ============================================================================
+// Authentic HGSS Marking Combo
+// ============================================================================
+
+static const struct OamData sOamData_HgssMarkingCombo =
+{
+    .y = 0,
+    .affineMode = ST_OAM_AFFINE_OFF,
+    .objMode = ST_OAM_OBJ_NORMAL,
+    .mosaic = FALSE,
+    .bpp = ST_OAM_4BPP,
+    .shape = SPRITE_SHAPE(32x8),
+    .x = 0,
+    .matrixNum = 0,
+    .size = SPRITE_SIZE(32x8),
+    .tileNum = 0,
+    .priority = 0,
+    .paletteNum = 0,
+    .affineParam = 0,
+};
+
+static const struct SpriteSheet sSpriteSheet_HgssMarkingCombo =
+{
+    // Allocate one 32x8 OBJ cell blank. Selected authentic HGSS symbol tiles
+    // are DMA-copied into the four 8x8 slots at runtime.
+    .data = sHgssMarkingComboBlank_Gfx,
+    .size = sizeof(sHgssMarkingComboBlank_Gfx),
+    .tag = GFXTAG_MARKING_COMBO,
+};
+
+static const struct SpritePalette sSpritePalette_HgssMarkingCombo =
+{
+    .data = sHgssMarkingsMenu_Pal,
+    .tag = PALTAG_MARKING_COMBO,
+};
+
+static const struct SpriteTemplate sSpriteTemplate_HgssMarkingCombo =
+{
+    .tileTag = GFXTAG_MARKING_COMBO,
+    .paletteTag = PALTAG_MARKING_COMBO,
+    .oam = &sOamData_HgssMarkingCombo,
+    .anims = gDummySpriteAnimTable,
+    .images = NULL,
+    .affineAnims = gDummySpriteAffineAnimTable,
+    .callback = SpriteCallbackDummy,
 };
 
 // ============================================================================

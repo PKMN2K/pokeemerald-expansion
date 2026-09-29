@@ -868,6 +868,7 @@ static void InitCursorItemIcon(void);
 static bool8 InitPalettesAndSprites(void);
 static void RefreshDisplayMonData(void);
 static void CreateMarkingComboSprite(void);
+static void UpdateHgssMarkingComboTiles(u8 markings, void *dest);
 static void UpdateMarkingComboSprite(void);
 static void ClearBottomWindow(void);
 static void UpdateGenderIconSprite(u8);
@@ -3796,12 +3797,50 @@ static bool8 InitPalettesAndSprites(void)
 
 static void CreateMarkingComboSprite(void)
 {
-    sStorage->markingComboSprite = CreateMonMarkingComboSprite(GFXTAG_MARKING_COMBO, PALTAG_MARKING_COMBO, sMarkings_Pal);
+    u8 spriteId;
+
+    FreeSpriteTilesByTag(GFXTAG_MARKING_COMBO);
+    FreeSpritePaletteByTag(PALTAG_MARKING_COMBO);
+    LoadSpriteSheet(&sSpriteSheet_HgssMarkingCombo);
+    LoadSpritePalette(&sSpritePalette_HgssMarkingCombo);
+
+    spriteId = CreateSprite(&sSpriteTemplate_HgssMarkingCombo,
+                            52 + (136 * sStorage->monInfoTilemapId),
+                            150,
+                            1);
+    if (spriteId == MAX_SPRITES)
+    {
+        sStorage->markingComboSprite = NULL;
+        sStorage->markingComboTilesPtr = NULL;
+        return;
+    }
+
+    sStorage->markingComboSprite = &gSprites[spriteId];
     sStorage->markingComboSprite->oam.priority = 0;
     sStorage->markingComboSprite->subpriority = 1;
-    sStorage->markingComboSprite->x = 52 + (136 * sStorage->monInfoTilemapId);
-    sStorage->markingComboSprite->y = 150;
-    sStorage->markingComboTilesPtr = (void *) OBJ_VRAM0 + 32 * GetSpriteTileStartByTag(GFXTAG_MARKING_COMBO);
+    sStorage->markingComboTilesPtr = (void *)OBJ_VRAM0
+                                   + 32 * GetSpriteTileStartByTag(GFXTAG_MARKING_COMBO);
+}
+
+static void UpdateHgssMarkingComboTiles(u8 markings, void *dest)
+{
+    // The save/engine bit order is circle, square, triangle, heart.
+    // HGSS presents them visually as circle, triangle, square, heart.
+    static const u8 sMarkingBitByDisplaySlot[NUM_MON_MARKINGS] = {0, 2, 1, 3};
+    u8 slot;
+
+    for (slot = 0; slot < NUM_MON_MARKINGS; slot++)
+    {
+        u8 markingBit = sMarkingBitByDisplaySlot[slot];
+        const u8 *src = (markings & (1 << markingBit))
+                      ? &sHgssMarkingCombo_Gfx[slot * TILE_SIZE_4BPP]
+                      : sHgssMarkingComboBlank_Gfx;
+
+        RequestDma3Copy(src,
+                        (u8 *)dest + slot * TILE_SIZE_4BPP,
+                        TILE_SIZE_4BPP,
+                        0x10);
+    }
 }
 
 static void HideInfoPanelSprites(void)
@@ -3845,8 +3884,8 @@ static void UpdateMarkingComboSprite(void)
         sStorage->markingComboSprite->invisible = FALSE;
     }
 
-    if (sStorage->markingComboSprite != NULL)
-        UpdateMonMarkingTiles(sStorage->displayMon.markings, sStorage->markingComboTilesPtr);
+    if (sStorage->markingComboSprite != NULL && sStorage->markingComboTilesPtr != NULL)
+        UpdateHgssMarkingComboTiles(sStorage->displayMon.markings, sStorage->markingComboTilesPtr);
 }
 
 static void RefreshDisplayMonData(void)

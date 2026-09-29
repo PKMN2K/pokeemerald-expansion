@@ -88,13 +88,33 @@
   "current_legacy": {
     "palette": "graphics/pokemon_storage/swsh/markings.pal",
     "runtime_function": "CreateMonMarkingComboSprite",
-    "live": true
+    "live": false,
+    "file_retained_for_phase_2_verification": true
   },
-  "status": "phase 1 complete: authentic HGSS circle/triangle/square/heart symbol pixels extracted into a compact 32x8 marking-combo asset; legacy markings.pal and generic combo renderer remain live",
-  "next": "Phase 2: replace the live generic marking-combo sprite/palette path with marking_combo_hgss.4bpp plus the verified HGSS markings palette, retaining markings.pal only for verification.",
+  "status": "phase 2 complete: authentic HGSS circle/triangle/square/heart marking tiles and verified HGSS palette are live; the generic marking-combo helper and legacy markings.pal are no longer referenced by Storage; markings.pal remains in the tree for verification",
+  "next": "Verify the HGSS marking-combo path in CI. If gen4-ui passes, delete graphics/pokemon_storage/swsh/markings.pal and mark phase 3 complete.",
   "pipeline": {
     "authentic_hgss_asset_ready": true,
-    "wired_live": false,
+    "wired_live": true,
     "legacy_equivalent_removed": false
+  },
+  "live_integration": {
+    "renderer": "32x8 OBJ sprite with four dynamically populated 8x8 slots",
+    "graphics": "graphics/gen4_ui/hgss_storage/verified/marking_combo_hgss.4bpp",
+    "palette": "verified HGSS markings_menu.png palette from /a/0/1/9 NCLR member 4",
+    "display_order": [
+      "circle",
+      "triangle",
+      "square",
+      "heart"
+    ],
+    "engine_bit_mapping": {
+      "circle": 0,
+      "triangle": 2,
+      "square": 1,
+      "heart": 3
+    },
+    "update_function": "UpdateHgssMarkingComboTiles",
+    "graphics_rule": "Each selected slot copies one exact 8x8 authentic HGSS source tile; unselected slots copy a transparent blank tile. No generic Emerald marking graphics are used."
   }
 }
