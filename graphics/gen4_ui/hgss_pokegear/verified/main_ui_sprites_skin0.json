@@ -1,0 +1,59 @@
+{
+  "role": "pokegear_main_ui_sprite_layer",
+  "phase": "authentic_asset_import",
+  "source_game": "Pokemon HeartGold / SoulSilver",
+  "source_repository": "pret/pokeheartgold",
+  "source_revision": "9d8b7591f09b65804da2fb2dfd56f320633e0d36",
+  "retail_binding": {
+    "loader": "PokegearUIManager_LoadInitialSkinGfx",
+    "loader_file": "src/application/pokegear/main/overlay_100_021E6914.c",
+    "consumer": "PokegearApp_LoadGraphics",
+    "consumer_file": "src/application/pokegear/main/overlay_100_021E5900.c",
+    "assets": [
+      {
+        "member": 0,
+        "type": "NCLR",
+        "source_path": "files/application/pokegear/pgear_gra/pgear_gra_00000000.NCLR",
+        "target_path": "graphics/gen4_ui/hgss_pokegear/verified/pgear_skin0_ui_palette.NCLR",
+        "source_git_blob_sha": "bbdc310859698dcce8dc7e0f9aa45e8ec2d94087"
+      },
+      {
+        "member": 6,
+        "type": "NCGR source PNG",
+        "source_path": "files/application/pokegear/pgear_gra/pgear_gra_00000006.png",
+        "target_path": "graphics/gen4_ui/hgss_pokegear/verified/pgear_skin0_ui_sprites.png",
+        "source_git_blob_sha": "c6dfd8b3946d4875a154bd4de359b1ee244dcd18"
+      },
+      {
+        "member": 12,
+        "type": "NCER",
+        "source_path": "files/application/pokegear/pgear_gra/pgear_gra_00000012.NCER",
+        "target_path": "graphics/gen4_ui/hgss_pokegear/verified/pgear_ui_cells.NCER",
+        "source_git_blob_sha": "aac8033e326bfadbb8d7328f62bb3246582e4d6c"
+      },
+      {
+        "member": 13,
+        "type": "NANR",
+        "source_path": "files/application/pokegear/pgear_gra/pgear_gra_00000013.NANR",
+        "target_path": "graphics/gen4_ui/hgss_pokegear/verified/pgear_ui_anims.NANR",
+        "source_git_blob_sha": "8bbd3faad47fad0187eae6441de4c6ddc56a15d6"
+      }
+    ],
+    "usage": "Common retail PokéGear UI sprites: app-switch cursor resources plus clock/day/status widgets."
+  },
+  "legacy_equivalent": {
+    "live_file": "src/pokenav_menu_handler_gfx.c",
+    "current_symbols": [
+      "gPokenavOptions_Gfx",
+      "gPokenavOptions_Pal"
+    ],
+    "finding": "The launcher background shell is authentic HGSS, but the interactive option sprite layer is still sourced from the legacy PokéNav options sprite sheet and palettes."
+  },
+  "pipeline": {
+    "authentic_hgss_asset_ready": true,
+    "wired_live": false,
+    "legacy_equivalent_removed": false
+  },
+  "next": "Phase 2: adapt only the verified retail cells/frames needed by the 240x160 GBA launcher and wire them live without deleting the legacy PokéNav option sprite layer.",
+  "status": "phase 1 complete: exact retail HGSS common PokéGear UI sprite resources are preserved in-tree; no live wiring or legacy removal has occurred"
+}

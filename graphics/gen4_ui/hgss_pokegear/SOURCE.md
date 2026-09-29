@@ -159,3 +159,37 @@ this cleanup.
 The fixed screen-shell sequence is therefore complete:
 
 **authentic HGSS asset → wire live → remove legacy equivalent**
+
+
+## Main UI sprite layer — phase 1
+
+With the authentic app-switch background and fixed screen shell complete, the
+remaining launcher still draws its interactive option layer from the legacy
+PokéNav sprite sheet and palettes in `src/pokenav_menu_handler_gfx.c`
+(`gPokenavOptions_Gfx` / `gPokenavOptions_Pal`).
+
+Retail HeartGold/SoulSilver has a distinct common PokéGear UI sprite resource
+set. At pret/pokeheartgold revision
+`9d8b7591f09b65804da2fb2dfd56f320633e0d36`,
+`PokegearUIManager_LoadInitialSkinGfx` in
+`src/application/pokegear/main/overlay_100_021E6914.c` loads, for default
+skin 0:
+
+- member 6 character graphics (the committed source PNG compiled to NCGR),
+- member 0 OBJ palette,
+- member 12 NCER cell layout,
+- member 13 NANR animation data.
+
+`PokegearApp_LoadGraphics` in
+`src/application/pokegear/main/overlay_100_021E5900.c` then creates the
+shared PokéGear UI sprites from that resource set, including the app-switch
+cursor sprites and the clock/day/status widgets.
+
+The four verified files in `verified/` are copied byte-for-byte from that
+retail HGSS source revision. They are source evidence only in this phase:
+nothing is wired into the GBA launcher yet, and no legacy PokéNav option
+sprite/palette is removed.
+
+The next phase will adapt only the retail cells/frames that are useful on the
+240x160 GBA launcher and wire those authentic pixels live while retaining the
+legacy sprite layer underneath until CI passes.
