@@ -942,3 +942,40 @@ The active Storage type presentation is now exclusively:
 
 This completes the strict sequence for Storage type badges:
 **authentic HGSS asset -> wire live -> remove legacy equivalent**.
+
+
+## Authentic HGSS Nature stat labels — phase 1
+
+The next remaining Storage info-panel legacy element is
+`graphics/pokemon_storage/swsh/stat_labels.png`. Before replacing it, the
+retail HGSS presentation was traced in the Pokémon Summary code rather than
+approximated with another sprite sheet.
+
+HGSS does **not** use dedicated 16x16 Nature stat-label sprites for this role.
+`PokemonSummary_Init` in `asm/unk_02088288.s` allocates font ID 4, and
+`sub_0208C7F8` in `asm/unk_0208C3E4.s` renders each affected stat name as
+text. It indexes `gNatureStatMods` for the current Nature and selects the
+following exact packed text-color arguments:
+
+- neutral: `0x000E0F00`
+- Nature increased: `0x000E0700`
+- Nature decreased: `0x000E0800`
+
+The five labels are read from HGSS message archive `msg_0302`, entries
+111–115: **Attack, Defense, Sp. Atk, Sp. Def, Speed**. The corresponding
+Nature-stat indices passed by the Summary renderer are 0, 1, 3, 4, and 2.
+
+This establishes that the authentic replacement is a **dynamic text
+presentation with Nature-dependent HGSS coloring**, not an HGSS-style sprite
+redraw. The exact packed color values are preserved as source behavior here;
+this phase deliberately does not invent RGB interpretations or new palette
+colors.
+
+The current expansion `stat_labels.png`, `sStatLabels_Gfx`,
+`sStatLabels_Pal`, and `UpdateStatLabelsSprites` remain live. This is phase 1
+only. Phase 2 will adapt the verified HGSS text behavior to the GBA Storage
+info-panel layout while retaining the old sprite sheet as a verification
+fallback.
+
+Machine-readable provenance is recorded in
+`verified/stat_labels.json`.

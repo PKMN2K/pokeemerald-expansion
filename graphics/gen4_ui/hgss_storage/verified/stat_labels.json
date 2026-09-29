@@ -1,0 +1,93 @@
+{
+  "role": "nature_stat_labels",
+  "classification": "native_hgss_summary_text_behavior",
+  "source_game": "Pokemon HeartGold / SoulSilver",
+  "decomp_verification": {
+    "repository": "pret/pokeheartgold",
+    "revision": "9d8b7591f09b65804da2fb2dfd56f320633e0d36",
+    "summary_core": "asm/unk_02088288.s",
+    "summary_text_renderer": "asm/unk_0208C3E4.s",
+    "renderer_function": "sub_0208C7F8",
+    "text_helper": "sub_0208C778",
+    "font_allocation": {
+      "function": "PokemonSummary_Init",
+      "font_id": 4,
+      "evidence": "PokemonSummary_Init calls FontID_Alloc(4)."
+    },
+    "nature_table": "gNatureStatMods",
+    "finding": "HGSS does not present Nature-modified stats with dedicated stat-label sprites. The Summary screen renders the stat names as text and selects one of three packed text-color parameters according to the corresponding gNatureStatMods entry."
+  },
+  "labels": [
+    {
+      "stat": "ATTACK",
+      "message_archive": "msg_0302",
+      "message_index": 111,
+      "message_hex": "0x6F",
+      "english": "Attack",
+      "nature_stat_index": 0
+    },
+    {
+      "stat": "DEFENSE",
+      "message_archive": "msg_0302",
+      "message_index": 112,
+      "message_hex": "0x70",
+      "english": "Defense",
+      "nature_stat_index": 1
+    },
+    {
+      "stat": "SP_ATK",
+      "message_archive": "msg_0302",
+      "message_index": 113,
+      "message_hex": "0x71",
+      "english": "Sp. Atk",
+      "nature_stat_index": 3
+    },
+    {
+      "stat": "SP_DEF",
+      "message_archive": "msg_0302",
+      "message_index": 114,
+      "message_hex": "0x72",
+      "english": "Sp. Def",
+      "nature_stat_index": 4
+    },
+    {
+      "stat": "SPEED",
+      "message_archive": "msg_0302",
+      "message_index": 115,
+      "message_hex": "0x73",
+      "english": "Speed",
+      "nature_stat_index": 2
+    }
+  ],
+  "native_color_behavior": {
+    "neutral": {
+      "condition": "gNatureStatMods[nature][stat] == 0",
+      "packed_text_color": "0x000E0F00"
+    },
+    "increased": {
+      "condition": "gNatureStatMods[nature][stat] > 0",
+      "packed_text_color": "0x000E0700"
+    },
+    "decreased": {
+      "condition": "gNatureStatMods[nature][stat] < 0",
+      "packed_text_color": "0x000E0800"
+    },
+    "note": "These are recorded as the exact packed HGSS text-color arguments used by sub_0208C7F8. This phase does not infer or fabricate replacement RGB values."
+  },
+  "current_expansion_legacy": {
+    "graphics": "graphics/pokemon_storage/swsh/stat_labels.png",
+    "gfx_symbol": "sStatLabels_Gfx",
+    "palette_symbol": "sStatLabels_Pal",
+    "runtime_function": "UpdateStatLabelsSprites",
+    "presentation": "five 16x16 stat-label sprite frames; separate palettes indicate Nature increase/decrease",
+    "live": true
+  },
+  "adaptation_rule": "Replace the legacy sprite-label presentation with dynamic text following HGSS Summary behavior. Use authentic HGSS font/text presentation and the verified Nature color-state semantics; do not draw HGSS-style stat-label sprites.",
+  "status": "phase 1 complete: authentic HGSS Nature-stat presentation verified as colored text rather than sprite labels; legacy stat_labels.png remains live",
+  "next": "Phase 2: replace the live 16x16 stat-label sprites with HGSS-derived dynamic stat-name text and native increase/decrease/neutral color behavior, retaining stat_labels.png only for verification until the new path passes CI.",
+  "pipeline": {
+    "authentic_hgss_behavior_verified": true,
+    "wired_live": false,
+    "legacy_equivalent_removed": false
+  }
+}
