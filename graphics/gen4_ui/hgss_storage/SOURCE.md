@@ -594,3 +594,9 @@ verification. Phase 3 is its removal.
 ### Gender glyph OBJ container repair
 
 Build verification exposed a malformed PNG container in the phase-2 OBJ packing derivative (libpng rejected its PLTE chunk). The live `gender_glyphs_obj.png` has been regenerated directly from the verified `gender_glyphs.png` export. The two authentic 16x16 HGSS font cells and their original palette indices are unchanged; only their layout is repacked vertically for GBA 1D OBJ tile order. The repaired indexed PNG SHA-256 is `7ef910bc3bcc0ac04cf00805cffb9596ed231a7e5e9ad33fbdb4e8dc02d2e8c7`.
+
+## Authentic HGSS gender indicator — phase 3
+
+Targeted Gen 4 UI asset generation and renderer compilation passed with the repaired authentic HGSS glyph OBJ export. The expansion-era `graphics/pokemon_storage/swsh/gender_icons.png` asset is now removed. The live graphics symbol has also been renamed from the inherited `sGenderIcons_Gfx` name to `sHgssGenderGlyphs_Gfx`, so the Storage gender indicator now has no remaining dependency on the legacy SWSH gender-icon asset path.
+
+The active presentation remains the verified HGSS font-derived 16x16 male/female glyph cells and original member-7 palette values imported in phases 1-2. This completes the strict sequence for this element: authentic HGSS asset -> wire live -> remove legacy equivalent.

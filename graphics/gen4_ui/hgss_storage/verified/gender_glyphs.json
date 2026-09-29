@@ -118,15 +118,15 @@
     "layout": "male 16x16 at x=0..15; female 16x16 at x=16..31",
     "pixel_rule": "Exact font-member-4 2bpp glyph classes expanded by HGSS DecompressGlyphTile semantics and remapped to the original member-7 palette indices from ov14_021F5114; no redraw or synthetic pixels."
   },
-  "status": "phase 2 complete: authentic HGSS font-rendered gender glyphs wired live",
-  "next": "Phase 3: after build/runtime verification, remove graphics/pokemon_storage/swsh/gender_icons.png and the remaining legacy equivalent.",
+  "status": "phase 3 complete: authentic HGSS font-rendered gender glyphs live; legacy expansion equivalent removed",
+  "next": "Continue to the next unresolved Storage UI element using the strict authentic HGSS asset -> wire live -> remove legacy equivalent sequence.",
   "live_integration": {
     "wired": true,
-    "legacy_equivalent_removed": false,
-    "current_legacy_source": "graphics/pokemon_storage/swsh/gender_icons.png",
-    "current_legacy_symbol": "sGenderIcons_Gfx",
+    "legacy_equivalent_removed": true,
     "live_source": "graphics/gen4_ui/hgss_storage/verified/gender_glyphs_obj.png",
-    "palette_tag": "PALTAG_HGSS_GENDER_GLYPHS"
+    "palette_tag": "PALTAG_HGSS_GENDER_GLYPHS",
+    "removed_legacy_source": "graphics/pokemon_storage/swsh/gender_icons.png",
+    "live_symbol": "sHgssGenderGlyphs_Gfx"
   },
   "obj_export": {
     "file": "gender_glyphs_obj.png",

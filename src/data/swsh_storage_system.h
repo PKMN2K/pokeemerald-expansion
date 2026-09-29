@@ -256,7 +256,7 @@ static const u16 sHgssStorageCursor_Pal[] = INCGFX_U16("graphics/gen4_ui/hgss_st
 // 82/83 through font ID 4; this OBJ sheet preserves those exact 16x16 glyph
 // pixels and member-7 colors, repacked vertically only for GBA 1D OBJ tile
 // order (male first, female second).
-static const u32 sGenderIcons_Gfx[] = INCGFX_U32("graphics/gen4_ui/hgss_storage/verified/gender_glyphs_obj.png", ".4bpp.smol");
+static const u32 sHgssGenderGlyphs_Gfx[] = INCGFX_U32("graphics/gen4_ui/hgss_storage/verified/gender_glyphs_obj.png", ".4bpp.smol");
 static const u16 sHgssGenderGlyphs_Pal[16] =
 {
     0x3713, 0x296B, 0x5EF5, 0x089D,
@@ -1066,7 +1066,7 @@ static const union AnimCmd *const sSpriteAnimTable_GenderIcons[] = {
 
 static const struct CompressedSpriteSheet sSpriteSheet_GenderIcons =
 {
-    .data = sGenderIcons_Gfx,
+    .data = sHgssGenderGlyphs_Gfx,
     .size = (16 * 16 * 2) / 2,
     .tag = GFXTAG_GENDER_ICON
 };
