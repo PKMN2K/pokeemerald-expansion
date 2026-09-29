@@ -108,3 +108,25 @@ The three files in `verified/` are copied byte-for-byte from
 This is **phase 1 only** for the fixed shell. The current lower PokéNav device
 artwork remains live until the verified retail shell is adapted and wired in a
 separate phase.
+
+## Fixed screen shell — phase 2
+
+The verified retail default-skin screen shell is now live on the GBA PokéGear
+without scaling or redrawing.
+
+`tools/gen4_ui/make_hgss_pokegear_screen_shell.py` adapts member 42 at tile
+granularity. It keeps NSCR columns 1..30, so the 256-pixel DS canvas becomes
+the 240-pixel GBA viewport by omitting one 8-pixel edge column on each side.
+Vertically it keeps source rows 0..11 and 16..23; rows 12..15 are a uniform
+32-pixel spacer in the retail screen map, so removing only that spacer converts
+192 pixels to 160 while every retained artwork pixel remains 1:1.
+
+The member-36 NCGR-derived indexed PNG is compiled directly as 4bpp tiles at
+BG2 tile base `0x40`. The adapted tilemap preserves the retail tile identity,
+horizontal/vertical flip bits, and palette-bank semantics while offsetting tile
+IDs by that GBA tile base. Member 24 palette bank 13 is emitted directly from
+the verified NCLR and loaded into BG palette bank 13.
+
+The authentic app-switch strip is loaded afterward and continues to own rows
+0..3. The old PokéNav device shell still loads first underneath the HGSS shell
+for this phase-2 verification cycle; its code and assets are not removed yet.

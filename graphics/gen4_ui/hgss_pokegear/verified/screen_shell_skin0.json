@@ -1,6 +1,6 @@
 {
   "role": "pokegear_fixed_screen_shell",
-  "phase": "authentic_asset_import",
+  "phase": "wired_live",
   "source_game": "Pokemon HeartGold / SoulSilver",
   "source_repository": "pret/pokeheartgold",
   "source_revision": "9d8b7591f09b65804da2fb2dfd56f320633e0d36",
@@ -64,8 +64,42 @@
   },
   "pipeline": {
     "authentic_hgss_asset_ready": true,
-    "wired_live": false,
+    "wired_live": true,
     "legacy_equivalent_removed": false
   },
-  "next": "Phase 2: adapt the verified member-36/member-24/member-42 fixed shell to the 240x160 GBA PokéGear composition at 1:1 pixel scale and wire it live without yet deleting the remaining legacy shell."
+  "next": "Run CI on the fixed-shell live integration. If green, phase 3 removes the remaining legacy PokéNav device shell that is now superseded by the verified retail HGSS shell.",
+  "live_adaptation": {
+    "generator": "tools/gen4_ui/make_hgss_pokegear_screen_shell.py",
+    "outputs": [
+      "graphics/gen4_ui/hgss_pokegear/screen_shell_gba.tilemap.bin",
+      "graphics/gen4_ui/hgss_pokegear/screen_shell_gba.palette.bin"
+    ],
+    "tile_source": "graphics/gen4_ui/hgss_pokegear/verified/pgear_skin0_screen_shell_tiles.png",
+    "dimensions": [
+      240,
+      160
+    ],
+    "source_geometry": [
+      256,
+      192
+    ],
+    "transformation": [
+      "retain NSCR columns 1..30, omitting one 8-pixel DS edge column on each side",
+      "retain NSCR rows 0..11 and 16..23",
+      "remove only the uniform 32-pixel spacer at source tile rows 12..15",
+      "preserve retail tile identity and flip bits while offsetting tile IDs by GBA tile base 0x40",
+      "emit exact member-24 NCLR palette bank 13 as the live GBA BG palette"
+    ],
+    "scaling": false,
+    "redrawing": false,
+    "recoloring": false,
+    "interpolation": false,
+    "live_file": "src/pokenav_menu_handler_gfx.c",
+    "bg": 2,
+    "tile_base": "0x40",
+    "palette_bank": 13,
+    "app_switch_layering": "The already-authentic HGSS app-switch strip loads after the shell and owns visible rows 0..3.",
+    "legacy_device_chrome_retained_for_verification": true
+  },
+  "status": "phase 2 complete: authentic HGSS default-skin fixed screen shell is adapted at 1:1 tile/pixel scale and wired live; the legacy PokéNav shell remains loaded underneath pending phase-3 removal"
 }

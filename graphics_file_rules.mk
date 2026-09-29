@@ -28,6 +28,7 @@ GEN4UIHGSSSTART := tools/gen4_ui/make_hgss_pokedex_start_menu.py
 GEN4UIHGSSSCROLL := tools/gen4_ui/make_hgss_pokedex_scroll_controls.py
 GEN4UIHGSSSTARTCURSOR := tools/gen4_ui/make_hgss_pokedex_start_cursor.py
 GEN4UIHGSSPOKEGEARSWITCH := tools/gen4_ui/make_hgss_pokegear_app_switch.py
+GEN4UIHGSSPOKEGEARSHELL := tools/gen4_ui/make_hgss_pokegear_screen_shell.py
 
 types := none normal fight flying poison ground rock bug ghost steel mystery fire water grass electric psychic ice dragon dark fairy stellar
 contest_types := cool beauty cute smart tough
@@ -70,6 +71,14 @@ $(GEN4UIGFXDIR)/hgss_pokegear/app_switch_gba.png: $(GEN4UIHGSSPOKEGEARSWITCH) \
 	$(GEN4UIGFXDIR)/hgss_pokegear/verified/pgear_skin0_app_switch_palette.NCLR \
 	$(GEN4UIGFXDIR)/hgss_pokegear/verified/pgear_skin0_app_switch_tilemap.NSCR
 	python3 $< $@
+
+$(GEN4UIGFXDIR)/hgss_pokegear/screen_shell_gba.tilemap.bin: $(GEN4UIHGSSPOKEGEARSHELL) \
+	$(GEN4UIGFXDIR)/hgss_pokegear/verified/pgear_skin0_screen_shell_tilemap.NSCR
+	python3 $< --tilemap $@
+
+$(GEN4UIGFXDIR)/hgss_pokegear/screen_shell_gba.palette.bin: $(GEN4UIHGSSPOKEGEARSHELL) \
+	$(GEN4UIGFXDIR)/hgss_pokegear/verified/pgear_skin0_screen_shell_palette.NCLR
+	python3 $< --palette $@
 
 # The live HGSS Pokédex background reserves BG palette entries 128..140.
 # Shifting tile pixel indices keeps the legacy Pokédex palettes (0..95 and 240..255)

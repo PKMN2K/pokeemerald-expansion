@@ -42,6 +42,10 @@
 #define HGSS_POKEGEAR_APP_SWITCH_WIDTH_TILES 30
 #define HGSS_POKEGEAR_APP_SWITCH_HEIGHT_TILES 4
 
+// Keep these in sync with make_hgss_pokegear_screen_shell.py.
+#define HGSS_POKEGEAR_SCREEN_SHELL_TILE_BASE 0x40
+#define HGSS_POKEGEAR_SCREEN_SHELL_PAL_BANK 13
+
 struct Pokenav_MenuGfx
 {
     bool32 (*isTaskActiveCB)(void);
@@ -92,6 +96,7 @@ static void CreateMatchCallBlueLightSprite(void);
 static void SpriteCB_BlinkingBlueLight(struct Sprite *);
 static void DestroyRematchBlueLightSprite(void);
 static void AddOptionDescriptionWindow(void);
+static void LoadHgssPokegearScreenShell(void);
 static void LoadHgssPokegearAppSwitchChrome(void);
 static void DrawPokeGearDescriptionPanel(u32 windowId);
 static void PrintCurrentOptionDescription(void);
@@ -120,6 +125,13 @@ static const u32 sPokenavDeviceBgTiles[] = INCGFX_U32("graphics/pokenav/device_o
 static const u32 sPokenavDeviceBgTilemap[] = INCGFX_U32("graphics/pokenav/device_outline_map.bin", ".smolTM");
 static const u16 sMatchCallBlueLightPal[] = INCGFX_U16("graphics/pokenav/blue_light.png", ".gbapal");
 static const u32 sMatchCallBlueLightTiles[] = INCGFX_U32("graphics/pokenav/blue_light.png", ".4bpp.smol");
+
+// Exact retail HGSS default-skin fixed PokéGear screen shell.
+// The NCGR-derived tile sheet is compiled directly; the generated map keeps
+// the retail tile/flip/palette semantics while removing only DS-only geometry.
+static const u32 sHgssPokegearScreenShellTiles[] = INCGFX_U32("graphics/gen4_ui/hgss_pokegear/verified/pgear_skin0_screen_shell_tiles.png", ".4bpp");
+static const u16 sHgssPokegearScreenShellPal[] = INCBIN_U16("graphics/gen4_ui/hgss_pokegear/screen_shell_gba.palette.bin");
+static const u16 sHgssPokegearScreenShellTilemap[] = INCBIN_U16("graphics/gen4_ui/hgss_pokegear/screen_shell_gba.tilemap.bin");
 
 // Exact retail HGSS default-skin PokéGear app-switch pixels, reconstructed
 // losslessly from pgear_gra members 48 (NCGR), 30 (NCLR), and 54 (NSCR).
@@ -500,6 +512,7 @@ static u32 LoopedTask_OpenMenu(s32 state)
     case 3:
         if (FreeTempTileDataBuffersIfPossible())
             return LT_PAUSE;
+        LoadHgssPokegearScreenShell();
         LoadHgssPokegearAppSwitchChrome();
         AddOptionDescriptionWindow();
         CreateMovingBgDotsTask();
@@ -860,6 +873,27 @@ static void DestroyMenuOptionSprites(void)
             DestroySprite(gfx->iconSprites[i][j]);
         }
     }
+}
+
+static void LoadHgssPokegearScreenShell(void)
+{
+    // Phase 2 deliberately leaves the legacy PokéNav shell load in state 1.
+    // This verified retail HGSS layer replaces it visually for validation;
+    // the legacy code/assets are not removed until the next gated phase.
+    LoadBgTiles(
+        2,
+        sHgssPokegearScreenShellTiles,
+        sizeof(sHgssPokegearScreenShellTiles),
+        HGSS_POKEGEAR_SCREEN_SHELL_TILE_BASE);
+    CopyPaletteIntoBufferUnfaded(
+        sHgssPokegearScreenShellPal,
+        BG_PLTT_ID(HGSS_POKEGEAR_SCREEN_SHELL_PAL_BANK),
+        sizeof(sHgssPokegearScreenShellPal));
+    LoadBgTilemap(
+        2,
+        sHgssPokegearScreenShellTilemap,
+        sizeof(sHgssPokegearScreenShellTilemap),
+        0);
 }
 
 static void LoadHgssPokegearAppSwitchChrome(void)
