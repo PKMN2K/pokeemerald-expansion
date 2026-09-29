@@ -798,3 +798,39 @@ legacy type atlas can be removed.
 
 The current `graphics/pokemon_storage/swsh/type_icons.png` path remains live.
 This is phase 1 only.
+
+
+## Authentic HGSS Storage Fairy badge — phase 1A adaptation
+
+Retail HGSS has no Fairy type, so the Fairy slot cannot be satisfied by claiming a
+nonexistent Nintendo badge. The supplied HGSS ROM-hack was useful as a structural
+reference: its Fairy implementation occupies the normal 32x16 type-badge resource
+path. Pixel comparison also showed why the hack badge cannot simply be adopted as
+"authentic HGSS" artwork: its F and I match retail HGSS glyph geometry, but at
+least its A differs from the retail HGSS A used by the native type badges.
+
+The project therefore resolves Fairy by **recomposing only verified retail HGSS
+pixels**. `verified/type_icon_fairy_hgss_composite.4bpp` starts from the exact
+Psychic badge (HGSS type 14, /a/0/0/8 member 223), retaining its complete native
+32x16 background/frame and palette-bank-1 presentation. Only the existing
+PSYCHIC label's palette-index F/E pixels in rows y=4..11 are cleared back to that
+badge's native base index 8. The word FAIRY is then assembled from untouched
+retail badge glyph pixels:
+
+- F: FLYING member 227, x=2..6 -> x=4..8
+- A: WATER member 241, x=10..14 -> x=9..13
+- I: FLYING member 227, x=17..20 -> x=14..17
+- R: WATER member 241, x=24..28 -> x=18..22
+- Y: FLYING member 227, x=12..16 -> x=23..27
+
+All glyph crops use their original 8-pixel-tall y=4..11 HGSS badge pixels and
+copy only the native F/E lettering indices. There is no redraw, scaling,
+anti-aliasing, custom glyph geometry, or Fairy-specific recoloring. The badge
+uses the unchanged retail HGSS type palette member 0x4A bank 1, whose existing
+pink/purple colors make the composition visually appropriate without inventing
+new colors.
+
+This is still pre-wiring work. The legacy
+`graphics/pokemon_storage/swsh/type_icons.png` remains live. Stellar is the
+remaining expansion-only type gap before the type-badge set can move to phase 2
+live wiring.

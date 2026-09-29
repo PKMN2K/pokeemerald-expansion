@@ -35,6 +35,12 @@
       "bytes": 96,
       "git_blob_sha": "04efed17079c80ee3b9e8f124f1dbaf900669c30",
       "layout": "Exact 3 x 16-color BGR555 palette banks from /a/0/0/8 member 0x4A."
+    },
+    "fairy_composite": {
+      "file": "type_icon_fairy_hgss_composite.4bpp",
+      "bytes": 256,
+      "git_blob_sha": "5d85f0c4e4d7da7b50efb647a4d607f3e3dd06aa",
+      "layout": "One 32x16 4bpp badge composed only from verified retail HGSS /a/0/0/8 type-badge pixels; uses native palette bank 1 from type_icons_hgss_gen4.gbapal."
     }
   },
   "native_types": [
@@ -186,7 +192,112 @@
   "expanded_engine_gaps": {
     "fairy": {
       "expansion_type": 19,
-      "native_hgss_badge": false
+      "native_hgss_badge": false,
+      "resolved": true,
+      "adaptation": "authentic_hgss_pixel_composite",
+      "output": "type_icon_fairy_hgss_composite.4bpp",
+      "palette_bank": 1,
+      "base_badge": {
+        "name": "PSYCHIC",
+        "hgss_type": 14,
+        "expansion_type": 15,
+        "graphics_member": 223,
+        "rule": "Use the verified retail HGSS Psychic badge as the complete 32x16 base. Only its F/E label pixels in y=4..11 are cleared back to the badge's native base palette index 8; frame/background pixels are otherwise unchanged."
+      },
+      "glyph_donors": [
+        {
+          "letter": "F",
+          "type": "FLYING",
+          "graphics_member": 227,
+          "source_rect": {
+            "x": 2,
+            "y": 4,
+            "width": 5,
+            "height": 8
+          },
+          "dest_rect": {
+            "x": 4,
+            "y": 4,
+            "width": 5,
+            "height": 8
+          }
+        },
+        {
+          "letter": "A",
+          "type": "WATER",
+          "graphics_member": 241,
+          "source_rect": {
+            "x": 10,
+            "y": 4,
+            "width": 5,
+            "height": 8
+          },
+          "dest_rect": {
+            "x": 9,
+            "y": 4,
+            "width": 5,
+            "height": 8
+          }
+        },
+        {
+          "letter": "I",
+          "type": "FLYING",
+          "graphics_member": 227,
+          "source_rect": {
+            "x": 17,
+            "y": 4,
+            "width": 4,
+            "height": 8
+          },
+          "dest_rect": {
+            "x": 14,
+            "y": 4,
+            "width": 4,
+            "height": 8
+          }
+        },
+        {
+          "letter": "R",
+          "type": "WATER",
+          "graphics_member": 241,
+          "source_rect": {
+            "x": 24,
+            "y": 4,
+            "width": 5,
+            "height": 8
+          },
+          "dest_rect": {
+            "x": 18,
+            "y": 4,
+            "width": 5,
+            "height": 8
+          }
+        },
+        {
+          "letter": "Y",
+          "type": "FLYING",
+          "graphics_member": 227,
+          "source_rect": {
+            "x": 12,
+            "y": 4,
+            "width": 5,
+            "height": 8
+          },
+          "dest_rect": {
+            "x": 23,
+            "y": 4,
+            "width": 5,
+            "height": 8
+          }
+        }
+      ],
+      "pixel_rule": "Copy only retail HGSS palette-index F/E glyph pixels from the donor rectangles. No glyph is redrawn, scaled, recolored, or sourced from the ROM-hack Fairy art. All other pixels remain the verified retail HGSS Psychic badge.",
+      "palette_rule": "Use unchanged retail HGSS type palette member 0x4A bank 1; no Fairy-specific colors are added.",
+      "hack_reference": {
+        "purpose": "layout/reference only",
+        "finding": "The ROM-hack Fairy member demonstrates the established 32x16 type-badge slot, but its lettering is not accepted wholesale: F and I match retail HGSS while at least A differs from the native HGSS A glyph.",
+        "pixels_copied": false
+      }
     },
     "stellar": {
       "expansion_type": 20,
@@ -202,12 +313,14 @@
     "runtime_function": "UpdateTypeIconTiles",
     "live": true
   },
-  "status": "phase 1 complete: all 18 native HGSS Pokemon type badges and exact 3-bank palette imported losslessly; expansion Fairy/Stellar adaptations remain unresolved before live wiring",
-  "next": "Phase 2 preparation: build authentic-source Fairy/Stellar adaptations, then map expansion TYPE_NORMAL..TYPE_DARK to the imported HGSS pack and wire the complete type presentation live while retaining the old atlas for verification.",
+  "status": "phase 1 preparation: all 18 native HGSS type badges imported and the expansion Fairy badge resolved through an authentic-HGSS-only pixel composite; Stellar remains unresolved before live wiring",
+  "next": "Resolve the expansion-only Stellar badge through authentic HGSS source artwork (or isolate its fallback explicitly), then begin phase 2 live type-badge wiring while retaining the legacy atlas for verification.",
   "pipeline": {
     "authentic_hgss_native_assets_imported": true,
     "expanded_only_types_resolved": false,
     "wired_live": false,
-    "legacy_equivalent_removed": false
+    "legacy_equivalent_removed": false,
+    "fairy_authentic_source_adaptation_resolved": true,
+    "stellar_authentic_source_adaptation_resolved": false
   }
 }
