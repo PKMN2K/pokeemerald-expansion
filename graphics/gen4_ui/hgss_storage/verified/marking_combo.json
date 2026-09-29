@@ -1,0 +1,100 @@
+{
+  "role": "marking_combo",
+  "classification": "authentic_hgss_pixel_recomposition",
+  "source_game": "Pokemon HeartGold / SoulSilver",
+  "source_archive": "/a/0/1/9",
+  "source_members": {
+    "nscr": 10,
+    "ncgr": 14,
+    "nclr": 4
+  },
+  "donor_asset": "graphics/gen4_ui/hgss_storage/verified/markings_menu.png",
+  "donor_metadata": "graphics/gen4_ui/hgss_storage/verified/markings_menu.json",
+  "donor_sha256": "81e2c02831b2b1aecc278bfeea43d3c888e5f354a194e5ee7bf9ce034572907d",
+  "output": {
+    "file": "marking_combo_hgss.4bpp",
+    "git_blob_sha": "9e660a1f14ffdbd64929c04357d05343312dc684",
+    "dimensions": [
+      32,
+      8
+    ],
+    "bytes": 128,
+    "format": "four consecutive 8x8 GBA 4bpp tiles"
+  },
+  "glyph_order": [
+    "circle",
+    "triangle",
+    "square",
+    "heart"
+  ],
+  "source_geometry": {
+    "button_rects": [
+      {
+        "glyph": "circle",
+        "x": 8,
+        "y": 8,
+        "width": 32,
+        "height": 24,
+        "glyph_bbox_within_button": {
+          "x": 16,
+          "y": 9,
+          "width": 7,
+          "height": 7
+        }
+      },
+      {
+        "glyph": "triangle",
+        "x": 48,
+        "y": 8,
+        "width": 32,
+        "height": 24,
+        "glyph_bbox_within_button": {
+          "x": 8,
+          "y": 9,
+          "width": 7,
+          "height": 7
+        }
+      },
+      {
+        "glyph": "square",
+        "x": 8,
+        "y": 32,
+        "width": 32,
+        "height": 24,
+        "glyph_bbox_within_button": {
+          "x": 16,
+          "y": 9,
+          "width": 7,
+          "height": 7
+        }
+      },
+      {
+        "glyph": "heart",
+        "x": 48,
+        "y": 32,
+        "width": 32,
+        "height": 24,
+        "glyph_bbox_within_button": {
+          "x": 8,
+          "y": 9,
+          "width": 7,
+          "height": 7
+        }
+      }
+    ],
+    "extraction_rule": "Copy only source palette indices 7 and 8 from each verified HGSS marking symbol into one transparent 8x8 tile. Preserve the 7x7 symbol pixel geometry exactly; no redraw, scaling, recolor, or smoothing."
+  },
+  "palette_rule": "Use the existing verified markings_menu.png HGSS palette when wired live. The compact asset preserves source palette indices 7/8 exactly.",
+  "current_legacy": {
+    "palette": "graphics/pokemon_storage/swsh/markings.pal",
+    "runtime_function": "CreateMonMarkingComboSprite",
+    "live": true
+  },
+  "status": "phase 1 complete: authentic HGSS circle/triangle/square/heart symbol pixels extracted into a compact 32x8 marking-combo asset; legacy markings.pal and generic combo renderer remain live",
+  "next": "Phase 2: replace the live generic marking-combo sprite/palette path with marking_combo_hgss.4bpp plus the verified HGSS markings palette, retaining markings.pal only for verification.",
+  "pipeline": {
+    "authentic_hgss_asset_ready": true,
+    "wired_live": false,
+    "legacy_equivalent_removed": false
+  }
+}

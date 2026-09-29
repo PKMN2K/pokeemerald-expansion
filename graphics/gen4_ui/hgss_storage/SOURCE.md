@@ -1056,3 +1056,34 @@ The live Nature-stat presentation is exclusively:
 
 This completes the strict sequence for Nature stat labels:
 **authentic HGSS behavior/asset -> wire live -> remove legacy equivalent**.
+
+
+## Authentic HGSS marking combo — phase 1
+
+After the Nature stat-label cleanup, the next visible legacy Storage role is the
+compact Pokémon marking-combo display. Its live path still calls
+`CreateMonMarkingComboSprite(..., sMarkings_Pal)`, where `sMarkings_Pal`
+comes from `graphics/pokemon_storage/swsh/markings.pal`.
+
+The authentic replacement source already exists in the verified HGSS markings
+panel: `verified/markings_menu.png`, reconstructed losslessly from
+`/a/0/1/9` NSCR 10 + NCGR 14 + NCLR 4. The current BoxPokemon format persists
+four marking bits, matching the first four native HGSS symbols: **circle,
+triangle, square, heart**.
+
+`verified/marking_combo_hgss.4bpp` contains those four symbols as four
+consecutive 8x8 tiles (32x8 total). Each glyph is copied directly from the
+verified HGSS panel at its native 7x7 geometry, preserving only the original
+palette-index 7/8 symbol pixels on a transparent background. There is no redraw,
+scaling, resampling, recoloring, or inferred replacement artwork.
+
+The source button geometry is:
+
+- circle: button x=8..39, y=8..31; symbol bbox x=16..22, y=9..15;
+- triangle: button x=48..79, y=8..31; symbol bbox x=8..14, y=9..15;
+- square: button x=8..39, y=32..55; symbol bbox x=16..22, y=9..15;
+- heart: button x=48..79, y=32..55; symbol bbox x=8..14, y=9..15.
+
+This is phase 1 only. The existing generic marking-combo sprite and legacy
+`markings.pal` remain live until the compact HGSS asset is wired and verified.
+Machine-readable provenance is recorded in `verified/marking_combo.json`.
