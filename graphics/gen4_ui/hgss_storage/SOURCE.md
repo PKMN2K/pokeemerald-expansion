@@ -678,3 +678,47 @@ the dedicated `PALTAG_HGSS_SHINY_STAR` path.
 
 This completes the strict sequence for the shiny indicator:
 authentic HGSS asset -> wire live -> remove legacy equivalent.
+
+
+## Authentic HGSS Pokérus indicator — phase 1
+
+The next unresolved Storage info-panel accessory is the expansion Pokérus
+indicator. As with the shiny marker, HGSS Storage itself does not expose this
+status icon, so the useful status is preserved by repurposing **authentic HGSS
+Summary-screen artwork** rather than retaining a SWSH-era graphic or drawing
+an HGSS-style substitute.
+
+The exact native source is the companion sprite immediately beside the Summary
+shiny marker. `sub_0208BD38` toggles the sprite stored at work offset
+`0x4D8` when the packed Summary status field's top two bits equal 2; the
+neighboring `0x4D4` sprite is the shiny marker. The `_02103A70` unmanaged
+sprite-template table identifies the Pokérus sprite as template index 53:
+resource set 23, animation 1, native position 252x132. Resource set 23 resolves
+through `resdat_00000085` to the same HGSS Summary resource quartet used by
+the shiny marker:
+
+- character: `NARC_a_0_3_9` member 58
+- palette: `NARC_a_1_6_2` member 61
+- cell: `NARC_a_0_3_9` member 51
+- animation: `NARC_a_0_3_9` member 50
+
+That character member contains exactly two 8x8 OBJ tiles. Tile 0 is the shiny
+star used by animation 0; tile 1 is the Pokérus symbol selected by template 53
+with animation 1. `verified/pokerus_symbol.png` is a direct 1:1 indexed
+export of tile 1 with the original first 16-color palette bank from member 61.
+Palette index 0 remains transparent. No redraw, recoloring, resampling,
+screenshot crop, or synthetic pixel work is present.
+
+Source archive SHA-1 values from the canonical HGSS filesystem manifest remain
+`1360486ee8eb2c19e8c5b6e36e4843d56a42c066` for `/a/0/3/9` and
+`30fd7818457b50689a8a78fe522eb9df366e58a4` for `/a/1/6/2`.
+The exported PNG SHA-256 is
+`7a6ebcaad6e27c64d3321fe5af5de0afb11be8e8632721821601cec213cc8cd3`.
+
+This is phase 1 only. The current 32x8 expansion
+`graphics/pokemon_storage/swsh/pokerus_icon.png` remains live. Phase 2 will
+wire the authentic 8x8 HGSS Summary symbol and adapt the live sprite geometry;
+phase 3 will remove the legacy equivalent after verification.
+
+The machine-readable provenance record is
+`verified/pokerus_indicator.json`.
