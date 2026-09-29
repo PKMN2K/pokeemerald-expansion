@@ -61,3 +61,27 @@ the 240x32 indexed output using only Python's standard library
 BGR555 colors, 1:1 geometry, and empty-margin-only crop are unchanged.
 
 No legacy PokéGear artwork is removed by this correction.
+
+## Main app-switch surface — phase 3
+
+CI #621 passed the corrected phase-2 integration across Gen 4 UI validation,
+Emerald, FireRed, LeafGreen, release, docs, and the general test suite.
+
+The superseded legacy app-switch region has now been removed from
+`graphics/pokenav/device_outline_map.bin`. Tilemap rows 0..3 are permanently
+blanked with the map's canonical blank entry (`0x2000`) before the authentic
+HGSS strip is installed.
+
+This means the verified retail HGSS strip is now the **only live background**
+for the app-switch surface rather than an overlay hiding old artwork. Seven
+legacy tiles that were exclusive to those rows (4, 8, 9, 12, 16, 17, and 20)
+are no longer referenced by the live tilemap.
+
+The shared legacy device character sheet is not deleted yet because other tiles
+still render the lower PokéNav shell. That lower shell is a separate surface
+and will be replaced through its own authentic-HGSS asset → wire-live → remove
+legacy-equivalent sequence.
+
+The app-switch surface sequence is therefore complete:
+
+**authentic HGSS asset → wire live → remove legacy equivalent**

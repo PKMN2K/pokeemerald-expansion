@@ -868,9 +868,9 @@ static void LoadHgssPokegearAppSwitchChrome(void)
     u32 x;
     u32 y;
 
-    // Keep the existing PokéNav device artwork live underneath this verified
-    // retail layer for phase-2 validation.  The strip occupies the top four
-    // visible BG2 rows at 1:1 scale; all menu sprites/input remain unchanged.
+    // The legacy PokéNav device map now has rows 0..3 blanked permanently.
+    // This verified retail strip is therefore the only live app-switch
+    // background; the still-needed lower device shell remains on BG2.
     LoadBgTiles(2, sHgssPokegearAppSwitchTiles, sizeof(sHgssPokegearAppSwitchTiles), HGSS_POKEGEAR_APP_SWITCH_TILE_BASE);
     CopyPaletteIntoBufferUnfaded(
         sHgssPokegearAppSwitchPal,
@@ -892,9 +892,9 @@ static void LoadHgssPokegearAppSwitchChrome(void)
         }
     }
 
-    // BG2's legacy device tilemap has already finished loading at this point.
-    // Overwrite only rows 0..3; the remaining device chrome stays untouched
-    // until the dedicated phase-3 removal step.
+    // Install the authentic rows into the blank app-switch region. The
+    // remaining lower legacy device chrome is outside this surface and will be
+    // migrated separately through the same authenticity-first sequence.
     LoadBgTilemap(2, gfx->hgssAppSwitchTilemap, sizeof(gfx->hgssAppSwitchTilemap), 0);
 }
 

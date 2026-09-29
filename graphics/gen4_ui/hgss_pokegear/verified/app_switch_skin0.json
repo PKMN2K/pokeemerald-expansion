@@ -1,6 +1,6 @@
 {
   "role": "pokegear_main_app_switch_surface",
-  "phase": "wired_live",
+  "phase": "legacy_equivalent_removed",
   "source_game": "Pokemon HeartGold / SoulSilver",
   "source_repository": "pret/pokeheartgold",
   "source_revision": "9d8b7591f09b65804da2fb2dfd56f320633e0d36",
@@ -52,9 +52,9 @@
   "pipeline": {
     "authentic_hgss_asset_ready": true,
     "wired_live": true,
-    "legacy_equivalent_removed": false
+    "legacy_equivalent_removed": true
   },
-  "next": "Verify the corrected phase-2 live integration in CI. Only after it passes should phase 3 remove the superseded legacy app-switch chrome.",
+  "next": "Audit the next PokéGear main-shell surface and begin its authentic HGSS asset phase.",
   "live_adaptation": {
     "generator": "tools/gen4_ui/make_hgss_pokegear_app_switch.py",
     "output": "graphics/gen4_ui/hgss_pokegear/app_switch_gba.png",
@@ -85,7 +85,7 @@
     "tile_base": "0x100",
     "palette_bank": 14,
     "current_menu_logic_preserved": true,
-    "legacy_device_chrome_retained_for_verification": true,
+    "legacy_device_chrome_retained_for_verification": false,
     "generator_runtime": "Python standard library only; no Pillow/PIL dependency",
     "ci_fix": {
       "failed_run": 620,
@@ -93,5 +93,24 @@
       "resolution": "replace Pillow use with a self-contained indexed-PNG decoder/encoder using struct, zlib, and CRC32; image reconstruction logic and retail source mapping are unchanged"
     }
   },
-  "status": "phase 2 integration corrected for all CI build environments; authentic HGSS app-switch reconstruction remains unchanged"
+  "status": "phase 3 complete: authentic HGSS app-switch strip is live and the legacy app-switch tilemap region has been removed",
+  "legacy_removal": {
+    "ci_gate": {
+      "run": 621,
+      "conclusion": "success"
+    },
+    "asset": "graphics/pokenav/device_outline_map.bin",
+    "removed_region": "tilemap rows 0..3 (32x4 entries)",
+    "replacement": "canonical blank entry 0x2000",
+    "obsolete_top_only_tile_ids": [
+      4,
+      8,
+      9,
+      12,
+      16,
+      17,
+      20
+    ],
+    "note": "Those legacy tile IDs are no longer referenced by the device tilemap. The shared character sheet remains temporarily because the lower PokéNav device shell still depends on other tiles and is a separate migration surface."
+  }
 }
