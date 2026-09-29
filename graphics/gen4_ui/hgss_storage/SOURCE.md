@@ -600,3 +600,29 @@ Build verification exposed a malformed PNG container in the phase-2 OBJ packing 
 Targeted Gen 4 UI asset generation and renderer compilation passed with the repaired authentic HGSS glyph OBJ export. The expansion-era `graphics/pokemon_storage/swsh/gender_icons.png` asset is now removed. The live graphics symbol has also been renamed from the inherited `sGenderIcons_Gfx` name to `sHgssGenderGlyphs_Gfx`, so the Storage gender indicator now has no remaining dependency on the legacy SWSH gender-icon asset path.
 
 The active presentation remains the verified HGSS font-derived 16x16 male/female glyph cells and original member-7 palette values imported in phases 1-2. This completes the strict sequence for this element: authentic HGSS asset -> wire live -> remove legacy equivalent.
+
+## Authentic HGSS shiny indicator — phase 1
+
+The next unresolved Storage info-panel accessory is the expansion shiny-status
+icon. HGSS Storage does **not** have an equivalent visible shiny indicator in
+this panel, so authenticity here means preserving the native absence rather
+than inventing a replacement graphic.
+
+The overlay-14 data path verifies that distinction. `ov14_021E7358` builds the
+native per-Pokemon Storage information record from species, held item,
+personality, both types, ability, nature, markings, level/egg state, gender,
+and the four move-related values used by the panel. It does not acquire shiny
+state. The native refresh paths `ov14_021E7470` / `ov14_021E74F0` then update
+the item, type, and text presentation without a shiny-status branch. Type
+display is explicitly handled by `ov14_021F3D70`, which makes the missing shiny
+role a verified behavioral difference rather than an unidentified asset.
+
+This is phase 1 only. The current expansion
+`graphics/pokemon_storage/swsh/shiny_icon.png` and
+`UpdateShinyIconSprite` path remain live for now. Phase 2 will wire the
+authentic HGSS behavior by suppressing that non-native presentation while
+retaining the legacy file for verification; phase 3 will remove the legacy
+asset after the new behavior is proven.
+
+The machine-readable provenance record is
+`verified/shiny_indicator.json`.

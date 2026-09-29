@@ -1,0 +1,41 @@
+{
+  "role": "shiny_indicator",
+  "classification": "absent_in_hgss_storage",
+  "source_game": "Pokemon HeartGold / SoulSilver",
+  "authentic_target": {
+    "visual_indicator_present": false,
+    "rule": "HGSS Storage does not render a dedicated shiny-status indicator in the Pokemon information panel.",
+    "adaptation": "Preserve native absence; do not invent or substitute a shiny icon."
+  },
+  "decomp_verification": {
+    "repository": "pret/pokeheartgold",
+    "overlay": "asm/overlay_14.s",
+    "mon_info_record_builder": "ov14_021E7358",
+    "mon_info_refresh": [
+      "ov14_021E7470",
+      "ov14_021E74F0"
+    ],
+    "type_indicator_renderer": "ov14_021F3D70",
+    "text_info_renderer": "ov14_021F5368",
+    "findings": [
+      "ov14_021E7358 builds the Storage info record from species, held item, personality, types, ability, nature, markings, level/egg state, gender/display flag, and four move-related values; it does not acquire shiny state.",
+      "ov14_021E7470 and ov14_021E74F0 refresh native item/type/text presentation from that record with no shiny-indicator branch.",
+      "The overlay contains no MonIsShiny/shiny presentation path for the Storage info panel.",
+      "Native type presentation is explicitly present through ov14_021F3D70, distinguishing it from the absent shiny role."
+    ]
+  },
+  "current_expansion_legacy": {
+    "asset": "graphics/pokemon_storage/swsh/shiny_icon.png",
+    "asset_git_blob_sha": "3fb4fa961ead8e853ad8d1250cae3c1830f77f0b",
+    "gfx_symbol": "sShinyIcon_Gfx",
+    "runtime_function": "UpdateShinyIconSprite",
+    "live": true
+  },
+  "status": "phase 1 complete: authentic HGSS Storage behavior verified as no shiny indicator; legacy expansion indicator remains live",
+  "next": "Phase 2: wire the authentic HGSS absence live by disabling/removing the shiny-indicator render path while retaining the legacy asset as a verification fallback. Phase 3 may delete the legacy asset only after build/runtime verification.",
+  "pipeline": {
+    "authentic_hgss_target_verified": true,
+    "wired_live": false,
+    "legacy_equivalent_removed": false
+  }
+}
