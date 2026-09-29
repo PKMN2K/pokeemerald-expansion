@@ -279,7 +279,9 @@ static const u16 sHgssMarkingsMenuSelected_Pal[16] =
     0x294A, 0x0000, 0x0000, 0x0000,
     0x0000, 0x0000, 0x0000, 0x0000,
 };
-static const u32 sShinyIcon_Gfx[]             = INCGFX_U32("graphics/pokemon_storage/swsh/shiny_icon.png", ".4bpp.smol");
+// Authentic HGSS Summary shiny star: /a/0/3/9 member 58 tile 0 + /a/1/6/2 member 61 palette bank 0.
+static const u32 sHgssShinyStar_Gfx[]          = INCGFX_U32("graphics/gen4_ui/hgss_storage/verified/shiny_star.png", ".4bpp.smol");
+static const u16 sHgssShinyStar_Pal[]          = INCGFX_U16("graphics/gen4_ui/hgss_storage/verified/shiny_star.png", ".gbapal");
 static const u32 sPokerusIcon_Gfx[]           = INCGFX_U32("graphics/pokemon_storage/swsh/pokerus_icon.png", ".4bpp.smol");
 static const u32 sStatLabels_Gfx[]            = INCGFX_U32("graphics/pokemon_storage/swsh/stat_labels.png", ".4bpp.smol");
 static const u16 sStatLabels_Pal[]             = INCGFX_U16("graphics/pokemon_storage/swsh/stat_labels.png", ".gbapal");
@@ -942,6 +944,15 @@ static const struct SpritePalette sSpritePal_HgssGenderGlyphs[] =
     {},
 };
 
+static const struct SpritePalette sSpritePal_HgssShinyStar[] =
+{
+    {
+        .data = sHgssShinyStar_Pal,
+        .tag = PALTAG_HGSS_SHINY_STAR,
+    },
+    {},
+};
+
 static const struct OamData sOamData_Cursor =
 {
     .shape = SPRITE_SHAPE(32x32),
@@ -1103,7 +1114,7 @@ static const struct OamData sOamData_ShinyIcon =
 
 static const struct CompressedSpriteSheet sSpriteSheet_ShinyIcon =
 {
-    .data = sShinyIcon_Gfx,
+    .data = sHgssShinyStar_Gfx,
     .size = (8 * 8) / 2,
     .tag = GFXTAG_SHINY_ICON
 };
@@ -1111,7 +1122,7 @@ static const struct CompressedSpriteSheet sSpriteSheet_ShinyIcon =
 static const struct SpriteTemplate sSpriteTemplate_ShinyIcon =
 {
     .tileTag = GFXTAG_SHINY_ICON,
-    .paletteTag = PALTAG_MISC_2,
+    .paletteTag = PALTAG_HGSS_SHINY_STAR,
     .oam = &sOamData_ShinyIcon,
 };
 

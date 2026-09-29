@@ -250,6 +250,7 @@ enum {
     PALTAG_HGSS_WALLPAPER_SELECTOR,
     PALTAG_HGSS_STORAGE_CURSOR,
     PALTAG_HGSS_GENDER_GLYPHS,
+    PALTAG_HGSS_SHINY_STAR,
     PALTAG_HGSS_BOX_THUMBNAIL,
     PALTAG_HGSS_BOX_THUMBNAIL_MARKERS,
 };
@@ -3779,6 +3780,7 @@ static bool8 InitPalettesAndSprites(void)
     case 7:
         LoadSpritePalettes(sSpritePal_StatLabels);
         LoadSpritePalettes(sSpritePal_HgssGenderGlyphs);
+        LoadSpritePalettes(sSpritePal_HgssShinyStar);
         sStorage->graphicsLoadState++;
         break;
     case 8:

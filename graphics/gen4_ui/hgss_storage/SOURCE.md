@@ -641,3 +641,24 @@ the legacy equivalent only after verification.
 
 The machine-readable provenance record is
 `verified/shiny_indicator.json`.
+
+
+## Authentic HGSS shiny indicator — phase 2
+
+The verified HGSS Summary shiny star is now wired into the live Storage
+shiny-status path. `sSpriteSheet_ShinyIcon` now reads its 8x8 graphics from
+`verified/shiny_star.png` through `sHgssShinyStar_Gfx`, and the sprite uses
+a dedicated `PALTAG_HGSS_SHINY_STAR` palette loaded from the same indexed
+PNG. This preserves the original HGSS OBJ palette indices instead of
+displaying the authentic pixels through the former expansion palette.
+
+`UpdateShinyIconSprite` keeps the existing Storage-specific shiny-status
+condition and 8x8 panel placement. Only the presentation asset is adapted:
+the rendered star and palette are now the exact HGSS Summary resource verified
+in phase 1.
+
+The legacy
+`graphics/pokemon_storage/swsh/shiny_icon.png` file is deliberately retained
+but is no longer the live graphics source. It remains solely as the phase-2
+verification fallback. Phase 3 will delete it only after the newly wired HGSS
+asset passes build/runtime verification.
