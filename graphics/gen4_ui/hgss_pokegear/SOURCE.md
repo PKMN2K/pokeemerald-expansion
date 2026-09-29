@@ -223,3 +223,31 @@ remains active underneath the authentic cursor. The legacy option-label
 graphics also remain untouched because they are a separate surface, not a
 pixel-equivalent of the retail cursor. If CI passes, phase 3 will remove the
 superseded top-level legacy selection glow while preserving submenu behavior.
+
+
+## Main UI selection cursor — phase 3
+
+CI #627 passed commit `9901d58c30c200fef677470bcac5c1724f6eb3ea`,
+validating the authentic retail HGSS cursor integration.
+
+The superseded **top-level** PokéNav scanline/lighten selection effect has now
+been removed from the live PokéGear menu. On top-level PokéGear menu types,
+the code clears the scanline highlight buffers, disables OBJ lighten blending
+and WIN0, holds `BLDY` at zero, and stops the old pulse task from changing the
+blend amount. The authentic member-6/member-0 cursor corners are therefore the
+only live top-level selection indicator.
+
+The scanline/lighten implementation itself is intentionally retained for the
+Condition and Condition Search submenus because those are separate legacy
+surfaces that have not yet gone through their own authenticity replacement
+sequence. Entering those submenus re-enables the existing window/blend effect;
+returning to the top-level PokéGear disables it again.
+
+The legacy PokéNav option-label graphics are also retained. Decoding the retail
+NCER/NANR established that they are not the pixel-equivalent of this HGSS
+cursor and must be migrated as a separate surface rather than being deleted
+under the cursor sequence.
+
+The cursor sequence is therefore complete:
+
+**authentic HGSS asset → wire live → remove legacy equivalent**

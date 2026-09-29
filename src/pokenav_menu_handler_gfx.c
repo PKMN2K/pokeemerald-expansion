@@ -119,6 +119,7 @@ static void CreateBgDotLightBluePalTask(void);
 static bool32 IsTaskActive_UpdateBgDotsPalette(void);
 static void Task_UpdateBgDotsPalette(u8);
 static void SetupPokenavMenuScanlineEffects(void);
+static void SetLegacyMenuOptionGlowEnabled(bool32 enabled);
 static void DestroyMenuOptionGlowTask(void);
 static void ResetBldCnt(void);
 static void InitMenuOptionGlow(void);
@@ -1604,11 +1605,7 @@ static void VBlankCB_PokenavMainMenu(void)
 
 static void SetupPokenavMenuScanlineEffects(void)
 {
-    SetGpuReg(REG_OFFSET_BLDCNT, BLDCNT_TGT1_OBJ | BLDCNT_EFFECT_LIGHTEN);
     SetGpuReg(REG_OFFSET_BLDY, 0);
-    SetGpuRegBits(REG_OFFSET_DISPCNT, DISPCNT_WIN0_ON);
-    SetGpuRegBits(REG_OFFSET_WININ, WININ_WIN0_ALL);
-    SetGpuRegBits(REG_OFFSET_WINOUT, WINOUT_WIN01_BG_ALL | WINOUT_WIN01_OBJ);
 #ifdef BUGFIX
     // BUGFIX: Use full register write instead of |=.
     // SetGpuRegBits left leftover window values from the Party screen,
@@ -1622,12 +1619,33 @@ static void SetupPokenavMenuScanlineEffects(void)
     ScanlineEffect_SetParams(sPokenavMainMenuScanlineEffectParams);
     SetVBlankCallback_(VBlankCB_PokenavMainMenu);
     CreateTask(Task_CurrentMenuOptionGlow, 3);
+
+    // The authentic HGSS four-corner cursor is now the sole selection
+    // indicator on the top-level PokéGear. Retain the legacy scanline/lighten
+    // effect only for the still-legacy Condition/Search submenus.
+    SetLegacyMenuOptionGlowEnabled(!IsPokeGearMainMenu());
+}
+
+static void SetLegacyMenuOptionGlowEnabled(bool32 enabled)
+{
+    if (enabled)
+    {
+        SetGpuReg(REG_OFFSET_BLDCNT, BLDCNT_TGT1_OBJ | BLDCNT_EFFECT_LIGHTEN);
+        SetGpuRegBits(REG_OFFSET_DISPCNT, DISPCNT_WIN0_ON);
+        SetGpuRegBits(REG_OFFSET_WININ, WININ_WIN0_ALL);
+        SetGpuRegBits(REG_OFFSET_WINOUT, WINOUT_WIN01_BG_ALL | WINOUT_WIN01_OBJ);
+    }
+    else
+    {
+        SetGpuReg(REG_OFFSET_BLDCNT, 0);
+        SetGpuReg(REG_OFFSET_BLDY, 0);
+        ClearGpuRegBits(REG_OFFSET_DISPCNT, DISPCNT_WIN0_ON);
+    }
 }
 
 static void DestroyMenuOptionGlowTask(void)
 {
-    SetGpuReg(REG_OFFSET_BLDCNT, 0);
-    ClearGpuRegBits(REG_OFFSET_DISPCNT, DISPCNT_WIN0_ON);
+    SetLegacyMenuOptionGlowEnabled(FALSE);
     ScanlineEffect_Stop();
     DestroyTask(FindTaskIdByFunc(Task_CurrentMenuOptionGlow));
     SetPokenavVBlankCallback();
@@ -1641,12 +1659,20 @@ static void ResetBldCnt(void)
 static void InitMenuOptionGlow(void)
 {
     SetMenuOptionGlow();
-    SetGpuReg(REG_OFFSET_BLDCNT, BLDCNT_TGT1_OBJ | BLDCNT_EFFECT_LIGHTEN);
+    SetLegacyMenuOptionGlowEnabled(!IsPokeGearMainMenu());
 }
 
 static void Task_CurrentMenuOptionGlow(u8 taskId)
 {
     s16 *data = gTasks[taskId].data;
+
+    if (IsPokeGearMainMenu())
+    {
+        // Phase 3: do not animate the removed legacy top-level glow.
+        SetGpuReg(REG_OFFSET_BLDY, 0);
+        return;
+    }
+
     data[0]++;
     if (data[0] > 0)
     {
@@ -1659,14 +1685,21 @@ static void Task_CurrentMenuOptionGlow(u8 taskId)
 
 static void SetMenuOptionGlow(void)
 {
-    int menuType = GetPokenavMenuType();
-    int cursorPos = GetPokenavCursorPos();
-    int r4 = sPokenavMenuOptionLabelGfx[menuType].deltaY * cursorPos + sPokenavMenuOptionLabelGfx[menuType].yStart - 8;
+    int menuType;
+    int cursorPos;
+    int r4;
 
     UpdateHgssPokegearCursor();
 
     CpuFill16(0, gScanlineEffectRegBuffers[0], DISPLAY_HEIGHT * 2);
     CpuFill16(0, gScanlineEffectRegBuffers[1], DISPLAY_HEIGHT * 2);
+
+    if (IsPokeGearMainMenu())
+        return;
+
+    menuType = GetPokenavMenuType();
+    cursorPos = GetPokenavCursorPos();
+    r4 = sPokenavMenuOptionLabelGfx[menuType].deltaY * cursorPos + sPokenavMenuOptionLabelGfx[menuType].yStart - 8;
     CpuFill16(RGB(16, 23, 28), &gScanlineEffectRegBuffers[0][r4], 0x20);
     CpuFill16(RGB(16, 23, 28), &gScanlineEffectRegBuffers[1][r4], 0x20);
 }

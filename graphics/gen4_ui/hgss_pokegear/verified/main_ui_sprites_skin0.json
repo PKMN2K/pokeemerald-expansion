@@ -1,6 +1,6 @@
 {
   "role": "pokegear_main_ui_sprite_layer",
-  "phase": "wired_live",
+  "phase": "legacy_equivalent_removed",
   "source_game": "Pokemon HeartGold / SoulSilver",
   "source_repository": "pret/pokeheartgold",
   "source_revision": "9d8b7591f09b65804da2fb2dfd56f320633e0d36",
@@ -48,17 +48,25 @@
       "Task_CurrentMenuOptionGlow",
       "SetMenuOptionGlow"
     ],
-    "retained_for_phase2": true,
+    "retained_for_phase2": false,
     "labels_are_separate_surface": true,
-    "finding": "After decoding the retail NCER/NANR, the direct equivalent of the imported HGSS common UI resource is the four-corner selection cursor. The existing PokéNav option labels are not removed in this sequence."
+    "finding": "After decoding the retail NCER/NANR, the direct equivalent of the imported HGSS common UI resource is the four-corner selection cursor. The existing PokéNav option labels are not removed in this sequence.",
+    "removed_from_top_level": true,
+    "retained_for_submenus": true,
+    "ci_gate": {
+      "workflow": "CI",
+      "run_number": 627,
+      "conclusion": "success",
+      "validated_commit": "9901d58c30c200fef677470bcac5c1724f6eb3ea"
+    }
   },
   "pipeline": {
     "authentic_hgss_asset_ready": true,
     "wired_live": true,
-    "legacy_equivalent_removed": false
+    "legacy_equivalent_removed": true
   },
-  "next": "Run CI on the live authentic HGSS cursor integration. If green, phase 3 removes the superseded top-level legacy scanline/lighten selection glow while preserving the glow on non-PokéGear submenus.",
-  "status": "phase 2 complete: authentic retail HGSS four-corner PokéGear cursor is wired live at 1:1 pixel scale; the legacy top-level selection glow remains underneath pending CI-gated removal",
+  "next": "Begin a new authenticity sequence for the next remaining legacy PokéGear surface; the option-label sprites and synthetic description strip are separate candidates and are not deleted by the completed cursor sequence.",
+  "status": "phase 3 complete: authentic retail HGSS four-corner cursor is the sole top-level selection indicator; the superseded top-level PokéNav scanline/lighten glow is disabled while submenu glow behavior is preserved",
   "decoded_cursor_binding": {
     "nanr_sequences": [
       4,
