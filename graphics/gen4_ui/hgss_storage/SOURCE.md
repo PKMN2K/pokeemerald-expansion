@@ -1198,3 +1198,19 @@ font palette when closed.
 `graphics/pokemon_storage/swsh/text_windows.pal` remains in the repository only
 for the phase-2 verification cycle. It has no live code reference and must not
 be deleted until the dedicated Gen 4 UI CI gate passes.
+
+## Authentic HGSS Storage text palette — phase 3
+
+CI run #617 verified the live HGSS text-palette integration before cleanup.
+The dedicated `gen4-ui` job passed, and Emerald, FireRed, and LeafGreen builds
+also passed.
+
+With the authentic retail HGSS font palette already live and
+`sTextWindows_Pal` no longer referenced, the legacy
+`graphics/pokemon_storage/swsh/text_windows.pal` file is now deleted.
+
+This completes the strict sequence for the Storage text palette:
+**authentic HGSS asset -> wire live -> remove legacy equivalent**.
+
+The next gate is the post-removal CI run. After that passes, the Storage audit
+can move on to the next remaining non-HGSS UI surface.
