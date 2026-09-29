@@ -601,28 +601,43 @@ Targeted Gen 4 UI asset generation and renderer compilation passed with the repa
 
 The active presentation remains the verified HGSS font-derived 16x16 male/female glyph cells and original member-7 palette values imported in phases 1-2. This completes the strict sequence for this element: authentic HGSS asset -> wire live -> remove legacy equivalent.
 
-## Authentic HGSS shiny indicator — phase 1
+## Authentic HGSS shiny indicator — phase 1 (revised)
 
-The next unresolved Storage info-panel accessory is the expansion shiny-status
-icon. HGSS Storage does **not** have an equivalent visible shiny indicator in
-this panel, so authenticity here means preserving the native absence rather
-than inventing a replacement graphic.
+HGSS Storage itself does not draw a shiny-status marker, but the project keeps
+that useful status information by repurposing **authentic HGSS artwork** from
+the native Pokemon Summary screen rather than retaining the expansion/SWSH
+graphic or drawing an HGSS-style substitute.
 
-The overlay-14 data path verifies that distinction. `ov14_021E7358` builds the
-native per-Pokemon Storage information record from species, held item,
-personality, both types, ability, nature, markings, level/egg state, gender,
-and the four move-related values used by the panel. It does not acquire shiny
-state. The native refresh paths `ov14_021E7470` / `ov14_021E74F0` then update
-the item, type, and text presentation without a shiny-status branch. Type
-display is explicitly handled by `ov14_021F3D70`, which makes the missing shiny
-role a verified behavioral difference rather than an unidentified asset.
+The exact source is verified through the HGSS resource graph. Summary
+`sub_0208981C` stores `MonIsShiny` in bit 29 of its packed status word.
+`sub_0208BD38` tests that bit and toggles the sprite stored at work offset
+`0x4D4`; the adjacent `0x4D8` sprite is the Pokerus indicator. The
+`_02103A70` sprite table identifies the shiny sprite as template index 52,
+resource set 23, animation 0. `resdat_00000085` maps resource set 23 to
+graphics 23 / palette 0 / cell 8 / animation 8. Those resolve through the
+HGSS resdat tables to:
 
-This is phase 1 only. The current expansion
-`graphics/pokemon_storage/swsh/shiny_icon.png` and
-`UpdateShinyIconSprite` path remain live for now. Phase 2 will wire the
-authentic HGSS behavior by suppressing that non-native presentation while
-retaining the legacy file for verification; phase 3 will remove the legacy
-asset after the new behavior is proven.
+- character: `NARC_a_0_3_9` member 58
+- palette: `NARC_a_1_6_2` member 61
+- cell: `NARC_a_0_3_9` member 51
+- animation: `NARC_a_0_3_9` member 50
+
+The character member contains exactly two 8x8 OBJ tiles: tile 0 is the shiny
+star and tile 1 is the Pokerus symbol. `verified/shiny_star.png` is a direct
+1:1 indexed export of tile 0 using the original first 16-color palette bank
+from member 61. DS OBJ palette index 0 remains transparent. No redraw,
+resampling, recoloring, screenshot crop, or synthetic pixels are present.
+
+Source archive checksums from the HGSS decomp's canonical filesystem manifest:
+`/a/0/3/9` SHA-1 `1360486ee8eb2c19e8c5b6e36e4843d56a42c066`;
+`/a/1/6/2` SHA-1 `30fd7818457b50689a8a78fe522eb9df366e58a4`.
+The exported PNG SHA-256 is
+`b7ee9b6d5e9017d9f8770cd898a993cd9a0b6fc034374a5fc18ae120799450fc`.
+
+This revision supersedes the earlier absence-only phase-1 plan. The existing
+`graphics/pokemon_storage/swsh/shiny_icon.png` remains live for now. Phase 2
+will wire this authentic HGSS Summary star into Storage; phase 3 will remove
+the legacy equivalent only after verification.
 
 The machine-readable provenance record is
 `verified/shiny_indicator.json`.
