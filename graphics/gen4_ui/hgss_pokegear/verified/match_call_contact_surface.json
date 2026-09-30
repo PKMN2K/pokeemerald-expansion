@@ -101,5 +101,12 @@
     "resulting_tile_base": "0x180",
     "palette_bank": 6,
     "legacy_retention": "phase-2 Emerald ui.png/ui.bin, call/list palettes, and procedural Phone panels remain compiled/active for rollback until live CI passes"
+  },
+  "phase2_ci_correction": {
+    "failed_run": 657,
+    "failed_job": "gen4-ui",
+    "cause": "the py_compile command ended before the new generator because the previous workflow line lacked a shell continuation",
+    "correction": "append a backslash to the existing generator line so make_hgss_pokegear_match_call_contact.py is passed to python3 -m py_compile",
+    "asset_or_runtime_change": false
   }
 }

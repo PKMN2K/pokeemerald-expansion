@@ -849,3 +849,17 @@ authentic HGSS Phone contact surface before the Match Call windows/list are
 created. No legacy asset is deleted until this live path passes CI.
 
 **authentic HGSS asset → wired live → legacy removal pending**
+
+
+### Match Call contact phase-2 CI correction
+
+CI #657 exposed a workflow-only error before the new asset build ran. The
+`python3 -m py_compile` line ended after
+`make_hgss_pokegear_rematch_badge.py`, so the shell invoked
+`make_hgss_pokegear_match_call_contact.py` separately with no output
+arguments and received its usage error.
+
+The missing line-continuation is now restored. No generator logic, retail
+source data, runtime wiring, layout, palette, or legacy Match Call resource is
+changed by this correction. Phase 2 remains the active gate; phase 3 must not
+start until the corrected live integration passes CI.
