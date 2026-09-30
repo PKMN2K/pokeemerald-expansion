@@ -532,3 +532,28 @@ submenu is active. They will not be removed until CI validates this live path.
 This is **phase 2**:
 
 **authentic HGSS asset -> wired live -> legacy removal pending**
+
+
+## Condition / Condition Search submenu labels — phase 3
+
+CI #641 passed the phase-2 authentic HGSS Condition/Search integration at
+`8714a052d77a340e0331e3f3979b61edcd0639f1`, so the rollback-only Emerald
+option-label presentation has now been removed.
+
+The cleanup removes the legacy `gPokenavOptions_Gfx` /
+`gPokenavOptions_Pal` bindings, the old option-label OBJ allocation and
+slide/zoom/blend animation path, and the scanline/lighten selection-glow path.
+The superseded source label PNGs and `graphics/pokenav/options/options.pal`
+are deleted as well. The live submenu remains the phase-2 authentic HGSS path:
+member-057-derived chrome and pointer plus exact font-ID-4 glyph pixels.
+
+`graphics/pokenav/options/options.bin` is deliberately retained. It is not
+part of the removed label sprite sheet: `src/pokenav_conditions_gfx.c` still
+uses `gPokenavOptions_Tilemap` from that file when the Condition detail screen
+is opened in search mode.
+
+This completes the implementation side of:
+
+**authentic HGSS asset → wire live → remove legacy equivalent**
+
+The phase-3 cleanup head must still pass CI before moving to the next UI surface.
