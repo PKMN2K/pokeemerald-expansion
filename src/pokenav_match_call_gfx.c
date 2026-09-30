@@ -122,8 +122,6 @@ static u32 ExitMatchCall(s32);
 static const u16 sMatchCallUI_Pal[] = INCGFX_U16("graphics/pokenav/match_call/ui.png", ".gbapal");
 static const u32 sMatchCallUI_Gfx[] = INCGFX_U32("graphics/pokenav/match_call/ui.png", ".4bpp.smol", "-num_tiles 13 -Wnum_tiles");
 static const u32 sMatchCallUI_Tilemap[] = INCGFX_U32("graphics/pokenav/match_call/ui.bin", ".smolTM");
-static const u16 sOptionsCursor_Pal[] = INCGFX_U16("graphics/pokenav/match_call/options_cursor.png", ".gbapal");
-static const u32 sOptionsCursor_Gfx[] = INCGFX_U32("graphics/pokenav/match_call/options_cursor.png", ".4bpp.smol");
 // Exact verified HGSS Pokédex member-057 lavender pointer, padded to 8x16.
 static const u32 sHgssOptionsCursor_Gfx[] = INCBIN_U32("graphics/gen4_ui/hgss_pokegear/match_call_options_cursor.4bpp");
 static const u16 sHgssOptionsCursor_Pal[] = INCBIN_U16("graphics/gen4_ui/hgss_pokegear/match_call_options_cursor.gbapal");
@@ -242,16 +240,6 @@ static const struct SpritePalette sHgssOptionsCursorSpritePalettes[] =
 {
     {sHgssOptionsCursor_Pal, PALTAG_CURSOR},
     {}
-};
-
-static const struct CompressedSpriteSheet sOptionsCursorSpriteSheets[1] =
-{
-    {sOptionsCursor_Gfx, 0x40, GFXTAG_CURSOR}
-};
-
-static const struct SpritePalette sOptionsCursorSpritePalettes[2] =
-{
-    {sOptionsCursor_Pal, PALTAG_CURSOR}
 };
 
 static const struct OamData sOptionsCursorOamData =
@@ -1303,24 +1291,13 @@ static bool32 WaitForCallMessageBoxErase(struct Pokenav_MatchCallGfx *gfx)
 
 static void AllocMatchCallSprites(void)
 {
-    int i;
     u8 paletteNum;
     struct SpriteSheet spriteSheet;
     struct Pokenav_MatchCallGfx *gfx = GetSubstructPtr(POKENAV_SUBSTRUCT_MATCH_CALL_OPEN);
 
-    // The authentic HGSS pointer is primary. Retain the legacy path only as
-    // a temporary allocation-failure fallback until this live pass validates.
+    // Exact verified HGSS options pointer and its authentic OBJ palette.
     LoadSpriteSheet(&sHgssOptionsCursorSpriteSheet);
-    if (GetSpriteTileStartByTag(GFXTAG_CURSOR) != 0xFFFF)
-    {
-        Pokenav_AllocAndLoadPalettes(sHgssOptionsCursorSpritePalettes);
-    }
-    else
-    {
-        for (i = 0; i < ARRAY_COUNT(sOptionsCursorSpriteSheets); i++)
-            LoadCompressedSpriteSheet(&sOptionsCursorSpriteSheets[i]);
-        Pokenav_AllocAndLoadPalettes(sOptionsCursorSpritePalettes);
-    }
+    Pokenav_AllocAndLoadPalettes(sHgssOptionsCursorSpritePalettes);
     gfx->optionsCursorSprite = NULL;
 
     // Load trainer pic gfx

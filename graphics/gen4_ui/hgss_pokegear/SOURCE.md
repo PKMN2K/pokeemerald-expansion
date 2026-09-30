@@ -690,3 +690,22 @@ lookup, because a zero return from `LoadSpriteSheet` can mean either failure or
 a valid tile start. No legacy asset is removed until the live commit passes CI.
 
 **authentic HGSS asset → wired live → legacy removal pending**
+
+
+## Match Call options-menu cursor — phase 3
+
+The cleanup is prepared against the live integration at
+`8002458487910f59c64bd3cd757ccc4c34ace420`. CI #651's ROM builds and Gen 4
+UI checks passed. Its general Test job was still running at preparation time;
+this cleanup must remain off the active branch until that live run passes.
+
+The cleanup removes the legacy options-cursor PNG, compressed-sheet/palette
+bindings and descriptors, allocation-failure fallback, and obsolete loop
+variable. `AllocMatchCallSprites` loads only the verified HGSS member-057
+pointer and authentic palette. The 8x16 geometry, tags, position, row offsets,
+bob callback, resource cleanup, and trainer-picture allocation remain intact.
+The verified role record describes the resulting cleaned tree.
+
+When this cleanup is applied after CI #651 succeeds, it completes:
+
+**authentic HGSS asset → wire live → remove legacy equivalent**
