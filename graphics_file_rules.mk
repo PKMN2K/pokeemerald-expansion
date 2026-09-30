@@ -71,7 +71,13 @@ $(GEN4UIGFXDIR)/hgss_pokegear/app_switch_gba.png: $(GEN4UIHGSSPOKEGEARSWITCH) \
 	$(GEN4UIGFXDIR)/hgss_pokegear/verified/pgear_skin0_app_switch_tiles.png \
 	$(GEN4UIGFXDIR)/hgss_pokegear/verified/pgear_skin0_app_switch_palette.NCLR \
 	$(GEN4UIGFXDIR)/hgss_pokegear/verified/pgear_skin0_app_switch_tilemap.NSCR
-	python3 $< $@
+	python3 $< normal $@
+
+$(GEN4UIGFXDIR)/hgss_pokegear/app_switch_selected_gba.png: $(GEN4UIHGSSPOKEGEARSWITCH) \
+	$(GEN4UIGFXDIR)/hgss_pokegear/verified/pgear_skin0_app_switch_tiles.png \
+	$(GEN4UIGFXDIR)/hgss_pokegear/verified/pgear_skin0_app_switch_palette.NCLR \
+	$(GEN4UIGFXDIR)/hgss_pokegear/verified/pgear_skin0_app_switch_tilemap.NSCR
+	python3 $< selected $@
 
 $(GEN4UIGFXDIR)/hgss_pokegear/screen_shell_gba.tilemap.bin: $(GEN4UIHGSSPOKEGEARSHELL) \
 	$(GEN4UIGFXDIR)/hgss_pokegear/verified/pgear_skin0_screen_shell_tilemap.NSCR

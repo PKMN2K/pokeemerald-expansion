@@ -40,10 +40,13 @@
 #define POKEGEAR_OPTION_SELECTED_X 92
 #define OPTION_EXIT_X             (DISPLAY_WIDTH + 16)
 
-#define HGSS_POKEGEAR_APP_SWITCH_TILE_BASE 0x100
-#define HGSS_POKEGEAR_APP_SWITCH_PAL_BANK 14
-#define HGSS_POKEGEAR_APP_SWITCH_WIDTH_TILES 30
-#define HGSS_POKEGEAR_APP_SWITCH_HEIGHT_TILES 4
+#define HGSS_POKEGEAR_APP_SWITCH_TILE_BASE          0x100
+#define HGSS_POKEGEAR_APP_SWITCH_SELECTED_TILE_BASE 0x178
+#define HGSS_POKEGEAR_APP_SWITCH_PAL_BANK           14
+#define HGSS_POKEGEAR_APP_SWITCH_SELECTED_PAL_BANK  15
+#define HGSS_POKEGEAR_APP_SWITCH_WIDTH_TILES        30
+#define HGSS_POKEGEAR_APP_SWITCH_HEIGHT_TILES       4
+#define HGSS_POKEGEAR_APP_BUTTON_WIDTH_TILES        6
 
 // Keep these in sync with make_hgss_pokegear_screen_shell.py.
 #define HGSS_POKEGEAR_SCREEN_SHELL_TILE_BASE 0x40
@@ -106,6 +109,8 @@ static void DestroyRematchBlueLightSprite(void);
 static void AddOptionDescriptionWindow(void);
 static void LoadHgssPokegearScreenShell(void);
 static void LoadHgssPokegearAppSwitchChrome(void);
+static void UpdateHgssPokegearAppSwitchSelection(void);
+static s32 GetHgssPokegearAppButtonForCurrentItem(void);
 static void PrintCurrentOptionDescription(void);
 static void PrintNoRibbonWinners(void);
 static bool32 IsDma3ManagerBusyWithBgCopy_(void);
@@ -143,6 +148,8 @@ static const u16 sHgssPokegearScreenShellTilemap[] = INCBIN_U16("graphics/gen4_u
 // The 256-pixel DS strip is cropped only by its empty 8-pixel side margins.
 static const u16 sHgssPokegearAppSwitchPal[] = INCGFX_U16("graphics/gen4_ui/hgss_pokegear/app_switch_gba.png", ".gbapal");
 static const u32 sHgssPokegearAppSwitchTiles[] = INCGFX_U32("graphics/gen4_ui/hgss_pokegear/app_switch_gba.png", ".4bpp");
+static const u16 sHgssPokegearAppSwitchSelectedPal[] = INCGFX_U16("graphics/gen4_ui/hgss_pokegear/app_switch_selected_gba.png", ".gbapal");
+static const u32 sHgssPokegearAppSwitchSelectedTiles[] = INCGFX_U32("graphics/gen4_ui/hgss_pokegear/app_switch_selected_gba.png", ".4bpp");
 
 // Exact retail HGSS PokéGear cursor-corner pixels. The build generator resolves
 // retail NANR sequences 4..7 -> NCER cells 20..23, whose four corners are one
@@ -1043,19 +1050,62 @@ static void LoadHgssPokegearScreenShell(void)
 
 static void LoadHgssPokegearAppSwitchChrome(void)
 {
-    struct Pokenav_MenuGfx *gfx = GetSubstructPtr(POKENAV_SUBSTRUCT_MENU_GFX);
-    u32 x;
-    u32 y;
-
-    // The legacy PokéNav device map now has rows 0..3 blanked permanently.
-    // This verified retail strip is therefore the only live app-switch
-    // background; the still-needed lower device shell remains on BG2.
-    LoadBgTiles(2, sHgssPokegearAppSwitchTiles, sizeof(sHgssPokegearAppSwitchTiles), HGSS_POKEGEAR_APP_SWITCH_TILE_BASE);
+    // Member 54 contains both normal (rows 0..3) and selected (rows 4..7)
+    // button states. Both are reconstructed from exact member-48 pixels.
+    LoadBgTiles(
+        2,
+        sHgssPokegearAppSwitchTiles,
+        sizeof(sHgssPokegearAppSwitchTiles),
+        HGSS_POKEGEAR_APP_SWITCH_TILE_BASE);
+    LoadBgTiles(
+        2,
+        sHgssPokegearAppSwitchSelectedTiles,
+        sizeof(sHgssPokegearAppSwitchSelectedTiles),
+        HGSS_POKEGEAR_APP_SWITCH_SELECTED_TILE_BASE);
     CopyPaletteIntoBufferUnfaded(
         sHgssPokegearAppSwitchPal,
         BG_PLTT_ID(HGSS_POKEGEAR_APP_SWITCH_PAL_BANK),
         sizeof(sHgssPokegearAppSwitchPal));
+    CopyPaletteIntoBufferUnfaded(
+        sHgssPokegearAppSwitchSelectedPal,
+        BG_PLTT_ID(HGSS_POKEGEAR_APP_SWITCH_SELECTED_PAL_BANK),
+        sizeof(sHgssPokegearAppSwitchSelectedPal));
 
+    UpdateHgssPokegearAppSwitchSelection();
+}
+
+static s32 GetHgssPokegearAppButtonForCurrentItem(void)
+{
+    // Preserve the five retail HGSS button slots. Three are direct functional
+    // matches; the remaining two reuse authentic slots without redrawing them.
+    switch (GetCurrentMenuItemId())
+    {
+    case POKENAV_MENUITEM_CONDITION:
+        return 0; // Configure slot
+    case POKENAV_MENUITEM_RIBBONS:
+        return 1; // Radio slot
+    case POKENAV_MENUITEM_MAP:
+        return 2; // Map slot
+    case POKENAV_MENUITEM_MATCH_CALL:
+        return 3; // Phone slot
+    case POKENAV_MENUITEM_SWITCH_OFF:
+        return 4; // Cancel slot
+    default:
+        return -1;
+    }
+}
+
+static void UpdateHgssPokegearAppSwitchSelection(void)
+{
+    struct Pokenav_MenuGfx *gfx = GetSubstructPtr(POKENAV_SUBSTRUCT_MENU_GFX);
+    s32 selectedButton = IsPokeGearMainMenu()
+        ? GetHgssPokegearAppButtonForCurrentItem()
+        : -1;
+    u32 x;
+    u32 y;
+
+    // Start from the authentic normal-state strip every time so moving the
+    // cursor restores the previously selected button losslessly.
     for (y = 0; y < HGSS_POKEGEAR_APP_SWITCH_HEIGHT_TILES; y++)
     {
         for (x = 0; x < 32; x++)
@@ -1071,10 +1121,29 @@ static void LoadHgssPokegearAppSwitchChrome(void)
         }
     }
 
-    // Install the authentic rows into the blank app-switch region. The
-    // remaining lower legacy device chrome is outside this surface and will be
-    // migrated separately through the same authenticity-first sequence.
-    LoadBgTilemap(2, gfx->hgssAppSwitchTilemap, sizeof(gfx->hgssAppSwitchTilemap), 0);
+    if (selectedButton >= 0)
+    {
+        u32 buttonStart = selectedButton * HGSS_POKEGEAR_APP_BUTTON_WIDTH_TILES;
+
+        for (y = 0; y < HGSS_POKEGEAR_APP_SWITCH_HEIGHT_TILES; y++)
+        {
+            for (x = 0; x < HGSS_POKEGEAR_APP_BUTTON_WIDTH_TILES; x++)
+            {
+                u32 dstX = buttonStart + x;
+                gfx->hgssAppSwitchTilemap[y * 32 + dstX]
+                    = (HGSS_POKEGEAR_APP_SWITCH_SELECTED_PAL_BANK << 12)
+                    | (HGSS_POKEGEAR_APP_SWITCH_SELECTED_TILE_BASE
+                       + y * HGSS_POKEGEAR_APP_SWITCH_WIDTH_TILES
+                       + dstX);
+            }
+        }
+    }
+
+    LoadBgTilemap(
+        2,
+        gfx->hgssAppSwitchTilemap,
+        sizeof(gfx->hgssAppSwitchTilemap),
+        0);
 }
 
 static void DrawCurrentMenuOptionLabels(void)
@@ -1676,6 +1745,7 @@ static void SetMenuOptionGlow(void)
     int r4;
 
     UpdateHgssPokegearCursor();
+    UpdateHgssPokegearAppSwitchSelection();
 
     CpuFill16(0, gScanlineEffectRegBuffers[0], DISPLAY_HEIGHT * 2);
     CpuFill16(0, gScanlineEffectRegBuffers[1], DISPLAY_HEIGHT * 2);

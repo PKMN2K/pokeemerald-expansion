@@ -224,13 +224,27 @@ def write_indexed_png4(path, rows, palette_rgb):
     path.write_bytes(encoded)
 
 
+STATE_ROW = {
+    "normal": 0,
+    "selected": 4,
+}
+
+# Retail member 54 is 256px wide. PokegearApp_DrawAppButtons uses columns
+# 1..24 for the first four 48px buttons, column 25 as an 8px spacer, and
+# columns 26..31 for Cancel. Removing only column 0 (left margin) and column
+# 25 (spacer) preserves every retail button pixel and packs 5 x 48px = 240px.
+GBA_SOURCE_TILE_COLUMNS = tuple(range(1, 25)) + tuple(range(26, 32))
+
+
 def main():
-    if len(sys.argv) != 2:
+    if len(sys.argv) != 3 or sys.argv[1] not in STATE_ROW:
         raise SystemExit(
-            "usage: make_hgss_pokegear_app_switch.py OUTPUT.png"
+            "usage: make_hgss_pokegear_app_switch.py "
+            "(normal|selected) OUTPUT.png"
         )
 
-    out_path = Path(sys.argv[1])
+    state = sys.argv[1]
+    out_path = Path(sys.argv[2])
     source_pixels = load_indexed_png4(TILES)
     palettes = load_nclr(PALETTE)
     width, height, entries = load_nscr(TILEMAP)
@@ -239,12 +253,12 @@ def main():
             f"{TILEMAP}: expected 256x96, got {width}x{height}"
         )
 
-    # Reconstruct the retail normal-state app-switch strip from rows 0..3 of
-    # member 54.  Each NSCR entry selects a tile, flip state, and palette bank.
+    state_row = STATE_ROW[state]
     retail_values = [[0] * 256 for _ in range(32)]
     for tile_y in range(4):
+        source_map_y = state_row + tile_y
         for tile_x in range(32):
-            entry = entries[tile_y * 32 + tile_x]
+            entry = entries[source_map_y * 32 + tile_x]
             tile = entry & 0x03FF
             hflip = bool(entry & 0x0400)
             vflip = bool(entry & 0x0800)
@@ -271,10 +285,20 @@ def main():
                         palette_index
                     ]
 
-    # Remove only the empty 8-pixel side margins from the 256-pixel DS strip.
-    cropped_values = [row[8:248] for row in retail_values]
+    # Preserve all five 48px retail buttons. Only the DS-only left margin
+    # (tile column 0) and inter-button spacer (tile column 25) are omitted.
+    cropped_values = []
+    for row in retail_values:
+        cropped_row = []
+        for tile_x in GBA_SOURCE_TILE_COLUMNS:
+            cropped_row.extend(row[tile_x * 8:(tile_x + 1) * 8])
+        if len(cropped_row) != 240:
+            raise ValueError("adapted app-switch row is not 240 pixels wide")
+        cropped_values.append(cropped_row)
 
-    # Reindex the exact retail BGR555 colors into one GBA-compatible 4bpp bank.
+    # Reindex exact retail BGR555 colors into one GBA-compatible 4bpp bank.
+    # Normal and selected states are emitted separately so each retains its
+    # exact retail color set without palette synthesis.
     color_to_index = {}
     palette_values = []
     indexed_rows = []
@@ -283,7 +307,9 @@ def main():
         for value in row:
             if value not in color_to_index:
                 if len(palette_values) >= 16:
-                    raise ValueError("retail crop exceeds 16 colors")
+                    raise ValueError(
+                        f"retail {state} app-switch state exceeds 16 colors"
+                    )
                 color_to_index[value] = len(palette_values)
                 palette_values.append(value)
             indexed_row.append(color_to_index[value])

@@ -1,0 +1,82 @@
+{
+  "role": "pokegear_app_switch_button_states",
+  "phase": "wired_live",
+  "source_game": "Pokemon HeartGold / SoulSilver",
+  "source_repository": "pret/pokeheartgold",
+  "source_revision": "9d8b7591f09b65804da2fb2dfd56f320633e0d36",
+  "retail_binding": {
+    "tiles_member": 48,
+    "palette_member": 30,
+    "tilemap_member": 54,
+    "normal_rows": [
+      0,
+      3
+    ],
+    "selected_rows": [
+      4,
+      7
+    ],
+    "retail_button_width_tiles": 6,
+    "retail_button_source_columns": [
+      [
+        1,
+        6
+      ],
+      [
+        7,
+        12
+      ],
+      [
+        13,
+        18
+      ],
+      [
+        19,
+        24
+      ],
+      [
+        26,
+        31
+      ]
+    ]
+  },
+  "gba_adaptation": {
+    "removed_source_tile_columns": [
+      0,
+      25
+    ],
+    "preserved_button_pixels": true,
+    "output_width_pixels": 240,
+    "scaling": false,
+    "redrawing": false,
+    "recoloring": false,
+    "interpolation": false
+  },
+  "live_binding": {
+    "bg": 2,
+    "normal_tile_base": "0x100",
+    "normal_palette_bank": 14,
+    "selected_tile_base": "0x178",
+    "selected_palette_bank": 15,
+    "functional_slot_mapping": {
+      "condition": 0,
+      "ribbons": 1,
+      "map": 2,
+      "match_call": 3,
+      "switch_off": 4
+    }
+  },
+  "pipeline": {
+    "authentic_hgss_asset_ready": true,
+    "wired_live": true,
+    "legacy_equivalent_removed": false
+  },
+  "ci_gate_before_wiring": {
+    "workflow": "CI",
+    "run_number": 629,
+    "conclusion": "success",
+    "validated_commit": "dfe7d3f9eb6e8b1d1ca3623925eec8c8cd6fa6f7"
+  },
+  "next": "Run CI on the live selected-state integration before changing or removing the legacy PokéNav option-label layer.",
+  "status": "authentic retail HGSS normal/selected app-button states are wired live with corrected lossless 240px geometry; legacy option labels remain pending validation"
+}

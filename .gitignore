@@ -130,6 +130,7 @@ __pycache__
 /graphics/gen4_ui/hgss_pokedex_counters_deca.tiles.bin
 
 /graphics/gen4_ui/hgss_pokegear/app_switch_gba.png
+/graphics/gen4_ui/hgss_pokegear/app_switch_selected_gba.png
 /graphics/gen4_ui/hgss_pokegear/screen_shell_gba.tilemap.bin
 /graphics/gen4_ui/hgss_pokegear/screen_shell_gba.palette.bin
 

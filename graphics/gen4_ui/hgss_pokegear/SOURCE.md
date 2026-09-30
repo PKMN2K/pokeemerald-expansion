@@ -274,3 +274,41 @@ BG2 underneath the text instead of covering it with fabricated pixels.
 This cleanup reuses an authentic HGSS asset that was already imported and
 wired live by the completed fixed-shell sequence; it does not create a new
 "HGSS-style" replacement.
+
+
+## App-switch selected state — live wiring
+
+CI #629 passed commit `dfe7d3f9eb6e8b1d1ca3623925eec8c8cd6fa6f7`,
+validating removal of the synthetic description panel.
+
+The already-verified retail member-54 NSCR contains three four-tile-high
+app-button state bands. Retail `PokegearApp_UpdateAppSwitchButtonBGState`
+uses rows 0..3 for normal buttons and rows 4..7 for the selected state.
+
+Auditing the retail copy coordinates also exposed a flaw in the earlier GBA
+width adaptation. The retail five-button layout is:
+
+- tile column 0: 8px left margin,
+- columns 1..24: four contiguous 48px buttons,
+- column 25: 8px spacer,
+- columns 26..31: the full 48px Cancel button.
+
+The previous outer-edge crop omitted column 31 and therefore discarded the
+rightmost eight pixels of Cancel. The generator now removes only source
+columns 0 and 25. This preserves every pixel of all five retail 48px buttons
+and packs them exactly into the GBA's 240px width: 5 × 48px.
+
+`make_hgss_pokegear_app_switch.py` now emits the retail normal and selected
+states separately. Each state is reconstructed from the exact member-48 tile
+pixels, member-30 BGR555 palette values, and member-54 tile/flip/palette
+semantics; there is no scaling, redrawing, recoloring, or interpolation.
+
+Both states are live on BG2. The normal state uses palette bank 14 and tile
+base `0x100`; selected-state tiles use palette bank 15 and tile base
+`0x178`. Moving the top-level PokéGear cursor restores the full normal strip
+then substitutes only the six authentic selected-state tiles for the mapped
+48px button.
+
+For this validation phase, the existing PokéNav option-label sprites remain
+live. They are not deleted until the authentic button-state integration passes
+CI and the separate label/function presentation is handled deliberately.
