@@ -125,6 +125,9 @@ $(GEN4UIGFXDIR)/hgss_pokegear/condition_search_cursor.4bpp: $(GEN4UIHGSSPOKEGEAR
 $(GEN4UIGFXDIR)/hgss_pokegear/condition_search_cursor.gbapal: $(GEN4UIHGSSPOKEGEARCONDITIONSEARCH) $(GEN4UIHGSSSTATS) $(GEN4UIHGSSSTARTCURSOR)
 	python3 $(GEN4UIHGSSPOKEGEARCONDITIONSEARCH) --cursor-palette $@
 
+$(GEN4UIGFXDIR)/hgss_pokegear/condition_search_labels.4bpp: $(GEN4UIHGSSPOKEGEARCONDITIONSEARCH) $(GEN4UIGFXDIR)/hgss_pokegear/verified/font_id4.bin
+	python3 $(GEN4UIHGSSPOKEGEARCONDITIONSEARCH) --labels $@
+
 # The live HGSS Pokédex background reserves BG palette entries 128..140.
 # Shifting tile pixel indices keeps the legacy Pokédex palettes (0..95 and 240..255)
 # available for text, windows, and other existing layers.
