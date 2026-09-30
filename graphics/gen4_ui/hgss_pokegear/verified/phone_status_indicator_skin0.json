@@ -1,0 +1,55 @@
+{
+  "role": "pokegear_phone_status_notification_source",
+  "phase": "authentic_hgss_asset_ready",
+  "source_game": "Pokemon HeartGold / SoulSilver",
+  "source_repository": "pret/pokeheartgold",
+  "source_revision": "9d8b7591f09b65804da2fb2dfd56f320633e0d36",
+  "retail_binding": {
+    "loader": "PokegearUIManager_LoadInitialSkinGfx",
+    "loader_file": "src/application/pokegear/main/overlay_100_021E6914.c",
+    "consumer": "PokegearApp_LoadGraphics",
+    "consumer_file": "src/application/pokegear/main/overlay_100_021E5900.c",
+    "sprite_index": 10,
+    "retail_position": [197, 48],
+    "nanr_sequence": 3,
+    "ncer_cells": [18, 19],
+    "member6_tiles": [200, 204],
+    "member0_palette_bank": 3,
+    "object_size": [16, 16],
+    "states": {
+      "0": "active / phone available",
+      "1": "disabled / phone unavailable"
+    },
+    "retail_state_change": "PokegearApp_LoadGraphics sets animation frame 1 when MapHeader_CanPlacePhoneCalls returns false."
+  },
+  "source_assets": [
+    "graphics/gen4_ui/hgss_pokegear/verified/pgear_skin0_ui_sprites.png",
+    "graphics/gen4_ui/hgss_pokegear/verified/pgear_skin0_ui_palette.NCLR",
+    "graphics/gen4_ui/hgss_pokegear/verified/pgear_ui_cells.NCER",
+    "graphics/gen4_ui/hgss_pokegear/verified/pgear_ui_anims.NANR"
+  ],
+  "generator": "tools/gen4_ui/make_hgss_pokegear_phone_status.py",
+  "generated_tiles": "graphics/gen4_ui/hgss_pokegear/phone_status.4bpp",
+  "generated_palette": "graphics/gen4_ui/hgss_pokegear/phone_status.gbapal",
+  "generated_layout": "two untouched 16x16 4bpp frames in retail sequence order: active then disabled",
+  "scaling": false,
+  "redrawing": false,
+  "recoloring": false,
+  "legacy_equivalent": {
+    "asset": "graphics/pokenav/blue_light.png",
+    "code": [
+      "CreateMatchCallBlueLightSprite",
+      "SpriteCB_BlinkingBlueLight",
+      "DestroyRematchBlueLightSprite"
+    ],
+    "predicate": "AreAnyTrainerRematchesNearby",
+    "removed": false
+  },
+  "authenticity_note": "Retail HGSS does not use this sprite as a nearby-rematch alert. It is the authentic PokéGear phone-availability status icon. The project will deliberately reuse this retail phone-specific artwork for the Emerald Match Call notification rather than fabricate an HGSS-style blue light; it is not claimed to be a direct retail functional equivalent.",
+  "pipeline": {
+    "authentic_hgss_asset_ready": true,
+    "wired_live": false,
+    "legacy_equivalent_removed": false
+  },
+  "next": "After CI validates the extraction, wire the authentic 16x16 HGSS phone-status asset to the existing Match Call rematch-notification predicate without scaling, redrawing, or recoloring. Keep the legacy blue-light asset until that live integration passes CI."
+}

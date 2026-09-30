@@ -30,6 +30,7 @@ GEN4UIHGSSSTARTCURSOR := tools/gen4_ui/make_hgss_pokedex_start_cursor.py
 GEN4UIHGSSPOKEGEARSWITCH := tools/gen4_ui/make_hgss_pokegear_app_switch.py
 GEN4UIHGSSPOKEGEARSHELL := tools/gen4_ui/make_hgss_pokegear_screen_shell.py
 GEN4UIHGSSPOKEGEARCURSOR := tools/gen4_ui/make_hgss_pokegear_cursor.py
+GEN4UIHGSSPOKEGEARPHONESTATUS := tools/gen4_ui/make_hgss_pokegear_phone_status.py
 
 types := none normal fight flying poison ground rock bug ghost steel mystery fire water grass electric psychic ice dragon dark fairy stellar
 contest_types := cool beauty cute smart tough
@@ -94,6 +95,18 @@ $(GEN4UIGFXDIR)/hgss_pokegear/cursor_corner.4bpp: $(GEN4UIHGSSPOKEGEARCURSOR) \
 	python3 $< --tiles $@
 
 $(GEN4UIGFXDIR)/hgss_pokegear/cursor_corner.gbapal: $(GEN4UIHGSSPOKEGEARCURSOR) \
+	$(GEN4UIGFXDIR)/hgss_pokegear/verified/pgear_skin0_ui_palette.NCLR \
+	$(GEN4UIGFXDIR)/hgss_pokegear/verified/pgear_ui_cells.NCER \
+	$(GEN4UIGFXDIR)/hgss_pokegear/verified/pgear_ui_anims.NANR
+	python3 $< --palette $@
+
+$(GEN4UIGFXDIR)/hgss_pokegear/phone_status.4bpp: $(GEN4UIHGSSPOKEGEARPHONESTATUS) \
+	$(GEN4UIGFXDIR)/hgss_pokegear/verified/pgear_skin0_ui_sprites.png \
+	$(GEN4UIGFXDIR)/hgss_pokegear/verified/pgear_ui_cells.NCER \
+	$(GEN4UIGFXDIR)/hgss_pokegear/verified/pgear_ui_anims.NANR
+	python3 $< --tiles $@
+
+$(GEN4UIGFXDIR)/hgss_pokegear/phone_status.gbapal: $(GEN4UIHGSSPOKEGEARPHONESTATUS) \
 	$(GEN4UIGFXDIR)/hgss_pokegear/verified/pgear_skin0_ui_palette.NCLR \
 	$(GEN4UIGFXDIR)/hgss_pokegear/verified/pgear_ui_cells.NCER \
 	$(GEN4UIGFXDIR)/hgss_pokegear/verified/pgear_ui_anims.NANR

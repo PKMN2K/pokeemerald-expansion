@@ -345,3 +345,38 @@ Ribbons are slot reuse, not claimed direct retail HGSS functional equivalents.
 This completes removal of the **top-level legacy label presentation** after
 the authentic HGSS app-button state integration. Condition/Search labels remain
 pending their own authenticity sequence.
+
+
+## Match Call notification — phase 1
+
+CI #631 passed commit `8c35d421cbb173218985225acd52c40c202fe23b`,
+validating removal of the top-level legacy PokéNav launcher labels.
+
+The next remaining top-level legacy element is the Emerald/PokéNav Match Call
+blue light (`graphics/pokenav/blue_light.png`). Its live behavior is implemented
+by `CreateMatchCallBlueLightSprite`, `SpriteCB_BlinkingBlueLight`, and
+`AreAnyTrainerRematchesNearby`.
+
+Retail HGSS does not contain a direct "nearby rematch blue light." The
+authenticity audit instead found the PokéGear's own phone-status indicator in
+the already-imported retail common-UI sprite set. In
+`PokegearApp_LoadGraphics`, UI sprite 10 uses NANR sequence 3. That sequence
+resolves to NCER cells 18 and 19, which are untouched 16x16 square objects using
+member-6 tiles 200 and 204 with member-0 palette bank 3. Retail uses frame 0 as
+the active/available phone state and switches to frame 1 when
+`MapHeader_CanPlacePhoneCalls` is false.
+
+`make_hgss_pokegear_phone_status.py` now validates that exact retail binding
+and extracts both 16x16 states byte-for-byte into a two-frame GBA 4bpp asset plus
+the original BGR555 palette. There is no scaling, redrawing, recoloring, or
+synthetic replacement artwork.
+
+This is a deliberate functional reuse of authentic HGSS phone artwork, not a
+claim that HGSS itself used this icon for rematch availability. Phase 2 will
+bind the authentic phone-status graphic to the existing Match Call notification
+predicate. The legacy blue-light sprite remains live and untouched until that
+integration is CI-validated.
+
+This commit is **phase 1 only**:
+
+**authentic HGSS asset ready -> wire live pending -> legacy removal pending**
