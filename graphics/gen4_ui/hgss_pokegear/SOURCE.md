@@ -380,3 +380,36 @@ integration is CI-validated.
 This commit is **phase 1 only**:
 
 **authentic HGSS asset ready -> wire live pending -> legacy removal pending**
+
+
+## Match Call notification — phase 2
+
+CI #632 passed commit `52c3a6f7f008cca20cea1340fb1d57a3f83cf2c3`,
+validating the phase-1 extraction of the authentic retail HGSS phone-status
+sprite.
+
+The active retail phone-status frame is now live as the top-level nearby-rematch
+notification. The existing Emerald predicate, `AreAnyTrainerRematchesNearby`,
+is deliberately retained; only its presentation changes.
+
+Retail `PokegearApp_LoadGraphics` places UI sprite 10 at (197, 48) on the
+256-pixel DS PokéGear screen. The already-validated fixed-shell GBA adaptation
+keeps source columns 1..30, so the live GBA sprite is placed at (189, 48):
+exactly one 8-pixel source column is removed from x and y remains unchanged.
+The 16x16 sprite pixels and palette are not scaled, redrawn, or recolored.
+
+When a nearby rematch exists, NCER cell 18 / member-6 tile 200 is displayed
+with the original notification blink cadence. The indicator is hidden while a
+Condition/Search submenu is active and is restored immediately on return to the
+top-level PokéGear. The retail disabled frame (cell 19 / tile 204) remains
+preserved in the generated asset for future phone-state use.
+
+For this validation phase, the old `graphics/pokenav/blue_light.png` resource,
+sprite template, callback, tags, and allocation path are intentionally retained.
+The legacy sprite is instantiated but forced invisible, making the authentic
+HGSS phone-status graphic the only visible notification while preserving a
+rollback-safe equivalent until CI validates the live integration.
+
+This is **phase 2**:
+
+**authentic HGSS asset -> wired live -> legacy removal pending**

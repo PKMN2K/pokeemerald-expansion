@@ -17,12 +17,14 @@
 #include "constants/songs.h"
 #include "constants/rgb.h"
 
-#define GFXTAG_BLUE_LIGHT          1
-#define GFXTAG_HGSS_POKEGEAR_CURSOR 2
-#define GFXTAG_OPTIONS             3
+#define GFXTAG_BLUE_LIGHT                     1
+#define GFXTAG_HGSS_POKEGEAR_CURSOR            2
+#define GFXTAG_OPTIONS                         3
+#define GFXTAG_HGSS_POKEGEAR_PHONE_STATUS      4
 
-#define PALTAG_HGSS_POKEGEAR_CURSOR 2
-#define PALTAG_BLUE_LIGHT            3
+#define PALTAG_HGSS_POKEGEAR_CURSOR            2
+#define PALTAG_BLUE_LIGHT                      3
+#define PALTAG_HGSS_POKEGEAR_PHONE_STATUS      9
 #define PALTAG_OPTIONS_DEFAULT 4 // Includes green for Smart/Region Map and yellow for Tough
 #define PALTAG_OPTIONS_BLUE 5
 #define PALTAG_OPTIONS_PINK 6
@@ -49,6 +51,12 @@
 #define HGSS_POKEGEAR_APP_CURSOR_X_OFFSET            16
 #define HGSS_POKEGEAR_APP_CURSOR_Y_OFFSET            10
 
+// Retail UI sprite 10 is at (197, 48) on the 256px DS PokéGear screen.
+// The fixed-shell GBA adaptation keeps source columns 1..30, so subtract
+// exactly one 8px source column from x while preserving y unchanged.
+#define HGSS_POKEGEAR_PHONE_STATUS_X                  189
+#define HGSS_POKEGEAR_PHONE_STATUS_Y                   48
+
 // Keep these in sync with make_hgss_pokegear_screen_shell.py.
 #define HGSS_POKEGEAR_SCREEN_SHELL_TILE_BASE 0x40
 #define HGSS_POKEGEAR_SCREEN_SHELL_PAL_BANK 13
@@ -64,6 +72,7 @@ struct Pokenav_MenuGfx
     bool8 pokenavAlreadyOpen;
     bool32 iconVisible[MAX_POKENAV_MENUITEMS];
     struct Sprite *blueLightSprite;
+    struct Sprite *hgssPhoneStatusSprite;
     struct Sprite *hgssCursorSprites[NUM_HGSS_POKEGEAR_CURSOR_SPRITES];
     struct Sprite *iconSprites[MAX_POKENAV_MENUITEMS][NUM_OPTION_SUBSPRITES];
     u8 bg1TilemapBuffer[BG_SCREEN_SIZE];
@@ -105,7 +114,9 @@ static void SpriteCB_OptionSlide(struct Sprite *);
 static void SpriteCB_OptionZoom(struct Sprite *);
 static void Task_OptionBlend(u8);
 static void CreateMatchCallBlueLightSprite(void);
+static void CreateHgssPokegearPhoneStatusSprite(void);
 static void SpriteCB_BlinkingBlueLight(struct Sprite *);
+static void SpriteCB_BlinkingHgssPhoneStatus(struct Sprite *);
 static void DestroyRematchBlueLightSprite(void);
 static void AddOptionDescriptionWindow(void);
 static void LoadHgssPokegearScreenShell(void);
@@ -158,6 +169,12 @@ static const u32 sHgssPokegearAppSwitchSelectedTiles[] = INCGFX_U32("graphics/ge
 // and member-0 palette bank 1 byte-for-byte.
 static const u32 sHgssPokegearCursorCornerTiles[] = INCBIN_U32("graphics/gen4_ui/hgss_pokegear/cursor_corner.4bpp");
 static const u16 sHgssPokegearCursorCornerPal[] = INCBIN_U16("graphics/gen4_ui/hgss_pokegear/cursor_corner.gbapal");
+
+// Exact retail HGSS PokéGear phone-status frames. The generator validates
+// NANR sequence 3 -> NCER cells 18/19 -> member-6 tiles 200/204 using
+// member-0 palette bank 3. Both 16x16 frames are preserved byte-for-byte.
+static const u32 sHgssPokegearPhoneStatusTiles[] = INCBIN_U32("graphics/gen4_ui/hgss_pokegear/phone_status.4bpp");
+static const u16 sHgssPokegearPhoneStatusPal[] = INCBIN_U16("graphics/gen4_ui/hgss_pokegear/phone_status.gbapal");
 
 static const u8 gText_NoRibbonWinners[] = _("There are no RIBBON winners.");
 
@@ -238,6 +255,19 @@ static const struct SpritePalette sHgssPokegearCursorSpritePalette =
 {
     .data = sHgssPokegearCursorCornerPal,
     .tag = PALTAG_HGSS_POKEGEAR_CURSOR,
+};
+
+static const struct SpriteSheet sHgssPokegearPhoneStatusSpriteSheet =
+{
+    .data = sHgssPokegearPhoneStatusTiles,
+    .size = sizeof(sHgssPokegearPhoneStatusTiles),
+    .tag = GFXTAG_HGSS_POKEGEAR_PHONE_STATUS,
+};
+
+static const struct SpritePalette sHgssPokegearPhoneStatusSpritePalette =
+{
+    .data = sHgssPokegearPhoneStatusPal,
+    .tag = PALTAG_HGSS_POKEGEAR_PHONE_STATUS,
 };
 
 // Retail app-button cursor centers after the lossless GBA width adaptation.
@@ -423,6 +453,43 @@ static const struct SpriteTemplate sMatchCallBlueLightSpriteTemplate =
     .tileTag = GFXTAG_BLUE_LIGHT,
     .paletteTag = PALTAG_BLUE_LIGHT,
     .oam = &sBlueLightOamData,
+};
+
+static const struct OamData sOamData_HgssPokegearPhoneStatus =
+{
+    .y = 0,
+    .affineMode = ST_OAM_AFFINE_OFF,
+    .objMode = ST_OAM_OBJ_NORMAL,
+    .bpp = ST_OAM_4BPP,
+    .shape = SPRITE_SHAPE(16x16),
+    .x = 0,
+    .size = SPRITE_SIZE(16x16),
+    .tileNum = 0,
+    .priority = 2,
+    .paletteNum = 0,
+};
+
+static const union AnimCmd sAnim_HgssPokegearPhoneStatus[] =
+{
+    // Phase 2 uses the authentic active/available frame (cell 18 / tile 200)
+    // as the rematch notification. The disabled retail frame remains preserved
+    // in the same sprite sheet for later phone-state use.
+    ANIMCMD_FRAME(0, 1),
+    ANIMCMD_END,
+};
+
+static const union AnimCmd *const sAnims_HgssPokegearPhoneStatus[] =
+{
+    sAnim_HgssPokegearPhoneStatus,
+};
+
+static const struct SpriteTemplate sHgssPokegearPhoneStatusSpriteTemplate =
+{
+    .tileTag = GFXTAG_HGSS_POKEGEAR_PHONE_STATUS,
+    .paletteTag = PALTAG_HGSS_POKEGEAR_PHONE_STATUS,
+    .oam = &sOamData_HgssPokegearPhoneStatus,
+    .anims = sAnims_HgssPokegearPhoneStatus,
+    .callback = SpriteCallbackDummy,
 };
 
 static const struct ScanlineEffectParams sPokenavMainMenuScanlineEffectParams =
@@ -877,6 +944,8 @@ static void LoadPokenavOptionPalettes(void)
     // launcher itself now uses only the authentic HGSS button/cursor layer.
     LoadSpriteSheet(&sHgssPokegearCursorSpriteSheet);
     LoadSpritePalette(&sHgssPokegearCursorSpritePalette);
+    LoadSpriteSheet(&sHgssPokegearPhoneStatusSpriteSheet);
+    LoadSpritePalette(&sHgssPokegearPhoneStatusSpritePalette);
 }
 
 static void FreeAndDestroyMainMenuSprites(void)
@@ -884,6 +953,7 @@ static void FreeAndDestroyMainMenuSprites(void)
     FreeSpriteTilesByTag(GFXTAG_OPTIONS);
     FreeSpriteTilesByTag(GFXTAG_BLUE_LIGHT);
     FreeSpriteTilesByTag(GFXTAG_HGSS_POKEGEAR_CURSOR);
+    FreeSpriteTilesByTag(GFXTAG_HGSS_POKEGEAR_PHONE_STATUS);
     FreeSpritePaletteByTag(PALTAG_OPTIONS_DEFAULT);
     FreeSpritePaletteByTag(PALTAG_OPTIONS_BLUE);
     FreeSpritePaletteByTag(PALTAG_OPTIONS_PINK);
@@ -891,6 +961,7 @@ static void FreeAndDestroyMainMenuSprites(void)
     FreeSpritePaletteByTag(PALTAG_OPTIONS_RED);
     FreeSpritePaletteByTag(PALTAG_BLUE_LIGHT);
     FreeSpritePaletteByTag(PALTAG_HGSS_POKEGEAR_CURSOR);
+    FreeSpritePaletteByTag(PALTAG_HGSS_POKEGEAR_PHONE_STATUS);
     DestroyMenuOptionSprites();
     DestroyRematchBlueLightSprite();
 }
@@ -1537,26 +1608,81 @@ static void Task_OptionBlend(u8 taskId)
 #undef tBlendTarget2
 #undef tBlendCounter
 
-// Blue light that blinks if there are available rematches nearby
+// Phase 2 keeps the old PokéNav blue-light sprite allocated and its callback
+// intact as a rollback-safe legacy equivalent, but suppresses it visually.
+// The authentic HGSS phone-status sprite is now the live rematch indicator.
 static void CreateMatchCallBlueLightSprite(void)
 {
     struct Pokenav_MenuGfx *gfx = GetSubstructPtr(POKENAV_SUBSTRUCT_MENU_GFX);
     u8 spriteId = CreateSprite(&sMatchCallBlueLightSpriteTemplate, 0x10, 0x60, 4);
+
     gfx->blueLightSprite = &gSprites[spriteId];
-    if (AreAnyTrainerRematchesNearby())
-        gfx->blueLightSprite->callback = SpriteCB_BlinkingBlueLight;
-    else
-        gfx->blueLightSprite->invisible = TRUE;
+    gfx->blueLightSprite->data[1] = TRUE; // Phase-2 legacy suppression.
+    gfx->blueLightSprite->callback = SpriteCB_BlinkingBlueLight;
+    gfx->blueLightSprite->invisible = TRUE;
+
+    CreateHgssPokegearPhoneStatusSprite();
+}
+
+static void CreateHgssPokegearPhoneStatusSprite(void)
+{
+    struct Pokenav_MenuGfx *gfx = GetSubstructPtr(POKENAV_SUBSTRUCT_MENU_GFX);
+    u8 spriteId = CreateSprite(
+        &sHgssPokegearPhoneStatusSpriteTemplate,
+        HGSS_POKEGEAR_PHONE_STATUS_X,
+        HGSS_POKEGEAR_PHONE_STATUS_Y,
+        4);
+
+    gfx->hgssPhoneStatusSprite = &gSprites[spriteId];
+    gfx->hgssPhoneStatusSprite->data[1] = AreAnyTrainerRematchesNearby();
+    gfx->hgssPhoneStatusSprite->data[2] = TRUE;
+    gfx->hgssPhoneStatusSprite->callback = SpriteCB_BlinkingHgssPhoneStatus;
+    gfx->hgssPhoneStatusSprite->invisible = !gfx->hgssPhoneStatusSprite->data[1];
 }
 
 static void DestroyRematchBlueLightSprite(void)
 {
     struct Pokenav_MenuGfx *gfx = GetSubstructPtr(POKENAV_SUBSTRUCT_MENU_GFX);
     DestroySprite(gfx->blueLightSprite);
+    DestroySprite(gfx->hgssPhoneStatusSprite);
 }
 
 static void SpriteCB_BlinkingBlueLight(struct Sprite *sprite)
 {
+    if (sprite->data[1])
+    {
+        // Retained but visually suppressed for the phase-2 validation cycle.
+        sprite->invisible = TRUE;
+        return;
+    }
+
+    sprite->data[0]++;
+    if (sprite->data[0] > 8)
+    {
+        sprite->data[0] = 0;
+        sprite->invisible ^= 1;
+    }
+}
+
+static void SpriteCB_BlinkingHgssPhoneStatus(struct Sprite *sprite)
+{
+    if (!sprite->data[1] || !IsPokeGearMainMenu())
+    {
+        sprite->data[0] = 0;
+        sprite->data[2] = FALSE;
+        sprite->invisible = TRUE;
+        return;
+    }
+
+    // Returning from a submenu restores the authentic indicator immediately,
+    // then resumes the original rematch-notification blink cadence.
+    if (!sprite->data[2])
+    {
+        sprite->data[2] = TRUE;
+        sprite->invisible = FALSE;
+        return;
+    }
+
     sprite->data[0]++;
     if (sprite->data[0] > 8)
     {
