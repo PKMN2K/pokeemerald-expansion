@@ -328,6 +328,7 @@ void SetVBlankCallback_(IntrCallback callback);
 
 // pokenav_list.c
 bool32 CreatePokenavList(const struct BgTemplate *bgTemplate, struct PokenavListTemplate *listTemplate, u32 tileOffset);
+bool32 CreatePokenavListWithHgssPhoneRows(const struct BgTemplate *bgTemplate, struct PokenavListTemplate *listTemplate, u32 tileOffset, u8 paletteNum, void (*rowDrawFunc)(u16 windowId, u32 listItemId, u32 row));
 bool32 IsCreatePokenavListTaskActive(void);
 void DestroyPokenavList(void);
 u32 PokenavList_GetSelectedIndex(void);
@@ -415,7 +416,7 @@ int GetNumberRegistered(void);
 struct PokenavMatchCallEntry *GetMatchCallList(void);
 mapsec_u16_t GetMatchCallMapSec(int index);
 bool32 ShouldDrawRematchPokeballIcon(int index);
-void ClearRematchPokeballIcon(u16 windowId, u32 tileOffset);
+void ClearRematchPokeballIcon(u16 windowId, u32 tileOffset, u32 rowHeight);
 enum TrainerPicID GetMatchCallTrainerPic(int index);
 const u8 *GetMatchCallFlavorText(int index, int checkPageEntry);
 const u8 *GetMatchCallMessageText(int index, bool8 *newRematchRequest);

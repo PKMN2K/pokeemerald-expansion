@@ -88,7 +88,8 @@ static void LoadCheckPageTrainerPic(struct Pokenav_MatchCallGfx *);
 static bool32 WaitForTrainerPic(struct Pokenav_MatchCallGfx *);
 static void TrainerPicSlideOffscreen(struct Pokenav_MatchCallGfx *);
 static void Task_FlashPokeballIcons(u8);
-static void DrawPokeGearPhoneContactRow(u16, u32);
+static void DrawPokeGearPhoneContactRowLegacy(u16, u32);
+static void DrawHgssPhoneContactRow(u16, u32, u32);
 static void TryDrawRematchPokeballIcon(u16, u32, u32);
 static void PrintNumberRegisteredLabel(u16);
 static void PrintNumberRegistered(u16);
@@ -126,12 +127,16 @@ static const u32 sHgssOptionsCursor_Gfx[] = INCBIN_U32("graphics/gen4_ui/hgss_po
 static const u16 sHgssOptionsCursor_Pal[] = INCBIN_U16("graphics/gen4_ui/hgss_pokegear/match_call_options_cursor.gbapal");
 static const u16 sCallWindow_Pal[] = INCGFX_U16("graphics/pokenav/match_call/call_window.pal", ".gbapal");
 static const u16 sListWindow_Pal[] = INCGFX_U16("graphics/pokenav/match_call/list_window.pal", ".gbapal");
+static const u16 sHgssContactRows_Pal[] = INCBIN_U16("graphics/gen4_ui/hgss_pokegear/match_call_contact_rows.gbapal");
 static const u32 sHgssRematchBadge_Gfx[] = INCBIN_U32("graphics/gen4_ui/hgss_pokegear/rematch_badge.4bpp");
 static const u16 sHgssRematchBadge_Pal[] = INCBIN_U16("graphics/gen4_ui/hgss_pokegear/rematch_badge.gbapal");
 
 enum {
     HGSS_MATCH_CALL_CONTACT_TILE_OFFSET = 0x100,
     HGSS_MATCH_CALL_CONTACT_PALETTE = 6,
+    HGSS_MATCH_CALL_ROWS_PALETTE = 7,
+    HGSS_MATCH_CALL_ROW_HEIGHT = 24,
+    HGSS_MATCH_CALL_BUFFER_ROWS = 8,
     HGSS_PHONE_BADGE_ACTIVE = 0x5000,
     HGSS_PHONE_BADGE_DISABLED = 0x5004,
     HGSS_PHONE_BADGE_EMPTY = 0x5008,
@@ -368,6 +373,7 @@ static u32 LoopedTask_OpenMatchCall(s32 state)
         LoadCallWindowAndFade(gfx);
         LoadBgTiles(3, sHgssRematchBadge_Gfx, sizeof(sHgssRematchBadge_Gfx), 0);
         CopyPaletteIntoBufferUnfaded(sListWindow_Pal, BG_PLTT_ID(3), sizeof(sListWindow_Pal));
+        CopyPaletteIntoBufferUnfaded(sHgssContactRows_Pal, BG_PLTT_ID(HGSS_MATCH_CALL_ROWS_PALETTE), sizeof(sHgssContactRows_Pal));
         CopyPaletteIntoBufferUnfaded(sHgssRematchBadge_Pal, BG_PLTT_ID(5), sizeof(sHgssRematchBadge_Pal));
         return LT_INC_AND_PAUSE;
     case 3:
@@ -896,12 +902,12 @@ static void CreateMatchCallList(void)
     template.item_X = 12;
     template.windowWidth = 16;
     template.listTop = 1;
-    template.maxShowed = 8;
+    template.maxShowed = 6;
     template.fillValue = 3;
     template.fontId = FONT_NARROW;
     template.bufferItemFunc = (PokenavListBufferItemFunc)BufferMatchCallNameAndDesc;
     template.iconDrawFunc = TryDrawRematchPokeballIcon;
-    CreatePokenavList(&sMatchCallBgTemplates[2], &template, HGSS_PHONE_BADGE_TILE_COUNT);
+    CreatePokenavListWithHgssPhoneRows(&sMatchCallBgTemplates[2], &template, HGSS_PHONE_BADGE_TILE_COUNT, HGSS_MATCH_CALL_ROWS_PALETTE, DrawHgssPhoneContactRow);
     CreateTask(Task_FlashPokeballIcons, 7);
 }
 
@@ -940,9 +946,9 @@ static void Task_FlashPokeballIcons(u8 taskId)
         tilemap = GetBgTilemapBuffer(3);
         if (tilemap == NULL)
             return;
-        for (row = 0; row < 16; row++)
+        for (row = 0; row < HGSS_MATCH_CALL_BUFFER_ROWS; row++)
         {
-            u16 *badge = tilemap + row * 64 + HGSS_PHONE_BADGE_COLUMN;
+            u16 *badge = tilemap + row * 96 + HGSS_PHONE_BADGE_COLUMN;
             if (badge[0] == HGSS_PHONE_BADGE_ACTIVE || badge[0] == HGSS_PHONE_BADGE_DISABLED)
             {
                 badge[0] = frame;
@@ -958,7 +964,7 @@ static void Task_FlashPokeballIcons(u8 taskId)
 #undef tSinIdx
 #undef tActive
 
-static void DrawPokeGearPhoneContactRow(u16 windowId, u32 row)
+static void DrawPokeGearPhoneContactRowLegacy(u16 windowId, u32 row)
 {
     u8 width = GetWindowAttribute(windowId, WINDOW_WIDTH) * 8;
     u8 y = (row & 0xF) * 16;
@@ -966,11 +972,49 @@ static void DrawPokeGearPhoneContactRow(u16 windowId, u32 row)
     if (width < 16)
         return;
 
-    // PokéGear contact card: recessed row with a slim status accent.
     FillWindowPixelRect(windowId, PIXEL_FILL(1), 0, y, width, 16);
     FillWindowPixelRect(windowId, PIXEL_FILL(3), 2, y, width - 4, 1);
     FillWindowPixelRect(windowId, PIXEL_FILL(5), 2, y + 15, width - 4, 1);
     FillWindowPixelRect(windowId, PIXEL_FILL(4), 0, y + 3, 1, 10);
+}
+
+static void DrawHgssPhoneContactRow(u16 windowId, u32 listItemId, u32 row)
+{
+    static const u8 sFill1[] = {11, 14};
+    static const u8 sBg1[] = {9, 12};
+    static const u8 sBg2[] = {10, 13};
+    static const u8 sFill2[] = {10, 13};
+    u32 colorIdx = (listItemId + 1) & 1;
+    u32 width = GetWindowAttribute(windowId, WINDOW_WIDTH) * 8;
+    u32 y = row * HGSS_MATCH_CALL_ROW_HEIGHT;
+    u32 rectWidth;
+
+    // Keep the old synthetic renderer compiled as the phase-2 safety fallback.
+    if (width <= 90)
+    {
+        DrawPokeGearPhoneContactRowLegacy(windowId, row);
+        return;
+    }
+
+    // Exact retail PhoneContactListUI_DrawNameSlotBG geometry. The GBA
+    // contact pane is 128 px wide, so this is a left crop of the retail
+    // 216-pixel row: coordinates and palette indices are unchanged.
+    FillWindowPixelRect(windowId, PIXEL_FILL(sFill1[colorIdx]), 0, y, width, 24);
+
+    rectWidth = MIN(82, width - 8);
+    FillWindowPixelRect(windowId, PIXEL_FILL(sBg1[colorIdx]), 8, y, rectWidth, 20);
+
+    if (width > 90)
+    {
+        rectWidth = MIN(126, width - 90);
+        FillWindowPixelRect(windowId, PIXEL_FILL(sBg2[colorIdx]), 90, y, rectWidth, 20);
+    }
+
+    FillWindowPixelRect(windowId, PIXEL_FILL(sFill2[colorIdx]), 1, y + 1, 2, 2);
+    FillWindowPixelRect(windowId, PIXEL_FILL(sFill1[colorIdx]), 8, y, 2, 7);
+    FillWindowPixelRect(windowId, PIXEL_FILL(sFill1[colorIdx]), 9, y + 9, 2, 2);
+    FillWindowPixelRect(windowId, PIXEL_FILL(sFill1[colorIdx]), 9, y + 13, 2, 2);
+    FillWindowPixelRect(windowId, PIXEL_FILL(sFill1[colorIdx]), 9, y + 17, 2, 2);
 }
 
 static void TryDrawRematchPokeballIcon(u16 windowId, u32 rematchId, u32 tileOffset)
@@ -978,9 +1022,7 @@ static void TryDrawRematchPokeballIcon(u16 windowId, u32 rematchId, u32 tileOffs
     u8 bg = GetWindowAttribute(windowId, WINDOW_BG);
     u16 *tilemap = GetBgTilemapBuffer(bg);
 
-    DrawPokeGearPhoneContactRow(windowId, tileOffset);
-
-    tilemap += tileOffset * 64 + HGSS_PHONE_BADGE_COLUMN;
+    tilemap += tileOffset * 96 + HGSS_PHONE_BADGE_COLUMN;
     if (ShouldDrawRematchPokeballIcon(rematchId))
     {
         u8 taskId = FindTaskIdByFunc(Task_FlashPokeballIcons);
@@ -1001,11 +1043,11 @@ static void TryDrawRematchPokeballIcon(u16 windowId, u32 rematchId, u32 tileOffs
     }
 }
 
-void ClearRematchPokeballIcon(u16 windowId, u32 tileOffset)
+void ClearRematchPokeballIcon(u16 windowId, u32 tileOffset, u32 rowHeight)
 {
     u8 bg = GetWindowAttribute(windowId, WINDOW_BG);
     u16 *tilemap = GetBgTilemapBuffer(bg);
-    tilemap += tileOffset * 64 + HGSS_PHONE_BADGE_COLUMN;
+    tilemap += tileOffset * (rowHeight / 8) * 32 + HGSS_PHONE_BADGE_COLUMN;
     tilemap[0] = HGSS_PHONE_BADGE_EMPTY;
     tilemap[1] = HGSS_PHONE_BADGE_EMPTY;
     tilemap[0x20] = HGSS_PHONE_BADGE_EMPTY;

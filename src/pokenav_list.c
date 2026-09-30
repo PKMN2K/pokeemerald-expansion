@@ -53,6 +53,15 @@ struct PokenavList
     u32 bgMoveType;
     PokenavListBufferItemFunc bufferItemFunc;
     void (*iconDrawFunc)(u16, u32, u32);
+    void (*rowDrawFunc)(u16, u32, u32);
+    bool8 useHgssPhoneRows;
+    bool8 suppressIcons;
+    u8 rowHeight;
+    u8 bufferRows;
+    u8 visibleStartRow;
+    u8 windowPaletteNum;
+    u8 scrollStep;
+    u16 savedSelectedIndexOffset;
     struct Sprite *rightArrow;
     struct Sprite *upArrow;
     struct Sprite *downArrow;
@@ -87,6 +96,10 @@ static u32 LoopedTask_CreatePokenavList(s32);
 static bool32 IsPrintListItemsTaskActive(void);
 static u32 LoopedTask_PrintListItems(s32);
 static u32 LoopedTask_MoveListWindow(s32);
+static u32 LoopedTask_MoveHgssPhoneListWindow(s32);
+static bool32 CreatePokenavListInternal(const struct BgTemplate *, struct PokenavListTemplate *, u32, bool32, u8, void (*)(u16, u32, u32));
+static void ClearHgssPhoneListIcons(struct PokenavList *);
+static void RedrawHgssPhoneListIcons(struct PokenavList *);
 static u32 LoopedTask_EraseListForCheckPage(s32);
 static u32 LoopedTask_ReshowListFromCheckPage(s32);
 static u32 LoopedTask_PrintCheckPageInfo(s32);
@@ -102,9 +115,29 @@ static const u8 gText_PokenavMatchCall_SelfIntroduction[] = _("SELF-INTRODUCTION
 
 bool32 CreatePokenavList(const struct BgTemplate *bgTemplate, struct PokenavListTemplate *listTemplate, u32 tileOffset)
 {
+    return CreatePokenavListInternal(bgTemplate, listTemplate, tileOffset, FALSE, listTemplate->fillValue, NULL);
+}
+
+bool32 CreatePokenavListWithHgssPhoneRows(const struct BgTemplate *bgTemplate, struct PokenavListTemplate *listTemplate, u32 tileOffset, u8 paletteNum, void (*rowDrawFunc)(u16, u32, u32))
+{
+    return CreatePokenavListInternal(bgTemplate, listTemplate, tileOffset, TRUE, paletteNum, rowDrawFunc);
+}
+
+static bool32 CreatePokenavListInternal(const struct BgTemplate *bgTemplate, struct PokenavListTemplate *listTemplate, u32 tileOffset, bool32 useHgssPhoneRows, u8 paletteNum, void (*rowDrawFunc)(u16, u32, u32))
+{
     struct PokenavList *list = AllocSubstruct(POKENAV_SUBSTRUCT_LIST, sizeof(struct PokenavList));
     if (list == NULL)
         return FALSE;
+
+    list->useHgssPhoneRows = useHgssPhoneRows;
+    list->suppressIcons = FALSE;
+    list->rowHeight = useHgssPhoneRows ? 24 : 16;
+    list->bufferRows = useHgssPhoneRows ? 8 : 16;
+    list->visibleStartRow = useHgssPhoneRows ? 1 : 0;
+    list->windowPaletteNum = paletteNum;
+    list->rowDrawFunc = rowDrawFunc;
+    list->scrollStep = 0;
+    list->savedSelectedIndexOffset = 0;
 
     InitPokenavListWindowState(&list->windowState, listTemplate);
     if (!CopyPokenavListMenuTemplate(list, bgTemplate, listTemplate, tileOffset))
@@ -142,7 +175,12 @@ static u32 LoopedTask_CreatePokenavList(s32 state)
         InitPokenavListBg(list);
         return LT_INC_AND_PAUSE;
     case 1:
-        InitPokenavListWindow(&list->listWindow);
+        if (list->useHgssPhoneRows)
+            FillWindowPixelBuffer(list->listWindow.windowId, PIXEL_FILL(0));
+        else
+            FillWindowPixelBuffer(list->listWindow.windowId, PIXEL_FILL(1));
+        PutWindowTilemap(list->listWindow.windowId);
+        CopyWindowToVram(list->listWindow.windowId, COPYWIN_MAP);
         return LT_INC_AND_PAUSE;
     case 2:
         InitListItems(&list->windowState, list);
@@ -167,14 +205,24 @@ static u32 LoopedTask_CreatePokenavList(s32 state)
 
 static void InitPokenavListBg(struct PokenavList *list)
 {
-    u16 tileNum = (list->listWindow.fillValue << 12) | list->listWindow.tileOffset;
+    u16 tileNum = (list->windowPaletteNum << 12) | list->listWindow.tileOffset;
     BgDmaFill(list->listWindow.bg, PIXEL_FILL(1), list->listWindow.tileOffset, 1);
     BgDmaFill(list->listWindow.bg, PIXEL_FILL(4), list->listWindow.tileOffset + 1, 1);
     SetBgTilemapBuffer(list->listWindow.bg, list->tilemapBuffer);
     FillBgTilemapBufferRect_Palette0(list->listWindow.bg, tileNum, 0, 0, 32, 32);
-    ChangeBgY(list->listWindow.bg, 0, BG_COORD_SET);
     ChangeBgX(list->listWindow.bg, 0, BG_COORD_SET);
-    ChangeBgY(list->listWindow.bg, list->listWindow.y << 11, BG_COORD_SUB);
+    if (list->useHgssPhoneRows)
+    {
+        // Retail HGSS buffers row 0 above the six visible Phone contacts.
+        // Keep that 24-pixel row offscreen while the first visible row begins
+        // at the existing GBA listTop position.
+        ChangeBgY(list->listWindow.bg, (list->rowHeight - list->listWindow.y * 8) << 8, BG_COORD_SET);
+    }
+    else
+    {
+        ChangeBgY(list->listWindow.bg, 0, BG_COORD_SET);
+        ChangeBgY(list->listWindow.bg, list->listWindow.y << 11, BG_COORD_SUB);
+    }
     CopyBgTilemapBufferToVram(list->listWindow.bg);
 }
 
@@ -191,7 +239,7 @@ static void InitListItems(const struct PokenavListWindowState *windowState, stru
     if (numToPrint > windowState->entriesOnscreen)
         numToPrint = windowState->entriesOnscreen;
 
-    PrintListItems(windowState->listPtr, windowState->windowTopIndex, numToPrint, windowState->listItemSize, 0, list);
+    PrintListItems(windowState->listPtr, windowState->windowTopIndex, numToPrint, windowState->listItemSize, list->useHgssPhoneRows ? list->visibleStartRow : 0, list);
 }
 
 static void PrintListItems(void *listPtr, u32 topIndex, u32 numItems, u32 itemSize, u32 printStart, struct PokenavList *list)
@@ -221,12 +269,18 @@ static u32 LoopedTask_PrintListItems(s32 state)
     switch (state)
     {
     case 0:
-        row = (list->listWindow.unkA + list->listWindow.numPrinted + list->printStart) & 0xF;
+        if (list->useHgssPhoneRows)
+            row = list->listWindow.numPrinted + list->printStart;
+        else
+            row = (list->listWindow.unkA + list->listWindow.numPrinted + list->printStart) & 0xF;
+
         list->bufferItemFunc(list->listPtr, list->itemTextBuffer);
-        if (list->iconDrawFunc != NULL)
+        if (list->rowDrawFunc != NULL)
+            list->rowDrawFunc(list->listWindow.windowId, list->printIndex, row);
+        if (list->iconDrawFunc != NULL && !list->suppressIcons)
             list->iconDrawFunc(list->listWindow.windowId, list->printIndex, row);
 
-        AddTextPrinterParameterized(list->listWindow.windowId, list->listWindow.fontId, list->itemTextBuffer, 8, (row << 4) + 1, TEXT_SKIP_DRAW, NULL);
+        AddTextPrinterParameterized(list->listWindow.windowId, list->listWindow.fontId, list->itemTextBuffer, 8, row * list->rowHeight + 1, TEXT_SKIP_DRAW, NULL);
         if (++list->listWindow.numPrinted >= list->listWindow.numToPrint)
         {
             // Finished printing items. If icons were being drawn, draw the
@@ -271,6 +325,25 @@ static void MoveListWindow(s32 delta, bool32 printItems)
     struct PokenavList *list = GetSubstructPtr(POKENAV_SUBSTRUCT_LIST);
     struct PokenavListWindowState *windowState = &list->windowState;
 
+    if (list->useHgssPhoneRows)
+    {
+        if (delta < 0)
+        {
+            if (windowState->windowTopIndex + delta < 0)
+                delta = -1 * windowState->windowTopIndex;
+        }
+        else
+        {
+            s32 index = windowState->windowTopIndex + windowState->entriesOnscreen;
+            if (index + delta >= windowState->listLength)
+                delta = windowState->listLength - index;
+        }
+
+        if (delta != 0)
+            CreateMoveListWindowTask(delta, list);
+        return;
+    }
+
     if (delta < 0)
     {
         if (windowState->windowTopIndex + delta < 0)
@@ -293,14 +366,106 @@ static void MoveListWindow(s32 delta, bool32 printItems)
 
 static void CreateMoveListWindowTask(s32 delta, struct PokenavList *list)
 {
+    list->moveDelta = delta;
+    if (list->useHgssPhoneRows)
+    {
+        list->scrollStep = 0;
+        list->moveListWindowLoopedTaskId = CreateLoopedTask(LoopedTask_MoveHgssPhoneListWindow, 6);
+        return;
+    }
+
     list->startBgY = GetBgY(list->listWindow.bg);
     list->endBgY = list->startBgY + (delta << 12);
     if (delta > 0)
         list->bgMoveType = BG_COORD_ADD;
     else
         list->bgMoveType = BG_COORD_SUB;
-    list->moveDelta = delta;
     list->moveListWindowLoopedTaskId = CreateLoopedTask(LoopedTask_MoveListWindow, 6);
+}
+
+static void ClearHgssPhoneListIcons(struct PokenavList *list)
+{
+    u32 row;
+
+    if (list->iconDrawFunc == NULL)
+        return;
+
+    for (row = 0; row < list->bufferRows; row++)
+        ClearRematchPokeballIcon(list->listWindow.windowId, row, list->rowHeight);
+    CopyWindowToVram(list->listWindow.windowId, COPYWIN_MAP);
+}
+
+static void RedrawHgssPhoneListIcons(struct PokenavList *list)
+{
+    u32 i;
+
+    if (list->iconDrawFunc == NULL)
+        return;
+
+    for (i = 0; i < list->windowState.entriesOnscreen; i++)
+    {
+        u32 index = list->windowState.windowTopIndex + i;
+        if (index >= list->windowState.listLength)
+            break;
+        list->iconDrawFunc(list->listWindow.windowId, index, list->visibleStartRow + i);
+    }
+    CopyWindowToVram(list->listWindow.windowId, COPYWIN_MAP);
+}
+
+static u32 LoopedTask_MoveHgssPhoneListWindow(s32 state)
+{
+    s32 step;
+    u32 index;
+    struct PokenavList *list = GetSubstructPtr(POKENAV_SUBSTRUCT_LIST);
+    struct PokenavListWindowState *windowState = &list->windowState;
+
+    switch (state)
+    {
+    case 0:
+        if (list->moveDelta == 0)
+            return LT_FINISH;
+
+        ClearHgssPhoneListIcons(list);
+        list->suppressIcons = TRUE;
+        list->scrollStep = 0;
+
+        if (list->moveDelta > 0)
+        {
+            index = windowState->windowTopIndex + windowState->entriesOnscreen;
+            PrintListItems(windowState->listPtr, index, 1, windowState->listItemSize, list->bufferRows - 1, list);
+        }
+        else
+        {
+            index = windowState->windowTopIndex - 1;
+            PrintListItems(windowState->listPtr, index, 1, windowState->listItemSize, 0, list);
+        }
+        return LT_INC_AND_PAUSE;
+    case 1:
+        if (IsPrintListItemsTaskActive())
+            return LT_PAUSE;
+        list->suppressIcons = FALSE;
+        return LT_INC_AND_CONTINUE;
+    case 2:
+        if (IsDma3ManagerBusyWithBgCopy())
+            return LT_PAUSE;
+
+        // HGSS Phone scrolls one 24-pixel contact row in three 8-pixel steps.
+        ScrollWindow(list->listWindow.windowId, list->moveDelta < 0 ? 1 : 0, 8, PIXEL_FILL(0));
+        CopyWindowToVram(list->listWindow.windowId, COPYWIN_GFX);
+        if (++list->scrollStep < 3)
+            return LT_PAUSE;
+
+        step = list->moveDelta > 0 ? 1 : -1;
+        windowState->windowTopIndex += step;
+        list->moveDelta -= step;
+        list->scrollStep = 0;
+        RedrawHgssPhoneListIcons(list);
+
+        if (list->moveDelta != 0)
+            return LT_SET_STATE(0);
+        return LT_FINISH;
+    }
+    return LT_FINISH;
 }
 
 static u32 LoopedTask_MoveListWindow(s32 state)
@@ -493,13 +658,31 @@ void PokenavList_DrawCurrentItemIcon(void)
 {
     struct PokenavList *list = GetSubstructPtr(POKENAV_SUBSTRUCT_LIST);
     struct PokenavListWindowState *windowState = &list->windowState;
-    list->iconDrawFunc(list->listWindow.windowId, windowState->windowTopIndex + windowState->selectedIndexOffset, (list->listWindow.unkA + windowState->selectedIndexOffset) & 0xF);
+    if (list->useHgssPhoneRows)
+        list->iconDrawFunc(list->listWindow.windowId, windowState->windowTopIndex + windowState->selectedIndexOffset, list->visibleStartRow + windowState->selectedIndexOffset);
+    else
+        list->iconDrawFunc(list->listWindow.windowId, windowState->windowTopIndex + windowState->selectedIndexOffset, (list->listWindow.unkA + windowState->selectedIndexOffset) & 0xF);
     CopyWindowToVram(list->listWindow.windowId, COPYWIN_MAP);
 }
 
 static u32 LoopedTask_EraseListForCheckPage(s32 state)
 {
     struct PokenavList *list = GetSubstructPtr(POKENAV_SUBSTRUCT_LIST);
+
+    if (list->useHgssPhoneRows)
+    {
+        if (state == 0)
+        {
+            list->savedSelectedIndexOffset = list->windowState.selectedIndexOffset;
+            list->windowState.windowTopIndex += list->windowState.selectedIndexOffset;
+            list->windowState.selectedIndexOffset = 0;
+            ToggleListArrows(list, TRUE);
+            FillWindowPixelBuffer(list->listWindow.windowId, PIXEL_FILL(0));
+            ClearHgssPhoneListIcons(list);
+            CopyWindowToVram(list->listWindow.windowId, COPYWIN_FULL);
+        }
+        return LT_FINISH;
+    }
 
     switch (state)
     {
@@ -586,6 +769,43 @@ static u32 LoopedTask_ReshowListFromCheckPage(s32 state)
 {
     struct PokenavList *list, *listAlias; // listAlias is needed for matching.
     struct PokenavListWindowState *windowState;
+
+    list = GetSubstructPtr(POKENAV_SUBSTRUCT_LIST);
+    if (list->useHgssPhoneRows)
+    {
+        windowState = &list->windowState;
+        switch (state)
+        {
+        case 0:
+        {
+            s32 selected = windowState->windowTopIndex;
+            s32 offset = list->savedSelectedIndexOffset;
+            s32 top;
+
+            if (offset >= windowState->entriesOnscreen)
+                offset = windowState->entriesOnscreen - 1;
+            if (offset > selected)
+                offset = selected;
+
+            top = selected - offset;
+            if (top + windowState->entriesOnscreen > windowState->listLength)
+                top = MAX(0, (s32)windowState->listLength - (s32)windowState->entriesOnscreen);
+
+            windowState->windowTopIndex = top;
+            windowState->selectedIndexOffset = selected - top;
+            FillWindowPixelBuffer(list->listWindow.windowId, PIXEL_FILL(0));
+            ClearHgssPhoneListIcons(list);
+            InitListItems(windowState, list);
+            return LT_INC_AND_PAUSE;
+        }
+        case 1:
+            if (IsPrintListItemsTaskActive())
+                return LT_PAUSE;
+            ToggleListArrows(list, FALSE);
+            return LT_FINISH;
+        }
+        return LT_FINISH;
+    }
 
     if (IsDma3ManagerBusyWithBgCopy())
         return LT_PAUSE;
@@ -682,7 +902,7 @@ static void EraseListEntry(struct PokenavListMenuWindow *listWindow, s32 offset,
     }
 
     for (entries--; entries != -1; offset = (offset + 1) & 0xF, entries--)
-        ClearRematchPokeballIcon(listWindow->windowId, offset);
+        ClearRematchPokeballIcon(listWindow->windowId, offset, 16);
 
     CopyWindowToVram(listWindow->windowId, COPYWIN_MAP);
 }
@@ -720,10 +940,23 @@ static void PrintCheckPageTrainerName(struct PokenavListWindowState *state, stru
     u8 colors[3] = {TEXT_COLOR_TRANSPARENT, TEXT_COLOR_DARK_GRAY, TEXT_COLOR_WHITE};
 
     list->bufferItemFunc(state->listPtr + state->listItemSize * state->windowTopIndex, list->itemTextBuffer);
-    DrawPokeGearPhoneCheckRow(list, list->listWindow.unkA, TRUE);
-    AddTextPrinterParameterized3(list->listWindow.windowId, list->listWindow.fontId, 8, (list->listWindow.unkA * 16) + 1, colors, TEXT_SKIP_DRAW, list->itemTextBuffer);
-    SetListMarginTile(&list->listWindow, TRUE);
-    CopyWindowRectToVram(list->listWindow.windowId, COPYWIN_FULL, 0, list->listWindow.unkA * 2, list->listWindow.width, 2);
+    if (list->useHgssPhoneRows)
+    {
+        u32 y = list->rowHeight;
+        FillWindowPixelRect(list->listWindow.windowId, PIXEL_FILL(1), 0, y, list->listWindow.width * 8, 16);
+        FillWindowPixelRect(list->listWindow.windowId, PIXEL_FILL(3), 2, y, list->listWindow.width * 8 - 4, 1);
+        FillWindowPixelRect(list->listWindow.windowId, PIXEL_FILL(5), 2, y + 15, list->listWindow.width * 8 - 4, 1);
+        FillWindowPixelRect(list->listWindow.windowId, PIXEL_FILL(4), 0, y + 3, 3, 10);
+        AddTextPrinterParameterized3(list->listWindow.windowId, list->listWindow.fontId, 8, y + 1, colors, TEXT_SKIP_DRAW, list->itemTextBuffer);
+        CopyWindowRectToVram(list->listWindow.windowId, COPYWIN_FULL, 0, y / 8, list->listWindow.width, 2);
+    }
+    else
+    {
+        DrawPokeGearPhoneCheckRow(list, list->listWindow.unkA, TRUE);
+        AddTextPrinterParameterized3(list->listWindow.windowId, list->listWindow.fontId, 8, (list->listWindow.unkA * 16) + 1, colors, TEXT_SKIP_DRAW, list->itemTextBuffer);
+        SetListMarginTile(&list->listWindow, TRUE);
+        CopyWindowRectToVram(list->listWindow.windowId, COPYWIN_FULL, 0, list->listWindow.unkA * 2, list->listWindow.width, 2);
+    }
 }
 
 // Print the trainer's name and title for the list after leaving the contact profile.
@@ -745,11 +978,23 @@ static void PrintMatchCallFieldNames(struct PokenavList *list, u32 fieldId)
         gText_PokenavMatchCall_SelfIntroduction
     };
     u8 colors[3] = {TEXT_COLOR_TRANSPARENT, TEXT_COLOR_DARK_GRAY, TEXT_COLOR_WHITE};
-    u32 top = (list->listWindow.unkA + 1 + (fieldId * 2)) & 0xF;
-
-    DrawPokeGearPhoneCheckRow(list, top, FALSE);
-    AddTextPrinterParameterized3(list->listWindow.windowId, FONT_NARROW, 6, (top << 4) + 1, colors, TEXT_SKIP_DRAW, fieldNames[fieldId]);
-    CopyWindowRectToVram(list->listWindow.windowId, COPYWIN_GFX, 0, top << 1, list->listWindow.width, 2);
+    if (list->useHgssPhoneRows)
+    {
+        u32 y = list->rowHeight + (1 + fieldId * 2) * 16;
+        FillWindowPixelRect(list->listWindow.windowId, PIXEL_FILL(1), 0, y, list->listWindow.width * 8, 16);
+        FillWindowPixelRect(list->listWindow.windowId, PIXEL_FILL(3), 2, y, list->listWindow.width * 8 - 4, 1);
+        FillWindowPixelRect(list->listWindow.windowId, PIXEL_FILL(5), 2, y + 15, list->listWindow.width * 8 - 4, 1);
+        FillWindowPixelRect(list->listWindow.windowId, PIXEL_FILL(4), 0, y + 3, 1, 10);
+        AddTextPrinterParameterized3(list->listWindow.windowId, FONT_NARROW, 6, y + 1, colors, TEXT_SKIP_DRAW, fieldNames[fieldId]);
+        CopyWindowRectToVram(list->listWindow.windowId, COPYWIN_GFX, 0, y / 8, list->listWindow.width, 2);
+    }
+    else
+    {
+        u32 top = (list->listWindow.unkA + 1 + (fieldId * 2)) & 0xF;
+        DrawPokeGearPhoneCheckRow(list, top, FALSE);
+        AddTextPrinterParameterized3(list->listWindow.windowId, FONT_NARROW, 6, (top << 4) + 1, colors, TEXT_SKIP_DRAW, fieldNames[fieldId]);
+        CopyWindowRectToVram(list->listWindow.windowId, COPYWIN_GFX, 0, top << 1, list->listWindow.width, 2);
+    }
 }
 
 static void PrintMatchCallFlavorText(struct PokenavListWindowState *windowState, struct PokenavList *list, u32 checkPageEntry)
@@ -762,16 +1007,27 @@ static void PrintMatchCallFlavorText(struct PokenavListWindowState *windowState,
         [CHECK_PAGE_INTRO_2]  = 7
     };
 
-    u32 r6 = (list->listWindow.unkA + lineOffsets[checkPageEntry]) & 0xF;
     const u8 *str = GetMatchCallFlavorText(windowState->windowTopIndex, checkPageEntry);
     u32 width = list->listWindow.width * 8;
 
     if (str != NULL)
     {
-        FillWindowPixelRect(list->listWindow.windowId, PIXEL_FILL(1), 0, r6 << 4, width, 16);
-        FillWindowPixelRect(list->listWindow.windowId, PIXEL_FILL(3), 4, r6 << 4, 1, 16);
-        AddTextPrinterParameterized(list->listWindow.windowId, FONT_NARROW, str, 8, (r6 << 4) + 1, TEXT_SKIP_DRAW, NULL);
-        CopyWindowRectToVram(list->listWindow.windowId, COPYWIN_GFX, 0, r6 * 2, list->listWindow.width, 2);
+        if (list->useHgssPhoneRows)
+        {
+            u32 y = list->rowHeight + lineOffsets[checkPageEntry] * 16;
+            FillWindowPixelRect(list->listWindow.windowId, PIXEL_FILL(1), 0, y, width, 16);
+            FillWindowPixelRect(list->listWindow.windowId, PIXEL_FILL(3), 4, y, 1, 16);
+            AddTextPrinterParameterized(list->listWindow.windowId, FONT_NARROW, str, 8, y + 1, TEXT_SKIP_DRAW, NULL);
+            CopyWindowRectToVram(list->listWindow.windowId, COPYWIN_GFX, 0, y / 8, list->listWindow.width, 2);
+        }
+        else
+        {
+            u32 r6 = (list->listWindow.unkA + lineOffsets[checkPageEntry]) & 0xF;
+            FillWindowPixelRect(list->listWindow.windowId, PIXEL_FILL(1), 0, r6 << 4, width, 16);
+            FillWindowPixelRect(list->listWindow.windowId, PIXEL_FILL(3), 4, r6 << 4, 1, 16);
+            AddTextPrinterParameterized(list->listWindow.windowId, FONT_NARROW, str, 8, (r6 << 4) + 1, TEXT_SKIP_DRAW, NULL);
+            CopyWindowRectToVram(list->listWindow.windowId, COPYWIN_GFX, 0, r6 * 2, list->listWindow.width, 2);
+        }
     }
 }
 
@@ -849,7 +1105,7 @@ static void CreateListArrowSprites(const struct PokenavListWindowState *windowSt
     list->rightArrow = &gSprites[spriteId];
 
     x = list->listWindow.x * 8 + (list->listWindow.width - 1) * 4;
-    spriteId = CreateSprite(&sSpriteTemplate_UpDownArrow, x, list->listWindow.y * 8 + windowState->entriesOnscreen * 16, 7);
+    spriteId = CreateSprite(&sSpriteTemplate_UpDownArrow, x, list->listWindow.y * 8 + windowState->entriesOnscreen * list->rowHeight, 7);
     list->downArrow = &gSprites[spriteId];
     list->downArrow->oam.tileNum += 2;
     list->downArrow->callback = SpriteCB_DownArrow;
@@ -891,7 +1147,7 @@ static void ToggleListArrows(struct PokenavList *list, bool32 invisible)
 static void SpriteCB_RightArrow(struct Sprite *sprite)
 {
     struct PokenavList *list = GetSubstructPtr(POKENAV_SUBSTRUCT_LIST);
-    sprite->y2 = list->windowState.selectedIndexOffset << 4;
+    sprite->y2 = list->windowState.selectedIndexOffset * list->rowHeight;
 }
 
 #define sTimer data[0]
@@ -991,8 +1247,8 @@ static bool32 CopyPokenavListMenuTemplate(struct PokenavList *dest, const struct
     window.tilemapLeft = template->item_X;
     window.tilemapTop = 0;
     window.width = template->windowWidth;
-    window.height = 32;
-    window.paletteNum = template->fillValue;
+    window.height = dest->useHgssPhoneRows ? 24 : 32;
+    window.paletteNum = dest->windowPaletteNum;
     window.baseBlock = tileOffset + 2;
 
     dest->listWindow.windowId = AddWindow(&window);

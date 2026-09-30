@@ -1,6 +1,6 @@
 {
   "role": "match_call_dynamic_contact_rows",
-  "phase": "source_prepared",
+  "phase": "wired_live",
   "classification": "direct implementation of documented retail HGSS PokéGear Phone contact-list row behavior",
   "source_revision": "9d8b7591f09b65804da2fb2dfd56f320633e0d36",
   "source_files": [
@@ -177,8 +177,51 @@
   },
   "pipeline": {
     "authentic_hgss_source_ready": true,
-    "wired_live": false,
+    "wired_live": true,
     "legacy_equivalent_removed": false
   },
-  "next": "Wire a Match Call-specific 24-pixel row cadence, six-contact viewport, exact retail rectangle fills, and exact member-10 palette bank 2 while leaving the current synthetic row path available until CI passes."
+  "next": "After phase-2 CI passes, remove DrawPokeGearPhoneContactRowLegacy and the superseded Emerald list-row palette dependency only if no remaining Match Call surface still uses it.",
+  "live_integration": {
+    "ci_gate": {
+      "workflow": "CI",
+      "run_number": 660,
+      "conclusion": "success",
+      "validated_commit": "4b4cf4f65bba9f6220dae2f328db4f33a73a6c07"
+    },
+    "list_api": "CreatePokenavListWithHgssPhoneRows",
+    "live_files": [
+      "src/pokenav_list.c",
+      "src/pokenav_match_call_gfx.c"
+    ],
+    "visible_contacts": 6,
+    "row_height_px": 24,
+    "buffer_rows": 8,
+    "visible_buffer_rows": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "scroll_behavior": "one retail row is moved in three 8-pixel ScrollWindow steps, matching PhoneContactListUI_ScrollStep",
+    "palette": {
+      "source": "verified member-10 NCLR palette bank 2",
+      "output": "graphics/gen4_ui/hgss_pokegear/match_call_contact_rows.gbapal",
+      "gba_bg_palette_bank": 7,
+      "color_indices_preserved": true
+    },
+    "row_geometry": {
+      "source_width_px": 216,
+      "gba_contact_pane_width_px": 128,
+      "adaptation": "left crop x=0..127 only; no scaling, recoloring, interpolation, or geometry resampling",
+      "source_rectangles_preserved": true
+    },
+    "isolation": "Only Match Call opts into the new Phone-row path. Existing Condition/Search/Ribbons lists continue to call CreatePokenavList and retain the 16-pixel renderer."
+  },
+  "phase2_fallback": {
+    "retained": "DrawPokeGearPhoneContactRowLegacy",
+    "activation": "only if the live contact window is unexpectedly <= 90 px wide",
+    "note": "The fallback remains compiled until phase-2 CI passes."
+  }
 }

@@ -933,3 +933,35 @@ Nothing is wired live in this phase. The existing
 24-pixel list path is implemented and passes CI.
 
 **authentic HGSS row source prepared → wire live pending → legacy removal pending**
+
+
+## Match Call dynamic contact rows — phase 2
+
+CI #660 passed phase 1 at `4b4cf4f65bba9f6220dae2f328db4f33a73a6c07`.
+
+The live Match Call list now opts into a dedicated HGSS Phone-row path rather
+than changing the generic PokéNav list behavior. Other PokéNav lists still use
+the existing 16-pixel `CreatePokenavList` path unchanged.
+
+The HGSS Phone path uses the retail buffering model: eight 24-pixel row slots,
+six visible contacts in slots 1–6, one row buffered above and below, and
+`ScrollWindow` in three 8-pixel steps for each one-row move. This mirrors the
+retail `PhoneContactListUI_ScrollStep` behavior and avoids forcing 24-pixel
+rows into the GBA BG's old 16-pixel ring.
+
+Rows use the exact member-10 palette-bank-2 indices documented in phase 1,
+loaded into dedicated GBA BG palette bank 7. The exact
+`PhoneContactListUI_DrawNameSlotBG` rectangles are used. Because the GBA
+Match Call contact pane remains 128 pixels wide while the retail row is 216
+pixels, the runtime keeps source x=0..127 as a direct crop; coordinates,
+palette indices, and pixel dimensions are not scaled or recolored.
+
+The list now displays six contacts at a 24-pixel cadence. Existing rematch
+badge tiles were adjusted to the three-tile-row stride and are hidden during
+the three scroll steps, then redrawn in their correct rows after the movement.
+
+The old synthetic `DrawPokeGearPhoneContactRowLegacy` remains compiled only
+as a phase-2 safety fallback for an unexpected contact window narrower than
+91 pixels. It is not removed until this live integration passes CI.
+
+**authentic HGSS row source ✅ → wired live ✅ → legacy removal pending**
