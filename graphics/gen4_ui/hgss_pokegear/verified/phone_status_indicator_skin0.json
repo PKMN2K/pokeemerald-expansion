@@ -56,7 +56,13 @@
     ],
     "predicate": "AreAnyTrainerRematchesNearby",
     "removed": true,
-    "removal_commit_pending": true
+    "stale_dependency_correction": {
+      "ci_run": 634,
+      "failed_commit": "bb225aaa674fb55d0409651755c30891f6dee3be",
+      "file": "src/pokenav_main_menu.c",
+      "removed_symbol": "sBlueLightCopy",
+      "reason": "unused INCGFX copy still generated a Make dependency on the deleted graphics/pokenav/blue_light.png"
+    }
   },
   "authenticity_note": "Retail HGSS does not use this sprite as a nearby-rematch alert. It is the authentic PokéGear phone-availability status icon. The project will deliberately reuse this retail phone-specific artwork for the Emerald Match Call notification rather than fabricate an HGSS-style blue light; it is not claimed to be a direct retail functional equivalent.",
   "pipeline": {
@@ -64,7 +70,7 @@
     "wired_live": true,
     "legacy_equivalent_removed": true
   },
-  "next": "Begin a new authenticity sequence for the next remaining legacy PokéGear surface. Condition/Search submenu labels remain on the shared PokéNav option sheet and are a separate candidate.",
+  "next": "Wait for CI to validate the cleanup correction before beginning the next PokéGear authenticity surface.",
   "ci_gate_before_wiring": {
     "workflow": "CI",
     "run_number": 632,
@@ -86,7 +92,7 @@
     "behavior": "visible only on the top-level PokéGear when a nearby rematch is available; preserves the previous blinking notification cadence",
     "legacy_blue_light": "removed after CI #633 validated the authentic HGSS phone-status integration"
   },
-  "status": "phase 3 complete: authentic retail HGSS phone-status artwork is the sole top-level nearby-rematch notification; the superseded PokéNav blue-light asset and implementation are removed",
+  "status": "phase 3 cleanup correction committed: all live and unused PokéNav blue-light source bindings are now removed; awaiting CI validation",
   "ci_gate_before_legacy_removal": {
     "workflow": "CI",
     "run_number": 633,

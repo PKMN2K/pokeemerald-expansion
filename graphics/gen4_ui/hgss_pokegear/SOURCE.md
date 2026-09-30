@@ -436,3 +436,17 @@ visibility behavior are unchanged from phase 2.
 This completes the Match Call notification sequence:
 
 **authentic HGSS asset -> wire live -> remove legacy equivalent**
+
+
+### Phase-3 build dependency correction
+
+CI #634 exposed one final non-live dependency that the phase-3 audit missed:
+`src/pokenav_main_menu.c` still declared
+`sBlueLightCopy`, an explicitly unused INCGFX copy of the deleted
+`graphics/pokenav/blue_light.png`. Although it was never rendered, Make still
+tracked the source PNG through the generated dependency file, causing all normal
+ROM/test builds to fail after the asset deletion.
+
+The unused declaration is now removed. No authentic HGSS behavior or live
+Match Call notification code changes in this correction. The next UI surface
+will not begin until this cleanup passes CI.
