@@ -29,6 +29,7 @@ GEN4UIHGSSSTARTCURSOR := tools/gen4_ui/make_hgss_pokedex_start_cursor.py
 GEN4UIHGSSPOKEGEARSWITCH := tools/gen4_ui/make_hgss_pokegear_app_switch.py
 GEN4UIHGSSPOKEGEARSHELL := tools/gen4_ui/make_hgss_pokegear_screen_shell.py
 GEN4UIHGSSPOKEGEARCURSOR := tools/gen4_ui/make_hgss_pokegear_cursor.py
+GEN4UIHGSSPOKEGEARREMATCH := tools/gen4_ui/make_hgss_pokegear_rematch_badge.py
 GEN4UIHGSSPOKEGEARPHONESTATUS := tools/gen4_ui/make_hgss_pokegear_phone_status.py
 GEN4UIHGSSPOKEGEARLISTARROWS := tools/gen4_ui/make_hgss_pokegear_list_arrows.py
 GEN4UIHGSSPOKEGEARCONDITIONSEARCH := tools/gen4_ui/make_hgss_pokegear_condition_search.py
@@ -111,6 +112,16 @@ $(GEN4UIGFXDIR)/hgss_pokegear/phone_status.gbapal: $(GEN4UIHGSSPOKEGEARPHONESTAT
 	$(GEN4UIGFXDIR)/hgss_pokegear/verified/pgear_skin0_ui_palette.NCLR \
 	$(GEN4UIGFXDIR)/hgss_pokegear/verified/pgear_ui_cells.NCER \
 	$(GEN4UIGFXDIR)/hgss_pokegear/verified/pgear_ui_anims.NANR
+	python3 $< --palette $@
+
+$(GEN4UIGFXDIR)/hgss_pokegear/rematch_badge.4bpp: $(GEN4UIHGSSPOKEGEARREMATCH) $(GEN4UIHGSSPOKEGEARPHONESTATUS) $(GEN4UIHGSSPOKEGEARCURSOR) \
+	$(GEN4UIGFXDIR)/hgss_pokegear/verified/pgear_skin0_ui_sprites.png \
+	$(GEN4UIGFXDIR)/hgss_pokegear/verified/pgear_ui_cells.NCER \
+	$(GEN4UIGFXDIR)/hgss_pokegear/verified/pgear_ui_anims.NANR
+	python3 $< --tiles $@
+
+$(GEN4UIGFXDIR)/hgss_pokegear/rematch_badge.gbapal: $(GEN4UIHGSSPOKEGEARREMATCH) $(GEN4UIHGSSPOKEGEARPHONESTATUS) $(GEN4UIHGSSPOKEGEARCURSOR) \
+	$(GEN4UIGFXDIR)/hgss_pokegear/verified/pgear_skin0_ui_palette.NCLR
 	python3 $< --palette $@
 
 # Match Call options pointer: exact verified HGSS member-057 pixels.

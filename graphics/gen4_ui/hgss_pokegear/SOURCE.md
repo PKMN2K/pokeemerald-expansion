@@ -709,3 +709,30 @@ The verified role record describes the resulting cleaned tree.
 When this cleanup is applied after CI #651 succeeds, it completes:
 
 **authentic HGSS asset → wire live → remove legacy equivalent**
+
+
+## Match Call rematch badge — phase 1
+
+This source package is prepared off the active branch while cleanup CI #652
+finishes general tests. Its ROM builds and Gen 4 UI checks already passed.
+Apply this package only after the cleanup run succeeds.
+
+The existing rematch badge uses an 8x16 legacy Poké Ball plus two interpolated
+palettes. Its replacement explicitly reuses authentic HGSS phone-status art
+for Emerald's per-contact rematch semantics. The verified retail binding is
+recorded in `verified/phone_status_indicator_skin0.json`: NANR sequence 3,
+NCER cells 18/19, member-6 tiles 200/204, member-0 palette bank 3.
+
+`make_hgss_pokegear_rematch_badge.py` validates the retail animation/cell
+binding and PNG CRCs, then copies both 16x16 frames exactly. Tiles 0..3 are
+active, 4..7 disabled, and tile 8 is transparent padding for absent badges.
+The 288-byte tile stream and original 32-byte palette are recorded with output
+hashes in `verified/rematch_badge.json` and added to the Gen 4 UI asset CI job.
+No visible source pixel is scaled, redrawn, or recolored.
+
+Native 16x16 artwork requires a two-column BG tilemap binding in the live
+phase; the current one-column 8x16 rematch binding cannot load it unchanged.
+Runtime predicates, contact rows, flashing code, and legacy files remain
+unchanged in this source-only package.
+
+**authentic HGSS asset prepared → wire live pending → legacy removal pending**
