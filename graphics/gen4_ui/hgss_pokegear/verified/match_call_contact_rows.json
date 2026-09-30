@@ -1,6 +1,6 @@
 {
   "role": "match_call_dynamic_contact_rows",
-  "phase": "wired_live",
+  "phase": "legacy_removed",
   "classification": "direct implementation of documented retail HGSS PokéGear Phone contact-list row behavior",
   "source_revision": "9d8b7591f09b65804da2fb2dfd56f320633e0d36",
   "source_files": [
@@ -166,27 +166,18 @@
     "recoloring": false,
     "interpolation": false
   },
-  "current_gba_gap": {
-    "live_renderer": "src/pokenav_match_call_gfx.c::DrawPokeGearPhoneContactRow",
-    "list_engine": "src/pokenav_list.c",
-    "current_row_stride_px": 16,
-    "current_visible_contacts": 8,
-    "retail_row_stride_px": 24,
-    "retail_visible_contacts": 6,
-    "note": "The generic PokéNav list code positions text with row << 4 and erases/moves entries in 16-pixel units. Phase 2 must add a Match Call-safe 24-pixel row path rather than compressing or approximating HGSS rows."
-  },
   "pipeline": {
     "authentic_hgss_source_ready": true,
     "wired_live": true,
-    "legacy_equivalent_removed": false
+    "legacy_equivalent_removed": true
   },
-  "next": "Re-run phase-2 CI. Only after the corrected live HGSS Phone-row integration passes should the synthetic fallback and any superseded row-palette dependency be removed.",
+  "next": "Begin phase 1 for the Match Call action/options pad: identify and verify the exact retail HGSS Phone menu/window resource or rendering behavior before replacing DrawPokeGearPhoneActionPad.",
   "live_integration": {
     "ci_gate": {
       "workflow": "CI",
-      "run_number": 660,
+      "run_number": 662,
       "conclusion": "success",
-      "validated_commit": "4b4cf4f65bba9f6220dae2f328db4f33a73a6c07"
+      "validated_commit": "a0a2d4469e5c6a7dc72c2f66d58d4ce4f7aa7540"
     },
     "list_api": "CreatePokenavListWithHgssPhoneRows",
     "live_files": [
@@ -219,11 +210,6 @@
     },
     "isolation": "Only Match Call opts into the new Phone-row path. Existing Condition/Search/Ribbons lists continue to call CreatePokenavList and retain the 16-pixel renderer."
   },
-  "phase2_fallback": {
-    "retained": "DrawPokeGearPhoneContactRowLegacy",
-    "activation": "only if the live contact window is unexpectedly <= 90 px wide",
-    "note": "The fallback remains compiled until phase-2 CI passes."
-  },
   "phase2_ci_correction": {
     "failed_run": 661,
     "failed_jobs": [
@@ -245,5 +231,28 @@
     "asset_or_runtime_design_change": false,
     "authenticity_change": false,
     "legacy_removal_started": false
+  },
+  "legacy_removal": {
+    "ci_gate": {
+      "workflow": "CI",
+      "run_number": 662,
+      "conclusion": "success",
+      "validated_commit": "a0a2d4469e5c6a7dc72c2f66d58d4ce4f7aa7540"
+    },
+    "removed_renderer": "DrawPokeGearPhoneContactRowLegacy",
+    "removed_fallback_condition": "width <= 90 synthetic 16-pixel row path",
+    "removed_palette_binding": "sListWindow_Pal / BG palette bank 3 load",
+    "removed_asset": "graphics/pokenav/match_call/list_window.pal",
+    "sole_live_row_renderer": "DrawHgssPhoneContactRow",
+    "sole_live_row_palette": "verified HGSS member-10 palette bank 2 -> GBA BG palette bank 7",
+    "scope_note": "This removes only the superseded dynamic contact-row equivalent. Action/options, trainer check-page chrome, and call-message chrome remain separate pending surfaces."
+  },
+  "resolved_gba_adaptation": {
+    "row_stride_px": 24,
+    "visible_contacts": 6,
+    "buffered_rows": 8,
+    "viewport_adaptation": "retail 216-pixel row is directly cropped to x=0..127 for the 128-pixel GBA Match Call pane; no scaling, recoloring, interpolation, or geometry resampling",
+    "scroll": "three 8-pixel ScrollWindow steps per 24-pixel row",
+    "isolation": "other PokéNav list users retain the generic 16-pixel path"
   }
 }

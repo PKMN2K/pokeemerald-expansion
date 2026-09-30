@@ -985,3 +985,29 @@ three-step scrolling design, or fallback policy.
 
 Phase 2 remains active. No legacy contact-row asset or renderer is removed
 until the corrected integration passes CI.
+
+
+## Match Call dynamic contact rows — phase 3
+
+CI #662 passed the corrected live 24-pixel HGSS Phone-row integration at
+`a0a2d4469e5c6a7dc72c2f66d58d4ce4f7aa7540`.
+
+The phase-2 safety fallback is now removed. The synthetic
+`DrawPokeGearPhoneContactRowLegacy` renderer and its narrow-window fallback
+branch are gone, leaving `DrawHgssPhoneContactRow` as the sole dynamic
+Match Call contact-row renderer.
+
+The old Emerald `list_window.pal` dependency is also removed. Its
+`sListWindow_Pal` binding and BG palette-bank-3 load were no longer used by
+the live contact window, which explicitly uses the verified HGSS member-10
+palette bank 2 mapped to GBA BG palette bank 7. The file
+`graphics/pokenav/match_call/list_window.pal` is deleted.
+
+This cleanup is intentionally limited to the dynamic contact rows. The
+procedural action/options pad, trainer check-page chrome, and call-message
+panel remain separate pending surfaces and are not treated as equivalents of
+the retail contact-row renderer.
+
+This completes the dynamic contact-row sequence:
+
+**authentic HGSS row source ✅ → wired live ✅ → legacy equivalent removed ✅**
