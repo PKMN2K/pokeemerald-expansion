@@ -1,6 +1,6 @@
 {
   "role": "pokegear_app_switch_button_states",
-  "phase": "wired_live",
+  "phase": "legacy_top_level_labels_removed",
   "source_game": "Pokemon HeartGold / SoulSilver",
   "source_repository": "pret/pokeheartgold",
   "source_revision": "9d8b7591f09b65804da2fb2dfd56f320633e0d36",
@@ -64,12 +64,37 @@
       "map": 2,
       "match_call": 3,
       "switch_off": 4
+    },
+    "cursor_geometry": {
+      "source_button_centers_x": [
+        32,
+        80,
+        128,
+        176,
+        230
+      ],
+      "gba_button_centers_x": [
+        24,
+        72,
+        120,
+        168,
+        214
+      ],
+      "x_offsets": [
+        -16,
+        16
+      ],
+      "y_center": 16,
+      "y_offsets": [
+        -10,
+        10
+      ]
     }
   },
   "pipeline": {
     "authentic_hgss_asset_ready": true,
     "wired_live": true,
-    "legacy_equivalent_removed": false
+    "legacy_equivalent_removed": true
   },
   "ci_gate_before_wiring": {
     "workflow": "CI",
@@ -77,6 +102,12 @@
     "conclusion": "success",
     "validated_commit": "dfe7d3f9eb6e8b1d1ca3623925eec8c8cd6fa6f7"
   },
-  "next": "Run CI on the live selected-state integration before changing or removing the legacy PokéNav option-label layer.",
-  "status": "authentic retail HGSS normal/selected app-button states are wired live with corrected lossless 240px geometry; legacy option labels remain pending validation"
+  "next": "Audit and replace the remaining legacy top-level Match Call blue-light notification before removing its PokéNav sprite asset.",
+  "status": "authentic retail HGSS normal/selected app-button states are live; the top-level vertical PokéNav label presentation is removed; shared legacy label resources remain only for Condition/Search submenus",
+  "ci_gate_before_cleanup": {
+    "workflow": "CI",
+    "run_number": 630,
+    "conclusion": "success",
+    "validated_commit": "2723bae4ece9dad61a875e7199fcae7a7d9b04ac"
+  }
 }

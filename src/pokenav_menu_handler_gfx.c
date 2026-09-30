@@ -36,8 +36,6 @@
 
 #define OPTION_DEFAULT_X          140
 #define OPTION_SELECTED_X         130
-#define POKEGEAR_OPTION_DEFAULT_X 100
-#define POKEGEAR_OPTION_SELECTED_X 92
 #define OPTION_EXIT_X             (DISPLAY_WIDTH + 16)
 
 #define HGSS_POKEGEAR_APP_SWITCH_TILE_BASE          0x100
@@ -47,6 +45,9 @@
 #define HGSS_POKEGEAR_APP_SWITCH_WIDTH_TILES        30
 #define HGSS_POKEGEAR_APP_SWITCH_HEIGHT_TILES       4
 #define HGSS_POKEGEAR_APP_BUTTON_WIDTH_TILES        6
+#define HGSS_POKEGEAR_APP_CURSOR_Y                   16
+#define HGSS_POKEGEAR_APP_CURSOR_X_OFFSET            16
+#define HGSS_POKEGEAR_APP_CURSOR_Y_OFFSET            10
 
 // Keep these in sync with make_hgss_pokegear_screen_shell.py.
 #define HGSS_POKEGEAR_SCREEN_SHELL_TILE_BASE 0x40
@@ -239,12 +240,14 @@ static const struct SpritePalette sHgssPokegearCursorSpritePalette =
     .tag = PALTAG_HGSS_POKEGEAR_CURSOR,
 };
 
-// Tile number, palette tag offset
-static const u16 sOptionsLabelGfx_RegionMap[] = {0x000, PALTAG_OPTIONS_DEFAULT - PALTAG_OPTIONS_START};
-static const u16 sOptionsLabelGfx_Condition[] = {0x020, PALTAG_OPTIONS_BLUE - PALTAG_OPTIONS_START};
-static const u16 sOptionsLabelGfx_MatchCall[] = {0x040, PALTAG_OPTIONS_RED - PALTAG_OPTIONS_START};
-static const u16 sOptionsLabelGfx_Ribbons[]   = {0x060, PALTAG_OPTIONS_PINK - PALTAG_OPTIONS_START};
-static const u16 sOptionsLabelGfx_SwitchOff[] = {0x080, PALTAG_OPTIONS_BEIGE - PALTAG_OPTIONS_START};
+// Retail app-button cursor centers after the lossless GBA width adaptation.
+// Source x centers 32/80/128/176 lose the removed 8px left margin; Cancel's
+// source center 230 loses both removed 8px columns (0 and 25).
+static const s16 sHgssPokegearAppButtonCenterX[] = {24, 72, 120, 168, 214};
+
+// Tile number, palette tag offset. The top-level Region Map/Condition/
+// Match Call/Ribbons/Switch Off ranges are intentionally no longer addressed;
+// this shared legacy sheet remains live only for Condition/Search submenus.
 static const u16 sOptionsLabelGfx_Party[]     = {0x0A0, PALTAG_OPTIONS_BLUE - PALTAG_OPTIONS_START};
 static const u16 sOptionsLabelGfx_Search[]    = {0x0C0, PALTAG_OPTIONS_BLUE - PALTAG_OPTIONS_START};
 static const u16 sOptionsLabelGfx_Cool[]      = {0x0E0, PALTAG_OPTIONS_RED - PALTAG_OPTIONS_START};
@@ -261,39 +264,12 @@ struct
     const u16 *gfx[MAX_POKENAV_MENUITEMS];
 } static const sPokenavMenuOptionLabelGfx[POKENAV_MENU_TYPE_COUNT] =
 {
-    [POKENAV_MENU_TYPE_DEFAULT] =
-    {
-        .yStart = 42,
-        .deltaY = 20,
-        .gfx = {
-            sOptionsLabelGfx_RegionMap,
-            sOptionsLabelGfx_Condition,
-            sOptionsLabelGfx_SwitchOff
-        }
-    },
-    [POKENAV_MENU_TYPE_UNLOCK_MC] =
-    {
-        .yStart = 42,
-        .deltaY = 20,
-        .gfx = {
-            sOptionsLabelGfx_RegionMap,
-            sOptionsLabelGfx_Condition,
-            sOptionsLabelGfx_MatchCall,
-            sOptionsLabelGfx_SwitchOff
-        }
-    },
-    [POKENAV_MENU_TYPE_UNLOCK_MC_RIBBONS] =
-    {
-        .yStart = 42,
-        .deltaY = 20,
-        .gfx = {
-            sOptionsLabelGfx_RegionMap,
-            sOptionsLabelGfx_Condition,
-            sOptionsLabelGfx_MatchCall,
-            sOptionsLabelGfx_Ribbons,
-            sOptionsLabelGfx_SwitchOff
-        }
-    },
+    // The authentic HGSS app-switch strip is the top-level launcher surface.
+    // Keep these entries empty so no legacy PokéNav top-level label tile range
+    // remains addressable by the live presentation.
+    [POKENAV_MENU_TYPE_DEFAULT] = {0},
+    [POKENAV_MENU_TYPE_UNLOCK_MC] = {0},
+    [POKENAV_MENU_TYPE_UNLOCK_MC_RIBBONS] = {0},
     [POKENAV_MENU_TYPE_CONDITION] =
     {
         .yStart = 56,
@@ -896,8 +872,9 @@ static void LoadPokenavOptionPalettes(void)
         LoadCompressedSpriteSheet(&sPokenavOptionsSpriteSheets[i]);
     Pokenav_AllocAndLoadPalettes(sPokenavOptionsSpritePalettes);
 
-    // Phase 2: the authentic retail HGSS cursor is live alongside the legacy
-    // selection glow. The glow stays until CI validates this integration.
+    // The shared PokéNav option sheet remains loaded only because the
+    // Condition/Search submenus still use its label ranges. The top-level
+    // launcher itself now uses only the authentic HGSS button/cursor layer.
     LoadSpriteSheet(&sHgssPokegearCursorSpriteSheet);
     LoadSpritePalette(&sHgssPokegearCursorSpritePalette);
 }
@@ -995,10 +972,8 @@ static void SetHgssPokegearCursorVisible(bool32 visible)
 static void UpdateHgssPokegearCursor(void)
 {
     struct Pokenav_MenuGfx *gfx = GetSubstructPtr(POKENAV_SUBSTRUCT_MENU_GFX);
-    s32 cursorPos;
-    s32 rowY;
-    s32 leftX;
-    s32 rightX;
+    s32 selectedButton;
+    s32 centerX;
 
     if (!IsPokeGearMainMenu())
     {
@@ -1006,23 +981,27 @@ static void UpdateHgssPokegearCursor(void)
         return;
     }
 
-    cursorPos = GetPokenavCursorPos();
-    rowY = 36 + 22 * cursorPos;
+    selectedButton = GetHgssPokegearAppButtonForCurrentItem();
+    if (selectedButton < 0 || selectedButton >= ARRAY_COUNT(sHgssPokegearAppButtonCenterX))
+    {
+        SetHgssPokegearCursorVisible(FALSE);
+        return;
+    }
 
-    // The legacy labels are four untouched 32x16 functional sprites. Keep the
-    // HGSS 16x16 corner pixels at native size and only separate the corners to
-    // frame that 128x16 interaction target; no HGSS pixel is stretched.
-    leftX = POKEGEAR_OPTION_SELECTED_X - 16;
-    rightX = leftX + NUM_OPTION_SUBSPRITES * 32;
+    centerX = sHgssPokegearAppButtonCenterX[selectedButton];
 
-    gfx->hgssCursorSprites[0]->x = leftX;
-    gfx->hgssCursorSprites[0]->y = rowY - 8;
-    gfx->hgssCursorSprites[1]->x = leftX;
-    gfx->hgssCursorSprites[1]->y = rowY + 8;
-    gfx->hgssCursorSprites[2]->x = rightX;
-    gfx->hgssCursorSprites[2]->y = rowY - 8;
-    gfx->hgssCursorSprites[3]->x = rightX;
-    gfx->hgssCursorSprites[3]->y = rowY + 8;
+    // Retail PokegearCursorManager positions the four managed cursor sprites at
+    // x +/- 16 and y +/- 10 around app-button centers. The GBA strip preserves
+    // those offsets exactly; only the centers account for the two omitted DS
+    // tile columns. Cursor pixels remain native 16x16 with retail flip states.
+    gfx->hgssCursorSprites[0]->x = centerX - HGSS_POKEGEAR_APP_CURSOR_X_OFFSET;
+    gfx->hgssCursorSprites[0]->y = HGSS_POKEGEAR_APP_CURSOR_Y - HGSS_POKEGEAR_APP_CURSOR_Y_OFFSET;
+    gfx->hgssCursorSprites[1]->x = centerX - HGSS_POKEGEAR_APP_CURSOR_X_OFFSET;
+    gfx->hgssCursorSprites[1]->y = HGSS_POKEGEAR_APP_CURSOR_Y + HGSS_POKEGEAR_APP_CURSOR_Y_OFFSET;
+    gfx->hgssCursorSprites[2]->x = centerX + HGSS_POKEGEAR_APP_CURSOR_X_OFFSET;
+    gfx->hgssCursorSprites[2]->y = HGSS_POKEGEAR_APP_CURSOR_Y - HGSS_POKEGEAR_APP_CURSOR_Y_OFFSET;
+    gfx->hgssCursorSprites[3]->x = centerX + HGSS_POKEGEAR_APP_CURSOR_X_OFFSET;
+    gfx->hgssCursorSprites[3]->y = HGSS_POKEGEAR_APP_CURSOR_Y + HGSS_POKEGEAR_APP_CURSOR_Y_OFFSET;
 
     SetHgssPokegearCursorVisible(TRUE);
 }
@@ -1148,18 +1127,27 @@ static void UpdateHgssPokegearAppSwitchSelection(void)
 
 static void DrawCurrentMenuOptionLabels(void)
 {
+    struct Pokenav_MenuGfx *gfx = GetSubstructPtr(POKENAV_SUBSTRUCT_MENU_GFX);
     s32 menuType = GetPokenavMenuType();
-    s32 yStart = sPokenavMenuOptionLabelGfx[menuType].yStart;
-    s32 deltaY = sPokenavMenuOptionLabelGfx[menuType].deltaY;
+    s32 i;
 
-    // Top-level PokéGear apps sit farther into the device face with roomier spacing.
     if (IsPokeGearMainMenu())
     {
-        yStart = 36;
-        deltaY = 22;
+        // Retail HGSS uses the app-switch buttons themselves as the launcher.
+        // Keep the shared legacy sprites allocated for submenu reuse, but never
+        // expose a PokéNav vertical label on the top-level PokéGear.
+        for (i = 0; i < MAX_POKENAV_MENUITEMS; i++)
+        {
+            SetOptionInvisibility(gfx->iconSprites[i], TRUE);
+            gfx->iconVisible[i] = FALSE;
+        }
+        return;
     }
 
-    DrawOptionLabelGfx(sPokenavMenuOptionLabelGfx[menuType].gfx, yStart, deltaY);
+    DrawOptionLabelGfx(
+        sPokenavMenuOptionLabelGfx[menuType].gfx,
+        sPokenavMenuOptionLabelGfx[menuType].yStart,
+        sPokenavMenuOptionLabelGfx[menuType].deltaY);
 }
 
 static void DrawOptionLabelGfx(const u16 *const *optionGfx, s32 yPos, s32 deltaY)
@@ -1210,12 +1198,12 @@ static bool32 IsPokeGearMainMenu(void)
 
 static s32 GetOptionDefaultX(void)
 {
-    return IsPokeGearMainMenu() ? POKEGEAR_OPTION_DEFAULT_X : OPTION_DEFAULT_X;
+    return OPTION_DEFAULT_X;
 }
 
 static s32 GetOptionSelectedX(void)
 {
-    return IsPokeGearMainMenu() ? POKEGEAR_OPTION_SELECTED_X : OPTION_SELECTED_X;
+    return OPTION_SELECTED_X;
 }
 
 static void StartOptionAnimations_Enter(void)
@@ -1224,9 +1212,19 @@ static void StartOptionAnimations_Enter(void)
     struct Pokenav_MenuGfx *gfx = GetSubstructPtr(POKENAV_SUBSTRUCT_MENU_GFX);
     s32 cursorPos = GetPokenavCursorPos();
     s32 iconCount = 0;
-    s32 defaultX = GetOptionDefaultX();
-    s32 selectedX = GetOptionSelectedX();
+    s32 defaultX;
+    s32 selectedX;
     s32 x;
+
+    if (IsPokeGearMainMenu())
+    {
+        gfx->cursorPos = cursorPos;
+        UpdateHgssPokegearCursor();
+        return;
+    }
+
+    defaultX = GetOptionDefaultX();
+    selectedX = GetOptionSelectedX();
 
     for (i = 0; i < MAX_POKENAV_MENUITEMS; i++)
     {
@@ -1260,8 +1258,20 @@ static void StartOptionAnimations_CursorMoved(void)
     struct Pokenav_MenuGfx *gfx = GetSubstructPtr(POKENAV_SUBSTRUCT_MENU_GFX);
     s32 prevPos = GetPokenavCursorPos();
     s32 newPos;
-    s32 defaultX = GetOptionDefaultX();
-    s32 selectedX = GetOptionSelectedX();
+    s32 defaultX;
+    s32 selectedX;
+
+    if (IsPokeGearMainMenu())
+    {
+        // SetMenuOptionGlow already updates both authentic HGSS selection
+        // layers. Only retain the logical cursor index; never animate/reveal
+        // the now-retired top-level PokéNav label sprites.
+        gfx->cursorPos = prevPos;
+        return;
+    }
+
+    defaultX = GetOptionDefaultX();
+    selectedX = GetOptionSelectedX();
 
     // Get the index of the next visible option
     for (i = 0, newPos = 0; i < MAX_POKENAV_MENUITEMS; i++)
@@ -1287,10 +1297,14 @@ static void StartOptionAnimations_CursorMoved(void)
 static void StartOptionAnimations_Exit(void)
 {
     s32 i;
-    s32 defaultX = GetOptionDefaultX();
+    s32 defaultX;
+    struct Pokenav_MenuGfx *gfx = GetSubstructPtr(POKENAV_SUBSTRUCT_MENU_GFX);
 
     SetHgssPokegearCursorVisible(FALSE);
-    struct Pokenav_MenuGfx *gfx = GetSubstructPtr(POKENAV_SUBSTRUCT_MENU_GFX);
+    if (IsPokeGearMainMenu())
+        return;
+
+    defaultX = GetOptionDefaultX();
 
     for (i = 0; i < MAX_POKENAV_MENUITEMS; i++)
     {

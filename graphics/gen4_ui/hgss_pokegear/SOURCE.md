@@ -312,3 +312,36 @@ then substitutes only the six authentic selected-state tiles for the mapped
 For this validation phase, the existing PokéNav option-label sprites remain
 live. They are not deleted until the authentic button-state integration passes
 CI and the separate label/function presentation is handled deliberately.
+
+
+## Top-level launcher labels — legacy removal
+
+CI #630 passed commit `2723bae4ece9dad61a875e7199fcae7a7d9b04ac`,
+validating the authentic retail HGSS normal/selected app-button states.
+
+The top-level launcher no longer draws the vertical PokéNav option-label
+sprites. Retail HGSS presents this surface through the app-switch buttons
+themselves, so retaining a second Emerald/PokéNav vertical launcher over the
+verified member-48/member-30/member-54 button strip was a legacy presentation
+layer rather than an authentic HGSS component.
+
+The five top-level PokéNav label tile ranges are no longer referenced by
+`src/pokenav_menu_handler_gfx.c`. The shared `gPokenavOptions_Gfx` /
+`gPokenavOptions_Pal` resource remains loaded only because Condition and
+Condition Search still use later ranges from that same legacy sheet; those
+submenus are separate migration surfaces and are unchanged by this cleanup.
+
+The authentic four-corner cursor is also re-anchored to the app buttons using
+the retail `PokegearCursorManager` geometry: x offsets ±16 and y offsets
+±10 around the retail button centers. After the existing lossless GBA width
+adaptation, the button centers are 24, 72, 120, 168, and 214 pixels. No cursor
+pixel is scaled, redrawn, or recolored.
+
+The current function mapping is intentionally still the one validated in the
+selected-state phase: Condition reuses Configure, Ribbons reuses Radio, Map
+uses Map, Match Call uses Phone, and Switch Off uses Cancel. Condition and
+Ribbons are slot reuse, not claimed direct retail HGSS functional equivalents.
+
+This completes removal of the **top-level legacy label presentation** after
+the authentic HGSS app-button state integration. Condition/Search labels remain
+pending their own authenticity sequence.
