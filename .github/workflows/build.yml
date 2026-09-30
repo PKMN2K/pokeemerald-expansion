@@ -148,7 +148,8 @@ jobs:
             graphics/gen4_ui/hgss_pokegear/condition_search_chrome.4bpp \
             graphics/gen4_ui/hgss_pokegear/condition_search_chrome.gbapal \
             graphics/gen4_ui/hgss_pokegear/condition_search_cursor.4bpp \
-            graphics/gen4_ui/hgss_pokegear/condition_search_cursor.gbapal
+            graphics/gen4_ui/hgss_pokegear/condition_search_cursor.gbapal \
+            graphics/gen4_ui/hgss_pokegear/condition_search_labels.4bpp
 
       - name: Compile Gen 4 UI renderer
         env:
