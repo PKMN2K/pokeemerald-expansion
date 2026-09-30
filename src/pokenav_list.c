@@ -94,6 +94,11 @@ static u32 LoopedTask_PrintCheckPageInfo(s32);
 static const u16 sListArrow_Pal[] = INCGFX_U16("graphics/pokenav/list_arrows.png", ".gbapal");
 static const u32 sListArrow_Gfx[] = INCGFX_U32("graphics/pokenav/list_arrows.png", ".4bpp.smol");
 
+// Verified retail HGSS Pokédex member-057 pointer and member-000 scroll
+// controls. The six-tile layout preserves the existing list sprite geometry.
+static const u32 sHgssListArrow_Gfx[] = INCBIN_U32("graphics/gen4_ui/hgss_pokegear/list_arrows.4bpp");
+static const u16 sHgssListArrow_Pal[] = INCBIN_U16("graphics/gen4_ui/hgss_pokegear/list_arrows.gbapal");
+
 static const u8 gText_PokenavMatchCall_Strategy[] = _("STRATEGY");
 static const u8 gText_PokenavMatchCall_TrainerPokemon[] = _("TRAINER'S POKéMON");
 static const u8 gText_PokenavMatchCall_SelfIntroduction[] = _("SELF-INTRODUCTION");
@@ -773,6 +778,22 @@ static void PrintMatchCallFlavorText(struct PokenavListWindowState *windowState,
     }
 }
 
+static const struct SpriteSheet sHgssListArrowSpriteSheet =
+{
+    .data = sHgssListArrow_Gfx,
+    .size = sizeof(sHgssListArrow_Gfx),
+    .tag = GFXTAG_ARROW
+};
+
+static const struct SpritePalette sHgssListArrowPalettes[] =
+{
+    {
+        .data = sHgssListArrow_Pal,
+        .tag = PALTAG_ARROW
+    },
+    {}
+};
+
 static const struct CompressedSpriteSheet sListArrowSpriteSheets[] =
 {
     {
@@ -839,6 +860,14 @@ static void LoadListArrowGfx(void)
     u32 i;
     const struct CompressedSpriteSheet *ptr;
 
+    LoadSpriteSheet(&sHgssListArrowSpriteSheet);
+    if (GetSpriteTileStartByTag(GFXTAG_ARROW) != 0xFFFF)
+    {
+        Pokenav_AllocAndLoadPalettes(sHgssListArrowPalettes);
+        return;
+    }
+
+    // Temporary phase-2 fallback, retained until the live HGSS path passes CI.
     for (i = 0, ptr = sListArrowSpriteSheets; i < ARRAY_COUNT(sListArrowSpriteSheets); ptr++, i++)
         LoadCompressedSpriteSheet(ptr);
 

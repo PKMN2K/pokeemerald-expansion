@@ -590,3 +590,29 @@ Build targets are `hgss_pokegear/list_arrows.4bpp` (192 bytes) and
 asset CI job. No C binding or legacy asset is changed in this phase.
 
 **authentic HGSS asset prepared → wire live pending → legacy removal pending**
+
+
+## Shared PokéNav list arrows — phase 2
+
+CI #647's Gen 4 UI asset/renderer job and Emerald/FireRed/LeafGreen ROM
+builds passed the phase-1 source commit `0d09d140f24698c492cedaa02644cc4a15f0a90e`.
+The general Test job was still running when this integration was prepared.
+
+`src/pokenav_list.c` now loads the authentic six-tile sheet with
+`LoadSpriteSheet`, followed by the combined authentic OBJ palette through the
+existing PokéNav palette allocator. This shared path supplies Match Call,
+Condition search results, and Ribbon lists.
+
+The 8x16 pointer and 16x8 vertical-arrow OAM sizes, tile offsets 0/2/4,
+positions, selected-row tracking, scrolling visibility checks, bob animation,
+hide/show callbacks, tags, and resource cleanup remain unchanged. The Gen 4 UI
+CI compile job explicitly includes `pokenav_list.o` to validate the new binding.
+
+The legacy compressed sheet, palette, and PNG remain as a temporary
+allocation-failure fallback while the live integration is validated. Success is
+checked using `GetSpriteTileStartByTag`: `LoadSpriteSheet` returns zero on
+allocation failure, and zero is also a valid tile start, so its return value
+must not be treated as a failure sentinel. Legacy removal is the next phase
+after this live commit passes CI.
+
+**authentic HGSS asset → wired live → legacy removal pending**
