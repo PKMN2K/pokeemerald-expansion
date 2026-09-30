@@ -31,6 +31,7 @@ GEN4UIHGSSPOKEGEARSWITCH := tools/gen4_ui/make_hgss_pokegear_app_switch.py
 GEN4UIHGSSPOKEGEARSHELL := tools/gen4_ui/make_hgss_pokegear_screen_shell.py
 GEN4UIHGSSPOKEGEARCURSOR := tools/gen4_ui/make_hgss_pokegear_cursor.py
 GEN4UIHGSSPOKEGEARPHONESTATUS := tools/gen4_ui/make_hgss_pokegear_phone_status.py
+GEN4UIHGSSPOKEGEARCONDITIONSEARCH := tools/gen4_ui/make_hgss_pokegear_condition_search.py
 
 types := none normal fight flying poison ground rock bug ghost steel mystery fire water grass electric psychic ice dragon dark fairy stellar
 contest_types := cool beauty cute smart tough
@@ -111,6 +112,18 @@ $(GEN4UIGFXDIR)/hgss_pokegear/phone_status.gbapal: $(GEN4UIHGSSPOKEGEARPHONESTAT
 	$(GEN4UIGFXDIR)/hgss_pokegear/verified/pgear_ui_cells.NCER \
 	$(GEN4UIGFXDIR)/hgss_pokegear/verified/pgear_ui_anims.NANR
 	python3 $< --palette $@
+
+$(GEN4UIGFXDIR)/hgss_pokegear/condition_search_chrome.4bpp: $(GEN4UIHGSSPOKEGEARCONDITIONSEARCH) $(GEN4UIHGSSSTATS)
+	python3 $(GEN4UIHGSSPOKEGEARCONDITIONSEARCH) --chrome $@
+
+$(GEN4UIGFXDIR)/hgss_pokegear/condition_search_chrome.gbapal: $(GEN4UIHGSSPOKEGEARCONDITIONSEARCH) $(GEN4UIHGSSSTATS)
+	python3 $(GEN4UIHGSSPOKEGEARCONDITIONSEARCH) --palette $@
+
+$(GEN4UIGFXDIR)/hgss_pokegear/condition_search_cursor.4bpp: $(GEN4UIHGSSPOKEGEARCONDITIONSEARCH) $(GEN4UIHGSSSTATS) $(GEN4UIHGSSSTARTCURSOR)
+	python3 $(GEN4UIHGSSPOKEGEARCONDITIONSEARCH) --cursor $@
+
+$(GEN4UIGFXDIR)/hgss_pokegear/condition_search_cursor.gbapal: $(GEN4UIHGSSPOKEGEARCONDITIONSEARCH) $(GEN4UIHGSSSTATS) $(GEN4UIHGSSSTARTCURSOR)
+	python3 $(GEN4UIHGSSPOKEGEARCONDITIONSEARCH) --cursor-palette $@
 
 # The live HGSS Pokédex background reserves BG palette entries 128..140.
 # Shifting tile pixel indices keeps the legacy Pokédex palettes (0..95 and 240..255)

@@ -1,0 +1,129 @@
+{
+  "role": "pokegear_condition_search_submenu_labels",
+  "phase": "authentic_hgss_asset_ready",
+  "source_game": "Pokemon HeartGold / SoulSilver",
+  "source_repository": "pret/pokeheartgold",
+  "source_revision": "9d8b7591f09b65804da2fb2dfd56f320633e0d36",
+  "classification": "functional reuse of authentic HGSS Pokedex list/search presentation",
+  "direct_retail_equivalent": false,
+  "authenticity_note": "Retail HGSS has no PokeNav Condition feature and therefore no direct Cool/Beauty/Cute/Smart/Tough submenu. This project deliberately reuses the genuine HGSS Pokedex list/search presentation for those Emerald gameplay semantics instead of fabricating an HGSS-style Condition menu.",
+  "retail_pokedex_binding": {
+    "source_file": "src/application/pokedex/ov18_021E8BF4.c",
+    "graphics_narc": "NARC_graphic_zukan_gra",
+    "list_screen_member": 57,
+    "list_character_member": 58,
+    "main_palette_member": 2,
+    "loader_evidence": [
+      "GfGfxLoader_LoadCharDataFromOpenNarc(... NARC_zukan_gra_zukan_gra_00000058_NCGR_lz ...)",
+      "GfGfxLoader_LoadScrnDataFromOpenNarc(... NARC_zukan_gra_zukan_gra_00000057_NSCR_lz ...)",
+      "PaletteData_LoadOpenNarc(... NARC_zukan_gra_zukan_gra_00000002_NCLR ...)"
+    ],
+    "search_cancel_semantics": [
+      "DEX_ORDER_QUIT / LIST_CANCEL",
+      "DEX_SEARCH_LETTERS_CANCEL",
+      "DEX_SEARCH_TYPE_CANCEL"
+    ]
+  },
+  "imported_visible_source": {
+    "rendered_member57_provider": "tools/gen4_ui/make_hgss_pokedex_stats.py",
+    "rendered_member57_sha256": "7765c42ee555e158c34e45a8fc380abb0540cbfdbff5508538a986ca543e9698",
+    "chrome": {
+      "fill_tile_source": [
+        32,
+        8,
+        8,
+        8
+      ],
+      "rule_tile_source": [
+        32,
+        24,
+        8,
+        8
+      ],
+      "generated_tiles": "graphics/gen4_ui/hgss_pokegear/condition_search_chrome.4bpp",
+      "generated_palette": "graphics/gen4_ui/hgss_pokegear/condition_search_chrome.gbapal",
+      "pixel_index_shift": false,
+      "scaling": false,
+      "redrawing": false,
+      "recoloring": false
+    },
+    "cursor": {
+      "provider": "tools/gen4_ui/make_hgss_pokedex_start_cursor.py",
+      "source_origin": [
+        120,
+        12
+      ],
+      "output_object_size": [
+        8,
+        16
+      ],
+      "generated_tiles": "graphics/gen4_ui/hgss_pokegear/condition_search_cursor.4bpp",
+      "generated_palette": "graphics/gen4_ui/hgss_pokegear/condition_search_cursor.gbapal",
+      "note": "The 8x16 GBA OBJ container is transparent padding around the exact retail lavender pointer pixels; no visible pointer pixel is redrawn, scaled, or recolored."
+    }
+  },
+  "retail_text_binding": {
+    "dynamic_text": true,
+    "pokedex_font_allocation": "FontID_Alloc(4, HEAP_ID_POKEDEX_APP)",
+    "font_source_file": "src/font.c",
+    "font_id": 4,
+    "font_narc": "NARC_graphic_font",
+    "font_member": 4,
+    "font_member_path": "files/graphic/font/font_00000004.bin",
+    "font_member_git_blob_sha": "a4b7623e8061d2a2867510bd5d8b4a7f5db11bf2",
+    "font_palette_member": 7,
+    "font_palette_path": "files/graphic/font/font_00000007.bin",
+    "font_palette_git_blob_sha": "0a4e5fb8d4c7de046ffa7a164ad45fc0e45558b3",
+    "existing_verified_palette_in_project": "graphics/gen4_ui/hgss_storage/verified/text_windows_hgss.gbapal",
+    "note": "HGSS renders localized list words dynamically. The project-specific words are therefore not claimed to exist as baked HGSS graphics. Later wiring must use exact font-ID-4 glyph pixels, not Emerald font pixels."
+  },
+  "project_menu_semantics": {
+    "condition": [
+      "Party",
+      "Search",
+      "Cancel"
+    ],
+    "condition_search": [
+      "Cool",
+      "Beauty",
+      "Cute",
+      "Smart",
+      "Tough",
+      "Cancel"
+    ]
+  },
+  "excluded_non_authentic_sources": [
+    "tools/gen4_ui/make_hgss_pokedex_search_overlay.py selected()/disabled() synthetic palette variants",
+    "tools/gen4_ui/make_hgss_pokedex_start_menu.py embedded legacy English label masks"
+  ],
+  "legacy_equivalent": {
+    "graphics_symbols": [
+      "gPokenavOptions_Gfx",
+      "gPokenavOptions_Pal"
+    ],
+    "live_drawer": "DrawCurrentMenuOptionLabels / DrawOptionLabelGfx",
+    "label_offsets": [
+      "sOptionsLabelGfx_Party 0x0A0",
+      "sOptionsLabelGfx_Search 0x0C0",
+      "sOptionsLabelGfx_Cool 0x0E0",
+      "sOptionsLabelGfx_Beauty 0x100",
+      "sOptionsLabelGfx_Cute 0x120",
+      "sOptionsLabelGfx_Smart 0x140",
+      "sOptionsLabelGfx_Tough 0x160",
+      "sOptionsLabelGfx_Cancel 0x180"
+    ],
+    "removed": false
+  },
+  "ci_gate_before_phase1": {
+    "workflow": "CI",
+    "run_number": 635,
+    "conclusion": "success",
+    "validated_commit": "88475be036d413aa531f7b3b954b75f0cd50c673"
+  },
+  "pipeline": {
+    "authentic_hgss_asset_ready": true,
+    "wired_live": false,
+    "legacy_equivalent_removed": false
+  },
+  "next": "After CI validates this authentic source package, wire the Condition/Search submenu presentation using the exact HGSS list chrome/pointer and exact font-ID-4 glyph pixels for the project menu words. Keep gPokenavOptions_Gfx/gPokenavOptions_Pal live until the replacement passes CI."
+}

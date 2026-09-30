@@ -450,3 +450,54 @@ ROM/test builds to fail after the asset deletion.
 The unused declaration is now removed. No authentic HGSS behavior or live
 Match Call notification code changes in this correction. The next UI surface
 will not begin until this cleanup passes CI.
+
+
+## Condition / Condition Search submenu labels — phase 1
+
+CI #635 passed commit `88475be036d413aa531f7b3b954b75f0cd50c673`,
+validating the final Match Call blue-light dependency cleanup. The next
+remaining shared PokéNav presentation on the launcher path is the
+Condition/Condition Search option-label set.
+
+Retail HGSS has no PokéNav Condition feature and therefore no direct retail
+**Party / Search / Cool / Beauty / Cute / Smart / Tough / Cancel** graphics.
+The authentic analogue chosen here is the HGSS Pokédex list/search
+presentation, because it is a retail filter-selection interface with explicit
+cancel behavior. This is functional reuse of genuine HGSS presentation, not a
+claim that HGSS contained an equivalent Condition application.
+
+The exact retail Pokédex binding in `pret/pokeheartgold` uses
+`zukan_gra` member 58 character graphics, member 57 screen data, and member 2
+palette data. The project already has a checksum-verified rendered member-57
+source raster in `make_hgss_pokedex_stats.py`; its SHA-256 is
+`7765c42ee555e158c34e45a8fc380abb0540cbfdbff5508538a986ca543e9698`.
+
+For this phase, `make_hgss_pokegear_condition_search.py` extracts only retail
+pixels: the 8x8 pale-blue list interior at source (32, 8), the 8x8
+orange/purple list rule at source (32, 24), and the authentic lavender list
+pointer already verified from source (120, 12). The chrome preserves source
+palette indices 0..14 exactly. The pointer preserves the same visible retail
+pixels and authentic lavender color inside an 8x16 transparent GBA OBJ
+container.
+
+There is no scaling, redrawing, recoloring, selected-state brightening,
+disabled-state desaturation, or other synthetic state.
+
+HGSS renders localized list text dynamically rather than baking these words
+into the graphics. The Pokédex allocates font ID 4; `src/font.c` maps that to
+`NARC_graphic_font` member 4
+(`files/graphic/font/font_00000004.bin`, Git blob
+`a4b7623e8061d2a2867510bd5d8b4a7f5db11bf2`). The corresponding authentic
+font palette is member 7, already verified in this project for Storage. Later
+wiring must therefore render the project menu words from exact font-ID-4 glyph
+pixels rather than retain Emerald label pixels or use an approximation.
+
+Two previously existing derivatives are explicitly excluded from this
+migration: the Pokédex Search overlay's synthetic selected/disabled palette
+variants, and the Pokédex START-menu generator's embedded legacy English label
+masks.
+
+The current shared `gPokenavOptions_Gfx` / `gPokenavOptions_Pal` label
+ranges remain live and untouched. This is phase 1 only:
+
+**authentic HGSS source package ready -> wire live pending -> legacy removal pending**
