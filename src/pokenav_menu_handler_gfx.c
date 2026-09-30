@@ -20,9 +20,11 @@
 #define GFXTAG_HGSS_POKEGEAR_CURSOR            2
 #define GFXTAG_OPTIONS                         3
 #define GFXTAG_HGSS_POKEGEAR_PHONE_STATUS      4
+#define GFXTAG_HGSS_CONDITION_SEARCH_CURSOR     5
 
 #define PALTAG_HGSS_POKEGEAR_CURSOR            2
 #define PALTAG_HGSS_POKEGEAR_PHONE_STATUS      9
+#define PALTAG_HGSS_CONDITION_SEARCH_CURSOR    10
 #define PALTAG_OPTIONS_DEFAULT 4 // Includes green for Smart/Region Map and yellow for Tough
 #define PALTAG_OPTIONS_BLUE 5
 #define PALTAG_OPTIONS_PINK 6
@@ -55,6 +57,19 @@
 #define HGSS_POKEGEAR_PHONE_STATUS_X                  189
 #define HGSS_POKEGEAR_PHONE_STATUS_Y                   48
 
+#define HGSS_CONDITION_SEARCH_CHROME_TILE_BASE        0x1F0
+#define HGSS_CONDITION_SEARCH_CHROME_PAL_BANK            12
+#define HGSS_CONDITION_SEARCH_FONT_PAL_BANK              11
+#define HGSS_CONDITION_SEARCH_PANEL_X_TILES              15
+#define HGSS_CONDITION_SEARCH_PANEL_WIDTH_TILES           14
+#define HGSS_CONDITION_SEARCH_WINDOW_TOP_TILES             4
+#define HGSS_CONDITION_SEARCH_WINDOW_HEIGHT_TILES         14
+#define HGSS_CONDITION_SEARCH_LABEL_WIDTH                 88
+#define HGSS_CONDITION_SEARCH_LABEL_HEIGHT                16
+#define HGSS_CONDITION_SEARCH_LABEL_BYTES \
+    (HGSS_CONDITION_SEARCH_LABEL_WIDTH * HGSS_CONDITION_SEARCH_LABEL_HEIGHT / 2)
+#define HGSS_CONDITION_SEARCH_CURSOR_X                   128
+
 // Keep these in sync with make_hgss_pokegear_screen_shell.py.
 #define HGSS_POKEGEAR_SCREEN_SHELL_TILE_BASE 0x40
 #define HGSS_POKEGEAR_SCREEN_SHELL_PAL_BANK 13
@@ -64,12 +79,14 @@ struct Pokenav_MenuGfx
     bool32 (*isTaskActiveCB)(void);
     u32 loopedTaskId;
     u16 optionDescWindowId;
+    u16 hgssConditionSearchWindowId;
     u8 bg3ScrollTaskId;
     u8 cursorPos;
     u8 numIconsBlending;
     bool8 pokenavAlreadyOpen;
     bool32 iconVisible[MAX_POKENAV_MENUITEMS];
     struct Sprite *hgssPhoneStatusSprite;
+    struct Sprite *hgssConditionSearchCursorSprite;
     struct Sprite *hgssCursorSprites[NUM_HGSS_POKEGEAR_CURSOR_SPRITES];
     struct Sprite *iconSprites[MAX_POKENAV_MENUITEMS][NUM_OPTION_SUBSPRITES];
     u8 bg1TilemapBuffer[BG_SCREEN_SIZE];
@@ -113,6 +130,13 @@ static void Task_OptionBlend(u8);
 static void CreateHgssPokegearPhoneStatusSprite(void);
 static void SpriteCB_BlinkingHgssPhoneStatus(struct Sprite *);
 static void DestroyHgssPokegearPhoneStatusSprite(void);
+static bool32 IsHgssConditionSearchSubmenu(void);
+static void LoadHgssConditionSearchAssets(void);
+static void DrawHgssConditionSearchSurface(void);
+static void ClearHgssConditionSearchSurface(void);
+static void UpdateHgssConditionSearchCursor(void);
+static void CreateHgssConditionSearchCursorSprite(void);
+static void DestroyHgssConditionSearchCursorSprite(void);
 static void AddOptionDescriptionWindow(void);
 static void LoadHgssPokegearScreenShell(void);
 static void LoadHgssPokegearAppSwitchChrome(void);
@@ -167,6 +191,13 @@ static const u16 sHgssPokegearCursorCornerPal[] = INCBIN_U16("graphics/gen4_ui/h
 // member-0 palette bank 3. Both 16x16 frames are preserved byte-for-byte.
 static const u32 sHgssPokegearPhoneStatusTiles[] = INCBIN_U32("graphics/gen4_ui/hgss_pokegear/phone_status.4bpp");
 static const u16 sHgssPokegearPhoneStatusPal[] = INCBIN_U16("graphics/gen4_ui/hgss_pokegear/phone_status.gbapal");
+
+static const u32 sHgssConditionSearchChromeTiles[] = INCBIN_U32("graphics/gen4_ui/hgss_pokegear/condition_search_chrome.4bpp");
+static const u16 sHgssConditionSearchChromePal[] = INCBIN_U16("graphics/gen4_ui/hgss_pokegear/condition_search_chrome.gbapal");
+static const ALIGNED(4) u8 sHgssConditionSearchLabels[] = INCBIN_U8("graphics/gen4_ui/hgss_pokegear/condition_search_labels.4bpp");
+static const u16 sHgssConditionSearchFontPal[] = INCBIN_U16("graphics/gen4_ui/hgss_storage/verified/text_windows_hgss.gbapal");
+static const u32 sHgssConditionSearchCursorTiles[] = INCBIN_U32("graphics/gen4_ui/hgss_pokegear/condition_search_cursor.4bpp");
+static const u16 sHgssConditionSearchCursorPal[] = INCBIN_U16("graphics/gen4_ui/hgss_pokegear/condition_search_cursor.gbapal");
 
 static const u8 gText_NoRibbonWinners[] = _("There are no RIBBON winners.");
 
@@ -315,11 +346,22 @@ static const struct WindowTemplate sOptionDescWindowTemplate =
 {
     .bg = 1,
     .tilemapLeft = 3,
-    .tilemapTop = 17,
+    .tilemapTop = 18,
     .width = 24,
     .height = 2,
     .paletteNum = 1,
     .baseBlock = 8
+};
+
+static const struct WindowTemplate sHgssConditionSearchWindowTemplate =
+{
+    .bg = 1,
+    .tilemapLeft = HGSS_CONDITION_SEARCH_PANEL_X_TILES,
+    .tilemapTop = HGSS_CONDITION_SEARCH_WINDOW_TOP_TILES,
+    .width = HGSS_CONDITION_SEARCH_PANEL_WIDTH_TILES,
+    .height = HGSS_CONDITION_SEARCH_WINDOW_HEIGHT_TILES,
+    .paletteNum = HGSS_CONDITION_SEARCH_FONT_PAL_BANK,
+    .baseBlock = 56
 };
 
 static const u8 *const sPageDescriptions[] =
@@ -457,6 +499,40 @@ static const struct SpriteTemplate sHgssPokegearPhoneStatusSpriteTemplate =
     .callback = SpriteCallbackDummy,
 };
 
+static const struct OamData sOamData_HgssConditionSearchCursor =
+{
+    .y = 0,
+    .affineMode = ST_OAM_AFFINE_OFF,
+    .objMode = ST_OAM_OBJ_NORMAL,
+    .bpp = ST_OAM_4BPP,
+    .shape = SPRITE_SHAPE(8x16),
+    .x = 0,
+    .size = SPRITE_SIZE(8x16),
+    .tileNum = 0,
+    .priority = 1,
+    .paletteNum = 0,
+};
+
+static const union AnimCmd sAnim_HgssConditionSearchCursor[] =
+{
+    ANIMCMD_FRAME(0, 1),
+    ANIMCMD_END,
+};
+
+static const union AnimCmd *const sAnims_HgssConditionSearchCursor[] =
+{
+    sAnim_HgssConditionSearchCursor,
+};
+
+static const struct SpriteTemplate sHgssConditionSearchCursorSpriteTemplate =
+{
+    .tileTag = GFXTAG_HGSS_CONDITION_SEARCH_CURSOR,
+    .paletteTag = PALTAG_HGSS_CONDITION_SEARCH_CURSOR,
+    .oam = &sOamData_HgssConditionSearchCursor,
+    .anims = sAnims_HgssConditionSearchCursor,
+    .callback = SpriteCallbackDummy,
+};
+
 static const struct ScanlineEffectParams sPokenavMainMenuScanlineEffectParams =
 {
     &REG_WIN0H,
@@ -537,6 +613,7 @@ void FreeMenuHandlerSubstruct2(void)
 
     DestroyMovingDotsBgTask();
     RemoveWindow(gfx->optionDescWindowId);
+    RemoveWindow(gfx->hgssConditionSearchWindowId);
     FreeAndDestroyMainMenuSprites();
     DestroyMenuOptionGlowTask();
     FreePokenavSubstruct(POKENAV_SUBSTRUCT_MENU_GFX);
@@ -589,6 +666,7 @@ static u32 LoopedTask_OpenMenu(s32 state)
             return LT_PAUSE;
         LoadHgssPokegearScreenShell();
         LoadHgssPokegearAppSwitchChrome();
+        LoadHgssConditionSearchAssets();
         AddOptionDescriptionWindow();
         CreateMovingBgDotsTask();
         return LT_INC_AND_CONTINUE;
@@ -911,6 +989,23 @@ static void LoadPokenavOptionPalettes(void)
     LoadSpritePalette(&sHgssPokegearCursorSpritePalette);
     LoadSpriteSheet(&sHgssPokegearPhoneStatusSpriteSheet);
     LoadSpritePalette(&sHgssPokegearPhoneStatusSpritePalette);
+
+    {
+        const struct SpriteSheet sheet =
+        {
+            .data = sHgssConditionSearchCursorTiles,
+            .size = sizeof(sHgssConditionSearchCursorTiles),
+            .tag = GFXTAG_HGSS_CONDITION_SEARCH_CURSOR,
+        };
+        const struct SpritePalette palette =
+        {
+            .data = sHgssConditionSearchCursorPal,
+            .tag = PALTAG_HGSS_CONDITION_SEARCH_CURSOR,
+        };
+
+        LoadSpriteSheet(&sheet);
+        LoadSpritePalette(&palette);
+    }
 }
 
 static void FreeAndDestroyMainMenuSprites(void)
@@ -918,6 +1013,7 @@ static void FreeAndDestroyMainMenuSprites(void)
     FreeSpriteTilesByTag(GFXTAG_OPTIONS);
     FreeSpriteTilesByTag(GFXTAG_HGSS_POKEGEAR_CURSOR);
     FreeSpriteTilesByTag(GFXTAG_HGSS_POKEGEAR_PHONE_STATUS);
+    FreeSpriteTilesByTag(GFXTAG_HGSS_CONDITION_SEARCH_CURSOR);
     FreeSpritePaletteByTag(PALTAG_OPTIONS_DEFAULT);
     FreeSpritePaletteByTag(PALTAG_OPTIONS_BLUE);
     FreeSpritePaletteByTag(PALTAG_OPTIONS_PINK);
@@ -925,8 +1021,10 @@ static void FreeAndDestroyMainMenuSprites(void)
     FreeSpritePaletteByTag(PALTAG_OPTIONS_RED);
     FreeSpritePaletteByTag(PALTAG_HGSS_POKEGEAR_CURSOR);
     FreeSpritePaletteByTag(PALTAG_HGSS_POKEGEAR_PHONE_STATUS);
+    FreeSpritePaletteByTag(PALTAG_HGSS_CONDITION_SEARCH_CURSOR);
     DestroyMenuOptionSprites();
     DestroyHgssPokegearPhoneStatusSprite();
+    DestroyHgssConditionSearchCursorSprite();
 }
 
 static void CreateMenuOptionSprites(void)
@@ -945,6 +1043,7 @@ static void CreateMenuOptionSprites(void)
     }
 
     CreateHgssPokegearCursorSprites();
+    CreateHgssConditionSearchCursorSprite();
 }
 
 static void DestroyMenuOptionSprites(void)
@@ -1038,6 +1137,151 @@ static void UpdateHgssPokegearCursor(void)
     gfx->hgssCursorSprites[3]->y = HGSS_POKEGEAR_APP_CURSOR_Y + HGSS_POKEGEAR_APP_CURSOR_Y_OFFSET;
 
     SetHgssPokegearCursorVisible(TRUE);
+}
+
+static bool32 IsHgssConditionSearchSubmenu(void)
+{
+    return GetPokenavMenuType() == POKENAV_MENU_TYPE_CONDITION
+        || GetPokenavMenuType() == POKENAV_MENU_TYPE_CONDITION_SEARCH;
+}
+
+static void LoadHgssConditionSearchAssets(void)
+{
+    LoadBgTiles(2, sHgssConditionSearchChromeTiles, sizeof(sHgssConditionSearchChromeTiles), HGSS_CONDITION_SEARCH_CHROME_TILE_BASE);
+    CopyPaletteIntoBufferUnfaded(sHgssConditionSearchChromePal, BG_PLTT_ID(HGSS_CONDITION_SEARCH_CHROME_PAL_BANK), sizeof(sHgssConditionSearchChromePal));
+    CopyPaletteIntoBufferUnfaded(sHgssConditionSearchFontPal, BG_PLTT_ID(HGSS_CONDITION_SEARCH_FONT_PAL_BANK), sizeof(sHgssConditionSearchFontPal));
+}
+
+static void DrawHgssConditionSearchChrome(u32 topTile, u32 bottomTile)
+{
+    u16 row[HGSS_CONDITION_SEARCH_PANEL_WIDTH_TILES];
+    u32 y;
+    u32 x;
+
+    for (y = topTile; y <= bottomTile; y++)
+    {
+        bool32 isRule = y == topTile || y == bottomTile;
+
+        for (x = 0; x < ARRAY_COUNT(row); x++)
+            row[x] = (HGSS_CONDITION_SEARCH_CHROME_PAL_BANK << 12)
+                | (HGSS_CONDITION_SEARCH_CHROME_TILE_BASE + (isRule ? 1 : 0));
+
+        LoadBgTilemap(2, row, sizeof(row), y * 32 + HGSS_CONDITION_SEARCH_PANEL_X_TILES);
+    }
+}
+
+static void DrawHgssConditionSearchLabels(u32 menuType)
+{
+    struct Pokenav_MenuGfx *gfx = GetSubstructPtr(POKENAV_SUBSTRUCT_MENU_GFX);
+    static const u8 sConditionLabels[] = {0, 1, 2};
+    static const u8 sSearchLabels[] = {3, 4, 5, 6, 7, 2};
+    const u8 *labels;
+    u32 count;
+    u32 firstCenterY;
+    u32 deltaY;
+    u32 i;
+
+    FillWindowPixelBuffer(gfx->hgssConditionSearchWindowId, PIXEL_FILL(0));
+    PutWindowTilemap(gfx->hgssConditionSearchWindowId);
+
+    if (menuType == POKENAV_MENU_TYPE_CONDITION)
+    {
+        labels = sConditionLabels;
+        count = ARRAY_COUNT(sConditionLabels);
+        firstCenterY = 56;
+        deltaY = 20;
+    }
+    else
+    {
+        labels = sSearchLabels;
+        count = ARRAY_COUNT(sSearchLabels);
+        firstCenterY = 40;
+        deltaY = 16;
+    }
+
+    for (i = 0; i < count; i++)
+    {
+        u32 destY = firstCenterY + i * deltaY
+            - HGSS_CONDITION_SEARCH_WINDOW_TOP_TILES * 8
+            - HGSS_CONDITION_SEARCH_LABEL_HEIGHT / 2;
+        const u8 *label = sHgssConditionSearchLabels + labels[i] * HGSS_CONDITION_SEARCH_LABEL_BYTES;
+
+        BlitBitmapToWindow(gfx->hgssConditionSearchWindowId, label, 16, destY,
+                           HGSS_CONDITION_SEARCH_LABEL_WIDTH, HGSS_CONDITION_SEARCH_LABEL_HEIGHT);
+    }
+
+    CopyWindowToVram(gfx->hgssConditionSearchWindowId, COPYWIN_FULL);
+}
+
+static void DrawHgssConditionSearchSurface(void)
+{
+    u32 menuType = GetPokenavMenuType();
+
+    LoadHgssPokegearScreenShell();
+    LoadHgssPokegearAppSwitchChrome();
+
+    if (menuType == POKENAV_MENU_TYPE_CONDITION)
+        DrawHgssConditionSearchChrome(5, 14);
+    else if (menuType == POKENAV_MENU_TYPE_CONDITION_SEARCH)
+        DrawHgssConditionSearchChrome(4, 17);
+
+    DrawHgssConditionSearchLabels(menuType);
+    UpdateHgssConditionSearchCursor();
+}
+
+static void ClearHgssConditionSearchSurface(void)
+{
+    struct Pokenav_MenuGfx *gfx = GetSubstructPtr(POKENAV_SUBSTRUCT_MENU_GFX);
+
+    gfx->hgssConditionSearchCursorSprite->invisible = TRUE;
+    FillWindowPixelBuffer(gfx->hgssConditionSearchWindowId, PIXEL_FILL(0));
+    ClearWindowTilemap(gfx->hgssConditionSearchWindowId);
+    CopyWindowToVram(gfx->hgssConditionSearchWindowId, COPYWIN_FULL);
+    LoadHgssPokegearScreenShell();
+    LoadHgssPokegearAppSwitchChrome();
+}
+
+static void UpdateHgssConditionSearchCursor(void)
+{
+    struct Pokenav_MenuGfx *gfx = GetSubstructPtr(POKENAV_SUBSTRUCT_MENU_GFX);
+    s32 yStart;
+    s32 deltaY;
+
+    if (!IsHgssConditionSearchSubmenu())
+    {
+        gfx->hgssConditionSearchCursorSprite->invisible = TRUE;
+        return;
+    }
+
+    if (GetPokenavMenuType() == POKENAV_MENU_TYPE_CONDITION)
+    {
+        yStart = 56;
+        deltaY = 20;
+    }
+    else
+    {
+        yStart = 40;
+        deltaY = 16;
+    }
+
+    gfx->hgssConditionSearchCursorSprite->x = HGSS_CONDITION_SEARCH_CURSOR_X;
+    gfx->hgssConditionSearchCursorSprite->y = yStart + GetPokenavCursorPos() * deltaY;
+    gfx->hgssConditionSearchCursorSprite->invisible = FALSE;
+}
+
+static void CreateHgssConditionSearchCursorSprite(void)
+{
+    struct Pokenav_MenuGfx *gfx = GetSubstructPtr(POKENAV_SUBSTRUCT_MENU_GFX);
+    u8 spriteId = CreateSprite(&sHgssConditionSearchCursorSpriteTemplate, HGSS_CONDITION_SEARCH_CURSOR_X, 0, 1);
+
+    gfx->hgssConditionSearchCursorSprite = &gSprites[spriteId];
+    gfx->hgssConditionSearchCursorSprite->invisible = TRUE;
+}
+
+static void DestroyHgssConditionSearchCursorSprite(void)
+{
+    struct Pokenav_MenuGfx *gfx = GetSubstructPtr(POKENAV_SUBSTRUCT_MENU_GFX);
+    DestroySprite(gfx->hgssConditionSearchCursorSprite);
 }
 
 static void LoadHgssPokegearScreenShell(void)
@@ -1165,16 +1409,18 @@ static void DrawCurrentMenuOptionLabels(void)
     s32 menuType = GetPokenavMenuType();
     s32 i;
 
-    if (IsPokeGearMainMenu())
+    if (IsPokeGearMainMenu() || IsHgssConditionSearchSubmenu())
     {
-        // Retail HGSS uses the app-switch buttons themselves as the launcher.
-        // Keep the shared legacy sprites allocated for submenu reuse, but never
-        // expose a PokéNav vertical label on the top-level PokéGear.
         for (i = 0; i < MAX_POKENAV_MENUITEMS; i++)
         {
             SetOptionInvisibility(gfx->iconSprites[i], TRUE);
             gfx->iconVisible[i] = FALSE;
         }
+
+        if (IsHgssConditionSearchSubmenu())
+            DrawHgssConditionSearchSurface();
+        else
+            ClearHgssConditionSearchSurface();
         return;
     }
 
@@ -1257,6 +1503,13 @@ static void StartOptionAnimations_Enter(void)
         return;
     }
 
+    if (IsHgssConditionSearchSubmenu())
+    {
+        gfx->cursorPos = cursorPos;
+        UpdateHgssConditionSearchCursor();
+        return;
+    }
+
     defaultX = GetOptionDefaultX();
     selectedX = GetOptionSelectedX();
 
@@ -1297,10 +1550,14 @@ static void StartOptionAnimations_CursorMoved(void)
 
     if (IsPokeGearMainMenu())
     {
-        // SetMenuOptionGlow already updates both authentic HGSS selection
-        // layers. Only retain the logical cursor index; never animate/reveal
-        // the now-retired top-level PokéNav label sprites.
         gfx->cursorPos = prevPos;
+        return;
+    }
+
+    if (IsHgssConditionSearchSubmenu())
+    {
+        gfx->cursorPos = prevPos;
+        UpdateHgssConditionSearchCursor();
         return;
     }
 
@@ -1337,6 +1594,12 @@ static void StartOptionAnimations_Exit(void)
     SetHgssPokegearCursorVisible(FALSE);
     if (IsPokeGearMainMenu())
         return;
+
+    if (IsHgssConditionSearchSubmenu())
+    {
+        gfx->hgssConditionSearchCursorSprite->invisible = TRUE;
+        return;
+    }
 
     defaultX = GetOptionDefaultX();
 
@@ -1626,7 +1889,10 @@ static void AddOptionDescriptionWindow(void)
     struct Pokenav_MenuGfx *gfx = GetSubstructPtr(POKENAV_SUBSTRUCT_MENU_GFX);
 
     gfx->optionDescWindowId = AddWindow(&sOptionDescWindowTemplate);
+    gfx->hgssConditionSearchWindowId = AddWindow(&sHgssConditionSearchWindowTemplate);
     PutWindowTilemap(gfx->optionDescWindowId);
+    ClearWindowTilemap(gfx->hgssConditionSearchWindowId);
+    FillWindowPixelBuffer(gfx->hgssConditionSearchWindowId, PIXEL_FILL(0));
 
     // Do not draw a fabricated HGSS-style panel here. A transparent window
     // leaves the verified retail HGSS fixed shell visible underneath.
@@ -1784,16 +2050,15 @@ static void ResetBldCnt(void)
 static void InitMenuOptionGlow(void)
 {
     SetMenuOptionGlow();
-    SetLegacyMenuOptionGlowEnabled(!IsPokeGearMainMenu());
+    SetLegacyMenuOptionGlowEnabled(!IsPokeGearMainMenu() && !IsHgssConditionSearchSubmenu());
 }
 
 static void Task_CurrentMenuOptionGlow(u8 taskId)
 {
     s16 *data = gTasks[taskId].data;
 
-    if (IsPokeGearMainMenu())
+    if (IsPokeGearMainMenu() || IsHgssConditionSearchSubmenu())
     {
-        // Phase 3: do not animate the removed legacy top-level glow.
         SetGpuReg(REG_OFFSET_BLDY, 0);
         return;
     }
@@ -1816,11 +2081,12 @@ static void SetMenuOptionGlow(void)
 
     UpdateHgssPokegearCursor();
     UpdateHgssPokegearAppSwitchSelection();
+    UpdateHgssConditionSearchCursor();
 
     CpuFill16(0, gScanlineEffectRegBuffers[0], DISPLAY_HEIGHT * 2);
     CpuFill16(0, gScanlineEffectRegBuffers[1], DISPLAY_HEIGHT * 2);
 
-    if (IsPokeGearMainMenu())
+    if (IsPokeGearMainMenu() || IsHgssConditionSearchSubmenu())
         return;
 
     menuType = GetPokenavMenuType();
