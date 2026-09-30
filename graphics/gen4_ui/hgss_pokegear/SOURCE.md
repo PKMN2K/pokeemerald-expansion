@@ -557,3 +557,36 @@ This completes the implementation side of:
 **authentic HGSS asset → wire live → remove legacy equivalent**
 
 The phase-3 cleanup head must still pass CI before moving to the next UI surface.
+
+
+## Shared PokéNav list arrows — phase 1
+
+CI #646 passed `2cc264e8c6793e74d03ca4887d9cc2f4f7d68491`, completing
+validation of the Condition/Search cleanup before this next surface.
+
+The shared list used by Match Call, Condition search results, and Ribbon lists
+still loads `graphics/pokenav/list_arrows.png`. Its replacement is prepared by
+`make_hgss_pokegear_list_arrows.py`:
+
+- Tiles 0–1: exact 8x16 lavender pointer from Pokédex member 057, source
+  x=120..124 / y=12..19, with transparent padding from the verified START
+  cursor builder.
+- Tiles 2–3: vertical reflection of the exact 16x8 member-000 scroll control,
+  source x=240..255 / y=0..7.
+- Tiles 4–5: the same member-000 scroll control in its original orientation.
+
+The existing source builders verify the retail-derived raster checksums.
+The arrow extraction additionally verifies SHA-256
+`ea5b9b2ac4141931be38eb7ac8e9ae1866ec26b4b2e252fe64f8aaeded5d6a36`
+on its remapped source pixels before this adapter combines the sheets.
+The combined OBJ palette preserves member-057 lavender and member-000
+pink/white/black source RGB values through the existing RGB555 conversion.
+No pixels are drawn, scaled, or recolored; only indices are merged and the
+up/down orientation is reflected. The six-tile layout matches the live shared
+list's current allocation and tile offsets, ready for the next wiring step.
+
+Build targets are `hgss_pokegear/list_arrows.4bpp` (192 bytes) and
+`hgss_pokegear/list_arrows.gbapal` (32 bytes), both covered by the Gen 4 UI
+asset CI job. No C binding or legacy asset is changed in this phase.
+
+**authentic HGSS asset prepared → wire live pending → legacy removal pending**
