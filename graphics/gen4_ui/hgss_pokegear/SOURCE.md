@@ -501,3 +501,34 @@ The current shared `gPokenavOptions_Gfx` / `gPokenavOptions_Pal` label
 ranges remain live and untouched. This is phase 1 only:
 
 **authentic HGSS source package ready -> wire live pending -> legacy removal pending**
+
+
+## Condition / Condition Search submenu labels — phase 2
+
+CI #636 passed commit `98f554561be9a23252650c415174a337fa26611b`,
+validating the phase-1 authentic HGSS source package.
+
+The two Condition submenus now use the authentic replacement path. BG2 is
+framed with the exact member-057 list interior/rule pixels; selection uses the
+exact member-057 lavender pointer; and Party/Search/Cancel plus the five
+Condition categories are rendered from exact retail HGSS font-ID-4 glyph bytes
+at 1:1 scale with the verified member-7 font palette.
+
+The project-specific words are not claimed to be baked retail HGSS graphics:
+HGSS renders list text dynamically. Their glyph pixels are retail HGSS font
+pixels, while the words continue to express the existing Emerald gameplay
+semantics. Font background/no-draw classes remain transparent so the authentic
+member-057 chrome is visible beneath them.
+
+Existing menu IDs, cursor indices, descriptions, feature launches and input
+logic are unchanged. The description strip moves down one tile to row 18 to
+leave the six-row Search panel clear.
+
+For rollback safety, the legacy `gPokenavOptions_Gfx` /
+`gPokenavOptions_Pal` submenu ranges, sprite allocation and glow code remain
+compiled, but the legacy labels are forced invisible while either Condition
+submenu is active. They will not be removed until CI validates this live path.
+
+This is **phase 2**:
+
+**authentic HGSS asset -> wired live -> legacy removal pending**
