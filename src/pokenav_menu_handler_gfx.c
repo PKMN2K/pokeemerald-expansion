@@ -239,7 +239,7 @@ static const struct SpritePalette sHgssPokegearPhoneStatusSpritePalette =
 // source center 230 loses both removed 8px columns (0 and 25).
 static const s16 sHgssPokegearAppButtonCenterX[] = {24, 72, 120, 168, 214};
 
- =
+static const struct WindowTemplate sOptionDescWindowTemplate =
 {
     .bg = 1,
     .tilemapLeft = 3,
@@ -284,7 +284,7 @@ static const u8 *const sPageDescriptions[] =
 static const u8 sOptionDescTextColors[]  = {0, TEXT_COLOR_BLUE, TEXT_COLOR_LIGHT_GREEN};
 static const u8 sOptionDescTextColors2[] = {0, TEXT_COLOR_BLUE, TEXT_COLOR_LIGHT_GREEN};
 
- =
+static const struct OamData sOamData_HgssPokegearCursor =
 {
     .y = 0,
     .affineMode = ST_OAM_AFFINE_OFF,
@@ -660,7 +660,6 @@ static u32 LoopedTask_ReturnToMainMenu(s32 state)
             return LT_PAUSE;
         if (IsDma3ManagerBusyWithBgCopy_())
             return LT_PAUSE;
-        InitMenuOptionGlow();
         break;
     }
     return LT_FINISH;
@@ -689,7 +688,6 @@ static u32 LoopedTask_OpenConditionSearchMenu(s32 state)
             return LT_PAUSE;
         if (IsTaskActive_UpdateBgDotsPalette())
             return LT_PAUSE;
-        InitMenuOptionGlow();
         break;
     }
     return LT_FINISH;
@@ -716,7 +714,6 @@ static u32 LoopedTask_ReturnToConditionMenu(s32 state)
     case 3:
         if (IsTaskActive_UpdateBgDotsPalette())
             return LT_PAUSE;
-        InitMenuOptionGlow();
         break;
     }
     return LT_FINISH;
@@ -1241,6 +1238,7 @@ static void StartOptionAnimations_Exit(void)
 }
 
 
+static void CreateHgssPokegearPhoneStatusSprite(void)
 {
     struct Pokenav_MenuGfx *gfx = GetSubstructPtr(POKENAV_SUBSTRUCT_MENU_GFX);
     u8 spriteId = CreateSprite(
@@ -1392,6 +1390,7 @@ static void Task_UpdateBgDotsPalette(u8 taskId)
 }
 
 
+static void ResetBldCnt(void)
 {
     SetGpuReg(REG_OFFSET_BLDCNT, 0);
 }
