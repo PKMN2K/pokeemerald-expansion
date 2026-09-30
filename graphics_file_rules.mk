@@ -35,6 +35,7 @@ GEN4UIHGSSPOKEGEARLISTARROWS := tools/gen4_ui/make_hgss_pokegear_list_arrows.py
 GEN4UIHGSSPOKEGEARCONDITIONSEARCH := tools/gen4_ui/make_hgss_pokegear_condition_search.py
 GEN4UIHGSSPOKEGEARCONTACT := tools/gen4_ui/make_hgss_pokegear_match_call_contact.py
 GEN4UIHGSSPOKEGEARCONTACTROWS := tools/gen4_ui/make_hgss_pokegear_contact_rows.py
+GEN4UIHGSSPOKEGEARACTIONMENU := tools/gen4_ui/make_hgss_pokegear_action_menu.py
 
 types := none normal fight flying poison ground rock bug ghost steel mystery fire water grass electric psychic ice dragon dark fairy stellar
 contest_types := cool beauty cute smart tough
@@ -170,6 +171,14 @@ $(GEN4UIGFXDIR)/hgss_pokegear/match_call_contact.gbapal: $(GEN4UIHGSSPOKEGEARCON
 $(GEN4UIGFXDIR)/hgss_pokegear/match_call_contact_rows.gbapal: $(GEN4UIHGSSPOKEGEARCONTACTROWS) \
 	$(GEN4UIGFXDIR)/hgss_pokegear/verified/pgphone_skin0_contact_palette.NCLR
 	python3 $< $@
+
+$(GEN4UIGFXDIR)/hgss_pokegear/match_call_action_menu.4bpp: $(GEN4UIHGSSPOKEGEARACTIONMENU) \
+	$(GEN4UIGFXDIR)/hgss_pokegear/verified/sbox_gra.png
+	python3 $< --tiles $@
+
+$(GEN4UIGFXDIR)/hgss_pokegear/match_call_action_menu.gbapal: $(GEN4UIHGSSPOKEGEARACTIONMENU) \
+	$(GEN4UIGFXDIR)/hgss_pokegear/verified/sbox_gra.png
+	python3 $< --palette $@
 
 # The live HGSS Pokédex background reserves BG palette entries 128..140.
 # Shifting tile pixel indices keeps the legacy Pokédex palettes (0..95 and 240..255)

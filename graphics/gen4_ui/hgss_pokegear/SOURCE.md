@@ -1011,3 +1011,49 @@ the retail contact-row renderer.
 This completes the dynamic contact-row sequence:
 
 **authentic HGSS row source ✅ → wired live ✅ → legacy equivalent removed ✅**
+
+
+## Match Call action/options menu — phase 1
+
+CI #663 passed the completed dynamic-contact-row cleanup at
+`32fd8cba314ea86b0a9fc615f8c5ce41c80c9152`.
+
+The retail audit found a direct HGSS visual counterpart for the current
+Match Call action pad. Selecting a Phone contact in HGSS opens context-menu
+ID 0, defined in `overlay_101_021F017C.c` as a three-item
+**Call / Sort / Quit** menu with width 16 tiles at retail origin (13, 9).
+`overlay_101_021F0880.c` instantiates that menu through the shared
+`TouchscreenListMenu` renderer.
+
+The menu chrome is not part of the Phone background. The renderer loads
+HGSS's shared `data/sbox_gra` resource. Its retail source
+`files/data/sbox_gra/sbox_gra.png` is now copied byte-for-byte to
+`verified/sbox_gra.png` (Git blob
+`177f5c242ba0eacc1f74dead410c526bc5a46267`, SHA-256
+`5cd355b6456624d9657def9d65b190ff2bedba789e7e44606f1df4affb6d8643`).
+
+The source is a 24×72, 4-bit indexed sheet: exactly 27 8×8 tiles. Retail
+`TouchscreenListMenu_DrawButtons` uses all 27 tiles as the normal and
+selected top, side, separator, and bottom pieces. The new generator verifies
+the source identity and emits every tile unchanged in row-major GBA 4bpp form,
+plus the complete 16-color source palette in source order. Output checksums are
+recorded in `verified/match_call_action_menu.json`.
+
+There is one intentional functional distinction. Retail Phone's labels/actions
+are Call / Sort / Quit, while this project's existing Match Call behavior is
+CALL / CHECK / CANCEL (or CALL / CANCEL when no check page exists). Phase 2
+will preserve those game semantics while replacing their visual container with
+the authentic HGSS context-menu chrome; this is a direct visual migration, not
+a claim that CHECK is retail SORT or that CANCEL is retail QUIT.
+
+The complete three-item retail menu is 18×10 tiles (144×80 px including its
+one-tile side borders). The planned GBA adaptation is translation only:
+retail origin (13, 9) becomes (12, 9), moving the complete menu eight pixels
+left so it fits exactly within the 240-pixel screen. No scaling, redrawing,
+recoloring, or geometry resampling is planned.
+
+Nothing is wired live in this phase. `DrawPokeGearPhoneActionPad`, its
+current labels, and the existing cursor path remain untouched until the new
+HGSS menu assets pass CI and are wired in phase 2.
+
+**authentic HGSS action-menu source prepared → wire live pending → legacy removal pending**
