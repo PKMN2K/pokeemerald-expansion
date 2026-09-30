@@ -895,3 +895,41 @@ must go through its own authenticity sequence.
 This completes the static contact-background sequence:
 
 **authentic HGSS asset → wire live → remove legacy equivalent**
+
+
+## Match Call dynamic contact rows — phase 1
+
+CI #659 passed the completed static contact-background cleanup at
+`fd91b629d01cde90fc8b940101268bfdb18ab818`.
+
+The next surface is the dynamic contact list drawn over BG3. Retail HGSS does
+not use a painted approximation for these rows: its Phone code draws each row
+programmatically with exact geometry and palette indices. The authoritative
+sources at the locked HGSS revision are:
+
+- `overlay_101_021F017C.c` blob
+  `320be2869ebb277fe85bac6021bf01b50bfc8f7a`: contact-list window is
+  MAIN_3, 27 tiles wide by 24 tiles high, palette bank 2.
+- `overlay_101_021F0F48.c` blob
+  `e303f58126397a8f28b0a4dd496bbea3d2c12c88`: exact row rectangles,
+  alternating color sets, text-color assignments, and six-contact paging.
+- Verified member-10 NCLR blob
+  `85b29945c3b9e8250b119922d64111ded55b1563`: the row window's exact
+  retail palette source.
+
+Retail rows are 216×24 pixels, alternate two documented color sets, maintain
+eight buffered rows for scrolling, and display six contacts. The current GBA
+PokéNav list path is hard-wired to 16-pixel rows (`row << 4`) and currently
+shows eight contacts, so silently squeezing HGSS into that cadence would not
+be authentic.
+
+`make_hgss_pokegear_contact_rows.py` now verifies the retail member-10 blob
+and extracts palette bank 2 byte-for-byte into
+`match_call_contact_rows.gbapal`. The exact row geometry and palette-index
+mapping are recorded in `verified/match_call_contact_rows.json`.
+
+Nothing is wired live in this phase. The existing
+`DrawPokeGearPhoneContactRow` remains untouched until a Match Call-specific
+24-pixel list path is implemented and passes CI.
+
+**authentic HGSS row source prepared → wire live pending → legacy removal pending**
