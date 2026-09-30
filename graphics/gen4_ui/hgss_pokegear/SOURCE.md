@@ -638,3 +638,34 @@ Match Call, Condition search results, and Ribbon lists:
 **authentic HGSS asset → wire live → remove legacy equivalent**
 
 The cleanup commit must pass CI before starting the next UI surface.
+
+
+## Match Call options-menu cursor — phase 1
+
+CI #649's Gen 4 UI and ROM build jobs passed the shared-arrow cleanup at
+`a807fc5895cc9f1b5c9fb71d9c35a5f49f608e5e`; its general Test job was still
+running when this source package was prepared.
+
+Match Call has a separate options-menu cursor, independent of the shared list
+arrows. It still uses `graphics/pokenav/match_call/options_cursor.png` through
+`sOptionsCursorSpriteSheets` in `src/pokenav_match_call_gfx.c`.
+
+The authentic replacement reuses the exact lavender Pokédex member-057 pointer
+already verified by `make_hgss_pokedex_start_cursor.py`. The visible pixels at
+x=120..124 / y=12..19 are copied 1:1 into an 8x16 OBJ with transparent padding.
+There is no scaling, redrawing, or recoloring. This is explicit reuse of an HGSS
+Pokédex control for Emerald's Match Call semantics, not a claim that it is a
+retail HGSS phone-menu cursor.
+
+Build targets `hgss_pokegear/match_call_options_cursor.4bpp` (64 bytes) and
+`hgss_pokegear/match_call_options_cursor.gbapal` (32 bytes) fit the current
+8x16 OAM size and two-tile allocation. The JSON role record beside the verified
+sources records source/member details and output hashes. The targets reuse the
+existing checksum-verifying source generator and are covered by the Gen 4 UI
+asset CI job.
+
+No C binding, cursor position, row spacing, bob callback, or legacy source is
+changed in this phase. Next: wire this prepared sheet/palette live, validate,
+then remove the superseded legacy cursor and its binding.
+
+**authentic HGSS asset prepared → wire live pending → legacy removal pending**

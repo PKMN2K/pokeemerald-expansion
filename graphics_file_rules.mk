@@ -113,6 +113,13 @@ $(GEN4UIGFXDIR)/hgss_pokegear/phone_status.gbapal: $(GEN4UIHGSSPOKEGEARPHONESTAT
 	$(GEN4UIGFXDIR)/hgss_pokegear/verified/pgear_ui_anims.NANR
 	python3 $< --palette $@
 
+# Match Call options pointer: exact verified HGSS member-057 pixels.
+$(GEN4UIGFXDIR)/hgss_pokegear/match_call_options_cursor.4bpp: $(GEN4UIHGSSSTARTCURSOR) $(GEN4UIHGSSSTATS)
+	python3 $(GEN4UIHGSSSTARTCURSOR) --tiles $@
+
+$(GEN4UIGFXDIR)/hgss_pokegear/match_call_options_cursor.gbapal: $(GEN4UIHGSSSTARTCURSOR) $(GEN4UIHGSSSTATS)
+	python3 $(GEN4UIHGSSSTARTCURSOR) --palette $@
+
 $(GEN4UIGFXDIR)/hgss_pokegear/list_arrows.4bpp: $(GEN4UIHGSSPOKEGEARLISTARROWS) $(GEN4UIHGSSSTARTCURSOR) $(GEN4UIHGSSSCROLL) $(GEN4UIHGSSSTATS) $(GEN4UIHGSSLIST)
 	python3 $< --tiles $@
 
