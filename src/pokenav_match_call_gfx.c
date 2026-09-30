@@ -124,6 +124,9 @@ static const u32 sMatchCallUI_Gfx[] = INCGFX_U32("graphics/pokenav/match_call/ui
 static const u32 sMatchCallUI_Tilemap[] = INCGFX_U32("graphics/pokenav/match_call/ui.bin", ".smolTM");
 static const u16 sOptionsCursor_Pal[] = INCGFX_U16("graphics/pokenav/match_call/options_cursor.png", ".gbapal");
 static const u32 sOptionsCursor_Gfx[] = INCGFX_U32("graphics/pokenav/match_call/options_cursor.png", ".4bpp.smol");
+// Exact verified HGSS Pokédex member-057 lavender pointer, padded to 8x16.
+static const u32 sHgssOptionsCursor_Gfx[] = INCBIN_U32("graphics/gen4_ui/hgss_pokegear/match_call_options_cursor.4bpp");
+static const u16 sHgssOptionsCursor_Pal[] = INCBIN_U16("graphics/gen4_ui/hgss_pokegear/match_call_options_cursor.gbapal");
 static const u16 sCallWindow_Pal[] = INCGFX_U16("graphics/pokenav/match_call/call_window.pal", ".gbapal");
 static const u16 sListWindow_Pal[] = INCGFX_U16("graphics/pokenav/match_call/list_window.pal", ".gbapal");
 static const u16 sPokeball_Pal[] = INCGFX_U16("graphics/pokenav/match_call/pokeball.pal", ".gbapal");
@@ -226,6 +229,19 @@ static const struct WindowTemplate sCallMsgBoxWindowTemplate =
     .height = 4,
     .paletteNum = 1,
     .baseBlock = 10
+};
+
+static const struct SpriteSheet sHgssOptionsCursorSpriteSheet =
+{
+    .data = sHgssOptionsCursor_Gfx,
+    .size = sizeof(sHgssOptionsCursor_Gfx),
+    .tag = GFXTAG_CURSOR
+};
+
+static const struct SpritePalette sHgssOptionsCursorSpritePalettes[] =
+{
+    {sHgssOptionsCursor_Pal, PALTAG_CURSOR},
+    {}
 };
 
 static const struct CompressedSpriteSheet sOptionsCursorSpriteSheets[1] =
@@ -1292,10 +1308,19 @@ static void AllocMatchCallSprites(void)
     struct SpriteSheet spriteSheet;
     struct Pokenav_MatchCallGfx *gfx = GetSubstructPtr(POKENAV_SUBSTRUCT_MATCH_CALL_OPEN);
 
-    // Load options cursor gfx
-    for (i = 0; i < ARRAY_COUNT(sOptionsCursorSpriteSheets); i++)
-        LoadCompressedSpriteSheet(&sOptionsCursorSpriteSheets[i]);
-    Pokenav_AllocAndLoadPalettes(sOptionsCursorSpritePalettes);
+    // The authentic HGSS pointer is primary. Retain the legacy path only as
+    // a temporary allocation-failure fallback until this live pass validates.
+    LoadSpriteSheet(&sHgssOptionsCursorSpriteSheet);
+    if (GetSpriteTileStartByTag(GFXTAG_CURSOR) != 0xFFFF)
+    {
+        Pokenav_AllocAndLoadPalettes(sHgssOptionsCursorSpritePalettes);
+    }
+    else
+    {
+        for (i = 0; i < ARRAY_COUNT(sOptionsCursorSpriteSheets); i++)
+            LoadCompressedSpriteSheet(&sOptionsCursorSpriteSheets[i]);
+        Pokenav_AllocAndLoadPalettes(sOptionsCursorSpritePalettes);
+    }
     gfx->optionsCursorSprite = NULL;
 
     // Load trainer pic gfx

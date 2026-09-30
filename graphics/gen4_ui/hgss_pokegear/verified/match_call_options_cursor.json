@@ -1,6 +1,6 @@
 {
   "role": "match_call_options_cursor",
-  "phase": "source_prepared",
+  "phase": "wired_live",
   "source_game": "Pokemon HeartGold / SoulSilver",
   "classification": "functional reuse of authentic HGSS Pokedex pointer",
   "direct_retail_equivalent": false,
@@ -39,6 +39,8 @@
   "generated_palette_sha256": "f627b52b40a592b625fa87584fd36ead7aa0a642191d4108e49b7cf4a0168c45",
   "legacy_runtime_binding": "src/pokenav_match_call_gfx.c:sOptionsCursorSpriteSheets",
   "legacy_asset": "graphics/pokenav/match_call/options_cursor.png",
-  "runtime_wired": false,
-  "legacy_removed": false
+  "runtime_wired": true,
+  "legacy_removed": false,
+  "runtime_binding": "src/pokenav_match_call_gfx.c:sHgssOptionsCursorSpriteSheet",
+  "legacy_fallback": "temporary allocation-failure fallback pending live CI"
 }

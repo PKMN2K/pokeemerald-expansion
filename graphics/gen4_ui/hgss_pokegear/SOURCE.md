@@ -669,3 +669,24 @@ changed in this phase. Next: wire this prepared sheet/palette live, validate,
 then remove the superseded legacy cursor and its binding.
 
 **authentic HGSS asset prepared → wire live pending → legacy removal pending**
+
+
+## Match Call options-menu cursor — phase 2
+
+CI #650's Gen 4 UI asset/renderer job and all ROM builds passed the source
+package at `2c6bf290d28a35e1fe650100bc09dc36ed7897d6`. The general Test job
+was still running when this live integration was prepared.
+
+`AllocMatchCallSprites` now loads the verified member-057 lavender pointer
+using `LoadSpriteSheet` and its authentic palette using the existing PokéNav
+palette allocator. The options cursor keeps its current 8x16 OAM size, two-tile
+allocation, priority, tags, (8,80) origin, 16-pixel row offsets, horizontal bob
+callback, show/hide lifecycle, and resource cleanup. Trainer picture allocation
+is unchanged. The Gen 4 UI compile job now includes `pokenav_match_call_gfx.o`.
+
+The legacy compressed sheet and palette remain only as a temporary
+allocation-failure fallback. Allocation success is determined by the cursor tag
+lookup, because a zero return from `LoadSpriteSheet` can mean either failure or
+a valid tile start. No legacy asset is removed until the live commit passes CI.
+
+**authentic HGSS asset → wired live → legacy removal pending**

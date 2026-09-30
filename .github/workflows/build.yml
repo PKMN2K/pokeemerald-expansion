@@ -166,7 +166,8 @@ jobs:
             build/emerald/src/pokedex.o \
             build/emerald/src/pokedex_area_screen.o \
             build/emerald/src/pokenav_menu_handler_gfx.o \
-            build/emerald/src/pokenav_list.o
+            build/emerald/src/pokenav_list.o \
+            build/emerald/src/pokenav_match_call_gfx.o
 
   build-firered:
     if: github.actor != 'allcontributors[bot]'
