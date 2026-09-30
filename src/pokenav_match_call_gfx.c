@@ -127,8 +127,6 @@ static const u32 sHgssOptionsCursor_Gfx[] = INCBIN_U32("graphics/gen4_ui/hgss_po
 static const u16 sHgssOptionsCursor_Pal[] = INCBIN_U16("graphics/gen4_ui/hgss_pokegear/match_call_options_cursor.gbapal");
 static const u16 sCallWindow_Pal[] = INCGFX_U16("graphics/pokenav/match_call/call_window.pal", ".gbapal");
 static const u16 sListWindow_Pal[] = INCGFX_U16("graphics/pokenav/match_call/list_window.pal", ".gbapal");
-static const u16 sPokeball_Pal[] = INCGFX_U16("graphics/pokenav/match_call/pokeball.pal", ".gbapal");
-static const u32 sPokeball_Gfx[] = INCGFX_U32("graphics/pokenav/match_call/pokeball.png", ".4bpp.smol");
 static const u32 sHgssRematchBadge_Gfx[] = INCBIN_U32("graphics/gen4_ui/hgss_pokegear/rematch_badge.4bpp");
 static const u16 sHgssRematchBadge_Pal[] = INCBIN_U16("graphics/gen4_ui/hgss_pokegear/rematch_badge.gbapal");
 
@@ -368,18 +366,14 @@ static u32 LoopedTask_OpenMatchCall(s32 state)
             return LT_PAUSE;
 
         LoadCallWindowAndFade(gfx);
-        DecompressAndCopyTileDataToVram(3, sPokeball_Gfx, 0, 0, 0);
+        LoadBgTiles(3, sHgssRematchBadge_Gfx, sizeof(sHgssRematchBadge_Gfx), 0);
         CopyPaletteIntoBufferUnfaded(sListWindow_Pal, BG_PLTT_ID(3), sizeof(sListWindow_Pal));
-        CopyPaletteIntoBufferUnfaded(sPokeball_Pal, BG_PLTT_ID(5), PLTT_SIZE_4BPP);
+        CopyPaletteIntoBufferUnfaded(sHgssRematchBadge_Pal, BG_PLTT_ID(5), sizeof(sHgssRematchBadge_Pal));
         return LT_INC_AND_PAUSE;
     case 3:
         if (FreeTempTileDataBuffersIfPossible() || !IsMatchCallListInitFinished())
             return LT_PAUSE;
 
-        // Wait for the legacy decompression to finish before replacing it.
-        // Its phase-2 source bindings remain until the live HGSS pass validates.
-        LoadBgTiles(3, sHgssRematchBadge_Gfx, sizeof(sHgssRematchBadge_Gfx), 0);
-        CopyPaletteIntoBufferUnfaded(sHgssRematchBadge_Pal, BG_PLTT_ID(5), sizeof(sHgssRematchBadge_Pal));
         CreateMatchCallList();
         return LT_INC_AND_PAUSE;
     case 4:

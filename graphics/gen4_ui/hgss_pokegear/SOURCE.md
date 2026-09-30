@@ -768,3 +768,26 @@ after the live replacement passes CI. The Match Call renderer is already an
 explicit target in the Gen 4 UI CI compile job.
 
 **authentic HGSS asset → wired live → legacy removal pending**
+
+
+## Match Call rematch badge — phase 3
+
+CI #654 passed the live native-HGSS badge integration at
+`99ffba706f3042b485ba4bd2b726b0af38eb1a2a`. The rollback-only Emerald rematch badge is now removed.
+
+`src/pokenav_match_call_gfx.c` no longer binds or decompresses
+`graphics/pokenav/match_call/pokeball.png`, and no longer loads
+`graphics/pokenav/match_call/pokeball.pal`. The native 16x16 HGSS
+phone-status frames and their authentic palette are loaded directly during
+Match Call initialization; the later list-creation state no longer performs a
+replacement pass.
+
+The superseded `pokeball.png` and `pokeball.pal` source files are deleted.
+Rematch predicates, 2x2 badge placement, retail-frame animation, list geometry,
+and show/hide behavior remain unchanged from phase 2.
+
+This completes the rematch-badge sequence:
+
+**authentic HGSS asset → wire live → remove legacy equivalent**
+
+The cleanup head must pass CI before the next UI surface begins.

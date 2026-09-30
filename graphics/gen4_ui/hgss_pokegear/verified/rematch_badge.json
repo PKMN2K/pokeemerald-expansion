@@ -1,6 +1,6 @@
 {
   "role": "match_call_rematch_badge",
-  "phase": "wired_live",
+  "phase": "legacy_removed",
   "classification": "functional reuse of authentic HGSS phone-status artwork",
   "direct_retail_equivalent": false,
   "source_record": "phone_status_indicator_skin0.json",
@@ -42,7 +42,7 @@
     "transparent": 8
   },
   "runtime_wired": true,
-  "legacy_removed": false,
+  "legacy_removed": true,
   "legacy_assets": [
     "graphics/pokenav/match_call/pokeball.png",
     "graphics/pokenav/match_call/pokeball.pal"
@@ -69,5 +69,17 @@
     "list_window_base_tile": 11,
     "list_window_tile_count": 512
   },
-  "legacy_retention": "phase-2 legacy load completes before HGSS tiles and palette replace it; remove after live CI"
+  "legacy_removal": {
+    "live_validation_ci": 654,
+    "live_validation_commit": "99ffba706f3042b485ba4bd2b726b0af38eb1a2a",
+    "removed_bindings": [
+      "sPokeball_Gfx",
+      "sPokeball_Pal"
+    ],
+    "removed_load_path": "legacy compressed 8x16 Poké Ball tiles and interpolated palette",
+    "removed_assets": [
+      "graphics/pokenav/match_call/pokeball.png",
+      "graphics/pokenav/match_call/pokeball.pal"
+    ]
+  }
 }
