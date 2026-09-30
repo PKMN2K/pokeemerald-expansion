@@ -1,6 +1,6 @@
 {
   "role": "match_call_action_options_menu",
-  "phase": "source_prepared",
+  "phase": "wired_live_pending_ci",
   "classification": "direct retail HGSS Phone context-menu visual counterpart with adapted game-specific option semantics",
   "source_revision": "9d8b7591f09b65804da2fb2dfd56f320633e0d36",
   "retail_phone_behavior": {
@@ -139,7 +139,7 @@
     "interpolation": false
   },
   "current_project_surface": {
-    "renderer": "src/pokenav_match_call_gfx.c::DrawPokeGearPhoneActionPad",
+    "renderer": "src/pokenav_match_call_gfx.c::DrawHgssPhoneActionMenu",
     "options": [
       "CALL",
       "CHECK",
@@ -172,14 +172,41 @@
   },
   "pipeline": {
     "authentic_hgss_source_ready": true,
-    "wired_live": false,
+    "wired_live": true,
     "legacy_equivalent_removed": false
   },
   "ci_gate_from_previous_surface": {
     "workflow": "CI",
-    "run_number": 663,
+    "run_number": 664,
     "conclusion": "success",
-    "validated_commit": "32fd8cba314ea86b0a9fc615f8c5ce41c80c9152"
+    "validated_commit": "6b326bec37c82e3c45702b7f3e99282d17a744a3"
   },
-  "next": "Wire the authentic sbox_gra context-menu chrome live for Match Call while retaining current CALL/CHECK/CANCEL actions and keeping DrawPokeGearPhoneActionPad until phase-2 CI passes."
+  "next": "Wait for phase-2 integration CI; then remove the unused legacy action pad and superseded cursor resources/helpers.",
+  "runtime_binding": {
+    "bg": 1,
+    "palette_bank": 8,
+    "window_base_tile": 256,
+    "window_tile_count": 180,
+    "origin_tiles": [
+      12,
+      9
+    ],
+    "row_cadence_px": 24,
+    "option_counts": [
+      2,
+      3
+    ],
+    "selection": "retail selected border and source text palette indices",
+    "close_paths": [
+      "CALL",
+      "nearby trainer",
+      "CHECK",
+      "CANCEL",
+      "screen teardown"
+    ],
+    "legacy_retained_until_wiring_ci": [
+      "DrawPokeGearPhoneActionPad",
+      "options cursor sprite resources and helpers"
+    ]
+  }
 }

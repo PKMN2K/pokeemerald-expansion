@@ -1057,3 +1057,38 @@ current labels, and the existing cursor path remain untouched until the new
 HGSS menu assets pass CI and are wired in phase 2.
 
 **authentic HGSS action-menu source prepared → wire live pending → legacy removal pending**
+
+
+## Match Call action/options menu — phase 2
+
+CI #664 passed the source-preparation commit `6b326bec` in full.
+`DrawHgssPhoneActionMenu` now renders the verified sbox_gra tiles live on BG1.
+The complete 18x10-tile allocation begins at (12, 9), preserving the planned
+one-tile translation, 16-tile option interiors and 24-pixel row cadence.
+Two-option contacts render the retail two-row grammar with a transparent tail.
+
+BG1 character tiles 256–435 are separate from the message window (10–121)
+and its border (1–8). BG palette bank 8 carries the unchanged source palette;
+contact, row, badge and message palettes remain in their existing banks.
+The selected top, bottom, side and both separator variants follow
+`TouchscreenListMenu_DrawButtons` from retail source blob
+`a74013e670f964ca994bc822d57577731f6a61c0`. Text uses source indices
+1/2/3 normally and 4/5/6 when selected, reordered only for Emerald's
+background/foreground/shadow API. Labels retain the current game font and
+CALL/CHECK/CANCEL semantics.
+
+Selection changes redraw the menu and wait for DMA completion. CALL,
+nearby-trainer messages, CHECK, CANCEL and teardown clear and free the overlay;
+repeated close calls are safe. The old pointer is no longer created. Its assets,
+helpers and the old procedural action-pad function remain for phase 3, with
+unused entry points explicitly marked pending successful integration CI.
+
+Local validation: generated tiles and palette pass their identity/checksum
+guards. A host-compiled harness of the actual C draw functions passed all five
+selection states across two- and three-option menus, checking retail border
+indices, fill/text palette indices, screen bounds and the transparent tail.
+`git diff --check` passed. Full ARM compilation and ROM checks are delegated to
+CI because the local workspace has no ARM compiler. Runtime emulator visual
+validation has not yet been performed.
+
+**authentic HGSS source validated → wired live (CI pending) → legacy removal pending**

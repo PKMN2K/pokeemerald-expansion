@@ -39,6 +39,7 @@ struct Pokenav_MatchCallGfx
     u16 locWindowId;
     u16 infoBoxWindowId;
     u16 msgBoxWindowId;
+    u16 actionWindowId;
     s16 pageDelta;
     u8 unused18;
     u8 unused19;
@@ -66,7 +67,8 @@ static void UpdateMatchCallInfoBox(struct Pokenav_MatchCallGfx *);
 static void PrintMatchCallLocation(struct Pokenav_MatchCallGfx *, int);
 static void AllocMatchCallSprites(void);
 static void SetPokeballIconsFlashing(bool32);
-static void DrawPokeGearPhoneActionPad(u16);
+static void UNUSED DrawPokeGearPhoneActionPad(u16);
+static void DrawHgssPhoneActionMenu(struct Pokenav_MatchCallGfx *);
 static void PrintMatchCallSelectionOptions(struct Pokenav_MatchCallGfx *);
 static bool32 ShowOptionsCursor(struct Pokenav_MatchCallGfx *);
 static void UpdateCursorGfxPos(struct Pokenav_MatchCallGfx *, int);
@@ -96,7 +98,7 @@ static void PrintNumberOfBattlesLabel(u16);
 static void PrintNumberOfBattles(u16);
 static void PrintMatchCallInfoLabel(u16, const u8 *, int);
 static void PrintMatchCallInfoNumber(u16, const u8 *, int);
-static void CreateOptionsCursorSprite(struct Pokenav_MatchCallGfx *, int);
+static void UNUSED CreateOptionsCursorSprite(struct Pokenav_MatchCallGfx *, int);
 static void CloseMatchCallSelectOptionsWindow(struct Pokenav_MatchCallGfx *);
 static struct Sprite *CreateTrainerPicSprite(void);
 static void SpriteCB_TrainerPicSlideOnscreen(struct Sprite *);
@@ -124,6 +126,8 @@ static const u16 sHgssMatchCallContact_Pal[] = INCBIN_U16("graphics/gen4_ui/hgss
 // Exact verified HGSS Pokédex member-057 lavender pointer, padded to 8x16.
 static const u32 sHgssOptionsCursor_Gfx[] = INCBIN_U32("graphics/gen4_ui/hgss_pokegear/match_call_options_cursor.4bpp");
 static const u16 sHgssOptionsCursor_Pal[] = INCBIN_U16("graphics/gen4_ui/hgss_pokegear/match_call_options_cursor.gbapal");
+static const u32 sHgssActionMenu_Gfx[] = INCBIN_U32("graphics/gen4_ui/hgss_pokegear/match_call_action_menu.4bpp");
+static const u16 sHgssActionMenu_Pal[] = INCBIN_U16("graphics/gen4_ui/hgss_pokegear/match_call_action_menu.gbapal");
 static const u16 sCallWindow_Pal[] = INCGFX_U16("graphics/pokenav/match_call/call_window.pal", ".gbapal");
 static const u16 sHgssContactRows_Pal[] = INCBIN_U16("graphics/gen4_ui/hgss_pokegear/match_call_contact_rows.gbapal");
 static const u32 sHgssRematchBadge_Gfx[] = INCBIN_U32("graphics/gen4_ui/hgss_pokegear/rematch_badge.4bpp");
@@ -220,6 +224,19 @@ static const struct WindowTemplate sMatchCallInfoBoxWindowTemplate =
     .baseBlock = 38
 };
 
+// BG1 tiles 256..435 are separate from the call window (10..121).
+// Retail 18x10 footprint translated left one tile; BG palette 8 is reserved.
+static const struct WindowTemplate sHgssActionMenuWindowTemplate =
+{
+    .bg = 1,
+    .tilemapLeft = 12,
+    .tilemapTop = 9,
+    .width = 18,
+    .height = 10,
+    .paletteNum = 8,
+    .baseBlock = 256
+};
+
 static const u8 *const sMatchCallOptionTexts[MATCH_CALL_OPTION_COUNT] =
 {
     [MATCH_CALL_OPTION_CALL]   = COMPOUND_STRING("CALL"),
@@ -304,6 +321,7 @@ bool32 OpenMatchCall(void)
         return FALSE;
 
     gfx->unused19 = 0;
+    gfx->actionWindowId = WINDOW_NONE;
     gfx->loopTaskId = CreateLoopedTask(LoopedTask_OpenMatchCall, 1);
     gfx->isTaskActiveCB = GetCurrentLoopedTaskActive;
     return TRUE;
@@ -325,6 +343,7 @@ bool32 IsMatchCallLoopedTaskActive(void)
 void FreeMatchCallSubstruct2(void)
 {
     struct Pokenav_MatchCallGfx *gfx = GetSubstructPtr(POKENAV_SUBSTRUCT_MATCH_CALL_OPEN);
+    CloseMatchCallSelectOptionsWindow(gfx);
     FreeMatchCallSprites();
     DestroyMatchCallList();
     RemoveWindow(gfx->infoBoxWindowId);
@@ -581,13 +600,14 @@ static u32 SelectMatchCallEntry(s32 state)
 static u32 MoveMatchCallOptionsCursor(s32 state)
 {
     struct Pokenav_MatchCallGfx *gfx;
-    u16 cursorPos;
-
-    PlaySE(SE_SELECT);
-    gfx = GetSubstructPtr(POKENAV_SUBSTRUCT_MATCH_CALL_OPEN);
-    cursorPos = GetMatchCallOptionCursorPos();
-    UpdateCursorGfxPos(gfx, cursorPos);
-    return LT_FINISH;
+    if (state == 0)
+    {
+        PlaySE(SE_SELECT);
+        gfx = GetSubstructPtr(POKENAV_SUBSTRUCT_MATCH_CALL_OPEN);
+        DrawHgssPhoneActionMenu(gfx);
+        return LT_INC_AND_PAUSE;
+    }
+    return IsDma3ManagerBusyWithBgCopy() ? LT_PAUSE : LT_FINISH;
 }
 
 static u32 CancelMatchCallSelection(s32 state)
@@ -1136,36 +1156,69 @@ static void DrawPokeGearPhoneActionPad(u16 windowId)
     }
 }
 
+// Copy the exact retail 8x8 tiles; interior rows use the retail fill indices.
+static void BlitHgssActionTile(u16 windowId, u32 tile, u32 x, u32 y)
+{
+    BlitBitmapToWindow(windowId, (const u8 *)sHgssActionMenu_Gfx + tile * 32,
+                       x * 8, y * 8, 8, 8);
+}
+
+static void DrawHgssPhoneActionMenu(struct Pokenav_MatchCallGfx *gfx)
+{
+    u32 count = 0;
+    u32 row, col, tile;
+    u32 selected = GetMatchCallOptionCursorPos();
+    u16 windowId = gfx->actionWindowId;
+    // Emerald color order is background, foreground, shadow.
+    static const u8 colors[2][3] = {{3, 1, 2}, {6, 4, 5}};
+
+    if (windowId == WINDOW_NONE)
+        return;
+    while (count < MATCH_CALL_OPTION_COUNT && GetMatchCallOptionId(count) != MATCH_CALL_OPTION_COUNT)
+        count++;
+    FillWindowPixelBuffer(windowId, PIXEL_FILL(0));
+    for (row = 0; row <= count * 3; row++)
+    {
+        if (row == 0)
+            tile = selected == 0 ? 12 : 0;
+        else if (row == count * 3)
+            tile = selected == count - 1 ? 21 : 9;
+        else if (row % 3 == 0)
+            tile = selected == row / 3 - 1 ? 18 : (selected == row / 3 ? 24 : 6);
+        else
+            tile = selected == row / 3 ? 15 : 3;
+        for (col = 0; col < 18; col++)
+        {
+            if (row % 3 != 0 && col > 0 && col < 17)
+                continue;
+            BlitHgssActionTile(windowId, tile + (col == 0 ? 0 : col == 17 ? 2 : 1), col, row);
+        }
+    }
+    for (row = 0; row < count; row++)
+    {
+        const u8 *label = sMatchCallOptionTexts[GetMatchCallOptionId(row)];
+        u32 active = selected == row;
+        u32 x = 8 + (128 - GetStringWidth(FONT_NARROW, label, 0)) / 2;
+        FillWindowPixelRect(windowId, PIXEL_FILL(colors[active][0]), 8, 8 + row * 24, 128, 16);
+        AddTextPrinterParameterized3(windowId, FONT_NARROW, x, 8 + row * 24,
+                                     colors[active], TEXT_SKIP_DRAW, label);
+    }
+    PutWindowTilemap(windowId);
+    CopyWindowToVram(windowId, COPYWIN_FULL);
+}
+
 static void PrintMatchCallSelectionOptions(struct Pokenav_MatchCallGfx *gfx)
 {
-    u32 i;
-    u8 width = GetWindowAttribute(gfx->infoBoxWindowId, WINDOW_WIDTH) * 8;
-
-    DrawPokeGearPhoneActionPad(gfx->infoBoxWindowId);
-    for (i = 0; i < MATCH_CALL_OPTION_COUNT; i++)
-    {
-        int optionText = GetMatchCallOptionId(i);
-        int x;
-
-        if (optionText == MATCH_CALL_OPTION_COUNT)
-            break;
-
-        x = (width - GetStringWidth(FONT_NARROW, sMatchCallOptionTexts[optionText], 0)) / 2;
-        AddTextPrinterParameterized(gfx->infoBoxWindowId, FONT_NARROW, sMatchCallOptionTexts[optionText], x, i * 16 + 1, TEXT_SKIP_DRAW, NULL);
-    }
-
-    CopyWindowToVram(gfx->infoBoxWindowId, COPYWIN_GFX);
+    if (gfx->actionWindowId == WINDOW_NONE)
+        gfx->actionWindowId = AddWindow(&sHgssActionMenuWindowTemplate);
+    LoadPalette(sHgssActionMenu_Pal, BG_PLTT_ID(8), sizeof(sHgssActionMenu_Pal));
+    DrawHgssPhoneActionMenu(gfx);
 }
 
 static bool32 ShowOptionsCursor(struct Pokenav_MatchCallGfx *gfx)
 {
-    if (!IsDma3ManagerBusyWithBgCopy())
-    {
-        CreateOptionsCursorSprite(gfx, GetMatchCallOptionCursorPos());
-        return FALSE;
-    }
-
-    return TRUE;
+    // Selection is now shown by the authentic sbox_gra selected border.
+    return IsDma3ManagerBusyWithBgCopy();
 }
 
 static void UpdateWindowsReturnToTrainerList(struct Pokenav_MatchCallGfx *gfx)
@@ -1246,6 +1299,7 @@ static void DrawPokeGearPhoneCallPanel(u16 windowId)
 
 static void DrawMsgBoxForMatchCallMsg(struct Pokenav_MatchCallGfx *gfx)
 {
+    CloseMatchCallSelectOptionsWindow(gfx);
     DrawPokeGearPhoneCallPanel(gfx->msgBoxWindowId);
     PutWindowTilemap(gfx->msgBoxWindowId);
     CopyWindowToVram(gfx->msgBoxWindowId, COPYWIN_FULL);
@@ -1254,6 +1308,7 @@ static void DrawMsgBoxForMatchCallMsg(struct Pokenav_MatchCallGfx *gfx)
 
 static void DrawMsgBoxForCloseByMsg(struct Pokenav_MatchCallGfx *gfx)
 {
+    CloseMatchCallSelectOptionsWindow(gfx);
     DrawPokeGearPhoneCallPanel(gfx->msgBoxWindowId);
     PutWindowTilemap(gfx->msgBoxWindowId);
     CopyWindowToVram(gfx->msgBoxWindowId, COPYWIN_FULL);
@@ -1366,8 +1421,18 @@ static void CreateOptionsCursorSprite(struct Pokenav_MatchCallGfx *gfx, int top)
 
 static void CloseMatchCallSelectOptionsWindow(struct Pokenav_MatchCallGfx *gfx)
 {
-    DestroySprite(gfx->optionsCursorSprite);
-    gfx->optionsCursorSprite = NULL;
+    if (gfx->optionsCursorSprite != NULL)
+    {
+        DestroySprite(gfx->optionsCursorSprite);
+        gfx->optionsCursorSprite = NULL;
+    }
+    if (gfx->actionWindowId != WINDOW_NONE)
+    {
+        ClearWindowTilemap(gfx->actionWindowId);
+        CopyWindowToVram(gfx->actionWindowId, COPYWIN_MAP);
+        RemoveWindow(gfx->actionWindowId);
+        gfx->actionWindowId = WINDOW_NONE;
+    }
 }
 
 static void UpdateCursorGfxPos(struct Pokenav_MatchCallGfx *gfx, int top)
