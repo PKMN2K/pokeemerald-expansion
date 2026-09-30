@@ -616,3 +616,25 @@ must not be treated as a failure sentinel. Legacy removal is the next phase
 after this live commit passes CI.
 
 **authentic HGSS asset → wired live → legacy removal pending**
+
+
+## Shared PokéNav list arrows — phase 3
+
+CI #648 passed the live integration commit
+`86913f26cd18fd7c7714b27fddf789a39682804e`, including all ROM builds,
+the Gen 4 UI asset/renderer job, and the general Test job.
+
+The shared list now unconditionally loads its verified HGSS six-tile sheet and
+combined OBJ palette. Removed the legacy compressed-sheet and palette
+bindings/descriptors, allocation-failure fallback loop, and superseded
+`graphics/pokenav/list_arrows.png`. No active code or build rule references the
+old graphic. Historical phase notes above describe the staging sequence only.
+
+The authentic pointer/scroll source generators and provenance, sprite sizes,
+positions, tile offsets, tags, callbacks, and destruction path remain intact.
+This completes the implementation sequence for the shared arrows used by
+Match Call, Condition search results, and Ribbon lists:
+
+**authentic HGSS asset → wire live → remove legacy equivalent**
+
+The cleanup commit must pass CI before starting the next UI surface.

@@ -91,9 +91,6 @@ static u32 LoopedTask_EraseListForCheckPage(s32);
 static u32 LoopedTask_ReshowListFromCheckPage(s32);
 static u32 LoopedTask_PrintCheckPageInfo(s32);
 
-static const u16 sListArrow_Pal[] = INCGFX_U16("graphics/pokenav/list_arrows.png", ".gbapal");
-static const u32 sListArrow_Gfx[] = INCGFX_U32("graphics/pokenav/list_arrows.png", ".4bpp.smol");
-
 // Verified retail HGSS Pokédex member-057 pointer and member-000 scroll
 // controls. The six-tile layout preserves the existing list sprite geometry.
 static const u32 sHgssListArrow_Gfx[] = INCBIN_U32("graphics/gen4_ui/hgss_pokegear/list_arrows.4bpp");
@@ -794,24 +791,6 @@ static const struct SpritePalette sHgssListArrowPalettes[] =
     {}
 };
 
-static const struct CompressedSpriteSheet sListArrowSpriteSheets[] =
-{
-    {
-        .data = sListArrow_Gfx,
-        .size = 0xC0,
-        .tag = GFXTAG_ARROW
-    }
-};
-
-static const struct SpritePalette sListArrowPalettes[] =
-{
-    {
-        .data = sListArrow_Pal,
-        .tag = PALTAG_ARROW
-    },
-    {}
-};
-
 static const struct OamData sOamData_RightArrow =
 {
     .y = 0,
@@ -857,21 +836,8 @@ static const struct SpriteTemplate sSpriteTemplate_UpDownArrow =
 
 static void LoadListArrowGfx(void)
 {
-    u32 i;
-    const struct CompressedSpriteSheet *ptr;
-
     LoadSpriteSheet(&sHgssListArrowSpriteSheet);
-    if (GetSpriteTileStartByTag(GFXTAG_ARROW) != 0xFFFF)
-    {
-        Pokenav_AllocAndLoadPalettes(sHgssListArrowPalettes);
-        return;
-    }
-
-    // Temporary phase-2 fallback, retained until the live HGSS path passes CI.
-    for (i = 0, ptr = sListArrowSpriteSheets; i < ARRAY_COUNT(sListArrowSpriteSheets); ptr++, i++)
-        LoadCompressedSpriteSheet(ptr);
-
-    Pokenav_AllocAndLoadPalettes(sListArrowPalettes);
+    Pokenav_AllocAndLoadPalettes(sHgssListArrowPalettes);
 }
 
 static void CreateListArrowSprites(const struct PokenavListWindowState *windowState, struct PokenavList *list)
