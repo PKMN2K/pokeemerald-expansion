@@ -106,7 +106,6 @@ static void DestroyRematchBlueLightSprite(void);
 static void AddOptionDescriptionWindow(void);
 static void LoadHgssPokegearScreenShell(void);
 static void LoadHgssPokegearAppSwitchChrome(void);
-static void DrawPokeGearDescriptionPanel(u32 windowId);
 static void PrintCurrentOptionDescription(void);
 static void PrintNoRibbonWinners(void);
 static bool32 IsDma3ManagerBusyWithBgCopy_(void);
@@ -342,8 +341,10 @@ static const u8 *const sPageDescriptions[] =
     [POKENAV_MENUITEM_CONDITION_SEARCH_CANCEL] = COMPOUND_STRING("Return to the CONDITION menu.")
 };
 
-static const u8 sOptionDescTextColors[]  = {TEXT_COLOR_GREEN, TEXT_COLOR_BLUE, TEXT_COLOR_LIGHT_GREEN};
-static const u8 sOptionDescTextColors2[] = {TEXT_COLOR_GREEN, TEXT_COLOR_BLUE, TEXT_COLOR_LIGHT_GREEN};
+// Color index 0 is transparent on the 4bpp window BG, allowing the verified
+// HGSS shell on BG2 to remain visible behind the functional description text.
+static const u8 sOptionDescTextColors[]  = {0, TEXT_COLOR_BLUE, TEXT_COLOR_LIGHT_GREEN};
+static const u8 sOptionDescTextColors2[] = {0, TEXT_COLOR_BLUE, TEXT_COLOR_LIGHT_GREEN};
 
 static const struct OamData sOamData_MenuOption =
 {
@@ -1487,26 +1488,11 @@ static void AddOptionDescriptionWindow(void)
 
     gfx->optionDescWindowId = AddWindow(&sOptionDescWindowTemplate);
     PutWindowTilemap(gfx->optionDescWindowId);
-    DrawPokeGearDescriptionPanel(gfx->optionDescWindowId);
+
+    // Do not draw a fabricated HGSS-style panel here. A transparent window
+    // leaves the verified retail HGSS fixed shell visible underneath.
+    FillWindowPixelBuffer(gfx->optionDescWindowId, PIXEL_FILL(0));
     CopyWindowToVram(gfx->optionDescWindowId, COPYWIN_FULL);
-}
-
-static void DrawPokeGearDescriptionPanel(u32 windowId)
-{
-    u8 width = GetWindowAttribute(windowId, WINDOW_WIDTH) * 8;
-    u8 height = GetWindowAttribute(windowId, WINDOW_HEIGHT) * 8;
-
-    FillWindowPixelBuffer(windowId, PIXEL_FILL(6));
-
-    if (width < 16 || height < 8)
-        return;
-
-    // HGSS PokéGear information strip: light upper bevel, dark lower edge.
-    FillWindowPixelRect(windowId, PIXEL_FILL(5), 2, 0, width - 4, 1);
-    FillWindowPixelRect(windowId, PIXEL_FILL(5), 0, 2, 1, height - 4);
-    FillWindowPixelRect(windowId, PIXEL_FILL(4), 2, height - 1, width - 4, 1);
-    FillWindowPixelRect(windowId, PIXEL_FILL(4), width - 1, 2, 1, height - 4);
-    FillWindowPixelRect(windowId, PIXEL_FILL(5), 6, 2, width - 12, 1);
 }
 
 static void PrintCurrentOptionDescription(void)
@@ -1517,7 +1503,7 @@ static void PrintCurrentOptionDescription(void)
     u32 windowWidth = GetWindowAttribute(gfx->optionDescWindowId, WINDOW_WIDTH) * 8;
     u32 width = GetStringWidth(FONT_NORMAL, desc, -1);
 
-    DrawPokeGearDescriptionPanel(gfx->optionDescWindowId);
+    FillWindowPixelBuffer(gfx->optionDescWindowId, PIXEL_FILL(0));
     AddTextPrinterParameterized3(gfx->optionDescWindowId, FONT_NORMAL, (windowWidth - width) / 2, 1, sOptionDescTextColors, 0, desc);
     CopyWindowToVram(gfx->optionDescWindowId, COPYWIN_GFX);
 }
@@ -1531,7 +1517,7 @@ static void PrintNoRibbonWinners(void)
     u32 windowWidth = GetWindowAttribute(gfx->optionDescWindowId, WINDOW_WIDTH) * 8;
     u32 width = GetStringWidth(FONT_NORMAL, s, -1);
 
-    DrawPokeGearDescriptionPanel(gfx->optionDescWindowId);
+    FillWindowPixelBuffer(gfx->optionDescWindowId, PIXEL_FILL(0));
     AddTextPrinterParameterized3(gfx->optionDescWindowId, FONT_NORMAL, (windowWidth - width) / 2, 1, sOptionDescTextColors2, 0, s);
     CopyWindowToVram(gfx->optionDescWindowId, COPYWIN_GFX);
 }

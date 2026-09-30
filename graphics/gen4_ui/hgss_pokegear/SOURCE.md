@@ -251,3 +251,26 @@ under the cursor sequence.
 The cursor sequence is therefore complete:
 
 **authentic HGSS asset → wire live → remove legacy equivalent**
+
+
+## Synthetic description strip — authenticity cleanup
+
+CI #628 passed commit `46d72676a3dd2ce95f6a5e388cc2c32a603bcda8`,
+completing validation of the retail HGSS cursor sequence.
+
+The remaining `DrawPokeGearDescriptionPanel()` surface was audited against
+the retail PokéGear main loader at the pinned pret/pokeheartgold revision.
+Retail HGSS does not provide or draw a separate beveled description strip in
+that layer. The GBA function was therefore an invented "HGSS-style" overlay,
+not an authentic asset that should be preserved or imitated.
+
+No substitute artwork is generated. The synthetic bevel/fill routine has been
+removed, and the functional description window is now cleared to transparent
+4bpp index 0 before text is printed. The text printer also uses transparent
+background index 0. This exposes the already-verified retail HGSS fixed shell
+(member 36 character graphics, member 24 palette, member 42 screen data) on
+BG2 underneath the text instead of covering it with fabricated pixels.
+
+This cleanup reuses an authentic HGSS asset that was already imported and
+wired live by the completed fixed-shell sequence; it does not create a new
+"HGSS-style" replacement.
