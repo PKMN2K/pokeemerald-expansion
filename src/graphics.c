@@ -1895,8 +1895,6 @@ const u32 gPokenavCondition_Gfx[] = INCGFX_U32("graphics/pokenav/condition/graph
 const u32 gPokenavCondition_Tilemap[] = INCGFX_U32("graphics/pokenav/condition/graph.bin", ".smolTM");
 
 const u16 gPokenavOptions_Tilemap[] = INCBIN_U16("graphics/pokenav/options/options.bin");
-const u32 gPokenavOptions_Gfx[] = INCGFX_U32("graphics/pokenav/options/options.4bpp", ".smol");
-const u16 gPokenavOptions_Pal[] = INCGFX_U16("graphics/pokenav/options/options.pal", ".gbapal");
 
 const u16 gPokenavHeader_Pal[] = INCGFX_U16("graphics/pokenav/header.png", ".gbapal");
 const u32 gPokenavHeader_Gfx[] = INCGFX_U32("graphics/pokenav/header.png", ".4bpp.smol", "-num_tiles 53 -Wnum_tiles"); // TODO: use width 9 and makefile rule for cleanliness, make wasnt behaving, didnt want to apply num_tiles to this
