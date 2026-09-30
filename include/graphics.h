@@ -1980,8 +1980,6 @@ extern const u16 gPokenavCondition_Pal[];
 extern const u32 gPokenavCondition_Gfx[];
 extern const u32 gPokenavCondition_Tilemap[];
 extern const u16 gPokenavOptions_Tilemap[];
-extern const u32 gPokenavOptions_Gfx[];
-extern const u16 gPokenavOptions_Pal[];
 extern const u16 gPokenavLeftHeader_Pal[];
 extern const u16 gPokenavHeader_Pal[];
 extern const u32 gPokenavHeader_Gfx[];
@@ -3384,8 +3382,6 @@ extern const u32 gBerryCrush_TextWindows_Tilemap[];
 extern const u32 gPokenavMessageBox_Gfx[];
 extern const u32 gPokenavMessageBox_Tilemap[];
 extern const u16 gPokenavMessageBox_Pal[];
-extern const u32 gPokenavOptions_Gfx[];
-extern const u16 gPokenavOptions_Pal[];
 
 // Battle Factory Screen
 extern const u16 gFrontierFactoryMenu_Gfx[34 * TILE_SIZE_4BPP / 2];
