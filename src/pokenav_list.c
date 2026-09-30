@@ -91,7 +91,6 @@ static void EraseListEntry(struct PokenavListMenuWindow *, s32, s32);
 static void CreateMoveListWindowTask(s32, struct PokenavList *);
 static void PrintListItems(void *, u32, u32, u32, u32, struct PokenavList *);
 static void InitListItems(const struct PokenavListWindowState *, struct PokenavList *);
-static void InitPokenavListWindow(const struct PokenavListMenuWindow *);
 static u32 LoopedTask_CreatePokenavList(s32);
 static bool32 IsPrintListItemsTaskActive(void);
 static u32 LoopedTask_PrintListItems(s32);
@@ -224,13 +223,6 @@ static void InitPokenavListBg(struct PokenavList *list)
         ChangeBgY(list->listWindow.bg, list->listWindow.y << 11, BG_COORD_SUB);
     }
     CopyBgTilemapBufferToVram(list->listWindow.bg);
-}
-
-static void InitPokenavListWindow(const struct PokenavListMenuWindow *listWindow)
-{
-    FillWindowPixelBuffer(listWindow->windowId, PIXEL_FILL(1));
-    PutWindowTilemap(listWindow->windowId);
-    CopyWindowToVram(listWindow->windowId, COPYWIN_MAP);
 }
 
 static void InitListItems(const struct PokenavListWindowState *windowState, struct PokenavList *list)
@@ -789,7 +781,11 @@ static u32 LoopedTask_ReshowListFromCheckPage(s32 state)
 
             top = selected - offset;
             if (top + windowState->entriesOnscreen > windowState->listLength)
-                top = MAX(0, (s32)windowState->listLength - (s32)windowState->entriesOnscreen);
+            {
+                top = (s32)windowState->listLength - (s32)windowState->entriesOnscreen;
+                if (top < 0)
+                    top = 0;
+            }
 
             windowState->windowTopIndex = top;
             windowState->selectedIndexOffset = selected - top;

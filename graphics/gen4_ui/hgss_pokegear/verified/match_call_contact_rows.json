@@ -180,7 +180,7 @@
     "wired_live": true,
     "legacy_equivalent_removed": false
   },
-  "next": "After phase-2 CI passes, remove DrawPokeGearPhoneContactRowLegacy and the superseded Emerald list-row palette dependency only if no remaining Match Call surface still uses it.",
+  "next": "Re-run phase-2 CI. Only after the corrected live HGSS Phone-row integration passes should the synthetic fallback and any superseded row-palette dependency be removed.",
   "live_integration": {
     "ci_gate": {
       "workflow": "CI",
@@ -223,5 +223,27 @@
     "retained": "DrawPokeGearPhoneContactRowLegacy",
     "activation": "only if the live contact window is unexpectedly <= 90 px wide",
     "note": "The fallback remains compiled until phase-2 CI passes."
+  },
+  "phase2_ci_correction": {
+    "failed_run": 661,
+    "failed_jobs": [
+      "test",
+      "build-firered",
+      "build-leafgreen",
+      "release"
+    ],
+    "cause": [
+      "src/pokenav_list.c used MAX even though this translation unit does not provide that macro",
+      "src/pokenav_match_call_gfx.c used MIN even though this translation unit does not provide that macro",
+      "InitPokenavListWindow became unused after phase-2 initialization was inlined and -Werror rejected it"
+    ],
+    "correction": [
+      "replace MAX with explicit bounds logic",
+      "replace MIN with explicit width clamps",
+      "remove the unused InitPokenavListWindow declaration and definition"
+    ],
+    "asset_or_runtime_design_change": false,
+    "authenticity_change": false,
+    "legacy_removal_started": false
   }
 }

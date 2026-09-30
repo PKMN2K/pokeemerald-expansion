@@ -1001,12 +1001,16 @@ static void DrawHgssPhoneContactRow(u16 windowId, u32 listItemId, u32 row)
     // 216-pixel row: coordinates and palette indices are unchanged.
     FillWindowPixelRect(windowId, PIXEL_FILL(sFill1[colorIdx]), 0, y, width, 24);
 
-    rectWidth = MIN(82, width - 8);
+    rectWidth = width - 8;
+    if (rectWidth > 82)
+        rectWidth = 82;
     FillWindowPixelRect(windowId, PIXEL_FILL(sBg1[colorIdx]), 8, y, rectWidth, 20);
 
     if (width > 90)
     {
-        rectWidth = MIN(126, width - 90);
+        rectWidth = width - 90;
+        if (rectWidth > 126)
+            rectWidth = 126;
         FillWindowPixelRect(windowId, PIXEL_FILL(sBg2[colorIdx]), 90, y, rectWidth, 20);
     }
 

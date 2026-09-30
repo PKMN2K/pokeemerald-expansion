@@ -965,3 +965,23 @@ as a phase-2 safety fallback for an unexpected contact window narrower than
 91 pixels. It is not removed until this live integration passes CI.
 
 **authentic HGSS row source ✅ → wired live ✅ → legacy removal pending**
+
+
+### Match Call contact-row phase-2 CI correction
+
+CI #661 reached the shared C build and exposed three compile-only issues in
+the phase-2 integration:
+
+- `src/pokenav_list.c` used `MAX`, which is not available in that
+  translation unit.
+- `src/pokenav_match_call_gfx.c` used `MIN`, likewise unavailable there.
+- `InitPokenavListWindow` became unused after the new initialization path was
+  inlined, and the project's `-Werror` policy rejected it.
+
+The correction replaces `MIN/MAX` with explicit bounds checks and removes
+only the now-unused helper. It does not change the verified HGSS palette,
+24-pixel geometry, six-contact viewport, eight-row buffering model,
+three-step scrolling design, or fallback policy.
+
+Phase 2 remains active. No legacy contact-row asset or renderer is removed
+until the corrected integration passes CI.
