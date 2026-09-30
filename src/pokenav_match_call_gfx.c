@@ -122,6 +122,9 @@ static u32 ExitMatchCall(s32);
 static const u16 sMatchCallUI_Pal[] = INCGFX_U16("graphics/pokenav/match_call/ui.png", ".gbapal");
 static const u32 sMatchCallUI_Gfx[] = INCGFX_U32("graphics/pokenav/match_call/ui.png", ".4bpp.smol", "-num_tiles 13 -Wnum_tiles");
 static const u32 sMatchCallUI_Tilemap[] = INCGFX_U32("graphics/pokenav/match_call/ui.bin", ".smolTM");
+static const u32 sHgssMatchCallContact_Gfx[] = INCBIN_U32("graphics/gen4_ui/hgss_pokegear/match_call_contact.4bpp");
+static const u16 sHgssMatchCallContact_Tilemap[] = INCBIN_U16("graphics/gen4_ui/hgss_pokegear/match_call_contact.tilemap.bin");
+static const u16 sHgssMatchCallContact_Pal[] = INCBIN_U16("graphics/gen4_ui/hgss_pokegear/match_call_contact.gbapal");
 // Exact verified HGSS Pokédex member-057 lavender pointer, padded to 8x16.
 static const u32 sHgssOptionsCursor_Gfx[] = INCBIN_U32("graphics/gen4_ui/hgss_pokegear/match_call_options_cursor.4bpp");
 static const u16 sHgssOptionsCursor_Pal[] = INCBIN_U16("graphics/gen4_ui/hgss_pokegear/match_call_options_cursor.gbapal");
@@ -131,6 +134,8 @@ static const u32 sHgssRematchBadge_Gfx[] = INCBIN_U32("graphics/gen4_ui/hgss_pok
 static const u16 sHgssRematchBadge_Pal[] = INCBIN_U16("graphics/gen4_ui/hgss_pokegear/rematch_badge.gbapal");
 
 enum {
+    HGSS_MATCH_CALL_CONTACT_TILE_OFFSET = 0x100,
+    HGSS_MATCH_CALL_CONTACT_PALETTE = 6,
     HGSS_PHONE_BADGE_ACTIVE = 0x5000,
     HGSS_PHONE_BADGE_DISABLED = 0x5004,
     HGSS_PHONE_BADGE_EMPTY = 0x5008,
@@ -354,6 +359,14 @@ static u32 LoopedTask_OpenMatchCall(s32 state)
     case 1:
         if (FreeTempTileDataBuffersIfPossible())
             return LT_PAUSE;
+
+        // Phase 2: install the verified retail HGSS Phone contact surface
+        // after the legacy BG2 decompression has completed. The old resources
+        // remain compiled until this live path passes CI.
+        LoadBgTiles(2, sHgssMatchCallContact_Gfx, sizeof(sHgssMatchCallContact_Gfx), HGSS_MATCH_CALL_CONTACT_TILE_OFFSET);
+        CopyToBgTilemapBuffer(2, sHgssMatchCallContact_Tilemap, sizeof(sHgssMatchCallContact_Tilemap), 0);
+        CopyPaletteIntoBufferUnfaded(sHgssMatchCallContact_Pal, BG_PLTT_ID(HGSS_MATCH_CALL_CONTACT_PALETTE), sizeof(sHgssMatchCallContact_Pal));
+        CopyBgTilemapBufferToVram(2);
 
         BgDmaFill(1, 0, 0, 1);
         SetBgTilemapBuffer(1, gfx->bgTilemapBuffer1);

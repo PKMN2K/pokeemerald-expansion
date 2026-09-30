@@ -33,6 +33,7 @@ GEN4UIHGSSPOKEGEARREMATCH := tools/gen4_ui/make_hgss_pokegear_rematch_badge.py
 GEN4UIHGSSPOKEGEARPHONESTATUS := tools/gen4_ui/make_hgss_pokegear_phone_status.py
 GEN4UIHGSSPOKEGEARLISTARROWS := tools/gen4_ui/make_hgss_pokegear_list_arrows.py
 GEN4UIHGSSPOKEGEARCONDITIONSEARCH := tools/gen4_ui/make_hgss_pokegear_condition_search.py
+GEN4UIHGSSPOKEGEARCONTACT := tools/gen4_ui/make_hgss_pokegear_match_call_contact.py
 
 types := none normal fight flying poison ground rock bug ghost steel mystery fire water grass electric psychic ice dragon dark fairy stellar
 contest_types := cool beauty cute smart tough
@@ -151,6 +152,19 @@ $(GEN4UIGFXDIR)/hgss_pokegear/condition_search_cursor.gbapal: $(GEN4UIHGSSPOKEGE
 
 $(GEN4UIGFXDIR)/hgss_pokegear/condition_search_labels.4bpp: $(GEN4UIHGSSPOKEGEARCONDITIONSEARCH) $(GEN4UIGFXDIR)/hgss_pokegear/verified/font_id4.bin
 	python3 $(GEN4UIHGSSPOKEGEARCONDITIONSEARCH) --labels $@
+
+$(GEN4UIGFXDIR)/hgss_pokegear/match_call_contact.4bpp: $(GEN4UIHGSSPOKEGEARCONTACT) \
+	$(GEN4UIGFXDIR)/hgss_pokegear/verified/pgphone_skin0_contact_tiles.png \
+	$(GEN4UIGFXDIR)/hgss_pokegear/verified/pgphone_skin0_contact_tilemap.NSCR
+	python3 $< --tiles $@
+
+$(GEN4UIGFXDIR)/hgss_pokegear/match_call_contact.tilemap.bin: $(GEN4UIHGSSPOKEGEARCONTACT) \
+	$(GEN4UIGFXDIR)/hgss_pokegear/verified/pgphone_skin0_contact_tilemap.NSCR
+	python3 $< --tilemap $@
+
+$(GEN4UIGFXDIR)/hgss_pokegear/match_call_contact.gbapal: $(GEN4UIHGSSPOKEGEARCONTACT) \
+	$(GEN4UIGFXDIR)/hgss_pokegear/verified/pgphone_skin0_contact_palette.NCLR
+	python3 $< --palette $@
 
 # The live HGSS Pokédex background reserves BG palette entries 128..140.
 # Shifting tile pixel indices keeps the legacy Pokédex palettes (0..95 and 240..255)

@@ -823,3 +823,29 @@ procedural panels remain untouched until an exact GBA adaptation of these
 retail Phone resources is prepared and separately validated.
 
 **authentic HGSS asset prepared → wire live pending → legacy removal pending**
+
+
+## Match Call contact surface — phase 2
+
+CI #656 passed the phase-1 verified retail source package at
+`fe37c46c3d9d31f678367c40937f37619e7b2a38`.
+
+The exact HGSS Phone contact screen is now wired live on Match Call BG2.
+`make_hgss_pokegear_match_call_contact.py` verifies the three copied retail
+files by Git blob identity before producing any output. It uses member 34's
+first 20 tile rows—the exact screen rectangle copied by retail HGSS—and keeps
+source columns 1..30 as the centered 240-pixel GBA viewport.
+
+Member-28 pixel indices and member-34 flip bits are preserved exactly. Source
+tile IDs are relocated into unused BG2 character space beginning at tile
+`0x180`; member-10 palette bank 0 is copied without color changes into
+dedicated GBA BG palette bank 6. There is no scaling, redrawing, recoloring, or
+interpolation.
+
+For rollback safety, the legacy Emerald `ui.png/ui.bin`, call/list palettes,
+and the procedural HGSS-style panel helpers remain present during this phase.
+Initialization first allows the old compressed BG to finish, then installs the
+authentic HGSS Phone contact surface before the Match Call windows/list are
+created. No legacy asset is deleted until this live path passes CI.
+
+**authentic HGSS asset → wired live → legacy removal pending**

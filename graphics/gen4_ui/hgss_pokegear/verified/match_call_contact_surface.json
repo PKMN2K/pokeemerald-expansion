@@ -1,6 +1,6 @@
 {
   "role": "match_call_contact_surface",
-  "phase": "source_prepared",
+  "phase": "wired_live",
   "classification": "direct reuse of authentic HGSS PokéGear Phone contact-list background assets",
   "source_game": "Pokemon HeartGold / SoulSilver",
   "source_repository": "pret/pokeheartgold",
@@ -56,8 +56,50 @@
   },
   "pipeline": {
     "authentic_hgss_asset_ready": true,
-    "wired_live": false,
+    "wired_live": true,
     "legacy_equivalent_removed": false
   },
-  "next": "Adapt only the exact retail member-28/member-34/member-10 Phone contact surface to the GBA viewport, then wire it live before removing any legacy Match Call chrome or procedural panel code."
+  "next": "After the live contact surface passes CI, remove the superseded Emerald background assets/bindings and replace the remaining procedural HGSS-style Match Call chrome only where the verified retail Phone assets provide the live equivalent.",
+  "live_adaptation": {
+    "generator": "tools/gen4_ui/make_hgss_pokegear_match_call_contact.py",
+    "outputs": [
+      "graphics/gen4_ui/hgss_pokegear/match_call_contact.4bpp",
+      "graphics/gen4_ui/hgss_pokegear/match_call_contact.tilemap.bin",
+      "graphics/gen4_ui/hgss_pokegear/match_call_contact.gbapal"
+    ],
+    "source_screen_rows": [
+      0,
+      19
+    ],
+    "source_columns": [
+      1,
+      30
+    ],
+    "source_viewport": [
+      256,
+      160
+    ],
+    "gba_viewport": [
+      240,
+      160
+    ],
+    "transformation": [
+      "keep the retail Phone contact screen's first 20 tile rows exactly",
+      "omit one 8-pixel edge column on each side to form the 240-pixel GBA viewport",
+      "preserve source tile pixel indices and horizontal/vertical flip bits",
+      "remap tile IDs into unused BG2 character space starting at tile 0x180",
+      "copy exact retail NCLR palette bank 0 into dedicated GBA BG palette bank 6"
+    ],
+    "scaling": false,
+    "redrawing": false,
+    "recoloring": false,
+    "interpolation": false,
+    "live_file": "src/pokenav_match_call_gfx.c",
+    "bg": 2,
+    "bg_template_base_tile": "0x80",
+    "load_offset": "0x100",
+    "resulting_tile_base": "0x180",
+    "palette_bank": 6,
+    "legacy_retention": "phase-2 Emerald ui.png/ui.bin, call/list palettes, and procedural Phone panels remain compiled/active for rollback until live CI passes"
+  }
 }
