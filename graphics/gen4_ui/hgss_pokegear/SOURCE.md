@@ -736,3 +736,35 @@ Runtime predicates, contact rows, flashing code, and legacy files remain
 unchanged in this source-only package.
 
 **authentic HGSS asset prepared → wire live pending → legacy removal pending**
+
+
+## Match Call rematch badge — phase 2
+
+Prepared against source commit `8d79eb91430935b6487bf5f751f1d2f6ef413357`.
+CI #653's Gen 4 UI job passed; this live change remains off the active branch
+until that source run finishes successfully.
+
+The live path loads the exact native 16x16 HGSS phone-status frames on BG3
+with their original palette in bank 5. Graphics tiles 0..8 are reserved for the
+two frames and transparent clearing tile. List fill tiles move to 9/10 and
+its 512-tile text window starts at 11, avoiding badge/text graphics overlap.
+The text window ends at tile 522, below the BG2 artwork at the address
+corresponding to BG3 tile 640.
+
+The contact list moves left from tile 13 to tile 12 while retaining its full
+16-tile text width. The badge occupies columns 28/29 (pixels 224..239), so the
+complete native image fits on the GBA screen without clipping the text window.
+Badge drawing and clearing write all four cells of the 2x2 tile block.
+The existing rematch predicate still controls presence. The alert task switches
+between the unchanged retail active/disabled frames every 16 frames rather than
+interpolating palette colors. It scans the 16 circular list rows, changes only
+existing badge cells, and ignores cleared rows. Newly drawn rows use the
+current animation phase. Existing show/hide task controls remain intact.
+
+For this phase, the legacy source loads are retained in initialization; the
+HGSS load occurs only after their decompression completes and replaces them
+before the list is created. The old source files and bindings are removed only
+after the live replacement passes CI. The Match Call renderer is already an
+explicit target in the Gen 4 UI CI compile job.
+
+**authentic HGSS asset → wired live → legacy removal pending**

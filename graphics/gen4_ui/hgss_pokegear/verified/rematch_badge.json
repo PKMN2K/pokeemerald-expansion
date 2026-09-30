@@ -1,6 +1,6 @@
 {
   "role": "match_call_rematch_badge",
-  "phase": "source_prepared",
+  "phase": "wired_live",
   "classification": "functional reuse of authentic HGSS phone-status artwork",
   "direct_retail_equivalent": false,
   "source_record": "phone_status_indicator_skin0.json",
@@ -41,7 +41,7 @@
     ],
     "transparent": 8
   },
-  "runtime_wired": false,
+  "runtime_wired": true,
   "legacy_removed": false,
   "legacy_assets": [
     "graphics/pokenav/match_call/pokeball.png",
@@ -52,5 +52,22 @@
   "generated_tiles_sha256": "353851e316ca36b962ad0d8785920127d197d4880029c0f813315e030bd4496e",
   "generated_palette": "graphics/gen4_ui/hgss_pokegear/rematch_badge.gbapal",
   "generated_palette_size": 32,
-  "generated_palette_sha256": "1aa4789a0cc9aa26227b2f3b85a9af761f8d3101fd44150ed3be19a6d463c3ec"
+  "generated_palette_sha256": "1aa4789a0cc9aa26227b2f3b85a9af761f8d3101fd44150ed3be19a6d463c3ec",
+  "runtime_binding": "src/pokenav_match_call_gfx.c:sHgssRematchBadge_Gfx",
+  "runtime_layout": {
+    "list_left_tile": 12,
+    "list_width_tiles": 16,
+    "badge_left_tile": 28,
+    "badge_width_tiles": 2,
+    "bg": 3,
+    "palette_bank": 5,
+    "reserved_badge_tiles": 9,
+    "list_fill_tiles": [
+      9,
+      10
+    ],
+    "list_window_base_tile": 11,
+    "list_window_tile_count": 512
+  },
+  "legacy_retention": "phase-2 legacy load completes before HGSS tiles and palette replace it; remove after live CI"
 }
