@@ -791,3 +791,35 @@ This completes the rematch-badge sequence:
 **authentic HGSS asset → wire live → remove legacy equivalent**
 
 The cleanup head must pass CI before the next UI surface begins.
+
+
+## Match Call contact surface — phase 1
+
+CI #655 passed the completed native-HGSS rematch-badge cleanup at
+`b9a2e8945b4e2e6e0635b349b0e136f9d8b3d64b`, so the next authenticity surface can begin.
+
+The remaining Match Call contact presentation is not yet acceptable as final
+HGSS artwork: `src/pokenav_match_call_gfx.c` still loads the legacy Emerald
+`ui.png/ui.bin` presentation and legacy call/list palettes, while
+`DrawPokeGearPhonePanel`, `DrawPokeGearPhonePortraitPanel`, and
+`DrawPokeGearPhoneCallPanel` construct HGSS-style chrome procedurally.
+
+The exact retail HGSS Phone app binding has now been verified against
+`pret/pokeheartgold` revision
+`9d8b7591f09b65804da2fb2dfd56f320633e0d36`. In
+`src/application/pokegear/phone/overlay_101_021F017C.c`, skin 0 loads:
+
+- Phone member 28 character graphics onto the contact-list BG,
+- Phone member 10 main-BG palette,
+- Phone member 34 screen/tilemap data for that BG.
+
+Those three retail source files are now copied byte-for-byte into
+`graphics/gen4_ui/hgss_pokegear/verified/`. Their Git blob IDs are identical
+to the source repository blobs, so this phase contains no redraw, recolor,
+rescale, or synthesized replacement artwork.
+
+Nothing is wired live in this commit. The existing Emerald assets and
+procedural panels remain untouched until an exact GBA adaptation of these
+retail Phone resources is prepared and separately validated.
+
+**authentic HGSS asset prepared → wire live pending → legacy removal pending**

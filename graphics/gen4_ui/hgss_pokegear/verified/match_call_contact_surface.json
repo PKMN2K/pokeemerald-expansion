@@ -1,0 +1,63 @@
+{
+  "role": "match_call_contact_surface",
+  "phase": "source_prepared",
+  "classification": "direct reuse of authentic HGSS PokéGear Phone contact-list background assets",
+  "source_game": "Pokemon HeartGold / SoulSilver",
+  "source_repository": "pret/pokeheartgold",
+  "source_revision": "9d8b7591f09b65804da2fb2dfd56f320633e0d36",
+  "retail_binding": {
+    "source_file": "src/application/pokegear/phone/overlay_101_021F017C.c",
+    "loader": "ov101_021F0284 / ov101_021F0388",
+    "skin_index": 0,
+    "mapping": {
+      "character_graphics": "skin + NARC_pgphone_gra_pgphone_gra_00000028_NCGR -> member 28",
+      "bg_palette": "skin + NARC_pgphone_gra_pgphone_gra_00000010_NCLR -> member 10",
+      "screen_tilemap": "skin + NARC_pgphone_gra_pgphone_gra_00000034_NSCR -> member 34"
+    },
+    "runtime_note": "Retail HGSS loads member 28 onto the Phone app MAIN_2 background, copies member 34 screen data into that layer, and loads member 10 into the main BG palette."
+  },
+  "verified_assets": [
+    {
+      "file": "pgphone_skin0_contact_tiles.png",
+      "source_path": "files/application/pokegear/phone/pgphone_gra/pgphone_gra_00000028.png",
+      "source_git_blob_sha": "24857c0254b5f892620da1241b665f81c83d7899",
+      "copied_git_blob_sha": "24857c0254b5f892620da1241b665f81c83d7899",
+      "byte_identity": true
+    },
+    {
+      "file": "pgphone_skin0_contact_palette.NCLR",
+      "source_path": "files/application/pokegear/phone/pgphone_gra/pgphone_gra_00000010.NCLR",
+      "source_git_blob_sha": "85b29945c3b9e8250b119922d64111ded55b1563",
+      "copied_git_blob_sha": "85b29945c3b9e8250b119922d64111ded55b1563",
+      "byte_identity": true
+    },
+    {
+      "file": "pgphone_skin0_contact_tilemap.NSCR",
+      "source_path": "files/application/pokegear/phone/pgphone_gra/pgphone_gra_00000034.NSCR",
+      "source_git_blob_sha": "ba15280bdce293fb3056cf5075b002f545e86790",
+      "copied_git_blob_sha": "ba15280bdce293fb3056cf5075b002f545e86790",
+      "byte_identity": true
+    }
+  ],
+  "current_project_gap": {
+    "live_file": "src/pokenav_match_call_gfx.c",
+    "legacy_assets": [
+      "graphics/pokenav/match_call/ui.png",
+      "graphics/pokenav/match_call/ui.bin",
+      "graphics/pokenav/match_call/call_window.pal",
+      "graphics/pokenav/match_call/list_window.pal"
+    ],
+    "non_authentic_runtime_helpers": [
+      "DrawPokeGearPhonePanel",
+      "DrawPokeGearPhonePortraitPanel",
+      "DrawPokeGearPhoneCallPanel"
+    ],
+    "finding": "The Match Call contact presentation still combines legacy Emerald UI resources with programmatically drawn HGSS-style panels. These are not final production artwork under the authenticity-only policy."
+  },
+  "pipeline": {
+    "authentic_hgss_asset_ready": true,
+    "wired_live": false,
+    "legacy_equivalent_removed": false
+  },
+  "next": "Adapt only the exact retail member-28/member-34/member-10 Phone contact surface to the GBA viewport, then wire it live before removing any legacy Match Call chrome or procedural panel code."
+}
