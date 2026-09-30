@@ -413,3 +413,26 @@ rollback-safe equivalent until CI validates the live integration.
 This is **phase 2**:
 
 **authentic HGSS asset -> wired live -> legacy removal pending**
+
+
+## Match Call notification — phase 3
+
+CI #633 passed commit `327470de41cf68d7d756cf17c68f1e398b7d2f0a`,
+validating the authentic HGSS phone-status sprite as the live top-level
+nearby-rematch notification across Gen 4 UI validation, Emerald, FireRed,
+LeafGreen, release, docs, and the general test suite.
+
+The superseded PokéNav blue-light implementation has now been removed completely.
+`graphics/pokenav/blue_light.png` is deleted, and
+`src/pokenav_menu_handler_gfx.c` no longer contains its graphics/palette tags,
+INCGFX bindings, compressed sprite-sheet entry, palette entry, 32x16 OAM
+template, hidden rollback sprite, blink callback, allocation path, or cleanup
+calls.
+
+The live path now creates and destroys only the authentic 16x16 HGSS
+phone-status sprite. Its rematch predicate and validated top-level/submenu
+visibility behavior are unchanged from phase 2.
+
+This completes the Match Call notification sequence:
+
+**authentic HGSS asset -> wire live -> remove legacy equivalent**
