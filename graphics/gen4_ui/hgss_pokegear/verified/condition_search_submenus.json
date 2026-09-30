@@ -1,6 +1,6 @@
 {
   "role": "pokegear_condition_search_submenu_labels",
-  "phase": "wired_live",
+  "phase": "legacy_removed",
   "source_game": "Pokemon HeartGold / SoulSilver",
   "source_repository": "pret/pokeheartgold",
   "source_revision": "9d8b7591f09b65804da2fb2dfd56f320633e0d36",
@@ -134,9 +134,15 @@
       "sOptionsLabelGfx_Tough 0x160",
       "sOptionsLabelGfx_Cancel 0x180"
     ],
-    "removed": false,
+    "removed": true,
     "live_visible": false,
-    "allocated_for_phase2_rollback": true
+    "allocated_for_phase2_rollback": false,
+    "removal_notes": [
+      "Removed gPokenavOptions_Gfx and gPokenavOptions_Pal runtime bindings.",
+      "Removed legacy menu-option OBJ allocation, slide/zoom/blend animation path, and scanline selection glow.",
+      "Removed obsolete graphics/pokenav/options label PNG sources and options.pal.",
+      "Retained graphics/pokenav/options/options.bin because gPokenavOptions_Tilemap remains live in src/pokenav_conditions_gfx.c for the Condition detail search-mode tilemap."
+    ]
   },
   "ci_gate_before_phase1": {
     "workflow": "CI",
@@ -147,9 +153,9 @@
   "pipeline": {
     "authentic_hgss_asset_ready": true,
     "wired_live": true,
-    "legacy_equivalent_removed": false
+    "legacy_equivalent_removed": true
   },
-  "next": "Wait for CI to validate the live authentic HGSS Condition/Search presentation. Only then remove the hidden gPokenavOptions_Gfx/gPokenavOptions_Pal submenu label ranges and legacy glow path.",
+  "next": "Wait for CI to validate the phase-3 legacy-removal head. Do not begin the next UI surface until that cleanup CI is green.",
   "live_binding": {
     "chrome_bg": 2,
     "chrome_tile_base": "0x1F0",
@@ -189,5 +195,18 @@
     "conclusion": "success",
     "validated_commit": "98f554561be9a23252650c415174a337fa26611b"
   },
-  "status": "phase 2: authentic HGSS member-057 chrome, font-ID-4 labels, and lavender pointer are live; legacy PokéNav submenu labels remain compiled but hidden pending CI"
+  "status": "phase 3: authentic HGSS Condition/Search presentation remains live and the superseded legacy option-label sprite/glow resources are removed; cleanup CI pending",
+  "ci_gate_before_legacy_removal": {
+    "workflow": "CI",
+    "run_number": 641,
+    "conclusion": "success",
+    "validated_commit": "8714a052d77a340e0331e3f3979b61edcd0639f1"
+  },
+  "legacy_removal_commits": [
+    "246fa7c9043ffa6f4a48c0253e0f5ce96cec9799",
+    "a451ca1a40595d6ab7eebe26300cb951cc7416c9",
+    "8f32c7a4b6d41d819ad2d8a85076aa924b2ad06f",
+    "c1037c5bc604064f9864ad3a7b6a36f723d64741",
+    "649ed72dc89dc3246da8d4d2640d9e41a0967398"
+  ]
 }
