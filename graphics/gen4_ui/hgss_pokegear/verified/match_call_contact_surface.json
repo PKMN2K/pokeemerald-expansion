@@ -1,6 +1,6 @@
 {
   "role": "match_call_contact_surface",
-  "phase": "wired_live",
+  "phase": "legacy_removed",
   "classification": "direct reuse of authentic HGSS PokéGear Phone contact-list background assets",
   "source_game": "Pokemon HeartGold / SoulSilver",
   "source_repository": "pret/pokeheartgold",
@@ -41,25 +41,20 @@
   ],
   "current_project_gap": {
     "live_file": "src/pokenav_match_call_gfx.c",
-    "legacy_assets": [
-      "graphics/pokenav/match_call/ui.png",
-      "graphics/pokenav/match_call/ui.bin",
-      "graphics/pokenav/match_call/call_window.pal",
-      "graphics/pokenav/match_call/list_window.pal"
+    "remaining_non_authentic_surfaces": [
+      "dynamic contact-row styling on BG3",
+      "Match Call action/options pad",
+      "trainer check-page portrait panel",
+      "call-message panel"
     ],
-    "non_authentic_runtime_helpers": [
-      "DrawPokeGearPhonePanel",
-      "DrawPokeGearPhonePortraitPanel",
-      "DrawPokeGearPhoneCallPanel"
-    ],
-    "finding": "The Match Call contact presentation still combines legacy Emerald UI resources with programmatically drawn HGSS-style panels. These are not final production artwork under the authenticity-only policy."
+    "finding": "The legacy Emerald static Match Call BG2 background is removed. Remaining procedural HGSS-style pieces are explicitly separate surfaces requiring their own verified HGSS replacements."
   },
   "pipeline": {
     "authentic_hgss_asset_ready": true,
     "wired_live": true,
-    "legacy_equivalent_removed": false
+    "legacy_equivalent_removed": true
   },
-  "next": "After the live contact surface passes CI, remove the superseded Emerald background assets/bindings and replace the remaining procedural HGSS-style Match Call chrome only where the verified retail Phone assets provide the live equivalent.",
+  "next": "Begin phase 1 for the dynamic Match Call contact-row styling using the exact retail HGSS Phone list rendering/palette behavior before changing or deleting the current BG3 row presentation.",
   "live_adaptation": {
     "generator": "tools/gen4_ui/make_hgss_pokegear_match_call_contact.py",
     "outputs": [
@@ -99,8 +94,7 @@
     "bg_template_base_tile": "0x80",
     "load_offset": "0x100",
     "resulting_tile_base": "0x180",
-    "palette_bank": 6,
-    "legacy_retention": "phase-2 Emerald ui.png/ui.bin, call/list palettes, and procedural Phone panels remain compiled/active for rollback until live CI passes"
+    "palette_bank": 6
   },
   "phase2_ci_correction": {
     "failed_run": 657,
@@ -108,5 +102,36 @@
     "cause": "the py_compile command ended before the new generator because the previous workflow line lacked a shell continuation",
     "correction": "append a backslash to the existing generator line so make_hgss_pokegear_match_call_contact.py is passed to python3 -m py_compile",
     "asset_or_runtime_change": false
+  },
+  "status": "phase 3 complete for the Match Call static contact background: authentic HGSS Phone member-28/member-34/member-10 is the sole BG2 source",
+  "legacy_removal": {
+    "ci_gate": {
+      "workflow": "CI",
+      "run_number": 658,
+      "conclusion": "success",
+      "validated_commit": "50ee0e60f2b9344f2b3f09e6a3861bde83e2eeea"
+    },
+    "removed_bindings": [
+      "sMatchCallUI_Pal",
+      "sMatchCallUI_Gfx",
+      "sMatchCallUI_Tilemap"
+    ],
+    "removed_assets": [
+      "graphics/pokenav/match_call/ui.png",
+      "graphics/pokenav/match_call/ui.bin"
+    ],
+    "removed_procedural_contact_chrome": [
+      "DrawPokeGearPhonePanel"
+    ],
+    "left_column_behavior": "Location/info windows are transparent over the retail HGSS BG2 and use the authentic contact palette bank 6.",
+    "deliberately_not_removed": [
+      "graphics/pokenav/match_call/call_window.pal",
+      "graphics/pokenav/match_call/list_window.pal",
+      "DrawPokeGearPhoneContactRow",
+      "DrawPokeGearPhoneActionPad",
+      "DrawPokeGearPhonePortraitPanel",
+      "DrawPokeGearPhoneCallPanel"
+    ],
+    "scope_note": "Those retained items render dynamic list rows, options, the trainer-check page, or call-message UI and are separate authenticity surfaces; the static member-34 contact background does not replace them."
   }
 }

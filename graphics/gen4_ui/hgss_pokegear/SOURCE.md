@@ -863,3 +863,35 @@ The missing line-continuation is now restored. No generator logic, retail
 source data, runtime wiring, layout, palette, or legacy Match Call resource is
 changed by this correction. Phase 2 remains the active gate; phase 3 must not
 start until the corrected live integration passes CI.
+
+
+## Match Call contact surface — phase 3
+
+CI #658 passed the corrected live integration at
+`50ee0e60f2b9344f2b3f09e6a3861bde83e2eeea`.
+
+The legacy Emerald static Match Call background is now removed. The
+`sMatchCallUI_Pal`, `sMatchCallUI_Gfx`, and
+`sMatchCallUI_Tilemap` bindings are gone, and
+`graphics/pokenav/match_call/ui.png` plus
+`graphics/pokenav/match_call/ui.bin` are deleted. Match Call BG2 now loads
+the verified HGSS Phone member-28/member-34/member-10 adaptation directly as
+its only static background path.
+
+The old UI palette also fed the left location/info windows. To avoid retaining
+that hidden dependency, those windows now use the authentic HGSS contact
+palette bank and are transparent, exposing the retail Phone background instead
+of drawing the synthetic `DrawPokeGearPhonePanel` chrome. That helper is
+removed.
+
+This cleanup is intentionally limited to the static contact background.
+`DrawPokeGearPhoneContactRow`, `DrawPokeGearPhoneActionPad`,
+`DrawPokeGearPhonePortraitPanel`, `DrawPokeGearPhoneCallPanel`,
+`call_window.pal`, and `list_window.pal` remain because they belong to
+dynamic list rows, options, the trainer-check page, and call-message UI. The
+retail member-34 background does not directly replace those surfaces; each
+must go through its own authenticity sequence.
+
+This completes the static contact-background sequence:
+
+**authentic HGSS asset → wire live → remove legacy equivalent**
