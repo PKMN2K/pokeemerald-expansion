@@ -1,6 +1,6 @@
 {
   "role": "match_call_action_options_menu",
-  "phase": "wired_live_pending_ci",
+  "phase": "legacy_removed_pending_ci",
   "classification": "direct retail HGSS Phone context-menu visual counterpart with adapted game-specific option semantics",
   "source_revision": "9d8b7591f09b65804da2fb2dfd56f320633e0d36",
   "retail_phone_behavior": {
@@ -173,15 +173,15 @@
   "pipeline": {
     "authentic_hgss_source_ready": true,
     "wired_live": true,
-    "legacy_equivalent_removed": false
+    "legacy_equivalent_removed": true
   },
   "ci_gate_from_previous_surface": {
     "workflow": "CI",
-    "run_number": 664,
+    "run_number": 665,
     "conclusion": "success",
-    "validated_commit": "6b326bec37c82e3c45702b7f3e99282d17a744a3"
+    "validated_commit": "af57be65e2f9e00a0422fd8d8edddcbb50e79b7d"
   },
-  "next": "Wait for phase-2 integration CI; then remove the unused legacy action pad and superseded cursor resources/helpers.",
+  "next": "Validate the phase-3 cleanup in CI before starting the next surface.",
   "runtime_binding": {
     "bg": 1,
     "palette_bank": 8,
@@ -203,10 +203,6 @@
       "CHECK",
       "CANCEL",
       "screen teardown"
-    ],
-    "legacy_retained_until_wiring_ci": [
-      "DrawPokeGearPhoneActionPad",
-      "options cursor sprite resources and helpers"
     ]
   }
 }

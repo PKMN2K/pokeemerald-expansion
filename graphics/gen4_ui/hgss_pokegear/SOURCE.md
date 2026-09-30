@@ -1092,3 +1092,23 @@ CI because the local workspace has no ARM compiler. Runtime emulator visual
 validation has not yet been performed.
 
 **authentic HGSS source validated → wired live (CI pending) → legacy removal pending**
+
+
+## Match Call action/options menu — phase 3
+
+CI #665 passed the live wiring at `af57be65` in full, including General Test.
+The procedural `DrawPokeGearPhoneActionPad` and superseded pointer sprite
+resources, helpers, allocation and release paths are now removed. The pointer's
+Match Call build rules, CI targets and obsolete role manifest are removed too.
+Shared HGSS Pokédex pointer source/generators remain in use by other surfaces.
+Earlier pointer sections above are historical records, not active bindings.
+
+The selected sbox_gra borders are the sole action-menu selection indicator.
+The DMA wait helper is now named `WaitForActionMenu`. CALL/CHECK/CANCEL behavior,
+retail geometry, palette and the live renderer are unchanged from phase 2.
+
+Validation: the actual C draw-function harness still passes all five selection
+states; no obsolete pad/pointer symbols remain in the runtime or build paths;
+`git diff --check` passes. Full cleanup integration CI is pending.
+
+**authentic HGSS asset → wired live and validated → legacy equivalent removed**
