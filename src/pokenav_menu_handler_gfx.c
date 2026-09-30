@@ -3,7 +3,6 @@
 #include "decompress.h"
 #include "bg.h"
 #include "palette.h"
-#include "trig.h"
 #include "gpu_regs.h"
 #include "menu.h"
 #include "window.h"
@@ -13,32 +12,18 @@
 #include "gym_leader_rematch.h"
 #include "window.h"
 #include "strings.h"
-#include "scanline_effect.h"
 #include "constants/songs.h"
-#include "constants/rgb.h"
 
 #define GFXTAG_HGSS_POKEGEAR_CURSOR            2
-#define GFXTAG_OPTIONS                         3
 #define GFXTAG_HGSS_POKEGEAR_PHONE_STATUS      4
 #define GFXTAG_HGSS_CONDITION_SEARCH_CURSOR     5
 
 #define PALTAG_HGSS_POKEGEAR_CURSOR            2
 #define PALTAG_HGSS_POKEGEAR_PHONE_STATUS      9
 #define PALTAG_HGSS_CONDITION_SEARCH_CURSOR    10
-#define PALTAG_OPTIONS_DEFAULT 4 // Includes green for Smart/Region Map and yellow for Tough
-#define PALTAG_OPTIONS_BLUE 5
-#define PALTAG_OPTIONS_PINK 6
-#define PALTAG_OPTIONS_BEIGE 7
-#define PALTAG_OPTIONS_RED 8
 
-#define PALTAG_OPTIONS_START PALTAG_OPTIONS_DEFAULT
-
-#define NUM_OPTION_SUBSPRITES 4
 #define NUM_HGSS_POKEGEAR_CURSOR_SPRITES 4
 
-#define OPTION_DEFAULT_X          140
-#define OPTION_SELECTED_X         130
-#define OPTION_EXIT_X             (DISPLAY_WIDTH + 16)
 
 #define HGSS_POKEGEAR_APP_SWITCH_TILE_BASE          0x100
 #define HGSS_POKEGEAR_APP_SWITCH_SELECTED_TILE_BASE 0x178
@@ -82,13 +67,10 @@ struct Pokenav_MenuGfx
     u16 hgssConditionSearchWindowId;
     u8 bg3ScrollTaskId;
     u8 cursorPos;
-    u8 numIconsBlending;
     bool8 pokenavAlreadyOpen;
-    bool32 iconVisible[MAX_POKENAV_MENUITEMS];
     struct Sprite *hgssPhoneStatusSprite;
     struct Sprite *hgssConditionSearchCursorSprite;
     struct Sprite *hgssCursorSprites[NUM_HGSS_POKEGEAR_CURSOR_SPRITES];
-    struct Sprite *iconSprites[MAX_POKENAV_MENUITEMS][NUM_OPTION_SUBSPRITES];
     u8 bg1TilemapBuffer[BG_SCREEN_SIZE];
     u16 hgssAppSwitchTilemap[32 * HGSS_POKEGEAR_APP_SWITCH_HEIGHT_TILES];
 };
@@ -113,20 +95,10 @@ static void DestroyHgssPokegearCursorSprites(void);
 static void SetHgssPokegearCursorVisible(bool32 visible);
 static void UpdateHgssPokegearCursor(void);
 static void DrawCurrentMenuOptionLabels(void);
-static void DrawOptionLabelGfx(const u16 *const *, s32, s32);
 static bool32 IsPokeGearMainMenu(void);
-static s32 GetOptionDefaultX(void);
-static s32 GetOptionSelectedX(void);
 static void StartOptionAnimations_Enter(void);
 static void StartOptionAnimations_CursorMoved(void);
 static void StartOptionAnimations_Exit(void);
-static void StartOptionSlide(struct Sprite **, s32, s32, s32);
-static void StartOptionZoom(struct Sprite **);
-static bool32 AreMenuOptionSpritesMoving(void);
-static void SetOptionInvisibility(struct Sprite **, bool32);
-static void SpriteCB_OptionSlide(struct Sprite *);
-static void SpriteCB_OptionZoom(struct Sprite *);
-static void Task_OptionBlend(u8);
 static void CreateHgssPokegearPhoneStatusSprite(void);
 static void SpriteCB_BlinkingHgssPhoneStatus(struct Sprite *);
 static void DestroyHgssPokegearPhoneStatusSprite(void);
@@ -153,13 +125,7 @@ static void ChangeBgDotsColorToPurple(void);
 static void CreateBgDotLightBluePalTask(void);
 static bool32 IsTaskActive_UpdateBgDotsPalette(void);
 static void Task_UpdateBgDotsPalette(u8);
-static void SetupPokenavMenuScanlineEffects(void);
-static void SetLegacyMenuOptionGlowEnabled(bool32 enabled);
-static void DestroyMenuOptionGlowTask(void);
 static void ResetBldCnt(void);
-static void InitMenuOptionGlow(void);
-static void Task_CurrentMenuOptionGlow(u8);
-static void SetMenuOptionGlow(void);
 
 static const u16 sPokenavBgDotsPal[] = INCGFX_U16("graphics/pokenav/bg_dots.png", ".gbapal");
 static const u32 sPokenavBgDotsTiles[] = INCGFX_U32("graphics/pokenav/bg_dots.png", ".4bpp.smol");
@@ -242,25 +208,6 @@ static const LoopedTask sMenuHandlerLoopTaskFuncs[] =
     [POKENAV_MENU_FUNC_OPEN_FEATURE]          = LoopedTask_OpenPokenavFeature
 };
 
-static const struct CompressedSpriteSheet sPokenavOptionsSpriteSheets[] =
-{
-    {
-        .data = gPokenavOptions_Gfx,
-        .size = 0x3400,
-        .tag = GFXTAG_OPTIONS
-    }
-};
-
-static const struct SpritePalette sPokenavOptionsSpritePalettes[] =
-{
-    {&gPokenavOptions_Pal[0x00], PALTAG_OPTIONS_DEFAULT},
-    {&gPokenavOptions_Pal[0x10], PALTAG_OPTIONS_BLUE},
-    {&gPokenavOptions_Pal[0x20], PALTAG_OPTIONS_PINK},
-    {&gPokenavOptions_Pal[0x30], PALTAG_OPTIONS_BEIGE},
-    {&gPokenavOptions_Pal[0x40], PALTAG_OPTIONS_RED},
-    {}
-};
-
 static const struct SpriteSheet sHgssPokegearCursorSpriteSheet =
 {
     .data = sHgssPokegearCursorCornerTiles,
@@ -292,57 +239,7 @@ static const struct SpritePalette sHgssPokegearPhoneStatusSpritePalette =
 // source center 230 loses both removed 8px columns (0 and 25).
 static const s16 sHgssPokegearAppButtonCenterX[] = {24, 72, 120, 168, 214};
 
-// Tile number, palette tag offset. The top-level Region Map/Condition/
-// Match Call/Ribbons/Switch Off ranges are intentionally no longer addressed;
-// this shared legacy sheet remains live only for Condition/Search submenus.
-static const u16 sOptionsLabelGfx_Party[]     = {0x0A0, PALTAG_OPTIONS_BLUE - PALTAG_OPTIONS_START};
-static const u16 sOptionsLabelGfx_Search[]    = {0x0C0, PALTAG_OPTIONS_BLUE - PALTAG_OPTIONS_START};
-static const u16 sOptionsLabelGfx_Cool[]      = {0x0E0, PALTAG_OPTIONS_RED - PALTAG_OPTIONS_START};
-static const u16 sOptionsLabelGfx_Beauty[]    = {0x100, PALTAG_OPTIONS_BLUE - PALTAG_OPTIONS_START};
-static const u16 sOptionsLabelGfx_Cute[]      = {0x120, PALTAG_OPTIONS_PINK - PALTAG_OPTIONS_START};
-static const u16 sOptionsLabelGfx_Smart[]     = {0x140, PALTAG_OPTIONS_DEFAULT - PALTAG_OPTIONS_START};
-static const u16 sOptionsLabelGfx_Tough[]     = {0x160, PALTAG_OPTIONS_DEFAULT - PALTAG_OPTIONS_START};
-static const u16 sOptionsLabelGfx_Cancel[]    = {0x180, PALTAG_OPTIONS_BEIGE - PALTAG_OPTIONS_START};
-
-struct
-{
-    u16 yStart;
-    u16 deltaY;
-    const u16 *gfx[MAX_POKENAV_MENUITEMS];
-} static const sPokenavMenuOptionLabelGfx[POKENAV_MENU_TYPE_COUNT] =
-{
-    // The authentic HGSS app-switch strip is the top-level launcher surface.
-    // Keep these entries empty so no legacy PokéNav top-level label tile range
-    // remains addressable by the live presentation.
-    [POKENAV_MENU_TYPE_DEFAULT] = {0},
-    [POKENAV_MENU_TYPE_UNLOCK_MC] = {0},
-    [POKENAV_MENU_TYPE_UNLOCK_MC_RIBBONS] = {0},
-    [POKENAV_MENU_TYPE_CONDITION] =
-    {
-        .yStart = 56,
-        .deltaY = 20,
-        .gfx = {
-            sOptionsLabelGfx_Party,
-            sOptionsLabelGfx_Search,
-            sOptionsLabelGfx_Cancel
-        }
-    },
-    [POKENAV_MENU_TYPE_CONDITION_SEARCH] =
-    {
-        .yStart = 40,
-        .deltaY = 16,
-        .gfx = {
-            sOptionsLabelGfx_Cool,
-            sOptionsLabelGfx_Beauty,
-            sOptionsLabelGfx_Cute,
-            sOptionsLabelGfx_Smart,
-            sOptionsLabelGfx_Tough,
-            sOptionsLabelGfx_Cancel
-        }
-    },
-};
-
-static const struct WindowTemplate sOptionDescWindowTemplate =
+ =
 {
     .bg = 1,
     .tilemapLeft = 3,
@@ -387,48 +284,7 @@ static const u8 *const sPageDescriptions[] =
 static const u8 sOptionDescTextColors[]  = {0, TEXT_COLOR_BLUE, TEXT_COLOR_LIGHT_GREEN};
 static const u8 sOptionDescTextColors2[] = {0, TEXT_COLOR_BLUE, TEXT_COLOR_LIGHT_GREEN};
 
-static const struct OamData sOamData_MenuOption =
-{
-    .y = 0,
-    .affineMode = ST_OAM_AFFINE_OFF,
-    .objMode = ST_OAM_OBJ_NORMAL,
-    .bpp = ST_OAM_4BPP,
-    .shape = SPRITE_SHAPE(32x16),
-    .x = 0,
-    .size = SPRITE_SIZE(32x16),
-    .tileNum = 0,
-    .priority = 2,
-    .paletteNum = 0,
-};
-
-static const union AffineAnimCmd sAffineAnim_MenuOption_Normal[] =
-{
-    AFFINEANIMCMD_FRAME(0x100, 0x100, 0, 0),
-    AFFINEANIMCMD_END,
-};
-
-static const union AffineAnimCmd sAffineAnim_MenuOption_Zoom[] =
-{
-    AFFINEANIMCMD_FRAME(0x100, 0x100, 0, 0),
-    AFFINEANIMCMD_FRAME(0x10, 0x10, 0, 0x12),
-    AFFINEANIMCMD_END,
-};
-
-static const union AffineAnimCmd *const sAffineAnims_MenuOption[] =
-{
-    sAffineAnim_MenuOption_Normal,
-    sAffineAnim_MenuOption_Zoom
-};
-
-static const struct SpriteTemplate sMenuOptionSpriteTemplate =
-{
-    .tileTag = GFXTAG_OPTIONS,
-    .paletteTag = PALTAG_OPTIONS_START,
-    .oam = &sOamData_MenuOption,
-    .affineAnims = sAffineAnims_MenuOption,
-};
-
-static const struct OamData sOamData_HgssPokegearCursor =
+ =
 {
     .y = 0,
     .affineMode = ST_OAM_AFFINE_OFF,
@@ -533,14 +389,6 @@ static const struct SpriteTemplate sHgssConditionSearchCursorSpriteTemplate =
     .callback = SpriteCallbackDummy,
 };
 
-static const struct ScanlineEffectParams sPokenavMainMenuScanlineEffectParams =
-{
-    &REG_WIN0H,
-    ((DMA_ENABLE | DMA_START_HBLANK | DMA_REPEAT | DMA_DEST_RELOAD) << 16) | 1,
-    1,
-    0
-};
-
 static bool32 AreAnyTrainerRematchesNearby(void)
 {
 #if FREE_MATCH_CALL == FALSE
@@ -586,7 +434,6 @@ static struct Pokenav_MenuGfx * OpenPokenavMenu(void)
 
     if (gfx != NULL)
     {
-        gfx->numIconsBlending = 0;
         gfx->loopedTaskId = CreateLoopedTask(LoopedTask_OpenMenu, 1);
         gfx->isTaskActiveCB = GetCurrentLoopedTaskActive;
     }
@@ -615,7 +462,6 @@ void FreeMenuHandlerSubstruct2(void)
     RemoveWindow(gfx->optionDescWindowId);
     RemoveWindow(gfx->hgssConditionSearchWindowId);
     FreeAndDestroyMainMenuSprites();
-    DestroyMenuOptionGlowTask();
     FreePokenavSubstruct(POKENAV_SUBSTRUCT_MENU_GFX);
 }
 
@@ -725,11 +571,9 @@ static u32 LoopedTask_OpenMenu(s32 state)
             break;
         }
         StartOptionAnimations_Enter();
-        SetupPokenavMenuScanlineEffects();
+        SetPokenavVBlankCallback();
         return LT_INC_AND_CONTINUE;
     case 9:
-        if (AreMenuOptionSpritesMoving())
-            return LT_PAUSE;
         if (AreLeftHeaderSpritesMoving())
             return LT_PAUSE;
         break;
@@ -742,14 +586,11 @@ static u32 LoopedTask_MoveMenuCursor(s32 state)
     switch (state)
     {
     case 0:
-        SetMenuOptionGlow();
         StartOptionAnimations_CursorMoved();
         PrintCurrentOptionDescription();
         PlaySE(SE_SELECT);
         return LT_INC_AND_PAUSE;
     case 1:
-        if (AreMenuOptionSpritesMoving())
-            return LT_PAUSE;
         if (IsDma3ManagerBusyWithBgCopy_())
             return LT_PAUSE;
         break;
@@ -768,8 +609,6 @@ static u32 LoopedTask_OpenConditionMenu(s32 state)
         PlaySE(SE_SELECT);
         return LT_INC_AND_PAUSE;
     case 1:
-        if (AreMenuOptionSpritesMoving())
-            return LT_PAUSE;
         if (AreLeftHeaderSpritesMoving())
             return LT_PAUSE;
         DrawCurrentMenuOptionLabels();
@@ -782,15 +621,12 @@ static u32 LoopedTask_OpenConditionMenu(s32 state)
         PrintCurrentOptionDescription();
         return LT_INC_AND_PAUSE;
     case 3:
-        if (AreMenuOptionSpritesMoving())
-            return LT_PAUSE;
         if (AreLeftHeaderSpritesMoving())
             return LT_PAUSE;
         if (IsTaskActive_UpdateBgDotsPalette())
             return LT_PAUSE;
         if (IsDma3ManagerBusyWithBgCopy_())
             return LT_PAUSE;
-        InitMenuOptionGlow();
         break;
     }
     return LT_FINISH;
@@ -806,8 +642,6 @@ static u32 LoopedTask_ReturnToMainMenu(s32 state)
         HideMainOrSubMenuLeftHeader(POKENAV_GFX_CONDITION_MENU, FALSE);
         return LT_INC_AND_PAUSE;
     case 1:
-        if (AreMenuOptionSpritesMoving())
-            return LT_PAUSE;
         if (AreLeftHeaderSpritesMoving())
             return LT_PAUSE;
         DrawCurrentMenuOptionLabels();
@@ -820,8 +654,6 @@ static u32 LoopedTask_ReturnToMainMenu(s32 state)
         PrintCurrentOptionDescription();
         return LT_INC_AND_PAUSE;
     case 3:
-        if (AreMenuOptionSpritesMoving())
-            return LT_PAUSE;
         if (AreLeftHeaderSpritesMoving())
             return LT_PAUSE;
         if (IsTaskActive_UpdateBgDotsPalette())
@@ -844,8 +676,6 @@ static u32 LoopedTask_OpenConditionSearchMenu(s32 state)
         PlaySE(SE_SELECT);
         return LT_INC_AND_PAUSE;
     case 1:
-        if (AreMenuOptionSpritesMoving())
-            return LT_PAUSE;
         LoadLeftHeaderGfxForIndex(7);
         DrawCurrentMenuOptionLabels();
         return LT_INC_AND_PAUSE;
@@ -855,8 +685,6 @@ static u32 LoopedTask_OpenConditionSearchMenu(s32 state)
         PrintCurrentOptionDescription();
         return LT_INC_AND_PAUSE;
     case 3:
-        if (AreMenuOptionSpritesMoving())
-            return LT_PAUSE;
         if (AreLeftHeaderSpritesMoving())
             return LT_PAUSE;
         if (IsTaskActive_UpdateBgDotsPalette())
@@ -877,8 +705,6 @@ static u32 LoopedTask_ReturnToConditionMenu(s32 state)
         HideMainOrSubMenuLeftHeader(POKENAV_GFX_SEARCH_MENU, FALSE);
         return LT_INC_AND_PAUSE;
     case 1:
-        if (AreMenuOptionSpritesMoving())
-            return LT_PAUSE;
         if (AreLeftHeaderSpritesMoving())
             return LT_PAUSE;
         DrawCurrentMenuOptionLabels();
@@ -888,8 +714,6 @@ static u32 LoopedTask_ReturnToConditionMenu(s32 state)
         PrintCurrentOptionDescription();
         return LT_INC_AND_PAUSE;
     case 3:
-        if (AreMenuOptionSpritesMoving())
-            return LT_PAUSE;
         if (IsTaskActive_UpdateBgDotsPalette())
             return LT_PAUSE;
         InitMenuOptionGlow();
@@ -960,8 +784,6 @@ static u32 LoopedTask_OpenPokenavFeature(s32 state)
         PlaySE(SE_SELECT);
         return LT_INC_AND_PAUSE;
     case 2:
-        if (AreMenuOptionSpritesMoving())
-            return LT_PAUSE;
         if (AreLeftHeaderSpritesMoving())
             return LT_PAUSE;
         PokenavFadeScreen(POKENAV_FADE_TO_BLACK);
@@ -976,15 +798,6 @@ static u32 LoopedTask_OpenPokenavFeature(s32 state)
 
 static void LoadPokenavOptionPalettes(void)
 {
-    s32 i;
-
-    for (i = 0; i < ARRAY_COUNT(sPokenavOptionsSpriteSheets); i++)
-        LoadCompressedSpriteSheet(&sPokenavOptionsSpriteSheets[i]);
-    Pokenav_AllocAndLoadPalettes(sPokenavOptionsSpritePalettes);
-
-    // The shared PokéNav option sheet remains loaded only because the
-    // Condition/Search submenus still use its label ranges. The top-level
-    // launcher itself now uses only the authentic HGSS button/cursor layer.
     LoadSpriteSheet(&sHgssPokegearCursorSpriteSheet);
     LoadSpritePalette(&sHgssPokegearCursorSpritePalette);
     LoadSpriteSheet(&sHgssPokegearPhoneStatusSpriteSheet);
@@ -1010,15 +823,9 @@ static void LoadPokenavOptionPalettes(void)
 
 static void FreeAndDestroyMainMenuSprites(void)
 {
-    FreeSpriteTilesByTag(GFXTAG_OPTIONS);
     FreeSpriteTilesByTag(GFXTAG_HGSS_POKEGEAR_CURSOR);
     FreeSpriteTilesByTag(GFXTAG_HGSS_POKEGEAR_PHONE_STATUS);
     FreeSpriteTilesByTag(GFXTAG_HGSS_CONDITION_SEARCH_CURSOR);
-    FreeSpritePaletteByTag(PALTAG_OPTIONS_DEFAULT);
-    FreeSpritePaletteByTag(PALTAG_OPTIONS_BLUE);
-    FreeSpritePaletteByTag(PALTAG_OPTIONS_PINK);
-    FreeSpritePaletteByTag(PALTAG_OPTIONS_BEIGE);
-    FreeSpritePaletteByTag(PALTAG_OPTIONS_RED);
     FreeSpritePaletteByTag(PALTAG_HGSS_POKEGEAR_CURSOR);
     FreeSpritePaletteByTag(PALTAG_HGSS_POKEGEAR_PHONE_STATUS);
     FreeSpritePaletteByTag(PALTAG_HGSS_CONDITION_SEARCH_CURSOR);
@@ -1029,37 +836,12 @@ static void FreeAndDestroyMainMenuSprites(void)
 
 static void CreateMenuOptionSprites(void)
 {
-    s32 i, j;
-    struct Pokenav_MenuGfx *gfx = GetSubstructPtr(POKENAV_SUBSTRUCT_MENU_GFX);
-
-    for (i = 0; i < MAX_POKENAV_MENUITEMS; i++)
-    {
-        for (j = 0; j < NUM_OPTION_SUBSPRITES; j++)
-        {
-            u8 spriteId = CreateSprite(&sMenuOptionSpriteTemplate, 0x8c, 20 * i + 40, 3);
-            gfx->iconSprites[i][j] = &gSprites[spriteId];
-            gSprites[spriteId].x2 = 32 * j;
-        }
-    }
-
     CreateHgssPokegearCursorSprites();
     CreateHgssConditionSearchCursorSprite();
 }
 
 static void DestroyMenuOptionSprites(void)
 {
-    s32 i, j;
-    struct Pokenav_MenuGfx *gfx = GetSubstructPtr(POKENAV_SUBSTRUCT_MENU_GFX);
-
-    for (i = 0; i < MAX_POKENAV_MENUITEMS; i++)
-    {
-        for (j = 0; j < NUM_OPTION_SUBSPRITES; j++)
-        {
-            FreeSpriteOamMatrix(gfx->iconSprites[i][j]);
-            DestroySprite(gfx->iconSprites[i][j]);
-        }
-    }
-
     DestroyHgssPokegearCursorSprites();
 }
 
@@ -1405,62 +1187,10 @@ static void UpdateHgssPokegearAppSwitchSelection(void)
 
 static void DrawCurrentMenuOptionLabels(void)
 {
-    struct Pokenav_MenuGfx *gfx = GetSubstructPtr(POKENAV_SUBSTRUCT_MENU_GFX);
-    s32 menuType = GetPokenavMenuType();
-    s32 i;
-
-    if (IsPokeGearMainMenu() || IsHgssConditionSearchSubmenu())
-    {
-        for (i = 0; i < MAX_POKENAV_MENUITEMS; i++)
-        {
-            SetOptionInvisibility(gfx->iconSprites[i], TRUE);
-            gfx->iconVisible[i] = FALSE;
-        }
-
-        if (IsHgssConditionSearchSubmenu())
-            DrawHgssConditionSearchSurface();
-        else
-            ClearHgssConditionSearchSurface();
-        return;
-    }
-
-    DrawOptionLabelGfx(
-        sPokenavMenuOptionLabelGfx[menuType].gfx,
-        sPokenavMenuOptionLabelGfx[menuType].yStart,
-        sPokenavMenuOptionLabelGfx[menuType].deltaY);
-}
-
-static void DrawOptionLabelGfx(const u16 *const *optionGfx, s32 yPos, s32 deltaY)
-{
-    s32 i, j;
-    struct Pokenav_MenuGfx *gfx = GetSubstructPtr(POKENAV_SUBSTRUCT_MENU_GFX);
-    s32 baseTile = GetSpriteTileStartByTag(GFXTAG_OPTIONS);
-
-    for (i = 0; i < MAX_POKENAV_MENUITEMS; i++)
-    {
-        if (*optionGfx != NULL)
-        {
-            for (j = 0; j < NUM_OPTION_SUBSPRITES; j++)
-            {
-                gfx->iconSprites[i][j]->oam.tileNum = (*optionGfx)[0] + baseTile + 8 * j;
-                gfx->iconSprites[i][j]->oam.paletteNum = IndexOfSpritePaletteTag((*optionGfx)[1] + PALTAG_OPTIONS_START);
-                gfx->iconSprites[i][j]->invisible = TRUE;
-                gfx->iconSprites[i][j]->y = yPos;
-                gfx->iconSprites[i][j]->x = OPTION_DEFAULT_X;
-                gfx->iconSprites[i][j]->x2 = 32 * j;
-            }
-            gfx->iconVisible[i] = TRUE;
-        }
-        else
-        {
-            for (j = 0; j < NUM_OPTION_SUBSPRITES; j++)
-                gfx->iconSprites[i][j]->invisible = TRUE;
-
-            gfx->iconVisible[i] = FALSE;
-        }
-        optionGfx++;
-        yPos += deltaY;
-    }
+    if (IsHgssConditionSearchSubmenu())
+        DrawHgssConditionSearchSurface();
+    else
+        ClearHgssConditionSearchSurface();
 }
 
 static bool32 IsPokeGearMainMenu(void)
@@ -1476,366 +1206,41 @@ static bool32 IsPokeGearMainMenu(void)
     }
 }
 
-static s32 GetOptionDefaultX(void)
-{
-    return OPTION_DEFAULT_X;
-}
-
-static s32 GetOptionSelectedX(void)
-{
-    return OPTION_SELECTED_X;
-}
-
 static void StartOptionAnimations_Enter(void)
 {
-    s32 i;
     struct Pokenav_MenuGfx *gfx = GetSubstructPtr(POKENAV_SUBSTRUCT_MENU_GFX);
-    s32 cursorPos = GetPokenavCursorPos();
-    s32 iconCount = 0;
-    s32 defaultX;
-    s32 selectedX;
-    s32 x;
+
+    gfx->cursorPos = GetPokenavCursorPos();
+    UpdateHgssPokegearAppSwitchSelection();
 
     if (IsPokeGearMainMenu())
-    {
-        gfx->cursorPos = cursorPos;
         UpdateHgssPokegearCursor();
-        return;
-    }
-
-    if (IsHgssConditionSearchSubmenu())
-    {
-        gfx->cursorPos = cursorPos;
+    else
         UpdateHgssConditionSearchCursor();
-        return;
-    }
-
-    defaultX = GetOptionDefaultX();
-    selectedX = GetOptionSelectedX();
-
-    for (i = 0; i < MAX_POKENAV_MENUITEMS; i++)
-    {
-        if (gfx->iconVisible[i])
-        {
-            if (iconCount++ == cursorPos)
-            {
-                x = selectedX;
-                gfx->cursorPos = i;
-            }
-            else
-            {
-                // Not selected, set default position
-                x = defaultX;
-            }
-
-            // Slide new options in
-            StartOptionSlide(gfx->iconSprites[i], OPTION_EXIT_X, x, 12);
-            SetOptionInvisibility(gfx->iconSprites[i], FALSE);
-        }
-        else
-        {
-            SetOptionInvisibility(gfx->iconSprites[i], TRUE);
-        }
-    }
 }
 
 static void StartOptionAnimations_CursorMoved(void)
 {
-    s32 i;
     struct Pokenav_MenuGfx *gfx = GetSubstructPtr(POKENAV_SUBSTRUCT_MENU_GFX);
-    s32 prevPos = GetPokenavCursorPos();
-    s32 newPos;
-    s32 defaultX;
-    s32 selectedX;
+
+    gfx->cursorPos = GetPokenavCursorPos();
+    UpdateHgssPokegearAppSwitchSelection();
 
     if (IsPokeGearMainMenu())
-    {
-        gfx->cursorPos = prevPos;
-        return;
-    }
-
-    if (IsHgssConditionSearchSubmenu())
-    {
-        gfx->cursorPos = prevPos;
+        UpdateHgssPokegearCursor();
+    else
         UpdateHgssConditionSearchCursor();
-        return;
-    }
-
-    defaultX = GetOptionDefaultX();
-    selectedX = GetOptionSelectedX();
-
-    // Get the index of the next visible option
-    for (i = 0, newPos = 0; i < MAX_POKENAV_MENUITEMS; i++)
-    {
-        if (gfx->iconVisible[i])
-        {
-            if (newPos == prevPos)
-            {
-                newPos = i;
-                break;
-            }
-            newPos++;
-        }
-    }
-
-    // The selected option slides out a bit and the previously
-    // selected option slides back to its original position.
-    StartOptionSlide(gfx->iconSprites[gfx->cursorPos], selectedX, defaultX, 4);
-    StartOptionSlide(gfx->iconSprites[newPos], defaultX, selectedX, 4);
-    gfx->cursorPos = newPos;
 }
 
 static void StartOptionAnimations_Exit(void)
 {
-    s32 i;
-    s32 defaultX;
     struct Pokenav_MenuGfx *gfx = GetSubstructPtr(POKENAV_SUBSTRUCT_MENU_GFX);
 
     SetHgssPokegearCursorVisible(FALSE);
-    if (IsPokeGearMainMenu())
-        return;
-
-    if (IsHgssConditionSearchSubmenu())
-    {
-        gfx->hgssConditionSearchCursorSprite->invisible = TRUE;
-        return;
-    }
-
-    defaultX = GetOptionDefaultX();
-
-    for (i = 0; i < MAX_POKENAV_MENUITEMS; i++)
-    {
-        if (gfx->iconVisible[i])
-        {
-            // Unselected options slide out,
-            // selected option zooms in
-            if (gfx->cursorPos != i)
-                StartOptionSlide(gfx->iconSprites[i], defaultX, OPTION_EXIT_X, 8);
-            else
-                StartOptionZoom(gfx->iconSprites[i]);
-        }
-    }
+    gfx->hgssConditionSearchCursorSprite->invisible = TRUE;
 }
 
-static bool32 AreMenuOptionSpritesMoving(void)
-{
-    s32 i;
-    struct Pokenav_MenuGfx *gfx = GetSubstructPtr(POKENAV_SUBSTRUCT_MENU_GFX);
 
-    for (i = 0; i < MAX_POKENAV_MENUITEMS; i++)
-    {
-        if (gfx->iconSprites[i][0]->callback != SpriteCallbackDummy)
-            return TRUE;
-    }
-
-    if (gfx->numIconsBlending != 0)
-        return TRUE;
-
-    return FALSE;
-}
-
-#define sSlideTime  data[0]
-#define sSlideAccel data[1]
-#define sSlideSpeed data[2]
-#define sSlideEndX  data[7]
-
-static void StartOptionSlide(struct Sprite **sprites, s32 startX, s32 endX, s32 time)
-{
-    s32 i;
-
-    for (i = 0; i < NUM_OPTION_SUBSPRITES; i++)
-    {
-        (*sprites)->x = startX;
-        (*sprites)->sSlideTime = time;
-        (*sprites)->sSlideAccel = 16 * (endX - startX) / time;
-        (*sprites)->sSlideSpeed = 16 * startX;
-        (*sprites)->sSlideEndX = endX;
-        (*sprites)->callback = SpriteCB_OptionSlide;
-        sprites++;
-    }
-}
-
-#define sZoomDelay       data[0]
-#define sZoomSetAffine   data[1]
-#define sZoomSpeed       data[2]
-#define sZoomSubspriteId data[7]
-
-#define tBlendDelay   data[0]
-#define tBlendState   data[1]
-#define tBlendTarget1 data[2]
-#define tBlendTarget2 data[3]
-#define tBlendCounter data[4]
-
-// When an option is selected it zooms in and blends away as part
-// of the transition to the next screen.
-static void StartOptionZoom(struct Sprite **sprites)
-{
-    s32 i;
-    struct Pokenav_MenuGfx *gfx = GetSubstructPtr(POKENAV_SUBSTRUCT_MENU_GFX);
-    u8 taskId;
-
-    for (i = 0; i < NUM_OPTION_SUBSPRITES; i++)
-    {
-        (*sprites)->oam.objMode = ST_OAM_OBJ_BLEND;
-        (*sprites)->oam.affineMode = ST_OAM_AFFINE_DOUBLE;
-        (*sprites)->callback = SpriteCB_OptionZoom;
-        (*sprites)->sZoomDelay = 8;
-        (*sprites)->sZoomSetAffine = FALSE;
-        (*sprites)->sZoomSubspriteId = i;
-        InitSpriteAffineAnim(sprites[0]);
-        StartSpriteAffineAnim(sprites[0], 0);
-        sprites++;
-    }
-
-    SetGpuReg(REG_OFFSET_BLDALPHA, BLDALPHA_BLEND(16, 0));
-    taskId = CreateTask(Task_OptionBlend, 3);
-    gTasks[taskId].tBlendDelay = 8;
-    gfx->numIconsBlending++;
-}
-
-static void SetOptionInvisibility(struct Sprite **sprites, bool32 invisible)
-{
-    s32 i;
-
-    for (i = 0; i < NUM_OPTION_SUBSPRITES; i++)
-    {
-        (*sprites)->invisible = invisible;
-        sprites++;
-    }
-}
-
-static void SpriteCB_OptionSlide(struct Sprite *sprite)
-{
-    sprite->sSlideTime--;
-    if (sprite->sSlideTime != -1)
-    {
-        sprite->sSlideSpeed += sprite->sSlideAccel;
-        sprite->x = sprite->sSlideSpeed >> 4;
-    }
-    else
-    {
-        sprite->x = sprite->sSlideEndX;
-        sprite->callback = SpriteCallbackDummy;
-    }
-}
-
-#undef sSlideTime
-#undef sSlideAccel
-#undef sSlideSpeed
-#undef sSlideEndX
-
-static void SpriteCB_OptionZoom(struct Sprite *sprite)
-{
-    s32 temp;
-    s32 x;
-    if (sprite->sZoomDelay == 0)
-    {
-        if (!sprite->sZoomSetAffine)
-        {
-            StartSpriteAffineAnim(sprite, 1);
-            sprite->sZoomSetAffine++;
-            sprite->sZoomSpeed = 0x100;
-            sprite->x += sprite->x2;
-            sprite->x2 = 0;
-        }
-        else
-        {
-            sprite->sZoomSpeed += 16;
-            temp = sprite->sZoomSpeed;
-            x = temp >> 3;
-            x = (x - 32) / 2;
-
-            // Each subsprite needs to zoom to a different degree/direction
-            switch (sprite->sZoomSubspriteId)
-            {
-            case 0:
-                sprite->x2 = -x * 3;
-                break;
-            case 1:
-                sprite->x2 = -x;
-                break;
-            case 2:
-                sprite->x2 = x;
-                break;
-            case 3:
-                sprite->x2 = x * 3;
-                break;
-            }
-            if (sprite->affineAnimEnded)
-            {
-                sprite->invisible = TRUE;
-                FreeOamMatrix(sprite->oam.matrixNum);
-                CalcCenterToCornerVec(sprite, sprite->oam.shape, sprite->oam.size, ST_OAM_AFFINE_OFF);
-                sprite->oam.affineMode = ST_OAM_AFFINE_OFF;
-                sprite->oam.objMode = ST_OAM_OBJ_NORMAL;
-                sprite->callback = SpriteCallbackDummy;
-            }
-        }
-    }
-    else
-    {
-        sprite->sZoomDelay--;
-    }
-}
-
-#undef sZoomDelay
-#undef sZoomSetAffine
-#undef sZoomSpeed
-#undef sZoomSubspriteId
-
-static void Task_OptionBlend(u8 taskId)
-{
-    s16 *data = gTasks[taskId].data;
-
-    if (tBlendDelay == 0)
-    {
-        switch (tBlendState)
-        {
-        case 0:
-            tBlendTarget1 = 16;
-            tBlendTarget2 = 0;
-            SetGpuReg(REG_OFFSET_BLDCNT, BLDCNT_EFFECT_NONE | BLDCNT_TGT2_ALL);
-            SetGpuReg(REG_OFFSET_BLDALPHA, BLDALPHA_BLEND(16, 0));
-            tBlendState++;
-            break;
-        case 1:
-            if (tBlendCounter & 1)
-            {
-                tBlendTarget1 -= 3;
-                if (tBlendTarget1 < 0)
-                    tBlendTarget1 = 0;
-            }
-            else
-            {
-                tBlendTarget2 += 3;
-                if (tBlendTarget2 > 16)
-                    tBlendTarget2 = 16;
-            }
-            SetGpuReg(REG_OFFSET_BLDALPHA, BLDALPHA_BLEND(tBlendTarget1, tBlendTarget2));
-            tBlendCounter++;
-            if (tBlendCounter == 12)
-            {
-                ((struct Pokenav_MenuGfx *)GetSubstructPtr(POKENAV_SUBSTRUCT_MENU_GFX))->numIconsBlending--;
-                SetGpuReg(REG_OFFSET_BLDALPHA, BLDALPHA_BLEND(0, 16));
-                DestroyTask(taskId);
-            }
-            break;
-        }
-    }
-    else
-    {
-        tBlendDelay--;
-    }
-}
-
-#undef tBlendDelay
-#undef tBlendState
-#undef tBlendTarget1
-#undef tBlendTarget2
-#undef tBlendCounter
-
-// Authentic HGSS phone-status artwork is the sole top-level rematch indicator.
-static void CreateHgssPokegearPhoneStatusSprite(void)
 {
     struct Pokenav_MenuGfx *gfx = GetSubstructPtr(POKENAV_SUBSTRUCT_MENU_GFX);
     u8 spriteId = CreateSprite(
@@ -1986,114 +1391,9 @@ static void Task_UpdateBgDotsPalette(u8 taskId)
         DestroyTask(taskId);
 }
 
-static void VBlankCB_PokenavMainMenu(void)
-{
-    TransferPlttBuffer();
-    LoadOam();
-    ProcessSpriteCopyRequests();
-    ScanlineEffect_InitHBlankDmaTransfer();
-}
 
-static void SetupPokenavMenuScanlineEffects(void)
-{
-    SetGpuReg(REG_OFFSET_BLDY, 0);
-#ifdef BUGFIX
-    // BUGFIX: Use full register write instead of |=.
-    // SetGpuRegBits left leftover window values from the Party screen,
-    // causing partial/missing glow highlights. SetGpuReg clears them fully.
-    SetGpuReg(REG_OFFSET_WIN0V, DISPLAY_HEIGHT);
-#else
-    SetGpuRegBits(REG_OFFSET_WIN0V, DISPLAY_HEIGHT);
-#endif
-    ScanlineEffect_Stop();
-    SetMenuOptionGlow();
-    ScanlineEffect_SetParams(sPokenavMainMenuScanlineEffectParams);
-    SetVBlankCallback_(VBlankCB_PokenavMainMenu);
-    CreateTask(Task_CurrentMenuOptionGlow, 3);
-
-    // The authentic HGSS four-corner cursor is now the sole selection
-    // indicator on the top-level PokéGear. Retain the legacy scanline/lighten
-    // effect only for the still-legacy Condition/Search submenus.
-    SetLegacyMenuOptionGlowEnabled(!IsPokeGearMainMenu());
-}
-
-static void SetLegacyMenuOptionGlowEnabled(bool32 enabled)
-{
-    if (enabled)
-    {
-        SetGpuReg(REG_OFFSET_BLDCNT, BLDCNT_TGT1_OBJ | BLDCNT_EFFECT_LIGHTEN);
-        SetGpuRegBits(REG_OFFSET_DISPCNT, DISPCNT_WIN0_ON);
-        SetGpuRegBits(REG_OFFSET_WININ, WININ_WIN0_ALL);
-        SetGpuRegBits(REG_OFFSET_WINOUT, WINOUT_WIN01_BG_ALL | WINOUT_WIN01_OBJ);
-    }
-    else
-    {
-        SetGpuReg(REG_OFFSET_BLDCNT, 0);
-        SetGpuReg(REG_OFFSET_BLDY, 0);
-        ClearGpuRegBits(REG_OFFSET_DISPCNT, DISPCNT_WIN0_ON);
-    }
-}
-
-static void DestroyMenuOptionGlowTask(void)
-{
-    SetLegacyMenuOptionGlowEnabled(FALSE);
-    ScanlineEffect_Stop();
-    DestroyTask(FindTaskIdByFunc(Task_CurrentMenuOptionGlow));
-    SetPokenavVBlankCallback();
-}
-
-static void ResetBldCnt(void)
 {
     SetGpuReg(REG_OFFSET_BLDCNT, 0);
-}
-
-static void InitMenuOptionGlow(void)
-{
-    SetMenuOptionGlow();
-    SetLegacyMenuOptionGlowEnabled(!IsPokeGearMainMenu() && !IsHgssConditionSearchSubmenu());
-}
-
-static void Task_CurrentMenuOptionGlow(u8 taskId)
-{
-    s16 *data = gTasks[taskId].data;
-
-    if (IsPokeGearMainMenu() || IsHgssConditionSearchSubmenu())
-    {
-        SetGpuReg(REG_OFFSET_BLDY, 0);
-        return;
-    }
-
-    data[0]++;
-    if (data[0] > 0)
-    {
-        data[0] = 0;
-        data[1] += 3;
-        data[1] &= 0x7F;
-        SetGpuReg(REG_OFFSET_BLDY, gSineTable[data[1]] >> 5);
-    }
-}
-
-static void SetMenuOptionGlow(void)
-{
-    int menuType;
-    int cursorPos;
-    int r4;
-
-    UpdateHgssPokegearCursor();
-    UpdateHgssPokegearAppSwitchSelection();
-    UpdateHgssConditionSearchCursor();
-
-    CpuFill16(0, gScanlineEffectRegBuffers[0], DISPLAY_HEIGHT * 2);
-    CpuFill16(0, gScanlineEffectRegBuffers[1], DISPLAY_HEIGHT * 2);
-
-    if (IsPokeGearMainMenu() || IsHgssConditionSearchSubmenu())
-        return;
-
-    menuType = GetPokenavMenuType();
-    cursorPos = GetPokenavCursorPos();
-    r4 = sPokenavMenuOptionLabelGfx[menuType].deltaY * cursorPos + sPokenavMenuOptionLabelGfx[menuType].yStart - 8;
-    CpuFill16(RGB(16, 23, 28), &gScanlineEffectRegBuffers[0][r4], 0x20);
-    CpuFill16(RGB(16, 23, 28), &gScanlineEffectRegBuffers[1][r4], 0x20);
 }
 
 void ResetBldCnt_(void)
