@@ -109,3 +109,10 @@ The converter extracts that boulder without scaling or repainting and remaps RGB
 Polished Crystal stores its Strength boulder, smashable rock, and fossil together in `gfx/sprites/boulder_rock_fossil.png`. The middle 16x16 object is the smashable rock used by Rock Smash.
 
 Polished Crystal's Rock Smash script shakes the obstacle and then removes it; it does not provide separate crumble artwork. The converter therefore repeats the authentic 16x16 rock into Expansion's four 16x16 breakable-rock frame slots in a 32x32 sheet. This preserves Polished Crystal's static-rock appearance while retaining Expansion's existing animation timing, collision, Rock Smash checks, encounter/item logic, and removal behavior.
+
+
+## Fossil object
+
+Polished Crystal stores its Strength boulder, smashable rock, and fossil together in `gfx/sprites/boulder_rock_fossil.png`. The bottom 16x16 object is the fossil.
+
+The converter extracts that authentic 16x16 fossil without scaling or repainting and remaps RGBDS white to GBA OBJ transparency. Both Expansion fossil object graphics IDs now use `graphics/object_events/pics/misc/polished_fossil.png`, while retaining their existing palette tags, object-event behavior, map scripting, and interaction logic.

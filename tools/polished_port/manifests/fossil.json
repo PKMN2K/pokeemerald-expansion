@@ -1,0 +1,37 @@
+{
+  "name": "polished_fossil",
+  "source": {
+    "repository": "Rangi42/polishedcrystal",
+    "commit": "3fa43192379df5c3e7b09a08e4d5d79af4f02f42",
+    "image": "gfx/sprites/boulder_rock_fossil.png",
+    "image_width": 16,
+    "image_height": 48,
+    "sprite": "SPRITE_BOULDER_ROCK_FOSSIL",
+    "slice": {
+      "x": 0,
+      "y": 32,
+      "width": 16,
+      "height": 16,
+      "meaning": "fossil object"
+    }
+  },
+  "target": {
+    "image": "graphics/object_events/pics/misc/polished_fossil.png",
+    "width": 16,
+    "height": 16,
+    "objects": [
+      "OBJ_EVENT_GFX_FOSSIL",
+      "OBJ_EVENT_GFX_FOSSIL_FRLG"
+    ]
+  },
+  "runtime": {
+    "palette": "retain each Expansion object graphics info palette tag",
+    "interaction": "retain Expansion fossil object-event behavior and map scripting",
+    "animation": "static single frame"
+  },
+  "policy": {
+    "resample": false,
+    "repaint": false,
+    "background": "RGBDS white remapped to OBJ palette index 0 transparency"
+  }
+}
