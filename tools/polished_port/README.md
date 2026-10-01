@@ -130,3 +130,10 @@ Expansion's shared Poké Ball object graphics use five physical 16x32 frame slot
 Polished Crystal stores its book, paper, and Pokédex standing-object graphics together in `gfx/sprites/book_paper_pokedex.png`. The normal standing facings use tiles $00-$03 for down, $04-$07 for up, and $08-$0b for left; Oak's Lab explicitly places the shared sprite as `SPRITEMOVEDATA_STANDING_LEFT` for `OaksLabPokedexText`. That identifies the bottom 16x16 frame as the authentic Pokédex object.
 
 The converter extracts that frame without scaling or repainting and remaps RGBDS white to GBA OBJ transparency. Expansion's existing 16x16 Pokédex object keeps its palette tag, map-event behavior, scripting, and collision; only the live graphic is replaced.
+
+
+## Sudowoodo weird-tree object
+
+Polished Crystal's `gfx/sprites/weird_tree.png` is a 16x48 sheet containing three 16x16 frames. Route 36 uses `SPRITE_WEIRD_TREE` with `SPRITEMOVEDATA_SUDOWOODO`; its special tree-shake action alternates the first two source poses, while ordinary directional movement can use the third pose when the disguised Sudowoodo flees.
+
+Expansion already exposes three physical 16x32 frames through `gObjectEventPic_SudowoodoTree`. The converter preserves all three authentic Crystal frames, bottom-aligning each 16x16 pose inside its corresponding 16x32 GBA frame without scaling or repainting. Expansion's existing Sudowoodo graphics info, palette tag, movement/animation tables, collision, and event scripting remain unchanged.

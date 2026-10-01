@@ -1,0 +1,33 @@
+{
+  "name": "polished_sudowoodo_tree",
+  "source": {
+    "repository": "Rangi42/polishedcrystal",
+    "commit": "3fa43192379df5c3e7b09a08e4d5d79af4f02f42",
+    "image": "gfx/sprites/weird_tree.png",
+    "image_width": 16,
+    "image_height": 48,
+    "sprite": "SPRITE_WEIRD_TREE",
+    "frame_width": 16,
+    "frame_height": 16,
+    "frame_count": 3
+  },
+  "target": {
+    "image": "graphics/object_events/pics/pokemon_old/polished_sudowoodo_tree.png",
+    "width": 48,
+    "height": 32,
+    "frame_width": 16,
+    "frame_height": 32,
+    "frame_count": 3,
+    "graphics_symbol": "gObjectEventPic_SudowoodoTree"
+  },
+  "runtime": {
+    "palette": "retain Expansion Sudowoodo palette tag",
+    "behavior": "retain Expansion animation, movement, collision, and event scripting"
+  },
+  "policy": {
+    "resample": false,
+    "repaint": false,
+    "placement": "bottom-align each 16x16 source frame inside corresponding 16x32 target frame",
+    "background": "RGBDS white remapped to OBJ palette index 0 transparency"
+  }
+}

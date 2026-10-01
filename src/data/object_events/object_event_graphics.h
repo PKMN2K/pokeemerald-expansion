@@ -386,7 +386,7 @@ const u32 gObjectEventPic_GroudonOld[] = INCGFX_U32("graphics/object_events/pics
 const u32 gObjectEventPic_KyogreOld[] = INCGFX_U32("graphics/object_events/pics/pokemon_old/kyogre.png", ".4bpp", "-mwidth 4 -mheight 4");
 
 const u32 gObjectEventPic_VigorothMover[] = INCGFX_U32("graphics/object_events/pics/pokemon_old/vigoroth_mover.png", ".4bpp", "-mwidth 4 -mheight 4");
-const u32 gObjectEventPic_SudowoodoTree[] = INCGFX_U32("graphics/object_events/pics/pokemon_old/sudowoodo_tree.png", ".4bpp", "-mwidth 2 -mheight 4");
+const u32 gObjectEventPic_SudowoodoTree[] = INCGFX_U32("graphics/object_events/pics/pokemon_old/polished_sudowoodo_tree.png", ".4bpp", "-mwidth 2 -mheight 4");
 const u32 gObjectEventPic_RayquazaCutscene[] = INCGFX_U32("graphics/object_events/pics/pokemon_old/rayquaza_cutscene.png", ".4bpp", "-mwidth 8 -mheight 8");
 
 const u16 gObjectEventPal_HoOh[] = INCGFX_U16("graphics/object_events/palettes/ho_oh.pal", ".gbapal");
