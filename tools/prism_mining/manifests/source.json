@@ -1,0 +1,51 @@
+{
+  "project": "pokemon-prism-mining-import",
+  "target_repository": "PKMN2K/pokeemerald-expansion",
+  "target_branch": "polished-crystal-port",
+  "integration": "same final pokeemerald-expansion ROM",
+  "scope": {
+    "include": [
+      "mineable rock and wall artwork",
+      "damaged or cracked states",
+      "break debris and dust effects",
+      "ore, gem, fossil, and item-reveal artwork used by mining",
+      "non-player animation frames required by mining"
+    ],
+    "exclude": [
+      "player graphics",
+      "trainer graphics",
+      "Prism mining EXP and leveling rules",
+      "unrelated Prism progression systems",
+      "unrelated Prism assets"
+    ]
+  },
+  "authoritative_rom": {
+    "version": "0.95.0254",
+    "title": "PM_PRISM",
+    "size_bytes": 2097152,
+    "md5": "7777fe98c1985ed73d024e2518a3a83b",
+    "sha1": "752076692ae3387cf426ce5f51a98c6b60e8df6a"
+  },
+  "references": [
+    {
+      "repository": "kanzure/pokemon-prism",
+      "commit": "97af399678fd87c125a05ef5c27ca8e5011ff588",
+      "role": "historical code reference",
+      "authoritative_for_v0_95_0254_art": false
+    },
+    {
+      "repository": "bottlebrushes/pokemon-prism-assets",
+      "branch": "main",
+      "role": "derived asset index from published Prism source tree",
+      "authoritative_for_v0_95_0254_art": false,
+      "verification_required": true
+    }
+  ],
+  "conversion_policy": {
+    "resample": false,
+    "repaint": false,
+    "preserve_frame_order": true,
+    "document_animation_semantics": true,
+    "verify_against_rom_or_published_source": true
+  }
+}
