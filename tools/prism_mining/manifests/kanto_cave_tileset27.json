@@ -1,0 +1,796 @@
+{
+  "name": "prism_kanto_cave_mining_tileset27",
+  "source": {
+    "game": "Pokemon Prism",
+    "version": "0.95.0254",
+    "mirror_repository": "Xalusc/POKEPRISM",
+    "mirror_commit": "ecb209a2404be3ac62a260a95d204a6a36170f4c",
+    "tileset_constant": "TILESET_CAVE_KANTO",
+    "tileset_id_hex": "0x1B",
+    "tileset_id_decimal": 27,
+    "image": "gfx/tilesets/27.png",
+    "image_blob_sha": "21d8803d41daec8aa5034ee465184a271578cc60",
+    "image_dimensions_px": [
+      128,
+      40
+    ],
+    "image_format": "PNG, 2-bit grayscale",
+    "collision_file": "tilesets/27_collision.asm",
+    "collision_blob_sha": "18460a9161fb5c171c0fe93256ec6516152af8f7",
+    "map_headers": [
+      "map_header EagulouGymF1, TILESET_CAVE_KANTO, INDOOR, EAGULOU_CITY, MUSIC_LIGHTHOUSE, 1, PALETTE_NITE, FISHGROUP_CAVE",
+      "map_header SilkTunnelB2F, TILESET_CAVE_KANTO, CAVE, SILK_TUNNEL, MUSIC_MT_MOON, 1, PALETTE_NITE, FISHGROUP_NONE",
+      "map_header MtBoulderB1F, TILESET_CAVE_KANTO, CAVE, MT_BOULDER, MUSIC_MT_MOON, 1, PALETTE_NITE, FISHGROUP_CAVE",
+      "map_header SilkTunnel1F, TILESET_CAVE_KANTO, CAVE, SILK_TUNNEL, MUSIC_MT_MOON, 1, PALETTE_NITE, FISHGROUP_NONE"
+    ]
+  },
+  "target": {
+    "image": "graphics/prism_mining/kanto_cave_tileset27.png",
+    "imported_byte_for_byte": true,
+    "live_wiring": "not yet; staged as the next authentic Prism mining terrain group"
+  },
+  "mining_behavior": {
+    "trigger": "MINING collision on eligible 16x16 metatile quadrants",
+    "visual_animation": "none",
+    "tile_mutation": "none",
+    "mineable_metatile_count": 101,
+    "mineable_quadrant_count": 242,
+    "fully_mineable_metatile_count": 25,
+    "entries": [
+      {
+        "metatile_hex": "0x02",
+        "quadrants": [
+          "TL",
+          "TR",
+          "BL",
+          "BR"
+        ]
+      },
+      {
+        "metatile_hex": "0x04",
+        "quadrants": [
+          "BL",
+          "BR"
+        ]
+      },
+      {
+        "metatile_hex": "0x05",
+        "quadrants": [
+          "TL",
+          "TR"
+        ]
+      },
+      {
+        "metatile_hex": "0x06",
+        "quadrants": [
+          "TL",
+          "BL"
+        ]
+      },
+      {
+        "metatile_hex": "0x07",
+        "quadrants": [
+          "TR",
+          "BR"
+        ]
+      },
+      {
+        "metatile_hex": "0x08",
+        "quadrants": [
+          "TL",
+          "TR",
+          "BL"
+        ]
+      },
+      {
+        "metatile_hex": "0x09",
+        "quadrants": [
+          "TL",
+          "TR",
+          "BR"
+        ]
+      },
+      {
+        "metatile_hex": "0x0A",
+        "quadrants": [
+          "TL",
+          "BL",
+          "BR"
+        ]
+      },
+      {
+        "metatile_hex": "0x0B",
+        "quadrants": [
+          "TR",
+          "BL",
+          "BR"
+        ]
+      },
+      {
+        "metatile_hex": "0x0C",
+        "quadrants": [
+          "BL"
+        ]
+      },
+      {
+        "metatile_hex": "0x0D",
+        "quadrants": [
+          "BR"
+        ]
+      },
+      {
+        "metatile_hex": "0x0E",
+        "quadrants": [
+          "TL"
+        ]
+      },
+      {
+        "metatile_hex": "0x0F",
+        "quadrants": [
+          "TR"
+        ]
+      },
+      {
+        "metatile_hex": "0x10",
+        "quadrants": [
+          "BR"
+        ]
+      },
+      {
+        "metatile_hex": "0x11",
+        "quadrants": [
+          "BL"
+        ]
+      },
+      {
+        "metatile_hex": "0x12",
+        "quadrants": [
+          "TR"
+        ]
+      },
+      {
+        "metatile_hex": "0x13",
+        "quadrants": [
+          "TL"
+        ]
+      },
+      {
+        "metatile_hex": "0x14",
+        "quadrants": [
+          "TL",
+          "BL"
+        ]
+      },
+      {
+        "metatile_hex": "0x16",
+        "quadrants": [
+          "TR",
+          "BR"
+        ]
+      },
+      {
+        "metatile_hex": "0x17",
+        "quadrants": [
+          "TL",
+          "TR",
+          "BL",
+          "BR"
+        ]
+      },
+      {
+        "metatile_hex": "0x18",
+        "quadrants": [
+          "TL",
+          "BL"
+        ]
+      },
+      {
+        "metatile_hex": "0x1A",
+        "quadrants": [
+          "TR",
+          "BR"
+        ]
+      },
+      {
+        "metatile_hex": "0x1B",
+        "quadrants": [
+          "TL",
+          "TR",
+          "BL",
+          "BR"
+        ]
+      },
+      {
+        "metatile_hex": "0x1C",
+        "quadrants": [
+          "TL",
+          "BL",
+          "BR"
+        ]
+      },
+      {
+        "metatile_hex": "0x1D",
+        "quadrants": [
+          "BL",
+          "BR"
+        ]
+      },
+      {
+        "metatile_hex": "0x1E",
+        "quadrants": [
+          "TR",
+          "BL",
+          "BR"
+        ]
+      },
+      {
+        "metatile_hex": "0x1F",
+        "quadrants": [
+          "TL",
+          "TR",
+          "BL",
+          "BR"
+        ]
+      },
+      {
+        "metatile_hex": "0x20",
+        "quadrants": [
+          "TL",
+          "TR",
+          "BL",
+          "BR"
+        ]
+      },
+      {
+        "metatile_hex": "0x21",
+        "quadrants": [
+          "TL",
+          "TR",
+          "BL",
+          "BR"
+        ]
+      },
+      {
+        "metatile_hex": "0x22",
+        "quadrants": [
+          "TL",
+          "TR",
+          "BL",
+          "BR"
+        ]
+      },
+      {
+        "metatile_hex": "0x23",
+        "quadrants": [
+          "TR"
+        ]
+      },
+      {
+        "metatile_hex": "0x25",
+        "quadrants": [
+          "TL",
+          "TR",
+          "BL",
+          "BR"
+        ]
+      },
+      {
+        "metatile_hex": "0x26",
+        "quadrants": [
+          "TL",
+          "BL"
+        ]
+      },
+      {
+        "metatile_hex": "0x2B",
+        "quadrants": [
+          "BL"
+        ]
+      },
+      {
+        "metatile_hex": "0x2C",
+        "quadrants": [
+          "BR"
+        ]
+      },
+      {
+        "metatile_hex": "0x2D",
+        "quadrants": [
+          "BL"
+        ]
+      },
+      {
+        "metatile_hex": "0x2E",
+        "quadrants": [
+          "TL",
+          "TR",
+          "BL",
+          "BR"
+        ]
+      },
+      {
+        "metatile_hex": "0x30",
+        "quadrants": [
+          "TR",
+          "BR"
+        ]
+      },
+      {
+        "metatile_hex": "0x31",
+        "quadrants": [
+          "TL",
+          "TR"
+        ]
+      },
+      {
+        "metatile_hex": "0x32",
+        "quadrants": [
+          "TL",
+          "BL"
+        ]
+      },
+      {
+        "metatile_hex": "0x34",
+        "quadrants": [
+          "BL",
+          "BR"
+        ]
+      },
+      {
+        "metatile_hex": "0x35",
+        "quadrants": [
+          "BL",
+          "BR"
+        ]
+      },
+      {
+        "metatile_hex": "0x37",
+        "quadrants": [
+          "TL",
+          "TR",
+          "BL",
+          "BR"
+        ]
+      },
+      {
+        "metatile_hex": "0x38",
+        "quadrants": [
+          "TL",
+          "TR",
+          "BL",
+          "BR"
+        ]
+      },
+      {
+        "metatile_hex": "0x39",
+        "quadrants": [
+          "TL",
+          "TR"
+        ]
+      },
+      {
+        "metatile_hex": "0x3A",
+        "quadrants": [
+          "TL",
+          "TR",
+          "BL",
+          "BR"
+        ]
+      },
+      {
+        "metatile_hex": "0x3B",
+        "quadrants": [
+          "TL"
+        ]
+      },
+      {
+        "metatile_hex": "0x3F",
+        "quadrants": [
+          "BL",
+          "BR"
+        ]
+      },
+      {
+        "metatile_hex": "0x40",
+        "quadrants": [
+          "TL",
+          "TR"
+        ]
+      },
+      {
+        "metatile_hex": "0x41",
+        "quadrants": [
+          "TL",
+          "TR"
+        ]
+      },
+      {
+        "metatile_hex": "0x42",
+        "quadrants": [
+          "TL",
+          "TR",
+          "BL",
+          "BR"
+        ]
+      },
+      {
+        "metatile_hex": "0x43",
+        "quadrants": [
+          "TL"
+        ]
+      },
+      {
+        "metatile_hex": "0x44",
+        "quadrants": [
+          "BL",
+          "BR"
+        ]
+      },
+      {
+        "metatile_hex": "0x45",
+        "quadrants": [
+          "BL",
+          "BR"
+        ]
+      },
+      {
+        "metatile_hex": "0x46",
+        "quadrants": [
+          "TL",
+          "TR",
+          "BR"
+        ]
+      },
+      {
+        "metatile_hex": "0x48",
+        "quadrants": [
+          "TL",
+          "BL"
+        ]
+      },
+      {
+        "metatile_hex": "0x49",
+        "quadrants": [
+          "TR",
+          "BR"
+        ]
+      },
+      {
+        "metatile_hex": "0x4A",
+        "quadrants": [
+          "TR",
+          "BR"
+        ]
+      },
+      {
+        "metatile_hex": "0x4B",
+        "quadrants": [
+          "TR",
+          "BR"
+        ]
+      },
+      {
+        "metatile_hex": "0x4C",
+        "quadrants": [
+          "TL",
+          "BL",
+          "BR"
+        ]
+      },
+      {
+        "metatile_hex": "0x4D",
+        "quadrants": [
+          "TL",
+          "TR",
+          "BL",
+          "BR"
+        ]
+      },
+      {
+        "metatile_hex": "0x4E",
+        "quadrants": [
+          "TL",
+          "TR",
+          "BL",
+          "BR"
+        ]
+      },
+      {
+        "metatile_hex": "0x4F",
+        "quadrants": [
+          "TL",
+          "TR",
+          "BL"
+        ]
+      },
+      {
+        "metatile_hex": "0x50",
+        "quadrants": [
+          "BL",
+          "BR"
+        ]
+      },
+      {
+        "metatile_hex": "0x51",
+        "quadrants": [
+          "TL",
+          "TR",
+          "BL",
+          "BR"
+        ]
+      },
+      {
+        "metatile_hex": "0x52",
+        "quadrants": [
+          "TL",
+          "TR",
+          "BL",
+          "BR"
+        ]
+      },
+      {
+        "metatile_hex": "0x53",
+        "quadrants": [
+          "TL",
+          "TR",
+          "BL",
+          "BR"
+        ]
+      },
+      {
+        "metatile_hex": "0x54",
+        "quadrants": [
+          "TL"
+        ]
+      },
+      {
+        "metatile_hex": "0x55",
+        "quadrants": [
+          "TL",
+          "TR"
+        ]
+      },
+      {
+        "metatile_hex": "0x56",
+        "quadrants": [
+          "TR"
+        ]
+      },
+      {
+        "metatile_hex": "0x57",
+        "quadrants": [
+          "TL",
+          "TR",
+          "BL"
+        ]
+      },
+      {
+        "metatile_hex": "0x58",
+        "quadrants": [
+          "TL",
+          "TR",
+          "BL",
+          "BR"
+        ]
+      },
+      {
+        "metatile_hex": "0x59",
+        "quadrants": [
+          "TR",
+          "BL",
+          "BR"
+        ]
+      },
+      {
+        "metatile_hex": "0x5A",
+        "quadrants": [
+          "TL"
+        ]
+      },
+      {
+        "metatile_hex": "0x5D",
+        "quadrants": [
+          "TL"
+        ]
+      },
+      {
+        "metatile_hex": "0x5E",
+        "quadrants": [
+          "BL",
+          "BR"
+        ]
+      },
+      {
+        "metatile_hex": "0x5F",
+        "quadrants": [
+          "TL",
+          "TR",
+          "BL",
+          "BR"
+        ]
+      },
+      {
+        "metatile_hex": "0x61",
+        "quadrants": [
+          "BL",
+          "BR"
+        ]
+      },
+      {
+        "metatile_hex": "0x62",
+        "quadrants": [
+          "TL",
+          "TR",
+          "BL"
+        ]
+      },
+      {
+        "metatile_hex": "0x63",
+        "quadrants": [
+          "TL",
+          "TR"
+        ]
+      },
+      {
+        "metatile_hex": "0x65",
+        "quadrants": [
+          "TL",
+          "TR",
+          "BL",
+          "BR"
+        ]
+      },
+      {
+        "metatile_hex": "0x66",
+        "quadrants": [
+          "TL",
+          "BL"
+        ]
+      },
+      {
+        "metatile_hex": "0x67",
+        "quadrants": [
+          "BR"
+        ]
+      },
+      {
+        "metatile_hex": "0x6A",
+        "quadrants": [
+          "BL"
+        ]
+      },
+      {
+        "metatile_hex": "0x6B",
+        "quadrants": [
+          "TL",
+          "TR"
+        ]
+      },
+      {
+        "metatile_hex": "0x6C",
+        "quadrants": [
+          "TR",
+          "BR"
+        ]
+      },
+      {
+        "metatile_hex": "0x6D",
+        "quadrants": [
+          "TL",
+          "BL"
+        ]
+      },
+      {
+        "metatile_hex": "0x6E",
+        "quadrants": [
+          "TL",
+          "TR"
+        ]
+      },
+      {
+        "metatile_hex": "0x6F",
+        "quadrants": [
+          "BL"
+        ]
+      },
+      {
+        "metatile_hex": "0x70",
+        "quadrants": [
+          "TL",
+          "TR",
+          "BL",
+          "BR"
+        ]
+      },
+      {
+        "metatile_hex": "0x71",
+        "quadrants": [
+          "TL",
+          "TR",
+          "BL",
+          "BR"
+        ]
+      },
+      {
+        "metatile_hex": "0x72",
+        "quadrants": [
+          "TL",
+          "TR",
+          "BL",
+          "BR"
+        ]
+      },
+      {
+        "metatile_hex": "0x73",
+        "quadrants": [
+          "TL",
+          "BL"
+        ]
+      },
+      {
+        "metatile_hex": "0x74",
+        "quadrants": [
+          "BL",
+          "BR"
+        ]
+      },
+      {
+        "metatile_hex": "0x77",
+        "quadrants": [
+          "TL"
+        ]
+      },
+      {
+        "metatile_hex": "0x79",
+        "quadrants": [
+          "BL",
+          "BR"
+        ]
+      },
+      {
+        "metatile_hex": "0x7A",
+        "quadrants": [
+          "TL",
+          "TR",
+          "BR"
+        ]
+      },
+      {
+        "metatile_hex": "0x7B",
+        "quadrants": [
+          "TL"
+        ]
+      },
+      {
+        "metatile_hex": "0x7D",
+        "quadrants": [
+          "TL",
+          "TR",
+          "BL",
+          "BR"
+        ]
+      },
+      {
+        "metatile_hex": "0x7E",
+        "quadrants": [
+          "TL",
+          "BL"
+        ]
+      },
+      {
+        "metatile_hex": "0x7F",
+        "quadrants": [
+          "TR",
+          "BR"
+        ]
+      }
+    ]
+  },
+  "policy": {
+    "player_graphics_included": false,
+    "mining_exp_or_rewards_included": false,
+    "resample": false,
+    "repaint": false
+  },
+  "follow_up": "Create the first placeable Kanto Cave mineable surface in the Expansion secondary-tileset format."
+}

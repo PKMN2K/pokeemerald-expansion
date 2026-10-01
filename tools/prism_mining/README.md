@@ -111,3 +111,12 @@ All **127 mineable 16x16 quadrants** from Prism Firelight Caverns tileset 33 are
 A source-attribute audit found that the mineable quadrants use only attributes `0x06` and `0x04`: palette 6 or palette 4, with **no X flip, Y flip, or alternate VRAM-bank usage**. Because both authentic Prism day palettes were already imported, every remaining mining quadrant could be converted directly without inventing flip handling or repainting tiles.
 
 The first nine metatile IDs were preserved exactly; the remaining 118 surfaces were appended. Existing maps are still untouched and must opt into the Firelight secondary tileset explicitly.
+
+
+## Kanto Cave mining tileset (tileset 27)
+
+The next staged Prism mining terrain group is `TILESET_CAVE_KANTO` (`0x1B` / decimal 27). Its authentic source graphic `gfx/tilesets/27.png` is a 128x40, 2-bit grayscale tilesheet and is now staged byte-for-byte as `graphics/prism_mining/kanto_cave_tileset27.png`.
+
+Its collision table contains **101 mineable metatiles** covering **242 mineable 16x16 quadrants**, including **25 fully mineable metatiles**. Prism uses this terrain in Kanto cave locations including Silk Tunnel, Mt. Boulder, and Eagulou Gym F1.
+
+This step is asset-and-manifest staging only. Kanto Cave is not yet wired as a live Expansion tileset, and no mining rewards, EXP, durability, player graphics, or unrelated Prism systems are imported.
