@@ -5,6 +5,7 @@ on:
     branches:
       - master
       - upcoming
+      - polished-crystal-port
   pull_request:
 
 env:
