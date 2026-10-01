@@ -6,6 +6,10 @@ static const struct SpriteFrameImage sPicTable_PolishedChrisNormal[] = {
     overworld_ascending_frames(gObjectEventPic_PolishedChrisNormalRunning, 2, 4),
 };
 
+static const struct SpriteFrameImage sPicTable_PolishedChrisBike[] = {
+    overworld_ascending_frames(gObjectEventPic_PolishedChrisBike, 4, 4),
+};
+
 static const struct SpriteFrameImage sPicTable_BrendanMachBike[] = {
     overworld_ascending_frames(gObjectEventPic_BrendanMachBike, 4, 4),
 };

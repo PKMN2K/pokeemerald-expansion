@@ -1492,6 +1492,107 @@ static const union AnimCmd *const sAnimTable_PolishedChrisNormal[] = {
     [ANIM_SPIN_EAST] = sAnim_SpinEast,
 };
 
+static const union AnimCmd sAnim_PolishedBikeTrickSouthA[] =
+{
+    ANIMCMD_FRAME(3, 4),
+    ANIMCMD_FRAME(0, 4),
+    ANIMCMD_END,
+};
+
+static const union AnimCmd sAnim_PolishedBikeTrickNorthA[] =
+{
+    ANIMCMD_FRAME(5, 4),
+    ANIMCMD_FRAME(1, 4),
+    ANIMCMD_END,
+};
+
+static const union AnimCmd sAnim_PolishedBikeTrickWestA[] =
+{
+    ANIMCMD_FRAME(7, 4),
+    ANIMCMD_FRAME(2, 4),
+    ANIMCMD_END,
+};
+
+static const union AnimCmd sAnim_PolishedBikeTrickEastA[] =
+{
+    ANIMCMD_FRAME(7, 4, .hFlip = TRUE),
+    ANIMCMD_FRAME(2, 4, .hFlip = TRUE),
+    ANIMCMD_END,
+};
+
+static const union AnimCmd sAnim_PolishedBikeTrickSouthB[] =
+{
+    ANIMCMD_FRAME(4, 4),
+    ANIMCMD_FRAME(0, 4),
+    ANIMCMD_END,
+};
+
+static const union AnimCmd sAnim_PolishedBikeTrickNorthB[] =
+{
+    ANIMCMD_FRAME(6, 4),
+    ANIMCMD_FRAME(1, 4),
+    ANIMCMD_END,
+};
+
+static const union AnimCmd sAnim_PolishedBikeTrickWestB[] =
+{
+    ANIMCMD_FRAME(8, 4),
+    ANIMCMD_FRAME(2, 4),
+    ANIMCMD_END,
+};
+
+static const union AnimCmd sAnim_PolishedBikeTrickEastB[] =
+{
+    ANIMCMD_FRAME(8, 4, .hFlip = TRUE),
+    ANIMCMD_FRAME(2, 4, .hFlip = TRUE),
+    ANIMCMD_END,
+};
+
+// Crystal has one cycling set and no separate Acro trick poses.
+// Preserve Acro mechanics and timing using only authentic cycling frames.
+static const union AnimCmd *const sAnimTable_PolishedChrisBike[] = {
+    [ANIM_STD_FACE_SOUTH] = sAnim_FaceSouth,
+    [ANIM_STD_FACE_NORTH] = sAnim_FaceNorth,
+    [ANIM_STD_FACE_WEST] = sAnim_FaceWest,
+    [ANIM_STD_FACE_EAST] = sAnim_FaceEast,
+    [ANIM_STD_GO_SOUTH] = sAnim_GoSouth,
+    [ANIM_STD_GO_NORTH] = sAnim_GoNorth,
+    [ANIM_STD_GO_WEST] = sAnim_GoWest,
+    [ANIM_STD_GO_EAST] = sAnim_GoEast,
+    [ANIM_STD_GO_FAST_SOUTH] = sAnim_GoFastSouth,
+    [ANIM_STD_GO_FAST_NORTH] = sAnim_GoFastNorth,
+    [ANIM_STD_GO_FAST_WEST] = sAnim_GoFastWest,
+    [ANIM_STD_GO_FAST_EAST] = sAnim_GoFastEast,
+    [ANIM_STD_GO_FASTER_SOUTH] = sAnim_GoFasterSouth,
+    [ANIM_STD_GO_FASTER_NORTH] = sAnim_GoFasterNorth,
+    [ANIM_STD_GO_FASTER_WEST] = sAnim_GoFasterWest,
+    [ANIM_STD_GO_FASTER_EAST] = sAnim_GoFasterEast,
+    [ANIM_STD_GO_FASTEST_SOUTH] = sAnim_GoFastestSouth,
+    [ANIM_STD_GO_FASTEST_NORTH] = sAnim_GoFastestNorth,
+    [ANIM_STD_GO_FASTEST_WEST] = sAnim_GoFastestWest,
+    [ANIM_STD_GO_FASTEST_EAST] = sAnim_GoFastestEast,
+    [ANIM_BUNNY_HOP_BACK_WHEEL_SOUTH] = sAnim_PolishedBikeTrickSouthA,
+    [ANIM_BUNNY_HOP_BACK_WHEEL_NORTH] = sAnim_PolishedBikeTrickNorthA,
+    [ANIM_BUNNY_HOP_BACK_WHEEL_WEST] = sAnim_PolishedBikeTrickWestA,
+    [ANIM_BUNNY_HOP_BACK_WHEEL_EAST] = sAnim_PolishedBikeTrickEastA,
+    [ANIM_BUNNY_HOP_FRONT_WHEEL_SOUTH] = sAnim_PolishedBikeTrickSouthB,
+    [ANIM_BUNNY_HOP_FRONT_WHEEL_NORTH] = sAnim_PolishedBikeTrickNorthB,
+    [ANIM_BUNNY_HOP_FRONT_WHEEL_WEST] = sAnim_PolishedBikeTrickWestB,
+    [ANIM_BUNNY_HOP_FRONT_WHEEL_EAST] = sAnim_PolishedBikeTrickEastB,
+    [ANIM_STANDING_WHEELIE_BACK_WHEEL_SOUTH] = sAnim_PolishedBikeTrickSouthA,
+    [ANIM_STANDING_WHEELIE_BACK_WHEEL_NORTH] = sAnim_PolishedBikeTrickNorthA,
+    [ANIM_STANDING_WHEELIE_BACK_WHEEL_WEST] = sAnim_PolishedBikeTrickWestA,
+    [ANIM_STANDING_WHEELIE_BACK_WHEEL_EAST] = sAnim_PolishedBikeTrickEastA,
+    [ANIM_STANDING_WHEELIE_FRONT_WHEEL_SOUTH] = sAnim_PolishedBikeTrickSouthB,
+    [ANIM_STANDING_WHEELIE_FRONT_WHEEL_NORTH] = sAnim_PolishedBikeTrickNorthB,
+    [ANIM_STANDING_WHEELIE_FRONT_WHEEL_WEST] = sAnim_PolishedBikeTrickWestB,
+    [ANIM_STANDING_WHEELIE_FRONT_WHEEL_EAST] = sAnim_PolishedBikeTrickEastB,
+    [ANIM_MOVING_WHEELIE_SOUTH] = sAnim_GoFastSouth,
+    [ANIM_MOVING_WHEELIE_NORTH] = sAnim_GoFastNorth,
+    [ANIM_MOVING_WHEELIE_WEST] = sAnim_GoFastWest,
+    [ANIM_MOVING_WHEELIE_EAST] = sAnim_GoFastEast,
+};
+
 static const union AnimCmd *const sAnimTable_AcroBike[] = {
     [ANIM_STD_FACE_SOUTH] = sAnim_FaceSouth,
     [ANIM_STD_FACE_NORTH] = sAnim_FaceNorth,

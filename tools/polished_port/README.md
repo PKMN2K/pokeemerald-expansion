@@ -49,4 +49,6 @@ Do not overwrite Brendan assets during conversion. The first generated output wi
 - `scripts/` — deterministic conversion scripts
 - `generated/` — optional intermediate/reference output, not live game assets
 
-The first script will convert `chris.png` into an Expansion-compatible walking sheet while preserving the original Polished Crystal pixels and palette intent.
+The walking and running conversions preserve the original Polished Crystal pixels and palette intent.
+
+The bike conversion maps `gfx/sprites/chris_bike.png` into a 9-frame 32x32 Expansion sheet. Each authentic 16x16 Crystal frame is horizontally centered and bottom-aligned. Both Mach Bike and Acro Bike player states use this same authentic Crystal cycling set. Because Crystal has no Acro trick poses, Acro-only animation slots reuse authentic cycling frames with compatible timing rather than inventing new artwork.

@@ -1,0 +1,39 @@
+{
+  "name": "polished_chris_bike",
+  "source": {
+    "repository": "Rangi42/polishedcrystal",
+    "commit": "3fa43192379df5c3e7b09a08e4d5d79af4f02f42",
+    "path": "gfx/sprites/chris_bike.png",
+    "sheet_width": 16,
+    "sheet_height": 96,
+    "frame_width": 16,
+    "frame_height": 16,
+    "frame_count": 6
+  },
+  "target": {
+    "path": "graphics/object_events/pics/people/polished_chris/bike.png",
+    "sheet_width": 288,
+    "sheet_height": 32,
+    "frame_width": 32,
+    "frame_height": 32,
+    "frame_count": 9,
+    "x_offset": 8,
+    "y_offset": 16,
+    "states": ["mach_bike", "acro_bike"]
+  },
+  "mapping": [
+    {"target": 0, "source": 0, "hflip": false},
+    {"target": 1, "source": 1, "hflip": false},
+    {"target": 2, "source": 2, "hflip": false},
+    {"target": 3, "source": 3, "hflip": false},
+    {"target": 4, "source": 3, "hflip": true},
+    {"target": 5, "source": 4, "hflip": false},
+    {"target": 6, "source": 4, "hflip": true},
+    {"target": 7, "source": 5, "hflip": false},
+    {"target": 8, "source": 5, "hflip": false}
+  ],
+  "acro_policy": {
+    "invent_new_art": false,
+    "special_trick_frames": "reuse authentic cycling frames with compatible timing"
+  }
+}
