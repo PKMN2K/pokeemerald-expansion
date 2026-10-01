@@ -1,0 +1,57 @@
+{
+  "name": "polished_chris_walking",
+  "source": {
+    "repository": "Rangi42/polishedcrystal",
+    "commit": "3fa43192379df5c3e7b09a08e4d5d79af4f02f42",
+    "path": "gfx/sprites/chris.png",
+    "sheet_width": 16,
+    "sheet_height": 96,
+    "frame_width": 16,
+    "frame_height": 16,
+    "frame_count": 6,
+    "frame_order": [
+      "south_idle",
+      "north_idle",
+      "west_idle",
+      "south_step",
+      "north_step",
+      "west_step"
+    ]
+  },
+  "target": {
+    "engine": "pokeemerald-expansion",
+    "sheet_width": 144,
+    "sheet_height": 32,
+    "frame_width": 16,
+    "frame_height": 32,
+    "frame_count": 9,
+    "anchor": "bottom",
+    "frame_order": [
+      "south_idle",
+      "north_idle",
+      "west_idle",
+      "south_step_a",
+      "south_step_b",
+      "north_step_a",
+      "north_step_b",
+      "west_step_a",
+      "west_step_b"
+    ]
+  },
+  "mapping": [
+    {"target": 0, "source": 0, "hflip": false},
+    {"target": 1, "source": 1, "hflip": false},
+    {"target": 2, "source": 2, "hflip": false},
+    {"target": 3, "source": 3, "hflip": false},
+    {"target": 4, "source": 3, "hflip": true},
+    {"target": 5, "source": 4, "hflip": false},
+    {"target": 6, "source": 4, "hflip": true},
+    {"target": 7, "source": 5, "hflip": false},
+    {"target": 8, "source": 5, "hflip": false}
+  ],
+  "notes": [
+    "Expansion generates east-facing frames by horizontal flip at runtime.",
+    "The 16x16 GSC frame is bottom-aligned inside each 16x32 GBA object-event frame.",
+    "No new player art is invented by this conversion."
+  ]
+}
