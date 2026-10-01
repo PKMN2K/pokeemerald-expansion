@@ -1,0 +1,21 @@
+{
+  "name": "polished_chris_pal_ow_red",
+  "source": {
+    "repository": "Rangi42/polishedcrystal",
+    "commit": "3fa43192379df5c3e7b09a08e4d5d79af4f02f42",
+    "path": "gfx/overworld/npc_sprites.pal",
+    "palette": "PAL_OW_RED"
+  },
+  "variants_rgb5": {
+    "morning": [[28,31,16],[31,22,10],[31,7,1],[0,0,0]],
+    "day": [[27,31,27],[31,19,10],[31,7,1],[0,0,0]],
+    "night": [[15,14,24],[16,9,9],[17,3,0],[0,0,0]],
+    "evening": [[31,21,14],[31,19,10],[31,7,1],[0,0,0]]
+  },
+  "registered_baseline": "day",
+  "notes": [
+    "Polished Crystal changes overworld sprite palettes by time of day.",
+    "The day variant is registered first as the dormant Expansion baseline.",
+    "Morning, night, and evening variants are preserved here for the later dynamic time-of-day palette pass."
+  ]
+}
