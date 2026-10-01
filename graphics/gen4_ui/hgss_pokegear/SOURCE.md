@@ -1112,3 +1112,48 @@ states; no obsolete pad/pointer symbols remain in the runtime or build paths;
 `git diff --check` passes. Full cleanup integration CI is pending.
 
 **authentic HGSS asset → wired live and validated → legacy equivalent removed**
+
+
+## Match Call call-message surface — phase 1
+
+CI #666 passed the completed Match Call action/options-menu cleanup at
+`8514943660616c94a667469a15ddffdc5df58f32`, so the next direct retail
+Phone surface can begin.
+
+The remaining call-message presentation is still not acceptable as final HGSS
+artwork. `src/pokenav_match_call_gfx.c` draws
+`DrawPokeGearPhoneCallPanel` procedurally and still depends on
+`graphics/pokenav/match_call/call_window.pal`. Those remain live in this
+phase; nothing is replaced before the retail source is verified.
+
+Retail HeartGold/SoulSilver already has a dedicated Phone call-screen source
+set. At the locked `pret/pokeheartgold` revision
+`9d8b7591f09b65804da2fb2dfd56f320633e0d36`,
+`src/application/pokegear/phone/overlay_101_021F017C.c` loads, for skin 0:
+
+- member 16 character graphics onto `GF_BG_LYR_SUB_3`,
+- member 22 NSCR screen/tilemap data onto that same layer,
+- member 4 NCLR into the SUB BG palette.
+
+The same retail module defines the Phone's two SUB_2 call/text windows, and
+`overlay_101_021F1D74.c` binds the first of those windows as
+`phoneCallMsgWindow` for the live Phone conversation text. This makes the
+member-16/member-22/member-4 set a direct retail source for the call-message
+screen rather than an invented HGSS-style analogue.
+
+The exact retail files are now copied byte-for-byte into `verified/`:
+
+- `pgphone_skin0_call_tiles.png` — source blob
+  `f1c86ec62e6764d295678d2714de8d942253160c`,
+- `pgphone_skin0_call_tilemap.NSCR` — source blob
+  `46641999f72d5f1b7348a1042a7e9b8b02be766c`,
+- `pgphone_skin0_call_palette.NCLR` — source blob
+  `932d99a855a27912da0f074acf3b42642a2c4254`.
+
+No pixel, palette entry, tile index, or geometry is changed in this phase.
+The existing GBA call-message panel, message-window behavior, text semantics,
+and legacy palette remain untouched. Phase 2 will adapt and wire the verified
+retail call-screen source while keeping the current panel available only as a
+rollback path until CI validates the integration.
+
+**authentic HGSS asset prepared → wire live pending → legacy removal pending**

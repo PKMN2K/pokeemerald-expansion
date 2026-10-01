@@ -1,0 +1,68 @@
+{
+  "role": "match_call_call_message_surface",
+  "phase": "authentic_source_prepared",
+  "classification": "direct retail HGSS PokéGear Phone call-screen source set",
+  "source_revision": "9d8b7591f09b65804da2fb2dfd56f320633e0d36",
+  "previous_gate": {
+    "workflow": "CI",
+    "run_number": 666,
+    "conclusion": "success",
+    "validated_commit": "8514943660616c94a667469a15ddffdc5df58f32"
+  },
+  "source_files": [
+    {
+      "path": "src/application/pokegear/phone/overlay_101_021F017C.c",
+      "git_blob_sha": "320be2869ebb277fe85bac6021bf01b50bfc8f7a",
+      "evidence": [
+        "skin + member 16 NCGR loads on GF_BG_LYR_SUB_3",
+        "skin + member 22 NSCR loads on GF_BG_LYR_SUB_3",
+        "skin + member 4 NCLR loads into the SUB BG palette",
+        "sWindowTemplates[0] and [1] define the Phone SUB_2 call/text windows"
+      ]
+    },
+    {
+      "path": "src/application/pokegear/phone/overlay_101_021F1D74.c",
+      "git_blob_sha": "fdb60ae9d07cc96be199b64e20597b2930f8b922",
+      "evidence": [
+        "PhoneCall_CreateContext binds template window1 as phoneCallMsgWindow",
+        "PhoneCallMessagePrint clears and prints conversation text in phoneCallMsgWindow"
+      ]
+    },
+    {
+      "path": "files/application/pokegear/phone/pgphone_gra/pgphone_gra_00000016.png",
+      "git_blob_sha": "f1c86ec62e6764d295678d2714de8d942253160c",
+      "repository_copy": "graphics/gen4_ui/hgss_pokegear/verified/pgphone_skin0_call_tiles.png",
+      "byte_identity": true
+    },
+    {
+      "path": "files/application/pokegear/phone/pgphone_gra/pgphone_gra_00000022.NSCR",
+      "git_blob_sha": "46641999f72d5f1b7348a1042a7e9b8b02be766c",
+      "repository_copy": "graphics/gen4_ui/hgss_pokegear/verified/pgphone_skin0_call_tilemap.NSCR",
+      "byte_identity": true
+    },
+    {
+      "path": "files/application/pokegear/phone/pgphone_gra/pgphone_gra_00000004.NCLR",
+      "git_blob_sha": "932d99a855a27912da0f074acf3b42642a2c4254",
+      "repository_copy": "graphics/gen4_ui/hgss_pokegear/verified/pgphone_skin0_call_palette.NCLR",
+      "byte_identity": true
+    }
+  ],
+  "retail_binding": {
+    "graphics_member": 16,
+    "tilemap_member": 22,
+    "palette_member": 4,
+    "graphics_layer": "GF_BG_LYR_SUB_3",
+    "call_text_layer": "GF_BG_LYR_SUB_2"
+  },
+  "legacy_pending": {
+    "renderer": "DrawPokeGearPhoneCallPanel",
+    "palette": "graphics/pokenav/match_call/call_window.pal",
+    "live_file": "src/pokenav_match_call_gfx.c"
+  },
+  "pipeline": {
+    "authentic_hgss_source_ready": true,
+    "wired_live": false,
+    "legacy_equivalent_removed": false
+  },
+  "next": "Phase 2: create a lossless GBA adaptation of member 16/member 22/member 4 and wire it live while retaining the current call panel as a CI-gated rollback path."
+}
