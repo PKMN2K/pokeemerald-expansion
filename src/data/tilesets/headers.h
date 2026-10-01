@@ -1541,3 +1541,15 @@ const struct Tileset gTileset_HallOfFame =
 };
 
 #endif // IS_FRLG
+
+const struct Tileset gTileset_PrismMoundCave =
+{
+    .isCompressed = TRUE,
+    .isSecondary = TRUE,
+    .tiles = gTilesetTiles_PrismMoundCave,
+    // Temporary target-engine palette bridge. Authentic Prism palette translation is a separate art step.
+    .palettes = gTilesetPalettes_Cave,
+    .metatiles = gMetatiles_PrismMoundCave,
+    .metatileAttributes = gMetatileAttributes_PrismMoundCave,
+    .callback = NULL,
+};

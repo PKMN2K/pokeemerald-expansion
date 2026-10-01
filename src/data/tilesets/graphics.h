@@ -3038,3 +3038,6 @@ const u16 ALIGNED(4) gTilesetPalettes_General_Frlg[][16] =
 const u32 gTilesetTiles_General_Frlg[] = INCGFX_U32("data/tilesets/primary/general_frlg/tiles.png", ".4bpp.smol");
 
 #endif // IS_FRLG
+
+// Pokémon Prism v0.95.0254 Mound Cave source tiles used by the mining subsystem.
+const u32 gTilesetTiles_PrismMoundCave[] = INCGFX_U32("data/tilesets/secondary/prism_mound_cave/tiles.png", ".4bpp.fastSmol", "-num_tiles 112 -Wnum_tiles");

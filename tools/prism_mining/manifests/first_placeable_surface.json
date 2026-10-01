@@ -1,0 +1,54 @@
+{
+  "name": "prism_mound_cave_first_placeable_mining_surface",
+  "source": {
+    "game": "Pokemon Prism",
+    "version": "0.95.0254",
+    "tileset_id": 21,
+    "tilesheet": "gfx/tilesets/21.png",
+    "source_block": "0x1D",
+    "source_quadrant": "TL",
+    "source_tile_ids": [
+      "0x0C",
+      "0x0D",
+      "0x1C",
+      "0x1D"
+    ],
+    "source_palette_id": 6,
+    "source_collision": {
+      "block": "0x1D",
+      "quadrants": {
+        "TL": "MINING",
+        "TR": "MINING",
+        "BL": "MINING",
+        "BR": "MINING"
+      }
+    }
+  },
+  "target": {
+    "tileset_symbol": "gTileset_PrismMoundCave",
+    "kind": "secondary",
+    "tiles": "data/tilesets/secondary/prism_mound_cave/tiles.png",
+    "tiles_source_imported_byte_for_byte": true,
+    "metatile_id": 0,
+    "metatile_entries_hex": [
+      "0x620C",
+      "0x620D",
+      "0x621C",
+      "0x621D",
+      "0x0000",
+      "0x0000",
+      "0x0000",
+      "0x0000"
+    ],
+    "behavior": "MB_PRISM_MINING",
+    "behavior_value": 240,
+    "layer_type": "METATILE_LAYER_TYPE_NORMAL",
+    "palette_bridge": "gTilesetPalettes_Cave"
+  },
+  "isolation": {
+    "existing_maps_modified": false,
+    "existing_cave_tileset_modified": false,
+    "activation": "A map must explicitly select gTileset_PrismMoundCave and place metatile 0."
+  },
+  "follow_up": "Translate Prism Mound Cave's fixed/night dungeon palette into a dedicated GBA palette bank."
+}

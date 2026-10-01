@@ -61,3 +61,12 @@ Mining is collision-driven rather than object-animation-driven: Prism marks elig
 Expansion now reserves `MB_PRISM_MINING` as a dedicated metatile behavior for Prism-style mineable surfaces. It is appended after the existing behavior IDs, so no existing behavior numbers are renumbered. `MetatileBehavior_IsPrismMining()` provides the runtime classifier that later mining interaction code can call.
 
 This step deliberately does **not** assign the behavior to existing Hoenn/FRLG cave tiles and does not implement rewards, pick durability, EXP, or player graphics. Mineable tiles will be opted in explicitly when Prism-derived cave geometry is wired into maps.
+
+
+## First placeable Prism mining surface
+
+A dedicated Expansion secondary tileset, `gTileset_PrismMoundCave`, now exposes the first authentic Prism mining surface without modifying any existing Hoenn/FRLG cave tiles.
+
+The initial 16x16 metatile is the **top-left quadrant of Prism Mound Cave block 0x1D**. Prism's block data uses source tiles `0x0c, 0x0d, 0x1c, 0x1d`; its collision entry marks all four 16x16 quadrants of block `0x1D` as `MINING`. The GBA metatile references those exact source tiles and is tagged `MB_PRISM_MINING`.
+
+The full authentic 128x56 Prism tilesheet is used directly as this secondary tileset's tile source. Existing maps are unchanged: this surface becomes active only when a map deliberately selects `gTileset_PrismMoundCave` and places metatile 0. For this geometry-only step, the tileset temporarily uses Expansion's Cave palette bank; Prism's time-of-day cave palette translation remains a separate art step.
