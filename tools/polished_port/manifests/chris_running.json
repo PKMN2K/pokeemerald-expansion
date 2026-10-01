@@ -1,0 +1,52 @@
+{
+  "name": "polished_chris_running",
+  "source": {
+    "repository": "Rangi42/polishedcrystal",
+    "commit": "9dfcd39459a505f2cd0901de2d878cb93f9e4773",
+    "path": "gfx/sprites/chris_run.png",
+    "sheet_width": 16,
+    "sheet_height": 96,
+    "frame_width": 16,
+    "frame_height": 16,
+    "frame_count": 6,
+    "frame_order": [
+      "south_run_base",
+      "north_run_base",
+      "west_run_base",
+      "south_run_step",
+      "north_run_step",
+      "west_run_step"
+    ]
+  },
+  "target": {
+    "path": "graphics/object_events/pics/people/polished_chris/running.png",
+    "sheet_width": 144,
+    "sheet_height": 32,
+    "frame_width": 16,
+    "frame_height": 32,
+    "frame_count": 9,
+    "appended_indices": "9-17",
+    "anchor": "bottom"
+  },
+  "mapping": [
+    {"target": 0, "source": 0, "hflip": false},
+    {"target": 1, "source": 1, "hflip": false},
+    {"target": 2, "source": 2, "hflip": false},
+    {"target": 3, "source": 3, "hflip": false},
+    {"target": 4, "source": 3, "hflip": true},
+    {"target": 5, "source": 4, "hflip": false},
+    {"target": 6, "source": 4, "hflip": true},
+    {"target": 7, "source": 5, "hflip": false},
+    {"target": 8, "source": 5, "hflip": false}
+  ],
+  "validation": {
+    "pixel_equivalence": true,
+    "top_half_transparent": true,
+    "palette_indices": 4
+  },
+  "notes": [
+    "This asset is intentionally pinned separately because dedicated running artwork postdates Polished Crystal v3.2.3.",
+    "Expansion generates east-facing frames by horizontal flip at runtime.",
+    "No new running artwork is invented."
+  ]
+}

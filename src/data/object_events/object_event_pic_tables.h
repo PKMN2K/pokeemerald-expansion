@@ -3,7 +3,7 @@ static const struct SpriteFrameImage sPicTable_BrendanNormal[] = {
 };
 
 static const struct SpriteFrameImage sPicTable_PolishedChrisNormal[] = {
-    overworld_ascending_frames(gObjectEventPic_PolishedChrisNormal, 2, 4),
+    overworld_ascending_frames(gObjectEventPic_PolishedChrisNormalRunning, 2, 4),
 };
 
 static const struct SpriteFrameImage sPicTable_BrendanMachBike[] = {

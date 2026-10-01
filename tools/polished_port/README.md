@@ -16,6 +16,7 @@ Converted assets are staged under new Polished Crystal-specific names first. The
 Authentic Polished Crystal sources:
 
 - `gfx/sprites/chris.png` — normal walking/standing source
+- `gfx/sprites/chris_run.png` — dedicated running source; supplemental pin `9dfcd39459a505f2cd0901de2d878cb93f9e4773`
 - `gfx/sprites/chris_bike.png` — bicycle source
 - `gfx/sprites/chris_surf.png` — surfing source
 - `gfx/overworld/chris_fish.png` — fishing-on-land frames
@@ -24,6 +25,7 @@ Authentic Polished Crystal sources:
 The corresponding compressed GBC build assets are referenced by `gfx/sprites.asm` as:
 
 - `gfx/sprites/chris.2bpp.lz`
+- `gfx/sprites/chris_run.2bpp.lzp` (supplemental development source)
 - `gfx/sprites/chris_bike.2bpp.lz`
 - `gfx/sprites/chris_surf.2bpp.lz`
 - `gfx/overworld/chris_fish.2bpp`

@@ -17,6 +17,16 @@ This branch is the clean base for a visual/content port of Polished Crystal onto
 
 Do not silently advance this source pin. Any future source upgrade should be deliberate and recorded here.
 
+### Supplemental asset pins
+
+Some authentic Polished Crystal assets were added after v3.2.3. When one is deliberately imported, pin it separately rather than silently moving the whole project baseline.
+
+- Chris running sprite:
+  - Repository: Rangi42/polishedcrystal
+  - Development commit: 9dfcd39459a505f2cd0901de2d878cb93f9e4773
+  - Source: `gfx/sprites/chris_run.png`
+  - Reason: dedicated PLAYER_RUN / SPRITE_CHRIS_RUN artwork is not present in v3.2.3.
+
 ## Porting rule
 
 pokeemerald-expansion remains the engine. Do not translate Polished Crystal wholesale from RGBDS assembly into C.

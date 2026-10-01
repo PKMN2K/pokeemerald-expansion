@@ -1,6 +1,6 @@
 const u32 gObjectEventPic_BrendanNormalRunning[] = INCBIN_U32("graphics/object_events/pics/people/brendan/walking.4bpp", "graphics/object_events/pics/people/brendan/running.4bpp");
 const u16 gObjectEventPal_Brendan[] = INCGFX_U16("graphics/object_events/palettes/brendan.pal", ".gbapal");
-const u32 gObjectEventPic_PolishedChrisNormal[] = INCGFX_U32("graphics/object_events/pics/people/polished_chris/walking.png", ".4bpp", "-mwidth 2 -mheight 4");
+const u32 gObjectEventPic_PolishedChrisNormalRunning[] = INCBIN_U32("graphics/object_events/pics/people/polished_chris/walking.4bpp", "graphics/object_events/pics/people/polished_chris/running.4bpp");
 const u16 gObjectEventPal_PolishedChris[] = INCGFX_U16("graphics/object_events/palettes/polished_chris.pal", ".gbapal");
 const u32 gObjectEventPic_RubySapphireBrendanNormal[] = INCGFX_U32("graphics/object_events/pics/people/ruby_sapphire_brendan/walking.png", ".4bpp", "-mwidth 2 -mheight 4");
 const u32 gObjectEventPic_RubySapphireBrendanRunning[] = INCGFX_U32("graphics/object_events/pics/people/ruby_sapphire_brendan/running.png", ".4bpp", "-mwidth 2 -mheight 4");
