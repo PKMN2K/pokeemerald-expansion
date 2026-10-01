@@ -34,6 +34,7 @@ GEN4UIHGSSPOKEGEARPHONESTATUS := tools/gen4_ui/make_hgss_pokegear_phone_status.p
 GEN4UIHGSSPOKEGEARLISTARROWS := tools/gen4_ui/make_hgss_pokegear_list_arrows.py
 GEN4UIHGSSPOKEGEARCONDITIONSEARCH := tools/gen4_ui/make_hgss_pokegear_condition_search.py
 GEN4UIHGSSPOKEGEARCONTACT := tools/gen4_ui/make_hgss_pokegear_match_call_contact.py
+GEN4UIHGSSPOKEGEARCALL := tools/gen4_ui/make_hgss_pokegear_match_call_call.py
 GEN4UIHGSSPOKEGEARCONTACTROWS := tools/gen4_ui/make_hgss_pokegear_contact_rows.py
 GEN4UIHGSSPOKEGEARACTIONMENU := tools/gen4_ui/make_hgss_pokegear_action_menu.py
 
@@ -159,6 +160,19 @@ $(GEN4UIGFXDIR)/hgss_pokegear/match_call_contact.tilemap.bin: $(GEN4UIHGSSPOKEGE
 
 $(GEN4UIGFXDIR)/hgss_pokegear/match_call_contact.gbapal: $(GEN4UIHGSSPOKEGEARCONTACT) \
 	$(GEN4UIGFXDIR)/hgss_pokegear/verified/pgphone_skin0_contact_palette.NCLR
+	python3 $< --palette $@
+
+$(GEN4UIGFXDIR)/hgss_pokegear/match_call_call.4bpp: $(GEN4UIHGSSPOKEGEARCALL) \
+	$(GEN4UIGFXDIR)/hgss_pokegear/verified/pgphone_skin0_call_tiles.png \
+	$(GEN4UIGFXDIR)/hgss_pokegear/verified/pgphone_skin0_call_tilemap.NSCR
+	python3 $< --tiles $@
+
+$(GEN4UIGFXDIR)/hgss_pokegear/match_call_call.tilemap.bin: $(GEN4UIHGSSPOKEGEARCALL) \
+	$(GEN4UIGFXDIR)/hgss_pokegear/verified/pgphone_skin0_call_tilemap.NSCR
+	python3 $< --tilemap $@
+
+$(GEN4UIGFXDIR)/hgss_pokegear/match_call_call.gbapal: $(GEN4UIHGSSPOKEGEARCALL) \
+	$(GEN4UIGFXDIR)/hgss_pokegear/verified/pgphone_skin0_call_palette.NCLR
 	python3 $< --palette $@
 
 $(GEN4UIGFXDIR)/hgss_pokegear/match_call_contact_rows.gbapal: $(GEN4UIHGSSPOKEGEARCONTACTROWS) \

@@ -1157,3 +1157,48 @@ retail call-screen source while keeping the current panel available only as a
 rollback path until CI validates the integration.
 
 **authentic HGSS asset prepared → wire live pending → legacy removal pending**
+
+
+## Match Call call-message surface — phase 2
+
+CI #667 completed successfully for phase-1 commit
+`42f11a993c94cc78779c7a278859affd2ef9a406`, clearing the source-preparation
+gate.
+
+The verified retail HGSS Phone member-16/member-22/member-4 set is now adapted
+and wired into the live Match Call call-message path.
+
+The GBA adaptation does not redraw, scale, recolor, or synthesize any source
+artwork:
+
+- member 22 is 32x24 tiles (256x192); source rows 0..3 are verified blank and
+  are omitted, preserving source rows 4..23 as the GBA's 20 visible rows;
+- the retail 27x4 Phone conversation window occupies source x=2..28 and
+  y=19..22; after the blank-row omission its live GBA position is exactly
+  x=2, y=15 with the same 27x4 dimensions;
+- source columns 29 and 30 are verified repeated filler on every nonblank
+  retained row, so only those two filler columns are omitted; source columns
+  0..28 and the unique right edge at column 31 are preserved;
+- source tile indices 0..19, H/V flip bits, and palette-bank-0 pixel indices
+  are preserved; the only GBA-side remapping is to BG1 tile base 0x80 and
+  palette bank 9.
+
+`tools/gen4_ui/make_hgss_pokegear_match_call_call.py` verifies all three
+retail Git blob identities before producing
+`match_call_call.4bpp`, `match_call_call.tilemap.bin`, and
+`match_call_call.gbapal`. CI's Gen-4 UI job now syntax-checks the generator
+and builds all three outputs.
+
+`DrawMsgBoxForMatchCallMsg` and `DrawMsgBoxForCloseByMsg` now enter
+`DrawHgssPhoneCallSurface`, which loads the authentic member-16 graphics,
+adapted member-22 tilemap, and member-4 palette on BG1, then overlays the
+27x4 live text window at the retail-derived coordinates. Retail HGSS itself
+fills that Phone text window with pixel index 0 before printing; the live path
+now mirrors that behavior.
+
+The previous `DrawPokeGearPhoneCallPanel`, original 28x4 window template, and
+`graphics/pokenav/match_call/call_window.pal` are intentionally retained
+only behind the phase-2 rollback switch until CI validates this integration.
+They are no longer the default live call-message surface.
+
+**authentic HGSS asset → wired live, CI pending → legacy removal pending**

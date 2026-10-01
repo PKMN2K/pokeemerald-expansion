@@ -57,6 +57,7 @@ static void CreateMatchCallList(void);
 static void DestroyMatchCallList(void);
 static void FreeMatchCallSprites(void);
 static void LoadCallWindowAndFade(struct Pokenav_MatchCallGfx *);
+static void DrawHgssPhoneCallSurface(struct Pokenav_MatchCallGfx *);
 static void DrawPokeGearPhoneCallPanel(u16);
 static void DrawPokeGearPhonePortraitPanel(u16);
 static void DrawMatchCallLeftColumnWindows(struct Pokenav_MatchCallGfx *);
@@ -116,6 +117,9 @@ static u32 ExitMatchCall(s32);
 static const u32 sHgssMatchCallContact_Gfx[] = INCBIN_U32("graphics/gen4_ui/hgss_pokegear/match_call_contact.4bpp");
 static const u16 sHgssMatchCallContact_Tilemap[] = INCBIN_U16("graphics/gen4_ui/hgss_pokegear/match_call_contact.tilemap.bin");
 static const u16 sHgssMatchCallContact_Pal[] = INCBIN_U16("graphics/gen4_ui/hgss_pokegear/match_call_contact.gbapal");
+static const u32 sHgssMatchCallCall_Gfx[] = INCBIN_U32("graphics/gen4_ui/hgss_pokegear/match_call_call.4bpp");
+static const u16 sHgssMatchCallCall_Tilemap[] = INCBIN_U16("graphics/gen4_ui/hgss_pokegear/match_call_call.tilemap.bin");
+static const u16 sHgssMatchCallCall_Pal[] = INCBIN_U16("graphics/gen4_ui/hgss_pokegear/match_call_call.gbapal");
 static const u32 sHgssActionMenu_Gfx[] = INCBIN_U32("graphics/gen4_ui/hgss_pokegear/match_call_action_menu.4bpp");
 static const u16 sHgssActionMenu_Pal[] = INCBIN_U16("graphics/gen4_ui/hgss_pokegear/match_call_action_menu.gbapal");
 static const u16 sCallWindow_Pal[] = INCGFX_U16("graphics/pokenav/match_call/call_window.pal", ".gbapal");
@@ -125,8 +129,10 @@ static const u16 sHgssRematchBadge_Pal[] = INCBIN_U16("graphics/gen4_ui/hgss_pok
 
 enum {
     HGSS_MATCH_CALL_CONTACT_TILE_OFFSET = 0x100,
+    HGSS_MATCH_CALL_CALL_TILE_OFFSET = 0x80,
     HGSS_MATCH_CALL_CONTACT_PALETTE = 6,
     HGSS_MATCH_CALL_ROWS_PALETTE = 7,
+    HGSS_MATCH_CALL_CALL_PALETTE = 9,
     HGSS_MATCH_CALL_ROW_HEIGHT = 24,
     HGSS_MATCH_CALL_BUFFER_ROWS = 8,
     HGSS_PHONE_BADGE_ACTIVE = 0x5000,
@@ -247,6 +253,21 @@ static const struct WindowTemplate sCallMsgBoxWindowTemplate =
     .paletteNum = 1,
     .baseBlock = 10
 };
+
+// Retail HGSS Phone window 0 is (2,19), 27x4. The GBA adaptation
+// removes only four blank source rows, so its live origin becomes (2,15).
+static const struct WindowTemplate sHgssCallMsgBoxWindowTemplate =
+{
+    .bg = 1,
+    .tilemapLeft = 2,
+    .tilemapTop = 15,
+    .width = 27,
+    .height = 4,
+    .paletteNum = 1,
+    .baseBlock = 10
+};
+
+static bool8 sUseLegacyCallPanelForRollback = FALSE;
 
 static const struct OamData sTrainerPicOamData =
 {
@@ -1194,9 +1215,35 @@ static void UpdateWindowsToShowCheckPage(struct Pokenav_MatchCallGfx *gfx)
 
 static void LoadCallWindowAndFade(struct Pokenav_MatchCallGfx *gfx)
 {
-    gfx->msgBoxWindowId = AddWindow(&sCallMsgBoxWindowTemplate);
+    if (sUseLegacyCallPanelForRollback)
+        gfx->msgBoxWindowId = AddWindow(&sCallMsgBoxWindowTemplate);
+    else
+        gfx->msgBoxWindowId = AddWindow(&sHgssCallMsgBoxWindowTemplate);
+
     LoadMatchCallWindowGfx(gfx->msgBoxWindowId, 1, 4);
     FadeToBlackExceptPrimary();
+}
+
+static void DrawHgssPhoneCallSurface(struct Pokenav_MatchCallGfx *gfx)
+{
+    if (sUseLegacyCallPanelForRollback)
+    {
+        DrawPokeGearPhoneCallPanel(gfx->msgBoxWindowId);
+        PutWindowTilemap(gfx->msgBoxWindowId);
+        CopyWindowToVram(gfx->msgBoxWindowId, COPYWIN_FULL);
+        return;
+    }
+
+    LoadBgTiles(1, sHgssMatchCallCall_Gfx, sizeof(sHgssMatchCallCall_Gfx), HGSS_MATCH_CALL_CALL_TILE_OFFSET);
+    CopyToBgTilemapBuffer(1, sHgssMatchCallCall_Tilemap, sizeof(sHgssMatchCallCall_Tilemap), 0);
+    LoadPalette(sHgssMatchCallCall_Pal, BG_PLTT_ID(HGSS_MATCH_CALL_CALL_PALETTE), sizeof(sHgssMatchCallCall_Pal));
+
+    // Retail HGSS fills the 27x4 Phone call text window with color index 0,
+    // then prints the conversation over the member-22 background.
+    FillWindowPixelBuffer(gfx->msgBoxWindowId, PIXEL_FILL(0));
+    PutWindowTilemap(gfx->msgBoxWindowId);
+    CopyWindowToVram(gfx->msgBoxWindowId, COPYWIN_FULL);
+    CopyBgTilemapBufferToVram(1);
 }
 
 static void DrawPokeGearPhoneCallPanel(u16 windowId)
@@ -1233,18 +1280,14 @@ static void DrawPokeGearPhoneCallPanel(u16 windowId)
 static void DrawMsgBoxForMatchCallMsg(struct Pokenav_MatchCallGfx *gfx)
 {
     CloseMatchCallSelectOptionsWindow(gfx);
-    DrawPokeGearPhoneCallPanel(gfx->msgBoxWindowId);
-    PutWindowTilemap(gfx->msgBoxWindowId);
-    CopyWindowToVram(gfx->msgBoxWindowId, COPYWIN_FULL);
+    DrawHgssPhoneCallSurface(gfx);
     HideSpinningPokenavSprite();
 }
 
 static void DrawMsgBoxForCloseByMsg(struct Pokenav_MatchCallGfx *gfx)
 {
     CloseMatchCallSelectOptionsWindow(gfx);
-    DrawPokeGearPhoneCallPanel(gfx->msgBoxWindowId);
-    PutWindowTilemap(gfx->msgBoxWindowId);
-    CopyWindowToVram(gfx->msgBoxWindowId, COPYWIN_FULL);
+    DrawHgssPhoneCallSurface(gfx);
     HideSpinningPokenavSprite();
 }
 
