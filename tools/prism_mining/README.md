@@ -47,3 +47,10 @@ Excluded:
 ## Next extraction pass
 
 Identify and verify the first self-contained non-player mining visual group (rock/wall state plus any break effect) from the v0.95.0254 source/ROM before wiring it into Expansion.
+
+
+## Mound Cave mining tileset (tileset 21)
+
+Mound Cave 1F uses Prism's `TILESET_CAVE`, which is tileset `0x15` / decimal 21. The authentic source graphic is `gfx/tilesets/21.png` (128x56). Its blob SHA exactly matches the v0.95.0254-derived `bottlebrushes/pokemon-prism-assets` copy, so the imported PNG is preserved byte-for-byte under `graphics/prism_mining/mound_cave_tileset21.png`.
+
+Mining is collision-driven rather than object-animation-driven: Prism marks eligible 16x16 quadrants of cave metatiles as `MINING`. The mining script plays `SFX_BEAT_UP`, rolls the result, and leaves the cave tile unchanged. There is therefore no separate Prism crack/break animation to import for normal mining. The manifest records the 49 tileset-21 metatiles containing at least one mineable quadrant so the later Emerald mechanic can reproduce the same eligible wall geometry.

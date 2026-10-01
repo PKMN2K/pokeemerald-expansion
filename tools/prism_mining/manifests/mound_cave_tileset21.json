@@ -1,0 +1,257 @@
+{
+  "name": "prism_mound_cave_mining_tileset21",
+  "source": {
+    "game": "Pokemon Prism",
+    "version": "0.95.0254",
+    "authoritative_rom_sha1": "752076692ae3387cf426ce5f51a98c6b60e8df6a",
+    "mirror_repository": "Xalusc/POKEPRISM",
+    "mirror_commit": "ecb209a2404be3ac62a260a95d204a6a36170f4c",
+    "image": "gfx/tilesets/21.png",
+    "image_blob_sha": "985ed7065b8cb3032ddcf9bc58bcb50ae427534a",
+    "collision_file": "tilesets/21_collision.asm",
+    "map_evidence": {
+      "map": "MoundF1",
+      "header": "map_header MoundF1, TILESET_CAVE, CAVE, MOUND_CAVE, ...",
+      "tileset_constant": "TILESET_CAVE",
+      "tileset_id_hex": "0x15",
+      "tileset_id_decimal": 21
+    },
+    "cross_check": {
+      "repository": "bottlebrushes/pokemon-prism-assets",
+      "path": "tilesets/tilesets_21/21.png",
+      "image_blob_sha": "985ed7065b8cb3032ddcf9bc58bcb50ae427534a",
+      "archive_manifest_source": "Published Prism v0.95.0254 source tree",
+      "exact_blob_match": true
+    }
+  },
+  "target": {
+    "image": "graphics/prism_mining/mound_cave_tileset21.png",
+    "imported_byte_for_byte": true,
+    "live_wiring": "not yet; staged source art for the shared Emerald ROM mining subsystem"
+  },
+  "mining_behavior": {
+    "trigger": "COLL_MINING / MINING collision on eligible 16x16 metatile quadrants",
+    "visual_animation": "none",
+    "sound": "SFX_BEAT_UP",
+    "tile_mutation": "none",
+    "note": "Normal Prism mining leaves the cave wall/rock graphic unchanged after success or failure."
+  },
+  "mineable_metatiles": {
+    "count": 49,
+    "quadrant_order": [
+      "TL",
+      "TR",
+      "BL",
+      "BR"
+    ],
+    "entries": {
+      "10": [
+        "BR"
+      ],
+      "11": [
+        "BL"
+      ],
+      "12": [
+        "BL"
+      ],
+      "13": [
+        "BL"
+      ],
+      "16": [
+        "TL",
+        "BL"
+      ],
+      "17": [
+        "TR"
+      ],
+      "18": [
+        "TL",
+        "TR",
+        "BL"
+      ],
+      "19": [
+        "TL",
+        "TR"
+      ],
+      "20": [
+        "TL",
+        "BL",
+        "BR"
+      ],
+      "21": [
+        "BL",
+        "BR"
+      ],
+      "22": [
+        "TR",
+        "BL",
+        "BR"
+      ],
+      "23": [
+        "TR"
+      ],
+      "28": [
+        "TL"
+      ],
+      "29": [
+        "BL"
+      ],
+      "31": [
+        "TL",
+        "TR",
+        "BL",
+        "BR"
+      ],
+      "34": [
+        "TL",
+        "TR",
+        "BL",
+        "BR"
+      ],
+      "35": [
+        "TR",
+        "BR"
+      ],
+      "36": [
+        "TR",
+        "BR"
+      ],
+      "37": [
+        "TL",
+        "TR",
+        "BL"
+      ],
+      "41": [
+        "BR"
+      ],
+      "42": [
+        "TL",
+        "BR"
+      ],
+      "43": [
+        "TR",
+        "BL"
+      ],
+      "50": [
+        "TL",
+        "BL",
+        "BR"
+      ],
+      "51": [
+        "BL",
+        "BR"
+      ],
+      "52": [
+        "BL",
+        "BR"
+      ],
+      "53": [
+        "BL"
+      ],
+      "54": [
+        "BL",
+        "BR"
+      ],
+      "55": [
+        "TR"
+      ],
+      "56": [
+        "BL"
+      ],
+      "57": [
+        "BL",
+        "BR"
+      ],
+      "01": [
+        "TR",
+        "BL",
+        "BR"
+      ],
+      "03": [
+        "BL",
+        "BR"
+      ],
+      "04": [
+        "TL",
+        "BL"
+      ],
+      "06": [
+        "TR",
+        "BR"
+      ],
+      "08": [
+        "TL",
+        "BL"
+      ],
+      "0A": [
+        "TR",
+        "BR"
+      ],
+      "0C": [
+        "TL",
+        "BL",
+        "BR"
+      ],
+      "0D": [
+        "BL",
+        "BR"
+      ],
+      "0E": [
+        "TR",
+        "BL",
+        "BR"
+      ],
+      "1A": [
+        "TL",
+        "TR",
+        "BR"
+      ],
+      "1C": [
+        "TL",
+        "BL"
+      ],
+      "1D": [
+        "TL",
+        "TR",
+        "BL",
+        "BR"
+      ],
+      "1E": [
+        "TR",
+        "BR"
+      ],
+      "2A": [
+        "TR"
+      ],
+      "2B": [
+        "BR"
+      ],
+      "2C": [
+        "BL"
+      ],
+      "2D": [
+        "TL",
+        "TR",
+        "BL",
+        "BR"
+      ],
+      "2E": [
+        "TL",
+        "TR",
+        "BL",
+        "BR"
+      ],
+      "2F": [
+        "TL",
+        "TR",
+        "BL",
+        "BR"
+      ]
+    }
+  },
+  "policy": {
+    "player_graphics_included": false,
+    "resample": false,
+    "repaint": false
+  }
+}
