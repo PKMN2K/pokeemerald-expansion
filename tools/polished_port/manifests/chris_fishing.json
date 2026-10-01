@@ -1,0 +1,31 @@
+{
+  "name": "polished_chris_fishing",
+  "source": {
+    "repository": "Rangi42/polishedcrystal",
+    "commit": "3fa43192379df5c3e7b09a08e4d5d79af4f02f42",
+    "land_base": "gfx/sprites/chris.png",
+    "land_overlay": "gfx/overworld/chris_fish.png",
+    "surf_base": "gfx/sprites/chris_surf.png",
+    "surf_overlay": "gfx/overworld/chris_surf_fish.png",
+    "overlay_layout": "three 16x8 strips: south, north, west"
+  },
+  "targets": {
+    "land": "graphics/object_events/pics/people/polished_chris/fishing.png",
+    "surf": "graphics/object_events/pics/people/polished_chris/surf_fishing.png",
+    "sheet_width": 384,
+    "sheet_height": 32,
+    "frame_width": 32,
+    "frame_height": 32,
+    "frame_count": 12,
+    "physical_order": [
+      "west_0","west_1","west_2","west_3",
+      "north_0","north_1","north_2","north_3",
+      "south_0","south_1","south_2","south_3"
+    ]
+  },
+  "policy": {
+    "invent_intermediate_art": false,
+    "four_slots_per_direction": "repeat the authentic composite pose",
+    "east": "horizontal flip of west at runtime"
+  }
+}

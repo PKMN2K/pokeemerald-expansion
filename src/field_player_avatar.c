@@ -1746,8 +1746,17 @@ void SetPlayerAvatarFieldMove(void)
 
 void SetPlayerAvatarFishing(enum Direction direction)
 {
+    struct ObjectEvent *playerObjEvent = &gObjectEvents[gPlayerAvatar.objectEventId];
+    u16 graphicsId = GetPlayerAvatarGraphicsIdByStateId(PLAYER_AVATAR_STATE_FISHING);
+
     EndORASDowsing();
-    ObjectEventSetGraphicsId(&gObjectEvents[gPlayerAvatar.objectEventId], GetPlayerAvatarGraphicsIdByStateId(PLAYER_AVATAR_STATE_FISHING));
+
+    // Polished Crystal has a distinct fishing composite while Surfing.
+    // The fishing task preserves and restores the original Surfing graphics ID.
+    if (gPlayerAvatar.gender == MALE && TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_SURFING))
+        graphicsId = PLAYER_AVATAR_GFX_MALE_SURF_FISHING;
+
+    ObjectEventSetGraphicsId(playerObjEvent, graphicsId);
     StartSpriteAnim(&gSprites[gPlayerAvatar.spriteId], GetFishingDirectionAnimNum(direction));
 }
 

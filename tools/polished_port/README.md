@@ -65,3 +65,13 @@ The bike conversion maps `gfx/sprites/chris_bike.png` into a 9-frame 32x32 Expan
 6. west step
 
 Each 16x16 Crystal frame is horizontally centered and bottom-aligned in its 32x32 GBA frame. Expansion's existing separate surf-blob/bobbing field effect remains unchanged.
+
+## Fishing conversion
+
+Polished Crystal's `gfx/overworld/chris_fish.png` and `chris_surf_fish.png` are 16x24 overlay sheets, not standalone full sprites. Each contains three 16x8 strips. The original engine writes those strips over the bottom half of Chris's south, north, and west standing frames.
+
+The converter reconstructs the authentic full 16x16 poses by combining:
+- land fishing: top half of `chris.png` + matching `chris_fish.png` strip
+- surf fishing: top half of `chris_surf.png` + matching `chris_surf_fish.png` strip
+
+Expansion requires four rod-animation frames per direction. Because Polished Crystal supplies one authentic fishing pose per direction, all four slots reuse that pose instead of inventing transitional artwork. East remains the engine-flipped west pose. When the male player is already surfing, `SetPlayerAvatarFishing` selects the dedicated surf-fishing sheet and the fishing task later restores the saved surfing graphics.
