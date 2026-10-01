@@ -1,0 +1,41 @@
+{
+  "name": "polished_item_ball",
+  "source": {
+    "repository": "Rangi42/polishedcrystal",
+    "commit": "3fa43192379df5c3e7b09a08e4d5d79af4f02f42",
+    "image": "gfx/sprites/ball_cut_fruit.png",
+    "image_width": 16,
+    "image_height": 48,
+    "sprite": "SPRITE_BALL_CUT_FRUIT",
+    "slice": {
+      "x": 0,
+      "y": 0,
+      "width": 16,
+      "height": 16,
+      "meaning": "overworld Poké Ball"
+    }
+  },
+  "target": {
+    "image": "graphics/object_events/pics/misc/polished_item_ball.png",
+    "width": 80,
+    "height": 32,
+    "frame_width": 16,
+    "frame_height": 32,
+    "frame_count": 5,
+    "objects": [
+      "OBJ_EVENT_GFX_ITEM_BALL",
+      "OBJ_EVENT_GFX_POKE_BALL"
+    ]
+  },
+  "runtime": {
+    "palette": "retain Expansion gObjectEventGraphicsInfo_PokeBall palette tag",
+    "behavior": "retain Expansion item pickup, scripted Poké Ball, collision, and animation behavior",
+    "animation": "five identical authentic Polished Crystal ball frames"
+  },
+  "policy": {
+    "resample": false,
+    "repaint": false,
+    "placement": "bottom-align 16x16 source inside each 16x32 Expansion frame",
+    "background": "RGBDS white remapped to OBJ palette index 0 transparency"
+  }
+}

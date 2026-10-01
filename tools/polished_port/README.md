@@ -116,3 +116,10 @@ Polished Crystal's Rock Smash script shakes the obstacle and then removes it; it
 Polished Crystal stores its Strength boulder, smashable rock, and fossil together in `gfx/sprites/boulder_rock_fossil.png`. The bottom 16x16 object is the fossil.
 
 The converter extracts that authentic 16x16 fossil without scaling or repainting and remaps RGBDS white to GBA OBJ transparency. Both Expansion fossil object graphics IDs now use `graphics/object_events/pics/misc/polished_fossil.png`, while retaining their existing palette tags, object-event behavior, map scripting, and interaction logic.
+
+
+## Overworld item Poké Ball
+
+Polished Crystal stores the ordinary overworld Poké Ball, a cut-tree object, and fruit-tree graphics together in `gfx/sprites/ball_cut_fruit.png`. The top 16x16 object is the Poké Ball used for visible item objects and scripted Poké Balls.
+
+Expansion's shared Poké Ball object graphics use five physical 16x32 frame slots. The converter bottom-aligns the authentic 16x16 Crystal Poké Ball in each slot and repeats it across all five frames, preserving Crystal's static item-ball appearance without inventing animation frames. `OBJ_EVENT_GFX_ITEM_BALL` and `OBJ_EVENT_GFX_POKE_BALL` continue to use Expansion's existing graphics-info object, palette tag, pickup/script behavior, collision, and animation timing.
