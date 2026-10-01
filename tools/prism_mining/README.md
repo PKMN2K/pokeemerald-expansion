@@ -79,3 +79,12 @@ The dedicated `gTileset_PrismMoundCave` now uses a Prism-derived palette bank in
 Prism's tileset PNG is 2-bit grayscale. Expansion's `gbagfx` inverts grayscale when converting to 4bpp, so original Prism color indices 0-3 become GBA indices 12-15. Each converted JASC palette therefore stores its four authentic Prism RGB555 colors in slots 12-15; slots 0-11 are unused by this imported tilesheet. Source RGB5 channels are expanded with `(v << 3) | (v >> 2)`, which round-trips exactly to the original 5-bit values.
 
 Palette slots 8-15 are currently zero-filled because Prism tileset 21 only references source palettes 0, 3, 4, and 6; keeping all 16 target slots present satisfies Expansion's secondary-tileset palette layout without inventing colors.
+
+
+## Firelight Caverns mining tileset (tileset 33)
+
+The next authentic mining terrain group is Prism's `TILESET_FIRELIGHT_CAVERNS` (`0x21` / decimal 33). Its source graphic `gfx/tilesets/33.png` is a 128x56, 2-bit grayscale tilesheet and is now staged byte-for-byte as `graphics/prism_mining/firelight_caverns_tileset33.png`.
+
+The source collision table contains **55 mineable metatiles**. As with Mound Cave, mining is collision-driven: there is no separate crack/debris animation and normal mining does not mutate the terrain tile. The new manifest records the exact mineable quadrants for later Emerald metatile conversion.
+
+This step is asset-only. Firelight Caverns is not yet wired as a live Expansion tileset, and no mining rewards, EXP, pick durability, player graphics, or unrelated Prism systems are imported.

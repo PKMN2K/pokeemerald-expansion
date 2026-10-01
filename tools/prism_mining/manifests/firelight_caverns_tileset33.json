@@ -1,0 +1,453 @@
+{
+  "name": "prism_firelight_caverns_mining_tileset33",
+  "source": {
+    "game": "Pokemon Prism",
+    "version": "0.95.0254",
+    "mirror_repository": "Xalusc/POKEPRISM",
+    "mirror_commit": "ecb209a2404be3ac62a260a95d204a6a36170f4c",
+    "tileset_constant": "TILESET_FIRELIGHT_CAVERNS",
+    "tileset_id_hex": "0x21",
+    "tileset_id_decimal": 33,
+    "image": "gfx/tilesets/33.png",
+    "image_blob_sha": "db19f279360dc187fd4fc01b8710df880c86107b",
+    "image_dimensions_px": [
+      128,
+      56
+    ],
+    "image_format": "PNG, 2-bit grayscale",
+    "collision_file": "tilesets/33_collision.asm",
+    "collision_blob_sha": "945c72c4527fb08a132efd97f7a33d68290339fb",
+    "map_headers": [
+      "map_header OxalisGym, TILESET_FIRELIGHT_CAVERNS, INDOOR, OXALIS_CITY, MUSIC_NALJO_GYM, 1, PALETTE_NITE, FISHGROUP_NONE",
+      "map_header HeathGymUnderground, TILESET_FIRELIGHT_CAVERNS, DUNGEON, HEATH_VILLAGE, MUSIC_TIN_TOWER, 0, PALETTE_NITE, FISHGROUP_NONE",
+      "map_header FirelightF1, TILESET_FIRELIGHT_CAVERNS, CAVE, FIRELIGHT_CAVERNS, MUSIC_SPROUT_TOWER, 1, PALETTE_DAY, FISHGROUP_NONE",
+      "map_header FirelightPalletPathB1F, TILESET_FIRELIGHT_CAVERNS, CAVE, FIRELIGHT_CAVERNS, MUSIC_SPROUT_TOWER, 1, PALETTE_DAY, FISHGROUP_NONE",
+      "map_header FirelightRooms, TILESET_FIRELIGHT_CAVERNS, CAVE, FIRELIGHT_CAVERNS, MUSIC_SPROUT_TOWER, 1, PALETTE_DAY, FISHGROUP_NONE",
+      "map_header FirelightPalletPath1F, TILESET_FIRELIGHT_CAVERNS, CAVE, FIRELIGHT_CAVERNS, MUSIC_SPROUT_TOWER, 1, PALETTE_DAY, FISHGROUP_NONE",
+      "map_header FirelightGroudon, TILESET_FIRELIGHT_CAVERNS, CAVE, FIRELIGHT_CAVERNS, MUSIC_SPROUT_TOWER, 1, PALETTE_DAY, FISHGROUP_NONE",
+      "map_header FirelightItemRoom, TILESET_FIRELIGHT_CAVERNS, CAVE, FIRELIGHT_CAVERNS, MUSIC_SPROUT_TOWER, 1, PALETTE_DAY, FISHGROUP_NONE"
+    ]
+  },
+  "target": {
+    "image": "graphics/prism_mining/firelight_caverns_tileset33.png",
+    "imported_byte_for_byte": true,
+    "live_wiring": "not yet; staged as the next authentic Prism mining terrain group"
+  },
+  "mining_behavior": {
+    "trigger": "MINING collision on eligible 16x16 metatile quadrants",
+    "visual_animation": "none",
+    "tile_mutation": "none",
+    "mineable_metatile_count": 55,
+    "entries": [
+      {
+        "metatile_hex": "0x00",
+        "quadrants": [
+          "TL",
+          "TR",
+          "BL",
+          "BR"
+        ]
+      },
+      {
+        "metatile_hex": "0x03",
+        "quadrants": [
+          "TL",
+          "BL"
+        ]
+      },
+      {
+        "metatile_hex": "0x04",
+        "quadrants": [
+          "TL",
+          "BL"
+        ]
+      },
+      {
+        "metatile_hex": "0x06",
+        "quadrants": [
+          "TR",
+          "BR"
+        ]
+      },
+      {
+        "metatile_hex": "0x08",
+        "quadrants": [
+          "TL",
+          "BL"
+        ]
+      },
+      {
+        "metatile_hex": "0x0A",
+        "quadrants": [
+          "TR",
+          "BR"
+        ]
+      },
+      {
+        "metatile_hex": "0x0C",
+        "quadrants": [
+          "TL",
+          "BL",
+          "BR"
+        ]
+      },
+      {
+        "metatile_hex": "0x0D",
+        "quadrants": [
+          "BL",
+          "BR"
+        ]
+      },
+      {
+        "metatile_hex": "0x0E",
+        "quadrants": [
+          "TR",
+          "BL",
+          "BR"
+        ]
+      },
+      {
+        "metatile_hex": "0x10",
+        "quadrants": [
+          "BR"
+        ]
+      },
+      {
+        "metatile_hex": "0x11",
+        "quadrants": [
+          "BL"
+        ]
+      },
+      {
+        "metatile_hex": "0x12",
+        "quadrants": [
+          "BL"
+        ]
+      },
+      {
+        "metatile_hex": "0x13",
+        "quadrants": [
+          "BL"
+        ]
+      },
+      {
+        "metatile_hex": "0x16",
+        "quadrants": [
+          "TL",
+          "BL"
+        ]
+      },
+      {
+        "metatile_hex": "0x17",
+        "quadrants": [
+          "TL",
+          "TR",
+          "BL",
+          "BR"
+        ]
+      },
+      {
+        "metatile_hex": "0x18",
+        "quadrants": [
+          "TL",
+          "TR",
+          "BL"
+        ]
+      },
+      {
+        "metatile_hex": "0x19",
+        "quadrants": [
+          "TL",
+          "TR"
+        ]
+      },
+      {
+        "metatile_hex": "0x1A",
+        "quadrants": [
+          "TL",
+          "TR",
+          "BR"
+        ]
+      },
+      {
+        "metatile_hex": "0x1C",
+        "quadrants": [
+          "TL",
+          "BL"
+        ]
+      },
+      {
+        "metatile_hex": "0x1D",
+        "quadrants": [
+          "TL",
+          "TR",
+          "BL",
+          "BR"
+        ]
+      },
+      {
+        "metatile_hex": "0x1E",
+        "quadrants": [
+          "TR",
+          "BR"
+        ]
+      },
+      {
+        "metatile_hex": "0x20",
+        "quadrants": [
+          "TL",
+          "BL",
+          "BR"
+        ]
+      },
+      {
+        "metatile_hex": "0x21",
+        "quadrants": [
+          "BL",
+          "BR"
+        ]
+      },
+      {
+        "metatile_hex": "0x22",
+        "quadrants": [
+          "TR",
+          "BL",
+          "BR"
+        ]
+      },
+      {
+        "metatile_hex": "0x23",
+        "quadrants": [
+          "TL",
+          "TR",
+          "BL",
+          "BR"
+        ]
+      },
+      {
+        "metatile_hex": "0x28",
+        "quadrants": [
+          "TL"
+        ]
+      },
+      {
+        "metatile_hex": "0x29",
+        "quadrants": [
+          "BL"
+        ]
+      },
+      {
+        "metatile_hex": "0x2A",
+        "quadrants": [
+          "TR"
+        ]
+      },
+      {
+        "metatile_hex": "0x2B",
+        "quadrants": [
+          "BR"
+        ]
+      },
+      {
+        "metatile_hex": "0x2C",
+        "quadrants": [
+          "TR",
+          "BR"
+        ]
+      },
+      {
+        "metatile_hex": "0x2D",
+        "quadrants": [
+          "TL",
+          "BL"
+        ]
+      },
+      {
+        "metatile_hex": "0x2E",
+        "quadrants": [
+          "TL",
+          "BL"
+        ]
+      },
+      {
+        "metatile_hex": "0x2F",
+        "quadrants": [
+          "TR",
+          "BR"
+        ]
+      },
+      {
+        "metatile_hex": "0x30",
+        "quadrants": [
+          "TL",
+          "TR",
+          "BL",
+          "BR"
+        ]
+      },
+      {
+        "metatile_hex": "0x31",
+        "quadrants": [
+          "TL",
+          "TR",
+          "BL",
+          "BR"
+        ]
+      },
+      {
+        "metatile_hex": "0x34",
+        "quadrants": [
+          "TL",
+          "TR",
+          "BL",
+          "BR"
+        ]
+      },
+      {
+        "metatile_hex": "0x35",
+        "quadrants": [
+          "TR",
+          "BR"
+        ]
+      },
+      {
+        "metatile_hex": "0x36",
+        "quadrants": [
+          "TR",
+          "BL",
+          "BR"
+        ]
+      },
+      {
+        "metatile_hex": "0x37",
+        "quadrants": [
+          "TL",
+          "TR",
+          "BL"
+        ]
+      },
+      {
+        "metatile_hex": "0x38",
+        "quadrants": [
+          "TL",
+          "BL",
+          "BR"
+        ]
+      },
+      {
+        "metatile_hex": "0x39",
+        "quadrants": [
+          "BL",
+          "BR"
+        ]
+      },
+      {
+        "metatile_hex": "0x3A",
+        "quadrants": [
+          "TR",
+          "BL",
+          "BR"
+        ]
+      },
+      {
+        "metatile_hex": "0x3B",
+        "quadrants": [
+          "TL",
+          "BL"
+        ]
+      },
+      {
+        "metatile_hex": "0x3C",
+        "quadrants": [
+          "TR",
+          "BR"
+        ]
+      },
+      {
+        "metatile_hex": "0x40",
+        "quadrants": [
+          "TL",
+          "TR",
+          "BL",
+          "BR"
+        ]
+      },
+      {
+        "metatile_hex": "0x41",
+        "quadrants": [
+          "BR"
+        ]
+      },
+      {
+        "metatile_hex": "0x42",
+        "quadrants": [
+          "TL",
+          "BR"
+        ]
+      },
+      {
+        "metatile_hex": "0x43",
+        "quadrants": [
+          "TR",
+          "BL"
+        ]
+      },
+      {
+        "metatile_hex": "0x45",
+        "quadrants": [
+          "BL",
+          "BR"
+        ]
+      },
+      {
+        "metatile_hex": "0x4B",
+        "quadrants": [
+          "TL",
+          "TR"
+        ]
+      },
+      {
+        "metatile_hex": "0x4E",
+        "quadrants": [
+          "TL",
+          "BL",
+          "BR"
+        ]
+      },
+      {
+        "metatile_hex": "0x50",
+        "quadrants": [
+          "BL",
+          "BR"
+        ]
+      },
+      {
+        "metatile_hex": "0x51",
+        "quadrants": [
+          "BL",
+          "BR"
+        ]
+      },
+      {
+        "metatile_hex": "0x52",
+        "quadrants": [
+          "BL",
+          "BR"
+        ]
+      },
+      {
+        "metatile_hex": "0x55",
+        "quadrants": [
+          "TR"
+        ]
+      }
+    ]
+  },
+  "policy": {
+    "player_graphics_included": false,
+    "mining_exp_or_rewards_included": false,
+    "resample": false,
+    "repaint": false
+  },
+  "follow_up": "Create the first placeable Firelight Caverns mineable surface in the Expansion secondary-tileset format."
+}
