@@ -3061,3 +3061,6 @@ const u16 gTilesetPalettes_PrismMoundCave[][16] =
     INCGFX_U16("data/tilesets/secondary/prism_mound_cave/palettes/14.pal", ".gbapal"),
     INCGFX_U16("data/tilesets/secondary/prism_mound_cave/palettes/15.pal", ".gbapal"),
 };
+
+// Pokémon Prism v0.95.0254 Firelight Caverns source tiles used by the mining subsystem.
+const u32 gTilesetTiles_PrismFirelightCaverns[] = INCGFX_U32("data/tilesets/secondary/prism_firelight_caverns/tiles.png", ".4bpp.fastSmol", "-num_tiles 112 -Wnum_tiles");

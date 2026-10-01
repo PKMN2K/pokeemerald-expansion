@@ -412,3 +412,7 @@ const u16 gMetatileAttributes_HallOfFame[] = INCBIN_U16("data/tilesets/secondary
 // One initial Prism-derived 16x16 mining surface; more source quadrants can be added incrementally.
 const u16 gMetatiles_PrismMoundCave[] = INCBIN_U16("data/tilesets/secondary/prism_mound_cave/metatiles.bin");
 const u16 gMetatileAttributes_PrismMoundCave[] = INCBIN_U16("data/tilesets/secondary/prism_mound_cave/metatile_attributes.bin");
+
+// First authentic Firelight Caverns 16x16 mining surface; more source quadrants can be added incrementally.
+const u16 gMetatiles_PrismFirelightCaverns[] = INCBIN_U16("data/tilesets/secondary/prism_firelight_caverns/metatiles.bin");
+const u16 gMetatileAttributes_PrismFirelightCaverns[] = INCBIN_U16("data/tilesets/secondary/prism_firelight_caverns/metatile_attributes.bin");

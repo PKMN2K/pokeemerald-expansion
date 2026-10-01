@@ -1552,3 +1552,15 @@ const struct Tileset gTileset_PrismMoundCave =
     .metatileAttributes = gMetatileAttributes_PrismMoundCave,
     .callback = NULL,
 };
+
+const struct Tileset gTileset_PrismFirelightCaverns =
+{
+    .isCompressed = TRUE,
+    .isSecondary = TRUE,
+    .tiles = gTilesetTiles_PrismFirelightCaverns,
+    // Temporary target-engine palette bridge. Authentic Prism day palette translation is the next art step.
+    .palettes = gTilesetPalettes_Cave,
+    .metatiles = gMetatiles_PrismFirelightCaverns,
+    .metatileAttributes = gMetatileAttributes_PrismFirelightCaverns,
+    .callback = NULL,
+};
