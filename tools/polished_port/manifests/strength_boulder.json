@@ -1,0 +1,38 @@
+{
+  "name": "polished_strength_boulder",
+  "source": {
+    "repository": "Rangi42/polishedcrystal",
+    "commit": "3fa43192379df5c3e7b09a08e4d5d79af4f02f42",
+    "image": "gfx/sprites/boulder_rock_fossil.png",
+    "image_width": 16,
+    "image_height": 48,
+    "sprite": "SPRITE_BOULDER_ROCK_FOSSIL",
+    "usage": "strengthboulder_event",
+    "slice": {
+      "x": 0,
+      "y": 0,
+      "width": 16,
+      "height": 16,
+      "meaning": "Strength boulder"
+    }
+  },
+  "target": {
+    "image": "graphics/object_events/pics/misc/polished_strength_boulder.png",
+    "width": 16,
+    "height": 16,
+    "objects": [
+      "OBJ_EVENT_GFX_PUSHABLE_BOULDER",
+      "OBJ_EVENT_GFX_PUSHABLE_BOULDER_FRLG"
+    ]
+  },
+  "runtime": {
+    "palette": "retain each Expansion object graphics info palette tag",
+    "movement": "retain Expansion Strength/pushable-boulder mechanics",
+    "animation": "static single frame"
+  },
+  "policy": {
+    "resample": false,
+    "repaint": false,
+    "background": "RGBDS white remapped to OBJ palette index 0 transparency"
+  }
+}

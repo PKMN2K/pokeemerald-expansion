@@ -95,3 +95,10 @@ The live `gFieldEffectPic_CutGrass` and `gFieldEffectPic_CutGrass_Copy` symbols 
 Polished Crystal's `gfx/overworld/cut_tree.png` is one 16x16 tree made from four 8x8 quadrants. Its Cut animation does not redraw the tree: `.Frameset_CutTree` switches among OAM layouts that progressively move the left and right quadrants apart.
 
 The converter precomposes those authentic OAM positions into four 32x16 frames. Frame 0 centers the intact 16x16 tree; frames 1–3 spread the halves outward exactly according to `.OAMData_CutTree2`, `.OAMData_CutTree3`, and `.OAMData_CutTree4`. Both Emerald and FRLG cuttable-tree object IDs use the new sheet while retaining their existing palette tags and Expansion's existing obstacle-removal timing.
+
+
+## Strength boulder object
+
+Polished Crystal stores its ordinary boulder, smashable rock, and fossil together in `gfx/sprites/boulder_rock_fossil.png` as three stacked 16x16 objects. The top 16x16 object is the sprite used by `strengthboulder_event`.
+
+The converter extracts that boulder without scaling or repainting and remaps RGBDS white to GBA OBJ transparency. Both Expansion pushable-boulder graphics IDs now use `graphics/object_events/pics/misc/polished_strength_boulder.png`. Their existing palette tags, collision, Strength checks, movement behavior, and map scripting remain unchanged.
