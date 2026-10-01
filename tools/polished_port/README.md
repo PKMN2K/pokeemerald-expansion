@@ -123,3 +123,10 @@ The converter extracts that authentic 16x16 fossil without scaling or repainting
 Polished Crystal stores the ordinary overworld Poké Ball, a cut-tree object, and fruit-tree graphics together in `gfx/sprites/ball_cut_fruit.png`. The top 16x16 object is the Poké Ball used for visible item objects and scripted Poké Balls.
 
 Expansion's shared Poké Ball object graphics use five physical 16x32 frame slots. The converter bottom-aligns the authentic 16x16 Crystal Poké Ball in each slot and repeats it across all five frames, preserving Crystal's static item-ball appearance without inventing animation frames. `OBJ_EVENT_GFX_ITEM_BALL` and `OBJ_EVENT_GFX_POKE_BALL` continue to use Expansion's existing graphics-info object, palette tag, pickup/script behavior, collision, and animation timing.
+
+
+## Pokédex object
+
+Polished Crystal stores its book, paper, and Pokédex standing-object graphics together in `gfx/sprites/book_paper_pokedex.png`. The normal standing facings use tiles $00-$03 for down, $04-$07 for up, and $08-$0b for left; Oak's Lab explicitly places the shared sprite as `SPRITEMOVEDATA_STANDING_LEFT` for `OaksLabPokedexText`. That identifies the bottom 16x16 frame as the authentic Pokédex object.
+
+The converter extracts that frame without scaling or repainting and remaps RGBDS white to GBA OBJ transparency. Expansion's existing 16x16 Pokédex object keeps its palette tag, map-event behavior, scripting, and collision; only the live graphic is replaced.

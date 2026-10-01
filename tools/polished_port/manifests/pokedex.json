@@ -1,0 +1,39 @@
+{
+  "name": "polished_pokedex",
+  "source": {
+    "repository": "Rangi42/polishedcrystal",
+    "commit": "3fa43192379df5c3e7b09a08e4d5d79af4f02f42",
+    "image": "gfx/sprites/book_paper_pokedex.png",
+    "image_width": 16,
+    "image_height": 48,
+    "sprite": "SPRITE_BOOK_PAPER_POKEDEX",
+    "usage_evidence": {
+      "map": "maps/OaksLab.asm",
+      "movement": "SPRITEMOVEDATA_STANDING_LEFT",
+      "script": "OaksLabPokedexText"
+    },
+    "slice": {
+      "x": 0,
+      "y": 32,
+      "width": 16,
+      "height": 16,
+      "meaning": "Pokédex object"
+    }
+  },
+  "target": {
+    "image": "graphics/object_events/pics/misc/polished_pokedex.png",
+    "width": 16,
+    "height": 16,
+    "object": "gObjectEventGraphicsInfo_Pokedex"
+  },
+  "runtime": {
+    "palette": "retain Expansion Pokédex object palette tag",
+    "behavior": "retain Expansion map-event scripting, interaction, and collision",
+    "animation": "static single frame"
+  },
+  "policy": {
+    "resample": false,
+    "repaint": false,
+    "background": "RGBDS white remapped to OBJ palette index 0 transparency"
+  }
+}
