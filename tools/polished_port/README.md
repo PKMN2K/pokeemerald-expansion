@@ -18,12 +18,16 @@ Authentic Polished Crystal sources:
 - `gfx/sprites/chris.png` — normal walking/standing source
 - `gfx/sprites/chris_bike.png` — bicycle source
 - `gfx/sprites/chris_surf.png` — surfing source
+- `gfx/overworld/chris_fish.png` — fishing-on-land frames
+- `gfx/overworld/chris_surf_fish.png` — fishing-while-surfing frames
 
 The corresponding compressed GBC build assets are referenced by `gfx/sprites.asm` as:
 
 - `gfx/sprites/chris.2bpp.lz`
 - `gfx/sprites/chris_bike.2bpp.lz`
 - `gfx/sprites/chris_surf.2bpp.lz`
+- `gfx/overworld/chris_fish.2bpp`
+- `gfx/overworld/chris_surf_fish.2bpp`
 
 pokeemerald-expansion currently separates the male player into these live sheets:
 
