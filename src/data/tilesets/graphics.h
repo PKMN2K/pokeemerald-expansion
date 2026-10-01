@@ -3064,3 +3064,23 @@ const u16 gTilesetPalettes_PrismMoundCave[][16] =
 
 // Pokémon Prism v0.95.0254 Firelight Caverns source tiles used by the mining subsystem.
 const u32 gTilesetTiles_PrismFirelightCaverns[] = INCGFX_U32("data/tilesets/secondary/prism_firelight_caverns/tiles.png", ".4bpp.fastSmol", "-num_tiles 112 -Wnum_tiles");
+
+const u16 gTilesetPalettes_PrismFirelightCaverns[][16] =
+{
+    INCGFX_U16("data/tilesets/secondary/prism_firelight_caverns/palettes/00.pal", ".gbapal"),
+    INCGFX_U16("data/tilesets/secondary/prism_firelight_caverns/palettes/01.pal", ".gbapal"),
+    INCGFX_U16("data/tilesets/secondary/prism_firelight_caverns/palettes/02.pal", ".gbapal"),
+    INCGFX_U16("data/tilesets/secondary/prism_firelight_caverns/palettes/03.pal", ".gbapal"),
+    INCGFX_U16("data/tilesets/secondary/prism_firelight_caverns/palettes/04.pal", ".gbapal"),
+    INCGFX_U16("data/tilesets/secondary/prism_firelight_caverns/palettes/05.pal", ".gbapal"),
+    INCGFX_U16("data/tilesets/secondary/prism_firelight_caverns/palettes/06.pal", ".gbapal"),
+    INCGFX_U16("data/tilesets/secondary/prism_firelight_caverns/palettes/07.pal", ".gbapal"),
+    INCGFX_U16("data/tilesets/secondary/prism_firelight_caverns/palettes/08.pal", ".gbapal"),
+    INCGFX_U16("data/tilesets/secondary/prism_firelight_caverns/palettes/09.pal", ".gbapal"),
+    INCGFX_U16("data/tilesets/secondary/prism_firelight_caverns/palettes/10.pal", ".gbapal"),
+    INCGFX_U16("data/tilesets/secondary/prism_firelight_caverns/palettes/11.pal", ".gbapal"),
+    INCGFX_U16("data/tilesets/secondary/prism_firelight_caverns/palettes/12.pal", ".gbapal"),
+    INCGFX_U16("data/tilesets/secondary/prism_firelight_caverns/palettes/13.pal", ".gbapal"),
+    INCGFX_U16("data/tilesets/secondary/prism_firelight_caverns/palettes/14.pal", ".gbapal"),
+    INCGFX_U16("data/tilesets/secondary/prism_firelight_caverns/palettes/15.pal", ".gbapal"),
+};

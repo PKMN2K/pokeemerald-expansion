@@ -88,3 +88,10 @@ The next authentic mining terrain group is Prism's `TILESET_FIRELIGHT_CAVERNS` (
 The source collision table contains **55 mineable metatiles**. As with Mound Cave, mining is collision-driven: there is no separate crack/debris animation and normal mining does not mutate the terrain tile. The new manifest records the exact mineable quadrants for later Emerald metatile conversion.
 
 This step is asset-only. Firelight Caverns is not yet wired as a live Expansion tileset, and no mining rewards, EXP, pick durability, player graphics, or unrelated Prism systems are imported.
+
+
+## Authentic Prism Firelight Caverns day palettes
+
+`gTileset_PrismFirelightCaverns` now uses a dedicated Prism-derived day palette bank instead of borrowing Expansion's Cave palettes. Prism's Firelight cave maps use `PALETTE_DAY`, and the dungeon color table maps day to palette records `$08-$0F` in `tilesets/bg.pal`.
+
+As with the Mound Cave import, Prism's 2-bit grayscale tile indices are translated by `gbagfx` into GBA indices 12-15, so each source four-color palette is stored in target palette entries 12-15. RGB5 channels are expanded with `(v << 3) | (v >> 2)` for exact GBA round-tripping. Target palette banks 8-15 remain zero-filled because this Prism tileset uses the eight dungeon palette slots.

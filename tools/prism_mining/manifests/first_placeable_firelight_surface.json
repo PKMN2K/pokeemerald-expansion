@@ -44,12 +44,38 @@
     "behavior": "MB_PRISM_MINING",
     "behavior_value": 240,
     "layer_type": "METATILE_LAYER_TYPE_NORMAL",
-    "palette_bridge": "gTilesetPalettes_Cave"
+    "palette_bridge": "gTilesetPalettes_PrismFirelightCaverns",
+    "palette_source": "Prism tilesets/bg.pal ;Day dungeon palette row ($08-$0F)",
+    "palette_translation": {
+      "source_palette_slots": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "target_palette_slots": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "source_2bpp_indices_to_gba_4bpp_indices": "0-3 -> 12-15",
+      "rgb5_to_rgb8": "(v << 3) | (v >> 2)",
+      "unused_target_slots": "8-15 zero-filled"
+    }
   },
   "isolation": {
     "existing_maps_modified": false,
     "existing_cave_tileset_modified": false,
     "activation": "A map must explicitly select gTileset_PrismFirelightCaverns and place metatile 0."
   },
-  "follow_up": "Translate Firelight Caverns' Prism day dungeon palette into a dedicated GBA palette bank."
+  "follow_up": "Expand Firelight Caverns beyond the first placeable mineable surface using the staged source metatile/collision manifest."
 }
