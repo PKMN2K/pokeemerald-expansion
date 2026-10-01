@@ -5,6 +5,7 @@ const u32 gObjectEventPic_PolishedChrisBike[] = INCGFX_U32("graphics/object_even
 const u32 gObjectEventPic_PolishedChrisSurfing[] = INCGFX_U32("graphics/object_events/pics/people/polished_chris/surfing.png", ".4bpp", "-mwidth 4 -mheight 4");
 const u32 gObjectEventPic_PolishedChrisFishing[] = INCGFX_U32("graphics/object_events/pics/people/polished_chris/fishing.png", ".4bpp", "-mwidth 4 -mheight 4");
 const u32 gObjectEventPic_PolishedChrisSurfFishing[] = INCGFX_U32("graphics/object_events/pics/people/polished_chris/surf_fishing.png", ".4bpp", "-mwidth 4 -mheight 4");
+const u32 gObjectEventPic_PolishedChrisFieldMove[] = INCGFX_U32("graphics/object_events/pics/people/polished_chris/field_move.png", ".4bpp", "-mwidth 4 -mheight 4");
 const u16 gObjectEventPal_PolishedChris[] = INCGFX_U16("graphics/object_events/palettes/polished_chris.pal", ".gbapal");
 const u32 gObjectEventPic_RubySapphireBrendanNormal[] = INCGFX_U32("graphics/object_events/pics/people/ruby_sapphire_brendan/walking.png", ".4bpp", "-mwidth 2 -mheight 4");
 const u32 gObjectEventPic_RubySapphireBrendanRunning[] = INCGFX_U32("graphics/object_events/pics/people/ruby_sapphire_brendan/running.png", ".4bpp", "-mwidth 2 -mheight 4");

@@ -1,0 +1,25 @@
+{
+  "name": "polished_chris_field_move",
+  "source": {
+    "repository": "Rangi42/polishedcrystal",
+    "commit": "3fa43192379df5c3e7b09a08e4d5d79af4f02f42",
+    "base": "gfx/sprites/chris.png",
+    "dedicated_field_move_asset_present": false
+  },
+  "target": {
+    "path": "graphics/object_events/pics/people/polished_chris/field_move.png",
+    "sheet_width": 96,
+    "sheet_height": 32,
+    "frame_width": 32,
+    "frame_height": 32,
+    "physical_frames": ["south_idle", "north_idle", "west_idle"]
+  },
+  "behavior": {
+    "south": "repeat frame 0 for Expansion field-move timing",
+    "north": "repeat frame 1 for Expansion field-move timing",
+    "west": "repeat frame 2 for Expansion field-move timing",
+    "east": "repeat horizontally flipped frame 2",
+    "total_duration_ticks": 24,
+    "invent_new_art": false
+  }
+}

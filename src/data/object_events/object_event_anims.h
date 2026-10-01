@@ -1492,6 +1492,53 @@ static const union AnimCmd *const sAnimTable_PolishedChrisNormal[] = {
     [ANIM_SPIN_EAST] = sAnim_SpinEast,
 };
 
+static const union AnimCmd sAnim_PolishedFieldMoveSouth[] =
+{
+    ANIMCMD_FRAME(0, 4),
+    ANIMCMD_FRAME(0, 4),
+    ANIMCMD_FRAME(0, 4),
+    ANIMCMD_FRAME(0, 4),
+    ANIMCMD_FRAME(0, 8),
+    ANIMCMD_END,
+};
+
+static const union AnimCmd sAnim_PolishedFieldMoveNorth[] =
+{
+    ANIMCMD_FRAME(1, 4),
+    ANIMCMD_FRAME(1, 4),
+    ANIMCMD_FRAME(1, 4),
+    ANIMCMD_FRAME(1, 4),
+    ANIMCMD_FRAME(1, 8),
+    ANIMCMD_END,
+};
+
+static const union AnimCmd sAnim_PolishedFieldMoveWest[] =
+{
+    ANIMCMD_FRAME(2, 4),
+    ANIMCMD_FRAME(2, 4),
+    ANIMCMD_FRAME(2, 4),
+    ANIMCMD_FRAME(2, 4),
+    ANIMCMD_FRAME(2, 8),
+    ANIMCMD_END,
+};
+
+static const union AnimCmd sAnim_PolishedFieldMoveEast[] =
+{
+    ANIMCMD_FRAME(2, 4, .hFlip = TRUE),
+    ANIMCMD_FRAME(2, 4, .hFlip = TRUE),
+    ANIMCMD_FRAME(2, 4, .hFlip = TRUE),
+    ANIMCMD_FRAME(2, 4, .hFlip = TRUE),
+    ANIMCMD_FRAME(2, 8, .hFlip = TRUE),
+    ANIMCMD_END,
+};
+
+static const union AnimCmd *const sAnimTable_PolishedChrisFieldMove[] = {
+    [ANIM_STD_FACE_SOUTH] = sAnim_PolishedFieldMoveSouth,
+    [ANIM_STD_FACE_NORTH] = sAnim_PolishedFieldMoveNorth,
+    [ANIM_STD_FACE_WEST] = sAnim_PolishedFieldMoveWest,
+    [ANIM_STD_FACE_EAST] = sAnim_PolishedFieldMoveEast,
+};
+
 static const union AnimCmd sAnim_PolishedBikeTrickSouthA[] =
 {
     ANIMCMD_FRAME(3, 4),

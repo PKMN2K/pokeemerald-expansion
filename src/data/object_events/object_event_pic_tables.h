@@ -33,6 +33,10 @@ static const struct SpriteFrameImage sPicTable_PolishedChrisSurfFishing[] = {
     overworld_ascending_frames(gObjectEventPic_PolishedChrisSurfFishing, 4, 4),
 };
 
+static const struct SpriteFrameImage sPicTable_PolishedChrisFieldMove[] = {
+    overworld_ascending_frames(gObjectEventPic_PolishedChrisFieldMove, 4, 4),
+};
+
 static const struct SpriteFrameImage sPicTable_BrendanMachBike[] = {
     overworld_ascending_frames(gObjectEventPic_BrendanMachBike, 4, 4),
 };

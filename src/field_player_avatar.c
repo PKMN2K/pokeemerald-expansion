@@ -1739,9 +1739,18 @@ void SetPlayerInvisibility(bool8 invisible)
 
 void SetPlayerAvatarFieldMove(void)
 {
+    struct ObjectEvent *playerObjEvent = &gObjectEvents[gPlayerAvatar.objectEventId];
+    u8 animNum = ANIM_FIELD_MOVE;
+
     EndORASDowsing();
-    ObjectEventSetGraphicsId(&gObjectEvents[gPlayerAvatar.objectEventId], GetPlayerAvatarGraphicsIdByStateId(PLAYER_AVATAR_STATE_FIELD_MOVE));
-    StartSpriteAnim(&gSprites[gPlayerAvatar.spriteId], ANIM_FIELD_MOVE);
+    ObjectEventSetGraphicsId(playerObjEvent, GetPlayerAvatarGraphicsIdByStateId(PLAYER_AVATAR_STATE_FIELD_MOVE));
+
+    // Polished Crystal has no dedicated trainer field-move animation.
+    // Preserve Chris's facing direction while retaining Expansion's timing.
+    if (gPlayerAvatar.gender == MALE)
+        animNum = GetFaceDirectionAnimNum(playerObjEvent->movementDirection);
+
+    StartSpriteAnim(&gSprites[gPlayerAvatar.spriteId], animNum);
 }
 
 void SetPlayerAvatarFishing(enum Direction direction)
