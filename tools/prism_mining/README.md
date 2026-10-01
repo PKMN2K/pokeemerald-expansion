@@ -102,3 +102,12 @@ As with the Mound Cave import, Prism's 2-bit grayscale tile indices are translat
 `gTileset_PrismFirelightCaverns` now contains **9 placeable mining metatiles**. Metatile 0 remains block `0x1D` TL; metatiles 1-8 add authentic mineable quadrants from blocks `0x17`, `0x23`, `0x31`, and `0x34`.
 
 This batch is intentionally conservative: every included source quadrant is marked `MINING`, and every source tile attribute is exactly `0x06` (palette 6 with no flip flags). That lets the conversion remain byte-for-byte in tile choice while using the already translated authentic Firelight day palette. Existing maps remain untouched.
+
+
+## Firelight mining surface conversion complete
+
+All **127 mineable 16x16 quadrants** from Prism Firelight Caverns tileset 33 are now available as placeable `MB_PRISM_MINING` metatiles in `gTileset_PrismFirelightCaverns`.
+
+A source-attribute audit found that the mineable quadrants use only attributes `0x06` and `0x04`: palette 6 or palette 4, with **no X flip, Y flip, or alternate VRAM-bank usage**. Because both authentic Prism day palettes were already imported, every remaining mining quadrant could be converted directly without inventing flip handling or repainting tiles.
+
+The first nine metatile IDs were preserved exactly; the remaining 118 surfaces were appended. Existing maps are still untouched and must opt into the Firelight secondary tileset explicitly.

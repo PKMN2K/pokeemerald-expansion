@@ -31,7 +31,8 @@
   "target": {
     "image": "graphics/prism_mining/firelight_caverns_tileset33.png",
     "imported_byte_for_byte": true,
-    "live_wiring": "live as gTileset_PrismFirelightCaverns with 9 placeable MB_PRISM_MINING metatiles"
+    "live_wiring": "live as gTileset_PrismFirelightCaverns with all 127 source MINING quadrants represented as placeable MB_PRISM_MINING metatiles",
+    "converted_mining_quadrants": 127
   },
   "mining_behavior": {
     "trigger": "MINING collision on eligible 16x16 metatile quadrants",
@@ -449,5 +450,5 @@
     "resample": false,
     "repaint": false
   },
-  "follow_up": "Continue converting remaining Firelight MINING quadrants after verifying source flip-attribute mapping."
+  "follow_up": "Firelight mineable terrain conversion is complete; move to the next Prism mining terrain group or begin map integration."
 }
