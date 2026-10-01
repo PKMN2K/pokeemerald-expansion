@@ -1,0 +1,27 @@
+{
+  "name": "polished_chris_surfing",
+  "source": {
+    "repository": "Rangi42/polishedcrystal",
+    "commit": "3fa43192379df5c3e7b09a08e4d5d79af4f02f42",
+    "path": "gfx/sprites/chris_surf.png",
+    "sheet_width": 16,
+    "sheet_height": 96,
+    "frame_width": 16,
+    "frame_height": 16,
+    "frame_count": 6,
+    "source_order": ["south_idle","north_idle","west_idle","south_step","north_step","west_step"]
+  },
+  "target": {
+    "path": "graphics/object_events/pics/people/polished_chris/surfing.png",
+    "sheet_width": 192,
+    "sheet_height": 32,
+    "frame_width": 32,
+    "frame_height": 32,
+    "frame_count": 6,
+    "physical_order": ["south_idle","south_step","north_idle","north_step","west_idle","west_step"],
+    "x_offset": 8,
+    "y_offset": 16
+  },
+  "source_to_target": [0,2,4,1,3,5],
+  "surf_blob": "retain pokeemerald-expansion field-effect layer unchanged"
+}

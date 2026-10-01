@@ -52,3 +52,16 @@ Do not overwrite Brendan assets during conversion. The first generated output wi
 The walking and running conversions preserve the original Polished Crystal pixels and palette intent.
 
 The bike conversion maps `gfx/sprites/chris_bike.png` into a 9-frame 32x32 Expansion sheet. Each authentic 16x16 Crystal frame is horizontally centered and bottom-aligned. Both Mach Bike and Acro Bike player states use this same authentic Crystal cycling set. Because Crystal has no Acro trick poses, Acro-only animation slots reuse authentic cycling frames with compatible timing rather than inventing new artwork.
+
+## Surf conversion
+
+`gfx/sprites/chris_surf.png` is a six-frame 16x96 Polished Crystal sheet. Expansion's surfing renderer uses six physical 32x32 frames plus a picture-table remap. The converter therefore preserves all six source frames and writes them in physical order:
+
+1. south idle
+2. south step
+3. north idle
+4. north step
+5. west idle
+6. west step
+
+Each 16x16 Crystal frame is horizontally centered and bottom-aligned in its 32x32 GBA frame. Expansion's existing separate surf-blob/bobbing field effect remains unchanged.

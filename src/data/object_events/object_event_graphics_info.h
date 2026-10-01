@@ -52,6 +52,24 @@ const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_PolishedChrisBike 
     .images = sPicTable_PolishedChrisBike,
 };
 
+const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_PolishedChrisSurfing = {
+    .tileTag = TAG_NONE,
+    .paletteTag = OBJ_EVENT_PAL_TAG_POLISHED_CHRIS,
+    .reflectionPaletteTag = OBJ_EVENT_PAL_TAG_NONE,
+    .size = 512,
+    .width = 32,
+    .height = 32,
+    .paletteSlot = PALSLOT_PLAYER,
+    .shadowSize = SHADOW_SIZE_M,
+    .inanimate = FALSE,
+    .compressed = FALSE,
+    .tracks = TRACKS_NONE,
+    .oam = &gObjectEventBaseOam_32x32,
+    .subspriteTables = sOamTables_32x32,
+    .anims = sAnimTable_Surfing,
+    .images = sPicTable_PolishedChrisSurfing,
+};
+
 const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_BrendanMachBike = {
     .tileTag = TAG_NONE,
     .paletteTag = OBJ_EVENT_PAL_TAG_BRENDAN,

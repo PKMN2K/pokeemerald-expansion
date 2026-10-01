@@ -1,6 +1,7 @@
 extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_BrendanNormal;
 extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_PolishedChrisNormal;
 extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_PolishedChrisBike;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_PolishedChrisSurfing;
 extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_BrendanMachBike;
 extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_BrendanSurfing;
 extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_BrendanFieldMove;
@@ -795,6 +796,7 @@ const struct ObjectEventGraphicsInfo *const gObjectEventGraphicsInfoPointers[NUM
 #endif // IS_FRLG
     [OBJ_EVENT_GFX_POLISHED_CHRIS_NORMAL]        = &gObjectEventGraphicsInfo_PolishedChrisNormal,
     [OBJ_EVENT_GFX_POLISHED_CHRIS_BIKE]          = &gObjectEventGraphicsInfo_PolishedChrisBike,
+    [OBJ_EVENT_GFX_POLISHED_CHRIS_SURFING]       = &gObjectEventGraphicsInfo_PolishedChrisSurfing,
 };
 
 const struct ObjectEventGraphicsInfo *const gMauvilleOldManGraphicsInfoPointers[] = {
