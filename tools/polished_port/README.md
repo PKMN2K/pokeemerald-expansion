@@ -88,3 +88,10 @@ The pinned Polished Crystal v3.2.3 tree has no dedicated Chris field-move sprite
 Polished Crystal's `gfx/overworld/cut_grass.png` is a 16x16 four-tile source image. The pinned `data/sprite_anims/oam.asm` confirms that `.OAMData_Leaf` uses tile `$00`, the top-left 8x8 tile. Expansion's Cut grass particle is also an 8x8 sprite, so the converter ports that exact tile without scaling or repainting.
 
 The live `gFieldEffectPic_CutGrass` and `gFieldEffectPic_CutGrass_Copy` symbols now use `graphics/field_effects/pics/polished_cut_grass.png`. Expansion's existing Cut palette, eight-particle orbit motion, sound, map edits, and timing remain unchanged.
+
+
+## Cut tree object
+
+Polished Crystal's `gfx/overworld/cut_tree.png` is one 16x16 tree made from four 8x8 quadrants. Its Cut animation does not redraw the tree: `.Frameset_CutTree` switches among OAM layouts that progressively move the left and right quadrants apart.
+
+The converter precomposes those authentic OAM positions into four 32x16 frames. Frame 0 centers the intact 16x16 tree; frames 1–3 spread the halves outward exactly according to `.OAMData_CutTree2`, `.OAMData_CutTree3`, and `.OAMData_CutTree4`. Both Emerald and FRLG cuttable-tree object IDs use the new sheet while retaining their existing palette tags and Expansion's existing obstacle-removal timing.

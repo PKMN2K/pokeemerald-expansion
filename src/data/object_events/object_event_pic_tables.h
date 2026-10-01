@@ -370,7 +370,7 @@ static const struct SpriteFrameImage sPicTable_UnusedPorygon2Doll[] = {
 };
 
 static const struct SpriteFrameImage sPicTable_CuttableTree[] = {
-    overworld_ascending_frames(gObjectEventPic_CuttableTree, 2, 2),
+    overworld_ascending_frames(gObjectEventPic_CuttableTree, 4, 2),
 };
 
 static const struct SpriteFrameImage sPicTable_MartEmployee[] = {
@@ -1751,10 +1751,10 @@ static const struct SpriteFrameImage sPicTable_Bruno[] = {
 };
 
 static const struct SpriteFrameImage sPicTable_CuttableTreeFrlg[] = {
-    overworld_frame(gObjectEventPic_CuttableTreeFrlg, 2, 2, 0),
-    overworld_frame(gObjectEventPic_CuttableTreeFrlg, 2, 2, 1),
-    overworld_frame(gObjectEventPic_CuttableTreeFrlg, 2, 2, 2),
-    overworld_frame(gObjectEventPic_CuttableTreeFrlg, 2, 2, 3),
+    overworld_frame(gObjectEventPic_CuttableTreeFrlg, 4, 2, 0),
+    overworld_frame(gObjectEventPic_CuttableTreeFrlg, 4, 2, 1),
+    overworld_frame(gObjectEventPic_CuttableTreeFrlg, 4, 2, 2),
+    overworld_frame(gObjectEventPic_CuttableTreeFrlg, 4, 2, 3),
 };
 
 static const struct SpriteFrameImage sPicTable_Clerk[] = {

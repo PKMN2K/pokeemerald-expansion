@@ -226,7 +226,7 @@ const u32 gObjectEventPic_BigWailmerDoll[] = INCGFX_U32("graphics/object_events/
 const u32 gObjectEventPic_BigRegirockDoll[] = INCGFX_U32("graphics/object_events/pics/dolls/big_regirock_doll.png", ".4bpp");
 const u32 gObjectEventPic_BigRegiceDoll[] = INCGFX_U32("graphics/object_events/pics/dolls/big_regice_doll.png", ".4bpp");
 const u32 gObjectEventPic_BigRegisteelDoll[] = INCGFX_U32("graphics/object_events/pics/dolls/big_registeel_doll.png", ".4bpp");
-const u32 gObjectEventPic_CuttableTree[] = INCGFX_U32("graphics/object_events/pics/misc/cuttable_tree.png", ".4bpp", "-mwidth 2 -mheight 2");
+const u32 gObjectEventPic_CuttableTree[] = INCGFX_U32("graphics/object_events/pics/misc/polished_cut_tree.png", ".4bpp", "-mwidth 4 -mheight 2");
 const u32 gObjectEventPic_BreakableRock[] = INCGFX_U32("graphics/object_events/pics/misc/breakable_rock.png", ".4bpp", "-mwidth 2 -mheight 2");
 const u32 gObjectEventPic_PushableBoulder[] = INCGFX_U32("graphics/object_events/pics/misc/pushable_boulder.png", ".4bpp");
 const u32 gObjectEventPic_MrBrineysBoat[] = INCGFX_U32("graphics/object_events/pics/misc/mr_brineys_boat.png", ".4bpp", "-mwidth 4 -mheight 4");
@@ -579,7 +579,7 @@ const u16 gObjectEventPic_GBAKid[] = INCGFX_U16("graphics/object_events/pics/peo
 const u16 gObjectEventPic_MomFrlg[] = INCGFX_U16("graphics/object_events/pics/people/mom_frlg.png", ".4bpp", "-mwidth 2 -mheight 4");
 const u16 gObjectEventPic_Policeman[] = INCGFX_U16("graphics/object_events/pics/people/policeman.png", ".4bpp", "-mwidth 2 -mheight 4");
 
-const u16 gObjectEventPic_CuttableTreeFrlg[] = INCGFX_U16("graphics/object_events/pics/misc/cuttable_tree_frlg.png", ".4bpp", "-mwidth 2 -mheight 2");
+const u16 gObjectEventPic_CuttableTreeFrlg[] = INCGFX_U16("graphics/object_events/pics/misc/polished_cut_tree.png", ".4bpp", "-mwidth 4 -mheight 2");
 const u32 gObjectEventPic_BreakableRockFrlg[] = INCGFX_U32("graphics/object_events/pics/misc/breakable_rock_frlg.png", ".4bpp", "-mwidth 2 -mheight 2");
 const u16 gObjectEventPic_PushableBoulderFrlg[] = INCGFX_U16("graphics/object_events/pics/misc/pushable_boulder_frlg.png", ".4bpp");
 const u32 gObjectEventPic_FossilFrlg[] = INCGFX_U32("graphics/object_events/pics/misc/fossil_frlg.png", ".4bpp");

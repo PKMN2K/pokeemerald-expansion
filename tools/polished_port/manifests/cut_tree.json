@@ -1,0 +1,39 @@
+{
+  "name": "polished_cut_tree",
+  "source": {
+    "repository": "Rangi42/polishedcrystal",
+    "commit": "3fa43192379df5c3e7b09a08e4d5d79af4f02f42",
+    "image": "gfx/overworld/cut_tree.png",
+    "image_width": 16,
+    "image_height": 16,
+    "frameset": "data/sprite_anims/framesets.asm .Frameset_CutTree",
+    "oam": "data/sprite_anims/oam.asm .OAMData_Tree/.OAMData_CutTree2/3/4"
+  },
+  "target": {
+    "image": "graphics/object_events/pics/misc/polished_cut_tree.png",
+    "sheet_width": 128,
+    "sheet_height": 16,
+    "frame_width": 32,
+    "frame_height": 16,
+    "frame_count": 4
+  },
+  "geometry": {
+    "frame_0_x": [-8, 0],
+    "frame_1_x": [-10, 2],
+    "frame_2_x": [-12, 4],
+    "frame_3_x": [-16, 8],
+    "canvas_origin_x": 16,
+    "canvas_origin_y": 8
+  },
+  "runtime": {
+    "objects": ["OBJ_EVENT_GFX_CUTTABLE_TREE", "OBJ_EVENT_GFX_CUTTABLE_TREE_FRLG"],
+    "animation_table": "sAnimTable_CuttableTree",
+    "timing": "keep pokeemerald-expansion ANIM_REMOVE_OBSTACLE timing for this art-only step",
+    "palette": "keep each existing object-event palette tag"
+  },
+  "policy": {
+    "resample": false,
+    "repaint": false,
+    "precompose_source_oam_motion": true
+  }
+}
