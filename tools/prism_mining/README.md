@@ -87,7 +87,7 @@ The next authentic mining terrain group is Prism's `TILESET_FIRELIGHT_CAVERNS` (
 
 The source collision table contains **55 mineable metatiles**. As with Mound Cave, mining is collision-driven: there is no separate crack/debris animation and normal mining does not mutate the terrain tile. The new manifest records the exact mineable quadrants for later Emerald metatile conversion.
 
-This step is asset-only. Firelight Caverns is not yet wired as a live Expansion tileset, and no mining rewards, EXP, pick durability, player graphics, or unrelated Prism systems are imported.
+Firelight Caverns is now wired as an isolated live Expansion secondary tileset. No existing maps select it yet, and no mining rewards, EXP, pick durability, player graphics, or unrelated Prism systems are imported.
 
 
 ## Authentic Prism Firelight Caverns day palettes
@@ -95,3 +95,10 @@ This step is asset-only. Firelight Caverns is not yet wired as a live Expansion 
 `gTileset_PrismFirelightCaverns` now uses a dedicated Prism-derived day palette bank instead of borrowing Expansion's Cave palettes. Prism's Firelight cave maps use `PALETTE_DAY`, and the dungeon color table maps day to palette records `$08-$0F` in `tilesets/bg.pal`.
 
 As with the Mound Cave import, Prism's 2-bit grayscale tile indices are translated by `gbagfx` into GBA indices 12-15, so each source four-color palette is stored in target palette entries 12-15. RGB5 channels are expanded with `(v << 3) | (v >> 2)` for exact GBA round-tripping. Target palette banks 8-15 remain zero-filled because this Prism tileset uses the eight dungeon palette slots.
+
+
+## Firelight mining surface batch 1
+
+`gTileset_PrismFirelightCaverns` now contains **9 placeable mining metatiles**. Metatile 0 remains block `0x1D` TL; metatiles 1-8 add authentic mineable quadrants from blocks `0x17`, `0x23`, `0x31`, and `0x34`.
+
+This batch is intentionally conservative: every included source quadrant is marked `MINING`, and every source tile attribute is exactly `0x06` (palette 6 with no flip flags). That lets the conversion remain byte-for-byte in tile choice while using the already translated authentic Firelight day palette. Existing maps remain untouched.

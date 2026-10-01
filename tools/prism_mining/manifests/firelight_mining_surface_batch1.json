@@ -1,0 +1,193 @@
+{
+  "name": "prism_firelight_caverns_mining_surface_batch_1",
+  "source": {
+    "game": "Pokemon Prism",
+    "version": "0.95.0254",
+    "tileset_id": 33,
+    "tileset_constant": "TILESET_FIRELIGHT_CAVERNS",
+    "constraint": "Only quadrants confirmed MINING with uniform source attribute 0x06 (palette 6, no flip flags) are included in this batch."
+  },
+  "target": {
+    "tileset_symbol": "gTileset_PrismFirelightCaverns",
+    "behavior": "MB_PRISM_MINING",
+    "metatile_count": 9,
+    "entries": [
+      {
+        "target_metatile_id": 0,
+        "source_block": "0x1D",
+        "source_quadrant": "TL",
+        "source_tiles": [
+          "0x0C",
+          "0x0D",
+          "0x1C",
+          "0x1D"
+        ],
+        "target_entries": [
+          "0x620C",
+          "0x620D",
+          "0x621C",
+          "0x621D"
+        ],
+        "source_attribute": "0x06",
+        "source_palette": 6
+      },
+      {
+        "target_metatile_id": 1,
+        "source_block": "0x17",
+        "source_quadrant": "TR",
+        "source_tiles": [
+          "0x1A",
+          "0x1B",
+          "0x01",
+          "0x00"
+        ],
+        "target_entries": [
+          "0x621A",
+          "0x621B",
+          "0x6201",
+          "0x6200"
+        ],
+        "source_attribute": "0x06",
+        "source_palette": 6
+      },
+      {
+        "target_metatile_id": 2,
+        "source_block": "0x23",
+        "source_quadrant": "TL",
+        "source_tiles": [
+          "0x51",
+          "0x52",
+          "0x01",
+          "0x00"
+        ],
+        "target_entries": [
+          "0x6251",
+          "0x6252",
+          "0x6201",
+          "0x6200"
+        ],
+        "source_attribute": "0x06",
+        "source_palette": 6
+      },
+      {
+        "target_metatile_id": 3,
+        "source_block": "0x31",
+        "source_quadrant": "TL",
+        "source_tiles": [
+          "0x05",
+          "0x52",
+          "0x5E",
+          "0x34"
+        ],
+        "target_entries": [
+          "0x6205",
+          "0x6252",
+          "0x625E",
+          "0x6234"
+        ],
+        "source_attribute": "0x06",
+        "source_palette": 6
+      },
+      {
+        "target_metatile_id": 4,
+        "source_block": "0x31",
+        "source_quadrant": "TR",
+        "source_tiles": [
+          "0x53",
+          "0x07",
+          "0x35",
+          "0x4F"
+        ],
+        "target_entries": [
+          "0x6253",
+          "0x6207",
+          "0x6235",
+          "0x624F"
+        ],
+        "source_attribute": "0x06",
+        "source_palette": 6
+      },
+      {
+        "target_metatile_id": 5,
+        "source_block": "0x31",
+        "source_quadrant": "BL",
+        "source_tiles": [
+          "0x25",
+          "0x04",
+          "0x25",
+          "0x0A"
+        ],
+        "target_entries": [
+          "0x6225",
+          "0x6204",
+          "0x6225",
+          "0x620A"
+        ],
+        "source_attribute": "0x06",
+        "source_palette": 6
+      },
+      {
+        "target_metatile_id": 6,
+        "source_block": "0x31",
+        "source_quadrant": "BR",
+        "source_tiles": [
+          "0x04",
+          "0x27",
+          "0x0B",
+          "0x27"
+        ],
+        "target_entries": [
+          "0x6204",
+          "0x6227",
+          "0x620B",
+          "0x6227"
+        ],
+        "source_attribute": "0x06",
+        "source_palette": 6
+      },
+      {
+        "target_metatile_id": 7,
+        "source_block": "0x34",
+        "source_quadrant": "BL",
+        "source_tiles": [
+          "0x55",
+          "0x56",
+          "0x04",
+          "0x06"
+        ],
+        "target_entries": [
+          "0x6255",
+          "0x6256",
+          "0x6204",
+          "0x6206"
+        ],
+        "source_attribute": "0x06",
+        "source_palette": 6
+      },
+      {
+        "target_metatile_id": 8,
+        "source_block": "0x34",
+        "source_quadrant": "BR",
+        "source_tiles": [
+          "0x57",
+          "0x58",
+          "0x0A",
+          "0x0B"
+        ],
+        "target_entries": [
+          "0x6257",
+          "0x6258",
+          "0x620A",
+          "0x620B"
+        ],
+        "source_attribute": "0x06",
+        "source_palette": 6
+      }
+    ]
+  },
+  "isolation": {
+    "existing_maps_modified": false,
+    "activation": "These surfaces are available only on maps explicitly selecting gTileset_PrismFirelightCaverns."
+  },
+  "follow_up": "Continue converting remaining Firelight MINING quadrants, adding source attribute flip conversion only after its mapping is verified."
+}
