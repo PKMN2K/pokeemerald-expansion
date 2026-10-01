@@ -1461,6 +1461,39 @@ static const union AnimCmd *const sAnimTable_BrendanMayNormal[] = {
     [ANIM_SPIN_EAST] = sAnim_SpinEast,
 };
 
+static const union AnimCmd *const sAnimTable_PolishedChrisNormal[] = {
+    [ANIM_STD_FACE_SOUTH] = sAnim_FaceSouth,
+    [ANIM_STD_FACE_NORTH] = sAnim_FaceNorth,
+    [ANIM_STD_FACE_WEST] = sAnim_FaceWest,
+    [ANIM_STD_FACE_EAST] = sAnim_FaceEast,
+    [ANIM_STD_GO_SOUTH] = sAnim_GoSouth,
+    [ANIM_STD_GO_NORTH] = sAnim_GoNorth,
+    [ANIM_STD_GO_WEST] = sAnim_GoWest,
+    [ANIM_STD_GO_EAST] = sAnim_GoEast,
+    [ANIM_STD_GO_FAST_SOUTH] = sAnim_GoFastSouth,
+    [ANIM_STD_GO_FAST_NORTH] = sAnim_GoFastNorth,
+    [ANIM_STD_GO_FAST_WEST] = sAnim_GoFastWest,
+    [ANIM_STD_GO_FAST_EAST] = sAnim_GoFastEast,
+    [ANIM_STD_GO_FASTER_SOUTH] = sAnim_GoFasterSouth,
+    [ANIM_STD_GO_FASTER_NORTH] = sAnim_GoFasterNorth,
+    [ANIM_STD_GO_FASTER_WEST] = sAnim_GoFasterWest,
+    [ANIM_STD_GO_FASTER_EAST] = sAnim_GoFasterEast,
+    [ANIM_STD_GO_FASTEST_SOUTH] = sAnim_GoFastestSouth,
+    [ANIM_STD_GO_FASTEST_NORTH] = sAnim_GoFastestNorth,
+    [ANIM_STD_GO_FASTEST_WEST] = sAnim_GoFastestWest,
+    [ANIM_STD_GO_FASTEST_EAST] = sAnim_GoFastestEast,
+    // Until the authentic Polished Crystal running frames are imported,
+    // running safely reuses the 0-8 walking frame set at fast timing.
+    [ANIM_RUN_SOUTH] = sAnim_GoFastSouth,
+    [ANIM_RUN_NORTH] = sAnim_GoFastNorth,
+    [ANIM_RUN_WEST] = sAnim_GoFastWest,
+    [ANIM_RUN_EAST] = sAnim_GoFastEast,
+    [ANIM_SPIN_SOUTH] = sAnim_SpinSouth,
+    [ANIM_SPIN_NORTH] = sAnim_SpinNorth,
+    [ANIM_SPIN_WEST] = sAnim_SpinWest,
+    [ANIM_SPIN_EAST] = sAnim_SpinEast,
+};
+
 static const union AnimCmd *const sAnimTable_AcroBike[] = {
     [ANIM_STD_FACE_SOUTH] = sAnim_FaceSouth,
     [ANIM_STD_FACE_NORTH] = sAnim_FaceNorth,
