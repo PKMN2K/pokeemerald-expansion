@@ -1,0 +1,30 @@
+{
+  "name": "prism_mound_cave_night_palettes",
+  "source": {
+    "repository": "Xalusc/POKEPRISM",
+    "commit": "ecb209a2404be3ac62a260a95d204a6a36170f4c",
+    "file": "tilesets/bg.pal",
+    "map_palette": "PALETTE_NITE",
+    "palette_mapping": ".DungeonColors Night row -> source palettes 0x10..0x17",
+    "tileset": 21
+  },
+  "target": {
+    "directory": "data/tilesets/secondary/prism_mound_cave/palettes",
+    "symbol": "gTilesetPalettes_PrismMoundCave",
+    "palette_count": 16,
+    "colors_per_palette": 16
+  },
+  "conversion": {
+    "source_color_depth": "RGB555",
+    "rgb5_to_rgb8": "(v << 3) | (v >> 2)",
+    "source_color_indices": [0, 1, 2, 3],
+    "target_color_indices": [12, 13, 14, 15],
+    "reason_for_index_offset": "gbagfx inverts grayscale PNG pixel indices during 2bpp-to-4bpp conversion",
+    "target_slots_8_to_15": "zero-filled; unused by Prism tileset 21"
+  },
+  "tileset_21_palette_ids_observed": [0, 3, 4, 6],
+  "policy": {
+    "repaint": false,
+    "invented_colors": false
+  }
+}

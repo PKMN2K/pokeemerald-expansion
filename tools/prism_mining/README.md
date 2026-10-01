@@ -70,3 +70,12 @@ A dedicated Expansion secondary tileset, `gTileset_PrismMoundCave`, now exposes 
 The initial 16x16 metatile is the **top-left quadrant of Prism Mound Cave block 0x1D**. Prism's block data uses source tiles `0x0c, 0x0d, 0x1c, 0x1d`; its collision entry marks all four 16x16 quadrants of block `0x1D` as `MINING`. The GBA metatile references those exact source tiles and is tagged `MB_PRISM_MINING`.
 
 The full authentic 128x56 Prism tilesheet is used directly as this secondary tileset's tile source. Existing maps are unchanged: this surface becomes active only when a map deliberately selects `gTileset_PrismMoundCave` and places metatile 0. For this geometry-only step, the tileset temporarily uses Expansion's Cave palette bank; Prism's time-of-day cave palette translation remains a separate art step.
+
+
+## Authentic Prism Mound Cave night palettes
+
+The dedicated `gTileset_PrismMoundCave` now uses a Prism-derived palette bank instead of borrowing Expansion's Cave palettes. Mound Cave is declared with `PALETTE_NITE`, so palettes 0-7 come from the `;Night` dungeon palette row in Prism's `tilesets/bg.pal`.
+
+Prism's tileset PNG is 2-bit grayscale. Expansion's `gbagfx` inverts grayscale when converting to 4bpp, so original Prism color indices 0-3 become GBA indices 12-15. Each converted JASC palette therefore stores its four authentic Prism RGB555 colors in slots 12-15; slots 0-11 are unused by this imported tilesheet. Source RGB5 channels are expanded with `(v << 3) | (v >> 2)`, which round-trips exactly to the original 5-bit values.
+
+Palette slots 8-15 are currently zero-filled because Prism tileset 21 only references source palettes 0, 3, 4, and 6; keeping all 16 target slots present satisfies Expansion's secondary-tileset palette layout without inventing colors.

@@ -3041,3 +3041,23 @@ const u32 gTilesetTiles_General_Frlg[] = INCGFX_U32("data/tilesets/primary/gener
 
 // Pokémon Prism v0.95.0254 Mound Cave source tiles used by the mining subsystem.
 const u32 gTilesetTiles_PrismMoundCave[] = INCGFX_U32("data/tilesets/secondary/prism_mound_cave/tiles.png", ".4bpp.fastSmol", "-num_tiles 112 -Wnum_tiles");
+
+const u16 gTilesetPalettes_PrismMoundCave[][16] =
+{
+    INCGFX_U16("data/tilesets/secondary/prism_mound_cave/palettes/00.pal", ".gbapal"),
+    INCGFX_U16("data/tilesets/secondary/prism_mound_cave/palettes/01.pal", ".gbapal"),
+    INCGFX_U16("data/tilesets/secondary/prism_mound_cave/palettes/02.pal", ".gbapal"),
+    INCGFX_U16("data/tilesets/secondary/prism_mound_cave/palettes/03.pal", ".gbapal"),
+    INCGFX_U16("data/tilesets/secondary/prism_mound_cave/palettes/04.pal", ".gbapal"),
+    INCGFX_U16("data/tilesets/secondary/prism_mound_cave/palettes/05.pal", ".gbapal"),
+    INCGFX_U16("data/tilesets/secondary/prism_mound_cave/palettes/06.pal", ".gbapal"),
+    INCGFX_U16("data/tilesets/secondary/prism_mound_cave/palettes/07.pal", ".gbapal"),
+    INCGFX_U16("data/tilesets/secondary/prism_mound_cave/palettes/08.pal", ".gbapal"),
+    INCGFX_U16("data/tilesets/secondary/prism_mound_cave/palettes/09.pal", ".gbapal"),
+    INCGFX_U16("data/tilesets/secondary/prism_mound_cave/palettes/10.pal", ".gbapal"),
+    INCGFX_U16("data/tilesets/secondary/prism_mound_cave/palettes/11.pal", ".gbapal"),
+    INCGFX_U16("data/tilesets/secondary/prism_mound_cave/palettes/12.pal", ".gbapal"),
+    INCGFX_U16("data/tilesets/secondary/prism_mound_cave/palettes/13.pal", ".gbapal"),
+    INCGFX_U16("data/tilesets/secondary/prism_mound_cave/palettes/14.pal", ".gbapal"),
+    INCGFX_U16("data/tilesets/secondary/prism_mound_cave/palettes/15.pal", ".gbapal"),
+};

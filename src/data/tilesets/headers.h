@@ -1547,8 +1547,7 @@ const struct Tileset gTileset_PrismMoundCave =
     .isCompressed = TRUE,
     .isSecondary = TRUE,
     .tiles = gTilesetTiles_PrismMoundCave,
-    // Temporary target-engine palette bridge. Authentic Prism palette translation is a separate art step.
-    .palettes = gTilesetPalettes_Cave,
+    .palettes = gTilesetPalettes_PrismMoundCave,
     .metatiles = gMetatiles_PrismMoundCave,
     .metatileAttributes = gMetatileAttributes_PrismMoundCave,
     .callback = NULL,
