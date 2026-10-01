@@ -1,0 +1,34 @@
+{
+  "name": "prism_mining_metatile_behavior",
+  "source_reference": {
+    "game": "Pokemon Prism",
+    "version": "0.95.0254",
+    "behavior": "MINING collision / MiningScript",
+    "note": "Prism mining is triggered by mineable map collision rather than a breakable object animation."
+  },
+  "target": {
+    "constant": "MB_PRISM_MINING",
+    "value": 240,
+    "classifier": "MetatileBehavior_IsPrismMining",
+    "files": [
+      "include/constants/metatile_behaviors.h",
+      "include/metatile_behavior.h",
+      "src/metatile_behavior.c"
+    ]
+  },
+  "compatibility": {
+    "existing_behavior_ids_renumbered": false,
+    "previous_last_behavior": "MB_ROCK_CLIMB",
+    "previous_last_value": 239,
+    "new_num_metatile_behaviors": 241,
+    "fits_u8": true
+  },
+  "intentionally_not_implemented_yet": [
+    "map tile assignments",
+    "mining interaction script",
+    "reward table",
+    "pick durability or charge",
+    "mining EXP",
+    "player graphics"
+  ]
+}
