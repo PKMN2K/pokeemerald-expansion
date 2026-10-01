@@ -1,0 +1,41 @@
+{
+  "name": "polished_smashable_rock",
+  "source": {
+    "repository": "Rangi42/polishedcrystal",
+    "commit": "3fa43192379df5c3e7b09a08e4d5d79af4f02f42",
+    "image": "gfx/sprites/boulder_rock_fossil.png",
+    "image_width": 16,
+    "image_height": 48,
+    "sprite": "SPRITE_BOULDER_ROCK_FOSSIL",
+    "usage": "Rock Smash smashable-rock object",
+    "slice": {
+      "x": 0,
+      "y": 16,
+      "width": 16,
+      "height": 16,
+      "meaning": "smashable rock"
+    }
+  },
+  "target": {
+    "image": "graphics/object_events/pics/misc/polished_smashable_rock.png",
+    "width": 32,
+    "height": 32,
+    "frame_width": 16,
+    "frame_height": 16,
+    "frame_count": 4,
+    "objects": [
+      "OBJ_EVENT_GFX_BREAKABLE_ROCK",
+      "OBJ_EVENT_GFX_BREAKABLE_ROCK_FRLG"
+    ]
+  },
+  "runtime": {
+    "palette": "retain each Expansion object graphics info palette tag",
+    "movement": "retain Expansion Rock Smash mechanics and obstacle removal",
+    "animation": "four identical authentic Polished Crystal rock frames; Expansion timing retained"
+  },
+  "policy": {
+    "resample": false,
+    "repaint": false,
+    "background": "RGBDS white remapped to OBJ palette index 0 transparency"
+  }
+}
