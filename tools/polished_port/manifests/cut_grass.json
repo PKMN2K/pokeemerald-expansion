@@ -1,0 +1,30 @@
+{
+  "name": "polished_cut_grass_leaf",
+  "source": {
+    "repository": "Rangi42/polishedcrystal",
+    "commit": "3fa43192379df5c3e7b09a08e4d5d79af4f02f42",
+    "image": "gfx/overworld/cut_grass.png",
+    "image_width": 16,
+    "image_height": 16,
+    "usage": "data/sprite_anims/oam.asm .OAMData_Leaf uses tile $00"
+  },
+  "target": {
+    "image": "graphics/field_effects/pics/polished_cut_grass.png",
+    "width": 8,
+    "height": 8,
+    "source_region": "top-left 8x8 tile"
+  },
+  "runtime": {
+    "graphics_symbols": [
+      "gFieldEffectPic_CutGrass",
+      "gFieldEffectPic_CutGrass_Copy"
+    ],
+    "palette": "keep existing gFieldEffectPal_CutGrass",
+    "motion": "keep existing pokeemerald-expansion Cut grass orbit callbacks and timing"
+  },
+  "policy": {
+    "resample": false,
+    "repaint": false,
+    "background": "RGBDS white remapped to OBJ palette index 0 transparency"
+  }
+}

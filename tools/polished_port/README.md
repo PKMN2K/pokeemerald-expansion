@@ -81,3 +81,10 @@ Expansion requires four rod-animation frames per direction. Because Polished Cry
 The pinned Polished Crystal v3.2.3 tree has no dedicated Chris field-move sprite sheet. Its Chris-specific overworld art consists of normal, bike, surf, and fishing overlays. To remain faithful, the Expansion field-move state therefore uses Chris's authentic standing frames rather than importing Brendan's five-frame throwing pose or inventing new art.
 
 `field_move.png` contains the authentic south, north, and west standing frames on 32x32 canvases. East is a runtime horizontal flip of west. A custom animation table repeats the appropriate directional frame for the same 24-frame-tick duration as Expansion's normal field-move animation, so Surf/Fly/Cut/etc. task timing remains unchanged while Chris visually stays facing the action.
+
+
+## Cut grass field effect
+
+Polished Crystal's `gfx/overworld/cut_grass.png` is a 16x16 four-tile source image. The pinned `data/sprite_anims/oam.asm` confirms that `.OAMData_Leaf` uses tile `$00`, the top-left 8x8 tile. Expansion's Cut grass particle is also an 8x8 sprite, so the converter ports that exact tile without scaling or repainting.
+
+The live `gFieldEffectPic_CutGrass` and `gFieldEffectPic_CutGrass_Copy` symbols now use `graphics/field_effects/pics/polished_cut_grass.png`. Expansion's existing Cut palette, eight-particle orbit motion, sound, map edits, and timing remain unchanged.
