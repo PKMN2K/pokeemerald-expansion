@@ -74,7 +74,7 @@ The converter reconstructs the authentic full 16x16 poses by combining:
 - land fishing: top half of `chris.png` + matching `chris_fish.png` strip
 - surf fishing: top half of `chris_surf.png` + matching `chris_surf_fish.png` strip
 
-Expansion requires four rod-animation frames per direction. Because Polished Crystal supplies one authentic fishing pose per direction, all four slots reuse that pose instead of inventing transitional artwork. East remains the engine-flipped west pose. When the male player is already surfing, `SetPlayerAvatarFishing` selects the dedicated surf-fishing sheet and the fishing task later restores the saved surfing graphics.
+Expansion requires four rod-animation frames per direction. Because Polished Crystal supplies one authentic fishing pose per direction, all four slots reuse that pose instead of inventing transitional artwork. Polished Crystal also draws `gfx/overworld/fishing_rod.png` as a fifth OAM tile: tile `$7a` sits below the south pose and above the north pose, while tile `$7b` sits outside the west/east pose. The converter now centers Chris at `(8, 8)` inside each 32x32 frame and bakes that authentic rod tile into the remaining space. East remains the engine-flipped west pose, which also flips the rod from the original west orientation to the original east orientation. When the male player is already surfing, `SetPlayerAvatarFishing` selects the dedicated surf-fishing sheet and the fishing task later restores the saved surfing graphics.
 
 ## Field-move pose
 
