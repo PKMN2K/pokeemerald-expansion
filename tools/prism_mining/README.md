@@ -191,3 +191,12 @@ The remaining Kanto Cave mining work is now the earlier source quadrants that we
 The final 44 are uniform source attribute `0x05` or `0x06`, with no X/Y flips, alternate VRAM bank, or priority flags. The complete target files are 3,872 bytes of metatile data and 484 bytes of metatile attributes.
 
 Kanto Cave mining terrain conversion is now complete. Existing maps remain untouched; map placement and mining gameplay integration stay isolated for later steps.
+
+
+## Olcan Isle / Olcan Chine staging
+
+Prism tileset 55 (`TILESET_OLCAN_ISLE`, source ID `0x37`) is staged at `graphics/prism_mining/olcan_isle_tileset55.png` for the next mining terrain group.
+
+Its collision table contains **110 `MINING` quadrants across 59 metatiles**. The source tileset is used by Olcan Isle (`PALETTE_AUTO`), Olcan Chine (`PALETTE_AUTO`), and Olcan Chine Entrance (`PALETTE_NITE`), so live palette wiring is intentionally deferred until its day/night palette usage is audited.
+
+No maps or live target tilesets are changed by this staging step.

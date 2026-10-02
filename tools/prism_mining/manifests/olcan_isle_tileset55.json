@@ -1,0 +1,2242 @@
+{
+  "name": "prism_olcan_isle_tileset55",
+  "source": {
+    "game": "Pokemon Prism",
+    "version": "0.95.0254",
+    "pinned_commit": "ecb209a2404be3ac62a260a95d204a6a36170f4c",
+    "tileset_constant": "TILESET_OLCAN_ISLE",
+    "tileset_id_hex": "0x37",
+    "tileset_id_decimal": 55,
+    "image_path": "gfx/tilesets/55.png",
+    "image_blob_sha": "5c310b5f144479ecbf90b1ca3ad1816ae93374f8",
+    "image_dimensions": {
+      "width": 128,
+      "height": 88
+    },
+    "metatiles_path": "tilesets/55_metatiles.bin",
+    "metatiles_blob_sha": "8e2cc5ad106dc33796b3067e45e5f385fbaac111",
+    "metatiles_bytes": 2688,
+    "attributes_path": "tilesets/55_attributes.bin",
+    "attributes_blob_sha": "46a3cca02d4acd6afdaff7587f0578583e48da17",
+    "attributes_bytes": 2688,
+    "collision_path": "tilesets/55_collision.asm",
+    "collision_blob_sha": "46571f2e6997039307cb6583645799738ffd29d1",
+    "collision_rows": 168,
+    "map_contexts": [
+      {
+        "map": "OlcanIsle",
+        "environment": "ROUTE",
+        "palette": "PALETTE_AUTO",
+        "fishgroup": "FISHGROUP_OCEAN"
+      },
+      {
+        "map": "OlcanChine",
+        "environment": "CAVE",
+        "palette": "PALETTE_AUTO",
+        "fishgroup": "FISHGROUP_CAVE"
+      },
+      {
+        "map": "OlcanChineEntrance",
+        "environment": "CAVE",
+        "palette": "PALETTE_NITE",
+        "fishgroup": "FISHGROUP_CAVE"
+      }
+    ]
+  },
+  "mining": {
+    "mining_metatiles": 59,
+    "mining_quadrants": 110,
+    "fully_mineable_metatiles": 0,
+    "source_attribute_counts": {
+      "0x05": 306,
+      "0x25": 120,
+      "0x00": 8,
+      "0x03": 2,
+      "0x0E": 3,
+      "0x2E": 1
+    },
+    "mixed_attribute_quadrants": 15,
+    "flagged_attribute_quadrants": 37,
+    "metatiles": [
+      {
+        "source_block": "0x04",
+        "mining_quadrants": [
+          "TL",
+          "BL"
+        ],
+        "quadrants": [
+          {
+            "quadrant": "TL",
+            "tile_ids": [
+              "0x2C",
+              "0x0B",
+              "0x1A",
+              "0x1B"
+            ],
+            "attributes": [
+              "0x05",
+              "0x05",
+              "0x05",
+              "0x05"
+            ]
+          },
+          {
+            "quadrant": "BL",
+            "tile_ids": [
+              "0x2A",
+              "0x2B",
+              "0x3A",
+              "0x3B"
+            ],
+            "attributes": [
+              "0x05",
+              "0x05",
+              "0x05",
+              "0x05"
+            ]
+          }
+        ]
+      },
+      {
+        "source_block": "0x06",
+        "mining_quadrants": [
+          "TR",
+          "BR"
+        ],
+        "quadrants": [
+          {
+            "quadrant": "TR",
+            "tile_ids": [
+              "0x0E",
+              "0x2D",
+              "0x1B",
+              "0x1F"
+            ],
+            "attributes": [
+              "0x05",
+              "0x05",
+              "0x25",
+              "0x05"
+            ]
+          },
+          {
+            "quadrant": "BR",
+            "tile_ids": [
+              "0x2B",
+              "0x2A",
+              "0x3B",
+              "0x3A"
+            ],
+            "attributes": [
+              "0x25",
+              "0x25",
+              "0x25",
+              "0x25"
+            ]
+          }
+        ]
+      },
+      {
+        "source_block": "0x07",
+        "mining_quadrants": [
+          "BL",
+          "BR"
+        ],
+        "quadrants": [
+          {
+            "quadrant": "BL",
+            "tile_ids": [
+              "0x46",
+              "0x47",
+              "0x56",
+              "0x57"
+            ],
+            "attributes": [
+              "0x00",
+              "0x00",
+              "0x00",
+              "0x00"
+            ]
+          },
+          {
+            "quadrant": "BR",
+            "tile_ids": [
+              "0x48",
+              "0x49",
+              "0x58",
+              "0x59"
+            ],
+            "attributes": [
+              "0x00",
+              "0x00",
+              "0x00",
+              "0x00"
+            ]
+          }
+        ]
+      },
+      {
+        "source_block": "0x08",
+        "mining_quadrants": [
+          "TL",
+          "BL"
+        ],
+        "quadrants": [
+          {
+            "quadrant": "TL",
+            "tile_ids": [
+              "0x2A",
+              "0x2B",
+              "0x3A",
+              "0x3B"
+            ],
+            "attributes": [
+              "0x05",
+              "0x05",
+              "0x05",
+              "0x05"
+            ]
+          },
+          {
+            "quadrant": "BL",
+            "tile_ids": [
+              "0x2A",
+              "0x2B",
+              "0x3A",
+              "0x3B"
+            ],
+            "attributes": [
+              "0x05",
+              "0x05",
+              "0x05",
+              "0x05"
+            ]
+          }
+        ]
+      },
+      {
+        "source_block": "0x0A",
+        "mining_quadrants": [
+          "TR",
+          "BR"
+        ],
+        "quadrants": [
+          {
+            "quadrant": "TR",
+            "tile_ids": [
+              "0x2B",
+              "0x2A",
+              "0x3B",
+              "0x3A"
+            ],
+            "attributes": [
+              "0x25",
+              "0x25",
+              "0x25",
+              "0x25"
+            ]
+          },
+          {
+            "quadrant": "BR",
+            "tile_ids": [
+              "0x2B",
+              "0x2A",
+              "0x3B",
+              "0x3A"
+            ],
+            "attributes": [
+              "0x25",
+              "0x25",
+              "0x25",
+              "0x25"
+            ]
+          }
+        ]
+      },
+      {
+        "source_block": "0x0C",
+        "mining_quadrants": [
+          "TL",
+          "BL",
+          "BR"
+        ],
+        "quadrants": [
+          {
+            "quadrant": "TL",
+            "tile_ids": [
+              "0x2A",
+              "0x2B",
+              "0x3A",
+              "0x3B"
+            ],
+            "attributes": [
+              "0x05",
+              "0x05",
+              "0x05",
+              "0x05"
+            ]
+          },
+          {
+            "quadrant": "BL",
+            "tile_ids": [
+              "0x4A",
+              "0x4B",
+              "0x5A",
+              "0x5B"
+            ],
+            "attributes": [
+              "0x05",
+              "0x05",
+              "0x05",
+              "0x05"
+            ]
+          },
+          {
+            "quadrant": "BR",
+            "tile_ids": [
+              "0x4C",
+              "0x4D",
+              "0x5C",
+              "0x5D"
+            ],
+            "attributes": [
+              "0x05",
+              "0x05",
+              "0x05",
+              "0x05"
+            ]
+          }
+        ]
+      },
+      {
+        "source_block": "0x0D",
+        "mining_quadrants": [
+          "BL",
+          "BR"
+        ],
+        "quadrants": [
+          {
+            "quadrant": "BL",
+            "tile_ids": [
+              "0x4C",
+              "0x4D",
+              "0x5C",
+              "0x5D"
+            ],
+            "attributes": [
+              "0x05",
+              "0x05",
+              "0x05",
+              "0x05"
+            ]
+          },
+          {
+            "quadrant": "BR",
+            "tile_ids": [
+              "0x4C",
+              "0x4D",
+              "0x5C",
+              "0x5D"
+            ],
+            "attributes": [
+              "0x05",
+              "0x05",
+              "0x05",
+              "0x05"
+            ]
+          }
+        ]
+      },
+      {
+        "source_block": "0x0E",
+        "mining_quadrants": [
+          "TR",
+          "BL",
+          "BR"
+        ],
+        "quadrants": [
+          {
+            "quadrant": "TR",
+            "tile_ids": [
+              "0x2B",
+              "0x2A",
+              "0x3B",
+              "0x3A"
+            ],
+            "attributes": [
+              "0x25",
+              "0x25",
+              "0x25",
+              "0x25"
+            ]
+          },
+          {
+            "quadrant": "BL",
+            "tile_ids": [
+              "0x4C",
+              "0x4D",
+              "0x5C",
+              "0x5D"
+            ],
+            "attributes": [
+              "0x05",
+              "0x05",
+              "0x05",
+              "0x05"
+            ]
+          },
+          {
+            "quadrant": "BR",
+            "tile_ids": [
+              "0x4B",
+              "0x4A",
+              "0x5B",
+              "0x5F"
+            ],
+            "attributes": [
+              "0x25",
+              "0x25",
+              "0x25",
+              "0x05"
+            ]
+          }
+        ]
+      },
+      {
+        "source_block": "0x10",
+        "mining_quadrants": [
+          "BL"
+        ],
+        "quadrants": [
+          {
+            "quadrant": "BL",
+            "tile_ids": [
+              "0x2F",
+              "0x2E",
+              "0x3F",
+              "0x3E"
+            ],
+            "attributes": [
+              "0x25",
+              "0x25",
+              "0x25",
+              "0x25"
+            ]
+          }
+        ]
+      },
+      {
+        "source_block": "0x14",
+        "mining_quadrants": [
+          "BR"
+        ],
+        "quadrants": [
+          {
+            "quadrant": "BR",
+            "tile_ids": [
+              "0x2A",
+              "0x2B",
+              "0x3A",
+              "0x3B"
+            ],
+            "attributes": [
+              "0x05",
+              "0x05",
+              "0x05",
+              "0x05"
+            ]
+          }
+        ]
+      },
+      {
+        "source_block": "0x16",
+        "mining_quadrants": [
+          "BL"
+        ],
+        "quadrants": [
+          {
+            "quadrant": "BL",
+            "tile_ids": [
+              "0x2B",
+              "0x2A",
+              "0x3B",
+              "0x3A"
+            ],
+            "attributes": [
+              "0x25",
+              "0x25",
+              "0x25",
+              "0x25"
+            ]
+          }
+        ]
+      },
+      {
+        "source_block": "0x17",
+        "mining_quadrants": [
+          "TL",
+          "BL"
+        ],
+        "quadrants": [
+          {
+            "quadrant": "TL",
+            "tile_ids": [
+              "0x06",
+              "0x0B",
+              "0x1A",
+              "0x1B"
+            ],
+            "attributes": [
+              "0x03",
+              "0x05",
+              "0x05",
+              "0x05"
+            ]
+          },
+          {
+            "quadrant": "BL",
+            "tile_ids": [
+              "0x2A",
+              "0x2B",
+              "0x3A",
+              "0x3B"
+            ],
+            "attributes": [
+              "0x05",
+              "0x05",
+              "0x05",
+              "0x05"
+            ]
+          }
+        ]
+      },
+      {
+        "source_block": "0x18",
+        "mining_quadrants": [
+          "TR",
+          "BR"
+        ],
+        "quadrants": [
+          {
+            "quadrant": "TR",
+            "tile_ids": [
+              "0x2A",
+              "0x2B",
+              "0x3A",
+              "0x3B"
+            ],
+            "attributes": [
+              "0x05",
+              "0x05",
+              "0x05",
+              "0x05"
+            ]
+          },
+          {
+            "quadrant": "BR",
+            "tile_ids": [
+              "0x2A",
+              "0x2B",
+              "0x3A",
+              "0x3B"
+            ],
+            "attributes": [
+              "0x05",
+              "0x05",
+              "0x05",
+              "0x05"
+            ]
+          }
+        ]
+      },
+      {
+        "source_block": "0x1A",
+        "mining_quadrants": [
+          "TL",
+          "BL"
+        ],
+        "quadrants": [
+          {
+            "quadrant": "TL",
+            "tile_ids": [
+              "0x2B",
+              "0x2A",
+              "0x3B",
+              "0x3A"
+            ],
+            "attributes": [
+              "0x25",
+              "0x25",
+              "0x25",
+              "0x25"
+            ]
+          },
+          {
+            "quadrant": "BL",
+            "tile_ids": [
+              "0x2B",
+              "0x2A",
+              "0x3B",
+              "0x3A"
+            ],
+            "attributes": [
+              "0x25",
+              "0x25",
+              "0x25",
+              "0x25"
+            ]
+          }
+        ]
+      },
+      {
+        "source_block": "0x1B",
+        "mining_quadrants": [
+          "TR",
+          "BR"
+        ],
+        "quadrants": [
+          {
+            "quadrant": "TR",
+            "tile_ids": [
+              "0x0E",
+              "0x07",
+              "0x1B",
+              "0x1F"
+            ],
+            "attributes": [
+              "0x05",
+              "0x03",
+              "0x25",
+              "0x05"
+            ]
+          },
+          {
+            "quadrant": "BR",
+            "tile_ids": [
+              "0x2B",
+              "0x2A",
+              "0x3B",
+              "0x3A"
+            ],
+            "attributes": [
+              "0x25",
+              "0x25",
+              "0x25",
+              "0x25"
+            ]
+          }
+        ]
+      },
+      {
+        "source_block": "0x1C",
+        "mining_quadrants": [
+          "TR"
+        ],
+        "quadrants": [
+          {
+            "quadrant": "TR",
+            "tile_ids": [
+              "0x4A",
+              "0x4B",
+              "0x5A",
+              "0x5B"
+            ],
+            "attributes": [
+              "0x05",
+              "0x05",
+              "0x05",
+              "0x05"
+            ]
+          }
+        ]
+      },
+      {
+        "source_block": "0x1D",
+        "mining_quadrants": [
+          "TL",
+          "TR"
+        ],
+        "quadrants": [
+          {
+            "quadrant": "TL",
+            "tile_ids": [
+              "0x4C",
+              "0x4D",
+              "0x5C",
+              "0x5D"
+            ],
+            "attributes": [
+              "0x05",
+              "0x05",
+              "0x05",
+              "0x05"
+            ]
+          },
+          {
+            "quadrant": "TR",
+            "tile_ids": [
+              "0x4C",
+              "0x4D",
+              "0x5C",
+              "0x5D"
+            ],
+            "attributes": [
+              "0x05",
+              "0x05",
+              "0x05",
+              "0x05"
+            ]
+          }
+        ]
+      },
+      {
+        "source_block": "0x1E",
+        "mining_quadrants": [
+          "TL"
+        ],
+        "quadrants": [
+          {
+            "quadrant": "TL",
+            "tile_ids": [
+              "0x4B",
+              "0x4A",
+              "0x5B",
+              "0x5F"
+            ],
+            "attributes": [
+              "0x25",
+              "0x25",
+              "0x25",
+              "0x05"
+            ]
+          }
+        ]
+      },
+      {
+        "source_block": "0x2E",
+        "mining_quadrants": [
+          "BL",
+          "BR"
+        ],
+        "quadrants": [
+          {
+            "quadrant": "BL",
+            "tile_ids": [
+              "0x4C",
+              "0x4D",
+              "0x5C",
+              "0x5D"
+            ],
+            "attributes": [
+              "0x05",
+              "0x05",
+              "0x05",
+              "0x05"
+            ]
+          },
+          {
+            "quadrant": "BR",
+            "tile_ids": [
+              "0x4C",
+              "0x4D",
+              "0x5C",
+              "0x5D"
+            ],
+            "attributes": [
+              "0x05",
+              "0x05",
+              "0x05",
+              "0x05"
+            ]
+          }
+        ]
+      },
+      {
+        "source_block": "0x2F",
+        "mining_quadrants": [
+          "TR",
+          "BL",
+          "BR"
+        ],
+        "quadrants": [
+          {
+            "quadrant": "TR",
+            "tile_ids": [
+              "0x2B",
+              "0x2A",
+              "0x3B",
+              "0x3A"
+            ],
+            "attributes": [
+              "0x25",
+              "0x25",
+              "0x25",
+              "0x25"
+            ]
+          },
+          {
+            "quadrant": "BL",
+            "tile_ids": [
+              "0x4C",
+              "0x4D",
+              "0x5C",
+              "0x5D"
+            ],
+            "attributes": [
+              "0x05",
+              "0x05",
+              "0x05",
+              "0x05"
+            ]
+          },
+          {
+            "quadrant": "BR",
+            "tile_ids": [
+              "0x4B",
+              "0x4A",
+              "0x5B",
+              "0x5F"
+            ],
+            "attributes": [
+              "0x25",
+              "0x25",
+              "0x25",
+              "0x05"
+            ]
+          }
+        ]
+      },
+      {
+        "source_block": "0x30",
+        "mining_quadrants": [
+          "TL",
+          "BL",
+          "BR"
+        ],
+        "quadrants": [
+          {
+            "quadrant": "TL",
+            "tile_ids": [
+              "0x2A",
+              "0x2B",
+              "0x3A",
+              "0x3B"
+            ],
+            "attributes": [
+              "0x05",
+              "0x05",
+              "0x05",
+              "0x05"
+            ]
+          },
+          {
+            "quadrant": "BL",
+            "tile_ids": [
+              "0x4A",
+              "0x4B",
+              "0x5A",
+              "0x5B"
+            ],
+            "attributes": [
+              "0x05",
+              "0x05",
+              "0x05",
+              "0x05"
+            ]
+          },
+          {
+            "quadrant": "BR",
+            "tile_ids": [
+              "0x4C",
+              "0x4D",
+              "0x5C",
+              "0x5D"
+            ],
+            "attributes": [
+              "0x05",
+              "0x05",
+              "0x05",
+              "0x05"
+            ]
+          }
+        ]
+      },
+      {
+        "source_block": "0x34",
+        "mining_quadrants": [
+          "BL"
+        ],
+        "quadrants": [
+          {
+            "quadrant": "BL",
+            "tile_ids": [
+              "0x4C",
+              "0x4D",
+              "0x5C",
+              "0x5D"
+            ],
+            "attributes": [
+              "0x05",
+              "0x05",
+              "0x05",
+              "0x05"
+            ]
+          }
+        ]
+      },
+      {
+        "source_block": "0x35",
+        "mining_quadrants": [
+          "BR"
+        ],
+        "quadrants": [
+          {
+            "quadrant": "BR",
+            "tile_ids": [
+              "0x4C",
+              "0x4D",
+              "0x5C",
+              "0x5D"
+            ],
+            "attributes": [
+              "0x05",
+              "0x05",
+              "0x05",
+              "0x05"
+            ]
+          }
+        ]
+      },
+      {
+        "source_block": "0x36",
+        "mining_quadrants": [
+          "TR"
+        ],
+        "quadrants": [
+          {
+            "quadrant": "TR",
+            "tile_ids": [
+              "0x4A",
+              "0x4B",
+              "0x5A",
+              "0x5B"
+            ],
+            "attributes": [
+              "0x05",
+              "0x05",
+              "0x05",
+              "0x05"
+            ]
+          }
+        ]
+      },
+      {
+        "source_block": "0x37",
+        "mining_quadrants": [
+          "TL"
+        ],
+        "quadrants": [
+          {
+            "quadrant": "TL",
+            "tile_ids": [
+              "0x4B",
+              "0x4A",
+              "0x5B",
+              "0x5F"
+            ],
+            "attributes": [
+              "0x25",
+              "0x25",
+              "0x25",
+              "0x05"
+            ]
+          }
+        ]
+      },
+      {
+        "source_block": "0x38",
+        "mining_quadrants": [
+          "TL",
+          "TR"
+        ],
+        "quadrants": [
+          {
+            "quadrant": "TL",
+            "tile_ids": [
+              "0x4C",
+              "0x4D",
+              "0x5C",
+              "0x5D"
+            ],
+            "attributes": [
+              "0x05",
+              "0x05",
+              "0x05",
+              "0x05"
+            ]
+          },
+          {
+            "quadrant": "TR",
+            "tile_ids": [
+              "0x4C",
+              "0x4D",
+              "0x5C",
+              "0x5D"
+            ],
+            "attributes": [
+              "0x05",
+              "0x05",
+              "0x05",
+              "0x05"
+            ]
+          }
+        ]
+      },
+      {
+        "source_block": "0x39",
+        "mining_quadrants": [
+          "TL",
+          "TR"
+        ],
+        "quadrants": [
+          {
+            "quadrant": "TL",
+            "tile_ids": [
+              "0x4C",
+              "0x4D",
+              "0x5C",
+              "0x5D"
+            ],
+            "attributes": [
+              "0x05",
+              "0x05",
+              "0x05",
+              "0x05"
+            ]
+          },
+          {
+            "quadrant": "TR",
+            "tile_ids": [
+              "0x4C",
+              "0x4D",
+              "0x5C",
+              "0x5D"
+            ],
+            "attributes": [
+              "0x05",
+              "0x05",
+              "0x05",
+              "0x05"
+            ]
+          }
+        ]
+      },
+      {
+        "source_block": "0x3A",
+        "mining_quadrants": [
+          "TL",
+          "TR"
+        ],
+        "quadrants": [
+          {
+            "quadrant": "TL",
+            "tile_ids": [
+              "0x4C",
+              "0x4D",
+              "0x5C",
+              "0x5D"
+            ],
+            "attributes": [
+              "0x05",
+              "0x05",
+              "0x05",
+              "0x05"
+            ]
+          },
+          {
+            "quadrant": "TR",
+            "tile_ids": [
+              "0x4B",
+              "0x4A",
+              "0x5B",
+              "0x5A"
+            ],
+            "attributes": [
+              "0x25",
+              "0x25",
+              "0x25",
+              "0x25"
+            ]
+          }
+        ]
+      },
+      {
+        "source_block": "0x3B",
+        "mining_quadrants": [
+          "TR",
+          "BL",
+          "BR"
+        ],
+        "quadrants": [
+          {
+            "quadrant": "TR",
+            "tile_ids": [
+              "0x2B",
+              "0x2A",
+              "0x3B",
+              "0x3A"
+            ],
+            "attributes": [
+              "0x25",
+              "0x25",
+              "0x25",
+              "0x25"
+            ]
+          },
+          {
+            "quadrant": "BL",
+            "tile_ids": [
+              "0x4B",
+              "0x4A",
+              "0x5B",
+              "0x5A"
+            ],
+            "attributes": [
+              "0x25",
+              "0x25",
+              "0x25",
+              "0x25"
+            ]
+          },
+          {
+            "quadrant": "BR",
+            "tile_ids": [
+              "0x2B",
+              "0x2A",
+              "0x3B",
+              "0x3A"
+            ],
+            "attributes": [
+              "0x25",
+              "0x25",
+              "0x25",
+              "0x25"
+            ]
+          }
+        ]
+      },
+      {
+        "source_block": "0x3E",
+        "mining_quadrants": [
+          "TL"
+        ],
+        "quadrants": [
+          {
+            "quadrant": "TL",
+            "tile_ids": [
+              "0x0E",
+              "0x2D",
+              "0x1B",
+              "0x1F"
+            ],
+            "attributes": [
+              "0x05",
+              "0x05",
+              "0x25",
+              "0x05"
+            ]
+          }
+        ]
+      },
+      {
+        "source_block": "0x3F",
+        "mining_quadrants": [
+          "BR"
+        ],
+        "quadrants": [
+          {
+            "quadrant": "BR",
+            "tile_ids": [
+              "0x4C",
+              "0x4D",
+              "0x5C",
+              "0x5D"
+            ],
+            "attributes": [
+              "0x05",
+              "0x05",
+              "0x05",
+              "0x05"
+            ]
+          }
+        ]
+      },
+      {
+        "source_block": "0x40",
+        "mining_quadrants": [
+          "TL",
+          "TR"
+        ],
+        "quadrants": [
+          {
+            "quadrant": "TL",
+            "tile_ids": [
+              "0x4A",
+              "0x4B",
+              "0x5A",
+              "0x5B"
+            ],
+            "attributes": [
+              "0x05",
+              "0x05",
+              "0x05",
+              "0x05"
+            ]
+          },
+          {
+            "quadrant": "TR",
+            "tile_ids": [
+              "0x4C",
+              "0x4D",
+              "0x5C",
+              "0x5D"
+            ],
+            "attributes": [
+              "0x05",
+              "0x05",
+              "0x05",
+              "0x05"
+            ]
+          }
+        ]
+      },
+      {
+        "source_block": "0x42",
+        "mining_quadrants": [
+          "TR",
+          "BL",
+          "BR"
+        ],
+        "quadrants": [
+          {
+            "quadrant": "TR",
+            "tile_ids": [
+              "0x2B",
+              "0x2A",
+              "0x3B",
+              "0x3A"
+            ],
+            "attributes": [
+              "0x25",
+              "0x25",
+              "0x25",
+              "0x25"
+            ]
+          },
+          {
+            "quadrant": "BL",
+            "tile_ids": [
+              "0x4C",
+              "0x4D",
+              "0x5C",
+              "0x5D"
+            ],
+            "attributes": [
+              "0x05",
+              "0x05",
+              "0x05",
+              "0x05"
+            ]
+          },
+          {
+            "quadrant": "BR",
+            "tile_ids": [
+              "0x4B",
+              "0x4A",
+              "0x5B",
+              "0x5F"
+            ],
+            "attributes": [
+              "0x25",
+              "0x25",
+              "0x25",
+              "0x05"
+            ]
+          }
+        ]
+      },
+      {
+        "source_block": "0x43",
+        "mining_quadrants": [
+          "TR"
+        ],
+        "quadrants": [
+          {
+            "quadrant": "TR",
+            "tile_ids": [
+              "0x4B",
+              "0x4A",
+              "0x5B",
+              "0x5A"
+            ],
+            "attributes": [
+              "0x25",
+              "0x25",
+              "0x25",
+              "0x25"
+            ]
+          }
+        ]
+      },
+      {
+        "source_block": "0x47",
+        "mining_quadrants": [
+          "TR",
+          "BR"
+        ],
+        "quadrants": [
+          {
+            "quadrant": "TR",
+            "tile_ids": [
+              "0x2B",
+              "0x2A",
+              "0x3B",
+              "0x3A"
+            ],
+            "attributes": [
+              "0x25",
+              "0x25",
+              "0x25",
+              "0x25"
+            ]
+          },
+          {
+            "quadrant": "BR",
+            "tile_ids": [
+              "0x2B",
+              "0x2A",
+              "0x3B",
+              "0x3A"
+            ],
+            "attributes": [
+              "0x25",
+              "0x25",
+              "0x25",
+              "0x25"
+            ]
+          }
+        ]
+      },
+      {
+        "source_block": "0x4C",
+        "mining_quadrants": [
+          "BL",
+          "BR"
+        ],
+        "quadrants": [
+          {
+            "quadrant": "BL",
+            "tile_ids": [
+              "0x4C",
+              "0x4D",
+              "0x5C",
+              "0x5D"
+            ],
+            "attributes": [
+              "0x05",
+              "0x05",
+              "0x05",
+              "0x05"
+            ]
+          },
+          {
+            "quadrant": "BR",
+            "tile_ids": [
+              "0x4B",
+              "0x4A",
+              "0x5B",
+              "0x5F"
+            ],
+            "attributes": [
+              "0x25",
+              "0x25",
+              "0x25",
+              "0x05"
+            ]
+          }
+        ]
+      },
+      {
+        "source_block": "0x4D",
+        "mining_quadrants": [
+          "BR"
+        ],
+        "quadrants": [
+          {
+            "quadrant": "BR",
+            "tile_ids": [
+              "0x2C",
+              "0x0B",
+              "0x1A",
+              "0x1B"
+            ],
+            "attributes": [
+              "0x05",
+              "0x05",
+              "0x05",
+              "0x05"
+            ]
+          }
+        ]
+      },
+      {
+        "source_block": "0x4F",
+        "mining_quadrants": [
+          "BL",
+          "BR"
+        ],
+        "quadrants": [
+          {
+            "quadrant": "BL",
+            "tile_ids": [
+              "0x4C",
+              "0x4D",
+              "0x5C",
+              "0x5D"
+            ],
+            "attributes": [
+              "0x05",
+              "0x05",
+              "0x05",
+              "0x05"
+            ]
+          },
+          {
+            "quadrant": "BR",
+            "tile_ids": [
+              "0x4C",
+              "0x4D",
+              "0x5C",
+              "0x5D"
+            ],
+            "attributes": [
+              "0x05",
+              "0x05",
+              "0x05",
+              "0x05"
+            ]
+          }
+        ]
+      },
+      {
+        "source_block": "0x58",
+        "mining_quadrants": [
+          "TR"
+        ],
+        "quadrants": [
+          {
+            "quadrant": "TR",
+            "tile_ids": [
+              "0x4C",
+              "0x4D",
+              "0x5C",
+              "0x5D"
+            ],
+            "attributes": [
+              "0x05",
+              "0x05",
+              "0x05",
+              "0x05"
+            ]
+          }
+        ]
+      },
+      {
+        "source_block": "0x59",
+        "mining_quadrants": [
+          "TL",
+          "BL",
+          "BR"
+        ],
+        "quadrants": [
+          {
+            "quadrant": "TL",
+            "tile_ids": [
+              "0x2F",
+              "0x2E",
+              "0x3F",
+              "0x3E"
+            ],
+            "attributes": [
+              "0x25",
+              "0x25",
+              "0x25",
+              "0x25"
+            ]
+          },
+          {
+            "quadrant": "BL",
+            "tile_ids": [
+              "0x4A",
+              "0x4B",
+              "0x5A",
+              "0x5B"
+            ],
+            "attributes": [
+              "0x05",
+              "0x05",
+              "0x05",
+              "0x05"
+            ]
+          },
+          {
+            "quadrant": "BR",
+            "tile_ids": [
+              "0x4C",
+              "0x4D",
+              "0x5C",
+              "0x5D"
+            ],
+            "attributes": [
+              "0x05",
+              "0x05",
+              "0x05",
+              "0x05"
+            ]
+          }
+        ]
+      },
+      {
+        "source_block": "0x5A",
+        "mining_quadrants": [
+          "BL",
+          "BR"
+        ],
+        "quadrants": [
+          {
+            "quadrant": "BL",
+            "tile_ids": [
+              "0x4C",
+              "0x4D",
+              "0x5C",
+              "0x5D"
+            ],
+            "attributes": [
+              "0x05",
+              "0x05",
+              "0x05",
+              "0x05"
+            ]
+          },
+          {
+            "quadrant": "BR",
+            "tile_ids": [
+              "0x4C",
+              "0x4D",
+              "0x5C",
+              "0x5D"
+            ],
+            "attributes": [
+              "0x05",
+              "0x05",
+              "0x05",
+              "0x05"
+            ]
+          }
+        ]
+      },
+      {
+        "source_block": "0x5B",
+        "mining_quadrants": [
+          "BL",
+          "BR"
+        ],
+        "quadrants": [
+          {
+            "quadrant": "BL",
+            "tile_ids": [
+              "0x4C",
+              "0x4D",
+              "0x5C",
+              "0x5D"
+            ],
+            "attributes": [
+              "0x05",
+              "0x05",
+              "0x05",
+              "0x05"
+            ]
+          },
+          {
+            "quadrant": "BR",
+            "tile_ids": [
+              "0x4C",
+              "0x4D",
+              "0x5C",
+              "0x5D"
+            ],
+            "attributes": [
+              "0x05",
+              "0x05",
+              "0x05",
+              "0x05"
+            ]
+          }
+        ]
+      },
+      {
+        "source_block": "0x5F",
+        "mining_quadrants": [
+          "TL",
+          "TR"
+        ],
+        "quadrants": [
+          {
+            "quadrant": "TL",
+            "tile_ids": [
+              "0x4C",
+              "0x4D",
+              "0x5C",
+              "0x5D"
+            ],
+            "attributes": [
+              "0x05",
+              "0x05",
+              "0x05",
+              "0x05"
+            ]
+          },
+          {
+            "quadrant": "TR",
+            "tile_ids": [
+              "0x4C",
+              "0x4D",
+              "0x5C",
+              "0x5D"
+            ],
+            "attributes": [
+              "0x05",
+              "0x05",
+              "0x05",
+              "0x05"
+            ]
+          }
+        ]
+      },
+      {
+        "source_block": "0x60",
+        "mining_quadrants": [
+          "TL",
+          "BL",
+          "BR"
+        ],
+        "quadrants": [
+          {
+            "quadrant": "TL",
+            "tile_ids": [
+              "0x2A",
+              "0x2B",
+              "0x3A",
+              "0x3B"
+            ],
+            "attributes": [
+              "0x05",
+              "0x05",
+              "0x05",
+              "0x05"
+            ]
+          },
+          {
+            "quadrant": "BL",
+            "tile_ids": [
+              "0x4A",
+              "0x4B",
+              "0x5A",
+              "0x5B"
+            ],
+            "attributes": [
+              "0x05",
+              "0x05",
+              "0x05",
+              "0x05"
+            ]
+          },
+          {
+            "quadrant": "BR",
+            "tile_ids": [
+              "0x2F",
+              "0x2E",
+              "0x3F",
+              "0x3E"
+            ],
+            "attributes": [
+              "0x25",
+              "0x25",
+              "0x25",
+              "0x25"
+            ]
+          }
+        ]
+      },
+      {
+        "source_block": "0x61",
+        "mining_quadrants": [
+          "BL"
+        ],
+        "quadrants": [
+          {
+            "quadrant": "BL",
+            "tile_ids": [
+              "0x4A",
+              "0x4B",
+              "0x5A",
+              "0x5B"
+            ],
+            "attributes": [
+              "0x05",
+              "0x05",
+              "0x05",
+              "0x05"
+            ]
+          }
+        ]
+      },
+      {
+        "source_block": "0x63",
+        "mining_quadrants": [
+          "BR"
+        ],
+        "quadrants": [
+          {
+            "quadrant": "BR",
+            "tile_ids": [
+              "0x4C",
+              "0x4D",
+              "0x5C",
+              "0x5D"
+            ],
+            "attributes": [
+              "0x05",
+              "0x05",
+              "0x05",
+              "0x05"
+            ]
+          }
+        ]
+      },
+      {
+        "source_block": "0x66",
+        "mining_quadrants": [
+          "TR",
+          "BL",
+          "BR"
+        ],
+        "quadrants": [
+          {
+            "quadrant": "TR",
+            "tile_ids": [
+              "0x2E",
+              "0x2F",
+              "0x3E",
+              "0x3F"
+            ],
+            "attributes": [
+              "0x05",
+              "0x05",
+              "0x05",
+              "0x05"
+            ]
+          },
+          {
+            "quadrant": "BL",
+            "tile_ids": [
+              "0x4C",
+              "0x4D",
+              "0x5C",
+              "0x5D"
+            ],
+            "attributes": [
+              "0x05",
+              "0x05",
+              "0x05",
+              "0x05"
+            ]
+          },
+          {
+            "quadrant": "BR",
+            "tile_ids": [
+              "0x4B",
+              "0x4A",
+              "0x5B",
+              "0x5F"
+            ],
+            "attributes": [
+              "0x25",
+              "0x25",
+              "0x25",
+              "0x05"
+            ]
+          }
+        ]
+      },
+      {
+        "source_block": "0x67",
+        "mining_quadrants": [
+          "BL",
+          "BR"
+        ],
+        "quadrants": [
+          {
+            "quadrant": "BL",
+            "tile_ids": [
+              "0x4A",
+              "0x4B",
+              "0x5A",
+              "0x5B"
+            ],
+            "attributes": [
+              "0x05",
+              "0x05",
+              "0x05",
+              "0x05"
+            ]
+          },
+          {
+            "quadrant": "BR",
+            "tile_ids": [
+              "0x4C",
+              "0x4D",
+              "0x5C",
+              "0x5D"
+            ],
+            "attributes": [
+              "0x05",
+              "0x05",
+              "0x05",
+              "0x05"
+            ]
+          }
+        ]
+      },
+      {
+        "source_block": "0x68",
+        "mining_quadrants": [
+          "TL",
+          "BL",
+          "BR"
+        ],
+        "quadrants": [
+          {
+            "quadrant": "TL",
+            "tile_ids": [
+              "0x2A",
+              "0x2B",
+              "0x3A",
+              "0x3B"
+            ],
+            "attributes": [
+              "0x05",
+              "0x05",
+              "0x05",
+              "0x05"
+            ]
+          },
+          {
+            "quadrant": "BL",
+            "tile_ids": [
+              "0x4A",
+              "0x4B",
+              "0x5A",
+              "0x5B"
+            ],
+            "attributes": [
+              "0x05",
+              "0x05",
+              "0x05",
+              "0x05"
+            ]
+          },
+          {
+            "quadrant": "BR",
+            "tile_ids": [
+              "0x2F",
+              "0x2E",
+              "0x3F",
+              "0x3E"
+            ],
+            "attributes": [
+              "0x25",
+              "0x25",
+              "0x25",
+              "0x25"
+            ]
+          }
+        ]
+      },
+      {
+        "source_block": "0x69",
+        "mining_quadrants": [
+          "TR"
+        ],
+        "quadrants": [
+          {
+            "quadrant": "TR",
+            "tile_ids": [
+              "0x2A",
+              "0x2B",
+              "0x3A",
+              "0x3B"
+            ],
+            "attributes": [
+              "0x05",
+              "0x05",
+              "0x05",
+              "0x05"
+            ]
+          }
+        ]
+      },
+      {
+        "source_block": "0x6E",
+        "mining_quadrants": [
+          "TL",
+          "TR"
+        ],
+        "quadrants": [
+          {
+            "quadrant": "TL",
+            "tile_ids": [
+              "0x4A",
+              "0x4B",
+              "0x5A",
+              "0x5B"
+            ],
+            "attributes": [
+              "0x05",
+              "0x05",
+              "0x05",
+              "0x05"
+            ]
+          },
+          {
+            "quadrant": "TR",
+            "tile_ids": [
+              "0x4C",
+              "0x4D",
+              "0x5C",
+              "0x5D"
+            ],
+            "attributes": [
+              "0x05",
+              "0x05",
+              "0x05",
+              "0x05"
+            ]
+          }
+        ]
+      },
+      {
+        "source_block": "0x81",
+        "mining_quadrants": [
+          "TL",
+          "BL",
+          "BR"
+        ],
+        "quadrants": [
+          {
+            "quadrant": "TL",
+            "tile_ids": [
+              "0x2A",
+              "0x2B",
+              "0x3A",
+              "0x3B"
+            ],
+            "attributes": [
+              "0x05",
+              "0x05",
+              "0x05",
+              "0x05"
+            ]
+          },
+          {
+            "quadrant": "BL",
+            "tile_ids": [
+              "0x4A",
+              "0x4B",
+              "0x08",
+              "0x07"
+            ],
+            "attributes": [
+              "0x05",
+              "0x05",
+              "0x0E",
+              "0x0E"
+            ]
+          },
+          {
+            "quadrant": "BR",
+            "tile_ids": [
+              "0x4C",
+              "0x4D",
+              "0x07",
+              "0x08"
+            ],
+            "attributes": [
+              "0x05",
+              "0x05",
+              "0x2E",
+              "0x0E"
+            ]
+          }
+        ]
+      },
+      {
+        "source_block": "0x83",
+        "mining_quadrants": [
+          "TR",
+          "BL",
+          "BR"
+        ],
+        "quadrants": [
+          {
+            "quadrant": "TR",
+            "tile_ids": [
+              "0x2E",
+              "0x2F",
+              "0x3E",
+              "0x3F"
+            ],
+            "attributes": [
+              "0x05",
+              "0x05",
+              "0x05",
+              "0x05"
+            ]
+          },
+          {
+            "quadrant": "BL",
+            "tile_ids": [
+              "0x2E",
+              "0x2F",
+              "0x3E",
+              "0x3F"
+            ],
+            "attributes": [
+              "0x05",
+              "0x05",
+              "0x05",
+              "0x05"
+            ]
+          },
+          {
+            "quadrant": "BR",
+            "tile_ids": [
+              "0x4B",
+              "0x4A",
+              "0x5B",
+              "0x5F"
+            ],
+            "attributes": [
+              "0x25",
+              "0x25",
+              "0x25",
+              "0x05"
+            ]
+          }
+        ]
+      },
+      {
+        "source_block": "0x8D",
+        "mining_quadrants": [
+          "TL"
+        ],
+        "quadrants": [
+          {
+            "quadrant": "TL",
+            "tile_ids": [
+              "0x0E",
+              "0x2D",
+              "0x1B",
+              "0x1F"
+            ],
+            "attributes": [
+              "0x05",
+              "0x05",
+              "0x25",
+              "0x05"
+            ]
+          }
+        ]
+      },
+      {
+        "source_block": "0x8E",
+        "mining_quadrants": [
+          "TR"
+        ],
+        "quadrants": [
+          {
+            "quadrant": "TR",
+            "tile_ids": [
+              "0x2C",
+              "0x0B",
+              "0x1A",
+              "0x1B"
+            ],
+            "attributes": [
+              "0x05",
+              "0x05",
+              "0x05",
+              "0x05"
+            ]
+          }
+        ]
+      },
+      {
+        "source_block": "0x8F",
+        "mining_quadrants": [
+          "BL"
+        ],
+        "quadrants": [
+          {
+            "quadrant": "BL",
+            "tile_ids": [
+              "0x4C",
+              "0x4D",
+              "0x5C",
+              "0x5D"
+            ],
+            "attributes": [
+              "0x05",
+              "0x05",
+              "0x05",
+              "0x05"
+            ]
+          }
+        ]
+      },
+      {
+        "source_block": "0x93",
+        "mining_quadrants": [
+          "BL"
+        ],
+        "quadrants": [
+          {
+            "quadrant": "BL",
+            "tile_ids": [
+              "0x4C",
+              "0x4D",
+              "0x5C",
+              "0x5D"
+            ],
+            "attributes": [
+              "0x05",
+              "0x05",
+              "0x05",
+              "0x05"
+            ]
+          }
+        ]
+      },
+      {
+        "source_block": "0xA4",
+        "mining_quadrants": [
+          "BL",
+          "BR"
+        ],
+        "quadrants": [
+          {
+            "quadrant": "BL",
+            "tile_ids": [
+              "0x4C",
+              "0x4D",
+              "0x5C",
+              "0x5D"
+            ],
+            "attributes": [
+              "0x05",
+              "0x05",
+              "0x05",
+              "0x05"
+            ]
+          },
+          {
+            "quadrant": "BR",
+            "tile_ids": [
+              "0x2F",
+              "0x2E",
+              "0x3F",
+              "0x3E"
+            ],
+            "attributes": [
+              "0x25",
+              "0x25",
+              "0x25",
+              "0x25"
+            ]
+          }
+        ]
+      },
+      {
+        "source_block": "0xA5",
+        "mining_quadrants": [
+          "TR",
+          "BL",
+          "BR"
+        ],
+        "quadrants": [
+          {
+            "quadrant": "TR",
+            "tile_ids": [
+              "0x2A",
+              "0x2B",
+              "0x3A",
+              "0x3B"
+            ],
+            "attributes": [
+              "0x05",
+              "0x05",
+              "0x05",
+              "0x05"
+            ]
+          },
+          {
+            "quadrant": "BL",
+            "tile_ids": [
+              "0x2F",
+              "0x2E",
+              "0x3F",
+              "0x3E"
+            ],
+            "attributes": [
+              "0x25",
+              "0x25",
+              "0x25",
+              "0x25"
+            ]
+          },
+          {
+            "quadrant": "BR",
+            "tile_ids": [
+              "0x4A",
+              "0x4B",
+              "0x5A",
+              "0x5B"
+            ],
+            "attributes": [
+              "0x05",
+              "0x05",
+              "0x05",
+              "0x05"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "target": {
+    "staged_art_path": "graphics/prism_mining/olcan_isle_tileset55.png",
+    "status": "staged_only",
+    "live_wiring": false
+  },
+  "follow_up": "Audit Prism day/night palette records used by TILESET_OLCAN_ISLE and choose a target palette strategy before creating live metatiles."
+}
