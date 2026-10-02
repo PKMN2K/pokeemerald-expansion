@@ -166,3 +166,10 @@ This batch introduces authentic palette-6 mining surfaces alongside palette 5. E
 `gTileset_PrismKantoCave` now contains **132 placeable mining metatiles**. IDs 0-77 are preserved exactly; IDs 78-131 append 54 verified `MINING` quadrants from source blocks `0x44` through `0x58` where listed by Prism's collision data.
 
 All appended quadrants are uniform source attribute `0x05` or `0x06`, with no X/Y flips, alternate VRAM bank, or priority flags. Target entries therefore remain direct `0x52xx`/`0x62xx` translations. Existing maps remain untouched.
+
+
+## Kanto Cave mining surface batch 6
+
+`gTileset_PrismKantoCave` now contains **167 placeable mining metatiles**. IDs 0-131 are preserved exactly; IDs 132-166 append 35 verified `MINING` quadrants from source blocks `0x59` through `0x6F` where listed by Prism's collision data.
+
+All appended quadrants are uniform source attribute `0x05` or `0x06`, with no X/Y flips, alternate VRAM bank, or priority flags. Target entries remain direct `0x52xx`/`0x62xx` translations. Existing maps remain untouched.
