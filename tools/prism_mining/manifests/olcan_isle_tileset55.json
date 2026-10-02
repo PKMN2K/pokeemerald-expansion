@@ -2235,7 +2235,7 @@
   },
   "target": {
     "staged_art_path": "graphics/prism_mining/olcan_isle_tileset55.png",
-    "status": "live_batch_3",
+    "status": "live_batch_4",
     "live_wiring": true,
     "palette_audit": "tools/prism_mining/manifests/olcan_isle_palette_attribute_audit.json",
     "palette_variants_staged": true,
@@ -2244,9 +2244,9 @@
     "shared_graphics_symbol": "gTilesetTiles_PrismOlcanIsle",
     "outdoor_tileset_symbol": "gTileset_PrismOlcanIsleDay",
     "chine_tileset_symbol": "gTileset_PrismOlcanChineDay",
-    "live_metatile_count": 32,
+    "live_metatile_count": 48,
     "live_surface_manifest": "tools/prism_mining/manifests/first_placeable_olcan_surface.json",
-    "latest_batch_manifest": "tools/prism_mining/manifests/olcan_isle_mining_surface_batch_3.json"
+    "latest_batch_manifest": "tools/prism_mining/manifests/olcan_isle_mining_surface_batch_4.json"
   },
-  "follow_up": "Continue source-order Olcan MINING quadrants from target ID 32. First bank-1 mining surface is source-order target 96; preserve mixed palettes and flip flags until then."
+  "follow_up": "Continue source-order Olcan MINING quadrants from target ID 48; first bank-1 mining surface remains target ID 96."
 }

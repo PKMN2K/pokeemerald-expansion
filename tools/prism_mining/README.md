@@ -245,3 +245,12 @@ The shared Olcan target now contains **32 live `MB_PRISM_MINING` metatiles**. ID
 This batch preserves additional X-flipped surfaces and introduces mixed source palette usage inside a mining surface: blocks `0x17` and `0x1B` combine palette 3 and palette 5 entries exactly as Prism does. No VRAM-bank-1 mining surface appears yet; the first such surface is source-order target ID 96.
 
 Existing maps remain untouched.
+
+
+## Olcan mining surfaces batch 4
+
+The shared Olcan target now contains **48 live `MB_PRISM_MINING` metatiles**. IDs 32-47 append the next sixteen source-order mining quadrants, beginning at Prism block `0x1E` TL and continuing through block `0x39` TL.
+
+The source-order gap from block `0x1E` to `0x2E` is intentional: blocks in between contain no `MINING` collision quadrants. Four surfaces in this batch preserve source X-flip attribute `0x25`; no new bank-1 or mixed-palette cases occur here.
+
+Existing maps remain untouched.
