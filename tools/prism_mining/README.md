@@ -218,3 +218,12 @@ Olcan now has a live shared mining tileset source. Prism block `0x04` top-left i
 Two target secondary tilesets share the same 176-tile graphics and metatile data: `gTileset_PrismOlcanIsleDay` uses the authentic Olcan Isle Day palettes, while `gTileset_PrismOlcanChineDay` uses the authentic Tunod/Olcan Chine Day palettes. Palette slots 8-15 are unused and zero-filled.
 
 Existing maps remain untouched; these tilesets are available only for deliberate later map assignment.
+
+
+## Olcan mining surfaces batch 1
+
+`gTileset_PrismOlcanIsleDay` and `gTileset_PrismOlcanChineDay` now share **10 live `MB_PRISM_MINING` metatiles**. IDs 1-9 append the next source-order Prism mining quadrants after the original block `0x04` TL surface.
+
+This batch validates source X-flip preservation in live data: Prism attribute `0x25` is translated to GBA metatile entries with the horizontal-flip bit set (for example `0x561B`, `0x562B`, `0x563B`). No bank-1 surface appears in this first expansion batch.
+
+Existing maps remain untouched.
