@@ -1,0 +1,2390 @@
+{
+  "source_attribute_semantics": {
+    "0x00": {
+      "palette": 0,
+      "vram_bank": 0,
+      "x_flip": false,
+      "y_flip": false,
+      "priority": false
+    },
+    "0x03": {
+      "palette": 3,
+      "vram_bank": 0,
+      "x_flip": false,
+      "y_flip": false,
+      "priority": false
+    },
+    "0x05": {
+      "palette": 5,
+      "vram_bank": 0,
+      "x_flip": false,
+      "y_flip": false,
+      "priority": false
+    },
+    "0x25": {
+      "palette": 5,
+      "vram_bank": 0,
+      "x_flip": true,
+      "y_flip": false,
+      "priority": false
+    },
+    "0x0E": {
+      "palette": 6,
+      "vram_bank": 1,
+      "x_flip": false,
+      "y_flip": false,
+      "priority": false
+    },
+    "0x2E": {
+      "palette": 6,
+      "vram_bank": 1,
+      "x_flip": true,
+      "y_flip": false,
+      "priority": false
+    }
+  },
+  "prism_loader": {
+    "bank0": "first 0x80 source tiles -> VRAM bank 0",
+    "bank1": "next 0x80 source tiles -> VRAM bank 1",
+    "bank1_linearization": "target linear tile = source tile id + 0x80 when source attribute bit 3 is set",
+    "observed_mining_bank1_tiles": [
+      "0x07 -> 0x87",
+      "0x08 -> 0x88"
+    ]
+  },
+  "gba_translation": {
+    "tile_base": "0x0200",
+    "horizontal_flip_bit": "0x0400",
+    "vertical_flip_bit": "0x0800",
+    "palette_shift": 12,
+    "formula": "entry = 0x0200 + tile_id + (bank1 ? 0x80 : 0) + (xflip ? 0x0400 : 0) + (yflip ? 0x0800 : 0) + (palette << 12)"
+  },
+  "palette_strategy": {
+    "exact_olcan_isle_source": "tilesets/olcan_isle.pal",
+    "exact_olcan_chine_source": "tilesets/tunod.pal",
+    "source_variants": [
+      "morn",
+      "day",
+      "nite"
+    ],
+    "source_palettes_per_variant": 8,
+    "target_storage": "Translated JASC-PAL files preserve all 3 authentic time-of-day variants for both contexts. Each 4-color GBC palette is stored in target slots 12-15 to match the imported 2bpp-indexed tiles.",
+    "live_wiring_plan": "Use separate Olcan Isle and Olcan Chine target palette symbols sharing the same tile graphics/metatiles, with Day as the initial static live default unless dynamic time-of-day switching is wired later.",
+    "outdoor_morn": [
+      {
+        "palette": 0,
+        "rgb5": [
+          [
+            28,
+            31,
+            16
+          ],
+          [
+            19,
+            23,
+            12
+          ],
+          [
+            12,
+            14,
+            8
+          ],
+          [
+            5,
+            5,
+            5
+          ]
+        ],
+        "rgb8": [
+          [
+            231,
+            255,
+            132
+          ],
+          [
+            156,
+            189,
+            99
+          ],
+          [
+            99,
+            115,
+            66
+          ],
+          [
+            41,
+            41,
+            41
+          ]
+        ],
+        "path": "data/tilesets/secondary/prism_olcan_isle/palette_variants/outdoor/morn/00.pal"
+      },
+      {
+        "palette": 1,
+        "rgb5": [
+          [
+            28,
+            31,
+            16
+          ],
+          [
+            28,
+            9,
+            3
+          ],
+          [
+            21,
+            1,
+            0
+          ],
+          [
+            5,
+            5,
+            5
+          ]
+        ],
+        "rgb8": [
+          [
+            231,
+            255,
+            132
+          ],
+          [
+            231,
+            74,
+            24
+          ],
+          [
+            173,
+            8,
+            0
+          ],
+          [
+            41,
+            41,
+            41
+          ]
+        ],
+        "path": "data/tilesets/secondary/prism_olcan_isle/palette_variants/outdoor/morn/01.pal"
+      },
+      {
+        "palette": 2,
+        "rgb5": [
+          [
+            25,
+            28,
+            2
+          ],
+          [
+            13,
+            21,
+            0
+          ],
+          [
+            9,
+            13,
+            0
+          ],
+          [
+            5,
+            5,
+            5
+          ]
+        ],
+        "rgb8": [
+          [
+            206,
+            231,
+            16
+          ],
+          [
+            107,
+            173,
+            0
+          ],
+          [
+            74,
+            107,
+            0
+          ],
+          [
+            41,
+            41,
+            41
+          ]
+        ],
+        "path": "data/tilesets/secondary/prism_olcan_isle/palette_variants/outdoor/morn/02.pal"
+      },
+      {
+        "palette": 3,
+        "rgb5": [
+          [
+            28,
+            31,
+            16
+          ],
+          [
+            15,
+            23,
+            28
+          ],
+          [
+            9,
+            15,
+            26
+          ],
+          [
+            5,
+            5,
+            5
+          ]
+        ],
+        "rgb8": [
+          [
+            231,
+            255,
+            132
+          ],
+          [
+            123,
+            189,
+            231
+          ],
+          [
+            74,
+            123,
+            214
+          ],
+          [
+            41,
+            41,
+            41
+          ]
+        ],
+        "path": "data/tilesets/secondary/prism_olcan_isle/palette_variants/outdoor/morn/03.pal"
+      },
+      {
+        "palette": 4,
+        "rgb5": [
+          [
+            28,
+            31,
+            16
+          ],
+          [
+            15,
+            23,
+            28
+          ],
+          [
+            12,
+            14,
+            8
+          ],
+          [
+            5,
+            5,
+            5
+          ]
+        ],
+        "rgb8": [
+          [
+            231,
+            255,
+            132
+          ],
+          [
+            123,
+            189,
+            231
+          ],
+          [
+            99,
+            115,
+            66
+          ],
+          [
+            41,
+            41,
+            41
+          ]
+        ],
+        "path": "data/tilesets/secondary/prism_olcan_isle/palette_variants/outdoor/morn/04.pal"
+      },
+      {
+        "palette": 5,
+        "rgb5": [
+          [
+            31,
+            23,
+            10
+          ],
+          [
+            26,
+            13,
+            4
+          ],
+          [
+            21,
+            7,
+            1
+          ],
+          [
+            5,
+            5,
+            5
+          ]
+        ],
+        "rgb8": [
+          [
+            255,
+            189,
+            82
+          ],
+          [
+            214,
+            107,
+            33
+          ],
+          [
+            173,
+            57,
+            8
+          ],
+          [
+            41,
+            41,
+            41
+          ]
+        ],
+        "path": "data/tilesets/secondary/prism_olcan_isle/palette_variants/outdoor/morn/05.pal"
+      },
+      {
+        "palette": 6,
+        "rgb5": [
+          [
+            28,
+            31,
+            16
+          ],
+          [
+            31,
+            17,
+            7
+          ],
+          [
+            28,
+            9,
+            3
+          ],
+          [
+            5,
+            5,
+            5
+          ]
+        ],
+        "rgb8": [
+          [
+            231,
+            255,
+            132
+          ],
+          [
+            255,
+            140,
+            57
+          ],
+          [
+            231,
+            74,
+            24
+          ],
+          [
+            41,
+            41,
+            41
+          ]
+        ],
+        "path": "data/tilesets/secondary/prism_olcan_isle/palette_variants/outdoor/morn/06.pal"
+      },
+      {
+        "palette": 7,
+        "rgb5": [
+          [
+            31,
+            31,
+            31
+          ],
+          [
+            4,
+            4,
+            4
+          ],
+          [
+            2,
+            22,
+            29
+          ],
+          [
+            31,
+            31,
+            31
+          ]
+        ],
+        "rgb8": [
+          [
+            255,
+            255,
+            255
+          ],
+          [
+            33,
+            33,
+            33
+          ],
+          [
+            16,
+            181,
+            239
+          ],
+          [
+            255,
+            255,
+            255
+          ]
+        ],
+        "path": "data/tilesets/secondary/prism_olcan_isle/palette_variants/outdoor/morn/07.pal"
+      }
+    ],
+    "outdoor_day": [
+      {
+        "palette": 0,
+        "rgb5": [
+          [
+            27,
+            31,
+            27
+          ],
+          [
+            21,
+            23,
+            24
+          ],
+          [
+            13,
+            14,
+            15
+          ],
+          [
+            5,
+            5,
+            5
+          ]
+        ],
+        "rgb8": [
+          [
+            222,
+            255,
+            222
+          ],
+          [
+            173,
+            189,
+            198
+          ],
+          [
+            107,
+            115,
+            123
+          ],
+          [
+            41,
+            41,
+            41
+          ]
+        ],
+        "path": "data/tilesets/secondary/prism_olcan_isle/palette_variants/outdoor/day/00.pal"
+      },
+      {
+        "palette": 1,
+        "rgb5": [
+          [
+            27,
+            31,
+            27
+          ],
+          [
+            31,
+            9,
+            7
+          ],
+          [
+            23,
+            1,
+            0
+          ],
+          [
+            5,
+            5,
+            5
+          ]
+        ],
+        "rgb8": [
+          [
+            222,
+            255,
+            222
+          ],
+          [
+            255,
+            74,
+            57
+          ],
+          [
+            189,
+            8,
+            0
+          ],
+          [
+            41,
+            41,
+            41
+          ]
+        ],
+        "path": "data/tilesets/secondary/prism_olcan_isle/palette_variants/outdoor/day/01.pal"
+      },
+      {
+        "palette": 2,
+        "rgb5": [
+          [
+            24,
+            28,
+            5
+          ],
+          [
+            18,
+            21,
+            0
+          ],
+          [
+            9,
+            13,
+            1
+          ],
+          [
+            5,
+            5,
+            5
+          ]
+        ],
+        "rgb8": [
+          [
+            198,
+            231,
+            41
+          ],
+          [
+            148,
+            173,
+            0
+          ],
+          [
+            74,
+            107,
+            8
+          ],
+          [
+            41,
+            41,
+            41
+          ]
+        ],
+        "path": "data/tilesets/secondary/prism_olcan_isle/palette_variants/outdoor/day/02.pal"
+      },
+      {
+        "palette": 3,
+        "rgb5": [
+          [
+            27,
+            31,
+            27
+          ],
+          [
+            15,
+            23,
+            28
+          ],
+          [
+            9,
+            15,
+            26
+          ],
+          [
+            5,
+            5,
+            5
+          ]
+        ],
+        "rgb8": [
+          [
+            222,
+            255,
+            222
+          ],
+          [
+            123,
+            189,
+            231
+          ],
+          [
+            74,
+            123,
+            214
+          ],
+          [
+            41,
+            41,
+            41
+          ]
+        ],
+        "path": "data/tilesets/secondary/prism_olcan_isle/palette_variants/outdoor/day/03.pal"
+      },
+      {
+        "palette": 4,
+        "rgb5": [
+          [
+            27,
+            31,
+            27
+          ],
+          [
+            15,
+            23,
+            28
+          ],
+          [
+            13,
+            14,
+            15
+          ],
+          [
+            5,
+            5,
+            5
+          ]
+        ],
+        "rgb8": [
+          [
+            222,
+            255,
+            222
+          ],
+          [
+            123,
+            189,
+            231
+          ],
+          [
+            107,
+            115,
+            123
+          ],
+          [
+            41,
+            41,
+            41
+          ]
+        ],
+        "path": "data/tilesets/secondary/prism_olcan_isle/palette_variants/outdoor/day/04.pal"
+      },
+      {
+        "palette": 5,
+        "rgb5": [
+          [
+            31,
+            23,
+            19
+          ],
+          [
+            29,
+            13,
+            9
+          ],
+          [
+            23,
+            7,
+            2
+          ],
+          [
+            5,
+            5,
+            5
+          ]
+        ],
+        "rgb8": [
+          [
+            255,
+            189,
+            156
+          ],
+          [
+            239,
+            107,
+            74
+          ],
+          [
+            189,
+            57,
+            16
+          ],
+          [
+            41,
+            41,
+            41
+          ]
+        ],
+        "path": "data/tilesets/secondary/prism_olcan_isle/palette_variants/outdoor/day/05.pal"
+      },
+      {
+        "palette": 6,
+        "rgb5": [
+          [
+            27,
+            31,
+            27
+          ],
+          [
+            31,
+            17,
+            14
+          ],
+          [
+            31,
+            9,
+            7
+          ],
+          [
+            5,
+            5,
+            5
+          ]
+        ],
+        "rgb8": [
+          [
+            222,
+            255,
+            222
+          ],
+          [
+            255,
+            140,
+            115
+          ],
+          [
+            255,
+            74,
+            57
+          ],
+          [
+            41,
+            41,
+            41
+          ]
+        ],
+        "path": "data/tilesets/secondary/prism_olcan_isle/palette_variants/outdoor/day/06.pal"
+      },
+      {
+        "palette": 7,
+        "rgb5": [
+          [
+            31,
+            31,
+            31
+          ],
+          [
+            4,
+            4,
+            4
+          ],
+          [
+            2,
+            22,
+            29
+          ],
+          [
+            31,
+            31,
+            31
+          ]
+        ],
+        "rgb8": [
+          [
+            255,
+            255,
+            255
+          ],
+          [
+            33,
+            33,
+            33
+          ],
+          [
+            16,
+            181,
+            239
+          ],
+          [
+            255,
+            255,
+            255
+          ]
+        ],
+        "path": "data/tilesets/secondary/prism_olcan_isle/palette_variants/outdoor/day/07.pal"
+      }
+    ],
+    "outdoor_nite": [
+      {
+        "palette": 0,
+        "rgb5": [
+          [
+            13,
+            16,
+            21
+          ],
+          [
+            10,
+            11,
+            19
+          ],
+          [
+            6,
+            7,
+            12
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "rgb8": [
+          [
+            107,
+            132,
+            173
+          ],
+          [
+            82,
+            90,
+            156
+          ],
+          [
+            49,
+            57,
+            99
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "path": "data/tilesets/secondary/prism_olcan_isle/palette_variants/outdoor/nite/00.pal"
+      },
+      {
+        "palette": 1,
+        "rgb5": [
+          [
+            13,
+            16,
+            21
+          ],
+          [
+            16,
+            4,
+            5
+          ],
+          [
+            11,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "rgb8": [
+          [
+            107,
+            132,
+            173
+          ],
+          [
+            132,
+            33,
+            41
+          ],
+          [
+            90,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "path": "data/tilesets/secondary/prism_olcan_isle/palette_variants/outdoor/nite/01.pal"
+      },
+      {
+        "palette": 2,
+        "rgb5": [
+          [
+            12,
+            14,
+            4
+          ],
+          [
+            9,
+            10,
+            0
+          ],
+          [
+            5,
+            7,
+            1
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "rgb8": [
+          [
+            99,
+            115,
+            33
+          ],
+          [
+            74,
+            82,
+            0
+          ],
+          [
+            41,
+            57,
+            8
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "path": "data/tilesets/secondary/prism_olcan_isle/palette_variants/outdoor/nite/02.pal"
+      },
+      {
+        "palette": 3,
+        "rgb5": [
+          [
+            13,
+            16,
+            21
+          ],
+          [
+            7,
+            11,
+            21
+          ],
+          [
+            4,
+            7,
+            19
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "rgb8": [
+          [
+            107,
+            132,
+            173
+          ],
+          [
+            57,
+            90,
+            173
+          ],
+          [
+            33,
+            57,
+            156
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "path": "data/tilesets/secondary/prism_olcan_isle/palette_variants/outdoor/nite/03.pal"
+      },
+      {
+        "palette": 4,
+        "rgb5": [
+          [
+            13,
+            16,
+            21
+          ],
+          [
+            30,
+            25,
+            6
+          ],
+          [
+            6,
+            7,
+            12
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "rgb8": [
+          [
+            107,
+            132,
+            173
+          ],
+          [
+            247,
+            206,
+            49
+          ],
+          [
+            49,
+            57,
+            99
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "path": "data/tilesets/secondary/prism_olcan_isle/palette_variants/outdoor/nite/04.pal"
+      },
+      {
+        "palette": 5,
+        "rgb5": [
+          [
+            15,
+            11,
+            15
+          ],
+          [
+            14,
+            6,
+            7
+          ],
+          [
+            11,
+            3,
+            2
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "rgb8": [
+          [
+            123,
+            90,
+            123
+          ],
+          [
+            115,
+            49,
+            57
+          ],
+          [
+            90,
+            24,
+            16
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "path": "data/tilesets/secondary/prism_olcan_isle/palette_variants/outdoor/nite/05.pal"
+      },
+      {
+        "palette": 6,
+        "rgb5": [
+          [
+            13,
+            16,
+            21
+          ],
+          [
+            16,
+            8,
+            11
+          ],
+          [
+            16,
+            4,
+            5
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "rgb8": [
+          [
+            107,
+            132,
+            173
+          ],
+          [
+            132,
+            66,
+            90
+          ],
+          [
+            132,
+            33,
+            41
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "path": "data/tilesets/secondary/prism_olcan_isle/palette_variants/outdoor/nite/06.pal"
+      },
+      {
+        "palette": 7,
+        "rgb5": [
+          [
+            31,
+            31,
+            31
+          ],
+          [
+            4,
+            4,
+            4
+          ],
+          [
+            2,
+            22,
+            29
+          ],
+          [
+            31,
+            31,
+            31
+          ]
+        ],
+        "rgb8": [
+          [
+            255,
+            255,
+            255
+          ],
+          [
+            33,
+            33,
+            33
+          ],
+          [
+            16,
+            181,
+            239
+          ],
+          [
+            255,
+            255,
+            255
+          ]
+        ],
+        "path": "data/tilesets/secondary/prism_olcan_isle/palette_variants/outdoor/nite/07.pal"
+      }
+    ],
+    "chine_morn": [
+      {
+        "palette": 0,
+        "rgb5": [
+          [
+            28,
+            31,
+            16
+          ],
+          [
+            21,
+            23,
+            22
+          ],
+          [
+            14,
+            15,
+            15
+          ],
+          [
+            5,
+            5,
+            5
+          ]
+        ],
+        "rgb8": [
+          [
+            231,
+            255,
+            132
+          ],
+          [
+            173,
+            189,
+            181
+          ],
+          [
+            115,
+            123,
+            123
+          ],
+          [
+            41,
+            41,
+            41
+          ]
+        ],
+        "path": "data/tilesets/secondary/prism_olcan_isle/palette_variants/chine/morn/00.pal"
+      },
+      {
+        "palette": 1,
+        "rgb5": [
+          [
+            28,
+            31,
+            16
+          ],
+          [
+            25,
+            13,
+            5
+          ],
+          [
+            18,
+            5,
+            1
+          ],
+          [
+            5,
+            5,
+            5
+          ]
+        ],
+        "rgb8": [
+          [
+            231,
+            255,
+            132
+          ],
+          [
+            206,
+            107,
+            41
+          ],
+          [
+            148,
+            41,
+            8
+          ],
+          [
+            41,
+            41,
+            41
+          ]
+        ],
+        "path": "data/tilesets/secondary/prism_olcan_isle/palette_variants/chine/morn/01.pal"
+      },
+      {
+        "palette": 2,
+        "rgb5": [
+          [
+            18,
+            25,
+            14
+          ],
+          [
+            13,
+            17,
+            5
+          ],
+          [
+            7,
+            10,
+            4
+          ],
+          [
+            5,
+            5,
+            5
+          ]
+        ],
+        "rgb8": [
+          [
+            148,
+            206,
+            115
+          ],
+          [
+            107,
+            140,
+            41
+          ],
+          [
+            57,
+            82,
+            33
+          ],
+          [
+            41,
+            41,
+            41
+          ]
+        ],
+        "path": "data/tilesets/secondary/prism_olcan_isle/palette_variants/chine/morn/02.pal"
+      },
+      {
+        "palette": 3,
+        "rgb5": [
+          [
+            28,
+            31,
+            16
+          ],
+          [
+            15,
+            23,
+            28
+          ],
+          [
+            9,
+            15,
+            26
+          ],
+          [
+            5,
+            5,
+            5
+          ]
+        ],
+        "rgb8": [
+          [
+            231,
+            255,
+            132
+          ],
+          [
+            123,
+            189,
+            231
+          ],
+          [
+            74,
+            123,
+            214
+          ],
+          [
+            41,
+            41,
+            41
+          ]
+        ],
+        "path": "data/tilesets/secondary/prism_olcan_isle/palette_variants/chine/morn/03.pal"
+      },
+      {
+        "palette": 4,
+        "rgb5": [
+          [
+            28,
+            31,
+            16
+          ],
+          [
+            15,
+            23,
+            28
+          ],
+          [
+            14,
+            15,
+            15
+          ],
+          [
+            5,
+            5,
+            5
+          ]
+        ],
+        "rgb8": [
+          [
+            231,
+            255,
+            132
+          ],
+          [
+            123,
+            189,
+            231
+          ],
+          [
+            115,
+            123,
+            123
+          ],
+          [
+            41,
+            41,
+            41
+          ]
+        ],
+        "path": "data/tilesets/secondary/prism_olcan_isle/palette_variants/chine/morn/04.pal"
+      },
+      {
+        "palette": 5,
+        "rgb5": [
+          [
+            27,
+            23,
+            18
+          ],
+          [
+            21,
+            15,
+            11
+          ],
+          [
+            16,
+            10,
+            6
+          ],
+          [
+            5,
+            5,
+            5
+          ]
+        ],
+        "rgb8": [
+          [
+            222,
+            189,
+            148
+          ],
+          [
+            173,
+            123,
+            90
+          ],
+          [
+            132,
+            82,
+            49
+          ],
+          [
+            41,
+            41,
+            41
+          ]
+        ],
+        "path": "data/tilesets/secondary/prism_olcan_isle/palette_variants/chine/morn/05.pal"
+      },
+      {
+        "palette": 6,
+        "rgb5": [
+          [
+            25,
+            27,
+            26
+          ],
+          [
+            11,
+            16,
+            22
+          ],
+          [
+            4,
+            9,
+            13
+          ],
+          [
+            5,
+            5,
+            5
+          ]
+        ],
+        "rgb8": [
+          [
+            206,
+            222,
+            214
+          ],
+          [
+            90,
+            132,
+            181
+          ],
+          [
+            33,
+            74,
+            107
+          ],
+          [
+            41,
+            41,
+            41
+          ]
+        ],
+        "path": "data/tilesets/secondary/prism_olcan_isle/palette_variants/chine/morn/06.pal"
+      },
+      {
+        "palette": 7,
+        "rgb5": [
+          [
+            31,
+            31,
+            31
+          ],
+          [
+            4,
+            4,
+            4
+          ],
+          [
+            2,
+            22,
+            29
+          ],
+          [
+            31,
+            31,
+            31
+          ]
+        ],
+        "rgb8": [
+          [
+            255,
+            255,
+            255
+          ],
+          [
+            33,
+            33,
+            33
+          ],
+          [
+            16,
+            181,
+            239
+          ],
+          [
+            255,
+            255,
+            255
+          ]
+        ],
+        "path": "data/tilesets/secondary/prism_olcan_isle/palette_variants/chine/morn/07.pal"
+      }
+    ],
+    "chine_day": [
+      {
+        "palette": 0,
+        "rgb5": [
+          [
+            27,
+            31,
+            27
+          ],
+          [
+            21,
+            23,
+            22
+          ],
+          [
+            14,
+            15,
+            15
+          ],
+          [
+            5,
+            5,
+            5
+          ]
+        ],
+        "rgb8": [
+          [
+            222,
+            255,
+            222
+          ],
+          [
+            173,
+            189,
+            181
+          ],
+          [
+            115,
+            123,
+            123
+          ],
+          [
+            41,
+            41,
+            41
+          ]
+        ],
+        "path": "data/tilesets/secondary/prism_olcan_isle/palette_variants/chine/day/00.pal"
+      },
+      {
+        "palette": 1,
+        "rgb5": [
+          [
+            27,
+            31,
+            27
+          ],
+          [
+            25,
+            13,
+            5
+          ],
+          [
+            18,
+            5,
+            1
+          ],
+          [
+            5,
+            5,
+            5
+          ]
+        ],
+        "rgb8": [
+          [
+            222,
+            255,
+            222
+          ],
+          [
+            206,
+            107,
+            41
+          ],
+          [
+            148,
+            41,
+            8
+          ],
+          [
+            41,
+            41,
+            41
+          ]
+        ],
+        "path": "data/tilesets/secondary/prism_olcan_isle/palette_variants/chine/day/01.pal"
+      },
+      {
+        "palette": 2,
+        "rgb5": [
+          [
+            20,
+            24,
+            7
+          ],
+          [
+            13,
+            17,
+            5
+          ],
+          [
+            7,
+            10,
+            4
+          ],
+          [
+            5,
+            5,
+            5
+          ]
+        ],
+        "rgb8": [
+          [
+            165,
+            198,
+            57
+          ],
+          [
+            107,
+            140,
+            41
+          ],
+          [
+            57,
+            82,
+            33
+          ],
+          [
+            41,
+            41,
+            41
+          ]
+        ],
+        "path": "data/tilesets/secondary/prism_olcan_isle/palette_variants/chine/day/02.pal"
+      },
+      {
+        "palette": 3,
+        "rgb5": [
+          [
+            27,
+            31,
+            27
+          ],
+          [
+            15,
+            23,
+            28
+          ],
+          [
+            9,
+            15,
+            26
+          ],
+          [
+            5,
+            5,
+            5
+          ]
+        ],
+        "rgb8": [
+          [
+            222,
+            255,
+            222
+          ],
+          [
+            123,
+            189,
+            231
+          ],
+          [
+            74,
+            123,
+            214
+          ],
+          [
+            41,
+            41,
+            41
+          ]
+        ],
+        "path": "data/tilesets/secondary/prism_olcan_isle/palette_variants/chine/day/03.pal"
+      },
+      {
+        "palette": 4,
+        "rgb5": [
+          [
+            27,
+            31,
+            27
+          ],
+          [
+            15,
+            23,
+            28
+          ],
+          [
+            14,
+            15,
+            15
+          ],
+          [
+            5,
+            5,
+            5
+          ]
+        ],
+        "rgb8": [
+          [
+            222,
+            255,
+            222
+          ],
+          [
+            123,
+            189,
+            231
+          ],
+          [
+            115,
+            123,
+            123
+          ],
+          [
+            41,
+            41,
+            41
+          ]
+        ],
+        "path": "data/tilesets/secondary/prism_olcan_isle/palette_variants/chine/day/04.pal"
+      },
+      {
+        "palette": 5,
+        "rgb5": [
+          [
+            28,
+            23,
+            21
+          ],
+          [
+            22,
+            15,
+            12
+          ],
+          [
+            16,
+            9,
+            6
+          ],
+          [
+            5,
+            5,
+            5
+          ]
+        ],
+        "rgb8": [
+          [
+            231,
+            189,
+            173
+          ],
+          [
+            181,
+            123,
+            99
+          ],
+          [
+            132,
+            74,
+            49
+          ],
+          [
+            41,
+            41,
+            41
+          ]
+        ],
+        "path": "data/tilesets/secondary/prism_olcan_isle/palette_variants/chine/day/05.pal"
+      },
+      {
+        "palette": 6,
+        "rgb5": [
+          [
+            24,
+            27,
+            31
+          ],
+          [
+            11,
+            16,
+            22
+          ],
+          [
+            4,
+            9,
+            13
+          ],
+          [
+            5,
+            5,
+            5
+          ]
+        ],
+        "rgb8": [
+          [
+            198,
+            222,
+            255
+          ],
+          [
+            90,
+            132,
+            181
+          ],
+          [
+            33,
+            74,
+            107
+          ],
+          [
+            41,
+            41,
+            41
+          ]
+        ],
+        "path": "data/tilesets/secondary/prism_olcan_isle/palette_variants/chine/day/06.pal"
+      },
+      {
+        "palette": 7,
+        "rgb5": [
+          [
+            31,
+            31,
+            31
+          ],
+          [
+            4,
+            4,
+            4
+          ],
+          [
+            2,
+            22,
+            29
+          ],
+          [
+            31,
+            31,
+            31
+          ]
+        ],
+        "rgb8": [
+          [
+            255,
+            255,
+            255
+          ],
+          [
+            33,
+            33,
+            33
+          ],
+          [
+            16,
+            181,
+            239
+          ],
+          [
+            255,
+            255,
+            255
+          ]
+        ],
+        "path": "data/tilesets/secondary/prism_olcan_isle/palette_variants/chine/day/07.pal"
+      }
+    ],
+    "chine_nite": [
+      {
+        "palette": 0,
+        "rgb5": [
+          [
+            13,
+            16,
+            21
+          ],
+          [
+            10,
+            11,
+            16
+          ],
+          [
+            7,
+            7,
+            11
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "rgb8": [
+          [
+            107,
+            132,
+            173
+          ],
+          [
+            82,
+            90,
+            132
+          ],
+          [
+            57,
+            57,
+            90
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "path": "data/tilesets/secondary/prism_olcan_isle/palette_variants/chine/nite/00.pal"
+      },
+      {
+        "palette": 1,
+        "rgb5": [
+          [
+            13,
+            16,
+            21
+          ],
+          [
+            12,
+            6,
+            3
+          ],
+          [
+            9,
+            2,
+            1
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "rgb8": [
+          [
+            107,
+            132,
+            173
+          ],
+          [
+            99,
+            49,
+            24
+          ],
+          [
+            74,
+            16,
+            8
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "path": "data/tilesets/secondary/prism_olcan_isle/palette_variants/chine/nite/01.pal"
+      },
+      {
+        "palette": 2,
+        "rgb5": [
+          [
+            10,
+            12,
+            5
+          ],
+          [
+            7,
+            9,
+            4
+          ],
+          [
+            3,
+            5,
+            3
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "rgb8": [
+          [
+            82,
+            99,
+            41
+          ],
+          [
+            57,
+            74,
+            33
+          ],
+          [
+            24,
+            41,
+            24
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "path": "data/tilesets/secondary/prism_olcan_isle/palette_variants/chine/nite/02.pal"
+      },
+      {
+        "palette": 3,
+        "rgb5": [
+          [
+            13,
+            16,
+            21
+          ],
+          [
+            7,
+            11,
+            21
+          ],
+          [
+            4,
+            7,
+            19
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "rgb8": [
+          [
+            107,
+            132,
+            173
+          ],
+          [
+            57,
+            90,
+            173
+          ],
+          [
+            33,
+            57,
+            156
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "path": "data/tilesets/secondary/prism_olcan_isle/palette_variants/chine/nite/03.pal"
+      },
+      {
+        "palette": 4,
+        "rgb5": [
+          [
+            13,
+            16,
+            21
+          ],
+          [
+            30,
+            25,
+            6
+          ],
+          [
+            7,
+            7,
+            11
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "rgb8": [
+          [
+            107,
+            132,
+            173
+          ],
+          [
+            247,
+            206,
+            49
+          ],
+          [
+            57,
+            57,
+            90
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "path": "data/tilesets/secondary/prism_olcan_isle/palette_variants/chine/nite/04.pal"
+      },
+      {
+        "palette": 5,
+        "rgb5": [
+          [
+            13,
+            11,
+            14
+          ],
+          [
+            10,
+            8,
+            9
+          ],
+          [
+            8,
+            5,
+            5
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "rgb8": [
+          [
+            107,
+            90,
+            115
+          ],
+          [
+            82,
+            66,
+            74
+          ],
+          [
+            66,
+            41,
+            41
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "path": "data/tilesets/secondary/prism_olcan_isle/palette_variants/chine/nite/05.pal"
+      },
+      {
+        "palette": 6,
+        "rgb5": [
+          [
+            12,
+            14,
+            24
+          ],
+          [
+            5,
+            8,
+            16
+          ],
+          [
+            2,
+            5,
+            10
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "rgb8": [
+          [
+            99,
+            115,
+            198
+          ],
+          [
+            41,
+            66,
+            132
+          ],
+          [
+            16,
+            41,
+            82
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "path": "data/tilesets/secondary/prism_olcan_isle/palette_variants/chine/nite/06.pal"
+      },
+      {
+        "palette": 7,
+        "rgb5": [
+          [
+            31,
+            31,
+            31
+          ],
+          [
+            4,
+            4,
+            4
+          ],
+          [
+            2,
+            22,
+            29
+          ],
+          [
+            31,
+            31,
+            31
+          ]
+        ],
+        "rgb8": [
+          [
+            255,
+            255,
+            255
+          ],
+          [
+            33,
+            33,
+            33
+          ],
+          [
+            16,
+            181,
+            239
+          ],
+          [
+            255,
+            255,
+            255
+          ]
+        ],
+        "path": "data/tilesets/secondary/prism_olcan_isle/palette_variants/chine/nite/07.pal"
+      }
+    ]
+  }
+}

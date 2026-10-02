@@ -2236,7 +2236,11 @@
   "target": {
     "staged_art_path": "graphics/prism_mining/olcan_isle_tileset55.png",
     "status": "staged_only",
-    "live_wiring": false
+    "live_wiring": false,
+    "palette_audit": "tools/prism_mining/manifests/olcan_isle_palette_attribute_audit.json",
+    "palette_variants_staged": true,
+    "attribute_translation_verified": true,
+    "bank1_linearization_verified": true
   },
-  "follow_up": "Audit Prism day/night palette records used by TILESET_OLCAN_ISLE and choose a target palette strategy before creating live metatiles."
+  "follow_up": "Create the first live Olcan mining target using the verified bank/flip translation and separate outdoor/chine Day palette symbols sharing one graphics source."
 }

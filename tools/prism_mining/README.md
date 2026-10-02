@@ -200,3 +200,12 @@ Prism tileset 55 (`TILESET_OLCAN_ISLE`, source ID `0x37`) is staged at `graphics
 Its collision table contains **110 `MINING` quadrants across 59 metatiles**. The source tileset is used by Olcan Isle (`PALETTE_AUTO`), Olcan Chine (`PALETTE_AUTO`), and Olcan Chine Entrance (`PALETTE_NITE`), so live palette wiring is intentionally deferred until its day/night palette usage is audited.
 
 No maps or live target tilesets are changed by this staging step.
+
+
+## Olcan palette and attribute audit
+
+Olcan's flagged source attributes are now decoded and preserved rather than flattened. `0x25` is palette 5 + X-flip; `0x0E` is palette 6 + VRAM bank 1; `0x2E` is palette 6 + VRAM bank 1 + X-flip. Prism's loader places the first `0x80` tiles in VRAM bank 0 and the next `0x80` in bank 1, so bank-1 tile IDs are linearized by adding `0x80` in the GBA target (`0x07 -> 0x87`, `0x08 -> 0x88` in the observed mining surfaces).
+
+The exact Prism `olcan_isle.pal` and `tunod.pal` sources are retained, and all **Morning / Day / Night** variants for their eight palettes are translated to JASC-PAL under `data/tilesets/secondary/prism_olcan_isle/palette_variants/`. Olcan Isle uses its dedicated palette source; Olcan Chine uses Tunod's palette source.
+
+For the imported 2bpp-indexed art, each four-color source palette is stored in target palette slots 12-15. Live wiring remains isolated for the next step; no existing maps are changed.
