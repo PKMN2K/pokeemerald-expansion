@@ -227,3 +227,12 @@ Existing maps remain untouched; these tilesets are available only for deliberate
 This batch validates source X-flip preservation in live data: Prism attribute `0x25` is translated to GBA metatile entries with the horizontal-flip bit set (for example `0x561B`, `0x562B`, `0x563B`). No bank-1 surface appears in this first expansion batch.
 
 Existing maps remain untouched.
+
+
+## Olcan mining surfaces batch 2
+
+The shared Olcan target now contains **20 live `MB_PRISM_MINING` metatiles**. IDs 10-19 append the next ten source-order mining quadrants, from Prism block `0x0C` TL through block `0x14` BR.
+
+This batch adds three more surfaces containing source X-flip attribute `0x25`; those remain encoded with the GBA horizontal-flip bit. No VRAM-bank-1 mining surface appears yet.
+
+Existing maps remain untouched.

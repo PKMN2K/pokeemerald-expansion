@@ -2235,7 +2235,7 @@
   },
   "target": {
     "staged_art_path": "graphics/prism_mining/olcan_isle_tileset55.png",
-    "status": "live_batch_1",
+    "status": "live_batch_2",
     "live_wiring": true,
     "palette_audit": "tools/prism_mining/manifests/olcan_isle_palette_attribute_audit.json",
     "palette_variants_staged": true,
@@ -2244,9 +2244,9 @@
     "shared_graphics_symbol": "gTilesetTiles_PrismOlcanIsle",
     "outdoor_tileset_symbol": "gTileset_PrismOlcanIsleDay",
     "chine_tileset_symbol": "gTileset_PrismOlcanChineDay",
-    "live_metatile_count": 10,
+    "live_metatile_count": 20,
     "live_surface_manifest": "tools/prism_mining/manifests/first_placeable_olcan_surface.json",
-    "latest_batch_manifest": "tools/prism_mining/manifests/olcan_isle_mining_surface_batch_1.json"
+    "latest_batch_manifest": "tools/prism_mining/manifests/olcan_isle_mining_surface_batch_2.json"
   },
-  "follow_up": "Continue source-order Olcan MINING quadrants from target ID 10; preserve source palette, X-flip, Y-flip, and bank-1 translation."
+  "follow_up": "Continue source-order Olcan MINING quadrants from target ID 20; preserve verified palette/flip/bank translation."
 }
