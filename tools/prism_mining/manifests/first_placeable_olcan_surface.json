@@ -1,0 +1,45 @@
+{
+  "name": "prism_olcan_first_placeable_mining_surface",
+  "source": {
+    "game": "Pokemon Prism",
+    "version": "0.95.0254",
+    "tileset": "TILESET_OLCAN_ISLE",
+    "tileset_id": "0x37",
+    "source_block": "0x04",
+    "source_quadrant": "TL",
+    "source_tile_ids": [
+      "0x2C",
+      "0x0B",
+      "0x1A",
+      "0x1B"
+    ],
+    "source_attributes": [
+      "0x05",
+      "0x05",
+      "0x05",
+      "0x05"
+    ],
+    "collision": "MINING"
+  },
+  "target": {
+    "target_metatile_id": 0,
+    "target_entries_hex": [
+      "0x522C",
+      "0x520B",
+      "0x521A",
+      "0x521B",
+      "0x0000",
+      "0x0000",
+      "0x0000",
+      "0x0000"
+    ],
+    "behavior": "MB_PRISM_MINING",
+    "behavior_value": 240,
+    "shared_graphics_symbol": "gTilesetTiles_PrismOlcanIsle",
+    "outdoor_tileset_symbol": "gTileset_PrismOlcanIsleDay",
+    "chine_tileset_symbol": "gTileset_PrismOlcanChineDay",
+    "outdoor_palette_symbol": "gTilesetPalettes_PrismOlcanIsleDay",
+    "chine_palette_symbol": "gTilesetPalettes_PrismOlcanChineDay"
+  },
+  "notes": "Both Day-context tilesets share identical graphics/metatiles; only their authentic Prism palette tables differ. Existing maps are unchanged."
+}

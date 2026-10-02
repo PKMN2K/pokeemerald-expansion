@@ -3109,3 +3109,47 @@ const u16 gTilesetPalettes_PrismKantoCave[][16] =
     INCGFX_U16("data/tilesets/secondary/prism_kanto_cave/palettes/14.pal", ".gbapal"),
     INCGFX_U16("data/tilesets/secondary/prism_kanto_cave/palettes/15.pal", ".gbapal"),
 };
+
+
+// Pokémon Prism v0.95.0254 Olcan Isle/Chine source tiles used by the mining subsystem.
+const u32 gTilesetTiles_PrismOlcanIsle[] = INCGFX_U32("data/tilesets/secondary/prism_olcan_isle/tiles.png", ".4bpp.fastSmol", "-num_tiles 176 -Wnum_tiles");
+
+const u16 gTilesetPalettes_PrismOlcanIsleDay[][16] =
+{
+    INCGFX_U16("data/tilesets/secondary/prism_olcan_isle/palette_variants/outdoor/day/00.pal", ".gbapal"),
+    INCGFX_U16("data/tilesets/secondary/prism_olcan_isle/palette_variants/outdoor/day/01.pal", ".gbapal"),
+    INCGFX_U16("data/tilesets/secondary/prism_olcan_isle/palette_variants/outdoor/day/02.pal", ".gbapal"),
+    INCGFX_U16("data/tilesets/secondary/prism_olcan_isle/palette_variants/outdoor/day/03.pal", ".gbapal"),
+    INCGFX_U16("data/tilesets/secondary/prism_olcan_isle/palette_variants/outdoor/day/04.pal", ".gbapal"),
+    INCGFX_U16("data/tilesets/secondary/prism_olcan_isle/palette_variants/outdoor/day/05.pal", ".gbapal"),
+    INCGFX_U16("data/tilesets/secondary/prism_olcan_isle/palette_variants/outdoor/day/06.pal", ".gbapal"),
+    INCGFX_U16("data/tilesets/secondary/prism_olcan_isle/palette_variants/outdoor/day/07.pal", ".gbapal"),
+    INCGFX_U16("data/tilesets/secondary/prism_olcan_isle/palette_variants/empty.pal", ".gbapal"),
+    INCGFX_U16("data/tilesets/secondary/prism_olcan_isle/palette_variants/empty.pal", ".gbapal"),
+    INCGFX_U16("data/tilesets/secondary/prism_olcan_isle/palette_variants/empty.pal", ".gbapal"),
+    INCGFX_U16("data/tilesets/secondary/prism_olcan_isle/palette_variants/empty.pal", ".gbapal"),
+    INCGFX_U16("data/tilesets/secondary/prism_olcan_isle/palette_variants/empty.pal", ".gbapal"),
+    INCGFX_U16("data/tilesets/secondary/prism_olcan_isle/palette_variants/empty.pal", ".gbapal"),
+    INCGFX_U16("data/tilesets/secondary/prism_olcan_isle/palette_variants/empty.pal", ".gbapal"),
+    INCGFX_U16("data/tilesets/secondary/prism_olcan_isle/palette_variants/empty.pal", ".gbapal"),
+};
+
+const u16 gTilesetPalettes_PrismOlcanChineDay[][16] =
+{
+    INCGFX_U16("data/tilesets/secondary/prism_olcan_isle/palette_variants/chine/day/00.pal", ".gbapal"),
+    INCGFX_U16("data/tilesets/secondary/prism_olcan_isle/palette_variants/chine/day/01.pal", ".gbapal"),
+    INCGFX_U16("data/tilesets/secondary/prism_olcan_isle/palette_variants/chine/day/02.pal", ".gbapal"),
+    INCGFX_U16("data/tilesets/secondary/prism_olcan_isle/palette_variants/chine/day/03.pal", ".gbapal"),
+    INCGFX_U16("data/tilesets/secondary/prism_olcan_isle/palette_variants/chine/day/04.pal", ".gbapal"),
+    INCGFX_U16("data/tilesets/secondary/prism_olcan_isle/palette_variants/chine/day/05.pal", ".gbapal"),
+    INCGFX_U16("data/tilesets/secondary/prism_olcan_isle/palette_variants/chine/day/06.pal", ".gbapal"),
+    INCGFX_U16("data/tilesets/secondary/prism_olcan_isle/palette_variants/chine/day/07.pal", ".gbapal"),
+    INCGFX_U16("data/tilesets/secondary/prism_olcan_isle/palette_variants/empty.pal", ".gbapal"),
+    INCGFX_U16("data/tilesets/secondary/prism_olcan_isle/palette_variants/empty.pal", ".gbapal"),
+    INCGFX_U16("data/tilesets/secondary/prism_olcan_isle/palette_variants/empty.pal", ".gbapal"),
+    INCGFX_U16("data/tilesets/secondary/prism_olcan_isle/palette_variants/empty.pal", ".gbapal"),
+    INCGFX_U16("data/tilesets/secondary/prism_olcan_isle/palette_variants/empty.pal", ".gbapal"),
+    INCGFX_U16("data/tilesets/secondary/prism_olcan_isle/palette_variants/empty.pal", ".gbapal"),
+    INCGFX_U16("data/tilesets/secondary/prism_olcan_isle/palette_variants/empty.pal", ".gbapal"),
+    INCGFX_U16("data/tilesets/secondary/prism_olcan_isle/palette_variants/empty.pal", ".gbapal"),
+};

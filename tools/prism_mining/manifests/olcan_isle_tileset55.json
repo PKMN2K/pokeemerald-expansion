@@ -2235,12 +2235,17 @@
   },
   "target": {
     "staged_art_path": "graphics/prism_mining/olcan_isle_tileset55.png",
-    "status": "staged_only",
-    "live_wiring": false,
+    "status": "live_first_surface",
+    "live_wiring": true,
     "palette_audit": "tools/prism_mining/manifests/olcan_isle_palette_attribute_audit.json",
     "palette_variants_staged": true,
     "attribute_translation_verified": true,
-    "bank1_linearization_verified": true
+    "bank1_linearization_verified": true,
+    "shared_graphics_symbol": "gTilesetTiles_PrismOlcanIsle",
+    "outdoor_tileset_symbol": "gTileset_PrismOlcanIsleDay",
+    "chine_tileset_symbol": "gTileset_PrismOlcanChineDay",
+    "live_metatile_count": 1,
+    "live_surface_manifest": "tools/prism_mining/manifests/first_placeable_olcan_surface.json"
   },
-  "follow_up": "Create the first live Olcan mining target using the verified bank/flip translation and separate outdoor/chine Day palette symbols sharing one graphics source."
+  "follow_up": "Expand Olcan mining surfaces incrementally using the verified palette, X-flip, and bank-1 linearization rules."
 }

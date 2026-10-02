@@ -421,3 +421,7 @@ const u16 gMetatileAttributes_PrismFirelightCaverns[] = INCBIN_U16("data/tileset
 // First authentic Prism Kanto Cave 16x16 mining surface.
 const u16 gMetatiles_PrismKantoCave[] = INCBIN_U16("data/tilesets/secondary/prism_kanto_cave/metatiles.bin");
 const u16 gMetatileAttributes_PrismKantoCave[] = INCBIN_U16("data/tilesets/secondary/prism_kanto_cave/metatile_attributes.bin");
+
+// First authentic Prism Olcan Isle/Chine 16x16 mining surface.
+const u16 gMetatiles_PrismOlcanIsle[] = INCBIN_U16("data/tilesets/secondary/prism_olcan_isle/metatiles.bin");
+const u16 gMetatileAttributes_PrismOlcanIsle[] = INCBIN_U16("data/tilesets/secondary/prism_olcan_isle/metatile_attributes.bin");

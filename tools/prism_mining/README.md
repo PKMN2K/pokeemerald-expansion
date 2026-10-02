@@ -209,3 +209,12 @@ Olcan's flagged source attributes are now decoded and preserved rather than flat
 The exact Prism `olcan_isle.pal` and `tunod.pal` sources are retained, and all **Morning / Day / Night** variants for their eight palettes are translated to JASC-PAL under `data/tilesets/secondary/prism_olcan_isle/palette_variants/`. Olcan Isle uses its dedicated palette source; Olcan Chine uses Tunod's palette source.
 
 For the imported 2bpp-indexed art, each four-color source palette is stored in target palette slots 12-15. Live wiring remains isolated for the next step; no existing maps are changed.
+
+
+## First live Olcan mining surface
+
+Olcan now has a live shared mining tileset source. Prism block `0x04` top-left is exposed as target metatile `0`, using source tiles `0x2C, 0x0B, 0x1A, 0x1B`, all palette 5, with `MB_PRISM_MINING` behavior.
+
+Two target secondary tilesets share the same 176-tile graphics and metatile data: `gTileset_PrismOlcanIsleDay` uses the authentic Olcan Isle Day palettes, while `gTileset_PrismOlcanChineDay` uses the authentic Tunod/Olcan Chine Day palettes. Palette slots 8-15 are unused and zero-filled.
+
+Existing maps remain untouched; these tilesets are available only for deliberate later map assignment.

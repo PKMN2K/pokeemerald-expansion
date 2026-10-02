@@ -1575,3 +1575,26 @@ const struct Tileset gTileset_PrismKantoCave =
     .metatileAttributes = gMetatileAttributes_PrismKantoCave,
     .callback = NULL,
 };
+
+
+const struct Tileset gTileset_PrismOlcanIsleDay =
+{
+    .isCompressed = TRUE,
+    .isSecondary = TRUE,
+    .tiles = gTilesetTiles_PrismOlcanIsle,
+    .palettes = gTilesetPalettes_PrismOlcanIsleDay,
+    .metatiles = gMetatiles_PrismOlcanIsle,
+    .metatileAttributes = gMetatileAttributes_PrismOlcanIsle,
+    .callback = NULL,
+};
+
+const struct Tileset gTileset_PrismOlcanChineDay =
+{
+    .isCompressed = TRUE,
+    .isSecondary = TRUE,
+    .tiles = gTilesetTiles_PrismOlcanIsle,
+    .palettes = gTilesetPalettes_PrismOlcanChineDay,
+    .metatiles = gMetatiles_PrismOlcanIsle,
+    .metatileAttributes = gMetatileAttributes_PrismOlcanIsle,
+    .callback = NULL,
+};
