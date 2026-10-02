@@ -152,3 +152,10 @@ All 15 appended quadrants are source `MINING` surfaces and every constituent til
 `gTileset_PrismKantoCave` now contains **46 placeable mining metatiles**. IDs 0-23 are preserved exactly; IDs 24-45 append 22 verified `MINING` quadrants from source blocks `0x22`, `0x23`, `0x25`, `0x26`, `0x2B`-`0x2E`, `0x30`, and `0x31`.
 
 Every appended tile attribute is still `0x05` (palette 5, bank 0, no X/Y flips), so this batch remains a direct source-tile conversion with no speculative flip handling. Existing maps remain untouched.
+
+
+## Kanto Cave mining surface batch 4
+
+`gTileset_PrismKantoCave` now contains **78 placeable mining metatiles**. IDs 0-45 are preserved exactly; IDs 46-77 append 32 verified `MINING` quadrants from source blocks `0x32`, `0x34`-`0x35`, `0x37`-`0x3B`, and `0x3F`-`0x43`.
+
+This batch introduces authentic palette-6 mining surfaces alongside palette 5. Every converted quadrant is uniform `0x05` or `0x06`, with no X/Y flips, alternate VRAM bank, or priority flags. Target entries therefore map directly to `0x52xx` or `0x62xx`. Existing maps remain untouched.
