@@ -1,0 +1,225 @@
+{
+  "name": "prism_kanto_cave_mining_surface_batch_1",
+  "source": {
+    "game": "Pokemon Prism",
+    "version": "0.95.0254",
+    "tileset_id": 27,
+    "rule": "Every appended quadrant is marked MINING in tilesets/27_collision.asm and every constituent tile has source attribute 0x05.",
+    "palette_id": 5,
+    "flip_flags": false,
+    "vram_bank": 0
+  },
+  "target": {
+    "tileset_symbol": "gTileset_PrismKantoCave",
+    "behavior": "MB_PRISM_MINING",
+    "behavior_value": 240,
+    "preserved_metatile_ids": [
+      0
+    ],
+    "appended_metatile_ids": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8
+    ],
+    "total_metatile_count": 9
+  },
+  "surfaces": [
+    {
+      "target_metatile_id": 0,
+      "source_block": "0x02",
+      "source_quadrant": "TL",
+      "source_tile_ids": [
+        "0x04",
+        "0x29",
+        "0x31",
+        "0x05"
+      ],
+      "target_entries_hex": [
+        "0x5204",
+        "0x5229",
+        "0x5231",
+        "0x5205",
+        "0x0000",
+        "0x0000",
+        "0x0000",
+        "0x0000"
+      ]
+    },
+    {
+      "target_metatile_id": 1,
+      "source_block": "0x02",
+      "source_quadrant": "TR",
+      "source_tile_ids": [
+        "0x29",
+        "0x07",
+        "0x05",
+        "0x17"
+      ],
+      "target_entries_hex": [
+        "0x5229",
+        "0x5207",
+        "0x5205",
+        "0x5217",
+        "0x0000",
+        "0x0000",
+        "0x0000",
+        "0x0000"
+      ]
+    },
+    {
+      "target_metatile_id": 2,
+      "source_block": "0x02",
+      "source_quadrant": "BL",
+      "source_tile_ids": [
+        "0x31",
+        "0x05",
+        "0x28",
+        "0x10"
+      ],
+      "target_entries_hex": [
+        "0x5231",
+        "0x5205",
+        "0x5228",
+        "0x5210",
+        "0x0000",
+        "0x0000",
+        "0x0000",
+        "0x0000"
+      ]
+    },
+    {
+      "target_metatile_id": 3,
+      "source_block": "0x02",
+      "source_quadrant": "BR",
+      "source_tile_ids": [
+        "0x05",
+        "0x17",
+        "0x10",
+        "0x11"
+      ],
+      "target_entries_hex": [
+        "0x5205",
+        "0x5217",
+        "0x5210",
+        "0x5211",
+        "0x0000",
+        "0x0000",
+        "0x0000",
+        "0x0000"
+      ]
+    },
+    {
+      "target_metatile_id": 4,
+      "source_block": "0x17",
+      "source_quadrant": "TL",
+      "source_tile_ids": [
+        "0x04",
+        "0x29",
+        "0x31",
+        "0x05"
+      ],
+      "target_entries_hex": [
+        "0x5204",
+        "0x5229",
+        "0x5231",
+        "0x5205",
+        "0x0000",
+        "0x0000",
+        "0x0000",
+        "0x0000"
+      ]
+    },
+    {
+      "target_metatile_id": 5,
+      "source_block": "0x17",
+      "source_quadrant": "TR",
+      "source_tile_ids": [
+        "0x29",
+        "0x07",
+        "0x05",
+        "0x17"
+      ],
+      "target_entries_hex": [
+        "0x5229",
+        "0x5207",
+        "0x5205",
+        "0x5217",
+        "0x0000",
+        "0x0000",
+        "0x0000",
+        "0x0000"
+      ]
+    },
+    {
+      "target_metatile_id": 6,
+      "source_block": "0x17",
+      "source_quadrant": "BL",
+      "source_tile_ids": [
+        "0x31",
+        "0x05",
+        "0x31",
+        "0x05"
+      ],
+      "target_entries_hex": [
+        "0x5231",
+        "0x5205",
+        "0x5231",
+        "0x5205",
+        "0x0000",
+        "0x0000",
+        "0x0000",
+        "0x0000"
+      ]
+    },
+    {
+      "target_metatile_id": 7,
+      "source_block": "0x17",
+      "source_quadrant": "BR",
+      "source_tile_ids": [
+        "0x05",
+        "0x17",
+        "0x05",
+        "0x17"
+      ],
+      "target_entries_hex": [
+        "0x5205",
+        "0x5217",
+        "0x5205",
+        "0x5217",
+        "0x0000",
+        "0x0000",
+        "0x0000",
+        "0x0000"
+      ]
+    },
+    {
+      "target_metatile_id": 8,
+      "source_block": "0x1B",
+      "source_quadrant": "TL",
+      "source_tile_ids": [
+        "0x31",
+        "0x05",
+        "0x31",
+        "0x05"
+      ],
+      "target_entries_hex": [
+        "0x5231",
+        "0x5205",
+        "0x5231",
+        "0x5205",
+        "0x0000",
+        "0x0000",
+        "0x0000",
+        "0x0000"
+      ]
+    }
+  ],
+  "isolation": {
+    "existing_maps_modified": false
+  }
+}

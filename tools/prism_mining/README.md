@@ -131,3 +131,10 @@ This step is asset-and-manifest staging only. Kanto Cave is not yet wired as a l
 `gTileset_PrismKantoCave` now uses its own `gTilesetPalettes_PrismKantoCave` table. The 16 palette files are exact blob-for-blob copies of the already verified Prism Night dungeon palette translation used by Mound Cave, because Kanto Cave source maps use the same `PALETTE_NITE` / `$10-$17` dungeon palette context.
 
 This removes the temporary shared-symbol bridge without changing any colors. Palette banks 0-7 contain the authentic Prism Night palettes and 8-15 remain the same zero-filled unused banks.
+
+
+## Kanto Cave mining surface batch 1
+
+`gTileset_PrismKantoCave` now contains **9 placeable mining metatiles**. Metatile 0 remains the original block `0x02` TL surface; metatiles 1-8 add block `0x02` TR/BL/BR, all four quadrants of block `0x17`, and block `0x1B` TL.
+
+Every appended source quadrant is marked `MINING`, and every constituent source tile uses attribute `0x05` (palette 5, bank 0, no X/Y flips). Existing maps remain untouched.
