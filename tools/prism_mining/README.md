@@ -272,3 +272,12 @@ The shared Olcan target now contains **80 live `MB_PRISM_MINING` metatiles**. ID
 Two surfaces in this batch preserve source X-flip attribute `0x25`. No bank-1 or mixed-palette mining surfaces occur in this range.
 
 Existing maps remain untouched.
+
+
+## Olcan mining surfaces batch 7
+
+The shared Olcan target now contains **96 live `MB_PRISM_MINING` metatiles**. IDs 80-95 append sixteen source-order mining quadrants from Prism block `0x60` BL through block `0x81` TL.
+
+Three surfaces in this batch preserve source X-flip attribute `0x25`. No bank-1 entries are included intentionally: target ID `96` (Prism block `0x81` BL) is the first bank-1 mining surface, so it is reserved for an isolated validation step.
+
+Existing maps remain untouched.
