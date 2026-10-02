@@ -27,12 +27,12 @@
   "target": {
     "image": "graphics/prism_mining/kanto_cave_tileset27.png",
     "imported_byte_for_byte": true,
-    "live_wiring": "live as gTileset_PrismKantoCave with 78 placeable mining surfaces",
+    "live_wiring": "live as gTileset_PrismKantoCave with 132 placeable mining surfaces",
     "tiles": "data/tilesets/secondary/prism_kanto_cave/tiles.png",
-    "metatile_count": 78,
+    "metatile_count": 132,
     "palette_symbol": "gTilesetPalettes_PrismKantoCave",
     "palette_context": "authentic Prism Night dungeon palettes ($10-$17), copied byte-for-byte from the already verified Mound Cave translation",
-    "latest_batch": "metatile IDs 46-77 add verified MINING quadrants from source blocks 0x32, 0x34-0x35, 0x37-0x3B, 0x3F-0x43; source attributes are uniform palette 5 or 6 with no flip/bank flags"
+    "latest_batch": "metatile IDs 78-131 add 54 verified MINING quadrants from source blocks 0x44-0x58; all are uniform palette 5 or 6 with no flip/bank/priority flags"
   },
   "mining_behavior": {
     "trigger": "MINING collision on eligible 16x16 metatile quadrants",
@@ -797,5 +797,5 @@
     "resample": false,
     "repaint": false
   },
-  "follow_up": "Continue expanding verified Kanto Cave MINING quadrants; palette-5 and palette-6 direct mappings are now both covered."
+  "follow_up": "Continue expanding verified Kanto Cave MINING quadrants beyond source block 0x58."
 }
