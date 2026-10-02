@@ -138,3 +138,10 @@ This removes the temporary shared-symbol bridge without changing any colors. Pal
 `gTileset_PrismKantoCave` now contains **9 placeable mining metatiles**. Metatile 0 remains the original block `0x02` TL surface; metatiles 1-8 add block `0x02` TR/BL/BR, all four quadrants of block `0x17`, and block `0x1B` TL.
 
 Every appended source quadrant is marked `MINING`, and every constituent source tile uses attribute `0x05` (palette 5, bank 0, no X/Y flips). Existing maps remain untouched.
+
+
+## Kanto Cave mining surface batch 2
+
+`gTileset_PrismKantoCave` now contains **24 placeable mining metatiles**. IDs 0-8 are preserved exactly; IDs 9-23 add block `0x1B` TR/BL/BR plus all four quadrants from blocks `0x1F`, `0x20`, and `0x21`.
+
+All 15 appended quadrants are source `MINING` surfaces and every constituent tile uses attribute `0x05` (palette 5, bank 0, no X/Y flips), so no speculative attribute translation was required. Existing maps remain untouched.
