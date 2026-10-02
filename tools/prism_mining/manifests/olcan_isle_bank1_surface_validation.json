@@ -1,0 +1,49 @@
+{
+  "name": "prism_olcan_bank1_surface_validation",
+  "source": {
+    "tileset": "TILESET_OLCAN_ISLE",
+    "tileset_id": "0x37",
+    "pinned_commit": "ecb209a2404be3ac62a260a95d204a6a36170f4c",
+    "source_block": "0x81",
+    "source_quadrant": "BL",
+    "source_tile_ids": [
+      "0x4A",
+      "0x4B",
+      "0x08",
+      "0x07"
+    ],
+    "source_attributes": [
+      "0x05",
+      "0x05",
+      "0x0E",
+      "0x0E"
+    ]
+  },
+  "target": {
+    "target_metatile_id": 96,
+    "total_live_metatiles": 97,
+    "behavior": "MB_PRISM_MINING",
+    "target_entries_hex": [
+      "0x524A",
+      "0x524B",
+      "0x6288",
+      "0x6287",
+      "0x0000",
+      "0x0000",
+      "0x0000",
+      "0x0000"
+    ]
+  },
+  "validation": {
+    "bank1_source_tiles": [
+      "0x08",
+      "0x07"
+    ],
+    "bank1_linearized_tiles": [
+      "0x88",
+      "0x87"
+    ],
+    "formula": "0x0200 + tile + (bank1 ? 0x80 : 0) + (xflip ? 0x0400 : 0) + (yflip ? 0x0800 : 0) + (palette << 12)",
+    "source_loader_note": "Prism copies wDecompressScratch + 0x80 tiles into VRAM bank 1, so bank-1 tile IDs linearize by +0x80 in the shared GBA tilesheet."
+  }
+}

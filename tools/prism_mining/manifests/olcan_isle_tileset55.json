@@ -2235,7 +2235,7 @@
   },
   "target": {
     "staged_art_path": "graphics/prism_mining/olcan_isle_tileset55.png",
-    "status": "live_batch_7",
+    "status": "live_bank1_validated",
     "live_wiring": true,
     "palette_audit": "tools/prism_mining/manifests/olcan_isle_palette_attribute_audit.json",
     "palette_variants_staged": true,
@@ -2244,9 +2244,9 @@
     "shared_graphics_symbol": "gTilesetTiles_PrismOlcanIsle",
     "outdoor_tileset_symbol": "gTileset_PrismOlcanIsleDay",
     "chine_tileset_symbol": "gTileset_PrismOlcanChineDay",
-    "live_metatile_count": 96,
+    "live_metatile_count": 97,
     "live_surface_manifest": "tools/prism_mining/manifests/first_placeable_olcan_surface.json",
-    "latest_batch_manifest": "tools/prism_mining/manifests/olcan_isle_mining_surface_batch_7.json"
+    "latest_batch_manifest": "tools/prism_mining/manifests/olcan_isle_bank1_surface_validation.json"
   },
-  "follow_up": "Target ID 96 is the first bank-1 Olcan mining surface (block 0x81 BL). Isolate it in the next step to validate +0x80 tile linearization live."
+  "follow_up": "Continue source-order Olcan MINING quadrants from target ID 97 after CI validates the first bank-1 surface at ID 96."
 }
