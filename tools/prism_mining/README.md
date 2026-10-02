@@ -182,3 +182,12 @@ All appended quadrants are uniform source attribute `0x05` or `0x06`, with no X/
 All appended quadrants are uniform source attribute `0x05` or `0x06`, with no X/Y flips, alternate VRAM bank, or priority flags. Target entries remain direct `0x52xx`/`0x62xx` translations. Existing maps remain untouched.
 
 The remaining Kanto Cave mining work is now the earlier source quadrants that were skipped before the sequential `0x1B`-`0x7F` pass; those can be audited and appended next.
+
+
+## Kanto Cave mining surface completion
+
+`gTileset_PrismKantoCave` now contains **all 242 Prism mining quadrants** as placeable `MB_PRISM_MINING` metatiles. IDs 0-197 are preserved exactly; IDs 198-241 append the final 44 earlier source quadrants that were skipped during the sequential expansion passes.
+
+The final 44 are uniform source attribute `0x05` or `0x06`, with no X/Y flips, alternate VRAM bank, or priority flags. The complete target files are 3,872 bytes of metatile data and 484 bytes of metatile attributes.
+
+Kanto Cave mining terrain conversion is now complete. Existing maps remain untouched; map placement and mining gameplay integration stay isolated for later steps.
