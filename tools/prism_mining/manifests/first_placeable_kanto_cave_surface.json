@@ -1,0 +1,69 @@
+{
+  "name": "prism_kanto_cave_first_placeable_mining_surface",
+  "source": {
+    "game": "Pokemon Prism",
+    "version": "0.95.0254",
+    "tileset_id": 27,
+    "tileset_constant": "TILESET_CAVE_KANTO",
+    "tilesheet": "gfx/tilesets/27.png",
+    "source_block": "0x02",
+    "source_quadrant": "TL",
+    "source_tile_ids": [
+      "0x04",
+      "0x29",
+      "0x31",
+      "0x05"
+    ],
+    "source_attributes": [
+      "0x05",
+      "0x05",
+      "0x05",
+      "0x05"
+    ],
+    "source_palette_id": 5,
+    "source_flags": {
+      "vram_bank": 0,
+      "x_flip": false,
+      "y_flip": false,
+      "priority": false
+    },
+    "source_collision": {
+      "block": "0x02",
+      "quadrants": {
+        "TL": "MINING",
+        "TR": "MINING",
+        "BL": "MINING",
+        "BR": "MINING"
+      }
+    },
+    "map_palette_context": "PALETTE_NITE"
+  },
+  "target": {
+    "tileset_symbol": "gTileset_PrismKantoCave",
+    "kind": "secondary",
+    "tiles": "data/tilesets/secondary/prism_kanto_cave/tiles.png",
+    "tiles_source_imported_byte_for_byte": true,
+    "tile_count": 80,
+    "metatile_id": 0,
+    "metatile_entries_hex": [
+      "0x5204",
+      "0x5229",
+      "0x5231",
+      "0x5205",
+      "0x0000",
+      "0x0000",
+      "0x0000",
+      "0x0000"
+    ],
+    "behavior": "MB_PRISM_MINING",
+    "behavior_value": 240,
+    "layer_type": "METATILE_LAYER_TYPE_NORMAL",
+    "palette_bridge": "gTilesetPalettes_PrismMoundCave",
+    "palette_bridge_reason": "Both source contexts use Prism's Night dungeon palette row; a dedicated Kanto Cave palette copy is deferred to the next isolated step."
+  },
+  "isolation": {
+    "existing_maps_modified": false,
+    "activation": "A map must explicitly select gTileset_PrismKantoCave and place metatile 0."
+  },
+  "follow_up": "Create dedicated authentic Prism Night palettes for Kanto Cave, then expand additional mining surfaces."
+}

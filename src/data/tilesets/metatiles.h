@@ -416,3 +416,8 @@ const u16 gMetatileAttributes_PrismMoundCave[] = INCBIN_U16("data/tilesets/secon
 // First authentic Firelight Caverns 16x16 mining surface; more source quadrants can be added incrementally.
 const u16 gMetatiles_PrismFirelightCaverns[] = INCBIN_U16("data/tilesets/secondary/prism_firelight_caverns/metatiles.bin");
 const u16 gMetatileAttributes_PrismFirelightCaverns[] = INCBIN_U16("data/tilesets/secondary/prism_firelight_caverns/metatile_attributes.bin");
+
+
+// First authentic Prism Kanto Cave 16x16 mining surface.
+const u16 gMetatiles_PrismKantoCave[] = INCBIN_U16("data/tilesets/secondary/prism_kanto_cave/metatiles.bin");
+const u16 gMetatileAttributes_PrismKantoCave[] = INCBIN_U16("data/tilesets/secondary/prism_kanto_cave/metatile_attributes.bin");

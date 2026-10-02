@@ -63,5 +63,6 @@ extern const struct Tileset gTileset_TrainerTower;
 
 extern const struct Tileset gTileset_PrismMoundCave;
 extern const struct Tileset gTileset_PrismFirelightCaverns;
+extern const struct Tileset gTileset_PrismKantoCave;
 
 #endif //GUARD_tilesets_H

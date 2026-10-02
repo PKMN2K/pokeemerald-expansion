@@ -1563,3 +1563,15 @@ const struct Tileset gTileset_PrismFirelightCaverns =
     .metatileAttributes = gMetatileAttributes_PrismFirelightCaverns,
     .callback = NULL,
 };
+
+
+const struct Tileset gTileset_PrismKantoCave =
+{
+    .isCompressed = TRUE,
+    .isSecondary = TRUE,
+    .tiles = gTilesetTiles_PrismKantoCave,
+    .palettes = gTilesetPalettes_PrismMoundCave,
+    .metatiles = gMetatiles_PrismKantoCave,
+    .metatileAttributes = gMetatileAttributes_PrismKantoCave,
+    .callback = NULL,
+};

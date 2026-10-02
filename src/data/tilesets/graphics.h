@@ -3084,3 +3084,7 @@ const u16 gTilesetPalettes_PrismFirelightCaverns[][16] =
     INCGFX_U16("data/tilesets/secondary/prism_firelight_caverns/palettes/14.pal", ".gbapal"),
     INCGFX_U16("data/tilesets/secondary/prism_firelight_caverns/palettes/15.pal", ".gbapal"),
 };
+
+
+// Pokémon Prism v0.95.0254 Kanto Cave source tiles used by the mining subsystem.
+const u32 gTilesetTiles_PrismKantoCave[] = INCGFX_U32("data/tilesets/secondary/prism_kanto_cave/tiles.png", ".4bpp.fastSmol", "-num_tiles 80 -Wnum_tiles");
