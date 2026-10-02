@@ -120,3 +120,14 @@ The next staged Prism mining terrain group is `TILESET_CAVE_KANTO` (`0x1B` / dec
 Its collision table contains **101 mineable metatiles** covering **242 mineable 16x16 quadrants**, including **25 fully mineable metatiles**. Prism uses this terrain in Kanto cave locations including Silk Tunnel, Mt. Boulder, and Eagulou Gym F1.
 
 This step is asset-and-manifest staging only. Kanto Cave is not yet wired as a live Expansion tileset, and no mining rewards, EXP, durability, player graphics, or unrelated Prism systems are imported.
+
+
+## First live Kanto Cave mining surface
+
+`gTileset_PrismKantoCave` is live with one placeable `MB_PRISM_MINING` surface from Prism block `0x02`, top-left quadrant. Its source tiles are `0x04, 0x29, 0x31, 0x05`, all using source palette attribute `0x05` with no flip or bank flags.
+
+## Dedicated Kanto Cave Night palettes
+
+`gTileset_PrismKantoCave` now uses its own `gTilesetPalettes_PrismKantoCave` table. The 16 palette files are exact blob-for-blob copies of the already verified Prism Night dungeon palette translation used by Mound Cave, because Kanto Cave source maps use the same `PALETTE_NITE` / `$10-$17` dungeon palette context.
+
+This removes the temporary shared-symbol bridge without changing any colors. Palette banks 0-7 contain the authentic Prism Night palettes and 8-15 remain the same zero-filled unused banks.

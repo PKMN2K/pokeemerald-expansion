@@ -27,7 +27,11 @@
   "target": {
     "image": "graphics/prism_mining/kanto_cave_tileset27.png",
     "imported_byte_for_byte": true,
-    "live_wiring": "not yet; staged as the next authentic Prism mining terrain group"
+    "live_wiring": "live as gTileset_PrismKantoCave with first placeable mining surface from source block 0x02 TL",
+    "tiles": "data/tilesets/secondary/prism_kanto_cave/tiles.png",
+    "metatile_count": 1,
+    "palette_symbol": "gTilesetPalettes_PrismKantoCave",
+    "palette_context": "authentic Prism Night dungeon palettes ($10-$17), copied byte-for-byte from the already verified Mound Cave translation"
   },
   "mining_behavior": {
     "trigger": "MINING collision on eligible 16x16 metatile quadrants",
@@ -792,5 +796,5 @@
     "resample": false,
     "repaint": false
   },
-  "follow_up": "Create the first placeable Kanto Cave mineable surface in the Expansion secondary-tileset format."
+  "follow_up": "Expand additional Kanto Cave MINING quadrants using source metatile and attribute data."
 }

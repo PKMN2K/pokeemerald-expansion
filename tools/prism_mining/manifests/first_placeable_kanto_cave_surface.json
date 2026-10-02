@@ -58,12 +58,13 @@
     "behavior": "MB_PRISM_MINING",
     "behavior_value": 240,
     "layer_type": "METATILE_LAYER_TYPE_NORMAL",
-    "palette_bridge": "gTilesetPalettes_PrismMoundCave",
-    "palette_bridge_reason": "Both source contexts use Prism's Night dungeon palette row; a dedicated Kanto Cave palette copy is deferred to the next isolated step."
+    "palette_bridge": null,
+    "palette_symbol": "gTilesetPalettes_PrismKantoCave",
+    "palette_source": "dedicated copy of authentic Prism Night dungeon palettes"
   },
   "isolation": {
     "existing_maps_modified": false,
     "activation": "A map must explicitly select gTileset_PrismKantoCave and place metatile 0."
   },
-  "follow_up": "Create dedicated authentic Prism Night palettes for Kanto Cave, then expand additional mining surfaces."
+  "follow_up": "Expand additional Kanto Cave mining surfaces from the verified source metatile and attribute data."
 }
