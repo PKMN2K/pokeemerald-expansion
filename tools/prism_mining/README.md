@@ -173,3 +173,12 @@ All appended quadrants are uniform source attribute `0x05` or `0x06`, with no X/
 `gTileset_PrismKantoCave` now contains **167 placeable mining metatiles**. IDs 0-131 are preserved exactly; IDs 132-166 append 35 verified `MINING` quadrants from source blocks `0x59` through `0x6F` where listed by Prism's collision data.
 
 All appended quadrants are uniform source attribute `0x05` or `0x06`, with no X/Y flips, alternate VRAM bank, or priority flags. Target entries remain direct `0x52xx`/`0x62xx` translations. Existing maps remain untouched.
+
+
+## Kanto Cave mining surface batch 7
+
+`gTileset_PrismKantoCave` now contains **198 placeable mining metatiles**. IDs 0-166 are preserved exactly; IDs 167-197 append all 31 verified `MINING` quadrants from source blocks `0x70` through `0x7F` where listed by Prism's collision data.
+
+All appended quadrants are uniform source attribute `0x05` or `0x06`, with no X/Y flips, alternate VRAM bank, or priority flags. Target entries remain direct `0x52xx`/`0x62xx` translations. Existing maps remain untouched.
+
+The remaining Kanto Cave mining work is now the earlier source quadrants that were skipped before the sequential `0x1B`-`0x7F` pass; those can be audited and appended next.
