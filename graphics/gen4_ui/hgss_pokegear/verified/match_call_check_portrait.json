@@ -1,6 +1,6 @@
 {
   "role": "match_call_check_page_portrait_chrome",
-  "phase": "wired_live_repair_ci_pending",
+  "phase": "legacy_removed_ci_pending",
   "classification": "functional reuse from authentic HGSS Trainer Card front chrome; no direct retail PokéGear Phone CHECK/profile page exists",
   "source_revision": "9d8b7591f09b65804da2fb2dfd56f320633e0d36",
   "previous_gate": {
@@ -100,23 +100,17 @@
       "byte_identity_to_narc_member": true
     }
   ],
-  "current_live_legacy": {
-    "renderer": "DrawPokeGearPhonePortraitPanel",
-    "live_file": "src/pokenav_match_call_gfx.c",
-    "trainer_sprite_behavior": "existing 64x64 Match Call trainer portrait remains unchanged in phase 1"
-  },
   "pipeline": {
     "authentic_hgss_source_ready": true,
     "wired_live": true,
-    "legacy_equivalent_removed": false
+    "legacy_equivalent_removed": true
   },
   "constraints": [
     "Do not describe this as a direct HGSS Phone equivalent.",
     "Phase 2 must isolate the exact Trainer Card portrait-bay region from the verified retail members before wiring.",
-    "No scaling, redrawing, recoloring, or invented HGSS-style chrome is allowed.",
-    "Keep DrawPokeGearPhonePortraitPanel only as a CI-gated rollback until the authentic reuse is validated."
+    "No scaling, redrawing, recoloring, or invented HGSS-style chrome is allowed."
   ],
-  "next": "Run repaired Phase-2 CI. If it passes, remove DrawPokeGearPhonePortraitPanel and sUseLegacyCheckPortraitForRollback in Phase 3.",
+  "next": "Validate Phase-3 cleanup in CI. After that, the Match Call CHECK-page portrait-chrome sequence is complete.",
   "phase2_source_members": [
     {
       "index": 0,
@@ -194,7 +188,8 @@
     "existing_trainer_sprite": "unchanged dynamic 64x64 Match Call trainer picture for the currently selected contact, centered at x=44",
     "check_palette_bank": 10,
     "list_restore_palette_bank": 6,
-    "rollback": "DrawPokeGearPhonePortraitPanel retained behind sUseLegacyCheckPortraitForRollback"
+    "rollback": null,
+    "sole_renderer": "DrawHgssTrainerCardPortraitPanel"
   },
   "failed_gate": {
     "workflow": "CI",
@@ -207,5 +202,17 @@
     "graphics/gen4_ui/hgss_pokegear/verified/trainer_card_avatar_tiles.NCGR",
     "graphics/gen4_ui/hgss_pokegear/verified/trainer_card_avatar_ethan.NSCR",
     "graphics/gen4_ui/hgss_pokegear/verified/trainer_card_avatar_lyra.NSCR"
-  ]
+  ],
+  "phase2_gate": {
+    "workflow": "CI",
+    "run_number": 741,
+    "conclusion": "success",
+    "validated_commit": "b716474ae4191b7d7c94ad1576c2c139b650bf59"
+  },
+  "legacy_cleanup": {
+    "removed_renderer": "DrawPokeGearPhonePortraitPanel",
+    "removed_switch": "sUseLegacyCheckPortraitForRollback",
+    "preserved_dynamic_trainer_sprite": true,
+    "note": "Only the synthetic CHECK-page chrome was removed; selected trainer portrait behavior is unchanged."
+  }
 }

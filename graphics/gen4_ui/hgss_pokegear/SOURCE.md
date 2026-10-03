@@ -1341,3 +1341,29 @@ this pipeline. The 88x64 chrome crop and its exact ten source palette indices
 are unchanged, as is the dynamic 64x64 Match Call trainer sprite.
 
 **authentic HGSS chrome source ✅ → dynamic trainer portrait preserved ✅ → repaired Phase 2 CI pending**
+
+
+## Match Call trainer CHECK-page portrait chrome — phase 3
+
+CI #741 passed the repaired live Phase-2 wiring at
+`b716474ae4191b7d7c94ad1576c2c139b650bf59`, including the Gen-4 UI asset
+build, Emerald/FireRed/LeafGreen builds, release build, and General Test.
+
+The CI-only rollback path is now removed. The procedural
+`DrawPokeGearPhonePortraitPanel` renderer and
+`sUseLegacyCheckPortraitForRollback` switch are deleted, leaving
+`DrawHgssTrainerCardPortraitPanel` as the sole CHECK-page chrome renderer.
+
+This does not alter the selected trainer portrait. Match Call still supplies
+the existing dynamic 64x64 trainer sprite for the currently selected contact;
+only the old invented frame around that sprite has been removed.
+
+The live background remains the lossless 88x64 crop from authentic HGSS
+Trainer Card front resources (NARC 0x31 members 0, 0x29 and 0x2f), with exact
+BGR555 source colors remapped into GBA 4bpp palette slots. This remains
+explicit functional reuse because retail HGSS PokéGear Phone has no
+CHECK/profile page.
+
+This completes the CHECK-page portrait-chrome sequence:
+
+**authentic HGSS source ✅ → wired live and validated ✅ → legacy equivalent removed ✅**

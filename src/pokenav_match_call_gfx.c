@@ -59,7 +59,6 @@ static void FreeMatchCallSprites(void);
 static void LoadCallWindowAndFade(struct Pokenav_MatchCallGfx *);
 static void DrawHgssPhoneCallSurface(struct Pokenav_MatchCallGfx *);
 static void DrawHgssTrainerCardPortraitPanel(u16);
-static void DrawPokeGearPhonePortraitPanel(u16);
 static void DrawMatchCallLeftColumnWindows(struct Pokenav_MatchCallGfx *);
 static void UpdateMatchCallInfoBox(struct Pokenav_MatchCallGfx *);
 static void PrintMatchCallLocation(struct Pokenav_MatchCallGfx *, int);
@@ -258,10 +257,6 @@ static const struct WindowTemplate sHgssCallMsgBoxWindowTemplate =
     .paletteNum = 1,
     .baseBlock = 10
 };
-
-// Phase-2 CI rollback only. Phase 3 removes this after the authentic
-// Trainer Card functional reuse has passed the full build/test gate.
-static bool8 sUseLegacyCheckPortraitForRollback = FALSE;
 
 static const struct OamData sTrainerPicOamData =
 {
@@ -1187,12 +1182,6 @@ static bool32 IsDma3ManagerBusyWithBgCopy1(struct Pokenav_MatchCallGfx *gfx)
 
 static void DrawHgssTrainerCardPortraitPanel(u16 windowId)
 {
-    if (sUseLegacyCheckPortraitForRollback)
-    {
-        DrawPokeGearPhonePortraitPanel(windowId);
-        return;
-    }
-
     // Functional reuse of the authentic HGSS Trainer Card front, not a
     // retail PokéGear Phone CHECK page. The generator crops source tiles
     // x=20..30, y=6..13 at 1:1 pixels and remaps only palette indices.
@@ -1201,26 +1190,6 @@ static void DrawHgssTrainerCardPortraitPanel(u16 windowId)
     FillWindowPixelBuffer(windowId, PIXEL_FILL(0));
     BlitBitmapToWindow(windowId, (const u8 *)sHgssCheckPortrait_Gfx, 0, 0, 88, 64);
     PutWindowTilemap(windowId);
-}
-
-static void DrawPokeGearPhonePortraitPanel(u16 windowId)
-{
-    u8 width = GetWindowAttribute(windowId, WINDOW_WIDTH) * 8;
-    u8 height = GetWindowAttribute(windowId, WINDOW_HEIGHT) * 8;
-
-    FillWindowPixelBuffer(windowId, PIXEL_FILL(1));
-
-    if (width < 24 || height < 24)
-        return;
-
-    // Contact portrait bay around the existing 64x64 trainer sprite.
-    FillWindowPixelRect(windowId, PIXEL_FILL(5), 2, 0, width - 4, 1);
-    FillWindowPixelRect(windowId, PIXEL_FILL(5), 0, 2, 1, height - 4);
-    FillWindowPixelRect(windowId, PIXEL_FILL(4), 2, height - 1, width - 4, 1);
-    FillWindowPixelRect(windowId, PIXEL_FILL(4), width - 1, 2, 1, height - 4);
-    FillWindowPixelRect(windowId, PIXEL_FILL(5), 8, 4, 1, height - 8);
-    FillWindowPixelRect(windowId, PIXEL_FILL(4), width - 9, 4, 1, height - 8);
-    FillWindowPixelRect(windowId, PIXEL_FILL(4), width - 7, 4, 3, 3);
 }
 
 static void UpdateWindowsToShowCheckPage(struct Pokenav_MatchCallGfx *gfx)
