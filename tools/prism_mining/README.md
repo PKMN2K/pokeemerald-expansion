@@ -378,3 +378,10 @@ Do not treat CAVE2-CAVE7 as incomplete migration work unless this decision is ex
 The imported `MB_PRISM_MINING` behavior is now connected to the normal A-button metatile interaction path. Interacting with any live Prism mining surface calls `EventScript_PrismMining` and displays a neutral mining-surface message.
 
 This integration step deliberately adds **no** Prism mining EXP, rewards, pickaxe/item requirements, random encounters, or tile mutation. It establishes a safe engine-level interaction hook that later mining mechanics can replace or extend without changing the imported art.
+
+
+## Intentionally skipped Prism sidescroll tileset
+
+Prism `TILESET_SIDESCROLL` (source ID `0x20`) is intentionally **not** being imported into the polished-crystal-port mining asset set.
+
+Do not treat the sidescroll tileset as incomplete migration work unless this decision is explicitly revisited later.
