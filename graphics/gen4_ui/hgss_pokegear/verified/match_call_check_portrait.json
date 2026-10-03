@@ -1,0 +1,120 @@
+{
+  "role": "match_call_check_page_portrait_chrome",
+  "phase": "authentic_source_prepared",
+  "classification": "functional reuse candidate from authentic HGSS Trainer Card; no direct retail PokéGear Phone CHECK/profile page exists",
+  "source_revision": "9d8b7591f09b65804da2fb2dfd56f320633e0d36",
+  "previous_gate": {
+    "workflow": "CI",
+    "run_number": 733,
+    "conclusion": "success",
+    "validated_commit": "0f7eb3f6dc5c8a2d8073128db61c529c2d69ded8"
+  },
+  "source_container": {
+    "path": "files/a/0/4/9",
+    "git_blob_sha": "42b98d38c6f095a769b193fd76421910f019620d",
+    "narc_id": "0x31",
+    "member_count": 78
+  },
+  "source_code": [
+    {
+      "path": "asm/overlay_trainer_card_main.s",
+      "git_blob_sha": "c5bd26ce54e49bcfb30a14fda7233ff260c7e2cb",
+      "evidence": [
+        "ov51_021E6354 loads NARC 0x31 member 0x1c as the MAIN BG palette",
+        "ov51_021E6354 loads member 0x2b character graphics to BG layer 2",
+        "ov51_021E6354 loads screen member 0x33 or 0x34 to BG layer 2",
+        "ov51_021E6354 reads member 0x35 as an auxiliary screen patch used on the same card layer"
+      ]
+    },
+    {
+      "path": "include/overlay_trainer_card.h",
+      "git_blob_sha": "be0b07f2bd28aedd53e14ae7863222b30810b972",
+      "evidence": [
+        "identifies the retail Trainer Card application and state used by overlay_trainer_card_main"
+      ]
+    }
+  ],
+  "verified_members": [
+    {
+      "index": 28,
+      "index_hex": "0x1c",
+      "size": 552,
+      "magic": "RLCN",
+      "palette_bytes": 512,
+      "colors": 256,
+      "path": "graphics/gen4_ui/hgss_pokegear/verified/trainer_card_main_palette.NCLR",
+      "role": "MAIN BG palette loaded by ov51_021E6354",
+      "git_blob_sha": "36c59142cf2235c3424c23d192e860d53081e2dc",
+      "byte_identity_to_narc_member": true
+    },
+    {
+      "index": 43,
+      "index_hex": "0x2b",
+      "size": 32832,
+      "magic": "RGCN",
+      "width_field": 32,
+      "height_field": 32,
+      "bitdepth_field": 3,
+      "path": "graphics/gen4_ui/hgss_pokegear/verified/trainer_card_main_tiles.NCGR",
+      "role": "MAIN_2 character graphics loaded by ov51_021E6354",
+      "git_blob_sha": "0dd93fa3431cb58ae3e0f1c470aed756d0bd832a",
+      "byte_identity_to_narc_member": true
+    },
+    {
+      "index": 51,
+      "index_hex": "0x33",
+      "size": 1572,
+      "magic": "RCSN",
+      "width": 256,
+      "height": 192,
+      "tilemap_bytes": 1536,
+      "path": "graphics/gen4_ui/hgss_pokegear/verified/trainer_card_main_screen_33.NSCR",
+      "role": "MAIN_2 256x192 screen variant loaded by ov51_021E6354",
+      "git_blob_sha": "f66237ebc3678b32b3f1e392ae1887e7a7af8adb",
+      "byte_identity_to_narc_member": true
+    },
+    {
+      "index": 52,
+      "index_hex": "0x34",
+      "size": 1572,
+      "magic": "RCSN",
+      "width": 256,
+      "height": 192,
+      "tilemap_bytes": 1536,
+      "path": "graphics/gen4_ui/hgss_pokegear/verified/trainer_card_main_screen_34.NSCR",
+      "role": "MAIN_2 256x192 screen variant loaded by ov51_021E6354",
+      "git_blob_sha": "0a97f899e1e7eb97b3ec46baf782207eb546dae2",
+      "byte_identity_to_narc_member": true
+    },
+    {
+      "index": 53,
+      "index_hex": "0x35",
+      "size": 400,
+      "magic": "RCSN",
+      "width": 112,
+      "height": 104,
+      "tilemap_bytes": 364,
+      "path": "graphics/gen4_ui/hgss_pokegear/verified/trainer_card_main_patch.NSCR",
+      "role": "112x104 MAIN_2 patch source used by ov51_021E6354",
+      "git_blob_sha": "5ca5ae7631d796444588ed8b26cd5c16befdf2d7",
+      "byte_identity_to_narc_member": true
+    }
+  ],
+  "current_live_legacy": {
+    "renderer": "DrawPokeGearPhonePortraitPanel",
+    "live_file": "src/pokenav_match_call_gfx.c",
+    "trainer_sprite_behavior": "existing 64x64 Match Call trainer portrait remains unchanged in phase 1"
+  },
+  "pipeline": {
+    "authentic_hgss_source_ready": true,
+    "wired_live": false,
+    "legacy_equivalent_removed": false
+  },
+  "constraints": [
+    "Do not describe this as a direct HGSS Phone equivalent.",
+    "Phase 2 must isolate the exact Trainer Card portrait-bay region from the verified retail members before wiring.",
+    "No scaling, redrawing, recoloring, or invented HGSS-style chrome is allowed.",
+    "Keep DrawPokeGearPhonePortraitPanel only as a CI-gated rollback until the authentic reuse is validated."
+  ],
+  "next": "Phase 2: identify the exact retail Trainer Card portrait-bay tile region and palette usage, create a lossless GBA adaptation for the 88x64 CHECK info area, and wire it live while retaining the current procedural panel as rollback."
+}

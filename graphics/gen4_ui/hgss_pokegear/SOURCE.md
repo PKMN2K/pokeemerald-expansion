@@ -1230,3 +1230,42 @@ palette entries are altered by this cleanup.
 This completes the call-message sequence:
 
 **authentic HGSS asset ✅ → wired live and validated ✅ → legacy equivalent removed ✅**
+
+
+## Match Call trainer CHECK-page portrait chrome — phase 1
+
+CI #733 passed the completed call-message cleanup at
+`0f7eb3f6dc5c8a2d8073128db61c529c2d69ded8`.
+
+The remaining `DrawPokeGearPhonePortraitPanel` is a procedural frame around
+the existing 64x64 Match Call trainer sprite. Retail HGSS PokéGear Phone does
+not have Emerald's CHECK/profile page, so there is no honest direct Phone
+equivalent to substitute here.
+
+The authentic analogue selected for audit is the retail HGSS **Trainer Card**,
+which presents a trainer portrait inside its own card chrome. This is
+explicitly a functional reuse candidate, not a claim that HGSS Phone had a
+CHECK page.
+
+At locked `pret/pokeheartgold` revision
+`9d8b7591f09b65804da2fb2dfd56f320633e0d36`, Trainer Card graphics come from NARC 0x31,
+`files/a/0/4/9` (Git blob `42b98d38c6f095a769b193fd76421910f019620d`).
+`ov51_021E6354` in `asm/overlay_trainer_card_main.s` loads the relevant
+MAIN-card layer from:
+
+- member 0x1c: 256-color MAIN BG palette,
+- member 0x2b: MAIN_2 character graphics,
+- members 0x33 / 0x34: the two 256x192 MAIN_2 screen variants,
+- member 0x35: the 112x104 auxiliary screen patch used on that card layer.
+
+Those five member payloads are now extracted byte-for-byte into
+`graphics/gen4_ui/hgss_pokegear/verified/`; their exact extracted Git blob
+identities and NARC member indices are recorded in
+`verified/match_call_check_portrait.json`.
+
+Nothing is cropped, adapted, or wired in this phase. The existing trainer
+sprite behavior and `DrawPokeGearPhonePortraitPanel` remain live. Phase 2
+must first isolate the exact retail Trainer Card portrait-bay region and its
+palette usage before a lossless GBA adaptation is allowed.
+
+**authentic HGSS source prepared → wire live pending → legacy removal pending**
