@@ -1367,3 +1367,41 @@ CHECK/profile page.
 This completes the CHECK-page portrait-chrome sequence:
 
 **authentic HGSS source ✅ → wired live and validated ✅ → legacy equivalent removed ✅**
+
+
+## Shared PokéNav help bar / PokéGear tooltip — phase 1
+
+CI #742 passed the completed Match Call CHECK-page cleanup at
+`c74286aa8a90d993d9fb004380b3f4ad9ed657ef`.
+
+The next live non-authentic surface is the shared bottom help bar in
+`src/pokenav_main_menu.c`. Its current `DrawHelpBar` routine constructs a
+beveled strip procedurally and even labels that construction “HGSS
+PokéGear-style.” It is therefore not acceptable as final authentic HGSS UI.
+
+Retail HGSS has a direct functional counterpart. At the locked
+`pret/pokeheartgold` revision
+`9d8b7591f09b65804da2fb2dfd56f320633e0d36`,
+`PokegearPhone_PrintContextMenuTooltip` in
+`src/application/pokegear/phone/overlay_101_021F0880.c` copies a 32x4-tile
+bottom tooltip strip from Phone screen data source rows 24..27 to MAIN_1
+rows 20..23. It then fills the centered two-row text window with pixel index
+5 and prints the tooltip using retail text colors 3/2/5.
+
+The underlying assets are the same already-verified retail Phone resources
+used by the Match Call contact surface: skin-0 member 28 NCGR, member 34
+NSCR, and member 10 NCLR. The tooltip source rectangle is especially simple
+and exact: all 128 NSCR entries are `0x1040`, meaning tile 64, palette bank
+1, with no flips.
+
+Phase 1 adds `make_hgss_pokegear_help_bar.py`, which verifies that retail
+binding and emits the exact tile-64 4bpp pixels plus the exact member-10
+palette bank 1. No source pixel or BGR555 color is changed.
+
+The live help bar is intentionally unchanged in this phase. Phase 2 will
+bottom-anchor the authentic four-tile-high HGSS tooltip strip in the 240x160
+GBA viewport, place the functional help text in its retail-relative middle
+two rows, and keep the current procedural renderer only as a CI rollback
+until the live integration is validated.
+
+**authentic HGSS asset prepared → wire live pending → legacy removal pending**

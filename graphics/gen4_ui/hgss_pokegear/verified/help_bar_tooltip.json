@@ -1,0 +1,120 @@
+{
+  "role": "shared_pokenav_help_bar",
+  "phase": "authentic_source_prepared_ci_pending",
+  "classification": "direct functional counterpart from authentic HGSS PokéGear Phone context-menu tooltip strip",
+  "source_game": "Pokemon HeartGold / SoulSilver",
+  "source_repository": "pret/pokeheartgold",
+  "source_revision": "9d8b7591f09b65804da2fb2dfd56f320633e0d36",
+  "previous_gate": {
+    "workflow": "CI",
+    "run_number": 742,
+    "conclusion": "success",
+    "validated_commit": "c74286aa8a90d993d9fb004380b3f4ad9ed657ef"
+  },
+  "retail_binding": {
+    "draw_source": {
+      "path": "src/application/pokegear/phone/overlay_101_021F0880.c",
+      "git_blob_sha": "fd6c631e36af4b743764e39e62cf74d82d56409e",
+      "function": "PokegearPhone_PrintContextMenuTooltip",
+      "behavior": [
+        "copies a 32x4 tile rectangle from phoneApp->screenData source x=0, y=24 to MAIN_1 destination x=0, y=20",
+        "fills phoneApp->windows[3] with pixel index 5",
+        "centers tooltip text horizontally",
+        "prints with MAKE_TEXT_COLOR(3, 2, 5)"
+      ]
+    },
+    "resource_source": {
+      "path": "src/application/pokegear/phone/overlay_101_021F017C.c",
+      "git_blob_sha": "320be2869ebb277fe85bac6021bf01b50bfc8f7a",
+      "behavior": [
+        "loads skin-0 member 28 NCGR into the shared MAIN BG character base",
+        "loads skin-0 member 34 NSCR into phoneApp->screenData",
+        "loads skin-0 member 10 NCLR into the MAIN BG palette"
+      ]
+    },
+    "window_template": {
+      "bg": "GF_BG_LYR_MAIN_1",
+      "left": 0,
+      "top": 21,
+      "width": 32,
+      "height": 2,
+      "palette": 10,
+      "baseTile": "0x3BF"
+    }
+  },
+  "verified_existing_assets": [
+    {
+      "path": "graphics/gen4_ui/hgss_pokegear/verified/pgphone_skin0_contact_tiles.png",
+      "retail_member": 28,
+      "git_blob_sha": "24857c0254b5f892620da1241b665f81c83d7899",
+      "reused_for": "retail tooltip tile 64"
+    },
+    {
+      "path": "graphics/gen4_ui/hgss_pokegear/verified/pgphone_skin0_contact_tilemap.NSCR",
+      "retail_member": 34,
+      "git_blob_sha": "ba15280bdce293fb3056cf5075b002f545e86790",
+      "reused_for": "retail tooltip source rows 24..27"
+    },
+    {
+      "path": "graphics/gen4_ui/hgss_pokegear/verified/pgphone_skin0_contact_palette.NCLR",
+      "retail_member": 10,
+      "git_blob_sha": "85b29945c3b9e8250b119922d64111ded55b1563",
+      "reused_for": "retail tooltip palette bank 1"
+    }
+  ],
+  "verified_geometry": {
+    "source_screen": [
+      256,
+      296
+    ],
+    "source_rect_tiles": {
+      "x": 0,
+      "y": 24,
+      "width": 32,
+      "height": 4
+    },
+    "source_rect_entries": "all 0x1040 (tile 64, palette bank 1, no H/V flip)",
+    "text_window_tiles": {
+      "x": 0,
+      "y": 21,
+      "width": 32,
+      "height": 2
+    },
+    "text_fill_index": 5,
+    "text_colors": [
+      3,
+      2,
+      5
+    ]
+  },
+  "prepared_outputs": [
+    "graphics/gen4_ui/hgss_pokegear/help_bar_tooltip.4bpp",
+    "graphics/gen4_ui/hgss_pokegear/help_bar_tooltip.gbapal"
+  ],
+  "generator": "tools/gen4_ui/make_hgss_pokegear_help_bar.py",
+  "current_live_legacy": {
+    "file": "src/pokenav_main_menu.c",
+    "renderer": "DrawHelpBar",
+    "behavior": "procedural beveled strip described in code as HGSS PokéGear-style",
+    "status": "left unchanged in phase 1"
+  },
+  "phase2_plan": [
+    "anchor the authentic four-tile-high tooltip strip to the bottom of the 240x160 GBA viewport",
+    "repeat the exact retail tile 64 across the 30-tile GBA width without scaling or redrawing",
+    "use the exact retail palette-bank-1 BGR555 values",
+    "place the functional help text in the retail-relative middle two tile rows and preserve the existing help-string semantics",
+    "retain the procedural DrawHelpBar path only as a CI-gated rollback until the authentic strip passes"
+  ],
+  "constraints": [
+    "Do not call the current procedural bevel authentic HGSS.",
+    "Do not redraw, resample, or recolor the retail tooltip tile.",
+    "Do not alter the live help bar in phase 1.",
+    "Choose the live GBA palette bank only after checking conflicts in phase 2."
+  ],
+  "pipeline": {
+    "authentic_hgss_asset_ready": true,
+    "wired_live": false,
+    "legacy_equivalent_removed": false
+  },
+  "next": "After phase-1 CI passes, wire the authentic HGSS Phone tooltip strip into the shared help-bar path while retaining the old DrawHelpBar only as rollback."
+}

@@ -38,6 +38,7 @@ GEN4UIHGSSPOKEGEARCALL := tools/gen4_ui/make_hgss_pokegear_match_call_call.py
 GEN4UIHGSSPOKEGEARCONTACTROWS := tools/gen4_ui/make_hgss_pokegear_contact_rows.py
 GEN4UIHGSSPOKEGEARACTIONMENU := tools/gen4_ui/make_hgss_pokegear_action_menu.py
 GEN4UIHGSSTRAINERCARDCHECK := tools/gen4_ui/make_hgss_trainer_card_check_portrait.py
+GEN4UIHGSSPOKEGEARHELPBAR := tools/gen4_ui/make_hgss_pokegear_help_bar.py
 
 types := none normal fight flying poison ground rock bug ghost steel mystery fire water grass electric psychic ice dragon dark fairy stellar
 contest_types := cool beauty cute smart tough
@@ -202,6 +203,16 @@ $(GEN4UIGFXDIR)/hgss_pokegear/match_call_check_portrait.gbapal: $(GEN4UIHGSSTRAI
 	$(GEN4UIGFXDIR)/hgss_pokegear/verified/trainer_card_sub_palette.NCLR \
 	$(GEN4UIGFXDIR)/hgss_pokegear/verified/trainer_card_front_tiles.NCGR \
 	$(GEN4UIGFXDIR)/hgss_pokegear/verified/trainer_card_front_screen.NSCR
+	python3 $< --palette $@
+
+$(GEN4UIGFXDIR)/hgss_pokegear/help_bar_tooltip.4bpp: $(GEN4UIHGSSPOKEGEARHELPBAR) $(GEN4UIHGSSPOKEGEARCONTACT) \
+	$(GEN4UIGFXDIR)/hgss_pokegear/verified/pgphone_skin0_contact_tiles.png \
+	$(GEN4UIGFXDIR)/hgss_pokegear/verified/pgphone_skin0_contact_tilemap.NSCR
+	python3 $< --tiles $@
+
+$(GEN4UIGFXDIR)/hgss_pokegear/help_bar_tooltip.gbapal: $(GEN4UIHGSSPOKEGEARHELPBAR) $(GEN4UIHGSSPOKEGEARCONTACT) \
+	$(GEN4UIGFXDIR)/hgss_pokegear/verified/pgphone_skin0_contact_palette.NCLR \
+	$(GEN4UIGFXDIR)/hgss_pokegear/verified/pgphone_skin0_contact_tilemap.NSCR
 	python3 $< --palette $@
 
 # The live HGSS Pokédex background reserves BG palette entries 128..140.
