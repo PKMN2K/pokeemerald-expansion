@@ -346,3 +346,12 @@ Target IDs `65-80` append the next sixteen source-order Prism Mound Cave mining 
 The preserved Prism `0x1D` TL surface remains target ID `0`; existing maps remain untouched.
 
 The next source-order surface is Prism block `0x36` BR.
+
+
+## Mound Cave mining surfaces batch 6
+
+Target IDs `81-96` append the next sixteen source-order Prism Mound Cave mining quadrants, from `0x36` BR through `0x52` BR. This raises live coverage to **97 / 104** source `MINING` quadrants.
+
+The preserved Prism `0x1D` TL surface remains target ID `0`; existing maps remain untouched.
+
+Seven Mound Cave mining quadrants remain, beginning at Prism block `0x53` BL and ending at `0x57` BR.

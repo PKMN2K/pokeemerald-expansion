@@ -29,10 +29,10 @@
     "live_wiring": true,
     "tileset_symbol": "gTileset_PrismMoundCave",
     "palette_symbol": "gTilesetPalettes_PrismMoundCave",
-    "status": "live_batch_5",
-    "live_metatile_count": 81,
-    "coverage": "81 / 104 source MINING quadrants represented; target ID 0 preserves source 0x1D TL, and IDs 1-80 cover source-order mining quadrants through 0x36 TR with the preserved source duplicate omitted.",
-    "latest_batch_manifest": "tools/prism_mining/manifests/mound_cave_mining_surface_batch_5.json"
+    "status": "live_batch_6",
+    "live_metatile_count": 97,
+    "coverage": "97 / 104 source MINING quadrants represented; target ID 0 preserves source 0x1D TL, and IDs 1-96 cover source-order mining quadrants through 0x52 BR with the preserved source duplicate omitted.",
+    "latest_batch_manifest": "tools/prism_mining/manifests/mound_cave_mining_surface_batch_6.json"
   },
   "mining_behavior": {
     "trigger": "COLL_MINING / MINING collision on eligible 16x16 metatile quadrants",
@@ -263,5 +263,5 @@
     "count": 104,
     "note": "49 source metatiles contain 104 MINING quadrants total."
   },
-  "follow_up": "Continue the remaining source-order Mound Cave MINING quadrants from source block 0x36 BR."
+  "follow_up": "Finish the remaining seven source-order Mound Cave MINING quadrants from source block 0x53 BL through 0x57 BR."
 }
