@@ -37,6 +37,7 @@ GEN4UIHGSSPOKEGEARCONTACT := tools/gen4_ui/make_hgss_pokegear_match_call_contact
 GEN4UIHGSSPOKEGEARCALL := tools/gen4_ui/make_hgss_pokegear_match_call_call.py
 GEN4UIHGSSPOKEGEARCONTACTROWS := tools/gen4_ui/make_hgss_pokegear_contact_rows.py
 GEN4UIHGSSPOKEGEARACTIONMENU := tools/gen4_ui/make_hgss_pokegear_action_menu.py
+GEN4UIHGSSTRAINERCARDCHECK := tools/gen4_ui/make_hgss_trainer_card_check_portrait.py
 
 types := none normal fight flying poison ground rock bug ghost steel mystery fire water grass electric psychic ice dragon dark fairy stellar
 contest_types := cool beauty cute smart tough
@@ -189,6 +190,24 @@ $(GEN4UIGFXDIR)/hgss_pokegear/match_call_action_menu.4bpp: $(GEN4UIHGSSPOKEGEARA
 
 $(GEN4UIGFXDIR)/hgss_pokegear/match_call_action_menu.gbapal: $(GEN4UIHGSSPOKEGEARACTIONMENU) \
 	$(GEN4UIGFXDIR)/hgss_pokegear/verified/sbox_gra.png
+	python3 $< --palette $@
+
+$(GEN4UIGFXDIR)/hgss_pokegear/match_call_check_portrait.4bpp: $(GEN4UIHGSSTRAINERCARDCHECK) \
+	$(GEN4UIGFXDIR)/hgss_pokegear/verified/trainer_card_sub_palette.NCLR \
+	$(GEN4UIGFXDIR)/hgss_pokegear/verified/trainer_card_front_tiles.NCGR \
+	$(GEN4UIGFXDIR)/hgss_pokegear/verified/trainer_card_front_screen.NSCR \
+	$(GEN4UIGFXDIR)/hgss_pokegear/verified/trainer_card_avatar_tiles.NCGR \
+	$(GEN4UIGFXDIR)/hgss_pokegear/verified/trainer_card_avatar_ethan.NSCR \
+	$(GEN4UIGFXDIR)/hgss_pokegear/verified/trainer_card_avatar_lyra.NSCR
+	python3 $< --tiles $@
+
+$(GEN4UIGFXDIR)/hgss_pokegear/match_call_check_portrait.gbapal: $(GEN4UIHGSSTRAINERCARDCHECK) \
+	$(GEN4UIGFXDIR)/hgss_pokegear/verified/trainer_card_sub_palette.NCLR \
+	$(GEN4UIGFXDIR)/hgss_pokegear/verified/trainer_card_front_tiles.NCGR \
+	$(GEN4UIGFXDIR)/hgss_pokegear/verified/trainer_card_front_screen.NSCR \
+	$(GEN4UIGFXDIR)/hgss_pokegear/verified/trainer_card_avatar_tiles.NCGR \
+	$(GEN4UIGFXDIR)/hgss_pokegear/verified/trainer_card_avatar_ethan.NSCR \
+	$(GEN4UIGFXDIR)/hgss_pokegear/verified/trainer_card_avatar_lyra.NSCR
 	python3 $< --palette $@
 
 # The live HGSS Pokédex background reserves BG palette entries 128..140.

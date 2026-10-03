@@ -1269,3 +1269,54 @@ must first isolate the exact retail Trainer Card portrait-bay region and its
 palette usage before a lossless GBA adaptation is allowed.
 
 **authentic HGSS source prepared → wire live pending → legacy removal pending**
+
+
+## Match Call trainer CHECK-page portrait chrome — phase 2
+
+CI #734 passed the phase-1 source audit at
+`95c1251cb11f2cb2293de0689feba42b4029a6f0`.
+
+The deeper retail Trainer Card trace refined the phase-1 candidate set to the
+actual front-card / avatar layers used on the DS SUB screen. This remains a
+**functional reuse** because retail HGSS PokéGear Phone has no CHECK/profile
+page.
+
+In `ov51_021E6354`, NARC 0x31 member 0 supplies the SUB BG palette, member
+0x29 supplies the Trainer Card front character graphics, and member 0x2f
+supplies its screen data. The avatar is a separate BG7 overlay:
+`ov51_021E6C6C` copies a 10x11-tile rectangle at retail x=21, y=5 from the
+avatar screen. The default avatar character member is 0x2c and the Ethan/Lyra
+screens are members 0x36/0x37.
+
+Those six source members are now retained byte-for-byte in `verified/`.
+Their extracted Git blob identities are recorded in
+`verified/match_call_check_portrait.json`.
+
+For the existing 11x8-tile (88x64) Match Call CHECK info window, the lossless
+chrome crop is source x=20..30, y=6..13 from the authentic Trainer Card front.
+That crop keeps one tile of card chrome to the left of the retail avatar
+footprint and places the retail avatar center at x=43.5, matching the existing
+Match Call trainer sprite center at x=44. No source pixel is scaled or
+redrawn.
+
+Member 0x29 is an 8bpp retail source, but this exact crop uses only ten palette
+indices: 16, 31, 32, 33, 34, 38, 39, 40, 42 and 43. The generator remaps only
+those indices to GBA 4bpp slots 0..9; the BGR555 values from retail member 0
+are copied exactly. Source index 16 maps to slot 0, allowing the window to be
+prefilled with the exact crop background before the color-keyed blit.
+
+`make_hgss_trainer_card_check_portrait.py` verifies all six extracted Git
+blob identities, the front-card crop's exact source-index set, the retail
+10x11 avatar placement, and the observed Ethan/Lyra nontransparent bounds
+before emitting `match_call_check_portrait.4bpp` and
+`match_call_check_portrait.gbapal`.
+
+The CHECK window now switches to dedicated GBA BG palette bank 10 and renders
+that authentic 88x64 Trainer Card crop underneath the existing 64x64 trainer
+sprite. Returning to the contact list explicitly restores the standard HGSS
+Phone contact palette bank 6 and rewrites the window tilemap.
+
+`DrawPokeGearPhonePortraitPanel` remains compiled only behind
+`sUseLegacyCheckPortraitForRollback` until this phase passes CI.
+
+**authentic HGSS source ✅ → wired live (CI pending) → legacy removal pending**

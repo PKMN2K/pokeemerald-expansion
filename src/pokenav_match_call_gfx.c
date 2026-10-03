@@ -58,6 +58,7 @@ static void DestroyMatchCallList(void);
 static void FreeMatchCallSprites(void);
 static void LoadCallWindowAndFade(struct Pokenav_MatchCallGfx *);
 static void DrawHgssPhoneCallSurface(struct Pokenav_MatchCallGfx *);
+static void DrawHgssTrainerCardPortraitPanel(u16);
 static void DrawPokeGearPhonePortraitPanel(u16);
 static void DrawMatchCallLeftColumnWindows(struct Pokenav_MatchCallGfx *);
 static void UpdateMatchCallInfoBox(struct Pokenav_MatchCallGfx *);
@@ -122,6 +123,8 @@ static const u16 sHgssMatchCallCall_Pal[] = INCBIN_U16("graphics/gen4_ui/hgss_po
 static const u16 sHgssMatchCallCallText_Pal[] = INCBIN_U16("graphics/gen4_ui/hgss_pokegear/match_call_call_text.gbapal");
 static const u32 sHgssActionMenu_Gfx[] = INCBIN_U32("graphics/gen4_ui/hgss_pokegear/match_call_action_menu.4bpp");
 static const u16 sHgssActionMenu_Pal[] = INCBIN_U16("graphics/gen4_ui/hgss_pokegear/match_call_action_menu.gbapal");
+static const u32 sHgssCheckPortrait_Gfx[] = INCBIN_U32("graphics/gen4_ui/hgss_pokegear/match_call_check_portrait.4bpp");
+static const u16 sHgssCheckPortrait_Pal[] = INCBIN_U16("graphics/gen4_ui/hgss_pokegear/match_call_check_portrait.gbapal");
 static const u16 sHgssContactRows_Pal[] = INCBIN_U16("graphics/gen4_ui/hgss_pokegear/match_call_contact_rows.gbapal");
 static const u32 sHgssRematchBadge_Gfx[] = INCBIN_U32("graphics/gen4_ui/hgss_pokegear/rematch_badge.4bpp");
 static const u16 sHgssRematchBadge_Pal[] = INCBIN_U16("graphics/gen4_ui/hgss_pokegear/rematch_badge.gbapal");
@@ -132,6 +135,7 @@ enum {
     HGSS_MATCH_CALL_CONTACT_PALETTE = 6,
     HGSS_MATCH_CALL_ROWS_PALETTE = 7,
     HGSS_MATCH_CALL_CALL_PALETTE = 9,
+    HGSS_MATCH_CALL_CHECK_PALETTE = 10,
     HGSS_MATCH_CALL_ROW_HEIGHT = 24,
     HGSS_MATCH_CALL_BUFFER_ROWS = 8,
     HGSS_PHONE_BADGE_ACTIVE = 0x5000,
@@ -255,6 +259,9 @@ static const struct WindowTemplate sHgssCallMsgBoxWindowTemplate =
     .baseBlock = 10
 };
 
+// Phase-2 CI rollback only. Phase 3 removes this after the authentic
+// Trainer Card functional reuse has passed the full build/test gate.
+static bool8 sUseLegacyCheckPortraitForRollback = FALSE;
 
 static const struct OamData sTrainerPicOamData =
 {
@@ -1032,12 +1039,16 @@ static void DrawMatchCallLeftColumnWindows(struct Pokenav_MatchCallGfx *gfx)
 
 static void UpdateMatchCallInfoBox(struct Pokenav_MatchCallGfx *gfx)
 {
+    // CHECK temporarily maps this window to the dedicated authentic Trainer
+    // Card palette. Restore the Phone contact palette before redrawing stats.
+    SetWindowAttribute(gfx->infoBoxWindowId, WINDOW_PALETTE_NUM, HGSS_MATCH_CALL_CONTACT_PALETTE);
+    PutWindowTilemap(gfx->infoBoxWindowId);
     FillWindowPixelBuffer(gfx->infoBoxWindowId, PIXEL_FILL(0));
     PrintNumberRegisteredLabel(gfx->infoBoxWindowId);
     PrintNumberRegistered(gfx->infoBoxWindowId);
     PrintNumberOfBattlesLabel(gfx->infoBoxWindowId);
     PrintNumberOfBattles(gfx->infoBoxWindowId);
-    CopyWindowToVram(gfx->infoBoxWindowId, COPYWIN_GFX);
+    CopyWindowToVram(gfx->infoBoxWindowId, COPYWIN_FULL);
 }
 
 static void PrintNumberRegisteredLabel(u16 windowId)
@@ -1174,6 +1185,24 @@ static bool32 IsDma3ManagerBusyWithBgCopy1(struct Pokenav_MatchCallGfx *gfx)
     return IsDma3ManagerBusyWithBgCopy();
 }
 
+static void DrawHgssTrainerCardPortraitPanel(u16 windowId)
+{
+    if (sUseLegacyCheckPortraitForRollback)
+    {
+        DrawPokeGearPhonePortraitPanel(windowId);
+        return;
+    }
+
+    // Functional reuse of the authentic HGSS Trainer Card front, not a
+    // retail PokéGear Phone CHECK page. The generator crops source tiles
+    // x=20..30, y=6..13 at 1:1 pixels and remaps only palette indices.
+    SetWindowAttribute(windowId, WINDOW_PALETTE_NUM, HGSS_MATCH_CALL_CHECK_PALETTE);
+    LoadPalette(sHgssCheckPortrait_Pal, BG_PLTT_ID(HGSS_MATCH_CALL_CHECK_PALETTE), sizeof(sHgssCheckPortrait_Pal));
+    FillWindowPixelBuffer(windowId, PIXEL_FILL(0));
+    BlitBitmapToWindow(windowId, (const u8 *)sHgssCheckPortrait_Gfx, 0, 0, 88, 64);
+    PutWindowTilemap(windowId);
+}
+
 static void DrawPokeGearPhonePortraitPanel(u16 windowId)
 {
     u8 width = GetWindowAttribute(windowId, WINDOW_WIDTH) * 8;
@@ -1197,7 +1226,7 @@ static void DrawPokeGearPhonePortraitPanel(u16 windowId)
 static void UpdateWindowsToShowCheckPage(struct Pokenav_MatchCallGfx *gfx)
 {
     CloseMatchCallSelectOptionsWindow(gfx);
-    DrawPokeGearPhonePortraitPanel(gfx->infoBoxWindowId);
+    DrawHgssTrainerCardPortraitPanel(gfx->infoBoxWindowId);
     CopyWindowToVram(gfx->infoBoxWindowId, COPYWIN_FULL);
 }
 

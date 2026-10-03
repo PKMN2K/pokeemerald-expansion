@@ -90,7 +90,8 @@ jobs:
             tools/gen4_ui/make_hgss_pokegear_match_call_contact.py \
             tools/gen4_ui/make_hgss_pokegear_match_call_call.py \
             tools/gen4_ui/make_hgss_pokegear_contact_rows.py \
-            tools/gen4_ui/make_hgss_pokegear_action_menu.py
+            tools/gen4_ui/make_hgss_pokegear_action_menu.py \
+            tools/gen4_ui/make_hgss_trainer_card_check_portrait.py
 
       - name: Build Gen 4 UI assets
         run: |
@@ -167,7 +168,9 @@ jobs:
             graphics/gen4_ui/hgss_pokegear/match_call_call_text.gbapal \
             graphics/gen4_ui/hgss_pokegear/match_call_contact_rows.gbapal \
             graphics/gen4_ui/hgss_pokegear/match_call_action_menu.4bpp \
-            graphics/gen4_ui/hgss_pokegear/match_call_action_menu.gbapal
+            graphics/gen4_ui/hgss_pokegear/match_call_action_menu.gbapal \
+            graphics/gen4_ui/hgss_pokegear/match_call_check_portrait.4bpp \
+            graphics/gen4_ui/hgss_pokegear/match_call_check_portrait.gbapal
 
       - name: Compile Gen 4 UI renderer
         env:

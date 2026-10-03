@@ -1,13 +1,13 @@
 {
   "role": "match_call_check_page_portrait_chrome",
-  "phase": "authentic_source_prepared",
-  "classification": "functional reuse candidate from authentic HGSS Trainer Card; no direct retail PokéGear Phone CHECK/profile page exists",
+  "phase": "wired_live_ci_pending",
+  "classification": "functional reuse from authentic HGSS Trainer Card front/avatar layers; no direct retail PokéGear Phone CHECK/profile page exists",
   "source_revision": "9d8b7591f09b65804da2fb2dfd56f320633e0d36",
   "previous_gate": {
     "workflow": "CI",
-    "run_number": 733,
+    "run_number": 734,
     "conclusion": "success",
-    "validated_commit": "0f7eb3f6dc5c8a2d8073128db61c529c2d69ded8"
+    "validated_commit": "95c1251cb11f2cb2293de0689feba42b4029a6f0"
   },
   "source_container": {
     "path": "files/a/0/4/9",
@@ -107,7 +107,7 @@
   },
   "pipeline": {
     "authentic_hgss_source_ready": true,
-    "wired_live": false,
+    "wired_live": true,
     "legacy_equivalent_removed": false
   },
   "constraints": [
@@ -116,5 +116,122 @@
     "No scaling, redrawing, recoloring, or invented HGSS-style chrome is allowed.",
     "Keep DrawPokeGearPhonePortraitPanel only as a CI-gated rollback until the authentic reuse is validated."
   ],
-  "next": "Phase 2: identify the exact retail Trainer Card portrait-bay tile region and palette usage, create a lossless GBA adaptation for the 88x64 CHECK info area, and wire it live while retaining the current procedural panel as rollback."
+  "next": "After phase-2 CI passes, remove DrawPokeGearPhonePortraitPanel and sUseLegacyCheckPortraitForRollback; keep the authentic Trainer Card functional reuse as the sole CHECK-page chrome.",
+  "phase2_source_members": [
+    {
+      "index": 0,
+      "index_hex": "0x0",
+      "path": "graphics/gen4_ui/hgss_pokegear/verified/trainer_card_sub_palette.NCLR",
+      "git_blob_sha": "011286aa1e98ffe659d88ed6e99b7e6c14a65491",
+      "size": 552,
+      "role": "SUB BG palette used by retail Trainer Card front"
+    },
+    {
+      "index": 41,
+      "index_hex": "0x29",
+      "path": "graphics/gen4_ui/hgss_pokegear/verified/trainer_card_front_tiles.NCGR",
+      "git_blob_sha": "fa067c9657aae2f263d20306d00ad3961e043f18",
+      "size": 26688,
+      "role": "retail Trainer Card front 8bpp character graphics"
+    },
+    {
+      "index": 47,
+      "index_hex": "0x2f",
+      "path": "graphics/gen4_ui/hgss_pokegear/verified/trainer_card_front_screen.NSCR",
+      "git_blob_sha": "8c2367f1b8c7ae0940f35e5173c195d7158cfef7",
+      "size": 2084,
+      "role": "retail Trainer Card front screen"
+    },
+    {
+      "index": 44,
+      "index_hex": "0x2c",
+      "path": "graphics/gen4_ui/hgss_pokegear/verified/trainer_card_avatar_tiles.NCGR",
+      "git_blob_sha": "5b7f2414b5240fb16134bd1ed6e9a25f40e3cd02",
+      "size": 8256,
+      "role": "default retail Trainer Card avatar character graphics; placement evidence"
+    },
+    {
+      "index": 54,
+      "index_hex": "0x36",
+      "path": "graphics/gen4_ui/hgss_pokegear/verified/trainer_card_avatar_ethan.NSCR",
+      "git_blob_sha": "29a3731d668684c9476dca5ed145fe08ff37a506",
+      "size": 2084,
+      "role": "Ethan retail avatar screen; placement evidence"
+    },
+    {
+      "index": 55,
+      "index_hex": "0x37",
+      "path": "graphics/gen4_ui/hgss_pokegear/verified/trainer_card_avatar_lyra.NSCR",
+      "git_blob_sha": "d7eb3d6803ee6d0ab12f30cfea6e5bf5c56d2309",
+      "size": 2084,
+      "role": "Lyra retail avatar screen; placement evidence"
+    }
+  ],
+  "retail_geometry": {
+    "avatar_overlay": {
+      "dest_x_tiles": 21,
+      "dest_y_tiles": 5,
+      "width_tiles": 10,
+      "height_tiles": 11,
+      "source_x_tiles": 21,
+      "source_y_tiles": 5
+    },
+    "verified_avatar_pixel_bounds": {
+      "ethan": {
+        "x_min": 184,
+        "y_min": 48,
+        "x_max": 223,
+        "y_max": 95
+      },
+      "lyra": {
+        "x_min": 184,
+        "y_min": 51,
+        "x_max": 223,
+        "y_max": 119
+      }
+    }
+  },
+  "gba_adaptation": {
+    "source_layer": "Trainer Card front member 0x29 + screen 0x2f + palette member 0",
+    "crop": {
+      "x_tiles": 20,
+      "y_tiles": 6,
+      "width_tiles": 11,
+      "height_tiles": 8,
+      "width_px": 88,
+      "height_px": 64
+    },
+    "reason": "one-tile left chrome margin preserves retail avatar center at x=43.5 in the 88px crop, aligned to the existing Match Call trainer sprite center x=44",
+    "source_palette_indices": [
+      16,
+      31,
+      32,
+      33,
+      34,
+      38,
+      39,
+      40,
+      42,
+      43
+    ],
+    "output_format": "GBA 4bpp tile-major",
+    "index_remap": "source indices listed above -> 0..9 in ascending order; source 16 -> 0",
+    "rgb_recoloring": false,
+    "scaling": false,
+    "redrawing": false,
+    "gba_palette_bank": 10
+  },
+  "generated_outputs": [
+    "graphics/gen4_ui/hgss_pokegear/match_call_check_portrait.4bpp",
+    "graphics/gen4_ui/hgss_pokegear/match_call_check_portrait.gbapal"
+  ],
+  "live_wiring": {
+    "file": "src/pokenav_match_call_gfx.c",
+    "renderer": "DrawHgssTrainerCardPortraitPanel",
+    "check_window": "infoBoxWindowId (11x8 tiles / 88x64)",
+    "existing_trainer_sprite": "unchanged 64x64 Match Call trainer picture centered at x=44",
+    "check_palette_bank": 10,
+    "list_restore_palette_bank": 6,
+    "rollback": "DrawPokeGearPhonePortraitPanel retained behind sUseLegacyCheckPortraitForRollback"
+  }
 }
