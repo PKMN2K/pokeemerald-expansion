@@ -1,0 +1,104 @@
+name: PKMN 2K Radio - Render I Miss You (poryaaaa)
+
+on:
+  push:
+    branches:
+      - pkmn2k-radio-i-miss-you-render
+    paths:
+      - .github/workflows/render-i-miss-you-poryaaaa.yml
+      - pkmn2k_radio/I_Miss_You_stage.zip.b64
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout render branch
+        uses: actions/checkout@v4
+
+      - name: Decode PKMN 2K Radio stage
+        shell: bash
+        run: |
+          set -euxo pipefail
+          mkdir -p /tmp/pkmn2k-radio-stage
+          base64 -d pkmn2k_radio/I_Miss_You_stage.zip.b64 > /tmp/I_Miss_You_stage.zip
+          unzip -o /tmp/I_Miss_You_stage.zip -d /tmp/pkmn2k-radio-stage
+          cp /tmp/pkmn2k-radio-stage/i_miss_you.inc sound/voicegroups/i_miss_you.inc
+
+      - name: Download poryaaaa 1.6.0
+        shell: bash
+        run: |
+          set -euxo pipefail
+          curl -L --fail --retry 3 \
+            -o /tmp/poryaaaa_linux.zip \
+            https://github.com/huderlem/poryaaaa/releases/download/1.6.0/poryaaaa_linux.zip
+          mkdir -p /tmp/poryaaaa
+          unzip -o /tmp/poryaaaa_linux.zip -d /tmp/poryaaaa
+          find /tmp/poryaaaa -maxdepth 4 -type f -name 'poryaaaa_render*' -print
+          RENDERER="$(find /tmp/poryaaaa -maxdepth 4 -type f -name 'poryaaaa_render*' | head -n 1)"
+          test -n "$RENDERER"
+          chmod +x "$RENDERER"
+          echo "PORYAAAA_RENDER=$RENDERER" >> "$GITHUB_ENV"
+
+      - name: Render GBA m4a reference WAV
+        shell: bash
+        run: |
+          set -euxo pipefail
+          "$PORYAAAA_RENDER" "$GITHUB_WORKSPACE" i_miss_you \
+            --midi /tmp/pkmn2k-radio-stage/Blink182_I_Miss_You_Poryaaaa_Emerald.mid \
+            --output /tmp/Blink182_I_Miss_You_Poryaaaa_GBA.wav \
+            --song-volume 127 \
+            --reverb 40 \
+            --analog-filter \
+            --polyphony 5 \
+            --sample-rate 44100 \
+            --pcm-mix-rate 13379 \
+            --tail 3.0
+
+      - name: Validate WAV
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import wave, os
+          p = "/tmp/Blink182_I_Miss_You_Poryaaaa_GBA.wav"
+          with wave.open(p, "rb") as w:
+              print("channels", w.getnchannels())
+              print("sample_width", w.getsampwidth())
+              print("sample_rate", w.getframerate())
+              print("frames", w.getnframes())
+              print("duration", w.getnframes() / w.getframerate())
+              assert w.getnchannels() == 2
+              assert w.getsampwidth() == 2
+              assert w.getframerate() == 44100
+              assert w.getnframes() > 44100
+          print("bytes", os.path.getsize(p))
+          PY
+
+      - name: Stage rendered output
+        shell: bash
+        run: |
+          set -euxo pipefail
+          mkdir -p pkmn2k_radio/renders
+          cp /tmp/Blink182_I_Miss_You_Poryaaaa_GBA.wav \
+             pkmn2k_radio/renders/Blink182_I_Miss_You_Poryaaaa_GBA.wav
+
+      - name: Upload WAV artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Blink182-I-Miss-You-Poryaaaa-GBA-WAV
+          path: pkmn2k_radio/renders/Blink182_I_Miss_You_Poryaaaa_GBA.wav
+          if-no-files-found: error
+
+      - name: Commit rendered WAV to render branch
+        shell: bash
+        run: |
+          set -euxo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add pkmn2k_radio/renders/Blink182_I_Miss_You_Poryaaaa_GBA.wav
+          git diff --cached --quiet && exit 0
+          git commit -m "PKMN 2K Radio: render I Miss You with poryaaaa [radio-render-output]"
+          git push origin HEAD:pkmn2k-radio-i-miss-you-render
