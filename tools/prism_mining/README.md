@@ -310,3 +310,12 @@ The pre-existing live target metatile `0` remains Prism block `0x1D` TL. IDs `1-
 Mound Cave source mining attributes are palette-only (`0x04` and `0x06`); this first expansion batch uses palette 6 throughout and requires no bank or flip translation. Authentic Prism Night dungeon palettes remain wired through `gTilesetPalettes_PrismMoundCave`.
 
 Existing maps remain untouched.
+
+
+## Mound Cave mining surfaces batch 2
+
+Target IDs `17-32` append the next sixteen source-order Mound Cave `MINING` quadrants, from Prism block `0x0D` BL through `0x19` TL. Together with preserved target ID `0` (`0x1D` TL), live Mound Cave coverage is now **33 / 104**.
+
+Target ID `28` (Prism block `0x17` TR) is the first mixed-palette Mound Cave surface: source attributes `0x04, 0x04, 0x06, 0x06` translate to `0x421A, 0x421B, 0x6201, 0x6200`. This batch still requires no bank or flip translation.
+
+Existing maps remain untouched. The next source-order surface is Prism block `0x19` TR; when expansion reaches `0x1D` TL it must be skipped because that surface is already preserved as target ID `0`.
