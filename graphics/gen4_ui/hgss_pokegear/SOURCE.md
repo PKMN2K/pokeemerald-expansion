@@ -1461,3 +1461,36 @@ slots 7..10, and centered functional help text.
 This completes the shared help-bar sequence:
 
 **authentic HGSS asset ✅ → wired live and validated ✅ → legacy equivalent removed ✅**
+
+
+## Shared PokéNav top header overlay — phase 1
+
+CI #745 passed the completed authentic HGSS help-tooltip cleanup at
+`ef9e99b7b53b53506eed284fb74c1ef86e224e8b`.
+
+The next remaining shared legacy layer is the Emerald PokéNav header loaded on
+BG0 by `src/pokenav_main_menu.c`. Its 32x32 tilemap has artwork only in rows
+0..3 and 22..23, with columns 0..29 occupied on those rows.
+
+The lower legacy rows no longer own a live visual role. On feature screens BG0
+scrolls by 32 pixels, and the completed authentic HGSS Phone tooltip path now
+fills source rows 20..23, covering the old header rows 22..23.
+
+That leaves only the legacy top four rows. They occupy the exact 30x4 GBA
+region already used by the authentic HGSS PokéGear app-switch strip on BG2.
+The retail counterpart therefore already exists and is already wired live
+underneath the legacy overlay: skin-0 member 48 character graphics, member 30
+palette, and member 54 screen data, as verified by
+`verified/app_switch_skin0.json`.
+
+This is not a request for new “HGSS-style” art. The correct migration is to
+expose the already-authentic retail app-switch surface by removing the
+superseded Emerald BG0 overlay after a gated validation cycle.
+
+Phase 1 adds
+`tools/gen4_ui/audit_hgss_pokegear_top_header.py`. It locks the exact legacy
+header blobs, the three verified retail app-switch source blobs, the legacy
+tilemap geometry, and the current 30x4 HGSS app-switch / 4-row help-tooltip
+runtime bindings. No live rendering or asset is changed in this phase.
+
+**authentic HGSS counterpart audited ✅ → live exposure pending → legacy overlay removal pending**
