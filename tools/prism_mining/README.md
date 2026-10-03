@@ -385,3 +385,12 @@ This integration step deliberately adds **no** Prism mining EXP, rewards, pickax
 Prism `TILESET_SIDESCROLL` (source ID `0x20`) is intentionally **not** being imported into the polished-crystal-port mining asset set.
 
 Do not treat the sidescroll tileset as incomplete migration work unless this decision is explicitly revisited later.
+
+
+## Mining surface import scope closed
+
+No additional Pokémon Prism mining terrain or mineable surface tilesets are to be imported into `polished-crystal-port`.
+
+The existing imported terrain pool—Firelight Caverns, Kanto Cave, Mound Cave, and Olcan Isle—is the final mining-surface set for this project. Previously skipped cave variants and `TILESET_SIDESCROLL` remain excluded, and other Prism tilesets containing `MINING` collision should likewise not be treated as pending surface migration work.
+
+Future Prism mining migration should focus on mining-specific non-terrain assets and integration, such as debris/dust effects, ore/gem/fossil/item-reveal artwork, other non-player mining animation frames, and the mining interaction/mechanics layer.
