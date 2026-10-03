@@ -477,13 +477,15 @@ Text_CantRockClimb:
 
 
 @ Pokémon Prism mining surface integration hook.
-@ Intentionally contains no Prism mining EXP, rewards, item consumption, or tile mutation yet.
+@ This first gameplay increment mirrors Prism's impact + failed extraction path.
+@ Rewards, pick requirements, durability, EXP, and tile mutation remain intentionally absent.
 EventScript_PrismMining::
 	lockall
-	msgbox Text_PrismMiningSurface, MSGBOX_DEFAULT
+	playse SE_M_ROCK_THROW
+	waitse
+	msgbox Text_PrismMiningNoItem, MSGBOX_DEFAULT
 	releaseall
 	end
 
-Text_PrismMiningSurface:
-	.string "The rock face looks suitable for\\n"
-	.string "mining.$"
+Text_PrismMiningNoItem:
+	.string "Unable to extract anything.$"
