@@ -1494,3 +1494,30 @@ tilemap geometry, and the current 30x4 HGSS app-switch / 4-row help-tooltip
 runtime bindings. No live rendering or asset is changed in this phase.
 
 **authentic HGSS counterpart audited ✅ → live exposure pending → legacy overlay removal pending**
+
+
+## Shared PokéNav top header overlay — phase 2
+
+CI #746 passed the Phase-1 overlap/provenance audit at
+`ea5de5dc18a59468ed6870e4652fde36f83d342f`.
+
+The redundant Emerald BG0 top strip is now suppressed by default so the
+already-live authentic HGSS PokéGear app-switch on BG2 is actually visible.
+No second copy of the HGSS art is generated and no retail pixel is altered.
+
+The exposure path is explicitly verified rather than assumed. The locked
+legacy `graphics/pokenav/header.png` has a fully transparent tile 0, which is
+the canonical blank entry used by its tilemap. BG1 sits between BG0 and BG2,
+but its main-menu `message.bin` uses tile 3 across visible rows 0..3, and
+tile 3 in the locked `message.png` is also fully transparent. Clearing only
+BG0 x=0..29, y=0..3 therefore reveals the authentic BG2 app-switch directly.
+
+The old Emerald header graphics, tilemap and palette still load in Phase 2,
+and `sUseLegacyTopHeaderForRollback` can retain their previous top rows for
+CI rollback. The legacy lower rows are untouched here; the already-completed
+HGSS Phone tooltip owns BG0 rows 20..23 on feature screens.
+
+No BG1 rendering, app-switch geometry, HGSS palette, menu semantics, or
+transition behavior is changed.
+
+**authentic HGSS counterpart ✅ → exposed live (CI pending) → legacy overlay removal pending**

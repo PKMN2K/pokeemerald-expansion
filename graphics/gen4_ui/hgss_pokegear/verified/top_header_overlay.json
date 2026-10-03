@@ -1,6 +1,6 @@
 {
   "role": "shared_pokenav_top_header_overlay",
-  "phase": "authentic_counterpart_audited_ci_pending",
+  "phase": "authentic_app_switch_exposed_ci_pending",
   "classification": "legacy Emerald PokéNav overlay directly covering an already-live authentic HGSS PokéGear app-switch surface",
   "source_game": "Pokemon HeartGold / SoulSilver",
   "source_repository": "pret/pokeheartgold",
@@ -97,5 +97,50 @@
     "wired_live": true,
     "legacy_equivalent_removed": false
   },
-  "next": "After this audit passes CI, make the legacy BG0 top-header region transparent so the already-live authentic HGSS app-switch is the sole top strip, while retaining the old header resources only as a CI rollback until cleanup."
+  "next": "Run Phase-2 CI. If it passes, remove the rollback switch and obsolete legacy top-header gfx/tilemap/palette loading and delete any header assets that no longer have live references.",
+  "phase1_gate": {
+    "workflow": "CI",
+    "run_number": 746,
+    "conclusion": "success",
+    "validated_commit": "ea5de5dc18a59468ed6870e4652fde36f83d342f"
+  },
+  "transparent_exposure_validation": {
+    "legacy_header_blank_tile": {
+      "source": "graphics/pokenav/header.png",
+      "tile_id": 0,
+      "required_indices": [
+        0
+      ],
+      "effect": "BG0 rows 0..3 can be cleared with canonical tile 0"
+    },
+    "intervening_bg1": {
+      "tilemap": "graphics/pokenav/message.bin",
+      "tilemap_git_blob_sha": "5f9930568acd30668bdc3fb03db6431412f2ba7d",
+      "gfx": "graphics/pokenav/message.png",
+      "gfx_git_blob_sha": "7df840d3a90d11a8c42568df113a1003dc898c24",
+      "top_rows": "0..3 use tile 3 across visible columns 0..29",
+      "tile3_indices": [
+        0
+      ],
+      "effect": "BG1 remains transparent over the authentic BG2 app-switch"
+    }
+  },
+  "live_exposure": {
+    "file": "src/pokenav_main_menu.c",
+    "function": "ExposeHgssPokegearTopStrip",
+    "bg": 0,
+    "cleared_rect_tiles": {
+      "x": 0,
+      "y": 0,
+      "width": 30,
+      "height": 4
+    },
+    "replacement_visible_underneath": "already-live authentic HGSS app-switch on BG2",
+    "new_hgss_pixels_generated": false,
+    "redraw": false,
+    "recolor": false,
+    "resample": false,
+    "legacy_load_retained_for_rollback": true,
+    "rollback_switch": "sUseLegacyTopHeaderForRollback"
+  }
 }
