@@ -328,3 +328,12 @@ Target IDs `33-48` append the next sixteen **unique** Prism Mound Cave mining qu
 This raises Mound Cave coverage to **49 / 104** source `MINING` quadrants with **49 live target metatiles** and no duplicate copy of the preserved surface. Source attributes in this batch remain palette-only; no bank or flip translation is required.
 
 Existing maps remain untouched. The next source-order surface is Prism block `0x22` TR.
+
+
+## Mound Cave mining surfaces batch 4
+
+Target IDs `49-64` append the next sixteen source-order Prism Mound Cave mining quadrants, from `0x22` TR through `0x2E` BL. This raises live coverage to **65 / 104** source `MINING` quadrants.
+
+The preserved Prism `0x1D` TL surface remains target ID `0`; no duplicate is introduced. Existing maps remain untouched.
+
+The next source-order surface is Prism block `0x2E` BR.
