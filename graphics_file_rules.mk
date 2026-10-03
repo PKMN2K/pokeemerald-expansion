@@ -210,6 +210,12 @@ $(GEN4UIGFXDIR)/hgss_pokegear/help_bar_tooltip.4bpp: $(GEN4UIHGSSPOKEGEARHELPBAR
 	$(GEN4UIGFXDIR)/hgss_pokegear/verified/pgphone_skin0_contact_tilemap.NSCR
 	python3 $< --tiles $@
 
+$(GEN4UIGFXDIR)/hgss_pokegear/help_bar_tooltip_gba.4bpp: $(GEN4UIHGSSPOKEGEARHELPBAR) $(GEN4UIHGSSPOKEGEARCONTACT) \
+	$(GEN4UIGFXDIR)/hgss_pokegear/verified/pgphone_skin0_contact_tiles.png \
+	$(GEN4UIGFXDIR)/hgss_pokegear/verified/pgphone_skin0_contact_tilemap.NSCR \
+	graphics/pokenav/header.png
+	python3 $< --gba-tiles $@
+
 $(GEN4UIGFXDIR)/hgss_pokegear/help_bar_tooltip.gbapal: $(GEN4UIHGSSPOKEGEARHELPBAR) $(GEN4UIHGSSPOKEGEARCONTACT) \
 	$(GEN4UIGFXDIR)/hgss_pokegear/verified/pgphone_skin0_contact_palette.NCLR \
 	$(GEN4UIGFXDIR)/hgss_pokegear/verified/pgphone_skin0_contact_tilemap.NSCR

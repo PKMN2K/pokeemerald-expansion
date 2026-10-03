@@ -173,6 +173,7 @@ jobs:
             graphics/gen4_ui/hgss_pokegear/match_call_check_portrait.4bpp \
             graphics/gen4_ui/hgss_pokegear/match_call_check_portrait.gbapal \
             graphics/gen4_ui/hgss_pokegear/help_bar_tooltip.4bpp \
+            graphics/gen4_ui/hgss_pokegear/help_bar_tooltip_gba.4bpp \
             graphics/gen4_ui/hgss_pokegear/help_bar_tooltip.gbapal
 
       - name: Compile Gen 4 UI renderer

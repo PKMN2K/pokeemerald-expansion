@@ -1405,3 +1405,35 @@ two rows, and keep the current procedural renderer only as a CI rollback
 until the live integration is validated.
 
 **authentic HGSS asset prepared → wire live pending → legacy removal pending**
+
+
+## Shared PokéNav help bar / PokéGear tooltip — phase 2
+
+CI #743 passed the phase-1 retail tooltip source at
+`7b4b08bd2eb675c0cdcc1f121e68a8f96ada9d05`.
+
+The authentic HGSS Phone context-menu tooltip is now the default live shared
+help-bar surface. Retail places a 32x4 strip at y=20 and a 32x2 text window at
+y=21. The GBA preserves that vertical geometry and omits only the two
+rightmost DS columns, yielding 30x4 and 30x2 surfaces.
+
+Retail member-34 rows 24..27 are entirely NSCR entry `0x1040`: member-28
+tile 64, palette bank 1, no flips. Tile 64 is a solid source-index-1 tile, so
+the strip is repeated without redraw or resampling.
+
+The shared BG0 header already occupies palette bank 0. Its validated PNG blob
+`7fe891e22f0fd440d3ee7d41ae0a2b35d008ac5d` uses indices
+0, 1, 3, 4, 5, 6, 11 and 12, leaving 7..10 free. The adaptation relocates
+retail tooltip indices 1/2/3/5 to BG0 indices 7/8/9/10 and copies the exact
+member-10 BGR555 values into those slots. No RGB recoloring occurs.
+
+Retail `MAKE_TEXT_COLOR(3, 2, 5)` becomes GBA
+background/foreground/shadow = 10/9/8. The functional help strings are
+preserved and horizontally centered, matching the retail tooltip behavior.
+
+The strip uses BG0 tile `0x35`: the validated header occupies 0x00..0x34,
+while the help window begins at 0x36. The previous procedural
+`DrawHelpBar`, original geometry, and legacy text colors remain only behind
+`sUseLegacyHelpBarForRollback` until CI validates this live integration.
+
+**authentic HGSS asset ✅ → wired live (CI pending) → legacy removal pending**
