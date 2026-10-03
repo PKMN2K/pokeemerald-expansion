@@ -22,26 +22,24 @@ enum {
     WALLPAPER_SKY, 			//Sky
     WALLPAPER_COMPUTA, 		//PC
     WALLPAPER_CUTE, 		//Cute (Cross Stitch)
-	//Wallpapers Page 4
-    WALLPAPER_SPACE,		// Spaic
-    WALLPAPER_DAYCARE,		// Daycare
-    WALLPAPER_CONTEST,		// Contest Stage
-    WALLPAPER_CLASSIC,		// Classic
-    WALLPAPER_CLASSIC2,		// Classic 2
+	// Wallpapers 16-24. Keep the legacy symbol names for IDs 15-19 so
+	// existing saves/source references retain their numeric values; the live
+	// HGSS menu labels below reflect the authenticated native wallpaper order.
+    WALLPAPER_SPACE,
+    WALLPAPER_DAYCARE,
+    WALLPAPER_CONTEST,
+    WALLPAPER_CLASSIC,
+    WALLPAPER_CLASSIC2,
+    WALLPAPER_SPECIAL_5,
+    WALLPAPER_SPECIAL_6,
+    WALLPAPER_SPECIAL_7,
+    WALLPAPER_SPECIAL_8,
     WALLPAPER_COUNT
 };
-#define MAX_DEFAULT_WALLPAPER WALLPAPER_FLYING
 
 // ============================================================================
 // Structs
 // ============================================================================
-
-struct Wallpaper
-{
-    const u32 *tiles;
-    const u32 *tilemap;
-    const u16 *palettes;
-};
 
 struct StorageMessage
 {
@@ -53,145 +51,257 @@ struct StorageMessage
 // Graphics - Storage System UI
 // ============================================================================
 
-static const u32 sSwShStorage_Gfx[]           = INCGFX_U32("graphics/pokemon_storage/swsh/tiles.png", ".4bpp.smol");
-static const u16 sSwShStorage_Pal[]           = INCGFX_U16("graphics/pokemon_storage/swsh/tiles.png", ".gbapal");
-static const u32 sSwShStorage_BG1_Tilemap[]   = INCGFX_U32("graphics/pokemon_storage/swsh/bg1.bin", ".smolTM");
-static const u32 sSwShStorage_BG2_Tilemap[]   = INCGFX_U32("graphics/pokemon_storage/swsh/bg2.bin", ".smolTM");
-static const u32 sMonInfo_Gfx[]               = INCGFX_U32("graphics/pokemon_storage/swsh/mon_info.png", ".4bpp.smol");
-static const u32 sMonInfo_Tilemap[]           = INCGFX_U32("graphics/pokemon_storage/swsh/mon_info.bin", ".smolTM");
-static const u16 sTextWindows_Pal[]           = INCGFX_U16("graphics/pokemon_storage/swsh/text_windows.pal", ".gbapal");
+// Authentic HGSS Storage Pokemon-info panel: /a/0/1/9 NSCR 9 + NCGR 14 + NCLR 4.
+static const u32 sHgssMonInfoPanel_Gfx[]       = INCGFX_U32("graphics/gen4_ui/hgss_storage/verified/mon_info_panel.png", ".4bpp");
+static const u16 sHgssMonInfoPanel_Pal[]       = INCGFX_U16("graphics/gen4_ui/hgss_storage/verified/mon_info_panel.png", ".gbapal");
 
-static const u32 sBoxTitleFrame_Gfx[]         = INCGFX_U32("graphics/pokemon_storage/swsh/box_title_frame.png", ".4bpp.smol");
-static const u32 sBoxTitleArrow_Gfx[]         = INCGFX_U32("graphics/pokemon_storage/swsh/box_title_arrow.png", ".4bpp.smol");
-static const u32 sChooseBoxMenu_Gfx[]         = INCGFX_U32("graphics/pokemon_storage/swsh/choose_box_menu.png", ".4bpp.smol");
-static const u32 sCursor_Gfx[]                = INCGFX_U32("graphics/pokemon_storage/swsh/cursor.png", ".4bpp.smol");
-static const u16 sCursor_Pal[]                = INCGFX_U16("graphics/pokemon_storage/swsh/cursor.png", ".gbapal");
-static const u32 sGenderIcons_Gfx[]           = INCGFX_U32("graphics/pokemon_storage/swsh/gender_icons.png", ".4bpp.smol");
-static const u16 sMarkings_Pal[]              = INCGFX_U16("graphics/pokemon_storage/swsh/markings.pal", ".gbapal");
-static const u32 sMarkingsMenu_Gfx[]          = INCGFX_U32("graphics/pokemon_storage/swsh/markings_menu.png", ".4bpp.smol");
-static const u32 sMessageWindow_Gfx[]         = INCGFX_U32("graphics/pokemon_storage/swsh/message_window.png", ".4bpp.smol");
-static const u32 sShinyIcon_Gfx[]             = INCGFX_U32("graphics/pokemon_storage/swsh/shiny_icon.png", ".4bpp.smol");
-static const u32 sPokerusIcon_Gfx[]           = INCGFX_U32("graphics/pokemon_storage/swsh/pokerus_icon.png", ".4bpp.smol");
-static const u32 sStatLabels_Gfx[]            = INCGFX_U32("graphics/pokemon_storage/swsh/stat_labels.png", ".4bpp.smol");
-static const ALIGNED(4) u8 sTypeIcons_Gfx[]   = INCGFX_U8("graphics/pokemon_storage/swsh/type_icons.png", ".4bpp");
-static const u16 sTypeIcons_Pal[]             = INCGFX_U16("graphics/pokemon_storage/swsh/type_icons.png", ".gbapal");
+// Authentic HGSS Storage message bar: /a/0/1/9 NSCR 11 + NCGR 14 + NCLR 4.
+static const u32 sHgssMessageWindow_Gfx[]       = INCGFX_U32("graphics/gen4_ui/hgss_storage/verified/message_window.png", ".4bpp");
+static const u16 sHgssMessageWindow_Pal[]       = INCGFX_U16("graphics/gen4_ui/hgss_storage/verified/message_window.png", ".gbapal");
 
-// ============================================================================
-// Graphics - Wallpapers
-// ============================================================================
+// Authentic HGSS Storage Yes/No panel: /a/0/1/9 NSCR 12 + NCGR 14 + NCLR 4.
+static const u32 sHgssYesNo_Gfx[]               = INCGFX_U32("graphics/gen4_ui/hgss_storage/verified/yes_no.png", ".4bpp");
+static const u16 sHgssYesNo_Pal[]               = INCGFX_U16("graphics/gen4_ui/hgss_storage/verified/yes_no.png", ".gbapal");
 
-static const u32 sWallpaperTiles_Base[]       = INCGFX_U32("graphics/pokemon_storage/swsh/wallpapers/base.png", ".4bpp.smol");
-static const u32 sWallpaperTilemap_Base[]     = INCGFX_U32("graphics/pokemon_storage/swsh/wallpapers/base.bin", ".smolTM");
-static const u16 sWallpaperPalette_Base[]     = INCGFX_U16("graphics/pokemon_storage/swsh/wallpapers/base.png", ".gbapal");
+// Authentic HGSS Storage context-menu frame: /a/0/1/9 NSCR 86 + NCGR 14 + NCLR 4.
+static const u32 sHgssContextMenu_Gfx[]          = INCGFX_U32("graphics/gen4_ui/hgss_storage/verified/context_menu.png", ".4bpp");
+static const u16 sHgssContextMenu_Pal[]          = INCGFX_U16("graphics/gen4_ui/hgss_storage/verified/context_menu.png", ".gbapal");
 
-static const u32 sWallpaperTiles_Plains[]     = INCGFX_U32("graphics/pokemon_storage/swsh/wallpapers/plains.png", ".4bpp.smol");
-static const u32 sWallpaperTilemap_Plains[]   = INCGFX_U32("graphics/pokemon_storage/swsh/wallpapers/plains.bin", ".smolTM");
-static const u16 sWallpaperPalette_Plains[]   = INCGFX_U16("graphics/pokemon_storage/swsh/wallpapers/plains.png", ".gbapal");
+// Authentic HGSS Storage wallpaper-selector swatch.
+// /a/0/1/9 NCGR 74 + NCLR 75 + NCER 76 + NANR 77.
+// The 24x24 export is the exact static NCER cell, compacted losslessly from
+// 8bpp {transparent, placeholder} pixels to a 4bpp mask for GBA OBJ use.
+static const u32 sHgssWallpaperSelectorSwatch_Gfx[] = INCGFX_U32("graphics/gen4_ui/hgss_storage/verified/wallpaper_selector_swatch.png", ".4bpp");
 
-static const u32 sWallpaperTiles_City[]       = INCGFX_U32("graphics/pokemon_storage/swsh/wallpapers/city.png", ".4bpp.smol");
-static const u32 sWallpaperTilemap_City[]     = INCGFX_U32("graphics/pokemon_storage/swsh/wallpapers/city.bin", ".smolTM");
-static const u16 sWallpaperPalette_City[]     = INCGFX_U16("graphics/pokemon_storage/swsh/wallpapers/city.png", ".gbapal");
-
-static const u32 sWallpaperTiles_Desert[]     = INCGFX_U32("graphics/pokemon_storage/swsh/wallpapers/desert.png", ".4bpp.smol");
-static const u32 sWallpaperTilemap_Desert[]   = INCGFX_U32("graphics/pokemon_storage/swsh/wallpapers/desert.bin", ".smolTM");
-static const u16 sWallpaperPalette_Desert[]   = INCGFX_U16("graphics/pokemon_storage/swsh/wallpapers/desert.png", ".gbapal");
-
-static const u32 sWallpaperTiles_Center[]     = INCGFX_U32("graphics/pokemon_storage/swsh/wallpapers/center.png", ".4bpp.smol");
-static const u32 sWallpaperTilemap_Center[]   = INCGFX_U32("graphics/pokemon_storage/swsh/wallpapers/center.bin", ".smolTM");
-static const u16 sWallpaperPalette_Center[]   = INCGFX_U16("graphics/pokemon_storage/swsh/wallpapers/center.png", ".gbapal");
-
-static const u32 sWallpaperTiles_Shore[]      = INCGFX_U32("graphics/pokemon_storage/swsh/wallpapers/river.png", ".4bpp.smol");
-static const u32 sWallpaperTilemap_Shore[]    = INCGFX_U32("graphics/pokemon_storage/swsh/wallpapers/river.bin", ".smolTM");
-static const u16 sWallpaperPalette_Shore[]    = INCGFX_U16("graphics/pokemon_storage/swsh/wallpapers/river.png", ".gbapal");
-
-static const u32 sWallpaperTiles_Ocean[]      = INCGFX_U32("graphics/pokemon_storage/swsh/wallpapers/ocean.png", ".4bpp.smol");
-static const u32 sWallpaperTilemap_Ocean[]    = INCGFX_U32("graphics/pokemon_storage/swsh/wallpapers/ocean.bin", ".smolTM");
-static const u16 sWallpaperPalette_Ocean[]    = INCGFX_U16("graphics/pokemon_storage/swsh/wallpapers/ocean.png", ".gbapal");
-
-static const u32 sWallpaperTiles_Mountain[]   = INCGFX_U32("graphics/pokemon_storage/swsh/wallpapers/mountain.png", ".4bpp.smol");
-static const u32 sWallpaperTilemap_Mountain[] = INCGFX_U32("graphics/pokemon_storage/swsh/wallpapers/mountain.bin", ".smolTM");
-static const u16 sWallpaperPalette_Mountain[] = INCGFX_U16("graphics/pokemon_storage/swsh/wallpapers/mountain.png", ".gbapal");
-
-static const u32 sWallpaperTiles_Volcano[]    = INCGFX_U32("graphics/pokemon_storage/swsh/wallpapers/volcano.png", ".4bpp.smol");
-static const u32 sWallpaperTilemap_Volcano[]  = INCGFX_U32("graphics/pokemon_storage/swsh/wallpapers/volcano.bin", ".smolTM");
-static const u16 sWallpaperPalette_Volcano[]  = INCGFX_U16("graphics/pokemon_storage/swsh/wallpapers/volcano.png", ".gbapal");
-
-static const u32 sWallpaperTiles_Cave[]       = INCGFX_U32("graphics/pokemon_storage/swsh/wallpapers/cave.png", ".4bpp.smol");
-static const u32 sWallpaperTilemap_Cave[]     = INCGFX_U32("graphics/pokemon_storage/swsh/wallpapers/cave.bin", ".smolTM");
-static const u16 sWallpaperPalette_Cave[]     = INCGFX_U16("graphics/pokemon_storage/swsh/wallpapers/cave.png", ".gbapal");
-
-static const u32 sWallpaperTiles_Beach[]      = INCGFX_U32("graphics/pokemon_storage/swsh/wallpapers/beach.png", ".4bpp.smol");
-static const u32 sWallpaperTilemap_Beach[]    = INCGFX_U32("graphics/pokemon_storage/swsh/wallpapers/beach.bin", ".smolTM");
-static const u16 sWallpaperPalette_Beach[]    = INCGFX_U16("graphics/pokemon_storage/swsh/wallpapers/beach.png", ".gbapal");
-
-static const u32 sWallpaperTiles_Snow[]       = INCGFX_U32("graphics/pokemon_storage/swsh/wallpapers/snow.png", ".4bpp.smol");
-static const u32 sWallpaperTilemap_Snow[]     = INCGFX_U32("graphics/pokemon_storage/swsh/wallpapers/snow.bin", ".smolTM");
-static const u16 sWallpaperPalette_Snow[]     = INCGFX_U16("graphics/pokemon_storage/swsh/wallpapers/snow.png", ".gbapal");
-
-static const u32 sWallpaperTiles_Sky[]        = INCGFX_U32("graphics/pokemon_storage/swsh/wallpapers/sky.png", ".4bpp.smol");
-static const u32 sWallpaperTilemap_Sky[]      = INCGFX_U32("graphics/pokemon_storage/swsh/wallpapers/sky.bin", ".smolTM");
-static const u16 sWallpaperPalette_Sky[]      = INCGFX_U16("graphics/pokemon_storage/swsh/wallpapers/sky.png", ".gbapal");
-
-static const u32 sWallpaperTiles_Computa[]    = INCGFX_U32("graphics/pokemon_storage/swsh/wallpapers/computa.png", ".4bpp.smol");
-static const u32 sWallpaperTilemap_Computa[]  = INCGFX_U32("graphics/pokemon_storage/swsh/wallpapers/computa.bin", ".smolTM");
-static const u16 sWallpaperPalette_Computa[]  = INCGFX_U16("graphics/pokemon_storage/swsh/wallpapers/computa.png", ".gbapal");
-
-static const u32 sWallpaperTiles_Cute[]       = INCGFX_U32("graphics/pokemon_storage/swsh/wallpapers/cute.png", ".4bpp.smol");
-static const u32 sWallpaperTilemap_Cute[]     = INCGFX_U32("graphics/pokemon_storage/swsh/wallpapers/cute.bin", ".smolTM");
-static const u16 sWallpaperPalette_Cute[]     = INCGFX_U16("graphics/pokemon_storage/swsh/wallpapers/cute.png", ".gbapal");
-
-static const u32 sWallpaperTiles_Space[]      = INCGFX_U32("graphics/pokemon_storage/swsh/wallpapers/space.png", ".4bpp.smol");
-static const u32 sWallpaperTilemap_Space[]    = INCGFX_U32("graphics/pokemon_storage/swsh/wallpapers/space.bin", ".smolTM");
-static const u16 sWallpaperPalette_Space[]    = INCGFX_U16("graphics/pokemon_storage/swsh/wallpapers/space.png", ".gbapal");
-
-static const u32 sWallpaperTiles_Daycare[]       = INCGFX_U32("graphics/pokemon_storage/swsh/wallpapers/daycare.png", ".4bpp.smol");
-static const u32 sWallpaperTilemap_Daycare[]     = INCGFX_U32("graphics/pokemon_storage/swsh/wallpapers/daycare.bin", ".smolTM");
-static const u16 sWallpaperPalette_Daycare[]     = INCGFX_U16("graphics/pokemon_storage/swsh/wallpapers/daycare.png", ".gbapal");
-
-static const u32 sWallpaperTiles_Contest[]     = INCGFX_U32("graphics/pokemon_storage/swsh/wallpapers/contest.png", ".4bpp.smol");
-static const u32 sWallpaperTilemap_Contest[]   = INCGFX_U32("graphics/pokemon_storage/swsh/wallpapers/contest.bin", ".smolTM");
-static const u16 sWallpaperPalette_Contest[]   = INCGFX_U16("graphics/pokemon_storage/swsh/wallpapers/contest.png", ".gbapal");
-
-static const u32 sWallpaperTiles_Classic[]    = INCGFX_U32("graphics/pokemon_storage/swsh/wallpapers/classic.png", ".4bpp.smol");
-static const u32 sWallpaperTilemap_Classic[]  = INCGFX_U32("graphics/pokemon_storage/swsh/wallpapers/classic.bin", ".smolTM");
-static const u16 sWallpaperPalette_Classic[]  = INCGFX_U16("graphics/pokemon_storage/swsh/wallpapers/classic.png", ".gbapal");
-
-static const u32 sWallpaperTiles_Classic2[]    = INCGFX_U32("graphics/pokemon_storage/swsh/wallpapers/classic2.png", ".4bpp.smol");
-static const u32 sWallpaperTilemap_Classic2[]  = INCGFX_U32("graphics/pokemon_storage/swsh/wallpapers/classic2.bin", ".smolTM");
-static const u16 sWallpaperPalette_Classic2[]  = INCGFX_U16("graphics/pokemon_storage/swsh/wallpapers/classic2.png", ".gbapal");
-
-#define WALLPAPER_ENTRY(name) {sWallpaperTiles_##name, sWallpaperTilemap_##name, sWallpaperPalette_##name}
-
-static const struct Wallpaper sSwShWallpapers[] =
+// Exact BGR555 colors from HGSS /a/0/1/9 NCLR member 75.
+// IDs 0-15 use the directly verified native selector indices 16-31.
+// IDs 16-23 use the remaining authentic first eight member-75 colors as the
+// compact GBA continuation; no synthetic colors are introduced.
+static const u16 sHgssWallpaperSelectorColors[WALLPAPER_COUNT] =
 {
-    // --- PAGE 1 ---
-    [WALLPAPER_BASE]     = WALLPAPER_ENTRY(Base),
-    [WALLPAPER_PLAINS]   = WALLPAPER_ENTRY(Plains),
-    [WALLPAPER_CITY]     = WALLPAPER_ENTRY(City),
-    [WALLPAPER_DESERT]   = WALLPAPER_ENTRY(Desert),
-    [WALLPAPER_CENTER]   = WALLPAPER_ENTRY(Center),
-
-    // --- PAGE 2 ---
-    [WALLPAPER_SHORE]    = WALLPAPER_ENTRY(Shore),
-    [WALLPAPER_OCEAN]    = WALLPAPER_ENTRY(Ocean),
-    [WALLPAPER_MOUNTAIN] = WALLPAPER_ENTRY(Mountain),
-    [WALLPAPER_VOLCANO]  = WALLPAPER_ENTRY(Volcano),
-    [WALLPAPER_CAVE]     = WALLPAPER_ENTRY(Cave),
-
-    // --- PAGE 3 ---
-    [WALLPAPER_BEACH]    = WALLPAPER_ENTRY(Beach),
-    [WALLPAPER_SNOW]     = WALLPAPER_ENTRY(Snow),
-    [WALLPAPER_SKY]      = WALLPAPER_ENTRY(Sky),
-    [WALLPAPER_COMPUTA]  = WALLPAPER_ENTRY(Computa),
-    [WALLPAPER_CUTE]     = WALLPAPER_ENTRY(Cute),
-
-    // --- PAGE 4 ---
-    [WALLPAPER_SPACE]    = WALLPAPER_ENTRY(Space),
-    [WALLPAPER_DAYCARE]  = WALLPAPER_ENTRY(Daycare),
-    [WALLPAPER_CONTEST]  = WALLPAPER_ENTRY(Contest),
-    [WALLPAPER_CLASSIC]  = WALLPAPER_ENTRY(Classic),
-    [WALLPAPER_CLASSIC2]  = WALLPAPER_ENTRY(Classic2),
+    [WALLPAPER_BASE]      = 0x523F,
+    [WALLPAPER_PLAINS]    = 0x7A2C,
+    [WALLPAPER_CITY]      = 0x43B3,
+    [WALLPAPER_DESERT]    = 0x7B71,
+    [WALLPAPER_CENTER]    = 0x4EDC,
+    [WALLPAPER_SHORE]     = 0x3F9F,
+    [WALLPAPER_OCEAN]     = 0x4E19,
+    [WALLPAPER_MOUNTAIN]  = 0x327E,
+    [WALLPAPER_VOLCANO]   = 0x0000,
+    [WALLPAPER_CAVE]      = 0x761F,
+    [WALLPAPER_BEACH]     = 0x7BDE,
+    [WALLPAPER_SNOW]      = 0x5ED6,
+    [WALLPAPER_SKY]       = 0x1A1A,
+    [WALLPAPER_COMPUTA]   = 0x41CE,
+    [WALLPAPER_CUTE]      = 0x18DC,
+    [WALLPAPER_SPACE]     = 0x7528,
+    [WALLPAPER_DAYCARE]   = 0x3F0F,
+    [WALLPAPER_CONTEST]   = 0x5294,
+    [WALLPAPER_CLASSIC]   = 0x3B38,
+    [WALLPAPER_CLASSIC2]  = 0x2EF5,
+    [WALLPAPER_SPECIAL_5] = 0x6658,
+    [WALLPAPER_SPECIAL_6] = 0x427B,
+    [WALLPAPER_SPECIAL_7] = 0x7BBA,
+    [WALLPAPER_SPECIAL_8] = 0x4A76,
 };
+
+// Exact retail HGSS font-ID-4 palette loaded by Storage through
+// LoadFontPal0(4, 0x1E0, heap 10). Kept in native 0..15 index order.
+static const u16 sHgssStorageText_Pal[] = INCBIN_U16("graphics/gen4_ui/hgss_storage/verified/text_windows_hgss.gbapal");
+
+// Generated from visually verified HGSS /a/0/1/9 role bindings.
+#include "hgss_storage_main_frame.inc.h"
+#include "hgss_storage_party_panel.inc.h"
+
+// Verified authentic HGSS PC wallpaper set.
+// /a/0/1/9: shared NSCR 15 + NCGR 16-39 + NCLR 40-63.
+// Every source is the 1:1 168x160 verified PNG; no legacy wallpaper art is used
+// by the live BG3 loader once a valid wallpaper ID is selected.
+static const u32 sHgssStorageWallpaper01_Gfx[] = INCGFX_U32("graphics/gen4_ui/hgss_storage/verified/wallpaper_01.png", ".4bpp");
+static const u16 sHgssStorageWallpaper01_Pal[] = INCGFX_U16("graphics/gen4_ui/hgss_storage/verified/wallpaper_01.png", ".gbapal");
+static const u32 sHgssStorageWallpaper02_Gfx[] = INCGFX_U32("graphics/gen4_ui/hgss_storage/verified/wallpaper_02.png", ".4bpp");
+static const u16 sHgssStorageWallpaper02_Pal[] = INCGFX_U16("graphics/gen4_ui/hgss_storage/verified/wallpaper_02.png", ".gbapal");
+static const u32 sHgssStorageWallpaper03_Gfx[] = INCGFX_U32("graphics/gen4_ui/hgss_storage/verified/wallpaper_03.png", ".4bpp");
+static const u16 sHgssStorageWallpaper03_Pal[] = INCGFX_U16("graphics/gen4_ui/hgss_storage/verified/wallpaper_03.png", ".gbapal");
+static const u32 sHgssStorageWallpaper04_Gfx[] = INCGFX_U32("graphics/gen4_ui/hgss_storage/verified/wallpaper_04.png", ".4bpp");
+static const u16 sHgssStorageWallpaper04_Pal[] = INCGFX_U16("graphics/gen4_ui/hgss_storage/verified/wallpaper_04.png", ".gbapal");
+static const u32 sHgssStorageWallpaper05_Gfx[] = INCGFX_U32("graphics/gen4_ui/hgss_storage/verified/wallpaper_05.png", ".4bpp");
+static const u16 sHgssStorageWallpaper05_Pal[] = INCGFX_U16("graphics/gen4_ui/hgss_storage/verified/wallpaper_05.png", ".gbapal");
+static const u32 sHgssStorageWallpaper06_Gfx[] = INCGFX_U32("graphics/gen4_ui/hgss_storage/verified/wallpaper_06.png", ".4bpp");
+static const u16 sHgssStorageWallpaper06_Pal[] = INCGFX_U16("graphics/gen4_ui/hgss_storage/verified/wallpaper_06.png", ".gbapal");
+static const u32 sHgssStorageWallpaper07_Gfx[] = INCGFX_U32("graphics/gen4_ui/hgss_storage/verified/wallpaper_07.png", ".4bpp");
+static const u16 sHgssStorageWallpaper07_Pal[] = INCGFX_U16("graphics/gen4_ui/hgss_storage/verified/wallpaper_07.png", ".gbapal");
+static const u32 sHgssStorageWallpaper08_Gfx[] = INCGFX_U32("graphics/gen4_ui/hgss_storage/verified/wallpaper_08.png", ".4bpp");
+static const u16 sHgssStorageWallpaper08_Pal[] = INCGFX_U16("graphics/gen4_ui/hgss_storage/verified/wallpaper_08.png", ".gbapal");
+static const u32 sHgssStorageWallpaper09_Gfx[] = INCGFX_U32("graphics/gen4_ui/hgss_storage/verified/wallpaper_09.png", ".4bpp");
+static const u16 sHgssStorageWallpaper09_Pal[] = INCGFX_U16("graphics/gen4_ui/hgss_storage/verified/wallpaper_09.png", ".gbapal");
+static const u32 sHgssStorageWallpaper10_Gfx[] = INCGFX_U32("graphics/gen4_ui/hgss_storage/verified/wallpaper_10.png", ".4bpp");
+static const u16 sHgssStorageWallpaper10_Pal[] = INCGFX_U16("graphics/gen4_ui/hgss_storage/verified/wallpaper_10.png", ".gbapal");
+static const u32 sHgssStorageWallpaper11_Gfx[] = INCGFX_U32("graphics/gen4_ui/hgss_storage/verified/wallpaper_11.png", ".4bpp");
+static const u16 sHgssStorageWallpaper11_Pal[] = INCGFX_U16("graphics/gen4_ui/hgss_storage/verified/wallpaper_11.png", ".gbapal");
+static const u32 sHgssStorageWallpaper12_Gfx[] = INCGFX_U32("graphics/gen4_ui/hgss_storage/verified/wallpaper_12.png", ".4bpp");
+static const u16 sHgssStorageWallpaper12_Pal[] = INCGFX_U16("graphics/gen4_ui/hgss_storage/verified/wallpaper_12.png", ".gbapal");
+static const u32 sHgssStorageWallpaper13_Gfx[] = INCGFX_U32("graphics/gen4_ui/hgss_storage/verified/wallpaper_13.png", ".4bpp");
+static const u16 sHgssStorageWallpaper13_Pal[] = INCGFX_U16("graphics/gen4_ui/hgss_storage/verified/wallpaper_13.png", ".gbapal");
+static const u32 sHgssStorageWallpaper14_Gfx[] = INCGFX_U32("graphics/gen4_ui/hgss_storage/verified/wallpaper_14.png", ".4bpp");
+static const u16 sHgssStorageWallpaper14_Pal[] = INCGFX_U16("graphics/gen4_ui/hgss_storage/verified/wallpaper_14.png", ".gbapal");
+static const u32 sHgssStorageWallpaper15_Gfx[] = INCGFX_U32("graphics/gen4_ui/hgss_storage/verified/wallpaper_15.png", ".4bpp");
+static const u16 sHgssStorageWallpaper15_Pal[] = INCGFX_U16("graphics/gen4_ui/hgss_storage/verified/wallpaper_15.png", ".gbapal");
+static const u32 sHgssStorageWallpaper16_Gfx[] = INCGFX_U32("graphics/gen4_ui/hgss_storage/verified/wallpaper_16.png", ".4bpp");
+static const u16 sHgssStorageWallpaper16_Pal[] = INCGFX_U16("graphics/gen4_ui/hgss_storage/verified/wallpaper_16.png", ".gbapal");
+static const u32 sHgssStorageWallpaper17_Gfx[] = INCGFX_U32("graphics/gen4_ui/hgss_storage/verified/wallpaper_17.png", ".4bpp");
+static const u16 sHgssStorageWallpaper17_Pal[] = INCGFX_U16("graphics/gen4_ui/hgss_storage/verified/wallpaper_17.png", ".gbapal");
+static const u32 sHgssStorageWallpaper18_Gfx[] = INCGFX_U32("graphics/gen4_ui/hgss_storage/verified/wallpaper_18.png", ".4bpp");
+static const u16 sHgssStorageWallpaper18_Pal[] = INCGFX_U16("graphics/gen4_ui/hgss_storage/verified/wallpaper_18.png", ".gbapal");
+static const u32 sHgssStorageWallpaper19_Gfx[] = INCGFX_U32("graphics/gen4_ui/hgss_storage/verified/wallpaper_19.png", ".4bpp");
+static const u16 sHgssStorageWallpaper19_Pal[] = INCGFX_U16("graphics/gen4_ui/hgss_storage/verified/wallpaper_19.png", ".gbapal");
+static const u32 sHgssStorageWallpaper20_Gfx[] = INCGFX_U32("graphics/gen4_ui/hgss_storage/verified/wallpaper_20.png", ".4bpp");
+static const u16 sHgssStorageWallpaper20_Pal[] = INCGFX_U16("graphics/gen4_ui/hgss_storage/verified/wallpaper_20.png", ".gbapal");
+static const u32 sHgssStorageWallpaper21_Gfx[] = INCGFX_U32("graphics/gen4_ui/hgss_storage/verified/wallpaper_21.png", ".4bpp");
+static const u16 sHgssStorageWallpaper21_Pal[] = INCGFX_U16("graphics/gen4_ui/hgss_storage/verified/wallpaper_21.png", ".gbapal");
+static const u32 sHgssStorageWallpaper22_Gfx[] = INCGFX_U32("graphics/gen4_ui/hgss_storage/verified/wallpaper_22.png", ".4bpp");
+static const u16 sHgssStorageWallpaper22_Pal[] = INCGFX_U16("graphics/gen4_ui/hgss_storage/verified/wallpaper_22.png", ".gbapal");
+static const u32 sHgssStorageWallpaper23_Gfx[] = INCGFX_U32("graphics/gen4_ui/hgss_storage/verified/wallpaper_23.png", ".4bpp");
+static const u16 sHgssStorageWallpaper23_Pal[] = INCGFX_U16("graphics/gen4_ui/hgss_storage/verified/wallpaper_23.png", ".gbapal");
+static const u32 sHgssStorageWallpaper24_Gfx[] = INCGFX_U32("graphics/gen4_ui/hgss_storage/verified/wallpaper_24.png", ".4bpp");
+static const u16 sHgssStorageWallpaper24_Pal[] = INCGFX_U16("graphics/gen4_ui/hgss_storage/verified/wallpaper_24.png", ".gbapal");
+
+static const u32 *const sHgssStorageWallpaperGfx[WALLPAPER_COUNT] =
+{
+    [WALLPAPER_BASE] = sHgssStorageWallpaper01_Gfx,
+    [WALLPAPER_PLAINS] = sHgssStorageWallpaper02_Gfx,
+    [WALLPAPER_CITY] = sHgssStorageWallpaper03_Gfx,
+    [WALLPAPER_DESERT] = sHgssStorageWallpaper04_Gfx,
+    [WALLPAPER_CENTER] = sHgssStorageWallpaper05_Gfx,
+    [WALLPAPER_SHORE] = sHgssStorageWallpaper06_Gfx,
+    [WALLPAPER_OCEAN] = sHgssStorageWallpaper07_Gfx,
+    [WALLPAPER_MOUNTAIN] = sHgssStorageWallpaper08_Gfx,
+    [WALLPAPER_VOLCANO] = sHgssStorageWallpaper09_Gfx,
+    [WALLPAPER_CAVE] = sHgssStorageWallpaper10_Gfx,
+    [WALLPAPER_BEACH] = sHgssStorageWallpaper11_Gfx,
+    [WALLPAPER_SNOW] = sHgssStorageWallpaper12_Gfx,
+    [WALLPAPER_SKY] = sHgssStorageWallpaper13_Gfx,
+    [WALLPAPER_COMPUTA] = sHgssStorageWallpaper14_Gfx,
+    [WALLPAPER_CUTE] = sHgssStorageWallpaper15_Gfx,
+    [WALLPAPER_SPACE] = sHgssStorageWallpaper16_Gfx,
+    [WALLPAPER_DAYCARE] = sHgssStorageWallpaper17_Gfx,
+    [WALLPAPER_CONTEST] = sHgssStorageWallpaper18_Gfx,
+    [WALLPAPER_CLASSIC] = sHgssStorageWallpaper19_Gfx,
+    [WALLPAPER_CLASSIC2] = sHgssStorageWallpaper20_Gfx,
+    [WALLPAPER_SPECIAL_5] = sHgssStorageWallpaper21_Gfx,
+    [WALLPAPER_SPECIAL_6] = sHgssStorageWallpaper22_Gfx,
+    [WALLPAPER_SPECIAL_7] = sHgssStorageWallpaper23_Gfx,
+    [WALLPAPER_SPECIAL_8] = sHgssStorageWallpaper24_Gfx,
+};
+
+static const u16 *const sHgssStorageWallpaperPal[WALLPAPER_COUNT] =
+{
+    [WALLPAPER_BASE] = sHgssStorageWallpaper01_Pal,
+    [WALLPAPER_PLAINS] = sHgssStorageWallpaper02_Pal,
+    [WALLPAPER_CITY] = sHgssStorageWallpaper03_Pal,
+    [WALLPAPER_DESERT] = sHgssStorageWallpaper04_Pal,
+    [WALLPAPER_CENTER] = sHgssStorageWallpaper05_Pal,
+    [WALLPAPER_SHORE] = sHgssStorageWallpaper06_Pal,
+    [WALLPAPER_OCEAN] = sHgssStorageWallpaper07_Pal,
+    [WALLPAPER_MOUNTAIN] = sHgssStorageWallpaper08_Pal,
+    [WALLPAPER_VOLCANO] = sHgssStorageWallpaper09_Pal,
+    [WALLPAPER_CAVE] = sHgssStorageWallpaper10_Pal,
+    [WALLPAPER_BEACH] = sHgssStorageWallpaper11_Pal,
+    [WALLPAPER_SNOW] = sHgssStorageWallpaper12_Pal,
+    [WALLPAPER_SKY] = sHgssStorageWallpaper13_Pal,
+    [WALLPAPER_COMPUTA] = sHgssStorageWallpaper14_Pal,
+    [WALLPAPER_CUTE] = sHgssStorageWallpaper15_Pal,
+    [WALLPAPER_SPACE] = sHgssStorageWallpaper16_Pal,
+    [WALLPAPER_DAYCARE] = sHgssStorageWallpaper17_Pal,
+    [WALLPAPER_CONTEST] = sHgssStorageWallpaper18_Pal,
+    [WALLPAPER_CLASSIC] = sHgssStorageWallpaper19_Pal,
+    [WALLPAPER_CLASSIC2] = sHgssStorageWallpaper20_Pal,
+    [WALLPAPER_SPECIAL_5] = sHgssStorageWallpaper21_Pal,
+    [WALLPAPER_SPECIAL_6] = sHgssStorageWallpaper22_Pal,
+    [WALLPAPER_SPECIAL_7] = sHgssStorageWallpaper23_Pal,
+    [WALLPAPER_SPECIAL_8] = sHgssStorageWallpaper24_Pal,
+};
+
+// Authentic HGSS Choose Box navigation controls.
+// /a/0/1/9 members 66-69; four verified 24x24 frames preserved 1:1.
+static const u32 sHgssChooseBoxNav_Gfx[] = INCGFX_U32("graphics/gen4_ui/hgss_storage/verified/choose_box_nav.png", ".4bpp");
+static const u16 sHgssChooseBoxNav_Pal[] = INCGFX_U16("graphics/gen4_ui/hgss_storage/verified/choose_box_nav.png", ".gbapal");
+
+// Authentic HGSS box-overview thumbnail base.
+// /a/0/1/9 members 70-73; verified NCER cell is exactly 32x32.
+static const u32 sHgssBoxThumbnailBase_Gfx[] = INCGFX_U32("graphics/gen4_ui/hgss_storage/verified/box_thumbnail_base.png", ".4bpp");
+static const u16 sHgssBoxThumbnailBase_Pal[] = INCGFX_U16("graphics/gen4_ui/hgss_storage/verified/box_thumbnail_base.png", ".gbapal");
+
+// ov14_021F4A64 maps HGSS body-color categories through ov14_021F8080, then
+// addresses member-75 palette indices 0x20-0x2F. These are the exact BGR555
+// colors after applying that native lookup table, ordered by enum BodyColor.
+static const u16 sHgssBoxThumbnailMarkerColors[10] =
+{
+    [BODY_COLOR_RED]    = 0x6E1D,
+    [BODY_COLOR_BLUE]   = 0x5FFB,
+    [BODY_COLOR_YELLOW] = 0x427B,
+    [BODY_COLOR_GREEN]  = 0x3B38,
+    [BODY_COLOR_BLACK]  = 0x5314,
+    [BODY_COLOR_BROWN]  = 0x53BE,
+    [BODY_COLOR_PURPLE] = 0x7BBA,
+    [BODY_COLOR_GRAY]   = 0x6ECD,
+    [BODY_COLOR_WHITE]  = 0x5AED,
+    [BODY_COLOR_PINK]   = 0x6E31,
+};
+
+// Authentic HGSS normal Storage hand pointer: NANR animation 14,
+// NCER cells 13 and 14, 20 ticks per frame.
+static const u32 sHgssStorageCursor_Gfx[] = INCGFX_U32("graphics/gen4_ui/hgss_storage/verified/cursor.png", ".4bpp");
+static const u16 sHgssStorageCursor_Pal[] = INCGFX_U16("graphics/gen4_ui/hgss_storage/verified/cursor.png", ".gbapal");
+
+// Authentic HGSS Storage gender symbols. HGSS renders message-bank entries
+// 82/83 through font ID 4; this OBJ sheet preserves those exact 16x16 glyph
+// pixels and member-7 colors, repacked vertically only for GBA 1D OBJ tile
+// order (male first, female second).
+static const u32 sHgssGenderGlyphs_Gfx[] = INCGFX_U32("graphics/gen4_ui/hgss_storage/verified/gender_glyphs_obj.png", ".4bpp.smol");
+static const u16 sHgssFontMember7_Pal[16] =
+{
+    0x3713, 0x296B, 0x5EF5, 0x089D,
+    0x5EBF, 0x0F45, 0x47B3, 0x7DC0,
+    0x76EF, 0x5E5F, 0x737F, 0x0000,
+    0x0000, 0x0000, 0x0000, 0x7FFF,
+};
+// Authentic HGSS markings panel: /a/0/1/9 NSCR 10 + NCGR 14 + NCLR 4.
+static const u32 sHgssMarkingsMenu_Gfx[]       = INCGFX_U32("graphics/gen4_ui/hgss_storage/verified/markings_menu.png", ".4bpp");
+static const u16 sHgssMarkingsMenu_Pal[]       = INCGFX_U16("graphics/gen4_ui/hgss_storage/verified/markings_menu.png", ".gbapal");
+
+// Compact Storage marking display: exact circle / triangle / square / heart
+// symbol pixels extracted 1:1 from the verified HGSS markings panel.
+static const ALIGNED(4) u8 sHgssMarkingCombo_Gfx[] = INCBIN_U8("graphics/gen4_ui/hgss_storage/verified/marking_combo_hgss.4bpp");
+static const ALIGNED(4) u8 sHgssMarkingComboBlank_Gfx[0x80] = {0};
+
+// Authentic /a/0/1/9 member 4 NCLR bank 3, reordered only to the verified
+// markings_menu.png palette indices. This is the active-mark button state.
+static const u16 sHgssMarkingsMenuSelected_Pal[16] =
+{
+    0x5790, 0x4E94, 0x356B, 0x2D57,
+    0x41FC, 0x4E94, 0x4E94, 0x39EF,
+    0x294A, 0x0000, 0x0000, 0x0000,
+    0x0000, 0x0000, 0x0000, 0x0000,
+};
+// Authentic HGSS Summary shiny star: /a/0/3/9 member 58 tile 0 + /a/1/6/2 member 61 palette bank 0.
+static const u32 sHgssShinyStar_Gfx[]          = INCGFX_U32("graphics/gen4_ui/hgss_storage/verified/shiny_star.png", ".4bpp.smol");
+static const u16 sHgssShinyStar_Pal[]          = INCGFX_U16("graphics/gen4_ui/hgss_storage/verified/shiny_star.png", ".gbapal");
+// Authentic HGSS Summary Pokerus symbol: /a/0/3/9 member 58 tile 1 + /a/1/6/2 member 61 palette bank 0.
+static const u32 sHgssPokerusSymbol_Gfx[]      = INCGFX_U32("graphics/gen4_ui/hgss_storage/verified/pokerus_symbol.png", ".4bpp.smol");
+static const u16 sHgssPokerusSymbol_Pal[]      = INCGFX_U16("graphics/gen4_ui/hgss_storage/verified/pokerus_symbol.png", ".gbapal");
+// Exact HGSS font-ID-4 glyph pixels, composed without scaling into compact
+// Storage-sidebar abbreviations (HP / At / De / SA / SD / Sp). The bitmap
+// contains neutral / Nature-up / Nature-down variants and is blitted to BG0.
+// Pixel classes address native retail font-palette indices directly:
+// foreground=14, neutral shadow=15, Nature-up shadow=7, Nature-down shadow=8.
+static const ALIGNED(4) u8 sHgssNatureStatLabels_Gfx[] = INCBIN_U8("graphics/gen4_ui/hgss_storage/verified/stat_labels_hgss_font.4bpp");
+// Authentic HGSS Storage type badges: exact /a/0/0/8 32x16 character data
+// plus the authentic-source Fairy composite. The three palette banks are the
+// exact retail HGSS /a/0/0/8 member 0x4A payload.
+static const ALIGNED(4) u8 sHgssTypeIcons_Gfx[] = INCBIN_U8("graphics/gen4_ui/hgss_storage/verified/type_icons_hgss_gen4.4bpp");
+static const ALIGNED(4) u8 sHgssFairyTypeIcon_Gfx[] = INCBIN_U8("graphics/gen4_ui/hgss_storage/verified/type_icon_fairy_hgss_composite.4bpp");
+static const u16 sHgssTypeIcons_Pal[] = INCBIN_U16("graphics/gen4_ui/hgss_storage/verified/type_icons_hgss_gen4.gbapal");
 
 // ============================================================================
 // Text Strings
@@ -234,30 +344,33 @@ static const u8 *const sMenuTexts[] =
     [MENU_SWITCH]     = COMPOUND_STRING("Switch"),
     [MENU_BAG]        = COMPOUND_STRING("Bag"),
     [MENU_SELECT]     = COMPOUND_STRING("Select"),
-    //Wallpapers Page 1
-    [MENU_BASE]       = COMPOUND_STRING("Default"),
-    [MENU_PLAINS]     = COMPOUND_STRING("Plains"),
-    [MENU_CITY]       = COMPOUND_STRING("City"),
-    [MENU_DESERT]     = COMPOUND_STRING("Desert"),
-    [MENU_CENTER]     = COMPOUND_STRING("Center"),
-    //Wallpapers Page 2
-    [MENU_SHORE]      = COMPOUND_STRING("River"),
-    [MENU_OCEAN]      = COMPOUND_STRING("Seabed"),
-    [MENU_MOUNTAIN]   = COMPOUND_STRING("Mountain"),
-    [MENU_VOLCANO]    = COMPOUND_STRING("Volcano"),
-    [MENU_CAVE]       = COMPOUND_STRING("Cave"),
-	//Wallpapers Page 3
-    [MENU_BEACH]      = COMPOUND_STRING("Beach"),
-    [MENU_SNOW]       = COMPOUND_STRING("Snow"),
-    [MENU_SKY]        = COMPOUND_STRING("Sky"),
-    [MENU_COMPUTA]    = COMPOUND_STRING("Machine"),
-    [MENU_CUTE]       = COMPOUND_STRING("Checks"),
-	//Wallpapers Page 4
-    [MENU_SPACE]      = COMPOUND_STRING("Space"),
-    [MENU_DAYCARE]    = COMPOUND_STRING("Daycare"),
-    [MENU_CONTEST]   = COMPOUND_STRING("Contest"),
-    [MENU_CLASSIC]    = COMPOUND_STRING("Classic"),
-    [MENU_CLASSIC2]   = COMPOUND_STRING("Classic 2"),
+    // Authentic HGSS normal wallpaper order: /a/0/1/9 members 16-31.
+    [MENU_BASE]       = COMPOUND_STRING("Forest"),
+    [MENU_PLAINS]     = COMPOUND_STRING("City"),
+    [MENU_CITY]       = COMPOUND_STRING("Desert"),
+    [MENU_DESERT]     = COMPOUND_STRING("Savanna"),
+    [MENU_CENTER]     = COMPOUND_STRING("Crag"),
+    [MENU_SHORE]      = COMPOUND_STRING("Volcano"),
+    [MENU_OCEAN]      = COMPOUND_STRING("Snow"),
+    [MENU_MOUNTAIN]   = COMPOUND_STRING("Cave"),
+    [MENU_VOLCANO]    = COMPOUND_STRING("Beach"),
+    [MENU_CAVE]       = COMPOUND_STRING("Seafloor"),
+    [MENU_BEACH]      = COMPOUND_STRING("River"),
+    [MENU_SNOW]       = COMPOUND_STRING("Sky"),
+    [MENU_SKY]        = COMPOUND_STRING("Polkadot"),
+    [MENU_COMPUTA]    = COMPOUND_STRING("PokéCenter"),
+    [MENU_CUTE]       = COMPOUND_STRING("Machine"),
+    [MENU_SPACE]      = COMPOUND_STRING("Simple"),
+    // The final eight are authenticated special HGSS wallpapers. Their art is
+    // wired in native order; neutral labels avoid inventing unsupported names.
+    [MENU_DAYCARE]    = COMPOUND_STRING("Special 1"),
+    [MENU_CONTEST]    = COMPOUND_STRING("Special 2"),
+    [MENU_CLASSIC]    = COMPOUND_STRING("Special 3"),
+    [MENU_CLASSIC2]   = COMPOUND_STRING("Special 4"),
+    [MENU_SPECIAL_5]  = COMPOUND_STRING("Special 5"),
+    [MENU_SPECIAL_6]  = COMPOUND_STRING("Special 6"),
+    [MENU_SPECIAL_7]  = COMPOUND_STRING("Special 7"),
+    [MENU_SPECIAL_8]  = COMPOUND_STRING("Special 8"),
     [MENU_COUNT]      = gText_EmptyString2,
 };
 
@@ -306,10 +419,10 @@ static const struct WindowTemplate sYesNoWindowTemplate =
 {
     .bg = 0,
     .tilemapLeft = 24,
-    .tilemapTop = 11,
+    .tilemapTop = 14,
     .width = 5,
     .height = 4,
-    .paletteNum = 15,
+    .paletteNum = 10,
     .baseBlock = 0x5C,
 };
 
@@ -328,11 +441,11 @@ static const struct WindowTemplate sWindowTemplates[] =
 {
     [WIN_MESSAGE] = {
         .bg = 0,
-        .tilemapLeft = 9,
-        .tilemapTop = 17,
-        .width = 20,
+        .tilemapLeft = 1,
+        .tilemapTop = 16,
+        .width = 28,
         .height = 2,
-        .paletteNum = 15,
+        .paletteNum = 10,
         .baseBlock = 44,
     },
     [WIN_ITEM_DESC] = {
@@ -348,14 +461,14 @@ static const struct WindowTemplate sWindowTemplates[] =
         .bg = 0,
         .tilemapLeft = 0,
         .tilemapTop = 23,
-        .width = 8,
+        .width = 7,
         .height = 2,
         .paletteNum = 15,
         .baseBlock = 202
     },
     [WIN_MON_INFO_LEVEL_LEFT] = {
         .bg = 0,
-        .tilemapLeft = 9,
+        .tilemapLeft = 7,
         .tilemapTop = 23,
         .width = 4,
         .height = 2,
@@ -373,27 +486,45 @@ static const struct WindowTemplate sWindowTemplates[] =
     },
     [WIN_MON_INFO_STATS_COL2_LEFT] = {
         .bg = 0,
-        .tilemapLeft = 10,
+        .tilemapLeft = 8,
         .tilemapTop = 27,
         .width = 3,
         .height = 6,
         .paletteNum = 15,
         .baseBlock = 244
     },
+    [WIN_MON_INFO_STAT_LABELS_COL1_LEFT] = {
+        .bg = 0,
+        .tilemapLeft = 0,
+        .tilemapTop = 27,
+        .width = 2,
+        .height = 6,
+        .paletteNum = 15,
+        .baseBlock = 298
+    },
+    [WIN_MON_INFO_STAT_LABELS_COL2_LEFT] = {
+        .bg = 0,
+        .tilemapLeft = 5,
+        .tilemapTop = 27,
+        .width = 2,
+        .height = 6,
+        .paletteNum = 15,
+        .baseBlock = 310
+    },
     [WIN_MON_INFO_ABILITY_LEFT] = {
         .bg = 0,
-        .tilemapLeft = 4,
+        .tilemapLeft = 1,
         .tilemapTop = 34,
-        .width = 9,
+        .width = 10,
         .height = 2,
         .paletteNum = 15,
         .baseBlock = 262
     },
     [WIN_MON_INFO_ITEM_LEFT] = {
         .bg = 0,
-        .tilemapLeft = 4,
+        .tilemapLeft = 1,
         .tilemapTop = 36,
-        .width = 9,
+        .width = 10,
         .height = 2,
         .paletteNum = 15,
         .baseBlock = 280
@@ -402,14 +533,14 @@ static const struct WindowTemplate sWindowTemplates[] =
         .bg = 0,
         .tilemapLeft = 17,
         .tilemapTop = 43,
-        .width = 8,
+        .width = 7,
         .height = 2,
         .paletteNum = 15,
         .baseBlock = 202
     },
     [WIN_MON_INFO_LEVEL_RIGHT] = {
         .bg = 0,
-        .tilemapLeft = 26,
+        .tilemapLeft = 24,
         .tilemapTop = 43,
         .width = 4,
         .height = 2,
@@ -427,27 +558,45 @@ static const struct WindowTemplate sWindowTemplates[] =
     },
     [WIN_MON_INFO_STATS_COL2_RIGHT] = {
         .bg = 0,
-        .tilemapLeft = 27,
+        .tilemapLeft = 25,
         .tilemapTop = 47,
         .width = 3,
         .height = 6,
         .paletteNum = 15,
         .baseBlock = 244
     },
+    [WIN_MON_INFO_STAT_LABELS_COL1_RIGHT] = {
+        .bg = 0,
+        .tilemapLeft = 17,
+        .tilemapTop = 47,
+        .width = 2,
+        .height = 6,
+        .paletteNum = 15,
+        .baseBlock = 298
+    },
+    [WIN_MON_INFO_STAT_LABELS_COL2_RIGHT] = {
+        .bg = 0,
+        .tilemapLeft = 22,
+        .tilemapTop = 47,
+        .width = 2,
+        .height = 6,
+        .paletteNum = 15,
+        .baseBlock = 310
+    },
     [WIN_MON_INFO_ABILITY_RIGHT] = {
         .bg = 0,
-        .tilemapLeft = 21,
+        .tilemapLeft = 18,
         .tilemapTop = 54,
-        .width = 9,
+        .width = 10,
         .height = 2,
         .paletteNum = 15,
         .baseBlock = 262
     },
     [WIN_MON_INFO_ITEM_RIGHT] = {
         .bg = 0,
-        .tilemapLeft = 21,
+        .tilemapLeft = 18,
         .tilemapTop = 56,
-        .width = 9,
+        .width = 10,
         .height = 2,
         .paletteNum = 15,
         .baseBlock = 280
@@ -455,12 +604,16 @@ static const struct WindowTemplate sWindowTemplates[] =
     DUMMY_WIN_TEMPLATE
 };
 
+// GBA text-printer order is {background, foreground, shadow}; this is
+// retail HGSS Storage MAKE_TEXT_COLOR(1, 2, 0) in that ordering.
+static const u8 sHgssStorageTextColors[3] = {0, 1, 2};
+
 static const u8 sTextColors[][3] =
 {
-    {1, 2, 3}, // Standard menus, mon info (stats, ability, item)
-    {4, 2, 5}, // Mon info (nickname and level) (grey BG)
+    {1, 2, 3}, // Standard menus / temporary authentic-palette remaps
+    {4, 2, 5}, // Legacy non-Storage callers retaining their own palette mapping
     {0, 4, 7}, // Choose box menu - actually uses PALTAG_MISC_3 and not bg pal 15
-    {0, 1, 6}, // Main message window
+    {0, 2, 3}, // HGSS Storage message window (cream / dark / gray)
 };
 
 
@@ -509,38 +662,233 @@ static const struct BgTemplate sBgTemplates[] =
 };
 
 // ============================================================================
-// Choose Box Menu Sprites
+// Authentic HGSS Choose Box Navigation Controls
 // ============================================================================
 
-static const struct OamData sOamData_ChooseBoxMenu =
+static const struct OamData sOamData_HgssChooseBoxNav =
 {
-    .y = 0,
-    .affineMode = ST_OAM_AFFINE_OFF,
-    .objMode = ST_OAM_OBJ_NORMAL,
-    .mosaic = FALSE,
-    .bpp = ST_OAM_4BPP,
-    .size = SPRITE_SIZE(32x32),
-    .x = 0,
-    .matrixNum = 0,
     .shape = SPRITE_SHAPE(32x32),
-    .tileNum = 0,
+    .size = SPRITE_SIZE(32x32),
     .priority = 1,
-    .paletteNum = 0,
-    .affineParam = 0,
 };
 
-static const struct CompressedSpriteSheet sSpriteSheet_ChooseBoxMenu =
+static const union AnimCmd sAnim_HgssChooseBoxNav_LeftNormal[] =
 {
-    .data = sChooseBoxMenu_Gfx,
-    .size = (32 * 32) / 2,
-    .tag = GFXTAG_BOX_SELECTION,
+    ANIMCMD_FRAME(0, 0),
+    ANIMCMD_END
 };
-    
-static const struct SpriteTemplate sSpriteTemplate_ChooseBoxMenu =
+
+static const union AnimCmd sAnim_HgssChooseBoxNav_LeftPressed[] =
 {
-    .tileTag = GFXTAG_BOX_SELECTION,
-    .paletteTag = PALTAG_MISC_3,
-    .oam = &sOamData_ChooseBoxMenu,
+    ANIMCMD_FRAME(16, 4),
+    ANIMCMD_FRAME(0, 0),
+    ANIMCMD_END
+};
+
+static const union AnimCmd sAnim_HgssChooseBoxNav_RightNormal[] =
+{
+    ANIMCMD_FRAME(32, 0),
+    ANIMCMD_END
+};
+
+static const union AnimCmd sAnim_HgssChooseBoxNav_RightPressed[] =
+{
+    ANIMCMD_FRAME(48, 4),
+    ANIMCMD_FRAME(32, 0),
+    ANIMCMD_END
+};
+
+static const union AnimCmd *const sAnims_HgssChooseBoxNav[] =
+{
+    sAnim_HgssChooseBoxNav_LeftNormal,
+    sAnim_HgssChooseBoxNav_LeftPressed,
+    sAnim_HgssChooseBoxNav_RightNormal,
+    sAnim_HgssChooseBoxNav_RightPressed,
+};
+
+static const struct SpriteTemplate sSpriteTemplate_HgssChooseBoxNav =
+{
+    .tileTag = GFXTAG_HGSS_CHOOSE_BOX_NAV,
+    .paletteTag = PALTAG_HGSS_CHOOSE_BOX_NAV,
+    .oam = &sOamData_HgssChooseBoxNav,
+    .anims = sAnims_HgssChooseBoxNav,
+};
+
+// ============================================================================
+// Authentic HGSS Box-Overview Thumbnail Base
+// ============================================================================
+
+static const struct OamData sOamData_HgssBoxThumbnail =
+{
+    .shape = SPRITE_SHAPE(32x32),
+    .size = SPRITE_SIZE(32x32),
+    .priority = 1,
+};
+
+static const union AnimCmd sAnim_HgssBoxThumbnail0[] =
+{
+    ANIMCMD_FRAME(0, 4),
+    ANIMCMD_END
+};
+
+static const union AnimCmd sAnim_HgssBoxThumbnail1[] =
+{
+    ANIMCMD_FRAME(16, 4),
+    ANIMCMD_END
+};
+
+static const union AnimCmd sAnim_HgssBoxThumbnail2[] =
+{
+    ANIMCMD_FRAME(32, 4),
+    ANIMCMD_END
+};
+
+static const union AnimCmd sAnim_HgssBoxThumbnail3[] =
+{
+    ANIMCMD_FRAME(48, 4),
+    ANIMCMD_END
+};
+
+static const union AnimCmd sAnim_HgssBoxThumbnail4[] =
+{
+    ANIMCMD_FRAME(64, 4),
+    ANIMCMD_END
+};
+
+static const union AnimCmd sAnim_HgssBoxThumbnail5[] =
+{
+    ANIMCMD_FRAME(80, 4),
+    ANIMCMD_END
+};
+
+static const union AnimCmd *const sAnims_HgssBoxThumbnail[] =
+{
+    sAnim_HgssBoxThumbnail0,
+    sAnim_HgssBoxThumbnail1,
+    sAnim_HgssBoxThumbnail2,
+    sAnim_HgssBoxThumbnail3,
+    sAnim_HgssBoxThumbnail4,
+    sAnim_HgssBoxThumbnail5,
+};
+
+static const struct SpriteTemplate sSpriteTemplate_HgssBoxThumbnail =
+{
+    .tileTag = GFXTAG_HGSS_BOX_THUMBNAIL,
+    .paletteTag = PALTAG_HGSS_BOX_THUMBNAIL,
+    .oam = &sOamData_HgssBoxThumbnail,
+    .anims = sAnims_HgssBoxThumbnail,
+};
+
+static const struct OamData sOamData_HgssBoxThumbnailMarkers =
+{
+    .shape = SPRITE_SHAPE(16x16),
+    .size = SPRITE_SIZE(16x16),
+    .priority = 1,
+};
+
+static const union AnimCmd sAnim_HgssBoxThumbnailMarkers0[] =
+{
+    ANIMCMD_FRAME(0, 4),
+    ANIMCMD_END
+};
+
+static const union AnimCmd sAnim_HgssBoxThumbnailMarkers1[] =
+{
+    ANIMCMD_FRAME(4, 4),
+    ANIMCMD_END
+};
+
+static const union AnimCmd sAnim_HgssBoxThumbnailMarkers2[] =
+{
+    ANIMCMD_FRAME(8, 4),
+    ANIMCMD_END
+};
+
+static const union AnimCmd sAnim_HgssBoxThumbnailMarkers3[] =
+{
+    ANIMCMD_FRAME(12, 4),
+    ANIMCMD_END
+};
+
+static const union AnimCmd sAnim_HgssBoxThumbnailMarkers4[] =
+{
+    ANIMCMD_FRAME(16, 4),
+    ANIMCMD_END
+};
+
+static const union AnimCmd sAnim_HgssBoxThumbnailMarkers5[] =
+{
+    ANIMCMD_FRAME(20, 4),
+    ANIMCMD_END
+};
+
+static const union AnimCmd *const sAnims_HgssBoxThumbnailMarkers[] =
+{
+    sAnim_HgssBoxThumbnailMarkers0,
+    sAnim_HgssBoxThumbnailMarkers1,
+    sAnim_HgssBoxThumbnailMarkers2,
+    sAnim_HgssBoxThumbnailMarkers3,
+    sAnim_HgssBoxThumbnailMarkers4,
+    sAnim_HgssBoxThumbnailMarkers5,
+};
+
+static const struct SpriteTemplate sSpriteTemplate_HgssBoxThumbnailMarkers =
+{
+    .tileTag = GFXTAG_HGSS_BOX_THUMBNAIL_MARKERS,
+    .paletteTag = PALTAG_HGSS_BOX_THUMBNAIL_MARKERS,
+    .oam = &sOamData_HgssBoxThumbnailMarkers,
+    .anims = sAnims_HgssBoxThumbnailMarkers,
+};
+
+// ============================================================================
+// Authentic HGSS Wallpaper Selector Swatches
+// ============================================================================
+
+static const struct OamData sOamData_HgssWallpaperSelector =
+{
+    .shape = SPRITE_SHAPE(32x32),
+    .size = SPRITE_SIZE(32x32),
+    .priority = 0,
+};
+
+static const union AnimCmd sAnim_HgssWallpaperSelector0[] =
+{
+    ANIMCMD_FRAME(0, 0),
+    ANIMCMD_END
+};
+
+static const union AnimCmd sAnim_HgssWallpaperSelector1[] =
+{
+    ANIMCMD_FRAME(16, 0),
+    ANIMCMD_END
+};
+
+static const union AnimCmd sAnim_HgssWallpaperSelector2[] =
+{
+    ANIMCMD_FRAME(32, 0),
+    ANIMCMD_END
+};
+
+static const union AnimCmd sAnim_HgssWallpaperSelector3[] =
+{
+    ANIMCMD_FRAME(48, 0),
+    ANIMCMD_END
+};
+
+static const union AnimCmd *const sAnims_HgssWallpaperSelector[] =
+{
+    sAnim_HgssWallpaperSelector0,
+    sAnim_HgssWallpaperSelector1,
+    sAnim_HgssWallpaperSelector2,
+    sAnim_HgssWallpaperSelector3,
+};
+
+static const struct SpriteTemplate sSpriteTemplate_HgssWallpaperSelector =
+{
+    .tileTag = GFXTAG_HGSS_WALLPAPER_SELECTOR,
+    .paletteTag = PALTAG_HGSS_WALLPAPER_SELECTOR,
+    .oam = &sOamData_HgssWallpaperSelector,
+    .anims = sAnims_HgssWallpaperSelector,
 };
 
 // ============================================================================
@@ -569,117 +917,6 @@ static const struct SpriteTemplate sSpriteTemplate_ChooseBoxMenu_MonCount =
     .tileTag = GFXTAG_BOX_SELECTION_PER_30,
     .paletteTag = PALTAG_MISC_3,
     .oam = &sOamData_ChooseBoxMenu_MonCount,
-};
-
-// ============================================================================
-// Box Title Frame Sprites
-// ============================================================================
-
-static const struct OamData sOamData_BoxTitleFrame =
-{
-    .y = 0,
-    .affineMode = ST_OAM_AFFINE_OFF,
-    .objMode = ST_OAM_OBJ_NORMAL,
-    .mosaic = FALSE,
-    .bpp = ST_OAM_4BPP,
-    .size = SPRITE_SIZE(32x16),
-    .x = 0,
-    .matrixNum = 0,
-    .shape = SPRITE_SHAPE(32x16),
-    .tileNum = 0,
-    .priority = 2,
-    .paletteNum = 0,
-    .affineParam = 0,
-};
-
-static const union AnimCmd sSpriteAnim_BoxTitleFrame_0[] = {
-    ANIMCMD_FRAME(0, 0, FALSE, FALSE),
-    ANIMCMD_END
-};
-
-static const union AnimCmd sSpriteAnim_BoxTitleFrame_1[] = {
-    ANIMCMD_FRAME(8, 0, FALSE, FALSE),
-    ANIMCMD_END
-};
-
-static const union AnimCmd sSpriteAnim_BoxTitleFrame_2[] = {
-    ANIMCMD_FRAME(0, 0, TRUE, FALSE),
-    ANIMCMD_END
-};
-
-static const union AnimCmd *const sSpriteAnimTable_BoxTitleFrame[] = {
-    sSpriteAnim_BoxTitleFrame_0,
-    sSpriteAnim_BoxTitleFrame_1,
-    sSpriteAnim_BoxTitleFrame_2,
-};
-
-static const u8 sBoxTitleFrameAnims[4] = {0, 1, 1, 2};
-
-static const struct CompressedSpriteSheet sSpriteSheet_BoxTitleFrame =
-{
-    .data = sBoxTitleFrame_Gfx,
-    .size = (32 * 16 * 2) / 2,
-    .tag = GFXTAG_BOX_TITLE_FRAME,
-};
-
-static const struct SpriteTemplate sSpriteTemplate_BoxTitleFrame =
-{
-    .tileTag = GFXTAG_BOX_TITLE_FRAME,
-    .paletteTag = PALTAG_MISC_1,
-    .oam = &sOamData_BoxTitleFrame,
-    .anims = sSpriteAnimTable_BoxTitleFrame,
-};
-
-// ============================================================================
-// Box Title Arrow Sprites
-// ============================================================================
-
-static const struct OamData sOamData_BoxTitleArrow =
-{
-    .y = 0,
-    .affineMode = ST_OAM_AFFINE_OFF,
-    .objMode = ST_OAM_OBJ_NORMAL,
-    .mosaic = FALSE,
-    .bpp = ST_OAM_4BPP,
-    .size = SPRITE_SIZE(8x8),
-    .x = 0,
-    .matrixNum = 0,
-    .shape = SPRITE_SHAPE(8x8),
-    .tileNum = 0,
-    .priority = 2,
-    .paletteNum = 0,
-    .affineParam = 0,
-};
-
-static const union AnimCmd sSpriteAnim_BoxTitleArrow_Left[] = {
-    ANIMCMD_FRAME(0, 0, FALSE, FALSE),
-    ANIMCMD_END
-};
-
-static const union AnimCmd sSpriteAnim_BoxTitleArrow_Right[] = {
-    ANIMCMD_FRAME(0, 0, TRUE, FALSE),
-    ANIMCMD_END
-};
-
-static const union AnimCmd *const sSpriteAnimTable_BoxTitleArrow[] = {
-    sSpriteAnim_BoxTitleArrow_Left,
-    sSpriteAnim_BoxTitleArrow_Right,
-};
-
-static const struct CompressedSpriteSheet sSpriteSheet_BoxTitleArrow =
-{
-    .data = sBoxTitleArrow_Gfx,
-    .size = (8 * 8) / 2,
-    .tag = GFXTAG_BOX_TITLE_ARROW,
-};
-
-static const struct SpriteTemplate sSpriteTemplate_BoxTitleArrow =
-{
-    .tileTag = GFXTAG_BOX_TITLE_ARROW,
-    .paletteTag = PALTAG_MISC_1,
-    .oam = &sOamData_BoxTitleArrow,
-    .anims = sSpriteAnimTable_BoxTitleArrow,
-    .callback = SpriteCB_Arrow,
 };
 
 // ============================================================================
@@ -733,53 +970,76 @@ static const struct SpriteTemplate sSpriteTemplate_BoxTitle =
 // Cursor Sprites
 // ============================================================================
 
-static const struct CompressedSpriteSheet sSpriteSheet_Cursor[] =
+// PALTAG_MISC_1/2/3 serve unrelated dynamic text/title roles. Seed them
+// from the exact retail HGSS font member-7 palette instead of the removed
+// expansion stat-label palette. Role-specific runtime colors may still
+// overwrite individual entries after allocation.
+static const struct SpritePalette sSpritePal_HgssFontShared[] =
 {
     {
-        .data = sCursor_Gfx,
-        .size = (16 * 16 * 3) / 2,
-        .tag = GFXTAG_CURSOR,
+        .data = sHgssFontMember7_Pal,
+        .tag = PALTAG_MISC_1,
+    },
+    {
+        .data = sHgssFontMember7_Pal,
+        .tag = PALTAG_MISC_2,
+    },
+    {
+        .data = sHgssFontMember7_Pal,
+        .tag = PALTAG_MISC_3,
     },
     {},
 };
 
-static const struct SpritePalette sSpritePal_Cursor[] =
+static const struct SpritePalette sSpritePal_HgssGenderGlyphs[] =
 {
     {
-        .data = sCursor_Pal,
-        .tag = PALTAG_MISC_1,
+        .data = sHgssFontMember7_Pal,
+        .tag = PALTAG_HGSS_GENDER_GLYPHS,
     },
+    {},
+};
+
+static const struct SpritePalette sSpritePal_HgssShinyStar[] =
+{
     {
-        .data = sCursor_Pal + 16,
-        .tag = PALTAG_MISC_2,
+        .data = sHgssShinyStar_Pal,
+        .tag = PALTAG_HGSS_SHINY_STAR,
     },
+    {},
+};
+
+static const struct SpritePalette sSpritePal_HgssPokerusSymbol[] =
+{
     {
-        .data = sCursor_Pal + 32,
-        .tag = PALTAG_MISC_3,
+        .data = sHgssPokerusSymbol_Pal,
+        .tag = PALTAG_HGSS_POKERUS_SYMBOL,
     },
     {},
 };
 
 static const struct OamData sOamData_Cursor =
 {
-    .shape = SPRITE_SHAPE(16x16),
-    .size = SPRITE_SIZE(16x16),
+    .shape = SPRITE_SHAPE(32x32),
+    .size = SPRITE_SIZE(32x32),
     .priority = 1,
 };
 
+// HGSS NANR animation 14: cells 13 -> 14, 20 ticks each, looping.
+// Both existing pokeemerald cursor states use the native HGSS motion so no
+// legacy cursor frame is displayed during movement or normal interaction.
 static const union AnimCmd sAnim_Cursor_Bouncing[] =
 {
-    ANIMCMD_FRAME(0, 8),
-    ANIMCMD_FRAME(4, 8),
-    ANIMCMD_FRAME(8, 8),
-    ANIMCMD_FRAME(4, 8),
+    ANIMCMD_FRAME(0, 20),
+    ANIMCMD_FRAME(16, 20),
     ANIMCMD_JUMP(0)
 };
 
 static const union AnimCmd sAnim_Cursor_Main[] =
 {
-    ANIMCMD_FRAME(4, 0),
-    ANIMCMD_END
+    ANIMCMD_FRAME(0, 20),
+    ANIMCMD_FRAME(16, 20),
+    ANIMCMD_JUMP(0)
 };
 
 static const union AnimCmd *const sAnims_Cursor[] =
@@ -791,7 +1051,7 @@ static const union AnimCmd *const sAnims_Cursor[] =
 static const struct SpriteTemplate sSpriteTemplate_Cursor =
 {
     .tileTag = GFXTAG_CURSOR,
-    .paletteTag = PALTAG_MISC_1,
+    .paletteTag = PALTAG_HGSS_STORAGE_CURSOR,
     .oam = &sOamData_Cursor,
     .anims = sAnims_Cursor,
 };
@@ -845,6 +1105,53 @@ static const union AffineAnimCmd *const sAffineAnims_ReleaseMon[] =
 };
 
 // ============================================================================
+// Authentic HGSS Marking Combo
+// ============================================================================
+
+static const struct OamData sOamData_HgssMarkingCombo =
+{
+    .y = 0,
+    .affineMode = ST_OAM_AFFINE_OFF,
+    .objMode = ST_OAM_OBJ_NORMAL,
+    .mosaic = FALSE,
+    .bpp = ST_OAM_4BPP,
+    .shape = SPRITE_SHAPE(32x8),
+    .x = 0,
+    .matrixNum = 0,
+    .size = SPRITE_SIZE(32x8),
+    .tileNum = 0,
+    .priority = 0,
+    .paletteNum = 0,
+    .affineParam = 0,
+};
+
+static const struct SpriteSheet sSpriteSheet_HgssMarkingCombo =
+{
+    // Allocate one 32x8 OBJ cell blank. Selected authentic HGSS symbol tiles
+    // are DMA-copied into the four 8x8 slots at runtime.
+    .data = sHgssMarkingComboBlank_Gfx,
+    .size = sizeof(sHgssMarkingComboBlank_Gfx),
+    .tag = GFXTAG_MARKING_COMBO,
+};
+
+static const struct SpritePalette sSpritePalette_HgssMarkingCombo =
+{
+    .data = sHgssMarkingsMenu_Pal,
+    .tag = PALTAG_MARKING_COMBO,
+};
+
+static const struct SpriteTemplate sSpriteTemplate_HgssMarkingCombo =
+{
+    .tileTag = GFXTAG_MARKING_COMBO,
+    .paletteTag = PALTAG_MARKING_COMBO,
+    .oam = &sOamData_HgssMarkingCombo,
+    .anims = gDummySpriteAnimTable,
+    .images = NULL,
+    .affineAnims = gDummySpriteAffineAnimTable,
+    .callback = SpriteCallbackDummy,
+};
+
+// ============================================================================
 // Gender Icon Sprites
 // ============================================================================
 
@@ -855,23 +1162,23 @@ static const struct OamData sOamData_GenderIcons =
     .objMode = ST_OAM_OBJ_NORMAL,
     .mosaic = FALSE,
     .bpp = ST_OAM_4BPP,
-    .shape = SPRITE_SHAPE(8x16),
+    .shape = SPRITE_SHAPE(16x16),
     .x = 0,
     .matrixNum = 0,
-    .size = SPRITE_SIZE(8x16),
+    .size = SPRITE_SIZE(16x16),
     .tileNum = 0,
     .priority = 0,
-    .paletteNum = 7,
+    .paletteNum = 0,
     .affineParam = 0,
 };
 
 static const union AnimCmd sSpriteAnim_GenderFemale[] = {
-    ANIMCMD_FRAME(0, 0, FALSE, FALSE),
+    ANIMCMD_FRAME(4, 0, FALSE, FALSE),
     ANIMCMD_END
 };
 
 static const union AnimCmd sSpriteAnim_GenderMale[] = {
-    ANIMCMD_FRAME(2, 0, FALSE, FALSE),
+    ANIMCMD_FRAME(0, 0, FALSE, FALSE),
     ANIMCMD_END
 };
 
@@ -882,15 +1189,15 @@ static const union AnimCmd *const sSpriteAnimTable_GenderIcons[] = {
 
 static const struct CompressedSpriteSheet sSpriteSheet_GenderIcons =
 {
-    .data = sGenderIcons_Gfx,
-    .size = (8 * 16 * 2) / 2,
+    .data = sHgssGenderGlyphs_Gfx,
+    .size = (16 * 16 * 2) / 2,
     .tag = GFXTAG_GENDER_ICON
 };
 
 static const struct SpriteTemplate sSpriteTemplate_GenderIcons =
 {
     .tileTag = GFXTAG_GENDER_ICON,
-    .paletteTag = PALTAG_MISC_2,
+    .paletteTag = PALTAG_HGSS_GENDER_GLYPHS,
     .oam = &sOamData_GenderIcons,
     .anims = sSpriteAnimTable_GenderIcons,
     .images = NULL,
@@ -919,7 +1226,7 @@ static const struct OamData sOamData_ShinyIcon =
 
 static const struct CompressedSpriteSheet sSpriteSheet_ShinyIcon =
 {
-    .data = sShinyIcon_Gfx,
+    .data = sHgssShinyStar_Gfx,
     .size = (8 * 8) / 2,
     .tag = GFXTAG_SHINY_ICON
 };
@@ -927,7 +1234,7 @@ static const struct CompressedSpriteSheet sSpriteSheet_ShinyIcon =
 static const struct SpriteTemplate sSpriteTemplate_ShinyIcon =
 {
     .tileTag = GFXTAG_SHINY_ICON,
-    .paletteTag = PALTAG_MISC_2,
+    .paletteTag = PALTAG_HGSS_SHINY_STAR,
     .oam = &sOamData_ShinyIcon,
 };
 
@@ -942,10 +1249,10 @@ static const struct OamData sOamData_PokerusIcon =
     .objMode = ST_OAM_OBJ_NORMAL,
     .mosaic = FALSE,
     .bpp = ST_OAM_4BPP,
-    .shape = SPRITE_SHAPE(32x8),
+    .shape = SPRITE_SHAPE(8x8),
     .x = 0,
     .matrixNum = 0,
-    .size = SPRITE_SIZE(32x8),
+    .size = SPRITE_SIZE(8x8),
     .tileNum = 0,
     .priority = 0,
     .paletteNum = 0,
@@ -954,87 +1261,20 @@ static const struct OamData sOamData_PokerusIcon =
 
 static const struct CompressedSpriteSheet sSpriteSheet_PokerusIcon =
 {
-    .data = sPokerusIcon_Gfx,
-    .size = (32 * 8) / 2,
+    .data = sHgssPokerusSymbol_Gfx,
+    .size = (8 * 8) / 2,
     .tag = GFXTAG_PKRS_ICON
 };
 
 static const struct SpriteTemplate sSpriteTemplate_PokerusIcon =
 {
     .tileTag = GFXTAG_PKRS_ICON,
-    .paletteTag = PALTAG_MISC_1,
+    .paletteTag = PALTAG_HGSS_POKERUS_SYMBOL,
     .oam = &sOamData_PokerusIcon,
 	.anims = gDummySpriteAnimTable,
     .images = NULL,
     .affineAnims = gDummySpriteAffineAnimTable,
     .callback = SpriteCallbackDummy,
-};
-
-// ============================================================================
-// Stat Label Sprites
-// ============================================================================
-
-static const struct OamData sOamData_StatLabels =
-{
-    .y = 0,
-    .affineMode = ST_OAM_AFFINE_OFF,
-    .objMode = ST_OAM_OBJ_NORMAL,
-    .mosaic = FALSE,
-    .bpp = ST_OAM_4BPP,
-    .shape = SPRITE_SHAPE(16x16),
-    .x = 0,
-    .matrixNum = 0,
-    .size = SPRITE_SIZE(16x16),
-    .tileNum = 0,
-    .priority = 0,
-};
-
-static const union AnimCmd sSpriteAnim_StatAtk[] = {
-    ANIMCMD_FRAME(0, 0, FALSE, FALSE),
-    ANIMCMD_END
-};
-
-static const union AnimCmd sSpriteAnim_StatDef[] = {
-    ANIMCMD_FRAME(4, 0, FALSE, FALSE),
-    ANIMCMD_END
-};
-
-static const union AnimCmd sSpriteAnim_StatSpAtk[] = {
-    ANIMCMD_FRAME(8, 0, FALSE, FALSE),
-    ANIMCMD_END
-};
-
-static const union AnimCmd sSpriteAnim_StatSpDef[] = {
-    ANIMCMD_FRAME(12, 0, FALSE, FALSE),
-    ANIMCMD_END
-};
-
-static const union AnimCmd sSpriteAnim_StatSpeed[] = {
-    ANIMCMD_FRAME(16, 0, FALSE, FALSE),
-    ANIMCMD_END
-};
-
-static const union AnimCmd *const sSpriteAnimTable_StatLabels[] = {
-    sSpriteAnim_StatAtk,
-    sSpriteAnim_StatDef,
-    sSpriteAnim_StatSpAtk,
-    sSpriteAnim_StatSpDef,
-    sSpriteAnim_StatSpeed,
-};
-
-static const struct CompressedSpriteSheet sSpriteSheet_StatLabels =
-{
-    .data = sStatLabels_Gfx,
-    .size = (16 * 16 * 5) / 2,
-    .tag = GFXTAG_STAT_LABELS
-};
-
-static const struct SpriteTemplate sSpriteTemplate_StatLabels =
-{
-    .tileTag = GFXTAG_STAT_LABELS,
-    .paletteTag = PALTAG_MISC_2,
-    .oam = &sOamData_StatLabels,
-    .anims = sSpriteAnimTable_StatLabels,
 };
 
 // ============================================================================
@@ -1062,8 +1302,8 @@ static const struct OamData sOamData_TypeIcons =
 // Uncompressed sprite sheet (only 2 slots loaded to save VRAM)
 static const struct SpriteSheet sSpriteSheet_TypeIcons =
 {
-    .data = sTypeIcons_Gfx,
-    .size = 2 * 0x100, // Only load 2 type icon slots (saves 4.75 KB VRAM)
+    .data = sHgssTypeIcons_Gfx,
+    .size = 2 * 0x100, // Only load 2 type icon slots; live badges are DMA-swapped per slot.
     .tag = GFXTAG_TYPE_ICON,
 };
 
@@ -1072,246 +1312,6 @@ static const struct SpriteTemplate sSpriteTemplate_TypeIcons =
     .tileTag = GFXTAG_TYPE_ICON,
     .paletteTag = PALTAG_TYPE_ICON,
     .oam = &sOamData_TypeIcons,
-};
-
-// ============================================================================
-// Markings Menu Sprites
-// ============================================================================
-
-static const struct CompressedSpriteSheet sSpriteSheet_MarkingsMenu =
-{
-    .data = sMarkingsMenu_Gfx,
-    .size = (
-        32 * 32 * 2 + // marking menu window
-        8 * 8 * 8 +   // marking menu marks
-        16 * 16 * 3   // marking menu cursor
-    ) / 2,
-    .tag = GFXTAG_MARKING_MENU,
-};
-
-static const struct OamData sOamData_MarkingsMenu_Window =
-{
-    .y = 0,
-    .affineMode = ST_OAM_AFFINE_OFF,
-    .objMode = ST_OAM_OBJ_NORMAL,
-    .mosaic = FALSE,
-    .bpp = ST_OAM_4BPP,
-    .shape = SPRITE_SHAPE(32x32),
-    .x = 0,
-    .matrixNum = 0,
-    .size = SPRITE_SIZE(32x32),
-    .tileNum = 0,
-    .priority = 0,
-    .paletteNum = 0,
-    .affineParam = 0,
-};
-
-static const union AnimCmd sAnim_MarkingsMenu_Window_0[] = {
-    ANIMCMD_FRAME(0, 0, FALSE, FALSE),
-    ANIMCMD_END
-};
-
-static const union AnimCmd sAnim_MarkingsMenu_Window_1[] = {
-    ANIMCMD_FRAME(16, 0, FALSE, FALSE),
-    ANIMCMD_END
-};
-
-static const union AnimCmd sAnim_MarkingsMenu_Window_2[] = {
-    ANIMCMD_FRAME(0, 0, TRUE, FALSE),
-    ANIMCMD_END
-};
-
-static const union AnimCmd *const sAnims_MarkingsMenu_Window[] = {
-    sAnim_MarkingsMenu_Window_0,
-    sAnim_MarkingsMenu_Window_1,
-    sAnim_MarkingsMenu_Window_2,
-};
-
-static const u8 sMarkingsMenu_WindowAnims[3] = {0, 1, 2};
-
-static const struct SpriteTemplate sSpriteTemplate_MarkingsMenu_Window =
-{
-    .tileTag = GFXTAG_MARKING_MENU,
-    .paletteTag = PALTAG_MISC_3,
-    .oam = &sOamData_MarkingsMenu_Window,
-    .anims = sAnims_MarkingsMenu_Window,
-};
-
-static const struct OamData sOamData_MarkingsMenu_Marks =
-{
-    .y = 0,
-    .affineMode = ST_OAM_AFFINE_OFF,
-    .objMode = ST_OAM_OBJ_NORMAL,
-    .mosaic = FALSE,
-    .bpp = ST_OAM_4BPP,
-    .shape = SPRITE_SHAPE(8x8),
-    .x = 0,
-    .matrixNum = 0,
-    .size = SPRITE_SIZE(8x8),
-    .tileNum = 0,
-    .priority = 0,
-    .paletteNum = 0,
-    .affineParam = 0,
-};
-
-static const union AnimCmd sAnim_MarkingsMenu_CircleOff[] = {
-    ANIMCMD_FRAME(32, 0, FALSE, FALSE),
-    ANIMCMD_END
-};
-
-static const union AnimCmd sAnim_MarkingsMenu_CircleOn[] = {
-    ANIMCMD_FRAME(33, 0, FALSE, FALSE),
-    ANIMCMD_END
-};
-
-static const union AnimCmd sAnim_MarkingsMenu_SquareOff[] = {
-    ANIMCMD_FRAME(34, 0, FALSE, FALSE),
-    ANIMCMD_END
-};
-
-static const union AnimCmd sAnim_MarkingsMenu_SquareOn[] = {
-    ANIMCMD_FRAME(35, 0, FALSE, FALSE),
-    ANIMCMD_END
-};
-
-static const union AnimCmd sAnim_MarkingsMenu_TriangleOff[] = {
-    ANIMCMD_FRAME(36, 0, FALSE, FALSE),
-    ANIMCMD_END
-};
-
-static const union AnimCmd sAnim_MarkingsMenu_TriangleOn[] = {
-    ANIMCMD_FRAME(37, 0, FALSE, FALSE),
-    ANIMCMD_END
-};
-
-static const union AnimCmd sAnim_MarkingsMenu_HeartOff[] = {
-    ANIMCMD_FRAME(38, 0, FALSE, FALSE),
-    ANIMCMD_END
-};
-
-static const union AnimCmd sAnim_MarkingsMenu_HeartOn[] = {
-    ANIMCMD_FRAME(39, 0, FALSE, FALSE),
-    ANIMCMD_END
-};
-
-static const union AnimCmd *const sAnims_MarkingsMenu_Marks[] = {
-    sAnim_MarkingsMenu_CircleOff,
-    sAnim_MarkingsMenu_CircleOn,
-    sAnim_MarkingsMenu_SquareOff,
-    sAnim_MarkingsMenu_SquareOn,
-    sAnim_MarkingsMenu_TriangleOff,
-    sAnim_MarkingsMenu_TriangleOn,
-    sAnim_MarkingsMenu_HeartOff,
-    sAnim_MarkingsMenu_HeartOn,
-};
-
-static const struct SpriteTemplate sSpriteTemplate_MarkingsMenu_Marks =
-{
-    .tileTag = GFXTAG_MARKING_MENU,
-    .paletteTag = PALTAG_MISC_3,
-    .oam = &sOamData_MarkingsMenu_Marks,
-    .anims = sAnims_MarkingsMenu_Marks,
-};
-
-// Marking menu cursor (16x16, 3 frames)
-static const struct OamData sOamData_MarkingsMenu_Cursor =
-{
-    .y = 0,
-    .affineMode = ST_OAM_AFFINE_OFF,
-    .objMode = ST_OAM_OBJ_NORMAL,
-    .mosaic = FALSE,
-    .bpp = ST_OAM_4BPP,
-    .shape = SPRITE_SHAPE(16x16),
-    .x = 0,
-    .matrixNum = 0,
-    .size = SPRITE_SIZE(16x16),
-    .tileNum = 0,
-    .priority = 0,
-    .paletteNum = 0,
-    .affineParam = 0,
-};
-
-static const union AnimCmd sAnim_MarkingsMenu_Cursor_Bouncing[] = {
-    ANIMCMD_FRAME(40, 8, FALSE, FALSE),
-    ANIMCMD_FRAME(44, 8, FALSE, FALSE),
-    ANIMCMD_FRAME(48, 8, FALSE, FALSE),
-    ANIMCMD_FRAME(44, 8, FALSE, FALSE),
-    ANIMCMD_JUMP(0)
-};
-
-static const union AnimCmd sAnim_MarkingsMenu_Cursor_Main[] = {
-    ANIMCMD_FRAME(44, 0, FALSE, FALSE),
-    ANIMCMD_END
-};
-
-static const union AnimCmd *const sAnims_MarkingsMenu_Cursor[] = {
-    sAnim_MarkingsMenu_Cursor_Bouncing,
-    sAnim_MarkingsMenu_Cursor_Main,
-};
-
-static const struct SpriteTemplate sSpriteTemplate_MarkingsMenu_Cursor =
-{
-    .tileTag = GFXTAG_MARKING_MENU,
-    .paletteTag = PALTAG_MISC_3,
-    .oam = &sOamData_MarkingsMenu_Cursor,
-    .anims = sAnims_MarkingsMenu_Cursor,
-};
-
-// ============================================================================
-// Message window sprites
-// ============================================================================
-
-static const struct OamData sOamData_MessageWindow =
-{
-    .y = 0,
-    .affineMode = ST_OAM_AFFINE_OFF,
-    .objMode = ST_OAM_OBJ_NORMAL,
-    .mosaic = FALSE,
-    .bpp = ST_OAM_4BPP,
-    .size = SPRITE_SIZE(32x32),
-    .x = 0,
-    .matrixNum = 0,
-    .shape = SPRITE_SHAPE(32x32),
-    .tileNum = 0,
-    .priority = 1,
-    .paletteNum = 0,
-    .affineParam = 0,
-};
-
-static const union AnimCmd sSpriteAnim_MessageWindow_0[] = {
-    ANIMCMD_FRAME(0, 0, FALSE, FALSE),
-    ANIMCMD_END
-};
-static const union AnimCmd sSpriteAnim_MessageWindow_1[] = {
-    ANIMCMD_FRAME(16, 0, FALSE, FALSE),
-    ANIMCMD_END
-};
-static const union AnimCmd sSpriteAnim_MessageWindow_2[] = {
-    ANIMCMD_FRAME(0, 0, TRUE, TRUE),
-    ANIMCMD_END
-};
-
-static const union AnimCmd *const sSpriteAnimTable_MessageWindow[] = {
-    sSpriteAnim_MessageWindow_0,
-    sSpriteAnim_MessageWindow_1,
-    sSpriteAnim_MessageWindow_2,
-};
-
-static const u8 sMessageWindowAnims[6] = {0, 1, 1, 1, 1, 2};
-
-static const struct CompressedSpriteSheet sSpriteSheet_MessageWindow =
-{
-    .data = sMessageWindow_Gfx,
-    .size = (32 * 32 * 2) / 2,
-    .tag = GFXTAG_MESSAGE_WINDOW,
-};
-
-static const struct SpriteTemplate sSpriteTemplate_MessageWindow =
-{
-    .tileTag = GFXTAG_MESSAGE_WINDOW,
-    .paletteTag = PALTAG_MISC_3,
-    .oam = &sOamData_MessageWindow,
-    .anims = sSpriteAnimTable_MessageWindow,
 };
 
 // ============================================================================

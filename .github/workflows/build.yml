@@ -52,6 +52,144 @@ jobs:
           GAME_VERSION: EMERALD
         run: make -j$(nproc) -O all
 
+  gen4-ui:
+    if: github.actor != 'allcontributors[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install binutils
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends binutils-arm-none-eabi gcc-arm-none-eabi libnewlib-arm-none-eabi libpng-dev python3
+
+      - name: Cache build tools
+        uses: actions/cache@v4
+        with:
+          path: |
+            tools/bin2c/bin2c
+            tools/gbafix/gbafix
+            tools/gbagfx/gbagfx
+            tools/jsonproc/jsonproc
+            tools/mapjson/mapjson
+            tools/mid2agb/mid2agb
+            tools/preproc/preproc
+            tools/ramscrgen/ramscrgen
+            tools/rsfont/rsfont
+            tools/scaninc/scaninc
+            tools/trainerproc/trainerproc
+            tools/compresSmol/compresSmol
+            tools/compresSmol/compresSmolTilemap
+            tools/wav2agb/wav2agb
+          key: tools-${{ runner.os }}-${{ hashFiles('tools/*/Makefile', 'tools/**/*.c', 'tools/**/*.cpp', 'tools/**/*.h') }}
+
+      - name: Validate Gen 4 UI tools
+        run: |
+          python3 -m py_compile tools/gen4_ui/pack_gen4_ui.py tools/gen4_ui/make_test_fixture.py tools/gen4_ui/make_hgss_pokedex_member_020.py tools/gen4_ui/make_hgss_pokedex_list_member_000.py tools/gen4_ui/make_hgss_pokedex_list_overlay.py tools/gen4_ui/make_hgss_pokedex_stats.py tools/gen4_ui/make_hgss_pokedex_evolution.py tools/gen4_ui/make_hgss_pokedex_forms.py tools/gen4_ui/make_hgss_pokedex_cry.py tools/gen4_ui/make_hgss_pokedex_size.py tools/gen4_ui/make_hgss_pokedex_search.py tools/gen4_ui/make_hgss_pokedex_search_overlay.py tools/gen4_ui/make_hgss_pokedex_area_chrome.py tools/gen4_ui/make_hgss_pokedex_start_menu.py tools/gen4_ui/make_hgss_pokedex_scroll_controls.py tools/gen4_ui/make_hgss_pokegear_app_switch.py tools/gen4_ui/make_hgss_pokegear_cursor.py tools/gen4_ui/make_hgss_pokegear_phone_status.py tools/gen4_ui/make_hgss_pokegear_condition_search.py tools/gen4_ui/make_hgss_pokegear_list_arrows.py tools/gen4_ui/make_hgss_pokegear_rematch_badge.py \
+            tools/gen4_ui/make_hgss_pokegear_match_call_contact.py \
+            tools/gen4_ui/make_hgss_pokegear_match_call_call.py \
+            tools/gen4_ui/make_hgss_pokegear_contact_rows.py \
+            tools/gen4_ui/make_hgss_pokegear_action_menu.py \
+            tools/gen4_ui/make_hgss_trainer_card_check_portrait.py \
+            tools/gen4_ui/make_hgss_pokegear_help_bar.py
+
+      - name: Build Gen 4 UI assets
+        run: |
+          make -j$(nproc) -O \
+            graphics/gen4_ui/renderer_test.gbapal \
+            graphics/gen4_ui/renderer_test.tiles.8bpp \
+            graphics/gen4_ui/renderer_test.tilemap.bin \
+            graphics/gen4_ui/hgss_pokedex_member_020.gbapal \
+            graphics/gen4_ui/hgss_pokedex_member_020.tiles.8bpp \
+            graphics/gen4_ui/hgss_pokedex_member_020.tilemap.bin \
+            graphics/gen4_ui/hgss_pokedex_info_gba.gbapal \
+            graphics/gen4_ui/hgss_pokedex_info_gba.tiles.8bpp \
+            graphics/gen4_ui/hgss_pokedex_info_gba.tilemap.bin \
+            graphics/gen4_ui/hgss_pokedex_list_gba.gbapal \
+            graphics/gen4_ui/hgss_pokedex_list_gba.tiles.8bpp \
+            graphics/gen4_ui/hgss_pokedex_list_gba.tilemap.bin \
+            graphics/gen4_ui/hgss_pokedex_list_overlay.tiles.bin \
+            graphics/gen4_ui/hgss_pokedex_list_overlay.tilemap.bin \
+            graphics/gen4_ui/hgss_pokedex_list_overlay.palette.bin \
+            graphics/gen4_ui/hgss_pokedex_stats_gba.gbapal \
+            graphics/gen4_ui/hgss_pokedex_stats_gba.tiles.8bpp \
+            graphics/gen4_ui/hgss_pokedex_stats_gba.tilemap.bin \
+            graphics/gen4_ui/hgss_pokedex_evolution_gba.gbapal \
+            graphics/gen4_ui/hgss_pokedex_evolution_gba.tiles.8bpp \
+            graphics/gen4_ui/hgss_pokedex_evolution_gba.tilemap.bin \
+            graphics/gen4_ui/hgss_pokedex_forms_gba.gbapal \
+            graphics/gen4_ui/hgss_pokedex_forms_gba.tiles.8bpp \
+            graphics/gen4_ui/hgss_pokedex_forms_gba.tilemap.bin \
+            graphics/gen4_ui/hgss_pokedex_cry_gba.gbapal \
+            graphics/gen4_ui/hgss_pokedex_cry_gba.tiles.8bpp \
+            graphics/gen4_ui/hgss_pokedex_cry_gba.tilemap.bin \
+            graphics/gen4_ui/hgss_pokedex_size_gba.gbapal \
+            graphics/gen4_ui/hgss_pokedex_size_gba.tiles.8bpp \
+            graphics/gen4_ui/hgss_pokedex_size_gba.tilemap.bin \
+            graphics/gen4_ui/hgss_pokedex_search_gba.gbapal \
+            graphics/gen4_ui/hgss_pokedex_search_gba.tiles.8bpp \
+            graphics/gen4_ui/hgss_pokedex_search_gba.tilemap.bin \
+            graphics/gen4_ui/hgss_pokedex_search_overlay.tiles.bin \
+            graphics/gen4_ui/hgss_pokedex_search_overlay.tilemap.bin \
+            graphics/gen4_ui/hgss_pokedex_search_overlay.palette.bin \
+            graphics/gen4_ui/hgss_pokedex_area_chrome.tiles.bin \
+            graphics/gen4_ui/hgss_pokedex_area_chrome.tilemap.bin \
+            graphics/gen4_ui/hgss_pokedex_area_chrome.palette.bin \
+            graphics/gen4_ui/hgss_pokedex_start_menu_main.tiles.bin \
+            graphics/gen4_ui/hgss_pokedex_start_menu_main.tilemap.bin \
+            graphics/gen4_ui/hgss_pokedex_start_menu_results.tiles.bin \
+            graphics/gen4_ui/hgss_pokedex_start_menu_results.tilemap.bin \
+            graphics/gen4_ui/hgss_pokedex_start_menu.palette.bin \
+            graphics/gen4_ui/hgss_pokedex_scroll_controls.tiles.bin \
+            graphics/gen4_ui/hgss_pokedex_scroll_controls.palette.bin \
+            graphics/gen4_ui/hgss_pokegear/app_switch_gba.4bpp \
+            graphics/gen4_ui/hgss_pokegear/app_switch_gba.gbapal \
+            graphics/gen4_ui/hgss_pokegear/app_switch_selected_gba.4bpp \
+            graphics/gen4_ui/hgss_pokegear/app_switch_selected_gba.gbapal \
+            graphics/gen4_ui/hgss_pokegear/cursor_corner.4bpp \
+            graphics/gen4_ui/hgss_pokegear/cursor_corner.gbapal \
+            graphics/gen4_ui/hgss_pokegear/phone_status.4bpp \
+            graphics/gen4_ui/hgss_pokegear/phone_status.gbapal \
+            graphics/gen4_ui/hgss_pokegear/condition_search_chrome.4bpp \
+            graphics/gen4_ui/hgss_pokegear/condition_search_chrome.gbapal \
+            graphics/gen4_ui/hgss_pokegear/condition_search_cursor.4bpp \
+            graphics/gen4_ui/hgss_pokegear/condition_search_cursor.gbapal \
+            graphics/gen4_ui/hgss_pokegear/condition_search_labels.4bpp \
+            graphics/gen4_ui/hgss_pokegear/list_arrows.4bpp \
+            graphics/gen4_ui/hgss_pokegear/list_arrows.gbapal \
+            graphics/gen4_ui/hgss_pokegear/rematch_badge.4bpp \
+            graphics/gen4_ui/hgss_pokegear/rematch_badge.gbapal \
+            graphics/gen4_ui/hgss_pokegear/match_call_contact.4bpp \
+            graphics/gen4_ui/hgss_pokegear/match_call_contact.tilemap.bin \
+            graphics/gen4_ui/hgss_pokegear/match_call_contact.gbapal \
+            graphics/gen4_ui/hgss_pokegear/match_call_call.4bpp \
+            graphics/gen4_ui/hgss_pokegear/match_call_call.tilemap.bin \
+            graphics/gen4_ui/hgss_pokegear/match_call_call.gbapal \
+            graphics/gen4_ui/hgss_pokegear/match_call_call_text.gbapal \
+            graphics/gen4_ui/hgss_pokegear/match_call_contact_rows.gbapal \
+            graphics/gen4_ui/hgss_pokegear/match_call_action_menu.4bpp \
+            graphics/gen4_ui/hgss_pokegear/match_call_action_menu.gbapal \
+            graphics/gen4_ui/hgss_pokegear/match_call_check_portrait.4bpp \
+            graphics/gen4_ui/hgss_pokegear/match_call_check_portrait.gbapal \
+            graphics/gen4_ui/hgss_pokegear/help_bar_tooltip.4bpp \
+            graphics/gen4_ui/hgss_pokegear/help_bar_tooltip_gba.4bpp \
+            graphics/gen4_ui/hgss_pokegear/help_bar_tooltip.gbapal
+
+      - name: Compile Gen 4 UI renderer
+        env:
+          GAME_VERSION: EMERALD
+        run: |
+          make -j$(nproc) -O \
+            build/emerald/src/gen4_ui.o \
+            build/emerald/src/gen4_ui_test.o \
+            build/emerald/src/pokedex_plus_hgss.o \
+            build/emerald/src/pokedex.o \
+            build/emerald/src/pokedex_area_screen.o \
+            build/emerald/src/pokenav_menu_handler_gfx.o \
+            build/emerald/src/pokenav_list.o \
+            build/emerald/src/pokenav_match_call_gfx.o
+
   build-firered:
     if: github.actor != 'allcontributors[bot]'
     runs-on: ubuntu-latest

@@ -1,0 +1,137 @@
+{
+  "role": "match_call_contact_surface",
+  "phase": "legacy_removed",
+  "classification": "direct reuse of authentic HGSS PokéGear Phone contact-list background assets",
+  "source_game": "Pokemon HeartGold / SoulSilver",
+  "source_repository": "pret/pokeheartgold",
+  "source_revision": "9d8b7591f09b65804da2fb2dfd56f320633e0d36",
+  "retail_binding": {
+    "source_file": "src/application/pokegear/phone/overlay_101_021F017C.c",
+    "loader": "ov101_021F0284 / ov101_021F0388",
+    "skin_index": 0,
+    "mapping": {
+      "character_graphics": "skin + NARC_pgphone_gra_pgphone_gra_00000028_NCGR -> member 28",
+      "bg_palette": "skin + NARC_pgphone_gra_pgphone_gra_00000010_NCLR -> member 10",
+      "screen_tilemap": "skin + NARC_pgphone_gra_pgphone_gra_00000034_NSCR -> member 34"
+    },
+    "runtime_note": "Retail HGSS loads member 28 onto the Phone app MAIN_2 background, copies member 34 screen data into that layer, and loads member 10 into the main BG palette."
+  },
+  "verified_assets": [
+    {
+      "file": "pgphone_skin0_contact_tiles.png",
+      "source_path": "files/application/pokegear/phone/pgphone_gra/pgphone_gra_00000028.png",
+      "source_git_blob_sha": "24857c0254b5f892620da1241b665f81c83d7899",
+      "copied_git_blob_sha": "24857c0254b5f892620da1241b665f81c83d7899",
+      "byte_identity": true
+    },
+    {
+      "file": "pgphone_skin0_contact_palette.NCLR",
+      "source_path": "files/application/pokegear/phone/pgphone_gra/pgphone_gra_00000010.NCLR",
+      "source_git_blob_sha": "85b29945c3b9e8250b119922d64111ded55b1563",
+      "copied_git_blob_sha": "85b29945c3b9e8250b119922d64111ded55b1563",
+      "byte_identity": true
+    },
+    {
+      "file": "pgphone_skin0_contact_tilemap.NSCR",
+      "source_path": "files/application/pokegear/phone/pgphone_gra/pgphone_gra_00000034.NSCR",
+      "source_git_blob_sha": "ba15280bdce293fb3056cf5075b002f545e86790",
+      "copied_git_blob_sha": "ba15280bdce293fb3056cf5075b002f545e86790",
+      "byte_identity": true
+    }
+  ],
+  "current_project_gap": {
+    "live_file": "src/pokenav_match_call_gfx.c",
+    "remaining_non_authentic_surfaces": [
+      "dynamic contact-row styling on BG3",
+      "Match Call action/options pad",
+      "trainer check-page portrait panel",
+      "call-message panel"
+    ],
+    "finding": "The legacy Emerald static Match Call BG2 background is removed. Remaining procedural HGSS-style pieces are explicitly separate surfaces requiring their own verified HGSS replacements."
+  },
+  "pipeline": {
+    "authentic_hgss_asset_ready": true,
+    "wired_live": true,
+    "legacy_equivalent_removed": true
+  },
+  "next": "Begin phase 1 for the dynamic Match Call contact-row styling using the exact retail HGSS Phone list rendering/palette behavior before changing or deleting the current BG3 row presentation.",
+  "live_adaptation": {
+    "generator": "tools/gen4_ui/make_hgss_pokegear_match_call_contact.py",
+    "outputs": [
+      "graphics/gen4_ui/hgss_pokegear/match_call_contact.4bpp",
+      "graphics/gen4_ui/hgss_pokegear/match_call_contact.tilemap.bin",
+      "graphics/gen4_ui/hgss_pokegear/match_call_contact.gbapal"
+    ],
+    "source_screen_rows": [
+      0,
+      19
+    ],
+    "source_columns": [
+      1,
+      30
+    ],
+    "source_viewport": [
+      256,
+      160
+    ],
+    "gba_viewport": [
+      240,
+      160
+    ],
+    "transformation": [
+      "keep the retail Phone contact screen's first 20 tile rows exactly",
+      "omit one 8-pixel edge column on each side to form the 240-pixel GBA viewport",
+      "preserve source tile pixel indices and horizontal/vertical flip bits",
+      "remap tile IDs into unused BG2 character space starting at tile 0x180",
+      "copy exact retail NCLR palette bank 0 into dedicated GBA BG palette bank 6"
+    ],
+    "scaling": false,
+    "redrawing": false,
+    "recoloring": false,
+    "interpolation": false,
+    "live_file": "src/pokenav_match_call_gfx.c",
+    "bg": 2,
+    "bg_template_base_tile": "0x80",
+    "load_offset": "0x100",
+    "resulting_tile_base": "0x180",
+    "palette_bank": 6
+  },
+  "phase2_ci_correction": {
+    "failed_run": 657,
+    "failed_job": "gen4-ui",
+    "cause": "the py_compile command ended before the new generator because the previous workflow line lacked a shell continuation",
+    "correction": "append a backslash to the existing generator line so make_hgss_pokegear_match_call_contact.py is passed to python3 -m py_compile",
+    "asset_or_runtime_change": false
+  },
+  "status": "phase 3 complete for the Match Call static contact background: authentic HGSS Phone member-28/member-34/member-10 is the sole BG2 source",
+  "legacy_removal": {
+    "ci_gate": {
+      "workflow": "CI",
+      "run_number": 658,
+      "conclusion": "success",
+      "validated_commit": "50ee0e60f2b9344f2b3f09e6a3861bde83e2eeea"
+    },
+    "removed_bindings": [
+      "sMatchCallUI_Pal",
+      "sMatchCallUI_Gfx",
+      "sMatchCallUI_Tilemap"
+    ],
+    "removed_assets": [
+      "graphics/pokenav/match_call/ui.png",
+      "graphics/pokenav/match_call/ui.bin"
+    ],
+    "removed_procedural_contact_chrome": [
+      "DrawPokeGearPhonePanel"
+    ],
+    "left_column_behavior": "Location/info windows are transparent over the retail HGSS BG2 and use the authentic contact palette bank 6.",
+    "deliberately_not_removed": [
+      "graphics/pokenav/match_call/call_window.pal",
+      "graphics/pokenav/match_call/list_window.pal",
+      "DrawPokeGearPhoneContactRow",
+      "DrawPokeGearPhoneActionPad",
+      "DrawPokeGearPhonePortraitPanel",
+      "DrawPokeGearPhoneCallPanel"
+    ],
+    "scope_note": "Those retained items render dynamic list rows, options, the trainer-check page, or call-message UI and are separate authenticity surfaces; the static member-34 contact background does not replace them."
+  }
+}

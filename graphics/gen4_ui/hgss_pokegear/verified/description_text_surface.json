@@ -1,0 +1,37 @@
+{
+  "role": "pokegear_description_text_surface",
+  "phase": "synthetic_overlay_removed",
+  "source_game": "Pokemon HeartGold / SoulSilver",
+  "source_repository": "pret/pokeheartgold",
+  "source_revision": "9d8b7591f09b65804da2fb2dfd56f320633e0d36",
+  "authentic_underlay": {
+    "surface": "fixed PokeGear screen shell",
+    "character_member": 36,
+    "palette_member": 24,
+    "screen_member": 42,
+    "live_bg": 2
+  },
+  "removed_non_authentic_surface": {
+    "file": "src/pokenav_menu_handler_gfx.c",
+    "symbol": "DrawPokeGearDescriptionPanel",
+    "behavior": [
+      "programmatic solid fill",
+      "programmatic light upper bevel",
+      "programmatic dark lower/right edge"
+    ],
+    "retail_equivalent_found": false
+  },
+  "live_behavior": {
+    "functional_description_text_retained": true,
+    "window_background": "transparent 4bpp index 0",
+    "text_background": "transparent index 0",
+    "replacement_artwork_generated": false
+  },
+  "ci_gate_before_cleanup": {
+    "workflow": "CI",
+    "run_number": 628,
+    "conclusion": "success",
+    "validated_commit": "46d72676a3dd2ce95f6a5e388cc2c32a603bcda8"
+  },
+  "status": "synthetic HGSS-style description bevel removed; authentic retail HGSS fixed shell remains visible beneath functional text"
+}

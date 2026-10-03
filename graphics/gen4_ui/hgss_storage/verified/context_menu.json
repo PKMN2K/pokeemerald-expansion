@@ -1,0 +1,88 @@
+{
+  "role": "context_menu",
+  "classification": "static_ncgr_nclr_nscr_composition",
+  "source_archive": "/a/0/1/9",
+  "source_kind": "nds_rom",
+  "archive_sha256": "f7a1a97638959a685719049a0b780686edb68704777fead790b230e10ed1df4a",
+  "source_members": {
+    "nscr": {
+      "index": 86,
+      "raw_sha256": "c006ba6537b01d1f356c49a0b4dd5e19ccb58c19cc5d8b626fad2e8e3515572b",
+      "decoded_sha256": "2d4d2489e35487de6f32c5b76d6dacd7363372b701a12b947ae644e0e5262c09"
+    },
+    "ncgr": {
+      "index": 14,
+      "raw_sha256": "ee815971b93b9f2ad99009fef4b7e2313eb6564b1ba0b570b612aaa4969453af",
+      "decoded_sha256": "afbfab4897a5f39aa96b6030877d243d0a67d8bd18f9a7295385f2c7feeb0651"
+    },
+    "nclr": {
+      "index": 4,
+      "raw_sha256": "aff0f6a18a333e68f1d6094d06e161fa41192b882f432ae615537c37f164b20b",
+      "decoded_sha256": "aff0f6a18a333e68f1d6094d06e161fa41192b882f432ae615537c37f164b20b"
+    }
+  },
+  "visual_verification": {
+    "extracted_reference": "PC_Box/screens/member_086_screen__tiles_014__pal_004.png",
+    "reference_png_sha256": "46b7b3c2d79e2d4690fb5da0f96e02e9199c73bf8a7a3a5a744f4022db1226c2",
+    "dimensions": [
+      96,
+      80
+    ],
+    "content": "native HGSS Pokemon Storage bordered vertical menu frame with cream interior and dotted top/bottom trim",
+    "binding_basis": "visual + geometry: 12x10-tile standalone framed menu surface matching the remaining dynamic Storage context-menu role; unlike NSCR 11/12 it is a compact menu frame rather than a full-width message/confirmation bar"
+  },
+  "export": {
+    "file": "context_menu.png",
+    "sha256": "8eaaa75cca6c9b610b48c7265337b8da6d8b25303ab5e285e23bd3805c610a3c",
+    "size": [
+      96,
+      80
+    ],
+    "png_color_type": "indexed_palette",
+    "colors": 7,
+    "png_bit_depth": 4,
+    "pixel_rule": "Lossless 1:1 re-index of NSCR 86 + NCGR 14 + NCLR 4; every RGB pixel preserved with no crop, redraw, resampling, or color changes."
+  },
+  "current_live_equivalent": {
+    "status": "removed from Storage context-menu role",
+    "former_code": [
+      "DrawStdFrameWithCustomTileAndPalette(sStorage->menuWindowId, FALSE, 192, 14)",
+      "ClearStdWindowAndFrameToTransparent(sStorage->menuWindowId, TRUE)",
+      "LoadUserWindowBorderGfxOnBg(0, 192, BG_PLTT_ID(14))"
+    ],
+    "former_visual_source": "engine-standard Emerald frame tiles at BG tile 192 / palette 14",
+    "remaining_storage_users": "none"
+  },
+  "status": "complete: authentic HGSS Storage context-menu frame live; Emerald standard-frame draw/clear and Storage border-resource loader removed",
+  "next": "Continue to the next remaining Storage UI role using authentic HGSS asset -> wire live -> remove legacy equivalent.",
+  "live_integration": {
+    "renderer": "dynamic BG0 composition from verified NSCR 86 tiles + existing window text/cursor",
+    "source": "verified/context_menu.png (NSCR 86 + NCGR 14 + NCLR 4)",
+    "source_dimensions": [
+      96,
+      80
+    ],
+    "source_tile_geometry": {
+      "width_tiles": 12,
+      "height_tiles": 10,
+      "horizontal": "source column 0 = native left edge; source column 1 = repeated continuation/interior used through screen-right edge",
+      "vertical": "rows 0/1 and 8/9 preserved as authentic two-tile top/bottom bands; source row 2 repeated only for variable middle height"
+    },
+    "base_tile": 904,
+    "tile_range": "904-1023",
+    "frame_palette_bank": 10,
+    "text_palette_bank": 15,
+    "text_palette_rule": "authentic NSCR 86 colors reordered only so existing menu engine indices 1/2/3 remain background/foreground/shadow",
+    "layout": {
+      "horizontal": "dynamic context windows right-aligned so the HGSS open-right frame terminates at GBA tile column 29",
+      "vertical": "existing cursor-relative top retained and clamped to fit the authentic two-row top/bottom bands",
+      "wallpaper_menu": "existing right alignment retained"
+    },
+    "legacy_standard_frame_visible": false,
+    "legacy_standard_frame_plumbing_still_present": false,
+    "menu_text_input_behavior": "unchanged",
+    "main_field_pc_menu": "not part of this Storage-overlay role; unchanged",
+    "storage_border_resource_loader_removed": true,
+    "cleanup": "authentic frame footprint cleared directly; functional window tilemap cleared/removed without standard-frame eraser"
+  }
+}

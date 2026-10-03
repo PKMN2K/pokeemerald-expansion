@@ -1,0 +1,123 @@
+{
+  "role": "shiny_indicator",
+  "classification": "authentic_hgss_summary_asset_repurposed_for_storage",
+  "source_game": "Pokemon HeartGold / SoulSilver",
+  "storage_native_behavior": {
+    "visual_indicator_present": false,
+    "note": "HGSS Storage overlay 14 has no dedicated shiny indicator."
+  },
+  "adaptation": {
+    "rule": "Preserve the useful shiny status by repurposing an authentic HGSS shiny-status graphic from Pokemon Summary; do not invent HGSS-style artwork.",
+    "source_screen": "Pokemon Summary"
+  },
+  "decomp_verification": {
+    "repository": "pret/pokeheartgold",
+    "revision": "9d8b7591f09b65804da2fb2dfd56f320633e0d36",
+    "summary_data_builder": "sub_0208981C",
+    "summary_indicator_renderer": "sub_0208BD38",
+    "shiny_status": "MonIsShiny -> packed status bit 29",
+    "shiny_sprite_work_offset": "0x4D4",
+    "pokerus_sprite_work_offset": "0x4D8",
+    "sprite_template": {
+      "table": "_02103A70",
+      "index": 52,
+      "resource_set": 23,
+      "animation": 0
+    },
+    "resdat": {
+      "resource_header": "files/data/resdat/resdat_00000085.json",
+      "resource_set_23": {
+        "graphics": 23,
+        "palette": 0,
+        "cell": 8,
+        "anim": 8
+      },
+      "graphics_23": {
+        "table": "resdat_00000054.json",
+        "archive": "NARC_a_0_3_9",
+        "member": 58
+      },
+      "palette_0": {
+        "table": "resdat_00000055.json",
+        "archive": "NARC_a_1_6_2",
+        "member": 61
+      },
+      "cell_8": {
+        "table": "resdat_00000053.json",
+        "archive": "NARC_a_0_3_9",
+        "member": 51
+      },
+      "anim_8": {
+        "table": "resdat_00000052.json",
+        "archive": "NARC_a_0_3_9",
+        "member": 50
+      }
+    }
+  },
+  "source_archives": {
+    "NARC_a_0_3_9": {
+      "path": "/a/0/3/9",
+      "filesystem_sha1": "1360486ee8eb2c19e8c5b6e36e4843d56a42c066",
+      "git_blob_sha": "893e46c114b33e8c092bf21f56f044043993e0ba"
+    },
+    "NARC_a_1_6_2": {
+      "path": "/a/1/6/2",
+      "filesystem_sha1": "30fd7818457b50689a8a78fe522eb9df366e58a4",
+      "git_blob_sha": "346c322792276d83e932bc464318ba943136b16b"
+    }
+  },
+  "export": {
+    "file": "shiny_star.png",
+    "source_char_member": 58,
+    "source_tile": 0,
+    "source_palette_member": 61,
+    "source_palette_bank": 0,
+    "dimensions": [
+      8,
+      8
+    ],
+    "png_color_type": "indexed_palette",
+    "png_bit_depth": 4,
+    "transparent_palette_index": 0,
+    "sha256": "b7ee9b6d5e9017d9f8770cd898a993cd9a0b6fc034374a5fc18ae120799450fc",
+    "pixel_rule": "Exact 1:1 HGSS OBJ tile and original 16-color palette bank; no redraw, crop from screenshot, resampling, recoloring, or synthetic pixels."
+  },
+  "current_expansion_legacy": {
+    "asset": "graphics/pokemon_storage/swsh/shiny_icon.png",
+    "asset_git_blob_sha": "3fb4fa961ead8e853ad8d1250cae3c1830f77f0b",
+    "gfx_symbol": "sShinyIcon_Gfx",
+    "runtime_function": "UpdateShinyIconSprite",
+    "live": false,
+    "asset_retained_for_verification": false,
+    "removed": true,
+    "removed_path": "graphics/pokemon_storage/swsh/shiny_icon.png",
+    "removed_git_blob_sha": "3fb4fa961ead8e853ad8d1250cae3c1830f77f0b"
+  },
+  "status": "phase 3 complete: authentic HGSS Summary shiny star live; legacy expansion shiny asset removed",
+  "next": "Continue to the next unresolved Storage UI element using the strict authentic HGSS asset -> wire live -> remove legacy equivalent sequence.",
+  "pipeline": {
+    "authentic_hgss_asset_imported": true,
+    "wired_live": true,
+    "legacy_equivalent_removed": true
+  },
+  "live_integration": {
+    "graphics_symbol": "sHgssShinyStar_Gfx",
+    "palette_symbol": "sHgssShinyStar_Pal",
+    "sprite_sheet": "sSpriteSheet_ShinyIcon",
+    "sprite_template": "sSpriteTemplate_ShinyIcon",
+    "palette_tag": "PALTAG_HGSS_SHINY_STAR",
+    "runtime_function": "UpdateShinyIconSprite",
+    "storage_position_preserved": true,
+    "note": "The Storage-specific status behavior and 8x8 placement are retained; the displayed pixels and palette now come from the authentic HGSS Summary shiny star."
+  },
+  "verification": {
+    "workflow_run_id": 36505275777,
+    "job": "gen4-ui",
+    "conclusion": "success",
+    "checks": [
+      "Validate Gen 4 UI tools",
+      "Build Gen 4 UI assets",
+      "Compile Gen 4 UI renderer"
+    ]
+  }
+}

@@ -1,0 +1,133 @@
+{
+  "role": "marking_combo",
+  "classification": "authentic_hgss_pixel_recomposition",
+  "source_game": "Pokemon HeartGold / SoulSilver",
+  "source_archive": "/a/0/1/9",
+  "source_members": {
+    "nscr": 10,
+    "ncgr": 14,
+    "nclr": 4
+  },
+  "donor_asset": "graphics/gen4_ui/hgss_storage/verified/markings_menu.png",
+  "donor_metadata": "graphics/gen4_ui/hgss_storage/verified/markings_menu.json",
+  "donor_sha256": "81e2c02831b2b1aecc278bfeea43d3c888e5f354a194e5ee7bf9ce034572907d",
+  "output": {
+    "file": "marking_combo_hgss.4bpp",
+    "git_blob_sha": "9e660a1f14ffdbd64929c04357d05343312dc684",
+    "dimensions": [
+      32,
+      8
+    ],
+    "bytes": 128,
+    "format": "four consecutive 8x8 GBA 4bpp tiles"
+  },
+  "glyph_order": [
+    "circle",
+    "triangle",
+    "square",
+    "heart"
+  ],
+  "source_geometry": {
+    "button_rects": [
+      {
+        "glyph": "circle",
+        "x": 8,
+        "y": 8,
+        "width": 32,
+        "height": 24,
+        "glyph_bbox_within_button": {
+          "x": 16,
+          "y": 9,
+          "width": 7,
+          "height": 7
+        }
+      },
+      {
+        "glyph": "triangle",
+        "x": 48,
+        "y": 8,
+        "width": 32,
+        "height": 24,
+        "glyph_bbox_within_button": {
+          "x": 8,
+          "y": 9,
+          "width": 7,
+          "height": 7
+        }
+      },
+      {
+        "glyph": "square",
+        "x": 8,
+        "y": 32,
+        "width": 32,
+        "height": 24,
+        "glyph_bbox_within_button": {
+          "x": 16,
+          "y": 9,
+          "width": 7,
+          "height": 7
+        }
+      },
+      {
+        "glyph": "heart",
+        "x": 48,
+        "y": 32,
+        "width": 32,
+        "height": 24,
+        "glyph_bbox_within_button": {
+          "x": 8,
+          "y": 9,
+          "width": 7,
+          "height": 7
+        }
+      }
+    ],
+    "extraction_rule": "Copy only source palette indices 7 and 8 from each verified HGSS marking symbol into one transparent 8x8 tile. Preserve the 7x7 symbol pixel geometry exactly; no redraw, scaling, recolor, or smoothing."
+  },
+  "palette_rule": "Use the existing verified markings_menu.png HGSS palette when wired live. The compact asset preserves source palette indices 7/8 exactly.",
+  "current_legacy": {
+    "palette": "graphics/pokemon_storage/swsh/markings.pal",
+    "runtime_function": "CreateMonMarkingComboSprite",
+    "live": false,
+    "file_retained_for_phase_2_verification": false,
+    "removed": true,
+    "removed_source": "graphics/pokemon_storage/swsh/markings.pal",
+    "removed_after_ci": {
+      "workflow_run": 36516622239,
+      "workflow_run_number": 614,
+      "job": "gen4-ui",
+      "conclusion": "success",
+      "verified_steps": [
+        "Validate Gen 4 UI tools",
+        "Build Gen 4 UI assets",
+        "Compile Gen 4 UI renderer"
+      ]
+    }
+  },
+  "status": "phase 3 complete: authentic HGSS circle/triangle/square/heart marking combo is live with the verified HGSS markings palette; the legacy SWSH markings palette has been removed after successful gen4-ui verification",
+  "next": "Marking-combo conversion complete. Continue to the next remaining Storage UI role using authentic HGSS asset -> wire live -> remove legacy equivalent.",
+  "pipeline": {
+    "authentic_hgss_asset_ready": true,
+    "wired_live": true,
+    "legacy_equivalent_removed": true
+  },
+  "live_integration": {
+    "renderer": "32x8 OBJ sprite with four dynamically populated 8x8 slots",
+    "graphics": "graphics/gen4_ui/hgss_storage/verified/marking_combo_hgss.4bpp",
+    "palette": "verified HGSS markings_menu.png palette from /a/0/1/9 NCLR member 4",
+    "display_order": [
+      "circle",
+      "triangle",
+      "square",
+      "heart"
+    ],
+    "engine_bit_mapping": {
+      "circle": 0,
+      "triangle": 2,
+      "square": 1,
+      "heart": 3
+    },
+    "update_function": "UpdateHgssMarkingComboTiles",
+    "graphics_rule": "Each selected slot copies one exact 8x8 authentic HGSS source tile; unselected slots copy a transparent blank tile. No generic Emerald marking graphics are used."
+  }
+}

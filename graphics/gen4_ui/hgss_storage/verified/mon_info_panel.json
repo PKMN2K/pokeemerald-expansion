@@ -1,0 +1,78 @@
+{
+  "role": "mon_info_panel",
+  "classification": "static_ncgr_nclr_nscr_composition",
+  "source_archive": "/a/0/1/9",
+  "source_kind": "nds_rom",
+  "archive_sha256": "f7a1a97638959a685719049a0b780686edb68704777fead790b230e10ed1df4a",
+  "source_members": {
+    "nscr": {
+      "index": 9,
+      "raw_sha256": "b01c368cbe097a076610393896f9f24781719a8d68ba8623c951a558b91ef46d",
+      "decoded_sha256": "5464006d7962485632080ab014f613c2f058283574757eebb99e96df84f8add7"
+    },
+    "ncgr": {
+      "index": 14,
+      "raw_sha256": "ee815971b93b9f2ad99009fef4b7e2313eb6564b1ba0b570b612aaa4969453af",
+      "decoded_sha256": "afbfab4897a5f39aa96b6030877d243d0a67d8bd18f9a7295385f2c7feeb0651"
+    },
+    "nclr": {
+      "index": 4,
+      "raw_sha256": "aff0f6a18a333e68f1d6094d06e161fa41192b882f432ae615537c37f164b20b",
+      "decoded_sha256": "aff0f6a18a333e68f1d6094d06e161fa41192b882f432ae615537c37f164b20b"
+    }
+  },
+  "visual_verification": {
+    "extracted_reference": "PC_Box/screens/member_009_screen__tiles_014__pal_004.png",
+    "reference_png_sha256": "2c591ee6567ad86785531c706536c6093aebe61131ba495db39fd073940cae4d",
+    "dimensions": [
+      88,
+      144
+    ],
+    "content": "native HGSS Pokemon Storage information panel; same 88x144 sidebar family as the verified party (NSCR 8) and markings (NSCR 10) panels, without the party/message extension"
+  },
+  "export": {
+    "file": "mon_info_panel.png",
+    "sha256": "53763692873de2dd50bd74ab84c04734fa5a8d4a4858f7e3f28624fd808974ce",
+    "size": [
+      88,
+      144
+    ],
+    "png_color_type": "indexed_palette",
+    "colors": 7,
+    "png_bit_depth": 4,
+    "pixel_rule": "Lossless 1:1 composite from NSCR 9 + NCGR 14 + NCLR 4; re-indexed only for GBA 4bpp compatibility, with no crop, redraw, resampling, or color changes."
+  },
+  "legacy_equivalent": {
+    "asset_gfx": "graphics/pokemon_storage/swsh/mon_info.png",
+    "asset_tilemap": "graphics/pokemon_storage/swsh/mon_info.bin",
+    "status": "removed"
+  },
+  "status": "complete: authentic HGSS mon-info panel live; legacy SWSH mon-info graphics, tilemap, code references, and shared base-map dependency removed",
+  "next": "Continue to the next remaining Storage UI role using authentic HGSS asset -> wire live -> remove legacy equivalent.",
+  "live_integration": {
+    "renderer": "BG0 virtual-screen tile composition",
+    "destination": {
+      "left": {
+        "left_tile": 0,
+        "top_tile": 20,
+        "width_tiles": 11,
+        "height_tiles": 18
+      },
+      "right": {
+        "left_tile": 17,
+        "top_tile": 40,
+        "width_tiles": 11,
+        "height_tiles": 18
+      }
+    },
+    "base_tile": 512,
+    "blank_tile": 710,
+    "palette_bank": 11,
+    "source": "verified/mon_info_panel.png (NSCR 9 + NCGR 14 + NCLR 4)",
+    "runtime_content": "existing dynamic Pokemon data retained and narrowed/repositioned to the native 88px panel",
+    "legacy_visual_footprint": "none; BG0 is initialized from an explicit transparent runtime tilemap before the authentic HGSS panel is drawn",
+    "legacy_assets_still_present": false,
+    "legacy_assets_live_as_panel": false,
+    "base_map": "runtime-generated transparent BG0 base; no SWSH mon_info tilemap dependency"
+  }
+}

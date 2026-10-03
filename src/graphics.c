@@ -707,9 +707,9 @@ const u32 gUnusedTilemap_BasicFrame[] = INCGFX_U32("graphics/unused/basic_frame.
 
 // Battle Interface
 
-const u16 gBattleInterface_BallStatusBarPal[] = INCGFX_U16("graphics/battle_interface/hgss/ball_status_bar.png", ".gbapal");
+const u16 gBattleInterface_BallStatusBarPal[] = INCGFX_U16("graphics/battle_interface/ball_status_bar.png", ".gbapal");
 
-const u16 gBattleInterface_BallDisplayPal[] = INCGFX_U16("graphics/battle_interface/hgss/ball_display.png", ".gbapal");
+const u16 gBattleInterface_BallDisplayPal[] = INCGFX_U16("graphics/battle_interface/ball_display.png", ".gbapal");
 
 const u16 gBattleInterface_BwHealthboxPal[] = INCGFX_U16("graphics/battle_interface/bw_healthbox.pal", ".gbapal");
 const u16 gBattleInterface_BwHealthbarPal[] = INCGFX_U16("graphics/battle_interface/bw_healthbar.pal", ".gbapal");
@@ -719,19 +719,19 @@ const u32 gBattleInterface_BwNameFontGfx[] = INCGFX_U32("graphics/battle_interfa
 const u32 gBattleInterface_BwHpNumbersFontGfx[] = INCGFX_U32("graphics/battle_interface/bw_hp_numbers_font.png", ".4bpp");
 const u32 gBattleInterface_BwLevelLabelGfx[] = INCGFX_U32("graphics/battle_interface/bw_level_label.png", ".4bpp");
 
-const u8 gHealthboxElementsGfxTable[][32] = INCBIN_U8("graphics/battle_interface/hgss/hpbar.4bpp",
-                                                  "graphics/battle_interface/hgss/expbar.4bpp",
-                                                  "graphics/battle_interface/hgss/status.4bpp",
-                                                  "graphics/battle_interface/hgss/misc.4bpp",
-                                                  "graphics/battle_interface/hgss/hpbar_anim.4bpp",
-                                                  "graphics/battle_interface/hgss/misc_frameend.4bpp",
-                                                  "graphics/battle_interface/hgss/ball_display.4bpp",
-                                                  "graphics/battle_interface/hgss/ball_caught_indicator.4bpp",
-                                                  "graphics/battle_interface/hgss/status2.4bpp", // these three duplicate sets of graphics are for the opponent/partner Pokémon
-                                                  "graphics/battle_interface/hgss/status3.4bpp",
-                                                  "graphics/battle_interface/hgss/status4.4bpp",
-                                                  "graphics/battle_interface/hgss/healthbox_doubles_frameend.4bpp",
-                                                  "graphics/battle_interface/hgss/healthbox_doubles_frameend_bar.4bpp",
+const u8 gHealthboxElementsGfxTable[][32] = INCBIN_U8("graphics/battle_interface/hpbar.4bpp",
+                                                  "graphics/battle_interface/expbar.4bpp",
+                                                  "graphics/battle_interface/status.4bpp",
+                                                  "graphics/battle_interface/misc.4bpp",
+                                                  "graphics/battle_interface/hpbar_anim.4bpp",
+                                                  "graphics/battle_interface/misc_frameend.4bpp",
+                                                  "graphics/battle_interface/ball_display.4bpp",
+                                                  "graphics/battle_interface/ball_caught_indicator.4bpp",
+                                                  "graphics/battle_interface/status2.4bpp", // these three duplicate sets of graphics are for the opponent/partner Pokémon
+                                                  "graphics/battle_interface/status3.4bpp",
+                                                  "graphics/battle_interface/status4.4bpp",
+                                                  "graphics/battle_interface/healthbox_doubles_player_frameend.4bpp",
+                                                  "graphics/battle_interface/healthbox_doubles_player_frameend_bar.4bpp",
                                                   "graphics/battle_interface/healthbox_doubles_opponent_frameend.4bpp",
                                                   "graphics/battle_interface/healthbox_doubles_opponent_frameend_bar.4bpp");
 const u32 gBattleInterfaceGfx_UnusedWindow3[] = INCGFX_U32("graphics/battle_interface/unused_window3.png", ".4bpp.smol");
@@ -1008,12 +1008,12 @@ const u16 gBattleAnimSpritePal_Eye[] = INCGFX_U16("graphics/battle_anims/sprites
 const u32 gBattleAnimSpriteGfx_Tendrils[] = INCGFX_U32("graphics/battle_anims/sprites/tendrils.png", ".4bpp.smol");
 const u16 gBattleAnimSpritePal_Tendrils[] = INCGFX_U16("graphics/battle_anims/sprites/tendrils.png", ".gbapal");
 
-const u32 gHealthboxSinglesPlayerGfx[] = INCGFX_U32("graphics/battle_interface/hgss/healthbox_singles_player.png", ".4bpp.smol", "-mwidth 8 -mheight 8");
-const u32 gHealthboxSinglesOpponentGfx[] = INCGFX_U32("graphics/battle_interface/hgss/healthbox_singles_opponent.png", ".4bpp.smol", "-mwidth 8 -mheight 4");
+const u32 gHealthboxSinglesPlayerGfx[] = INCGFX_U32("graphics/battle_interface/healthbox_singles_player.png", ".4bpp.smol", "-mwidth 8 -mheight 8");
+const u32 gHealthboxSinglesOpponentGfx[] = INCGFX_U32("graphics/battle_interface/healthbox_singles_opponent.png", ".4bpp.smol", "-mwidth 8 -mheight 4");
 const u32 gHealthboxSinglesOpponentLargeGfx[] = INCGFX_U32("graphics/battle_interface/healthbox_singles_opponent_large.png", ".4bpp.smol", "-mwidth 8 -mheight 8");
-const u32 gHealthboxDoublesPlayerGfx[] = INCGFX_U32("graphics/battle_interface/hgss/healthbox_doubles_player.png", ".4bpp.smol", "-mwidth 8 -mheight 4");
-const u32 gHealthboxDoublesOpponentGfx[] = INCGFX_U32("graphics/battle_interface/hgss/healthbox_doubles_opponent.png", ".4bpp.smol", "-mwidth 8 -mheight 4");
-const u32 gHealthboxSafariGfx[] = INCGFX_U32("graphics/battle_interface/hgss/healthbox_safari.png", ".4bpp.smol", "-mwidth 8 -mheight 8");
+const u32 gHealthboxDoublesPlayerGfx[] = INCGFX_U32("graphics/battle_interface/healthbox_doubles_player.png", ".4bpp.smol", "-mwidth 8 -mheight 4");
+const u32 gHealthboxDoublesOpponentGfx[] = INCGFX_U32("graphics/battle_interface/healthbox_doubles_opponent.png", ".4bpp.smol", "-mwidth 8 -mheight 4");
+const u32 gHealthboxSafariGfx[] = INCGFX_U32("graphics/battle_interface/healthbox_safari.png", ".4bpp.smol", "-mwidth 8 -mheight 8");
 
 const u32 gUnusedGfx_Shadow[] = INCGFX_U32("graphics/unused/shadow.png", ".4bpp.smol");
 const u16 gUnusedPal_Shadow[] = INCGFX_U16("graphics/unused/shadow.png", ".gbapal");
@@ -1433,7 +1433,7 @@ const u16 gBattleAnimBackgroundImageMuddyWater_Pal[] = INCGFX_U16("graphics/batt
 const u32 gEnemyMonShadow_Gfx[] = INCGFX_U32("graphics/battle_interface/enemy_mon_shadow.png", ".4bpp.smol");
 const u32 gEnemyMonShadowsSized_Gfx[] = INCGFX_U32("graphics/battle_interface/enemy_mon_shadows_sized.png", ".4bpp.smol");
 
-const u32 gBattleInterface_BallStatusBarGfx[] = INCGFX_U32("graphics/battle_interface/hgss/ball_status_bar.png", ".4bpp.smol");
+const u32 gBattleInterface_BallStatusBarGfx[] = INCGFX_U32("graphics/battle_interface/ball_status_bar.png", ".4bpp.smol");
 
 const u32 gBattleAnimBgImage_Ghost[] = INCGFX_U32("graphics/battle_anims/backgrounds/ghost.png", ".4bpp.smol");
 const u16 gBattleAnimBgPalette_Ghost[] = INCGFX_U16("graphics/battle_anims/backgrounds/ghost.png", ".gbapal");
@@ -1895,8 +1895,6 @@ const u32 gPokenavCondition_Gfx[] = INCGFX_U32("graphics/pokenav/condition/graph
 const u32 gPokenavCondition_Tilemap[] = INCGFX_U32("graphics/pokenav/condition/graph.bin", ".smolTM");
 
 const u16 gPokenavOptions_Tilemap[] = INCBIN_U16("graphics/pokenav/options/options.bin");
-const u32 gPokenavOptions_Gfx[] = INCGFX_U32("graphics/pokenav/options/options.4bpp", ".smol");
-const u16 gPokenavOptions_Pal[] = INCGFX_U16("graphics/pokenav/options/options.pal", ".gbapal");
 
 const u16 gPokenavHeader_Pal[] = INCGFX_U16("graphics/pokenav/header.png", ".gbapal");
 const u32 gPokenavHeader_Gfx[] = INCGFX_U32("graphics/pokenav/header.png", ".4bpp.smol", "-num_tiles 53 -Wnum_tiles"); // TODO: use width 9 and makefile rule for cleanliness, make wasnt behaving, didnt want to apply num_tiles to this

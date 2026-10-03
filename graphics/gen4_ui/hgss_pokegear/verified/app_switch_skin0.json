@@ -1,0 +1,116 @@
+{
+  "role": "pokegear_main_app_switch_surface",
+  "phase": "legacy_equivalent_removed",
+  "source_game": "Pokemon HeartGold / SoulSilver",
+  "source_repository": "pret/pokeheartgold",
+  "source_revision": "9d8b7591f09b65804da2fb2dfd56f320633e0d36",
+  "retail_mapping_verification": {
+    "source_file": "src/application/pokegear/main/overlay_100_021E5900.c",
+    "function": "PokegearApp_LoadSkinGraphics",
+    "skin_index": 0,
+    "mapping": {
+      "character_graphics": "skinIdx + NARC_pgear_gra_pgear_gra_00000048_NCGR -> member 48",
+      "bg_palette": "skinIdx + NARC_pgear_gra_pgear_gra_00000030_NCLR -> member 30",
+      "app_switch_tilemap": "skinIdx + NARC_pgear_gra_pgear_gra_00000054_NSCR -> member 54"
+    },
+    "runtime_note": "Retail PokegearApp_DrawAppButtons copies the member-54 screen data into the main PokéGear app-switch strip and uses the skin-0 member-48 graphics/member-30 palette."
+  },
+  "verified_assets": [
+    {
+      "file": "pgear_skin0_app_switch_tiles.png",
+      "target_path": "graphics/gen4_ui/hgss_pokegear/verified/pgear_skin0_app_switch_tiles.png",
+      "retail_source": "files/application/pokegear/pgear_gra/pgear_gra_00000048.png",
+      "retail_git_blob_sha": "0b33041050709233198495bf43f4969738c4921e",
+      "role": "Default-skin main-screen PokéGear app-switch character graphics (member 48)",
+      "byte_identity": "copied byte-for-byte from pret/pokeheartgold retail extraction"
+    },
+    {
+      "file": "pgear_skin0_app_switch_palette.NCLR",
+      "target_path": "graphics/gen4_ui/hgss_pokegear/verified/pgear_skin0_app_switch_palette.NCLR",
+      "retail_source": "files/application/pokegear/pgear_gra/pgear_gra_00000030.NCLR",
+      "retail_git_blob_sha": "69f91d3bf7a72e5868d5dc6cf04add710bd7138a",
+      "role": "Default-skin main-screen PokéGear BG palette (member 30)",
+      "byte_identity": "copied byte-for-byte from pret/pokeheartgold retail extraction"
+    },
+    {
+      "file": "pgear_skin0_app_switch_tilemap.NSCR",
+      "target_path": "graphics/gen4_ui/hgss_pokegear/verified/pgear_skin0_app_switch_tilemap.NSCR",
+      "retail_source": "files/application/pokegear/pgear_gra/pgear_gra_00000054.NSCR",
+      "retail_git_blob_sha": "c9103c3dba3d4f1ec88025987ad0f2ddbc63c0b1",
+      "role": "Default-skin PokéGear app-switch tilemap (member 54)",
+      "byte_identity": "copied byte-for-byte from pret/pokeheartgold retail extraction"
+    }
+  ],
+  "current_project_gap": {
+    "module": "PokéGear/PokéNav",
+    "live_files": [
+      "src/pokenav_menu_handler_gfx.c",
+      "src/pokenav_main_menu.c"
+    ],
+    "finding": "Current top-level PokéGear presentation still includes programmatically drawn HGSS-style panels and legacy PokéNav artwork. This source set establishes a verified retail HGSS app-switch visual before any live replacement."
+  },
+  "pipeline": {
+    "authentic_hgss_asset_ready": true,
+    "wired_live": true,
+    "legacy_equivalent_removed": true
+  },
+  "next": "Audit the next PokéGear main-shell surface and begin its authentic HGSS asset phase.",
+  "live_adaptation": {
+    "generator": "tools/gen4_ui/make_hgss_pokegear_app_switch.py",
+    "output": "graphics/gen4_ui/hgss_pokegear/app_switch_gba.png",
+    "dimensions": [
+      240,
+      32
+    ],
+    "source_geometry": [
+      256,
+      32
+    ],
+    "transformation": [
+      "reconstruct retail normal-state rows 0..3 through member-54 NSCR",
+      "apply member-30 NCLR palette banks exactly",
+      "remove only empty x=0..7 and x=248..255 margins",
+      "reindex exact retail colors into one 4bpp GBA palette"
+    ],
+    "scaling": false,
+    "redrawing": false,
+    "recoloring": false,
+    "interpolation": false,
+    "live_file": "src/pokenav_menu_handler_gfx.c",
+    "bg": 2,
+    "destination_rows": [
+      0,
+      3
+    ],
+    "tile_base": "0x100",
+    "palette_bank": 14,
+    "current_menu_logic_preserved": true,
+    "legacy_device_chrome_retained_for_verification": false,
+    "generator_runtime": "Python standard library only; no Pillow/PIL dependency",
+    "ci_fix": {
+      "failed_run": 620,
+      "cause": "normal ROM/test jobs do not install Pillow, while the first generator revision imported PIL.Image",
+      "resolution": "replace Pillow use with a self-contained indexed-PNG decoder/encoder using struct, zlib, and CRC32; image reconstruction logic and retail source mapping are unchanged"
+    }
+  },
+  "status": "phase 3 complete: authentic HGSS app-switch strip is live and the legacy app-switch tilemap region has been removed",
+  "legacy_removal": {
+    "ci_gate": {
+      "run": 621,
+      "conclusion": "success"
+    },
+    "asset": "graphics/pokenav/device_outline_map.bin",
+    "removed_region": "tilemap rows 0..3 (32x4 entries)",
+    "replacement": "canonical blank entry 0x2000",
+    "obsolete_top_only_tile_ids": [
+      4,
+      8,
+      9,
+      12,
+      16,
+      17,
+      20
+    ],
+    "note": "Those legacy tile IDs are no longer referenced by the device tilemap. The shared character sheet remains temporarily because the lower PokéNav device shell still depends on other tiles and is a separate migration surface."
+  }
+}

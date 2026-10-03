@@ -1,0 +1,103 @@
+{
+  "role": "pokegear_main_ui_sprite_layer",
+  "phase": "legacy_equivalent_removed",
+  "source_game": "Pokemon HeartGold / SoulSilver",
+  "source_repository": "pret/pokeheartgold",
+  "source_revision": "9d8b7591f09b65804da2fb2dfd56f320633e0d36",
+  "retail_binding": {
+    "loader": "PokegearUIManager_LoadInitialSkinGfx",
+    "loader_file": "src/application/pokegear/main/overlay_100_021E6914.c",
+    "consumer": "PokegearApp_LoadGraphics",
+    "consumer_file": "src/application/pokegear/main/overlay_100_021E5900.c",
+    "assets": [
+      {
+        "member": 0,
+        "type": "NCLR",
+        "source_path": "files/application/pokegear/pgear_gra/pgear_gra_00000000.NCLR",
+        "target_path": "graphics/gen4_ui/hgss_pokegear/verified/pgear_skin0_ui_palette.NCLR",
+        "source_git_blob_sha": "bbdc310859698dcce8dc7e0f9aa45e8ec2d94087"
+      },
+      {
+        "member": 6,
+        "type": "NCGR source PNG",
+        "source_path": "files/application/pokegear/pgear_gra/pgear_gra_00000006.png",
+        "target_path": "graphics/gen4_ui/hgss_pokegear/verified/pgear_skin0_ui_sprites.png",
+        "source_git_blob_sha": "c6dfd8b3946d4875a154bd4de359b1ee244dcd18"
+      },
+      {
+        "member": 12,
+        "type": "NCER",
+        "source_path": "files/application/pokegear/pgear_gra/pgear_gra_00000012.NCER",
+        "target_path": "graphics/gen4_ui/hgss_pokegear/verified/pgear_ui_cells.NCER",
+        "source_git_blob_sha": "aac8033e326bfadbb8d7328f62bb3246582e4d6c"
+      },
+      {
+        "member": 13,
+        "type": "NANR",
+        "source_path": "files/application/pokegear/pgear_gra/pgear_gra_00000013.NANR",
+        "target_path": "graphics/gen4_ui/hgss_pokegear/verified/pgear_ui_anims.NANR",
+        "source_git_blob_sha": "8bbd3faad47fad0187eae6441de4c6ddc56a15d6"
+      }
+    ],
+    "usage": "Common retail PokéGear UI sprites: app-switch cursor resources plus clock/day/status widgets."
+  },
+  "legacy_equivalent": {
+    "live_file": "src/pokenav_menu_handler_gfx.c",
+    "current_selection_effect": [
+      "SetupPokenavMenuScanlineEffects",
+      "Task_CurrentMenuOptionGlow",
+      "SetMenuOptionGlow"
+    ],
+    "retained_for_phase2": false,
+    "labels_are_separate_surface": true,
+    "finding": "After decoding the retail NCER/NANR, the direct equivalent of the imported HGSS common UI resource is the four-corner selection cursor. The existing PokéNav option labels are not removed in this sequence.",
+    "removed_from_top_level": true,
+    "retained_for_submenus": true,
+    "ci_gate": {
+      "workflow": "CI",
+      "run_number": 627,
+      "conclusion": "success",
+      "validated_commit": "9901d58c30c200fef677470bcac5c1724f6eb3ea"
+    }
+  },
+  "pipeline": {
+    "authentic_hgss_asset_ready": true,
+    "wired_live": true,
+    "legacy_equivalent_removed": true
+  },
+  "next": "Begin a new authenticity sequence for the next remaining legacy PokéGear surface; the option-label sprites and synthetic description strip are separate candidates and are not deleted by the completed cursor sequence.",
+  "status": "phase 3 complete: authentic retail HGSS four-corner cursor is the sole top-level selection indicator; the superseded top-level PokéNav scanline/lighten glow is disabled while submenu glow behavior is preserved",
+  "decoded_cursor_binding": {
+    "nanr_sequences": [
+      4,
+      5,
+      6,
+      7
+    ],
+    "ncer_cells": [
+      20,
+      21,
+      22,
+      23
+    ],
+    "base_cell": 20,
+    "object_size": [
+      16,
+      16
+    ],
+    "member6_tile_index": 208,
+    "member0_palette_bank": 1,
+    "flips": [
+      "none",
+      "vertical",
+      "horizontal",
+      "horizontal+vertical"
+    ],
+    "generator": "tools/gen4_ui/make_hgss_pokegear_cursor.py",
+    "generated_tiles": "graphics/gen4_ui/hgss_pokegear/cursor_corner.4bpp",
+    "generated_palette": "graphics/gen4_ui/hgss_pokegear/cursor_corner.gbapal",
+    "scaling": false,
+    "redrawing": false,
+    "recoloring": false
+  }
+}

@@ -1,0 +1,102 @@
+{
+  "role": "pokegear_phone_status_notification_source",
+  "phase": "legacy_equivalent_removed",
+  "source_game": "Pokemon HeartGold / SoulSilver",
+  "source_repository": "pret/pokeheartgold",
+  "source_revision": "9d8b7591f09b65804da2fb2dfd56f320633e0d36",
+  "retail_binding": {
+    "loader": "PokegearUIManager_LoadInitialSkinGfx",
+    "loader_file": "src/application/pokegear/main/overlay_100_021E6914.c",
+    "consumer": "PokegearApp_LoadGraphics",
+    "consumer_file": "src/application/pokegear/main/overlay_100_021E5900.c",
+    "sprite_index": 10,
+    "retail_position": [
+      197,
+      48
+    ],
+    "nanr_sequence": 3,
+    "ncer_cells": [
+      18,
+      19
+    ],
+    "member6_tiles": [
+      200,
+      204
+    ],
+    "member0_palette_bank": 3,
+    "object_size": [
+      16,
+      16
+    ],
+    "states": {
+      "0": "active / phone available",
+      "1": "disabled / phone unavailable"
+    },
+    "retail_state_change": "PokegearApp_LoadGraphics sets animation frame 1 when MapHeader_CanPlacePhoneCalls returns false."
+  },
+  "source_assets": [
+    "graphics/gen4_ui/hgss_pokegear/verified/pgear_skin0_ui_sprites.png",
+    "graphics/gen4_ui/hgss_pokegear/verified/pgear_skin0_ui_palette.NCLR",
+    "graphics/gen4_ui/hgss_pokegear/verified/pgear_ui_cells.NCER",
+    "graphics/gen4_ui/hgss_pokegear/verified/pgear_ui_anims.NANR"
+  ],
+  "generator": "tools/gen4_ui/make_hgss_pokegear_phone_status.py",
+  "generated_tiles": "graphics/gen4_ui/hgss_pokegear/phone_status.4bpp",
+  "generated_palette": "graphics/gen4_ui/hgss_pokegear/phone_status.gbapal",
+  "generated_layout": "two untouched 16x16 4bpp frames in retail sequence order: active then disabled",
+  "scaling": false,
+  "redrawing": false,
+  "recoloring": false,
+  "legacy_equivalent": {
+    "asset": "graphics/pokenav/blue_light.png",
+    "code": [
+      "CreateMatchCallBlueLightSprite",
+      "SpriteCB_BlinkingBlueLight",
+      "DestroyRematchBlueLightSprite"
+    ],
+    "predicate": "AreAnyTrainerRematchesNearby",
+    "removed": true,
+    "stale_dependency_correction": {
+      "ci_run": 634,
+      "failed_commit": "bb225aaa674fb55d0409651755c30891f6dee3be",
+      "file": "src/pokenav_main_menu.c",
+      "removed_symbol": "sBlueLightCopy",
+      "reason": "unused INCGFX copy still generated a Make dependency on the deleted graphics/pokenav/blue_light.png"
+    }
+  },
+  "authenticity_note": "Retail HGSS does not use this sprite as a nearby-rematch alert. It is the authentic PokéGear phone-availability status icon. The project will deliberately reuse this retail phone-specific artwork for the Emerald Match Call notification rather than fabricate an HGSS-style blue light; it is not claimed to be a direct retail functional equivalent.",
+  "pipeline": {
+    "authentic_hgss_asset_ready": true,
+    "wired_live": true,
+    "legacy_equivalent_removed": true
+  },
+  "next": "Wait for CI to validate the cleanup correction before beginning the next PokéGear authenticity surface.",
+  "ci_gate_before_wiring": {
+    "workflow": "CI",
+    "run_number": 632,
+    "conclusion": "success",
+    "validated_commit": "52c3a6f7f008cca20cea1340fb1d57a3f83cf2c3"
+  },
+  "live_integration": {
+    "predicate": "AreAnyTrainerRematchesNearby",
+    "active_frame": "NCER cell 18 / member-6 tile 200",
+    "sprite_position_ds": [
+      197,
+      48
+    ],
+    "sprite_position_gba": [
+      189,
+      48
+    ],
+    "geometry_adaptation": "subtract one 8px source column because the fixed-shell viewport keeps DS columns 1..30; y is unchanged",
+    "behavior": "visible only on the top-level PokéGear when a nearby rematch is available; preserves the previous blinking notification cadence",
+    "legacy_blue_light": "removed after CI #633 validated the authentic HGSS phone-status integration"
+  },
+  "status": "phase 3 cleanup correction committed: all live and unused PokéNav blue-light source bindings are now removed; awaiting CI validation",
+  "ci_gate_before_legacy_removal": {
+    "workflow": "CI",
+    "run_number": 633,
+    "conclusion": "success",
+    "validated_commit": "327470de41cf68d7d756cf17c68f1e398b7d2f0a"
+  }
+}
