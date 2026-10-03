@@ -290,3 +290,12 @@ Target metatile **ID 96** is the first live Olcan mining surface that exercises 
 Prism block `0x81` BL uses source tiles `0x4A, 0x4B, 0x08, 0x07` with attributes `0x05, 0x05, 0x0E, 0x0E`. The lower two tiles are palette 6, bank 1, so they linearize to target tile IDs `0x88` and `0x87`. The resulting target entries are `0x524A, 0x524B, 0x6288, 0x6287`.
 
 This single-surface commit intentionally isolates the first bank-1 transition for CI validation. Existing maps remain untouched.
+
+
+## Olcan mining surface conversion complete
+
+The shared Olcan target now contains **all 110 Prism `MINING` collision quadrants** as live `MB_PRISM_MINING` metatiles. Final IDs 97-109 cover Prism block `0x81` BR through block `0xA5` BR.
+
+Target ID `97` preserves the remaining mixed bank/palette/flip case: source attributes `0x05, 0x05, 0x2E, 0x0E` translate the lower-left bank-1, palette-6, X-flipped tile to `0x6687` and the lower-right bank-1, palette-6 tile to `0x6288`.
+
+Olcan mining-surface coverage is now **110 / 110**. Existing maps remain untouched; map assignment and dynamic morning/night palette switching are separate follow-up work.
