@@ -1202,3 +1202,31 @@ only behind the phase-2 rollback switch until CI validates this integration.
 They are no longer the default live call-message surface.
 
 **authentic HGSS asset → wired live, CI pending → legacy removal pending**
+
+
+## Match Call call-message surface — phase 3
+
+CI #668 passed the live authentic HGSS Phone call-screen wiring at
+`3835462385a8b2138c1fae6f80a2539158cbefdb`.
+
+The phase-2 rollback path is now removed. `DrawPokeGearPhoneCallPanel`, the
+old 28x4 `sCallMsgBoxWindowTemplate`, and
+`sUseLegacyCallPanelForRollback` are deleted, leaving the retail-derived
+27x4 `sHgssCallMsgBoxWindowTemplate` and `DrawHgssPhoneCallSurface` as the
+sole Match Call call-message presentation.
+
+The final dependency on `graphics/pokenav/match_call/call_window.pal` was the
+GBA text-window palette bank. It has been replaced with an authentic direct
+source: palette bank 1 from verified HGSS Phone member 4 NCLR. Retail
+`sWindowTemplates[0]` and `[1]` both specify palette 1 on SUB_2, and
+`PhoneCallMessagePrint` renders the live conversation into that window.
+The generator now emits that bank byte-for-byte as
+`match_call_call_text.gbapal`, loaded into GBA BG palette bank 1. The legacy
+`call_window.pal` file is deleted.
+
+No call-screen geometry, source pixels, tile indices, flip bits, or member-4
+palette entries are altered by this cleanup.
+
+This completes the call-message sequence:
+
+**authentic HGSS asset ✅ → wired live and validated ✅ → legacy equivalent removed ✅**

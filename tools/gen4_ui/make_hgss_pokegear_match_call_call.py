@@ -227,19 +227,21 @@ def make_tilemap():
     return struct.pack("<" + "H" * len(out), *out)
 
 
-def make_palette():
+def make_palette(bank_index):
     colors = load_nclr(PALETTE)
-    bank = colors[:16]
+    start = bank_index * 16
+    bank = colors[start:start + 16]
     if len(bank) != 16:
-        raise ValueError(f"{PALETTE}: missing retail bank 0")
+        raise ValueError(f"{PALETTE}: missing retail bank {bank_index}")
     return struct.pack("<16H", *bank)
 
 
 def main():
-    if len(sys.argv) != 3 or sys.argv[1] not in ("--tiles", "--tilemap", "--palette"):
+    modes = ("--tiles", "--tilemap", "--palette", "--text-palette")
+    if len(sys.argv) != 3 or sys.argv[1] not in modes:
         raise SystemExit(
             "usage: make_hgss_pokegear_match_call_call.py "
-            "(--tiles|--tilemap|--palette) OUTPUT"
+            "(--tiles|--tilemap|--palette|--text-palette) OUTPUT"
         )
     output = Path(sys.argv[2])
     output.parent.mkdir(parents=True, exist_ok=True)
@@ -247,8 +249,11 @@ def main():
         output.write_bytes(make_tiles())
     elif sys.argv[1] == "--tilemap":
         output.write_bytes(make_tilemap())
+    elif sys.argv[1] == "--palette":
+        output.write_bytes(make_palette(0))
     else:
-        output.write_bytes(make_palette())
+        # Retail sWindowTemplates[0]/[1] use palette 1 on SUB_2.
+        output.write_bytes(make_palette(1))
 
 
 if __name__ == "__main__":

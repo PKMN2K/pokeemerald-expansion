@@ -1,13 +1,13 @@
 {
   "role": "match_call_call_message_surface",
-  "phase": "wired_live_ci_pending",
+  "phase": "legacy_removed_ci_pending",
   "classification": "direct retail HGSS PokéGear Phone call-screen source set",
   "source_revision": "9d8b7591f09b65804da2fb2dfd56f320633e0d36",
   "previous_gate": {
     "workflow": "CI",
-    "run_number": 667,
+    "run_number": 668,
     "conclusion": "success",
-    "validated_commit": "42f11a993c94cc78779c7a278859affd2ef9a406"
+    "validated_commit": "3835462385a8b2138c1fae6f80a2539158cbefdb"
   },
   "source_files": [
     {
@@ -54,17 +54,13 @@
     "graphics_layer": "GF_BG_LYR_SUB_3",
     "call_text_layer": "GF_BG_LYR_SUB_2"
   },
-  "legacy_pending": {
-    "renderer": "DrawPokeGearPhoneCallPanel",
-    "palette": "graphics/pokenav/match_call/call_window.pal",
-    "live_file": "src/pokenav_match_call_gfx.c"
-  },
+  "legacy_pending": null,
   "pipeline": {
     "authentic_hgss_source_ready": true,
     "wired_live": true,
-    "legacy_equivalent_removed": false
+    "legacy_equivalent_removed": true
   },
-  "next": "After phase-2 CI passes, remove DrawPokeGearPhoneCallPanel, the legacy 28x4 template/rollback switch, and graphics/pokenav/match_call/call_window.pal after replacing any remaining text-palette dependency with an authentic HGSS source.",
+  "next": "Run phase-3 CI. After it passes, the Match Call call-message surface sequence is complete; audit the separate trainer CHECK-page portrait chrome next.",
   "gba_adaptation": {
     "source_dimensions_tiles": [
       32,
@@ -113,7 +109,20 @@
       "DrawMsgBoxForCloseByMsg"
     ],
     "bg": 1,
-    "live_default": "authentic HGSS member-16/member-22/member-4 surface",
-    "rollback": "DrawPokeGearPhoneCallPanel retained behind sUseLegacyCallPanelForRollback"
+    "live_default": "authentic HGSS member-16/member-22/member-4 surface only",
+    "rollback": null
+  },
+  "text_palette": {
+    "source": "graphics/gen4_ui/hgss_pokegear/verified/pgphone_skin0_call_palette.NCLR",
+    "retail_palette_bank": 1,
+    "generated_output": "graphics/gen4_ui/hgss_pokegear/match_call_call_text.gbapal",
+    "gba_palette_bank": 1,
+    "evidence": "Retail Phone sWindowTemplates[0] and [1] both use palette 1 on SUB_2; PhoneCallMessagePrint renders the conversation into phoneCallMsgWindow."
+  },
+  "legacy_removed": {
+    "renderer": "DrawPokeGearPhoneCallPanel",
+    "template": "sCallMsgBoxWindowTemplate",
+    "rollback_switch": "sUseLegacyCallPanelForRollback",
+    "palette_asset": "graphics/pokenav/match_call/call_window.pal"
   }
 }

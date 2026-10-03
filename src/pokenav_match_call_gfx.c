@@ -58,7 +58,6 @@ static void DestroyMatchCallList(void);
 static void FreeMatchCallSprites(void);
 static void LoadCallWindowAndFade(struct Pokenav_MatchCallGfx *);
 static void DrawHgssPhoneCallSurface(struct Pokenav_MatchCallGfx *);
-static void DrawPokeGearPhoneCallPanel(u16);
 static void DrawPokeGearPhonePortraitPanel(u16);
 static void DrawMatchCallLeftColumnWindows(struct Pokenav_MatchCallGfx *);
 static void UpdateMatchCallInfoBox(struct Pokenav_MatchCallGfx *);
@@ -120,9 +119,9 @@ static const u16 sHgssMatchCallContact_Pal[] = INCBIN_U16("graphics/gen4_ui/hgss
 static const u32 sHgssMatchCallCall_Gfx[] = INCBIN_U32("graphics/gen4_ui/hgss_pokegear/match_call_call.4bpp");
 static const u16 sHgssMatchCallCall_Tilemap[] = INCBIN_U16("graphics/gen4_ui/hgss_pokegear/match_call_call.tilemap.bin");
 static const u16 sHgssMatchCallCall_Pal[] = INCBIN_U16("graphics/gen4_ui/hgss_pokegear/match_call_call.gbapal");
+static const u16 sHgssMatchCallCallText_Pal[] = INCBIN_U16("graphics/gen4_ui/hgss_pokegear/match_call_call_text.gbapal");
 static const u32 sHgssActionMenu_Gfx[] = INCBIN_U32("graphics/gen4_ui/hgss_pokegear/match_call_action_menu.4bpp");
 static const u16 sHgssActionMenu_Pal[] = INCBIN_U16("graphics/gen4_ui/hgss_pokegear/match_call_action_menu.gbapal");
-static const u16 sCallWindow_Pal[] = INCGFX_U16("graphics/pokenav/match_call/call_window.pal", ".gbapal");
 static const u16 sHgssContactRows_Pal[] = INCBIN_U16("graphics/gen4_ui/hgss_pokegear/match_call_contact_rows.gbapal");
 static const u32 sHgssRematchBadge_Gfx[] = INCBIN_U32("graphics/gen4_ui/hgss_pokegear/rematch_badge.4bpp");
 static const u16 sHgssRematchBadge_Pal[] = INCBIN_U16("graphics/gen4_ui/hgss_pokegear/rematch_badge.gbapal");
@@ -243,17 +242,6 @@ static const u8 *const sMatchCallOptionTexts[MATCH_CALL_OPTION_COUNT] =
 // The series of 5 dots that appear when someone is called with Match Call
 static const u8 sText_CallingDots[] = _("CALLING{PAUSE 4}·{PAUSE 4}·{PAUSE 4}·{PAUSE 4}·\p");
 
-static const struct WindowTemplate sCallMsgBoxWindowTemplate =
-{
-    .bg = 1,
-    .tilemapLeft = 1,
-    .tilemapTop = 12,
-    .width = 28,
-    .height = 4,
-    .paletteNum = 1,
-    .baseBlock = 10
-};
-
 // Retail HGSS Phone window 0 is (2,19), 27x4. The GBA adaptation
 // removes only four blank source rows, so its live origin becomes (2,15).
 static const struct WindowTemplate sHgssCallMsgBoxWindowTemplate =
@@ -267,7 +255,6 @@ static const struct WindowTemplate sHgssCallMsgBoxWindowTemplate =
     .baseBlock = 10
 };
 
-static bool8 sUseLegacyCallPanelForRollback = FALSE;
 
 static const struct OamData sTrainerPicOamData =
 {
@@ -356,7 +343,8 @@ static u32 LoopedTask_OpenMatchCall(s32 state)
         BgDmaFill(1, 0, 0, 1);
         SetBgTilemapBuffer(1, gfx->bgTilemapBuffer1);
         FillBgTilemapBufferRect_Palette0(1, 0x1000, 0, 0, 32, 20);
-        CopyPaletteIntoBufferUnfaded(sCallWindow_Pal, BG_PLTT_ID(1), sizeof(sCallWindow_Pal));
+        // Retail HGSS Phone call-text windows use member-4 NCLR palette bank 1.
+        CopyPaletteIntoBufferUnfaded(sHgssMatchCallCallText_Pal, BG_PLTT_ID(1), sizeof(sHgssMatchCallCallText_Pal));
         CopyBgTilemapBufferToVram(1);
         return LT_INC_AND_PAUSE;
     case 2:
@@ -1215,25 +1203,13 @@ static void UpdateWindowsToShowCheckPage(struct Pokenav_MatchCallGfx *gfx)
 
 static void LoadCallWindowAndFade(struct Pokenav_MatchCallGfx *gfx)
 {
-    if (sUseLegacyCallPanelForRollback)
-        gfx->msgBoxWindowId = AddWindow(&sCallMsgBoxWindowTemplate);
-    else
-        gfx->msgBoxWindowId = AddWindow(&sHgssCallMsgBoxWindowTemplate);
-
+    gfx->msgBoxWindowId = AddWindow(&sHgssCallMsgBoxWindowTemplate);
     LoadMatchCallWindowGfx(gfx->msgBoxWindowId, 1, 4);
     FadeToBlackExceptPrimary();
 }
 
 static void DrawHgssPhoneCallSurface(struct Pokenav_MatchCallGfx *gfx)
 {
-    if (sUseLegacyCallPanelForRollback)
-    {
-        DrawPokeGearPhoneCallPanel(gfx->msgBoxWindowId);
-        PutWindowTilemap(gfx->msgBoxWindowId);
-        CopyWindowToVram(gfx->msgBoxWindowId, COPYWIN_FULL);
-        return;
-    }
-
     LoadBgTiles(1, sHgssMatchCallCall_Gfx, sizeof(sHgssMatchCallCall_Gfx), HGSS_MATCH_CALL_CALL_TILE_OFFSET);
     CopyToBgTilemapBuffer(1, sHgssMatchCallCall_Tilemap, sizeof(sHgssMatchCallCall_Tilemap), 0);
     LoadPalette(sHgssMatchCallCall_Pal, BG_PLTT_ID(HGSS_MATCH_CALL_CALL_PALETTE), sizeof(sHgssMatchCallCall_Pal));
@@ -1244,37 +1220,6 @@ static void DrawHgssPhoneCallSurface(struct Pokenav_MatchCallGfx *gfx)
     PutWindowTilemap(gfx->msgBoxWindowId);
     CopyWindowToVram(gfx->msgBoxWindowId, COPYWIN_FULL);
     CopyBgTilemapBufferToVram(1);
-}
-
-static void DrawPokeGearPhoneCallPanel(u16 windowId)
-{
-    u8 width = GetWindowAttribute(windowId, WINDOW_WIDTH) * 8;
-    u8 height = GetWindowAttribute(windowId, WINDOW_HEIGHT) * 8;
-
-    FillWindowPixelBuffer(windowId, PIXEL_FILL(1));
-
-    if (width < 48 || height < 24)
-        return;
-
-    // PokéGear Phone call display: recessed shell with a dedicated status bay.
-    FillWindowPixelRect(windowId, PIXEL_FILL(3), 2, 0, width - 4, 1);
-    FillWindowPixelRect(windowId, PIXEL_FILL(3), 0, 2, 1, height - 4);
-    FillWindowPixelRect(windowId, PIXEL_FILL(2), 2, height - 1, width - 4, 1);
-    FillWindowPixelRect(windowId, PIXEL_FILL(2), width - 1, 2, 1, height - 4);
-    FillWindowPixelRect(windowId, PIXEL_FILL(3), 28, 3, 1, height - 6);
-    FillWindowPixelRect(windowId, PIXEL_FILL(2), 29, 3, 1, height - 6);
-
-    // Block-built handset.
-    FillWindowPixelRect(windowId, PIXEL_FILL(2), 7, 8, 3, 7);
-    FillWindowPixelRect(windowId, PIXEL_FILL(2), 9, 13, 8, 3);
-    FillWindowPixelRect(windowId, PIXEL_FILL(2), 15, 8, 3, 7);
-    FillWindowPixelRect(windowId, PIXEL_FILL(3), 9, 7, 3, 2);
-    FillWindowPixelRect(windowId, PIXEL_FILL(3), 14, 14, 3, 2);
-
-    // Signal bars and alert LED.
-    FillWindowPixelRect(windowId, PIXEL_FILL(3), 20, 14, 2, 3);
-    FillWindowPixelRect(windowId, PIXEL_FILL(3), 23, 11, 2, 6);
-    FillWindowPixelRect(windowId, PIXEL_FILL(4), 22, 5, 3, 3);
 }
 
 static void DrawMsgBoxForMatchCallMsg(struct Pokenav_MatchCallGfx *gfx)

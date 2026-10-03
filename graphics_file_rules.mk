@@ -175,6 +175,10 @@ $(GEN4UIGFXDIR)/hgss_pokegear/match_call_call.gbapal: $(GEN4UIHGSSPOKEGEARCALL) 
 	$(GEN4UIGFXDIR)/hgss_pokegear/verified/pgphone_skin0_call_palette.NCLR
 	python3 $< --palette $@
 
+$(GEN4UIGFXDIR)/hgss_pokegear/match_call_call_text.gbapal: $(GEN4UIHGSSPOKEGEARCALL) \
+	$(GEN4UIGFXDIR)/hgss_pokegear/verified/pgphone_skin0_call_palette.NCLR
+	python3 $< --text-palette $@
+
 $(GEN4UIGFXDIR)/hgss_pokegear/match_call_contact_rows.gbapal: $(GEN4UIHGSSPOKEGEARCONTACTROWS) \
 	$(GEN4UIGFXDIR)/hgss_pokegear/verified/pgphone_skin0_contact_palette.NCLR
 	python3 $< $@

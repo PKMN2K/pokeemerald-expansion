@@ -164,6 +164,7 @@ jobs:
             graphics/gen4_ui/hgss_pokegear/match_call_call.4bpp \
             graphics/gen4_ui/hgss_pokegear/match_call_call.tilemap.bin \
             graphics/gen4_ui/hgss_pokegear/match_call_call.gbapal \
+            graphics/gen4_ui/hgss_pokegear/match_call_call_text.gbapal \
             graphics/gen4_ui/hgss_pokegear/match_call_contact_rows.gbapal \
             graphics/gen4_ui/hgss_pokegear/match_call_action_menu.4bpp \
             graphics/gen4_ui/hgss_pokegear/match_call_action_menu.gbapal
