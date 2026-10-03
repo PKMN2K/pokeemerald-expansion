@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 from pathlib import Path
+import binascii
 import hashlib
 import struct
-
-from make_hgss_pokegear_match_call_contact import load_indexed_png4
+import zlib
 
 
 LEGACY_HEADER_GFX = Path("graphics/pokenav/header.png")
@@ -41,6 +41,107 @@ def verify_blob(path):
     return data
 
 
+PNG_SIGNATURE = b"\x89PNG\r\n\x1a\n"
+
+
+def paeth_predictor(a, b, c):
+    p = a + b - c
+    pa = abs(p - a)
+    pb = abs(p - b)
+    pc = abs(p - c)
+    if pa <= pb and pa <= pc:
+        return a
+    if pb <= pc:
+        return b
+    return c
+
+
+def load_locked_indexed_png4(path):
+    # Decode only after this audit's own blob lock passes. Do not reuse an
+    # asset-specific verifier from another generator: its allow-list is
+    # intentionally limited to that generator's own retail source files.
+    data = verify_blob(path)
+    if not data.startswith(PNG_SIGNATURE):
+        raise ValueError(f"{path}: not a PNG")
+
+    pos = len(PNG_SIGNATURE)
+    ihdr = None
+    idat = bytearray()
+    while pos < len(data):
+        if pos + 12 > len(data):
+            raise ValueError(f"{path}: truncated PNG chunk")
+        length = struct.unpack_from(">I", data, pos)[0]
+        chunk_type = data[pos + 4:pos + 8]
+        payload_start = pos + 8
+        payload_end = payload_start + length
+        crc_end = payload_end + 4
+        if crc_end > len(data):
+            raise ValueError(f"{path}: truncated {chunk_type!r} chunk")
+
+        payload = data[payload_start:payload_end]
+        expected_crc = struct.unpack_from(">I", data, payload_end)[0]
+        actual_crc = binascii.crc32(chunk_type + payload) & 0xFFFFFFFF
+        if expected_crc != actual_crc:
+            raise ValueError(f"{path}: invalid {chunk_type!r} CRC")
+
+        if chunk_type == b"IHDR":
+            ihdr = struct.unpack(">IIBBBBB", payload)
+        elif chunk_type == b"IDAT":
+            idat.extend(payload)
+        elif chunk_type == b"IEND":
+            break
+        pos = crc_end
+
+    if ihdr is None:
+        raise ValueError(f"{path}: missing IHDR")
+    width, height, bit_depth, color_type, compression, filter_method, interlace = ihdr
+    if bit_depth != 4 or color_type != 3:
+        raise ValueError(f"{path}: expected 4-bit indexed PNG")
+    if width % 2:
+        raise ValueError(f"{path}: odd-width 4-bit PNG is unsupported by this audit")
+    if compression != 0 or filter_method != 0 or interlace != 0:
+        raise ValueError(f"{path}: unsupported PNG encoding")
+
+    row_bytes = width // 2
+    raw = zlib.decompress(bytes(idat))
+    if len(raw) != height * (row_bytes + 1):
+        raise ValueError(f"{path}: unexpected decompressed size")
+
+    rows = []
+    prev = bytearray(row_bytes)
+    offset = 0
+    for _ in range(height):
+        filter_type = raw[offset]
+        scan = bytearray(raw[offset + 1:offset + 1 + row_bytes])
+        offset += row_bytes + 1
+        recon = bytearray(row_bytes)
+
+        for x, value in enumerate(scan):
+            left = recon[x - 1] if x else 0
+            up = prev[x]
+            up_left = prev[x - 1] if x else 0
+            if filter_type == 0:
+                recon[x] = value
+            elif filter_type == 1:
+                recon[x] = (value + left) & 0xFF
+            elif filter_type == 2:
+                recon[x] = (value + up) & 0xFF
+            elif filter_type == 3:
+                recon[x] = (value + ((left + up) // 2)) & 0xFF
+            elif filter_type == 4:
+                recon[x] = (value + paeth_predictor(left, up, up_left)) & 0xFF
+            else:
+                raise ValueError(f"{path}: unsupported PNG filter {filter_type}")
+
+        pixels = []
+        for value in recon:
+            pixels.extend((value >> 4, value & 0x0F))
+        rows.append(pixels)
+        prev = recon
+
+    return rows
+
+
 def verify_legacy_header_geometry():
     raw = verify_blob(LEGACY_HEADER_MAP)
     if len(raw) != 32 * 32 * 2:
@@ -72,7 +173,7 @@ def verify_legacy_header_geometry():
 def verify_transparent_exposure_path():
     # The legacy header tilemap's canonical blank entry is tile 0. Verify the
     # locked header sheet still keeps that exact tile fully transparent.
-    header_pixels = load_indexed_png4(LEGACY_HEADER_GFX)
+    header_pixels = load_locked_indexed_png4(LEGACY_HEADER_GFX)
     header_tile0 = [
         header_pixels[y][x]
         for y in range(8)
@@ -93,7 +194,7 @@ def verify_transparent_exposure_path():
         if [entry & 0x03FF for entry in row[:30]] != [3] * 30:
             raise ValueError(f"{MESSAGE_MAP}: row {y} no longer uses transparent tile 3")
 
-    message_pixels = load_indexed_png4(MESSAGE_GFX)
+    message_pixels = load_locked_indexed_png4(MESSAGE_GFX)
     tile3 = [
         message_pixels[y][x]
         for y in range(8)

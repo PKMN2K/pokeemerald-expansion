@@ -1521,3 +1521,22 @@ No BG1 rendering, app-switch geometry, HGSS palette, menu semantics, or
 transition behavior is changed.
 
 **authentic HGSS counterpart ✅ → exposed live (CI pending) → legacy overlay removal pending**
+
+
+### Phase 2 audit repair after CI #747
+
+CI #747 exposed an audit-only dependency error before the Gen-4 UI validation
+could complete. `audit_hgss_pokegear_top_header.py` imported
+`load_indexed_png4` from the Match Call contact generator. That decoder
+deliberately calls the Match Call generator's own source verifier, whose
+allow-list contains only its Phone source files, so it correctly rejected the
+unrelated locked legacy `graphics/pokenav/header.png` path with a
+`KeyError`.
+
+The audit now uses its own standard-library 4-bit indexed PNG decoder after
+checking each file against this audit's existing Git-blob locks. PNG signature,
+chunk CRCs, indexed 4bpp encoding, scanline filters, decompressed size, and
+pixel indices are still verified. The live Phase-2 renderer and authentic HGSS
+app-switch exposure are unchanged.
+
+**live HGSS exposure unchanged ✅ → audit dependency repaired → CI pending**

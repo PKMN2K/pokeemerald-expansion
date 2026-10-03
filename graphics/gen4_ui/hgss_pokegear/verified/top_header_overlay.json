@@ -1,6 +1,6 @@
 {
   "role": "shared_pokenav_top_header_overlay",
-  "phase": "authentic_app_switch_exposed_ci_pending",
+  "phase": "authentic_app_switch_exposed_ci_repair_pending",
   "classification": "legacy Emerald PokéNav overlay directly covering an already-live authentic HGSS PokéGear app-switch surface",
   "source_game": "Pokemon HeartGold / SoulSilver",
   "source_repository": "pret/pokeheartgold",
@@ -97,7 +97,7 @@
     "wired_live": true,
     "legacy_equivalent_removed": false
   },
-  "next": "Run Phase-2 CI. If it passes, remove the rollback switch and obsolete legacy top-header gfx/tilemap/palette loading and delete any header assets that no longer have live references.",
+  "next": "Validate the Phase-2 audit repair in CI. If green, proceed to Phase 3 removal of the legacy top-header rollback/resources.",
   "phase1_gate": {
     "workflow": "CI",
     "run_number": 746,
@@ -142,5 +142,12 @@
     "resample": false,
     "legacy_load_retained_for_rollback": true,
     "rollback_switch": "sUseLegacyTopHeaderForRollback"
+  },
+  "repair": {
+    "failed_ci_run": 747,
+    "failed_job": "gen4-ui",
+    "cause": "audit_hgss_pokegear_top_header.py imported load_indexed_png4 from the Match Call generator, whose verifier correctly rejects paths outside its own EXPECTED_GIT_BLOBS allow-list",
+    "resolution": "use a self-contained standard-library 4-bit indexed PNG decoder after this audit's own Git-blob verification",
+    "live_rendering_changed": false
   }
 }
