@@ -371,3 +371,10 @@ Mound Cave mining-surface conversion is complete; the next step is the next inco
 Prism tilesets `TILESET_CAVE2` through `TILESET_CAVE7` (source IDs `0x30-0x35`) are intentionally **not** being imported into the polished-crystal-port mining asset set. The existing Firelight Caverns, Kanto Cave, Mound Cave, and Olcan Isle terrain groups provide sufficient mining visual variety, so these additional cave variants are excluded to avoid redundant asset accumulation.
 
 Do not treat CAVE2-CAVE7 as incomplete migration work unless this decision is explicitly revisited later.
+
+
+## Mining interaction integration
+
+The imported `MB_PRISM_MINING` behavior is now connected to the normal A-button metatile interaction path. Interacting with any live Prism mining surface calls `EventScript_PrismMining` and displays a neutral mining-surface message.
+
+This integration step deliberately adds **no** Prism mining EXP, rewards, pickaxe/item requirements, random encounters, or tile mutation. It establishes a safe engine-level interaction hook that later mining mechanics can replace or extend without changing the imported art.

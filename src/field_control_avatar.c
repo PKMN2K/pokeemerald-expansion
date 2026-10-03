@@ -601,6 +601,9 @@ static const u8 *GetInteractedMetatileScript(struct MapPosition *position, u8 me
     if (IsFieldMoveUnlocked(FIELD_MOVE_ROCK_CLIMB) && MetatileBehavior_IsRockClimbable(metatileBehavior) == TRUE && !IsRockClimbActive())
         return EventScript_UseRockClimb;
 
+    if (MetatileBehavior_IsPrismMining(metatileBehavior) == TRUE)
+        return EventScript_PrismMining;
+
     elevation = position->elevation;
     if (elevation == MapGridGetElevationAt(position->x, position->y))
     {

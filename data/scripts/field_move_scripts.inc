@@ -474,3 +474,16 @@ Text_MonUsedRockClimb:
 Text_CantRockClimb:
 	.string "The cliff is steep.\n"
 	.string "A Pokémon may be able to climb it.$"
+
+
+@ Pokémon Prism mining surface integration hook.
+@ Intentionally contains no Prism mining EXP, rewards, item consumption, or tile mutation yet.
+EventScript_PrismMining::
+	lockall
+	msgbox Text_PrismMiningSurface, MSGBOX_DEFAULT
+	releaseall
+	end
+
+Text_PrismMiningSurface:
+	.string "The rock face looks suitable for\\n"
+	.string "mining.$"
