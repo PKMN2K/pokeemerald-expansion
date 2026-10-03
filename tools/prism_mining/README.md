@@ -319,3 +319,12 @@ Target IDs `17-32` append the next sixteen source-order Mound Cave `MINING` quad
 Target ID `28` (Prism block `0x17` TR) is the first mixed-palette Mound Cave surface: source attributes `0x04, 0x04, 0x06, 0x06` translate to `0x421A, 0x421B, 0x6201, 0x6200`. This batch still requires no bank or flip translation.
 
 Existing maps remain untouched. The next source-order surface is Prism block `0x19` TR; when expansion reaches `0x1D` TL it must be skipped because that surface is already preserved as target ID `0`.
+
+
+## Mound Cave mining surfaces batch 3
+
+Target IDs `33-48` append the next sixteen **unique** Prism Mound Cave mining quadrants. The source walk begins at `0x19` TR and ends at `0x21` BR. Prism `0x1D` TL is deliberately skipped during this batch because that exact surface is already preserved as target ID `0`.
+
+This raises Mound Cave coverage to **49 / 104** source `MINING` quadrants with **49 live target metatiles** and no duplicate copy of the preserved surface. Source attributes in this batch remain palette-only; no bank or flip translation is required.
+
+Existing maps remain untouched. The next source-order surface is Prism block `0x22` TR.
