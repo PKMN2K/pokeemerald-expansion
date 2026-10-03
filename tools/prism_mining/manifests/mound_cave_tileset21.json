@@ -26,8 +26,13 @@
   },
   "target": {
     "image": "graphics/prism_mining/mound_cave_tileset21.png",
-    "imported_byte_for_byte": true,
-    "live_wiring": "not yet; staged source art for the shared Emerald ROM mining subsystem"
+    "live_wiring": true,
+    "tileset_symbol": "gTileset_PrismMoundCave",
+    "palette_symbol": "gTilesetPalettes_PrismMoundCave",
+    "status": "live_batch_1",
+    "live_metatile_count": 17,
+    "coverage": "17 / 104 source MINING quadrants represented; target ID 0 preserves the earlier 0x1D TL surface, IDs 1-16 begin source-order expansion.",
+    "latest_batch_manifest": "tools/prism_mining/manifests/mound_cave_mining_surface_batch_1.json"
   },
   "mining_behavior": {
     "trigger": "COLL_MINING / MINING collision on eligible 16x16 metatile quadrants",
@@ -253,5 +258,10 @@
     "player_graphics_included": false,
     "resample": false,
     "repaint": false
-  }
+  },
+  "mining_quadrants": {
+    "count": 104,
+    "note": "49 source metatiles contain 104 MINING quadrants total."
+  },
+  "follow_up": "Continue the remaining source-order Mound Cave MINING quadrants from source block 0x0D BL, skipping source block 0x1D TL because it is already target ID 0."
 }

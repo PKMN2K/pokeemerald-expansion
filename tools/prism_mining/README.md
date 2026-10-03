@@ -299,3 +299,14 @@ The shared Olcan target now contains **all 110 Prism `MINING` collision quadrant
 Target ID `97` preserves the remaining mixed bank/palette/flip case: source attributes `0x05, 0x05, 0x2E, 0x0E` translate the lower-left bank-1, palette-6, X-flipped tile to `0x6687` and the lower-right bank-1, palette-6 tile to `0x6288`.
 
 Olcan mining-surface coverage is now **110 / 110**. Existing maps remain untouched; map assignment and dynamic morning/night palette switching are separate follow-up work.
+
+
+## Mound Cave mining surfaces batch 1
+
+Mound Cave (`TILESET_CAVE`, Prism source ID `0x15`) is the next incomplete mining terrain group. Its source collision data contains **104 `MINING` quadrants across 49 metatiles**.
+
+The pre-existing live target metatile `0` remains Prism block `0x1D` TL. IDs `1-16` now append the first sixteen source-order mining quadrants (`0x01` TR through `0x0C` BR), skipping no source surfaces in that range.
+
+Mound Cave source mining attributes are palette-only (`0x04` and `0x06`); this first expansion batch uses palette 6 throughout and requires no bank or flip translation. Authentic Prism Night dungeon palettes remain wired through `gTilesetPalettes_PrismMoundCave`.
+
+Existing maps remain untouched.
