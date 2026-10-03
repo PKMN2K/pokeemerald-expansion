@@ -8,40 +8,30 @@ import sys
 PALETTE = Path("graphics/gen4_ui/hgss_pokegear/verified/trainer_card_sub_palette.NCLR")
 FRONT_TILES = Path("graphics/gen4_ui/hgss_pokegear/verified/trainer_card_front_tiles.NCGR")
 FRONT_SCREEN = Path("graphics/gen4_ui/hgss_pokegear/verified/trainer_card_front_screen.NSCR")
-AVATAR_TILES = Path("graphics/gen4_ui/hgss_pokegear/verified/trainer_card_avatar_tiles.NCGR")
-AVATAR_ETHAN = Path("graphics/gen4_ui/hgss_pokegear/verified/trainer_card_avatar_ethan.NSCR")
-AVATAR_LYRA = Path("graphics/gen4_ui/hgss_pokegear/verified/trainer_card_avatar_lyra.NSCR")
-
 EXPECTED_GIT_BLOBS = {
     PALETTE: "011286aa1e98ffe659d88ed6e99b7e6c14a65491",
     FRONT_TILES: "fa067c9657aae2f263d20306d00ad3961e043f18",
     FRONT_SCREEN: "8c2367f1b8c7ae0940f35e5173c195d7158cfef7",
-    AVATAR_TILES: "5b7f2414b5240fb16134bd1ed6e9a25f40e3cd02",
-    AVATAR_ETHAN: "29a3731d668684c9476dca5ed145fe08ff37a506",
-    AVATAR_LYRA: "d7eb3d6803ee6d0ab12f30cfea6e5bf5c56d2309",
 }
 
-# Retail avatar overlay footprint from ov51_021E6C6C.
+# Retail Trainer Card code (ov51_021E6C6C) places its portrait overlay at
+# x=21, y=5 with a 10x11-tile footprint. These coordinates are geometry
+# evidence only; no Ethan/Lyra portrait assets are inputs to this generator.
 RETAIL_AVATAR_X = 21
 RETAIL_AVATAR_Y = 5
 RETAIL_AVATAR_W = 10
 RETAIL_AVATAR_H = 11
 
-# 88x64 GBA CHECK window crop. One tile of retail card chrome is retained
-# left of the avatar footprint so the retail avatar center is x=43.5 here,
-# matching the existing Match Call trainer sprite center at x=44.
+# 88x64 GBA CHECK window crop. One tile of authentic retail card chrome is
+# retained left of that documented portrait footprint, so the footprint center
+# is x=43.5 here, matching the existing dynamic Match Call trainer sprite
+# center at x=44.
 CROP_X = 20
 CROP_Y = 6
 CROP_W = 11
 CROP_H = 8
 
 EXPECTED_SOURCE_INDICES = (16, 31, 32, 33, 34, 38, 39, 40, 42, 43)
-EXPECTED_AVATAR_BBOXES = {
-    AVATAR_ETHAN: (184, 48, 223, 95),
-    AVATAR_LYRA: (184, 51, 223, 119),
-}
-
-
 def git_blob_sha(data):
     return hashlib.sha1(f"blob {len(data)}\0".encode("ascii") + data).hexdigest()
 
@@ -129,28 +119,6 @@ def source_pixel(tiles, entry, px, py):
     return tiles[off]
 
 
-def verify_avatar_placement():
-    tiles = parse_ncgr(AVATAR_TILES)
-    for path, expected in EXPECTED_AVATAR_BBOXES.items():
-        width, height, entries = parse_nscr(path)
-        if (width, height) != (256, 256):
-            raise ValueError(f"{path}: expected 256x256 avatar screen")
-        cols = width // 8
-        xs = []
-        ys = []
-        for ty in range(RETAIL_AVATAR_Y, RETAIL_AVATAR_Y + RETAIL_AVATAR_H):
-            for tx in range(RETAIL_AVATAR_X, RETAIL_AVATAR_X + RETAIL_AVATAR_W):
-                entry = entries[ty * cols + tx]
-                for py in range(8):
-                    for px in range(8):
-                        if source_pixel(tiles, entry, px, py) != 0:
-                            xs.append(tx * 8 + px)
-                            ys.append(ty * 8 + py)
-        actual = (min(xs), min(ys), max(xs), max(ys))
-        if actual != expected:
-            raise ValueError(f"{path}: avatar bbox {actual} != verified {expected}")
-
-
 def crop_pixels():
     tiles = parse_ncgr(FRONT_TILES)
     width, height, entries = parse_nscr(FRONT_SCREEN)
@@ -185,7 +153,6 @@ def crop_pixels():
 
 
 def make_tiles():
-    verify_avatar_placement()
     pixels = crop_pixels()
     mapping = {source: dest for dest, source in enumerate(EXPECTED_SOURCE_INDICES)}
     out = bytearray()
@@ -223,9 +190,9 @@ def main():
     if sys.argv[1] == "--tiles":
         output.write_bytes(make_tiles())
     else:
-        # Validate avatar placement in both modes so every generated artifact
-        # is gated by the same retail geometry evidence.
-        verify_avatar_placement()
+        # Both outputs are gated by the exact retail front-card crop and its
+        # verified ten-color source-index set. The live trainer portrait is
+        # supplied dynamically by Match Call, not by Ethan/Lyra card assets.
         crop_pixels()
         output.write_bytes(make_palette())
 

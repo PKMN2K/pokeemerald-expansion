@@ -195,19 +195,13 @@ $(GEN4UIGFXDIR)/hgss_pokegear/match_call_action_menu.gbapal: $(GEN4UIHGSSPOKEGEA
 $(GEN4UIGFXDIR)/hgss_pokegear/match_call_check_portrait.4bpp: $(GEN4UIHGSSTRAINERCARDCHECK) \
 	$(GEN4UIGFXDIR)/hgss_pokegear/verified/trainer_card_sub_palette.NCLR \
 	$(GEN4UIGFXDIR)/hgss_pokegear/verified/trainer_card_front_tiles.NCGR \
-	$(GEN4UIGFXDIR)/hgss_pokegear/verified/trainer_card_front_screen.NSCR \
-	$(GEN4UIGFXDIR)/hgss_pokegear/verified/trainer_card_avatar_tiles.NCGR \
-	$(GEN4UIGFXDIR)/hgss_pokegear/verified/trainer_card_avatar_ethan.NSCR \
-	$(GEN4UIGFXDIR)/hgss_pokegear/verified/trainer_card_avatar_lyra.NSCR
+	$(GEN4UIGFXDIR)/hgss_pokegear/verified/trainer_card_front_screen.NSCR
 	python3 $< --tiles $@
 
 $(GEN4UIGFXDIR)/hgss_pokegear/match_call_check_portrait.gbapal: $(GEN4UIHGSSTRAINERCARDCHECK) \
 	$(GEN4UIGFXDIR)/hgss_pokegear/verified/trainer_card_sub_palette.NCLR \
 	$(GEN4UIGFXDIR)/hgss_pokegear/verified/trainer_card_front_tiles.NCGR \
-	$(GEN4UIGFXDIR)/hgss_pokegear/verified/trainer_card_front_screen.NSCR \
-	$(GEN4UIGFXDIR)/hgss_pokegear/verified/trainer_card_avatar_tiles.NCGR \
-	$(GEN4UIGFXDIR)/hgss_pokegear/verified/trainer_card_avatar_ethan.NSCR \
-	$(GEN4UIGFXDIR)/hgss_pokegear/verified/trainer_card_avatar_lyra.NSCR
+	$(GEN4UIGFXDIR)/hgss_pokegear/verified/trainer_card_front_screen.NSCR
 	python3 $< --palette $@
 
 # The live HGSS Pokédex background reserves BG palette entries 128..140.
