@@ -1,0 +1,471 @@
+{
+  "name": "prism_mound_cave_mining_surface_batch_5",
+  "source": {
+    "tileset": "TILESET_CAVE",
+    "tileset_id": "0x15",
+    "pinned_commit": "ecb209a2404be3ac62a260a95d204a6a36170f4c",
+    "total_mineable_metatiles": 49,
+    "total_mining_quadrants": 104
+  },
+  "target": {
+    "preserved_existing_id_0": {
+      "source_block": "0x1D",
+      "source_quadrant": "TL"
+    },
+    "start_id": 65,
+    "end_id": 80,
+    "append_count": 16,
+    "total_live_metatiles": 81,
+    "represented_source_quadrants": 81,
+    "behavior": "MB_PRISM_MINING"
+  },
+  "selection": {
+    "source_index_start": 65,
+    "source_index_end": 80,
+    "preserved_source_index": 38
+  },
+  "translation": {
+    "formula": "0x0200 + tile + (bank1 ? 0x80 : 0) + (xflip ? 0x0400 : 0) + (yflip ? 0x0800 : 0) + (palette << 12)",
+    "source_attributes_observed": [
+      "0x06"
+    ],
+    "bank1_exercised": false,
+    "x_flip_exercised": false,
+    "y_flip_exercised": false,
+    "mixed_palette_exercised": false
+  },
+  "surfaces": [
+    {
+      "target_metatile_id": 65,
+      "source_block": "0x2E",
+      "source_quadrant": "BR",
+      "source_tile_ids": [
+        "0x57",
+        "0x58",
+        "0x57",
+        "0x58"
+      ],
+      "source_attributes": [
+        "0x06",
+        "0x06",
+        "0x06",
+        "0x06"
+      ],
+      "target_entries_hex": [
+        "0x6257",
+        "0x6258",
+        "0x6257",
+        "0x6258",
+        "0x0000",
+        "0x0000",
+        "0x0000",
+        "0x0000"
+      ]
+    },
+    {
+      "target_metatile_id": 66,
+      "source_block": "0x2F",
+      "source_quadrant": "TL",
+      "source_tile_ids": [
+        "0x25",
+        "0x56",
+        "0x25",
+        "0x56"
+      ],
+      "source_attributes": [
+        "0x06",
+        "0x06",
+        "0x06",
+        "0x06"
+      ],
+      "target_entries_hex": [
+        "0x6225",
+        "0x6256",
+        "0x6225",
+        "0x6256",
+        "0x0000",
+        "0x0000",
+        "0x0000",
+        "0x0000"
+      ]
+    },
+    {
+      "target_metatile_id": 67,
+      "source_block": "0x2F",
+      "source_quadrant": "TR",
+      "source_tile_ids": [
+        "0x57",
+        "0x58",
+        "0x57",
+        "0x58"
+      ],
+      "source_attributes": [
+        "0x06",
+        "0x06",
+        "0x06",
+        "0x06"
+      ],
+      "target_entries_hex": [
+        "0x6257",
+        "0x6258",
+        "0x6257",
+        "0x6258",
+        "0x0000",
+        "0x0000",
+        "0x0000",
+        "0x0000"
+      ]
+    },
+    {
+      "target_metatile_id": 68,
+      "source_block": "0x2F",
+      "source_quadrant": "BL",
+      "source_tile_ids": [
+        "0x25",
+        "0x56",
+        "0x25",
+        "0x56"
+      ],
+      "source_attributes": [
+        "0x06",
+        "0x06",
+        "0x06",
+        "0x06"
+      ],
+      "target_entries_hex": [
+        "0x6225",
+        "0x6256",
+        "0x6225",
+        "0x6256",
+        "0x0000",
+        "0x0000",
+        "0x0000",
+        "0x0000"
+      ]
+    },
+    {
+      "target_metatile_id": 69,
+      "source_block": "0x2F",
+      "source_quadrant": "BR",
+      "source_tile_ids": [
+        "0x57",
+        "0x58",
+        "0x57",
+        "0x58"
+      ],
+      "source_attributes": [
+        "0x06",
+        "0x06",
+        "0x06",
+        "0x06"
+      ],
+      "target_entries_hex": [
+        "0x6257",
+        "0x6258",
+        "0x6257",
+        "0x6258",
+        "0x0000",
+        "0x0000",
+        "0x0000",
+        "0x0000"
+      ]
+    },
+    {
+      "target_metatile_id": 70,
+      "source_block": "0x31",
+      "source_quadrant": "TL",
+      "source_tile_ids": [
+        "0x05",
+        "0x52",
+        "0x5E",
+        "0x34"
+      ],
+      "source_attributes": [
+        "0x06",
+        "0x06",
+        "0x06",
+        "0x06"
+      ],
+      "target_entries_hex": [
+        "0x6205",
+        "0x6252",
+        "0x625E",
+        "0x6234",
+        "0x0000",
+        "0x0000",
+        "0x0000",
+        "0x0000"
+      ]
+    },
+    {
+      "target_metatile_id": 71,
+      "source_block": "0x31",
+      "source_quadrant": "TR",
+      "source_tile_ids": [
+        "0x53",
+        "0x07",
+        "0x35",
+        "0x4F"
+      ],
+      "source_attributes": [
+        "0x06",
+        "0x06",
+        "0x06",
+        "0x06"
+      ],
+      "target_entries_hex": [
+        "0x6253",
+        "0x6207",
+        "0x6235",
+        "0x624F",
+        "0x0000",
+        "0x0000",
+        "0x0000",
+        "0x0000"
+      ]
+    },
+    {
+      "target_metatile_id": 72,
+      "source_block": "0x31",
+      "source_quadrant": "BL",
+      "source_tile_ids": [
+        "0x25",
+        "0x04",
+        "0x25",
+        "0x0A"
+      ],
+      "source_attributes": [
+        "0x06",
+        "0x06",
+        "0x06",
+        "0x06"
+      ],
+      "target_entries_hex": [
+        "0x6225",
+        "0x6204",
+        "0x6225",
+        "0x620A",
+        "0x0000",
+        "0x0000",
+        "0x0000",
+        "0x0000"
+      ]
+    },
+    {
+      "target_metatile_id": 73,
+      "source_block": "0x31",
+      "source_quadrant": "BR",
+      "source_tile_ids": [
+        "0x04",
+        "0x27",
+        "0x0B",
+        "0x27"
+      ],
+      "source_attributes": [
+        "0x06",
+        "0x06",
+        "0x06",
+        "0x06"
+      ],
+      "target_entries_hex": [
+        "0x6204",
+        "0x6227",
+        "0x620B",
+        "0x6227",
+        "0x0000",
+        "0x0000",
+        "0x0000",
+        "0x0000"
+      ]
+    },
+    {
+      "target_metatile_id": 74,
+      "source_block": "0x34",
+      "source_quadrant": "TL",
+      "source_tile_ids": [
+        "0x00",
+        "0x00",
+        "0x00",
+        "0x00"
+      ],
+      "source_attributes": [
+        "0x06",
+        "0x06",
+        "0x06",
+        "0x06"
+      ],
+      "target_entries_hex": [
+        "0x6200",
+        "0x6200",
+        "0x6200",
+        "0x6200",
+        "0x0000",
+        "0x0000",
+        "0x0000",
+        "0x0000"
+      ]
+    },
+    {
+      "target_metatile_id": 75,
+      "source_block": "0x34",
+      "source_quadrant": "TR",
+      "source_tile_ids": [
+        "0x00",
+        "0x00",
+        "0x00",
+        "0x00"
+      ],
+      "source_attributes": [
+        "0x06",
+        "0x06",
+        "0x06",
+        "0x06"
+      ],
+      "target_entries_hex": [
+        "0x6200",
+        "0x6200",
+        "0x6200",
+        "0x6200",
+        "0x0000",
+        "0x0000",
+        "0x0000",
+        "0x0000"
+      ]
+    },
+    {
+      "target_metatile_id": 76,
+      "source_block": "0x34",
+      "source_quadrant": "BL",
+      "source_tile_ids": [
+        "0x00",
+        "0x00",
+        "0x00",
+        "0x00"
+      ],
+      "source_attributes": [
+        "0x06",
+        "0x06",
+        "0x06",
+        "0x06"
+      ],
+      "target_entries_hex": [
+        "0x6200",
+        "0x6200",
+        "0x6200",
+        "0x6200",
+        "0x0000",
+        "0x0000",
+        "0x0000",
+        "0x0000"
+      ]
+    },
+    {
+      "target_metatile_id": 77,
+      "source_block": "0x34",
+      "source_quadrant": "BR",
+      "source_tile_ids": [
+        "0x00",
+        "0x00",
+        "0x00",
+        "0x00"
+      ],
+      "source_attributes": [
+        "0x06",
+        "0x06",
+        "0x06",
+        "0x06"
+      ],
+      "target_entries_hex": [
+        "0x6200",
+        "0x6200",
+        "0x6200",
+        "0x6200",
+        "0x0000",
+        "0x0000",
+        "0x0000",
+        "0x0000"
+      ]
+    },
+    {
+      "target_metatile_id": 78,
+      "source_block": "0x35",
+      "source_quadrant": "TR",
+      "source_tile_ids": [
+        "0x0C",
+        "0x0D",
+        "0x1C",
+        "0x1D"
+      ],
+      "source_attributes": [
+        "0x06",
+        "0x06",
+        "0x06",
+        "0x06"
+      ],
+      "target_entries_hex": [
+        "0x620C",
+        "0x620D",
+        "0x621C",
+        "0x621D",
+        "0x0000",
+        "0x0000",
+        "0x0000",
+        "0x0000"
+      ]
+    },
+    {
+      "target_metatile_id": 79,
+      "source_block": "0x35",
+      "source_quadrant": "BR",
+      "source_tile_ids": [
+        "0x00",
+        "0x4F",
+        "0x01",
+        "0x5F"
+      ],
+      "source_attributes": [
+        "0x06",
+        "0x06",
+        "0x06",
+        "0x06"
+      ],
+      "target_entries_hex": [
+        "0x6200",
+        "0x624F",
+        "0x6201",
+        "0x625F",
+        "0x0000",
+        "0x0000",
+        "0x0000",
+        "0x0000"
+      ]
+    },
+    {
+      "target_metatile_id": 80,
+      "source_block": "0x36",
+      "source_quadrant": "TR",
+      "source_tile_ids": [
+        "0x00",
+        "0x4F",
+        "0x34",
+        "0x5F"
+      ],
+      "source_attributes": [
+        "0x06",
+        "0x06",
+        "0x06",
+        "0x06"
+      ],
+      "target_entries_hex": [
+        "0x6200",
+        "0x624F",
+        "0x6234",
+        "0x625F",
+        "0x0000",
+        "0x0000",
+        "0x0000",
+        "0x0000"
+      ]
+    }
+  ]
+}
