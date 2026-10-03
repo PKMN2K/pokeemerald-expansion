@@ -1437,3 +1437,27 @@ while the help window begins at 0x36. The previous procedural
 `sUseLegacyHelpBarForRollback` until CI validates this live integration.
 
 **authentic HGSS asset ✅ → wired live (CI pending) → legacy removal pending**
+
+
+## Shared PokéNav help bar / PokéGear tooltip — phase 3
+
+CI #744 passed the live authentic HGSS Phone tooltip wiring at
+`fd861bcdb96356e5feff7167ab40b5f6b85e46d9`.
+
+The Phase-2 rollback path is now removed. The procedural `DrawHelpBar`
+renderer, `sLegacyHelpBarWindowTemplate`, `sLegacyHelpBarTextColors`, and
+`sUseLegacyHelpBarForRollback` are deleted. The shared help bar now has only
+the authentic HGSS-derived runtime path:
+`sHgssHelpBarWindowTemplate`, `LoadHgssPokegearHelpBarStrip`, and
+`DrawHgssPokegearHelpBar`.
+
+No authentic source geometry, tile pixels, BGR555 values, palette-index
+mapping, or help-string semantics are changed by this cleanup. The live
+surface remains the retail Phone context-menu tooltip adaptation validated by
+CI #744: 30 visible columns of the retail 32x4 bottom strip, the retail-relative
+two-row text window, exact retail colors relocated into validated free BG0
+slots 7..10, and centered functional help text.
+
+This completes the shared help-bar sequence:
+
+**authentic HGSS asset ✅ → wired live and validated ✅ → legacy equivalent removed ✅**

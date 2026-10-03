@@ -1,6 +1,6 @@
 {
   "role": "shared_pokenav_help_bar",
-  "phase": "wired_live_ci_pending",
+  "phase": "legacy_removed_ci_pending",
   "classification": "direct functional counterpart from authentic HGSS PokéGear Phone context-menu tooltip strip",
   "source_game": "Pokemon HeartGold / SoulSilver",
   "source_repository": "pret/pokeheartgold",
@@ -93,12 +93,6 @@
     "graphics/gen4_ui/hgss_pokegear/help_bar_tooltip_gba.4bpp"
   ],
   "generator": "tools/gen4_ui/make_hgss_pokegear_help_bar.py",
-  "current_live_legacy": {
-    "file": "src/pokenav_main_menu.c",
-    "renderer": "DrawHelpBar",
-    "behavior": "procedural beveled strip described in code as HGSS PokéGear-style",
-    "status": "rollback only"
-  },
   "phase2_plan": [
     "anchor the authentic four-tile-high tooltip strip to the bottom of the 240x160 GBA viewport",
     "repeat the exact retail tile 64 across the 30-tile GBA width without scaling or redrawing",
@@ -107,17 +101,16 @@
     "retain the procedural DrawHelpBar path only as a CI-gated rollback until the authentic strip passes"
   ],
   "constraints": [
-    "Do not call the current procedural bevel authentic HGSS.",
     "Do not redraw, resample, or recolor the retail tooltip tile.",
-    "Do not alter the live help bar in phase 1.",
-    "Choose the live GBA palette bank only after checking conflicts in phase 2."
+    "Keep the exact retail member-10 BGR555 colors; only the validated GBA palette-index relocation is allowed.",
+    "Keep the functional project help strings while preserving retail-centered tooltip presentation."
   ],
   "pipeline": {
     "authentic_hgss_asset_ready": true,
     "wired_live": true,
-    "legacy_equivalent_removed": false
+    "legacy_equivalent_removed": true
   },
-  "next": "Run Phase-2 CI. If it passes, remove DrawHelpBar, sLegacyHelpBarWindowTemplate, sLegacyHelpBarTextColors, and sUseLegacyHelpBarForRollback in Phase 3.",
+  "next": "Validate Phase-3 cleanup in CI. After that, the shared PokéNav help-bar / HGSS PokéGear tooltip sequence is complete.",
   "phase1_gate": {
     "workflow": "CI",
     "run_number": 743,
@@ -202,11 +195,22 @@
   },
   "live_wiring": {
     "file": "src/pokenav_main_menu.c",
-    "authentic_renderer": "DrawHgssPokegearHelpBar",
+    "sole_renderer": "DrawHgssPokegearHelpBar",
     "strip_loader": "LoadHgssPokegearHelpBarStrip",
     "window_template": "sHgssHelpBarWindowTemplate",
-    "legacy_rollback_renderer": "DrawHelpBar",
-    "rollback_switch": "sUseLegacyHelpBarForRollback",
     "functional_help_strings_preserved": true
+  },
+  "phase2_gate": {
+    "workflow": "CI",
+    "run_number": 744,
+    "conclusion": "success",
+    "validated_commit": "fd861bcdb96356e5feff7167ab40b5f6b85e46d9"
+  },
+  "legacy_cleanup": {
+    "removed_renderer": "DrawHelpBar",
+    "removed_window_template": "sLegacyHelpBarWindowTemplate",
+    "removed_text_colors": "sLegacyHelpBarTextColors",
+    "removed_switch": "sUseLegacyHelpBarForRollback",
+    "authentic_runtime_behavior_changed": false
   }
 }

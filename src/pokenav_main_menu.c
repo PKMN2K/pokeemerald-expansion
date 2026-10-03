@@ -50,7 +50,6 @@ static void CreateLeftHeaderSprites(void);
 static void InitHelpBar(void);
 static u32 LoopedTask_SlideMenuHeaderUp(s32);
 static u32 LoopedTask_SlideMenuHeaderDown(s32);
-static void DrawHelpBar(u32);
 static void DrawHgssPokegearHelpBar(u32);
 static void LoadHgssPokegearHelpBarStrip(void);
 static void LoadHgssPokegearHelpBarPalette(void);
@@ -76,20 +75,6 @@ const struct BgTemplate gPokenavMainMenuBgTemplates[] =
         .priority = 0,
         .baseTile = 0,
     }
-};
-
-static const struct WindowTemplate sLegacyHelpBarWindowTemplate[] =
-{
-    {
-        .bg = 0,
-        .tilemapLeft = 1,
-        .tilemapTop = 22,
-        .width = 16,
-        .height = 2,
-        .paletteNum = 0,
-        .baseBlock = 0x36,
-    },
-    DUMMY_WIN_TEMPLATE
 };
 
 // Retail HGSS uses a 32x4 tooltip strip at y=20 with a 32x2 text window at
@@ -126,11 +111,6 @@ static const u8 *const sHelpBarTexts[HELPBAR_COUNT] =
     [HELPBAR_RIBBONS_CHECK]         = COMPOUND_STRING("D-PAD BROWSE {B_BUTTON}BACK"),
 };
 
-static const u8 sLegacyHelpBarTextColors[3] =
-{
-    TEXT_COLOR_RED, TEXT_COLOR_WHITE, TEXT_COLOR_DARK_GRAY
-};
-
 enum
 {
     HGSS_HELP_BAR_TILE = 0x35,
@@ -150,9 +130,6 @@ static const u8 sHgssHelpBarTextColors[3] =
     HGSS_HELP_BAR_TEXT_COLOR,
     HGSS_HELP_BAR_SHADOW_COLOR,
 };
-
-// Phase-2 CI rollback only.
-static bool8 sUseLegacyHelpBarForRollback = FALSE;
 
 static const struct CompressedSpriteSheet sSpinningPokenavSpriteSheet[] =
 {
@@ -588,49 +565,27 @@ static void InitHelpBar(void)
 {
     struct Pokenav_MainMenu *menu = GetSubstructPtr(POKENAV_SUBSTRUCT_MAIN_MENU);
 
-    if (sUseLegacyHelpBarForRollback)
-        InitWindows(&sLegacyHelpBarWindowTemplate[0]);
-    else
-        InitWindows(&sHgssHelpBarWindowTemplate[0]);
-
+    InitWindows(&sHgssHelpBarWindowTemplate[0]);
     menu->helpBarWindowId = 0;
-    if (sUseLegacyHelpBarForRollback)
-    {
-        DrawHelpBar(menu->helpBarWindowId);
-    }
-    else
-    {
-        LoadHgssPokegearHelpBarStrip();
-        DrawHgssPokegearHelpBar(menu->helpBarWindowId);
-    }
-
+    LoadHgssPokegearHelpBarStrip();
+    DrawHgssPokegearHelpBar(menu->helpBarWindowId);
     PutWindowTilemap(menu->helpBarWindowId);
     CopyWindowToVram(menu->helpBarWindowId, COPYWIN_FULL);
-    if (!sUseLegacyHelpBarForRollback)
-        CopyBgTilemapBufferToVram(0);
+    CopyBgTilemapBufferToVram(0);
 }
 
 void PrintHelpBarText(u32 textId)
 {
     struct Pokenav_MainMenu *menu = GetSubstructPtr(POKENAV_SUBSTRUCT_MAIN_MENU);
+    s32 textX;
+    s32 textWidth;
 
-    if (sUseLegacyHelpBarForRollback)
-    {
-        DrawHelpBar(menu->helpBarWindowId);
-        AddTextPrinterParameterized3(menu->helpBarWindowId, FONT_NORMAL, 0, 1, sLegacyHelpBarTextColors, 0, sHelpBarTexts[textId]);
-    }
-    else
-    {
-        s32 textX;
-        s32 textWidth;
-
-        DrawHgssPokegearHelpBar(menu->helpBarWindowId);
-        textWidth = GetStringWidth(FONT_NORMAL, sHelpBarTexts[textId], 0);
-        textX = (DISPLAY_WIDTH - textWidth) / 2;
-        if (textX < 0)
-            textX = 0;
-        AddTextPrinterParameterized3(menu->helpBarWindowId, FONT_NORMAL, textX, 0, sHgssHelpBarTextColors, 0, sHelpBarTexts[textId]);
-    }
+    DrawHgssPokegearHelpBar(menu->helpBarWindowId);
+    textWidth = GetStringWidth(FONT_NORMAL, sHelpBarTexts[textId], 0);
+    textX = (DISPLAY_WIDTH - textWidth) / 2;
+    if (textX < 0)
+        textX = 0;
+    AddTextPrinterParameterized3(menu->helpBarWindowId, FONT_NORMAL, textX, 0, sHgssHelpBarTextColors, 0, sHelpBarTexts[textId]);
 }
 
 bool32 WaitForHelpBar(void)
@@ -668,25 +623,6 @@ static void DrawHgssPokegearHelpBar(u32 windowId)
 {
     // Retail fills the tooltip text window with source palette index 5.
     FillWindowPixelBuffer(windowId, PIXEL_FILL(HGSS_HELP_BAR_FILL_COLOR));
-}
-
-static void DrawHelpBar(u32 windowId)
-{
-    u8 width = GetWindowAttribute(windowId, WINDOW_WIDTH) * 8;
-    u8 height = GetWindowAttribute(windowId, WINDOW_HEIGHT) * 8;
-
-    FillWindowPixelBuffer(windowId, PIXEL_FILL(4));
-
-    if (width < 16 || height < 8)
-        return;
-
-    // HGSS PokéGear-style beveled control strip.
-    FillWindowPixelRect(windowId, PIXEL_FILL(5), 2, 0, width - 4, 1);
-    FillWindowPixelRect(windowId, PIXEL_FILL(5), 0, 2, 1, height - 4);
-    FillWindowPixelRect(windowId, PIXEL_FILL(1), 2, height - 1, width - 4, 1);
-    FillWindowPixelRect(windowId, PIXEL_FILL(1), width - 1, 2, 1, height - 4);
-    FillWindowPixelRect(windowId, PIXEL_FILL(5), 5, 2, width - 10, 1);
-    FillWindowPixelRect(windowId, PIXEL_FILL(1), 5, height - 3, width - 10, 1);
 }
 
 static void InitPokenavMainMenuResources(void)
