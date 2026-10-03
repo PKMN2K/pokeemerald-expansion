@@ -394,3 +394,14 @@ No additional Pokémon Prism mining terrain or mineable surface tilesets are to 
 The existing imported terrain pool—Firelight Caverns, Kanto Cave, Mound Cave, and Olcan Isle—is the final mining-surface set for this project. Previously skipped cave variants and `TILESET_SIDESCROLL` remain excluded, and other Prism tilesets containing `MINING` collision should likewise not be treated as pending surface migration work.
 
 Future Prism mining migration should focus on mining-specific non-terrain assets and integration, such as debris/dust effects, ore/gem/fossil/item-reveal artwork, other non-player mining animation frames, and the mining interaction/mechanics layer.
+
+
+## Prism non-terrain mining artwork audit
+
+The pinned Pokémon Prism source implementation was audited before importing any additional effect artwork.
+
+Prism's `MiningScript` does **not** invoke a dedicated pickaxe swing, rock-debris/dust animation, ore/gem/fossil reveal graphic, or mining-specific item-reveal animation. Its visual flow remains on the existing mineable surface, plays `SFX_BEAT_UP`, resolves the extracted item, and then uses normal text/item handling.
+
+The source asset `gfx/field/boulderdust.png` is **not mining-specific**. Prism loads `BoulderDustGFX` as a generic indoor overworld emote and it is not referenced by `event/mining.asm`. It should therefore not be imported or documented as authentic Prism mining artwork.
+
+No extra non-terrain mining-effect graphics are pending from this source audit. The authentic Prism mining visual asset migration is therefore represented by the already imported mining surfaces; future work can focus on interaction/mechanics or on new custom effects if explicitly desired.
