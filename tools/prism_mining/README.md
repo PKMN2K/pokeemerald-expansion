@@ -364,3 +364,10 @@ Target IDs `97-103` add the final seven Prism Mound Cave mining quadrants, from 
 The preserved Prism `0x1D` TL surface remains target ID `0`, with every other source mining quadrant represented exactly once across IDs `1-103`. Existing maps remain untouched.
 
 Mound Cave mining-surface conversion is complete; the next step is the next incomplete Prism mining terrain group or later map/palette wiring.
+
+
+## Intentionally skipped Prism cave variants
+
+Prism tilesets `TILESET_CAVE2` through `TILESET_CAVE7` (source IDs `0x30-0x35`) are intentionally **not** being imported into the polished-crystal-port mining asset set. The existing Firelight Caverns, Kanto Cave, Mound Cave, and Olcan Isle terrain groups provide sufficient mining visual variety, so these additional cave variants are excluded to avoid redundant asset accumulation.
+
+Do not treat CAVE2-CAVE7 as incomplete migration work unless this decision is explicitly revisited later.
