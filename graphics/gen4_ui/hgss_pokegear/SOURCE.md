@@ -1880,3 +1880,32 @@ all three message-box bindings, and both source assets.
 No substitute panel or invented HGSS-style artwork is generated.
 
 **authentic HGSS fixed shell ✅ → Emerald message-box pixels suppressed live (CI pending) → text palette rehome + legacy removal pending**
+
+
+## Shared PokéNav message-box BG1 surface — phase 3
+
+CI #769 passed the live Phase-2 suppression at
+`b7b56d119e64c8945025df6f4cf56227d4299273`.
+
+The final Emerald dependency has now been removed. The option-description
+window no longer uses BG palette bank 1 from `graphics/pokenav/message.png`.
+It now uses the already-verified retail HGSS font palette from
+`graphics/gen4_ui/hgss_storage/verified/text_windows_hgss.gbapal`, loaded in
+the existing HGSS font palette bank. Retail HGSS's native text tuple
+`MAKE_TEXT_COLOR(1, 2, 0)` maps directly to GBA printer order
+`{ background 0, foreground 1, shadow 2 }`, so no colors are invented or
+remapped.
+
+The one-cycle rollback switch and all
+`gPokenavMessageBox_Pal/Gfx/Tilemap` references are removed from the
+runtime, graphics bindings, and public declarations. The obsolete source
+assets are deleted:
+
+- `graphics/pokenav/message.png`
+- `graphics/pokenav/message.bin`
+
+BG1 itself remains active for functional text/windows, but its shared base
+tile/map is explicitly transparent. The already-live authentic HGSS fixed
+shell on BG2 therefore remains visible beneath functional content.
+
+**authentic HGSS shell/text palette ✅ → wired live ✅ → legacy message-box equivalent removed (CI pending)**

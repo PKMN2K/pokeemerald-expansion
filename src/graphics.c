@@ -1897,9 +1897,6 @@ const u32 gPokenavCondition_Tilemap[] = INCGFX_U32("graphics/pokenav/condition/g
 const u16 gPokenavOptions_Tilemap[] = INCBIN_U16("graphics/pokenav/options/options.bin");
 
 
-const u16 gPokenavMessageBox_Pal[] = INCGFX_U16("graphics/pokenav/message.png", ".gbapal");
-const u32 gPokenavMessageBox_Gfx[] = INCGFX_U32("graphics/pokenav/message.png", ".4bpp.smol");
-const u32 gPokenavMessageBox_Tilemap[] = INCGFX_U32("graphics/pokenav/message.bin", ".smolTM");
 
 const u16 gRegionMapCityZoomTiles_Pal[] = INCGFX_U16("graphics/pokenav/region_map/zoom_tiles.png", ".gbapal");
 const u32 gRegionMapCityZoomText_Gfx[] = INCGFX_U32("graphics/pokenav/region_map/city_zoom_text.png", ".4bpp.smol");

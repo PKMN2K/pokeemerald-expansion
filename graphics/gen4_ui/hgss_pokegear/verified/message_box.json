@@ -1,15 +1,15 @@
 {
   "role": "shared_pokenav_message_box_bg1",
-  "phase": "legacy_message_box_pixels_suppressed_ci_pending",
+  "phase": "legacy_message_box_removed",
   "classification": "legacy Emerald PokéNav shared BG1 message-box surface layered above the already-live authentic HGSS PokéGear fixed shell",
   "source_game": "Pokemon HeartGold / SoulSilver",
   "source_repository": "pret/pokeheartgold",
   "source_revision": "9d8b7591f09b65804da2fb2dfd56f320633e0d36",
   "previous_gate": {
     "workflow": "CI",
-    "run_number": 768,
+    "run_number": 769,
     "conclusion": "success",
-    "validated_commit": "ee658f3d07249e006c74004de88630ed79d27c46"
+    "validated_commit": "b7b56d119e64c8945025df6f4cf56227d4299273"
   },
   "legacy_surface": {
     "assets": [
@@ -67,10 +67,10 @@
   "pipeline": {
     "authentic_hgss_asset_ready": true,
     "wired_live": true,
-    "legacy_equivalent_removed": false
+    "legacy_equivalent_removed": true
   },
-  "next": "Run Phase-2 CI. If green, rehome option-description text to an authenticated HGSS text palette, remove the rollback path and message-box graphics/tilemap/palette bindings, then delete message.png/message.bin in Phase 3.",
-  "status": "phase 2: legacy Emerald message-box pixels/tilemap suppressed by default; BG1 functional text retained; legacy palette temporarily retained for text; CI pending",
+  "next": "After Phase-3 CI passes, audit the next remaining non-authentic PokéNav/PokéGear presentation surface.",
+  "status": "phase 3 complete: option-description text uses verified retail HGSS font colors; Emerald message-box rollback, bindings, palette dependency, and source assets removed; CI pending",
   "phase2_action": {
     "live_file": "src/pokenav_menu_handler_gfx.c",
     "rollback_switch": "sUseLegacyMessageBoxForRollback",
@@ -90,6 +90,35 @@
       "phase3_requirement": "move option-description text to an authenticated HGSS text palette before deleting the message-box palette/source"
     },
     "legacy_assets_retained_for_validation": true,
+    "new_hgss_pixels_generated": false
+  },
+  "authentic_text_palette": {
+    "manifest": "graphics/gen4_ui/hgss_storage/verified/text_windows.json",
+    "path": "graphics/gen4_ui/hgss_storage/verified/text_windows_hgss.gbapal",
+    "git_blob_sha": "975495973ba86ed1e1d53104f6e2a4ef2fd6471d",
+    "source": "retail HGSS font_00000007.bin NCLR",
+    "live_palette_bank": 11,
+    "native_text_tuple": {
+      "hgss": "MAKE_TEXT_COLOR(1, 2, 0)",
+      "gba_printer_order": [
+        0,
+        1,
+        2
+      ]
+    }
+  },
+  "phase3_action": {
+    "rollback_removed": true,
+    "message_box_graphics_binding_removed": true,
+    "message_box_tilemap_binding_removed": true,
+    "message_box_palette_binding_removed": true,
+    "legacy_assets_deleted": [
+      "graphics/pokenav/message.png",
+      "graphics/pokenav/message.bin"
+    ],
+    "bg1_retained_for_functional_windows": true,
+    "bg1_base_surface": "transparent tile/map",
+    "option_description_palette_rehomed_to": "verified retail HGSS text_windows_hgss.gbapal",
     "new_hgss_pixels_generated": false
   }
 }

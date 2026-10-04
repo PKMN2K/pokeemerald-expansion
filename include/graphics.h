@@ -3363,9 +3363,6 @@ extern const u16 gBerryCrush_Crusher_Pal[];
 extern const u32 gBerryCrush_TextWindows_Tilemap[];
 
 // PokéNav
-extern const u32 gPokenavMessageBox_Gfx[];
-extern const u32 gPokenavMessageBox_Tilemap[];
-extern const u16 gPokenavMessageBox_Pal[];
 
 // Battle Factory Screen
 extern const u16 gFrontierFactoryMenu_Gfx[34 * TILE_SIZE_4BPP / 2];

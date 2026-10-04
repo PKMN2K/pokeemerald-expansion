@@ -155,10 +155,8 @@ static const u16 sHgssConditionSearchCursorPal[] = INCBIN_U16("graphics/gen4_ui/
 
 static const u8 gText_NoRibbonWinners[] = _("There are no RIBBON winners.");
 
-// Phase-2 rollback gate for Emerald's shared PokéNav message-box skin.
-// The normal HGSS path keeps BG1 for functional windows/text but exposes
-// the verified retail fixed shell underneath instead of drawing this skin.
-static bool8 sUseLegacyMessageBoxForRollback = FALSE;
+// BG1 remains active for functional windows/text, but its shared base layer is
+// transparent so the verified retail HGSS fixed shell on BG2 remains visible.
 static const u32 sTransparentMessageBoxBgTile[8] = {0};
 
 static const struct BgTemplate sPokenavMainMenuBgTemplates[] = {
@@ -240,7 +238,7 @@ static const struct WindowTemplate sOptionDescWindowTemplate =
     .tilemapTop = 18,
     .width = 24,
     .height = 2,
-    .paletteNum = 1,
+    .paletteNum = HGSS_CONDITION_SEARCH_FONT_PAL_BANK,
     .baseBlock = 8
 };
 
@@ -273,10 +271,10 @@ static const u8 *const sPageDescriptions[] =
     [POKENAV_MENUITEM_CONDITION_SEARCH_CANCEL] = COMPOUND_STRING("Return to the CONDITION menu.")
 };
 
-// Color index 0 is transparent on the 4bpp window BG, allowing the verified
-// HGSS shell on BG2 to remain visible behind the functional description text.
-static const u8 sOptionDescTextColors[]  = {0, TEXT_COLOR_BLUE, TEXT_COLOR_LIGHT_GREEN};
-static const u8 sOptionDescTextColors2[] = {0, TEXT_COLOR_BLUE, TEXT_COLOR_LIGHT_GREEN};
+// Retail HGSS Storage font palette uses MAKE_TEXT_COLOR(1, 2, 0).
+// GBA printer order is background, foreground, shadow -> {0, 1, 2}.
+static const u8 sOptionDescTextColors[]  = {0, 1, 2};
+static const u8 sOptionDescTextColors2[] = {0, 1, 2};
 
 static const struct OamData sOamData_HgssPokegearCursor =
 {
@@ -476,16 +474,7 @@ static u32 LoopedTask_OpenMenu(s32 state)
         SetBgTilemapBuffer(1, gfx->bg1TilemapBuffer);
         LoadBgTiles(1, sTransparentMessageBoxBgTile, sizeof(sTransparentMessageBoxBgTile), 0);
         FillBgTilemapBufferRect_Palette0(1, 0, 0, 0, 32, 32);
-        if (sUseLegacyMessageBoxForRollback)
-        {
-            DecompressAndCopyTileDataToVram(1, gPokenavMessageBox_Gfx, 0, 0, 0);
-            CopyToBgTilemapBuffer(1, gPokenavMessageBox_Tilemap, 0, 0);
-        }
         CopyBgTilemapBufferToVram(1);
-        // Temporary functional dependency for Phase 2: the option-description
-        // window still uses BG palette bank 1. Phase 3 will rehome that text
-        // onto an authenticated HGSS text palette before deleting this source.
-        CopyPaletteIntoBufferUnfaded(gPokenavMessageBox_Pal, BG_PLTT_ID(1), PLTT_SIZE_4BPP);
         ChangeBgX(1, 0, BG_COORD_SET);
         ChangeBgY(1, 0, BG_COORD_SET);
         ChangeBgX(2, 0, BG_COORD_SET);
