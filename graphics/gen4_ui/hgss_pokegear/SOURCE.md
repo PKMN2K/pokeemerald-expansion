@@ -1597,3 +1597,26 @@ current live BG3 scroll/palette bindings. No live rendering changes in this
 phase.
 
 **authentic HGSS shell already live ✅ → legacy moving-dot layer audited ✅ → suppression pending → removal pending**
+
+
+## Shared PokéNav moving-dot background — phase 2
+
+CI #750 passed the Phase-1 provenance/behavior audit at
+`a6bd41bd65a12b19740f4f4fe821f16a2e884a35`.
+
+The legacy Emerald moving-dot layer is now suppressed by default behind
+`sUseLegacyMovingBgDotsForRollback = FALSE`. The normal PokéGear path no
+longer loads the BG3 dot tiles, tilemap, or palette; it keeps BG3 hidden,
+does not create `Task_MoveBgDots`, and turns the old blue/purple dot palette
+transitions into no-ops.
+
+The rollback path still contains the original assets and behavior for this
+single validation cycle. `bg3ScrollTaskId` is initialized to `TASK_NONE`,
+and cleanup only destroys the scroll task when the rollback path actually
+created one.
+
+No substitute art has been created. The already-validated authentic HGSS
+fixed shell/app layers remain the visible PokéGear surface, matching the retail
+finding that the core PokéGear has no shared animated-dot background.
+
+**authentic HGSS shell ✅ → legacy moving-dot layer suppressed live (CI pending) → legacy code/assets removal pending**

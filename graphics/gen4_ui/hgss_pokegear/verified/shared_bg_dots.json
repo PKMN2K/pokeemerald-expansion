@@ -1,15 +1,15 @@
 {
   "role": "shared_pokenav_moving_dots_background",
-  "phase": "authentic_behavior_audited",
+  "phase": "legacy_bg3_suppressed_ci_pending",
   "classification": "legacy Emerald PokéNav animated BG3 decoration behind the already-live authentic HGSS PokéGear shell",
   "source_game": "Pokemon HeartGold / SoulSilver",
   "source_repository": "pret/pokeheartgold",
   "source_revision": "9d8b7591f09b65804da2fb2dfd56f320633e0d36",
   "previous_gate": {
     "workflow": "CI",
-    "run_number": 749,
+    "run_number": 750,
     "conclusion": "success",
-    "validated_commit": "235bda6b1bcc761f6d0ee8b803e69580b57d3ed4"
+    "validated_commit": "a6bd41bd65a12b19740f4f4fe821f16a2e884a35"
   },
   "legacy_surface": {
     "gfx": {
@@ -66,5 +66,22 @@
     "wired_live": true,
     "legacy_equivalent_removed": false
   },
-  "next": "After Phase-1 CI passes, suppress the legacy BG3 moving-dot load/scroll/palette behavior behind a rollback path while leaving source assets in place for the validation cycle."
+  "next": "Run Phase-2 CI. If green, remove the rollback switch, moving-dot code, and graphics/pokenav/bg_dots.png + bg_dots.bin in Phase 3.",
+  "phase2_action": {
+    "live_file": "src/pokenav_menu_handler_gfx.c",
+    "rollback_switch": "sUseLegacyMovingBgDotsForRollback",
+    "rollback_default": false,
+    "normal_path": [
+      "legacy BG3 dot tiles/tilemap/palette are not loaded",
+      "BG3 remains hidden while the shared PokéGear menu is active",
+      "moving-dot scroll task is not created",
+      "blue/purple legacy dot palette transitions are no-ops"
+    ],
+    "safety": [
+      "bg3ScrollTaskId is initialized to TASK_NONE",
+      "cleanup destroys the task only when one was actually created"
+    ],
+    "legacy_assets_retained_for_validation": true,
+    "new_hgss_pixels_generated": false
+  }
 }

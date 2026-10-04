@@ -10,6 +10,7 @@ HGSS_SHELL_TILES = Path("graphics/gen4_ui/hgss_pokegear/verified/pgear_skin0_scr
 HGSS_SHELL_PALETTE = Path("graphics/gen4_ui/hgss_pokegear/verified/pgear_skin0_screen_shell_palette.NCLR")
 HGSS_SHELL_TILEMAP = Path("graphics/gen4_ui/hgss_pokegear/verified/pgear_skin0_screen_shell_tilemap.NSCR")
 HGSS_SHELL_MANIFEST = Path("graphics/gen4_ui/hgss_pokegear/verified/screen_shell_skin0.json")
+BG_DOTS_MANIFEST = Path("graphics/gen4_ui/hgss_pokegear/verified/shared_bg_dots.json")
 MENU_GFX_C = Path("src/pokenav_menu_handler_gfx.c")
 
 EXPECTED_GIT_BLOBS = {
@@ -58,30 +59,50 @@ def verify_completed_hgss_shell():
             raise ValueError(f"{MENU_GFX_C}: missing live HGSS shell token {token!r}")
 
 
-def verify_legacy_dots_are_still_live():
+def verify_phase2_suppression():
+    manifest = json.loads(BG_DOTS_MANIFEST.read_text())
+    if manifest.get("phase") != "legacy_bg3_suppressed_ci_pending":
+        raise ValueError(f"{BG_DOTS_MANIFEST}: unexpected phase")
+
     menu = MENU_GFX_C.read_text()
-    required = (
+
+    # Rollback resources remain byte-locked for this one validation cycle.
+    for token in (
         'INCGFX_U16("graphics/pokenav/bg_dots.png", ".gbapal")',
         'INCGFX_U32("graphics/pokenav/bg_dots.png", ".4bpp.smol")',
         'INCGFX_U32("graphics/pokenav/bg_dots.bin", ".smolTM")',
         "DecompressAndCopyTileDataToVram(3, sPokenavBgDotsTiles",
         "DecompressAndCopyTileDataToVram(3, sPokenavBgDotsTilemap",
         "CopyPaletteIntoBufferUnfaded(sPokenavBgDotsPal, BG_PLTT_ID(3)",
-        "CreateMovingBgDotsTask();",
         "ChangeBgX(3, 0x80, BG_COORD_ADD);",
-        "ChangeBgDotsColorToPurple();",
-        "CreateBgDotLightBluePalTask();",
+    ):
+        if token not in menu:
+            raise ValueError(f"{MENU_GFX_C}: rollback implementation missing {token!r}")
+
+    # The normal path must suppress every shared-dot behavior.
+    required = (
+        "static bool8 sUseLegacyMovingBgDotsForRollback = FALSE;",
+        "gfx->bg3ScrollTaskId = TASK_NONE;",
+        "if (sUseLegacyMovingBgDotsForRollback)",
+        "if (!sUseLegacyMovingBgDotsForRollback)",
+        "HideBg(3);",
+        "if (gfx->bg3ScrollTaskId != TASK_NONE)",
     )
     for token in required:
         if token not in menu:
-            raise ValueError(f"{MENU_GFX_C}: legacy moving-dot binding changed: {token!r}")
+            raise ValueError(f"{MENU_GFX_C}: missing Phase-2 suppression token {token!r}")
+
+    if menu.count("if (sUseLegacyMovingBgDotsForRollback)") < 2:
+        raise ValueError(f"{MENU_GFX_C}: BG3 load/show are not both rollback-gated")
+    if menu.count("if (!sUseLegacyMovingBgDotsForRollback)") < 4:
+        raise ValueError(f"{MENU_GFX_C}: scroll/palette helpers are not fully suppressed")
 
 
 def main():
     for path in EXPECTED_GIT_BLOBS:
         verify_blob(path)
     verify_completed_hgss_shell()
-    verify_legacy_dots_are_still_live()
+    verify_phase2_suppression()
 
 
 if __name__ == "__main__":

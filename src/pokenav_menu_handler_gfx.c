@@ -127,6 +127,12 @@ static bool32 IsTaskActive_UpdateBgDotsPalette(void);
 static void Task_UpdateBgDotsPalette(u8);
 static void ResetBldCnt(void);
 
+// Phase-2 rollback gate for the superseded Emerald PokéNav moving-dot layer.
+// Retail HGSS has no shared equivalent behind the core PokéGear shell, so the
+// authentic path leaves BG3 hidden. Keep the old resources callable only until
+// this suppression passes CI, then remove them in the next gated phase.
+static bool8 sUseLegacyMovingBgDotsForRollback = FALSE;
+
 static const u16 sPokenavBgDotsPal[] = INCGFX_U16("graphics/pokenav/bg_dots.png", ".gbapal");
 static const u32 sPokenavBgDotsTiles[] = INCGFX_U32("graphics/pokenav/bg_dots.png", ".4bpp.smol");
 static const u32 sPokenavBgDotsTilemap[] = INCGFX_U32("graphics/pokenav/bg_dots.bin", ".smolTM");
@@ -436,6 +442,7 @@ static struct Pokenav_MenuGfx * OpenPokenavMenu(void)
     {
         gfx->loopedTaskId = CreateLoopedTask(LoopedTask_OpenMenu, 1);
         gfx->isTaskActiveCB = GetCurrentLoopedTaskActive;
+        gfx->bg3ScrollTaskId = TASK_NONE;
     }
 
     return gfx;
@@ -501,11 +508,20 @@ static u32 LoopedTask_OpenMenu(s32 state)
     case 2:
         if (FreeTempTileDataBuffersIfPossible())
             return LT_PAUSE;
-        DecompressAndCopyTileDataToVram(3, sPokenavBgDotsTiles, 0, 0, 0);
-        DecompressAndCopyTileDataToVram(3, sPokenavBgDotsTilemap, 0, 0, 1);
-        CopyPaletteIntoBufferUnfaded(sPokenavBgDotsPal, BG_PLTT_ID(3), sizeof(sPokenavBgDotsPal));
-        if (GetPokenavMenuType() == POKENAV_MENU_TYPE_CONDITION || GetPokenavMenuType() == POKENAV_MENU_TYPE_CONDITION_SEARCH)
-            ChangeBgDotsColorToPurple();
+        if (sUseLegacyMovingBgDotsForRollback)
+        {
+            DecompressAndCopyTileDataToVram(3, sPokenavBgDotsTiles, 0, 0, 0);
+            DecompressAndCopyTileDataToVram(3, sPokenavBgDotsTilemap, 0, 0, 1);
+            CopyPaletteIntoBufferUnfaded(sPokenavBgDotsPal, BG_PLTT_ID(3), sizeof(sPokenavBgDotsPal));
+            if (GetPokenavMenuType() == POKENAV_MENU_TYPE_CONDITION || GetPokenavMenuType() == POKENAV_MENU_TYPE_CONDITION_SEARCH)
+                ChangeBgDotsColorToPurple();
+        }
+        else
+        {
+            // The retail HGSS core PokéGear has no shared animated background
+            // behind its fixed shell. Do not substitute an invented surface.
+            HideBg(3);
+        }
         return LT_INC_AND_PAUSE;
     case 3:
         if (FreeTempTileDataBuffersIfPossible())
@@ -532,7 +548,10 @@ static u32 LoopedTask_OpenMenu(s32 state)
     case 7:
         ShowBg(1);
         ShowBg(2);
-        ShowBg(3);
+        if (sUseLegacyMovingBgDotsForRollback)
+            ShowBg(3);
+        else
+            HideBg(3);
         if (gfx->pokenavAlreadyOpen)
         {
             PokenavFadeScreen(POKENAV_FADE_FROM_BLACK);
@@ -1338,13 +1357,25 @@ static bool32 IsDma3ManagerBusyWithBgCopy_(void)
 static void CreateMovingBgDotsTask(void)
 {
     struct Pokenav_MenuGfx *gfx = GetSubstructPtr(POKENAV_SUBSTRUCT_MENU_GFX);
+
+    if (!sUseLegacyMovingBgDotsForRollback)
+    {
+        gfx->bg3ScrollTaskId = TASK_NONE;
+        return;
+    }
+
     gfx->bg3ScrollTaskId = CreateTask(Task_MoveBgDots, 2);
 }
 
 static void DestroyMovingDotsBgTask(void)
 {
     struct Pokenav_MenuGfx *gfx = GetSubstructPtr(POKENAV_SUBSTRUCT_MENU_GFX);
-    DestroyTask(gfx->bg3ScrollTaskId);
+
+    if (gfx->bg3ScrollTaskId != TASK_NONE)
+    {
+        DestroyTask(gfx->bg3ScrollTaskId);
+        gfx->bg3ScrollTaskId = TASK_NONE;
+    }
 }
 
 static void Task_MoveBgDots(u8 taskId)
@@ -1354,25 +1385,41 @@ static void Task_MoveBgDots(u8 taskId)
 
 static void CreateBgDotPurplePalTask(void)
 {
-    u8 taskId = CreateTask(Task_UpdateBgDotsPalette, 3);
+    u8 taskId;
+
+    if (!sUseLegacyMovingBgDotsForRollback)
+        return;
+
+    taskId = CreateTask(Task_UpdateBgDotsPalette, 3);
     SetWordTaskArg(taskId, 1, (uintptr_t)(sPokenavBgDotsPal + 1));
     SetWordTaskArg(taskId, 3, (uintptr_t)(sPokenavBgDotsPal + 7));
 }
 
 static void ChangeBgDotsColorToPurple(void)
 {
+    if (!sUseLegacyMovingBgDotsForRollback)
+        return;
+
     CopyPaletteIntoBufferUnfaded(sPokenavBgDotsPal + 7, BG_PLTT_ID(3) + 1, PLTT_SIZEOF(2));
 }
 
 static void CreateBgDotLightBluePalTask(void)
 {
-    u8 taskId = CreateTask(Task_UpdateBgDotsPalette, 3);
+    u8 taskId;
+
+    if (!sUseLegacyMovingBgDotsForRollback)
+        return;
+
+    taskId = CreateTask(Task_UpdateBgDotsPalette, 3);
     SetWordTaskArg(taskId, 1, (uintptr_t)(sPokenavBgDotsPal + 7));
     SetWordTaskArg(taskId, 3, (uintptr_t)(sPokenavBgDotsPal + 1));
 }
 
 static bool32 IsTaskActive_UpdateBgDotsPalette(void)
 {
+    if (!sUseLegacyMovingBgDotsForRollback)
+        return FALSE;
+
     return FuncIsActiveTask(Task_UpdateBgDotsPalette);
 }
 
