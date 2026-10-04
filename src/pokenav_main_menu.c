@@ -20,7 +20,6 @@ struct Pokenav_MainMenu
     u32 currentTaskId;
     u32 helpBarWindowId;
     u32 palettes;
-    struct Sprite *spinningPokenav;
     struct Sprite *leftHeaderSprites[2];
     struct Sprite *submenuLeftHeaderSprites[2];
     ALIGNED(4) u8 tilemapBuffer[BG_SCREEN_SIZE];
@@ -53,16 +52,7 @@ static u32 LoopedTask_SlideMenuHeaderDown(s32);
 static void DrawHgssPokegearHelpBar(u32);
 static void LoadHgssPokegearHelpBarStrip(void);
 static void LoadHgssPokegearHelpBarPalette(void);
-static void SpriteCB_SpinningPokenav(struct Sprite *);
 static u32 LoopedTask_InitPokenavMenu(s32);
-
-// Phase-2 rollback gate for Emerald's rotating PokéNav device icon.
-// Retail HGSS has no equivalent shared spinner, so the authentic path does
-// not instantiate this OBJ. Keep the old resources for one CI cycle only.
-static bool8 sUseLegacySpinningNavIconForRollback = FALSE;
-
-static const u16 sSpinningPokenav_Pal[] = INCGFX_U16("graphics/pokenav/nav_icon.png", ".gbapal");
-static const u32 sSpinningPokenav_Gfx[] = INCGFX_U32("graphics/pokenav/nav_icon.png", ".4bpp.smol");
 
 // Exact retail HGSS PokéGear Phone tooltip pixels/colors. The GBA tile only
 // relocates source palette index 1 into an unused BG0 palette slot.
@@ -140,24 +130,6 @@ static const u8 sHgssHelpBarTextColors[3] =
     HGSS_HELP_BAR_SHADOW_COLOR,
 };
 
-static const struct CompressedSpriteSheet sSpinningPokenavSpriteSheet[] =
-{
-    {
-        .data = sSpinningPokenav_Gfx,
-        .size = 0x1000,
-        .tag = 0,
-    }
-};
-
-static const struct SpritePalette sSpinningNavgearPalettes[] =
-{
-    {
-        .data = sSpinningPokenav_Pal,
-        .tag = 0,
-    },
-    {}
-};
-
 static const struct CompressedSpriteSheet sMenuLeftHeaderSpriteSheet =
 {
     .data = gPokenavLeftHeaderHoennMap_Gfx, // Hoenn map is the first of the headers listed
@@ -229,47 +201,6 @@ static const struct CompressedSpriteSheetNoSize sPokenavSubMenuLeftHeaderSpriteS
         .data = gPokenavLeftHeaderTough_Gfx,
         .tag = 3
     }
-};
-
-static const struct OamData sSpinningPokenavSpriteOam =
-{
-    .y = 0,
-    .affineMode = ST_OAM_AFFINE_OFF,
-    .objMode = ST_OAM_OBJ_NORMAL,
-    .bpp = ST_OAM_4BPP,
-    .shape = SPRITE_SHAPE(32x32),
-    .x = 0,
-    .size = SPRITE_SIZE(32x32),
-    .tileNum = 0,
-    .priority = 0,
-    .paletteNum = 0,
-};
-
-static const union AnimCmd sSpinningPokenavAnims[] =
-{
-    ANIMCMD_FRAME(0, 8),
-    ANIMCMD_FRAME(16, 8),
-    ANIMCMD_FRAME(32, 8),
-    ANIMCMD_FRAME(48, 8),
-    ANIMCMD_FRAME(64, 8),
-    ANIMCMD_FRAME(80, 8),
-    ANIMCMD_FRAME(96, 8),
-    ANIMCMD_FRAME(112, 8),
-    ANIMCMD_JUMP(0)
-};
-
-static const union AnimCmd *const sSpinningPokenavAnimTable[] =
-{
-    sSpinningPokenavAnims
-};
-
-static const struct SpriteTemplate sSpinningPokenavSpriteTemplate =
-{
-    .tileTag = 0,
-    .paletteTag = 0,
-    .oam = &sSpinningPokenavSpriteOam,
-    .anims = sSpinningPokenavAnimTable,
-    .callback = SpriteCB_SpinningPokenav
 };
 
 static const struct OamData sOamData_LeftHeader =
@@ -636,64 +567,15 @@ static void DrawHgssPokegearHelpBar(u32 windowId)
 
 static void InitPokenavMainMenuResources(void)
 {
-    s32 i;
-    u8 spriteId;
     struct Pokenav_MainMenu *menu = GetSubstructPtr(POKENAV_SUBSTRUCT_MAIN_MENU);
 
-    for (i = 0; i < ARRAY_COUNT(sSpinningPokenavSpriteSheet); i++)
-        LoadCompressedSpriteSheet(&sSpinningPokenavSpriteSheet[i]);
-
-    Pokenav_AllocAndLoadPalettes(sSpinningNavgearPalettes);
-    menu->palettes = ~1 & ~(0x10000 << IndexOfSpritePaletteTag(0));
-    menu->spinningPokenav = NULL;
-    if (sUseLegacySpinningNavIconForRollback)
-    {
-        spriteId = CreateSprite(&sSpinningPokenavSpriteTemplate, 220, 12, 0);
-        menu->spinningPokenav = &gSprites[spriteId];
-    }
+    // The removed Emerald spinner no longer owns OBJ palette 0, so all OBJ
+    // palettes participate normally in PokéNav fades.
+    menu->palettes = ~1;
 }
 
 static void CleanupPokenavMainMenuResources(void)
 {
-    struct Pokenav_MainMenu *menu = GetSubstructPtr(POKENAV_SUBSTRUCT_MAIN_MENU);
-
-    if (menu->spinningPokenav != NULL)
-        DestroySprite(menu->spinningPokenav);
-    FreeSpriteTilesByTag(0);
-    FreeSpritePaletteByTag(0);
-}
-
-static void SpriteCB_SpinningPokenav(struct Sprite *sprite)
-{
-    // If the background starts scrolling, follow it.
-    sprite->y2 = (GetBgY(0) / 256u) * -1;
-}
-
-struct Sprite *GetSpinningPokenavSprite(void)
-{
-    struct Pokenav_MainMenu *menu = GetSubstructPtr(POKENAV_SUBSTRUCT_MAIN_MENU);
-
-    if (menu->spinningPokenav == NULL)
-        return NULL;
-
-    menu->spinningPokenav->callback = SpriteCallbackDummy;
-    return menu->spinningPokenav;
-}
-
-void HideSpinningPokenavSprite(void)
-{
-    struct Pokenav_MainMenu *menu = GetSubstructPtr(POKENAV_SUBSTRUCT_MAIN_MENU);
-
-    if (menu->spinningPokenav == NULL)
-        return;
-
-    // Move sprite so it's no longer visible
-    menu->spinningPokenav->x = 220;
-    menu->spinningPokenav->y = 12;
-    menu->spinningPokenav->callback = SpriteCB_SpinningPokenav;
-    menu->spinningPokenav->invisible = FALSE;
-    menu->spinningPokenav->oam.priority = 0;
-    menu->spinningPokenav->subpriority = 0;
 }
 
 static void CreateLeftHeaderSprites(void)

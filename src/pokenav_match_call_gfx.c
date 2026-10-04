@@ -1224,14 +1224,12 @@ static void DrawMsgBoxForMatchCallMsg(struct Pokenav_MatchCallGfx *gfx)
 {
     CloseMatchCallSelectOptionsWindow(gfx);
     DrawHgssPhoneCallSurface(gfx);
-    HideSpinningPokenavSprite();
 }
 
 static void DrawMsgBoxForCloseByMsg(struct Pokenav_MatchCallGfx *gfx)
 {
     CloseMatchCallSelectOptionsWindow(gfx);
     DrawHgssPhoneCallSurface(gfx);
-    HideSpinningPokenavSprite();
 }
 
 static bool32 IsDma3ManagerBusyWithBgCopy2(struct Pokenav_MatchCallGfx *gfx)
@@ -1282,7 +1280,6 @@ static bool32 WaitForMatchCallMessageText(struct Pokenav_MatchCallGfx *gfx)
 
 static void EraseCallMessageBox(struct Pokenav_MatchCallGfx *gfx)
 {
-    HideSpinningPokenavSprite();
     FillBgTilemapBufferRect_Palette0(1, 0, 0, 0, 32, 20);
     CopyBgTilemapBufferToVram(1);
 }

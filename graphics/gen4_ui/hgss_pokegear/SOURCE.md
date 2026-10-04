@@ -1701,3 +1701,33 @@ shared rotating device/logo sprite, so the authentic behavior is simply to
 leave that overlay absent.
 
 **authentic HGSS shared UI ✅ → legacy spinning icon suppressed live (CI pending) → legacy code/asset removal pending**
+
+
+## Shared spinning PokéNav device icon — phase 3
+
+CI #761 passed the live Phase-2 spinner suppression at
+`dc8a8f41b09e8430274aef25638d13b1a6e5777b`.
+
+The rollback path is now removed. `src/pokenav_main_menu.c` no longer owns
+a spinner pointer or contains the legacy `nav_icon.png` bindings,
+sprite-sheet/palette definitions, 32x32 OAM, eight-frame animation, sprite
+template, callback, allocation, cleanup, or rollback switch.
+
+The obsolete public helpers `GetSpinningPokenavSprite` and
+`HideSpinningPokenavSprite` are removed from both the implementation and
+`include/pokenav.h`. The three Match Call call-surface sites that existed
+only to restore that Emerald sprite are removed as well.
+
+Because the deleted spinner previously reserved OBJ palette tag 0,
+`InitPokenavMainMenuResources` now uses `menu->palettes = ~1`; there is no
+longer a nonexistent spinner palette to exempt from PokéNav fades.
+
+The now-unreferenced source asset is deleted:
+
+- `graphics/pokenav/nav_icon.png`
+
+No replacement art is generated. Retail HGSS has no shared rotating
+device/logo sprite, so the authentic HGSS PokéGear presentation remains
+unobstructed.
+
+**authentic HGSS shared UI ✅ → live without Emerald spinner ✅ → legacy equivalent removed (CI pending)**

@@ -1,15 +1,15 @@
 {
   "role": "shared_pokenav_spinning_device_icon",
-  "phase": "legacy_spinner_suppressed_ci_pending",
+  "phase": "legacy_spinner_removed_ci_pending",
   "classification": "legacy Emerald PokéNav animated 32x32 device/logo sprite over the already-authentic HGSS PokéGear presentation",
   "source_game": "Pokemon HeartGold / SoulSilver",
   "source_repository": "pret/pokeheartgold",
   "source_revision": "9d8b7591f09b65804da2fb2dfd56f320633e0d36",
   "previous_gate": {
     "workflow": "CI",
-    "run_number": 753,
+    "run_number": 761,
     "conclusion": "success",
-    "validated_commit": "28932055adf5aaa67d5fa54cea8998f40fb51fd3"
+    "validated_commit": "dc8a8f41b09e8430274aef25638d13b1a6e5777b"
   },
   "legacy_surface": {
     "asset": {
@@ -91,9 +91,9 @@
   "pipeline": {
     "authentic_hgss_asset_ready": true,
     "wired_live": true,
-    "legacy_equivalent_removed": false
+    "legacy_equivalent_removed": true
   },
-  "next": "Run Phase-2 CI. If green, remove the rollback switch, spinner code/resources, nav_icon.png, and obsolete Match Call restore calls in Phase 3.",
+  "next": "Run Phase-3 CI. If green, mark the spinning-icon cleanup complete and audit the next remaining legacy PokéNav surface (left-header graphics).",
   "phase2_action": {
     "live_file": "src/pokenav_main_menu.c",
     "rollback_switch": "sUseLegacySpinningNavIconForRollback",
@@ -108,5 +108,24 @@
     "legacy_asset_retained_for_validation": true,
     "new_hgss_pixels_generated": false
   },
-  "status": "phase 2: legacy rotating PokéNav icon suppressed by default; rollback source retained; CI pending"
+  "status": "phase 3: legacy Emerald rotating PokéNav icon and compatibility API removed; CI pending",
+  "phase3_action": {
+    "live_files": [
+      "src/pokenav_main_menu.c",
+      "src/pokenav_match_call_gfx.c",
+      "include/pokenav.h"
+    ],
+    "removed": [
+      "rollback switch sUseLegacySpinningNavIconForRollback",
+      "nav_icon graphics/palette bindings",
+      "spinner sprite-sheet, OAM, animation, template, callback, allocation and cleanup code",
+      "Pokenav_MainMenu spinner pointer",
+      "GetSpinningPokenavSprite / HideSpinningPokenavSprite public API",
+      "obsolete Match Call spinner restore calls"
+    ],
+    "removed_asset": "graphics/pokenav/nav_icon.png",
+    "palette_cleanup": "removed spinner palette tag 0 ownership and normalized the PokéNav fade mask to ~1",
+    "new_hgss_pixels_generated": false,
+    "ci_pending": true
+  }
 }

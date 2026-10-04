@@ -375,8 +375,6 @@ bool32 MainMenuLoopedTaskIsBusy(void);
 void SetLeftHeaderSpritesInvisibility(void);
 void PokenavCopyPalette(const u16 *src, const u16 *dest, int size, int a3, int a4, u16 *palette);
 void FadeToBlackExceptPrimary(void);
-struct Sprite *GetSpinningPokenavSprite(void);
-void HideSpinningPokenavSprite(void);
 void UpdateRegionMapRightHeaderTiles(u32 menuGfxId);
 void HideMainOrSubMenuLeftHeader(u32 id, bool32 onRightSide);
 void SlideMenuHeaderUp(void);
