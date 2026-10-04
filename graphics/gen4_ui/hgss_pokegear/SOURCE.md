@@ -1731,3 +1731,39 @@ device/logo sprite, so the authentic HGSS PokéGear presentation remains
 unobstructed.
 
 **authentic HGSS shared UI ✅ → live without Emerald spinner ✅ → legacy equivalent removed (CI pending)**
+
+
+## Shared PokéNav left-header sprites — phase 1
+
+CI #762 passed the completed spinning-icon removal at
+`c9f1fad1d33f56fec3ff8efde39a4b768f5039cf`.
+
+The next remaining shared Emerald presentation layer is the family of sliding
+left-header OBJ sprites in `src/pokenav_main_menu.c`. The layer owns the
+Main Menu, Hoenn Map, Match Call, Condition, Ribbons, Party, Search and five
+contest-condition header graphics under `graphics/pokenav/left_headers/`,
+plus their shared palette. The runtime creates two 64x32 main-header sprites
+and two 32x16 submenu-header sprites, loads the requested legacy art into OBJ
+VRAM, and slides those sprites on/off screen with `MoveLeftHeader`.
+
+These sprites are presentation only. Menu IDs, cursor state, feature launches,
+input handling, and the completed authentic HGSS surfaces do not depend on
+their pixels. The authentic shared navigation context is already supplied by
+the verified retail default-skin PokéGear shell and app-switch strip. The
+converted Condition/Search screens also already provide their own HGSS-derived
+feature chrome rather than relying on an Emerald sliding title.
+
+Retail HGSS does not add a second shared sliding title-card layer over that
+PokéGear presentation. Keeping Emerald's left-edge title sprites on top of the
+retail shell therefore leaves a visibly non-authentic PokéNav layer in the
+otherwise converted interface. No replacement "HGSS-style" title artwork
+should be drawn; the correct target is the already-live retail shell/app
+surfaces without the extra Emerald overlay.
+
+Phase 1 adds `tools/gen4_ui/audit_hgss_pokegear_left_headers.py` and
+`verified/left_headers.json`. The audit byte-locks all thirteen legacy header
+source files, the verified retail shell/app-switch sources, their completed
+manifests, and the current left-header sprite bindings. No live renderer,
+sprite behavior, palette allocation, or asset is changed in this phase.
+
+**authentic HGSS shell/app switch already live ✅ → legacy left-header layer audited ✅ → suppression pending → removal pending**
