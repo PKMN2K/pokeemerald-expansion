@@ -1,15 +1,15 @@
 {
   "role": "shared_pokenav_spinning_device_icon",
-  "phase": "authentic_behavior_audited",
+  "phase": "legacy_spinner_suppressed_ci_pending",
   "classification": "legacy Emerald PokéNav animated 32x32 device/logo sprite over the already-authentic HGSS PokéGear presentation",
   "source_game": "Pokemon HeartGold / SoulSilver",
   "source_repository": "pret/pokeheartgold",
   "source_revision": "9d8b7591f09b65804da2fb2dfd56f320633e0d36",
   "previous_gate": {
     "workflow": "CI",
-    "run_number": 752,
+    "run_number": 753,
     "conclusion": "success",
-    "validated_commit": "2f2e714bb7671945a3b0d0d68f2799868129b9b7"
+    "validated_commit": "28932055adf5aaa67d5fa54cea8998f40fb51fd3"
   },
   "legacy_surface": {
     "asset": {
@@ -93,5 +93,20 @@
     "wired_live": true,
     "legacy_equivalent_removed": false
   },
-  "next": "After Phase-1 CI passes, suppress the legacy spinning nav icon behind a rollback path while leaving nav_icon.png and old sprite code in place for one validation cycle."
+  "next": "Run Phase-2 CI. If green, remove the rollback switch, spinner code/resources, nav_icon.png, and obsolete Match Call restore calls in Phase 3.",
+  "phase2_action": {
+    "live_file": "src/pokenav_main_menu.c",
+    "rollback_switch": "sUseLegacySpinningNavIconForRollback",
+    "rollback_default": false,
+    "normal_path": [
+      "legacy nav_icon sprite sheet and palette remain loaded only for rollback compatibility during this validation cycle",
+      "the 32x32 spinning PokéNav OBJ is not instantiated",
+      "cleanup tolerates the absent spinner pointer",
+      "GetSpinningPokenavSprite returns NULL when the spinner is suppressed",
+      "HideSpinningPokenavSprite becomes a safe no-op when Match Call invokes it without a spinner"
+    ],
+    "legacy_asset_retained_for_validation": true,
+    "new_hgss_pixels_generated": false
+  },
+  "status": "phase 2: legacy rotating PokéNav icon suppressed by default; rollback source retained; CI pending"
 }

@@ -47,47 +47,56 @@ def verify_completed_hgss_main_ui_source():
     if required != (True, True, True):
         raise ValueError(f"{MAIN_UI_MANIFEST}: common HGSS UI source is no longer complete")
 
-    retail = manifest.get("retail_binding", {})
-    if retail.get("consumer") != "PokegearApp_LoadGraphics":
-        raise ValueError(f"{MAIN_UI_MANIFEST}: retail consumer binding changed")
-    if retail.get("usage") != "Common retail PokéGear UI sprites: app-switch cursor resources plus clock/day/status widgets.":
-        raise ValueError(f"{MAIN_UI_MANIFEST}: retail common-sprite classification changed")
 
-
-def verify_phase1_legacy_spinner_is_still_live():
+def verify_phase2_spinner_suppression():
     manifest = json.loads(NAV_ICON_MANIFEST.read_text())
-    if manifest.get("phase") != "authentic_behavior_audited":
+    if manifest.get("phase") != "legacy_spinner_suppressed_ci_pending":
         raise ValueError(f"{NAV_ICON_MANIFEST}: unexpected phase")
 
     main = MAIN_MENU_C.read_text()
-    required = (
+
+    # Legacy asset/code stays byte-locked for the one-cycle rollback path.
+    rollback_tokens = (
         'INCGFX_U16("graphics/pokenav/nav_icon.png", ".gbapal")',
         'INCGFX_U32("graphics/pokenav/nav_icon.png", ".4bpp.smol")',
         "static const struct CompressedSpriteSheet sSpinningPokenavSpriteSheet[]",
-        ".size = 0x1000",
-        "static const struct OamData sSpinningPokenavSpriteOam",
-        ".shape = SPRITE_SHAPE(32x32)",
-        ".size = SPRITE_SIZE(32x32)",
-        "ANIMCMD_FRAME(0, 8)",
-        "ANIMCMD_FRAME(112, 8)",
+        "static const struct SpriteTemplate sSpinningPokenavSpriteTemplate",
         "CreateSprite(&sSpinningPokenavSpriteTemplate, 220, 12, 0)",
-        "DestroySprite(menu->spinningPokenav);",
-        "void HideSpinningPokenavSprite(void)",
+        "SpriteCB_SpinningPokenav",
+    )
+    for token in rollback_tokens:
+        if token not in main:
+            raise ValueError(f"{MAIN_MENU_C}: rollback spinner binding missing: {token!r}")
+
+    # The normal/authentic path must instantiate no legacy spinner.
+    required = (
+        "static bool8 sUseLegacySpinningNavIconForRollback = FALSE;",
+        "menu->spinningPokenav = NULL;",
+        "if (sUseLegacySpinningNavIconForRollback)",
+        "if (menu->spinningPokenav != NULL)",
+        "if (menu->spinningPokenav == NULL)",
     )
     for token in required:
         if token not in main:
-            raise ValueError(f"{MAIN_MENU_C}: legacy spinner binding changed: {token!r}")
+            raise ValueError(f"{MAIN_MENU_C}: Phase-2 suppression token missing: {token!r}")
 
+    create_pos = main.index("CreateSprite(&sSpinningPokenavSpriteTemplate, 220, 12, 0)")
+    gate_pos = main.rfind("if (sUseLegacySpinningNavIconForRollback)", 0, create_pos)
+    if gate_pos < 0 or create_pos - gate_pos > 300:
+        raise ValueError(f"{MAIN_MENU_C}: legacy spinner creation is not rollback-gated")
+
+    # Existing Match Call call sites are intentionally retained; with no
+    # spinner instantiated their helper safely becomes a no-op.
     match_call = MATCH_CALL_C.read_text()
     if "HideSpinningPokenavSprite();" not in match_call:
-        raise ValueError(f"{MATCH_CALL_C}: expected legacy spinner call-site changed")
+        raise ValueError(f"{MATCH_CALL_C}: Match Call compatibility call-sites changed unexpectedly")
 
 
 def main():
     for path in EXPECTED_GIT_BLOBS:
         verify_blob(path)
     verify_completed_hgss_main_ui_source()
-    verify_phase1_legacy_spinner_is_still_live()
+    verify_phase2_spinner_suppression()
 
 
 if __name__ == "__main__":

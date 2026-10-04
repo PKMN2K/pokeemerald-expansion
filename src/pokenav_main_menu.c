@@ -56,6 +56,11 @@ static void LoadHgssPokegearHelpBarPalette(void);
 static void SpriteCB_SpinningPokenav(struct Sprite *);
 static u32 LoopedTask_InitPokenavMenu(s32);
 
+// Phase-2 rollback gate for Emerald's rotating PokéNav device icon.
+// Retail HGSS has no equivalent shared spinner, so the authentic path does
+// not instantiate this OBJ. Keep the old resources for one CI cycle only.
+static bool8 sUseLegacySpinningNavIconForRollback = FALSE;
+
 static const u16 sSpinningPokenav_Pal[] = INCGFX_U16("graphics/pokenav/nav_icon.png", ".gbapal");
 static const u32 sSpinningPokenav_Gfx[] = INCGFX_U32("graphics/pokenav/nav_icon.png", ".4bpp.smol");
 
@@ -640,15 +645,20 @@ static void InitPokenavMainMenuResources(void)
 
     Pokenav_AllocAndLoadPalettes(sSpinningNavgearPalettes);
     menu->palettes = ~1 & ~(0x10000 << IndexOfSpritePaletteTag(0));
-    spriteId = CreateSprite(&sSpinningPokenavSpriteTemplate, 220, 12, 0);
-    menu->spinningPokenav = &gSprites[spriteId];
+    menu->spinningPokenav = NULL;
+    if (sUseLegacySpinningNavIconForRollback)
+    {
+        spriteId = CreateSprite(&sSpinningPokenavSpriteTemplate, 220, 12, 0);
+        menu->spinningPokenav = &gSprites[spriteId];
+    }
 }
 
 static void CleanupPokenavMainMenuResources(void)
 {
     struct Pokenav_MainMenu *menu = GetSubstructPtr(POKENAV_SUBSTRUCT_MAIN_MENU);
 
-    DestroySprite(menu->spinningPokenav);
+    if (menu->spinningPokenav != NULL)
+        DestroySprite(menu->spinningPokenav);
     FreeSpriteTilesByTag(0);
     FreeSpritePaletteByTag(0);
 }
@@ -663,6 +673,9 @@ struct Sprite *GetSpinningPokenavSprite(void)
 {
     struct Pokenav_MainMenu *menu = GetSubstructPtr(POKENAV_SUBSTRUCT_MAIN_MENU);
 
+    if (menu->spinningPokenav == NULL)
+        return NULL;
+
     menu->spinningPokenav->callback = SpriteCallbackDummy;
     return menu->spinningPokenav;
 }
@@ -670,6 +683,9 @@ struct Sprite *GetSpinningPokenavSprite(void)
 void HideSpinningPokenavSprite(void)
 {
     struct Pokenav_MainMenu *menu = GetSubstructPtr(POKENAV_SUBSTRUCT_MAIN_MENU);
+
+    if (menu->spinningPokenav == NULL)
+        return;
 
     // Move sprite so it's no longer visible
     menu->spinningPokenav->x = 220;

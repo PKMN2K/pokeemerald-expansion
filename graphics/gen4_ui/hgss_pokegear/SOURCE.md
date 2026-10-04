@@ -1678,3 +1678,26 @@ four authentic retail common-UI source files, and lock the current live spinner
 bindings. No live rendering changes in this phase.
 
 **authentic HGSS shared UI already live ✅ → legacy spinning icon audited ✅ → suppression pending → removal pending**
+
+
+## Shared spinning PokéNav device icon — phase 2
+
+CI #753 passed the Phase-1 authenticity audit at
+`28932055adf5aaa67d5fa54cea8998f40fb51fd3`.
+
+The legacy 32x32 rotating PokéNav icon is now suppressed by default behind
+`sUseLegacySpinningNavIconForRollback = FALSE`. The normal PokéGear path
+does not instantiate `sSpinningPokenavSpriteTemplate`, so no Emerald device
+logo is drawn over the authentic HGSS UI.
+
+For this one validation cycle, `nav_icon.png`, its palette/sprite-sheet
+bindings, animation data, callback, and template remain compiled as a rollback
+path. `menu->spinningPokenav` is explicitly initialized to `NULL`; cleanup,
+the public getter, and the legacy Match Call restore helper safely tolerate the
+absence of the sprite.
+
+No replacement art is generated or repurposed. Retail HGSS has no equivalent
+shared rotating device/logo sprite, so the authentic behavior is simply to
+leave that overlay absent.
+
+**authentic HGSS shared UI ✅ → legacy spinning icon suppressed live (CI pending) → legacy code/asset removal pending**
