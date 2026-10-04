@@ -1,9 +1,6 @@
 #!/usr/bin/env python3
 from pathlib import Path
-import binascii
 import hashlib
-import struct
-import zlib
 
 
 LEGACY_HEADER_GFX = Path("graphics/pokenav/header.png")
@@ -17,15 +14,11 @@ GRAPHICS_C = Path("src/graphics.c")
 GRAPHICS_H = Path("include/graphics.h")
 GRAPHICS_RULES = Path("graphics_file_rules.mk")
 HELP_BAR_GENERATOR = Path("tools/gen4_ui/make_hgss_pokegear_help_bar.py")
-MESSAGE_GFX = Path("graphics/pokenav/message.png")
-MESSAGE_MAP = Path("graphics/pokenav/message.bin")
 
 EXPECTED_GIT_BLOBS = {
     APP_SWITCH_TILES: "0b33041050709233198495bf43f4969738c4921e",
     APP_SWITCH_PALETTE: "69f91d3bf7a72e5868d5dc6cf04add710bd7138a",
     APP_SWITCH_TILEMAP: "c9103c3dba3d4f1ec88025987ad0f2ddbc63c0b1",
-    MESSAGE_GFX: "7df840d3a90d11a8c42568df113a1003dc898c24",
-    MESSAGE_MAP: "5f9930568acd30668bdc3fb03db6431412f2ba7d",
 }
 
 
@@ -41,104 +34,6 @@ def verify_blob(path):
     if actual != expected:
         raise ValueError(f"{path}: Git blob {actual} != verified {expected}")
     return data
-
-
-PNG_SIGNATURE = b"\x89PNG\r\n\x1a\n"
-
-
-def paeth_predictor(a, b, c):
-    p = a + b - c
-    pa = abs(p - a)
-    pb = abs(p - b)
-    pc = abs(p - c)
-    if pa <= pb and pa <= pc:
-        return a
-    if pb <= pc:
-        return b
-    return c
-
-
-def load_locked_indexed_png4(path):
-    data = verify_blob(path)
-    if not data.startswith(PNG_SIGNATURE):
-        raise ValueError(f"{path}: not a PNG")
-
-    pos = len(PNG_SIGNATURE)
-    ihdr = None
-    idat = bytearray()
-    while pos < len(data):
-        if pos + 12 > len(data):
-            raise ValueError(f"{path}: truncated PNG chunk")
-        length = struct.unpack_from(">I", data, pos)[0]
-        chunk_type = data[pos + 4:pos + 8]
-        payload_start = pos + 8
-        payload_end = payload_start + length
-        crc_end = payload_end + 4
-        if crc_end > len(data):
-            raise ValueError(f"{path}: truncated {chunk_type!r} chunk")
-
-        payload = data[payload_start:payload_end]
-        expected_crc = struct.unpack_from(">I", data, payload_end)[0]
-        actual_crc = binascii.crc32(chunk_type + payload) & 0xFFFFFFFF
-        if expected_crc != actual_crc:
-            raise ValueError(f"{path}: invalid {chunk_type!r} CRC")
-
-        if chunk_type == b"IHDR":
-            ihdr = struct.unpack(">IIBBBBB", payload)
-        elif chunk_type == b"IDAT":
-            idat.extend(payload)
-        elif chunk_type == b"IEND":
-            break
-        pos = crc_end
-
-    if ihdr is None:
-        raise ValueError(f"{path}: missing IHDR")
-    width, height, bit_depth, color_type, compression, filter_method, interlace = ihdr
-    if bit_depth != 4 or color_type != 3:
-        raise ValueError(f"{path}: expected 4-bit indexed PNG")
-    if width % 2:
-        raise ValueError(f"{path}: odd-width 4-bit PNG is unsupported")
-    if compression != 0 or filter_method != 0 or interlace != 0:
-        raise ValueError(f"{path}: unsupported PNG encoding")
-
-    row_bytes = width // 2
-    raw = zlib.decompress(bytes(idat))
-    if len(raw) != height * (row_bytes + 1):
-        raise ValueError(f"{path}: unexpected decompressed size")
-
-    rows = []
-    prev = bytearray(row_bytes)
-    offset = 0
-    for _ in range(height):
-        filter_type = raw[offset]
-        scan = bytearray(raw[offset + 1:offset + 1 + row_bytes])
-        offset += row_bytes + 1
-        recon = bytearray(row_bytes)
-
-        for x, value in enumerate(scan):
-            left = recon[x - 1] if x else 0
-            up = prev[x]
-            up_left = prev[x - 1] if x else 0
-            if filter_type == 0:
-                recon[x] = value
-            elif filter_type == 1:
-                recon[x] = (value + left) & 0xFF
-            elif filter_type == 2:
-                recon[x] = (value + up) & 0xFF
-            elif filter_type == 3:
-                recon[x] = (value + ((left + up) // 2)) & 0xFF
-            elif filter_type == 4:
-                recon[x] = (value + paeth_predictor(left, up, up_left)) & 0xFF
-            else:
-                raise ValueError(f"{path}: unsupported PNG filter {filter_type}")
-
-        pixels = []
-        for value in recon:
-            pixels.extend((value >> 4, value & 0x0F))
-        rows.append(pixels)
-        prev = recon
-
-    return rows
 
 
 def verify_legacy_removed():
@@ -173,26 +68,6 @@ def verify_legacy_removed():
         raise ValueError(f"{HELP_BAR_GENERATOR}: legacy palette-slot dependency remains")
 
 
-def verify_message_transparency():
-    message_map = verify_blob(MESSAGE_MAP)
-    if len(message_map) != 32 * 20 * 2:
-        raise ValueError(f"{MESSAGE_MAP}: expected 1280 bytes")
-    message_entries = struct.unpack("<640H", message_map)
-    for y in range(4):
-        row = message_entries[y * 32:(y + 1) * 32]
-        if [entry & 0x03FF for entry in row[:30]] != [3] * 30:
-            raise ValueError(f"{MESSAGE_MAP}: row {y} no longer uses transparent tile 3")
-
-    message_pixels = load_locked_indexed_png4(MESSAGE_GFX)
-    tile3 = [
-        message_pixels[y][x]
-        for y in range(8)
-        for x in range(24, 32)
-    ]
-    if set(tile3) != {0}:
-        raise ValueError(f"{MESSAGE_GFX}: tile 3 is no longer transparent")
-
-
 def verify_live_hgss_binding():
     main = MAIN_MENU_C.read_text()
     gfx = MENU_GFX_C.read_text()
@@ -211,6 +86,10 @@ def verify_live_hgss_binding():
     required_gfx = (
         "#define HGSS_POKEGEAR_APP_SWITCH_WIDTH_TILES        30",
         "#define HGSS_POKEGEAR_APP_SWITCH_HEIGHT_TILES       4",
+        "static const u32 sTransparentMessageBoxBgTile[8] = {0};",
+        "SetBgTilemapBuffer(1, gfx->bg1TilemapBuffer);",
+        "LoadBgTiles(1, sTransparentMessageBoxBgTile, sizeof(sTransparentMessageBoxBgTile), 0);",
+        "FillBgTilemapBufferRect_Palette0(1, 0, 0, 0, 32, 32);",
         "LoadBgTilemap(",
         "gfx->hgssAppSwitchTilemap",
     )
@@ -223,10 +102,7 @@ def main():
     verify_blob(APP_SWITCH_TILES)
     verify_blob(APP_SWITCH_PALETTE)
     verify_blob(APP_SWITCH_TILEMAP)
-    verify_blob(MESSAGE_GFX)
-    verify_blob(MESSAGE_MAP)
     verify_legacy_removed()
-    verify_message_transparency()
     verify_live_hgss_binding()
 
 
