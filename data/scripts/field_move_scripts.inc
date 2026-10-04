@@ -477,13 +477,13 @@ Text_CantRockClimb:
 
 
 @ Pokémon Prism mining surface integration hook.
-@ Uses Prism's level-0 extraction window without importing mining EXP/levels.
-@ Prism-only reward slots remain unresolved and return ITEM_NONE for now.
+@ Reward selection is project-owned and intentionally independent of Prism's loot table.
+@ Until the custom PKMN 2K mining table is defined, the reward hook returns ITEM_NONE.
 EventScript_PrismMining::
 	lockall
 	playse SE_M_ROCK_THROW
 	waitse
-	specialvar VAR_RESULT, PrismMiningRollBaseReward
+	specialvar VAR_RESULT, MiningRollCustomReward
 	goto_if_eq VAR_RESULT, ITEM_NONE, EventScript_PrismMiningNoItem
 	giveitem VAR_RESULT, 1
 	releaseall
