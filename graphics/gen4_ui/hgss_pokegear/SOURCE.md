@@ -1767,3 +1767,32 @@ manifests, and the current left-header sprite bindings. No live renderer,
 sprite behavior, palette allocation, or asset is changed in this phase.
 
 **authentic HGSS shell/app switch already live ✅ → legacy left-header layer audited ✅ → suppression pending → removal pending**
+
+
+## Shared PokéNav left-header sprites — phase 2
+
+CI #764 passed the repaired Phase-1 provenance/runtime audit at
+`f881dbc31b2a6b21e0ee7403e28a60cabafa7815`.
+
+The Emerald sliding left-header layer is now suppressed by default behind
+`sUseLegacyLeftHeadersForRollback = FALSE`. On the normal authentic HGSS
+path, the main-menu initializer leaves both legacy header sprite arrays as
+`NULL` and does not load the shared header sheet, allocate its OBJ palettes,
+or instantiate the main/submenu header sprites.
+
+All public legacy call surfaces remain present for this validation cycle but
+safely become no-ops while the rollback switch is false:
+`LoadLeftHeaderGfxForIndex`, `UpdateRegionMapRightHeaderTiles`,
+`ShowLeftHeaderGfx`, `HideMainOrSubMenuLeftHeader`, and
+`SetLeftHeaderSpritesInvisibility`. `AreLeftHeaderSpritesMoving` returns
+false immediately, preserving the callers' transition semantics without
+dereferencing absent sprites.
+
+No source art is deleted yet. The complete
+`graphics/pokenav/left_headers/` set, graphics bindings, sprite templates,
+movement code, and load path remain compiled behind the rollback gate for one
+CI cycle. No substitute artwork is generated: the already-validated authentic
+HGSS PokéGear shell/app-switch and feature-specific HGSS surfaces remain
+visible without an extra Emerald title overlay.
+
+**authentic HGSS shell/app surfaces ✅ → legacy left-header layer suppressed live (CI pending) → legacy code/assets removal pending**

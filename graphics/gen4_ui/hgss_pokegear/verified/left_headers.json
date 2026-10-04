@@ -1,15 +1,15 @@
 {
   "role": "shared_pokenav_left_header_sprites",
-  "phase": "authentic_behavior_audited",
+  "phase": "legacy_left_headers_suppressed_ci_pending",
   "classification": "legacy Emerald PokéNav sliding title/header OBJ layer drawn over already-live authentic HGSS PokéGear shell and app surfaces",
   "source_game": "Pokemon HeartGold / SoulSilver",
   "source_repository": "pret/pokeheartgold",
   "source_revision": "9d8b7591f09b65804da2fb2dfd56f320633e0d36",
   "previous_gate": {
     "workflow": "CI",
-    "run_number": 762,
+    "run_number": 764,
     "conclusion": "success",
-    "validated_commit": "c9f1fad1d33f56fec3ff8efde39a4b768f5039cf"
+    "validated_commit": "f881dbc31b2a6b21e0ee7403e28a60cabafa7815"
   },
   "legacy_surface": {
     "directory": "graphics/pokenav/left_headers",
@@ -126,7 +126,7 @@
     "wired_live": true,
     "legacy_equivalent_removed": false
   },
-  "next": "After Phase-1 CI passes, suppress left-header creation/loading/show behavior behind a one-cycle rollback path while retaining the legacy source assets for validation.",
+  "next": "Run Phase-2 CI. If green, remove the rollback switch, legacy left-header sprite/runtime code, graphics bindings, and obsolete graphics/pokenav/left_headers assets in Phase 3.",
   "audit_repair": {
     "failed_ci_run": 763,
     "failed_job": "gen4-ui",
@@ -136,5 +136,19 @@
     "observed_checkout_blob_before_normalization": "97f9a0af8b39068a4ed299a38bb7eaaaa3a12721",
     "live_rendering_changed": false
   },
-  "status": "phase 1 audit repaired for .pal checkout EOL normalization; live rendering unchanged; CI pending"
+  "status": "phase 2: legacy Emerald sliding left-header OBJ layer suppressed by default; rollback source/assets retained; CI pending",
+  "phase2_action": {
+    "live_file": "src/pokenav_main_menu.c",
+    "rollback_switch": "sUseLegacyLeftHeadersForRollback",
+    "default_value": false,
+    "behavior": [
+      "legacy left-header sprite pointers initialize to NULL",
+      "legacy sprite sheet/palettes and header OBJ sprites are not instantiated on the default authentic path",
+      "legacy load/show/hide/right-map-header/invisibility helpers return without touching absent sprites",
+      "AreLeftHeaderSpritesMoving returns FALSE on the authentic path"
+    ],
+    "legacy_assets_retained_for_validation": true,
+    "new_hgss_pixels_generated": false,
+    "live_authentic_surface": "already-validated HGSS PokéGear fixed shell, app-switch, and feature-specific HGSS-derived screens"
+  }
 }

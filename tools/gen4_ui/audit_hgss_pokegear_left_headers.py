@@ -78,24 +78,60 @@ def verify_authentic_shared_surfaces_are_live():
             raise ValueError(f"{MENU_GFX_C}: missing live authentic HGSS token {token!r}")
 
 
-def verify_legacy_left_headers_are_still_live():
+def verify_phase2_left_header_suppression():
     main = MAIN_MENU_C.read_text()
     graphics = GRAPHICS_C.read_text()
 
+    # The complete Emerald rollback resource set remains byte-locked/compiled
+    # for this validation cycle.
     required_main = (
-        "CreateLeftHeaderSprites();",
+        "static bool8 sUseLegacyLeftHeadersForRollback = FALSE;",
         "sMenuLeftHeaderSpriteSheet",
         "sMenuLeftHeaderSpriteSheets[]",
         "sPokenavSubMenuLeftHeaderSpriteSheets[]",
-        "LoadLeftHeaderGfxForIndex",
-        "ShowLeftHeaderGfx",
-        "HideMainOrSubMenuLeftHeader",
+        "LoadCompressedSpriteSheet(&sMenuLeftHeaderSpriteSheet);",
+        "CreateSprite(&sLeftHeaderSpriteTemplate",
+        "CreateSprite(&sSubmenuLeftHeaderSpriteTemplate",
         "MoveLeftHeader",
         "SpriteCB_MoveLeftHeader",
     )
     for token in required_main:
         if token not in main:
-            raise ValueError(f"{MAIN_MENU_C}: legacy left-header binding changed: {token!r}")
+            raise ValueError(f"{MAIN_MENU_C}: Phase-2 rollback binding changed: {token!r}")
+
+    # The normal authentic path must instantiate no legacy header OBJ and all
+    # public call surfaces must safely tolerate the absent sprite pointers.
+    required_suppression = (
+        "menu->leftHeaderSprites[i] = NULL;",
+        "menu->submenuLeftHeaderSprites[i] = NULL;",
+        "if (!sUseLegacyLeftHeadersForRollback)\n        return;",
+        "if (!sUseLegacyLeftHeadersForRollback)\n        return FALSE;",
+    )
+    for token in required_suppression:
+        if token not in main:
+            raise ValueError(f"{MAIN_MENU_C}: Phase-2 suppression token missing: {token!r}")
+
+    create_pos = main.index("LoadCompressedSpriteSheet(&sMenuLeftHeaderSpriteSheet);")
+    gate_pos = main.rfind("if (!sUseLegacyLeftHeadersForRollback)", 0, create_pos)
+    if gate_pos < 0 or create_pos - gate_pos > 200:
+        raise ValueError(f"{MAIN_MENU_C}: legacy left-header creation is not rollback-gated")
+
+    for function_name in (
+        "LoadLeftHeaderGfxForIndex",
+        "UpdateRegionMapRightHeaderTiles",
+        "ShowLeftHeaderGfx",
+        "HideMainOrSubMenuLeftHeader",
+        "SetLeftHeaderSpritesInvisibility",
+    ):
+        function_pos = main.index(function_name)
+        gate_pos = main.index("if (!sUseLegacyLeftHeadersForRollback)", function_pos)
+        if gate_pos - function_pos > 220:
+            raise ValueError(f"{MAIN_MENU_C}: {function_name} is not safely suppressed")
+
+    moving_pos = main.index("AreLeftHeaderSpritesMoving")
+    false_gate = main.index("if (!sUseLegacyLeftHeadersForRollback)\n        return FALSE;", moving_pos)
+    if false_gate - moving_pos > 220:
+        raise ValueError(f"{MAIN_MENU_C}: moving-state helper is not safely suppressed")
 
     required_graphics = (
         'INCGFX_U16("graphics/pokenav/left_headers/palette.pal", ".gbapal")',
@@ -107,12 +143,11 @@ def verify_legacy_left_headers_are_still_live():
     )
     for token in required_graphics:
         if token not in graphics:
-            raise ValueError(f"{GRAPHICS_C}: legacy left-header graphics binding changed: {token!r}")
+            raise ValueError(f"{GRAPHICS_C}: rollback graphics binding changed: {token!r}")
 
-
-def verify_phase1_manifest():
+def verify_phase2_manifest():
     manifest = json.loads(LEFT_HEADERS_MANIFEST.read_text())
-    if manifest.get("phase") != "authentic_behavior_audited":
+    if manifest.get("phase") != "legacy_left_headers_suppressed_ci_pending":
         raise ValueError(f"{LEFT_HEADERS_MANIFEST}: unexpected phase")
     pipeline = manifest.get("pipeline", {})
     if (
@@ -120,7 +155,7 @@ def verify_phase1_manifest():
         pipeline.get("wired_live"),
         pipeline.get("legacy_equivalent_removed"),
     ) != (True, True, False):
-        raise ValueError(f"{LEFT_HEADERS_MANIFEST}: unexpected Phase-1 pipeline state")
+        raise ValueError(f"{LEFT_HEADERS_MANIFEST}: unexpected Phase-2 pipeline state")
 
 
 def main():
@@ -129,8 +164,8 @@ def main():
     verify_completed_manifest(APP_SWITCH_MANIFEST)
     verify_completed_manifest(SCREEN_SHELL_MANIFEST)
     verify_authentic_shared_surfaces_are_live()
-    verify_legacy_left_headers_are_still_live()
-    verify_phase1_manifest()
+    verify_phase2_left_header_suppression()
+    verify_phase2_manifest()
 
 
 if __name__ == "__main__":

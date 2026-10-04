@@ -130,6 +130,11 @@ static const u8 sHgssHelpBarTextColors[3] =
     HGSS_HELP_BAR_SHADOW_COLOR,
 };
 
+// Phase-2 rollback gate for Emerald's sliding PokéNav title/header sprites.
+// Retail HGSS uses the already-live PokéGear shell/app surfaces without this
+// extra shared overlay. Keep legacy resources compiled for one CI cycle only.
+static bool8 sUseLegacyLeftHeadersForRollback = FALSE;
+
 static const struct CompressedSpriteSheet sMenuLeftHeaderSpriteSheet =
 {
     .data = gPokenavLeftHeaderHoennMap_Gfx, // Hoenn map is the first of the headers listed
@@ -583,6 +588,15 @@ static void CreateLeftHeaderSprites(void)
     s32 i, spriteId;
     struct Pokenav_MainMenu *menu = GetSubstructPtr(POKENAV_SUBSTRUCT_MAIN_MENU);
 
+    for (i = 0; i < (s32)ARRAY_COUNT(menu->leftHeaderSprites); i++)
+    {
+        menu->leftHeaderSprites[i] = NULL;
+        menu->submenuLeftHeaderSprites[i] = NULL;
+    }
+
+    if (!sUseLegacyLeftHeadersForRollback)
+        return;
+
     LoadCompressedSpriteSheet(&sMenuLeftHeaderSpriteSheet);
     AllocSpritePalette(1);
     AllocSpritePalette(2);
@@ -606,6 +620,9 @@ static void CreateLeftHeaderSprites(void)
 
 void LoadLeftHeaderGfxForIndex(u32 menuGfxId)
 {
+    if (!sUseLegacyLeftHeadersForRollback)
+        return;
+
     if (menuGfxId < POKENAV_GFX_SUBMENUS_START)
         LoadLeftHeaderGfxForMenu(menuGfxId);
     else
@@ -614,8 +631,12 @@ void LoadLeftHeaderGfxForIndex(u32 menuGfxId)
 
 void UpdateRegionMapRightHeaderTiles(u32 menuGfxId)
 {
-    struct Pokenav_MainMenu *menu = GetSubstructPtr(POKENAV_SUBSTRUCT_MAIN_MENU);
+    struct Pokenav_MainMenu *menu;
 
+    if (!sUseLegacyLeftHeadersForRollback)
+        return;
+
+    menu = GetSubstructPtr(POKENAV_SUBSTRUCT_MAIN_MENU);
     if (menuGfxId == POKENAV_GFX_MAP_MENU_ZOOMED_OUT)
         menu->leftHeaderSprites[1]->oam.tileNum = GetSpriteTileStartByTag(2) + 32;
     else
@@ -664,6 +685,9 @@ void ShowLeftHeaderGfx(u32 menuGfxId, bool32 isMain, bool32 isOnRightSide)
 {
     u32 tileTop;
 
+    if (!sUseLegacyLeftHeadersForRollback)
+        return;
+
     if (!isMain)
         tileTop = 0x30;
     else
@@ -677,6 +701,9 @@ void ShowLeftHeaderGfx(u32 menuGfxId, bool32 isMain, bool32 isOnRightSide)
 
 void HideMainOrSubMenuLeftHeader(u32 id, bool32 onRightSide)
 {
+    if (!sUseLegacyLeftHeadersForRollback)
+        return;
+
     if (id < POKENAV_GFX_PARTY_MENU)
         HideLeftHeaderSprites(onRightSide);
     else
@@ -686,8 +713,12 @@ void HideMainOrSubMenuLeftHeader(u32 id, bool32 onRightSide)
 void SetLeftHeaderSpritesInvisibility(void)
 {
     s32 i;
-    struct Pokenav_MainMenu *menu = GetSubstructPtr(POKENAV_SUBSTRUCT_MAIN_MENU);
+    struct Pokenav_MainMenu *menu;
 
+    if (!sUseLegacyLeftHeadersForRollback)
+        return;
+
+    menu = GetSubstructPtr(POKENAV_SUBSTRUCT_MAIN_MENU);
     for (i = 0; i < (s32)ARRAY_COUNT(menu->leftHeaderSprites); i++)
     {
         menu->leftHeaderSprites[i]->invisible = TRUE;
@@ -697,8 +728,12 @@ void SetLeftHeaderSpritesInvisibility(void)
 
 bool32 AreLeftHeaderSpritesMoving(void)
 {
-    struct Pokenav_MainMenu *menu = GetSubstructPtr(POKENAV_SUBSTRUCT_MAIN_MENU);
+    struct Pokenav_MainMenu *menu;
 
+    if (!sUseLegacyLeftHeadersForRollback)
+        return FALSE;
+
+    menu = GetSubstructPtr(POKENAV_SUBSTRUCT_MAIN_MENU);
     if (menu->leftHeaderSprites[0]->callback == SpriteCallbackDummy && menu->submenuLeftHeaderSprites[0]->callback == SpriteCallbackDummy)
         return FALSE;
     else
