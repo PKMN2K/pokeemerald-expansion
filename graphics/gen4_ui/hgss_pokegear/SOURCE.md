@@ -1620,3 +1620,27 @@ fixed shell/app layers remain the visible PokéGear surface, matching the retail
 finding that the core PokéGear has no shared animated-dot background.
 
 **authentic HGSS shell ✅ → legacy moving-dot layer suppressed live (CI pending) → legacy code/assets removal pending**
+
+
+## Shared PokéNav moving-dot background — phase 3
+
+CI #751 passed the live Phase-2 suppression at
+`1c31a6f0afd43455baf3a9c0057f725f834fa351`.
+
+The rollback path is now removed. `src/pokenav_menu_handler_gfx.c` no longer
+contains the moving-dot resource declarations, BG3 load path,
+`Task_MoveBgDots`, its task lifecycle/state, or the blue/purple palette
+transition machinery. The shared/core PokéGear launcher simply keeps BG3
+hidden; feature modules remain free to use BG3 for their own app-specific
+surfaces.
+
+The now-unreferenced Emerald assets are deleted:
+
+- `graphics/pokenav/bg_dots.png`
+- `graphics/pokenav/bg_dots.bin`
+
+No HGSS artwork is generated to replace them. The visible shared background
+remains the already-verified authentic HGSS fixed screen shell, consistent
+with the retail PokéGear core behavior audited in Phase 1.
+
+**authentic HGSS shell ✅ → live without Emerald moving dots ✅ → legacy equivalent removed (CI pending)**

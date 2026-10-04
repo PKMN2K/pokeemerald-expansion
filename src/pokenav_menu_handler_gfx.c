@@ -65,7 +65,6 @@ struct Pokenav_MenuGfx
     u32 loopedTaskId;
     u16 optionDescWindowId;
     u16 hgssConditionSearchWindowId;
-    u8 bg3ScrollTaskId;
     u8 cursorPos;
     bool8 pokenavAlreadyOpen;
     struct Sprite *hgssPhoneStatusSprite;
@@ -117,25 +116,8 @@ static s32 GetHgssPokegearAppButtonForCurrentItem(void);
 static void PrintCurrentOptionDescription(void);
 static void PrintNoRibbonWinners(void);
 static bool32 IsDma3ManagerBusyWithBgCopy_(void);
-static void CreateMovingBgDotsTask(void);
-static void DestroyMovingDotsBgTask(void);
-static void Task_MoveBgDots(u8);
-static void CreateBgDotPurplePalTask(void);
-static void ChangeBgDotsColorToPurple(void);
-static void CreateBgDotLightBluePalTask(void);
-static bool32 IsTaskActive_UpdateBgDotsPalette(void);
-static void Task_UpdateBgDotsPalette(u8);
 static void ResetBldCnt(void);
 
-// Phase-2 rollback gate for the superseded Emerald PokéNav moving-dot layer.
-// Retail HGSS has no shared equivalent behind the core PokéGear shell, so the
-// authentic path leaves BG3 hidden. Keep the old resources callable only until
-// this suppression passes CI, then remove them in the next gated phase.
-static bool8 sUseLegacyMovingBgDotsForRollback = FALSE;
-
-static const u16 sPokenavBgDotsPal[] = INCGFX_U16("graphics/pokenav/bg_dots.png", ".gbapal");
-static const u32 sPokenavBgDotsTiles[] = INCGFX_U32("graphics/pokenav/bg_dots.png", ".4bpp.smol");
-static const u32 sPokenavBgDotsTilemap[] = INCGFX_U32("graphics/pokenav/bg_dots.bin", ".smolTM");
 // Exact retail HGSS default-skin fixed PokéGear screen shell.
 // The NCGR-derived tile sheet is compiled directly; the generated map keeps
 // the retail tile/flip/palette semantics while removing only DS-only geometry.
@@ -442,7 +424,6 @@ static struct Pokenav_MenuGfx * OpenPokenavMenu(void)
     {
         gfx->loopedTaskId = CreateLoopedTask(LoopedTask_OpenMenu, 1);
         gfx->isTaskActiveCB = GetCurrentLoopedTaskActive;
-        gfx->bg3ScrollTaskId = TASK_NONE;
     }
 
     return gfx;
@@ -465,7 +446,6 @@ void FreeMenuHandlerSubstruct2(void)
 {
     struct Pokenav_MenuGfx *gfx = GetSubstructPtr(POKENAV_SUBSTRUCT_MENU_GFX);
 
-    DestroyMovingDotsBgTask();
     RemoveWindow(gfx->optionDescWindowId);
     RemoveWindow(gfx->hgssConditionSearchWindowId);
     FreeAndDestroyMainMenuSprites();
@@ -508,20 +488,9 @@ static u32 LoopedTask_OpenMenu(s32 state)
     case 2:
         if (FreeTempTileDataBuffersIfPossible())
             return LT_PAUSE;
-        if (sUseLegacyMovingBgDotsForRollback)
-        {
-            DecompressAndCopyTileDataToVram(3, sPokenavBgDotsTiles, 0, 0, 0);
-            DecompressAndCopyTileDataToVram(3, sPokenavBgDotsTilemap, 0, 0, 1);
-            CopyPaletteIntoBufferUnfaded(sPokenavBgDotsPal, BG_PLTT_ID(3), sizeof(sPokenavBgDotsPal));
-            if (GetPokenavMenuType() == POKENAV_MENU_TYPE_CONDITION || GetPokenavMenuType() == POKENAV_MENU_TYPE_CONDITION_SEARCH)
-                ChangeBgDotsColorToPurple();
-        }
-        else
-        {
-            // The retail HGSS core PokéGear has no shared animated background
-            // behind its fixed shell. Do not substitute an invented surface.
-            HideBg(3);
-        }
+        // Retail HGSS has no shared animated layer behind the core PokéGear
+        // shell. Keep BG3 available for app-specific surfaces, but hidden here.
+        HideBg(3);
         return LT_INC_AND_PAUSE;
     case 3:
         if (FreeTempTileDataBuffersIfPossible())
@@ -530,7 +499,6 @@ static u32 LoopedTask_OpenMenu(s32 state)
         LoadHgssPokegearAppSwitchChrome();
         LoadHgssConditionSearchAssets();
         AddOptionDescriptionWindow();
-        CreateMovingBgDotsTask();
         return LT_INC_AND_CONTINUE;
     case 4:
         LoadPokenavOptionPalettes();
@@ -548,10 +516,7 @@ static u32 LoopedTask_OpenMenu(s32 state)
     case 7:
         ShowBg(1);
         ShowBg(2);
-        if (sUseLegacyMovingBgDotsForRollback)
-            ShowBg(3);
-        else
-            HideBg(3);
+        HideBg(3);
         if (gfx->pokenavAlreadyOpen)
         {
             PokenavFadeScreen(POKENAV_FADE_FROM_BLACK);
@@ -636,13 +601,10 @@ static u32 LoopedTask_OpenConditionMenu(s32 state)
     case 2:
         StartOptionAnimations_Enter();
         ShowLeftHeaderGfx(1, FALSE, FALSE);
-        CreateBgDotPurplePalTask();
         PrintCurrentOptionDescription();
         return LT_INC_AND_PAUSE;
     case 3:
         if (AreLeftHeaderSpritesMoving())
-            return LT_PAUSE;
-        if (IsTaskActive_UpdateBgDotsPalette())
             return LT_PAUSE;
         if (IsDma3ManagerBusyWithBgCopy_())
             return LT_PAUSE;
@@ -669,13 +631,10 @@ static u32 LoopedTask_ReturnToMainMenu(s32 state)
     case 2:
         StartOptionAnimations_Enter();
         ShowLeftHeaderGfx(0, FALSE, FALSE);
-        CreateBgDotLightBluePalTask();
         PrintCurrentOptionDescription();
         return LT_INC_AND_PAUSE;
     case 3:
         if (AreLeftHeaderSpritesMoving())
-            return LT_PAUSE;
-        if (IsTaskActive_UpdateBgDotsPalette())
             return LT_PAUSE;
         if (IsDma3ManagerBusyWithBgCopy_())
             return LT_PAUSE;
@@ -705,8 +664,6 @@ static u32 LoopedTask_OpenConditionSearchMenu(s32 state)
     case 3:
         if (AreLeftHeaderSpritesMoving())
             return LT_PAUSE;
-        if (IsTaskActive_UpdateBgDotsPalette())
-            return LT_PAUSE;
         break;
     }
     return LT_FINISH;
@@ -731,8 +688,6 @@ static u32 LoopedTask_ReturnToConditionMenu(s32 state)
         PrintCurrentOptionDescription();
         return LT_INC_AND_PAUSE;
     case 3:
-        if (IsTaskActive_UpdateBgDotsPalette())
-            return LT_PAUSE;
         break;
     }
     return LT_FINISH;
@@ -1353,89 +1308,6 @@ static bool32 IsDma3ManagerBusyWithBgCopy_(void)
 {
     return IsDma3ManagerBusyWithBgCopy();
 }
-
-static void CreateMovingBgDotsTask(void)
-{
-    struct Pokenav_MenuGfx *gfx = GetSubstructPtr(POKENAV_SUBSTRUCT_MENU_GFX);
-
-    if (!sUseLegacyMovingBgDotsForRollback)
-    {
-        gfx->bg3ScrollTaskId = TASK_NONE;
-        return;
-    }
-
-    gfx->bg3ScrollTaskId = CreateTask(Task_MoveBgDots, 2);
-}
-
-static void DestroyMovingDotsBgTask(void)
-{
-    struct Pokenav_MenuGfx *gfx = GetSubstructPtr(POKENAV_SUBSTRUCT_MENU_GFX);
-
-    if (gfx->bg3ScrollTaskId != TASK_NONE)
-    {
-        DestroyTask(gfx->bg3ScrollTaskId);
-        gfx->bg3ScrollTaskId = TASK_NONE;
-    }
-}
-
-static void Task_MoveBgDots(u8 taskId)
-{
-    ChangeBgX(3, 0x80, BG_COORD_ADD);
-}
-
-static void CreateBgDotPurplePalTask(void)
-{
-    u8 taskId;
-
-    if (!sUseLegacyMovingBgDotsForRollback)
-        return;
-
-    taskId = CreateTask(Task_UpdateBgDotsPalette, 3);
-    SetWordTaskArg(taskId, 1, (uintptr_t)(sPokenavBgDotsPal + 1));
-    SetWordTaskArg(taskId, 3, (uintptr_t)(sPokenavBgDotsPal + 7));
-}
-
-static void ChangeBgDotsColorToPurple(void)
-{
-    if (!sUseLegacyMovingBgDotsForRollback)
-        return;
-
-    CopyPaletteIntoBufferUnfaded(sPokenavBgDotsPal + 7, BG_PLTT_ID(3) + 1, PLTT_SIZEOF(2));
-}
-
-static void CreateBgDotLightBluePalTask(void)
-{
-    u8 taskId;
-
-    if (!sUseLegacyMovingBgDotsForRollback)
-        return;
-
-    taskId = CreateTask(Task_UpdateBgDotsPalette, 3);
-    SetWordTaskArg(taskId, 1, (uintptr_t)(sPokenavBgDotsPal + 7));
-    SetWordTaskArg(taskId, 3, (uintptr_t)(sPokenavBgDotsPal + 1));
-}
-
-static bool32 IsTaskActive_UpdateBgDotsPalette(void)
-{
-    if (!sUseLegacyMovingBgDotsForRollback)
-        return FALSE;
-
-    return FuncIsActiveTask(Task_UpdateBgDotsPalette);
-}
-
-static void Task_UpdateBgDotsPalette(u8 taskId)
-{
-    u16 sp8[2];
-    s16 *data = gTasks[taskId].data;
-    const u16 *pal1 = (const u16 *)GetWordTaskArg(taskId, 1);
-    const u16 *pal2 = (const u16 *)GetWordTaskArg(taskId, 3);
-
-    PokenavCopyPalette(pal1, pal2, 2, 12, ++data[0], sp8);
-    LoadPalette(sp8, BG_PLTT_ID(3) + 1, PLTT_SIZEOF(2));
-    if (data[0] == 12)
-        DestroyTask(taskId);
-}
-
 
 static void ResetBldCnt(void)
 {

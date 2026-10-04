@@ -1,15 +1,15 @@
 {
   "role": "shared_pokenav_moving_dots_background",
-  "phase": "legacy_bg3_suppressed_ci_pending",
+  "phase": "legacy_bg3_removed_ci_pending",
   "classification": "legacy Emerald PokéNav animated BG3 decoration behind the already-live authentic HGSS PokéGear shell",
   "source_game": "Pokemon HeartGold / SoulSilver",
   "source_repository": "pret/pokeheartgold",
   "source_revision": "9d8b7591f09b65804da2fb2dfd56f320633e0d36",
   "previous_gate": {
     "workflow": "CI",
-    "run_number": 750,
+    "run_number": 751,
     "conclusion": "success",
-    "validated_commit": "a6bd41bd65a12b19740f4f4fe821f16a2e884a35"
+    "validated_commit": "1c31a6f0afd43455baf3a9c0057f725f834fa351"
   },
   "legacy_surface": {
     "gfx": {
@@ -64,9 +64,9 @@
   "pipeline": {
     "authentic_hgss_asset_ready": true,
     "wired_live": true,
-    "legacy_equivalent_removed": false
+    "legacy_equivalent_removed": true
   },
-  "next": "Run Phase-2 CI. If green, remove the rollback switch, moving-dot code, and graphics/pokenav/bg_dots.png + bg_dots.bin in Phase 3.",
+  "next": "Run Phase-3 CI. If green, mark the moving-dot cleanup complete and audit the next remaining legacy PokéNav surface.",
   "phase2_action": {
     "live_file": "src/pokenav_menu_handler_gfx.c",
     "rollback_switch": "sUseLegacyMovingBgDotsForRollback",
@@ -83,5 +83,23 @@
     ],
     "legacy_assets_retained_for_validation": true,
     "new_hgss_pixels_generated": false
-  }
+  },
+  "phase3_action": {
+    "live_file": "src/pokenav_menu_handler_gfx.c",
+    "removed_rollback_switch": "sUseLegacyMovingBgDotsForRollback",
+    "removed_code": [
+      "shared BG3 legacy asset loading",
+      "Task_MoveBgDots and its task lifecycle",
+      "legacy blue/purple palette transition tasks",
+      "bg3ScrollTaskId state"
+    ],
+    "removed_assets": [
+      "graphics/pokenav/bg_dots.png",
+      "graphics/pokenav/bg_dots.bin"
+    ],
+    "core_bg3_behavior": "hidden; reserved for app-specific surfaces rather than a shared invented background",
+    "new_hgss_pixels_generated": false,
+    "ci_pending": true
+  },
+  "status": "phase 3: obsolete Emerald shared moving-dot layer removed; authentic HGSS fixed shell remains the core PokéGear background; CI pending"
 }

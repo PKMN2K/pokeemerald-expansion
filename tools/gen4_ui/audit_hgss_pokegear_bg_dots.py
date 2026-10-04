@@ -13,13 +13,28 @@ HGSS_SHELL_MANIFEST = Path("graphics/gen4_ui/hgss_pokegear/verified/screen_shell
 BG_DOTS_MANIFEST = Path("graphics/gen4_ui/hgss_pokegear/verified/shared_bg_dots.json")
 MENU_GFX_C = Path("src/pokenav_menu_handler_gfx.c")
 
-EXPECTED_GIT_BLOBS = {
-    LEGACY_DOTS_GFX: "056e2400b84fa02d02a24b43eb24904eefbf2bdd",
-    LEGACY_DOTS_MAP: "7161609bb086de4cc03b0fc52f283649e7f9761d",
+EXPECTED_HGSS_GIT_BLOBS = {
     HGSS_SHELL_TILES: "163a4fa068fbffae472d1672947fad86647d110b",
     HGSS_SHELL_PALETTE: "f293e5f8760201fd109d77bb9cefcdcbb4682f67",
     HGSS_SHELL_TILEMAP: "f0d5863b63fb82a6bc36c4f49c17859fea8d05aa",
 }
+
+REMOVED_SOURCE_TOKENS = (
+    "sUseLegacyMovingBgDotsForRollback",
+    "sPokenavBgDotsPal",
+    "sPokenavBgDotsTiles",
+    "sPokenavBgDotsTilemap",
+    "CreateMovingBgDotsTask",
+    "DestroyMovingDotsBgTask",
+    "Task_MoveBgDots",
+    "CreateBgDotPurplePalTask",
+    "ChangeBgDotsColorToPurple",
+    "CreateBgDotLightBluePalTask",
+    "IsTaskActive_UpdateBgDotsPalette",
+    "Task_UpdateBgDotsPalette",
+    "bg3ScrollTaskId",
+    "graphics/pokenav/bg_dots",
+)
 
 
 def git_blob_sha(data):
@@ -27,10 +42,10 @@ def git_blob_sha(data):
     return hashlib.sha1(header + data).hexdigest()
 
 
-def verify_blob(path):
+def verify_hgss_blob(path):
     data = path.read_bytes()
     actual = git_blob_sha(data)
-    expected = EXPECTED_GIT_BLOBS[path]
+    expected = EXPECTED_HGSS_GIT_BLOBS[path]
     if actual != expected:
         raise ValueError(f"{path}: Git blob {actual} != verified {expected}")
 
@@ -59,50 +74,35 @@ def verify_completed_hgss_shell():
             raise ValueError(f"{MENU_GFX_C}: missing live HGSS shell token {token!r}")
 
 
-def verify_phase2_suppression():
+def verify_phase3_removal():
     manifest = json.loads(BG_DOTS_MANIFEST.read_text())
-    if manifest.get("phase") != "legacy_bg3_suppressed_ci_pending":
+    if manifest.get("phase") != "legacy_bg3_removed_ci_pending":
         raise ValueError(f"{BG_DOTS_MANIFEST}: unexpected phase")
 
+    pipeline = manifest.get("pipeline", {})
+    if pipeline.get("legacy_equivalent_removed") is not True:
+        raise ValueError(f"{BG_DOTS_MANIFEST}: removal flag is not final")
+
+    for path in (LEGACY_DOTS_GFX, LEGACY_DOTS_MAP):
+        if path.exists():
+            raise ValueError(f"{path}: obsolete legacy moving-dot asset still exists")
+
     menu = MENU_GFX_C.read_text()
+    for token in REMOVED_SOURCE_TOKENS:
+        if token in menu:
+            raise ValueError(f"{MENU_GFX_C}: removed legacy token still present: {token!r}")
 
-    # Rollback resources remain byte-locked for this one validation cycle.
-    for token in (
-        'INCGFX_U16("graphics/pokenav/bg_dots.png", ".gbapal")',
-        'INCGFX_U32("graphics/pokenav/bg_dots.png", ".4bpp.smol")',
-        'INCGFX_U32("graphics/pokenav/bg_dots.bin", ".smolTM")',
-        "DecompressAndCopyTileDataToVram(3, sPokenavBgDotsTiles",
-        "DecompressAndCopyTileDataToVram(3, sPokenavBgDotsTilemap",
-        "CopyPaletteIntoBufferUnfaded(sPokenavBgDotsPal, BG_PLTT_ID(3)",
-        "ChangeBgX(3, 0x80, BG_COORD_ADD);",
-    ):
-        if token not in menu:
-            raise ValueError(f"{MENU_GFX_C}: rollback implementation missing {token!r}")
-
-    # The normal path must suppress every shared-dot behavior.
-    required = (
-        "static bool8 sUseLegacyMovingBgDotsForRollback = FALSE;",
-        "gfx->bg3ScrollTaskId = TASK_NONE;",
-        "if (sUseLegacyMovingBgDotsForRollback)",
-        "if (!sUseLegacyMovingBgDotsForRollback)",
-        "HideBg(3);",
-        "if (gfx->bg3ScrollTaskId != TASK_NONE)",
-    )
-    for token in required:
-        if token not in menu:
-            raise ValueError(f"{MENU_GFX_C}: missing Phase-2 suppression token {token!r}")
-
-    if menu.count("if (sUseLegacyMovingBgDotsForRollback)") < 2:
-        raise ValueError(f"{MENU_GFX_C}: BG3 load/show are not both rollback-gated")
-    if menu.count("if (!sUseLegacyMovingBgDotsForRollback)") < 4:
-        raise ValueError(f"{MENU_GFX_C}: scroll/palette helpers are not fully suppressed")
+    # The shared/core launcher keeps BG3 blank. Feature modules may still use
+    # BG3 independently for their own app-specific surfaces.
+    if menu.count("HideBg(3);") < 2:
+        raise ValueError(f"{MENU_GFX_C}: core PokéGear no longer keeps BG3 hidden")
 
 
 def main():
-    for path in EXPECTED_GIT_BLOBS:
-        verify_blob(path)
+    for path in EXPECTED_HGSS_GIT_BLOBS:
+        verify_hgss_blob(path)
     verify_completed_hgss_shell()
-    verify_phase2_suppression()
+    verify_phase3_removal()
 
 
 if __name__ == "__main__":
