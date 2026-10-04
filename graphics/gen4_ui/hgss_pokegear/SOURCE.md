@@ -1854,3 +1854,29 @@ manifest state, and the current BG1 load/show bindings. No live rendering,
 window behavior, palette assignment, or source asset is changed in this phase.
 
 **authentic HGSS fixed shell already live ✅ → legacy BG1 message-box layer audited ✅ → suppression pending → removal pending**
+
+
+## Shared PokéNav message-box BG1 surface — phase 2
+
+CI #768 passed the Phase-1 provenance/runtime audit at
+`ee658f3d07249e006c74004de88630ed79d27c46`.
+
+The visible Emerald message-box layer is now suppressed by default behind
+`sUseLegacyMessageBoxForRollback = FALSE`. BG1 itself remains active because
+it owns functional windows/text. On the normal HGSS path, BG1 tile 0 is
+explicitly transparent and its shared tilemap is cleared before windows are
+drawn; the old `message.png` graphics and `message.bin` tilemap are loaded
+only when the rollback switch is enabled. This exposes the already-verified
+retail HGSS fixed shell on BG2 rather than drawing Emerald chrome above it.
+
+One legacy dependency is intentionally retained for this validation cycle:
+`gPokenavMessageBox_Pal` still populates BG palette bank 1 because the
+functional option-description window currently uses that bank. Removing it in
+the same step would risk making the text unreadable. The palette itself does
+not restore the suppressed message-box pixels; Phase 3 will first move that
+text onto an authenticated HGSS text palette, then remove the rollback code,
+all three message-box bindings, and both source assets.
+
+No substitute panel or invented HGSS-style artwork is generated.
+
+**authentic HGSS fixed shell ✅ → Emerald message-box pixels suppressed live (CI pending) → text palette rehome + legacy removal pending**

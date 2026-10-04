@@ -1,15 +1,15 @@
 {
   "role": "shared_pokenav_message_box_bg1",
-  "phase": "authentic_behavior_audited",
+  "phase": "legacy_message_box_pixels_suppressed_ci_pending",
   "classification": "legacy Emerald PokéNav shared BG1 message-box surface layered above the already-live authentic HGSS PokéGear fixed shell",
   "source_game": "Pokemon HeartGold / SoulSilver",
   "source_repository": "pret/pokeheartgold",
   "source_revision": "9d8b7591f09b65804da2fb2dfd56f320633e0d36",
   "previous_gate": {
     "workflow": "CI",
-    "run_number": 767,
+    "run_number": 768,
     "conclusion": "success",
-    "validated_commit": "f659eb353fbd4e4626348a33d14a62e786900c94"
+    "validated_commit": "ee658f3d07249e006c74004de88630ed79d27c46"
   },
   "legacy_surface": {
     "assets": [
@@ -69,6 +69,27 @@
     "wired_live": true,
     "legacy_equivalent_removed": false
   },
-  "next": "After Phase-1 CI passes, suppress only the Emerald message-box graphics/tilemap/palette behind a one-cycle rollback path while retaining BG1 and its functional windows/text.",
-  "status": "phase 1: legacy BG1 message-box surface audited; authentic HGSS fixed shell already live underneath; rendering unchanged; CI pending"
+  "next": "Run Phase-2 CI. If green, rehome option-description text to an authenticated HGSS text palette, remove the rollback path and message-box graphics/tilemap/palette bindings, then delete message.png/message.bin in Phase 3.",
+  "status": "phase 2: legacy Emerald message-box pixels/tilemap suppressed by default; BG1 functional text retained; legacy palette temporarily retained for text; CI pending",
+  "phase2_action": {
+    "live_file": "src/pokenav_menu_handler_gfx.c",
+    "rollback_switch": "sUseLegacyMessageBoxForRollback",
+    "default_value": false,
+    "behavior": [
+      "BG1 remains allocated and shown for functional windows/text",
+      "tile 0 is explicitly loaded as transparent",
+      "the BG1 tilemap is cleared to transparent entries on the normal HGSS path",
+      "legacy message-box graphics/tilemap load only when the rollback switch is enabled",
+      "the verified HGSS fixed shell on BG2 is exposed through transparent BG1"
+    ],
+    "temporary_palette_dependency": {
+      "retained_asset": "graphics/pokenav/message.png",
+      "binding": "gPokenavMessageBox_Pal",
+      "reason": "the functional option-description window still uses BG palette bank 1",
+      "visible_legacy_skin_suppressed": true,
+      "phase3_requirement": "move option-description text to an authenticated HGSS text palette before deleting the message-box palette/source"
+    },
+    "legacy_assets_retained_for_validation": true,
+    "new_hgss_pixels_generated": false
+  }
 }

@@ -45,26 +45,36 @@ def verify_shell_complete():
         raise ValueError(f"{SHELL_MANIFEST}: authentic HGSS fixed shell is no longer complete")
 
 
-def verify_phase1_runtime():
+def verify_phase2_runtime():
     handler = HANDLER.read_text()
     graphics = GRAPHICS.read_text()
     graphics_h = GRAPHICS_H.read_text()
 
-    handler_tokens = (
-        ".bg = 1,",
-        ".priority = 1,",
-        ".bg = 2,",
-        ".priority = 2,",
+    required = (
+        "static bool8 sUseLegacyMessageBoxForRollback = FALSE;",
+        "static const u32 sTransparentMessageBoxBgTile[8] = {0};",
+        "SetBgTilemapBuffer(1, gfx->bg1TilemapBuffer);",
+        "LoadBgTiles(1, sTransparentMessageBoxBgTile, sizeof(sTransparentMessageBoxBgTile), 0);",
+        "FillBgTilemapBufferRect_Palette0(1, 0, 0, 0, 32, 32);",
+        "if (sUseLegacyMessageBoxForRollback)",
         "DecompressAndCopyTileDataToVram(1, gPokenavMessageBox_Gfx, 0, 0, 0);",
         "CopyToBgTilemapBuffer(1, gPokenavMessageBox_Tilemap, 0, 0);",
         "CopyPaletteIntoBufferUnfaded(gPokenavMessageBox_Pal, BG_PLTT_ID(1), PLTT_SIZE_4BPP);",
         "ShowBg(1);",
         "LoadHgssPokegearScreenShell();",
-        "FillWindowPixelBuffer(gfx->optionDescWindowId, PIXEL_FILL(0));",
     )
-    for token in handler_tokens:
+    for token in required:
         if token not in handler:
-            raise ValueError(f"{HANDLER}: Phase-1 runtime token changed: {token!r}")
+            raise ValueError(f"{HANDLER}: Phase-2 runtime token changed: {token!r}")
+
+    gate = handler.index("if (sUseLegacyMessageBoxForRollback)")
+    gfx_load = handler.index("DecompressAndCopyTileDataToVram(1, gPokenavMessageBox_Gfx", gate)
+    tilemap_load = handler.index("CopyToBgTilemapBuffer(1, gPokenavMessageBox_Tilemap", gate)
+    palette_load = handler.index("CopyPaletteIntoBufferUnfaded(gPokenavMessageBox_Pal")
+    if gfx_load - gate > 300 or tilemap_load - gate > 400:
+        raise ValueError(f"{HANDLER}: legacy message-box pixels are not rollback-gated")
+    if palette_load < gate:
+        raise ValueError(f"{HANDLER}: Phase-2 text palette dependency moved unexpectedly")
 
     graphics_tokens = (
         'gPokenavMessageBox_Pal[] = INCGFX_U16("graphics/pokenav/message.png", ".gbapal")',
@@ -73,7 +83,7 @@ def verify_phase1_runtime():
     )
     for token in graphics_tokens:
         if token not in graphics:
-            raise ValueError(f"{GRAPHICS}: Phase-1 graphics binding changed: {token!r}")
+            raise ValueError(f"{GRAPHICS}: rollback graphics binding changed: {token!r}")
 
     for token in (
         "gPokenavMessageBox_Pal",
@@ -81,12 +91,11 @@ def verify_phase1_runtime():
         "gPokenavMessageBox_Tilemap",
     ):
         if token not in graphics_h:
-            raise ValueError(f"{GRAPHICS_H}: Phase-1 declaration changed: {token!r}")
+            raise ValueError(f"{GRAPHICS_H}: rollback declaration changed: {token!r}")
 
-
-def verify_phase1_manifest():
+def verify_phase2_manifest():
     manifest = json.loads(MESSAGE_MANIFEST.read_text())
-    if manifest.get("phase") != "authentic_behavior_audited":
+    if manifest.get("phase") != "legacy_message_box_pixels_suppressed_ci_pending":
         raise ValueError(f"{MESSAGE_MANIFEST}: unexpected phase")
     pipeline = manifest.get("pipeline", {})
     state = (
@@ -95,7 +104,7 @@ def verify_phase1_manifest():
         pipeline.get("legacy_equivalent_removed"),
     )
     if state != (True, True, False):
-        raise ValueError(f"{MESSAGE_MANIFEST}: unexpected Phase-1 pipeline state")
+        raise ValueError(f"{MESSAGE_MANIFEST}: unexpected Phase-2 pipeline state")
 
 
 def main():
@@ -104,8 +113,8 @@ def main():
     for path, expected in AUTHENTIC_GIT_BLOBS.items():
         verify_blob(path, expected)
     verify_shell_complete()
-    verify_phase1_runtime()
-    verify_phase1_manifest()
+    verify_phase2_runtime()
+    verify_phase2_manifest()
 
 
 if __name__ == "__main__":
