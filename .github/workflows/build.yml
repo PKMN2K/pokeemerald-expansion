@@ -96,11 +96,13 @@ jobs:
             tools/gen4_ui/audit_hgss_pokegear_top_header.py \
             tools/gen4_ui/audit_hgss_pokegear_bg_dots.py \
             tools/gen4_ui/audit_hgss_pokegear_nav_icon.py \
-            tools/gen4_ui/audit_hgss_pokegear_left_headers.py
+            tools/gen4_ui/audit_hgss_pokegear_left_headers.py \
+            tools/gen4_ui/audit_hgss_pokegear_message_box.py
           python3 tools/gen4_ui/audit_hgss_pokegear_top_header.py
           python3 tools/gen4_ui/audit_hgss_pokegear_bg_dots.py
           python3 tools/gen4_ui/audit_hgss_pokegear_nav_icon.py
           python3 tools/gen4_ui/audit_hgss_pokegear_left_headers.py
+          python3 tools/gen4_ui/audit_hgss_pokegear_message_box.py
 
       - name: Build Gen 4 UI assets
         run: |

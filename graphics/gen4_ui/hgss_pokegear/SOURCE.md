@@ -1821,3 +1821,36 @@ the already-verified authentic HGSS PokéGear fixed shell, app-switch strip,
 and feature-specific HGSS surfaces.
 
 **authentic HGSS asset ✅ → wired live ✅ → legacy equivalent removed (CI pending)**
+
+
+## Shared PokéNav message-box BG1 surface — phase 1
+
+CI #767 passed the completed shared left-header removal at
+`f659eb353fbd4e4626348a33d14a62e786900c94`.
+
+The next remaining live shared Emerald presentation layer is
+`graphics/pokenav/message.png` plus `graphics/pokenav/message.bin`.
+`src/pokenav_menu_handler_gfx.c` still decompresses that artwork into BG1,
+copies its tilemap into the launcher buffer, loads its palette into BG palette
+bank 1, and shows BG1.
+
+This is significant because the launcher BG templates place BG1 at priority 1
+while the already-verified authentic HGSS fixed shell is on BG2 at priority 2.
+Legacy message-box pixels can therefore sit above and obscure the retail HGSS
+shell. BG1 itself cannot simply be deleted: it also owns functional text and
+windows. The artwork/tilemap/palette is the legacy presentation dependency,
+not the existence of BG1.
+
+The authentic replacement is already live. The verified default-skin HGSS
+fixed shell comes from retail PokéGear members 36/24/42 and the option
+description window is already explicitly transparent so the shell can show
+through. Retail does not require a second Emerald message-box skin on top of
+that surface, and no invented "HGSS-style" panel should be introduced.
+
+Phase 1 adds `audit_hgss_pokegear_message_box.py` and
+`verified/message_box.json`. They byte-lock both Emerald message-box assets,
+the three verified retail fixed-shell source blobs, the completed shell
+manifest state, and the current BG1 load/show bindings. No live rendering,
+window behavior, palette assignment, or source asset is changed in this phase.
+
+**authentic HGSS fixed shell already live ✅ → legacy BG1 message-box layer audited ✅ → suppression pending → removal pending**
