@@ -1,15 +1,15 @@
 {
   "role": "shared_pokenav_left_header_sprites",
-  "phase": "legacy_left_headers_suppressed_ci_pending",
+  "phase": "legacy_left_headers_removed",
   "classification": "legacy Emerald PokéNav sliding title/header OBJ layer drawn over already-live authentic HGSS PokéGear shell and app surfaces",
   "source_game": "Pokemon HeartGold / SoulSilver",
   "source_repository": "pret/pokeheartgold",
   "source_revision": "9d8b7591f09b65804da2fb2dfd56f320633e0d36",
   "previous_gate": {
     "workflow": "CI",
-    "run_number": 764,
+    "run_number": 765,
     "conclusion": "success",
-    "validated_commit": "f881dbc31b2a6b21e0ee7403e28a60cabafa7815"
+    "validated_commit": "856c33ef8fb26c7a5a6bb315e208d7b75e84a185"
   },
   "legacy_surface": {
     "directory": "graphics/pokenav/left_headers",
@@ -124,9 +124,9 @@
   "pipeline": {
     "authentic_hgss_asset_ready": true,
     "wired_live": true,
-    "legacy_equivalent_removed": false
+    "legacy_equivalent_removed": true
   },
-  "next": "Run Phase-2 CI. If green, remove the rollback switch, legacy left-header sprite/runtime code, graphics bindings, and obsolete graphics/pokenav/left_headers assets in Phase 3.",
+  "next": "Audit the next remaining shared PokéNav/Emerald presentation surface after Phase-3 CI passes.",
   "audit_repair": {
     "failed_ci_run": 763,
     "failed_job": "gen4-ui",
@@ -136,7 +136,7 @@
     "observed_checkout_blob_before_normalization": "97f9a0af8b39068a4ed299a38bb7eaaaa3a12721",
     "live_rendering_changed": false
   },
-  "status": "phase 2: legacy Emerald sliding left-header OBJ layer suppressed by default; rollback source/assets retained; CI pending",
+  "status": "phase 3 complete: legacy Emerald sliding left-header runtime, API, graphics bindings, and source assets removed; authentic HGSS presentation remains; CI pending",
   "phase2_action": {
     "live_file": "src/pokenav_main_menu.c",
     "rollback_switch": "sUseLegacyLeftHeadersForRollback",
@@ -150,5 +150,16 @@
     "legacy_assets_retained_for_validation": true,
     "new_hgss_pixels_generated": false,
     "live_authentic_surface": "already-validated HGSS PokéGear fixed shell, app-switch, and feature-specific HGSS-derived screens"
+  },
+  "phase3_action": {
+    "rollback_removed": true,
+    "runtime_removed": true,
+    "public_api_removed": true,
+    "graphics_bindings_removed": true,
+    "legacy_assets_deleted": true,
+    "deleted_directory": "graphics/pokenav/left_headers",
+    "caller_transition_cleanup": "removed header-only load/show/hide/movement waits while retaining unrelated fade, DMA, help-bar, menu-animation, and BG-slide gates",
+    "new_hgss_pixels_generated": false,
+    "live_authentic_surface": "verified retail HGSS PokéGear fixed shell, app-switch, and feature-specific HGSS-derived screens"
   }
 }

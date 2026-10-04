@@ -1796,3 +1796,28 @@ HGSS PokéGear shell/app-switch and feature-specific HGSS surfaces remain
 visible without an extra Emerald title overlay.
 
 **authentic HGSS shell/app surfaces ✅ → legacy left-header layer suppressed live (CI pending) → legacy code/assets removal pending**
+
+
+## Shared PokéNav left-header sprites — phase 3
+
+CI #765 passed the live Phase-2 suppression at
+`856c33ef8fb26c7a5a6bb315e208d7b75e84a185`.
+
+The one-cycle rollback path is now removed. `src/pokenav_main_menu.c` no
+longer contains the rollback switch, left-header sprite pointers/buffers,
+legacy sprite-sheet tables, OAM/templates, decompression/palette load path,
+show/hide helpers, movement callback, or header-specific transition state.
+The corresponding public API declarations and all remaining call sites are
+removed as well. Header-only waits were deleted while unrelated fade, DMA,
+help-bar, menu-animation, and BG-slide synchronization remains intact.
+
+The obsolete global graphics bindings/declarations are removed from
+`src/graphics.c` and `include/graphics.h`, and the complete legacy source
+set under `graphics/pokenav/left_headers/` is deleted.
+
+No replacement artwork is synthesized or redrawn. Retail HGSS has no
+equivalent shared sliding title-card layer; the visible presentation remains
+the already-verified authentic HGSS PokéGear fixed shell, app-switch strip,
+and feature-specific HGSS surfaces.
+
+**authentic HGSS asset ✅ → wired live ✅ → legacy equivalent removed (CI pending)**

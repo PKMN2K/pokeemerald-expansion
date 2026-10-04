@@ -526,40 +526,14 @@ static u32 LoopedTask_OpenMenu(s32 state)
             PlaySE(SE_POKENAV_ON);
             PokenavFadeScreen(POKENAV_FADE_FROM_BLACK_ALL);
         }
-        switch (GetPokenavMenuType())
-        {
-        case POKENAV_MENU_TYPE_CONDITION_SEARCH:
-            LoadLeftHeaderGfxForIndex(7);
-            // fallthrough
-        case POKENAV_MENU_TYPE_CONDITION:
-            LoadLeftHeaderGfxForIndex(1);
-            break;
-        default:
-            LoadLeftHeaderGfxForIndex(0);
-            break;
-        }
         return LT_INC_AND_PAUSE;
     case 8:
         if (IsPaletteFadeActive())
             return LT_PAUSE;
-        switch (GetPokenavMenuType())
-        {
-        case POKENAV_MENU_TYPE_CONDITION_SEARCH:
-            ShowLeftHeaderGfx(7, FALSE, FALSE);
-            // fallthrough
-        case POKENAV_MENU_TYPE_CONDITION:
-            ShowLeftHeaderGfx(1, FALSE, FALSE);
-            break;
-        default:
-            ShowLeftHeaderGfx(0, FALSE, FALSE);
-            break;
-        }
         StartOptionAnimations_Enter();
         SetPokenavVBlankCallback();
         return LT_INC_AND_CONTINUE;
     case 9:
-        if (AreLeftHeaderSpritesMoving())
-            return LT_PAUSE;
         break;
     }
     return LT_FINISH;
@@ -589,23 +563,16 @@ static u32 LoopedTask_OpenConditionMenu(s32 state)
     case 0:
         ResetBldCnt();
         StartOptionAnimations_Exit();
-        HideMainOrSubMenuLeftHeader(POKENAV_GFX_MAIN_MENU, FALSE);
         PlaySE(SE_SELECT);
         return LT_INC_AND_PAUSE;
     case 1:
-        if (AreLeftHeaderSpritesMoving())
-            return LT_PAUSE;
         DrawCurrentMenuOptionLabels();
-        LoadLeftHeaderGfxForIndex(1);
         return LT_INC_AND_PAUSE;
     case 2:
         StartOptionAnimations_Enter();
-        ShowLeftHeaderGfx(1, FALSE, FALSE);
         PrintCurrentOptionDescription();
         return LT_INC_AND_PAUSE;
     case 3:
-        if (AreLeftHeaderSpritesMoving())
-            return LT_PAUSE;
         if (IsDma3ManagerBusyWithBgCopy_())
             return LT_PAUSE;
         break;
@@ -620,22 +587,15 @@ static u32 LoopedTask_ReturnToMainMenu(s32 state)
     case 0:
         ResetBldCnt();
         StartOptionAnimations_Exit();
-        HideMainOrSubMenuLeftHeader(POKENAV_GFX_CONDITION_MENU, FALSE);
         return LT_INC_AND_PAUSE;
     case 1:
-        if (AreLeftHeaderSpritesMoving())
-            return LT_PAUSE;
         DrawCurrentMenuOptionLabels();
-        LoadLeftHeaderGfxForIndex(0);
         return LT_INC_AND_PAUSE;
     case 2:
         StartOptionAnimations_Enter();
-        ShowLeftHeaderGfx(0, FALSE, FALSE);
         PrintCurrentOptionDescription();
         return LT_INC_AND_PAUSE;
     case 3:
-        if (AreLeftHeaderSpritesMoving())
-            return LT_PAUSE;
         if (IsDma3ManagerBusyWithBgCopy_())
             return LT_PAUSE;
         break;
@@ -653,17 +613,13 @@ static u32 LoopedTask_OpenConditionSearchMenu(s32 state)
         PlaySE(SE_SELECT);
         return LT_INC_AND_PAUSE;
     case 1:
-        LoadLeftHeaderGfxForIndex(7);
         DrawCurrentMenuOptionLabels();
         return LT_INC_AND_PAUSE;
     case 2:
         StartOptionAnimations_Enter();
-        ShowLeftHeaderGfx(7, FALSE, FALSE);
         PrintCurrentOptionDescription();
         return LT_INC_AND_PAUSE;
     case 3:
-        if (AreLeftHeaderSpritesMoving())
-            return LT_PAUSE;
         break;
     }
     return LT_FINISH;
@@ -676,11 +632,8 @@ static u32 LoopedTask_ReturnToConditionMenu(s32 state)
     case 0:
         ResetBldCnt();
         StartOptionAnimations_Exit();
-        HideMainOrSubMenuLeftHeader(POKENAV_GFX_SEARCH_MENU, FALSE);
         return LT_INC_AND_PAUSE;
     case 1:
-        if (AreLeftHeaderSpritesMoving())
-            return LT_PAUSE;
         DrawCurrentMenuOptionLabels();
         return LT_INC_AND_PAUSE;
     case 2:
@@ -743,20 +696,15 @@ static u32 LoopedTask_OpenPokenavFeature(s32 state)
         switch (GetPokenavMenuType())
         {
         case POKENAV_MENU_TYPE_CONDITION_SEARCH:
-            HideMainOrSubMenuLeftHeader(POKENAV_GFX_SEARCH_MENU, FALSE);
             // fallthrough
         case POKENAV_MENU_TYPE_CONDITION:
-            HideMainOrSubMenuLeftHeader(POKENAV_GFX_CONDITION_MENU, FALSE);
             break;
         default:
-            HideMainOrSubMenuLeftHeader(POKENAV_GFX_MAIN_MENU, FALSE);
             break;
         }
         PlaySE(SE_SELECT);
         return LT_INC_AND_PAUSE;
     case 2:
-        if (AreLeftHeaderSpritesMoving())
-            return LT_PAUSE;
         PokenavFadeScreen(POKENAV_FADE_TO_BLACK);
         return LT_INC_AND_PAUSE;
     case 3:

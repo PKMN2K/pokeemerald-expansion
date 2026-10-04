@@ -392,12 +392,10 @@ static u32 LoopedTask_OpenRegionMap(s32 taskState)
             menuGfxId = POKENAV_GFX_MAP_MENU_ZOOMED_IN;
 
         UpdateRegionMapHelpBarText();
-        LoadLeftHeaderGfxForIndex(menuGfxId);
-        ShowLeftHeaderGfx(menuGfxId, TRUE, TRUE);
         PokenavFadeScreen(POKENAV_FADE_FROM_BLACK);
         return LT_INC_AND_PAUSE;
     case 7:
-        if (IsPaletteFadeActive() || AreLeftHeaderSpritesMoving())
+        if (IsPaletteFadeActive())
             return LT_PAUSE;
         return LT_INC_AND_CONTINUE;
     default:
@@ -442,7 +440,6 @@ static u32 LoopedTask_RegionMapZoomOut(s32 taskState)
         if (WaitForHelpBar())
             return LT_PAUSE;
 
-        UpdateRegionMapRightHeaderTiles(POKENAV_GFX_MAP_MENU_ZOOMED_OUT);
         break;
     }
 
@@ -475,7 +472,6 @@ static u32 LoopedTask_RegionMapZoomIn(s32 taskState)
         if (WaitForHelpBar())
             return LT_PAUSE;
 
-        UpdateRegionMapRightHeaderTiles(POKENAV_GFX_MAP_MENU_ZOOMED_IN);
         break;
     }
 
@@ -494,7 +490,6 @@ static u32 LoopedTask_ExitRegionMap(s32 taskState)
         if (IsPaletteFadeActive())
             return LT_PAUSE;
 
-        SetLeftHeaderSpritesInvisibility();
         SlideMenuHeaderDown();
         return LT_INC_AND_PAUSE;
     case 2:

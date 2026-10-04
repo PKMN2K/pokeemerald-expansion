@@ -355,17 +355,9 @@ static u32 LoopedTask_OpenConditionGraphMenu(s32 state)
         return LT_INC_AND_PAUSE;
     case 15:
         PokenavFadeScreen(POKENAV_FADE_FROM_BLACK);
-        if (!IsConditionMenuSearchMode())
-        {
-            LoadLeftHeaderGfxForIndex(POKENAV_GFX_PARTY_MENU);
-            ShowLeftHeaderGfx(POKENAV_GFX_CONDITION_MENU, TRUE, FALSE);
-            ShowLeftHeaderGfx(POKENAV_GFX_PARTY_MENU, TRUE, FALSE);
-        }
         return LT_INC_AND_PAUSE;
     case 16:
         if (IsPaletteFadeActive())
-            return LT_PAUSE;
-        if (!IsConditionMenuSearchMode() && AreLeftHeaderSpritesMoving())
             return LT_PAUSE;
         SetVBlankCallback_(VBlankCB_PokenavConditionGraph);
         return LT_INC_AND_PAUSE;
@@ -919,10 +911,6 @@ void FreeConditionGraphMenuSubstruct2(void)
         RemoveWindow(menu->listIndexWindowId);
         RemoveWindow(menu->unusedWindowId1);
         RemoveWindow(menu->unusedWindowId2);
-    }
-    else
-    {
-        SetLeftHeaderSpritesInvisibility();
     }
 
     SetGpuReg(REG_OFFSET_DISPCNT, DISPCNT_OBJ_ON | DISPCNT_BG0_ON | DISPCNT_OBJ_1D_MAP);

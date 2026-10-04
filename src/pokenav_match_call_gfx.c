@@ -381,12 +381,10 @@ static u32 LoopedTask_OpenMatchCall(s32 state)
         ShowBg(3);
         ShowBg(1);
         AllocMatchCallSprites();
-        LoadLeftHeaderGfxForIndex(3);
-        ShowLeftHeaderGfx(POKENAV_GFX_MATCH_CALL_MENU, TRUE, FALSE);
         PokenavFadeScreen(POKENAV_FADE_FROM_BLACK);
         return LT_INC_AND_PAUSE;
     case 7:
-        if (IsPaletteFadeActive() || AreLeftHeaderSpritesMoving())
+        if (IsPaletteFadeActive())
             return LT_PAUSE;
 
         SetPokeballIconsFlashing(TRUE);
@@ -868,7 +866,6 @@ static u32 ExitMatchCall(s32 state)
         if (IsPaletteFadeActive() || MainMenuLoopedTaskIsBusy())
             return LT_PAUSE;
 
-        SetLeftHeaderSpritesInvisibility();
         break;
     }
 

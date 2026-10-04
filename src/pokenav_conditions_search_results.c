@@ -478,16 +478,11 @@ static u32 LoopedTask_OpenConditionSearchResults(s32 state)
         if (!gfx->fromGraph)
         {
             u8 searchGfxId = GetSelectedConditionSearch() + POKENAV_MENUITEM_CONDITION_SEARCH_COOL;
-            LoadLeftHeaderGfxForIndex(searchGfxId);
-            ShowLeftHeaderGfx(searchGfxId, TRUE, FALSE);
-            ShowLeftHeaderGfx(POKENAV_GFX_CONDITION_MENU, TRUE, FALSE);
         }
         PokenavFadeScreen(POKENAV_FADE_FROM_BLACK);
         return LT_INC_AND_PAUSE;
     case 5:
         if (IsPaletteFadeActive())
-            return LT_PAUSE;
-        if (AreLeftHeaderSpritesMoving())
             return LT_PAUSE;
         break;
     }
@@ -640,7 +635,6 @@ static u32 LoopedTask_ExitConditionSearchMenu(s32 state)
             return LT_PAUSE;
         if (MainMenuLoopedTaskIsBusy())
             return LT_PAUSE;
-        SetLeftHeaderSpritesInvisibility();
         break;
     }
     return LT_FINISH;

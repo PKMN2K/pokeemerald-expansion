@@ -462,16 +462,9 @@ static u32 LoopedTask_OpenRibbonsMonList(s32 state)
         HideBg(3);
         PrintHelpBarText(HELPBAR_RIBBONS_MON_LIST);
         PokenavFadeScreen(POKENAV_FADE_FROM_BLACK);
-        if (!menu->fromSummary)
-        {
-            LoadLeftHeaderGfxForIndex(POKENAV_GFX_RIBBONS_MENU);
-            ShowLeftHeaderGfx(POKENAV_GFX_RIBBONS_MENU, TRUE, FALSE);
-        }
         return LT_INC_AND_PAUSE;
     case 5:
         if (IsPaletteFadeActive())
-            return LT_PAUSE;
-        if (AreLeftHeaderSpritesMoving())
             return LT_PAUSE;
         break;
     }
@@ -624,7 +617,6 @@ static u32 LoopedTask_RibbonsListReturnToMainMenu(s32 state)
             return LT_PAUSE;
         if (MainMenuLoopedTaskIsBusy())
             return LT_PAUSE;
-        SetLeftHeaderSpritesInvisibility();
         break;
     }
     return LT_FINISH;
