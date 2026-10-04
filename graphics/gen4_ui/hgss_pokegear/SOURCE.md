@@ -1644,3 +1644,37 @@ remains the already-verified authentic HGSS fixed screen shell, consistent
 with the retail PokéGear core behavior audited in Phase 1.
 
 **authentic HGSS shell ✅ → live without Emerald moving dots ✅ → legacy equivalent removed (CI pending)**
+
+
+## Shared spinning PokéNav device icon — phase 1
+
+CI #752 passed the completed shared moving-dot removal at
+`2f2e714bb7671945a3b0d0d68f2799868129b9b7`.
+
+The next remaining shared legacy overlay is
+`graphics/pokenav/nav_icon.png` in `src/pokenav_main_menu.c`. It is a
+dedicated 32x32 OBJ created at GBA position (220, 12), animated through eight
+frames, and kept alive across the PokéNav/PokéGear session. Match Call also
+contains explicit calls that restore this legacy sprite after call surfaces.
+
+The pinned retail HGSS PokéGear core has no equivalent rotating logo/device
+sprite. At pret/pokeheartgold revision
+`9d8b7591f09b65804da2fb2dfd56f320633e0d36`,
+`PokegearUIManager_LoadInitialSkinGfx` supplies the common member-6/member-0/
+member-12/member-13 OBJ resource set. `PokegearApp_LoadGraphics` consumes
+that set as four app-switch cursor sprites, the weekday widget, four clock
+digits, the clock separator, and the phone-status widget. It does not create a
+32x32 rotating device/logo sprite.
+
+The legitimate retail shared PokéGear sprite source is already verified by
+`verified/main_ui_sprites_skin0.json`, and its useful cursor/status roles are
+already wired elsewhere in this conversion. There is therefore no authentic
+asset to import for the Emerald spinner, and no substitute artwork should be
+invented.
+
+Phase 1 adds `audit_hgss_pokegear_nav_icon.py` and
+`verified/spinning_nav_icon.json`. They byte-lock the legacy icon and the
+four authentic retail common-UI source files, and lock the current live spinner
+bindings. No live rendering changes in this phase.
+
+**authentic HGSS shared UI already live ✅ → legacy spinning icon audited ✅ → suppression pending → removal pending**
