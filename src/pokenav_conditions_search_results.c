@@ -475,10 +475,6 @@ static u32 LoopedTask_OpenConditionSearchResults(s32 state)
         ShowBg(1);
         ShowBg(2);
         HideBg(3);
-        if (!gfx->fromGraph)
-        {
-            u8 searchGfxId = GetSelectedConditionSearch() + POKENAV_MENUITEM_CONDITION_SEARCH_COOL;
-        }
         PokenavFadeScreen(POKENAV_FADE_FROM_BLACK);
         return LT_INC_AND_PAUSE;
     case 5:

@@ -136,7 +136,7 @@
     "observed_checkout_blob_before_normalization": "97f9a0af8b39068a4ed299a38bb7eaaaa3a12721",
     "live_rendering_changed": false
   },
-  "status": "phase 3 complete: legacy Emerald sliding left-header runtime, API, graphics bindings, and source assets removed; authentic HGSS presentation remains; CI pending",
+  "status": "phase 3 cleanup repaired after CI #766; verified HGSS assets unchanged; CI pending",
   "phase2_action": {
     "live_file": "src/pokenav_main_menu.c",
     "rollback_switch": "sUseLegacyLeftHeadersForRollback",
@@ -161,5 +161,19 @@
     "caller_transition_cleanup": "removed header-only load/show/hide/movement waits while retaining unrelated fade, DMA, help-bar, menu-animation, and BG-slide gates",
     "new_hgss_pixels_generated": false,
     "live_authentic_surface": "verified retail HGSS PokéGear fixed shell, app-switch, and feature-specific HGSS-derived screens"
+  },
+  "phase3_repair": {
+    "failed_ci_run": 766,
+    "causes": [
+      "Phase-3 audit generated the Git blob header with literal backslash-zero instead of the required NUL byte",
+      "legacy header removal left searchGfxId unused in condition-search results",
+      "legacy header removal left menuGfxId header-only in the Region Map initializer"
+    ],
+    "resolution": [
+      "restore canonical Git blob hashing without changing any verified HGSS asset hash",
+      "remove the empty condition-search header-only block",
+      "remove the obsolete Region Map header-only menuGfxId selection"
+    ],
+    "live_rendering_changed": false
   }
 }
