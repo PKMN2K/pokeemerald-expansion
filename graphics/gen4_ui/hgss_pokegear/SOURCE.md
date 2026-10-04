@@ -1540,3 +1540,26 @@ pixel indices are still verified. The live Phase-2 renderer and authentic HGSS
 app-switch exposure are unchanged.
 
 **live HGSS exposure unchanged ✅ → audit dependency repaired → CI pending**
+
+
+## Shared PokéNav top header overlay — phase 3
+
+CI #748 passed the repaired Phase-2 exposure audit at
+`67941bac5f0d69ea5a09630691c09a5f8b38393d`. The authentic HGSS PokéGear app-switch surface is therefore
+the validated live replacement for the old Emerald PokéNav top header.
+
+Phase 3 removes the rollback path and the obsolete legacy equivalent:
+`gPokenavHeader_Gfx`, `gPokenavHeader_Tilemap`, and
+`gPokenavHeader_Pal` are no longer loaded or declared, and
+`graphics/pokenav/header.png` / `graphics/pokenav/header.bin` are deleted.
+BG0 now starts from an explicit transparent tile/map so it cannot obscure the
+already-live authentic HGSS app-switch on BG2.
+
+The HGSS tooltip generator also no longer consults the removed Emerald header
+to prove palette slots 7..10 are unused. Those slots are now explicitly owned
+by the authentic HGSS help surface, preserving the same exact retail BGR555
+colors and index remap without retaining a dead legacy asset dependency.
+
+No HGSS artwork is redrawn, recolored, resampled, or synthesized.
+
+**authentic HGSS asset ✅ → wired live ✅ → legacy equivalent removed (CI pending)**

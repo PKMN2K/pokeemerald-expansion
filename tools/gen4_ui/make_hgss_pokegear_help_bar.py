@@ -7,7 +7,6 @@ from make_hgss_pokegear_match_call_contact import (
     PALETTE,
     TILEMAP,
     TILES,
-    git_blob_sha,
     load_indexed_png4,
     load_nclr,
     load_nscr,
@@ -24,11 +23,8 @@ TOOLTIP_TILE = 64
 TOOLTIP_PALETTE_BANK = 1
 EXPECTED_TOOLTIP_ENTRY = 0x1040
 
-# The shared PokéNav BG0 header uses palette bank 0. At this validated blob,
-# indices 7..10 are unused by the header artwork, so the tooltip can relocate
-# its needed indices there while retaining exact retail BGR555 colors.
-HEADER = Path("graphics/pokenav/header.png")
-EXPECTED_HEADER_GIT_BLOB = "7fe891e22f0fd440d3ee7d41ae0a2b35d008ac5d"
+# BG0 palette bank 0 is now owned by the HGSS help surface. Reserve indices
+# 7..10 for the exact retail tooltip colors while retaining retail BGR555 data.
 GBA_INDEX_REMAP = {
     1: 7,   # retail tooltip strip
     2: 8,   # retail text shadow
@@ -77,18 +73,7 @@ def make_tiles():
     return bytes(out)
 
 
-def verify_gba_header_palette_slots():
-    data = HEADER.read_bytes()
-    actual = git_blob_sha(data)
-    if actual != EXPECTED_HEADER_GIT_BLOB:
-        raise ValueError(
-            f"{HEADER}: Git blob {actual} != validated "
-            f"{EXPECTED_HEADER_GIT_BLOB}; re-audit free palette slots 7..10"
-        )
-
-
 def make_gba_tiles():
-    verify_gba_header_palette_slots()
     source = make_tiles()
     out = bytearray()
     for value in source:

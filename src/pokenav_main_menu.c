@@ -53,7 +53,6 @@ static u32 LoopedTask_SlideMenuHeaderDown(s32);
 static void DrawHgssPokegearHelpBar(u32);
 static void LoadHgssPokegearHelpBarStrip(void);
 static void LoadHgssPokegearHelpBarPalette(void);
-static void ExposeHgssPokegearTopStrip(void);
 static void SpriteCB_SpinningPokenav(struct Sprite *);
 static u32 LoopedTask_InitPokenavMenu(s32);
 
@@ -65,17 +64,9 @@ static const u32 sSpinningPokenav_Gfx[] = INCGFX_U32("graphics/pokenav/nav_icon.
 static const u32 sHgssHelpBarTooltip_Gfx[] = INCBIN_U32("graphics/gen4_ui/hgss_pokegear/help_bar_tooltip_gba.4bpp");
 static const u16 sHgssHelpBarTooltip_Pal[] = INCBIN_U16("graphics/gen4_ui/hgss_pokegear/help_bar_tooltip.gbapal");
 
-// Phase-2 CI rollback only. The legacy header assets remain loaded until the
-// authentic app-switch exposure passes the full build/test gate.
-static bool8 sUseLegacyTopHeaderForRollback = FALSE;
-
-enum
-{
-    HGSS_TOP_STRIP_LEFT = 0,
-    HGSS_TOP_STRIP_TOP = 0,
-    HGSS_TOP_STRIP_WIDTH = 30,
-    HGSS_TOP_STRIP_HEIGHT = 4,
-};
+// BG0 no longer carries Emerald PokéNav header artwork. Keep tile 0 explicitly
+// transparent so BG1/BG0 cannot obscure the authentic HGSS app-switch on BG2.
+static const u32 sTransparentBgTile[8] = {0};
 
 const struct BgTemplate gPokenavMainMenuBgTemplates[] =
 {
@@ -375,12 +366,9 @@ static u32 LoopedTask_InitPokenavMenu(s32 state)
         return LT_INC_AND_CONTINUE;
     case 1:
         menu = GetSubstructPtr(POKENAV_SUBSTRUCT_MAIN_MENU);
-        DecompressAndCopyTileDataToVram(0, &gPokenavHeader_Gfx, 0, 0, 0);
         SetBgTilemapBuffer(0, menu->tilemapBuffer);
-        CopyToBgTilemapBuffer(0, &gPokenavHeader_Tilemap, 0, 0);
-        CopyPaletteIntoBufferUnfaded(gPokenavHeader_Pal, BG_PLTT_ID(0), PLTT_SIZE_4BPP);
-        if (!sUseLegacyTopHeaderForRollback)
-            ExposeHgssPokegearTopStrip();
+        LoadBgTiles(0, sTransparentBgTile, sizeof(sTransparentBgTile), 0);
+        FillBgTilemapBufferRect_Palette0(0, 0, 0, 0, 32, 32);
         CopyBgTilemapBufferToVram(0);
         return LT_INC_AND_PAUSE;
     case 2:
@@ -402,22 +390,6 @@ static u32 LoopedTask_InitPokenavMenu(s32 state)
     }
 }
 
-static void ExposeHgssPokegearTopStrip(void)
-{
-    // The validated legacy header uses only rows 0..3 for its visible top
-    // strip. Tile 0 in the locked header sheet is fully transparent, and BG1
-    // also uses a fully transparent fill tile across these rows, so clearing
-    // this BG0 rectangle exposes the already-live authentic HGSS app-switch
-    // on BG2 without redrawing or duplicating any HGSS pixels.
-    FillBgTilemapBufferRect_Palette0(
-        0,
-        0,
-        HGSS_TOP_STRIP_LEFT,
-        HGSS_TOP_STRIP_TOP,
-        HGSS_TOP_STRIP_WIDTH,
-        HGSS_TOP_STRIP_HEIGHT
-    );
-}
 
 void SetActiveMenuLoopTasks(void *createLoopTask, void *isLoopTaskActive) // Fix types later.
 {
@@ -627,8 +599,8 @@ bool32 WaitForHelpBar(void)
 
 static void LoadHgssPokegearHelpBarPalette(void)
 {
-    // Header indices 7..10 are free at the validated header blob. Copy exact
-    // retail member-10 colors into those slots; only the indices move.
+    // BG0 palette slots 7..10 are dedicated to the authentic HGSS tooltip
+    // after legacy header removal. Copy exact retail member-10 colors there.
     CopyPaletteIntoBufferUnfaded(&sHgssHelpBarTooltip_Pal[1], BG_PLTT_ID(0) + HGSS_HELP_BAR_STRIP_COLOR, sizeof(u16));
     CopyPaletteIntoBufferUnfaded(&sHgssHelpBarTooltip_Pal[2], BG_PLTT_ID(0) + HGSS_HELP_BAR_SHADOW_COLOR, sizeof(u16));
     CopyPaletteIntoBufferUnfaded(&sHgssHelpBarTooltip_Pal[3], BG_PLTT_ID(0) + HGSS_HELP_BAR_TEXT_COLOR, sizeof(u16));

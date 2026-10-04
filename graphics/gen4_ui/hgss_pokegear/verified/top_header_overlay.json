@@ -1,6 +1,6 @@
 {
   "role": "shared_pokenav_top_header_overlay",
-  "phase": "authentic_app_switch_exposed_ci_repair_pending",
+  "phase": "legacy_top_header_removed_ci_pending",
   "classification": "legacy Emerald PokéNav overlay directly covering an already-live authentic HGSS PokéGear app-switch surface",
   "source_game": "Pokemon HeartGold / SoulSilver",
   "source_repository": "pret/pokeheartgold",
@@ -95,9 +95,9 @@
   "pipeline": {
     "authentic_hgss_asset_ready": true,
     "wired_live": true,
-    "legacy_equivalent_removed": false
+    "legacy_equivalent_removed": true
   },
-  "next": "Validate the Phase-2 audit repair in CI. If green, proceed to Phase 3 removal of the legacy top-header rollback/resources.",
+  "next": "Run Phase-3 CI. If green, mark the shared top-header conversion complete and move to the next remaining legacy PokéNav surface.",
   "phase1_gate": {
     "workflow": "CI",
     "run_number": 746,
@@ -140,8 +140,8 @@
     "redraw": false,
     "recolor": false,
     "resample": false,
-    "legacy_load_retained_for_rollback": true,
-    "rollback_switch": "sUseLegacyTopHeaderForRollback"
+    "legacy_load_retained_for_rollback": false,
+    "rollback_switch": null
   },
   "repair": {
     "failed_ci_run": 747,
@@ -149,5 +149,30 @@
     "cause": "audit_hgss_pokegear_top_header.py imported load_indexed_png4 from the Match Call generator, whose verifier correctly rejects paths outside its own EXPECTED_GIT_BLOBS allow-list",
     "resolution": "use a self-contained standard-library 4-bit indexed PNG decoder after this audit's own Git-blob verification",
     "live_rendering_changed": false
+  },
+  "phase2_gate": {
+    "workflow": "CI",
+    "run_number": 748,
+    "conclusion": "success",
+    "validated_commit": "67941bac5f0d69ea5a09630691c09a5f8b38393d"
+  },
+  "phase3_action": {
+    "live_file": "src/pokenav_main_menu.c",
+    "replacement": "BG0 is initialized with an explicit transparent tile/map so the already-live authentic HGSS app-switch on BG2 remains visible",
+    "removed_symbols": [
+      "gPokenavHeader_Gfx",
+      "gPokenavHeader_Tilemap",
+      "gPokenavHeader_Pal"
+    ],
+    "removed_assets": [
+      "graphics/pokenav/header.png",
+      "graphics/pokenav/header.bin"
+    ],
+    "removed_build_dependency": "HGSS help-bar palette remap no longer depends on legacy Emerald header artwork",
+    "new_hgss_pixels_generated": false,
+    "redraw": false,
+    "recolor": false,
+    "resample": false,
+    "ci_pending": true
   }
 }
