@@ -1,0 +1,70 @@
+{
+  "role": "shared_pokenav_moving_dots_background",
+  "phase": "authentic_behavior_audited",
+  "classification": "legacy Emerald PokéNav animated BG3 decoration behind the already-live authentic HGSS PokéGear shell",
+  "source_game": "Pokemon HeartGold / SoulSilver",
+  "source_repository": "pret/pokeheartgold",
+  "source_revision": "9d8b7591f09b65804da2fb2dfd56f320633e0d36",
+  "previous_gate": {
+    "workflow": "CI",
+    "run_number": 749,
+    "conclusion": "success",
+    "validated_commit": "235bda6b1bcc761f6d0ee8b803e69580b57d3ed4"
+  },
+  "legacy_surface": {
+    "gfx": {
+      "path": "graphics/pokenav/bg_dots.png",
+      "git_blob_sha": "056e2400b84fa02d02a24b43eb24904eefbf2bdd"
+    },
+    "tilemap": {
+      "path": "graphics/pokenav/bg_dots.bin",
+      "git_blob_sha": "7161609bb086de4cc03b0fc52f283649e7f9761d"
+    },
+    "live_file": "src/pokenav_menu_handler_gfx.c",
+    "bg": 3,
+    "behavior": [
+      "loads legacy dot tiles, tilemap, and palette during menu initialization",
+      "scrolls BG3 continuously via Task_MoveBgDots",
+      "crossfades dot palette between light blue and purple for menu transitions"
+    ]
+  },
+  "retail_audit": {
+    "source_file": "src/application/pokegear/main/overlay_100_021E5900.c",
+    "findings": [
+      "PokegearApp_InitBGs initializes the core PokéGear MAIN_0 and SUB_0 layers only",
+      "PokegearApp_LoadSkinGraphics loads the authentic app-switch and fixed-shell skin resources onto those core layers",
+      "additional layers are owned/cleared by applications; the core PokéGear does not install a shared animated moving-dot background"
+    ],
+    "conclusion": "there is no retail HGSS shared moving-dot counterpart to import; retaining Emerald bg_dots under the HGSS shell is non-authentic"
+  },
+  "authentic_counterpart": {
+    "role": "default-skin fixed PokéGear shell with app-owned additional layers",
+    "manifest": "graphics/gen4_ui/hgss_pokegear/verified/screen_shell_skin0.json",
+    "verified_assets": [
+      {
+        "path": "graphics/gen4_ui/hgss_pokegear/verified/pgear_skin0_screen_shell_tiles.png",
+        "git_blob_sha": "163a4fa068fbffae472d1672947fad86647d110b"
+      },
+      {
+        "path": "graphics/gen4_ui/hgss_pokegear/verified/pgear_skin0_screen_shell_palette.NCLR",
+        "git_blob_sha": "f293e5f8760201fd109d77bb9cefcdcbb4682f67"
+      },
+      {
+        "path": "graphics/gen4_ui/hgss_pokegear/verified/pgear_skin0_screen_shell_tilemap.NSCR",
+        "git_blob_sha": "f0d5863b63fb82a6bc36c4f49c17859fea8d05aa"
+      }
+    ],
+    "already_wired_and_validated": true
+  },
+  "phase1_action": {
+    "audit_script": "tools/gen4_ui/audit_hgss_pokegear_bg_dots.py",
+    "live_rendering_changed": false,
+    "assets_deleted": false
+  },
+  "pipeline": {
+    "authentic_hgss_asset_ready": true,
+    "wired_live": true,
+    "legacy_equivalent_removed": false
+  },
+  "next": "After Phase-1 CI passes, suppress the legacy BG3 moving-dot load/scroll/palette behavior behind a rollback path while leaving source assets in place for the validation cycle."
+}

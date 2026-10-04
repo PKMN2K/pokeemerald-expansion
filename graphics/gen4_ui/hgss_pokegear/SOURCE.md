@@ -1563,3 +1563,37 @@ colors and index remap without retaining a dead legacy asset dependency.
 No HGSS artwork is redrawn, recolored, resampled, or synthesized.
 
 **authentic HGSS asset ✅ → wired live ✅ → legacy equivalent removed (CI pending)**
+
+
+## Shared PokéNav moving-dot background — phase 1
+
+CI #749 passed the completed shared top-header cleanup at
+`235bda6b1bcc761f6d0ee8b803e69580b57d3ed4`.
+
+The next remaining shared legacy layer is Emerald's animated
+`graphics/pokenav/bg_dots.png` / `bg_dots.bin` background on BG3.
+`src/pokenav_menu_handler_gfx.c` still loads that tile/palette surface,
+scrolls it continuously with `Task_MoveBgDots`, and crossfades its colors
+between light blue and purple during launcher/submenu transitions.
+
+The pinned retail HGSS PokéGear core does not install an equivalent shared
+animated background. At pret/pokeheartgold revision
+`9d8b7591f09b65804da2fb2dfd56f320633e0d36`,
+`PokegearApp_InitBGs` initializes only the core MAIN_0 and SUB_0 PokéGear
+layers. `PokegearApp_LoadSkinGraphics` loads the authentic app-switch and
+fixed screen-shell resources onto those layers, while additional layers are
+owned or cleared by the active application. There is no retail core
+moving-dot layer to reproduce.
+
+That means the authenticity-preserving replacement is already present: the
+verified default-skin HGSS fixed shell is live, and app-specific layers remain
+available for their actual retail surfaces. Per the project authenticity
+policy, no invented "HGSS-style" background should replace the Emerald dots.
+
+Phase 1 adds `tools/gen4_ui/audit_hgss_pokegear_bg_dots.py` and
+`verified/shared_bg_dots.json`. They lock both legacy dot blobs, the three
+verified HGSS fixed-shell source blobs, the completed shell manifest, and the
+current live BG3 scroll/palette bindings. No live rendering changes in this
+phase.
+
+**authentic HGSS shell already live ✅ → legacy moving-dot layer audited ✅ → suppression pending → removal pending**
