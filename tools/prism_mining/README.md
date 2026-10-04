@@ -405,3 +405,10 @@ Prism's `MiningScript` does **not** invoke a dedicated pickaxe swing, rock-debri
 The source asset `gfx/field/boulderdust.png` is **not mining-specific**. Prism loads `BoulderDustGFX` as a generic indoor overworld emote and it is not referenced by `event/mining.asm`. It should therefore not be imported or documented as authentic Prism mining artwork.
 
 No extra non-terrain mining-effect graphics are pending from this source audit. The authentic Prism mining visual asset migration is therefore represented by the already imported mining surfaces; future work can focus on interaction/mechanics or on new custom effects if explicitly desired.
+
+## Custom mining reward policy
+
+The original Pokémon Prism mining reward table is **not part of this port's gameplay design**. The imported Prism work supplies mining surfaces, interaction provenance, and presentation behavior only.
+
+Reward selection is project-owned through `MiningRollCustomReward()`. Until the PKMN 2K mining loot table is explicitly designed, that hook returns `ITEM_NONE`; Prism's probabilities, mining-level reward windows, map-specific special rewards, and Prism-only item substitutions must not be reintroduced by default.
+
