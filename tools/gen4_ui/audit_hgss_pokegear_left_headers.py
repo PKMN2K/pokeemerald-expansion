@@ -10,6 +10,7 @@ LEFT_HEADERS_MANIFEST = Path("graphics/gen4_ui/hgss_pokegear/verified/left_heade
 MAIN_MENU_C = Path("src/pokenav_main_menu.c")
 MENU_GFX_C = Path("src/pokenav_menu_handler_gfx.c")
 GRAPHICS_C = Path("src/graphics.c")
+LEGACY_PALETTE = Path("graphics/pokenav/left_headers/palette.pal")
 
 EXPECTED_GIT_BLOBS = {
     Path("graphics/pokenav/left_headers/beauty.png"): "96eb88ca621cb6038e16581aa38472e489374f9f",
@@ -19,7 +20,7 @@ EXPECTED_GIT_BLOBS = {
     Path("graphics/pokenav/left_headers/hoenn_map.png"): "b347c01ee947855358f5a64e4612329a3f87e750",
     Path("graphics/pokenav/left_headers/main_menu.png"): "c0371f5678fb57ea42c70e96890d4c6009e774fa",
     Path("graphics/pokenav/left_headers/match_call.png"): "66455af78bbf8fe14a7a393c45120f38fbf8fa4e",
-    Path("graphics/pokenav/left_headers/palette.pal"): "eb13b1a87259d4393c6cda3261bcacddde8b26e7",
+    LEGACY_PALETTE: "eb13b1a87259d4393c6cda3261bcacddde8b26e7",
     Path("graphics/pokenav/left_headers/party.png"): "b66ef3b17fc2c310c67110ed72bf86896438f4e6",
     Path("graphics/pokenav/left_headers/ribbons.png"): "6753dc9233c4beced965967f1349f5176f636028",
     Path("graphics/pokenav/left_headers/search.png"): "f4484accf8209d48a0281f9e444f76d6bfc38d20",
@@ -41,6 +42,12 @@ def git_blob_sha(data):
 
 def verify_blob(path):
     data = path.read_bytes()
+    # .gitattributes forces *.pal to CRLF in the Actions checkout, while the
+    # canonical Git blob is stored with LF. Normalize this text asset back to
+    # repository form before applying the Git-blob lock; binary assets remain
+    # byte-for-byte strict.
+    if path == LEGACY_PALETTE:
+        data = data.replace(b"\r\n", b"\n")
     actual = git_blob_sha(data)
     expected = EXPECTED_GIT_BLOBS[path]
     if actual != expected:

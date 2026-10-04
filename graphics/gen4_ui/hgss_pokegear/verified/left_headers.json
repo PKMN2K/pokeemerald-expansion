@@ -14,19 +14,58 @@
   "legacy_surface": {
     "directory": "graphics/pokenav/left_headers",
     "assets": [
-      {"path": "graphics/pokenav/left_headers/beauty.png", "git_blob_sha": "96eb88ca621cb6038e16581aa38472e489374f9f"},
-      {"path": "graphics/pokenav/left_headers/condition.png", "git_blob_sha": "6d80db5e3f7685965a41c6028a6e4bc7a0ea7dc4"},
-      {"path": "graphics/pokenav/left_headers/cool.png", "git_blob_sha": "a96291b836c9d947026cdc523b5ab07dcabb8a0e"},
-      {"path": "graphics/pokenav/left_headers/cute.png", "git_blob_sha": "63c3f9557eda5caf69b26aa16dfa3b2f5038b112"},
-      {"path": "graphics/pokenav/left_headers/hoenn_map.png", "git_blob_sha": "b347c01ee947855358f5a64e4612329a3f87e750"},
-      {"path": "graphics/pokenav/left_headers/main_menu.png", "git_blob_sha": "c0371f5678fb57ea42c70e96890d4c6009e774fa"},
-      {"path": "graphics/pokenav/left_headers/match_call.png", "git_blob_sha": "66455af78bbf8fe14a7a393c45120f38fbf8fa4e"},
-      {"path": "graphics/pokenav/left_headers/palette.pal", "git_blob_sha": "eb13b1a87259d4393c6cda3261bcacddde8b26e7"},
-      {"path": "graphics/pokenav/left_headers/party.png", "git_blob_sha": "b66ef3b17fc2c310c67110ed72bf86896438f4e6"},
-      {"path": "graphics/pokenav/left_headers/ribbons.png", "git_blob_sha": "6753dc9233c4beced965967f1349f5176f636028"},
-      {"path": "graphics/pokenav/left_headers/search.png", "git_blob_sha": "f4484accf8209d48a0281f9e444f76d6bfc38d20"},
-      {"path": "graphics/pokenav/left_headers/smart.png", "git_blob_sha": "c53dcdf4c00e2ce63448b2908e57daa259a1be23"},
-      {"path": "graphics/pokenav/left_headers/tough.png", "git_blob_sha": "f78d47524b89aebaa7fcc6a114a9ab5bfe3a166f"}
+      {
+        "path": "graphics/pokenav/left_headers/beauty.png",
+        "git_blob_sha": "96eb88ca621cb6038e16581aa38472e489374f9f"
+      },
+      {
+        "path": "graphics/pokenav/left_headers/condition.png",
+        "git_blob_sha": "6d80db5e3f7685965a41c6028a6e4bc7a0ea7dc4"
+      },
+      {
+        "path": "graphics/pokenav/left_headers/cool.png",
+        "git_blob_sha": "a96291b836c9d947026cdc523b5ab07dcabb8a0e"
+      },
+      {
+        "path": "graphics/pokenav/left_headers/cute.png",
+        "git_blob_sha": "63c3f9557eda5caf69b26aa16dfa3b2f5038b112"
+      },
+      {
+        "path": "graphics/pokenav/left_headers/hoenn_map.png",
+        "git_blob_sha": "b347c01ee947855358f5a64e4612329a3f87e750"
+      },
+      {
+        "path": "graphics/pokenav/left_headers/main_menu.png",
+        "git_blob_sha": "c0371f5678fb57ea42c70e96890d4c6009e774fa"
+      },
+      {
+        "path": "graphics/pokenav/left_headers/match_call.png",
+        "git_blob_sha": "66455af78bbf8fe14a7a393c45120f38fbf8fa4e"
+      },
+      {
+        "path": "graphics/pokenav/left_headers/palette.pal",
+        "git_blob_sha": "eb13b1a87259d4393c6cda3261bcacddde8b26e7"
+      },
+      {
+        "path": "graphics/pokenav/left_headers/party.png",
+        "git_blob_sha": "b66ef3b17fc2c310c67110ed72bf86896438f4e6"
+      },
+      {
+        "path": "graphics/pokenav/left_headers/ribbons.png",
+        "git_blob_sha": "6753dc9233c4beced965967f1349f5176f636028"
+      },
+      {
+        "path": "graphics/pokenav/left_headers/search.png",
+        "git_blob_sha": "f4484accf8209d48a0281f9e444f76d6bfc38d20"
+      },
+      {
+        "path": "graphics/pokenav/left_headers/smart.png",
+        "git_blob_sha": "c53dcdf4c00e2ce63448b2908e57daa259a1be23"
+      },
+      {
+        "path": "graphics/pokenav/left_headers/tough.png",
+        "git_blob_sha": "f78d47524b89aebaa7fcc6a114a9ab5bfe3a166f"
+      }
     ],
     "live_file": "src/pokenav_main_menu.c",
     "graphics_bindings": "src/graphics.c",
@@ -50,12 +89,30 @@
     "app_switch_manifest": "graphics/gen4_ui/hgss_pokegear/verified/app_switch_skin0.json",
     "screen_shell_manifest": "graphics/gen4_ui/hgss_pokegear/verified/screen_shell_skin0.json",
     "verified_assets": [
-      {"path": "graphics/gen4_ui/hgss_pokegear/verified/pgear_skin0_app_switch_tiles.png", "git_blob_sha": "0b33041050709233198495bf43f4969738c4921e"},
-      {"path": "graphics/gen4_ui/hgss_pokegear/verified/pgear_skin0_app_switch_palette.NCLR", "git_blob_sha": "69f91d3bf7a72e5868d5dc6cf04add710bd7138a"},
-      {"path": "graphics/gen4_ui/hgss_pokegear/verified/pgear_skin0_app_switch_tilemap.NSCR", "git_blob_sha": "c9103c3dba3d4f1ec88025987ad0f2ddbc63c0b1"},
-      {"path": "graphics/gen4_ui/hgss_pokegear/verified/pgear_skin0_screen_shell_tiles.png", "git_blob_sha": "163a4fa068fbffae472d1672947fad86647d110b"},
-      {"path": "graphics/gen4_ui/hgss_pokegear/verified/pgear_skin0_screen_shell_palette.NCLR", "git_blob_sha": "f293e5f8760201fd109d77bb9cefcdcbb4682f67"},
-      {"path": "graphics/gen4_ui/hgss_pokegear/verified/pgear_skin0_screen_shell_tilemap.NSCR", "git_blob_sha": "f0d5863b63fb82a6bc36c4f49c17859fea8d05aa"}
+      {
+        "path": "graphics/gen4_ui/hgss_pokegear/verified/pgear_skin0_app_switch_tiles.png",
+        "git_blob_sha": "0b33041050709233198495bf43f4969738c4921e"
+      },
+      {
+        "path": "graphics/gen4_ui/hgss_pokegear/verified/pgear_skin0_app_switch_palette.NCLR",
+        "git_blob_sha": "69f91d3bf7a72e5868d5dc6cf04add710bd7138a"
+      },
+      {
+        "path": "graphics/gen4_ui/hgss_pokegear/verified/pgear_skin0_app_switch_tilemap.NSCR",
+        "git_blob_sha": "c9103c3dba3d4f1ec88025987ad0f2ddbc63c0b1"
+      },
+      {
+        "path": "graphics/gen4_ui/hgss_pokegear/verified/pgear_skin0_screen_shell_tiles.png",
+        "git_blob_sha": "163a4fa068fbffae472d1672947fad86647d110b"
+      },
+      {
+        "path": "graphics/gen4_ui/hgss_pokegear/verified/pgear_skin0_screen_shell_palette.NCLR",
+        "git_blob_sha": "f293e5f8760201fd109d77bb9cefcdcbb4682f67"
+      },
+      {
+        "path": "graphics/gen4_ui/hgss_pokegear/verified/pgear_skin0_screen_shell_tilemap.NSCR",
+        "git_blob_sha": "f0d5863b63fb82a6bc36c4f49c17859fea8d05aa"
+      }
     ],
     "already_wired_and_validated": true
   },
@@ -69,5 +126,15 @@
     "wired_live": true,
     "legacy_equivalent_removed": false
   },
-  "next": "After Phase-1 CI passes, suppress left-header creation/loading/show behavior behind a one-cycle rollback path while retaining the legacy source assets for validation."
+  "next": "After Phase-1 CI passes, suppress left-header creation/loading/show behavior behind a one-cycle rollback path while retaining the legacy source assets for validation.",
+  "audit_repair": {
+    "failed_ci_run": 763,
+    "failed_job": "gen4-ui",
+    "cause": ".gitattributes checks *.pal files out with CRLF, while the canonical repository Git blob is LF; the first audit hashed working-tree bytes directly",
+    "resolution": "normalize only graphics/pokenav/left_headers/palette.pal from CRLF to LF before computing its Git-blob SHA; binary/image asset locks remain byte-for-byte strict",
+    "expected_repository_blob": "eb13b1a87259d4393c6cda3261bcacddde8b26e7",
+    "observed_checkout_blob_before_normalization": "97f9a0af8b39068a4ed299a38bb7eaaaa3a12721",
+    "live_rendering_changed": false
+  },
+  "status": "phase 1 audit repaired for .pal checkout EOL normalization; live rendering unchanged; CI pending"
 }
