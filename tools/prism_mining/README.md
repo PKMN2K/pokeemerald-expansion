@@ -441,3 +441,10 @@ The mining integration now exposes runtime selectors for Olcan Isle and Olcan Ch
 `TIME_MORNING` selects the Prism Morning bank, `TIME_DAY` selects Day, and both `TIME_EVENING` and `TIME_NIGHT` select Prism Night because the imported Prism palette set has no separate Evening bank. This does not change `OW_TIMES_OF_DAY` or the project's global clock behavior.
 
 No map uses these selectors yet. The next map-wiring step can call them when choosing an Olcan mining secondary tileset without duplicating palette-selection logic.
+
+
+## Live Olcan palette rollover
+
+Olcan's imported Prism Morning/Day/Night source palettes now refresh when Expansion's active `gTimeOfDay` period changes while the player remains on the map.
+
+The rollover hook only runs for the six Olcan Isle/Chine secondary tileset variants. It reloads the selected secondary palette bank and then lets Expansion's existing weather/time-of-day lighting pass reapply normally. Tiles, metatiles, mining collision, maps, reward logic, and the global `OW_TIMES_OF_DAY` configuration are unchanged.
