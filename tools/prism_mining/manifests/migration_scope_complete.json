@@ -1,0 +1,89 @@
+{
+  "project": "pokemon-prism-mining-import",
+  "status": "authentic_asset_scope_complete",
+  "target_repository": "PKMN2K/pokeemerald-expansion",
+  "target_branch": "polished-crystal-port",
+  "imported_surface_groups": [
+    {
+      "name": "Mound Cave",
+      "prism_tileset_id_hex": "0x15",
+      "target_tileset": "gTileset_PrismMoundCave",
+      "mining_quadrants_imported": 104,
+      "mining_quadrants_total": 104,
+      "coverage": "complete"
+    },
+    {
+      "name": "Firelight Caverns",
+      "prism_tileset_id_hex": "0x21",
+      "target_tileset": "gTileset_PrismFirelightCaverns",
+      "mining_quadrants_imported": 127,
+      "mining_quadrants_total": 127,
+      "coverage": "complete"
+    },
+    {
+      "name": "Kanto Cave",
+      "prism_tileset_id_hex": "0x1B",
+      "target_tileset": "gTileset_PrismKantoCave",
+      "mining_quadrants_imported": 242,
+      "mining_quadrants_total": 242,
+      "coverage": "complete"
+    },
+    {
+      "name": "Olcan Isle / Olcan Chine",
+      "prism_tileset_id_hex": "0x37",
+      "target_tilesets": [
+        "gTileset_PrismOlcanIsleDay",
+        "gTileset_PrismOlcanChineDay"
+      ],
+      "mining_quadrants_imported": 110,
+      "mining_quadrants_total": 110,
+      "coverage": "complete"
+    }
+  ],
+  "total_mining_quadrants_imported": 583,
+  "intentionally_excluded_surface_groups": [
+    {
+      "name": "CAVE2-CAVE7",
+      "prism_tileset_ids_hex": [
+        "0x30",
+        "0x31",
+        "0x32",
+        "0x33",
+        "0x34",
+        "0x35"
+      ],
+      "reason": "Redundant mining terrain intentionally excluded from project scope."
+    },
+    {
+      "name": "TILESET_SIDESCROLL",
+      "prism_tileset_id_hex": "0x20",
+      "reason": "Sidescroll terrain intentionally excluded from project scope."
+    },
+    {
+      "name": "Other Prism tilesets containing MINING collision",
+      "reason": "Mining surface import scope is closed; these are not pending migration work."
+    }
+  ],
+  "non_terrain_asset_audit": {
+    "dedicated_pickaxe_swing_graphics": false,
+    "dedicated_mining_debris_or_dust_graphics": false,
+    "dedicated_ore_gem_fossil_reveal_graphics": false,
+    "dedicated_mining_item_reveal_graphics": false,
+    "generic_boulderdust_imported": false,
+    "notes": "Prism's authentic mining presentation does not use separate mining-specific effect graphics beyond the imported terrain surfaces. Generic boulderdust is unrelated to MiningScript and remains excluded."
+  },
+  "integration_state": {
+    "metatile_behavior": "MB_PRISM_MINING",
+    "a_button_interaction": true,
+    "eligibility_hook": "MiningCanInteract",
+    "attempt_cost_hook": "MiningApplyAttemptCost",
+    "custom_reward_hook": "MiningRollCustomReward",
+    "custom_reward_table_defined": false,
+    "prism_reward_table_retained": false,
+    "mining_exp_retained": false,
+    "durability_enabled": false,
+    "tile_destruction_enabled": false,
+    "existing_maps_modified": false
+  },
+  "next_work_policy": "Do not import more Prism mining terrain by default. Continue only with project-owned integration/mechanics or deliberate map/palette wiring; the custom reward table remains deferred."
+}
