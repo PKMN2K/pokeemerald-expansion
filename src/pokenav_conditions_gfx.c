@@ -49,6 +49,16 @@ static const u16 sPokeGearStatusMarkingsFramePal[] =
 };
 static const u32 sConditionGraphData_Gfx[] = INCGFX_U32("graphics/pokenav/condition/graph_data.png", ".4bpp.smol");
 static const u32 sConditionGraphData_Tilemap[] = INCGFX_U32("graphics/pokenav/condition/graph_data.bin", ".smolTM");
+
+// Retail HGSS has no PokéNav Condition screen. Reuse only checksum-verified
+// HGSS Pokédex member-057 list/search pixels from the existing adapter.
+static const u32 sHgssConditionStatusChrome_Gfx[] = INCBIN_U32("graphics/gen4_ui/hgss_pokegear/condition_search_chrome.4bpp");
+static const u16 sHgssConditionStatusChrome_Pal[] = INCBIN_U16("graphics/gen4_ui/hgss_pokegear/condition_search_chrome.gbapal");
+
+// Phase 2: authentic HGSS surface is live. Keep the Emerald surface only until
+// the following legacy-removal phase has passed CI.
+static const bool8 sUseLegacyConditionSurfaceForRollback = FALSE;
+
 static const u16 sMonMarkings_Pal[] = INCGFX_U16("graphics/pokenav/condition/mon_markings.pal", ".gbapal");
 
 static const u8 gText_Number2[] = _("No. ");
@@ -259,7 +269,10 @@ static u32 LoopedTask_OpenConditionGraphMenu(s32 state)
         SetGpuReg(REG_OFFSET_DISPCNT, DISPCNT_WIN0_ON | DISPCNT_WIN1_ON | DISPCNT_OBJ_ON | DISPCNT_OBJ_1D_MAP | DISPCNT_BG0_ON | DISPCNT_BG3_ON);
         SetGpuReg(REG_OFFSET_BLDCNT, BLDCNT_TGT1_BG2 | BLDCNT_EFFECT_BLEND | BLDCNT_TGT2_BG3);
         SetGpuReg(REG_OFFSET_BLDALPHA, BLDALPHA_BLEND(11, 4));
-        DecompressAndCopyTileDataToVram(3, gPokenavCondition_Gfx, 0, 0, 0);
+        if (sUseLegacyConditionSurfaceForRollback)
+            DecompressAndCopyTileDataToVram(3, gPokenavCondition_Gfx, 0, 0, 0);
+        else
+            LoadBgTiles(3, sHgssConditionStatusChrome_Gfx, sizeof(sHgssConditionStatusChrome_Gfx), 0);
         return LT_INC_AND_PAUSE;
     case 2:
         if (FreeTempTileDataBuffersIfPossible())
@@ -270,13 +283,23 @@ static u32 LoopedTask_OpenConditionGraphMenu(s32 state)
          if (FreeTempTileDataBuffersIfPossible())
             return LT_PAUSE;
 
-        DecompressDataWithHeaderVram(gPokenavCondition_Tilemap, menu->tilemapBuffers[0]);
+        if (sUseLegacyConditionSurfaceForRollback)
+        {
+            DecompressDataWithHeaderVram(gPokenavCondition_Tilemap, menu->tilemapBuffers[0]);
+            if (IsConditionMenuSearchMode() == TRUE)
+                CopyToBgTilemapBufferRect(3, gPokenavOptions_Tilemap, 0, 5, 9, 4);
+            CopyPaletteIntoBufferUnfaded(gPokenavCondition_Pal, BG_PLTT_ID(1), PLTT_SIZE_4BPP);
+        }
+        else
+        {
+            // Tile 0 is the exact pale-blue list interior from HGSS member 057.
+            // Fill the whole map with that authentic tile; existing graph/data
+            // layers remain above it and continue to provide Condition behavior.
+            CpuFill32(0, menu->tilemapBuffers[0], BG_SCREEN_SIZE);
+            CopyPaletteIntoBufferUnfaded(sHgssConditionStatusChrome_Pal, BG_PLTT_ID(0), PLTT_SIZE_4BPP);
+        }
         SetBgTilemapBuffer(3, menu->tilemapBuffers[0]);
-        if (IsConditionMenuSearchMode() == TRUE)
-            CopyToBgTilemapBufferRect(3, gPokenavOptions_Tilemap, 0, 5, 9, 4);
-
         CopyBgTilemapBufferToVram(3);
-        CopyPaletteIntoBufferUnfaded(gPokenavCondition_Pal, BG_PLTT_ID(1), PLTT_SIZE_4BPP);
         CopyPaletteIntoBufferUnfaded(gConditionText_Pal, BG_PLTT_ID(15), PLTT_SIZE_4BPP);
         menu->monTransitionX = -80;
         return LT_INC_AND_PAUSE;
