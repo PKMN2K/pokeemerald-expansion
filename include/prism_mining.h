@@ -6,5 +6,6 @@ struct Tileset;
 const struct Tileset *GetPrismOlcanIsleTilesetForCurrentTime(void);
 const struct Tileset *GetPrismOlcanChineTilesetForCurrentTime(void);
 const struct Tileset *ResolvePrismOlcanTilesetForCurrentTime(const struct Tileset *tileset);
+bool32 IsPrismOlcanTileset(const struct Tileset *tileset);
 
 #endif // GUARD_PRISM_MINING_H
