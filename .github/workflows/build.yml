@@ -94,6 +94,7 @@ jobs:
             tools/gen4_ui/make_hgss_trainer_card_check_portrait.py \
             tools/gen4_ui/make_hgss_pokegear_help_bar.py \
             tools/gen4_ui/make_hgss_pokegear_map_sub0.py \
+            tools/gen4_ui/make_hgss_pokegear_map_main1.py \
             tools/gen4_ui/audit_hgss_pokegear_top_header.py \
             tools/gen4_ui/audit_hgss_pokegear_bg_dots.py \
             tools/gen4_ui/audit_hgss_pokegear_nav_icon.py \
@@ -188,7 +189,10 @@ jobs:
             graphics/gen4_ui/hgss_pokegear/help_bar_tooltip.gbapal \
             graphics/gen4_ui/hgss_pokegear/map_sub0.4bpp \
             graphics/gen4_ui/hgss_pokegear/map_sub0.tilemap.bin \
-            graphics/gen4_ui/hgss_pokegear/map_sub0.gbapal
+            graphics/gen4_ui/hgss_pokegear/map_sub0.gbapal \
+            graphics/gen4_ui/hgss_pokegear/map_main1.4bpp \
+            graphics/gen4_ui/hgss_pokegear/map_main1.tilemap.bin \
+            graphics/gen4_ui/hgss_pokegear/map_main1.gbapal
 
       - name: Compile Gen 4 UI renderer
         env:
