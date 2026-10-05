@@ -13,7 +13,7 @@
   "pipeline": {
     "authentic_hgss_asset_ready": true,
     "wired_live": true,
-    "legacy_equivalent_removed": false
+    "legacy_equivalent_removed": true
   },
   "source_blobs": {
     "pgmap_gra_00000062.NCLR": "907fcbae7aef50adf87c6eb1323ab6f2b83c0e77",
@@ -28,5 +28,12 @@
     "tile_base": "0x1E0",
     "palette_bank": 4,
     "screen_buffer": "32x32"
-  }
+  },
+  "legacy_removal_commit": "373c38e91ee2bc5e239adcbdaf4807c7b94b8958",
+  "removed_legacy": [
+    "disabled flat PokéNav BG1 rollback fill",
+    "synthetic PokéGear viewport bezel window",
+    "synthetic PokéGear info-card frame drawing",
+    "synthetic city-preview bezel"
+  ]
 }
