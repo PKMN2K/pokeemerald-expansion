@@ -432,3 +432,12 @@ The already translated authentic Prism Morning and Night palette banks are now w
 Olcan Isle exposes `gTileset_PrismOlcanIsleMorning`, `gTileset_PrismOlcanIsleDay`, and `gTileset_PrismOlcanIsleNight`. Olcan Chine exposes the corresponding Morning, Day, and Night variants using its Tunod/Chine palette source. All six variants share the same authentic Prism tile graphics, 110 mining metatiles, and `MB_PRISM_MINING` attributes.
 
 This step does not assign any map to these tilesets and does not add automatic clock-driven palette switching. It only makes the verified Morning/Night palettes live and selectable so later map/time-of-day integration can choose among them without duplicating mining geometry.
+
+
+## Olcan runtime time-of-day selector
+
+The mining integration now exposes runtime selectors for Olcan Isle and Olcan Chine that choose among the already-wired Morning, Day, and Night tileset variants using Expansion's existing `gTimeOfDay` state.
+
+`TIME_MORNING` selects the Prism Morning bank, `TIME_DAY` selects Day, and both `TIME_EVENING` and `TIME_NIGHT` select Prism Night because the imported Prism palette set has no separate Evening bank. This does not change `OW_TIMES_OF_DAY` or the project's global clock behavior.
+
+No map uses these selectors yet. The next map-wiring step can call them when choosing an Olcan mining secondary tileset without duplicating palette-selection logic.
