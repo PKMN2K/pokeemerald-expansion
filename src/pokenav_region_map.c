@@ -91,6 +91,17 @@ static const u16 sHgssPokeGearMapSub0_Pal[] = INCBIN_U16("graphics/gen4_ui/hgss_
 
 #define HGSS_POKEGEAR_MAP_SUB0_FIELD_ENTRY (sHgssPokeGearMapSub0_Tilemap[23 * 32])
 
+#define HGSS_POKEGEAR_MAP_MAIN1_TILE_BASE 0x1C0
+#define HGSS_POKEGEAR_MAP_MAIN1_PAL_BANK_A 5
+#define HGSS_POKEGEAR_MAP_MAIN1_PAL_BANK_B 6
+static const u32 sHgssPokeGearMapMain1_Gfx[] = INCBIN_U32("graphics/gen4_ui/hgss_pokegear/map_main1.4bpp");
+static const u16 sHgssPokeGearMapMain1_Tilemap[] = INCBIN_U16("graphics/gen4_ui/hgss_pokegear/map_main1.tilemap.bin");
+static const u16 sHgssPokeGearMapMain1_Pal[] = INCBIN_U16("graphics/gen4_ui/hgss_pokegear/map_main1.gbapal");
+
+// Phase 2 rollback only. MAIN_1 is the live frame; SUB_0 remains loaded for
+// the authentic pale info-field tile used by dynamic map details.
+static const bool8 sUseMapSub0SurfaceForRollback = FALSE;
+
 #include "data/region_map/city_map_tilemaps.h"
 
 static const struct BgTemplate sRegionMapBgTemplates[3] =
@@ -529,12 +540,20 @@ static void FreeCityZoomViewGfx(void)
 
 static void LoadPokenavRegionMapGfx(struct Pokenav_RegionMapGfx *state)
 {
-    // Retail HGSS pgmap_gra members 62/64/65. DS and GBA 4bpp text
-    // screens share tile/flip/palette entry bits; the build adapter only
-    // moves tile IDs into BG1's unused 0x1E0 character range.
+    // SUB_0 stays resident for its exact retail pale field tile, used behind
+    // dynamic map details. MAIN_1 is the live retail frame: its transparent
+    // tile-0 opening exposes the affine region map on BG2.
     LoadBgTiles(1, sHgssPokeGearMapSub0_Gfx, sizeof(sHgssPokeGearMapSub0_Gfx), HGSS_POKEGEAR_MAP_SUB0_TILE_BASE);
-    CpuCopy16(sHgssPokeGearMapSub0_Tilemap, state->tilemapBuffer, sizeof(sHgssPokeGearMapSub0_Tilemap));
     CopyPaletteIntoBufferUnfaded(sHgssPokeGearMapSub0_Pal, BG_PLTT_ID(4), PLTT_SIZE_4BPP);
+    LoadBgTiles(1, sHgssPokeGearMapMain1_Gfx, sizeof(sHgssPokeGearMapMain1_Gfx), HGSS_POKEGEAR_MAP_MAIN1_TILE_BASE);
+    CopyPaletteIntoBufferUnfaded(sHgssPokeGearMapMain1_Pal, BG_PLTT_ID(HGSS_POKEGEAR_MAP_MAIN1_PAL_BANK_A), PLTT_SIZE_4BPP);
+    CopyPaletteIntoBufferUnfaded(&sHgssPokeGearMapMain1_Pal[16], BG_PLTT_ID(HGSS_POKEGEAR_MAP_MAIN1_PAL_BANK_B), PLTT_SIZE_4BPP);
+
+    if (sUseMapSub0SurfaceForRollback)
+        CpuCopy16(sHgssPokeGearMapSub0_Tilemap, state->tilemapBuffer, sizeof(sHgssPokeGearMapSub0_Tilemap));
+    else
+        CpuCopy16(sHgssPokeGearMapMain1_Tilemap, state->tilemapBuffer, sizeof(sHgssPokeGearMapMain1_Tilemap));
+
     SetBgTilemapBuffer(1, state->tilemapBuffer);
     state->infoWindowId = AddWindow(&sMapSecInfoWindowTemplate);
     DecompressAndCopyTileDataToVram(1, sRegionMapCityZoomTiles_Gfx, 0, 0, 0);
