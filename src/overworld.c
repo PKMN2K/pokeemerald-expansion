@@ -50,6 +50,7 @@
 #include "oras_dowse.h"
 #include "palette.h"
 #include "play_time.h"
+#include "prism_mining.h"
 #include "random.h"
 #include "roamer.h"
 #include "rotating_gate.h"
@@ -1861,11 +1862,21 @@ static void OverworldBasic(void)
     if (!gPaletteFade.active && --gTimeUpdateCounter <= 0)
     {
         struct TimeBlendSettings cachedBlend = gTimeBlend;
+        u8 previousTimeOfDay = gTimeOfDay;
         u32 *bld0 = (u32*)&cachedBlend;
         u32 *bld1 = (u32*)&gTimeBlend;
         gTimeUpdateCounter = (SECONDS_PER_MINUTE * 60 / FakeRtc_GetSecondsRatio());
         UpdateTimeOfDay(TRUE);
         FormChangeTimeUpdate();
+
+        // Prism's Olcan palettes are discrete Morning/Day/Night source banks.
+        // If the RTC crosses into another period while the player remains on
+        // an Olcan map, reload only the secondary palette bank. The existing
+        // weather/time tint pass below will then reapply the active lighting.
+        if (previousTimeOfDay != gTimeOfDay
+         && IsPrismOlcanTileset(gMapHeader.mapLayout->secondaryTileset))
+            LoadSecondaryTilesetPalette(gMapHeader.mapLayout, FALSE);
+
         if (MapHasNaturalLight(gMapHeader.mapType) &&
            (bld0[0] != bld1[0]
          || bld0[1] != bld1[1]
