@@ -40,6 +40,7 @@ GEN4UIHGSSPOKEGEARACTIONMENU := tools/gen4_ui/make_hgss_pokegear_action_menu.py
 GEN4UIHGSSTRAINERCARDCHECK := tools/gen4_ui/make_hgss_trainer_card_check_portrait.py
 GEN4UIHGSSPOKEGEARHELPBAR := tools/gen4_ui/make_hgss_pokegear_help_bar.py
 GEN4UIHGSSPOKEGEARMAPSUB0 := tools/gen4_ui/make_hgss_pokegear_map_sub0.py
+GEN4UIHGSSPOKEGEARMAPMAIN1 := tools/gen4_ui/make_hgss_pokegear_map_main1.py
 
 types := none normal fight flying poison ground rock bug ghost steel mystery fire water grass electric psychic ice dragon dark fairy stellar
 contest_types := cool beauty cute smart tough
@@ -232,6 +233,19 @@ $(GEN4UIGFXDIR)/hgss_pokegear/map_sub0.tilemap.bin: $(GEN4UIHGSSPOKEGEARMAPSUB0)
 
 $(GEN4UIGFXDIR)/hgss_pokegear/map_sub0.gbapal: $(GEN4UIHGSSPOKEGEARMAPSUB0) \
 	$(GEN4UIGFXDIR)/hgss_pokegear/verified/map/pgmap_gra_00000062.NCLR
+	python3 $< --palette $@
+
+$(GEN4UIGFXDIR)/hgss_pokegear/map_main1.4bpp: $(GEN4UIHGSSPOKEGEARMAPMAIN1) \
+	$(GEN4UIGFXDIR)/hgss_pokegear/verified/map/pgmap_gra_00000066.png \
+	$(GEN4UIGFXDIR)/hgss_pokegear/verified/map/pgmap_gra_00000067.NSCR
+	python3 $< --tiles $@
+
+$(GEN4UIGFXDIR)/hgss_pokegear/map_main1.tilemap.bin: $(GEN4UIHGSSPOKEGEARMAPMAIN1) \
+	$(GEN4UIGFXDIR)/hgss_pokegear/verified/map/pgmap_gra_00000067.NSCR
+	python3 $< --tilemap $@
+
+$(GEN4UIGFXDIR)/hgss_pokegear/map_main1.gbapal: $(GEN4UIHGSSPOKEGEARMAPMAIN1) \
+	$(GEN4UIGFXDIR)/hgss_pokegear/verified/map/pgmap_gra_00000063.NCLR
 	python3 $< --palette $@
 
 # The live HGSS Pokédex background reserves BG palette entries 128..140.
