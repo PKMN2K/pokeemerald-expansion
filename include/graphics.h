@@ -1976,10 +1976,6 @@ extern const u16 gBerryPalette_Kee[];
 extern const u16 gBerryPalette_Maranga[];
 
 //PokéNav
-extern const u16 gPokenavCondition_Pal[];
-extern const u32 gPokenavCondition_Gfx[];
-extern const u32 gPokenavCondition_Tilemap[];
-extern const u16 gPokenavOptions_Tilemap[];
 extern const u16 gPokenavRibbonsSummaryBg_Pal[];
 extern const u32 gPokenavRibbonsSummaryBg_Gfx[];
 extern const u32 gPokenavRibbonsSummaryBg_Tilemap[];
