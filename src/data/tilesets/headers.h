@@ -1598,3 +1598,47 @@ const struct Tileset gTileset_PrismOlcanChineDay =
     .metatileAttributes = gMetatileAttributes_PrismOlcanIsle,
     .callback = NULL,
 };
+
+const struct Tileset gTileset_PrismOlcanIsleMorning =
+{
+    .isCompressed = TRUE,
+    .isSecondary = TRUE,
+    .tiles = gTilesetTiles_PrismOlcanIsle,
+    .palettes = gTilesetPalettes_PrismOlcanIsleMorning,
+    .metatiles = gMetatiles_PrismOlcanIsle,
+    .metatileAttributes = gMetatileAttributes_PrismOlcanIsle,
+    .callback = NULL,
+};
+
+const struct Tileset gTileset_PrismOlcanIsleNight =
+{
+    .isCompressed = TRUE,
+    .isSecondary = TRUE,
+    .tiles = gTilesetTiles_PrismOlcanIsle,
+    .palettes = gTilesetPalettes_PrismOlcanIsleNight,
+    .metatiles = gMetatiles_PrismOlcanIsle,
+    .metatileAttributes = gMetatileAttributes_PrismOlcanIsle,
+    .callback = NULL,
+};
+
+const struct Tileset gTileset_PrismOlcanChineMorning =
+{
+    .isCompressed = TRUE,
+    .isSecondary = TRUE,
+    .tiles = gTilesetTiles_PrismOlcanIsle,
+    .palettes = gTilesetPalettes_PrismOlcanChineMorning,
+    .metatiles = gMetatiles_PrismOlcanIsle,
+    .metatileAttributes = gMetatileAttributes_PrismOlcanIsle,
+    .callback = NULL,
+};
+
+const struct Tileset gTileset_PrismOlcanChineNight =
+{
+    .isCompressed = TRUE,
+    .isSecondary = TRUE,
+    .tiles = gTilesetTiles_PrismOlcanIsle,
+    .palettes = gTilesetPalettes_PrismOlcanChineNight,
+    .metatiles = gMetatiles_PrismOlcanIsle,
+    .metatileAttributes = gMetatileAttributes_PrismOlcanIsle,
+    .callback = NULL,
+};
