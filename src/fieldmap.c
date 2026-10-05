@@ -10,6 +10,7 @@
 #include "overworld.h"
 #include "palette.h"
 #include "pokenav.h"
+#include "prism_mining.h"
 #include "script.h"
 #include "secret_base.h"
 #include "trainer_hill.h"
@@ -1029,7 +1030,9 @@ static void LoadPrimaryTilesetPalette(struct MapLayout const *mapLayout)
 
 void LoadSecondaryTilesetPalette(struct MapLayout const *mapLayout, bool8 skipFaded)
 {
-    LoadTilesetPalette(mapLayout->secondaryTileset, GetNumPalsInPrimary(mapLayout) * 16, (NUM_PALS_TOTAL - GetNumPalsInPrimary(mapLayout)) * PLTT_SIZE_4BPP, skipFaded, GetNumPalsInPrimary(mapLayout));
+    const struct Tileset *secondaryTileset = ResolvePrismOlcanTilesetForCurrentTime(mapLayout->secondaryTileset);
+
+    LoadTilesetPalette(secondaryTileset, GetNumPalsInPrimary(mapLayout) * 16, (NUM_PALS_TOTAL - GetNumPalsInPrimary(mapLayout)) * PLTT_SIZE_4BPP, skipFaded, GetNumPalsInPrimary(mapLayout));
 }
 
 void CopyMapTilesetsToVram(struct MapLayout const *mapLayout)
