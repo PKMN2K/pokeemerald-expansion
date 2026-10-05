@@ -1,0 +1,33 @@
+{
+  "source_repository": "pret/pokeheartgold",
+  "source_commit": "9d8b7591f09b65804da2fb2dfd56f320633e0d36",
+  "source_directory": "files/application/pokegear/map/pgmap_gra",
+  "retail_loader_reference": "src/application/pokegear/map/overlay_101_021EDCE0.c::FlyMap_LoadBGGraphics/FlyMap_FinalizeGraphicsSetup; src/application/pokegear/map/overlay_101_021E9270.c",
+  "retail_layer": "GF_BG_LYR_SUB_2",
+  "members": {
+    "shared_palette": "pgmap_gra_00000062.NCLR",
+    "tiles": "pgmap_gra_00000068.png",
+    "tilemap": "pgmap_gra_00000069.NSCR"
+  },
+  "retail_behavior": {
+    "tiles_member_68_loaded_to": "GF_BG_LYR_SUB_2",
+    "screen_member_69_loaded_as": "unk_16C",
+    "town_map_copy": "rows 8..13, 32x6 to GF_BG_LYR_SUB_2",
+    "gear_map_copy": "rows 8..23, 32x16 to GF_BG_LYR_SUB_2",
+    "selected_location_panel": "8x7 block copied to SUB_2 at (23,11), source x 0 or 8 depending on location state"
+  },
+  "geography_policy": "Presentation/detail layer only. Do not replace the live Emerald/custom region geography or coordinate data with HGSS Johto/Kanto map data.",
+  "purpose": "Exact retail HGSS PokeGear Map SUB_2 selected-location/detail surface. Imported before live GBA wiring; no reconstructed or HGSS-style art.",
+  "pipeline": {
+    "authentic_hgss_asset_ready": true,
+    "wired_live": false,
+    "legacy_equivalent_removed": false
+  },
+  "source_blobs": {
+    "pgmap_gra_00000062.NCLR": "907fcbae7aef50adf87c6eb1323ab6f2b83c0e77",
+    "pgmap_gra_00000068.png": "890771f6c06680c5cc75af1df0ecf90d8a6d318c",
+    "pgmap_gra_00000069.NSCR": "09a8868e7ebb01f86554feda5464ab9ebb16f466"
+  },
+  "shared_palette_note": "Member 62 is already present byte-for-byte from the validated SUB_0 import and is reused here exactly as retail HGSS does.",
+  "import_commit": "5eb188ff5e6f22d01eb31ee82e81041f807c100f"
+}
