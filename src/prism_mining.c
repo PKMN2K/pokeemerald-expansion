@@ -1,4 +1,7 @@
 #include "global.h"
+#include "overworld.h"
+#include "tilesets.h"
+#include "constants/rtc.h"
 #include "constants/items.h"
 
 // PKMN 2K mining eligibility hook.
@@ -19,6 +22,42 @@ bool32 MiningCanInteract(void)
 // It runs only after MiningCanInteract() succeeds.
 void MiningApplyAttemptCost(void)
 {
+}
+
+
+static const struct Tileset *GetPrismOlcanTilesetForTimeOfDay(bool32 useChinePalettes)
+{
+    switch (gTimeOfDay)
+    {
+    case TIME_MORNING:
+        return useChinePalettes
+            ? &gTileset_PrismOlcanChineMorning
+            : &gTileset_PrismOlcanIsleMorning;
+    case TIME_EVENING:
+    case TIME_NIGHT:
+        // Prism has no separate Evening palette bank.
+        return useChinePalettes
+            ? &gTileset_PrismOlcanChineNight
+            : &gTileset_PrismOlcanIsleNight;
+    case TIME_DAY:
+    default:
+        return useChinePalettes
+            ? &gTileset_PrismOlcanChineDay
+            : &gTileset_PrismOlcanIsleDay;
+    }
+}
+
+// Runtime selectors for the already-imported Prism Olcan palette variants.
+// They intentionally follow Expansion's current gTimeOfDay state without
+// changing the project's global time-of-day configuration.
+const struct Tileset *GetPrismOlcanIsleTilesetForCurrentTime(void)
+{
+    return GetPrismOlcanTilesetForTimeOfDay(FALSE);
+}
+
+const struct Tileset *GetPrismOlcanChineTilesetForCurrentTime(void)
+{
+    return GetPrismOlcanTilesetForTimeOfDay(TRUE);
 }
 
 // PKMN 2K mining reward hook.
