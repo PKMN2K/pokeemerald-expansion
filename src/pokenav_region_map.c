@@ -88,6 +88,15 @@ extern const u32 gRegionMapCityZoomText_Gfx[];
 static const u16 sMapSecInfoWindow_Pal[] = INCGFX_U16("graphics/pokenav/region_map/info_window.pal", ".gbapal");
 static const u32 sRegionMapCityZoomTiles_Gfx[] = INCGFX_U32("graphics/pokenav/region_map/zoom_tiles.png", ".4bpp.smol");
 
+#define HGSS_POKEGEAR_MAP_SUB0_TILE_BASE 0x1E0
+static const u32 sHgssPokeGearMapSub0_Gfx[] = INCBIN_U32("graphics/gen4_ui/hgss_pokegear/map_sub0.4bpp");
+static const u16 sHgssPokeGearMapSub0_Tilemap[] = INCBIN_U16("graphics/gen4_ui/hgss_pokegear/map_sub0.tilemap.bin");
+static const u16 sHgssPokeGearMapSub0_Pal[] = INCBIN_U16("graphics/gen4_ui/hgss_pokegear/map_sub0.gbapal");
+
+// Phase 2: the exact retail HGSS Map SUB_0 surface is live. Keep the old flat
+// PokéNav backdrop only until this wiring has passed CI.
+static const bool8 sUseLegacyRegionMapBackdropForRollback = FALSE;
+
 #include "data/region_map/city_map_tilemaps.h"
 
 static const struct BgTemplate sRegionMapBgTemplates[3] =
@@ -542,7 +551,19 @@ static void LoadPokenavRegionMapGfx(struct Pokenav_RegionMapGfx *state)
     BgDmaFill(1, PIXEL_FILL(1), 0x41, 1);
     BgDmaFill(1, PIXEL_FILL(3), 0x42, 1);
     BgDmaFill(1, PIXEL_FILL(2), 0x43, 1);
-    CpuFill16(0x1040, state->tilemapBuffer, 0x800);
+    if (sUseLegacyRegionMapBackdropForRollback)
+    {
+        CpuFill16(0x1040, state->tilemapBuffer, 0x800);
+    }
+    else
+    {
+        // Retail HGSS pgmap_gra members 62/64/65. DS and GBA 4bpp text
+        // screens share tile/flip/palette entry bits; the build adapter only
+        // moves tile IDs into BG1's unused 0x1E0 character range.
+        LoadBgTiles(1, sHgssPokeGearMapSub0_Gfx, sizeof(sHgssPokeGearMapSub0_Gfx), HGSS_POKEGEAR_MAP_SUB0_TILE_BASE);
+        CpuCopy16(sHgssPokeGearMapSub0_Tilemap, state->tilemapBuffer, sizeof(sHgssPokeGearMapSub0_Tilemap));
+        CopyPaletteIntoBufferUnfaded(sHgssPokeGearMapSub0_Pal, BG_PLTT_ID(4), PLTT_SIZE_4BPP);
+    }
     SetBgTilemapBuffer(1, state->tilemapBuffer);
     state->infoWindowId = AddWindow(&sMapSecInfoWindowTemplate);
     state->viewportWindowId = AddWindow(&sMapViewportWindowTemplate);
