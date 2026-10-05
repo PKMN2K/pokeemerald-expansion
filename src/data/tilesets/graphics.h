@@ -3153,3 +3153,83 @@ const u16 gTilesetPalettes_PrismOlcanChineDay[][16] =
     INCGFX_U16("data/tilesets/secondary/prism_olcan_isle/palette_variants/empty.pal", ".gbapal"),
     INCGFX_U16("data/tilesets/secondary/prism_olcan_isle/palette_variants/empty.pal", ".gbapal"),
 };
+
+const u16 gTilesetPalettes_PrismOlcanIsleMorning[][16] =
+{
+    INCGFX_U16("data/tilesets/secondary/prism_olcan_isle/palette_variants/outdoor/morn/00.pal", ".gbapal"),
+    INCGFX_U16("data/tilesets/secondary/prism_olcan_isle/palette_variants/outdoor/morn/01.pal", ".gbapal"),
+    INCGFX_U16("data/tilesets/secondary/prism_olcan_isle/palette_variants/outdoor/morn/02.pal", ".gbapal"),
+    INCGFX_U16("data/tilesets/secondary/prism_olcan_isle/palette_variants/outdoor/morn/03.pal", ".gbapal"),
+    INCGFX_U16("data/tilesets/secondary/prism_olcan_isle/palette_variants/outdoor/morn/04.pal", ".gbapal"),
+    INCGFX_U16("data/tilesets/secondary/prism_olcan_isle/palette_variants/outdoor/morn/05.pal", ".gbapal"),
+    INCGFX_U16("data/tilesets/secondary/prism_olcan_isle/palette_variants/outdoor/morn/06.pal", ".gbapal"),
+    INCGFX_U16("data/tilesets/secondary/prism_olcan_isle/palette_variants/outdoor/morn/07.pal", ".gbapal"),
+    INCGFX_U16("data/tilesets/secondary/prism_olcan_isle/palette_variants/empty.pal", ".gbapal"),
+    INCGFX_U16("data/tilesets/secondary/prism_olcan_isle/palette_variants/empty.pal", ".gbapal"),
+    INCGFX_U16("data/tilesets/secondary/prism_olcan_isle/palette_variants/empty.pal", ".gbapal"),
+    INCGFX_U16("data/tilesets/secondary/prism_olcan_isle/palette_variants/empty.pal", ".gbapal"),
+    INCGFX_U16("data/tilesets/secondary/prism_olcan_isle/palette_variants/empty.pal", ".gbapal"),
+    INCGFX_U16("data/tilesets/secondary/prism_olcan_isle/palette_variants/empty.pal", ".gbapal"),
+    INCGFX_U16("data/tilesets/secondary/prism_olcan_isle/palette_variants/empty.pal", ".gbapal"),
+    INCGFX_U16("data/tilesets/secondary/prism_olcan_isle/palette_variants/empty.pal", ".gbapal"),
+};
+
+const u16 gTilesetPalettes_PrismOlcanIsleNight[][16] =
+{
+    INCGFX_U16("data/tilesets/secondary/prism_olcan_isle/palette_variants/outdoor/nite/00.pal", ".gbapal"),
+    INCGFX_U16("data/tilesets/secondary/prism_olcan_isle/palette_variants/outdoor/nite/01.pal", ".gbapal"),
+    INCGFX_U16("data/tilesets/secondary/prism_olcan_isle/palette_variants/outdoor/nite/02.pal", ".gbapal"),
+    INCGFX_U16("data/tilesets/secondary/prism_olcan_isle/palette_variants/outdoor/nite/03.pal", ".gbapal"),
+    INCGFX_U16("data/tilesets/secondary/prism_olcan_isle/palette_variants/outdoor/nite/04.pal", ".gbapal"),
+    INCGFX_U16("data/tilesets/secondary/prism_olcan_isle/palette_variants/outdoor/nite/05.pal", ".gbapal"),
+    INCGFX_U16("data/tilesets/secondary/prism_olcan_isle/palette_variants/outdoor/nite/06.pal", ".gbapal"),
+    INCGFX_U16("data/tilesets/secondary/prism_olcan_isle/palette_variants/outdoor/nite/07.pal", ".gbapal"),
+    INCGFX_U16("data/tilesets/secondary/prism_olcan_isle/palette_variants/empty.pal", ".gbapal"),
+    INCGFX_U16("data/tilesets/secondary/prism_olcan_isle/palette_variants/empty.pal", ".gbapal"),
+    INCGFX_U16("data/tilesets/secondary/prism_olcan_isle/palette_variants/empty.pal", ".gbapal"),
+    INCGFX_U16("data/tilesets/secondary/prism_olcan_isle/palette_variants/empty.pal", ".gbapal"),
+    INCGFX_U16("data/tilesets/secondary/prism_olcan_isle/palette_variants/empty.pal", ".gbapal"),
+    INCGFX_U16("data/tilesets/secondary/prism_olcan_isle/palette_variants/empty.pal", ".gbapal"),
+    INCGFX_U16("data/tilesets/secondary/prism_olcan_isle/palette_variants/empty.pal", ".gbapal"),
+    INCGFX_U16("data/tilesets/secondary/prism_olcan_isle/palette_variants/empty.pal", ".gbapal"),
+};
+
+const u16 gTilesetPalettes_PrismOlcanChineMorning[][16] =
+{
+    INCGFX_U16("data/tilesets/secondary/prism_olcan_isle/palette_variants/chine/morn/00.pal", ".gbapal"),
+    INCGFX_U16("data/tilesets/secondary/prism_olcan_isle/palette_variants/chine/morn/01.pal", ".gbapal"),
+    INCGFX_U16("data/tilesets/secondary/prism_olcan_isle/palette_variants/chine/morn/02.pal", ".gbapal"),
+    INCGFX_U16("data/tilesets/secondary/prism_olcan_isle/palette_variants/chine/morn/03.pal", ".gbapal"),
+    INCGFX_U16("data/tilesets/secondary/prism_olcan_isle/palette_variants/chine/morn/04.pal", ".gbapal"),
+    INCGFX_U16("data/tilesets/secondary/prism_olcan_isle/palette_variants/chine/morn/05.pal", ".gbapal"),
+    INCGFX_U16("data/tilesets/secondary/prism_olcan_isle/palette_variants/chine/morn/06.pal", ".gbapal"),
+    INCGFX_U16("data/tilesets/secondary/prism_olcan_isle/palette_variants/chine/morn/07.pal", ".gbapal"),
+    INCGFX_U16("data/tilesets/secondary/prism_olcan_isle/palette_variants/empty.pal", ".gbapal"),
+    INCGFX_U16("data/tilesets/secondary/prism_olcan_isle/palette_variants/empty.pal", ".gbapal"),
+    INCGFX_U16("data/tilesets/secondary/prism_olcan_isle/palette_variants/empty.pal", ".gbapal"),
+    INCGFX_U16("data/tilesets/secondary/prism_olcan_isle/palette_variants/empty.pal", ".gbapal"),
+    INCGFX_U16("data/tilesets/secondary/prism_olcan_isle/palette_variants/empty.pal", ".gbapal"),
+    INCGFX_U16("data/tilesets/secondary/prism_olcan_isle/palette_variants/empty.pal", ".gbapal"),
+    INCGFX_U16("data/tilesets/secondary/prism_olcan_isle/palette_variants/empty.pal", ".gbapal"),
+    INCGFX_U16("data/tilesets/secondary/prism_olcan_isle/palette_variants/empty.pal", ".gbapal"),
+};
+
+const u16 gTilesetPalettes_PrismOlcanChineNight[][16] =
+{
+    INCGFX_U16("data/tilesets/secondary/prism_olcan_isle/palette_variants/chine/nite/00.pal", ".gbapal"),
+    INCGFX_U16("data/tilesets/secondary/prism_olcan_isle/palette_variants/chine/nite/01.pal", ".gbapal"),
+    INCGFX_U16("data/tilesets/secondary/prism_olcan_isle/palette_variants/chine/nite/02.pal", ".gbapal"),
+    INCGFX_U16("data/tilesets/secondary/prism_olcan_isle/palette_variants/chine/nite/03.pal", ".gbapal"),
+    INCGFX_U16("data/tilesets/secondary/prism_olcan_isle/palette_variants/chine/nite/04.pal", ".gbapal"),
+    INCGFX_U16("data/tilesets/secondary/prism_olcan_isle/palette_variants/chine/nite/05.pal", ".gbapal"),
+    INCGFX_U16("data/tilesets/secondary/prism_olcan_isle/palette_variants/chine/nite/06.pal", ".gbapal"),
+    INCGFX_U16("data/tilesets/secondary/prism_olcan_isle/palette_variants/chine/nite/07.pal", ".gbapal"),
+    INCGFX_U16("data/tilesets/secondary/prism_olcan_isle/palette_variants/empty.pal", ".gbapal"),
+    INCGFX_U16("data/tilesets/secondary/prism_olcan_isle/palette_variants/empty.pal", ".gbapal"),
+    INCGFX_U16("data/tilesets/secondary/prism_olcan_isle/palette_variants/empty.pal", ".gbapal"),
+    INCGFX_U16("data/tilesets/secondary/prism_olcan_isle/palette_variants/empty.pal", ".gbapal"),
+    INCGFX_U16("data/tilesets/secondary/prism_olcan_isle/palette_variants/empty.pal", ".gbapal"),
+    INCGFX_U16("data/tilesets/secondary/prism_olcan_isle/palette_variants/empty.pal", ".gbapal"),
+    INCGFX_U16("data/tilesets/secondary/prism_olcan_isle/palette_variants/empty.pal", ".gbapal"),
+    INCGFX_U16("data/tilesets/secondary/prism_olcan_isle/palette_variants/empty.pal", ".gbapal"),
+};
