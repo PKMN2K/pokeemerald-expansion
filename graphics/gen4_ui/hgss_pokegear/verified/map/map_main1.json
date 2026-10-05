@@ -17,7 +17,7 @@
   "purpose": "Exact retail HGSS PokeGear Map MAIN_1 asset group. Imported before live GBA wiring; no reconstructed or HGSS-style art.",
   "pipeline": {
     "authentic_hgss_asset_ready": true,
-    "wired_live": false,
+    "wired_live": true,
     "legacy_equivalent_removed": false
   },
   "source_blobs": {
@@ -25,5 +25,23 @@
     "pgmap_gra_00000066.png": "0020479f6cf2100d6eeb8fdaa3d456b41e1897db",
     "pgmap_gra_00000067.NSCR": "0f43ed11f57f5ec3fee9c9adfb5af4867cb070d1"
   },
-  "import_commit": "41dc07a0aaf2d6079450d782473a2f11665ecc68"
+  "import_commit": "41dc07a0aaf2d6079450d782473a2f11665ecc68",
+  "live_adapter": "tools/gen4_ui/make_hgss_pokegear_map_main1.py",
+  "live_wiring_commit": "d866dbe6380cff7e7dcfd81c2527ac48d7ca4578",
+  "gba_mapping": {
+    "bg": 1,
+    "tile_base": "0x1C0",
+    "palette_banks": {
+      "source_5": 5,
+      "source_7": 6
+    },
+    "retail_copy": "32x24",
+    "gba_screen_buffer": "32x32",
+    "lower_rows": "extended with the exact transparent retail MAIN_1 opening tile"
+  },
+  "integration": {
+    "region_map_layer": "BG2 affine map remains visible through MAIN_1 retail transparent tile 0",
+    "sub0_role": "retained only for the exact retail pale info-field tile used by dynamic map details",
+    "rollback": "full SUB_0 surface remains behind a disabled Phase 2 rollback flag until CI validation"
+  }
 }
