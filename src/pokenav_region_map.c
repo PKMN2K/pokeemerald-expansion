@@ -98,9 +98,8 @@ static const u32 sHgssPokeGearMapMain1_Gfx[] = INCBIN_U32("graphics/gen4_ui/hgss
 static const u16 sHgssPokeGearMapMain1_Tilemap[] = INCBIN_U16("graphics/gen4_ui/hgss_pokegear/map_main1.tilemap.bin");
 static const u16 sHgssPokeGearMapMain1_Pal[] = INCBIN_U16("graphics/gen4_ui/hgss_pokegear/map_main1.gbapal");
 
-// Phase 2 rollback only. MAIN_1 is the live frame; SUB_0 remains loaded for
-// the authentic pale info-field tile used by dynamic map details.
-static const bool8 sUseMapSub0SurfaceForRollback = FALSE;
+// MAIN_1 is the live retail frame. SUB_0 remains loaded only for the exact
+// pale info-field tile used behind dynamic map details.
 
 #include "data/region_map/city_map_tilemaps.h"
 
@@ -549,10 +548,7 @@ static void LoadPokenavRegionMapGfx(struct Pokenav_RegionMapGfx *state)
     CopyPaletteIntoBufferUnfaded(sHgssPokeGearMapMain1_Pal, BG_PLTT_ID(HGSS_POKEGEAR_MAP_MAIN1_PAL_BANK_A), PLTT_SIZE_4BPP);
     CopyPaletteIntoBufferUnfaded(&sHgssPokeGearMapMain1_Pal[16], BG_PLTT_ID(HGSS_POKEGEAR_MAP_MAIN1_PAL_BANK_B), PLTT_SIZE_4BPP);
 
-    if (sUseMapSub0SurfaceForRollback)
-        CpuCopy16(sHgssPokeGearMapSub0_Tilemap, state->tilemapBuffer, sizeof(sHgssPokeGearMapSub0_Tilemap));
-    else
-        CpuCopy16(sHgssPokeGearMapMain1_Tilemap, state->tilemapBuffer, sizeof(sHgssPokeGearMapMain1_Tilemap));
+    CpuCopy16(sHgssPokeGearMapMain1_Tilemap, state->tilemapBuffer, sizeof(sHgssPokeGearMapMain1_Tilemap));
 
     SetBgTilemapBuffer(1, state->tilemapBuffer);
     state->infoWindowId = AddWindow(&sMapSecInfoWindowTemplate);
