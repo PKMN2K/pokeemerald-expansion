@@ -481,6 +481,8 @@ Text_CantRockClimb:
 @ Until the custom PKMN 2K mining table is defined, the reward hook returns ITEM_NONE.
 EventScript_PrismMining::
 	lockall
+	specialvar VAR_RESULT, MiningCanInteract
+	goto_if_eq VAR_RESULT, FALSE, EventScript_PrismMiningUnavailable
 	playse SE_M_ROCK_THROW
 	waitse
 	specialvar VAR_RESULT, MiningRollCustomReward
@@ -489,10 +491,18 @@ EventScript_PrismMining::
 	releaseall
 	end
 
+EventScript_PrismMiningUnavailable:
+	msgbox Text_PrismMiningUnavailable, MSGBOX_DEFAULT
+	releaseall
+	end
+
 EventScript_PrismMiningNoItem:
 	msgbox Text_PrismMiningNoItem, MSGBOX_DEFAULT
 	releaseall
 	end
+
+Text_PrismMiningUnavailable:
+	.string "You can't mine here right now.$"
 
 Text_PrismMiningNoItem:
 	.string "Unable to extract anything.$"

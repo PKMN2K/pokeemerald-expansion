@@ -412,3 +412,8 @@ The original Pokémon Prism mining reward table is **not part of this port's gam
 
 Reward selection is project-owned through `MiningRollCustomReward()`. Until the PKMN 2K mining loot table is explicitly designed, that hook returns `ITEM_NONE`; Prism's probabilities, mining-level reward windows, map-specific special rewards, and Prism-only item substitutions must not be reintroduced by default.
 
+## Mining eligibility hook
+
+Mining access is now routed through `MiningCanInteract()` before any mining sound or reward roll occurs. The hook currently returns `TRUE`, so gameplay is unchanged: every `MB_PRISM_MINING` surface remains usable.
+
+This deliberately leaves the eventual requirement open. A later PKMN 2K design can gate mining behind a key item, Trainer Skill, quest flag, or another condition by changing one function rather than modifying imported tilesets or map interactions.
