@@ -425,3 +425,20 @@ const u16 gMetatileAttributes_PrismKantoCave[] = INCBIN_U16("data/tilesets/secon
 // First authentic Prism Olcan Isle/Chine 16x16 mining surface.
 const u16 gMetatiles_PrismOlcanIsle[] = INCBIN_U16("data/tilesets/secondary/prism_olcan_isle/metatiles.bin");
 const u16 gMetatileAttributes_PrismOlcanIsle[] = INCBIN_U16("data/tilesets/secondary/prism_olcan_isle/metatile_attributes.bin");
+
+
+#define PRISM_METATILE_ENTRY_COUNT 8
+
+STATIC_ASSERT(ARRAY_COUNT(gMetatiles_PrismMoundCave) == 104 * PRISM_METATILE_ENTRY_COUNT, PrismMoundCaveMiningMetatileCount);
+STATIC_ASSERT(ARRAY_COUNT(gMetatileAttributes_PrismMoundCave) == 104, PrismMoundCaveMiningAttributeCount);
+
+STATIC_ASSERT(ARRAY_COUNT(gMetatiles_PrismFirelightCaverns) == 127 * PRISM_METATILE_ENTRY_COUNT, PrismFirelightMiningMetatileCount);
+STATIC_ASSERT(ARRAY_COUNT(gMetatileAttributes_PrismFirelightCaverns) == 127, PrismFirelightMiningAttributeCount);
+
+STATIC_ASSERT(ARRAY_COUNT(gMetatiles_PrismKantoCave) == 242 * PRISM_METATILE_ENTRY_COUNT, PrismKantoCaveMiningMetatileCount);
+STATIC_ASSERT(ARRAY_COUNT(gMetatileAttributes_PrismKantoCave) == 242, PrismKantoCaveMiningAttributeCount);
+
+STATIC_ASSERT(ARRAY_COUNT(gMetatiles_PrismOlcanIsle) == 110 * PRISM_METATILE_ENTRY_COUNT, PrismOlcanMiningMetatileCount);
+STATIC_ASSERT(ARRAY_COUNT(gMetatileAttributes_PrismOlcanIsle) == 110, PrismOlcanMiningAttributeCount);
+
+#undef PRISM_METATILE_ENTRY_COUNT
