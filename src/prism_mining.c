@@ -1,5 +1,6 @@
 #include "global.h"
 #include "overworld.h"
+#include "prism_mining.h"
 #include "tilesets.h"
 #include "constants/rtc.h"
 #include "constants/items.h"
@@ -27,6 +28,10 @@ void MiningApplyAttemptCost(void)
 
 static const struct Tileset *GetPrismOlcanTilesetForTimeOfDay(bool32 useChinePalettes)
 {
+    // Ensure map-load palette selection uses the current RTC period rather than
+    // whatever gTimeOfDay happened to contain before the warp.
+    UpdateTimeOfDay(FALSE);
+
     switch (gTimeOfDay)
     {
     case TIME_MORNING:
@@ -58,6 +63,22 @@ const struct Tileset *GetPrismOlcanIsleTilesetForCurrentTime(void)
 const struct Tileset *GetPrismOlcanChineTilesetForCurrentTime(void)
 {
     return GetPrismOlcanTilesetForTimeOfDay(TRUE);
+}
+
+
+const struct Tileset *ResolvePrismOlcanTilesetForCurrentTime(const struct Tileset *tileset)
+{
+    if (tileset == &gTileset_PrismOlcanIsleMorning
+     || tileset == &gTileset_PrismOlcanIsleDay
+     || tileset == &gTileset_PrismOlcanIsleNight)
+        return GetPrismOlcanIsleTilesetForCurrentTime();
+
+    if (tileset == &gTileset_PrismOlcanChineMorning
+     || tileset == &gTileset_PrismOlcanChineDay
+     || tileset == &gTileset_PrismOlcanChineNight)
+        return GetPrismOlcanChineTilesetForCurrentTime();
+
+    return tileset;
 }
 
 // PKMN 2K mining reward hook.
