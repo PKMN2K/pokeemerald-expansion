@@ -423,3 +423,12 @@ This deliberately leaves the eventual requirement open. A later PKMN 2K design c
 Each permitted mining attempt now calls `MiningApplyAttemptCost()` after the impact feedback and before reward resolution. The hook is intentionally a no-op, so current gameplay remains unchanged.
 
 This separates future attempt costs from mining eligibility and reward selection. Trainer stamina, consumable picks, tool durability, or a no-cost design can later be implemented here without changing the imported mining surfaces or loot hook.
+
+
+## Selectable Olcan Morning / Night palette variants
+
+The already translated authentic Prism Morning and Night palette banks are now wired as selectable secondary tilesets alongside the existing Day variants.
+
+Olcan Isle exposes `gTileset_PrismOlcanIsleMorning`, `gTileset_PrismOlcanIsleDay`, and `gTileset_PrismOlcanIsleNight`. Olcan Chine exposes the corresponding Morning, Day, and Night variants using its Tunod/Chine palette source. All six variants share the same authentic Prism tile graphics, 110 mining metatiles, and `MB_PRISM_MINING` attributes.
+
+This step does not assign any map to these tilesets and does not add automatic clock-driven palette switching. It only makes the verified Morning/Night palettes live and selectable so later map/time-of-day integration can choose among them without duplicating mining geometry.
