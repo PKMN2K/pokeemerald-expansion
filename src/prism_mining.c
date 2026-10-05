@@ -12,6 +12,15 @@ bool32 MiningCanInteract(void)
     return TRUE;
 }
 
+// PKMN 2K mining attempt-cost hook.
+//
+// This is intentionally a no-op until the project decides whether mining
+// spends trainer stamina, consumes a tool, reduces durability, or has no cost.
+// It runs only after MiningCanInteract() succeeds.
+void MiningApplyAttemptCost(void)
+{
+}
+
 // PKMN 2K mining reward hook.
 //
 // The Prism reward table is intentionally not retained. This function is a

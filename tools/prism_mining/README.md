@@ -417,3 +417,9 @@ Reward selection is project-owned through `MiningRollCustomReward()`. Until the 
 Mining access is now routed through `MiningCanInteract()` before any mining sound or reward roll occurs. The hook currently returns `TRUE`, so gameplay is unchanged: every `MB_PRISM_MINING` surface remains usable.
 
 This deliberately leaves the eventual requirement open. A later PKMN 2K design can gate mining behind a key item, Trainer Skill, quest flag, or another condition by changing one function rather than modifying imported tilesets or map interactions.
+
+## Mining attempt-cost hook
+
+Each permitted mining attempt now calls `MiningApplyAttemptCost()` after the impact feedback and before reward resolution. The hook is intentionally a no-op, so current gameplay remains unchanged.
+
+This separates future attempt costs from mining eligibility and reward selection. Trainer stamina, consumable picks, tool durability, or a no-cost design can later be implemented here without changing the imported mining surfaces or loot hook.

@@ -485,6 +485,7 @@ EventScript_PrismMining::
 	goto_if_eq VAR_RESULT, FALSE, EventScript_PrismMiningUnavailable
 	playse SE_M_ROCK_THROW
 	waitse
+	special MiningApplyAttemptCost
 	specialvar VAR_RESULT, MiningRollCustomReward
 	goto_if_eq VAR_RESULT, ITEM_NONE, EventScript_PrismMiningNoItem
 	giveitem VAR_RESULT, 1
