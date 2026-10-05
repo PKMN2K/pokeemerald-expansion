@@ -18,7 +18,7 @@
   "pipeline": {
     "authentic_hgss_asset_ready": true,
     "wired_live": true,
-    "legacy_equivalent_removed": false
+    "legacy_equivalent_removed": true
   },
   "source_blobs": {
     "pgmap_gra_00000063.NCLR": "d55d134d59e48ce4fbf177d3024307b06a0b1fa4",
@@ -43,5 +43,12 @@
     "region_map_layer": "BG2 affine map remains visible through MAIN_1 retail transparent tile 0",
     "sub0_role": "retained only for the exact retail pale info-field tile used by dynamic map details",
     "rollback": "full SUB_0 surface remains behind a disabled Phase 2 rollback flag until CI validation"
-  }
+  },
+  "rollback_removed_commit": "04547caf12df30db2005993ee3a5ef21dd29a491",
+  "removed_legacy": [
+    "disabled full-SUB_0 surface rollback path"
+  ],
+  "retained_authentic_dependency": [
+    "SUB_0 tiles/palette/tilemap remain present because the live Map still uses the exact retail pale info-field tile behind dynamic details"
+  ]
 }
