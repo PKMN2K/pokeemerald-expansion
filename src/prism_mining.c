@@ -81,6 +81,17 @@ const struct Tileset *ResolvePrismOlcanTilesetForCurrentTime(const struct Tilese
     return tileset;
 }
 
+
+bool32 IsPrismOlcanTileset(const struct Tileset *tileset)
+{
+    return tileset == &gTileset_PrismOlcanIsleMorning
+        || tileset == &gTileset_PrismOlcanIsleDay
+        || tileset == &gTileset_PrismOlcanIsleNight
+        || tileset == &gTileset_PrismOlcanChineMorning
+        || tileset == &gTileset_PrismOlcanChineDay
+        || tileset == &gTileset_PrismOlcanChineNight;
+}
+
 // PKMN 2K mining reward hook.
 //
 // The Prism reward table is intentionally not retained. This function is a
