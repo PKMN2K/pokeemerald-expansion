@@ -12,7 +12,7 @@
   "purpose": "Exact retail HGSS PokeGear Map SUB_0 asset group. Imported before live GBA wiring; no reconstructed or HGSS-style art.",
   "pipeline": {
     "authentic_hgss_asset_ready": true,
-    "wired_live": false,
+    "wired_live": true,
     "legacy_equivalent_removed": false
   },
   "source_blobs": {
@@ -20,5 +20,13 @@
     "pgmap_gra_00000064.png": "db869c4590aae5e32170edf1abb14d5104900cd3",
     "pgmap_gra_00000065.NSCR": "0b0e6ee70d201bf1241e612b1a16c657e5a25c17"
   },
-  "import_commit": "e47e450352921850247a61ebc4911a9a60f46ae8"
+  "import_commit": "e47e450352921850247a61ebc4911a9a60f46ae8",
+  "live_adapter": "tools/gen4_ui/make_hgss_pokegear_map_sub0.py",
+  "live_wiring_commit": "0d7e03a128e1c5f8762b49f5d0f80a0023ca69f6",
+  "gba_mapping": {
+    "bg": 1,
+    "tile_base": "0x1E0",
+    "palette_bank": 4,
+    "screen_buffer": "32x32"
+  }
 }
