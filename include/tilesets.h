@@ -66,5 +66,9 @@ extern const struct Tileset gTileset_PrismFirelightCaverns;
 extern const struct Tileset gTileset_PrismKantoCave;
 extern const struct Tileset gTileset_PrismOlcanIsleDay;
 extern const struct Tileset gTileset_PrismOlcanChineDay;
+extern const struct Tileset gTileset_PrismOlcanIsleMorning;
+extern const struct Tileset gTileset_PrismOlcanIsleNight;
+extern const struct Tileset gTileset_PrismOlcanChineMorning;
+extern const struct Tileset gTileset_PrismOlcanChineNight;
 
 #endif //GUARD_tilesets_H
