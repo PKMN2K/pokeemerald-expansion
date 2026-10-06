@@ -22,7 +22,7 @@
     "authentic_hgss_asset_ready": true,
     "wired_live": true,
     "legacy_equivalent_removed": false,
-    "live_scope": "Unzoomed region-map cursor only; zoomed mode temporarily retains legacy large cursor until HGSS 2x affine scaling is ported."
+    "live_scope": "Both unzoomed and zoomed region-map cursor paths use the authentic retail HGSS 16x16 cursor; zoomed mode applies the retail-equivalent 2x runtime affine scale."
   },
   "source_blobs": {
     "pgmap_gra_00000000.NCLR": "9e0e2984206e76c7b54ffac00c687d8753626497",
@@ -74,5 +74,11 @@
       15
     ],
     "note": "No retail player-marker graphics are wired."
+  },
+  "zoom_wiring": {
+    "commit": "b705145d434340f4c8fb334d6129dea3164f3876",
+    "behavior": "Use the same retail sequence-0 16x16 cursor in zoom mode with 2x affine scaling.",
+    "source_reference": "pret/pokeheartgold ov101_021E990C sets cursor scale ratio to 2 when zoomed.",
+    "legacy_status": "cursor_large.png and its legacy animation remain present but are no longer selected by the live zoom path; remove only after CI validation."
   }
 }
