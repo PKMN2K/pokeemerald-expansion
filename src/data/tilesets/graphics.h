@@ -3234,24 +3234,17 @@ const u16 gTilesetPalettes_PrismOlcanChineNight[][16] =
     INCGFX_U16("data/tilesets/secondary/prism_olcan_isle/palette_variants/empty.pal", ".gbapal"),
 };
 
-#define PRISM_4BPP_TILE_U32_COUNT 8
-
-STATIC_ASSERT(ARRAY_COUNT(gTilesetTiles_PrismMoundCave) == 112 * PRISM_4BPP_TILE_U32_COUNT, PrismMiningMoundTileCount);
+// The Prism tile graphics above are emitted through .4bpp.fastSmol compression,
+// so ARRAY_COUNT() reflects compressed byte size rather than the source tile count.
+// The source tile counts remain enforced by each INCGFX invocation's -num_tiles
+// argument; compile-time guards here are therefore limited to fixed-size palettes.
 STATIC_ASSERT(ARRAY_COUNT(gTilesetPalettes_PrismMoundCave) == 16, PrismMiningMoundPaletteCount);
-
-STATIC_ASSERT(ARRAY_COUNT(gTilesetTiles_PrismFirelightCaverns) == 112 * PRISM_4BPP_TILE_U32_COUNT, PrismMiningFirelightTileCount);
 STATIC_ASSERT(ARRAY_COUNT(gTilesetPalettes_PrismFirelightCaverns) == 16, PrismMiningFirelightPaletteCount);
-
-STATIC_ASSERT(ARRAY_COUNT(gTilesetTiles_PrismKantoCave) == 80 * PRISM_4BPP_TILE_U32_COUNT, PrismMiningKantoTileCount);
 STATIC_ASSERT(ARRAY_COUNT(gTilesetPalettes_PrismKantoCave) == 16, PrismMiningKantoPaletteCount);
-
-STATIC_ASSERT(ARRAY_COUNT(gTilesetTiles_PrismOlcanIsle) == 176 * PRISM_4BPP_TILE_U32_COUNT, PrismMiningOlcanTileCount);
 STATIC_ASSERT(ARRAY_COUNT(gTilesetPalettes_PrismOlcanIsleDay) == 16, PrismMiningOlcanIsleDayPaletteCount);
 STATIC_ASSERT(ARRAY_COUNT(gTilesetPalettes_PrismOlcanChineDay) == 16, PrismMiningOlcanChineDayPaletteCount);
 STATIC_ASSERT(ARRAY_COUNT(gTilesetPalettes_PrismOlcanIsleMorning) == 16, PrismMiningOlcanIsleMorningPaletteCount);
 STATIC_ASSERT(ARRAY_COUNT(gTilesetPalettes_PrismOlcanIsleNight) == 16, PrismMiningOlcanIsleNightPaletteCount);
 STATIC_ASSERT(ARRAY_COUNT(gTilesetPalettes_PrismOlcanChineMorning) == 16, PrismMiningOlcanChineMorningPaletteCount);
 STATIC_ASSERT(ARRAY_COUNT(gTilesetPalettes_PrismOlcanChineNight) == 16, PrismMiningOlcanChineNightPaletteCount);
-
-#undef PRISM_4BPP_TILE_U32_COUNT
 
