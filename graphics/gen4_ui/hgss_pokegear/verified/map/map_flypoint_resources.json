@@ -35,11 +35,11 @@
   "pipeline": {
     "authentic_hgss_asset_ready": true,
     "wired_live": true,
-    "legacy_equivalent_removed": false
+    "legacy_equivalent_removed": true
   },
   "geography_policy": "Safe for custom regions. Does not import HGSS fly-point coordinates, location names, Johto/Kanto tilemaps, or player-marker graphics.",
   "wiring": {
-    "commit": "63be20fa6f6995a588cba961922c65ef1a9cfece",
+    "commit": "29464c63c4aa8541d67f2a58b5c0fef501460cff",
     "target": "src/region_map.c Fly Map destination markers",
     "behavior": [
       "Use the exact retail HGSS 16x16 fly-point marker for visited destinations.",
@@ -47,6 +47,16 @@
       "Hide undiscovered destinations, matching retail HGSS behavior.",
       "Center the marker over each destination's map-section dimensions."
     ],
-    "retained_legacy": "graphics/pokenav/region_map/fly_target_icons.png remains loaded only for the Battle Frontier red-outline marker until an authentic HGSS replacement or removal decision is validated."
+    "retained_legacy": null
+  },
+  "legacy_removal": {
+    "removed_asset": "graphics/pokenav/region_map/fly_target_icons.png",
+    "removed_code": [
+      "legacy fly icon palette/sheet load",
+      "legacy can-fly/cannot-fly marker animations",
+      "Battle Frontier red-outline animation/template"
+    ],
+    "special_destination_behavior": "Battle Frontier keeps FLAG_LANDMARK_BATTLE_FRONTIER gating and its existing fly warp; it now uses the authentic HGSS fly-point marker centered on its map section.",
+    "geography_preserved": true
   }
 }
