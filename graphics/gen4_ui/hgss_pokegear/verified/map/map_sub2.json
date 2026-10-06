@@ -20,7 +20,7 @@
   "purpose": "Exact retail HGSS PokeGear Map SUB_2 selected-location/detail surface. Imported before live GBA wiring; no reconstructed or HGSS-style art.",
   "pipeline": {
     "authentic_hgss_asset_ready": true,
-    "wired_live": false,
+    "wired_live": true,
     "legacy_equivalent_removed": false
   },
   "source_blobs": {
@@ -29,5 +29,14 @@
     "pgmap_gra_00000069.NSCR": "09a8868e7ebb01f86554feda5464ab9ebb16f466"
   },
   "shared_palette_note": "Member 62 is already present byte-for-byte from the validated SUB_0 import and is reused here exactly as retail HGSS does.",
-  "import_commit": "5eb188ff5e6f22d01eb31ee82e81041f807c100f"
+  "import_commit": "5eb188ff5e6f22d01eb31ee82e81041f807c100f",
+  "wiring_commit": "4f337483ecd6e9e5f9e3a18991b74c738e355ac1",
+  "gba_mapping": {
+    "tile_base": "0x180",
+    "palette_bank": 2,
+    "retail_crop": "source x=16..31, y=8..23 (16x16)",
+    "gba_destination": "x=14..29, y=2..17",
+    "rationale": "Preserves the complete authentic retail right-side SUB_2 detail surface while shifting it two tiles left to fit the 240px GBA viewport."
+  },
+  "integration_note": "SUB_2 is live as presentation/detail chrome only. The existing dynamic region name, landmark, city-preview, cursor, fly-point and geography logic remains active until each legacy presentation element has an authentic HGSS replacement."
 }
