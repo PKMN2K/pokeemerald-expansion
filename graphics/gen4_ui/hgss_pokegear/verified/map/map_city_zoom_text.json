@@ -1,0 +1,42 @@
+{
+  "phase": "legacy_city_zoom_text_audited",
+  "purpose": "Audit the Emerald PokéNav city-zoom cycling text sprite before removal from the authentic HGSS Map presentation.",
+  "legacy_asset": {
+    "file": "graphics/pokenav/region_map/city_zoom_text.png",
+    "git_blob_sha": "4e2b41be6dde2bf5450901a5e611992bf89ec3d3",
+    "dimensions": "64x64 4bpp indexed PNG",
+    "live_role": "Three 32x8 OBJ slices are created and cycled as a legend while the PokéNav city preview is visible."
+  },
+  "retail_hgss_findings": {
+    "source_repository": "pret/pokeheartgold",
+    "source_commit": "9d8b7591f09b65804da2fb2dfd56f320633e0d36",
+    "map_sources": [
+      "src/application/pokegear/map/overlay_101_021EDCE0.c",
+      "src/application/pokegear/map/overlay_101_021E9270.c"
+    ],
+    "finding": "Retail HGSS Map renders location text through SUB_1 windows over the Map detail layers; it does not create an Emerald-style cycling city-legend text sprite.",
+    "authentic_surfaces_already_live": [
+      "HGSS Map SUB_2 selected-location/detail surface",
+      "HGSS Map member-62 window palette and retail text color tuple"
+    ]
+  },
+  "geography_policy": {
+    "keep_separate": "The Hoenn city-map tilemaps and zoom_tiles.png remain classified as geography/content data in this phase.",
+    "forbidden": "Do not replace them with HGSS SUB_3/member12+13 because those resources encode fixed retail Johto/Kanto city thumbnails."
+  },
+  "authentic_sources": {
+    "member62_nclr": "907fcbae7aef50adf87c6eb1323ab6f2b83c0e77",
+    "member68_tiles": "890771f6c06680c5cc75af1df0ecf90d8a6d318c",
+    "member69_nscr": "09a8868e7ebb01f86554feda5464ab9ebb16f466",
+    "prerequisite_manifests": [
+      "graphics/gen4_ui/hgss_pokegear/verified/map/map_sub2.json",
+      "graphics/gen4_ui/hgss_pokegear/verified/map/map_window_palette.json"
+    ]
+  },
+  "pipeline": {
+    "authentic_hgss_asset_ready": true,
+    "wired_live": false,
+    "legacy_equivalent_removed": false
+  },
+  "next": "Suppress the Emerald city-zoom cycling text sprite while leaving city-map geography/data untouched; validate in CI before deleting the sprite code and asset."
+}
