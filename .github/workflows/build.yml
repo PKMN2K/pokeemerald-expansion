@@ -97,6 +97,7 @@ jobs:
             tools/gen4_ui/make_hgss_pokegear_map_main1.py \
             tools/gen4_ui/make_hgss_pokegear_map_sub2.py \
             tools/gen4_ui/make_hgss_pokegear_map_cursor.py \
+            tools/gen4_ui/make_hgss_pokegear_map_flypoint.py \
             tools/gen4_ui/audit_hgss_pokegear_top_header.py \
             tools/gen4_ui/audit_hgss_pokegear_bg_dots.py \
             tools/gen4_ui/audit_hgss_pokegear_nav_icon.py \
@@ -199,7 +200,9 @@ jobs:
             graphics/gen4_ui/hgss_pokegear/map_sub2.tilemap.bin \
             graphics/gen4_ui/hgss_pokegear/map_sub2.gbapal \
             graphics/gen4_ui/hgss_pokegear/map_cursor.4bpp \
-            graphics/gen4_ui/hgss_pokegear/map_cursor.gbapal
+            graphics/gen4_ui/hgss_pokegear/map_cursor.gbapal \
+            graphics/gen4_ui/hgss_pokegear/map_flypoint.4bpp \
+            graphics/gen4_ui/hgss_pokegear/map_flypoint.gbapal
 
       - name: Compile Gen 4 UI renderer
         env:

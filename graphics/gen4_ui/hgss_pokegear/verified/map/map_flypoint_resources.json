@@ -1,0 +1,41 @@
+{
+  "source_repository": "pret/pokeheartgold",
+  "source_commit": "9d8b7591f09b65804da2fb2dfd56f320633e0d36",
+  "source_directory": "files/application/pokegear/map/pgmap_gra",
+  "resource_set": 1,
+  "purpose": "Generic retail HGSS PokeGear Fly Map destination indicator; no region geography.",
+  "source_members": {
+    "palette": "pgmap_gra_00000000.NCLR",
+    "tiles": "pgmap_gra_00000001.png",
+    "cells": "pgmap_gra_00000002.NCER",
+    "animations": "pgmap_gra_00000003.NANR"
+  },
+  "source_blobs": {
+    "pgmap_gra_00000000.NCLR": "9e0e2984206e76c7b54ffac00c687d8753626497",
+    "pgmap_gra_00000001.png": "537eab25b10bf0803c3642df515bf3cdc289f3bc",
+    "pgmap_gra_00000002.NCER": "579c414c22fe0775c539377488bd5b12f4501592",
+    "pgmap_gra_00000003.NANR": "9c446e6297aea062853fd9bd1c24c37b40bfd411"
+  },
+  "retail_mapping": {
+    "sprite_template_index": 9,
+    "animation_sequence": 9,
+    "cell": 17,
+    "tile": 53,
+    "frame_size": "16x16",
+    "palette_bank": 0,
+    "duration": 1
+  },
+  "adapter": {
+    "path": "tools/gen4_ui/make_hgss_pokegear_map_flypoint.py",
+    "outputs": [
+      "map_flypoint.4bpp",
+      "map_flypoint.gbapal"
+    ]
+  },
+  "pipeline": {
+    "authentic_hgss_asset_ready": true,
+    "wired_live": false,
+    "legacy_equivalent_removed": false
+  },
+  "geography_policy": "Safe for custom regions. Does not import HGSS fly-point coordinates, location names, Johto/Kanto tilemaps, or player-marker graphics."
+}
