@@ -460,3 +460,9 @@ This does not assign mining art to any map or expand the terrain scope. It gives
 `CurrentMapUsesPrismMiningTileset()` now reports whether the active map layout's secondary tileset belongs to the approved Prism mining family. The helper safely returns false before a map layout is available.
 
 This is runtime plumbing only: no existing map is reassigned, no mining surface is added, and no reward or eligibility behavior changes. It gives later mining-map setup, diagnostics, or project-owned mechanics one stable current-map check.
+
+## Current-map Olcan family helper
+
+`CurrentMapUsesPrismOlcanTileset()` now reports whether the active map layout is using any approved Olcan Isle/Chine Morning, Day, or Night secondary tileset.
+
+This remains runtime plumbing only. It does not assign maps, alter palette timing, expand mining terrain, or change mining rewards. It gives later Olcan-specific palette/debug/map logic one direct current-map check.
