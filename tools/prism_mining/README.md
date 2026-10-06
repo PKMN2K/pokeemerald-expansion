@@ -448,3 +448,9 @@ No map uses these selectors yet. The next map-wiring step can call them when cho
 Olcan's imported Prism Morning/Day/Night source palettes now refresh when Expansion's active `gTimeOfDay` period changes while the player remains on the map.
 
 The rollover hook only runs for the six Olcan Isle/Chine secondary tileset variants. It reloads the selected secondary palette bank and then lets Expansion's existing weather/time-of-day lighting pass reapply normally. Tiles, metatiles, mining collision, maps, reward logic, and the global `OW_TIMES_OF_DAY` configuration are unchanged.
+
+## Prism mining tileset family classifier
+
+The integration now exposes `IsPrismMiningTileset()` as the single classifier for the project's approved Prism mining terrain pool: Mound Cave, Firelight Caverns, Kanto Cave, and every Olcan Isle/Chine time-of-day variant.
+
+This does not assign mining art to any map or expand the terrain scope. It gives later map wiring, debug tools, and mining-specific runtime logic one stable test instead of duplicating the approved tileset list.
