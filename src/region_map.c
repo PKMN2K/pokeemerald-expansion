@@ -117,13 +117,10 @@ static void CB_FadeInFlyMap(void);
 static void CB_HandleFlyMapInput(void);
 static void CB_ExitFlyMap(void);
 
-// Authentic retail HGSS PokeGear Map cursor. The retail resource is a
-// two-frame 16x16 OBJ; use it directly for the unzoomed region-map cursor.
-// Zoomed mode still uses the legacy large cursor until the retail 2x affine
-// scaling behavior is ported separately.
+// Authentic retail HGSS PokeGear Map cursor. Retail uses the same two-frame
+// 16x16 OBJ at 1x normally and a 2x affine scale in zoom mode.
 static const u16 sRegionMapCursorPal[] = INCBIN_U16("graphics/gen4_ui/hgss_pokegear/map_cursor.gbapal");
 static const u32 sHgssPokeGearMapCursor_Gfx[] = INCBIN_U32("graphics/gen4_ui/hgss_pokegear/map_cursor.4bpp");
-static const u32 sRegionMapCursorLargeGfxLZ[] = INCGFX_U32("graphics/pokenav/region_map/cursor_large.png", ".4bpp.smol");
 static const u16 sRegionMapBg_Pal[] = INCGFX_U16("graphics/pokenav/region_map/map.pal", ".gbapal");
 static const u32 sRegionMapBg_GfxLZ[] = INCGFX_U32("graphics/pokenav/region_map/map.png", ".8bpp.smol", "-num_tiles 233 -Wnum_tiles");
 static const u32 sRegionMapBg_TilemapLZ[] = INCGFX_U32("graphics/pokenav/region_map/map.bin", ".smolTM");
@@ -236,19 +233,9 @@ static const union AnimCmd sRegionMapCursorAnim1[] =
     ANIMCMD_JUMP(0)
 };
 
-static const union AnimCmd sRegionMapCursorAnim2[] =
-{
-    ANIMCMD_FRAME( 0, 10),
-    ANIMCMD_FRAME(16, 10),
-    ANIMCMD_FRAME(32, 10),
-    ANIMCMD_FRAME(16, 10),
-    ANIMCMD_JUMP(0)
-};
-
 static const union AnimCmd *const sRegionMapCursorAnimTable[] =
 {
-    sRegionMapCursorAnim1,
-    sRegionMapCursorAnim2
+    sRegionMapCursorAnim1
 };
 
 static const struct SpritePalette sRegionMapCursorSpritePalette =
@@ -773,7 +760,7 @@ bool8 LoadRegionMapGfx(void)
         memcpy(sRegionMap->cursorSmallImage, sHgssPokeGearMapCursor_Gfx, sizeof(sRegionMap->cursorSmallImage));
         break;
     case 4:
-        DecompressDataWithHeaderWram(sRegionMapCursorLargeGfxLZ, sRegionMap->cursorLargeImage);
+        // Retail HGSS reuses the 16x16 cursor at 2x scale; no second graphic.
         break;
     case 5:
         InitMapBasedOnPlayerLocation();

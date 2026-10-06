@@ -21,8 +21,9 @@
   "pipeline": {
     "authentic_hgss_asset_ready": true,
     "wired_live": true,
-    "legacy_equivalent_removed": false,
-    "live_scope": "Both unzoomed and zoomed region-map cursor paths use the authentic retail HGSS 16x16 cursor; zoomed mode applies the retail-equivalent 2x runtime affine scale."
+    "legacy_equivalent_removed": true,
+    "live_scope": "Both unzoomed and zoomed region-map cursor paths use the authentic retail HGSS 16x16 cursor; zoomed mode applies the retail-equivalent 2x runtime affine scale.",
+    "legacy_removal_scope": "Removed Emerald cursor.pal, cursor_small.png, cursor_large.png, the old large-cursor animation, decompression path, and unused 0x600 large-cursor RAM buffer."
   },
   "source_blobs": {
     "pgmap_gra_00000000.NCLR": "9e0e2984206e76c7b54ffac00c687d8753626497",
@@ -80,5 +81,19 @@
     "behavior": "Use the same retail sequence-0 16x16 cursor in zoom mode with 2x affine scaling.",
     "source_reference": "pret/pokeheartgold ov101_021E990C sets cursor scale ratio to 2 when zoomed.",
     "legacy_status": "cursor_large.png and its legacy animation remain present but are no longer selected by the live zoom path; remove only after CI validation."
+  },
+  "legacy_removal": {
+    "removed_assets": [
+      "graphics/pokenav/region_map/cursor.pal",
+      "graphics/pokenav/region_map/cursor_small.png",
+      "graphics/pokenav/region_map/cursor_large.png"
+    ],
+    "removed_code": [
+      "sRegionMapCursorLargeGfxLZ",
+      "sRegionMapCursorAnim2",
+      "legacy large-cursor decompression init step"
+    ],
+    "retained_init_step_4": true,
+    "reason": "Keep LoadRegionMapGfx init-step sequencing stable while making step 4 a no-op; HGSS zoom uses runtime 2x scaling."
   }
 }
