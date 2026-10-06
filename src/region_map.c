@@ -770,7 +770,7 @@ bool8 LoadRegionMapGfx(void)
             LoadPalette(gRegionMapInfos[regionMapType].regionMapPalette, BG_PLTT_ID(7), 3 * PLTT_SIZE_4BPP);
         break;
     case 3:
-        CpuCopy16(sHgssPokeGearMapCursor_Gfx, sRegionMap->cursorSmallImage, sizeof(sRegionMap->cursorSmallImage));
+        memcpy(sRegionMap->cursorSmallImage, sHgssPokeGearMapCursor_Gfx, sizeof(sRegionMap->cursorSmallImage));
         break;
     case 4:
         DecompressDataWithHeaderWram(sRegionMapCursorLargeGfxLZ, sRegionMap->cursorLargeImage);
