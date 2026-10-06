@@ -33,5 +33,33 @@
   "geography_audit": {
     "sub3_members_12_13": "Skipped for generic live wiring. Member 13 contains location-specific 7x7 city thumbnail blocks selected by tilemapUnk174BlockID for named HGSS Johto/Kanto cities.",
     "main2_members_10_11": "Still deferred because this path contains region-specific map geography."
+  },
+  "adapter": {
+    "path": "tools/gen4_ui/make_hgss_pokegear_map_cursor.py",
+    "commit": "52b5f54ace2a84c862031b6080308c76fddf3885",
+    "outputs": [
+      "map_cursor.4bpp",
+      "map_cursor.gbapal"
+    ],
+    "retail_mapping": {
+      "cursor_sequence": 0,
+      "cursor_cells": [
+        0,
+        1
+      ],
+      "cursor_tiles": [
+        0,
+        4
+      ],
+      "cursor_palette_bank": 15,
+      "frame_durations": [
+        15,
+        15
+      ]
+    },
+    "excluded_player_marker": {
+      "animation_sequence": 1,
+      "reason": "PKMN2K protagonists are not Ethan/Lyra; retail player-marker pixels are intentionally not exported."
+    }
   }
 }
