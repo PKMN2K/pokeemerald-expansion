@@ -34,8 +34,19 @@
   },
   "pipeline": {
     "authentic_hgss_asset_ready": true,
-    "wired_live": false,
+    "wired_live": true,
     "legacy_equivalent_removed": false
   },
-  "geography_policy": "Safe for custom regions. Does not import HGSS fly-point coordinates, location names, Johto/Kanto tilemaps, or player-marker graphics."
+  "geography_policy": "Safe for custom regions. Does not import HGSS fly-point coordinates, location names, Johto/Kanto tilemaps, or player-marker graphics.",
+  "wiring": {
+    "commit": "63be20fa6f6995a588cba961922c65ef1a9cfece",
+    "target": "src/region_map.c Fly Map destination markers",
+    "behavior": [
+      "Use the exact retail HGSS 16x16 fly-point marker for visited destinations.",
+      "Preserve PKMN2K/pokeemerald region-specific fly-location coordinates and visit flags.",
+      "Hide undiscovered destinations, matching retail HGSS behavior.",
+      "Center the marker over each destination's map-section dimensions."
+    ],
+    "retained_legacy": "graphics/pokenav/region_map/fly_target_icons.png remains loaded only for the Battle Frontier red-outline marker until an authentic HGSS replacement or removal decision is validated."
+  }
 }
