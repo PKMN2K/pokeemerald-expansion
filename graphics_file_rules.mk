@@ -238,6 +238,10 @@ $(GEN4UIGFXDIR)/hgss_pokegear/map_sub0.gbapal: $(GEN4UIHGSSPOKEGEARMAPSUB0) \
 	$(GEN4UIGFXDIR)/hgss_pokegear/verified/map/pgmap_gra_00000062.NCLR
 	python3 $< --palette $@
 
+$(GEN4UIGFXDIR)/hgss_pokegear/map_window.gbapal: $(GEN4UIHGSSPOKEGEARMAPSUB0) \
+	$(GEN4UIGFXDIR)/hgss_pokegear/verified/map/pgmap_gra_00000062.NCLR
+	python3 $< --window-palette $@
+
 $(GEN4UIGFXDIR)/hgss_pokegear/map_main1.4bpp: $(GEN4UIHGSSPOKEGEARMAPMAIN1) \
 	$(GEN4UIGFXDIR)/hgss_pokegear/verified/map/pgmap_gra_00000066.png \
 	$(GEN4UIGFXDIR)/hgss_pokegear/verified/map/pgmap_gra_00000067.NSCR

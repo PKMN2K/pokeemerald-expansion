@@ -193,6 +193,7 @@ jobs:
             graphics/gen4_ui/hgss_pokegear/map_sub0.4bpp \
             graphics/gen4_ui/hgss_pokegear/map_sub0.tilemap.bin \
             graphics/gen4_ui/hgss_pokegear/map_sub0.gbapal \
+            graphics/gen4_ui/hgss_pokegear/map_window.gbapal \
             graphics/gen4_ui/hgss_pokegear/map_main1.4bpp \
             graphics/gen4_ui/hgss_pokegear/map_main1.tilemap.bin \
             graphics/gen4_ui/hgss_pokegear/map_main1.gbapal \

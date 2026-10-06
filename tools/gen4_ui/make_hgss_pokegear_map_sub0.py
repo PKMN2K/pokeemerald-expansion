@@ -39,6 +39,7 @@ SOURCE_HEIGHT_TILES = 24
 OUTPUT_WIDTH_TILES = 32
 OUTPUT_HEIGHT_TILES = 32
 SOURCE_PALETTE_BANK = 4
+WINDOW_PALETTE_BANK = 1
 GBA_PALETTE_BANK = 4
 GBA_TILE_BASE = 0x1E0
 
@@ -248,11 +249,23 @@ def make_palette():
     return struct.pack("<16H", *bank)
 
 
+def make_window_palette():
+    # Retail Fly Map windows on SUB_1 explicitly select palette bank 1.
+    # Member 62 NCLR is loaded as the shared SUB-screen BG palette source,
+    # so export that exact 16-color bank without remapping or recoloring.
+    colors = load_nclr(PALETTE)
+    start = WINDOW_PALETTE_BANK * 16
+    bank = colors[start:start + 16]
+    if len(bank) != 16:
+        raise ValueError(f"{PALETTE}: missing retail window palette bank 1")
+    return struct.pack("<16H", *bank)
+
+
 def main():
-    if len(sys.argv) != 3 or sys.argv[1] not in ("--tiles", "--tilemap", "--palette"):
+    if len(sys.argv) != 3 or sys.argv[1] not in ("--tiles", "--tilemap", "--palette", "--window-palette"):
         raise SystemExit(
             "usage: make_hgss_pokegear_map_sub0.py "
-            "(--tiles|--tilemap|--palette) OUTPUT"
+            "(--tiles|--tilemap|--palette|--window-palette) OUTPUT"
         )
 
     output = Path(sys.argv[2])
@@ -261,6 +274,8 @@ def main():
         output.write_bytes(make_tiles())
     elif sys.argv[1] == "--tilemap":
         output.write_bytes(make_tilemap())
+    elif sys.argv[1] == "--window-palette":
+        output.write_bytes(make_window_palette())
     else:
         output.write_bytes(make_palette())
 
