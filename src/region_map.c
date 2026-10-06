@@ -117,8 +117,12 @@ static void CB_FadeInFlyMap(void);
 static void CB_HandleFlyMapInput(void);
 static void CB_ExitFlyMap(void);
 
-static const u16 sRegionMapCursorPal[] = INCGFX_U16("graphics/pokenav/region_map/cursor.pal", ".gbapal");
-static const u32 sRegionMapCursorSmallGfxLZ[] = INCGFX_U32("graphics/pokenav/region_map/cursor_small.png", ".4bpp.smol");
+// Authentic retail HGSS PokeGear Map cursor. The retail resource is a
+// two-frame 16x16 OBJ; use it directly for the unzoomed region-map cursor.
+// Zoomed mode still uses the legacy large cursor until the retail 2x affine
+// scaling behavior is ported separately.
+static const u16 sRegionMapCursorPal[] = INCBIN_U16("graphics/gen4_ui/hgss_pokegear/map_cursor.gbapal");
+static const u32 sHgssPokeGearMapCursor_Gfx[] = INCBIN_U32("graphics/gen4_ui/hgss_pokegear/map_cursor.4bpp");
 static const u32 sRegionMapCursorLargeGfxLZ[] = INCGFX_U32("graphics/pokenav/region_map/cursor_large.png", ".4bpp.smol");
 static const u16 sRegionMapBg_Pal[] = INCGFX_U16("graphics/pokenav/region_map/map.pal", ".gbapal");
 static const u32 sRegionMapBg_GfxLZ[] = INCGFX_U32("graphics/pokenav/region_map/map.png", ".8bpp.smol", "-num_tiles 233 -Wnum_tiles");
@@ -226,8 +230,9 @@ static const struct OamData sRegionMapCursorOam =
 
 static const union AnimCmd sRegionMapCursorAnim1[] =
 {
-    ANIMCMD_FRAME(0, 20),
-    ANIMCMD_FRAME(4, 20),
+    // Match retail HGSS PokeGear Map cursor sequence 0 timing.
+    ANIMCMD_FRAME(0, 15),
+    ANIMCMD_FRAME(4, 15),
     ANIMCMD_JUMP(0)
 };
 
@@ -765,7 +770,7 @@ bool8 LoadRegionMapGfx(void)
             LoadPalette(gRegionMapInfos[regionMapType].regionMapPalette, BG_PLTT_ID(7), 3 * PLTT_SIZE_4BPP);
         break;
     case 3:
-        DecompressDataWithHeaderWram(sRegionMapCursorSmallGfxLZ, sRegionMap->cursorSmallImage);
+        CpuCopy16(sHgssPokeGearMapCursor_Gfx, sRegionMap->cursorSmallImage, sizeof(sRegionMap->cursorSmallImage));
         break;
     case 4:
         DecompressDataWithHeaderWram(sRegionMapCursorLargeGfxLZ, sRegionMap->cursorLargeImage);
