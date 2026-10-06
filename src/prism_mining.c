@@ -103,6 +103,14 @@ bool32 IsPrismMiningTileset(const struct Tileset *tileset)
         || IsPrismOlcanTileset(tileset);
 }
 
+bool32 CurrentMapUsesPrismMiningTileset(void)
+{
+    if (gMapHeader.mapLayout == NULL)
+        return FALSE;
+
+    return IsPrismMiningTileset(gMapHeader.mapLayout->secondaryTileset);
+}
+
 // PKMN 2K mining reward hook.
 //
 // The Prism reward table is intentionally not retained. This function is a
