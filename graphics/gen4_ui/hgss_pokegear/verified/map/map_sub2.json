@@ -21,7 +21,7 @@
   "pipeline": {
     "authentic_hgss_asset_ready": true,
     "wired_live": true,
-    "legacy_equivalent_removed": false
+    "legacy_equivalent_removed": true
   },
   "source_blobs": {
     "pgmap_gra_00000062.NCLR": "907fcbae7aef50adf87c6eb1323ab6f2b83c0e77",
@@ -38,5 +38,10 @@
     "gba_destination": "x=14..29, y=2..17",
     "rationale": "Preserves the complete authentic retail right-side SUB_2 detail surface while shifting it two tiles left to fit the 240px GBA viewport."
   },
-  "integration_note": "SUB_2 is live as presentation/detail chrome only. The existing dynamic region name, landmark, city-preview, cursor, fly-point and geography logic remains active until each legacy presentation element has an authentic HGSS replacement."
+  "integration_note": "SUB_2 is live as presentation/detail chrome only. The existing dynamic region name, landmark, city-preview, cursor, fly-point and geography logic remains active until each legacy presentation element has an authentic HGSS replacement.",
+  "legacy_removal_commit": "b30f1864624bdaf9bc5bb3d4dbfd0888676c3a63",
+  "removed_legacy": [
+    "temporary SUB_0 pale-field filler inside the right-side map detail card",
+    "live SUB_0 Map bindings that existed only to support that filler"
+  ]
 }
