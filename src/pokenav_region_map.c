@@ -14,6 +14,7 @@
 #include "sprite.h"
 #include "string_util.h"
 #include "task.h"
+#include "text.h"
 #include "text_window.h"
 #include "window.h"
 #include "constants/rgb.h"
@@ -62,6 +63,7 @@ static bool32 IsDecompressCityMapsActive(void);
 static void LoadPokenavRegionMapGfx(struct Pokenav_RegionMapGfx *);
 static bool32 TryFreeTempTileDataBuffers(void);
 static void UpdateMapSecInfoWindow(struct Pokenav_RegionMapGfx *);
+static void PrintHgssMapWindowText(u8 windowId, const u8 *text, u8 x, u8 y);
 static void RestoreHgssMapSub2DetailRect(struct Pokenav_RegionMapGfx *, u8, u8, u8, u8);
 static bool32 IsDma3ManagerBusyWithBgCopy_(struct Pokenav_RegionMapGfx *);
 static void ChangeBgYForZoom(bool32);
@@ -82,7 +84,7 @@ static u32 LoopedTask_TreatAsPokeNavFlyMap(s32);
 extern const u16 gRegionMapCityZoomTiles_Pal[];
 extern const u32 gRegionMapCityZoomText_Gfx[];
 
-static const u16 sMapSecInfoWindow_Pal[] = INCGFX_U16("graphics/pokenav/region_map/info_window.pal", ".gbapal");
+static const u16 sHgssPokeGearMapWindow_Pal[] = INCBIN_U16("graphics/gen4_ui/hgss_pokegear/map_window.gbapal");
 static const u32 sRegionMapCityZoomTiles_Gfx[] = INCGFX_U32("graphics/pokenav/region_map/zoom_tiles.png", ".4bpp.smol");
 
 #define HGSS_POKEGEAR_MAP_MAIN1_TILE_BASE 0x1C0
@@ -573,7 +575,7 @@ static void LoadPokenavRegionMapGfx(struct Pokenav_RegionMapGfx *state)
     FillWindowPixelBuffer(state->infoWindowId, PIXEL_FILL(0));
     PutWindowTilemap(state->infoWindowId);
     CopyWindowToVram(state->infoWindowId, COPYWIN_FULL);
-    CopyPaletteIntoBufferUnfaded(sMapSecInfoWindow_Pal, BG_PLTT_ID(1), sizeof(sMapSecInfoWindow_Pal));
+    CopyPaletteIntoBufferUnfaded(sHgssPokeGearMapWindow_Pal, BG_PLTT_ID(1), sizeof(sHgssPokeGearMapWindow_Pal));
     CopyPaletteIntoBufferUnfaded(gRegionMapCityZoomTiles_Pal, BG_PLTT_ID(3), PLTT_SIZE_4BPP);
     if (!IsRegionMapZoomed())
         ChangeBgY(1, -0x6000, BG_COORD_SET);
@@ -602,6 +604,31 @@ static void RestoreHgssMapSub2DetailRect(struct Pokenav_RegionMapGfx *state, u8 
     }
 }
 
+static void PrintHgssMapWindowText(u8 windowId, const u8 *text, u8 x, u8 y)
+{
+    struct TextPrinterTemplate printer;
+
+    printer.currentChar = text;
+    printer.type = WINDOW_TEXT_PRINTER;
+    printer.windowId = windowId;
+    printer.fontId = FONT_NARROW;
+    printer.x = x;
+    printer.y = y;
+    printer.currentX = x;
+    printer.currentY = y;
+    printer.letterSpacing = gFonts[FONT_NARROW].letterSpacing;
+    printer.lineSpacing = gFonts[FONT_NARROW].lineSpacing;
+
+    // Retail HGSS Map windows use MAKE_TEXT_COLOR(1, 2, 0):
+    // foreground 1, shadow 2, background 0.
+    printer.color.background = 0;
+    printer.color.foreground = 1;
+    printer.color.shadow = 2;
+    printer.color.accent = 0;
+
+    AddTextPrinter(&printer, TEXT_SKIP_DRAW, NULL);
+}
+
 static void UpdateMapSecInfoWindow(struct Pokenav_RegionMapGfx *state)
 {
     struct RegionMap *regionMap = GetSubstructPtr(POKENAV_SUBSTRUCT_REGION_MAP);
@@ -610,14 +637,14 @@ static void UpdateMapSecInfoWindow(struct Pokenav_RegionMapGfx *state)
     {
     case MAPSECTYPE_CITY_CANFLY:
         PutWindowRectTilemap(state->infoWindowId, 0, 0, 12, 2);
-        AddTextPrinterParameterized(state->infoWindowId, FONT_NARROW, regionMap->mapSecName, 4, 1, TEXT_SKIP_DRAW, NULL);
+        PrintHgssMapWindowText(state->infoWindowId, regionMap->mapSecName, 4, 1);
         DrawCityMap(state, regionMap->mapSecId, regionMap->posWithinMapSec);
         CopyWindowToVram(state->infoWindowId, COPYWIN_FULL);
         SetCityZoomTextInvisibility(FALSE);
         break;
     case MAPSECTYPE_CITY_CANTFLY:
         PutWindowRectTilemap(state->infoWindowId, 0, 0, 12, 2);
-        AddTextPrinterParameterized(state->infoWindowId, FONT_NARROW, regionMap->mapSecName, 4, 1, TEXT_SKIP_DRAW, NULL);
+        PrintHgssMapWindowText(state->infoWindowId, regionMap->mapSecName, 4, 1);
         RestoreHgssMapSub2DetailRect(state, 17, 6, 12, 11);
         CopyWindowToVram(state->infoWindowId, COPYWIN_FULL);
         SetCityZoomTextInvisibility(TRUE);
@@ -625,7 +652,7 @@ static void UpdateMapSecInfoWindow(struct Pokenav_RegionMapGfx *state)
     case MAPSECTYPE_ROUTE:
     case MAPSECTYPE_BATTLE_FRONTIER:
         PutWindowTilemap(state->infoWindowId);
-        AddTextPrinterParameterized(state->infoWindowId, FONT_NARROW, regionMap->mapSecName, 4, 1, TEXT_SKIP_DRAW, NULL);
+        PrintHgssMapWindowText(state->infoWindowId, regionMap->mapSecName, 4, 1);
         PrintLandmarkNames(state, regionMap->mapSecId, regionMap->posWithinMapSec);
         CopyWindowToVram(state->infoWindowId, COPYWIN_FULL);
         SetCityZoomTextInvisibility(TRUE);
@@ -727,7 +754,7 @@ static void PrintLandmarkNames(struct Pokenav_RegionMapGfx *state, mapsec_s32_t 
             break;
 
         StringCopyPadded(gStringVar1, landmarkName, CHAR_SPACE, 12);
-        AddTextPrinterParameterized(state->infoWindowId, FONT_NARROW, gStringVar1, 4, i * 16 + 17, TEXT_SKIP_DRAW, NULL);
+        PrintHgssMapWindowText(state->infoWindowId, gStringVar1, 4, i * 16 + 17);
         i++;
     }
 }

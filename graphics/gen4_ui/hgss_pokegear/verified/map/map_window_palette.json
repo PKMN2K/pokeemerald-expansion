@@ -19,8 +19,20 @@
   "geography_policy": "Palette-only presentation resource. Contains no Johto/Kanto coordinates, labels, tilemaps, or city thumbnails.",
   "pipeline": {
     "authentic_hgss_asset_ready": true,
-    "wired_live": false,
+    "wired_live": true,
     "legacy_equivalent_removed": false
   },
-  "pending_legacy": "graphics/pokenav/region_map/info_window.pal"
+  "pending_legacy": "graphics/pokenav/region_map/info_window.pal remains in the repository for this validation cycle but is no longer live.",
+  "live_integration": {
+    "target": "src/pokenav_region_map.c map-section info window",
+    "gba_palette_bank": 1,
+    "palette_file": "graphics/gen4_ui/hgss_pokegear/map_window.gbapal",
+    "retail_text_tuple": "MAKE_TEXT_COLOR(1, 2, 0)",
+    "gba_text_indices": {
+      "background": 0,
+      "foreground": 1,
+      "shadow": 2
+    },
+    "behavior": "Map section names and landmark names now render against the exact retail HGSS Map window palette bank 1."
+  }
 }
