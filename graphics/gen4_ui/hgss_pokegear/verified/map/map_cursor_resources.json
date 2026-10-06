@@ -20,8 +20,9 @@
   "scope_policy": "Import exact retail bundle for provenance. The GBA adapter must extract/wire only reusable map cursor/indicator graphics. Do not wire the retail Ethan/Lyra player marker because PKMN2K uses different protagonists. Do not import SUB_3 city-thumbnail geography.",
   "pipeline": {
     "authentic_hgss_asset_ready": true,
-    "wired_live": false,
-    "legacy_equivalent_removed": false
+    "wired_live": true,
+    "legacy_equivalent_removed": false,
+    "live_scope": "Unzoomed region-map cursor only; zoomed mode temporarily retains legacy large cursor until HGSS 2x affine scaling is ported."
   },
   "source_blobs": {
     "pgmap_gra_00000000.NCLR": "9e0e2984206e76c7b54ffac00c687d8753626497",
@@ -61,5 +62,17 @@
       "animation_sequence": 1,
       "reason": "PKMN2K protagonists are not Ethan/Lyra; retail player-marker pixels are intentionally not exported."
     }
+  },
+  "wiring_commit": "0164f2be206365f977acbedbbe549f8e8c301eff",
+  "live_mapping": {
+    "source": "retail HGSS PokeGear Map animation sequence 0",
+    "gba_target": "src/region_map.c unzoomed cursor path",
+    "frame_size": "16x16",
+    "frames": 2,
+    "frame_durations": [
+      15,
+      15
+    ],
+    "note": "No retail player-marker graphics are wired."
   }
 }
