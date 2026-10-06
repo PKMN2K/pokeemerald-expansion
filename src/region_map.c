@@ -831,6 +831,7 @@ void FreeRegionMapIconResources(void)
 {
     if (sRegionMap->cursorSprite != NULL)
     {
+        FreeSpriteOamMatrix(sRegionMap->cursorSprite);
         DestroySprite(sRegionMap->cursorSprite);
         FreeSpriteTilesByTag(sRegionMap->cursorTileTag);
         FreeSpritePaletteByTag(sRegionMap->cursorPaletteTag);
@@ -1671,25 +1672,27 @@ void CreateRegionMapCursor(u16 tileTag, u16 paletteTag)
     struct SpriteTemplate template;
     struct SpritePalette palette;
     struct SpriteSheet sheet;
+    struct OamData oam = sRegionMapCursorOam;
 
     palette = sRegionMapCursorSpritePalette;
     template = sRegionMapCursorSpriteTemplate;
+    template.oam = &oam;
     sheet.tag = tileTag;
     template.tileTag = tileTag;
     sRegionMap->cursorTileTag = tileTag;
     palette.tag = paletteTag;
     template.paletteTag = paletteTag;
     sRegionMap->cursorPaletteTag = paletteTag;
+    sheet.data = sRegionMap->cursorSmallImage;
+    sheet.size = sizeof(sRegionMap->cursorSmallImage);
     if (!sRegionMap->zoomed)
     {
-        sheet.data = sRegionMap->cursorSmallImage;
-        sheet.size = sizeof(sRegionMap->cursorSmallImage);
         template.callback = SpriteCB_CursorMapFull;
     }
     else
     {
-        sheet.data = sRegionMap->cursorLargeImage;
-        sheet.size = sizeof(sRegionMap->cursorLargeImage);
+        // Retail HGSS scales the same 16x16 map cursor to 2x in zoom mode.
+        oam.affineMode = ST_OAM_AFFINE_DOUBLE;
         template.callback = SpriteCB_CursorMapZoomed;
     }
     LoadSpriteSheet(&sheet);
@@ -1700,10 +1703,7 @@ void CreateRegionMapCursor(u16 tileTag, u16 paletteTag)
         sRegionMap->cursorSprite = &gSprites[spriteId];
         if (sRegionMap->zoomed == TRUE)
         {
-            sRegionMap->cursorSprite->oam.size = SPRITE_SIZE(32x32);
-            sRegionMap->cursorSprite->x -= 8;
-            sRegionMap->cursorSprite->y -= 8;
-            StartSpriteAnim(sRegionMap->cursorSprite, 1);
+            SetOamMatrixRotationScaling(sRegionMap->cursorSprite->oam.matrixNum, 0x200, 0x200, 0);
         }
         else
         {
