@@ -1,0 +1,37 @@
+{
+  "source_repository": "pret/pokeheartgold",
+  "source_commit": "9d8b7591f09b65804da2fb2dfd56f320633e0d36",
+  "source_directory": "files/application/pokegear/map/pgmap_gra",
+  "retail_resource_table": {
+    "char": "files/data/resdat/resdat_00000034.json",
+    "pltt": "files/data/resdat/resdat_00000035.json",
+    "cell": "files/data/resdat/resdat_00000033.json",
+    "anim": "files/data/resdat/resdat_00000032.json",
+    "header": "files/data/resdat/resdat_00000080.json"
+  },
+  "resource_set": 1,
+  "retail_members": {
+    "palette": "pgmap_gra_00000000.NCLR",
+    "tiles": "pgmap_gra_00000001.png",
+    "cells": "pgmap_gra_00000002.NCER",
+    "animations": "pgmap_gra_00000003.NANR"
+  },
+  "retail_usage": "sSpriteTemplates resourceSet 1: map cursor, player marker, roamers and fly-point indicators.",
+  "scope_policy": "Import exact retail bundle for provenance. The GBA adapter must extract/wire only reusable map cursor/indicator graphics. Do not wire the retail Ethan/Lyra player marker because PKMN2K uses different protagonists. Do not import SUB_3 city-thumbnail geography.",
+  "pipeline": {
+    "authentic_hgss_asset_ready": true,
+    "wired_live": false,
+    "legacy_equivalent_removed": false
+  },
+  "source_blobs": {
+    "pgmap_gra_00000000.NCLR": "9e0e2984206e76c7b54ffac00c687d8753626497",
+    "pgmap_gra_00000001.png": "537eab25b10bf0803c3642df515bf3cdc289f3bc",
+    "pgmap_gra_00000002.NCER": "579c414c22fe0775c539377488bd5b12f4501592",
+    "pgmap_gra_00000003.NANR": "9c446e6297aea062853fd9bd1c24c37b40bfd411"
+  },
+  "import_commit": "6a2aec5b465caedf8d7344cd1d7169fbebc1b4d1",
+  "geography_audit": {
+    "sub3_members_12_13": "Skipped for generic live wiring. Member 13 contains location-specific 7x7 city thumbnail blocks selected by tilemapUnk174BlockID for named HGSS Johto/Kanto cities.",
+    "main2_members_10_11": "Still deferred because this path contains region-specific map geography."
+  }
+}
