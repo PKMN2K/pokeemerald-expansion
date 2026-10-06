@@ -111,6 +111,14 @@ bool32 CurrentMapUsesPrismMiningTileset(void)
     return IsPrismMiningTileset(gMapHeader.mapLayout->secondaryTileset);
 }
 
+bool32 CurrentMapUsesPrismOlcanTileset(void)
+{
+    if (gMapHeader.mapLayout == NULL)
+        return FALSE;
+
+    return IsPrismOlcanTileset(gMapHeader.mapLayout->secondaryTileset);
+}
+
 // PKMN 2K mining reward hook.
 //
 // The Prism reward table is intentionally not retained. This function is a
