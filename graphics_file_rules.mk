@@ -42,6 +42,7 @@ GEN4UIHGSSPOKEGEARHELPBAR := tools/gen4_ui/make_hgss_pokegear_help_bar.py
 GEN4UIHGSSPOKEGEARMAPSUB0 := tools/gen4_ui/make_hgss_pokegear_map_sub0.py
 GEN4UIHGSSPOKEGEARMAPMAIN1 := tools/gen4_ui/make_hgss_pokegear_map_main1.py
 GEN4UIHGSSPOKEGEARMAPSUB2 := tools/gen4_ui/make_hgss_pokegear_map_sub2.py
+GEN4UIHGSSPOKEGEARMAPCURSOR := tools/gen4_ui/make_hgss_pokegear_map_cursor.py
 
 types := none normal fight flying poison ground rock bug ghost steel mystery fire water grass electric psychic ice dragon dark fairy stellar
 contest_types := cool beauty cute smart tough
@@ -260,6 +261,18 @@ $(GEN4UIGFXDIR)/hgss_pokegear/map_sub2.tilemap.bin: $(GEN4UIHGSSPOKEGEARMAPSUB2)
 
 $(GEN4UIGFXDIR)/hgss_pokegear/map_sub2.gbapal: $(GEN4UIHGSSPOKEGEARMAPSUB2) \
 	$(GEN4UIGFXDIR)/hgss_pokegear/verified/map/pgmap_gra_00000062.NCLR
+	python3 $< --palette $@
+
+$(GEN4UIGFXDIR)/hgss_pokegear/map_cursor.4bpp: $(GEN4UIHGSSPOKEGEARMAPCURSOR) \
+	$(GEN4UIGFXDIR)/hgss_pokegear/verified/map/pgmap_gra_00000001.png \
+	$(GEN4UIGFXDIR)/hgss_pokegear/verified/map/pgmap_gra_00000002.NCER \
+	$(GEN4UIGFXDIR)/hgss_pokegear/verified/map/pgmap_gra_00000003.NANR
+	python3 $< --tiles $@
+
+$(GEN4UIGFXDIR)/hgss_pokegear/map_cursor.gbapal: $(GEN4UIHGSSPOKEGEARMAPCURSOR) \
+	$(GEN4UIGFXDIR)/hgss_pokegear/verified/map/pgmap_gra_00000000.NCLR \
+	$(GEN4UIGFXDIR)/hgss_pokegear/verified/map/pgmap_gra_00000002.NCER \
+	$(GEN4UIGFXDIR)/hgss_pokegear/verified/map/pgmap_gra_00000003.NANR
 	python3 $< --palette $@
 
 # The live HGSS Pokédex background reserves BG palette entries 128..140.
