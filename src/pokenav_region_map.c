@@ -98,8 +98,22 @@ static const u32 sHgssPokeGearMapMain1_Gfx[] = INCBIN_U32("graphics/gen4_ui/hgss
 static const u16 sHgssPokeGearMapMain1_Tilemap[] = INCBIN_U16("graphics/gen4_ui/hgss_pokegear/map_main1.tilemap.bin");
 static const u16 sHgssPokeGearMapMain1_Pal[] = INCBIN_U16("graphics/gen4_ui/hgss_pokegear/map_main1.gbapal");
 
-// MAIN_1 is the live retail frame. SUB_0 remains loaded only for the exact
-// pale info-field tile used behind dynamic map details.
+#define HGSS_POKEGEAR_MAP_SUB2_TILE_BASE 0x180
+#define HGSS_POKEGEAR_MAP_SUB2_PAL_BANK 2
+#define HGSS_POKEGEAR_MAP_SUB2_SOURCE_X 16
+#define HGSS_POKEGEAR_MAP_SUB2_SOURCE_Y 8
+#define HGSS_POKEGEAR_MAP_SUB2_PANEL_WIDTH 16
+#define HGSS_POKEGEAR_MAP_SUB2_PANEL_HEIGHT 16
+#define HGSS_POKEGEAR_MAP_SUB2_DEST_X 14
+#define HGSS_POKEGEAR_MAP_SUB2_DEST_Y 2
+static const u32 sHgssPokeGearMapSub2_Gfx[] = INCBIN_U32("graphics/gen4_ui/hgss_pokegear/map_sub2.4bpp");
+static const u16 sHgssPokeGearMapSub2_Tilemap[] = INCBIN_U16("graphics/gen4_ui/hgss_pokegear/map_sub2.tilemap.bin");
+static const u16 sHgssPokeGearMapSub2_Pal[] = INCBIN_U16("graphics/gen4_ui/hgss_pokegear/map_sub2.gbapal");
+
+// MAIN_1 remains the live retail frame. SUB_2 now supplies the authentic
+// right-side detail-panel chrome, cropped from the retail 256px DS surface to
+// fit the 240px GBA viewport. SUB_0 stays resident for its exact pale field
+// tile behind dynamic map details.
 
 #include "data/region_map/city_map_tilemaps.h"
 
@@ -547,8 +561,21 @@ static void LoadPokenavRegionMapGfx(struct Pokenav_RegionMapGfx *state)
     LoadBgTiles(1, sHgssPokeGearMapMain1_Gfx, sizeof(sHgssPokeGearMapMain1_Gfx), HGSS_POKEGEAR_MAP_MAIN1_TILE_BASE);
     CopyPaletteIntoBufferUnfaded(sHgssPokeGearMapMain1_Pal, BG_PLTT_ID(HGSS_POKEGEAR_MAP_MAIN1_PAL_BANK_A), PLTT_SIZE_4BPP);
     CopyPaletteIntoBufferUnfaded(&sHgssPokeGearMapMain1_Pal[16], BG_PLTT_ID(HGSS_POKEGEAR_MAP_MAIN1_PAL_BANK_B), PLTT_SIZE_4BPP);
+    LoadBgTiles(1, sHgssPokeGearMapSub2_Gfx, sizeof(sHgssPokeGearMapSub2_Gfx), HGSS_POKEGEAR_MAP_SUB2_TILE_BASE);
+    CopyPaletteIntoBufferUnfaded(sHgssPokeGearMapSub2_Pal, BG_PLTT_ID(HGSS_POKEGEAR_MAP_SUB2_PAL_BANK), PLTT_SIZE_4BPP);
 
     CpuCopy16(sHgssPokeGearMapMain1_Tilemap, state->tilemapBuffer, sizeof(sHgssPokeGearMapMain1_Tilemap));
+
+    // Retail SUB_2 is 256px wide. Keep its 16x16 right-side detail surface
+    // exactly, shifted two tiles left so the complete chrome fits the 240px
+    // GBA viewport. The dynamic Emerald/custom-region data remains separate.
+    for (int y = 0; y < HGSS_POKEGEAR_MAP_SUB2_PANEL_HEIGHT; y++)
+    {
+        CpuCopy16(
+            &sHgssPokeGearMapSub2_Tilemap[(HGSS_POKEGEAR_MAP_SUB2_SOURCE_Y + y) * 32 + HGSS_POKEGEAR_MAP_SUB2_SOURCE_X],
+            &((u16 *)state->tilemapBuffer)[(HGSS_POKEGEAR_MAP_SUB2_DEST_Y + y) * 32 + HGSS_POKEGEAR_MAP_SUB2_DEST_X],
+            HGSS_POKEGEAR_MAP_SUB2_PANEL_WIDTH * sizeof(u16));
+    }
 
     SetBgTilemapBuffer(1, state->tilemapBuffer);
     state->infoWindowId = AddWindow(&sMapSecInfoWindowTemplate);
