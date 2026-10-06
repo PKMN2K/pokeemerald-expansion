@@ -92,6 +92,17 @@ bool32 IsPrismOlcanTileset(const struct Tileset *tileset)
         || tileset == &gTileset_PrismOlcanChineNight;
 }
 
+// Identifies the complete, intentionally limited PKMN 2K Prism mining
+// secondary-tileset pool. Keep this centralized so later map/debug logic does
+// not need to duplicate the approved terrain list.
+bool32 IsPrismMiningTileset(const struct Tileset *tileset)
+{
+    return tileset == &gTileset_PrismMoundCave
+        || tileset == &gTileset_PrismFirelightCaverns
+        || tileset == &gTileset_PrismKantoCave
+        || IsPrismOlcanTileset(tileset);
+}
+
 // PKMN 2K mining reward hook.
 //
 // The Prism reward table is intentionally not retained. This function is a
