@@ -35,5 +35,7 @@
     "synthetic PokéGear viewport bezel window",
     "synthetic PokéGear info-card frame drawing",
     "synthetic city-preview bezel"
-  ]
+  ],
+  "current_role": "Retained as verified/buildable retail HGSS source material, but no longer bound live in pokenav_region_map.c after SUB_2 replaced its temporary detail-card filler role.",
+  "retired_from_live_map_commit": "b30f1864624bdaf9bc5bb3d4dbfd0888676c3a63"
 }
