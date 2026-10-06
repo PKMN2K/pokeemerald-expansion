@@ -454,3 +454,9 @@ The rollover hook only runs for the six Olcan Isle/Chine secondary tileset varia
 The integration now exposes `IsPrismMiningTileset()` as the single classifier for the project's approved Prism mining terrain pool: Mound Cave, Firelight Caverns, Kanto Cave, and every Olcan Isle/Chine time-of-day variant.
 
 This does not assign mining art to any map or expand the terrain scope. It gives later map wiring, debug tools, and mining-specific runtime logic one stable test instead of duplicating the approved tileset list.
+
+## Current-map mining tileset helper
+
+`CurrentMapUsesPrismMiningTileset()` now reports whether the active map layout's secondary tileset belongs to the approved Prism mining family. The helper safely returns false before a map layout is available.
+
+This is runtime plumbing only: no existing map is reassigned, no mining surface is added, and no reward or eligibility behavior changes. It gives later mining-map setup, diagnostics, or project-owned mechanics one stable current-map check.
