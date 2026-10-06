@@ -62,6 +62,7 @@ static bool32 IsDecompressCityMapsActive(void);
 static void LoadPokenavRegionMapGfx(struct Pokenav_RegionMapGfx *);
 static bool32 TryFreeTempTileDataBuffers(void);
 static void UpdateMapSecInfoWindow(struct Pokenav_RegionMapGfx *);
+static void RestoreHgssMapSub2DetailRect(struct Pokenav_RegionMapGfx *, u8, u8, u8, u8);
 static bool32 IsDma3ManagerBusyWithBgCopy_(struct Pokenav_RegionMapGfx *);
 static void ChangeBgYForZoom(bool32);
 static bool32 IsChangeBgYForZoomActive(void);
@@ -84,13 +85,6 @@ extern const u32 gRegionMapCityZoomText_Gfx[];
 static const u16 sMapSecInfoWindow_Pal[] = INCGFX_U16("graphics/pokenav/region_map/info_window.pal", ".gbapal");
 static const u32 sRegionMapCityZoomTiles_Gfx[] = INCGFX_U32("graphics/pokenav/region_map/zoom_tiles.png", ".4bpp.smol");
 
-#define HGSS_POKEGEAR_MAP_SUB0_TILE_BASE 0x1E0
-static const u32 sHgssPokeGearMapSub0_Gfx[] = INCBIN_U32("graphics/gen4_ui/hgss_pokegear/map_sub0.4bpp");
-static const u16 sHgssPokeGearMapSub0_Tilemap[] = INCBIN_U16("graphics/gen4_ui/hgss_pokegear/map_sub0.tilemap.bin");
-static const u16 sHgssPokeGearMapSub0_Pal[] = INCBIN_U16("graphics/gen4_ui/hgss_pokegear/map_sub0.gbapal");
-
-#define HGSS_POKEGEAR_MAP_SUB0_FIELD_ENTRY (sHgssPokeGearMapSub0_Tilemap[23 * 32])
-
 #define HGSS_POKEGEAR_MAP_MAIN1_TILE_BASE 0x1C0
 #define HGSS_POKEGEAR_MAP_MAIN1_PAL_BANK_A 5
 #define HGSS_POKEGEAR_MAP_MAIN1_PAL_BANK_B 6
@@ -110,10 +104,9 @@ static const u32 sHgssPokeGearMapSub2_Gfx[] = INCBIN_U32("graphics/gen4_ui/hgss_
 static const u16 sHgssPokeGearMapSub2_Tilemap[] = INCBIN_U16("graphics/gen4_ui/hgss_pokegear/map_sub2.tilemap.bin");
 static const u16 sHgssPokeGearMapSub2_Pal[] = INCBIN_U16("graphics/gen4_ui/hgss_pokegear/map_sub2.gbapal");
 
-// MAIN_1 remains the live retail frame. SUB_2 now supplies the authentic
+// MAIN_1 remains the live retail frame. SUB_2 supplies the authentic
 // right-side detail-panel chrome, cropped from the retail 256px DS surface to
-// fit the 240px GBA viewport. SUB_0 stays resident for its exact pale field
-// tile behind dynamic map details.
+// fit the 240px GBA viewport.
 
 #include "data/region_map/city_map_tilemaps.h"
 
@@ -553,11 +546,8 @@ static void FreeCityZoomViewGfx(void)
 
 static void LoadPokenavRegionMapGfx(struct Pokenav_RegionMapGfx *state)
 {
-    // SUB_0 stays resident for its exact retail pale field tile, used behind
-    // dynamic map details. MAIN_1 is the live retail frame: its transparent
-    // tile-0 opening exposes the affine region map on BG2.
-    LoadBgTiles(1, sHgssPokeGearMapSub0_Gfx, sizeof(sHgssPokeGearMapSub0_Gfx), HGSS_POKEGEAR_MAP_SUB0_TILE_BASE);
-    CopyPaletteIntoBufferUnfaded(sHgssPokeGearMapSub0_Pal, BG_PLTT_ID(4), PLTT_SIZE_4BPP);
+    // MAIN_1 is the live retail frame: its transparent tile-0 opening exposes
+    // the affine region map on BG2. SUB_2 supplies the retail detail surface.
     LoadBgTiles(1, sHgssPokeGearMapMain1_Gfx, sizeof(sHgssPokeGearMapMain1_Gfx), HGSS_POKEGEAR_MAP_MAIN1_TILE_BASE);
     CopyPaletteIntoBufferUnfaded(sHgssPokeGearMapMain1_Pal, BG_PLTT_ID(HGSS_POKEGEAR_MAP_MAIN1_PAL_BANK_A), PLTT_SIZE_4BPP);
     CopyPaletteIntoBufferUnfaded(&sHgssPokeGearMapMain1_Pal[16], BG_PLTT_ID(HGSS_POKEGEAR_MAP_MAIN1_PAL_BANK_B), PLTT_SIZE_4BPP);
@@ -598,6 +588,20 @@ static bool32 TryFreeTempTileDataBuffers(void)
     return FreeTempTileDataBuffersIfPossible();
 }
 
+static void RestoreHgssMapSub2DetailRect(struct Pokenav_RegionMapGfx *state, u8 x, u8 y, u8 width, u8 height)
+{
+    const u8 sourceX = HGSS_POKEGEAR_MAP_SUB2_SOURCE_X + x - HGSS_POKEGEAR_MAP_SUB2_DEST_X;
+    const u8 sourceY = HGSS_POKEGEAR_MAP_SUB2_SOURCE_Y + y - HGSS_POKEGEAR_MAP_SUB2_DEST_Y;
+
+    for (u8 row = 0; row < height; row++)
+    {
+        CpuCopy16(
+            &sHgssPokeGearMapSub2_Tilemap[(sourceY + row) * 32 + sourceX],
+            &((u16 *)state->tilemapBuffer)[(y + row) * 32 + x],
+            width * sizeof(u16));
+    }
+}
+
 static void UpdateMapSecInfoWindow(struct Pokenav_RegionMapGfx *state)
 {
     struct RegionMap *regionMap = GetSubstructPtr(POKENAV_SUBSTRUCT_REGION_MAP);
@@ -614,8 +618,8 @@ static void UpdateMapSecInfoWindow(struct Pokenav_RegionMapGfx *state)
     case MAPSECTYPE_CITY_CANTFLY:
         PutWindowRectTilemap(state->infoWindowId, 0, 0, 12, 2);
         AddTextPrinterParameterized(state->infoWindowId, FONT_NARROW, regionMap->mapSecName, 4, 1, TEXT_SKIP_DRAW, NULL);
-        FillBgTilemapBufferRect(1, HGSS_POKEGEAR_MAP_SUB0_FIELD_ENTRY, 17, 6, 12, 11, 17);
-            CopyWindowToVram(state->infoWindowId, COPYWIN_FULL);
+        RestoreHgssMapSub2DetailRect(state, 17, 6, 12, 11);
+        CopyWindowToVram(state->infoWindowId, COPYWIN_FULL);
         SetCityZoomTextInvisibility(TRUE);
         break;
     case MAPSECTYPE_ROUTE:
@@ -627,7 +631,7 @@ static void UpdateMapSecInfoWindow(struct Pokenav_RegionMapGfx *state)
         SetCityZoomTextInvisibility(TRUE);
         break;
     case MAPSECTYPE_NONE:
-        FillBgTilemapBufferRect(1, HGSS_POKEGEAR_MAP_SUB0_FIELD_ENTRY, 17, 4, 12, 13, 17);
+        RestoreHgssMapSub2DetailRect(state, 17, 4, 12, 13);
         CopyBgTilemapBufferToVram(1);
         SetCityZoomTextInvisibility(TRUE);
         break;
@@ -709,7 +713,7 @@ static void DrawCityMap(struct Pokenav_RegionMapGfx *state, mapsec_s32_t mapSecI
     if (i == NUM_CITY_MAPS)
         return;
 
-    FillBgTilemapBufferRect(1, HGSS_POKEGEAR_MAP_SUB0_FIELD_ENTRY, 17, 6, 12, 11, 17);
+    RestoreHgssMapSub2DetailRect(state, 17, 6, 12, 11);
     CopyToBgTilemapBufferRect(1, state->cityZoomPics[i], 18, 6, 10, 10);
 }
 
