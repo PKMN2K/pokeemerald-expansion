@@ -20,9 +20,9 @@
   "pipeline": {
     "authentic_hgss_asset_ready": true,
     "wired_live": true,
-    "legacy_equivalent_removed": false
+    "legacy_equivalent_removed": true
   },
-  "pending_legacy": "graphics/pokenav/region_map/info_window.pal remains in the repository for this validation cycle but is no longer live.",
+  "pending_legacy": null,
   "live_integration": {
     "target": "src/pokenav_region_map.c map-section info window",
     "gba_palette_bank": 1,
@@ -34,5 +34,10 @@
       "shadow": 2
     },
     "behavior": "Map section names and landmark names now render against the exact retail HGSS Map window palette bank 1."
+  },
+  "legacy_removal": {
+    "removed_asset": "graphics/pokenav/region_map/info_window.pal",
+    "removed_after_ci": 849,
+    "reason": "No live references remain after the authentic HGSS Map member-62 palette bank 1 was validated live."
   }
 }
