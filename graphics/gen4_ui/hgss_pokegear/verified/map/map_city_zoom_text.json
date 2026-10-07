@@ -1,5 +1,5 @@
 {
-  "phase": "legacy_city_zoom_text_audited",
+  "phase": "legacy_city_zoom_text_suppressed",
   "purpose": "Audit the Emerald PokéNav city-zoom cycling text sprite before removal from the authentic HGSS Map presentation.",
   "legacy_asset": {
     "file": "graphics/pokenav/region_map/city_zoom_text.png",
@@ -35,8 +35,16 @@
   },
   "pipeline": {
     "authentic_hgss_asset_ready": true,
-    "wired_live": false,
+    "wired_live": true,
     "legacy_equivalent_removed": false
   },
-  "next": "Suppress the Emerald city-zoom cycling text sprite while leaving city-map geography/data untouched; validate in CI before deleting the sprite code and asset."
+  "next": "Delete the now-dead Emerald city-zoom text sprite code, graphics binding, and asset; keep the Hoenn city-map geography/data intact.",
+  "validation": {
+    "runtime_policy": "All city-zoom text sprites are created invisible and every map-section path keeps them invisible, so the Emerald cycling legend cannot appear during this validation phase.",
+    "geography_preserved": [
+      "graphics/pokenav/region_map/zoom_tiles.png",
+      "data/region_map/city_map_tilemaps.h",
+      "data/region_map/city_map_entries.h"
+    ]
+  }
 }
