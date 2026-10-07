@@ -1,0 +1,36 @@
+{
+  "role": "map_city_zoom_obj_palette_lifecycle",
+  "phase": "legacy_obj_palette_lifecycle_audited",
+  "classification": "dead Emerald OBJ palette lifecycle remaining after city-zoom text sprite removal",
+  "source_game": "Pokemon HeartGold / SoulSilver",
+  "source_repository": "pret/pokeheartgold",
+  "source_revision": "9d8b7591f09b65804da2fb2dfd56f320633e0d36",
+  "finding": {
+    "legacy_runtime": [
+      "PALTAG_CITY_ZOOM",
+      "sCityZoomTilesSpritePalette",
+      "Pokenav_AllocAndLoadPalettes(sCityZoomTilesSpritePalette)",
+      "FreeSpritePaletteByTag(PALTAG_CITY_ZOOM)"
+    ],
+    "why_dead": "The only city-zoom OBJ sprites were the Emerald cycling text sprites removed in the previous migration step. The city preview itself is BG data, not OBJ data.",
+    "live_bg_palette_path": "gRegionMapCityZoomTiles_Pal is still copied to BG palette bank 3 by LoadPokenavRegionMapGfx and must remain.",
+    "hgss_presentation": "Authentic HGSS Map MAIN_1/SUB_2 and window surfaces remain the live presentation; this audit does not replace geography/content data."
+  },
+  "preserve": [
+    "graphics/pokenav/region_map/zoom_tiles.png",
+    "gRegionMapCityZoomTiles_Pal",
+    "data/region_map/city_map_tilemaps.h",
+    "data/region_map/city_map_entries.h"
+  ],
+  "prerequisites": [
+    "graphics/gen4_ui/hgss_pokegear/verified/map/map_sub2.json",
+    "graphics/gen4_ui/hgss_pokegear/verified/map/map_window_palette.json",
+    "graphics/gen4_ui/hgss_pokegear/verified/map/map_city_zoom_text.json"
+  ],
+  "pipeline": {
+    "authentic_hgss_asset_ready": true,
+    "wired_live": true,
+    "legacy_equivalent_removed": false
+  },
+  "next": "Remove only the dead Emerald OBJ palette allocation/free lifecycle while preserving the BG city-map palette and custom-region geography."
+}
