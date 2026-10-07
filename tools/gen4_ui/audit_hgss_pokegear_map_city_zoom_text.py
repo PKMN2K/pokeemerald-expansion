@@ -3,7 +3,6 @@ from pathlib import Path
 import hashlib
 import json
 
-
 LEGACY_CITY_ZOOM_TEXT = Path("graphics/pokenav/region_map/city_zoom_text.png")
 MAP_SUB2_MANIFEST = Path("graphics/gen4_ui/hgss_pokegear/verified/map/map_sub2.json")
 MAP_WINDOW_MANIFEST = Path("graphics/gen4_ui/hgss_pokegear/verified/map/map_window_palette.json")
@@ -11,8 +10,7 @@ CITY_ZOOM_MANIFEST = Path("graphics/gen4_ui/hgss_pokegear/verified/map/map_city_
 REGION_MAP_C = Path("src/pokenav_region_map.c")
 GRAPHICS_C = Path("src/graphics.c")
 
-EXPECTED_BLOBS = {
-    LEGACY_CITY_ZOOM_TEXT: "4e2b41be6dde2bf5450901a5e611992bf89ec3d3",
+EXPECTED_AUTHENTIC_BLOBS = {
     Path("graphics/gen4_ui/hgss_pokegear/verified/map/pgmap_gra_00000062.NCLR"):
         "907fcbae7aef50adf87c6eb1323ab6f2b83c0e77",
     Path("graphics/gen4_ui/hgss_pokegear/verified/map/pgmap_gra_00000068.png"):
@@ -28,19 +26,24 @@ LEGACY_RUNTIME_TOKENS = (
     "SpriteCB_CityZoomText",
     "UpdateCityZoomTextPosition",
     "SetCityZoomTextInvisibility",
+    "cityZoomTextSprites",
+    "GFXTAG_CITY_ZOOM",
 )
 
+GEOGRAPHY_TOKENS = (
+    'graphics/pokenav/region_map/zoom_tiles.png',
+    'data/region_map/city_map_tilemaps.h',
+    'data/region_map/city_map_entries.h',
+)
 
 def git_blob_sha(data):
     header = f"blob {len(data)}\0".encode("ascii")
     return hashlib.sha1(header + data).hexdigest()
 
-
 def verify_blob(path, expected):
     actual = git_blob_sha(path.read_bytes())
     if actual != expected:
         raise ValueError(f"{path}: Git blob {actual} != verified {expected}")
-
 
 def verify_completed_manifest(path):
     manifest = json.loads(path.read_text())
@@ -53,35 +56,27 @@ def verify_completed_manifest(path):
     if state != (True, True, True):
         raise ValueError(f"{path}: prerequisite authentic HGSS Map surface is no longer complete")
 
-
-def verify_phase2_legacy_binding():
-    if not LEGACY_CITY_ZOOM_TEXT.exists():
-        raise ValueError(f"{LEGACY_CITY_ZOOM_TEXT}: Phase-2 legacy source unexpectedly missing")
-
-    graphics = GRAPHICS_C.read_text()
-    if 'graphics/pokenav/region_map/city_zoom_text.png' not in graphics:
-        raise ValueError(f"{GRAPHICS_C}: legacy city-zoom text graphics binding missing")
+def verify_phase3_removal():
+    if LEGACY_CITY_ZOOM_TEXT.exists():
+        raise ValueError(f"{LEGACY_CITY_ZOOM_TEXT}: legacy city-zoom text asset still exists")
 
     runtime = REGION_MAP_C.read_text()
+    graphics = GRAPHICS_C.read_text()
+    combined = runtime + "\n" + graphics
     for token in LEGACY_RUNTIME_TOKENS:
-        if token not in runtime and token != "gRegionMapCityZoomText_Gfx":
-            raise ValueError(f"{REGION_MAP_C}: expected retained Phase-2 token missing: {token!r}")
-    if "gRegionMapCityZoomText_Gfx" not in runtime:
-        raise ValueError(f"{REGION_MAP_C}: city-zoom text resource is no longer referenced")
+        if token in combined:
+            raise ValueError(f"legacy city-zoom text token still present: {token!r}")
 
-    if "SetCityZoomTextInvisibility(FALSE)" in runtime:
-        raise ValueError(f"{REGION_MAP_C}: legacy city-zoom text can still be made visible")
+    if 'graphics/pokenav/region_map/city_zoom_text.png' in graphics:
+        raise ValueError(f"{GRAPHICS_C}: legacy city-zoom graphics binding still present")
 
-    if "sprite->invisible = TRUE;" not in runtime:
-        raise ValueError(f"{REGION_MAP_C}: city-zoom text sprites are not born suppressed")
+    for token in GEOGRAPHY_TOKENS:
+        if token not in runtime:
+            raise ValueError(f"{REGION_MAP_C}: geography/content dependency was removed: {token!r}")
 
-    if runtime.count("SetCityZoomTextInvisibility(TRUE)") < 4:
-        raise ValueError(f"{REGION_MAP_C}: not every map-section path keeps legacy city-zoom text suppressed")
-
-
-def verify_phase2_manifest():
+def verify_phase3_manifest():
     manifest = json.loads(CITY_ZOOM_MANIFEST.read_text())
-    if manifest.get("phase") != "legacy_city_zoom_text_suppressed":
+    if manifest.get("phase") != "legacy_city_zoom_text_removed":
         raise ValueError(f"{CITY_ZOOM_MANIFEST}: unexpected phase")
     pipeline = manifest.get("pipeline", {})
     state = (
@@ -89,18 +84,16 @@ def verify_phase2_manifest():
         pipeline.get("wired_live"),
         pipeline.get("legacy_equivalent_removed"),
     )
-    if state != (True, True, False):
-        raise ValueError(f"{CITY_ZOOM_MANIFEST}: unexpected Phase-2 pipeline state")
-
+    if state != (True, True, True):
+        raise ValueError(f"{CITY_ZOOM_MANIFEST}: unexpected Phase-3 pipeline state")
 
 def main():
-    for path, expected in EXPECTED_BLOBS.items():
+    for path, expected in EXPECTED_AUTHENTIC_BLOBS.items():
         verify_blob(path, expected)
     verify_completed_manifest(MAP_SUB2_MANIFEST)
     verify_completed_manifest(MAP_WINDOW_MANIFEST)
-    verify_phase2_legacy_binding()
-    verify_phase2_manifest()
-
+    verify_phase3_removal()
+    verify_phase3_manifest()
 
 if __name__ == "__main__":
     main()
