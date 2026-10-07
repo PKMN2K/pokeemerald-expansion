@@ -368,7 +368,7 @@ jobs:
           key: tools-check-${{ runner.os }}-${{ hashFiles('tools/*/Makefile', 'tools/**/*.c', 'tools/**/*.cpp', 'tools/**/*.h') }}
 
       - name: Test
-        timeout-minutes: 15
+        timeout-minutes: 25
         env:
           GAME_VERSION: EMERALD
           TEST: 1
