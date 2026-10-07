@@ -1,6 +1,6 @@
 {
   "role": "map_city_zoom_obj_palette_lifecycle",
-  "phase": "legacy_obj_palette_lifecycle_audited",
+  "phase": "legacy_obj_palette_lifecycle_removed",
   "classification": "dead Emerald OBJ palette lifecycle remaining after city-zoom text sprite removal",
   "source_game": "Pokemon HeartGold / SoulSilver",
   "source_repository": "pret/pokeheartgold",
@@ -30,7 +30,24 @@
   "pipeline": {
     "authentic_hgss_asset_ready": true,
     "wired_live": true,
-    "legacy_equivalent_removed": false
+    "legacy_equivalent_removed": true
   },
-  "next": "Remove only the dead Emerald OBJ palette allocation/free lifecycle while preserving the BG city-map palette and custom-region geography."
+  "next": "Audit the next remaining legacy PokéNav/Map presentation dependency.",
+  "removal": {
+    "removed": [
+      "PALTAG_CITY_ZOOM",
+      "sCityZoomTilesSpritePalette",
+      "Pokenav_AllocAndLoadPalettes(sCityZoomTilesSpritePalette)",
+      "FreeSpritePaletteByTag(PALTAG_CITY_ZOOM)",
+      "LoadCityZoomViewGfx",
+      "FreeCityZoomViewGfx"
+    ],
+    "preserved": [
+      "graphics/pokenav/region_map/zoom_tiles.png",
+      "gRegionMapCityZoomTiles_Pal",
+      "BG palette bank 3 load for city preview",
+      "data/region_map/city_map_tilemaps.h",
+      "data/region_map/city_map_entries.h"
+    ]
+  }
 }
