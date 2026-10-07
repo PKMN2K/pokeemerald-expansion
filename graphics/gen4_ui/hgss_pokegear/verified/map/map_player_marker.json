@@ -1,0 +1,59 @@
+{
+  "role": "map_player_position_marker",
+  "phase": "retail_player_marker_binding_audited",
+  "classification": "legacy Emerald/FRLG player-position icon with direct authentic HGSS PokéGear Map counterpart",
+  "source_game": "Pokemon HeartGold / SoulSilver",
+  "source_repository": "pret/pokeheartgold",
+  "source_revision": "9d8b7591f09b65804da2fb2dfd56f320633e0d36",
+  "legacy_runtime": {
+    "file": "src/region_map.c",
+    "assets": [
+      "graphics/pokenav/region_map/brendan_icon.png",
+      "graphics/pokenav/region_map/may_icon.png",
+      "graphics/pokenav/region_map/red_icon.png",
+      "graphics/pokenav/region_map/red_icon.pal",
+      "graphics/pokenav/region_map/leaf_icon.png",
+      "graphics/pokenav/region_map/leaf_icon.pal"
+    ],
+    "behavior": "CreateRegionMapPlayerIcon selects an Emerald/FRLG protagonist marker and places it on the region map."
+  },
+  "retail_hgss_binding": {
+    "sprite_creation_source": {
+      "path": "src/application/pokegear/map/overlay_101_021EDCE0.c",
+      "git_blob_sha": "8c2bb848db1c482034f7f27ff7ea475a1b17b912",
+      "template_index": 3,
+      "resource_set": 1,
+      "animation": 1,
+      "draw_priority": 2,
+      "screen": "MAIN"
+    },
+    "runtime_behavior": [
+      "the player marker is created as PGMAP_SPRITE_PLAYER",
+      "animation is disabled for the player marker",
+      "Sprite_SetAnimationFrame selects the playerGender frame"
+    ],
+    "resource_registration_source": {
+      "path": "src/application/pokegear/main/overlay_100_021E6914.c",
+      "git_blob_sha": "4079b25b1c41864707768fb954d04d5043826409",
+      "map_resource_list": {
+        "charRes": "resdat_00000034",
+        "plttRes": "resdat_00000035",
+        "cellRes": "resdat_00000033",
+        "animRes": "resdat_00000032",
+        "headerId": "resdat_00000080"
+      }
+    }
+  },
+  "preserve": [
+    "region-map geography and layouts",
+    "map.png/map.bin/map.pal and Kanto/Sevii equivalents until custom-region geography replaces them",
+    "cursor and fly-point HGSS resources already wired",
+    "player location coordinates and region-map positioning logic"
+  ],
+  "pipeline": {
+    "authentic_hgss_asset_ready": false,
+    "wired_live": false,
+    "legacy_equivalent_removed": false
+  },
+  "next": "Extract and verify the authentic HGSS PokéGear Map player-marker resource set before wiring it live."
+}
