@@ -11,10 +11,12 @@ PREREQUISITES = (
 )
 
 LEGACY_TOKENS = (
-    "#define PALTAG_CITY_ZOOM 11",
+    "PALTAG_CITY_ZOOM",
     "sCityZoomTilesSpritePalette",
     "Pokenav_AllocAndLoadPalettes(sCityZoomTilesSpritePalette)",
     "FreeSpritePaletteByTag(PALTAG_CITY_ZOOM)",
+    "LoadCityZoomViewGfx",
+    "FreeCityZoomViewGfx",
 )
 
 PRESERVE_TOKENS = (
@@ -39,8 +41,8 @@ def verify_complete(path):
 def main():
     runtime = REGION_MAP_C.read_text()
     for token in LEGACY_TOKENS:
-        if token not in runtime:
-            raise ValueError(f"{REGION_MAP_C}: expected audited legacy token missing: {token!r}")
+        if token in runtime:
+            raise ValueError(f"{REGION_MAP_C}: removed legacy token still present: {token!r}")
     for token in PRESERVE_TOKENS:
         if token not in runtime:
             raise ValueError(f"{REGION_MAP_C}: required geography/BG palette token missing: {token!r}")
@@ -49,7 +51,7 @@ def main():
         verify_complete(path)
 
     data = json.loads(MANIFEST.read_text())
-    if data.get("phase") != "legacy_obj_palette_lifecycle_audited":
+    if data.get("phase") != "legacy_obj_palette_lifecycle_removed":
         raise ValueError(f"{MANIFEST}: unexpected phase")
     p = data.get("pipeline", {})
     state = (
@@ -57,8 +59,8 @@ def main():
         p.get("wired_live"),
         p.get("legacy_equivalent_removed"),
     )
-    if state != (True, True, False):
-        raise ValueError(f"{MANIFEST}: unexpected audit pipeline state")
+    if state != (True, True, True):
+        raise ValueError(f"{MANIFEST}: unexpected completed pipeline state")
 
 if __name__ == "__main__":
     main()
