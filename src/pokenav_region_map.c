@@ -21,7 +21,6 @@
 #include "constants/songs.h"
 #include "constants/region_map_sections.h"
 
-#define PALTAG_CITY_ZOOM 11
 
 #define NUM_CITY_MAPS 22
 
@@ -54,8 +53,6 @@ static u32 GetExitRegionMapMenuId(struct Pokenav_RegionMapMenu *);
 static u32 LoopedTask_OpenRegionMap(s32);
 static u32 LoopedTask_DecompressCityMaps(s32);
 static bool32 GetCurrentLoopedTaskActive(void);
-static void FreeCityZoomViewGfx(void);
-static void LoadCityZoomViewGfx(void);
 static void DecompressCityMaps(void);
 static bool32 IsDecompressCityMapsActive(void);
 static void LoadPokenavRegionMapGfx(struct Pokenav_RegionMapGfx *);
@@ -144,12 +141,6 @@ static const LoopedTask sRegionMapLoopTaskFuncs[] =
     [POKENAV_MAP_FUNC_ZOOM_IN]      = LoopedTask_RegionMapZoomIn,
     [POKENAV_MAP_FUNC_EXIT]         = LoopedTask_ExitRegionMap,
     [POKENAV_MAP_FUNC_FLY]          = LoopedTask_TreatAsPokeNavFlyMap,
-};
-
-static const struct SpritePalette sCityZoomTilesSpritePalette[] =
-{
-    {gRegionMapCityZoomTiles_Pal, PALTAG_CITY_ZOOM},
-    {}
 };
 
 static const struct WindowTemplate sMapSecInfoWindowTemplate =
@@ -270,7 +261,6 @@ void FreeRegionMapSubstruct2(void)
 {
     struct Pokenav_RegionMapGfx *state = GetSubstructPtr(POKENAV_SUBSTRUCT_REGION_MAP_ZOOM);
     FreeRegionMapIconResources();
-    FreeCityZoomViewGfx();
     RemoveWindow(state->infoWindowId);
     FreePokenavSubstruct(POKENAV_SUBSTRUCT_REGION_MAP);
     FreePokenavSubstruct(POKENAV_SUBSTRUCT_REGION_MAP_ZOOM);
@@ -315,7 +305,6 @@ static u32 LoopedTask_OpenRegionMap(s32 taskState)
         InitBgTemplates(sRegionMapBgTemplates, ARRAY_COUNT(sRegionMapBgTemplates) - 1);
         regionMap = GetSubstructPtr(POKENAV_SUBSTRUCT_REGION_MAP);
         InitRegionMapData(regionMap, &sRegionMapBgTemplates[1], ShouldOpenRegionMapZoomed());
-        LoadCityZoomViewGfx();
         return LT_INC_AND_PAUSE;
     case 1:
         if (LoadRegionMapGfx())
@@ -492,15 +481,7 @@ static u32 LoopedTask_TreatAsPokeNavFlyMap(s32 taskState)
     return LT_FINISH;
 }
 
-static void LoadCityZoomViewGfx(void)
-{
-    Pokenav_AllocAndLoadPalettes(sCityZoomTilesSpritePalette);
-}
 
-static void FreeCityZoomViewGfx(void)
-{
-    FreeSpritePaletteByTag(PALTAG_CITY_ZOOM);
-}
 
 static void LoadPokenavRegionMapGfx(struct Pokenav_RegionMapGfx *state)
 {
