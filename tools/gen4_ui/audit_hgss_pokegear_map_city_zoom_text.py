@@ -54,9 +54,9 @@ def verify_completed_manifest(path):
         raise ValueError(f"{path}: prerequisite authentic HGSS Map surface is no longer complete")
 
 
-def verify_phase1_legacy_binding():
+def verify_phase2_legacy_binding():
     if not LEGACY_CITY_ZOOM_TEXT.exists():
-        raise ValueError(f"{LEGACY_CITY_ZOOM_TEXT}: Phase-1 legacy source unexpectedly missing")
+        raise ValueError(f"{LEGACY_CITY_ZOOM_TEXT}: Phase-2 legacy source unexpectedly missing")
 
     graphics = GRAPHICS_C.read_text()
     if 'graphics/pokenav/region_map/city_zoom_text.png' not in graphics:
@@ -65,14 +65,23 @@ def verify_phase1_legacy_binding():
     runtime = REGION_MAP_C.read_text()
     for token in LEGACY_RUNTIME_TOKENS:
         if token not in runtime and token != "gRegionMapCityZoomText_Gfx":
-            raise ValueError(f"{REGION_MAP_C}: expected live Phase-1 token missing: {token!r}")
+            raise ValueError(f"{REGION_MAP_C}: expected retained Phase-2 token missing: {token!r}")
     if "gRegionMapCityZoomText_Gfx" not in runtime:
         raise ValueError(f"{REGION_MAP_C}: city-zoom text resource is no longer referenced")
 
+    if "SetCityZoomTextInvisibility(FALSE)" in runtime:
+        raise ValueError(f"{REGION_MAP_C}: legacy city-zoom text can still be made visible")
 
-def verify_phase1_manifest():
+    if "sprite->invisible = TRUE;" not in runtime:
+        raise ValueError(f"{REGION_MAP_C}: city-zoom text sprites are not born suppressed")
+
+    if runtime.count("SetCityZoomTextInvisibility(TRUE)") < 4:
+        raise ValueError(f"{REGION_MAP_C}: not every map-section path keeps legacy city-zoom text suppressed")
+
+
+def verify_phase2_manifest():
     manifest = json.loads(CITY_ZOOM_MANIFEST.read_text())
-    if manifest.get("phase") != "legacy_city_zoom_text_audited":
+    if manifest.get("phase") != "legacy_city_zoom_text_suppressed":
         raise ValueError(f"{CITY_ZOOM_MANIFEST}: unexpected phase")
     pipeline = manifest.get("pipeline", {})
     state = (
@@ -80,8 +89,8 @@ def verify_phase1_manifest():
         pipeline.get("wired_live"),
         pipeline.get("legacy_equivalent_removed"),
     )
-    if state != (True, False, False):
-        raise ValueError(f"{CITY_ZOOM_MANIFEST}: unexpected Phase-1 pipeline state")
+    if state != (True, True, False):
+        raise ValueError(f"{CITY_ZOOM_MANIFEST}: unexpected Phase-2 pipeline state")
 
 
 def main():
@@ -89,8 +98,8 @@ def main():
         verify_blob(path, expected)
     verify_completed_manifest(MAP_SUB2_MANIFEST)
     verify_completed_manifest(MAP_WINDOW_MANIFEST)
-    verify_phase1_legacy_binding()
-    verify_phase1_manifest()
+    verify_phase2_legacy_binding()
+    verify_phase2_manifest()
 
 
 if __name__ == "__main__":
