@@ -640,7 +640,10 @@ static void UpdateMapSecInfoWindow(struct Pokenav_RegionMapGfx *state)
         PrintHgssMapWindowText(state->infoWindowId, regionMap->mapSecName, 4, 1);
         DrawCityMap(state, regionMap->mapSecId, regionMap->posWithinMapSec);
         CopyWindowToVram(state->infoWindowId, COPYWIN_FULL);
-        SetCityZoomTextInvisibility(FALSE);
+        // Retail HGSS uses window text on the detail surface rather than
+        // Emerald's cycling city-legend OBJ. Keep the legacy sprites allocated
+        // for this validation phase, but never allow them to display.
+        SetCityZoomTextInvisibility(TRUE);
         break;
     case MAPSECTYPE_CITY_CANTFLY:
         PutWindowRectTilemap(state->infoWindowId, 0, 0, 12, 2);
@@ -783,6 +786,7 @@ static void CreateCityZoomTextSprites(void)
         sprite->data[3] = 150;
         sprite->data[4] = i * 4;
         sprite->oam.tileNum += i * 4;
+        sprite->invisible = TRUE;
         state->cityZoomTextSprites[i] = sprite;
     }
 }
