@@ -1893,7 +1893,6 @@ const u16 gContestResultsTitle_Tilemap[]        = INCBIN_U16("graphics/contest/r
 
 
 const u16 gRegionMapCityZoomTiles_Pal[] = INCGFX_U16("graphics/pokenav/region_map/zoom_tiles.png", ".gbapal");
-const u32 gRegionMapCityZoomText_Gfx[] = INCGFX_U32("graphics/pokenav/region_map/city_zoom_text.png", ".4bpp.smol");
 
 const u16 gPokenavConditionCancel_Pal[] = INCGFX_U16("graphics/pokenav/condition/cancel.pal", ".gbapal");
 const u8 gPokenavConditionCancel_Gfx[] = INCGFX_U8("graphics/pokenav/condition/cancel.png", ".4bpp");
