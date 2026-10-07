@@ -7,6 +7,10 @@ on:
       - upcoming
   pull_request:
 
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
 env:
   GAME_REVISION: 0
   GAME_LANGUAGE: ENGLISH
@@ -364,6 +368,7 @@ jobs:
           key: tools-check-${{ runner.os }}-${{ hashFiles('tools/*/Makefile', 'tools/**/*.c', 'tools/**/*.cpp', 'tools/**/*.h') }}
 
       - name: Test
+        timeout-minutes: 15
         env:
           GAME_VERSION: EMERALD
           TEST: 1
