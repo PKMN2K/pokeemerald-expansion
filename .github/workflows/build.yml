@@ -108,7 +108,8 @@ jobs:
             tools/gen4_ui/audit_hgss_pokegear_left_headers.py \
             tools/gen4_ui/audit_hgss_pokegear_message_box.py \
             tools/gen4_ui/audit_hgss_pokegear_map_city_zoom_text.py \
-            tools/gen4_ui/audit_hgss_pokegear_map_city_zoom_obj_palette.py
+            tools/gen4_ui/audit_hgss_pokegear_map_city_zoom_obj_palette.py \
+            tools/gen4_ui/audit_hgss_pokegear_map_player_marker.py
           python3 tools/gen4_ui/audit_hgss_pokegear_top_header.py
           python3 tools/gen4_ui/audit_hgss_pokegear_bg_dots.py
           python3 tools/gen4_ui/audit_hgss_pokegear_nav_icon.py
@@ -116,6 +117,7 @@ jobs:
           python3 tools/gen4_ui/audit_hgss_pokegear_message_box.py
           python3 tools/gen4_ui/audit_hgss_pokegear_map_city_zoom_text.py
           python3 tools/gen4_ui/audit_hgss_pokegear_map_city_zoom_obj_palette.py
+          python3 tools/gen4_ui/audit_hgss_pokegear_map_player_marker.py
 
       - name: Build Gen 4 UI assets
         run: |
