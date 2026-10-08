@@ -1,0 +1,142 @@
+{
+  "role": "box_overview_thumbnail_base",
+  "classification": "dynamic_six_at_a_time_box_overview",
+  "source_archive": "/a/0/1/9",
+  "source_kind": "user_preserved_hgss_extraction",
+  "archive_sha256": "f7a1a97638959a685719049a0b780686edb68704777fead790b230e10ed1df4a",
+  "members": {
+    "ncgr": 70,
+    "nclr": 71,
+    "ncer": 72,
+    "nanr": 73
+  },
+  "member_hashes": {
+    "70": {
+      "raw_sha256": "f1356607fbc74720ce41b5c755288a0c54e496194542161269431479ab22f8aa",
+      "decoded_sha256": "f1356607fbc74720ce41b5c755288a0c54e496194542161269431479ab22f8aa",
+      "decoded_size": 1072
+    },
+    "71": {
+      "raw_sha256": "9c732d87b6e28a50d36122e2364e53fd557b03a809d818fa9588d7cb386ea950",
+      "decoded_sha256": "9c732d87b6e28a50d36122e2364e53fd557b03a809d818fa9588d7cb386ea950",
+      "decoded_size": 552
+    },
+    "72": {
+      "raw_sha256": "750ac25c29709912bb74cf33975c655100231798f8e7f2eeaadec54415d8dd19",
+      "decoded_sha256": "2761ed2b944e416deac312204af621d1d782ba2b9597763548f43ae5f10abf33",
+      "decoded_size": 107
+    },
+    "73": {
+      "raw_sha256": "0fc29c9a52929550960f55d56f45ebc819228da7e81845234bc06edd8685bd75",
+      "decoded_sha256": "02501a6a5ce892afbfaf7aaf1ac388045db6e55ade71548a00cc3a91b7fb3f37",
+      "decoded_size": 111
+    }
+  },
+  "export": {
+    "file": "box_thumbnail_base.png",
+    "sha256": "6e85a338de8cc97049494b0b27a7e9b3318d2d00124bd6fdbd35d098c7441458",
+    "size": [
+      32,
+      32
+    ],
+    "source": "member_070_tiles.png",
+    "pixel_rule": "Byte-for-byte copy of the user-preserved HeartGold extraction; no redraw, crop, resampling, recoloring, or synthetic pixels.",
+    "png_encoding": "indexed 4bpp palette; exact rendered RGBA pixels preserved; HGSS placeholder remains palette index 8"
+  },
+  "nitro_geometry": {
+    "ncgr_bpp": 8,
+    "ncgr_character_bytes": 1024,
+    "ncer_cells": 1,
+    "source_cell": 0,
+    "cell_size": [
+      32,
+      32
+    ],
+    "oam_objects": 1,
+    "nanr_animation": 0,
+    "nanr_cell": 0,
+    "frame_duration": 4
+  },
+  "decomp_verification": {
+    "repository": "pret/pokeheartgold",
+    "path": "asm/overlay_14.s",
+    "resource_loader": "ov14_021F41E4",
+    "rebuild_one_box": "ov14_021F4958",
+    "rebuild_all_boxes": "ov14_021F49C8",
+    "upload_visible_six": "ov14_021F49E0",
+    "incremental_refresh": "ov14_021F4A20",
+    "overview_entry": "ov14_021EE338",
+    "overview_input": "ov14_021EE3C8",
+    "behavior": "HGSS builds 18 content-sensitive 32x32 box thumbnails and presents six at a time with group navigation."
+  },
+  "status": "phase 3 complete: authenticated HGSS six-at-a-time box overview owns destination browsing after the full CI verification gate passed",
+  "next": "Advance to the next Storage UI role audit using authentic HGSS asset -> wire live -> remove legacy equivalent.",
+  "live_integration": {
+    "wired_base": true,
+    "dynamic_content_wired": true,
+    "legacy_equivalent_removed": true,
+    "renderer": "six 32x32 HGSS overview cells rebuilt per visible group; GBA 4bpp adaptation uses 32x32 base/wallpaper OBJ cells plus centered 16x16 marker OBJ cells with exact source pixels/colors",
+    "native_positions": [
+      [
+        43,
+        84
+      ],
+      [
+        77,
+        84
+      ],
+      [
+        111,
+        84
+      ],
+      [
+        145,
+        84
+      ],
+      [
+        179,
+        84
+      ],
+      [
+        213,
+        84
+      ]
+    ],
+    "grouping": "six consecutive boxes; group base = floor(candidate_box / 6) * 6; nonexistent trailing expansion box ids are left blank",
+    "fidelity_guard": "No synthetic thumbnail pixels or colors are introduced. Member-70 visible pixels, member-75 wallpaper colors, ov14_021F8080 marker colors, native six-cell positions, and ov14_021F4A64 marker geometry are preserved.",
+    "wallpaper_mutation": {
+      "hgss_routine": "ov14_021F4958 -> ov14_021F46B0",
+      "source_placeholder_index": 8,
+      "source_placeholder_bgr555": "0x03E0",
+      "mapping": "wallpaper ids 0-15 use exact member-75 indices 16-31; ids 16-23 fold to 0-7 exactly as ov14_021E7930 does for overview thumbnails"
+    },
+    "marker_mutation": {
+      "hgss_routine": "ov14_021F4A64",
+      "layout": "6 columns x 5 rows",
+      "x_positions": [
+        10,
+        12,
+        14,
+        16,
+        18,
+        20
+      ],
+      "y_positions": [
+        11,
+        13,
+        15,
+        17,
+        19
+      ],
+      "marker_size": [
+        2,
+        1
+      ],
+      "body_color_lookup": "ov14_021F8080 + member-75 first palette bank",
+      "egg_rule": "Manaphy eggs use BLUE; all other eggs use WHITE"
+    },
+    "gba_palette_adaptation": "HGSS 8bpp base/wallpaper and 0x20+ marker indices are split into two centered 4bpp OBJ layers. The marker layer stores only the native occupied middle region (base-local x=8..23,y=8..23), reducing OBJ VRAM while leaving every visible BGR555 color and pixel position unchanged.",
+    "selection_flow": "Left/Right changes the authenticated overview candidate without full-box preview scrolling; A confirms and runs the normal Storage transition once if the destination differs; B cancels immediately.",
+    "verification_gate": "Full CI passed before phase-3 legacy removal: Emerald, FireRed, LeafGreen, release, Gen-4 UI, docs validation, and general test."
+  }
+}

@@ -1,0 +1,131 @@
+{
+  "role": "storage_cursor",
+  "classification": "sprite_animation",
+  "source_archive": "/a/0/1/9",
+  "archive_sha256": "f7a1a97638959a685719049a0b780686edb68704777fead790b230e10ed1df4a",
+  "source_members": {
+    "ncgr": {
+      "index": 66,
+      "sha256": "3989d3a74bf444379b55cf3a2d04ff3c2d145a076f0481fa72972fe4de109092"
+    },
+    "ncer": {
+      "index": 67,
+      "sha256": "98b99b5e454bb519ef4535f74df541a2ee4a9291b98a7d2db700bff64208145b"
+    },
+    "nanr": {
+      "index": 68,
+      "sha256": "a0c7f45c4bb50965b23546c30eb6aefaf9a8bce691aac9bcf0f91cbef18ec55c"
+    },
+    "nclr": {
+      "index": 69,
+      "sha256": "c30d6010bff96c1bda391470f7a50a52ab7aa559669e5f1e916bd572c0ea4b14"
+    }
+  },
+  "decomp_evidence": {
+    "repository": "pret/pokeheartgold",
+    "path": "asm/overlay_14.s",
+    "loader": "ov14_021F3DE8",
+    "creator": "ov14_021F3E70",
+    "sprite_slot": 9,
+    "initial_template": "ov14_021F837C",
+    "runtime_animation_setter": "ov14_021F29E4",
+    "box_cursor_selector": "ov14_021F6C94 and ov14_021F6D14 select animation 14 for box-column positions 0-5"
+  },
+  "ncer": {
+    "cebk_tile_index_shift": 1,
+    "cells": [
+      {
+        "index": 13,
+        "bounds": {
+          "min_x": -10,
+          "min_y": -6,
+          "max_x": 21,
+          "max_y": 25
+        },
+        "size": [
+          32,
+          32
+        ]
+      },
+      {
+        "index": 14,
+        "bounds": {
+          "min_x": -10,
+          "min_y": -6,
+          "max_x": 21,
+          "max_y": 25
+        },
+        "size": [
+          32,
+          32
+        ]
+      }
+    ]
+  },
+  "nanr": {
+    "animation": 14,
+    "mode": 2,
+    "frames": [
+      {
+        "cell": 13,
+        "duration": 20
+      },
+      {
+        "cell": 14,
+        "duration": 20
+      }
+    ]
+  },
+  "export": {
+    "file": "cursor.png",
+    "sha256": "9c7e83525e839603df98e076ce1ce7f52cd5ed6a327a47f886dacdb99826e52b",
+    "png_color_type": "indexed_palette",
+    "size": [
+      64,
+      32
+    ],
+    "frame_size": [
+      32,
+      32
+    ],
+    "layout": "2 horizontal frames: animation 14 cell 13, then cell 14",
+    "pixel_rule": "Exact NCGR+NCER+NCLR composite at 1:1 DS pixel scale using CEBK shift=1; no redraw, resampling, recoloring, or synthetic pixels."
+  },
+  "status": "complete: authentic HGSS storage cursor is live and the legacy SWSH cursor equivalent is removed",
+  "next": "Continue to the next remaining storage UI role using authentic HGSS asset -> wire live -> remove legacy equivalent.",
+  "live_integration": {
+    "renderer": "GBA OBJ sprite",
+    "source_frame_size": [
+      32,
+      32
+    ],
+    "source_layout": "two horizontal 32x32 verified HGSS frames",
+    "runtime_layout": "two contiguous 32x32 OBJ cells",
+    "runtime_repack": "tile-order only; visible pixels and palette indices unchanged",
+    "animation": "cell 13 for 20 ticks, cell 14 for 20 ticks, looping",
+    "palette": "dedicated PALTAG_HGSS_STORAGE_CURSOR; authentic palette used in all cursor modes",
+    "ncer_origin_preservation": {
+      "bounds": {
+        "min_x": -10,
+        "min_y": -6,
+        "max_x": 21,
+        "max_y": 25
+      },
+      "obj_visual_offset": [
+        6,
+        10
+      ],
+      "logical_cursor_coordinates_unchanged": true
+    },
+    "legacy_asset_removed": true,
+    "legacy_equivalent_removed": [
+      "graphics/pokemon_storage/swsh/cursor.png",
+      "sCursor_Gfx",
+      "sCursor_Pal",
+      "sSpriteSheet_Cursor",
+      "sSpritePal_Cursor",
+      "multimove PALTAG_MISC_3 cursor recolor override"
+    ],
+    "unrelated_palette_dependency_resolution": "PALTAG_MISC_1/2/3 remain for stat-label/title roles but now load the palette from stat_labels.png; no legacy cursor pixels or palette data remain."
+  }
+}

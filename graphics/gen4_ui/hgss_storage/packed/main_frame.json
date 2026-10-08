@@ -1,0 +1,35 @@
+{
+  "role": "main_frame",
+  "source": "verified/main_frame.png",
+  "source_members": {
+    "nscr": 2,
+    "ncgr": 3,
+    "nclr": 4
+  },
+  "source_dimensions": [
+    256,
+    192
+  ],
+  "gba_composition": [
+    240,
+    160
+  ],
+  "width_tiles": 30,
+  "height_tiles": 20,
+  "tile_count": 25,
+  "tile_bytes": 800,
+  "tilemap_entries": 600,
+  "tilemap_bytes": 1200,
+  "palette_bank_count": 1,
+  "palette_bytes": 32,
+  "palette_rule": "GBA palette index 0 reserved for transparency; all nine authentic HGSS RGB colors remapped losslessly to indices 1-9.",
+  "composition_rule": {
+    "horizontal": "destination columns 0-12 use source 0-12; destination 13-29 use source 15-31, omitting only source columns 13-14",
+    "vertical": "destination rows 0-17 use source 0-17; destination rows 18-19 use source 22-23, omitting source rows 18-21",
+    "visible_footprint": "whole authentic tiles only: left 2 columns; top 2 rows from column 13 rightward; rightmost column; full bottom 2 rows. All other cells are transparent so wallpaper/party layers remain visible."
+  },
+  "pixel_rule": "Every nontransparent output pixel is copied 1:1 from the verified HGSS main-frame source. No source pixel is redrawn, resampled, or recolored.",
+  "tiles_file": "main_frame.tiles.4bpp",
+  "tilemap_file": "main_frame.tilemap.bin",
+  "palette_file": "main_frame.palette.bin"
+}

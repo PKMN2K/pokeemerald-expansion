@@ -1,0 +1,41 @@
+{
+  "source_repository": "pret/pokeheartgold",
+  "source_commit": "9d8b7591f09b65804da2fb2dfd56f320633e0d36",
+  "source_directory": "files/application/pokegear/map/pgmap_gra",
+  "retail_loader_reference": "src/application/pokegear/map/overlay_101_021EDCE0.c::FlyMap_LoadBGGraphics",
+  "retail_layer": "GF_BG_LYR_SUB_0",
+  "members": {
+    "palette": "pgmap_gra_00000062.NCLR",
+    "tiles": "pgmap_gra_00000064.png",
+    "tilemap": "pgmap_gra_00000065.NSCR"
+  },
+  "purpose": "Exact retail HGSS PokeGear Map SUB_0 asset group. Imported before live GBA wiring; no reconstructed or HGSS-style art.",
+  "pipeline": {
+    "authentic_hgss_asset_ready": true,
+    "wired_live": true,
+    "legacy_equivalent_removed": true
+  },
+  "source_blobs": {
+    "pgmap_gra_00000062.NCLR": "907fcbae7aef50adf87c6eb1323ab6f2b83c0e77",
+    "pgmap_gra_00000064.png": "db869c4590aae5e32170edf1abb14d5104900cd3",
+    "pgmap_gra_00000065.NSCR": "0b0e6ee70d201bf1241e612b1a16c657e5a25c17"
+  },
+  "import_commit": "e47e450352921850247a61ebc4911a9a60f46ae8",
+  "live_adapter": "tools/gen4_ui/make_hgss_pokegear_map_sub0.py",
+  "live_wiring_commit": "0d7e03a128e1c5f8762b49f5d0f80a0023ca69f6",
+  "gba_mapping": {
+    "bg": 1,
+    "tile_base": "0x1E0",
+    "palette_bank": 4,
+    "screen_buffer": "32x32"
+  },
+  "legacy_removal_commit": "373c38e91ee2bc5e239adcbdaf4807c7b94b8958",
+  "removed_legacy": [
+    "disabled flat PokéNav BG1 rollback fill",
+    "synthetic PokéGear viewport bezel window",
+    "synthetic PokéGear info-card frame drawing",
+    "synthetic city-preview bezel"
+  ],
+  "current_role": "Retained as verified/buildable retail HGSS source material, but no longer bound live in pokenav_region_map.c after SUB_2 replaced its temporary detail-card filler role.",
+  "retired_from_live_map_commit": "b30f1864624bdaf9bc5bb3d4dbfd0888676c3a63"
+}

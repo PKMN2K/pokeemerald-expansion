@@ -1,0 +1,54 @@
+{
+  "source_repository": "pret/pokeheartgold",
+  "source_commit": "9d8b7591f09b65804da2fb2dfd56f320633e0d36",
+  "source_directory": "files/application/pokegear/map/pgmap_gra",
+  "retail_loader_reference": "src/application/pokegear/map/overlay_101_021EDCE0.c::FlyMap_LoadBGGraphics/FlyMap_FinalizeGraphicsSetup",
+  "retail_layer": "GF_BG_LYR_MAIN_1",
+  "members": {
+    "palette": "pgmap_gra_00000063.NCLR",
+    "tiles": "pgmap_gra_00000066.png",
+    "tilemap": "pgmap_gra_00000067.NSCR"
+  },
+  "retail_behavior": {
+    "tiles_member_66_loaded_to": "GF_BG_LYR_MAIN_1",
+    "palette_member_63_loaded_to": "GF_BG_LYR_MAIN_1",
+    "screen_member_67_copied_to": "GF_BG_LYR_MAIN_1 at (0,0), 32x24"
+  },
+  "purpose": "Exact retail HGSS PokeGear Map MAIN_1 asset group. Imported before live GBA wiring; no reconstructed or HGSS-style art.",
+  "pipeline": {
+    "authentic_hgss_asset_ready": true,
+    "wired_live": true,
+    "legacy_equivalent_removed": true
+  },
+  "source_blobs": {
+    "pgmap_gra_00000063.NCLR": "d55d134d59e48ce4fbf177d3024307b06a0b1fa4",
+    "pgmap_gra_00000066.png": "0020479f6cf2100d6eeb8fdaa3d456b41e1897db",
+    "pgmap_gra_00000067.NSCR": "0f43ed11f57f5ec3fee9c9adfb5af4867cb070d1"
+  },
+  "import_commit": "41dc07a0aaf2d6079450d782473a2f11665ecc68",
+  "live_adapter": "tools/gen4_ui/make_hgss_pokegear_map_main1.py",
+  "live_wiring_commit": "d866dbe6380cff7e7dcfd81c2527ac48d7ca4578",
+  "gba_mapping": {
+    "bg": 1,
+    "tile_base": "0x1C0",
+    "palette_banks": {
+      "source_5": 5,
+      "source_7": 6
+    },
+    "retail_copy": "32x24",
+    "gba_screen_buffer": "32x32",
+    "lower_rows": "extended with the exact transparent retail MAIN_1 opening tile"
+  },
+  "integration": {
+    "region_map_layer": "BG2 affine map remains visible through MAIN_1 retail transparent tile 0",
+    "sub0_role": "retained only for the exact retail pale info-field tile used by dynamic map details",
+    "rollback": "full SUB_0 surface remains behind a disabled Phase 2 rollback flag until CI validation"
+  },
+  "rollback_removed_commit": "04547caf12df30db2005993ee3a5ef21dd29a491",
+  "removed_legacy": [
+    "disabled full-SUB_0 surface rollback path"
+  ],
+  "retained_authentic_dependency": [
+    "SUB_0 tiles/palette/tilemap remain present because the live Map still uses the exact retail pale info-field tile behind dynamic details"
+  ]
+}

@@ -1,0 +1,43 @@
+{
+  "source_repository": "pret/pokeheartgold",
+  "source_commit": "9d8b7591f09b65804da2fb2dfd56f320633e0d36",
+  "retail_code": "src/application/pokegear/map/overlay_101_021EDCE0.c",
+  "source_asset": "graphics/gen4_ui/hgss_pokegear/verified/map/pgmap_gra_00000062.NCLR",
+  "source_git_blob_sha": "907fcbae7aef50adf87c6eb1323ab6f2b83c0e77",
+  "retail_binding": {
+    "loader": "FlyMap_LoadBGGraphics",
+    "palette_source": "member 62 NCLR loaded as SUB-screen BG palette data",
+    "window_templates": "sWindowTemplates[0..6] use SUB_1 palette = 1",
+    "exported_bank": 1
+  },
+  "adapter": {
+    "path": "tools/gen4_ui/make_hgss_pokegear_map_sub0.py",
+    "mode": "--window-palette",
+    "output": "graphics/gen4_ui/hgss_pokegear/map_window.gbapal",
+    "rule": "Exact 16-color BGR555 palette bank 1; no recoloring, remapping, interpolation, or synthetic colors."
+  },
+  "geography_policy": "Palette-only presentation resource. Contains no Johto/Kanto coordinates, labels, tilemaps, or city thumbnails.",
+  "pipeline": {
+    "authentic_hgss_asset_ready": true,
+    "wired_live": true,
+    "legacy_equivalent_removed": true
+  },
+  "pending_legacy": null,
+  "live_integration": {
+    "target": "src/pokenav_region_map.c map-section info window",
+    "gba_palette_bank": 1,
+    "palette_file": "graphics/gen4_ui/hgss_pokegear/map_window.gbapal",
+    "retail_text_tuple": "MAKE_TEXT_COLOR(1, 2, 0)",
+    "gba_text_indices": {
+      "background": 0,
+      "foreground": 1,
+      "shadow": 2
+    },
+    "behavior": "Map section names and landmark names now render against the exact retail HGSS Map window palette bank 1."
+  },
+  "legacy_removal": {
+    "removed_asset": "graphics/pokenav/region_map/info_window.pal",
+    "removed_after_ci": 849,
+    "reason": "No live references remain after the authentic HGSS Map member-62 palette bank 1 was validated live."
+  }
+}

@@ -1,0 +1,99 @@
+{
+  "source_repository": "pret/pokeheartgold",
+  "source_commit": "9d8b7591f09b65804da2fb2dfd56f320633e0d36",
+  "source_directory": "files/application/pokegear/map/pgmap_gra",
+  "retail_resource_table": {
+    "char": "files/data/resdat/resdat_00000034.json",
+    "pltt": "files/data/resdat/resdat_00000035.json",
+    "cell": "files/data/resdat/resdat_00000033.json",
+    "anim": "files/data/resdat/resdat_00000032.json",
+    "header": "files/data/resdat/resdat_00000080.json"
+  },
+  "resource_set": 1,
+  "retail_members": {
+    "palette": "pgmap_gra_00000000.NCLR",
+    "tiles": "pgmap_gra_00000001.png",
+    "cells": "pgmap_gra_00000002.NCER",
+    "animations": "pgmap_gra_00000003.NANR"
+  },
+  "retail_usage": "sSpriteTemplates resourceSet 1: map cursor, player marker, roamers and fly-point indicators.",
+  "scope_policy": "Import exact retail bundle for provenance. The GBA adapter must extract/wire only reusable map cursor/indicator graphics. Do not wire the retail Ethan/Lyra player marker because PKMN2K uses different protagonists. Do not import SUB_3 city-thumbnail geography.",
+  "pipeline": {
+    "authentic_hgss_asset_ready": true,
+    "wired_live": true,
+    "legacy_equivalent_removed": true,
+    "live_scope": "Both unzoomed and zoomed region-map cursor paths use the authentic retail HGSS 16x16 cursor; zoomed mode applies the retail-equivalent 2x runtime affine scale.",
+    "legacy_removal_scope": "Removed Emerald cursor.pal, cursor_small.png, cursor_large.png, the old large-cursor animation, decompression path, and unused 0x600 large-cursor RAM buffer."
+  },
+  "source_blobs": {
+    "pgmap_gra_00000000.NCLR": "9e0e2984206e76c7b54ffac00c687d8753626497",
+    "pgmap_gra_00000001.png": "537eab25b10bf0803c3642df515bf3cdc289f3bc",
+    "pgmap_gra_00000002.NCER": "579c414c22fe0775c539377488bd5b12f4501592",
+    "pgmap_gra_00000003.NANR": "9c446e6297aea062853fd9bd1c24c37b40bfd411"
+  },
+  "import_commit": "6a2aec5b465caedf8d7344cd1d7169fbebc1b4d1",
+  "geography_audit": {
+    "sub3_members_12_13": "Skipped for generic live wiring. Member 13 contains location-specific 7x7 city thumbnail blocks selected by tilemapUnk174BlockID for named HGSS Johto/Kanto cities.",
+    "main2_members_10_11": "Still deferred because this path contains region-specific map geography."
+  },
+  "adapter": {
+    "path": "tools/gen4_ui/make_hgss_pokegear_map_cursor.py",
+    "commit": "52b5f54ace2a84c862031b6080308c76fddf3885",
+    "outputs": [
+      "map_cursor.4bpp",
+      "map_cursor.gbapal"
+    ],
+    "retail_mapping": {
+      "cursor_sequence": 0,
+      "cursor_cells": [
+        0,
+        1
+      ],
+      "cursor_tiles": [
+        0,
+        4
+      ],
+      "cursor_palette_bank": 15,
+      "frame_durations": [
+        15,
+        15
+      ]
+    },
+    "excluded_player_marker": {
+      "animation_sequence": 1,
+      "reason": "PKMN2K protagonists are not Ethan/Lyra; retail player-marker pixels are intentionally not exported."
+    }
+  },
+  "wiring_commit": "0164f2be206365f977acbedbbe549f8e8c301eff",
+  "live_mapping": {
+    "source": "retail HGSS PokeGear Map animation sequence 0",
+    "gba_target": "src/region_map.c unzoomed cursor path",
+    "frame_size": "16x16",
+    "frames": 2,
+    "frame_durations": [
+      15,
+      15
+    ],
+    "note": "No retail player-marker graphics are wired."
+  },
+  "zoom_wiring": {
+    "commit": "b705145d434340f4c8fb334d6129dea3164f3876",
+    "behavior": "Use the same retail sequence-0 16x16 cursor in zoom mode with 2x affine scaling.",
+    "source_reference": "pret/pokeheartgold ov101_021E990C sets cursor scale ratio to 2 when zoomed.",
+    "legacy_status": "cursor_large.png and its legacy animation remain present but are no longer selected by the live zoom path; remove only after CI validation."
+  },
+  "legacy_removal": {
+    "removed_assets": [
+      "graphics/pokenav/region_map/cursor.pal",
+      "graphics/pokenav/region_map/cursor_small.png",
+      "graphics/pokenav/region_map/cursor_large.png"
+    ],
+    "removed_code": [
+      "sRegionMapCursorLargeGfxLZ",
+      "sRegionMapCursorAnim2",
+      "legacy large-cursor decompression init step"
+    ],
+    "retained_init_step_4": true,
+    "reason": "Keep LoadRegionMapGfx init-step sequencing stable while making step 4 a no-op; HGSS zoom uses runtime 2x scaling."
+  }
+}

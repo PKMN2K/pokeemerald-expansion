@@ -6,13 +6,371 @@ BATTRANSGFXDIR := graphics/battle_transitions
 TYPESGFXDIR := graphics/types
 ROULETTEGFXDIR := graphics/roulette
 SLOTMACHINEGFXDIR := graphics/slot_machine
-PKNAVOPTIONSGFXDIR := graphics/pokenav/options
 WALLPAPERGFXDIR := graphics/pokemon_storage/wallpapers
 JPCONTESTGFXDIR := graphics/contest/japanese
 TITLESCREENGFXDIR := graphics/title_screen
+GEN4UIGFXDIR := graphics/gen4_ui
+GEN4UIPACK := tools/gen4_ui/pack_gen4_ui.py
+GEN4UITESTFIXTURE := tools/gen4_ui/make_test_fixture.py
+GEN4UIHGSSDEX := tools/gen4_ui/make_hgss_pokedex_member_020.py
+GEN4UIHGSSLIST := tools/gen4_ui/make_hgss_pokedex_list_member_000.py
+GEN4UIHGSSLISTOVERLAY := tools/gen4_ui/make_hgss_pokedex_list_overlay.py
+GEN4UIHGSSSTATS := tools/gen4_ui/make_hgss_pokedex_stats.py
+GEN4UIHGSSEVO := tools/gen4_ui/make_hgss_pokedex_evolution.py
+GEN4UIHGSSFORMS := tools/gen4_ui/make_hgss_pokedex_forms.py
+GEN4UIHGSSCRY := tools/gen4_ui/make_hgss_pokedex_cry.py
+GEN4UIHGSSSIZE := tools/gen4_ui/make_hgss_pokedex_size.py
+GEN4UIHGSSAREA := tools/gen4_ui/make_hgss_pokedex_area_chrome.py
+GEN4UIHGSSSEARCH := tools/gen4_ui/make_hgss_pokedex_search.py
+GEN4UIHGSSSEARCHOVERLAY := tools/gen4_ui/make_hgss_pokedex_search_overlay.py
+GEN4UIHGSSSTART := tools/gen4_ui/make_hgss_pokedex_start_menu.py
+GEN4UIHGSSSCROLL := tools/gen4_ui/make_hgss_pokedex_scroll_controls.py
+GEN4UIHGSSSTARTCURSOR := tools/gen4_ui/make_hgss_pokedex_start_cursor.py
+GEN4UIHGSSPOKEGEARSWITCH := tools/gen4_ui/make_hgss_pokegear_app_switch.py
+GEN4UIHGSSPOKEGEARSHELL := tools/gen4_ui/make_hgss_pokegear_screen_shell.py
+GEN4UIHGSSPOKEGEARCURSOR := tools/gen4_ui/make_hgss_pokegear_cursor.py
+GEN4UIHGSSPOKEGEARREMATCH := tools/gen4_ui/make_hgss_pokegear_rematch_badge.py
+GEN4UIHGSSPOKEGEARPHONESTATUS := tools/gen4_ui/make_hgss_pokegear_phone_status.py
+GEN4UIHGSSPOKEGEARLISTARROWS := tools/gen4_ui/make_hgss_pokegear_list_arrows.py
+GEN4UIHGSSPOKEGEARCONDITIONSEARCH := tools/gen4_ui/make_hgss_pokegear_condition_search.py
+GEN4UIHGSSPOKEGEARCONTACT := tools/gen4_ui/make_hgss_pokegear_match_call_contact.py
+GEN4UIHGSSPOKEGEARCALL := tools/gen4_ui/make_hgss_pokegear_match_call_call.py
+GEN4UIHGSSPOKEGEARCONTACTROWS := tools/gen4_ui/make_hgss_pokegear_contact_rows.py
+GEN4UIHGSSPOKEGEARACTIONMENU := tools/gen4_ui/make_hgss_pokegear_action_menu.py
+GEN4UIHGSSTRAINERCARDCHECK := tools/gen4_ui/make_hgss_trainer_card_check_portrait.py
+GEN4UIHGSSPOKEGEARHELPBAR := tools/gen4_ui/make_hgss_pokegear_help_bar.py
+GEN4UIHGSSPOKEGEARMAPSUB0 := tools/gen4_ui/make_hgss_pokegear_map_sub0.py
+GEN4UIHGSSPOKEGEARMAPMAIN1 := tools/gen4_ui/make_hgss_pokegear_map_main1.py
+GEN4UIHGSSPOKEGEARMAPSUB2 := tools/gen4_ui/make_hgss_pokegear_map_sub2.py
+GEN4UIHGSSPOKEGEARMAPCURSOR := tools/gen4_ui/make_hgss_pokegear_map_cursor.py
+GEN4UIHGSSPOKEGEARMAPPLAYER := tools/gen4_ui/make_hgss_pokegear_map_player_marker.py
+GEN4UIHGSSPOKEGEARMAPFLYPOINT := tools/gen4_ui/make_hgss_pokegear_map_flypoint.py
 
 types := none normal fight flying poison ground rock bug ghost steel mystery fire water grass electric psychic ice dragon dark fairy stellar
 contest_types := cool beauty cute smart tough
+
+
+### Gen 4 UI ###
+
+$(GEN4UIGFXDIR)/renderer_test.png: $(GEN4UITESTFIXTURE)
+	python3 $< $@
+
+$(GEN4UIGFXDIR)/hgss_pokedex_member_020.png: $(GEN4UIHGSSDEX)
+	python3 $< $@
+
+$(GEN4UIGFXDIR)/hgss_pokedex_info_gba.png: $(GEN4UIHGSSDEX)
+	python3 $< --gba-layout $@
+
+$(GEN4UIGFXDIR)/hgss_pokedex_list_gba.png: $(GEN4UIHGSSLIST)
+	python3 $< $@
+
+$(GEN4UIGFXDIR)/hgss_pokedex_stats_gba.png: $(GEN4UIHGSSSTATS)
+	python3 $< $@
+
+$(GEN4UIGFXDIR)/hgss_pokedex_evolution_gba.png: $(GEN4UIHGSSEVO)
+	python3 $< $@
+
+$(GEN4UIGFXDIR)/hgss_pokedex_forms_gba.png: $(GEN4UIHGSSFORMS)
+	python3 $< $@
+
+$(GEN4UIGFXDIR)/hgss_pokedex_cry_gba.png: $(GEN4UIHGSSCRY)
+	python3 $< $@
+
+$(GEN4UIGFXDIR)/hgss_pokedex_size_gba.png: $(GEN4UIHGSSSIZE)
+	python3 $< $@
+
+$(GEN4UIGFXDIR)/hgss_pokedex_search_gba.png: $(GEN4UIHGSSSEARCH)
+	python3 $< $@
+
+$(GEN4UIGFXDIR)/hgss_pokegear/app_switch_gba.png: $(GEN4UIHGSSPOKEGEARSWITCH) \
+	$(GEN4UIGFXDIR)/hgss_pokegear/verified/pgear_skin0_app_switch_tiles.png \
+	$(GEN4UIGFXDIR)/hgss_pokegear/verified/pgear_skin0_app_switch_palette.NCLR \
+	$(GEN4UIGFXDIR)/hgss_pokegear/verified/pgear_skin0_app_switch_tilemap.NSCR
+	python3 $< normal $@
+
+$(GEN4UIGFXDIR)/hgss_pokegear/app_switch_selected_gba.png: $(GEN4UIHGSSPOKEGEARSWITCH) \
+	$(GEN4UIGFXDIR)/hgss_pokegear/verified/pgear_skin0_app_switch_tiles.png \
+	$(GEN4UIGFXDIR)/hgss_pokegear/verified/pgear_skin0_app_switch_palette.NCLR \
+	$(GEN4UIGFXDIR)/hgss_pokegear/verified/pgear_skin0_app_switch_tilemap.NSCR
+	python3 $< selected $@
+
+$(GEN4UIGFXDIR)/hgss_pokegear/screen_shell_gba.tilemap.bin: $(GEN4UIHGSSPOKEGEARSHELL) \
+	$(GEN4UIGFXDIR)/hgss_pokegear/verified/pgear_skin0_screen_shell_tilemap.NSCR
+	python3 $< --tilemap $@
+
+$(GEN4UIGFXDIR)/hgss_pokegear/screen_shell_gba.palette.bin: $(GEN4UIHGSSPOKEGEARSHELL) \
+	$(GEN4UIGFXDIR)/hgss_pokegear/verified/pgear_skin0_screen_shell_palette.NCLR
+	python3 $< --palette $@
+
+$(GEN4UIGFXDIR)/hgss_pokegear/cursor_corner.4bpp: $(GEN4UIHGSSPOKEGEARCURSOR) \
+	$(GEN4UIGFXDIR)/hgss_pokegear/verified/pgear_skin0_ui_sprites.png \
+	$(GEN4UIGFXDIR)/hgss_pokegear/verified/pgear_ui_cells.NCER \
+	$(GEN4UIGFXDIR)/hgss_pokegear/verified/pgear_ui_anims.NANR
+	python3 $< --tiles $@
+
+$(GEN4UIGFXDIR)/hgss_pokegear/cursor_corner.gbapal: $(GEN4UIHGSSPOKEGEARCURSOR) \
+	$(GEN4UIGFXDIR)/hgss_pokegear/verified/pgear_skin0_ui_palette.NCLR \
+	$(GEN4UIGFXDIR)/hgss_pokegear/verified/pgear_ui_cells.NCER \
+	$(GEN4UIGFXDIR)/hgss_pokegear/verified/pgear_ui_anims.NANR
+	python3 $< --palette $@
+
+$(GEN4UIGFXDIR)/hgss_pokegear/phone_status.4bpp: $(GEN4UIHGSSPOKEGEARPHONESTATUS) \
+	$(GEN4UIGFXDIR)/hgss_pokegear/verified/pgear_skin0_ui_sprites.png \
+	$(GEN4UIGFXDIR)/hgss_pokegear/verified/pgear_ui_cells.NCER \
+	$(GEN4UIGFXDIR)/hgss_pokegear/verified/pgear_ui_anims.NANR
+	python3 $< --tiles $@
+
+$(GEN4UIGFXDIR)/hgss_pokegear/phone_status.gbapal: $(GEN4UIHGSSPOKEGEARPHONESTATUS) \
+	$(GEN4UIGFXDIR)/hgss_pokegear/verified/pgear_skin0_ui_palette.NCLR \
+	$(GEN4UIGFXDIR)/hgss_pokegear/verified/pgear_ui_cells.NCER \
+	$(GEN4UIGFXDIR)/hgss_pokegear/verified/pgear_ui_anims.NANR
+	python3 $< --palette $@
+
+$(GEN4UIGFXDIR)/hgss_pokegear/rematch_badge.4bpp: $(GEN4UIHGSSPOKEGEARREMATCH) $(GEN4UIHGSSPOKEGEARPHONESTATUS) $(GEN4UIHGSSPOKEGEARCURSOR) \
+	$(GEN4UIGFXDIR)/hgss_pokegear/verified/pgear_skin0_ui_sprites.png \
+	$(GEN4UIGFXDIR)/hgss_pokegear/verified/pgear_ui_cells.NCER \
+	$(GEN4UIGFXDIR)/hgss_pokegear/verified/pgear_ui_anims.NANR
+	python3 $< --tiles $@
+
+$(GEN4UIGFXDIR)/hgss_pokegear/rematch_badge.gbapal: $(GEN4UIHGSSPOKEGEARREMATCH) $(GEN4UIHGSSPOKEGEARPHONESTATUS) $(GEN4UIHGSSPOKEGEARCURSOR) \
+	$(GEN4UIGFXDIR)/hgss_pokegear/verified/pgear_skin0_ui_palette.NCLR
+	python3 $< --palette $@
+
+$(GEN4UIGFXDIR)/hgss_pokegear/list_arrows.4bpp: $(GEN4UIHGSSPOKEGEARLISTARROWS) $(GEN4UIHGSSSTARTCURSOR) $(GEN4UIHGSSSCROLL) $(GEN4UIHGSSSTATS) $(GEN4UIHGSSLIST)
+	python3 $< --tiles $@
+
+$(GEN4UIGFXDIR)/hgss_pokegear/list_arrows.gbapal: $(GEN4UIHGSSPOKEGEARLISTARROWS) $(GEN4UIHGSSSTARTCURSOR) $(GEN4UIHGSSSCROLL) $(GEN4UIHGSSSTATS) $(GEN4UIHGSSLIST)
+	python3 $< --palette $@
+
+$(GEN4UIGFXDIR)/hgss_pokegear/condition_search_chrome.4bpp: $(GEN4UIHGSSPOKEGEARCONDITIONSEARCH) $(GEN4UIHGSSSTATS)
+	python3 $(GEN4UIHGSSPOKEGEARCONDITIONSEARCH) --chrome $@
+
+$(GEN4UIGFXDIR)/hgss_pokegear/condition_search_chrome.gbapal: $(GEN4UIHGSSPOKEGEARCONDITIONSEARCH) $(GEN4UIHGSSSTATS)
+	python3 $(GEN4UIHGSSPOKEGEARCONDITIONSEARCH) --palette $@
+
+$(GEN4UIGFXDIR)/hgss_pokegear/condition_search_cursor.4bpp: $(GEN4UIHGSSPOKEGEARCONDITIONSEARCH) $(GEN4UIHGSSSTATS) $(GEN4UIHGSSSTARTCURSOR)
+	python3 $(GEN4UIHGSSPOKEGEARCONDITIONSEARCH) --cursor $@
+
+$(GEN4UIGFXDIR)/hgss_pokegear/condition_search_cursor.gbapal: $(GEN4UIHGSSPOKEGEARCONDITIONSEARCH) $(GEN4UIHGSSSTATS) $(GEN4UIHGSSSTARTCURSOR)
+	python3 $(GEN4UIHGSSPOKEGEARCONDITIONSEARCH) --cursor-palette $@
+
+$(GEN4UIGFXDIR)/hgss_pokegear/condition_search_labels.4bpp: $(GEN4UIHGSSPOKEGEARCONDITIONSEARCH) $(GEN4UIGFXDIR)/hgss_pokegear/verified/font_id4.bin
+	python3 $(GEN4UIHGSSPOKEGEARCONDITIONSEARCH) --labels $@
+
+$(GEN4UIGFXDIR)/hgss_pokegear/match_call_contact.4bpp: $(GEN4UIHGSSPOKEGEARCONTACT) \
+	$(GEN4UIGFXDIR)/hgss_pokegear/verified/pgphone_skin0_contact_tiles.png \
+	$(GEN4UIGFXDIR)/hgss_pokegear/verified/pgphone_skin0_contact_tilemap.NSCR
+	python3 $< --tiles $@
+
+$(GEN4UIGFXDIR)/hgss_pokegear/match_call_contact.tilemap.bin: $(GEN4UIHGSSPOKEGEARCONTACT) \
+	$(GEN4UIGFXDIR)/hgss_pokegear/verified/pgphone_skin0_contact_tilemap.NSCR
+	python3 $< --tilemap $@
+
+$(GEN4UIGFXDIR)/hgss_pokegear/match_call_contact.gbapal: $(GEN4UIHGSSPOKEGEARCONTACT) \
+	$(GEN4UIGFXDIR)/hgss_pokegear/verified/pgphone_skin0_contact_palette.NCLR
+	python3 $< --palette $@
+
+$(GEN4UIGFXDIR)/hgss_pokegear/match_call_call.4bpp: $(GEN4UIHGSSPOKEGEARCALL) \
+	$(GEN4UIGFXDIR)/hgss_pokegear/verified/pgphone_skin0_call_tiles.png \
+	$(GEN4UIGFXDIR)/hgss_pokegear/verified/pgphone_skin0_call_tilemap.NSCR
+	python3 $< --tiles $@
+
+$(GEN4UIGFXDIR)/hgss_pokegear/match_call_call.tilemap.bin: $(GEN4UIHGSSPOKEGEARCALL) \
+	$(GEN4UIGFXDIR)/hgss_pokegear/verified/pgphone_skin0_call_tilemap.NSCR
+	python3 $< --tilemap $@
+
+$(GEN4UIGFXDIR)/hgss_pokegear/match_call_call.gbapal: $(GEN4UIHGSSPOKEGEARCALL) \
+	$(GEN4UIGFXDIR)/hgss_pokegear/verified/pgphone_skin0_call_palette.NCLR
+	python3 $< --palette $@
+
+$(GEN4UIGFXDIR)/hgss_pokegear/match_call_call_text.gbapal: $(GEN4UIHGSSPOKEGEARCALL) \
+	$(GEN4UIGFXDIR)/hgss_pokegear/verified/pgphone_skin0_call_palette.NCLR
+	python3 $< --text-palette $@
+
+$(GEN4UIGFXDIR)/hgss_pokegear/match_call_contact_rows.gbapal: $(GEN4UIHGSSPOKEGEARCONTACTROWS) \
+	$(GEN4UIGFXDIR)/hgss_pokegear/verified/pgphone_skin0_contact_palette.NCLR
+	python3 $< $@
+
+$(GEN4UIGFXDIR)/hgss_pokegear/match_call_action_menu.4bpp: $(GEN4UIHGSSPOKEGEARACTIONMENU) \
+	$(GEN4UIGFXDIR)/hgss_pokegear/verified/sbox_gra.png
+	python3 $< --tiles $@
+
+$(GEN4UIGFXDIR)/hgss_pokegear/match_call_action_menu.gbapal: $(GEN4UIHGSSPOKEGEARACTIONMENU) \
+	$(GEN4UIGFXDIR)/hgss_pokegear/verified/sbox_gra.png
+	python3 $< --palette $@
+
+$(GEN4UIGFXDIR)/hgss_pokegear/match_call_check_portrait.4bpp: $(GEN4UIHGSSTRAINERCARDCHECK) \
+	$(GEN4UIGFXDIR)/hgss_pokegear/verified/trainer_card_sub_palette.NCLR \
+	$(GEN4UIGFXDIR)/hgss_pokegear/verified/trainer_card_front_tiles.NCGR \
+	$(GEN4UIGFXDIR)/hgss_pokegear/verified/trainer_card_front_screen.NSCR
+	python3 $< --tiles $@
+
+$(GEN4UIGFXDIR)/hgss_pokegear/match_call_check_portrait.gbapal: $(GEN4UIHGSSTRAINERCARDCHECK) \
+	$(GEN4UIGFXDIR)/hgss_pokegear/verified/trainer_card_sub_palette.NCLR \
+	$(GEN4UIGFXDIR)/hgss_pokegear/verified/trainer_card_front_tiles.NCGR \
+	$(GEN4UIGFXDIR)/hgss_pokegear/verified/trainer_card_front_screen.NSCR
+	python3 $< --palette $@
+
+$(GEN4UIGFXDIR)/hgss_pokegear/help_bar_tooltip.4bpp: $(GEN4UIHGSSPOKEGEARHELPBAR) $(GEN4UIHGSSPOKEGEARCONTACT) \
+	$(GEN4UIGFXDIR)/hgss_pokegear/verified/pgphone_skin0_contact_tiles.png \
+	$(GEN4UIGFXDIR)/hgss_pokegear/verified/pgphone_skin0_contact_tilemap.NSCR
+	python3 $< --tiles $@
+
+$(GEN4UIGFXDIR)/hgss_pokegear/help_bar_tooltip_gba.4bpp: $(GEN4UIHGSSPOKEGEARHELPBAR) $(GEN4UIHGSSPOKEGEARCONTACT) \
+	$(GEN4UIGFXDIR)/hgss_pokegear/verified/pgphone_skin0_contact_tiles.png \
+	$(GEN4UIGFXDIR)/hgss_pokegear/verified/pgphone_skin0_contact_tilemap.NSCR
+	python3 $< --gba-tiles $@
+
+$(GEN4UIGFXDIR)/hgss_pokegear/help_bar_tooltip.gbapal: $(GEN4UIHGSSPOKEGEARHELPBAR) $(GEN4UIHGSSPOKEGEARCONTACT) \
+	$(GEN4UIGFXDIR)/hgss_pokegear/verified/pgphone_skin0_contact_palette.NCLR \
+	$(GEN4UIGFXDIR)/hgss_pokegear/verified/pgphone_skin0_contact_tilemap.NSCR
+	python3 $< --palette $@
+
+$(GEN4UIGFXDIR)/hgss_pokegear/map_sub0.4bpp: $(GEN4UIHGSSPOKEGEARMAPSUB0) \
+	$(GEN4UIGFXDIR)/hgss_pokegear/verified/map/pgmap_gra_00000064.png \
+	$(GEN4UIGFXDIR)/hgss_pokegear/verified/map/pgmap_gra_00000065.NSCR
+	python3 $< --tiles $@
+
+$(GEN4UIGFXDIR)/hgss_pokegear/map_sub0.tilemap.bin: $(GEN4UIHGSSPOKEGEARMAPSUB0) \
+	$(GEN4UIGFXDIR)/hgss_pokegear/verified/map/pgmap_gra_00000065.NSCR
+	python3 $< --tilemap $@
+
+$(GEN4UIGFXDIR)/hgss_pokegear/map_sub0.gbapal: $(GEN4UIHGSSPOKEGEARMAPSUB0) \
+	$(GEN4UIGFXDIR)/hgss_pokegear/verified/map/pgmap_gra_00000062.NCLR
+	python3 $< --palette $@
+
+$(GEN4UIGFXDIR)/hgss_pokegear/map_window.gbapal: $(GEN4UIHGSSPOKEGEARMAPSUB0) \
+	$(GEN4UIGFXDIR)/hgss_pokegear/verified/map/pgmap_gra_00000062.NCLR
+	python3 $< --window-palette $@
+
+$(GEN4UIGFXDIR)/hgss_pokegear/map_main1.4bpp: $(GEN4UIHGSSPOKEGEARMAPMAIN1) \
+	$(GEN4UIGFXDIR)/hgss_pokegear/verified/map/pgmap_gra_00000066.png \
+	$(GEN4UIGFXDIR)/hgss_pokegear/verified/map/pgmap_gra_00000067.NSCR
+	python3 $< --tiles $@
+
+$(GEN4UIGFXDIR)/hgss_pokegear/map_main1.tilemap.bin: $(GEN4UIHGSSPOKEGEARMAPMAIN1) \
+	$(GEN4UIGFXDIR)/hgss_pokegear/verified/map/pgmap_gra_00000067.NSCR
+	python3 $< --tilemap $@
+
+$(GEN4UIGFXDIR)/hgss_pokegear/map_main1.gbapal: $(GEN4UIHGSSPOKEGEARMAPMAIN1) \
+	$(GEN4UIGFXDIR)/hgss_pokegear/verified/map/pgmap_gra_00000063.NCLR
+	python3 $< --palette $@
+
+$(GEN4UIGFXDIR)/hgss_pokegear/map_sub2.4bpp: $(GEN4UIHGSSPOKEGEARMAPSUB2) \
+	$(GEN4UIGFXDIR)/hgss_pokegear/verified/map/pgmap_gra_00000068.png \
+	$(GEN4UIGFXDIR)/hgss_pokegear/verified/map/pgmap_gra_00000069.NSCR
+	python3 $< --tiles $@
+
+$(GEN4UIGFXDIR)/hgss_pokegear/map_sub2.tilemap.bin: $(GEN4UIHGSSPOKEGEARMAPSUB2) \
+	$(GEN4UIGFXDIR)/hgss_pokegear/verified/map/pgmap_gra_00000069.NSCR
+	python3 $< --tilemap $@
+
+$(GEN4UIGFXDIR)/hgss_pokegear/map_sub2.gbapal: $(GEN4UIHGSSPOKEGEARMAPSUB2) \
+	$(GEN4UIGFXDIR)/hgss_pokegear/verified/map/pgmap_gra_00000062.NCLR
+	python3 $< --palette $@
+
+$(GEN4UIGFXDIR)/hgss_pokegear/map_cursor.4bpp: $(GEN4UIHGSSPOKEGEARMAPCURSOR) \
+	$(GEN4UIGFXDIR)/hgss_pokegear/verified/map/pgmap_gra_00000001.png \
+	$(GEN4UIGFXDIR)/hgss_pokegear/verified/map/pgmap_gra_00000002.NCER \
+	$(GEN4UIGFXDIR)/hgss_pokegear/verified/map/pgmap_gra_00000003.NANR
+	python3 $< --tiles $@
+
+$(GEN4UIGFXDIR)/hgss_pokegear/map_cursor.gbapal: $(GEN4UIHGSSPOKEGEARMAPCURSOR) \
+	$(GEN4UIGFXDIR)/hgss_pokegear/verified/map/pgmap_gra_00000000.NCLR \
+	$(GEN4UIGFXDIR)/hgss_pokegear/verified/map/pgmap_gra_00000002.NCER \
+	$(GEN4UIGFXDIR)/hgss_pokegear/verified/map/pgmap_gra_00000003.NANR
+	python3 $< --palette $@
+
+$(GEN4UIGFXDIR)/hgss_pokegear/map_player_marker.4bpp: $(GEN4UIHGSSPOKEGEARMAPPLAYER) $(GEN4UIHGSSPOKEGEARMAPCURSOR) \
+	$(GEN4UIGFXDIR)/hgss_pokegear/verified/map/pgmap_gra_00000001.png \
+	$(GEN4UIGFXDIR)/hgss_pokegear/verified/map/pgmap_gra_00000002.NCER \
+	$(GEN4UIGFXDIR)/hgss_pokegear/verified/map/pgmap_gra_00000003.NANR
+	python3 $< --tiles $@
+
+$(GEN4UIGFXDIR)/hgss_pokegear/map_player_marker.gbapal: $(GEN4UIHGSSPOKEGEARMAPPLAYER) $(GEN4UIHGSSPOKEGEARMAPCURSOR) \
+	$(GEN4UIGFXDIR)/hgss_pokegear/verified/map/pgmap_gra_00000000.NCLR \
+	$(GEN4UIGFXDIR)/hgss_pokegear/verified/map/pgmap_gra_00000002.NCER \
+	$(GEN4UIGFXDIR)/hgss_pokegear/verified/map/pgmap_gra_00000003.NANR
+	python3 $< --palette $@
+
+$(GEN4UIGFXDIR)/hgss_pokegear/map_flypoint.4bpp: $(GEN4UIHGSSPOKEGEARMAPFLYPOINT) $(GEN4UIHGSSPOKEGEARMAPCURSOR) \
+	$(GEN4UIGFXDIR)/hgss_pokegear/verified/map/pgmap_gra_00000001.png \
+	$(GEN4UIGFXDIR)/hgss_pokegear/verified/map/pgmap_gra_00000002.NCER \
+	$(GEN4UIGFXDIR)/hgss_pokegear/verified/map/pgmap_gra_00000003.NANR
+	python3 $< --tiles $@
+
+$(GEN4UIGFXDIR)/hgss_pokegear/map_flypoint.gbapal: $(GEN4UIHGSSPOKEGEARMAPFLYPOINT) $(GEN4UIHGSSPOKEGEARMAPCURSOR) \
+	$(GEN4UIGFXDIR)/hgss_pokegear/verified/map/pgmap_gra_00000000.NCLR \
+	$(GEN4UIGFXDIR)/hgss_pokegear/verified/map/pgmap_gra_00000002.NCER \
+	$(GEN4UIGFXDIR)/hgss_pokegear/verified/map/pgmap_gra_00000003.NANR
+	python3 $< --palette $@
+
+# The live HGSS Pokédex background reserves BG palette entries 128..140.
+# Shifting tile pixel indices keeps the legacy Pokédex palettes (0..95 and 240..255)
+# available for text, windows, and other existing layers.
+$(GEN4UIGFXDIR)/hgss_pokedex_member_020.tiles.8bpp: $(GEN4UIGFXDIR)/hgss_pokedex_member_020.8bpp $(GEN4UIGFXDIR)/hgss_pokedex_member_020.png $(GEN4UIPACK)
+	python3 $(GEN4UIPACK) $(word 2,$^) $< --tiles $@ --palette-base 128
+
+$(GEN4UIGFXDIR)/hgss_pokedex_member_020.tilemap.bin: $(GEN4UIGFXDIR)/hgss_pokedex_member_020.8bpp $(GEN4UIGFXDIR)/hgss_pokedex_member_020.png $(GEN4UIPACK)
+	python3 $(GEN4UIPACK) $(word 2,$^) $< --tilemap $@ --palette-base 128
+
+$(GEN4UIGFXDIR)/hgss_pokedex_info_gba.tiles.8bpp: $(GEN4UIGFXDIR)/hgss_pokedex_info_gba.8bpp $(GEN4UIGFXDIR)/hgss_pokedex_info_gba.png $(GEN4UIPACK)
+	python3 $(GEN4UIPACK) $(word 2,$^) $< --tiles $@ --palette-base 128
+
+$(GEN4UIGFXDIR)/hgss_pokedex_info_gba.tilemap.bin: $(GEN4UIGFXDIR)/hgss_pokedex_info_gba.8bpp $(GEN4UIGFXDIR)/hgss_pokedex_info_gba.png $(GEN4UIPACK)
+	python3 $(GEN4UIPACK) $(word 2,$^) $< --tilemap $@ --palette-base 128
+
+$(GEN4UIGFXDIR)/hgss_pokedex_list_gba.tiles.8bpp: $(GEN4UIGFXDIR)/hgss_pokedex_list_gba.8bpp $(GEN4UIGFXDIR)/hgss_pokedex_list_gba.png $(GEN4UIPACK)
+	python3 $(GEN4UIPACK) $(word 2,$^) $< --tiles $@ --palette-base 128
+
+$(GEN4UIGFXDIR)/hgss_pokedex_list_gba.tilemap.bin: $(GEN4UIGFXDIR)/hgss_pokedex_list_gba.8bpp $(GEN4UIGFXDIR)/hgss_pokedex_list_gba.png $(GEN4UIPACK)
+	python3 $(GEN4UIPACK) $(word 2,$^) $< --tilemap $@ --palette-base 128
+
+$(GEN4UIGFXDIR)/hgss_pokedex_stats_gba.tiles.8bpp: $(GEN4UIGFXDIR)/hgss_pokedex_stats_gba.8bpp $(GEN4UIGFXDIR)/hgss_pokedex_stats_gba.png $(GEN4UIPACK)
+	python3 $(GEN4UIPACK) $(word 2,$^) $< --tiles $@ --palette-base 128
+
+$(GEN4UIGFXDIR)/hgss_pokedex_stats_gba.tilemap.bin: $(GEN4UIGFXDIR)/hgss_pokedex_stats_gba.8bpp $(GEN4UIGFXDIR)/hgss_pokedex_stats_gba.png $(GEN4UIPACK)
+	python3 $(GEN4UIPACK) $(word 2,$^) $< --tilemap $@ --palette-base 128
+
+$(GEN4UIGFXDIR)/hgss_pokedex_evolution_gba.tiles.8bpp: $(GEN4UIGFXDIR)/hgss_pokedex_evolution_gba.8bpp $(GEN4UIGFXDIR)/hgss_pokedex_evolution_gba.png $(GEN4UIPACK)
+	python3 $(GEN4UIPACK) $(word 2,$^) $< --tiles $@ --palette-base 128
+
+$(GEN4UIGFXDIR)/hgss_pokedex_evolution_gba.tilemap.bin: $(GEN4UIGFXDIR)/hgss_pokedex_evolution_gba.8bpp $(GEN4UIGFXDIR)/hgss_pokedex_evolution_gba.png $(GEN4UIPACK)
+	python3 $(GEN4UIPACK) $(word 2,$^) $< --tilemap $@ --palette-base 128
+
+$(GEN4UIGFXDIR)/hgss_pokedex_forms_gba.tiles.8bpp: $(GEN4UIGFXDIR)/hgss_pokedex_forms_gba.8bpp $(GEN4UIGFXDIR)/hgss_pokedex_forms_gba.png $(GEN4UIPACK)
+	python3 $(GEN4UIPACK) $(word 2,$^) $< --tiles $@ --palette-base 128
+
+$(GEN4UIGFXDIR)/hgss_pokedex_forms_gba.tilemap.bin: $(GEN4UIGFXDIR)/hgss_pokedex_forms_gba.8bpp $(GEN4UIGFXDIR)/hgss_pokedex_forms_gba.png $(GEN4UIPACK)
+	python3 $(GEN4UIPACK) $(word 2,$^) $< --tilemap $@ --palette-base 128
+
+$(GEN4UIGFXDIR)/hgss_pokedex_cry_gba.tiles.8bpp: $(GEN4UIGFXDIR)/hgss_pokedex_cry_gba.8bpp $(GEN4UIGFXDIR)/hgss_pokedex_cry_gba.png $(GEN4UIPACK)
+	python3 $(GEN4UIPACK) $(word 2,$^) $< --tiles $@ --palette-base 128
+
+$(GEN4UIGFXDIR)/hgss_pokedex_cry_gba.tilemap.bin: $(GEN4UIGFXDIR)/hgss_pokedex_cry_gba.8bpp $(GEN4UIGFXDIR)/hgss_pokedex_cry_gba.png $(GEN4UIPACK)
+	python3 $(GEN4UIPACK) $(word 2,$^) $< --tilemap $@ --palette-base 128
+
+$(GEN4UIGFXDIR)/hgss_pokedex_size_gba.tiles.8bpp: $(GEN4UIGFXDIR)/hgss_pokedex_size_gba.8bpp $(GEN4UIGFXDIR)/hgss_pokedex_size_gba.png $(GEN4UIPACK)
+	python3 $(GEN4UIPACK) $(word 2,$^) $< --tiles $@ --palette-base 128
+
+$(GEN4UIGFXDIR)/hgss_pokedex_size_gba.tilemap.bin: $(GEN4UIGFXDIR)/hgss_pokedex_size_gba.8bpp $(GEN4UIGFXDIR)/hgss_pokedex_size_gba.png $(GEN4UIPACK)
+	python3 $(GEN4UIPACK) $(word 2,$^) $< --tilemap $@ --palette-base 128
+
+$(GEN4UIGFXDIR)/hgss_pokedex_search_gba.tiles.8bpp: $(GEN4UIGFXDIR)/hgss_pokedex_search_gba.8bpp $(GEN4UIGFXDIR)/hgss_pokedex_search_gba.png $(GEN4UIPACK)
+	python3 $(GEN4UIPACK) $(word 2,$^) $< --tiles $@ --palette-base 128
+
+$(GEN4UIGFXDIR)/hgss_pokedex_search_gba.tilemap.bin: $(GEN4UIGFXDIR)/hgss_pokedex_search_gba.8bpp $(GEN4UIGFXDIR)/hgss_pokedex_search_gba.png $(GEN4UIPACK)
+	python3 $(GEN4UIPACK) $(word 2,$^) $< --tilemap $@ --palette-base 128
+
+# gbagfx first converts the indexed source PNG into a full 8bpp tile stream.
+# This second stage deduplicates identical/flipped tiles and emits a standard
+# 32x32 text-BG tilemap suitable for Gen4UiLoadBgAsset.
+$(GEN4UIGFXDIR)/%.tiles.8bpp: $(GEN4UIGFXDIR)/%.8bpp $(GEN4UIGFXDIR)/%.png $(GEN4UIPACK)
+	python3 $(GEN4UIPACK) $(word 2,$^) $< --tiles $@
+
+$(GEN4UIGFXDIR)/%.tilemap.bin: $(GEN4UIGFXDIR)/%.8bpp $(GEN4UIGFXDIR)/%.png $(GEN4UIPACK)
+	python3 $(GEN4UIPACK) $(word 2,$^) $< --tilemap $@
+
 
 ### Miscellaneous ###
 
@@ -301,17 +659,62 @@ $(WALLPAPERGFXDIR)/whiscash/tiles.4bpp: $(WALLPAPERGFXDIR)/friends_frame2.4bpp $
 
 ### Pokenav ###
 
-$(PKNAVOPTIONSGFXDIR)/options.4bpp: $(PKNAVOPTIONSGFXDIR)/hoenn_map.4bpp \
-                                    $(PKNAVOPTIONSGFXDIR)/condition.4bpp \
-                                    $(PKNAVOPTIONSGFXDIR)/match_call.4bpp \
-                                    $(PKNAVOPTIONSGFXDIR)/ribbons.4bpp \
-                                    $(PKNAVOPTIONSGFXDIR)/switch_off.4bpp \
-                                    $(PKNAVOPTIONSGFXDIR)/party.4bpp \
-                                    $(PKNAVOPTIONSGFXDIR)/search.4bpp \
-                                    $(PKNAVOPTIONSGFXDIR)/cool.4bpp \
-                                    $(PKNAVOPTIONSGFXDIR)/beauty.4bpp \
-                                    $(PKNAVOPTIONSGFXDIR)/cute.4bpp \
-                                    $(PKNAVOPTIONSGFXDIR)/smart.4bpp \
-                                    $(PKNAVOPTIONSGFXDIR)/tough.4bpp \
-                                    $(PKNAVOPTIONSGFXDIR)/cancel.4bpp
-	@cat $^ >$@
+
+$(GEN4UIGFXDIR)/hgss_pokedex_area_chrome.tiles.bin: $(GEN4UIHGSSAREA)
+	python3 $< --tiles $@
+
+$(GEN4UIGFXDIR)/hgss_pokedex_area_chrome.tilemap.bin: $(GEN4UIHGSSAREA)
+	python3 $< --tilemap $@
+
+$(GEN4UIGFXDIR)/hgss_pokedex_area_chrome.palette.bin: $(GEN4UIHGSSAREA)
+	python3 $< --palette $@
+
+
+$(GEN4UIGFXDIR)/hgss_pokedex_start_menu_main.tiles.bin: $(GEN4UIHGSSSTART) $(GEN4UIHGSSSTATS)
+	python3 $(GEN4UIHGSSSTART) --variant main --tiles $@
+
+$(GEN4UIGFXDIR)/hgss_pokedex_start_menu_main.tilemap.bin: $(GEN4UIHGSSSTART) $(GEN4UIHGSSSTATS)
+	python3 $(GEN4UIHGSSSTART) --variant main --tilemap $@
+
+$(GEN4UIGFXDIR)/hgss_pokedex_start_menu_results.tiles.bin: $(GEN4UIHGSSSTART) $(GEN4UIHGSSSTATS)
+	python3 $(GEN4UIHGSSSTART) --variant search-results --tiles $@
+
+$(GEN4UIGFXDIR)/hgss_pokedex_start_menu_results.tilemap.bin: $(GEN4UIHGSSSTART) $(GEN4UIHGSSSTATS)
+	python3 $(GEN4UIHGSSSTART) --variant search-results --tilemap $@
+
+$(GEN4UIGFXDIR)/hgss_pokedex_start_menu.palette.bin: $(GEN4UIHGSSSTART) $(GEN4UIHGSSSTATS)
+	python3 $(GEN4UIHGSSSTART) --palette $@
+
+
+$(GEN4UIGFXDIR)/hgss_pokedex_list_overlay.tiles.bin: $(GEN4UIHGSSLISTOVERLAY) $(GEN4UIHGSSLIST)
+	python3 $(GEN4UIHGSSLISTOVERLAY) --tiles $@
+
+$(GEN4UIGFXDIR)/hgss_pokedex_list_overlay.tilemap.bin: $(GEN4UIHGSSLISTOVERLAY) $(GEN4UIHGSSLIST)
+	python3 $(GEN4UIHGSSLISTOVERLAY) --tilemap $@
+
+$(GEN4UIGFXDIR)/hgss_pokedex_list_overlay.palette.bin: $(GEN4UIHGSSLISTOVERLAY) $(GEN4UIHGSSLIST)
+	python3 $(GEN4UIHGSSLISTOVERLAY) --palette $@
+
+
+$(GEN4UIGFXDIR)/hgss_pokedex_search_overlay.tiles.bin: $(GEN4UIHGSSSEARCHOVERLAY) $(GEN4UIHGSSSEARCH)
+	python3 $(GEN4UIHGSSSEARCHOVERLAY) --tiles $@
+
+$(GEN4UIGFXDIR)/hgss_pokedex_search_overlay.tilemap.bin: $(GEN4UIHGSSSEARCHOVERLAY) $(GEN4UIHGSSSEARCH)
+	python3 $(GEN4UIHGSSSEARCHOVERLAY) --tilemap $@
+
+$(GEN4UIGFXDIR)/hgss_pokedex_search_overlay.palette.bin: $(GEN4UIHGSSSEARCHOVERLAY) $(GEN4UIHGSSSEARCH)
+	python3 $(GEN4UIHGSSSEARCHOVERLAY) --palette $@
+
+
+$(GEN4UIGFXDIR)/hgss_pokedex_scroll_controls.tiles.bin: $(GEN4UIHGSSSCROLL) $(GEN4UIHGSSLIST)
+	python3 $(GEN4UIHGSSSCROLL) --tiles $@
+
+$(GEN4UIGFXDIR)/hgss_pokedex_scroll_controls.palette.bin: $(GEN4UIHGSSSCROLL) $(GEN4UIHGSSLIST)
+	python3 $(GEN4UIHGSSSCROLL) --palette $@
+
+$(GEN4UIGFXDIR)/hgss_pokedex_start_cursor.tiles.bin: $(GEN4UIHGSSSTARTCURSOR) $(GEN4UIHGSSSTATS)
+	python3 $(GEN4UIHGSSSTARTCURSOR) --tiles $@
+
+$(GEN4UIGFXDIR)/hgss_pokedex_start_cursor.palette.bin: $(GEN4UIHGSSSTARTCURSOR) $(GEN4UIHGSSSTATS)
+	python3 $(GEN4UIHGSSSTARTCURSOR) --palette $@
+

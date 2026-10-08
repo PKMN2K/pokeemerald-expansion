@@ -20,43 +20,27 @@ struct Pokenav_MainMenu
     u32 currentTaskId;
     u32 helpBarWindowId;
     u32 palettes;
-    struct Sprite *spinningPokenav;
-    struct Sprite *leftHeaderSprites[2];
-    struct Sprite *submenuLeftHeaderSprites[2];
     ALIGNED(4) u8 tilemapBuffer[BG_SCREEN_SIZE];
-    ALIGNED(4) u8 leftHeaderMenuBuffer[0x1000];
-    ALIGNED(4) u8 leftHeaderSubMenuBuffer[0x1000];
-};
-
-// This struct uses a 32bit tag, and doesn't have a size field.
-// Needed to match LoadLeftHeaderGfxForSubMenu.
-struct CompressedSpriteSheetNoSize
-{
-    const u32 *data;  // Compressed sprite data
-    u32 tag;
 };
 
 static void CleanupPokenavMainMenuResources(void);
-static void LoadLeftHeaderGfxForSubMenu(u32);
-static void LoadLeftHeaderGfxForMenu(u32);
-static void HideLeftHeaderSubmenuSprites(bool32);
-static void HideLeftHeaderSprites(bool32);
-static void ShowLeftHeaderSprites(u32, bool32);
-static void ShowLeftHeaderSubmenuSprites(u32, bool32);
-static void MoveLeftHeader(struct Sprite *, s32, s32, s32);
-static void SpriteCB_MoveLeftHeader(struct Sprite *);
 static void InitPokenavMainMenuResources(void);
-static void CreateLeftHeaderSprites(void);
 static void InitHelpBar(void);
 static u32 LoopedTask_SlideMenuHeaderUp(s32);
 static u32 LoopedTask_SlideMenuHeaderDown(s32);
-static void DrawHelpBar(u32);
-static void SpriteCB_SpinningPokenav(struct Sprite *);
+static void DrawHgssPokegearHelpBar(u32);
+static void LoadHgssPokegearHelpBarStrip(void);
+static void LoadHgssPokegearHelpBarPalette(void);
 static u32 LoopedTask_InitPokenavMenu(s32);
 
-static const u16 sSpinningPokenav_Pal[] = INCGFX_U16("graphics/pokenav/nav_icon.png", ".gbapal");
-static const u32 sSpinningPokenav_Gfx[] = INCGFX_U32("graphics/pokenav/nav_icon.png", ".4bpp.smol");
-static const u32 sBlueLightCopy[] = INCGFX_U32("graphics/pokenav/blue_light.png", ".4bpp.smol"); // Unused copy of sMatchCallBlueLightTiles
+// Exact retail HGSS PokéGear Phone tooltip pixels/colors. The GBA tile only
+// relocates source palette index 1 into an unused BG0 palette slot.
+static const u32 sHgssHelpBarTooltip_Gfx[] = INCBIN_U32("graphics/gen4_ui/hgss_pokegear/help_bar_tooltip_gba.4bpp");
+static const u16 sHgssHelpBarTooltip_Pal[] = INCBIN_U16("graphics/gen4_ui/hgss_pokegear/help_bar_tooltip.gbapal");
+
+// BG0 no longer carries Emerald PokéNav header artwork. Keep tile 0 explicitly
+// transparent so BG1/BG0 cannot obscure the authentic HGSS app-switch on BG2.
+static const u32 sTransparentBgTile[8] = {0};
 
 const struct BgTemplate gPokenavMainMenuBgTemplates[] =
 {
@@ -71,13 +55,15 @@ const struct BgTemplate gPokenavMainMenuBgTemplates[] =
     }
 };
 
-static const struct WindowTemplate sHelpBarWindowTemplate[] =
+// Retail HGSS uses a 32x4 tooltip strip at y=20 with a 32x2 text window at
+// y=21. The GBA keeps that vertical geometry and omits only two DS columns.
+static const struct WindowTemplate sHgssHelpBarWindowTemplate[] =
 {
     {
         .bg = 0,
-        .tilemapLeft = 1,
-        .tilemapTop = 22,
-        .width = 16,
+        .tilemapLeft = 0,
+        .tilemapTop = 21,
+        .width = 30,
         .height = 2,
         .paletteNum = 0,
         .baseBlock = 0x36,
@@ -103,184 +89,24 @@ static const u8 *const sHelpBarTexts[HELPBAR_COUNT] =
     [HELPBAR_RIBBONS_CHECK]         = COMPOUND_STRING("D-PAD BROWSE {B_BUTTON}BACK"),
 };
 
-static const u8 sHelpBarTextColors[3] =
+enum
 {
-    TEXT_COLOR_RED, TEXT_COLOR_WHITE, TEXT_COLOR_DARK_GRAY
+    HGSS_HELP_BAR_TILE = 0x35,
+    HGSS_HELP_BAR_STRIP_TOP = 20,
+    HGSS_HELP_BAR_STRIP_WIDTH = 30,
+    HGSS_HELP_BAR_STRIP_HEIGHT = 4,
+    HGSS_HELP_BAR_STRIP_COLOR = 7,
+    HGSS_HELP_BAR_SHADOW_COLOR = 8,
+    HGSS_HELP_BAR_TEXT_COLOR = 9,
+    HGSS_HELP_BAR_FILL_COLOR = 10,
 };
 
-static const struct CompressedSpriteSheet sSpinningPokenavSpriteSheet[] =
+// HGSS MAKE_TEXT_COLOR(3, 2, 5) -> GBA background/foreground/shadow.
+static const u8 sHgssHelpBarTextColors[3] =
 {
-    {
-        .data = sSpinningPokenav_Gfx,
-        .size = 0x1000,
-        .tag = 0,
-    }
-};
-
-static const struct SpritePalette sSpinningNavgearPalettes[] =
-{
-    {
-        .data = sSpinningPokenav_Pal,
-        .tag = 0,
-    },
-    {}
-};
-
-static const struct CompressedSpriteSheet sMenuLeftHeaderSpriteSheet =
-{
-    .data = gPokenavLeftHeaderHoennMap_Gfx, // Hoenn map is the first of the headers listed
-    .size = 0xC00,
-    .tag = 2
-};
-
-static const struct CompressedSpriteSheet sMenuLeftHeaderSpriteSheets[] =
-{
-    [POKENAV_GFX_MAIN_MENU] = {
-        .data = gPokenavLeftHeaderMainMenu_Gfx,
-        .size = 0x20,
-        .tag = 3
-    },
-    [POKENAV_GFX_CONDITION_MENU] = {
-        .data = gPokenavLeftHeaderCondition_Gfx,
-        .size = 0x20,
-        .tag = 1
-    },
-    [POKENAV_GFX_RIBBONS_MENU] = {
-        .data = gPokenavLeftHeaderRibbons_Gfx,
-        .size = 0x20,
-        .tag = 1
-    },
-    [POKENAV_GFX_MATCH_CALL_MENU] = {
-        .data = gPokenavLeftHeaderMatchCall_Gfx,
-        .size = 0x20,
-        .tag = 4
-    },
-    [POKENAV_GFX_MAP_MENU_ZOOMED_OUT] = {
-        .data = gPokenavLeftHeaderHoennMap_Gfx,
-        .size = 0x20,
-        .tag = 0
-    },
-    [POKENAV_GFX_MAP_MENU_ZOOMED_IN] = {
-        .data = gPokenavLeftHeaderHoennMap_Gfx,
-        .size = 0x40,
-        .tag = 0
-    }
-};
-
-static const struct CompressedSpriteSheetNoSize sPokenavSubMenuLeftHeaderSpriteSheets[] =
-{
-    [POKENAV_GFX_PARTY_MENU - POKENAV_GFX_SUBMENUS_START] = {
-        .data = gPokenavLeftHeaderParty_Gfx,
-        .tag = 1
-    },
-    [POKENAV_GFX_SEARCH_MENU - POKENAV_GFX_SUBMENUS_START] = {
-        .data = gPokenavLeftHeaderSearch_Gfx,
-        .tag = 1
-    },
-    [POKENAV_GFX_COOL_MENU - POKENAV_GFX_SUBMENUS_START] = {
-        .data = gPokenavLeftHeaderCool_Gfx,
-        .tag = 4
-    },
-    [POKENAV_GFX_BEAUTY_MENU - POKENAV_GFX_SUBMENUS_START] = {
-        .data = gPokenavLeftHeaderBeauty_Gfx,
-        .tag = 1
-    },
-    [POKENAV_GFX_CUTE_MENU - POKENAV_GFX_SUBMENUS_START] = {
-        .data = gPokenavLeftHeaderCute_Gfx,
-        .tag = 2
-    },
-    [POKENAV_GFX_SMART_MENU - POKENAV_GFX_SUBMENUS_START] = {
-        .data = gPokenavLeftHeaderSmart_Gfx,
-        .tag = 0
-    },
-    [POKENAV_GFX_TOUGH_MENU - POKENAV_GFX_SUBMENUS_START] = {
-        .data = gPokenavLeftHeaderTough_Gfx,
-        .tag = 3
-    }
-};
-
-static const struct OamData sSpinningPokenavSpriteOam =
-{
-    .y = 0,
-    .affineMode = ST_OAM_AFFINE_OFF,
-    .objMode = ST_OAM_OBJ_NORMAL,
-    .bpp = ST_OAM_4BPP,
-    .shape = SPRITE_SHAPE(32x32),
-    .x = 0,
-    .size = SPRITE_SIZE(32x32),
-    .tileNum = 0,
-    .priority = 0,
-    .paletteNum = 0,
-};
-
-static const union AnimCmd sSpinningPokenavAnims[] =
-{
-    ANIMCMD_FRAME(0, 8),
-    ANIMCMD_FRAME(16, 8),
-    ANIMCMD_FRAME(32, 8),
-    ANIMCMD_FRAME(48, 8),
-    ANIMCMD_FRAME(64, 8),
-    ANIMCMD_FRAME(80, 8),
-    ANIMCMD_FRAME(96, 8),
-    ANIMCMD_FRAME(112, 8),
-    ANIMCMD_JUMP(0)
-};
-
-static const union AnimCmd *const sSpinningPokenavAnimTable[] =
-{
-    sSpinningPokenavAnims
-};
-
-static const struct SpriteTemplate sSpinningPokenavSpriteTemplate =
-{
-    .tileTag = 0,
-    .paletteTag = 0,
-    .oam = &sSpinningPokenavSpriteOam,
-    .anims = sSpinningPokenavAnimTable,
-    .callback = SpriteCB_SpinningPokenav
-};
-
-static const struct OamData sOamData_LeftHeader =
-{
-    .y = 0,
-    .affineMode = ST_OAM_AFFINE_OFF,
-    .objMode = ST_OAM_OBJ_NORMAL,
-    .bpp = ST_OAM_4BPP,
-    .shape = SPRITE_SHAPE(64x32),
-    .x = 0,
-    .size = SPRITE_SIZE(64x32),
-    .tileNum = 0,
-    .priority = 1,
-    .paletteNum = 0,
-};
-
-static const struct OamData sOamData_SubmenuLeftHeader =
-{
-    .y = 0,
-    .affineMode = ST_OAM_AFFINE_OFF,
-    .objMode = ST_OAM_OBJ_NORMAL,
-    .bpp = ST_OAM_4BPP,
-    .shape = SPRITE_SHAPE(32x16),
-    .x = 0,
-    .matrixNum = 0,
-    .size = SPRITE_SIZE(32x16),
-    .tileNum = 0,
-    .priority = 1,
-    .paletteNum = 0,
-};
-
-static const struct SpriteTemplate sLeftHeaderSpriteTemplate =
-{
-    .tileTag = 2,
-    .paletteTag = 1,
-    .oam = &sOamData_LeftHeader,
-};
-
-static const struct SpriteTemplate sSubmenuLeftHeaderSpriteTemplate =
-{
-    .tileTag = 2,
-    .paletteTag = 2,
-    .oam = &sOamData_SubmenuLeftHeader,
+    HGSS_HELP_BAR_FILL_COLOR,
+    HGSS_HELP_BAR_TEXT_COLOR,
+    HGSS_HELP_BAR_SHADOW_COLOR,
 };
 
 bool32 InitPokenavMainMenu(void)
@@ -339,10 +165,9 @@ static u32 LoopedTask_InitPokenavMenu(s32 state)
         return LT_INC_AND_CONTINUE;
     case 1:
         menu = GetSubstructPtr(POKENAV_SUBSTRUCT_MAIN_MENU);
-        DecompressAndCopyTileDataToVram(0, &gPokenavHeader_Gfx, 0, 0, 0);
         SetBgTilemapBuffer(0, menu->tilemapBuffer);
-        CopyToBgTilemapBuffer(0, &gPokenavHeader_Tilemap, 0, 0);
-        CopyPaletteIntoBufferUnfaded(gPokenavHeader_Pal, BG_PLTT_ID(0), PLTT_SIZE_4BPP);
+        LoadBgTiles(0, sTransparentBgTile, sizeof(sTransparentBgTile), 0);
+        FillBgTilemapBufferRect_Palette0(0, 0, 0, 0, 32, 32);
         CopyBgTilemapBufferToVram(0);
         return LT_INC_AND_PAUSE;
     case 2:
@@ -356,13 +181,13 @@ static u32 LoopedTask_InitPokenavMenu(s32 state)
             return LT_PAUSE;
 
         InitPokenavMainMenuResources();
-        CreateLeftHeaderSprites();
         ShowBg(0);
         return LT_FINISH;
     default:
         return LT_FINISH;
     }
 }
+
 
 void SetActiveMenuLoopTasks(void *createLoopTask, void *isLoopTaskActive) // Fix types later.
 {
@@ -542,19 +367,27 @@ static void InitHelpBar(void)
 {
     struct Pokenav_MainMenu *menu = GetSubstructPtr(POKENAV_SUBSTRUCT_MAIN_MENU);
 
-    InitWindows(&sHelpBarWindowTemplate[0]);
+    InitWindows(&sHgssHelpBarWindowTemplate[0]);
     menu->helpBarWindowId = 0;
-    DrawHelpBar(menu->helpBarWindowId);
+    LoadHgssPokegearHelpBarStrip();
+    DrawHgssPokegearHelpBar(menu->helpBarWindowId);
     PutWindowTilemap(menu->helpBarWindowId);
     CopyWindowToVram(menu->helpBarWindowId, COPYWIN_FULL);
+    CopyBgTilemapBufferToVram(0);
 }
 
 void PrintHelpBarText(u32 textId)
 {
     struct Pokenav_MainMenu *menu = GetSubstructPtr(POKENAV_SUBSTRUCT_MAIN_MENU);
+    s32 textX;
+    s32 textWidth;
 
-    DrawHelpBar(menu->helpBarWindowId);
-    AddTextPrinterParameterized3(menu->helpBarWindowId, FONT_NORMAL, 0, 1, sHelpBarTextColors, 0, sHelpBarTexts[textId]);
+    DrawHgssPokegearHelpBar(menu->helpBarWindowId);
+    textWidth = GetStringWidth(FONT_NORMAL, sHelpBarTexts[textId], 0);
+    textX = (DISPLAY_WIDTH - textWidth) / 2;
+    if (textX < 0)
+        textX = 0;
+    AddTextPrinterParameterized3(menu->helpBarWindowId, FONT_NORMAL, textX, 0, sHgssHelpBarTextColors, 0, sHelpBarTexts[textId]);
 }
 
 bool32 WaitForHelpBar(void)
@@ -562,294 +395,47 @@ bool32 WaitForHelpBar(void)
     return IsDma3ManagerBusyWithBgCopy();
 }
 
-static void DrawHelpBar(u32 windowId)
+static void LoadHgssPokegearHelpBarPalette(void)
 {
-    u8 width = GetWindowAttribute(windowId, WINDOW_WIDTH) * 8;
-    u8 height = GetWindowAttribute(windowId, WINDOW_HEIGHT) * 8;
+    // BG0 palette slots 7..10 are dedicated to the authentic HGSS tooltip
+    // after legacy header removal. Copy exact retail member-10 colors there.
+    CopyPaletteIntoBufferUnfaded(&sHgssHelpBarTooltip_Pal[1], BG_PLTT_ID(0) + HGSS_HELP_BAR_STRIP_COLOR, sizeof(u16));
+    CopyPaletteIntoBufferUnfaded(&sHgssHelpBarTooltip_Pal[2], BG_PLTT_ID(0) + HGSS_HELP_BAR_SHADOW_COLOR, sizeof(u16));
+    CopyPaletteIntoBufferUnfaded(&sHgssHelpBarTooltip_Pal[3], BG_PLTT_ID(0) + HGSS_HELP_BAR_TEXT_COLOR, sizeof(u16));
+    CopyPaletteIntoBufferUnfaded(&sHgssHelpBarTooltip_Pal[5], BG_PLTT_ID(0) + HGSS_HELP_BAR_FILL_COLOR, sizeof(u16));
+}
 
-    FillWindowPixelBuffer(windowId, PIXEL_FILL(4));
+static void LoadHgssPokegearHelpBarStrip(void)
+{
+    LoadBgTiles(0, sHgssHelpBarTooltip_Gfx, sizeof(sHgssHelpBarTooltip_Gfx), HGSS_HELP_BAR_TILE);
+    LoadHgssPokegearHelpBarPalette();
 
-    if (width < 16 || height < 8)
-        return;
+    // Retail destination is 32x4 at y=20. The GBA viewport keeps 30 columns.
+    FillBgTilemapBufferRect_Palette0(
+        0,
+        HGSS_HELP_BAR_TILE,
+        0,
+        HGSS_HELP_BAR_STRIP_TOP,
+        HGSS_HELP_BAR_STRIP_WIDTH,
+        HGSS_HELP_BAR_STRIP_HEIGHT
+    );
+}
 
-    // HGSS PokéGear-style beveled control strip.
-    FillWindowPixelRect(windowId, PIXEL_FILL(5), 2, 0, width - 4, 1);
-    FillWindowPixelRect(windowId, PIXEL_FILL(5), 0, 2, 1, height - 4);
-    FillWindowPixelRect(windowId, PIXEL_FILL(1), 2, height - 1, width - 4, 1);
-    FillWindowPixelRect(windowId, PIXEL_FILL(1), width - 1, 2, 1, height - 4);
-    FillWindowPixelRect(windowId, PIXEL_FILL(5), 5, 2, width - 10, 1);
-    FillWindowPixelRect(windowId, PIXEL_FILL(1), 5, height - 3, width - 10, 1);
+static void DrawHgssPokegearHelpBar(u32 windowId)
+{
+    // Retail fills the tooltip text window with source palette index 5.
+    FillWindowPixelBuffer(windowId, PIXEL_FILL(HGSS_HELP_BAR_FILL_COLOR));
 }
 
 static void InitPokenavMainMenuResources(void)
 {
-    s32 i;
-    u8 spriteId;
     struct Pokenav_MainMenu *menu = GetSubstructPtr(POKENAV_SUBSTRUCT_MAIN_MENU);
 
-    for (i = 0; i < ARRAY_COUNT(sSpinningPokenavSpriteSheet); i++)
-        LoadCompressedSpriteSheet(&sSpinningPokenavSpriteSheet[i]);
-
-    Pokenav_AllocAndLoadPalettes(sSpinningNavgearPalettes);
-    menu->palettes = ~1 & ~(0x10000 << IndexOfSpritePaletteTag(0));
-    spriteId = CreateSprite(&sSpinningPokenavSpriteTemplate, 220, 12, 0);
-    menu->spinningPokenav = &gSprites[spriteId];
+    // The removed Emerald spinner no longer owns OBJ palette 0, so all OBJ
+    // palettes participate normally in PokéNav fades.
+    menu->palettes = ~1;
 }
 
 static void CleanupPokenavMainMenuResources(void)
 {
-    struct Pokenav_MainMenu *menu = GetSubstructPtr(POKENAV_SUBSTRUCT_MAIN_MENU);
-
-    DestroySprite(menu->spinningPokenav);
-    FreeSpriteTilesByTag(0);
-    FreeSpritePaletteByTag(0);
-}
-
-static void SpriteCB_SpinningPokenav(struct Sprite *sprite)
-{
-    // If the background starts scrolling, follow it.
-    sprite->y2 = (GetBgY(0) / 256u) * -1;
-}
-
-struct Sprite *GetSpinningPokenavSprite(void)
-{
-    struct Pokenav_MainMenu *menu = GetSubstructPtr(POKENAV_SUBSTRUCT_MAIN_MENU);
-
-    menu->spinningPokenav->callback = SpriteCallbackDummy;
-    return menu->spinningPokenav;
-}
-
-void HideSpinningPokenavSprite(void)
-{
-    struct Pokenav_MainMenu *menu = GetSubstructPtr(POKENAV_SUBSTRUCT_MAIN_MENU);
-
-    // Move sprite so it's no longer visible
-    menu->spinningPokenav->x = 220;
-    menu->spinningPokenav->y = 12;
-    menu->spinningPokenav->callback = SpriteCB_SpinningPokenav;
-    menu->spinningPokenav->invisible = FALSE;
-    menu->spinningPokenav->oam.priority = 0;
-    menu->spinningPokenav->subpriority = 0;
-}
-
-static void CreateLeftHeaderSprites(void)
-{
-    s32 i, spriteId;
-    struct Pokenav_MainMenu *menu = GetSubstructPtr(POKENAV_SUBSTRUCT_MAIN_MENU);
-
-    LoadCompressedSpriteSheet(&sMenuLeftHeaderSpriteSheet);
-    AllocSpritePalette(1);
-    AllocSpritePalette(2);
-    for (i = 0; i < (s32)ARRAY_COUNT(menu->leftHeaderSprites); i++)
-    {
-        // Create main left header
-        spriteId = CreateSprite(&sLeftHeaderSpriteTemplate, 0, 0, 1);
-        menu->leftHeaderSprites[i] = &gSprites[spriteId];
-        menu->leftHeaderSprites[i]->invisible = TRUE;
-        menu->leftHeaderSprites[i]->x2 = i * 64;
-
-        // Create submenu left header
-        spriteId = CreateSprite(&sSubmenuLeftHeaderSpriteTemplate, 0, 0, 2);
-        menu->submenuLeftHeaderSprites[i] = &gSprites[spriteId];
-        menu->submenuLeftHeaderSprites[i]->invisible = TRUE;
-        menu->submenuLeftHeaderSprites[i]->x2 = i * 32;
-        menu->submenuLeftHeaderSprites[i]->y2 = 18;
-        menu->submenuLeftHeaderSprites[i]->oam.tileNum += (i * 8) + 64;
-    }
-}
-
-void LoadLeftHeaderGfxForIndex(u32 menuGfxId)
-{
-    if (menuGfxId < POKENAV_GFX_SUBMENUS_START)
-        LoadLeftHeaderGfxForMenu(menuGfxId);
-    else
-        LoadLeftHeaderGfxForSubMenu(menuGfxId - POKENAV_GFX_SUBMENUS_START);
-}
-
-void UpdateRegionMapRightHeaderTiles(u32 menuGfxId)
-{
-    struct Pokenav_MainMenu *menu = GetSubstructPtr(POKENAV_SUBSTRUCT_MAIN_MENU);
-
-    if (menuGfxId == POKENAV_GFX_MAP_MENU_ZOOMED_OUT)
-        menu->leftHeaderSprites[1]->oam.tileNum = GetSpriteTileStartByTag(2) + 32;
-    else
-        menu->leftHeaderSprites[1]->oam.tileNum = GetSpriteTileStartByTag(2) + 64;
-}
-
-static void LoadLeftHeaderGfxForMenu(u32 menuGfxId)
-{
-    struct Pokenav_MainMenu *menu;
-    u32 size, tag;
-
-    if (menuGfxId >= POKENAV_GFX_SUBMENUS_START)
-        return;
-
-    menu = GetSubstructPtr(POKENAV_SUBSTRUCT_MAIN_MENU);
-    tag = sMenuLeftHeaderSpriteSheets[menuGfxId].tag;
-    size = GetDecompressedDataSize(sMenuLeftHeaderSpriteSheets[menuGfxId].data);
-    LoadPalette(&gPokenavLeftHeader_Pal[tag * 16], OBJ_PLTT_ID(IndexOfSpritePaletteTag(1)), PLTT_SIZE_4BPP);
-    DecompressDataWithHeaderWram(sMenuLeftHeaderSpriteSheets[menuGfxId].data, menu->leftHeaderMenuBuffer);
-    RequestDma3Copy(menu->leftHeaderMenuBuffer, (void *)OBJ_VRAM0 + (GetSpriteTileStartByTag(2) * 32), size, 1);
-    menu->leftHeaderSprites[1]->oam.tileNum = GetSpriteTileStartByTag(2) + sMenuLeftHeaderSpriteSheets[menuGfxId].size;
-
-    if (menuGfxId == POKENAV_GFX_MAP_MENU_ZOOMED_OUT || menuGfxId == POKENAV_GFX_MAP_MENU_ZOOMED_IN)
-        menu->leftHeaderSprites[1]->x2 = 56;
-    else
-        menu->leftHeaderSprites[1]->x2 = 64;
-}
-
-static void LoadLeftHeaderGfxForSubMenu(u32 menuGfxId)
-{
-    struct Pokenav_MainMenu *menu;
-    u32 size, tag;
-
-    if (menuGfxId >= POKENAV_GFX_MENUS_END - POKENAV_GFX_SUBMENUS_START)
-        return;
-
-    menu = GetSubstructPtr(POKENAV_SUBSTRUCT_MAIN_MENU);
-    tag = sPokenavSubMenuLeftHeaderSpriteSheets[menuGfxId].tag;
-    size = GetDecompressedDataSize(sPokenavSubMenuLeftHeaderSpriteSheets[menuGfxId].data);
-    LoadPalette(&gPokenavLeftHeader_Pal[tag * 16], OBJ_PLTT_ID(IndexOfSpritePaletteTag(2)), PLTT_SIZE_4BPP);
-    DecompressDataWithHeaderWram(sPokenavSubMenuLeftHeaderSpriteSheets[menuGfxId].data, menu->leftHeaderSubMenuBuffer);
-    RequestDma3Copy(menu->leftHeaderSubMenuBuffer, (void *)OBJ_VRAM0 + 0x800 + (GetSpriteTileStartByTag(2) * 32), size, 1);
-}
-
-void ShowLeftHeaderGfx(u32 menuGfxId, bool32 isMain, bool32 isOnRightSide)
-{
-    u32 tileTop;
-
-    if (!isMain)
-        tileTop = 0x30;
-    else
-        tileTop = 0x10;
-
-    if (menuGfxId < POKENAV_GFX_SUBMENUS_START)
-        ShowLeftHeaderSprites(tileTop, isOnRightSide);
-    else
-        ShowLeftHeaderSubmenuSprites(tileTop, isOnRightSide);
-}
-
-void HideMainOrSubMenuLeftHeader(u32 id, bool32 onRightSide)
-{
-    if (id < POKENAV_GFX_PARTY_MENU)
-        HideLeftHeaderSprites(onRightSide);
-    else
-        HideLeftHeaderSubmenuSprites(onRightSide);
-}
-
-void SetLeftHeaderSpritesInvisibility(void)
-{
-    s32 i;
-    struct Pokenav_MainMenu *menu = GetSubstructPtr(POKENAV_SUBSTRUCT_MAIN_MENU);
-
-    for (i = 0; i < (s32)ARRAY_COUNT(menu->leftHeaderSprites); i++)
-    {
-        menu->leftHeaderSprites[i]->invisible = TRUE;
-        menu->submenuLeftHeaderSprites[i]->invisible = TRUE;
-    }
-}
-
-bool32 AreLeftHeaderSpritesMoving(void)
-{
-    struct Pokenav_MainMenu *menu = GetSubstructPtr(POKENAV_SUBSTRUCT_MAIN_MENU);
-
-    if (menu->leftHeaderSprites[0]->callback == SpriteCallbackDummy && menu->submenuLeftHeaderSprites[0]->callback == SpriteCallbackDummy)
-        return FALSE;
-    else
-        return TRUE;
-}
-
-static void ShowLeftHeaderSprites(u32 startY, bool32 isOnRightSide)
-{
-    s32 start, end, i;
-    struct Pokenav_MainMenu *menu = GetSubstructPtr(POKENAV_SUBSTRUCT_MAIN_MENU);
-
-    if (!isOnRightSide)
-        start = -96, end = 32;
-    else
-        start = 256, end = 160;
-
-    for (i = 0; i < (s32)ARRAY_COUNT(menu->leftHeaderSprites); i++)
-    {
-        menu->leftHeaderSprites[i]->y = startY;
-        MoveLeftHeader(menu->leftHeaderSprites[i], start, end, 12);
-    }
-}
-
-static void ShowLeftHeaderSubmenuSprites(u32 startY, bool32 isOnRightSide)
-{
-    s32 start, end, i;
-    struct Pokenav_MainMenu *menu = GetSubstructPtr(POKENAV_SUBSTRUCT_MAIN_MENU);
-
-    if (!isOnRightSide)
-        start = -96, end = 16;
-    else
-        start = 256, end = 192;
-
-    for (i = 0; i < (s32)ARRAY_COUNT(menu->submenuLeftHeaderSprites); i++)
-    {
-        menu->submenuLeftHeaderSprites[i]->y = startY;
-        MoveLeftHeader(menu->submenuLeftHeaderSprites[i], start, end, 12);
-    }
-}
-
-static void HideLeftHeaderSprites(bool32 isOnRightSide)
-{
-    s32 start, end, i;
-    struct Pokenav_MainMenu *menu = GetSubstructPtr(POKENAV_SUBSTRUCT_MAIN_MENU);
-
-    if (!isOnRightSide)
-        start = 32, end = -96;
-    else
-        start = 192, end = 256;
-
-    for (i = 0; i < (s32)ARRAY_COUNT(menu->leftHeaderSprites); i++)
-    {
-        MoveLeftHeader(menu->leftHeaderSprites[i], start, end, 12);
-    }
-}
-
-static void HideLeftHeaderSubmenuSprites(bool32 isOnRightSide)
-{
-    s32 start, end, i;
-    struct Pokenav_MainMenu *menu = GetSubstructPtr(POKENAV_SUBSTRUCT_MAIN_MENU);
-
-    if (!isOnRightSide)
-        start = 16, end = -96;
-    else
-        start = 192, end = 256;
-
-    for (i = 0; i < (s32)ARRAY_COUNT(menu->submenuLeftHeaderSprites); i++)
-    {
-        MoveLeftHeader(menu->submenuLeftHeaderSprites[i], start, end, 12);
-    }
-}
-
-static void MoveLeftHeader(struct Sprite *sprite, s32 startX, s32 endX, s32 duration)
-{
-    sprite->x = startX;
-    sprite->data[0] = startX * 16;
-    sprite->data[1] = (endX - startX) * 16 / duration;
-    sprite->data[2] = duration;
-    sprite->data[7] = endX;
-    sprite->callback = SpriteCB_MoveLeftHeader;
-}
-
-static void SpriteCB_MoveLeftHeader(struct Sprite *sprite)
-{
-    if (sprite->data[2] != 0)
-    {
-        sprite->data[2]--;
-        sprite->data[0] += sprite->data[1];
-        sprite->x = sprite->data[0] >> 4;
-        if (sprite->x < -16 || sprite->x > 256)
-            sprite->invisible = TRUE;
-        else
-            sprite->invisible = FALSE;
-    }
-    else
-    {
-        sprite->x = sprite->data[7];
-        sprite->callback = SpriteCallbackDummy;
-    }
 }

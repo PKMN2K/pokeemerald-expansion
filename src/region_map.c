@@ -46,8 +46,6 @@
 #define MAPCURSOR_X_MAX (MAPCURSOR_X_MIN + MAP_WIDTH - 1)
 #define MAPCURSOR_Y_MAX (MAPCURSOR_Y_MIN + MAP_HEIGHT - 1)
 
-#define FLYDESTICON_RED_OUTLINE 6
-
 enum {
     TAG_CURSOR,
     TAG_PLAYER_ICON,
@@ -111,15 +109,16 @@ static void SetFlyMapCallback(void callback(void));
 static void DrawFlyDestTextWindow(void);
 static void LoadFlyDestIcons(void);
 static void CreateFlyDestIcons(void);
-static void TryCreateRedOutlineFlyDestIcons(void);
+static void TryCreateSpecialFlyDestIcons(void);
 static void SpriteCB_FlyDestIcon(struct Sprite *sprite);
 static void CB_FadeInFlyMap(void);
 static void CB_HandleFlyMapInput(void);
 static void CB_ExitFlyMap(void);
 
-static const u16 sRegionMapCursorPal[] = INCGFX_U16("graphics/pokenav/region_map/cursor.pal", ".gbapal");
-static const u32 sRegionMapCursorSmallGfxLZ[] = INCGFX_U32("graphics/pokenav/region_map/cursor_small.png", ".4bpp.smol");
-static const u32 sRegionMapCursorLargeGfxLZ[] = INCGFX_U32("graphics/pokenav/region_map/cursor_large.png", ".4bpp.smol");
+// Authentic retail HGSS PokeGear Map cursor. Retail uses the same two-frame
+// 16x16 OBJ at 1x normally and a 2x affine scale in zoom mode.
+static const u16 sRegionMapCursorPal[] = INCBIN_U16("graphics/gen4_ui/hgss_pokegear/map_cursor.gbapal");
+static const u32 sHgssPokeGearMapCursor_Gfx[] = INCBIN_U32("graphics/gen4_ui/hgss_pokegear/map_cursor.4bpp");
 static const u16 sRegionMapBg_Pal[] = INCGFX_U16("graphics/pokenav/region_map/map.pal", ".gbapal");
 static const u32 sRegionMapBg_GfxLZ[] = INCGFX_U32("graphics/pokenav/region_map/map.png", ".8bpp.smol", "-num_tiles 233 -Wnum_tiles");
 static const u32 sRegionMapBg_TilemapLZ[] = INCGFX_U32("graphics/pokenav/region_map/map.bin", ".smolTM");
@@ -226,24 +225,15 @@ static const struct OamData sRegionMapCursorOam =
 
 static const union AnimCmd sRegionMapCursorAnim1[] =
 {
-    ANIMCMD_FRAME(0, 20),
-    ANIMCMD_FRAME(4, 20),
-    ANIMCMD_JUMP(0)
-};
-
-static const union AnimCmd sRegionMapCursorAnim2[] =
-{
-    ANIMCMD_FRAME( 0, 10),
-    ANIMCMD_FRAME(16, 10),
-    ANIMCMD_FRAME(32, 10),
-    ANIMCMD_FRAME(16, 10),
+    // Match retail HGSS PokeGear Map cursor sequence 0 timing.
+    ANIMCMD_FRAME(0, 15),
+    ANIMCMD_FRAME(4, 15),
     ANIMCMD_JUMP(0)
 };
 
 static const union AnimCmd *const sRegionMapCursorAnimTable[] =
 {
-    sRegionMapCursorAnim1,
-    sRegionMapCursorAnim2
+    sRegionMapCursorAnim1
 };
 
 static const struct SpritePalette sRegionMapCursorSpritePalette =
@@ -290,8 +280,8 @@ static const mapsec_u8_t sMapSecIdsOffMap[] =
 static const u16 sRegionMapFramePal[] = INCGFX_U16("graphics/pokenav/region_map/frame.png", ".gbapal");
 static const u32 sRegionMapFrameGfxLZ[] = INCGFX_U32("graphics/pokenav/region_map/frame.png", ".4bpp.smol");
 static const u32 sRegionMapFrameTilemapLZ[] = INCGFX_U32("graphics/pokenav/region_map/frame.bin", ".smolTM");
-static const u16 sFlyTargetIcons_Pal[] = INCGFX_U16("graphics/pokenav/region_map/fly_target_icons.png", ".gbapal");
-static const u32 sFlyTargetIcons_Gfx[] = INCGFX_U32("graphics/pokenav/region_map/fly_target_icons.png", ".4bpp.smol");
+static const u16 sHgssFlyPoint_Pal[] = INCBIN_U16("graphics/gen4_ui/hgss_pokegear/map_flypoint.gbapal");
+static const u32 sHgssFlyPoint_Gfx[] = INCBIN_U32("graphics/gen4_ui/hgss_pokegear/map_flypoint.4bpp");
 
 static const u16 ALIGNED(4) sPokedexAreaMap_Pal[] = INCGFX_U16("graphics/pokedex/region_map.pal", ".gbapal");
 static const u32 sPokedexAreaMap_Gfx[] = INCGFX_U32("graphics/pokedex/region_map.png", ".8bpp.smol", "-num_tiles 232 -Wnum_tiles");
@@ -612,13 +602,13 @@ static const struct WindowTemplate sFlyMapWindowTemplates[] =
     DUMMY_WIN_TEMPLATE
 };
 
-static const struct SpritePalette sFlyTargetIconsSpritePalette =
+static const struct SpritePalette sHgssFlyPointSpritePalette =
 {
-    .data = sFlyTargetIcons_Pal,
+    .data = sHgssFlyPoint_Pal,
     .tag = TAG_FLY_ICON
 };
 
-static const mapsec_u16_t sRedOutlineFlyDestinations[][2] =
+static const mapsec_u16_t sSpecialFlyDestinations[][2] =
 {
     {
         FLAG_LANDMARK_BATTLE_FRONTIER,
@@ -630,73 +620,30 @@ static const mapsec_u16_t sRedOutlineFlyDestinations[][2] =
     }
 };
 
-static const struct OamData sFlyDestIcon_OamData =
+static const struct OamData sHgssFlyPoint_OamData =
 {
-    .shape = SPRITE_SHAPE(8x8),
-    .size = SPRITE_SIZE(8x8),
+    .shape = SPRITE_SHAPE(16x16),
+    .size = SPRITE_SIZE(16x16),
     .priority = 2
 };
 
-static const union AnimCmd sFlyDestIcon_Anim_8x8CanFly[] =
+static const union AnimCmd sHgssFlyPoint_Anim[] =
 {
-    ANIMCMD_FRAME( 0, 5),
+    ANIMCMD_FRAME(0, 1),
     ANIMCMD_END
 };
 
-static const union AnimCmd sFlyDestIcon_Anim_16x8CanFly[] =
+static const union AnimCmd *const sHgssFlyPoint_Anims[] =
 {
-    ANIMCMD_FRAME( 1, 5),
-    ANIMCMD_END
+    sHgssFlyPoint_Anim
 };
 
-static const union AnimCmd sFlyDestIcon_Anim_8x16CanFly[] =
-{
-    ANIMCMD_FRAME( 3, 5),
-    ANIMCMD_END
-};
-
-static const union AnimCmd sFlyDestIcon_Anim_8x8CantFly[] =
-{
-    ANIMCMD_FRAME( 5, 5),
-    ANIMCMD_END
-};
-
-static const union AnimCmd sFlyDestIcon_Anim_16x8CantFly[] =
-{
-    ANIMCMD_FRAME( 6, 5),
-    ANIMCMD_END
-};
-
-static const union AnimCmd sFlyDestIcon_Anim_8x16CantFly[] =
-{
-    ANIMCMD_FRAME( 8, 5),
-    ANIMCMD_END
-};
-
-// Only used by Battle Frontier
-static const union AnimCmd sFlyDestIcon_Anim_RedOutline[] =
-{
-    ANIMCMD_FRAME(10, 5),
-    ANIMCMD_END
-};
-
-static const union AnimCmd *const sFlyDestIcon_Anims[] =
-{
-    [SPRITE_SHAPE(8x8)]       = sFlyDestIcon_Anim_8x8CanFly,
-    [SPRITE_SHAPE(16x8)]      = sFlyDestIcon_Anim_16x8CanFly,
-    [SPRITE_SHAPE(8x16)]      = sFlyDestIcon_Anim_8x16CanFly,
-    [SPRITE_SHAPE(8x8)  + 3]  = sFlyDestIcon_Anim_8x8CantFly,
-    [SPRITE_SHAPE(16x8) + 3]  = sFlyDestIcon_Anim_16x8CantFly,
-    [SPRITE_SHAPE(8x16) + 3]  = sFlyDestIcon_Anim_8x16CantFly,
-    [FLYDESTICON_RED_OUTLINE] = sFlyDestIcon_Anim_RedOutline
-};
-
-static const struct SpriteTemplate sFlyDestIconSpriteTemplate =
+static const struct SpriteTemplate sHgssFlyPointSpriteTemplate =
 {
     .tileTag = TAG_FLY_ICON,
     .paletteTag = TAG_FLY_ICON,
-    .oam = &sFlyDestIcon_OamData,
-    .anims = sFlyDestIcon_Anims,
+    .oam = &sHgssFlyPoint_OamData,
+    .anims = sHgssFlyPoint_Anims,
 };
 
 void InitRegionMap(struct RegionMap *regionMap, bool8 zoomed)
@@ -765,10 +712,10 @@ bool8 LoadRegionMapGfx(void)
             LoadPalette(gRegionMapInfos[regionMapType].regionMapPalette, BG_PLTT_ID(7), 3 * PLTT_SIZE_4BPP);
         break;
     case 3:
-        DecompressDataWithHeaderWram(sRegionMapCursorSmallGfxLZ, sRegionMap->cursorSmallImage);
+        memcpy(sRegionMap->cursorSmallImage, sHgssPokeGearMapCursor_Gfx, sizeof(sRegionMap->cursorSmallImage));
         break;
     case 4:
-        DecompressDataWithHeaderWram(sRegionMapCursorLargeGfxLZ, sRegionMap->cursorLargeImage);
+        // Retail HGSS reuses the 16x16 cursor at 2x scale; no second graphic.
         break;
     case 5:
         InitMapBasedOnPlayerLocation();
@@ -826,6 +773,7 @@ void FreeRegionMapIconResources(void)
 {
     if (sRegionMap->cursorSprite != NULL)
     {
+        FreeSpriteOamMatrix(sRegionMap->cursorSprite);
         DestroySprite(sRegionMap->cursorSprite);
         FreeSpriteTilesByTag(sRegionMap->cursorTileTag);
         FreeSpritePaletteByTag(sRegionMap->cursorPaletteTag);
@@ -1666,25 +1614,27 @@ void CreateRegionMapCursor(u16 tileTag, u16 paletteTag)
     struct SpriteTemplate template;
     struct SpritePalette palette;
     struct SpriteSheet sheet;
+    struct OamData oam = sRegionMapCursorOam;
 
     palette = sRegionMapCursorSpritePalette;
     template = sRegionMapCursorSpriteTemplate;
+    template.oam = &oam;
     sheet.tag = tileTag;
     template.tileTag = tileTag;
     sRegionMap->cursorTileTag = tileTag;
     palette.tag = paletteTag;
     template.paletteTag = paletteTag;
     sRegionMap->cursorPaletteTag = paletteTag;
+    sheet.data = sRegionMap->cursorSmallImage;
+    sheet.size = sizeof(sRegionMap->cursorSmallImage);
     if (!sRegionMap->zoomed)
     {
-        sheet.data = sRegionMap->cursorSmallImage;
-        sheet.size = sizeof(sRegionMap->cursorSmallImage);
         template.callback = SpriteCB_CursorMapFull;
     }
     else
     {
-        sheet.data = sRegionMap->cursorLargeImage;
-        sheet.size = sizeof(sRegionMap->cursorLargeImage);
+        // Retail HGSS scales the same 16x16 map cursor to 2x in zoom mode.
+        oam.affineMode = ST_OAM_AFFINE_DOUBLE;
         template.callback = SpriteCB_CursorMapZoomed;
     }
     LoadSpriteSheet(&sheet);
@@ -1695,10 +1645,7 @@ void CreateRegionMapCursor(u16 tileTag, u16 paletteTag)
         sRegionMap->cursorSprite = &gSprites[spriteId];
         if (sRegionMap->zoomed == TRUE)
         {
-            sRegionMap->cursorSprite->oam.size = SPRITE_SIZE(32x32);
-            sRegionMap->cursorSprite->x -= 8;
-            sRegionMap->cursorSprite->y -= 8;
-            StartSpriteAnim(sRegionMap->cursorSprite, 1);
+            SetOamMatrixRotationScaling(sRegionMap->cursorSprite->oam.matrixNum, 0x200, 0x200, 0);
         }
         else
         {
@@ -2120,14 +2067,14 @@ static void LoadFlyDestIcons(void)
 {
     struct SpriteSheet sheet;
 
-    DecompressDataWithHeaderWram(sFlyTargetIcons_Gfx, sFlyMap->tileBuffer);
-    sheet.data = sFlyMap->tileBuffer;
-    sheet.size = sizeof(sFlyMap->tileBuffer);
+    sheet.data = sHgssFlyPoint_Gfx;
+    sheet.size = sizeof(sHgssFlyPoint_Gfx);
     sheet.tag = TAG_FLY_ICON;
     LoadSpriteSheet(&sheet);
-    LoadSpritePalette(&sFlyTargetIconsSpritePalette);
+    LoadSpritePalette(&sHgssFlyPointSpritePalette);
+
     CreateFlyDestIcons();
-    TryCreateRedOutlineFlyDestIcons();
+    TryCreateSpecialFlyDestIcons();
 }
 
 struct FlyLocation
@@ -2334,7 +2281,6 @@ static void CreateFlyDestIcons(void)
     u16 y;
     u16 width;
     u16 height;
-    u16 shape;
     u8 spriteId;
 
     for (i = 0; i < ARRAY_COUNT(sFlyLocations); i++)
@@ -2342,28 +2288,18 @@ static void CreateFlyDestIcons(void)
         if (sFlyLocations[i].regionMapType != regionMapType)
             continue;
 
+        // Retail HGSS hides fly-point indicators until their destination is unlocked.
+        if (!FlagGet(sFlyLocations[i].flag))
+            continue;
+
         GetMapSecDimensions(sFlyLocations[i].mapsec, &x, &y, &width, &height);
-        x = (x + MAPCURSOR_X_MIN) * 8 + 4;
-        y = (y + MAPCURSOR_Y_MIN) * 8 + 4;
+        x = (x + MAPCURSOR_X_MIN) * 8 + width * 4;
+        y = (y + MAPCURSOR_Y_MIN) * 8 + height * 4;
 
-        if (width == 2)
-            shape = SPRITE_SHAPE(16x8);
-        else if (height == 2)
-            shape = SPRITE_SHAPE(8x16);
-        else
-            shape = SPRITE_SHAPE(8x8);
-
-        spriteId = CreateSpriteUnchecked(&sFlyDestIconSpriteTemplate, x, y, 10);
+        spriteId = CreateSpriteUnchecked(&sHgssFlyPointSpriteTemplate, x, y, 10);
         if (spriteId != MAX_SPRITES)
         {
-            gSprites[spriteId].oam.shape = shape;
-
-            if (FlagGet(sFlyLocations[i].flag))
-                gSprites[spriteId].callback = SpriteCB_FlyDestIcon;
-            else
-                shape += 3;
-
-            StartSpriteAnim(&gSprites[spriteId], shape);
+            gSprites[spriteId].callback = SpriteCB_FlyDestIcon;
             gSprites[spriteId].sIconMapSec = sFlyLocations[i].mapsec;
         }
     }
@@ -2371,7 +2307,9 @@ static void CreateFlyDestIcons(void)
 
 // Draw a red outline box on the mapsec if its corresponding flag has been set
 // Only used for Battle Frontier, but set up to handle more
-static void TryCreateRedOutlineFlyDestIcons(void)
+// Special fly destinations not represented in sFlyLocations use the same
+// authentic HGSS fly-point marker while retaining their project-specific flags.
+static void TryCreateSpecialFlyDestIcons(void)
 {
     u16 i;
     u16 x;
@@ -2381,20 +2319,18 @@ static void TryCreateRedOutlineFlyDestIcons(void)
     mapsec_u16_t mapSecId;
     u8 spriteId;
 
-    for (i = 0; sRedOutlineFlyDestinations[i][1] != MAPSEC_NONE; i++)
+    for (i = 0; sSpecialFlyDestinations[i][1] != MAPSEC_NONE; i++)
     {
-        if (FlagGet(sRedOutlineFlyDestinations[i][0]))
+        if (FlagGet(sSpecialFlyDestinations[i][0]))
         {
-            mapSecId = sRedOutlineFlyDestinations[i][1];
+            mapSecId = sSpecialFlyDestinations[i][1];
             GetMapSecDimensions(mapSecId, &x, &y, &width, &height);
-            x = (x + MAPCURSOR_X_MIN) * 8;
-            y = (y + MAPCURSOR_Y_MIN) * 8;
-            spriteId = CreateSpriteUnchecked(&sFlyDestIconSpriteTemplate, x, y, 10);
+            x = (x + MAPCURSOR_X_MIN) * 8 + width * 4;
+            y = (y + MAPCURSOR_Y_MIN) * 8 + height * 4;
+            spriteId = CreateSpriteUnchecked(&sHgssFlyPointSpriteTemplate, x, y, 10);
             if (spriteId != MAX_SPRITES)
             {
-                gSprites[spriteId].oam.size = SPRITE_SIZE(16x16);
                 gSprites[spriteId].callback = SpriteCB_FlyDestIcon;
-                StartSpriteAnim(&gSprites[spriteId], FLYDESTICON_RED_OUTLINE);
                 gSprites[spriteId].sIconMapSec = mapSecId;
             }
         }

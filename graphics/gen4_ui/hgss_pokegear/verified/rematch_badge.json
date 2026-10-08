@@ -1,0 +1,85 @@
+{
+  "role": "match_call_rematch_badge",
+  "phase": "legacy_removed",
+  "classification": "functional reuse of authentic HGSS phone-status artwork",
+  "direct_retail_equivalent": false,
+  "source_record": "phone_status_indicator_skin0.json",
+  "source_game": "Pokemon HeartGold / SoulSilver",
+  "ncer_cells": [
+    18,
+    19
+  ],
+  "nanr_sequence": 3,
+  "member6_tiles": [
+    200,
+    204
+  ],
+  "member0_palette_bank": 3,
+  "native_frame_size": [
+    16,
+    16
+  ],
+  "legacy_frame_size": [
+    8,
+    16
+  ],
+  "scaling": false,
+  "redrawing": false,
+  "recoloring": false,
+  "tile_layout": {
+    "active": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "disabled": [
+      4,
+      5,
+      6,
+      7
+    ],
+    "transparent": 8
+  },
+  "runtime_wired": true,
+  "legacy_removed": true,
+  "legacy_assets": [
+    "graphics/pokenav/match_call/pokeball.png",
+    "graphics/pokenav/match_call/pokeball.pal"
+  ],
+  "generated_tiles": "graphics/gen4_ui/hgss_pokegear/rematch_badge.4bpp",
+  "generated_tiles_size": 288,
+  "generated_tiles_sha256": "353851e316ca36b962ad0d8785920127d197d4880029c0f813315e030bd4496e",
+  "generated_palette": "graphics/gen4_ui/hgss_pokegear/rematch_badge.gbapal",
+  "generated_palette_size": 32,
+  "generated_palette_sha256": "1aa4789a0cc9aa26227b2f3b85a9af761f8d3101fd44150ed3be19a6d463c3ec",
+  "runtime_binding": "src/pokenav_match_call_gfx.c:sHgssRematchBadge_Gfx",
+  "runtime_layout": {
+    "list_left_tile": 12,
+    "list_width_tiles": 16,
+    "badge_left_tile": 28,
+    "badge_width_tiles": 2,
+    "bg": 3,
+    "palette_bank": 5,
+    "reserved_badge_tiles": 9,
+    "list_fill_tiles": [
+      9,
+      10
+    ],
+    "list_window_base_tile": 11,
+    "list_window_tile_count": 512
+  },
+  "legacy_removal": {
+    "live_validation_ci": 654,
+    "live_validation_commit": "99ffba706f3042b485ba4bd2b726b0af38eb1a2a",
+    "removed_bindings": [
+      "sPokeball_Gfx",
+      "sPokeball_Pal"
+    ],
+    "removed_load_path": "legacy compressed 8x16 Poké Ball tiles and interpolated palette",
+    "removed_assets": [
+      "graphics/pokenav/match_call/pokeball.png",
+      "graphics/pokenav/match_call/pokeball.pal"
+    ]
+  }
+}

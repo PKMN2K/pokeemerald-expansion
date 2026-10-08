@@ -1976,28 +1976,6 @@ extern const u16 gBerryPalette_Kee[];
 extern const u16 gBerryPalette_Maranga[];
 
 //PokéNav
-extern const u16 gPokenavCondition_Pal[];
-extern const u32 gPokenavCondition_Gfx[];
-extern const u32 gPokenavCondition_Tilemap[];
-extern const u16 gPokenavOptions_Tilemap[];
-extern const u32 gPokenavOptions_Gfx[];
-extern const u16 gPokenavOptions_Pal[];
-extern const u16 gPokenavLeftHeader_Pal[];
-extern const u16 gPokenavHeader_Pal[];
-extern const u32 gPokenavHeader_Gfx[];
-extern const u32 gPokenavHeader_Tilemap[];
-extern const u32 gPokenavLeftHeaderHoennMap_Gfx[];
-extern const u32 gPokenavLeftHeaderMainMenu_Gfx[];
-extern const u32 gPokenavLeftHeaderCondition_Gfx[];
-extern const u32 gPokenavLeftHeaderRibbons_Gfx[];
-extern const u32 gPokenavLeftHeaderMatchCall_Gfx[];
-extern const u32 gPokenavLeftHeaderParty_Gfx[];
-extern const u32 gPokenavLeftHeaderSearch_Gfx[];
-extern const u32 gPokenavLeftHeaderCool_Gfx[];
-extern const u32 gPokenavLeftHeaderBeauty_Gfx[];
-extern const u32 gPokenavLeftHeaderCute_Gfx[];
-extern const u32 gPokenavLeftHeaderSmart_Gfx[];
-extern const u32 gPokenavLeftHeaderTough_Gfx[];
 extern const u16 gPokenavRibbonsSummaryBg_Pal[];
 extern const u32 gPokenavRibbonsSummaryBg_Gfx[];
 extern const u32 gPokenavRibbonsSummaryBg_Tilemap[];
@@ -3381,11 +3359,6 @@ extern const u16 gBerryCrush_Crusher_Pal[];
 extern const u32 gBerryCrush_TextWindows_Tilemap[];
 
 // PokéNav
-extern const u32 gPokenavMessageBox_Gfx[];
-extern const u32 gPokenavMessageBox_Tilemap[];
-extern const u16 gPokenavMessageBox_Pal[];
-extern const u32 gPokenavOptions_Gfx[];
-extern const u16 gPokenavOptions_Pal[];
 
 // Battle Factory Screen
 extern const u16 gFrontierFactoryMenu_Gfx[34 * TILE_SIZE_4BPP / 2];

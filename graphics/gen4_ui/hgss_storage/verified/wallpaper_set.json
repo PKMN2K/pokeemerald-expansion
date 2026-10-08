@@ -1,0 +1,464 @@
+{
+  "role": "wallpaper_set",
+  "game": "Pokemon HeartGold / SoulSilver",
+  "source_archive": "/a/0/1/9",
+  "archive_sha256": "f7a1a97638959a685719049a0b780686edb68704777fead790b230e10ed1df4a",
+  "native_count": 24,
+  "dimensions": [
+    168,
+    160
+  ],
+  "tile_dimensions": [
+    21,
+    20
+  ],
+  "shared_nscr": {
+    "index": 15,
+    "raw_sha256": "82523f89488ceeadc92b8c9ed1b1cf84957ed8dc8c56e2aef1fc2c18dacfb6bf",
+    "decoded_sha256": "a0d9cb5f210008692851ab7ae1edf557433d6e4b00b7d13b5a3c86d3092d30df"
+  },
+  "member_mapping": "wallpaper N uses NSCR 15 + NCGR (15+N) + NCLR (39+N)",
+  "conversion": "Each checked-in PNG is a compact 4-bit indexed repack of the extracted HGSS composition. Source RGB pixels are preserved 1:1 with no crop, redraw, scaling, recoloring, or synthetic chrome.",
+  "status": "authentic asset set complete; wallpaper_01 was already present/live, wallpaper_02 through wallpaper_24 imported but not yet wired",
+  "next": "Wire all 24 native HGSS wallpapers into the Storage wallpaper IDs/selection, then remove the legacy SWSH wallpaper folder in the later cleanup phase.",
+  "wallpapers": [
+    {
+      "wallpaper": 1,
+      "nscr": 15,
+      "ncgr": {
+        "index": 16,
+        "raw_sha256": "e82a24ae68385139490739834721e5cce3228cff65b3fd8b62f5e3b2d22c0b20",
+        "decoded_sha256": "3a3b9873269be67969bb06f3ffc86c7b6173de9cc7947e50d8358ba16b2264b7"
+      },
+      "nclr": {
+        "index": 40,
+        "raw_sha256": "db73f56f2b1bdd52d85ef82e7bb9968e9247b2919fbd112609310efee3a6a0fe",
+        "decoded_sha256": "db73f56f2b1bdd52d85ef82e7bb9968e9247b2919fbd112609310efee3a6a0fe"
+      },
+      "source_png_sha256": "29164402b64565e2a3b1c218135847c1689d6ea1f6f7ca87449428764480927c",
+      "checked_in_path": "wallpaper_01.png",
+      "git_blob_sha1": "8873a04f5f67c7b75abc6a2f0be5ca97b35fa4b3",
+      "checked_in_png_sha256": "8893f405cbcbf3844ab1e681c3f88942456ee405ab8df1474016445b2cfb1218"
+    },
+    {
+      "wallpaper": 2,
+      "nscr": 15,
+      "ncgr": {
+        "index": 17,
+        "raw_sha256": "a85c08b5d243d655aa4cb41ad382d743c968dff763aacd0acfd3797407923782",
+        "decoded_sha256": "be83f20b544df3494a32b1c66096e3696c91c4a31eef0181b0eba287416ff434"
+      },
+      "nclr": {
+        "index": 41,
+        "raw_sha256": "d89da6c9166ae9277ab9cbc2f29ba08818dddc3e3a91430860097c4e10e21902",
+        "decoded_sha256": "d89da6c9166ae9277ab9cbc2f29ba08818dddc3e3a91430860097c4e10e21902"
+      },
+      "source_png_sha256": "4fbd1be0a25f25d2b7519900d9466f8d299c607654a000995c01858b4abe8d11",
+      "checked_in_path": "wallpaper_02.png",
+      "git_blob_sha1": "7ca46c613149c5c762780d26f98b4053da0206cc",
+      "checked_in_png_sha256": "93e0297b71a8ace3b26f65a42fb88293dd2f3f81f198410c0f01c157f5c4bf4c"
+    },
+    {
+      "wallpaper": 3,
+      "nscr": 15,
+      "ncgr": {
+        "index": 18,
+        "raw_sha256": "af8e4d4c2fdf205ceb8116c99c926d36ef6263c98a01976f7f7f1119454dd9e8",
+        "decoded_sha256": "d60786e4ea2ea3e7cbbdbb7df935db09c4a4e902ab3191ecde1b3f9a8ac885a0"
+      },
+      "nclr": {
+        "index": 42,
+        "raw_sha256": "5ce15faeab635cbb36d19df8807a5b902ae2d6d4cb16167c82f1a4990fc996ac",
+        "decoded_sha256": "5ce15faeab635cbb36d19df8807a5b902ae2d6d4cb16167c82f1a4990fc996ac"
+      },
+      "source_png_sha256": "c495454d4855d27afbb8ebffb61212c6538515b5a1c7f438b79119cf838fab69",
+      "checked_in_path": "wallpaper_03.png",
+      "git_blob_sha1": "f2c958ea3c188cdcba0bb1e23a0369b9b5d21628",
+      "checked_in_png_sha256": "06b23279aa154af858fc4e572ec5562aa0081ce82bbf467eb44136f3dc7f9875"
+    },
+    {
+      "wallpaper": 4,
+      "nscr": 15,
+      "ncgr": {
+        "index": 19,
+        "raw_sha256": "ca1d19f408200e0f49609728a3099a512429669fdb3c9b737001992aa09f6dc1",
+        "decoded_sha256": "8c742ad9ca11d712a5faa6e0725737dd19f4696978b9d1b0a9d870a74fd9ec1d"
+      },
+      "nclr": {
+        "index": 43,
+        "raw_sha256": "41f4c609ee9670c9b56539196895829672501398b504c817aa76de44adc2c16d",
+        "decoded_sha256": "41f4c609ee9670c9b56539196895829672501398b504c817aa76de44adc2c16d"
+      },
+      "source_png_sha256": "13b64d1e107f4c2e8a158ab1542b5ef30fc355692b934a7faa3642f384f386d1",
+      "checked_in_path": "wallpaper_04.png",
+      "git_blob_sha1": "c2234d30e6846e12dd7f65542e5d25857ab36ac3",
+      "checked_in_png_sha256": "f57c28114613c17a7d85bd2b94cdb23701f22df9d6ebc3e70285d7602c7547f1"
+    },
+    {
+      "wallpaper": 5,
+      "nscr": 15,
+      "ncgr": {
+        "index": 20,
+        "raw_sha256": "3ea3f18349eca3aac87c17301203fcbd58f60649c9619a518bae350688dff04e",
+        "decoded_sha256": "baaef3045c1d96381d11749bd243bd6793c6f7fe0bcaa4070f12f0e58e11276a"
+      },
+      "nclr": {
+        "index": 44,
+        "raw_sha256": "874a3e252d68b4441cea7ffe76eb5595f96c7ab048c484c406964c3cea8df948",
+        "decoded_sha256": "874a3e252d68b4441cea7ffe76eb5595f96c7ab048c484c406964c3cea8df948"
+      },
+      "source_png_sha256": "1085e7631c4623c133febd41fe90768d257a87f4834e3fdbcd2a69deaa162015",
+      "checked_in_path": "wallpaper_05.png",
+      "git_blob_sha1": "da604f0ebc94aaa50305da19f5a6b83e3cdbfb6d",
+      "checked_in_png_sha256": "51f71bf2f719f39c9a97320ef502d4147bc3a80e6a8d1540d563cac11e6fde97"
+    },
+    {
+      "wallpaper": 6,
+      "nscr": 15,
+      "ncgr": {
+        "index": 21,
+        "raw_sha256": "b7b406ffe639ed881b66f3370657ade924e8ff285b789da82ca16a22c9cebcb1",
+        "decoded_sha256": "793eec45d144e732a4ee38d15192580273d53c532455e040a576ae40d15a0e05"
+      },
+      "nclr": {
+        "index": 45,
+        "raw_sha256": "6f921389480453988e89342363783d042880d92fa476381d1058d8df5e54a1dc",
+        "decoded_sha256": "6f921389480453988e89342363783d042880d92fa476381d1058d8df5e54a1dc"
+      },
+      "source_png_sha256": "31c32071cd4426bc695ec8c2af0e8a1013dc02585bab5132be89a711b3bfe17c",
+      "checked_in_path": "wallpaper_06.png",
+      "git_blob_sha1": "b36459d73fe37087e62614a62f304cfcf1c2df9b",
+      "checked_in_png_sha256": "c2044c92a43c8edf8c75e674a5bda19f13a3732e0fe7ad957c01e8f2829c94c3"
+    },
+    {
+      "wallpaper": 7,
+      "nscr": 15,
+      "ncgr": {
+        "index": 22,
+        "raw_sha256": "43fcc43a1a5be1104608ff7b53ab4ab4ff9bf185a19a4e5b9801d04ec6c59e2b",
+        "decoded_sha256": "fc39406704006b6505962c277a6daf09d15bac0efc897d9aecfb59917d01e943"
+      },
+      "nclr": {
+        "index": 46,
+        "raw_sha256": "d0eaff6aee3ed19426d2046deb5a8e17101c14033f57c7d50795d2f579c289e1",
+        "decoded_sha256": "d0eaff6aee3ed19426d2046deb5a8e17101c14033f57c7d50795d2f579c289e1"
+      },
+      "source_png_sha256": "398adcfb916d1b692c7913643041bff639fcf87cf7edb07c44b52246644d7baf",
+      "checked_in_path": "wallpaper_07.png",
+      "git_blob_sha1": "27fc57b85578dbee92e05f377fd97e622683044f",
+      "checked_in_png_sha256": "a653724e35858ec78bd7f26557c9382d89af41c1bb94ae951b8a5d327b9857f0"
+    },
+    {
+      "wallpaper": 8,
+      "nscr": 15,
+      "ncgr": {
+        "index": 23,
+        "raw_sha256": "a923da5ff74f557fe1c81167d7753f688fc237dc9f900f2906057c38687ce4f9",
+        "decoded_sha256": "7510199a88572e75c32671f5017c7911cb325c2a0d76642487cdbeaa1aa585b2"
+      },
+      "nclr": {
+        "index": 47,
+        "raw_sha256": "645e658e57fc407e50490884f5932d6f75219a4a6b15c52b2a9d219932bd198c",
+        "decoded_sha256": "645e658e57fc407e50490884f5932d6f75219a4a6b15c52b2a9d219932bd198c"
+      },
+      "source_png_sha256": "bc4cb5615763b7541cbd93e6bdeed153f0ca9828e84a216c0956d265bc2bf527",
+      "checked_in_path": "wallpaper_08.png",
+      "git_blob_sha1": "ca8a256bdad010c3fae4866ecc256941a6c83e47",
+      "checked_in_png_sha256": "cc831ada0f7c83e0635a946fb67abc6115c567b7bb99548836660cd78b8ef11c"
+    },
+    {
+      "wallpaper": 9,
+      "nscr": 15,
+      "ncgr": {
+        "index": 24,
+        "raw_sha256": "1780030c7170fdc79a6cec29e2e2c03d75ca28e92ac291c3215d22b148d38b69",
+        "decoded_sha256": "8e08bb13f40ff33b86992eb0551cbfedc156a7273d676d3b99c25ef88b348a89"
+      },
+      "nclr": {
+        "index": 48,
+        "raw_sha256": "fd516cef80fff4d98a796b0d67234e8b76bcd3f8812f43a9068ebc00443c311b",
+        "decoded_sha256": "fd516cef80fff4d98a796b0d67234e8b76bcd3f8812f43a9068ebc00443c311b"
+      },
+      "source_png_sha256": "ec14b5b1244f70302e75f20c8c0055c212c89e2c52986f3b50c0235bf5b6b1e0",
+      "checked_in_path": "wallpaper_09.png",
+      "git_blob_sha1": "ae25e87bca93bcfd8d3bd84b96ae1b6b92a15090",
+      "checked_in_png_sha256": "4fd7e6bb40298e58216bd397700f5efbeafb6f31a766c2e35739aba2c01e296e"
+    },
+    {
+      "wallpaper": 10,
+      "nscr": 15,
+      "ncgr": {
+        "index": 25,
+        "raw_sha256": "01c5bfcbc981531fbba5e58fb6156f3e55e287e96e5a688468ce00ba3ce4867a",
+        "decoded_sha256": "5d682d84c6229ab72f2f2895c03186b7d072545cf7a867fd99900131ba68474d"
+      },
+      "nclr": {
+        "index": 49,
+        "raw_sha256": "be92bba4ebf2b94ddcb8c81576702b6f2b1781a671f7ca6cd3ccb5eea4514b92",
+        "decoded_sha256": "be92bba4ebf2b94ddcb8c81576702b6f2b1781a671f7ca6cd3ccb5eea4514b92"
+      },
+      "source_png_sha256": "476e00cb955114bcaa4541c323ebbee58689b5368c3c6a022327aa410bd02a3d",
+      "checked_in_path": "wallpaper_10.png",
+      "git_blob_sha1": "03a0faafd977ca6f0965a7edcd62eb4aeaddbeb9",
+      "checked_in_png_sha256": "2886185c86d5da9b6160dc6483d5441f92d92a4621bad3f0b41650c1ff3cb3ee"
+    },
+    {
+      "wallpaper": 11,
+      "nscr": 15,
+      "ncgr": {
+        "index": 26,
+        "raw_sha256": "eb6a428698c5e9028599ba96b988ddb667680023bbcadda5b2f7eabdde47e161",
+        "decoded_sha256": "b3f0c8d3b22b0d9adc36744a5770d473781e9bd7ccb7eac0752d106306789025"
+      },
+      "nclr": {
+        "index": 50,
+        "raw_sha256": "36359494f0d7e60dab0a193dc6330c1434a8d3a146c9f97e528a7794e4fad45d",
+        "decoded_sha256": "36359494f0d7e60dab0a193dc6330c1434a8d3a146c9f97e528a7794e4fad45d"
+      },
+      "source_png_sha256": "12000fd2db8c0a34a8dc84357694cb61cda92992119412b0018883b9137cc05c",
+      "checked_in_path": "wallpaper_11.png",
+      "git_blob_sha1": "18a9f02ebd9b0a8e1d6717e34dc0e73e91d3576a",
+      "checked_in_png_sha256": "6f247400dcf8267cb1437934b93db2559a4596e5a3e76083f28d9c2fc03600de"
+    },
+    {
+      "wallpaper": 12,
+      "nscr": 15,
+      "ncgr": {
+        "index": 27,
+        "raw_sha256": "2e17a082803e28e1866d65572aa76e7dd879877f05e19b264786dfbf532a9735",
+        "decoded_sha256": "2f340cd73d8750f94bbec0bdaa35b24086b4d1c86d96f45f7667fa8d2240889b"
+      },
+      "nclr": {
+        "index": 51,
+        "raw_sha256": "0559f0d1bdbb83f54ca359cc6dff9abd86cb026f0052eb34b4393769c6b4e744",
+        "decoded_sha256": "0559f0d1bdbb83f54ca359cc6dff9abd86cb026f0052eb34b4393769c6b4e744"
+      },
+      "source_png_sha256": "bda2c12c286226034bb7f604d7ab4144eb897369cb308aecdb686c62dd26546d",
+      "checked_in_path": "wallpaper_12.png",
+      "git_blob_sha1": "400ca7074258a75afb65eeda0b9bdd96131d04d4",
+      "checked_in_png_sha256": "72692be7843cb1b81ee0361ecc5aa851b1dbe55824b15297feafb9de17326771"
+    },
+    {
+      "wallpaper": 13,
+      "nscr": 15,
+      "ncgr": {
+        "index": 28,
+        "raw_sha256": "a9212681e1f7c574d0553ccbd8a2791ece594af4a928aeb7c490a06200fd5534",
+        "decoded_sha256": "b8647cfd04556f1844005da094cb6335af06c335745b3687311b324a738f44c6"
+      },
+      "nclr": {
+        "index": 52,
+        "raw_sha256": "e2a94e12cf8a64fc308e79e1c7cfdfeca7c5cbfa2b7197139538bdd249467943",
+        "decoded_sha256": "e2a94e12cf8a64fc308e79e1c7cfdfeca7c5cbfa2b7197139538bdd249467943"
+      },
+      "source_png_sha256": "de5226e2ae16e4acb7bb501685ed772477a46becc28a6abf741aad988da9d232",
+      "checked_in_path": "wallpaper_13.png",
+      "git_blob_sha1": "af8f4d35e01c3cdb2022d809af8024f4cb00b509",
+      "checked_in_png_sha256": "d007a10841cded06a972844841f2891cfe6dab96362249d3589ac3c6535bb204"
+    },
+    {
+      "wallpaper": 14,
+      "nscr": 15,
+      "ncgr": {
+        "index": 29,
+        "raw_sha256": "d2aebcff16359615d6be06f18f14e090f424eca33863855a1033a74daa17e442",
+        "decoded_sha256": "b1e1414df5cd9189b05767db2dba6b44925e216f6601be2f1a3d84a9c4ea9a69"
+      },
+      "nclr": {
+        "index": 53,
+        "raw_sha256": "42126cae101720d2cae96384cc37e1236f1a683f148dda67c0d0e5e0bc92f9c5",
+        "decoded_sha256": "42126cae101720d2cae96384cc37e1236f1a683f148dda67c0d0e5e0bc92f9c5"
+      },
+      "source_png_sha256": "048f54cef60abb17ccc96e069f80b623fc318f1eb1cef5ca88e3dd5085b49443",
+      "checked_in_path": "wallpaper_14.png",
+      "git_blob_sha1": "80a49a036167db6daa2c6b4dfe80badfc57f54da",
+      "checked_in_png_sha256": "7c8683858c19281e03d5b932d89504f340593aa5019bdc1062205643a7422d11"
+    },
+    {
+      "wallpaper": 15,
+      "nscr": 15,
+      "ncgr": {
+        "index": 30,
+        "raw_sha256": "6aac6dad9bab6b9cb4d0d55b243d32193b08e90c3bcad96585385be224af4388",
+        "decoded_sha256": "2d1107eb8dd35c9c90824ad81ac73dfa5dc598a469681bac556a84ee758315be"
+      },
+      "nclr": {
+        "index": 54,
+        "raw_sha256": "1817018f016e57c28e01253204adf13b075706c9c7cba0106223335226f0e025",
+        "decoded_sha256": "1817018f016e57c28e01253204adf13b075706c9c7cba0106223335226f0e025"
+      },
+      "source_png_sha256": "02f38c9c9fa2e6eedd60e45930026b6a2ab3625f4cc20555a5fb2fa41f0a4f15",
+      "checked_in_path": "wallpaper_15.png",
+      "git_blob_sha1": "5a78ebd806a796b666c5044edb45f8baa9c7f476",
+      "checked_in_png_sha256": "22ad6acb2373a2f7da5e84488f94f74d3f5111e9b4bd70dff5b040434fc36892"
+    },
+    {
+      "wallpaper": 16,
+      "nscr": 15,
+      "ncgr": {
+        "index": 31,
+        "raw_sha256": "01683cc3883f3a0945c9b33c54b1059e7eec8c0c4c1caba682ac7b80131fbc01",
+        "decoded_sha256": "0e8c2cb198d22459eb959d58f3bbddd6b898814773e484047eac258e3e9366c5"
+      },
+      "nclr": {
+        "index": 55,
+        "raw_sha256": "b16330bfd33214d1fe5e5b086c0ecf15ce01b2578fab61f7134c7ee8c62fdf68",
+        "decoded_sha256": "b16330bfd33214d1fe5e5b086c0ecf15ce01b2578fab61f7134c7ee8c62fdf68"
+      },
+      "source_png_sha256": "84842e0e805e89efc2418a375bc52cc81fa27affae4200cab41bdcae13d3b862",
+      "checked_in_path": "wallpaper_16.png",
+      "git_blob_sha1": "6957fde152641bb36bc90d8e68ad9d11f3ecc84b",
+      "checked_in_png_sha256": "2a08a401534d23a7c78b863f743ea4506b0062a8c496917ffac52db5dedf8236"
+    },
+    {
+      "wallpaper": 17,
+      "nscr": 15,
+      "ncgr": {
+        "index": 32,
+        "raw_sha256": "ef7b80e5971385197ec5f673f718911288fc58d817629fa55f421bd782d14eef",
+        "decoded_sha256": "953109229c14c144fc3cfbf63cf6e79896a27a7a5d4724fa25f8d410305e907e"
+      },
+      "nclr": {
+        "index": 56,
+        "raw_sha256": "fa5a1066f12ed972551cc55c18e5166766aa1d3278075a1acad34ce144252703",
+        "decoded_sha256": "fa5a1066f12ed972551cc55c18e5166766aa1d3278075a1acad34ce144252703"
+      },
+      "source_png_sha256": "c523c9707c4e5297e9262c74c9017427be1ab3e415caa3fbd1b83ca9ebb66b36",
+      "checked_in_path": "wallpaper_17.png",
+      "git_blob_sha1": "2aee3a10357a2092ceccb6cbc6a626fb433cb9b3",
+      "checked_in_png_sha256": "dcdebc7b4f9e793db77a58ad850229b34f5e656003391245574ce8132f112c1f"
+    },
+    {
+      "wallpaper": 18,
+      "nscr": 15,
+      "ncgr": {
+        "index": 33,
+        "raw_sha256": "0c500e884540c20966714f6fd39c7c8e37596d1d8a90e12af1b05545c2efbc68",
+        "decoded_sha256": "fdcc0aa7f6d996513bdbf7cf1121b0d142df0d346839e14c7e098a7906c7ad23"
+      },
+      "nclr": {
+        "index": 57,
+        "raw_sha256": "357f5cc2e7e21deee60c4f331d4244b31481c518c90e2db8143b5368be50c2fd",
+        "decoded_sha256": "357f5cc2e7e21deee60c4f331d4244b31481c518c90e2db8143b5368be50c2fd"
+      },
+      "source_png_sha256": "77ee8580087c85c60306fc4eeb1feb64193d64c8b8e68b2a264c4d4f369e35f2",
+      "checked_in_path": "wallpaper_18.png",
+      "git_blob_sha1": "5f5362ee98d776e5150a8c7fc362bbd01decb410",
+      "checked_in_png_sha256": "8c18619ebb68fe9f585a34f9a2f0b347ce016c20cc7279d18439c95ca34caef6"
+    },
+    {
+      "wallpaper": 19,
+      "nscr": 15,
+      "ncgr": {
+        "index": 34,
+        "raw_sha256": "2dcf5a23e274345413fe77642e9e0926e67f69c83b748af99a3d22c3e206ec4d",
+        "decoded_sha256": "b6a3be76f55b13480c265a8173f67ce427cbab14a16de0664290584ec73578a1"
+      },
+      "nclr": {
+        "index": 58,
+        "raw_sha256": "ab6b70a84fd6e97a5f7fef3aadfcd57a71ad1a16d35a39c12bc8f995b16f41f0",
+        "decoded_sha256": "ab6b70a84fd6e97a5f7fef3aadfcd57a71ad1a16d35a39c12bc8f995b16f41f0"
+      },
+      "source_png_sha256": "9e9f98149423d612ee42f13ccbd36651fc8e51d747cb0e4ba5d1641940ed9947",
+      "checked_in_path": "wallpaper_19.png",
+      "git_blob_sha1": "5965b4bdae796d720e5746a077736ed9d0332464",
+      "checked_in_png_sha256": "6a0c6ea9bff889354a79ed9168d1e87c631c2ca6ffd1ab63c6f2ae9f2f4c3866"
+    },
+    {
+      "wallpaper": 20,
+      "nscr": 15,
+      "ncgr": {
+        "index": 35,
+        "raw_sha256": "30203b65e81516810e170f4b2a13cda6a310965b463a5441158864334752992d",
+        "decoded_sha256": "228d4d7d39f1adadcc0f9d55201f18d132a6fde28ccd6a65cc48328df09f9c1f"
+      },
+      "nclr": {
+        "index": 59,
+        "raw_sha256": "a7bb578210b091491698beff5dc8b79223f47ad0ff8778068c2b28188cf11d89",
+        "decoded_sha256": "a7bb578210b091491698beff5dc8b79223f47ad0ff8778068c2b28188cf11d89"
+      },
+      "source_png_sha256": "343cbbf93ef4c45365c9d3698127f3ef254ad6b8efed6f6947b8f0fc3bfacbd0",
+      "checked_in_path": "wallpaper_20.png",
+      "git_blob_sha1": "6da449eb3f067ab967be231caa2da1f55029b770",
+      "checked_in_png_sha256": "e75564d2ebdae70fe4e9aeb33c963c17830bb025527dd25c5d37d4673d27c9f9"
+    },
+    {
+      "wallpaper": 21,
+      "nscr": 15,
+      "ncgr": {
+        "index": 36,
+        "raw_sha256": "5fd1d86e3d87184738f5e685f0bddca29d420001a860333d4d32413714fcc1a0",
+        "decoded_sha256": "16db220c3c94cd417c8dae74d8e873d545b21464b39c1dbdea77dbe3b9ec1fcd"
+      },
+      "nclr": {
+        "index": 60,
+        "raw_sha256": "eb61709d61fd80ed0ddfd1d6708dae8290eec31dba180cddd432c241974e30ae",
+        "decoded_sha256": "eb61709d61fd80ed0ddfd1d6708dae8290eec31dba180cddd432c241974e30ae"
+      },
+      "source_png_sha256": "346119d5f1d57bdb587c92aff8702c850b55522649aae9ece8e231aae4f5efc1",
+      "checked_in_path": "wallpaper_21.png",
+      "git_blob_sha1": "3b3bfeab7b693c91a0245b0006d27e08a4f11fea",
+      "checked_in_png_sha256": "888adb6620d64d05840493b496e9240e26b4554f7d605ef326808b4503827271"
+    },
+    {
+      "wallpaper": 22,
+      "nscr": 15,
+      "ncgr": {
+        "index": 37,
+        "raw_sha256": "bed92022ba0adca3f4695946d923e7c60cc9cb2d9093e799ad9ec09e309a8037",
+        "decoded_sha256": "8e880e695466498beea8f1f1ce20a3f727963323cb8b30005a01432a067a9f0d"
+      },
+      "nclr": {
+        "index": 61,
+        "raw_sha256": "e350f4f758a9de14465e3df1ab1d1841d5573600dad0cae6779b66f342c49612",
+        "decoded_sha256": "e350f4f758a9de14465e3df1ab1d1841d5573600dad0cae6779b66f342c49612"
+      },
+      "source_png_sha256": "4940fde8749b11d58cf22bfd8464d199a4c0b70531425d56d089d2a0eaf381cb",
+      "checked_in_path": "wallpaper_22.png",
+      "git_blob_sha1": "567204b6ea2bbee15059d411f4621cd0690d5c08",
+      "checked_in_png_sha256": "0b1a45ee89a3ba2d9fd2a592d8a177323536dd52ba18e55a8170c89303578012"
+    },
+    {
+      "wallpaper": 23,
+      "nscr": 15,
+      "ncgr": {
+        "index": 38,
+        "raw_sha256": "83835691dfa64b9520e8363c919021f0e192079423ddc4872d8ad31fd8ac24bf",
+        "decoded_sha256": "a74d4ec6daf31d1fcd85057c168e2e6b24fdf2fa62b8c3150c4240fd0066fc63"
+      },
+      "nclr": {
+        "index": 62,
+        "raw_sha256": "c6c911977a8f076242e71020794bc1fb846b25c246026e9710b51a875adda0bd",
+        "decoded_sha256": "c6c911977a8f076242e71020794bc1fb846b25c246026e9710b51a875adda0bd"
+      },
+      "source_png_sha256": "c469416db4c741bf837b4916984142a2732ef4091f800dbacdd98bb346286247",
+      "checked_in_path": "wallpaper_23.png",
+      "git_blob_sha1": "c9cb68ad0246fd495f03efac6a96cf0750ab8994",
+      "checked_in_png_sha256": "89f0b0617e011b0b1796e0b5a61f3c3d2547f64bc1b1fa8addb830a166b2495c"
+    },
+    {
+      "wallpaper": 24,
+      "nscr": 15,
+      "ncgr": {
+        "index": 39,
+        "raw_sha256": "dd5c543467ea22ce5ec0e94aba9b37f9daa902bbb04b8c57486b73f00d5538af",
+        "decoded_sha256": "21c6c989f46ead11c6befef3bd3511e6b09a3d5bc6982a7ea098edacc388bfca"
+      },
+      "nclr": {
+        "index": 63,
+        "raw_sha256": "f024a6859ebb89838e2faad733e12b710af46634a3d5f7c03b21550fee0f8dcf",
+        "decoded_sha256": "f024a6859ebb89838e2faad733e12b710af46634a3d5f7c03b21550fee0f8dcf"
+      },
+      "source_png_sha256": "99351603e72666116424f86bb5ac1bf4b807045586517d62eccb8eb4f8ddf1df",
+      "checked_in_path": "wallpaper_24.png",
+      "git_blob_sha1": "fbcddfb7e90d8c3413c2ad01b336459fe320c8e9",
+      "checked_in_png_sha256": "a0d3f516b29770a0d206bdf2c50b2a6b3e9936691fc61bd22b0c0359efb7bb8c"
+    }
+  ],
+  "verification_repack": {
+    "reason": "CI detected invalid IDAT CRCs in previously checked-in authentic HGSS wallpaper PNG containers (first wallpaper_04, then wallpaper_11).",
+    "action": "Regenerated all 24 wallpaper PNG containers from the verified /a/0/1/9 source mapping instead of repairing files individually.",
+    "fidelity": "Each file is indexed 4bpp at 168x160 and preserves the authentic NSCR layout, NCGR palette indices, and NCLR BGR555 colors at 1:1 pixel scale. No redraw, resampling, recoloring, or synthetic pixels.",
+    "source_mapping": "NSCR 15 + NCGR (15+N) + NCLR (39+N)."
+  }
+}

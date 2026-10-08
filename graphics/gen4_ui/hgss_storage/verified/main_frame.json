@@ -1,0 +1,72 @@
+{
+  "role": "main_frame",
+  "classification": "static_ncgr_nclr_nscr_composition",
+  "source_archive": "/a/0/1/9",
+  "archive_sha256": "f7a1a97638959a685719049a0b780686edb68704777fead790b230e10ed1df4a",
+  "source_members": {
+    "nscr": {
+      "index": 2
+    },
+    "ncgr": {
+      "index": 3
+    },
+    "nclr": {
+      "index": 4
+    }
+  },
+  "decomp_verification": {
+    "repository": "pret/pokeheartgold",
+    "path": "asm/overlay_14.s",
+    "loader": "ov14_021E5C54",
+    "behavior": "loads NCGR member 3 and NSCR member 2 into the same HGSS Storage background layer; NCLR member 4 supplies the matching palette"
+  },
+  "visual_verification": {
+    "extracted_reference": "PC_Box/screens/member_002_screen__tiles_003__pal_004.png",
+    "dimensions": [
+      256,
+      192
+    ],
+    "content": "native HGSS Storage blue outer frame/background with inset cream panel",
+    "source_png_sha256": "4e2c93c780178d1fee9b9a8d6d17fb13d8a9f573633d1490009692a45be700ea"
+  },
+  "export": {
+    "file": "main_frame.png",
+    "sha256": "7e26aef505d25265cd27877c479b39a2e378dbee92ab4d389c559b8b344d4b18",
+    "size": [
+      256,
+      192
+    ],
+    "png_color_type": "indexed_palette",
+    "colors": 9,
+    "png_bit_depth": 4,
+    "pixel_rule": "Pixel-identical 4-bit indexed repack of the user-preserved HGSS extraction; no crop, redraw, resampling, recoloring, or synthetic pixels."
+  },
+  "legacy_equivalent": {
+    "asset_gfx": "graphics/pokemon_storage/swsh/tiles.png",
+    "asset_tilemap": "graphics/pokemon_storage/swsh/bg1.bin",
+    "status": "removed in phase 3 after the authentic HGSS frame was live"
+  },
+  "status": "phase 3 complete: authentic HGSS main Storage frame is live on a transparent BG1 base; legacy SWSH frame assets and load path removed",
+  "next": "Proceed to the next Storage UI role using the same authentic HGSS asset -> wire live -> remove legacy equivalent sequence.",
+  "live_integration": {
+    "renderer": "BG1 sparse authentic-HGSS tile composition on an explicitly cleared transparent tilemap",
+    "source": "verified/main_frame.png (/a/0/1/9 NSCR 2 + NCGR 3 + NCLR 4)",
+    "destination": {
+      "left_tile": 0,
+      "top_tile": 0,
+      "width_tiles": 30,
+      "height_tiles": 20
+    },
+    "base_tile": 0,
+    "palette_bank": 4,
+    "gba_adaptation": {
+      "horizontal": "destination columns 0-12 use source 0-12; destination 13-29 use source 15-31, omitting source columns 13-14",
+      "vertical": "destination rows 0-17 use source 0-17; destination rows 18-19 use source 22-23, omitting source rows 18-21",
+      "visible_footprint": "left two columns, rightmost column, top two rows from column 13 rightward, and full bottom two rows; all other cells transparent"
+    },
+    "transparency_rule": "palette index 0 is reserved for transparent composition cells; all nine authentic HGSS colors are remapped losslessly to indices 1-9",
+    "party_panel_tile_base": "immediately after the authentic main-frame tile block",
+    "legacy_visible_in_frame_role": false,
+    "legacy_assets_removed": true
+  }
+}

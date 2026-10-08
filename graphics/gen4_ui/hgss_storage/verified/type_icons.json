@@ -1,0 +1,377 @@
+{
+  "role": "type_icons",
+  "classification": "native_hgss_storage_type_badges",
+  "source_game": "Pokemon HeartGold / SoulSilver",
+  "decomp_verification": {
+    "repository": "pret/pokeheartgold",
+    "revision": "9d8b7591f09b65804da2fb2dfd56f320633e0d36",
+    "storage_overlay": "asm/overlay_14.s",
+    "setup": "ov14_021F3C08",
+    "renderer": "ov14_021F3D70",
+    "dynamic_loader": "ov14_021F3D0C",
+    "type_member_map_function": "sub_02077678",
+    "type_palette_map_function": "sub_0207769C",
+    "source_narc_function": "sub_020776B4",
+    "source_narc_id": 8,
+    "source_archive": "/a/0/0/8",
+    "palette_member": 74,
+    "palette_banks": 3,
+    "finding": "HGSS Storage dynamically loads each Pokemon type badge from NARC 8 and applies one of three palette banks. Each badge resolves to exactly 0x100 bytes of 4bpp character data (8 tiles = 32x16 pixels)."
+  },
+  "source_archive": {
+    "path": "/a/0/0/8",
+    "filesystem_sha1": "670ec02b1742a7b711caafea295113d5ab88b51b",
+    "git_blob_sha": "379a0012eaf5d5561d7555bc73baef4d62797cc9"
+  },
+  "exports": {
+    "graphics": {
+      "file": "type_icons_hgss_gen4.4bpp",
+      "bytes": 4608,
+      "git_blob_sha": "a194840d96b37ab5286657be8073d804ff9dd314",
+      "layout": "18 consecutive 0x100-byte native HGSS type badges in HGSS type-ID order 0..17; each entry retains original 4bpp tile bytes unchanged."
+    },
+    "palette": {
+      "file": "type_icons_hgss_gen4.gbapal",
+      "bytes": 96,
+      "git_blob_sha": "04efed17079c80ee3b9e8f124f1dbaf900669c30",
+      "layout": "Exact 3 x 16-color BGR555 palette banks from /a/0/0/8 member 0x4A."
+    },
+    "fairy_composite": {
+      "file": "type_icon_fairy_hgss_composite.4bpp",
+      "bytes": 256,
+      "git_blob_sha": "5d85f0c4e4d7da7b50efb647a4d607f3e3dd06aa",
+      "layout": "One 32x16 4bpp Fairy badge derived from the verified retail HGSS Mystery/??? badge geometry. Native bank-2 type-color roles A/B/C are remapped to authentic bank-1 pink roles 8/9/A; FAIRY lettering is composed from untouched retail HGSS type-badge glyph pixels."
+    }
+  },
+  "native_types": [
+    {
+      "name": "NORMAL",
+      "hgss_type": 0,
+      "expansion_type": 1,
+      "graphics_member": 234,
+      "graphics_member_hex": "0xEA",
+      "palette_bank": 0
+    },
+    {
+      "name": "FIGHTING",
+      "hgss_type": 1,
+      "expansion_type": 2,
+      "graphics_member": 225,
+      "graphics_member_hex": "0xE1",
+      "palette_bank": 0
+    },
+    {
+      "name": "FLYING",
+      "hgss_type": 2,
+      "expansion_type": 3,
+      "graphics_member": 227,
+      "graphics_member_hex": "0xE3",
+      "palette_bank": 1
+    },
+    {
+      "name": "POISON",
+      "hgss_type": 3,
+      "expansion_type": 4,
+      "graphics_member": 235,
+      "graphics_member_hex": "0xEB",
+      "palette_bank": 1
+    },
+    {
+      "name": "GROUND",
+      "hgss_type": 4,
+      "expansion_type": 5,
+      "graphics_member": 229,
+      "graphics_member_hex": "0xE5",
+      "palette_bank": 0
+    },
+    {
+      "name": "ROCK",
+      "hgss_type": 5,
+      "expansion_type": 6,
+      "graphics_member": 237,
+      "graphics_member_hex": "0xED",
+      "palette_bank": 0
+    },
+    {
+      "name": "BUG",
+      "hgss_type": 6,
+      "expansion_type": 7,
+      "graphics_member": 231,
+      "graphics_member_hex": "0xE7",
+      "palette_bank": 2
+    },
+    {
+      "name": "GHOST",
+      "hgss_type": 7,
+      "expansion_type": 8,
+      "graphics_member": 228,
+      "graphics_member_hex": "0xE4",
+      "palette_bank": 1
+    },
+    {
+      "name": "STEEL",
+      "hgss_type": 8,
+      "expansion_type": 9,
+      "graphics_member": 238,
+      "graphics_member_hex": "0xEE",
+      "palette_bank": 0
+    },
+    {
+      "name": "MYSTERY",
+      "hgss_type": 9,
+      "expansion_type": 10,
+      "graphics_member": 236,
+      "graphics_member_hex": "0xEC",
+      "palette_bank": 2
+    },
+    {
+      "name": "FIRE",
+      "hgss_type": 10,
+      "expansion_type": 11,
+      "graphics_member": 226,
+      "graphics_member_hex": "0xE2",
+      "palette_bank": 0
+    },
+    {
+      "name": "WATER",
+      "hgss_type": 11,
+      "expansion_type": 12,
+      "graphics_member": 241,
+      "graphics_member_hex": "0xF1",
+      "palette_bank": 1
+    },
+    {
+      "name": "GRASS",
+      "hgss_type": 12,
+      "expansion_type": 13,
+      "graphics_member": 233,
+      "graphics_member_hex": "0xE9",
+      "palette_bank": 2
+    },
+    {
+      "name": "ELECTRIC",
+      "hgss_type": 13,
+      "expansion_type": 14,
+      "graphics_member": 222,
+      "graphics_member_hex": "0xDE",
+      "palette_bank": 0
+    },
+    {
+      "name": "PSYCHIC",
+      "hgss_type": 14,
+      "expansion_type": 15,
+      "graphics_member": 223,
+      "graphics_member_hex": "0xDF",
+      "palette_bank": 1
+    },
+    {
+      "name": "ICE",
+      "hgss_type": 15,
+      "expansion_type": 16,
+      "graphics_member": 230,
+      "graphics_member_hex": "0xE6",
+      "palette_bank": 1
+    },
+    {
+      "name": "DRAGON",
+      "hgss_type": 16,
+      "expansion_type": 17,
+      "graphics_member": 221,
+      "graphics_member_hex": "0xDD",
+      "palette_bank": 2
+    },
+    {
+      "name": "DARK",
+      "hgss_type": 17,
+      "expansion_type": 18,
+      "graphics_member": 224,
+      "graphics_member_hex": "0xE0",
+      "palette_bank": 0
+    }
+  ],
+  "expanded_engine_gaps": {
+    "fairy": {
+      "expansion_type": 19,
+      "native_hgss_badge": false,
+      "resolved": true,
+      "adaptation": "authentic_hgss_mystery_badge_repalette_and_glyph_composite",
+      "output": "type_icon_fairy_hgss_composite.4bpp",
+      "palette_bank": 1,
+      "base_badge": {
+        "name": "MYSTERY",
+        "hgss_type": 9,
+        "expansion_type": 10,
+        "graphics_member": 236,
+        "rule": "Use the verified retail HGSS Mystery/??? badge as the complete 32x16 geometry source."
+      },
+      "palette_role_remap": [
+        {
+          "source_index": 10,
+          "source_role": "Mystery base",
+          "dest_index": 8,
+          "dest_color": "HGSS bank-1 pink #F85888"
+        },
+        {
+          "source_index": 11,
+          "source_role": "Mystery highlight",
+          "dest_index": 9,
+          "dest_color": "HGSS bank-1 light pink #F8C0B0"
+        },
+        {
+          "source_index": 12,
+          "source_role": "Mystery shadow/accent",
+          "dest_index": 10,
+          "dest_color": "HGSS bank-1 muted pink-brown #906060"
+        }
+      ],
+      "glyph_donors": [
+        {
+          "letter": "F",
+          "type": "FLYING",
+          "graphics_member": 227,
+          "source_rect": {
+            "x": 2,
+            "y": 4,
+            "width": 5,
+            "height": 8
+          },
+          "dest_rect": {
+            "x": 4,
+            "y": 4,
+            "width": 5,
+            "height": 8
+          }
+        },
+        {
+          "letter": "A",
+          "type": "WATER",
+          "graphics_member": 241,
+          "source_rect": {
+            "x": 10,
+            "y": 4,
+            "width": 5,
+            "height": 8
+          },
+          "dest_rect": {
+            "x": 9,
+            "y": 4,
+            "width": 5,
+            "height": 8
+          }
+        },
+        {
+          "letter": "I",
+          "type": "FLYING",
+          "graphics_member": 227,
+          "source_rect": {
+            "x": 17,
+            "y": 4,
+            "width": 4,
+            "height": 8
+          },
+          "dest_rect": {
+            "x": 14,
+            "y": 4,
+            "width": 4,
+            "height": 8
+          }
+        },
+        {
+          "letter": "R",
+          "type": "WATER",
+          "graphics_member": 241,
+          "source_rect": {
+            "x": 24,
+            "y": 4,
+            "width": 5,
+            "height": 8
+          },
+          "dest_rect": {
+            "x": 18,
+            "y": 4,
+            "width": 5,
+            "height": 8
+          }
+        },
+        {
+          "letter": "Y",
+          "type": "FLYING",
+          "graphics_member": 227,
+          "source_rect": {
+            "x": 12,
+            "y": 4,
+            "width": 5,
+            "height": 8
+          },
+          "dest_rect": {
+            "x": 23,
+            "y": 4,
+            "width": 5,
+            "height": 8
+          }
+        }
+      ],
+      "pixel_rule": "No custom colors or drawn geometry. The retail Mystery badge supplies all structural pixels; only its three type-specific palette indices are reassigned to existing retail HGSS bank-1 pink indices. The ??? label is replaced by retail HGSS F/E glyph pixels from native type badges.",
+      "palette_rule": "Use unchanged retail HGSS /a/0/0/8 member 0x4A bank 1. No palette entries are added or altered.",
+      "hack_reference": {
+        "purpose": "slot/layout reference only",
+        "finding": "The supplied Fairy-enabled HGSS hack replaces the native Mystery slot, reinforcing Mystery as the correct structural base. No hack Fairy pixels or custom palette colors are copied.",
+        "pixels_copied": false
+      }
+    },
+    "stellar": {
+      "expansion_type": 20,
+      "native_hgss_badge": false,
+      "resolved": true,
+      "policy": "intentionally_unsupported_in_project",
+      "visible_badge_required": false,
+      "rationale": "TYPE_STELLAR remains an engine-level compatibility enum only. This base/hack family will not implement Terastal/Stellar gameplay, so Storage must never require or render a Stellar badge."
+    },
+    "rule": "Do not fabricate HGSS-style badges. Fairy is resolved through a documented authentic-HGSS-only composite. Stellar is intentionally unsupported by project design and therefore requires no visible badge."
+  },
+  "current_expansion_legacy": {
+    "graphics": "graphics/pokemon_storage/swsh/type_icons.png",
+    "graphics_git_blob_sha": "dfc81e4ce9d3de960140d17b4478badffa493557",
+    "gfx_symbol": "sTypeIcons_Gfx",
+    "palette_symbol": "sTypeIcons_Pal",
+    "runtime_function": "UpdateTypeIconTiles",
+    "live": false,
+    "retained_for_phase_2_verification": false,
+    "live_replacement": {
+      "native_graphics": "graphics/gen4_ui/hgss_storage/verified/type_icons_hgss_gen4.4bpp",
+      "fairy_graphics": "graphics/gen4_ui/hgss_storage/verified/type_icon_fairy_hgss_composite.4bpp",
+      "palette": "graphics/gen4_ui/hgss_storage/verified/type_icons_hgss_gen4.gbapal",
+      "runtime_function": "UpdateTypeIconTiles"
+    },
+    "removed": true,
+    "removed_after_ci": {
+      "workflow_run": 36512969421,
+      "workflow_run_number": 607,
+      "job": "gen4-ui",
+      "conclusion": "success",
+      "verified_steps": [
+        "Validate Gen 4 UI tools",
+        "Build Gen 4 UI assets",
+        "Compile Gen 4 UI renderer"
+      ]
+    }
+  },
+  "status": "phase 3 complete: authentic HGSS native type badges plus the authentic-source Fairy badge are live; Stellar is intentionally unsupported; the legacy Storage type atlas has been removed after successful gen4-ui verification",
+  "next": "Type-badge conversion complete. Continue to the next unresolved Storage UI element using authentic HGSS asset -> wire live -> remove legacy equivalent.",
+  "pipeline": {
+    "authentic_hgss_native_assets_imported": true,
+    "expanded_only_types_resolved": true,
+    "wired_live": true,
+    "legacy_equivalent_removed": true,
+    "fairy_authentic_source_adaptation_resolved": true,
+    "stellar_authentic_source_adaptation_resolved": false,
+    "stellar_intentionally_unsupported": true
+  },
+  "live_mapping": {
+    "native_types": "TYPE_NORMAL..TYPE_DARK map directly to concatenated HGSS badge entries using (type - TYPE_NORMAL) * 0x100.",
+    "fairy": "TYPE_FAIRY uses type_icon_fairy_hgss_composite.4bpp and HGSS palette bank 1.",
+    "stellar": "TYPE_STELLAR is explicitly unsupported and suppressed from visible Storage presentation.",
+    "palette_base_obj_slot": 13,
+    "palette_banks": "Exact HGSS bank mapping from sub_0207769C; Fairy uses bank 1."
+  }
+}

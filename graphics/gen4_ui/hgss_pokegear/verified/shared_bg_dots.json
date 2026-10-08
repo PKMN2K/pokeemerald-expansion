@@ -1,0 +1,105 @@
+{
+  "role": "shared_pokenav_moving_dots_background",
+  "phase": "legacy_bg3_removed_ci_pending",
+  "classification": "legacy Emerald PokéNav animated BG3 decoration behind the already-live authentic HGSS PokéGear shell",
+  "source_game": "Pokemon HeartGold / SoulSilver",
+  "source_repository": "pret/pokeheartgold",
+  "source_revision": "9d8b7591f09b65804da2fb2dfd56f320633e0d36",
+  "previous_gate": {
+    "workflow": "CI",
+    "run_number": 751,
+    "conclusion": "success",
+    "validated_commit": "1c31a6f0afd43455baf3a9c0057f725f834fa351"
+  },
+  "legacy_surface": {
+    "gfx": {
+      "path": "graphics/pokenav/bg_dots.png",
+      "git_blob_sha": "056e2400b84fa02d02a24b43eb24904eefbf2bdd"
+    },
+    "tilemap": {
+      "path": "graphics/pokenav/bg_dots.bin",
+      "git_blob_sha": "7161609bb086de4cc03b0fc52f283649e7f9761d"
+    },
+    "live_file": "src/pokenav_menu_handler_gfx.c",
+    "bg": 3,
+    "behavior": [
+      "loads legacy dot tiles, tilemap, and palette during menu initialization",
+      "scrolls BG3 continuously via Task_MoveBgDots",
+      "crossfades dot palette between light blue and purple for menu transitions"
+    ]
+  },
+  "retail_audit": {
+    "source_file": "src/application/pokegear/main/overlay_100_021E5900.c",
+    "findings": [
+      "PokegearApp_InitBGs initializes the core PokéGear MAIN_0 and SUB_0 layers only",
+      "PokegearApp_LoadSkinGraphics loads the authentic app-switch and fixed-shell skin resources onto those core layers",
+      "additional layers are owned/cleared by applications; the core PokéGear does not install a shared animated moving-dot background"
+    ],
+    "conclusion": "there is no retail HGSS shared moving-dot counterpart to import; retaining Emerald bg_dots under the HGSS shell is non-authentic"
+  },
+  "authentic_counterpart": {
+    "role": "default-skin fixed PokéGear shell with app-owned additional layers",
+    "manifest": "graphics/gen4_ui/hgss_pokegear/verified/screen_shell_skin0.json",
+    "verified_assets": [
+      {
+        "path": "graphics/gen4_ui/hgss_pokegear/verified/pgear_skin0_screen_shell_tiles.png",
+        "git_blob_sha": "163a4fa068fbffae472d1672947fad86647d110b"
+      },
+      {
+        "path": "graphics/gen4_ui/hgss_pokegear/verified/pgear_skin0_screen_shell_palette.NCLR",
+        "git_blob_sha": "f293e5f8760201fd109d77bb9cefcdcbb4682f67"
+      },
+      {
+        "path": "graphics/gen4_ui/hgss_pokegear/verified/pgear_skin0_screen_shell_tilemap.NSCR",
+        "git_blob_sha": "f0d5863b63fb82a6bc36c4f49c17859fea8d05aa"
+      }
+    ],
+    "already_wired_and_validated": true
+  },
+  "phase1_action": {
+    "audit_script": "tools/gen4_ui/audit_hgss_pokegear_bg_dots.py",
+    "live_rendering_changed": false,
+    "assets_deleted": false
+  },
+  "pipeline": {
+    "authentic_hgss_asset_ready": true,
+    "wired_live": true,
+    "legacy_equivalent_removed": true
+  },
+  "next": "Run Phase-3 CI. If green, mark the moving-dot cleanup complete and audit the next remaining legacy PokéNav surface.",
+  "phase2_action": {
+    "live_file": "src/pokenav_menu_handler_gfx.c",
+    "rollback_switch": "sUseLegacyMovingBgDotsForRollback",
+    "rollback_default": false,
+    "normal_path": [
+      "legacy BG3 dot tiles/tilemap/palette are not loaded",
+      "BG3 remains hidden while the shared PokéGear menu is active",
+      "moving-dot scroll task is not created",
+      "blue/purple legacy dot palette transitions are no-ops"
+    ],
+    "safety": [
+      "bg3ScrollTaskId is initialized to TASK_NONE",
+      "cleanup destroys the task only when one was actually created"
+    ],
+    "legacy_assets_retained_for_validation": true,
+    "new_hgss_pixels_generated": false
+  },
+  "phase3_action": {
+    "live_file": "src/pokenav_menu_handler_gfx.c",
+    "removed_rollback_switch": "sUseLegacyMovingBgDotsForRollback",
+    "removed_code": [
+      "shared BG3 legacy asset loading",
+      "Task_MoveBgDots and its task lifecycle",
+      "legacy blue/purple palette transition tasks",
+      "bg3ScrollTaskId state"
+    ],
+    "removed_assets": [
+      "graphics/pokenav/bg_dots.png",
+      "graphics/pokenav/bg_dots.bin"
+    ],
+    "core_bg3_behavior": "hidden; reserved for app-specific surfaces rather than a shared invented background",
+    "new_hgss_pixels_generated": false,
+    "ci_pending": true
+  },
+  "status": "phase 3: obsolete Emerald shared moving-dot layer removed; authentic HGSS fixed shell remains the core PokéGear background; CI pending"
+}

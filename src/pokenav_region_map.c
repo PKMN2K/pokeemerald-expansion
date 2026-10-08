@@ -14,14 +14,13 @@
 #include "sprite.h"
 #include "string_util.h"
 #include "task.h"
+#include "text.h"
 #include "text_window.h"
 #include "window.h"
 #include "constants/rgb.h"
 #include "constants/songs.h"
 #include "constants/region_map_sections.h"
 
-#define GFXTAG_CITY_ZOOM 6
-#define PALTAG_CITY_ZOOM 11
 
 #define NUM_CITY_MAPS 22
 
@@ -37,8 +36,6 @@ struct Pokenav_RegionMapGfx
     bool32 (*isTaskActiveCB)(void);
     u32 loopTaskId;
     u16 infoWindowId;
-    u16 viewportWindowId;
-    struct Sprite *cityZoomTextSprites[3];
     u8 ALIGNED(2) tilemapBuffer[BG_SCREEN_SIZE];
     u8 cityZoomPics[NUM_CITY_MAPS][200];
 };
@@ -56,26 +53,19 @@ static u32 GetExitRegionMapMenuId(struct Pokenav_RegionMapMenu *);
 static u32 LoopedTask_OpenRegionMap(s32);
 static u32 LoopedTask_DecompressCityMaps(s32);
 static bool32 GetCurrentLoopedTaskActive(void);
-static void FreeCityZoomViewGfx(void);
-static void LoadCityZoomViewGfx(void);
 static void DecompressCityMaps(void);
 static bool32 IsDecompressCityMapsActive(void);
 static void LoadPokenavRegionMapGfx(struct Pokenav_RegionMapGfx *);
-static void DrawPokeGearMapViewport(struct Pokenav_RegionMapGfx *);
-static void DrawPokeGearMapInfoPanel(struct Pokenav_RegionMapGfx *);
 static bool32 TryFreeTempTileDataBuffers(void);
 static void UpdateMapSecInfoWindow(struct Pokenav_RegionMapGfx *);
+static void PrintHgssMapWindowText(u8 windowId, const u8 *text, u8 x, u8 y);
+static void RestoreHgssMapSub2DetailRect(struct Pokenav_RegionMapGfx *, u8, u8, u8, u8);
 static bool32 IsDma3ManagerBusyWithBgCopy_(struct Pokenav_RegionMapGfx *);
 static void ChangeBgYForZoom(bool32);
 static bool32 IsChangeBgYForZoomActive(void);
-static void CreateCityZoomTextSprites(void);
-static void DrawPokeGearCityPreviewFrame(void);
 static void DrawCityMap(struct Pokenav_RegionMapGfx *, mapsec_s32_t, int);
 static void PrintLandmarkNames(struct Pokenav_RegionMapGfx *, mapsec_s32_t, int);
-static void SetCityZoomTextInvisibility(bool32);
 static void Task_ChangeBgYForZoom(u8 taskId);
-static void UpdateCityZoomTextPosition(void);
-static void SpriteCB_CityZoomText(struct Sprite *sprite);
 static u32 LoopedTask_UpdateInfoAfterCursorMove(s32);
 static u32 LoopedTask_RegionMapZoomOut(s32);
 static u32 LoopedTask_RegionMapZoomIn(s32);
@@ -83,10 +73,32 @@ static u32 LoopedTask_ExitRegionMap(s32);
 static u32 LoopedTask_TreatAsPokeNavFlyMap(s32);
 
 extern const u16 gRegionMapCityZoomTiles_Pal[];
-extern const u32 gRegionMapCityZoomText_Gfx[];
 
-static const u16 sMapSecInfoWindow_Pal[] = INCGFX_U16("graphics/pokenav/region_map/info_window.pal", ".gbapal");
+static const u16 sHgssPokeGearMapWindow_Pal[] = INCBIN_U16("graphics/gen4_ui/hgss_pokegear/map_window.gbapal");
 static const u32 sRegionMapCityZoomTiles_Gfx[] = INCGFX_U32("graphics/pokenav/region_map/zoom_tiles.png", ".4bpp.smol");
+
+#define HGSS_POKEGEAR_MAP_MAIN1_TILE_BASE 0x1C0
+#define HGSS_POKEGEAR_MAP_MAIN1_PAL_BANK_A 5
+#define HGSS_POKEGEAR_MAP_MAIN1_PAL_BANK_B 6
+static const u32 sHgssPokeGearMapMain1_Gfx[] = INCBIN_U32("graphics/gen4_ui/hgss_pokegear/map_main1.4bpp");
+static const u16 sHgssPokeGearMapMain1_Tilemap[] = INCBIN_U16("graphics/gen4_ui/hgss_pokegear/map_main1.tilemap.bin");
+static const u16 sHgssPokeGearMapMain1_Pal[] = INCBIN_U16("graphics/gen4_ui/hgss_pokegear/map_main1.gbapal");
+
+#define HGSS_POKEGEAR_MAP_SUB2_TILE_BASE 0x180
+#define HGSS_POKEGEAR_MAP_SUB2_PAL_BANK 2
+#define HGSS_POKEGEAR_MAP_SUB2_SOURCE_X 16
+#define HGSS_POKEGEAR_MAP_SUB2_SOURCE_Y 8
+#define HGSS_POKEGEAR_MAP_SUB2_PANEL_WIDTH 16
+#define HGSS_POKEGEAR_MAP_SUB2_PANEL_HEIGHT 16
+#define HGSS_POKEGEAR_MAP_SUB2_DEST_X 14
+#define HGSS_POKEGEAR_MAP_SUB2_DEST_Y 2
+static const u32 sHgssPokeGearMapSub2_Gfx[] = INCBIN_U32("graphics/gen4_ui/hgss_pokegear/map_sub2.4bpp");
+static const u16 sHgssPokeGearMapSub2_Tilemap[] = INCBIN_U16("graphics/gen4_ui/hgss_pokegear/map_sub2.tilemap.bin");
+static const u16 sHgssPokeGearMapSub2_Pal[] = INCBIN_U16("graphics/gen4_ui/hgss_pokegear/map_sub2.gbapal");
+
+// MAIN_1 remains the live retail frame. SUB_2 supplies the authentic
+// right-side detail-panel chrome, cropped from the retail 256px DS surface to
+// fit the 240px GBA viewport.
 
 #include "data/region_map/city_map_tilemaps.h"
 
@@ -131,17 +143,6 @@ static const LoopedTask sRegionMapLoopTaskFuncs[] =
     [POKENAV_MAP_FUNC_FLY]          = LoopedTask_TreatAsPokeNavFlyMap,
 };
 
-static const struct CompressedSpriteSheet sCityZoomTextSpriteSheet[1] =
-{
-    {gRegionMapCityZoomText_Gfx, 0x800, GFXTAG_CITY_ZOOM}
-};
-
-static const struct SpritePalette sCityZoomTilesSpritePalette[] =
-{
-    {gRegionMapCityZoomTiles_Pal, PALTAG_CITY_ZOOM},
-    {}
-};
-
 static const struct WindowTemplate sMapSecInfoWindowTemplate =
 {
     .bg = 1,
@@ -153,40 +154,7 @@ static const struct WindowTemplate sMapSecInfoWindowTemplate =
     .baseBlock = 0x4C
 };
 
-static const struct WindowTemplate sMapViewportWindowTemplate =
-{
-    .bg = 1,
-    .tilemapLeft = 0,
-    .tilemapTop = 3,
-    .width = 16,
-    .height = 14,
-    .paletteNum = 1,
-    .baseBlock = 0x100
-};
-
 #include "data/region_map/city_map_entries.h"
-
-static const struct OamData sCityZoomTextSprite_OamData =
-{
-    .y = 0,
-    .affineMode = ST_OAM_AFFINE_OFF,
-    .objMode = ST_OAM_OBJ_NORMAL,
-    .bpp = ST_OAM_4BPP,
-    .shape = SPRITE_SHAPE(32x8),
-    .x = 0,
-    .size = SPRITE_SIZE(32x8),
-    .tileNum = 0,
-    .priority = 1,
-    .paletteNum = 0,
-};
-
-static const struct SpriteTemplate sCityZoomTextSpriteTemplate =
-{
-    .tileTag = GFXTAG_CITY_ZOOM,
-    .paletteTag = PALTAG_CITY_ZOOM,
-    .oam = &sCityZoomTextSprite_OamData,
-    .callback = SpriteCB_CityZoomText,
-};
 
 u32 PokenavCallback_Init_RegionMap(void)
 {
@@ -293,8 +261,6 @@ void FreeRegionMapSubstruct2(void)
 {
     struct Pokenav_RegionMapGfx *state = GetSubstructPtr(POKENAV_SUBSTRUCT_REGION_MAP_ZOOM);
     FreeRegionMapIconResources();
-    FreeCityZoomViewGfx();
-    RemoveWindow(state->viewportWindowId);
     RemoveWindow(state->infoWindowId);
     FreePokenavSubstruct(POKENAV_SUBSTRUCT_REGION_MAP);
     FreePokenavSubstruct(POKENAV_SUBSTRUCT_REGION_MAP_ZOOM);
@@ -326,7 +292,6 @@ static bool8 ShouldOpenRegionMapZoomed(void)
 
 static u32 LoopedTask_OpenRegionMap(s32 taskState)
 {
-    int menuGfxId;
     struct RegionMap *regionMap;
     struct Pokenav_RegionMapGfx *state = GetSubstructPtr(POKENAV_SUBSTRUCT_REGION_MAP_ZOOM);
     switch (taskState)
@@ -340,7 +305,6 @@ static u32 LoopedTask_OpenRegionMap(s32 taskState)
         InitBgTemplates(sRegionMapBgTemplates, ARRAY_COUNT(sRegionMapBgTemplates) - 1);
         regionMap = GetSubstructPtr(POKENAV_SUBSTRUCT_REGION_MAP);
         InitRegionMapData(regionMap, &sRegionMapBgTemplates[1], ShouldOpenRegionMapZoomed());
-        LoadCityZoomViewGfx();
         return LT_INC_AND_PAUSE;
     case 1:
         if (LoadRegionMapGfx())
@@ -386,18 +350,11 @@ static u32 LoopedTask_OpenRegionMap(s32 taskState)
         SetVBlankCallback_(VBlankCB_RegionMap);
         return LT_INC_AND_PAUSE;
     case 6:
-        if (!ShouldOpenRegionMapZoomed())
-            menuGfxId = POKENAV_GFX_MAP_MENU_ZOOMED_OUT;
-        else
-            menuGfxId = POKENAV_GFX_MAP_MENU_ZOOMED_IN;
-
         UpdateRegionMapHelpBarText();
-        LoadLeftHeaderGfxForIndex(menuGfxId);
-        ShowLeftHeaderGfx(menuGfxId, TRUE, TRUE);
         PokenavFadeScreen(POKENAV_FADE_FROM_BLACK);
         return LT_INC_AND_PAUSE;
     case 7:
-        if (IsPaletteFadeActive() || AreLeftHeaderSpritesMoving())
+        if (IsPaletteFadeActive())
             return LT_PAUSE;
         return LT_INC_AND_CONTINUE;
     default:
@@ -442,7 +399,6 @@ static u32 LoopedTask_RegionMapZoomOut(s32 taskState)
         if (WaitForHelpBar())
             return LT_PAUSE;
 
-        UpdateRegionMapRightHeaderTiles(POKENAV_GFX_MAP_MENU_ZOOMED_OUT);
         break;
     }
 
@@ -475,7 +431,6 @@ static u32 LoopedTask_RegionMapZoomIn(s32 taskState)
         if (WaitForHelpBar())
             return LT_PAUSE;
 
-        UpdateRegionMapRightHeaderTiles(POKENAV_GFX_MAP_MENU_ZOOMED_IN);
         break;
     }
 
@@ -494,7 +449,6 @@ static u32 LoopedTask_ExitRegionMap(s32 taskState)
         if (IsPaletteFadeActive())
             return LT_PAUSE;
 
-        SetLeftHeaderSpritesInvisibility();
         SlideMenuHeaderDown();
         return LT_INC_AND_PAUSE;
     case 2:
@@ -527,44 +481,38 @@ static u32 LoopedTask_TreatAsPokeNavFlyMap(s32 taskState)
     return LT_FINISH;
 }
 
-static void LoadCityZoomViewGfx(void)
-{
-    int i;
-    for (i = 0; i < ARRAY_COUNT(sCityZoomTextSpriteSheet); i++)
-        LoadCompressedSpriteSheet(&sCityZoomTextSpriteSheet[i]);
 
-    Pokenav_AllocAndLoadPalettes(sCityZoomTilesSpritePalette);
-    CreateCityZoomTextSprites();
-}
-
-static void FreeCityZoomViewGfx(void)
-{
-    int i;
-    struct Pokenav_RegionMapGfx *state = GetSubstructPtr(POKENAV_SUBSTRUCT_REGION_MAP_ZOOM);
-    FreeSpriteTilesByTag(GFXTAG_CITY_ZOOM);
-    FreeSpritePaletteByTag(PALTAG_CITY_ZOOM);
-    for (i = 0; i < (int)ARRAY_COUNT(state->cityZoomTextSprites); i++)
-        DestroySprite(state->cityZoomTextSprites[i]);
-}
 
 static void LoadPokenavRegionMapGfx(struct Pokenav_RegionMapGfx *state)
 {
-    BgDmaFill(1, PIXEL_FILL(0), 0x40, 1);
-    BgDmaFill(1, PIXEL_FILL(1), 0x41, 1);
-    BgDmaFill(1, PIXEL_FILL(3), 0x42, 1);
-    BgDmaFill(1, PIXEL_FILL(2), 0x43, 1);
-    CpuFill16(0x1040, state->tilemapBuffer, 0x800);
+    // MAIN_1 is the live retail frame: its transparent tile-0 opening exposes
+    // the affine region map on BG2. SUB_2 supplies the retail detail surface.
+    LoadBgTiles(1, sHgssPokeGearMapMain1_Gfx, sizeof(sHgssPokeGearMapMain1_Gfx), HGSS_POKEGEAR_MAP_MAIN1_TILE_BASE);
+    CopyPaletteIntoBufferUnfaded(sHgssPokeGearMapMain1_Pal, BG_PLTT_ID(HGSS_POKEGEAR_MAP_MAIN1_PAL_BANK_A), PLTT_SIZE_4BPP);
+    CopyPaletteIntoBufferUnfaded(&sHgssPokeGearMapMain1_Pal[16], BG_PLTT_ID(HGSS_POKEGEAR_MAP_MAIN1_PAL_BANK_B), PLTT_SIZE_4BPP);
+    LoadBgTiles(1, sHgssPokeGearMapSub2_Gfx, sizeof(sHgssPokeGearMapSub2_Gfx), HGSS_POKEGEAR_MAP_SUB2_TILE_BASE);
+    CopyPaletteIntoBufferUnfaded(sHgssPokeGearMapSub2_Pal, BG_PLTT_ID(HGSS_POKEGEAR_MAP_SUB2_PAL_BANK), PLTT_SIZE_4BPP);
+
+    CpuCopy16(sHgssPokeGearMapMain1_Tilemap, state->tilemapBuffer, sizeof(sHgssPokeGearMapMain1_Tilemap));
+
+    // Retail SUB_2 is 256px wide. Keep its 16x16 right-side detail surface
+    // exactly, shifted two tiles left so the complete chrome fits the 240px
+    // GBA viewport. The dynamic Emerald/custom-region data remains separate.
+    for (int y = 0; y < HGSS_POKEGEAR_MAP_SUB2_PANEL_HEIGHT; y++)
+    {
+        CpuCopy16(
+            &sHgssPokeGearMapSub2_Tilemap[(HGSS_POKEGEAR_MAP_SUB2_SOURCE_Y + y) * 32 + HGSS_POKEGEAR_MAP_SUB2_SOURCE_X],
+            &((u16 *)state->tilemapBuffer)[(HGSS_POKEGEAR_MAP_SUB2_DEST_Y + y) * 32 + HGSS_POKEGEAR_MAP_SUB2_DEST_X],
+            HGSS_POKEGEAR_MAP_SUB2_PANEL_WIDTH * sizeof(u16));
+    }
+
     SetBgTilemapBuffer(1, state->tilemapBuffer);
     state->infoWindowId = AddWindow(&sMapSecInfoWindowTemplate);
-    state->viewportWindowId = AddWindow(&sMapViewportWindowTemplate);
     DecompressAndCopyTileDataToVram(1, sRegionMapCityZoomTiles_Gfx, 0, 0, 0);
-    DrawPokeGearMapViewport(state);
-    DrawPokeGearMapInfoPanel(state);
-    PutWindowTilemap(state->viewportWindowId);
+    FillWindowPixelBuffer(state->infoWindowId, PIXEL_FILL(0));
     PutWindowTilemap(state->infoWindowId);
-    CopyWindowToVram(state->viewportWindowId, COPYWIN_FULL);
     CopyWindowToVram(state->infoWindowId, COPYWIN_FULL);
-    CopyPaletteIntoBufferUnfaded(sMapSecInfoWindow_Pal, BG_PLTT_ID(1), sizeof(sMapSecInfoWindow_Pal));
+    CopyPaletteIntoBufferUnfaded(sHgssPokeGearMapWindow_Pal, BG_PLTT_ID(1), sizeof(sHgssPokeGearMapWindow_Pal));
     CopyPaletteIntoBufferUnfaded(gRegionMapCityZoomTiles_Pal, BG_PLTT_ID(3), PLTT_SIZE_4BPP);
     if (!IsRegionMapZoomed())
         ChangeBgY(1, -0x6000, BG_COORD_SET);
@@ -574,83 +522,78 @@ static void LoadPokenavRegionMapGfx(struct Pokenav_RegionMapGfx *state)
     ChangeBgX(1, 0, BG_COORD_SET);
 }
 
-static void DrawPokeGearMapViewport(struct Pokenav_RegionMapGfx *state)
-{
-    u8 width = GetWindowAttribute(state->viewportWindowId, WINDOW_WIDTH) * 8;
-    u8 height = GetWindowAttribute(state->viewportWindowId, WINDOW_HEIGHT) * 8;
-
-    FillWindowPixelBuffer(state->viewportWindowId, PIXEL_FILL(0));
-
-    if (width < 24 || height < 24)
-        return;
-
-    // Transparent PokéGear screen bezel over the live region-map BG.
-    FillWindowPixelRect(state->viewportWindowId, PIXEL_FILL(3), 3, 0, width - 6, 1);
-    FillWindowPixelRect(state->viewportWindowId, PIXEL_FILL(3), 0, 3, 1, height - 6);
-    FillWindowPixelRect(state->viewportWindowId, PIXEL_FILL(2), 3, height - 1, width - 6, 1);
-    FillWindowPixelRect(state->viewportWindowId, PIXEL_FILL(2), width - 1, 3, 1, height - 6);
-    FillWindowPixelRect(state->viewportWindowId, PIXEL_FILL(3), 7, 3, width - 14, 1);
-    FillWindowPixelRect(state->viewportWindowId, PIXEL_FILL(2), 7, height - 4, width - 14, 1);
-}
-
-static void DrawPokeGearMapInfoPanel(struct Pokenav_RegionMapGfx *state)
-{
-    u8 width = GetWindowAttribute(state->infoWindowId, WINDOW_WIDTH) * 8;
-    u8 height = GetWindowAttribute(state->infoWindowId, WINDOW_HEIGHT) * 8;
-
-    FillWindowPixelBuffer(state->infoWindowId, PIXEL_FILL(1));
-
-    if (width < 16 || height < 24)
-        return;
-
-    // PokéGear map card: monochrome beveled frame with a dedicated title band.
-    FillWindowPixelRect(state->infoWindowId, PIXEL_FILL(3), 1, 0, width - 2, 1);
-    FillWindowPixelRect(state->infoWindowId, PIXEL_FILL(3), 0, 1, 1, height - 2);
-    FillWindowPixelRect(state->infoWindowId, PIXEL_FILL(2), 1, height - 1, width - 2, 1);
-    FillWindowPixelRect(state->infoWindowId, PIXEL_FILL(2), width - 1, 1, 1, height - 2);
-    FillWindowPixelRect(state->infoWindowId, PIXEL_FILL(3), 5, 15, width - 10, 1);
-}
-
 static bool32 TryFreeTempTileDataBuffers(void)
 {
     return FreeTempTileDataBuffersIfPossible();
 }
 
+static void RestoreHgssMapSub2DetailRect(struct Pokenav_RegionMapGfx *state, u8 x, u8 y, u8 width, u8 height)
+{
+    const u8 sourceX = HGSS_POKEGEAR_MAP_SUB2_SOURCE_X + x - HGSS_POKEGEAR_MAP_SUB2_DEST_X;
+    const u8 sourceY = HGSS_POKEGEAR_MAP_SUB2_SOURCE_Y + y - HGSS_POKEGEAR_MAP_SUB2_DEST_Y;
+
+    for (u8 row = 0; row < height; row++)
+    {
+        CpuCopy16(
+            &sHgssPokeGearMapSub2_Tilemap[(sourceY + row) * 32 + sourceX],
+            &((u16 *)state->tilemapBuffer)[(y + row) * 32 + x],
+            width * sizeof(u16));
+    }
+}
+
+static void PrintHgssMapWindowText(u8 windowId, const u8 *text, u8 x, u8 y)
+{
+    struct TextPrinterTemplate printer;
+
+    printer.currentChar = text;
+    printer.type = WINDOW_TEXT_PRINTER;
+    printer.windowId = windowId;
+    printer.fontId = FONT_NARROW;
+    printer.x = x;
+    printer.y = y;
+    printer.currentX = x;
+    printer.currentY = y;
+    printer.letterSpacing = gFonts[FONT_NARROW].letterSpacing;
+    printer.lineSpacing = gFonts[FONT_NARROW].lineSpacing;
+
+    // Retail HGSS Map windows use MAKE_TEXT_COLOR(1, 2, 0):
+    // foreground 1, shadow 2, background 0.
+    printer.color.background = 0;
+    printer.color.foreground = 1;
+    printer.color.shadow = 2;
+    printer.color.accent = 0;
+
+    AddTextPrinter(&printer, TEXT_SKIP_DRAW, NULL);
+}
+
 static void UpdateMapSecInfoWindow(struct Pokenav_RegionMapGfx *state)
 {
     struct RegionMap *regionMap = GetSubstructPtr(POKENAV_SUBSTRUCT_REGION_MAP);
+    FillWindowPixelBuffer(state->infoWindowId, PIXEL_FILL(0));
     switch (regionMap->mapSecType)
     {
     case MAPSECTYPE_CITY_CANFLY:
-        DrawPokeGearMapInfoPanel(state);
         PutWindowRectTilemap(state->infoWindowId, 0, 0, 12, 2);
-        AddTextPrinterParameterized(state->infoWindowId, FONT_NARROW, regionMap->mapSecName, 4, 1, TEXT_SKIP_DRAW, NULL);
+        PrintHgssMapWindowText(state->infoWindowId, regionMap->mapSecName, 4, 1);
         DrawCityMap(state, regionMap->mapSecId, regionMap->posWithinMapSec);
         CopyWindowToVram(state->infoWindowId, COPYWIN_FULL);
-        SetCityZoomTextInvisibility(FALSE);
         break;
     case MAPSECTYPE_CITY_CANTFLY:
-        DrawPokeGearMapInfoPanel(state);
         PutWindowRectTilemap(state->infoWindowId, 0, 0, 12, 2);
-        AddTextPrinterParameterized(state->infoWindowId, FONT_NARROW, regionMap->mapSecName, 4, 1, TEXT_SKIP_DRAW, NULL);
-        FillBgTilemapBufferRect(1, 0x1041, 17, 6, 12, 11, 17);
-        DrawPokeGearCityPreviewFrame();
+        PrintHgssMapWindowText(state->infoWindowId, regionMap->mapSecName, 4, 1);
+        RestoreHgssMapSub2DetailRect(state, 17, 6, 12, 11);
         CopyWindowToVram(state->infoWindowId, COPYWIN_FULL);
-        SetCityZoomTextInvisibility(TRUE);
         break;
     case MAPSECTYPE_ROUTE:
     case MAPSECTYPE_BATTLE_FRONTIER:
-        DrawPokeGearMapInfoPanel(state);
         PutWindowTilemap(state->infoWindowId);
-        AddTextPrinterParameterized(state->infoWindowId, FONT_NARROW, regionMap->mapSecName, 4, 1, TEXT_SKIP_DRAW, NULL);
+        PrintHgssMapWindowText(state->infoWindowId, regionMap->mapSecName, 4, 1);
         PrintLandmarkNames(state, regionMap->mapSecId, regionMap->posWithinMapSec);
         CopyWindowToVram(state->infoWindowId, COPYWIN_FULL);
-        SetCityZoomTextInvisibility(TRUE);
         break;
     case MAPSECTYPE_NONE:
-        FillBgTilemapBufferRect(1, 0x1041, 17, 4, 12, 13, 17);
+        RestoreHgssMapSub2DetailRect(state, 17, 4, 12, 13);
         CopyBgTilemapBufferToVram(1);
-        SetCityZoomTextInvisibility(TRUE);
         break;
     }
 }
@@ -683,7 +626,6 @@ static void Task_ChangeBgYForZoom(u8 taskId)
             DestroyTask(taskId);
         }
 
-        UpdateCityZoomTextPosition();
     }
     else
     {
@@ -693,7 +635,6 @@ static void Task_ChangeBgYForZoom(u8 taskId)
             DestroyTask(taskId);
         }
 
-        UpdateCityZoomTextPosition();
     }
 }
 
@@ -721,15 +662,6 @@ static u32 LoopedTask_DecompressCityMaps(s32 taskState)
     return LT_FINISH;
 }
 
-static void DrawPokeGearCityPreviewFrame(void)
-{
-    // Two-tone bezel surrounding the existing 10x10 city preview.
-    FillBgTilemapBufferRect(1, 0x1042, 17, 5, 12, 1, 17);
-    FillBgTilemapBufferRect(1, 0x1042, 17, 6, 1, 10, 17);
-    FillBgTilemapBufferRect(1, 0x1043, 28, 6, 1, 10, 17);
-    FillBgTilemapBufferRect(1, 0x1043, 17, 16, 12, 1, 17);
-}
-
 static void DrawCityMap(struct Pokenav_RegionMapGfx *state, mapsec_s32_t mapSecId, int pos)
 {
     int i;
@@ -739,9 +671,8 @@ static void DrawCityMap(struct Pokenav_RegionMapGfx *state, mapsec_s32_t mapSecI
     if (i == NUM_CITY_MAPS)
         return;
 
-    FillBgTilemapBufferRect_Palette0(1, 0x1041, 17, 6, 12, 11);
+    RestoreHgssMapSub2DetailRect(state, 17, 6, 12, 11);
     CopyToBgTilemapBufferRect(1, state->cityZoomPics[i], 18, 6, 10, 10);
-    DrawPokeGearCityPreviewFrame();
 }
 
 static void PrintLandmarkNames(struct Pokenav_RegionMapGfx *state, mapsec_s32_t mapSecId, int pos)
@@ -754,89 +685,9 @@ static void PrintLandmarkNames(struct Pokenav_RegionMapGfx *state, mapsec_s32_t 
             break;
 
         StringCopyPadded(gStringVar1, landmarkName, CHAR_SPACE, 12);
-        AddTextPrinterParameterized(state->infoWindowId, FONT_NARROW, gStringVar1, 4, i * 16 + 17, TEXT_SKIP_DRAW, NULL);
+        PrintHgssMapWindowText(state->infoWindowId, gStringVar1, 4, i * 16 + 17);
         i++;
     }
-}
-
-static void CreateCityZoomTextSprites(void)
-{
-    int i;
-    int y;
-    struct Sprite *sprite;
-    struct Pokenav_RegionMapGfx *state = GetSubstructPtr(POKENAV_SUBSTRUCT_REGION_MAP_ZOOM);
-
-    // When not zoomed in the text is still created but its pushed off screen.
-    // Zoomed mode docks the cycling legend against the PokéGear info card.
-    if (!IsRegionMapZoomed())
-        y = 228;
-    else
-        y = 128;
-
-    for (i = 0; i < (int)ARRAY_COUNT(state->cityZoomTextSprites); i++)
-    {
-        u8 spriteId = CreateSprite(&sCityZoomTextSpriteTemplate, 148 + i * 32, y, 8);
-        sprite = &gSprites[spriteId];
-        sprite->data[0] = 0;
-        sprite->data[1] = i * 4;
-        sprite->data[2] = sprite->oam.tileNum;
-        sprite->data[3] = 150;
-        sprite->data[4] = i * 4;
-        sprite->oam.tileNum += i * 4;
-        state->cityZoomTextSprites[i] = sprite;
-    }
-}
-
-// Slide and cycle through the text key showing what the features on the zoomed city map are
-static void SpriteCB_CityZoomText(struct Sprite *sprite)
-{
-    if (sprite->data[3])
-    {
-        sprite->data[3]--;
-        return;
-    }
-
-    if (++sprite->data[0] > 11)
-        sprite->data[0] = 0;
-
-    if (++sprite->data[1] > 60)
-        sprite->data[1] = 0;
-
-    sprite->oam.tileNum = sprite->data[2] + sprite->data[1];
-    if (sprite->data[5] < 4)
-    {
-        if (sprite->data[0] == 0)
-        {
-            sprite->data[5]++;
-            sprite->data[3] = 120;
-        }
-    }
-    else
-    {
-        if (sprite->data[1] == sprite->data[4])
-        {
-            sprite->data[5] = 0;
-            sprite->data[0] = 0;
-            sprite->data[3] = 120;
-        }
-    }
-}
-
-static void UpdateCityZoomTextPosition(void)
-{
-    int i;
-    struct Pokenav_RegionMapGfx *state = GetSubstructPtr(POKENAV_SUBSTRUCT_REGION_MAP_ZOOM);
-    int y = 128 - (GetBgY(1) >> 8);
-    for (i = 0; i < (int)ARRAY_COUNT(state->cityZoomTextSprites); i++)
-        state->cityZoomTextSprites[i]->y = y;
-}
-
-static void SetCityZoomTextInvisibility(bool32 invisible)
-{
-    int i;
-    struct Pokenav_RegionMapGfx *state = GetSubstructPtr(POKENAV_SUBSTRUCT_REGION_MAP_ZOOM);
-    for (i = 0; i < (int)ARRAY_COUNT(state->cityZoomTextSprites); i++)
-        state->cityZoomTextSprites[i]->invisible = invisible;
 }
 
 void UpdateRegionMapHelpBarText(void)

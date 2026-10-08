@@ -1,0 +1,258 @@
+{
+  "role": "match_call_dynamic_contact_rows",
+  "phase": "legacy_removed",
+  "classification": "direct implementation of documented retail HGSS PokéGear Phone contact-list row behavior",
+  "source_revision": "9d8b7591f09b65804da2fb2dfd56f320633e0d36",
+  "source_files": [
+    {
+      "path": "src/application/pokegear/phone/overlay_101_021F017C.c",
+      "git_blob_sha": "320be2869ebb277fe85bac6021bf01b50bfc8f7a",
+      "evidence": [
+        "sWindowTemplates[2] is the contact-list window on GF_BG_LYR_MAIN_3",
+        "window geometry: left 1, top 2, width 27 tiles, height 24 tiles",
+        "window palette bank: 2",
+        "member 10 NCLR is loaded into the retail MAIN_BG palette"
+      ]
+    },
+    {
+      "path": "src/application/pokegear/phone/overlay_101_021F0F48.c",
+      "git_blob_sha": "e303f58126397a8f28b0a4dd496bbea3d2c12c88",
+      "evidence": [
+        "PokegearPhone_InitContactListUI defines the exact row/text palette indices",
+        "PhoneContactListUI_DrawNameSlotBG defines the exact row rectangles",
+        "PhoneContactListUI_DrawNameSlotsBGs alternates two color sets across eight buffered rows",
+        "PokegearPhone_SetContactListUIAndDraw displays six contacts"
+      ]
+    },
+    {
+      "path": "files/application/pokegear/phone/pgphone_gra/pgphone_gra_00000010.NCLR",
+      "git_blob_sha": "85b29945c3b9e8250b119922d64111ded55b1563",
+      "repository_copy": "graphics/gen4_ui/hgss_pokegear/verified/pgphone_skin0_contact_palette.NCLR",
+      "byte_identity": true
+    }
+  ],
+  "retail_window": {
+    "bg": "GF_BG_LYR_MAIN_3",
+    "left_tiles": 1,
+    "top_tiles": 2,
+    "width_tiles": 27,
+    "height_tiles": 24,
+    "palette_bank": 2,
+    "base_tile": "0x177"
+  },
+  "retail_rows": {
+    "buffered_rows": 8,
+    "visible_contacts": 6,
+    "row_height_px": 24,
+    "row_width_px": 216,
+    "first_bg_color": 0,
+    "alternate_each_row": true,
+    "draw_name_slot_bg": [
+      {
+        "palette_index": "fill1",
+        "x": 0,
+        "y": "row_y",
+        "width": 216,
+        "height": 24
+      },
+      {
+        "palette_index": "bg1",
+        "x": 8,
+        "y": "row_y",
+        "width": 82,
+        "height": 20
+      },
+      {
+        "palette_index": "bg2",
+        "x": 90,
+        "y": "row_y",
+        "width": 126,
+        "height": 20
+      },
+      {
+        "palette_index": "fill2",
+        "x": 1,
+        "y": "row_y + 1",
+        "width": 2,
+        "height": 2
+      },
+      {
+        "palette_index": "fill1",
+        "x": 8,
+        "y": "row_y",
+        "width": 2,
+        "height": 7
+      },
+      {
+        "palette_index": "fill1",
+        "x": 9,
+        "y": "row_y + 9",
+        "width": 2,
+        "height": 2
+      },
+      {
+        "palette_index": "fill1",
+        "x": 9,
+        "y": "row_y + 13",
+        "width": 2,
+        "height": 2
+      },
+      {
+        "palette_index": "fill1",
+        "x": 9,
+        "y": "row_y + 17",
+        "width": 2,
+        "height": 2
+      }
+    ],
+    "color_sets": [
+      {
+        "fg1": 1,
+        "bg1": 9,
+        "sh1": 2,
+        "fg3": 3,
+        "sh3": 4,
+        "fill1": 11,
+        "fg2": 5,
+        "bg2": 10,
+        "sh2": 6,
+        "fg4": 7,
+        "sh4": 8,
+        "fill2": 10
+      },
+      {
+        "fg1": 1,
+        "bg1": 12,
+        "sh1": 2,
+        "fg3": 3,
+        "sh3": 4,
+        "fill1": 14,
+        "fg2": 5,
+        "bg2": 13,
+        "sh2": 6,
+        "fg4": 7,
+        "sh4": 8,
+        "fill2": 13
+      }
+    ],
+    "text_color_mapping": {
+      "deselected_name": [
+        "fg1",
+        "sh1",
+        "bg1"
+      ],
+      "deselected_class": [
+        "fg2",
+        "sh2",
+        "bg2"
+      ],
+      "selected_name": [
+        "fg3",
+        "sh3",
+        "bg1"
+      ],
+      "selected_class": [
+        "fg4",
+        "sh4",
+        "bg2"
+      ]
+    }
+  },
+  "prepared_asset": {
+    "generator": "tools/gen4_ui/make_hgss_pokegear_contact_rows.py",
+    "output": "graphics/gen4_ui/hgss_pokegear/match_call_contact_rows.gbapal",
+    "source_palette_bank": 2,
+    "transformation": "exact 16-color BGR555 bank extraction only",
+    "recoloring": false,
+    "interpolation": false
+  },
+  "pipeline": {
+    "authentic_hgss_source_ready": true,
+    "wired_live": true,
+    "legacy_equivalent_removed": true
+  },
+  "next": "Begin phase 1 for the Match Call action/options pad: identify and verify the exact retail HGSS Phone menu/window resource or rendering behavior before replacing DrawPokeGearPhoneActionPad.",
+  "live_integration": {
+    "ci_gate": {
+      "workflow": "CI",
+      "run_number": 662,
+      "conclusion": "success",
+      "validated_commit": "a0a2d4469e5c6a7dc72c2f66d58d4ce4f7aa7540"
+    },
+    "list_api": "CreatePokenavListWithHgssPhoneRows",
+    "live_files": [
+      "src/pokenav_list.c",
+      "src/pokenav_match_call_gfx.c"
+    ],
+    "visible_contacts": 6,
+    "row_height_px": 24,
+    "buffer_rows": 8,
+    "visible_buffer_rows": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "scroll_behavior": "one retail row is moved in three 8-pixel ScrollWindow steps, matching PhoneContactListUI_ScrollStep",
+    "palette": {
+      "source": "verified member-10 NCLR palette bank 2",
+      "output": "graphics/gen4_ui/hgss_pokegear/match_call_contact_rows.gbapal",
+      "gba_bg_palette_bank": 7,
+      "color_indices_preserved": true
+    },
+    "row_geometry": {
+      "source_width_px": 216,
+      "gba_contact_pane_width_px": 128,
+      "adaptation": "left crop x=0..127 only; no scaling, recoloring, interpolation, or geometry resampling",
+      "source_rectangles_preserved": true
+    },
+    "isolation": "Only Match Call opts into the new Phone-row path. Existing Condition/Search/Ribbons lists continue to call CreatePokenavList and retain the 16-pixel renderer."
+  },
+  "phase2_ci_correction": {
+    "failed_run": 661,
+    "failed_jobs": [
+      "test",
+      "build-firered",
+      "build-leafgreen",
+      "release"
+    ],
+    "cause": [
+      "src/pokenav_list.c used MAX even though this translation unit does not provide that macro",
+      "src/pokenav_match_call_gfx.c used MIN even though this translation unit does not provide that macro",
+      "InitPokenavListWindow became unused after phase-2 initialization was inlined and -Werror rejected it"
+    ],
+    "correction": [
+      "replace MAX with explicit bounds logic",
+      "replace MIN with explicit width clamps",
+      "remove the unused InitPokenavListWindow declaration and definition"
+    ],
+    "asset_or_runtime_design_change": false,
+    "authenticity_change": false,
+    "legacy_removal_started": false
+  },
+  "legacy_removal": {
+    "ci_gate": {
+      "workflow": "CI",
+      "run_number": 662,
+      "conclusion": "success",
+      "validated_commit": "a0a2d4469e5c6a7dc72c2f66d58d4ce4f7aa7540"
+    },
+    "removed_renderer": "DrawPokeGearPhoneContactRowLegacy",
+    "removed_fallback_condition": "width <= 90 synthetic 16-pixel row path",
+    "removed_palette_binding": "sListWindow_Pal / BG palette bank 3 load",
+    "removed_asset": "graphics/pokenav/match_call/list_window.pal",
+    "sole_live_row_renderer": "DrawHgssPhoneContactRow",
+    "sole_live_row_palette": "verified HGSS member-10 palette bank 2 -> GBA BG palette bank 7",
+    "scope_note": "This removes only the superseded dynamic contact-row equivalent. Action/options, trainer check-page chrome, and call-message chrome remain separate pending surfaces."
+  },
+  "resolved_gba_adaptation": {
+    "row_stride_px": 24,
+    "visible_contacts": 6,
+    "buffered_rows": 8,
+    "viewport_adaptation": "retail 216-pixel row is directly cropped to x=0..127 for the 128-pixel GBA Match Call pane; no scaling, recoloring, interpolation, or geometry resampling",
+    "scroll": "three 8-pixel ScrollWindow steps per 24-pixel row",
+    "isolation": "other PokéNav list users retain the generic 16-pixel path"
+  }
+}

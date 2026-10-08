@@ -1,0 +1,163 @@
+{
+  "role": "nature_stat_labels",
+  "classification": "native_hgss_summary_text_behavior",
+  "source_game": "Pokemon HeartGold / SoulSilver",
+  "decomp_verification": {
+    "repository": "pret/pokeheartgold",
+    "revision": "9d8b7591f09b65804da2fb2dfd56f320633e0d36",
+    "summary_core": "asm/unk_02088288.s",
+    "summary_text_renderer": "asm/unk_0208C3E4.s",
+    "renderer_function": "sub_0208C7F8",
+    "text_helper": "sub_0208C778",
+    "font_allocation": {
+      "function": "PokemonSummary_Init",
+      "font_id": 4,
+      "evidence": "PokemonSummary_Init calls FontID_Alloc(4)."
+    },
+    "nature_table": "gNatureStatMods",
+    "finding": "HGSS does not present Nature-modified stats with dedicated stat-label sprites. The Summary screen renders the stat names as text and selects one of three packed text-color parameters according to the corresponding gNatureStatMods entry."
+  },
+  "labels": [
+    {
+      "stat": "ATTACK",
+      "message_archive": "msg_0302",
+      "message_index": 111,
+      "message_hex": "0x6F",
+      "english": "Attack",
+      "nature_stat_index": 0
+    },
+    {
+      "stat": "DEFENSE",
+      "message_archive": "msg_0302",
+      "message_index": 112,
+      "message_hex": "0x70",
+      "english": "Defense",
+      "nature_stat_index": 1
+    },
+    {
+      "stat": "SP_ATK",
+      "message_archive": "msg_0302",
+      "message_index": 113,
+      "message_hex": "0x71",
+      "english": "Sp. Atk",
+      "nature_stat_index": 3
+    },
+    {
+      "stat": "SP_DEF",
+      "message_archive": "msg_0302",
+      "message_index": 114,
+      "message_hex": "0x72",
+      "english": "Sp. Def",
+      "nature_stat_index": 4
+    },
+    {
+      "stat": "SPEED",
+      "message_archive": "msg_0302",
+      "message_index": 115,
+      "message_hex": "0x73",
+      "english": "Speed",
+      "nature_stat_index": 2
+    }
+  ],
+  "native_color_behavior": {
+    "neutral": {
+      "condition": "gNatureStatMods[nature][stat] == 0",
+      "packed_text_color": "0x000E0F00"
+    },
+    "increased": {
+      "condition": "gNatureStatMods[nature][stat] > 0",
+      "packed_text_color": "0x000E0700"
+    },
+    "decreased": {
+      "condition": "gNatureStatMods[nature][stat] < 0",
+      "packed_text_color": "0x000E0800"
+    },
+    "note": "These are recorded as the exact packed HGSS text-color arguments used by sub_0208C7F8. This phase does not infer or fabricate replacement RGB values."
+  },
+  "current_expansion_legacy": {
+    "graphics": "graphics/pokemon_storage/swsh/stat_labels.png",
+    "gfx_symbol": "sStatLabels_Gfx",
+    "palette_symbol": "sStatLabels_Pal",
+    "runtime_function": "UpdateStatLabelsSprites",
+    "presentation": "five 16x16 stat-label sprite frames; separate palettes indicate Nature increase/decrease",
+    "live": true,
+    "gfx_live": false,
+    "palette_live_for_stat_labels": false,
+    "palette_still_live_for_unrelated_roles": false,
+    "unrelated_palette_consumers": [],
+    "palette_dependency_resolved": true,
+    "file_still_present_for_verification": false,
+    "replacement_palette": {
+      "symbol": "sHgssFontMember7_Pal",
+      "source": "retail HGSS NARC_graphic_font member 7",
+      "source_git_blob_sha": "0a4e5fb8d4c7de046ffa7a164ad45fc0e45558b3",
+      "consumers": [
+        "PALTAG_MISC_1",
+        "PALTAG_MISC_2",
+        "PALTAG_MISC_3",
+        "HGSS gender glyph palette"
+      ]
+    },
+    "removed": true,
+    "removed_source": "graphics/pokemon_storage/swsh/stat_labels.png",
+    "removed_after_ci": {
+      "workflow_run": 36515493362,
+      "workflow_run_number": 611,
+      "job": "gen4-ui",
+      "conclusion": "success",
+      "verified_steps": [
+        "Validate Gen 4 UI tools",
+        "Build Gen 4 UI assets",
+        "Compile Gen 4 UI renderer"
+      ]
+    }
+  },
+  "adaptation_rule": "Replace the legacy sprite-label presentation with dynamic text following HGSS Summary behavior. Use authentic HGSS font/text presentation and the verified Nature color-state semantics; do not draw HGSS-style stat-label sprites.",
+  "status": "phase 3 complete: authentic HGSS font-derived Nature stat labels are live; the legacy SWSH stat-label graphics/palette dependency has been removed after successful gen4-ui verification",
+  "next": "Nature stat-label conversion complete. Continue to the next remaining Storage UI role using authentic HGSS asset -> wire live -> remove legacy equivalent.",
+  "pipeline": {
+    "authentic_hgss_behavior_verified": true,
+    "wired_live": true,
+    "legacy_equivalent_removed": true,
+    "legacy_palette_dependency_resolved": true
+  },
+  "live_adaptation": {
+    "asset": "graphics/gen4_ui/hgss_storage/verified/stat_labels_hgss_font.4bpp",
+    "asset_git_blob_sha": "7a486ee8d6e4b57da10b71260503578f708600db",
+    "dimensions": [
+      16,
+      288
+    ],
+    "labels": [
+      "HP",
+      "At",
+      "De",
+      "SA",
+      "SD",
+      "Sp"
+    ],
+    "states_per_label": [
+      "neutral",
+      "increased",
+      "decreased"
+    ],
+    "layout_rule": "Two 16px label columns preserve the existing 88px Storage sidebar geometry. Abbreviations are composed from exact retail HGSS font-ID-4 glyph pixels at native 1:1 scale; no redraw, scaling, smoothing, or synthetic glyphs.",
+    "rendering": "BG0 window bitmap blit; no OBJ stat-label sprites",
+    "source_font": {
+      "path": "files/graphic/font/font_00000004.bin",
+      "git_blob_sha": "a4b7623e8061d2a2867510bd5d8b4a7f5db11bf2"
+    },
+    "palette": {
+      "source": "files/graphic/font/font_00000007.bin",
+      "git_blob_sha": "0a4e5fb8d4c7de046ffa7a164ad45fc0e45558b3",
+      "gba_bank": 15,
+      "direct_native_indices": {
+        "7": "0x7DC0 Nature-increased shadow",
+        "8": "0x76EF Nature-decreased shadow",
+        "14": "0x0000 foreground",
+        "15": "0x7FFF neutral shadow"
+      },
+      "note": "The temporary 8..11 compatibility remap is removed. The atlas now encodes retail HGSS font-palette indices directly."
+    }
+  }
+}

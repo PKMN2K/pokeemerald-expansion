@@ -1,0 +1,131 @@
+{
+  "role": "shared_pokenav_spinning_device_icon",
+  "phase": "legacy_spinner_removed_ci_pending",
+  "classification": "legacy Emerald PokéNav animated 32x32 device/logo sprite over the already-authentic HGSS PokéGear presentation",
+  "source_game": "Pokemon HeartGold / SoulSilver",
+  "source_repository": "pret/pokeheartgold",
+  "source_revision": "9d8b7591f09b65804da2fb2dfd56f320633e0d36",
+  "previous_gate": {
+    "workflow": "CI",
+    "run_number": 761,
+    "conclusion": "success",
+    "validated_commit": "dc8a8f41b09e8430274aef25638d13b1a6e5777b"
+  },
+  "legacy_surface": {
+    "asset": {
+      "path": "graphics/pokenav/nav_icon.png",
+      "git_blob_sha": "83624135bafa7dbdd84c461f10a15fe68249ea4f"
+    },
+    "live_file": "src/pokenav_main_menu.c",
+    "object_size": [
+      32,
+      32
+    ],
+    "position_gba": [
+      220,
+      12
+    ],
+    "animation": {
+      "frames": 8,
+      "frame_tiles": [
+        0,
+        16,
+        32,
+        48,
+        64,
+        80,
+        96,
+        112
+      ],
+      "duration_each": 8,
+      "loops": true
+    },
+    "behavior": [
+      "loaded as a dedicated OBJ palette and compressed sprite sheet",
+      "created for the shared PokéNav/PokéGear lifetime",
+      "tracks BG0 vertical scrolling through SpriteCB_SpinningPokenav",
+      "is explicitly restored by Match Call call-surface cleanup paths"
+    ]
+  },
+  "retail_audit": {
+    "loader_file": "src/application/pokegear/main/overlay_100_021E6914.c",
+    "consumer_file": "src/application/pokegear/main/overlay_100_021E5900.c",
+    "loader": "PokegearUIManager_LoadInitialSkinGfx",
+    "consumer": "PokegearApp_LoadGraphics",
+    "findings": [
+      "the retail common PokéGear sprite source is skin-0 member 6 NCGR, member 0 NCLR, member 12 NCER, and member 13 NANR",
+      "PokegearApp_LoadGraphics creates four app-switch cursor sprites plus weekday, four clock digits, clock separator, and phone-status widgets",
+      "the retail shared sprite set contains no 32x32 rotating device/logo sprite",
+      "no retail core PokéGear sprite is created at the legacy GBA spinner role/position"
+    ],
+    "conclusion": "there is no authentic retail HGSS counterpart for Emerald's spinning nav_icon; inventing or repurposing replacement art would violate the authenticity-only policy"
+  },
+  "authentic_context": {
+    "manifest": "graphics/gen4_ui/hgss_pokegear/verified/main_ui_sprites_skin0.json",
+    "verified_assets": [
+      {
+        "path": "graphics/gen4_ui/hgss_pokegear/verified/pgear_skin0_ui_palette.NCLR",
+        "git_blob_sha": "bbdc310859698dcce8dc7e0f9aa45e8ec2d94087"
+      },
+      {
+        "path": "graphics/gen4_ui/hgss_pokegear/verified/pgear_skin0_ui_sprites.png",
+        "git_blob_sha": "c6dfd8b3946d4875a154bd4de359b1ee244dcd18"
+      },
+      {
+        "path": "graphics/gen4_ui/hgss_pokegear/verified/pgear_ui_cells.NCER",
+        "git_blob_sha": "aac8033e326bfadbb8d7328f62bb3246582e4d6c"
+      },
+      {
+        "path": "graphics/gen4_ui/hgss_pokegear/verified/pgear_ui_anims.NANR",
+        "git_blob_sha": "8bbd3faad47fad0187eae6441de4c6ddc56a15d6"
+      }
+    ],
+    "already_validated": true,
+    "note": "authentic app-switch cursor and phone-status integrations already occupy the legitimate shared PokéGear UI roles; no replacement spinner is required"
+  },
+  "phase1_action": {
+    "audit_script": "tools/gen4_ui/audit_hgss_pokegear_nav_icon.py",
+    "live_rendering_changed": false,
+    "asset_deleted": false
+  },
+  "pipeline": {
+    "authentic_hgss_asset_ready": true,
+    "wired_live": true,
+    "legacy_equivalent_removed": true
+  },
+  "next": "Run Phase-3 CI. If green, mark the spinning-icon cleanup complete and audit the next remaining legacy PokéNav surface (left-header graphics).",
+  "phase2_action": {
+    "live_file": "src/pokenav_main_menu.c",
+    "rollback_switch": "sUseLegacySpinningNavIconForRollback",
+    "rollback_default": false,
+    "normal_path": [
+      "legacy nav_icon sprite sheet and palette remain loaded only for rollback compatibility during this validation cycle",
+      "the 32x32 spinning PokéNav OBJ is not instantiated",
+      "cleanup tolerates the absent spinner pointer",
+      "GetSpinningPokenavSprite returns NULL when the spinner is suppressed",
+      "HideSpinningPokenavSprite becomes a safe no-op when Match Call invokes it without a spinner"
+    ],
+    "legacy_asset_retained_for_validation": true,
+    "new_hgss_pixels_generated": false
+  },
+  "status": "phase 3: legacy Emerald rotating PokéNav icon and compatibility API removed; CI pending",
+  "phase3_action": {
+    "live_files": [
+      "src/pokenav_main_menu.c",
+      "src/pokenav_match_call_gfx.c",
+      "include/pokenav.h"
+    ],
+    "removed": [
+      "rollback switch sUseLegacySpinningNavIconForRollback",
+      "nav_icon graphics/palette bindings",
+      "spinner sprite-sheet, OAM, animation, template, callback, allocation and cleanup code",
+      "Pokenav_MainMenu spinner pointer",
+      "GetSpinningPokenavSprite / HideSpinningPokenavSprite public API",
+      "obsolete Match Call spinner restore calls"
+    ],
+    "removed_asset": "graphics/pokenav/nav_icon.png",
+    "palette_cleanup": "removed spinner palette tag 0 ownership and normalized the PokéNav fade mask to ~1",
+    "new_hgss_pixels_generated": false,
+    "ci_pending": true
+  }
+}

@@ -1,0 +1,122 @@
+{
+  "role": "choose_box",
+  "classification": "dynamic_runtime_composition",
+  "standalone_bg_asset": false,
+  "source_archive": "/a/0/1/9",
+  "archive_sha256": "f7a1a97638959a685719049a0b780686edb68704777fead790b230e10ed1df4a",
+  "member_count": 87,
+  "nscr_members": [
+    0,
+    2,
+    5,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    15,
+    85,
+    86
+  ],
+  "decomp_source": {
+    "repository": "pret/pokeheartgold",
+    "path": "asm/overlay_14.s",
+    "archive_id": "NARC_a_0_1_9"
+  },
+  "excluded_false_matches": [
+    {
+      "members": [
+        70,
+        71,
+        72,
+        73
+      ],
+      "formats": [
+        "NCGR",
+        "NCLR",
+        "NCER",
+        "NANR"
+      ],
+      "loaded_by": "ov14_021F41E4",
+      "reason": "Sprite bundle is used by the wallpaper-selection path; it is not a Choose Box grid."
+    },
+    {
+      "members": [
+        74,
+        75,
+        76,
+        77
+      ],
+      "formats": [
+        "NCGR",
+        "NCLR",
+        "NCER",
+        "NANR"
+      ],
+      "loaded_by": "ov14_021F42EC",
+      "reason": "Companion wallpaper-selection sprite bundle; ov14_021F462C also reads member 74 while wallpaper choices change."
+    }
+  ],
+  "auxiliary_screen_members": [
+    {
+      "member": 85,
+      "format": "NSCR",
+      "decoded_sha256": "839d6afe01baf0c3bcd12d450feef08e8f7e428a221672f503a39c5e181232e6",
+      "rendered_size": [
+        256,
+        72
+      ],
+      "result": "Auxiliary frame/window surface, not an all-box chooser."
+    },
+    {
+      "member": 86,
+      "format": "NSCR",
+      "decoded_sha256": "2d4d2489e35487de6f32c5b76d6dacd7363372b701a12b947ae644e0e5262c09",
+      "rendered_size": [
+        96,
+        80
+      ],
+      "result": "Auxiliary bordered window surface, not an all-box chooser."
+    }
+  ],
+  "integration_rule": "Do not synthesize or bind a static choose_box background. Recreate the HGSS interaction from verified dynamic components and runtime layout behavior.",
+  "status": "native composition stage 4 complete: authentic HGSS Choose Box controls live and legacy chooser cursor/control path removed",
+  "integration_stage": {
+    "stage": 4,
+    "behavior": [
+      "Verified /a/0/1/9 members 66-69 remain the only visible left/right Choose Box controls.",
+      "The normal storage cursor is hidden without being moved or repurposed while the Choose Box interaction is active.",
+      "The synthetic CURSOR_AREA_IN_CHOOSE_BOX state and its movement/coordinate/priority paths are removed.",
+      "Normal storage cursor visibility and logical position are preserved and restored when the chooser closes."
+    ],
+    "next": "Choose Box control replacement is complete; continue with the next remaining storage UI role using authentic asset -> wire live -> remove legacy equivalent."
+  },
+  "navigation_controls": {
+    "source_members": {
+      "ncgr": {
+        "index": 66,
+        "sha256": "3989d3a74bf444379b55cf3a2d04ff3c2d145a076f0481fa72972fe4de109092"
+      },
+      "ncer": {
+        "index": 67,
+        "sha256": "98b99b5e454bb519ef4535f74df541a2ee4a9291b98a7d2db700bff64208145b"
+      },
+      "nanr": {
+        "index": 68,
+        "sha256": "a0c7f45c4bb50965b23546c30eb6aefaf9a8bce691aac9bcf0f91cbef18ec55c"
+      },
+      "nclr": {
+        "index": 69,
+        "sha256": "c30d6010bff96c1bda391470f7a50a52ab7aa559669e5f1e916bd572c0ea4b14"
+      }
+    },
+    "loader": "ov14_021F3DE8",
+    "creator": "ov14_021F3E70",
+    "left_template": "ov14_021F81A8: x=12, y=28, animation=1",
+    "right_template": "ov14_021F81DC: x=156, y=28, animation=3",
+    "export": "verified/choose_box_nav.png",
+    "metadata": "verified/choose_box_nav.json",
+    "status": "wired live; legacy chooser cursor/control equivalent removed"
+  }
+}
