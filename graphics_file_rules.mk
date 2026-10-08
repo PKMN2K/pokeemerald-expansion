@@ -43,6 +43,7 @@ GEN4UIHGSSPOKEGEARMAPSUB0 := tools/gen4_ui/make_hgss_pokegear_map_sub0.py
 GEN4UIHGSSPOKEGEARMAPMAIN1 := tools/gen4_ui/make_hgss_pokegear_map_main1.py
 GEN4UIHGSSPOKEGEARMAPSUB2 := tools/gen4_ui/make_hgss_pokegear_map_sub2.py
 GEN4UIHGSSPOKEGEARMAPCURSOR := tools/gen4_ui/make_hgss_pokegear_map_cursor.py
+GEN4UIHGSSPOKEGEARMAPPLAYER := tools/gen4_ui/make_hgss_pokegear_map_player_marker.py
 GEN4UIHGSSPOKEGEARMAPFLYPOINT := tools/gen4_ui/make_hgss_pokegear_map_flypoint.py
 
 types := none normal fight flying poison ground rock bug ghost steel mystery fire water grass electric psychic ice dragon dark fairy stellar
@@ -275,6 +276,18 @@ $(GEN4UIGFXDIR)/hgss_pokegear/map_cursor.4bpp: $(GEN4UIHGSSPOKEGEARMAPCURSOR) \
 	python3 $< --tiles $@
 
 $(GEN4UIGFXDIR)/hgss_pokegear/map_cursor.gbapal: $(GEN4UIHGSSPOKEGEARMAPCURSOR) \
+	$(GEN4UIGFXDIR)/hgss_pokegear/verified/map/pgmap_gra_00000000.NCLR \
+	$(GEN4UIGFXDIR)/hgss_pokegear/verified/map/pgmap_gra_00000002.NCER \
+	$(GEN4UIGFXDIR)/hgss_pokegear/verified/map/pgmap_gra_00000003.NANR
+	python3 $< --palette $@
+
+$(GEN4UIGFXDIR)/hgss_pokegear/map_player_marker.4bpp: $(GEN4UIHGSSPOKEGEARMAPPLAYER) $(GEN4UIHGSSPOKEGEARMAPCURSOR) \
+	$(GEN4UIGFXDIR)/hgss_pokegear/verified/map/pgmap_gra_00000001.png \
+	$(GEN4UIGFXDIR)/hgss_pokegear/verified/map/pgmap_gra_00000002.NCER \
+	$(GEN4UIGFXDIR)/hgss_pokegear/verified/map/pgmap_gra_00000003.NANR
+	python3 $< --tiles $@
+
+$(GEN4UIGFXDIR)/hgss_pokegear/map_player_marker.gbapal: $(GEN4UIHGSSPOKEGEARMAPPLAYER) $(GEN4UIHGSSPOKEGEARMAPCURSOR) \
 	$(GEN4UIGFXDIR)/hgss_pokegear/verified/map/pgmap_gra_00000000.NCLR \
 	$(GEN4UIGFXDIR)/hgss_pokegear/verified/map/pgmap_gra_00000002.NCER \
 	$(GEN4UIGFXDIR)/hgss_pokegear/verified/map/pgmap_gra_00000003.NANR
