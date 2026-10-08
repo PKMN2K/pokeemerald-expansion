@@ -1,0 +1,45 @@
+{
+  "role": "standalone_fly_map_frame",
+  "phase": "legacy_fly_map_frame_audited",
+  "classification": "legacy Emerald Fly Map BG1 frame/chrome with direct authentic HGSS PokéGear Fly Map MAIN_1 counterpart",
+  "legacy_runtime": {
+    "file": "src/region_map.c",
+    "bg": 1,
+    "char_base": 3,
+    "map_base": 30,
+    "assets": [
+      "graphics/pokenav/region_map/frame.png",
+      "graphics/pokenav/region_map/frame.bin"
+    ],
+    "bindings": [
+      "sRegionMapFramePal",
+      "sRegionMapFrameGfxLZ",
+      "sRegionMapFrameTilemapLZ"
+    ]
+  },
+  "authentic_hgss_counterpart": {
+    "manifest": "graphics/gen4_ui/hgss_pokegear/verified/map/map_main1.json",
+    "source_game": "Pokemon HeartGold / SoulSilver",
+    "source_revision": "9d8b7591f09b65804da2fb2dfd56f320633e0d36",
+    "retail_layer": "GF_BG_LYR_MAIN_1",
+    "members": {
+      "palette": "pgmap_gra_00000063.NCLR",
+      "tiles": "pgmap_gra_00000066.png",
+      "tilemap": "pgmap_gra_00000067.NSCR"
+    },
+    "retail_loader": "src/application/pokegear/map/overlay_101_021EDCE0.c::FlyMap_LoadBGGraphics/FlyMap_FinalizeGraphicsSetup"
+  },
+  "preserve": [
+    "BG2 affine region geography",
+    "gRegionMapInfos map graphics/tilemaps/palettes",
+    "custom-region layout and coordinate data",
+    "fly destination data",
+    "player/cursor location logic"
+  ],
+  "pipeline": {
+    "authentic_hgss_asset_ready": true,
+    "wired_live": false,
+    "legacy_equivalent_removed": false
+  },
+  "next": "Wire the already-verified authentic HGSS MAIN_1 frame to standalone Fly Map BG1, validate it, then remove frame.png/frame.bin and their legacy bindings."
+}
