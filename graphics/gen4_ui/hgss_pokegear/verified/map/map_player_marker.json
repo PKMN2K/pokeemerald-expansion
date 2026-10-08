@@ -1,6 +1,6 @@
 {
   "role": "map_player_position_marker",
-  "phase": "retail_player_marker_binding_audited",
+  "phase": "authentic_player_marker_asset_extracted",
   "classification": "legacy Emerald/FRLG player-position icon with direct authentic HGSS PokéGear Map counterpart",
   "source_game": "Pokemon HeartGold / SoulSilver",
   "source_repository": "pret/pokeheartgold",
@@ -51,9 +51,38 @@
     "player location coordinates and region-map positioning logic"
   ],
   "pipeline": {
-    "authentic_hgss_asset_ready": false,
+    "authentic_hgss_asset_ready": true,
     "wired_live": false,
     "legacy_equivalent_removed": false
   },
-  "next": "Extract and verify the authentic HGSS PokéGear Map player-marker resource set before wiring it live."
+  "next": "Keep the authentic marker bundle verified but unwired; continue with another legacy Map presentation element that does not conflict with custom protagonist identity.",
+  "extraction": {
+    "tool": "tools/gen4_ui/make_hgss_pokegear_map_player_marker.py",
+    "outputs": [
+      "graphics/gen4_ui/hgss_pokegear/map_player_marker.4bpp",
+      "graphics/gen4_ui/hgss_pokegear/map_player_marker.gbapal"
+    ],
+    "verified_mapping": {
+      "animation_sequence": 1,
+      "cells": [
+        2,
+        3
+      ],
+      "tiles": [
+        8,
+        12
+      ],
+      "frame_durations": [
+        1,
+        1
+      ],
+      "frame_size": "16x16",
+      "palette_bank": 15,
+      "retail_frame_selection": "playerGender"
+    }
+  },
+  "policy": {
+    "live_wiring_deferred": true,
+    "reason": "PKMN2K does not use Ethan/Lyra as its player avatars; authentic retail marker pixels are verified/extracted for provenance but are not wired over the project player marker without an explicit policy change."
+  }
 }
