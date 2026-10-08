@@ -29,7 +29,7 @@ def main():
             raise ValueError(f"{REGION_MAP}: required map behavior token missing: {token}")
 
     data = json.loads(MANIFEST.read_text())
-    if data.get("phase") != "retail_player_marker_binding_audited":
+    if data.get("phase") != "authentic_player_marker_asset_extracted":
         raise ValueError(f"{MANIFEST}: unexpected phase")
 
     retail = data.get("retail_hgss_binding", {})
@@ -43,8 +43,8 @@ def main():
         p.get("wired_live"),
         p.get("legacy_equivalent_removed"),
     )
-    if state != (False, False, False):
-        raise ValueError(f"{MANIFEST}: audit must not claim extraction/wiring/removal complete")
+    if state != (True, False, False):
+        raise ValueError(f"{MANIFEST}: extraction gate must be ready but remain unwired/unremoved")
 
 if __name__ == "__main__":
     main()
