@@ -854,8 +854,8 @@ static void DrawPokeGearRibbonSelectionFocus(struct Pokenav_RibbonsSummaryMenu *
 
     DrawPokeGearRibbonGridFrame(windowId);
 
-    // The gift-ribbon row may sit below this 10-tile-high frame.
-    // Never draw the focus brackets beyond the window pixel buffer.
+    // Gift ribbons occupy row 3 (y = 56) in the current 10-tile frame.
+    // Keep explicit clipping to protect against future ribbon/layout expansion.
     if (show
      && x >= 2
      && y >= 2
