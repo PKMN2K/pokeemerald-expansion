@@ -912,8 +912,7 @@ static void CreateHgssRibbonCursor(struct Pokenav_RibbonsSummaryMenu *menu)
         if (menu->hgssCursorCorners[i] != NULL)
         {
             menu->hgssCursorCorners[i]->invisible = TRUE;
-            menu->hgssCursorCorners[i]->oam.hFlip = (i & 2) != 0;
-            menu->hgssCursorCorners[i]->oam.vFlip = (i & 1) != 0;
+            SetSpriteOamFlipBits(menu->hgssCursorCorners[i], (i & 2) != 0, (i & 1) != 0);
         }
     }
 }
