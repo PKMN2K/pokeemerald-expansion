@@ -970,9 +970,12 @@ static void PrintRibbonNameAndDescription(struct Pokenav_RibbonsSummaryMenu *men
         // gift ribbon it is
         ribbonId = gSaveBlock1Ptr->giftRibbons[ribbonId - FIRST_GIFT_RIBBON];
 
-        // If 0, this gift ribbon slot is unoccupied
+        // Refresh the cleared panel even when this gift slot is unoccupied.
         if (ribbonId == 0)
+        {
+            CopyWindowToVram(menu->ribbonCountWindowId, COPYWIN_GFX);
             return;
+        }
 
         // Print gift ribbon name/description
         ribbonId--;
