@@ -25,6 +25,9 @@ enum
 };
 
 #define GFXTAG_RIBBON_ICONS_BIG 9
+#define GFXTAG_HGSS_RIBBON_CURSOR 0xF120
+#define PALTAG_HGSS_RIBBON_CURSOR 0xF120
+#define HGSS_RIBBON_CURSOR_CORNERS 4
 
 #define PALTAG_RIBBON_ICONS_1 15
 #define PALTAG_RIBBON_ICONS_2 16
@@ -67,6 +70,7 @@ struct Pokenav_RibbonsSummaryMenu
     u16 unusedWindowId;
     u16 monSpriteId;
     struct Sprite *bigRibbonSprite;
+    struct Sprite *hgssCursorCorners[HGSS_RIBBON_CURSOR_CORNERS];
     u32 unused;
     u8 tilemapBuffers[2][BG_SCREEN_SIZE];
 };
@@ -80,6 +84,8 @@ static void PrintRibbbonsSummaryMonInfo(struct Pokenav_RibbonsSummaryMenu *);
 static void PrintRibbonsMonListIndex(struct Pokenav_RibbonsSummaryMenu *);
 static void DrawPokeGearRibbonGridFrame(u16);
 static void DrawPokeGearRibbonSelectionFocus(struct Pokenav_RibbonsSummaryMenu *, bool8);
+static void CreateHgssRibbonCursor(struct Pokenav_RibbonsSummaryMenu *);
+static void DestroyHgssRibbonCursor(struct Pokenav_RibbonsSummaryMenu *);
 static void DrawPokeGearRibbonDetailPanel(u16);
 static void DrawPokeGearRibbonMonCard(u16);
 static void DrawPokeGearRibbonIndexCard(u16);
@@ -562,6 +568,7 @@ void FreeRibbonsSummaryScreen2(void)
     FreeSpritePaletteByTag(PALTAG_RIBBON_ICONS_3);
     FreeSpritePaletteByTag(PALTAG_RIBBON_ICONS_4);
     FreeSpritePaletteByTag(PALTAG_RIBBON_ICONS_5);
+    DestroyHgssRibbonCursor(menu);
     FreeSpriteOamMatrix(menu->bigRibbonSprite);
     DestroySprite(menu->bigRibbonSprite);
     FreePokenavSubstruct(POKENAV_SUBSTRUCT_RIBBONS_SUMMARY_MENU);
@@ -647,6 +654,7 @@ static u32 LoopedTask_OpenRibbonsSummaryMenu(s32 state)
         if (!IsDma3ManagerBusyWithBgCopy())
         {
             CreateBigRibbonSprite(menu);
+            CreateHgssRibbonCursor(menu);
             ChangeBgX(1, 0, BG_COORD_SET);
             ChangeBgY(1, 0, BG_COORD_SET);
             ChangeBgX(2, 0, BG_COORD_SET);
@@ -845,30 +853,85 @@ static void DrawPokeGearRibbonGridFrame(u16 windowId)
     FillWindowPixelRect(windowId, PIXEL_FILL(6), width - 10, 4, 5, 2);
 }
 
+// Reuse the verified HGSS Pokégear selection-corner pixels and palette.
+static const u32 sHgssRibbonCursorTiles[] = INCBIN_U32("graphics/gen4_ui/hgss_pokegear/cursor_corner.4bpp");
+static const u16 sHgssRibbonCursorPalette[] = INCBIN_U16("graphics/gen4_ui/hgss_pokegear/cursor_corner.gbapal");
+
+static const struct SpriteSheet sHgssRibbonCursorSheet =
+{
+    .data = sHgssRibbonCursorTiles,
+    .size = sizeof(sHgssRibbonCursorTiles),
+    .tag = GFXTAG_HGSS_RIBBON_CURSOR,
+};
+
+static const struct SpritePalette sHgssRibbonCursorPal =
+{
+    .data = sHgssRibbonCursorPalette,
+    .tag = PALTAG_HGSS_RIBBON_CURSOR,
+};
+
+static const struct OamData sHgssRibbonCursorOam =
+{
+    .affineMode = ST_OAM_AFFINE_OFF,
+    .objMode = ST_OAM_OBJ_NORMAL,
+    .bpp = ST_OAM_4BPP,
+    .shape = SPRITE_SHAPE(16x16),
+    .size = SPRITE_SIZE(16x16),
+    .priority = 0,
+};
+
+static const struct SpriteTemplate sHgssRibbonCursorTemplate =
+{
+    .tileTag = GFXTAG_HGSS_RIBBON_CURSOR,
+    .paletteTag = PALTAG_HGSS_RIBBON_CURSOR,
+    .oam = &sHgssRibbonCursorOam,
+};
+
+static void CreateHgssRibbonCursor(struct Pokenav_RibbonsSummaryMenu *menu)
+{
+    u32 i;
+    LoadSpriteSheet(&sHgssRibbonCursorSheet);
+    LoadSpritePalette(&sHgssRibbonCursorPal);
+    for (i = 0; i < HGSS_RIBBON_CURSOR_CORNERS; i++)
+    {
+        u8 id = CreateSprite(&sHgssRibbonCursorTemplate, 0, 0, 0);
+        menu->hgssCursorCorners[i] = id == MAX_SPRITES ? NULL : &gSprites[id];
+        if (menu->hgssCursorCorners[i] != NULL)
+        {
+            menu->hgssCursorCorners[i]->invisible = TRUE;
+            menu->hgssCursorCorners[i]->oam.hFlip = (i & 2) != 0;
+            menu->hgssCursorCorners[i]->oam.vFlip = (i & 1) != 0;
+        }
+    }
+}
+
+static void DestroyHgssRibbonCursor(struct Pokenav_RibbonsSummaryMenu *menu)
+{
+    u32 i;
+    for (i = 0; i < HGSS_RIBBON_CURSOR_CORNERS; i++)
+        if (menu->hgssCursorCorners[i] != NULL)
+            DestroySprite(menu->hgssCursorCorners[i]);
+    FreeSpriteTilesByTag(GFXTAG_HGSS_RIBBON_CURSOR);
+    FreeSpritePaletteByTag(PALTAG_HGSS_RIBBON_CURSOR);
+}
+
 static void DrawPokeGearRibbonSelectionFocus(struct Pokenav_RibbonsSummaryMenu *menu, bool8 show)
 {
     u32 position = GetSelectedPosition();
-    u8 x = (position % RIBBONS_PER_ROW) * 16 + 8;
-    u8 y = (position / RIBBONS_PER_ROW) * 16 + 8;
-    u16 windowId = menu->gridFrameWindowId;
+    s32 x = (position % RIBBONS_PER_ROW) * 16 + 96;
+    s32 y = (position / RIBBONS_PER_ROW) * 16 + 40;
+    u32 i;
 
-    DrawPokeGearRibbonGridFrame(windowId);
-
-    if (show)
+    // The four authentic corners frame the selected 16x16 ribbon icon.
+    for (i = 0; i < HGSS_RIBBON_CURSOR_CORNERS; i++)
     {
-        // Gen 4 inspection focus: gold corner brackets with a cyan locator tick.
-        FillWindowPixelRect(windowId, PIXEL_FILL(6), x, y, 6, 2);
-        FillWindowPixelRect(windowId, PIXEL_FILL(6), x, y, 2, 6);
-        FillWindowPixelRect(windowId, PIXEL_FILL(6), x + 10, y, 6, 2);
-        FillWindowPixelRect(windowId, PIXEL_FILL(6), x + 14, y, 2, 6);
-        FillWindowPixelRect(windowId, PIXEL_FILL(6), x, y + 14, 6, 2);
-        FillWindowPixelRect(windowId, PIXEL_FILL(6), x, y + 10, 2, 6);
-        FillWindowPixelRect(windowId, PIXEL_FILL(6), x + 10, y + 14, 6, 2);
-        FillWindowPixelRect(windowId, PIXEL_FILL(6), x + 14, y + 10, 2, 6);
-        FillWindowPixelRect(windowId, PIXEL_FILL(0), x + 7, y - 2, 2, 2);
+        struct Sprite *corner = menu->hgssCursorCorners[i];
+        if (corner == NULL)
+            continue;
+        corner->x = x + ((i & 2) ? 8 : -8);
+        corner->y = y + ((i & 1) ? 8 : -8);
+        corner->invisible = !show;
     }
-
-    CopyWindowToVram(windowId, COPYWIN_GFX);
 }
 
 static void DrawPokeGearRibbonDetailPanel(u16 windowId)
