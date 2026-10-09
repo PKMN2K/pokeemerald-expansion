@@ -5,6 +5,7 @@ on:
     branches:
       - master
       - upcoming
+      - feature/gen4-ui-renderer
   pull_request:
 
 concurrency:
