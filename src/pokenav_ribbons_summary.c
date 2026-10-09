@@ -948,16 +948,9 @@ static void DrawPokeGearRibbonSelectionFocus(struct Pokenav_RibbonsSummaryMenu *
 
 static void DrawPokeGearRibbonDetailPanel(u16 windowId)
 {
-    u8 width = GetWindowAttribute(windowId, WINDOW_WIDTH) * 8;
-    u8 height = GetWindowAttribute(windowId, WINDOW_HEIGHT) * 8;
-
+    // Clear previous text without drawing a fabricated HGSS-style bevel.
+    // The authentic HGSS ribbon-details surface has not yet been wired.
     FillWindowPixelBuffer(windowId, PIXEL_FILL(4));
-    FillWindowPixelRect(windowId, PIXEL_FILL(1), 3, 0, width - 6, 1);
-    FillWindowPixelRect(windowId, PIXEL_FILL(1), 0, 3, 1, height - 6);
-    FillWindowPixelRect(windowId, PIXEL_FILL(5), 3, height - 1, width - 6, 1);
-    FillWindowPixelRect(windowId, PIXEL_FILL(5), width - 1, 3, 1, height - 6);
-    FillWindowPixelRect(windowId, PIXEL_FILL(6), 5, 4, 3, height - 8);
-    FillWindowPixelRect(windowId, PIXEL_FILL(9), 10, 3, width - 15, 1);
 }
 
 static void DrawPokeGearRibbonMonCard(u16 windowId)
