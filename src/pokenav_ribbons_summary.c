@@ -854,7 +854,13 @@ static void DrawPokeGearRibbonSelectionFocus(struct Pokenav_RibbonsSummaryMenu *
 
     DrawPokeGearRibbonGridFrame(windowId);
 
-    if (show)
+    // The gift-ribbon row may sit below this 10-tile-high frame.
+    // Never draw the focus brackets beyond the window pixel buffer.
+    if (show
+     && x >= 2
+     && y >= 2
+     && x + 16 <= GetWindowAttribute(windowId, WINDOW_WIDTH) * 8
+     && y + 16 <= GetWindowAttribute(windowId, WINDOW_HEIGHT) * 8)
     {
         // Gen 4 inspection focus: gold corner brackets with a cyan locator tick.
         FillWindowPixelRect(windowId, PIXEL_FILL(6), x, y, 6, 2);
