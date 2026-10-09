@@ -880,11 +880,24 @@ static const struct OamData sHgssRibbonCursorOam =
     .priority = 0,
 };
 
+static const union AnimCmd sHgssRibbonCursorAnim[] =
+{
+    ANIMCMD_FRAME(0, 1),
+    ANIMCMD_END,
+};
+
+static const union AnimCmd *const sHgssRibbonCursorAnims[] =
+{
+    sHgssRibbonCursorAnim,
+};
+
 static const struct SpriteTemplate sHgssRibbonCursorTemplate =
 {
     .tileTag = GFXTAG_HGSS_RIBBON_CURSOR,
     .paletteTag = PALTAG_HGSS_RIBBON_CURSOR,
     .oam = &sHgssRibbonCursorOam,
+    .anims = sHgssRibbonCursorAnims,
+    .callback = SpriteCallbackDummy,
 };
 
 static void CreateHgssRibbonCursor(struct Pokenav_RibbonsSummaryMenu *menu)
