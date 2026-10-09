@@ -955,15 +955,9 @@ static void DrawPokeGearRibbonDetailPanel(u16 windowId)
 
 static void DrawPokeGearRibbonMonCard(u16 windowId)
 {
-    u8 width = GetWindowAttribute(windowId, WINDOW_WIDTH) * 8;
-    u8 height = GetWindowAttribute(windowId, WINDOW_HEIGHT) * 8;
-
+    // Retain the readable name/level text surface without fabricated chrome.
+    // No retail HGSS ribbon-summary card art has been imported for this window.
     FillWindowPixelBuffer(windowId, PIXEL_FILL(1));
-    FillWindowPixelRect(windowId, PIXEL_FILL(5), 3, 0, width - 6, 1);
-    FillWindowPixelRect(windowId, PIXEL_FILL(5), 0, 3, 1, height - 6);
-    FillWindowPixelRect(windowId, PIXEL_FILL(6), 3, height - 1, width - 6, 1);
-    FillWindowPixelRect(windowId, PIXEL_FILL(6), width - 1, 3, 1, height - 6);
-    FillWindowPixelRect(windowId, PIXEL_FILL(3), 5, 2, width - 10, 1);
 }
 
 static void DrawPokeGearRibbonIndexCard(u16 windowId)
