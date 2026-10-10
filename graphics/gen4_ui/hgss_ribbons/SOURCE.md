@@ -84,3 +84,25 @@ index must not be conflated.
 
 This narrows the archival tracing target to the ribbon scene's resource
 registration/override path; it does not yet authorize asset extraction.
+
+
+## Ribbon scene resource ID 39 traced to its initial archive (2026-10-10)
+
+Retail `asm/unk_0208B1AC.s` function `sub_0208B1AC` initializes its
+sprite system with the resource database set `_02103A2C`, then calls
+`sub_0200D294` to register those resources. Later,
+`sub_0208C250` passes **resource ID 0x27 (39)** to
+`SpriteSystem_ReplaceCharResObj`, with the selected ribbon's NCGR
+number obtained from `GetRibbonAttr(ribbon, RIBBONDAT_NCGR)`.
+
+Crucially, `pret/pokeheartgold/files/data/resdat/resdat_00000054.json`
+maps character-resource IDs **39, 40, 41, and 42** to
+**`NARC_a_1_6_2`, file 76** as the *initial* character resource.
+This provides a concrete archive candidate for the ribbon graphics:
+`NARC_a_1_6_2` (filesystem archive `a/1/6/2`).
+
+**Remaining verification:** the replace function's archive-selection
+semantics must be confirmed before equating the initial member 76's
+archive with the replacement NCGR members 72–119. The corresponding
+palette source and retail ribbon-summary background are also not yet
+verified. Do not import arbitrary members or replace live assets yet.
