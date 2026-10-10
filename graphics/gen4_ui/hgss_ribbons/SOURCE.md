@@ -60,3 +60,27 @@ must be traced before extracting members 72–119.
 
 Source inspected: `pret/pokeheartgold/asm/unk_0208B1AC.s`,
 `sub_0208C250`. Existing Emerald ribbon graphics remain untouched.
+
+
+## Sprite resource database cross-check (2026-10-10)
+
+The same retail ribbon consumer `asm/unk_0208B1AC.s` embeds a
+resource-database list at `_02103A2C`:
+`NARC_resdat_resdat_00000054` (character),
+`NARC_resdat_resdat_00000055` (palette),
+`NARC_resdat_resdat_00000053` (cell), and
+`NARC_resdat_resdat_00000052` (animation).
+
+Their corresponding files are
+`files/data/resdat/resdat_00000054.json` (kind `char`),
+`resdat_00000055.json` (kind `pltt`),
+`resdat_00000053.json` (kind `cell`), and
+`resdat_00000052.json` (kind `anim`).
+These are **resource-description tables containing mappings to multiple
+different graphics archives**, not a verified single parent ribbon NARC.
+For example, resdat character records reference both `NARC_a_0_3_9`
+and `NARC_a_1_6_2`. A resource ID, character member ID, and NARC file
+index must not be conflated.
+
+This narrows the archival tracing target to the ribbon scene's resource
+registration/override path; it does not yet authorize asset extraction.
