@@ -42,3 +42,21 @@ Identify the specific retail HGSS graphics archive referenced by the
 ribbon-summary screen, extract its NCGR/NCLR and screen geometry,
 verify the binary source provenance, then import assets before altering
 the existing functional ribbon presentation.
+
+
+## Retail ribbon sprite consumer verified (2026-10-10)
+
+The HeartGold decomp's `asm/unk_0208B1AC.s`, function `sub_0208C250`,
+calls `GetRibbonAttr(ribbon, 1)` for the NCGR member and passes that
+member to `SpriteSystem_ReplaceCharResObj`. It separately calls
+`GetRibbonAttr(ribbon, 2)` for the NCLR member and passes the result
+to `thunk_Sprite_SetPaletteOverride`.
+
+This verifies the **runtime use** of the ribbon NCGR/NCLR IDs and the
+sprite-resource replacement approach—not the containing archive.
+The immediate value `0x27` in the call is a sprite-resource argument;
+do not assume it identifies a NARC. The parent sprite resource loader
+must be traced before extracting members 72–119.
+
+Source inspected: `pret/pokeheartgold/asm/unk_0208B1AC.s`,
+`sub_0208C250`. Existing Emerald ribbon graphics remain untouched.
