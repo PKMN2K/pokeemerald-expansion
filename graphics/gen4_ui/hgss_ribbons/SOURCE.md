@@ -106,3 +106,34 @@ semantics must be confirmed before equating the initial member 76's
 archive with the replacement NCGR members 72–119. The corresponding
 palette source and retail ribbon-summary background are also not yet
 verified. Do not import arbitrary members or replace live assets yet.
+
+
+## Confirmed retail ribbon-icon archive — correction (2026-10-10)
+
+**The live ribbon replacement archive is `NARC_a_0_3_9` (NARC ID
+`0x27` = 39, filesystem `a/0/3/9`), NOT `NARC_a_1_6_2`.**
+The previous section's `a/1/6/2` mapping applies only to the
+*initial sprite-resource record* in `resdat_00000054.json`.
+It must not be used to extract ribbon icons.
+
+This is confirmed by the function signature in
+`pret/pokeheartgold/src/sprite_system.c`:
+
+`SpriteSystem_ReplaceCharResObj(spriteSystem, spriteManager, narcId,
+fileId, compressed, resId)`
+
+At `sub_0208C250` in `asm/unk_0208B1AC.s`, the ARM calling
+convention binds `r2 = 0x27` to **narcId**, `r3 = GetRibbonAttr(ribbon,
+RIBBONDAT_NCGR)` to **fileId**, stack argument 1 to `compressed = 0`,
+and stack argument 2 to **resId = argument3 + 0x19**. Therefore
+ribbon character members 72–119 are loaded **uncompressed** from
+`NARC_a_0_3_9` by this routine.
+
+The palette value from `GetRibbonAttr(ribbon, RIBBONDAT_NCLR)`
+is used as a **palette override index (value + 7)**; this routine does
+not load a new NCLR per ribbon. The corresponding loaded palette
+resource must be traced separately before mapping NCLR IDs to
+archive files.
+
+**Extraction gate reached for NCGR source identification only.**
+No BG tilemap or palette source has yet been proven by this call.
