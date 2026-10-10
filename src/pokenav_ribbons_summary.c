@@ -962,15 +962,9 @@ static void DrawPokeGearRibbonMonCard(u16 windowId)
 
 static void DrawPokeGearRibbonIndexCard(u16 windowId)
 {
-    u8 width = GetWindowAttribute(windowId, WINDOW_WIDTH) * 8;
-    u8 height = GetWindowAttribute(windowId, WINDOW_HEIGHT) * 8;
-
+    // Keep functional ribbon-list position text without fabricated borders.
+    // Authentic HGSS replacement art for this window remains to be verified.
     FillWindowPixelBuffer(windowId, PIXEL_FILL(4));
-    FillWindowPixelRect(windowId, PIXEL_FILL(1), 3, 0, width - 6, 1);
-    FillWindowPixelRect(windowId, PIXEL_FILL(1), 0, 3, 1, height - 6);
-    FillWindowPixelRect(windowId, PIXEL_FILL(5), 3, height - 1, width - 6, 1);
-    FillWindowPixelRect(windowId, PIXEL_FILL(5), width - 1, 3, 1, height - 6);
-    FillWindowPixelRect(windowId, PIXEL_FILL(6), 4, 3, 2, height - 6);
 }
 
 static void AddRibbonGridFrameWindow(struct Pokenav_RibbonsSummaryMenu *menu)
