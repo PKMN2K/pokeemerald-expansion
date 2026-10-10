@@ -466,3 +466,9 @@ This is runtime plumbing only: no existing map is reassigned, no mining surface 
 `CurrentMapUsesPrismOlcanTileset()` now reports whether the active map layout is using any approved Olcan Isle/Chine Morning, Day, or Night secondary tileset.
 
 This remains runtime plumbing only. It does not assign maps, alter palette timing, expand mining terrain, or change mining rewards. It gives later Olcan-specific palette/debug/map logic one direct current-map check.
+
+## Prism mining terrain family ID
+
+`GetPrismMiningTilesetFamily()` now classifies an approved Prism mining secondary tileset as Mound Cave, Firelight Caverns, Kanto Cave, Olcan, or none. `IsPrismMiningTileset()` delegates to that classifier so the approved terrain list has a single source of truth.
+
+This does not add new terrain, assign maps, or change mining rewards. It prepares later project-owned mining behavior and diagnostics to distinguish the four accepted terrain families without repeating tileset pointer comparisons.
