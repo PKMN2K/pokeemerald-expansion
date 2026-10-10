@@ -95,12 +95,23 @@ bool32 IsPrismOlcanTileset(const struct Tileset *tileset)
 // Identifies the complete, intentionally limited PKMN 2K Prism mining
 // secondary-tileset pool. Keep this centralized so later map/debug logic does
 // not need to duplicate the approved terrain list.
+enum PrismMiningTilesetFamily GetPrismMiningTilesetFamily(const struct Tileset *tileset)
+{
+    if (tileset == &gTileset_PrismMoundCave)
+        return PRISM_MINING_TILESET_MOUND_CAVE;
+    if (tileset == &gTileset_PrismFirelightCaverns)
+        return PRISM_MINING_TILESET_FIRELIGHT_CAVERNS;
+    if (tileset == &gTileset_PrismKantoCave)
+        return PRISM_MINING_TILESET_KANTO_CAVE;
+    if (IsPrismOlcanTileset(tileset))
+        return PRISM_MINING_TILESET_OLCAN;
+
+    return PRISM_MINING_TILESET_NONE;
+}
+
 bool32 IsPrismMiningTileset(const struct Tileset *tileset)
 {
-    return tileset == &gTileset_PrismMoundCave
-        || tileset == &gTileset_PrismFirelightCaverns
-        || tileset == &gTileset_PrismKantoCave
-        || IsPrismOlcanTileset(tileset);
+    return GetPrismMiningTilesetFamily(tileset) != PRISM_MINING_TILESET_NONE;
 }
 
 bool32 CurrentMapUsesPrismMiningTileset(void)
