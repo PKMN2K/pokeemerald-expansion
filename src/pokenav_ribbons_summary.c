@@ -819,38 +819,10 @@ static const struct WindowTemplate sRibbonGridFrameWindowTemplate =
 
 static void DrawPokeGearRibbonGridFrame(u16 windowId)
 {
-    u8 width = GetWindowAttribute(windowId, WINDOW_WIDTH) * 8;
-    u8 height = GetWindowAttribute(windowId, WINDOW_HEIGHT) * 8;
-    u32 x;
-    u32 y;
-
-    FillWindowPixelBuffer(windowId, PIXEL_FILL(4));
-
-    // HGSS-style medal case: bright upper/left edge with darker lower/right bevel.
-    FillWindowPixelRect(windowId, PIXEL_FILL(1), 4, 0, width - 8, 2);
-    FillWindowPixelRect(windowId, PIXEL_FILL(1), 0, 4, 2, height - 8);
-    FillWindowPixelRect(windowId, PIXEL_FILL(5), 4, height - 2, width - 8, 2);
-    FillWindowPixelRect(windowId, PIXEL_FILL(5), width - 2, 4, 2, height - 8);
-    FillWindowPixelRect(windowId, PIXEL_FILL(9), 6, 4, width - 12, 1);
-    FillWindowPixelRect(windowId, PIXEL_FILL(9), 4, 6, 1, height - 12);
-
-    // Subtle 16x16 medal slots aligned with the existing ribbon icon positions.
-    for (x = 8; x < 152; x += 16)
-    {
-        FillWindowPixelRect(windowId, PIXEL_FILL(10), x, 8, 1, height - 16);
-        if (x + 15 < width)
-            FillWindowPixelRect(windowId, PIXEL_FILL(3), x + 15, 8, 1, height - 16);
-    }
-
-    for (y = 8; y < height - 8; y += 16)
-    {
-        FillWindowPixelRect(windowId, PIXEL_FILL(10), 8, y, width - 16, 1);
-        if (y + 15 < height)
-            FillWindowPixelRect(windowId, PIXEL_FILL(3), 8, y + 15, width - 16, 1);
-    }
-
-    // Gold status LED / medal accent.
-    FillWindowPixelRect(windowId, PIXEL_FILL(6), width - 10, 4, 5, 2);
+    // No retail HGSS ribbon-grid chrome is verified for this window.
+    // Transparent pixels preserve the existing BG presentation and ribbon icons,
+    // rather than substituting programmatically drawn medal-case artwork.
+    FillWindowPixelBuffer(windowId, PIXEL_FILL(0));
 }
 
 // Reuse the verified HGSS Pokégear selection-corner pixels and palette.
