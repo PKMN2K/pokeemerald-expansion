@@ -137,3 +137,21 @@ archive files.
 
 **Extraction gate reached for NCGR source identification only.**
 No BG tilemap or palette source has yet been proven by this call.
+
+
+## Retail ROM extraction gate completed (2026-10-10)
+
+A user-provided USA HeartGold NDS was parsed via the NitroFS file table.
+File `a/0/3/9` is a valid NARC containing **137 members**.
+Members **72–119** (48 files) were extracted without changing bytes.
+Their Nintendo DS character graphics signatures begin with `RGCN`.
+An independently packaged extraction contains all 48 originals and a
+JSON manifest recording file indices, sizes, and SHA-256 checksums.
+
+This confirms the original ribbon-character archive and member range
+against an actual retail ROM, in addition to the source-code loader trace.
+The source archive and PNG conversion are not yet committed to the
+repository. **Do not wire these NCGRs to the live GBA interface until
+the retail palette-source mapping, conversion constraints, and ribbon
+layout are verified.** The initial character-resource archive `a/1/6/2`
+is distinct from the ribbon replacement archive `a/0/3/9`.
