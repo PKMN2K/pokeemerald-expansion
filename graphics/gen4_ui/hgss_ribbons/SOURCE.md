@@ -412,3 +412,41 @@ Original sources:
 `ObjPlttTransfer_InitFromTemplate`,
 `ObjPlttTransfer_ReserveAndTransfer_HandleExtPltt`,
 `ObjPlttTransferTask_ReserveBlocks`.
+
+
+## Palette resource order yields a testable ribbon-bank hypothesis (2026-10-11)
+
+`resdat_00000055.json` provides the following ordered entries;
+the two `extra` values are the resource's VRAM selector and palette
+count used by the sprite resource loader:
+
+| Resource | VRAM selector | Palette count | Archive / member |
+| --- | ---: | ---: | --- |
+| 0 | 3 | 3 | a/1/6/2:61 |
+| 1 | 2 | 3 | a/0/0/8:74 |
+| 3 | 1 | 1 | a/0/3/9:65 |
+| 4 | 2 | 1 | graphic/plist/gra:23 |
+| 5 | 2 | 5 | a/0/3/9:136 |
+| 6 | 1 | 1 | a/1/6/2:49 |
+| 7 | 1 | 2 | a/1/6/2:65 |
+| 8 | 2 | 3 | poketool/icongra/poke_icon:0 |
+| 9 | 2 | 1 | a/1/6/2:3 |
+
+**New hypothesis:** if resources 0, 1, 4, and 5 all use the
+*same* sub-screen palette allocation pool, their consecutive
+bank ranges are 0–2, 3–5, 6, and **7–11**, respectively.
+That aligns exactly with the ribbon sprite override
+`RIBBONDAT_NCLR + 7` (0–4 variations) and the **five populated
+banks** of NCLR `a/0/3/9` member **136**.
+This is strong corroboration that member 136 carries the ribbon
+colours, **despite** the ribbon sprite header linking resource 8
+for its default palette proxy. A palette override can select
+another loaded bank.
+
+**Not yet fully proven:** the allocation routine keeps *separate*
+standard and extended palette cursors. Inspect each resource's
+`bExtendedPlt` flag and loader classification to establish that
+these particular resources indeed share the same pool; check
+bank-to-pixel colour matching before enabling replacement.
+The NCLR format fields differ (member 136 reports 4; icon member
+0 reports 3), so do not silently assume a shared pool.
