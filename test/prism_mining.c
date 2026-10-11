@@ -24,8 +24,8 @@ TEST("Only approved Prism mining tilesets are recognized as mining terrain")
     EXPECT(IsPrismMiningTileset(&gTileset_PrismKantoCave));
     EXPECT(IsPrismMiningTileset(&gTileset_PrismOlcanIsleDay));
 
-    EXPECT_FALSE(IsPrismMiningTileset(&gTileset_General));
-    EXPECT_FALSE(IsPrismMiningTileset(NULL));
+    EXPECT_EQ(IsPrismMiningTileset(&gTileset_General), FALSE);
+    EXPECT_EQ(IsPrismMiningTileset(NULL), FALSE);
     EXPECT_EQ(GetPrismMiningTilesetFamily(&gTileset_General), PRISM_MINING_TILESET_NONE);
     EXPECT_EQ(GetPrismMiningTilesetFamily(NULL), PRISM_MINING_TILESET_NONE);
 }
