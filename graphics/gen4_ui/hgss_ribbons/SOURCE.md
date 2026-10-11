@@ -473,3 +473,27 @@ to assert the final absolute palette-bank positions.
 
 This finding narrows conversion to five authentic 16-colour palettes
 without claiming that the final runtime bank indices are proven.
+
+
+## NCLR palette-mode fields checked against retail binaries (2026-10-11)
+
+Byte-for-byte extraction archives were re-inspected. In the
+Nintendo DS NCLR/TTLP data header, the 32-bit palette format field
+at file offset `0x18` reads **4** for `a/0/3/9` member **136**,
+and **3** for member **65** and
+`pbr/poke_icon.narc` member **0**. The 32-bit extended palette
+flag at file offset `0x1C` is **0 for all three**. Consequently,
+the candidate ribbon colours in member 136 are in the **standard**
+OBJ palette allocation pool, *not* the extended pool. The loader
+named `HandleExtPltt` handles both cases and selects the pool
+using `bExtendedPlt` (`src/obj_pltt_transfer.c`).
+
+The earlier note describing the ribbon palette as necessarily
+"extended OBJ" should be read as identifying the *transfer
+function*, not proof that its NCLR is flagged as an extended palette.
+
+The hypothesis of resource 5 starting at standard sub-screen bank
+7 remains contingent on the standard/extended flags and VRAM
+destinations for the *preceding* palette resources 0, 1, and 4.
+Do not promote that bank offset to confirmed until those binary
+resources have been examined. No game artwork or colours changed.
