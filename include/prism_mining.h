@@ -17,6 +17,7 @@ const struct Tileset *GetPrismOlcanChineTilesetForCurrentTime(void);
 const struct Tileset *ResolvePrismOlcanTilesetForCurrentTime(const struct Tileset *tileset);
 bool32 IsPrismOlcanTileset(const struct Tileset *tileset);
 enum PrismMiningTilesetFamily GetPrismMiningTilesetFamily(const struct Tileset *tileset);
+enum PrismMiningTilesetFamily GetCurrentPrismMiningTilesetFamily(void);
 bool32 IsPrismMiningTileset(const struct Tileset *tileset);
 bool32 CurrentMapUsesPrismMiningTileset(void);
 bool32 CurrentMapUsesPrismOlcanTileset(void);
