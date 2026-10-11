@@ -55,6 +55,7 @@
 #include "constants/pokedex.h"
 #include "constants/pokemon.h"
 #include "constants/pokemon_size_record.h"
+#include "constants/prism_mining.h"
 #include "constants/random_mon_generation.h"
 #include "constants/rtc.h"
 #include "constants/roulette.h"
