@@ -478,3 +478,9 @@ This does not add new terrain, assign maps, or change mining rewards. It prepare
 `GetCurrentPrismMiningTilesetFamily()` now returns the active map's approved Prism mining terrain family—Mound Cave, Firelight Caverns, Kanto Cave, Olcan, or none. `CurrentMapUsesPrismMiningTileset()` now delegates to this getter.
 
 This remains non-gameplay runtime plumbing. It does not assign maps, add mining surfaces, change rewards, or alter eligibility; it simply provides later mining logic and diagnostics with one current-map family value.
+
+## Script-visible mining terrain family
+
+`GetCurrentPrismMiningTilesetFamily` is now registered as an event-script special. Scripts can use `specialvar VAR_RESULT, GetCurrentPrismMiningTilesetFamily` to obtain the active approved Prism mining family ID without duplicating C-side tileset checks.
+
+No existing mining event branches on this value yet. This step only exposes the already-established runtime family classification to map/event scripting and does not change rewards, eligibility, terrain, or map assignments.
