@@ -223,3 +223,27 @@ corresponding palettes in the retail ROM. Resource database entries
 `a/0/3/9` member 65 and member 136 alone do not establish which
 one supplies those banks. Avoid pixel conversion or live replacement
 until this mapping is verified.
+
+
+## Palette loading path and ROM binary structure (2026-10-11)
+
+Retail `sub_0208B1AC` calls `sub_0200D294` with the
+`_02103A2C` resdat list. `src/sprite_system.c` defines this
+function as a call to `SpriteSystem_LoadResourceDataFromFilepaths`
+with character load mode 2 and palette load mode 1. Therefore the
+ribbon scene initializes palette resources from the matching PLTT
+resdat; it is not loading every NCLR in the graphics NARC.
+
+Direct binary inspection of the extracted original NCLR members **65**
+and **136** confirms each has Nintendo DS `RLCN` / `TTLP`
+sections, a total size of **552 bytes**, and **512 bytes of palette
+payload** (256 15-bit colors, capacity for 16 four-bit palette banks).
+That is enough capacity for the runtime ribbon `NCLR attribute + 7`
+index but does **not** establish the OBJ palette allocation offsets
+or which of the two is used. Do not treat this as proof of a ribbon
+palette file-to-bank assignment.
+
+Next verification requires tracing `SpriteSystem_LoadResourceDataFromFilepaths`
+through palette VRAM transfer and the ribbon sprite resource header,
+or validating a controlled retail render. Do not replace the live
+Emerald palette on a capacity inference.
