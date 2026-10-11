@@ -4,6 +4,7 @@
 #include "tilesets.h"
 #include "constants/rtc.h"
 #include "constants/items.h"
+#include "constants/prism_mining.h"
 
 // PKMN 2K mining eligibility hook.
 //
@@ -91,6 +92,12 @@ bool32 IsPrismOlcanTileset(const struct Tileset *tileset)
         || tileset == &gTileset_PrismOlcanChineDay
         || tileset == &gTileset_PrismOlcanChineNight;
 }
+
+STATIC_ASSERT(PRISM_MINING_TILESET_NONE == PRISM_MINING_FAMILY_NONE, PrismMiningFamilyNoneMatchesScript);
+STATIC_ASSERT(PRISM_MINING_TILESET_MOUND_CAVE == PRISM_MINING_FAMILY_MOUND_CAVE, PrismMiningFamilyMoundMatchesScript);
+STATIC_ASSERT(PRISM_MINING_TILESET_FIRELIGHT_CAVERNS == PRISM_MINING_FAMILY_FIRELIGHT_CAVERNS, PrismMiningFamilyFirelightMatchesScript);
+STATIC_ASSERT(PRISM_MINING_TILESET_KANTO_CAVE == PRISM_MINING_FAMILY_KANTO_CAVE, PrismMiningFamilyKantoMatchesScript);
+STATIC_ASSERT(PRISM_MINING_TILESET_OLCAN == PRISM_MINING_FAMILY_OLCAN, PrismMiningFamilyOlcanMatchesScript);
 
 // Identifies the complete, intentionally limited PKMN 2K Prism mining
 // secondary-tileset pool. Keep this centralized so later map/debug logic does
