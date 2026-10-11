@@ -174,3 +174,28 @@ override mapping remain to be established from the ribbon scene code.
 Do not import any of these palette members as the authoritative
 ribbon palette until the scene's palette-loader path is verified;
 the current functional Emerald ribbon graphics remain unchanged.
+
+
+## Retail palette resource mapping narrowed (2026-10-11)
+
+The ribbon scene initializes its palette resource collection through
+`resdat_00000055.json`, sourced by `_02103A2C` in
+`asm/unk_0208B1AC.s`. This database explicitly maps:
+- Palette resource **ID 3** -> `NARC_a_0_3_9` member **65**;
+- Palette resource **ID 5** -> `NARC_a_0_3_9` member **136**.
+
+These two NCLR members are therefore **confirmed scene-loaded palette
+resource candidates**, not merely arbitrary palettes sharing the archive.
+The selected ribbon's `RIBBONDAT_NCLR` value is passed to
+`thunk_Sprite_SetPaletteOverride` as `value + 7` in
+`sub_0208C250`. That is a palette-bank selection, **not a NARC file
+index or a separate NCLR load**. Which palette resource supplies the
+banks selected by that override requires the scene sprite palette
+allocation trace or an original-ROM render check.
+
+`sub_0208B48C` separately calls `SpriteSystem_ReplacePlttResObj`
+using NARC ID `0xA2` (162), for a different changing resource; this
+must **not** be misclassified as the ribbon palette source.
+
+Keep both 65 and 136 unchanged and unassigned until the active
+palette-bank mapping is verified. No synthetic or recolored sprites.
