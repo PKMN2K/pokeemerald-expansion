@@ -641,3 +641,4 @@ gSpecials::
 	def_special MiningCanInteract
 	def_special MiningApplyAttemptCost
 	def_special MiningRollCustomReward
+	def_special GetCurrentPrismMiningTilesetFamily
