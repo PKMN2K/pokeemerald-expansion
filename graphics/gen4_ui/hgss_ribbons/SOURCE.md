@@ -155,3 +155,22 @@ repository. **Do not wire these NCGRs to the live GBA interface until
 the retail palette-source mapping, conversion constraints, and ribbon
 layout are verified.** The initial character-resource archive `a/1/6/2`
 is distinct from the ribbon replacement archive `a/0/3/9`.
+
+
+## Retail archive palette inventory (2026-10-11)
+
+Direct inspection of the uploaded USA HeartGold ROM's
+`a/0/3/9` archive confirms it contains **137 members**, including
+**nine raw NCLR (`RLCN` magic) palette files** at member indices:
+`1, 14, 37, 38, 39, 40, 65, 69, 136`.
+
+All nine NCLR member payloads were extracted byte-for-byte to a
+separate downloadable verification package with member-number and
+SHA-256 manifest. This is an **archive inventory**, not proof that all
+nine palettes belong to ribbons or that a particular NCLR is the live
+ribbon palette. The precise loaded palette resource and index +7
+override mapping remain to be established from the ribbon scene code.
+
+Do not import any of these palette members as the authoritative
+ribbon palette until the scene's palette-loader path is verified;
+the current functional Emerald ribbon graphics remain unchanged.
