@@ -380,3 +380,35 @@ bank lookup.
 Do not derive a GBA ribbon palette from empty banks or pretend
 the final ribbon colours are confirmed. NCGR character extraction
 remains verified; live Emerald art remains unchanged.
+
+
+## Extended palette bank allocation algorithm verified (2026-10-11)
+
+Retail `src/obj_pltt_transfer.c` establishes **sequential,
+32-byte-per-bank palette allocation**, tracked independently for
+main and sub screens. `ObjPlttTransfer_InitFromTemplate` reads
+`template->plttNum` as each resource's bank count.
+`ObjPlttTransfer_ReserveAndTransfer_HandleExtPltt` chooses
+`extPosMain` or `extPosSub` for extended palettes, and
+`ObjPlttTransferTask_ReserveBlocks` increments the selected
+position by `plttSize * 32`. The standard-palette path uses
+`posMain`/`posSub` separately, so one must distinguish
+extended and standard resources when computing bank numbers.
+
+**Consequence:** The ribbon's runtime palette override index
+`7 + RIBBONDAT_NCLR` can refer to the global allocated sprite
+palette slots, not banks numbered from zero inside its *own*
+NCLR file. The empty banks 7+ in `poke_icon.narc` member 0
+therefore do not prove that the source ribbon colours are missing.
+To assign exact colours, reconstruct the ordering, per-resource
+`plttNum`, extended palette flags, and main/sub VRAM destination
+for the palette objects in `resdat_00000055` during scene
+initialization, then compare against retail render output.
+Do **not** assume a particular palette resource solely from the
+sprite header or bank index.
+
+Original sources:
+`pret/pokeheartgold/src/obj_pltt_transfer.c`:
+`ObjPlttTransfer_InitFromTemplate`,
+`ObjPlttTransfer_ReserveAndTransfer_HandleExtPltt`,
+`ObjPlttTransferTask_ReserveBlocks`.
