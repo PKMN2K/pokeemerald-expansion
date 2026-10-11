@@ -490,3 +490,9 @@ No existing mining event branches on this value yet. This step only exposes the 
 The existing `CurrentMapUsesPrismMiningTileset()` and `CurrentMapUsesPrismOlcanTileset()` helpers are now registered as event-script specials. Scripts can call either through `specialvar VAR_RESULT, ...` and branch on a simple boolean result without hard-coding terrain-family numbers.
 
 This does not change the live mining interaction, map assignments, rewards, eligibility, or terrain scope. It only exposes the already-tested current-map classifiers to event scripting.
+
+## Named event-script mining family constants
+
+Event scripts now include `constants/prism_mining.h`, exposing symbolic family IDs: `PRISM_MINING_FAMILY_NONE`, `PRISM_MINING_FAMILY_MOUND_CAVE`, `PRISM_MINING_FAMILY_FIRELIGHT_CAVERNS`, `PRISM_MINING_FAMILY_KANTO_CAVE`, and `PRISM_MINING_FAMILY_OLCAN`.
+
+Compile-time assertions in `src/prism_mining.c` verify these script-facing values remain synchronized with the C `PrismMiningTilesetFamily` enum. Future scripts can therefore branch on named constants after `GetCurrentPrismMiningTilesetFamily` without embedding raw numeric IDs.
