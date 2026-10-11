@@ -273,3 +273,31 @@ sprite's assigned PLTT resource/header to the palette-bank indices.
 `resdat_00000085` and resolve which PLTT resource is referenced
 by ribbon character resource 39, then determine compatible GBA
 palettization without changing the authentic pixels.
+
+
+## Ribbon sprite header palette assignment confirmed (2026-10-11)
+
+Retail `pret/pokeheartgold/files/data/resdat/resdat_00000085.json`
+contains the ribbon scene's sprite resource headers. The entries with
+character graphics IDs **38, 39, 40, 41, 42, and 43** each select:
+`palette: 8`, `cell: 4`, `anim: 4`, and priority 3.
+In particular, the ribbon sprite's **graphics resource 39** uses
+**palette resource ID 8**, not palette resource 3 or 5.
+
+The palette resource database `resdat_00000055.json` maps ID **8**
+to `NARC_poketool_icongra_poke_icon`, file **0**, uncompressed.
+Thus the sprite resource header links ribbon sprites to the
+**Pokémon icon graphics archive palette resource**, while
+`sub_0208C250` overrides the displayed sprite palette index with
+`GetRibbonAttr(ribbon, RIBBONDAT_NCLR) + 7`.
+
+**Correction to prior candidates:** `a/0/3/9` NCLR members 65 and
+136 are scene-loaded palette resources 3 and 5, but they are **not**
+the palette resource referenced by the ribbon sprite's resdat header.
+Do not assume they are the final ribbon palettes.
+
+Remaining verification: determine how palette indices 7+ map to
+loaded OBJ extended palettes, and examine the actual colours in
+`poketool/icongra/poke_icon` file 0. Verify whether the ribbon
+override intentionally selects palette slots outside the linked
+resource before deriving GBA-compatible ribbon palettes.
