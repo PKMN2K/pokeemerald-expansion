@@ -324,3 +324,28 @@ ribbon colours: the override index and resource transfer allocation
 must be tested against the actual NCLR bytes.
 
 No synthetic palette or artwork has been generated.
+
+
+## Header-linked icon palette extracted and inspected (2026-10-11)
+
+Retail `NARC_poketool_icongra_poke_icon` member **0**, mapped from
+ribbon sprite PLTT resource **8** by `resdat_00000055.json`, was
+extracted directly from the supplied HeartGold ROM as an unchanged
+552-byte `RLCN`/`TTLP` NCLR resource.
+
+SHA-256 of original member 0:
+`96d45b21044626a1975b92065a9a40115975f4bb53d2a64301dc747553549a84`.
+
+Its TTLP section contains 512 bytes / 256 little-endian RGB555
+entries, naturally divisible into sixteen 16-colour palettes. First
+bank begins with RGB555 values `1e69, 3a10, 5ef7, 7fff`.
+No colours were synthesized, recoloured, or palette-quantized.
+A separate local extraction archive contains the original NCLR.
+
+This proves the **binary palette asset linked by the retail ribbon
+sprite resource header**. However, verifying *which of its 16 banks*
+is physically addressed by the runtime `nclrId + 7` override still
+requires tracing the palette transfer/proxy offset or checking a
+retail render. A header link alone does not prove all ribbon sprite
+pixels display using this NCLR's bank `7 + nclrId` without an
+offset. Live Emerald ribbon assets remain unchanged.
