@@ -642,3 +642,5 @@ gSpecials::
 	def_special MiningApplyAttemptCost
 	def_special MiningRollCustomReward
 	def_special GetCurrentPrismMiningTilesetFamily
+	def_special CurrentMapUsesPrismMiningTileset
+	def_special CurrentMapUsesPrismOlcanTileset
