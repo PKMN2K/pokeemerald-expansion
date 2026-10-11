@@ -301,3 +301,26 @@ loaded OBJ extended palettes, and examine the actual colours in
 `poketool/icongra/poke_icon` file 0. Verify whether the ribbon
 override intentionally selects palette slots outside the linked
 resource before deriving GBA-compatible ribbon palettes.
+
+
+## Sprite-resource palette transfer implementation (2026-10-11)
+
+Retail `src/sprite_transfer.c` confirms that the palette-loader branch
+calls `SpriteTransfer_CreateAllExtPlttTransferTasks` for every populated
+PLTT resource. Each resource supplies its own `plttData`,
+`vram`, `resId`, and `plttNum` to
+`ObjPlttTransfer_CreateTaskAndDoTransferFromTemplate_HandleExtPltt`.
+The conversion must not assume the ribbon palette indices correspond
+directly to palette-file indices or contiguous banks in arbitrary
+NCLR members.
+
+The sprite header `resdat_00000085` ties graphics resources 38-43,
+including the ribbon's replacement resource 39, to PLTT resource
+**8**. `resdat_00000055` identifies resource 8 as
+`NARC_poketool_icongra_poke_icon`, member **0**.
+This is the explicit header-linked palette to inspect and export next.
+It is not enough by itself to conclude that member 0 contains all
+ribbon colours: the override index and resource transfer allocation
+must be tested against the actual NCLR bytes.
+
+No synthetic palette or artwork has been generated.
