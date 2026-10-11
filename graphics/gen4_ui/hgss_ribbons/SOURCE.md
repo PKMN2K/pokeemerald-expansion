@@ -247,3 +247,29 @@ Next verification requires tracing `SpriteSystem_LoadResourceDataFromFilepaths`
 through palette VRAM transfer and the ribbon sprite resource header,
 or validating a controlled retail render. Do not replace the live
 Emerald palette on a capacity inference.
+
+
+## Extended OBJ palette transfer confirmed (2026-10-11)
+
+The retail source `pret/pokeheartgold/src/sprite_system.c` resolves
+`sub_0200D294` to `SpriteSystem_LoadResourceDataFromFilepaths(..., 2, 1)`.
+Its actual `loadPlttMode == 1` branch invokes
+`SpriteTransfer_CreateAllExtPlttTransferTasks`, rather than
+`SpriteTransfer_CreateAllPlttTransferTasks` (mode 0).
+The ribbon scene therefore registers its PLTT resdat graphics in the
+**extended OBJ palette transfer path**. This is an important portability
+constraint: the original DS 16-bank palette data and palette-index
+override cannot simply be transplanted into GBA OBJ palette memory,
+which lacks equivalent extended OBJ palette behavior.
+
+The loader obtains the `resdat` archives via `NARC_data_resdat`,
+initializes sprite resource objects with
+`LoadAll2DGfxResObjsFromHeader`, and finally creates the sprite
+resource headers. Existing source data identifies PLTT resources 3
+(member 65) and 5 (member 136), but does not yet tie the ribbon
+sprite's assigned PLTT resource/header to the palette-bank indices.
+
+**Next gate:** inspect the retail resource-header mapping
+`resdat_00000085` and resolve which PLTT resource is referenced
+by ribbon character resource 39, then determine compatible GBA
+palettization without changing the authentic pixels.
