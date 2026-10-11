@@ -199,3 +199,27 @@ must **not** be misclassified as the ribbon palette source.
 
 Keep both 65 and 136 unchanged and unassigned until the active
 palette-bank mapping is verified. No synthetic or recolored sprites.
+
+
+## Runtime ribbon palette-bank calculation verified (2026-10-11)
+
+Retail `asm/unk_0208B1AC.s`, `sub_0208C250`, calls
+`GetRibbonAttr(ribbon, RIBBONDAT_NCLR)` then passes `nclrId + 7`
+to `thunk_Sprite_SetPaletteOverride` for the corresponding ribbon
+sprite. This same function uses a ribbon-dependent NCGR member and
+replaces its sprite character resource from `NARC_a_0_3_9`.
+
+Retail `src/sprite.c` implements `Sprite_SetPaletteOverride` by
+setting the sprite's `palIndex` and its palette-override flag.
+Thus `+7` is the in-memory sprite palette index, **not** a file
+number, and must not be read as member `7 + nclrId` of
+`a/0/3/9`. The ribbon screen shows at most **nine** ribbon sprites
+at a time in the two paths `sub_0208C2A0` and `sub_0208C320`;
+those functions call `sub_0208C250` on the displayed ribbon slots.
+
+Remaining verification: map the populated OBJ palette banks used by
+indices `7 + nclrId` to the loaded NCLR payload(s) and confirm the
+corresponding palettes in the retail ROM. Resource database entries
+`a/0/3/9` member 65 and member 136 alone do not establish which
+one supplies those banks. Avoid pixel conversion or live replacement
+until this mapping is verified.
