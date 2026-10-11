@@ -450,3 +450,26 @@ these particular resources indeed share the same pool; check
 bank-to-pixel colour matching before enabling replacement.
 The NCLR format fields differ (member 136 reports 4; icon member
 0 reports 3), so do not silently assume a shared pool.
+
+
+## Palette count and destination originate in resource metadata (2026-10-11)
+
+Retail `src/unk_0200A090.c` confirms that
+`GetResourceExtraPlttData` obtains the unpacked NCLR palette pointer
+through `NNS_G2dGetUnpackedPaletteData`, and copies the resource
+database's VRAM selector and palette count into the palette resource.
+`GF2DGfxResObj_GetPlttNum` returns this stored `pltt_num`, not
+a count inferred from NCLR binary length. The sprite transfer loader
+then passes these metadata values to the transfer task.
+
+For the proposed ribbon colour palette (`a/0/3/9` member 136,
+resource ID 5), `resdat_00000055` declares VRAM selector **2** and
+palette count **5**. These are confirmed configuration values for
+the retail loader, and the same member contains five populated banks.
+The remaining question is whether the NCLR's unpacked
+`bExtendedPlt` flag routes this through the extended or standard
+allocation cursor. The resource ID order alone is not sufficient
+to assert the final absolute palette-bank positions.
+
+This finding narrows conversion to five authentic 16-colour palettes
+without claiming that the final runtime bank indices are proven.
