@@ -484,3 +484,9 @@ This remains non-gameplay runtime plumbing. It does not assign maps, add mining 
 `GetCurrentPrismMiningTilesetFamily` is now registered as an event-script special. Scripts can use `specialvar VAR_RESULT, GetCurrentPrismMiningTilesetFamily` to obtain the active approved Prism mining family ID without duplicating C-side tileset checks.
 
 No existing mining event branches on this value yet. This step only exposes the already-established runtime family classification to map/event scripting and does not change rewards, eligibility, terrain, or map assignments.
+
+## Script-visible mining map checks
+
+The existing `CurrentMapUsesPrismMiningTileset()` and `CurrentMapUsesPrismOlcanTileset()` helpers are now registered as event-script specials. Scripts can call either through `specialvar VAR_RESULT, ...` and branch on a simple boolean result without hard-coding terrain-family numbers.
+
+This does not change the live mining interaction, map assignments, rewards, eligibility, or terrain scope. It only exposes the already-tested current-map classifiers to event scripting.
