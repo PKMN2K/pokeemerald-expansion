@@ -472,3 +472,9 @@ This remains runtime plumbing only. It does not assign maps, alter palette timin
 `GetPrismMiningTilesetFamily()` now classifies an approved Prism mining secondary tileset as Mound Cave, Firelight Caverns, Kanto Cave, Olcan, or none. `IsPrismMiningTileset()` delegates to that classifier so the approved terrain list has a single source of truth.
 
 This does not add new terrain, assign maps, or change mining rewards. It prepares later project-owned mining behavior and diagnostics to distinguish the four accepted terrain families without repeating tileset pointer comparisons.
+
+## Current-map mining terrain family
+
+`GetCurrentPrismMiningTilesetFamily()` now returns the active map's approved Prism mining terrain family—Mound Cave, Firelight Caverns, Kanto Cave, Olcan, or none. `CurrentMapUsesPrismMiningTileset()` now delegates to this getter.
+
+This remains non-gameplay runtime plumbing. It does not assign maps, add mining surfaces, change rewards, or alter eligibility; it simply provides later mining logic and diagnostics with one current-map family value.
