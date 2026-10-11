@@ -349,3 +349,34 @@ requires tracing the palette transfer/proxy offset or checking a
 retail render. A header link alone does not prove all ribbon sprite
 pixels display using this NCLR's bank `7 + nclrId` without an
 offset. Live Emerald ribbon assets remain unchanged.
+
+
+## Direct retail palette extraction and important bank mismatch (2026-10-11)
+
+The USA HeartGold ROM NitroFS path `pbr/poke_icon.narc`
+contains a NARC of **540 members**. Its member **0** was extracted
+byte-for-byte; this matches the `poke_icon` resource named by PLTT
+resdat resource **8** in the ribbon sprite header.
+
+Extracted member 0 is a **552-byte NCLR** with `RLCN` /
+`TTLP` sections and **256 16-bit colour entries**. A SHA-256
+manifest accompanies the preserved original binary in the extraction
+package `HGSS_ribbon_header_palette_resource8.zip`.
+
+**Crucial finding:** after parsing its 40-byte NCLR header, the
+sixteen 16-colour banks have populated nonzero colour values only in
+banks **0–2**. Banks **3–15** are entirely zero. Therefore palette
+override values `7 + RIBBONDAT_NCLR` **cannot be naively indexed**
+into these member-0 banks to obtain the ribbon colours.
+
+Cross-check of `a/0/3/9` NCLR members 65 and 136 likewise finds
+nonzero colours only in banks 0 and 0–4 respectively. This supports
+the distinction between the sprite header's resource reference and
+the ultimate **allocated/combined extended OBJ palette index**.
+The override must be resolved through resource allocation and
+potentially other palette loads rather than simple direct member
+bank lookup.
+
+Do not derive a GBA ribbon palette from empty banks or pretend
+the final ribbon colours are confirmed. NCGR character extraction
+remains verified; live Emerald art remains unchanged.
