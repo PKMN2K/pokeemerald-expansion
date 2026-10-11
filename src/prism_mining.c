@@ -114,12 +114,17 @@ bool32 IsPrismMiningTileset(const struct Tileset *tileset)
     return GetPrismMiningTilesetFamily(tileset) != PRISM_MINING_TILESET_NONE;
 }
 
-bool32 CurrentMapUsesPrismMiningTileset(void)
+enum PrismMiningTilesetFamily GetCurrentPrismMiningTilesetFamily(void)
 {
     if (gMapHeader.mapLayout == NULL)
-        return FALSE;
+        return PRISM_MINING_TILESET_NONE;
 
-    return IsPrismMiningTileset(gMapHeader.mapLayout->secondaryTileset);
+    return GetPrismMiningTilesetFamily(gMapHeader.mapLayout->secondaryTileset);
+}
+
+bool32 CurrentMapUsesPrismMiningTileset(void)
+{
+    return GetCurrentPrismMiningTilesetFamily() != PRISM_MINING_TILESET_NONE;
 }
 
 bool32 CurrentMapUsesPrismOlcanTileset(void)
