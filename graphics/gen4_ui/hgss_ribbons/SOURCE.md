@@ -497,3 +497,44 @@ The hypothesis of resource 5 starting at standard sub-screen bank
 destinations for the *preceding* palette resources 0, 1, and 4.
 Do not promote that bank offset to confirmed until those binary
 resources have been examined. No game artwork or colours changed.
+
+
+## Confirmed ribbon palette allocation from the retail ROM (2026-10-11)
+
+**Extraction gate cleared for the five standard ribbon palette banks.**
+The user-provided USA HeartGold ROM was inspected directly through its
+NitroFS FAT/FNT and the corresponding NARC member tables. The palette
+resources that precede resource 5 in the retail
+`resdat_00000055.json` order were checked by their real NCLR binary
+headers, not inferred from resource names:
+
+| PLTT resource | NitroFS archive / member | VRAM selector | Palette count | NCLR format field | bExtendedPlt |
+| --- | --- | ---: | ---: | ---: | ---: |
+| 0 | `a/1/6/2` / 61 | 3 | 3 | 3 | 0 |
+| 1 | `a/0/0/8` / 74 | 2 | 3 | 3 | 0 |
+| 4 | `pbr/plist_gra.narc` / 23 | 2 | 1 | 3 | 0 |
+| 5 | `a/0/3/9` / 136 | 2 | 5 | 4 | 0 |
+
+The integer flags at NCLR offsets `0x18` (format) and `0x1C`
+(extended) were read directly. All four are standard, not extended,
+palettes; VRAM selector 3 targets both main and sub, while 2 targets
+sub. The retail allocator in `src/obj_pltt_transfer.c` assigns these
+resources sequentially to **standard sub-screen** palette memory,
+32 bytes per 16-colour bank. The resulting allocation is:
+
+- Resource 0: standard sub OBJ banks 0–2
+- Resource 1: standard sub OBJ banks 3–5
+- Resource 4: standard sub OBJ bank 6
+- **Resource 5: standard sub OBJ banks 7–11**
+
+`sub_0208C250` in `asm/unk_0208B1AC.s` sets the visible ribbon
+sprite's palette override to `7 + GetRibbonAttr(ribbon, RIBBONDAT_NCLR)`,
+an exact match to those five banks. Thus the original colour source for
+the five ribbon variants is **NCLR member 136 in `a/0/3/9`**.
+The sprite header's default palette resource 8 does not supersede
+the explicit runtime palette override.
+
+The next phase may decode the verified NCGR members 72–119 using
+member 136's five original 16-colour banks, preserving the original
+pixels and colours. GBA tile/palette limits and in-game presentation
+still need validation before deleting the Emerald equivalents.
