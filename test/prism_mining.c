@@ -29,3 +29,19 @@ TEST("Only approved Prism mining tilesets are recognized as mining terrain")
     EXPECT_EQ(GetPrismMiningTilesetFamily(&gTileset_General), PRISM_MINING_TILESET_NONE);
     EXPECT_EQ(GetPrismMiningTilesetFamily(NULL), PRISM_MINING_TILESET_NONE);
 }
+
+TEST("Prism Olcan tileset detection covers every imported palette variant")
+{
+    EXPECT(IsPrismOlcanTileset(&gTileset_PrismOlcanIsleMorning));
+    EXPECT(IsPrismOlcanTileset(&gTileset_PrismOlcanIsleDay));
+    EXPECT(IsPrismOlcanTileset(&gTileset_PrismOlcanIsleNight));
+    EXPECT(IsPrismOlcanTileset(&gTileset_PrismOlcanChineMorning));
+    EXPECT(IsPrismOlcanTileset(&gTileset_PrismOlcanChineDay));
+    EXPECT(IsPrismOlcanTileset(&gTileset_PrismOlcanChineNight));
+
+    EXPECT_EQ(IsPrismOlcanTileset(&gTileset_PrismMoundCave), FALSE);
+    EXPECT_EQ(IsPrismOlcanTileset(&gTileset_PrismFirelightCaverns), FALSE);
+    EXPECT_EQ(IsPrismOlcanTileset(&gTileset_PrismKantoCave), FALSE);
+    EXPECT_EQ(IsPrismOlcanTileset(&gTileset_General), FALSE);
+    EXPECT_EQ(IsPrismOlcanTileset(NULL), FALSE);
+}
