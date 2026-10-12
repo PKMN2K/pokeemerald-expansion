@@ -194,6 +194,9 @@ jobs:
             tools/mgba-rom-test-hydra/mgba-rom-test-hydra
           key: tools-check-${{ runner.os }}-${{ hashFiles('tools/*/Makefile', 'tools/**/*.c', 'tools/**/*.cpp', 'tools/**/*.h') }}
 
+      - name: Validate Polished Crystal field artwork wiring
+        run: python3 tools/polished_port/scripts/check_field_art_wiring.py
+
       - name: Test
         env:
           GAME_VERSION: EMERALD
