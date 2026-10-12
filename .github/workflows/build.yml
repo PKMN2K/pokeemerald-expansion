@@ -123,6 +123,9 @@ jobs:
           python3 tools/gen4_ui/audit_hgss_pokegear_map_player_marker.py
           python3 tools/gen4_ui/audit_hgss_pokegear_map_fly_frame.py
 
+      - name: Validate imported HGSS ribbon assets
+        run: python3 tools/validate_hgss_ribbon_assets.py
+
       - name: Build Gen 4 UI assets
         run: |
           make -j$(nproc) -O \
