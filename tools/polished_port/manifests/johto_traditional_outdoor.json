@@ -1,0 +1,32 @@
+{
+  "name": "polished_johto_traditional_outdoor",
+  "status": "source_inventory_verified_not_yet_registered",
+  "source": {
+    "repository": "Rangi42/polishedcrystal",
+    "commit": "3fa43192379df5c3e7b09a08e4d5d79af4f02f42",
+    "definition": "data/tilesets.asm",
+    "tileset": "TilesetJohto1",
+    "graphics": [
+      "gfx/tilesets/johto_common.png",
+      "gfx/tilesets/johto_traditional.johto_common.2bpp.vram0.lz",
+      "gfx/tilesets/johto_traditional.johto_common.2bpp.vram1.lz"
+    ],
+    "metatiles": "data/tilesets/johto_traditional_metatiles.bin",
+    "attributes": "data/tilesets/johto_traditional_attributes.bin",
+    "collision_declaration": "data/tilesets/johto_traditional_collision.bin.lz"
+  },
+  "target": {
+    "engine": "pokeemerald-expansion 1.17.0",
+    "branch": "polished-crystal-port",
+    "namespace": "polished_johto_traditional",
+    "intended_role": "first playable outdoor vertical slice"
+  },
+  "conversion_requirements": [
+    "Decode original common and variant 2bpp tile banks and preserve source tile order.",
+    "Translate source palette attributes and time-of-day palettes to GBA-compatible 4bpp palettes.",
+    "Translate 2x2 8x8 GBC blocks and collision semantics into Emerald metatiles and behavior bytes.",
+    "Preserve grass, water, door and sign semantics in the first test layout.",
+    "Register the converted tileset only after all referenced binary and palette outputs exist.",
+    "Do not substitute Prism terrain or overwrite existing expansion graphics."
+  ]
+}
