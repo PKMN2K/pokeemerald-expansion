@@ -18,6 +18,7 @@ def load(name):
 def main():
     extractor = load("extract_johto_collision")
     auditor = load("audit_johto_collision_mapping")
+    stager = load("stage_johto_metatile_collision")
     symbols = set(re.findall(r"\bMB_[A-Z0-9_]+\b",
                              (ROOT / "include/constants/metatile_behaviors.h").read_text()))
     unknown = set(auditor.CANDIDATES.values()) - symbols
@@ -46,6 +47,31 @@ def main():
     assert report["physical"]["DOOR"]["classification"] == "requires_map_event_review"
     assert report["physical"]["FLOOR"]["classification"] == "walkable_candidate"
     assert report["physical"]["WATER"]["classification"] == "unresolved"
+
+    staged_source = {
+        "block_count": 253,
+        "missing_blocks_in_256_capacity": [253, 254, 255],
+        "blocks": [
+            {"block": i, "quadrants": {
+                "top_left": "FLOOR",
+                "top_right": "WALL" if i == 0 else "FLOOR",
+                "bottom_left": "DOOR" if i == 0 else "FLOOR",
+                "bottom_right": "FLOOR",
+            }} for i in range(253)
+        ],
+    }
+    staged = stager.stage(staged_source)
+    assert staged["source_block_count"] == 253
+    assert staged["blocks"][0]["quadrants"][1]["physical"] == "blocked"
+    assert staged["blocks"][0]["quadrants"][2]["requires_review"]
+    assert staged["blocks"][0]["quadrants"][0]["emerald_behavior_candidate"] == "MB_NORMAL"
+    assert "attributes" not in staged
+    try:
+        stager.stage({**staged_source, "missing_blocks_in_256_capacity": []})
+    except ValueError:
+        pass
+    else:
+        raise AssertionError("missing block mismatch not rejected")
 
     try:
         extractor.extract("tilecoll FLOOR, FLOOR, FLOOR, FLOOR ; 01\n")
