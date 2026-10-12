@@ -45,3 +45,33 @@ TEST("Prism Olcan tileset detection covers every imported palette variant")
     EXPECT_EQ(IsPrismOlcanTileset(&gTileset_General), FALSE);
     EXPECT_EQ(IsPrismOlcanTileset(NULL), FALSE);
 }
+
+TEST("Current Prism mining map helpers follow the active secondary tileset")
+{
+    const struct MapLayout *savedLayout = gMapHeader.mapLayout;
+    struct MapLayout layout = {0};
+
+    gMapHeader.mapLayout = &layout;
+
+    layout.secondaryTileset = &gTileset_PrismMoundCave;
+    EXPECT_EQ(GetCurrentPrismMiningTilesetFamily(), PRISM_MINING_TILESET_MOUND_CAVE);
+    EXPECT(CurrentMapUsesPrismMiningTileset());
+    EXPECT_EQ(CurrentMapUsesPrismOlcanTileset(), FALSE);
+
+    layout.secondaryTileset = &gTileset_PrismOlcanChineNight;
+    EXPECT_EQ(GetCurrentPrismMiningTilesetFamily(), PRISM_MINING_TILESET_OLCAN);
+    EXPECT(CurrentMapUsesPrismMiningTileset());
+    EXPECT(CurrentMapUsesPrismOlcanTileset());
+
+    layout.secondaryTileset = &gTileset_General;
+    EXPECT_EQ(GetCurrentPrismMiningTilesetFamily(), PRISM_MINING_TILESET_NONE);
+    EXPECT_EQ(CurrentMapUsesPrismMiningTileset(), FALSE);
+    EXPECT_EQ(CurrentMapUsesPrismOlcanTileset(), FALSE);
+
+    gMapHeader.mapLayout = NULL;
+    EXPECT_EQ(GetCurrentPrismMiningTilesetFamily(), PRISM_MINING_TILESET_NONE);
+    EXPECT_EQ(CurrentMapUsesPrismMiningTileset(), FALSE);
+    EXPECT_EQ(CurrentMapUsesPrismOlcanTileset(), FALSE);
+
+    gMapHeader.mapLayout = savedLayout;
+}
