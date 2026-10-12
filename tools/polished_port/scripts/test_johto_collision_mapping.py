@@ -42,6 +42,10 @@ def main():
     assert report["unresolved"]["DOOR"] == 1
     assert "WALL" not in report["candidates"]
     assert "DOOR" not in report["candidates"]
+    assert report["physical"]["WALL"]["classification"] == "blocked"
+    assert report["physical"]["DOOR"]["classification"] == "requires_map_event_review"
+    assert report["physical"]["FLOOR"]["classification"] == "walkable_candidate"
+    assert report["physical"]["WATER"]["classification"] == "unresolved"
 
     try:
         extractor.extract("tilecoll FLOOR, FLOOR, FLOOR, FLOOR ; 01\n")
