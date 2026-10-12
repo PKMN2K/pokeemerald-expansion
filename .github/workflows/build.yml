@@ -197,6 +197,9 @@ jobs:
       - name: Validate Polished Crystal field artwork wiring
         run: python3 tools/polished_port/scripts/check_field_art_wiring.py
 
+      - name: Validate Johto collision mapping audit
+        run: python3 tools/polished_port/scripts/test_johto_collision_mapping.py
+
       - name: Test
         env:
           GAME_VERSION: EMERALD
