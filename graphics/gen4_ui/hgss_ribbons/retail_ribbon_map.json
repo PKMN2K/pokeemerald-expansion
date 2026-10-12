@@ -1,0 +1,567 @@
+{
+  "source": "pret/pokeheartgold/src/ribbon.c sRibbonInfo",
+  "ncgr_archive": "a/0/3/9",
+  "nclr_member": 136,
+  "ribbons": [
+    {
+      "retail_ribbon_index": 0,
+      "save_field": "MON_DATA_CHAMPION_RIBBON",
+      "ncgr_member": 72,
+      "nclr_bank": 0,
+      "filename": "ribbon_ncgr_072_nclr_0.png"
+    },
+    {
+      "retail_ribbon_index": 1,
+      "save_field": "MON_DATA_COOL_RIBBON",
+      "ncgr_member": 73,
+      "nclr_bank": 0,
+      "filename": "ribbon_ncgr_073_nclr_0.png"
+    },
+    {
+      "retail_ribbon_index": 2,
+      "save_field": "MON_DATA_COOL_RIBBON_SUPER",
+      "ncgr_member": 74,
+      "nclr_bank": 0,
+      "filename": "ribbon_ncgr_074_nclr_0.png"
+    },
+    {
+      "retail_ribbon_index": 3,
+      "save_field": "MON_DATA_COOL_RIBBON_HYPER",
+      "ncgr_member": 75,
+      "nclr_bank": 0,
+      "filename": "ribbon_ncgr_075_nclr_0.png"
+    },
+    {
+      "retail_ribbon_index": 4,
+      "save_field": "MON_DATA_COOL_RIBBON_MASTER",
+      "ncgr_member": 76,
+      "nclr_bank": 0,
+      "filename": "ribbon_ncgr_076_nclr_0.png"
+    },
+    {
+      "retail_ribbon_index": 5,
+      "save_field": "MON_DATA_BEAUTY_RIBBON",
+      "ncgr_member": 73,
+      "nclr_bank": 1,
+      "filename": "ribbon_ncgr_073_nclr_1.png"
+    },
+    {
+      "retail_ribbon_index": 6,
+      "save_field": "MON_DATA_BEAUTY_RIBBON_SUPER",
+      "ncgr_member": 74,
+      "nclr_bank": 1,
+      "filename": "ribbon_ncgr_074_nclr_1.png"
+    },
+    {
+      "retail_ribbon_index": 7,
+      "save_field": "MON_DATA_BEAUTY_RIBBON_HYPER",
+      "ncgr_member": 75,
+      "nclr_bank": 1,
+      "filename": "ribbon_ncgr_075_nclr_1.png"
+    },
+    {
+      "retail_ribbon_index": 8,
+      "save_field": "MON_DATA_BEAUTY_RIBBON_MASTER",
+      "ncgr_member": 76,
+      "nclr_bank": 1,
+      "filename": "ribbon_ncgr_076_nclr_1.png"
+    },
+    {
+      "retail_ribbon_index": 9,
+      "save_field": "MON_DATA_CUTE_RIBBON",
+      "ncgr_member": 73,
+      "nclr_bank": 2,
+      "filename": "ribbon_ncgr_073_nclr_2.png"
+    },
+    {
+      "retail_ribbon_index": 10,
+      "save_field": "MON_DATA_CUTE_RIBBON_SUPER",
+      "ncgr_member": 74,
+      "nclr_bank": 2,
+      "filename": "ribbon_ncgr_074_nclr_2.png"
+    },
+    {
+      "retail_ribbon_index": 11,
+      "save_field": "MON_DATA_CUTE_RIBBON_HYPER",
+      "ncgr_member": 75,
+      "nclr_bank": 2,
+      "filename": "ribbon_ncgr_075_nclr_2.png"
+    },
+    {
+      "retail_ribbon_index": 12,
+      "save_field": "MON_DATA_CUTE_RIBBON_MASTER",
+      "ncgr_member": 76,
+      "nclr_bank": 2,
+      "filename": "ribbon_ncgr_076_nclr_2.png"
+    },
+    {
+      "retail_ribbon_index": 13,
+      "save_field": "MON_DATA_SMART_RIBBON",
+      "ncgr_member": 73,
+      "nclr_bank": 3,
+      "filename": "ribbon_ncgr_073_nclr_3.png"
+    },
+    {
+      "retail_ribbon_index": 14,
+      "save_field": "MON_DATA_SMART_RIBBON_SUPER",
+      "ncgr_member": 74,
+      "nclr_bank": 3,
+      "filename": "ribbon_ncgr_074_nclr_3.png"
+    },
+    {
+      "retail_ribbon_index": 15,
+      "save_field": "MON_DATA_SMART_RIBBON_HYPER",
+      "ncgr_member": 75,
+      "nclr_bank": 3,
+      "filename": "ribbon_ncgr_075_nclr_3.png"
+    },
+    {
+      "retail_ribbon_index": 16,
+      "save_field": "MON_DATA_SMART_RIBBON_MASTER",
+      "ncgr_member": 76,
+      "nclr_bank": 3,
+      "filename": "ribbon_ncgr_076_nclr_3.png"
+    },
+    {
+      "retail_ribbon_index": 17,
+      "save_field": "MON_DATA_TOUGH_RIBBON",
+      "ncgr_member": 73,
+      "nclr_bank": 4,
+      "filename": "ribbon_ncgr_073_nclr_4.png"
+    },
+    {
+      "retail_ribbon_index": 18,
+      "save_field": "MON_DATA_TOUGH_RIBBON_SUPER",
+      "ncgr_member": 74,
+      "nclr_bank": 4,
+      "filename": "ribbon_ncgr_074_nclr_4.png"
+    },
+    {
+      "retail_ribbon_index": 19,
+      "save_field": "MON_DATA_TOUGH_RIBBON_HYPER",
+      "ncgr_member": 75,
+      "nclr_bank": 4,
+      "filename": "ribbon_ncgr_075_nclr_4.png"
+    },
+    {
+      "retail_ribbon_index": 20,
+      "save_field": "MON_DATA_TOUGH_RIBBON_MASTER",
+      "ncgr_member": 76,
+      "nclr_bank": 4,
+      "filename": "ribbon_ncgr_076_nclr_4.png"
+    },
+    {
+      "retail_ribbon_index": 21,
+      "save_field": "MON_DATA_WINNING_RIBBON",
+      "ncgr_member": 78,
+      "nclr_bank": 0,
+      "filename": "ribbon_ncgr_078_nclr_0.png"
+    },
+    {
+      "retail_ribbon_index": 22,
+      "save_field": "MON_DATA_VICTORY_RIBBON",
+      "ncgr_member": 77,
+      "nclr_bank": 0,
+      "filename": "ribbon_ncgr_077_nclr_0.png"
+    },
+    {
+      "retail_ribbon_index": 23,
+      "save_field": "MON_DATA_ARTIST_RIBBON",
+      "ncgr_member": 79,
+      "nclr_bank": 1,
+      "filename": "ribbon_ncgr_079_nclr_1.png"
+    },
+    {
+      "retail_ribbon_index": 24,
+      "save_field": "MON_DATA_EFFORT_RIBBON",
+      "ncgr_member": 80,
+      "nclr_bank": 2,
+      "filename": "ribbon_ncgr_080_nclr_2.png"
+    },
+    {
+      "retail_ribbon_index": 25,
+      "save_field": "MON_DATA_MARINE_RIBBON",
+      "ncgr_member": 81,
+      "nclr_bank": 1,
+      "filename": "ribbon_ncgr_081_nclr_1.png"
+    },
+    {
+      "retail_ribbon_index": 26,
+      "save_field": "MON_DATA_LAND_RIBBON",
+      "ncgr_member": 81,
+      "nclr_bank": 3,
+      "filename": "ribbon_ncgr_081_nclr_3.png"
+    },
+    {
+      "retail_ribbon_index": 27,
+      "save_field": "MON_DATA_SKY_RIBBON",
+      "ncgr_member": 81,
+      "nclr_bank": 4,
+      "filename": "ribbon_ncgr_081_nclr_4.png"
+    },
+    {
+      "retail_ribbon_index": 28,
+      "save_field": "MON_DATA_COUNTRY_RIBBON",
+      "ncgr_member": 82,
+      "nclr_bank": 3,
+      "filename": "ribbon_ncgr_082_nclr_3.png"
+    },
+    {
+      "retail_ribbon_index": 29,
+      "save_field": "MON_DATA_NATIONAL_RIBBON",
+      "ncgr_member": 82,
+      "nclr_bank": 4,
+      "filename": "ribbon_ncgr_082_nclr_4.png"
+    },
+    {
+      "retail_ribbon_index": 30,
+      "save_field": "MON_DATA_EARTH_RIBBON",
+      "ncgr_member": 83,
+      "nclr_bank": 0,
+      "filename": "ribbon_ncgr_083_nclr_0.png"
+    },
+    {
+      "retail_ribbon_index": 31,
+      "save_field": "MON_DATA_WORLD_RIBBON",
+      "ncgr_member": 83,
+      "nclr_bank": 1,
+      "filename": "ribbon_ncgr_083_nclr_1.png"
+    },
+    {
+      "retail_ribbon_index": 32,
+      "save_field": "MON_DATA_SINNOH_CHAMP_RIBBON",
+      "ncgr_member": 88,
+      "nclr_bank": 0,
+      "filename": "ribbon_ncgr_088_nclr_0.png"
+    },
+    {
+      "retail_ribbon_index": 33,
+      "save_field": "MON_DATA_SUPER_COOL_RIBBON",
+      "ncgr_member": 89,
+      "nclr_bank": 0,
+      "filename": "ribbon_ncgr_089_nclr_0.png"
+    },
+    {
+      "retail_ribbon_index": 34,
+      "save_field": "MON_DATA_SUPER_COOL_RIBBON_GREAT",
+      "ncgr_member": 90,
+      "nclr_bank": 0,
+      "filename": "ribbon_ncgr_090_nclr_0.png"
+    },
+    {
+      "retail_ribbon_index": 35,
+      "save_field": "MON_DATA_SUPER_COOL_RIBBON_ULTRA",
+      "ncgr_member": 91,
+      "nclr_bank": 0,
+      "filename": "ribbon_ncgr_091_nclr_0.png"
+    },
+    {
+      "retail_ribbon_index": 36,
+      "save_field": "MON_DATA_SUPER_COOL_RIBBON_MASTER",
+      "ncgr_member": 92,
+      "nclr_bank": 0,
+      "filename": "ribbon_ncgr_092_nclr_0.png"
+    },
+    {
+      "retail_ribbon_index": 37,
+      "save_field": "MON_DATA_SUPER_BEAUTY_RIBBON",
+      "ncgr_member": 89,
+      "nclr_bank": 1,
+      "filename": "ribbon_ncgr_089_nclr_1.png"
+    },
+    {
+      "retail_ribbon_index": 38,
+      "save_field": "MON_DATA_SUPER_BEAUTY_RIBBON_GREAT",
+      "ncgr_member": 90,
+      "nclr_bank": 1,
+      "filename": "ribbon_ncgr_090_nclr_1.png"
+    },
+    {
+      "retail_ribbon_index": 39,
+      "save_field": "MON_DATA_SUPER_BEAUTY_RIBBON_ULTRA",
+      "ncgr_member": 91,
+      "nclr_bank": 1,
+      "filename": "ribbon_ncgr_091_nclr_1.png"
+    },
+    {
+      "retail_ribbon_index": 40,
+      "save_field": "MON_DATA_SUPER_BEAUTY_RIBBON_MASTER",
+      "ncgr_member": 92,
+      "nclr_bank": 1,
+      "filename": "ribbon_ncgr_092_nclr_1.png"
+    },
+    {
+      "retail_ribbon_index": 41,
+      "save_field": "MON_DATA_SUPER_CUTE_RIBBON",
+      "ncgr_member": 89,
+      "nclr_bank": 2,
+      "filename": "ribbon_ncgr_089_nclr_2.png"
+    },
+    {
+      "retail_ribbon_index": 42,
+      "save_field": "MON_DATA_SUPER_CUTE_RIBBON_GREAT",
+      "ncgr_member": 90,
+      "nclr_bank": 2,
+      "filename": "ribbon_ncgr_090_nclr_2.png"
+    },
+    {
+      "retail_ribbon_index": 43,
+      "save_field": "MON_DATA_SUPER_CUTE_RIBBON_ULTRA",
+      "ncgr_member": 91,
+      "nclr_bank": 2,
+      "filename": "ribbon_ncgr_091_nclr_2.png"
+    },
+    {
+      "retail_ribbon_index": 44,
+      "save_field": "MON_DATA_SUPER_CUTE_RIBBON_MASTER",
+      "ncgr_member": 92,
+      "nclr_bank": 2,
+      "filename": "ribbon_ncgr_092_nclr_2.png"
+    },
+    {
+      "retail_ribbon_index": 45,
+      "save_field": "MON_DATA_SUPER_SMART_RIBBON",
+      "ncgr_member": 89,
+      "nclr_bank": 3,
+      "filename": "ribbon_ncgr_089_nclr_3.png"
+    },
+    {
+      "retail_ribbon_index": 46,
+      "save_field": "MON_DATA_SUPER_SMART_RIBBON_GREAT",
+      "ncgr_member": 90,
+      "nclr_bank": 3,
+      "filename": "ribbon_ncgr_090_nclr_3.png"
+    },
+    {
+      "retail_ribbon_index": 47,
+      "save_field": "MON_DATA_SUPER_SMART_RIBBON_ULTRA",
+      "ncgr_member": 91,
+      "nclr_bank": 3,
+      "filename": "ribbon_ncgr_091_nclr_3.png"
+    },
+    {
+      "retail_ribbon_index": 48,
+      "save_field": "MON_DATA_SUPER_SMART_RIBBON_MASTER",
+      "ncgr_member": 92,
+      "nclr_bank": 3,
+      "filename": "ribbon_ncgr_092_nclr_3.png"
+    },
+    {
+      "retail_ribbon_index": 49,
+      "save_field": "MON_DATA_SUPER_TOUGH_RIBBON",
+      "ncgr_member": 89,
+      "nclr_bank": 4,
+      "filename": "ribbon_ncgr_089_nclr_4.png"
+    },
+    {
+      "retail_ribbon_index": 50,
+      "save_field": "MON_DATA_SUPER_TOUGH_RIBBON_GREAT",
+      "ncgr_member": 90,
+      "nclr_bank": 4,
+      "filename": "ribbon_ncgr_090_nclr_4.png"
+    },
+    {
+      "retail_ribbon_index": 51,
+      "save_field": "MON_DATA_SUPER_TOUGH_RIBBON_ULTRA",
+      "ncgr_member": 91,
+      "nclr_bank": 4,
+      "filename": "ribbon_ncgr_091_nclr_4.png"
+    },
+    {
+      "retail_ribbon_index": 52,
+      "save_field": "MON_DATA_SUPER_TOUGH_RIBBON_MASTER",
+      "ncgr_member": 92,
+      "nclr_bank": 4,
+      "filename": "ribbon_ncgr_092_nclr_4.png"
+    },
+    {
+      "retail_ribbon_index": 53,
+      "save_field": "MON_DATA_ABILITY_RIBBON",
+      "ncgr_member": 93,
+      "nclr_bank": 0,
+      "filename": "ribbon_ncgr_093_nclr_0.png"
+    },
+    {
+      "retail_ribbon_index": 54,
+      "save_field": "MON_DATA_GREAT_ABILITY_RIBBON",
+      "ncgr_member": 94,
+      "nclr_bank": 0,
+      "filename": "ribbon_ncgr_094_nclr_0.png"
+    },
+    {
+      "retail_ribbon_index": 55,
+      "save_field": "MON_DATA_DOUBLE_ABILITY_RIBBON",
+      "ncgr_member": 95,
+      "nclr_bank": 0,
+      "filename": "ribbon_ncgr_095_nclr_0.png"
+    },
+    {
+      "retail_ribbon_index": 56,
+      "save_field": "MON_DATA_MULTI_ABILITY_RIBBON",
+      "ncgr_member": 96,
+      "nclr_bank": 0,
+      "filename": "ribbon_ncgr_096_nclr_0.png"
+    },
+    {
+      "retail_ribbon_index": 57,
+      "save_field": "MON_DATA_PAIR_ABILITY_RIBBON",
+      "ncgr_member": 97,
+      "nclr_bank": 0,
+      "filename": "ribbon_ncgr_097_nclr_0.png"
+    },
+    {
+      "retail_ribbon_index": 58,
+      "save_field": "MON_DATA_WORLD_ABILITY_RIBBON",
+      "ncgr_member": 98,
+      "nclr_bank": 0,
+      "filename": "ribbon_ncgr_098_nclr_0.png"
+    },
+    {
+      "retail_ribbon_index": 59,
+      "save_field": "MON_DATA_ALERT_RIBBON",
+      "ncgr_member": 99,
+      "nclr_bank": 2,
+      "filename": "ribbon_ncgr_099_nclr_2.png"
+    },
+    {
+      "retail_ribbon_index": 60,
+      "save_field": "MON_DATA_SHOCK_RIBBON",
+      "ncgr_member": 100,
+      "nclr_bank": 0,
+      "filename": "ribbon_ncgr_100_nclr_0.png"
+    },
+    {
+      "retail_ribbon_index": 61,
+      "save_field": "MON_DATA_DOWNCAST_RIBBON",
+      "ncgr_member": 101,
+      "nclr_bank": 1,
+      "filename": "ribbon_ncgr_101_nclr_1.png"
+    },
+    {
+      "retail_ribbon_index": 62,
+      "save_field": "MON_DATA_CARELESS_RIBBON",
+      "ncgr_member": 102,
+      "nclr_bank": 2,
+      "filename": "ribbon_ncgr_102_nclr_2.png"
+    },
+    {
+      "retail_ribbon_index": 63,
+      "save_field": "MON_DATA_RELAX_RIBBON",
+      "ncgr_member": 103,
+      "nclr_bank": 3,
+      "filename": "ribbon_ncgr_103_nclr_3.png"
+    },
+    {
+      "retail_ribbon_index": 64,
+      "save_field": "MON_DATA_SNOOZE_RIBBON",
+      "ncgr_member": 104,
+      "nclr_bank": 0,
+      "filename": "ribbon_ncgr_104_nclr_0.png"
+    },
+    {
+      "retail_ribbon_index": 65,
+      "save_field": "MON_DATA_SMILE_RIBBON",
+      "ncgr_member": 105,
+      "nclr_bank": 2,
+      "filename": "ribbon_ncgr_105_nclr_2.png"
+    },
+    {
+      "retail_ribbon_index": 66,
+      "save_field": "MON_DATA_GORGEOUS_RIBBON",
+      "ncgr_member": 106,
+      "nclr_bank": 1,
+      "filename": "ribbon_ncgr_106_nclr_1.png"
+    },
+    {
+      "retail_ribbon_index": 67,
+      "save_field": "MON_DATA_ROYAL_RIBBON",
+      "ncgr_member": 107,
+      "nclr_bank": 3,
+      "filename": "ribbon_ncgr_107_nclr_3.png"
+    },
+    {
+      "retail_ribbon_index": 68,
+      "save_field": "MON_DATA_GORGEOUS_ROYAL_RIBBON",
+      "ncgr_member": 108,
+      "nclr_bank": 0,
+      "filename": "ribbon_ncgr_108_nclr_0.png"
+    },
+    {
+      "retail_ribbon_index": 69,
+      "save_field": "MON_DATA_FOOTPRINT_RIBBON",
+      "ncgr_member": 109,
+      "nclr_bank": 0,
+      "filename": "ribbon_ncgr_109_nclr_0.png"
+    },
+    {
+      "retail_ribbon_index": 70,
+      "save_field": "MON_DATA_RECORD_RIBBON",
+      "ncgr_member": 110,
+      "nclr_bank": 1,
+      "filename": "ribbon_ncgr_110_nclr_1.png"
+    },
+    {
+      "retail_ribbon_index": 71,
+      "save_field": "MON_DATA_HISTORY_RIBBON",
+      "ncgr_member": 111,
+      "nclr_bank": 3,
+      "filename": "ribbon_ncgr_111_nclr_3.png"
+    },
+    {
+      "retail_ribbon_index": 72,
+      "save_field": "MON_DATA_LEGEND_RIBBON",
+      "ncgr_member": 112,
+      "nclr_bank": 0,
+      "filename": "ribbon_ncgr_112_nclr_0.png"
+    },
+    {
+      "retail_ribbon_index": 73,
+      "save_field": "MON_DATA_RED_RIBBON",
+      "ncgr_member": 113,
+      "nclr_bank": 0,
+      "filename": "ribbon_ncgr_113_nclr_0.png"
+    },
+    {
+      "retail_ribbon_index": 74,
+      "save_field": "MON_DATA_GREEN_RIBBON",
+      "ncgr_member": 114,
+      "nclr_bank": 3,
+      "filename": "ribbon_ncgr_114_nclr_3.png"
+    },
+    {
+      "retail_ribbon_index": 75,
+      "save_field": "MON_DATA_BLUE_RIBBON",
+      "ncgr_member": 115,
+      "nclr_bank": 1,
+      "filename": "ribbon_ncgr_115_nclr_1.png"
+    },
+    {
+      "retail_ribbon_index": 76,
+      "save_field": "MON_DATA_FESTIVAL_RIBBON",
+      "ncgr_member": 116,
+      "nclr_bank": 1,
+      "filename": "ribbon_ncgr_116_nclr_1.png"
+    },
+    {
+      "retail_ribbon_index": 77,
+      "save_field": "MON_DATA_CARNIVAL_RIBBON",
+      "ncgr_member": 117,
+      "nclr_bank": 0,
+      "filename": "ribbon_ncgr_117_nclr_0.png"
+    },
+    {
+      "retail_ribbon_index": 78,
+      "save_field": "MON_DATA_CLASSIC_RIBBON",
+      "ncgr_member": 118,
+      "nclr_bank": 1,
+      "filename": "ribbon_ncgr_118_nclr_1.png"
+    },
+    {
+      "retail_ribbon_index": 79,
+      "save_field": "MON_DATA_PREMIER_RIBBON",
+      "ncgr_member": 119,
+      "nclr_bank": 0,
+      "filename": "ribbon_ncgr_119_nclr_0.png"
+    }
+  ]
+}
