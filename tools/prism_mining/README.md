@@ -44,9 +44,13 @@ Excluded:
 - Every imported asset group gets a manifest recording source, frame layout, target path, and retained runtime behavior.
 - CI must build the same shared ROM after each committed integration step.
 
-## Next extraction pass
+## Migration status
 
-Identify and verify the first self-contained non-player mining visual group (rock/wall state plus any break effect) from the v0.95.0254 source/ROM before wiring it into Expansion.
+The authentic Pokémon Prism mining-asset migration is **complete for the approved project scope**.
+
+The final imported mining terrain pool is Firelight Caverns, Kanto Cave, Mound Cave, and Olcan Isle/Chine. CAVE2-CAVE7 and TILESET_SIDESCROLL are intentionally excluded. The source audit found no dedicated Prism mining pickaxe animation, debris/dust effect, ore/gem/fossil reveal graphic, or mining-specific item-reveal animation still waiting to be imported.
+
+Remaining work is project-specific gameplay or deployment rather than Prism asset migration: choosing which maps use these tilesets and, when desired, defining PKMN 2K reward, eligibility, and attempt-cost behavior.
 
 
 ## Mound Cave mining tileset (tileset 21)
@@ -393,7 +397,7 @@ No additional Pokémon Prism mining terrain or mineable surface tilesets are to 
 
 The existing imported terrain pool—Firelight Caverns, Kanto Cave, Mound Cave, and Olcan Isle—is the final mining-surface set for this project. Previously skipped cave variants and `TILESET_SIDESCROLL` remain excluded, and other Prism tilesets containing `MINING` collision should likewise not be treated as pending surface migration work.
 
-Future Prism mining migration should focus on mining-specific non-terrain assets and integration, such as debris/dust effects, ore/gem/fossil/item-reveal artwork, other non-player mining animation frames, and the mining interaction/mechanics layer.
+The subsequent source audit confirmed that Prism does not provide additional mining-specific non-terrain effect graphics to migrate. Future work should therefore focus on project-owned map assignment and mining gameplay rather than expanding the Prism asset set.
 
 
 ## Prism non-terrain mining artwork audit
@@ -440,7 +444,7 @@ The mining integration now exposes runtime selectors for Olcan Isle and Olcan Ch
 
 `TIME_MORNING` selects the Prism Morning bank, `TIME_DAY` selects Day, and both `TIME_EVENING` and `TIME_NIGHT` select Prism Night because the imported Prism palette set has no separate Evening bank. This does not change `OW_TIMES_OF_DAY` or the project's global clock behavior.
 
-No map uses these selectors yet. The next map-wiring step can call them when choosing an Olcan mining secondary tileset without duplicating palette-selection logic.
+The selector is integrated into the Olcan runtime palette path, including live time-of-day rollover for maps that use an Olcan secondary tileset. Map assignment remains deliberately project-owned and is not performed by this migration.
 
 
 ## Live Olcan palette rollover
