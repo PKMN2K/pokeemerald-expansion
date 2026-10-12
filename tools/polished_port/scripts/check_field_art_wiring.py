@@ -12,8 +12,8 @@ import sys
 
 ROOT = Path(__file__).resolve().parents[3]
 ASSETS = {
-    "walking": ("graphics/object_events/pics/people/polished_chris/walking.png", (32, 32)),
-    "running": ("graphics/object_events/pics/people/polished_chris/running.png", (32, 32)),
+    "walking": ("graphics/object_events/pics/people/polished_chris/walking.png", (144, 32)),
+    "running": ("graphics/object_events/pics/people/polished_chris/running.png", (144, 32)),
     "bike": ("graphics/object_events/pics/people/polished_chris/bike.png", (32, 32)),
     "surfing": ("graphics/object_events/pics/people/polished_chris/surfing.png", (32, 32)),
     "fishing": ("graphics/object_events/pics/people/polished_chris/fishing.png", (32, 32)),
@@ -59,8 +59,8 @@ for name, (path, (frame_w, frame_h)) in ASSETS.items():
         errors.append("invalid PNG header: " + path)
         continue
     w, h = struct.unpack(">II", header[16:24])
-    check(w % frame_w == 0 and h % frame_h == 0,
-          f"{name}: {w}x{h} not aligned to {frame_w}x{frame_h} frames")
+    check((w, h) == (144, 32) if name in ("walking", "running") else (w % frame_w == 0 and h % frame_h == 0),
+          f"{name}: unexpected sheet size {w}x{h}; expected {frame_w}x{frame_h} alignment")
     check((path in graphics) if name not in ("walking", "running") else ("gObjectEventPic_PolishedChrisNormalRunning" in graphics),
           f"{name}: graphic asset not referenced by object-event graphics header")
 
