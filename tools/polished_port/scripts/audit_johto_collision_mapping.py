@@ -75,7 +75,9 @@ def audit(inventory):
         "source_missing_blocks": inventory["missing_blocks_in_256_capacity"],
         "candidates": {symbol: {"emerald": CANDIDATES[symbol], "occurrences": count}
                        for symbol, count in sorted(counts.items()) if symbol in CANDIDATES},
-        "physical": {symbol: {"classification": classify_physical(symbol), "occurrences": count}\n                     for symbol, count in sorted(counts.items())},\n        "unresolved": {symbol: count for symbol, count in sorted(counts.items())
+        "physical": {symbol: {"classification": classify_physical(symbol), "occurrences": count}
+                     for symbol, count in sorted(counts.items())},
+        "unresolved": {symbol: count for symbol, count in sorted(counts.items())
                        if symbol not in CANDIDATES},
         "notes": [
             "Emerald metatile behavior and physical impassability require separate fields.",
