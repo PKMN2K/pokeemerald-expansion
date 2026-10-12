@@ -71,9 +71,9 @@ for name in OBJECT_NAMES:
 
 check("sPicTable_PolishedChrisSurfFishing" in pics,
       "missing dedicated surf-fishing picture table")
-check("POLISHED_CHRIS_SURF_FISHING" in player,
+check("PLAYER_AVATAR_GFX_MALE_SURF_FISHING" in player,
       "player fishing logic does not reference surf-fishing state")
-check("POLISHED_CHRIS_FISHING" in player,
+check("PLAYER_AVATAR_STATE_FISHING" in player,
       "player fishing logic does not reference land-fishing state")
 
 if errors:
