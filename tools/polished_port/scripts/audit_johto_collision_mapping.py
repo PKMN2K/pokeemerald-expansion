@@ -45,6 +45,27 @@ CANDIDATES = {
 # independent from the behavior enum; no mapping for DOOR or warp carpets
 # until actual map warp events and directional entry are configured.
 
+# Explicit physical movement classification; separate from metatile behaviors.
+# These are review classifications, not final Emerald collision bitfields.
+IMPASSABLE = {"WALL", "VOID", "HEADBUTT_TREE", "BUOY"}
+EVENT_REQUIRED = {
+    "DOOR", "CAVE", "WARP_CARPET_DOWN", "WARP_CARPET_UP",
+    "WARP_CARPET_LEFT", "WARP_CARPET_RIGHT", "LADDER",
+    "POKECENTER_SIGN", "MART_SIGN",
+}
+# Deliberately do not assign a passability default to unrecognized values.
+
+
+def classify_physical(symbol):
+    if symbol in IMPASSABLE:
+        return "blocked"
+    if symbol in EVENT_REQUIRED:
+        return "requires_map_event_review"
+    if symbol == "FLOOR":
+        return "walkable_candidate"
+    return "unresolved"
+
+
 def audit(inventory):
     counts = Counter(symbol for block in inventory["blocks"]
                      for symbol in block["quadrants"].values())
@@ -54,7 +75,7 @@ def audit(inventory):
         "source_missing_blocks": inventory["missing_blocks_in_256_capacity"],
         "candidates": {symbol: {"emerald": CANDIDATES[symbol], "occurrences": count}
                        for symbol, count in sorted(counts.items()) if symbol in CANDIDATES},
-        "unresolved": {symbol: count for symbol, count in sorted(counts.items())
+        "physical": {symbol: {"classification": classify_physical(symbol), "occurrences": count}\n                     for symbol, count in sorted(counts.items())},\n        "unresolved": {symbol: count for symbol, count in sorted(counts.items())
                        if symbol not in CANDIDATES},
         "notes": [
             "Emerald metatile behavior and physical impassability require separate fields.",
