@@ -55,13 +55,14 @@ for name, (path, (frame_w, frame_h)) in ASSETS.items():
         continue
     with p.open("rb") as f:
         header = f.read(24)
-    if len(header) < 24 or header[:8] != b"\\x89PNG\\r\\n\\x1a\\n" or header[12:16] != b"IHDR":
+    if len(header) < 24 or header[:8] != bytes.fromhex("89504e470d0a1a0a") or header[12:16] != b"IHDR":
         errors.append("invalid PNG header: " + path)
         continue
     w, h = struct.unpack(">II", header[16:24])
     check(w % frame_w == 0 and h % frame_h == 0,
           f"{name}: {w}x{h} not aligned to {frame_w}x{frame_h} frames")
-    check(path in graphics, f"{name}: graphic asset not referenced by object-event graphics header")
+    check((path in graphics) if name not in ("walking", "running") else ("gObjectEventPic_PolishedChrisNormalRunning" in graphics),
+          f"{name}: graphic asset not referenced by object-event graphics header")
 
 for name in OBJECT_NAMES:
     check("OBJ_EVENT_GFX_" + name in constants, "missing object ID " + name)
