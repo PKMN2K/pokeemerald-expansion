@@ -203,6 +203,9 @@ jobs:
       - name: Validate Johto primary and secondary metatile banks
         run: python3 tools/polished_port/scripts/test_johto_metatile_banks.py
 
+      - name: Audit authentic Johto graphics palettes and priority flags
+        run: python3 tools/polished_port/scripts/test_johto_graphics_mapping.py
+
       - name: Test
         env:
           GAME_VERSION: EMERALD
