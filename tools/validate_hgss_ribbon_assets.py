@@ -30,20 +30,36 @@ def main():
             assert row[field] == source[field], (row["emerald_symbol"], field)
         assert row["retail_mon_data"] == source["mon_data"]
 
-    # These are the ONLY retail ribbon binaries currently committed.
-    # Expand this table as each original member is actually added, not from
-    # the locally generated staging archive.
-    installed = ((0, "champion.4bpp", "palette_0.gbapal", 72, 0),)
-    for emerald_id, gfx_name, palette_name, member, bank in installed:
-        entry = emerald[emerald_id]
-        assert int(entry["ncgr_member"]) == member
-        assert int(entry["nclr_bank"]) == bank
-        gfx = (RIBBONS / gfx_name).read_bytes()
-        pal = (RIBBONS / palette_name).read_bytes()
-        assert len(gfx) == 32 * 32 // 2, (gfx_name, len(gfx))
-        assert len(pal) == 16 * 2, (palette_name, len(pal))
-        print(f"{gfx_name}: 512 bytes, sha256={hashlib.sha256(gfx).hexdigest()}")
-        print(f"{palette_name}: 32 bytes, sha256={hashlib.sha256(pal).hexdigest()}")
+    # Verify every imported authentic NCGR tile file, including shared contest
+    # shapes. Files are never synthesized: only resources present on disk count.
+    installed = {
+        "champion.4bpp": 72,
+        "contest_normal.4bpp": 73,
+        "contest_super.4bpp": 74,
+        "contest_hyper.4bpp": 75,
+        "contest_master.4bpp": 76,
+        "victory_77.4bpp": 77,
+        "winning_78.4bpp": 78,
+        "artist_79.4bpp": 79,
+        "effort_80.4bpp": 80,
+    }
+    imported = {p.name for p in RIBBONS.glob("*.4bpp")}
+    assert imported == set(installed), (
+        "Update the verified HGSS asset inventory for new or missing NCGR files",
+        sorted(imported ^ set(installed)),
+    )
+    for name, member in installed.items():
+        assert any(int(row["ncgr_member"]) == member for row in emerald), name
+        gfx = (RIBBONS / name).read_bytes()
+        assert len(gfx) == 32 * 32 // 2, (name, len(gfx))
+        print(f"{name}: 512 bytes, sha256={hashlib.sha256(gfx).hexdigest()}")
+
+    for bank in range(5):
+        name = f"palette_{bank}.gbapal"
+        pal = (RIBBONS / name).read_bytes()
+        assert len(pal) == 16 * 2, (name, len(pal))
+        assert any(int(row["nclr_bank"]) == bank for row in emerald), name
+        print(f"{name}: 32 bytes, sha256={hashlib.sha256(pal).hexdigest()}")
     print("HGSS ribbon metadata consistent; imported binaries have expected 4bpp/palette sizes.")
 
 
