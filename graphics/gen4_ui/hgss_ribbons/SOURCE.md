@@ -596,3 +596,19 @@ on disk until visual testing of the new pagination completes.
 
 This change resizes **the layout**, not the authentic ribbon artwork.
 A successful compilation does not replace in-game visual verification.
+
+## Offline ribbon grid verification (2026-10-13)
+
+`tools/gen4_ui/check_hgss_ribbon_grid.py` checks the **live C source**
+against all 32 Emerald-to-retail mappings, the full-size BG1 tile
+boundaries, and representative D-pad navigation across **207 nonempty**
+normal/gift-ribbon ownership combinations (0–25 normal, 0–7 gift).
+The gen4-ui CI job builds five transparent, pixel-exact 128x64 PNG
+previews from the same untouched HGSS 4bpp data and five original
+NCLR color banks. They are uploaded as
+`hgss-ribbon-grid-offline-previews` in each workflow run.
+
+**Important:** These are *offline sprite-layer references*, **not**
+mGBA screenshots and not in-game proof. No generated preview is linked
+into the ROM. Real emulator testing is still required before deleting
+unused legacy icon files or declaring the ribbon migration complete.

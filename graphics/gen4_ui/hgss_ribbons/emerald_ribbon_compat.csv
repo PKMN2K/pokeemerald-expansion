@@ -1,5 +1,5 @@
 # Emerald ribbon identifiers in src/pokenav_ribbons_summary.c sRibbonData order; retail IDs 0-31 from pret/pokeheartgold/src/ribbon.c
-# This mapping is data-only. No live assets are wired. Extra HGSS-only ribbons (IDs 32-79) remain unmapped.
+# The 32 mapped HGSS NCGR/palette combinations are now wired into live summary icon display. Extra HGSS-only ribbons (IDs 32-79) remain unmapped.
 emerald_ribbon_id,emerald_symbol,retail_ribbon_id,retail_mon_data,ncgr_member,nclr_bank,retail_sub_obj_bank
 0,CHAMPION_RIBBON,0,MON_DATA_CHAMPION_RIBBON,72,0,7
 1,COOL_RIBBON_NORMAL,1,MON_DATA_COOL_RIBBON,73,0,7
