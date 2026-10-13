@@ -538,3 +538,24 @@ The next phase may decode the verified NCGR members 72–119 using
 member 136's five original 16-colour banks, preserving the original
 pixels and colours. GBA tile/palette limits and in-game presentation
 still need validation before deleting the Emerald equivalents.
+
+
+## Shared Gen 3 ribbon NCGR shapes imported (2026-10-13)
+
+Extracted from the user-supplied USA HeartGold ROM, NitroFS `a/0/3/9`
+(NARC file 168). The direct NCGR records are 560 bytes each; the
+unaltered 512-byte character-data portion at file offsets 48–559 is
+staged as GBA-compatible 4bpp tile data:
+
+| NCGR member | Authentic staged file | Emerald ribbons using its tiles | Raw tiles SHA-256 |
+| --- | --- | --- | --- |
+| 81 | `marine_land_sky_81.4bpp` | Marine, Land, Sky | `c3a7d55673bc680d66640681b569b8b94fbe97d2434cb3a02b5b6c9bf19ac6a2` |
+| 82 | `country_national_82.4bpp` | Country, National | `7be5f114e9e5bd92ea0261e57d51bae87038575d98acdd6d5cbfc2ef5ca9d18e` |
+| 83 | `earth_world_83.4bpp` | Earth, World | `ead81584d4e756a094f552522c59659b8c4f1d4f108c0dbcfed2b80bc3f64811` |
+
+Emerald-to-retail ribbon IDs, members and palette-bank mappings are
+already recorded in `emerald_ribbon_compat.csv`. The five palette banks
+remain unchanged, taken byte-for-byte from member 136 of the same NARC.
+The validator now checks retail SHA-256 digests for every staged ribbon
+tile set and palette. **These are assets only:** no live renderer is
+rewired and no Emerald ribbon art is deleted in this commit.
