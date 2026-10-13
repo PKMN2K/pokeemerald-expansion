@@ -48,6 +48,15 @@ def main():
     assert report["physical"]["DOOR"]["classification"] == "requires_map_event_review"
     assert report["physical"]["FLOOR"]["classification"] == "walkable_candidate"
     assert report["physical"]["WATER"]["classification"] == "unresolved"
+    assert auditor.review_requirement("LEDGE_DOWN") == "ledge_direction_and_entry_validation"
+    assert auditor.DIRECTIONAL_LEDGE_CANDIDATES["LEDGE_DOWN"] == "MB_JUMP_SOUTH"
+    assert auditor.review_requirement("WATER") == "surf_boundary_and_effect_validation"
+    assert auditor.review_requirement("WHIRLPOOL") == "surf_boundary_and_effect_validation"
+    assert auditor.review_requirement("TOP_WALL") == "directional_wall_and_neighbor_validation"
+    assert auditor.review_requirement("DOOR") == "map_event_validation"
+    assert auditor.review_requirement("FLOOR") is None
+    assert report["movement_review"]["WATER"]["candidate"] is None
+
 
     staged_source = {
         "block_count": 253,
