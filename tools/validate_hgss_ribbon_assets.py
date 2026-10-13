@@ -46,7 +46,10 @@ def main():
         "country_national_82.4bpp": (82, "7be5f114e9e5bd92ea0261e57d51bae87038575d98acdd6d5cbfc2ef5ca9d18e"),
         "earth_world_83.4bpp": (83, "ead81584d4e756a094f552522c59659b8c4f1d4f108c0dbcfed2b80bc3f64811"),
     }
-    imported = {p.name for p in RIBBONS.glob("*.4bpp")}
+    # The packed display sheet is validated separately against its 12 source
+    # members below; it is not a thirteenth retail NCGR resource.
+    imported = {p.name for p in RIBBONS.glob("*.4bpp")
+                if p.name != "big_icons_hgss.4bpp"}
     assert imported == set(installed), (
         "Update the verified HGSS asset inventory for new or missing NCGR files",
         sorted(imported ^ set(installed)),
