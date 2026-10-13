@@ -290,6 +290,7 @@ static void DebugAction_Selection_NextStep(u8 taskId);
 
 static void DebugAction_Util_Fly(u8 taskId);
 static void DebugAction_Util_Gen4UiTest(u8 taskId);
+static void DebugAction_Util_HgssRibbonGridTest(u8 taskId);
 static void DebugAction_Util_WatchCredits(u8 taskId);
 static void DebugAction_Util_CheatStart(u8 taskId);
 
@@ -593,6 +594,7 @@ static const struct DebugMenuOption sDebugMenu_Actions_Utilities[] =
     { COMPOUND_STRING("Warp to map warp…"),         DebugAction_Selection_Init, &sWarpSelection},
     { COMPOUND_STRING("Set weather…"),              DebugAction_Selection_Init, &sSetWeatherSelection },
     { COMPOUND_STRING("Gen 4 UI test"),             DebugAction_Util_Gen4UiTest },
+    { COMPOUND_STRING("HGSS ribbon grid test"),       DebugAction_Util_HgssRibbonGridTest },
     { COMPOUND_STRING("Font Test…"),                DebugAction_ExecuteScript, Debug_EventScript_FontTest },
     { COMPOUND_STRING("Time Functions…"),           DebugAction_OpenSubMenu, sDebugMenu_Actions_TimeMenu, },
     { COMPOUND_STRING("Watch credits…"),            DebugAction_Util_WatchCredits },
@@ -1757,6 +1759,12 @@ static void DebugAction_Util_Gen4UiTest(u8 taskId)
 {
     Debug_DestroyMenu_Full(taskId);
     SetMainCallback2(CB2_Gen4UiTest);
+}
+
+static void DebugAction_Util_HgssRibbonGridTest(u8 taskId)
+{
+    Debug_DestroyMenu_Full(taskId);
+    SetMainCallback2(CB2_HgssRibbonGridTest);
 }
 
 static void DebugSelectionStep_UpdateMapGroup(u8 taskId, u8 digits, u32 min, u32 max)

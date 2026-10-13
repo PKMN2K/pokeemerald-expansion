@@ -612,3 +612,22 @@ NCLR color banks. They are uploaded as
 mGBA screenshots and not in-game proof. No generated preview is linked
 into the ROM. Real emulator testing is still required before deleting
 unused legacy icon files or declaring the ribbon migration complete.
+
+## Emulator-accessible pixel grid viewer (2026-10-13)
+
+An additional `HGSS ribbon grid test` action has been added beside
+`Gen 4 UI test` in the debug utilities menu. It enters
+`CB2_HgssRibbonGridTest` in `src/gen4_ui_test.c`. This loads the
+same original 0x1800-byte HGSS tiles into BG0 at tile one, the
+same original five HGSS palette banks, and lays out the same
+five 4x2 ribbon pages on the GBA screen. Use Left/Right to change
+pages, B to return to the field. All normal and gift entries
+are included; the deliberate blank slots on page four remain.
+This debug viewer does not modify player, party, save data,
+game ribbon logic, or the normal PokéNav.
+
+It enables **real hardware/emulator on-screen pixel verification**
+when opened in a running GBA build. It is not an automated mGBA
+screenshot capture and does not exercise PokeNav's mon selection
+or zoom animation. The live PokeNav ribbon screen must still be
+visually checked separately before obsolete graphics are deleted.

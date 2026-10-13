@@ -68,6 +68,19 @@ def parse_live_mapping():
         member, bank = mapping[row["emerald_symbol"]]
         assert member == int(row["ncgr_member"]), row
         assert bank == int(row["nclr_bank"]), row
+    # Check the mGBA-accessible debug preview mirrors the same 32 entries.
+    debug_screen = (ROOT / "src/gen4_ui_test.c").read_text()
+    assert "void CB2_HgssRibbonGridTest(void)" in debug_screen
+    assert "LoadBgTiles(0, sHgssRibbonPreviewTiles" in debug_screen
+    assert "HGSS_RIBBON_PREVIEW_PAGE_COUNT 5" in debug_screen
+    icon_table = debug_screen.split("static const struct HgssRibbonPreviewIcon sHgssRibbonPreviewIcons[] =", 1)[1].split("};", 1)[0]
+    preview_entries = re.findall(r"^\s*\{(\d+),\s*(\d+)\}", icon_table, re.M)
+    assert len(preview_entries) == 32, len(preview_entries)
+    for row in rows:
+        rid = int(row["emerald_ribbon_id"])
+        frame, bank = (int(x) for x in preview_entries[rid])
+        assert FRAME_MEMBERS[frame] == int(row["ncgr_member"]), row
+        assert bank == int(row["nclr_bank"]), row
     assert (1 + (NORMAL_CAPACITY // GRID_COLUMNS)) * GRID_COLUMNS == GIFT_START
     # The 0x1800 tiles + blank tile fit BG1's 16 KB character block.
     assert (12 * 16 + 1) * 32 <= 0x4000

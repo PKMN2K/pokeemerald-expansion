@@ -34,4 +34,7 @@ bool32 Gen4UiLoadBgAsset(u32 bg, const struct Gen4UiBgAsset *asset);
 // Temporary end-to-end renderer validation screen.
 void CB2_Gen4UiTest(void);
 
+// Emulator-accessible debug preview of the unmodified 32x32 HGSS ribbon grid.
+void CB2_HgssRibbonGridTest(void);
+
 #endif // GUARD_GEN4_UI_H
