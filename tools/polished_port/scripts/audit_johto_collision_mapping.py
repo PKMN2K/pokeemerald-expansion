@@ -56,6 +56,31 @@ EVENT_REQUIRED = {
 # Deliberately do not assign a passability default to unrecognized values.
 
 
+# Source-specific movement cases are intentionally not promoted to live
+# Emerald behaviors until their orientation and neighbor rules are checked.
+DIRECTIONAL_LEDGE_CANDIDATES = {
+    "LEDGE_DOWN": "MB_JUMP_SOUTH",
+    "LEDGE_LEFT": "MB_JUMP_WEST",
+    "LEDGE_RIGHT": "MB_JUMP_EAST",
+    "LEDGE_DOWN_LEFT": "MB_JUMP_SOUTHWEST",
+    "LEDGE_DOWN_RIGHT": "MB_JUMP_SOUTHEAST",
+}
+BOUNDARY_REVIEW = {"WATER", "BUOY", "WHIRLPOOL"}
+DIRECTIONAL_WALL_REVIEW = {"TOP_WALL", "BOTTOM_WALL"}
+
+
+def review_requirement(symbol):
+    if symbol in DIRECTIONAL_LEDGE_CANDIDATES:
+        return "ledge_direction_and_entry_validation"
+    if symbol in BOUNDARY_REVIEW:
+        return "surf_boundary_and_effect_validation"
+    if symbol in DIRECTIONAL_WALL_REVIEW:
+        return "directional_wall_and_neighbor_validation"
+    if symbol in EVENT_REQUIRED:
+        return "map_event_validation"
+    return None
+
+
 def classify_physical(symbol):
     if symbol in IMPASSABLE:
         return "blocked"
@@ -75,6 +100,8 @@ def audit(inventory):
         "source_missing_blocks": inventory["missing_blocks_in_256_capacity"],
         "candidates": {symbol: {"emerald": CANDIDATES[symbol], "occurrences": count}
                        for symbol, count in sorted(counts.items()) if symbol in CANDIDATES},
+        "movement_review": {symbol: {"requirement": review_requirement(symbol), "candidate": DIRECTIONAL_LEDGE_CANDIDATES.get(symbol), "occurrences": count}
+                            for symbol, count in sorted(counts.items()) if review_requirement(symbol)},
         "physical": {symbol: {"classification": classify_physical(symbol), "occurrences": count}
                      for symbol, count in sorted(counts.items())},
         "unresolved": {symbol: count for symbol, count in sorted(counts.items())
