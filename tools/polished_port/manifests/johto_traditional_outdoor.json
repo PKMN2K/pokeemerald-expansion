@@ -13,20 +13,36 @@
     ],
     "metatiles": "data/tilesets/johto_traditional_metatiles.bin",
     "attributes": "data/tilesets/johto_traditional_attributes.bin",
-    "collision_declaration": "data/tilesets/johto_traditional_collision.bin.lz"
+    "collision_declaration": "data/tilesets/johto_traditional_collision.bin.lz",
+    "block_count": 253,
+    "metatiles_fixture": "tools/polished_port/fixtures/johto_traditional_metatiles.bin.b64",
+    "attributes_fixture": "tools/polished_port/fixtures/johto_traditional_attributes.bin.b64",
+    "collision_fixture": "tools/polished_port/fixtures/johto_traditional_collision.asm"
   },
   "target": {
     "engine": "pokeemerald-expansion 1.17.0",
     "branch": "polished-crystal-port",
     "namespace": "polished_johto_traditional",
-    "intended_role": "first playable outdoor vertical slice"
+    "intended_role": "first playable outdoor vertical slice",
+    "staged_geometry": {
+      "total_metatiles": 1012,
+      "primary_metatiles": 512,
+      "secondary_metatiles": 500,
+      "unused_secondary_ids": [
+        1012,
+        1023
+      ],
+      "registered": false
+    }
   },
   "conversion_requirements": [
     "Decode original common and variant 2bpp tile banks and preserve source tile order.",
     "Translate source palette attributes and time-of-day palettes to GBA-compatible 4bpp palettes.",
-    "Translate 2x2 8x8 GBC blocks and collision semantics into Emerald metatiles and behavior bytes.",
+    "Translate authentic 253 4x4-tile GBC blocks into 1012 16x16 Emerald metatiles, preserving all four source quadrants and their collision semantics.",
     "Preserve grass, water, door and sign semantics in the first test layout.",
     "Register the converted tileset only after all referenced binary and palette outputs exist.",
-    "Do not substitute Prism terrain or overwrite existing expansion graphics."
+    "Do not substitute Prism terrain or overwrite existing expansion graphics.",
+    "Account for all seven source palette IDs (0..6) across six primary and seven secondary palette slots.",
+    "Resolve 38 source GBC tile priority flags before live Emerald layer registration."
   ]
 }
