@@ -20,6 +20,7 @@ def main():
     auditor = load("audit_johto_collision_mapping")
     stager = load("stage_johto_metatile_collision")
     verifier = load("verify_johto_collision_source")
+    drafter = load("draft_johto_metatile_attributes")
     symbols = set(re.findall(r"\bMB_[A-Z0-9_]+\b",
                              (ROOT / "include/constants/metatile_behaviors.h").read_text()))
     unknown = set(auditor.CANDIDATES.values()) - symbols
@@ -90,6 +91,19 @@ def main():
     assert len(authentic_staged["blocks"]) == 253
     assert authentic_staged["quadrants_requiring_review"] > 0
     assert "attributes" not in authentic_staged
+    attribute_draft = drafter.draft(authentic_inventory)
+    assert attribute_draft["status"] == "draft_only_no_binary_output"
+    assert attribute_draft["quadrants"] == 1012
+    assert attribute_draft["source_missing_blocks"] == [253, 254, 255]
+    assert all(not q["ready_for_live_attribute"]
+               for block in attribute_draft["blocks"] for q in block["quadrants"])
+    assert all(q["behavior_candidate"] is None
+               for block in attribute_draft["blocks"]
+               for q in block["quadrants"] if q["source_symbol"] == "DOOR")
+    assert all(q["passability_candidate"] == "impassable"
+               for block in attribute_draft["blocks"]
+               for q in block["quadrants"] if q["source_symbol"] == "WALL")
+
 
     assert sum(verifier.EXPECTED.values()) == 253 * 4
     try:
