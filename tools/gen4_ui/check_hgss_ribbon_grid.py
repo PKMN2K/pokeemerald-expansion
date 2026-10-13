@@ -74,7 +74,7 @@ def parse_live_mapping():
     assert "LoadBgTiles(0, sHgssRibbonPreviewTiles" in debug_screen
     assert "HGSS_RIBBON_PREVIEW_PAGE_COUNT 5" in debug_screen
     icon_table = debug_screen.split("static const struct HgssRibbonPreviewIcon sHgssRibbonPreviewIcons[] =", 1)[1].split("};", 1)[0]
-    preview_entries = re.findall(r"^\s*\{(\d+),\s*(\d+)\}", icon_table, re.M)
+    preview_entries = re.findall(r"\{(\d+),\s*(\d+)\}", icon_table)
     assert len(preview_entries) == 32, len(preview_entries)
     for row in rows:
         rid = int(row["emerald_ribbon_id"])
