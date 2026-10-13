@@ -19,6 +19,7 @@ def main():
     extractor = load("extract_johto_collision")
     auditor = load("audit_johto_collision_mapping")
     stager = load("stage_johto_metatile_collision")
+    verifier = load("verify_johto_collision_source")
     symbols = set(re.findall(r"\bMB_[A-Z0-9_]+\b",
                              (ROOT / "include/constants/metatile_behaviors.h").read_text()))
     unknown = set(auditor.CANDIDATES.values()) - symbols
@@ -66,6 +67,13 @@ def main():
     assert staged["blocks"][0]["quadrants"][2]["requires_review"]
     assert staged["blocks"][0]["quadrants"][0]["emerald_behavior_candidate"] == "MB_NORMAL"
     assert "attributes" not in staged
+    assert sum(verifier.EXPECTED.values()) == 253 * 4
+    try:
+        verifier.validate(staged_source)
+    except ValueError as exc:
+        assert "source collision symbol counts mismatch" in str(exc)
+    else:
+        raise AssertionError("source fingerprint mismatch was accepted")
     try:
         stager.stage({**staged_source, "missing_blocks_in_256_capacity": []})
     except ValueError:
