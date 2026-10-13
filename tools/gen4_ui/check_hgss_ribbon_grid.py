@@ -162,8 +162,9 @@ def icon_pixels(tiles, palette):
 
 def write_previews(rows, outdir):
     outdir.mkdir(parents=True, exist_ok=True)
-    members = dict(zip(FRAME_MEMBERS, (ASSETS / "big_icons_hgss.4bpp").read_bytes()[i * 512:(i + 1) * 512]
-                                     for i in range(len(FRAME_MEMBERS))))
+    sheet = (ASSETS / "big_icons_hgss.4bpp").read_bytes()
+    members = {member: sheet[i * 512:(i + 1) * 512]
+               for i, member in enumerate(FRAME_MEMBERS)}
     assert len(members) == 12 and all(len(raw) == 512 for raw in members.values())
     palettes = [(ASSETS / f"palette_{i}.gbapal").read_bytes() for i in range(5)]
     positions = {i: r for i, r in enumerate(rows[:NORMAL_CAPACITY])}
