@@ -14,7 +14,7 @@ from pathlib import Path
 import struct
 
 SOURCE_PREFIX = Path("data/tilesets/johto_traditional")
-BLOCK_COUNT = 256
+BLOCK_COUNT = 253
 SOURCE_SIDE = 4
 GBA_TILES_PER_METATILE = 8
 GBC_TILE_BANK_BIT = 0x08
@@ -29,7 +29,7 @@ def convert(metatiles: bytes, attrs: bytes) -> bytes:
                          f"{len(metatiles)} metatile and {len(attrs)} attribute bytes")
 
     output = bytearray()
-    # Polished Crystal blocks are 32x32, made of 4x4 8x8 tiles.
+    # The pinned source has 253 blocks, each 32x32 with 4x4 8x8 tiles.
     # Each becomes FOUR 16x16 Emerald metatiles, in TL/TR/BL/BR order.
     for block in range(BLOCK_COUNT):
         start = block * 16
@@ -67,7 +67,7 @@ def main() -> None:
     target = args.output / "metatiles.staging.bin"
     target.write_bytes(result)
     print(f"Staged {BLOCK_COUNT * 4} metatiles ({len(result)} bytes) at {target}")
-    print("NOT registered: requires palette, tile-bank and collision verification.")
+    print("NOT registered: GBC priority flags, palette, transparency and collision need review.")
 
 
 if __name__ == "__main__":
