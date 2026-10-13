@@ -574,3 +574,25 @@ The legacy 16x16 BG grid icons and palette remain live until their
 layout can support 32x32 retail pixels, without rescaling or redrawing.
 The old `icons_big.png` should only be deleted after the replacement
 zoom path has been verified in-game; no legacy chrome is removed here.
+
+## Native 32x32 HGSS ribbon grid (2026-10-13)
+
+The summary BG1 grid now loads the same **unmodified** 0x1800-byte
+HGSS ribbon tile sheet and the same five original NCLR 136 palettes
+used by the expanded-ribbon sprite. Four columns by two rows fill the
+existing 128x64-pixel grid viewport: BG1 tiles x11–26, y4–11.
+One blank BG tile is reserved at index zero; the source NCGR tile
+blocks start at tile one and have 16 tiles each.
+
+Eight icons are shown per page; the ribbon IDs and virtual gift-ribbon
+gap are preserved, with pages based on the selected virtual slot.
+D-pad navigation continues across ordinary ribbons and, crucially,
+multiple gift-ribbon rows. Page changes redraw BG1 before moving the
+authentic HGSS selection corners and zoom sprite. The Pokémon card,
+ribbon descriptions, other windows, and all save-data semantics remain
+unaltered. Legacy `icons.png` and `icons1.pal`–`icons5.pal`
+are no longer referenced by this ribbon summary screen, but are kept
+on disk until visual testing of the new pagination completes.
+
+This change resizes **the layout**, not the authentic ribbon artwork.
+A successful compilation does not replace in-game visual verification.

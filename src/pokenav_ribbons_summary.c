@@ -1,4 +1,5 @@
 #include "global.h"
+#include "bg.h"
 #include "decompress.h"
 #include "dynamic_placeholder_text_util.h"
 #include "graphics.h"
@@ -35,8 +36,15 @@ enum
 #define PALTAG_RIBBON_ICONS_4 18
 #define PALTAG_RIBBON_ICONS_5 19
 
-#define RIBBONS_PER_ROW 9
-#define GIFT_RIBBON_ROW (1 + (FIRST_GIFT_RIBBON / RIBBONS_PER_ROW)) // Gift ribbons start on a new row after the normal ribbons.
+// Native HGSS ribbon icons are 32x32. A four-column, two-row page
+// fits the existing ribbon-grid viewport at x=88..216, y=32..96.
+#define RIBBONS_PER_ROW 4
+#define RIBBON_GRID_ROWS 2
+#define RIBBONS_PER_PAGE (RIBBONS_PER_ROW * RIBBON_GRID_ROWS)
+#define RIBBON_ICON_TILES 4
+#define RIBBON_GRID_LEFT_TILE 11
+#define RIBBON_GRID_TOP_TILE 4
+#define GIFT_RIBBON_ROW (1 + (FIRST_GIFT_RIBBON / RIBBONS_PER_ROW))
 #define GIFT_RIBBON_START_POS (RIBBONS_PER_ROW * GIFT_RIBBON_ROW)
 
 #define MON_SPRITE_X_ON  40
@@ -75,9 +83,8 @@ struct Pokenav_RibbonsSummaryMenu
     u8 tilemapBuffers[2][BG_SCREEN_SIZE];
 };
 
-// Used for the initial drawing of the ribbons
+// Used for iterating over the ribbons on the current page.
 static u32 sRibbonDraw_Total;
-static u32 sRibbonDraw_Current;
 
 static void PrintCurrentMonRibbonCount(struct Pokenav_RibbonsSummaryMenu *);
 static void PrintRibbbonsSummaryMonInfo(struct Pokenav_RibbonsSummaryMenu *);
@@ -101,7 +108,7 @@ static void AddRibbonCountWindow(struct Pokenav_RibbonsSummaryMenu *);
 static void AddRibbonGridFrameWindow(struct Pokenav_RibbonsSummaryMenu *);
 static void CreateBigRibbonSprite(struct Pokenav_RibbonsSummaryMenu *);
 static void AddRibbonSummaryMonNameWindow(struct Pokenav_RibbonsSummaryMenu *);
-static void DrawAllRibbonsSmall(struct Pokenav_RibbonsSummaryMenu *);
+static void DrawAllRibbonsHgss(struct Pokenav_RibbonsSummaryMenu *);
 static bool32 IsRibbonAnimating(struct Pokenav_RibbonsSummaryMenu *);
 static bool32 IsMonSpriteAnimating(struct Pokenav_RibbonsSummaryMenu *);
 static void GetMonRibbons(struct Pokenav_RibbonsSummaryList *);
@@ -119,8 +126,8 @@ static u16 DrawRibbonsMonFrontPic(s32, s32);
 static void StartMonSpriteSlide(struct Sprite *, s32, s32, s32);
 static void SpriteCB_MonSpriteSlide(struct Sprite *);
 static void ClearRibbonsSummaryBg(void);
-static void BufferSmallRibbonGfxData(u16 *, u32);
-static void DrawRibbonSmall(u32, u32);
+static void BufferHgssRibbonGfxData(u16 *, u32);
+static void DrawRibbonHgss(u32, u32);
 static void SpriteCB_WaitForRibbonAnimation(struct Sprite *);
 static u32 LoopedTask_OpenRibbonsSummaryMenu(s32);
 static u32 LoopedTask_SwitchRibbonsSummaryMon(s32);
@@ -159,15 +166,8 @@ struct
 #include "data/text/ribbon_descriptions.h"
 #include "data/text/gift_ribbon_descriptions.h"
 
-static const u16 sRibbonIcons1_Pal[] = INCGFX_U16("graphics/pokenav/ribbons/icons1.pal", ".gbapal");
-static const u16 sRibbonIcons2_Pal[] = INCGFX_U16("graphics/pokenav/ribbons/icons2.pal", ".gbapal");
-static const u16 sRibbonIcons3_Pal[] = INCGFX_U16("graphics/pokenav/ribbons/icons3.pal", ".gbapal");
-static const u16 sRibbonIcons4_Pal[] = INCGFX_U16("graphics/pokenav/ribbons/icons4.pal", ".gbapal");
-static const u16 sRibbonIcons5_Pal[] = INCGFX_U16("graphics/pokenav/ribbons/icons5.pal", ".gbapal");
 static const u16 sMonInfo_Pal[] = INCGFX_U16("graphics/pokenav/ribbons/mon_info.pal", ".gbapal"); // palette for Pokémon's name/gender/level text
-static const u32 sRibbonIconsSmall_Gfx[] = INCGFX_U32("graphics/pokenav/ribbons/icons.png", ".4bpp.smol");
-// Native 32x32 retail HGSS NCGR tile blocks in sRibbonGfxData order.
-// The 16x16 BG icon grid stays intact until its layout is migrated.
+// All grid and expanded icons use the same unmodified retail HGSS tiles.
 static const u32 sRibbonIconsBig_Gfx[] = INCBIN_U32("graphics/gen4_ui/hgss_ribbons/big_icons_hgss.4bpp");
 static const u16 sHgssRibbonBigPal0[] = INCBIN_U16("graphics/gen4_ui/hgss_ribbons/palette_0.gbapal");
 static const u16 sHgssRibbonBigPal1[] = INCBIN_U16("graphics/gen4_ui/hgss_ribbons/palette_1.gbapal");
@@ -307,11 +307,15 @@ static bool32 TrySelectRibbonUp(struct Pokenav_RibbonsSummaryList *list)
         list->selectedPos -= RIBBONS_PER_ROW;
         return TRUE;
     }
+    // Gift ribbons can now span multiple four-icon rows.
+    if (list->selectedPos - GIFT_RIBBON_START_POS >= RIBBONS_PER_ROW)
+    {
+        list->selectedPos -= RIBBONS_PER_ROW;
+        return TRUE;
+    }
     if (list->numNormalRibbons != 0)
     {
-        // In gift ribbons, try to move up into normal ribbons
-        // If there's > 1 row of gift ribbons (not normally possible)
-        // it's impossible to move up between them
+        // Move back into the last populated normal-ribbon row.
         u32 ribbonPos = list->selectedPos - GIFT_RIBBON_START_POS;
         list->selectedPos = ribbonPos + list->normalRibbonLastRowStart;
         if (list->selectedPos >= list->numNormalRibbons)
@@ -323,8 +327,16 @@ static bool32 TrySelectRibbonUp(struct Pokenav_RibbonsSummaryList *list)
 
 static bool32 TrySelectRibbonDown(struct Pokenav_RibbonsSummaryList *list)
 {
-    if (list->selectedPos >= FIRST_GIFT_RIBBON)
+    if (list->selectedPos >= GIFT_RIBBON_START_POS)
+    {
+        u32 nextRibbon = list->selectedPos - GIFT_RIBBON_START_POS + RIBBONS_PER_ROW;
+        if (nextRibbon < list->numGiftRibbons)
+        {
+            list->selectedPos += RIBBONS_PER_ROW;
+            return TRUE;
+        }
         return FALSE;
+    }
     if (list->selectedPos < list->normalRibbonLastRowStart)
     {
         // Not in last row of normal ribbons, advance to next row
@@ -377,7 +389,7 @@ static bool32 TrySelectRibbonRight(struct Pokenav_RibbonsSummaryList *list)
     else
     {
         // Move right in gift ribbon row
-        if (column < list->numGiftRibbons - 1)
+        if (list->selectedPos - GIFT_RIBBON_START_POS + 1 < list->numGiftRibbons)
         {
             list->selectedPos++;
             return TRUE;
@@ -604,14 +616,16 @@ static u32 LoopedTask_OpenRibbonsSummaryMenu(s32 state)
         if (!FreeTempTileDataBuffersIfPossible())
         {
             BgDmaFill(1, 0, 0, 1);
-            DecompressAndCopyTileDataToVram(1, sRibbonIconsSmall_Gfx, 0, 1, 0);
+            // Leave tile zero blank for the BG clear operation.
+            // 12 * 16 retail 4bpp tiles occupy only 0x1800 of BG1's 0x4000 bytes.
+            LoadBgTiles(1, sRibbonIconsBig_Gfx, sizeof(sRibbonIconsBig_Gfx), 1);
             SetBgTilemapBuffer(1, menu->tilemapBuffers[1]);
             FillBgTilemapBufferRect_Palette0(1, 0, 0, 0, 32, 20);
-            CopyPaletteIntoBufferUnfaded(sRibbonIcons1_Pal, BG_PLTT_ID(2), PLTT_SIZE_4BPP);
-            CopyPaletteIntoBufferUnfaded(sRibbonIcons2_Pal, BG_PLTT_ID(3), PLTT_SIZE_4BPP);
-            CopyPaletteIntoBufferUnfaded(sRibbonIcons3_Pal, BG_PLTT_ID(4), PLTT_SIZE_4BPP);
-            CopyPaletteIntoBufferUnfaded(sRibbonIcons4_Pal, BG_PLTT_ID(5), PLTT_SIZE_4BPP);
-            CopyPaletteIntoBufferUnfaded(sRibbonIcons5_Pal, BG_PLTT_ID(6), PLTT_SIZE_4BPP);
+            CopyPaletteIntoBufferUnfaded(sHgssRibbonBigPal0, BG_PLTT_ID(2), PLTT_SIZE_4BPP);
+            CopyPaletteIntoBufferUnfaded(sHgssRibbonBigPal1, BG_PLTT_ID(3), PLTT_SIZE_4BPP);
+            CopyPaletteIntoBufferUnfaded(sHgssRibbonBigPal2, BG_PLTT_ID(4), PLTT_SIZE_4BPP);
+            CopyPaletteIntoBufferUnfaded(sHgssRibbonBigPal3, BG_PLTT_ID(5), PLTT_SIZE_4BPP);
+            CopyPaletteIntoBufferUnfaded(sHgssRibbonBigPal4, BG_PLTT_ID(6), PLTT_SIZE_4BPP);
             CopyPaletteIntoBufferUnfaded(sMonInfo_Pal, BG_PLTT_ID(10), sizeof(sMonInfo_Pal));
             CopyBgTilemapBufferToVram(1);
             return LT_INC_AND_PAUSE;
@@ -654,7 +668,7 @@ static u32 LoopedTask_OpenRibbonsSummaryMenu(s32 state)
         }
         return LT_PAUSE;
     case 7:
-        DrawAllRibbonsSmall(menu);
+        DrawAllRibbonsHgss(menu);
         PrintHelpBarText(HELPBAR_RIBBONS_LIST);
         return LT_INC_AND_PAUSE;
     case 8:
@@ -713,7 +727,7 @@ static u32 LoopedTask_SwitchRibbonsSummaryMon(s32 state)
         }
         return LT_PAUSE;
     case 2:
-        DrawAllRibbonsSmall(menu);
+        DrawAllRibbonsHgss(menu);
         return LT_INC_AND_CONTINUE;
     case 3:
         PrintRibbonsMonListIndex(menu);
@@ -771,6 +785,8 @@ static u32 LoopedTask_MoveRibbonsCursorExpanded(s32 state)
     case 1:
         if (!IsRibbonAnimating(menu))
         {
+            // Page to the selected ribbon before moving the expanded cursor.
+            DrawAllRibbonsHgss(menu);
             UpdateAndZoomInSelectedRibbon(menu);
             return LT_INC_AND_PAUSE;
         }
@@ -909,8 +925,9 @@ static void DestroyHgssRibbonCursor(struct Pokenav_RibbonsSummaryMenu *menu)
 static void DrawPokeGearRibbonSelectionFocus(struct Pokenav_RibbonsSummaryMenu *menu, bool8 show)
 {
     u32 position = GetSelectedPosition();
-    s32 x = (position % RIBBONS_PER_ROW) * 16 + 96;
-    s32 y = (position / RIBBONS_PER_ROW) * 16 + 40;
+    u32 pageSlot = position % RIBBONS_PER_PAGE;
+    s32 x = (RIBBON_GRID_LEFT_TILE + RIBBON_ICON_TILES * (pageSlot % RIBBONS_PER_ROW)) * 8 + 16;
+    s32 y = (RIBBON_GRID_TOP_TILE + RIBBON_ICON_TILES * (pageSlot / RIBBONS_PER_ROW)) * 8 + 16;
     u32 i;
 
     // The four authentic corners frame the selected 16x16 ribbon icon.
@@ -919,8 +936,8 @@ static void DrawPokeGearRibbonSelectionFocus(struct Pokenav_RibbonsSummaryMenu *
         struct Sprite *corner = menu->hgssCursorCorners[i];
         if (corner == NULL)
             continue;
-        corner->x = x + ((i & 2) ? 8 : -8);
-        corner->y = y + ((i & 1) ? 8 : -8);
+        corner->x = x + ((i & 2) ? 16 : -16);
+        corner->y = y + ((i & 1) ? 16 : -16);
         corner->invisible = !show;
     }
 }
@@ -1209,37 +1226,48 @@ static void SpriteCB_MonSpriteSlide(struct Sprite *sprite)
 #undef sTime
 #undef sDestX
 
-static void DrawAllRibbonsSmall(struct Pokenav_RibbonsSummaryMenu *menu)
+static void DrawAllRibbonsHgss(struct Pokenav_RibbonsSummaryMenu *menu)
 {
     u32 *ribbonIds;
+    u32 i;
+    u32 pageStart = (GetSelectedPosition() / RIBBONS_PER_PAGE) * RIBBONS_PER_PAGE;
 
+    // Each page contains at most 8 unscaled 32x32 HGSS icons. Their
+    // logical slots preserve the gap between ordinary and gift ribbons.
     ClearRibbonsSummaryBg();
 
     ribbonIds = GetNormalRibbonIds(&sRibbonDraw_Total);
-    for (sRibbonDraw_Current = 0; sRibbonDraw_Current < sRibbonDraw_Total; sRibbonDraw_Current++)
-        DrawRibbonSmall(sRibbonDraw_Current, *(ribbonIds++));
+    for (i = 0; i < sRibbonDraw_Total; i++)
+    {
+        if (i >= pageStart && i < pageStart + RIBBONS_PER_PAGE)
+            DrawRibbonHgss(i - pageStart, ribbonIds[i]);
+    }
 
     ribbonIds = GetGiftRibbonIds(&sRibbonDraw_Total);
-    for (sRibbonDraw_Current = 0; sRibbonDraw_Current < sRibbonDraw_Total; sRibbonDraw_Current++)
-        DrawRibbonSmall(sRibbonDraw_Current + GIFT_RIBBON_START_POS, *(ribbonIds++));
+    for (i = 0; i < sRibbonDraw_Total; i++)
+    {
+        u32 slot = i + GIFT_RIBBON_START_POS;
+        if (slot >= pageStart && slot < pageStart + RIBBONS_PER_PAGE)
+            DrawRibbonHgss(slot - pageStart, ribbonIds[i]);
+    }
 
     CopyBgTilemapBufferToVram(1);
 }
 
-// Redundant, the same FillBg is called in LoopedTask_OpenRibbonsSummaryMenu
+// Tile zero is kept blank; all remaining BG1 tiles are original HGSS art.
 static void ClearRibbonsSummaryBg(void)
 {
     FillBgTilemapBufferRect_Palette0(1, 0, 0, 0, 32, 20);
 }
 
-static void DrawRibbonSmall(u32 i, u32 ribbonId)
+static void DrawRibbonHgss(u32 slot, u32 ribbonId)
 {
-    u16 bgData[4];
-    u32 destX = (i % RIBBONS_PER_ROW) * 2 + 11;
-    u32 destY = (i / RIBBONS_PER_ROW) * 2 + 4;
+    u16 bgData[RIBBON_ICON_TILES * RIBBON_ICON_TILES];
+    u32 destX = (slot % RIBBONS_PER_ROW) * RIBBON_ICON_TILES + RIBBON_GRID_LEFT_TILE;
+    u32 destY = (slot / RIBBONS_PER_ROW) * RIBBON_ICON_TILES + RIBBON_GRID_TOP_TILE;
 
-    BufferSmallRibbonGfxData(bgData, ribbonId);
-    CopyToBgTilemapBufferRect(1, bgData, destX, destY, 2, 2);
+    BufferHgssRibbonGfxData(bgData, ribbonId);
+    CopyToBgTilemapBufferRect(1, bgData, destX, destY, RIBBON_ICON_TILES, RIBBON_ICON_TILES);
 }
 
 // Below correspond to a ribbon icon in ribbons/icons.png and ribbons/icons_big.png; 0 at top, 11 at bottom
@@ -1302,15 +1330,15 @@ struct
 
 #undef TO_PAL_OFFSET
 
-static void BufferSmallRibbonGfxData(u16 *dst, u32 ribbonId)
+static void BufferHgssRibbonGfxData(u16 *dst, u32 ribbonId)
 {
     u16 palNum = sRibbonGfxData[ribbonId].palNumOffset + 2;
-    u16 tileNum = (sRibbonGfxData[ribbonId].tileNumOffset * 2) + 1;
+    u16 tileNum = (sRibbonGfxData[ribbonId].tileNumOffset * 16) + 1;
+    u32 i;
 
-    dst[0] = tileNum | (palNum << 12);
-    dst[1] = tileNum | (palNum << 12) | 0x400;
-    dst[2] = (tileNum + 1) | (palNum << 12);
-    dst[3] = (tileNum + 1) | (palNum << 12) | 0x400;
+    // A 32x32 NCGR is 16 independent 8x8 tiles, row-major and unflipped.
+    for (i = 0; i < RIBBON_ICON_TILES * RIBBON_ICON_TILES; i++)
+        dst[i] = (tileNum + i) | (palNum << 12);
 }
 
 static const struct SpriteSheet sSpriteSheet_RibbonIconsBig =
@@ -1405,8 +1433,9 @@ static void UpdateAndZoomInSelectedRibbon(struct Pokenav_RibbonsSummaryMenu *men
 {
     u32 ribbonId;
     s32 position = GetSelectedPosition();
-    s32 x = (position % RIBBONS_PER_ROW) * 16 + 96;
-    s32 y = (position / RIBBONS_PER_ROW) * 16 + 40;
+    u32 pageSlot = position % RIBBONS_PER_PAGE;
+    s32 x = (RIBBON_GRID_LEFT_TILE + RIBBON_ICON_TILES * (pageSlot % RIBBONS_PER_ROW)) * 8 + 16;
+    s32 y = (RIBBON_GRID_TOP_TILE + RIBBON_ICON_TILES * (pageSlot / RIBBONS_PER_ROW)) * 8 + 16;
 
     menu->bigRibbonSprite->x = x;
     menu->bigRibbonSprite->y = y;
