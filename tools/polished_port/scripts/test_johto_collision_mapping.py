@@ -76,6 +76,21 @@ def main():
     assert staged["blocks"][0]["quadrants"][2]["requires_review"]
     assert staged["blocks"][0]["quadrants"][0]["emerald_behavior_candidate"] == "MB_NORMAL"
     assert "attributes" not in staged
+    # Exercise the real pinned upstream declarations, not just synthetic blocks.
+    authentic_text = (ROOT / "tools/polished_port/fixtures/johto_traditional_collision.asm").read_text()
+    authentic_blocks = extractor.extract(authentic_text)
+    authentic_inventory = {
+        "block_count": len(authentic_blocks),
+        "missing_blocks_in_256_capacity": [253, 254, 255],
+        "blocks": authentic_blocks,
+    }
+    authentic_counts = verifier.validate(authentic_inventory)
+    assert sum(authentic_counts.values()) == 1012
+    authentic_staged = stager.stage(authentic_inventory)
+    assert len(authentic_staged["blocks"]) == 253
+    assert authentic_staged["quadrants_requiring_review"] > 0
+    assert "attributes" not in authentic_staged
+
     assert sum(verifier.EXPECTED.values()) == 253 * 4
     try:
         verifier.validate(staged_source)
