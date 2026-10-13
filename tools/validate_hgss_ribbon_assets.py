@@ -74,6 +74,30 @@ def main():
         digest = hashlib.sha256(pal).hexdigest()
         assert digest == expected_digest, (name, digest, expected_digest)
         print(f"{name}: 32 bytes, sha256={digest}")
+
+    # Native retail NCGR tiles: 12 original 32x32 blocks in zoom-frame order.
+    big_icon_order = (
+        "champion.4bpp",
+        "contest_normal.4bpp",
+        "contest_super.4bpp",
+        "contest_hyper.4bpp",
+        "contest_master.4bpp",
+        "winning_78.4bpp",
+        "victory_77.4bpp",
+        "artist_79.4bpp",
+        "effort_80.4bpp",
+        "marine_land_sky_81.4bpp",
+        "country_national_82.4bpp",
+        "earth_world_83.4bpp",
+    )
+    big_sheet = (RIBBONS / "big_icons_hgss.4bpp").read_bytes()
+    expected_sheet = b"".join((RIBBONS / name).read_bytes() for name in big_icon_order)
+    assert len(big_sheet) == 12 * 512, len(big_sheet)
+    assert big_sheet == expected_sheet, "HGSS selected ribbon sheet differs from retail NCGRs"
+    assert hashlib.sha256(big_sheet).hexdigest() == (
+        "5b78564602edf75e2ceb4d93327310da286cc131fb9422081f07f002713eca4d"
+    ), "HGSS ribbon sprite sheet does not match the source ROM"
+
     print("HGSS ribbon metadata consistent; imported binaries have expected 4bpp/palette sizes.")
 
 

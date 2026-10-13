@@ -559,3 +559,18 @@ remain unchanged, taken byte-for-byte from member 136 of the same NARC.
 The validator now checks retail SHA-256 digests for every staged ribbon
 tile set and palette. **These are assets only:** no live renderer is
 rewired and no Emerald ribbon art is deleted in this commit.
+
+## Live selected-ribbon graphics (2026-10-13)
+
+The zoom sprite in `src/pokenav_ribbons_summary.c` now loads the 32x32
+retail HGSS NCGR pixels from `big_icons_hgss.4bpp`: twelve mechanically
+concatenated, unchanged tile sets (NCGR 72–76, 78, 77, 79–83)
+in the existing sprite frame order. Size: 0x1800 bytes.
+SHA-256: `5b78564602edf75e2ceb4d93327310da286cc131fb9422081f07f002713eca4d`.
+Its five sprite palettes load the original NCLR 136 banks unchanged.
+The existing zoom animation and 16-tile frame offsets are preserved.
+
+The legacy 16x16 BG grid icons and palette remain live until their
+layout can support 32x32 retail pixels, without rescaling or redrawing.
+The old `icons_big.png` should only be deleted after the replacement
+zoom path has been verified in-game; no legacy chrome is removed here.

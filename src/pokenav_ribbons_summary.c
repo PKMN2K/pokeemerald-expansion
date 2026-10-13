@@ -166,7 +166,14 @@ static const u16 sRibbonIcons4_Pal[] = INCGFX_U16("graphics/pokenav/ribbons/icon
 static const u16 sRibbonIcons5_Pal[] = INCGFX_U16("graphics/pokenav/ribbons/icons5.pal", ".gbapal");
 static const u16 sMonInfo_Pal[] = INCGFX_U16("graphics/pokenav/ribbons/mon_info.pal", ".gbapal"); // palette for Pokémon's name/gender/level text
 static const u32 sRibbonIconsSmall_Gfx[] = INCGFX_U32("graphics/pokenav/ribbons/icons.png", ".4bpp.smol");
-static const u32 sRibbonIconsBig_Gfx[] = INCGFX_U32("graphics/pokenav/ribbons/icons_big.png", ".4bpp.smol");
+// Native 32x32 retail HGSS NCGR tile blocks in sRibbonGfxData order.
+// The 16x16 BG icon grid stays intact until its layout is migrated.
+static const u32 sRibbonIconsBig_Gfx[] = INCBIN_U32("graphics/gen4_ui/hgss_ribbons/big_icons_hgss.4bpp");
+static const u16 sHgssRibbonBigPal0[] = INCBIN_U16("graphics/gen4_ui/hgss_ribbons/palette_0.gbapal");
+static const u16 sHgssRibbonBigPal1[] = INCBIN_U16("graphics/gen4_ui/hgss_ribbons/palette_1.gbapal");
+static const u16 sHgssRibbonBigPal2[] = INCBIN_U16("graphics/gen4_ui/hgss_ribbons/palette_2.gbapal");
+static const u16 sHgssRibbonBigPal3[] = INCBIN_U16("graphics/gen4_ui/hgss_ribbons/palette_3.gbapal");
+static const u16 sHgssRibbonBigPal4[] = INCBIN_U16("graphics/gen4_ui/hgss_ribbons/palette_4.gbapal");
 
 static const struct BgTemplate sBgTemplates[] =
 {
@@ -1306,18 +1313,18 @@ static void BufferSmallRibbonGfxData(u16 *dst, u32 ribbonId)
     dst[3] = (tileNum + 1) | (palNum << 12) | 0x400;
 }
 
-static const struct CompressedSpriteSheet sSpriteSheet_RibbonIconsBig =
+static const struct SpriteSheet sSpriteSheet_RibbonIconsBig =
 {
-    sRibbonIconsBig_Gfx, 0x1800, GFXTAG_RIBBON_ICONS_BIG
+    sRibbonIconsBig_Gfx, sizeof(sRibbonIconsBig_Gfx), GFXTAG_RIBBON_ICONS_BIG
 };
 
 static const struct SpritePalette sSpritePalettes_RibbonIcons[] =
 {
-    {sRibbonIcons1_Pal, PALTAG_RIBBON_ICONS_1},
-    {sRibbonIcons2_Pal, PALTAG_RIBBON_ICONS_2},
-    {sRibbonIcons3_Pal, PALTAG_RIBBON_ICONS_3},
-    {sRibbonIcons4_Pal, PALTAG_RIBBON_ICONS_4},
-    {sRibbonIcons5_Pal, PALTAG_RIBBON_ICONS_5},
+    {sHgssRibbonBigPal0, PALTAG_RIBBON_ICONS_1},
+    {sHgssRibbonBigPal1, PALTAG_RIBBON_ICONS_2},
+    {sHgssRibbonBigPal2, PALTAG_RIBBON_ICONS_3},
+    {sHgssRibbonBigPal3, PALTAG_RIBBON_ICONS_4},
+    {sHgssRibbonBigPal4, PALTAG_RIBBON_ICONS_5},
     {},
 };
 
@@ -1384,7 +1391,7 @@ static void CreateBigRibbonSprite(struct Pokenav_RibbonsSummaryMenu *menu)
 {
     u8 spriteId;
 
-    LoadCompressedSpriteSheet(&sSpriteSheet_RibbonIconsBig);
+    LoadSpriteSheet(&sSpriteSheet_RibbonIconsBig);
     Pokenav_AllocAndLoadPalettes(sSpritePalettes_RibbonIcons);
 
     spriteId = CreateSprite(&sSpriteTemplate_RibbonIconBig, 0, 0, 0);
