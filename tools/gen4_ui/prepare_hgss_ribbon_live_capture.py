@@ -31,6 +31,23 @@ text = text.replace(include_marker, include_marker +
 # an almost entirely black owner list. Exercise the normal menu instead.
 assert text.count("        SetActivePokenavMenu(POKENAV_MAIN_MENU);") == 1
 
+# Use the NORMAL initial PokéNav graphics path while moving its start cursor
+# to Ribbons. The previous fixture's Down presses accidentally entered the
+# region map and every subsequent screenshot captured the wrong application.
+handler = Path("src/pokenav_menu_handler.c")
+handler_text = handler.read_text()
+start = handler_text.index("bool32 PokenavCallback_Init_MainMenuCursorOnMap(void)")
+end = handler_text.index("bool32 PokenavCallback_Init_MainMenuCursorOnMatchCall(void)", start)
+block = handler_text[start:end]
+for old, new in (
+    ("menu->cursorPos = POKENAV_MENUITEM_MAP;", "menu->cursorPos = POKENAV_MENUITEM_RIBBONS;"),
+    ("menu->currMenuItem = POKENAV_MENUITEM_MAP;", "menu->currMenuItem = POKENAV_MENUITEM_RIBBONS;"),
+):
+    if block.count(old) != 1:
+        raise SystemExit("Unexpected initial menu cursor setup")
+    block = block.replace(old, new)
+handler.write_text(handler_text[:start] + block + handler_text[end:])
+
 # The fixture is appended only to the CI checkout's pokenav.c so it can
 # share the real Pokenav main menu -> ribbon list -> summary route.
 text += r"""
@@ -88,4 +105,4 @@ void CB2_HgssRibbonLiveCapture(void)
 }
 """
 path.write_text(text)
-print("Prepared disposable full-menu CI boot: 25 normal + 7 gift ribbons")
+print("Prepared disposable full-menu CI boot: initial Ribbons cursor, 25 normal + 7 gift ribbons")

@@ -140,3 +140,18 @@ Down/A buttons. Movement waits are increased so the animated ribbon
 selection can complete before subsequent input. The capture includes a
 `main_menu.png` baseline and requires distinct live screen transitions.
 No underlying game-code or assets were changed.
+
+## Live capture retry #3 (2026-10-14)
+
+The corrected full-menu capture showed the Hoenn map instead of the
+ribbon owner list. The startup menu navigation automation was incorrect.
+The disposable fixture now preselects the **Ribbons** option *inside*
+the normal `PokenavCallback_Init_MainMenuCursorOnMap` handler while
+preserving the full initial menu UI and callbacks. It then presses A to
+enter the ribbon list and A again to open the summary.
+
+The validator additionally requires the first 32x32 retail Champion
+ribbon icon to appear in the proper location in the live summary,
+compared to the original HGSS source-colored offline pixels. This avoids
+false-positive passes from unrelated colorful screens, such as Hoenn
+region maps. The local cursor patch is never committed to game code.

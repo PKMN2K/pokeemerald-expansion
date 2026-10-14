@@ -8,9 +8,10 @@ from pathlib import Path
 import sys
 from PIL import Image, ImageChops
 
-if len(sys.argv) != 2:
-    raise SystemExit("usage: verify_hgss_ribbon_live_screens.py SHOTS_DIR")
+if len(sys.argv) != 3:
+    raise SystemExit("usage: verify_hgss_ribbon_live_screens.py SHOTS_DIR OFFLINE_DIR")
 base = Path(sys.argv[1])
+reference_dir = Path(sys.argv[2])
 names = (
     "main_menu",
     "owner_list",
@@ -47,3 +48,28 @@ for left, right in (
         raise SystemExit(f"Missing screen transition between {left} and {right}: {changed} pixels")
     print(f"{left} -> {right}: {changed} changed pixels")
 print("Captured distinct live PokéNav states; manual screenshot review is still required.")
+
+# Positive identity check: the unexpanded REAL PokéNav must display the
+# original HGSS Champion ribbon in its native top-left 32x32 slot.
+# This rejects earlier captures that mistakenly entered the Hoenn region map,
+# even if all frames are colorful and visually different.
+actual = images["summary_page_01"]
+expected = Image.open(reference_dir / "page_01.png").convert("RGBA")
+assert expected.size == (128, 64)
+compared = 0
+mismatched = 0
+for yy in range(32):
+    for xx in range(32):
+        ref = expected.getpixel((xx, yy))
+        if ref[3] == 0:
+            continue
+        compared += 1
+        got = actual.getpixel((xx + 88, yy + 32))
+        if max(abs(got[channel] - ref[channel]) for channel in range(3)) > 8:
+            mismatched += 1
+if compared < 64 or mismatched * 10 > compared:
+    raise SystemExit(
+        f"Actual live PokéNav did not display the retail HGSS Champion icon: "
+        f"{mismatched}/{compared} opaque pixel mismatches"
+    )
+print(f"Live PokéNav identity confirmed: {compared - mismatched}/{compared} HGSS Champion pixels agree.")
