@@ -152,6 +152,33 @@
         "uses_existing_emerald_runtime_time_enum": true,
         "installs_runtime_palette_hook": false,
         "registers_live_map_headers": false
+      },
+      "emerald_runtime_bridge": {
+        "status": "compiled_opt_in_unregistered",
+        "header": "include/polished_johto_palette.h",
+        "source": "src/polished_johto_palette.c",
+        "generated_source_rgb555_table": "src/data/tilesets/polished_johto_palette_tables.h",
+        "generator": "tools/polished_port/scripts/emit_johto_palette_c_tables.py",
+        "ci_test": "tools/polished_port/scripts/test_johto_runtime_palette_tables.py",
+        "source_rgb555_words": 582,
+        "source_families": [
+          "standard",
+          "violet_ecruteak",
+          "overcast"
+        ],
+        "original_periods": [
+          "morn",
+          "day",
+          "nite",
+          "eve"
+        ],
+        "registered_emerald_map_layouts": 0,
+        "requires_exact_layout_and_both_tileset_pointers": true,
+        "map_palette_loader_hook": "src/fieldmap.c LoadSecondaryTilesetPalette",
+        "rtc_period_refresh_hook": "src/overworld.c OverworldBasic",
+        "source_palette_double_tint_guard": true,
+        "live_palette_applied_to_rom_maps": false,
+        "prism_mining_changed": false
       }
     }
   },
@@ -166,6 +193,8 @@
     "Resolve 38 source GBC tile priority flags before live Emerald layer registration.",
     "Resolve original Polished Crystal map group IDs to eventual Emerald map headers and weather/event conditions; the staged source-specific roof overlays are NOT yet runtime-selected.",
     "Map selected original Johto map names and 1-based source groups to new Emerald map header IDs before live palette selection; current script does not remap Hoenn IDs.",
-    "Connect resolved source RGB555 palettes to existing Emerald UpdateTimeOfDay/field palette refresh hooks only after authentic tileset graphics and map registration; avoid applying Emerald generic DNS tint twice."
+    "Connect resolved source RGB555 palettes to existing Emerald UpdateTimeOfDay/field palette refresh hooks only after authentic tileset graphics and map registration; avoid applying Emerald generic DNS tint twice.",
+    "Keep the opt-in C Johto palette registration table empty until registered Emerald layout IDs, BOTH authentic tileset identities, color-zero backdrop/transparency policy, GBC priority layers, and weather/map overrides are verified. Do not enter original Johto numeric map groups as Emerald layout IDs.",
+    "Compiled Johto color composer does not yet resolve special palette files beyond standard/Violet-Ecruteak/overcast; original source weather event conditions and all other special overrides require runtime parity."
   ]
 }
