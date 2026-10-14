@@ -51,6 +51,7 @@
 #include "palette.h"
 #include "play_time.h"
 #include "prism_mining.h"
+#include "polished_johto_palette.h"
 #include "random.h"
 #include "roamer.h"
 #include "rotating_gate.h"
@@ -1800,6 +1801,11 @@ void UpdateAltBgPalettes(u16 palettes)
     u32 i = 1;
     if (!MapHasNaturalLight(gMapHeader.mapType))
         return;
+    // Authentic Johto RGB555 palettes already encode their clock period;
+    // never blend them a second time against Expansion alternate palettes.
+    // There are NO active Johto layout registrations yet.
+    if (PolishedJohtoIsRegisteredMapLayout(gMapHeader.mapLayout))
+        return;
     palettes &= ~((1 << GetNumPalsInPrimary(gMapHeader.mapLayout)) - 1) | primary->swapPalettes;
     palettes &= ((1 << GetNumPalsInPrimary(gMapHeader.mapLayout)) - 1) | (secondary->swapPalettes << GetNumPalsInPrimary(gMapHeader.mapLayout));
     palettes &= PALETTES_MAP ^ (1 << 0); // don't blend palette 0, [13,15]
@@ -1834,6 +1840,10 @@ void UpdatePalettesWithTime(u32 palettes)
         }
 
     palettes &= PALETTES_MAP | PALETTES_OBJECTS; // Don't blend UI pals
+    // Keep imported source BG colors intact; still tint sprites as usual.
+    // This mask is applied only when a real Johto map layout is registered.
+    if (PolishedJohtoIsRegisteredMapLayout(gMapHeader.mapLayout))
+        palettes &= ~((1 << JOHTO_GBA_PALETTE_COUNT) - 1);
     if (!palettes)
         return;
     TimeMixPalettes(palettes, gPlttBufferUnfaded, gPlttBufferFaded, &gTimeBlend.startBlend, &gTimeBlend.endBlend, gTimeBlend.weight);
@@ -1876,6 +1886,11 @@ static void OverworldBasic(void)
         if (previousTimeOfDay != gTimeOfDay
          && IsPrismOlcanTileset(gMapHeader.mapLayout->secondaryTileset))
             LoadSecondaryTilesetPalette(gMapHeader.mapLayout, FALSE);
+
+        // Exact original Johto RGB555 variants update on RTC period changes.
+        // No-op until a new imported Johto map is explicitly registered.
+        if (previousTimeOfDay != gTimeOfDay)
+            PolishedJohtoTryApplyRegisteredMapPalette(gMapHeader.mapLayout, FALSE);
 
         if (MapHasNaturalLight(gMapHeader.mapType) &&
            (bld0[0] != bld1[0]
