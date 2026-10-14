@@ -17,7 +17,15 @@
     "block_count": 253,
     "metatiles_fixture": "tools/polished_port/fixtures/johto_traditional_metatiles.bin.b64",
     "attributes_fixture": "tools/polished_port/fixtures/johto_traditional_attributes.bin.b64",
-    "collision_fixture": "tools/polished_port/fixtures/johto_traditional_collision.asm"
+    "collision_fixture": "tools/polished_port/fixtures/johto_traditional_collision.asm",
+    "palette_sources": {
+      "base_rgb": "gfx/tilesets/bg_tiles.pal",
+      "outdoor_lookup": "data/maps/environment_colors.asm",
+      "violet_ecruteak": "gfx/tilesets/violet_ecruteak.pal",
+      "overcast": "gfx/tilesets/bg_tiles_overcast.pal",
+      "fixture_root": "tools/polished_port/fixtures/",
+      "pin": "3fa43192379df5c3e7b09a08e4d5d79af4f02f42"
+    }
   },
   "target": {
     "engine": "pokeemerald-expansion 1.17.0",
@@ -35,7 +43,7 @@
       "registered": false
     },
     "palette_staging": {
-      "status": "global_slot_allocation_reviewed_colors_not_imported",
+      "status": "authentic_rgb555_time_palettes_staged_not_registered",
       "source_palette_ids": [
         0,
         1,
@@ -67,12 +75,31 @@
       "secondary_references_to_palette_6": 48,
       "source_priority_8x8_tiles_requiring_layer_review": 38,
       "source_graphics_audit_tool": "tools/polished_port/scripts/audit_johto_graphics_mapping.py",
-      "registered": false
+      "registered": false,
+      "conversion_script": "tools/polished_port/scripts/stage_johto_time_palettes.py",
+      "authentic_color_variants": 12,
+      "time_variants": [
+        "morn",
+        "day",
+        "nite",
+        "eve"
+      ],
+      "palette_families": [
+        "standard",
+        "violet_ecruteak",
+        "overcast"
+      ],
+      "gba_palette_banks_per_variant": 7,
+      "bytes_per_variant": 224,
+      "environment_palette_3_source": "per-time water table indices 0x28, 0x29, 0x2A, 0x2B",
+      "original_rgb555_preserved": true,
+      "dynamic_map_group_roof_override_implemented": false,
+      "emerald_time_of_day_palette_switching_implemented": false
     }
   },
   "conversion_requirements": [
     "Decode original common and variant 2bpp tile banks and preserve source tile order.",
-    "Translate source palette attributes and time-of-day palettes to GBA-compatible 4bpp palettes.",
+    "Preserve 12 authentic source RGB555 time-of-day/variant palettes in staging; implement actual Emerald palette slot-6 roof override, dynamic weather, and time switching before registration.",
     "Translate authentic 253 4x4-tile GBC blocks into 1012 16x16 Emerald metatiles, preserving all four source quadrants and their collision semantics.",
     "Preserve grass, water, door and sign semantics in the first test layout.",
     "Register the converted tileset only after all referenced binary and palette outputs exist.",
