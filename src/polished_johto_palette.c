@@ -110,13 +110,19 @@ bool8 PolishedJohtoComposePalette(enum PolishedJohtoPaletteFamily family,
         return FALSE;
 
     // GBA's 16-color banks: preserve all four original CGB RGB555 colors
-    // exactly; the twelve unused color entries are zero-padded.
+    // exactly in slots 0..3, duplicate opaque CGB color 0 into slot 4,
+    // and zero-pad the eleven unused slots.
     for (bank = 0; bank < JOHTO_GBA_PALETTE_COUNT; bank++)
     {
         for (color = 0; color < JOHTO_GBA_PALETTE_COLORS; color++)
         {
             if (color < 4)
                 output[bank][color] = sPolishedJohtoPaletteColors[family][sourcePeriod][bank][color];
+            else if (color == 4)
+                // GBC BG color 0 is opaque, unlike GBA pixel index 0.
+                // The authentic color is duplicated in GBA slot 4 so PNG
+                // source color-0 pixels never turn transparent.
+                output[bank][color] = sPolishedJohtoPaletteColors[family][sourcePeriod][bank][0];
             else
                 output[bank][color] = 0;
         }
