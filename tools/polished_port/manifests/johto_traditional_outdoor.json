@@ -27,7 +27,10 @@
       "pin": "3fa43192379df5c3e7b09a08e4d5d79af4f02f42",
       "map_group_roofs": "gfx/tilesets/roofs.pal",
       "overcast_roofs": "gfx/tilesets/roofs_overcast.pal",
-      "map_group_indices": "constants/map_constants.asm"
+      "map_group_indices": "constants/map_constants.asm",
+      "map_headers": "data/maps/maps.asm",
+      "special_map_palette_declarations": "data/maps/palettes.asm",
+      "weather_map_eligibility": "engine/events/overcast.asm"
     }
   },
   "target": {
@@ -114,6 +117,41 @@
         "roof_morning_shares_day": true,
         "map_group_mapping_to_emerald": false,
         "original_weather_event_conditions_implemented": false
+      },
+      "map_time_routing": {
+        "status": "authentic_source_map_name_to_staging_palette_selector_not_live",
+        "script": "tools/polished_port/scripts/route_johto_palette.py",
+        "test": "tools/polished_port/scripts/test_johto_map_palette_routing.py",
+        "original_map_headers_verified": 605,
+        "original_johto_traditional_maps": 24,
+        "original_johto_overcast_maps": 14,
+        "first_playable_source_map_candidates": [
+          "NewBarkTown",
+          "CherrygroveCity"
+        ],
+        "original_map_ids_do_not_equal_emerald_ids": true,
+        "emerald_time_to_polished_source_time": {
+          "TIME_MORNING": "morn",
+          "TIME_DAY": "day",
+          "TIME_EVENING": "eve",
+          "TIME_NIGHT": "nite"
+        },
+        "supported_special_map_palette_names": [
+          "VioletEcruteakPalette"
+        ],
+        "blocked_unconverted_palette_names": [
+          "BellchimeTrailPalette"
+        ],
+        "original_weather_candidates": {
+          "AzaleaTown": 1,
+          "Route33": 1,
+          "LakeOfRage": 2,
+          "Route43": 2
+        },
+        "weather_eligibility_must_be_supplied_by_caller": true,
+        "uses_existing_emerald_runtime_time_enum": true,
+        "installs_runtime_palette_hook": false,
+        "registers_live_map_headers": false
       }
     }
   },
@@ -126,6 +164,8 @@
     "Do not substitute Prism terrain or overwrite existing expansion graphics.",
     "Use global source-to-Emerald palette IDs 0..6; primary loads 0..5 and the paired secondary supplies palette slot 6 for use by either bank. Validate actual RGB555 palette colors and time-of-day variants before registration.",
     "Resolve 38 source GBC tile priority flags before live Emerald layer registration.",
-    "Resolve original Polished Crystal map group IDs to eventual Emerald map headers and weather/event conditions; the staged source-specific roof overlays are NOT yet runtime-selected."
+    "Resolve original Polished Crystal map group IDs to eventual Emerald map headers and weather/event conditions; the staged source-specific roof overlays are NOT yet runtime-selected.",
+    "Map selected original Johto map names and 1-based source groups to new Emerald map header IDs before live palette selection; current script does not remap Hoenn IDs.",
+    "Connect resolved source RGB555 palettes to existing Emerald UpdateTimeOfDay/field palette refresh hooks only after authentic tileset graphics and map registration; avoid applying Emerald generic DNS tint twice."
   ]
 }
