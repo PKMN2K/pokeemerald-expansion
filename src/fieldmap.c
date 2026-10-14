@@ -11,6 +11,7 @@
 #include "palette.h"
 #include "pokenav.h"
 #include "prism_mining.h"
+#include "polished_johto_palette.h"
 #include "script.h"
 #include "secret_base.h"
 #include "trainer_hill.h"
@@ -1033,6 +1034,10 @@ void LoadSecondaryTilesetPalette(struct MapLayout const *mapLayout, bool8 skipFa
     const struct Tileset *secondaryTileset = ResolvePrismOlcanTilesetForCurrentTime(mapLayout->secondaryTileset);
 
     LoadTilesetPalette(secondaryTileset, GetNumPalsInPrimary(mapLayout) * 16, (NUM_PALS_TOTAL - GetNumPalsInPrimary(mapLayout)) * PLTT_SIZE_4BPP, skipFaded, GetNumPalsInPrimary(mapLayout));
+
+    // No-op until an authentic Johto layout and BOTH tileset identities are
+    // explicitly registered. Does not change Hoenn or Prism palette loading.
+    PolishedJohtoTryApplyRegisteredMapPalette(mapLayout, skipFaded);
 }
 
 void CopyMapTilesetsToVram(struct MapLayout const *mapLayout)
