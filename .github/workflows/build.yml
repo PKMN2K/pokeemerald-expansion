@@ -221,6 +221,9 @@ jobs:
       - name: Test guarded Johto Emerald runtime palette composition
         run: python3 tools/polished_port/scripts/test_johto_runtime_palette_tables.py
 
+      - name: Test pinned Johto PNG pixel and VRAM graphics conversion
+        run: python3 tools/polished_port/scripts/test_johto_tile_graphics.py
+
       - name: Test
         env:
           GAME_VERSION: EMERALD
