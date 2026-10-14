@@ -110,3 +110,21 @@ inspect the images and CI result before checking Step A. This is stronger
 evidence than offline PNGs but **does not verify the full live PokéNav
 screen**, the overlay/chrome, zoom, selection corners or all runtime input.
 Step B remains mandatory before legacy asset deletion.
+
+## Step D — actual live PokéNav screenshots (2026-10-14)
+
+The [live PokéNav screenshot workflow](../../.github/workflows/hgss-ribbon-live-pokenav.yml)
+boots a **disposable CI-only Emerald ROM** with one Pikachu carrying
+25 ordinary and seven gift ribbons. A temporary local checkout patch
+starts directly on the real PokéNav ribbon-owner list; headless mGBA
+then uses real A, B and Down inputs to enter the live ribbon summary,
+expand the ribbon, move across page four and page five, and shrink it.
+All screenshots are native 240x160 GBA framebuffer output.
+
+Artifact: `hgss-ribbon-live-pokenav-screenshots`. A sanity script checks
+that the captured frames are nonblank and show distinct transitions.
+The reviewer must still inspect the screenshots for proper on-screen
+cursor, zoom, chrome and description readability. CI-only changes
+to `src/pokenav.c` and the linker script are **not committed** and the
+temporary test ROM and save are **not uploaded**. Ordinary builds and
+user save data are unaffected.

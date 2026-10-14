@@ -1,0 +1,81 @@
+name: HGSS ribbon live PokéNav screenshots
+
+on:
+  push:
+    branches: [feature/gen4-ui-renderer]
+    paths:
+      - .github/workflows/hgss-ribbon-live-pokenav.yml
+      - tools/gen4_ui/prepare_hgss_ribbon_live_capture.py
+      - tools/gen4_ui/verify_hgss_ribbon_live_screens.py
+      - src/pokenav.c
+      - src/pokenav_ribbons_summary.c
+      - graphics/gen4_ui/hgss_ribbons/**
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  pokenav-emulator:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    env:
+      GAME_VERSION: EMERALD
+      GAME_REVISION: 0
+      GAME_LANGUAGE: ENGLISH
+      COMPARE: 0
+      UNUSED_ERROR: 1
+      DEPRECATED_ERROR: 1
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@v4
+
+      - name: Install GBA compiler and screenshot dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            binutils-arm-none-eabi gcc-arm-none-eabi libnewlib-arm-none-eabi \
+            libpng-dev libmgba-dev python3 python3-pil git
+
+      - name: Build isolated live PokéNav screenshot fixture
+        run: |
+          python3 tools/gen4_ui/prepare_hgss_ribbon_live_capture.py
+          make -j$(nproc) -O all
+          test -s pokeemerald.gba
+
+      - name: Build pinned mGBA headless screenshot utility
+        run: |
+          git clone https://github.com/JohnnySun/gba-rom-debugger.git /tmp/gba-rom-debugger
+          git -C /tmp/gba-rom-debugger checkout --detach 1ab7c814f9e062790567c58c8c0c2b74ad62e1ae
+          cc -std=gnu11 -O2 -DUSE_PNG -o /tmp/gba-walk \
+            /tmp/gba-rom-debugger/src/gba-walk.c -lmgba -lpng
+
+      - name: Capture actual ribbon list, five-page navigation and zoom
+        run: |
+          mkdir -p build/hgss-ribbon-live
+          /tmp/gba-walk pokeemerald.gba build/hgss-ribbon-live \
+            run:1800 snap:owner_list \
+            press:A:1 run:180 snap:summary_page_01 \
+            press:A:1 run:70 snap:zoom_page_01 \
+            press:DOWN:1 press:DOWN:1 press:DOWN:1 \
+            press:DOWN:1 press:DOWN:1 press:DOWN:1 \
+            run:70 snap:zoom_normal_page_04 \
+            press:DOWN:1 run:70 snap:zoom_gift_page_04 \
+            press:DOWN:1 run:70 snap:zoom_gift_page_05 \
+            press:B:1 run:70 snap:summary_page_05
+          python3 tools/gen4_ui/verify_hgss_ribbon_live_screens.py build/hgss-ribbon-live
+          printf '%s\n' \
+            'These are real mGBA framebuffer screenshots of the LIVE PokéNav ribbon list and summary.' \
+            'A disposable CI checkout patched only initial callback, test Pokémon ribbon data,' \
+            'and the opening PokéNav menu for deterministic traversal.' \
+            'No ROM, save, game code patch or original HGSS art is uploaded.' \
+            'Inspection of full-screen panel layout, cursor, descriptions and palette remains required.' \
+            > build/hgss-ribbon-live/README.txt
+
+      - name: Upload actual PokéNav screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: hgss-ribbon-live-pokenav-screenshots
+          path: build/hgss-ribbon-live/
+          if-no-files-found: warn
