@@ -3,6 +3,7 @@
 #include "gen4_ui.h"
 #include "gpu_regs.h"
 #include "main.h"
+#include "malloc.h"
 #include "overworld.h"
 #include "palette.h"
 #include "scanline_effect.h"
@@ -191,7 +192,10 @@ static const struct BgTemplate sHgssRibbonPreviewBgTemplates[] =
     },
 };
 
-static u16 sHgssRibbonPreviewMap[BG_SCREEN_SIZE / sizeof(u16)];
+// Allocate the 2 KB BG map only when the debug viewer is opened.
+// Keeping it in permanent EWRAM pushed the headless test runner's heap/
+// stack budget over the limit, although the viewer is never executed there.
+static u16 *sHgssRibbonPreviewMap;
 static u8 sHgssRibbonPreviewPage;
 
 static void HgssRibbonPreview_DrawPage(void)
@@ -227,12 +231,24 @@ static void HgssRibbonPreview_DrawPage(void)
     CopyBgTilemapBufferToVram(0);
 }
 
+static void HgssRibbonPreview_Close(void)
+{
+    SetVBlankCallback(NULL);
+    ResetBgsAndClearDma3BusyFlags(0);
+    UnsetBgTilemapBuffer(0);
+    if (sHgssRibbonPreviewMap != NULL)
+    {
+        Free(sHgssRibbonPreviewMap);
+        sHgssRibbonPreviewMap = NULL;
+    }
+    SetMainCallback2(CB2_ReturnToField);
+}
+
 static void HgssRibbonPreview_Main(void)
 {
     if (JOY_NEW(B_BUTTON))
     {
-        SetVBlankCallback(NULL);
-        SetMainCallback2(CB2_ReturnToField);
+        HgssRibbonPreview_Close();
         return;
     }
     if (JOY_NEW(DPAD_RIGHT))
@@ -264,6 +280,12 @@ void CB2_HgssRibbonGridTest(void)
         ScanlineEffect_Stop();
         ResetSpriteData();
         FreeAllSpritePalettes();
+        sHgssRibbonPreviewMap = AllocZeroed(BG_SCREEN_SIZE);
+        if (sHgssRibbonPreviewMap == NULL)
+        {
+            SetMainCallback2(CB2_ReturnToField);
+            return;
+        }
         SetBgTilemapBuffer(0, sHgssRibbonPreviewMap);
         sHgssRibbonPreviewPage = 0;
         gMain.state++;
@@ -271,7 +293,7 @@ void CB2_HgssRibbonGridTest(void)
     case 1:
         if (LoadBgTiles(0, sHgssRibbonPreviewTiles, sizeof(sHgssRibbonPreviewTiles), 1) == 0xFFFF)
         {
-            SetMainCallback2(CB2_ReturnToField);
+            HgssRibbonPreview_Close();
             return;
         }
         LoadPalette(sHgssRibbonPreviewPalette0, BG_PLTT_ID(2), sizeof(sHgssRibbonPreviewPalette0));
