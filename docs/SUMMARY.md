@@ -57,6 +57,7 @@
   - [How to use Random Mon Generation](tutorials/how_to_random_mon_generator.md)
   - [How to use dynamic trainer battle scripts](tutorials/how_to_dynamic_trainer_script.md)
   - [How to use the Dynamic Multichoice](tutorials/how_to_dynmultichoice.md)
+  - [HGSS ribbon grid visual acceptance](gen4_ui/hgss_ribbon_visual_qa.md)
 - [Changelog](./CHANGELOG.md)
     - [1.17.x]()
         - [Version 1.17.0](changelogs/1.17.x/1.17.0.md)
