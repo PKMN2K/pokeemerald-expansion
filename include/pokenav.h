@@ -493,4 +493,17 @@ void CreateRibbonsSummaryLoopedTask(s32 id);
 u32 IsRibbonsSummaryLoopedTaskActive(void);
 void FreeRibbonsSummaryScreen2(void);
 
+#if TESTING
+enum
+{
+    HGSS_RIBBON_TEST_UP,
+    HGSS_RIBBON_TEST_DOWN,
+    HGSS_RIBBON_TEST_LEFT,
+    HGSS_RIBBON_TEST_RIGHT,
+};
+
+u16 Test_HgssRibbonNavigate(u16 selectedPos, u8 normalCount, u8 giftCount, u8 direction);
+void Test_HgssRibbonScreenPosition(u16 selectedPos, s16 *x, s16 *y);
+#endif
+
 #endif // GUARD_POKENAV_H

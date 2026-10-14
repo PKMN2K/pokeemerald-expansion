@@ -91,6 +91,7 @@ static void PrintRibbbonsSummaryMonInfo(struct Pokenav_RibbonsSummaryMenu *);
 static void PrintRibbonsMonListIndex(struct Pokenav_RibbonsSummaryMenu *);
 static void DrawPokeGearRibbonGridFrame(u16);
 static void DrawPokeGearRibbonSelectionFocus(struct Pokenav_RibbonsSummaryMenu *, bool8);
+static void GetHgssRibbonScreenPosition(u32, s16 *, s16 *);
 static void CreateHgssRibbonCursor(struct Pokenav_RibbonsSummaryMenu *);
 static void DestroyHgssRibbonCursor(struct Pokenav_RibbonsSummaryMenu *);
 static void DrawPokeGearRibbonDetailPanel(u16);
@@ -922,13 +923,20 @@ static void DestroyHgssRibbonCursor(struct Pokenav_RibbonsSummaryMenu *menu)
     FreeSpritePaletteByTag(PALTAG_HGSS_RIBBON_CURSOR);
 }
 
+// Both the 32x32 selection-corner sprites and affine zoom sprite use
+// the same page-relative BG-cell center. No independent pixel arithmetic.
+static void GetHgssRibbonScreenPosition(u32 position, s16 *x, s16 *y)
+{
+    u32 pageSlot = position % RIBBONS_PER_PAGE;
+    *x = (RIBBON_GRID_LEFT_TILE + RIBBON_ICON_TILES * (pageSlot % RIBBONS_PER_ROW)) * 8 + 16;
+    *y = (RIBBON_GRID_TOP_TILE + RIBBON_ICON_TILES * (pageSlot / RIBBONS_PER_ROW)) * 8 + 16;
+}
+
 static void DrawPokeGearRibbonSelectionFocus(struct Pokenav_RibbonsSummaryMenu *menu, bool8 show)
 {
-    u32 position = GetSelectedPosition();
-    u32 pageSlot = position % RIBBONS_PER_PAGE;
-    s32 x = (RIBBON_GRID_LEFT_TILE + RIBBON_ICON_TILES * (pageSlot % RIBBONS_PER_ROW)) * 8 + 16;
-    s32 y = (RIBBON_GRID_TOP_TILE + RIBBON_ICON_TILES * (pageSlot / RIBBONS_PER_ROW)) * 8 + 16;
+    s16 x, y;
     u32 i;
+    GetHgssRibbonScreenPosition(GetSelectedPosition(), &x, &y);
 
     // Four authentic HGSS corners frame the selected 32x32 ribbon icon.
     for (i = 0; i < HGSS_RIBBON_CURSOR_CORNERS; i++)
@@ -1432,10 +1440,8 @@ static void CreateBigRibbonSprite(struct Pokenav_RibbonsSummaryMenu *menu)
 static void UpdateAndZoomInSelectedRibbon(struct Pokenav_RibbonsSummaryMenu *menu)
 {
     u32 ribbonId;
-    s32 position = GetSelectedPosition();
-    u32 pageSlot = position % RIBBONS_PER_PAGE;
-    s32 x = (RIBBON_GRID_LEFT_TILE + RIBBON_ICON_TILES * (pageSlot % RIBBONS_PER_ROW)) * 8 + 16;
-    s32 y = (RIBBON_GRID_TOP_TILE + RIBBON_ICON_TILES * (pageSlot / RIBBONS_PER_ROW)) * 8 + 16;
+    s16 x, y;
+    GetHgssRibbonScreenPosition(GetSelectedPosition(), &x, &y);
 
     menu->bigRibbonSprite->x = x;
     menu->bigRibbonSprite->y = y;
@@ -1475,3 +1481,40 @@ static void SpriteCB_WaitForRibbonAnimation(struct Sprite *sprite)
         sprite->callback = SpriteCallbackDummy;
     }
 }
+
+#if TESTING
+// Test-only adapter around the *live* ribbon movement functions.
+// These functions are compiled only into the mGBA test binary.
+u16 Test_HgssRibbonNavigate(u16 selectedPos, u8 normalCount, u8 giftCount, u8 direction)
+{
+    struct Pokenav_RibbonsSummaryList list = {0};
+
+    list.selectedPos = selectedPos;
+    list.numNormalRibbons = normalCount;
+    list.numGiftRibbons = giftCount;
+    if (normalCount != 0)
+        list.normalRibbonLastRowStart = ((normalCount - 1) / RIBBONS_PER_ROW) * RIBBONS_PER_ROW;
+
+    switch (direction)
+    {
+    case HGSS_RIBBON_TEST_UP:
+        TrySelectRibbonUp(&list);
+        break;
+    case HGSS_RIBBON_TEST_DOWN:
+        TrySelectRibbonDown(&list);
+        break;
+    case HGSS_RIBBON_TEST_LEFT:
+        TrySelectRibbonLeft(&list);
+        break;
+    case HGSS_RIBBON_TEST_RIGHT:
+        TrySelectRibbonRight(&list);
+        break;
+    }
+    return list.selectedPos;
+}
+
+void Test_HgssRibbonScreenPosition(u16 selectedPos, s16 *x, s16 *y)
+{
+    GetHgssRibbonScreenPosition(selectedPos, x, y);
+}
+#endif

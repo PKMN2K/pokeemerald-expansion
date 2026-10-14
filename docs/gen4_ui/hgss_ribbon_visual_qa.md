@@ -78,3 +78,18 @@ followed by another complete CI run.
 Record screenshot references and the test save/fixture in the migration
 notes before marking this screen visually verified. Never check
 saves or proprietary ROM dumps into the repository.
+
+## Headless mGBA verification of live C navigation
+
+The test runner now includes `test/pokenav_ribbons.c`, which calls
+`Test_HgssRibbonNavigate` (a `TESTING`-only adapter around the actual
+`TrySelectRibbonUp/Down/Left/Right` functions). It exhaustively checks
+reachability and valid targets across all **207 nonempty** normal/gift
+ownership combinations. A second test verifies the shared live cursor/
+zoom center for every grid cell across all five pages.
+
+The runtime cursor and selected-ribbon sprite now obtain their location
+from the **same** `GetHgssRibbonScreenPosition` helper, eliminating
+independent coordinate calculations. These tests run in a real headless
+GBA emulator, but do not capture the full PokéNav screen or evaluate
+pixel appearance. Visual acceptance remains mandatory.

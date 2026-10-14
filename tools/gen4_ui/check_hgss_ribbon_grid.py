@@ -51,13 +51,11 @@ def parse_live_mapping():
     assert "sRibbonGfxData[ribbonId].tileNumOffset * 16" in source
     assert "for (i = 0; i < RIBBON_ICON_TILES * RIBBON_ICON_TILES; i++)" in source
     assert "list->selectedPos - GIFT_RIBBON_START_POS >= RIBBONS_PER_ROW" in source
-    # BG1 icons, selection corners and the zoomed OBJ must agree on
-    # the selected slot inside the 4x2 page (including pages 2-5).
-    origin_x = "s32 x = (RIBBON_GRID_LEFT_TILE + RIBBON_ICON_TILES * (pageSlot % RIBBONS_PER_ROW)) * 8 + 16;"
-    origin_y = "s32 y = (RIBBON_GRID_TOP_TILE + RIBBON_ICON_TILES * (pageSlot / RIBBONS_PER_ROW)) * 8 + 16;"
-    assert source.count("u32 pageSlot = position % RIBBONS_PER_PAGE;") == 2
-    assert source.count(origin_x) == 2
-    assert source.count(origin_y) == 2
+    # BG1 icons, selection corners and zoom OBJ share the same calculation.
+    assert source.count("u32 pageSlot = position % RIBBONS_PER_PAGE;") == 1
+    assert "*x = (RIBBON_GRID_LEFT_TILE + RIBBON_ICON_TILES * (pageSlot % RIBBONS_PER_ROW)) * 8 + 16;" in source
+    assert "*y = (RIBBON_GRID_TOP_TILE + RIBBON_ICON_TILES * (pageSlot / RIBBONS_PER_ROW)) * 8 + 16;" in source
+    assert source.count("GetHgssRibbonScreenPosition(GetSelectedPosition(), &x, &y);") == 2
     assert "corner->x = x + ((i & 2) ? 16 : -16);" in source
     assert "corner->y = y + ((i & 1) ? 16 : -16);" in source
     assert ".shape = SPRITE_SHAPE(32x32)," in source
@@ -92,6 +90,8 @@ def parse_live_mapping():
     assert "sHgssRibbonPreviewMap = AllocZeroed(BG_SCREEN_SIZE);" in debug_screen
     assert "Free(sHgssRibbonPreviewMap);" in debug_screen
     assert "static u16 sHgssRibbonPreviewMap[" not in debug_screen
+    assert "u16 Test_HgssRibbonNavigate(" in source
+    assert "void Test_HgssRibbonScreenPosition(" in source
     icon_table = debug_screen.split("static const struct HgssRibbonPreviewIcon sHgssRibbonPreviewIcons[] =", 1)[1].split("};", 1)[0]
     preview_entries = re.findall(r"\{(\d+),\s*(\d+)\}", icon_table)
     assert len(preview_entries) == 32, len(preview_entries)
