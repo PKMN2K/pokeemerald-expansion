@@ -212,6 +212,9 @@ jobs:
       - name: Verify authentic Polished Crystal roof palette overrides
         run: python3 tools/polished_port/scripts/test_johto_roof_palettes.py
 
+      - name: Validate original Johto map palette routing against Emerald clock
+        run: python3 tools/polished_port/scripts/test_johto_map_palette_routing.py
+
       - name: Test
         env:
           GAME_VERSION: EMERALD
