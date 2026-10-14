@@ -35,6 +35,7 @@ from stage_johto_roof_palettes import load_roof_tables, stage_roof_variant
 MAP_HEADER_FIXTURE = FIXTURES / "johto_map_headers.asm"
 MAP_CONSTANTS_FIXTURE = FIXTURES / "johto_map_constants.asm"
 SPECIAL_PALETTE_FIXTURE = FIXTURES / "johto_special_map_palettes.asm"
+WEATHER_FIXTURE = FIXTURES / "johto_overcast_conditions.asm"
 RTC_HEADER = Path(__file__).resolve().parents[3] / "include/constants/rtc.h"
 
 TRADITIONAL = "TILESET_JOHTO_TRADITIONAL"
@@ -172,8 +173,28 @@ def parse_map_palette_overrides(text):
     return overrides
 
 
+def validate_source_weather_candidates(text):
+    expected = {
+        "AzaleaTown": ("MAP_AZALEA_TOWN", "AZALEA_OVERCAST"),
+        "Route33": ("MAP_ROUTE_33", "AZALEA_OVERCAST"),
+        "LakeOfRage": ("MAP_LAKE_OF_RAGE", "LAKE_OF_RAGE_OVERCAST"),
+        "Route43": ("MAP_ROUTE_43", "LAKE_OF_RAGE_OVERCAST"),
+    }
+    if set(expected) != set(ORIGINAL_WEATHER_CANDIDATES):
+        raise ValueError("original weather routing list changed")
+    for map_name, (map_constant, weather_symbol) in expected.items():
+        if not re.search(r"\\b" + map_constant + r"\\b", text):
+            raise ValueError(f"source weather selector missing {map_name}")
+        if not re.search(r"\\b" + weather_symbol + r"\\b", text):
+            raise ValueError(f"source weather type missing {weather_symbol}")
+    return True
+
+
 def load_source_map_rules(fixture_dir=FIXTURES, rtc_header=RTC_HEADER):
     validate_emerald_time_enum(rtc_header.read_text(encoding="utf-8"))
+    validate_source_weather_candidates(
+        (fixture_dir / "johto_overcast_conditions.asm").read_text(encoding="utf-8")
+    )
     maps = parse_source_maps(
         (fixture_dir / "johto_map_headers.asm").read_text(encoding="utf-8"),
         (fixture_dir / "johto_map_constants.asm").read_text(encoding="utf-8"),
