@@ -23,15 +23,16 @@ if text.count(include_marker) != 1:
 text = text.replace(include_marker, include_marker +
                     '#include "pokemon.h"\n'
                     '#include "load_save.h"\n'
+                    '#include "event_data.h"\n'
+                    '#include "constants/flags.h"\n'
                     '#include "constants/species.h"\n')
-old_menu = "        SetActivePokenavMenu(POKENAV_MAIN_MENU);"
-if text.count(old_menu) != 1:
-    raise SystemExit("Refusing patch: unexpected initial PokéNav menu")
-text = text.replace(old_menu,
-                    "        SetActivePokenavMenu(POKENAV_RIBBONS_MON_LIST);")
+# IMPORTANT: Do NOT skip the real PokéNav main menu. The original
+# shortcut bypassed its app-switch, window, and palette setup and left
+# an almost entirely black owner list. Exercise the normal menu instead.
+assert text.count("        SetActivePokenavMenu(POKENAV_MAIN_MENU);") == 1
 
 # The fixture is appended only to the CI checkout's pokenav.c so it can
-# share the real Pokenav state machine and normal ribbon list->summary route.
+# share the real Pokenav main menu -> ribbon list -> summary route.
 text += r"""
 
 // TEMPORARY CI SCREENSHOT FIXTURE. NOT PART OF THE COMMITTED GAME CODE.
@@ -78,11 +79,13 @@ void CB2_HgssRibbonLiveCapture(void)
     for (i = 0; i < 7; i++)
         gSaveBlock1Ptr->giftRibbons[i] = i + 1;
 
-    // Initialize the real PokéNav callback, UI, and background state.
-    // The sole local patch skips the main menu and opens the ribbon owner
-    // list; an actual A press then enters the normal live ribbon summary.
+    // Activate the two real menu flags in this disposable CI memory only.
+    // The full PokéNav main menu must initialize backgrounds and palettes.
+    InitEventData();
+    FlagSet(FLAG_ADDED_MATCH_CALL_TO_POKENAV);
+    FlagSet(FLAG_SYS_RIBBON_GET);
     CB2_InitPokeNav();
 }
 """
 path.write_text(text)
-print("Prepared isolated CI boot: live PokéNav, 25 normal + 7 gift ribbons")
+print("Prepared disposable full-menu CI boot: 25 normal + 7 gift ribbons")

@@ -12,6 +12,7 @@ if len(sys.argv) != 2:
     raise SystemExit("usage: verify_hgss_ribbon_live_screens.py SHOTS_DIR")
 base = Path(sys.argv[1])
 names = (
+    "main_menu",
     "owner_list",
     "summary_page_01",
     "zoom_page_01",
@@ -32,6 +33,7 @@ for name in names:
     print(f"{name}: {len(colors)} framebuffer RGB colors")
 
 for left, right in (
+    ("main_menu", "owner_list"),
     ("owner_list", "summary_page_01"),
     ("summary_page_01", "zoom_page_01"),
     ("zoom_page_01", "zoom_normal_page_04"),

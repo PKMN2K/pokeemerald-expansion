@@ -128,3 +128,15 @@ cursor, zoom, chrome and description readability. CI-only changes
 to `src/pokenav.c` and the linker script are **not committed** and the
 temporary test ROM and save are **not uploaded**. Ordinary builds and
 user save data are unaffected.
+
+## Full-menu live capture repair (2026-10-14)
+
+The first live capture exposed a test-fixture defect: it skipped the
+regular PokéNav main-menu screen initialization, producing mostly black
+screens even though ribbon sprites and labels appeared. The temporary
+CI boot now initializes the real main menu, enables the two relevant
+ribbon/Match Call flags only in temporary RAM, and navigates using actual
+Down/A buttons. Movement waits are increased so the animated ribbon
+selection can complete before subsequent input. The capture includes a
+`main_menu.png` baseline and requires distinct live screen transitions.
+No underlying game-code or assets were changed.
