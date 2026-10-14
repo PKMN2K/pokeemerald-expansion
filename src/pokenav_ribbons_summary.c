@@ -930,7 +930,7 @@ static void DrawPokeGearRibbonSelectionFocus(struct Pokenav_RibbonsSummaryMenu *
     s32 y = (RIBBON_GRID_TOP_TILE + RIBBON_ICON_TILES * (pageSlot / RIBBONS_PER_ROW)) * 8 + 16;
     u32 i;
 
-    // The four authentic corners frame the selected 16x16 ribbon icon.
+    // Four authentic HGSS corners frame the selected 32x32 ribbon icon.
     for (i = 0; i < HGSS_RIBBON_CURSOR_CORNERS; i++)
     {
         struct Sprite *corner = menu->hgssCursorCorners[i];

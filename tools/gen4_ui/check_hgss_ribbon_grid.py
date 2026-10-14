@@ -51,6 +51,19 @@ def parse_live_mapping():
     assert "sRibbonGfxData[ribbonId].tileNumOffset * 16" in source
     assert "for (i = 0; i < RIBBON_ICON_TILES * RIBBON_ICON_TILES; i++)" in source
     assert "list->selectedPos - GIFT_RIBBON_START_POS >= RIBBONS_PER_ROW" in source
+    # BG1 icons, selection corners and the zoomed OBJ must agree on
+    # the selected slot inside the 4x2 page (including pages 2-5).
+    origin_x = "s32 x = (RIBBON_GRID_LEFT_TILE + RIBBON_ICON_TILES * (pageSlot % RIBBONS_PER_ROW)) * 8 + 16;"
+    origin_y = "s32 y = (RIBBON_GRID_TOP_TILE + RIBBON_ICON_TILES * (pageSlot / RIBBONS_PER_ROW)) * 8 + 16;"
+    assert source.count("u32 pageSlot = position % RIBBONS_PER_PAGE;") == 2
+    assert source.count(origin_x) == 2
+    assert source.count(origin_y) == 2
+    assert "corner->x = x + ((i & 2) ? 16 : -16);" in source
+    assert "corner->y = y + ((i & 1) ? 16 : -16);" in source
+    assert ".shape = SPRITE_SHAPE(32x32)," in source
+    assert ".size = SPRITE_SIZE(32x32)," in source
+    assert "sRibbonIconsSmall_Gfx" not in source
+    assert "BufferSmallRibbonGfxData" not in source
     for bank in range(5):
         assert "CopyPaletteIntoBufferUnfaded(sHgssRibbonBigPal" + str(bank) in source
     matches = re.findall(

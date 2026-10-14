@@ -647,3 +647,13 @@ the permanent memory cost. No original HGSS art was modified.
 Run #990 built the ROMs but produced broad allocator assertion
 failures in headless mGBA tests. The RAM change is the targeted
 hypothesis-driven fix; CI should confirm before calling it resolved.
+
+## Visual acceptance gate (2026-10-14)
+
+See [HGSS ribbon emulator acceptance checklist](../../../docs/gen4_ui/hgss_ribbon_visual_qa.md).
+It distinguishes the five pixel-exact **offline** previews from a
+runtime emulator screenshot, and requires testing page boundaries,
+gift-only ribbon sets, selection corners, zoom, and descriptions in
+the actual PokéNav before the obsolete 16x16 assets can be removed.
+The automated source check now protects both page-relative sprite
+origin expressions and their 32x32 corner offsets.
