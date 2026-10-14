@@ -8,8 +8,7 @@
     "tileset": "TilesetJohto1",
     "graphics": [
       "gfx/tilesets/johto_common.png",
-      "gfx/tilesets/johto_traditional.johto_common.2bpp.vram0.lz",
-      "gfx/tilesets/johto_traditional.johto_common.2bpp.vram1.lz"
+      "gfx/tilesets/johto_traditional.johto_common.png"
     ],
     "metatiles": "data/tilesets/johto_traditional_metatiles.bin",
     "attributes": "data/tilesets/johto_traditional_attributes.bin",
@@ -31,6 +30,20 @@
       "map_headers": "data/maps/maps.asm",
       "special_map_palette_declarations": "data/maps/palettes.asm",
       "weather_map_eligibility": "engine/events/overcast.asm"
+    },
+    "graphics_pinned_pngs": {
+      "johto_common": {
+        "fixture": "tools/polished_port/fixtures/johto_common.png.b64",
+        "git_blob_sha": "e193d6c5b63126cbd3477e2d94818dd535bbb60a",
+        "tiles": 128,
+        "vram_bank": 0
+      },
+      "johto_traditional": {
+        "fixture": "tools/polished_port/fixtures/johto_traditional.johto_common.png.b64",
+        "git_blob_sha": "c44dc6a67fa8598b60969e7b44b21431bd50fbe5",
+        "tiles": 160,
+        "vram_bank": 1
+      }
     }
   },
   "target": {
@@ -178,12 +191,45 @@
         "rtc_period_refresh_hook": "src/overworld.c OverworldBasic",
         "source_palette_double_tint_guard": true,
         "live_palette_applied_to_rom_maps": false,
-        "prism_mining_changed": false
-      }
+        "prism_mining_changed": false,
+        "gba_opaque_source_color_zero_duplicated_at_index_four": true
+      },
+      "gba_opaque_source_color_zero_duplicated_at_index_four": true
+    },
+    "graphics_staging": {
+      "status": "source_verified_converted_to_GBA_4bpp_not_registered",
+      "converter": "tools/polished_port/scripts/stage_johto_tile_graphics.py",
+      "ci_test": "tools/polished_port/scripts/test_johto_tile_graphics.py",
+      "source_tile_count": 288,
+      "original_common_tile_count": 128,
+      "original_traditional_tile_count": 160,
+      "primary_graphics_bytes": 16384,
+      "secondary_graphics_bytes": 16384,
+      "gba_transparent_tile_id": 0,
+      "source_common_to_gba_tile_ids": [
+        1,
+        128
+      ],
+      "source_traditional_to_gba_tile_ids": [
+        129,
+        288
+      ],
+      "unused_gba_primary_ids": [
+        289,
+        511
+      ],
+      "gba_secondary_graphics_all_blank": true,
+      "original_gbc_color_index_zero_mapped_to_opaque_gba_color_index": 4,
+      "original_rgb555_color_zero_duplicated_at_gba_palette_index_four": true,
+      "source_metatile_refs_updated_for_4bpp_graphics": true,
+      "all_source_refs_count": 4048,
+      "source_GBC_priority_flag_count": 38,
+      "source_tile_animations_unregistered": true,
+      "registered": false
     }
   },
   "conversion_requirements": [
-    "Decode original common and variant 2bpp tile banks and preserve source tile order.",
+    "Keep original 128 common and 160 Traditional PNG source tiles in pinned blob order, converted to 4bpp palette indices 1..4, with separate blank index0; source graphics are staged and not yet registered.",
     "Preserve 12 authentic source RGB555 time-of-day/variant palettes in staging; implement actual Emerald palette slot-6 roof override, dynamic weather, and time switching before registration.",
     "Translate authentic 253 4x4-tile GBC blocks into 1012 16x16 Emerald metatiles, preserving all four source quadrants and their collision semantics.",
     "Preserve grass, water, door and sign semantics in the first test layout.",
@@ -194,7 +240,9 @@
     "Resolve original Polished Crystal map group IDs to eventual Emerald map headers and weather/event conditions; the staged source-specific roof overlays are NOT yet runtime-selected.",
     "Map selected original Johto map names and 1-based source groups to new Emerald map header IDs before live palette selection; current script does not remap Hoenn IDs.",
     "Connect resolved source RGB555 palettes to existing Emerald UpdateTimeOfDay/field palette refresh hooks only after authentic tileset graphics and map registration; avoid applying Emerald generic DNS tint twice.",
-    "Keep the opt-in C Johto palette registration table empty until registered Emerald layout IDs, BOTH authentic tileset identities, color-zero backdrop/transparency policy, GBC priority layers, and weather/map overrides are verified. Do not enter original Johto numeric map groups as Emerald layout IDs.",
-    "Compiled Johto color composer does not yet resolve special palette files beyond standard/Violet-Ecruteak/overcast; original source weather event conditions and all other special overrides require runtime parity."
+    "Keep the opt-in C Johto palette registration table empty until registered Emerald layout IDs, BOTH authentic tileset identities, GBC priority layers, and weather/map overrides are verified. Do not enter original Johto numeric map groups as Emerald layout IDs.",
+    "Compiled Johto color composer does not yet resolve special palette files beyond standard/Violet-Ecruteak/overcast; original source weather event conditions and all other special overrides require runtime parity.",
+    "Source GBC index0 is opaque: use GBA pixel index4 and repeat original RGB555 color0 at index4 in all staged/runtime palette banks, leaving transparent GBA pixel0 exclusively for synthetic layer padding.",
+    "Verify all GBC animated outdoor tiles and 38 GBC priority flags before registering new Emerald Johto map layouts; no gameplay/collision import is activated."
   ]
 }
