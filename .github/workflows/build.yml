@@ -209,6 +209,9 @@ jobs:
       - name: Verify pinned Polished Crystal Johto RGB555 time palettes
         run: python3 tools/polished_port/scripts/test_johto_time_palettes.py
 
+      - name: Verify authentic Polished Crystal roof palette overrides
+        run: python3 tools/polished_port/scripts/test_johto_roof_palettes.py
+
       - name: Test
         env:
           GAME_VERSION: EMERALD
