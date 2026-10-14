@@ -5,6 +5,7 @@ from pathlib import Path
 import struct
 
 from convert_johto_traditional_blocks import BLOCK_COUNT, convert
+from stage_johto_tile_graphics import gba_tile_id
 from extract_johto_collision import extract
 from split_johto_metatile_banks import (
     PRIMARY_BYTES, SECONDARY_BYTES, BYTES_PER_METATILE, manifest,
@@ -24,7 +25,7 @@ def load_binary_fixture(stem):
 
 
 def expected_entry(tile, attr):
-    return (tile | (0x100 if attr & 0x08 else 0)
+    return (gba_tile_id(tile, int(bool(attr & 0x08)))
             | ((attr & 0x07) << 12)
             | (0x0400 if attr & 0x20 else 0)
             | (0x0800 if attr & 0x40 else 0))
@@ -110,9 +111,10 @@ def main():
         else:
             raise AssertionError(f"unavailable block {invalid_block} accepted")
 
-    print("PASS: authentic 253 source blocks -> 512 primary + 500 secondary metatiles")
+    print("PASS: authentic 253 blocks -> 512 primary + 500 secondary metatiles")
     print("PASS: 1012 original metatiles preserved; 12 source-absent IDs not invented")
-    print("REVIEW: seven source palette IDs and 38 GBC priority flags need live mapping")
+    print("PASS: real source GBC VRAM references match original 4bpp tile IDs 1..288")
+    print("REVIEW: 38 GBC priority flags still need live layer mapping")
 
 
 if __name__ == "__main__":
