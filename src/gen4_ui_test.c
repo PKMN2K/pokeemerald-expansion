@@ -217,7 +217,7 @@ static void HgssRibbonPreview_DrawPage(void)
 
         icon = &sHgssRibbonPreviewIcons[ribbonId];
         for (j = 0; j < ARRAY_COUNT(tilemap); j++)
-            tilemap[j] = 1 + icon->frame * 16 + j | ((icon->bank + 2) << 12);
+            tilemap[j] = (1 + icon->frame * 16 + j) | ((icon->bank + 2) << 12);
 
         CopyToBgTilemapBufferRect(0, tilemap,
             HGSS_RIBBON_PREVIEW_LEFT_TILE + (i % HGSS_RIBBON_PREVIEW_COLUMNS) * HGSS_RIBBON_PREVIEW_ICON_TILES,
