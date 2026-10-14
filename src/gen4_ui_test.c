@@ -193,8 +193,8 @@ static const struct BgTemplate sHgssRibbonPreviewBgTemplates[] =
 };
 
 // Allocate the 2 KB BG map only when the debug viewer is opened.
-// Keeping it in permanent EWRAM pushed the headless test runner's heap/
-// stack budget over the limit, although the viewer is never executed there.
+// Static .bss occupies IWRAM (32 KB), including during headless tests.
+// Using the heap on demand preserves that scarce memory for the test runner.
 static u16 *sHgssRibbonPreviewMap;
 static u8 sHgssRibbonPreviewPage;
 

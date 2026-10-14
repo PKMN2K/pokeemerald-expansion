@@ -631,3 +631,19 @@ when opened in a running GBA build. It is not an automated mGBA
 screenshot capture and does not exercise PokeNav's mon selection
 or zoom animation. The live PokeNav ribbon screen must still be
 visually checked separately before obsolete graphics are deleted.
+
+## Headless mGBA test-runner memory repair (2026-10-14)
+
+The first ribbon debug viewer implementation stored its 2 KB BG map
+as a permanent static BSS array. The test linker places ordinary
+`.bss` in only **32 KB of IWRAM** (see `ld_script_test.ld`).
+The ribbon viewer is never opened in the battle tests, yet that
+allocation still consumed IWRAM in every test case. The new viewer
+allocates the map with `AllocZeroed(BG_SCREEN_SIZE)` *on entry* and
+frees it on exit or tile-loading error. A Python source validator
+protects this invariant so further viewer changes do not restore
+the permanent memory cost. No original HGSS art was modified.
+
+Run #990 built the ROMs but produced broad allocator assertion
+failures in headless mGBA tests. The RAM change is the targeted
+hypothesis-driven fix; CI should confirm before calling it resolved.

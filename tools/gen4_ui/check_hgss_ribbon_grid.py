@@ -73,6 +73,12 @@ def parse_live_mapping():
     assert "void CB2_HgssRibbonGridTest(void)" in debug_screen
     assert "LoadBgTiles(0, sHgssRibbonPreviewTiles" in debug_screen
     assert "HGSS_RIBBON_PREVIEW_PAGE_COUNT 5" in debug_screen
+    # A permanent 2 KB .bss map consumes scarce IWRAM even in headless
+    # battle tests which never open the debug viewer. Guard this repair.
+    assert "static u16 *sHgssRibbonPreviewMap;" in debug_screen
+    assert "sHgssRibbonPreviewMap = AllocZeroed(BG_SCREEN_SIZE);" in debug_screen
+    assert "Free(sHgssRibbonPreviewMap);" in debug_screen
+    assert "static u16 sHgssRibbonPreviewMap[" not in debug_screen
     icon_table = debug_screen.split("static const struct HgssRibbonPreviewIcon sHgssRibbonPreviewIcons[] =", 1)[1].split("};", 1)[0]
     preview_entries = re.findall(r"\{(\d+),\s*(\d+)\}", icon_table)
     assert len(preview_entries) == 32, len(preview_entries)
