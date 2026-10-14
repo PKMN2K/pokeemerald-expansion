@@ -72,7 +72,7 @@ def parse_outdoor_colors(text):
         if not raw.startswith("db "):
             continue
         tokens = [token.strip() for token in raw[3:].split(",")]
-        if len(tokens) != 8 or not all(re.fullmatch(r"\\$[0-9a-fA-F]{2}", x) for x in tokens):
+        if len(tokens) != 8 or not all(re.fullmatch(r"\$[0-9a-fA-F]{2}", x) for x in tokens):
             raise ValueError("malformed outdoor source palette table")
         rows.append(tuple(int(x[1:], 16) for x in tokens))
     if len(rows) != 4:
@@ -180,7 +180,7 @@ def main():
     for key, raw in outputs.items():
         (args.output / (key + ".staging.bin")).write_bytes(raw)
     (args.output / "johto_palettes.review.json").write_text(
-        json.dumps(report, indent=2) + "\\n", encoding="utf-8"
+        json.dumps(report, indent=2) + "\n", encoding="utf-8"
     )
     print(f"Staged {len(outputs)} original RGB555 palette variants: {args.output}")
     print("No registered tileset; roof group overrides and time switching unresolved.")
