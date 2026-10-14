@@ -14,6 +14,9 @@ base = Path(sys.argv[1])
 reference_dir = Path(sys.argv[2])
 names = (
     "main_menu",
+    "after_select_01",
+    "after_select_25",
+    "after_select_125",
     "owner_list",
     "summary_page_01",
     "zoom_page_01",
@@ -23,18 +26,22 @@ names = (
     "summary_page_05",
 )
 images = {}
+failures = []
 for name in names:
     img = Image.open(base / (name + ".png")).convert("RGB")
     if img.size != (240, 160):
         raise SystemExit(f"{name}: expected 240x160 GBA framebuffer, got {img.size}")
     colors = img.getcolors(240 * 160) or []
     if len(colors) < 16:
-        raise SystemExit(f"{name}: suspiciously blank/low-color capture ({len(colors)} colors)")
+        failures.append(f"{name}: suspiciously blank/low-color capture ({len(colors)} colors)")
     images[name] = img
     print(f"{name}: {len(colors)} framebuffer RGB colors")
 
 for left, right in (
-    ("main_menu", "owner_list"),
+    ("main_menu", "after_select_01"),
+    ("after_select_01", "after_select_25"),
+    ("after_select_25", "after_select_125"),
+    ("after_select_125", "owner_list"),
     ("owner_list", "summary_page_01"),
     ("summary_page_01", "zoom_page_01"),
     ("zoom_page_01", "zoom_normal_page_04"),
@@ -45,8 +52,10 @@ for left, right in (
     diff = ImageChops.difference(images[left], images[right])
     changed = sum(1 for p in diff.getdata() if p != (0, 0, 0))
     if changed < 64:
-        raise SystemExit(f"Missing screen transition between {left} and {right}: {changed} pixels")
+        failures.append(f"Missing screen transition between {left} and {right}: {changed} pixels")
     print(f"{left} -> {right}: {changed} changed pixels")
+if failures:
+    raise SystemExit("Live capture diagnostics:\\n" + "\\n".join(failures))
 print("Captured distinct live PokéNav states; manual screenshot review is still required.")
 
 # Positive identity check: the unexpanded REAL PokéNav must display the
