@@ -9,8 +9,10 @@ Reads four pinned text fixtures from the Polished Crystal source:
 
 Produces a *review-only* collection of 7 GBA 4bpp palette banks for each
 outdoor time and palette family. Each original CGB palette has four colors
-which are preserved bit-for-bit as RGB555; the remaining 12 colors in each
-GBA bank are zero-filled (unused). No new pixel art or colors are drawn.
+which are preserved bit-for-bit as RGB555 in slots 0..3. Because GBA pixel
+index 0 is transparent and original GBC background color 0 was opaque,
+slot 4 duplicates original color 0. Remaining 11 slots are unused zero.
+No new pixel art or colors are drawn.
 
 These outputs are not tileset-ready: Emerald uses global palette slots
 0..5 (primary) and 6..12 (secondary); runtime roof map-group overrides,
@@ -120,7 +122,7 @@ def expand_seven_palettes(palettes):
     for colors in palettes:
         if len(colors) != 4 or any(not 0 <= v < 0x8000 for v in colors):
             raise ValueError("expected four genuine RGB555 colors per CGB bank")
-        out.extend(struct.pack("<16H", *colors, *([0] * 12)))
+        out.extend(struct.pack("<16H", *colors, colors[0], *([0] * 11)))
     assert len(out) == OUTPUT_BYTES
     return bytes(out)
 
@@ -137,7 +139,8 @@ def stage(source):
         "primary_slots": list(range(6)),
         "secondary_slots": list(range(6, 13)),
         "variants": {},
-        "source_color_order": "RGBDS RGB 5-bit R, 5-bit G, 5-bit B -> GBA RGB555 little endian",
+        "source_color_order": "RGBDS RGB 5-bit R,G,B -> GBA RGB555 little endian; opaque GBC index0 maps to duplicate color0 at GBA index4",
+        "gba_palette_index_4_is_duplicate_of_source_color_0": True,
         "unresolved": [
             "Authentic graphics banks/VRAM tile ordering must be loaded separately",
             "Slot 6 is supplied by the secondary tileset and used by both banks",
