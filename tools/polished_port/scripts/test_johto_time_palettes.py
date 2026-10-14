@@ -74,7 +74,10 @@ def main():
             for pal_idx, color_values in enumerate(expected_palettes):
                 vals = struct.unpack_from("<16H", raw, pal_idx * 32)
                 assert vals[:4] == color_values
-                assert vals[4:] == (0,) * 12
+                # CGB background palette pixel0 is opaque; GBA pixel0 is
+                # transparent. Copy the original source color0 to index4.
+                assert vals[4] == color_values[0]
+                assert vals[5:] == (0,) * 11
                 assert record["original_rgb555"][pal_idx] == [
                     f"0x{color:04X}" for color in color_values
                 ]
