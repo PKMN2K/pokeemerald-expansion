@@ -47,6 +47,18 @@ jobs:
         run: |
           git clone https://github.com/JohnnySun/gba-rom-debugger.git /tmp/gba-rom-debugger
           git -C /tmp/gba-rom-debugger checkout --detach 1ab7c814f9e062790567c58c8c0c2b74ad62e1ae
+          # The upstream screenshot utility deliberately suppresses every
+          # mGBA diagnostic. Restore stderr output in this disposable CI
+          # checkout to diagnose black-screen crashes during menu transition.
+          python3 - <<'PY'
+          from pathlib import Path
+          source = Path("/tmp/gba-rom-debugger/src/gba-walk.c")
+          content = source.read_text()
+          old = "(void) logger; (void) category; (void) level; (void) format; (void) args;"
+          new = "(void) logger; (void) category; (void) level; vfprintf(stderr, format, args); fputc('\\n', stderr);"
+          assert content.count(old) == 1
+          source.write_text(content.replace(old, new))
+          PY
           cc -std=gnu11 -O2 -DUSE_PNG -o /tmp/gba-walk \
             /tmp/gba-rom-debugger/src/gba-walk.c -lmgba -lpng
 
@@ -55,7 +67,10 @@ jobs:
           mkdir -p build/hgss-ribbon-live
           /tmp/gba-walk pokeemerald.gba build/hgss-ribbon-live \
             run:700 snap:main_menu \
-            press:A:1 run:400 snap:owner_list \
+            press:A:1 snap:after_select_01 \
+            run:25 snap:after_select_25 \
+            run:100 snap:after_select_125 \
+            run:275 snap:owner_list \
             press:A:1 run:220 snap:summary_page_01 \
             press:A:1 run:100 snap:zoom_page_01 \
             press:DOWN:1 run:110 press:DOWN:1 run:110 \
