@@ -6,12 +6,15 @@ Usage:
       --source /path/to/polishedcrystal --output /tmp/polished-johto
 
 This creates a *staging* 16x16 GBA metatile table, not a registered
-game tileset. Palette, VRAM bank layout and collision must be validated
-before it can be wired into live map headers.
+game tileset. GBC VRAM bank-0/1 graphics are mapped to real imported 4bpp
+tile IDs 1..288, with tile 0 reserved as an explicitly blank upper-layer
+tile. Source GBC priority and map collisions are not yet wired live.
 """
 import argparse
 from pathlib import Path
 import struct
+
+from stage_johto_tile_graphics import gba_tile_id
 
 SOURCE_PREFIX = Path("data/tilesets/johto_traditional")
 BLOCK_COUNT = 253
@@ -40,15 +43,15 @@ def convert(metatiles: bytes, attrs: bytes) -> bytes:
                     for x in (0, 1):
                         i = start + (by + y) * 4 + bx + x
                         attr = attrs[i]
-                        tile_id = metatiles[i] | (0x100 if attr & GBC_TILE_BANK_BIT else 0)
+                        tile_id = gba_tile_id(metatiles[i], int(bool(attr & GBC_TILE_BANK_BIT)))
                         entry = tile_id | ((attr & 7) << 12)
                         if attr & GBC_HFLIP_BIT:
                             entry |= 1 << 10
                         if attr & GBC_VFLIP_BIT:
                             entry |= 1 << 11
                         bottom.append(entry)
-                # Top layer uses tile 0 as a provisional transparent tile.
-                # Not safe to register until tile 0 transparency is verified.
+                # Top layer uses the verified synthetic all-transparent GBA tile 0.
+                # Source GBC priority bit7 still needs correct layer behavior.
                 for entry in bottom + [0] * 4:
                     output.extend(struct.pack("<H", entry))
     assert len(output) == BLOCK_COUNT * 4 * GBA_TILES_PER_METATILE * 2
