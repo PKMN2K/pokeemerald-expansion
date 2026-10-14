@@ -183,9 +183,9 @@ def validate_source_weather_candidates(text):
     if set(expected) != set(ORIGINAL_WEATHER_CANDIDATES):
         raise ValueError("original weather routing list changed")
     for map_name, (map_constant, weather_symbol) in expected.items():
-        if not re.search(r"\\b" + map_constant + r"\\b", text):
+        if not re.search(r"\b" + map_constant + r"\b", text):
             raise ValueError(f"source weather selector missing {map_name}")
-        if not re.search(r"\\b" + weather_symbol + r"\\b", text):
+        if not re.search(r"\b" + weather_symbol + r"\b", text):
             raise ValueError(f"source weather type missing {weather_symbol}")
     return True
 
