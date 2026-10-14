@@ -93,3 +93,20 @@ from the **same** `GetHgssRibbonScreenPosition` helper, eliminating
 independent coordinate calculations. These tests run in a real headless
 GBA emulator, but do not capture the full PokéNav screen or evaluate
 pixel appearance. Visual acceptance remains mandatory.
+
+## Step C — automated isolated-viewer mGBA screenshots (added 2026-10-14)
+
+The separate [HGSS ribbon emulator screenshots workflow](../../.github/workflows/hgss-ribbon-emulator.yml)
+builds a **temporary CI-only Emerald ROM** with its initial callback
+repointed to `CB2_HgssRibbonGridTest` by locally patching the linker
+script during CI. This change is never committed or used in release ROMs.
+A pinned, MIT-licensed headless mGBA screenshot utility captures all five
+pages as real 240x160 GBA framebuffer screenshots, and a pixel verifier
+compares each opaque icon pixel to the authentic HGSS tile/palette source.
+It uploads **screenshots only**, not the temporary ROM.
+
+Artifact: `hgss-ribbon-real-emulator-screenshots`. The reviewer must
+inspect the images and CI result before checking Step A. This is stronger
+evidence than offline PNGs but **does not verify the full live PokéNav
+screen**, the overlay/chrome, zoom, selection corners or all runtime input.
+Step B remains mandatory before legacy asset deletion.

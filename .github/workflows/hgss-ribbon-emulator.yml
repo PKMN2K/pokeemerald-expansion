@@ -1,0 +1,80 @@
+name: HGSS ribbon emulator screenshots
+
+on:
+  push:
+    branches:
+      - feature/gen4-ui-renderer
+    paths:
+      - .github/workflows/hgss-ribbon-emulator.yml
+      - src/gen4_ui_test.c
+      - src/pokenav_ribbons_summary.c
+      - graphics/gen4_ui/hgss_ribbons/**
+      - tools/gen4_ui/prepare_hgss_ribbon_capture.py
+      - tools/gen4_ui/verify_hgss_ribbon_emulator_screens.py
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  ribbon-emulator:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    env:
+      GAME_VERSION: EMERALD
+      GAME_REVISION: 0
+      GAME_LANGUAGE: ENGLISH
+      COMPARE: 0
+      UNUSED_ERROR: 1
+      DEPRECATED_ERROR: 1
+    steps:
+      - name: Checkout feature branch
+        uses: actions/checkout@v4
+
+      - name: Install GBA toolchain and native mGBA screenshot dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            binutils-arm-none-eabi gcc-arm-none-eabi libnewlib-arm-none-eabi \
+            libpng-dev libmgba-dev python3 python3-pil git
+
+      - name: Build temporary viewer-boot ROM (not a release artifact)
+        run: |
+          python3 tools/gen4_ui/prepare_hgss_ribbon_capture.py
+          make -j$(nproc) -O all
+          test -s pokeemerald.gba
+          grep -q "gInitialMainCB2 = CB2_HgssRibbonGridTest;" ld_script_modern.ld
+
+      - name: Compile pinned headless mGBA screenshot tool
+        run: |
+          git clone https://github.com/JohnnySun/gba-rom-debugger.git /tmp/gba-rom-debugger
+          git -C /tmp/gba-rom-debugger checkout --detach 1ab7c814f9e062790567c58c8c0c2b74ad62e1ae
+          cc -std=gnu11 -O2 -DUSE_PNG -o /tmp/gba-walk \
+            /tmp/gba-rom-debugger/src/gba-walk.c -lmgba -lpng
+
+      - name: Capture all five pages from actual mGBA framebuffer
+        run: |
+          mkdir -p build/hgss-ribbon-emulator build/hgss-ribbon-offline
+          python3 tools/gen4_ui/check_hgss_ribbon_grid.py --preview-dir build/hgss-ribbon-offline
+          /tmp/gba-walk pokeemerald.gba build/hgss-ribbon-emulator \
+            run:180 snap:page_01 \
+            press:RIGHT:1 snap:page_02 \
+            press:RIGHT:1 snap:page_03 \
+            press:RIGHT:1 snap:page_04 \
+            press:RIGHT:1 snap:page_05
+          python3 tools/gen4_ui/verify_hgss_ribbon_emulator_screens.py \
+            build/hgss-ribbon-emulator build/hgss-ribbon-offline
+          printf '%s\n' \
+            'Actual 240x160 mGBA framebuffer captures of the standalone HGSS ribbon debug viewer.' \
+            'Temporary CI ROM booted directly into CB2_HgssRibbonGridTest via linker override.' \
+            'NOT screenshots of the normal live PokéNav, ribbon zoom, or selection cursor.' \
+            'The temporary boot ROM is not uploaded or committed; retail HGSS pixels are untouched.' \
+            > build/hgss-ribbon-emulator/README.txt
+
+      - name: Upload native mGBA screenshot evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: hgss-ribbon-real-emulator-screenshots
+          path: build/hgss-ribbon-emulator/
+          if-no-files-found: warn
