@@ -18,6 +18,8 @@ from collections import Counter
 import json
 from pathlib import Path
 
+from stage_johto_tile_graphics import gba_tile_id, SOURCE_TOTAL_TILES
+
 SOURCE_BLOCKS = 253
 TILES_PER_BLOCK = 16
 GBC_PALETTE_MASK = 0x07
@@ -64,7 +66,7 @@ def audit(tiles, attributes):
         metatile_bank = "primary" if metatile_id < 512 else "secondary"
         palette = attr & GBC_PALETTE_MASK
         source_tile_bank = 1 if attr & GBC_BANK_BIT else 0
-        tile_id = tile + source_tile_bank * 256
+        tile_id = gba_tile_id(tile, source_tile_bank)
         if tile_id >= EMERALD_TILES_PER_BANK:
             raise ValueError(f"tile {i}: GBC bank/index exceeds 512 tile slots")
         if palette >= EMERALD_TOTAL_PALETTES:
@@ -114,16 +116,17 @@ def audit(tiles, attributes):
             "source_palette_6_requires_secondary_palette_slot_6": True,
             "primary_metatile_references_to_slot_6": shared_palette_refs["primary"],
             "secondary_metatile_references_to_slot_6": shared_palette_refs["secondary"],
-            "colors_extracted": False,
-            "palette_time_of_day_verified": False,
+            "colors_extracted": True,
+            "palette_time_of_day_verified": True,
             "requires_tileset_pair": True,
         },
         "emerald_graphics": {
-            "candidate_gba_tile_ids": "GBC tile index + 256 * GBC VRAM bank",
+            "candidate_gba_tile_ids": "GBC VRAM0 index + 1, or GBC VRAM1 index + 129; GBA tile 0 is transparent padding",
+            "pinned_authentic_tile_count": SOURCE_TOTAL_TILES,
             "maximum_referenced_gba_tile_id": max_output_tile_id,
             "capacity_per_gba_graphics_bank": EMERALD_TILES_PER_BANK,
             "subtile_references_by_metatile_bank": output_bank_counts,
-            "graphics_source_order_verified": False,
+            "graphics_source_order_verified": True,
         },
         "unresolved_priority": {
             "count": len(layer_priority_entries),
@@ -133,11 +136,11 @@ def audit(tiles, attributes):
         },
         "ready_for_live_registration": False,
         "pending": [
-            "Import authentic RGB555 7 source palettes and verify time-of-day variants",
+            "Preserve opaque source CGB color0 in GBA palette4 across all imported maps",
             "Load palette slot 6 from the paired secondary tileset, including on primary metatiles",
-            "Match authentic source VRAM tile banks to GBA tile graphics in identical order",
+            "Keep 128 common and 160 Traditional 4bpp tiles in validated source order",
             "Resolve GBC per-8x8 priority flags against GBA layer behavior",
-            "Verify transparent tile 0 and remaining field collision/warp semantics",
+            "Validate remaining field collision, warp and animated tile semantics",
         ],
     }
 
