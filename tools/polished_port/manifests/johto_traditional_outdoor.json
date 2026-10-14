@@ -24,7 +24,10 @@
       "violet_ecruteak": "gfx/tilesets/violet_ecruteak.pal",
       "overcast": "gfx/tilesets/bg_tiles_overcast.pal",
       "fixture_root": "tools/polished_port/fixtures/",
-      "pin": "3fa43192379df5c3e7b09a08e4d5d79af4f02f42"
+      "pin": "3fa43192379df5c3e7b09a08e4d5d79af4f02f42",
+      "map_group_roofs": "gfx/tilesets/roofs.pal",
+      "overcast_roofs": "gfx/tilesets/roofs_overcast.pal",
+      "map_group_indices": "constants/map_constants.asm"
     }
   },
   "target": {
@@ -94,7 +97,24 @@
       "environment_palette_3_source": "per-time water table indices 0x28, 0x29, 0x2A, 0x2B",
       "original_rgb555_preserved": true,
       "dynamic_map_group_roof_override_implemented": false,
-      "emerald_time_of_day_palette_switching_implemented": false
+      "emerald_time_of_day_palette_switching_implemented": false,
+      "roof_overrides": {
+        "status": "authentic_map_group_and_overcast_roof_rgb555_overlays_staged_not_live",
+        "script": "tools/polished_port/scripts/stage_johto_roof_palettes.py",
+        "test": "tools/polished_port/scripts/test_johto_roof_palettes.py",
+        "original_numbered_map_groups": 37,
+        "unused_source_map_group_index": 0,
+        "original_overcast_indices": 3,
+        "roof_global_palette_slot": 6,
+        "overridden_color_indices": [
+          1,
+          2
+        ],
+        "roof_override_bytes_per_variant": 4,
+        "roof_morning_shares_day": true,
+        "map_group_mapping_to_emerald": false,
+        "original_weather_event_conditions_implemented": false
+      }
     }
   },
   "conversion_requirements": [
@@ -105,6 +125,7 @@
     "Register the converted tileset only after all referenced binary and palette outputs exist.",
     "Do not substitute Prism terrain or overwrite existing expansion graphics.",
     "Use global source-to-Emerald palette IDs 0..6; primary loads 0..5 and the paired secondary supplies palette slot 6 for use by either bank. Validate actual RGB555 palette colors and time-of-day variants before registration.",
-    "Resolve 38 source GBC tile priority flags before live Emerald layer registration."
+    "Resolve 38 source GBC tile priority flags before live Emerald layer registration.",
+    "Resolve original Polished Crystal map group IDs to eventual Emerald map headers and weather/event conditions; the staged source-specific roof overlays are NOT yet runtime-selected."
   ]
 }
