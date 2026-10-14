@@ -215,6 +215,12 @@ jobs:
       - name: Validate original Johto map palette routing against Emerald clock
         run: python3 tools/polished_port/scripts/test_johto_map_palette_routing.py
 
+      - name: Verify source-generated Johto RGB555 tables
+        run: python3 tools/polished_port/scripts/emit_johto_palette_c_tables.py --check
+
+      - name: Test guarded Johto Emerald runtime palette composition
+        run: python3 tools/polished_port/scripts/test_johto_runtime_palette_tables.py
+
       - name: Test
         env:
           GAME_VERSION: EMERALD
