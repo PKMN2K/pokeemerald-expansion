@@ -40,7 +40,7 @@ def main():
         "4": 32, "5": 1132, "6": 128,
     }
     assert src["gbc_tile_bank_counts"] == {"0": 3162, "1": 886}
-    assert gfx["maximum_referenced_gba_tile_id"] == 406
+    assert gfx["maximum_referenced_gba_tile_id"] == 279
     assert gfx["subtile_references_by_metatile_bank"] == {
         "primary": 2048, "secondary": 2000,
     }
@@ -50,8 +50,9 @@ def main():
     assert slots["primary_metatile_references_to_slot_6"] == 80
     assert slots["secondary_metatile_references_to_slot_6"] == 48
     assert slots["requires_tileset_pair"]
-    assert not slots["colors_extracted"]
-    assert not slots["palette_time_of_day_verified"]
+    assert gfx["pinned_authentic_tile_count"] == 288
+    assert slots["colors_extracted"]
+    assert slots["palette_time_of_day_verified"]
 
     assert src["gbc_priority_tile_count"] == flags["count"] == 38
     assert len(flags["source_priority_entries"]) == 38
@@ -74,7 +75,7 @@ def main():
 
     assert not report["ready_for_live_registration"]
     assert not flags["gba_layer_rules_verified"]
-    assert not gfx["graphics_source_order_verified"]
+    assert gfx["graphics_source_order_verified"]
 
     # Test that this assumption remains true for the actual engine:
     # primary 6 + secondary 7; secondary palette loader starts at index 6.
