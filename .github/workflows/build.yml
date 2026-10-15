@@ -237,7 +237,7 @@ jobs:
 
       - name: Test native Johto C animation state on host
         run: |
-          gcc -std=c11 -Wall -Wextra -Werror -fsanitize=address,undefined -fno-omit-frame-pointer -Itools/polished_port/tests/include -Iinclude src/polished_johto_animation.c tools/polished_port/tests/test_johto_animation_native.c -o /tmp/test_johto_animation_native
+          gcc -std=c11 -Wall -Wextra -Werror -DPOLISHED_JOHTO_HOST_TEST -fsanitize=address,undefined -fno-omit-frame-pointer -Itools/polished_port/tests/include -Iinclude src/polished_johto_animation.c tools/polished_port/tests/test_johto_animation_native.c -o /tmp/test_johto_animation_native
           /tmp/test_johto_animation_native
 
       - name: Test
