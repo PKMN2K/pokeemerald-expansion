@@ -119,36 +119,36 @@ path.write_text(text)
 nav = Path("src/pokenav.c")
 nav_text = nav.read_text()
 nav_text = nav_text.replace(
-    "static void CB2_Pokenav(void)\\n{",
-    "static volatile u16 sCaptureRibbonStage;\\n"
-    "static void CB2_Pokenav(void)\\n{",
+    "static void CB2_Pokenav(void)\n{",
+    "static volatile u16 sCaptureRibbonStage;\n"
+    "static void CB2_Pokenav(void)\n{",
     1,
 )
 nav_text = nav_text.replace(
-    "    UpdatePaletteFade();\\n}\\n\\nstatic void VBlankCB_Pokenav",
-    "    UpdatePaletteFade();\\n"
-    "    // CI-only RGB breadcrumb, visible on black screens.\\n"
-    "    gPlttBufferFaded[0] = sCaptureRibbonStage == 3 ? RGB(0, 0, 31) :\\n"
-    "        sCaptureRibbonStage == 2 ? RGB(0, 31, 0) :\\n"
-    "        sCaptureRibbonStage == 1 ? RGB(31, 0, 0) : RGB(0, 0, 0);\\n"
-    "}\\n\\nstatic void VBlankCB_Pokenav",
+    "    UpdatePaletteFade();\n}\n\nstatic void VBlankCB_Pokenav",
+    "    UpdatePaletteFade();\n"
+    "    // CI-only RGB breadcrumb, visible on black screens.\n"
+    "    gPlttBufferFaded[0] = sCaptureRibbonStage == 3 ? RGB(0, 0, 31) :\n"
+    "        sCaptureRibbonStage == 2 ? RGB(0, 31, 0) :\n"
+    "        sCaptureRibbonStage == 1 ? RGB(31, 0, 0) : RGB(0, 0, 0);\n"
+    "}\n\nstatic void VBlankCB_Pokenav",
     1,
 )
 nav_text = nav_text.replace(
     "        if (menuId == POKENAV_MENU_FUNC_EXIT)",
-    "        if (menuId == POKENAV_RIBBONS_MON_LIST) sCaptureRibbonStage = 1;\\n"
+    "        if (menuId == POKENAV_RIBBONS_MON_LIST) sCaptureRibbonStage = 1;\n"
     "        if (menuId == POKENAV_MENU_FUNC_EXIT)",
     1,
 )
 nav_text = nav_text.replace(
     "    if (!PokenavMenuCallbacks[index].init())",
-    "    if (menuId == POKENAV_RIBBONS_MON_LIST) sCaptureRibbonStage = 2;\\n"
+    "    if (menuId == POKENAV_RIBBONS_MON_LIST) sCaptureRibbonStage = 2;\n"
     "    if (!PokenavMenuCallbacks[index].init())",
     1,
 )
 nav_text = nav_text.replace(
     "    if (!PokenavMenuCallbacks[index].open())",
-    "    if (menuId == POKENAV_RIBBONS_MON_LIST) sCaptureRibbonStage = 3;\\n"
+    "    if (menuId == POKENAV_RIBBONS_MON_LIST) sCaptureRibbonStage = 3;\n"
     "    if (!PokenavMenuCallbacks[index].open())",
     1,
 )
