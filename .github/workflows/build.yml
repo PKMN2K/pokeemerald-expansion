@@ -235,6 +235,11 @@ jobs:
       - name: Test Johto 4bpp scroll dispatcher
         run: python3 tools/polished_port/scripts/test_johto_animation_dispatch_4bpp.py
 
+      - name: Test native Johto C animation state on host
+        run: |
+          gcc -std=c11 -Wall -Wextra -Werror -fsanitize=address,undefined -fno-omit-frame-pointer -Itools/polished_port/tests/include -Iinclude src/polished_johto_animation.c tools/polished_port/tests/test_johto_animation_native.c -o /tmp/test_johto_animation_native
+          /tmp/test_johto_animation_native
+
       - name: Test
         env:
           GAME_VERSION: EMERALD
