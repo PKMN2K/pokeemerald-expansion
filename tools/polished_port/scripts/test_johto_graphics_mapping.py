@@ -51,6 +51,9 @@ def main():
     assert slots["secondary_metatile_references_to_slot_6"] == 48
     assert slots["requires_tileset_pair"]
     assert gfx["pinned_authentic_tile_count"] == 288
+    assert gfx["source_derived_priority_overlay_tiles"] == 12
+    assert gfx["first_priority_overlay_gba_tile_id"] == 289
+    assert gfx["last_priority_overlay_gba_tile_id"] == 300
     assert slots["colors_extracted"]
     assert slots["palette_time_of_day_verified"]
 
@@ -75,6 +78,12 @@ def main():
 
     assert not report["ready_for_live_registration"]
     assert not flags["gba_layer_rules_verified"]
+    assert flags["source_priority_overlay_conversion_staged"]
+    assert flags["staged_priority_overlay_tile_count"] == 12
+    assert flags["required_emerald_metatile_layer_type"] == "METATILE_LAYER_TYPE_NORMAL"
+    assert flags["gbc_color_zero_masked_on_bg1_only"]
+    assert flags["requires_gba_bg_obj_elevation_priority_validation"]
+    assert not flags["needs_per_8x8_priority_layer_policy"]
     assert gfx["graphics_source_order_verified"]
 
     # Test that this assumption remains true for the actual engine:
