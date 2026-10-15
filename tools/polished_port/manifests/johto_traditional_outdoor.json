@@ -215,7 +215,7 @@
         288
       ],
       "unused_gba_primary_ids": [
-        289,
+        301,
         511
       ],
       "gba_secondary_graphics_all_blank": true,
@@ -225,7 +225,76 @@
       "all_source_refs_count": 4048,
       "source_GBC_priority_flag_count": 38,
       "source_tile_animations_unregistered": true,
-      "registered": false
+      "registered": false,
+      "gba_4bpp_priority_overlay_ids": [
+        289,
+        300
+      ],
+      "gba_4bpp_priority_overlay_tile_count": 12,
+      "source_priority_subtile_occurrences": 38,
+      "source_priority_unique_gba_metatile_count": 11,
+      "source_priority_blocks": [
+        20,
+        145,
+        146,
+        210,
+        211,
+        214,
+        215
+      ],
+      "source_priority_7bit_overlay_staged": true,
+      "gba_priority_overlay_color0_transparent": true,
+      "gba_priority_overlay_source_colors_1_to_3_unchanged": true,
+      "required_emerald_metatile_layer": "METATILE_LAYER_TYPE_NORMAL",
+      "emerald_obj_elevation_priority_verified": false
+    },
+    "priority_layer_staging": {
+      "status": "per_8x8_original_CGB_priority_masks_staged_not_live",
+      "source_flag_count": 38,
+      "source_32x32_blocks_with_flags": 7,
+      "flagged_block_counts": {
+        "20": 2,
+        "145": 8,
+        "146": 8,
+        "210": 8,
+        "211": 8,
+        "214": 2,
+        "215": 2
+      },
+      "affected_emerald_16x16_metatile_ids": [
+        81,
+        582,
+        583,
+        586,
+        587,
+        842,
+        843,
+        846,
+        847,
+        856,
+        861
+      ],
+      "source_derived_distinct_foreground_mask_tiles": 12,
+      "gba_foreground_tile_range": [
+        289,
+        300
+      ],
+      "gba_bottom_source_tile_range": [
+        1,
+        288
+      ],
+      "original_cgb_color_zero_background_remains_opaque_at_gba_index_4": true,
+      "original_cgb_color_zero_sprite_punchthrough_at_gba_bg1_index_0": true,
+      "masked_foreground_preserves_only_cgb_palette_colors_1_to_3": true,
+      "source_flip_and_palette_flags_preserved": true,
+      "gba_metatile_layer_required": "METATILE_LAYER_TYPE_NORMAL",
+      "gba_bg2_opaque_field_base": true,
+      "gba_bg1_masked_front_against_sprites": true,
+      "gba_obj_priority1_elevation_cases_verified": false,
+      "live_layout_registered": false,
+      "generator": "tools/polished_port/scripts/stage_johto_tile_graphics.py",
+      "metatile_converter": "tools/polished_port/scripts/convert_johto_traditional_blocks.py",
+      "test": "tools/polished_port/scripts/test_johto_priority_overlays.py"
     }
   },
   "conversion_requirements": [
@@ -236,13 +305,14 @@
     "Register the converted tileset only after all referenced binary and palette outputs exist.",
     "Do not substitute Prism terrain or overwrite existing expansion graphics.",
     "Use global source-to-Emerald palette IDs 0..6; primary loads 0..5 and the paired secondary supplies palette slot 6 for use by either bank. Validate actual RGB555 palette colors and time-of-day variants before registration.",
-    "Resolve 38 source GBC tile priority flags before live Emerald layer registration.",
+    "The 38 GBC bit7 priority flags are staged using 12 source-derived color0-masked BG1 overlays; compare Emerald OAM priority1/elevation against this layer before live registration.",
     "Resolve original Polished Crystal map group IDs to eventual Emerald map headers and weather/event conditions; the staged source-specific roof overlays are NOT yet runtime-selected.",
     "Map selected original Johto map names and 1-based source groups to new Emerald map header IDs before live palette selection; current script does not remap Hoenn IDs.",
     "Connect resolved source RGB555 palettes to existing Emerald UpdateTimeOfDay/field palette refresh hooks only after authentic tileset graphics and map registration; avoid applying Emerald generic DNS tint twice.",
     "Keep the opt-in C Johto palette registration table empty until registered Emerald layout IDs, BOTH authentic tileset identities, GBC priority layers, and weather/map overrides are verified. Do not enter original Johto numeric map groups as Emerald layout IDs.",
     "Compiled Johto color composer does not yet resolve special palette files beyond standard/Violet-Ecruteak/overcast; original source weather event conditions and all other special overrides require runtime parity.",
-    "Source GBC index0 is opaque: use GBA pixel index4 and repeat original RGB555 color0 at index4 in all staged/runtime palette banks, leaving transparent GBA pixel0 exclusively for synthetic layer padding.",
-    "Verify all GBC animated outdoor tiles and 38 GBC priority flags before registering new Emerald Johto map layouts; no gameplay/collision import is activated."
+    "Source GBC index0 is opaque: use GBA pixel index4 and repeat original RGB555 color0 at index4 in all staged/runtime palette banks, leaving transparent GBA pixel0 exclusively for synthetic layer padding. Foreground priority masks instead use transparent pixel0 ONLY where original CGB color0 must allow OBJ through.",
+    "Verify all GBC animated outdoor tiles and 38 GBC priority flags before registering new Emerald Johto map layouts; no gameplay/collision import is activated.",
+    "Use METATILE_LAYER_TYPE_NORMAL (BG2 lower graphics, BG1 priority masks) for staged Johto metatiles; verify sprite and subsprite elevation rendering before registering any map layout."
   ]
 }
