@@ -561,6 +561,31 @@ static void AppendTilesetAnimToBuffer(const u16 *src, u16 *dest, u16 size)
     }
 }
 
+// Staging-only Johto transfer bridge. There are deliberately no callers or
+// Johto tileset registrations yet. This uses Emerald's established deferred
+// DMA queue instead of writing VRAM from the animation state machine.
+// Source-derived destinations: eight animated tiles plus scrolling tile $35.
+void QueuePolishedJohtoAnimationTile(const u16 *frame, u16 tileId)
+{
+    if (frame == NULL)
+        return;
+
+    switch (tileId)
+    {
+    case 132: // Flower
+    case 149: // Water
+    case 157: // Rain puddle
+    case 158: // Rain water
+    case 178: // Whirlpool 1
+    case 179: // Whirlpool 2
+    case 182: // Down-scrolling tile $35
+    case 194: // Whirlpool 3
+    case 195: // Whirlpool 4
+        AppendTilesetAnimToBuffer(frame, (u16 *)(BG_VRAM + TILE_OFFSET_4BPP(tileId)), TILE_SIZE_4BPP);
+        break;
+    }
+}
+
 void TransferTilesetAnimsBuffer(void)
 {
     int i;
