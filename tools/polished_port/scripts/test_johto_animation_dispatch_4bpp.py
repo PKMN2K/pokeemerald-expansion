@@ -22,7 +22,9 @@ def main():
             assert events[step]["animation"] == name
             assert events[step]["frame"] == frame_index(name, cycle)
             assert events[step]["tile"] == TARGETS[name][0] + 129
-        assert tiles[SCROLL_GBA_TILE] == initial[-(4 * ((3 * (cycle + 1)) % 8)):] + initial[:-(4 * ((3 * (cycle + 1)) % 8))] if ((3 * (cycle + 1)) % 8) else tiles[SCROLL_GBA_TILE] == initial
+        rows = (3 * (cycle + 1)) % 8
+        expected = initial[-4 * rows:] + initial[:-4 * rows] if rows else initial
+        assert tiles[SCROLL_GBA_TILE] == expected
     assert tiles[SCROLL_GBA_TILE] == initial
     for value in (-1, 8):
         try:
