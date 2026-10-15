@@ -1,7 +1,12 @@
 #ifndef GUARD_POLISHED_JOHTO_ANIMATION_H
 #define GUARD_POLISHED_JOHTO_ANIMATION_H
 
+#ifdef POLISHED_JOHTO_HOST_TEST
+#include <stdint.h>
+typedef uint8_t u8;
+#else
 #include "global.h"
+#endif
 
 // Source tileset animation is opt-in. No map, tileset callback, DMA or VRAM
 // writes are registered here.
