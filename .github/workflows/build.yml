@@ -224,6 +224,9 @@ jobs:
       - name: Test pinned Johto PNG pixel and VRAM graphics conversion
         run: python3 tools/polished_port/scripts/test_johto_tile_graphics.py
 
+      - name: Verify authentic GBC tile priority overlays and sprite color-zero punch-through
+        run: python3 tools/polished_port/scripts/test_johto_priority_overlays.py
+
       - name: Test
         env:
           GAME_VERSION: EMERALD
