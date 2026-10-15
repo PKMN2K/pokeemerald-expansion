@@ -10,6 +10,11 @@ from stage_johto_tile_graphics import (
     SOURCE_COMMON_TILES,
     SOURCE_TOTAL_TILES,
     SOURCE_TRADITIONAL_TILES,
+    FIRST_PRIORITY_GBA_TILE,
+    EXPECTED_PRIORITY_REFERENCES,
+    EXPECTED_PRIORITY_UNIQUE_TILES,
+    priority_overlay_tile_ids,
+    mask_source_zero_for_priority,
     SOURCES,
     build_graphics,
     encode_gba_tile,
@@ -34,7 +39,7 @@ def main():
     assert len(primary) == GBA_PRIMARY_TILE_CAPACITY * GBA_TILE_BYTES == 16384
     assert len(secondary) == GBA_SECONDARY_TILE_CAPACITY * GBA_TILE_BYTES == 16384
     assert primary[:32] == b"\x00" * 32
-    assert primary[289 * 32:] == b"\x00" * (223 * 32)
+    assert primary[301 * 32:] == b"\x00" * (211 * 32)
     assert secondary == b"\x00" * 16384
     assert review["source_png_tile_counts"] == {
         "common_vram0": SOURCE_COMMON_TILES,
@@ -46,6 +51,14 @@ def main():
     assert review["gba_source_common_tile_ids"] == [1, 128]
     assert review["gba_source_traditional_tile_ids"] == [129, 288]
     assert review["gba_4bpp_reserved_transparent_tile_id"] == 0
+    assert review["gba_priority_overlay_tile_count"] == 12
+    assert review["gba_priority_overlay_ids"] == [289, 300]
+    assert review["priority_source_subtile_references"] == 38
+    assert review["priority_mask_gbc_color_zero_transparent"]
+    assert review["priority_masks_keep_gbc_colors_1_to_3_unchanged"]
+    assert review["priority_source_flag_mapping_staged"]
+    assert not review["priority_sprite_elevation_parity_verified"]
+    assert review["gba_padded_tile_count"] == 724
     assert review["palette_gba_index_4_must_duplicate_source_color_0"]
     assert not review["emerald_tileset_registered"]
     assert not review["ready_for_live_registration"]
@@ -69,6 +82,29 @@ def main():
                     and (x >> 4) in (1, 2, 3, 4)) for x in encoded_bytes)
     assert len(originals) == 288
     assert primary[32:289 * 32] == b"".join(originals)
+
+    # Original GBC BG bit7 pixels 1..3 cover sprites, but index 0 does not.
+    # Masked BG1 clones preserve that behavior; opaque BG2 art is unchanged.
+    source_metatiles = load_fixture("metatiles")
+    source_attributes = load_fixture("attributes")
+    mask_map = priority_overlay_tile_ids(source_metatiles, source_attributes)
+    assert len(mask_map) == EXPECTED_PRIORITY_UNIQUE_TILES == 12
+    assert FIRST_PRIORITY_GBA_TILE == 289
+    assert list(mask_map.values()) == list(range(289, 301))
+    assert sorted(mask_map) == [12, 174, 189, 257, 258, 259, 260,
+                                261, 273, 274, 275, 276]
+    assert sum(bool(a & 0x80) for a in source_attributes) == EXPECTED_PRIORITY_REFERENCES == 38
+    for normal_id, mask_id in mask_map.items():
+        ordinary = primary[normal_id * 32:(normal_id + 1) * 32]
+        overlay = primary[mask_id * 32:(mask_id + 1) * 32]
+        assert overlay == mask_source_zero_for_priority(ordinary)
+        for bottom, top in zip(ordinary, overlay):
+            for shift in (0, 4):
+                opaque = (bottom >> shift) & 15
+                front = (top >> shift) & 15
+                assert front == (0 if opaque == 4 else opaque)
+                assert opaque in (1, 2, 3, 4)
+                assert front in (0, 1, 2, 3)
 
     metatiles = load_fixture("metatiles")
     attrs = load_fixture("attributes")
@@ -128,11 +164,13 @@ def main():
     rejects(lambda: encode_gba_tile([(4,) * 8] * 8))
 
     print("PASS: pinned Git blobs give exactly 128 shared + 160 Traditional tiles")
-    print("PASS: 288 source tiles preserved, 736 GBA slots blank padding only")
+    print("PASS: 288 source tiles preserved plus 12 source-derived priority overlays")
+    print("PASS: 724 GBA tile slots remain blank padding")
     print("PASS: all 4048 original source subtile references map to authentic 4bpp art")
     print("PASS: opaque GBC color0 uses GBA index4, never transparent index0")
     print("PASS: malformed assets and nonexistent tiles fail closed")
-    print("REVIEW: 38 per-8x8 source priority flags and animation still pending")
+    print("PASS: all 38 bit7 positions use per-pixel color0 transparency")
+    print("REVIEW: live sprite elevation parity and animations still pending")
 
 
 if __name__ == "__main__":
