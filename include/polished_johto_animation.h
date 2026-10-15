@@ -4,6 +4,7 @@
 #ifdef POLISHED_JOHTO_HOST_TEST
 #include <stdint.h>
 typedef uint8_t u8;
+typedef uint32_t u32;
 #else
 #include "global.h"
 #endif
