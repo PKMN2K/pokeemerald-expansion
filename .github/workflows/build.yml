@@ -230,6 +230,9 @@ jobs:
       - name: Verify pinned Johto outdoor animation dispatch schedule
         run: python3 tools/polished_port/scripts/test_johto_animation_schedule.py
 
+      - name: Validate authentic Johto animation frame sprites and 22-step timing
+        run: python3 tools/polished_port/scripts/test_johto_animation_frames.py
+
       - name: Test
         env:
           GAME_VERSION: EMERALD

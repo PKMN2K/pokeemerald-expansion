@@ -297,7 +297,7 @@
       "test": "tools/polished_port/scripts/test_johto_priority_overlays.py"
     },
     "animation_staging": {
-      "status": "authentic_dispatch_schedule_pinned_frames_not_yet_converted",
+      "status": "original_38_4bpp_frames_and_eight_cycle_source_timing_staged_not_live",
       "source": "engine/tilesets/tileset_anims.asm",
       "source_pin": "3fa43192379df5c3e7b09a08e4d5d79af4f02f42",
       "fixture": "tools/polished_port/fixtures/johto_outdoor_animation_schedule.asm",
@@ -315,9 +315,34 @@
         "ScrollTileDown",
         "ReadTileFromBuffer"
       ],
-      "original_frame_graphics_imported": false,
-      "original_frame_timing_ported": false,
-      "emerald_animation_hook_registered": false
+      "original_frame_graphics_imported": true,
+      "original_frame_timing_ported": "staged_exact_selectors_and_dispatch_trace;_not_yet_installed_in_emerald_runtime",
+      "emerald_animation_hook_registered": false,
+      "source_png_fixture": "tools/polished_port/fixtures/johto_outdoor_animation_pngs.json",
+      "source_timing_fixture": "tools/polished_port/fixtures/johto_outdoor_animation_timing.asm",
+      "converter": "tools/polished_port/scripts/stage_johto_animation_frames.py",
+      "ci_frame_and_timing_test": "tools/polished_port/scripts/test_johto_animation_frames.py",
+      "source_png_files": 9,
+      "source_8x8_frames": 38,
+      "converted_4bpp_frame_groups": 8,
+      "converted_frame_bytes": 1216,
+      "source_dispatch_steps": 22,
+      "source_timer_increment_command_index": 11,
+      "source_timer_modulus": 8,
+      "complete_cycles_regression_traced": 8,
+      "destinations_gba_primary_tile_ids": {
+        "water": 149,
+        "rain_puddle": 157,
+        "rain_water": 158,
+        "flower": 132,
+        "whirlpool_1": 178,
+        "whirlpool_2": 179,
+        "whirlpool_3": 194,
+        "whirlpool_4": 195
+      },
+      "source_priority_masks_animated_id_overlap": 0,
+      "original_three_scroll_commands_to_gba_tile_182_pending": true,
+      "emerald_map_registered": false
     }
   },
   "conversion_requirements": [
@@ -336,6 +361,7 @@
     "Compiled Johto color composer does not yet resolve special palette files beyond standard/Violet-Ecruteak/overcast; original source weather event conditions and all other special overrides require runtime parity.",
     "Source GBC index0 is opaque: use GBA pixel index4 and repeat original RGB555 color0 at index4 in all staged/runtime palette banks, leaving transparent GBA pixel0 exclusively for synthetic layer padding. Foreground priority masks instead use transparent pixel0 ONLY where original CGB color0 must allow OBJ through.",
     "Verify all GBC animated outdoor tiles and 38 GBC priority flags before registering new Emerald Johto map layouts; no gameplay/collision import is activated.",
-    "Use METATILE_LAYER_TYPE_NORMAL (BG2 lower graphics, BG1 priority masks) for staged Johto metatiles; verify sprite and subsprite elevation rendering before registering any map layout."
+    "Use METATILE_LAYER_TYPE_NORMAL (BG2 lower graphics, BG1 priority masks) for staged Johto metatiles; verify sprite and subsprite elevation rendering before registering any map layout.",
+    "Staged 38 pinned animation frames and original 22-step timer selectors are tested; before installing live animation callbacks, implement source 2bpp scroll/row rotation tile $35 in 4bpp and verify frame timing against Emerald's VBlank and weather dispatch."
   ]
 }
