@@ -112,46 +112,47 @@ void CB2_HgssRibbonLiveCapture(void)
 }
 """
 path.write_text(text)
-# Instrument the disposable game code with a palette breadcrumb. This alters
-# only the CI-generated ROM, never the committed PokéNav renderer. A forced
-# backdrop color after the normal palette fade differentiates dispatch from
-# ribbon-list initialization even when all other graphics are black.
+# Inject mGBA's documented debug-register logging only into the disposable
+# CI ROM. Logs are emitted through the screenshot utility's stderr logger.
 nav = Path("src/pokenav.c")
 nav_text = nav.read_text()
-nav_text = nav_text.replace(
-    "static void CB2_Pokenav(void)\n{",
-    "static volatile u16 sCaptureRibbonStage;\n"
-    "static void CB2_Pokenav(void)\n{",
-    1,
-)
-nav_text = nav_text.replace(
-    "    UpdatePaletteFade();\n}\n\nstatic void VBlankCB_Pokenav",
-    "    UpdatePaletteFade();\n"
-    "    // CI-only RGB breadcrumb, visible on black screens.\n"
-    "    gPlttBufferFaded[0] = sCaptureRibbonStage == 3 ? 0x7C00 :\n"
-    "        sCaptureRibbonStage == 2 ? 0x03E0 :\n"
-    "        sCaptureRibbonStage == 1 ? 0x001F : 0x0000;\n"
-    "}\n\nstatic void VBlankCB_Pokenav",
-    1,
-)
-nav_text = nav_text.replace(
-    "        if (menuId == POKENAV_MENU_FUNC_EXIT)",
-    "        if (menuId == POKENAV_RIBBONS_MON_LIST) sCaptureRibbonStage = 1;\n"
-    "        if (menuId == POKENAV_MENU_FUNC_EXIT)",
-    1,
-)
-nav_text = nav_text.replace(
-    "    if (!PokenavMenuCallbacks[index].init())",
-    "    if (menuId == POKENAV_RIBBONS_MON_LIST) sCaptureRibbonStage = 2;\n"
-    "    if (!PokenavMenuCallbacks[index].init())",
-    1,
-)
-nav_text = nav_text.replace(
-    "    if (!PokenavMenuCallbacks[index].open())",
-    "    if (menuId == POKENAV_RIBBONS_MON_LIST) sCaptureRibbonStage = 3;\n"
-    "    if (!PokenavMenuCallbacks[index].open())",
-    1,
-)
+def patch_once(old, new):
+    global nav_text
+    if nav_text.count(old) != 1:
+        raise SystemExit(f"Unexpected PokéNav diagnostic hook: {old[:70]}")
+    nav_text = nav_text.replace(old, new, 1)
+
+logger = r"""
+// Disposable CI-only mGBA console tracer; no production source is changed.
+static void CaptureLog(const char *msg)
+{
+    volatile u16 *enable = (volatile u16 *)0x04FFF780;
+    volatile u16 *flags = (volatile u16 *)0x04FFF700;
+    volatile char *buffer = (volatile char *)0x04FFF600;
+    u32 i;
+    *enable = 0xC0DE;
+    if (*enable != 0x1DEA)
+        return;
+    for (i = 0; msg[i] && i < 254; i++)
+        buffer[i] = msg[i];
+    buffer[i] = 0;
+    *flags = 0x103; // mGBA INFO, trigger logging
+}
+"""
+patch_once("static void CB2_Pokenav(void)\n{",
+           logger + "\nstatic void CB2_Pokenav(void)\n{")
+patch_once("        if (menuId == POKENAV_MENU_FUNC_EXIT)",
+           '        if (menuId == POKENAV_RIBBONS_MON_LIST) CaptureLog("RIBBON_STAGE: dispatch requested");\n'
+           "        if (menuId == POKENAV_MENU_FUNC_EXIT)")
+patch_once("    if (!PokenavMenuCallbacks[index].init())",
+           '    if (menuId == POKENAV_RIBBONS_MON_LIST) CaptureLog("RIBBON_STAGE: before init");\n'
+           "    if (!PokenavMenuCallbacks[index].init())")
+patch_once("    if (!PokenavMenuCallbacks[index].open())",
+           '    if (menuId == POKENAV_RIBBONS_MON_LIST) CaptureLog("RIBBON_STAGE: before open");\n'
+           "    if (!PokenavMenuCallbacks[index].open())")
+patch_once("    SetActiveMenuLoopTasks(PokenavMenuCallbacks[index].createLoopTask",
+           '    if (menuId == POKENAV_RIBBONS_MON_LIST) CaptureLog("RIBBON_STAGE: open succeeded");\n'
+           "    SetActiveMenuLoopTasks(PokenavMenuCallbacks[index].createLoopTask")
 nav.write_text(nav_text)
 
 print("Prepared disposable full-menu CI boot: initial Ribbons cursor, 25 normal + 7 gift ribbons")
