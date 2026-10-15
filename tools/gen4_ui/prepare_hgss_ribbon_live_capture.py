@@ -24,6 +24,8 @@ text = text.replace(include_marker, include_marker +
                     '#include "pokemon.h"\n'
                     '#include "load_save.h"\n'
                     '#include "event_data.h"\n'
+                    '#include "sprite.h"\n'
+                    '#include "palette.h"\n'
                     '#include "constants/flags.h"\n'
                     '#include "constants/species.h"\n')
 # IMPORTANT: Do NOT skip the real PokéNav main menu. The original
@@ -101,6 +103,11 @@ void CB2_HgssRibbonLiveCapture(void)
     InitEventData();
     FlagSet(FLAG_ADDED_MATCH_CALL_TO_POKENAV);
     FlagSet(FLAG_SYS_RIBBON_GET);
+    // A cold boot has not passed through the field menu, which normally
+    // resets sprite/OAM state before opening the PokéNav. Match the real
+    // PokéNav tutorial entry path for this isolated capture fixture.
+    ResetSpriteData();
+    FreeAllSpritePalettes();
     CB2_InitPokeNav();
 }
 """
