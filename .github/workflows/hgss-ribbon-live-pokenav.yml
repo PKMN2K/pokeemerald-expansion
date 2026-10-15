@@ -65,6 +65,24 @@ jobs:
       - name: Capture actual ribbon list, five-page navigation and zoom
         run: |
           mkdir -p build/hgss-ribbon-live
+          # Detect the known blackout promptly before performing the longer
+          # navigation sequence. Keep these early frames as failure artifacts.
+          /tmp/gba-walk pokeemerald.gba build/hgss-ribbon-live \
+            run:700 snap:main_menu \
+            press:A:1 snap:after_select_01 \
+            run:25 snap:after_select_25 \
+            run:100 snap:after_select_125
+          python3 - <<'PY'
+          from PIL import Image
+          from pathlib import Path
+          for name in ("main_menu", "after_select_01", "after_select_25", "after_select_125"):
+              im = Image.open(Path("build/hgss-ribbon-live") / f"{name}.png").convert("RGB")
+              colors = len(im.getcolors(im.width * im.height) or [])
+              print(f"{name}: {colors} colors", flush=True)
+          im = Image.open("build/hgss-ribbon-live/after_select_125.png").convert("RGB")
+          if len(im.getcolors(im.width * im.height) or []) < 16:
+              raise SystemExit("PokéNav remains black after 125 frames; inspect early screenshots")
+          PY
           /tmp/gba-walk pokeemerald.gba build/hgss-ribbon-live \
             run:700 snap:main_menu \
             press:A:1 snap:after_select_01 \
