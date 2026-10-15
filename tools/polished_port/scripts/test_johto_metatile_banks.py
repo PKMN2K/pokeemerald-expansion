@@ -5,7 +5,7 @@ from pathlib import Path
 import struct
 
 from convert_johto_traditional_blocks import BLOCK_COUNT, convert
-from stage_johto_tile_graphics import gba_tile_id
+from stage_johto_tile_graphics import gba_tile_id, priority_overlay_tile_ids
 from extract_johto_collision import extract
 from split_johto_metatile_banks import (
     PRIMARY_BYTES, SECONDARY_BYTES, BYTES_PER_METATILE, manifest,
@@ -32,6 +32,8 @@ def expected_entry(tile, attr):
 
 
 def verify_source_geometry(tiles, attrs, converted):
+    priority_map = priority_overlay_tile_ids(tiles, attrs)
+    priority_occurrences = 0
     for block in range(BLOCK_COUNT):
         start = block * 16
         for slot, (by, bx) in enumerate(((0, 0), (0, 2), (2, 0), (2, 2))):
@@ -41,7 +43,20 @@ def verify_source_geometry(tiles, attrs, converted):
             expected = tuple(expected_entry(tiles[i], attrs[i]) for i in indices)
             offset = (block * 4 + slot) * BYTES_PER_METATILE
             assert struct.unpack_from("<4H", converted, offset) == expected
-            assert struct.unpack_from("<4H", converted, offset + 8) == (0, 0, 0, 0)
+            upper = []
+            for i in indices:
+                if attrs[i] & 0x80:
+                    # Only the GBA tile ID changes; palette, X/Y flip
+                    # must equal the original GBC bit7 tile's attributes.
+                    normal = expected_entry(tiles[i], attrs[i])
+                    source_id = gba_tile_id(tiles[i], int(bool(attrs[i] & 8)))
+                    upper.append((normal & ~0x3FF) | priority_map[source_id])
+                    priority_occurrences += 1
+                else:
+                    upper.append(0)
+            assert struct.unpack_from("<4H", converted, offset + 8) == tuple(upper)
+    assert priority_occurrences == 38
+    assert len(priority_map) == 12
 
 
 def main():
@@ -114,7 +129,8 @@ def main():
     print("PASS: authentic 253 blocks -> 512 primary + 500 secondary metatiles")
     print("PASS: 1012 original metatiles preserved; 12 source-absent IDs not invented")
     print("PASS: real source GBC VRAM references match original 4bpp tile IDs 1..288")
-    print("REVIEW: 38 GBC priority flags still need live layer mapping")
+    print("PASS: 38 source bit7 entries preserved as masked foreground tile references")
+    print("REVIEW: live sprite-elevation BG/OBJ priority and animations remain pending")
 
 
 if __name__ == "__main__":
