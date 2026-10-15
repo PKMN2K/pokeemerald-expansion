@@ -5,6 +5,8 @@ void InitTilesetAnimations(void);
 void InitSecondaryTilesetAnimation(void);
 void UpdateTilesetAnimations(void);
 void TransferTilesetAnimsBuffer(void);
+// Reserved for source-verified Johto tilesets; no live caller registered.
+void QueuePolishedJohtoAnimationTile(const u16 *frame, u16 tileId);
 
 void InitTilesetAnim_General(void);
 void InitTilesetAnim_Petalburg(void);
