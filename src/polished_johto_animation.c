@@ -89,3 +89,46 @@ u8 PolishedJohtoAnimation_Frame(u8 stream, u8 timer)
     default: return 0;
     }
 }
+
+// Dispatches only verified source tile destinations. Each stream is stored
+// contiguously in the caller's authenticated 4bpp frame table:
+// water(4), rain puddle(8), rain water(8), flower(2), whirlpool 1..4(4 each).
+// The queue callback can be Emerald's guarded DMA bridge, but no runtime
+// registration occurs here. Frame storage and state must remain alive until
+// TransferTilesetAnimsBuffer drains the deferred transfer queue.
+void PolishedJohtoAnimation_DispatchStaged(
+    struct PolishedJohtoAnimationState *state,
+    const u16 *const *frames, PolishedJohtoQueueTile queue)
+{
+    static const u8 sSteps[] = {0, 1, 2, 4, 5, 6, 7, 8, 9, 10};
+    static const u8 sStreams[] = {0, 1, 2, 3, 4, 5, 6, 7, 1, 2};
+    static const u8 sOffsets[] = {0, 4, 12, 20, 22, 26, 30, 34};
+    static const u16 sDestinations[] = {149, 157, 158, 132, 178, 179, 194, 195};
+    u32 i;
+
+    if (state == NULL)
+        return;
+
+    // The pinned frame table is optional until an authentic Johto tileset
+    // is registered. Never transfer uninitialized or placeholder graphics.
+    if (frames != NULL && queue != NULL)
+    {
+        for (i = 0; i < 10; i++)
+        {
+            if (state->dispatchStep == sSteps[i])
+            {
+                u8 stream = sStreams[i];
+                const u16 *frame = frames[sOffsets[stream] +
+                    PolishedJohtoAnimation_Frame(stream, state->timer)];
+                if (frame != NULL)
+                    queue(frame, sDestinations[stream]);
+                break;
+            }
+        }
+    }
+
+    PolishedJohtoAnimation_Step(state);
+
+    if (frames != NULL && queue != NULL && state->dispatchStep == 21)
+        queue((const u16 *)state->scrollTile, 182);
+}
