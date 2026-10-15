@@ -11,6 +11,18 @@ static void RotateRows(u8 *tile)
     memcpy(tile, last, 4);
 }
 
+static unsigned queuedCount;
+static u16 lastQueuedTile;
+static const u16 *lastQueuedFrame;
+
+static void RecordTile(const u16 *frame, u16 tileId)
+{
+    assert(frame != NULL);
+    queuedCount++;
+    lastQueuedTile = tileId;
+    lastQueuedFrame = frame;
+}
+
 int main(void)
 {
     struct PolishedJohtoAnimationState state;
@@ -69,6 +81,44 @@ int main(void)
     PolishedJohtoAnimation_Step(NULL);
     PolishedJohtoAnimation_Reset(NULL, initial);
     PolishedJohtoAnimation_Reset(&state, NULL);
+    // Exercise the opt-in transfer callback without touching DMA/VRAM.
+    {
+        const u16 *frames[38];
+        u16 payload[38][16];
+        const u16 destinations[10] = {149, 157, 158, 132, 178, 179, 194, 195, 157, 158};
+        const u8 steps[10] = {0, 1, 2, 4, 5, 6, 7, 8, 9, 10};
+        unsigned emitted = 0, event = 0;
+        for (i = 0; i < 38; i++)
+            frames[i] = payload[i];
+        PolishedJohtoAnimation_Reset(&state, initial);
+        queuedCount = 0;
+        for (step = 0; step < 22; step++)
+        {
+            unsigned prior = queuedCount;
+            PolishedJohtoAnimation_DispatchStaged(&state, frames, RecordTile);
+            if (event < 10 && step == steps[event])
+            {
+                assert(queuedCount == prior + 1);
+                assert(lastQueuedTile == destinations[event]);
+                event++;
+                emitted++;
+            }
+            else if (step == 20)
+            {
+                assert(queuedCount == prior + 1);
+                assert(lastQueuedTile == 182);
+                assert(lastQueuedFrame == (const u16 *)state.scrollTile);
+                emitted++;
+            }
+            else
+                assert(queuedCount == prior);
+        }
+        assert(emitted == 11 && event == 10);
+        queuedCount = 0;
+        PolishedJohtoAnimation_Reset(&state, initial);
+        PolishedJohtoAnimation_DispatchStaged(&state, NULL, RecordTile);
+        assert(queuedCount == 0);
+    }
     puts("PASS: native C 176-step dispatcher, buffers, and 64 authentic frame selectors");
     return 0;
 }
