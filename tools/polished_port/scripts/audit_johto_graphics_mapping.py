@@ -18,7 +18,9 @@ from collections import Counter
 import json
 from pathlib import Path
 
-from stage_johto_tile_graphics import gba_tile_id, SOURCE_TOTAL_TILES
+from stage_johto_tile_graphics import (
+    gba_tile_id, SOURCE_TOTAL_TILES, priority_overlay_tile_ids,
+)
 
 SOURCE_BLOCKS = 253
 TILES_PER_BLOCK = 16
@@ -96,6 +98,7 @@ def audit(tiles, attributes):
                 "palette_global_slot": palette,
             })
 
+    priority_mask_ids = priority_overlay_tile_ids(tiles, attributes)
     used_palettes = sorted(palette_counts)
     if used_palettes != list(range(7)):
         raise ValueError(f"unexpected source palette IDs: {used_palettes}")
@@ -127,19 +130,28 @@ def audit(tiles, attributes):
             "capacity_per_gba_graphics_bank": EMERALD_TILES_PER_BANK,
             "subtile_references_by_metatile_bank": output_bank_counts,
             "graphics_source_order_verified": True,
+            "source_derived_priority_overlay_tiles": len(priority_mask_ids),
+            "first_priority_overlay_gba_tile_id": min(priority_mask_ids.values()),
+            "last_priority_overlay_gba_tile_id": max(priority_mask_ids.values()),
         },
         "unresolved_priority": {
             "count": len(layer_priority_entries),
             "source_priority_entries": layer_priority_entries,
-            "gba_layer_rules_verified": False,
-            "needs_per_8x8_priority_layer_policy": True,
+            "gba_layer_rules_verified": False,  # Still requires sprite-elevation runtime validation
+            "source_priority_overlay_conversion_staged": True,
+            "staged_priority_overlay_tile_count": len(priority_mask_ids),
+            "staged_priority_overlay_mapping": {str(k): v for k, v in priority_mask_ids.items()},
+            "gbc_color_zero_masked_on_bg1_only": True,
+            "required_emerald_metatile_layer_type": "METATILE_LAYER_TYPE_NORMAL",
+            "requires_gba_bg_obj_elevation_priority_validation": True,
+            "needs_per_8x8_priority_layer_policy": False,
         },
         "ready_for_live_registration": False,
         "pending": [
             "Preserve opaque source CGB color0 in GBA palette4 across all imported maps",
             "Load palette slot 6 from the paired secondary tileset, including on primary metatiles",
             "Keep 128 common and 160 Traditional 4bpp tiles in validated source order",
-            "Resolve GBC per-8x8 priority flags against GBA layer behavior",
+            "Validate staged GBC bit7 BG1 masks against real Emerald OBJ elevation priorities",
             "Validate remaining field collision, warp and animated tile semantics",
         ],
     }
@@ -153,7 +165,7 @@ def main():
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
     print(f"Audited {report['source']['tile_references']} source tile references.")
-    print(f"Priority-flagged 8x8 tiles requiring review: "
+    print(f"Priority-flagged 8x8 tiles staged for BG1: "
           f"{report['unresolved_priority']['count']}")
     print("Global palette 6 supplied by secondary bank; no colors registered.")
     print(f"Review-only manifest: {args.output}")
