@@ -64,7 +64,7 @@ def manifest():
         "unresolved_before_live_use": [
             "Source VRAM tile banks and palette indices must be reconciled with GBA tileset graphics",
             "GBC palette 0..6 references need GBA primary-six / secondary-seven allocation",
-            "Source priority bit 7 and provisional upper-layer transparency must be resolved",
+            "38 source priority bit7 entries stage to 12 color0-masked BG1 overlays; still verify live OBJ/elevation parity",
             "Collision, ledge, warp and sign behaviors are not registered",
             "Missing 12 secondary slots cannot be treated as authentic source tiles",
             "Both bank halves must be registered together as one map pair",
