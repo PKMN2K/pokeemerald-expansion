@@ -1,0 +1,80 @@
+{
+  "source_repository": "Rangi42/polishedcrystal",
+  "source_commit": "3fa43192379df5c3e7b09a08e4d5d79af4f02f42",
+  "source_disassembly": "engine/tilesets/tileset_anims.asm",
+  "png_layout": "2-bit grayscale noninterlaced PNG; RGBGFX -c dmg tile-order frames; no recoloring",
+  "assets": {
+    "water": {
+      "source_path": "gfx/tilesets/water/johto_water.png",
+      "git_blob_sha": "29fd57e1a3a68a139c5bfac544770998dfad845a",
+      "width": 16,
+      "height": 16,
+      "frame_count": 4,
+      "png_base64": "iVBORw0KGgoAAAANSUhEUgAAABAAAAAQAgAAAABwKLgcAAAAKklEQVR42mMIDZ8ayhBaGjqVIRQIIER4KIwbG5oKFQOqQJaAEHBtV2HqALV7F88oJZJYAAAAAElFTkSuQmCC"
+    },
+    "rain_puddle": {
+      "source_path": "gfx/tilesets/rain/rain_puddle.png",
+      "git_blob_sha": "302438f15729fa957b6b9984dd105d803d7162b4",
+      "width": 32,
+      "height": 16,
+      "frame_count": 8,
+      "png_base64": "iVBORw0KGgoAAAANSUhEUgAAACAAAAAQAgAAAAAY2zokAAAALElEQVR42mNYBQUMIGL9r13rgIzVr3ate7WaAcR/tXr1K2QGXAquGEk7FRgAcm1YrX9xb/cAAAAASUVORK5CYII="
+    },
+    "rain_water": {
+      "source_path": "gfx/tilesets/rain/rain_water.png",
+      "git_blob_sha": "4b99512c5d61dd2c4524ee8499b2e42e75946528",
+      "width": 32,
+      "height": 16,
+      "frame_count": 8,
+      "png_base64": "iVBORw0KGgoAAAANSUhEUgAAACAAAAAQAgAAAAAY2zokAAAAUUlEQVR42kWMwQ3AMAwCWRL5FfXVERgl6qtjMUr/JUraGMk6gwVEVieJyjoe3YhhNRfG7SqDClwDvsjzucWZA1HsUXrSFNrRhvW0HdM8o995ASfENoFOgDfbAAAAAElFTkSuQmCC"
+    },
+    "flower_1": {
+      "source_path": "gfx/tilesets/flower/1.png",
+      "git_blob_sha": "e3fd2867bc16b3bfe5ce8880692f6b6c328521be",
+      "width": 8,
+      "height": 8,
+      "frame_count": 1,
+      "png_base64": "iVBORw0KGgoAAAANSUhEUgAAAAgAAAAIAgAAAACr1Pn2AAAAIUlEQVR42mPYHc3wdhnDtkiGa5EMqcsZUuMYZlUzPH0HAHGpCZ99JTxFAAAAAElFTkSuQmCC"
+    },
+    "flower_2": {
+      "source_path": "gfx/tilesets/flower/2.png",
+      "git_blob_sha": "901e34a1fbe72e92fdbb2990171d14bd5284e863",
+      "width": 8,
+      "height": 8,
+      "frame_count": 1,
+      "png_base64": "iVBORw0KGgoAAAANSUhEUgAAAAgAAAAIAgAAAACr1Pn2AAAAH0lEQVR42mPYWc3wbB7DzHSGm2kM06aDyG2zGd7mAQB4zAoQqdNVGAAAAABJRU5ErkJggg=="
+    },
+    "whirlpool_1": {
+      "source_path": "gfx/tilesets/whirlpool/1.png",
+      "git_blob_sha": "4641dbc0d0e2bedb4100f5c34e29cf298b94ddf0",
+      "width": 8,
+      "height": 32,
+      "frame_count": 4,
+      "png_base64": "iVBORw0KGgoAAAANSUhEUgAAAAgAAAAgAgAAAABAK36tAAAAWUlEQVR42hXIIQ6AIBSA4f+SbyQep2DuEfAURKOF+zCbJgvdOYs4v/jRboIQB0dFC8lhmeckCn7m6hwFdbyKGmZMQhuETlo5BRm4hi7/xxnf2Sp7IQfU88YPLnMlrTcv3RAAAAAASUVORK5CYII="
+    },
+    "whirlpool_2": {
+      "source_path": "gfx/tilesets/whirlpool/2.png",
+      "git_blob_sha": "ce542405364971ab2c9e5b187bf2f36a3bc55cc1",
+      "width": 8,
+      "height": 32,
+      "frame_count": 4,
+      "png_base64": "iVBORw0KGgoAAAANSUhEUgAAAAgAAAAgAgAAAABAK36tAAAAWElEQVR42hXMMQqAMAxA0X9JKyjFXchYnLyQ0jF0Kp4idsoxOori/ng0wxfexNEIimX2TMxY40mczuTcBS0kRQqx4xuXsxqD0oUszMIYCQ3TX9b6Dy5E+QADPCkBF2XF7AAAAABJRU5ErkJggg=="
+    },
+    "whirlpool_3": {
+      "source_path": "gfx/tilesets/whirlpool/3.png",
+      "git_blob_sha": "55b629440e659d0e657c2308bac6dd91f22fc05d",
+      "width": 8,
+      "height": 32,
+      "frame_count": 4,
+      "png_base64": "iVBORw0KGgoAAAANSUhEUgAAAAgAAAAgAgAAAABAK36tAAAAWUlEQVR42hXKOwqAMBAA0bmkbJX1FGHZgHqK4Aks9D6SynQ29rZ+AlM9Bj/xhPdoh6zYw2H0Ef8zUmQcqYoKJRP3JmkgCZopG+HlNqRQHQ3trDO2YBdhosgHavAjVZmdkXEAAAAASUVORK5CYII="
+    },
+    "whirlpool_4": {
+      "source_path": "gfx/tilesets/whirlpool/4.png",
+      "git_blob_sha": "2175c5957ea414c68440fd8a80cd4b48e58c02a4",
+      "width": 8,
+      "height": 32,
+      "frame_count": 4,
+      "png_base64": "iVBORw0KGgoAAAANSUhEUgAAAAgAAAAgAgAAAABAK36tAAAAWElEQVR42hXIMQqAIBiA0e+SKiTSCaTJDqU4/jSJp5Cm6BTSJFZvfOyCaUyFsiyZ1JkGdeEqQegFfRBPUmC4/+1G8bSMFuLD/LJzG7zHC1Jpgn5IKyOg3AtWoicwKp9IVgAAAABJRU5ErkJggg=="
+    }
+  }
+}
