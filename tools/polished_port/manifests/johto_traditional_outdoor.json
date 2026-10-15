@@ -295,6 +295,29 @@
       "generator": "tools/polished_port/scripts/stage_johto_tile_graphics.py",
       "metatile_converter": "tools/polished_port/scripts/convert_johto_traditional_blocks.py",
       "test": "tools/polished_port/scripts/test_johto_priority_overlays.py"
+    },
+    "animation_staging": {
+      "status": "authentic_dispatch_schedule_pinned_frames_not_yet_converted",
+      "source": "engine/tilesets/tileset_anims.asm",
+      "source_pin": "3fa43192379df5c3e7b09a08e4d5d79af4f02f42",
+      "fixture": "tools/polished_port/fixtures/johto_outdoor_animation_schedule.asm",
+      "test": "tools/polished_port/scripts/test_johto_animation_schedule.py",
+      "shared_source_tileset_count": 5,
+      "dispatch_steps": 22,
+      "operations": [
+        "AnimateWaterTile",
+        "AnimateRainPuddleTile",
+        "AnimateRainWaterTile",
+        "AnimateFlowerTile",
+        "AnimateWhirlpoolTile",
+        "StandingTileFrame8",
+        "WriteTileToBuffer",
+        "ScrollTileDown",
+        "ReadTileFromBuffer"
+      ],
+      "original_frame_graphics_imported": false,
+      "original_frame_timing_ported": false,
+      "emerald_animation_hook_registered": false
     }
   },
   "conversion_requirements": [
