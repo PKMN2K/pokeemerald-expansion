@@ -232,6 +232,8 @@ jobs:
 
       - name: Validate authentic Johto animation frame sprites and 22-step timing
         run: python3 tools/polished_port/scripts/test_johto_animation_frames.py
+      - name: Test Johto 4bpp scroll dispatcher
+        run: python3 tools/polished_port/scripts/test_johto_animation_dispatch_4bpp.py
 
       - name: Test
         env:
