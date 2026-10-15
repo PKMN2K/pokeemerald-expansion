@@ -227,6 +227,9 @@ jobs:
       - name: Verify authentic GBC tile priority overlays and sprite color-zero punch-through
         run: python3 tools/polished_port/scripts/test_johto_priority_overlays.py
 
+      - name: Verify pinned Johto outdoor animation dispatch schedule
+        run: python3 tools/polished_port/scripts/test_johto_animation_schedule.py
+
       - name: Test
         env:
           GAME_VERSION: EMERALD
