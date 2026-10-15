@@ -128,9 +128,9 @@ nav_text = nav_text.replace(
     "    UpdatePaletteFade();\n}\n\nstatic void VBlankCB_Pokenav",
     "    UpdatePaletteFade();\n"
     "    // CI-only RGB breadcrumb, visible on black screens.\n"
-    "    gPlttBufferFaded[0] = sCaptureRibbonStage == 3 ? RGB(0, 0, 31) :\n"
-    "        sCaptureRibbonStage == 2 ? RGB(0, 31, 0) :\n"
-    "        sCaptureRibbonStage == 1 ? RGB(31, 0, 0) : RGB(0, 0, 0);\n"
+    "    gPlttBufferFaded[0] = sCaptureRibbonStage == 3 ? 0x7C00 :\n"
+    "        sCaptureRibbonStage == 2 ? 0x03E0 :\n"
+    "        sCaptureRibbonStage == 1 ? 0x001F : 0x0000;\n"
     "}\n\nstatic void VBlankCB_Pokenav",
     1,
 )
