@@ -17,7 +17,8 @@ single synthetic all-transparent tile at GBA index 0, followed by the
   GBA index 0                : transparent-only padding, no original artwork
   GBA index 1..128           : GBC bank0 common source tile 0..127
   GBA index 129..288         : GBC bank1 Traditional tile 0..159
-  GBA index 289..511         : transparent padding (unused)
+  GBA index 289..300         : 12 CGB bit7 sprite-overlap overlay masks
+  GBA index 301..511         : transparent padding (unused)
   GBA secondary graphics     : transparent padding (unused; tile refs point
                                to the shared primary graphics, not new art)
 
@@ -26,7 +27,11 @@ white=0, light gray=1, dark gray=2, black=3. GBA 4bpp palette color
 index zero is *transparent*, unlike GBC BG index zero, which is opaque.
 Therefore map CGB color0 to GBA index4, while colors1..3 map to 1..3.
 The runtime composer/staged palettes must duplicate original CGB RGB555
-color0 into GBA palette index4. No color is invented or altered.
+color0 into GBA palette index4. CGB priority bit7 causes only the original
+nonzero CGB background colors (1..3) to cover sprites. The 12 overlay
+variants map source color0 to transparent GBA pixel index0, while the
+underlying base tile still paints that color via palette index4.
+No color is invented or altered.
 
 Only standard-library Python is needed; PNG grayscale/2-bit, noninterlaced
 is verified and unfiltered byte-for-byte. Source Git blob SHAs are pinned
@@ -60,6 +65,13 @@ GBA_TRANSPARENT_TILE_ID = 0
 GBA_TILE_BYTES = 32
 GBA_PRIMARY_TILE_CAPACITY = 512
 GBA_SECONDARY_TILE_CAPACITY = 512
+SOURCE_METATILE_BLOCKS = 253
+SOURCE_SUBTILE_COUNT = SOURCE_METATILE_BLOCKS * 16
+GBC_PRIORITY_BIT = 0x80
+GBC_VRAM_BANK_BIT = 0x08
+EXPECTED_PRIORITY_REFERENCES = 38
+EXPECTED_PRIORITY_UNIQUE_TILES = 12
+FIRST_PRIORITY_GBA_TILE = SOURCE_TOTAL_TILES + 1  # 289
 SOURCE_TO_GBA_PIXEL = (3, 2, 1, 4)  # image samples 0,1,2,3 -> GBA indices
 #   grayscale 0 (black) -> CGB 3 -> GBA 3
 #   grayscale 1 (dark)  -> CGB 2 -> GBA 2
@@ -197,6 +209,66 @@ def png_to_tiles(image_rows):
     return tiles
 
 
+def load_source_metatile_tables(fixture_dir=FIXTURES):
+    """Read the original pinned 253x16 RGBDS metatile/attribute fixtures."""
+    data = []
+    for stem in ("metatiles", "attributes"):
+        p = fixture_dir / f"johto_traditional_{stem}.bin.b64"
+        lines = p.read_text(encoding="utf-8").splitlines()
+        encoded = "".join(line.strip() for line in lines
+                          if line.strip() and not line.lstrip().startswith("#"))
+        raw = base64.b64decode(encoded, validate=True)
+        if len(raw) != SOURCE_SUBTILE_COUNT:
+            raise ValueError(f"{stem}: expected {SOURCE_SUBTILE_COUNT} source subtile bytes")
+        data.append(raw)
+    return tuple(data)
+
+
+def priority_overlay_tile_ids(metatiles, attributes):
+    """Deterministic original-GBC-tile-ID -> GBA foreground-mask-ID map.
+
+    Bit7 is per 8x8 map attribute, not a permanent property of a tile:
+    ordinary uses of the same source graphic must NOT be masked.
+    """
+    if len(metatiles) != SOURCE_SUBTILE_COUNT or len(attributes) != SOURCE_SUBTILE_COUNT:
+        raise ValueError("expected the original 4048 tile/attribute references")
+    if any(a & 0x10 for a in attributes):
+        raise ValueError("original tile attribute bit4 is reserved")
+    flagged_ids = [
+        gba_tile_id(tile, int(bool(attr & GBC_VRAM_BANK_BIT)))
+        for tile, attr in zip(metatiles, attributes) if attr & GBC_PRIORITY_BIT
+    ]
+    distinct_ids = sorted(set(flagged_ids))
+    if len(flagged_ids) != EXPECTED_PRIORITY_REFERENCES:
+        raise ValueError(f"source priority flag count changed: {len(flagged_ids)}")
+    if len(distinct_ids) != EXPECTED_PRIORITY_UNIQUE_TILES:
+        raise ValueError(f"source priority graphics inventory changed: {len(distinct_ids)}")
+    if FIRST_PRIORITY_GBA_TILE + len(distinct_ids) > GBA_PRIMARY_TILE_CAPACITY:
+        raise ValueError("priority overlay tiles exceed primary GBA graphics bank")
+    return {
+        original_id: FIRST_PRIORITY_GBA_TILE + index
+        for index, original_id in enumerate(distinct_ids)
+    }
+
+
+def mask_source_zero_for_priority(original_gba_tile):
+    """Preserve CGB colors 1..3; make only CGB color0 transparent to sprites.
+
+    Base tiles use GBA 1,2,3,4 (4 is opaque CGB color0). These foreground
+    variants turn index4 to GBA transparent index0. The original opaque
+    index4 remains painted by the base copy on BG2.
+    """
+    if len(original_gba_tile) != GBA_TILE_BYTES:
+        raise ValueError("priority source tile must be 32-byte GBA 4bpp")
+    out = bytearray()
+    for packed in original_gba_tile:
+        a, b = packed & 15, packed >> 4
+        if a not in (1, 2, 3, 4) or b not in (1, 2, 3, 4):
+            raise ValueError("foreground source tile contains an unexpected color index")
+        out.append((0 if a == 4 else a) | ((0 if b == 4 else b) << 4))
+    return bytes(out)
+
+
 def build_graphics(fixture_dir=FIXTURES):
     source_tiles = []
     samples = Counter()
@@ -215,7 +287,16 @@ def build_graphics(fixture_dir=FIXTURES):
     # Original source tile indices are 0..127 in VRAM0, 0..159 in VRAM1.
     # Blank tile0 is new *padding*, not a fabricated source graphic.
     source_converted = common + traditional
-    primary = b"\x00" * GBA_TILE_BYTES + b"".join(source_converted)
+    source_metatiles, source_attrs = load_source_metatile_tables(fixture_dir)
+    priority_map = priority_overlay_tile_ids(source_metatiles, source_attrs)
+    # Regular graphics and priority masks use identical *source* pixels.
+    # Never replace a regular source tile globally: bit7 is per tile entry.
+    overlay_tiles = [
+        mask_source_zero_for_priority(source_converted[ordinary_id - 1])
+        for ordinary_id in priority_map
+    ]
+    primary = (b"\x00" * GBA_TILE_BYTES + b"".join(source_converted)
+               + b"".join(overlay_tiles))
     primary += b"\x00" * (GBA_PRIMARY_TILE_CAPACITY * GBA_TILE_BYTES - len(primary))
     secondary = b"\x00" * (GBA_SECONDARY_TILE_CAPACITY * GBA_TILE_BYTES)
     if len(primary) != 16384 or len(secondary) != 16384:
@@ -233,7 +314,15 @@ def build_graphics(fixture_dir=FIXTURES):
         "gba_primary_tile_count": GBA_PRIMARY_TILE_CAPACITY,
         "gba_secondary_tile_count": GBA_SECONDARY_TILE_CAPACITY,
         "gba_nonpadding_tile_count": SOURCE_TOTAL_TILES,
-        "gba_padded_tile_count": 1024 - SOURCE_TOTAL_TILES,
+        "gba_padded_tile_count": 1024 - SOURCE_TOTAL_TILES - len(priority_map),
+        "gba_priority_overlay_tile_count": len(priority_map),
+        "gba_priority_overlay_ids": [FIRST_PRIORITY_GBA_TILE, FIRST_PRIORITY_GBA_TILE + len(priority_map) - 1],
+        "priority_source_subtile_references": EXPECTED_PRIORITY_REFERENCES,
+        "priority_source_regular_to_overlay_ids": {str(k): v for k, v in priority_map.items()},
+        "priority_mask_gbc_color_zero_transparent": True,
+        "priority_masks_keep_gbc_colors_1_to_3_unchanged": True,
+        "priority_source_flag_mapping_staged": True,
+        "priority_sprite_elevation_parity_verified": False,
         "gba_source_pixel_to_index": {"0": 3, "1": 2, "2": 1, "3": 4},
         "palette_gba_index_4_must_duplicate_source_color_0": True,
         "original_rgb555_values_modified": False,
@@ -259,8 +348,8 @@ def main():
         json.dumps(report, indent=2) + "\n", encoding="utf-8"
     )
     print("Staged 128 authentic common + 160 authentic Traditional GBC tiles as GBA 4bpp.")
-    print("GBA graphics tiles 1..288 authentic; tile 0 and unused slots transparent.")
-    print("No registered Emerald tileset; source animations and priority still unresolved.")
+    print("GBA graphics tiles 1..288 authentic; 289..300 are masked source-derived priority overlays.")
+    print("No registered Emerald tileset; sprite-elevation priority and source animations pending.")
 
 
 if __name__ == "__main__":
