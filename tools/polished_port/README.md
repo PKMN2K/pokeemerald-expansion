@@ -137,3 +137,30 @@ The converter extracts that frame without scaling or repainting and remaps RGBDS
 Polished Crystal's `gfx/sprites/weird_tree.png` is a 16x48 sheet containing three 16x16 frames. Route 36 uses `SPRITE_WEIRD_TREE` with `SPRITEMOVEDATA_SUDOWOODO`; its special tree-shake action alternates the first two source poses, while ordinary directional movement can use the third pose when the disguised Sudowoodo flees.
 
 Expansion already exposes three physical 16x32 frames through `gObjectEventPic_SudowoodoTree`. The converter preserves all three authentic Crystal frames, bottom-aligning each 16x16 pose inside its corresponding 16x32 GBA frame without scaling or repainting. Expansion's existing Sudowoodo graphics info, palette tag, movement/animation tables, collision, and event scripting remain unchanged.
+
+## Johto Traditional priority-mask staging (not registered)
+
+The 128 authentic shared tiles and 160 authentic Traditional tiles occupy GBA 4bpp
+IDs 1–288. Tile 0 is transparent padding. Original GBC background color 0
+is opaque, so the normal tile graphics use GBA pixel index 4 and duplicate
+the original RGB555 color 0 at palette index 4, without changing its color.
+
+GBC BG attribute bit 7 prioritizes source color indices 1–3 over sprites;
+source color 0 still lets sprites show through. All 38 original flags are
+preserved across seven source 32x32 blocks and eleven Emerald 16x16 metatiles.
+Twelve source-derived BG1 foreground masks occupy GBA graphics IDs 289–300.
+Only GBC color-0 pixels become GBA transparent index 0 in those masks; the
+lower BG2 graphic stays opaque and the original palette/flip bits are retained.
+Unflagged positions use transparent BG1 tile 0. The matching Emerald layer
+is METATILE_LAYER_TYPE_NORMAL (BG2 lower, BG1 upper).
+
+Run source-backed regression tests with:
+
+    python3 tools/polished_port/scripts/test_johto_tile_graphics.py
+    python3 tools/polished_port/scripts/test_johto_metatile_banks.py
+    python3 tools/polished_port/scripts/test_johto_priority_overlays.py
+
+These are staging-only outputs. There are zero registered Johto layouts.
+Before activation, validate BG1 versus OBJ sprite priority at all elevations,
+particularly raised sprites with priority 1, plus authentic animations and
+field collision/event semantics. No Hoenn or Prism mining assets are changed.
