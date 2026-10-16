@@ -23,6 +23,8 @@ struct PolishedJohtoAnimationState
 void PolishedJohtoAnimation_Reset(struct PolishedJohtoAnimationState *state, const u8 *initialTile);
 void PolishedJohtoAnimation_Step(struct PolishedJohtoAnimationState *state);
 u8 PolishedJohtoAnimation_Frame(u8 stream, u8 timer);
+// Returns the ROM-resident 38-frame authentic source table (NULL in host tests).
+const u16 *const *PolishedJohtoAnimation_AuthenticFrames(void);
 
 // Source frame groups are supplied only after their pinned 4bpp binaries
 // are linked. No map or DMA queue function is installed by this API.
