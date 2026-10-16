@@ -9,6 +9,7 @@ void TransferTilesetAnimsBuffer(void);
 void QueuePolishedJohtoAnimationTile(const u16 *frame, u16 tileId);
 // Inactive until an authentic Johto map explicitly initializes the callback.
 void InitTilesetAnim_PolishedJohtoOutdoor(const u8 *initialScrollTile);
+void InitTilesetAnim_PolishedJohtoOutdoorAuthentic(void);
 void TilesetAnim_PolishedJohtoOutdoor(u16 timer);
 
 void InitTilesetAnim_General(void);
