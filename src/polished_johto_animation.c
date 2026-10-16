@@ -1,6 +1,9 @@
 #include "global.h"
 #include "polished_johto_animation.h"
 #ifndef POLISHED_JOHTO_HOST_TEST
+#include "tileset_anims.h"
+#endif
+#ifndef POLISHED_JOHTO_HOST_TEST
 #include "data/tilesets/polished_johto_animation_frames.h"
 #endif
 
@@ -144,3 +147,29 @@ const u16 *const *PolishedJohtoAnimation_AuthenticFrames(void)
     return sPolishedJohtoFrames;
 #endif
 }
+
+// Opt-in tileset integration entry points. No existing map or tileset uses
+// these functions. The caller must provide the authentic initial 4bpp tile
+// $35 before activating this callback; passing NULL keeps it disabled.
+#ifndef POLISHED_JOHTO_HOST_TEST
+static struct PolishedJohtoAnimationState sJohtoOutdoorAnim;
+static bool8 sJohtoOutdoorAnimReady;
+
+void InitTilesetAnim_PolishedJohtoOutdoor(const u8 *initialScrollTile)
+{
+    sJohtoOutdoorAnimReady = FALSE;
+    if (initialScrollTile == NULL)
+        return;
+    PolishedJohtoAnimation_Reset(&sJohtoOutdoorAnim, initialScrollTile);
+    sJohtoOutdoorAnimReady = TRUE;
+}
+
+void TilesetAnim_PolishedJohtoOutdoor(u16 timer)
+{
+    (void)timer;
+    if (!sJohtoOutdoorAnimReady)
+        return;
+    PolishedJohtoAnimation_DispatchStaged(&sJohtoOutdoorAnim,
+        PolishedJohtoAnimation_AuthenticFrames(), QueuePolishedJohtoAnimationTile);
+}
+#endif
