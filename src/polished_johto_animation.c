@@ -164,6 +164,13 @@ void InitTilesetAnim_PolishedJohtoOutdoor(const u8 *initialScrollTile)
     sJohtoOutdoorAnimReady = TRUE;
 }
 
+// Opt-in initialization with the exact source tile rather than a caller's
+// substitute graphics. Still no registered map or callback.
+void InitTilesetAnim_PolishedJohtoOutdoorAuthentic(void)
+{
+    InitTilesetAnim_PolishedJohtoOutdoor((const u8 *)sPolishedJohtoInitialScrollTile);
+}
+
 void TilesetAnim_PolishedJohtoOutdoor(u16 timer)
 {
     (void)timer;
