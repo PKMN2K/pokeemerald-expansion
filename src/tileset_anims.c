@@ -6,6 +6,7 @@
 #include "task.h"
 #include "battle_transition.h"
 #include "fieldmap.h"
+#include "tileset_anims.h"
 
 static EWRAM_DATA struct {
     const u16 *src;
