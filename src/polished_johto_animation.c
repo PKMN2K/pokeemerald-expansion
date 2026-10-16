@@ -1,5 +1,8 @@
 #include "global.h"
 #include "polished_johto_animation.h"
+#ifndef POLISHED_JOHTO_HOST_TEST
+#include "data/tilesets/polished_johto_animation_frames.h"
+#endif
 
 // Original source: Rangi42/polishedcrystal 3fa43192379df5c3e7b09a08e4d5d79af4f02f42
 // engine/tilesets/tileset_anims.asm. This component is intentionally not
@@ -131,4 +134,13 @@ void PolishedJohtoAnimation_DispatchStaged(
 
     if (frames != NULL && queue != NULL && state->dispatchStep == 21)
         queue((const u16 *)state->scrollTile, 182);
+}
+
+const u16 *const *PolishedJohtoAnimation_AuthenticFrames(void)
+{
+#ifdef POLISHED_JOHTO_HOST_TEST
+    return NULL;
+#else
+    return sPolishedJohtoFrames;
+#endif
 }
