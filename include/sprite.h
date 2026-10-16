@@ -150,6 +150,7 @@ enum
     SUBSPRITES_OFF,
     SUBSPRITES_ON,
     SUBSPRITES_IGNORE_PRIORITY, // on but priority is ignored
+    SUBSPRITES_STATIC_COMPOSITE, // keep multi-OBJ art assembled while logical sprite affine state runs
 };
 
 struct Subsprite
