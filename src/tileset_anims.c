@@ -640,6 +640,18 @@ static void _InitSecondaryTilesetAnimation(void)
         gMapHeader.mapLayout->secondaryTileset->callback();
 }
 
+// Opt-in tileset initializer for a future authentic Johto outdoor layout.
+// Deliberately not referenced by any existing tileset or map. The tileset
+// callback must be assigned explicitly after graphics/layout validation.
+// One Emerald callback tick corresponds to one original dispatch command.
+void InitTilesetAnim_PolishedJohtoOutdoorPrimary(void)
+{
+    InitTilesetAnim_PolishedJohtoOutdoorAuthentic();
+    sPrimaryTilesetAnimCounter = 0;
+    sPrimaryTilesetAnimCounterMax = 22;
+    sPrimaryTilesetAnimCallback = TilesetAnim_PolishedJohtoOutdoor;
+}
+
 void InitTilesetAnim_General(void)
 {
     sPrimaryTilesetAnimCounter = 0;
