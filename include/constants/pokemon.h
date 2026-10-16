@@ -403,6 +403,20 @@ enum GeneratedMonOrigin
 // - Unown has 1 frame, presumably to avoid the work of animating all 28 of its forms
 #define MAX_MON_PIC_FRAMES 2
 
+/*
+ * Optional static Gen 5-style battle sprites.
+ *
+ * The normal expansion assets remain 64x64. A registered Gen 5 battle sprite is
+ * a single 96x96 4bpp frame, split into four hardware OBJ pieces at render time.
+ * Keeping this battle-only means party/summary/storage/Pokedex UI can continue to
+ * use the normal 64x64 species artwork.
+ */
+#define GEN5_BATTLE_PIC_WIDTH 96
+#define GEN5_BATTLE_PIC_HEIGHT 96
+#define GEN5_BATTLE_PIC_SIZE (GEN5_BATTLE_PIC_WIDTH * GEN5_BATTLE_PIC_HEIGHT / 2)
+#define GEN5_BATTLE_PIC_TILE_COUNT (GEN5_BATTLE_PIC_SIZE / TILE_SIZE_4BPP)
+#define BATTLE_MON_PIC_SLOT_SIZE GEN5_BATTLE_PIC_SIZE
+
 #define BATTLE_ALIVE_EXCEPT_BATTLER      0
 #define BATTLE_ALIVE_EXCEPT_BATTLER_SIDE 1
 #define BATTLE_ALIVE_SIDE                2
