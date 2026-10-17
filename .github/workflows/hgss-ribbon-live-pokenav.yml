@@ -55,7 +55,7 @@ jobs:
           source = Path("/tmp/gba-rom-debugger/src/gba-walk.c")
           content = source.read_text()
           old = "(void) logger; (void) category; (void) level; (void) format; (void) args;"
-          new = "(void) logger; (void) category; (void) level; vfprintf(stderr, format, args); fputc('\\n', stderr);"
+          new = "(void) logger; (void) category; (void) level; { char msg[512]; static unsigned int nonstage_lines = 0; vsnprintf(msg, sizeof(msg), format, args); if (strstr(msg, \"RIBBON_STAGE\") || nonstage_lines++ < 200) fprintf(stderr, \"%s\\\\n\", msg); }"
           assert content.count(old) == 1
           source.write_text(content.replace(old, new))
           PY
