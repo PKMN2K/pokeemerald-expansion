@@ -80,8 +80,11 @@ jobs:
               colors = len(im.getcolors(im.width * im.height) or [])
               print(f"{name}: {colors} colors", flush=True)
           im = Image.open("build/hgss-ribbon-live/after_select_125.png").convert("RGB")
-          if len(im.getcolors(im.width * im.height) or []) < 16:
-              raise SystemExit("PokéNav remains black after 125 frames; inspect early screenshots")
+          # The verified owner-list capture uses only 14 colors. Palette
+          # size is not evidence of a blackout; reject near-uniform frames.
+          colors = im.getcolors(im.width * im.height)
+          if max(count for count, _ in colors) >= im.width * im.height * 0.99:
+              raise SystemExit("PokéNav frame is nearly uniform after 125 frames; inspect early screenshots")
           PY
           /tmp/gba-walk pokeemerald.gba build/hgss-ribbon-live \
             run:700 snap:main_menu \

@@ -34,8 +34,11 @@ for name in names:
     colors = img.getcolors(240 * 160) or []
     # Transition snapshots may legitimately land during the fade to black.
     # Only settled screens must satisfy the nonblank rendering check.
-    if not name.startswith("after_select_") and len(colors) < 16:
-        failures.append(f"{name}: suspiciously blank/low-color capture ({len(colors)} colors)")
+    # A readable owner list legitimately uses 14 colors. Measure occupied
+    # image area instead of requiring an arbitrary number of palette colors.
+    dominant_pixels = max(count for count, _ in colors)
+    if not name.startswith("after_select_") and dominant_pixels >= img.width * img.height * 0.99:
+        failures.append(f"{name}: nearly uniform capture ({dominant_pixels}/{img.width * img.height} pixels)")
     images[name] = img
     print(f"{name}: {len(colors)} framebuffer RGB colors")
 
