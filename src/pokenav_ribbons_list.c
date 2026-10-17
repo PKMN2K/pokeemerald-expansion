@@ -642,6 +642,10 @@ static void AddRibbonsMonListWindow(struct Pokenav_RibbonsMonMenu *menu)
 {
     s32 listCount;
     menu->winid = AddWindow(&sRibbonsMonListWindowTemplate);
+    // AddWindow may allocate its own blank map when BG1 has no windows yet.
+    // Keep the frame loaded by LoopedTask_OpenRibbonsMonList as the live map;
+    // otherwise tile zero repeats over BG2 and obscures the owner rows.
+    SetBgTilemapBuffer(1, menu->buff);
     PutWindowTilemap(menu->winid);
     listCount = GetRibbonsMonListCount();
     DrawListIndexNumber(menu->winid, 0, listCount);
