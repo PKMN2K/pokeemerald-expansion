@@ -85,6 +85,11 @@ void CB2_HgssRibbonLiveCapture(void)
     u8 master = 4;
     u32 i;
 
+    // The normal intro initializes SaveBlock1 and the bag/decor pointers.
+    // This callback replaces that intro, so bind the cold-boot save memory
+    // before CreateMon, gift ribbon writes, or InitEventData can use it.
+    SetSaveBlocksPointers(0);
+
     ZeroPlayerPartyMons();
     CreateMon(mon, SPECIES_PIKACHU, 50, 0, OTID_STRUCT_PRESET(0));
     gPartiesCount[B_TRAINER_PLAYER] = 1;
