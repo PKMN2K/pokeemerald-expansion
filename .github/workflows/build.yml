@@ -206,6 +206,18 @@ jobs:
       - name: Audit Johto outdoor diagnostic grid without map registration
         run: python3 tools/polished_port/scripts/audit_johto_outdoor_test_grid.py
 
+      - name: Export isolated Johto layout fixture without map registration
+        run: |
+          output="$(mktemp -d)"
+          python3 tools/polished_port/scripts/export_johto_diagnostic_layout.py --output "$output"
+          test "$(wc -c < "$output/map.bin")" -eq 128
+          python3 - "$output/layout.json" <<'PY'
+          import json, sys
+          doc = json.load(open(sys.argv[1]))
+          assert doc["map_header"] is None and doc["tileset_registration"] is None
+          assert doc["width"] == doc["height"] == 8
+          PY
+
       - name: Audit authentic Johto graphics palettes and priority flags
         run: python3 tools/polished_port/scripts/test_johto_graphics_mapping.py
 
