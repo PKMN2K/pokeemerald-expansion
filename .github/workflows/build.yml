@@ -206,6 +206,19 @@ jobs:
       - name: Audit Johto outdoor diagnostic grid without map registration
         run: python3 tools/polished_port/scripts/audit_johto_outdoor_test_grid.py
 
+      - name: Preflight isolated Johto tileset registration blockers
+        run: |
+          output="$(mktemp -d)"
+          python3 tools/polished_port/scripts/preflight_johto_tileset_registration.py --output "$output"
+          python3 - "$output/registration_preflight.json" <<'PY'
+          import json, sys
+          report = json.load(open(sys.argv[1]))
+          assert report["status"] == "registration_blocked_pending_source_parity"
+          assert report["blockers"]
+          assert not report["first_test_map_registered"]
+          assert report["existing_map_replacements"] == 0
+          PY
+
       - name: Export authentic Johto unregistered tileset bundle
         run: |
           output="$(mktemp -d)"
