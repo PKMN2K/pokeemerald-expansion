@@ -206,6 +206,21 @@ jobs:
       - name: Audit Johto outdoor diagnostic grid without map registration
         run: python3 tools/polished_port/scripts/audit_johto_outdoor_test_grid.py
 
+      - name: Verify authentic Johto quadrant collision projection
+        run: |
+          report="$(mktemp)"
+          python3 tools/polished_port/scripts/project_johto_collision_symbols.py --output "$report"
+          python3 - "$report" <<'PY'
+          import json, sys
+          doc = json.load(open(sys.argv[1]))
+          rows = doc["primary"] + doc["secondary"]
+          assert len(doc["primary"]) == 512 and len(doc["secondary"]) == 500
+          assert [row["metatile_id"] for row in rows] == list(range(1012))
+          assert all(row["emerald_behavior_id"] is None for row in rows)
+          assert doc["unmapped_source_symbols"]
+          assert not doc["emerald_attribute_tables_emitted"]
+          PY
+
       - name: Preflight isolated Johto tileset registration blockers
         run: |
           output="$(mktemp -d)"
