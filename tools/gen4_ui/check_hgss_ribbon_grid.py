@@ -106,6 +106,25 @@ def parse_live_mapping():
     return rows
 
 
+
+def check_retail_4bpp_assets(rows):
+    """Enforce the native 16-entry palette-bank and 4bpp tile contract."""
+    sheet = (ASSETS / "big_icons_hgss.4bpp").read_bytes()
+    # Each of twelve 32x32 icons occupies sixteen 8x8 4bpp tiles.
+    assert len(sheet) == len(FRAME_MEMBERS) * 16 * 32, (
+        "HGSS ribbon sheet must contain exactly 12 native 4bpp icons", len(sheet)
+    )
+    assert len(set(FRAME_MEMBERS)) == len(FRAME_MEMBERS)
+    assert all(len((ASSETS / f"palette_{bank}.gbapal").read_bytes()) == 16 * 2
+               for bank in range(5)), "Each HGSS palette bank must have exactly 16 BGR555 entries"
+    assert all(int(row["ncgr_member"]) in FRAME_MEMBERS
+               and 0 <= int(row["nclr_bank"]) < 5 for row in rows)
+    # Four bits per pixel encode only palette indices 0..15.
+    for value in sheet:
+        assert (value & 15) < 16 and (value >> 4) < 16
+    print("Verified 12 native 32x32 4bpp icons and five 16-entry BGR555 palette banks")
+
+
 def adjacent(pos, normal_count, gift_count):
     """Model C DPAD targets for exhaustive page/navigation geometry checks."""
     normal_last_row = ((normal_count - 1) // GRID_COLUMNS) * GRID_COLUMNS if normal_count else 0
@@ -226,6 +245,7 @@ def main():
     parser.add_argument("--preview-dir", type=Path)
     args = parser.parse_args()
     rows = parse_live_mapping()
+    check_retail_4bpp_assets(rows)
     cases = check_navigation()
     print(f"Verified 32 live ribbon member/palette combinations and {cases} nonempty ribbon layouts")
     if args.preview_dir:
