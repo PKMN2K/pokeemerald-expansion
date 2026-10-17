@@ -89,6 +89,22 @@ for yy in range(32):
         got = actual.getpixel((xx + 88, yy + 32))
         if max(abs(got[channel] - ref[channel]) for channel in range(3)) > 8:
             mismatched += 1
+# Save pixel-level diagnostics with the CI screenshots for visual review.
+# These are inspection aids, never substituted for authentic game artwork.
+actual_crop = actual.crop((88, 32, 120, 64))
+reference_crop = expected.crop((0, 0, 32, 32))
+actual_crop.save(base / "champion_actual_crop.png")
+reference_crop.save(base / "champion_reference_crop.png")
+comparison = Image.new("RGB", (32, 32), (0, 0, 0))
+for yy in range(32):
+    for xx in range(32):
+        ref = reference_crop.getpixel((xx, yy))
+        if ref[3]:
+            got = actual_crop.getpixel((xx, yy))
+            bad = max(abs(got[c] - ref[c]) for c in range(3)) > 8
+            comparison.putpixel((xx, yy), (255, 0, 0) if bad else (0, 160, 0))
+comparison.save(base / "champion_pixel_comparison.png")
+
 if compared < 64 or mismatched * 10 > compared:
     raise SystemExit(
         f"Actual live PokéNav did not display the retail HGSS Champion icon: "
