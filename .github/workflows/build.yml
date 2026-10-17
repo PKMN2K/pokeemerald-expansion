@@ -206,6 +206,19 @@ jobs:
       - name: Audit Johto outdoor diagnostic grid without map registration
         run: python3 tools/polished_port/scripts/audit_johto_outdoor_test_grid.py
 
+      - name: Audit Johto wall and water collision semantics
+        run: |
+          report="$(mktemp)"
+          python3 tools/polished_port/scripts/audit_johto_wall_water_behaviors.py --output "$report"
+          python3 - "$report" <<'PY'
+          import json, sys
+          doc = json.load(open(sys.argv[1]))
+          assert doc["reviewed_metatiles"] + doc["unreviewed_metatiles"] == 1012
+          assert set(doc["symbol_counts"]) == set(doc["source_symbols"])
+          assert not doc["candidate_is_verified_equivalent"]
+          assert not doc["produced_metatile_attributes"] and not doc["registered"]
+          PY
+
       - name: Review Johto collision behavior candidates without live registration
         run: |
           report="$(mktemp)"
