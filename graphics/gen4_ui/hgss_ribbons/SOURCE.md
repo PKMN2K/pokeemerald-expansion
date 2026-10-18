@@ -828,3 +828,30 @@ authorization to hardcode these offsets on Emerald. Next follow the
 page-index state and callers to determine precisely when each offset
 is applied and which tilemap rectangles are drawn for ribbon mode.
 No graphics or runtime source were changed.
+
+## Retail PokemonSummary_Main state-machine callers traced (2026-10-18)
+
+The summary overlay `PokemonSummary_Main` in `asm/unk_02088288.s`
+dispatches **23 states (0..22)** through its jump table at
+`_02088442`. A separate per-state integer is written through the
+overlay manager's main-state argument; these are **application state
+indices, not proven summary page indices**.
+
+Confirmed dispatch edges:
+- State **2** calls `sub_02088B40`, a longer input/dispatch handler.
+- State **3** calls `sub_02088D18` which calls BG transition
+  `sub_0208A564` and conditionally `sub_0208AFA0`.
+- State **4** calls `sub_02088D34`, which calls BG transition
+  `sub_0208A63C`.
+- State **5** calls `sub_02088D48`, continuing input/navigation.
+- States **6**, **7**, **8** call `sub_02088E68`,
+  `sub_02088E98`, `sub_02089028` respectively.
+
+Therefore the previously found **BG5 horizontal transitions** in
+`sub_0208A564` and `sub_0208A63C` have an authenticated main-loop
+entry path via states **3** and **4**. This alone does **not** prove
+which state represents selection of the Ribbons tab or what entire
+layer stack looks like there. Next map `sub_02088B40`'s input
+conditions and page-index storage to the state transitions and to
+the dedicated ribbon-drawing paths. Do not substitute state 3/4 for
+ribbon mode without that proof. No live graphics changed.
