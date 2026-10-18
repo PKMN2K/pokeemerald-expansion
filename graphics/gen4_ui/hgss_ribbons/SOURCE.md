@@ -777,3 +777,30 @@ for HGSS window geometry. The additional NCGR 1 tiles have also been
 decoded for inspection, but their appearance alone is not evidence of
 ribbon-tab placement. No artwork was redrawn, no live source changed and
 no Emerald background was deleted.
+
+## Confirmed owner of shared background composition (2026-10-18)
+
+The parent of `sub_020887C4` is now identified by symbol, not
+inference: `PokemonSummary_Init` in
+[`asm/unk_02088288.s`](https://github.com/pret/pokeheartgold/blob/master/asm/unk_02088288.s)
+(lines approximately 30–183) calls `sub_02088630` to initialize BG
+layers, then `sub_020887C4` to load palette/character/screen
+resources, and subsequently calls `sub_0208B1AC` to initialize the
+known ribbon-capable OBJ system. The same assembly defines
+`gOverlayTemplate_PokemonSummary` using `PokemonSummary_Init`,
+`PokemonSummary_Main`, and `PokemonSummary_Exit`.
+
+Accordingly, the authenticated `a/1/6/2` BG maps are from the **HGSS
+Pokémon Summary application**, not from Pokégear and not from a
+standalone ribbons menu. Ribbon icons are one overlay within this
+summary application. Treat the decoded NSCR compositions as shared
+summary-screen backgrounds; do not claim either whole map is an
+exclusive ribbon-panel asset.
+
+The next necessary gate is the ribbon-page-specific rendering and BG
+scroll/masking transitions inside `PokemonSummary_Main` and its
+callees: identify the exact visible tilemap subset, page-specific
+windows, layering, and offsets before converting portions to a
+240×160 GBA composition. Merely cropping the whole 256×256 or
+512×512 previews would not reproduce that runtime result. No game
+graphics were modified.
