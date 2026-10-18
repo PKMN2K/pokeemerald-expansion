@@ -220,6 +220,24 @@ jobs:
           assert not doc["surf_and_jump_verified"]
           PY
 
+      - name: Validate isolated Johto basic walkability layout
+        run: |
+          output="$(mktemp -d)"
+          python3 tools/polished_port/scripts/export_johto_basic_walkability_layout.py --output "$output"
+          python3 - "$output" <<'PY'
+          import json, pathlib, struct, sys
+          folder = pathlib.Path(sys.argv[1])
+          doc = json.loads((folder / "johto_basic_walkability_layout.json").read_text())
+          raw = (folder / "johto_basic_walkability_layout.bin").read_bytes()
+          cells = struct.unpack("<64H", raw)
+          assert len(raw) == 128 and len(doc["cells"]) == 64
+          assert list(cells) == [r["packed_cell"] for r in doc["cells"]]
+          assert all((v & 0x0C00) == 0 and (v >> 12) == 3 for v in cells)
+          assert all(r["source_symbol"] in ("FLOOR", "TALL_GRASS") for r in doc["cells"])
+          assert doc["no_unknown_behavior_fallback"]
+          assert not doc["live_map_registered"] and not doc["movement_verified_in_emulator"]
+          PY
+
       - name: Validate safe Johto basic-terrain test selection
         run: |
           output="$(mktemp -d)"
