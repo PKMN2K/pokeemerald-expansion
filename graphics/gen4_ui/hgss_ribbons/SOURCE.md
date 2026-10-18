@@ -755,3 +755,25 @@ decoding. No ROM bytes or graphics were committed, and no runtime art
 was replaced. The next gate is decoding the NCGR/NCLR/NSCR pixel
 presentation and selecting only retail-authentic pieces for the live
 ribbon page.
+
+## Decoded retail background preview (2026-10-18)
+
+Decoded **unaltered** NitroFS `a/1/6/2` members from the user-provided
+HeartGold ROM using the authentic 256-colour NCLR member 0, 4bpp NCGR
+8x8 tile data, and Nintendo DS block-ordered NSCR maps. Local
+preview-only 2x nearest-neighbour renders (never inserted into the
+ROM) show:
+
+- NCGR 2 + NSCR 13 (256x256): blue-and-gray framed boxes, patterned
+  left panel and horizontal upper/lower sections.
+- NCGR 20 + NSCR 21 (512x512): green-and-gray horizontal stripes,
+  framed windows and panel portions.
+
+These are **retail summary UI layer compositions**, but exact ribbon-tab
+visible portions, offsets, dynamic overlays, BG blending and source
+palettes require retail runtime confirmation. The tilemap dimensions
+exceed the GBA screen viewport; do not copy full sheets as a substitute
+for HGSS window geometry. The additional NCGR 1 tiles have also been
+decoded for inspection, but their appearance alone is not evidence of
+ribbon-tab placement. No artwork was redrawn, no live source changed and
+no Emerald background was deleted.
