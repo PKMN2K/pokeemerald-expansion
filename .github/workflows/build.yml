@@ -220,6 +220,24 @@ jobs:
           assert not doc["surf_and_jump_verified"]
           PY
 
+      - name: Validate sparse Johto attribute candidate binaries
+        run: |
+          output="$(mktemp -d)"
+          python3 tools/polished_port/scripts/export_johto_sparse_attributes.py --output "$output"
+          python3 - "$output" <<'PY'
+          import json, pathlib, struct, sys
+          root = pathlib.Path(sys.argv[1])
+          meta = json.loads((root / "johto_attribute_candidates.json").read_text())
+          primary = struct.unpack("<512H", (root / "johto_primary_attribute_candidates.bin").read_bytes())
+          secondary = struct.unpack("<500H", (root / "johto_secondary_attribute_candidates.bin").read_bytes())
+          bits = (root / "johto_attribute_candidate_validity.bin").read_bytes()
+          words = primary + secondary
+          assert len(bits) == 127
+          assert meta["candidate_entries"] + meta["unresolved_entries"] == 1012
+          assert all((word != 0xFFFF) == bool(bits[i // 8] & (1 << (i % 8))) for i, word in enumerate(words))
+          assert not meta["live_binary_suitable"] and not meta["tileset_registered"]
+          PY
+
       - name: Package authentic Johto integration fixture with checksums
         run: |
           output="$(mktemp -d)"
