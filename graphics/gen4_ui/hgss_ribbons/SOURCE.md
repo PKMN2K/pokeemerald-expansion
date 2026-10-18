@@ -669,3 +669,33 @@ The authentic sprite and palette sources already documented above therefore do N
 A fresh inspection of retail `asm/unk_0208B1AC.s` found the only `GfGfxLoader_GetCharData` call in `sub_0208BE00`, which sends Pokémon icon character data to sub-engine OBJ VRAM via `GXS_LoadOBJ`. The unit's `_02103A2C` archive constants register sprite resources, not a proven NSCR BG map. Neither call identifies the ribbon-page background.
 
 The decomp's recursive tracked source tree also has no dedicated `ribbon_summary` or `pokemon_summary` filename: the relevant UI initialization may be part of a numbered overlay/assembly unit. Therefore filename searches alone cannot authenticate background assets. **No background member IDs are confirmed**, and no replacement graphics are authorized yet. Next identify the owner of the summary/ribbon application by runtime overlay registration and trace its BG character, palette and screen loaders to archive/member IDs. Do not infer IDs from `GfGfxLoader_GetCharData`'s Pokémon icon operands.
+
+## Retail summary-screen BG loader located (2026-10-18)
+
+**New source-backed lead:** [`pret/pokeheartgold/asm/unk_02088288.s`](https://github.com/pret/pokeheartgold/blob/master/asm/unk_02088288.s)
+owns the UI initializer calling `sub_0208B1AC` (the known ribbon
+OBJ initializer). Before this call it creates three archives:
+`NARC_New(0x27, 0x13)`, `NARC_New(0xA2, 0x13)`, and
+`NARC_New(0xB4, 0x13)`; its `sub_020887C4` receives the
+**second** archive (`0xA2`) as its third argument.
+
+Crucially, [`include/filesystem_files_def.h`](https://github.com/pret/pokeheartgold/blob/master/include/filesystem_files_def.h)
+maps **NARC 162 = `NARC_a_1_6_2`**. Thus the BG graphics loaded
+in `sub_020887C4` come from **`a/1/6/2`**, distinct from the
+verified ribbon OBJ characters in `a/0/3/9`.
+
+Retail `sub_020887C4` loads these **archive member IDs**:
+- sub BG3: palette **0**, character **2**, screen/tilemap **13**;
+- sub BG6: palette **4**, character **1**;
+- sub BG5: character **20**, screen/tilemap **21**.
+
+These IDs are grounded in the original assembly's
+`GfGfxLoader_GXLoadPalFromOpenNarc`,
+`GfGfxLoader_LoadCharDataFromOpenNarc`, and
+`GfGfxLoader_LoadScrnDataFromOpenNarc` calls, with explicit layer
+arguments 3, 6 and 5. The assets are **summary-screen shared BG
+candidates**, not yet proven to be all visible ribbon-tab chrome.
+Their exact pixels, palettes, window layers and fit on a 240x160
+Emerald display must be checked against the original ROM before
+conversion or import. Keep existing live Emerald backgrounds until
+this provenance/visual gate is passed.
