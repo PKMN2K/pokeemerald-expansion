@@ -699,3 +699,34 @@ Their exact pixels, palettes, window layers and fit on a 240x160
 Emerald display must be checked against the original ROM before
 conversion or import. Keep existing live Emerald backgrounds until
 this provenance/visual gate is passed.
+
+## Public decomp contains the actual BG archive — binary inspected (2026-10-18)
+
+`pret/pokeheartgold/files/a/1/6/2` is tracked as a **90,916-byte
+NARC** in GitHub, so the previously supplied retail ROM is not required
+for initial archive inspection. The original binary (not just its source
+references) was read through the GitHub connector and its `NARC`,
+`BTAF`, `BTNF` and `GMIF` sections parsed. It contains **79 members**.
+
+| Member | Size | First Nitro graphics signature |
+| ---: | ---: | --- |
+| 0 | 552 | RLCN (NCLR palette) |
+| 1 | 16,448 | RGCN (NCGR characters) |
+| 2 | 8,256 | RGCN (NCGR characters) |
+| 4 | 146 | RECN (NCER cell data) |
+| 13 | 2,084 | RCSN (NSCR screen) |
+| 20 | 6,208 | RGCN (NCGR characters) |
+| 21 | 8,228 | RCSN (NSCR screen) |
+
+**Correction to the preceding source trace:** the two calls to
+`GfGfxLoader_GXLoadPalFromOpenNarc` in `sub_020887C4` both load
+**member 0**. The second call uses `r2=4` for the palette destination
+offset, **not member 4**. Member 4 is demonstrably `RECN` cell
+data and cannot be used as an NCLR palette. The correctly established
+BG candidates are palette member **0**; graphics **2, 1, 20**; and
+screen maps **13, 21**. The BG destination/palette slot details must
+still be verified before wiring.
+
+The binary headers verify file types and sizes, not the visual identity
+of a ribbon tab or suitability of an NSCR tilemap on the GBA.
+No existing art has been replaced or deleted.
