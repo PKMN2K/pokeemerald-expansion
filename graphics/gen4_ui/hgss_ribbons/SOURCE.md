@@ -657,3 +657,9 @@ gift-only ribbon sets, selection corners, zoom, and descriptions in
 the actual PokéNav before the obsolete 16x16 assets can be removed.
 The automated source check now protects both page-relative sprite
 origin expressions and their 32x32 corner offsets.
+
+## Ribbon background source trace (2026-10-18)
+
+Rechecked the retail `asm/unk_0208B1AC.s` sprite initialization path. `sub_0208B1AC` initializes a SpriteSystem and loads resource tables at `_02103A2C`; it does not establish a ribbon-screen BG tilemap source. The `sub_0208BE00` path uses `Pokemon_GetIconNaix` or `Boxmon_GetIconNaix` followed by `GfGfxLoader_GetCharData` and `GXS_LoadOBJ`: that is a Pokémon icon OBJ upload, not a ribbon panel background. Do not mistake its numeric arguments for a ribbon-summary NSCR/NCGR/NCLR trio.
+
+The authentic sprite and palette sources already documented above therefore do NOT authenticate the full ribbon screen's background or chrome. Next trace the actual Pokémon summary ribbon page BG initialization, identify its exact NitroFS NARC/member files and destination layers, and verify original binary provenance before replacing `gPokenavRibbonsSummaryBg_*`. No custom backgrounds or inferred substitute artwork are authorized.
