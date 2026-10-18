@@ -855,3 +855,31 @@ layer stack looks like there. Next map `sub_02088B40`'s input
 conditions and page-index storage to the state transitions and to
 the dedicated ribbon-drawing paths. Do not substitute state 3/4 for
 ribbon mode without that proof. No live graphics changed.
+
+
+## Summary tab selector connected to BG tilemap dispatch (2026-10-18)
+
+Retail `asm/unk_02088288.s` finally links navigation to dynamic
+summary-page background composition:
+
+- `sub_02088B40` calls `sub_02089E30` for left/right navigation.
+- `sub_02089E30` reads the **signed byte at summary-state offset
+  `0x7BC`**, walks values **0, 1, 2** (skipping those disallowed by
+  the overlay arguments' bit mask at offset `0x15`), and calls
+  `sub_02089E14` when selection changes.
+- `sub_02089E14` invokes `sub_02089D68`. The latter writes the
+  selected value back to **`0x7BC`**, rebuilds the visible text/
+  sprite presentation and explicitly calls `sub_02089F98`.
+- `sub_02089F98` reads that **same `0x7BC`** and selects BG3
+  tilemap rectangles from the per-page table `_021039B8`
+  (12-byte entries). It also selects BG6 map content conditionally,
+  invokes `sub_02089F50` to populate BG rectangles, and positions
+  BG5 at horizontal offset `0x80` under its matching conditional.
+
+**Verification boundary:** `0x7BC` is a genuine three-option
+summary-page selector; the selector-to-map wiring and per-page
+`_021039B8` table are now source-confirmed. The semantic names of
+values 0, 1 and 2 (in particular which is Ribbons) and the exact
+table rectangles still need to be decoded before extracting a
+ribbon-only composition. Do not confuse the `PokemonSummary_Main`
+state machine (0–22) with this 0–2 page selector.
