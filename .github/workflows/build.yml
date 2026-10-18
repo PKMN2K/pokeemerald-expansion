@@ -220,6 +220,22 @@ jobs:
           assert not doc["surf_and_jump_verified"]
           PY
 
+      - name: Package authentic Johto integration fixture with checksums
+        run: |
+          output="$(mktemp -d)"
+          python3 tools/polished_port/scripts/package_johto_integration_fixture.py --output "$output"
+          python3 - "$output" <<'PY'
+          import hashlib, json, pathlib, struct, sys
+          folder = pathlib.Path(sys.argv[1])
+          doc = json.loads((folder / "johto_integration_manifest.json").read_text())
+          assert len(doc["files"]) == 6
+          assert all(len((folder / name).read_bytes()) == size for name, size in doc["files"].items())
+          assert all(hashlib.sha256((folder / name).read_bytes()).hexdigest() == digest for name, digest in doc["sha256"].items())
+          assert len(struct.unpack("<64H", (folder / "johto_mapgrid_candidate.bin").read_bytes())) == 64
+          assert not doc["attribute_tables_included"] and not doc["map_registered"]
+          assert not doc["tilesets_registered"]
+          PY
+
       - name: Export integrated Johto 8x8 collision and elevation fixture
         run: |
           output="$(mktemp -d)"
