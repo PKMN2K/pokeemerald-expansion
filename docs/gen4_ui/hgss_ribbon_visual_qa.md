@@ -155,3 +155,31 @@ ribbon icon to appear in the proper location in the live summary,
 compared to the original HGSS source-colored offline pixels. This avoids
 false-positive passes from unrelated colorful screens, such as Hoenn
 region maps. The local cursor patch is never committed to game code.
+
+
+## Live ribbon screenshot review — run #19 (2026-10-18)
+
+- Source: [HGSS ribbon live PokéNav screenshots #19](https://github.com/PKMN2K/pokeemerald-expansion/actions/runs/39090441633), commit `eca0ab45e6110b7b703048d24aa5ddb2fb4694a2`.
+- The real mGBA framebuffer captures show native 32x32 ribbon icons,
+  selection corners, expanded ribbon, and normal/gift page transitions.
+  The smaller description font resolves the previously observed right-edge
+  overflow in the **sampled** normal/gift ribbon screenshots; the raised
+  text area does not overlap the bottom help bar in those captures.
+- CI #1131 and both screenshot workflows passed. These fixtures do not
+  exhaustively prove every ribbon name, save, animation or UI skin.
+- **Do not declare complete HGSS ribbon-screen authenticity:** live
+  `src/pokenav_ribbons_summary.c` still loads
+  `gPokenavRibbonsSummaryBg_Gfx`,
+  `gPokenavRibbonsSummaryBg_Tilemap` and
+  `gPokenavRibbonsSummaryBg_Pal` from Emerald. The description, Pokémon
+  card and list-index windows currently use plain filled surfaces, not
+  verified retail HGSS ribbon-summary panel graphics.
+- Next asset gate: trace the **specific** retail HGSS ribbon-screen
+  background/window assets and geometry from the HeartGold ROM/decomp,
+  verify provenance, import original graphics, then wire the live screen.
+  Only afterward remove superseded Emerald BG/window assets and verify
+  emulator captures again. Do not invent, redraw or reskin panels.
+- The legacy `graphics/pokenav/ribbons/icons.png`, `icons_big.png`,
+  and `icons1.pal`–`icons5.pal` are not runtime references in this
+  particular summary source, but may have build/dependency consumers;
+  do a repository-wide reference audit before any deletion.
