@@ -220,6 +220,21 @@ jobs:
           assert not doc["surf_and_jump_verified"]
           PY
 
+      - name: Merge Johto water and ledge candidates with fail-closed behavior review
+        run: |
+          report="$(mktemp)"
+          python3 tools/polished_port/scripts/merge_johto_behavior_candidates.py --output "$report"
+          python3 - "$report" <<'PY'
+          import json, sys
+          doc = json.load(open(sys.argv[1]))
+          rows = doc["primary"] + doc["secondary"]
+          assert len(rows) == 1012
+          assert doc["directional_water_candidates"] > 0
+          assert doc["unresolved_attribute_words"] > 0
+          assert all(not row["registration_ready"] for row in rows)
+          assert not doc["live_attribute_binary_generated"] and not doc["map_registered"]
+          PY
+
       - name: Audit Johto Emerald metatile attributes without live export
         run: |
           report="$(mktemp)"
