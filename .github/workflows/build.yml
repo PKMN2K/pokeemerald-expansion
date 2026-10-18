@@ -220,6 +220,23 @@ jobs:
           assert not doc["surf_and_jump_verified"]
           PY
 
+      - name: Validate proposed isolated Johto layout registration schema
+        run: |
+          output="$(mktemp -d)"
+          python3 tools/polished_port/scripts/prepare_johto_layout_registration.py --output "$output"
+          python3 - "$output" <<'PY'
+          import json, pathlib, sys
+          root = pathlib.Path(sys.argv[1])
+          report = json.loads((root / "johto_layout_registration_proposal.json").read_text())
+          entry = report["layout_proposal"]
+          assert entry["width"] == entry["height"] == 8
+          assert entry["id"] == "LAYOUT_POLISHED_JOHTO_WALKABILITY_TEST"
+          assert report["all_test_cells_have_basic_candidate_attributes"]
+          assert not report["currently_registered"] and not report["existing_layouts_modified"]
+          assert not report["complete_tileset_attribute_tables"]
+          assert not report["map_header_and_warp_defined"]
+          PY
+
       - name: Validate isolated Johto basic walkability layout
         run: |
           output="$(mktemp -d)"
