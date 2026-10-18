@@ -206,6 +206,20 @@ jobs:
       - name: Audit Johto outdoor diagnostic grid without map registration
         run: python3 tools/polished_port/scripts/audit_johto_outdoor_test_grid.py
 
+      - name: Audit Johto water and directional ledge field candidates
+        run: |
+          report="$(mktemp)"
+          python3 tools/polished_port/scripts/audit_johto_ledge_water_fields.py --output "$report"
+          python3 - "$report" <<'PY'
+          import json, sys
+          doc = json.load(open(sys.argv[1]))
+          assert doc["original_metatile_count"] == 1012
+          assert doc["affected_metatiles"] == len(doc["records"])
+          assert set(doc["counts"]) == set(doc["ledge_candidates"]) | set(doc["water_candidates"]) | set(doc["obstacle_symbols"])
+          assert not doc["attributes_generated"] and not doc["live_layout_registered"]
+          assert not doc["surf_and_jump_verified"]
+          PY
+
       - name: Validate offline Johto map-grid collision preview
         run: |
           output="$(mktemp -d)"
