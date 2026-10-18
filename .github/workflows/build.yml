@@ -220,6 +220,21 @@ jobs:
           assert not doc["surf_and_jump_verified"]
           PY
 
+      - name: Validate Johto map-grid elevation encoding without registration
+        run: |
+          output="$(mktemp -d)"
+          python3 tools/polished_port/scripts/validate_johto_elevation_encoding.py --output "$output"
+          test "$(wc -c < "$output/johto_elevation_candidate.bin")" -eq 128
+          python3 - "$output/johto_elevation_candidate.json" <<'PY'
+          import json, sys
+          report = json.load(open(sys.argv[1]))
+          assert len(report["cells"]) == 64
+          assert all(row["candidate_only"] for row in report["cells"])
+          assert all((row["encoded_cell"] & 1023) == row["metatile_id"] for row in report["cells"])
+          assert not report["registered"] and not report["surf_eligibility_verified"]
+          assert not report["object_bg_priority_verified"] and not report["ledge_traversal_verified"]
+          PY
+
       - name: Validate offline Johto map-grid collision preview
         run: |
           output="$(mktemp -d)"
