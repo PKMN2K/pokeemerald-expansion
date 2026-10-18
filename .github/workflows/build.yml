@@ -220,6 +220,22 @@ jobs:
           assert not doc["surf_and_jump_verified"]
           PY
 
+      - name: Review per-metatile Johto mapgrid collision and elevation blockers
+        run: |
+          report="$(mktemp)"
+          python3 tools/polished_port/scripts/review_johto_mapgrid_blockers.py --output "$report"
+          python3 - "$report" <<'PY'
+          import json, sys
+          doc = json.load(open(sys.argv[1]))
+          rows = doc["primary"] + doc["secondary"]
+          assert len(doc["primary"]) == 512 and len(doc["secondary"]) == 500
+          assert [r["metatile_id"] for r in rows] == list(range(1012))
+          assert sum(doc["categories"].values()) == 1012
+          assert all(r["required_live_tests"] and not r["verified_in_game"] for r in rows)
+          assert not doc["generated_mapgrid_cells"] and not doc["generated_attribute_binary"]
+          assert not doc["live_map_registered"]
+          PY
+
       - name: Merge Johto water and ledge candidates with fail-closed behavior review
         run: |
           report="$(mktemp)"
