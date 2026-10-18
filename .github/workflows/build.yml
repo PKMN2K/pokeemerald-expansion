@@ -220,6 +220,23 @@ jobs:
           assert not doc["surf_and_jump_verified"]
           PY
 
+      - name: Validate safe Johto basic-terrain test selection
+        run: |
+          output="$(mktemp -d)"
+          python3 tools/polished_port/scripts/select_johto_basic_test_terrain.py --output "$output"
+          python3 - "$output" <<'PY'
+          import json, pathlib, struct, sys
+          root = pathlib.Path(sys.argv[1])
+          report = json.loads((root / "johto_basic_terrain_selection.json").read_text())
+          ids = [x[0] for x in struct.iter_unpack("<H", (root / "johto_basic_terrain_ids.bin").read_bytes())]
+          assert len(ids) == report["eligible_count"] > 0
+          assert ids == [row["metatile_id"] for row in report["eligible"]]
+          assert all(row["source_symbol"] in ("FLOOR", "TALL_GRASS") for row in report["eligible"])
+          assert len(set(ids)) == len(ids) and all(0 <= x < 1012 for x in ids)
+          assert report["unresolved_terrain_excluded"]
+          assert not report["actual_test_map_registered"] and not report["field_walkability_verified"]
+          PY
+
       - name: Validate sparse Johto attribute candidate binaries
         run: |
           output="$(mktemp -d)"
