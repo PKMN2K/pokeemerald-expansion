@@ -804,3 +804,27 @@ windows, layering, and offsets before converting portions to a
 240×160 GBA composition. Merely cropping the whole 256×256 or
 512×512 previews would not reproduce that runtime result. No game
 graphics were modified.
+
+## Runtime BG offsets identified; ribbon-specific branch still pending (2026-10-18)
+
+The retail `asm/unk_02088288.s` contains actual background-position
+transitions, proving the NSCR previews cannot simply be cropped as
+static Ribbons-tab layouts.
+
+- `sub_02088630` initializes BG2 horizontal and vertical positions to
+  zero with `ScheduleSetBgPosText`.
+- `sub_02089F98` positions BG5 horizontally at **0x80** and vertically
+  at zero after tilemap operations. These are **runtime position
+  parameters**, not image dimensions.
+- `sub_0208A564` and `sub_0208A63C` change BG5 horizontal position
+  between **zero** and **0x80** using increments of **0x40**.
+- `sub_0208A9C4` contains BG5 vertical transition logic targeting
+  **0x48** using increments of **0x24**.
+
+These functions are in the `PokemonSummary` overlay containing the
+ribbon display, but **their correspondence to entering or leaving the
+Ribbons tab is not yet proven**. This is a renderer-relevant clue, not
+authorization to hardcode these offsets on Emerald. Next follow the
+page-index state and callers to determine precisely when each offset
+is applied and which tilemap rectangles are drawn for ribbon mode.
+No graphics or runtime source were changed.
