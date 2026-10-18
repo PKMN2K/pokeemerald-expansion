@@ -220,6 +220,22 @@ jobs:
           assert not doc["surf_and_jump_verified"]
           PY
 
+      - name: Export integrated Johto 8x8 collision and elevation fixture
+        run: |
+          output="$(mktemp -d)"
+          python3 tools/polished_port/scripts/export_johto_integrated_mapgrid.py --output "$output"
+          python3 - "$output" <<'PY'
+          import json, pathlib, struct, sys
+          folder = pathlib.Path(sys.argv[1])
+          doc = json.loads((folder / "johto_mapgrid_candidate.json").read_text())
+          data = (folder / "johto_mapgrid_candidate.bin").read_bytes()
+          cells = struct.unpack("<64H", data)
+          assert len(data) == 128 and doc["width"] == doc["height"] == 8
+          assert [row["packed_cell"] for row in doc["cells"]] == list(cells)
+          assert all(not row["verified_in_game"] for row in doc["cells"])
+          assert not doc["field_behaviors_verified"] and not doc["map_registered"]
+          PY
+
       - name: Review per-metatile Johto mapgrid collision and elevation blockers
         run: |
           report="$(mktemp)"
