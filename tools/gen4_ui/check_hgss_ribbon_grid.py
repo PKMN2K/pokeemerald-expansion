@@ -119,9 +119,6 @@ def check_retail_4bpp_assets(rows):
                for bank in range(5)), "Each HGSS palette bank must have exactly 16 BGR555 entries"
     assert all(int(row["ncgr_member"]) in FRAME_MEMBERS
                and 0 <= int(row["nclr_bank"]) < 5 for row in rows)
-    # Four bits per pixel encode only palette indices 0..15.
-    for value in sheet:
-        assert (value & 15) < 16 and (value >> 4) < 16
     print("Verified 12 native 32x32 4bpp icons and five 16-entry BGR555 palette banks")
 
 
