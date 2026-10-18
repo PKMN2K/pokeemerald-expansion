@@ -730,3 +730,28 @@ still be verified before wiring.
 The binary headers verify file types and sizes, not the visual identity
 of a ribbon tab or suitability of an NSCR tilemap on the GBA.
 No existing art has been replaced or deleted.
+
+## Retail ROM versus pret repository: exact binary match (2026-10-18)
+
+The user-supplied `Pokemon - HeartGold Version (USA).nds`
+(128 MiB, NitroFS FNT/FAT) was inspected directly. NitroFS path
+`a/1/6/2` resolves to **file ID 291**, ROM byte range
+`85889024..85979940` (90,916 bytes). The extracted NARC has 79
+members. **The full NARC byte-for-byte Git blob SHA-1 is
+`346c322792276d83e932bc464318ba943136b16b`, identical to
+`pret/pokeheartgold/files/a/1/6/2` on master.** Its raw SHA-256 is
+`003c80069fcd1f9c9eb842ae0294ecbdeffabbff40593cc471236e81239d9eed`.
+
+Relevant raw member SHA-256 values (unmodified):
+- 0 NCLR, 552 B: `af7d1518c77c79339cb3796d45d9f0d03499ce800f2bac5592bba1893c8f91e5`
+- 1 NCGR, 16448 B: `ce8cfb8284a3cc4603d0c607093c61217fd51b93d3f6724f2d48b92ca86f5677`
+- 2 NCGR, 8256 B: `c8ea700e41c6562e50d9e57fd2693a4962ef7cf873823c83cbae88493925bafe`
+- 13 NSCR, 2084 B: `de008db6841a679b92d5f61122a522c99fc3c9675c582fb3c7c3914fd3f334de`
+- 20 NCGR, 6208 B: `4f81f6fe6d028b070b7362aece250a79c2b78e0ef73764af3f11eccceab0e910`
+- 21 NSCR, 8228 B: `5958f34526a1e01cf5c1b7636bb7dd7e2fb78b9f6890607532d88a2859ac32a5`
+
+All six original member files were extracted locally for visual
+decoding. No ROM bytes or graphics were committed, and no runtime art
+was replaced. The next gate is decoding the NCGR/NCLR/NSCR pixel
+presentation and selecting only retail-authentic pieces for the live
+ribbon page.
