@@ -24,8 +24,23 @@ def prepare(out):
     assert not any(x.get("id") == ID or x.get("name") == NAME for x in existing)
     attrs, mask, _ = build_attributes()
     assert len(attrs) == 1012 and len(mask) == 127
-    used = sorted({x["metatile_id"] for x in walk["cells"]})
-    assert used and all(attrs[i] != 0xFFFF for i in used)
+    cells = walk["cells"]
+    assert walk["width"] == walk["height"] == 8
+    assert len(cells) == 64 and walk["bytes"] == 128
+    assert [(cell["x"], cell["y"]) for cell in cells] == [
+        (x, y) for y in range(8) for x in range(8)
+    ]
+    used = sorted({cell["metatile_id"] for cell in cells})
+    assert used and all(0 <= i < len(attrs) and i < 1024 for i in used)
+    coverage = all(
+        attrs[cell["metatile_id"]] != 0xFFFF
+        and bool(mask[cell["metatile_id"] // 8] & (1 << (cell["metatile_id"] % 8)))
+        and attrs[cell["metatile_id"]] == cell["candidate_attribute_word"]
+        and cell["packed_cell"] == (cell["metatile_id"] | (3 << 12))
+        and cell["source_symbol"] in ("FLOOR", "TALL_GRASS")
+        for cell in cells
+    )
+    assert coverage, "Test map contains unsupported or mismatched metatile attributes"
     proposal = {
         "id": ID, "name": NAME, "width": 8, "height": 8,
         "border_width": 2, "border_height": 2,
@@ -44,7 +59,7 @@ def prepare(out):
         "currently_registered": False,
         "existing_layouts_modified": False,
         "referenced_test_metatile_ids": used,
-        "all_test_cells_have_basic_candidate_attributes": True,
+        "all_test_cells_have_basic_candidate_attributes": coverage,
         "complete_tileset_attribute_tables": False,
         "movement_verified_in_emulator": False,
         "map_header_and_warp_defined": False,
