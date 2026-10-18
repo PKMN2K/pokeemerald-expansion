@@ -220,6 +220,19 @@ jobs:
           assert not doc["surf_and_jump_verified"]
           PY
 
+      - name: Audit Johto foreground masks against provisional elevation
+        run: |
+          report="$(mktemp)"
+          python3 tools/polished_port/scripts/audit_johto_foreground_elevation.py --output "$report"
+          python3 - "$report" <<'PY'
+          import json, sys
+          doc = json.load(open(sys.argv[1]))
+          assert len(doc["cells"]) == 64
+          assert doc["flagged_source_blocks"] == [20, 145, 146, 210, 211, 214, 215]
+          assert not doc["sprite_occlusion_verified_in_game"]
+          assert not doc["live_map_registered"]
+          PY
+
       - name: Validate Johto map-grid elevation encoding without registration
         run: |
           output="$(mktemp -d)"
