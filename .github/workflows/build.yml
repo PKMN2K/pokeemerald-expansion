@@ -206,6 +206,20 @@ jobs:
       - name: Audit Johto outdoor diagnostic grid without map registration
         run: python3 tools/polished_port/scripts/audit_johto_outdoor_test_grid.py
 
+      - name: Validate offline Johto map-grid collision preview
+        run: |
+          output="$(mktemp -d)"
+          python3 tools/polished_port/scripts/preview_johto_mapgrid_collision.py --output "$output"
+          test "$(wc -c < "$output/johto_collision_preview.bin")" -eq 128
+          python3 - "$output/johto_collision_preview.json" <<'PY'
+          import json, sys
+          doc = json.load(open(sys.argv[1]))
+          assert len(doc["cells"]) == 64
+          assert all(cell["packed_cell"] & 1023 == cell["metatile_id"] for cell in doc["cells"])
+          assert not doc["water_surfing_verified"] and not doc["map_registered"]
+          assert not doc["metatile_attribute_tables_emitted"]
+          PY
+
       - name: Audit Johto wall and water collision semantics
         run: |
           report="$(mktemp)"
