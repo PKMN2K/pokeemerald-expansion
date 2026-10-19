@@ -955,3 +955,41 @@ conditional overlay arguments, viewport crop and DS-to-GBA adaptation
 still require validation before replacing live Emerald background.
 This commit is provenance/implementation guidance only, with no
 runtime UI graphics changes.
+
+
+## Ribbons page background decision tree verified (2026-10-19)
+
+Original `pret/pokeheartgold/asm/unk_02088288.s` routine
+`sub_02089F98` (approximately lines 3572–3734) combines
+selector **2** (Ribbons; separately verified by `sub_0208C2A0`)
+with mode flags from the overlay's parameter structure.
+
+BG3 screen map: if argument byte/word at **+0x34 == 0** and
+the page selector **0x7BC == 2**, use NARC 0xA2 member **11**
+(0x0B). Otherwise use selector-indexed first entry in
+`_021039B8`, i.e. Ribbons row member **10** (0x0A).
+
+BG6 screen map:
+- If parameter **+0x12 == 2**, use the Ribbons row's third
+  entry, member **9**, and set BG5 horizontal position to
+  **0x80**, vertical position **0**. When parameter
+  **+0x18 == 0**, additionally call `sub_0208AF70`.
+- Otherwise, if the state bit from offset **0x6A0** (built
+  by loading `[state+0x6A0]`, shifting left 3, then right 31)
+  is set, use third entry member **9**.
+- Otherwise, if `sub_02089E80(state, 2)` is nonzero,
+  use second entry member **9**.
+- Otherwise choose fixed member **0x4E (78)** for selector
+  2 (member 0x4D/77 is for selector 0).
+
+Thus **the Ribbons background is conditional, not simply
+the three IDs 10, 9, 9**. In particular BG3 member 11 is a
+retail-authentic alternative to member 10. All members
+are read by `sub_02089F50` from `a/1/6/2`.
+
+Before replacing Emerald's live tilemaps: inspect original
+NCGR/NSCR and palette compatibility for 9, 10, 11, 78,
+identify which parameter mode applies to the intended
+PokéNav ribbon screen, and visually verify combined layers
+against a genuine HGSS Ribbons screenshot. No asset
+redraw, no live rendering change in this trace.
