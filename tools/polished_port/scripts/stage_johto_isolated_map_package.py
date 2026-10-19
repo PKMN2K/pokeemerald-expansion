@@ -12,6 +12,7 @@ import struct
 from pathlib import Path
 from prepare_johto_layout_registration import prepare, ROOT, ID, NAME
 from export_johto_tileset_bundle import export as export_tileset
+from export_johto_test_metatile_bindings import export as export_bindings
 
 MAP_ID = "MAP_POLISHED_JOHTO_WALKABILITY_TEST"
 MAP_NAME = "PolishedJohto_WalkabilityTest"
@@ -131,6 +132,16 @@ def stage(output):
     # Pinned real-source graphics and palettes are kept as another offline folder.
     assets = output / "OFFLINE_ONLY" / "johto_source_tileset"
     export_tileset(assets)
+    bindings = export_bindings(
+        output / "OFFLINE_ONLY" / "attribute_bindings",
+        map_raw, border_raw,
+        (assets / "johto_primary_metatiles.bin").read_bytes(),
+        (assets / "johto_secondary_metatiles.bin").read_bytes(),
+    )
+    assert bindings["map_cells_checked"] == 64
+    assert bindings["border_cells_checked"] == 4
+    assert bindings["binding_count"] > 0
+    assert not bindings["live_registration_allowed"]
     (output / "OFFLINE_ONLY" / "layout_entry.review.json").write_text(
         json.dumps(proposed_layout, indent=2) + "\n", encoding="utf-8")
     (output / "OFFLINE_ONLY" / "map_header.INCOMPLETE.review.json").write_text(
@@ -144,6 +155,10 @@ def stage(output):
         "border_sha256": hashlib.sha256(border_raw).hexdigest(),
         "map_bytes": len(map_raw), "border_bytes": len(border_raw),
         "tileset_source_bundle_staged": True,
+        "test_metatile_binding_count": bindings["binding_count"],
+        "test_metatile_bindings_sha256": bindings["binary_sha256"],
+        "test_metatile_geometry_verified": bindings["source_geometry_bytes_verified"],
+        "test_metatile_bindings_live_usable": False,
         "map_header_draft_schema_checked": True,
         "verified_header_constants": constants,
         "temporary_region_map_placeholder": region_placeholder,
