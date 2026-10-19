@@ -1064,3 +1064,28 @@ not pushed into the runtime graphics tree. Next establish
 actual layered DS screen placement and validate a 240×160
 GBA crop before the authentic-asset → live-wire → legacy
 removal sequence.
+
+
+## Reproduced original background maps with new renderer (2026-10-19)
+
+Executed equivalent logic to `tools/render_hgss_ribbon_backgrounds.py`
+against a **90,916-byte original NARC** extracted from HeartGold's
+NitroFS **file ID 291**. It parses **79 members**, extracts NCLR
+member 0, and correctly renders all four declared 256×256
+BG tilemaps **BG3/10, BG3/11, BG6/9, BG6/78** from the original
+NCGR pairs, respecting 4bpp palette banks and flip attributes.
+The tile indices validate within each NCGR's bounds.
+
+Compared outputs to the previous ROM-derived preview images:
+top-left sample colours and recognizable detail agree, but images
+are **not byte/pixel identical across the entire canvas**. The
+earlier review PNGs have transparent pixels below screen y=192,
+whereas the new renderer includes all 256 NSCR rows. This is a
+**preview-viewport difference**, not evidence of a reconstructed
+retail full-screen composite. Do not treat the standalone 256×256
+images as proof of retail screen composition or layer order.
+
+Next establish page-specific layer origins and actual on-screen
+crop, then compare a layered DS reference and selected 240×160
+GBA viewport before wiring resources live. No legacy assets
+removed in this validation.
