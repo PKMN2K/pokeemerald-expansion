@@ -10,6 +10,7 @@ from pathlib import Path
 from export_johto_basic_walkability_layout import export as export_layout
 from export_johto_sparse_attributes import build as build_attributes
 from export_johto_basic_border_candidate import export as export_border
+from audit_johto_border_graphics import audit as audit_border_graphics
 
 ROOT = Path(__file__).resolve().parents[3]
 LAYOUTS = ROOT / "data/layouts/layouts.json"
@@ -20,6 +21,9 @@ def prepare(out):
     out.mkdir(parents=True, exist_ok=True)
     walk = export_layout(out)
     border = export_border(out)
+    graphics = audit_border_graphics(out)
+    assert graphics["metatile_id"] == border["metatile_id"]
+    assert graphics["geometry_checked"] and not graphics["border_art_verified"]
     assert border["width"] == border["height"] == 2
     assert border["bytes"] == 8 and len(border["packed_cells"]) == 4
     assert border["source_backed"] and not border["registered"]
@@ -71,6 +75,8 @@ def prepare(out):
         "border_art_verified": False,
         "offline_border_candidate_generated": True,
         "border_candidate_metatile_id": border["metatile_id"],
+        "border_source_geometry_checked": graphics["geometry_checked"],
+        "border_runtime_priority_verified": graphics["runtime_priority_verified"],
     }
     (out / "johto_layout_registration_proposal.json").write_text(
         json.dumps(report, indent=2) + "\n", encoding="utf-8")
