@@ -11,6 +11,7 @@ from export_johto_basic_walkability_layout import export as export_layout
 from export_johto_sparse_attributes import build as build_attributes
 from export_johto_basic_border_candidate import export as export_border
 from audit_johto_border_graphics import audit as audit_border_graphics
+from audit_johto_test_cell_encoding import audit as audit_cell_encoding
 
 ROOT = Path(__file__).resolve().parents[3]
 LAYOUTS = ROOT / "data/layouts/layouts.json"
@@ -20,6 +21,10 @@ NAME = "PolishedJohto_WalkabilityTest_Layout"
 def prepare(out):
     out.mkdir(parents=True, exist_ok=True)
     walk = export_layout(out)
+    cell_audit = audit_cell_encoding(out)
+    assert cell_audit["cells_checked"] == 64
+    assert cell_audit["source_cell_binary_round_trip_checked"]
+    assert not cell_audit["ready_for_live_registration"]
     border = export_border(out)
     graphics = audit_border_graphics(out)
     assert graphics["metatile_id"] == border["metatile_id"]
@@ -74,6 +79,7 @@ def prepare(out):
         "map_header_and_warp_defined": False,
         "border_art_verified": False,
         "offline_border_candidate_generated": True,
+        "test_cell_binary_encoding_checked": cell_audit["source_cell_binary_round_trip_checked"],
         "border_candidate_metatile_id": border["metatile_id"],
         "border_source_geometry_checked": graphics["geometry_checked"],
         "border_runtime_priority_verified": graphics["runtime_priority_verified"],
@@ -82,6 +88,7 @@ def prepare(out):
             "source_geometry_checked": graphics["geometry_checked"],
             "source_pixels_checked": graphics["converted_4bpp_pixels_checked"],
             "candidate_collision_coverage": coverage,
+            "test_cell_binary_encoding_checked": cell_audit["source_cell_binary_round_trip_checked"],
             "complete_tileset_attributes": False,
             "visual_border_verified": False,
             "object_layer_priority_verified": False,
