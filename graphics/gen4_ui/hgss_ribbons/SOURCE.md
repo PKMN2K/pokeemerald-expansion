@@ -1089,3 +1089,36 @@ Next establish page-specific layer origins and actual on-screen
 crop, then compare a layered DS reference and selected 240×160
 GBA viewport before wiring resources live. No legacy assets
 removed in this validation.
+
+
+## GBA 240x160 viewport candidate comparison (2026-10-19)
+
+Used the previously reconstructed authentic full 256x256 source
+tilemap PNGs (BG3/10, BG3/11, BG6/9, BG6/78) to compare
+**three 240x160 unscaled review crops** on each tilemap:
+- top-left (x=0,y=0)
+- slightly inset (x=8,y=16)
+- more deeply inset (x=16,y=32)
+
+All three variants were actually cropped and compared visually.
+At y=0 the full top three rows of the nine-circle ribbon grid
+remain visible on BG6 member 9, but the bottom navigation controls
+are cut off. At y=16, more of the original bottom artwork appears.
+At y=32 the upper grid is cut off, even though additional bottom
+controls become visible. The analogous BG3 crops shift its original
+header and border offscreen as the viewport moves downward.
+
+**Conclusion:** These crops demonstrate an important GBA
+240x160 spatial constraint, not an approved final viewport.
+A simple downward crop cannot simultaneously preserve the
+original full top grid and all bottom controls in place.
+Final Emerald placement may require compositing original
+HGSS graphic pieces into the 240x160 layout without
+repainting; confirm retail layer/window origins and existing
+PokéNav functional zones first. Do NOT infer DS scroll values
+as GBA crop offsets and do NOT wire any of these tentative
+crops live or remove the existing background yet.
+
+The review images generated this session include 12 individual
+240x160 PNG crops and a single contact sheet, independent of
+the runtime assets.
