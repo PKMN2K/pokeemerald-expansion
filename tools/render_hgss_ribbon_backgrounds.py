@@ -108,7 +108,11 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("narc", type=Path, help="Original a/1/6/2 NARC bytes")
     parser.add_argument("out", type=Path, help="Preview directory")
+    parser.add_argument("--viewport-x", type=int, default=0, help="Review crop left, 0..16")
+    parser.add_argument("--viewport-y", type=int, default=0, help="Review crop top, 0..96")
     args = parser.parse_args()
+    if not (0 <= args.viewport_x <= 16 and 0 <= args.viewport_y <= 96):
+        parser.error("240x160 viewport must fit the original 256x256 tilemap")
     members = narc_members(args.narc.read_bytes())
     if len(members) != 79:
         raise ValueError(f"Expected 79 archive members, got {len(members)}")
@@ -119,6 +123,11 @@ def main():
                        palettes, MAX_TILE[char_id])
         destination = args.out / (label + ".png")
         image.save(destination)
+        # Separate individual-layer crops for GBA layout review, not a
+        # claim about original DS compositing or approved Emerald positions.
+        image.crop((args.viewport_x, args.viewport_y,
+                    args.viewport_x + 240, args.viewport_y + 160)).save(
+                        args.out / (label + "_gba_review.png"))
         print(f"{destination}: authentic NCGR {char_id} / NSCR {screen_id}")
 
 
