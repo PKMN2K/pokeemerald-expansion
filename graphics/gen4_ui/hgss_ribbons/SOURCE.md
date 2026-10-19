@@ -883,3 +883,40 @@ values 0, 1 and 2 (in particular which is Ribbons) and the exact
 table rectangles still need to be decoded before extracting a
 ribbon-only composition. Do not confuse the `PokemonSummary_Main`
 state machine (0–22) with this 0–2 page selector.
+
+
+## Original page background resource table decoded (2026-10-19)
+
+The retail `pret/pokeheartgold/asm/unk_02088288.s` defines
+`_021039B8` explicitly at approximately line 5991:
+
+```asm
+_021039B8:
+    .word 13, 12, 14
+    .word 19, 17, 18
+    .word 10, 9, 9
+    .word 13, 12, 12
+```
+
+Each row is 12 bytes (three u32 member IDs). The initial
+`sub_02089F98` BG3 path indexes `_021039B8 + 12*selector`
+and its BG6 branches may reference `+4` or `+8`.
+The selector is the signed summary-state byte at `0x7BC`
+(0–2). Consequently the first three rows directly correspond
+to selector values 0, 1 and 2; the **fourth row is present in
+ROM assembly but its caller/use is not yet established**.
+Do not claim a fourth selectable tab.
+
+`sub_02089F50` calls
+`AllocAndReadWholeNarcMemberByIdPair(0xA2, member, 0x13)`,
+unpacks the member with `NNS_G2dGetUnpackedScreenData`,
+calls `LoadRectToBgTilemapRect` for a 32×32 tile rectangle,
+and schedules the requested BG buffer transfer. Thus these
+are actual NSCR member identifiers in NARC **a/1/6/2**,
+not abstract style tokens or palette identifiers.
+
+The exact Ribbons-tab mapping among values 0–2 is **not
+yet confirmed**; the associated conditional BG6 member,
+window crop and screen composition must be checked before
+replacing Emerald's legacy background. No rendered assets
+or runtime code changed.
