@@ -77,6 +77,17 @@ def prepare(out):
         "border_candidate_metatile_id": border["metatile_id"],
         "border_source_geometry_checked": graphics["geometry_checked"],
         "border_runtime_priority_verified": graphics["runtime_priority_verified"],
+        "border_converted_4bpp_pixels_checked": graphics["converted_4bpp_pixels_checked"],
+        "emulator_test_readiness": {
+            "source_geometry_checked": graphics["geometry_checked"],
+            "source_pixels_checked": graphics["converted_4bpp_pixels_checked"],
+            "candidate_collision_coverage": coverage,
+            "complete_tileset_attributes": False,
+            "visual_border_verified": False,
+            "object_layer_priority_verified": False,
+            "map_header_and_warp_defined": False,
+            "ready_for_live_map_registration": False,
+        },
     }
     (out / "johto_layout_registration_proposal.json").write_text(
         json.dumps(report, indent=2) + "\n", encoding="utf-8")
