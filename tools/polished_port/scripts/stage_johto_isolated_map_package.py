@@ -7,6 +7,7 @@ resolved. This command never writes data/maps, data/layouts or map_groups.json.
 import argparse
 import hashlib
 import json
+import re
 import struct
 from pathlib import Path
 from prepare_johto_layout_registration import prepare, ROOT, ID, NAME
@@ -14,8 +15,26 @@ from export_johto_tileset_bundle import export as export_tileset
 
 MAP_ID = "MAP_POLISHED_JOHTO_WALKABILITY_TEST"
 MAP_NAME = "PolishedJohto_WalkabilityTest"
-MISSING_HEADER_FIELDS = ("music", "region", "region_map_section",
-                         "weather", "map_type", "battle_scene")
+# Use real repo constants for a deliberately silent, otherwise neutral test map.
+# These values are NOT a Johto music/region-map integration decision.
+HEADER_CONSTANTS = {
+    "music": ("MUS_DUMMY", "include/constants/songs.h"),
+    "region": ("REGION_JOHTO", "include/constants/regions.h"),
+    "weather": ("WEATHER_NONE", "include/constants/weather.h"),
+    "map_type": ("MAP_TYPE_ROUTE", "include/constants/map_types.h"),
+    "battle_scene": ("MAP_BATTLE_SCENE_NORMAL", "include/constants/map_types.h"),
+}
+MISSING_HEADER_FIELDS = ("region_map_section",)
+
+def verify_header_constants():
+    for field, (name, path) in HEADER_CONSTANTS.items():
+        body = (ROOT / path).read_text(encoding="utf-8")
+        pattern = (r"(?m)^\\s*#define\\s+" if field == "music" else r"(?m)^\\s*")
+        pattern += re.escape(name)
+        pattern += (r"\\s+\\d+\\b" if field == "music" else r"(?:\\s*,|\\s*=)")
+        assert re.search(pattern, body), f"missing source-backed constant {name} in {path}"
+    return {field: name for field, (name, _) in HEADER_CONSTANTS.items()}
+
 
 def stage(output):
     output = output.resolve()
@@ -35,17 +54,21 @@ def stage(output):
     groups = json.loads((ROOT / "data/maps/map_groups.json").read_text(encoding="utf-8"))
     assert not any(MAP_NAME in values for values in groups.values() if isinstance(values, list))
     reference_map = json.loads((ROOT / "data/maps/Route101/map.json").read_text(encoding="utf-8"))
+    constants = verify_header_constants()
     header = {
         "id": MAP_ID, "name": MAP_NAME, "layout": ID,
-        "music": None, "region": None, "region_map_section": None,
-        "requires_flash": False, "weather": None, "map_type": None,
+        "music": constants["music"], "region": constants["region"],
+        "region_map_section": None,
+        "requires_flash": False, "weather": constants["weather"],
+        "map_type": constants["map_type"],
         "allow_cycling": False, "allow_escaping": False,
         "allow_running": True, "show_map_name": False,
-        "battle_scene": None, "connections": [], "object_events": [],
+        "battle_scene": constants["battle_scene"], "connections": [], "object_events": [],
         "warp_events": [], "coord_events": [], "bg_events": [],
     }
     assert set(header) == set(reference_map), "Map-header draft does not match native schema"
     assert all(header[field] is None for field in MISSING_HEADER_FIELDS)
+    assert all(header[field] == name for field, name in constants.items())
     assert not any(header[k] for k in (
         "connections", "object_events", "warp_events", "coord_events", "bg_events"
     ))
@@ -65,6 +88,20 @@ def stage(output):
     )
     (root / "map.bin").write_bytes(map_raw)
     (root / "border.bin").write_bytes(border_raw)
+    # Development teleport position only; NOT a warp, event, or ROM entry point.
+    cells = json.loads((reports / "johto_basic_walkability_layout.json").read_text())["cells"]
+    spawn = cells[1 + 1 * 8]
+    assert (spawn["x"], spawn["y"]) == (1, 1)
+    assert spawn["source_symbol"] == "FLOOR" and spawn["candidate_attribute_word"] == 0
+    assert (spawn["packed_cell"] >> 12) == 3
+    spawn_plan = {"map_id": MAP_ID, "x": 1, "y": 1, "elevation": 3,
+                  "source_metatile_id": spawn["metatile_id"],
+                  "proposed_debug_teleport_only": True,
+                  "warp_or_map_group_registered": False,
+                  "in_emulator_verified": False}
+    (output / "OFFLINE_ONLY" / "debug_spawn.review.json").write_text(
+        json.dumps(spawn_plan, indent=2) + "\\n", encoding="utf-8"
+    )
 
     # Pinned real-source graphics and palettes are kept as another offline folder.
     assets = output / "OFFLINE_ONLY" / "johto_source_tileset"
@@ -83,7 +120,9 @@ def stage(output):
         "map_bytes": len(map_raw), "border_bytes": len(border_raw),
         "tileset_source_bundle_staged": True,
         "map_header_draft_schema_checked": True,
+        "verified_header_constants": constants,
         "unresolved_header_fields": list(MISSING_HEADER_FIELDS),
+        "debug_spawn_candidate_validated_offline": True,
         "no_warp_or_access_route": True,
         "full_tileset_attributes_ready": False,
         "visual_and_runtime_collision_verified": False,
