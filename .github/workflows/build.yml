@@ -284,6 +284,30 @@ jobs:
           assert not layer["sprite_elevation_parity_verified_in_emulator"]
           assert not report["obstacle_sprite_occlusion_verified_in_emulator"]
           assert not layer["registered_with_engine"] and not layer["safe_to_enable"]
+          probe_root = root / "sprite_occlusion_probes"
+          probe = json.loads((probe_root / "johto_sprite_occlusion_probes.review.json").read_text())
+          probe_bytes = (probe_root / "johto_sprite_occlusion_probes.OFFLINE.bin").read_bytes()
+          assert probe["status"] == "OFFLINE_SPRITE_OCCLUSION_PROBES_NOT_FOR_ROM"
+          assert probe["map_bytes"] == len(probe_bytes) == 128
+          assert probe["obstacle_case_count"] == report["sprite_occlusion_probe_cases"] == 7
+          assert probe["player_probe_count"] == report["sprite_occlusion_probe_positions"] == 14
+          assert probe["priority_mask_case_count"] == report["sprite_occlusion_priority_cases"] == 1
+          assert hashlib.sha256(probe_bytes).hexdigest() == report["sprite_occlusion_probe_map_sha256"]
+          assert probe["base_map_sha256"] == hashlib.sha256(map_file.read_bytes()).hexdigest()
+          assert probe["cases"][0]["case_id"] == "ordinary_wall"
+          assert probe["cases"][1]["case_id"] == "priority_wall"
+          assert probe["cases"][0]["expected_foreground_opaque_pixels"] == 0
+          assert probe["cases"][1]["expected_foreground_opaque_pixels"] > 0
+          assert len(probe["cases"]) == 7
+          assert all(len(case["probes"]) == 2 for case in probe["cases"])
+          assert all(len(case["foreground_opaque_mask_rows_hex"]) == 16 for case in probe["cases"])
+          assert all(not case["runtime_occlusion_verified"] for case in probe["cases"])
+          assert probe["original_source_graphics_used"]
+          assert probe["foreground_masks_source_checked"]
+          assert not probe["complete_metatile_attribute_tables"]
+          assert not probe["sprite_overdraw_and_movement_verified_in_emulator"]
+          assert not probe["map_registered"] and not probe["safe_to_enable"]
+          assert not report["sprite_occlusion_probe_registered"]
           bindings_root = root / "attribute_bindings"
           bindings = json.loads((bindings_root / "johto_test_attribute_bindings.review.json").read_text())
           raw_bindings = (bindings_root / "johto_test_attribute_bindings.review.bin").read_bytes()

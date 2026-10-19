@@ -15,6 +15,7 @@ from export_johto_tileset_bundle import export as export_tileset
 from export_johto_test_metatile_bindings import export as export_bindings
 from export_johto_obstacle_collision_review import export as export_obstacles
 from audit_johto_obstacle_foreground_priority import inspect as inspect_obstacle_priority
+from export_johto_sprite_occlusion_probes import export as export_sprite_probes
 
 MAP_ID = "MAP_POLISHED_JOHTO_WALKABILITY_TEST"
 MAP_NAME = "PolishedJohto_WalkabilityTest"
@@ -164,6 +165,16 @@ def stage(output):
     )
     assert layer_review["obstacle_metatiles_checked"] == 6
     assert not layer_review["sprite_elevation_parity_verified_in_emulator"]
+    sprite_probes = export_sprite_probes(
+        output / "OFFLINE_ONLY" / "sprite_occlusion_probes",
+        map_raw,
+        (assets / "johto_primary_metatiles.bin").read_bytes(),
+        (assets / "johto_secondary_metatiles.bin").read_bytes(),
+        (assets / "johto_primary.4bpp").read_bytes(),
+    )
+    assert sprite_probes["obstacle_case_count"] == 7
+    assert sprite_probes["player_probe_count"] == 14
+    assert not sprite_probes["sprite_overdraw_and_movement_verified_in_emulator"]
     assert (root / "map.bin").read_bytes() == map_raw
     (output / "OFFLINE_ONLY" / "layout_entry.review.json").write_text(
         json.dumps(proposed_layout, indent=2) + "\n", encoding="utf-8")
@@ -189,6 +200,11 @@ def stage(output):
         "obstacle_priority_source_flags_verified": layer_review["source_bit7_priority_references_matched"],
         "obstacle_bg1_bg2_source_conversion_verified": layer_review["masked_bg1_graphics_matched"],
         "obstacle_sprite_occlusion_verified_in_emulator": False,
+        "sprite_occlusion_probe_cases": sprite_probes["obstacle_case_count"],
+        "sprite_occlusion_probe_positions": sprite_probes["player_probe_count"],
+        "sprite_occlusion_priority_cases": sprite_probes["priority_mask_case_count"],
+        "sprite_occlusion_probe_map_sha256": sprite_probes["probe_map_sha256"],
+        "sprite_occlusion_probe_registered": False,
         "map_header_draft_schema_checked": True,
         "verified_header_constants": constants,
         "temporary_region_map_placeholder": region_placeholder,
