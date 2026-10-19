@@ -41,7 +41,7 @@ def verify_region_map_placeholder():
     template = (ROOT / "src/data/region_map/region_map_sections.constants.json.txt").read_text(
         encoding="utf-8"
     )
-    assert re.search(r"(?m)^\\s*MAPSEC_NONE,\\s*$", template)
+    assert re.search(r"(?m)^\s*MAPSEC_NONE,\s*$", template)
     assert not any(id.startswith("MAPSEC_JOHTO_") for id in ids)
     return {"section": REGION_MAP_PLACEHOLDER,
             "source_entries": len(ids),
