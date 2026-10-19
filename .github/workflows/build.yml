@@ -258,7 +258,13 @@ jobs:
           assert header["weather"] == "WEATHER_NONE"
           assert header["map_type"] == "MAP_TYPE_ROUTE"
           assert header["battle_scene"] == "MAP_BATTLE_SCENE_NORMAL"
-          assert header["region_map_section"] is None
+          assert header["region_map_section"] == "MAPSEC_NONE"
+          section = report["temporary_region_map_placeholder"]
+          assert section["section"] == "MAPSEC_NONE"
+          assert section["source_entries"] > 0
+          assert not section["native_johto_map_section_registered"]
+          assert not section["actual_johto_placement_verified"]
+          assert report["header_without_null_field_values"]
           assert report["unresolved_header_fields"] == ["region_map_section"]
           assert len(report["verified_header_constants"]) == 5
           spawn = json.loads((root / "debug_spawn.review.json").read_text())
