@@ -1,41 +1,21 @@
-# HGSS retail ribbon-screen background trace — investigation checkpoint
+# HGSS Ribbon BG — verified source and remaining integration gate
 
-Target branch: `feature/gen4-ui-renderer`
+Branch: `feature/gen4-ui-renderer`.
 
-## Source-backed observations
+## Already completed (do not repeat extraction)
+- Original retail HeartGold `a/1/6/2` NARC, NitroFS file ID 291, has been examined; it has 79 members.
+- Member 0 supplies an original NCLR with sixteen 16-colour palette banks.
+- BG3 character resource: NCGR member 2, with NSCR members 10 or 11 depending on retail state.
+- BG6 character resource: NCGR member 1, with NSCR member 9 or fallback 78 depending on retail state.
+- Original BG6 NSCR 9 visibly includes the nine-circle ribbons panel.
+- ROM-derived source-layer previews, reproducible renderer, and 240x160 viewport experiments already exist. See `graphics/gen4_ui/hgss_ribbons/SOURCE.md` and `tools/render_hgss_ribbon_backgrounds.py`.
 
-- The retail ribbon sprite setup routine `sub_0208B1AC` in
-  [pret/pokeheartgold/asm/unk_0208B1AC.s](https://github.com/pret/pokeheartgold/blob/master/asm/unk_0208B1AC.s)
-  initializes sprite systems, resource databases and sprite VRAM. This
-  **does not establish** the ribbon screen's BG tilemap, BG palette or
-  window-frame source. In particular, the ribbon icon archive
-  `a/0/3/9` is not evidence for the screen background.
-- The current fork's `src/pokenav_ribbons_summary.c` still initializes
-  the live summary from Emerald's
-  `gPokenavRibbonsSummaryBg_Gfx`,
-  `gPokenavRibbonsSummaryBg_Tilemap` and
-  `gPokenavRibbonsSummaryBg_Pal`.
-- The geometry audit `tools/audit_hgss_ribbon_gba_layout.py`
-  describes screen occupancy, not original retail background provenance.
-  Passing geometry checks does not authorize replacing graphics.
+## Actual unresolved integration work
+1. Establish which **retail layer combination, priority, and origin** corresponds to the ribbon summary, including windows and sprite overlays.
+2. Adapt **original extracted graphics pieces**, without drawing or recolouring, to fit the live Emerald 240x160 screen. A simple source crop fails: y=0 cuts lower controls, whereas lowering the viewport clips the upper grid.
+3. Respect verified live window footprints: ribbon icons x=88..215, y=32..95; BG2 grid window x=80..239, y=24..103; name x=112..215, y=8..23; count x=96..223, y=96..127; list index x=8..63, y=40..55; Pokémon sprite anchor (40,104).
+4. Wire the authentic BG, inspect the real mGBA framebuffer and navigation states, then remove only unused Emerald graphics after checking all references.
 
-## Exact next extraction gate
+**Current status:** retail sources and renderers verified; the final authentic BG composition and live wiring are not completed. No invented HGSS-style graphics.
 
-1. Trace **the caller / owning overlay** of `sub_0208B1AC`, not just
-   its sprite resource list; locate initialization of BG layers and
-   window resources for the actual retail ribbon-details scene.
-2. Record the loader's archive constant, member index, compression,
-   palette assignment, tile dimensions and resource identifiers.
-3. Cross-check each claimed background/window resource against original
-   HeartGold NitroFS bytes and the overlay's consumption path. Record
-   SHA-256 hashes and do not include proprietary ROM dumps.
-4. Only after this mapping is verified, extract **original** retail
-   tiles/palettes, convert without painting new UI art, adapt layout
-   to 240x160, and replace live Emerald BG bindings.
-5. Inspect native mGBA captures of the full live PokéNav summary
-   (including selected ribbons and text). Audit all legacy build/runtime
-   references before removing superseded Emerald assets.
-
-**Status:** Source BG/window archive and members are still unverified.
-Do not mark HGSS ribbon-screen background as ported. This checkpoint
-adds no artwork and changes no game behavior.
+This file corrects an earlier stale checkpoint which incorrectly asserted that the original BG archive and members were unknown.
