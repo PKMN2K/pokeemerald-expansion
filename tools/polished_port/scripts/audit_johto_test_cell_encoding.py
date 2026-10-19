@@ -34,7 +34,7 @@ def audit(output):
                        "behavior_candidate": behavior, "elevation_candidate": LAND_ELEVATION})
     result = {"status": "OFFLINE_ONLY", "cells_checked": len(checks),
               "behavior_candidates": BEHAVIOR, "elevation_candidate": LAND_ELEVATION,
-              "reserved_mapgrid_bits_clear": True,
+              "basic_map_collision_bits_clear": True,
               "source_cell_binary_round_trip_checked": True,
               "runtime_collision_verified": False, "tileset_registered": False,
               "map_registered": False, "ready_for_live_registration": False}

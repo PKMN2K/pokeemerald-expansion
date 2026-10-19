@@ -229,7 +229,7 @@ jobs:
           report = json.loads((pathlib.Path(sys.argv[1]) / "johto_test_cell_encoding_audit.json").read_text())
           assert report["cells_checked"] == 64
           assert report["source_cell_binary_round_trip_checked"]
-          assert report["reserved_mapgrid_bits_clear"]
+          assert report["basic_map_collision_bits_clear"]
           assert not report["runtime_collision_verified"]
           assert not report["map_registered"]
           PY
@@ -247,6 +247,25 @@ jobs:
           map_file = root / "data/layouts/PolishedJohto_WalkabilityTest/map.bin"
           border_file = root / "data/layouts/PolishedJohto_WalkabilityTest/border.bin"
           assert report["status"] == "offline_package_NOT_FOR_ROM"
+          obstacles_dir = root / "obstacle_collision_review"
+          obstacles = json.loads((obstacles_dir / "johto_obstacle_collision.review.json").read_text())
+          obstacles_raw = (obstacles_dir / "johto_obstacle_collision.review.bin").read_bytes()
+          assert obstacles["status"] == "OFFLINE_OBSTACLE_MAPGRID_REVIEW_NOT_FOR_ROM"
+          assert len(obstacles_raw) == obstacles["review_map_bytes"] == 128
+          assert obstacles["changed_cells"] == report["obstacle_collision_review_cells"] == 6
+          assert set(obstacles["source_symbols"]) == {
+              "WALL", "VOID", "TOP_WALL", "BOTTOM_WALL", "BUOY", "WHIRLPOOL"
+          }
+          assert obstacles["collision_value"] == 3 and obstacles["collision_bits_engine_verified"]
+          assert obstacles["source_wall_and_obstacle_graphics_verified"]
+          assert obstacles["all_untouched_map_cells_preserved"] and obstacles["debug_spawn_untouched"]
+          assert all(a["candidate_attribute_word"] is None for a in obstacles["assignments"])
+          assert all(a["collision"] == 3 for a in obstacles["assignments"])
+          assert hashlib.sha256(obstacles_raw).hexdigest() == report["obstacle_collision_review_sha256"]
+          assert obstacles["base_map_sha256"] == hashlib.sha256(map_file.read_bytes()).hexdigest()
+          assert not obstacles["registered_with_engine"] and not obstacles["safe_to_register"]
+          assert not obstacles["emulator_collision_verified"]
+          assert report["obstacle_collision_review_offline_only"]
           bindings_root = root / "attribute_bindings"
           bindings = json.loads((bindings_root / "johto_test_attribute_bindings.review.json").read_text())
           raw_bindings = (bindings_root / "johto_test_attribute_bindings.review.bin").read_bytes()
