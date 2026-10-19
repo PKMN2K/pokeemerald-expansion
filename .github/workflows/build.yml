@@ -247,6 +247,25 @@ jobs:
           map_file = root / "data/layouts/PolishedJohto_WalkabilityTest/map.bin"
           border_file = root / "data/layouts/PolishedJohto_WalkabilityTest/border.bin"
           assert report["status"] == "offline_package_NOT_FOR_ROM"
+          bindings_root = root / "attribute_bindings"
+          bindings = json.loads((bindings_root / "johto_test_attribute_bindings.review.json").read_text())
+          raw_bindings = (bindings_root / "johto_test_attribute_bindings.review.bin").read_bytes()
+          import struct
+          pairs = list(struct.iter_unpack("<HH", raw_bindings))
+          assert pairs == [(x["metatile_id"], x["candidate_attribute_word"])
+                           for x in bindings["bindings"]]
+          assert len(pairs) == bindings["binding_count"] == report["test_metatile_binding_count"]
+          assert len(raw_bindings) == bindings["binary_bytes"] == 4 * len(pairs)
+          assert hashlib.sha256(raw_bindings).hexdigest() == report["test_metatile_bindings_sha256"]
+          assert bindings["map_cells_checked"] == 64
+          assert bindings["border_cells_checked"] == 4
+          assert bindings["no_unresolved_attribute_fallback"]
+          assert bindings["original_metatile_ids_preserved"]
+          assert report["test_metatile_geometry_verified"]
+          assert not report["test_metatile_bindings_live_usable"]
+          assert not bindings["live_registration_allowed"]
+          assert not bindings["complete_primary_attribute_table"]
+          assert not bindings["complete_secondary_attribute_table"]
           assert report["map_bytes"] == map_file.stat().st_size == 128
           assert report["border_bytes"] == border_file.stat().st_size == 8
           assert hashlib.sha256(map_file.read_bytes()).hexdigest() == report["map_sha256"]
