@@ -77,7 +77,7 @@ def render(ncgr, nscr, palettes, max_tiles):
         raise ValueError("Expected original NSCR")
     if len(nscr) != 2084:
         raise ValueError("Expected 32x32 tilemap")
-    tiles = ncgr[48:]
+    tiles = ncgr[64:]
     if len(tiles) != max_tiles * 32:
         raise ValueError("Unexpected NCGR tile count")
     out = Image.new("RGBA", (256, 256))
