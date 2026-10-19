@@ -308,6 +308,28 @@ jobs:
           assert not probe["sprite_overdraw_and_movement_verified_in_emulator"]
           assert not probe["map_registered"] and not probe["safe_to_enable"]
           assert not report["sprite_occlusion_probe_registered"]
+          cov = json.loads((root / "attribute_coverage/johto_full_layer_attribute_coverage.review.json").read_text())
+          assert cov["status"] == "SOURCE_LAYER_FIELDS_REVIEW_ONLY_BEHAVIORS_INCOMPLETE"
+          assert len(cov["metatiles"]) == cov["source_metatiles_checked"] == 1012
+          assert cov["source_8x8_references_checked"] == 4048
+          assert cov["primary_source_entries"] == 512 and cov["secondary_source_entries"] == 500
+          assert cov["absent_secondary_source_ids"] == list(range(1012, 1024))
+          assert cov["normal_layer_candidates"] == report["all_johto_layer_candidates_verified"] == 1012
+          assert cov["original_priority_8x8_references_checked"] == report["all_johto_source_priority_tiles_verified"] == 38
+          assert cov["source_bg2_palette_flip_bits_checked"] and cov["original_masked_priority_graphics_checked"]
+          assert cov["known_behavior_word_candidates"] == report["johto_known_behavior_candidates"] > 0
+          assert cov["unresolved_behavior_words"] == report["johto_unresolved_behavior_words"] > 0
+          assert cov["known_behavior_word_candidates"] + cov["unresolved_behavior_words"] == 1012
+          assert all(row["source_derived_layer_type"] == "METATILE_LAYER_TYPE_NORMAL" for row in cov["metatiles"])
+          assert all(row["full_attribute_word"] is None for row in cov["metatiles"]
+                     if row["behavior_requires_further_mapping"])
+          assert all(cov["metatiles"][probe["metatile_id"]]["candidate_behavior_word"] is None
+                     for probe in probe["cases"])
+          assert not cov["source_metatile_attribute_table_emitted"]
+          assert not cov["complete_primary_behavior_attribute_table"]
+          assert not cov["complete_secondary_behavior_attribute_table"]
+          assert not cov["ready_for_live_map_registration"]
+          assert not report["full_johto_attribute_table_emitted"]
           bindings_root = root / "attribute_bindings"
           bindings = json.loads((bindings_root / "johto_test_attribute_bindings.review.json").read_text())
           raw_bindings = (bindings_root / "johto_test_attribute_bindings.review.bin").read_bytes()

@@ -16,6 +16,7 @@ from export_johto_test_metatile_bindings import export as export_bindings
 from export_johto_obstacle_collision_review import export as export_obstacles
 from audit_johto_obstacle_foreground_priority import inspect as inspect_obstacle_priority
 from export_johto_sprite_occlusion_probes import export as export_sprite_probes
+from audit_johto_full_layer_attribute_coverage import audit as audit_all_layers
 
 MAP_ID = "MAP_POLISHED_JOHTO_WALKABILITY_TEST"
 MAP_NAME = "PolishedJohto_WalkabilityTest"
@@ -175,6 +176,20 @@ def stage(output):
     assert sprite_probes["obstacle_case_count"] == 7
     assert sprite_probes["player_probe_count"] == 14
     assert not sprite_probes["sprite_overdraw_and_movement_verified_in_emulator"]
+    coverage = audit_all_layers(
+        output / "OFFLINE_ONLY" / "attribute_coverage",
+        (assets / "johto_primary_metatiles.bin").read_bytes(),
+        (assets / "johto_secondary_metatiles.bin").read_bytes(),
+        (assets / "johto_primary.4bpp").read_bytes(),
+    )
+    assert coverage["normal_layer_candidates"] == 1012
+    assert coverage["original_priority_8x8_references_checked"] == 38
+    assert coverage["unresolved_behavior_words"] > 0
+    assert not coverage["source_metatile_attribute_table_emitted"]
+    assert all(
+        coverage["metatiles"][probe["metatile_id"]]["candidate_behavior_word"] is None
+        for probe in sprite_probes["cases"]
+    )
     assert (root / "map.bin").read_bytes() == map_raw
     (output / "OFFLINE_ONLY" / "layout_entry.review.json").write_text(
         json.dumps(proposed_layout, indent=2) + "\n", encoding="utf-8")
@@ -205,6 +220,11 @@ def stage(output):
         "sprite_occlusion_priority_cases": sprite_probes["priority_mask_case_count"],
         "sprite_occlusion_probe_map_sha256": sprite_probes["probe_map_sha256"],
         "sprite_occlusion_probe_registered": False,
+        "all_johto_layer_candidates_verified": coverage["normal_layer_candidates"],
+        "all_johto_source_priority_tiles_verified": coverage["original_priority_8x8_references_checked"],
+        "johto_known_behavior_candidates": coverage["known_behavior_word_candidates"],
+        "johto_unresolved_behavior_words": coverage["unresolved_behavior_words"],
+        "full_johto_attribute_table_emitted": False,
         "map_header_draft_schema_checked": True,
         "verified_header_constants": constants,
         "temporary_region_map_placeholder": region_placeholder,
