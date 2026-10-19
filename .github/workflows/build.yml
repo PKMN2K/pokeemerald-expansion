@@ -330,6 +330,30 @@ jobs:
           assert not cov["complete_secondary_behavior_attribute_table"]
           assert not cov["ready_for_live_map_registration"]
           assert not report["full_johto_attribute_table_emitted"]
+          wallroot = root / "wall_collision_rules"
+          wallreport = json.loads((wallroot / "johto_wall_collision_rules.review.json").read_text())
+          wallbin = (wallroot / "johto_wall_collision_rules.review.bin").read_bytes()
+          wallpairs = list(struct.iter_unpack("<HH", wallbin))
+          assert wallreport["status"] == "WALL_MAPGRID_COLLISION_RULES_NOT_FOR_ROM"
+          assert len(wallpairs) == wallreport["review_pairs"] == report["source_wall_collision_rule_count"] == 481
+          assert len(wallbin) == wallreport["review_binary_bytes"] == 4 * 481
+          assert hashlib.sha256(wallbin).hexdigest() == report["wall_collision_rule_binary_sha256"]
+          assert wallpairs == [(w["metatile_id"], w["candidate_mapcell_collision_mask"]) for w in wallreport["walls"]]
+          assert all(bits == 0x0C00 for _, bits in wallpairs)
+          assert wallpairs == sorted(wallpairs) and len(set(mid for mid, _ in wallpairs)) == 481
+          assert wallreport["source_wall_primary"] + wallreport["source_wall_secondary"] == 481
+          assert wallreport["source_priority_wall_metatiles"] == 3
+          assert all(w["candidate_emerald_behavior"] is None for w in wallreport["walls"])
+          assert all(w["candidate_full_metatile_attribute_word"] is None for w in wallreport["walls"])
+          assert all((w["example_land_cell_elevation_3"] & 0x0C00) == 0x0C00 for w in wallreport["walls"])
+          assert all((w["example_surf_cell_elevation_1"] >> 12) == 1 for w in wallreport["walls"])
+          assert wallreport["movement_gate_checked_against_native_engine"]
+          assert report["wall_collision_rule_engine_gate_checked"]
+          assert wallreport["wall_behavior_words_still_unresolved"] == 481
+          assert wallreport["wall_attribute_fallbacks_added"] == report["wall_attribute_fallbacks_added"] == 0
+          assert not wallreport["complete_tileset_attributes_exported"]
+          assert not wallreport["wall_sprite_occlusion_verified_in_emulator"]
+          assert not wallreport["safe_for_live_registration"] and not report["wall_collision_rules_registered"]
           bindings_root = root / "attribute_bindings"
           bindings = json.loads((bindings_root / "johto_test_attribute_bindings.review.json").read_text())
           raw_bindings = (bindings_root / "johto_test_attribute_bindings.review.bin").read_bytes()

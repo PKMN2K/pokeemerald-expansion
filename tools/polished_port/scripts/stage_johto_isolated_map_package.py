@@ -17,6 +17,7 @@ from export_johto_obstacle_collision_review import export as export_obstacles
 from audit_johto_obstacle_foreground_priority import inspect as inspect_obstacle_priority
 from export_johto_sprite_occlusion_probes import export as export_sprite_probes
 from audit_johto_full_layer_attribute_coverage import audit as audit_all_layers
+from export_johto_wall_mapgrid_rules import export as export_wall_rules
 
 MAP_ID = "MAP_POLISHED_JOHTO_WALKABILITY_TEST"
 MAP_NAME = "PolishedJohto_WalkabilityTest"
@@ -190,6 +191,16 @@ def stage(output):
         coverage["metatiles"][probe["metatile_id"]]["candidate_behavior_word"] is None
         for probe in sprite_probes["cases"]
     )
+    walls = export_wall_rules(
+        output / "OFFLINE_ONLY" / "wall_collision_rules", coverage
+    )
+    assert walls["source_wall_metatiles"] == 481
+    assert walls["wall_attribute_fallbacks_added"] == 0
+    assert not walls["safe_for_live_registration"]
+    assert all(
+        wall["candidate_emerald_behavior"] is None
+        for wall in walls["walls"]
+    )
     assert (root / "map.bin").read_bytes() == map_raw
     (output / "OFFLINE_ONLY" / "layout_entry.review.json").write_text(
         json.dumps(proposed_layout, indent=2) + "\n", encoding="utf-8")
@@ -225,6 +236,11 @@ def stage(output):
         "johto_known_behavior_candidates": coverage["known_behavior_word_candidates"],
         "johto_unresolved_behavior_words": coverage["unresolved_behavior_words"],
         "full_johto_attribute_table_emitted": False,
+        "source_wall_collision_rule_count": walls["source_wall_metatiles"],
+        "wall_collision_rule_binary_sha256": walls["review_binary_sha256"],
+        "wall_collision_rule_engine_gate_checked": walls["movement_gate_checked_against_native_engine"],
+        "wall_attribute_fallbacks_added": walls["wall_attribute_fallbacks_added"],
+        "wall_collision_rules_registered": False,
         "map_header_draft_schema_checked": True,
         "verified_header_constants": constants,
         "temporary_region_map_placeholder": region_placeholder,
