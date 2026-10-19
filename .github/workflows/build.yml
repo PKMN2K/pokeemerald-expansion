@@ -234,6 +234,31 @@ jobs:
           assert not report["map_registered"]
           PY
 
+      - name: Stage isolated Johto map package without ROM registration
+        run: |
+          output="$(mktemp -d)"
+          python3 tools/polished_port/scripts/stage_johto_isolated_map_package.py --output "$output"
+          python3 - "$output" <<'PY'
+          import hashlib, json, pathlib, sys
+          root = pathlib.Path(sys.argv[1]) / "OFFLINE_ONLY"
+          report = json.loads((root / "package_manifest.json").read_text())
+          layout = json.loads((root / "layout_entry.review.json").read_text())
+          header = json.loads((root / "map_header.INCOMPLETE.review.json").read_text())
+          map_file = root / "data/layouts/PolishedJohto_WalkabilityTest/map.bin"
+          border_file = root / "data/layouts/PolishedJohto_WalkabilityTest/border.bin"
+          assert report["status"] == "offline_package_NOT_FOR_ROM"
+          assert report["map_bytes"] == map_file.stat().st_size == 128
+          assert report["border_bytes"] == border_file.stat().st_size == 8
+          assert hashlib.sha256(map_file.read_bytes()).hexdigest() == report["map_sha256"]
+          assert hashlib.sha256(border_file.read_bytes()).hexdigest() == report["border_sha256"]
+          assert layout["layout_version"] == "emerald"
+          assert layout["id"] == header["layout"]
+          assert header["warp_events"] == [] and report["no_warp_or_access_route"]
+          assert report["unresolved_header_fields"]
+          assert not report["map_registered"] and not report["tilesets_registered"]
+          assert not report["safe_to_enable"]
+          PY
+
       - name: Validate proposed isolated Johto layout registration schema
         run: |
           output="$(mktemp -d)"
