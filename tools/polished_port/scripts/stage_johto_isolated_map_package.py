@@ -29,9 +29,9 @@ MISSING_HEADER_FIELDS = ("region_map_section",)
 def verify_header_constants():
     for field, (name, path) in HEADER_CONSTANTS.items():
         body = (ROOT / path).read_text(encoding="utf-8")
-        pattern = (r"(?m)^\\s*#define\\s+" if field == "music" else r"(?m)^\\s*")
+        pattern = (r"(?m)^\s*#define\s+" if field == "music" else r"(?m)^\s*")
         pattern += re.escape(name)
-        pattern += (r"\\s+\\d+\\b" if field == "music" else r"(?:\\s*,|\\s*=)")
+        pattern += (r"\s+\d+\b" if field == "music" else r"(?:\s*,|\s*=)")
         assert re.search(pattern, body), f"missing source-backed constant {name} in {path}"
     return {field: name for field, (name, _) in HEADER_CONSTANTS.items()}
 
@@ -100,7 +100,7 @@ def stage(output):
                   "warp_or_map_group_registered": False,
                   "in_emulator_verified": False}
     (output / "OFFLINE_ONLY" / "debug_spawn.review.json").write_text(
-        json.dumps(spawn_plan, indent=2) + "\\n", encoding="utf-8"
+        json.dumps(spawn_plan, indent=2) + "\n", encoding="utf-8"
     )
 
     # Pinned real-source graphics and palettes are kept as another offline folder.
