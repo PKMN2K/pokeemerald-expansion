@@ -354,6 +354,44 @@ jobs:
           assert not wallreport["complete_tileset_attributes_exported"]
           assert not wallreport["wall_sprite_occlusion_verified_in_emulator"]
           assert not wallreport["safe_for_live_registration"] and not report["wall_collision_rules_registered"]
+          waterdir = root / "water_ledge_field_probes"
+          water = json.loads((waterdir / "johto_water_ledge_field_probes.review.json").read_text())
+          assert water["status"] == "JOHTO_WATER_LEDGE_OFFLINE_ENGINE_REVIEW_NOT_FOR_ROM"
+          assert water["source_metatiles_checked"] == report["water_ledge_metatiles_reviewed"] == 78
+          assert water["source_water_metatiles"] == 59
+          assert water["source_cardinal_ledge_metatiles"] == report["water_ledge_cardinal_count"] == 15
+          assert water["source_diagonal_ledge_metatiles"] == report["water_ledge_diagonal_blocked_count"] == 4
+          assert water["counts"] == {
+              "WATER": 59, "LEDGE_DOWN": 7, "LEDGE_LEFT": 4, "LEDGE_RIGHT": 4,
+              "LEDGE_DOWN_LEFT": 2, "LEDGE_DOWN_RIGHT": 2,
+          }
+          assert water["native_engine_audit"]["surfable_water_behavior_and_shore_entry_path_verified"]
+          assert water["native_engine_audit"]["surf_exit_elevation_gate_verified"]
+          assert water["native_engine_audit"]["cardinal_ledge_jump_dispatch_verified"]
+          assert water["native_engine_audit"]["diagonal_jump_engine_support"] is False
+          assert water["diagonal_ledges_require_new_engine_logic"]
+          assert water["pond_vs_ocean_water_choice_unresolved"]
+          assert len(water["offline_map_variants"]) == report["water_ledge_probe_variants"] == 4
+          assert {m["source_symbol"] for m in water["offline_map_variants"]} == {
+              "WATER", "LEDGE_DOWN", "LEDGE_LEFT", "LEDGE_RIGHT"
+          }
+          for item in water["offline_map_variants"]:
+              raw = (waterdir / item["filename"]).read_bytes()
+              words = struct.unpack("<64H", raw)
+              target = item["test_target_xy"]
+              spawn = item["actor_spawn_xy"]
+              assert len(raw) == 128
+              assert hashlib.sha256(raw).hexdigest() == item["sha256"]
+              assert (words[target[1] * 8 + target[0]] & 0x03FF) == item["source_metatile_id"]
+              assert (words[target[1] * 8 + target[0]] >> 12) == item["test_target_elevation_candidate"]
+              assert ((words[target[1] * 8 + target[0]] >> 10) & 3) == 0
+              assert (words[spawn[1] * 8 + spawn[0]] >> 12) == 3
+              assert item["expected_runtime_result_verified"] is False
+          assert all(item["candidate_emerald_behavior_word"] is None for item in water["metatiles"])
+          assert all(not item["surf_jump_and_shore_transition_verified"] for item in water["metatiles"])
+          assert not water["full_attribute_words_emitted"]
+          assert not water["safe_to_enable"] and not water["live_map_registered"]
+          assert not report["water_ledge_behavior_attributes_registered"]
           bindings_root = root / "attribute_bindings"
           bindings = json.loads((bindings_root / "johto_test_attribute_bindings.review.json").read_text())
           raw_bindings = (bindings_root / "johto_test_attribute_bindings.review.bin").read_bytes()

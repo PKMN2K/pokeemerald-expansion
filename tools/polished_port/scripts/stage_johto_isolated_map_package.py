@@ -18,6 +18,7 @@ from audit_johto_obstacle_foreground_priority import inspect as inspect_obstacle
 from export_johto_sprite_occlusion_probes import export as export_sprite_probes
 from audit_johto_full_layer_attribute_coverage import audit as audit_all_layers
 from export_johto_wall_mapgrid_rules import export as export_wall_rules
+from export_johto_water_ledge_field_probes import export as export_water_ledge_probes
 
 MAP_ID = "MAP_POLISHED_JOHTO_WALKABILITY_TEST"
 MAP_NAME = "PolishedJohto_WalkabilityTest"
@@ -201,6 +202,17 @@ def stage(output):
         wall["candidate_emerald_behavior"] is None
         for wall in walls["walls"]
     )
+    water_ledge = export_water_ledge_probes(
+        output / "OFFLINE_ONLY" / "water_ledge_field_probes", coverage,
+        (assets / "johto_primary_metatiles.bin").read_bytes(),
+        (assets / "johto_secondary_metatiles.bin").read_bytes(),
+        map_raw,
+    )
+    assert water_ledge["source_water_metatiles"] == 59
+    assert water_ledge["source_cardinal_ledge_metatiles"] == 15
+    assert water_ledge["source_diagonal_ledge_metatiles"] == 4
+    assert len(water_ledge["offline_map_variants"]) == 4
+    assert not water_ledge["safe_to_enable"]
     assert (root / "map.bin").read_bytes() == map_raw
     (output / "OFFLINE_ONLY" / "layout_entry.review.json").write_text(
         json.dumps(proposed_layout, indent=2) + "\n", encoding="utf-8")
@@ -241,6 +253,11 @@ def stage(output):
         "wall_collision_rule_engine_gate_checked": walls["movement_gate_checked_against_native_engine"],
         "wall_attribute_fallbacks_added": walls["wall_attribute_fallbacks_added"],
         "wall_collision_rules_registered": False,
+        "water_ledge_metatiles_reviewed": water_ledge["source_metatiles_checked"],
+        "water_ledge_probe_variants": len(water_ledge["offline_map_variants"]),
+        "water_ledge_cardinal_count": water_ledge["source_cardinal_ledge_metatiles"],
+        "water_ledge_diagonal_blocked_count": water_ledge["source_diagonal_ledge_metatiles"],
+        "water_ledge_behavior_attributes_registered": False,
         "map_header_draft_schema_checked": True,
         "verified_header_constants": constants,
         "temporary_region_map_placeholder": region_placeholder,
