@@ -993,3 +993,39 @@ identify which parameter mode applies to the intended
 PokéNav ribbon screen, and visually verify combined layers
 against a genuine HGSS Ribbons screenshot. No asset
 redraw, no live rendering change in this trace.
+
+
+## Original Ribbons NCGR/NSCR structural compatibility (2026-10-19)
+
+Independently decoded the original 90,916-byte NARC
+`pret/pokeheartgold/files/a/1/6/2` in its binary format
+(NARC/BTAF/GMIF), not from appearance or recreated artwork.
+The base palette is member **0** (NCLR, 552 bytes, 16×16-color
+banks); `sub_020887C4` loads BG3 character member **2**
+(NCGR 8,256 bytes = 256 4bpp tiles) and BG6 character member
+**1** (NCGR 16,448 bytes = 512 4bpp tiles).
+
+Each Ribbons-page candidate BG tilemap **9, 10, 11, 78**
+is an original 2,084-byte RCSN/NSCR containing a 32×32
+screen map (1,024 entries). Decoding each little-endian
+tilemap entry as DS text BG bits 0–9 for tile index and
+bits 12–15 for palette bank yields:
+
+| NSCR member | Used for | Largest tile index | Unique indices | Referenced palette banks |
+| --- | --- | ---: | ---: | --- |
+| 10 | BG3 general Ribbons variant | 192 | 55 | 0, 2, 4 |
+| 11 | BG3 alternate Ribbons variant | 148 | 35 | 0, 4 |
+| 9 | BG6 conditional variant | 441 | 131 | 0, 2, 3, 4 |
+| 78 | BG6 fallback variant | 313 | 117 | 0, 2, 3, 4 |
+
+Consequently **10 and 11 fit NCGR 2's 256-tile range**;
+**9 and 78 fit NCGR 1's 512-tile range**. All their palette
+bank indices fit original member 0's 16-bank palette. This
+is a structural proof that the source graphics, screen maps
+and palette indexing are compatible; it does **not** yet
+prove the visible final two-screen DS composition or a
+240×160 GBA viewport adaptation.
+
+Do not redraw, delete Emerald legacy backgrounds, or
+claim screenshot parity until the composed reference is
+visually validated.
