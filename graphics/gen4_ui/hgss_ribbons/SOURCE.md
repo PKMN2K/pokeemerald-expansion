@@ -1029,3 +1029,38 @@ prove the visible final two-screen DS composition or a
 Do not redraw, delete Emerald legacy backgrounds, or
 claim screenshot parity until the composed reference is
 visually validated.
+
+
+## Original ROM-derived Ribbons layer previews rendered (2026-10-19)
+
+Extracted NARC `a/1/6/2` directly from the provided retail
+HeartGold NDS ROM (NitroFS file ID 291), decoded the original
+16-bank NCLR member 0 and 4bpp NCGR members 1 and 2, and
+rendered original NSCR tilemaps including palette selection and
+horizontal/vertical flips (no invented pixels or reillustration).
+
+Verified four 256×256 transparent-background previews:
+- BG3 NSCR **10** + NCGR **2**: lined light-blue left summary
+  panel, with yellow border.
+- BG3 NSCR **11** + NCGR **2**: broad yellow panel (alternate
+  mode), with matching perimeter frame.
+- BG6 NSCR **9** + NCGR **1**: gold/orange nine-circle
+  **ribbon-background panel**, lower tab/navigation icons,
+  right-side boxes and blue button.
+- BG6 NSCR **78** + NCGR **1**: distinct red panel with lined
+  left summary area and different lower tab treatment.
+
+These are **independent full source tilemap renders**, not
+yet a pixel-exact final top/bottom-screen retail screenshot
+with layer blending, dynamic windows, sprites, scrolling,
+screen crop and game state. Crucially, NSCR 9 visibly
+contains the nine-circle Ribbons grid backdrop. The
+visual test confirms the authentic resource identity,
+but does not yet justify replacing Emerald's live BG.
+
+A five-image PNG review package was produced separately
+for human review in this development session; assets were
+not pushed into the runtime graphics tree. Next establish
+actual layered DS screen placement and validate a 240×160
+GBA crop before the authentic-asset → live-wire → legacy
+removal sequence.
