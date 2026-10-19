@@ -239,7 +239,7 @@ jobs:
           output="$(mktemp -d)"
           python3 tools/polished_port/scripts/stage_johto_isolated_map_package.py --output "$output"
           python3 - "$output" <<'PY'
-          import hashlib, json, pathlib, sys
+          import hashlib, json, pathlib, struct, sys
           root = pathlib.Path(sys.argv[1]) / "OFFLINE_ONLY"
           report = json.loads((root / "package_manifest.json").read_text())
           layout = json.loads((root / "layout_entry.review.json").read_text())
