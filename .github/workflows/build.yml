@@ -220,6 +220,20 @@ jobs:
           assert not doc["surf_and_jump_verified"]
           PY
 
+      - name: Audit Johto test-cell candidate behaviors and binary encoding
+        run: |
+          output="$(mktemp -d)"
+          python3 tools/polished_port/scripts/audit_johto_test_cell_encoding.py --output "$output"
+          python3 - "$output" <<'PY'
+          import json, pathlib, sys
+          report = json.loads((pathlib.Path(sys.argv[1]) / "johto_test_cell_encoding_audit.json").read_text())
+          assert report["cells_checked"] == 64
+          assert report["source_cell_binary_round_trip_checked"]
+          assert report["reserved_mapgrid_bits_clear"]
+          assert not report["runtime_collision_verified"]
+          assert not report["map_registered"]
+          PY
+
       - name: Validate proposed isolated Johto layout registration schema
         run: |
           output="$(mktemp -d)"
