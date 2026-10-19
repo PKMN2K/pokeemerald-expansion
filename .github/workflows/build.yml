@@ -266,6 +266,24 @@ jobs:
           assert not obstacles["registered_with_engine"] and not obstacles["safe_to_register"]
           assert not obstacles["emulator_collision_verified"]
           assert report["obstacle_collision_review_offline_only"]
+          layer = json.loads((obstacles_dir / "johto_obstacle_foreground_priority.review.json").read_text())
+          assert layer["status"] == "OBSTACLE_FOREGROUND_PRIORITY_SOURCE_REVIEW_ONLY"
+          assert layer["obstacle_map_sha256"] == report["obstacle_collision_review_sha256"]
+          assert layer["obstacle_metatiles_checked"] == 6
+          assert layer["source_8x8_subtiles_checked"] == report["obstacle_foreground_subtiles_checked"] == 24
+          assert layer["source_bit7_priority_references_matched"]
+          assert layer["base_bg2_geometry_and_flips_matched"]
+          assert layer["masked_bg1_graphics_matched"]
+          assert layer["candidate_metatile_layer"] == "METATILE_LAYER_TYPE_NORMAL"
+          assert layer["total_priority_subtiles"] == sum(
+              o["priority_subtile_count"] for o in layer["obstacles"]
+          )
+          assert all(len(o["subtiles"]) == 4 for o in layer["obstacles"])
+          assert report["obstacle_priority_source_flags_verified"]
+          assert report["obstacle_bg1_bg2_source_conversion_verified"]
+          assert not layer["sprite_elevation_parity_verified_in_emulator"]
+          assert not report["obstacle_sprite_occlusion_verified_in_emulator"]
+          assert not layer["registered_with_engine"] and not layer["safe_to_enable"]
           bindings_root = root / "attribute_bindings"
           bindings = json.loads((bindings_root / "johto_test_attribute_bindings.review.json").read_text())
           raw_bindings = (bindings_root / "johto_test_attribute_bindings.review.bin").read_bytes()

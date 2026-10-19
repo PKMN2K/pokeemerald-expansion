@@ -14,6 +14,7 @@ from prepare_johto_layout_registration import prepare, ROOT, ID, NAME
 from export_johto_tileset_bundle import export as export_tileset
 from export_johto_test_metatile_bindings import export as export_bindings
 from export_johto_obstacle_collision_review import export as export_obstacles
+from audit_johto_obstacle_foreground_priority import inspect as inspect_obstacle_priority
 
 MAP_ID = "MAP_POLISHED_JOHTO_WALKABILITY_TEST"
 MAP_NAME = "PolishedJohto_WalkabilityTest"
@@ -152,6 +153,17 @@ def stage(output):
     assert obstacle_review["changed_cells"] == 6
     assert not obstacle_review["safe_to_register"]
     assert not obstacle_review["emulator_collision_verified"]
+    obstacle_review_dir = output / "OFFLINE_ONLY" / "obstacle_collision_review"
+    layer_review = inspect_obstacle_priority(
+        obstacle_review_dir,
+        obstacle_review,
+        (obstacle_review_dir / "johto_obstacle_collision.review.bin").read_bytes(),
+        (assets / "johto_primary_metatiles.bin").read_bytes(),
+        (assets / "johto_secondary_metatiles.bin").read_bytes(),
+        (assets / "johto_primary.4bpp").read_bytes(),
+    )
+    assert layer_review["obstacle_metatiles_checked"] == 6
+    assert not layer_review["sprite_elevation_parity_verified_in_emulator"]
     assert (root / "map.bin").read_bytes() == map_raw
     (output / "OFFLINE_ONLY" / "layout_entry.review.json").write_text(
         json.dumps(proposed_layout, indent=2) + "\n", encoding="utf-8")
@@ -173,6 +185,10 @@ def stage(output):
         "obstacle_collision_review_sha256": obstacle_review["review_map_sha256"],
         "obstacle_collision_review_cells": obstacle_review["changed_cells"],
         "obstacle_collision_review_offline_only": True,
+        "obstacle_foreground_subtiles_checked": layer_review["source_8x8_subtiles_checked"],
+        "obstacle_priority_source_flags_verified": layer_review["source_bit7_priority_references_matched"],
+        "obstacle_bg1_bg2_source_conversion_verified": layer_review["masked_bg1_graphics_matched"],
+        "obstacle_sprite_occlusion_verified_in_emulator": False,
         "map_header_draft_schema_checked": True,
         "verified_header_constants": constants,
         "temporary_region_map_placeholder": region_placeholder,
