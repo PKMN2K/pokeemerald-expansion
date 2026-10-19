@@ -60,12 +60,13 @@ def prepare(out):
         "border_width": 2, "border_height": 2,
         "primary_tileset": "gTileset_PolishedJohtoOutdoorPrimary",
         "secondary_tileset": "gTileset_PolishedJohtoOutdoorSecondary",
+        "layout_version": "emerald",
         "border_filepath": "data/layouts/PolishedJohto_WalkabilityTest/border.bin",
         "blockdata_filepath": "data/layouts/PolishedJohto_WalkabilityTest/map.bin",
     }
     required = {"id", "name", "width", "height", "border_width",
                 "border_height", "primary_tileset", "secondary_tileset",
-                "border_filepath", "blockdata_filepath"}
+                "border_filepath", "blockdata_filepath", "layout_version"}
     assert required <= proposal.keys()
     report = {
         "status": "proposed_layout_not_registered",
