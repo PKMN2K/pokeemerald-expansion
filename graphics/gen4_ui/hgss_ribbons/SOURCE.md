@@ -1122,3 +1122,45 @@ crops live or remove the existing background yet.
 The review images generated this session include 12 individual
 240x160 PNG crops and a single contact sheet, independent of
 the runtime assets.
+
+
+## Emerald live Ribbons layout occupancy audited before HGSS BG wiring (2026-10-19)
+
+Verified against the **live source** `src/pokenav_ribbons_summary.c`
+on `feature/gen4-ui-renderer`, rather than estimating positions from
+an isolated background screenshot:
+
+- Pokémon front sprite anchor `MON_SPRITE_X_ON=40`,
+  `MON_SPRITE_Y=104`. This occupies the **left visual zone**;
+  actual sprite footprint depends on species.
+- Ribbon icon grid starts at tile **(11,4) = (88,32)**,
+  with four original HGSS 32×32 icons per row and two rows.
+  Eight visible icon tiles cover nominal **x=88..215,
+  y=32..95**, before cursor/selection geometry.
+- Grid-frame/window on BG2: tilemap left **10**,
+  top **3**, size **20×10** tiles, i.e. x=80..239,
+  y=24..103. The frame's pixel buffer is currently cleared,
+  not a verified HGSS panel drawing.
+- Current Pokémon name window: left **14**, top **1**,
+  size **13×2** tiles, i.e. x=112..215, y=8..23.
+- Ribbon count window: left **12**, top **12**,
+  size **16×4** tiles, i.e. x=96..223, y=96..127.
+  Note that its tile bounds overlap the grid frame
+  vertically on rows y=96..103; the runtime window
+  ordering is authoritative.
+- Mon-list index window: left **1**, top **5**,
+  size **7×2** tiles, i.e. x=8..63, y=40..55.
+- The live legacy BG2 is still loaded from
+  `gPokenavRibbonsSummaryBg_Gfx`,
+  `gPokenavRibbonsSummaryBg_Tilemap`, and
+  `gPokenavRibbonsSummaryBg_Pal` in the existing
+  initialization loop. BG1 is initialized separately.
+
+Integration consequence: any original HGSS background tilemap must
+be **placed around these actual overlapping UI windows**, rather than
+replacing their positions or blindly cropping the 256×256 source
+background. The original visible portion should preserve the
+right-side 4×2 ribbon grid and left Pokémon zone. The correct
+BG3/BG6-to-GBA composition and cropped tile palette allocation
+are **not yet signed off**. Do not remove any legacy background
+until an authentic version is live and screenshot-validated.
