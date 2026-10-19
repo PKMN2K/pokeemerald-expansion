@@ -920,3 +920,38 @@ yet confirmed**; the associated conditional BG6 member,
 window crop and screen composition must be checked before
 replacing Emerald's legacy background. No rendered assets
 or runtime code changed.
+
+
+## Confirmed Ribbons selector value 2 (2026-10-19)
+
+The Ribbons tab is **summary-page selector 2**. Direct original retail
+proof is in `pret/pokeheartgold/asm/unk_0208B1AC.s`,
+`sub_0208C2A0` (around lines 2138–2198): it first disables
+ribbon sprite draw flags, then reads the signed byte at summary state
+offset **0x7BC**, compares it against **2** and, only on equality,
+iterates up to nine visible ribbon sprites (bounded by ribbon count
+at **0x7C6**), turns them on, and calls `sub_0208C250`.
+That routine calls `GetRibbonAttr`, loads the authentic ribbon
+character resource from archive **0x27** and overrides the
+sprite palette using `GetRibbonAttr(...,2)+7`.
+
+The separate background renderer `sub_02089F98` in
+`asm/unk_02088288.s` uses the same selector at **0x7BC**.
+Therefore selector 2 indexes table `_021039B8` row **2**
+(zero-based) with original NSCR member IDs **10, 9, 9**
+from NARC **0xA2 = a/1/6/2**. Specifically:
+- BG3 general branch uses first entry **10**, subject to the
+  alternate `[overlay arguments + 0x34] == 0` and
+  `selector == 2` branch that loads member **11** instead.
+- BG6 conditional branch when `[overlay arguments + 0x12] == 2`
+  uses the **third entry 9**, then sets BG5 horizontal scroll
+  to 0x80 and vertical scroll to zero.
+- Other BG6 branches depend on flags and can use **second entry 9**
+  or fixed member IDs **0x4D / 0x4E**; verify exact context
+  before representing them as universal ribbon assets.
+
+The Ribbons-page index is now unambiguous; however complete composition,
+conditional overlay arguments, viewport crop and DS-to-GBA adaptation
+still require validation before replacing live Emerald background.
+This commit is provenance/implementation guidance only, with no
+runtime UI graphics changes.
