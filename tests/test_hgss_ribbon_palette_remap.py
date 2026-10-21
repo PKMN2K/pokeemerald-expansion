@@ -8,6 +8,7 @@ from unittest.mock import patch
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "tools"))
 from export_hgss_ribbon_gba_bg import parse_palette_map, remap_palette
 from audit_hgss_ribbon_palette_slots import audit
+from validate_hgss_ribbon_gba_bg import validate
 
 
 class PaletteRemappingTests(unittest.TestCase):
@@ -47,6 +48,38 @@ class PaletteRemappingTests(unittest.TestCase):
     def test_incomplete_map_rejected(self):
         with self.assertRaisesRegex(ValueError, "precisely"):
             remap_palette(self.original, {0: 7}, {0, 2, 4})
+
+    def test_tilemap_structure_valid(self):
+        tiles = bytes(32) + bytes([0x11]) * 32
+        palette = bytes(512)
+        tilemap = bytearray(2048)
+        tilemap[0:2] = (1 | (7 << 12)).to_bytes(2, "little")
+        result = validate(tiles, palette, bytes(tilemap))
+        self.assertEqual(result["tile_count"], 2)
+        self.assertEqual(result["palette_banks"], [0, 7])
+
+    def test_tilemap_rejects_invalid_tile_reference(self):
+        tilemap = bytearray(2048)
+        tilemap[0:2] = (2).to_bytes(2, "little")
+        with self.assertRaisesRegex(ValueError, "out of range"):
+            validate(bytes(64), bytes(512), bytes(tilemap))
+
+    def test_tilemap_rejects_nonblank_padding(self):
+        tilemap = bytearray(2048)
+        tilemap[(20 * 32) * 2:(20 * 32) * 2 + 2] = (1).to_bytes(2, "little")
+        with self.assertRaisesRegex(ValueError, "offscreen"):
+            validate(bytes(64), bytes(512), bytes(tilemap))
+
+    def test_tilemap_rejects_malformed_binary(self):
+        for tiles, palette, tilemap in (
+            (bytes(31), bytes(512), bytes(2048)),
+            (bytes(32), bytes(510), bytes(2048)),
+            (bytes(32), bytes(512), bytes(2046)),
+            (bytes([1]) * 32, bytes(512), bytes(2048)),
+        ):
+            with self.subTest(sizes=(len(tiles), len(palette), len(tilemap))):
+                with self.assertRaises(ValueError):
+                    validate(tiles, palette, tilemap)
 
     def test_live_palette_audit(self):
         source = ("CopyPaletteIntoBufferUnfaded(foo, BG_PLTT_ID(2), 32);\n"
