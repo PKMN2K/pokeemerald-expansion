@@ -6,7 +6,6 @@ Diagnostic output only, not approved GBA tilemaps or live game resources.
 """
 import argparse
 from pathlib import Path
-from PIL import ImageDraw
 from render_hgss_ribbon_backgrounds import narc_members, palette_banks, render
 from audit_hgss_ribbon_gba_layout import REGIONS
 
@@ -17,6 +16,7 @@ TRIALS = {
 }
 
 def main():
+    from PIL import ImageDraw
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument("narc", type=Path)
     p.add_argument("out", type=Path)
