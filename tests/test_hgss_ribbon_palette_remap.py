@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
 """Regression tests for lossless HGSS ribbon palette-bank relocation."""
 import sys
+import tempfile
 import unittest
 from pathlib import Path
 from unittest.mock import patch
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "tools"))
-from export_hgss_ribbon_gba_bg import parse_palette_map, remap_palette
+from export_hgss_ribbon_gba_bg import parse_palette_map, remap_palette, export
 from audit_hgss_ribbon_palette_slots import audit
 from validate_hgss_ribbon_gba_bg import validate
 
@@ -80,6 +81,46 @@ class PaletteRemappingTests(unittest.TestCase):
             with self.subTest(sizes=(len(tiles), len(palette), len(tilemap))):
                 with self.assertRaises(ValueError):
                     validate(tiles, palette, tilemap)
+
+    def test_export_roundtrip_remaps_real_screen_entries(self):
+        # Synthetic Nitro structures: no copyrighted image data is bundled.
+        palette = b"RLCN" + bytes(12) + b"TTLP" + bytes(20) + self.original
+        self.assertEqual(len(palette), 552)
+        ncgr_base = b"RGCN" + bytes(12) + b"RAHC" + bytes(44)
+        self.assertEqual(len(ncgr_base), 64)
+        ncgr_bg3 = ncgr_base + bytes([0x11]) * (256 * 32)
+        ncgr_bg6 = ncgr_base + bytes([0x22]) * (512 * 32)
+        screen = bytearray(2084)
+        screen[0:4] = b"RCSN"
+        screen[16:20] = b"NRCS"
+        source_banks = (0, 2, 4)
+        for y in range(20):
+            for x in range(30):
+                bank = source_banks[x % 3]
+                position = 36 + (y * 32 + x) * 2
+                screen[position:position + 2] = (bank << 12).to_bytes(2, "little")
+        members = [b""] * 79
+        members[0], members[1], members[2] = palette, ncgr_bg6, ncgr_bg3
+        members[9] = members[10] = bytes(screen)
+        with tempfile.TemporaryDirectory() as directory:
+            with patch("export_hgss_ribbon_gba_bg.SOURCE") as source, \\
+                 patch("export_hgss_ribbon_gba_bg.selected", return_value=False):
+                source.read_text.return_value = "CopyPaletteIntoBufferUnfaded(icon, BG_PLTT_ID(2), 32);"
+                export(members, "header_only", 0, 0, Path(directory),
+                       {0: 7, 2: 8, 4: 9})
+            prefix = Path(directory) / "header_only"
+            tiles = prefix.with_suffix(".4bpp").read_bytes()
+            mapped_palette = prefix.with_suffix(".gbapal").read_bytes()
+            mapped_screen = prefix.with_suffix(".bin").read_bytes()
+            result = validate(tiles, mapped_palette, mapped_screen)
+            self.assertEqual(result["palette_banks"], [7, 8, 9])
+            self.assertEqual(len(mapped_screen), 2048)
+            for x in range(30):
+                attr = int.from_bytes(mapped_screen[2*x:2*x+2], "little")
+                self.assertEqual(attr >> 12, (7, 8, 9)[x % 3])
+            self.assertEqual(mapped_palette[7 * 32:8 * 32], self.original[:32])
+            self.assertEqual(mapped_palette[8 * 32:9 * 32], self.original[2 * 32:3 * 32])
+            self.assertEqual(mapped_palette[9 * 32:10 * 32], self.original[4 * 32:5 * 32])
 
     def test_live_palette_audit(self):
         source = ("CopyPaletteIntoBufferUnfaded(foo, BG_PLTT_ID(2), 32);\n"
