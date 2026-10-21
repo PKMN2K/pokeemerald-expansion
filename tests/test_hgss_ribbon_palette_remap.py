@@ -103,7 +103,7 @@ class PaletteRemappingTests(unittest.TestCase):
         members[0], members[1], members[2] = palette, ncgr_bg6, ncgr_bg3
         members[9] = members[10] = bytes(screen)
         with tempfile.TemporaryDirectory() as directory:
-            with patch("export_hgss_ribbon_gba_bg.SOURCE") as source, \\
+            with patch("export_hgss_ribbon_gba_bg.SOURCE") as source, \
                  patch("export_hgss_ribbon_gba_bg.selected", return_value=False):
                 source.read_text.return_value = "CopyPaletteIntoBufferUnfaded(icon, BG_PLTT_ID(2), 32);"
                 export(members, "header_only", 0, 0, Path(directory),
