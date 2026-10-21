@@ -1164,3 +1164,31 @@ right-side 4×2 ribbon grid and left Pokémon zone. The correct
 BG3/BG6-to-GBA composition and cropped tile palette allocation
 are **not yet signed off**. Do not remove any legacy background
 until an authentic version is live and screenshot-validated.
+
+
+## GBA ribbon background exporter source validation — 2026-10-20
+
+Verified the original ROM NitroFS file ID 291 (`a/1/6/2`),
+90,916 bytes, SHA-256:
+`003c80069fcd1f9c9eb842ae0294ecbdeffabbff40593cc471236e81239d9eed`.
+Independently executed the same layout selection, NCGR/NSCR indexing,
+tile deduplication, palette-bank capture and 32×32 GBA tilemap
+serialization logic against the extracted source NARC.
+
+| Trial | Exported 4bpp tiles including blank tile 0 | Palette banks | Opaque BG6 replacements | BG6 tiles skipped (transparent) |
+| --- | ---: | --- | ---: | ---: |
+| header_only | 39 | 0, 2, 4 | 64 | 0 |
+| header_footer | 49 | 0, 2, 4 | 182 | 2 |
+| left_case | 48 | 0, 2, 4 | 208 | 2 |
+
+All use a 32×32 tilemap (2,048 bytes) and the original
+16-bank 512-byte BGR555 palette. No graphics assets were committed.
+The initial blank tile is included in the exported 4bpp set.
+
+**Integration gate:** these are structure/selection checks, not pixel-perfect
+gameplay screenshots. The exporter currently copies all original NCLR banks
+and assumes BG palette slots 0, 2, 4 can be reserved. The live PokéNav uses
+additional BG/window palette allocations, so palette collisions must be
+measured before wiring. A 4bpp BG tile may also mix with a lower layer in
+ways the conservative fully-opaque-only substitution does not reproduce.
+Do not remove Emerald's live ribbon BG until screenshot-verified.
