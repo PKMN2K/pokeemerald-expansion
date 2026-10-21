@@ -9,6 +9,7 @@ transparent compositing approximation. No runtime wiring is performed.
 """
 import argparse
 from pathlib import Path
+from audit_hgss_ribbon_palette_slots import audit, SOURCE
 from render_hgss_ribbon_backgrounds import narc_members, u16
 from preview_hgss_ribbon_tile_layout import TRIALS
 from audit_hgss_ribbon_gba_layout import REGIONS
@@ -48,7 +49,40 @@ def selected(name, x, y):
                for rx, ry, rw, rh in TRIALS[name])
 
 
-def export(members, layout, viewport_x, viewport_y, out):
+def parse_palette_map(spec):
+    if not spec:
+        return {}
+    mapping = {}
+    for pair in spec.split(","):
+        fields = pair.split(":")
+        if len(fields) != 2:
+            raise ValueError("Expected SRC:DST palette mappings")
+        source, target = map(int, fields)
+        if not (0 <= source < 16 and 0 <= target < 16):
+            raise ValueError("Palette banks must be in range 0..15")
+        if source in mapping:
+            raise ValueError("Duplicate source bank")
+        mapping[source] = target
+    if len(set(mapping.values())) != len(mapping):
+        raise ValueError("Duplicate destination bank")
+    return mapping
+
+
+def remap_palette(original, mapping, used_banks):
+    if set(mapping) != used_banks:
+        raise ValueError("Mappings must cover precisely the used source banks")
+    owners, _ = audit(SOURCE.read_text())
+    collisions = set(mapping.values()) & set(owners)
+    if collisions:
+        raise ValueError(f"Destinations collide with live BG palette loads: {sorted(collisions)}")
+    # Relocate complete original 16-color banks, never recolor retail pixels.
+    result = bytearray(512)
+    for source, target in mapping.items():
+        result[32 * target:32 * (target + 1)] = original[32 * source:32 * (source + 1)]
+    return bytes(result)
+
+
+def export(members, layout, viewport_x, viewport_y, out, palette_map=None):
     if any(v % 8 for v in (viewport_x, viewport_y)):
         raise ValueError("Tilemap export requires 8-pixel-aligned viewport")
     if not (0 <= viewport_x <= 16 and 0 <= viewport_y <= 96):
@@ -90,10 +124,18 @@ def export(members, layout, viewport_x, viewport_y, out):
             bank = attr >> 12
             banks.add(bank)
             screen[ty * 32 + tx] = dest_tile | (attr & 0xfc00)
+    palette_map = palette_map or {}
+    if palette_map:
+        palette_bytes = remap_palette(nclr[40:552], palette_map, banks)
+        screen = [(value & 0x0fff) | (palette_map[value >> 12] << 12)
+                  if index // 32 < HEIGHT and index % 32 < WIDTH else value
+                  for index, value in enumerate(screen)]
+    else:
+        palette_bytes = nclr[40:552]
     out.mkdir(parents=True, exist_ok=True)
     prefix = out / layout
     (out / (layout + ".4bpp")).write_bytes(b"".join(graphics))
-    (out / (layout + ".gbapal")).write_bytes(nclr[40:552])
+    (out / (layout + ".gbapal")).write_bytes(palette_bytes)
     (out / (layout + ".bin")).write_bytes(
         b"".join(value.to_bytes(2, "little") for value in screen))
     print(f"{prefix}: {len(graphics)} GBA tiles, banks {sorted(banks)}, "
@@ -110,11 +152,13 @@ def main():
     p.add_argument("--layout", choices=tuple(TRIALS), default="header_only")
     p.add_argument("--viewport-x", type=int, default=0)
     p.add_argument("--viewport-y", type=int, default=0)
+    p.add_argument("--palette-map", default="", help="Complete SRC:DST bank mapping, e.g. 0:7,2:8,4:9")
     args = p.parse_args()
     members = narc_members(args.narc.read_bytes())
     if len(members) != 79:
         raise ValueError("Expected 79 NARC members")
-    export(members, args.layout, args.viewport_x, args.viewport_y, args.out)
+    export(members, args.layout, args.viewport_x, args.viewport_y, args.out,
+           parse_palette_map(args.palette_map))
 
 
 if __name__ == "__main__":
