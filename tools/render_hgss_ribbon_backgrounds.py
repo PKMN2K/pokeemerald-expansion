@@ -8,7 +8,6 @@ Requires Pillow. This does not alter live Emerald UI resources.
 """
 import argparse
 from pathlib import Path
-from PIL import Image
 
 PAIRS = {"bg3_10": (2, 10), "bg3_11": (2, 11),
          "bg6_9": (1, 9), "bg6_78": (1, 78)}
@@ -71,6 +70,7 @@ def palette_banks(nclr):
 
 
 def render(ncgr, nscr, palettes, max_tiles):
+    from PIL import Image
     if ncgr[:4] != b"RGCN" or ncgr[16:20] != b"RAHC":
         raise ValueError("Expected original NCGR")
     if nscr[:4] != b"RCSN" or nscr[16:20] != b"NRCS":
