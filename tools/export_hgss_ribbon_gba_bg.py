@@ -140,16 +140,14 @@ def export(members, layout, viewport_x, viewport_y, out, palette_map=None):
                   if index // 32 < HEIGHT and index % 32 < WIDTH else value
                   for index, value in enumerate(screen)]
     else:
-        # Original DS bank numbers are not automatically safe in GBA BG VRAM.
-        # Refuse even review exports that would silently replace live palettes.
-        owners, _ = audit(SOURCE.read_text())
-        conflicts = banks & set(owners)
-        if conflicts:
-            raise ValueError(
-                f"Unmapped HGSS palette banks collide with live BG loads: {sorted(conflicts)}; "
-                "supply a verified --palette-map"
-            )
-        palette_bytes = nclr[40:552]
+        # A 512-byte GBA palette upload changes every BG bank, including
+        # banks not referenced by the exported map. Require an explicit,
+        # audited mapping rather than treating non-overlapping tile indices
+        # as proof that a full palette upload is safe.
+        raise ValueError(
+            "HGSS BG export requires a complete --palette-map; "
+            "unmapped full-palette uploads can overwrite live BG banks"
+        )
     tile_bytes = b"".join(graphics)
     screen_bytes = b"".join(value.to_bytes(2, "little") for value in screen)
     # Fail before emitting any files if the export violates GBA structure.
