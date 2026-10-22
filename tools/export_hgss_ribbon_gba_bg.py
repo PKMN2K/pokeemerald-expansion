@@ -156,6 +156,13 @@ def export(members, layout, viewport_x, viewport_y, out, palette_map=None):
     prefix = out / layout
     (out / (layout + ".4bpp")).write_bytes(tile_bytes)
     (out / (layout + ".gbapal")).write_bytes(palette_bytes)
+    # Emit only explicitly allocated banks as standalone 32-byte resources.
+    # The 512-byte palette is diagnostic; uploading it wholesale would erase
+    # other PokéNav colours, including unreferenced but live palette banks.
+    for bank in sorted(set(palette_map.values())):
+        (out / f"{layout}.bank_{bank:02d}.gbapal").write_bytes(
+            palette_bytes[bank * 32:(bank + 1) * 32]
+        )
     (out / (layout + ".bin")).write_bytes(screen_bytes)
     print(f"{prefix}: {len(graphics)} GBA tiles, banks {sorted(banks)}, "
           f"{substitutions} opaque BG6 substitutions, "
