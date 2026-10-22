@@ -144,6 +144,12 @@ class PaletteRemappingTests(unittest.TestCase):
             self.assertEqual(mapped_palette[7 * 32:8 * 32], self.original[:32])
             self.assertEqual(mapped_palette[8 * 32:9 * 32], self.original[2 * 32:3 * 32])
             self.assertEqual(mapped_palette[9 * 32:10 * 32], self.original[4 * 32:5 * 32])
+            for src, dst in ((0, 7), (2, 8), (4, 9)):
+                bank_file = Path(directory) / f"header_only.bank_{dst:02d}.gbapal"
+                self.assertEqual(bank_file.stat().st_size, 32)
+                self.assertEqual(bank_file.read_bytes(),
+                                 self.original[src * 32:(src + 1) * 32])
+            self.assertFalse((Path(directory) / "header_only.bank_02.gbapal").exists())
 
     def test_live_palette_audit(self):
         source = ("CopyPaletteIntoBufferUnfaded(foo, BG_PLTT_ID(2), 32);\n"
