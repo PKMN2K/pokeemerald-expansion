@@ -25,7 +25,12 @@ def main():
     args = p.parse_args()
     if not (0 <= args.viewport_x <= 16 and 0 <= args.viewport_y <= 96):
         p.error("240x160 viewport must fit the 256x256 source map")
-    parts = narc_members(args.narc.read_bytes())
+    # Reject unverified source archives before generating composition previews.
+    # Import here to avoid a top-level dependency cycle with the exporter.
+    from export_hgss_ribbon_gba_bg import verify_source_narc
+    archive = args.narc.read_bytes()
+    verify_source_narc(archive)
+    parts = narc_members(archive)
     if len(parts) != 79:
         raise ValueError("Expected 79 original NARC members")
     palettes = palette_banks(parts[0])
