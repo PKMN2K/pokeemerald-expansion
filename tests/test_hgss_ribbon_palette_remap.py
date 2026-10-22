@@ -20,6 +20,22 @@ class PaletteRemappingTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "SHA-256 mismatch"):
             verify_source_narc(b"NARC" + bytes(128))
 
+    def test_verified_source_digest_is_accepted(self):
+        # Exercise the exact-match path without distributing retail ROM bytes.
+        from export_hgss_ribbon_gba_bg import EXPECTED_NARC_SHA256
+        with patch("export_hgss_ribbon_gba_bg.hashlib.sha256") as sha256:
+            sha256.return_value.hexdigest.return_value = EXPECTED_NARC_SHA256
+            self.assertIsNone(verify_source_narc(b"test fixture"))
+            sha256.assert_called_once_with(b"test fixture")
+
+    def test_source_digest_rejects_single_character_difference(self):
+        from export_hgss_ribbon_gba_bg import EXPECTED_NARC_SHA256
+        different = ("0" if EXPECTED_NARC_SHA256[0] != "0" else "1") + EXPECTED_NARC_SHA256[1:]
+        with patch("export_hgss_ribbon_gba_bg.hashlib.sha256") as sha256:
+            sha256.return_value.hexdigest.return_value = different
+            with self.assertRaisesRegex(ValueError, "SHA-256 mismatch"):
+                verify_source_narc(b"test fixture")
+
     def test_parse_valid(self):
         self.assertEqual(parse_palette_map("0:7,2:8,4:9"), {0: 7, 2: 8, 4: 9})
 
