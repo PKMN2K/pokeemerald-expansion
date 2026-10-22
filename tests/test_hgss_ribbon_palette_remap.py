@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Regression tests for lossless HGSS ribbon palette-bank relocation."""
+import json
 import sys
 import tempfile
 import unittest
@@ -150,6 +151,15 @@ class PaletteRemappingTests(unittest.TestCase):
                 self.assertEqual(bank_file.read_bytes(),
                                  self.original[src * 32:(src + 1) * 32])
             self.assertFalse((Path(directory) / "header_only.bank_02.gbapal").exists())
+            manifest = json.loads((Path(directory) / "header_only.manifest.json").read_text())
+            self.assertFalse(manifest["runtime_verified"])
+            self.assertEqual(manifest["viewport"], {"x": 0, "y": 0, "width": 240, "height": 160})
+            self.assertEqual(
+                [(bank["source_bank"], bank["destination_bank"], bank["size"])
+                 for bank in manifest["palette_banks"]],
+                [(0, 7, 32), (2, 8, 32), (4, 9, 32)],
+            )
+            self.assertEqual(manifest["tile_count"], len(tiles) // 32)
 
     def test_live_palette_audit(self):
         source = ("CopyPaletteIntoBufferUnfaded(foo, BG_PLTT_ID(2), 32);\n"
