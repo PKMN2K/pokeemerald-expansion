@@ -8,14 +8,23 @@ opaque; otherwise the BG3 tile remains, avoiding an incorrect flattened
 transparent compositing approximation. No runtime wiring is performed.
 """
 import argparse
+import hashlib
 from pathlib import Path
 from audit_hgss_ribbon_palette_slots import audit, SOURCE
 from render_hgss_ribbon_backgrounds import narc_members, u16
 from preview_hgss_ribbon_tile_layout import TRIALS
 from audit_hgss_ribbon_gba_layout import REGIONS
+from validate_hgss_ribbon_gba_bg import validate
 
 MAX_TILES = {1: 512, 2: 256}
 WIDTH, HEIGHT = 30, 20
+EXPECTED_NARC_SHA256 = "003c80069fcd1f9c9eb842ae0294ecbdeffabbff40593cc471236e81239d9eed"
+
+
+def verify_source_narc(data):
+    actual = hashlib.sha256(data).hexdigest()
+    if actual != EXPECTED_NARC_SHA256:
+        raise ValueError(f"HGSS ribbon NARC SHA-256 mismatch: {actual}; expected {EXPECTED_NARC_SHA256}")
 
 
 def entry(nscr, x, y):
@@ -132,12 +141,15 @@ def export(members, layout, viewport_x, viewport_y, out, palette_map=None):
                   for index, value in enumerate(screen)]
     else:
         palette_bytes = nclr[40:552]
+    tile_bytes = b"".join(graphics)
+    screen_bytes = b"".join(value.to_bytes(2, "little") for value in screen)
+    # Fail before emitting any files if the export violates GBA structure.
+    validate(tile_bytes, palette_bytes, screen_bytes)
     out.mkdir(parents=True, exist_ok=True)
     prefix = out / layout
-    (out / (layout + ".4bpp")).write_bytes(b"".join(graphics))
+    (out / (layout + ".4bpp")).write_bytes(tile_bytes)
     (out / (layout + ".gbapal")).write_bytes(palette_bytes)
-    (out / (layout + ".bin")).write_bytes(
-        b"".join(value.to_bytes(2, "little") for value in screen))
+    (out / (layout + ".bin")).write_bytes(screen_bytes)
     print(f"{prefix}: {len(graphics)} GBA tiles, banks {sorted(banks)}, "
           f"{substitutions} opaque BG6 substitutions, "
           f"{kept_transparent} skipped transparent BG6 tiles")
@@ -154,7 +166,9 @@ def main():
     p.add_argument("--viewport-y", type=int, default=0)
     p.add_argument("--palette-map", default="", help="Complete SRC:DST bank mapping, e.g. 0:7,2:8,4:9")
     args = p.parse_args()
-    members = narc_members(args.narc.read_bytes())
+    archive = args.narc.read_bytes()
+    verify_source_narc(archive)
+    members = narc_members(archive)
     if len(members) != 79:
         raise ValueError("Expected 79 NARC members")
     export(members, args.layout, args.viewport_x, args.viewport_y, args.out,
