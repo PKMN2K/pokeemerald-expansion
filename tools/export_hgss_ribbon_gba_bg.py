@@ -9,6 +9,7 @@ transparent compositing approximation. No runtime wiring is performed.
 """
 import argparse
 import hashlib
+import json
 from pathlib import Path
 from audit_hgss_ribbon_palette_slots import audit, SOURCE
 from render_hgss_ribbon_backgrounds import narc_members, u16
@@ -164,6 +165,29 @@ def export(members, layout, viewport_x, viewport_y, out, palette_map=None):
             palette_bytes[bank * 32:(bank + 1) * 32]
         )
     (out / (layout + ".bin")).write_bytes(screen_bytes)
+    # Machine-readable handoff for the future runtime loader. Each palette
+    # bank is a separate BG_PLTT_ID(bank) upload of exactly 32 bytes.
+    # This manifest does not certify the bank as free across PokéNav modules.
+    manifest = {
+        "source_narc_sha256": EXPECTED_NARC_SHA256,
+        "layout": layout,
+        "viewport": {"x": viewport_x, "y": viewport_y, "width": 240, "height": 160},
+        "tile_count": len(graphics),
+        "tilemap": layout + ".bin",
+        "tiles": layout + ".4bpp",
+        "palette_banks": [
+            {"source_bank": src, "destination_bank": dst,
+             "file": f"{layout}.bank_{dst:02d}.gbapal", "size": 32}
+            for src, dst in sorted(palette_map.items())
+        ],
+        "runtime_verified": False,
+        "requires": ["cross-module BG palette ownership audit",
+                     "retail BG3/BG6 composition verification",
+                     "live mGBA screenshot review"],
+    }
+    (out / (layout + ".manifest.json")).write_text(
+        json.dumps(manifest, indent=2, sort_keys=True) + "\n"
+    )
     print(f"{prefix}: {len(graphics)} GBA tiles, banks {sorted(banks)}, "
           f"{substitutions} opaque BG6 substitutions, "
           f"{kept_transparent} skipped transparent BG6 tiles")
