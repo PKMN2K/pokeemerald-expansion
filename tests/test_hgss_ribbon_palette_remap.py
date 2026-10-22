@@ -7,7 +7,7 @@ from pathlib import Path
 from unittest.mock import patch
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "tools"))
-from export_hgss_ribbon_gba_bg import parse_palette_map, remap_palette, export
+from export_hgss_ribbon_gba_bg import parse_palette_map, remap_palette, export, verify_source_narc
 from audit_hgss_ribbon_palette_slots import audit
 from validate_hgss_ribbon_gba_bg import validate
 
@@ -15,6 +15,10 @@ from validate_hgss_ribbon_gba_bg import validate
 class PaletteRemappingTests(unittest.TestCase):
     def setUp(self):
         self.original = b"".join(bytes([i]) * 32 for i in range(16))
+
+    def test_unverified_narc_is_rejected(self):
+        with self.assertRaisesRegex(ValueError, "SHA-256 mismatch"):
+            verify_source_narc(b"NARC" + bytes(128))
 
     def test_parse_valid(self):
         self.assertEqual(parse_palette_map("0:7,2:8,4:9"), {0: 7, 2: 8, 4: 9})
