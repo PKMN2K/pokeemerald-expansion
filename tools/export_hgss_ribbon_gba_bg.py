@@ -101,6 +101,47 @@ def compose_matching_palette_tiles(base, overlay, base_attr, overlay_attr, palet
     )
 
 
+
+def compose_in_original_palette(base, overlay, base_attr, overlay_attr, palette):
+    """Find any retail HGSS palette bank that represents the exact final pixels.
+
+    Prefer the original BG3 bank, then BG6, then the remaining retail banks.
+    All flips are baked into the returned 4bpp tile. No new colours are made.
+    Return (tile_bytes, original_bank), or None if no single bank fits.
+    """
+    if len(palette) != 512 or len(base) != 32 or len(overlay) != 32:
+        raise ValueError("Expected original NCLR palette and 8x8 tiles")
+
+    def unpack(raw, attr):
+        values = [(v >> shift) & 15 for v in raw for shift in (0, 4)]
+        return [values[(7 - y if attr & 0x800 else y) * 8
+                       + (7 - x if attr & 0x400 else x)]
+                for y in range(8) for x in range(8)]
+
+    bottom = unpack(base, base_attr)
+    top = unpack(overlay, overlay_attr)
+    base_bank, overlay_bank = base_attr >> 12, overlay_attr >> 12
+    pixels = [(overlay_bank, a) if a else (base_bank, b)
+              for b, a in zip(bottom, top)]
+    colors = [None if index == 0 else
+              palette[bank * 32 + index * 2:bank * 32 + index * 2 + 2]
+              for bank, index in pixels]
+    candidates = dict.fromkeys((base_bank, overlay_bank, *range(16)))
+    for bank in candidates:
+        entries = [palette[bank * 32 + i * 2:bank * 32 + i * 2 + 2]
+                   for i in range(16)]
+        indices = {color: next((i for i in range(1, 16)
+                                if entries[i] == color), None)
+                   for color in set(colors) if color is not None}
+        if any(index is None for index in indices.values()):
+            continue
+        flattened = [0 if color is None else indices[color] for color in colors]
+        result = bytes(flattened[i] | (flattened[i + 1] << 4)
+                       for i in range(0, 64, 2))
+        return result, bank
+    return None
+
+
 def protected(tx, ty):
     x, y = tx * 8, ty * 8
     return any(x < r.right and x + 8 > r.x and
@@ -193,12 +234,12 @@ def export(members, layout, viewport_x, viewport_y, out, palette_map=None):
                     key = ("composite", raw_tile)
                     composed_transparent += 1
                 else:
-                    composite = compose_matching_palette_tiles(
+                    composite = compose_in_original_palette(
                         raw_tile, src_tile, base_attr, candidate, nclr[40:552]
                     )
                     if composite is not None:
-                        raw_tile = composite
-                        attr = base_attr & ~0x0c00
+                        raw_tile, output_bank = composite
+                        attr = (output_bank << 12) | (base_attr & 0x03ff)
                         key = ("composite", raw_tile)
                         composed_cross_bank += 1
                     else:
