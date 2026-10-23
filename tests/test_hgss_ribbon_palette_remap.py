@@ -200,7 +200,7 @@ class PaletteRemappingTests(unittest.TestCase):
         members[0], members[1], members[2] = palette, bg6, bg3
         members[9], members[10] = bytes(top_map), bytes(base_map)
         with tempfile.TemporaryDirectory() as directory:
-            with patch("export_hgss_ribbon_gba_bg.SOURCE") as source, \\
+            with patch("export_hgss_ribbon_gba_bg.SOURCE") as source, \
                  patch("export_hgss_ribbon_gba_bg.selected",
                        side_effect=lambda layout, x, y: y == 0 and x in (0, 8)):
                 source.read_text.return_value = ""
