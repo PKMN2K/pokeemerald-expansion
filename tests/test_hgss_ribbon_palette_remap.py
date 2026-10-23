@@ -97,8 +97,8 @@ class PaletteRemappingTests(unittest.TestCase):
     def test_cross_bank_exact_colour_composition(self):
         palette = bytearray(512)
         # BG3 index 5 and BG6 index 3 contain the same original BGR555 colour.
-        palette[2 * 32 + 5 * 2:2 * 32 + 5 * 2 + 2] = b"\\x34\\x12"
-        palette[4 * 32 + 3 * 2:4 * 32 + 3 * 2 + 2] = b"\\x34\\x12"
+        palette[2 * 32 + 5 * 2:2 * 32 + 5 * 2 + 2] = b"\x34\x12"
+        palette[4 * 32 + 3 * 2:4 * 32 + 3 * 2 + 2] = b"\x34\x12"
         base = bytes([0x11] * 32)
         overlay = bytes([0x03] * 32)
         result = compose_matching_palette_tiles(
@@ -107,7 +107,7 @@ class PaletteRemappingTests(unittest.TestCase):
 
     def test_cross_bank_missing_colour_refuses_composition(self):
         palette = bytearray(512)
-        palette[4 * 32 + 3 * 2:4 * 32 + 3 * 2 + 2] = b"\\x34\\x12"
+        palette[4 * 32 + 3 * 2:4 * 32 + 3 * 2 + 2] = b"\x34\x12"
         result = compose_matching_palette_tiles(
             bytes([0x11] * 32), bytes([0x03] * 32),
             2 << 12, 4 << 12, bytes(palette))
@@ -115,7 +115,7 @@ class PaletteRemappingTests(unittest.TestCase):
 
     def test_cross_bank_composition_can_use_third_original_palette_bank(self):
         palette = bytearray(512)
-        a, b = b"\\x34\\x12", b"\\x78\\x56"
+        a, b = b"\x34\x12", b"\x78\x56"
         palette[2*32+2:2*32+4] = a
         palette[4*32+6:4*32+8] = b
         palette[6*32+10:6*32+12] = a
@@ -127,8 +127,8 @@ class PaletteRemappingTests(unittest.TestCase):
 
     def test_cross_bank_composition_rejects_unrepresentable_colours(self):
         palette = bytearray(512)
-        palette[2*32+2:2*32+4] = b"\\x34\\x12"
-        palette[4*32+6:4*32+8] = b"\\x78\\x56"
+        palette[2*32+2:2*32+4] = b"\x34\x12"
+        palette[4*32+6:4*32+8] = b"\x78\x56"
         self.assertIsNone(compose_in_original_palette(
             bytes([0x11])*32, bytes([0x03])*32,
             2 << 12, 4 << 12, bytes(palette)))
