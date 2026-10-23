@@ -8,7 +8,7 @@ from pathlib import Path
 from unittest.mock import patch
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "tools"))
-from export_hgss_ribbon_gba_bg import parse_palette_map, remap_palette, export, verify_source_narc, compose_same_bank_tiles, compose_matching_palette_tiles
+from export_hgss_ribbon_gba_bg import parse_palette_map, remap_palette, export, verify_source_narc, compose_same_bank_tiles, compose_matching_palette_tiles, compose_in_original_palette
 from audit_hgss_ribbon_palette_slots import audit
 from validate_hgss_ribbon_gba_bg import validate
 
@@ -112,6 +112,26 @@ class PaletteRemappingTests(unittest.TestCase):
             bytes([0x11] * 32), bytes([0x03] * 32),
             2 << 12, 4 << 12, bytes(palette))
         self.assertIsNone(result)
+
+    def test_cross_bank_composition_can_use_third_original_palette_bank(self):
+        palette = bytearray(512)
+        a, b = b"\\x34\\x12", b"\\x78\\x56"
+        palette[2*32+2:2*32+4] = a
+        palette[4*32+6:4*32+8] = b
+        palette[6*32+10:6*32+12] = a
+        palette[6*32+14:6*32+16] = b
+        result = compose_in_original_palette(
+            bytes([0x11])*32, bytes([0x03])*32,
+            2 << 12, 4 << 12, bytes(palette))
+        self.assertEqual(result, (bytes([0x57])*32, 6))
+
+    def test_cross_bank_composition_rejects_unrepresentable_colours(self):
+        palette = bytearray(512)
+        palette[2*32+2:2*32+4] = b"\\x34\\x12"
+        palette[4*32+6:4*32+8] = b"\\x78\\x56"
+        self.assertIsNone(compose_in_original_palette(
+            bytes([0x11])*32, bytes([0x03])*32,
+            2 << 12, 4 << 12, bytes(palette)))
 
     def test_cross_bank_transparency_is_rejected(self):
         with self.assertRaisesRegex(ValueError, "different palette banks"):
