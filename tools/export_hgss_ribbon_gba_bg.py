@@ -47,6 +47,31 @@ def opaque(tile_bytes):
     return all((v & 15) != 0 and (v >> 4) != 0 for v in tile_bytes)
 
 
+
+def compose_same_bank_tiles(base, overlay, base_attr, overlay_attr):
+    """Composite two 8x8 4bpp tiles without changing palette-index colours.
+
+    Both DS screen entries must select the same 16-colour palette bank.
+    Resolve DS horizontal/vertical tile flips into pixel order; the output
+    tile is unflipped and uses the original bank without recolouring.
+    """
+    if base_attr >> 12 != overlay_attr >> 12:
+        raise ValueError("Cannot flatten BG layers with different palette banks")
+    if len(base) != 32 or len(overlay) != 32:
+        raise ValueError("Expected two 8x8 4bpp tiles")
+
+    def pixels(tile_bytes, attr):
+        values = [(byte >> shift) & 15 for byte in tile_bytes for shift in (0, 4)]
+        return [values[(7 - y if attr & 0x800 else y) * 8 +
+                       (7 - x if attr & 0x400 else x)]
+                for y in range(8) for x in range(8)]
+
+    bottom = pixels(base, base_attr)
+    top = pixels(overlay, overlay_attr)
+    result = [upper if upper else lower for lower, upper in zip(bottom, top)]
+    return bytes(result[i] | (result[i + 1] << 4) for i in range(0, 64, 2))
+
+
 def protected(tx, ty):
     x, y = tx * 8, ty * 8
     return any(x < r.right and x + 8 > r.x and
