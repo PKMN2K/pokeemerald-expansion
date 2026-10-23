@@ -131,6 +131,7 @@ def export(members, layout, viewport_x, viewport_y, out, palette_map=None):
     cache = {}
     screen = [0] * 1024
     kept_transparent = 0
+    empty_bg6_cells = 0
     skipped_bg6_cells = []
     composed_transparent = 0
     substitutions = 0
@@ -151,6 +152,10 @@ def export(members, layout, viewport_x, viewport_y, out, palette_map=None):
                     raw_tile = src_tile
                     key = (1, candidate & 0x3ff)
                     substitutions += 1
+                elif not any(src_tile):
+                    # Fully transparent BG6 contributes no visible pixels,
+                    # irrespective of the two palette-bank identifiers.
+                    empty_bg6_cells += 1
                 elif (candidate >> 12) == (base_attr >> 12):
                     raw_tile = compose_same_bank_tiles(raw_tile, src_tile, base_attr, candidate)
                     # The pixel order already incorporates both DS flip flags.
@@ -159,7 +164,12 @@ def export(members, layout, viewport_x, viewport_y, out, palette_map=None):
                     composed_transparent += 1
                 else:
                     kept_transparent += 1
-                    skipped_bg6_cells.append({"x": x, "y": y, "source_x": sx * 8, "source_y": sy * 8})
+                    visible_pixels = sum((byte & 15 != 0) + (byte >> 4 != 0) for byte in src_tile)
+                    skipped_bg6_cells.append({
+                        "x": x, "y": y, "source_x": sx * 8, "source_y": sy * 8,
+                        "bg3_bank": base_attr >> 12, "bg6_bank": candidate >> 12,
+                        "bg6_visible_pixels": visible_pixels,
+                    })
             if key not in cache:
                 cache[key] = len(graphics)
                 graphics.append(raw_tile)
@@ -218,6 +228,7 @@ def export(members, layout, viewport_x, viewport_y, out, palette_map=None):
         "runtime_verified": False,
         "bg6_opaque_substitutions": substitutions,
         "bg6_same_bank_composited_cells": composed_transparent,
+        "bg6_fully_transparent_cells_ignored": empty_bg6_cells,
         "bg6_transparent_cells_not_composited": skipped_bg6_cells,
         "composition_verified": False,
         "requires": ["cross-module BG palette ownership audit",
@@ -230,6 +241,7 @@ def export(members, layout, viewport_x, viewport_y, out, palette_map=None):
     print(f"{prefix}: {len(graphics)} GBA tiles, banks {sorted(banks)}, "
           f"{substitutions} opaque BG6 substitutions, "
           f"{composed_transparent} losslessly composited BG6 tiles, "
+          f"{empty_bg6_cells} empty BG6 tiles, "
           f"{kept_transparent} skipped cross-bank BG6 tiles")
     print("REVIEW ONLY: 32x32 map padded outside 240x160; palette-bank VRAM "
           "conflicts, DS scroll/priority, actual emulator display unverified.")
