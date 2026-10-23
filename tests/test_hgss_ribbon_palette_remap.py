@@ -184,6 +184,43 @@ class PaletteRemappingTests(unittest.TestCase):
             )
             self.assertEqual(manifest["tile_count"], len(tiles) // 32)
 
+    def test_export_reports_same_bank_and_cross_bank_overlay_cells(self):
+        palette = b"RLCN" + bytes(12) + b"TTLP" + bytes(20) + self.original
+        header = b"RGCN" + bytes(12) + b"RAHC" + bytes(44)
+        bg3 = header + bytes([0x11]) * (256 * 32)
+        bg6 = header + bytes([0x03]) * (512 * 32)
+        base_map = bytearray(2084)
+        top_map = bytearray(2084)
+        for screen in (base_map, top_map):
+            screen[:4] = b"RCSN"
+            screen[16:20] = b"NRCS"
+        # The second cell uses a different bank on BG3 than BG6.
+        base_map[38:40] = (2 << 12).to_bytes(2, "little")
+        members = [b""] * 79
+        members[0], members[1], members[2] = palette, bg6, bg3
+        members[9], members[10] = bytes(top_map), bytes(base_map)
+        with tempfile.TemporaryDirectory() as directory:
+            with patch("export_hgss_ribbon_gba_bg.SOURCE") as source, \\
+                 patch("export_hgss_ribbon_gba_bg.selected",
+                       side_effect=lambda layout, x, y: y == 0 and x in (0, 8)):
+                source.read_text.return_value = ""
+                export(members, "header_only", 0, 0, Path(directory), {0: 7, 2: 8})
+            manifest = json.loads((Path(directory) / "header_only.manifest.json").read_text())
+            self.assertEqual(manifest["bg6_same_bank_composited_cells"], 1)
+            self.assertEqual(manifest["bg6_transparent_cells_not_composited"],
+                             [{"x": 8, "y": 0, "source_x": 8, "source_y": 0}])
+            self.assertFalse(manifest["composition_verified"])
+            tiles = (Path(directory) / "header_only.4bpp").read_bytes()
+            tilemap = (Path(directory) / "header_only.bin").read_bytes()
+            first = int.from_bytes(tilemap[:2], "little")
+            second = int.from_bytes(tilemap[2:4], "little")
+            self.assertEqual(first >> 12, 7)
+            self.assertEqual(second >> 12, 8)
+            self.assertEqual(tiles[(first & 0x3ff)*32:(first & 0x3ff)*32+32],
+                             bytes([0x13])*32)
+            self.assertEqual(tiles[(second & 0x3ff)*32:(second & 0x3ff)*32+32],
+                             bytes([0x11])*32)
+
     def test_live_palette_audit(self):
         source = ("CopyPaletteIntoBufferUnfaded(foo, BG_PLTT_ID(2), 32);\n"
                   "CopyPaletteIntoBufferUnfaded(bar, BG_PLTT_ID(4), 32);")
