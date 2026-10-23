@@ -8,7 +8,7 @@ from pathlib import Path
 from unittest.mock import patch
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "tools"))
-from export_hgss_ribbon_gba_bg import parse_palette_map, remap_palette, export, verify_source_narc
+from export_hgss_ribbon_gba_bg import parse_palette_map, remap_palette, export, verify_source_narc, compose_same_bank_tiles
 from audit_hgss_ribbon_palette_slots import audit
 from validate_hgss_ribbon_gba_bg import validate
 
@@ -70,6 +70,25 @@ class PaletteRemappingTests(unittest.TestCase):
     def test_incomplete_map_rejected(self):
         with self.assertRaisesRegex(ValueError, "precisely"):
             remap_palette(self.original, {0: 7}, {0, 2, 4})
+
+    def test_same_bank_transparency_preserves_original_pixel_indices(self):
+        base = bytes([0x21] * 32)  # alternating source pixels 1 and 2
+        overlay = bytes([0x03] * 32)  # transparent odd pixels, opaque 3 at even pixels
+        output = compose_same_bank_tiles(base, overlay, 2 << 12, 2 << 12)
+        self.assertEqual(output, bytes([0x23] * 32))
+        self.assertEqual(len(output), 32)
+
+    def test_same_bank_composition_resolves_tile_flips(self):
+        # First row of the source overlay is opaque, all other rows transparent.
+        base = bytes([0x11] * 32)
+        overlay = bytes([0x22] * 4 + [0] * 28)
+        output = compose_same_bank_tiles(base, overlay, 1 << 12, (1 << 12) | 0x800)
+        self.assertEqual(output[:28], bytes([0x11] * 28))
+        self.assertEqual(output[28:], bytes([0x22] * 4))
+
+    def test_cross_bank_transparency_is_rejected(self):
+        with self.assertRaisesRegex(ValueError, "different palette banks"):
+            compose_same_bank_tiles(bytes(32), bytes(32), 1 << 12, 2 << 12)
 
     def test_tilemap_structure_valid(self):
         tiles = bytes(32) + bytes([0x11]) * 32
@@ -155,6 +174,7 @@ class PaletteRemappingTests(unittest.TestCase):
             self.assertFalse(manifest["runtime_verified"])
             self.assertFalse(manifest["composition_verified"])
             self.assertEqual(manifest["bg6_opaque_substitutions"], 0)
+            self.assertEqual(manifest["bg6_same_bank_composited_cells"], 0)
             self.assertEqual(manifest["bg6_transparent_cells_not_composited"], [])
             self.assertEqual(manifest["viewport"], {"x": 0, "y": 0, "width": 240, "height": 160})
             self.assertEqual(
