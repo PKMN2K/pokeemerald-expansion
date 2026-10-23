@@ -33,6 +33,13 @@ jobs:
           DEBIAN_FRONTEND: noninteractive
         run: |
           set -euxo pipefail
+          # Azure Ubuntu mirrors intermittently stall on large ARM/Newlib .deb
+          # downloads; use the canonical Ubuntu archive instead.
+          for sources in /etc/apt/apt-mirrors.txt /etc/apt/sources.list /etc/apt/sources.list.d/ubuntu.sources; do
+            if [ -f "$sources" ]; then
+              sudo sed -i 's|azure.archive.ubuntu.com|archive.ubuntu.com|g' "$sources"
+            fi
+          done
           echo "::group::APT update"
           sudo apt-get -o Acquire::Retries=3 -o Acquire::http::Timeout=30 -o Acquire::https::Timeout=30 update
           echo "::endgroup::"
@@ -80,6 +87,13 @@ jobs:
           DEBIAN_FRONTEND: noninteractive
         run: |
           set -euxo pipefail
+          # Azure Ubuntu mirrors intermittently stall on large ARM/Newlib .deb
+          # downloads; use the canonical Ubuntu archive instead.
+          for sources in /etc/apt/apt-mirrors.txt /etc/apt/sources.list /etc/apt/sources.list.d/ubuntu.sources; do
+            if [ -f "$sources" ]; then
+              sudo sed -i 's|azure.archive.ubuntu.com|archive.ubuntu.com|g' "$sources"
+            fi
+          done
           echo "::group::APT update"
           sudo apt-get -o Acquire::Retries=3 -o Acquire::http::Timeout=30 -o Acquire::https::Timeout=30 update
           echo "::endgroup::"
@@ -285,6 +299,13 @@ jobs:
           DEBIAN_FRONTEND: noninteractive
         run: |
           set -euxo pipefail
+          # Azure Ubuntu mirrors intermittently stall on large ARM/Newlib .deb
+          # downloads; use the canonical Ubuntu archive instead.
+          for sources in /etc/apt/apt-mirrors.txt /etc/apt/sources.list /etc/apt/sources.list.d/ubuntu.sources; do
+            if [ -f "$sources" ]; then
+              sudo sed -i 's|azure.archive.ubuntu.com|archive.ubuntu.com|g' "$sources"
+            fi
+          done
           echo "::group::APT update"
           sudo apt-get -o Acquire::Retries=3 -o Acquire::http::Timeout=30 -o Acquire::https::Timeout=30 update
           echo "::endgroup::"
@@ -330,6 +351,13 @@ jobs:
           DEBIAN_FRONTEND: noninteractive
         run: |
           set -euxo pipefail
+          # Azure Ubuntu mirrors intermittently stall on large ARM/Newlib .deb
+          # downloads; use the canonical Ubuntu archive instead.
+          for sources in /etc/apt/apt-mirrors.txt /etc/apt/sources.list /etc/apt/sources.list.d/ubuntu.sources; do
+            if [ -f "$sources" ]; then
+              sudo sed -i 's|azure.archive.ubuntu.com|archive.ubuntu.com|g' "$sources"
+            fi
+          done
           echo "::group::APT update"
           sudo apt-get -o Acquire::Retries=3 -o Acquire::http::Timeout=30 -o Acquire::https::Timeout=30 update
           echo "::endgroup::"
@@ -375,6 +403,13 @@ jobs:
           DEBIAN_FRONTEND: noninteractive
         run: |
           set -euxo pipefail
+          # Azure Ubuntu mirrors intermittently stall on large ARM/Newlib .deb
+          # downloads; use the canonical Ubuntu archive instead.
+          for sources in /etc/apt/apt-mirrors.txt /etc/apt/sources.list /etc/apt/sources.list.d/ubuntu.sources; do
+            if [ -f "$sources" ]; then
+              sudo sed -i 's|azure.archive.ubuntu.com|archive.ubuntu.com|g' "$sources"
+            fi
+          done
           echo "::group::APT update"
           sudo apt-get -o Acquire::Retries=3 -o Acquire::http::Timeout=30 -o Acquire::https::Timeout=30 update
           echo "::endgroup::"
@@ -422,6 +457,13 @@ jobs:
           DEBIAN_FRONTEND: noninteractive
         run: |
           set -euxo pipefail
+          # Azure Ubuntu mirrors intermittently stall on large ARM/Newlib .deb
+          # downloads; use the canonical Ubuntu archive instead.
+          for sources in /etc/apt/apt-mirrors.txt /etc/apt/sources.list /etc/apt/sources.list.d/ubuntu.sources; do
+            if [ -f "$sources" ]; then
+              sudo sed -i 's|azure.archive.ubuntu.com|archive.ubuntu.com|g' "$sources"
+            fi
+          done
           echo "::group::APT update"
           sudo apt-get -o Acquire::Retries=3 -o Acquire::http::Timeout=30 -o Acquire::https::Timeout=30 update
           echo "::endgroup::"
