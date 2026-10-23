@@ -207,8 +207,11 @@ class PaletteRemappingTests(unittest.TestCase):
                 export(members, "header_only", 0, 0, Path(directory), {0: 7, 2: 8})
             manifest = json.loads((Path(directory) / "header_only.manifest.json").read_text())
             self.assertEqual(manifest["bg6_same_bank_composited_cells"], 1)
+            self.assertEqual(manifest["bg6_fully_transparent_cells_ignored"], 0)
             self.assertEqual(manifest["bg6_transparent_cells_not_composited"],
-                             [{"x": 8, "y": 0, "source_x": 8, "source_y": 0}])
+                             [{"x": 8, "y": 0, "source_x": 8, "source_y": 0,
+                               "bg3_bank": 2, "bg6_bank": 0,
+                               "bg6_visible_pixels": 32}])
             self.assertFalse(manifest["composition_verified"])
             tiles = (Path(directory) / "header_only.4bpp").read_bytes()
             tilemap = (Path(directory) / "header_only.bin").read_bytes()
