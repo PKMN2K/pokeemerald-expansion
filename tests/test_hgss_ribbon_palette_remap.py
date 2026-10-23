@@ -86,6 +86,14 @@ class PaletteRemappingTests(unittest.TestCase):
         self.assertEqual(output[:28], bytes([0x11] * 28))
         self.assertEqual(output[28:], bytes([0x22] * 4))
 
+    def test_compositor_preserves_pixel_layout_for_transparent_overlay(self):
+        base = bytes([0x21] * 32)
+        overlay = bytes(32)
+        self.assertEqual(
+            compose_same_bank_tiles(base, overlay, 0, 0),
+            base,
+        )
+
     def test_cross_bank_transparency_is_rejected(self):
         with self.assertRaisesRegex(ValueError, "different palette banks"):
             compose_same_bank_tiles(bytes(32), bytes(32), 1 << 12, 2 << 12)
