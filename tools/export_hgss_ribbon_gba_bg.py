@@ -106,6 +106,7 @@ def export(members, layout, viewport_x, viewport_y, out, palette_map=None):
     cache = {}
     screen = [0] * 1024
     kept_transparent = 0
+    skipped_bg6_cells = []
     substitutions = 0
     banks = set()
     for ty in range(HEIGHT):
@@ -121,6 +122,7 @@ def export(members, layout, viewport_x, viewport_y, out, palette_map=None):
                     substitutions += 1
                 else:
                     kept_transparent += 1
+                    skipped_bg6_cells.append({"x": x, "y": y, "source_x": sx * 8, "source_y": sy * 8})
             attr = entry(members[screen_id], sx, sy)
             index = attr & 0x3ff
             raw_tile = tile(members[char_id], index, MAX_TILES[char_id])
@@ -181,6 +183,9 @@ def export(members, layout, viewport_x, viewport_y, out, palette_map=None):
             for src, dst in sorted(palette_map.items())
         ],
         "runtime_verified": False,
+        "bg6_opaque_substitutions": substitutions,
+        "bg6_transparent_cells_not_composited": skipped_bg6_cells,
+        "composition_verified": False,
         "requires": ["cross-module BG palette ownership audit",
                      "retail BG3/BG6 composition verification",
                      "live mGBA screenshot review"],
