@@ -72,6 +72,35 @@ def compose_same_bank_tiles(base, overlay, base_attr, overlay_attr):
     return bytes(result[i] | (result[i + 1] << 4) for i in range(0, 64, 2))
 
 
+
+def compose_matching_palette_tiles(base, overlay, base_attr, overlay_attr, palette):
+    """Losslessly flatten cross-bank overlay only if all colours exist in BG3.
+
+    Translate original colour indices, never RGB values. Palette entry zero is
+    transparent on BG6; only nonzero destination entries represent ink.
+    Return None if the authentic BG3 bank cannot represent an overlay colour.
+    """
+    base_bank, overlay_bank = base_attr >> 12, overlay_attr >> 12
+    base_colors = [palette[base_bank * 32 + i * 2:
+                           base_bank * 32 + i * 2 + 2] for i in range(16)]
+    source_colors = [palette[overlay_bank * 32 + i * 2:
+                             overlay_bank * 32 + i * 2 + 2] for i in range(16)]
+    pixels = [(byte >> shift) & 15 for byte in overlay for shift in (0, 4)]
+    translation = {0: 0}
+    for index in set(pixels) - {0}:
+        matching = next((i for i in range(1, 16)
+                         if base_colors[i] == source_colors[index]), None)
+        if matching is None:
+            return None
+        translation[index] = matching
+    translated = [translation[index] for index in pixels]
+    packed = bytes(translated[i] | translated[i + 1] << 4
+                   for i in range(0, 64, 2))
+    return compose_same_bank_tiles(
+        base, packed, base_attr, (overlay_attr & 0x0fff) | (base_attr & 0xf000)
+    )
+
+
 def protected(tx, ty):
     x, y = tx * 8, ty * 8
     return any(x < r.right and x + 8 > r.x and
@@ -134,6 +163,7 @@ def export(members, layout, viewport_x, viewport_y, out, palette_map=None):
     empty_bg6_cells = 0
     skipped_bg6_cells = []
     composed_transparent = 0
+    composed_cross_bank = 0
     substitutions = 0
     banks = set()
     for ty in range(HEIGHT):
@@ -163,13 +193,22 @@ def export(members, layout, viewport_x, viewport_y, out, palette_map=None):
                     key = ("composite", raw_tile)
                     composed_transparent += 1
                 else:
-                    kept_transparent += 1
-                    visible_pixels = sum((byte & 15 != 0) + (byte >> 4 != 0) for byte in src_tile)
-                    skipped_bg6_cells.append({
-                        "x": x, "y": y, "source_x": sx * 8, "source_y": sy * 8,
-                        "bg3_bank": base_attr >> 12, "bg6_bank": candidate >> 12,
-                        "bg6_visible_pixels": visible_pixels,
-                    })
+                    composite = compose_matching_palette_tiles(
+                        raw_tile, src_tile, base_attr, candidate, nclr[40:552]
+                    )
+                    if composite is not None:
+                        raw_tile = composite
+                        attr = base_attr & ~0x0c00
+                        key = ("composite", raw_tile)
+                        composed_cross_bank += 1
+                    else:
+                        kept_transparent += 1
+                        visible_pixels = sum((byte & 15 != 0) + (byte >> 4 != 0) for byte in src_tile)
+                        skipped_bg6_cells.append({
+                            "x": x, "y": y, "source_x": sx * 8, "source_y": sy * 8,
+                            "bg3_bank": base_attr >> 12, "bg6_bank": candidate >> 12,
+                            "bg6_visible_pixels": visible_pixels,
+                        })
             if key not in cache:
                 cache[key] = len(graphics)
                 graphics.append(raw_tile)
@@ -228,6 +267,7 @@ def export(members, layout, viewport_x, viewport_y, out, palette_map=None):
         "runtime_verified": False,
         "bg6_opaque_substitutions": substitutions,
         "bg6_same_bank_composited_cells": composed_transparent,
+        "bg6_cross_bank_exact_color_composited_cells": composed_cross_bank,
         "bg6_fully_transparent_cells_ignored": empty_bg6_cells,
         "bg6_transparent_cells_not_composited": skipped_bg6_cells,
         "composition_verified": False,
@@ -240,7 +280,8 @@ def export(members, layout, viewport_x, viewport_y, out, palette_map=None):
     )
     print(f"{prefix}: {len(graphics)} GBA tiles, banks {sorted(banks)}, "
           f"{substitutions} opaque BG6 substitutions, "
-          f"{composed_transparent} losslessly composited BG6 tiles, "
+          f"{composed_transparent} same-bank composites, "
+          f"{composed_cross_bank} exact-colour cross-bank composites, "
           f"{empty_bg6_cells} empty BG6 tiles, "
           f"{kept_transparent} skipped cross-bank BG6 tiles")
     print("REVIEW ONLY: 32x32 map padded outside 240x160; palette-bank VRAM "
