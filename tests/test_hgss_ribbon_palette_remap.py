@@ -153,6 +153,9 @@ class PaletteRemappingTests(unittest.TestCase):
             self.assertFalse((Path(directory) / "header_only.bank_02.gbapal").exists())
             manifest = json.loads((Path(directory) / "header_only.manifest.json").read_text())
             self.assertFalse(manifest["runtime_verified"])
+            self.assertFalse(manifest["composition_verified"])
+            self.assertEqual(manifest["bg6_opaque_substitutions"], 0)
+            self.assertEqual(manifest["bg6_transparent_cells_not_composited"], [])
             self.assertEqual(manifest["viewport"], {"x": 0, "y": 0, "width": 240, "height": 160})
             self.assertEqual(
                 [(bank["source_bank"], bank["destination_bank"], bank["size"])
