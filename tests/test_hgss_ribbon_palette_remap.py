@@ -8,7 +8,7 @@ from pathlib import Path
 from unittest.mock import patch
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "tools"))
-from export_hgss_ribbon_gba_bg import parse_palette_map, remap_palette, export, verify_source_narc, compose_same_bank_tiles
+from export_hgss_ribbon_gba_bg import parse_palette_map, remap_palette, export, verify_source_narc, compose_same_bank_tiles, compose_matching_palette_tiles
 from audit_hgss_ribbon_palette_slots import audit
 from validate_hgss_ribbon_gba_bg import validate
 
@@ -93,6 +93,25 @@ class PaletteRemappingTests(unittest.TestCase):
             compose_same_bank_tiles(base, overlay, 0, 0),
             base,
         )
+
+    def test_cross_bank_exact_colour_composition(self):
+        palette = bytearray(512)
+        # BG3 index 5 and BG6 index 3 contain the same original BGR555 colour.
+        palette[2 * 32 + 5 * 2:2 * 32 + 5 * 2 + 2] = b"\\x34\\x12"
+        palette[4 * 32 + 3 * 2:4 * 32 + 3 * 2 + 2] = b"\\x34\\x12"
+        base = bytes([0x11] * 32)
+        overlay = bytes([0x03] * 32)
+        result = compose_matching_palette_tiles(
+            base, overlay, 2 << 12, 4 << 12, bytes(palette))
+        self.assertEqual(result, bytes([0x15] * 32))
+
+    def test_cross_bank_missing_colour_refuses_composition(self):
+        palette = bytearray(512)
+        palette[4 * 32 + 3 * 2:4 * 32 + 3 * 2 + 2] = b"\\x34\\x12"
+        result = compose_matching_palette_tiles(
+            bytes([0x11] * 32), bytes([0x03] * 32),
+            2 << 12, 4 << 12, bytes(palette))
+        self.assertIsNone(result)
 
     def test_cross_bank_transparency_is_rejected(self):
         with self.assertRaisesRegex(ValueError, "different palette banks"):
