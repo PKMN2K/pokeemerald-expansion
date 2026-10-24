@@ -471,6 +471,49 @@ jobs:
           assert not shore["emulator_surf_and_shore_exit_verified"]
           assert not shore["safe_to_enable"] and not shore["map_registered"]
           assert not report["surf_shoreline_registered"]
+          extended_root = root / "extended_behavior_review"
+          ext = json.loads((extended_root / "johto_extended_behavior_pairs.review.json").read_text())
+          ext_raw = (extended_root / "johto_extended_behavior_pairs.review.bin").read_bytes()
+          ext_bitmap = (extended_root / "johto_extended_behavior_validity.review.bin").read_bytes()
+          ext_pairs = list(struct.iter_unpack("<HH", ext_raw))
+          assert ext["status"] == "SOURCE_BACKED_EXTENDED_BEHAVIOR_PAIRS_NOT_FOR_ROM"
+          assert ext["metatiles_checked"] == ext["source_geometry_checked"] == 1012
+          assert len(ext["per_metatile_review"]) == 1012
+          assert ext["candidate_metatiles"] == report["extended_behavior_review_pairs"] == 407
+          assert ext["existing_basic_candidates_retained"] == 329
+          assert ext["new_water_candidates"] == 59 and ext["new_ledge_candidates"] == 19
+          assert ext["unresolved_metatiles"] == report["extended_behavior_review_unresolved"] == 605
+          assert ext["unresolved_wall_metatiles"] == 481
+          assert len(ext_pairs) == 407 and len(ext_raw) == ext["pairs_binary_bytes"] == 1628
+          assert len(ext_bitmap) == ext["validity_bitmap_bytes"] == 127
+          assert sum(b.bit_count() for b in ext_bitmap) == 407
+          assert ext_pairs == [(row["metatile_id"], row["candidate_attribute_word"])
+                              for row in ext["pairs"]]
+          assert ext_pairs == sorted(ext_pairs)
+          assert all(0 <= mid < 1012 and 0 <= word < 256 for mid, word in ext_pairs)
+          assert len(set(mid for mid, _ in ext_pairs)) == 407
+          assert hashlib.sha256(ext_raw).hexdigest() == ext["pairs_binary_sha256"] == report["extended_behavior_review_pair_sha256"]
+          assert hashlib.sha256(ext_bitmap).hexdigest() == ext["validity_bitmap_sha256"] == report["extended_behavior_review_bitmap_sha256"]
+          assert ext["behavior_names"]["WATER"] == "MB_JOHTO_WATER"
+          assert ext["behavior_names"]["LEDGE_DOWN_LEFT"] == "MB_JOHTO_LEDGE_DOWN_LEFT"
+          assert ext["behavior_names"]["LEDGE_DOWN_RIGHT"] == "MB_JOHTO_LEDGE_DOWN_RIGHT"
+          assert ext["behavior_ids"]["FLOOR"] == 0 and ext["behavior_ids"]["TALL_GRASS"] == 2
+          for row in ext["per_metatile_review"]:
+              mid = row["metatile_id"]
+              valid = bool(ext_bitmap[mid // 8] & (1 << (mid % 8)))
+              assert valid == (row["candidate_attribute_word"] is not None)
+              assert not row["registered_with_engine"] and not row["emulator_verified"]
+              if row["source_collision_symbol"] == "WALL":
+                  assert row["candidate_attribute_word"] is None
+                  assert row["requires_mapcell_collision_validation"]
+          assert sum(row["source_collision_symbol"] == "WALL" for row in ext["per_metatile_review"]) == 481
+          assert ext["no_attribute_fallbacks_added"]
+          assert not ext["complete_primary_attribute_table_emitted"]
+          assert not ext["complete_secondary_attribute_table_emitted"]
+          assert not ext["all_metatile_attribute_words_resolved"]
+          assert not ext["full_rom_tileset_emitted"]
+          assert not ext["live_map_registered"]
+          assert not ext["safe_to_register"] and not report["extended_behavior_review_registered"]
           bindings_root = root / "attribute_bindings"
           bindings = json.loads((bindings_root / "johto_test_attribute_bindings.review.json").read_text())
           raw_bindings = (bindings_root / "johto_test_attribute_bindings.review.bin").read_bytes()

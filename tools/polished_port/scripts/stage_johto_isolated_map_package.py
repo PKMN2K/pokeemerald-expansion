@@ -20,6 +20,7 @@ from audit_johto_full_layer_attribute_coverage import audit as audit_all_layers
 from export_johto_wall_mapgrid_rules import export as export_wall_rules
 from export_johto_water_ledge_field_probes import export as export_water_ledge_probes
 from export_johto_surf_shoreline_probes import export as export_surf_shoreline
+from export_johto_extended_behavior_review import export as export_extended_behaviors
 
 MAP_ID = "MAP_POLISHED_JOHTO_WALKABILITY_TEST"
 MAP_NAME = "PolishedJohto_WalkabilityTest"
@@ -228,6 +229,18 @@ def stage(output):
     assert len(shoreline["variants"]) == 4
     assert shoreline["engine_and_original_surf_permissions"]["native_surf_entry_exit_gates_verified"]
     assert not shoreline["safe_to_enable"]
+    extended = export_extended_behaviors(
+        output / "OFFLINE_ONLY" / "extended_behavior_review", coverage,
+        (assets / "johto_primary_metatiles.bin").read_bytes(),
+        (assets / "johto_secondary_metatiles.bin").read_bytes(),
+    )
+    assert extended["candidate_metatiles"] == 407
+    assert extended["existing_basic_candidates_retained"] == 329
+    assert extended["new_water_candidates"] == 59
+    assert extended["new_ledge_candidates"] == 19
+    assert extended["unresolved_metatiles"] == 605
+    assert extended["unresolved_wall_metatiles"] == 481
+    assert not extended["safe_to_register"]
     assert (root / "map.bin").read_bytes() == map_raw
     (output / "OFFLINE_ONLY" / "layout_entry.review.json").write_text(
         json.dumps(proposed_layout, indent=2) + "\n", encoding="utf-8")
@@ -286,6 +299,11 @@ def stage(output):
         "surf_shoreline_generic_visual_effects_deferred":
             shoreline["engine_and_original_surf_permissions"]["generic_johto_water_visual_effects_not_assumed"],
         "surf_shoreline_registered": False,
+        "extended_behavior_review_pairs": extended["candidate_metatiles"],
+        "extended_behavior_review_unresolved": extended["unresolved_metatiles"],
+        "extended_behavior_review_pair_sha256": extended["pairs_binary_sha256"],
+        "extended_behavior_review_bitmap_sha256": extended["validity_bitmap_sha256"],
+        "extended_behavior_review_registered": False,
         "map_header_draft_schema_checked": True,
         "verified_header_constants": constants,
         "temporary_region_map_placeholder": region_placeholder,
