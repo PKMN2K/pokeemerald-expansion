@@ -22,7 +22,9 @@ class CandidateAuditTests(unittest.TestCase):
             return {
                 "bg6_transparent_cells_not_composited":
                     [{"bg6_visible_pixels": 2}] * (y // 8),
-                "bg6_unresolved_palette_bank_pairs": [],
+                "bg6_unresolved_palette_bank_pairs":
+                    [{"bg3_bank": 0, "bg6_bank": 1,
+                      "cells": y // 8, "visible_pixels": y // 4}],
                 "source_palette_banks_needed": [0],
                 "bg6_opaque_substitutions": 0,
                 "bg6_same_bank_composited_cells": 1,
@@ -52,6 +54,21 @@ class CandidateAuditTests(unittest.TestCase):
                                 for row in report["candidates"]))
             saved = json.loads((Path(temp) / "comparison.json").read_text())
             self.assertEqual(saved, report)
+
+    def test_rejects_inconsistent_palette_conflict_totals(self):
+        inconsistent = {
+            "bg6_transparent_cells_not_composited":
+                [{"bg6_visible_pixels": 4}],
+            "bg6_unresolved_palette_bank_pairs":
+                [{"bg3_bank": 0, "bg6_bank": 1,
+                  "cells": 1, "visible_pixels": 3}],
+        }
+        with tempfile.TemporaryDirectory() as temp:
+            with patch("audit_hgss_ribbon_bg_candidates.export",
+                       return_value=inconsistent):
+                with self.assertRaisesRegex(ValueError, "Inconsistent"):
+                    audit_all([], Path(temp))
+            self.assertFalse((Path(temp) / "comparison.json").exists())
 
     def test_does_not_claim_visual_verification(self):
         with tempfile.TemporaryDirectory() as temp:
