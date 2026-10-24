@@ -3,9 +3,9 @@
 
 Reads only authentic HGSS a/1/6/2 NARC bytes. No art is drawn or recolored.
 Exports 32x32 GBA screen entries, 4bpp character tiles, and the original
-256-color BGR555 palette. The BG6 tile is substituted only if it is fully
-opaque; otherwise the BG3 tile remains, avoiding an incorrect flattened
-transparent compositing approximation. No runtime wiring is performed.
+256-color BGR555 palette. BG3/BG6 can be composed only when the exact source colour values remain
+representable by an original palette bank. Other combinations are reported
+rather than guessed. No runtime wiring is performed.
 """
 import argparse
 import hashlib
