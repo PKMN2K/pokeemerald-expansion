@@ -253,6 +253,17 @@ class PaletteRemappingTests(unittest.TestCase):
                 source.read_text.return_value = ""
                 export(members, "header_only", 0, 0, Path(directory), {0: 7, 2: 8})
             manifest = json.loads((Path(directory) / "header_only.manifest.json").read_text())
+            audit_dir = Path(directory) / "source_audit"
+            with patch("export_hgss_ribbon_gba_bg.selected",
+                       side_effect=lambda layout, x, y: y == 0 and x in (0, 8)):
+                report = export(members, "header_only", 0, 0, audit_dir,
+                                audit_only=True)
+            self.assertEqual(report["source_palette_banks_needed"], [0, 2])
+            self.assertEqual(report["bg6_unresolved_palette_bank_pairs"],
+                             [{"bg3_bank": 2, "bg6_bank": 0,
+                               "cells": 1, "visible_pixels": 32}])
+            self.assertTrue((audit_dir / "header_only.audit.json").exists())
+            self.assertFalse((audit_dir / "header_only.4bpp").exists())
             self.assertEqual(manifest["bg6_same_bank_composited_cells"], 1)
             self.assertEqual(manifest["bg6_fully_transparent_cells_ignored"], 0)
             self.assertEqual(manifest["bg6_transparent_cells_not_composited"],
