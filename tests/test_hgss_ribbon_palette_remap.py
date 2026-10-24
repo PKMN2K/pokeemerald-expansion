@@ -259,6 +259,9 @@ class PaletteRemappingTests(unittest.TestCase):
                              [{"x": 8, "y": 0, "source_x": 8, "source_y": 0,
                                "bg3_bank": 2, "bg6_bank": 0,
                                "bg6_visible_pixels": 32}])
+            self.assertEqual(manifest["bg6_unresolved_palette_bank_pairs"],
+                             [{"bg3_bank": 2, "bg6_bank": 0,
+                               "cells": 1, "visible_pixels": 32}])
             self.assertFalse(manifest["composition_verified"])
             tiles = (Path(directory) / "header_only.4bpp").read_bytes()
             tilemap = (Path(directory) / "header_only.bin").read_bytes()
