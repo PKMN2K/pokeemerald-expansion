@@ -19,3 +19,21 @@ Branch: `feature/gen4-ui-renderer`.
 **Current status:** retail sources and renderers verified; the final authentic BG composition and live wiring are not completed. No invented HGSS-style graphics.
 
 This file corrects an earlier stale checkpoint which incorrectly asserted that the original BG archive and members were unknown.
+
+
+## Batch source-only composition audit
+
+Once the verified original retail `a/1/6/2` NARC is available locally, run:
+
+```sh
+python3 tools/audit_hgss_ribbon_bg_candidates.py /path/to/a_1_6_2.narc build/hgss-ribbon-bg-audit
+```
+
+The script verifies the exact known SHA-256 before parsing. It compares all
+three provisional BG6 layouts and all tile-aligned 240x160 viewport origins,
+writing per-candidate `.audit.json` files and a sortable
+`comparison.json`. These contain palette-bank pairs and genuinely
+unrepresentable transparent-overlay pixel counts, but **are not proof of the
+correct retail arrangement**. The original source archive is not committed.
+Visual reference and BG priority/scroll verification remain required before
+any live PokéNav wiring or removal of Emerald graphics.
