@@ -21,8 +21,13 @@ def audit_all(members, output):
             for x in range(0, 17, 8):
                 folder = output / layout / f"x{x}_y{y}"
                 result = export(members, layout, x, y, folder, audit_only=True)
+                unresolved_pixels = sum(
+                    cell["bg6_visible_pixels"]
+                    for cell in result["bg6_transparent_cells_not_composited"]
+                )
                 candidates.append({
                     "layout": layout, "viewport_x": x, "viewport_y": y,
+                    "unresolved_visible_pixels": unresolved_pixels,
                     "unresolved_cells": len(result["bg6_transparent_cells_not_composited"]),
                     "unresolved_pairs": result["bg6_unresolved_palette_bank_pairs"],
                     "source_palette_banks_needed": result["source_palette_banks_needed"],
@@ -30,10 +35,14 @@ def audit_all(members, output):
                     "same_bank_composites": result["bg6_same_bank_composited_cells"],
                     "cross_bank_composites": result["bg6_cross_bank_exact_color_composited_cells"],
                 })
-    candidates.sort(key=lambda row: (row["unresolved_cells"], row["layout"],
+    # Compare viewport crops only within the same layout. Layouts cover
+    # different BG6 regions, so a smaller region naturally has fewer conflicts.
+    candidates.sort(key=lambda row: (row["layout"], row["unresolved_cells"],
+                                      row["unresolved_visible_pixels"],
                                       row["viewport_y"], row["viewport_x"]))
     summary = {
-        "purpose": "source-only comparison; not visual or runtime verification",
+        "purpose": "source-only comparison within each layout; not visual or runtime verification",
+        "warning": "Conflict counts cannot rank layouts of different BG6 coverage",
         "candidate_count": len(candidates),
         "candidates": candidates,
     }
