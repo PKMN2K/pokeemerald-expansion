@@ -262,7 +262,10 @@ class PaletteRemappingTests(unittest.TestCase):
             self.assertEqual(report["bg6_unresolved_palette_bank_pairs"],
                              [{"bg3_bank": 2, "bg6_bank": 0,
                                "cells": 1, "visible_pixels": 32}])
-            self.assertTrue((audit_dir / "header_only.audit.json").exists())
+            audit_file = audit_dir / "header_only.audit.json"
+            self.assertTrue(audit_file.exists())
+            self.assertEqual(json.loads(audit_file.read_text()), report)
+            self.assertTrue(audit_file.read_text().endswith("\n"))
             self.assertFalse((audit_dir / "header_only.4bpp").exists())
             self.assertEqual(manifest["bg6_same_bank_composited_cells"], 1)
             self.assertEqual(manifest["bg6_fully_transparent_cells_ignored"], 0)
