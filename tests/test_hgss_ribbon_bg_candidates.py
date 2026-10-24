@@ -20,7 +20,8 @@ class CandidateAuditTests(unittest.TestCase):
             self.assertTrue(audit_only)
             calls.append((layout, x, y))
             return {
-                "bg6_transparent_cells_not_composited": [1] * (y // 8),
+                "bg6_transparent_cells_not_composited":
+                    [{"bg6_visible_pixels": 2}] * (y // 8),
                 "bg6_unresolved_palette_bank_pairs": [],
                 "source_palette_banks_needed": [0],
                 "bg6_opaque_substitutions": 0,
@@ -38,9 +39,17 @@ class CandidateAuditTests(unittest.TestCase):
             self.assertEqual(len(set(calls)), expected)
             self.assertEqual({x for _, x, _ in calls}, {0, 8, 16})
             self.assertEqual({y for _, _, y in calls}, set(range(0, 97, 8)))
-            self.assertTrue(all(row["unresolved_cells"] <=
-                                report["candidates"][i + 1]["unresolved_cells"]
-                                for i, row in enumerate(report["candidates"][:-1])))
+            self.assertTrue(all(
+                (row["layout"], row["unresolved_cells"],
+                 row["unresolved_visible_pixels"]) <=
+                (report["candidates"][i + 1]["layout"],
+                 report["candidates"][i + 1]["unresolved_cells"],
+                 report["candidates"][i + 1]["unresolved_visible_pixels"])
+                for i, row in enumerate(report["candidates"][:-1])
+            ))
+            self.assertTrue(all(row["unresolved_visible_pixels"] ==
+                                row["unresolved_cells"] * 2
+                                for row in report["candidates"]))
             saved = json.loads((Path(temp) / "comparison.json").read_text())
             self.assertEqual(saved, report)
 
@@ -57,6 +66,7 @@ class CandidateAuditTests(unittest.TestCase):
                        }):
                 result = audit_all([], Path(temp))
         self.assertIn("not visual or runtime verification", result["purpose"])
+        self.assertIn("cannot rank layouts", result["warning"])
 
 
 if __name__ == "__main__":
