@@ -288,7 +288,7 @@ def export(members, layout, viewport_x, viewport_y, out, palette_map=None, audit
         }
         out.mkdir(parents=True, exist_ok=True)
         target = out / (layout + ".audit.json")
-        target.write_text(json.dumps(report, indent=2, sort_keys=True) + "\\n")
+        target.write_text(json.dumps(report, indent=2, sort_keys=True) + "\n")
         print(f"{target}: {kept_transparent} unresolved BG6 cells; review only")
         return report
     palette_map = palette_map or {}
