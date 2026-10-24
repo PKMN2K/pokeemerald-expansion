@@ -293,6 +293,19 @@ def export(members, layout, viewport_x, viewport_y, out, palette_map=None):
     # Machine-readable handoff for the future runtime loader. Each palette
     # bank is a separate BG_PLTT_ID(bank) upload of exactly 32 bytes.
     # This manifest does not certify the bank as free across PokéNav modules.
+    # Group genuine unrepresentable overlays by their original source banks.
+    # This reports where a second hardware BG or palette allocation is still
+    # needed without pretending the provisional flattened export is complete.
+    unresolved_pairs = {}
+    for cell in skipped_bg6_cells:
+        pair = (cell["bg3_bank"], cell["bg6_bank"])
+        report = unresolved_pairs.setdefault(pair, {"cells": 0, "visible_pixels": 0})
+        report["cells"] += 1
+        report["visible_pixels"] += cell["bg6_visible_pixels"]
+    unresolved_summary = [
+        {"bg3_bank": bg3, "bg6_bank": bg6, **unresolved_pairs[(bg3, bg6)]}
+        for bg3, bg6 in sorted(unresolved_pairs)
+    ]
     manifest = {
         "source_narc_sha256": EXPECTED_NARC_SHA256,
         "layout": layout,
@@ -311,6 +324,7 @@ def export(members, layout, viewport_x, viewport_y, out, palette_map=None):
         "bg6_cross_bank_exact_color_composited_cells": composed_cross_bank,
         "bg6_fully_transparent_cells_ignored": empty_bg6_cells,
         "bg6_transparent_cells_not_composited": skipped_bg6_cells,
+        "bg6_unresolved_palette_bank_pairs": unresolved_summary,
         "composition_verified": False,
         "requires": ["cross-module BG palette ownership audit",
                      "retail BG3/BG6 composition verification",
