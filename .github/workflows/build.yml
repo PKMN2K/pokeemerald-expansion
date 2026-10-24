@@ -415,6 +415,50 @@ jobs:
           assert not water["full_attribute_words_emitted"]
           assert not water["safe_to_enable"] and not water["live_map_registered"]
           assert not report["water_ledge_behavior_attributes_registered"]
+          shore_root = root / "surf_shoreline_probes"
+          shore = json.loads((shore_root / "johto_surf_shoreline_probes.review.json").read_text())
+          assert shore["status"] == "OFFLINE_JOHTO_SURF_SHORELINE_PROBES_NOT_FOR_ROM"
+          assert shore["source_water_quadrants"] == report["surf_shoreline_source_water_quadrants"] == 59
+          assert shore["engine_and_original_surf_permissions"]["source_water_and_land_permissions_verified"]
+          assert report["surf_shoreline_original_source_permissions_checked"]
+          assert shore["engine_and_original_surf_permissions"]["native_surf_entry_exit_gates_verified"]
+          assert shore["engine_and_original_surf_permissions"]["native_surf_field_move_and_follower_checks_verified"]
+          assert shore["engine_and_original_surf_permissions"]["pond_ocean_basic_movement_and_encounter_flags_equivalent"]
+          assert report["surf_shoreline_pond_ocean_movement_flags_checked"]
+          assert shore["engine_and_original_surf_permissions"]["pond_ocean_gameplay_choice_still_unresolved"]
+          assert shore["source_water_does_not_distinguish_pond_from_ocean"]
+          assert shore["candidate_pond_behavior"] == "MB_POND_WATER"
+          assert shore["candidate_ocean_behavior"] == "MB_OCEAN_WATER"
+          variants = shore["variants"]
+          assert len(variants) == report["surf_shoreline_probe_variants"] == 4
+          assert [v["name"] for v in variants] == [
+              "baseline", "blocked_water", "flat_water", "blocked_shore"
+          ]
+          for v in variants:
+              raw = (shore_root / v["filename"]).read_bytes()
+              assert len(raw) == 128
+              assert hashlib.sha256(raw).hexdigest() == v["sha256"]
+              words = struct.unpack("<64H", raw)
+              assert v["water_cells"] == 9
+              assert sum((x & 0x03FF) == shore["source_water_metatile_id_used_for_probe"] for x in words) == 9
+              assert len(v["transitions"]) == 4
+              assert all(not t["emulator_verified"] for t in v["transitions"])
+          assert {t["land_facing"] for t in variants[0]["transitions"]} == {
+              "north", "south", "east", "west"
+          }
+          assert all(t["candidate_surf_entry_unblocked"] and t["candidate_shore_exit_unblocked"]
+                     for t in variants[0]["transitions"])
+          assert variants[1]["transitions"][0]["water_collision"] == 3
+          assert not variants[1]["transitions"][0]["candidate_surf_entry_unblocked"]
+          assert variants[2]["transitions"][0]["water_elevation"] == 3
+          assert not variants[2]["transitions"][0]["candidate_surf_entry_unblocked"]
+          assert variants[3]["transitions"][0]["land_collision"] == 3
+          assert not variants[3]["transitions"][0]["candidate_shore_exit_unblocked"]
+          assert shore["source_base_map_sha256"] == hashlib.sha256(map_file.read_bytes()).hexdigest()
+          assert not shore["water_behavior_attribute_words_emitted"]
+          assert not shore["emulator_surf_and_shore_exit_verified"]
+          assert not shore["safe_to_enable"] and not shore["map_registered"]
+          assert not report["surf_shoreline_registered"]
           bindings_root = root / "attribute_bindings"
           bindings = json.loads((bindings_root / "johto_test_attribute_bindings.review.json").read_text())
           raw_bindings = (bindings_root / "johto_test_attribute_bindings.review.bin").read_bytes()

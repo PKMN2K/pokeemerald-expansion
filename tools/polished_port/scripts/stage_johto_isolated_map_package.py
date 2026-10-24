@@ -19,6 +19,7 @@ from export_johto_sprite_occlusion_probes import export as export_sprite_probes
 from audit_johto_full_layer_attribute_coverage import audit as audit_all_layers
 from export_johto_wall_mapgrid_rules import export as export_wall_rules
 from export_johto_water_ledge_field_probes import export as export_water_ledge_probes
+from export_johto_surf_shoreline_probes import export as export_surf_shoreline
 
 MAP_ID = "MAP_POLISHED_JOHTO_WALKABILITY_TEST"
 MAP_NAME = "PolishedJohto_WalkabilityTest"
@@ -215,6 +216,16 @@ def stage(output):
     assert water_ledge["native_engine_audit"]["corner_ledge_cardinal_compatibility_supported_in_engine"]
     assert not water_ledge["diagonal_ledges_require_new_engine_logic"]
     assert not water_ledge["safe_to_enable"]
+    shoreline = export_surf_shoreline(
+        output / "OFFLINE_ONLY" / "surf_shoreline_probes", coverage,
+        (assets / "johto_primary_metatiles.bin").read_bytes(),
+        (assets / "johto_secondary_metatiles.bin").read_bytes(),
+        map_raw,
+    )
+    assert shoreline["source_water_quadrants"] == 59
+    assert len(shoreline["variants"]) == 4
+    assert shoreline["engine_and_original_surf_permissions"]["native_surf_entry_exit_gates_verified"]
+    assert not shoreline["safe_to_enable"]
     assert (root / "map.bin").read_bytes() == map_raw
     (output / "OFFLINE_ONLY" / "layout_entry.review.json").write_text(
         json.dumps(proposed_layout, indent=2) + "\n", encoding="utf-8")
@@ -262,6 +273,13 @@ def stage(output):
         "water_ledge_corner_source_count": water_ledge["source_diagonal_ledge_metatiles"],
         "water_ledge_corner_dispatch_source_verified": water_ledge["corner_ledge_source_facing_masks_verified"],
         "water_ledge_behavior_attributes_registered": False,
+        "surf_shoreline_probe_variants": len(shoreline["variants"]),
+        "surf_shoreline_source_water_quadrants": shoreline["source_water_quadrants"],
+        "surf_shoreline_original_source_permissions_checked":
+            shoreline["engine_and_original_surf_permissions"]["source_water_and_land_permissions_verified"],
+        "surf_shoreline_pond_ocean_movement_flags_checked":
+            shoreline["engine_and_original_surf_permissions"]["pond_ocean_basic_movement_and_encounter_flags_equivalent"],
+        "surf_shoreline_registered": False,
         "map_header_draft_schema_checked": True,
         "verified_header_constants": constants,
         "temporary_region_map_placeholder": region_placeholder,
