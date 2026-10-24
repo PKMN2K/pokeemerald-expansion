@@ -21,6 +21,7 @@ from export_johto_wall_mapgrid_rules import export as export_wall_rules
 from export_johto_water_ledge_field_probes import export as export_water_ledge_probes
 from export_johto_surf_shoreline_probes import export as export_surf_shoreline
 from export_johto_extended_behavior_review import export as export_extended_behaviors
+from export_johto_source_wall_permissions import export as export_wall_permissions
 
 MAP_ID = "MAP_POLISHED_JOHTO_WALKABILITY_TEST"
 MAP_NAME = "PolishedJohto_WalkabilityTest"
@@ -241,6 +242,14 @@ def stage(output):
     assert extended["unresolved_metatiles"] == 605
     assert extended["unresolved_wall_metatiles"] == 481
     assert not extended["safe_to_register"]
+    permissions = export_wall_permissions(
+        output / "OFFLINE_ONLY" / "source_wall_permissions", coverage,
+        walls, extended,
+    )
+    assert permissions["source_wall_permission_count"] == 569
+    assert permissions["existing_wall_subset_count"] == 481
+    assert permissions["new_wall_permission_quadrants"] == 88
+    assert not permissions["safe_to_register"]
     assert (root / "map.bin").read_bytes() == map_raw
     (output / "OFFLINE_ONLY" / "layout_entry.review.json").write_text(
         json.dumps(proposed_layout, indent=2) + "\n", encoding="utf-8")
@@ -304,6 +313,10 @@ def stage(output):
         "extended_behavior_review_pair_sha256": extended["pairs_binary_sha256"],
         "extended_behavior_review_bitmap_sha256": extended["validity_bitmap_sha256"],
         "extended_behavior_review_registered": False,
+        "source_wall_permission_count": permissions["source_wall_permission_count"],
+        "source_wall_permission_additional_count": permissions["new_wall_permission_quadrants"],
+        "source_wall_permission_review_sha256": permissions["binary_sha256"],
+        "source_wall_permission_registered": False,
         "map_header_draft_schema_checked": True,
         "verified_header_constants": constants,
         "temporary_region_map_placeholder": region_placeholder,

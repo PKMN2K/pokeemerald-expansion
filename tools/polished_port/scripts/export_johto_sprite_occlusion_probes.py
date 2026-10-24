@@ -24,6 +24,9 @@ ROOT = Path(__file__).resolve().parents[3]
 SIDE = 8
 ELEVATION = 3
 IMPASSABLE = 3
+CLEAR = 0
+SURF_ELEVATION = 1
+WALL_PERMISSION_SYMBOLS = {"WALL", "VOID", "BUOY"}
 CATEGORIES = (
     ("ordinary_wall", "WALL", False),
     ("priority_wall", "WALL", True),
@@ -126,8 +129,11 @@ def export(output: Path, original_map: bytes, primary_metatiles: bytes,
         mask = mask_rows(top, primary_graphics)
         pixel_count = sum(v.bit_count() for v in mask)
         assert (pixel_count > 0) == expect_priority
-        packed = metatile_id | (IMPASSABLE << 10) | (ELEVATION << 12)
-        assert packed & 0x0C00 == 0x0C00
+        collision = IMPASSABLE if symbol in WALL_PERMISSION_SYMBOLS else CLEAR
+        elevation = SURF_ELEVATION if symbol == "WHIRLPOOL" else ELEVATION
+        packed = metatile_id | (collision << 10) | (elevation << 12)
+        assert ((packed >> 10) & 3) == collision
+        assert (packed >> 12) == elevation
         words_out[y * SIDE + x] = packed
 
         probes = []
@@ -138,8 +144,9 @@ def export(output: Path, original_map: bytes, primary_metatiles: bytes,
                 "actor_elevation": ELEVATION, "actor_facing": face,
                 "actor_cell_expected_source_symbol": "FLOOR",
                 "expected_floor_collision_bits": 0,
-                "expected_target_collision_bits": IMPASSABLE,
-                "movement_into_obstacle_should_be_blocked": True,
+                "expected_target_collision_bits": collision,
+                "movement_into_obstacle_should_be_blocked": collision == IMPASSABLE,
+                "requires_special_water_or_directional_test": collision != IMPASSABLE,
                 "sprite_occlusion_must_be_visually_checked": True,
                 "in_emulator_result": None,
             })
@@ -149,6 +156,8 @@ def export(output: Path, original_map: bytes, primary_metatiles: bytes,
             "metatile_id": metatile_id, "source_block": metatile_id // 4,
             "bank": bank, "bank_local_index": local,
             "packed_map_cell": packed,
+            "candidate_collision_bits": collision,
+            "candidate_elevation": elevation,
             "original_geometry_sha256": hashlib.sha256(raw_geom).hexdigest(),
             "source_priority_subtiles": sum(flags),
             "expected_foreground_opaque_pixels": pixel_count,
@@ -160,7 +169,9 @@ def export(output: Path, original_map: bytes, primary_metatiles: bytes,
     for case in cases:
         for p in case["probes"]:
             assert words_out[p["actor_y"] * SIDE + p["actor_x"]] == floor_word
-    assert sum((word >> 10) & 3 == IMPASSABLE for word in words_out) == 7
+    assert sum(((word >> 10) & 3) == IMPASSABLE for word in words_out) == 4
+    assert sum(c["candidate_collision_bits"] == IMPASSABLE for c in cases) == 4
+    assert next(c for c in cases if c["case_id"] == "whirlpool")["candidate_elevation"] == SURF_ELEVATION
     assert sum(bool(case["source_priority_subtiles"]) for case in cases) == 1
     assert cases[1]["case_id"] == "priority_wall"
     assert cases[1]["expected_foreground_opaque_pixels"] > 0

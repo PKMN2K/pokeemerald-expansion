@@ -62,8 +62,10 @@ def inspect(output: Path, obstacle_report: dict, obstacle_map: bytes,
         mid = a["metatile_id"]
         assert 0 <= mid < SOURCE_TOTAL
         assert cells[x + y * 8] == a["packed_cell"]
-        assert ((a["packed_cell"] >> 10) & 3) == 3
-        assert ((a["packed_cell"] >> 12) & 15) == a["elevation"] == 3
+        assert ((a["packed_cell"] >> 10) & 3) == a["collision"]
+        assert ((a["packed_cell"] >> 12) & 15) == a["elevation"]
+        assert a["collision"] == (3 if a["source_permission"] == "WALL_TILE" else 0)
+        assert a["elevation"] == (1 if a["source_permission"] == "WATER_TILE" else 3)
         block, quadrant = divmod(mid, 4)
         start_y, start_x = (quadrant // 2) * 2, (quadrant % 2) * 2
         bank = "primary" if mid < EMERALD_BANK_PRIMARY else "secondary"
@@ -124,8 +126,9 @@ def inspect(output: Path, obstacle_report: dict, obstacle_map: bytes,
             "foreground_masked_color_zero_pixels": sum(
                 x["foreground_color_zero_pixels_masked"] for x in source_entries
             ),
-            "candidate_collision_bits": 3,
-            "candidate_elevation": 3,
+            "candidate_collision_bits": a["collision"],
+            "candidate_elevation": a["elevation"],
+            "source_permission": a["source_permission"],
             "required_emerald_layer_type": "METATILE_LAYER_TYPE_NORMAL",
             "subtiles": source_entries,
             "obj_occlusion_verified_in_emulator": False,

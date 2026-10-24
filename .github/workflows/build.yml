@@ -260,7 +260,12 @@ jobs:
           assert obstacles["source_wall_and_obstacle_graphics_verified"]
           assert obstacles["all_untouched_map_cells_preserved"] and obstacles["debug_spawn_untouched"]
           assert all(a["candidate_attribute_word"] is None for a in obstacles["assignments"])
-          assert all(a["collision"] == 3 for a in obstacles["assignments"])
+          assert obstacles["source_permission_aware_fixture"]
+          assert {a["source_symbol"]: a["collision"] for a in obstacles["assignments"]} == {
+              "WALL": 3, "VOID": 3, "BUOY": 3,
+              "TOP_WALL": 0, "BOTTOM_WALL": 0, "WHIRLPOOL": 0,
+          }
+          assert next(a for a in obstacles["assignments"] if a["source_symbol"] == "WHIRLPOOL")["elevation"] == 1
           assert hashlib.sha256(obstacles_raw).hexdigest() == report["obstacle_collision_review_sha256"]
           assert obstacles["base_map_sha256"] == hashlib.sha256(map_file.read_bytes()).hexdigest()
           assert not obstacles["registered_with_engine"] and not obstacles["safe_to_register"]
@@ -514,6 +519,32 @@ jobs:
           assert not ext["full_rom_tileset_emitted"]
           assert not ext["live_map_registered"]
           assert not ext["safe_to_register"] and not report["extended_behavior_review_registered"]
+          source_wall_dir = root / "source_wall_permissions"
+          perm = json.loads((source_wall_dir / "johto_source_wall_permissions.review.json").read_text())
+          perm_raw = (source_wall_dir / "johto_source_wall_permissions.review.bin").read_bytes()
+          perm_pairs = list(struct.iter_unpack("<HH", perm_raw))
+          assert perm["status"] == "SOURCE_PINNED_WALL_PERMISSIONS_NOT_FOR_ROM"
+          assert perm["source_permission_fixture_verified"]
+          assert perm["source_wall_permission_count"] == report["source_wall_permission_count"] == 569
+          assert perm["existing_wall_subset_count"] == 481
+          assert perm["new_wall_permission_quadrants"] == report["source_wall_permission_additional_count"] == 88
+          assert perm["counts"]["HEADBUTT_TREE"] == 58 and perm["counts"]["BUOY"] == 26
+          assert perm["counts"]["VOID"] == 4 and perm["counts"]["WALL"] == 481
+          assert perm["source_permissions"]["WHIRLPOOL"] == "WATER_TILE"
+          assert perm["source_permissions"]["TOP_WALL"] == "LAND_TILE"
+          assert perm["source_permissions"]["BOTTOM_WALL"] == "LAND_TILE"
+          assert perm["whirlpool_is_water_not_wall"]
+          assert perm["directional_wall_edges_are_land_not_wall"]
+          assert len(perm_pairs) == 569 and len(perm_raw) == perm["binary_bytes"] == 569 * 4
+          assert all(mask == 0x0C00 for _, mask in perm_pairs)
+          assert perm_pairs == [(r["metatile_id"], r["candidate_mapgrid_collision_mask"])
+                                for r in perm["rules"]]
+          assert hashlib.sha256(perm_raw).hexdigest() == perm["binary_sha256"] == report["source_wall_permission_review_sha256"]
+          assert perm["headbutt_interaction_pending"] and perm["buoy_and_void_placement_pending"]
+          assert not perm["mapgrid_map_emitted"] and not perm["complete_attribute_table_emitted"]
+          assert not perm["source_interaction_script_ported"]
+          assert not perm["live_tileset_registered"] and not perm["live_map_registered"]
+          assert not perm["safe_to_register"] and not report["source_wall_permission_registered"]
           bindings_root = root / "attribute_bindings"
           bindings = json.loads((bindings_root / "johto_test_attribute_bindings.review.json").read_text())
           raw_bindings = (bindings_root / "johto_test_attribute_bindings.review.bin").read_bytes()

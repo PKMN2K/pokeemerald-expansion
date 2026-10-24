@@ -10,7 +10,9 @@ from collections import Counter
 from pathlib import Path
 from merge_johto_behavior_candidates import merge
 
-IMPASSABLE = {"WALL", "VOID", "TOP_WALL", "BOTTOM_WALL", "BUOY", "WHIRLPOOL"}
+# Exact WALL_TILE permissions from the pinned Crystal collision table.
+# WHIRLPOOL is WATER_TILE; TOP_WALL and BOTTOM_WALL are LAND_TILE.
+IMPASSABLE = {"WALL", "VOID", "HEADBUTT_TREE", "BUOY"}
 WATER = {"WATER"}
 LEDGES = {"LEDGE_DOWN", "LEDGE_LEFT", "LEDGE_RIGHT", "LEDGE_DOWN_LEFT", "LEDGE_DOWN_RIGHT"}
 BASIC = {"FLOOR", "TALL_GRASS"}
@@ -28,12 +30,18 @@ def classify(row):
         blockers += ["map_cell_walkability_test"]
     else:
         blockers += ["source_special_behavior_translation", "field_interaction_or_script_test"]
-    if symbol in {"BUOY", "WHIRLPOOL"}:
-        blockers += ["water_obstacle_or_whirlpool_script_test"]
+    if symbol == "HEADBUTT_TREE":
+        blockers += ["headbutt_field_interaction_test"]
+    if symbol == "BUOY":
+        blockers += ["buoy_water_placement_and_occlusion_test"]
+    if symbol == "WHIRLPOOL":
+        blockers += ["water_tile_permission_test", "whirlpool_field_move_test",
+                     "not_an_ordinary_impassable_wall"]
     if symbol == "VOID":
         blockers += ["map_border_test"]
     if symbol in {"TOP_WALL", "BOTTOM_WALL"}:
-        blockers += ["foreground_priority_test"]
+        blockers += ["foreground_priority_test", "directional_edge_collision_test",
+                     "source_permission_is_land_not_wall"]
     return {**row, "required_live_tests": blockers, "verified_in_game": False}
 
 def review():

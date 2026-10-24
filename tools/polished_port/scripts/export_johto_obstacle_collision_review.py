@@ -21,6 +21,13 @@ SYMBOLS = ("WALL", "VOID", "TOP_WALL", "BOTTOM_WALL", "BUOY", "WHIRLPOOL")
 WIDTH = HEIGHT = 8
 ELEVATION = 3
 COLLISION = 3
+# The first two and BUOY are WALL_TILE; wall edges are LAND_TILE,
+# and WHIRLPOOL is WATER_TILE in the pinned Crystal source.
+SOURCE_PERMISSION = {
+    "WALL": "WALL_TILE", "VOID": "WALL_TILE",
+    "TOP_WALL": "LAND_TILE", "BOTTOM_WALL": "LAND_TILE",
+    "BUOY": "WALL_TILE", "WHIRLPOOL": "WATER_TILE",
+}
 
 
 def verify_engine_encoding():
@@ -81,16 +88,20 @@ def export(output, base_map: bytes, primary_metatiles: bytes,
         geometry = primary_metatiles if bank == "primary" else secondary_metatiles
         shape = geometry[local * 16:(local + 1) * 16]
         assert len(shape) == 16
-        word = metatile | (COLLISION << 10) | (ELEVATION << 12)
+        permission = SOURCE_PERMISSION[symbol]
+        collision = COLLISION if permission == "WALL_TILE" else 0
+        elevation = 1 if permission == "WATER_TILE" else ELEVATION
+        word = metatile | (collision << 10) | (elevation << 12)
         assert (word & 0x03FF) == metatile
-        assert (word & 0x0C00) == 0x0C00
-        assert (word & 0xF000) == ELEVATION << 12
+        assert ((word >> 10) & 3) == collision
+        assert (word & 0xF000) == elevation << 12
         changed[at] = word
         assignments.append({
             "x": x, "y": y, "source_symbol": symbol,
             "metatile_id": metatile, "bank": bank, "bank_local_index": local,
             "source_geometry_sha256": hashlib.sha256(shape).hexdigest(),
-            "packed_cell": word, "collision": COLLISION, "elevation": ELEVATION,
+            "packed_cell": word, "collision": collision, "elevation": elevation,
+            "source_permission": permission,
             "candidate_attribute_word": None,
             "source_emerald_behavior_mapped": False,
             "sprite_priority_verified": False,
@@ -112,6 +123,13 @@ def export(output, base_map: bytes, primary_metatiles: bytes,
         "collision_bits_engine_verified": True,
         "engine_provenance": engine_provenance,
         "collision_value": COLLISION,
+        "source_permission_collision_variants": {
+            "WALL_TILE": 3, "LAND_TILE": 0, "WATER_TILE": 0
+        },
+        "source_permission_elevation_candidate": {
+            "WALL_TILE": 3, "LAND_TILE": 3, "WATER_TILE": 1
+        },
+        "source_permission_aware_fixture": True,
         "source_wall_and_obstacle_graphics_verified": True,
         "base_map_sha256": hashlib.sha256(base_map).hexdigest(),
         "review_map_sha256": hashlib.sha256(raw).hexdigest(),
