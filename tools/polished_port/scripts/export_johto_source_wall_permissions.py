@@ -60,9 +60,10 @@ def export(output: Path, coverage: dict, prior_wall: dict, extended: dict):
     frequencies = Counter(row["source_collision_symbol"] for row in rows)
     assert {sym: frequencies[sym] for sym in EXPECTED} == EXPECTED
     assert prior_wall["source_wall_metatiles"] == 481
-    assert extended["candidate_metatiles"] == 407
+    assert extended["candidate_metatiles"] == 465
+    assert extended["new_headbutt_tree_candidates"] == 58
     assert extended["unresolved_wall_metatiles"] == 481
-    assert extended["unresolved_metatiles"] == 605
+    assert extended["unresolved_metatiles"] == 547
     assert not coverage["source_metatile_attribute_table_emitted"]
 
     pairs = []

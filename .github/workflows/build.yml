@@ -484,22 +484,26 @@ jobs:
           assert ext["status"] == "SOURCE_BACKED_EXTENDED_BEHAVIOR_PAIRS_NOT_FOR_ROM"
           assert ext["metatiles_checked"] == ext["source_geometry_checked"] == 1012
           assert len(ext["per_metatile_review"]) == 1012
-          assert ext["candidate_metatiles"] == report["extended_behavior_review_pairs"] == 407
+          assert ext["candidate_metatiles"] == report["extended_behavior_review_pairs"] == 465
           assert ext["existing_basic_candidates_retained"] == 329
           assert ext["new_water_candidates"] == 59 and ext["new_ledge_candidates"] == 19
-          assert ext["unresolved_metatiles"] == report["extended_behavior_review_unresolved"] == 605
+          assert ext["new_headbutt_tree_candidates"] == 58
+          assert ext["headbutt_field_move_scripts_pending"]
+          assert ext["unresolved_metatiles"] == report["extended_behavior_review_unresolved"] == 547
           assert ext["unresolved_wall_metatiles"] == 481
-          assert len(ext_pairs) == 407 and len(ext_raw) == ext["pairs_binary_bytes"] == 1628
+          assert len(ext_pairs) == 465 and len(ext_raw) == ext["pairs_binary_bytes"] == 1860
           assert len(ext_bitmap) == ext["validity_bitmap_bytes"] == 127
-          assert sum(b.bit_count() for b in ext_bitmap) == 407
+          assert sum(b.bit_count() for b in ext_bitmap) == 465
           assert ext_pairs == [(row["metatile_id"], row["candidate_attribute_word"])
                               for row in ext["pairs"]]
           assert ext_pairs == sorted(ext_pairs)
           assert all(0 <= mid < 1012 and 0 <= word < 256 for mid, word in ext_pairs)
-          assert len(set(mid for mid, _ in ext_pairs)) == 407
+          assert len(set(mid for mid, _ in ext_pairs)) == 465
           assert hashlib.sha256(ext_raw).hexdigest() == ext["pairs_binary_sha256"] == report["extended_behavior_review_pair_sha256"]
           assert hashlib.sha256(ext_bitmap).hexdigest() == ext["validity_bitmap_sha256"] == report["extended_behavior_review_bitmap_sha256"]
           assert ext["behavior_names"]["WATER"] == "MB_JOHTO_WATER"
+          assert ext["behavior_names"]["HEADBUTT_TREE"] == "MB_JOHTO_HEADBUTT_TREE"
+          assert sum(x["requires_headbutt_script_and_encounter_port"] for x in ext["per_metatile_review"]) == 58
           assert ext["behavior_names"]["LEDGE_DOWN_LEFT"] == "MB_JOHTO_LEDGE_DOWN_LEFT"
           assert ext["behavior_names"]["LEDGE_DOWN_RIGHT"] == "MB_JOHTO_LEDGE_DOWN_RIGHT"
           assert ext["behavior_ids"]["FLOOR"] == 0 and ext["behavior_ids"]["TALL_GRASS"] == 2
@@ -545,6 +549,34 @@ jobs:
           assert not perm["source_interaction_script_ported"]
           assert not perm["live_tileset_registered"] and not perm["live_map_registered"]
           assert not perm["safe_to_register"] and not report["source_wall_permission_registered"]
+          tree_root = root / "headbutt_field_probes"
+          tree = json.loads((tree_root / "johto_headbutt_field_probes.review.json").read_text())
+          tree_raw = (tree_root / tree["probe_filename"]).read_bytes()
+          assert tree["status"] == "JOHTO_HEADBUTT_COLLISION_PROBES_NOT_FOR_ROM"
+          assert tree["source_headbutt_quadrants"] == report["headbutt_tree_source_quadrants"] == 58
+          assert tree["facing_direction_probe_count"] == report["headbutt_field_probe_count"] == 4
+          assert len(tree_raw) == 128
+          assert hashlib.sha256(tree_raw).hexdigest() == tree["probe_map_sha256"] == report["headbutt_field_probe_sha256"]
+          tree_words = struct.unpack("<64H", tree_raw)
+          assert sum(((w >> 10) & 3) == 3 for w in tree_words) == 4
+          assert {c["direction"] for c in tree["cases"]} == {"north", "south", "east", "west"}
+          assert len({c["metatile_id"] for c in tree["cases"]}) == 4
+          assert all(c["candidate_behavior"] == "MB_JOHTO_HEADBUTT_TREE"
+                     and c["candidate_mapgrid_collision"] == 3
+                     and c["collision_should_block_walking"]
+                     and not c["field_move_prompt_or_encounter_verified"]
+                     for c in tree["cases"])
+          assert tree["source_and_engine_checks"]["source_a_button_facing_tree_check"]
+          assert tree["source_and_engine_checks"]["source_party_has_headbutt_move_gate"]
+          assert tree["source_and_engine_checks"]["source_tree_encounters_and_rewards_require_separate_port"]
+          assert tree["source_and_engine_checks"]["emerald_tree_behavior_recognizer_compiled"]
+          assert tree["source_and_engine_checks"]["emerald_headbutt_field_move_not_yet_present"]
+          assert tree["source_graphics_verified"] and tree["mapgrid_collision_rules_verified"]
+          assert not tree["field_move_script_implemented"] and not tree["headbutt_encounters_ported"]
+          assert not tree["tree_animation_ported"] and not tree["headbutt_item_rewards_ported"]
+          assert not tree["tileset_attributes_registered"] and not tree["map_registered"]
+          assert not tree["emulator_interaction_test_passed"] and not tree["safe_to_register"]
+          assert not report["headbutt_field_move_registered"]
           bindings_root = root / "attribute_bindings"
           bindings = json.loads((bindings_root / "johto_test_attribute_bindings.review.json").read_text())
           raw_bindings = (bindings_root / "johto_test_attribute_bindings.review.bin").read_bytes()

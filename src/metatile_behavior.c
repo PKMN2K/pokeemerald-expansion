@@ -29,6 +29,8 @@ static const u8 sTileBitAttributes[NUM_METATILE_BEHAVIORS] =
     [MB_SOOTOPOLIS_DEEP_WATER]              = TILE_FLAG_UNUSED | TILE_FLAG_SURFABLE,
     [MB_OCEAN_WATER]                        = TILE_FLAG_UNUSED | TILE_FLAG_SURFABLE | TILE_FLAG_HAS_ENCOUNTERS,
     [MB_JOHTO_WATER]                        = TILE_FLAG_UNUSED | TILE_FLAG_SURFABLE | TILE_FLAG_HAS_ENCOUNTERS,
+    // Headbutt trees are solid; any encounters must come from field scripts.
+    [MB_JOHTO_HEADBUTT_TREE]                = 0,
     [MB_PUDDLE]                             = TILE_FLAG_UNUSED,
     [MB_SHALLOW_WATER]                      = TILE_FLAG_UNUSED,
     [MB_NO_SURFACING]                       = TILE_FLAG_UNUSED | TILE_FLAG_SURFABLE,
@@ -139,6 +141,12 @@ static const u8 sTileBitAttributes[NUM_METATILE_BEHAVIORS] =
     [MB_FAST_WATER]                         = TILE_FLAG_UNUSED | TILE_FLAG_SURFABLE,
     [MB_CYCLING_ROAD_WATER]                 = TILE_FLAG_UNUSED | TILE_FLAG_SURFABLE,
 };
+
+// Headbutt animation, encounters and items need separate Johto scripts.
+bool8 MetatileBehavior_IsJohtoHeadbuttTree(u8 metatileBehavior)
+{
+    return metatileBehavior == MB_JOHTO_HEADBUTT_TREE;
+}
 
 bool8 MetatileBehavior_IsATile(u8 metatileBehavior)
 {

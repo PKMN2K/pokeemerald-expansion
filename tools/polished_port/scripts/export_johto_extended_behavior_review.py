@@ -25,6 +25,7 @@ BEHAVIOR_MAP = {
     "FLOOR": "MB_NORMAL",
     "TALL_GRASS": "MB_TALL_GRASS",
     "WATER": "MB_JOHTO_WATER",
+    "HEADBUTT_TREE": "MB_JOHTO_HEADBUTT_TREE",
     "LEDGE_DOWN": "MB_JUMP_SOUTH",
     "LEDGE_LEFT": "MB_JUMP_WEST",
     "LEDGE_RIGHT": "MB_JUMP_EAST",
@@ -36,10 +37,11 @@ WATER = frozenset(("WATER",))
 LEDGES = frozenset(k for k in BEHAVIOR_MAP if k.startswith("LEDGE_"))
 EXPECTED_COUNTS = {
     "FLOOR": 323, "TALL_GRASS": 6,
-    "WATER": 59, "LEDGE_DOWN": 7, "LEDGE_LEFT": 4,
+    "WATER": 59, "HEADBUTT_TREE": 58,
+    "LEDGE_DOWN": 7, "LEDGE_LEFT": 4,
     "LEDGE_RIGHT": 4, "LEDGE_DOWN_LEFT": 2, "LEDGE_DOWN_RIGHT": 2,
 }
-EXPECTED_CANDIDATES = 407
+EXPECTED_CANDIDATES = 465
 EXPECTED_WALL = 481
 TOTAL = 1012
 
@@ -119,8 +121,10 @@ def export(output: Path, coverage: dict, primary: bytes, secondary: bytes):
         else:
             unresolved[symbol] += 1
             assert candidate is None
-        if symbol in IMPASSABLE:
+        if symbol in IMPASSABLE and symbol != "HEADBUTT_TREE":
             assert candidate is None, "Never flatten collision-only obstacles into floors"
+        if symbol == "HEADBUTT_TREE":
+            assert name == "MB_JOHTO_HEADBUTT_TREE", "Tree remains solid; only its identity is mapped"
         full_review.append({
             "metatile_id": mid,
             "source_collision_symbol": symbol,
@@ -132,6 +136,7 @@ def export(output: Path, coverage: dict, primary: bytes, secondary: bytes):
             "requires_mapcell_collision_validation": symbol in IMPASSABLE,
             "requires_water_elevation_and_field_validation": symbol in WATER,
             "requires_jump_and_elevation_validation": symbol in LEDGES,
+            "requires_headbutt_script_and_encounter_port": symbol == "HEADBUTT_TREE",
             "requires_special_script_review": name is None and symbol not in IMPASSABLE,
             "registered_with_engine": False,
             "emulator_verified": False,
@@ -165,6 +170,8 @@ def export(output: Path, coverage: dict, primary: bytes, secondary: bytes):
         "existing_basic_candidates_retained": original_count,
         "new_water_candidates": symbol_counts["WATER"],
         "new_ledge_candidates": sum(symbol_counts[s] for s in LEDGES),
+        "new_headbutt_tree_candidates": symbol_counts["HEADBUTT_TREE"],
+        "headbutt_field_move_scripts_pending": True,
         "unresolved_metatiles": sum(unresolved.values()),
         "unresolved_wall_metatiles": unresolved["WALL"],
         "unresolved_by_symbol": dict(sorted(unresolved.items())),

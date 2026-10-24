@@ -248,6 +248,8 @@ enum {
     MB_JOHTO_LEDGE_DOWN_LEFT,
     // Generic source Johto WATER: Surf/fish/encounters, no inferred pond/ocean visuals.
     MB_JOHTO_WATER,
+    // Solid source tree tile; its field-move interaction is still unregistered.
+    MB_JOHTO_HEADBUTT_TREE,
     NUM_METATILE_BEHAVIORS
 };
 

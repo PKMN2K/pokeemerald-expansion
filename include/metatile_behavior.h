@@ -10,6 +10,7 @@ enum {
 };
 
 bool8 MetatileBehavior_IsATile(u8 metatileBehavior);
+bool8 MetatileBehavior_IsJohtoHeadbuttTree(u8 metatileBehavior);
 bool8 MetatileBehavior_IsEncounterTile(u8 metatileBehavior);
 bool8 MetatileBehavior_IsJumpEast(u8 metatileBehavior);
 bool8 MetatileBehavior_IsJumpWest(u8 metatileBehavior);

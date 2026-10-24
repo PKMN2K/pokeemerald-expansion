@@ -22,6 +22,7 @@ from export_johto_water_ledge_field_probes import export as export_water_ledge_p
 from export_johto_surf_shoreline_probes import export as export_surf_shoreline
 from export_johto_extended_behavior_review import export as export_extended_behaviors
 from export_johto_source_wall_permissions import export as export_wall_permissions
+from export_johto_headbutt_field_probes import export as export_headbutt
 
 MAP_ID = "MAP_POLISHED_JOHTO_WALKABILITY_TEST"
 MAP_NAME = "PolishedJohto_WalkabilityTest"
@@ -235,11 +236,13 @@ def stage(output):
         (assets / "johto_primary_metatiles.bin").read_bytes(),
         (assets / "johto_secondary_metatiles.bin").read_bytes(),
     )
-    assert extended["candidate_metatiles"] == 407
+    assert extended["candidate_metatiles"] == 465
     assert extended["existing_basic_candidates_retained"] == 329
     assert extended["new_water_candidates"] == 59
     assert extended["new_ledge_candidates"] == 19
-    assert extended["unresolved_metatiles"] == 605
+    assert extended["new_headbutt_tree_candidates"] == 58
+    assert extended["headbutt_field_move_scripts_pending"]
+    assert extended["unresolved_metatiles"] == 547
     assert extended["unresolved_wall_metatiles"] == 481
     assert not extended["safe_to_register"]
     permissions = export_wall_permissions(
@@ -250,6 +253,16 @@ def stage(output):
     assert permissions["existing_wall_subset_count"] == 481
     assert permissions["new_wall_permission_quadrants"] == 88
     assert not permissions["safe_to_register"]
+    headbutt = export_headbutt(
+        output / "OFFLINE_ONLY" / "headbutt_field_probes", coverage,
+        extended, permissions, map_raw,
+        (assets / "johto_primary_metatiles.bin").read_bytes(),
+        (assets / "johto_secondary_metatiles.bin").read_bytes(),
+    )
+    assert headbutt["source_headbutt_quadrants"] == 58
+    assert headbutt["facing_direction_probe_count"] == 4
+    assert not headbutt["field_move_script_implemented"]
+    assert not headbutt["safe_to_register"]
     assert (root / "map.bin").read_bytes() == map_raw
     (output / "OFFLINE_ONLY" / "layout_entry.review.json").write_text(
         json.dumps(proposed_layout, indent=2) + "\n", encoding="utf-8")
@@ -317,6 +330,10 @@ def stage(output):
         "source_wall_permission_additional_count": permissions["new_wall_permission_quadrants"],
         "source_wall_permission_review_sha256": permissions["binary_sha256"],
         "source_wall_permission_registered": False,
+        "headbutt_tree_source_quadrants": headbutt["source_headbutt_quadrants"],
+        "headbutt_field_probe_count": headbutt["facing_direction_probe_count"],
+        "headbutt_field_probe_sha256": headbutt["probe_map_sha256"],
+        "headbutt_field_move_registered": False,
         "map_header_draft_schema_checked": True,
         "verified_header_constants": constants,
         "temporary_region_map_placeholder": region_placeholder,
