@@ -201,7 +201,7 @@ def export(output: Path, headbutt_review: dict):
     forms = [x for row in pointers if not row["shares_canyon_table"]
              for table in (row["normal"], row["rare"] or [])
              for x in table if x["source_form"] is not None]
-    assert len(forms) == 3
+    assert len(forms) == 4
     assert all(x["source_form"] == "HISUIAN_FORM" for x in forms)
     assert len({row["source_group"] for row in maps}) == 9
     assert all(p["source_constant"] in {r["source_group"] for r in maps}
