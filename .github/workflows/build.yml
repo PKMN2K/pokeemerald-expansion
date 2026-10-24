@@ -577,6 +577,54 @@ jobs:
           assert not tree["tileset_attributes_registered"] and not tree["map_registered"]
           assert not tree["emulator_interaction_test_passed"] and not tree["safe_to_register"]
           assert not report["headbutt_field_move_registered"]
+          table_root = root / "headbutt_encounter_tables"
+          encounter = json.loads((table_root / "johto_headbutt_encounters.review.json").read_text())
+          assert encounter["status"] == "PINNED_HEADBUTT_ENCOUNTERS_REVIEW_NOT_FOR_ROM"
+          assert encounter["source_tree_map_assignments"] == report["headbutt_encounter_map_assignments"] == 43
+          assert encounter["source_rock_map_assignments_separate"] == report["headbutt_encounter_rock_maps_reviewed"] == 14
+          assert encounter["source_pointer_groups"] == report["headbutt_encounter_group_pointers"] == 10
+          assert encounter["source_distinct_tree_distributions"] == 8
+          assert encounter["source_city_aliases_canyon"]
+          assert len(encounter["source_tree_groups"]) == 10
+          assert len(encounter["source_tree_map_groups"]) == 43
+          assert len({m["source_map_id"] for m in encounter["source_tree_map_groups"]}) == 43
+          assert encounter["source_selection_logic"]["chance_to_battle_percent_by_tree_score"] == {
+              "bad": 10, "good": 50, "rare": 80,
+          }
+          assert encounter["source_selection_logic"]["rare_table_is_not_a_second_roll_after_normal"]
+          assert encounter["source_selection_logic"]["tree_no_encounter_group_disables_item_reward"]
+          assert encounter["source_selection_logic"]["tree_reward_requires_wing_case"]
+          assert encounter["source_selection_logic"]["tree_wing_reward_percent_when_eligible"] == 10
+          assert encounter["source_selection_logic"]["tree_wing_inventory_cap"] == 999
+          assert encounter["source_fixed_and_dynamic_level_expressions_preserved"]
+          assert encounter["source_hisuian_forms_preserved"]
+          assert encounter["source_tree_groups"][0]["shares_canyon_table"]
+          assert encounter["source_tree_groups"][0]["normal"] == encounter["source_tree_groups"][1]["normal"]
+          assert encounter["source_tree_groups"][0]["rare"] == encounter["source_tree_groups"][1]["rare"]
+          assert encounter["source_tree_groups"][-1]["is_rock_smash_table"]
+          assert encounter["source_tree_groups"][-1]["rare"] is None
+          for group in encounter["source_tree_groups"]:
+              for distribution in (group["normal"], group["rare"]):
+                  if distribution is not None:
+                      assert sum(row["weight_percent"] for row in distribution) == 100
+          for name, meta in encounter["source_files"].items():
+              assert hashlib.sha256(
+                  (root.parent.parent / "tools/polished_port/fixtures" / {
+                      "encounters": "johto_headbutt_treemons.asm",
+                      "maps": "johto_headbutt_tree_maps.asm",
+                      "engine": "johto_headbutt_tree_engine.asm",
+                      "overworld": "johto_headbutt_overworld_flow.asm",
+                  }[name]).read_bytes()
+              ).hexdigest() == meta["sha256"]
+          assert not encounter["complete_emerald_wild_encounters_emitted"]
+          assert not encounter["source_map_ids_remapped_to_emerald"]
+          assert not encounter["source_pokemon_form_ids_remapped_to_emerald"]
+          assert not encounter["badge_scaled_levels_implemented"]
+          assert not encounter["headbutt_field_move_implemented"]
+          assert not encounter["tree_encounter_selection_implemented"]
+          assert not encounter["wing_case_inventory_implemented"]
+          assert not encounter["live_map_registered"] and not encounter["safe_to_enable"]
+          assert not report["headbutt_encounter_tables_registered"]
           bindings_root = root / "attribute_bindings"
           bindings = json.loads((bindings_root / "johto_test_attribute_bindings.review.json").read_text())
           raw_bindings = (bindings_root / "johto_test_attribute_bindings.review.bin").read_bytes()

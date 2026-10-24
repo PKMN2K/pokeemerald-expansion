@@ -23,6 +23,7 @@ from export_johto_surf_shoreline_probes import export as export_surf_shoreline
 from export_johto_extended_behavior_review import export as export_extended_behaviors
 from export_johto_source_wall_permissions import export as export_wall_permissions
 from export_johto_headbutt_field_probes import export as export_headbutt
+from export_johto_headbutt_encounter_tables import export as export_headbutt_encounters
 
 MAP_ID = "MAP_POLISHED_JOHTO_WALKABILITY_TEST"
 MAP_NAME = "PolishedJohto_WalkabilityTest"
@@ -263,6 +264,14 @@ def stage(output):
     assert headbutt["facing_direction_probe_count"] == 4
     assert not headbutt["field_move_script_implemented"]
     assert not headbutt["safe_to_register"]
+    tree_encounters = export_headbutt_encounters(
+        output / "OFFLINE_ONLY" / "headbutt_encounter_tables", headbutt
+    )
+    assert tree_encounters["source_tree_map_assignments"] == 43
+    assert tree_encounters["source_rock_map_assignments_separate"] == 14
+    assert tree_encounters["source_pointer_groups"] == 10
+    assert tree_encounters["source_city_aliases_canyon"]
+    assert not tree_encounters["safe_to_enable"]
     assert (root / "map.bin").read_bytes() == map_raw
     (output / "OFFLINE_ONLY" / "layout_entry.review.json").write_text(
         json.dumps(proposed_layout, indent=2) + "\n", encoding="utf-8")
@@ -334,6 +343,10 @@ def stage(output):
         "headbutt_field_probe_count": headbutt["facing_direction_probe_count"],
         "headbutt_field_probe_sha256": headbutt["probe_map_sha256"],
         "headbutt_field_move_registered": False,
+        "headbutt_encounter_map_assignments": tree_encounters["source_tree_map_assignments"],
+        "headbutt_encounter_group_pointers": tree_encounters["source_pointer_groups"],
+        "headbutt_encounter_rock_maps_reviewed": tree_encounters["source_rock_map_assignments_separate"],
+        "headbutt_encounter_tables_registered": False,
         "map_header_draft_schema_checked": True,
         "verified_header_constants": constants,
         "temporary_region_map_placeholder": region_placeholder,
