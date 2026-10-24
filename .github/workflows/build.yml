@@ -359,6 +359,9 @@ jobs:
           assert water["status"] == "JOHTO_WATER_LEDGE_OFFLINE_ENGINE_REVIEW_NOT_FOR_ROM"
           assert water["source_metatiles_checked"] == report["water_ledge_metatiles_reviewed"] == 78
           assert water["source_water_metatiles"] == 59
+          assert water["water_behavior_candidate_from_existing_audit"] == "MB_JOHTO_WATER"
+          assert water["generic_source_water_behavior_engine_supported"]
+          assert water["pond_vs_ocean_water_visuals_unresolved"]
           assert water["source_cardinal_ledge_metatiles"] == report["water_ledge_cardinal_count"] == 15
           assert water["source_diagonal_ledge_metatiles"] == report["water_ledge_corner_source_count"] == 4
           assert report["water_ledge_diagonal_blocked_count"] == 0
@@ -429,6 +432,15 @@ jobs:
           assert shore["source_water_does_not_distinguish_pond_from_ocean"]
           assert shore["candidate_pond_behavior"] == "MB_POND_WATER"
           assert shore["candidate_ocean_behavior"] == "MB_OCEAN_WATER"
+          assert shore["candidate_generic_johto_behavior"] == "MB_JOHTO_WATER"
+          assert shore["engine_and_original_surf_permissions"]["generic_johto_surf_fishing_and_encounter_flags_verified"]
+          assert shore["engine_and_original_surf_permissions"]["generic_johto_water_visual_effects_not_assumed"]
+          assert shore["engine_and_original_surf_permissions"]["generic_johto_not_deep_or_ocean_logic"]
+          assert report["surf_shoreline_generic_johto_water_behavior_source_checked"]
+          assert report["surf_shoreline_generic_visual_effects_deferred"]
+          assert shore["engine_and_original_surf_permissions"]["native_water_flags"]["MB_JOHTO_WATER"] == [
+              "TILE_FLAG_HAS_ENCOUNTERS", "TILE_FLAG_SURFABLE", "TILE_FLAG_UNUSED"
+          ]
           variants = shore["variants"]
           assert len(variants) == report["surf_shoreline_probe_variants"] == 4
           assert [v["name"] for v in variants] == [

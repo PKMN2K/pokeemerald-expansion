@@ -96,6 +96,7 @@ def validate_engine():
     source_masks = verify_pinned_corner_masks()
     waterfn = behavior.split("bool8 MetatileBehavior_IsSurfableFishableWater(", 1)[1].split("\n}", 1)[0]
     assert "MB_OCEAN_WATER" in waterfn and "MB_POND_WATER" in waterfn
+    assert "MB_JOHTO_WATER" in waterfn
     playerSurf = avatar.split("bool8 IsPlayerFacingSurfableFishableWater(", 1)[1].split("\n}", 1)[0]
     assert "GetCollisionAtCoords(" in playerSurf
     assert "COLLISION_ELEVATION_MISMATCH" in playerSurf
@@ -283,6 +284,8 @@ def export(output: Path, coverage: dict, primary_metatiles: bytes,
         "source_metatiles_checked": len(affected),
         "counts": counts, "native_engine_audit": engine,
         "water_behavior_candidate_from_existing_audit": WATER["WATER"],
+        "generic_source_water_behavior_engine_supported": True,
+        "pond_vs_ocean_water_visuals_unresolved": True,
         "pond_vs_ocean_water_choice_unresolved": True,
         "diagonal_ledges_require_new_engine_logic": False,
         "corner_ledge_engine_extension_compiled_but_not_playtested": True,

@@ -21,7 +21,7 @@ LEDGES = {
     "LEDGE_DOWN_LEFT": "MB_JUMP_SOUTHWEST",
     "LEDGE_DOWN_RIGHT": "MB_JUMP_SOUTHEAST",
 }
-WATER = {"WATER": "MB_OCEAN_WATER"}
+WATER = {"WATER": "MB_JOHTO_WATER"}
 OBSTACLES = {"BUOY", "WHIRLPOOL"}
 def classify():
     available = set(re.findall(r"^\s*(MB_[A-Z0-9_]+)\s*,", BEHAVIORS.read_text(), re.M))

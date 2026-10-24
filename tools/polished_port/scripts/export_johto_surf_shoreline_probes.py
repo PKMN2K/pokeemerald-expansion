@@ -89,7 +89,7 @@ def check_native_permissions():
     fishable = behavior.split("bool8 MetatileBehavior_IsSurfableFishableWater(", 1)[1].split("\n}", 1)[0]
     diver = behavior.split("bool8 MetatileBehavior_IsDiveable(", 1)[1].split("\n}", 1)[0]
     flags = {}
-    for kind in ("MB_POND_WATER", "MB_OCEAN_WATER"):
+    for kind in ("MB_POND_WATER", "MB_OCEAN_WATER", "MB_JOHTO_WATER"):
         assert kind in fishable
         match = re.search(r"(?m)^\s*\[" + kind + r"\]\s*=\s*([^,\n]+)", behavior)
         assert match, "Missing native water flags: " + kind
@@ -97,12 +97,27 @@ def check_native_permissions():
         assert "TILE_FLAG_SURFABLE" in flags[kind]
         assert "TILE_FLAG_HAS_ENCOUNTERS" in flags[kind]
         assert kind not in diver, "Standard Johto WATER must not become Dive water"
-    assert flags["MB_POND_WATER"] == flags["MB_OCEAN_WATER"]
+    assert flags["MB_POND_WATER"] == flags["MB_OCEAN_WATER"] == flags["MB_JOHTO_WATER"]
+    reflect = behavior.split("bool8 MetatileBehavior_IsReflective(", 1)[1].split("\n}", 1)[0]
+    ripples = behavior.split("bool8 MetatileBehavior_HasRipples(", 1)[1].split("\n}", 1)[0]
+    deep_ocean = behavior.split("bool8 MetatileBehavior_IsDeepOrOceanWater(", 1)[1].split("\n}", 1)[0]
+    # The source says generic WATER. Do not invent pond reflection/ripples,
+    # or ocean/deep-water field logic that the original collision lacks.
+    assert "MB_JOHTO_WATER" not in reflect
+    assert "MB_JOHTO_WATER" not in ripples
+    assert "MB_JOHTO_WATER" not in deep_ocean
+    # Native water wild encounters require SURFABLE and HAS_ENCOUNTERS flags.
+    wild = behavior.split("bool8 MetatileBehavior_IsWaterWildEncounter(", 1)[1].split("\n}", 1)[0]
+    assert "MetatileBehavior_IsSurfableWaterOrUnderwater(" in wild
+    assert "MetatileBehavior_IsEncounterTile(" in wild
     return {
         "source_water_and_land_permissions_verified": True,
         "native_surf_entry_exit_gates_verified": True,
         "native_surf_field_move_and_follower_checks_verified": True,
         "pond_ocean_basic_movement_and_encounter_flags_equivalent": True,
+        "generic_johto_surf_fishing_and_encounter_flags_verified": True,
+        "generic_johto_water_visual_effects_not_assumed": True,
+        "generic_johto_not_deep_or_ocean_logic": True,
         "native_water_flags": flags,
         "pond_ocean_gameplay_choice_still_unresolved": True,
         "live_transition_verified": False,
@@ -223,6 +238,7 @@ def export(output: Path, coverage: dict, primary: bytes, secondary: bytes,
         "variants": variants,
         "candidate_pond_behavior": "MB_POND_WATER",
         "candidate_ocean_behavior": "MB_OCEAN_WATER",
+        "candidate_generic_johto_behavior": "MB_JOHTO_WATER",
         "source_water_does_not_distinguish_pond_from_ocean": True,
         "water_behavior_attribute_words_emitted": False,
         "map_registered": False,

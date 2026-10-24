@@ -210,6 +210,7 @@ def stage(output):
         map_raw,
     )
     assert water_ledge["source_water_metatiles"] == 59
+    assert water_ledge["water_behavior_candidate_from_existing_audit"] == "MB_JOHTO_WATER"
     assert water_ledge["source_cardinal_ledge_metatiles"] == 15
     assert water_ledge["source_diagonal_ledge_metatiles"] == 4
     assert len(water_ledge["offline_map_variants"]) == 6
@@ -223,6 +224,7 @@ def stage(output):
         map_raw,
     )
     assert shoreline["source_water_quadrants"] == 59
+    assert shoreline["candidate_generic_johto_behavior"] == "MB_JOHTO_WATER"
     assert len(shoreline["variants"]) == 4
     assert shoreline["engine_and_original_surf_permissions"]["native_surf_entry_exit_gates_verified"]
     assert not shoreline["safe_to_enable"]
@@ -279,6 +281,10 @@ def stage(output):
             shoreline["engine_and_original_surf_permissions"]["source_water_and_land_permissions_verified"],
         "surf_shoreline_pond_ocean_movement_flags_checked":
             shoreline["engine_and_original_surf_permissions"]["pond_ocean_basic_movement_and_encounter_flags_equivalent"],
+        "surf_shoreline_generic_johto_water_behavior_source_checked":
+            shoreline["engine_and_original_surf_permissions"]["generic_johto_surf_fishing_and_encounter_flags_verified"],
+        "surf_shoreline_generic_visual_effects_deferred":
+            shoreline["engine_and_original_surf_permissions"]["generic_johto_water_visual_effects_not_assumed"],
         "surf_shoreline_registered": False,
         "map_header_draft_schema_checked": True,
         "verified_header_constants": constants,

@@ -28,6 +28,7 @@ static const u8 sTileBitAttributes[NUM_METATILE_BEHAVIORS] =
     [MB_WATERFALL]                          = TILE_FLAG_UNUSED | TILE_FLAG_SURFABLE,
     [MB_SOOTOPOLIS_DEEP_WATER]              = TILE_FLAG_UNUSED | TILE_FLAG_SURFABLE,
     [MB_OCEAN_WATER]                        = TILE_FLAG_UNUSED | TILE_FLAG_SURFABLE | TILE_FLAG_HAS_ENCOUNTERS,
+    [MB_JOHTO_WATER]                        = TILE_FLAG_UNUSED | TILE_FLAG_SURFABLE | TILE_FLAG_HAS_ENCOUNTERS,
     [MB_PUDDLE]                             = TILE_FLAG_UNUSED,
     [MB_SHALLOW_WATER]                      = TILE_FLAG_UNUSED,
     [MB_NO_SURFACING]                       = TILE_FLAG_UNUSED | TILE_FLAG_SURFABLE,
@@ -1120,7 +1121,8 @@ bool8 MetatileBehavior_IsMossdeepGymWarp(u8 metatileBehavior)
 
 bool8 MetatileBehavior_IsSurfableFishableWater(u8 metatileBehavior)
 {
-    if (metatileBehavior == MB_POND_WATER
+    if (metatileBehavior == MB_JOHTO_WATER
+     || metatileBehavior == MB_POND_WATER
      || metatileBehavior == MB_OCEAN_WATER
      || metatileBehavior == MB_INTERIOR_DEEP_WATER
      || metatileBehavior == MB_DEEP_WATER

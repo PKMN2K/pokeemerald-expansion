@@ -246,6 +246,8 @@ enum {
     // Corner-ledge source tiles allow either south or one horizontal jump.
     MB_JOHTO_LEDGE_DOWN_RIGHT,
     MB_JOHTO_LEDGE_DOWN_LEFT,
+    // Generic source Johto WATER: Surf/fish/encounters, no inferred pond/ocean visuals.
+    MB_JOHTO_WATER,
     NUM_METATILE_BEHAVIORS
 };
 
