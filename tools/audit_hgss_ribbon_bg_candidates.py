@@ -25,6 +25,16 @@ def audit_all(members, output):
                     cell["bg6_visible_pixels"]
                     for cell in result["bg6_transparent_cells_not_composited"]
                 )
+                pair_pixels = sum(pair["visible_pixels"] for pair in
+                                  result["bg6_unresolved_palette_bank_pairs"])
+                pair_cells = sum(pair["cells"] for pair in
+                                 result["bg6_unresolved_palette_bank_pairs"])
+                if (pair_pixels != unresolved_pixels or
+                        pair_cells != len(result["bg6_transparent_cells_not_composited"])):
+                    raise ValueError(
+                        f"Inconsistent BG3/BG6 conflict accounting at {layout} "
+                        f"viewport ({x}, {y})"
+                    )
                 candidates.append({
                     "layout": layout, "viewport_x": x, "viewport_y": y,
                     "unresolved_visible_pixels": unresolved_pixels,
