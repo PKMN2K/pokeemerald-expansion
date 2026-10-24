@@ -9877,6 +9877,16 @@ enum Direction GetLedgeJumpDirection(s16 x, s16 y, enum Direction direction)
     index--;
     behavior = MapGridGetMetatileBehaviorAt(x, y);
 
+    // Polished Crystal corner ledges accept two CARDINAL jump directions.
+    // DOWN_RIGHT allows south/east; DOWN_LEFT allows south/west. No
+    // diagonal displacement is needed, and existing Hoenn behavior is intact.
+    if (behavior == MB_JOHTO_LEDGE_DOWN_RIGHT
+     && (index == DIR_SOUTH - 1 || index == DIR_EAST - 1))
+        return index + 1;
+    if (behavior == MB_JOHTO_LEDGE_DOWN_LEFT
+     && (index == DIR_SOUTH - 1 || index == DIR_WEST - 1))
+        return index + 1;
+
     if (ledgeBehaviorFuncs[index](behavior) == TRUE)
         return index + 1;
 

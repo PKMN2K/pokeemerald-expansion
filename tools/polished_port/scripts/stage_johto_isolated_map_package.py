@@ -211,7 +211,9 @@ def stage(output):
     assert water_ledge["source_water_metatiles"] == 59
     assert water_ledge["source_cardinal_ledge_metatiles"] == 15
     assert water_ledge["source_diagonal_ledge_metatiles"] == 4
-    assert len(water_ledge["offline_map_variants"]) == 4
+    assert len(water_ledge["offline_map_variants"]) == 6
+    assert water_ledge["native_engine_audit"]["corner_ledge_cardinal_compatibility_supported_in_engine"]
+    assert not water_ledge["diagonal_ledges_require_new_engine_logic"]
     assert not water_ledge["safe_to_enable"]
     assert (root / "map.bin").read_bytes() == map_raw
     (output / "OFFLINE_ONLY" / "layout_entry.review.json").write_text(
@@ -256,7 +258,9 @@ def stage(output):
         "water_ledge_metatiles_reviewed": water_ledge["source_metatiles_checked"],
         "water_ledge_probe_variants": len(water_ledge["offline_map_variants"]),
         "water_ledge_cardinal_count": water_ledge["source_cardinal_ledge_metatiles"],
-        "water_ledge_diagonal_blocked_count": water_ledge["source_diagonal_ledge_metatiles"],
+        "water_ledge_diagonal_blocked_count": 0,
+        "water_ledge_corner_source_count": water_ledge["source_diagonal_ledge_metatiles"],
+        "water_ledge_corner_dispatch_source_verified": water_ledge["corner_ledge_source_facing_masks_verified"],
         "water_ledge_behavior_attributes_registered": False,
         "map_header_draft_schema_checked": True,
         "verified_header_constants": constants,

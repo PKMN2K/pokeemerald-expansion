@@ -243,6 +243,9 @@ enum {
     MB_DOWN_LEFT_STAIR_WARP,
     MB_ROCK_CLIMB,
     MB_PRISM_MINING,
+    // Corner-ledge source tiles allow either south or one horizontal jump.
+    MB_JOHTO_LEDGE_DOWN_RIGHT,
+    MB_JOHTO_LEDGE_DOWN_LEFT,
     NUM_METATILE_BEHAVIORS
 };
 
