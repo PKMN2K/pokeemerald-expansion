@@ -29,6 +29,17 @@ struct FieldMoveInfo
     u32 padding:3;
 };
 
+// Polished Crystal Headbutt tree selector; no live Johto map dispatch yet.
+enum JohtoHeadbuttTreeScore
+{
+    JOHTO_HEADBUTT_BAD_TREE,
+    JOHTO_HEADBUTT_GOOD_TREE,
+    JOHTO_HEADBUTT_RARE_TREE,
+};
+
+enum JohtoHeadbuttTreeScore GetJohtoHeadbuttTreeScore(u8 x, u8 y, u16 trainerId);
+bool8 JohtoHeadbuttRollStartsBattle(enum JohtoHeadbuttTreeScore score, u8 rollOutOfTen);
+
 extern const struct FieldMoveInfo gFieldMoveInfo[];
 extern const struct FieldMoveUnlock gFieldMoveUnlocks[];
 

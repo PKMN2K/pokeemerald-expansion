@@ -24,6 +24,7 @@ from export_johto_extended_behavior_review import export as export_extended_beha
 from export_johto_source_wall_permissions import export as export_wall_permissions
 from export_johto_headbutt_field_probes import export as export_headbutt
 from export_johto_headbutt_encounter_tables import export as export_headbutt_encounters
+from export_johto_headbutt_score_probes import export as export_headbutt_score
 
 MAP_ID = "MAP_POLISHED_JOHTO_WALKABILITY_TEST"
 MAP_NAME = "PolishedJohto_WalkabilityTest"
@@ -272,6 +273,14 @@ def stage(output):
     assert tree_encounters["source_pointer_groups"] == 10
     assert tree_encounters["source_city_aliases_canyon"]
     assert not tree_encounters["safe_to_enable"]
+    score_review = export_headbutt_score(
+        output / "OFFLINE_ONLY" / "headbutt_score_probes", tree_encounters
+    )
+    assert score_review["vector_count"] == 2560
+    assert score_review["encounter_roll_successes_out_of_ten"] == {
+        "bad": 1, "good": 5, "rare": 8,
+    }
+    assert not score_review["safe_to_enable"]
     assert (root / "map.bin").read_bytes() == map_raw
     (output / "OFFLINE_ONLY" / "layout_entry.review.json").write_text(
         json.dumps(proposed_layout, indent=2) + "\n", encoding="utf-8")
@@ -347,6 +356,11 @@ def stage(output):
         "headbutt_encounter_group_pointers": tree_encounters["source_pointer_groups"],
         "headbutt_encounter_rock_maps_reviewed": tree_encounters["source_rock_map_assignments_separate"],
         "headbutt_encounter_tables_registered": False,
+        "headbutt_score_vector_count": score_review["vector_count"],
+        "headbutt_score_vector_sha256": score_review["binary_sha256"],
+        "headbutt_source_tree_score_engine_helpers_compiled":
+            score_review["source_checks"]["compiled_but_unwired_emerald_helpers_checked"],
+        "headbutt_score_engine_helpers_wired_to_gameplay": False,
         "map_header_draft_schema_checked": True,
         "verified_header_constants": constants,
         "temporary_region_map_placeholder": region_placeholder,

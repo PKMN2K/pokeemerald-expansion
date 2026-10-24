@@ -625,6 +625,30 @@ jobs:
           assert not encounter["wing_case_inventory_implemented"]
           assert not encounter["live_map_registered"] and not encounter["safe_to_enable"]
           assert not report["headbutt_encounter_tables_registered"]
+          score_root = root / "headbutt_score_probes"
+          score_doc = json.loads((score_root / "johto_headbutt_score.review.json").read_text())
+          score_data = (score_root / score_doc["binary_filename"]).read_bytes()
+          assert score_doc["status"] == "JOHTO_HEADBUTT_SCORE_MODEL_UNREGISTERED"
+          assert score_doc["vector_count"] == report["headbutt_score_vector_count"] == 2560
+          assert len(score_data) == 2560
+          assert hashlib.sha256(score_data).hexdigest() == score_doc["binary_sha256"] == report["headbutt_score_vector_sha256"]
+          assert score_doc["source_checks"]["pinned_coordinate_arithmetic_reviewed"]
+          assert score_doc["source_checks"]["pinned_random_roll_gates_verified"]
+          assert score_doc["source_checks"]["compiled_but_unwired_emerald_helpers_checked"]
+          assert report["headbutt_source_tree_score_engine_helpers_compiled"]
+          assert score_doc["vector_score_counts"] == {"bad": 1280, "good": 1024, "rare": 256}
+          assert score_doc["encounter_roll_successes_out_of_ten"] == {"bad": 1, "good": 5, "rare": 8}
+          assert len(score_doc["samples"]) == 7
+          for y in range(16):
+              for x in range(16):
+                  outcomes = score_data[(y * 16 + x) * 10:(y * 16 + x + 1) * 10]
+                  assert outcomes.count(0) == 5 and outcomes.count(1) == 4 and outcomes.count(2) == 1
+          assert score_doc["source_tree_table_selects_rare_only_for_score_rare"]
+          assert score_doc["source_rock_smash_encounter_tables_excluded"]
+          assert not score_doc["field_move_not_registered"] is False
+          assert not score_doc["tree_battles_not_enabled"] is False
+          assert not score_doc["emulator_verified"] and not score_doc["safe_to_enable"]
+          assert not report["headbutt_score_engine_helpers_wired_to_gameplay"]
           bindings_root = root / "attribute_bindings"
           bindings = json.loads((bindings_root / "johto_test_attribute_bindings.review.json").read_text())
           raw_bindings = (bindings_root / "johto_test_attribute_bindings.review.bin").read_bytes()

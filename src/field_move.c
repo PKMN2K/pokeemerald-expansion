@@ -191,3 +191,39 @@ const struct FieldMoveInfo gFieldMoveInfo[FIELD_MOVES_COUNT] =
         .hideIfLocked = TRUE,
     },
 };
+
+// Pinned Polished Crystal: engine/events/treemons.asm GetTreeScore.
+// Coordinates are the collision tile in front of the player, not the
+// player's own coordinates. Source computes ((x * (y + 1) + y) / 5) % 10,
+// compares it with trainer ID % 10, and divides the difference into
+// rare (0), good (1-4) and bad (5-9) trees.
+// Dormant until Johto Headbutt field-move and map wiring is implemented.
+enum JohtoHeadbuttTreeScore GetJohtoHeadbuttTreeScore(u8 x, u8 y, u16 trainerId)
+{
+    u16 coordinateNumerator = (u16)x * (y + 1) + y;
+    u8 coordinateScore = (coordinateNumerator / 5) % 10;
+    u8 trainerScore = trainerId % 10;
+    u8 delta = (coordinateScore + 10 - trainerScore) % 10;
+
+    if (delta == 0)
+        return JOHTO_HEADBUTT_RARE_TREE;
+    if (delta < 5)
+        return JOHTO_HEADBUTT_GOOD_TREE;
+    return JOHTO_HEADBUTT_BAD_TREE;
+}
+
+// GetTreeMon uses RandomRange(10): bad 1/10, good 5/10, rare 8/10.
+// The rare score selects the second distribution; ordinary scores do not.
+// This helper does not start battles or consume game RNG by itself.
+bool8 JohtoHeadbuttRollStartsBattle(enum JohtoHeadbuttTreeScore score, u8 rollOutOfTen)
+{
+    if (rollOutOfTen >= 10)
+        return FALSE;
+    if (score == JOHTO_HEADBUTT_RARE_TREE)
+        return rollOutOfTen < 8;
+    if (score == JOHTO_HEADBUTT_GOOD_TREE)
+        return rollOutOfTen < 5;
+    if (score == JOHTO_HEADBUTT_BAD_TREE)
+        return rollOutOfTen < 1;
+    return FALSE;
+}
