@@ -187,7 +187,7 @@ def remap_palette(original, mapping, used_banks):
     return bytes(result)
 
 
-def export(members, layout, viewport_x, viewport_y, out, palette_map=None):
+def export(members, layout, viewport_x, viewport_y, out, palette_map=None, audit_only=False):
     if any(v % 8 for v in (viewport_x, viewport_y)):
         raise ValueError("Tilemap export requires 8-pixel-aligned viewport")
     if not (0 <= viewport_x <= 16 and 0 <= viewport_y <= 96):
@@ -259,6 +259,38 @@ def export(members, layout, viewport_x, viewport_y, out, palette_map=None):
             bank = attr >> 12
             banks.add(bank)
             screen[ty * 32 + tx] = dest_tile | (attr & 0xfc00)
+    # An audit of the retail source does not require guessing which GBA
+    # palette banks are free. Preserve exact diagnostics even when no
+    # collision-safe runtime mapping has yet been established.
+    if audit_only:
+        unresolved_pairs = {}
+        for cell in skipped_bg6_cells:
+            pair = (cell["bg3_bank"], cell["bg6_bank"])
+            item = unresolved_pairs.setdefault(pair, {"cells": 0, "visible_pixels": 0})
+            item["cells"] += 1
+            item["visible_pixels"] += cell["bg6_visible_pixels"]
+        report = {
+            "source_narc_sha256": EXPECTED_NARC_SHA256,
+            "layout": layout,
+            "viewport": {"x": viewport_x, "y": viewport_y, "width": 240, "height": 160},
+            "source_palette_banks_needed": sorted(banks),
+            "bg6_opaque_substitutions": substitutions,
+            "bg6_same_bank_composited_cells": composed_transparent,
+            "bg6_cross_bank_exact_color_composited_cells": composed_cross_bank,
+            "bg6_fully_transparent_cells_ignored": empty_bg6_cells,
+            "bg6_transparent_cells_not_composited": skipped_bg6_cells,
+            "bg6_unresolved_palette_bank_pairs": [
+                {"bg3_bank": bg3, "bg6_bank": bg6, **values}
+                for (bg3, bg6), values in sorted(unresolved_pairs.items())
+            ],
+            "composition_verified": False,
+            "runtime_verified": False,
+        }
+        out.mkdir(parents=True, exist_ok=True)
+        target = out / (layout + ".audit.json")
+        target.write_text(json.dumps(report, indent=2, sort_keys=True) + "\\n")
+        print(f"{target}: {kept_transparent} unresolved BG6 cells; review only")
+        return report
     palette_map = palette_map or {}
     if palette_map:
         palette_bytes = remap_palette(nclr[40:552], palette_map, banks)
@@ -351,6 +383,7 @@ def main():
     p.add_argument("--viewport-x", type=int, default=0)
     p.add_argument("--viewport-y", type=int, default=0)
     p.add_argument("--palette-map", default="", help="Complete SRC:DST bank mapping, e.g. 0:7,2:8,4:9")
+    p.add_argument("--audit-only", action="store_true", help="Inspect original composition without assigning GBA palette banks")
     args = p.parse_args()
     archive = args.narc.read_bytes()
     verify_source_narc(archive)
@@ -358,7 +391,7 @@ def main():
     if len(members) != 79:
         raise ValueError("Expected 79 NARC members")
     export(members, args.layout, args.viewport_x, args.viewport_y, args.out,
-           parse_palette_map(args.palette_map))
+           parse_palette_map(args.palette_map), audit_only=args.audit_only)
 
 
 if __name__ == "__main__":
