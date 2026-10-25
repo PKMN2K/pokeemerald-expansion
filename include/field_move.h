@@ -39,6 +39,7 @@ enum JohtoHeadbuttTreeScore
 
 enum JohtoHeadbuttTreeScore GetJohtoHeadbuttTreeScore(u8 x, u8 y, u16 trainerId);
 bool8 JohtoHeadbuttRollStartsBattle(enum JohtoHeadbuttTreeScore score, u8 rollOutOfTen);
+bool8 JohtoHeadbuttUsesRareEncounterTable(enum JohtoHeadbuttTreeScore score);
 
 extern const struct FieldMoveInfo gFieldMoveInfo[];
 extern const struct FieldMoveUnlock gFieldMoveUnlocks[];
