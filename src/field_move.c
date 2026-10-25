@@ -227,3 +227,11 @@ bool8 JohtoHeadbuttRollStartsBattle(enum JohtoHeadbuttTreeScore score, u8 rollOu
         return rollOutOfTen < 1;
     return FALSE;
 }
+
+// Only rare-score trees select Polished Crystal's second tree encounter
+// distribution. Normal and good scores use the first distribution.
+// Dormant: no species selection or wild battle is performed here.
+bool8 JohtoHeadbuttUsesRareEncounterTable(enum JohtoHeadbuttTreeScore score)
+{
+    return score == JOHTO_HEADBUTT_RARE_TREE;
+}
