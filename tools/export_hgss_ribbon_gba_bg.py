@@ -176,6 +176,13 @@ def parse_palette_map(spec):
 
 
 def remap_palette(original, mapping, used_banks):
+    if len(original) != 512:
+        raise ValueError("Expected exactly 512 bytes of original 16-bank BGR555 palette")
+    if any(not isinstance(bank, int) or not 0 <= bank < 16
+           for bank in (*mapping.keys(), *mapping.values(), *used_banks)):
+        raise ValueError("Palette bank assignments must be integers in range 0..15")
+    if len(set(mapping.values())) != len(mapping):
+        raise ValueError("Duplicate destination palette bank")
     if set(mapping) != used_banks:
         raise ValueError("Mappings must cover precisely the used source banks")
     owners, _ = audit(SOURCE.read_text())
