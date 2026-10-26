@@ -27,6 +27,16 @@ class PaletteRemappingTests(unittest.TestCase):
                        audit_only=True)
             self.assertFalse(out.exists())
 
+    def test_ncgr_tile_reader_rejects_negative_and_overflow_ids(self):
+        from export_hgss_ribbon_gba_bg import tile
+        header = b"RGCN" + bytes(12) + b"RAHC" + bytes(44)
+        original = header + bytes([0x21]) * (256 * 32)
+        self.assertEqual(tile(original, 0, 256), bytes([0x21]) * 32)
+        for tile_id in (-1, 256):
+            with self.subTest(tile_id=tile_id):
+                with self.assertRaisesRegex(ValueError, "out of range"):
+                    tile(original, tile_id, 256)
+
     def test_nscr_coordinates_do_not_wrap_into_adjacent_rows(self):
         screen = bytearray(2084)
         screen[:4] = b"RCSN"
