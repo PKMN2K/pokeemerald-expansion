@@ -200,7 +200,7 @@ def remap_palette(original, mapping, used_banks):
     return bytes(result)
 
 
-def export(members, layout, viewport_x, viewport_y, out, palette_map=None, audit_only=False):
+def export(members, layout, viewport_x, viewport_y, out, palette_map=None, audit_only=False, allow_incomplete=False):
     if len(members) != 79:
         raise ValueError("Expected 79 original HGSS ribbon NARC members")
     if layout not in TRIALS:
@@ -308,6 +308,12 @@ def export(members, layout, viewport_x, viewport_y, out, palette_map=None, audit
         target.write_text(json.dumps(report, indent=2, sort_keys=True) + "\n")
         print(f"{target}: {kept_transparent} unresolved BG6 cells; review only")
         return report
+    if skipped_bg6_cells and not allow_incomplete:
+        raise ValueError(
+            f"HGSS BG export would omit {len(skipped_bg6_cells)} visible BG6 "
+            "overlay cells; use --audit-only to inspect or "
+            "--allow-incomplete-composition for diagnostic-only assets"
+        )
     palette_map = palette_map or {}
     if palette_map:
         palette_bytes = remap_palette(nclr[40:552], palette_map, banks)
@@ -402,6 +408,8 @@ def main():
     p.add_argument("--viewport-y", type=int, default=0)
     p.add_argument("--palette-map", default="", help="Complete SRC:DST bank mapping, e.g. 0:7,2:8,4:9")
     p.add_argument("--audit-only", action="store_true", help="Inspect original composition without assigning GBA palette banks")
+    p.add_argument("--allow-incomplete-composition", action="store_true",
+                   help="Permit diagnostic assets with visibly unresolved BG6 cells")
     args = p.parse_args()
     archive = args.narc.read_bytes()
     verify_source_narc(archive)
@@ -409,7 +417,8 @@ def main():
     if len(members) != 79:
         raise ValueError("Expected 79 NARC members")
     export(members, args.layout, args.viewport_x, args.viewport_y, args.out,
-           parse_palette_map(args.palette_map), audit_only=args.audit_only)
+           parse_palette_map(args.palette_map), audit_only=args.audit_only,
+           allow_incomplete=args.allow_incomplete_composition)
 
 
 if __name__ == "__main__":
