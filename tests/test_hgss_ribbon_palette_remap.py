@@ -320,7 +320,12 @@ class PaletteRemappingTests(unittest.TestCase):
                  patch("export_hgss_ribbon_gba_bg.selected",
                        side_effect=lambda layout, x, y: y == 0 and x in (0, 8)):
                 source.read_text.return_value = ""
-                export(members, "header_only", 0, 0, Path(directory), {0: 7, 2: 8})
+                with self.assertRaisesRegex(ValueError, "would omit 1 visible BG6"):
+                    export(members, "header_only", 0, 0, Path(directory),
+                           {0: 7, 2: 8})
+                self.assertFalse((Path(directory) / "header_only.bin").exists())
+                export(members, "header_only", 0, 0, Path(directory),
+                       {0: 7, 2: 8}, allow_incomplete=True)
             manifest = json.loads((Path(directory) / "header_only.manifest.json").read_text())
             audit_dir = Path(directory) / "source_audit"
             with patch("export_hgss_ribbon_gba_bg.selected",
