@@ -40,7 +40,7 @@ def tile(ncgr, tile_id, max_tiles):
     if ncgr[:4] != b"RGCN" or ncgr[16:20] != b"RAHC":
         raise ValueError("Expected original NCGR")
     data = ncgr[64:]
-    if len(data) != max_tiles * 32 or tile_id >= max_tiles:
+    if len(data) != max_tiles * 32 or not (0 <= tile_id < max_tiles):
         raise ValueError("NCGR tile out of range")
     return data[tile_id * 32:(tile_id + 1) * 32]
 
