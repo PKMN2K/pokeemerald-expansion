@@ -8,7 +8,7 @@ from pathlib import Path
 from unittest.mock import patch
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "tools"))
-from export_hgss_ribbon_gba_bg import parse_palette_map, remap_palette, export, verify_source_narc, compose_same_bank_tiles, compose_matching_palette_tiles, compose_in_original_palette
+from export_hgss_ribbon_gba_bg import parse_palette_map, remap_palette, export, verify_source_narc, compose_same_bank_tiles, compose_matching_palette_tiles, compose_in_original_palette, entry
 from audit_hgss_ribbon_palette_slots import audit
 from validate_hgss_ribbon_gba_bg import validate
 
@@ -26,6 +26,17 @@ class PaletteRemappingTests(unittest.TestCase):
                 export([b""] * 79, "not_a_retail_layout", 0, 0, out,
                        audit_only=True)
             self.assertFalse(out.exists())
+
+    def test_nscr_coordinates_do_not_wrap_into_adjacent_rows(self):
+        screen = bytearray(2084)
+        screen[:4] = b"RCSN"
+        screen[16:20] = b"NRCS"
+        screen[36:38] = (0x1234).to_bytes(2, "little")
+        self.assertEqual(entry(bytes(screen), 0, 0), 0x1234)
+        for x, y in ((32, 0), (-1, 1), (0, 32), (0, -1)):
+            with self.subTest(x=x, y=y):
+                with self.assertRaisesRegex(ValueError, "outside original"):
+                    entry(bytes(screen), x, y)
 
     def test_unverified_narc_is_rejected(self):
         with self.assertRaisesRegex(ValueError, "SHA-256 mismatch"):
