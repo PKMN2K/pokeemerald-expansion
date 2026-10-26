@@ -188,6 +188,10 @@ def remap_palette(original, mapping, used_banks):
 
 
 def export(members, layout, viewport_x, viewport_y, out, palette_map=None, audit_only=False):
+    if len(members) != 79:
+        raise ValueError("Expected 79 original HGSS ribbon NARC members")
+    if layout not in TRIALS:
+        raise ValueError(f"Unknown HGSS ribbon layout: {layout}")
     if any(v % 8 for v in (viewport_x, viewport_y)):
         raise ValueError("Tilemap export requires 8-pixel-aligned viewport")
     if not (0 <= viewport_x <= 16 and 0 <= viewport_y <= 96):
