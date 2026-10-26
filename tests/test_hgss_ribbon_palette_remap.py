@@ -292,9 +292,9 @@ class PaletteRemappingTests(unittest.TestCase):
         # Exact original colours across distinct source banks, with BG6's
         # upper-left source pixel moved to the bottom-right by H+V flips.
         palette = bytearray(512)
-        palette[2 * 32 + 1 * 2:2 * 32 + 1 * 2 + 2] = b"\\x34\\x12"
-        palette[4 * 32 + 3 * 2:4 * 32 + 3 * 2 + 2] = b"\\x78\\x56"
-        palette[2 * 32 + 3 * 2:2 * 32 + 3 * 2 + 2] = b"\\x78\\x56"
+        palette[2 * 32 + 1 * 2:2 * 32 + 1 * 2 + 2] = b"\x34\x12"
+        palette[4 * 32 + 3 * 2:4 * 32 + 3 * 2 + 2] = b"\x78\x56"
+        palette[2 * 32 + 3 * 2:2 * 32 + 3 * 2 + 2] = b"\x78\x56"
         base = bytes([0x11] * 32)
         overlay = bytes([0x03] + [0] * 31)
         result = compose_in_original_palette(
