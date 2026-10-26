@@ -46,6 +46,8 @@ def tile(ncgr, tile_id, max_tiles):
 
 
 def opaque(tile_bytes):
+    if len(tile_bytes) != 32:
+        raise ValueError("Expected exactly 32 bytes for an 8x8 HGSS 4bpp tile")
     return all((v & 15) != 0 and (v >> 4) != 0 for v in tile_bytes)
 
 
