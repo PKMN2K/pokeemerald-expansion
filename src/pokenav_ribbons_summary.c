@@ -255,9 +255,9 @@ static u32 RibbonsSummaryHandleInput(struct Pokenav_RibbonsSummaryList *list)
         return RIBBONS_SUMMARY_FUNC_SWITCH_MONS;
     }
 
-    if (JOY_NEW(A_BUTTON))
+    if (JOY_NEW(A_BUTTON) && (list->numNormalRibbons != 0 || list->numGiftRibbons != 0))
     {
-        // Enter ribbon selection
+        // Do not inspect an uninitialized ribbon when this Pokémon has none.
         list->callback = HandleExpandedRibbonInput;
         return RIBBONS_SUMMARY_FUNC_SELECT_RIBBON;
     }
