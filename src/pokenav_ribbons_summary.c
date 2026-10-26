@@ -381,7 +381,7 @@ static bool32 TrySelectRibbonRight(struct Pokenav_RibbonsSummaryList *list)
     if (list->selectedPos < GIFT_RIBBON_START_POS)
     {
         // Move right in normal ribbon row
-        if (list->selectedPos < list->numNormalRibbons - 1)
+        if (list->numNormalRibbons != 0 && list->selectedPos < list->numNormalRibbons - 1)
         {
             list->selectedPos++;
             return TRUE;
