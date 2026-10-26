@@ -17,6 +17,16 @@ class PaletteRemappingTests(unittest.TestCase):
     def setUp(self):
         self.original = b"".join(bytes([i]) * 32 for i in range(16))
 
+    def test_export_rejects_invalid_source_shape_before_writing(self):
+        with tempfile.TemporaryDirectory() as directory:
+            out = Path(directory) / "generated"
+            with self.assertRaisesRegex(ValueError, "79 original"):
+                export([], "header_only", 0, 0, out, audit_only=True)
+            with self.assertRaisesRegex(ValueError, "Unknown HGSS ribbon layout"):
+                export([b""] * 79, "not_a_retail_layout", 0, 0, out,
+                       audit_only=True)
+            self.assertFalse(out.exists())
+
     def test_unverified_narc_is_rejected(self):
         with self.assertRaisesRegex(ValueError, "SHA-256 mismatch"):
             verify_source_narc(b"NARC" + bytes(128))
