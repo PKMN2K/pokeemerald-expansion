@@ -298,6 +298,7 @@ class PaletteRemappingTests(unittest.TestCase):
                 [(0, 7, 32), (2, 8, 32), (4, 9, 32)],
             )
             self.assertEqual(manifest["tile_count"], len(tiles) // 32)
+            self.assertEqual(manifest["source_palette_banks_needed"], [0, 2, 4])
 
     def test_export_reports_same_bank_and_cross_bank_overlay_cells(self):
         palette = b"RLCN" + bytes(12) + b"TTLP" + bytes(20) + self.original
