@@ -27,6 +27,16 @@ class PaletteRemappingTests(unittest.TestCase):
                        audit_only=True)
             self.assertFalse(out.exists())
 
+    def test_overlay_opacity_rejects_malformed_tiles(self):
+        from export_hgss_ribbon_gba_bg import opaque
+        self.assertTrue(opaque(bytes([0x11]) * 32))
+        self.assertFalse(opaque(bytes(32)))
+        self.assertFalse(opaque(bytes([0x10]) * 32))
+        for length in (0, 31, 33):
+            with self.subTest(length=length):
+                with self.assertRaisesRegex(ValueError, "exactly 32 bytes"):
+                    opaque(bytes([0x11]) * length)
+
     def test_ncgr_tile_reader_rejects_negative_and_overflow_ids(self):
         from export_hgss_ribbon_gba_bg import tile
         header = b"RGCN" + bytes(12) + b"RAHC" + bytes(44)
