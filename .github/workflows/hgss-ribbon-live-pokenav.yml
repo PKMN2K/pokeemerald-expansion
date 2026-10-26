@@ -32,8 +32,14 @@ jobs:
 
       - name: Install GBA compiler and screenshot dependencies
         run: |
-          sudo apt-get update
-          sudo apt-get install -y --no-install-recommends \
+          # The hosted runner's azure.archive.ubuntu.com mirror stalled on the
+          # large ARM compiler/newlib archives and exhausted the job timeout.
+          # Prefer the public Ubuntu mirror and retry transient network errors.
+          sudo sed -i 's|http://azure.archive.ubuntu.com/ubuntu|http://archive.ubuntu.com/ubuntu|g' \
+            /etc/apt/sources.list /etc/apt/sources.list.d/ubuntu.sources 2>/dev/null || true
+          sudo apt-get -o Acquire::Retries=3 -o Acquire::http::Timeout=60 update
+          sudo apt-get -o Acquire::Retries=3 -o Acquire::http::Timeout=60 \
+            install -y --no-install-recommends \
             binutils-arm-none-eabi gcc-arm-none-eabi libnewlib-arm-none-eabi \
             libpng-dev libmgba-dev python3 python3-pil git
 
