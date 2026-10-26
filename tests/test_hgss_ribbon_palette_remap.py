@@ -288,6 +288,24 @@ class PaletteRemappingTests(unittest.TestCase):
             self.assertEqual(tiles[(second & 0x3ff)*32:(second & 0x3ff)*32+32],
                              bytes([0x11])*32)
 
+    def test_cross_bank_composition_resolves_both_ds_flip_flags(self):
+        # Exact original colours across distinct source banks, with BG6's
+        # upper-left source pixel moved to the bottom-right by H+V flips.
+        palette = bytearray(512)
+        palette[2 * 32 + 1 * 2:2 * 32 + 1 * 2 + 2] = b"\\x34\\x12"
+        palette[4 * 32 + 3 * 2:4 * 32 + 3 * 2 + 2] = b"\\x78\\x56"
+        palette[2 * 32 + 3 * 2:2 * 32 + 3 * 2 + 2] = b"\\x78\\x56"
+        base = bytes([0x11] * 32)
+        overlay = bytes([0x03] + [0] * 31)
+        result = compose_in_original_palette(
+            base, overlay, 2 << 12, (4 << 12) | 0x0c00, bytes(palette)
+        )
+        self.assertIsNotNone(result)
+        pixels, bank = result
+        self.assertEqual(bank, 2)
+        self.assertEqual(pixels[:31], bytes([0x11] * 31))
+        self.assertEqual(pixels[31], 0x31)
+
     def test_live_palette_audit(self):
         source = ("CopyPaletteIntoBufferUnfaded(foo, BG_PLTT_ID(2), 32);\n"
                   "CopyPaletteIntoBufferUnfaded(bar, BG_PLTT_ID(4), 32);")
