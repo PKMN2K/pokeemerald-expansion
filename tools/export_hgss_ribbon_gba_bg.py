@@ -360,6 +360,7 @@ def export(members, layout, viewport_x, viewport_y, out, palette_map=None, audit
         "layout": layout,
         "viewport": {"x": viewport_x, "y": viewport_y, "width": 240, "height": 160},
         "tile_count": len(graphics),
+        "source_palette_banks_needed": sorted(banks),
         "tilemap": layout + ".bin",
         "tiles": layout + ".4bpp",
         "palette_banks": [
