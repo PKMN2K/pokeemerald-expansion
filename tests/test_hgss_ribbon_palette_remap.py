@@ -70,6 +70,19 @@ class PaletteRemappingTests(unittest.TestCase):
                 with self.assertRaises(ValueError):
                     parse_palette_map(spec)
 
+    def test_remap_rejects_malformed_palette_and_invalid_bank_assignments(self):
+        with self.assertRaisesRegex(ValueError, "exactly 512"):
+            remap_palette(bytes(510), {0: 7}, {0})
+        for mapping, used in (
+            ({16: 7}, {16}),
+            ({0: 16}, {0}),
+            ({0: -1}, {0}),
+            ({0: 7, 2: 7}, {0, 2}),
+        ):
+            with self.subTest(mapping=mapping):
+                with self.assertRaises(ValueError):
+                    remap_palette(self.original, mapping, used)
+
     def test_relocation_is_lossless(self):
         owners = "CopyPaletteIntoBufferUnfaded(icon, BG_PLTT_ID(2), 32);"
         with patch("export_hgss_ribbon_gba_bg.SOURCE") as source:
