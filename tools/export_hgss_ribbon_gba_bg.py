@@ -31,6 +31,8 @@ def verify_source_narc(data):
 def entry(nscr, x, y):
     if nscr[:4] != b"RCSN" or nscr[16:20] != b"NRCS" or len(nscr) != 2084:
         raise ValueError("Expected original 32x32 NSCR")
+    if not (0 <= x < 32 and 0 <= y < 32):
+        raise ValueError("NSCR cell coordinates outside original 32x32 grid")
     return u16(nscr, 36 + 2 * (y * 32 + x))
 
 
