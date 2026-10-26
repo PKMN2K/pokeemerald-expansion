@@ -84,6 +84,8 @@ def compose_matching_palette_tiles(base, overlay, base_attr, overlay_attr, palet
     transparent on BG6; only nonzero destination entries represent ink.
     Return None if the authentic BG3 bank cannot represent an overlay colour.
     """
+    if len(palette) != 512 or len(base) != 32 or len(overlay) != 32:
+        raise ValueError("Expected original 512-byte NCLR palette and two 8x8 tiles")
     base_bank, overlay_bank = base_attr >> 12, overlay_attr >> 12
     base_colors = [palette[base_bank * 32 + i * 2:
                            base_bank * 32 + i * 2 + 2] for i in range(16)]
