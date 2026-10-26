@@ -148,6 +148,20 @@ class PaletteRemappingTests(unittest.TestCase):
             base,
         )
 
+    def test_matching_palette_compositor_rejects_malformed_inputs(self):
+        valid_tile = bytes([0x11] * 32)
+        valid_palette = bytes(512)
+        for base, overlay, palette in (
+            (bytes(31), valid_tile, valid_palette),
+            (valid_tile, bytes(31), valid_palette),
+            (valid_tile, valid_tile, bytes(510)),
+        ):
+            with self.subTest(lengths=(len(base), len(overlay), len(palette))):
+                with self.assertRaisesRegex(ValueError, "Expected original"):
+                    compose_matching_palette_tiles(
+                        base, overlay, 0, 1 << 12, palette
+                    )
+
     def test_cross_bank_exact_colour_composition(self):
         palette = bytearray(512)
         # BG3 index 5 and BG6 index 3 contain the same original BGR555 colour.
