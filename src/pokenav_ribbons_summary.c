@@ -511,9 +511,10 @@ static void GetMonRibbons(struct Pokenav_RibbonsSummaryList *list)
     }
     else
     {
-        // There are no normal ribbons, move cursor to first gift ribbon
+        // With gift ribbons only, start at their first slot. If this Pokémon
+        // has no ribbons at all, retain a valid first-page cursor position.
         list->normalRibbonLastRowStart = 0;
-        list->selectedPos = GIFT_RIBBON_START_POS;
+        list->selectedPos = list->numGiftRibbons != 0 ? GIFT_RIBBON_START_POS : 0;
     }
 }
 
