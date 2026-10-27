@@ -27,6 +27,8 @@ def main():
                    help="Retail BG3 screen-map member to preview")
     p.add_argument("--bg6-nscr", type=int, choices=(9, 78), default=9,
                    help="Retail BG6 screen-map member to preview")
+    p.add_argument("--all-source-pairs", action="store_true",
+                   help="Compare all four verified BG3/BG6 NSCR pairings")
     args = p.parse_args()
     if not (0 <= args.viewport_x <= 16 and 0 <= args.viewport_y <= 96):
         p.error("240x160 viewport must fit the 256x256 source map")
@@ -39,60 +41,62 @@ def main():
     if len(parts) != 79:
         raise ValueError("Expected 79 original NARC members")
     palettes = palette_banks(parts[0])
-    bg3 = render(parts[2], parts[args.bg3_nscr], palettes, 256)
-    bg6 = render(parts[1], parts[args.bg6_nscr], palettes, 512)
+    pairings = ((a, b) for a in (10, 11) for b in (9, 78)) if args.all_source_pairs else ((args.bg3_nscr, args.bg6_nscr),)
     bounds = (args.viewport_x, args.viewport_y,
               args.viewport_x + 240, args.viewport_y + 160)
-    base, case = bg3.crop(bounds), bg6.crop(bounds)
     protected = [r for r in REGIONS if "frame" not in r.name]
     args.out.mkdir(parents=True, exist_ok=True)
     # Distinct names prevent candidate combinations overwriting one another.
-    source_label = f"bg3_{args.bg3_nscr}_bg6_{args.bg6_nscr}_x{args.viewport_x}_y{args.viewport_y}"
-    manifest = []
-    for label, regions in TRIALS.items():
-        result = base.copy()
-        n = 0
-        protected_skips = 0
-        transparent_skips = 0
-        visible_bg6_pixels = 0
-        for x, y, w, h in regions:
-            if any(v % 8 for v in (x, y, w, h)):
-                raise AssertionError("Selection must be 8x8 tile aligned")
-            for ty in range(y, y+h, 8):
-                for tx in range(x, x+w, 8):
-                    if any(tx < r.right and tx+8 > r.x and
-                           ty < r.bottom and ty+8 > r.y for r in protected):
-                        protected_skips += 1
-                        continue
-                    tile = case.crop((tx, ty, tx+8, ty+8))
-                    visible = tile.getchannel("A").getbbox()
-                    if visible is None:
-                        transparent_skips += 1
-                        continue
-                    visible_bg6_pixels += sum(1 for alpha in tile.getchannel("A").getdata() if alpha)
-                    result.paste(tile, (tx, ty), tile)
-                    n += 1
-        result.save(args.out / f"{source_label}_{label}.png")
-        guide = result.copy()
-        draw = ImageDraw.Draw(guide)
-        for r in REGIONS:
-            draw.rectangle((r.x, r.y, r.right-1, r.bottom-1),
-                           outline=(255, 0, 255, 255))
-        draw.line((36,104,44,104), fill=(0,255,0,255))
-        draw.line((40,100,40,108), fill=(0,255,0,255))
-        guide.save(args.out / f"{source_label}_{label}_guide.png")
-        manifest.append({"candidate": f"{source_label}_{label}",
-                         "bg3_nscr": args.bg3_nscr, "bg6_nscr": args.bg6_nscr,
-                         "viewport_x": args.viewport_x, "viewport_y": args.viewport_y,
-                         "trial": label, "bg6_tiles_applied": n,
-                         "protected_tiles_skipped": protected_skips,
-                         "fully_transparent_bg6_tiles_skipped": transparent_skips,
-                         "visible_bg6_pixels_applied": visible_bg6_pixels})
-        print(f"{source_label}_{label}: {n} visible BG6 tiles, "
-              f"{visible_bg6_pixels} opaque pixels composited")
-    (args.out / f"{source_label}_manifest.json").write_text(
-        json.dumps({"purpose": "source-only preview, not verified retail layer ordering",
-                    "candidates": manifest}, indent=2) + "\n")
+    for bg3_nscr, bg6_nscr in pairings:
+        bg3 = render(parts[2], parts[bg3_nscr], palettes, 256)
+        bg6 = render(parts[1], parts[bg6_nscr], palettes, 512)
+        base, case = bg3.crop(bounds), bg6.crop(bounds)
+        source_label = f"bg3_{bg3_nscr}_bg6_{bg6_nscr}_x{args.viewport_x}_y{args.viewport_y}"
+        manifest = []
+        for label, regions in TRIALS.items():
+            result = base.copy()
+            n = 0
+            protected_skips = 0
+            transparent_skips = 0
+            visible_bg6_pixels = 0
+            for x, y, w, h in regions:
+                if any(v % 8 for v in (x, y, w, h)):
+                    raise AssertionError("Selection must be 8x8 tile aligned")
+                for ty in range(y, y+h, 8):
+                    for tx in range(x, x+w, 8):
+                        if any(tx < r.right and tx+8 > r.x and
+                               ty < r.bottom and ty+8 > r.y for r in protected):
+                            protected_skips += 1
+                            continue
+                        tile = case.crop((tx, ty, tx+8, ty+8))
+                        visible = tile.getchannel("A").getbbox()
+                        if visible is None:
+                            transparent_skips += 1
+                            continue
+                        visible_bg6_pixels += sum(1 for alpha in tile.getchannel("A").getdata() if alpha)
+                        result.paste(tile, (tx, ty), tile)
+                        n += 1
+            result.save(args.out / f"{source_label}_{label}.png")
+            guide = result.copy()
+            draw = ImageDraw.Draw(guide)
+            for r in REGIONS:
+                draw.rectangle((r.x, r.y, r.right-1, r.bottom-1),
+                               outline=(255, 0, 255, 255))
+            draw.line((36,104,44,104), fill=(0,255,0,255))
+            draw.line((40,100,40,108), fill=(0,255,0,255))
+            guide.save(args.out / f"{source_label}_{label}_guide.png")
+            manifest.append({"candidate": f"{source_label}_{label}",
+                             "bg3_nscr": bg3_nscr, "bg6_nscr": bg6_nscr,
+                             "viewport_x": args.viewport_x, "viewport_y": args.viewport_y,
+                             "trial": label, "bg6_tiles_applied": n,
+                             "protected_tiles_skipped": protected_skips,
+                             "fully_transparent_bg6_tiles_skipped": transparent_skips,
+                             "visible_bg6_pixels_applied": visible_bg6_pixels})
+            print(f"{source_label}_{label}: {n} visible BG6 tiles, "
+                  f"{visible_bg6_pixels} opaque pixels composited")
+        (args.out / f"{source_label}_manifest.json").write_text(
+            json.dumps({"purpose": "source-only preview, not verified retail layer ordering",
+                        "candidates": manifest}, indent=2) + "\n")
     print("Review-only: DS scroll, priority, and GBA palette allocation unverified.")
 
 if __name__ == "__main__":
