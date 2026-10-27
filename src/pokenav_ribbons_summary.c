@@ -407,6 +407,17 @@ static bool32 TrySelectRibbonRight(struct Pokenav_RibbonsSummaryList *list)
     if (column >= RIBBONS_PER_ROW - 1)
         return FALSE;
 
+    // Do not advance from an invalid slot even if a later ribbon exists.
+    if (list->selectedPos < GIFT_RIBBON_START_POS)
+    {
+        if (list->selectedPos >= list->numNormalRibbons)
+            return FALSE;
+    }
+    else if (list->selectedPos - GIFT_RIBBON_START_POS >= list->numGiftRibbons)
+    {
+        return FALSE;
+    }
+
     if (list->selectedPos < GIFT_RIBBON_START_POS)
     {
         // Move right in normal ribbon row
