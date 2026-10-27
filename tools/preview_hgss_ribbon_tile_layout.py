@@ -53,6 +53,8 @@ def main():
         result = base.copy()
         n = 0
         protected_skips = 0
+        transparent_skips = 0
+        visible_bg6_pixels = 0
         for x, y, w, h in regions:
             if any(v % 8 for v in (x, y, w, h)):
                 raise AssertionError("Selection must be 8x8 tile aligned")
@@ -63,6 +65,11 @@ def main():
                         protected_skips += 1
                         continue
                     tile = case.crop((tx, ty, tx+8, ty+8))
+                    visible = tile.getchannel("A").getbbox()
+                    if visible is None:
+                        transparent_skips += 1
+                        continue
+                    visible_bg6_pixels += sum(1 for alpha in tile.getchannel("A").getdata() if alpha)
                     result.paste(tile, (tx, ty), tile)
                     n += 1
         result.save(args.out / f"{source_label}_{label}.png")
@@ -78,8 +85,11 @@ def main():
                          "bg3_nscr": args.bg3_nscr, "bg6_nscr": args.bg6_nscr,
                          "viewport_x": args.viewport_x, "viewport_y": args.viewport_y,
                          "trial": label, "bg6_tiles_applied": n,
-                         "protected_tiles_skipped": protected_skips})
-        print(f"{source_label}_{label}: {n} original BG6 tile positions composited")
+                         "protected_tiles_skipped": protected_skips,
+                         "fully_transparent_bg6_tiles_skipped": transparent_skips,
+                         "visible_bg6_pixels_applied": visible_bg6_pixels})
+        print(f"{source_label}_{label}: {n} visible BG6 tiles, "
+              f"{visible_bg6_pixels} opaque pixels composited")
     (args.out / f"{source_label}_manifest.json").write_text(
         json.dumps({"purpose": "source-only preview, not verified retail layer ordering",
                     "candidates": manifest}, indent=2) + "\n")
