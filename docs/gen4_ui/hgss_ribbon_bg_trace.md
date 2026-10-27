@@ -37,3 +37,36 @@ unrepresentable transparent-overlay pixel counts, but **are not proof of the
 correct retail arrangement**. The original source archive is not committed.
 Visual reference and BG priority/scroll verification remain required before
 any live PokéNav wiring or removal of Emerald graphics.
+
+## Live background replacement gate (2026-10-27 audit)
+
+The current live entry point is `LoopedTask_OpenRibbonsSummaryMenu` in
+`src/pokenav_ribbons_summary.c`. Its state 0 loads the **Emerald**
+`gPokenavRibbonsSummaryBg_Gfx`, `gPokenavRibbonsSummaryBg_Tilemap`,
+and `gPokenavRibbonsSummaryBg_Pal` onto BG2. State 1 separately installs
+original HGSS 32x32 ribbon tiles and five verified palettes on BG1.
+The current blank BG2 window fills for the grid, ribbon description,
+Pokémon name and list index are placeholders, not retail HGSS chrome.
+
+### Required evidence before the next live graphics replacement
+
+1. Use the existing original `a/1/6/2` NARC extraction and source-layer
+   renderer. Match BG3 NCGR member 2 with NSCR 10/11 and BG6 NCGR member 1
+   with NSCR 9/78; document the selected pair, palette banks, origins and
+   layer priority using a **retail screenshot** reference.
+2. Check a 240x160 composed preview against the existing PokéNav footprints
+   listed above, especially the name card, ribbon descriptions, last grid
+   row and help bar. Do not treat a cropped 256x192 DS framebuffer or
+   isolated BG preview as a verified GBA layout.
+3. Import only the verified original source pixels/tilemaps and document
+   provenance. Wire the new BG resources into the real opening state while
+   preserving the native 32x32 HGSS ribbon icon BG1 and four-corner OBJ.
+4. Review uploaded **live** mGBA framebuffer screenshots at normal, gift,
+   expanded and empty-ribbon states. Only after this verification search
+   all references to the old Emerald BG assets and remove truly unused
+   equivalents. Rerun all three workflows.
+
+**Stop condition:** An unverified layer combination, unknown window artwork,
+or clipped real ribbon control must block any declaration that the Emerald
+background has been replaced. The existing screenshot CI verifies operation
+and selected icon pixels, not visual equivalence to the retail HGSS full UI.
