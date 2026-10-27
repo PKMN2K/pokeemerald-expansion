@@ -35,8 +35,15 @@ jobs:
           # The hosted runner's azure.archive.ubuntu.com mirror stalled on the
           # large ARM compiler/newlib archives and exhausted the job timeout.
           # Prefer the public Ubuntu mirror and retry transient network errors.
-          sudo sed -i 's|http://azure.archive.ubuntu.com/ubuntu|http://archive.ubuntu.com/ubuntu|g' \
-            /etc/apt/sources.list /etc/apt/sources.list.d/ubuntu.sources 2>/dev/null || true
+          # Ubuntu 24.04 uses deb822 sources; older runners may use sources.list.
+          # Rewrite each existing source individually so a missing file cannot
+          # prevent the rewrite (as happened with the previous sed command).
+          sudo find /etc/apt -type f \( -name '*.list' -o -name '*.sources' \) \
+            -exec sed -i 's|http://azure.archive.ubuntu.com/ubuntu|http://archive.ubuntu.com/ubuntu|g' {} +
+          if sudo grep -R 'azure.archive.ubuntu.com/ubuntu' /etc/apt/sources.list /etc/apt/sources.list.d/ 2>/dev/null; then
+            echo 'Azure Ubuntu mirror still configured' >&2
+            exit 1
+          fi
           sudo apt-get -o Acquire::Retries=3 -o Acquire::http::Timeout=60 update
           sudo apt-get -o Acquire::Retries=3 -o Acquire::http::Timeout=60 \
             install -y --no-install-recommends \
