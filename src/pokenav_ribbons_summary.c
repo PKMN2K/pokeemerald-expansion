@@ -328,6 +328,12 @@ static bool32 TrySelectRibbonUp(struct Pokenav_RibbonsSummaryList *list)
 
 static bool32 TrySelectRibbonDown(struct Pokenav_RibbonsSummaryList *list)
 {
+    // Refuse downward navigation from an empty or invalid normal-ribbon slot.
+    // Gift-only summaries start at their populated gift row instead.
+    if (list->selectedPos < GIFT_RIBBON_START_POS
+     && list->selectedPos >= list->numNormalRibbons)
+        return FALSE;
+
     if (list->selectedPos >= GIFT_RIBBON_START_POS)
     {
         u32 nextRibbon = list->selectedPos - GIFT_RIBBON_START_POS + RIBBONS_PER_ROW;
