@@ -32,6 +32,8 @@ def main():
     args = p.parse_args()
     if not (0 <= args.viewport_x <= 16 and 0 <= args.viewport_y <= 96):
         p.error("240x160 viewport must fit the 256x256 source map")
+    if args.viewport_x % 8 or args.viewport_y % 8:
+        p.error("Viewport origin must be 8x8 tile aligned for source-faithful BG composition")
     # Reject unverified source archives before generating composition previews.
     # Import here to avoid a top-level dependency cycle with the exporter.
     from export_hgss_ribbon_gba_bg import verify_source_narc
