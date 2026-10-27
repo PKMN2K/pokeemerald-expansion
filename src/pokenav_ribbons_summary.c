@@ -299,6 +299,17 @@ static u32 ReturnToRibbonsListFromSummary(struct Pokenav_RibbonsSummaryList *lis
 
 static bool32 TrySelectRibbonUp(struct Pokenav_RibbonsSummaryList *list)
 {
+    // Do not navigate from a nonexistent normal or gift ribbon slot.
+    if (list->selectedPos < GIFT_RIBBON_START_POS)
+    {
+        if (list->selectedPos >= list->numNormalRibbons)
+            return FALSE;
+    }
+    else if (list->selectedPos - GIFT_RIBBON_START_POS >= list->numGiftRibbons)
+    {
+        return FALSE;
+    }
+
     if (list->selectedPos < FIRST_GIFT_RIBBON)
     {
         // In normal ribbons, try to move up a row
