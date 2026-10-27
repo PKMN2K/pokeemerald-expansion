@@ -362,6 +362,18 @@ static bool32 TrySelectRibbonDown(struct Pokenav_RibbonsSummaryList *list)
 static bool32 TrySelectRibbonLeft(struct Pokenav_RibbonsSummaryList *list)
 {
     u16 column = list->selectedPos % RIBBONS_PER_ROW;
+
+    // Never move into a nonexistent ribbon slot, including empty summaries.
+    if (list->selectedPos < GIFT_RIBBON_START_POS)
+    {
+        if (list->selectedPos >= list->numNormalRibbons)
+            return FALSE;
+    }
+    else if (list->selectedPos - GIFT_RIBBON_START_POS >= list->numGiftRibbons)
+    {
+        return FALSE;
+    }
+
     if (column != 0)
     {
         list->selectedPos--;
