@@ -22,6 +22,10 @@ def main():
     p.add_argument("out", type=Path)
     p.add_argument("--viewport-x", type=int, default=0)
     p.add_argument("--viewport-y", type=int, default=0)
+    p.add_argument("--bg3-nscr", type=int, choices=(10, 11), default=10,
+                   help="Retail BG3 screen-map member to preview")
+    p.add_argument("--bg6-nscr", type=int, choices=(9, 78), default=9,
+                   help="Retail BG6 screen-map member to preview")
     args = p.parse_args()
     if not (0 <= args.viewport_x <= 16 and 0 <= args.viewport_y <= 96):
         p.error("240x160 viewport must fit the 256x256 source map")
@@ -34,13 +38,15 @@ def main():
     if len(parts) != 79:
         raise ValueError("Expected 79 original NARC members")
     palettes = palette_banks(parts[0])
-    bg3 = render(parts[2], parts[10], palettes, 256)
-    bg6 = render(parts[1], parts[9], palettes, 512)
+    bg3 = render(parts[2], parts[args.bg3_nscr], palettes, 256)
+    bg6 = render(parts[1], parts[args.bg6_nscr], palettes, 512)
     bounds = (args.viewport_x, args.viewport_y,
               args.viewport_x + 240, args.viewport_y + 160)
     base, case = bg3.crop(bounds), bg6.crop(bounds)
     protected = [r for r in REGIONS if "frame" not in r.name]
     args.out.mkdir(parents=True, exist_ok=True)
+    # Distinct names prevent candidate combinations overwriting one another.
+    source_label = f"bg3_{args.bg3_nscr}_bg6_{args.bg6_nscr}_x{args.viewport_x}_y{args.viewport_y}"
     for label, regions in TRIALS.items():
         result = base.copy()
         n = 0
@@ -55,7 +61,7 @@ def main():
                     tile = case.crop((tx, ty, tx+8, ty+8))
                     result.paste(tile, (tx, ty), tile)
                     n += 1
-        result.save(args.out / f"{label}.png")
+        result.save(args.out / f"{source_label}_{label}.png")
         guide = result.copy()
         draw = ImageDraw.Draw(guide)
         for r in REGIONS:
@@ -63,8 +69,8 @@ def main():
                            outline=(255, 0, 255, 255))
         draw.line((36,104,44,104), fill=(0,255,0,255))
         draw.line((40,100,40,108), fill=(0,255,0,255))
-        guide.save(args.out / f"{label}_guide.png")
-        print(f"{label}: {n} original BG6 tile positions composited")
+        guide.save(args.out / f"{source_label}_{label}_guide.png")
+        print(f"{source_label}_{label}: {n} original BG6 tile positions composited")
     print("Review-only: DS scroll, priority, and GBA palette allocation unverified.")
 
 if __name__ == "__main__":
