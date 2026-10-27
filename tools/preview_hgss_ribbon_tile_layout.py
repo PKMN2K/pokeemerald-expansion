@@ -5,6 +5,7 @@ Requires original a/1/6/2 NARC and Pillow; no original artwork is bundled.
 Diagnostic output only, not approved GBA tilemaps or live game resources.
 """
 import argparse
+import json
 from pathlib import Path
 from render_hgss_ribbon_backgrounds import narc_members, palette_banks, render
 from audit_hgss_ribbon_gba_layout import REGIONS
@@ -47,9 +48,11 @@ def main():
     args.out.mkdir(parents=True, exist_ok=True)
     # Distinct names prevent candidate combinations overwriting one another.
     source_label = f"bg3_{args.bg3_nscr}_bg6_{args.bg6_nscr}_x{args.viewport_x}_y{args.viewport_y}"
+    manifest = []
     for label, regions in TRIALS.items():
         result = base.copy()
         n = 0
+        protected_skips = 0
         for x, y, w, h in regions:
             if any(v % 8 for v in (x, y, w, h)):
                 raise AssertionError("Selection must be 8x8 tile aligned")
@@ -57,6 +60,7 @@ def main():
                 for tx in range(x, x+w, 8):
                     if any(tx < r.right and tx+8 > r.x and
                            ty < r.bottom and ty+8 > r.y for r in protected):
+                        protected_skips += 1
                         continue
                     tile = case.crop((tx, ty, tx+8, ty+8))
                     result.paste(tile, (tx, ty), tile)
@@ -70,7 +74,15 @@ def main():
         draw.line((36,104,44,104), fill=(0,255,0,255))
         draw.line((40,100,40,108), fill=(0,255,0,255))
         guide.save(args.out / f"{source_label}_{label}_guide.png")
+        manifest.append({"candidate": f"{source_label}_{label}",
+                         "bg3_nscr": args.bg3_nscr, "bg6_nscr": args.bg6_nscr,
+                         "viewport_x": args.viewport_x, "viewport_y": args.viewport_y,
+                         "trial": label, "bg6_tiles_applied": n,
+                         "protected_tiles_skipped": protected_skips})
         print(f"{source_label}_{label}: {n} original BG6 tile positions composited")
+    (args.out / f"{source_label}_manifest.json").write_text(
+        json.dumps({"purpose": "source-only preview, not verified retail layer ordering",
+                    "candidates": manifest}, indent=2) + "\n")
     print("Review-only: DS scroll, priority, and GBA palette allocation unverified.")
 
 if __name__ == "__main__":
