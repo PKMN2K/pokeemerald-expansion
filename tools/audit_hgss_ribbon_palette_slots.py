@@ -27,6 +27,21 @@ def audit(source):
     conflicts = {bank: owners[bank] for bank in sorted(HGSS_BG_BANKS & owners.keys())}
     return owners, conflicts
 
+def audit_pokenav_modules():
+    # Include symbolic bank expressions rather than silently assuming they are free.
+    pattern = re.compile(
+        r'(?:CopyPaletteIntoBufferUnfaded|LoadPalette|LoadCompressedPalette)'
+        r'\s*\([^;]*?BG_PLTT_ID\s*\(\s*([^()]+?)\s*\)', re.S)
+    results = {}
+    for module in sorted((ROOT / 'src').glob('pokenav*.c')):
+        source = module.read_text()
+        matches = []
+        for match in pattern.finditer(source):
+            matches.append((source.count('\n', 0, match.start()) + 1, match.group(1).strip()))
+        if matches:
+            results[module.name] = matches
+    return results
+
 def main():
     owners, conflicts = audit(SOURCE.read_text())
     print("Retail HGSS BG NCLR banks:", sorted(HGSS_BG_BANKS))
@@ -38,6 +53,10 @@ def main():
         print(f"  bank {bank} would overwrite: {', '.join(assets)}")
     free = sorted(set(range(TOTAL_BANKS)) - owners.keys())
     print("Not explicitly loaded by this source:", free)
+    print("Direct BG palette loads across PokéNav modules:")
+    for module, loads in audit_pokenav_modules().items():
+        print(f"  {module}: " + ", ".join(f"L{line} bank {bank}" for line, bank in loads))
+    print("Symbolic banks, helper writes and tilemap ownership require further audit.")
     # Report candidate destinations, not a claim of global palette ownership.
     if len(free) >= len(HGSS_BG_BANKS):
         trial = dict(zip(sorted(HGSS_BG_BANKS), free[:len(HGSS_BG_BANKS)]))
