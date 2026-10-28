@@ -67,7 +67,7 @@ def main():
     symbolic = []
     resolved = []
     for module, loads in module_loads.items():
-        definitions = dict(re.findall(r"^\\s*#define\\s+(\\w+)\\s+(\\d+)\\s*(?:\\r?$)",
+        definitions = dict(re.findall(r"^\s*#define\s+(\w+)\s+(\d+)\s*(?:\r?$)",
                                       (ROOT / "src" / module).read_text(), re.M))
         for line, bank in loads:
             if bank.isdecimal():
