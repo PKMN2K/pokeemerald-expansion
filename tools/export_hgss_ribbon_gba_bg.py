@@ -200,9 +200,11 @@ def remap_palette(original, mapping, used_banks):
     return bytes(result)
 
 
-def export(members, layout, viewport_x, viewport_y, out, palette_map=None, audit_only=False, allow_incomplete=False):
+def export(members, layout, viewport_x, viewport_y, out, palette_map=None, audit_only=False, allow_incomplete=False, bg3_nscr=10, bg6_nscr=9):
     if len(members) != 79:
         raise ValueError("Expected 79 original HGSS ribbon NARC members")
+    if bg3_nscr not in (10, 11) or bg6_nscr not in (9, 78):
+        raise ValueError('Unverified HGSS ribbon NSCR member pair')
     if layout not in TRIALS:
         raise ValueError(f"Unknown HGSS ribbon layout: {layout}")
     if any(v % 8 for v in (viewport_x, viewport_y)):
@@ -228,12 +230,12 @@ def export(members, layout, viewport_x, viewport_y, out, palette_map=None, audit
         for tx in range(WIDTH):
             x, y = tx * 8, ty * 8
             sx, sy = tx + viewport_x // 8, ty + viewport_y // 8
-            base_attr = entry(members[10], sx, sy)
+            base_attr = entry(members[bg3_nscr], sx, sy)
             attr = base_attr
             raw_tile = tile(members[2], base_attr & 0x3ff, MAX_TILES[2])
             key = (2, base_attr & 0x3ff)
             if selected(layout, x, y) and not protected(tx, ty):
-                candidate = entry(members[9], sx, sy)
+                candidate = entry(members[bg6_nscr], sx, sy)
                 src_tile = tile(members[1], candidate & 0x3ff, MAX_TILES[1])
                 if opaque(src_tile):
                     attr = candidate
@@ -288,6 +290,8 @@ def export(members, layout, viewport_x, viewport_y, out, palette_map=None, audit
             item["visible_pixels"] += cell["bg6_visible_pixels"]
         report = {
             "source_narc_sha256": EXPECTED_NARC_SHA256,
+        "retail_bg3_nscr": bg3_nscr,
+        "retail_bg6_nscr": bg6_nscr,
             "layout": layout,
             "viewport": {"x": viewport_x, "y": viewport_y, "width": 240, "height": 160},
             "source_palette_banks_needed": sorted(banks),
@@ -363,6 +367,8 @@ def export(members, layout, viewport_x, viewport_y, out, palette_map=None, audit
     ]
     manifest = {
         "source_narc_sha256": EXPECTED_NARC_SHA256,
+        "retail_bg3_nscr": bg3_nscr,
+        "retail_bg6_nscr": bg6_nscr,
         "layout": layout,
         "viewport": {"x": viewport_x, "y": viewport_y, "width": 240, "height": 160},
         "tile_count": len(graphics),
@@ -404,6 +410,8 @@ def main():
     p.add_argument("narc", type=Path)
     p.add_argument("out", type=Path)
     p.add_argument("--layout", choices=tuple(TRIALS), default="header_only")
+    p.add_argument("--bg3-nscr", type=int, choices=(10, 11), default=10)
+    p.add_argument("--bg6-nscr", type=int, choices=(9, 78), default=9)
     p.add_argument("--viewport-x", type=int, default=0)
     p.add_argument("--viewport-y", type=int, default=0)
     p.add_argument("--palette-map", default="", help="Complete SRC:DST bank mapping, e.g. 0:7,2:8,4:9")
@@ -418,7 +426,8 @@ def main():
         raise ValueError("Expected 79 NARC members")
     export(members, args.layout, args.viewport_x, args.viewport_y, args.out,
            parse_palette_map(args.palette_map), audit_only=args.audit_only,
-           allow_incomplete=args.allow_incomplete_composition)
+           allow_incomplete=args.allow_incomplete_composition,
+           bg3_nscr=args.bg3_nscr, bg6_nscr=args.bg6_nscr)
 
 
 if __name__ == "__main__":
