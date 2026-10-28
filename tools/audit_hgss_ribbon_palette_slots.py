@@ -57,15 +57,22 @@ def main():
     for module, loads in audit_pokenav_modules().items():
         print(f"  {module}: " + ", ".join(f"L{line} bank {bank}" for line, bank in loads))
     print("Symbolic banks, helper writes and tilemap ownership require further audit.")
-    # Report candidate destinations, not a claim of global palette ownership.
-    if len(free) >= len(HGSS_BG_BANKS):
-        trial = dict(zip(sorted(HGSS_BG_BANKS), free[:len(HGSS_BG_BANKS)]))
-        spec = ",".join(f"{src}:{dst}" for src, dst in trial.items())
-        print("LOCAL-ONLY candidate --palette-map:", spec)
-        print("BLOCKED for live wiring until cross-module palette ownership and")
-        print("tilemap palette indices are independently audited.")
-    else:
-        print("BLOCKED: insufficient unclaimed BG banks even in this source.")
+    # BG bank 0 hosts individual help-bar colour uploads in pokenav_main_menu.c.
+    # Treat every literal destination across modules as reserved for this
+    # conservative audit. Symbolic destinations are unresolved, NOT free.
+    module_loads = audit_pokenav_modules()
+    literal_banks = {int(bank) for loads in module_loads.values()
+                     for _, bank in loads if bank.isdecimal()}
+    literal_banks.add(0)  # Partial help-bar BG_PLTT_ID(0) colour writes.
+    candidates = sorted(set(range(TOTAL_BANKS)) - set(owners) - literal_banks)
+    symbolic = [(module, line, bank) for module, loads in module_loads.items()
+                for line, bank in loads if not bank.isdecimal()]
+    print("Conservatively excluded direct-load and help-bar banks:", sorted(literal_banks))
+    print("Unclaimed by this limited literal-load inventory:", candidates)
+    print("Unresolved symbolic destinations:", len(symbolic))
+    print("BLOCKED: no --palette-map is approved by a source-only scan;")
+    print("BG bank lifetimes, symbolic constants, and tilemap references")
+    print("must be resolved before a collision-safe export or live wiring.")
     print("Note: unlisted banks are NOT certified free; other PokéNav/BG "
           "initialization and tilemap palette references must also be checked.")
     if conflicts:
