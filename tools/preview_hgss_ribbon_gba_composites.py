@@ -11,6 +11,7 @@ from pathlib import Path
 from PIL import Image, ImageDraw
 
 from render_hgss_ribbon_backgrounds import narc_members, palette_banks, render
+from export_hgss_ribbon_gba_bg import verify_source_narc
 from audit_hgss_ribbon_gba_layout import REGIONS
 
 LAYERS = {"bg3_10": (2, 10), "bg3_11": (2, 11),
@@ -29,7 +30,9 @@ def main():
     args = parser.parse_args()
     if not (0 <= args.viewport_x <= 16 and 0 <= args.viewport_y <= 96):
         parser.error("GBA viewport must fit the 256x256 source tilemaps")
-    members = narc_members(args.narc.read_bytes())
+    archive = args.narc.read_bytes()
+    verify_source_narc(archive)
+    members = narc_members(archive)
     if len(members) != 79:
         raise ValueError("Expected 79 original NARC members")
     palettes = palette_banks(members[0])
