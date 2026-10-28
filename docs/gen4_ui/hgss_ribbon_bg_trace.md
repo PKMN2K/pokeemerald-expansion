@@ -70,3 +70,31 @@ Pokémon name and list index are placeholders, not retail HGSS chrome.
 or clipped real ribbon control must block any declaration that the Emerald
 background has been replaced. The existing screenshot CI verifies operation
 and selected icon pixels, not visual equivalence to the retail HGSS full UI.
+
+## Uploaded HeartGold source audit — provisional viewport (0,8), 2026-10-28
+
+The user-provided USA HeartGold ROM (`IPKE01`) supplied NitroFS
+`a/1/6/2` (file ID 291). Its SHA-256 matches the existing exporter
+allowlist: `003c80069fcd1f9c9eb842ae0294ecbdeffabbff40593cc471236e81239d9eed`.
+
+A read-only, source-cell audit of BG3 NSCR 10 over BG6 NSCR 9,
+with the source viewport at (0,8), found:
+
+| Provisional trial | Source BG palette banks | BG6 cells with visible artwork | Cross-bank BG6 overlay cells needing exact-colour resolution |
+| --- | --- | ---: | ---: |
+| `header_only` | 0, 2, 4 | 64 | 0 |
+| `header_footer` | 0, 2, 4 | 184 | 2 |
+| `left_case` | 0, 2, 4 | 210 | 2 |
+
+Counts are from the archive's original 8x8 cells and use the existing
+protected-window geometry. They are **not** counts of successfully exported
+GBA composite tiles: transparent/partial overlays and palette-bank
+translations still require the full exporter diagnostics.
+
+**Implementation gate remains closed:** these are retail-source
+measurements, not proof of the actual DS layer priorities, scroll offsets,
+or correct GBA layout. All three candidates require a collision-safe
+cross-module BG palette mapping; merely using source banks 0, 2 and 4
+would overlap currently loaded PokéNav palettes. Do not commit the ROM or
+its raw archive, replace Emerald BG resources, or remove legacy art until
+the GBA exporter and live framebuffer review establish correctness.
