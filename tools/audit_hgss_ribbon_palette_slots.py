@@ -38,6 +38,15 @@ def main():
         print(f"  bank {bank} would overwrite: {', '.join(assets)}")
     free = sorted(set(range(TOTAL_BANKS)) - owners.keys())
     print("Not explicitly loaded by this source:", free)
+    # Report candidate destinations, not a claim of global palette ownership.
+    if len(free) >= len(HGSS_BG_BANKS):
+        trial = dict(zip(sorted(HGSS_BG_BANKS), free[:len(HGSS_BG_BANKS)]))
+        spec = ",".join(f"{src}:{dst}" for src, dst in trial.items())
+        print("LOCAL-ONLY candidate --palette-map:", spec)
+        print("BLOCKED for live wiring until cross-module palette ownership and")
+        print("tilemap palette indices are independently audited.")
+    else:
+        print("BLOCKED: insufficient unclaimed BG banks even in this source.")
     print("Note: unlisted banks are NOT certified free; other PokéNav/BG "
           "initialization and tilemap palette references must also be checked.")
     if conflicts:
