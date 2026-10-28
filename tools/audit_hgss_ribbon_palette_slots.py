@@ -64,12 +64,29 @@ def main():
     literal_banks = {int(bank) for loads in module_loads.values()
                      for _, bank in loads if bank.isdecimal()}
     literal_banks.add(0)  # Partial help-bar BG_PLTT_ID(0) colour writes.
+    symbolic = []
+    resolved = []
+    for module, loads in module_loads.items():
+        definitions = dict(re.findall(r"^\\s*#define\\s+(\\w+)\\s+(\\d+)\\s*(?:\\r?$)",
+                                      (ROOT / "src" / module).read_text(), re.M))
+        for line, bank in loads:
+            if bank.isdecimal():
+                continue
+            if bank in definitions and 0 <= int(definitions[bank]) < TOTAL_BANKS:
+                target = int(definitions[bank])
+                literal_banks.add(target)
+                resolved.append((module, line, bank, target))
+            else:
+                symbolic.append((module, line, bank))
     candidates = sorted(set(range(TOTAL_BANKS)) - set(owners) - literal_banks)
-    symbolic = [(module, line, bank) for module, loads in module_loads.items()
-                for line, bank in loads if not bank.isdecimal()]
+    print("Resolved symbolic destinations:")
+    for module, line, name, bank in resolved:
+        print(f"  {module}:L{line} {name} = bank {bank}")
     print("Conservatively excluded direct-load and help-bar banks:", sorted(literal_banks))
     print("Unclaimed by this limited literal-load inventory:", candidates)
     print("Unresolved symbolic destinations:", len(symbolic))
+    for module, line, name in symbolic:
+        print(f"  {module}:L{line} {name}")
     print("BLOCKED: no --palette-map is approved by a source-only scan;")
     print("BG bank lifetimes, symbolic constants, and tilemap references")
     print("must be resolved before a collision-safe export or live wiring.")
