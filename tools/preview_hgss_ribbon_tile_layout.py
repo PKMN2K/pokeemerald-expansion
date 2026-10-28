@@ -17,7 +17,7 @@ TRIALS = {
 }
 
 def main():
-    from PIL import ImageDraw
+    from PIL import Image, ImageDraw
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument("narc", type=Path)
     p.add_argument("out", type=Path)
@@ -48,6 +48,8 @@ def main():
               args.viewport_x + 240, args.viewport_y + 160)
     protected = [r for r in REGIONS if "frame" not in r.name]
     args.out.mkdir(parents=True, exist_ok=True)
+    # Collect previews in deterministic order for side-by-side retail review.
+    contact = []
     # Distinct names prevent candidate combinations overwriting one another.
     for bg3_nscr, bg6_nscr in pairings:
         bg3 = render(parts[2], parts[bg3_nscr], palettes, 256)
@@ -79,6 +81,7 @@ def main():
                         result.paste(tile, (tx, ty), tile)
                         n += 1
             result.save(args.out / f"{source_label}_{label}.png")
+            contact.append((f"{source_label}_{label}", result.copy()))
             guide = result.copy()
             draw = ImageDraw.Draw(guide)
             for r in REGIONS:
@@ -99,6 +102,17 @@ def main():
         (args.out / f"{source_label}_manifest.json").write_text(
             json.dumps({"purpose": "source-only preview, not verified retail layer ordering",
                         "candidates": manifest}, indent=2) + "\n")
+    # Place all generated alternatives in one image, without modifying pixels.
+    # Labels occupy a separate margin, not the original BG artwork.
+    columns = len(TRIALS)
+    rows = (len(contact) + columns - 1) // columns
+    sheet = Image.new("RGBA", (columns * 240, rows * 184), (0, 0, 0, 255))
+    label_draw = ImageDraw.Draw(sheet)
+    for index, (name, preview) in enumerate(contact):
+        x, y = (index % columns) * 240, (index // columns) * 184
+        sheet.paste(preview, (x, y))
+        label_draw.text((x + 3, y + 164), name, fill=(255, 255, 255, 255))
+    sheet.save(args.out / "candidate_contact_sheet.png")
     print("Review-only: DS scroll, priority, and GBA palette allocation unverified.")
 
 if __name__ == "__main__":
