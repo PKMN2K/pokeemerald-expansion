@@ -18,7 +18,8 @@ LAYERS = {"bg3_10": (2, 10), "bg3_11": (2, 11),
           "bg6_9": (1, 9), "bg6_78": (1, 78)}
 CASES = (("ribbons_normal", "bg3_10", "bg6_9"),
          ("ribbons_alternate", "bg3_11", "bg6_9"),
-         ("ribbons_fallback", "bg3_10", "bg6_78"))
+         ("ribbons_fallback", "bg3_10", "bg6_78"),
+         ("ribbons_alternate_fallback", "bg3_11", "bg6_78"))
 
 
 def main():
