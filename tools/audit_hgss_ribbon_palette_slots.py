@@ -87,6 +87,14 @@ def main():
     literal_banks = {int(bank) for loads in module_loads.values()
                      for _, bank in loads if bank.isdecimal()}
     literal_banks.add(0)  # Partial help-bar BG_PLTT_ID(0) colour writes.
+    # All explicit BG_PLTT_ID references may participate in palette use,
+    # including writes outside the direct-load functions above. Reserve them.
+    # Symbolic expressions remain unresolved and cannot certify any bank free.
+    all_references = audit_all_bg_palette_references()
+    for references in all_references.values():
+        for _, expression in references:
+            if expression.isdecimal() and int(expression) < TOTAL_BANKS:
+                literal_banks.add(int(expression))
     symbolic = []
     resolved = []
     for module, loads in module_loads.items():
@@ -117,6 +125,15 @@ def main():
         print(f"  {module}:L{line} {name} = bank {bank}")
     print("Conservatively excluded direct-load and help-bar banks:", sorted(literal_banks))
     print("Unclaimed by this limited literal-load inventory:", candidates)
+    unresolved_references = [
+        (module, line, expression)
+        for module, references in all_references.items()
+        for line, expression in references
+        if not expression.isdecimal()
+    ]
+    print("Nonliteral BG_PLTT_ID references requiring review:", len(unresolved_references))
+    for module, line, expression in unresolved_references:
+        print(f"  {module}:L{line} {expression}")
     print("Unresolved symbolic destinations:", len(symbolic))
     for module, line, name in symbolic:
         print(f"  {module}:L{line} {name}")
