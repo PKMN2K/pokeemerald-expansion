@@ -88,6 +88,7 @@ def audit_tilemap_palette_calls():
         "FillBgTilemapBufferRect",
         "CopyToBgTilemapBufferRect",
         "CopyToBgTilemapBufferRect_ChangePalette",
+        "SetBgTilemapBuffer",
         "ChangeBgX",
     )
     pattern = re.compile(r"\b(" + "|".join(names) + r")\s*\(")
@@ -132,6 +133,8 @@ def main():
     for module, calls in audit_tilemap_palette_calls().items():
         for line, function, statement in calls:
             print(f"  {module}:L{line} {function}: {statement}")
+    print("SetBgTilemapBuffer identifies BG-to-tilemap-buffer associations;")
+    print("CopyToBgTilemapBufferRect may preserve palette bits from source data.")
     print("Call sites do not establish the palette values in map data.")
     print("References are diagnostic only; no banks are certified free.")
     print("Symbolic banks, helper writes and tilemap ownership require further audit.")
