@@ -42,6 +42,23 @@ def audit_pokenav_modules():
             results[module.name] = matches
     return results
 
+def audit_all_bg_palette_references():
+    """Inventory every BG_PLTT_ID reference, including partial/helper writes.
+
+    A reference is not proof of ownership or a safe free palette bank.
+    """
+    results = {}
+    pattern = re.compile(r"BG_PLTT_ID\s*\(\s*([^()]+?)\s*\)")
+    for module in sorted((ROOT / "src").glob("pokenav*.c")):
+        source = module.read_text()
+        references = [
+            (source.count("\n", 0, match.start()) + 1, match.group(1).strip())
+            for match in pattern.finditer(source)
+        ]
+        if references:
+            results[module.name] = references
+    return results
+
 def main():
     owners, conflicts = audit(SOURCE.read_text())
     print("Retail HGSS BG NCLR banks:", sorted(HGSS_BG_BANKS))
@@ -56,6 +73,12 @@ def main():
     print("Direct BG palette loads across PokéNav modules:")
     for module, loads in audit_pokenav_modules().items():
         print(f"  {module}: " + ", ".join(f"L{line} bank {bank}" for line, bank in loads))
+    print("All BG_PLTT_ID references across PokéNav (including helper writes):")
+    for module, references in audit_all_bg_palette_references().items():
+        print(f"  {module}: " + ", ".join(
+            f"L{line} bank/expression {bank}" for line, bank in references
+        ))
+    print("References are diagnostic only; no banks are certified free.")
     print("Symbolic banks, helper writes and tilemap ownership require further audit.")
     # BG bank 0 hosts individual help-bar colour uploads in pokenav_main_menu.c.
     # Treat every literal destination across modules as reserved for this
