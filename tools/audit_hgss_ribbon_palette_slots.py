@@ -59,6 +59,16 @@ def audit_all_bg_palette_references():
             results[module.name] = references
     return results
 
+def numeric_bank(expression):
+    """Parse direct decimal/hex bank literals; leave expressions unresolved."""
+    value = expression.strip()
+    while value.startswith("(") and value.endswith(")"):
+        value = value[1:-1].strip()
+    if not re.fullmatch(r"(?:0[xX][0-9a-fA-F]+|[0-9]+)[uUlL]*", value):
+        return None
+    digits = re.sub(r"[uUlL]+$", "", value)
+    return int(digits, 16 if digits.lower().startswith("0x") else 10)
+
 def numeric_palette_macros(module):
     """Resolve only numeric macros local to a PokéNav source module."""
     definitions = {}
@@ -66,12 +76,9 @@ def numeric_palette_macros(module):
         r"^\s*#define\s+(\w+)\s+([^\r\n/]+)",
         (ROOT / "src" / module).read_text(), re.M
     ):
-        numeric = value.strip()
-        while numeric.startswith("(") and numeric.endswith(")"):
-            numeric = numeric[1:-1].strip()
-        if re.fullmatch(r"(?:0[xX][0-9a-fA-F]+|[0-9]+)[uUlL]*", numeric):
-            digits = re.sub(r"[uUlL]+$", "", numeric)
-            definitions[name] = int(digits, 16 if digits.lower().startswith("0x") else 10)
+        numeric = numeric_bank(value)
+        if numeric is not None:
+            definitions[name] = numeric
     return definitions
 
 def main():
@@ -99,8 +106,9 @@ def main():
     # Treat every literal destination across modules as reserved for this
     # conservative audit. Symbolic destinations are unresolved, NOT free.
     module_loads = audit_pokenav_modules()
-    literal_banks = {int(bank) for loads in module_loads.values()
-                     for _, bank in loads if bank.isdecimal()}
+    literal_banks = {value for loads in module_loads.values()
+                     for _, bank in loads
+                     if (value := numeric_bank(bank)) is not None and 0 <= value < TOTAL_BANKS}
     literal_banks.add(0)  # Partial help-bar BG_PLTT_ID(0) colour writes.
     # All explicit BG_PLTT_ID references may participate in palette use,
     # including writes outside the direct-load functions above. Reserve them.
@@ -111,17 +119,19 @@ def main():
     for module, references in all_references.items():
         definitions = macro_definitions[module]
         for line, expression in references:
-            value = int(expression) if expression.isdecimal() else definitions.get(expression)
+            value = numeric_bank(expression)
+            if value is None:
+                value = definitions.get(expression)
             if value is not None and 0 <= value < TOTAL_BANKS:
                 literal_banks.add(value)
-                if not expression.isdecimal():
+                if numeric_bank(expression) is None:
                     resolved_references.append((module, line, expression, value))
     symbolic = []
     resolved = []
     for module, loads in module_loads.items():
         definitions = numeric_palette_macros(module)
         for line, bank in loads:
-            if bank.isdecimal():
+            if numeric_bank(bank) is not None:
                 continue
             if bank in definitions and 0 <= int(definitions[bank]) < TOTAL_BANKS:
                 target = int(definitions[bank])
@@ -142,7 +152,7 @@ def main():
         (module, line, expression)
         for module, references in all_references.items()
         for line, expression in references
-        if not expression.isdecimal() and expression not in macro_definitions[module]
+        if numeric_bank(expression) is None and expression not in macro_definitions[module]
     ]
     print("Nonliteral BG_PLTT_ID references requiring review:", len(unresolved_references))
     for module, line, expression in unresolved_references:
