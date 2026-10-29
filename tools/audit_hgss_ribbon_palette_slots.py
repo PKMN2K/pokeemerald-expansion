@@ -59,6 +59,21 @@ def audit_all_bg_palette_references():
             results[module.name] = references
     return results
 
+def numeric_palette_macros(module):
+    """Resolve only numeric macros local to a PokéNav source module."""
+    definitions = {}
+    for name, value in re.findall(
+        r"^\s*#define\s+(\w+)\s+([^\r\n/]+)",
+        (ROOT / "src" / module).read_text(), re.M
+    ):
+        numeric = value.strip()
+        while numeric.startswith("(") and numeric.endswith(")"):
+            numeric = numeric[1:-1].strip()
+        if re.fullmatch(r"(?:0[xX][0-9a-fA-F]+|[0-9]+)[uUlL]*", numeric):
+            digits = re.sub(r"[uUlL]+$", "", numeric)
+            definitions[name] = int(digits, 16 if digits.lower().startswith("0x") else 10)
+    return definitions
+
 def main():
     owners, conflicts = audit(SOURCE.read_text())
     print("Retail HGSS BG NCLR banks:", sorted(HGSS_BG_BANKS))
@@ -91,25 +106,20 @@ def main():
     # including writes outside the direct-load functions above. Reserve them.
     # Symbolic expressions remain unresolved and cannot certify any bank free.
     all_references = audit_all_bg_palette_references()
-    for references in all_references.values():
-        for _, expression in references:
-            if expression.isdecimal() and int(expression) < TOTAL_BANKS:
-                literal_banks.add(int(expression))
+    resolved_references = []
+    macro_definitions = {module: numeric_palette_macros(module) for module in all_references}
+    for module, references in all_references.items():
+        definitions = macro_definitions[module]
+        for line, expression in references:
+            value = int(expression) if expression.isdecimal() else definitions.get(expression)
+            if value is not None and 0 <= value < TOTAL_BANKS:
+                literal_banks.add(value)
+                if not expression.isdecimal():
+                    resolved_references.append((module, line, expression, value))
     symbolic = []
     resolved = []
     for module, loads in module_loads.items():
-        # Numeric macro destinations may be decimal, hexadecimal, or wrapped
-        # in parentheses. Keep expressions and imported macros unresolved.
-        definitions = {}
-        for name, value in re.findall(
-            r"^\s*#define\s+(\w+)\s+([^\r\n/]+)",
-            (ROOT / "src" / module).read_text(), re.M
-        ):
-            numeric = value.strip()
-            while numeric.startswith("(") and numeric.endswith(")"):
-                numeric = numeric[1:-1].strip()
-            if re.fullmatch(r"(?:0[xX][0-9a-fA-F]+|[0-9]+)[uUlL]*", numeric):
-                definitions[name] = int(re.sub(r"[uUlL]+$", "", numeric), 0 if numeric.lower().startswith("0x") else 10)
+        definitions = numeric_palette_macros(module)
         for line, bank in loads:
             if bank.isdecimal():
                 continue
@@ -123,13 +133,16 @@ def main():
     print("Resolved symbolic destinations:")
     for module, line, name, bank in resolved:
         print(f"  {module}:L{line} {name} = bank {bank}")
+    print("Resolved symbolic BG palette references:")
+    for module, line, name, bank in resolved_references:
+        print(f"  {module}:L{line} {name} = bank {bank}")
     print("Conservatively excluded direct-load and help-bar banks:", sorted(literal_banks))
     print("Unclaimed by this limited literal-load inventory:", candidates)
     unresolved_references = [
         (module, line, expression)
         for module, references in all_references.items()
         for line, expression in references
-        if not expression.isdecimal()
+        if not expression.isdecimal() and expression not in macro_definitions[module]
     ]
     print("Nonliteral BG_PLTT_ID references requiring review:", len(unresolved_references))
     for module, line, expression in unresolved_references:
