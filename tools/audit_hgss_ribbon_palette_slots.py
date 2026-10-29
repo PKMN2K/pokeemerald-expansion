@@ -110,6 +110,27 @@ def audit_tilemap_palette_calls():
             results[module.name] = hits
     return results
 
+def audit_ribbon_tilemap_palette_bits(source):
+    """Inspect the known ribbon tilemap encoder without assuming bank safety."""
+    palette_tags = [
+        int(value) for _, value in re.findall(
+            r"^#define\s+(PALTAG_RIBBON_ICONS_[1-5])\s+(\d+)\s*$",
+            source, re.M
+        )
+    ]
+    base = re.search(r"#define\s+TO_PAL_OFFSET\(palNum\)\s+\(\(palNum\)\s*-\s*PALTAG_RIBBON_ICONS_1\)", source)
+    encoder = re.search(
+        r"palNum\s*=\s*sRibbonGfxData\[ribbonId\]\.palNumOffset\s*\+\s*(\d+)\s*;", source
+    )
+    packing = re.search(r"dst\[i\]\s*=\s*\(tileNum\s*\+\s*i\)\s*\|\s*\(palNum\s*<<\s*12\)", source)
+    if len(palette_tags) != 5 or not base or not encoder or not packing:
+        print("UNRESOLVED: ribbon BG1 palette-bit encoding changed; inspect manually.")
+        return set()
+    banks = {tag - palette_tags[0] + int(encoder.group(1)) for tag in palette_tags}
+    print("Ribbon BG1 tilemap palette banks from source expression:", sorted(banks))
+    print("These are tilemap references, not proof of available palette memory.")
+    return {bank for bank in banks if 0 <= bank < TOTAL_BANKS}
+
 def main():
     owners, conflicts = audit(SOURCE.read_text())
     print("Retail HGSS BG NCLR banks:", sorted(HGSS_BG_BANKS))
@@ -146,6 +167,7 @@ def main():
                      for _, bank in loads
                      if (value := numeric_bank(bank)) is not None and 0 <= value < TOTAL_BANKS}
     literal_banks.add(0)  # Partial help-bar BG_PLTT_ID(0) colour writes.
+    literal_banks.update(audit_ribbon_tilemap_palette_bits(SOURCE.read_text()))
     # All explicit BG_PLTT_ID references may participate in palette use,
     # including writes outside the direct-load functions above. Reserve them.
     # Symbolic expressions remain unresolved and cannot certify any bank free.
