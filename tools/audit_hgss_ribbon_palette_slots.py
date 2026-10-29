@@ -132,6 +132,22 @@ def audit_ribbon_tilemap_palette_bits(source):
     print("These are tilemap references, not proof of available palette memory.")
     return {bank for bank in banks if 0 <= bank < TOTAL_BANKS}
 
+def audit_ribbon_summary_bg2_tilemap():
+    """Read the 32x20 BG2 4bpp tilemap's palette nibble from source bytes."""
+    tilemap = ROOT / "graphics/pokenav/ribbons/summary_bg.bin"
+    data = tilemap.read_bytes()
+    expected_size = 32 * 20 * 2
+    if len(data) != expected_size:
+        print(f"UNRESOLVED: BG2 tilemap size {len(data)} != {expected_size}")
+        return set()
+    entries = [int.from_bytes(data[i:i + 2], "little")
+               for i in range(0, len(data), 2)]
+    banks = {entry >> 12 for entry in entries}
+    print("Ribbon BG2 summary tilemap palette banks:", sorted(banks))
+    print("BG2 tilemap bytes:", tilemap.relative_to(ROOT), "entries:", len(entries))
+    print("BG2 palette bits are evidence of references, not safe allocation.")
+    return banks
+
 def main():
     owners, conflicts = audit(SOURCE.read_text())
     print("Retail HGSS BG NCLR banks:", sorted(HGSS_BG_BANKS))
@@ -171,6 +187,7 @@ def main():
                      if (value := numeric_bank(bank)) is not None and 0 <= value < TOTAL_BANKS}
     literal_banks.add(0)  # Partial help-bar BG_PLTT_ID(0) colour writes.
     literal_banks.update(audit_ribbon_tilemap_palette_bits(SOURCE.read_text()))
+    literal_banks.update(audit_ribbon_summary_bg2_tilemap())
     # All explicit BG_PLTT_ID references may participate in palette use,
     # including writes outside the direct-load functions above. Reserve them.
     # Symbolic expressions remain unresolved and cannot certify any bank free.
