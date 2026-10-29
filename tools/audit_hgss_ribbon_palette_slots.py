@@ -94,10 +94,17 @@ def audit_tilemap_palette_calls():
     results = {}
     for module in sorted((ROOT / "src").glob("pokenav*.c")):
         source = module.read_text()
-        hits = [
-            (source.count("\n", 0, match.start()) + 1, match.group(1))
-            for match in pattern.finditer(source)
-        ]
+        # Show the complete source statement where practical. A function name
+        # alone conceals the palette argument and the source tilemap.
+        hits = []
+        for match in pattern.finditer(source):
+            line = source.count("\n", 0, match.start()) + 1
+            end = source.find(";", match.end())
+            if end < 0 or end - match.start() > 512:
+                statement = "<statement requires manual inspection>"
+            else:
+                statement = " ".join(source[match.start():end + 1].split())
+            hits.append((line, match.group(1), statement))
         if hits:
             results[module.name] = hits
     return results
@@ -123,8 +130,8 @@ def main():
         ))
     print("Tilemap-copy/fill palette ownership call sites (inspection required):")
     for module, calls in audit_tilemap_palette_calls().items():
-        for line, function in calls:
-            print(f"  {module}:L{line} {function}")
+        for line, function, statement in calls:
+            print(f"  {module}:L{line} {function}: {statement}")
     print("Call sites do not establish the palette values in map data.")
     print("References are diagnostic only; no banks are certified free.")
     print("Symbolic banks, helper writes and tilemap ownership require further audit.")
