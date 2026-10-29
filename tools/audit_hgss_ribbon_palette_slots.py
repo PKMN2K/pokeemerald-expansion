@@ -81,6 +81,27 @@ def numeric_palette_macros(module):
             definitions[name] = numeric
     return definitions
 
+def audit_tilemap_palette_calls():
+    """Find source-level tilemap palette setters; do not infer bank lifetimes."""
+    names = (
+        "FillBgTilemapBufferRect_Palette0",
+        "FillBgTilemapBufferRect",
+        "CopyToBgTilemapBufferRect",
+        "CopyToBgTilemapBufferRect_ChangePalette",
+        "ChangeBgX",
+    )
+    pattern = re.compile(r"\b(" + "|".join(names) + r")\s*\(")
+    results = {}
+    for module in sorted((ROOT / "src").glob("pokenav*.c")):
+        source = module.read_text()
+        hits = [
+            (source.count("\n", 0, match.start()) + 1, match.group(1))
+            for match in pattern.finditer(source)
+        ]
+        if hits:
+            results[module.name] = hits
+    return results
+
 def main():
     owners, conflicts = audit(SOURCE.read_text())
     print("Retail HGSS BG NCLR banks:", sorted(HGSS_BG_BANKS))
@@ -100,6 +121,11 @@ def main():
         print(f"  {module}: " + ", ".join(
             f"L{line} bank/expression {bank}" for line, bank in references
         ))
+    print("Tilemap-copy/fill palette ownership call sites (inspection required):")
+    for module, calls in audit_tilemap_palette_calls().items():
+        for line, function in calls:
+            print(f"  {module}:L{line} {function}")
+    print("Call sites do not establish the palette values in map data.")
     print("References are diagnostic only; no banks are certified free.")
     print("Symbolic banks, helper writes and tilemap ownership require further audit.")
     # BG bank 0 hosts individual help-bar colour uploads in pokenav_main_menu.c.
