@@ -67,8 +67,18 @@ def main():
     symbolic = []
     resolved = []
     for module, loads in module_loads.items():
-        definitions = dict(re.findall(r"^\s*#define\s+(\w+)\s+(\d+)\s*(?:\r?$)",
-                                      (ROOT / "src" / module).read_text(), re.M))
+        # Numeric macro destinations may be decimal, hexadecimal, or wrapped
+        # in parentheses. Keep expressions and imported macros unresolved.
+        definitions = {}
+        for name, value in re.findall(
+            r"^\s*#define\s+(\w+)\s+([^\r\n/]+)",
+            (ROOT / "src" / module).read_text(), re.M
+        ):
+            numeric = value.strip()
+            while numeric.startswith("(") and numeric.endswith(")"):
+                numeric = numeric[1:-1].strip()
+            if re.fullmatch(r"(?:0[xX][0-9a-fA-F]+|[0-9]+)[uUlL]*", numeric):
+                definitions[name] = int(re.sub(r"[uUlL]+$", "", numeric), 0 if numeric.lower().startswith("0x") else 10)
         for line, bank in loads:
             if bank.isdecimal():
                 continue
