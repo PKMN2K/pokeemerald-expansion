@@ -182,6 +182,14 @@ def audit_ribbon_window_color_dependencies(source):
     print("Ribbon window symbolic text colors (mapping not resolved):")
     for line, name in text_colors:
         print(f"  L{line}: {name}")
+    explicit_printers = [
+        (source.count("\\n", 0, m.start()) + 1, m.group(1))
+        for m in re.finditer(r"\\b(AddTextPrinterParameterized3|AddTextPrinterParameterized)\\s*\\(", source)
+    ]
+    print("Ribbon text-printer calls (default colors require separate review):")
+    for line, function in explicit_printers:
+        print(f"  L{line}: {function}")
+    print("TEXT_COLOR names above are symbolic, not resolved 4bpp indices.")
     print("BG bank 1 cannot be replaced safely until window pixel indices")
     print("and text colors are checked against the replacement palette.")
 
