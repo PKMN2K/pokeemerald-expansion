@@ -170,6 +170,21 @@ def audit_ribbon_window_palettes(source):
     print("Window bank references also reserve shared physical BG palettes.")
     return {bank for _, _, bank in windows if 0 <= bank < TOTAL_BANKS}
 
+def audit_ribbon_window_color_dependencies(source):
+    """List window pixel indices; text colors need runtime mapping review."""
+    fills = [(source.count("\\n", 0, m.start()) + 1, int(m.group(1)))
+             for m in re.finditer(r"FillWindowPixelBuffer\\s*\\(\\s*[^,]+,\\s*PIXEL_FILL\\s*\\(\\s*(\\d+)\\s*\\)", source)]
+    text_colors = [(source.count("\\n", 0, m.start()) + 1, m.group(1))
+                   for m in re.finditer(r"\\b(TEXT_COLOR_[A-Z0-9_]+)\\b", source)]
+    print("Ribbon window PIXEL_FILL palette indices:")
+    for line, index in fills:
+        print(f"  L{line}: 4bpp color index {index}")
+    print("Ribbon window symbolic text colors (mapping not resolved):")
+    for line, name in text_colors:
+        print(f"  L{line}: {name}")
+    print("BG bank 1 cannot be replaced safely until window pixel indices")
+    print("and text colors are checked against the replacement palette.")
+
 def main():
     owners, conflicts = audit(SOURCE.read_text())
     print("Retail HGSS BG NCLR banks:", sorted(HGSS_BG_BANKS))
@@ -219,6 +234,7 @@ def main():
         print("loads, windows and other layers still require collision checks.")
     literal_banks.update(bg1_banks | bg2_banks)
     literal_banks.update(audit_ribbon_window_palettes(SOURCE.read_text()))
+    audit_ribbon_window_color_dependencies(SOURCE.read_text())
     # All explicit BG_PLTT_ID references may participate in palette use,
     # including writes outside the direct-load functions above. Reserve them.
     # Symbolic expressions remain unresolved and cannot certify any bank free.
