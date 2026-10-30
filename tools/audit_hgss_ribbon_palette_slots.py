@@ -154,13 +154,13 @@ def audit_ribbon_summary_bg2_tilemap():
 def audit_ribbon_window_palettes(source):
     """Report direct window palette users on the live ribbon summary screen."""
     pattern = re.compile(
-        r"static\\s+const\\s+struct\\s+WindowTemplate\\s+(\\w+)"
-        r"(?:\\[\\])?\\s*=\\s*\\{(.*?)\\};", re.S
+        r"static\s+const\s+struct\s+WindowTemplate\s+(\w+)"
+        r"(?:\[\])?\s*=\s*\{(.*?)\};", re.S
     )
     windows = []
     for match in pattern.finditer(source):
-        palette = re.search(r"\\.paletteNum\\s*=\\s*(\\d+)", match.group(2))
-        bg = re.search(r"\\.bg\\s*=\\s*(\\d+)", match.group(2))
+        palette = re.search(r"\.paletteNum\s*=\s*(\d+)", match.group(2))
+        bg = re.search(r"\.bg\s*=\s*(\d+)", match.group(2))
         if palette:
             windows.append((match.group(1), int(bg.group(1)) if bg else None,
                             int(palette.group(1))))
@@ -172,10 +172,10 @@ def audit_ribbon_window_palettes(source):
 
 def audit_ribbon_window_color_dependencies(source):
     """List window pixel indices; text colors need runtime mapping review."""
-    fills = [(source.count("\\n", 0, m.start()) + 1, int(m.group(1)))
-             for m in re.finditer(r"FillWindowPixelBuffer\\s*\\(\\s*[^,]+,\\s*PIXEL_FILL\\s*\\(\\s*(\\d+)\\s*\\)", source)]
-    text_colors = [(source.count("\\n", 0, m.start()) + 1, m.group(1))
-                   for m in re.finditer(r"\\b(TEXT_COLOR_[A-Z0-9_]+)\\b", source)]
+    fills = [(source.count("\n", 0, m.start()) + 1, int(m.group(1)))
+             for m in re.finditer(r"FillWindowPixelBuffer\s*\(\s*[^,]+,\s*PIXEL_FILL\s*\(\s*(\d+)\s*\)", source)]
+    text_colors = [(source.count("\n", 0, m.start()) + 1, m.group(1))
+                   for m in re.finditer(r"\b(TEXT_COLOR_[A-Z0-9_]+)\b", source)]
     print("Ribbon window PIXEL_FILL palette indices:")
     for line, index in fills:
         print(f"  L{line}: 4bpp color index {index}")
