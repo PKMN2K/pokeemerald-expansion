@@ -186,8 +186,16 @@ def main():
                      for _, bank in loads
                      if (value := numeric_bank(bank)) is not None and 0 <= value < TOTAL_BANKS}
     literal_banks.add(0)  # Partial help-bar BG_PLTT_ID(0) colour writes.
-    literal_banks.update(audit_ribbon_tilemap_palette_bits(SOURCE.read_text()))
-    literal_banks.update(audit_ribbon_summary_bg2_tilemap())
+    bg1_banks = audit_ribbon_tilemap_palette_bits(SOURCE.read_text())
+    bg2_banks = audit_ribbon_summary_bg2_tilemap()
+    print("Ribbon BG1/BG2 shared tilemap palette banks:", sorted(bg1_banks & bg2_banks))
+    if bg1_banks & bg2_banks:
+        print("CONFLICT RISK: both BG layers reference the same physical BG")
+        print("palette bank; verify their colors match before any replacement.")
+    else:
+        print("No shared BG1/BG2 tilemap bank references found; palette")
+        print("loads, windows and other layers still require collision checks.")
+    literal_banks.update(bg1_banks | bg2_banks)
     # All explicit BG_PLTT_ID references may participate in palette use,
     # including writes outside the direct-load functions above. Reserve them.
     # Symbolic expressions remain unresolved and cannot certify any bank free.
