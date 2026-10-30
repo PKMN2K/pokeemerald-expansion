@@ -151,6 +151,25 @@ def audit_ribbon_summary_bg2_tilemap():
     print("BG2 palette bits are evidence of references, not safe allocation.")
     return banks
 
+def audit_ribbon_window_palettes(source):
+    """Report direct window palette users on the live ribbon summary screen."""
+    pattern = re.compile(
+        r"static\\s+const\\s+struct\\s+WindowTemplate\\s+(\\w+)"
+        r"(?:\\[\\])?\\s*=\\s*\\{(.*?)\\};", re.S
+    )
+    windows = []
+    for match in pattern.finditer(source):
+        palette = re.search(r"\\.paletteNum\\s*=\\s*(\\d+)", match.group(2))
+        bg = re.search(r"\\.bg\\s*=\\s*(\\d+)", match.group(2))
+        if palette:
+            windows.append((match.group(1), int(bg.group(1)) if bg else None,
+                            int(palette.group(1))))
+    print("Ribbon summary window palette assignments:")
+    for name, bg, bank in windows:
+        print(f"  {name}: BG{bg if bg is not None else '?'} bank {bank}")
+    print("Window bank references also reserve shared physical BG palettes.")
+    return {bank for _, _, bank in windows if 0 <= bank < TOTAL_BANKS}
+
 def main():
     owners, conflicts = audit(SOURCE.read_text())
     print("Retail HGSS BG NCLR banks:", sorted(HGSS_BG_BANKS))
@@ -199,6 +218,7 @@ def main():
         print("No shared BG1/BG2 tilemap bank references found; palette")
         print("loads, windows and other layers still require collision checks.")
     literal_banks.update(bg1_banks | bg2_banks)
+    literal_banks.update(audit_ribbon_window_palettes(SOURCE.read_text()))
     # All explicit BG_PLTT_ID references may participate in palette use,
     # including writes outside the direct-load functions above. Reserve them.
     # Symbolic expressions remain unresolved and cannot certify any bank free.
