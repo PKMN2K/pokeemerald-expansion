@@ -144,6 +144,9 @@ def audit_ribbon_summary_bg2_tilemap():
                for i in range(0, len(data), 2)]
     banks = {entry >> 12 for entry in entries}
     print("Ribbon BG2 summary tilemap palette banks:", sorted(banks))
+    if banks != {1}:
+        print("UNRESOLVED: BG2 summary tilemap no longer exclusively uses")
+        print("bank 1; revisit BG1/BG2 palette ownership before wiring.")
     print("BG2 tilemap bytes:", tilemap.relative_to(ROOT), "entries:", len(entries))
     print("BG2 palette bits are evidence of references, not safe allocation.")
     return banks
