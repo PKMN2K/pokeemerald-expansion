@@ -95,5 +95,24 @@ class RibbonTextColorAuditTests(unittest.TestCase):
                 audit.audit_default_ribbon_font_colors()
             self.assertIn("UNRESOLVED: default FONT_NORMAL foreground index 16", output.getvalue())
 
+
+    def test_flags_hexadecimal_default_font_palette_index(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            source = root / "src"
+            source.mkdir()
+            (source / "text.c").write_text(
+                "[FONT_SMALL] = {\n"
+                "    .color.foreground = 0x10,\n"
+                "    .color.background = 0x0,\n"
+                "    .color.shadow = 0x1,\n"
+                "    .color.accent = 0x2,\n"
+                "},\n"
+            )
+            output = io.StringIO()
+            with patch.object(audit, "ROOT", root), contextlib.redirect_stdout(output):
+                audit.audit_default_ribbon_font_colors()
+            self.assertIn("UNRESOLVED: default FONT_SMALL foreground index 16", output.getvalue())
+
 if __name__ == "__main__":
     unittest.main()
