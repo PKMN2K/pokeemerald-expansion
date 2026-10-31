@@ -172,8 +172,12 @@ def audit_ribbon_window_palettes(source):
 
 def audit_ribbon_window_color_dependencies(source):
     """List window pixel indices; text colors need runtime mapping review."""
-    fills = [(source.count("\n", 0, m.start()) + 1, int(m.group(1)))
-             for m in re.finditer(r"FillWindowPixelBuffer\s*\(\s*[^,]+,\s*PIXEL_FILL\s*\(\s*(\d+)\s*\)", source)]
+    fills = [(source.count("\n", 0, m.start()) + 1,
+              int(m.group(1), 16 if m.group(1).lower().startswith("0x") else 10))
+             for m in re.finditer(
+                 r"FillWindowPixelBuffer\s*\(\s*[^,]+,\s*PIXEL_FILL\s*\(\s*(0[xX][0-9a-fA-F]+|[0-9]+)[uUlL]*\s*\)",
+                 source
+             )]
     text_colors = [(source.count("\n", 0, m.start()) + 1, m.group(1))
                    for m in re.finditer(r"\b(TEXT_COLOR_[A-Z0-9_]+)\b", source)]
     print("Ribbon window PIXEL_FILL palette indices:")
