@@ -53,12 +53,12 @@ class RibbonTextColorAuditTests(unittest.TestCase):
             constants = root / "include" / "constants"
             constants.mkdir(parents=True)
             (constants / "characters.h").write_text(
-                "#define TEXT_COLOR_INVALID 16\\n"
+                "#define TEXT_COLOR_INVALID 16\n"
             )
             output = io.StringIO()
             with patch.object(audit, "ROOT", root), contextlib.redirect_stdout(output):
                 audit.audit_ribbon_window_color_dependencies(
-                    "const u8 color = TEXT_COLOR_INVALID;\\n"
+                    "const u8 color = TEXT_COLOR_INVALID;\n"
                 )
             self.assertIn("UNRESOLVED: TEXT_COLOR_INVALID = 16", output.getvalue())
 
