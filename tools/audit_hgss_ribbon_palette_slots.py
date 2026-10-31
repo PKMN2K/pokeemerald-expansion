@@ -189,7 +189,22 @@ def audit_ribbon_window_color_dependencies(source):
     print("Ribbon text-printer calls (default colors require separate review):")
     for line, function in explicit_printers:
         print(f"  L{line}: {function}")
-    print("TEXT_COLOR names above are symbolic, not resolved 4bpp indices.")
+    definitions = (ROOT / "include/constants/characters.h").read_text()
+    color_definitions = {
+        name: int(value, 0)
+        for name, value in re.findall(
+            r"^#define\\s+(TEXT_COLOR_[A-Z0-9_]+)\\s+(0[xX][0-9a-fA-F]+|[0-9]+)\\b",
+            definitions, re.M
+        )
+    }
+    print("Resolved ribbon text color indices from constants/characters.h:")
+    for name in sorted({name for _, name in text_colors}):
+        if name in color_definitions:
+            print(f"  {name} = 4bpp color index {color_definitions[name]}")
+        else:
+            print(f"  UNRESOLVED: {name}")
+    print("These indices belong to each window's selected BG palette bank.")
+
     print("BG bank 1 cannot be replaced safely until window pixel indices")
     print("and text colors are checked against the replacement palette.")
 
