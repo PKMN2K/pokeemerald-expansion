@@ -200,7 +200,11 @@ def audit_ribbon_window_color_dependencies(source):
     print("Resolved ribbon text color indices from constants/characters.h:")
     for name in sorted({name for _, name in text_colors}):
         if name in color_definitions:
-            print(f"  {name} = 4bpp color index {color_definitions[name]}")
+            index = color_definitions[name]
+            if 0 <= index < 16:
+                print(f"  {name} = 4bpp color index {index}")
+            else:
+                print(f"  UNRESOLVED: {name} = {index} (outside 4bpp index 0..15)")
         else:
             print(f"  UNRESOLVED: {name}")
     print("These indices belong to each window's selected BG palette bank.")
