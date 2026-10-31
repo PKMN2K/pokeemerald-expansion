@@ -208,6 +208,29 @@ def audit_ribbon_window_color_dependencies(source):
     print("BG bank 1 cannot be replaced safely until window pixel indices")
     print("and text colors are checked against the replacement palette.")
 
+def audit_default_ribbon_font_colors():
+    """Read real default indices for FONT_NORMAL and FONT_SMALL."""
+    source = (ROOT / "src/text.c").read_text()
+    for font in ("FONT_NORMAL", "FONT_SMALL"):
+        match = re.search(
+            r"\[" + font + r"\]\s*=\s*\{(.*?)\n\s*\},", source, re.S
+        )
+        if not match:
+            print(f"UNRESOLVED: default {font} colors")
+            continue
+        colors = {}
+        for field, value in re.findall(
+            r"\.color\.(foreground|background|shadow|accent)\s*=\s*(\d+)",
+            match.group(1)
+        ):
+            colors[field] = int(value)
+        if set(colors) != {"foreground", "background", "shadow", "accent"}:
+            print(f"UNRESOLVED: incomplete default {font} colors: {colors}")
+        else:
+            print(f"Default {font} palette indices: {colors}")
+    print("Default font indices use the selected window palette bank;")
+    print("they do not establish compatibility with a replacement BG palette.")
+
 def main():
     owners, conflicts = audit(SOURCE.read_text())
     print("Retail HGSS BG NCLR banks:", sorted(HGSS_BG_BANKS))
@@ -258,6 +281,7 @@ def main():
     literal_banks.update(bg1_banks | bg2_banks)
     literal_banks.update(audit_ribbon_window_palettes(SOURCE.read_text()))
     audit_ribbon_window_color_dependencies(SOURCE.read_text())
+    audit_default_ribbon_font_colors()
     # All explicit BG_PLTT_ID references may participate in palette use,
     # including writes outside the direct-load functions above. Reserve them.
     # Symbolic expressions remain unresolved and cannot certify any bank free.
