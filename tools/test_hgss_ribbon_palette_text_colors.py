@@ -138,7 +138,7 @@ class RibbonTextColorAuditTests(unittest.TestCase):
             output = io.StringIO()
             with patch.object(audit, "ROOT", root), contextlib.redirect_stdout(output):
                 audit.audit_ribbon_window_color_dependencies(
-                    "FillWindowPixelBuffer(windowId, PIXEL_FILL(\\n    BG_COLOR_INDEX\\n));"
+                    "FillWindowPixelBuffer(windowId, PIXEL_FILL(\n    BG_COLOR_INDEX\n));"
                 )
             self.assertIn("UNRESOLVED: PIXEL_FILL expression BG_COLOR_INDEX", output.getvalue())
 
