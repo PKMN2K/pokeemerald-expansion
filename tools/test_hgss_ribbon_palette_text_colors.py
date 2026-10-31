@@ -83,12 +83,12 @@ class RibbonTextColorAuditTests(unittest.TestCase):
             source = root / "src"
             source.mkdir()
             (source / "text.c").write_text(
-                "[FONT_NORMAL] = {\\n"
-                "    .color.foreground = 16,\\n"
-                "    .color.background = 0,\\n"
-                "    .color.shadow = 1,\\n"
-                "    .color.accent = 2,\\n"
-                "},\\n"
+                "[FONT_NORMAL] = {\n"
+                "    .color.foreground = 16,\n"
+                "    .color.background = 0,\n"
+                "    .color.shadow = 1,\n"
+                "    .color.accent = 2,\n"
+                "},\n"
             )
             output = io.StringIO()
             with patch.object(audit, "ROOT", root), contextlib.redirect_stdout(output):
