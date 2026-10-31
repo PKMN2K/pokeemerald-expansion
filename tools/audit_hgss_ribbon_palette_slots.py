@@ -227,10 +227,10 @@ def audit_default_ribbon_font_colors():
             continue
         colors = {}
         for field, value in re.findall(
-            r"\.color\.(foreground|background|shadow|accent)\s*=\s*(\d+)",
+            r"\.color\.(foreground|background|shadow|accent)\s*=\s*(0[xX][0-9a-fA-F]+|[0-9]+)\b",
             match.group(1)
         ):
-            colors[field] = int(value)
+            colors[field] = int(value, 16 if value.lower().startswith('0x') else 10)
         if set(colors) != {"foreground", "background", "shadow", "accent"}:
             print(f"UNRESOLVED: incomplete default {font} colors: {colors}")
         else:
