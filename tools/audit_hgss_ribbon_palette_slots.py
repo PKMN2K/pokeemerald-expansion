@@ -180,7 +180,7 @@ def audit_ribbon_window_color_dependencies(source):
              )]
     unresolved_fills = [
         (source.count("\n", 0, m.start()) + 1, m.group(1).strip())
-        for m in re.finditer(r"FillWindowPixelBuffer\s*\(\s*[^,]+,\s*PIXEL_FILL\s*\(\s*([^)]*?)\s*\)", source)
+        for m in re.finditer(r"FillWindowPixelBuffer\s*\(\s*[^,]+,\s*PIXEL_FILL\s*\(\s*([^)]*?)\s*\)", source, re.S)
         if not re.fullmatch(r"(?:0[xX][0-9a-fA-F]+|[0-9]+)[uUlL]*", m.group(1).strip())
     ]
     text_colors = [(source.count("\n", 0, m.start()) + 1, m.group(1))
