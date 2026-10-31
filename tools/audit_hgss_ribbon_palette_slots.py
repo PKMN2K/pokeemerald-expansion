@@ -178,6 +178,11 @@ def audit_ribbon_window_color_dependencies(source):
                  r"FillWindowPixelBuffer\s*\(\s*[^,]+,\s*PIXEL_FILL\s*\(\s*(0[xX][0-9a-fA-F]+|[0-9]+)[uUlL]*\s*\)",
                  source
              )]
+    unresolved_fills = [
+        (source.count("\n", 0, m.start()) + 1, m.group(1).strip())
+        for m in re.finditer(r"FillWindowPixelBuffer\s*\(\s*[^,]+,\s*PIXEL_FILL\s*\(\s*([^)]*?)\s*\)", source)
+        if not re.fullmatch(r"(?:0[xX][0-9a-fA-F]+|[0-9]+)[uUlL]*", m.group(1).strip())
+    ]
     text_colors = [(source.count("\n", 0, m.start()) + 1, m.group(1))
                    for m in re.finditer(r"\b(TEXT_COLOR_[A-Z0-9_]+)\b", source)]
     print("Ribbon window PIXEL_FILL palette indices:")
@@ -186,6 +191,8 @@ def audit_ribbon_window_color_dependencies(source):
             print(f"  L{line}: 4bpp color index {index}")
         else:
             print(f"  L{line}: UNRESOLVED: PIXEL_FILL index {index} (outside 4bpp index 0..15)")
+    for line, expression in unresolved_fills:
+        print(f"  L{line}: UNRESOLVED: PIXEL_FILL expression {expression}")
     print("Ribbon window symbolic text colors (mapping not resolved):")
     for line, name in text_colors:
         print(f"  L{line}: {name}")
