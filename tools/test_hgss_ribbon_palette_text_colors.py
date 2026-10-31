@@ -63,5 +63,18 @@ class RibbonTextColorAuditTests(unittest.TestCase):
             self.assertIn("UNRESOLVED: TEXT_COLOR_INVALID = 16", output.getvalue())
 
 
+
+    def test_reports_out_of_range_pixel_fill_index(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            constants = root / "include" / "constants"
+            constants.mkdir(parents=True)
+            (constants / "characters.h").write_text("")
+            source = "FillWindowPixelBuffer(windowId, PIXEL_FILL(16));"
+            output = io.StringIO()
+            with patch.object(audit, "ROOT", root), contextlib.redirect_stdout(output):
+                audit.audit_ribbon_window_color_dependencies(source)
+            self.assertIn("UNRESOLVED: PIXEL_FILL index 16", output.getvalue())
+
 if __name__ == "__main__":
     unittest.main()
