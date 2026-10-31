@@ -103,7 +103,7 @@ class RibbonTextColorAuditTests(unittest.TestCase):
             source.mkdir()
             (source / "text.c").write_text(
                 "[FONT_SMALL] = {\n"
-                "    .color.foreground = 0x10,\n"
+                "    .color.foreground = 0x10U,\n"
                 "    .color.background = 0x0,\n"
                 "    .color.shadow = 0x1,\n"
                 "    .color.accent = 0x2,\n"
