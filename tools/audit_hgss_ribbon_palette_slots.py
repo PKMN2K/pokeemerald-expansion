@@ -235,6 +235,9 @@ def audit_default_ribbon_font_colors():
             print(f"UNRESOLVED: incomplete default {font} colors: {colors}")
         else:
             print(f"Default {font} palette indices: {colors}")
+            for field, index in sorted(colors.items()):
+                if not 0 <= index < TOTAL_BANKS:
+                    print(f"UNRESOLVED: default {font} {field} index {index} (outside 4bpp index 0..15)")
     print("Default font indices use the selected window palette bank;")
     print("they do not establish compatibility with a replacement BG palette.")
 
