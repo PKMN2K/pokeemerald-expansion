@@ -70,7 +70,7 @@ class RibbonTextColorAuditTests(unittest.TestCase):
             constants = root / "include" / "constants"
             constants.mkdir(parents=True)
             (constants / "characters.h").write_text("")
-            source = "FillWindowPixelBuffer(windowId, PIXEL_FILL(16));"
+            source = "FillWindowPixelBuffer(windowId, PIXEL_FILL(0x10U));"
             output = io.StringIO()
             with patch.object(audit, "ROOT", root), contextlib.redirect_stdout(output):
                 audit.audit_ribbon_window_color_dependencies(source)
