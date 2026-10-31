@@ -163,6 +163,9 @@ jobs:
       - name: Test HGSS ribbon BG candidate audit
         run: python3 -m unittest discover -s tests -p 'test_hgss_ribbon_bg_candidates.py' -v
 
+      - name: Test HGSS ribbon text-color palette resolution
+        run: python3 tools/test_hgss_ribbon_palette_text_colors.py -v
+
       - name: Validate imported HGSS ribbon assets
         run: python3 tools/validate_hgss_ribbon_assets.py
 
