@@ -183,8 +183,8 @@ def audit_ribbon_window_color_dependencies(source):
     for line, name in text_colors:
         print(f"  L{line}: {name}")
     explicit_printers = [
-        (source.count("\\n", 0, m.start()) + 1, m.group(1))
-        for m in re.finditer(r"\\b(AddTextPrinterParameterized3|AddTextPrinterParameterized)\\s*\\(", source)
+        (source.count("\n", 0, m.start()) + 1, m.group(1))
+        for m in re.finditer(r"\b(AddTextPrinterParameterized3|AddTextPrinterParameterized)\s*\(", source)
     ]
     print("Ribbon text-printer calls (default colors require separate review):")
     for line, function in explicit_printers:
