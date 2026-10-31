@@ -227,7 +227,7 @@ def audit_default_ribbon_font_colors():
             continue
         colors = {}
         for field, value in re.findall(
-            r"\.color\.(foreground|background|shadow|accent)\s*=\s*(0[xX][0-9a-fA-F]+|[0-9]+)\b",
+            r"\.color\.(foreground|background|shadow|accent)\s*=\s*(0[xX][0-9a-fA-F]+|[0-9]+)[uUlL]*\b",
             match.group(1)
         ):
             colors[field] = int(value, 16 if value.lower().startswith('0x') else 10)
