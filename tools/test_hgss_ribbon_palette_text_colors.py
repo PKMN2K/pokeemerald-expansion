@@ -76,5 +76,24 @@ class RibbonTextColorAuditTests(unittest.TestCase):
                 audit.audit_ribbon_window_color_dependencies(source)
             self.assertIn("UNRESOLVED: PIXEL_FILL index 16", output.getvalue())
 
+
+    def test_flags_invalid_default_font_palette_index(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            source = root / "src"
+            source.mkdir()
+            (source / "text.c").write_text(
+                "[FONT_NORMAL] = {\\n"
+                "    .color.foreground = 16,\\n"
+                "    .color.background = 0,\\n"
+                "    .color.shadow = 1,\\n"
+                "    .color.accent = 2,\\n"
+                "},\\n"
+            )
+            output = io.StringIO()
+            with patch.object(audit, "ROOT", root), contextlib.redirect_stdout(output):
+                audit.audit_default_ribbon_font_colors()
+            self.assertIn("UNRESOLVED: default FONT_NORMAL foreground index 16", output.getvalue())
+
 if __name__ == "__main__":
     unittest.main()
