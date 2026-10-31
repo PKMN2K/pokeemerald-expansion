@@ -193,7 +193,7 @@ def audit_ribbon_window_color_dependencies(source):
     color_definitions = {
         name: int(value, 0)
         for name, value in re.findall(
-            r"^#define\\s+(TEXT_COLOR_[A-Z0-9_]+)\\s+(0[xX][0-9a-fA-F]+|[0-9]+)\\b",
+            r"^#define\s+(TEXT_COLOR_[A-Z0-9_]+)\s+(0[xX][0-9a-fA-F]+|[0-9]+)\b",
             definitions, re.M
         )
     }
