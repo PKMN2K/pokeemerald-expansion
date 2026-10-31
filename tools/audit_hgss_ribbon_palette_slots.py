@@ -178,7 +178,10 @@ def audit_ribbon_window_color_dependencies(source):
                    for m in re.finditer(r"\b(TEXT_COLOR_[A-Z0-9_]+)\b", source)]
     print("Ribbon window PIXEL_FILL palette indices:")
     for line, index in fills:
-        print(f"  L{line}: 4bpp color index {index}")
+        if 0 <= index < 16:
+            print(f"  L{line}: 4bpp color index {index}")
+        else:
+            print(f"  L{line}: UNRESOLVED: PIXEL_FILL index {index} (outside 4bpp index 0..15)")
     print("Ribbon window symbolic text colors (mapping not resolved):")
     for line, name in text_colors:
         print(f"  L{line}: {name}")
