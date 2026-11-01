@@ -140,7 +140,7 @@ class RibbonTextColorAuditTests(unittest.TestCase):
                 audit.audit_ribbon_window_color_dependencies(
                     "FillWindowPixelBuffer(windowId, PIXEL_FILL(\n    BG_COLOR_INDEX\n    + 1\n));"
                 )
-            self.assertIn("UNRESOLVED: PIXEL_FILL expression BG_COLOR_INDEX", output.getvalue())
+            self.assertIn("UNRESOLVED: PIXEL_FILL expression BG_COLOR_INDEX + 1", output.getvalue())
 
 if __name__ == "__main__":
     unittest.main()
