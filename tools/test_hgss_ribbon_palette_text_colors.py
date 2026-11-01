@@ -152,7 +152,7 @@ class RibbonTextColorAuditTests(unittest.TestCase):
             output = io.StringIO()
             with patch.object(audit, "ROOT", root), contextlib.redirect_stdout(output):
                 audit.audit_ribbon_window_color_dependencies(
-                    "FillWindowPixelBuffer(windowId, PIXEL_FILL(\\n    0x0FU\\n));"
+                    "FillWindowPixelBuffer(windowId, PIXEL_FILL(\n    0x0FU\n));"
                 )
             result = output.getvalue()
             self.assertIn("4bpp color index 15", result)
