@@ -204,5 +204,21 @@ class RibbonTextColorAuditTests(unittest.TestCase):
                 )
             self.assertIn("UNRESOLVED: PIXEL_FILL expression (BG_COLOR_INDEX", output.getvalue())
 
+
+    def test_reports_malformed_numeric_suffix_as_unresolved(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            constants = root / "include" / "constants"
+            constants.mkdir(parents=True)
+            (constants / "characters.h").write_text("")
+            output = io.StringIO()
+            with patch.object(audit, "ROOT", root), contextlib.redirect_stdout(output):
+                audit.audit_ribbon_window_color_dependencies(
+                    "FillWindowPixelBuffer(windowId, PIXEL_FILL(15XYZ));"
+                )
+            result = output.getvalue()
+            self.assertIn("UNRESOLVED: PIXEL_FILL expression 15XYZ", result)
+            self.assertNotIn("4bpp color index 15", result)
+
 if __name__ == "__main__":
     unittest.main()
