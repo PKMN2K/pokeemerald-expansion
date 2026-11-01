@@ -192,7 +192,7 @@ def audit_ribbon_window_color_dependencies(source):
         else:
             print(f"  L{line}: UNRESOLVED: PIXEL_FILL index {index} (outside 4bpp index 0..15)")
     for line, expression in unresolved_fills:
-        print(f"  L{line}: UNRESOLVED: PIXEL_FILL expression {expression}")
+        print(f"  L{line}: UNRESOLVED: PIXEL_FILL expression {' '.join(expression.split())}")
     print("Ribbon window symbolic text colors (mapping not resolved):")
     for line, name in text_colors:
         print(f"  L{line}: {name}")
