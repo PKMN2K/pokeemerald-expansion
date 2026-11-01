@@ -126,7 +126,7 @@ class RibbonTextColorAuditTests(unittest.TestCase):
                 audit.audit_ribbon_window_color_dependencies(
                     "FillWindowPixelBuffer(windowId, PIXEL_FILL(BG_COLOR_INDEX));"
                 )
-            self.assertIn("UNRESOLVED: PIXEL_FILL expression BG_COLOR_INDEX + 1", output.getvalue())
+            self.assertIn("UNRESOLVED: PIXEL_FILL expression BG_COLOR_INDEX", output.getvalue())
 
 
     def test_reports_multiline_symbolic_pixel_fill_as_unresolved(self):
