@@ -67,6 +67,12 @@ def verify_source_and_engine():
                    "rows[i].sourceLevelExpression == NULL", "*out = rows[i]",
                    "remaining -= rows[i].weight"):
         assert needle in resolver, needle
+    assert "bool8 JohtoHeadbuttResolveLevel(" in header
+    level_resolver = cpp.split("bool8 JohtoHeadbuttResolveLevel(", 1)[1].split("\n}\n", 1)[0]
+    for needle in ("JOHTO_HEADBUTT_LEVEL_FIXED", "JOHTO_HEADBUTT_LEVEL_BADGE_OFFSET",
+                   "badgeBaseLevel + sourceValue", "level < 1 || level > 100",
+                   "*outLevel = level"):
+        assert needle in level_resolver, needle
     return {"pinned_coordinate_arithmetic_reviewed": True,
             "pinned_trainer_id_modulo_verified": True,
             "pinned_random_roll_gates_verified": True,
