@@ -42,6 +42,20 @@ bool8 JohtoHeadbuttRollStartsBattle(enum JohtoHeadbuttTreeScore score, u8 rollOu
 bool8 JohtoHeadbuttUsesRareEncounterTable(enum JohtoHeadbuttTreeScore score);
 s16 JohtoHeadbuttSelectWeightedEntry(const u8 *weights, u8 count, u8 rollOutOfHundred);
 
+// Source-facing encounter row. Names and level expressions remain symbolic
+// until audited Emerald species/form and badge-level mappings exist.
+struct JohtoHeadbuttSourceEncounter
+{
+    u8 weight;
+    const char *sourceSpecies;
+    const char *sourceForm;
+    const char *sourceLevelExpression;
+};
+
+bool8 JohtoHeadbuttResolveSourceEncounter(const struct JohtoHeadbuttSourceEncounter *rows,
+                                          u8 count, u8 rollOutOfHundred,
+                                          struct JohtoHeadbuttSourceEncounter *out);
+
 extern const struct FieldMoveInfo gFieldMoveInfo[];
 extern const struct FieldMoveUnlock gFieldMoveUnlocks[];
 
