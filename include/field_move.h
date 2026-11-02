@@ -56,6 +56,17 @@ bool8 JohtoHeadbuttResolveSourceEncounter(const struct JohtoHeadbuttSourceEncoun
                                           u8 count, u8 rollOutOfHundred,
                                           struct JohtoHeadbuttSourceEncounter *out);
 
+// Level inputs are source-relative only. Caller must supply a verified
+// SetBadgeBaseLevel result; this helper does not calculate badge progression.
+enum JohtoHeadbuttLevelMode
+{
+    JOHTO_HEADBUTT_LEVEL_FIXED,
+    JOHTO_HEADBUTT_LEVEL_BADGE_OFFSET,
+};
+
+bool8 JohtoHeadbuttResolveLevel(enum JohtoHeadbuttLevelMode mode,
+                                s16 sourceValue, u8 badgeBaseLevel, u8 *outLevel);
+
 extern const struct FieldMoveInfo gFieldMoveInfo[];
 extern const struct FieldMoveUnlock gFieldMoveUnlocks[];
 
