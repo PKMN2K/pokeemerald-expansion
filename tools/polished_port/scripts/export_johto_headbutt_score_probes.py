@@ -67,10 +67,15 @@ def verify_source_and_engine():
                    "rows[i].sourceLevelExpression == NULL", "*out = rows[i]",
                    "remaining -= rows[i].weight"):
         assert needle in resolver, needle
+    assert "bool8 JohtoHeadbuttGetBadgeBaseLevel(u8 badgeCount, u8 *outLevel);" in header
+    badge = cpp.split("bool8 JohtoHeadbuttGetBadgeBaseLevel(", 1)[1].split("\n}\n", 1)[0]
+    assert "4, 8, 12, 16, 20, 24, 28, 32, 36" in badge
+    assert "40, 43, 46, 49, 52, 55, 58, 61" in badge
+    assert "badgeCount >= ARRAY_COUNT(sBadgeBaseLevels)" in badge
     assert "bool8 JohtoHeadbuttResolveLevel(" in header
     level_resolver = cpp.split("bool8 JohtoHeadbuttResolveLevel(", 1)[1].split("\n}\n", 1)[0]
     for needle in ("JOHTO_HEADBUTT_LEVEL_FIXED", "JOHTO_HEADBUTT_LEVEL_BADGE_OFFSET",
-                   "badgeBaseLevel + sourceValue", "level < 1 || level > 100",
+                   "badgeBaseLevel + sourceValue", "level < 2", "level > 99",
                    "*outLevel = level"):
         assert needle in level_resolver, needle
     return {"pinned_coordinate_arithmetic_reviewed": True,
