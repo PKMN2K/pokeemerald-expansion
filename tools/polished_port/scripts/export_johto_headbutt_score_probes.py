@@ -110,6 +110,46 @@ def export(output: Path, encounter_report: dict):
                 else:
                     raise AssertionError("unselected encounter roll")
             assert [outcomes.count(idx) for idx in range(len(weights))] == weights
+    # Offline source entry resolution: retain symbolic species, forms and
+    # badge-level expressions; do not invent Emerald constants or levels.
+    resolved_entries = []
+    seen_groups = set()
+    for group in encounter_report["source_tree_groups"]:
+        if group["is_rock_smash_table"]:
+            continue
+        effective = group["effective_table_label"]
+        if effective in seen_groups:
+            continue  # CITY aliases CANYON; not a new source distribution.
+        seen_groups.add(effective)
+        for distribution in ("normal", "rare"):
+            entries = group[distribution]
+            assert entries is not None
+            for roll in range(100):
+                remaining = roll
+                for index, entry in enumerate(entries):
+                    if remaining < entry["weight_percent"]:
+                        assert entry["source_species"]
+                        assert entry["source_level_expression"]
+                        assert entry["requires_badge_level_translation"] == (entry["fixed_level"] is None)
+                        resolved_entries.append({
+                            "source_table": effective,
+                            "distribution": distribution,
+                            "roll": roll,
+                            "entry_index": index,
+                            "source_species": entry["source_species"],
+                            "source_form": entry["source_form"],
+                            "source_level_expression": entry["source_level_expression"],
+                            "requires_badge_level_translation": entry["requires_badge_level_translation"],
+                        })
+                        break
+                    remaining -= entry["weight_percent"]
+                else:
+                    raise AssertionError("unresolved weighted source row")
+    assert len(resolved_entries) == 8 * 2 * 100
+    assert any(row["source_form"] == "HISUIAN_FORM" for row in resolved_entries)
+    assert any(row["requires_badge_level_translation"] for row in resolved_entries)
+    (output / "johto_headbutt_resolved_source_entries.OFFLINE.json").write_text(
+        json.dumps(resolved_entries, indent=2) + "\n", encoding="utf-8")
     vectors = bytearray()
     count = Counter()
     for y in range(HEIGHT):
@@ -165,6 +205,9 @@ def export(output: Path, encounter_report: dict):
         "encounter_roll_successes_out_of_ten": pass_counts,
         "source_tree_table_selects_rare_only_for_score_rare": True,
         "source_rock_smash_encounter_tables_excluded": True,
+        "source_entry_resolution_vectors": len(resolved_entries),
+        "source_entry_resolution_file": "johto_headbutt_resolved_source_entries.OFFLINE.json",
+        "source_entry_resolution_only": True,
         "source_map_identifiers_untranslated": True,
         "field_move_not_registered": True,
         "tree_battles_not_enabled": True,
