@@ -270,5 +270,21 @@ class RibbonTextColorAuditTests(unittest.TestCase):
             self.assertIn("4bpp color index 15", result)
             self.assertNotIn("UNRESOLVED: PIXEL_FILL", result)
 
+
+    def test_rejects_hexadecimal_palette_index_above_boundary(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            constants = root / "include" / "constants"
+            constants.mkdir(parents=True)
+            (constants / "characters.h").write_text("")
+            output = io.StringIO()
+            with patch.object(audit, "ROOT", root), contextlib.redirect_stdout(output):
+                audit.audit_ribbon_window_color_dependencies(
+                    "FillWindowPixelBuffer(windowId, PIXEL_FILL(0x10UL));"
+                )
+            result = output.getvalue()
+            self.assertIn("UNRESOLVED: PIXEL_FILL index 16", result)
+            self.assertNotIn("4bpp color index 16", result)
+
 if __name__ == "__main__":
     unittest.main()
