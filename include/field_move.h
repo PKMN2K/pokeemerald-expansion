@@ -64,6 +64,7 @@ enum JohtoHeadbuttLevelMode
     JOHTO_HEADBUTT_LEVEL_BADGE_OFFSET,
 };
 
+bool8 JohtoHeadbuttGetBadgeBaseLevel(u8 badgeCount, u8 *outLevel);
 bool8 JohtoHeadbuttResolveLevel(enum JohtoHeadbuttLevelMode mode,
                                 s16 sourceValue, u8 badgeBaseLevel, u8 *outLevel);
 
