@@ -238,5 +238,21 @@ class RibbonTextColorAuditTests(unittest.TestCase):
             self.assertIn("TEXT_COLOR_INDENTED = 4bpp color index 15", result)
             self.assertNotIn("UNRESOLVED: TEXT_COLOR_INDENTED", result)
 
+
+    def test_accepts_zero_palette_index_boundary(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            constants = root / "include" / "constants"
+            constants.mkdir(parents=True)
+            (constants / "characters.h").write_text("")
+            output = io.StringIO()
+            with patch.object(audit, "ROOT", root), contextlib.redirect_stdout(output):
+                audit.audit_ribbon_window_color_dependencies(
+                    "FillWindowPixelBuffer(windowId, PIXEL_FILL(0));"
+                )
+            result = output.getvalue()
+            self.assertIn("4bpp color index 0", result)
+            self.assertNotIn("UNRESOLVED: PIXEL_FILL", result)
+
 if __name__ == "__main__":
     unittest.main()
