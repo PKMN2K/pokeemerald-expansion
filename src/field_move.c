@@ -235,3 +235,31 @@ bool8 JohtoHeadbuttUsesRareEncounterTable(enum JohtoHeadbuttTreeScore score)
 {
     return score == JOHTO_HEADBUTT_RARE_TREE;
 }
+
+// Pinned SelectTreeMon: RandomRange(100), subtract each row's weight
+// until the roll is below its row weight. Returns an index only, not a
+// species, form, level, or battle. Reject invalid/incomplete tables.
+s16 JohtoHeadbuttSelectWeightedEntry(const u8 *weights, u8 count, u8 rollOutOfHundred)
+{
+    u16 total = 0;
+    u8 i;
+    u8 remaining = rollOutOfHundred;
+
+    if (weights == NULL || count == 0 || rollOutOfHundred >= 100)
+        return -1;
+    for (i = 0; i < count; i++)
+    {
+        if (weights[i] == 0 || total + weights[i] > 100)
+            return -1;
+        total += weights[i];
+    }
+    if (total != 100)
+        return -1;
+    for (i = 0; i < count; i++)
+    {
+        if (remaining < weights[i])
+            return i;
+        remaining -= weights[i];
+    }
+    return -1;
+}
