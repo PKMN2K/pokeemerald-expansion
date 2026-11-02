@@ -298,9 +298,24 @@ bool8 JohtoHeadbuttResolveSourceEncounter(const struct JohtoHeadbuttSourceEncoun
     return FALSE;
 }
 
-// Isolated level arithmetic for pinned source fixed levels and badge offsets.
-// The badge base must be provided by a future verified Polished Crystal port;
-// do not read Emerald badges or enable any encounter from this helper.
+// Source: pinned data/wild/badge_base_levels.asm, CountSetBits(wBadges).
+// No live badge flags are accessed until the map/field move port is ready.
+bool8 JohtoHeadbuttGetBadgeBaseLevel(u8 badgeCount, u8 *outLevel)
+{
+    static const u8 sBadgeBaseLevels[17] =
+    {
+        4, 8, 12, 16, 20, 24, 28, 32, 36,
+        40, 43, 46, 49, 52, 55, 58, 61
+    };
+
+    if (outLevel == NULL || badgeCount >= ARRAY_COUNT(sBadgeBaseLevels))
+        return FALSE;
+    *outLevel = sBadgeBaseLevels[badgeCount];
+    return TRUE;
+}
+
+// Source: pinned engine/overworld/wildmons.asm AdjustLevelForBadges.
+// Fixed levels pass through unchanged; badge offsets clamp to 2..99.
 bool8 JohtoHeadbuttResolveLevel(enum JohtoHeadbuttLevelMode mode,
                                 s16 sourceValue, u8 badgeBaseLevel, u8 *outLevel)
 {
@@ -309,19 +324,22 @@ bool8 JohtoHeadbuttResolveLevel(enum JohtoHeadbuttLevelMode mode,
     if (outLevel == NULL)
         return FALSE;
     if (mode == JOHTO_HEADBUTT_LEVEL_FIXED)
-        level = sourceValue;
-    else if (mode == JOHTO_HEADBUTT_LEVEL_BADGE_OFFSET)
     {
-        if (badgeBaseLevel == 0 || badgeBaseLevel > 100)
+        if (sourceValue < 1 || sourceValue > 100)
             return FALSE;
-        level = badgeBaseLevel + sourceValue;
+        *outLevel = sourceValue;
+        return TRUE;
     }
-    else
+    if (mode != JOHTO_HEADBUTT_LEVEL_BADGE_OFFSET
+     || badgeBaseLevel < 4 || badgeBaseLevel > 61
+     || sourceValue < -128 || sourceValue > 127)
         return FALSE;
 
-    // Fail closed instead of guessing the source's out-of-range behavior.
-    if (level < 1 || level > 100)
-        return FALSE;
+    level = badgeBaseLevel + sourceValue;
+    if (level < 2)
+        level = 2;
+    else if (level > 99)
+        level = 99;
     *outLevel = level;
     return TRUE;
 }
