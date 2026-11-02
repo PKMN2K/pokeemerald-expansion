@@ -60,6 +60,13 @@ def verify_source_and_engine():
     selection = cpp.split("s16 JohtoHeadbuttSelectWeightedEntry(", 1)[1].split("\n}\n", 1)[0]
     for needle in ("rollOutOfHundred >= 100", "total != 100", "remaining < weights[i]", "remaining -= weights[i]", "return i;"):
         assert needle in selection, needle
+    assert "struct JohtoHeadbuttSourceEncounter" in header
+    assert "bool8 JohtoHeadbuttResolveSourceEncounter(" in header
+    resolver = cpp.split("bool8 JohtoHeadbuttResolveSourceEncounter(", 1)[1].split("\n}\n", 1)[0]
+    for needle in ("total != 100", "rows[i].sourceSpecies == NULL",
+                   "rows[i].sourceLevelExpression == NULL", "*out = rows[i]",
+                   "remaining -= rows[i].weight"):
+        assert needle in resolver, needle
     return {"pinned_coordinate_arithmetic_reviewed": True,
             "pinned_trainer_id_modulo_verified": True,
             "pinned_random_roll_gates_verified": True,
