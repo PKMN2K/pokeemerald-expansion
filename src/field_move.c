@@ -263,3 +263,37 @@ s16 JohtoHeadbuttSelectWeightedEntry(const u8 *weights, u8 count, u8 rollOutOfHu
     }
     return -1;
 }
+
+// Resolve only pinned source identifiers, never Emerald IDs or a battle.
+// No RNG is consumed: the caller supplies the same 0..99 roll as SelectTreeMon.
+bool8 JohtoHeadbuttResolveSourceEncounter(const struct JohtoHeadbuttSourceEncounter *rows,
+                                          u8 count, u8 rollOutOfHundred,
+                                          struct JohtoHeadbuttSourceEncounter *out)
+{
+    u16 total = 0;
+    u8 i;
+    u8 remaining = rollOutOfHundred;
+
+    if (rows == NULL || out == NULL || count == 0 || rollOutOfHundred >= 100)
+        return FALSE;
+    for (i = 0; i < count; i++)
+    {
+        if (rows[i].weight == 0 || total + rows[i].weight > 100
+         || rows[i].sourceSpecies == NULL || rows[i].sourceSpecies[0] == '\0'
+         || rows[i].sourceLevelExpression == NULL || rows[i].sourceLevelExpression[0] == '\0')
+            return FALSE;
+        total += rows[i].weight;
+    }
+    if (total != 100)
+        return FALSE;
+    for (i = 0; i < count; i++)
+    {
+        if (remaining < rows[i].weight)
+        {
+            *out = rows[i];
+            return TRUE;
+        }
+        remaining -= rows[i].weight;
+    }
+    return FALSE;
+}
