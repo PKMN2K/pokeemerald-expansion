@@ -297,3 +297,31 @@ bool8 JohtoHeadbuttResolveSourceEncounter(const struct JohtoHeadbuttSourceEncoun
     }
     return FALSE;
 }
+
+// Isolated level arithmetic for pinned source fixed levels and badge offsets.
+// The badge base must be provided by a future verified Polished Crystal port;
+// do not read Emerald badges or enable any encounter from this helper.
+bool8 JohtoHeadbuttResolveLevel(enum JohtoHeadbuttLevelMode mode,
+                                s16 sourceValue, u8 badgeBaseLevel, u8 *outLevel)
+{
+    s32 level;
+
+    if (outLevel == NULL)
+        return FALSE;
+    if (mode == JOHTO_HEADBUTT_LEVEL_FIXED)
+        level = sourceValue;
+    else if (mode == JOHTO_HEADBUTT_LEVEL_BADGE_OFFSET)
+    {
+        if (badgeBaseLevel == 0 || badgeBaseLevel > 100)
+            return FALSE;
+        level = badgeBaseLevel + sourceValue;
+    }
+    else
+        return FALSE;
+
+    // Fail closed instead of guessing the source's out-of-range behavior.
+    if (level < 1 || level > 100)
+        return FALSE;
+    *outLevel = level;
+    return TRUE;
+}
