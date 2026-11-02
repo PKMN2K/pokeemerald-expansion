@@ -56,6 +56,10 @@ def verify_source_and_engine():
     assert "if (rollOutOfTen >= 10)" in roll_body
     for threshold in THRESHOLDS:
         assert "rollOutOfTen < " + str(threshold) in roll_body
+    assert "s16 JohtoHeadbuttSelectWeightedEntry(const u8 *weights, u8 count, u8 rollOutOfHundred);" in header
+    selection = cpp.split("s16 JohtoHeadbuttSelectWeightedEntry(", 1)[1].split("\n}\n", 1)[0]
+    for needle in ("rollOutOfHundred >= 100", "total != 100", "remaining < weights[i]", "remaining -= weights[i]", "return i;"):
+        assert needle in selection, needle
     return {"pinned_coordinate_arithmetic_reviewed": True,
             "pinned_trainer_id_modulo_verified": True,
             "pinned_random_roll_gates_verified": True,
@@ -85,6 +89,27 @@ def export(output: Path, encounter_report: dict):
         "bad": 10, "good": 50, "rare": 80,
     }
     assert not encounter_report["tree_encounter_selection_implemented"]
+    # Validate cumulative row boundaries against every pinned normal/rare table.
+    for group in encounter_report["source_tree_groups"]:
+        if group["is_rock_smash_table"]:
+            continue
+        for table in (group["normal"], group["rare"]):
+            if table is None:
+                continue
+            weights = [entry["weight_percent"] for entry in table]
+            assert all(0 < weight <= 100 for weight in weights)
+            assert sum(weights) == 100
+            outcomes = []
+            for roll in range(100):
+                remaining = roll
+                for idx, weight in enumerate(weights):
+                    if remaining < weight:
+                        outcomes.append(idx)
+                        break
+                    remaining -= weight
+                else:
+                    raise AssertionError("unselected encounter roll")
+            assert [outcomes.count(idx) for idx in range(len(weights))] == weights
     vectors = bytearray()
     count = Counter()
     for y in range(HEIGHT):
