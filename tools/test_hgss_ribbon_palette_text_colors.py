@@ -220,5 +220,23 @@ class RibbonTextColorAuditTests(unittest.TestCase):
             self.assertIn("UNRESOLVED: PIXEL_FILL expression 15XYZ", result)
             self.assertNotIn("4bpp color index 15", result)
 
+
+    def test_resolves_indented_text_color_define(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            constants = root / "include" / "constants"
+            constants.mkdir(parents=True)
+            (constants / "characters.h").write_text(
+                "  # define TEXT_COLOR_INDENTED 0x0FU\\n"
+            )
+            output = io.StringIO()
+            with patch.object(audit, "ROOT", root), contextlib.redirect_stdout(output):
+                audit.audit_ribbon_window_color_dependencies(
+                    "const u8 color = TEXT_COLOR_INDENTED;"
+                )
+            result = output.getvalue()
+            self.assertIn("TEXT_COLOR_INDENTED = 4bpp color index 15", result)
+            self.assertNotIn("UNRESOLVED: TEXT_COLOR_INDENTED", result)
+
 if __name__ == "__main__":
     unittest.main()
