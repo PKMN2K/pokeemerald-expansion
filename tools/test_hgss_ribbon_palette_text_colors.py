@@ -348,5 +348,26 @@ class RibbonTextColorAuditTests(unittest.TestCase):
             r'(?:ribbon_icons_big|ribbon_icons_small)\.4bpp',
         )
 
+
+    def test_authentic_ribbon_icon_tiles_are_shared_by_bg_and_zoom_sprite(self):
+        """BG grid and selected-ribbon zoom must use the same HGSS source art."""
+        source = audit.SOURCE.read_text()
+        self.assertIn(
+            'sRibbonIconsBig_Gfx[] = INCBIN_U32('
+            '"graphics/gen4_ui/hgss_ribbons/big_icons_hgss.4bpp")',
+            source,
+        )
+        self.assertRegex(
+            source,
+            r"LoadBgTiles\s*\(\s*1\s*,\s*sRibbonIconsBig_Gfx\s*,"
+            r"\s*sizeof\s*\(\s*sRibbonIconsBig_Gfx\s*\)",
+        )
+        self.assertRegex(
+            source,
+            r"sSpriteSheet_RibbonIconsBig\s*=\s*\{\s*"
+            r"sRibbonIconsBig_Gfx\s*,\s*sizeof\s*\(\s*sRibbonIconsBig_Gfx\s*\)",
+        )
+        self.assertNotIn("gPokenavRibbonsIconsBig_Gfx", source)
+
 if __name__ == "__main__":
     unittest.main()
