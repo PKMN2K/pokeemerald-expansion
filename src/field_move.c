@@ -343,3 +343,21 @@ bool8 JohtoHeadbuttResolveLevel(enum JohtoHeadbuttLevelMode mode,
     *outLevel = level;
     return TRUE;
 }
+
+// Dormant composition of the original badge count lookup and level adjustment.
+// Fixed-level encounters do not require a badge count.
+bool8 JohtoHeadbuttResolveLevelFromBadgeCount(enum JohtoHeadbuttLevelMode mode,
+                                              s16 sourceValue, u8 badgeCount, u8 *outLevel)
+{
+    u8 badgeBaseLevel;
+
+    if (outLevel == NULL)
+        return FALSE;
+    if (mode == JOHTO_HEADBUTT_LEVEL_FIXED)
+        return JohtoHeadbuttResolveLevel(mode, sourceValue, 0, outLevel);
+    if (mode != JOHTO_HEADBUTT_LEVEL_BADGE_OFFSET)
+        return FALSE;
+    if (!JohtoHeadbuttGetBadgeBaseLevel(badgeCount, &badgeBaseLevel))
+        return FALSE;
+    return JohtoHeadbuttResolveLevel(mode, sourceValue, badgeBaseLevel, outLevel);
+}
