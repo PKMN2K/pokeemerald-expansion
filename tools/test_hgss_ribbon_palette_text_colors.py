@@ -398,5 +398,23 @@ class RibbonTextColorAuditTests(unittest.TestCase):
             with self.subTest(palette=index):
                 self.assertEqual((assets / f"palette_{index}.gbapal").stat().st_size, 32)
 
+
+    def test_hgss_ribbon_selection_focus_survives_missing_zoom_sprite(self):
+        """The authentic selection corners remain active on OBJ exhaustion."""
+        source = audit.SOURCE.read_text()
+        self.assertRegex(
+            source,
+            r"menu->bigRibbonSprite\s*=\s*spriteId\s*==\s*MAX_SPRITES"
+            r"\s*\?\s*NULL\s*:\s*&gSprites\[spriteId\]",
+        )
+        start = source.index("static void UpdateAndZoomInSelectedRibbon(", source.index("static void CreateBigRibbonSprite("))
+        body = source[start:source.index("\nstatic void ZoomOutSelectedRibbon(", start)]
+        focus = body.index("DrawPokeGearRibbonSelectionFocus(menu, TRUE);")
+        guard = body.index("if (menu->bigRibbonSprite == NULL)")
+        dereference = body.index("menu->bigRibbonSprite->x = x;")
+        self.assertLess(focus, guard)
+        self.assertLess(guard, dereference)
+        self.assertIn("        return;", body[guard:dereference])
+
 if __name__ == "__main__":
     unittest.main()
