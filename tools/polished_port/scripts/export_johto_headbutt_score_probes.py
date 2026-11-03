@@ -172,6 +172,48 @@ def export(output: Path, encounter_report: dict):
     assert len(resolved_entries) == 8 * 2 * 100
     assert any(row["source_form"] == "HISUIAN_FORM" for row in resolved_entries)
     assert any(row["requires_badge_level_translation"] for row in resolved_entries)
+    # Exhaustively check all 100 rolls in each of the 16 source distributions
+    # against the 17 pinned badge-base levels. Preserve species and forms,
+    # while resolving only source-level arithmetic; this never calls Emerald RNG.
+    badge_levels = (4, 8, 12, 16, 20, 24, 28, 32, 36,
+                    40, 43, 46, 49, 52, 55, 58, 61)
+    source_c = (ROOT / "src/field_move.c").read_text(encoding="utf-8")
+    c_badges = source_c.split("static const u8 sBadgeBaseLevels[17] =", 1)[1].split("};", 1)[0]
+    assert tuple(map(int, re.findall(r"\\d+", c_badges))) == badge_levels
+    level_cases = 0
+    badge_relative_cases = 0
+    sample_levels = []
+    for row in resolved_entries:
+        expr = row["source_level_expression"]
+        if row["requires_badge_level_translation"]:
+            match = re.fullmatch(r"LEVEL_FROM_BADGES\\s*([+-])\\s*(\\d+)", expr)
+            assert match, expr
+            offset = int(match.group(2)) * (1 if match.group(1) == "+" else -1)
+        else:
+            assert re.fullmatch(r"\\d+", expr), expr
+            fixed = int(expr)
+            assert 1 <= fixed <= 100
+        for badge_count, base in enumerate(badge_levels):
+            level = max(2, min(99, base + offset)) if row["requires_badge_level_translation"] else fixed
+            assert 1 <= level <= 100
+            level_cases += 1
+            badge_relative_cases += int(row["requires_badge_level_translation"])
+            if row["roll"] == 0 and badge_count in (0, 8, 16) and len(sample_levels) < 48:
+                sample_levels.append({
+                    "source_table": row["source_table"],
+                    "distribution": row["distribution"],
+                    "species": row["source_species"],
+                    "form": row["source_form"],
+                    "expression": expr,
+                    "badges": badge_count,
+                    "resolved_level": level,
+                })
+    assert level_cases == 8 * 2 * 100 * 17
+    assert badge_relative_cases > 0
+    assert any(row["form"] == "HISUIAN_FORM" for row in sample_levels)
+    assert any(row["expression"].startswith("LEVEL_FROM_BADGES") for row in sample_levels)
+    (output / "johto_headbutt_badge_level_samples.OFFLINE.json").write_text(
+        json.dumps(sample_levels, indent=2) + "\\n", encoding="utf-8")
     (output / "johto_headbutt_resolved_source_entries.OFFLINE.json").write_text(
         json.dumps(resolved_entries, indent=2) + "\n", encoding="utf-8")
     vectors = bytearray()
@@ -232,6 +274,10 @@ def export(output: Path, encounter_report: dict):
         "source_entry_resolution_vectors": len(resolved_entries),
         "source_entry_resolution_file": "johto_headbutt_resolved_source_entries.OFFLINE.json",
         "source_entry_resolution_only": True,
+        "source_badge_level_cases": level_cases,
+        "source_badge_relative_cases": badge_relative_cases,
+        "source_badge_level_sample_file": "johto_headbutt_badge_level_samples.OFFLINE.json",
+        "source_badge_levels_exhaustively_audited_offline": True,
         "source_map_identifiers_untranslated": True,
         "field_move_not_registered": True,
         "tree_battles_not_enabled": True,
