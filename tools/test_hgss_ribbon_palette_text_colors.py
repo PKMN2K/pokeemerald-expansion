@@ -386,5 +386,17 @@ class RibbonTextColorAuditTests(unittest.TestCase):
             r"PALTAG_RIBBON_ICONS_1\s*\)",
         )
 
+
+    def test_authentic_hgss_ribbon_assets_match_4bpp_layout(self):
+        """Every indexed 32x32 icon and all five BG/OBJ palettes must fit."""
+        assets = audit.ROOT / "graphics/gen4_ui/hgss_ribbons"
+        sheet = assets / "big_icons_hgss.4bpp"
+        # 32x32 pixels at 4bpp = 512 bytes per icon, twelve designs.
+        self.assertGreaterEqual(sheet.stat().st_size, 12 * 512)
+        self.assertEqual(sheet.stat().st_size % 512, 0)
+        for index in range(5):
+            with self.subTest(palette=index):
+                self.assertEqual((assets / f"palette_{index}.gbapal").stat().st_size, 32)
+
 if __name__ == "__main__":
     unittest.main()
