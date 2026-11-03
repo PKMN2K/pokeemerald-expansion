@@ -179,18 +179,18 @@ def export(output: Path, encounter_report: dict):
                     40, 43, 46, 49, 52, 55, 58, 61)
     source_c = (ROOT / "src/field_move.c").read_text(encoding="utf-8")
     c_badges = source_c.split("static const u8 sBadgeBaseLevels[17] =", 1)[1].split("};", 1)[0]
-    assert tuple(map(int, re.findall(r"\\d+", c_badges))) == badge_levels
+    assert tuple(map(int, re.findall(r"\d+", c_badges))) == badge_levels
     level_cases = 0
     badge_relative_cases = 0
     sample_levels = []
     for row in resolved_entries:
         expr = row["source_level_expression"]
         if row["requires_badge_level_translation"]:
-            match = re.fullmatch(r"LEVEL_FROM_BADGES\\s*([+-])\\s*(\\d+)", expr)
+            match = re.fullmatch(r"LEVEL_FROM_BADGES\s*([+-])\s*(\d+)", expr)
             assert match, expr
             offset = int(match.group(2)) * (1 if match.group(1) == "+" else -1)
         else:
-            assert re.fullmatch(r"\\d+", expr), expr
+            assert re.fullmatch(r"\d+", expr), expr
             fixed = int(expr)
             assert 1 <= fixed <= 100
         for badge_count, base in enumerate(badge_levels):
@@ -213,7 +213,7 @@ def export(output: Path, encounter_report: dict):
     assert any(row["form"] == "HISUIAN_FORM" for row in sample_levels)
     assert any(row["expression"].startswith("LEVEL_FROM_BADGES") for row in sample_levels)
     (output / "johto_headbutt_badge_level_samples.OFFLINE.json").write_text(
-        json.dumps(sample_levels, indent=2) + "\\n", encoding="utf-8")
+        json.dumps(sample_levels, indent=2) + "\n", encoding="utf-8")
     (output / "johto_headbutt_resolved_source_entries.OFFLINE.json").write_text(
         json.dumps(resolved_entries, indent=2) + "\n", encoding="utf-8")
     vectors = bytearray()
