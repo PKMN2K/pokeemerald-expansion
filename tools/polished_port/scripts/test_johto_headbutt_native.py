@@ -37,7 +37,7 @@ def extract_native_code():
                    "enum JohtoHeadbuttLevelMode\n{"):
         structures.append(hdr.split(marker, 1)[1].split("\n};", 1)[0])
     prefix = ("#include <stddef.h>\n#include <stdint.h>\n"
-              "typedef uint8_t u8; typedef int16_t s16; typedef int32_t s32;\n"
+              "typedef uint8_t u8; typedef uint16_t u16; typedef int16_t s16; typedef int32_t s32;\n"
               "typedef uint8_t bool8;\n#define TRUE 1\n#define FALSE 0\n"
               "#define ARRAY_COUNT(a) (sizeof(a) / sizeof((a)[0]))\n"
               "struct JohtoHeadbuttSourceEncounter\n{"
@@ -60,7 +60,7 @@ def run(encounter_report):
         source.write_text(extract_native_code(), encoding="utf-8")
         subprocess.run(["cc", "-std=c11", "-Wall", "-Wextra", "-Werror",
                         "-shared", "-fPIC", str(source), "-o", str(library)],
-                       check=True, capture_output=True, text=True, timeout=60)
+                       check=True, text=True, timeout=60)
         c = ctypes.CDLL(str(library))
         c.JohtoHeadbuttSelectWeightedEntry.argtypes = (
             ctypes.POINTER(ctypes.c_uint8), ctypes.c_uint8, ctypes.c_uint8)
