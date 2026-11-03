@@ -172,17 +172,33 @@ def audit_ribbon_window_palettes(source):
 
 def audit_ribbon_window_color_dependencies(source):
     """List window pixel indices; text colors need runtime mapping review."""
-    fills = [(source.count("\n", 0, m.start()) + 1,
-              int(m.group(1), 16 if m.group(1).lower().startswith("0x") else 10))
-             for m in re.finditer(
-                 r"FillWindowPixelBuffer\s*\(\s*[^,]+,\s*PIXEL_FILL\s*\(\s*(0[xX][0-9a-fA-F]+|[0-9]+)[uUlL]*\s*\)",
-                 source
-             )]
-    unresolved_fills = [
-        (source.count("\n", 0, m.start()) + 1, m.group(1).strip())
-        for m in re.finditer(r"FillWindowPixelBuffer\s*\(\s*[^,]+,\s*PIXEL_FILL\s*\(\s*([^)]*?)\s*\)", source, re.S)
-        if not re.fullmatch(r"(?:0[xX][0-9a-fA-F]+|[0-9]+)[uUlL]*", m.group(1).strip())
-    ]
+    fills = []
+    unresolved_fills = []
+    fill_call = re.compile(
+        r"FillWindowPixelBuffer\s*\(\s*[^,]+,\s*PIXEL_FILL\s*\(",
+        re.S
+    )
+    numeric_index = re.compile(r"(0[xX][0-9a-fA-F]+|[0-9]+)[uUlL]*")
+    for match in fill_call.finditer(source):
+        depth = 1
+        pos = match.end()
+        while pos < len(source) and depth:
+            if source[pos] == "(":
+                depth += 1
+            elif source[pos] == ")":
+                depth -= 1
+            pos += 1
+        line = source.count("\n", 0, match.start()) + 1
+        if depth:
+            unresolved_fills.append((line, source[match.end():].strip()))
+            continue
+        expression = source[match.end():pos - 1].strip()
+        number = numeric_index.fullmatch(expression)
+        if number:
+            value = number.group(1)
+            fills.append((line, int(value, 16 if value.lower().startswith("0x") else 10)))
+        else:
+            unresolved_fills.append((line, expression))
     text_colors = [(source.count("\n", 0, m.start()) + 1, m.group(1))
                    for m in re.finditer(r"\b(TEXT_COLOR_[A-Z0-9_]+)\b", source)]
     print("Ribbon window PIXEL_FILL palette indices:")
