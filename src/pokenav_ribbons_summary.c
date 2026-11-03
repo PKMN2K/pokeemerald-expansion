@@ -1487,12 +1487,14 @@ static void UpdateAndZoomInSelectedRibbon(struct Pokenav_RibbonsSummaryMenu *men
     u32 ribbonId;
     s16 x, y;
     GetHgssRibbonScreenPosition(GetSelectedPosition(), &x, &y);
+    // Keep the authentic selection corners usable even if the zoom sprite
+    // could not be allocated because all OBJ slots are occupied.
+    DrawPokeGearRibbonSelectionFocus(menu, TRUE);
     if (menu->bigRibbonSprite == NULL)
         return;
 
     menu->bigRibbonSprite->x = x;
     menu->bigRibbonSprite->y = y;
-    DrawPokeGearRibbonSelectionFocus(menu, TRUE);
 
     // Set new selected ribbon's gfx data
     ribbonId = GetRibbonId();
