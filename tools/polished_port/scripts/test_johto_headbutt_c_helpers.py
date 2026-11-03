@@ -24,7 +24,7 @@ BADGE_BASES = (4, 8, 12, 16, 20, 24, 28, 32, 36, 40, 43, 46, 49, 52, 55, 58, 61)
 
 
 def extract_function(source, name):
-    match = re.search(r"(?m)^(?:s16|bool8)\\s+" + name + r"\\s*\\(", source)
+    match = re.search(r"(?m)^(?:s16|bool8)\s+" + name + r"\s*\(", source)
     assert match is not None, name
     start = source.find("{", match.end())
     assert start != -1, name
