@@ -323,5 +323,30 @@ class RibbonTextColorAuditTests(unittest.TestCase):
             r"palNum\s*=\s*sRibbonGfxData\[ribbonId\]\.palNumOffset\s*\+\s*2\s*;",
         )
 
+
+    def test_authentic_hgss_ribbon_tiles_feed_grid_and_expanded_sprite(self):
+        """Both live ribbon views must share the authentic, unscaled HGSS sheet."""
+        source = audit.SOURCE.read_text()
+        self.assertIn(
+            'sRibbonIconsBig_Gfx[] = INCBIN_U32('
+            '"graphics/gen4_ui/hgss_ribbons/big_icons_hgss.4bpp")',
+            source,
+        )
+        self.assertRegex(
+            source,
+            r"LoadBgTiles\s*\(\s*1\s*,\s*sRibbonIconsBig_Gfx\s*,"
+            r"\s*sizeof\s*\(\s*sRibbonIconsBig_Gfx\s*\)",
+        )
+        self.assertRegex(
+            source,
+            r"sSpriteSheet_RibbonIconsBig\s*=\s*\{\s*"
+            r"sRibbonIconsBig_Gfx\s*,\s*sizeof\s*\(\s*sRibbonIconsBig_Gfx\s*\)",
+        )
+        self.assertNotRegex(
+            source,
+            r'(?:LoadBgTiles|INCBIN_U32)\s*\([^;]*'
+            r'(?:ribbon_icons_big|ribbon_icons_small)\.4bpp',
+        )
+
 if __name__ == "__main__":
     unittest.main()
