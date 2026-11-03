@@ -369,5 +369,22 @@ class RibbonTextColorAuditTests(unittest.TestCase):
         )
         self.assertNotIn("gPokenavRibbonsIconsBig_Gfx", source)
 
+
+    def test_hgss_zoom_sprite_uses_same_five_palettes_as_bg_grid(self):
+        """Expanded ribbon must keep the authentic HGSS grid's palette ordering."""
+        source = audit.SOURCE.read_text()
+        for index in range(5):
+            self.assertRegex(
+                source,
+                rf"\{{\s*sHgssRibbonBigPal{index}\s*,\s*"
+                rf"PALTAG_RIBBON_ICONS_{index + 1}\s*\}}",
+            )
+        self.assertRegex(
+            source,
+            r"oam\.paletteNum\s*=\s*IndexOfSpritePaletteTag\s*\(\s*"
+            r"sRibbonGfxData\[ribbonId\]\.palNumOffset\s*\+\s*"
+            r"PALTAG_RIBBON_ICONS_1\s*\)",
+        )
+
 if __name__ == "__main__":
     unittest.main()
