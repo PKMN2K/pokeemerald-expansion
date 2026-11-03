@@ -234,6 +234,9 @@ jobs:
           assert not report["map_registered"]
           PY
 
+      - name: Execute dormant Headbutt C helper source-vector regression
+        run: python3 tools/polished_port/scripts/test_johto_headbutt_c_helpers.py
+
       - name: Stage isolated Johto map package without ROM registration
         run: |
           output="$(mktemp -d)"
