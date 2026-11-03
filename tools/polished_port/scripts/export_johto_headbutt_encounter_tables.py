@@ -207,6 +207,50 @@ def export(output: Path, headbutt_review: dict):
     assert all(p["source_constant"] in {r["source_group"] for r in maps}
                for p in pointers if not p["is_rock_smash_table"])
     assert not any(row["source_group"] == "TREEMON_SET_ROCK" for row in maps)
+    # Candidate species constants only: do not translate these identifiers into
+    # encounter records or claim the existing forms are runtime-equivalent.
+    species_constants = (ROOT / "include/constants/species.h").read_text(encoding="utf-8")
+    declared = set(re.findall(r"(?m)^\\s*(SPECIES_[A-Z0-9_]+)\\s*=", species_constants))
+    source_species = sorted({
+        entry["source_species"]
+        for pointer in pointers if not pointer["shares_canyon_table"]
+        for table in (pointer["normal"], pointer["rare"] or [])
+        for entry in table
+    })
+    candidates = []
+    for name in source_species:
+        source_forms = sorted({
+            entry["source_form"] for pointer in pointers
+            if not pointer["shares_canyon_table"]
+            for table in (pointer["normal"], pointer["rare"] or [])
+            for entry in table if entry["source_species"] == name
+            and entry["source_form"] is not None
+        })
+        base_constant = "SPECIES_" + name
+        form_candidates = [
+            "SPECIES_" + name + "_HISUI"
+            for form in source_forms if form == "HISUIAN_FORM"
+        ]
+        candidates.append({
+            "source_species": name,
+            "source_forms": source_forms,
+            "base_constant": base_constant if base_constant in declared else None,
+            "source_form_constant_candidates": [
+                value for value in form_candidates if value in declared
+            ],
+            "unresolved_forms": [
+                form for form in source_forms
+                if form != "HISUIAN_FORM" or "SPECIES_" + name + "_HISUI" not in declared
+            ],
+            "runtime_mapping_verified": False,
+        })
+    assert candidates and all(row["base_constant"] for row in candidates)
+    assert any(row["source_form_constant_candidates"] for row in candidates)
+    map_groups = (ROOT / "data/maps/map_groups.json").read_text(encoding="utf-8")
+    # Johto source map identifiers cannot be mapped simply by matching names.
+    registered_johto_map_groups = "Johto" in map_groups
+    assert not registered_johto_map_groups
+
     report = {
         "status": "PINNED_HEADBUTT_ENCOUNTERS_REVIEW_NOT_FOR_ROM",
         "source": PIN,
@@ -230,6 +274,12 @@ def export(output: Path, headbutt_review: dict):
         "source_tree_groups": pointers,
         "source_tree_map_groups": maps,
         "source_rock_maps": rock_maps,
+        "source_species_constant_candidates": candidates,
+        "source_species_candidates_checked": len(candidates),
+        "source_form_runtime_semantics_verified": False,
+        "source_map_groups_registered_by_name": registered_johto_map_groups,
+        "johto_source_map_dispatch_verified": False,
+        "headbutt_field_dispatch_verified": False,
         "complete_emerald_wild_encounters_emitted": False,
         "source_map_ids_remapped_to_emerald": False,
         "source_pokemon_form_ids_remapped_to_emerald": False,
