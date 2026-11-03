@@ -952,7 +952,14 @@ static void CreateHgssRibbonCursor(struct Pokenav_RibbonsSummaryMenu *menu)
             menu->hgssCursorCorners[i] = NULL;
         return;
     }
-    LoadSpritePalette(&sHgssRibbonCursorPal);
+    // If all OBJ palette banks are occupied, do not create corners with
+    // a missing palette tag. The ribbon grid remains usable without them.
+    if (LoadSpritePalette(&sHgssRibbonCursorPal) == 0xFF)
+    {
+        for (i = 0; i < HGSS_RIBBON_CURSOR_CORNERS; i++)
+            menu->hgssCursorCorners[i] = NULL;
+        return;
+    }
     for (i = 0; i < HGSS_RIBBON_CURSOR_CORNERS; i++)
     {
         u8 id = CreateSprite(&sHgssRibbonCursorTemplate, 0, 0, 0);
