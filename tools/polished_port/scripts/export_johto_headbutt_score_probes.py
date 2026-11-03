@@ -78,6 +78,12 @@ def verify_source_and_engine():
                    "badgeBaseLevel + sourceValue", "level < 2", "level > 99",
                    "*outLevel = level"):
         assert needle in level_resolver, needle
+    assert "bool8 JohtoHeadbuttResolveLevelFromBadgeCount(" in header
+    composed = cpp.split("bool8 JohtoHeadbuttResolveLevelFromBadgeCount(", 1)[1].split("\n}\n", 1)[0]
+    for needle in ("mode == JOHTO_HEADBUTT_LEVEL_FIXED",
+                   "JohtoHeadbuttGetBadgeBaseLevel(badgeCount, &badgeBaseLevel)",
+                   "JohtoHeadbuttResolveLevel(mode, sourceValue, badgeBaseLevel, outLevel)"):
+        assert needle in composed, needle
     return {"pinned_coordinate_arithmetic_reviewed": True,
             "pinned_trainer_id_modulo_verified": True,
             "pinned_random_roll_gates_verified": True,
