@@ -286,5 +286,22 @@ class RibbonTextColorAuditTests(unittest.TestCase):
             self.assertIn("UNRESOLVED: PIXEL_FILL index 16", result)
             self.assertNotIn("4bpp color index 16", result)
 
+
+    def test_preserves_complete_nested_pixel_fill_expression(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            constants = root / "include" / "constants"
+            constants.mkdir(parents=True)
+            (constants / "characters.h").write_text("")
+            output = io.StringIO()
+            with patch.object(audit, "ROOT", root), contextlib.redirect_stdout(output):
+                audit.audit_ribbon_window_color_dependencies(
+                    "FillWindowPixelBuffer(windowId, PIXEL_FILL((BG_COLOR_INDEX + 1)));"
+                )
+            self.assertIn(
+                "UNRESOLVED: PIXEL_FILL expression (BG_COLOR_INDEX + 1)",
+                output.getvalue()
+            )
+
 if __name__ == "__main__":
     unittest.main()
