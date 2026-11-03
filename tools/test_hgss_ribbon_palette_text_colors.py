@@ -303,5 +303,25 @@ class RibbonTextColorAuditTests(unittest.TestCase):
                 output.getvalue()
             )
 
+
+    def test_live_hgss_ribbon_bg_palettes_match_tilemap_palette_offset(self):
+        """Authentic HGSS palette files must match the BG1 tilemap bank mapping."""
+        source = audit.SOURCE.read_text()
+        for index in range(5):
+            self.assertIn(
+                f'sHgssRibbonBigPal{index}[] = INCBIN_U16('
+                f'"graphics/gen4_ui/hgss_ribbons/palette_{index}.gbapal")',
+                source,
+            )
+            self.assertRegex(
+                source,
+                rf"CopyPaletteIntoBufferUnfaded\s*\(\s*sHgssRibbonBigPal{index}"
+                rf"\s*,\s*BG_PLTT_ID\s*\(\s*{index + 2}\s*\)",
+            )
+        self.assertRegex(
+            source,
+            r"palNum\s*=\s*sRibbonGfxData\[ribbonId\]\.palNumOffset\s*\+\s*2\s*;",
+        )
+
 if __name__ == "__main__":
     unittest.main()
