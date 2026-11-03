@@ -944,6 +944,14 @@ static void CreateHgssRibbonCursor(struct Pokenav_RibbonsSummaryMenu *menu)
 {
     u32 i;
     LoadSpriteSheet(&sHgssRibbonCursorSheet);
+    // A failed OBJ tile allocation must not create corners with invalid art.
+    // Leave every corner absent so focus and teardown can safely skip them.
+    if (GetSpriteTileStartByTag(GFXTAG_HGSS_RIBBON_CURSOR) == TAG_NONE)
+    {
+        for (i = 0; i < HGSS_RIBBON_CURSOR_CORNERS; i++)
+            menu->hgssCursorCorners[i] = NULL;
+        return;
+    }
     LoadSpritePalette(&sHgssRibbonCursorPal);
     for (i = 0; i < HGSS_RIBBON_CURSOR_CORNERS; i++)
     {
