@@ -12,6 +12,7 @@ from collections import Counter
 from pathlib import Path
 
 from export_johto_headbutt_encounter_tables import load_sources
+from test_johto_headbutt_native import run as validate_native_headbutt
 
 ROOT = Path(__file__).resolve().parents[3]
 SCORE_NAMES = ("bad", "good", "rare")
@@ -172,6 +173,8 @@ def export(output: Path, encounter_report: dict):
     assert len(resolved_entries) == 8 * 2 * 100
     assert any(row["source_form"] == "HISUIAN_FORM" for row in resolved_entries)
     assert any(row["requires_badge_level_translation"] for row in resolved_entries)
+    native_checks = validate_native_headbutt(encounter_report)
+    assert native_checks["native_c_badge_level_cases"] == 27200
     # Exhaustively check all 100 rolls in each of the 16 source distributions
     # against the 17 pinned badge-base levels. Preserve species and forms,
     # while resolving only source-level arithmetic; this never calls Emerald RNG.
@@ -278,6 +281,7 @@ def export(output: Path, encounter_report: dict):
         "source_badge_relative_cases": badge_relative_cases,
         "source_badge_level_sample_file": "johto_headbutt_badge_level_samples.OFFLINE.json",
         "source_badge_levels_exhaustively_audited_offline": True,
+        "native_compiled_c_helpers_validation": native_checks,
         "source_map_identifiers_untranslated": True,
         "field_move_not_registered": True,
         "tree_battles_not_enabled": True,
