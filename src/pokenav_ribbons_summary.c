@@ -1472,6 +1472,13 @@ static void CreateBigRibbonSprite(struct Pokenav_RibbonsSummaryMenu *menu)
     u8 spriteId;
 
     LoadSpriteSheet(&sSpriteSheet_RibbonIconsBig);
+    // The sprite allocator can have free sprite slots but insufficient OBJ tiles.
+    // Keep the HGSS selection-corner fallback instead of using an unloaded sheet.
+    if (GetSpriteTileStartByTag(GFXTAG_RIBBON_ICONS_BIG) == TAG_NONE)
+    {
+        menu->bigRibbonSprite = NULL;
+        return;
+    }
     Pokenav_AllocAndLoadPalettes(sSpritePalettes_RibbonIcons);
 
     spriteId = CreateSprite(&sSpriteTemplate_RibbonIconBig, 0, 0, 0);
