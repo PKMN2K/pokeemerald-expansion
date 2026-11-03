@@ -630,8 +630,11 @@ void FreeRibbonsSummaryScreen2(void)
     FreeSpritePaletteByTag(PALTAG_RIBBON_ICONS_4);
     FreeSpritePaletteByTag(PALTAG_RIBBON_ICONS_5);
     DestroyHgssRibbonCursor(menu);
-    FreeSpriteOamMatrix(menu->bigRibbonSprite);
-    DestroySprite(menu->bigRibbonSprite);
+    if (menu->bigRibbonSprite != NULL)
+    {
+        FreeSpriteOamMatrix(menu->bigRibbonSprite);
+        DestroySprite(menu->bigRibbonSprite);
+    }
     FreePokenavSubstruct(POKENAV_SUBSTRUCT_RIBBONS_SUMMARY_MENU);
 }
 
@@ -1472,8 +1475,9 @@ static void CreateBigRibbonSprite(struct Pokenav_RibbonsSummaryMenu *menu)
     Pokenav_AllocAndLoadPalettes(sSpritePalettes_RibbonIcons);
 
     spriteId = CreateSprite(&sSpriteTemplate_RibbonIconBig, 0, 0, 0);
-    menu->bigRibbonSprite = &gSprites[spriteId];
-    menu->bigRibbonSprite->invisible = TRUE;
+    menu->bigRibbonSprite = spriteId == MAX_SPRITES ? NULL : &gSprites[spriteId];
+    if (menu->bigRibbonSprite != NULL)
+        menu->bigRibbonSprite->invisible = TRUE;
 }
 
 #define sInvisibleWhenDone data[0]
@@ -1483,6 +1487,8 @@ static void UpdateAndZoomInSelectedRibbon(struct Pokenav_RibbonsSummaryMenu *men
     u32 ribbonId;
     s16 x, y;
     GetHgssRibbonScreenPosition(GetSelectedPosition(), &x, &y);
+    if (menu->bigRibbonSprite == NULL)
+        return;
 
     menu->bigRibbonSprite->x = x;
     menu->bigRibbonSprite->y = y;
@@ -1504,6 +1510,8 @@ static void UpdateAndZoomInSelectedRibbon(struct Pokenav_RibbonsSummaryMenu *men
 static void ZoomOutSelectedRibbon(struct Pokenav_RibbonsSummaryMenu *menu)
 {
     DrawPokeGearRibbonSelectionFocus(menu, FALSE);
+    if (menu->bigRibbonSprite == NULL)
+        return;
     menu->bigRibbonSprite->sInvisibleWhenDone = TRUE;
     StartSpriteAffineAnim(menu->bigRibbonSprite, RIBBONANIM_ZOOM_OUT);
     menu->bigRibbonSprite->callback = SpriteCB_WaitForRibbonAnimation;
@@ -1511,7 +1519,7 @@ static void ZoomOutSelectedRibbon(struct Pokenav_RibbonsSummaryMenu *menu)
 
 static bool32 IsRibbonAnimating(struct Pokenav_RibbonsSummaryMenu *menu)
 {
-    return (menu->bigRibbonSprite->callback != SpriteCallbackDummy);
+    return menu->bigRibbonSprite != NULL && menu->bigRibbonSprite->callback != SpriteCallbackDummy;
 }
 
 static void SpriteCB_WaitForRibbonAnimation(struct Sprite *sprite)
