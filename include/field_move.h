@@ -68,6 +68,11 @@ bool8 JohtoHeadbuttGetBadgeBaseLevel(u8 badgeCount, u8 *outLevel);
 bool8 JohtoHeadbuttResolveLevel(enum JohtoHeadbuttLevelMode mode,
                                 s16 sourceValue, u8 badgeBaseLevel, u8 *outLevel);
 
+// Accepts an explicit count, not live badge flags. This composes the pinned
+// progression table with the isolated level resolver for offline callers.
+bool8 JohtoHeadbuttResolveLevelFromBadgeCount(enum JohtoHeadbuttLevelMode mode,
+                                              s16 sourceValue, u8 badgeCount, u8 *outLevel);
+
 extern const struct FieldMoveInfo gFieldMoveInfo[];
 extern const struct FieldMoveUnlock gFieldMoveUnlocks[];
 
