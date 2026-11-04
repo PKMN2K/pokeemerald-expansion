@@ -109,7 +109,9 @@ def sea_battle(game, lose=False):
             continue
         if game.u32(game.sym["gMain"]+4)==game.sym["CB2_Overworld"]|1:
             game.frames(30)
-            if task_active(game,"Task_BattleStart"):
+            # Task_BattleStart destroys itself after selecting CB2_InitBattle.
+            # A missing task alone does not mean field controls are available.
+            if task_active(game,"Task_BattleStart") or game.u32(game.sym["gMain"]+4)!=game.sym["CB2_Overworld"]|1:
                 continue
             return seen
         if task_active(game,"Task_HandleChooseMonInput"):
@@ -141,6 +143,41 @@ def sea_battle(game, lose=False):
     raise AssertionError(("Cherrygrove water battle did not finish", seen, party(game,details=True)))
 
 
+def sea_step(game, direction, lose=False):
+    """Finish real encounter transitions before issuing another field step."""
+    origin = game.position()
+    original_map = game.map_number()
+    dx,dy = {UP:(0,-1), DOWN:(0,1), LEFT:(-1,0), RIGHT:(1,0)}[direction]
+    target = origin[0]+dx, origin[1]+dy
+    seen = None
+    def battle_active():
+        return task_active(game,"Task_BattleStart") or game.u32(game.sym["gMain"]+4)!=game.sym["CB2_Overworld"]|1
+    for _ in range(3):
+        if battle_active():
+            seen = sea_battle(game,lose) or seen
+            if lose and seen:
+                return seen
+            assert game.map_number()==original_map,"Unexpected defeat during sea traversal"
+        if game.position()==target:
+            return seen
+        try:
+            game.step(direction)
+        except AssertionError:
+            # Wild checks can also interrupt before the coordinate changes.
+            # Preserve genuine collision failures instead of blindly retrying.
+            if not battle_active():
+                raise
+            continue
+        game.frames(45)
+        seen = sea_battle(game,lose) or seen
+        if lose and seen:
+            return seen
+        assert game.map_number()==original_map,"Unexpected defeat during sea traversal"
+        assert game.position()==target,(origin,target,game.position())
+        return seen
+    raise AssertionError(("Repeated encounter startup prevented a sea step",origin,target))
+
+
 def check_items_and_blackout(game, city, center, checks):
     # The northeastern Nugget ledge is approached through the unported north
     # connection. Its native event is audited, not reached through a test warp.
@@ -152,7 +189,7 @@ def check_items_and_blackout(game, city, center, checks):
     assert game.position()==(10,10)
     game.snapshot("cherrygrove-surf")
     for direction in (DOWN,DOWN,DOWN,LEFT,LEFT,LEFT):
-        game.step(direction);game.frames(45);sea_battle(game)
+        sea_step(game,direction)
         assert game.map_number()==map_id(game,city),"Unexpected defeat en route to Fisher"
     assert game.position()==(7,13) and not game.read(game.sym["gPlayerAvatar"],1)[0]&8
     before=count_item(game,extra_layout()["mystic"])
@@ -169,9 +206,7 @@ def check_items_and_blackout(game, city, center, checks):
     game.restore("cherrygrove-surf")
     encountered=None
     for _ in range(150):
-        game.step(DOWN if game.position()[1]==10 else UP)
-        game.frames(45)
-        encountered=sea_battle(game,lose=True)
+        encountered=sea_step(game,DOWN if game.position()[1]==10 else UP,lose=True)
         if encountered:
             break
     assert encountered is not None
