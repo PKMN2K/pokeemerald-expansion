@@ -451,8 +451,14 @@ def run(args):
             checks.append("original town uses all four source background, roof and sprite palettes")
             # Complete the real first-entry story before testing ordinary doors.
             # Independent choice branches use snapshots reached by real input.
+            from test_new_bark_mom_emulator import check_mom, check_mom_after_starter
+            check_mom(game, maps, rows, checks)
             from test_new_bark_intro_emulator import check_intro
             check_intro(game, maps, rows, checks)
+            check_mom_after_starter(game, maps, checks)
+            # Mom's schedule tests deliberately change the RTC. Establish the
+            # night palette again before the independent door/palette probes.
+            game.set_hour(23)
             game.snapshot("PolishedNewBarkTown")
             # Breadth-first traversal creates snapshots only by normal gameplay.
             # Then every directed door/stair edge is tested, including both
@@ -511,7 +517,9 @@ def run(args):
             checks.append("all seven interiors use fixed source day colors and restore the outdoor night palette")
             for name, position, key, shot in (
                 ("PolishedNewBarkTown", (8, 9), UP, "town-sign"),
-                ("PolishedPlayersHouse1F", (1, 2), UP, "home-fridge"),
+                # Mom occupies the refrigerator approach at night. The sink
+                # remains accessible in this overnight traversal snapshot.
+                ("PolishedPlayersHouse1F", (2, 2), UP, "home-sink"),
                 ("PolishedLyrasHouse2F", (4, 2), UP, "lyra-pc"),
             ):
                 game.restore(name)

@@ -206,6 +206,21 @@
       "path": "gfx/trainers/lyra1.pal",
       "fixture": "gfx__trainers__lyra1.pal.b64",
       "git_blob_sha1": "c8d91f3db4d462342e977303dcc18a6b9ff38aaa"
+    },
+    {
+      "path": "gfx/sprites/mom.png",
+      "fixture": "gfx__sprites__mom.png.b64",
+      "git_blob_sha1": "36010c92d4be05a06d9541237b8d63abd993326d"
+    },
+    {
+      "path": "gfx/sprites/matron.png",
+      "fixture": "gfx__sprites__matron.png.b64",
+      "git_blob_sha1": "aa1fbc06fa399fea1ca8dab7bd5918bc9464d0f0"
+    },
+    {
+      "path": "engine/rtc/timeset.asm",
+      "fixture": "engine__rtc__timeset.asm.b64",
+      "git_blob_sha1": "bdcaa3bd4aec01a59d39f5ed3b846ca51c876427"
     }
   ]
 }

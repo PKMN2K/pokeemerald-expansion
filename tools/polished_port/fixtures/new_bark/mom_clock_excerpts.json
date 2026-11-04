@@ -1,0 +1,34 @@
+{
+  "repository": "Rangi42/polishedcrystal",
+  "commit": "3fa43192379df5c3e7b09a08e4d5d79af4f02f42",
+  "extracts": [
+    {
+      "git_blob_sha1": "d76b34846468a29aa36ff83795a1ecb87330cfb7",
+      "first_line": 231,
+      "excerpt": "_OakTimeWhatDayIsItText::\n\ttext \"What day is it?\"\n\tdone\n",
+      "sha256": "63966e2a7464ee5b74c26641854ade0805c95a91b96b19236d1dc6d1511685c3",
+      "path": "data/text/common.asm"
+    },
+    {
+      "git_blob_sha1": "d76b34846468a29aa36ff83795a1ecb87330cfb7",
+      "first_line": 236,
+      "excerpt": "_OakTimeIsItText::\n\ttext \", is it?\"\n\tdone\n",
+      "sha256": "f9136e2c8fd454712c3f3cfee513d34fbb7f029c0b77b7efc2b12a92ad2f6bcb",
+      "path": "data/text/common.asm"
+    },
+    {
+      "git_blob_sha1": "d76b34846468a29aa36ff83795a1ecb87330cfb7",
+      "first_line": 4293,
+      "excerpt": "Text_DSTIsThatOK::\n\ttext \" DST,\"\n\tline \"is that OK?\"\n\tdone\n",
+      "sha256": "1167f7a2e1357ee1a507add53f66aa0211a27c6a7893c01c53410147fb9c9355",
+      "path": "data/text/common.asm"
+    },
+    {
+      "git_blob_sha1": "d76b34846468a29aa36ff83795a1ecb87330cfb7",
+      "first_line": 4299,
+      "excerpt": "_TimeAskOkayText::\n\ttext \",\"\n\tline \"is that OK?\"\n\tdone\n",
+      "sha256": "0be338bdf3a6bf47d0960b02ab62339092b1d613c350346bd6a42935ac0e650d",
+      "path": "data/text/common.asm"
+    }
+  ]
+}

@@ -50,6 +50,10 @@
 #define FLAG_HIDE_POLISHED_NEW_BARK_RIVAL 0x20
 // Contact registration persists now; the Pokégear phone UI is a later phase.
 #define FLAG_POLISHED_HAS_ELM_CONTACT 0x21
+#define FLAG_POLISHED_POKEGEAR 0x22
+#define FLAG_POLISHED_PHONE_CARD 0x23
+#define FLAG_POLISHED_HAS_MOM_CONTACT 0x24
+#define FLAG_POLISHED_DAYLIGHT_SAVING 0x25
 
 #if IS_FRLG
 
@@ -57,10 +61,6 @@
 
 #else
 
-#define FLAG_UNUSED_0x022    0x22 // Unused Flag
-#define FLAG_UNUSED_0x023    0x23 // Unused Flag
-#define FLAG_UNUSED_0x024    0x24 // Unused Flag
-#define FLAG_UNUSED_0x025    0x25 // Unused Flag
 #define FLAG_UNUSED_0x026    0x26 // Unused Flag
 #define FLAG_UNUSED_0x027    0x27 // Unused Flag
 #define FLAG_UNUSED_0x028    0x28 // Unused Flag

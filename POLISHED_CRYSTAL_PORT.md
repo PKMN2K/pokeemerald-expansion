@@ -120,8 +120,8 @@ use the source's fixed daytime colors. Existing map/layout IDs stay unchanged.
 
 This completes the town's **geography and traversal phase**. The ambient
 resident phase below populates the source's unconditional dialogue NPCs.
-The window rival and opening starter sequence are covered below. Mom's events,
-later story-dependent NPCs, hidden items, room decorations and Route 29/27
+The window rival, opening starter sequence and Mom's opening are covered below.
+Later story-dependent NPCs, hidden items, room decorations and Route 29/27
 connections are still pending. The unconnected town boundaries remain closed
 by source border collision. No Headbutt source-map assignments are invented.
 New Bark's original `TREEMON_SET_CITY` encounter data remains in the dormant
@@ -195,8 +195,8 @@ four source sprite palettes, intermediate positions/facings, jump height,
 native impact playback, input locking and control restoration. It repeats the
 scene immediately, after leaving/re-entering town, after native Save/Continue,
 and while riding the demo's Mach Bike. Frame traces and screenshots accompany
-the validation report. Mom's events and later rival progression are separate
-unfinished phases.
+the validation report. Later rival progression remains a separate unfinished
+phase; Mom's opening is described below.
 
 ### Elm and Lyra's introduction and starter choice
 
@@ -227,8 +227,8 @@ Elm, Lyra, the aide and the three balls use exact v3.2.3 source pixels and
 daytime indoor palettes. Lyra uses the existing red time palette outdoors.
 Ball frames use only the source standing ball, not its cut-tree/fruit frames.
 `new_bark_intro.py` translates the selected source movement and dialogue labels;
-`build_new_bark.py --check` reproduces all 79 products, including the battle
-assets described below.
+`build_new_bark.py --check` reproduces all 81 products, including the battle
+and home assets described below.
 
 Three previously unused vars shared by Emerald and FRLG hold town scene
 (`0x40DB`), lab scene (`0x40DC`) and starter choice (`0x40E5`). Contact bit `0x21`
@@ -245,8 +245,8 @@ actual encrypted Pokémon's species/level/item/checksum, preservation of the dem
 party, duplicate-gift prevention, and native Save/reset/Continue plus reentry.
 Snapshots include cartridge savedata and are taken only through gameplay.
 
-Starter selection hands off to the first Lyra battle below. Mom's events,
-the Mr. Pokémon journey and the usable Pokégear phone interface remain pending.
+Starter selection hands off to the first Lyra battle below. The Mr. Pokémon
+journey and the usable Pokégear phone interface remain pending.
 Elm's contact is stored for that later interface. Sound cues and Pokémon battle
 art currently use Expansion's assets; this does not claim a Polished Crystal
 soundtrack or a complete battle-art migration.
@@ -291,8 +291,59 @@ Save/Continue, reentry and duplicate-gift guards.
 The resident movement probe also observes walking lanes from nearby and allows
 bounded native random pauses while still requiring displacement and checking
 source movement bounds. This addresses the prior CI #1438 movement assertion.
-The next content phase is Mom's opening events and Route 29; later campaign
-scenes and the phone interface remain unported.
+Mom's opening is now covered below. Route 29, later campaign scenes and the
+phone interface remain unported.
+
+### Mom's opening, home schedule and weekday setup
+
+The player's downstairs home now contains the authentic Mom and Matron sprites,
+using the source's red daytime indoor palette. All four original coordinate
+triggers and direct interaction start Mom's release introduction. The two
+eastern approaches finish at `(10,4)`; the northern approaches finish at `(9,3)`.
+The slow steps, facing changes, exclamation and final left-facing pose are
+preserved. The release-text importer correctly excludes Mom's DEBUG-only text.
+
+The one-time handoff records Pokégear ownership, the Phone Card and Mom's
+contact. It then offers all seven weekdays with confirmation and retry,
+the source's DST yes/no and confirmation loop, and both Running Shoes answers.
+The weekday picker uses Expansion's native multichoice interface. A saved
+weekday offset follows the actual RTC without changing its date, time or daily
+event counters. `PolishedJohtoGetWeekday` exposes that chosen weekday for later
+Johto events. Initial DST selection records a flag without adding an hour,
+exactly as the source's `Special_InitialSetDSTFlag` does.
+
+The Pokégear clock/phone screens and always-run option are not implemented by
+this scene. Their two instruction paragraphs are omitted so Mom describes the
+available hold-B running controls. The full source text remains pinned for the
+later interface port. Ownership/contact flags do not grant Emerald's PokéNav
+or insert a substitute Bag item. Existing demo running equipment is preserved.
+
+After a map reload, Mom uses her source positions: morning `(3,2)` at 05:00,
+day `(9,4)` at 09:00, evening `(6,3)` at 17:00 and night `(1,2)` at 21:00.
+She remains at the opening position until that visit ends, including after
+menu returns. Save/Continue recomputes the correct visibility without showing
+multiple Moms. The visiting neighbor gives all three source greetings and
+returns to face right. Mom's repeat text changes from Elm's waiting message to
+the errand conversation after the starter; banking awaits the Mystery Egg quest.
+
+Four unused shared flags (`0x22`–`0x25`) and two unused vars (`0x40F7`–`0x40F8`)
+hold ownership/contact/DST, home scene and weekday offset. Save sizes and all
+existing IDs are unchanged. The source RTC routine and clock-text excerpts
+retain the same v3.2.3 pin and blob hashes.
+
+The native tests cover all weekday values, invalid choices, preservation of
+the original clock and rollover through eight subsequent days. Real-input
+mGBA checks exercise every approach and weekday, both retry loops, DST choices,
+Running Shoes answers, schedule boundaries, neighbor dialogue, pre/post-starter
+repeat interactions, and Save/Continue before and after the event. Screenshots
+include the native weekday picker and live clock confirmation.
+
+The emulator now fixes its hardware RTC before New Game seeds the RNG. Its
+deliberate-loss input switches while both Pokémon are healthy, then uses the
+remaining Pokémon's status move with an explicit PP check. This removes the
+observed exhausted-Leer loop without changing production battle behavior.
+
+The next content phase is Route 29.
 
 The playable visual slice and dormant Headbutt encounter selection are complete
 parts of the port. **The whole Polished Crystal migration is not complete.**

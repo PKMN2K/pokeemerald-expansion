@@ -5,6 +5,8 @@ extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_PolishedSci
 extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_PolishedLyra;
 extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_PolishedElm;
 extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_PolishedRival;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_PolishedMom;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_PolishedMatron;
 extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_PolishedPokefan;
 extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_PolishedFatGuy;
 extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_PolishedSchoolboy;
@@ -422,6 +424,8 @@ extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_ApricornTre
 
 const struct ObjectEventGraphicsInfo *const gObjectEventGraphicsInfoPointers[NUM_OBJ_EVENT_GFX] = {
     [OBJ_EVENT_GFX_POLISHED_POKEFAN] = &gObjectEventGraphicsInfo_PolishedPokefan,
+    [OBJ_EVENT_GFX_POLISHED_MOM] = &gObjectEventGraphicsInfo_PolishedMom,
+    [OBJ_EVENT_GFX_POLISHED_MATRON] = &gObjectEventGraphicsInfo_PolishedMatron,
     [OBJ_EVENT_GFX_POLISHED_RIVAL] = &gObjectEventGraphicsInfo_PolishedRival,
     [OBJ_EVENT_GFX_POLISHED_BALL_GREEN] = &gObjectEventGraphicsInfo_PolishedBallGreen,
     [OBJ_EVENT_GFX_POLISHED_BALL_BLUE] = &gObjectEventGraphicsInfo_PolishedBallBlue,

@@ -644,3 +644,6 @@ gSpecials::
 	def_special GetCurrentPrismMiningTilesetFamily
 	def_special CurrentMapUsesPrismMiningTileset
 	def_special CurrentMapUsesPrismOlcanTileset
+	def_special PolishedJohtoBufferChosenWeekday
+	def_special PolishedJohtoCommitWeekday
+	def_special PolishedJohtoBufferClock

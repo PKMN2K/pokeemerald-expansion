@@ -14,7 +14,92 @@
   "show_map_name": false,
   "battle_scene": "MAP_BATTLE_SCENE_NORMAL",
   "connections": null,
-  "object_events": [],
+  "object_events": [
+    {
+      "local_id": "LOCALID_HOME_INITIAL",
+      "graphics_id": "OBJ_EVENT_GFX_POLISHED_MOM",
+      "x": 9,
+      "y": 4,
+      "elevation": 3,
+      "movement_type": "MOVEMENT_TYPE_FACE_LEFT",
+      "movement_range_x": 0,
+      "movement_range_y": 0,
+      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_sight_or_berry_tree_id": "0",
+      "script": "PolishedMom_Talk",
+      "flag": "FLAG_TEMP_2"
+    },
+    {
+      "local_id": "LOCALID_HOME_MORN",
+      "graphics_id": "OBJ_EVENT_GFX_POLISHED_MOM",
+      "x": 3,
+      "y": 2,
+      "elevation": 3,
+      "movement_type": "MOVEMENT_TYPE_FACE_UP",
+      "movement_range_x": 0,
+      "movement_range_y": 0,
+      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_sight_or_berry_tree_id": "0",
+      "script": "PolishedMom_Talk",
+      "flag": "FLAG_TEMP_3"
+    },
+    {
+      "local_id": "LOCALID_HOME_DAY",
+      "graphics_id": "OBJ_EVENT_GFX_POLISHED_MOM",
+      "x": 9,
+      "y": 4,
+      "elevation": 3,
+      "movement_type": "MOVEMENT_TYPE_FACE_LEFT",
+      "movement_range_x": 0,
+      "movement_range_y": 0,
+      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_sight_or_berry_tree_id": "0",
+      "script": "PolishedMom_Talk",
+      "flag": "FLAG_TEMP_4"
+    },
+    {
+      "local_id": "LOCALID_HOME_EVE",
+      "graphics_id": "OBJ_EVENT_GFX_POLISHED_MOM",
+      "x": 6,
+      "y": 3,
+      "elevation": 3,
+      "movement_type": "MOVEMENT_TYPE_FACE_UP",
+      "movement_range_x": 0,
+      "movement_range_y": 0,
+      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_sight_or_berry_tree_id": "0",
+      "script": "PolishedMom_Talk",
+      "flag": "FLAG_TEMP_5"
+    },
+    {
+      "local_id": "LOCALID_HOME_NITE",
+      "graphics_id": "OBJ_EVENT_GFX_POLISHED_MOM",
+      "x": 1,
+      "y": 2,
+      "elevation": 3,
+      "movement_type": "MOVEMENT_TYPE_FACE_UP",
+      "movement_range_x": 0,
+      "movement_range_y": 0,
+      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_sight_or_berry_tree_id": "0",
+      "script": "PolishedMom_Talk",
+      "flag": "FLAG_TEMP_6"
+    },
+    {
+      "local_id": "LOCALID_HOME_NEIGHBOR",
+      "graphics_id": "OBJ_EVENT_GFX_POLISHED_MATRON",
+      "x": 6,
+      "y": 4,
+      "elevation": 3,
+      "movement_type": "MOVEMENT_TYPE_FACE_RIGHT",
+      "movement_range_x": 0,
+      "movement_range_y": 0,
+      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_sight_or_berry_tree_id": "0",
+      "script": "PolishedMom_Neighbor",
+      "flag": "0"
+    }
+  ],
   "warp_events": [
     {
       "x": 8,
@@ -38,7 +123,44 @@
       "dest_warp_id": "0"
     }
   ],
-  "coord_events": [],
+  "coord_events": [
+    {
+      "type": "trigger",
+      "x": 10,
+      "y": 4,
+      "elevation": 3,
+      "var": "VAR_POLISHED_HOME_SCENE",
+      "var_value": "0",
+      "script": "PolishedMom_Trigger1"
+    },
+    {
+      "type": "trigger",
+      "x": 11,
+      "y": 4,
+      "elevation": 3,
+      "var": "VAR_POLISHED_HOME_SCENE",
+      "var_value": "0",
+      "script": "PolishedMom_Trigger2"
+    },
+    {
+      "type": "trigger",
+      "x": 9,
+      "y": 1,
+      "elevation": 3,
+      "var": "VAR_POLISHED_HOME_SCENE",
+      "var_value": "0",
+      "script": "PolishedMom_Trigger3"
+    },
+    {
+      "type": "trigger",
+      "x": 9,
+      "y": 2,
+      "elevation": 3,
+      "var": "VAR_POLISHED_HOME_SCENE",
+      "var_value": "0",
+      "script": "PolishedMom_Trigger4"
+    }
+  ],
   "bg_events": [
     {
       "type": "sign",

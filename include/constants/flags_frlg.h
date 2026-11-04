@@ -4,10 +4,10 @@
 
 // 0x020 is FLAG_HIDE_POLISHED_NEW_BARK_RIVAL, shared in flags.h.
 // 0x021 reserved for FLAG_POLISHED_HAS_ELM_CONTACT in flags.h.
-#define FLAG_0x022               0x022
-#define FLAG_0x023               0x023
-#define FLAG_0x024               0x024
-#define FLAG_0x025               0x025
+// 0x022 reserved for the shared Polished home/clock state in flags.h.
+// 0x023 reserved for the shared Polished home/clock state in flags.h.
+// 0x024 reserved for the shared Polished home/clock state in flags.h.
+// 0x025 reserved for the shared Polished home/clock state in flags.h.
 #define FLAG_0x026               0x026
 #define FLAG_0x027               0x027
 

@@ -1127,6 +1127,17 @@ static const struct MenuAction MultichoiceList_Exit[] =
     {gText_Exit},
 };
 
+static const struct MenuAction MultichoiceList_PolishedWeekdays[] =
+{
+    {COMPOUND_STRING("Sunday")},
+    {COMPOUND_STRING("Monday")},
+    {COMPOUND_STRING("Tuesday")},
+    {COMPOUND_STRING("Wednesday")},
+    {COMPOUND_STRING("Thursday")},
+    {COMPOUND_STRING("Friday")},
+    {COMPOUND_STRING("Saturday")},
+};
+
 struct MultichoiceListStruct
 {
     const struct MenuAction *list;
@@ -1135,6 +1146,7 @@ struct MultichoiceListStruct
 
 static const struct MultichoiceListStruct sMultichoiceLists[] =
 {
+    [MULTI_POLISHED_WEEKDAYS]           = MULTICHOICE(MultichoiceList_PolishedWeekdays),
     [MULTI_BRINEY_ON_DEWFORD]          = MULTICHOICE(MultichoiceList_BrineyOnDewford),
     [MULTI_PC]                         = MULTICHOICE(MultichoiceList_Exit),
     [MULTI_ENTERINFO]                  = MULTICHOICE(MultichoiceList_EnterInfo),

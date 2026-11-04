@@ -37,6 +37,11 @@ def layout():
         "Chikorita": "SPECIES_CHIKORITA", "berry": "ITEM_ORAN_BERRY",
         "town_scene": "VAR_POLISHED_NEW_BARK_SCENE", "lab_scene": "VAR_POLISHED_ELMS_LAB_SCENE",
         "starter": "VAR_POLISHED_STARTER", "contact": "FLAG_POLISHED_HAS_ELM_CONTACT",
+        "home_scene": "VAR_POLISHED_HOME_SCENE", "weekday_offset": "VAR_POLISHED_WEEKDAY_OFFSET",
+        "gear": "FLAG_POLISHED_POKEGEAR", "phone": "FLAG_POLISHED_PHONE_CARD",
+        "mom_contact": "FLAG_POLISHED_HAS_MOM_CONTACT", "dst": "FLAG_POLISHED_DAYLIGHT_SAVING",
+        "time_offset": "offsetof(struct SaveBlock2, localTimeOffset)", "time_size": "sizeof(struct Time)",
+        "battle_pp": "offsetof(struct BattlePokemon, pp)",
     }
     source = ('#include "global.h"\n#include "battle.h"\n#include "constants/items.h"\n#include "constants/species.h"\n'
               '#include "constants/vars.h"\n#include "constants/flags.h"\n'

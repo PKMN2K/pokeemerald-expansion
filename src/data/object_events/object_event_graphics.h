@@ -658,3 +658,5 @@ const u32 gObjectEventPic_PolishedStarterBall[] = INCGFX_U32("graphics/object_ev
 const u16 gObjectEventPal_PolishedBallRed[] = INCBIN_U16("graphics/object_events/polished_npc_palettes/poke_ball.bin");
 const u16 gObjectEventPal_PolishedBallBlue[] = INCBIN_U16("graphics/object_events/polished_npc_palettes/deco_item.bin");
 const u16 gObjectEventPal_PolishedBallGreen[] = INCBIN_U16("graphics/object_events/polished_npc_palettes/key_item.bin");
+const u32 gObjectEventPic_PolishedMom[] = INCGFX_U32("graphics/object_events/polished_mom/walking.png", ".4bpp", "-mwidth 2 -mheight 4");
+const u32 gObjectEventPic_PolishedMatron[] = INCGFX_U32("graphics/object_events/polished_matron/walking.png", ".4bpp", "-mwidth 2 -mheight 4");

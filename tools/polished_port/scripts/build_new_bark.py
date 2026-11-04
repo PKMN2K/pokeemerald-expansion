@@ -3,9 +3,9 @@
 
 This imports map blocks, door/stair coordinates, reading interactions and the
 six ambient residents, the rival's lab-window encounter, and Lyra/Elm's
-introduction, starter selection, Lyra battle and first Potion. Further events
-and room decorations are separate work. Route 29/27
-connections await those maps.
+introduction, starter selection, Lyra battle, first Potion and Mom's opening.
+Further events and room decorations are separate work. Route 29/27 connections
+await those maps.
 """
 import argparse
 import base64
@@ -26,6 +26,7 @@ from convert_player_walking import (convert as convert_npc, _read_png_2bit_grays
     _write_indexed_4bit_png)
 import new_bark_intro
 import new_bark_battle
+import new_bark_mom
 
 MAPS = {
     "NewBarkTown": "NEW_BARK_TOWN",
@@ -96,28 +97,36 @@ def json_bytes(value):
 
 
 def source_text(script, label):
-    match = re.search(r"^" + re.escape(label) + r":\n(.*?)(?=^\w+:|\Z)", script, re.M | re.S)
+    match = re.search(r"^" + re.escape(label) + r":{1,2}\n(.*?)(?=^[.\w]+:{1,2}|\Z)", script, re.M | re.S)
     assert match, label
-    body = match[1]
+    # Resolve release conditionals before parsing text commands. In particular,
+    # Mom's DEBUG branch contains its own done; it must not truncate release text.
+    body = []
+    stack = []
+    for raw in match[1].splitlines():
+        command = raw.strip()
+        if command in ("if DEF(DEBUG)", "if !DEF(DEBUG)"):
+            stack.append(command == "if !DEF(DEBUG)")
+        elif command == "else":
+            assert stack, label
+            stack[-1] = not stack[-1]
+        elif command == "endc":
+            assert stack, label
+            stack.pop()
+        elif all(stack):
+            body.append(raw)
+    assert not stack, label
+    body = "\n".join(body)
     assert re.search(r"^\s*done\s*$", body, re.M), f"Not plain text: {label}"
-    # Import release text, including Elm's !DEBUG-only introduction. Fail on
-    # other conditionals or unsupported commands instead of dropping dialogue.
+    # Fail on unsupported commands instead of silently dropping dialogue.
     lines = []
-    conditional = False
     for raw in body.splitlines():
         raw = raw.strip()
         if not raw or raw.startswith(";"):
             continue
         if raw == "jumpthistext" and label in INLINE_TEXT and not lines:
             continue
-        if raw == "if !DEF(DEBUG)":
-            assert not conditional, label
-            conditional = True
-        elif raw == "endc":
-            assert conditional, label
-            conditional = False
-        elif raw == "done":
-            assert not conditional, label
+        if raw == "done":
             break
         elif raw == "text_ram wStringBuffer3":
             lines.append(("text", "{STR_VAR_3}"))
@@ -226,7 +235,7 @@ def resident_assets(files):
                 *([0] * 12)) for period in range(4))
     with tempfile.TemporaryDirectory() as tmp:
         inp, out = Path(tmp) / "npc.png", Path(tmp) / "walking.png"
-        for sprite in ("fat_guy", "schoolboy", "battle_girl", "child", "rival", "elm", "lyra", "scientist"):
+        for sprite in ("fat_guy", "schoolboy", "battle_girl", "child", "rival", "elm", "lyra", "scientist", "mom", "matron"):
             inp.write_bytes(files[f"gfx/sprites/{sprite}.png"])
             convert_npc(inp, out)
             products[f"graphics/object_events/polished_{sprite}/walking.png"] = out.read_bytes()
@@ -411,6 +420,11 @@ def map_header(name, constant, width, height, script, files):
         scene, report = new_bark_battle.lab(script, header, source_text, text_definition)
         code += scene
         story.append(report)
+    if name == "PlayersHouse1F":
+        hooks, scene, report = new_bark_mom.house(script, header, files, source_text, text_definition)
+        code = code.replace("\t.byte 0\n", hooks + "\t.byte 0\n", 1)
+        code += scene
+        story.append(report)
     return header, (code.rstrip() + "\n").encode(), resident_info, story
 
 
@@ -512,7 +526,7 @@ def generate():
 
 """
     products["src/data/tilesets/polished_new_bark.h"] = (header_text.rstrip() + "\n").encode()
-    report = {"source_commit": PIN, "scope": "source geography, connected interiors, static interactions, six ambient residents, rival window encounter, Lyra/Elm introduction, all three starter choices, first Lyra battle and aide Potion; later story progression deferred",
+    report = {"source_commit": PIN, "scope": "source geography, connected interiors, static interactions, six ambient residents, rival window encounter, Lyra/Elm introduction, all three starter choices, first Lyra battle, aide Potion and Mom's opening with weekday/DST setup, schedules and neighbor; later story progression deferred",
         "maps": maps, "layouts": layouts, "output_sha256": {p: hashlib.sha256(raw).hexdigest() for p, raw in products.items()}}
     products["tools/polished_port/manifests/new_bark.json"] = json_bytes(report)
     return products

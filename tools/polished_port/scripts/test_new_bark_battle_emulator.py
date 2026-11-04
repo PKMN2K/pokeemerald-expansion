@@ -86,8 +86,8 @@ def finish_battle(game, maps, label, lose=False, expected=None):
     game.screenshot('battle-' + label + '-challenge')
     observed = None
     portrait_seen = False
-    status_turns, switched = 0, False
-    for frame in range(1500):
+    switches, status_turns = 0, 0
+    for frame in range(2500 if lose else 1500):
         if not portrait_seen and observed is None:
             portrait_seen = check_portrait(game, label)
         if task_active(game, 'Task_HandleChooseMonInput'):
@@ -105,9 +105,12 @@ def finish_battle(game, maps, label, lose=False, expected=None):
             else:
                 game.press(A, 30)
         elif controller(game, 'HandleInputChooseAction'):
-            if lose and not switched and status_turns >= 15:
-                switched = True
+            if lose and sum(bool(mon['hp']) for mon in party(game, details=True)) > 1:
+                # Spend native turns switching while both Pokémon are alive.
+                # Burning all of the lead's Leer PP before its partner fainted
+                # could leave this test endlessly selecting an exhausted move.
                 choose_cell(game, 'gActionSelectionCursor', 2)
+                switches += 1
             else:
                 choose_cell(game, 'gActionSelectionCursor', 0)
         elif controller(game, 'HandleInputChooseMove'):
@@ -125,7 +128,13 @@ def finish_battle(game, maps, label, lose=False, expected=None):
                     assert bytes.fromhex(observed[0]['nickname']).split(b'\xff', 1)[0] == encoded
                     assert observed[0]['moves'] == [*(layout()[move] for move in moves), 0, 0]
                 game.screenshot('battle-' + label + '-first-turn')
-            # The demo Totodile attacks to win; Leer/Growl permits a genuine full-party defeat.
+            # Once only one Pokémon remains, its untouched status move permits
+            # a genuine defeat. Fail immediately with useful diagnostics if a
+            # future roster change removes that input, instead of stalling.
+            if lose:
+                pp = game.read(game.sym['gBattleMons'] + layout()['battle_pp'], 4)
+                assert pp[1], ('Loss test exhausted its status move', label, switches,
+                               status_turns, party(game, details=True))
             choose_cell(game, 'gMoveSelectionCursor', 1 if lose else 0)
             status_turns += lose
         else:
@@ -133,7 +142,8 @@ def finish_battle(game, maps, label, lose=False, expected=None):
         if observed and game.u32(game.sym['gMain'] + 4) == game.sym['CB2_Overworld'] | 1:
             break
     else:
-        raise AssertionError('Battle did not return: ' + label)
+        raise AssertionError(('Battle did not return', label, switches, status_turns,
+                              party(game, details=True)))
     assert observed is not None and portrait_seen
     outcome = game.read(game.sym['gBattleOutcome'], 1)[0]
     assert outcome == (2 if lose else 1), (label, outcome)
@@ -143,7 +153,8 @@ def finish_battle(game, maps, label, lose=False, expected=None):
     healed = party(game, details=True)
     assert all(mon['hp'] == mon['max_hp'] and not mon['status'] for mon in healed)
     game.screenshot('battle-' + label + '-complete')
-    return {'portrait_pixels_and_palette_match': portrait_seen, 'opponent': observed[0], 'outcome': outcome, 'party_after_heal': healed}
+    return {'portrait_pixels_and_palette_match': portrait_seen, 'opponent': observed[0], 'outcome': outcome,
+            'party_after_heal': healed, 'voluntary_switches': switches, 'status_turns': status_turns}
 
 
 def take_potion(game, maps, x, label):

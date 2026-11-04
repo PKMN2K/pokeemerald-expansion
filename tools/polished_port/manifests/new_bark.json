@@ -1,6 +1,6 @@
 {
   "source_commit": "3fa43192379df5c3e7b09a08e4d5d79af4f02f42",
-  "scope": "source geography, connected interiors, static interactions, six ambient residents, rival window encounter, Lyra/Elm introduction, all three starter choices, first Lyra battle and aide Potion; later story progression deferred",
+  "scope": "source geography, connected interiors, static interactions, six ambient residents, rival window encounter, Lyra/Elm introduction, all three starter choices, first Lyra battle, aide Potion and Mom's opening with weekday/DST setup, schedules and neighbor; later story progression deferred",
   "maps": {
     "NEW_BARK_TOWN": {
       "name": "NewBarkTown",
@@ -625,7 +625,132 @@
       ],
       "static_interactions": 4,
       "residents": [],
-      "story_encounters": []
+      "story_encounters": [
+        {
+          "source_script": "MomEventScript",
+          "source_scene": 0,
+          "next_scene": 1,
+          "source_triggers": [
+            [
+              10,
+              4
+            ],
+            [
+              11,
+              4
+            ],
+            [
+              9,
+              1
+            ],
+            [
+              9,
+              2
+            ]
+          ],
+          "source_schedule_hours": {
+            "MORN": 5,
+            "DAY": 9,
+            "EVE": 17,
+            "NITE": 21
+          },
+          "objects": [
+            {
+              "local_id": "LOCALID_HOME_INITIAL",
+              "graphics_id": "OBJ_EVENT_GFX_POLISHED_MOM",
+              "x": 9,
+              "y": 4,
+              "elevation": 3,
+              "movement_type": "MOVEMENT_TYPE_FACE_LEFT",
+              "movement_range_x": 0,
+              "movement_range_y": 0,
+              "trainer_type": "TRAINER_TYPE_NONE",
+              "trainer_sight_or_berry_tree_id": "0",
+              "script": "PolishedMom_Talk",
+              "flag": "FLAG_TEMP_2"
+            },
+            {
+              "local_id": "LOCALID_HOME_MORN",
+              "graphics_id": "OBJ_EVENT_GFX_POLISHED_MOM",
+              "x": 3,
+              "y": 2,
+              "elevation": 3,
+              "movement_type": "MOVEMENT_TYPE_FACE_UP",
+              "movement_range_x": 0,
+              "movement_range_y": 0,
+              "trainer_type": "TRAINER_TYPE_NONE",
+              "trainer_sight_or_berry_tree_id": "0",
+              "script": "PolishedMom_Talk",
+              "flag": "FLAG_TEMP_3"
+            },
+            {
+              "local_id": "LOCALID_HOME_DAY",
+              "graphics_id": "OBJ_EVENT_GFX_POLISHED_MOM",
+              "x": 9,
+              "y": 4,
+              "elevation": 3,
+              "movement_type": "MOVEMENT_TYPE_FACE_LEFT",
+              "movement_range_x": 0,
+              "movement_range_y": 0,
+              "trainer_type": "TRAINER_TYPE_NONE",
+              "trainer_sight_or_berry_tree_id": "0",
+              "script": "PolishedMom_Talk",
+              "flag": "FLAG_TEMP_4"
+            },
+            {
+              "local_id": "LOCALID_HOME_EVE",
+              "graphics_id": "OBJ_EVENT_GFX_POLISHED_MOM",
+              "x": 6,
+              "y": 3,
+              "elevation": 3,
+              "movement_type": "MOVEMENT_TYPE_FACE_UP",
+              "movement_range_x": 0,
+              "movement_range_y": 0,
+              "trainer_type": "TRAINER_TYPE_NONE",
+              "trainer_sight_or_berry_tree_id": "0",
+              "script": "PolishedMom_Talk",
+              "flag": "FLAG_TEMP_5"
+            },
+            {
+              "local_id": "LOCALID_HOME_NITE",
+              "graphics_id": "OBJ_EVENT_GFX_POLISHED_MOM",
+              "x": 1,
+              "y": 2,
+              "elevation": 3,
+              "movement_type": "MOVEMENT_TYPE_FACE_UP",
+              "movement_range_x": 0,
+              "movement_range_y": 0,
+              "trainer_type": "TRAINER_TYPE_NONE",
+              "trainer_sight_or_berry_tree_id": "0",
+              "script": "PolishedMom_Talk",
+              "flag": "FLAG_TEMP_6"
+            },
+            {
+              "local_id": "LOCALID_HOME_NEIGHBOR",
+              "graphics_id": "OBJ_EVENT_GFX_POLISHED_MATRON",
+              "x": 6,
+              "y": 4,
+              "elevation": 3,
+              "movement_type": "MOVEMENT_TYPE_FACE_RIGHT",
+              "movement_range_x": 0,
+              "movement_range_y": 0,
+              "trainer_type": "TRAINER_TYPE_NONE",
+              "trainer_sight_or_berry_tree_id": "0",
+              "script": "PolishedMom_Neighbor",
+              "flag": "0"
+            }
+          ],
+          "clock": "native RTC weekday bias; initial DST flag does not adjust hours",
+          "deferred": [
+            "Pok\u00e9gear clock/phone interface",
+            "always-run option",
+            "Mystery Egg banking"
+          ],
+          "text_adaptations": [
+            "omit unavailable clock-adjustment and always-run option instructions"
+          ]
+        }
+      ]
     },
     "PLAYERS_HOUSE_2F": {
       "name": "PlayersHouse2F",
@@ -1255,6 +1380,8 @@
     "graphics/object_events/polished_elm/walking.png": "1ec669240544a70600ff9a373cd5a5330f2e9ec7dc082f74c55c20f60712f811",
     "graphics/object_events/polished_lyra/walking.png": "eb961be1a8c23b5dd9009aac778f56641176eade8655c944b9bce6ecadecd398",
     "graphics/object_events/polished_scientist/walking.png": "f53ad5927627a0507f3707dba0d77ecd7ce43827ff4b843cca2e4cd9ed1142b4",
+    "graphics/object_events/polished_mom/walking.png": "d3b302bc6e4f3887adbeaa7057b46e5ee65d9e1f3ce02ada4e2b2c2b82f93535",
+    "graphics/object_events/polished_matron/walking.png": "d372b357d084ef239c27c94ba28e8d299c042435ed3f2406decc67dc41c96d93",
     "graphics/object_events/polished_starter_ball/ball.png": "4bffc1d93f9a170a67dd221c9ead8323e406f5c0a79baafef34359e02e60107e",
     "src/data/polished_lyra.party": "3749de2745b1dc27e2b18f120ead690cb5da97a2841fba412b5b836d05f0c672",
     "graphics/trainers/front_pics/polished_lyra.png": "c7dcce48743079bf58b6e3eec234bd3b987db27647d9e0cef7ec3f62a2be292f",
@@ -1269,8 +1396,8 @@
     "data/maps/PolishedElmsLab/scripts.inc": "250c28df846943ee5f83a1075817299816b995062bb7ab5b7a0c4bed2e01a00d",
     "data/layouts/PolishedPlayersHouse1F/map.bin": "66eb31dcc753d0fa08c180c8693f007c2bad0204b6ded6b0e4411c854e27c559",
     "data/layouts/PolishedPlayersHouse1F/border.bin": "58b6ce2870c231fbe07a763ac9c4dc612e669cfbebfb93760435a9dbbdced76e",
-    "data/maps/PolishedPlayersHouse1F/map.json": "9ae41b767c92ecd16a374072c195894bf9d36889bb4796ad2c17e99dd59aefd7",
-    "data/maps/PolishedPlayersHouse1F/scripts.inc": "9f08d3bb8a33879e0f1564ea78748a64f1334e9a47b7f013056bed03bdd21b1f",
+    "data/maps/PolishedPlayersHouse1F/map.json": "ebf8c1449fdfe5f6470e0dda52e50337c913426307b1095ef274561696aa038e",
+    "data/maps/PolishedPlayersHouse1F/scripts.inc": "b7cf39f7e6275b173db72004f21533496bb1b6ad6c3478ee50b30d9d7cb12b6e",
     "data/layouts/PolishedPlayersHouse2F/map.bin": "d250290a259126e36aa2f8719c8d72b3c56c9cc040d368772a6d59147ac29c02",
     "data/layouts/PolishedPlayersHouse2F/border.bin": "58b6ce2870c231fbe07a763ac9c4dc612e669cfbebfb93760435a9dbbdced76e",
     "data/maps/PolishedPlayersHouse2F/map.json": "8f5a349401e473b66f451788009d335acf3fa5d439c210f2a56d09fcbfa7ab65",

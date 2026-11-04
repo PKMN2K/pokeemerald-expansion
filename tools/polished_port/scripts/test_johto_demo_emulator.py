@@ -60,6 +60,9 @@ class Game:
         self.process = subprocess.Popen([str(driver), str(rom)], stdin=subprocess.PIPE,
                                         stdout=subprocess.PIPE, text=True, env={**os.environ, "TZ": "UTC"})
         self.timestamp = 1793786400
+        # Set the cartridge's RTC before boot/New Game seeds the native RNG.
+        # A host wall-clock seed made otherwise identical input replays differ.
+        self.command(f"rtc {self.timestamp}")
 
     def command(self, line):
         self.process.stdin.write(line + "\n")
