@@ -24,6 +24,7 @@ def capture(walker, rom, output):
 
     enter_search()
     snap("cool_first")
+    press("UP", 100); snap("cool_first_after_up")
     press("DOWN", 100); snap("cool_tied")
     press("DOWN", 100); snap("cool_third")
     press("UP", 100); press("UP", 100)
@@ -44,16 +45,31 @@ def capture(walker, rom, output):
         press("DOWN", 100)
         press("A", 450)
         snap(name)
+        press("DOWN", 100); snap(name + "_second")
+        press("DOWN", 100); snap(name + "_third")
     press("B", 260)  # Search categories
     press("B", 260)  # Condition menu
     press("B", 260)  # Main menu
     snap("main_return")
     enter_search(); snap("cool_reentered")
     press("B", 260); press("A", 450); snap("short_list")
+    press("RIGHT"); snap("short_last")
+    press("DOWN", 100); snap("short_last_after_down")
     press("B", 260); press("A", 450); snap("single_list")
     press("DOWN", 100); snap("single_after_down")
+    press("UP", 100); snap("single_after_up")
     press("A", 360); snap("single_graph")
     press("B", 300); snap("single_return")
+    subprocess.run([walker, rom, str(output), *actions], check=True, timeout=180)
+    # Cold boot with R held selects four party and 100 boxed results. This
+    # verifies three-digit rank text and page clamping across PC box limits.
+    actions = ["press:R:90", "run:700"]
+    enter_search()
+    for _ in range(18):
+        press("RIGHT")
+    snap("rank104")
+    press("DOWN", 100); snap("rank104_after_down")
+    press("UP", 100); snap("rank103")
     subprocess.run([walker, rom, str(output), *actions], check=True, timeout=180)
 
 

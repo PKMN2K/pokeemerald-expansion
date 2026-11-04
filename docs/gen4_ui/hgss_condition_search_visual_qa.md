@@ -34,6 +34,7 @@ PokéNav main menu, Condition menu, category menu and result/detail screens.
 ![Boxed results after upward circular-buffer wrap](screenshots/condition_search/cool_wrap_up.png)
 ![Beauty search with different sorting](screenshots/condition_search/beauty.png)
 ![Single result after returning from details](screenshots/condition_search/single_return.png)
+![Three-digit rank across PC boxes](screenshots/condition_search/rank104.png)
 
 ## Reproducible acceptance
 
@@ -45,28 +46,35 @@ The normal startup callback and runtime source are not changed by the fixture
 in the production commit.
 
 The fixture has four party Pokémon, twenty boxed Pokémon with distinct
-twelve-character names and level 100, and one high-stat egg that must be
-excluded. Each category has different condition values. Later entries
+twelve-character names and level 100, and high-stat eggs in both the party
+and PC that must be excluded. One boxed Pokémon is male, so all three gender
+cases are checked. Each category has different condition values. Later entries
 remove synthetic box/party records to exercise four-result and one-result
-lists through the same runtime code.
+lists through the same runtime code. A second cold boot with R held creates
+104 valid results across four PC boxes, exercising three-digit ranks and
+12-character names ending in three digits.
 
 `verify_hgss_condition_search_screens.py` compares **26,544 pixels in each
-of 19 settled list states** against original HGSS panels and the game's
+of 34 settled list states** against original HGSS panels and the game's
 actual font glyphs. It computes the expected category ordering and tied
 ranks from the fixture data independently of the runtime. RGB555 expansion
 allows a maximum channel difference of eight. Only the animated pointer
-footprints are excluded; these were reviewed visually.
+footprints are excluded; these were reviewed visually. Every results frame
+also restores the same VIEW/BACK footer, and both detail transitions must
+render a filled condition polygon.
 
 | Coverage | Accepted behavior |
 |---|---|
-| All five categories | Correct title, sorted names and rank |
-| Tied leaders and high-stat egg | Ranks 1, 1, 3; egg absent |
+| All five categories | Correct title, sorted names, and first/second/third ranks |
+| Tied leaders and high-stat party/PC eggs | Ranks 1, 1, 3; both eggs absent |
+| Male, female and genderless Pokémon | Original palette indices and correct symbols |
+| 104-result list across PC boxes | Ranks 104 and 103 fit; final page clamps correctly |
 | First, second, fourth and last pages | Correct rows, names, levels and rank |
-| Last-result boundary | Down leaves the selected result unchanged |
+| First/last-result boundaries | Up/Down leave boundary selections unchanged |
 | Upward circular-buffer wrap | No stale row text or header bleed |
 | PC detail screen and return | Same selected result, rank and panel colors |
 | Page-up and main-menu re-entry | First result restored correctly |
-| Four-result and one-result lists | Unused rows clear; no stale cards |
+| Four-result and one-result lists | Unused rows clear; page and Up/Down boundaries hold |
 | Single-result detail round trip | Selection and original colors preserved |
 
 ## Legacy removal
