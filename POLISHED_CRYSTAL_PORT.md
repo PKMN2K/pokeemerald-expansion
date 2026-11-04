@@ -123,6 +123,10 @@ population. Conditional NPCs, starter selection, the rival/Lyra scenes, Mom's
 events, hidden items, room decorations and Route 29/27 connections are still
 pending. The unconnected town boundaries remain closed by source border
 collision. No story flags or Headbutt source-map assignments are invented.
+New Bark's original `TREEMON_SET_CITY` encounter data remains in the dormant
+selector. Registering its geography does not enable that data in live play;
+the audit checks that the selector still has no production caller. The seven
+interiors have no source tree encounter sets.
 
 `build_new_bark.py --check` reproduces the maps, tilesets, static scripts and
 source manifest. `test_new_bark_emulator.py` follows all 19 directed warps with

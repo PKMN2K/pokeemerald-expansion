@@ -336,13 +336,27 @@ def export(output: Path, headbutt_review: dict):
         candidate["used_by_headbutt"] = candidate["source_species"] in tree_species
         candidate["runtime_mapping_verified"] = runtime_tables_match and candidate["used_by_headbutt"]
     map_groups = json.loads((ROOT / "data/maps/map_groups.json").read_text(encoding="utf-8"))
-    # The custom visual demo has no original map identity or Headbutt set.
-    # Keep rejecting new source-map groups until their explicit bridge is audited;
-    # a substring such as "Johto" must never imply source encounter routing.
+    # The custom garden has no source map identity. The reviewed New Bark
+    # geography does: the town has a City set, while its interiors have none.
+    # Keep rejecting unreviewed registrations; a "Johto" name or matching
+    # numeric map ID must never imply an Emerald-to-source encounter bridge.
+    from build_new_bark import MAPS as new_bark_maps
+    registered_source_sets = {row["source_map_id"]: row["source_group"] for row in maps
+                              if row["source_map_id"] in new_bark_maps.values()}
+    assert registered_source_sets == {"NEW_BARK_TOWN": "TREEMON_SET_CITY"}
+    # Production still contains only the dormant selector's definition, with
+    # no live caller or function-pointer binding. A future field phase must
+    # replace this gate with explicit mapping and gameplay validation.
+    selector = r"\bJohtoHeadbuttSelectEncounterFromSourceMap\b"
+    references = [str(path.relative_to(ROOT)) for path in (ROOT / "src").rglob("*.c")
+                  if re.search(selector, path.read_text())]
+    assert references == ["src/polished_johto_headbutt.c"]
     johto_groups = {name: map_groups[name] for name in map_groups["group_order"] if "Johto" in name}
     assert set(johto_groups) <= {"gMapGroup_PolishedJohtoDemo"}
     visual_demo_maps = johto_groups.get("gMapGroup_PolishedJohtoDemo", [])
-    assert not visual_demo_maps or visual_demo_maps == ["PolishedJohtoDemoOutdoor", "PolishedJohtoDemoLab"]
+    expected_visual_maps = ["PolishedJohtoDemoOutdoor", "PolishedJohtoDemoLab"]
+    expected_visual_maps += ["Polished" + name for name in new_bark_maps]
+    assert not visual_demo_maps or visual_demo_maps == expected_visual_maps
 
     report = {
         "status": "PINNED_HEADBUTT_ENCOUNTERS_REVIEW_NOT_FOR_ROM",
@@ -379,6 +393,7 @@ def export(output: Path, headbutt_review: dict):
         "identity_mapping_only_engine_stats_and_learnsets_retained": True,
         "source_map_groups_registered_by_name": False,
         "registered_visual_demo_maps_without_headbutt_mapping": visual_demo_maps,
+        "registered_source_tree_sets_not_wired": registered_source_sets,
         "johto_source_map_dispatch_verified": runtime_tables_match,
         "emerald_to_source_map_dispatch_verified": False,
         "headbutt_field_dispatch_verified": False,
