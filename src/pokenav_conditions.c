@@ -127,7 +127,7 @@ static u32 OpenMarkingsMenu(struct Pokenav_ConditionMenu *menu)
     u8 markings;
     u32 ret = CONDITION_FUNC_NONE, boxId, monId;
 
-    if (!HandleMonMarkingsMenuInput())
+    if (!HandleConditionMarkingsMenuInput())
     {
         menu->monMarks[menu->loadId] = GetMonMarkingsData();
         monListPtr = GetSubstructPtr(POKENAV_SUBSTRUCT_MON_LIST);
@@ -168,6 +168,10 @@ static u8 ConditionGraphHandleDpadInput(struct Pokenav_ConditionMenu *menu)
 {
     struct PokenavMonList *monListPtr = GetSubstructPtr(POKENAV_SUBSTRUCT_MON_LIST);
     u8 ret = CONDITION_FUNC_NONE;
+
+    // An empty party contains only Cancel; do not try to load a portrait.
+    if (monListPtr->listCount <= 1)
+        return ret;
 
     if (JOY_HELD(DPAD_UP))
     {
@@ -347,8 +351,8 @@ static u8 *CopyConditionMonNameGender(u8 *str, u16 listId, bool8 skipPadding)
     *(str++) = TEXT_COLOR_TRANSPARENT;
     *(str++) = EXT_CTRL_CODE_BEGIN;
     *(str++) = EXT_CTRL_CODE_TEXT_COLORS;
-    *(str++) = TEXT_COLOR_BLUE;
-    *(str++) = TEXT_COLOR_LIGHT_BLUE;
+    *(str++) = 5;
+    *(str++) = 2;
     *(str++) = TEXT_COLOR_TRANSPARENT;
 
     if (GetBoxOrPartyMonData(boxId, monId, MON_DATA_IS_EGG, NULL))
@@ -376,11 +380,11 @@ static u8 *CopyConditionMonNameGender(u8 *str, u16 listId, bool8 skipPadding)
     while (*str_ != EOS)
         (str_++);
 
-    str_ = WrapFontIdToFit(str, str_, FONT_NORMAL, 57);
+    str_ = WrapFontIdToFit(str, str_, FONT_NORMAL, 96);
 
     *(str_++) = EXT_CTRL_CODE_BEGIN;
     *(str_++) = EXT_CTRL_CODE_SKIP;
-    *(str_++) = 60;
+    *(str_++) = 96;
     switch (gender)
     {
     default:
@@ -389,16 +393,16 @@ static u8 *CopyConditionMonNameGender(u8 *str, u16 listId, bool8 skipPadding)
     case MON_MALE:
         *(str_++) = EXT_CTRL_CODE_BEGIN;
         *(str_++) = EXT_CTRL_CODE_TEXT_COLORS;
-        *(str_++) = TEXT_COLOR_RED;
-        *(str_++) = TEXT_COLOR_LIGHT_RED;
+        *(str_++) = 9;
+        *(str_++) = 2;
         *(str_++) = TEXT_COLOR_TRANSPARENT;
         *(str_++) = CHAR_MALE;
         break;
     case MON_FEMALE:
         *(str_++) = EXT_CTRL_CODE_BEGIN;
         *(str_++) = EXT_CTRL_CODE_TEXT_COLORS;
-        *(str_++) = TEXT_COLOR_GREEN;
-        *(str_++) = TEXT_COLOR_LIGHT_GREEN;
+        *(str_++) = 6;
+        *(str_++) = 2;
         *(str_++) = TEXT_COLOR_TRANSPARENT;
         *(str_++) = CHAR_FEMALE;
         break;
@@ -406,8 +410,8 @@ static u8 *CopyConditionMonNameGender(u8 *str, u16 listId, bool8 skipPadding)
 
     *(str_++) = EXT_CTRL_CODE_BEGIN;
     *(str_++) = EXT_CTRL_CODE_TEXT_COLORS;
-    *(str_++) = TEXT_COLOR_BLUE;
-    *(str_++) = TEXT_COLOR_LIGHT_BLUE;
+    *(str_++) = 5;
+    *(str_++) = 2;
     *(str_++) = TEXT_COLOR_TRANSPARENT;
     *(str_++) = CHAR_SLASH;
     *(str_++) = CHAR_EXTRA_SYMBOL;
@@ -443,8 +447,8 @@ static void CopyMonNameGenderLocation(s16 listId, u8 loadId)
         menu->locationText[loadId][i++] = TEXT_COLOR_TRANSPARENT;
         menu->locationText[loadId][i++] = EXT_CTRL_CODE_BEGIN;
         menu->locationText[loadId][i++] = EXT_CTRL_CODE_TEXT_COLORS;
-        menu->locationText[loadId][i++] = TEXT_COLOR_BLUE;
-        menu->locationText[loadId][i++] = TEXT_COLOR_LIGHT_BLUE;
+        menu->locationText[loadId][i++] = 5;
+        menu->locationText[loadId][i++] = 2;
         menu->locationText[loadId][i++] = TEXT_COLOR_TRANSPARENT;
         if (boxId == TOTAL_BOXES_COUNT)
             CopyStringLeftAlignedToConditionData(&menu->locationText[loadId][i], gText_InParty, BOX_NAME_LENGTH);
@@ -608,14 +612,10 @@ bool32 IsConditionMenuSearchMode(void)
         return FALSE;
 }
 
-// Markings are only shown in search mode
 u8 TryGetMonMarkId(void)
 {
     struct Pokenav_ConditionMenu *menu = GetSubstructPtr(POKENAV_SUBSTRUCT_CONDITION_GRAPH_MENU);
-    if (menu->inSearchMode == TRUE)
-        return menu->monMarks[menu->loadId];
-    else
-        return 0;
+    return menu->monMarks[menu->loadId];
 }
 
 u8 GetNumConditionMonSparkles(void)

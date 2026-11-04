@@ -14,6 +14,9 @@ on:
       - src/pokenav_conditions_search_results.c
       - src/pokenav_conditions.c
       - src/pokenav_conditions_gfx.c
+      - src/pokenav_main_menu.c
+      - include/pokenav.h
+      - graphics/gen4_ui/hgss_condition/**
       - src/pokenav_menu_handler.c
       - src/pokenav_menu_handler_gfx.c
   workflow_dispatch:

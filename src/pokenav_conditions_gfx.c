@@ -9,12 +9,12 @@
 #include "menu_specialized.h"
 #include "mon_markings.h"
 #include "palette.h"
-#include "pokenav.h"
 #include "scanline_effect.h"
 #include "string_util.h"
 #include "strings.h"
 #include "text.h"
-#include "constants/rgb.h"
+#include "constants/songs.h"
+#include "sound.h"
 
 static u32 LoopedTask_TransitionMons(s32);
 static u32 LoopedTask_ExitConditionGraphMenu(s32);
@@ -23,137 +23,67 @@ static u32 LoopedTask_SlideMonOut(s32);
 static u32 LoopedTask_OpenMonMarkingsWindow(s32);
 static u32 LoopedTask_CloseMonMarkingsWindow(s32);
 
-static u8 sInitialLoadId; // Never read
+// Retail HGSS panel/font/star assets. The blue fill is data rendered by the
+// existing condition scanline windows, using an unchanged HGSS palette entry.
+static const u32 sHgssGraphTiles[] = INCBIN_U32("graphics/gen4_ui/hgss_condition/graph_bg.4bpp");
+static const u16 sHgssGraphMap[] = INCBIN_U16("graphics/gen4_ui/hgss_condition/graph_bg.bin");
+static const u16 sHgssTextPal[] = INCBIN_U16("graphics/gen4_ui/hgss_ribbons/summary_bg.bank_1.gbapal");
+static const u16 sHgssHeaderPal[] = INCBIN_U16("graphics/gen4_ui/hgss_ribbons/summary_bg.bank_7.gbapal");
+static const u32 sGraphDataTile[] = {0x99999999, 0x99999999, 0x99999999, 0x99999999, 0x99999999, 0x99999999, 0x99999999, 0x99999999};
+static const u32 sHgssSheenStars[] = INCBIN_U32("graphics/gen4_ui/hgss_condition/sheen_stars.4bpp");
+static const u16 sHgssStarPal[] = INCGFX_U16("graphics/gen4_ui/hgss_storage/verified/shiny_star.png", ".gbapal");
+static const u32 sHgssMarkingsPanel[] = INCBIN_U32("graphics/gen4_ui/hgss_condition/markings_panel.4bpp");
+static const u16 sHgssMarkingsPal[] = INCGFX_U16("graphics/gen4_ui/hgss_storage/verified/markings_menu.png", ".gbapal");
+static const u32 sHgssMarkingsCombo[] = INCBIN_U32("graphics/gen4_ui/hgss_storage/verified/marking_combo_hgss.4bpp");
+// Original /a/0/1/9 member 4 bank 3, reordered to the verified PNG indices.
+static const u16 sHgssMarkingsSelectedPal[] = {0x5790, 0x4E94, 0x356B, 0x2D57, 0x41FC, 0x4E94, 0x4E94, 0x39EF, 0x294A, 0, 0, 0, 0, 0, 0, 0};
+static const u32 sHgssCursorTiles[] = INCBIN_U32("graphics/gen4_ui/hgss_pokegear/condition_search_cursor.4bpp");
+static const u16 sHgssCursorPal[] = INCBIN_U16("graphics/gen4_ui/hgss_pokegear/condition_search_cursor.gbapal");
+static const u8 sTextColors[] = {0, 5, 2};
+static const u8 sText_Condition[] = _("CONDITION");
+static const u8 sText_Number[] = _("No. ");
+static const u8 sText_Cancel[] = _("CANCEL");
+static const u8 sMarkingBitBySlot[] = {0, 2, 1, 3};
 
-const u16 gConditionGraphData_Pal[] = INCGFX_U16("graphics/pokenav/condition/graph_data.pal", ".gbapal");
-const u16 gConditionText_Pal[] = INCGFX_U16("graphics/pokenav/condition/text.pal", ".gbapal");
-
-static const u16 sPokeGearStatusMarkingsFramePal[] =
+static const struct BgTemplate sMenuBgTemplates[] =
 {
-    RGB(0, 0, 0),
-    RGB(31, 31, 31),
-    RGB(26, 30, 31),
-    RGB(18, 27, 31),
-    RGB(8, 18, 27),
-    RGB(3, 9, 15),
-    RGB(31, 27, 10),
-    RGB(21, 25, 28),
-    RGB(15, 20, 24),
-    RGB(10, 15, 19),
-    RGB(6, 11, 15),
-    RGB(23, 28, 31),
-    RGB(13, 22, 28),
-    RGB(29, 31, 31),
-    RGB(9, 24, 30),
-    RGB(0, 0, 0),
-};
-static const u32 sConditionGraphData_Gfx[] = INCGFX_U32("graphics/pokenav/condition/graph_data.png", ".4bpp.smol");
-static const u32 sConditionGraphData_Tilemap[] = INCGFX_U32("graphics/pokenav/condition/graph_data.bin", ".smolTM");
-
-// Retail HGSS has no PokéNav Condition screen. Reuse only checksum-verified
-// HGSS Pokédex member-057 list/search pixels from the existing adapter.
-static const u32 sHgssConditionStatusChrome_Gfx[] = INCBIN_U32("graphics/gen4_ui/hgss_pokegear/condition_search_chrome.4bpp");
-static const u16 sHgssConditionStatusChrome_Pal[] = INCBIN_U16("graphics/gen4_ui/hgss_pokegear/condition_search_chrome.gbapal");
-
-static const u16 sMonMarkings_Pal[] = INCGFX_U16("graphics/pokenav/condition/mon_markings.pal", ".gbapal");
-
-static const u8 gText_Number2[] = _("No. ");
-
-static const struct BgTemplate sMenuBgTemplates[3] =
-{
-    {
-        .bg = 1,
-        .charBaseIndex = 1,
-        .mapBaseIndex = 0x1F,
-        .screenSize = 0,
-        .paletteMode = 0,
-        .priority = 1,
-        .baseTile = 0
-    },
-    {
-        .bg = 2,
-        .charBaseIndex = 3,
-        .mapBaseIndex = 0x1D,
-        .screenSize = 0,
-        .paletteMode = 0,
-        .priority = 2,
-        .baseTile = 0
-    },
-    {
-        .bg = 3,
-        .charBaseIndex = 2,
-        .mapBaseIndex = 0x1E,
-        .screenSize = 0,
-        .paletteMode = 0,
-        .priority = 3,
-        .baseTile = 0
-    }
+    {.bg = 1, .charBaseIndex = 1, .mapBaseIndex = 6, .screenSize = 0, .paletteMode = 0, .priority = 1, .baseTile = 0},
+    {.bg = 2, .charBaseIndex = 3, .mapBaseIndex = 7, .screenSize = 0, .paletteMode = 0, .priority = 2, .baseTile = 0},
+    {.bg = 3, .charBaseIndex = 2, .mapBaseIndex = 4, .screenSize = 0, .paletteMode = 0, .priority = 3, .baseTile = 0},
 };
 
-static const struct WindowTemplate sMonNameGenderWindowTemplate =
-{
-    .bg = 1,
-    .tilemapLeft = 13,
-    .tilemapTop = 1,
-    .width = 13,
-    .height = 4,
-    .paletteNum = 15,
-    .baseBlock = 2
-};
+static const struct WindowTemplate sTitleWindow =
+    {.bg = 1, .tilemapLeft = 1, .tilemapTop = 1, .width = 14, .height = 2, .paletteNum = 1, .baseBlock = 16};
+static const struct WindowTemplate sIndexWindow =
+    {.bg = 1, .tilemapLeft = 22, .tilemapTop = 1, .width = 7, .height = 2, .paletteNum = 1, .baseBlock = 44};
+static const struct WindowTemplate sNameWindow =
+    {.bg = 1, .tilemapLeft = 1, .tilemapTop = 3, .width = 18, .height = 2, .paletteNum = 1, .baseBlock = 64};
+static const struct WindowTemplate sLocationWindow =
+    {.bg = 1, .tilemapLeft = 20, .tilemapTop = 3, .width = 9, .height = 2, .paletteNum = 1, .baseBlock = 100};
+static const struct WindowTemplate sMarkingsWindow =
+    {.bg = 1, .tilemapLeft = 11, .tilemapTop = 6, .width = 4, .height = 1, .paletteNum = 12, .baseBlock = 118};
 
-static const struct WindowTemplate sListIndexWindowTemplate =
-{
-    .bg = 1,
-    .tilemapLeft = 1,
-    .tilemapTop = 6,
-    .width = 7,
-    .height = 2,
-    .paletteNum = 15,
-    .baseBlock = 0x36
-};
+#define MARKS_LEFT 19
+#define MARKS_TOP 1
+#define MARKS_WIDTH 11
+#define MARKS_HEIGHT 15
+#define MARKS_BASE_TILE 256
+#define MARKS_PAL 12
+#define MARKS_SELECTED_PAL 13
 
-static const struct WindowTemplate sUnusedWindowTemplate1 =
+static const struct OamData sMarkCursorOam =
+    {.shape = SPRITE_SHAPE(8x16), .size = SPRITE_SIZE(8x16), .priority = 0};
+static const union AnimCmd sMarkCursorAnim[] = {ANIMCMD_FRAME(0, 0), ANIMCMD_END};
+static const union AnimCmd *const sMarkCursorAnims[] = {sMarkCursorAnim};
+static const struct SpriteTemplate sMarkCursorTemplate =
 {
-    .bg = 1,
-    .tilemapLeft = 1,
-    .tilemapTop = 0x1C,
-    .width = 5,
-    .height = 2,
-    .paletteNum = 15,
-    .baseBlock = 0x44
-};
-
-static const struct WindowTemplate sUnusedWindowTemplate2 =
-{
-    .bg = 1,
-    .tilemapLeft = 13,
-    .tilemapTop = 0x1C,
-    .width = 3,
-    .height = 2,
-    .paletteNum = 15,
-    .baseBlock = 0x44
-};
-
-static const struct WindowTemplate sPokeGearGraphFrameWindowTemplate =
-{
-    .bg = 1,
-    .tilemapLeft = 14,
-    .tilemapTop = 6,
-    .width = 11,
-    .height = 10,
-    .paletteNum = 15,
-    .baseBlock = 0x80
-};
-
-static const struct WindowTemplate sPokeGearPartyRailWindowTemplate =
-{
-    .bg = 1,
-    .tilemapLeft = 27,
-    .tilemapTop = 0,
-    .width = 3,
-    .height = 18,
-    .paletteNum = 15,
-    .baseBlock = 0xF0
+    .tileTag = TAG_CONDITION_MARKINGS_MENU,
+    .paletteTag = TAG_CONDITION_MARKINGS_MENU,
+    .oam = &sMarkCursorOam,
+    .anims = sMarkCursorAnims,
+    .images = NULL,
+    .affineAnims = gDummySpriteAffineAnimTable,
+    .callback = SpriteCallbackDummy,
 };
 
 static const LoopedTask sLoopedTaskFuncs[] =
@@ -172,9 +102,7 @@ typedef u8 ALIGNED(4) TilemapBuffer[BG_SCREEN_SIZE];
 struct Pokenav_ConditionMenuGfx
 {
     u32 loopedTaskId;
-    TilemapBuffer tilemapBuffers[3];
-    u8 filler[2];
-    u8 partyPokeballSpriteIds[PARTY_SIZE + 1];
+    TilemapBuffer tilemapBuffers[2];
     u32 (*callback)(void);
     s16 monTransitionX;
     u8 monPicSpriteId;
@@ -182,28 +110,28 @@ struct Pokenav_ConditionMenuGfx
     u16 monGfxTileStart;
     void *monGfxPtr;
     u8 nameGenderWindowId;
+    u8 locationWindowId;
     u8 listIndexWindowId;
-    u8 unusedWindowId1;
-    u8 unusedWindowId2;
-    u8 graphFrameWindowId;
-    u8 partyRailWindowId;
-    struct MonMarkingsMenu marksMenu;
-    struct Sprite *monMarksSprite;
+    u8 titleWindowId;
+    u8 markingsWindowId;
+    u8 markings;
+    u8 pendingMarkings;
+    u8 markingCursor;
+    u8 markingCursorSpriteId;
     struct Sprite *conditionSparkleSprites[MAX_CONDITION_SPARKLES];
-    u8 windowModeState;
-    u8 filler2[0xFA3];
 };
-
-extern s8 GetConditionGraphMenuCurrentLoadIndex(void); // This function's declaration here is s8 vs. u8 in pokenav_conditions.c
 
 static u32 LoopedTask_OpenConditionGraphMenu(s32);
 static u32 GetConditionGraphMenuLoopedTaskActive(void);
 static void CreateConditionMonPic(u8);
-static void CreateMonMarkingsOrPokeballIndicators(void);
-static void CopyUnusedConditionWindowsToVram(void);
-static void DrawPokeGearStatusInfoCard(u8, bool8);
-static void DrawPokeGearStatusGraphFrame(u8);
-static void DrawPokeGearStatusPartyRail(u8, bool8);
+static void LoadHgssConditionSprites(void);
+static void CreateHgssConditionSparkles(void);
+static void DrawConditionMarkings(void);
+static void OpenConditionMarkings(void);
+static void CloseConditionMarkings(void);
+static void UpdateConditionMarkings(void);
+static void UpdateConditionMarkCursor(void);
+static bool32 IsConditionCancelSelected(void);
 static bool32 UpdateConditionGraphMenuWindows(u8, u16, bool8);
 static void VBlankCB_PokenavConditionGraph(void);
 static void DoConditionGraphEnterTransition(void);
@@ -221,7 +149,7 @@ bool32 OpenConditionGraphMenu(void)
     menu->monPicSpriteId = SPRITE_NONE;
     menu->loopedTaskId = CreateLoopedTask(LoopedTask_OpenConditionGraphMenu, 1);
     menu->callback = GetConditionGraphMenuLoopedTaskActive;
-    menu->windowModeState = 0;
+    menu->markingCursorSpriteId = SPRITE_NONE;
     return TRUE;
 }
 
@@ -251,145 +179,88 @@ static u32 LoopedTask_OpenConditionGraphMenu(s32 state)
     switch (state)
     {
     case 0:
-        if (LoadConditionGraphMenuGfx() != TRUE)
+        if (!LoadConditionGraphMenuGfx())
             return LT_PAUSE;
         return LT_INC_AND_PAUSE;
     case 1:
         InitBgTemplates(sMenuBgTemplates, ARRAY_COUNT(sMenuBgTemplates));
-        ChangeBgX(1, 0, BG_COORD_SET);
-        ChangeBgY(1, 0, BG_COORD_SET);
-        ChangeBgX(2, 0, BG_COORD_SET);
-        ChangeBgY(2, 0, BG_COORD_SET);
-        ChangeBgX(3, 0, BG_COORD_SET);
-        ChangeBgY(3, 0, BG_COORD_SET);
-        SetGpuReg(REG_OFFSET_DISPCNT, DISPCNT_WIN0_ON | DISPCNT_WIN1_ON | DISPCNT_OBJ_ON | DISPCNT_OBJ_1D_MAP | DISPCNT_BG0_ON | DISPCNT_BG3_ON);
+        for (u32 bg = 1; bg <= 3; bg++)
+        {
+            ChangeBgX(bg, 0, BG_COORD_SET);
+            ChangeBgY(bg, 0, BG_COORD_SET);
+        }
+        SetGpuReg(REG_OFFSET_DISPCNT, DISPCNT_WIN0_ON | DISPCNT_WIN1_ON | DISPCNT_OBJ_ON | DISPCNT_OBJ_1D_MAP | DISPCNT_BG0_ON);
         SetGpuReg(REG_OFFSET_BLDCNT, BLDCNT_TGT1_BG2 | BLDCNT_EFFECT_BLEND | BLDCNT_TGT2_BG3);
         SetGpuReg(REG_OFFSET_BLDALPHA, BLDALPHA_BLEND(11, 4));
-        LoadBgTiles(3, sHgssConditionStatusChrome_Gfx, sizeof(sHgssConditionStatusChrome_Gfx), 0);
+        LoadBgTiles(3, sHgssGraphTiles, sizeof(sHgssGraphTiles), 0);
+        SetBgTilemapBuffer(3, menu->tilemapBuffers[0]);
+        CopyToBgTilemapBuffer(3, sHgssGraphMap, sizeof(sHgssGraphMap), 0);
+        CopyBgTilemapBufferToVram(3);
+        CopyPaletteIntoBufferUnfaded(sHgssTextPal, BG_PLTT_ID(1), sizeof(sHgssTextPal));
+        CopyPaletteIntoBufferUnfaded(sHgssHeaderPal, BG_PLTT_ID(7), sizeof(sHgssHeaderPal));
+        CopyPaletteIntoBufferUnfaded(sHgssMarkingsPal, BG_PLTT_ID(MARKS_PAL), sizeof(sHgssMarkingsPal));
+        CopyPaletteIntoBufferUnfaded(sHgssMarkingsSelectedPal, BG_PLTT_ID(MARKS_SELECTED_PAL), sizeof(sHgssMarkingsSelectedPal));
+        menu->monTransitionX = -80;
         return LT_INC_AND_PAUSE;
     case 2:
         if (FreeTempTileDataBuffersIfPossible())
             return LT_PAUSE;
-        DecompressAndCopyTileDataToVram(2, sConditionGraphData_Gfx, 0, 0, 0);
-        return LT_INC_AND_PAUSE;
-    case 3:
-         if (FreeTempTileDataBuffersIfPossible())
-            return LT_PAUSE;
-
-        // Tile 0 is the exact pale-blue list interior from HGSS member 057.
-        // Fill the whole map with that authentic tile; existing graph/data
-        // layers remain above it and continue to provide Condition behavior.
-        CpuFill32(0, menu->tilemapBuffers[0], BG_SCREEN_SIZE);
-        CopyPaletteIntoBufferUnfaded(sHgssConditionStatusChrome_Pal, BG_PLTT_ID(0), PLTT_SIZE_4BPP);
-        SetBgTilemapBuffer(3, menu->tilemapBuffers[0]);
-        CopyBgTilemapBufferToVram(3);
-        CopyPaletteIntoBufferUnfaded(gConditionText_Pal, BG_PLTT_ID(15), PLTT_SIZE_4BPP);
-        menu->monTransitionX = -80;
-        return LT_INC_AND_PAUSE;
-    case 4:
-        if (FreeTempTileDataBuffersIfPossible())
-            return LT_PAUSE;
-
-        DecompressDataWithHeaderVram(sConditionGraphData_Tilemap, menu->tilemapBuffers[2]);
-        SetBgTilemapBuffer(2, menu->tilemapBuffers[2]);
+        LoadBgTiles(2, sGraphDataTile, sizeof(sGraphDataTile), 1);
+        SetBgTilemapBuffer(2, menu->tilemapBuffers[1]);
+        FillBgTilemapBufferRect(2, 1, 0, 0, 32, 32, 1);
         CopyBgTilemapBufferToVram(2);
-        CopyPaletteIntoBufferUnfaded(gConditionGraphData_Pal, BG_PLTT_ID(3), PLTT_SIZE_4BPP);
         ConditionGraph_InitWindow(2);
         return LT_INC_AND_PAUSE;
-    case 5:
+    case 3:
         BgDmaFill(1, 0, 0, 1);
-        BgDmaFill(1, 17, 1, 1);
-        CpuFill32(0, menu->tilemapBuffers[1], BG_SCREEN_SIZE);
-        SetBgTilemapBuffer(1, menu->tilemapBuffers[1]);
+        menu->titleWindowId = AddWindow(&sTitleWindow);
+        menu->listIndexWindowId = AddWindow(&sIndexWindow);
+        menu->nameGenderWindowId = AddWindow(&sNameWindow);
+        menu->locationWindowId = AddWindow(&sLocationWindow);
+        menu->markingsWindowId = AddWindow(&sMarkingsWindow);
+        // AddWindow owns BG1's map. Popup edits must use that same buffer.
+        FillBgTilemapBufferRect_Palette0(1, 0, 0, 0, 32, 32);
+        FillWindowPixelBuffer(menu->titleWindowId, PIXEL_FILL(0));
+        AddTextPrinterParameterized3(menu->titleWindowId, FONT_NORMAL, 0, 1, sTextColors, TEXT_SKIP_DRAW, sText_Condition);
+        PutWindowTilemap(menu->titleWindowId);
+        CopyWindowToVram(menu->titleWindowId, COPYWIN_FULL);
+        return LT_INC_AND_PAUSE;
+    case 4:
+        if (!IsConditionCancelSelected())
+            CreateConditionMonPic(0);
+        LoadHgssConditionSprites();
+        return LT_INC_AND_PAUSE;
+    case 5:
+        UpdateConditionGraphMenuWindows(0, GetConditionGraphMenuCurrentLoadIndex(), TRUE);
+        UpdateConditionGraphMenuWindows(1, GetConditionGraphMenuCurrentLoadIndex(), TRUE);
+        UpdateConditionGraphMenuWindows(2, GetConditionGraphMenuCurrentLoadIndex(), TRUE);
+        UpdateConditionGraphMenuWindows(3, GetConditionGraphMenuCurrentLoadIndex(), TRUE);
         return LT_INC_AND_PAUSE;
     case 6:
-        if (FreeTempTileDataBuffersIfPossible())
-            return LT_PAUSE;
-
-        menu->nameGenderWindowId = AddWindow(&sMonNameGenderWindowTemplate);
-        menu->graphFrameWindowId = AddWindow(&sPokeGearGraphFrameWindowTemplate);
-        menu->partyRailWindowId = AddWindow(&sPokeGearPartyRailWindowTemplate);
-        DrawPokeGearStatusGraphFrame(menu->graphFrameWindowId);
-        DrawPokeGearStatusPartyRail(menu->partyRailWindowId, !IsConditionMenuSearchMode());
-        if (IsConditionMenuSearchMode() == TRUE)
-        {
-            menu->listIndexWindowId = AddWindow(&sListIndexWindowTemplate);
-            menu->unusedWindowId1 = AddWindow(&sUnusedWindowTemplate1);
-            menu->unusedWindowId2 = AddWindow(&sUnusedWindowTemplate2);
-        }
-        DeactivateAllTextPrinters();
-        return LT_INC_AND_PAUSE;
-    case 7:
-        CreateConditionMonPic(0);
-        return LT_INC_AND_PAUSE;
-    case 8:
-        CreateMonMarkingsOrPokeballIndicators();
-        return LT_INC_AND_PAUSE;
-    case 9:
-        if (IsConditionMenuSearchMode() == TRUE)
-            CopyUnusedConditionWindowsToVram();
-        return LT_INC_AND_PAUSE;
-    case 10:
-        UpdateConditionGraphMenuWindows(0, GetConditionGraphMenuCurrentLoadIndex(), TRUE);
-        return LT_INC_AND_PAUSE;
-    case 11:
-        UpdateConditionGraphMenuWindows(1, GetConditionGraphMenuCurrentLoadIndex(), TRUE);
-        return LT_INC_AND_PAUSE;
-    case 12:
-        UpdateConditionGraphMenuWindows(2, GetConditionGraphMenuCurrentLoadIndex(), TRUE);
-        return LT_INC_AND_PAUSE;
-    case 13:
-        if (UpdateConditionGraphMenuWindows(3, GetConditionGraphMenuCurrentLoadIndex(), TRUE) != TRUE)
-            return LT_PAUSE;
-        PutWindowTilemap(menu->nameGenderWindowId);
-        PutWindowTilemap(menu->graphFrameWindowId);
-        PutWindowTilemap(menu->partyRailWindowId);
-        CopyWindowToVram(menu->graphFrameWindowId, COPYWIN_FULL);
-        CopyWindowToVram(menu->partyRailWindowId, COPYWIN_FULL);
-        if (IsConditionMenuSearchMode() == TRUE)
-        {
-            PutWindowTilemap(menu->listIndexWindowId);
-            PutWindowTilemap(menu->unusedWindowId1);
-            PutWindowTilemap(menu->unusedWindowId2);
-        }
-        return LT_INC_AND_PAUSE;
-    case 14:
         ShowBg(1);
         HideBg(2);
         ShowBg(3);
-        PrintHelpBarText(HELPBAR_CONDITION_MON_STATUS);
-        return LT_INC_AND_PAUSE;
-    case 15:
+        PrintHelpBarText(IsConditionMenuSearchMode() ? HELPBAR_CONDITION_MON_STATUS : HELPBAR_CONDITION_PARTY);
         PokenavFadeScreen(POKENAV_FADE_FROM_BLACK);
         return LT_INC_AND_PAUSE;
-    case 16:
+    case 7:
         if (IsPaletteFadeActive())
             return LT_PAUSE;
         SetVBlankCallback_(VBlankCB_PokenavConditionGraph);
-        return LT_INC_AND_PAUSE;
-    case 17:
         DoConditionGraphEnterTransition();
         ConditionGraph_InitResetScanline(GetConditionGraphPtr());
         return LT_INC_AND_PAUSE;
-    case 18:
+    case 8:
         if (ConditionGraph_ResetScanline(GetConditionGraphPtr()))
             return LT_PAUSE;
+        ToggleGraphData(!IsConditionCancelSelected());
         return LT_INC_AND_PAUSE;
-    case 19:
-        ToggleGraphData(TRUE);
-        return LT_INC_AND_PAUSE;
-    case 20:
-        if (!ConditionMenu_UpdateMonEnter(GetConditionGraphPtr(), &menu->monTransitionX))
-        {
-            ResetConditionSparkleSprites(menu->conditionSparkleSprites);
-            if (IsConditionMenuSearchMode() == TRUE || GetConditionGraphCurrentListIndex() != GetMonListCount())
-                CreateConditionSparkleSprites(menu->conditionSparkleSprites, menu->monPicSpriteId, GetNumConditionMonSparkles());
-
-            return LT_FINISH;
-        }
-        return LT_PAUSE;
+    case 9:
+        if (ConditionMenu_UpdateMonEnter(GetConditionGraphPtr(), &menu->monTransitionX))
+            return LT_PAUSE;
+        CreateHgssConditionSparkles();
+        return LT_FINISH;
     }
-
     return LT_FINISH;
 }
 
@@ -470,11 +341,7 @@ static u32 LoopedTask_TransitionMons(s32 state)
         graph = GetConditionGraphPtr();
         if (!ConditionMenu_UpdateMonEnter(graph, &menu->monTransitionX))
         {
-            ResetConditionSparkleSprites(menu->conditionSparkleSprites);
-            if (IsConditionMenuSearchMode() != TRUE && GetConditionGraphCurrentListIndex() == GetMonListCount())
-                return LT_INC_AND_CONTINUE;
-
-            CreateConditionSparkleSprites(menu->conditionSparkleSprites, menu->monPicSpriteId, GetNumConditionMonSparkles());
+            CreateHgssConditionSparkles();
             return LT_INC_AND_CONTINUE;
         }
         return LT_PAUSE;
@@ -517,8 +384,7 @@ static u32 LoopedTask_MoveCursorNoTransition(s32 state)
     case 8:
         if (!ConditionMenu_UpdateMonEnter(GetConditionGraphPtr(), &menu->monTransitionX))
         {
-            ResetConditionSparkleSprites(menu->conditionSparkleSprites);
-            CreateConditionSparkleSprites(menu->conditionSparkleSprites, menu->monPicSpriteId, GetNumConditionMonSparkles());
+            CreateHgssConditionSparkles();
             return LT_INC_AND_CONTINUE;
         }
         return LT_PAUSE;
@@ -570,7 +436,7 @@ static u32 LoopedTask_OpenMonMarkingsWindow(s32 state)
     switch (state)
     {
     case 0:
-        OpenMonMarkingsMenu(TryGetMonMarkId(), 168, 16);
+        OpenConditionMarkings();
         return LT_INC_AND_CONTINUE;
     case 1:
         PrintHelpBarText(HELPBAR_CONDITION_MARKINGS);
@@ -589,7 +455,7 @@ static u32 LoopedTask_CloseMonMarkingsWindow(s32 state)
     switch (state)
     {
     case 0:
-        FreeMonMarkingsMenu();
+        CloseConditionMarkings();
         return LT_INC_AND_CONTINUE;
     case 1:
         PrintHelpBarText(HELPBAR_CONDITION_MON_STATUS);
@@ -603,300 +469,203 @@ static u32 LoopedTask_CloseMonMarkingsWindow(s32 state)
     return LT_FINISH;
 }
 
-static u8 UNUSED *UnusedPrintNumberString(u8 *dst, u16 num)
+static bool32 IsConditionCancelSelected(void)
 {
-    u8 *txtPtr = ConvertIntToDecimalStringN(dst, num, STR_CONV_MODE_RIGHT_ALIGN, 4);
-    txtPtr = StringCopy(txtPtr, gText_Number2);
-
-    return txtPtr;
+    return !IsConditionMenuSearchMode() && GetConditionGraphCurrentListIndex() == GetMonListCount() - 1;
 }
 
-static void DrawPokeGearStatusInfoCard(u8 windowId, bool8 compact)
+static void DrawConditionMarkings(void)
 {
-    u8 width = GetWindowAttribute(windowId, WINDOW_WIDTH) * 8;
-    u8 height = GetWindowAttribute(windowId, WINDOW_HEIGHT) * 8;
-
-    FillWindowPixelBuffer(windowId, PIXEL_FILL(9));
-
-    if (width < 16 || height < 8)
-        return;
-
-    // Gen 4/HGSS-style inset LCD card: cyan lit edge, dark lower bevel.
-    FillWindowPixelRect(windowId, PIXEL_FILL(4), 3, 0, width - 6, 1);
-    FillWindowPixelRect(windowId, PIXEL_FILL(4), 0, 3, 1, height - 6);
-    FillWindowPixelRect(windowId, PIXEL_FILL(5), 3, height - 1, width - 6, 1);
-    FillWindowPixelRect(windowId, PIXEL_FILL(5), width - 1, 3, 1, height - 6);
-    FillWindowPixelRect(windowId, PIXEL_FILL(3), 3, 2, width - 6, 1);
-
-    if (!compact && height >= 24)
-    {
-        // Separate nickname/gender from location like an HGSS summary/status card.
-        FillWindowPixelRect(windowId, PIXEL_FILL(3), 6, 15, width - 12, 1);
-        FillWindowPixelRect(windowId, PIXEL_FILL(4), 3, 5, 2, height - 10);
-    }
-}
-
-static void DrawPokeGearStatusGraphFrame(u8 windowId)
-{
-    u8 width = GetWindowAttribute(windowId, WINDOW_WIDTH) * 8;
-    u8 height = GetWindowAttribute(windowId, WINDOW_HEIGHT) * 8;
-
-    FillWindowPixelBuffer(windowId, PIXEL_FILL(0));
-
-    // Precise bezel around the hardware radar band (Y 56-121, centered X 155).
-    FillWindowPixelRect(windowId, PIXEL_FILL(4), 5, 0, width - 10, 2);
-    FillWindowPixelRect(windowId, PIXEL_FILL(4), 0, 5, 2, height - 10);
-    FillWindowPixelRect(windowId, PIXEL_FILL(5), 5, height - 2, width - 10, 2);
-    FillWindowPixelRect(windowId, PIXEL_FILL(5), width - 2, 5, 2, height - 10);
-    FillWindowPixelRect(windowId, PIXEL_FILL(3), 7, 4, width - 14, 1);
-    FillWindowPixelRect(windowId, PIXEL_FILL(3), 4, 7, 1, height - 14);
-
-    // Small Gen 4-style corner notches.
-    FillWindowPixelRect(windowId, PIXEL_FILL(4), 2, 2, 5, 2);
-    FillWindowPixelRect(windowId, PIXEL_FILL(5), width - 7, height - 4, 5, 2);
-}
-
-static void DrawPokeGearStatusPartyRail(u8 windowId, bool8 show)
-{
-    u8 width = GetWindowAttribute(windowId, WINDOW_WIDTH) * 8;
-    u8 height = GetWindowAttribute(windowId, WINDOW_HEIGHT) * 8;
-    u32 y;
-
-    FillWindowPixelBuffer(windowId, PIXEL_FILL(0));
-
-    if (!show)
-        return;
-
-    // HGSS-like segmented vertical selector track behind the party status tabs.
-    FillWindowPixelRect(windowId, PIXEL_FILL(4), 2, 3, 2, height - 6);
-    FillWindowPixelRect(windowId, PIXEL_FILL(5), width - 4, 3, 2, height - 6);
-
-    for (y = 19; y < 120; y += 20)
-    {
-        FillWindowPixelRect(windowId, PIXEL_FILL(3), 5, y, width - 10, 1);
-        FillWindowPixelRect(windowId, PIXEL_FILL(5), 7, y + 1, width - 14, 1);
-    }
-
-    // Bottom soft-key dock for BACK.
-    FillWindowPixelRect(windowId, PIXEL_FILL(4), 3, 121, width - 6, 1);
-    FillWindowPixelRect(windowId, PIXEL_FILL(5), 3, 141, width - 6, 1);
+    struct Pokenav_ConditionMenuGfx *menu = GetSubstructPtr(POKENAV_SUBSTRUCT_CONDITION_GRAPH_MENU_GFX);
+    u8 markings = IsConditionCancelSelected() ? 0 : TryGetMonMarkId();
+    FillWindowPixelBuffer(menu->markingsWindowId, PIXEL_FILL(0));
+    for (u32 slot = 0; slot < NUM_MON_MARKINGS; slot++)
+        if (markings & (1 << sMarkingBitBySlot[slot]))
+            BlitBitmapToWindow(menu->markingsWindowId, (const u8 *)sHgssMarkingsCombo + slot * TILE_SIZE_4BPP, slot * 8, 0, 8, 8);
+    PutWindowTilemap(menu->markingsWindowId);
+    CopyWindowToVram(menu->markingsWindowId, COPYWIN_FULL);
 }
 
 static bool32 UpdateConditionGraphMenuWindows(u8 mode, u16 bufferIndex, bool8 winMode)
 {
-    u8 text[32];
-    const u8 *str;
     struct Pokenav_ConditionMenuGfx *menu = GetSubstructPtr(POKENAV_SUBSTRUCT_CONDITION_GRAPH_MENU_GFX);
+    u8 text[32], *end;
 
     switch (mode)
     {
     case 0:
-        DrawPokeGearStatusInfoCard(menu->nameGenderWindowId, FALSE);
-        if (IsConditionMenuSearchMode() == TRUE)
-            DrawPokeGearStatusInfoCard(menu->listIndexWindowId, TRUE);
+        FillWindowPixelBuffer(menu->nameGenderWindowId, PIXEL_FILL(0));
+        FillWindowPixelBuffer(menu->locationWindowId, PIXEL_FILL(0));
+        FillWindowPixelBuffer(menu->listIndexWindowId, PIXEL_FILL(0));
         break;
     case 1:
-        if (GetConditionGraphCurrentListIndex() != GetMonListCount() - 1 || IsConditionMenuSearchMode() == TRUE)
-        {
-            str = GetConditionMonNameText(bufferIndex);
-            AddTextPrinterParameterized(menu->nameGenderWindowId, FONT_NORMAL, str, 6, 1, 0, NULL);
-        }
+        AddTextPrinterParameterized3(menu->nameGenderWindowId, FONT_NORMAL, 0, 1, sTextColors, TEXT_SKIP_DRAW,
+                                     IsConditionCancelSelected() ? gText_Cancel : GetConditionMonNameText(bufferIndex));
         break;
     case 2:
-        if (IsConditionMenuSearchMode() == TRUE)
+        ToggleGraphData(!IsConditionCancelSelected());
+        if (IsConditionCancelSelected())
+            StringCopy(text, sText_Cancel);
+        else if (IsConditionMenuSearchMode())
         {
-            u32 i = 0;
-            str = GetConditionMonLocationText(bufferIndex);
-            AddTextPrinterParameterized(menu->nameGenderWindowId, FONT_NORMAL, str, 6, 17, 0, NULL);
-            text[i++] = EXT_CTRL_CODE_BEGIN;
-            text[i++] = EXT_CTRL_CODE_BACKGROUND;
-            text[i++] = TEXT_COLOR_TRANSPARENT;
-            text[i++] = EXT_CTRL_CODE_BEGIN;
-            text[i++] = EXT_CTRL_CODE_TEXT_COLORS;
-            text[i++] = TEXT_COLOR_BLUE;
-            text[i++] = TEXT_COLOR_LIGHT_BLUE;
-            text[i++] = TEXT_COLOR_TRANSPARENT;
-            StringCopy(&text[i], gText_Number2);
-            AddTextPrinterParameterized(menu->listIndexWindowId, FONT_NORMAL, text, 7, 1, 0, NULL);
-            ConvertIntToDecimalStringN(&text[i], GetConditionMonDataBuffer(), STR_CONV_MODE_RIGHT_ALIGN, 4);
-            AddTextPrinterParameterized(menu->listIndexWindowId, FONT_NORMAL, text, 31, 1, 0, NULL);
-        }
-        break;
-    case 3:
-        switch (menu->windowModeState)
-        {
-        case 0:
-            if (winMode)
-                CopyWindowToVram(menu->nameGenderWindowId, COPYWIN_FULL);
-            else
-                CopyWindowToVram(menu->nameGenderWindowId, COPYWIN_GFX);
-
-            if (IsConditionMenuSearchMode() == TRUE)
-            {
-                menu->windowModeState++;
-                return FALSE;
-            }
-            else
-            {
-                menu->windowModeState = 0;
-                return TRUE;
-            }
-        case 1:
-            if (winMode)
-                CopyWindowToVram(menu->listIndexWindowId, COPYWIN_FULL);
-            else
-                CopyWindowToVram(menu->listIndexWindowId, COPYWIN_GFX);
-
-            menu->windowModeState = 0;
-            return TRUE;
-        }
-    }
-
-    return FALSE;
-}
-
-static void CopyUnusedConditionWindowsToVram(void)
-{
-    struct Pokenav_ConditionMenuGfx *menu = GetSubstructPtr(POKENAV_SUBSTRUCT_CONDITION_GRAPH_MENU_GFX);
-
-    CopyWindowToVram(menu->unusedWindowId1, COPYWIN_FULL);
-    CopyWindowToVram(menu->unusedWindowId2, COPYWIN_FULL);
-}
-
-static void SpriteCB_PartyPokeball(struct Sprite *sprite)
-{
-    if (sprite->data[0] == GetConditionGraphCurrentListIndex())
-        StartSpriteAnim(sprite, CONDITION_ICON_SELECTED);
-    else
-        StartSpriteAnim(sprite, CONDITION_ICON_UNSELECTED);
-}
-
-void HighlightCurrentPartyIndexPokeball(struct Sprite *sprite)
-{
-    if (GetConditionGraphCurrentListIndex() == GetMonListCount() - 1)
-        sprite->oam.paletteNum = IndexOfSpritePaletteTag(TAG_CONDITION_BALL);
-    else
-        sprite->oam.paletteNum = IndexOfSpritePaletteTag(TAG_CONDITION_CANCEL);
-}
-
-void MonMarkingsCallback(struct Sprite *sprite)
-{
-    StartSpriteAnim(sprite, TryGetMonMarkId());
-}
-
-static void CreateMonMarkingsOrPokeballIndicators(void)
-{
-    struct SpriteSheet sprSheets[4];
-    struct SpriteTemplate sprTemplate;
-    struct SpritePalette sprPals[3];
-    struct SpriteSheet sprSheet;
-    struct Sprite *sprite;
-    u16 i, spriteId;
-    struct Pokenav_ConditionMenuGfx *menu = GetSubstructPtr(POKENAV_SUBSTRUCT_CONDITION_GRAPH_MENU_GFX);
-
-    LoadConditionSelectionIcons(sprSheets, &sprTemplate, sprPals);
-    if (IsConditionMenuSearchMode() == TRUE)
-    {
-        // Search Mode, load markings menu
-        menu->marksMenu.baseTileTag = TAG_CONDITION_MARKINGS_MENU;
-        menu->marksMenu.basePaletteTag = TAG_CONDITION_MARKINGS_MENU;
-        InitMonMarkingsMenu(&menu->marksMenu);
-        BufferMonMarkingsMenuTiles();
-        // Override only this Status app's popup frame with the HGSS-style LCD palette.
-        menu->marksMenu.framePalette = sPokeGearStatusMarkingsFramePal;
-        sprite = CreateMonMarkingAllCombosSprite(TAG_CONDITION_MON_MARKINGS, TAG_CONDITION_MON_MARKINGS, sMonMarkings_Pal);
-        sprite->oam.priority = 3;
-        sprite->x = 192;
-        sprite->y = 32;
-        sprite->callback = MonMarkingsCallback;
-        menu->monMarksSprite = sprite;
-        PokenavFillPalette(IndexOfSpritePaletteTag(TAG_CONDITION_MON_MARKINGS), 0);
-    }
-    else
-    {
-        // Party Mode, load Pokéball selection icons
-        LoadSpriteSheets(sprSheets);
-        Pokenav_AllocAndLoadPalettes(sprPals);
-
-        // Add icons for occupied slots
-        for (i = 0; i < GetMonListCount() - 1; i++)
-        {
-            spriteId = CreateSpriteUnchecked(&sprTemplate, 228, (i * 20) + 8, 0);
-            if (spriteId != MAX_SPRITES)
-            {
-                menu->partyPokeballSpriteIds[i] = spriteId;
-                gSprites[spriteId].data[0] = i;
-                gSprites[spriteId].callback = SpriteCB_PartyPokeball;
-            }
-            else
-            {
-                menu->partyPokeballSpriteIds[i] = SPRITE_NONE;
-            }
-        }
-
-        // Add icons for empty slots
-        sprTemplate.tileTag = TAG_CONDITION_BALL_PLACEHOLDER;
-        sprTemplate.callback = SpriteCallbackDummy;
-        for (; i < PARTY_SIZE; i++)
-        {
-            spriteId = CreateSpriteUnchecked(&sprTemplate, 228, (i * 20) + 8, 0);
-            if (spriteId != MAX_SPRITES)
-            {
-                menu->partyPokeballSpriteIds[i] = spriteId;
-                gSprites[spriteId].oam.size = 0;
-            }
-            else
-            {
-                menu->partyPokeballSpriteIds[i] = SPRITE_NONE;
-            }
-        }
-
-        // Add cancel icon
-        sprTemplate.tileTag = TAG_CONDITION_CANCEL;
-        sprTemplate.callback = HighlightCurrentPartyIndexPokeball;
-        spriteId = CreateSpriteUnchecked(&sprTemplate, 224, (i * 20) + 8, 0);
-        if (spriteId != MAX_SPRITES)
-        {
-            menu->partyPokeballSpriteIds[i] = spriteId;
-            gSprites[spriteId].oam.shape = SPRITE_SHAPE(32x16);
-            gSprites[spriteId].oam.size = SPRITE_SIZE(32x16);
+            end = StringCopy(text, sText_Number);
+            ConvertIntToDecimalStringN(end, GetConditionMonDataBuffer(), STR_CONV_MODE_RIGHT_ALIGN, 3);
         }
         else
         {
-            menu->partyPokeballSpriteIds[i] = SPRITE_NONE;
+            end = ConvertIntToDecimalStringN(text, GetConditionGraphCurrentListIndex() + 1, STR_CONV_MODE_RIGHT_ALIGN, 1);
+            end = StringCopy(end, COMPOUND_STRING(" / "));
+            ConvertIntToDecimalStringN(end, GetMonListCount() - 1, STR_CONV_MODE_LEFT_ALIGN, 1);
         }
+        AddTextPrinterParameterized3(menu->listIndexWindowId, FONT_NORMAL, 0, 1, sTextColors, TEXT_SKIP_DRAW, text);
+        if (!IsConditionCancelSelected())
+            AddTextPrinterParameterized3(menu->locationWindowId, FONT_NORMAL, 0, 1, sTextColors, TEXT_SKIP_DRAW, GetConditionMonLocationText(bufferIndex));
+        DrawConditionMarkings();
+        break;
+    case 3:
+        PutWindowTilemap(menu->nameGenderWindowId);
+        PutWindowTilemap(menu->locationWindowId);
+        PutWindowTilemap(menu->listIndexWindowId);
+        CopyWindowToVram(menu->nameGenderWindowId, winMode ? COPYWIN_FULL : COPYWIN_GFX);
+        CopyWindowToVram(menu->locationWindowId, winMode ? COPYWIN_FULL : COPYWIN_GFX);
+        CopyWindowToVram(menu->listIndexWindowId, winMode ? COPYWIN_FULL : COPYWIN_GFX);
+        break;
     }
+    return TRUE;
+}
 
-    LoadConditionSparkle(&sprSheet, &sprPals[0]);
-    LoadSpriteSheet(&sprSheet);
-    sprPals[1].data = NULL;
-    Pokenav_AllocAndLoadPalettes(sprPals);
+static void LoadHgssConditionSprites(void)
+{
+    const struct SpriteSheet sheet = {sHgssSheenStars, sizeof(sHgssSheenStars), TAG_CONDITION_SPARKLE};
+    const struct SpritePalette pal = {sHgssStarPal, TAG_CONDITION_SPARKLE};
+    LoadSpriteSheet(&sheet);
+    Pokenav_AllocAndLoadPalettes((const struct SpritePalette[]){{pal.data, pal.tag}, {NULL}});
+}
+
+static void CreateHgssConditionSparkles(void)
+{
+    // Keep the unscaled HGSS stars inside this screen's portrait card.
+    // Position offsets leave the shared Pokeblock animation unchanged.
+    static const s8 offsets[MAX_CONDITION_SPARKLES][2] =
+        {{0, 2}, {0, 0}, {-3, 0}, {-3, 0}, {0, 0}, {0, -2}, {0, 0}, {3, 0}, {3, 0}, {0, 0}};
+    struct Pokenav_ConditionMenuGfx *menu = GetSubstructPtr(POKENAV_SUBSTRUCT_CONDITION_GRAPH_MENU_GFX);
+    ResetConditionSparkleSprites(menu->conditionSparkleSprites);
+    if (IsConditionCancelSelected() || menu->monPicSpriteId == SPRITE_NONE)
+        return;
+    CreateConditionSparkleSprites(menu->conditionSparkleSprites, menu->monPicSpriteId, GetNumConditionMonSparkles());
+    for (u32 i = 0; i < MAX_CONDITION_SPARKLES && menu->conditionSparkleSprites[i] != NULL; i++)
+    {
+        menu->conditionSparkleSprites[i]->x2 = offsets[i][0];
+        menu->conditionSparkleSprites[i]->y2 = offsets[i][1];
+    }
+}
+
+static void UpdateConditionMarkCursor(void)
+{
+    static const s16 positions[][2] = {{165, 28}, {197, 28}, {165, 52}, {197, 52}, {164, 80}, {164, 112}};
+    struct Pokenav_ConditionMenuGfx *menu = GetSubstructPtr(POKENAV_SUBSTRUCT_CONDITION_GRAPH_MENU_GFX);
+    if (menu->markingCursorSpriteId != SPRITE_NONE)
+    {
+        gSprites[menu->markingCursorSpriteId].x = positions[menu->markingCursor][0];
+        gSprites[menu->markingCursorSpriteId].y = positions[menu->markingCursor][1];
+    }
+}
+
+static void UpdateConditionMarkings(void)
+{
+    struct Pokenav_ConditionMenuGfx *menu = GetSubstructPtr(POKENAV_SUBSTRUCT_CONDITION_GRAPH_MENU_GFX);
+    u16 *map = GetBgTilemapBuffer(1);
+    for (u32 slot = 0; slot < NUM_MON_MARKINGS; slot++)
+    {
+        u32 left = MARKS_LEFT + 1 + (slot % 2) * 5;
+        u32 top = MARKS_TOP + 1 + (slot / 2) * 3;
+        u32 pal = (menu->pendingMarkings & (1 << sMarkingBitBySlot[slot])) ? MARKS_SELECTED_PAL : MARKS_PAL;
+        for (u32 y = 0; y < 3; y++)
+            for (u32 x = 0; x < 4; x++)
+                map[(top + y) * 32 + left + x] = (map[(top + y) * 32 + left + x] & 0xFFF) | (pal << 12);
+    }
+    CopyBgTilemapBufferToVram(1);
+}
+
+static void OpenConditionMarkings(void)
+{
+    struct Pokenav_ConditionMenuGfx *menu = GetSubstructPtr(POKENAV_SUBSTRUCT_CONDITION_GRAPH_MENU_GFX);
+    const struct SpriteSheet sheet = {sHgssCursorTiles, sizeof(sHgssCursorTiles), TAG_CONDITION_MARKINGS_MENU};
+    const struct SpritePalette pal = {sHgssCursorPal, TAG_CONDITION_MARKINGS_MENU};
+    u16 *map = GetBgTilemapBuffer(1);
+    menu->markings = menu->pendingMarkings = TryGetMonMarkId();
+    menu->markingCursor = 0;
+    LoadBgTiles(1, sHgssMarkingsPanel, sizeof(sHgssMarkingsPanel), MARKS_BASE_TILE);
+    for (u32 y = 0; y < MARKS_HEIGHT; y++)
+        for (u32 x = 0; x < MARKS_WIDTH; x++)
+            map[(MARKS_TOP + y) * 32 + MARKS_LEFT + x] = (MARKS_BASE_TILE + y * MARKS_WIDTH + x) | (MARKS_PAL << 12);
+    UpdateConditionMarkings();
+    HideBg(2);
+    LoadSpriteSheet(&sheet);
+    LoadSpritePalette(&pal);
+    menu->markingCursorSpriteId = CreateSprite(&sMarkCursorTemplate, 0, 0, 0);
+    UpdateConditionMarkCursor();
+}
+
+bool8 HandleConditionMarkingsMenuInput(void)
+{
+    struct Pokenav_ConditionMenuGfx *menu = GetSubstructPtr(POKENAV_SUBSTRUCT_CONDITION_GRAPH_MENU_GFX);
+    u8 cursor = menu->markingCursor;
+    if (JOY_NEW(B_BUTTON))
+    {
+        PlaySE(SE_SELECT);
+        return FALSE; // Cancel keeps the original four saved marking bits.
+    }
+    if (JOY_NEW(A_BUTTON))
+    {
+        PlaySE(SE_SELECT);
+        if (cursor >= NUM_MON_MARKINGS)
+        {
+            if (cursor == NUM_MON_MARKINGS)
+                menu->markings = menu->pendingMarkings;
+            return FALSE;
+        }
+        menu->pendingMarkings ^= 1 << sMarkingBitBySlot[cursor];
+        UpdateConditionMarkings();
+    }
+    else if (JOY_NEW(DPAD_LEFT | DPAD_RIGHT) && cursor < NUM_MON_MARKINGS)
+        menu->markingCursor ^= 1;
+    else if (JOY_NEW(DPAD_UP))
+        menu->markingCursor = cursor < 2 ? 5 : cursor < 4 ? cursor - 2 : cursor - 1;
+    else if (JOY_NEW(DPAD_DOWN))
+        menu->markingCursor = cursor < 2 ? cursor + 2 : cursor < 4 ? 4 : cursor == 4 ? 5 : 0;
+    if (cursor != menu->markingCursor)
+    {
+        PlaySE(SE_SELECT);
+        UpdateConditionMarkCursor();
+    }
+    return TRUE;
+}
+
+static void CloseConditionMarkings(void)
+{
+    struct Pokenav_ConditionMenuGfx *menu = GetSubstructPtr(POKENAV_SUBSTRUCT_CONDITION_GRAPH_MENU_GFX);
+    if (menu->markingCursorSpriteId != SPRITE_NONE)
+    {
+        DestroySprite(&gSprites[menu->markingCursorSpriteId]);
+        menu->markingCursorSpriteId = SPRITE_NONE;
+    }
+    FreeSpriteTilesByTag(TAG_CONDITION_MARKINGS_MENU);
+    FreeSpritePaletteByTag(TAG_CONDITION_MARKINGS_MENU);
+    FillBgTilemapBufferRect_Palette0(1, 0, MARKS_LEFT, MARKS_TOP, MARKS_WIDTH, MARKS_HEIGHT);
+    PutWindowTilemap(menu->titleWindowId);
+    PutWindowTilemap(menu->nameGenderWindowId);
+    PutWindowTilemap(menu->locationWindowId);
+    PutWindowTilemap(menu->listIndexWindowId);
+    DrawConditionMarkings();
+    CopyBgTilemapBufferToVram(1);
+    ShowBg(2);
 }
 
 static void FreeConditionMenuGfx(struct Pokenav_ConditionMenuGfx *menu)
 {
-    u8 i;
-
-    if (IsConditionMenuSearchMode() == TRUE)
-    {
-        DestroySprite(menu->monMarksSprite);
-        FreeSpriteTilesByTag(TAG_CONDITION_MARKINGS_MENU);
-        FreeSpriteTilesByTag(TAG_CONDITION_MON_MARKINGS);
-        FreeSpritePaletteByTag(TAG_CONDITION_MARKINGS_MENU);
-        FreeSpritePaletteByTag(TAG_CONDITION_MON_MARKINGS);
-    }
-    else
-    {
-        for (i = 0; i < PARTY_SIZE + 1; i++)
-            DestroySprite(&gSprites[menu->partyPokeballSpriteIds[i]]);
-
-        FreeSpriteTilesByTag(TAG_CONDITION_BALL);
-        FreeSpriteTilesByTag(TAG_CONDITION_CANCEL);
-        FreeSpriteTilesByTag(TAG_CONDITION_BALL_PLACEHOLDER);
-        FreeSpritePaletteByTag(TAG_CONDITION_BALL);
-        FreeSpritePaletteByTag(TAG_CONDITION_CANCEL);
-    }
-
+    if (menu->markingCursorSpriteId != SPRITE_NONE)
+        CloseConditionMarkings();
     if (menu->monPicSpriteId != SPRITE_NONE)
     {
         DestroySprite(&gSprites[menu->monPicSpriteId]);
@@ -909,18 +678,14 @@ void FreeConditionGraphMenuSubstruct2(void)
 {
     struct Pokenav_ConditionMenuGfx *menu = GetSubstructPtr(POKENAV_SUBSTRUCT_CONDITION_GRAPH_MENU_GFX);
 
+    FreeConditionMenuGfx(menu);
     RemoveWindow(menu->nameGenderWindowId);
-    RemoveWindow(menu->graphFrameWindowId);
-    RemoveWindow(menu->partyRailWindowId);
-    if (IsConditionMenuSearchMode() == TRUE)
-    {
-        RemoveWindow(menu->listIndexWindowId);
-        RemoveWindow(menu->unusedWindowId1);
-        RemoveWindow(menu->unusedWindowId2);
-    }
+    RemoveWindow(menu->locationWindowId);
+    RemoveWindow(menu->listIndexWindowId);
+    RemoveWindow(menu->titleWindowId);
+    RemoveWindow(menu->markingsWindowId);
 
     SetGpuReg(REG_OFFSET_DISPCNT, DISPCNT_OBJ_ON | DISPCNT_BG0_ON | DISPCNT_OBJ_1D_MAP);
-    FreeConditionMenuGfx(menu);
     SetExitVBlank();
     FreePokenavSubstruct(POKENAV_SUBSTRUCT_CONDITION_GRAPH_MENU_GFX);
 }
@@ -928,7 +693,7 @@ void FreeConditionGraphMenuSubstruct2(void)
 void MonPicGfxSpriteCallback(struct Sprite *sprite)
 {
     struct Pokenav_ConditionMenuGfx *menu = GetSubstructPtr(POKENAV_SUBSTRUCT_CONDITION_GRAPH_MENU_GFX);
-    sprite->x = menu->monTransitionX + 38;
+    sprite->x = menu->monTransitionX + 40;
 }
 
 static void CreateConditionMonPic(u8 id)
@@ -946,7 +711,7 @@ static void CreateConditionMonPic(u8 id)
         sprPal.data = GetConditionMonPal(id);
         menu->monPalIndex = LoadSpritePalette(&sprPal);
         menu->monGfxTileStart = LoadSpriteSheet(&sprSheet);
-        spriteId = CreateSpriteUnchecked(&sprTemplate, 38, 104, 0);
+        spriteId = CreateSpriteUnchecked(&sprTemplate, 40, 80, 0);
         menu->monPicSpriteId = spriteId;
         if (spriteId == MAX_SPRITES)
         {
@@ -997,7 +762,6 @@ static void DoConditionGraphEnterTransition(void)
     struct ConditionGraph *graph = GetConditionGraphPtr();
     u8 id = GetConditionGraphMenuCurrentLoadIndex();
 
-    sInitialLoadId = id;
     ConditionGraph_SetNewPositions(graph, graph->savedPositions[CONDITION_GRAPH_LOAD_MAX - 1], graph->savedPositions[id]);
     ConditionGraph_TryUpdate(graph);
 }
@@ -1018,7 +782,7 @@ u8 GetMonMarkingsData(void)
     struct Pokenav_ConditionMenuGfx *menu = GetSubstructPtr(POKENAV_SUBSTRUCT_CONDITION_GRAPH_MENU_GFX);
 
     if (IsConditionMenuSearchMode() == 1)
-        return menu->marksMenu.markings;
+        return menu->markings;
     else
         return 0;
 }

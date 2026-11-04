@@ -1,0 +1,79 @@
+{
+  "panels": "../hgss_ribbons/summary_bg.source.json",
+  "panel_manifest_sha256": "3659000052c1ca6fbe1a5d7441929d292ed35842c3777cae637f5639b367e265",
+  "font": "../hgss_pokegear/verified/font_id4.bin",
+  "font_sha256": "7bdadd0f2ed2507b34f002ad17117a532423ab474c46d499388eb551e785296a",
+  "labels": [
+    [
+      "Cool",
+      142,
+      40
+    ],
+    [
+      "Beauty",
+      192,
+      64
+    ],
+    [
+      "Cute",
+      192,
+      109
+    ],
+    [
+      "Smart",
+      87,
+      109
+    ],
+    [
+      "Tough",
+      84,
+      64
+    ]
+  ],
+  "guides": {
+    "kind": "mathematical graph reference, not retail artwork",
+    "center": [
+      155,
+      91
+    ],
+    "max_condition_vertices": [
+      [
+        155,
+        56
+      ],
+      [
+        189,
+        80
+      ],
+      [
+        176,
+        119
+      ],
+      [
+        135,
+        119
+      ],
+      [
+        122,
+        80
+      ]
+    ],
+    "palette_indices": [
+      3,
+      14
+    ]
+  },
+  "sheen": "../hgss_storage/verified/shiny_indicator.json",
+  "markings": "../hgss_storage/verified/markings_menu.json",
+  "chrome_rule": "Original summary cells and font glyphs at native size; no repainting or recoloring",
+  "palette_banks": [
+    1,
+    7
+  ],
+  "outputs": {
+    "graph_bg.4bpp": "b9da7e6e705965d3b0c47356d3135146497eaa2d6bf8d7176720261d6d1dbc47",
+    "graph_bg.bin": "6c7c4f5b5bf436a9467d7cae926f1ba7079964e1ee925f4eb2e6b8b416fd54d2",
+    "sheen_stars.4bpp": "b5397d93923410ade4f539440aa958e6a4a7ca481635574fc22f70b62aec7012",
+    "markings_panel.4bpp": "f2a4456111736b8aea84325291c7f34a06121737eeb181b2739657b8fdf8aa1a"
+  }
+}

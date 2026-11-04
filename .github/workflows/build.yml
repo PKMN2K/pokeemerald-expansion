@@ -172,6 +172,9 @@ jobs:
       - name: Validate HGSS Condition search panels and layout
         run: python3 tools/gen4_ui/check_hgss_condition_search.py
 
+      - name: Validate HGSS Condition detail panels and layout
+        run: python3 tools/gen4_ui/check_hgss_condition_graph.py
+
       - name: Check HGSS ribbon grid geometry and generate offline previews
         run: python3 tools/gen4_ui/check_hgss_ribbon_grid.py --preview-dir build/hgss-ribbon-grid-preview
 

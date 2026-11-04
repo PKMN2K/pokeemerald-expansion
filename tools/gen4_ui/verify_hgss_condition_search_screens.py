@@ -12,6 +12,7 @@ from pathlib import Path
 from PIL import Image, ImageChops
 from make_hgss_ribbon_list import ASSETS, OUT
 from check_hgss_condition_search import check
+from verify_hgss_condition_graph_screens import check_polygon
 
 ROOT = Path(__file__).resolve().parents[2]
 
@@ -145,12 +146,10 @@ def main(base):
                           ("single_list", "single_after_down")):
         area = (36, 29, 240, 115)
         assert not ImageChops.difference(images[before].crop(area), images[after].crop(area)).getbbox()
-    for name, list_name in (("condition_graph", "cool_wrap_up"), ("single_graph", "single_list")):
+    for name, list_name, stats in (("condition_graph", "cool_wrap_up", [105, 110, 175, 145, 135]),
+                                   ("single_graph", "single_list", [255, 40, 80, 120, 10])):
         graph = Image.open(base / f"{name}.png").convert("RGB")
-        region = graph.crop((116, 48, 210, 125))
-        green = sum(count for count, (r, g, b) in region.getcolors(region.width * region.height)
-                    if g > 100 and g > r * 2 and g > b * 2)
-        assert green > 100, f"Condition polygon missing: {name}"
+        check_polygon(graph, stats, name)
         assert ImageChops.difference(graph, images[list_name]).getbbox()
     print(f"Verified {len(states)} states: all categories, ties, party/PC eggs, genders, three-digit ranks, wrap and returns")
 

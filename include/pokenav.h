@@ -175,6 +175,7 @@ enum
     HELPBAR_MAP_ZOOMED_IN_CANFLY,
     HELPBAR_CONDITION_MON_LIST,
     HELPBAR_CONDITION_MON_STATUS,
+    HELPBAR_CONDITION_PARTY,
     HELPBAR_CONDITION_MARKINGS,
     HELPBAR_MC_TRAINER_LIST,
     HELPBAR_MC_CALL_MENU,
@@ -450,6 +451,7 @@ u8 GetNumConditionMonSparkles(void);
 bool32 LoadNextConditionMenuMonData(u8 mode);
 u8 TryGetMonMarkId(void);
 u8 *GetConditionMonNameText(u8 loadId);
+u8 GetConditionGraphMenuCurrentLoadIndex(void);
 u8 *GetConditionMonLocationText(u8 loadId);
 u16 GetConditionMonDataBuffer(void);
 void *GetConditionMonPicGfx(u8 loadId);
@@ -461,6 +463,7 @@ void CreateConditionGraphMenuLoopedTask(s32 id);
 u32 IsConditionGraphMenuLoopedTaskActive(void);
 void FreeConditionGraphMenuSubstruct2(void);
 u8 GetMonMarkingsData(void);
+bool8 HandleConditionMarkingsMenuInput(void);
 
 // pokenav_conditions_search_results.c
 bool32 PokenavCallback_Init_ConditionSearch(void);

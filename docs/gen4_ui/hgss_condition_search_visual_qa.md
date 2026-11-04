@@ -85,6 +85,6 @@ After live acceptance and a reference audit, the old
 borders are removed from the live renderer. Existing authenticated HGSS
 list pointers, scroll controls and shared help bar remain in use.
 
-The Condition graph's own visual migration is a separate element. Its
-entry/return behavior is exercised here because it is part of using the
-results list.
+The Condition graph has its own completed
+[visual acceptance](hgss_condition_graph_visual_qa.md). Its entry/return
+behavior is also exercised here because it is part of using the results list.

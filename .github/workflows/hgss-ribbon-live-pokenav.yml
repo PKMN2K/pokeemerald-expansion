@@ -11,6 +11,8 @@ on:
       - tools/gen4_ui/make_hgss_ribbon_list.py
       - tools/gen4_ui/verify_hgss_ribbon_list_screens.py
       - src/pokenav.c
+      - src/pokenav_main_menu.c
+      - include/pokenav.h
       - src/pokenav_ribbons_list.c
       - src/pokenav_list.c
       - src/pokenav_ribbons_summary.c
