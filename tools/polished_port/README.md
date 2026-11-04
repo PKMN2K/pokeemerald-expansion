@@ -76,6 +76,13 @@ The converter reconstructs the authentic full 16x16 poses by combining:
 
 Expansion requires four rod-animation frames per direction. Because Polished Crystal supplies one authentic fishing pose per direction, all four slots reuse that pose instead of inventing transitional artwork. Polished Crystal also draws `gfx/overworld/fishing_rod.png` as a fifth OAM tile: tile `$7a` sits below the south pose and above the north pose, while tile `$7b` sits outside the west/east pose. The converter now centers Chris at `(8, 8)` inside each 32x32 frame and bakes that authentic rod tile into the remaining space. East remains the engine-flipped west pose, which also flips the rod from the original west orientation to the original east orientation. When the male player is already surfing, `SetPlayerAvatarFishing` selects the dedicated surf-fishing sheet and the fishing task later restores the saved surfing graphics.
 
+The live fishing path compensates for that centered body with a constant eight-pixel
+vertical offset and no horizontal shift, from the first cast frame through rod
+retraction. Brendan's per-frame alignment adjustments apply only to the other
+graphics IDs. Surf adds its existing bobbing displacement to this fixed offset;
+putting the rod away restores the normal anchor. The emulator checks all four
+casting directions and the separate land/Surf restoration paths.
+
 ## Field-move pose
 
 The pinned Polished Crystal v3.2.3 tree has no dedicated Chris field-move sprite sheet. Its Chris-specific overworld art consists of normal, bike, surf, and fishing overlays. To remain faithful, the Expansion field-move state therefore uses Chris's authentic standing frames rather than importing Brendan's five-frame throwing pose or inventing new art.

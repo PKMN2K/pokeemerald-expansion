@@ -14,6 +14,7 @@
 #include "tv.h"
 #include "wild_encounter.h"
 #include "config/fishing.h"
+#include "constants/event_objects.h"
 
 static void Task_Fishing(u8);
 static bool32 Fishing_Init(struct Task *);
@@ -615,16 +616,27 @@ static void AlignFishingAnimationFrames(void)
             animCmdIndex--;
     }
     animType = playerSprite->anims[playerSprite->animNum][animCmdIndex].type;
-    if (animType == 1 || animType == 2 || animType == 3)
+    if (gObjectEvents[gPlayerAvatar.objectEventId].graphicsId == OBJ_EVENT_GFX_POLISHED_CHRIS_FISHING
+     || gObjectEvents[gPlayerAvatar.objectEventId].graphicsId == OBJ_EVENT_GFX_POLISHED_CHRIS_SURF_FISHING)
     {
-        playerSprite->x2 = 8;
-        if (GetPlayerFacingDirection() == 3)
-            playerSprite->x2 = -8;
-    }
-    if (animType == 5)
-        playerSprite->y2 = -8;
-    if (animType == 10 || animType == 11)
+        // The Crystal body is centered at (8,8) to leave room for its rod.
+        // Keep its feet at the normal (bottom-aligned) player anchor. All four
+        // frames repeat one source pose, so Brendan's frame shifts do not apply.
         playerSprite->y2 = 8;
+    }
+    else
+    {
+        if (animType == 1 || animType == 2 || animType == 3)
+        {
+            playerSprite->x2 = 8;
+            if (GetPlayerFacingDirection() == 3)
+                playerSprite->x2 = -8;
+        }
+        if (animType == 5)
+            playerSprite->y2 = -8;
+        if (animType == 10 || animType == 11)
+            playerSprite->y2 = 8;
+    }
     if (gPlayerAvatar.flags & PLAYER_AVATAR_FLAG_SURFING)
         SetSurfBlob_PlayerOffset(gObjectEvents[gPlayerAvatar.objectEventId].fieldEffectSpriteId, TRUE, playerSprite->y2);
 }

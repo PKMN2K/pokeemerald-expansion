@@ -1766,6 +1766,15 @@ void SetPlayerAvatarFishing(enum Direction direction)
         graphicsId = PLAYER_AVATAR_GFX_MALE_SURF_FISHING;
 
     ObjectEventSetGraphicsId(playerObjEvent, graphicsId);
+    if (graphicsId == OBJ_EVENT_GFX_POLISHED_CHRIS_FISHING
+     || graphicsId == OBJ_EVENT_GFX_POLISHED_CHRIS_SURF_FISHING)
+    {
+        // Match the centered Crystal fishing composite from the first frame.
+        gSprites[gPlayerAvatar.spriteId].x2 = 0;
+        gSprites[gPlayerAvatar.spriteId].y2 = 8;
+        if (TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_SURFING))
+            SetSurfBlob_PlayerOffset(playerObjEvent->fieldEffectSpriteId, TRUE, 8);
+    }
     StartSpriteAnim(&gSprites[gPlayerAvatar.spriteId], GetFishingDirectionAnimNum(direction));
 }
 

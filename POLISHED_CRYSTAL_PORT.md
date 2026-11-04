@@ -92,7 +92,9 @@ GBA regression tests check real map dispatch, reciprocal warps, palette opt-in
 guards, and complete visible sprite frames. `test_johto_demo_emulator.py` boots a
 fresh ROM and uses real button input to verify movement, interaction, doors,
 Surf, bike mounting/dismounting, and separate land/surf fishing poses and their
-return to the prior movement state. It checks live palette RAM against the pinned source and animated water
+return to the prior movement state. All four casting directions retain the same
+body anchor, including the native Surf bob. It checks live palette RAM against
+the pinned source and animated water
 in VRAM, including nighttime transitions to and from the fixed-palette lab.
 CI builds the demo and uploads its ROM, screenshots and validation JSON.
 The emulator probe uses libmgba; it does not patch game RAM or inject scripts.

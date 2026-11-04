@@ -175,6 +175,21 @@ class Game:
                 return
         raise AssertionError("Fishing did not restore the player graphics")
 
+    def check_fishing_alignment(self, surfing=False):
+        # The converted body starts at (8,8) inside a 32x32 sheet, eight pixels
+        # above the normal walking/surfing anchor. Native Brendan frame shifts
+        # must not move these identical Crystal poses around during casting.
+        for _ in range(28):
+            sprite = self.read(self.sym["gPlayerAvatar"] + 4, 1)[0]
+            x2, y2 = struct.unpack("<hh", self.read(self.sym["gSprites"] + sprite * 68 + 36, 4))
+            if surfing:
+                obj = self.read(self.sym["gPlayerAvatar"] + 5, 1)[0]
+                blob = self.read(self.sym["gObjectEvents"] + obj * 36 + 26, 1)[0]
+                bob = struct.unpack("<h", self.read(self.sym["gSprites"] + blob * 68 + 38, 2))[0]
+                y2 -= bob
+            assert (x2, y2) == (0, 8), f"Crystal fishing body shifted: {(x2, y2)}"
+            self.frames(1)
+
     def interact(self, name):
         self.frames(1, A)
         self.frames(100)
@@ -307,6 +322,7 @@ def run(args):
             game.face(UP)
             game.use_key_item(0)
             game.wait_player_images("sPicTable_PolishedChrisFishing")
+            game.check_fishing_alignment()
             game.screenshot("land-fishing")
             game.finish_fishing("sPicTable_PolishedChrisNormal")
             assert game.position() == (18, 15)
@@ -319,12 +335,18 @@ def run(args):
             game.frames(180)
             assert game.read(game.sym["gPlayerAvatar"], 1)[0] & 8, "Surf did not start"
             game.screenshot("surf")
-            game.use_key_item(0)
-            game.wait_player_images("sPicTable_PolishedChrisSurfFishing")
-            game.screenshot("surf-fishing")
-            game.finish_fishing("sPicTable_PolishedChrisSurfing")
-            assert game.read(game.sym["gPlayerAvatar"], 1)[0] & 8, "Fishing lost Surf state"
+            game.go(18, 12)
+            for facing, direction in (("east", RIGHT), ("south", DOWN), ("west", LEFT), ("north", UP)):
+                game.face(direction)
+                game.frames(20)
+                game.use_key_item(0)
+                game.wait_player_images("sPicTable_PolishedChrisSurfFishing")
+                game.check_fishing_alignment(surfing=True)
+                game.screenshot("surf-fishing-" + facing)
+                game.finish_fishing("sPicTable_PolishedChrisSurfing")
+                assert game.read(game.sym["gPlayerAvatar"], 1)[0] & 8, "Fishing lost Surf state"
             checks.append("land and surf fishing use their separate authentic sheets and restore the prior player state")
+            checks.append("all four fishing directions preserve the Crystal body anchor and Surf bobbing")
             game.frames(100, DOWN)
             game.frames(40)
             assert not game.read(game.sym["gPlayerAvatar"], 1)[0] & 8, "Surf did not end on shore"
