@@ -1,3 +1,15 @@
+# Current status — HGSS ribbon summary integrated
+
+The live summary uses verified original HGSS panel/case cells and palettes,
+native ribbon icons and transparent text windows. See
+[the corrected source/layout trace](../../../docs/gen4_ui/hgss_ribbon_bg_trace.md)
+for the byte-48 NCGR payload correction, separate main/sub screen mapping,
+reproducible source-cell exporter and live acceptance evidence. The entries
+below are historical investigation notes; their outstanding gates are
+superseded by that current trace.
+
+---
+
 # Retail HGSS ribbon asset provenance — extraction gate
 
 Source: `pret/pokeheartgold/src/ribbon.c` (`sRibbonInfo` and `GetRibbonAttr`).

@@ -1,100 +1,82 @@
-# HGSS Ribbon BG — verified source and remaining integration gate
+# HGSS ribbon summary — source and live layout
 
 Branch: `feature/gen4-ui-renderer`.
 
-## Already completed (do not repeat extraction)
-- Original retail HeartGold `a/1/6/2` NARC, NitroFS file ID 291, has been examined; it has 79 members.
-- Member 0 supplies an original NCLR with sixteen 16-colour palette banks.
-- BG3 character resource: NCGR member 2, with NSCR members 10 or 11 depending on retail state.
-- BG6 character resource: NCGR member 1, with NSCR member 9 or fallback 78 depending on retail state.
-- Original BG6 NSCR 9 visibly includes the nine-circle ribbons panel.
-- ROM-derived source-layer previews, reproducible renderer, and 240x160 viewport experiments already exist. See `graphics/gen4_ui/hgss_ribbons/SOURCE.md` and `tools/render_hgss_ribbon_backgrounds.py`.
+The summary now uses original HGSS artwork throughout its background,
+header, portrait/index cards, medal case and detail panel. The existing
+native 32×32 icons, five original palettes and selection corners are
+retained. This is a 240×160 adaptation of original source pieces, not a
+claim to reproduce both 256×192 DS screens on one GBA screen.
 
-## Actual unresolved integration work
-1. Establish which **retail layer combination, priority, and origin** corresponds to the ribbon summary, including windows and sprite overlays.
-2. Adapt **original extracted graphics pieces**, without drawing or recolouring, to fit the live Emerald 240x160 screen. A simple source crop fails: y=0 cuts lower controls, whereas lowering the viewport clips the upper grid.
-3. Respect verified live window footprints: ribbon icons x=88..215, y=32..95; BG2 grid window x=80..239, y=24..103; name x=112..215, y=8..23; count x=96..223, y=96..127; list index x=8..63, y=40..55; Pokémon sprite anchor (40,104).
-4. Wire the authentic BG, inspect the real mGBA framebuffer and navigation states, then remove only unused Emerald graphics after checking all references.
+## Corrected source decoding
 
-**Current status:** retail sources and renderers verified; the final authentic BG composition and live wiring are not completed. No invented HGSS-style graphics.
+The uploaded USA HeartGold ROM's NitroFS `a/1/6/2` (file ID 291) is
+90,916 bytes, SHA-256
+`003c80069fcd1f9c9eb842ae0294ecbdeffabbff40593cc471236e81239d9eed`.
+It matches the archive tracked in
+[pret/pokeheartgold](https://github.com/pret/pokeheartgold/tree/e1d5a4606640e31c44d36714ad0b5cdd9c8763fd).
 
-This file corrects an earlier stale checkpoint which incorrectly asserted that the original BG archive and members were unknown.
+Two errors in the earlier diagnostic path are corrected:
 
+- NCGR member 1 starts its character payload at byte **48**, followed
+  by 16 bytes of SOPC metadata. The old `ncgr[64:]` skipped half a tile
+  and included metadata as graphics, causing the striped previews.
+  The reader now follows RAHC's size/offset fields and checks bounds.
+- In `include/gf_gfx_planes.h`, global layer 3 is **main BG3** and
+  global layer 6 is **sub BG2**. They belong to separate DS screens.
+  The earlier BG3-over-BG6 candidate composites do not represent retail
+  layer ordering and are not used by the live exporter.
 
-## Batch source-only composition audit
+`PokemonSummary_Init` → `sub_020887C4` loads NCGR **1** into global
+layer **6** and NCLR **0** into sub BG palette memory. The Ribbons tab
+(selector **2**, verified in `sub_0208C2A0`) selects NSCR **9** in
+`sub_02089F98`. The decoded yellow medal case, circles, header and party
+portrait frames match the retail touch-screen reference visible in
+[this HGSS playthrough](https://www.yumekichi-blog.com/entry/pokemon-ribbon7).
+No main-screen layer is composited over this sub-screen map.
 
-Once the verified original retail `a/1/6/2` NARC is available locally, run:
+## GBA adaptation
 
-```sh
-python3 tools/audit_hgss_ribbon_bg_candidates.py /path/to/a_1_6_2.narc build/hgss-ribbon-bg-audit
-```
+`tools/gen4_ui/make_hgss_ribbon_summary.py` reads the exact hash-verified
+archive. Each output tile is byte-identical to an original NCGR tile;
+only tile placement, hardware flip bits and palette-bank addresses change.
+The script repeats original interior/edge cells to fit the GBA layout.
 
-The script verifies the exact known SHA-256 before parsing. It compares all
-three provisional BG6 layouts and all tile-aligned 240x160 viewport origins,
-writing per-candidate `.audit.json` files and a sortable
-`comparison.json`. These contain palette-bank pairs and genuinely
-unrepresentable transparent-overlay pixel counts, but **are not proof of the
-correct retail arrangement**. The original source archive is not committed.
-Visual reference and BG priority/scroll verification remain required before
-any live PokéNav wiring or removal of Emerald graphics.
+| Element | Retail cells / adaptation | GBA bounds |
+|---|---|---|
+| Header | NSCR 9 columns 19/20/31, rows 0–3 | x=0–239, y=0–31 |
+| Medal case | Yellow fill and original right edge, mirrored for left | x=80–231, y=24–95 |
+| Eight circle slots | Original x=16–47, y=8–39, repeated at native size | icons x=88–215, y=32–95 |
+| Index, portrait, details | Original party-frame corners/edges at x=160, y=40, repeated interiors; hardware flips close opposite edges | index y=32–63; portrait y=64–127; details x=80–239, y=96–127 |
+| Shared help bar | Existing authentic HGSS Pokégear bar on BG0 | begins y=128; text y=136 |
 
-## Live background replacement gate (2026-10-27 audit)
+BG2 owns the static background in character block 1. BG1 keeps the
+193 icon tiles (including transparent tile zero) followed by nonoverlapping
+text allocations at 0x100, 0x148, 0x162 and 0x170 in character block 3.
+Text uses transparent backgrounds, so clearing old text cannot erase panel
+art. Ribbon paging clears only the icon rectangle, preserving text maps.
+The portrait center is (40,96), inside the space above the help bar.
 
-The current live entry point is `LoopedTask_OpenRibbonsSummaryMenu` in
-`src/pokenav_ribbons_summary.c`. Its state 0 loads the **Emerald**
-`gPokenavRibbonsSummaryBg_Gfx`, `gPokenavRibbonsSummaryBg_Tilemap`,
-and `gPokenavRibbonsSummaryBg_Pal` onto BG2. State 1 separately installs
-original HGSS 32x32 ribbon tiles and five verified palettes on BG1.
-The current blank BG2 window fills for the grid, ribbon description,
-Pokémon name and list index are placeholders, not retail HGSS chrome.
+Original NCLR bank **0 → GBA BG bank 1** supplies panel/text colors;
+bank **4 → GBA BG bank 7** supplies the yellow case. Only those two
+32-byte banks are loaded. Ribbon palettes remain in banks 2–6; shared
+PokéNav BG0/help-bar colors and OBJ palettes are untouched. The owner-list
+entry reloads its own banks 1/2 on return. Live exit/re-entry capture checks
+that the palette transition works.
 
-### Required evidence before the next live graphics replacement
+The exporter records original tile IDs, per-tile hashes and output hashes
+in `graphics/gen4_ui/hgss_ribbons/summary_bg.source.json`. CI verifies
+those hashes, tilemap bounds, palette ownership and disjoint text/icon
+VRAM. The proprietary ROM and raw archive remain outside the repository.
 
-1. Use the existing original `a/1/6/2` NARC extraction and source-layer
-   renderer. Match BG3 NCGR member 2 with NSCR 10/11 and BG6 NCGR member 1
-   with NSCR 9/78; document the selected pair, palette banks, origins and
-   layer priority using a **retail screenshot** reference.
-2. Check a 240x160 composed preview against the existing PokéNav footprints
-   listed above, especially the name card, ribbon descriptions, last grid
-   row and help bar. Do not treat a cropped 256x192 DS framebuffer or
-   isolated BG preview as a verified GBA layout.
-3. Import only the verified original source pixels/tilemaps and document
-   provenance. Wire the new BG resources into the real opening state while
-   preserving the native 32x32 HGSS ribbon icon BG1 and four-corner OBJ.
-4. Review uploaded **live** mGBA framebuffer screenshots at normal, gift,
-   expanded and empty-ribbon states. Only after this verification search
-   all references to the old Emerald BG assets and remove truly unused
-   equivalents. Rerun all three workflows.
+## Verification and cleanup
 
-**Stop condition:** An unverified layer combination, unknown window artwork,
-or clipped real ribbon control must block any declaration that the Emerald
-background has been replaced. The existing screenshot CI verifies operation
-and selected icon pixels, not visual equivalence to the retail HGSS full UI.
+See [live visual acceptance](hgss_ribbon_visual_qa.md) for the framebuffer
+checks and recorded screenshots. Remove only superseded summary resources
+after those checks pass. The historical candidate/audit utilities remain
+available for lossless tile-operation tests; their main/sub combinations
+are diagnostic experiments, not a retail screen compositor.
 
-## Uploaded HeartGold source audit — provisional viewport (0,8), 2026-10-28
-
-The user-provided USA HeartGold ROM (`IPKE01`) supplied NitroFS
-`a/1/6/2` (file ID 291). Its SHA-256 matches the existing exporter
-allowlist: `003c80069fcd1f9c9eb842ae0294ecbdeffabbff40593cc471236e81239d9eed`.
-
-A read-only, source-cell audit of BG3 NSCR 10 over BG6 NSCR 9,
-with the source viewport at (0,8), found:
-
-| Provisional trial | Source BG palette banks | BG6 cells with visible artwork | Cross-bank BG6 overlay cells needing exact-colour resolution |
-| --- | --- | ---: | ---: |
-| `header_only` | 0, 2, 4 | 64 | 0 |
-| `header_footer` | 0, 2, 4 | 184 | 2 |
-| `left_case` | 0, 2, 4 | 210 | 2 |
-
-Counts are from the archive's original 8x8 cells and use the existing
-protected-window geometry. They are **not** counts of successfully exported
-GBA composite tiles: transparent/partial overlays and palette-bank
-translations still require the full exporter diagnostics.
-
-**Implementation gate remains closed:** these are retail-source
-measurements, not proof of the actual DS layer priorities, scroll offsets,
-or correct GBA layout. All three candidates require a collision-safe
-cross-module BG palette mapping; merely using source banks 0, 2 and 4
-would overlap currently loaded PokéNav palettes. Do not commit the ROM or
-its raw archive, replace Emerald BG resources, or remove legacy art until
-the GBA exporter and live framebuffer review establish correctness.
+Selection corners retain their original 16×16 tiles. Their opaque pixels
+span 2–12, so centers at ±10 produce a true 32×32 visible frame. This
+keeps second-row selection marks above the detail text.

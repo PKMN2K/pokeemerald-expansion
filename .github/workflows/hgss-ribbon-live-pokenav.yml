@@ -7,6 +7,7 @@ on:
       - .github/workflows/hgss-ribbon-live-pokenav.yml
       - tools/gen4_ui/prepare_hgss_ribbon_live_capture.py
       - tools/gen4_ui/verify_hgss_ribbon_live_screens.py
+      - tools/gen4_ui/make_hgss_ribbon_summary.py
       - src/pokenav.c
       - src/pokenav_ribbons_summary.c
       - graphics/gen4_ui/hgss_ribbons/**
@@ -113,7 +114,16 @@ jobs:
             snap:zoom_normal_page_04 \
             press:DOWN:1 run:110 snap:zoom_gift_page_04 \
             press:DOWN:1 run:110 snap:zoom_gift_page_05 \
-            press:B:1 run:110 snap:summary_page_05
+            press:B:1 run:110 snap:summary_page_05 \
+            press:DOWN:1 run:150 snap:gift_only \
+            press:A:1 run:110 snap:zoom_gift_only \
+            press:B:1 run:110 press:DOWN:1 run:150 snap:empty \
+            press:A:1 run:110 snap:empty_after_a \
+            press:DOWN:1 run:150 snap:single \
+            press:A:1 run:110 snap:zoom_single \
+            press:B:1 run:110 press:B:1 run:220 snap:return_owner_list \
+            press:UP:1 run:110 press:UP:1 run:110 press:UP:1 run:110 \
+            press:A:1 run:220 snap:summary_reentered
           python3 tools/gen4_ui/check_hgss_ribbon_grid.py --preview-dir build/hgss-ribbon-offline
           python3 tools/gen4_ui/verify_hgss_ribbon_live_screens.py \
             build/hgss-ribbon-live build/hgss-ribbon-offline

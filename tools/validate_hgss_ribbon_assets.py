@@ -6,12 +6,14 @@ No asset generation or redraws. Run from repository root.
 import csv
 import hashlib
 from pathlib import Path
+from gen4_ui.make_hgss_ribbon_summary import validate_assets
 
 ROOT = Path(__file__).resolve().parent.parent
 RIBBONS = ROOT / "graphics/gen4_ui/hgss_ribbons"
 
 
 def main():
+    validate_assets()
     with (RIBBONS / "retail_ribbon_map.csv").open(newline="") as fp:
         retail = list(csv.DictReader(fp))
     with (RIBBONS / "emerald_ribbon_compat.csv").open(newline="") as fp:
@@ -49,7 +51,7 @@ def main():
     # The packed display sheet is validated separately against its 12 source
     # members below; it is not a thirteenth retail NCGR resource.
     imported = {p.name for p in RIBBONS.glob("*.4bpp")
-                if p.name != "big_icons_hgss.4bpp"}
+                if p.name not in {"big_icons_hgss.4bpp", "summary_bg.4bpp"}}
     assert imported == set(installed), (
         "Update the verified HGSS asset inventory for new or missing NCGR files",
         sorted(imported ^ set(installed)),

@@ -92,7 +92,7 @@ void CB2_HgssRibbonLiveCapture(void)
 
     ZeroPlayerPartyMons();
     CreateMon(mon, SPECIES_PIKACHU, 50, 0, OTID_STRUCT_PRESET(0));
-    gPartiesCount[B_TRAINER_PLAYER] = 1;
+    gPartiesCount[B_TRAINER_PLAYER] = 4;
 
     // 1 champion + (5 * 4 contests) + 4 single special = 25 ordinary,
     // followed by seven gift ribbons. Actual game GetMonRibbons() reads them.
@@ -102,6 +102,20 @@ void CB2_HgssRibbonLiveCapture(void)
         SetMonData(mon, sSingleRibbons[i], &enabled);
     for (i = 0; i < 7; i++)
         gSaveBlock1Ptr->giftRibbons[i] = i + 1;
+
+    // Sorted by ribbon count: full (32), gift-only (7), empty probe (2
+    // until summary entry), and single (1). All data exists only in RAM.
+    mon = &gParties[B_TRAINER_PLAYER][1];
+    CreateMon(mon, SPECIES_EEVEE, 35, 0, OTID_STRUCT_PRESET(0));
+    for (i = 5; i < ARRAY_COUNT(sSingleRibbons); i++)
+        SetMonData(mon, sSingleRibbons[i], &enabled);
+    mon = &gParties[B_TRAINER_PLAYER][2];
+    CreateMon(mon, SPECIES_DITTO, 20, 0, OTID_STRUCT_PRESET(0));
+    SetMonData(mon, MON_DATA_CHAMPION_RIBBON, &enabled);
+    SetMonData(mon, MON_DATA_EFFORT_RIBBON, &enabled);
+    mon = &gParties[B_TRAINER_PLAYER][3];
+    CreateMon(mon, SPECIES_BULBASAUR, 5, 0, OTID_STRUCT_PRESET(0));
+    SetMonData(mon, MON_DATA_CHAMPION_RIBBON, &enabled);
 
     // Activate the two real menu flags in this disposable CI memory only.
     // The full PokéNav main menu must initialize backgrounds and palettes.
@@ -160,4 +174,21 @@ patch_once("    SetActiveMenuLoopTasks(PokenavMenuCallbacks[index].createLoopTas
            "    SetActiveMenuLoopTasks(PokenavMenuCallbacks[index].createLoopTask")
 nav.write_text(nav_text)
 
-print("Prepared disposable full-menu CI boot: initial Ribbons cursor, 25 normal + 7 gift ribbons")
+# The owner list normally excludes ribbonless Pokemon. Clear only the
+# synthetic Ditto after list construction to exercise empty-summary input.
+summary = Path("src/pokenav_ribbons_summary.c")
+summary_text = summary.read_text()
+needle = "    list->numNormalRibbons = 0;"
+assert summary_text.count(needle) == 1
+summary_text = summary_text.replace(needle, r"""
+    // Disposable empty-ribbon fixture, never committed to runtime C.
+    if (monInfo->boxId == TOTAL_BOXES_COUNT && monInfo->monId == 2)
+    {
+        u8 noRibbons = 0;
+        SetMonData(&gParties[B_TRAINER_PLAYER][2], MON_DATA_CHAMPION_RIBBON, &noRibbons);
+        SetMonData(&gParties[B_TRAINER_PLAYER][2], MON_DATA_EFFORT_RIBBON, &noRibbons);
+        ribbonFlags = 0;
+    }
+""" + needle)
+summary.write_text(summary_text)
+print("Prepared disposable full-menu capture: full, gift-only, empty and single ribbon owners")

@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
-"""Export a conservative HGSS Ribbons layout to GBA 4bpp BG assets.
+"""Historical cross-screen tile-stitching experiment (NOT a retail compositor).
+
+Production uses gen4_ui/make_hgss_ribbon_summary.py. BG3 and BG6 below
+belong to separate DS screens; their combinations are diagnostics only.
 
 Reads only authentic HGSS a/1/6/2 NARC bytes. No art is drawn or recolored.
 Exports 32x32 GBA screen entries, 4bpp character tiles, and the original
@@ -12,7 +15,7 @@ import hashlib
 import json
 from pathlib import Path
 from audit_hgss_ribbon_palette_slots import audit, SOURCE
-from render_hgss_ribbon_backgrounds import narc_members, u16
+from render_hgss_ribbon_backgrounds import narc_members, u16, character_data
 from preview_hgss_ribbon_tile_layout import TRIALS
 from audit_hgss_ribbon_gba_layout import REGIONS
 from validate_hgss_ribbon_gba_bg import validate
@@ -39,7 +42,7 @@ def entry(nscr, x, y):
 def tile(ncgr, tile_id, max_tiles):
     if ncgr[:4] != b"RGCN" or ncgr[16:20] != b"RAHC":
         raise ValueError("Expected original NCGR")
-    data = ncgr[64:]
+    data = character_data(ncgr, max_tiles)
     if len(data) != max_tiles * 32 or not (0 <= tile_id < max_tiles):
         raise ValueError("NCGR tile out of range")
     return data[tile_id * 32:(tile_id + 1) * 32]

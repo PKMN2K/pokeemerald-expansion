@@ -133,20 +133,20 @@ def audit_ribbon_tilemap_palette_bits(source):
     return {bank for bank in banks if 0 <= bank < TOTAL_BANKS}
 
 def audit_ribbon_summary_bg2_tilemap():
-    """Read the 32x20 BG2 4bpp tilemap's palette nibble from source bytes."""
-    tilemap = ROOT / "graphics/pokenav/ribbons/summary_bg.bin"
+    """Read the padded 32x32 HGSS BG2 tilemap palette nibbles."""
+    tilemap = ROOT / "graphics/gen4_ui/hgss_ribbons/summary_bg.bin"
     data = tilemap.read_bytes()
-    expected_size = 32 * 20 * 2
+    expected_size = 32 * 32 * 2
     if len(data) != expected_size:
         print(f"UNRESOLVED: BG2 tilemap size {len(data)} != {expected_size}")
         return set()
     entries = [int.from_bytes(data[i:i + 2], "little")
                for i in range(0, len(data), 2)]
-    banks = {entry >> 12 for entry in entries}
+    banks = {entry >> 12 for i, entry in enumerate(entries) if i // 32 < 20 and i % 32 < 30}
     print("Ribbon BG2 summary tilemap palette banks:", sorted(banks))
-    if banks != {1}:
-        print("UNRESOLVED: BG2 summary tilemap no longer exclusively uses")
-        print("bank 1; revisit BG1/BG2 palette ownership before wiring.")
+    if banks != {1, 7}:
+        print("UNRESOLVED: HGSS summary tilemap must use only banks 1 and 7;")
+        print("inspect the source-cell exporter and runtime palette loads.")
     print("BG2 tilemap bytes:", tilemap.relative_to(ROOT), "entries:", len(entries))
     print("BG2 palette bits are evidence of references, not safe allocation.")
     return banks

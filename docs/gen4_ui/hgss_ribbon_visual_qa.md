@@ -1,185 +1,70 @@
-# HGSS Ribbon Grid — Emulator Visual Acceptance
+# HGSS ribbon summary — visual acceptance
 
-**Branch:** `feature/gen4-ui-renderer`
-**Scope:** Emerald's PokéNav ribbon summary only. Trainer card is not part
-of this UI migration. Use only the already-imported, retail HGSS assets.
+Scope: the PokéNav ribbon **summary screen** on `feature/gen4-ui-renderer`.
+The title, medal case, portrait/index cards and detail panel now use original
+HGSS source cells. The four-by-two grid and native 32×32 ribbon art fit the
+GBA screen. Source mapping and palette/VRAM ownership are documented in
+[the background trace](hgss_ribbon_bg_trace.md).
 
-## Automated checks already implemented
+## Reviewed native framebuffer captures
 
-- The dedicated `gen4-ui` CI job validates the 32 ribbon/retail palette
-  combinations and 207 nonempty ribbon-ownership layouts.
-- The native 32x32 sheet consists of 12 retail NCGR blocks (16 4bpp tiles
-  apiece), with five original HGSS palette banks. No redrawing or scaling.
-- The static validator confirms the selected ribbon's BG cell, zoom OBJ,
-  and four corner sprites share a common page-relative center.
-- `hgss-ribbon-grid-offline-previews` contains five 128x64-pixel PNGs
-  generated from retail data. **They are not in-game screenshots.**
-- Successful builds and battle tests establish compilation/runtime
-  compatibility, **not** correct PokéNav rendering.
+These are unscaled 240×160 mGBA frames from the real PokéNav menu, not
+offline artwork previews. Captured and reviewed on 2026-11-03.
 
-## Step A — isolated real-emulator artwork check
+![Live ribbon summary](screenshots/ribbon_summary/summary.png)
+![Expanded last-page gift ribbon](screenshots/ribbon_summary/expanded_gift.png)
+![Empty ribbon summary](screenshots/ribbon_summary/empty.png)
 
-1. Build the Emerald target from this feature branch and launch it in
-   a GBA emulator such as mGBA, with the project's debug menu enabled.
-2. In Debug > Utilities, select **HGSS ribbon grid test**.
-3. Confirm the first page shows champion and contest ribbons in their
-   original colors, at the expected native pixel size.
-4. Press Right repeatedly to inspect pages two through five, including
-   all five palette families and the gap before the gift ribbons.
-5. Press Left to revisit previous pages; confirm wrapping in both
-   directions and no displaced or corrupted tiles. Press B to exit.
-6. Capture screenshots showing pages 1, 4 and 5. Compare only the
-   **ribbon icon pixels** with the offline preview PNGs, accounting for
-   the viewer's transparent background.
+The review checked normal/gift icon colors, selection alignment, both
+lines of descriptions, title/name/gender/level, list index, portrait, count,
+help bar and palette restoration after returning to the owner list.
+The first capture exposed the help bar covering y=128 onward; the layout
+now keeps all content above that boundary. Selection-corner opaque pixels
+now stay inside the 32×32 icon cell instead of crossing into descriptions.
 
-This test does **not** exercise the live PokéNav navigation or selected
-ribbon zoom and must not be treated as proof of those behaviors.
+## Reproducible checks
 
-## Step B — actual PokéNav ribbon summary (required)
+The [live screenshot workflow](../../.github/workflows/hgss-ribbon-live-pokenav.yml)
+patches only its disposable checkout to cold-boot the normal PokéNav main
+menu, enter the real owner list, and drive the real summary with A/B/D-pad
+input. It uploads screenshots, never its temporary ROM or save.
 
-Use a test save with ribboned Pokémon; preserve the original save.
-Multiple test saves are acceptable. The listed counts refer to
-**owned ribbon entries**, not total ribbons in the species data.
-
-| Save fixture | Checks |
+| Fixture/state | Verification |
 |---|---|
-| 1 normal ribbon | Single icon at top left; A expands; B shrinks |
-| 8 normal ribbons | Exactly two rows; corners/zoom centered on each icon |
-| 9 normal ribbons | Down/right can move from page 1 to page 2 |
-| 25 normal ribbons | Last normal icon at virtual slot 24, page 4 |
-| Gift-only Pokémon | First gift at virtual slot 28; no invalid normal icon |
-| 5–7 gift ribbons | Navigation reaches second gift row on page 5 |
-| Normal + gifts | Traverses the gap and both sections without losing selection |
+| 25 normal + 7 gift ribbons | Five-page navigation, normal/gift boundary, expand/shrink |
+| Seven gifts only | Starts at the gift row, no invented normal icon, expand/shrink |
+| Empty summary | Zero count, empty grid, A leaves grid/details unchanged |
+| One normal ribbon | One icon, count, expand/shrink |
+| Owner switching | Name, gender, level, portrait, count and page reset |
+| Exit/re-entry | Owner list works and original panel colors return |
 
-For each fixture, enter PokéNav > Ribbons > Pokémon > ribbon summary.
-Check ordinary navigation before pressing A, selected-ribbon details
-and palette after A, Left/Right/Up/Down while expanded, and B to shrink.
-Switch Pokémon to confirm the new icon page resets correctly.
-Also check that the larger icons do not cover the ribbon-count text,
-Pokémon name, description, other sprites or edge of the display.
+The empty fixture is deliberately removed from its synthetic Pokémon
+**after** owner-list construction, because the normal list excludes
+ribbonless Pokémon. It does not change normal game or save behavior.
 
-**Special boundary:** On page 4 the first normal icon is virtual slot
-24 and the gift icons start at slot 28 (row 2). No nonexistent
-normal-ribbon icon should appear at slots 25–27.
+The automated verifier compares **404 opaque Champion pixels** and
+**3,712 unobscured background pixels per settled screen** against the
+source assets (RGB555 expansion tolerance of 8). Background comparisons
+cover six settled states, including empty, single, gifts and re-entry.
+It also rejects missing transitions and changes after A on an empty grid.
 
-Capture a screenshot of the full live PokéNav screen, plus a screenshot
-of the expanded selected ribbon on the last page. Check the actual
-ribbon labels/descriptions and 32x32 selection corners.
+`check_hgss_ribbon_grid.py` validates all 32 ribbon/member/palette mappings,
+all 207 nonempty ownership layouts, and the actual opaque selection-corner
+footprint. `test/pokenav_ribbons.c` exercises the actual C navigation and
+shared cursor centers, and measures both description lines for every
+normal and gift ribbon against the available 140-pixel text width.
 
-## Completion criteria / cleanup gate
+The separate [isolated icon workflow](../../.github/workflows/hgss-ribbon-emulator.yml)
+still checks all five pages against original icon pixels in mGBA.
 
-Do **not** delete `graphics/pokenav/ribbons/icons.png`, `icons_big.png`,
-or the five legacy `icons*.pal` files solely because the compiler or
-the offline converter passes. Verify the actual screen first, then
-audit all remaining references in the source/graphics build rules.
-Only delete files that are truly unreferenced and no longer needed,
-followed by another complete CI run.
+## Legacy cleanup
 
-Record screenshot references and the test save/fixture in the migration
-notes before marking this screen visually verified. Never check
-saves or proprietary ROM dumps into the repository.
+After live review and a repository-wide reference audit, the superseded
+Emerald `summary_bg.png/.bin`, `icons.png`, `icons_big.png`, five icon
+palettes and `mon_info.pal` are removed, along with the unused global
+summary background declarations/definitions. Owner-list resources remain
+outside this summary-screen change. The empty transparent grid window is
+removed; text now overlays the original panels without overwriting them.
 
-## Headless mGBA verification of live C navigation
-
-The test runner now includes `test/pokenav_ribbons.c`, which calls
-`Test_HgssRibbonNavigate` (a `TESTING`-only adapter around the actual
-`TrySelectRibbonUp/Down/Left/Right` functions). It exhaustively checks
-reachability and valid targets across all **207 nonempty** normal/gift
-ownership combinations. A second test verifies the shared live cursor/
-zoom center for every grid cell across all five pages.
-
-The runtime cursor and selected-ribbon sprite now obtain their location
-from the **same** `GetHgssRibbonScreenPosition` helper, eliminating
-independent coordinate calculations. These tests run in a real headless
-GBA emulator, but do not capture the full PokéNav screen or evaluate
-pixel appearance. Visual acceptance remains mandatory.
-
-## Step C — automated isolated-viewer mGBA screenshots (added 2026-10-14)
-
-The separate [HGSS ribbon emulator screenshots workflow](../../.github/workflows/hgss-ribbon-emulator.yml)
-builds a **temporary CI-only Emerald ROM** with its initial callback
-repointed to `CB2_HgssRibbonGridTest` by locally patching the linker
-script during CI. This change is never committed or used in release ROMs.
-A pinned, MIT-licensed headless mGBA screenshot utility captures all five
-pages as real 240x160 GBA framebuffer screenshots, and a pixel verifier
-compares each opaque icon pixel to the authentic HGSS tile/palette source.
-It uploads **screenshots only**, not the temporary ROM.
-
-Artifact: `hgss-ribbon-real-emulator-screenshots`. The reviewer must
-inspect the images and CI result before checking Step A. This is stronger
-evidence than offline PNGs but **does not verify the full live PokéNav
-screen**, the overlay/chrome, zoom, selection corners or all runtime input.
-Step B remains mandatory before legacy asset deletion.
-
-## Step D — actual live PokéNav screenshots (2026-10-14)
-
-The [live PokéNav screenshot workflow](../../.github/workflows/hgss-ribbon-live-pokenav.yml)
-boots a **disposable CI-only Emerald ROM** with one Pikachu carrying
-25 ordinary and seven gift ribbons. A temporary local checkout patch
-starts directly on the real PokéNav ribbon-owner list; headless mGBA
-then uses real A, B and Down inputs to enter the live ribbon summary,
-expand the ribbon, move across page four and page five, and shrink it.
-All screenshots are native 240x160 GBA framebuffer output.
-
-Artifact: `hgss-ribbon-live-pokenav-screenshots`. A sanity script checks
-that the captured frames are nonblank and show distinct transitions.
-The reviewer must still inspect the screenshots for proper on-screen
-cursor, zoom, chrome and description readability. CI-only changes
-to `src/pokenav.c` and the linker script are **not committed** and the
-temporary test ROM and save are **not uploaded**. Ordinary builds and
-user save data are unaffected.
-
-## Full-menu live capture repair (2026-10-14)
-
-The first live capture exposed a test-fixture defect: it skipped the
-regular PokéNav main-menu screen initialization, producing mostly black
-screens even though ribbon sprites and labels appeared. The temporary
-CI boot now initializes the real main menu, enables the two relevant
-ribbon/Match Call flags only in temporary RAM, and navigates using actual
-Down/A buttons. Movement waits are increased so the animated ribbon
-selection can complete before subsequent input. The capture includes a
-`main_menu.png` baseline and requires distinct live screen transitions.
-No underlying game-code or assets were changed.
-
-## Live capture retry #3 (2026-10-14)
-
-The corrected full-menu capture showed the Hoenn map instead of the
-ribbon owner list. The startup menu navigation automation was incorrect.
-The disposable fixture now preselects the **Ribbons** option *inside*
-the normal `PokenavCallback_Init_MainMenuCursorOnMap` handler while
-preserving the full initial menu UI and callbacks. It then presses A to
-enter the ribbon list and A again to open the summary.
-
-The validator additionally requires the first 32x32 retail Champion
-ribbon icon to appear in the proper location in the live summary,
-compared to the original HGSS source-colored offline pixels. This avoids
-false-positive passes from unrelated colorful screens, such as Hoenn
-region maps. The local cursor patch is never committed to game code.
-
-
-## Live ribbon screenshot review — run #19 (2026-10-18)
-
-- Source: [HGSS ribbon live PokéNav screenshots #19](https://github.com/PKMN2K/pokeemerald-expansion/actions/runs/39090441633), commit `eca0ab45e6110b7b703048d24aa5ddb2fb4694a2`.
-- The real mGBA framebuffer captures show native 32x32 ribbon icons,
-  selection corners, expanded ribbon, and normal/gift page transitions.
-  The smaller description font resolves the previously observed right-edge
-  overflow in the **sampled** normal/gift ribbon screenshots; the raised
-  text area does not overlap the bottom help bar in those captures.
-- CI #1131 and both screenshot workflows passed. These fixtures do not
-  exhaustively prove every ribbon name, save, animation or UI skin.
-- **Do not declare complete HGSS ribbon-screen authenticity:** live
-  `src/pokenav_ribbons_summary.c` still loads
-  `gPokenavRibbonsSummaryBg_Gfx`,
-  `gPokenavRibbonsSummaryBg_Tilemap` and
-  `gPokenavRibbonsSummaryBg_Pal` from Emerald. The description, Pokémon
-  card and list-index windows currently use plain filled surfaces, not
-  verified retail HGSS ribbon-summary panel graphics.
-- Next asset gate: trace the **specific** retail HGSS ribbon-screen
-  background/window assets and geometry from the HeartGold ROM/decomp,
-  verify provenance, import original graphics, then wire the live screen.
-  Only afterward remove superseded Emerald BG/window assets and verify
-  emulator captures again. Do not invent, redraw or reskin panels.
-- The legacy `graphics/pokenav/ribbons/icons.png`, `icons_big.png`,
-  and `icons1.pal`–`icons5.pal` are not runtime references in this
-  particular summary source, but may have build/dependency consumers;
-  do a repository-wide reference audit before any deletion.
+This completes the GBA-adapted ribbon summary element. It does not claim
+that unrelated PokéNav screens or the entire Gen 4 migration are complete.

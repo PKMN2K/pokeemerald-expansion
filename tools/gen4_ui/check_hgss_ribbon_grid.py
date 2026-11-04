@@ -56,8 +56,8 @@ def parse_live_mapping():
     assert "*x = (RIBBON_GRID_LEFT_TILE + RIBBON_ICON_TILES * (pageSlot % RIBBONS_PER_ROW)) * 8 + 16;" in source
     assert "*y = (RIBBON_GRID_TOP_TILE + RIBBON_ICON_TILES * (pageSlot / RIBBONS_PER_ROW)) * 8 + 16;" in source
     assert source.count("GetHgssRibbonScreenPosition(GetSelectedPosition(), &x, &y);") == 2
-    assert "corner->x = x + ((i & 2) ? 16 : -16);" in source
-    assert "corner->y = y + ((i & 1) ? 16 : -16);" in source
+    assert "corner->x = x + ((i & 2) ? 10 : -10);" in source
+    assert "corner->y = y + ((i & 1) ? 10 : -10);" in source
     assert ".shape = SPRITE_SHAPE(32x32)," in source
     assert ".size = SPRITE_SIZE(32x32)," in source
     assert "sRibbonIconsSmall_Gfx" not in source
@@ -180,6 +180,29 @@ def check_navigation():
     return checked
 
 
+def check_cursor_footprint():
+    """Check actual opaque corner pixels, not just 16x16 OAM rectangles."""
+    source = (ROOT / "src/pokenav_ribbons_summary.c").read_text()
+    offset = int(re.search(r"corner->x = x \+ \(\(i & 2\) \? (\d+) :", source).group(1))
+    raw = (ROOT / "graphics/gen4_ui/hgss_pokegear/cursor_corner.4bpp").read_bytes()
+    ink = []
+    for y in range(16):
+        for x in range(16):
+            byte = raw[((y // 8) * 2 + x // 8) * 32 + (y % 8) * 4 + (x % 8) // 2]
+            if (byte >> (4 * (x % 2))) & 15:
+                ink.append((x, y))
+    for cell in range(8):
+        cx, cy = 104 + 32 * (cell % 4), 48 + 32 * (cell // 4)
+        for corner in range(4):
+            for x, y in ink:
+                px = cx + (offset if corner & 2 else -offset) - 8 + (15 - x if corner & 2 else x)
+                py = cy + (offset if corner & 1 else -offset) - 8 + (15 - y if corner & 1 else y)
+                assert cx - 16 <= px < cx + 16
+                assert cy - 16 <= py < cy + 16
+                assert 32 <= py < 96  # excludes header and description text
+    print("Verified opaque selection-corner pixels stay inside all eight native cells")
+
+
 def png_chunk(tag, payload):
     return struct.pack(">I", len(payload)) + tag + payload + struct.pack(">I", zlib.crc32(tag + payload) & 0xFFFFFFFF)
 
@@ -244,6 +267,7 @@ def main():
     rows = parse_live_mapping()
     check_retail_4bpp_assets(rows)
     cases = check_navigation()
+    check_cursor_footprint()
     print(f"Verified 32 live ribbon member/palette combinations and {cases} nonempty ribbon layouts")
     if args.preview_dir:
         write_previews(rows, args.preview_dir)

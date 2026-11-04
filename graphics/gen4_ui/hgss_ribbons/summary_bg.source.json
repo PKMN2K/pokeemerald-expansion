@@ -1,0 +1,105 @@
+{
+  "source_narc_sha256": "003c80069fcd1f9c9eb842ae0294ecbdeffabbff40593cc471236e81239d9eed",
+  "ncgr": 1,
+  "nscr": 9,
+  "nclr": 0,
+  "source_screen": "sub engine BG2 (global layer 6), not main BG3",
+  "adaptation": "Original header, party-panel frame and medal-case cells; repeated interiors, native 8x8 pixels",
+  "palette_map": {
+    "0": 1,
+    "4": 7
+  },
+  "tile_count": 15,
+  "tiles": [
+    {
+      "tile": 1,
+      "ncgr": 1,
+      "source_tile": 33,
+      "sha256": "70b7e0e023a6d57326206707ce2bdb3809fb47b28ef0597578cb9cc27134a871"
+    },
+    {
+      "tile": 2,
+      "ncgr": 1,
+      "source_tile": 35,
+      "sha256": "7e5dd1ff8335339ef866cfe2fcb7400f432e122c8afc3f22dddab03bf7bb0c46"
+    },
+    {
+      "tile": 3,
+      "ncgr": 1,
+      "source_tile": 6,
+      "sha256": "e0e77a507412b120f6ede61f62295b1a7b2ff19d3dcc8f7253e51663470c888e"
+    },
+    {
+      "tile": 4,
+      "ncgr": 1,
+      "source_tile": 37,
+      "sha256": "c2f480d4dda9f4522b9f6d590011636d904accfe59f12f9d66a0221c2558e3a2"
+    },
+    {
+      "tile": 5,
+      "ncgr": 1,
+      "source_tile": 8,
+      "sha256": "f78edeb5f587a1406755fbb2ded6187d52350b4951c13c7015555872274dd304"
+    },
+    {
+      "tile": 6,
+      "ncgr": 1,
+      "source_tile": 99,
+      "sha256": "a66ef7f30ab3d4ebab1036d3d21d86b81d235139e9ddd1eeb10905ddfc35b6b6"
+    },
+    {
+      "tile": 7,
+      "ncgr": 1,
+      "source_tile": 100,
+      "sha256": "bfcee0770a3327216baf2b0c1fa7b533795844ca3df33b26b6343645e86b3a16"
+    },
+    {
+      "tile": 8,
+      "ncgr": 1,
+      "source_tile": 15,
+      "sha256": "52f5d8903b1c651789982430778611b4b6d913724ba4dbd676126dad0d8d5efa"
+    },
+    {
+      "tile": 9,
+      "ncgr": 1,
+      "source_tile": 16,
+      "sha256": "7310fb3980b1e54f060d7e2ece9ace9164ef7c778b5166c863551a982cf620e4"
+    },
+    {
+      "tile": 10,
+      "ncgr": 1,
+      "source_tile": 1,
+      "sha256": "af9613760f72635fbdb44a5a0a63c39f12af30f950a6ee5c971be188e89c4051"
+    },
+    {
+      "tile": 11,
+      "ncgr": 1,
+      "source_tile": 103,
+      "sha256": "939826518d9db41b05ac814063b6154eb9a6cf390d92ac1d5f02d6a8547dd7e7"
+    },
+    {
+      "tile": 12,
+      "ncgr": 1,
+      "source_tile": 14,
+      "sha256": "02d449a31fbb267c8f352e9968a79e3e5fc95c1bbeaa502fd6454ebde5a4bedc"
+    },
+    {
+      "tile": 13,
+      "ncgr": 1,
+      "source_tile": 17,
+      "sha256": "806424232079494e5a6108e9b93bc08874fa82c1f532626a2810f2e6b6c77c9a"
+    },
+    {
+      "tile": 14,
+      "ncgr": 1,
+      "source_tile": 4,
+      "sha256": "e8b72e0b71c772f8398f58104fb04c243c67ec46014cb06c22329c49b03d4c86"
+    }
+  ],
+  "outputs": {
+    "summary_bg.4bpp": "e6ff23ea979d16c7e02a420314414fabf637a323ffb8e0988d65e83c5e04a96f",
+    "summary_bg.bin": "a4c32231328d691ede751f515f014bcf5dcf654a716cc1241503fca4da5e838a",
+    "summary_bg.bank_1.gbapal": "b9677abc5867bc5bd879c77becf6b9fc05ab074e0683e50f262bd5cf5477ec07",
+    "summary_bg.bank_7.gbapal": "1d88aa52aa5e52714b50ce79fe570a105ce41ed6a8437beea0afc44f32128b0d"
+  }
+}

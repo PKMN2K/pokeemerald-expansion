@@ -1,6 +1,23 @@
 #include "global.h"
 #include "pokenav.h"
+#include "string_util.h"
+#include "text.h"
+#include "constants/pokemon.h"
 #include "test/test.h"
+
+extern const u8 *const gRibbonDescriptionPointers[][2];
+extern const u8 *const gGiftRibbonDescriptionPointers[][2];
+
+TEST("HGSS ribbon details fit both lines for every normal and gift ribbon")
+{
+    u32 ribbon, line;
+    for (ribbon = 0; ribbon < FIRST_GIFT_RIBBON; ribbon++)
+        for (line = 0; line < 2; line++)
+            EXPECT_LE(GetStringWidth(FONT_SMALL, gRibbonDescriptionPointers[ribbon][line], 0), 140);
+    for (ribbon = 0; ribbon < MAX_GIFT_RIBBON; ribbon++)
+        for (line = 0; line < 2; line++)
+            EXPECT_LE(GetStringWidth(FONT_SMALL, gGiftRibbonDescriptionPointers[ribbon][line], 0), 140);
+}
 
 // These tests invoke the real movement code from pokenav_ribbons_summary.c,
 // not the Python reference model or the offline PNG preview.

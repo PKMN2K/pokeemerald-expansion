@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Regression tests for lossless HGSS ribbon palette-bank relocation."""
 import json
+import struct
 import sys
 import tempfile
 import unittest
@@ -11,6 +12,18 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "tools"))
 from export_hgss_ribbon_gba_bg import parse_palette_map, remap_palette, export, verify_source_narc, compose_same_bank_tiles, compose_matching_palette_tiles, compose_in_original_palette, entry
 from audit_hgss_ribbon_palette_slots import audit
 from validate_hgss_ribbon_gba_bg import validate
+from render_hgss_ribbon_backgrounds import character_data
+
+
+def synthetic_ncgr(pixels):
+    header = bytearray(48)
+    header[:4] = b"RGCN"
+    struct.pack_into("<IHH", header, 8, 64 + len(pixels), 16, 2)
+    header[16:20] = b"RAHC"
+    struct.pack_into("<I", header, 20, 32 + len(pixels))
+    struct.pack_into("<I", header, 28, 3)
+    struct.pack_into("<II", header, 40, len(pixels), 24)
+    return bytes(header) + pixels + b"SOPC" + struct.pack("<I", 16) + bytes(8)
 
 
 class PaletteRemappingTests(unittest.TestCase):
@@ -39,13 +52,26 @@ class PaletteRemappingTests(unittest.TestCase):
 
     def test_ncgr_tile_reader_rejects_negative_and_overflow_ids(self):
         from export_hgss_ribbon_gba_bg import tile
-        header = b"RGCN" + bytes(12) + b"RAHC" + bytes(44)
-        original = header + bytes([0x21]) * (256 * 32)
+        original = synthetic_ncgr(bytes([0x21]) * (256 * 32))
         self.assertEqual(tile(original, 0, 256), bytes([0x21]) * 32)
         for tile_id in (-1, 256):
             with self.subTest(tile_id=tile_id):
                 with self.assertRaisesRegex(ValueError, "out of range"):
                     tile(original, tile_id, 256)
+
+    def test_ncgr_payload_starts_at_48_and_excludes_sopc(self):
+        # Distinct first/last half-tiles catch the previous 16-byte shift,
+        # which uniform synthetic tiles concealed.
+        pixels = bytes(range(32)) + bytes(reversed(range(32)))
+        original = synthetic_ncgr(pixels)
+        self.assertEqual(character_data(original, 2), pixels)
+        self.assertNotIn(b"SOPC", character_data(original, 2))
+
+    def test_ncgr_rejects_payload_extending_into_metadata(self):
+        original = bytearray(synthetic_ncgr(bytes(64)))
+        struct.pack_into("<I", original, 44, 40)
+        with self.assertRaisesRegex(ValueError, "payload bounds"):
+            character_data(original, 2)
 
     def test_nscr_coordinates_do_not_wrap_into_adjacent_rows(self):
         screen = bytearray(2084)
@@ -241,10 +267,8 @@ class PaletteRemappingTests(unittest.TestCase):
         # Synthetic Nitro structures: no copyrighted image data is bundled.
         palette = b"RLCN" + bytes(12) + b"TTLP" + bytes(20) + self.original
         self.assertEqual(len(palette), 552)
-        ncgr_base = b"RGCN" + bytes(12) + b"RAHC" + bytes(44)
-        self.assertEqual(len(ncgr_base), 64)
-        ncgr_bg3 = ncgr_base + bytes([0x11]) * (256 * 32)
-        ncgr_bg6 = ncgr_base + bytes([0x22]) * (512 * 32)
+        ncgr_bg3 = synthetic_ncgr(bytes([0x11]) * (256 * 32))
+        ncgr_bg6 = synthetic_ncgr(bytes([0x22]) * (512 * 32))
         screen = bytearray(2084)
         screen[0:4] = b"RCSN"
         screen[16:20] = b"NRCS"
@@ -302,9 +326,8 @@ class PaletteRemappingTests(unittest.TestCase):
 
     def test_export_reports_same_bank_and_cross_bank_overlay_cells(self):
         palette = b"RLCN" + bytes(12) + b"TTLP" + bytes(20) + self.original
-        header = b"RGCN" + bytes(12) + b"RAHC" + bytes(44)
-        bg3 = header + bytes([0x11]) * (256 * 32)
-        bg6 = header + bytes([0x03]) * (512 * 32)
+        bg3 = synthetic_ncgr(bytes([0x11]) * (256 * 32))
+        bg6 = synthetic_ncgr(bytes([0x03]) * (512 * 32))
         base_map = bytearray(2084)
         top_map = bytearray(2084)
         for screen in (base_map, top_map):

@@ -49,8 +49,9 @@ enum
 
 #define MON_SPRITE_X_ON  40
 #define MON_SPRITE_X_OFF -32
-#define MON_SPRITE_Y     104
+#define MON_SPRITE_Y     96
 
+static const u8 sText_HgssRibbons[] = _("RIBBONS");
 static const u8 gText_RibbonsF700[] = _("RIBBONS {DYNAMIC 0}");
 
 struct Pokenav_RibbonsSummaryList
@@ -72,9 +73,9 @@ struct Pokenav_RibbonsSummaryMenu
     u32 (*callback)(void);
     u32 loopedTaskId;
     u16 nameWindowId;
+    u16 titleWindowId;
     u16 ribbonCountWindowId;
     u16 listIdxWindowId;
-    u16 gridFrameWindowId;
     u16 unusedWindowId;
     u16 monSpriteId;
     struct Sprite *bigRibbonSprite;
@@ -89,7 +90,6 @@ static u32 sRibbonDraw_Total;
 static void PrintCurrentMonRibbonCount(struct Pokenav_RibbonsSummaryMenu *);
 static void PrintRibbbonsSummaryMonInfo(struct Pokenav_RibbonsSummaryMenu *);
 static void PrintRibbonsMonListIndex(struct Pokenav_RibbonsSummaryMenu *);
-static void DrawPokeGearRibbonGridFrame(u16);
 static void DrawPokeGearRibbonSelectionFocus(struct Pokenav_RibbonsSummaryMenu *, bool8);
 static void GetHgssRibbonScreenPosition(u32, s16 *, s16 *);
 static void CreateHgssRibbonCursor(struct Pokenav_RibbonsSummaryMenu *);
@@ -106,7 +106,6 @@ static void DestroyRibbonsMonFrontPic(struct Pokenav_RibbonsSummaryMenu *);
 static void SlideMonSpriteOff(struct Pokenav_RibbonsSummaryMenu *);
 static void SlideMonSpriteOn(struct Pokenav_RibbonsSummaryMenu *);
 static void AddRibbonCountWindow(struct Pokenav_RibbonsSummaryMenu *);
-static void AddRibbonGridFrameWindow(struct Pokenav_RibbonsSummaryMenu *);
 static void CreateBigRibbonSprite(struct Pokenav_RibbonsSummaryMenu *);
 static void AddRibbonSummaryMonNameWindow(struct Pokenav_RibbonsSummaryMenu *);
 static void DrawAllRibbonsHgss(struct Pokenav_RibbonsSummaryMenu *);
@@ -167,7 +166,12 @@ struct
 #include "data/text/ribbon_descriptions.h"
 #include "data/text/gift_ribbon_descriptions.h"
 
-static const u16 sMonInfo_Pal[] = INCGFX_U16("graphics/pokenav/ribbons/mon_info.pal", ".gbapal"); // palette for Pokémon's name/gender/level text
+// Verified retail summary cells, adapted at native pixel size for 240x160.
+static const u32 sHgssSummaryBgTiles[] = INCBIN_U32("graphics/gen4_ui/hgss_ribbons/summary_bg.4bpp");
+static const u16 sHgssSummaryBgMap[] = INCBIN_U16("graphics/gen4_ui/hgss_ribbons/summary_bg.bin");
+static const u16 sHgssSummaryTextPalette[] = INCBIN_U16("graphics/gen4_ui/hgss_ribbons/summary_bg.bank_1.gbapal");
+static const u16 sHgssSummaryCasePalette[] = INCBIN_U16("graphics/gen4_ui/hgss_ribbons/summary_bg.bank_7.gbapal");
+static const u8 sHgssRibbonTextColors[] = {0, 5, 2};
 // All grid and expanded icons use the same unmodified retail HGSS tiles.
 static const u32 sRibbonIconsBig_Gfx[] = INCBIN_U32("graphics/gen4_ui/hgss_ribbons/big_icons_hgss.4bpp");
 static const u16 sHgssRibbonBigPal0[] = INCBIN_U16("graphics/gen4_ui/hgss_ribbons/palette_0.gbapal");
@@ -617,8 +621,8 @@ void FreeRibbonsSummaryScreen2(void)
     struct Pokenav_RibbonsSummaryMenu *menu = GetSubstructPtr(POKENAV_SUBSTRUCT_RIBBONS_SUMMARY_MENU);
     RemoveWindow(menu->ribbonCountWindowId);
     RemoveWindow(menu->nameWindowId);
+    RemoveWindow(menu->titleWindowId);
     RemoveWindow(menu->listIdxWindowId);
-    RemoveWindow(menu->gridFrameWindowId);
 #ifndef BUGFIX
     RemoveWindow(menu->unusedWindowId); // Removing window, but window id is never set
 #endif
@@ -651,10 +655,11 @@ static u32 LoopedTask_OpenRibbonsSummaryMenu(s32 state)
     {
     case 0:
         InitBgTemplates(sBgTemplates, ARRAY_COUNT(sBgTemplates));
-        DecompressAndCopyTileDataToVram(2, gPokenavRibbonsSummaryBg_Gfx, 0, 0, 0);
+        LoadBgTiles(2, sHgssSummaryBgTiles, sizeof(sHgssSummaryBgTiles), 0);
         SetBgTilemapBuffer(2, menu->tilemapBuffers[0]);
-        CopyToBgTilemapBuffer(2, gPokenavRibbonsSummaryBg_Tilemap, 0, 0);
-        CopyPaletteIntoBufferUnfaded(gPokenavRibbonsSummaryBg_Pal, BG_PLTT_ID(1), PLTT_SIZE_4BPP);
+        CopyToBgTilemapBuffer(2, sHgssSummaryBgMap, sizeof(sHgssSummaryBgMap), 0);
+        CopyPaletteIntoBufferUnfaded(sHgssSummaryTextPalette, BG_PLTT_ID(1), PLTT_SIZE_4BPP);
+        CopyPaletteIntoBufferUnfaded(sHgssSummaryCasePalette, BG_PLTT_ID(7), PLTT_SIZE_4BPP);
         CopyBgTilemapBufferToVram(2);
         return LT_INC_AND_PAUSE;
     case 1:
@@ -671,7 +676,6 @@ static u32 LoopedTask_OpenRibbonsSummaryMenu(s32 state)
             CopyPaletteIntoBufferUnfaded(sHgssRibbonBigPal2, BG_PLTT_ID(4), PLTT_SIZE_4BPP);
             CopyPaletteIntoBufferUnfaded(sHgssRibbonBigPal3, BG_PLTT_ID(5), PLTT_SIZE_4BPP);
             CopyPaletteIntoBufferUnfaded(sHgssRibbonBigPal4, BG_PLTT_ID(6), PLTT_SIZE_4BPP);
-            CopyPaletteIntoBufferUnfaded(sMonInfo_Pal, BG_PLTT_ID(10), sizeof(sMonInfo_Pal));
             CopyBgTilemapBufferToVram(1);
             return LT_INC_AND_PAUSE;
         }
@@ -679,7 +683,6 @@ static u32 LoopedTask_OpenRibbonsSummaryMenu(s32 state)
     case 2:
         if (!FreeTempTileDataBuffersIfPossible())
         {
-            AddRibbonGridFrameWindow(menu);
             AddRibbonCountWindow(menu);
             return LT_INC_AND_PAUSE;
         }
@@ -874,25 +877,6 @@ static u32 LoopedTask_ShrinkExpandedRibbon(s32 state)
     return LT_FINISH;
 }
 
-static const struct WindowTemplate sRibbonGridFrameWindowTemplate =
-{
-    .bg = 2,
-    .tilemapLeft = 10,
-    .tilemapTop = 3,
-    .width = 20,
-    .height = 10,
-    .paletteNum = 1,
-    .baseBlock = 0x7C,
-};
-
-static void DrawPokeGearRibbonGridFrame(u16 windowId)
-{
-    // No retail HGSS ribbon-grid chrome is verified for this window.
-    // Transparent pixels preserve the existing BG presentation and ribbon icons,
-    // rather than substituting programmatically drawn medal-case artwork.
-    FillWindowPixelBuffer(windowId, PIXEL_FILL(0));
-}
-
 // Reuse the verified HGSS Pokégear selection-corner pixels and palette.
 static const u32 sHgssRibbonCursorTiles[] = INCBIN_U32("graphics/gen4_ui/hgss_pokegear/cursor_corner.4bpp");
 static const u16 sHgssRibbonCursorPalette[] = INCBIN_U16("graphics/gen4_ui/hgss_pokegear/cursor_corner.gbapal");
@@ -997,56 +981,47 @@ static void DrawPokeGearRibbonSelectionFocus(struct Pokenav_RibbonsSummaryMenu *
     u32 i;
     GetHgssRibbonScreenPosition(GetSelectedPosition(), &x, &y);
 
-    // Four authentic HGSS corners frame the selected 32x32 ribbon icon.
+    // Opaque source pixels occupy 2..12 in each 16x16 corner. Centers
+    // at +/-10 therefore frame exactly the 32x32 cell, without covering
+    // the header or two-line details below the second ribbon row.
     for (i = 0; i < HGSS_RIBBON_CURSOR_CORNERS; i++)
     {
         struct Sprite *corner = menu->hgssCursorCorners[i];
         if (corner == NULL)
             continue;
-        corner->x = x + ((i & 2) ? 16 : -16);
-        corner->y = y + ((i & 1) ? 16 : -16);
+        corner->x = x + ((i & 2) ? 10 : -10);
+        corner->y = y + ((i & 1) ? 10 : -10);
         corner->invisible = !show;
     }
 }
 
 static void DrawPokeGearRibbonDetailPanel(u16 windowId)
 {
-    // Clear previous text without drawing a fabricated HGSS-style bevel.
-    // The authentic HGSS ribbon-details surface has not yet been wired.
-    FillWindowPixelBuffer(windowId, PIXEL_FILL(4));
+    // Text is transparent over the original HGSS panel on BG2.
+    FillWindowPixelBuffer(windowId, PIXEL_FILL(0));
 }
 
 static void DrawPokeGearRibbonMonCard(u16 windowId)
 {
-    // Retain the readable name/level text surface without fabricated chrome.
-    // No retail HGSS ribbon-summary card art has been imported for this window.
-    FillWindowPixelBuffer(windowId, PIXEL_FILL(1));
+    // Text is transparent over the original HGSS panel on BG2.
+    FillWindowPixelBuffer(windowId, PIXEL_FILL(0));
 }
 
 static void DrawPokeGearRibbonIndexCard(u16 windowId)
 {
-    // Keep functional ribbon-list position text without fabricated borders.
-    // Authentic HGSS replacement art for this window remains to be verified.
-    FillWindowPixelBuffer(windowId, PIXEL_FILL(4));
-}
-
-static void AddRibbonGridFrameWindow(struct Pokenav_RibbonsSummaryMenu *menu)
-{
-    menu->gridFrameWindowId = AddWindow(&sRibbonGridFrameWindowTemplate);
-    DrawPokeGearRibbonGridFrame(menu->gridFrameWindowId);
-    PutWindowTilemap(menu->gridFrameWindowId);
-    CopyWindowToVram(menu->gridFrameWindowId, COPYWIN_FULL);
+    // Text is transparent over the original HGSS panel on BG2.
+    FillWindowPixelBuffer(windowId, PIXEL_FILL(0));
 }
 
 static const struct WindowTemplate sRibbonCountWindowTemplate =
 {
-    .bg = 2,
-    .tilemapLeft = 12,
+    .bg = 1,
+    .tilemapLeft = 11,
     .tilemapTop = 12,
-    .width = 16,
+    .width = 18,
     .height = 4,
     .paletteNum = 1,
-    .baseBlock = 0x14,
+    .baseBlock = 0x100,
 };
 
 static void AddRibbonCountWindow(struct Pokenav_RibbonsSummaryMenu *menu)
@@ -1058,14 +1033,12 @@ static void AddRibbonCountWindow(struct Pokenav_RibbonsSummaryMenu *menu)
 
 static void PrintCurrentMonRibbonCount(struct Pokenav_RibbonsSummaryMenu *menu)
 {
-    u8 color[] = {TEXT_COLOR_RED, TEXT_COLOR_DARK_GRAY, TEXT_COLOR_LIGHT_GRAY};
-
     ConvertIntToDecimalStringN(gStringVar1, GetCurrMonRibbonCount(), STR_CONV_MODE_LEFT_ALIGN, 2);
     DynamicPlaceholderTextUtil_Reset();
     DynamicPlaceholderTextUtil_SetPlaceholderPtr(0, gStringVar1);
     DynamicPlaceholderTextUtil_ExpandPlaceholders(gStringVar4, gText_RibbonsF700);
     DrawPokeGearRibbonDetailPanel(menu->ribbonCountWindowId);
-    AddTextPrinterParameterized3(menu->ribbonCountWindowId, FONT_NORMAL, 12, 1, color, TEXT_SKIP_DRAW, gStringVar4);
+    AddTextPrinterParameterized3(menu->ribbonCountWindowId, FONT_NORMAL, 4, 1, sHgssRibbonTextColors, TEXT_SKIP_DRAW, gStringVar4);
     CopyWindowToVram(menu->ribbonCountWindowId, COPYWIN_GFX);
 }
 
@@ -1073,14 +1046,13 @@ static void PrintRibbonNameAndDescription(struct Pokenav_RibbonsSummaryMenu *men
 {
     s32 i;
     u32 ribbonId = GetRibbonId();
-    u8 color[] = {TEXT_COLOR_RED, TEXT_COLOR_DARK_GRAY, TEXT_COLOR_LIGHT_GRAY};
 
     DrawPokeGearRibbonDetailPanel(menu->ribbonCountWindowId);
     if (ribbonId < FIRST_GIFT_RIBBON)
     {
         // Print normal ribbon name/description
         for (i = 0; i < 2; i++)
-            AddTextPrinterParameterized3(menu->ribbonCountWindowId, FONT_SMALL, 12, (i * 14) + 1, color, TEXT_SKIP_DRAW, gRibbonDescriptionPointers[ribbonId][i]);
+            AddTextPrinterParameterized3(menu->ribbonCountWindowId, FONT_SMALL, 4, (i * 14) + 1, sHgssRibbonTextColors, TEXT_SKIP_DRAW, gRibbonDescriptionPointers[ribbonId][i]);
     }
     else
     {
@@ -1099,7 +1071,7 @@ static void PrintRibbonNameAndDescription(struct Pokenav_RibbonsSummaryMenu *men
         // Print gift ribbon name/description
         ribbonId--;
         for (i = 0; i < 2; i++)
-            AddTextPrinterParameterized3(menu->ribbonCountWindowId, FONT_SMALL, 12, (i * 14) + 1, color, TEXT_SKIP_DRAW, gGiftRibbonDescriptionPointers[ribbonId][i]);
+            AddTextPrinterParameterized3(menu->ribbonCountWindowId, FONT_SMALL, 4, (i * 14) + 1, sHgssRibbonTextColors, TEXT_SKIP_DRAW, gGiftRibbonDescriptionPointers[ribbonId][i]);
     }
 
     CopyWindowToVram(menu->ribbonCountWindowId, COPYWIN_GFX);
@@ -1107,31 +1079,49 @@ static void PrintRibbonNameAndDescription(struct Pokenav_RibbonsSummaryMenu *men
 
 static const struct WindowTemplate sRibbonSummaryMonNameWindowTemplate =
 {
-    .bg = 2,
+    .bg = 1,
     .tilemapLeft = 14,
     .tilemapTop = 1,
     .width = 13,
     .height = 2,
-    .paletteNum = 10,
-    .baseBlock = 0x54,
+    .paletteNum = 1,
+    .baseBlock = 0x148,
+};
+
+static const struct WindowTemplate sRibbonTitleWindowTemplate =
+{
+    .bg = 1,
+    .tilemapLeft = 1,
+    .tilemapTop = 1,
+    .width = 11,
+    .height = 2,
+    .paletteNum = 1,
+    .baseBlock = 0x170,
 };
 
 static void AddRibbonSummaryMonNameWindow(struct Pokenav_RibbonsSummaryMenu *menu)
 {
+    menu->titleWindowId = AddWindow(&sRibbonTitleWindowTemplate);
+    FillWindowPixelBuffer(menu->titleWindowId, PIXEL_FILL(0));
+    PutWindowTilemap(menu->titleWindowId);
+    AddTextPrinterParameterized3(menu->titleWindowId, FONT_NORMAL, 0, 1, sHgssRibbonTextColors, TEXT_SKIP_DRAW, sText_HgssRibbons);
+    CopyWindowToVram(menu->titleWindowId, COPYWIN_FULL);
+
     menu->nameWindowId = AddWindow(&sRibbonSummaryMonNameWindowTemplate);
     PutWindowTilemap(menu->nameWindowId);
     PrintRibbbonsSummaryMonInfo(menu);
 }
 
-static const u8 sText_MaleSymbol[] = _("{TEXT_COLORS LIGHT_RED GREEN WHITE}{BACKGROUND WHITE}♂{TEXT_COLORS DARK_GRAY LIGHT_GRAY WHITE}{BACKGROUND WHITE}");
-static const u8 sText_FemaleSymbol[] = _("{TEXT_COLORS LIGHT_GREEN BLUE WHITE}{BACKGROUND WHITE}♀{TEXT_COLORS DARK_GRAY LIGHT_GRAY WHITE}{BACKGROUND WHITE}");
-static const u8 sText_NoGenderSymbol[] = _("{UNK_SPACER}");
+static const u8 sText_MaleSymbol[] = _("♂");
+static const u8 sText_FemaleSymbol[] = _("♀");
+static const u8 sText_NoGenderSymbol[] = _(" ");
 
 static void PrintRibbbonsSummaryMonInfo(struct Pokenav_RibbonsSummaryMenu *menu)
 {
     const u8 *genderTxt;
     u8 *txtPtr;
     u8 level, gender;
+    u8 genderColors[] = {0, 9, 2};
     u16 windowId = menu->nameWindowId;
 
     DrawPokeGearRibbonMonCard(windowId);
@@ -1143,32 +1133,33 @@ static void PrintRibbbonsSummaryMonInfo(struct Pokenav_RibbonsSummaryMenu *menu)
         break;
     case MON_FEMALE:
         genderTxt = sText_FemaleSymbol;
+        genderColors[1] = 6;
         break;
     default:
         genderTxt = sText_NoGenderSymbol;
         break;
     }
-    AddTextPrinterParameterized(windowId, GetFontIdToFit(gStringVar3, FONT_NORMAL, 0, 56), gStringVar3, 6, 1, TEXT_SKIP_DRAW, NULL);
+    AddTextPrinterParameterized3(windowId, GetFontIdToFit(gStringVar3, FONT_NORMAL, 0, 56), 0, 1, sHgssRibbonTextColors, TEXT_SKIP_DRAW, gStringVar3);
+    AddTextPrinterParameterized3(windowId, FONT_NORMAL, 56, 1, genderColors, TEXT_SKIP_DRAW, genderTxt);
 
-    txtPtr = StringCopy(gStringVar1, genderTxt);
-    *(txtPtr++) = CHAR_SLASH;
+    txtPtr = gStringVar1;
     *(txtPtr++) = CHAR_EXTRA_SYMBOL;
     *(txtPtr++) = CHAR_LV_2;
     ConvertIntToDecimalStringN(txtPtr, level, STR_CONV_MODE_LEFT_ALIGN, 3);
-    AddTextPrinterParameterized(windowId, FONT_NORMAL, gStringVar1, 64, 1, TEXT_SKIP_DRAW, NULL);
+    AddTextPrinterParameterized3(windowId, FONT_NORMAL, 68, 1, sHgssRibbonTextColors, TEXT_SKIP_DRAW, gStringVar1);
     CopyWindowToVram(windowId, COPYWIN_GFX);
 }
 
 static const struct WindowTemplate sRibbonMonListIndexWindowTemplate[] =
 {
     {
-        .bg = 2,
+        .bg = 1,
         .tilemapLeft = 1,
         .tilemapTop = 5,
         .width = 7,
         .height = 2,
         .paletteNum = 1,
-        .baseBlock = 0x6E,
+        .baseBlock = 0x162,
     },
     {},
 };
@@ -1193,7 +1184,7 @@ static void PrintRibbonsMonListIndex(struct Pokenav_RibbonsSummaryMenu *menu)
     *(txtPtr++) = CHAR_SLASH;
     ConvertIntToDecimalStringN(txtPtr, count, STR_CONV_MODE_RIGHT_ALIGN, 3);
     x = GetStringCenterAlignXOffset(FONT_NORMAL, gStringVar1, 56);
-    AddTextPrinterParameterized(menu->listIdxWindowId, FONT_NORMAL, gStringVar1, x, 1, TEXT_SKIP_DRAW, NULL);
+    AddTextPrinterParameterized3(menu->listIdxWindowId, FONT_NORMAL, x, 1, sHgssRibbonTextColors, TEXT_SKIP_DRAW, gStringVar1);
     CopyWindowToVram(menu->listIdxWindowId, COPYWIN_GFX);
 }
 
@@ -1324,7 +1315,10 @@ static void DrawAllRibbonsHgss(struct Pokenav_RibbonsSummaryMenu *menu)
 // Tile zero is kept blank; all remaining BG1 tiles are original HGSS art.
 static void ClearRibbonsSummaryBg(void)
 {
-    FillBgTilemapBufferRect_Palette0(1, 0, 0, 0, 32, 20);
+    // Leave the text windows on BG1 intact when changing ribbon pages.
+    FillBgTilemapBufferRect_Palette0(1, 0, RIBBON_GRID_LEFT_TILE, RIBBON_GRID_TOP_TILE,
+                                   RIBBONS_PER_ROW * RIBBON_ICON_TILES,
+                                   RIBBON_GRID_ROWS * RIBBON_ICON_TILES);
 }
 
 static void DrawRibbonHgss(u32 slot, u32 ribbonId)
@@ -1337,7 +1331,7 @@ static void DrawRibbonHgss(u32 slot, u32 ribbonId)
     CopyToBgTilemapBufferRect(1, bgData, destX, destY, RIBBON_ICON_TILES, RIBBON_ICON_TILES);
 }
 
-// Below correspond to a ribbon icon in ribbons/icons.png and ribbons/icons_big.png; 0 at top, 11 at bottom
+// Native HGSS sheet block order; shared by grid and expanded OBJ.
 enum {
     RIBBONGFX_CHAMPION,
     RIBBONGFX_CONTEST_NORMAL,

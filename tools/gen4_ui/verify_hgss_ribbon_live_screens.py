@@ -7,6 +7,7 @@ changes. Human inspection is still required for exact chrome/cursor quality.
 from pathlib import Path
 import sys
 from PIL import Image, ImageChops
+from make_hgss_ribbon_summary import ASSETS, render_assets
 
 if len(sys.argv) != 3:
     raise SystemExit("usage: verify_hgss_ribbon_live_screens.py SHOTS_DIR OFFLINE_DIR")
@@ -24,6 +25,14 @@ names = (
     "zoom_gift_page_04",
     "zoom_gift_page_05",
     "summary_page_05",
+    "gift_only",
+    "zoom_gift_only",
+    "empty",
+    "empty_after_a",
+    "single",
+    "zoom_single",
+    "return_owner_list",
+    "summary_reentered",
 )
 images = {}
 failures = []
@@ -50,6 +59,13 @@ for left, right in (
     ("zoom_normal_page_04", "zoom_gift_page_04"),
     ("zoom_gift_page_04", "zoom_gift_page_05"),
     ("zoom_gift_page_05", "summary_page_05"),
+    ("summary_page_05", "gift_only"),
+    ("gift_only", "zoom_gift_only"),
+    ("zoom_gift_only", "empty"),
+    ("empty", "single"),
+    ("single", "zoom_single"),
+    ("zoom_single", "return_owner_list"),
+    ("return_owner_list", "summary_reentered"),
 ):
     diff = ImageChops.difference(images[left], images[right])
     changed = sum(1 for p in diff.getdata() if p != (0, 0, 0))
@@ -111,3 +127,27 @@ if compared < 64 or mismatched * 10 > compared:
         f"{mismatched}/{compared} opaque pixel mismatches"
     )
 print(f"Live PokéNav identity confirmed: {compared - mismatched}/{compared} HGSS Champion pixels agree.")
+
+# Verify source-colored panel pixels on the actual hardware framebuffer.
+# Exclude text, Pokemon/medal sprites and the shared PokéNav title/help bar.
+background = render_assets(ASSETS)
+excluded = ((8, 40, 64, 56), (0, 64, 88, 128),
+            (88, 32, 216, 96), (88, 96, 232, 128))
+for name in ("summary_page_01", "summary_page_05", "gift_only", "empty", "single", "summary_reentered"):
+    checked = bad = 0
+    for y in range(32, 128):
+        for x in range(240):
+            if any(a <= x < c and b <= y < d for a, b, c, d in excluded):
+                continue
+            checked += 1
+            a, b = images[name].getpixel((x, y)), background.getpixel((x, y))
+            bad += max(abs(a[c] - b[c]) for c in range(3)) > 8
+    if bad:
+        raise SystemExit(f"{name}: {bad}/{checked} HGSS background pixels differ")
+    print(f"{name}: {checked} exact-color HGSS panel pixels verified")
+
+empty = images["empty"].crop((80, 24, 240, 144))
+after_a = images["empty_after_a"].crop((80, 24, 240, 144))
+if ImageChops.difference(empty, after_a).getbbox():
+    raise SystemExit("A changed the empty ribbon grid/details; empty-selection guard failed")
+print("Empty ribbon A input leaves the grid and details unchanged")

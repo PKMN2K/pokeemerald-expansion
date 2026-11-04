@@ -22,6 +22,31 @@ def u32(data, offset):
     return int.from_bytes(data[offset:offset + 4], "little")
 
 
+def character_data(ncgr, max_tiles):
+    """Read RAHC's payload, excluding the optional trailing SOPC block.
+
+    The retail file has a 48-byte header followed by tiles, then 16 bytes
+    of SOPC metadata. Total size minus tile size is NOT the data offset.
+    """
+    if ncgr[:4] != b"RGCN":
+        raise ValueError("Expected original NCGR")
+    pos = u16(ncgr, 12)
+    while pos + 8 <= len(ncgr):
+        size = u32(ncgr, pos + 4)
+        if size < 8 or pos + size > len(ncgr):
+            raise ValueError("Damaged NCGR block")
+        if ncgr[pos:pos + 4] == b"RAHC":
+            if size < 32 or u32(ncgr, pos + 12) != 3:
+                raise ValueError("Expected tiled 4bpp NCGR")
+            length = u32(ncgr, pos + 24)
+            start = pos + 8 + u32(ncgr, pos + 28)
+            if length != max_tiles * 32 or start < pos + 32 or start + length > pos + size:
+                raise ValueError("Unexpected NCGR tile count or payload bounds")
+            return ncgr[start:start + length]
+        pos += size
+    raise ValueError("NCGR missing RAHC block")
+
+
 def narc_members(data):
     if data[:4] != b"NARC":
         raise ValueError("Expected original NARC archive")
@@ -77,9 +102,7 @@ def render(ncgr, nscr, palettes, max_tiles):
         raise ValueError("Expected original NSCR")
     if len(nscr) != 2084:
         raise ValueError("Expected 32x32 tilemap")
-    tiles = ncgr[64:]
-    if len(tiles) != max_tiles * 32:
-        raise ValueError("Unexpected NCGR tile count")
+    tiles = character_data(ncgr, max_tiles)
     out = Image.new("RGBA", (256, 256))
     pix = out.load()
     for index in range(1024):

@@ -2072,9 +2072,6 @@ const u16 gWallpaperPalettes_Ribbon[][16] =
 const u32 gWallpaperTiles_Ribbon[] = INCGFX_U32("graphics/pokemon_storage/wallpapers/ribbon/tiles.4bpp", ".smol");
 const u32 gWallpaperTilemap_Ribbon[] = INCGFX_U32("graphics/pokemon_storage/wallpapers/ribbon/tilemap.bin", ".smolTM");
 
-const u16 gPokenavRibbonsSummaryBg_Pal[] = INCGFX_U16("graphics/pokenav/ribbons/summary_bg.png", ".gbapal");
-const u32 gPokenavRibbonsSummaryBg_Gfx[] = INCGFX_U32("graphics/pokenav/ribbons/summary_bg.png", ".4bpp.smol");
-const u32 gPokenavRibbonsSummaryBg_Tilemap[] = INCGFX_U32("graphics/pokenav/ribbons/summary_bg.bin", ".smolTM");
 
 const u16 gMonIconPalettes[][16] =
 {
