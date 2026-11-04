@@ -1164,6 +1164,14 @@
   ],
   "gMapGroup_PolishedJohtoDemo": [
     "PolishedJohtoDemoOutdoor",
-    "PolishedJohtoDemoLab"
+    "PolishedJohtoDemoLab",
+    "PolishedNewBarkTown",
+    "PolishedElmsLab",
+    "PolishedPlayersHouse1F",
+    "PolishedPlayersHouse2F",
+    "PolishedPlayersNeighborsHouse",
+    "PolishedLyrasHouse1F",
+    "PolishedLyrasHouse2F",
+    "PolishedElmsHouse"
   ]
 }

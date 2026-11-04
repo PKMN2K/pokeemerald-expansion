@@ -97,20 +97,21 @@ def gba_tile(rows, transparent=False):
     return bytes(remap[row[x]] | remap[row[x + 1]] << 4 for row in rows for x in range(0, 8, 2))
 
 
-def lab_geometry(files):
-    png = files["gfx/tilesets/lab.png"]
+def lab_geometry(files, tileset="lab"):
+    """Convert a source indoor tileset with no foreground-priority tiles."""
+    png = files[f"gfx/tilesets/{tileset}.png"]
     width, height = struct.unpack_from(">II", png, 16)
     pixels = parse_grayscale2_png(png, expected_width=width, expected_height=height)
     graphics = bytearray(32)  # transparent overlay tile
     for y in range(0, height, 8):
         for x in range(0, width, 8):
             graphics.extend(gba_tile([row[x:x + 8] for row in pixels[y:y + 8]]))
-    tiles = files["data/tilesets/lab_metatiles.bin"]
-    attrs = files["data/tilesets/lab_attributes.bin"]
-    assert len(tiles) == len(attrs) == 53 * 16
+    tiles = files[f"data/tilesets/{tileset}_metatiles.bin"]
+    attrs = files[f"data/tilesets/{tileset}_attributes.bin"]
+    assert len(tiles) == len(attrs) and len(tiles) % 16 == 0
     assert not any(a & 0x80 for a in attrs), "Review new foreground priority before importing"
     result = bytearray()
-    for b in range(53):
+    for b in range(len(tiles) // 16):
         for q in range(4):
             words = []
             for n in range(4):
@@ -157,7 +158,7 @@ def apply_new_bark_roof(graphics, files):
     return bytes(result)
 
 
-def map_cells(blocks, width, symbols):
+def map_cells(blocks, width, symbols, behaviors=BEHAVIORS):
     assert len(blocks) % width == 0
     cells = []
     used = set()
@@ -165,14 +166,14 @@ def map_cells(blocks, width, symbols):
         for x in range(width * 2):
             metatile = blocks[y // 2 * width + x // 2] * 4 + y % 2 * 2 + x % 2
             symbol = symbols[metatile]
-            assert symbol in BEHAVIORS, f"Unreviewed collision {symbol} at ({x}, {y})"
+            assert symbol in behaviors, f"Unreviewed collision {symbol} at ({x}, {y})"
             used.add(metatile)
             # Elevation 3 uses native ground-level OBJ priority; BG1 carries only
             # the source foreground masks.
             # Native Surf needs an elevation mismatch: land 3, water 1.
             # Equal-elevation water suppresses the Surf prompt and is unsafe.
             elevation = 1 if symbol == "WATER" else 3
-            cells.append(metatile | (0xC00 if BEHAVIORS[symbol][1] else 0) | elevation << 12)
+            cells.append(metatile | (0xC00 if behaviors[symbol][1] else 0) | elevation << 12)
     return struct.pack(f"<{len(cells)}H", *cells), used
 
 

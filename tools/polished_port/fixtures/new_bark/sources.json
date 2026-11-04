@@ -1,0 +1,131 @@
+{
+  "repository": "Rangi42/polishedcrystal",
+  "commit": "3fa43192379df5c3e7b09a08e4d5d79af4f02f42",
+  "files": [
+    {
+      "path": "constants/map_constants.asm",
+      "fixture": "constants__map_constants.asm.b64",
+      "git_blob_sha1": "9192b1fc6d0329f32af329c1117daa2c52530a01"
+    },
+    {
+      "path": "data/maps/maps.asm",
+      "fixture": "data__maps__maps.asm.b64",
+      "git_blob_sha1": "8e9e46b753ff22de7300f1d08b80525cffb4bf97"
+    },
+    {
+      "path": "data/maps/attributes.asm",
+      "fixture": "data__maps__attributes.asm.b64",
+      "git_blob_sha1": "237acf833a908c1e12e923c2e1a0b875d2551846"
+    },
+    {
+      "path": "data/maps/blocks.asm",
+      "fixture": "data__maps__blocks.asm.b64",
+      "git_blob_sha1": "d99449ef1fb13a46babf9aebef2784f319c46fe6"
+    },
+    {
+      "path": "data/collision/collision_permissions.asm",
+      "fixture": "data__collision__collision_permissions.asm.b64",
+      "git_blob_sha1": "f50ede0f98f2e5ba4b245e3df123b2e3deb143f3"
+    },
+    {
+      "path": "gfx/tilesets/johto_house.png",
+      "fixture": "gfx__tilesets__johto_house.png.b64",
+      "git_blob_sha1": "eb28caa0f15fb80404588b552bbd7dd84b0b40b3"
+    },
+    {
+      "path": "data/tilesets/johto_house_metatiles.bin",
+      "fixture": "data__tilesets__johto_house_metatiles.bin.b64",
+      "git_blob_sha1": "3005e29c185a94334d41798caca8ce9cdd8bc0af"
+    },
+    {
+      "path": "data/tilesets/johto_house_attributes.bin",
+      "fixture": "data__tilesets__johto_house_attributes.bin.b64",
+      "git_blob_sha1": "7db12a7ddeb76dc42de71fb95396dad8acd0397d"
+    },
+    {
+      "path": "data/tilesets/johto_house_collision.asm",
+      "fixture": "data__tilesets__johto_house_collision.asm.b64",
+      "git_blob_sha1": "ee18213c1d555b52c9f9f64701381379c9426cf1"
+    },
+    {
+      "path": "maps/NewBarkTown.asm",
+      "fixture": "maps__NewBarkTown.asm.b64",
+      "git_blob_sha1": "76a556311a4aadcd016fbd38418ee447c5147caf"
+    },
+    {
+      "path": "maps/ElmsLab.asm",
+      "fixture": "maps__ElmsLab.asm.b64",
+      "git_blob_sha1": "9f82a1726df25459f53071867eaf6ee7dbe3a414"
+    },
+    {
+      "path": "maps/PlayersHouse1F.asm",
+      "fixture": "maps__PlayersHouse1F.asm.b64",
+      "git_blob_sha1": "f15a80a0cfd96417da756d8117d9e6f65838230a"
+    },
+    {
+      "path": "maps/PlayersHouse2F.asm",
+      "fixture": "maps__PlayersHouse2F.asm.b64",
+      "git_blob_sha1": "be4bee16a81a7528b1c5ccf7cf9c6fe9686a5b5f"
+    },
+    {
+      "path": "maps/PlayersNeighborsHouse.asm",
+      "fixture": "maps__PlayersNeighborsHouse.asm.b64",
+      "git_blob_sha1": "0bcb397a5a7088490552453f7ef09a22fb0e1299"
+    },
+    {
+      "path": "maps/LyrasHouse1F.asm",
+      "fixture": "maps__LyrasHouse1F.asm.b64",
+      "git_blob_sha1": "c1581eed8da8460bc10e330e2c6e2794705ca6ac"
+    },
+    {
+      "path": "maps/LyrasHouse2F.asm",
+      "fixture": "maps__LyrasHouse2F.asm.b64",
+      "git_blob_sha1": "a255d3271024f344c9ed0c583d395d1269dbc97e"
+    },
+    {
+      "path": "maps/ElmsHouse.asm",
+      "fixture": "maps__ElmsHouse.asm.b64",
+      "git_blob_sha1": "bf6a304be53c8b219cb2ee3b854d1dbbab01e9c5"
+    },
+    {
+      "path": "maps/NewBarkTown.ablk",
+      "fixture": "maps__NewBarkTown.ablk.b64",
+      "git_blob_sha1": "80b5b7dbbb73ec4a8dbaca4a7bfbd7c0761197ee"
+    },
+    {
+      "path": "maps/ElmsLab.ablk",
+      "fixture": "maps__ElmsLab.ablk.b64",
+      "git_blob_sha1": "c27e60bc38a3dac294bd6682140bdfcfca75522b"
+    },
+    {
+      "path": "maps/PlayersHouse1F.ablk",
+      "fixture": "maps__PlayersHouse1F.ablk.b64",
+      "git_blob_sha1": "375a53f13c242eddfe318d08aada4aa7d94be66c"
+    },
+    {
+      "path": "maps/PlayersHouse2F.ablk",
+      "fixture": "maps__PlayersHouse2F.ablk.b64",
+      "git_blob_sha1": "a60d5b209acb38c431e05e2f6d1016f8b787e88d"
+    },
+    {
+      "path": "maps/JohtoHouse4.ablk",
+      "fixture": "maps__JohtoHouse4.ablk.b64",
+      "git_blob_sha1": "359a29a07e77526c55c7146ea48e4e564b15460e"
+    },
+    {
+      "path": "maps/LyrasHouse1F.ablk",
+      "fixture": "maps__LyrasHouse1F.ablk.b64",
+      "git_blob_sha1": "666c6ff2fea91cb5a4ae31c3915e4a34ab24335c"
+    },
+    {
+      "path": "maps/LyrasHouse2F.ablk",
+      "fixture": "maps__LyrasHouse2F.ablk.b64",
+      "git_blob_sha1": "0820f2182a4d544ee76cbb9667b9f624f9f8b639"
+    },
+    {
+      "path": "maps/ElmsHouse.ablk",
+      "fixture": "maps__ElmsHouse.ablk.b64",
+      "git_blob_sha1": "721ef7b5266a46e4b10a434ddf0f34a595e0e15d"
+    }
+  ]
+}

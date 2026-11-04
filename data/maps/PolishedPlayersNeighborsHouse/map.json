@@ -1,0 +1,36 @@
+{
+  "id": "MAP_POLISHED_PLAYERS_NEIGHBORS_HOUSE",
+  "name": "PolishedPlayersNeighborsHouse",
+  "layout": "LAYOUT_POLISHED_PLAYERS_NEIGHBORS_HOUSE",
+  "music": "MUS_DUMMY",
+  "region": "REGION_JOHTO",
+  "region_map_section": "MAPSEC_NONE",
+  "requires_flash": false,
+  "weather": "WEATHER_NONE",
+  "map_type": "MAP_TYPE_INDOOR",
+  "allow_cycling": false,
+  "allow_escaping": false,
+  "allow_running": true,
+  "show_map_name": false,
+  "battle_scene": "MAP_BATTLE_SCENE_NORMAL",
+  "connections": null,
+  "object_events": [],
+  "warp_events": [
+    {
+      "x": 2,
+      "y": 7,
+      "elevation": 0,
+      "dest_map": "MAP_POLISHED_NEW_BARK_TOWN",
+      "dest_warp_id": "2"
+    },
+    {
+      "x": 3,
+      "y": 7,
+      "elevation": 0,
+      "dest_map": "MAP_POLISHED_NEW_BARK_TOWN",
+      "dest_warp_id": "2"
+    }
+  ],
+  "coord_events": [],
+  "bg_events": []
+}

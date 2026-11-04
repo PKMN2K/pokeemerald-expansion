@@ -46,14 +46,18 @@ def main():
     fieldmap = FIELDMAP_FILE.read_text(encoding="utf-8")
     overworld = OVERWORLD_FILE.read_text(encoding="utf-8")
 
-    # Only the live visual demo may opt in. Hoenn, Prism and the fixed-palette
-    # indoor lab must never inherit an outdoor source map-group palette.
+    # Only the two registered outdoor layouts may opt in. Hoenn, Prism and
+    # fixed-palette interiors must never inherit an outdoor source palette.
     assert re.search(
         r"static const struct PolishedJohtoMapPaletteRegistration "
         r"sJohtoMapRegistrations\[\]\s*=\s*\{\s*"
         r"\{LAYOUT_POLISHED_JOHTO_DEMO_OUTDOOR,\s*"
         r"&gTileset_PolishedJohtoDemoOutdoorPrimary,\s*"
         r"&gTileset_PolishedJohtoDemoOutdoorSecondary,\s*"
+        r"24, JOHTO_PALETTE_STANDARD, 0\},\s*"
+        r"\{LAYOUT_POLISHED_NEW_BARK_TOWN,\s*"
+        r"&gTileset_PolishedNewBarkOutdoorPrimary,\s*"
+        r"&gTileset_PolishedNewBarkOutdoorSecondary,\s*"
         r"24, JOHTO_PALETTE_STANDARD, 0\},\s*\};",
         runtime,
     ), "Unexpected or incomplete Johto palette registration"
@@ -88,7 +92,7 @@ def main():
     print("PASS: 582 C RGB555 words match pinned source palette and roof variants")
     print("PASS: source nighttime/evening map explicitly to Emerald enum")
     print("PASS: field palette-load, RTC refresh, and double-tint guards wired")
-    print("PASS: only the isolated outdoor demo is registered; Hoenn/Prism are excluded")
+    print("PASS: only the demo garden and New Bark Town are registered; Hoenn/Prism are excluded")
 
 
 if __name__ == "__main__":

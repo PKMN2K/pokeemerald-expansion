@@ -1,0 +1,76 @@
+{
+  "id": "MAP_POLISHED_LYRAS_HOUSE_1F",
+  "name": "PolishedLyrasHouse1F",
+  "layout": "LAYOUT_POLISHED_LYRAS_HOUSE_1F",
+  "music": "MUS_DUMMY",
+  "region": "REGION_JOHTO",
+  "region_map_section": "MAPSEC_NONE",
+  "requires_flash": false,
+  "weather": "WEATHER_NONE",
+  "map_type": "MAP_TYPE_INDOOR",
+  "allow_cycling": false,
+  "allow_escaping": false,
+  "allow_running": true,
+  "show_map_name": false,
+  "battle_scene": "MAP_BATTLE_SCENE_NORMAL",
+  "connections": null,
+  "object_events": [],
+  "warp_events": [
+    {
+      "x": 2,
+      "y": 7,
+      "elevation": 0,
+      "dest_map": "MAP_POLISHED_NEW_BARK_TOWN",
+      "dest_warp_id": "3"
+    },
+    {
+      "x": 3,
+      "y": 7,
+      "elevation": 0,
+      "dest_map": "MAP_POLISHED_NEW_BARK_TOWN",
+      "dest_warp_id": "3"
+    },
+    {
+      "x": 0,
+      "y": 0,
+      "elevation": 0,
+      "dest_map": "MAP_POLISHED_LYRAS_HOUSE_2F",
+      "dest_warp_id": "0"
+    }
+  ],
+  "coord_events": [],
+  "bg_events": [
+    {
+      "type": "sign",
+      "x": 10,
+      "y": 1,
+      "elevation": 0,
+      "player_facing_dir": "BG_EVENT_PLAYER_FACING_NORTH",
+      "script": "PolishedLyrasHouse1F_LyrasFridgeScript"
+    },
+    {
+      "type": "sign",
+      "x": 8,
+      "y": 1,
+      "elevation": 0,
+      "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
+      "script": "PolishedLyrasHouse1F_LyrasSinkText"
+    },
+    {
+      "type": "sign",
+      "x": 9,
+      "y": 1,
+      "elevation": 0,
+      "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
+      "script": "PolishedLyrasHouse1F_LyrasStoveText"
+    },
+    {
+      "type": "sign",
+      "x": 5,
+      "y": 1,
+      "elevation": 0,
+      "player_facing_dir": "BG_EVENT_PLAYER_FACING_NORTH",
+      "script": "PolishedLyrasHouse1F_LyrasTVScript"
+    }
+  ]
+}

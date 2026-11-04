@@ -12,9 +12,9 @@
 
 static const u16 sJohtoRedSpritePalettes[] = INCBIN_U16("graphics/object_events/polished_pokefan/time_palettes.bin");
 
-// Only the isolated outdoor demonstration opts into time/roof palettes.
-// Its original block art uses New Bark's source roof group (24). The indoor
-// lab has a fixed source PALETTE_DAY indoor palette and no outdoor override.
+// The outdoor demonstration and original New Bark Town opt into time/roof
+// palettes with source roof group 24. Their interiors use PALETTE_DAY and
+// have no outdoor override.
 // Source group 24 is never interpreted as an Emerald map group.
 struct PolishedJohtoMapPaletteRegistration
 {
@@ -31,6 +31,10 @@ static const struct PolishedJohtoMapPaletteRegistration sJohtoMapRegistrations[]
     {LAYOUT_POLISHED_JOHTO_DEMO_OUTDOOR,
      &gTileset_PolishedJohtoDemoOutdoorPrimary,
      &gTileset_PolishedJohtoDemoOutdoorSecondary,
+     24, JOHTO_PALETTE_STANDARD, 0},
+    {LAYOUT_POLISHED_NEW_BARK_TOWN,
+     &gTileset_PolishedNewBarkOutdoorPrimary,
+     &gTileset_PolishedNewBarkOutdoorSecondary,
      24, JOHTO_PALETTE_STANDARD, 0},
 };
 

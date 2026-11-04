@@ -1803,7 +1803,7 @@ void UpdateAltBgPalettes(u16 palettes)
         return;
     // Authentic Johto RGB555 palettes already encode their clock period;
     // never blend them a second time against Expansion alternate palettes.
-    // The isolated outdoor demonstration is the only active registration.
+    // Only explicitly registered Johto outdoor layouts use this path.
     if (PolishedJohtoIsRegisteredMapLayout(gMapHeader.mapLayout))
         return;
     palettes &= ~((1 << GetNumPalsInPrimary(gMapHeader.mapLayout)) - 1) | primary->swapPalettes;

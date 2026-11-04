@@ -2,6 +2,7 @@
 #include "tilesets.h"
 #include "tileset_anims.h"
 #include "data/tilesets/polished_johto_demo.h"
+#include "data/tilesets/polished_new_bark.h"
 
 #include "data/tilesets/graphics.h"
 #include "data/tilesets/metatiles.h"

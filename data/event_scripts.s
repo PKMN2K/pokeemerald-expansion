@@ -131,6 +131,14 @@ gStdScripts::
 gStdScripts_End::
 	.include "data/maps/PolishedJohtoDemoOutdoor/scripts.inc"
 	.include "data/maps/PolishedJohtoDemoLab/scripts.inc"
+	.include "data/maps/PolishedNewBarkTown/scripts.inc"
+	.include "data/maps/PolishedElmsLab/scripts.inc"
+	.include "data/maps/PolishedPlayersHouse1F/scripts.inc"
+	.include "data/maps/PolishedPlayersHouse2F/scripts.inc"
+	.include "data/maps/PolishedPlayersNeighborsHouse/scripts.inc"
+	.include "data/maps/PolishedLyrasHouse1F/scripts.inc"
+	.include "data/maps/PolishedLyrasHouse2F/scripts.inc"
+	.include "data/maps/PolishedElmsHouse/scripts.inc"
 
 
 	.include "data/maps/PetalburgCity/scripts.inc"

@@ -101,6 +101,37 @@ The emulator probe uses libmgba; it does not patch game RAM or inject scripts.
 
 ## Whole-port completion status
 
+### New Bark Town geography
+
+The opt-in demo now also reaches the original **20-by-18 New Bark Town** and
+all seven connected interiors: Elm's Lab, both floors of the player's home,
+the neighbors' house, both floors of Lyra's home, and Elm's house. Speak to the
+second guide on the east side of the demonstration garden to visit; the town
+teacher offers a return trip. These two travel prompts are demo navigation.
+
+The maps use the v3.2.3 block layouts, original door/stair coordinates and
+source collision permissions. The neighbors' house correctly uses the shared
+`JohtoHouse4.ablk` source layout. All 19 warp events retain their source
+destinations, including wide door exits and Elm's sideways entrance. House
+tiles, palettes and 21 static sign/furnishing interactions are imported from
+the same pin. Elm's healing machine invokes Expansion's native party healing.
+The town opts into New Bark's four outdoor/roof palettes; all seven interiors
+use the source's fixed daytime colors. Existing map/layout IDs stay unchanged.
+
+This completes the town's **geography and traversal phase**, not its story or
+population. Conditional NPCs, starter selection, the rival/Lyra scenes, Mom's
+events, hidden items, room decorations and Route 29/27 connections are still
+pending. The unconnected town boundaries remain closed by source border
+collision. No story flags or Headbutt source-map assignments are invented.
+
+`build_new_bark.py --check` reproduces the maps, tilesets, static scripts and
+source manifest. `test_new_bark_emulator.py` follows all 19 directed warps with
+real input from a fresh demo game, checks the destination and landing cell,
+compares live day/night palette RAM, exercises reading/healing interactions,
+and returns to the garden. CI includes both this check and the original demo
+movement/fishing checks. Fixtures and outputs are recorded in
+`tools/polished_port/manifests/new_bark.json`.
+
 The playable visual slice and dormant Headbutt encounter selection are complete
 parts of the port. **The whole Polished Crystal migration is not complete.**
 Remaining areas include the broader tileset/map and NPC conversion, live unique

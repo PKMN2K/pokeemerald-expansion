@@ -5,6 +5,12 @@ extern const struct Tileset gTileset_PolishedJohtoDemoOutdoorPrimary;
 extern const struct Tileset gTileset_PolishedJohtoDemoOutdoorSecondary;
 extern const struct Tileset gTileset_PolishedJohtoDemoLabPrimary;
 extern const struct Tileset gTileset_PolishedJohtoDemoLabSecondary;
+extern const struct Tileset gTileset_PolishedNewBarkOutdoorPrimary;
+extern const struct Tileset gTileset_PolishedNewBarkOutdoorSecondary;
+extern const struct Tileset gTileset_PolishedNewBarkHousePrimary;
+extern const struct Tileset gTileset_PolishedNewBarkHouseSecondary;
+extern const struct Tileset gTileset_PolishedNewBarkLabPrimary;
+extern const struct Tileset gTileset_PolishedNewBarkLabSecondary;
 
 extern const u32 gTilesetTiles_General[];
 extern const u16 gTilesetPalettes_General[][16];

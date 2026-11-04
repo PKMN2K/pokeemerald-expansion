@@ -9345,6 +9345,94 @@
       "border_filepath": "data/layouts/PolishedJohtoDemoLab/border.bin",
       "blockdata_filepath": "data/layouts/PolishedJohtoDemoLab/map.bin",
       "layout_version": "emerald"
+    },
+    {
+      "id": "LAYOUT_POLISHED_NEW_BARK_TOWN",
+      "name": "PolishedNewBarkTown_Layout",
+      "width": 20,
+      "height": 18,
+      "primary_tileset": "gTileset_PolishedNewBarkOutdoorPrimary",
+      "secondary_tileset": "gTileset_PolishedNewBarkOutdoorSecondary",
+      "border_filepath": "data/layouts/PolishedNewBarkTown/border.bin",
+      "blockdata_filepath": "data/layouts/PolishedNewBarkTown/map.bin",
+      "layout_version": "emerald"
+    },
+    {
+      "id": "LAYOUT_POLISHED_ELMS_LAB",
+      "name": "PolishedElmsLab_Layout",
+      "width": 10,
+      "height": 12,
+      "primary_tileset": "gTileset_PolishedNewBarkLabPrimary",
+      "secondary_tileset": "gTileset_PolishedNewBarkLabSecondary",
+      "border_filepath": "data/layouts/PolishedElmsLab/border.bin",
+      "blockdata_filepath": "data/layouts/PolishedElmsLab/map.bin",
+      "layout_version": "emerald"
+    },
+    {
+      "id": "LAYOUT_POLISHED_PLAYERS_HOUSE_1F",
+      "name": "PolishedPlayersHouse1F_Layout",
+      "width": 12,
+      "height": 8,
+      "primary_tileset": "gTileset_PolishedNewBarkHousePrimary",
+      "secondary_tileset": "gTileset_PolishedNewBarkHouseSecondary",
+      "border_filepath": "data/layouts/PolishedPlayersHouse1F/border.bin",
+      "blockdata_filepath": "data/layouts/PolishedPlayersHouse1F/map.bin",
+      "layout_version": "emerald"
+    },
+    {
+      "id": "LAYOUT_POLISHED_PLAYERS_HOUSE_2F",
+      "name": "PolishedPlayersHouse2F_Layout",
+      "width": 8,
+      "height": 6,
+      "primary_tileset": "gTileset_PolishedNewBarkHousePrimary",
+      "secondary_tileset": "gTileset_PolishedNewBarkHouseSecondary",
+      "border_filepath": "data/layouts/PolishedPlayersHouse2F/border.bin",
+      "blockdata_filepath": "data/layouts/PolishedPlayersHouse2F/map.bin",
+      "layout_version": "emerald"
+    },
+    {
+      "id": "LAYOUT_POLISHED_PLAYERS_NEIGHBORS_HOUSE",
+      "name": "PolishedPlayersNeighborsHouse_Layout",
+      "width": 8,
+      "height": 8,
+      "primary_tileset": "gTileset_PolishedNewBarkHousePrimary",
+      "secondary_tileset": "gTileset_PolishedNewBarkHouseSecondary",
+      "border_filepath": "data/layouts/PolishedPlayersNeighborsHouse/border.bin",
+      "blockdata_filepath": "data/layouts/PolishedPlayersNeighborsHouse/map.bin",
+      "layout_version": "emerald"
+    },
+    {
+      "id": "LAYOUT_POLISHED_LYRAS_HOUSE_1F",
+      "name": "PolishedLyrasHouse1F_Layout",
+      "width": 12,
+      "height": 8,
+      "primary_tileset": "gTileset_PolishedNewBarkHousePrimary",
+      "secondary_tileset": "gTileset_PolishedNewBarkHouseSecondary",
+      "border_filepath": "data/layouts/PolishedLyrasHouse1F/border.bin",
+      "blockdata_filepath": "data/layouts/PolishedLyrasHouse1F/map.bin",
+      "layout_version": "emerald"
+    },
+    {
+      "id": "LAYOUT_POLISHED_LYRAS_HOUSE_2F",
+      "name": "PolishedLyrasHouse2F_Layout",
+      "width": 8,
+      "height": 6,
+      "primary_tileset": "gTileset_PolishedNewBarkHousePrimary",
+      "secondary_tileset": "gTileset_PolishedNewBarkHouseSecondary",
+      "border_filepath": "data/layouts/PolishedLyrasHouse2F/border.bin",
+      "blockdata_filepath": "data/layouts/PolishedLyrasHouse2F/map.bin",
+      "layout_version": "emerald"
+    },
+    {
+      "id": "LAYOUT_POLISHED_ELMS_HOUSE",
+      "name": "PolishedElmsHouse_Layout",
+      "width": 8,
+      "height": 8,
+      "primary_tileset": "gTileset_PolishedNewBarkHousePrimary",
+      "secondary_tileset": "gTileset_PolishedNewBarkHouseSecondary",
+      "border_filepath": "data/layouts/PolishedElmsHouse/border.bin",
+      "blockdata_filepath": "data/layouts/PolishedElmsHouse/map.bin",
+      "layout_version": "emerald"
     }
   ]
 }
