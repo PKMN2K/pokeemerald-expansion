@@ -562,9 +562,8 @@ static void AppendTilesetAnimToBuffer(const u16 *src, u16 *dest, u16 size)
     }
 }
 
-// Staging-only Johto transfer bridge. There are deliberately no callers or
-// Johto tileset registrations yet. This uses Emerald's established deferred
-// DMA queue instead of writing VRAM from the animation state machine.
+// Opt-in Johto transfer bridge. Uses Emerald's established deferred DMA queue
+// instead of writing VRAM from the animation state machine.
 // Source-derived destinations: eight animated tiles plus scrolling tile $35.
 void QueuePolishedJohtoAnimationTile(const u16 *frame, u16 tileId)
 {
@@ -641,9 +640,7 @@ static void _InitSecondaryTilesetAnimation(void)
         gMapHeader.mapLayout->secondaryTileset->callback();
 }
 
-// Opt-in tileset initializer for a future authentic Johto outdoor layout.
-// Deliberately not referenced by any existing tileset or map. The tileset
-// callback must be assigned explicitly after graphics/layout validation.
+// Opt-in initializer used only by the isolated Johto outdoor demonstration.
 // One Emerald callback tick corresponds to one original dispatch command.
 void InitTilesetAnim_PolishedJohtoOutdoorPrimary(void)
 {

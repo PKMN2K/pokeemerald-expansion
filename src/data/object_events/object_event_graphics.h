@@ -640,3 +640,5 @@ const u16 gObjectEventPic_PidgeyOld[] = INCGFX_U16("graphics/object_events/pics/
 const u16 gObjectEventPic_ClefairyOld[] = INCGFX_U16("graphics/object_events/pics/pokemon_old/clefairy.png", ".4bpp", "-mwidth 2 -mheight 2");
 
 #endif // IS_FRLG
+const u32 gObjectEventPic_PolishedPokefan[] = INCGFX_U32("graphics/object_events/polished_pokefan/walking.png", ".4bpp", "-mwidth 2 -mheight 4");
+const u16 gObjectEventPal_PolishedPokefan[] = INCBIN_U16("graphics/object_events/polished_pokefan/palette.bin");

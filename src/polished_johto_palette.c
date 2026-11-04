@@ -2,15 +2,16 @@
 #include "polished_johto_palette.h"
 #include "palette.h"
 #include "rtc.h"
+#include "tilesets.h"
+#include "constants/layouts.h"
 
 // Source-generated, pinned RGB555 data; no custom/redrawn colors.
 #include "data/tilesets/polished_johto_palette_tables.h"
 
-// Explicit layout registrations are intentionally EMPTY at this stage.
-// A future imported Johto layout must have its exact Emerald layout ID,
-// exact two tileset pointers, source map-group index and verified palette
-// family entered here. Never reuse the 1-based source group as an Emerald
-// map group, and never auto-enable on a generic Emerald/Hoenn map.
+// Only the isolated outdoor demonstration opts into time/roof palettes.
+// Its original block art uses New Bark's source roof group (24). The indoor
+// lab has a fixed source PALETTE_DAY indoor palette and no outdoor override.
+// Source group 24 is never interpreted as an Emerald map group.
 struct PolishedJohtoMapPaletteRegistration
 {
     u16 emeraldLayoutId;
@@ -23,8 +24,10 @@ struct PolishedJohtoMapPaletteRegistration
 
 static const struct PolishedJohtoMapPaletteRegistration sJohtoMapRegistrations[] =
 {
-    // Sentinel. No live layouts are registered; Prism mining is unaffected.
-    {0},
+    {LAYOUT_POLISHED_JOHTO_DEMO_OUTDOOR,
+     &gTileset_PolishedJohtoDemoOutdoorPrimary,
+     &gTileset_PolishedJohtoDemoOutdoorSecondary,
+     24, JOHTO_PALETTE_STANDARD, 0},
 };
 
 static const struct PolishedJohtoMapPaletteRegistration *FindJohtoMapRegistration(const struct MapLayout *layout)

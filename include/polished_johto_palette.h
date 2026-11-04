@@ -26,9 +26,8 @@ bool8 PolishedJohtoComposePalette(enum PolishedJohtoPaletteFamily family,
                                 u8 sourceOvercastIndex,
                                 u16 output[JOHTO_GBA_PALETTE_COUNT][JOHTO_GBA_PALETTE_COLORS]);
 
-// Explicit opt-in only: no Emerald map layouts have been registered yet.
-// The source-mapping table remains empty until the authentic tileset,
-// map layouts, transparency and priority/layer behavior are verified.
+// Explicit opt-in only: the isolated Johto outdoor demo is registered.
+// Both tileset identities and the live layout ID must match its registration.
 bool8 PolishedJohtoIsRegisteredMapLayout(const struct MapLayout *mapLayout);
 bool8 PolishedJohtoTryApplyRegisteredMapPalette(const struct MapLayout *mapLayout,
                                              bool8 skipFaded);

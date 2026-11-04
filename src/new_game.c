@@ -135,10 +135,14 @@ static void ClearFrontierRecord(void)
 
 static void WarpToTruck(void)
 {
+#if POLISHED_JOHTO_DEMO
+    SetWarpDestination(MAP_GROUP(MAP_POLISHED_JOHTO_DEMO_OUTDOOR), MAP_NUM(MAP_POLISHED_JOHTO_DEMO_OUTDOOR), WARP_ID_NONE, 6, 8);
+#else
     if (IS_FRLG)
         SetWarpDestination(MAP_GROUP(MAP_PALLET_TOWN_PLAYERS_HOUSE_2F), MAP_NUM(MAP_PALLET_TOWN_PLAYERS_HOUSE_2F), WARP_ID_NONE, 6, 6);
     else
         SetWarpDestination(MAP_GROUP(MAP_INSIDE_OF_TRUCK), MAP_NUM(MAP_INSIDE_OF_TRUCK), WARP_ID_NONE, -1, -1);
+#endif
     WarpIntoMap();
 }
 
@@ -234,6 +238,17 @@ void NewGameInitData(void)
     ResetItemFlags();
     ResetDexNav();
     ClearFollowerNPCData();
+#if POLISHED_JOHTO_DEMO
+    // Equipment for exercising the imported field poses in the isolated garden.
+    CreateRandomMon(&gParties[B_TRAINER_PLAYER][0], SPECIES_TOTODILE, 10);
+    SetMonMoveSlot(&gParties[B_TRAINER_PLAYER][0], MOVE_SURF, 0);
+    gPartiesCount[B_TRAINER_PLAYER] = 1;
+    FlagSet(FLAG_SYS_POKEMON_GET);
+    FlagSet(FLAG_SYS_B_DASH);
+    FlagSet(FLAG_BADGE05_GET);
+    AddBagItem(ITEM_OLD_ROD, 1);
+    AddBagItem(ITEM_MACH_BIKE, 1);
+#endif
 }
 
 static void ResetMiniGamesRecords(void)

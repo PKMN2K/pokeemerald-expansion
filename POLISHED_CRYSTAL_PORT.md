@@ -54,6 +54,54 @@ Boot the clean expansion engine into a test map that uses:
 
 No broader game-content port begins until this vertical slice is working.
 
+## Playable visual slice
+
+The first milestone now has an opt-in ROM build:
+
+```sh
+make -j4 POLISHED_JOHTO_DEMO=1
+```
+
+Open `pokeemerald-johto-demo.gba` and select **NEW GAME**. Chris starts in a
+24-by-20 Johto garden with Totodile, Surf, an Old Rod and a Mach Bike. The sign
+and NPC have working dialogue; the laboratory door leads into the original
+10-by-12 Elm's Lab block layout and returns outside. The pond's southern opening
+supports native Surf entry and exit. The lab NPC heals the party.
+
+The garden is a demonstration arrangement of unchanged source blocks, **not a
+replacement for New Bark Town or a claim that its story has been ported**. Its
+roof uses New Bark's nine source roof tiles and palette group 24. The interior
+uses the source's fixed daytime indoor palette. Existing Hoenn startup and saves
+remain available in ordinary builds; the two maps occupy a newly appended group.
+FireRed and LeafGreen retain their own region filtering and do not offer this
+Emerald demo mode. Prism mining assets and rewards are unchanged.
+
+The live integration includes:
+
+- Source-authentic outdoor graphics, roof replacement, laboratory tiles and NPC.
+- All four outdoor RGB555 periods, explicit roof routing, and animated water.
+- Source-backed wall, grass and water behavior; land elevation 3 and water 1.
+- Separate map-grid collision and tile behavior, with unsupported unused tile
+  attributes left invalid. This is not permission to register every source block.
+- Fixed horizontal-frame packing for Chris walking/running and the imported NPC.
+
+`build_johto_demo.py --check` reproduces the binary assets from pinned fixtures.
+GBA regression tests check real map dispatch, reciprocal warps, palette opt-in
+guards, and complete visible sprite frames. `test_johto_demo_emulator.py` boots a
+fresh ROM and uses real button input to verify movement, interaction, doors and
+Surf. It checks live palette RAM against the pinned source and animated water
+in VRAM. CI builds the demo and uploads its ROM, screenshots and validation JSON.
+The emulator probe uses libmgba; it does not patch game RAM or inject scripts.
+
+## Whole-port completion status
+
+The playable visual slice and dormant Headbutt encounter selection are complete
+parts of the port. **The whole Polished Crystal migration is not complete.**
+Remaining areas include the broader tileset/map and NPC conversion, live unique
+field interactions (including Headbutt), Crystal UI and battle presentation, and
+the selected game content and scripts. No complete Johto/Kanto campaign,
+Pokégear, Wing Case, or source story progression is claimed by this demo.
+
 ## Dormant Headbutt encounter phase
 
 The encounter-data and selection phase now has one compiled path from an
@@ -89,11 +137,11 @@ python3 tools/polished_port/scripts/test_johto_headbutt_encounters.py
 
 The API deliberately accepts **source** coordinates and map IDs. Live Emerald
 maps must receive an explicit mapping when they are registered; matching map
-numbers or names is not a valid bridge. No Johto maps, field-move menu entries,
-tree animation, Wing Case inventory, rewards or battle scripts are activated by
-this phase. Those belong to the subsequent field-interaction/registration phase,
-which still requires in-emulator validation. Prism mining assets and rewards are
-outside this work.
+numbers or names is not a valid bridge. The demonstration maps above have no
+Headbutt encounter mapping: a custom garden must not silently inherit a source
+route's encounter set. Headbutt field-move entries, tree animation, Wing Case
+inventory, rewards and battle scripts remain deferred to their own live
+interaction phase. Prism mining assets and rewards are outside this work.
 
 Additional fixtures retain the same v3.2.3 pin: `data/wild/badge_base_levels.asm`,
 the `SetBadgeBaseLevel`/`AdjustLevelForBadges` excerpt from

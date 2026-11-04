@@ -1803,7 +1803,7 @@ void UpdateAltBgPalettes(u16 palettes)
         return;
     // Authentic Johto RGB555 palettes already encode their clock period;
     // never blend them a second time against Expansion alternate palettes.
-    // There are NO active Johto layout registrations yet.
+    // The isolated outdoor demonstration is the only active registration.
     if (PolishedJohtoIsRegisteredMapLayout(gMapHeader.mapLayout))
         return;
     palettes &= ~((1 << GetNumPalsInPrimary(gMapHeader.mapLayout)) - 1) | primary->swapPalettes;
@@ -1888,7 +1888,7 @@ static void OverworldBasic(void)
             LoadSecondaryTilesetPalette(gMapHeader.mapLayout, FALSE);
 
         // Exact original Johto RGB555 variants update on RTC period changes.
-        // No-op until a new imported Johto map is explicitly registered.
+        // The explicit registration check excludes Hoenn and the fixed-palette lab.
         if (previousTimeOfDay != gTimeOfDay)
             PolishedJohtoTryApplyRegisteredMapPalette(gMapHeader.mapLayout, FALSE);
 
@@ -1964,7 +1964,7 @@ void CB2_NewGame(void)
     PlayTimeCounter_Start();
     ScriptContext_Init();
     UnlockPlayerFieldControls();
-    if (IS_FRLG)
+    if (IS_FRLG || POLISHED_JOHTO_DEMO)
         gFieldCallback = FieldCB_WarpExitFadeFromBlack;
     else
         gFieldCallback = ExecuteTruckSequence;

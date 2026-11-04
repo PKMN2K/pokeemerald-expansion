@@ -1,0 +1,56 @@
+{
+  "repository": "Rangi42/polishedcrystal",
+  "commit": "3fa43192379df5c3e7b09a08e4d5d79af4f02f42",
+  "files": [
+    {
+      "path": "gfx/tilesets/lab.png",
+      "fixture": "lab.png.b64",
+      "git_blob_sha1": "62568cea5d35683f4e4831a682e869554860e342"
+    },
+    {
+      "path": "data/tilesets/lab_metatiles.bin",
+      "fixture": "lab_metatiles.bin.b64",
+      "git_blob_sha1": "aebfb95cdfa8cf0c670f86abee324ab08962ac59"
+    },
+    {
+      "path": "data/tilesets/lab_attributes.bin",
+      "fixture": "lab_attributes.bin.b64",
+      "git_blob_sha1": "5492f007cd69d2a17627eaac96cf876028cc7cd5"
+    },
+    {
+      "path": "data/tilesets/lab_collision.asm",
+      "fixture": "lab_collision.asm.b64",
+      "git_blob_sha1": "ef47559928b3e33b6326e426926046b5451619d9"
+    },
+    {
+      "path": "maps/ElmsLab.ablk",
+      "fixture": "ElmsLab.ablk.b64",
+      "git_blob_sha1": "c27e60bc38a3dac294bd6682140bdfcfca75522b"
+    },
+    {
+      "path": "gfx/sprites/pokefan_f.png",
+      "fixture": "pokefan_f.png.b64",
+      "git_blob_sha1": "2107159e99739bef00783c9d6dafae19bd309580"
+    },
+    {
+      "path": "gfx/overworld/npc_sprites.pal",
+      "fixture": "npc_sprites.pal.b64",
+      "git_blob_sha1": "d9756693af887faba55c6e8c6f301620e97e15de"
+    },
+    {
+      "path": "gfx/tilesets/roofs/new_bark.png",
+      "fixture": "new_bark.png.b64",
+      "git_blob_sha1": "1aa48fb87efa7d301d66e4a90b4f078b0519764c"
+    },
+    {
+      "path": "engine/tilesets/mapgroup_roofs.asm",
+      "fixture": "mapgroup_roofs.asm.b64",
+      "git_blob_sha1": "111c2d00d375f7fca58022fe3773c7f0c424e1d5"
+    },
+    {
+      "path": "data/maps/roofs.asm",
+      "fixture": "roofs.asm.b64",
+      "git_blob_sha1": "efa81f8f2198c207b451cca18c8a657176d5db55"
+    }
+  ]
+}

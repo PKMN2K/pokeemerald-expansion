@@ -2529,3 +2529,6 @@ static const struct SpriteFrameImage sPicTable_MomFrlg[] = {
 };
 
 #endif // IS_FRLG
+static const struct SpriteFrameImage sPicTable_PolishedPokefan[] = {
+    overworld_ascending_frames(gObjectEventPic_PolishedPokefan, 2, 4),
+};

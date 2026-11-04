@@ -335,10 +335,14 @@ def export(output: Path, headbutt_review: dict):
     for candidate in candidates:
         candidate["used_by_headbutt"] = candidate["source_species"] in tree_species
         candidate["runtime_mapping_verified"] = runtime_tables_match and candidate["used_by_headbutt"]
-    map_groups = (ROOT / "data/maps/map_groups.json").read_text(encoding="utf-8")
-    # Johto source map identifiers cannot be mapped simply by matching names.
-    registered_johto_map_groups = "Johto" in map_groups
-    assert not registered_johto_map_groups
+    map_groups = json.loads((ROOT / "data/maps/map_groups.json").read_text(encoding="utf-8"))
+    # The custom visual demo has no original map identity or Headbutt set.
+    # Keep rejecting new source-map groups until their explicit bridge is audited;
+    # a substring such as "Johto" must never imply source encounter routing.
+    johto_groups = {name: map_groups[name] for name in map_groups["group_order"] if "Johto" in name}
+    assert set(johto_groups) <= {"gMapGroup_PolishedJohtoDemo"}
+    visual_demo_maps = johto_groups.get("gMapGroup_PolishedJohtoDemo", [])
+    assert not visual_demo_maps or visual_demo_maps == ["PolishedJohtoDemoOutdoor", "PolishedJohtoDemoLab"]
 
     report = {
         "status": "PINNED_HEADBUTT_ENCOUNTERS_REVIEW_NOT_FOR_ROM",
@@ -373,7 +377,8 @@ def export(output: Path, headbutt_review: dict):
         "dormant_source_map_assignments": source_map_assignments(maps),
         "dormant_source_map_dispatch_implemented": runtime_tables_match,
         "identity_mapping_only_engine_stats_and_learnsets_retained": True,
-        "source_map_groups_registered_by_name": registered_johto_map_groups,
+        "source_map_groups_registered_by_name": False,
+        "registered_visual_demo_maps_without_headbutt_mapping": visual_demo_maps,
         "johto_source_map_dispatch_verified": runtime_tables_match,
         "emerald_to_source_map_dispatch_verified": False,
         "headbutt_field_dispatch_verified": False,

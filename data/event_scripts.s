@@ -129,6 +129,8 @@ gStdScripts::
 	.4byte Std_PutItemAway             @ STD_PUT_ITEM_AWAY
 	.4byte Std_ReceivedItem            @ STD_RECEIVED_ITEM
 gStdScripts_End::
+	.include "data/maps/PolishedJohtoDemoOutdoor/scripts.inc"
+	.include "data/maps/PolishedJohtoDemoLab/scripts.inc"
 
 
 	.include "data/maps/PetalburgCity/scripts.inc"

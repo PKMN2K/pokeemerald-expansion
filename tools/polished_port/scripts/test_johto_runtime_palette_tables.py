@@ -46,15 +46,17 @@ def main():
     fieldmap = FIELDMAP_FILE.read_text(encoding="utf-8")
     overworld = OVERWORLD_FILE.read_text(encoding="utf-8")
 
-    # Explicit no-map registration: this is a compiled, active *hook*, but
-    # it cannot change a single existing Hoenn/Prism map palette. The user
-    # must explicitly register newly created layouts after gfx/layers work.
+    # Only the live visual demo may opt in. Hoenn, Prism and the fixed-palette
+    # indoor lab must never inherit an outdoor source map-group palette.
     assert re.search(
         r"static const struct PolishedJohtoMapPaletteRegistration "
         r"sJohtoMapRegistrations\[\]\s*=\s*\{\s*"
-        r"//[^\n]*\n\s*\{0\},\s*\};",
+        r"\{LAYOUT_POLISHED_JOHTO_DEMO_OUTDOOR,\s*"
+        r"&gTileset_PolishedJohtoDemoOutdoorPrimary,\s*"
+        r"&gTileset_PolishedJohtoDemoOutdoorSecondary,\s*"
+        r"24, JOHTO_PALETTE_STANDARD, 0\},\s*\};",
         runtime,
-    ), "Johto map routes were activated before live graphics were validated"
+    ), "Unexpected or incomplete Johto palette registration"
     assert "registration->emeraldLayoutId == 0" in runtime
     assert "registration->primaryTileset == NULL" in runtime
     assert "registration->secondaryTileset == NULL" in runtime
@@ -86,7 +88,7 @@ def main():
     print("PASS: 582 C RGB555 words match pinned source palette and roof variants")
     print("PASS: source nighttime/evening map explicitly to Emerald enum")
     print("PASS: field palette-load, RTC refresh, and double-tint guards wired")
-    print("PASS: zero registered map layouts; existing Hoenn/Prism palettes untouched")
+    print("PASS: only the isolated outdoor demo is registered; Hoenn/Prism are excluded")
 
 
 if __name__ == "__main__":

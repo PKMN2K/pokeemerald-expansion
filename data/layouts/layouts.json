@@ -9323,6 +9323,28 @@
       "border_filepath": "data/layouts/OneIsland_KindleRoad_EmberSpa_Frlg/border.bin",
       "blockdata_filepath": "data/layouts/OneIsland_KindleRoad_EmberSpa_Frlg/map.bin",
       "layout_version": "frlg"
+    },
+    {
+      "id": "LAYOUT_POLISHED_JOHTO_DEMO_OUTDOOR",
+      "name": "PolishedJohtoDemoOutdoor_Layout",
+      "width": 24,
+      "height": 20,
+      "primary_tileset": "gTileset_PolishedJohtoDemoOutdoorPrimary",
+      "secondary_tileset": "gTileset_PolishedJohtoDemoOutdoorSecondary",
+      "border_filepath": "data/layouts/PolishedJohtoDemoOutdoor/border.bin",
+      "blockdata_filepath": "data/layouts/PolishedJohtoDemoOutdoor/map.bin",
+      "layout_version": "emerald"
+    },
+    {
+      "id": "LAYOUT_POLISHED_JOHTO_DEMO_LAB",
+      "name": "PolishedJohtoDemoLab_Layout",
+      "width": 10,
+      "height": 12,
+      "primary_tileset": "gTileset_PolishedJohtoDemoLabPrimary",
+      "secondary_tileset": "gTileset_PolishedJohtoDemoLabSecondary",
+      "border_filepath": "data/layouts/PolishedJohtoDemoLab/border.bin",
+      "blockdata_filepath": "data/layouts/PolishedJohtoDemoLab/map.bin",
+      "layout_version": "emerald"
     }
   ]
 }

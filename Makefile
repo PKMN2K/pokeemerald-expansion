@@ -33,6 +33,8 @@ BUILD_DIR := build
 COMPARE     ?= 0
 # Executes the Test Runner System that checks that all mechanics work as expected
 TEST         ?= 0
+# Opt-in visual port demonstration; separate ROM and object directory.
+POLISHED_JOHTO_DEMO ?= 0
 # Enables -fanalyzer C flag to analyze in depth potential UBs
 ANALYZE      ?= 0
 # Count unused warnings as errors. Used by RH-Hideout's repo
@@ -96,6 +98,12 @@ ifeq ($(RELEASE),1)
 	FILE_NAME := $(FILE_NAME)-release
 endif
 
+ifeq ($(POLISHED_JOHTO_DEMO),1)
+  ifneq ($(MAP_VERSION),emerald)
+    $(error POLISHED_JOHTO_DEMO requires the Emerald map engine)
+  endif
+  FILE_NAME := $(FILE_NAME)-johto-demo
+endif
 ROM_NAME := $(FILE_NAME).gba
 OBJ_DIR_NAME := $(BUILD_DIR)/$(BUILD_NAME)
 OBJ_DIR_NAME_TEST := $(BUILD_DIR)/$(BUILD_NAME)-test
@@ -123,6 +131,9 @@ ifeq ($(DEBUG),1)
 endif
 ifeq ($(RELEASE),1)
   OBJ_DIR := $(OBJ_DIR_NAME_RELEASE)
+endif
+ifeq ($(POLISHED_JOHTO_DEMO),1)
+  OBJ_DIR := $(OBJ_DIR)-johto-demo
 endif
 ELF := $(ROM:.gba=.elf)
 MAP := $(ROM:.gba=.map)
@@ -157,6 +168,7 @@ else
 O_LEVEL ?= 2
 endif
 CPPFLAGS := $(INCLUDE_CPP_ARGS) -Wno-trigraphs -DMODERN=1 -DTESTING=$(TEST) -D$(GAME_VERSION) -std=gnu17
+override CPPFLAGS += -DPOLISHED_JOHTO_DEMO=$(POLISHED_JOHTO_DEMO)
 ifeq ($(RELEASE),1)
 	override CPPFLAGS += -DRELEASE
 	ifeq ($(USE_LTO_ON_RELEASE),1)

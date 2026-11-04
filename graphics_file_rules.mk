@@ -311,3 +311,9 @@ $(PKNAVOPTIONSGFXDIR)/options.4bpp: $(PKNAVOPTIONSGFXDIR)/hoenn_map.4bpp \
                                     $(PKNAVOPTIONSGFXDIR)/tough.4bpp \
                                     $(PKNAVOPTIONSGFXDIR)/cancel.4bpp
 	@cat $^ >$@
+# Polished Crystal's converted 16x32 frames are arranged horizontally. Without
+# metatile dimensions gbagfx emits sheet rows and the first four frames are blank.
+graphics/object_events/pics/people/polished_chris/walking.4bpp: graphics/object_events/pics/people/polished_chris/walking.png graphics_file_rules.mk
+	$(GFX) $< $@ -mwidth 2 -mheight 4
+graphics/object_events/pics/people/polished_chris/running.4bpp: graphics/object_events/pics/people/polished_chris/running.png graphics_file_rules.mk
+	$(GFX) $< $@ -mwidth 2 -mheight 4

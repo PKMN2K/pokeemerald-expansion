@@ -1077,6 +1077,16 @@ static void Task_HandleMainMenuAPressed(u8 taskId)
         {
         case ACTION_NEW_GAME:
         default:
+#if POLISHED_JOHTO_DEMO
+            // A new demo save starts in the imported area without Hoenn's intro.
+            // Continue and ordinary builds retain their normal behavior.
+            StringCopy(gSaveBlock2Ptr->playerName, COMPOUND_STRING("Chris"));
+            gSaveBlock2Ptr->playerGender = MALE;
+            DestroyTask(taskId);
+            FreeAllWindowBuffers();
+            SetMainCallback2(CB2_NewGame);
+            return;
+#endif
             if (IS_FRLG)
             {
                 DestroyTask(taskId);

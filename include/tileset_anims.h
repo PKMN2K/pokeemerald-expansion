@@ -5,12 +5,12 @@ void InitTilesetAnimations(void);
 void InitSecondaryTilesetAnimation(void);
 void UpdateTilesetAnimations(void);
 void TransferTilesetAnimsBuffer(void);
-// Reserved for source-verified Johto tilesets; no live caller registered.
+// Source-verified Johto animation transfers, used by the outdoor demo.
 void QueuePolishedJohtoAnimationTile(const u16 *frame, u16 tileId);
-// Inactive until an authentic Johto map explicitly initializes the callback.
+// Only an explicitly opted-in tileset initializes this callback.
 void InitTilesetAnim_PolishedJohtoOutdoor(const u8 *initialScrollTile);
 void InitTilesetAnim_PolishedJohtoOutdoorAuthentic(void);
-// Future Johto tileset callback entry point; no existing map registers it.
+// Opt-in Johto tileset callback entry point.
 void InitTilesetAnim_PolishedJohtoOutdoorPrimary(void);
 void TilesetAnim_PolishedJohtoOutdoor(u16 timer);
 
