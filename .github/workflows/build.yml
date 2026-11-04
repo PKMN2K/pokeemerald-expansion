@@ -1,6 +1,3 @@
-Warning: truncated output (original token count: 15668)
-Total output lines: 1083
-
 name: CI
 
 on:
@@ -537,7 +534,41 @@ jobs:
           assert ext_pairs == [(row["metatile_id"], row["candidate_attribute_word"])
                               for row in ext["pairs"]]
           assert ext_pairs == sorted(ext_pairs)
-          assert all(0 <= mid < 1012 and 0 <= word < 256 for m…668 tokens truncated…"source_wall_permission_additional_count"] == 88
+          assert all(0 <= mid < 1012 and 0 <= word < 256 for mid, word in ext_pairs)
+          assert len(set(mid for mid, _ in ext_pairs)) == 465
+          assert hashlib.sha256(ext_raw).hexdigest() == ext["pairs_binary_sha256"] == report["extended_behavior_review_pair_sha256"]
+          assert hashlib.sha256(ext_bitmap).hexdigest() == ext["validity_bitmap_sha256"] == report["extended_behavior_review_bitmap_sha256"]
+          assert ext["behavior_names"]["WATER"] == "MB_JOHTO_WATER"
+          assert ext["behavior_names"]["HEADBUTT_TREE"] == "MB_JOHTO_HEADBUTT_TREE"
+          assert sum(x["requires_headbutt_script_and_encounter_port"] for x in ext["per_metatile_review"]) == 58
+          assert ext["behavior_names"]["LEDGE_DOWN_LEFT"] == "MB_JOHTO_LEDGE_DOWN_LEFT"
+          assert ext["behavior_names"]["LEDGE_DOWN_RIGHT"] == "MB_JOHTO_LEDGE_DOWN_RIGHT"
+          assert ext["behavior_ids"]["FLOOR"] == 0 and ext["behavior_ids"]["TALL_GRASS"] == 2
+          for row in ext["per_metatile_review"]:
+              mid = row["metatile_id"]
+              valid = bool(ext_bitmap[mid // 8] & (1 << (mid % 8)))
+              assert valid == (row["candidate_attribute_word"] is not None)
+              assert not row["registered_with_engine"] and not row["emulator_verified"]
+              if row["source_collision_symbol"] == "WALL":
+                  assert row["candidate_attribute_word"] is None
+                  assert row["requires_mapcell_collision_validation"]
+          assert sum(row["source_collision_symbol"] == "WALL" for row in ext["per_metatile_review"]) == 481
+          assert ext["no_attribute_fallbacks_added"]
+          assert not ext["complete_primary_attribute_table_emitted"]
+          assert not ext["complete_secondary_attribute_table_emitted"]
+          assert not ext["all_metatile_attribute_words_resolved"]
+          assert not ext["full_rom_tileset_emitted"]
+          assert not ext["live_map_registered"]
+          assert not ext["safe_to_register"] and not report["extended_behavior_review_registered"]
+          source_wall_dir = root / "source_wall_permissions"
+          perm = json.loads((source_wall_dir / "johto_source_wall_permissions.review.json").read_text())
+          perm_raw = (source_wall_dir / "johto_source_wall_permissions.review.bin").read_bytes()
+          perm_pairs = list(struct.iter_unpack("<HH", perm_raw))
+          assert perm["status"] == "SOURCE_PINNED_WALL_PERMISSIONS_NOT_FOR_ROM"
+          assert perm["source_permission_fixture_verified"]
+          assert perm["source_wall_permission_count"] == report["source_wall_permission_count"] == 569
+          assert perm["existing_wall_subset_count"] == 481
+          assert perm["new_wall_permission_quadrants"] == report["source_wall_permission_additional_count"] == 88
           assert perm["counts"]["HEADBUTT_TREE"] == 58 and perm["counts"]["BUOY"] == 26
           assert perm["counts"]["VOID"] == 4 and perm["counts"]["WALL"] == 481
           assert perm["source_permissions"]["WHIRLPOOL"] == "WATER_TILE"
