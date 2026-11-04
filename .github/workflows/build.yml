@@ -237,6 +237,11 @@ jobs:
       - name: Execute dormant Headbutt C helper source-vector regression
         run: python3 tools/polished_port/scripts/test_johto_headbutt_c_helpers.py
 
+      - name: Verify complete dormant Headbutt encounter pipeline
+        run: |
+          python3 tools/polished_port/scripts/export_johto_headbutt_encounter_tables.py --check
+          python3 tools/polished_port/scripts/test_johto_headbutt_encounters.py
+
       - name: Stage isolated Johto map package without ROM registration
         run: |
           output="$(mktemp -d)"
@@ -621,10 +626,17 @@ jobs:
               ).hexdigest() == meta["sha256"]
           assert not encounter["complete_emerald_wild_encounters_emitted"]
           assert not encounter["source_map_ids_remapped_to_emerald"]
-          assert not encounter["source_pokemon_form_ids_remapped_to_emerald"]
-          assert not encounter["badge_scaled_levels_implemented"]
+          assert encounter["source_pokemon_form_ids_remapped_to_emerald"]
+          assert encounter["source_form_runtime_semantics_verified"]
+          assert encounter["unresolved_species_form_mappings"] == []
+          assert encounter["dormant_encounter_data_complete"]
+          assert encounter["dormant_generated_tables_match_source"]
+          assert encounter["dormant_source_map_dispatch_implemented"]
+          assert len(encounter["dormant_source_map_assignments"]) == 43
+          assert encounter["source_species_candidates_checked"] == 25
+          assert encounter["badge_scaled_levels_implemented"]
           assert not encounter["headbutt_field_move_implemented"]
-          assert not encounter["tree_encounter_selection_implemented"]
+          assert encounter["tree_encounter_selection_implemented"]
           assert not encounter["wing_case_inventory_implemented"]
           assert not encounter["live_map_registered"] and not encounter["safe_to_enable"]
           assert not report["headbutt_encounter_tables_registered"]

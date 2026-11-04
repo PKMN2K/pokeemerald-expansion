@@ -113,7 +113,8 @@ def export(output: Path, encounter_report: dict):
     assert encounter_report["source_selection_logic"]["chance_to_battle_percent_by_tree_score"] == {
         "bad": 10, "good": 50, "rare": 80,
     }
-    assert not encounter_report["tree_encounter_selection_implemented"]
+    assert encounter_report["tree_encounter_selection_implemented"]
+    assert not encounter_report["headbutt_field_dispatch_verified"]
     # Validate cumulative row boundaries against every pinned normal/rare table.
     for group in encounter_report["source_tree_groups"]:
         if group["is_rock_smash_table"]:

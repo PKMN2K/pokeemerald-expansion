@@ -42,8 +42,8 @@ bool8 JohtoHeadbuttRollStartsBattle(enum JohtoHeadbuttTreeScore score, u8 rollOu
 bool8 JohtoHeadbuttUsesRareEncounterTable(enum JohtoHeadbuttTreeScore score);
 s16 JohtoHeadbuttSelectWeightedEntry(const u8 *weights, u8 count, u8 rollOutOfHundred);
 
-// Source-facing encounter row. Names and level expressions remain symbolic
-// until audited Emerald species/form and badge-level mappings exist.
+// Source-facing review row. The typed dormant runtime tables are separate;
+// this interface preserves original names and expressions for audit tools.
 struct JohtoHeadbuttSourceEncounter
 {
     u8 weight;
@@ -56,8 +56,8 @@ bool8 JohtoHeadbuttResolveSourceEncounter(const struct JohtoHeadbuttSourceEncoun
                                           u8 count, u8 rollOutOfHundred,
                                           struct JohtoHeadbuttSourceEncounter *out);
 
-// Level inputs are source-relative only. Caller must supply a verified
-// SetBadgeBaseLevel result; this helper does not calculate badge progression.
+// Level inputs are source-relative only. The direct level helper accepts a
+// verified SetBadgeBaseLevel result; the composition below accepts badge count.
 enum JohtoHeadbuttLevelMode
 {
     JOHTO_HEADBUTT_LEVEL_FIXED,

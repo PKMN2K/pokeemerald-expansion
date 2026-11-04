@@ -272,6 +272,8 @@ def stage(output):
     assert tree_encounters["source_rock_map_assignments_separate"] == 14
     assert tree_encounters["source_pointer_groups"] == 10
     assert tree_encounters["source_city_aliases_canyon"]
+    assert tree_encounters["dormant_encounter_data_complete"]
+    assert not tree_encounters["unresolved_species_form_mappings"]
     assert not tree_encounters["safe_to_enable"]
     score_review = export_headbutt_score(
         output / "OFFLINE_ONLY" / "headbutt_score_probes", tree_encounters
@@ -356,6 +358,7 @@ def stage(output):
         "headbutt_encounter_group_pointers": tree_encounters["source_pointer_groups"],
         "headbutt_encounter_rock_maps_reviewed": tree_encounters["source_rock_map_assignments_separate"],
         "headbutt_encounter_tables_registered": False,
+        "headbutt_dormant_encounter_data_complete": tree_encounters["dormant_encounter_data_complete"],
         "headbutt_score_vector_count": score_review["vector_count"],
         "headbutt_score_vector_sha256": score_review["binary_sha256"],
         "headbutt_source_tree_score_engine_helpers_compiled":
