@@ -1,5 +1,6 @@
 @ Generated from pinned CherrygroveCity.asm: geography, static text and ambient residents.
 PolishedCherrygroveCity_MapScripts::
+	map_script MAP_SCRIPT_ON_LOAD, PolishedReturn_CityLoad
 	.byte 0
 
 PolishedCherrygroveCity_CherrygroveCitySignText::
@@ -31,6 +32,7 @@ PolishedCherrygroveCity_CherrygroveTeacherText_HaveMapCard_Text:
 	.string "When you're with\nPOKéMON, going\lanywhere is fun.$"
 
 PolishedCherrygroveCity_CherrygroveYoungsterScript::
+	goto_if_set FLAG_SYS_POKEDEX_GET, PolishedReturn_CityYoungster
 	msgbox PolishedCherrygroveCity_CherrygroveYoungsterScript_Text, MSGBOX_NPC
 	end
 
@@ -332,6 +334,121 @@ PolishedCherrygrove_MapAccess:
 
 PolishedCherrygrove_MapFullText:
 	.string "Your BAG is full.\pCome to my house when\nyou have room for the map.$"
+
+PolishedReturn_CityLoad::
+	setflag FLAG_TEMP_2
+	end
+PolishedReturn_Silent::
+	end
+PolishedReturn_RivalSouth::
+	lockall
+	setobjectxyperm LOCALID_CHERRYGROVE_RIVAL, 39, 7
+	goto PolishedReturn_RivalStart
+PolishedReturn_RivalNorth::
+	lockall
+	setobjectxyperm LOCALID_CHERRYGROVE_RIVAL, 39, 6
+PolishedReturn_RivalStart::
+	turnobject OBJ_EVENT_ID_PLAYER, DIR_EAST
+	applymovement OBJ_EVENT_ID_PLAYER, PolishedIntro_Exclamation
+	waitmovement 0
+	delay 15
+	clearflag FLAG_TEMP_2
+	addobject LOCALID_CHERRYGROVE_RIVAL
+	applymovement LOCALID_CHERRYGROVE_RIVAL, PolishedReturn_RivalApproach
+	waitmovement 0
+	turnobject OBJ_EVENT_ID_PLAYER, DIR_EAST
+	msgbox PolishedReturn_CherrygroveRivalText_Seen, MSGBOX_DEFAULT
+	closemessage
+	setvar VAR_LAST_TALKED, LOCALID_CHERRYGROVE_RIVAL
+	goto_if_eq VAR_POLISHED_STARTER, 2, PolishedReturn_RivalChikorita
+	goto_if_eq VAR_POLISHED_STARTER, 3, PolishedReturn_RivalCyndaquil
+	trainerbattle_earlyrival TRAINER_POLISHED_RIVAL_TOTODILE, RIVAL_BATTLE_HEAL_AFTER, PolishedReturn_RivalCherrygroveWinText, PolishedReturn_RivalCherrygroveLossText
+	goto PolishedReturn_RivalAfter
+PolishedReturn_RivalChikorita::
+	trainerbattle_earlyrival TRAINER_POLISHED_RIVAL_CHIKORITA, RIVAL_BATTLE_HEAL_AFTER, PolishedReturn_RivalCherrygroveWinText, PolishedReturn_RivalCherrygroveLossText
+	goto PolishedReturn_RivalAfter
+PolishedReturn_RivalCyndaquil::
+	trainerbattle_earlyrival TRAINER_POLISHED_RIVAL_CYNDAQUIL, RIVAL_BATTLE_HEAL_AFTER, PolishedReturn_RivalCherrygroveWinText, PolishedReturn_RivalCherrygroveLossText
+PolishedReturn_RivalAfter::
+	lockall
+	msgbox PolishedReturn_CherrygroveRivalTextAfter1, MSGBOX_DEFAULT
+	closemessage
+	playse SE_M_COMET_PUNCH
+	applymovement OBJ_EVENT_ID_PLAYER, PolishedReturn_PlayerPush
+	waitmovement 0
+	applymovement LOCALID_CHERRYGROVE_RIVAL, PolishedReturn_RivalStarts
+	waitmovement 0
+	applymovement LOCALID_CHERRYGROVE_RIVAL, PolishedIntro_Exclamation
+	waitmovement 0
+	applymovement LOCALID_CHERRYGROVE_RIVAL, PolishedReturn_RivalBack
+	waitmovement 0
+	turnobject OBJ_EVENT_ID_PLAYER, DIR_NORTH
+	msgbox PolishedReturn_CherrygroveRivalTextAfter2, MSGBOX_DEFAULT
+	closemessage
+	turnobject OBJ_EVENT_ID_PLAYER, DIR_WEST
+	applymovement LOCALID_CHERRYGROVE_RIVAL, PolishedReturn_RivalExit
+	waitmovement 0
+	removeobject LOCALID_CHERRYGROVE_RIVAL
+	setflag FLAG_TEMP_2
+	special HealPlayerParty
+	setflag FLAG_POLISHED_CHERRYGROVE_RIVAL_DONE
+	setvar VAR_POLISHED_CHERRYGROVE_SCENE, 2
+	releaseall
+	end
+
+PolishedReturn_RivalApproach:
+	walk_left
+	walk_left
+	walk_left
+	walk_left
+	walk_left
+	step_end
+
+PolishedReturn_PlayerPush:
+	walk_fast_down
+	face_left
+	step_end
+
+PolishedReturn_RivalStarts:
+	walk_fast_left
+	walk_fast_left
+	step_end
+
+PolishedReturn_RivalBack:
+	walk_fast_right
+	face_down
+	step_end
+
+PolishedReturn_RivalExit:
+	walk_fast_left
+	walk_fast_left
+	walk_fast_left
+	walk_fast_up
+	walk_fast_up
+	walk_fast_left
+	walk_fast_left
+	step_end
+
+PolishedReturn_CherrygroveRivalText_Seen:
+	.string "…… …… ……\pYou got a POKéMON\nat the Lab.\pWhat a waste.\nA wimp like you.\p…… …… ……\pDon't you get what\nI'm saying?\pWell, I too, have\na good POKéMON.\pI'll show you\nwhat I mean!$"
+
+PolishedReturn_RivalCherrygroveWinText:
+	.string "Humph. Are you\nhappy you won?$"
+
+PolishedReturn_RivalCherrygroveLossText:
+	.string "Humph. That was a\nwaste of time.$"
+
+PolishedReturn_CherrygroveRivalTextAfter1:
+	.string "…… …… ……\pYou want to know\nwho I am?\pI'm going to be\nthe world's great-\lest POKéMON\ltrainer.$"
+
+PolishedReturn_CherrygroveRivalTextAfter2:
+	.string "I dropped my\nTrainer Card…\pHey! Give it\nback!\pOh no… You saw\nmy name…$"
+
+PolishedReturn_CityYoungster::
+	msgbox PolishedReturn_CityYoungsterText, MSGBOX_NPC
+	end
+PolishedReturn_CityYoungsterText:
+	.string "I battled the\ntrainers on the\lroad.\pMy POKéMON lost.\nThey're a mess! I\pmust take them to\na POKéMON Center.$"
 PolishedCherrygroveCity_MartSign::
 	msgbox PolishedCherrygroveCity_MartSign_Text, MSGBOX_SIGN
 	end

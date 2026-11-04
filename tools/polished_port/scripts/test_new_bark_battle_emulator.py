@@ -15,23 +15,23 @@ from test_new_bark_intro_emulator import layout, var, party, script_active, text
 
 
 @lru_cache
-def portrait_data():
+def portrait_data(trainer='lyra1'):
     files = source_files()
     with tempfile.TemporaryDirectory() as tmp:
         path = Path(tmp) / 'lyra.png'
-        path.write_bytes(files['gfx/trainers/lyra1.png'])
+        path.write_bytes(files['gfx/trainers/'+trainer+'.png'])
         width, height, source = _read_png_2bit_grayscale(path)
     assert (width, height) == (56, 56)
     def pixel(x, y):
         return 3 - source[y - 8][x - 4] if 4 <= x < 60 and 8 <= y < 64 else 0
     tiles = bytes(pixel(x + tx, y + ty) | pixel(x + tx + 1, y + ty) << 4
         for ty in range(0, 64, 8) for tx in range(0, 64, 8) for y in range(8) for x in range(0, 8, 2))
-    colors = [tuple(map(int, rgb)) for rgb in re.findall(r'RGB\s+(\d+),\s*(\d+),\s*(\d+)', files['gfx/trainers/lyra1.pal'].decode())]
+    colors = [tuple(map(int, rgb)) for rgb in re.findall(r'RGB\s+(\d+),\s*(\d+),\s*(\d+)', files['gfx/trainers/'+trainer+'.pal'].decode())]
     palette = struct.pack('<16H', 0x7fff, *(r | g << 5 | b << 10 for r, g, b in colors), *([0] * 13))
     return tiles, palette
 
 
-def check_portrait(game, label):
+def check_portrait(game, label, trainer='lyra1'):
     battle = game.u32(game.sym['gBattleStruct'])
     if not battle:
         return False
@@ -44,7 +44,7 @@ def check_portrait(game, label):
     if not raw[0x3e] & 1 or raw[0x3e] & 4 or struct.unpack_from('<h', raw, 0x24)[0] != 0:
         return False
     attr = struct.unpack_from('<H', raw, 4)[0]
-    tiles, palette = portrait_data()
+    tiles, palette = portrait_data(trainer)
     offset = (16 + (attr >> 12)) * 32
     if game.read(game.sym['gPlttBufferFaded'] + offset, 32) != palette:
         return False

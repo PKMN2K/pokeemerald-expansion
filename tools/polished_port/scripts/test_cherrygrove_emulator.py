@@ -389,6 +389,8 @@ def check_city(game, route, observed, rows, checks):
     game.restore("cherrygrove-services")
     from test_route30_emulator import check_route30
     check_route30(game,city,checks)
+    from test_return_emulator import check_return
+    check_return(game,city,checks)
     walk(game,city,(39,6));game.step(RIGHT);game.frames(100)
     assert game.map_number()==map_id(game,route) and game.position()==(0,6)
     checks.append("Cherrygrove's east connection returns seamlessly to Route 29")

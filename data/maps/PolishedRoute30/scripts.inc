@@ -2,6 +2,7 @@
 PolishedRoute30_MapScripts::
 	map_script MAP_SCRIPT_ON_LOAD, PolishedRoute30_Setup
 	map_script MAP_SCRIPT_ON_RETURN_TO_FIELD, PolishedRoute30_Setup
+	map_script MAP_SCRIPT_ON_FRAME_TABLE, PolishedReturn_PhoneFrame
 	.byte 0
 
 PolishedRoute30_Route30SignText::
@@ -47,6 +48,8 @@ PolishedRoute30_BerryMastersHouseSignText_Text:
 	.string "Berry Master's\nHouse$"
 
 PolishedRoute30_Setup::
+	setflag FLAG_TEMP_2
+	call_if_set FLAG_POLISHED_GAVE_MYSTERY_EGG, PolishedReturn_ShowJoey
 	special PolishedFruitRefreshAll
 	end
 PolishedRoute30_Silent::
@@ -93,6 +96,7 @@ PolishedRoute30_BigBattleText:
 	.string "What? This is a\nbig battle!\lLeave me alone!$"
 
 PolishedRoute30_Youngster::
+	goto_if_set FLAG_POLISHED_GAVE_MYSTERY_EGG, PolishedReturn_RouteYoungster
 	msgbox PolishedRoute30_YoungsterText, MSGBOX_NPC
 	end
 PolishedRoute30_YoungsterText:
@@ -129,3 +133,41 @@ PolishedRoute30_DonBeaten:
 
 PolishedRoute30_DonAfter:
 	.string "I ran out of POKé\nBalls while I was\lcatching POKéMON.\pI should've bought\nsome more…$"
+
+PolishedReturn_RouteYoungster::
+	msgbox PolishedReturn_RouteYoungsterText, MSGBOX_NPC
+	end
+PolishedReturn_RouteYoungsterText:
+	.string "Everyone's having\nfun battling!\lYou should too!$"
+
+PolishedReturn_ShowJoey::
+	clearflag FLAG_TEMP_2
+	return
+PolishedReturn_PhoneFrame::
+	map_script_2 VAR_POLISHED_ERRAND_STATE, 1, PolishedReturn_ElmCall
+	.2byte 0
+PolishedReturn_ElmCall::
+	lockall
+	playse SE_PC_LOGIN
+	msgbox PolishedReturn_PhoneCaller, MSGBOX_DEFAULT
+	msgbox PolishedReturn_ElmPhoneDisasterText, MSGBOX_DEFAULT
+	setvar VAR_POLISHED_ERRAND_STATE, 2
+	releaseall
+	end
+PolishedReturn_PhoneCaller:
+	.string "Incoming call: PROF. ELM$"
+PolishedReturn_Joey::
+	trainerbattle_single TRAINER_POLISHED_JOEY, PolishedReturn_JoeySeen, PolishedReturn_JoeyBeaten
+	msgbox PolishedReturn_JoeyAfter, MSGBOX_AUTOCLOSE
+	end
+PolishedReturn_ElmPhoneDisasterText:
+	.string "H-hello? {PLAYER}?\nIt's a disaster!\pUh, um, it's just\nterrible!\pWhat should I do?\nIt… Oh, no…\pPlease get back\nhere now!$"
+
+PolishedReturn_JoeySeen:
+	.string "I just lost, so\nI'm trying to find\lmore POKéMON.\pWait! You look\nweak! Come on,\llet's battle!$"
+
+PolishedReturn_JoeyBeaten:
+	.string "Ack! I lost again!\nDoggone it!$"
+
+PolishedReturn_JoeyAfter:
+	.string "Do I have to have\nmore POKéMON in\porder to battle\nbetter?\pNo! I'm sticking\nwith this one no\lmatter what!$"

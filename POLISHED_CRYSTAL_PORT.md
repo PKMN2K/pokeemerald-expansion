@@ -267,8 +267,9 @@ Lyra's original 56×56 trainer portrait is centered horizontally and aligned to
 the bottom of a native 64×64 canvas without scaling. Its original two colors,
 white and black are preserved as RGB555; only the source background index is
 transparent. The portrait ID and three trainer IDs are appended, leaving all
-existing IDs and the maximum trainer-flag allocation unchanged. Six reserved
-Emerald trainer slots remain. FireRed/LeafGreen retain their own roster.
+existing IDs and the maximum trainer-flag allocation unchanged. The remaining
+six Emerald slots are used by Mikey, Don, the three first-rival teams and Joey
+in the Route 30 and return phases. FireRed/LeafGreen retain their own roster.
 
 Both winning and losing return to the lab. Lyra uses her original dialogue,
 walks five steps down and leaves; the entire party is healed before source
@@ -450,8 +451,8 @@ their coordinates. Joey's Rattata/Pidgey battle blocks the first-visit western
 path; his two attack movements return both Pokémon to their source positions.
 Mikey and Don have native trainer battles, source portraits, species, levels
 and early learnsets. Gen II DV 6 contributes native IV 12, matching the earlier
-Lyra conversion convention. Their rematches and Joey's later battle await the
-return quest. Battle mechanics, abilities and music use Expansion's engine.
+Lyra conversion convention. Joey becomes a trainer after the Egg is delivered;
+trainer rematches remain pending. Battles use Expansion's mechanics and music.
 
 All three grass tables preserve the source species/level probabilities. The
 same source clock boundaries and evening mixture used by Route 29 now apply to
@@ -485,17 +486,62 @@ Four formerly unused shared flags (`0x4AC`–`0x4AF`) store the route's pickups,
 Cut tree and Mulch gift. Four unused vars (`0x40FB`–`0x40FE`) store independent
 fruit dates, Mr. Pokémon's scene and the return-errand stage. Oak and the prop
 use temporary visibility flags derived from the saved scene. The return stage
-records the theft/Elm-call handoff without activating unfinished return scripts.
-The next content phase is the return rival battle, Elm's phone call and theft
-investigation, Mystery Egg delivery and Mom's banking. Fishing tables, source
-music and the complete Pokégear interface remain pending.
+queues Elm's call; the city and lab scenes independently arm the rival and
+theft investigation. Fishing tables and source music remain pending.
 
-Deterministic generation reproduces 192 source-map products. Host checks compare
+Deterministic generation reproduces 195 source-map products. Host checks compare
 connections, source encounter weights, item pixels/palettes, safe flag allocation
 and walkable scene paths. Native tests exercise independent harvests, conditional
 Mulch consumption, clock reversal and reciprocal door landings. The real-input
 emulator campaign exercises the outbound trip, gifts, choices, Oak, the native
 Pokédex, healing, Save/Continue, repeat visits and the return connection.
+
+### Return to Elm: stolen starter and the Mystery Egg
+
+On the first exit from Mr. Pokémon's house, Elm calls about the disaster at his
+lab. The source call text is displayed once using an Expansion message box and
+notification sound. Saving, resetting and re-entering the house do not repeat
+it. There is no general-purpose Pokégear phone interface yet.
+
+Returning east through Cherrygrove at `(33,6)` or `(33,7)` starts the first
+rival battle. All three source parties lead with a male Lv4 Rattata; the
+second Pokémon is Lv5 and holds an Oran Berry:
+
+| Player's starter | Rival's stolen starter |
+| --- | --- |
+| Cyndaquil | Totodile |
+| Totodile | Chikorita |
+| Chikorita | Cyndaquil |
+
+The portrait uses the original 56×56 pixels and RGB555 colors, padded to the
+64×64 native canvas. Trainer moves come from the pinned learnsets. A win or
+loss continues the ID-card scene in town, heals the full party, and permanently
+clears the encounter. No whiteout or repeat battle is required.
+
+At Elm's lab, either aisle leads to the officer's accusation and Lyra's
+intervention. The native naming screen shows the rival's overworld sprite.
+Confirming an empty name retains the source default `Silver`; the officer
+uses the chosen name in his dialogue. The name occupies eight previously
+reserved bytes in SaveBlock2. The following clock field and save size do not
+move. The Egg is removed once, Elm recoils and returns to his original tile,
+and subsequent conversations use his studying-the-Egg text. The broken window,
+New Bark teacher and Route 30 youngster also respond to the quest state.
+
+Returning to Route 30 now reveals Joey at `(2,28)` in place of his staged
+Rattata/Pidgey fight. His first trainer battle uses his source Lv5 male
+Rattata with Guts, Adamant nature, Tackle, Leer and Quick Attack. His number
+exchange and later rematches remain part of the phone migration.
+
+Three previously unused flags shared with FRLG (`0x4BD`–`0x4BF`) record the
+rival encounter, theft investigation and Egg delivery. The four trainer IDs
+`860`–`863` fill the existing Emerald allocation. Before adding more trainers,
+extend trainer tracking deliberately; an additional ID would cross that limit.
+
+`test_return.py` checks source parties, choreography, flags and trainer capacity.
+The campaign emulator uses normal controller input to reach all three rival
+variants, both battle outcomes, both lab approaches, name entry, saved Egg
+delivery and Joey's battle. The next story events are Mom's money-saving
+conversation and Lyra's catching tutorial on Route 29. Route 31 remains closed.
 
 The playable visual slice and dormant Headbutt encounter selection are complete
 parts of the port. **The whole Polished Crystal migration is not complete.**

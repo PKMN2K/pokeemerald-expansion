@@ -5,8 +5,9 @@ This imports map blocks, door/stair coordinates, reading interactions and the
 six ambient residents, the rival's lab-window encounter, and Lyra/Elm's
 introduction, starter selection, Lyra battle, first Potion and Mom's opening.
 Cherrygrove includes the guide tour, Town Map, residents and native services.
-Route 30 includes Mulch, the Mystery Egg and Oak. The return errand,
-Routes 27/31/46 and the bay remain separate work.
+Route 30 includes Mulch, the Mystery Egg and Oak. The return errand includes
+Elm's call, the rival, the theft investigation, Egg delivery and Joey's battle.
+The catching tutorial, Routes 27/31/46 and the bay remain separate work.
 """
 import argparse
 import base64
@@ -31,6 +32,7 @@ import new_bark_mom
 import polished_route29
 import polished_cherrygrove
 import polished_route30
+import polished_return
 
 NEW_BARK_MAPS = {
     "NewBarkTown": "NEW_BARK_TOWN",
@@ -488,13 +490,16 @@ def map_header(name, constant, width, height, script, files):
             "PolishedPlayersNeighborsHouse_ResidentSchedule::\n\tsetflag FLAG_TEMP_2\n\tcall_if_eq VAR_POLISHED_MR_POKEMON_SCENE, 1, PolishedRoute30_ShowNeighbor\n")
         code += "PolishedRoute30_ShowNeighbor::\n\tclearflag FLAG_TEMP_2\n\treturn\n\nPolishedRoute30_NeighborHome::\n\tmsgbox PolishedRoute30_NeighborHomeText, MSGBOX_NPC\n\tend\n"
         code += text_definition("PolishedRoute30_NeighborHomeText", source_text(script, "PlayersNeighborText"))
+    code = polished_return.adapt(name, script, header, files, code, source_text, text_definition)
+    if name in polished_return.STORY:
+        story.append(polished_return.STORY[name])
     return header, (code.rstrip() + "\n").encode(), resident_info, story
 
 
 def generate():
     files = source_files()
     ids = behavior_ids()
-    products, maps, layouts = {**resident_assets(files), **new_bark_battle.battle_assets(files), **polished_cherrygrove.assets(files), **polished_route30.assets(files)}, {}, []
+    products, maps, layouts = {**resident_assets(files), **new_bark_battle.battle_assets(files), **polished_cherrygrove.assets(files), **polished_route30.assets(files), **polished_return.assets(files)}, {}, []
     indoor = palette_rows((FIXTURES / "johto_bg_tiles.pal").read_text())[32:39]
     indoor_palette = b"".join(struct.pack("<16H", *p, p[0], *([0] * 11)) for p in indoor).ljust(512, b"\0")
     outdoor = apply_new_bark_roof(build_graphics()[0], files)
@@ -610,7 +615,7 @@ def generate():
 
 """
     products["src/data/tilesets/polished_new_bark.h"] = (header_text.rstrip() + "\n").encode()
-    report = {"source_commit": PIN, "scope": "source geography, connected interiors, static interactions, six ambient residents, rival window encounter, Lyra/Elm introduction, all three starter choices, first Lyra battle, aide Potion and Mom's opening with weekday/DST setup, schedules and neighbor; Route 29, Cherrygrove services, Route 30 with Mulch and native encounters, Mystery Egg and Oak; return quest deferred",
+    report = {"source_commit": PIN, "scope": "source geography, connected interiors, static interactions, six ambient residents, rival window encounter, Lyra/Elm introduction, all three starter choices, first Lyra battle, aide Potion and Mom's opening with weekday/DST setup, schedules and neighbor; Route 29, Cherrygrove services, Route 30 with Mulch, native encounters, Mystery Egg and Oak; Elm's disaster call, first rival battle, theft investigation, rival naming, Egg delivery and Joey's first battle",
         "maps": maps, "layouts": layouts, "output_sha256": {p: hashlib.sha256(raw).hexdigest() for p, raw in products.items()}}
     products["tools/polished_port/manifests/new_bark.json"] = json_bytes(report)
     products["tools/polished_port/manifests/route29_wild.json"] = json_bytes({

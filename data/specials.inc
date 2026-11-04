@@ -655,3 +655,6 @@ gSpecials::
 	def_special PolishedFruitAvailable
 	def_special PolishedFruitPick
 	def_special PolishedFruitUseMulch
+
+	def_special PolishedErrandNameRival
+	def_special PolishedErrandBufferRivalName

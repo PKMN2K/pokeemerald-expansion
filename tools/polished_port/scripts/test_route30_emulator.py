@@ -187,6 +187,12 @@ def check_route30(game,city,checks):
     assert not task_active(game,'Task_ShowStartMenu') and not player_state(game)['frozen']
     for index in (0,1):
         leave(game,mr,route,index)
+        if index == 0:
+            advance(game,lambda:text_matches(game,'PolishedReturn_ElmPhoneDisasterText'))
+            game.screenshot('return-elm-disaster-call')
+            advance(game,lambda:state(game,0xfe)==2 and not script_active(game))
+            save_game(game);continue_game(game)
+        assert state(game,0xfe)==2 and not script_active(game)
         travel(game,route,(17,6),seen);game.step(UP);game.frames(200)
         assert not script_active(game) and state(game)==1 and count_item(game,values()['egg'],True)==1
     game.screenshot('route30-mr-pokemon-complete')
@@ -194,6 +200,7 @@ def check_route30(game,city,checks):
     checks.append('Route 30 Antidote, hidden Potion, Pecha tree and Joey battle animation work at source coordinates; both houses have reciprocal exits')
     checks.append('Mr. Pokémon grants one Mystery Egg; Oak follows the source choreography, grants a usable native Pokédex and departs; the full party heals')
     checks.append('Mystery Egg, Pokédex, Oak departure and return-errand state survive Save/Continue and repeated entry without duplicate gifts')
+    checks.append("Elm's disaster call plays on leaving Mr. Pokémon, then stays completed across Save/Continue and reentry")
     travel(game,route,(7,53),seen);game.step(DOWN);game.frames(100)
     assert game.map_number()==map_id(game,city) and game.position()==(17,0)
     assert seen

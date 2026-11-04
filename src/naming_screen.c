@@ -29,6 +29,7 @@
 #include "main.h"
 #include "decompress.h"
 #include "constants/event_objects.h"
+#include "constants/layouts.h"
 #include "constants/rgb.h"
 
 enum {
@@ -1460,6 +1461,14 @@ static const union AnimCmd *const sAnims_Rival[] =
 
 static void NamingScreen_CreateRivalIcon(void)
 {
+    if (gMapHeader.mapLayoutId == LAYOUT_POLISHED_ELMS_LAB)
+    {
+        u8 spriteId = CreateObjectGraphicsSprite(OBJ_EVENT_GFX_POLISHED_RIVAL, SpriteCallbackDummy, 56, 37, 0);
+        gSprites[spriteId].oam.priority = 3;
+        StartSpriteAnim(&gSprites[spriteId], ANIM_STD_GO_SOUTH);
+        return;
+    }
+
     const struct SpriteSheet sheet = {
         sRival_Gfx, 0x900, GFXTAG_RIVAL
     };

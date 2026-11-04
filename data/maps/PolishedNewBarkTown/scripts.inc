@@ -58,7 +58,16 @@ PolishedNewBarkTown_LyrasHouseSignText_Text:
 PolishedNewBarkTown_Teacher::
 	lock
 	faceplayer
+	goto_if_set FLAG_POLISHED_GAVE_MYSTERY_EGG, PolishedReturn_TeacherAfterEgg
+	goto_if_ne VAR_POLISHED_STARTER, 0, PolishedReturn_TeacherAfterStarter
 	msgbox PolishedNewBarkTown_Breeze, MSGBOX_DEFAULT
+	goto PolishedReturn_TeacherTravel
+PolishedReturn_TeacherAfterEgg::
+	msgbox PolishedReturn_Text_TellMomIfLeaving, MSGBOX_DEFAULT
+	goto PolishedReturn_TeacherTravel
+PolishedReturn_TeacherAfterStarter::
+	msgbox PolishedReturn_Text_YourMonIsAdorable, MSGBOX_DEFAULT
+PolishedReturn_TeacherTravel::
 	msgbox PolishedNewBarkTown_Garden, MSGBOX_YESNO
 	goto_if_eq VAR_RESULT, NO, PolishedNewBarkTown_Stay
 	closemessage
@@ -298,3 +307,9 @@ PolishedRoute29_Text_WhatDoYouThinkYoureDoing:
 
 PolishedRoute29_Text_ItsDangerousToGoAlone:
 	.string "It's dangerous to\ngo out without a\lPOKéMON!\pWild POKéMON\njump out of the\pgrass on the way\nto the next town.$"
+
+PolishedReturn_Text_TellMomIfLeaving:
+	.string "Hi, {PLAYER}!\nLeaving again?\pYou should tell\nyour mom if you\lare leaving.$"
+
+PolishedReturn_Text_YourMonIsAdorable:
+	.string "Oh! Your POKéMON\nis adorable!\lI wish I had one!$"

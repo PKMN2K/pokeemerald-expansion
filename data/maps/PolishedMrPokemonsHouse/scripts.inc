@@ -106,6 +106,8 @@ PolishedMrPokemonsHouse_CheckIntro::
 	setvar VAR_POLISHED_MR_POKEMON_SCENE, 1
 @ Stage 1 records the stolen-starter/Elm-call handoff for the return phase.
 	setvar VAR_POLISHED_ERRAND_STATE, 1
+	setvar VAR_POLISHED_CHERRYGROVE_SCENE, 1
+	setvar VAR_POLISHED_ELMS_LAB_SCENE, 3
 	releaseall
 	end
 PolishedMrPokemonsHouse_Full::
@@ -113,6 +115,7 @@ PolishedMrPokemonsHouse_Full::
 	releaseall
 	end
 PolishedMrPokemonsHouse_Talk::
+	goto_if_set FLAG_POLISHED_GAVE_MYSTERY_EGG, PolishedReturn_MrPokemonAfter
 	lock
 	faceplayer
 	goto_if_eq VAR_POLISHED_MR_POKEMON_SCENE, 0, PolishedMrPokemonsHouse_FullTalk
@@ -185,6 +188,12 @@ PolishedMrPokemonsHouse_ReceivedDex:
 
 PolishedMrPokemonsHouse_MakeRoom:
 	.string "Please make room for the Egg\nand visit me again.$"
+
+PolishedReturn_MrPokemonAfter::
+	msgbox PolishedReturn_MrPokemonAfterText, MSGBOX_NPC
+	end
+PolishedReturn_MrPokemonAfterText:
+	.string "Life is delight-\nful! Always, new\pdiscoveries to be\nmade!$"
 PolishedMrPokemonsHouse_TrashCan::
 	msgbox PolishedMrPokemonsHouse_TrashCan_Text, MSGBOX_SIGN
 	end

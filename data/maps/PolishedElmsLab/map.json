@@ -98,6 +98,20 @@
       "trainer_sight_or_berry_tree_id": "0",
       "script": "PolishedIntro_ElmsLabLyraScript",
       "flag": "FLAG_TEMP_5"
+    },
+    {
+      "local_id": "LOCALID_ELMS_LAB_OFFICER",
+      "graphics_id": "OBJ_EVENT_GFX_POLISHED_OFFICER",
+      "x": 5,
+      "y": 3,
+      "elevation": 3,
+      "movement_type": "MOVEMENT_TYPE_FACE_UP",
+      "movement_range_x": 0,
+      "movement_range_y": 0,
+      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_sight_or_berry_tree_id": "0",
+      "script": "PolishedReturn_Cop",
+      "flag": "FLAG_TEMP_6"
     }
   ],
   "warp_events": [
@@ -161,6 +175,24 @@
       "var": "VAR_POLISHED_ELMS_LAB_SCENE",
       "var_value": "5",
       "script": "PolishedBattle_AideRight"
+    },
+    {
+      "type": "trigger",
+      "x": 4,
+      "y": 5,
+      "elevation": 3,
+      "var": "VAR_POLISHED_ELMS_LAB_SCENE",
+      "var_value": "3",
+      "script": "PolishedReturn_CopLeft"
+    },
+    {
+      "type": "trigger",
+      "x": 5,
+      "y": 5,
+      "elevation": 3,
+      "var": "VAR_POLISHED_ELMS_LAB_SCENE",
+      "var_value": "3",
+      "script": "PolishedReturn_CopRight"
     }
   ],
   "bg_events": [
@@ -211,6 +243,14 @@
       "elevation": 0,
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
       "script": "PolishedElmsLab_Heal"
+    },
+    {
+      "type": "sign",
+      "x": 5,
+      "y": 0,
+      "elevation": 0,
+      "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
+      "script": "PolishedReturn_LabWindow"
     }
   ]
 }

@@ -84,6 +84,11 @@ def party(game, enemy=False, details=False):
                 status=struct.unpack_from("<I", raw, data["status"])[0],
                 moves=[move & 0x7ff for move in struct.unpack_from("<4H", decoded, attacks)],
                 pp=[pp & 0x7f for pp in decoded[attacks + 8:attacks + 12]])
+            if enemy:
+                efforts, misc = [game.read(game.sym['sSubstructOffsets']+24*block+personality%24,1)[0]*data['substruct_size'] for block in (2,3)]
+                iv_word = struct.unpack_from('<I',decoded,misc+4)[0]
+                result[-1].update(evs=list(decoded[efforts:efforts+6]),
+                    ivs=[(iv_word>>(5*i))&31 for i in range(6)])
     return result
 
 
@@ -242,6 +247,7 @@ def check_intro(game, maps, rows, checks):
         assert not script_active(game) and remaining(game, lab) == [left]
         assert lyra not in actors(game) and actors(game)[elm]["position"] == (5, 2)
         assert party(game) == actual
+        game.command('save '+str(game.output/('return-starter-'+species.lower()+'.state')))
         report.append({"player_starter": species, "lyra_starter": lyra_species, "remaining_ball": left,
             "party": actual, "scene": var(game, "lab_scene"), "saved_and_reentered": True})
         print("PASS: starter", species, "-> Lyra", lyra_species, "with save, reentry and duplicate-gift guard", flush=True)

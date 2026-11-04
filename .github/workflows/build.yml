@@ -60,6 +60,7 @@ jobs:
           python3 tools/polished_port/scripts/test_route29.py
           python3 tools/polished_port/scripts/test_cherrygrove.py
           python3 tools/polished_port/scripts/test_route30.py
+          python3 tools/polished_port/scripts/test_return.py
 
       - name: Build playable Johto demo
         timeout-minutes: 20

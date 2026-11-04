@@ -1,6 +1,6 @@
 {
   "source_commit": "3fa43192379df5c3e7b09a08e4d5d79af4f02f42",
-  "scope": "source geography, connected interiors, static interactions, six ambient residents, rival window encounter, Lyra/Elm introduction, all three starter choices, first Lyra battle, aide Potion and Mom's opening with weekday/DST setup, schedules and neighbor; Route 29, Cherrygrove services, Route 30 with Mulch and native encounters, Mystery Egg and Oak; return quest deferred",
+  "scope": "source geography, connected interiors, static interactions, six ambient residents, rival window encounter, Lyra/Elm introduction, all three starter choices, first Lyra battle, aide Potion and Mom's opening with weekday/DST setup, schedules and neighbor; Route 29, Cherrygrove services, Route 30 with Mulch, native encounters, Mystery Egg and Oak; Elm's disaster call, first rival battle, theft investigation, rival naming, Egg delivery and Joey's first battle",
   "maps": {
     "NEW_BARK_TOWN": {
       "name": "NewBarkTown",
@@ -350,7 +350,7 @@
           "dest_warp_id": "0"
         }
       ],
-      "static_interactions": 6,
+      "static_interactions": 7,
       "residents": [],
       "story_encounters": [
         {
@@ -502,6 +502,14 @@
             "quantity": 1
           },
           "next_phase": "Mom's events and Route 29"
+        },
+        {
+          "source": "MeetCopScript/MeetCopScript2, CopScript, SpecialNameRival, ElmAfterTheftScript",
+          "columns": [
+            4,
+            5
+          ],
+          "handoff": "name rival; take one Mystery Egg; scene 3 to 2"
         }
       ]
     },
@@ -1928,6 +1936,14 @@
               ]
             }
           ]
+        },
+        {
+          "source": "CherrygroveRivalTriggerNorth/South",
+          "rows": [
+            6,
+            7
+          ],
+          "battle": "Rival0 1/2/3, both outcomes continue and heal; scene 1 to 2"
         }
       ]
     },
@@ -2766,10 +2782,15 @@
           "first_visit": "Joey's battle barrier, original residents, Mikey/Don, six signs, Antidote, hidden Potion, Cut and two daily fruit trees",
           "deferred": [
             "Route31 north connection",
-            "post-errand Joey battle and phone rematches",
+            "Joey phone registration and rematches",
             "fishing",
             "source music"
           ]
+        },
+        {
+          "source": "ElmPhoneScript2.disaster, TrainerYoungsterJoey",
+          "call": "First outdoor return from Mr. Pok\u00e9mon; clears on completion",
+          "post_egg": "Replace staged battle with sight trainer Joey; phone/rematches deferred"
         }
       ]
     },
@@ -2965,7 +2986,7 @@
           "next_scene": 1,
           "gift": "Mystery Egg key item",
           "pokedex": "native National Pok\u00e9dex adapter; original Johto ordering/UI pending",
-          "return_handoff": "VAR_POLISHED_ERRAND_STATE=1; return rival, Elm call/theft investigation and Egg delivery are next"
+          "return_handoff": "Queue Elm's call on Route 30, the Cherrygrove rival and the lab investigation"
         }
       ]
     }
@@ -3247,14 +3268,17 @@
     "graphics/object_events/polished_npc_palettes/purple_time.bin": "b17559dff1558e2f8224b00e543d4d33f3404680eb978a62db08ae407be162bc",
     "graphics/object_events/polished_npc_palettes/pink_time.bin": "62a6b1219fd138a49ac726715676ca171337568ef2df66a4fb7dabb885dcd80b",
     "src/data/polished_route30.party": "c8234770314b52522b1b3fec29e7b86b30337955d22d57e3c895d1a4f67a968d",
+    "graphics/trainers/front_pics/polished_rival.png": "14aa048e357549340e926f557c4c4737b45a7c4d51f6807ee7c74068f8814d10",
+    "graphics/trainers/palettes/polished_rival.pal": "bbc303be54aea8bbd4c70bcacdbd205d922b345702d45a013bcc37fa824e95b6",
+    "src/data/polished_return.party": "c3ff98fb424914ef7de50d2dcd587bdf514b7f88efc82a864d16e5fb2b2439a0",
     "data/layouts/PolishedNewBarkTown/map.bin": "0cfa1f14ae1edc366416d1cb39410cc6fa621759dad4eb7aa1c9eb0007a919c3",
     "data/layouts/PolishedNewBarkTown/border.bin": "310f01837605c39f0e0a084ab8e536b47e44c21cab74534066b2413ce33f2119",
     "data/maps/PolishedNewBarkTown/map.json": "3aa008e443f5336a3ab8e97852aac79e15422103b64c12ee6b5b7dd952d96aa2",
-    "data/maps/PolishedNewBarkTown/scripts.inc": "4de98c40ca8f8d9e04c8c6048a254a82f9b2ca3da66b7d732c31f7cdcb80702b",
+    "data/maps/PolishedNewBarkTown/scripts.inc": "7167aa549668efe81a7f1963563dbe900a90deb4ddf9812e0d305a14864a8205",
     "data/layouts/PolishedElmsLab/map.bin": "edcb44c979918661055b6aef0e304340121f55a0ad53d73d592ab07ba797a681",
     "data/layouts/PolishedElmsLab/border.bin": "58b6ce2870c231fbe07a763ac9c4dc612e669cfbebfb93760435a9dbbdced76e",
-    "data/maps/PolishedElmsLab/map.json": "2c54ad2486df490e3cbc99d80c91de04c5f72c2e79d3ad7d3a8f881d774ace12",
-    "data/maps/PolishedElmsLab/scripts.inc": "5543ee832c5aa3d491bd725dcc589ebf329e546cbb76af3dc7e0bc26a7a8088b",
+    "data/maps/PolishedElmsLab/map.json": "76a64456615d3ca286c7469bae548c230d99020eafdd352b77c5281f4acbc58a",
+    "data/maps/PolishedElmsLab/scripts.inc": "bd55108f76af0380a29ec3ec59c3f35b167f2d716130510db9821bbc09060353",
     "data/layouts/PolishedPlayersHouse1F/map.bin": "66eb31dcc753d0fa08c180c8693f007c2bad0204b6ded6b0e4411c854e27c559",
     "data/layouts/PolishedPlayersHouse1F/border.bin": "58b6ce2870c231fbe07a763ac9c4dc612e669cfbebfb93760435a9dbbdced76e",
     "data/maps/PolishedPlayersHouse1F/map.json": "f6182e8995f8ae5efae60232ccd395e037f6c1544b4684803efad8af82cc012b",
@@ -3289,8 +3313,8 @@
     "data/maps/PolishedRoute2946Gate/scripts.inc": "1bb253495763c3e575233f58502e02be0ee1db6bf57c71d185f4b275872aa490",
     "data/layouts/PolishedCherrygroveCity/map.bin": "3d93dab2e0d57ca099f937465a5551e9e4d702300dc819f02bd957e28c7d3103",
     "data/layouts/PolishedCherrygroveCity/border.bin": "310f01837605c39f0e0a084ab8e536b47e44c21cab74534066b2413ce33f2119",
-    "data/maps/PolishedCherrygroveCity/map.json": "74e8f35842530d0cf8d400db7a437e0066e5505da7640783717b601f5c75b7a7",
-    "data/maps/PolishedCherrygroveCity/scripts.inc": "f0e43319d46b1d3c1c765c14435995528b2939fe4695e2221e3d41c0b31a5f88",
+    "data/maps/PolishedCherrygroveCity/map.json": "247eebaea328618fdeb43376b84fe198b1a6519fc5b215275da5ee6501680d00",
+    "data/maps/PolishedCherrygroveCity/scripts.inc": "dd119f3ff9c5b48b46fc0d88bddab8e8a9b1768f785971b2bdc2f9ec9b57cb10",
     "data/layouts/PolishedCherrygroveMart/map.bin": "272ff1bbe2e97632e2e284949ee86c7b405d3db3694639e8c68f881031dd4049",
     "data/layouts/PolishedCherrygroveMart/border.bin": "58b6ce2870c231fbe07a763ac9c4dc612e669cfbebfb93760435a9dbbdced76e",
     "data/maps/PolishedCherrygroveMart/map.json": "90074af61aa70279cf3eb5d87f71f9b1113bd2e45f425a1862726c9214aa05fa",
@@ -3313,8 +3337,8 @@
     "data/maps/PolishedCherrygroveEvolutionSpeechHouse/scripts.inc": "05000884b4cfe3446f1dba3c0567e29b8d58b88db1bfbc80b5d72efc25ca387c",
     "data/layouts/PolishedRoute30/map.bin": "14f49e563b4951d2cbecb2b924c50299a73630da7bebd7e1653aa62c5027a5c9",
     "data/layouts/PolishedRoute30/border.bin": "310f01837605c39f0e0a084ab8e536b47e44c21cab74534066b2413ce33f2119",
-    "data/maps/PolishedRoute30/map.json": "50fff01bc3e1887c506d634e11d07d8f462339496ff78334ccffd4243723bd71",
-    "data/maps/PolishedRoute30/scripts.inc": "4542d7b5f25ff48c06a18d3af6e6bafec2236f11eabdfe1692584e7045479e5b",
+    "data/maps/PolishedRoute30/map.json": "7270dcbca21e0b9caaa1821ca13594ccf0bcfd30e2abbde6824264613d66d74a",
+    "data/maps/PolishedRoute30/scripts.inc": "a87b10e547914ad13b001a09025692be35b20c59d64760c0c3f588ce181c9bfe",
     "data/layouts/PolishedRoute30BerrySpeechHouse/map.bin": "3a2ac680f7ac1eb0a6988f4bd068e0cb322553f997a329a24c9a4870d9499a98",
     "data/layouts/PolishedRoute30BerrySpeechHouse/border.bin": "58b6ce2870c231fbe07a763ac9c4dc612e669cfbebfb93760435a9dbbdced76e",
     "data/maps/PolishedRoute30BerrySpeechHouse/map.json": "811e560c29287cce0d948b8650ae8f7204a9a4fff1f9b95aff7a3400ef36942f",
@@ -3322,7 +3346,7 @@
     "data/layouts/PolishedMrPokemonsHouse/map.bin": "66f527050de5da31e4176672c552c9ab25ff0d550ad893448672279021ffaf58",
     "data/layouts/PolishedMrPokemonsHouse/border.bin": "58b6ce2870c231fbe07a763ac9c4dc612e669cfbebfb93760435a9dbbdced76e",
     "data/maps/PolishedMrPokemonsHouse/map.json": "5c3822cf61f6e1bd6978077e420c645f4d1ccd41b0a6eae75f2c55ef842e577d",
-    "data/maps/PolishedMrPokemonsHouse/scripts.inc": "08c7724bac2c53789793fd695fd067a09c252d605cb37df9a26e32249dc80be6",
+    "data/maps/PolishedMrPokemonsHouse/scripts.inc": "1a005d2a78777919aa281b9cd8169469b6f16f61446cf6f77998159bf4bdf501",
     "data/tilesets/primary/polished_new_bark_outdoor/tiles.bin": "4606596e49129db4f858005c54f71865f818549f252026016bec23bee8e89b45",
     "data/tilesets/primary/polished_new_bark_outdoor/palettes.bin": "fe14bfb5c6092799d53593ab4638bb4a3502ef83e72cf6de0aace0745c8694a8",
     "data/tilesets/primary/polished_new_bark_outdoor/metatiles.bin": "db29314040e9c515e27686a5e202bbf69030e5631d0efe24da69fbac66c739fa",

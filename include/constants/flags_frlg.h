@@ -1211,9 +1211,9 @@
 #define FLAG_DEFEATED_CHAMP           0x4BC
 
 // Unused?
-#define FLAG_0x4BD               0x4BD
-#define FLAG_0x4BE               0x4BE
-#define FLAG_0x4BF               0x4BF
+// Reserved by shared FLAG_POLISHED_CHERRYGROVE_RIVAL_DONE
+// Reserved by shared FLAG_POLISHED_ELM_THEFT_REPORTED
+// Reserved by shared FLAG_POLISHED_GAVE_MYSTERY_EGG
 #define FLAG_0x4C0               0x4C0
 #define FLAG_0x4C1               0x4C1
 #define FLAG_0x4C2               0x4C2

@@ -1,0 +1,81 @@
+/* Pinned first rival parties: DV 15 -> IV 30, zero EVs. */
+
+=== TRAINER_POLISHED_RIVAL_CHIKORITA ===
+Name: boy
+Class: Rival
+Pic: Polished Rival
+Gender: Male
+Music: Intense
+Double Battle: No
+
+Rattata (M)
+Level: 4
+IVs: 30 HP / 30 Atk / 30 Def / 30 SpA / 30 SpD / 30 Spe
+- Tackle
+- Leer
+- Quick Attack
+
+Chikorita (M) @ Oran Berry
+Level: 5
+IVs: 30 HP / 30 Atk / 30 Def / 30 SpA / 30 SpD / 30 Spe
+- Tackle
+- Growl
+
+=== TRAINER_POLISHED_RIVAL_CYNDAQUIL ===
+Name: boy
+Class: Rival
+Pic: Polished Rival
+Gender: Male
+Music: Intense
+Double Battle: No
+
+Rattata (M)
+Level: 4
+IVs: 30 HP / 30 Atk / 30 Def / 30 SpA / 30 SpD / 30 Spe
+- Tackle
+- Leer
+- Quick Attack
+
+Cyndaquil (M) @ Oran Berry
+Level: 5
+IVs: 30 HP / 30 Atk / 30 Def / 30 SpA / 30 SpD / 30 Spe
+- Tackle
+- Leer
+
+=== TRAINER_POLISHED_RIVAL_TOTODILE ===
+Name: boy
+Class: Rival
+Pic: Polished Rival
+Gender: Male
+Music: Intense
+Double Battle: No
+
+Rattata (M)
+Level: 4
+IVs: 30 HP / 30 Atk / 30 Def / 30 SpA / 30 SpD / 30 Spe
+- Tackle
+- Leer
+- Quick Attack
+
+Totodile (M) @ Oran Berry
+Level: 5
+IVs: 30 HP / 30 Atk / 30 Def / 30 SpA / 30 SpD / 30 Spe
+- Scratch
+- Leer
+
+=== TRAINER_POLISHED_JOEY ===
+Name: Joey
+Class: Youngster
+Pic: Polished Youngster
+Gender: Male
+Music: Male
+Double Battle: No
+
+Rattata (M)
+Level: 5
+Ability: Guts
+Nature: Adamant
+IVs: 30 HP / 30 Atk / 30 Def / 30 SpA / 30 SpD / 30 Spe
+- Tackle
+- Leer
+- Quick Attack

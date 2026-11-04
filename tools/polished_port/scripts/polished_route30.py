@@ -206,7 +206,7 @@ def events(name, script, header, files, text, define):
         code+=define(p+"_"+who+"After",plain_text(script,"GenericTrainer"+source,text))
     return (f"\tmap_script MAP_SCRIPT_ON_LOAD, {p}_Setup\n\tmap_script MAP_SCRIPT_ON_RETURN_TO_FIELD, {p}_Setup\n",code,
         {"first_visit":"Joey's battle barrier, original residents, Mikey/Don, six signs, Antidote, hidden Potion, Cut and two daily fruit trees",
-         "deferred":["Route31 north connection","post-errand Joey battle and phone rematches","fishing","source music"]})
+         "deferred":["Route31 north connection","Joey phone registration and rematches","fishing","source music"]})
 
 
 def mr_pokemon(script,header,text,define):
@@ -342,4 +342,4 @@ def mr_pokemon(script,header,text,define):
     code+=define(p+"_MakeRoom","Please make room for the Egg\\nand visit me again.$")
     return hooks,code,{"source_scene":0,"next_scene":1,"gift":"Mystery Egg key item",
         "pokedex":"native National Pokédex adapter; original Johto ordering/UI pending",
-        "return_handoff":"VAR_POLISHED_ERRAND_STATE=1; return rival, Elm call/theft investigation and Egg delivery are next"}
+        "return_handoff":"Queue Elm's call on Route 30, the Cherrygrove rival and the lab investigation"}

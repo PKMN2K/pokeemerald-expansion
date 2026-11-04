@@ -64,8 +64,10 @@ PolishedElmsLab_CannotHealText:
 
 @ Ball visibility derives from the saved choice; no extra permanent flags.
 PolishedIntro_LabVisibility::
+	call PolishedReturn_LabVisibility
 	clearflag FLAG_TEMP_5
 	call_if_eq VAR_POLISHED_ELMS_LAB_SCENE, 5, PolishedBattle_HideLyra
+	call_if_eq VAR_POLISHED_ELMS_LAB_SCENE, 3, PolishedBattle_HideLyra
 	call_if_eq VAR_POLISHED_ELMS_LAB_SCENE, 2, PolishedBattle_HideLyra
 	clearflag FLAG_TEMP_2
 	clearflag FLAG_TEMP_3
@@ -96,6 +98,7 @@ PolishedIntro_HideChikoritaTotodile::
 @ Continue restores saved actors; reconcile them with the map-load masks.
 @ Nickname/menu returns retain the current masks and choreography.
 PolishedIntro_LabRestore::
+	call_if_set FLAG_TEMP_6, PolishedReturn_RemoveOfficer
 	call_if_set FLAG_TEMP_5, PolishedBattle_RemoveLyra
 	call_if_set FLAG_TEMP_2, PolishedIntro_RemoveCyndaquil
 	call_if_set FLAG_TEMP_3, PolishedIntro_RemoveTotodile
@@ -168,6 +171,7 @@ PolishedIntro_ElmAccepted::
 	end
 
 PolishedIntro_ProfElmScript::
+	goto_if_eq VAR_POLISHED_MR_POKEMON_SCENE, 1, PolishedReturn_ElmTalk
 	lock
 	faceplayer
 	goto_if_ne VAR_POLISHED_STARTER, 0, PolishedIntro_ElmAfterStarter
@@ -190,6 +194,9 @@ PolishedIntro_LyraAfterStarter::
 	release
 	end
 PolishedIntro_ElmsAideScript::
+	goto_if_set FLAG_POLISHED_GAVE_MYSTERY_EGG, PolishedReturn_AideBusy
+	goto_if_eq VAR_POLISHED_MR_POKEMON_SCENE, 1, PolishedReturn_Aide
+PolishedReturn_AideBusy::
 	msgbox PolishedIntro_AideText_AlwaysBusy, MSGBOX_NPC
 	end
 
@@ -694,3 +701,244 @@ PolishedBattle_ElmsLabLyraSeeYouText:
 
 PolishedBattle_AideText_GiveYouPotions:
 	.string "{PLAYER}, I want\nyou to have this\lfor your errand.$"
+
+PolishedReturn_LabVisibility::
+	setflag FLAG_TEMP_6
+	goto_if_ne VAR_POLISHED_MR_POKEMON_SCENE, 1, PolishedReturn_LabVisibilityDone
+	goto_if_set FLAG_POLISHED_ELM_THEFT_REPORTED, PolishedReturn_LabVisibilityDone
+	clearflag FLAG_TEMP_6
+PolishedReturn_LabVisibilityDone::
+	return
+PolishedReturn_RemoveOfficer::
+	removeobject LOCALID_ELMS_LAB_OFFICER
+	return
+PolishedReturn_LabWindow::
+	goto_if_eq VAR_POLISHED_ERRAND_STATE, 2, PolishedReturn_BrokenWindow
+	msgbox PolishedReturn_ElmsLabWindowText1, MSGBOX_SIGN
+	end
+PolishedReturn_BrokenWindow::
+	msgbox PolishedReturn_ElmsLabWindowText2, MSGBOX_SIGN
+	end
+PolishedReturn_CopRight::
+	lockall
+	applymovement OBJ_EVENT_ID_PLAYER, PolishedReturn_PlayerLeft
+	waitmovement 0
+	goto PolishedReturn_CopApproach
+PolishedReturn_CopLeft::
+	lockall
+PolishedReturn_CopApproach::
+	applymovement OBJ_EVENT_ID_PLAYER, PolishedReturn_WalkToCop
+	waitmovement 0
+PolishedReturn_Cop::
+	lockall
+	turnobject LOCALID_ELMS_LAB_OFFICER, DIR_WEST
+	msgbox PolishedReturn_ElmsLabOfficerText1, MSGBOX_DEFAULT
+	closemessage
+	removeobject LOCALID_ELMS_LAB_LYRA
+	setobjectxyperm LOCALID_ELMS_LAB_LYRA, 5, 8
+	clearflag FLAG_TEMP_5
+	addobject LOCALID_ELMS_LAB_LYRA
+	applymovement LOCALID_ELMS_LAB_LYRA, PolishedReturn_LyraRunsIn
+	waitmovement 0
+	turnobject LOCALID_ELMS_LAB_OFFICER, DIR_SOUTH
+	msgbox PolishedReturn_ElmsLabLyraTheftInnocentText, MSGBOX_DEFAULT
+	delay 10
+	turnobject LOCALID_ELMS_LAB_OFFICER, DIR_WEST
+	msgbox PolishedReturn_ElmsLabOfficerText2, MSGBOX_DEFAULT
+	closemessage
+	fadescreen FADE_TO_BLACK
+	special PolishedErrandNameRival
+	waitstate
+	special PolishedErrandBufferRivalName
+	msgbox PolishedReturn_ElmsLabOfficerText3, MSGBOX_DEFAULT
+	closemessage
+	applymovement LOCALID_ELMS_LAB_LYRA, PolishedReturn_LyraAside
+	waitmovement 0
+	applymovement LOCALID_ELMS_LAB_OFFICER, PolishedReturn_OfficerLeaves
+	waitmovement 0
+	removeobject LOCALID_ELMS_LAB_OFFICER
+	setflag FLAG_TEMP_6
+	delay 10
+	turnobject LOCALID_ELMS_LAB_LYRA, DIR_NORTH
+	turnobject OBJ_EVENT_ID_PLAYER, DIR_SOUTH
+	msgbox PolishedReturn_ElmsLabLyraTheftGoodbyeText, MSGBOX_DEFAULT
+	closemessage
+	applymovement LOCALID_ELMS_LAB_LYRA, PolishedReturn_LyraLeaves
+	waitmovement 0
+	removeobject LOCALID_ELMS_LAB_LYRA
+	setflag FLAG_TEMP_5
+	setflag FLAG_POLISHED_ELM_THEFT_REPORTED
+	setvar VAR_POLISHED_ELMS_LAB_SCENE, 2
+	delay 10
+	applymovement OBJ_EVENT_ID_PLAYER, PolishedReturn_GiveEggApproach
+	waitmovement 0
+	goto PolishedReturn_GiveEgg
+
+PolishedReturn_ElmTalk::
+	lockall
+	faceplayer
+	goto_if_set FLAG_POLISHED_GAVE_MYSTERY_EGG, PolishedReturn_ElmStudying
+PolishedReturn_GiveEgg::
+	msgbox PolishedReturn_ElmAfterTheftText1, MSGBOX_DEFAULT
+	checkitem ITEM_POLISHED_MYSTERY_EGG
+	goto_if_eq VAR_RESULT, FALSE, PolishedReturn_ElmDone
+	msgbox PolishedReturn_ElmAfterTheftText2, MSGBOX_DEFAULT
+	removeitem ITEM_POLISHED_MYSTERY_EGG, 1
+	closemessage
+	getplayerxy VAR_0x8004, VAR_0x8005
+	call PolishedReturn_ElmRecoil
+	msgbox PolishedReturn_ElmAfterTheftText3, MSGBOX_DEFAULT
+	closemessage
+	call PolishedReturn_ElmRecover
+	msgbox PolishedReturn_ElmAfterTheftText4, MSGBOX_DEFAULT
+	msgbox PolishedReturn_ElmAfterTheftText5, MSGBOX_DEFAULT
+	setflag FLAG_POLISHED_GAVE_MYSTERY_EGG
+	msgbox PolishedReturn_ElmAfterTheftText6, MSGBOX_DEFAULT
+PolishedReturn_ElmDone::
+	releaseall
+	end
+PolishedReturn_ElmStudying::
+	msgbox PolishedReturn_ElmStudyingEggText, MSGBOX_DEFAULT
+	releaseall
+	end
+PolishedReturn_Aide::
+	msgbox PolishedReturn_AideText_TheftTestimony, MSGBOX_NPC
+	end
+
+PolishedReturn_ElmRecoil::
+	goto_if_eq VAR_0x8004, 4, PolishedReturn_ElmRight
+	goto_if_eq VAR_0x8004, 6, PolishedReturn_ElmLeft
+	goto_if_eq VAR_0x8005, 1, PolishedReturn_ElmDown
+	goto PolishedReturn_ElmUp
+PolishedReturn_ElmRecover::
+	goto_if_eq VAR_0x8004, 4, PolishedReturn_ElmLeft
+	goto_if_eq VAR_0x8004, 6, PolishedReturn_ElmRight
+	goto_if_eq VAR_0x8005, 1, PolishedReturn_ElmUp
+	goto PolishedReturn_ElmDown
+PolishedReturn_ElmUp::
+	applymovement LOCALID_ELMS_LAB_ELM, PolishedReturn_ElmStepUp
+	waitmovement 0
+	return
+PolishedReturn_ElmStepUp:
+	lock_facing_direction
+	walk_fast_up
+	unlock_facing_direction
+	step_end
+
+PolishedReturn_ElmDown::
+	applymovement LOCALID_ELMS_LAB_ELM, PolishedReturn_ElmStepDown
+	waitmovement 0
+	return
+PolishedReturn_ElmStepDown:
+	lock_facing_direction
+	walk_fast_down
+	unlock_facing_direction
+	step_end
+
+PolishedReturn_ElmLeft::
+	applymovement LOCALID_ELMS_LAB_ELM, PolishedReturn_ElmStepLeft
+	waitmovement 0
+	return
+PolishedReturn_ElmStepLeft:
+	lock_facing_direction
+	walk_fast_left
+	unlock_facing_direction
+	step_end
+
+PolishedReturn_ElmRight::
+	applymovement LOCALID_ELMS_LAB_ELM, PolishedReturn_ElmStepRight
+	waitmovement 0
+	return
+PolishedReturn_ElmStepRight:
+	lock_facing_direction
+	walk_fast_right
+	unlock_facing_direction
+	step_end
+
+PolishedReturn_PlayerLeft:
+	walk_left
+	step_end
+
+PolishedReturn_WalkToCop:
+	walk_up
+	walk_up
+	face_right
+	step_end
+
+PolishedReturn_LyraRunsIn:
+	walk_up
+	walk_up
+	walk_up
+	walk_up
+	step_end
+
+PolishedReturn_LyraAside:
+	walk_left
+	face_right
+	step_end
+
+PolishedReturn_OfficerLeaves:
+	walk_down
+	walk_down
+	walk_down
+	walk_down
+	walk_down
+	step_end
+
+PolishedReturn_LyraLeaves:
+	walk_down
+	walk_down
+	walk_down
+	walk_down
+	walk_down
+	step_end
+
+PolishedReturn_GiveEggApproach:
+	walk_right
+	face_up
+	step_end
+
+PolishedReturn_ElmsLabOfficerText1:
+	.string "I heard a POKéMON\nwas stolen here.\pRule number one!\n“The criminal will\palways return to\nthe scene of the\lcrime…”\pOh my… So you're\nthe thief?$"
+
+PolishedReturn_ElmsLabOfficerText2:
+	.string "What?\pYou battled a\ntrainer like that?\pDid you happen to\nget his name?$"
+
+PolishedReturn_ElmsLabOfficerText3:
+	.string "OK! So {STR_VAR_1}\nwas his name.\pThanks for helping\nmy investigation!$"
+
+PolishedReturn_ElmsLabLyraTheftInnocentText:
+	.string "Lyra: Hold on!\n{PLAYER} has noth-\ling to do with it!\pI saw a red-haired\nboy spying on the\lbuilding!$"
+
+PolishedReturn_ElmsLabLyraTheftGoodbyeText:
+	.string "Lyra: {PLAYER},\nI'm glad he under-\pstood that you're\ninnocent.\pI hope he makes\nthe thief return\lthat POKéMON…\pWell then, see\nyou later!$"
+
+PolishedReturn_ElmAfterTheftText1:
+	.string "Elm: {PLAYER}, this\nis terrible…\pOh, yes, what was\nMr.POKéMON's big\ldiscovery?$"
+
+PolishedReturn_ElmAfterTheftText2:
+	.string "{PLAYER} handed\nthe Mystery Egg to\lProf.Elm.$"
+
+PolishedReturn_ElmAfterTheftText3:
+	.string "Elm: This?$"
+
+PolishedReturn_ElmAfterTheftText4:
+	.string "But… Is it a\nPOKéMON Egg?\pIf it is, it is a\ngreat discovery!$"
+
+PolishedReturn_ElmAfterTheftText5:
+	.string "Elm: What?!\pProf.Oak gave you\na POKédex?\p{PLAYER}, is that\ntrue? Th-that's\lincredible!\pHe is superb at\nseeing the poten-\ltial of people as\ltrainers.\pWow, {PLAYER}. You\nmay have what it\ptakes to become\nthe Champion.\pYou seem to be\ngetting on great\lwith POKéMON too.\pYou should take\nthe POKéMON Gym\lchallenge.\pThe closest Gym\nwould be the one\lin Violet City.$"
+
+PolishedReturn_ElmAfterTheftText6:
+	.string "…{PLAYER}. The\nroad to the\pchampionship will\nbe a long one.\pBefore you leave,\nmake sure that you\ltalk to your mom.\pAnd give me a call\nsometimes too.\pI can tell you all\nabout my research\pon how POKéMON\nevolve!$"
+
+PolishedReturn_ElmStudyingEggText:
+	.string "Elm: Don't give\nup! I'll call if\pI learn anything\nabout that Egg!$"
+
+PolishedReturn_AideText_TheftTestimony:
+	.string "There was a loud\nnoise outside…\pWhen we went to\nlook, someone\lstole a POKéMON.\pIt's unbelievable\nthat anyone would\ldo that!\p…sigh… That\nstolen POKéMON.\pI wonder how it's\ndoing.\pThey say a POKéMON\nraised by a bad\pperson turns bad\nitself.$"
+
+PolishedReturn_ElmsLabWindowText1:
+	.string "The window's open.\pA pleasant breeze\nis blowing in.$"
+
+PolishedReturn_ElmsLabWindowText2:
+	.string "He broke in\nthrough here!$"

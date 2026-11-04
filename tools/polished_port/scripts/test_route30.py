@@ -27,7 +27,7 @@ def main():
         expected=[(int(x),int(y),dest,int(n)-1) for x,y,dest,n in re.findall(r'warp_event\s+(\d+),\s*(\d+),\s*(\w+),\s*(\d+)',src)]
         actual=[(w['x'],w['y'],w['dest_map'].removeprefix('MAP_POLISHED_'),int(w['dest_warp_id'])) for w in live['warp_events']]
         assert actual==expected,name
-    assert len(route['object_events'])==11
+    assert len(route['object_events'])==12
     for obj in route['object_events']:
         x,y=obj['x'],obj['y']
         assert re.search(rf'(?:object|pokemon|cuttree|fruittree|itemball)_event\s*{x},\s*{y},',files['maps/Route30.asm'].decode()),obj

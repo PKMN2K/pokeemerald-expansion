@@ -164,7 +164,7 @@ def events(name, script, header, files, text, define):
         f = [s.strip() for s in raw.split(",")]
         x, y, sprite, move, ry, rx, time, color, kind, command, label, flag = f
         if sprite == "SPRITE_RIVAL":
-            continue  # Requires the unported Mystery Egg return scene.
+            continue  # The return encounter appends him after existing local IDs.
         if color == "0":
             camel = "".join(s.title() for s in sprite.removeprefix("SPRITE_").split("_"))
             color = "PAL_NPC_" + re.search(camel + r"SpriteGFX, WALKING_SPRITE, PAL_OW_(\w+)", files["data/sprites/sprites.asm"].decode())[1]

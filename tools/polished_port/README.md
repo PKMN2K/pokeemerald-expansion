@@ -238,3 +238,14 @@ for the three native tests. `test_new_bark_emulator.py` continues through Route
 Its checkpoints are created by that ROM's own gameplay; no injected save or RAM
 mutation substitutes for completing the tour and service interactions.
 See `POLISHED_CRYSTAL_PORT.md` for complete scope and remaining story work.
+
+## Mystery Egg return
+
+`polished_return.py` generates Elm's incoming call, the Cherrygrove rival, the
+lab investigation and naming, the Egg handoff and the first Joey battle from
+the same Polished Crystal v3.2.3 pin. Run `build_new_bark.py --check` and
+`test_return.py` to verify the generated maps, source parties, movement and
+flag assignments. The New Bark emulator campaign invokes `test_return_emulator.py`
+after Mr. Pokémon. It branches from each starter's actual gameplay, checks
+the trainer portrait in VRAM, plays both win/loss outcomes and saves through
+the native game menu before checking the persistent name and quest state.

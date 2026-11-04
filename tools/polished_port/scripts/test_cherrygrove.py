@@ -16,8 +16,10 @@ def main():
     route = json.loads((ROOT/"data/maps/PolishedRoute29/map.json").read_text())
     assert city["connections"] == [{"map":route["id"],"offset":0,"direction":"right"}, {"map":"MAP_POLISHED_ROUTE_30","offset":10,"direction":"up"}]
     assert {"map":city["id"],"offset":0,"direction":"left"} in route["connections"]
-    assert not any(n["graphics_id"]=="OBJ_EVENT_GFX_POLISHED_RIVAL" for n in city["object_events"])
-    assert len(city["object_events"])==5 and len(city["coord_events"])==1
+    rival, = (n for n in city['object_events'] if n['graphics_id']=='OBJ_EVENT_GFX_POLISHED_RIVAL')
+    assert (rival['x'],rival['y'],rival['flag'])==(39,6,'FLAG_TEMP_2')
+    assert len(city['object_events'])==6
+    assert [(e['x'],e['y'],int(e['var_value'])) for e in city['coord_events']]==[(33,7,0),(33,6,1),(33,7,1)]
     warps = 0
     for name in MAPS:
         live=json.loads((ROOT/f"data/maps/Polished{name}/map.json").read_text())

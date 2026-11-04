@@ -69,6 +69,10 @@
 #define FLAG_POLISHED_ROUTE30_HIDDEN_POTION 0x4AD
 #define FLAG_POLISHED_ROUTE30_ANTIDOTE 0x4AE
 #define FLAG_POLISHED_ROUTE30_MULCH 0x4AF
+#define FLAG_POLISHED_CHERRYGROVE_RIVAL_DONE 0x4BD
+#define FLAG_POLISHED_ELM_THEFT_REPORTED 0x4BE
+#define FLAG_POLISHED_GAVE_MYSTERY_EGG 0x4BF
+
 #if IS_FRLG
 
 #include "constants/flags_frlg.h"
@@ -1279,9 +1283,9 @@
 #define FLAG_UNUSED_0x4BA                                           0x4BA // Unused Flag
 #define FLAG_UNUSED_0x4BB                                           0x4BB // Unused Flag
 #define FLAG_UNUSED_0x4BC                                           0x4BC // Unused Flag
-#define FLAG_UNUSED_0x4BD                                           0x4BD // Unused Flag
-#define FLAG_UNUSED_0x4BE                                           0x4BE // Unused Flag
-#define FLAG_UNUSED_0x4BF                                           0x4BF // Unused Flag
+// Reserved by shared FLAG_POLISHED_CHERRYGROVE_RIVAL_DONE
+// Reserved by shared FLAG_POLISHED_ELM_THEFT_REPORTED
+// Reserved by shared FLAG_POLISHED_GAVE_MYSTERY_EGG
 #define FLAG_UNUSED_0x4C0                                           0x4C0 // Unused Flag
 #define FLAG_UNUSED_0x4C1                                           0x4C1 // Unused Flag
 #define FLAG_UNUSED_0x4C2                                           0x4C2 // Unused Flag

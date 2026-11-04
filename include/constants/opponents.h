@@ -864,13 +864,17 @@
 #define TRAINER_POLISHED_LYRA_CYNDAQUIL      856
 #define TRAINER_POLISHED_LYRA_TOTODILE       857
 
-// NOTE: Because each Trainer uses a flag to determine when they are defeated, there is only space for 6 additional trainers before trainer flag space overflows
+// NOTE: Because each Trainer uses a flag to determine when they are defeated, all Emerald trainer slots are allocated; adding trainers requires a reviewed flag allocation
 //       More space can be made by shifting flags around in constants/flags.h or changing how trainer flags are handled
 //       MAX_TRAINERS_COUNT can be increased but will take up additional saveblock space
 
 #define TRAINER_POLISHED_MIKEY 858
 #define TRAINER_POLISHED_DON 859
-#define TRAINERS_COUNT_EMERALD     860
+#define TRAINER_POLISHED_RIVAL_CHIKORITA 860
+#define TRAINER_POLISHED_RIVAL_CYNDAQUIL 861
+#define TRAINER_POLISHED_RIVAL_TOTODILE 862
+#define TRAINER_POLISHED_JOEY 863
+#define TRAINERS_COUNT_EMERALD     864
 #define MAX_TRAINERS_COUNT_EMERALD 864
 
 #if IS_FRLG

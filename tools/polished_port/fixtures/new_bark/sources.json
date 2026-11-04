@@ -666,6 +666,51 @@
       "path": "data/pokemon/evos_attacks.asm",
       "fixture": "data__pokemon__evos_attacks.asm.b64",
       "git_blob_sha1": "69299b45bba2bc3e19588642fab8e3e57d065f08"
+    },
+    {
+      "path": "gfx/trainers/rival1.png",
+      "fixture": "gfx__trainers__rival1.png.b64",
+      "git_blob_sha1": "5c8c8fde250725f6fb7bdec8dccf4afdcf3693c6"
+    },
+    {
+      "path": "gfx/trainers/rival1.pal",
+      "fixture": "gfx__trainers__rival1.pal.b64",
+      "git_blob_sha1": "b58648a1a4883ef823d3b5e35b7748ab911d885a"
+    },
+    {
+      "path": "data/trainers/pic_pointers.asm",
+      "fixture": "data__trainers__pic_pointers.asm.b64",
+      "git_blob_sha1": "d2fb1367a7c1d2a23522aa4535a214ef708c3bd8"
+    },
+    {
+      "path": "data/trainers/palettes.asm",
+      "fixture": "data__trainers__palettes.asm.b64",
+      "git_blob_sha1": "4f7234527c10681f814cee1979ef7429e52cf81c"
+    },
+    {
+      "path": "data/phone/text/elm.asm",
+      "fixture": "data__phone__text__elm.asm.b64",
+      "git_blob_sha1": "85334147f2bb08deb12f24095f5b69910aac52ee"
+    },
+    {
+      "path": "data/phone/special_calls.asm",
+      "fixture": "data__phone__special_calls.asm.b64",
+      "git_blob_sha1": "11a3b8cef3684b165af361aac22dcba52863c7b8"
+    },
+    {
+      "path": "engine/phone/scripts/elm.asm",
+      "fixture": "engine__phone__scripts__elm.asm.b64",
+      "git_blob_sha1": "545389f340ff2635e9092450b7ac174712bb78e2"
+    },
+    {
+      "path": "gfx/trainers.asm",
+      "fixture": "gfx__trainers.asm.b64",
+      "git_blob_sha1": "2494fad72c04b5a1f1e9e4fa71226a6af967ab06"
+    },
+    {
+      "path": "engine/events/specials.asm",
+      "fixture": "engine__events__specials.asm.b64",
+      "git_blob_sha1": "59e7d8e1cc1f1bb8c0392848694eff7abad8b230"
     }
   ]
 }
