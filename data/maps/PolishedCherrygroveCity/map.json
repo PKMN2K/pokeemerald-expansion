@@ -18,6 +18,11 @@
       "map": "MAP_POLISHED_ROUTE_29",
       "offset": 0,
       "direction": "right"
+    },
+    {
+      "map": "MAP_POLISHED_ROUTE_30",
+      "offset": 10,
+      "direction": "up"
     }
   ],
   "object_events": [

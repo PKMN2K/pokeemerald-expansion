@@ -1,3 +1,12 @@
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_PolishedYoungsterBlue;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_PolishedYoungsterBrown;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_PolishedLassGreen;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_PolishedBugCatcher;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_PolishedOak;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_PolishedRattataBack;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_PolishedPokedex;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_PolishedFruitPink;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_PolishedFruitPickedPink;
 extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_PolishedGramps;
 extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_PolishedYoungsterRed;
 extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_PolishedPokefanBlue;
@@ -472,6 +481,15 @@ const struct ObjectEventGraphicsInfo *const gObjectEventGraphicsInfoPointers[NUM
     [OBJ_EVENT_GFX_POLISHED_CHILD_RED] = &gObjectEventGraphicsInfo_PolishedChildRed,
     [OBJ_EVENT_GFX_POLISHED_BOWING_NURSE] = &gObjectEventGraphicsInfo_PolishedBowingNurse,
     [OBJ_EVENT_GFX_POLISHED_PIDGEY] = &gObjectEventGraphicsInfo_PolishedPidgey,
+    [OBJ_EVENT_GFX_POLISHED_YOUNGSTER_BLUE] = &gObjectEventGraphicsInfo_PolishedYoungsterBlue,
+    [OBJ_EVENT_GFX_POLISHED_YOUNGSTER_BROWN] = &gObjectEventGraphicsInfo_PolishedYoungsterBrown,
+    [OBJ_EVENT_GFX_POLISHED_LASS_GREEN] = &gObjectEventGraphicsInfo_PolishedLassGreen,
+    [OBJ_EVENT_GFX_POLISHED_BUG_CATCHER] = &gObjectEventGraphicsInfo_PolishedBugCatcher,
+    [OBJ_EVENT_GFX_POLISHED_OAK] = &gObjectEventGraphicsInfo_PolishedOak,
+    [OBJ_EVENT_GFX_POLISHED_RATTATA_BACK] = &gObjectEventGraphicsInfo_PolishedRattataBack,
+    [OBJ_EVENT_GFX_POLISHED_POKEDEX] = &gObjectEventGraphicsInfo_PolishedPokedex,
+    [OBJ_EVENT_GFX_POLISHED_FRUIT_PINK] = &gObjectEventGraphicsInfo_PolishedFruitPink,
+    [OBJ_EVENT_GFX_POLISHED_FRUIT_PICKED_PINK] = &gObjectEventGraphicsInfo_PolishedFruitPickedPink,
     [OBJ_EVENT_GFX_POLISHED_COOL_DUDE_BLUE] = &gObjectEventGraphicsInfo_PolishedCoolDudeBlue,
     [OBJ_EVENT_GFX_POLISHED_FRUIT_PICKED] = &gObjectEventGraphicsInfo_PolishedFruitPicked,
     [OBJ_EVENT_GFX_POLISHED_RIVAL] = &gObjectEventGraphicsInfo_PolishedRival,

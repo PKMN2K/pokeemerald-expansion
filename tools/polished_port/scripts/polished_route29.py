@@ -82,39 +82,51 @@ PolishedRoute29_Potion::
 \tend
 
 PolishedRoute29_Fruit::
-\tlockall
-\tspecial PolishedRoute29RefreshFruit
-\tmsgbox PolishedRoute29_FruitBearing, MSGBOX_DEFAULT
-\tspecialvar VAR_RESULT, PolishedRoute29FruitAvailable
-\tgoto_if_eq VAR_RESULT, FALSE, PolishedRoute29_NoFruit
-\tbufferitemname STR_VAR_3, ITEM_ORAN_BERRY
-\tmsgbox PolishedRoute29_FruitHey, MSGBOX_DEFAULT
-\tspecial PolishedRoute29PickFruit
-\tgoto_if_eq VAR_RESULT, 0, PolishedRoute29_FruitFull
-\tcopyvar VAR_0x8004, VAR_RESULT
-\tgoto_if_eq VAR_RESULT, 1, PolishedRoute29_FruitOne
-\tgoto_if_eq VAR_RESULT, 2, PolishedRoute29_FruitTwo
-\tmsgbox PolishedRoute29_FruitObtainedThree, MSGBOX_DEFAULT
-\tgoto PolishedRoute29_FruitDone
-PolishedRoute29_FruitOne::
-\tmsgbox PolishedRoute29_FruitObtainedOne, MSGBOX_DEFAULT
-\tgoto PolishedRoute29_FruitDone
-PolishedRoute29_FruitTwo::
-\tmsgbox PolishedRoute29_FruitObtainedTwo, MSGBOX_DEFAULT
-PolishedRoute29_FruitDone::
-\tplayfanfare MUS_OBTAIN_ITEM
-\twaitfanfare
-\tputitemaway ITEM_ORAN_BERRY, VAR_0x8004
-\treleaseall
-\tend
-PolishedRoute29_FruitFull::
-\tmsgbox PolishedRoute29_FruitPackFull, MSGBOX_DEFAULT
-\treleaseall
-\tend
-PolishedRoute29_NoFruit::
-\tmsgbox PolishedRoute29_FruitNothing, MSGBOX_DEFAULT
-\treleaseall
-\tend
+	setvar VAR_0x8005, 0
+	goto PolishedFruit_Interact
+
+PolishedFruit_Interact::
+	lockall
+	special PolishedFruitPrepare
+	msgbox PolishedRoute29_FruitBearing, MSGBOX_DEFAULT
+	specialvar VAR_RESULT, PolishedFruitAvailable
+	goto_if_eq VAR_RESULT, FALSE, PolishedFruit_None
+	bufferitemname STR_VAR_3, VAR_0x8006
+	msgbox PolishedRoute29_FruitHey, MSGBOX_DEFAULT
+	special PolishedFruitPick
+	goto_if_eq VAR_RESULT, 0, PolishedFruit_Full
+	copyvar VAR_0x8004, VAR_RESULT
+	goto_if_eq VAR_RESULT, 1, PolishedFruit_One
+	goto_if_eq VAR_RESULT, 2, PolishedFruit_Two
+	msgbox PolishedRoute29_FruitObtainedThree, MSGBOX_DEFAULT
+	goto PolishedFruit_Done
+PolishedFruit_One::
+	msgbox PolishedRoute29_FruitObtainedOne, MSGBOX_DEFAULT
+	goto PolishedFruit_Done
+PolishedFruit_Two::
+	msgbox PolishedRoute29_FruitObtainedTwo, MSGBOX_DEFAULT
+PolishedFruit_Done::
+	playfanfare MUS_OBTAIN_ITEM
+	waitfanfare
+	putitemaway VAR_0x8006, VAR_0x8004
+	releaseall
+	end
+PolishedFruit_Full::
+	msgbox PolishedRoute29_FruitPackFull, MSGBOX_DEFAULT
+	releaseall
+	end
+PolishedFruit_None::
+	msgbox PolishedRoute29_FruitNothing, MSGBOX_DEFAULT
+	checkitem ITEM_POLISHED_MULCH
+	goto_if_eq VAR_RESULT, FALSE, PolishedFruit_End
+	msgbox PolishedFruit_WantMulch, MSGBOX_YESNO
+	goto_if_eq VAR_RESULT, NO, PolishedFruit_End
+	special PolishedFruitUseMulch
+	goto_if_eq VAR_RESULT, FALSE, PolishedFruit_End
+	msgbox PolishedFruit_UsedMulch, MSGBOX_DEFAULT
+PolishedFruit_End::
+	releaseall
+	end
 
 """
     for label in ("Text_WaitingForNight", "Text_WaitingForMorning"):
@@ -127,12 +139,14 @@ PolishedRoute29_NoFruit::
         "ObtainedThree": "_ObtainedThreeFruitText", "PackFull": "_FruitPackIsFullText",
         "Nothing": "_NothingHereText"}.items():
         code += define("PolishedRoute29_Fruit" + label, text(common, source))
+    for key, label in (("WantMulch", "_WantToUseMulchText"), ("UsedMulch", "_UsedMulchText")):
+        code += define("PolishedFruit_" + key, text(common, label))
     return ("\tmap_script MAP_SCRIPT_ON_LOAD, PolishedRoute29_Setup\n"
             "\tmap_script MAP_SCRIPT_ON_RETURN_TO_FIELD, PolishedRoute29_Setup\n"), code, {
         "first_visit": "4 residents, 3 signs, Potion, 2 persistent Cut trees, daily Oran Berry tree",
         "berry_yield": "Random 1-3, falls back to fitting quantity; commit daily stamp only after addition",
         "tips_translation": "Unavailable GBC title shortcuts replaced by encounter-time advice",
-        "deferred": ["Cherrygrove", "Route46", "Lyra tutorial", "Tuscany", "Mulch replenishment"]}
+        "deferred": ["Route46", "Lyra tutorial", "Tuscany"]}
 
 
 def wild_entries(files):

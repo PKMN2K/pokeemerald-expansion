@@ -193,7 +193,8 @@ def events(name, script, header, files, text, define):
         code += define(event + "_Text", plain_text(script, label, text))
     hooks = ""
     if name == "CherrygroveCity":
-        header["connections"] = [{"map": "MAP_POLISHED_ROUTE_29", "offset": 0, "direction": "right"}]
+        header["connections"] = [{"map": "MAP_POLISHED_ROUTE_29", "offset": 0, "direction": "right"},
+            {"map": "MAP_POLISHED_ROUTE_30", "offset": 10, "direction": "up"}]
         header["bg_events"].append({"type": "hidden_item", "x": 35, "y": 2, "elevation": 0,
             "item": "ITEM_NUGGET", "flag": "FLAG_POLISHED_CHERRYGROVE_NUGGET"})
         bird = object_at("LOCALID_CHERRYGROVE_PIDGEY", "POLISHED_PIDGEY", 26, 13, p + "_Pidgey")

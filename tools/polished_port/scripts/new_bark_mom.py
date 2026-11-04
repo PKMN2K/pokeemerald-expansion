@@ -38,7 +38,7 @@ def house(script, header, files, source_text, text_definition):
             "x": x, "y": y, "elevation": 3, "movement_type": "MOVEMENT_TYPE_FACE_" + facing,
             "movement_range_x": 0, "movement_range_y": 0, "trainer_type": "TRAINER_TYPE_NONE",
             "trainer_sight_or_berry_tree_id": "0", "script": prefix + ("_Neighbor" if i == 5 else "_Talk"),
-            "flag": "0" if i == 5 else f"FLAG_TEMP_{i + 2}"})
+            "flag": "FLAG_HIDE_POLISHED_NEW_BARK_RIVAL" if i == 5 else f"FLAG_TEMP_{i + 2}"})
     assert "MomSpriteGFX, WALKING_SPRITE, PAL_OW_RED" in files["data/sprites/sprites.asm"].decode()
     for i, (x, y) in enumerate(((10, 4), (11, 4), (9, 1), (9, 2)), 1):
         assert re.search(rf"coord_event\s+{x},\s+{y},\s+0, MomTrigger{i}", script)

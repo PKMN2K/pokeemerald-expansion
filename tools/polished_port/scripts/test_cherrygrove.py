@@ -14,7 +14,7 @@ def main():
     files = source_files()
     city = json.loads((ROOT/"data/maps/PolishedCherrygroveCity/map.json").read_text())
     route = json.loads((ROOT/"data/maps/PolishedRoute29/map.json").read_text())
-    assert city["connections"] == [{"map":route["id"],"offset":0,"direction":"right"}]
+    assert city["connections"] == [{"map":route["id"],"offset":0,"direction":"right"}, {"map":"MAP_POLISHED_ROUTE_30","offset":10,"direction":"up"}]
     assert {"map":city["id"],"offset":0,"direction":"left"} in route["connections"]
     assert not any(n["graphics_id"]=="OBJ_EVENT_GFX_POLISHED_RIVAL" for n in city["object_events"])
     assert len(city["object_events"])==5 and len(city["coord_events"])==1

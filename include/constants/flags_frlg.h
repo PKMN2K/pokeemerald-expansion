@@ -1190,10 +1190,10 @@
 // Reserved by shared FLAG_POLISHED_CHERRYGROVE_NUGGET
 // Reserved by shared FLAG_POLISHED_CHERRYGROVE_MYSTIC_WATER
 // Reserved by shared FLAG_POLISHED_READ_RED_JOURNAL
-#define FLAG_UNUSED_0x4AC               0x4AC // Unused Flag
-#define FLAG_UNUSED_0x4AD               0x4AD // Unused Flag
-#define FLAG_UNUSED_0x4AE               0x4AE // Unused Flag
-#define FLAG_UNUSED_0x4AF               0x4AF // Unused Flag
+// Reserved by shared FLAG_POLISHED_ROUTE30_CUT
+// Reserved by shared FLAG_POLISHED_ROUTE30_HIDDEN_POTION
+// Reserved by shared FLAG_POLISHED_ROUTE30_ANTIDOTE
+// Reserved by shared FLAG_POLISHED_ROUTE30_MULCH
 
 // Boss clear flags, 1200
 #define FLAG_DEFEATED_BROCK           0x4B0

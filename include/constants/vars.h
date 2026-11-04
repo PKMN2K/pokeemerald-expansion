@@ -270,10 +270,10 @@
 #define VAR_POLISHED_WEEKDAY_OFFSET                     0x40F8 // 0-6: Johto weekday bias relative to the native RTC
 #define VAR_POLISHED_ROUTE29_FRUIT_DAY                                0x40F9 // Last successful Oran harvest: native RTC day + 1
 #define VAR_POLISHED_CHERRYGROVE_SCENE                   0x40FA // 0: guide tour pending, 2: complete
-#define VAR_UNUSED_0x40FB                                0x40FB // Unused Var
-#define VAR_UNUSED_0x40FC                                0x40FC // Unused Var
-#define VAR_UNUSED_0x40FD                                0x40FD // Unused Var
-#define VAR_UNUSED_0x40FE                                0x40FE // Unused Var
+#define VAR_POLISHED_ROUTE30_ORAN_DAY 0x40FB
+#define VAR_POLISHED_ROUTE30_PECHA_DAY 0x40FC
+#define VAR_POLISHED_MR_POKEMON_SCENE 0x40FD
+#define VAR_POLISHED_ERRAND_STATE 0x40FE
 #define VAR_UNUSED_0x40FF                                0x40FF // Unused Var
 
 #define VARS_END                                         0x40FF

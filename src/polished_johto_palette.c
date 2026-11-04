@@ -13,6 +13,8 @@
 static const u16 sJohtoRedSpritePalettes[] = INCBIN_U16("graphics/object_events/polished_pokefan/time_palettes.bin");
 static const u16 sJohtoBlueSpritePalettes[] = INCBIN_U16("graphics/object_events/polished_npc_palettes/blue_time.bin");
 static const u16 sJohtoGreenSpritePalettes[] = INCBIN_U16("graphics/object_events/polished_npc_palettes/green_time.bin");
+static const u16 sJohtoPinkSpritePalettes[] = INCBIN_U16("graphics/object_events/polished_npc_palettes/pink_time.bin");
+static const u16 sJohtoPurpleSpritePalettes[] = INCBIN_U16("graphics/object_events/polished_npc_palettes/purple_time.bin");
 static const u16 sJohtoBrownSpritePalettes[] = INCBIN_U16("graphics/object_events/polished_npc_palettes/brown_time.bin");
 
 // The garden, New Bark and Route 29 use source roof group 24; Cherrygrove
@@ -30,6 +32,10 @@ struct PolishedJohtoMapPaletteRegistration
 
 static const struct PolishedJohtoMapPaletteRegistration sJohtoMapRegistrations[] =
 {
+    {LAYOUT_POLISHED_ROUTE_30,
+     &gTileset_PolishedNewBarkOutdoorPrimary,
+     &gTileset_PolishedNewBarkOutdoorSecondary,
+     26, JOHTO_PALETTE_STANDARD, 0},
     {LAYOUT_POLISHED_CHERRYGROVE_CITY,
      &gTileset_PolishedNewBarkOutdoorPrimary,
      &gTileset_PolishedNewBarkOutdoorSecondary,
@@ -185,6 +191,12 @@ bool8 PolishedJohtoTryApplySpritePalette(u8 paletteNum)
         break;
     case OBJ_EVENT_PAL_TAG_POLISHED_NPC_GREEN:
         palettes = sJohtoGreenSpritePalettes;
+        break;
+    case OBJ_EVENT_PAL_TAG_POLISHED_NPC_PINK:
+        palettes = sJohtoPinkSpritePalettes;
+        break;
+    case OBJ_EVENT_PAL_TAG_POLISHED_NPC_PURPLE:
+        palettes = sJohtoPurpleSpritePalettes;
         break;
     case OBJ_EVENT_PAL_TAG_POLISHED_NPC_BROWN:
         palettes = sJohtoBrownSpritePalettes;

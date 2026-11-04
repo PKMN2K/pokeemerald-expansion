@@ -650,3 +650,8 @@ gSpecials::
 	def_special PolishedRoute29FruitAvailable
 	def_special PolishedRoute29RefreshFruit
 	def_special PolishedRoute29PickFruit
+	def_special PolishedFruitRefreshAll
+	def_special PolishedFruitPrepare
+	def_special PolishedFruitAvailable
+	def_special PolishedFruitPick
+	def_special PolishedFruitUseMulch

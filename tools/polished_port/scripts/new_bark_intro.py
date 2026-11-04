@@ -120,9 +120,15 @@ PolishedIntro_LabVisibility::
 	clearflag FLAG_TEMP_2
 	clearflag FLAG_TEMP_3
 	clearflag FLAG_TEMP_4
+	goto_if_eq VAR_POLISHED_MR_POKEMON_SCENE, 1, PolishedRoute30_AllBallsTaken
 	goto_if_eq VAR_POLISHED_STARTER, 1, PolishedIntro_HideCyndaquilChikorita
 	goto_if_eq VAR_POLISHED_STARTER, 2, PolishedIntro_HideTotodileCyndaquil
 	goto_if_eq VAR_POLISHED_STARTER, 3, PolishedIntro_HideChikoritaTotodile
+	end
+PolishedRoute30_AllBallsTaken::
+	setflag FLAG_TEMP_2
+	setflag FLAG_TEMP_3
+	setflag FLAG_TEMP_4
 	end
 PolishedIntro_HideCyndaquilChikorita::
 	setflag FLAG_TEMP_2

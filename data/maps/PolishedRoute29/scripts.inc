@@ -69,37 +69,49 @@ PolishedRoute29_Potion::
 	end
 
 PolishedRoute29_Fruit::
+	setvar VAR_0x8005, 0
+	goto PolishedFruit_Interact
+
+PolishedFruit_Interact::
 	lockall
-	special PolishedRoute29RefreshFruit
+	special PolishedFruitPrepare
 	msgbox PolishedRoute29_FruitBearing, MSGBOX_DEFAULT
-	specialvar VAR_RESULT, PolishedRoute29FruitAvailable
-	goto_if_eq VAR_RESULT, FALSE, PolishedRoute29_NoFruit
-	bufferitemname STR_VAR_3, ITEM_ORAN_BERRY
+	specialvar VAR_RESULT, PolishedFruitAvailable
+	goto_if_eq VAR_RESULT, FALSE, PolishedFruit_None
+	bufferitemname STR_VAR_3, VAR_0x8006
 	msgbox PolishedRoute29_FruitHey, MSGBOX_DEFAULT
-	special PolishedRoute29PickFruit
-	goto_if_eq VAR_RESULT, 0, PolishedRoute29_FruitFull
+	special PolishedFruitPick
+	goto_if_eq VAR_RESULT, 0, PolishedFruit_Full
 	copyvar VAR_0x8004, VAR_RESULT
-	goto_if_eq VAR_RESULT, 1, PolishedRoute29_FruitOne
-	goto_if_eq VAR_RESULT, 2, PolishedRoute29_FruitTwo
+	goto_if_eq VAR_RESULT, 1, PolishedFruit_One
+	goto_if_eq VAR_RESULT, 2, PolishedFruit_Two
 	msgbox PolishedRoute29_FruitObtainedThree, MSGBOX_DEFAULT
-	goto PolishedRoute29_FruitDone
-PolishedRoute29_FruitOne::
+	goto PolishedFruit_Done
+PolishedFruit_One::
 	msgbox PolishedRoute29_FruitObtainedOne, MSGBOX_DEFAULT
-	goto PolishedRoute29_FruitDone
-PolishedRoute29_FruitTwo::
+	goto PolishedFruit_Done
+PolishedFruit_Two::
 	msgbox PolishedRoute29_FruitObtainedTwo, MSGBOX_DEFAULT
-PolishedRoute29_FruitDone::
+PolishedFruit_Done::
 	playfanfare MUS_OBTAIN_ITEM
 	waitfanfare
-	putitemaway ITEM_ORAN_BERRY, VAR_0x8004
+	putitemaway VAR_0x8006, VAR_0x8004
 	releaseall
 	end
-PolishedRoute29_FruitFull::
+PolishedFruit_Full::
 	msgbox PolishedRoute29_FruitPackFull, MSGBOX_DEFAULT
 	releaseall
 	end
-PolishedRoute29_NoFruit::
+PolishedFruit_None::
 	msgbox PolishedRoute29_FruitNothing, MSGBOX_DEFAULT
+	checkitem ITEM_POLISHED_MULCH
+	goto_if_eq VAR_RESULT, FALSE, PolishedFruit_End
+	msgbox PolishedFruit_WantMulch, MSGBOX_YESNO
+	goto_if_eq VAR_RESULT, NO, PolishedFruit_End
+	special PolishedFruitUseMulch
+	goto_if_eq VAR_RESULT, FALSE, PolishedFruit_End
+	msgbox PolishedFruit_UsedMulch, MSGBOX_DEFAULT
+PolishedFruit_End::
 	releaseall
 	end
 
@@ -129,3 +141,9 @@ PolishedRoute29_FruitPackFull:
 
 PolishedRoute29_FruitNothing:
 	.string "There's nothing\nhere…$"
+
+PolishedFruit_WantMulch:
+	.string "Want to use\nMulch?$"
+
+PolishedFruit_UsedMulch:
+	.string "{PLAYER} used\nMulch!\pThe tree was\nfertilized!$"

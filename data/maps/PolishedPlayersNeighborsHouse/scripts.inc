@@ -6,6 +6,8 @@ PolishedPlayersNeighborsHouse_MapScripts::
 
 @ Map-local visibility, recomputed on entry and save loading.
 PolishedPlayersNeighborsHouse_ResidentSchedule::
+	setflag FLAG_TEMP_2
+	call_if_eq VAR_POLISHED_MR_POKEMON_SCENE, 1, PolishedRoute30_ShowNeighbor
 	gettime
 	goto_if_lt VAR_0x8000, 5, PolishedPlayersNeighborsHouse_ResidentSchedule_Evening
 	goto_if_ge VAR_0x8000, 17, PolishedPlayersNeighborsHouse_ResidentSchedule_Evening
@@ -38,3 +40,13 @@ PolishedPlayersNeighborsHouse_PlayersNeighborsHusbandText::
 
 PolishedPlayersNeighborsHouse_PlayersNeighborsHusbandText_Text:
 	.string "This town is the\nfarthest south-\peast one in all\nof Johto.$"
+
+PolishedRoute30_ShowNeighbor::
+	clearflag FLAG_TEMP_2
+	return
+
+PolishedRoute30_NeighborHome::
+	msgbox PolishedRoute30_NeighborHomeText, MSGBOX_NPC
+	end
+PolishedRoute30_NeighborHomeText:
+	.string "My daughter is\nadamant about\pbecoming Prof.\nElm's assistant.\pShe really loves\nPOKéMON!\pBut then, so do I!$"

@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
-"""Reproduce New Bark, Route 29 and Cherrygrove's first-visit maps and events.
+"""Reproduce the first journey from New Bark to Mr. Pokémon.
 
 This imports map blocks, door/stair coordinates, reading interactions and the
 six ambient residents, the rival's lab-window encounter, and Lyra/Elm's
 introduction, starter selection, Lyra battle, first Potion and Mom's opening.
 Cherrygrove includes the guide tour, Town Map, residents and native services.
-Further story events, Routes 27/30/46 and the bay remain separate work.
+Route 30 includes Mulch, the Mystery Egg and Oak. The return errand,
+Routes 27/31/46 and the bay remain separate work.
 """
 import argparse
 import base64
@@ -29,6 +30,7 @@ import new_bark_battle
 import new_bark_mom
 import polished_route29
 import polished_cherrygrove
+import polished_route30
 
 NEW_BARK_MAPS = {
     "NewBarkTown": "NEW_BARK_TOWN",
@@ -40,7 +42,7 @@ NEW_BARK_MAPS = {
     "LyrasHouse2F": "LYRAS_HOUSE_2F",
     "ElmsHouse": "ELMS_HOUSE",
 }
-MAPS = {**NEW_BARK_MAPS, "Route29": "ROUTE_29", "Route2946Gate": "ROUTE_29_46_GATE", **polished_cherrygrove.MAPS}
+MAPS = {**NEW_BARK_MAPS, "Route29": "ROUTE_29", "Route2946Gate": "ROUTE_29_46_GATE", **polished_cherrygrove.MAPS, **polished_route30.MAPS}
 BEHAVIORS = {**BEHAVIORS,
     "WINDOW": ("MB_NORMAL", True),
     "COUNTER": ("MB_COUNTER", True),
@@ -343,7 +345,7 @@ def rival_scene(script, files):
         code += text_definition(prefix + f"_Text{number}", source_text(script, f"NewBarkTownRivalText{number}"))
     report = {"source_script": "NewBarkTownRivalScript", "source_sprite": "SPRITE_RIVAL", "source_palette": "RED",
         "source_visibility_event": fields[-1], "visibility_flag": obj["flag"],
-        "visibility_setter_pending": "maps/MrPokemonsHouse.asm (Mystery Egg visit)", "event": obj,
+        "visibility_setter": "PolishedMrPokemonsHouse_CheckIntro (completed first visit)", "event": obj,
         "player_path": [[2, 2], [2, 3], [2, 5]], "rival_path": [[3, 2], [2, 2], [3, 2]],
         "sound_translation": {"SFX_TACKLE": "SE_M_COMET_PUNCH"}}
     return obj, code, report
@@ -356,8 +358,8 @@ def map_header(name, constant, width, height, script, files):
         "layout": "LAYOUT_POLISHED_" + constant,
         "music": "MUS_DUMMY", "region": "REGION_JOHTO", "region_map_section": "MAPSEC_NONE",
         "requires_flash": False, "weather": "WEATHER_NONE",
-        "map_type": "MAP_TYPE_TOWN" if name in ("NewBarkTown", "CherrygroveCity") else "MAP_TYPE_ROUTE" if name == "Route29" else "MAP_TYPE_INDOOR",
-        "allow_cycling": name in ("NewBarkTown", "Route29", "CherrygroveCity"), "allow_escaping": False,
+        "map_type": "MAP_TYPE_TOWN" if name in ("NewBarkTown", "CherrygroveCity") else "MAP_TYPE_ROUTE" if name in ("Route29", "Route30") else "MAP_TYPE_INDOOR",
+        "allow_cycling": name in ("NewBarkTown", "Route29", "Route30", "CherrygroveCity"), "allow_escaping": False,
         "allow_running": True, "show_map_name": False, "battle_scene": "MAP_BATTLE_SCENE_NORMAL",
         "connections": None, "object_events": [], "warp_events": [], "coord_events": [], "bg_events": [],
     }
@@ -469,13 +471,30 @@ def map_header(name, constant, width, height, script, files):
         code = code.replace("\t.byte 0\n", hooks + "\t.byte 0\n", 1)
         code += scene
         story.append(report)
+    if name in polished_route30.MAPS:
+        hooks, scene, report = polished_route30.events(name, script, header, files, source_text, text_definition)
+        code = code.replace("\t.byte 0\n", hooks + "\t.byte 0\n", 1)
+        code += scene
+        story.append(report)
+        if name == "Route30":
+            code = code.replace(source_text(script, "Route30AdvancedTipsText"),
+                "Advanced Tips!\\pDuring battle, choose\\nPOKéMON to switch partners.\\pChoose BAG to use an item,\\nor RUN to leave a wild battle!$")
+    if name == "PlayersNeighborsHouse":
+        npc = polished_route29.object_at("LOCALID_RETURNED_NEIGHBOR", "POLISHED_MATRON", 5, 3,
+            "PolishedRoute30_NeighborHome", "FLAG_TEMP_2")
+        npc["movement_type"] = "MOVEMENT_TYPE_FACE_LEFT"
+        header["object_events"].append(npc)
+        code = code.replace("PolishedPlayersNeighborsHouse_ResidentSchedule::\n",
+            "PolishedPlayersNeighborsHouse_ResidentSchedule::\n\tsetflag FLAG_TEMP_2\n\tcall_if_eq VAR_POLISHED_MR_POKEMON_SCENE, 1, PolishedRoute30_ShowNeighbor\n")
+        code += "PolishedRoute30_ShowNeighbor::\n\tclearflag FLAG_TEMP_2\n\treturn\n\nPolishedRoute30_NeighborHome::\n\tmsgbox PolishedRoute30_NeighborHomeText, MSGBOX_NPC\n\tend\n"
+        code += text_definition("PolishedRoute30_NeighborHomeText", source_text(script, "PlayersNeighborText"))
     return header, (code.rstrip() + "\n").encode(), resident_info, story
 
 
 def generate():
     files = source_files()
     ids = behavior_ids()
-    products, maps, layouts = {**resident_assets(files), **new_bark_battle.battle_assets(files), **polished_cherrygrove.assets(files)}, {}, []
+    products, maps, layouts = {**resident_assets(files), **new_bark_battle.battle_assets(files), **polished_cherrygrove.assets(files), **polished_route30.assets(files)}, {}, []
     indoor = palette_rows((FIXTURES / "johto_bg_tiles.pal").read_text())[32:39]
     indoor_palette = b"".join(struct.pack("<16H", *p, p[0], *([0] * 11)) for p in indoor).ljust(512, b"\0")
     outdoor = apply_new_bark_roof(build_graphics()[0], files)
@@ -499,10 +518,10 @@ def generate():
     permissions = {symbol: permission for permission, symbol in re.findall(
         r"db (LAND_TILE|WALL_TILE|WATER_TILE)\s*; COLL_(\w+)", files["data/collision/collision_permissions.asm"].decode())}
     for name, constant in MAPS.items():
-        bank = "Outdoor" if name in ("NewBarkTown", "Route29", "CherrygroveCity") else "Lab" if name == "ElmsLab" else "Gate" if name == "Route2946Gate" else "Mart" if name == "CherrygroveMart" else "PokeCenter" if name == "CherrygrovePokeCenter1F" else "House"
+        bank = "Outdoor" if name in ("NewBarkTown", "Route29", "Route30", "CherrygroveCity") else "Lab" if name == "ElmsLab" else "Gate" if name == "Route2946Gate" else "Mart" if name == "CherrygroveMart" else "PokeCenter" if name == "CherrygrovePokeCenter1F" else "House"
         source_tileset = {"Outdoor": "JOHTO_TRADITIONAL", "Lab": "LAB", "House": "JOHTO_HOUSE", "Gate": "GATE", "Mart": "MART", "PokeCenter": "POKECENTER"}[bank]
         assert re.search(r"map " + name + r", TILESET_" + source_tileset + r",", files["data/maps/maps.asm"].decode())
-        source_layout = "JohtoHouse4" if name == "PlayersNeighborsHouse" else name
+        source_layout = "JohtoHouse4" if name in ("PlayersNeighborsHouse", "Route30BerrySpeechHouse") else name
         source_layout = polished_cherrygrove.BLOCKS.get(name, source_layout)
         if name == "Route2946Gate":
             source_layout = "NorthSouthGate"
@@ -533,7 +552,7 @@ def generate():
         products[f"data/layouts/{prefix}/map.bin"] = raw
         products[f"data/layouts/{prefix}/border.bin"] = border_raw
         header, script, resident_info, story = map_header(name, constant, width * 2, height * 2, files[f"maps/{name}.asm"].decode(), files)
-        if name in polished_cherrygrove.MAPS:
+        if name in (*polished_cherrygrove.MAPS, *polished_route30.MAPS):
             script += polished_cherrygrove.furniture(name, header, raw, width * 2, symbols, files, source_text, text_definition).encode()
             script = script.rstrip() + b"\n"
         products[f"data/maps/{prefix}/map.json"] = json_bytes(header)
@@ -591,7 +610,7 @@ def generate():
 
 """
     products["src/data/tilesets/polished_new_bark.h"] = (header_text.rstrip() + "\n").encode()
-    report = {"source_commit": PIN, "scope": "source geography, connected interiors, static interactions, six ambient residents, rival window encounter, Lyra/Elm introduction, all three starter choices, first Lyra battle, aide Potion and Mom's opening with weekday/DST setup, schedules and neighbor; Route 29 first visit, gatehouse and native wild encounters; later story progression deferred",
+    report = {"source_commit": PIN, "scope": "source geography, connected interiors, static interactions, six ambient residents, rival window encounter, Lyra/Elm introduction, all three starter choices, first Lyra battle, aide Potion and Mom's opening with weekday/DST setup, schedules and neighbor; Route 29, Cherrygrove services, Route 30 with Mulch and native encounters, Mystery Egg and Oak; return quest deferred",
         "maps": maps, "layouts": layouts, "output_sha256": {p: hashlib.sha256(raw).hexdigest() for p, raw in products.items()}}
     products["tools/polished_port/manifests/new_bark.json"] = json_bytes(report)
     products["tools/polished_port/manifests/route29_wild.json"] = json_bytes({

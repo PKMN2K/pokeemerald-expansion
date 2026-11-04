@@ -515,6 +515,7 @@ static const struct SpritePalette sObjectEventSpritePalettes[] = {
     {gObjectEventPal_PolishedBallBlue,        OBJ_EVENT_PAL_TAG_POLISHED_BALL_BLUE},
     {gObjectEventPal_PolishedBallGreen,        OBJ_EVENT_PAL_TAG_POLISHED_BALL_GREEN},
     {gObjectEventPal_PolishedNpcPink, OBJ_EVENT_PAL_TAG_POLISHED_NPC_PINK},
+    {gObjectEventPal_PolishedNpcPurple, OBJ_EVENT_PAL_TAG_POLISHED_NPC_PURPLE},
     {gObjectEventPal_PolishedBgGreen, OBJ_EVENT_PAL_TAG_POLISHED_BG_GREEN},
     {gObjectEventPal_BrendanReflection,     OBJ_EVENT_PAL_TAG_BRENDAN_REFLECTION},
     {gObjectEventPal_BridgeReflection,      OBJ_EVENT_PAL_TAG_BRIDGE_REFLECTION},
@@ -9885,7 +9886,7 @@ enum Direction GetLedgeJumpDirection(s16 x, s16 y, enum Direction direction)
         index -= DIR_EAST;
 
     index--;
-    if (gMapHeader.mapLayoutId == LAYOUT_POLISHED_ROUTE_29 || gMapHeader.mapLayoutId == LAYOUT_POLISHED_CHERRYGROVE_CITY)
+    if (gMapHeader.mapLayoutId == LAYOUT_POLISHED_ROUTE_29 || gMapHeader.mapLayoutId == LAYOUT_POLISHED_CHERRYGROVE_CITY || gMapHeader.mapLayoutId == LAYOUT_POLISHED_ROUTE_30)
     {
         s16 originX = x, originY = y;
         s16 landingX = x, landingY = y;

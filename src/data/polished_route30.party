@@ -1,0 +1,40 @@
+/* Pinned first-visit western Route 30 trainers. */
+
+=== TRAINER_POLISHED_MIKEY ===
+Name: Mikey
+Class: Youngster
+Pic: Polished Youngster
+Gender: Male
+Music: Male
+Double Battle: No
+
+Rattata (M)
+Level: 2
+IVs: 12 HP / 12 Atk / 12 Def / 12 SpA / 12 SpD / 12 Spe
+- Tackle
+- Leer
+
+Pidgey (M)
+Level: 4
+IVs: 12 HP / 12 Atk / 12 Def / 12 SpA / 12 SpD / 12 Spe
+- Tackle
+
+=== TRAINER_POLISHED_DON ===
+Name: Don
+Class: Bug Catcher
+Pic: Polished Bug Catcher
+Gender: Male
+Music: Male
+Double Battle: No
+
+Caterpie (M)
+Level: 3
+IVs: 12 HP / 12 Atk / 12 Def / 12 SpA / 12 SpD / 12 Spe
+- Tackle
+- String Shot
+
+Caterpie (M)
+Level: 3
+IVs: 12 HP / 12 Atk / 12 Def / 12 SpA / 12 SpD / 12 Spe
+- Tackle
+- String Shot

@@ -546,6 +546,126 @@
       "path": "data/collision/collision_std_scripts.asm",
       "fixture": "data__collision__collision_std_scripts.asm.b64",
       "git_blob_sha1": "ed4a07b3e067c20ab404977adbbd783b402d660f"
+    },
+    {
+      "path": "maps/Route30.asm",
+      "fixture": "maps__Route30.asm.b64",
+      "git_blob_sha1": "e03b24f4505323bcd7b9d50079734cfa58a60f8e"
+    },
+    {
+      "path": "maps/Route30.ablk",
+      "fixture": "maps__Route30.ablk.b64",
+      "git_blob_sha1": "e55ea6a9c5ab9b69b22d417eabbd3f0761a06c08"
+    },
+    {
+      "path": "maps/Route30BerrySpeechHouse.asm",
+      "fixture": "maps__Route30BerrySpeechHouse.asm.b64",
+      "git_blob_sha1": "35194837fa68236401925f873cac48b69d51b87b"
+    },
+    {
+      "path": "maps/MrPokemonsHouse.asm",
+      "fixture": "maps__MrPokemonsHouse.asm.b64",
+      "git_blob_sha1": "9f92dfed55ca79c02890c32ff32e1e459e2a8088"
+    },
+    {
+      "path": "maps/MrPokemonsHouse.ablk",
+      "fixture": "maps__MrPokemonsHouse.ablk.b64",
+      "git_blob_sha1": "70eb2ce2a8cc674b4aeef968e03e32b485f482f6"
+    },
+    {
+      "path": "gfx/sprites/oak.png",
+      "fixture": "gfx__sprites__oak.png.b64",
+      "git_blob_sha1": "7a76574d0929ee373f08c2f3dfc1366e924c99fd"
+    },
+    {
+      "path": "gfx/sprites/lass.png",
+      "fixture": "gfx__sprites__lass.png.b64",
+      "git_blob_sha1": "d63ca0d9fa603bbfd9b0fc97ae4596d5b9714d3b"
+    },
+    {
+      "path": "gfx/sprites/bug_catcher.png",
+      "fixture": "gfx__sprites__bug_catcher.png.b64",
+      "git_blob_sha1": "27506b2e47a52c06ddd0cabb603cee1c7ad5be3c"
+    },
+    {
+      "path": "gfx/sprites/rattata_back.png",
+      "fixture": "gfx__sprites__rattata_back.png.b64",
+      "git_blob_sha1": "259b106643b7442920b1f234729e58cd1fdf6bfa"
+    },
+    {
+      "path": "gfx/sprites/book_paper_pokedex.png",
+      "fixture": "gfx__sprites__book_paper_pokedex.png.b64",
+      "git_blob_sha1": "ba5822d37687a4152931fdaf46bd0d5cad436cc8"
+    },
+    {
+      "path": "gfx/items/mulch.png",
+      "fixture": "gfx__items__mulch.png.b64",
+      "git_blob_sha1": "a239458eaf8f9b61ed2585ee23c52b5c59ffaabe"
+    },
+    {
+      "path": "gfx/items/mystery_egg.png",
+      "fixture": "gfx__items__mystery_egg.png.b64",
+      "git_blob_sha1": "f9e9efa829f94714eb2332025290901a14fdf79f"
+    },
+    {
+      "path": "gfx/items/items.pal",
+      "fixture": "gfx__items__items.pal.b64",
+      "git_blob_sha1": "d06245a3daca89077fade89d3caa633287c9b6c5"
+    },
+    {
+      "path": "gfx/items/key_items.pal",
+      "fixture": "gfx__items__key_items.pal.b64",
+      "git_blob_sha1": "4af1a80673ac883dd8d122aaf760ba2c40cdcc80"
+    },
+    {
+      "path": "data/items/icon_pointers.asm",
+      "fixture": "data__items__icon_pointers.asm.b64",
+      "git_blob_sha1": "03df75ed7a38529fcfbe6e4c5bb91a35d59d215e"
+    },
+    {
+      "path": "data/items/attributes.asm",
+      "fixture": "data__items__attributes.asm.b64",
+      "git_blob_sha1": "462f69887a4fc6eea7b160892df8b515d306ded1"
+    },
+    {
+      "path": "data/items/descriptions.asm",
+      "fixture": "data__items__descriptions.asm.b64",
+      "git_blob_sha1": "166e93e79f6c3cea2cac3f7916cade54364a2fd5"
+    },
+    {
+      "path": "gfx/trainers/youngster.png",
+      "fixture": "gfx__trainers__youngster.png.b64",
+      "git_blob_sha1": "ddac1794aa5a6a3ed9bfbbabc76a182dd409d68b"
+    },
+    {
+      "path": "gfx/trainers/youngster.pal",
+      "fixture": "gfx__trainers__youngster.pal.b64",
+      "git_blob_sha1": "a330d692f6c02e3bf53ca4cd966af118e78e721e"
+    },
+    {
+      "path": "gfx/trainers/bug_catcher.png",
+      "fixture": "gfx__trainers__bug_catcher.png.b64",
+      "git_blob_sha1": "1ad5fcae85c4e1fcc726ee8bc53677337ebf3231"
+    },
+    {
+      "path": "gfx/trainers/bug_catcher.pal",
+      "fixture": "gfx__trainers__bug_catcher.pal.b64",
+      "git_blob_sha1": "417eac1b02a70c9f774ada2cdeddfb52e8707eef"
+    },
+    {
+      "path": "data/trainers/parties.asm",
+      "fixture": "data__trainers__parties.asm.b64",
+      "git_blob_sha1": "70b801219a30bf24109cd23f2efc3d706afd34ea"
+    },
+    {
+      "path": "data/trainers/dvs.asm",
+      "fixture": "data__trainers__dvs.asm.b64",
+      "git_blob_sha1": "170459db9179b4fbfd76f610688c357c2811521b"
+    },
+    {
+      "path": "data/pokemon/evos_attacks.asm",
+      "fixture": "data__pokemon__evos_attacks.asm.b64",
+      "git_blob_sha1": "69299b45bba2bc3e19588642fab8e3e57d065f08"
     }
   ]
 }

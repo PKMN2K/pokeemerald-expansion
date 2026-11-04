@@ -187,9 +187,9 @@ to Expansion's own Tackle impact, `SE_M_COMET_PUNCH`.
 
 `FLAG_HIDE_POLISHED_NEW_BARK_RIVAL` reserves previously unused persistent bit
 `0x20` in both Emerald and FRLG without changing save size or existing IDs.
-It corresponds to source `EVENT_RIVAL_NEW_BARK_TOWN`. The source setter during
-the Mystery Egg visit at Mr. Pokémon's house is still pending, so the rival
-remains visible and the window encounter repeats in this demo.
+It corresponds to source `EVENT_RIVAL_NEW_BARK_TOWN`. The window encounter
+repeats until the Mystery Egg visit at Mr. Pokémon's house, whose source setter
+now makes the rival leave town.
 
 The real-input emulator suite verifies the two exact dialogue buffers, all
 four source sprite palettes, intermediate positions/facings, jump height,
@@ -246,8 +246,9 @@ actual encrypted Pokémon's species/level/item/checksum, preservation of the dem
 party, duplicate-gift prevention, and native Save/reset/Continue plus reentry.
 Snapshots include cartridge savedata and are taken only through gameplay.
 
-Starter selection hands off to the first Lyra battle below. The Mr. Pokémon
-journey and the usable Pokégear phone interface remain pending.
+Starter selection hands off to the first Lyra battle below, followed by the
+Route 29, Cherrygrove and Mr. Pokémon journey described in the later sections.
+The usable Pokégear phone interface remains pending.
 Elm's contact is stored for that later interface. Sound cues and Pokémon battle
 art currently use Expansion's assets; this does not claim a Polished Crystal
 soundtrack or a complete battle-art migration.
@@ -393,7 +394,7 @@ Cherrygrove's original 40×22 city connects to Route 29's western edge. Its Mart
 Pokémon Center, Guide Gent's house and both speech houses retain their source
 layouts and fifteen reciprocal door events. This brings the port to sixteen
 source maps and 37 door/stair events, plus the two garden demonstration maps.
-Route 30 and the bay remain closed; the Center communication floor is blocked
+Route 30 is connected in the next phase below; the bay remains closed. The Center communication floor is blocked
 until its story requirements and destination are imported.
 
 The automatic east-entry trigger and direct Guide Gent conversation follow
@@ -418,8 +419,8 @@ including the animated Pidgey. The two children retain their conversation
 facings. Signs, shelves and ordinary furniture use source text. The hidden
 Nugget and Fisher's Mystic Water use native Bag handling and persistent flags;
 the Fisher records completion only after successful insertion.
-The Nugget's northeastern ledge requires the still-unported northern approach;
-its event encoding is verified without inventing an access path.
+The Nugget's northeastern ledge requires the northern water approach through
+Route 30; the land-route tests audit its event encoding.
 
 The city registers source roof group 26. Its time refresh cannot be skipped
 when another clock reader has already updated the shared time variable. The
@@ -438,8 +439,63 @@ doors, source encounters and special palettes. Native tests check reciprocal
 landings, blackout routing and map/palette isolation. The real-input mGBA
 campaign exercises the tour, map viewer, services, residents and saved state.
 
-The next content phase is Route 30 and Mr. Pokémon's first errand. The return
-rival battle, Elm's Mystery Egg handoff and Mom's banking follow that phase.
+### Route 30, Mulch and Mr. Pokémon's first visit
+
+The original 26×54 Route 30 connects north of Cherrygrove with the source's
+five-block offset, translated to ten native cells. Both 8×8 houses and all six
+reciprocal door events are live. The port now contains nineteen source maps and
+43 directed door/stair events, plus the two garden maps. Route 31 stays closed.
+Original signs, the Antidote, hidden Potion, Cut tree and two fruit trees retain
+their coordinates. Joey's Rattata/Pidgey battle blocks the first-visit western
+path; his two attack movements return both Pokémon to their source positions.
+Mikey and Don have native trainer battles, source portraits, species, levels
+and early learnsets. Gen II DV 6 contributes native IV 12, matching the earlier
+Lyra conversion convention. Their rematches and Joey's later battle await the
+return quest. Battle mechanics, abilities and music use Expansion's engine.
+
+All three grass tables preserve the source species/level probabilities. The
+same source clock boundaries and evening mixture used by Route 29 now apply to
+Route 30 as well. Its water tables retain Poliwag/Poliwhirl and 60/30/10
+weights; native rate 4 is the closest integer to the source's 2% base check.
+Native encounter cooldowns, modifiers and Repels remain active. The route uses
+roof group 26, including time-dependent purple Rattata and pink Pecha colors.
+Indoor colors remain fixed. The Town Map identifies these three maps as Route 30.
+
+The Berry Master gives one original Mulch item, recording the gift only after
+successful Bag insertion. Mulch has its original item pixels and palette. When
+talking to a picked tree, No preserves the item; Yes consumes one and replenishes
+only that tree, exactly as the source's FertilizedFruitTree flag reset does.
+The shared interaction supports Route 29's Oran tree and both Route 30 trees.
+Each keeps its own saved daily harvest; full-pocket fallback and clock-reversal
+protection remain active. Using Mulch from the Bag is unavailable in the source
+as well. Both Mulch and Mystery Egg append new item IDs without changing any
+existing item's ID.
+
+Mr. Pokémon's first-entry scene grants the Mystery Egg key item, preserves the
+release dialogue and Oak's movements, removes the source Pokédex prop and Oak,
+and heals the full party. The first-frame scene starts before the native doorway
+step, so the original right/up approach is preserved. A full key pocket leaves
+the quest pending for another visit. Oak unlocks Expansion's usable
+National Pokédex so the Johto Pokémon can be viewed; original Johto ordering and
+Pokédex presentation remain pending. Saving and returning preserve the handoff
+and prevent repeat gifts. The source rival leaves New Bark's window, the remaining
+lab ball disappears, and the visiting neighbor returns home.
+
+Four formerly unused shared flags (`0x4AC`–`0x4AF`) store the route's pickups,
+Cut tree and Mulch gift. Four unused vars (`0x40FB`–`0x40FE`) store independent
+fruit dates, Mr. Pokémon's scene and the return-errand stage. Oak and the prop
+use temporary visibility flags derived from the saved scene. The return stage
+records the theft/Elm-call handoff without activating unfinished return scripts.
+The next content phase is the return rival battle, Elm's phone call and theft
+investigation, Mystery Egg delivery and Mom's banking. Fishing tables, source
+music and the complete Pokégear interface remain pending.
+
+Deterministic generation reproduces 192 source-map products. Host checks compare
+connections, source encounter weights, item pixels/palettes, safe flag allocation
+and walkable scene paths. Native tests exercise independent harvests, conditional
+Mulch consumption, clock reversal and reciprocal door landings. The real-input
+emulator campaign exercises the outbound trip, gifts, choices, Oak, the native
+Pokédex, healing, Save/Continue, repeat visits and the return connection.
 
 The playable visual slice and dormant Headbutt encounter selection are complete
 parts of the port. **The whole Polished Crystal migration is not complete.**

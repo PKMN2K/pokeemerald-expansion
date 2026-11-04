@@ -56,9 +56,9 @@ def finish_wild(game, observed, label):
     raise AssertionError("Route 29 wild battle did not return to the field")
 
 
-def route_walk(game, data, goal, observed):
+def route_walk(game, data, goal, observed, battle_handler=finish_wild):
     width, height = data["width"], data["height"]
-    stem = "outdoor" if data["name"] == "PolishedRoute29" else "gate"
+    stem = "outdoor" if data["name"] in ("PolishedRoute29", "PolishedRoute30") else "gate"
     attr = b"".join((ROOT / f"data/tilesets/{side}/polished_new_bark_{stem}/metatile_attributes.bin").read_bytes()
                     for side in ("primary", "secondary"))
     attrs = struct.unpack("<1024H", attr)
@@ -82,17 +82,17 @@ def route_walk(game, data, goal, observed):
         if pos == goal:
             for key, target in paths[pos]:
                 for attempt in range(3):
-                    finish_wild(game, observed, str(len(observed)))
+                    battle_handler(game, observed, str(len(observed)))
                     try:
                         game.step(key)
                         break
                     except AssertionError:
-                        if not task_active(game, "Task_BattleStart"):
+                        if not task_active(game, "Task_BattleStart") and game.u32(game.sym["gMain"]+4)==game.sym["CB2_Overworld"]|1:
                             raise
                 else:
                     raise AssertionError("Repeated encounter startup prevented a route step")
                 game.frames(45)
-                finish_wild(game, observed, str(len(observed)))
+                battle_handler(game, observed, str(len(observed)))
                 assert game.position() == target, (pos, target, game.position())
             return
         for key, dx, dy in ((RIGHT, 1, 0), (LEFT, -1, 0), (UP, 0, -1), (DOWN, 0, 1)):

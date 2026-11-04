@@ -179,8 +179,8 @@ def sea_step(game, direction, lose=False):
 
 
 def check_items_and_blackout(game, city, center, checks):
-    # The northeastern Nugget ledge is approached through the unported north
-    # connection. Its native event is audited, not reached through a test warp.
+    # The northeastern Nugget ledge requires the Route 30 water approach.
+    # This city check audits its encoding without inventing a shortcut.
     game.restore("CherrygrovePokeCenter1F")
     leave(game,center,city)
     walk(game,city,(10,9));game.face(DOWN);game.press(A)
@@ -387,6 +387,8 @@ def check_city(game, route, observed, rows, checks):
     checks.append("Center PC opens native Pokémon storage and reading Red's journal records its persistent flag")
     check_items_and_blackout(game,city,center,checks)
     game.restore("cherrygrove-services")
+    from test_route30_emulator import check_route30
+    check_route30(game,city,checks)
     walk(game,city,(39,6));game.step(RIGHT);game.frames(100)
     assert game.map_number()==map_id(game,route) and game.position()==(0,6)
     checks.append("Cherrygrove's east connection returns seamlessly to Route 29")

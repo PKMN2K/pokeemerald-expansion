@@ -458,7 +458,8 @@ enum TimeOfDay GetTimeOfDayForEncounters(u32 headerId, enum WildPokemonArea area
     // when the host game's global time-of-day encounters are disabled.
     if (headerId != HEADER_NONE
         && gWildMonHeaders[headerId].mapGroup == MAP_GROUP(MAP_POLISHED_ROUTE_29)
-        && gWildMonHeaders[headerId].mapNum == MAP_NUM(MAP_POLISHED_ROUTE_29))
+        && (gWildMonHeaders[headerId].mapNum == MAP_NUM(MAP_POLISHED_ROUTE_29)
+         || gWildMonHeaders[headerId].mapNum == MAP_NUM(MAP_POLISHED_ROUTE_30)))
     {
         RtcCalcLocalTime();
         return PolishedRoute29EncounterTime(gLocalTime.hours,

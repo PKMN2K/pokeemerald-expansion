@@ -1855,4 +1855,10 @@ static const union AnimCmd *const sAnimTable_PolishedPidgey[] = {
     [ANIM_STD_FACE_NORTH] = sAnim_PolishedPidgey,
     [ANIM_STD_FACE_WEST] = sAnim_PolishedPidgey,
     [ANIM_STD_FACE_EAST] = sAnim_PolishedPidgey,
+    [4 ... 31] = sAnim_PolishedPidgey,
+};
+
+// Single pinned standing frame, including all native scripted walk speeds.
+static const union AnimCmd *const sAnimTable_PolishedFixed[] = {
+    [0 ... 31] = sAnim_FaceSouth,
 };

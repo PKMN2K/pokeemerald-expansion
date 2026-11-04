@@ -16099,6 +16099,30 @@ const struct ItemInfo gItemsInfo[] =
         .iconPic = gItemIcon_PokeshiDoll,
         .iconPalette = gItemIconPalette_PokeshiDoll,
     },
+    [ITEM_POLISHED_MULCH] =
+    {
+        .name = ITEM_NAME("Mulch"),
+        .price = 200,
+        .description = COMPOUND_STRING("Plant fertilizer\nfor Berry trees."),
+        .pocket = POCKET_ITEMS,
+        .type = ITEM_USE_BAG_MENU,
+        .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
+        .iconPic = gItemIcon_PolishedMulch,
+        .iconPalette = gItemIconPalette_PolishedMulch,
+    },
+    [ITEM_POLISHED_MYSTERY_EGG] =
+    {
+        .name = ITEM_NAME("Mystery Egg"),
+        .price = 0,
+        .description = COMPOUND_STRING("An Egg obtained\nfrom Mr. Pokémon."),
+        .importance = 1,
+        .pocket = POCKET_KEY_ITEMS,
+        .type = ITEM_USE_BAG_MENU,
+        .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
+        .iconPic = gItemIcon_PolishedMysteryEgg,
+        .iconPalette = gItemIconPalette_PolishedMysteryEgg,
+    },
+
 };
 
 #undef ITEM_NAME

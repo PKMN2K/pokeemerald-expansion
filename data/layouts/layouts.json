@@ -9521,6 +9521,39 @@
       "border_filepath": "data/layouts/PolishedCherrygroveEvolutionSpeechHouse/border.bin",
       "blockdata_filepath": "data/layouts/PolishedCherrygroveEvolutionSpeechHouse/map.bin",
       "layout_version": "emerald"
+    },
+    {
+      "id": "LAYOUT_POLISHED_ROUTE_30",
+      "name": "PolishedRoute30_Layout",
+      "width": 26,
+      "height": 54,
+      "primary_tileset": "gTileset_PolishedNewBarkOutdoorPrimary",
+      "secondary_tileset": "gTileset_PolishedNewBarkOutdoorSecondary",
+      "border_filepath": "data/layouts/PolishedRoute30/border.bin",
+      "blockdata_filepath": "data/layouts/PolishedRoute30/map.bin",
+      "layout_version": "emerald"
+    },
+    {
+      "id": "LAYOUT_POLISHED_ROUTE_30_BERRY_SPEECH_HOUSE",
+      "name": "PolishedRoute30BerrySpeechHouse_Layout",
+      "width": 8,
+      "height": 8,
+      "primary_tileset": "gTileset_PolishedNewBarkHousePrimary",
+      "secondary_tileset": "gTileset_PolishedNewBarkHouseSecondary",
+      "border_filepath": "data/layouts/PolishedRoute30BerrySpeechHouse/border.bin",
+      "blockdata_filepath": "data/layouts/PolishedRoute30BerrySpeechHouse/map.bin",
+      "layout_version": "emerald"
+    },
+    {
+      "id": "LAYOUT_POLISHED_MR_POKEMONS_HOUSE",
+      "name": "PolishedMrPokemonsHouse_Layout",
+      "width": 8,
+      "height": 8,
+      "primary_tileset": "gTileset_PolishedNewBarkHousePrimary",
+      "secondary_tileset": "gTileset_PolishedNewBarkHouseSecondary",
+      "border_filepath": "data/layouts/PolishedMrPokemonsHouse/border.bin",
+      "blockdata_filepath": "data/layouts/PolishedMrPokemonsHouse/map.bin",
+      "layout_version": "emerald"
     }
   ]
 }

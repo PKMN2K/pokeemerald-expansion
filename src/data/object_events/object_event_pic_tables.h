@@ -2648,3 +2648,23 @@ static const struct SpriteFrameImage sPicTable_PolishedPidgey[] = {
     overworld_frame(gObjectEventPic_PolishedPidgey, 2, 4, 0),
     overworld_frame(gObjectEventPic_PolishedPidgey, 2, 4, 1),
 };
+
+static const struct SpriteFrameImage sPicTable_PolishedOak[] = {
+    overworld_ascending_frames(gObjectEventPic_PolishedOak, 2, 4),
+};
+
+static const struct SpriteFrameImage sPicTable_PolishedLass[] = {
+    overworld_ascending_frames(gObjectEventPic_PolishedLass, 2, 4),
+};
+
+static const struct SpriteFrameImage sPicTable_PolishedBugCatcher[] = {
+    overworld_ascending_frames(gObjectEventPic_PolishedBugCatcher, 2, 4),
+};
+
+static const struct SpriteFrameImage sPicTable_PolishedRattataBack[] = {
+    overworld_frame(gObjectEventPic_PolishedRattataBack, 2, 4, 0),
+};
+
+static const struct SpriteFrameImage sPicTable_PolishedPokedex[] = {
+    overworld_frame(gObjectEventPic_PolishedPokedex, 2, 4, 0),
+};
