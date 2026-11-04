@@ -15,6 +15,7 @@
 #include "text.h"
 #include "text_window.h"
 #include "window.h"
+#include "polished_town_map.h"
 #include "constants/rgb.h"
 #include "constants/songs.h"
 
@@ -97,6 +98,11 @@ static const struct WindowTemplate sFieldRegionMapWindowTemplates[] =
 
 void FieldInitRegionMap(MainCallback callback)
 {
+    if (PolishedTownMapApplies())
+    {
+        PolishedTownMapInit(callback);
+        return;
+    }
     SetVBlankCallback(NULL);
     sFieldRegionMapHandler = Alloc(sizeof(*sFieldRegionMapHandler));
     sFieldRegionMapHandler->state = 0;

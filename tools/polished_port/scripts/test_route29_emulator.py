@@ -251,6 +251,8 @@ def check_route(game, maps, rows, checks):
     # Traverse the full width in both directions, including native ledge jumps.
     route_walk(game, route, (1, 6), observed)
     game.screenshot("route29-west-end")
+    from test_cherrygrove_emulator import check_city
+    check_city(game, route, observed, rows, checks)
     interact(game, route, (3, 6), UP, observed, "PolishedRoute29_Route29Sign2Text_Text")
     close_resident_dialogue(game)
     route_walk(game, route, (59, 8), observed)

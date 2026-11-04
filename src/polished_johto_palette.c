@@ -15,10 +15,9 @@ static const u16 sJohtoBlueSpritePalettes[] = INCBIN_U16("graphics/object_events
 static const u16 sJohtoGreenSpritePalettes[] = INCBIN_U16("graphics/object_events/polished_npc_palettes/green_time.bin");
 static const u16 sJohtoBrownSpritePalettes[] = INCBIN_U16("graphics/object_events/polished_npc_palettes/brown_time.bin");
 
-// The outdoor demonstration and original New Bark Town opt into time/roof
-// palettes with source roof group 24. Their interiors use PALETTE_DAY and
-// have no outdoor override.
-// Source group 24 is never interpreted as an Emerald map group.
+// The garden, New Bark and Route 29 use source roof group 24; Cherrygrove
+// uses source group 26. Interiors have fixed palettes without an override.
+// Source roof groups are never interpreted as Emerald map groups.
 struct PolishedJohtoMapPaletteRegistration
 {
     u16 emeraldLayoutId;
@@ -31,6 +30,10 @@ struct PolishedJohtoMapPaletteRegistration
 
 static const struct PolishedJohtoMapPaletteRegistration sJohtoMapRegistrations[] =
 {
+    {LAYOUT_POLISHED_CHERRYGROVE_CITY,
+     &gTileset_PolishedNewBarkOutdoorPrimary,
+     &gTileset_PolishedNewBarkOutdoorSecondary,
+     26, JOHTO_PALETTE_STANDARD, 0},
     {LAYOUT_POLISHED_JOHTO_DEMO_OUTDOOR,
      &gTileset_PolishedJohtoDemoOutdoorPrimary,
      &gTileset_PolishedJohtoDemoOutdoorSecondary,

@@ -223,3 +223,18 @@ Traditional block or every sprite elevation; additional source foreground
 blocks and raised sprites still need their own live validation before use.
 See `POLISHED_CRYSTAL_PORT.md` for the playable scope and emulator checks.
 Prism mining assets are unchanged.
+
+## Cherrygrove first visit
+
+`build_new_bark.py` also generates the six Cherrygrove maps and their first-visit
+events through `polished_cherrygrove.py`. The original guide route, residents,
+signs, furniture, special indoor palettes and map artwork come from the same
+v3.2.3 fixture pin. The native Town Map key item opens a Johto viewer; shops,
+healing, PC storage, gifts and blackout recovery use Expansion services.
+
+Run `test_cherrygrove.py` for source parity and `make check TESTS=Cherrygrove`
+for the three native tests. `test_new_bark_emulator.py` continues through Route
+29 into Cherrygrove and invokes `test_cherrygrove_emulator.py` with real input.
+Its checkpoints are created by that ROM's own gameplay; no injected save or RAM
+mutation substitutes for completing the tour and service interactions.
+See `POLISHED_CRYSTAL_PORT.md` for complete scope and remaining story work.

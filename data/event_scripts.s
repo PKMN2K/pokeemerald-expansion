@@ -1752,3 +1752,9 @@ EventScript_PalletTown_PlayersHouse_2F_TurnOnPC::
 
 	.include "data/maps/PolishedRoute29/scripts.inc"
 	.include "data/maps/PolishedRoute2946Gate/scripts.inc"
+	.include "data/maps/PolishedCherrygroveCity/scripts.inc"
+	.include "data/maps/PolishedCherrygroveMart/scripts.inc"
+	.include "data/maps/PolishedCherrygrovePokeCenter1F/scripts.inc"
+	.include "data/maps/PolishedCherrygroveGymSpeechHouse/scripts.inc"
+	.include "data/maps/PolishedGuideGentsHouse/scripts.inc"
+	.include "data/maps/PolishedCherrygroveEvolutionSpeechHouse/scripts.inc"

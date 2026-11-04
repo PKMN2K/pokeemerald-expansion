@@ -31,7 +31,8 @@ def main():
     route = json.loads((ROOT / "data/maps/PolishedRoute29/map.json").read_text())
     gate = json.loads((ROOT / "data/maps/PolishedRoute2946Gate/map.json").read_text())
     assert town["connections"] == [{"map": route["id"], "offset": 0, "direction": "left"}]
-    assert route["connections"] == [{"map": town["id"], "offset": 0, "direction": "right"}]
+    assert route["connections"] == [{"map": town["id"], "offset": 0, "direction": "right"},
+        {"map": "MAP_POLISHED_CHERRYGROVE_CITY", "offset": 0, "direction": "left"}]
     assert route["map_type"] == "MAP_TYPE_ROUTE" and gate["map_type"] == "MAP_TYPE_INDOOR"
     assert route["warp_events"][0]["dest_warp_id"] == "0" and len(gate["warp_events"]) == 2
     cells = struct.unpack("<80H", (ROOT / "data/layouts/PolishedRoute2946Gate/map.bin").read_bytes())

@@ -47,7 +47,8 @@ def events(name, script, header, files, text, define):
         for label in ("Text_WaitPlayer", "Text_WhatDoYouThinkYoureDoing", "Text_ItsDangerousToGoAlone"):
             code += define("PolishedRoute29_" + label, text(script, label))
         return "\tmap_script MAP_SCRIPT_ON_TRANSITION, PolishedRoute29_SetRespawn\n", code, {"west_connection": "Route29", "exit_guard": "Both source approach rows; requires Elm starter", "blackout": "New Bark Town 6,5, native full-party recovery"}
-    header["connections"] = [{"map": "MAP_POLISHED_NEW_BARK_TOWN", "offset": 0, "direction": "right"}]
+    header["connections"] = [{"map": "MAP_POLISHED_NEW_BARK_TOWN", "offset": 0, "direction": "right"},
+        {"map": "MAP_POLISHED_CHERRYGROVE_CITY", "offset": 0, "direction": "left"}]
     npc = obj(script, "Route29CooltrainerMScript", "LOCALID_ROUTE29_COOL_DUDE", "COOL_DUDE")
     npc["script"] = "PolishedRoute29_CoolDude"
     header["object_events"].append(npc)

@@ -1891,11 +1891,12 @@ static void OverworldBasic(void)
          && IsPrismOlcanTileset(gMapHeader.mapLayout->secondaryTileset))
             LoadSecondaryTilesetPalette(gMapHeader.mapLayout, FALSE);
 
-        // Exact original Johto RGB555 variants update on RTC period changes.
-        // The explicit registration check excludes Hoenn and the fixed-palette lab.
-        if (previousTimeOfDay != gTimeOfDay)
+        // A GetTimeOfDay() caller may already have advanced gTimeOfDay before
+        // this minute poll. Refresh registered Johto palettes here even then;
+        // comparing the shared clock variable can leave the previous BG bank
+        // loaded indefinitely. Unregistered maps and interiors are a no-op.
+        if (PolishedJohtoTryApplyRegisteredMapPalette(gMapHeader.mapLayout, FALSE))
         {
-            PolishedJohtoTryApplyRegisteredMapPalette(gMapHeader.mapLayout, FALSE);
             for (u32 i = 0; i < 16; i++)
                 PolishedJohtoTryApplySpritePalette(i);
         }

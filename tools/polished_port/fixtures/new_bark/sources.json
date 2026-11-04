@@ -316,6 +316,236 @@
       "path": "gfx/sprites/camper.png",
       "fixture": "gfx__sprites__camper.png.b64",
       "git_blob_sha1": "a2b531ab15db603a6f7d4b064df4431341ab1a93"
+    },
+    {
+      "path": "maps/CherrygroveCity.asm",
+      "fixture": "maps__CherrygroveCity.asm.b64",
+      "git_blob_sha1": "c300b91974aa01b619e7d1c227478eeafa55d688"
+    },
+    {
+      "path": "maps/CherrygroveMart.asm",
+      "fixture": "maps__CherrygroveMart.asm.b64",
+      "git_blob_sha1": "0293bd841697bff6641afbac21dc142fec4f543e"
+    },
+    {
+      "path": "maps/CherrygrovePokeCenter1F.asm",
+      "fixture": "maps__CherrygrovePokeCenter1F.asm.b64",
+      "git_blob_sha1": "0f57ed3dd5328192b4c07161f8aa00df6df3ad79"
+    },
+    {
+      "path": "maps/CherrygroveGymSpeechHouse.asm",
+      "fixture": "maps__CherrygroveGymSpeechHouse.asm.b64",
+      "git_blob_sha1": "ecced8c5a3ad176ce012a2867d3f350c568d9415"
+    },
+    {
+      "path": "maps/GuideGentsHouse.asm",
+      "fixture": "maps__GuideGentsHouse.asm.b64",
+      "git_blob_sha1": "bb5e9d306adcce49fc95b834a03692f79abb663b"
+    },
+    {
+      "path": "maps/CherrygroveEvolutionSpeechHouse.asm",
+      "fixture": "maps__CherrygroveEvolutionSpeechHouse.asm.b64",
+      "git_blob_sha1": "d2e8c788c3005156b9eedc3f88c1181fe24905b9"
+    },
+    {
+      "path": "maps/CherrygroveCity.ablk",
+      "fixture": "maps__CherrygroveCity.ablk.b64",
+      "git_blob_sha1": "d8c4c48815f3d4e6218b9710706fe387cfde902d"
+    },
+    {
+      "path": "maps/Mart.ablk",
+      "fixture": "maps__Mart.ablk.b64",
+      "git_blob_sha1": "649d93d8c26751a95fe95698e4fb5fcc8c61a3d2"
+    },
+    {
+      "path": "maps/JohtoPokeCenter1F.ablk",
+      "fixture": "maps__JohtoPokeCenter1F.ablk.b64",
+      "git_blob_sha1": "bd906788f5133f1aa04749ee855626524b9e81dd"
+    },
+    {
+      "path": "maps/JohtoHouse1.ablk",
+      "fixture": "maps__JohtoHouse1.ablk.b64",
+      "git_blob_sha1": "748480170f0d5cae9b47ca715471d7cd7bbd1d2e"
+    },
+    {
+      "path": "maps/House2.ablk",
+      "fixture": "maps__House2.ablk.b64",
+      "git_blob_sha1": "ed0580a399ea86b1a77edcbb9db15139c9f99b06"
+    },
+    {
+      "path": "gfx/tilesets/mart.png",
+      "fixture": "gfx__tilesets__mart.png.b64",
+      "git_blob_sha1": "5b655cf46887f19edb571e45a93e45708b922c35"
+    },
+    {
+      "path": "gfx/tilesets/mart.pal",
+      "fixture": "gfx__tilesets__mart.pal.b64",
+      "git_blob_sha1": "d6334125f0c538ed196bbc4de4787750feb53367"
+    },
+    {
+      "path": "data/tilesets/mart_metatiles.bin",
+      "fixture": "data__tilesets__mart_metatiles.bin.b64",
+      "git_blob_sha1": "f1ffe838ded6041feffb86ab511b577973324bee"
+    },
+    {
+      "path": "data/tilesets/mart_attributes.bin",
+      "fixture": "data__tilesets__mart_attributes.bin.b64",
+      "git_blob_sha1": "3547126ba8ec3554a664c9d2efb40d6d975c2d06"
+    },
+    {
+      "path": "data/tilesets/mart_collision.asm",
+      "fixture": "data__tilesets__mart_collision.asm.b64",
+      "git_blob_sha1": "ccda777273551651ffc7ad8806d90cfac37a84b5"
+    },
+    {
+      "path": "gfx/tilesets/pokecenter.png",
+      "fixture": "gfx__tilesets__pokecenter.png.b64",
+      "git_blob_sha1": "073cff98d22b6ad5f8668a8400366c376839bed0"
+    },
+    {
+      "path": "gfx/tilesets/pokecenter.pal",
+      "fixture": "gfx__tilesets__pokecenter.pal.b64",
+      "git_blob_sha1": "a04e7448d4d40bfc2f33ff6c33d3f1db8fcdd362"
+    },
+    {
+      "path": "data/tilesets/pokecenter_metatiles.bin",
+      "fixture": "data__tilesets__pokecenter_metatiles.bin.b64",
+      "git_blob_sha1": "dfa64531191373e72ae6d73c66c9513b892d2276"
+    },
+    {
+      "path": "data/tilesets/pokecenter_attributes.bin",
+      "fixture": "data__tilesets__pokecenter_attributes.bin.b64",
+      "git_blob_sha1": "4100207a1750216c896c0815759112e1facb2f1f"
+    },
+    {
+      "path": "data/tilesets/pokecenter_collision.asm",
+      "fixture": "data__tilesets__pokecenter_collision.asm.b64",
+      "git_blob_sha1": "1fcf916187a65e51ffdc07b5e83f337118099cc1"
+    },
+    {
+      "path": "gfx/sprites/gramps.png",
+      "fixture": "gfx__sprites__gramps.png.b64",
+      "git_blob_sha1": "abe61a31dd10941b8b4dea67797e4fa7480b64e3"
+    },
+    {
+      "path": "gfx/sprites/youngster.png",
+      "fixture": "gfx__sprites__youngster.png.b64",
+      "git_blob_sha1": "87ef3e338dc3ff304a8891f6fdf8bc783df308c3"
+    },
+    {
+      "path": "gfx/sprites/fisher.png",
+      "fixture": "gfx__sprites__fisher.png.b64",
+      "git_blob_sha1": "59e0f4d53a2a0e47b452b013fa462012e9f8e140"
+    },
+    {
+      "path": "gfx/sprites/gentleman.png",
+      "fixture": "gfx__sprites__gentleman.png.b64",
+      "git_blob_sha1": "38a6125d2afea487604cdc5c106e6fefb3648588"
+    },
+    {
+      "path": "gfx/sprites/lady.png",
+      "fixture": "gfx__sprites__lady.png.b64",
+      "git_blob_sha1": "4686273139e0110d3d0e14700112f98b683d2e61"
+    },
+    {
+      "path": "gfx/sprites/clerk.png",
+      "fixture": "gfx__sprites__clerk.png.b64",
+      "git_blob_sha1": "77a5fb91448491f48910f948b9e5ce345ee78986"
+    },
+    {
+      "path": "gfx/sprites/cute_girl.png",
+      "fixture": "gfx__sprites__cute_girl.png.b64",
+      "git_blob_sha1": "762108ad536e28f0724504bd7f23a9394ee59b27"
+    },
+    {
+      "path": "gfx/sprites/pokefan_m.png",
+      "fixture": "gfx__sprites__pokefan_m.png.b64",
+      "git_blob_sha1": "fea7979d32cb4ce477d97d7620cbe2f78ee69e73"
+    },
+    {
+      "path": "gfx/sprites/bowing_nurse.png",
+      "fixture": "gfx__sprites__bowing_nurse.png.b64",
+      "git_blob_sha1": "4cd71fcfc0e9ac676ecb4e1342dd4b62dbdaa730"
+    },
+    {
+      "path": "gfx/icons/pidgey.png",
+      "fixture": "gfx__icons__pidgey.png.b64",
+      "git_blob_sha1": "dfd231328e4922dccf03c79ec861412ec15a02aa"
+    },
+    {
+      "path": "gfx/town_map/town_map.png",
+      "fixture": "gfx__town_map__town_map.png.b64",
+      "git_blob_sha1": "e9e20dbfa212c1c9850324bbfa9379d7af9bfe2a"
+    },
+    {
+      "path": "gfx/town_map/johto.bin",
+      "fixture": "gfx__town_map__johto.bin.b64",
+      "git_blob_sha1": "9cc2bc2de2079b6de79ce5c3e0cd9188d50cbccd"
+    },
+    {
+      "path": "gfx/town_map/arrow.png",
+      "fixture": "gfx__town_map__arrow.png.b64",
+      "git_blob_sha1": "a3f2eddac149cce5351f228ca6f26e580fb1ef04"
+    },
+    {
+      "path": "gfx/pokegear/pokegear.pal",
+      "fixture": "gfx__pokegear__pokegear.pal.b64",
+      "git_blob_sha1": "9ccbb5e35fb559f575682f64d75975023c56938c"
+    },
+    {
+      "path": "engine/pokegear/pokegear.asm",
+      "fixture": "engine__pokegear__pokegear.asm.b64",
+      "git_blob_sha1": "bd1dddd778668484f686e16f9a4380afbee54ac3"
+    },
+    {
+      "path": "data/maps/landmarks.asm",
+      "fixture": "data__maps__landmarks.asm.b64",
+      "git_blob_sha1": "74b01a3b99d86a14e3f71d688c431804c1aed12e"
+    },
+    {
+      "path": "data/text/std_text.asm",
+      "fixture": "data__text__std_text.asm.b64",
+      "git_blob_sha1": "bcaf741009b61c8b063e1eaf0f7e7e31612fd025"
+    },
+    {
+      "path": "data/items/marts.asm",
+      "fixture": "data__items__marts.asm.b64",
+      "git_blob_sha1": "3276288ced98b0dc9fa8a3c18e6a2548731d3ec5"
+    },
+    {
+      "path": "engine/events/std_scripts.asm",
+      "fixture": "engine__events__std_scripts.asm.b64",
+      "git_blob_sha1": "2ae648b48bebbb97c62a27f3f324d37353f0556a"
+    },
+    {
+      "path": "engine/gfx/cgb_layouts.asm",
+      "fixture": "engine__gfx__cgb_layouts.asm.b64",
+      "git_blob_sha1": "3acb9636adf9cfc42cae99db93215cbe5fc4ada9"
+    },
+    {
+      "path": "macros/scripts/maps.asm",
+      "fixture": "macros__scripts__maps.asm.b64",
+      "git_blob_sha1": "6aabb85e920b37715c167505997d20b84240f0ec"
+    },
+    {
+      "path": "data/wild/johto_water.asm",
+      "fixture": "data__wild__johto_water.asm.b64",
+      "git_blob_sha1": "da03d98f3c7e7c0e8c8f52683f2d05a8b938d989"
+    },
+    {
+      "path": "engine/tilesets/tileset_palettes.asm",
+      "fixture": "engine__tilesets__tileset_palettes.asm.b64",
+      "git_blob_sha1": "49ed5776a31806f5ab651e14ff18402f3c206881"
+    },
+    {
+      "path": "data/maps/palettes.asm",
+      "fixture": "data__maps__palettes.asm.b64",
+      "git_blob_sha1": "114b86e1d683719841adc3ee71e47a944346e282"
+    },
+    {
+      "path": "data/collision/collision_std_scripts.asm",
+      "fixture": "data__collision__collision_std_scripts.asm.b64",
+      "git_blob_sha1": "ed4a07b3e067c20ab404977adbbd783b402d660f"
     }
   ]
 }

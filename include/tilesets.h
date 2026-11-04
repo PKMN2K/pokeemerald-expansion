@@ -84,5 +84,9 @@ extern const struct Tileset gTileset_PrismOlcanChineNight;
 
 extern const struct Tileset gTileset_PolishedNewBarkGatePrimary;
 extern const struct Tileset gTileset_PolishedNewBarkGateSecondary;
+extern const struct Tileset gTileset_PolishedNewBarkMartPrimary;
+extern const struct Tileset gTileset_PolishedNewBarkMartSecondary;
+extern const struct Tileset gTileset_PolishedNewBarkPokeCenterPrimary;
+extern const struct Tileset gTileset_PolishedNewBarkPokeCenterSecondary;
 
 #endif //GUARD_tilesets_H

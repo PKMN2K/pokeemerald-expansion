@@ -1,3 +1,18 @@
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_PolishedGramps;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_PolishedYoungsterRed;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_PolishedPokefanBlue;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_PolishedFisher;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_PolishedFatGuyRed;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_PolishedGentleman;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_PolishedLadyGreen;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_PolishedClerk;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_PolishedSchoolboyRed;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_PolishedCuteGirlGreen;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_PolishedPokefanMBrown;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_PolishedChildRed;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_PolishedBowingNurse;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_PolishedPidgey;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_PolishedCoolDudeBlue;
 extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_PolishedTeacher;
 extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_PolishedCoolDude;
 extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_PolishedOfficer;
@@ -443,6 +458,21 @@ const struct ObjectEventGraphicsInfo *const gObjectEventGraphicsInfoPointers[NUM
     [OBJ_EVENT_GFX_POLISHED_FAT_GUY_BLUE] = &gObjectEventGraphicsInfo_PolishedFatGuyBlue,
     [OBJ_EVENT_GFX_POLISHED_CUT_TREE] = &gObjectEventGraphicsInfo_PolishedCutTree,
     [OBJ_EVENT_GFX_POLISHED_FRUIT] = &gObjectEventGraphicsInfo_PolishedFruit,
+    [OBJ_EVENT_GFX_POLISHED_GRAMPS] = &gObjectEventGraphicsInfo_PolishedGramps,
+    [OBJ_EVENT_GFX_POLISHED_YOUNGSTER_RED] = &gObjectEventGraphicsInfo_PolishedYoungsterRed,
+    [OBJ_EVENT_GFX_POLISHED_POKEFAN_BLUE] = &gObjectEventGraphicsInfo_PolishedPokefanBlue,
+    [OBJ_EVENT_GFX_POLISHED_FISHER] = &gObjectEventGraphicsInfo_PolishedFisher,
+    [OBJ_EVENT_GFX_POLISHED_FAT_GUY_RED] = &gObjectEventGraphicsInfo_PolishedFatGuyRed,
+    [OBJ_EVENT_GFX_POLISHED_GENTLEMAN] = &gObjectEventGraphicsInfo_PolishedGentleman,
+    [OBJ_EVENT_GFX_POLISHED_LADY_GREEN] = &gObjectEventGraphicsInfo_PolishedLadyGreen,
+    [OBJ_EVENT_GFX_POLISHED_CLERK] = &gObjectEventGraphicsInfo_PolishedClerk,
+    [OBJ_EVENT_GFX_POLISHED_SCHOOLBOY_RED] = &gObjectEventGraphicsInfo_PolishedSchoolboyRed,
+    [OBJ_EVENT_GFX_POLISHED_CUTE_GIRL_GREEN] = &gObjectEventGraphicsInfo_PolishedCuteGirlGreen,
+    [OBJ_EVENT_GFX_POLISHED_POKEFAN_M_BROWN] = &gObjectEventGraphicsInfo_PolishedPokefanMBrown,
+    [OBJ_EVENT_GFX_POLISHED_CHILD_RED] = &gObjectEventGraphicsInfo_PolishedChildRed,
+    [OBJ_EVENT_GFX_POLISHED_BOWING_NURSE] = &gObjectEventGraphicsInfo_PolishedBowingNurse,
+    [OBJ_EVENT_GFX_POLISHED_PIDGEY] = &gObjectEventGraphicsInfo_PolishedPidgey,
+    [OBJ_EVENT_GFX_POLISHED_COOL_DUDE_BLUE] = &gObjectEventGraphicsInfo_PolishedCoolDudeBlue,
     [OBJ_EVENT_GFX_POLISHED_FRUIT_PICKED] = &gObjectEventGraphicsInfo_PolishedFruitPicked,
     [OBJ_EVENT_GFX_POLISHED_RIVAL] = &gObjectEventGraphicsInfo_PolishedRival,
     [OBJ_EVENT_GFX_POLISHED_BALL_GREEN] = &gObjectEventGraphicsInfo_PolishedBallGreen,

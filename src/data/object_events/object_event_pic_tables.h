@@ -2601,3 +2601,50 @@ static const struct SpriteFrameImage sPicTable_PolishedFruit[] = {
 static const struct SpriteFrameImage sPicTable_PolishedFruitPicked[] = {
     overworld_frame(gObjectEventPic_PolishedFruitPicked, 2, 4, 0),
 };
+
+static const struct SpriteFrameImage sPicTable_PolishedGramps[] = {
+    overworld_ascending_frames(gObjectEventPic_PolishedGramps, 2, 4),
+};
+
+static const struct SpriteFrameImage sPicTable_PolishedYoungster[] = {
+    overworld_ascending_frames(gObjectEventPic_PolishedYoungster, 2, 4),
+};
+
+static const struct SpriteFrameImage sPicTable_PolishedPokefanF[] = {
+    overworld_ascending_frames(gObjectEventPic_PolishedPokefanF, 2, 4),
+};
+
+static const struct SpriteFrameImage sPicTable_PolishedFisher[] = {
+    overworld_ascending_frames(gObjectEventPic_PolishedFisher, 2, 4),
+};
+
+static const struct SpriteFrameImage sPicTable_PolishedGentleman[] = {
+    overworld_ascending_frames(gObjectEventPic_PolishedGentleman, 2, 4),
+};
+
+static const struct SpriteFrameImage sPicTable_PolishedLady[] = {
+    overworld_ascending_frames(gObjectEventPic_PolishedLady, 2, 4),
+};
+
+static const struct SpriteFrameImage sPicTable_PolishedClerk[] = {
+    overworld_ascending_frames(gObjectEventPic_PolishedClerk, 2, 4),
+};
+
+static const struct SpriteFrameImage sPicTable_PolishedCuteGirl[] = {
+    overworld_ascending_frames(gObjectEventPic_PolishedCuteGirl, 2, 4),
+};
+
+static const struct SpriteFrameImage sPicTable_PolishedPokefanM[] = {
+    overworld_ascending_frames(gObjectEventPic_PolishedPokefanM, 2, 4),
+};
+
+static const struct SpriteFrameImage sPicTable_PolishedBowingNurse[] = {
+    overworld_frame(gObjectEventPic_PolishedBowingNurse, 2, 4, 0),
+    overworld_frame(gObjectEventPic_PolishedBowingNurse, 2, 4, 1),
+    overworld_frame(gObjectEventPic_PolishedBowingNurse, 2, 4, 2),
+};
+
+static const struct SpriteFrameImage sPicTable_PolishedPidgey[] = {
+    overworld_frame(gObjectEventPic_PolishedPidgey, 2, 4, 0),
+    overworld_frame(gObjectEventPic_PolishedPidgey, 2, 4, 1),
+};

@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
-"""Reproduce New Bark Town, its seven interiors, Route 29 and its gatehouse.
+"""Reproduce New Bark, Route 29 and Cherrygrove's first-visit maps and events.
 
 This imports map blocks, door/stair coordinates, reading interactions and the
 six ambient residents, the rival's lab-window encounter, and Lyra/Elm's
 introduction, starter selection, Lyra battle, first Potion and Mom's opening.
-Further story events, Route 27, Cherrygrove and Route 46 are separate work.
+Cherrygrove includes the guide tour, Town Map, residents and native services.
+Further story events, Routes 27/30/46 and the bay remain separate work.
 """
 import argparse
 import base64
@@ -27,6 +28,7 @@ import new_bark_intro
 import new_bark_battle
 import new_bark_mom
 import polished_route29
+import polished_cherrygrove
 
 NEW_BARK_MAPS = {
     "NewBarkTown": "NEW_BARK_TOWN",
@@ -38,7 +40,7 @@ NEW_BARK_MAPS = {
     "LyrasHouse2F": "LYRAS_HOUSE_2F",
     "ElmsHouse": "ELMS_HOUSE",
 }
-MAPS = {**NEW_BARK_MAPS, "Route29": "ROUTE_29", "Route2946Gate": "ROUTE_29_46_GATE"}
+MAPS = {**NEW_BARK_MAPS, "Route29": "ROUTE_29", "Route2946Gate": "ROUTE_29_46_GATE", **polished_cherrygrove.MAPS}
 BEHAVIORS = {**BEHAVIORS,
     "WINDOW": ("MB_NORMAL", True),
     "COUNTER": ("MB_COUNTER", True),
@@ -52,6 +54,11 @@ BEHAVIORS = {**BEHAVIORS,
     "STAIRCASE": ("MB_LADDER", False),
     "WARP_CARPET_LEFT": ("MB_WEST_ARROW_WARP", False),
     "WARP_CARPET_RIGHT": ("MB_EAST_ARROW_WARP", False),
+    "MART_SHELF": ("MB_NORMAL", True),
+    "LADDER": ("MB_LADDER", False),
+    "MART_SIGN": ("MB_NORMAL", True),
+    "POKECENTER_SIGN": ("MB_NORMAL", True),
+    "TRASH_CAN": ("MB_NORMAL", True),
 }
 # Scripts with an unconditional inline text body, rather than a story branch.
 INLINE_TEXT = {"PlayersHouse1FTVScript", "LyrasFridgeScript", "LyrasTVScript"}
@@ -349,8 +356,8 @@ def map_header(name, constant, width, height, script, files):
         "layout": "LAYOUT_POLISHED_" + constant,
         "music": "MUS_DUMMY", "region": "REGION_JOHTO", "region_map_section": "MAPSEC_NONE",
         "requires_flash": False, "weather": "WEATHER_NONE",
-        "map_type": "MAP_TYPE_TOWN" if name == "NewBarkTown" else "MAP_TYPE_ROUTE" if name == "Route29" else "MAP_TYPE_INDOOR",
-        "allow_cycling": name in ("NewBarkTown", "Route29"), "allow_escaping": False,
+        "map_type": "MAP_TYPE_TOWN" if name in ("NewBarkTown", "CherrygroveCity") else "MAP_TYPE_ROUTE" if name == "Route29" else "MAP_TYPE_INDOOR",
+        "allow_cycling": name in ("NewBarkTown", "Route29", "CherrygroveCity"), "allow_escaping": False,
         "allow_running": True, "show_map_name": False, "battle_scene": "MAP_BATTLE_SCENE_NORMAL",
         "connections": None, "object_events": [], "warp_events": [], "coord_events": [], "bg_events": [],
     }
@@ -358,6 +365,8 @@ def map_header(name, constant, width, height, script, files):
     schedule_header, schedule_code = schedule_script(name, resident_info, files)
     code = f"@ Generated from pinned {name}.asm: geography, static text and ambient residents.\n{prefix}_MapScripts::\n{schedule_header}\t.byte 0\n\n" + schedule_code
     for x, y, destination, warp in re.findall(r"^\s*warp_event\s+(\d+),\s*(\d+),\s*(\w+),\s*(\d+)", script, re.M):
+        if destination == "POKECENTER_2F":
+            continue  # Closed in the source first-visit story state.
         if name == "Route2946Gate" and destination == "ROUTE_46":
             continue  # North door is blocked until Route 46 is imported.
         if destination == "ROUTE_29_46_GATE":
@@ -455,13 +464,18 @@ def map_header(name, constant, width, height, script, files):
             # The GBC title-screen shortcuts are unavailable in this engine.
             code = code.replace(source_text(script, "Route29AdvancedTipsSignText"),
                 "Advanced Tips!\\pSome POKéMON appear\\nonly at certain times.\\pLook during both the\\nday and the night!$")
+    if name in polished_cherrygrove.MAPS:
+        hooks, scene, report = polished_cherrygrove.events(name, script, header, files, source_text, text_definition)
+        code = code.replace("\t.byte 0\n", hooks + "\t.byte 0\n", 1)
+        code += scene
+        story.append(report)
     return header, (code.rstrip() + "\n").encode(), resident_info, story
 
 
 def generate():
     files = source_files()
     ids = behavior_ids()
-    products, maps, layouts = {**resident_assets(files), **new_bark_battle.battle_assets(files)}, {}, []
+    products, maps, layouts = {**resident_assets(files), **new_bark_battle.battle_assets(files), **polished_cherrygrove.assets(files)}, {}, []
     indoor = palette_rows((FIXTURES / "johto_bg_tiles.pal").read_text())[32:39]
     indoor_palette = b"".join(struct.pack("<16H", *p, p[0], *([0] * 11)) for p in indoor).ljust(512, b"\0")
     outdoor = apply_new_bark_roof(build_graphics()[0], files)
@@ -475,15 +489,21 @@ def generate():
         "Lab": (*lab_geometry(files), indoor_palette, collisions(files["data/tilesets/lab_collision.asm"].decode())),
         "Gate": (*lab_geometry(files, "gate"), indoor_palette, collisions(files["data/tilesets/gate_collision.asm"].decode())),
     }
+    for key in ("Mart", "PokeCenter"):
+        name = key.lower()
+        rows = polished_cherrygrove.service_palettes(files, key)
+        palette = b"".join(struct.pack("<16H", *p, p[0], *([0] * 11)) for p in rows).ljust(512, b"\0")
+        banks[key] = (*lab_geometry(files, name), palette, collisions(files[f"data/tilesets/{name}_collision.asm"].decode()))
     used_by_bank = {key: set() for key in banks}
     # Invert without collapsing the many source symbols sharing a permission.
     permissions = {symbol: permission for permission, symbol in re.findall(
         r"db (LAND_TILE|WALL_TILE|WATER_TILE)\s*; COLL_(\w+)", files["data/collision/collision_permissions.asm"].decode())}
     for name, constant in MAPS.items():
-        bank = "Outdoor" if name in ("NewBarkTown", "Route29") else "Lab" if name == "ElmsLab" else "Gate" if name == "Route2946Gate" else "House"
-        source_tileset = {"Outdoor": "JOHTO_TRADITIONAL", "Lab": "LAB", "House": "JOHTO_HOUSE", "Gate": "GATE"}[bank]
+        bank = "Outdoor" if name in ("NewBarkTown", "Route29", "CherrygroveCity") else "Lab" if name == "ElmsLab" else "Gate" if name == "Route2946Gate" else "Mart" if name == "CherrygroveMart" else "PokeCenter" if name == "CherrygrovePokeCenter1F" else "House"
+        source_tileset = {"Outdoor": "JOHTO_TRADITIONAL", "Lab": "LAB", "House": "JOHTO_HOUSE", "Gate": "GATE", "Mart": "MART", "PokeCenter": "POKECENTER"}[bank]
         assert re.search(r"map " + name + r", TILESET_" + source_tileset + r",", files["data/maps/maps.asm"].decode())
         source_layout = "JohtoHouse4" if name == "PlayersNeighborsHouse" else name
+        source_layout = polished_cherrygrove.BLOCKS.get(name, source_layout)
         if name == "Route2946Gate":
             source_layout = "NorthSouthGate"
         if name == "PlayersNeighborsHouse":
@@ -493,6 +513,10 @@ def generate():
         assert len(blocks) == width * height
         symbols = banks[bank][3]
         raw, used = map_cells(blocks, width, symbols, BEHAVIORS)
+        if name == "CherrygrovePokeCenter1F":
+            cells = list(struct.unpack(f"<{len(raw)//2}H", raw))
+            cells[7 * width * 2] |= 0xC00  # Communication floor opens after the Mystery Egg quest.
+            raw = struct.pack(f"<{len(cells)}H", *cells)
         if name == "Route2946Gate":
             cells = list(struct.unpack(f"<{len(raw)//2}H", raw))
             for x in (4, 5):
@@ -509,6 +533,9 @@ def generate():
         products[f"data/layouts/{prefix}/map.bin"] = raw
         products[f"data/layouts/{prefix}/border.bin"] = border_raw
         header, script, resident_info, story = map_header(name, constant, width * 2, height * 2, files[f"maps/{name}.asm"].decode(), files)
+        if name in polished_cherrygrove.MAPS:
+            script += polished_cherrygrove.furniture(name, header, raw, width * 2, symbols, files, source_text, text_definition).encode()
+            script = script.rstrip() + b"\n"
         products[f"data/maps/{prefix}/map.json"] = json_bytes(header)
         products[f"data/maps/{prefix}/scripts.inc"] = script
         tileset = "PolishedNewBark" + bank

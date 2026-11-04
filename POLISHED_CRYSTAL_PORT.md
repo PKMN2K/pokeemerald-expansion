@@ -375,8 +375,8 @@ harvest and the next RTC day replenishes it. Cut uses native field-move
 requirements, source tree pixels/background green colors, persistent removal,
 and a one-frame native removal animation rather than unimported GBC particles.
 The Advanced Tips sign replaces unsupported GBC title shortcuts with encounter
-time advice. Source music, Mulch, later Lyra/Tuscany events, Route 46 and
-Cherrygrove are deferred. Headbutt remains dormant.
+time advice. Source music, Mulch, later Lyra/Tuscany events and Route 46
+are deferred. Cherrygrove is connected below. Headbutt remains dormant.
 
 Shared unused flags `0x26`, `0x27`, `0xE9` hold the Potion and two Cut trees;
 unused var `0x40F9` holds the last successful berry day plus one. Existing IDs
@@ -387,7 +387,59 @@ blackout routing and real-map ledge landings. Real-input mGBA checks cover the
 opening guard, connection, source residents, gate, pickups, Save/Continue,
 daily regrowth, native nighttime battles and complete traversal back to town.
 
-The next content phase is Cherrygrove City and its first-visit services/events.
+### Cherrygrove first visit, Town Map and services
+
+Cherrygrove's original 40×22 city connects to Route 29's western edge. Its Mart,
+Pokémon Center, Guide Gent's house and both speech houses retain their source
+layouts and fifteen reciprocal door events. This brings the port to sixteen
+source maps and 37 door/stair events, plus the two garden demonstration maps.
+Route 30 and the bay remain closed; the Center communication floor is blocked
+until its story requirements and destination are imported.
+
+The automatic east-entry trigger and direct Guide Gent conversation follow
+all six original tour stops. He grants one native Town Map key item, then goes
+home. If the Bag cannot accept it, the gift remains available at his house.
+The Map Card ownership flag and completed scene persist through Save/Continue.
+The portable map and Center wall map display the pinned Johto artwork, original
+tile flips and palettes, and all 67 Johto landmark names/coordinates. Direction
+buttons select landmarks; A or B returns to play. This is a usable map adapter;
+the complete Pokégear clock/phone/radio interface remains pending.
+
+The Mart sells the four original first-visit items through Expansion's native
+shop: Potion, Antidote, Paralyze Heal and Awakening. The Center nurse uses the
+four source greetings, Yes/No prompt, left/bowing sprite poses, native healing
+fanfare and full-party healing. Its PC opens native storage, the journal records
+the original Red article flag, and entering sets a Johto blackout destination
+at (5,3). Native whiteout recovery heals the party there without a Hoenn NPC.
+The original healing-machine ball animation and source music remain pending.
+
+All first-visit residents use source sprites, positions, colors and dialogue,
+including the animated Pidgey. The two children retain their conversation
+facings. Signs, shelves and ordinary furniture use source text. The hidden
+Nugget and Fisher's Mystic Water use native Bag handling and persistent flags;
+the Fisher records completion only after successful insertion.
+The Nugget's northeastern ledge requires the still-unported northern approach;
+its event encoding is verified without inventing an access path.
+
+The city registers source roof group 26. Its time refresh cannot be skipped
+when another clock reader has already updated the shared time variable. The
+Center copies the source red bank into its Johto floor bank, and the generic
+Mart uses its original blue override. Interiors retain their fixed day colors.
+The water table preserves the original Tentacool/Tentacruel levels and 60/30/10
+weights. Native encounter rate 11 is the closest integer to the source's 6%
+base probability; Expansion cooldowns, abilities and Repels remain active.
+Fishing encounter tables and later story-dependent events are still pending.
+
+Five unused flags shared by Emerald and FRLG (`0x4A7`–`0x4AB`) hold guide-home,
+Map Card, Nugget, Mystic Water and journal state; unused var `0x40FA` holds the
+city scene. Existing IDs and save sizes stay unchanged. Deterministic generation
+now reproduces 163 source-map products. Host audits compare the guide's route,
+doors, source encounters and special palettes. Native tests check reciprocal
+landings, blackout routing and map/palette isolation. The real-input mGBA
+campaign exercises the tour, map viewer, services, residents and saved state.
+
+The next content phase is Route 30 and Mr. Pokémon's first errand. The return
+rival battle, Elm's Mystery Egg handoff and Mom's banking follow that phase.
 
 The playable visual slice and dormant Headbutt encounter selection are complete
 parts of the port. **The whole Polished Crystal migration is not complete.**

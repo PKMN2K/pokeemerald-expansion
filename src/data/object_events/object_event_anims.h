@@ -1841,3 +1841,18 @@ static const union AnimCmd *const sAnimTable_RedGreenVSSeeker[] = {
 static const union AnimCmd *const sAnimTable_RedGreenVSSeekerBike[] = {
     sAnim_VSSeekerBike,
 };
+
+// Source nurse frames: down, bow, left. No walking-frame indexes.
+static const union AnimCmd *const sAnimTable_PolishedBowingNurse[] = {
+    [ANIM_STD_FACE_SOUTH] = sAnim_FaceSouth,
+    [ANIM_STD_FACE_NORTH] = sAnim_FaceNorth,
+    [ANIM_STD_FACE_WEST] = sAnim_FaceWest,
+    [ANIM_STD_FACE_EAST] = sAnim_FaceEast,
+};
+static const union AnimCmd sAnim_PolishedPidgey[] = { ANIMCMD_FRAME(0, 16), ANIMCMD_FRAME(1, 16), ANIMCMD_JUMP(0) };
+static const union AnimCmd *const sAnimTable_PolishedPidgey[] = {
+    [ANIM_STD_FACE_SOUTH] = sAnim_PolishedPidgey,
+    [ANIM_STD_FACE_NORTH] = sAnim_PolishedPidgey,
+    [ANIM_STD_FACE_WEST] = sAnim_PolishedPidgey,
+    [ANIM_STD_FACE_EAST] = sAnim_PolishedPidgey,
+};

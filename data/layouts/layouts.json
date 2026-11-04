@@ -9455,6 +9455,72 @@
       "border_filepath": "data/layouts/PolishedRoute2946Gate/border.bin",
       "blockdata_filepath": "data/layouts/PolishedRoute2946Gate/map.bin",
       "layout_version": "emerald"
+    },
+    {
+      "id": "LAYOUT_POLISHED_CHERRYGROVE_CITY",
+      "name": "PolishedCherrygroveCity_Layout",
+      "width": 40,
+      "height": 22,
+      "primary_tileset": "gTileset_PolishedNewBarkOutdoorPrimary",
+      "secondary_tileset": "gTileset_PolishedNewBarkOutdoorSecondary",
+      "border_filepath": "data/layouts/PolishedCherrygroveCity/border.bin",
+      "blockdata_filepath": "data/layouts/PolishedCherrygroveCity/map.bin",
+      "layout_version": "emerald"
+    },
+    {
+      "id": "LAYOUT_POLISHED_CHERRYGROVE_MART",
+      "name": "PolishedCherrygroveMart_Layout",
+      "width": 12,
+      "height": 8,
+      "primary_tileset": "gTileset_PolishedNewBarkMartPrimary",
+      "secondary_tileset": "gTileset_PolishedNewBarkMartSecondary",
+      "border_filepath": "data/layouts/PolishedCherrygroveMart/border.bin",
+      "blockdata_filepath": "data/layouts/PolishedCherrygroveMart/map.bin",
+      "layout_version": "emerald"
+    },
+    {
+      "id": "LAYOUT_POLISHED_CHERRYGROVE_POKECENTER_1F",
+      "name": "PolishedCherrygrovePokeCenter1F_Layout",
+      "width": 12,
+      "height": 8,
+      "primary_tileset": "gTileset_PolishedNewBarkPokeCenterPrimary",
+      "secondary_tileset": "gTileset_PolishedNewBarkPokeCenterSecondary",
+      "border_filepath": "data/layouts/PolishedCherrygrovePokeCenter1F/border.bin",
+      "blockdata_filepath": "data/layouts/PolishedCherrygrovePokeCenter1F/map.bin",
+      "layout_version": "emerald"
+    },
+    {
+      "id": "LAYOUT_POLISHED_CHERRYGROVE_GYM_SPEECH_HOUSE",
+      "name": "PolishedCherrygroveGymSpeechHouse_Layout",
+      "width": 8,
+      "height": 8,
+      "primary_tileset": "gTileset_PolishedNewBarkHousePrimary",
+      "secondary_tileset": "gTileset_PolishedNewBarkHouseSecondary",
+      "border_filepath": "data/layouts/PolishedCherrygroveGymSpeechHouse/border.bin",
+      "blockdata_filepath": "data/layouts/PolishedCherrygroveGymSpeechHouse/map.bin",
+      "layout_version": "emerald"
+    },
+    {
+      "id": "LAYOUT_POLISHED_GUIDE_GENTS_HOUSE",
+      "name": "PolishedGuideGentsHouse_Layout",
+      "width": 8,
+      "height": 8,
+      "primary_tileset": "gTileset_PolishedNewBarkHousePrimary",
+      "secondary_tileset": "gTileset_PolishedNewBarkHouseSecondary",
+      "border_filepath": "data/layouts/PolishedGuideGentsHouse/border.bin",
+      "blockdata_filepath": "data/layouts/PolishedGuideGentsHouse/map.bin",
+      "layout_version": "emerald"
+    },
+    {
+      "id": "LAYOUT_POLISHED_CHERRYGROVE_EVOLUTION_SPEECH_HOUSE",
+      "name": "PolishedCherrygroveEvolutionSpeechHouse_Layout",
+      "width": 8,
+      "height": 8,
+      "primary_tileset": "gTileset_PolishedNewBarkHousePrimary",
+      "secondary_tileset": "gTileset_PolishedNewBarkHouseSecondary",
+      "border_filepath": "data/layouts/PolishedCherrygroveEvolutionSpeechHouse/border.bin",
+      "blockdata_filepath": "data/layouts/PolishedCherrygroveEvolutionSpeechHouse/map.bin",
+      "layout_version": "emerald"
     }
   ]
 }

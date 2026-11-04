@@ -59,6 +59,12 @@
 #define FLAG_POLISHED_ROUTE29_CUT_1 0x27
 #define FLAG_POLISHED_ROUTE29_CUT_2 0xE9
 
+#define FLAG_POLISHED_GUIDE_HOME 0x4A7
+#define FLAG_POLISHED_MAP_CARD 0x4A8
+#define FLAG_POLISHED_CHERRYGROVE_NUGGET 0x4A9
+#define FLAG_POLISHED_CHERRYGROVE_MYSTIC_WATER 0x4AA
+#define FLAG_POLISHED_READ_RED_JOURNAL 0x4AB
+
 #if IS_FRLG
 
 #include "constants/flags_frlg.h"
@@ -1247,11 +1253,11 @@
 #define FLAG_UNUSED_0x4A4                                           0x4A4 // Unused Flag
 #define FLAG_UNUSED_0x4A5                                           0x4A5 // Unused Flag
 #define FLAG_UNUSED_0x4A6                                           0x4A6 // Unused Flag
-#define FLAG_UNUSED_0x4A7                                           0x4A7 // Unused Flag
-#define FLAG_UNUSED_0x4A8                                           0x4A8 // Unused Flag
-#define FLAG_UNUSED_0x4A9                                           0x4A9 // Unused Flag
-#define FLAG_UNUSED_0x4AA                                           0x4AA // Unused Flag
-#define FLAG_UNUSED_0x4AB                                           0x4AB // Unused Flag
+// Reserved by shared FLAG_POLISHED_GUIDE_HOME
+// Reserved by shared FLAG_POLISHED_MAP_CARD
+// Reserved by shared FLAG_POLISHED_CHERRYGROVE_NUGGET
+// Reserved by shared FLAG_POLISHED_CHERRYGROVE_MYSTIC_WATER
+// Reserved by shared FLAG_POLISHED_READ_RED_JOURNAL
 #define FLAG_UNUSED_0x4AC                                           0x4AC // Unused Flag
 #define FLAG_UNUSED_0x4AD                                           0x4AD // Unused Flag
 #define FLAG_UNUSED_0x4AE                                           0x4AE // Unused Flag

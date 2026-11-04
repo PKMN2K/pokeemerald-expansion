@@ -343,7 +343,7 @@ def export(output: Path, headbutt_review: dict):
     from build_new_bark import MAPS as new_bark_maps
     registered_source_sets = {row["source_map_id"]: row["source_group"] for row in maps
                               if row["source_map_id"] in new_bark_maps.values()}
-    assert registered_source_sets == {"NEW_BARK_TOWN": "TREEMON_SET_CITY", "ROUTE_29": "TREEMON_SET_ROUTE"}
+    assert registered_source_sets == {"NEW_BARK_TOWN": "TREEMON_SET_CITY", "ROUTE_29": "TREEMON_SET_ROUTE", "CHERRYGROVE_CITY": "TREEMON_SET_CITY"}
     # Production still contains only the dormant selector's definition, with
     # no live caller or function-pointer binding. A future field phase must
     # replace this gate with explicit mapping and gameplay validation.
