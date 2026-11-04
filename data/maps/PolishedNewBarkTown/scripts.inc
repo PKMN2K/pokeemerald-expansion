@@ -1,6 +1,29 @@
-@ Generated from pinned NewBarkTown.asm: geography and static text only.
+@ Generated from pinned NewBarkTown.asm: geography, static text and ambient residents.
 PolishedNewBarkTown_MapScripts::
+	map_script MAP_SCRIPT_ON_LOAD, PolishedNewBarkTown_ResidentSchedule
+	map_script MAP_SCRIPT_ON_RETURN_TO_FIELD, PolishedNewBarkTown_ResidentSchedule_Restore
 	.byte 0
+
+@ Map-local visibility, recomputed on entry and save loading.
+PolishedNewBarkTown_ResidentSchedule::
+	gettime
+	goto_if_lt VAR_0x8000, 5, PolishedNewBarkTown_ResidentSchedule_Evening
+	goto_if_ge VAR_0x8000, 17, PolishedNewBarkTown_ResidentSchedule_Evening
+	clearflag FLAG_TEMP_1
+	end
+PolishedNewBarkTown_ResidentSchedule_Evening::
+	setflag FLAG_TEMP_1
+	end
+
+@ Continue restores saved actors; reconcile only this scheduled resident with
+@ the freshly computed mask. Ordinary menu returns retain the existing mask.
+PolishedNewBarkTown_ResidentSchedule_Restore::
+	goto_if_set FLAG_TEMP_1, PolishedNewBarkTown_ResidentSchedule_Hide
+	addobject LOCALID_NEW_BARK_SCHOOLBOY
+	end
+PolishedNewBarkTown_ResidentSchedule_Hide::
+	removeobject LOCALID_NEW_BARK_SCHOOLBOY
+	end
 
 PolishedNewBarkTown_NewBarkTownSignText::
 	msgbox PolishedNewBarkTown_NewBarkTownSignText_Text, MSGBOX_SIGN
@@ -48,3 +71,17 @@ PolishedNewBarkTown_Breeze:
 
 PolishedNewBarkTown_Garden:
 	.string "Return to the demonstration\ngarden?$"
+
+PolishedNewBarkTown_Text_ElmDiscoveredNewMon::
+	msgbox PolishedNewBarkTown_Text_ElmDiscoveredNewMon_Text, MSGBOX_NPC
+	end
+
+PolishedNewBarkTown_Text_ElmDiscoveredNewMon_Text:
+	.string "Yo, {PLAYER}!\pI hear Prof.Elm\ndiscovered some\lnew POKéMON.$"
+
+PolishedNewBarkTown_Text_GearIsImpressive::
+	msgbox PolishedNewBarkTown_Text_GearIsImpressive_Text, MSGBOX_NPC
+	end
+
+PolishedNewBarkTown_Text_GearIsImpressive_Text:
+	.string "Wow, your POKégear\nis impressive!\pDid your mom get\nit for you?$"

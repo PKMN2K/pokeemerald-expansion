@@ -11,6 +11,9 @@
 #include "data/tilesets/polished_johto_palette_tables.h"
 
 static const u16 sJohtoRedSpritePalettes[] = INCBIN_U16("graphics/object_events/polished_pokefan/time_palettes.bin");
+static const u16 sJohtoBlueSpritePalettes[] = INCBIN_U16("graphics/object_events/polished_npc_palettes/blue_time.bin");
+static const u16 sJohtoGreenSpritePalettes[] = INCBIN_U16("graphics/object_events/polished_npc_palettes/green_time.bin");
+static const u16 sJohtoBrownSpritePalettes[] = INCBIN_U16("graphics/object_events/polished_npc_palettes/brown_time.bin");
 
 // The outdoor demonstration and original New Bark Town opt into time/roof
 // palettes with source roof group 24. Their interiors use PALETTE_DAY and
@@ -155,16 +158,33 @@ bool8 PolishedJohtoTryApplySpritePalette(u8 paletteNum)
 {
     u16 tag;
     u8 sourcePeriod, roofPeriod;
+    const u16 *palettes;
 
     if (paletteNum >= 16 || !PolishedJohtoIsRegisteredMapLayout(gMapHeader.mapLayout))
         return FALSE;
     tag = GetSpritePaletteTagByPaletteNum(paletteNum);
-    if (tag != OBJ_EVENT_PAL_TAG_POLISHED_CHRIS && tag != OBJ_EVENT_PAL_TAG_POLISHED_POKEFAN)
+    switch (tag)
+    {
+    case OBJ_EVENT_PAL_TAG_POLISHED_CHRIS:
+    case OBJ_EVENT_PAL_TAG_POLISHED_POKEFAN:
+        palettes = sJohtoRedSpritePalettes;
+        break;
+    case OBJ_EVENT_PAL_TAG_POLISHED_NPC_BLUE:
+        palettes = sJohtoBlueSpritePalettes;
+        break;
+    case OBJ_EVENT_PAL_TAG_POLISHED_NPC_GREEN:
+        palettes = sJohtoGreenSpritePalettes;
+        break;
+    case OBJ_EVENT_PAL_TAG_POLISHED_NPC_BROWN:
+        palettes = sJohtoBrownSpritePalettes;
+        break;
+    default:
         return FALSE;
+    }
     if (!GetJohtoTimeIndices(GetTimeOfDay(), &sourcePeriod, &roofPeriod))
         return FALSE;
 
-    LoadPaletteFast(&sJohtoRedSpritePalettes[sourcePeriod * 16], OBJ_PLTT_ID(paletteNum), PLTT_SIZE_4BPP);
+    LoadPaletteFast(&palettes[sourcePeriod * 16], OBJ_PLTT_ID(paletteNum), PLTT_SIZE_4BPP);
     return TRUE;
 }
 

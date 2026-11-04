@@ -2532,3 +2532,19 @@ static const struct SpriteFrameImage sPicTable_MomFrlg[] = {
 static const struct SpriteFrameImage sPicTable_PolishedPokefan[] = {
     overworld_ascending_frames(gObjectEventPic_PolishedPokefan, 2, 4),
 };
+
+static const struct SpriteFrameImage sPicTable_PolishedFatGuy[] = {
+    overworld_ascending_frames(gObjectEventPic_PolishedFatGuy, 2, 4),
+};
+
+static const struct SpriteFrameImage sPicTable_PolishedSchoolboy[] = {
+    overworld_ascending_frames(gObjectEventPic_PolishedSchoolboy, 2, 4),
+};
+
+static const struct SpriteFrameImage sPicTable_PolishedBattleGirl[] = {
+    overworld_ascending_frames(gObjectEventPic_PolishedBattleGirl, 2, 4),
+};
+
+static const struct SpriteFrameImage sPicTable_PolishedChild[] = {
+    overworld_ascending_frames(gObjectEventPic_PolishedChild, 2, 4),
+};

@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """Reproduce New Bark Town's source geography and all seven connected interiors.
 
-This imports map blocks, door/stair coordinates and static reading interactions.
-Story scenes, conditional NPCs, item events and room decorations are separate
-work. Route 29/27 connections are deliberately absent until those maps exist.
+This imports map blocks, door/stair coordinates, reading interactions and the
+six ambient residents. Story scenes, story-dependent NPCs, item events and room
+decorations are separate work. Route 29/27 connections await those maps.
 """
 import argparse
 import base64
@@ -11,6 +11,8 @@ import hashlib
 import json
 import re
 import struct
+import tempfile
+from pathlib import Path
 
 from build_johto_demo import (ROOT, FIXTURES, PIN, BEHAVIORS, source_files as demo_sources,
     behavior_ids, collisions, map_cells, lab_geometry, palette_rows, apply_new_bark_roof)
@@ -18,6 +20,7 @@ from convert_johto_traditional_blocks import convert
 from stage_johto_tile_graphics import build_graphics
 from stage_johto_time_palettes import stage, load_source_palettes
 from test_johto_metatile_banks import load_binary_fixture
+from convert_player_walking import convert as convert_npc
 
 MAPS = {
     "NewBarkTown": "NEW_BARK_TOWN",
@@ -45,6 +48,30 @@ BEHAVIORS = {**BEHAVIORS,
 }
 # Scripts with an unconditional inline text body, rather than a story branch.
 INLINE_TEXT = {"PlayersHouse1FTVScript", "LyrasFridgeScript", "LyrasTVScript"}
+
+# Only source jumptextfaceplayer residents with no story flag are imported.
+# The teacher retains the explicitly separate demo travel prompt.
+RESIDENTS = {
+    "NewBarkTown": {"Text_ElmDiscoveredNewMon": "NEW_BARK_FAT_GUY",
+                    "Text_GearIsImpressive": "NEW_BARK_SCHOOLBOY"},
+    "PlayersNeighborsHouse": {"PlayersNeighborsDaughterText": "NEIGHBORS_DAUGHTER",
+                              "PlayersNeighborsHusbandText": "NEIGHBORS_HUSBAND"},
+    "ElmsHouse": {"ElmsWifeText": "ELMS_WIFE", "ElmsSonText": "ELMS_SON"},
+}
+NPC_GRAPHICS = {
+    ("SPRITE_FAT_GUY", "GREEN"): "POLISHED_FAT_GUY",
+    ("SPRITE_SCHOOLBOY", "BLUE"): "POLISHED_SCHOOLBOY",
+    ("SPRITE_BATTLE_GIRL", "RED"): "POLISHED_BATTLE_GIRL",
+    ("SPRITE_POKEFAN_F", "GREEN"): "POLISHED_POKEFAN_GREEN",
+    ("SPRITE_CHILD", "BROWN"): "POLISHED_CHILD",
+}
+NPC_MOVEMENTS = {
+    "SPRITEMOVEDATA_WALK_UP_DOWN": "MOVEMENT_TYPE_WANDER_UP_AND_DOWN",
+    "SPRITEMOVEDATA_WALK_LEFT_RIGHT": "MOVEMENT_TYPE_WANDER_LEFT_AND_RIGHT",
+    "SPRITEMOVEDATA_STANDING_UP": "MOVEMENT_TYPE_FACE_UP",
+    "SPRITEMOVEDATA_STANDING_LEFT": "MOVEMENT_TYPE_FACE_LEFT",
+    "SPRITEMOVEDATA_STANDING_RIGHT": "MOVEMENT_TYPE_FACE_RIGHT",
+}
 
 
 def source_files():
@@ -82,7 +109,101 @@ def text_definition(label, text):
     return f'{label}:\n\t.string "{text}"\n\n'
 
 
-def map_header(name, constant, width, height, script):
+def residents(name, script, files):
+    objects, code, report = [], "", []
+    selected = RESIDENTS.get(name, {})
+    for line in re.findall(r"^\s*object_event (.*)$", script, re.M):
+        fields = [field.strip() for field in line.split(",")]
+        if len(fields) != 12 or fields[10] not in selected:
+            continue
+        x, y, sprite, movement, ry, rx, time, palette, kind, command, label, flag = fields
+        assert (kind, command, flag) == ("OBJECTTYPE_COMMAND", "jumptextfaceplayer", "-1")
+        if palette == "0":
+            # A source default is sprite-specific; it is not palette zero.
+            assert sprite == "SPRITE_SCHOOLBOY"
+            palette = "PAL_NPC_" + re.search(r"SchoolboySpriteGFX, WALKING_SPRITE, PAL_OW_(\w+)",
+                files["data/sprites/sprites.asm"].decode())[1]
+        color = palette.removeprefix("PAL_NPC_")
+        event = "Polished" + name + "_" + label
+        scheduled = time != "-1"
+        objects.append({"local_id": "LOCALID_" + selected[label],
+            "graphics_id": "OBJ_EVENT_GFX_" + NPC_GRAPHICS[sprite, color],
+            "x": int(x), "y": int(y), "elevation": 3,
+            "movement_type": NPC_MOVEMENTS[movement],
+            "movement_range_x": int(rx), "movement_range_y": int(ry),
+            "trainer_type": "TRAINER_TYPE_NONE", "trainer_sight_or_berry_tree_id": "0",
+            "script": event, "flag": "FLAG_TEMP_1" if scheduled else "0"})
+        code += f"{event}::\n\tmsgbox {event}_Text, MSGBOX_NPC\n\tend\n\n"
+        code += text_definition(event + "_Text", source_text(script, label))
+        report.append({"local_id": objects[-1]["local_id"], "source_sprite": sprite,
+            "source_palette": color, "source_text": label, "source_movement": movement,
+            "source_time": time, "event": objects[-1]})
+    assert len(objects) == len(selected), name
+    return objects, code, report
+
+
+def schedule_script(name, resident_info, files):
+    scheduled = [npc for npc in resident_info if npc["source_time"] != "-1"]
+    if not scheduled:
+        return "", ""
+    assert len(scheduled) == 1  # FLAG_TEMP_1 is local to each of these two maps.
+    time = scheduled[0]["source_time"]
+    assert time in ("(1 << MORN) | (1 << DAY)", "(1 << EVE) | (1 << NITE)")
+    daytime = time == "(1 << MORN) | (1 << DAY)"
+    constants = files["constants/misc_constants.asm"].decode()
+    morning = int(re.search(r"DEF MORN_HOUR EQU\s+(\d+)", constants)[1])
+    evening = int(re.search(r"DEF EVE_HOUR\s+EQU\s+(\d+)", constants)[1])
+    prefix = "Polished" + name + "_ResidentSchedule"
+    # Source LoadMapObjects -> LoadObjectMasks -> CheckObjectTime sets the
+    # visibility mask when loading the map, not during an NPC conversation.
+    # Read actual RTC hours rather than Expansion's configurable TOD cutoffs.
+    code = f"""@ Map-local visibility, recomputed on entry and save loading.
+{prefix}::
+\tgettime
+\tgoto_if_lt VAR_0x8000, {morning}, {prefix}_Evening
+\tgoto_if_ge VAR_0x8000, {evening}, {prefix}_Evening
+\t{'clearflag' if daytime else 'setflag'} FLAG_TEMP_1
+\tend
+{prefix}_Evening::
+\t{'setflag' if daytime else 'clearflag'} FLAG_TEMP_1
+\tend
+
+@ Continue restores saved actors; reconcile only this scheduled resident with
+@ the freshly computed mask. Ordinary menu returns retain the existing mask.
+{prefix}_Restore::
+\tgoto_if_set FLAG_TEMP_1, {prefix}_Hide
+\taddobject {scheduled[0]['local_id']}
+\tend
+{prefix}_Hide::
+\tremoveobject {scheduled[0]['local_id']}
+\tend
+
+"""
+    return (f"\tmap_script MAP_SCRIPT_ON_LOAD, {prefix}\n"
+            f"\tmap_script MAP_SCRIPT_ON_RETURN_TO_FIELD, {prefix}_Restore\n"), code
+
+
+def resident_assets(files):
+    products = {}
+    colors = re.findall(r"^\s*ow_npc_pal_const (\w+)", files["constants/sprite_data_constants.asm"].decode(), re.M)
+    rows = palette_rows(files["gfx/overworld/npc_sprites.pal"].decode())
+    assert colors[:4] == ["RED", "BLUE", "GREEN", "BROWN"] and len(rows) == 80
+    for color in ("BLUE", "GREEN", "BROWN"):
+        index = colors.index(color)
+        base = "graphics/object_events/polished_npc_palettes/" + color.lower()
+        products[base + ".bin"] = struct.pack("<16H", *rows[20 + index], *([0] * 12))
+        products[base + "_time.bin"] = b"".join(struct.pack("<16H", *rows[period * 20 + index],
+            *([0] * 12)) for period in range(4))
+    with tempfile.TemporaryDirectory() as tmp:
+        inp, out = Path(tmp) / "npc.png", Path(tmp) / "walking.png"
+        for sprite in ("fat_guy", "schoolboy", "battle_girl", "child"):
+            inp.write_bytes(files[f"gfx/sprites/{sprite}.png"])
+            convert_npc(inp, out)
+            products[f"graphics/object_events/polished_{sprite}/walking.png"] = out.read_bytes()
+    return products
+
+
+def map_header(name, constant, width, height, script, files):
     prefix = "Polished" + name
     header = {
         "id": "MAP_POLISHED_" + constant, "name": prefix,
@@ -94,7 +215,9 @@ def map_header(name, constant, width, height, script):
         "allow_running": True, "show_map_name": False, "battle_scene": "MAP_BATTLE_SCENE_NORMAL",
         "connections": None, "object_events": [], "warp_events": [], "coord_events": [], "bg_events": [],
     }
-    code = f"@ Generated from pinned {name}.asm: geography and static text only.\n{prefix}_MapScripts::\n\t.byte 0\n\n"
+    objects, resident_code, resident_info = residents(name, script, files)
+    schedule_header, schedule_code = schedule_script(name, resident_info, files)
+    code = f"@ Generated from pinned {name}.asm: geography, static text and ambient residents.\n{prefix}_MapScripts::\n{schedule_header}\t.byte 0\n\n" + schedule_code
     for x, y, destination, warp in re.findall(r"^\s*warp_event\s+(\d+),\s*(\d+),\s*(\w+),\s*(\d+)", script, re.M):
         assert destination in MAPS.values(), (name, destination)
         assert 0 <= int(x) < width and 0 <= int(y) < height
@@ -117,7 +240,7 @@ def map_header(name, constant, width, height, script):
         # explicitly demo navigation, independent of any Crystal story flags.
         header["object_events"].append({"local_id": "LOCALID_NEW_BARK_TEACHER",
             "graphics_id": "OBJ_EVENT_GFX_POLISHED_POKEFAN", "x": 6, "y": 8, "elevation": 3,
-            "movement_type": "MOVEMENT_TYPE_FACE_DOWN", "movement_range_x": 0, "movement_range_y": 0,
+            "movement_type": "MOVEMENT_TYPE_LOOK_AROUND", "movement_range_x": 0, "movement_range_y": 0,
             "trainer_type": "TRAINER_TYPE_NONE", "trainer_sight_or_berry_tree_id": "0",
             "script": prefix + "_Teacher", "flag": "0"})
         code += f"""{prefix}_Teacher::
@@ -150,13 +273,14 @@ def map_header(name, constant, width, height, script):
 
 """
         code += text_definition(prefix + "_HealText", source_text(script, "ElmsLabHealingMachineText2"))
-    return header, (code.rstrip() + "\n").encode()
+    header["object_events"].extend(objects)
+    return header, ((code + resident_code).rstrip() + "\n").encode(), resident_info
 
 
 def generate():
     files = source_files()
     ids = behavior_ids()
-    products, maps, layouts = {}, {}, []
+    products, maps, layouts = resident_assets(files), {}, []
     indoor = palette_rows((FIXTURES / "johto_bg_tiles.pal").read_text())[32:39]
     indoor_palette = b"".join(struct.pack("<16H", *p, p[0], *([0] * 11)) for p in indoor).ljust(512, b"\0")
     outdoor = apply_new_bark_roof(build_graphics()[0], files)
@@ -195,7 +319,7 @@ def generate():
         prefix = "Polished" + name
         products[f"data/layouts/{prefix}/map.bin"] = raw
         products[f"data/layouts/{prefix}/border.bin"] = border_raw
-        header, script = map_header(name, constant, width * 2, height * 2, files[f"maps/{name}.asm"].decode())
+        header, script, resident_info = map_header(name, constant, width * 2, height * 2, files[f"maps/{name}.asm"].decode(), files)
         products[f"data/maps/{prefix}/map.json"] = json_bytes(header)
         products[f"data/maps/{prefix}/scripts.inc"] = script
         tileset = "PolishedNewBark" + bank
@@ -205,7 +329,8 @@ def generate():
             "layout_version": "emerald"})
         maps[constant] = {"name": name, "width": width * 2, "height": height * 2, "tileset": bank,
             "source_blocks": source_layout, "used_metatiles": sorted(used | border_used),
-            "warps": header["warp_events"], "static_interactions": len(header["bg_events"])}
+            "warps": header["warp_events"], "static_interactions": len(header["bg_events"]),
+            "residents": resident_info}
     # Validate all source warp indexes against their actual destination, never
     # merely against an unrelated Emerald map with a matching numeric ID.
     for constant, info in maps.items():
@@ -244,7 +369,7 @@ def generate():
 
 """
     products["src/data/tilesets/polished_new_bark.h"] = (header_text.rstrip() + "\n").encode()
-    report = {"source_commit": PIN, "scope": "source geography, connected interiors and static interactions; story/NPC population deferred",
+    report = {"source_commit": PIN, "scope": "source geography, connected interiors, static interactions and six ambient residents; story-dependent cast deferred",
         "maps": maps, "layouts": layouts, "output_sha256": {p: hashlib.sha256(raw).hexdigest() for p, raw in products.items()}}
     products["tools/polished_port/manifests/new_bark.json"] = json_bytes(report)
     return products

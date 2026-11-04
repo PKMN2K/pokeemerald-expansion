@@ -1,4 +1,4 @@
-@ Generated from pinned LyrasHouse1F.asm: geography and static text only.
+@ Generated from pinned LyrasHouse1F.asm: geography, static text and ambient residents.
 PolishedLyrasHouse1F_MapScripts::
 	.byte 0
 

@@ -642,3 +642,10 @@ const u16 gObjectEventPic_ClefairyOld[] = INCGFX_U16("graphics/object_events/pic
 #endif // IS_FRLG
 const u32 gObjectEventPic_PolishedPokefan[] = INCGFX_U32("graphics/object_events/polished_pokefan/walking.png", ".4bpp", "-mwidth 2 -mheight 4");
 const u16 gObjectEventPal_PolishedPokefan[] = INCBIN_U16("graphics/object_events/polished_pokefan/palette.bin");
+const u32 gObjectEventPic_PolishedFatGuy[] = INCGFX_U32("graphics/object_events/polished_fat_guy/walking.png", ".4bpp", "-mwidth 2 -mheight 4");
+const u32 gObjectEventPic_PolishedSchoolboy[] = INCGFX_U32("graphics/object_events/polished_schoolboy/walking.png", ".4bpp", "-mwidth 2 -mheight 4");
+const u32 gObjectEventPic_PolishedBattleGirl[] = INCGFX_U32("graphics/object_events/polished_battle_girl/walking.png", ".4bpp", "-mwidth 2 -mheight 4");
+const u32 gObjectEventPic_PolishedChild[] = INCGFX_U32("graphics/object_events/polished_child/walking.png", ".4bpp", "-mwidth 2 -mheight 4");
+const u16 gObjectEventPal_PolishedNpcBlue[] = INCBIN_U16("graphics/object_events/polished_npc_palettes/blue.bin");
+const u16 gObjectEventPal_PolishedNpcGreen[] = INCBIN_U16("graphics/object_events/polished_npc_palettes/green.bin");
+const u16 gObjectEventPal_PolishedNpcBrown[] = INCBIN_U16("graphics/object_events/polished_npc_palettes/brown.bin");

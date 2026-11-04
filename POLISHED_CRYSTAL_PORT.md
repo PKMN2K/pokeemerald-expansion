@@ -118,9 +118,10 @@ the same pin. Elm's healing machine invokes Expansion's native party healing.
 The town opts into New Bark's four outdoor/roof palettes; all seven interiors
 use the source's fixed daytime colors. Existing map/layout IDs stay unchanged.
 
-This completes the town's **geography and traversal phase**, not its story or
-population. Conditional NPCs, starter selection, the rival/Lyra scenes, Mom's
-events, hidden items, room decorations and Route 29/27 connections are still
+This completes the town's **geography and traversal phase**. The ambient
+resident phase below populates the source's unconditional dialogue NPCs.
+Story-dependent NPCs, starter selection, the rival/Lyra scenes, Mom's events,
+hidden items, room decorations and Route 29/27 connections are still
 pending. The unconnected town boundaries remain closed by source border
 collision. No story flags or Headbutt source-map assignments are invented.
 New Bark's original `TREEMON_SET_CITY` encounter data remains in the dormant
@@ -135,6 +136,37 @@ compares live day/night palette RAM, exercises reading/healing interactions,
 and returns to the garden. CI includes both this check and the original demo
 movement/fishing checks. Fixtures and outputs are recorded in
 `tools/polished_port/manifests/new_bark.json`.
+
+### New Bark ambient residents
+
+Six source residents are now live: the green-clothed man and daytime schoolboy
+in town, the neighbors' daughter and evening/night husband, and Elm's wife and
+son. Their source dialogue, positions, walking axes/radii and facing directions
+are preserved using Expansion's native NPC scripts and movement. The existing
+town teacher now looks around, while retaining the demo's return-trip prompt.
+
+The four additional walking sheets are converted directly from pinned source
+pixels; Elm's wife reuses the existing Pokefan F frames with her original green
+palette. Red, blue, green and brown source colors remain distinct. Outdoor
+actors use the imported time palettes; interiors retain source daytime colors.
+New graphics IDs and palette tags are appended without renumbering old IDs.
+
+As in source `LoadObjectMasks`/`CheckObjectTime`, schedules are evaluated when
+loading a map. The schoolboy appears from **05:00 through 16:59**; the husband
+appears from **17:00 through 04:59**. Map-local temporary flags are recomputed
+from RTC hours, independent of Expansion's configurable time-period cutoffs.
+Returning from an ordinary menu keeps the current mask. Save/Continue computes
+a fresh mask and reconciles the restored actor, so a saved daytime/nighttime
+presence cannot override the clock. A clock change never removes a speaker in
+the middle of a conversation. No persistent story flags are assigned.
+
+`build_new_bark.py --check` also reproduces these sprites, palettes, events and
+scripts from the pinned fixtures. The mGBA check exercises all six conversations
+and walking bounds, verifies outdoor period colors and indoor daytime colors,
+checks both schedules around all four source time boundaries and midnight, and
+tests native Save/reset/Continue with visibility changes in both directions.
+The source schoolboy's Pokégear dialogue is retained; it does not add Pokégear
+functionality. The story-dependent cast and opening sequence remain pending.
 
 The playable visual slice and dormant Headbutt encounter selection are complete
 parts of the port. **The whole Polished Crystal migration is not complete.**

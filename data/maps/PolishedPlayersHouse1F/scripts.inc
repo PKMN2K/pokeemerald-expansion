@@ -1,4 +1,4 @@
-@ Generated from pinned PlayersHouse1F.asm: geography and static text only.
+@ Generated from pinned PlayersHouse1F.asm: geography, static text and ambient residents.
 PolishedPlayersHouse1F_MapScripts::
 	.byte 0
 

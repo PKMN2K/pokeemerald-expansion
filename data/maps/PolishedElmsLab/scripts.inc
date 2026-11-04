@@ -1,4 +1,4 @@
-@ Generated from pinned ElmsLab.asm: geography and static text only.
+@ Generated from pinned ElmsLab.asm: geography, static text and ambient residents.
 PolishedElmsLab_MapScripts::
 	.byte 0
 

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Walk every original New Bark door/stair through real input in a fresh ROM."""
+"""Exercise New Bark's warps, residents and schedules through real GBA input."""
 import argparse
 from collections import deque
 import hashlib
@@ -31,7 +31,12 @@ def map_data(name):
 def walk(game, data, goal):
     """Use the actual converted collision grid, avoiding other warp tiles."""
     width, height = data["width"], data["height"]
-    blocked = {(row["x"], row["y"]) for row in data["object_events"] + data["warp_events"]}
+    blocked = {(row["x"], row["y"]) for row in data["warp_events"]}
+    # Reserve each resident's whole walking range, not just its spawn tile.
+    for row in data["object_events"]:
+        for dx in range(-row["movement_range_x"], row["movement_range_x"] + 1):
+            for dy in range(-row["movement_range_y"], row["movement_range_y"] + 1):
+                blocked.add((row["x"] + dx, row["y"] + dy))
     blocked.discard(goal)
     start = game.position()
     queue = deque([start])
@@ -70,6 +75,206 @@ def check_player_palette(game, expected):
     offset = (16 + tags.index(tag)) * 32
     for buffer in ("gPlttBufferUnfaded", "gPlttBufferFaded"):
         assert game.read(game.sym[buffer] + offset, 32) == expected, f"Player palette: {buffer}"
+
+
+def actors(game):
+    group, number = game.map_number()
+    count = int(re.search(r"#define OBJECT_EVENTS_COUNT\s+(\d+)",
+        (ROOT / "include/constants/global.h").read_text())[1])
+    raw = game.read(game.sym["gObjectEvents"], count * 0x24)
+    result = {}
+    for start in range(0, len(raw), 0x24):
+        actor = raw[start:start + 0x24]
+        if actor[0] & 1 and actor[9:11] == bytes((number, group)) and not actor[2] & 1:
+            result[actor[8]] = {"position": tuple(v - 7 for v in struct.unpack_from("<hh", actor, 0x10)),
+                "graphics": struct.unpack_from("<H", actor, 4)[0], "direction": actor[0x18] & 15,
+                "invisible": bool(actor[1] & 0x20)}
+    return result
+
+
+def resident_id(data, name):
+    return next(i + 1 for i, obj in enumerate(data["object_events"]) if obj["local_id"] == name)
+
+
+def travel(game, data, destination):
+    warp = next(row for row in data["warp_events"] if row["dest_map"] == destination["id"])
+    walk(game, data, (warp["x"], warp["y"]))
+    behavior = warp_behavior(data, warp)
+    if behavior.endswith("ARROW_WARP"):
+        game.frames(20, {"MB_SOUTH_ARROW_WARP": DOWN, "MB_WEST_ARROW_WARP": LEFT, "MB_EAST_ARROW_WARP": RIGHT}[behavior])
+    game.frames(240)
+
+
+def check_resident_palette(game, data, local_id, color, period, rows):
+    actor = actors(game)[local_id]
+    assert not actor["invisible"]
+    info = game.u32(game.sym["gObjectEventGraphicsInfoPointers"] + actor["graphics"] * 4)
+    tag = struct.unpack("<H", game.read(info + 2, 2))[0]
+    tags = struct.unpack("<16H", game.read(game.sym["sSpritePaletteTags"], 32))
+    assert tag in tags
+    offset = (16 + tags.index(tag)) * 32
+    source_period = ("morn", "day", "nite", "eve").index(period)
+    expected = struct.pack("<16H", *rows[source_period * 20 + color], *([0] * 12))
+    for buffer in ("gPlttBufferUnfaded", "gPlttBufferFaded"):
+        assert game.read(game.sym[buffer] + offset, 32) == expected, (data["name"], local_id, period, buffer)
+
+
+def talk_to_resident(game, data, local_id, shot, leave_open=False):
+    """Approach the resident's actual position, including moving actors."""
+    for attempt in range(30):
+        npc = actors(game).get(local_id)
+        assert npc is not None, (data["name"], local_id)
+        x, y = npc["position"]
+        for key, dx, dy in DIRECTIONS:
+            approach = x - dx, y - dy
+            if not (0 <= approach[0] < data["width"] and 0 <= approach[1] < data["height"]):
+                continue
+            try:
+                walk(game, data, approach)
+            except AssertionError:
+                continue
+            game.face(key)
+            if actors(game)[local_id]["position"] != (x, y):
+                break
+            game.press(A, 240)
+            if game.read(game.sym["sGlobalScriptContext"] + 1, 1) != b"\0":
+                assert struct.unpack("<H", game.read(game.sym["gSpecialVar_LastTalked"], 2))[0] == local_id
+                game.screenshot(shot)
+                if not leave_open:
+                    close_resident_dialogue(game)
+                return
+        game.frames(30)
+    raise AssertionError(f"Cannot talk to {data['name']} resident {local_id}")
+
+
+def close_resident_dialogue(game):
+    for _ in range(32):
+        game.press(A, 45)
+        if game.read(game.sym["sGlobalScriptContext"] + 1, 1) == b"\0":
+            return
+    raise AssertionError("Resident dialogue did not release control")
+
+
+def save_game(game):
+    game.press(START, 40)
+    count = game.read(game.sym["sNumStartMenuActions"], 1)[0]
+    actions = game.read(game.sym["sCurrentStartMenuActions"], count)
+    # Follow the native menu's Save callback, rather than assuming a fixed row.
+    save_action = next(i for i in actions if game.u32(game.sym["sStartMenuItems"] + i * 8 + 4)
+        == game.sym["StartMenuSaveCallback"] | 1)
+    for _ in range(count):
+        cursor = game.read(game.sym["sStartMenuCursorPos"], 1)[0]
+        if actions[cursor] == save_action:
+            break
+        game.press(DOWN, 12)
+    else:
+        raise AssertionError("Save menu entry not found")
+    game.press(A, 100)
+    for _ in range(8):
+        game.press(A, 120)
+    game.press(B, 40)
+    game.screenshot("resident-save")
+
+
+def continue_game(game):
+    game.command("reset")
+    game.frames(1400)
+    for key in [START] + [A] * 12:
+        game.press(key, 240)
+        if game.u32(game.sym["gMain"] + 4) == game.sym["CB2_Overworld"] | 1:
+            return
+    raise AssertionError("Continue did not reach the overworld")
+
+
+def check_residents(game, maps, rows, checks):
+    town, neighbors, elms = (maps["Polished" + name] for name in ("NewBarkTown", "PlayersNeighborsHouse", "ElmsHouse"))
+    boy = resident_id(town, "LOCALID_NEW_BARK_SCHOOLBOY")
+    husband = resident_id(neighbors, "LOCALID_NEIGHBORS_HUSBAND")
+    game.restore("PolishedNewBarkTown")
+    # Both sides of every source time boundary, including midnight. Native
+    # Expansion TOD settings must not change Crystal's 05:00/17:00 schedule.
+    for hour in (4, 5, 8, 9, 16, 17, 20, 21, 0):
+        game.set_hour(hour)
+        travel(game, town, neighbors)
+        assert (husband in actors(game)) == (hour < 5 or hour >= 17), ("indoors", hour, actors(game))
+        if hour == 17:
+            game.snapshot("residents-evening-indoors")
+        travel(game, neighbors, town)
+        walk(game, town, (7, 14))
+        assert (boy in actors(game)) == (5 <= hour < 17), ("outdoors", hour, actors(game))
+        if hour == 16:
+            game.snapshot("residents-daytime-town")
+        print("PASS: resident schedules at", hour, flush=True)
+    checks.append("both residents obey source map-entry schedules at 04/05, 08/09, 16/17, 20/21 and midnight")
+
+    # All six conversations; indoor sprites keep source DAY colors at night.
+    cases = (
+        (town, "residents-daytime-town", "LOCALID_NEW_BARK_FAT_GUY", 2, "PolishedFatGuy"),
+        (town, "residents-daytime-town", "LOCALID_NEW_BARK_SCHOOLBOY", 1, "PolishedSchoolboy"),
+        (neighbors, "residents-evening-indoors", "LOCALID_NEIGHBORS_DAUGHTER", 0, "PolishedBattleGirl"),
+        (neighbors, "residents-evening-indoors", "LOCALID_NEIGHBORS_HUSBAND", 1, "PolishedSchoolboy"),
+        (elms, "PolishedElmsHouse", "LOCALID_ELMS_WIFE", 2, "PolishedPokefanGreen"),
+        (elms, "PolishedElmsHouse", "LOCALID_ELMS_SON", 3, "PolishedChild"),
+    )
+    for data, snapshot, name, color, graphics in cases:
+        game.restore(snapshot)
+        game.set_hour(10 if data == town else 23)
+        local_id = resident_id(data, name)
+        obj = data["object_events"][local_id - 1]
+        actor = actors(game)[local_id]
+        assert game.u32(game.sym["gObjectEventGraphicsInfoPointers"] + actor["graphics"] * 4) == game.sym["gObjectEventGraphicsInfo_" + graphics]
+        positions = set()
+        for _ in range(80):
+            current = actors(game)[local_id]["position"]
+            assert abs(current[0] - obj["x"]) <= obj["movement_range_x"], (name, current)
+            assert abs(current[1] - obj["y"]) <= obj["movement_range_y"], (name, current)
+            positions.add(current)
+            game.frames(10)
+        if obj["movement_range_x"] or obj["movement_range_y"]:
+            assert len(positions) > 1, name
+        else:
+            assert len(positions) == 1, name
+        check_resident_palette(game, data, local_id, color, "day", rows)
+        talk_to_resident(game, data, local_id, name.lower())
+        if data == town:
+            for hour, period in ((7, "morn"), (19, "eve"), (23, "nite")):
+                game.set_hour(hour)
+                check_resident_palette(game, data, local_id, color, period, rows)
+        print("PASS: resident artwork, movement, dialogue and palette", name, flush=True)
+    checks.append("all six authentic resident graphics, source colors, movement bounds and conversations work in-game")
+
+    # A time change must not remove the speaker or reschedule on a menu return.
+    game.restore("residents-daytime-town")
+    game.set_hour(16)
+    talk_to_resident(game, town, boy, "schoolboy-before-evening", leave_open=True)
+    game.set_hour(17)
+    assert boy in actors(game) and game.read(game.sym["sGlobalScriptContext"] + 1, 1) != b"\0"
+    close_resident_dialogue(game)
+    game.press(START, 40)
+    game.press(B, 40)
+    assert boy in actors(game)
+    travel(game, town, neighbors)
+    travel(game, neighbors, town)
+    walk(game, town, (7, 14))
+    assert boy not in actors(game)
+    checks.append("clock changes preserve the current speaker until a map reload")
+
+    # Save a visible resident, then a hidden one; reset/Continue at the opposite
+    # time so saved actors cannot override the newly calculated visibility.
+    travel(game, town, neighbors)
+    assert husband in actors(game)
+    saved_map, saved_position = game.map_number(), game.position()
+    save_game(game)
+    game.set_hour(10)
+    continue_game(game)
+    assert game.map_number() == saved_map and game.position() == saved_position
+    assert husband not in actors(game), "saved evening resident survived a daytime Continue"
+    save_game(game)
+    game.set_hour(23)
+    continue_game(game)
+    assert game.map_number() == saved_map and game.position() == saved_position
+    assert husband in actors(game), "saved hidden resident did not return on a nighttime Continue"
+    checks.append("native Save/reset/Continue reconciles resident visibility in both directions")
 
 
 def run(args):
@@ -189,6 +394,7 @@ def run(args):
             game.press(B, 60)
             assert game.read(game.sym["sGlobalScriptContext"] + 1, 1) == b"\0"
             checks.append("Elm's healing machine accepts the native healing interaction")
+            check_residents(game, maps, rows, checks)
             game.restore("PolishedNewBarkTown")
             walk(game, town, (6, 9))
             game.face(UP)

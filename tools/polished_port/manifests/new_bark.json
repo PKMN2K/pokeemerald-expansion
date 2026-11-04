@@ -1,6 +1,6 @@
 {
   "source_commit": "3fa43192379df5c3e7b09a08e4d5d79af4f02f42",
-  "scope": "source geography, connected interiors and static interactions; story/NPC population deferred",
+  "scope": "source geography, connected interiors, static interactions and six ambient residents; story-dependent cast deferred",
   "maps": {
     "NEW_BARK_TOWN": {
       "name": "NewBarkTown",
@@ -135,7 +135,53 @@
           "dest_warp_id": "1"
         }
       ],
-      "static_interactions": 4
+      "static_interactions": 4,
+      "residents": [
+        {
+          "local_id": "LOCALID_NEW_BARK_FAT_GUY",
+          "source_sprite": "SPRITE_FAT_GUY",
+          "source_palette": "GREEN",
+          "source_text": "Text_ElmDiscoveredNewMon",
+          "source_movement": "SPRITEMOVEDATA_WALK_UP_DOWN",
+          "source_time": "-1",
+          "event": {
+            "local_id": "LOCALID_NEW_BARK_FAT_GUY",
+            "graphics_id": "OBJ_EVENT_GFX_POLISHED_FAT_GUY",
+            "x": 13,
+            "y": 8,
+            "elevation": 3,
+            "movement_type": "MOVEMENT_TYPE_WANDER_UP_AND_DOWN",
+            "movement_range_x": 0,
+            "movement_range_y": 1,
+            "trainer_type": "TRAINER_TYPE_NONE",
+            "trainer_sight_or_berry_tree_id": "0",
+            "script": "PolishedNewBarkTown_Text_ElmDiscoveredNewMon",
+            "flag": "0"
+          }
+        },
+        {
+          "local_id": "LOCALID_NEW_BARK_SCHOOLBOY",
+          "source_sprite": "SPRITE_SCHOOLBOY",
+          "source_palette": "BLUE",
+          "source_text": "Text_GearIsImpressive",
+          "source_movement": "SPRITEMOVEDATA_WALK_LEFT_RIGHT",
+          "source_time": "(1 << MORN) | (1 << DAY)",
+          "event": {
+            "local_id": "LOCALID_NEW_BARK_SCHOOLBOY",
+            "graphics_id": "OBJ_EVENT_GFX_POLISHED_SCHOOLBOY",
+            "x": 7,
+            "y": 15,
+            "elevation": 3,
+            "movement_type": "MOVEMENT_TYPE_WANDER_LEFT_AND_RIGHT",
+            "movement_range_x": 1,
+            "movement_range_y": 0,
+            "trainer_type": "TRAINER_TYPE_NONE",
+            "trainer_sight_or_berry_tree_id": "0",
+            "script": "PolishedNewBarkTown_Text_GearIsImpressive",
+            "flag": "FLAG_TEMP_1"
+          }
+        }
+      ]
     },
     "ELMS_LAB": {
       "name": "ElmsLab",
@@ -217,7 +263,8 @@
           "dest_warp_id": "0"
         }
       ],
-      "static_interactions": 6
+      "static_interactions": 6,
+      "residents": []
     },
     "PLAYERS_HOUSE_1F": {
       "name": "PlayersHouse1F",
@@ -342,7 +389,8 @@
           "dest_warp_id": "0"
         }
       ],
-      "static_interactions": 4
+      "static_interactions": 4,
+      "residents": []
     },
     "PLAYERS_HOUSE_2F": {
       "name": "PlayersHouse2F",
@@ -393,7 +441,8 @@
           "dest_warp_id": "2"
         }
       ],
-      "static_interactions": 0
+      "static_interactions": 0,
+      "residents": []
     },
     "PLAYERS_NEIGHBORS_HOUSE": {
       "name": "PlayersNeighborsHouse",
@@ -487,7 +536,53 @@
           "dest_warp_id": "2"
         }
       ],
-      "static_interactions": 0
+      "static_interactions": 0,
+      "residents": [
+        {
+          "local_id": "LOCALID_NEIGHBORS_DAUGHTER",
+          "source_sprite": "SPRITE_BATTLE_GIRL",
+          "source_palette": "RED",
+          "source_text": "PlayersNeighborsDaughterText",
+          "source_movement": "SPRITEMOVEDATA_STANDING_RIGHT",
+          "source_time": "-1",
+          "event": {
+            "local_id": "LOCALID_NEIGHBORS_DAUGHTER",
+            "graphics_id": "OBJ_EVENT_GFX_POLISHED_BATTLE_GIRL",
+            "x": 2,
+            "y": 3,
+            "elevation": 3,
+            "movement_type": "MOVEMENT_TYPE_FACE_RIGHT",
+            "movement_range_x": 0,
+            "movement_range_y": 0,
+            "trainer_type": "TRAINER_TYPE_NONE",
+            "trainer_sight_or_berry_tree_id": "0",
+            "script": "PolishedPlayersNeighborsHouse_PlayersNeighborsDaughterText",
+            "flag": "0"
+          }
+        },
+        {
+          "local_id": "LOCALID_NEIGHBORS_HUSBAND",
+          "source_sprite": "SPRITE_SCHOOLBOY",
+          "source_palette": "BLUE",
+          "source_text": "PlayersNeighborsHusbandText",
+          "source_movement": "SPRITEMOVEDATA_STANDING_LEFT",
+          "source_time": "(1 << EVE) | (1 << NITE)",
+          "event": {
+            "local_id": "LOCALID_NEIGHBORS_HUSBAND",
+            "graphics_id": "OBJ_EVENT_GFX_POLISHED_SCHOOLBOY",
+            "x": 5,
+            "y": 4,
+            "elevation": 3,
+            "movement_type": "MOVEMENT_TYPE_FACE_LEFT",
+            "movement_range_x": 0,
+            "movement_range_y": 0,
+            "trainer_type": "TRAINER_TYPE_NONE",
+            "trainer_sight_or_berry_tree_id": "0",
+            "script": "PolishedPlayersNeighborsHouse_PlayersNeighborsHusbandText",
+            "flag": "FLAG_TEMP_1"
+          }
+        }
+      ]
     },
     "LYRAS_HOUSE_1F": {
       "name": "LyrasHouse1F",
@@ -612,7 +707,8 @@
           "dest_warp_id": "0"
         }
       ],
-      "static_interactions": 4
+      "static_interactions": 4,
+      "residents": []
     },
     "LYRAS_HOUSE_2F": {
       "name": "LyrasHouse2F",
@@ -671,7 +767,8 @@
           "dest_warp_id": "2"
         }
       ],
-      "static_interactions": 1
+      "static_interactions": 1,
+      "residents": []
     },
     "ELMS_HOUSE": {
       "name": "ElmsHouse",
@@ -761,7 +858,53 @@
           "dest_warp_id": "4"
         }
       ],
-      "static_interactions": 2
+      "static_interactions": 2,
+      "residents": [
+        {
+          "local_id": "LOCALID_ELMS_WIFE",
+          "source_sprite": "SPRITE_POKEFAN_F",
+          "source_palette": "GREEN",
+          "source_text": "ElmsWifeText",
+          "source_movement": "SPRITEMOVEDATA_WALK_UP_DOWN",
+          "source_time": "-1",
+          "event": {
+            "local_id": "LOCALID_ELMS_WIFE",
+            "graphics_id": "OBJ_EVENT_GFX_POLISHED_POKEFAN_GREEN",
+            "x": 1,
+            "y": 5,
+            "elevation": 3,
+            "movement_type": "MOVEMENT_TYPE_WANDER_UP_AND_DOWN",
+            "movement_range_x": 0,
+            "movement_range_y": 1,
+            "trainer_type": "TRAINER_TYPE_NONE",
+            "trainer_sight_or_berry_tree_id": "0",
+            "script": "PolishedElmsHouse_ElmsWifeText",
+            "flag": "0"
+          }
+        },
+        {
+          "local_id": "LOCALID_ELMS_SON",
+          "source_sprite": "SPRITE_CHILD",
+          "source_palette": "BROWN",
+          "source_text": "ElmsSonText",
+          "source_movement": "SPRITEMOVEDATA_STANDING_UP",
+          "source_time": "-1",
+          "event": {
+            "local_id": "LOCALID_ELMS_SON",
+            "graphics_id": "OBJ_EVENT_GFX_POLISHED_CHILD",
+            "x": 4,
+            "y": 5,
+            "elevation": 3,
+            "movement_type": "MOVEMENT_TYPE_FACE_UP",
+            "movement_range_x": 0,
+            "movement_range_y": 0,
+            "trainer_type": "TRAINER_TYPE_NONE",
+            "trainer_sight_or_berry_tree_id": "0",
+            "script": "PolishedElmsHouse_ElmsSonText",
+            "flag": "0"
+          }
+        }
+      ]
     }
   },
   "layouts": [
@@ -855,38 +998,48 @@
     }
   ],
   "output_sha256": {
+    "graphics/object_events/polished_npc_palettes/blue.bin": "4d44c96dca856b1ce0b14cf015ff730e0f04d7fc6a3eee0f4b8cf17d9d633ce4",
+    "graphics/object_events/polished_npc_palettes/blue_time.bin": "a3c8fa31c470d1c2e87019122b9665d4c7985d8442e47a2dcb79b94d16f13c23",
+    "graphics/object_events/polished_npc_palettes/green.bin": "7fc5d4fa9d9efdde5283d4c21b45d57b4ba7d7291dd0a007e4516006df3f792f",
+    "graphics/object_events/polished_npc_palettes/green_time.bin": "877eb47eafd08623ccd14b06fc26a03da5e4a527dd41267f8c7215f64530f496",
+    "graphics/object_events/polished_npc_palettes/brown.bin": "70b9442959b732002832c4e9cf8a98018ad51282a77d01531563f756e646a5b7",
+    "graphics/object_events/polished_npc_palettes/brown_time.bin": "b52af0e28bfc0e0a31fe38bfb3e69fe7b02e832f45feb335310b8c96afa29965",
+    "graphics/object_events/polished_fat_guy/walking.png": "dbb4e839dd7b8b2b1429235c707222f1be980b9d6e8e1447c2e62151e2569949",
+    "graphics/object_events/polished_schoolboy/walking.png": "aa15916926e8e2fa77a6dd3a4d8a4a2a294f3df7bffca000bf36d489b608497b",
+    "graphics/object_events/polished_battle_girl/walking.png": "cb6843e84c7b9b5f6d6ea69717aa54f3841ff837cd1c93f51b0515cfe469cb02",
+    "graphics/object_events/polished_child/walking.png": "5d207fa020abf4a5d96b2fe62529b08f019f452878e9d6c4a124da0e2ad4f050",
     "data/layouts/PolishedNewBarkTown/map.bin": "0cfa1f14ae1edc366416d1cb39410cc6fa621759dad4eb7aa1c9eb0007a919c3",
     "data/layouts/PolishedNewBarkTown/border.bin": "310f01837605c39f0e0a084ab8e536b47e44c21cab74534066b2413ce33f2119",
-    "data/maps/PolishedNewBarkTown/map.json": "0b1d806fc945efa57f8cfd8fd13607e2b2ef2d4ddc1fe31ae420634db8f452ed",
-    "data/maps/PolishedNewBarkTown/scripts.inc": "0e902f4f5156cab14d2fe19e38aabc3804ef819a57014139a5cb2a29cad6f38f",
+    "data/maps/PolishedNewBarkTown/map.json": "365e0b0fe261054848319980196651df91e07b066a48cde6a667d882a93a6ed1",
+    "data/maps/PolishedNewBarkTown/scripts.inc": "134cbff8d849a9774333ee59a0915a2a39d22edad9db969249fdee731d038771",
     "data/layouts/PolishedElmsLab/map.bin": "edcb44c979918661055b6aef0e304340121f55a0ad53d73d592ab07ba797a681",
     "data/layouts/PolishedElmsLab/border.bin": "58b6ce2870c231fbe07a763ac9c4dc612e669cfbebfb93760435a9dbbdced76e",
     "data/maps/PolishedElmsLab/map.json": "a8053948e3e4e28b3c52e6191c4f8fc002272ec314a24e703803b958a43ec1a4",
-    "data/maps/PolishedElmsLab/scripts.inc": "58cb2dbdcb001bb6b92111508590881b9dd08394b7e0b2a64454af0a2b37e8e8",
+    "data/maps/PolishedElmsLab/scripts.inc": "cda7ae0cd87e9e34c85a3d5accb689e148b07d0e7160942553fe21cde74bc6cd",
     "data/layouts/PolishedPlayersHouse1F/map.bin": "66eb31dcc753d0fa08c180c8693f007c2bad0204b6ded6b0e4411c854e27c559",
     "data/layouts/PolishedPlayersHouse1F/border.bin": "58b6ce2870c231fbe07a763ac9c4dc612e669cfbebfb93760435a9dbbdced76e",
     "data/maps/PolishedPlayersHouse1F/map.json": "9ae41b767c92ecd16a374072c195894bf9d36889bb4796ad2c17e99dd59aefd7",
-    "data/maps/PolishedPlayersHouse1F/scripts.inc": "b42bc36a02eba11c6b422f290a17e895f87063d267c0ee3e2f3a5621f77b31a3",
+    "data/maps/PolishedPlayersHouse1F/scripts.inc": "9f08d3bb8a33879e0f1564ea78748a64f1334e9a47b7f013056bed03bdd21b1f",
     "data/layouts/PolishedPlayersHouse2F/map.bin": "d250290a259126e36aa2f8719c8d72b3c56c9cc040d368772a6d59147ac29c02",
     "data/layouts/PolishedPlayersHouse2F/border.bin": "58b6ce2870c231fbe07a763ac9c4dc612e669cfbebfb93760435a9dbbdced76e",
     "data/maps/PolishedPlayersHouse2F/map.json": "8f5a349401e473b66f451788009d335acf3fa5d439c210f2a56d09fcbfa7ab65",
-    "data/maps/PolishedPlayersHouse2F/scripts.inc": "5fd8a4a69c2633d3d28093c8b4309c1cddf34f7401e1e8bd603ca3d8c6f82c1e",
+    "data/maps/PolishedPlayersHouse2F/scripts.inc": "c7173e4f21410ad791e0aac12424e556fe6776eaf010c560419834642e84118b",
     "data/layouts/PolishedPlayersNeighborsHouse/map.bin": "3a2ac680f7ac1eb0a6988f4bd068e0cb322553f997a329a24c9a4870d9499a98",
     "data/layouts/PolishedPlayersNeighborsHouse/border.bin": "58b6ce2870c231fbe07a763ac9c4dc612e669cfbebfb93760435a9dbbdced76e",
-    "data/maps/PolishedPlayersNeighborsHouse/map.json": "8c17d1daa2f1b4ac7f7dfea703de43099e3dc379a16a7a41f64bad8074dfbdff",
-    "data/maps/PolishedPlayersNeighborsHouse/scripts.inc": "50df13350eede90e6fe7331bf787e3a81b49a387a7b440962edaefd2f3de5f75",
+    "data/maps/PolishedPlayersNeighborsHouse/map.json": "dccf7438cc5ee5d9882b410e490300b2ddbf5d9b6bdda57ca930c5282f13839c",
+    "data/maps/PolishedPlayersNeighborsHouse/scripts.inc": "9e64ac32a73ad33923f463a95aa56a64af558e95a4bd5e8d0cd1d2243af134b6",
     "data/layouts/PolishedLyrasHouse1F/map.bin": "8acbd6d42940ff39ed624d87fe7de422b0a34aa42ec2b4f908656bb6a65d3e95",
     "data/layouts/PolishedLyrasHouse1F/border.bin": "58b6ce2870c231fbe07a763ac9c4dc612e669cfbebfb93760435a9dbbdced76e",
     "data/maps/PolishedLyrasHouse1F/map.json": "92b601b1667d402537866c36014852da917d358a99c848f62a38a737ad0060c9",
-    "data/maps/PolishedLyrasHouse1F/scripts.inc": "ebb6f446ea1e1b9668b572b3d99a4173a057d85887439fe359c33bff4ccdf969",
+    "data/maps/PolishedLyrasHouse1F/scripts.inc": "986fece14bde3d6c6ce8f32479dc531b1fd6c3d0e94ef42a1f1f4d15320a929f",
     "data/layouts/PolishedLyrasHouse2F/map.bin": "48eca917f79220f8dcd722d64cd02dba15bd40138606a2d1fc753ac6b265603a",
     "data/layouts/PolishedLyrasHouse2F/border.bin": "58b6ce2870c231fbe07a763ac9c4dc612e669cfbebfb93760435a9dbbdced76e",
     "data/maps/PolishedLyrasHouse2F/map.json": "204d509aadcf1741463b19d00862a2b64468aa97ebb911cc3e971b1e7da4665c",
-    "data/maps/PolishedLyrasHouse2F/scripts.inc": "45f04e9c8c15a48d4bb7976cf71ae0418d954ee2999ef9384e0997bede5786ee",
+    "data/maps/PolishedLyrasHouse2F/scripts.inc": "f6d822e31d63efb2b6c394bb9a0a2e8264cb53fc4fa3231990ecf607522e2220",
     "data/layouts/PolishedElmsHouse/map.bin": "2d181df2bd91a56dd206ca95ee5e1331f9c2eca5c14fe53a1f571ca7b6b378b0",
     "data/layouts/PolishedElmsHouse/border.bin": "58b6ce2870c231fbe07a763ac9c4dc612e669cfbebfb93760435a9dbbdced76e",
-    "data/maps/PolishedElmsHouse/map.json": "ca7c68a6aea3b20281b83c5fbefdb4a57a250e28ea01f21121d6e09b5168aba6",
-    "data/maps/PolishedElmsHouse/scripts.inc": "c8d2a72f6aa6573ce08e0af133b88883f43d4a105a68595c0e11b1c097716cd8",
+    "data/maps/PolishedElmsHouse/map.json": "24488e88e3e0f9c46dc014dcbed53a568844665bed6237fe5f3ff021682f86a8",
+    "data/maps/PolishedElmsHouse/scripts.inc": "8ee9fe2211ff81e89c073b96b40a3cfe44a7e32121cd6f9af99499f008e82276",
     "data/tilesets/primary/polished_new_bark_outdoor/tiles.bin": "4606596e49129db4f858005c54f71865f818549f252026016bec23bee8e89b45",
     "data/tilesets/primary/polished_new_bark_outdoor/palettes.bin": "fe14bfb5c6092799d53593ab4638bb4a3502ef83e72cf6de0aace0745c8694a8",
     "data/tilesets/primary/polished_new_bark_outdoor/metatiles.bin": "db29314040e9c515e27686a5e202bbf69030e5631d0efe24da69fbac66c739fa",

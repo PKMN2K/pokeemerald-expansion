@@ -1,4 +1,9 @@
 extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_PolishedPokefan;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_PolishedFatGuy;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_PolishedSchoolboy;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_PolishedBattleGirl;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_PolishedChild;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_PolishedPokefanGreen;
 extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_BrendanNormal;
 extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_PolishedChrisNormal;
 extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_PolishedChrisBike;
@@ -410,6 +415,11 @@ extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_ApricornTre
 
 const struct ObjectEventGraphicsInfo *const gObjectEventGraphicsInfoPointers[NUM_OBJ_EVENT_GFX] = {
     [OBJ_EVENT_GFX_POLISHED_POKEFAN] = &gObjectEventGraphicsInfo_PolishedPokefan,
+    [OBJ_EVENT_GFX_POLISHED_FAT_GUY] = &gObjectEventGraphicsInfo_PolishedFatGuy,
+    [OBJ_EVENT_GFX_POLISHED_SCHOOLBOY] = &gObjectEventGraphicsInfo_PolishedSchoolboy,
+    [OBJ_EVENT_GFX_POLISHED_BATTLE_GIRL] = &gObjectEventGraphicsInfo_PolishedBattleGirl,
+    [OBJ_EVENT_GFX_POLISHED_CHILD] = &gObjectEventGraphicsInfo_PolishedChild,
+    [OBJ_EVENT_GFX_POLISHED_POKEFAN_GREEN] = &gObjectEventGraphicsInfo_PolishedPokefanGreen,
     [OBJ_EVENT_GFX_BRENDAN_NORMAL] =           &gObjectEventGraphicsInfo_BrendanNormal,
     [OBJ_EVENT_GFX_BRENDAN_MACH_BIKE] =        &gObjectEventGraphicsInfo_BrendanMachBike,
     [OBJ_EVENT_GFX_BRENDAN_SURFING] =          &gObjectEventGraphicsInfo_BrendanSurfing,

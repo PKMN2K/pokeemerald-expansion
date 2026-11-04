@@ -101,6 +101,12 @@ int main(int argc, char **argv)
             free(state);
             puts("load");
         }
+        else if (!strcmp(command, "reset\n"))
+        {
+            // A console reset preserves cartridge save data; no RAM injection.
+            core->reset(core);
+            puts("reset");
+        }
         else if (!strncmp(command, "quit", 4))
             break;
         else

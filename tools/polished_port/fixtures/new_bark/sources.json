@@ -126,6 +126,51 @@
       "path": "maps/ElmsHouse.ablk",
       "fixture": "maps__ElmsHouse.ablk.b64",
       "git_blob_sha1": "721ef7b5266a46e4b10a434ddf0f34a595e0e15d"
+    },
+    {
+      "path": "gfx/sprites/fat_guy.png",
+      "fixture": "gfx__sprites__fat_guy.png.b64",
+      "git_blob_sha1": "a84a2e3716887c48f7590239d27bb933af8fa8d3"
+    },
+    {
+      "path": "gfx/sprites/schoolboy.png",
+      "fixture": "gfx__sprites__schoolboy.png.b64",
+      "git_blob_sha1": "5c0d339396a762b57f673144c8e02624f9070b20"
+    },
+    {
+      "path": "gfx/sprites/battle_girl.png",
+      "fixture": "gfx__sprites__battle_girl.png.b64",
+      "git_blob_sha1": "53bf81b137d52b84ff8fdac7e64152c138d5bd8c"
+    },
+    {
+      "path": "gfx/sprites/child.png",
+      "fixture": "gfx__sprites__child.png.b64",
+      "git_blob_sha1": "e1306b6a0223905b261d9eddbad0968ea4100d03"
+    },
+    {
+      "path": "data/sprites/sprites.asm",
+      "fixture": "data__sprites__sprites.asm.b64",
+      "git_blob_sha1": "6edb5885587225104f63c214b0c6b3ec45e6f96b"
+    },
+    {
+      "path": "constants/sprite_data_constants.asm",
+      "fixture": "constants__sprite_data_constants.asm.b64",
+      "git_blob_sha1": "dc09f72e0d28752ba97c5af83689ad1baa86e735"
+    },
+    {
+      "path": "constants/misc_constants.asm",
+      "fixture": "constants__misc_constants.asm.b64",
+      "git_blob_sha1": "3d9e3268f9cb003caf75d023345832c42deff47e"
+    },
+    {
+      "path": "home/map_objects.asm",
+      "fixture": "home__map_objects.asm.b64",
+      "git_blob_sha1": "f4d3c2cdca5565165e4c937977ce53100b88e27c"
+    },
+    {
+      "path": "engine/overworld/map_setup.asm",
+      "fixture": "engine__overworld__map_setup.asm.b64",
+      "git_blob_sha1": "0c64733c0ab2086b1f157bb669cb3c068f44b040"
     }
   ]
 }

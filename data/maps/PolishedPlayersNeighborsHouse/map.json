@@ -14,7 +14,36 @@
   "show_map_name": false,
   "battle_scene": "MAP_BATTLE_SCENE_NORMAL",
   "connections": null,
-  "object_events": [],
+  "object_events": [
+    {
+      "local_id": "LOCALID_NEIGHBORS_DAUGHTER",
+      "graphics_id": "OBJ_EVENT_GFX_POLISHED_BATTLE_GIRL",
+      "x": 2,
+      "y": 3,
+      "elevation": 3,
+      "movement_type": "MOVEMENT_TYPE_FACE_RIGHT",
+      "movement_range_x": 0,
+      "movement_range_y": 0,
+      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_sight_or_berry_tree_id": "0",
+      "script": "PolishedPlayersNeighborsHouse_PlayersNeighborsDaughterText",
+      "flag": "0"
+    },
+    {
+      "local_id": "LOCALID_NEIGHBORS_HUSBAND",
+      "graphics_id": "OBJ_EVENT_GFX_POLISHED_SCHOOLBOY",
+      "x": 5,
+      "y": 4,
+      "elevation": 3,
+      "movement_type": "MOVEMENT_TYPE_FACE_LEFT",
+      "movement_range_x": 0,
+      "movement_range_y": 0,
+      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_sight_or_berry_tree_id": "0",
+      "script": "PolishedPlayersNeighborsHouse_PlayersNeighborsHusbandText",
+      "flag": "FLAG_TEMP_1"
+    }
+  ],
   "warp_events": [
     {
       "x": 2,
