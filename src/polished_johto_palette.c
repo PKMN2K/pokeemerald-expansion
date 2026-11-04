@@ -1,12 +1,16 @@
 #include "global.h"
 #include "polished_johto_palette.h"
 #include "palette.h"
+#include "sprite.h"
 #include "rtc.h"
 #include "tilesets.h"
+#include "constants/event_objects.h"
 #include "constants/layouts.h"
 
 // Source-generated, pinned RGB555 data; no custom/redrawn colors.
 #include "data/tilesets/polished_johto_palette_tables.h"
+
+static const u16 sJohtoRedSpritePalettes[] = INCBIN_U16("graphics/object_events/polished_pokefan/time_palettes.bin");
 
 // Only the isolated outdoor demonstration opts into time/roof palettes.
 // Its original block art uses New Bark's source roof group (24). The indoor
@@ -140,6 +144,23 @@ bool8 PolishedJohtoComposePalette(enum PolishedJohtoPaletteFamily family,
 
     output[6][1] = roofPairs[roofPeriod][0];
     output[6][2] = roofPairs[roofPeriod][1];
+    return TRUE;
+}
+
+bool8 PolishedJohtoTryApplySpritePalette(u8 paletteNum)
+{
+    u16 tag;
+    u8 sourcePeriod, roofPeriod;
+
+    if (paletteNum >= 16 || !PolishedJohtoIsRegisteredMapLayout(gMapHeader.mapLayout))
+        return FALSE;
+    tag = GetSpritePaletteTagByPaletteNum(paletteNum);
+    if (tag != OBJ_EVENT_PAL_TAG_POLISHED_CHRIS && tag != OBJ_EVENT_PAL_TAG_POLISHED_POKEFAN)
+        return FALSE;
+    if (!GetJohtoTimeIndices(GetTimeOfDay(), &sourcePeriod, &roofPeriod))
+        return FALSE;
+
+    LoadPaletteFast(&sJohtoRedSpritePalettes[sourcePeriod * 16], OBJ_PLTT_ID(paletteNum), PLTT_SIZE_4BPP);
     return TRUE;
 }
 

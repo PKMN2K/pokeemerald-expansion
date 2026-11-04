@@ -138,7 +138,7 @@ Polished Crystal's `gfx/sprites/weird_tree.png` is a 16x48 sheet containing thre
 
 Expansion already exposes three physical 16x32 frames through `gObjectEventPic_SudowoodoTree`. The converter preserves all three authentic Crystal frames, bottom-aligning each 16x16 pose inside its corresponding 16x32 GBA frame without scaling or repainting. Expansion's existing Sudowoodo graphics info, palette tag, movement/animation tables, collision, and event scripting remain unchanged.
 
-## Johto Traditional priority-mask staging (not registered)
+## Johto Traditional priority masks and live demonstration
 
 The 128 authentic shared tiles and 160 authentic Traditional tiles occupy GBA 4bpp
 IDs 1–288. Tile 0 is transparent padding. Original GBC background color 0
@@ -160,7 +160,15 @@ Run source-backed regression tests with:
     python3 tools/polished_port/scripts/test_johto_metatile_banks.py
     python3 tools/polished_port/scripts/test_johto_priority_overlays.py
 
-These are staging-only outputs. There are zero registered Johto layouts.
-Before activation, validate BG1 versus OBJ sprite priority at all elevations,
-particularly raised sprites with priority 1, plus authentic animations and
-field collision/event semantics. No Hoenn or Prism mining assets are changed.
+The two isolated Johto demo layouts now use this conversion pipeline; build
+them with `make POLISHED_JOHTO_DEMO=1` and select NEW GAME. The outdoor garden
+registers only its reviewed terrain, collision, water animation and source
+time/roof palette routing. Elm's Lab uses its original block layout and fixed
+indoor palette. Chris and the imported Pokefan use the exact four source red
+OBJ palettes outdoors, with daytime colors restored indoors.
+
+Unused metatile attributes remain invalid. The demo does not authorize every
+Traditional block or every sprite elevation; additional source foreground
+blocks and raised sprites still need their own live validation before use.
+See `POLISHED_CRYSTAL_PORT.md` for the playable scope and emulator checks.
+Prism mining assets are unchanged.

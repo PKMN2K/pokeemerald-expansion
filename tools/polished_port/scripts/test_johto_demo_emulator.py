@@ -19,6 +19,7 @@ from pathlib import Path
 from stage_johto_time_palettes import stage, load_source_palettes
 from stage_johto_roof_palettes import load_roof_tables, roof_colors, apply_roof_colors
 from stage_johto_animation_frames import build_frames
+from build_johto_demo import palette_rows, source_files
 
 A, B, START, RIGHT, LEFT, UP, DOWN = 1, 2, 8, 16, 32, 64, 128
 ROOT = Path(__file__).resolve().parents[3]
@@ -87,6 +88,19 @@ class Game:
         self.command(f"shot {file}")
         png_from_ppm(file)
 
+    def check_sprite_palettes(self, expected):
+        tags = struct.unpack("<16H", self.read(self.sym["sSpritePaletteTags"], 32))
+        constants = (ROOT / "include/constants/event_objects.h").read_text()
+        for name in ("POLISHED_CHRIS", "POLISHED_POKEFAN"):
+            tag = int(re.search(r"#define OBJ_EVENT_PAL_TAG_" + name + r"\s+(0x[0-9A-Fa-f]+)", constants)[1], 16)
+            assert tag in tags, f"Imported sprite palette missing: {name}"
+            offset = (16 + tags.index(tag)) * 32
+            for buffer in ("gPlttBufferUnfaded", "gPlttBufferFaded"):
+                actual = self.read(self.sym[buffer] + offset, 32)
+                if actual != expected:
+                    self.screenshot("palette-mismatch")
+                    raise AssertionError(f"Wrong {name} {buffer}: {actual.hex()} != {expected.hex()}")
+
     def step(self, key):
         before = self.position()
         for _ in range(40):
@@ -107,6 +121,59 @@ class Game:
     def face(self, key):
         self.frames(1, key)
         self.frames(8)
+
+    def player_images(self):
+        sprite = self.read(self.sym["gPlayerAvatar"] + 4, 1)[0]
+        return self.u32(self.sym["gSprites"] + sprite * 68 + 12)
+
+    def press(self, key, wait=40):
+        self.frames(1, key)
+        self.frames(wait)
+
+    def use_key_item(self, index):
+        self.press(START)
+        # Follow the real menu's current cursor; visits preserve its position.
+        actions = self.read(self.sym["sCurrentStartMenuActions"], 9)
+        bag = actions.index(2)  # MENU_ACTION_BAG
+        for _ in range(9):
+            if self.read(self.sym["sStartMenuCursorPos"], 1)[0] == bag:
+                break
+            self.press(DOWN)
+        else:
+            raise AssertionError("Could not select the Bag")
+        self.press(A, 120)
+        for _ in range(5):
+            if self.read(self.sym["gBagPosition"] + 5, 1)[0] == 4:  # POCKET_KEY_ITEMS
+                break
+            self.press(RIGHT)
+        else:
+            raise AssertionError("Could not select Key Items")
+        for _ in range(5):
+            cursor = struct.unpack("<H", self.read(self.sym["gBagPosition"] + 16, 2))[0]
+            if cursor == index:
+                break
+            self.press(DOWN if cursor < index else UP)
+        else:
+            raise AssertionError("Could not select the supplied key item")
+        self.press(A)
+        self.press(A, 120)  # USE
+
+    def wait_player_images(self, name):
+        for _ in range(100):
+            if (self.u32(self.sym["gMain"] + 4) == self.sym["CB2_Overworld"] | 1
+                    and self.player_images() == self.sym[name]):
+                return
+            self.frames(5)
+        raise AssertionError(f"Player did not use {name}")
+
+    def finish_fishing(self, restored_images):
+        for _ in range(24):
+            self.press(B, 60)
+            if (self.player_images() == self.sym[restored_images]
+                    and self.read(self.sym["gPlayerAvatar"] + 6, 1) == b"\0"):
+                self.frames(60)
+                return
+        raise AssertionError("Fishing did not restore the player graphics")
 
     def interact(self, name):
         self.frames(1, A)
@@ -163,12 +230,18 @@ def run(args):
             checks.append("new game boots into the Johto courtyard")
             palettes = stage(load_source_palettes())[0]
             roofs = load_roof_tables()
+            sprite_rows = palette_rows(source_files()["gfx/overworld/npc_sprites.pal"].decode())
+            sprite_palettes = {period: struct.pack("<16H", *sprite_rows[index * 20], *([0] * 12))
+                               for index, period in enumerate(("morn", "day", "nite", "eve"))}
             for hour, period in [(10, "day"), (7, "morn"), (19, "eve"), (23, "nite"), (10, "day")]:
                 game.set_hour(hour)
                 expected = apply_roof_colors(palettes[f"standard.{period}"], roof_colors(roofs, period, map_group=24)[0])
-                assert game.read(game.sym["gPlttBufferUnfaded"], 224) == expected, f"Wrong {period} palette"
+                for buffer in ("gPlttBufferUnfaded", "gPlttBufferFaded"):
+                    assert game.read(game.sym[buffer], 224) == expected, f"Wrong {period} {buffer}"
+                game.check_sprite_palettes(sprite_palettes[period])
                 game.screenshot("courtyard-" + period)
             checks.append("all four live RGB555 palettes match the pinned source and roof group")
+            checks.append("Chris and NPC use exact source OBJ colors in every period without double tinting")
             game.snapshot("courtyard")
             # Read the actual animated tile in VRAM; it must cycle after clock changes.
             water = {game.read(0x06000000 + 149 * 32, 32)}
@@ -202,19 +275,41 @@ def run(args):
             assert game.map_number() == (group, 1)
             assert game.position() == (4, 11)
             game.go(4, 8)
+            game.set_hour(23)
+            game.check_sprite_palettes(sprite_palettes["day"])
             game.screenshot("laboratory")
             game.go(4, 10)
             game.frames(60, DOWN)
             game.frames(180)
             assert game.map_number() == (group, 0)
             assert game.position() == (6, 6)
+            game.check_sprite_palettes(sprite_palettes["nite"])
+            expected = apply_roof_colors(palettes["standard.nite"], roof_colors(roofs, "nite", map_group=24)[0])
+            for buffer in ("gPlttBufferUnfaded", "gPlttBufferFaded"):
+                assert game.read(game.sym[buffer], 224) == expected, f"Nighttime door tint: {buffer}"
             game.screenshot("door-return")
             checks.append("door enters the original lab layout and its exit returns outside")
+            checks.append("nighttime door transitions restore indoor day and outdoor night OBJ palettes")
+            game.restore("courtyard")
+            game.use_key_item(1)  # Mach Bike, after the Old Rod in this fresh bag
+            game.wait_player_images("sPicTable_PolishedChrisBike")
+            assert game.read(game.sym["gPlayerAvatar"], 1)[0] & 2
+            game.step(DOWN)
+            game.screenshot("bike")
+            game.use_key_item(1)
+            game.wait_player_images("sPicTable_PolishedChrisNormal")
+            assert not game.read(game.sym["gPlayerAvatar"], 1)[0] & 6
+            checks.append("native bike use selects Chris's cycling graphics and restores walking")
             game.restore("courtyard")
             game.go(6, 16)
             game.go(18, 16)
             game.go(18, 15)
             game.face(UP)
+            game.use_key_item(0)
+            game.wait_player_images("sPicTable_PolishedChrisFishing")
+            game.screenshot("land-fishing")
+            game.finish_fishing("sPicTable_PolishedChrisNormal")
+            assert game.position() == (18, 15)
             game.frames(1, A)
             for _ in range(10):
                 game.frames(60)
@@ -224,6 +319,12 @@ def run(args):
             game.frames(180)
             assert game.read(game.sym["gPlayerAvatar"], 1)[0] & 8, "Surf did not start"
             game.screenshot("surf")
+            game.use_key_item(0)
+            game.wait_player_images("sPicTable_PolishedChrisSurfFishing")
+            game.screenshot("surf-fishing")
+            game.finish_fishing("sPicTable_PolishedChrisSurfing")
+            assert game.read(game.sym["gPlayerAvatar"], 1)[0] & 8, "Fishing lost Surf state"
+            checks.append("land and surf fishing use their separate authentic sheets and restore the prior player state")
             game.frames(100, DOWN)
             game.frames(40)
             assert not game.read(game.sym["gPlayerAvatar"], 1)[0] & 8, "Surf did not end on shore"

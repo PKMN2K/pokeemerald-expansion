@@ -79,7 +79,9 @@ Emerald demo mode. Prism mining assets and rewards are unchanged.
 The live integration includes:
 
 - Source-authentic outdoor graphics, roof replacement, laboratory tiles and NPC.
-- All four outdoor RGB555 periods, explicit roof routing, and animated water.
+- All four outdoor RGB555 periods for backgrounds, Chris and the NPC, explicit
+  roof routing, and animated water. Source-colored OBJ tags bypass the engine's
+  extra time tint only on the registered outdoor map; indoors they use day colors.
 - Source-backed wall, grass and water behavior; land elevation 3 and water 1.
 - Separate map-grid collision and tile behavior, with unsupported unused tile
   attributes left invalid. This is not permission to register every source block.
@@ -88,9 +90,11 @@ The live integration includes:
 `build_johto_demo.py --check` reproduces the binary assets from pinned fixtures.
 GBA regression tests check real map dispatch, reciprocal warps, palette opt-in
 guards, and complete visible sprite frames. `test_johto_demo_emulator.py` boots a
-fresh ROM and uses real button input to verify movement, interaction, doors and
-Surf. It checks live palette RAM against the pinned source and animated water
-in VRAM. CI builds the demo and uploads its ROM, screenshots and validation JSON.
+fresh ROM and uses real button input to verify movement, interaction, doors,
+Surf, bike mounting/dismounting, and separate land/surf fishing poses and their
+return to the prior movement state. It checks live palette RAM against the pinned source and animated water
+in VRAM, including nighttime transitions to and from the fixed-palette lab.
+CI builds the demo and uploads its ROM, screenshots and validation JSON.
 The emulator probe uses libmgba; it does not patch game RAM or inject scripts.
 
 ## Whole-port completion status

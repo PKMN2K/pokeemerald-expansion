@@ -193,6 +193,7 @@
     "data/layouts/PolishedJohtoDemoLab/map.bin": "edcb44c979918661055b6aef0e304340121f55a0ad53d73d592ab07ba797a681",
     "data/layouts/PolishedJohtoDemoLab/border.bin": "58b6ce2870c231fbe07a763ac9c4dc612e669cfbebfb93760435a9dbbdced76e",
     "graphics/object_events/polished_pokefan/palette.bin": "6bea9f58183362185008f3754ec7459a32da253ecc9ebb1ac00c10e970f90de1",
+    "graphics/object_events/polished_pokefan/time_palettes.bin": "080fb6aeb5d49b70821c04b01bd60228c3b223b184a2bdfa313412a19e89f89a",
     "graphics/object_events/polished_pokefan/walking.png": "35524bdddefc31bb547a18e15f3547473c138e132a68b9511b427a23f1b63d3f"
   }
 }

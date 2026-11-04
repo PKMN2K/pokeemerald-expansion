@@ -32,4 +32,8 @@ bool8 PolishedJohtoIsRegisteredMapLayout(const struct MapLayout *mapLayout);
 bool8 PolishedJohtoTryApplyRegisteredMapPalette(const struct MapLayout *mapLayout,
                                              bool8 skipFaded);
 
+// Only the two imported red-palette sprite tags on the registered outdoor
+// layout are eligible. Other tags, maps and invalid slots remain unchanged.
+bool8 PolishedJohtoTryApplySpritePalette(u8 paletteNum);
+
 #endif // GUARD_POLISHED_JOHTO_PALETTE_H

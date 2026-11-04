@@ -213,8 +213,14 @@ def generate():
         products[f"data/layouts/PolishedJohtoDemo{name}/border.bin"] = border_raw
         report["maps"][name] = {"width": width * 2, "height": len(blocks) // width * 2,
             "used_metatiles": sorted(used), "source_collision_symbols": sorted({symbols[m] for m in used})}
-    npc_pal = palette_rows(files["gfx/overworld/npc_sprites.pal"].decode())[20]  # daytime red
+    npc_rows = palette_rows(files["gfx/overworld/npc_sprites.pal"].decode())
+    assert len(npc_rows) == 80  # 20 source OBJ palettes per period
+    npc_pal = npc_rows[20]  # daytime red; fixed indoor baseline
     products["graphics/object_events/polished_pokefan/palette.bin"] = struct.pack("<16H", *npc_pal, *([0] * 12))
+    # Chris and Pokefan F both use PAL_OW_RED. Preserve source period order,
+    # which differs from Expansion: morning, day, night, evening.
+    products["graphics/object_events/polished_pokefan/time_palettes.bin"] = b"".join(
+        struct.pack("<16H", *npc_rows[period * 20], *([0] * 12)) for period in range(4))
     with tempfile.TemporaryDirectory() as tmp:
         inp, out = Path(tmp) / "pokefan.png", Path(tmp) / "walking.png"
         inp.write_bytes(files["gfx/sprites/pokefan_f.png"])

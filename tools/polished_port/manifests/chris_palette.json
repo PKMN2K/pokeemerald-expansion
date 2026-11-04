@@ -15,7 +15,7 @@
   "registered_baseline": "day",
   "notes": [
     "Polished Crystal changes overworld sprite palettes by time of day.",
-    "The day variant is registered first as the dormant Expansion baseline.",
-    "Morning, night, and evening variants are preserved here for the later dynamic time-of-day palette pass."
+    "The day variant remains the baseline for indoor and ordinary Expansion maps.",
+    "The registered Johto outdoor demo now selects all four exact source variants and bypasses a second Expansion time tint."
   ]
 }

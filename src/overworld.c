@@ -1835,12 +1835,14 @@ void UpdatePalettesWithTime(u32 palettes)
     if (palettes >= (1 << 16))
         for (i = 0; i < 16; i++, mask <<= 1)
         {
-            if (IS_BLEND_IMMUNE_TAG(GetSpritePaletteTagByPaletteNum(i)))
+            if (((palettes & mask) && PolishedJohtoTryApplySpritePalette(i))
+             || IS_BLEND_IMMUNE_TAG(GetSpritePaletteTagByPaletteNum(i)))
                 palettes &= ~(mask);
         }
 
     palettes &= PALETTES_MAP | PALETTES_OBJECTS; // Don't blend UI pals
-    // Keep imported source BG colors intact; still tint sprites as usual.
+    // Keep imported source BG colors intact. Unregistered sprite tags still
+    // receive the engine's normal tint; imported OBJ tags were handled above.
     // This mask is applied only when a real Johto map layout is registered.
     if (PolishedJohtoIsRegisteredMapLayout(gMapHeader.mapLayout))
         palettes &= ~((1 << JOHTO_GBA_PALETTE_COUNT) - 1);
@@ -1851,6 +1853,8 @@ void UpdatePalettesWithTime(u32 palettes)
 
 u8 UpdateSpritePaletteWithTime(u8 paletteNum)
 {
+    if (PolishedJohtoTryApplySpritePalette(paletteNum))
+        return paletteNum;
     if (MapHasNaturalLight(gMapHeader.mapType)
      && !IS_BLEND_IMMUNE_TAG(GetSpritePaletteTagByPaletteNum(paletteNum)))
         TimeMixPalettes(1, &gPlttBufferUnfaded[OBJ_PLTT_ID(paletteNum)], &gPlttBufferFaded[OBJ_PLTT_ID(paletteNum)], &gTimeBlend.startBlend, &gTimeBlend.endBlend, gTimeBlend.weight);
@@ -1890,7 +1894,11 @@ static void OverworldBasic(void)
         // Exact original Johto RGB555 variants update on RTC period changes.
         // The explicit registration check excludes Hoenn and the fixed-palette lab.
         if (previousTimeOfDay != gTimeOfDay)
+        {
             PolishedJohtoTryApplyRegisteredMapPalette(gMapHeader.mapLayout, FALSE);
+            for (u32 i = 0; i < 16; i++)
+                PolishedJohtoTryApplySpritePalette(i);
+        }
 
         if (MapHasNaturalLight(gMapHeader.mapType) &&
            (bld0[0] != bld1[0]

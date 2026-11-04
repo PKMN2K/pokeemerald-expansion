@@ -1,4 +1,5 @@
 #include "global.h"
+#include "polished_johto_palette.h"
 #include "palette.h"
 #include "util.h"
 #include "decompress.h"
@@ -243,12 +244,18 @@ static u8 UpdateTimeOfDayPaletteFade(void)
 
     // First pply TOD blend to relevant subset of palettes
     timePalettes = gPaletteFadeSelectedPalettes & PALETTES_MAP; // tile palettes, don't blend [13, 15]
+    // Source Johto colors already encode their period. Still fade them to/from
+    // black below, but do not apply Expansion's time tint during map entry.
+    if (PolishedJohtoIsRegisteredMapLayout(gMapHeader.mapLayout))
+        timePalettes &= ~((1 << JOHTO_GBA_PALETTE_COUNT) - 1);
     // Sprite palettes, don't blend those with tags
     u32 i;
     u32 j = 1 << 16;
     for (i = 0; i < 16; i++, j <<= 1) // Mask out palettes that should not be light blended
     {
-        if ((gPaletteFadeSelectedPalettes & j) && !IS_BLEND_IMMUNE_TAG(GetSpritePaletteTagByPaletteNum(i)))
+        if ((gPaletteFadeSelectedPalettes & j)
+         && !PolishedJohtoTryApplySpritePalette(i)
+         && !IS_BLEND_IMMUNE_TAG(GetSpritePaletteTagByPaletteNum(i)))
             timePalettes |= j;
     }
 
