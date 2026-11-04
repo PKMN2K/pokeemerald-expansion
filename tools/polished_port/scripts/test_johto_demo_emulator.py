@@ -27,7 +27,18 @@ ROOT = Path(__file__).resolve().parents[3]
 
 def symbols(elf):
     lines = subprocess.check_output(["arm-none-eabi-nm", "-n", str(elf)], text=True).splitlines()
-    return {p[2]: int(p[0], 16) for line in lines if len(p := line.split()) == 3}
+    result = {}
+    for line in lines:
+        fields = line.split()
+        if len(fields) != 3:
+            continue
+        address, kind, name = fields
+        value = int(address, 16)
+        result[name] = value
+        # Several controller translation units use the same static function
+        # name. Preserve all addresses for state-aware emulator input.
+        result.setdefault(name + "@all", []).append(value)
+    return result
 
 
 def png_from_ppm(path):

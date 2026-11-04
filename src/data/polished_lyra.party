@@ -1,0 +1,43 @@
+/* Generated from the pinned Lyra1 opening parties and Lv5 learnsets. */
+
+=== TRAINER_POLISHED_LYRA_CHIKORITA ===
+Name: Lyra
+Class: Rival
+Pic: Polished Lyra
+Gender: Female
+Music: Female
+Double Battle: No
+
+Chicory (Chikorita) (F)
+Level: 5
+IVs: 22 HP / 22 Atk / 22 Def / 22 SpA / 22 SpD / 22 Spe
+- Tackle
+- Growl
+
+=== TRAINER_POLISHED_LYRA_CYNDAQUIL ===
+Name: Lyra
+Class: Rival
+Pic: Polished Lyra
+Gender: Female
+Music: Female
+Double Battle: No
+
+Cinder (Cyndaquil) (F)
+Level: 5
+IVs: 22 HP / 22 Atk / 22 Def / 22 SpA / 22 SpD / 22 Spe
+- Tackle
+- Leer
+
+=== TRAINER_POLISHED_LYRA_TOTODILE ===
+Name: Lyra
+Class: Rival
+Pic: Polished Lyra
+Gender: Female
+Music: Female
+Double Battle: No
+
+Toto (Totodile) (F)
+Level: 5
+IVs: 22 HP / 22 Atk / 22 Def / 22 SpA / 22 SpD / 22 Spe
+- Scratch
+- Leer

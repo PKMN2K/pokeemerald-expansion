@@ -196,6 +196,16 @@
       "path": "gfx/sprites/ball_cut_fruit.png",
       "fixture": "gfx__sprites__ball_cut_fruit.png.b64",
       "git_blob_sha1": "f9e4531d803f04e6fabf3e9a5d73381447b6a784"
+    },
+    {
+      "path": "gfx/trainers/lyra1.png",
+      "fixture": "gfx__trainers__lyra1.png.b64",
+      "git_blob_sha1": "f79fc8de89b29fa33233c753acad9439bf1bfa3d"
+    },
+    {
+      "path": "gfx/trainers/lyra1.pal",
+      "fixture": "gfx__trainers__lyra1.pal.b64",
+      "git_blob_sha1": "c8d91f3db4d462342e977303dcc18a6b9ff38aaa"
     }
   ]
 }

@@ -1459,7 +1459,10 @@ void BattleSetup_StartTrainerBattle(void)
         }
     }
 
-    if (TRAINER_BATTLE_PARAM.earlyRival && GetRivalBattleFlags() & RIVAL_BATTLE_TUTORIAL)
+    // TUTORIAL includes HEAL_AFTER. Healing alone must not select the
+    // first-battle party/controller (Birch's Zigzagoon in Emerald).
+    if (TRAINER_BATTLE_PARAM.earlyRival
+     && (GetRivalBattleFlags() & RIVAL_BATTLE_TUTORIAL) == RIVAL_BATTLE_TUTORIAL)
         gBattleTypeFlags |= BATTLE_TYPE_FIRST_BATTLE;
 
     if (CurrentBattlePyramidLocation() != PYRAMID_LOCATION_NONE)

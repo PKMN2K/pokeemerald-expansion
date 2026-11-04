@@ -1,0 +1,40 @@
+{
+  "commit": "3fa43192379df5c3e7b09a08e4d5d79af4f02f42",
+  "extracts": [
+    {
+      "path": "data/trainers/parties.asm",
+      "git_blob_sha1": "70b801219a30bf24109cd23f2efc3d706afd34ea",
+      "first_line": 1406,
+      "excerpt": "\tdef_trainer LYRA1_1, \"Lyra\"\n\ttr_mon 5, \"Chicory\", CHIKORITA\n\tend_trainer\n\n\tdef_trainer LYRA1_2, \"Lyra\"\n\ttr_mon 5, \"Cinder\", CYNDAQUIL\n\tend_trainer\n\n\tdef_trainer LYRA1_3, \"Lyra\"\n\ttr_mon 5, \"Toto\", TOTODILE\n\tend_trainer\n\n",
+      "sha256": "84adb8dcd9ee4013c66daaa154ff1ccb58f55f44146ca4076ed23b78b7665506"
+    },
+    {
+      "path": "data/pokemon/evos_attacks.asm",
+      "git_blob_sha1": "69299b45bba2bc3e19588642fab8e3e57d065f08",
+      "first_line": 3299,
+      "excerpt": "\tevos_attacks Chikorita\n\tevo_data EVOLVE_LEVEL, 16, BAYLEEF\n\tlearnset 1, TACKLE\n\tlearnset 1, GROWL\n",
+      "sha256": "486dfff085e49f02621d47b90e74828ea8bb7add1edf76f41e46df7cf741cafa"
+    },
+    {
+      "path": "data/pokemon/evos_attacks.asm",
+      "git_blob_sha1": "69299b45bba2bc3e19588642fab8e3e57d065f08",
+      "first_line": 3362,
+      "excerpt": "\tevos_attacks Cyndaquil\n\tevo_data EVOLVE_LEVEL, 14, QUILAVA\n\tlearnset 1, TACKLE\n\tlearnset 1, LEER\n",
+      "sha256": "ffe1f2c21ec36dbdce510f99535f31ae2fdad379c2d717fbee0c460b2d3e86c0"
+    },
+    {
+      "path": "data/pokemon/evos_attacks.asm",
+      "git_blob_sha1": "69299b45bba2bc3e19588642fab8e3e57d065f08",
+      "first_line": 3439,
+      "excerpt": "\tevos_attacks Totodile\n\tevo_data EVOLVE_LEVEL, 18, CROCONAW\n\tlearnset 1, SCRATCH\n\tlearnset 1, LEER\n",
+      "sha256": "845afd9604ae7936ee463514e33f31b7a640f943c014ae76a4299d078663cae2"
+    },
+    {
+      "path": "data/trainers/dvs.asm",
+      "git_blob_sha1": "170459db9179b4fbfd76f610688c357c2811521b",
+      "first_line": 35,
+      "excerpt": "\tdb   0, $BB, $BB, $BB, FEMALE ; lyra1\n",
+      "sha256": "d1d2ae0c43a41b2bf0b6cac645221e831709a071b4ff4a58b7c8f854beda3bbc"
+    }
+  ]
+}

@@ -227,7 +227,8 @@ Elm, Lyra, the aide and the three balls use exact v3.2.3 source pixels and
 daytime indoor palettes. Lyra uses the existing red time palette outdoors.
 Ball frames use only the source standing ball, not its cut-tree/fruit frames.
 `new_bark_intro.py` translates the selected source movement and dialogue labels;
-`build_new_bark.py --check` reproduces all 76 products.
+`build_new_bark.py --check` reproduces all 79 products, including the battle
+assets described below.
 
 Three previously unused vars shared by Emerald and FRLG hold town scene
 (`0x40DB`), lab scene (`0x40DC`) and starter choice (`0x40E5`). Contact bit `0x21`
@@ -244,11 +245,54 @@ actual encrypted Pokémon's species/level/item/checksum, preservation of the dem
 party, duplicate-gift prevention, and native Save/reset/Continue plus reentry.
 Snapshots include cartridge savedata and are taken only through gameplay.
 
-This phase ends before `LyraBattleScript`. Her first battle, the aide's potion
-handoff, Mom's events, the Mr. Pokémon journey and the usable Pokégear phone
-interface remain pending. Elm's contact is stored for that later interface.
-Sound cues and battle previews currently use Expansion's assets; this does not
-claim a Polished Crystal soundtrack or battle-art migration.
+Starter selection hands off to the first Lyra battle below. Mom's events,
+the Mr. Pokémon journey and the usable Pokégear phone interface remain pending.
+Elm's contact is stored for that later interface. Sound cues and Pokémon battle
+art currently use Expansion's assets; this does not claim a Polished Crystal
+soundtrack or a complete battle-art migration.
+
+### Lyra's first battle and the aide's Potion
+
+The original `(4,6)` lab trigger now starts Lyra's first battle. Her corresponding
+Lv5 Chikorita (Chicory), Cyndaquil (Cinder), or Totodile (Toto) retains its source
+nickname and two starting moves. The native trainer parties use no held item,
+zero EVs and IV 22 to represent the source class's DV 11 stat contribution.
+Expansion supplies its ordinary abilities, natures, AI and battle rules.
+The party and learnset excerpts record the v3.2.3 source blob hashes and line
+numbers in `lyra_battle_excerpts.json`.
+
+Lyra's original 56×56 trainer portrait is centered horizontally and aligned to
+the bottom of a native 64×64 canvas without scaling. Its original two colors,
+white and black are preserved as RGB555; only the source background index is
+transparent. The portrait ID and three trainer IDs are appended, leaving all
+existing IDs and the maximum trainer-flag allocation unchanged. Six reserved
+Emerald trainer slots remain. FireRed/LeafGreen retain their own roster.
+
+Both winning and losing return to the lab. Lyra uses her original dialogue,
+walks five steps down and leaves; the entire party is healed before source
+scene 5 becomes active. Crossing `(4,8)` or `(5,8)` brings the aide over by the
+corresponding source path. He gives **one Potion**, returns to `(2,9)`, and
+advances to source scene 2. A failed native Bag insertion leaves scene 5 pending
+so the player can retry; a successful gift cannot repeat.
+
+Lyra's visibility derives from the existing saved lab scene and a map-local
+flag. No permanent flag or save field was added. Save/Continue before and after
+the Potion retains her departure and the correct pending/completed handoff.
+The native battle helper needed one correction: `RIVAL_BATTLE_TUTORIAL` is a
+composite value containing `RIVAL_BATTLE_HEAL_AFTER`. Testing any overlapping
+bit incorrectly activated Emerald's Birch/Zigzagoon tutorial for a healing-only
+rival battle. The check now requires the complete tutorial value, preserving
+FRLG's explicit tutorial mode. A native setup regression exercises all three
+flag configurations.
+
+The mGBA suite checks the live portrait pixels/palette, nicknames and moves for
+all three opponents, an actual full-party defeat, both aide approaches, native
+Save/Continue, reentry and duplicate-gift guards.
+The resident movement probe also observes walking lanes from nearby and allows
+bounded native random pauses while still requiring displacement and checking
+source movement bounds. This addresses the prior CI #1438 movement assertion.
+The next content phase is Mom's opening events and Route 29; later campaign
+scenes and the phone interface remain unported.
 
 The playable visual slice and dormant Headbutt encounter selection are complete
 parts of the port. **The whole Polished Crystal migration is not complete.**

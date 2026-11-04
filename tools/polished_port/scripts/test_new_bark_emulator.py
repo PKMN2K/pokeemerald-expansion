@@ -243,13 +243,22 @@ def check_residents(game, maps, rows, checks):
         obj = data["object_events"][local_id - 1]
         actor = actors(game)[local_id]
         assert game.u32(game.sym["gObjectEventGraphicsInfoPointers"] + actor["graphics"] * 4) == game.sym["gObjectEventGraphicsInfo_" + graphics]
+        # Observe from outside the resident's walking lane, with the full
+        # lane on screen. Random facing attempts can collide with its bounds;
+        # allow a bounded 40 seconds, still requiring real displacement.
+        if obj["movement_range_y"]:
+            walk(game, data, (obj["x"] - 1, obj["y"]))
+        elif obj["movement_range_x"]:
+            walk(game, data, (obj["x"], obj["y"] - 1))
         positions = set()
-        for _ in range(80):
+        for sample in range(240):
             current = actors(game)[local_id]["position"]
             assert abs(current[0] - obj["x"]) <= obj["movement_range_x"], (name, current)
             assert abs(current[1] - obj["y"]) <= obj["movement_range_y"], (name, current)
             positions.add(current)
             game.frames(10)
+            if sample >= 79 and (len(positions) > 1 or not (obj["movement_range_x"] or obj["movement_range_y"])):
+                break
         if obj["movement_range_x"] or obj["movement_range_y"]:
             assert len(positions) > 1, name
         else:

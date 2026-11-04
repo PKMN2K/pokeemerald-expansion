@@ -64,6 +64,9 @@ PolishedElmsLab_CannotHealText:
 
 @ Ball visibility derives from the saved choice; no extra permanent flags.
 PolishedIntro_LabVisibility::
+	clearflag FLAG_TEMP_5
+	call_if_eq VAR_POLISHED_ELMS_LAB_SCENE, 5, PolishedBattle_HideLyra
+	call_if_eq VAR_POLISHED_ELMS_LAB_SCENE, 2, PolishedBattle_HideLyra
 	clearflag FLAG_TEMP_2
 	clearflag FLAG_TEMP_3
 	clearflag FLAG_TEMP_4
@@ -87,6 +90,7 @@ PolishedIntro_HideChikoritaTotodile::
 @ Continue restores saved actors; reconcile them with the map-load masks.
 @ Nickname/menu returns retain the current masks and choreography.
 PolishedIntro_LabRestore::
+	call_if_set FLAG_TEMP_5, PolishedBattle_RemoveLyra
 	call_if_set FLAG_TEMP_2, PolishedIntro_RemoveCyndaquil
 	call_if_set FLAG_TEMP_3, PolishedIntro_RemoveTotodile
 	call_if_set FLAG_TEMP_4, PolishedIntro_RemoveChikorita
@@ -550,3 +554,137 @@ PolishedIntro_LyraNicknamedChikoritaText:
 
 PolishedIntro_ReceivedGift:
 	.string "{PLAYER} received\n{STR_VAR_1}!$"
+
+@ Scene 6: both battle outcomes continue in the lab, never white out.
+PolishedBattle_Lyra::
+	lockall
+	turnobject LOCALID_ELMS_LAB_LYRA, DIR_SOUTH
+	msgbox PolishedBattle_ElmsLabLyraChallengeText, MSGBOX_DEFAULT
+	closemessage
+	applymovement LOCALID_ELMS_LAB_LYRA, PolishedBattle_Approach
+	waitmovement 0
+	turnobject LOCALID_PLAYER, DIR_EAST
+	setvar VAR_LAST_TALKED, LOCALID_ELMS_LAB_LYRA
+	goto_if_eq VAR_POLISHED_STARTER, 2, PolishedBattle_Cyndaquil
+	goto_if_eq VAR_POLISHED_STARTER, 3, PolishedBattle_Totodile
+	trainerbattle_earlyrival TRAINER_POLISHED_LYRA_CHIKORITA, RIVAL_BATTLE_HEAL_AFTER, PolishedBattle_ElmsLabLyraWinText, PolishedBattle_ElmsLabLyraLossText
+	goto PolishedBattle_After
+PolishedBattle_Cyndaquil::
+	trainerbattle_earlyrival TRAINER_POLISHED_LYRA_CYNDAQUIL, RIVAL_BATTLE_HEAL_AFTER, PolishedBattle_ElmsLabLyraWinText, PolishedBattle_ElmsLabLyraLossText
+	goto PolishedBattle_After
+PolishedBattle_Totodile::
+	trainerbattle_earlyrival TRAINER_POLISHED_LYRA_TOTODILE, RIVAL_BATTLE_HEAL_AFTER, PolishedBattle_ElmsLabLyraWinText, PolishedBattle_ElmsLabLyraLossText
+PolishedBattle_After::
+	lockall
+	msgbox PolishedBattle_ElmsLabLyraText_YouLost, MSGBOX_DEFAULT
+	turnobject LOCALID_ELMS_LAB_LYRA, DIR_NORTH
+	msgbox PolishedBattle_ElmsLabLyraThankYouText, MSGBOX_DEFAULT
+	turnobject LOCALID_ELMS_LAB_LYRA, DIR_WEST
+	msgbox PolishedBattle_ElmsLabLyraSeeYouText, MSGBOX_DEFAULT
+	closemessage
+	turnobject LOCALID_PLAYER, DIR_SOUTH
+	applymovement LOCALID_ELMS_LAB_LYRA, PolishedBattle_Leaves
+	waitmovement 0
+	removeobject LOCALID_ELMS_LAB_LYRA
+	special HealPlayerParty
+	setvar VAR_POLISHED_ELMS_LAB_SCENE, 5
+	releaseall
+	end
+
+@ Scene 5: a single Potion, from either source approach. Do not commit the
+@ gift if native Bag insertion fails; walking across the trigger can retry.
+PolishedBattle_AideLeft::
+	lockall
+	applymovement LOCALID_ELMS_LAB_AIDE, PolishedBattle_AideRight1
+	waitmovement 0
+	call PolishedBattle_Potion
+	applymovement LOCALID_ELMS_LAB_AIDE, PolishedBattle_AideLeft1
+	waitmovement 0
+	releaseall
+	end
+PolishedBattle_AideRight::
+	lockall
+	applymovement LOCALID_ELMS_LAB_AIDE, PolishedBattle_AideRight2
+	waitmovement 0
+	call PolishedBattle_Potion
+	applymovement LOCALID_ELMS_LAB_AIDE, PolishedBattle_AideLeft2
+	waitmovement 0
+	releaseall
+	end
+PolishedBattle_Potion::
+	turnobject LOCALID_PLAYER, DIR_SOUTH
+	msgbox PolishedBattle_AideText_GiveYouPotions, MSGBOX_DEFAULT
+	giveitem ITEM_POTION
+	goto_if_eq VAR_RESULT, FALSE, PolishedBattle_PotionDone
+	setvar VAR_POLISHED_ELMS_LAB_SCENE, 2
+PolishedBattle_PotionDone::
+	msgbox PolishedIntro_AideText_AlwaysBusy, MSGBOX_DEFAULT
+	closemessage
+	return
+
+PolishedBattle_RemoveLyra::
+	removeobject LOCALID_ELMS_LAB_LYRA
+	return
+PolishedBattle_HideLyra::
+	setflag FLAG_TEMP_5
+	return
+
+PolishedBattle_Approach:
+	walk_down
+	face_left
+	step_end
+
+PolishedBattle_Leaves:
+	walk_down
+	walk_down
+	walk_down
+	walk_down
+	walk_down
+	step_end
+
+PolishedBattle_AideRight1:
+	walk_right
+	walk_right
+	face_up
+	step_end
+
+PolishedBattle_AideRight2:
+	walk_right
+	walk_right
+	walk_right
+	face_up
+	step_end
+
+PolishedBattle_AideLeft1:
+	walk_left
+	walk_left
+	face_down
+	step_end
+
+PolishedBattle_AideLeft2:
+	walk_left
+	walk_left
+	walk_left
+	face_down
+	step_end
+
+PolishedBattle_ElmsLabLyraChallengeText:
+	.string "Lyra: {PLAYER}!\nLet's get to know\pour POKéMON with\na battle!$"
+
+PolishedBattle_ElmsLabLyraWinText:
+	.string "Good job,\n{PLAYER}!$"
+
+PolishedBattle_ElmsLabLyraLossText:
+	.string "Yay! I won!$"
+
+PolishedBattle_ElmsLabLyraText_YouLost:
+	.string "That was an\nexciting battle!$"
+
+PolishedBattle_ElmsLabLyraThankYouText:
+	.string "Thank you for the\nPOKéMON, Prof.\lElm.$"
+
+PolishedBattle_ElmsLabLyraSeeYouText:
+	.string "{PLAYER}, I'll\nsee you later!\pHave fun on your\nerrand!$"
+
+PolishedBattle_AideText_GiveYouPotions:
+	.string "{PLAYER}, I want\nyou to have this\lfor your errand.$"

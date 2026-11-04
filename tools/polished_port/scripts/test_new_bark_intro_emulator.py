@@ -21,9 +21,15 @@ def layout():
     """Ask the ARM compiler for this revision's layouts; never patch the ROM."""
     fields = {
         "vars": "offsetof(struct SaveBlock1, vars)",
+        "trainer_sprites": "offsetof(struct BattleStruct, trainerSlideSpriteIds)",
         "flags": "offsetof(struct SaveBlock1, flags)",
         "mon_size": "sizeof(struct Pokemon)",
         "level": "offsetof(struct Pokemon, level)",
+        "hp": "offsetof(struct Pokemon, hp)", "max_hp": "offsetof(struct Pokemon, maxHP)",
+        "status": "offsetof(struct Pokemon, status)",
+        "items": "offsetof(struct SaveBlock1, bag.items)", "items_count": "BAG_ITEMS_COUNT",
+        "encryption_key": "offsetof(struct SaveBlock2, encryptionKey)", "potion": "ITEM_POTION",
+        "tackle": "MOVE_TACKLE", "growl": "MOVE_GROWL", "leer": "MOVE_LEER", "scratch": "MOVE_SCRATCH",
         "secure": "offsetof(struct BoxPokemon, secure)",
         "checksum": "offsetof(struct BoxPokemon, checksum)",
         "substruct_size": "sizeof(union PokemonSubstruct)",
@@ -32,7 +38,7 @@ def layout():
         "town_scene": "VAR_POLISHED_NEW_BARK_SCENE", "lab_scene": "VAR_POLISHED_ELMS_LAB_SCENE",
         "starter": "VAR_POLISHED_STARTER", "contact": "FLAG_POLISHED_HAS_ELM_CONTACT",
     }
-    source = ('#include "global.h"\n#include "constants/items.h"\n#include "constants/species.h"\n'
+    source = ('#include "global.h"\n#include "battle.h"\n#include "constants/items.h"\n#include "constants/species.h"\n'
               '#include "constants/vars.h"\n#include "constants/flags.h"\n'
               'const u32 layout[] = {' + ','.join(fields.values()) + '};\n')
     result = subprocess.run(["arm-none-eabi-gcc", "-mcpu=arm7tdmi", "-mthumb", "-mabi=apcs-gnu",
@@ -49,10 +55,10 @@ def var(game, name):
     return struct.unpack("<H", game.read(addr, 2))[0]
 
 
-def party(game):
+def party(game, enemy=False, details=False):
     data = layout()
-    count = game.read(game.u32(game.sym["gPlayerPartyCountPtr"]), 1)[0]
-    base = game.u32(game.sym["gPlayerPartyPtr"])
+    count = game.read(game.u32(game.sym["gEnemyPartyCountPtr" if enemy else "gPlayerPartyCountPtr"]), 1)[0]
+    base = game.u32(game.sym["gEnemyPartyPtr" if enemy else "gPlayerPartyPtr"])
     result = []
     for index in range(count):
         raw = game.read(base + index * data["mon_size"], data["mon_size"])
@@ -65,6 +71,13 @@ def party(game):
         species, item = struct.unpack_from("<HH", decoded, offset)
         result.append({"species": species & 0x7FF, "item": item & 0x3FF, "level": raw[data["level"]],
             "personality": personality, "trainer": trainer, "nickname": raw[8:18].hex()})
+        if details:
+            attacks = game.read(game.sym["sSubstructOffsets"] + 24 + personality % 24, 1)[0] * data["substruct_size"]
+            result[-1].update(hp=struct.unpack_from("<H", raw, data["hp"])[0],
+                max_hp=struct.unpack_from("<H", raw, data["max_hp"])[0],
+                status=struct.unpack_from("<I", raw, data["status"])[0],
+                moves=[move & 0x7ff for move in struct.unpack_from("<4H", decoded, attacks)],
+                pp=[pp & 0x7f for pp in decoded[attacks + 8:attacks + 12]])
     return result
 
 
@@ -79,9 +92,13 @@ def task_active(game, name):
 
 
 def text_matches(game, label):
-    text = game.read(game.sym[label], 1024).split(b"\xff", 1)[0].split(b"\xfd", 1)[0]
+    text = game.read(game.sym[label], 1024).split(b"\xff", 1)[0]
     assert text, label
-    return game.read(game.sym["gStringVar4"], len(text)) == text
+    # Match the full expanded message, including source text that begins with
+    # PLAYER rather than a literal prefix (the aide's first Potion offer).
+    pattern = b".*?".join(re.escape(part) for part in re.split(rb"\xfd.", text))
+    shown = game.read(game.sym["gStringVar4"], 1024).split(b"\xff", 1)[0]
+    return re.fullmatch(pattern, shown, re.S) is not None
 
 
 def advance(game, condition, limit=200):
@@ -210,12 +227,14 @@ def check_intro(game, maps, rows, checks):
         continue_game(game)
         assert var(game, "starter") == index and var(game, "lab_scene") == 6
         assert remaining(game, lab) == [left] and party(game) == actual
+        from test_new_bark_battle_emulator import check_battle
+        check_battle(game, maps, species, lyra_species, index, checks)
         travel(game, lab, town)
         travel(game, town, lab)
         # Actors outside the camera are culled, so approach the table first.
         walk(game, lab, (4, 4))
         assert not script_active(game) and remaining(game, lab) == [left]
-        assert actors(game)[lyra]["position"] == (5, 5) and actors(game)[elm]["position"] == (5, 2)
+        assert lyra not in actors(game) and actors(game)[elm]["position"] == (5, 2)
         assert party(game) == actual
         report.append({"player_starter": species, "lyra_starter": lyra_species, "remaining_ball": left,
             "party": actual, "scene": var(game, "lab_scene"), "saved_and_reentered": True})
@@ -239,4 +258,7 @@ def check_intro(game, maps, rows, checks):
     assert len(party(game)) == 2
     game.screenshot("starter-cyndaquil-west-approach")
     checks.append("Cyndaquil's west approach keeps the player in front of Elm; healing is unavailable until a starter is chosen")
+    from test_new_bark_battle_emulator import finish_battle, take_potion
+    finish_battle(game, maps, "west-approach")
+    take_potion(game, maps, 4, "west-approach")
     travel(game, lab, town)

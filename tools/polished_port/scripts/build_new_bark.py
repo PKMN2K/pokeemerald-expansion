@@ -3,7 +3,7 @@
 
 This imports map blocks, door/stair coordinates, reading interactions and the
 six ambient residents, the rival's lab-window encounter, and Lyra/Elm's
-introduction through starter selection. Further story scenes, item events
+introduction, starter selection, Lyra battle and first Potion. Further events
 and room decorations are separate work. Route 29/27
 connections await those maps.
 """
@@ -25,6 +25,7 @@ from test_johto_metatile_banks import load_binary_fixture
 from convert_player_walking import (convert as convert_npc, _read_png_2bit_grayscale,
     _write_indexed_4bit_png)
 import new_bark_intro
+import new_bark_battle
 
 MAPS = {
     "NewBarkTown": "NEW_BARK_TOWN",
@@ -406,13 +407,17 @@ def map_header(name, constant, width, height, script, files):
         code = code.replace("\t.byte 0\n", hooks + "\t.byte 0\n", 1)
         code += scene
         story.append(report)
+    if name == "ElmsLab":
+        scene, report = new_bark_battle.lab(script, header, source_text, text_definition)
+        code += scene
+        story.append(report)
     return header, (code.rstrip() + "\n").encode(), resident_info, story
 
 
 def generate():
     files = source_files()
     ids = behavior_ids()
-    products, maps, layouts = resident_assets(files), {}, []
+    products, maps, layouts = {**resident_assets(files), **new_bark_battle.battle_assets(files)}, {}, []
     indoor = palette_rows((FIXTURES / "johto_bg_tiles.pal").read_text())[32:39]
     indoor_palette = b"".join(struct.pack("<16H", *p, p[0], *([0] * 11)) for p in indoor).ljust(512, b"\0")
     outdoor = apply_new_bark_roof(build_graphics()[0], files)
@@ -507,7 +512,7 @@ def generate():
 
 """
     products["src/data/tilesets/polished_new_bark.h"] = (header_text.rstrip() + "\n").encode()
-    report = {"source_commit": PIN, "scope": "source geography, connected interiors, static interactions, six ambient residents, rival window encounter, Lyra/Elm introduction and all three starter choices; Lyra battle and later story progression deferred",
+    report = {"source_commit": PIN, "scope": "source geography, connected interiors, static interactions, six ambient residents, rival window encounter, Lyra/Elm introduction, all three starter choices, first Lyra battle and aide Potion; later story progression deferred",
         "maps": maps, "layouts": layouts, "output_sha256": {p: hashlib.sha256(raw).hexdigest() for p, raw in products.items()}}
     products["tools/polished_port/manifests/new_bark.json"] = json_bytes(report)
     return products

@@ -10,3 +10,6 @@ AUTO_GEN_TARGETS += src/data/debug_trainers.h
 
 %.h: %.party $(TRAINERPROC)
 	$(CPP) $(CPPFLAGS) -traditional-cpp - < $< | $(TRAINERPROC) -o $@ -i $< -
+
+# The pinned New Bark parties are generated independently of the base roster.
+src/data/trainers.h: src/data/polished_lyra.party

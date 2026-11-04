@@ -1,7 +1,6 @@
 """Native event translation of the pinned Lyra/Elm introduction and starters.
 
-Source scene numbers are retained. Scene 6 is the handoff to the future Lyra
-battle; this module does not substitute a Hoenn quest or trainer battle.
+Source scene numbers are retained. Scene 6 hands off to new_bark_battle.
 """
 import re
 
@@ -115,6 +114,9 @@ def lab(script, header, source_text, text_definition):
 """
     code = """@ Ball visibility derives from the saved choice; no extra permanent flags.
 PolishedIntro_LabVisibility::
+	clearflag FLAG_TEMP_5
+	call_if_eq VAR_POLISHED_ELMS_LAB_SCENE, 5, PolishedBattle_HideLyra
+	call_if_eq VAR_POLISHED_ELMS_LAB_SCENE, 2, PolishedBattle_HideLyra
 	clearflag FLAG_TEMP_2
 	clearflag FLAG_TEMP_3
 	clearflag FLAG_TEMP_4
@@ -138,6 +140,7 @@ PolishedIntro_HideChikoritaTotodile::
 @ Continue restores saved actors; reconcile them with the map-load masks.
 @ Nickname/menu returns retain the current masks and choreography.
 PolishedIntro_LabRestore::
+	call_if_set FLAG_TEMP_5, PolishedBattle_RemoveLyra
 	call_if_set FLAG_TEMP_2, PolishedIntro_RemoveCyndaquil
 	call_if_set FLAG_TEMP_3, PolishedIntro_RemoveTotodile
 	call_if_set FLAG_TEMP_4, PolishedIntro_RemoveChikorita
@@ -372,4 +375,4 @@ PolishedIntro_LyraFollowElm:
     # The source givepoke command supplies this receipt before its nickname UI.
     code += text_definition("PolishedIntro_ReceivedGift", "{PLAYER} received\\n{STR_VAR_1}!$")
     return hooks, code, {"source_script": "ElmsLab_AutowalkUpToElm", "scenes": [0, 1, 6],
-        "choices": choices, "events": objects, "next_phase": "LyraBattleScript"}
+        "choices": choices, "events": objects, "next_phase": "LyraBattleScript (new_bark_battle.py)"}
