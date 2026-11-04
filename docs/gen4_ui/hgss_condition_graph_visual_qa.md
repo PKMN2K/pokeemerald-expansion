@@ -98,7 +98,8 @@ and `mon_markings.pal` are removed. The live screen no longer binds procedural
 frames, the old party Pokéball rail, hidden bottom Cancel graphic, generic
 markings-menu art, or old sheen sprites.
 
-Pokéblock feeding still uses `graph_data.pal`, `text.pal`, the generic
-selection icons and their animation. Its two palette definitions now live
-in `use_pokeblock.c`; those shared files and feeding behavior are retained.
-The Condition detail's sheen positioning is local to this screen.
+The [Pokéblock recipient/results migration](hgss_pokeblock_use_visual_qa.md)
+now uses the same original HGSS graph, palette and sheen assets. The shared
+loader and star positioning live in `menu_specialized.c`; both screens retain
+the same 80 × 88 portrait card. The final old selection rail and its shared
+palettes are removed. The unrelated SWSH summary still owns `sparkle.png`.

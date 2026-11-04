@@ -45,18 +45,18 @@ def check():
     for left, right in zip(regions, regions[1:]):
         assert left[2] <= right[1], f"VRAM collision: {left[0]} / {right[0]}"
     assert regions[-1][2] <= 0x10000
-    for name in ("graph_bg.4bpp", "graph_bg.bin", "sheen_stars.4bpp", "markings_panel.4bpp"):
+    for name in ("graph_bg.4bpp", "graph_bg.bin", "markings_panel.4bpp"):
         assert f'"graphics/gen4_ui/hgss_condition/{name}"' in source, name
     for legacy in ("graphics/pokenav/condition/", "DrawPokeGear", "LoadConditionSelectionIcons",
                    "LoadConditionSparkle", "SetMonMarkingsMenuPointer", "OpenMonMarkingsMenu"):
         assert legacy not in source, f"Legacy detail binding: {legacy}"
-    # Feeding still owns these shared files; removing them would break it.
-    feeding = (ROOT / "src/use_pokeblock.c").read_text()
-    for name in ("graph_data.pal", "text.pal"):
-        assert f'"graphics/pokenav/condition/{name}"' in feeding
+    shared = (ROOT / "src/menu_specialized.c").read_text()
+    assert '"graphics/gen4_ui/hgss_condition/sheen_stars.4bpp"' in shared
+    assert "LoadHgssConditionSparkle" in source
+    assert "CreateHgssConditionSparkleSprites" in source
     for name in ("graph_data.png", "graph_data.bin", "mon_markings.pal"):
         assert not (ROOT / "graphics/pokenav/condition" / name).exists(), f"Unused legacy detail art: {name}"
-    print("Verified Condition detail bindings, help-bar clearance and disjoint VRAM; feeding retains its assets")
+    print("Verified Condition detail bindings, help-bar clearance and disjoint VRAM; shared HGSS sheen binding")
 
 
 if __name__ == "__main__":

@@ -30,8 +30,6 @@ static const u16 sHgssGraphMap[] = INCBIN_U16("graphics/gen4_ui/hgss_condition/g
 static const u16 sHgssTextPal[] = INCBIN_U16("graphics/gen4_ui/hgss_ribbons/summary_bg.bank_1.gbapal");
 static const u16 sHgssHeaderPal[] = INCBIN_U16("graphics/gen4_ui/hgss_ribbons/summary_bg.bank_7.gbapal");
 static const u32 sGraphDataTile[] = {0x99999999, 0x99999999, 0x99999999, 0x99999999, 0x99999999, 0x99999999, 0x99999999, 0x99999999};
-static const u32 sHgssSheenStars[] = INCBIN_U32("graphics/gen4_ui/hgss_condition/sheen_stars.4bpp");
-static const u16 sHgssStarPal[] = INCGFX_U16("graphics/gen4_ui/hgss_storage/verified/shiny_star.png", ".gbapal");
 static const u32 sHgssMarkingsPanel[] = INCBIN_U32("graphics/gen4_ui/hgss_condition/markings_panel.4bpp");
 static const u16 sHgssMarkingsPal[] = INCGFX_U16("graphics/gen4_ui/hgss_storage/verified/markings_menu.png", ".gbapal");
 static const u32 sHgssMarkingsCombo[] = INCBIN_U32("graphics/gen4_ui/hgss_storage/verified/marking_combo_hgss.4bpp");
@@ -536,28 +534,20 @@ static bool32 UpdateConditionGraphMenuWindows(u8 mode, u16 bufferIndex, bool8 wi
 
 static void LoadHgssConditionSprites(void)
 {
-    const struct SpriteSheet sheet = {sHgssSheenStars, sizeof(sHgssSheenStars), TAG_CONDITION_SPARKLE};
-    const struct SpritePalette pal = {sHgssStarPal, TAG_CONDITION_SPARKLE};
+    struct SpriteSheet sheet;
+    struct SpritePalette pal;
+    LoadHgssConditionSparkle(&sheet, &pal);
     LoadSpriteSheet(&sheet);
     Pokenav_AllocAndLoadPalettes((const struct SpritePalette[]){{pal.data, pal.tag}, {NULL}});
 }
 
 static void CreateHgssConditionSparkles(void)
 {
-    // Keep the unscaled HGSS stars inside this screen's portrait card.
-    // Position offsets leave the shared Pokeblock animation unchanged.
-    static const s8 offsets[MAX_CONDITION_SPARKLES][2] =
-        {{0, 2}, {0, 0}, {-3, 0}, {-3, 0}, {0, 0}, {0, -2}, {0, 0}, {3, 0}, {3, 0}, {0, 0}};
     struct Pokenav_ConditionMenuGfx *menu = GetSubstructPtr(POKENAV_SUBSTRUCT_CONDITION_GRAPH_MENU_GFX);
     ResetConditionSparkleSprites(menu->conditionSparkleSprites);
     if (IsConditionCancelSelected() || menu->monPicSpriteId == SPRITE_NONE)
         return;
-    CreateConditionSparkleSprites(menu->conditionSparkleSprites, menu->monPicSpriteId, GetNumConditionMonSparkles());
-    for (u32 i = 0; i < MAX_CONDITION_SPARKLES && menu->conditionSparkleSprites[i] != NULL; i++)
-    {
-        menu->conditionSparkleSprites[i]->x2 = offsets[i][0];
-        menu->conditionSparkleSprites[i]->y2 = offsets[i][1];
-    }
+    CreateHgssConditionSparkleSprites(menu->conditionSparkleSprites, menu->monPicSpriteId, GetNumConditionMonSparkles());
 }
 
 static void UpdateConditionMarkCursor(void)

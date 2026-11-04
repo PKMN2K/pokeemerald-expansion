@@ -1,0 +1,83 @@
+name: HGSS Pokeblock recipient and results screenshots
+
+on:
+  push:
+    branches: [feature/gen4-ui-renderer]
+    paths:
+      - .github/workflows/hgss-pokeblock-use.yml
+      - tools/gen4_ui/*hgss_pokeblock_use*.py
+      - tools/gen4_ui/verify_hgss_condition_graph_screens.py
+      - tools/gen4_ui/check_hgss_condition_graph.py
+      - tools/gen4_ui/make_hgss_condition_graph.py
+      - tools/gen4_ui/make_hgss_ribbon_summary.py
+      - tools/gen4_ui/make_hgss_pokegear_list_arrows.py
+      - graphics/gen4_ui/hgss_pokeblock_use/**
+      - graphics/gen4_ui/hgss_condition/**
+      - graphics/gen4_ui/hgss_ribbons/summary_bg*
+      - graphics/gen4_ui/hgss_pokegear/list_arrows*
+      - graphics/gen4_ui/hgss_storage/verified/shiny*
+      - include/menu_specialized.h
+      - src/use_pokeblock.c
+      - src/menu_specialized.c
+      - src/pokeblock.c
+      - src/pokeblock_feed.c
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  pokeblock-use-emulator:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    env:
+      GAME_VERSION: EMERALD
+      GAME_REVISION: 0
+      GAME_LANGUAGE: ENGLISH
+      COMPARE: 0
+      UNUSED_ERROR: 1
+      DEPRECATED_ERROR: 1
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@v4
+
+      - name: Install GBA compiler and screenshot dependencies
+        run: |
+          for sources in /etc/apt/apt-mirrors.txt /etc/apt/sources.list /etc/apt/sources.list.d/ubuntu.sources; do
+            if [ -f "$sources" ]; then
+              sudo sed -i 's|azure.archive.ubuntu.com|archive.ubuntu.com|g' "$sources"
+            fi
+          done
+          sudo apt-get -o Acquire::Retries=3 -o Acquire::http::Timeout=30 update
+          sudo apt-get -o Acquire::Retries=3 -o Acquire::http::Timeout=30 install -y --no-install-recommends binutils-arm-none-eabi gcc-arm-none-eabi libnewlib-arm-none-eabi libpng-dev libmgba-dev python3 python3-pil git
+
+      - name: Validate original assets and production VRAM layout
+        run: python3 tools/gen4_ui/check_hgss_pokeblock_use.py
+
+      - name: Build disposable live Pokeblock feeding fixture
+        run: |
+          python3 tools/gen4_ui/prepare_hgss_pokeblock_use_capture.py
+          make -j$(nproc) -O all
+          test -s pokeemerald.gba
+
+      - name: Build pinned headless mGBA screenshot utility
+        run: |
+          git clone https://github.com/JohnnySun/gba-rom-debugger.git /tmp/gba-rom-debugger
+          git -C /tmp/gba-rom-debugger checkout --detach 1ab7c814f9e062790567c58c8c0c2b74ad62e1ae
+          cc -std=gnu11 -O2 -DUSE_PNG -o /tmp/gba-walk /tmp/gba-rom-debugger/src/gba-walk.c -lmgba -lpng
+
+      - name: Capture party selection, prompts, six feeding cycles and returns
+        run: python3 tools/gen4_ui/capture_hgss_pokeblock_use.py /tmp/gba-walk pokeemerald.gba build/hgss-pokeblock-use
+
+      - name: Verify original panels, text, arrows, saved stats and item consumption
+        run: python3 tools/gen4_ui/verify_hgss_pokeblock_use_screens.py build/hgss-pokeblock-use
+
+      - name: Upload actual Pokeblock feeding screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: hgss-pokeblock-use-screenshots
+          path: |
+            build/hgss-pokeblock-use/*.png
+            build/hgss-pokeblock-use/audit.json
+          if-no-files-found: warn

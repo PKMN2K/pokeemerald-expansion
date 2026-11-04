@@ -26,18 +26,10 @@ enum {
 
 enum {
     TAG_CONDITION_MON = 100,
-    TAG_CONDITION_BALL,
-    TAG_CONDITION_CANCEL,
-    TAG_CONDITION_BALL_PLACEHOLDER,
-    TAG_CONDITION_SPARKLE,
+    TAG_CONDITION_SPARKLE = 104,
     TAG_CONDITION_MON_MARKINGS,
     TAG_CONDITION_MARKINGS_MENU,
     TAG_CONDITION_MARKINGS_MENU_2, // Used implicitly by CreateMonMarkingsMenuSprites
-};
-
-enum {
-    CONDITION_ICON_SELECTED,
-    CONDITION_ICON_UNSELECTED,
 };
 
 #define MAX_CONDITION_SPARKLES 10
@@ -115,10 +107,11 @@ void GetConditionMenuMonNameAndLocString(u8 *locationDst, u8 *nameDst, u16 boxId
 void GetConditionMenuMonConditions(struct ConditionGraph *graph, u8 *numSparkles, u16 boxId, u16 monId, u16 partyId, u16 id, u16 numMons, bool8 excludesCancel);
 void GetConditionMenuMonGfx(void *tilesDst, void *palDst, u16 boxId, u16 monId, u16 partyId, u16 numMons, bool8 excludesCancel);
 void LoadConditionMonPicTemplate(struct SpriteSheet *sheet, struct SpriteTemplate *template, struct SpritePalette *pal);
-void LoadConditionSelectionIcons(struct SpriteSheet *sheets, struct SpriteTemplate *template, struct SpritePalette *pals);
 s32 GetBoxOrPartyMonData(u16 boxId, u16 monId, s32 request, u8 *dst);
 
 // Condition sparkles
+void LoadHgssConditionSparkle(struct SpriteSheet *sheet, struct SpritePalette *pal);
+void CreateHgssConditionSparkleSprites(struct Sprite **sprites, u8 monSpriteId, u8 count);
 void LoadConditionSparkle(struct SpriteSheet *sheet, struct SpritePalette *pal);
 void ResetConditionSparkleSprites(struct Sprite **sprites);
 void CreateConditionSparkleSprites(struct Sprite **sprites, u8 monSpriteId, u8 _count);

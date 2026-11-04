@@ -3143,10 +3143,6 @@ extern const u32 gEnemyMonShadowsSized_Gfx[];
 
 extern const u32 gBattleAnimFogTilemap[];
 
-extern const u32 gUsePokeblockGraph_Gfx[];
-extern const u32 gUsePokeblockGraph_Tilemap[];
-extern const u16 gUsePokeblockGraph_Pal[];
-extern const u16 gUsePokeblockNatureWin_Pal[];
 
 // Berry blender
 extern const u8 gBerryBlenderPlayerArrow_Gfx[];
@@ -3331,7 +3327,6 @@ extern const u32 gEasyChatButtonWindow_Gfx[];
 extern const u16 gEasyChatButtonWindow_Pal[];
 
 // Use Pokeblock
-extern const u32 gUsePokeblockCondition_Gfx[];
 
 // Union Room Chat
 extern const u16 gUnionRoomChat_Background_Pal[];
@@ -3344,11 +3339,6 @@ extern const u32 gUnionRoomChat_Keyboard_Tilemap[];
 extern const u32 gUnionRoomChat_RButtonLabels[];
 
 // Use Pokeblock
-extern const u8 gPokenavConditionCancel_Gfx[];
-extern const u16 gPokenavConditionCancel_Pal[];
-extern const u8 gUsePokeblockUpDown_Gfx[];
-extern const u16 gUsePokeblockUpDown_Pal[];
-extern const u16 gUsePokeblockCondition_Pal[];
 
 // Berry Crush
 extern const u32 gBerryCrush_Crusher_Gfx[];

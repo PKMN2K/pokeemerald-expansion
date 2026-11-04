@@ -910,8 +910,8 @@ static u8 *GetConditionMenuMonString(u8 *dst, u16 boxId, u16 monId)
     *(dst++) = TEXT_COLOR_TRANSPARENT;
     *(dst++) = EXT_CTRL_CODE_BEGIN;
     *(dst++) = EXT_CTRL_CODE_TEXT_COLORS;
-    *(dst++) = TEXT_COLOR_BLUE;
-    *(dst++) = TEXT_COLOR_LIGHT_BLUE;
+    *(dst++) = 5;
+    *(dst++) = 2;
     *(dst++) = TEXT_COLOR_TRANSPARENT;
     if (GetBoxOrPartyMonData(box, mon, MON_DATA_IS_EGG, NULL))
         return StringCopyPadded(dst, gText_EggNickname, 0, POKEMON_NAME_LENGTH + 2);
@@ -938,26 +938,26 @@ static u8 *GetConditionMenuMonString(u8 *dst, u16 boxId, u16 monId)
 
     *(str++) = EXT_CTRL_CODE_BEGIN;
     *(str++) = EXT_CTRL_CODE_SKIP;
-    *(str++) = 60;
+    *(str++) = 96;
 
     switch (gender)
     {
     default:
-        *(str++) = CHAR_SPACE;
+        *(str++) = CHAR_SPACER;
         break;
     case MON_MALE:
         *(str++) = EXT_CTRL_CODE_BEGIN;
         *(str++) = EXT_CTRL_CODE_TEXT_COLORS;
-        *(str++) = TEXT_COLOR_RED;
-        *(str++) = TEXT_COLOR_LIGHT_RED;
+        *(str++) = 9;
+        *(str++) = 2;
         *(str++) = TEXT_COLOR_TRANSPARENT;
         *(str++) = CHAR_MALE;
         break;
     case MON_FEMALE:
         *(str++) = EXT_CTRL_CODE_BEGIN;
         *(str++) = EXT_CTRL_CODE_TEXT_COLORS;
-        *(str++) = TEXT_COLOR_GREEN;
-        *(str++) = TEXT_COLOR_LIGHT_GREEN;
+        *(str++) = 6;
+        *(str++) = 2;
         *(str++) = TEXT_COLOR_TRANSPARENT;
         *(str++) = CHAR_FEMALE;
         break;
@@ -965,8 +965,8 @@ static u8 *GetConditionMenuMonString(u8 *dst, u16 boxId, u16 monId)
 
     *(str++) = EXT_CTRL_CODE_BEGIN;
     *(str++) = EXT_CTRL_CODE_TEXT_COLORS;
-    *(str++) = TEXT_COLOR_BLUE;
-    *(str++) = TEXT_COLOR_LIGHT_BLUE;
+    *(str++) = 5;
+    *(str++) = 2;
     *(str++) = TEXT_COLOR_TRANSPARENT;
     *(str++) = CHAR_SLASH;
     *(str++) = CHAR_EXTRA_SYMBOL;
@@ -1013,8 +1013,8 @@ void GetConditionMenuMonNameAndLocString(u8 *locationDst, u8 *nameDst, u16 boxId
         locationDst[i++] = TEXT_COLOR_TRANSPARENT;
         locationDst[i++] = EXT_CTRL_CODE_BEGIN;
         locationDst[i++] = EXT_CTRL_CODE_TEXT_COLORS;
-        locationDst[i++] = TEXT_COLOR_BLUE;
-        locationDst[i++] = TEXT_COLOR_LIGHT_BLUE;
+        locationDst[i++] = 5;
+        locationDst[i++] = 2;
         locationDst[i++] = TEXT_COLOR_TRANSPARENT;
         if (box == TOTAL_BOXES_COUNT) // Party mon.
             BufferConditionMenuSpacedStringN(&locationDst[i], gText_InParty, BOX_NAME_LENGTH);
@@ -1113,8 +1113,6 @@ bool8 ConditionMenu_UpdateMonExit(struct ConditionGraph *graph, s16 *x)
     return (graphUpdating || monUpdating);
 }
 
-static const u32 sConditionPokeball_Gfx[] = INCGFX_U32("graphics/pokenav/condition/pokeball.png", ".4bpp");
-static const u32 sConditionPokeballPlaceholder_Gfx[] = INCGFX_U32("graphics/pokenav/condition/pokeball_placeholder.png", ".4bpp");
 static const u16 sConditionSparkle_Gfx[] = INCGFX_U16("graphics/pokenav/condition/sparkle.png", ".gbapal");
 static const u32 sConditionSparkle_Pal[] = INCGFX_U32("graphics/pokenav/condition/sparkle.png", ".4bpp");
 
@@ -1133,41 +1131,6 @@ static const struct OamData sOam_ConditionMonPic =
     .priority = 1,
     .paletteNum = 0,
     .affineParam = 0
-};
-
-static const struct OamData sOam_ConditionSelectionIcon =
-{
-    .y = 0,
-    .affineMode = ST_OAM_AFFINE_OFF,
-    .objMode = ST_OAM_OBJ_NORMAL,
-    .mosaic = FALSE,
-    .bpp = ST_OAM_4BPP,
-    .shape = SPRITE_SHAPE(16x16),
-    .x = 0,
-    .matrixNum = 0,
-    .size = SPRITE_SIZE(16x16),
-    .tileNum = 0,
-    .priority = 2,
-    .paletteNum = 0,
-    .affineParam = 0
-};
-
-static const union AnimCmd sAnim_ConditionSelectionIcon_Selected[] =
-{
-    ANIMCMD_FRAME(0, 5),
-    ANIMCMD_END
-};
-
-static const union AnimCmd sAnim_ConditionSelectionIcon_Unselected[] =
-{
-    ANIMCMD_FRAME(4, 5),
-    ANIMCMD_END
-};
-
-static const union AnimCmd *const sAnims_ConditionSelectionIcon[] =
-{
-    [CONDITION_ICON_SELECTED] = sAnim_ConditionSelectionIcon_Selected,
-    [CONDITION_ICON_UNSELECTED] = sAnim_ConditionSelectionIcon_Unselected
 };
 
 // Just loads the generic data, up to the caller to load the actual sheet/pal for the specific mon
@@ -1189,49 +1152,34 @@ void LoadConditionMonPicTemplate(struct SpriteSheet *sheet, struct SpriteTemplat
     *pal = dataPal;
 }
 
-void LoadConditionSelectionIcons(struct SpriteSheet *sheets, struct SpriteTemplate *template, struct SpritePalette *pals)
-{
-    u8 i;
-
-    struct SpriteSheet dataSheets[] =
-    {
-        {sConditionPokeball_Gfx, 0x100, TAG_CONDITION_BALL},
-        {sConditionPokeballPlaceholder_Gfx, 0x20, TAG_CONDITION_BALL_PLACEHOLDER},
-        {gPokenavConditionCancel_Gfx, 0x100, TAG_CONDITION_CANCEL},
-        {},
-    };
-
-    struct SpritePalette dataPals[] =
-    {
-        {gPokenavConditionCancel_Pal, TAG_CONDITION_BALL},
-        {gPokenavConditionCancel_Pal + 16, TAG_CONDITION_CANCEL},
-        {},
-    };
-
-    // Tag is overwritten for the other selection icons
-    struct SpriteTemplate dataTemplate =
-    {
-        .tileTag = TAG_CONDITION_BALL,
-        .paletteTag = TAG_CONDITION_BALL,
-        .oam = &sOam_ConditionSelectionIcon,
-        .anims = sAnims_ConditionSelectionIcon,
-    };
-
-    for (i = 0; i < ARRAY_COUNT(dataSheets); i++)
-        *(sheets++) = dataSheets[i];
-
-    *template = dataTemplate;
-
-    for (i = 0; i < ARRAY_COUNT(dataPals); i++)
-        *(pals++) = dataPals[i];
-}
-
 #define sSparkleId           data[0]
 #define sDelayTimer          data[1]
 #define sNumExtraSparkles    data[2]
 #define sCurSparkleId        data[3]
 #define sMonSpriteId         data[4]
 #define sNextSparkleSpriteId data[5]
+
+// Original HGSS summary star, shared by Condition detail and Pokéblock results.
+void LoadHgssConditionSparkle(struct SpriteSheet *sheet, struct SpritePalette *pal)
+{
+    static const u32 tiles[] = INCBIN_U32("graphics/gen4_ui/hgss_condition/sheen_stars.4bpp");
+    static const u16 colors[] = INCGFX_U16("graphics/gen4_ui/hgss_storage/verified/shiny_star.png", ".gbapal");
+    *sheet = (struct SpriteSheet){tiles, sizeof(tiles), TAG_CONDITION_SPARKLE};
+    *pal = (struct SpritePalette){colors, TAG_CONDITION_SPARKLE};
+}
+
+void CreateHgssConditionSparkleSprites(struct Sprite **sprites, u8 monSpriteId, u8 count)
+{
+    // Keep all ten unscaled stars inside the 80 x 88 portrait card.
+    static const s8 offsets[MAX_CONDITION_SPARKLES][2] =
+        {{0, 2}, {0, 0}, {-3, 0}, {-3, 0}, {0, 0}, {0, -2}, {0, 0}, {3, 0}, {3, 0}, {0, 0}};
+    CreateConditionSparkleSprites(sprites, monSpriteId, count);
+    for (u32 i = 0; i < MAX_CONDITION_SPARKLES && sprites[i] != NULL; i++)
+    {
+        sprites[i]->x2 = offsets[i][0];
+        sprites[i]->y2 = offsets[i][1];
+    }
+}
 
 void LoadConditionSparkle(struct SpriteSheet *sheet, struct SpritePalette *pal)
 {

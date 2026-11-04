@@ -1,0 +1,21 @@
+{
+  "source": "../hgss_ribbons/summary_bg.source.json",
+  "source_manifest_sha256": "3659000052c1ca6fbe1a5d7441929d292ed35842c3777cae637f5639b367e265",
+  "adaptation": "Original party-card corners, edges and interiors; complete 8x8 cells, native colors, no repainting or scaling",
+  "footer_tiles": [
+    30,
+    4
+  ],
+  "confirmation_tiles": [
+    8,
+    6
+  ],
+  "palette_bank": 1,
+  "background": "../hgss_condition/source.json",
+  "sheen": "../hgss_storage/verified/shiny_indicator.json",
+  "indicators": "Original HGSS Pok\u00e9dex list arrows and pointer, via make_hgss_pokegear_list_arrows.py",
+  "outputs": {
+    "footer.4bpp": "c477f64a4d44296062300ba8a368de8f64a538d351de155a7769a2dcdffc1dbb",
+    "confirmation.4bpp": "7b52508d5723fd0e771ee027115319baac39ed6a8d1ddc56694eb55a708c15d0"
+  }
+}

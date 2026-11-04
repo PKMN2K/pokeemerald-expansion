@@ -59,6 +59,7 @@
   - [How to use the Dynamic Multichoice](tutorials/how_to_dynmultichoice.md)
   - [HGSS Condition search visual acceptance](gen4_ui/hgss_condition_search_visual_qa.md)
   - [HGSS Condition detail visual acceptance](gen4_ui/hgss_condition_graph_visual_qa.md)
+  - [HGSS Pokéblock recipient and results acceptance](gen4_ui/hgss_pokeblock_use_visual_qa.md)
   - [HGSS ribbon grid visual acceptance](gen4_ui/hgss_ribbon_visual_qa.md)
   - [HGSS ribbon background source trace](gen4_ui/hgss_ribbon_bg_trace.md)
 - [Changelog](./CHANGELOG.md)
