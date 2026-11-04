@@ -649,3 +649,4 @@ const u32 gObjectEventPic_PolishedChild[] = INCGFX_U32("graphics/object_events/p
 const u16 gObjectEventPal_PolishedNpcBlue[] = INCBIN_U16("graphics/object_events/polished_npc_palettes/blue.bin");
 const u16 gObjectEventPal_PolishedNpcGreen[] = INCBIN_U16("graphics/object_events/polished_npc_palettes/green.bin");
 const u16 gObjectEventPal_PolishedNpcBrown[] = INCBIN_U16("graphics/object_events/polished_npc_palettes/brown.bin");
+const u32 gObjectEventPic_PolishedRival[] = INCGFX_U32("graphics/object_events/polished_rival/walking.png", ".4bpp", "-mwidth 2 -mheight 4");

@@ -45,13 +45,16 @@
 #define TEMP_FLAGS_END   FLAG_TEMP_1F
 #define NUM_TEMP_FLAGS   (TEMP_FLAGS_END - TEMP_FLAGS_START + 1)
 
+// Polished Crystal EVENT_RIVAL_NEW_BARK_TOWN. This slot was unused in both
+// Emerald and FRLG; keep it persistent without growing or shifting save data.
+#define FLAG_HIDE_POLISHED_NEW_BARK_RIVAL 0x20
+
 #if IS_FRLG
 
 #include "constants/flags_frlg.h"
 
 #else
 
-#define FLAG_UNUSED_0x020    0x20 // Unused Flag
 #define FLAG_UNUSED_0x021    0x21 // Unused Flag
 #define FLAG_UNUSED_0x022    0x22 // Unused Flag
 #define FLAG_UNUSED_0x023    0x23 // Unused Flag

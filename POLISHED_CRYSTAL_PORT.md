@@ -166,7 +166,38 @@ and walking bounds, verifies outdoor period colors and indoor daytime colors,
 checks both schedules around all four source time boundaries and midnight, and
 tests native Save/reset/Continue with visibility changes in both directions.
 The source schoolboy's Pokégear dialogue is retained; it does not add Pokégear
-functionality. The story-dependent cast and opening sequence remain pending.
+functionality. The remaining story-dependent cast and main opening sequence
+remain pending.
+
+### Rival at Elm's lab window
+
+The first New Bark rival encounter is live at the original `(3,2)` window
+position, with the pinned Rival walking sheet and source red time palettes.
+The map permits only the original west approach at `(2,2)`. Both source text
+passages play in order: the rival initially watches the window, then turns
+toward the player before the shove.
+
+The player faces north, backs down one cell to `(2,3)`, and jumps two cells to
+`(2,5)` without turning around. The rival moves left into the vacated cell,
+faces down, and returns right to `(3,2)`. Crystal's `jump_step_down` performs
+both a jump and a landing step, so the port uses native `jump_2_down`, not a
+one-cell hop. The short source follow sequence is expressed as two simultaneous
+scripted movements; it does not replace the global follower. `SFX_TACKLE` maps
+to Expansion's own Tackle impact, `SE_M_COMET_PUNCH`.
+
+`FLAG_HIDE_POLISHED_NEW_BARK_RIVAL` reserves previously unused persistent bit
+`0x20` in both Emerald and FRLG without changing save size or existing IDs.
+It corresponds to source `EVENT_RIVAL_NEW_BARK_TOWN`. The source setter during
+the Mystery Egg visit at Mr. Pokémon's house is still pending, so the rival
+remains visible and the window encounter repeats in this demo.
+
+The real-input emulator suite verifies the two exact dialogue buffers, all
+four source sprite palettes, intermediate positions/facings, jump height,
+native impact playback, input locking and control restoration. It repeats the
+scene immediately, after leaving/re-entering town, after native Save/Continue,
+and while riding the demo's Mach Bike. Frame traces and screenshots accompany
+the validation report. Elm/Lyra's introduction, starter selection, Mom's events
+and later rival progression are separate unfinished phases.
 
 The playable visual slice and dormant Headbutt encounter selection are complete
 parts of the port. **The whole Polished Crystal migration is not complete.**

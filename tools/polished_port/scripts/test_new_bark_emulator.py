@@ -156,6 +156,7 @@ def close_resident_dialogue(game):
 
 
 def save_game(game):
+    save_counter = game.u32(game.sym["gSaveCounter"])
     game.press(START, 40)
     count = game.read(game.sym["sNumStartMenuActions"], 1)[0]
     actions = game.read(game.sym["sCurrentStartMenuActions"], count)
@@ -170,8 +171,23 @@ def save_game(game):
     else:
         raise AssertionError("Save menu entry not found")
     game.press(A, 100)
-    for _ in range(8):
-        game.press(A, 120)
+    # Follow live save callbacks, explicitly choose YES on either confirmation
+    # prompt, and require an actual successful save rather than a fixed wait.
+    for _ in range(180):
+        callback = game.u32(game.sym["sSaveDialogCallback"]) & ~1
+        if callback in (game.sym["SaveConfirmInputCallback"], game.sym["SaveOverwriteInputCallback"]):
+            game.press(UP, 12)
+            game.press(A, 30)
+        elif callback == game.sym["SaveReturnSuccessCallback"]:
+            game.press(A, 120)
+            break
+        elif callback in (game.sym["SaveErrorCallback"], game.sym["SaveReturnErrorCallback"]):
+            raise AssertionError("Native save reported an error")
+        else:
+            game.frames(20)
+    else:
+        raise AssertionError("Native save did not report success")
+    assert game.u32(game.sym["gSaveCounter"]) != save_counter, "Native save counter did not advance"
     game.press(B, 40)
     game.screenshot("resident-save")
 
@@ -267,7 +283,7 @@ def check_residents(game, maps, rows, checks):
     save_game(game)
     game.set_hour(10)
     continue_game(game)
-    assert game.map_number() == saved_map and game.position() == saved_position
+    assert game.map_number() == saved_map and game.position() == saved_position, (saved_map, saved_position, game.map_number(), game.position())
     assert husband not in actors(game), "saved evening resident survived a daytime Continue"
     save_game(game)
     game.set_hour(23)
@@ -275,6 +291,107 @@ def check_residents(game, maps, rows, checks):
     assert game.map_number() == saved_map and game.position() == saved_position
     assert husband in actors(game), "saved hidden resident did not return on a nighttime Continue"
     checks.append("native Save/reset/Continue reconciles resident visibility in both directions")
+
+
+def player_state(game):
+    index = game.read(game.sym["gPlayerAvatar"] + 5, 1)[0]
+    raw = game.read(game.sym["gObjectEvents"] + index * 36, 36)
+    return {"position": list(game.position()), "direction": raw[0x18] & 15,
+        "facing_locked": bool(raw[1] & 2), "frozen": bool(raw[1] & 1),
+        "jump_height": struct.unpack("<h", game.read(game.sym["gSprites"] + raw[0x23] * 68 + 38, 2))[0]}
+
+
+def rival_encounter(game, town, local_id, name):
+    prefix = "PolishedNewBarkTown_Rival"
+    text1 = game.read(game.sym[prefix + "_Text1"], 256).split(b"\xff", 1)[0] + b"\xff"
+    text2 = game.read(game.sym[prefix + "_Text2"], 256).split(b"\xff", 1)[0] + b"\xff"
+    assert game.position() == (2, 2) and actors(game)[local_id]["position"] == (3, 2)
+    assert actors(game)[local_id]["direction"] == 4  # Still watching the window.
+    game.face(RIGHT)
+    game.press(A, 240)
+    assert game.read(game.sym["gStringVar4"], len(text1)) == text1
+    assert actors(game)[local_id]["direction"] == 4
+    game.press(A, 240)
+    game.screenshot(name + "-watching")
+    for _ in range(16):
+        if game.read(game.sym["gStringVar4"], len(text2)) == text2:
+            break
+        game.press(A, 80)
+    else:
+        raise AssertionError("Rival never delivered the second source text")
+    game.frames(240)
+    assert game.position() == (2, 2) and actors(game)[local_id]["direction"] == 3
+    game.screenshot(name + "-response")
+    sound = int(re.search(r"#define SE_M_COMET_PUNCH\s+(\d+)", (ROOT / "include/constants/songs.h").read_text())[1])
+    header = game.u32(game.sym["gSongTable"] + sound * 8)
+    game.frames(1, A)
+    trace, impact, shot = [], False, False
+    for frame in range(360):
+        state = player_state(game)
+        npc = actors(game)[local_id]
+        state.update({"frame": frame, "rival_position": list(npc["position"]), "rival_direction": npc["direction"]})
+        trace.append(state)
+        if state["facing_locked"]:
+            assert state["direction"] == 2, state  # Backwards motion faces north.
+        for player in ("gMPlayInfo_SE1", "gMPlayInfo_SE2"):
+            song, status = struct.unpack("<II", game.read(game.sym[player], 8))
+            impact |= song == header and bool(status & 0xFFFF) and not status & 0x80000000
+        if state["jump_height"] < 0 and not shot:
+            game.screenshot(name + "-shove")
+            shot = True
+        if game.read(game.sym["sGlobalScriptContext"] + 1, 1) == b"\0":
+            break
+        # Conflicting movement/menu inputs must not interrupt the cutscene.
+        game.frames(1, LEFT | DOWN | B | START)
+    else:
+        raise AssertionError("Rival shove never released script control")
+    game.frames(2)
+    assert game.position() == (2, 5), trace[-1]
+    assert actors(game)[local_id]["position"] == (3, 2) and actors(game)[local_id]["direction"] == 4
+    assert any(row["position"] == [2, 3] for row in trace)
+    assert any(row["rival_position"] == [2, 2] for row in trace)
+    assert shot and impact, ("jump/impact not observed", shot, impact)
+    state = player_state(game)
+    assert not state["facing_locked"] and not state["frozen"] and state["jump_height"] == 0, state
+    game.step(RIGHT)
+    assert player_state(game)["direction"] == 4
+    (game.output / (name + "-trace.json")).write_text(json.dumps(trace, indent=2) + "\n")
+    print("PASS: rival encounter", name, flush=True)
+
+
+def check_rival(game, maps, rows, checks):
+    town, lab = maps["PolishedNewBarkTown"], maps["PolishedElmsLab"]
+    local_id = resident_id(town, "LOCALID_NEW_BARK_RIVAL")
+    game.restore("PolishedNewBarkTown")
+    walk(game, town, (2, 2))
+    npc = actors(game)[local_id]
+    assert game.u32(game.sym["gObjectEventGraphicsInfoPointers"] + npc["graphics"] * 4) == game.sym["gObjectEventGraphicsInfo_PolishedRival"]
+    for hour, period in ((7, "morn"), (10, "day"), (19, "eve"), (23, "nite")):
+        game.set_hour(hour)
+        check_resident_palette(game, town, local_id, 0, period, rows)
+    rival_encounter(game, town, local_id, "rival-first")
+    walk(game, town, (2, 2))
+    rival_encounter(game, town, local_id, "rival-repeat")
+    travel(game, town, lab)
+    travel(game, lab, town)
+    walk(game, town, (2, 2))
+    rival_encounter(game, town, local_id, "rival-reentered")
+    saved_map, saved_position = game.map_number(), game.position()
+    save_game(game)
+    continue_game(game)
+    assert game.map_number() == saved_map and game.position() == saved_position, (saved_map, saved_position, game.map_number(), game.position())
+    walk(game, town, (2, 2))
+    rival_encounter(game, town, local_id, "rival-after-continue")
+    walk(game, town, (2, 2))
+    game.use_key_item(1)  # The demo supplies a Mach Bike before story progression.
+    game.wait_player_images("sPicTable_PolishedChrisBike")
+    rival_encounter(game, town, local_id, "rival-on-bike")
+    assert game.read(game.sym["gPlayerAvatar"], 1)[0] & 2
+    game.use_key_item(1)
+    game.wait_player_images("sPicTable_PolishedChrisNormal")
+    checks.append("rival uses authentic artwork and all four source palettes, with both source dialogue passages")
+    checks.append("rival shove preserves north-facing backwards motion, a two-cell jump, impact sound and the source return path")
+    checks.append("rival encounter ignores stray input, releases movement/facing locks, repeats after reentry and Save/Continue, and preserves bike state")
 
 
 def run(args):
@@ -395,6 +512,7 @@ def run(args):
             assert game.read(game.sym["sGlobalScriptContext"] + 1, 1) == b"\0"
             checks.append("Elm's healing machine accepts the native healing interaction")
             check_residents(game, maps, rows, checks)
+            check_rival(game, maps, rows, checks)
             game.restore("PolishedNewBarkTown")
             walk(game, town, (6, 9))
             game.face(UP)

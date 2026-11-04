@@ -171,6 +171,11 @@
       "path": "engine/overworld/map_setup.asm",
       "fixture": "engine__overworld__map_setup.asm.b64",
       "git_blob_sha1": "0c64733c0ab2086b1f157bb669cb3c068f44b040"
+    },
+    {
+      "path": "gfx/sprites/rival.png",
+      "fixture": "gfx__sprites__rival.png.b64",
+      "git_blob_sha1": "4931317a7b521f9664bb8c320046113d5adf38f9"
     }
   ]
 }

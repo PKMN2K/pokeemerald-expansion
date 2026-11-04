@@ -2,7 +2,7 @@
 #define GUARD_CONSTANTS_FLAGS_FRLG_H
 
 
-#define FLAG_0x020               0x020
+// 0x020 is FLAG_HIDE_POLISHED_NEW_BARK_RIVAL, shared in flags.h.
 #define FLAG_0x021               0x021
 #define FLAG_0x022               0x022
 #define FLAG_0x023               0x023

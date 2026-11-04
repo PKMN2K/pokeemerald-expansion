@@ -56,6 +56,20 @@
       "trainer_sight_or_berry_tree_id": "0",
       "script": "PolishedNewBarkTown_Text_GearIsImpressive",
       "flag": "FLAG_TEMP_1"
+    },
+    {
+      "local_id": "LOCALID_NEW_BARK_RIVAL",
+      "graphics_id": "OBJ_EVENT_GFX_POLISHED_RIVAL",
+      "x": 3,
+      "y": 2,
+      "elevation": 3,
+      "movement_type": "MOVEMENT_TYPE_FACE_RIGHT",
+      "movement_range_x": 0,
+      "movement_range_y": 0,
+      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_sight_or_berry_tree_id": "0",
+      "script": "PolishedNewBarkTown_Rival",
+      "flag": "FLAG_HIDE_POLISHED_NEW_BARK_RIVAL"
     }
   ],
   "warp_events": [

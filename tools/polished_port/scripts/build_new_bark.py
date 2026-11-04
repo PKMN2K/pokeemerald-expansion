@@ -2,8 +2,9 @@
 """Reproduce New Bark Town's source geography and all seven connected interiors.
 
 This imports map blocks, door/stair coordinates, reading interactions and the
-six ambient residents. Story scenes, story-dependent NPCs, item events and room
-decorations are separate work. Route 29/27 connections await those maps.
+six ambient residents and the rival's lab-window encounter. Further story
+scenes, item events and room decorations are separate work. Route 29/27
+connections await those maps.
 """
 import argparse
 import base64
@@ -196,11 +197,86 @@ def resident_assets(files):
             *([0] * 12)) for period in range(4))
     with tempfile.TemporaryDirectory() as tmp:
         inp, out = Path(tmp) / "npc.png", Path(tmp) / "walking.png"
-        for sprite in ("fat_guy", "schoolboy", "battle_girl", "child"):
+        for sprite in ("fat_guy", "schoolboy", "battle_girl", "child", "rival"):
             inp.write_bytes(files[f"gfx/sprites/{sprite}.png"])
             convert_npc(inp, out)
             products[f"graphics/object_events/polished_{sprite}/walking.png"] = out.read_bytes()
     return products
+
+
+def rival_scene(script, files):
+    fields = next([part.strip() for part in line.split(",")]
+        for line in re.findall(r"^\s*object_event (.*)$", script, re.M)
+        if ", NewBarkTownRivalScript," in line)
+    assert fields == ["3", "2", "SPRITE_RIVAL", "SPRITEMOVEDATA_STANDING_RIGHT", "0", "0", "-1", "0",
+                      "OBJECTTYPE_SCRIPT", "0", "NewBarkTownRivalScript", "EVENT_RIVAL_NEW_BARK_TOWN"]
+    assert "RivalSpriteGFX, WALKING_SPRITE, PAL_OW_RED" in files["data/sprites/sprites.asm"].decode()
+    prefix = "PolishedNewBarkTown_Rival"
+    obj = {"local_id": "LOCALID_NEW_BARK_RIVAL", "graphics_id": "OBJ_EVENT_GFX_POLISHED_RIVAL",
+        "x": int(fields[0]), "y": int(fields[1]), "elevation": 3,
+        "movement_type": "MOVEMENT_TYPE_FACE_RIGHT", "movement_range_x": 0, "movement_range_y": 0,
+        "trainer_type": "TRAINER_TYPE_NONE", "trainer_sight_or_berry_tree_id": "0",
+        "script": prefix, "flag": "FLAG_HIDE_POLISHED_NEW_BARK_RIVAL"}
+    code = f"""@ The west approach (2,2) is the only walkable adjacent tile.
+@ Source follow queues one left step into the player's vacated cell; express
+@ those two simultaneous moves directly without replacing any global follower.
+@ Crystal jump_step_down travels TWO cells (Jump and Land), hence jump_2_down.
+{prefix}::
+\tlockall
+\tmsgbox {prefix}_Text1, MSGBOX_DEFAULT
+\tclosemessage
+\tapplymovement LOCALID_NEW_BARK_RIVAL, {prefix}_FaceLeft
+\twaitmovement LOCALID_NEW_BARK_RIVAL
+\tmsgbox {prefix}_Text2, MSGBOX_DEFAULT
+\tclosemessage
+\tapplymovement OBJ_EVENT_ID_PLAYER, {prefix}_BackStep
+\tapplymovement LOCALID_NEW_BARK_RIVAL, {prefix}_StepLeft
+\twaitmovement OBJ_EVENT_ID_PLAYER
+\twaitmovement LOCALID_NEW_BARK_RIVAL
+\tdelay 5
+\tapplymovement LOCALID_NEW_BARK_RIVAL, {prefix}_FaceDown
+\twaitmovement LOCALID_NEW_BARK_RIVAL
+\tdelay 5
+@ Expansion's native Tackle impact (gBattleAnimMove_Tackle).
+\tplayse SE_M_COMET_PUNCH
+\tapplymovement OBJ_EVENT_ID_PLAYER, {prefix}_Shove
+\twaitmovement OBJ_EVENT_ID_PLAYER
+\tapplymovement LOCALID_NEW_BARK_RIVAL, {prefix}_Return
+\twaitmovement LOCALID_NEW_BARK_RIVAL
+\treleaseall
+\tend
+
+{prefix}_FaceLeft:
+\tface_left
+\tstep_end
+{prefix}_FaceDown:
+\tface_down
+\tstep_end
+{prefix}_BackStep:
+\tface_up
+\tlock_facing_direction
+\twalk_down
+\tstep_end
+{prefix}_StepLeft:
+\twalk_left
+\tstep_end
+{prefix}_Shove:
+\tjump_2_down
+\tunlock_facing_direction
+\tstep_end
+{prefix}_Return:
+\twalk_right
+\tstep_end
+
+"""
+    for number in (1, 2):
+        code += text_definition(prefix + f"_Text{number}", source_text(script, f"NewBarkTownRivalText{number}"))
+    report = {"source_script": "NewBarkTownRivalScript", "source_sprite": "SPRITE_RIVAL", "source_palette": "RED",
+        "source_visibility_event": fields[-1], "visibility_flag": obj["flag"],
+        "visibility_setter_pending": "maps/MrPokemonsHouse.asm (Mystery Egg visit)", "event": obj,
+        "player_path": [[2, 2], [2, 3], [2, 5]], "rival_path": [[3, 2], [2, 2], [3, 2]],
+        "sound_translation": {"SFX_TACKLE": "SE_M_COMET_PUNCH"}}
+    return obj, code, report
 
 
 def map_header(name, constant, width, height, script, files):
@@ -274,7 +350,14 @@ def map_header(name, constant, width, height, script, files):
 """
         code += text_definition(prefix + "_HealText", source_text(script, "ElmsLabHealingMachineText2"))
     header["object_events"].extend(objects)
-    return header, ((code + resident_code).rstrip() + "\n").encode(), resident_info
+    code += resident_code
+    story = []
+    if name == "NewBarkTown":
+        obj, scene, report = rival_scene(script, files)
+        header["object_events"].append(obj)  # Preserve all existing local IDs.
+        code += scene
+        story.append(report)
+    return header, (code.rstrip() + "\n").encode(), resident_info, story
 
 
 def generate():
@@ -319,7 +402,7 @@ def generate():
         prefix = "Polished" + name
         products[f"data/layouts/{prefix}/map.bin"] = raw
         products[f"data/layouts/{prefix}/border.bin"] = border_raw
-        header, script, resident_info = map_header(name, constant, width * 2, height * 2, files[f"maps/{name}.asm"].decode(), files)
+        header, script, resident_info, story = map_header(name, constant, width * 2, height * 2, files[f"maps/{name}.asm"].decode(), files)
         products[f"data/maps/{prefix}/map.json"] = json_bytes(header)
         products[f"data/maps/{prefix}/scripts.inc"] = script
         tileset = "PolishedNewBark" + bank
@@ -330,7 +413,13 @@ def generate():
         maps[constant] = {"name": name, "width": width * 2, "height": height * 2, "tileset": bank,
             "source_blocks": source_layout, "used_metatiles": sorted(used | border_used),
             "warps": header["warp_events"], "static_interactions": len(header["bg_events"]),
-            "residents": resident_info}
+            "residents": resident_info, "story_encounters": story}
+        if story:
+            cells = struct.unpack(f"<{len(raw) // 2}H", raw)
+            def walkable(x, y):
+                return not cells[y * width * 2 + x] & 0xC00 and cells[y * width * 2 + x] >> 12 == 3
+            assert walkable(2, 2) and not any(walkable(x, y) for x, y in ((3, 1), (4, 2), (3, 3)))
+            assert all(walkable(x, y) for x, y in ((2, 3), (2, 4), (2, 5), (3, 2)))
     # Validate all source warp indexes against their actual destination, never
     # merely against an unrelated Emerald map with a matching numeric ID.
     for constant, info in maps.items():
@@ -369,7 +458,7 @@ def generate():
 
 """
     products["src/data/tilesets/polished_new_bark.h"] = (header_text.rstrip() + "\n").encode()
-    report = {"source_commit": PIN, "scope": "source geography, connected interiors, static interactions and six ambient residents; story-dependent cast deferred",
+    report = {"source_commit": PIN, "scope": "source geography, connected interiors, static interactions, six ambient residents and the rival's lab-window encounter; further story progression deferred",
         "maps": maps, "layouts": layouts, "output_sha256": {p: hashlib.sha256(raw).hexdigest() for p, raw in products.items()}}
     products["tools/polished_port/manifests/new_bark.json"] = json_bytes(report)
     return products

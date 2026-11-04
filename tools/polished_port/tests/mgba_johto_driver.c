@@ -3,6 +3,9 @@
 #include <mgba/core/core.h>
 #include <mgba/core/config.h>
 #include <mgba/core/log.h>
+#include <mgba/core/serialize.h>
+#include <mgba-util/vfs.h>
+#include <fcntl.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -79,26 +82,23 @@ int main(int argc, char **argv)
         }
         else if (sscanf(command, "save %799s", path) == 1)
         {
-            void *state = malloc(core->stateSize(core));
-            FILE *file = fopen(path, "wb");
-            if (!state || !file || !core->saveState(core, state))
+            struct VFile *file = VFileOpen(path, O_CREAT | O_TRUNC | O_RDWR);
+            // Save slots and the RAM save counter must travel together.
+            // Raw core states omit cartridge flash; restoring one after a
+            // native save can otherwise make Continue pick the wrong slot.
+            if (!file || !mCoreSaveStateNamed(core, file, SAVESTATE_SAVEDATA))
                 return 5;
-            if (fwrite(state, 1, core->stateSize(core), file) != core->stateSize(core))
+            if (!file->close(file))
                 return 6;
-            fclose(file);
-            free(state);
             puts("save");
         }
         else if (sscanf(command, "load %799s", path) == 1)
         {
-            void *state = malloc(core->stateSize(core));
-            FILE *file = fopen(path, "rb");
-            if (!state || !file || fread(state, 1, core->stateSize(core), file) != core->stateSize(core))
+            struct VFile *file = VFileOpen(path, O_RDONLY);
+            if (!file || !mCoreLoadStateNamed(core, file, SAVESTATE_SAVEDATA))
                 return 7;
-            fclose(file);
-            if (!core->loadState(core, state))
+            if (!file->close(file))
                 return 8;
-            free(state);
             puts("load");
         }
         else if (!strcmp(command, "reset\n"))

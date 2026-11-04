@@ -85,3 +85,60 @@ PolishedNewBarkTown_Text_GearIsImpressive::
 
 PolishedNewBarkTown_Text_GearIsImpressive_Text:
 	.string "Wow, your POKégear\nis impressive!\pDid your mom get\nit for you?$"
+
+@ The west approach (2,2) is the only walkable adjacent tile.
+@ Source follow queues one left step into the player's vacated cell; express
+@ those two simultaneous moves directly without replacing any global follower.
+@ Crystal jump_step_down travels TWO cells (Jump and Land), hence jump_2_down.
+PolishedNewBarkTown_Rival::
+	lockall
+	msgbox PolishedNewBarkTown_Rival_Text1, MSGBOX_DEFAULT
+	closemessage
+	applymovement LOCALID_NEW_BARK_RIVAL, PolishedNewBarkTown_Rival_FaceLeft
+	waitmovement LOCALID_NEW_BARK_RIVAL
+	msgbox PolishedNewBarkTown_Rival_Text2, MSGBOX_DEFAULT
+	closemessage
+	applymovement OBJ_EVENT_ID_PLAYER, PolishedNewBarkTown_Rival_BackStep
+	applymovement LOCALID_NEW_BARK_RIVAL, PolishedNewBarkTown_Rival_StepLeft
+	waitmovement OBJ_EVENT_ID_PLAYER
+	waitmovement LOCALID_NEW_BARK_RIVAL
+	delay 5
+	applymovement LOCALID_NEW_BARK_RIVAL, PolishedNewBarkTown_Rival_FaceDown
+	waitmovement LOCALID_NEW_BARK_RIVAL
+	delay 5
+@ Expansion's native Tackle impact (gBattleAnimMove_Tackle).
+	playse SE_M_COMET_PUNCH
+	applymovement OBJ_EVENT_ID_PLAYER, PolishedNewBarkTown_Rival_Shove
+	waitmovement OBJ_EVENT_ID_PLAYER
+	applymovement LOCALID_NEW_BARK_RIVAL, PolishedNewBarkTown_Rival_Return
+	waitmovement LOCALID_NEW_BARK_RIVAL
+	releaseall
+	end
+
+PolishedNewBarkTown_Rival_FaceLeft:
+	face_left
+	step_end
+PolishedNewBarkTown_Rival_FaceDown:
+	face_down
+	step_end
+PolishedNewBarkTown_Rival_BackStep:
+	face_up
+	lock_facing_direction
+	walk_down
+	step_end
+PolishedNewBarkTown_Rival_StepLeft:
+	walk_left
+	step_end
+PolishedNewBarkTown_Rival_Shove:
+	jump_2_down
+	unlock_facing_direction
+	step_end
+PolishedNewBarkTown_Rival_Return:
+	walk_right
+	step_end
+
+PolishedNewBarkTown_Rival_Text1:
+	.string "……\pSo this is the\nfamous Elm POKéMON\lLab…$"
+
+PolishedNewBarkTown_Rival_Text2:
+	.string "…What are you\nstaring at?$"

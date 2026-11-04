@@ -1,6 +1,6 @@
 {
   "source_commit": "3fa43192379df5c3e7b09a08e4d5d79af4f02f42",
-  "scope": "source geography, connected interiors, static interactions and six ambient residents; story-dependent cast deferred",
+  "scope": "source geography, connected interiors, static interactions, six ambient residents and the rival's lab-window encounter; further story progression deferred",
   "maps": {
     "NEW_BARK_TOWN": {
       "name": "NewBarkTown",
@@ -181,6 +181,61 @@
             "flag": "FLAG_TEMP_1"
           }
         }
+      ],
+      "story_encounters": [
+        {
+          "source_script": "NewBarkTownRivalScript",
+          "source_sprite": "SPRITE_RIVAL",
+          "source_palette": "RED",
+          "source_visibility_event": "EVENT_RIVAL_NEW_BARK_TOWN",
+          "visibility_flag": "FLAG_HIDE_POLISHED_NEW_BARK_RIVAL",
+          "visibility_setter_pending": "maps/MrPokemonsHouse.asm (Mystery Egg visit)",
+          "event": {
+            "local_id": "LOCALID_NEW_BARK_RIVAL",
+            "graphics_id": "OBJ_EVENT_GFX_POLISHED_RIVAL",
+            "x": 3,
+            "y": 2,
+            "elevation": 3,
+            "movement_type": "MOVEMENT_TYPE_FACE_RIGHT",
+            "movement_range_x": 0,
+            "movement_range_y": 0,
+            "trainer_type": "TRAINER_TYPE_NONE",
+            "trainer_sight_or_berry_tree_id": "0",
+            "script": "PolishedNewBarkTown_Rival",
+            "flag": "FLAG_HIDE_POLISHED_NEW_BARK_RIVAL"
+          },
+          "player_path": [
+            [
+              2,
+              2
+            ],
+            [
+              2,
+              3
+            ],
+            [
+              2,
+              5
+            ]
+          ],
+          "rival_path": [
+            [
+              3,
+              2
+            ],
+            [
+              2,
+              2
+            ],
+            [
+              3,
+              2
+            ]
+          ],
+          "sound_translation": {
+            "SFX_TACKLE": "SE_M_COMET_PUNCH"
+          }
+        }
       ]
     },
     "ELMS_LAB": {
@@ -264,7 +319,8 @@
         }
       ],
       "static_interactions": 6,
-      "residents": []
+      "residents": [],
+      "story_encounters": []
     },
     "PLAYERS_HOUSE_1F": {
       "name": "PlayersHouse1F",
@@ -390,7 +446,8 @@
         }
       ],
       "static_interactions": 4,
-      "residents": []
+      "residents": [],
+      "story_encounters": []
     },
     "PLAYERS_HOUSE_2F": {
       "name": "PlayersHouse2F",
@@ -442,7 +499,8 @@
         }
       ],
       "static_interactions": 0,
-      "residents": []
+      "residents": [],
+      "story_encounters": []
     },
     "PLAYERS_NEIGHBORS_HOUSE": {
       "name": "PlayersNeighborsHouse",
@@ -582,7 +640,8 @@
             "flag": "FLAG_TEMP_1"
           }
         }
-      ]
+      ],
+      "story_encounters": []
     },
     "LYRAS_HOUSE_1F": {
       "name": "LyrasHouse1F",
@@ -708,7 +767,8 @@
         }
       ],
       "static_interactions": 4,
-      "residents": []
+      "residents": [],
+      "story_encounters": []
     },
     "LYRAS_HOUSE_2F": {
       "name": "LyrasHouse2F",
@@ -768,7 +828,8 @@
         }
       ],
       "static_interactions": 1,
-      "residents": []
+      "residents": [],
+      "story_encounters": []
     },
     "ELMS_HOUSE": {
       "name": "ElmsHouse",
@@ -904,7 +965,8 @@
             "flag": "0"
           }
         }
-      ]
+      ],
+      "story_encounters": []
     }
   },
   "layouts": [
@@ -1008,10 +1070,11 @@
     "graphics/object_events/polished_schoolboy/walking.png": "aa15916926e8e2fa77a6dd3a4d8a4a2a294f3df7bffca000bf36d489b608497b",
     "graphics/object_events/polished_battle_girl/walking.png": "cb6843e84c7b9b5f6d6ea69717aa54f3841ff837cd1c93f51b0515cfe469cb02",
     "graphics/object_events/polished_child/walking.png": "5d207fa020abf4a5d96b2fe62529b08f019f452878e9d6c4a124da0e2ad4f050",
+    "graphics/object_events/polished_rival/walking.png": "550b7d2da34033dfdd3d1573bfca9da8c20d0c7cf117ee1f5831b416fdade70b",
     "data/layouts/PolishedNewBarkTown/map.bin": "0cfa1f14ae1edc366416d1cb39410cc6fa621759dad4eb7aa1c9eb0007a919c3",
     "data/layouts/PolishedNewBarkTown/border.bin": "310f01837605c39f0e0a084ab8e536b47e44c21cab74534066b2413ce33f2119",
-    "data/maps/PolishedNewBarkTown/map.json": "365e0b0fe261054848319980196651df91e07b066a48cde6a667d882a93a6ed1",
-    "data/maps/PolishedNewBarkTown/scripts.inc": "134cbff8d849a9774333ee59a0915a2a39d22edad9db969249fdee731d038771",
+    "data/maps/PolishedNewBarkTown/map.json": "1ee357c6b1d0e08fc50013b1be9c174b2959d561207154a15944ce23896b526a",
+    "data/maps/PolishedNewBarkTown/scripts.inc": "308cf3d46467634befd3228da5e78f795809fde968dc145326cb410b57a5b658",
     "data/layouts/PolishedElmsLab/map.bin": "edcb44c979918661055b6aef0e304340121f55a0ad53d73d592ab07ba797a681",
     "data/layouts/PolishedElmsLab/border.bin": "58b6ce2870c231fbe07a763ac9c4dc612e669cfbebfb93760435a9dbbdced76e",
     "data/maps/PolishedElmsLab/map.json": "a8053948e3e4e28b3c52e6191c4f8fc002272ec314a24e703803b958a43ec1a4",
