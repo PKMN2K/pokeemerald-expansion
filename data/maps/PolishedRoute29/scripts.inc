@@ -234,9 +234,9 @@ PolishedDeparture_Full::
 PolishedDeparture_Tuscany::
     lock
     faceplayer
+    goto_if_set FLAG_POLISHED_TUSCANY_SILK_SCARF, PolishedDeparture_TuesdayAgain
     specialvar VAR_RESULT, PolishedJohtoGetWeekday
     goto_if_ne VAR_RESULT, 2, PolishedDeparture_WrongDay
-    goto_if_set FLAG_POLISHED_TUSCANY_SILK_SCARF, PolishedDeparture_TuesdayAgain
     goto_if_set FLAG_POLISHED_MET_TUSCANY, PolishedDeparture_Scarf
     msgbox PolishedDeparture_MeetTuscanyText, MSGBOX_DEFAULT
     setflag FLAG_POLISHED_MET_TUSCANY

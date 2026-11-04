@@ -243,6 +243,17 @@ def check_departure(game,town,checks):
             game.face(DOWN);game.press(A,100)
             advance(game,lambda:text_matches(game,'PolishedDeparture_TuscanyTuesdayText'));close_resident_dialogue(game)
             assert count_item(game,fields()['scarf'])==count+1
+            # While she is still on screen after the weekday changes, the
+            # source gives her repeat greeting precedence over the weekday.
+            game.timestamp += 86400
+            game.command(f'rtc {game.timestamp}')
+            game.refresh_clock()
+            assert weekday(game) == 3
+            game.face(DOWN)
+            game.press(A, 100)
+            advance(game, lambda: text_matches(game, 'PolishedDeparture_TuscanyTuesdayText'))
+            close_resident_dialogue(game)
+            assert count_item(game,fields()['scarf']) == count + 1
         route_walk(game,route,(59,8),[]);game.step(RIGHT);game.frames(90)
     checks.append('Tuscany is absent on Monday after the bank opens and gives one Silk Scarf on Tuesday; the gift stays collected across Save/Continue')
     report = {
