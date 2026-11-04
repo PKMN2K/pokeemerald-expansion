@@ -7,6 +7,7 @@ import csv
 import hashlib
 from pathlib import Path
 from gen4_ui.make_hgss_ribbon_summary import validate_assets
+from gen4_ui.make_hgss_ribbon_list import validate as validate_owner_list
 
 ROOT = Path(__file__).resolve().parent.parent
 RIBBONS = ROOT / "graphics/gen4_ui/hgss_ribbons"
@@ -14,6 +15,7 @@ RIBBONS = ROOT / "graphics/gen4_ui/hgss_ribbons"
 
 def main():
     validate_assets()
+    validate_owner_list()
     with (RIBBONS / "retail_ribbon_map.csv").open(newline="") as fp:
         retail = list(csv.DictReader(fp))
     with (RIBBONS / "emerald_ribbon_compat.csv").open(newline="") as fp:

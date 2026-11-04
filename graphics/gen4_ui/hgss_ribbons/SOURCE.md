@@ -1,4 +1,4 @@
-# Current status — HGSS ribbon summary integrated
+# Current status — HGSS ribbon owner list and summary integrated
 
 The live summary uses verified original HGSS panel/case cells and palettes,
 native ribbon icons and transparent text windows. See
@@ -7,6 +7,14 @@ for the byte-48 NCGR payload correction, separate main/sub screen mapping,
 reproducible source-cell exporter and live acceptance evidence. The entries
 below are historical investigation notes; their outstanding gates are
 superseded by that current trace.
+
+The owner list also reuses these verified header and party-card cells.
+`owner_list/source.json` records its lossless tile/flip mapping and hashes;
+`make_hgss_ribbon_list.py` reproduces the assets from this directory without
+the raw ROM. Its six-row viewport, text layer, long PC nicknames, paging,
+buffer wrap and return paths are framebuffer-verified. Emerald's remaining
+`list_bg.png/.bin` and `list_ui.pal`, and the synthetic runtime row/counter
+decorations, are removed. See the linked visual acceptance for evidence.
 
 ---
 

@@ -1,6 +1,6 @@
-# HGSS ribbon summary — visual acceptance
+# HGSS ribbon interface — visual acceptance
 
-Scope: the PokéNav ribbon **summary screen** on `feature/gen4-ui-renderer`.
+Scope: the PokéNav ribbon **owner list and summary** on `feature/gen4-ui-renderer`.
 The title, medal case, portrait/index cards and detail panel now use original
 HGSS source cells. The four-by-two grid and native 32×32 ribbon art fit the
 GBA screen. Source mapping and palette/VRAM ownership are documented in
@@ -62,9 +62,46 @@ still checks all five pages against original icon pixels in mGBA.
 After live review and a repository-wide reference audit, the superseded
 Emerald `summary_bg.png/.bin`, `icons.png`, `icons_big.png`, five icon
 palettes and `mon_info.pal` are removed, along with the unused global
-summary background declarations/definitions. Owner-list resources remain
-outside this summary-screen change. The empty transparent grid window is
+summary background declarations/definitions. The empty transparent grid window is
 removed; text now overlays the original panels without overwriting them.
 
-This completes the GBA-adapted ribbon summary element. It does not claim
-that unrelated PokéNav screens or the entire Gen 4 migration are complete.
+## Ribbon owner list — completed 2026-11-04
+
+The owner picker now reuses the same verified retail HGSS summary header,
+party-card corners/edges and palette. HGSS has no PokéNav ribbon owner list;
+this is an adaptation of original cells, with no synthetic card artwork,
+scaling or recoloring. The six visible 200×16 rows occupy x=24–223,
+y=24–119, leaving both scroll controls and the shared help bar usable.
+
+![Party and PC owners](screenshots/ribbon_owners/first_page.png)
+![PC owners after circular-buffer wrap](screenshots/ribbon_owners/pc_page.png)
+![Short owner list](screenshots/ribbon_owners/short_list.png)
+
+`make_hgss_ribbon_list.py` reproduces every output byte from the verified
+summary cells and audits the live VRAM allocations. The first scrolling
+capture exposed rows bleeding through transparent header windows. Header
+text now has its own BG3 map; the original BG1 artwork masks BG2's circular
+row buffer outside the six-row viewport. BG3 is hidden by the normal
+summary/main-menu entry paths. Palette banks 1 and 7 are reloaded on entry.
+
+The live fixture adds twenty boxed Unown, each with a distinct 12-character
+nickname and level 100, after the four party owners. The third main-menu
+entry removes only those synthetic box records to test a four-owner list.
+These changes exist only in the disposable screenshot build.
+
+`verify_hgss_ribbon_list_screens.py` compares **26,544 pixels per state**
+against original panel tiles and the game's font glyphs, including the exact
+expected nickname, level, ribbon count and selected/total index. Ten settled
+states cover first/second/fourth pages, the last-entry boundary, upward
+buffer wrap, return from a boxed summary, page-up to the start, main-menu
+re-entry and a short list. Animated pointer footprints are excluded from
+pixel comparisons and reviewed visually. The short list also proves that
+unused rows contain no stale text or cards.
+
+After live acceptance, `graphics/pokenav/ribbons/list_bg.png`, `list_bg.bin`
+and `list_ui.pal` are removed. The hand-drawn counter card, row borders,
+count pockets and alternating ticks are removed from runtime code. The
+existing authenticated HGSS list pointer/scroll sprites remain in use.
+
+This completes the GBA-adapted ribbon owner-list and summary interface.
+Unrelated PokéNav screens and the overall Gen 4 migration remain separate.

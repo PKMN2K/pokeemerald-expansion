@@ -38,8 +38,10 @@ struct Pokenav_RibbonsMonMenu
     bool32 (*callback)(void);
     u32 loopedTaskId;
     u16 winid;
+    u16 titleWindowId;
     bool32 fromSummary;
     u8 buff[BG_SCREEN_SIZE];
+    u8 textMap[BG_SCREEN_SIZE];
 };
 
 static u32 HandleRibbonsMonListInput_WaitListInit(struct Pokenav_RibbonsMonList *);
@@ -60,8 +62,7 @@ static u32 LoopedTask_RibbonsListMovePageDown(s32);
 static u32 LoopedTask_RibbonsListReturnToMainMenu(s32);
 static u32 LoopedTask_RibbonsListOpenSummary(s32);
 static void DrawListIndexNumber(s32, s32, s32);
-static void DrawPokeGearRibbonCountCard(u16);
-static void DrawPokeGearRibbonOwnerRow(u16, u32, u32);
+static void DrawHgssRibbonOwnerRow(u16, u32, u32);
 static void AddRibbonsMonListWindow(struct Pokenav_RibbonsMonMenu *);
 static void UpdateIndexNumberDisplay(struct Pokenav_RibbonsMonMenu *);
 static void CreateRibbonMonsList(void);
@@ -74,10 +75,17 @@ static const LoopedTask sMonRibbonListLoopTaskFuncs[] =
     BuildBoxMonRibbonList
 };
 
-static const u16 sMonRibbonListFramePal[] = INCGFX_U16("graphics/pokenav/ribbons/list_bg.png", ".gbapal");
-static const u32 sMonRibbonListFrameTiles[] = INCGFX_U32("graphics/pokenav/ribbons/list_bg.png", ".4bpp.smol");
-static const u32 sMonRibbonListFrameTilemap[] = INCGFX_U32("graphics/pokenav/ribbons/list_bg.bin", ".smolTM");
-static const u16 sMonRibbonListUi_Pal[] = INCGFX_U16("graphics/pokenav/ribbons/list_ui.pal", ".gbapal");
+// Original HGSS summary header and party cards, adapted without redrawing.
+// BG1 masks the circular BG2 list buffer above/below the six visible rows.
+static const u32 sHgssRibbonListFrameTiles[] = INCBIN_U32("graphics/gen4_ui/hgss_ribbons/summary_bg.4bpp");
+static const u16 sHgssRibbonListFrameMap[] = INCBIN_U16("graphics/gen4_ui/hgss_ribbons/owner_list/background.bin");
+static const u32 sHgssRibbonOwnerRow[] = INCBIN_U32("graphics/gen4_ui/hgss_ribbons/owner_list/row.4bpp");
+static const u16 sHgssRibbonListTextPalette[] = INCBIN_U16("graphics/gen4_ui/hgss_ribbons/summary_bg.bank_1.gbapal");
+static const u16 sHgssRibbonListHeaderPalette[] = INCBIN_U16("graphics/gen4_ui/hgss_ribbons/summary_bg.bank_7.gbapal");
+static const u8 sHgssRibbonListTextColors[] = {0, 5, 2};
+static const u8 sText_Ribbons[] = _("RIBBONS");
+// These indices belong to the retail palette, not Emerald's color names.
+static const u8 sText_RowColors[] = {EXT_CTRL_CODE_BEGIN, EXT_CTRL_CODE_COLOR_HIGHLIGHT_SHADOW, 5, 0, 2, EOS};
 
 static const struct BgTemplate sMonRibbonListBgTemplates[] =
 {
@@ -97,6 +105,14 @@ static const struct BgTemplate sMonRibbonListBgTemplates[] =
         .paletteMode = 0,
         .priority = 3,
         .baseTile = 0
+    }, {
+        .bg = 3,
+        .charBaseIndex = 1,
+        .mapBaseIndex = 0x04,
+        .screenSize = 0,
+        .paletteMode = 0,
+        .priority = 1,
+        .baseTile = 0
     }
 };
 
@@ -113,17 +129,28 @@ static const LoopedTask sRibbonsMonMenuLoopTaskFuncs[] =
 
 static const struct WindowTemplate sRibbonsMonListWindowTemplate =
 {
-    .bg = 1,
-    .tilemapLeft = 1,
-    .tilemapTop = 6,
+    .bg = 3,
+    .tilemapLeft = 22,
+    .tilemapTop = 1,
     .width = 7,
     .height = 2,
     .paletteNum = 1,
-    .baseBlock = 20
+    .baseBlock = 92
 };
 
-static const u8 sText_MaleSymbol[] = _("{TEXT_COLORS LIGHT_RED GREEN WHITE}{BACKGROUND WHITE}♂{TEXT_COLORS DARK_GRAY LIGHT_GRAY WHITE}{BACKGROUND WHITE}");
-static const u8 sText_FemaleSymbol[] = _("{TEXT_COLORS LIGHT_GREEN BLUE WHITE}{BACKGROUND WHITE}♀{TEXT_COLORS DARK_GRAY LIGHT_GRAY WHITE}{BACKGROUND WHITE}");
+static const struct WindowTemplate sRibbonsListTitleWindowTemplate =
+{
+    .bg = 3,
+    .tilemapLeft = 1,
+    .tilemapTop = 1,
+    .width = 14,
+    .height = 2,
+    .paletteNum = 1,
+    .baseBlock = 64
+};
+
+static const u8 sText_MaleSymbol[] = {EXT_CTRL_CODE_BEGIN, EXT_CTRL_CODE_COLOR, 9, CHAR_MALE, EXT_CTRL_CODE_BEGIN, EXT_CTRL_CODE_COLOR, 5, EOS};
+static const u8 sText_FemaleSymbol[] = {EXT_CTRL_CODE_BEGIN, EXT_CTRL_CODE_COLOR, 6, CHAR_FEMALE, EXT_CTRL_CODE_BEGIN, EXT_CTRL_CODE_COLOR, 5, EOS};
 static const u8 sText_NoGenderSymbol[] = _("{UNK_SPACER}");
 
 bool32 PokenavCallback_Init_MonRibbonList(void)
@@ -419,6 +446,7 @@ void FreeRibbonsMonMenu(void)
     struct Pokenav_RibbonsMonMenu *menu = GetSubstructPtr(POKENAV_SUBSTRUCT_RIBBONS_MON_MENU);
     DestroyPokenavList();
     RemoveWindow(menu->winid);
+    RemoveWindow(menu->titleWindowId);
     FreePokenavSubstruct(POKENAV_SUBSTRUCT_RIBBONS_MON_MENU);
 }
 
@@ -429,10 +457,11 @@ static u32 LoopedTask_OpenRibbonsMonList(s32 state)
     {
     case 0:
         InitBgTemplates(sMonRibbonListBgTemplates, ARRAY_COUNT(sMonRibbonListBgTemplates));
-        DecompressAndCopyTileDataToVram(1, sMonRibbonListFrameTiles, 0, 0, 0);
+        LoadBgTiles(1, sHgssRibbonListFrameTiles, sizeof(sHgssRibbonListFrameTiles), 0);
         SetBgTilemapBuffer(1, menu->buff);
-        CopyToBgTilemapBuffer(1, sMonRibbonListFrameTilemap, 0, 0);
-        CopyPaletteIntoBufferUnfaded(sMonRibbonListFramePal, BG_PLTT_ID(1), sizeof(sMonRibbonListFramePal));
+        CopyToBgTilemapBuffer(1, sHgssRibbonListFrameMap, sizeof(sHgssRibbonListFrameMap), 0);
+        CopyPaletteIntoBufferUnfaded(sHgssRibbonListTextPalette, BG_PLTT_ID(1), sizeof(sHgssRibbonListTextPalette));
+        CopyPaletteIntoBufferUnfaded(sHgssRibbonListHeaderPalette, BG_PLTT_ID(7), sizeof(sHgssRibbonListHeaderPalette));
         CopyBgTilemapBufferToVram(1);
         return LT_INC_AND_PAUSE;
     case 1:
@@ -447,7 +476,6 @@ static u32 LoopedTask_OpenRibbonsMonList(s32 state)
     case 2:
         if (FreeTempTileDataBuffersIfPossible())
             return LT_PAUSE;
-        CopyPaletteIntoBufferUnfaded(sMonRibbonListUi_Pal, BG_PLTT_ID(2), sizeof(sMonRibbonListUi_Pal));
         CreateRibbonMonsList();
         return LT_INC_AND_PAUSE;
     case 3:
@@ -459,7 +487,9 @@ static u32 LoopedTask_OpenRibbonsMonList(s32 state)
         if (FreeTempTileDataBuffersIfPossible())
             return LT_PAUSE;
         ShowBg(2);
-        HideBg(3);
+        ChangeBgX(3, 0, BG_COORD_SET);
+        ChangeBgY(3, 0, BG_COORD_SET);
+        ShowBg(3);
         PrintHelpBarText(HELPBAR_RIBBONS_MON_LIST);
         PokenavFadeScreen(POKENAV_FADE_FROM_BLACK);
         return LT_INC_AND_PAUSE;
@@ -642,10 +672,15 @@ static void AddRibbonsMonListWindow(struct Pokenav_RibbonsMonMenu *menu)
 {
     s32 listCount;
     menu->winid = AddWindow(&sRibbonsMonListWindowTemplate);
-    // AddWindow may allocate its own blank map when BG1 has no windows yet.
-    // Keep the frame loaded by LoopedTask_OpenRibbonsMonList as the live map;
-    // otherwise tile zero repeats over BG2 and obscures the owner rows.
-    SetBgTilemapBuffer(1, menu->buff);
+    menu->titleWindowId = AddWindow(&sRibbonsListTitleWindowTemplate);
+    // Text uses a separate map so transparent glyph backgrounds reveal the
+    // original BG1 header, never the circular BG2 rows behind that header.
+    SetBgTilemapBuffer(3, menu->textMap);
+    FillBgTilemapBufferRect_Palette0(3, 0, 0, 0, 32, 32);
+    FillWindowPixelBuffer(menu->titleWindowId, PIXEL_FILL(0));
+    PutWindowTilemap(menu->titleWindowId);
+    AddTextPrinterParameterized3(menu->titleWindowId, FONT_NORMAL, 0, 1, sHgssRibbonListTextColors, TEXT_SKIP_DRAW, sText_Ribbons);
+    CopyWindowToVram(menu->titleWindowId, COPYWIN_FULL);
     PutWindowTilemap(menu->winid);
     listCount = GetRibbonsMonListCount();
     DrawListIndexNumber(menu->winid, 0, listCount);
@@ -661,44 +696,10 @@ static void UpdateIndexNumberDisplay(struct Pokenav_RibbonsMonMenu *menu)
     CopyWindowToVram(menu->winid, COPYWIN_GFX);
 }
 
-static void DrawPokeGearRibbonCountCard(u16 windowId)
+static void DrawHgssRibbonOwnerRow(u16 windowId, u32 itemId, u32 tileOffset)
 {
-    u8 width = GetWindowAttribute(windowId, WINDOW_WIDTH) * 8;
-    u8 height = GetWindowAttribute(windowId, WINDOW_HEIGHT) * 8;
-
-    FillWindowPixelBuffer(windowId, PIXEL_FILL(2));
-
-    if (width < 16 || height < 8)
-        return;
-
-    // Compact Gen 4/HGSS-style counter card.
-    FillWindowPixelRect(windowId, PIXEL_FILL(1), 3, 0, width - 6, 1);
-    FillWindowPixelRect(windowId, PIXEL_FILL(1), 0, 3, 1, height - 6);
-    FillWindowPixelRect(windowId, PIXEL_FILL(3), 3, height - 1, width - 6, 1);
-    FillWindowPixelRect(windowId, PIXEL_FILL(3), width - 1, 3, 1, height - 6);
-    FillWindowPixelRect(windowId, PIXEL_FILL(5), 4, 3, 2, height - 6);
-    FillWindowPixelRect(windowId, PIXEL_FILL(9), 8, 3, width - 12, 1);
-}
-
-static void DrawPokeGearRibbonOwnerRow(u16 windowId, u32 itemId, u32 tileOffset)
-{
-    u8 width = GetWindowAttribute(windowId, WINDOW_WIDTH) * 8;
     u8 y = (tileOffset & 0xF) * 16;
-
-    // Recessed owner card with a gold ribbon-count pocket at the right.
-    FillWindowPixelRect(windowId, PIXEL_FILL(2), 0, y, width, 16);
-    FillWindowPixelRect(windowId, PIXEL_FILL(1), 3, y, width - 6, 1);
-    FillWindowPixelRect(windowId, PIXEL_FILL(3), 3, y + 15, width - 6, 1);
-    FillWindowPixelRect(windowId, PIXEL_FILL(6), 1, y + 4, 2, 8);
-
-    FillWindowPixelRect(windowId, PIXEL_FILL(9), width - 23, y + 3, 19, 10);
-    FillWindowPixelRect(windowId, PIXEL_FILL(5), width - 23, y + 3, 19, 1);
-    FillWindowPixelRect(windowId, PIXEL_FILL(3), width - 23, y + 12, 19, 1);
-    FillWindowPixelRect(windowId, PIXEL_FILL(5), width - 23, y + 5, 2, 6);
-
-    // Small alternating DS-era locator tick, decorative only.
-    if ((itemId & 1) != 0)
-        FillWindowPixelRect(windowId, PIXEL_FILL(1), width - 5, y + 6, 1, 4);
+    BlitBitmapToWindow(windowId, (const u8 *)sHgssRibbonOwnerRow, 0, y, 200, 16);
 }
 
 static void DrawListIndexNumber(s32 windowId, s32 index, s32 max)
@@ -707,14 +708,14 @@ static void DrawListIndexNumber(s32 windowId, s32 index, s32 max)
     u32 x;
     u8 *ptr;
 
-    DrawPokeGearRibbonCountCard(windowId);
+    FillWindowPixelBuffer(windowId, PIXEL_FILL(0));
 
     ptr = strbuf;
     ptr = ConvertIntToDecimalStringN(ptr, index, STR_CONV_MODE_RIGHT_ALIGN, 3);
     *ptr++ = CHAR_SLASH;
     ConvertIntToDecimalStringN(ptr, max, STR_CONV_MODE_RIGHT_ALIGN, 3);
     x = GetStringCenterAlignXOffset(FONT_NORMAL, strbuf, 56);
-    AddTextPrinterParameterized(windowId, FONT_NORMAL, strbuf, x, 1, TEXT_SKIP_DRAW, NULL);
+    AddTextPrinterParameterized3(windowId, FONT_NORMAL, x, 1, sHgssRibbonListTextColors, TEXT_SKIP_DRAW, strbuf);
 }
 
 static void CreateRibbonMonsList(void)
@@ -724,14 +725,14 @@ static void CreateRibbonMonsList(void)
     template.count = GetRibbonsMonListCount();
     template.itemSize = sizeof(struct PokenavListItem);
     template.startIndex = GetRibbonListMenuCurrIndex();
-    template.item_X = 13;
-    template.windowWidth = 17;
-    template.listTop = 1;
-    template.maxShowed = 8;
-    template.fillValue = 2;
+    template.item_X = 3;
+    template.windowWidth = 25;
+    template.listTop = 3;
+    template.maxShowed = 6;
+    template.fillValue = 1;
     template.fontId = FONT_NORMAL;
     template.bufferItemFunc = BufferRibbonMonInfoText;
-    template.iconDrawFunc = DrawPokeGearRibbonOwnerRow;
+    template.iconDrawFunc = DrawHgssRibbonOwnerRow;
     CreatePokenavList(&sMonRibbonListBgTemplates[1], &template, 0);
 }
 
@@ -744,6 +745,8 @@ static void BufferRibbonMonInfoText(struct PokenavListItem *listItem, u8 *dest)
     const u8 *genderStr;
     struct PokenavMonListItem *item = (struct PokenavMonListItem *)listItem;
     u32 fontId;
+
+    dest = StringCopy(dest, sText_RowColors);
 
     // Mon is in party
     if (item->boxId == TOTAL_BOXES_COUNT)
@@ -775,15 +778,15 @@ static void BufferRibbonMonInfoText(struct PokenavListItem *listItem, u8 *dest)
         break;
     }
     end = StringGet_Nickname(gStringVar3);
-    fontId = GetFontIdToFit(gStringVar3, FONT_NORMAL, 0, 60);
-    WrapFontIdToFit(gStringVar3, end, FONT_NORMAL, 60);
-    dest = GetStringClearToWidth(dest, fontId, gStringVar3, 60);
+    fontId = GetFontIdToFit(gStringVar3, FONT_NORMAL, 0, 96);
+    WrapFontIdToFit(gStringVar3, end, FONT_NORMAL, 96);
+    dest = GetStringClearToWidth(dest, fontId, gStringVar3, 96);
 
     s = StringCopy(gStringVar1, genderStr);
     *s++ = CHAR_SLASH;
     *s++ = CHAR_EXTRA_SYMBOL;
     *s++ = CHAR_LV_2;
     ConvertIntToDecimalStringN(s, level, STR_CONV_MODE_LEFT_ALIGN, 3);
-    dest = GetStringClearToWidth(dest, FONT_NORMAL, gStringVar1, 54);
+    dest = GetStringClearToWidth(dest, FONT_NORMAL, gStringVar1, 80);
     ConvertIntToDecimalStringN(dest, item->data, STR_CONV_MODE_RIGHT_ALIGN, 2);
 }

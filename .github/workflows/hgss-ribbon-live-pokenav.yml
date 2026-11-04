@@ -8,7 +8,11 @@ on:
       - tools/gen4_ui/prepare_hgss_ribbon_live_capture.py
       - tools/gen4_ui/verify_hgss_ribbon_live_screens.py
       - tools/gen4_ui/make_hgss_ribbon_summary.py
+      - tools/gen4_ui/make_hgss_ribbon_list.py
+      - tools/gen4_ui/verify_hgss_ribbon_list_screens.py
       - src/pokenav.c
+      - src/pokenav_ribbons_list.c
+      - src/pokenav_list.c
       - src/pokenav_ribbons_summary.c
       - graphics/gen4_ui/hgss_ribbons/**
   workflow_dispatch:
@@ -127,6 +131,24 @@ jobs:
           python3 tools/gen4_ui/check_hgss_ribbon_grid.py --preview-dir build/hgss-ribbon-offline
           python3 tools/gen4_ui/verify_hgss_ribbon_live_screens.py \
             build/hgss-ribbon-live build/hgss-ribbon-offline
+          # Cold boot again for owner paging, circular-buffer wrap and exit.
+          /tmp/gba-walk pokeemerald.gba build/hgss-ribbon-live \
+            run:700 press:A:1 run:400 snap:owners_first \
+            press:RIGHT:1 run:160 snap:owners_page_02 \
+            press:RIGHT:1 run:160 press:RIGHT:1 run:160 snap:owners_page_04 \
+            press:RIGHT:1 run:160 snap:owners_last \
+            press:DOWN:1 run:110 snap:owners_last_after_down \
+            press:UP:1 run:110 press:UP:1 run:110 press:UP:1 run:110 \
+            press:UP:1 run:110 press:UP:1 run:110 press:UP:1 run:110 \
+            press:UP:1 run:110 press:UP:1 run:110 snap:owners_wrap_up \
+            press:A:1 run:220 snap:owners_box_summary \
+            press:B:1 run:220 snap:owners_return_from_box \
+            press:LEFT:1 run:160 press:LEFT:1 run:160 press:LEFT:1 run:160 \
+            snap:owners_back_at_start \
+            press:B:1 run:220 snap:owners_main_menu \
+            press:A:1 run:400 snap:owners_reentered \
+            press:B:1 run:220 press:A:1 run:400 snap:owners_short
+          python3 tools/gen4_ui/verify_hgss_ribbon_list_screens.py build/hgss-ribbon-live
           printf '%s\n' \
             'These are real mGBA framebuffer screenshots of the LIVE PokéNav ribbon list and summary.' \
             'A disposable CI checkout patches only its initial callback, ribbon test data and initial menu cursor.' \

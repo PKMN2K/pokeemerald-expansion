@@ -22,6 +22,8 @@ if text.count(include_marker) != 1:
     raise SystemExit("Refusing patch: missing PokéNav include")
 text = text.replace(include_marker, include_marker +
                     '#include "pokemon.h"\n'
+                    '#include "pokemon_storage_system.h"\n'
+                    '#include "string_util.h"\n'
                     '#include "load_save.h"\n'
                     '#include "event_data.h"\n'
                     '#include "sprite.h"\n'
@@ -117,6 +119,18 @@ void CB2_HgssRibbonLiveCapture(void)
     CreateMon(mon, SPECIES_BULBASAUR, 5, 0, OTID_STRUCT_PRESET(0));
     SetMonData(mon, MON_DATA_CHAMPION_RIBBON, &enabled);
 
+    // Twenty boxed owners exercise paging and the 16-row circular buffer.
+    // A maximum-length nickname and Lv100 also exercise column spacing.
+    for (i = 0; i < 20; i++)
+    {
+        struct BoxPokemon *boxMon = GetBoxedMonPtr(0, i);
+        CreateBoxMon(boxMon, SPECIES_UNOWN, 100, 0, OTID_STRUCT_PRESET(0));
+        SetBoxMonData(boxMon, MON_DATA_CHAMPION_RIBBON, &enabled);
+        StringCopy(gStringVar1, COMPOUND_STRING("WWWWWWWWWW"));
+        ConvertIntToDecimalStringN(gStringVar1 + 10, i + 1, STR_CONV_MODE_LEADING_ZEROS, 2);
+        SetBoxMonData(boxMon, MON_DATA_NICKNAME, gStringVar1);
+    }
+
     // Activate the two real menu flags in this disposable CI memory only.
     // The full PokéNav main menu must initialize backgrounds and palettes.
     InitEventData();
@@ -191,4 +205,22 @@ summary_text = summary_text.replace(needle, r"""
     }
 """ + needle)
 summary.write_text(summary_text)
-print("Prepared disposable full-menu capture: full, gift-only, empty and single ribbon owners")
+
+# A third cold-owner-list entry in the paging capture removes only the
+# synthetic boxed owners, exercising a short list after a full one.
+owners = Path("src/pokenav_ribbons_list.c")
+owner_text = owners.read_text()
+needle = "bool32 PokenavCallback_Init_MonRibbonList(void)\n{\n"
+assert owner_text.count(needle) == 1
+owner_text = owner_text.replace(needle, needle + r"""
+    // Disposable fixture data only; the real list initialization follows.
+    static u32 captureEntries;
+    if (++captureEntries == 3)
+    {
+        u32 i;
+        for (i = 0; i < 20; i++)
+            ZeroBoxMonData(GetBoxedMonPtr(0, i));
+    }
+""")
+owners.write_text(owner_text)
+print("Prepared disposable capture: full/gift/empty/single summaries and 24 party/PC owners")

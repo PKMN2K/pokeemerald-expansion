@@ -61,7 +61,7 @@ Original NCLR bank **0 → GBA BG bank 1** supplies panel/text colors;
 bank **4 → GBA BG bank 7** supplies the yellow case. Only those two
 32-byte banks are loaded. Ribbon palettes remain in banks 2–6; shared
 PokéNav BG0/help-bar colors and OBJ palettes are untouched. The owner-list
-entry reloads its own banks 1/2 on return. Live exit/re-entry capture checks
+entry reloads the same original banks 1/7 on return. Live exit/re-entry capture checks
 that the palette transition works.
 
 The exporter records original tile IDs, per-tile hashes and output hashes
@@ -80,3 +80,25 @@ are diagnostic experiments, not a retail screen compositor.
 Selection corners retain their original 16×16 tiles. Their opaque pixels
 span 2–12, so centers at ±10 produce a true 32×32 visible frame. This
 keeps second-row selection marks above the detail text.
+
+## Owner-list adaptation and memory ownership
+
+`make_hgss_ribbon_list.py` reuses the verified summary tiles and palettes.
+The top three tile rows preserve the yellow header; the party-frame cells
+become 200×16 owner cards by repeating edge interiors and baking their
+hardware flips losslessly. `owner_list/source.json` links the output hashes
+and source cell attributes to the original summary provenance manifest.
+
+| Resource | GBA allocation |
+|---|---|
+| Shared help bar | BG0, character block 0, screen block 5, priority 0 |
+| Original header and viewport mask | BG1, character block 1, screen block 6, priority 2 |
+| Circular owner-row window | BG2, character blocks 2–3, screen block 7, priority 3; 802 tiles including the two base tiles |
+| Transparent title and index text | BG3, character block 1, screen block 4, priority 1; tiles 64–105 |
+
+The BG1 mask is transparent only at tile rectangle (3,3), 25×12 tiles.
+It hides offscreen entries as BG2 scrolls. The BG3 text map is separate so
+clearing the title/index cannot punch holes through that mask. The asset
+validator rejects overlapping VRAM regions and a viewport that differs
+from the live C list geometry. No shared BG0 palette or sprite resources
+are replaced by the owner-list adapter.
