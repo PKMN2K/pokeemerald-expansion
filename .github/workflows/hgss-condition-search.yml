@@ -1,0 +1,76 @@
+name: HGSS Condition search screenshots
+
+on:
+  push:
+    branches: [feature/gen4-ui-renderer]
+    paths:
+      - .github/workflows/hgss-condition-search.yml
+      - tools/gen4_ui/*hgss_condition_search*.py
+      - tools/gen4_ui/make_hgss_ribbon_list.py
+      - tools/gen4_ui/make_hgss_ribbon_summary.py
+      - graphics/gen4_ui/hgss_ribbons/**
+      - src/pokenav.c
+      - src/pokenav_list.c
+      - src/pokenav_conditions_search_results.c
+      - src/pokenav_conditions.c
+      - src/pokenav_conditions_gfx.c
+      - src/pokenav_menu_handler.c
+      - src/pokenav_menu_handler_gfx.c
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  condition-search-emulator:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    env:
+      GAME_VERSION: EMERALD
+      GAME_REVISION: 0
+      GAME_LANGUAGE: ENGLISH
+      COMPARE: 0
+      UNUSED_ERROR: 1
+      DEPRECATED_ERROR: 1
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@v4
+
+      - name: Install GBA compiler and screenshot dependencies
+        run: |
+          for sources in /etc/apt/apt-mirrors.txt /etc/apt/sources.list /etc/apt/sources.list.d/ubuntu.sources; do
+            if [ -f "$sources" ]; then
+              sudo sed -i 's|azure.archive.ubuntu.com|archive.ubuntu.com|g' "$sources"
+            fi
+          done
+          sudo apt-get -o Acquire::Retries=3 -o Acquire::http::Timeout=30 update
+          sudo apt-get -o Acquire::Retries=3 -o Acquire::http::Timeout=30 install -y --no-install-recommends binutils-arm-none-eabi gcc-arm-none-eabi libnewlib-arm-none-eabi libpng-dev libmgba-dev python3 python3-pil git
+
+      - name: Validate original assets and production layout
+        run: python3 tools/gen4_ui/check_hgss_condition_search.py
+
+      - name: Build disposable live Condition-search fixture
+        run: |
+          python3 tools/gen4_ui/prepare_hgss_condition_search_capture.py
+          make -j$(nproc) -O all
+          test -s pokeemerald.gba
+
+      - name: Build pinned headless mGBA screenshot utility
+        run: |
+          git clone https://github.com/JohnnySun/gba-rom-debugger.git /tmp/gba-rom-debugger
+          git -C /tmp/gba-rom-debugger checkout --detach 1ab7c814f9e062790567c58c8c0c2b74ad62e1ae
+          cc -std=gnu11 -O2 -DUSE_PNG -o /tmp/gba-walk /tmp/gba-rom-debugger/src/gba-walk.c -lmgba -lpng
+
+      - name: Capture all categories, scrolling and return paths
+        run: python3 tools/gen4_ui/capture_hgss_condition_search.py /tmp/gba-walk pokeemerald.gba build/hgss-condition-search
+
+      - name: Verify original panels, names, levels and ranks
+        run: python3 tools/gen4_ui/verify_hgss_condition_search_screens.py build/hgss-condition-search
+
+      - name: Upload actual Condition-search screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: hgss-condition-search-screenshots
+          path: build/hgss-condition-search/
+          if-no-files-found: warn

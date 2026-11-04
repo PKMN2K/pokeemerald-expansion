@@ -5,7 +5,6 @@
 #include "palette.h"
 #include "window.h"
 #include "sound.h"
-#include "dynamic_placeholder_text_util.h"
 #include "strings.h"
 #include "string_util.h"
 #include "international_string_util.h"
@@ -22,7 +21,15 @@ enum
     CONDITION_SEARCH_FUNC_SELECT_MON,
 };
 
-static const u8 gText_NumberIndex[] = _("No. {DYNAMIC 0}");
+static const u8 sText_NumberIndex[] = _("No. ");
+static const u8 *const sSearchTitles[] =
+{
+    COMPOUND_STRING("COOL SEARCH"),
+    COMPOUND_STRING("BEAUTY SEARCH"),
+    COMPOUND_STRING("CUTE SEARCH"),
+    COMPOUND_STRING("SMART SEARCH"),
+    COMPOUND_STRING("TOUGH SEARCH"),
+};
 
 struct Pokenav_SearchResults
 {
@@ -42,9 +49,11 @@ struct Pokenav_SearchResultsGfx
     bool32 (*callback)(void);
     u32 loopedTaskId;
     u16 winid;
+    u16 titleWindowId;
     bool32 fromGraph;
     u8 buff[BG_SCREEN_SIZE];
-}; // size: 0x810
+    u8 textMap[BG_SCREEN_SIZE];
+};
 
 static u32 HandleConditionSearchInput_WaitSetup(struct Pokenav_SearchResults *);
 static u32 HandleConditionSearchInput(struct Pokenav_SearchResults *);
@@ -65,8 +74,7 @@ static void InsertMonListItem(struct Pokenav_SearchResults *, struct PokenavMonL
 static bool32 GetSearchResultCurrentLoopedTaskActive(void);
 static u32 LoopedTask_OpenConditionSearchResults(s32);
 static void AddSearchResultListMenuWindow(struct Pokenav_SearchResultsGfx *);
-static void DrawPokeGearStatusRankCard(u16);
-static void DrawPokeGearStatusSearchRow(u16, u32, u32);
+static void DrawHgssConditionSearchRow(u16, u32, u32);
 static void PrintSearchResultListMenuItems(struct Pokenav_SearchResultsGfx *);
 static void CreateSearchResultsList(void);
 static void BufferSearchMonListItem(struct PokenavMonListItem *, u8 *);
@@ -81,10 +89,16 @@ static const LoopedTask sConditionSearchLoopedTaskFuncs[] =
     ConvertConditionsToListRanks
 };
 
-static const u16 sConditionSearchResultFramePal[] = INCGFX_U16("graphics/pokenav/condition/search_results.png", ".gbapal");
-static const u32 sConditionSearchResultTiles[] = INCGFX_U32("graphics/pokenav/condition/search_results.png", ".4bpp.smol");
-static const u32 sConditionSearchResultTilemap[] = INCGFX_U32("graphics/pokenav/condition/search_results.bin", ".smolTM");
-static const u16 sListBg_Pal[] = INCGFX_U16("graphics/pokenav/condition/search_results_list.pal", ".gbapal");
+// Reuse the verified retail HGSS summary header/party cards already adapted
+// to the six-row owner list. BG1 masks BG2's circular rows outside the list;
+// transparent title/rank glyphs use a separate BG3 map above that mask.
+static const u32 sHgssSearchFrameTiles[] = INCBIN_U32("graphics/gen4_ui/hgss_ribbons/summary_bg.4bpp");
+static const u16 sHgssSearchFrameMap[] = INCBIN_U16("graphics/gen4_ui/hgss_ribbons/owner_list/background.bin");
+static const u32 sHgssSearchRow[] = INCBIN_U32("graphics/gen4_ui/hgss_ribbons/owner_list/row.4bpp");
+static const u16 sHgssSearchTextPalette[] = INCBIN_U16("graphics/gen4_ui/hgss_ribbons/summary_bg.bank_1.gbapal");
+static const u16 sHgssSearchHeaderPalette[] = INCBIN_U16("graphics/gen4_ui/hgss_ribbons/summary_bg.bank_7.gbapal");
+static const u8 sHgssSearchTextColors[] = {0, 5, 2};
+static const u8 sText_RowColors[] = {EXT_CTRL_CODE_BEGIN, EXT_CTRL_CODE_COLOR_HIGHLIGHT_SHADOW, 5, 0, 2, EOS};
 
 static const struct BgTemplate sConditionSearchResultBgTemplates[] =
 {
@@ -104,6 +118,14 @@ static const struct BgTemplate sConditionSearchResultBgTemplates[] =
         .paletteMode = 0,
         .priority = 3,
         .baseTile = 0
+    }, {
+        .bg = 3,
+        .charBaseIndex = 1,
+        .mapBaseIndex = 0x04,
+        .screenSize = 0,
+        .paletteMode = 0,
+        .priority = 1,
+        .baseTile = 0
     }
 };
 
@@ -120,17 +142,28 @@ static const LoopedTask sSearchResultLoopTaskFuncs[] =
 
 static const struct WindowTemplate sSearchResultListMenuWindowTemplate =
 {
-    .bg = 1,
-    .tilemapLeft = 1,
-    .tilemapTop = 6,
+    .bg = 3,
+    .tilemapLeft = 22,
+    .tilemapTop = 1,
     .width = 7,
     .height = 2,
     .paletteNum = 1,
-    .baseBlock = 20
+    .baseBlock = 92
 };
 
-static const u8 sText_MaleSymbol[] = _("{TEXT_COLORS LIGHT_RED GREEN WHITE}{BACKGROUND WHITE}♂{TEXT_COLORS DARK_GRAY LIGHT_GRAY WHITE}{BACKGROUND WHITE}");
-static const u8 sText_FemaleSymbol[] = _("{TEXT_COLORS LIGHT_GREEN BLUE WHITE}{BACKGROUND WHITE}♀{TEXT_COLORS DARK_GRAY LIGHT_GRAY WHITE}{BACKGROUND WHITE}");
+static const struct WindowTemplate sSearchTitleWindowTemplate =
+{
+    .bg = 3,
+    .tilemapLeft = 1,
+    .tilemapTop = 1,
+    .width = 14,
+    .height = 2,
+    .paletteNum = 1,
+    .baseBlock = 64
+};
+
+static const u8 sText_MaleSymbol[] = {EXT_CTRL_CODE_BEGIN, EXT_CTRL_CODE_COLOR, 9, CHAR_MALE, EXT_CTRL_CODE_BEGIN, EXT_CTRL_CODE_COLOR, 5, EOS};
+static const u8 sText_FemaleSymbol[] = {EXT_CTRL_CODE_BEGIN, EXT_CTRL_CODE_COLOR, 6, CHAR_FEMALE, EXT_CTRL_CODE_BEGIN, EXT_CTRL_CODE_COLOR, 5, EOS};
 static const u8 sText_NoGenderSymbol[] = _("{UNK_SPACER}");
 
 bool32 PokenavCallback_Init_ConditionSearch(void)
@@ -432,6 +465,7 @@ void FreeSearchResultSubstruct2(void)
     struct Pokenav_SearchResultsGfx *gfx = GetSubstructPtr(POKENAV_SUBSTRUCT_CONDITION_SEARCH_RESULTS_GFX);
     DestroyPokenavList();
     RemoveWindow(gfx->winid);
+    RemoveWindow(gfx->titleWindowId);
     FreePokenavSubstruct(POKENAV_SUBSTRUCT_CONDITION_SEARCH_RESULTS_GFX);
 }
 
@@ -442,11 +476,11 @@ static u32 LoopedTask_OpenConditionSearchResults(s32 state)
     {
     case 0:
         InitBgTemplates(sConditionSearchResultBgTemplates, ARRAY_COUNT(sConditionSearchResultBgTemplates));
-        DecompressAndCopyTileDataToVram(1, sConditionSearchResultTiles, 0, 0, 0);
+        LoadBgTiles(1, sHgssSearchFrameTiles, sizeof(sHgssSearchFrameTiles), 0);
         SetBgTilemapBuffer(1, gfx->buff);
-        CopyToBgTilemapBuffer(1, sConditionSearchResultTilemap, 0, 0);
-        CopyBgTilemapBufferToVram(1);
-        CopyPaletteIntoBufferUnfaded(sConditionSearchResultFramePal, BG_PLTT_ID(1), sizeof(sConditionSearchResultFramePal));
+        CopyToBgTilemapBuffer(1, sHgssSearchFrameMap, sizeof(sHgssSearchFrameMap), 0);
+        CopyPaletteIntoBufferUnfaded(sHgssSearchTextPalette, BG_PLTT_ID(1), sizeof(sHgssSearchTextPalette));
+        CopyPaletteIntoBufferUnfaded(sHgssSearchHeaderPalette, BG_PLTT_ID(7), sizeof(sHgssSearchHeaderPalette));
         CopyBgTilemapBufferToVram(1);
         return LT_INC_AND_PAUSE;
     case 1:
@@ -458,7 +492,6 @@ static u32 LoopedTask_OpenConditionSearchResults(s32 state)
     case 2:
         if (FreeTempTileDataBuffersIfPossible())
             return LT_PAUSE;
-        CopyPaletteIntoBufferUnfaded(sListBg_Pal, BG_PLTT_ID(2), sizeof(sListBg_Pal));
         CreateSearchResultsList();
         return LT_INC_AND_PAUSE;
     case 3:
@@ -474,7 +507,9 @@ static u32 LoopedTask_OpenConditionSearchResults(s32 state)
         ChangeBgY(1, 0, BG_COORD_SET);
         ShowBg(1);
         ShowBg(2);
-        HideBg(3);
+        ChangeBgX(3, 0, BG_COORD_SET);
+        ChangeBgY(3, 0, BG_COORD_SET);
+        ShowBg(3);
         PokenavFadeScreen(POKENAV_FADE_FROM_BLACK);
         return LT_INC_AND_PAUSE;
     case 5:
@@ -655,57 +690,31 @@ static u32 LoopedTask_SelectSearchResult(s32 state)
 static void AddSearchResultListMenuWindow(struct Pokenav_SearchResultsGfx *gfx)
 {
     gfx->winid = AddWindow(&sSearchResultListMenuWindowTemplate);
-    DrawPokeGearStatusRankCard(gfx->winid);
+    gfx->titleWindowId = AddWindow(&sSearchTitleWindowTemplate);
+    SetBgTilemapBuffer(3, gfx->textMap);
+    FillBgTilemapBufferRect_Palette0(3, 0, 0, 0, 32, 32);
+    FillWindowPixelBuffer(gfx->titleWindowId, PIXEL_FILL(0));
+    PutWindowTilemap(gfx->titleWindowId);
+    AddTextPrinterParameterized3(gfx->titleWindowId, FONT_NORMAL, 0, 1, sHgssSearchTextColors, TEXT_SKIP_DRAW, sSearchTitles[GetSelectedConditionSearch()]);
+    CopyWindowToVram(gfx->titleWindowId, COPYWIN_FULL);
     PutWindowTilemap(gfx->winid);
-    CopyWindowToVram(gfx->winid, COPYWIN_FULL);
     PrintSearchResultListMenuItems(gfx);
+    CopyWindowToVram(gfx->winid, COPYWIN_MAP);
 }
 
-static void DrawPokeGearStatusRankCard(u16 windowId)
+static void DrawHgssConditionSearchRow(u16 windowId, u32 itemId, u32 tileOffset)
 {
-    u8 width = GetWindowAttribute(windowId, WINDOW_WIDTH) * 8;
-    u8 height = GetWindowAttribute(windowId, WINDOW_HEIGHT) * 8;
-
-    FillWindowPixelBuffer(windowId, PIXEL_FILL(2));
-
-    if (width < 16 || height < 8)
-        return;
-
-    // Compact Gen 4/HGSS-style rank badge.
-    FillWindowPixelRect(windowId, PIXEL_FILL(5), 3, 0, width - 6, 1);
-    FillWindowPixelRect(windowId, PIXEL_FILL(5), 0, 3, 1, height - 6);
-    FillWindowPixelRect(windowId, PIXEL_FILL(3), 3, height - 1, width - 6, 1);
-    FillWindowPixelRect(windowId, PIXEL_FILL(3), width - 1, 3, 1, height - 6);
-    FillWindowPixelRect(windowId, PIXEL_FILL(1), 5, 2, width - 10, 1);
-}
-
-static void DrawPokeGearStatusSearchRow(u16 windowId, u32 itemId, u32 tileOffset)
-{
-    u8 width = GetWindowAttribute(windowId, WINDOW_WIDTH) * 8;
     u8 y = (tileOffset & 0xF) * 16;
-
-    // Recessed HGSS list card behind each search result.
-    FillWindowPixelRect(windowId, PIXEL_FILL(2), 0, y, width, 16);
-    FillWindowPixelRect(windowId, PIXEL_FILL(5), 3, y, width - 6, 1);
-    FillWindowPixelRect(windowId, PIXEL_FILL(3), 3, y + 15, width - 6, 1);
-    FillWindowPixelRect(windowId, PIXEL_FILL(1), 1, y + 4, 2, 8);
-
-    if ((itemId & 1) != 0)
-        FillWindowPixelRect(windowId, PIXEL_FILL(9), width - 4, y + 6, 2, 4);
+    BlitBitmapToWindow(windowId, (const u8 *)sHgssSearchRow, 0, y, 200, 16);
 }
 
 static void PrintSearchResultListMenuItems(struct Pokenav_SearchResultsGfx *gfx)
 {
-    s32 rank = GetSearchResultsSelectedMonRank();
-
-    DrawPokeGearStatusRankCard(gfx->winid);
-    DynamicPlaceholderTextUtil_Reset();
-    DynamicPlaceholderTextUtil_SetPlaceholderPtr(0, gStringVar1);
-    *gStringVar1 = EOS;
-    DynamicPlaceholderTextUtil_ExpandPlaceholders(gStringVar2, gText_NumberIndex);
-    AddTextPrinterParameterized(gfx->winid, FONT_NORMAL, gStringVar2, 6, 1, TEXT_SKIP_DRAW, NULL);
-    ConvertIntToDecimalStringN(gStringVar1, rank, STR_CONV_MODE_RIGHT_ALIGN, 3);
-    AddTextPrinterParameterized(gfx->winid, FONT_NORMAL, gStringVar1, 36, 1, TEXT_SKIP_DRAW, NULL);
+    u8 *end;
+    FillWindowPixelBuffer(gfx->winid, PIXEL_FILL(0));
+    end = StringCopy(gStringVar1, sText_NumberIndex);
+    ConvertIntToDecimalStringN(end, GetSearchResultsSelectedMonRank(), STR_CONV_MODE_RIGHT_ALIGN, 3);
+    AddTextPrinterParameterized3(gfx->winid, FONT_NORMAL, 0, 1, sHgssSearchTextColors, TEXT_SKIP_DRAW, gStringVar1);
     CopyWindowToVram(gfx->winid, COPYWIN_GFX);
 }
 
@@ -717,14 +726,14 @@ static void CreateSearchResultsList(void)
     template.count = GetSearchResultsMonListCount();
     template.itemSize = sizeof(struct PokenavListItem);
     template.startIndex = GetSearchResultsCurrentListIndex();
-    template.item_X = 13;
-    template.windowWidth = 17;
-    template.listTop = 1;
-    template.maxShowed = 8;
-    template.fillValue = 2;
+    template.item_X = 3;
+    template.windowWidth = 25;
+    template.listTop = 3;
+    template.maxShowed = 6;
+    template.fillValue = 1;
     template.fontId = FONT_NORMAL;
     template.bufferItemFunc = (PokenavListBufferItemFunc)BufferSearchMonListItem;
-    template.iconDrawFunc = DrawPokeGearStatusSearchRow;
+    template.iconDrawFunc = DrawHgssConditionSearchRow;
     CreatePokenavList(&sConditionSearchResultBgTemplates[1], &template, 0);
 }
 
@@ -735,6 +744,8 @@ static void BufferSearchMonListItem(struct PokenavMonListItem *item, u8 *dest)
     u8 *s, *end;
     const u8 *genderStr;
     u32 fontId;
+
+    dest = StringCopy(dest, sText_RowColors);
 
     // Mon is in party
     if (item->boxId == TOTAL_BOXES_COUNT)
@@ -766,9 +777,9 @@ static void BufferSearchMonListItem(struct PokenavMonListItem *item, u8 *dest)
         break;
     }
     end = StringGet_Nickname(gStringVar3);
-    fontId = GetFontIdToFit(gStringVar3, FONT_NORMAL, 0, 60);
-    WrapFontIdToFit(gStringVar3, end, FONT_NORMAL, 60);
-    dest = GetStringClearToWidth(dest, fontId, gStringVar3, 60);
+    fontId = GetFontIdToFit(gStringVar3, FONT_NORMAL, 0, 96);
+    WrapFontIdToFit(gStringVar3, end, FONT_NORMAL, 96);
+    dest = GetStringClearToWidth(dest, fontId, gStringVar3, 96);
 
     s = StringCopy(gStringVar1, genderStr);
     *s++ = CHAR_SLASH;

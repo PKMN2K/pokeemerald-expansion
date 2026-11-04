@@ -74,10 +74,17 @@ def validate():
     for name, data in build().items():
         assert (OUT / name).read_bytes() == data, f"Stale HGSS owner-list asset: {name}"
     source = (ASSETS.parents[2] / "src/pokenav_ribbons_list.c").read_text()
+    validate_list_layout(source, "sMonRibbonListBgTemplates", (
+        "sRibbonsMonListWindowTemplate", "sRibbonsListTitleWindowTemplate"))
+    print("Verified HGSS owner-list header, six-row mask and lossless party-card cells")
+
+
+def validate_list_layout(source, bg_template, window_templates):
+    """Check VRAM ownership for a user of the shared six-row HGSS panels."""
     def fields(block):
         return {key: int(value, 0) for key, value in re.findall(r"\.(\w+)\s*=\s*(0x[\dA-Fa-f]+|\d+)", block)}
 
-    block = re.search(r"sMonRibbonListBgTemplates\[\].*?\n};", source, re.S).group()
+    block = re.search(bg_template + r"\[\].*?\n};", source, re.S).group()
     bgs = {entry["bg"]: entry for entry in (fields(b) for b in re.findall(r"\{([^{}]+)\}", block))}
     assert [bgs[i]["charBaseIndex"] for i in (1, 2, 3)] == [1, 2, 1]
     assert [bgs[i]["priority"] for i in (1, 2, 3)] == [2, 3, 1]
@@ -86,7 +93,7 @@ def validate():
     for bg, entry in bgs.items():
         start = entry["mapBaseIndex"] * 2048
         regions.append((f"BG{bg} map", start, start + 2048))
-    for name in ("sRibbonsMonListWindowTemplate", "sRibbonsListTitleWindowTemplate"):
+    for name in window_templates:
         block = re.search(name + r"\s*=.*?\n};", source, re.S).group()
         entry = fields(block)
         assert entry["bg"] == 3 and entry["paletteNum"] == 1
@@ -102,7 +109,6 @@ def validate():
     for left, right in zip(regions, regions[1:]):
         assert left[2] <= right[1], f"VRAM collision: {left[0]} / {right[0]}"
     assert regions[-1][2] <= 0x10000
-    print("Verified HGSS owner-list header, six-row mask and lossless party-card cells")
 
 
 if __name__ == "__main__":

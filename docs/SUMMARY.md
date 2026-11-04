@@ -57,6 +57,7 @@
   - [How to use Random Mon Generation](tutorials/how_to_random_mon_generator.md)
   - [How to use dynamic trainer battle scripts](tutorials/how_to_dynamic_trainer_script.md)
   - [How to use the Dynamic Multichoice](tutorials/how_to_dynmultichoice.md)
+  - [HGSS Condition search visual acceptance](gen4_ui/hgss_condition_search_visual_qa.md)
   - [HGSS ribbon grid visual acceptance](gen4_ui/hgss_ribbon_visual_qa.md)
   - [HGSS ribbon background source trace](gen4_ui/hgss_ribbon_bg_trace.md)
 - [Changelog](./CHANGELOG.md)
