@@ -55,7 +55,8 @@ IVs: 22 HP / 22 Atk / 22 Def / 22 SpA / 22 SpD / 22 Spe
     # JASC -> RGB555 truncates the low three bits; bit replication preserves
     # each original five-bit channel exactly.
     pal = 'JASC-PAL\n0100\n16\n' + ''.join(' '.join(str((c << 3) | (c >> 2)) for c in color) + '\n' for color in colors)
-    products['graphics/trainers/palettes/polished_lyra.pal'] = pal.encode()
+    # .gitattributes checks out .pal files with CRLF, including on Linux CI.
+    products['graphics/trainers/palettes/polished_lyra.pal'] = pal.replace('\n', '\r\n').encode()
     return products
 
 
