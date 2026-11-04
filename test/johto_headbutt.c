@@ -29,7 +29,7 @@ TEST("Johto Headbutt preserves Hisuian identity when creating an Expansion Pokem
         EXPECT(gSpeciesInfo[out.species].isHisuianForm);
         EXPECT_EQ(GetSpeciesType(out.species, 0), TYPE_ELECTRIC);
         EXPECT_EQ(GetSpeciesType(out.species, 1), TYPE_GRASS);
-        CreateMon(&mon, out.species, out.level, USE_RANDOM_IVS, FALSE, 0, OT_ID_PLAYER_ID, 0);
+        CreateMon(&mon, out.species, out.level, 0, OTID_STRUCT_PRESET(0));
         EXPECT_EQ(GetMonData(&mon, MON_DATA_SPECIES), species);
         EXPECT_EQ(GetMonData(&mon, MON_DATA_LEVEL), level);
     }

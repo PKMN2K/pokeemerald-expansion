@@ -294,7 +294,8 @@ def audit_selector(engine, overworld):
         "tree_wing_quantity_min": 1,
         "tree_wing_quantity_max": 10,
         "tree_wing_inventory_cap": 999,
-        "exact_tree_score_math_requires_port": True,
+        "exact_tree_score_math_requires_port": False,
+        "tree_score_live_gameplay_dispatch_pending": True,
         "source_headbutt_animation_and_script_require_port": True,
     }
 
