@@ -13,6 +13,8 @@ import zlib
 from collections import deque
 from pathlib import Path
 
+import make_hgss_pokegear_cursor as cursor_assets
+
 ROOT = Path(__file__).resolve().parents[2]
 ASSETS = ROOT / "graphics/gen4_ui/hgss_ribbons"
 SOURCE = ROOT / "src/pokenav_ribbons_summary.c"
@@ -184,7 +186,12 @@ def check_cursor_footprint():
     """Check actual opaque corner pixels, not just 16x16 OAM rectangles."""
     source = (ROOT / "src/pokenav_ribbons_summary.c").read_text()
     offset = int(re.search(r"corner->x = x \+ \(\(i & 2\) \? (\d+) :", source).group(1))
-    raw = (ROOT / "graphics/gen4_ui/hgss_pokegear/cursor_corner.4bpp").read_bytes()
+    # This audit runs before generated assets exist on a clean CI checkout.
+    # Use the same verified NCER/NANR cell and PNG extraction as the build.
+    cursor_assets.validate_nanr(ROOT / cursor_assets.ANIMS)
+    tile, _ = cursor_assets.load_cursor_cell(ROOT / cursor_assets.CELLS)
+    rows = cursor_assets.load_indexed_png4(ROOT / cursor_assets.SPRITES)
+    raw = cursor_assets.extract_base_cursor_tiles(rows, tile)
     ink = []
     for y in range(16):
         for x in range(16):
