@@ -2,6 +2,50 @@
 
 This directory contains conversion tooling and manifests for moving authentic Polished Crystal assets into pokeemerald-expansion without replacing the engine.
 
+## Route 29 first visit
+
+`build_new_bark.py` now reproduces ten connected source maps: New Bark and its
+seven interiors, Route 29 (60×18 cells), and the Route 29/46 gatehouse (10×8).
+The town and route share the same traditional tiles and time palettes across
+their reciprocal west/east connection. Route 29 uses the source standing-tile
+ledge trigger, validates the two-cell landing and leaves other maps unchanged.
+The four first-visit route residents,
+two gate residents, three signs, Potion, two Cut trees and Oran Berry tree use
+the pinned map coordinates and source art.
+
+Both original west-exit approaches run the teacher's safeguard before an Elm
+starter is selected. Entering New Bark records a native blackout destination
+at (6,5), where native recovery heals the party without a Hoenn nurse script.
+The gate's source warps 3/4 become native warps 0/1; its northern door cells are
+blocked until Route 46 exists. Cherrygrove and Route 46 connections, Lyra's
+post-Mystery-Egg tutorial and Tuscany's quest-dependent appearance remain
+deferred. No dangling warp or placeholder destination is used.
+
+Wild encounter species, levels and combined probabilities match all three
+source tables. Native twelve-slot tables preserve the seven-slot distribution
+by combining the identical final two source entries. The source evening rule
+selects day for 153 of 256 random bytes and night for the remaining 103.
+These tables opt in without changing other maps' global clock configuration.
+The native base encounter rate is 18×16/2880 = 10%; Expansion's movement
+cooldown, lead abilities, Repels and other encounter modifiers still apply.
+
+The fruit tree yields one to three Oran Berries, falling back to the amount
+that fits. A successful harvest records the native RTC day; a full pocket does
+not consume it, Save/Continue preserves it, and clock reversal cannot grant a
+second harvest. Picked fruit retains its source blank overlay and interaction.
+Mulch replenishment is deferred. Cut trees use source pixels and the copied
+background green palette, with a safe single-frame native removal animation;
+the Game Boy particle animation is not imported in this phase. Native Cut
+requirements apply, and either interaction or the party menu recognizes them.
+
+The source Advanced Tips sign's unsupported GBC title-screen shortcuts are
+replaced with time-of-day encounter advice. Source music remains outside this
+phase. Outdoor object overlays retain source pixels with native bottom anchors.
+
+Checks: `build_new_bark.py --check`, `test_route29.py`, native `Route 29` tests,
+and the real-input `test_new_bark_emulator.py` campaign. The emulator harness
+reads RAM for assertions and uses ordinary game input for state changes.
+
 ## Source pin
 
 Polished Crystal v3.2.3:

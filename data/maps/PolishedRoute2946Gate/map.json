@@ -1,0 +1,65 @@
+{
+  "id": "MAP_POLISHED_ROUTE_29_46_GATE",
+  "name": "PolishedRoute2946Gate",
+  "layout": "LAYOUT_POLISHED_ROUTE_29_46_GATE",
+  "music": "MUS_DUMMY",
+  "region": "REGION_JOHTO",
+  "region_map_section": "MAPSEC_NONE",
+  "requires_flash": false,
+  "weather": "WEATHER_NONE",
+  "map_type": "MAP_TYPE_INDOOR",
+  "allow_cycling": false,
+  "allow_escaping": false,
+  "allow_running": true,
+  "show_map_name": false,
+  "battle_scene": "MAP_BATTLE_SCENE_NORMAL",
+  "connections": null,
+  "object_events": [
+    {
+      "local_id": "LOCALID_ROUTE29_GATE_OFFICER",
+      "graphics_id": "OBJ_EVENT_GFX_POLISHED_OFFICER",
+      "x": 0,
+      "y": 4,
+      "elevation": 3,
+      "movement_type": "MOVEMENT_TYPE_FACE_RIGHT",
+      "movement_range_x": 0,
+      "movement_range_y": 0,
+      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_sight_or_berry_tree_id": "0",
+      "script": "PolishedRoute2946Gate_Route29Route46GateOfficerText",
+      "flag": "0"
+    },
+    {
+      "local_id": "LOCALID_ROUTE29_GATE_CAMPER",
+      "graphics_id": "OBJ_EVENT_GFX_POLISHED_CAMPER",
+      "x": 6,
+      "y": 4,
+      "elevation": 3,
+      "movement_type": "MOVEMENT_TYPE_WANDER_UP_AND_DOWN",
+      "movement_range_x": 0,
+      "movement_range_y": 1,
+      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_sight_or_berry_tree_id": "0",
+      "script": "PolishedRoute2946Gate_Route29Route46GateYoungsterText",
+      "flag": "0"
+    }
+  ],
+  "warp_events": [
+    {
+      "x": 4,
+      "y": 7,
+      "elevation": 0,
+      "dest_map": "MAP_POLISHED_ROUTE_29",
+      "dest_warp_id": "0"
+    },
+    {
+      "x": 5,
+      "y": 7,
+      "elevation": 0,
+      "dest_map": "MAP_POLISHED_ROUTE_29",
+      "dest_warp_id": "0"
+    }
+  ],
+  "coord_events": [],
+  "bg_events": []
+}

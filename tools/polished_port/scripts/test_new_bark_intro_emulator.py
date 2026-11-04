@@ -35,6 +35,7 @@ def layout():
         "substruct_size": "sizeof(union PokemonSubstruct)",
         "Cyndaquil": "SPECIES_CYNDAQUIL", "Totodile": "SPECIES_TOTODILE",
         "Chikorita": "SPECIES_CHIKORITA", "berry": "ITEM_ORAN_BERRY",
+        "Hoothoot": "SPECIES_HOOTHOOT", "Rattata": "SPECIES_RATTATA",
         "town_scene": "VAR_POLISHED_NEW_BARK_SCENE", "lab_scene": "VAR_POLISHED_ELMS_LAB_SCENE",
         "starter": "VAR_POLISHED_STARTER", "contact": "FLAG_POLISHED_HAS_ELM_CONTACT",
         "home_scene": "VAR_POLISHED_HOME_SCENE", "weekday_offset": "VAR_POLISHED_WEEKDAY_OFFSET",

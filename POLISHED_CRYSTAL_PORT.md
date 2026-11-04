@@ -121,8 +121,9 @@ use the source's fixed daytime colors. Existing map/layout IDs stay unchanged.
 This completes the town's **geography and traversal phase**. The ambient
 resident phase below populates the source's unconditional dialogue NPCs.
 The window rival, opening starter sequence and Mom's opening are covered below.
-Later story-dependent NPCs, hidden items, room decorations and Route 29/27
-connections are still pending. The unconnected town boundaries remain closed
+Later story-dependent NPCs, hidden items, room decorations and Route 27
+are still pending. Route 29 is connected in the phase described below.
+The remaining unconnected town boundaries remain closed
 by source border collision. No Headbutt source-map assignments are invented.
 New Bark's original `TREEMON_SET_CITY` encounter data remains in the dormant
 selector. Registering its geography does not enable that data in live play;
@@ -227,7 +228,7 @@ Elm, Lyra, the aide and the three balls use exact v3.2.3 source pixels and
 daytime indoor palettes. Lyra uses the existing red time palette outdoors.
 Ball frames use only the source standing ball, not its cut-tree/fruit frames.
 `new_bark_intro.py` translates the selected source movement and dialogue labels;
-`build_new_bark.py --check` reproduces all 81 products, including the battle
+`build_new_bark.py --check` reproduces all 106 products, including the battle
 and home assets described below.
 
 Three previously unused vars shared by Emerald and FRLG hold town scene
@@ -291,7 +292,7 @@ Save/Continue, reentry and duplicate-gift guards.
 The resident movement probe also observes walking lanes from nearby and allows
 bounded native random pauses while still requiring displacement and checking
 source movement bounds. This addresses the prior CI #1438 movement assertion.
-Mom's opening is now covered below. Route 29, later campaign scenes and the
+Mom's opening and Route 29 are now covered below. Later campaign scenes and the
 phone interface remain unported.
 
 ### Mom's opening, home schedule and weekday setup
@@ -343,7 +344,50 @@ deliberate-loss input switches while both Pokémon are healthy, then uses the
 remaining Pokémon's status move with an explicit PP check. This removes the
 observed exhausted-Leer loop without changing production battle behavior.
 
-The next content phase is Route 29.
+### Route 29 first visit and gatehouse
+
+Route 29's 60×18-cell geography now connects seamlessly to New Bark. Its four
+first-visit residents, three signs, Potion, two Cut trees and daily Oran Berry
+tree use the pinned coordinates and source sprites. The 10×8-cell gatehouse
+includes both residents, including native interaction across the officer's
+counter. Source gate warps 3/4 map to native 0/1; both northern door cells stay
+blocked until Route 46 is imported. There are now ten source maps and 22
+reciprocal door/stair events, in addition to the two garden demo maps.
+
+The original teacher safeguard runs at both town exit approaches until the
+player receives an Elm starter. New Bark records a native blackout destination
+at (6,5), where the engine restores the party without entering a Hoenn scene.
+The route shares the town's traditional tile banks, roof group and four time
+palettes. Its ledges use Crystal's standing-tile jump rule, with a walkable,
+unoccupied two-cell landing. Other maps retain Emerald's next-tile ledge rule.
+
+All three source grass tables preserve species, levels and combined weights.
+The duplicate final slots allow exact species/level probabilities in twelve
+native slots. Evening selects the day table on 153/256 rolls and the night
+table otherwise, matching the source byte threshold. Native rate 18 gives a
+10% unmodified check; Expansion's encounter cooldowns, abilities and Repels
+remain in effect. Only this route opts into these clock rules.
+
+Berry harvests give one to three Oran Berries, fall back to an amount that
+fits, and record the RTC day only after successful Bag insertion. Same-day
+reuse and clock reversal cannot duplicate berries; Save/Continue persists the
+harvest and the next RTC day replenishes it. Cut uses native field-move
+requirements, source tree pixels/background green colors, persistent removal,
+and a one-frame native removal animation rather than unimported GBC particles.
+The Advanced Tips sign replaces unsupported GBC title shortcuts with encounter
+time advice. Source music, Mulch, later Lyra/Tuscany events, Route 46 and
+Cherrygrove are deferred. Headbutt remains dormant.
+
+Shared unused flags `0x26`, `0x27`, `0xE9` hold the Potion and two Cut trees;
+unused var `0x40F9` holds the last successful berry day plus one. Existing IDs
+and save sizes are unchanged. Reproducible checks cover all live encounter
+weights, source connections, gate remapping and flag allocation. Native tests
+cover clock boundaries/evening rolls, Bag-full fallback, daily clock reversal,
+blackout routing and real-map ledge landings. Real-input mGBA checks cover the
+opening guard, connection, source residents, gate, pickups, Save/Continue,
+daily regrowth, native nighttime battles and complete traversal back to town.
+
+The next content phase is Cherrygrove City and its first-visit services/events.
 
 The playable visual slice and dormant Headbutt encounter selection are complete
 parts of the port. **The whole Polished Crystal migration is not complete.**

@@ -261,7 +261,7 @@
 #define VAR_0x40F6                 0x40F6
 // 0x40F7 is reserved for VAR_POLISHED_HOME_SCENE in vars.h.
 // 0x40F8 is reserved for VAR_POLISHED_WEEKDAY_OFFSET in vars.h.
-#define VAR_0x40F9                 0x40F9
+// 0x40F9 reserved for VAR_POLISHED_ROUTE29_FRUIT_DAY in vars.h.
 #define VAR_0x40FA                 0x40FA
 #define VAR_0x40FB                 0x40FB
 #define VAR_0x40FC                 0x40FC

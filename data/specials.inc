@@ -647,3 +647,6 @@ gSpecials::
 	def_special PolishedJohtoBufferChosenWeekday
 	def_special PolishedJohtoCommitWeekday
 	def_special PolishedJohtoBufferClock
+	def_special PolishedRoute29FruitAvailable
+	def_special PolishedRoute29RefreshFruit
+	def_special PolishedRoute29PickFruit

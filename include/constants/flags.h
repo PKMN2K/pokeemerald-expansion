@@ -55,14 +55,16 @@
 #define FLAG_POLISHED_HAS_MOM_CONTACT 0x24
 #define FLAG_POLISHED_DAYLIGHT_SAVING 0x25
 
+#define FLAG_POLISHED_ROUTE29_POTION 0x26
+#define FLAG_POLISHED_ROUTE29_CUT_1 0x27
+#define FLAG_POLISHED_ROUTE29_CUT_2 0xE9
+
 #if IS_FRLG
 
 #include "constants/flags_frlg.h"
 
 #else
 
-#define FLAG_UNUSED_0x026    0x26 // Unused Flag
-#define FLAG_UNUSED_0x027    0x27 // Unused Flag
 #define FLAG_UNUSED_0x028    0x28 // Unused Flag
 #define FLAG_UNUSED_0x029    0x29 // Unused Flag
 #define FLAG_UNUSED_0x02A    0x2A // Unused Flag
@@ -267,7 +269,6 @@
 #define FLAG_RECEIVED_TM_ROAR                0xE7
 #define FLAG_RECEIVED_TM_GIGA_DRAIN          0xE8
 
-#define FLAG_UNUSED_0x0E9                    0xE9 // Unused Flag
 
 #define FLAG_RECEIVED_TM_REST                0xEA
 #define FLAG_RECEIVED_TM_ATTRACT             0xEB

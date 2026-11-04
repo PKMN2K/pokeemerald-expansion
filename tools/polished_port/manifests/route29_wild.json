@@ -1,0 +1,240 @@
+{
+  "source_commit": "3fa43192379df5c3e7b09a08e4d5d79af4f02f42",
+  "source_weights": [
+    30,
+    30,
+    20,
+    10,
+    5,
+    3,
+    2
+  ],
+  "native_weights": [
+    20,
+    20,
+    10,
+    10,
+    10,
+    10,
+    5,
+    5,
+    4,
+    4,
+    1,
+    1
+  ],
+  "rate_translation": "18 * 16 / 2880 = 10% base check; native step cooldown, abilities and other modifiers remain",
+  "evening": "17-21 hours: source day table for 153/256 rolls; night for 103/256",
+  "encounters": [
+    {
+      "map": "MAP_POLISHED_ROUTE_29",
+      "base_label": "gPolishedRoute29_Morning",
+      "always_time_of_day": true,
+      "land_mons": {
+        "encounter_rate": 18,
+        "mons": [
+          {
+            "min_level": 2,
+            "max_level": 2,
+            "species": "SPECIES_PIDGEY"
+          },
+          {
+            "min_level": 2,
+            "max_level": 2,
+            "species": "SPECIES_SENTRET"
+          },
+          {
+            "min_level": 2,
+            "max_level": 2,
+            "species": "SPECIES_PIDGEY"
+          },
+          {
+            "min_level": 2,
+            "max_level": 2,
+            "species": "SPECIES_SENTRET"
+          },
+          {
+            "min_level": 3,
+            "max_level": 3,
+            "species": "SPECIES_PIDGEY"
+          },
+          {
+            "min_level": 3,
+            "max_level": 3,
+            "species": "SPECIES_PIDGEY"
+          },
+          {
+            "min_level": 3,
+            "max_level": 3,
+            "species": "SPECIES_SENTRET"
+          },
+          {
+            "min_level": 3,
+            "max_level": 3,
+            "species": "SPECIES_SENTRET"
+          },
+          {
+            "min_level": 2,
+            "max_level": 2,
+            "species": "SPECIES_RATTATA"
+          },
+          {
+            "min_level": 3,
+            "max_level": 3,
+            "species": "SPECIES_HOPPIP"
+          },
+          {
+            "min_level": 2,
+            "max_level": 2,
+            "species": "SPECIES_RATTATA"
+          },
+          {
+            "min_level": 3,
+            "max_level": 3,
+            "species": "SPECIES_HOPPIP"
+          }
+        ]
+      }
+    },
+    {
+      "map": "MAP_POLISHED_ROUTE_29",
+      "base_label": "gPolishedRoute29_Day",
+      "always_time_of_day": true,
+      "land_mons": {
+        "encounter_rate": 18,
+        "mons": [
+          {
+            "min_level": 2,
+            "max_level": 2,
+            "species": "SPECIES_PIDGEY"
+          },
+          {
+            "min_level": 2,
+            "max_level": 2,
+            "species": "SPECIES_SENTRET"
+          },
+          {
+            "min_level": 2,
+            "max_level": 2,
+            "species": "SPECIES_PIDGEY"
+          },
+          {
+            "min_level": 2,
+            "max_level": 2,
+            "species": "SPECIES_SENTRET"
+          },
+          {
+            "min_level": 3,
+            "max_level": 3,
+            "species": "SPECIES_PIDGEY"
+          },
+          {
+            "min_level": 3,
+            "max_level": 3,
+            "species": "SPECIES_PIDGEY"
+          },
+          {
+            "min_level": 3,
+            "max_level": 3,
+            "species": "SPECIES_SENTRET"
+          },
+          {
+            "min_level": 3,
+            "max_level": 3,
+            "species": "SPECIES_SENTRET"
+          },
+          {
+            "min_level": 2,
+            "max_level": 2,
+            "species": "SPECIES_RATTATA"
+          },
+          {
+            "min_level": 3,
+            "max_level": 3,
+            "species": "SPECIES_HOPPIP"
+          },
+          {
+            "min_level": 2,
+            "max_level": 2,
+            "species": "SPECIES_RATTATA"
+          },
+          {
+            "min_level": 3,
+            "max_level": 3,
+            "species": "SPECIES_HOPPIP"
+          }
+        ]
+      }
+    },
+    {
+      "map": "MAP_POLISHED_ROUTE_29",
+      "base_label": "gPolishedRoute29_Night",
+      "always_time_of_day": true,
+      "land_mons": {
+        "encounter_rate": 18,
+        "mons": [
+          {
+            "min_level": 2,
+            "max_level": 2,
+            "species": "SPECIES_HOOTHOOT"
+          },
+          {
+            "min_level": 2,
+            "max_level": 2,
+            "species": "SPECIES_RATTATA"
+          },
+          {
+            "min_level": 2,
+            "max_level": 2,
+            "species": "SPECIES_HOOTHOOT"
+          },
+          {
+            "min_level": 2,
+            "max_level": 2,
+            "species": "SPECIES_RATTATA"
+          },
+          {
+            "min_level": 3,
+            "max_level": 3,
+            "species": "SPECIES_HOOTHOOT"
+          },
+          {
+            "min_level": 3,
+            "max_level": 3,
+            "species": "SPECIES_HOOTHOOT"
+          },
+          {
+            "min_level": 3,
+            "max_level": 3,
+            "species": "SPECIES_RATTATA"
+          },
+          {
+            "min_level": 3,
+            "max_level": 3,
+            "species": "SPECIES_RATTATA"
+          },
+          {
+            "min_level": 2,
+            "max_level": 2,
+            "species": "SPECIES_RATTATA"
+          },
+          {
+            "min_level": 3,
+            "max_level": 3,
+            "species": "SPECIES_HOOTHOOT"
+          },
+          {
+            "min_level": 2,
+            "max_level": 2,
+            "species": "SPECIES_RATTATA"
+          },
+          {
+            "min_level": 3,
+            "max_level": 3,
+            "species": "SPECIES_HOOTHOOT"
+          }
+        ]
+      }
+    }
+  ]
+}

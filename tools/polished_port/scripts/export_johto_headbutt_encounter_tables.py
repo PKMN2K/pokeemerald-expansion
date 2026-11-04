@@ -336,14 +336,14 @@ def export(output: Path, headbutt_review: dict):
         candidate["used_by_headbutt"] = candidate["source_species"] in tree_species
         candidate["runtime_mapping_verified"] = runtime_tables_match and candidate["used_by_headbutt"]
     map_groups = json.loads((ROOT / "data/maps/map_groups.json").read_text(encoding="utf-8"))
-    # The custom garden has no source map identity. The reviewed New Bark
-    # geography does: the town has a City set, while its interiors have none.
+    # The custom garden has no source map identity. New Bark has a City set,
+    # Route 29 has a Route set, and their imported interiors have none.
     # Keep rejecting unreviewed registrations; a "Johto" name or matching
     # numeric map ID must never imply an Emerald-to-source encounter bridge.
     from build_new_bark import MAPS as new_bark_maps
     registered_source_sets = {row["source_map_id"]: row["source_group"] for row in maps
                               if row["source_map_id"] in new_bark_maps.values()}
-    assert registered_source_sets == {"NEW_BARK_TOWN": "TREEMON_SET_CITY"}
+    assert registered_source_sets == {"NEW_BARK_TOWN": "TREEMON_SET_CITY", "ROUTE_29": "TREEMON_SET_ROUTE"}
     # Production still contains only the dormant selector's definition, with
     # no live caller or function-pointer binding. A future field phase must
     # replace this gate with explicit mapping and gameplay validation.

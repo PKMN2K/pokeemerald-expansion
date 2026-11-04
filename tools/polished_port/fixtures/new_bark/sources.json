@@ -221,6 +221,101 @@
       "path": "engine/rtc/timeset.asm",
       "fixture": "engine__rtc__timeset.asm.b64",
       "git_blob_sha1": "bdcaa3bd4aec01a59d39f5ed3b846ca51c876427"
+    },
+    {
+      "path": "maps/Route29.asm",
+      "fixture": "maps__Route29.asm.b64",
+      "git_blob_sha1": "73dbce4a761cb7b8154fd8e5b84dde84af4bf2c5"
+    },
+    {
+      "path": "maps/Route2946Gate.asm",
+      "fixture": "maps__Route2946Gate.asm.b64",
+      "git_blob_sha1": "999379424f8828126d5dccce60191a11ac8db192"
+    },
+    {
+      "path": "maps/Route29.ablk",
+      "fixture": "maps__Route29.ablk.b64",
+      "git_blob_sha1": "1a9e8b004fd5214befd924471cf066fe3014da77"
+    },
+    {
+      "path": "maps/NorthSouthGate.ablk",
+      "fixture": "maps__NorthSouthGate.ablk.b64",
+      "git_blob_sha1": "d4e3831c0c6e2eb3ac1869809cf0ed4caaac16c8"
+    },
+    {
+      "path": "gfx/tilesets/gate.png",
+      "fixture": "gfx__tilesets__gate.png.b64",
+      "git_blob_sha1": "a1c7af29dbf1c5df785b5e7a246f683666a97daf"
+    },
+    {
+      "path": "data/tilesets/gate_metatiles.bin",
+      "fixture": "data__tilesets__gate_metatiles.bin.b64",
+      "git_blob_sha1": "262345cf8bd6a2b6cc5c943e59b61db530fe295a"
+    },
+    {
+      "path": "data/tilesets/gate_attributes.bin",
+      "fixture": "data__tilesets__gate_attributes.bin.b64",
+      "git_blob_sha1": "467e4bc8a0b0a2d38c29cacce4c918d1efbf1515"
+    },
+    {
+      "path": "data/tilesets/gate_collision.asm",
+      "fixture": "data__tilesets__gate_collision.asm.b64",
+      "git_blob_sha1": "eae4d68151567976de4959abf30385285d8dd576"
+    },
+    {
+      "path": "data/wild/johto_grass.asm",
+      "fixture": "data__wild__johto_grass.asm.b64",
+      "git_blob_sha1": "811c9d1b5e72c44cca1b9f35929b3ba18d9d8d2b"
+    },
+    {
+      "path": "data/wild/probabilities.asm",
+      "fixture": "data__wild__probabilities.asm.b64",
+      "git_blob_sha1": "d380e8c0727f913d1341c3de362a279a6143d201"
+    },
+    {
+      "path": "engine/overworld/wildmons.asm",
+      "fixture": "engine__overworld__wildmons.asm.b64",
+      "git_blob_sha1": "661988ed652ec219dd918a71739e96671c21b93e"
+    },
+    {
+      "path": "engine/events/fruit_trees.asm",
+      "fixture": "engine__events__fruit_trees.asm.b64",
+      "git_blob_sha1": "4b047409663a8c37261d1528998acf38ba4459a3"
+    },
+    {
+      "path": "engine/overworld/time.asm",
+      "fixture": "engine__overworld__time.asm.b64",
+      "git_blob_sha1": "ff39e8e407417815564b91df57bb8bc66a0d9944"
+    },
+    {
+      "path": "data/text/common.asm",
+      "fixture": "data__text__common.asm.b64",
+      "git_blob_sha1": "d76b34846468a29aa36ff83795a1ecb87330cfb7"
+    },
+    {
+      "path": "data/sprites/facings.asm",
+      "fixture": "data__sprites__facings.asm.b64",
+      "git_blob_sha1": "6e481b05c139cec1aa36f3b0fb84748d6da94e40"
+    },
+    {
+      "path": "gfx/sprites/teacher.png",
+      "fixture": "gfx__sprites__teacher.png.b64",
+      "git_blob_sha1": "57c25654444d6bf5b5aa0c066ce34ef974a79cf9"
+    },
+    {
+      "path": "gfx/sprites/cool_dude.png",
+      "fixture": "gfx__sprites__cool_dude.png.b64",
+      "git_blob_sha1": "e3eaa97b33b35f4e009b65924806ef1059828724"
+    },
+    {
+      "path": "gfx/sprites/officer.png",
+      "fixture": "gfx__sprites__officer.png.b64",
+      "git_blob_sha1": "f62252038f62a5fa5edfb8103342f7ac2a4d7013"
+    },
+    {
+      "path": "gfx/sprites/camper.png",
+      "fixture": "gfx__sprites__camper.png.b64",
+      "git_blob_sha1": "a2b531ab15db603a6f7d4b064df4431341ab1a93"
     }
   ]
 }

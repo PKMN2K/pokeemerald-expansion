@@ -153,7 +153,7 @@ bool32 SetUpFieldMove_Cut(void)
         return TRUE;
     }
 
-    if (CheckObjectGraphicsInFrontOfPlayer(OBJ_EVENT_GFX_CUTTABLE_TREE) == TRUE || CheckObjectGraphicsInFrontOfPlayer(OBJ_EVENT_GFX_CUTTABLE_TREE_FRLG) == TRUE)
+    if (CheckObjectGraphicsInFrontOfPlayer(OBJ_EVENT_GFX_CUTTABLE_TREE) == TRUE || CheckObjectGraphicsInFrontOfPlayer(OBJ_EVENT_GFX_CUTTABLE_TREE_FRLG) == TRUE || CheckObjectGraphicsInFrontOfPlayer(OBJ_EVENT_GFX_POLISHED_CUT_TREE) == TRUE)
     {
         // Standing in front of cuttable tree.
         gFieldCallback2 = FieldCallback_PrepareFadeInFromMenu;

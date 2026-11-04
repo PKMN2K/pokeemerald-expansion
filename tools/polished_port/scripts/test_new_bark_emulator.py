@@ -9,7 +9,7 @@ import re
 import struct
 import tempfile
 
-from build_new_bark import MAPS, source_files
+from build_new_bark import NEW_BARK_MAPS as MAPS, source_files
 from build_johto_demo import ROOT, palette_rows
 from test_johto_demo_emulator import Game, A, B, START, RIGHT, LEFT, UP, DOWN
 from stage_johto_time_palettes import stage, load_source_palettes
@@ -449,6 +449,8 @@ def run(args):
                 game.check_sprite_palettes(obj[period])
                 game.screenshot("new-bark-" + period)
             checks.append("original town uses all four source background, roof and sprite palettes")
+            from test_route29_emulator import check_guard, check_route
+            check_guard(game, town, checks)
             # Complete the real first-entry story before testing ordinary doors.
             # Independent choice branches use snapshots reached by real input.
             from test_new_bark_mom_emulator import check_mom, check_mom_after_starter
@@ -456,6 +458,7 @@ def run(args):
             from test_new_bark_intro_emulator import check_intro
             check_intro(game, maps, rows, checks)
             check_mom_after_starter(game, maps, checks)
+            check_route(game, maps, rows, checks)
             # Mom's schedule tests deliberately change the RTC. Establish the
             # night palette again before the independent door/palette probes.
             game.set_hour(23)

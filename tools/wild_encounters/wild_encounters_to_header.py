@@ -177,7 +177,7 @@ class WildEncounterAssembler:
             self.WriteLine(".encounterTypes =", 2)
             self.WriteLine("{", 2)
             for time in self.config.times_of_day:
-                if not self.config.time_encounters and time != self.config.time_fallback:
+                if not self.config.time_encounters and time != self.config.time_fallback and not map_data.get("always_time_of_day", False):
                     continue
                 self.WriteLine(f"[{time}] =", 4)
                 self.WriteLine("{", 4)
@@ -235,6 +235,7 @@ class WildEncounterAssembler:
                     headers["data"][shared_label][time] = {}
                 headers["data"][shared_label]["mapGroup"] = map_group
                 headers["data"][shared_label]["mapNum"] = map_num
+                headers["data"][shared_label]["always_time_of_day"] = map_encounters.get("always_time_of_day", False)
 
                 version = "EMERALD"
                 if "FireRed" in shared_label:

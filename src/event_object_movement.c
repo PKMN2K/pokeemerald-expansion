@@ -1,4 +1,5 @@
 #include "global.h"
+#include "constants/layouts.h"
 #include "malloc.h"
 #include "battle_anim.h"
 #include "battle_pyramid.h"
@@ -513,6 +514,7 @@ static const struct SpritePalette sObjectEventSpritePalettes[] = {
     {gObjectEventPal_PolishedBallRed,        OBJ_EVENT_PAL_TAG_POLISHED_BALL_RED},
     {gObjectEventPal_PolishedBallBlue,        OBJ_EVENT_PAL_TAG_POLISHED_BALL_BLUE},
     {gObjectEventPal_PolishedBallGreen,        OBJ_EVENT_PAL_TAG_POLISHED_BALL_GREEN},
+    {gObjectEventPal_PolishedBgGreen, OBJ_EVENT_PAL_TAG_POLISHED_BG_GREEN},
     {gObjectEventPal_BrendanReflection,     OBJ_EVENT_PAL_TAG_BRENDAN_REFLECTION},
     {gObjectEventPal_BridgeReflection,      OBJ_EVENT_PAL_TAG_BRIDGE_REFLECTION},
     {gObjectEventPal_PlayerUnderwater,      OBJ_EVENT_PAL_TAG_PLAYER_UNDERWATER},
@@ -9882,7 +9884,23 @@ enum Direction GetLedgeJumpDirection(s16 x, s16 y, enum Direction direction)
         index -= DIR_EAST;
 
     index--;
-    behavior = MapGridGetMetatileBehaviorAt(x, y);
+    if (gMapHeader.mapLayoutId == LAYOUT_POLISHED_ROUTE_29)
+    {
+        s16 originX = x, originY = y;
+        s16 landingX = x, landingY = y;
+        // Crystal .TryJump reads the STANDING tile and checks the landing
+        // two cells away. The original route has a wall below each ledge;
+        // Emerald's next-tile trigger would jump directly into that wall.
+        MoveCoords(GetOppositeDirection(index + 1), &originX, &originY);
+        MoveCoords(index + 1, &landingX, &landingY);
+        behavior = MapGridGetMetatileBehaviorAt(originX, originY);
+        if (MapGridGetCollisionAt(landingX, landingY)
+            || MapGridGetElevationAt(landingX, landingY) != 3
+            || GetObjectEventIdByXY(landingX, landingY) != OBJECT_EVENTS_COUNT)
+            return DIR_NONE;
+    }
+    else
+        behavior = MapGridGetMetatileBehaviorAt(x, y);
 
     // Polished Crystal corner ledges accept two CARDINAL jump directions.
     // DOWN_RIGHT allows south/east; DOWN_LEFT allows south/west. No

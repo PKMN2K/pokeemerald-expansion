@@ -8,8 +8,6 @@
 // 0x023 reserved for the shared Polished home/clock state in flags.h.
 // 0x024 reserved for the shared Polished home/clock state in flags.h.
 // 0x025 reserved for the shared Polished home/clock state in flags.h.
-#define FLAG_0x026               0x026
-#define FLAG_0x027               0x027
 
 // Hide/show flags
 #define FLAG_HIDE_BULBASAUR_BALL                           0x028
@@ -207,7 +205,6 @@
 #define FLAG_0x0E6               0x0E6
 #define FLAG_0x0E7               0x0E7
 #define FLAG_0x0E8               0x0E8
-#define FLAG_0x0E9               0x0E9
 #define FLAG_0x0EA               0x0EA
 #define FLAG_0x0EB               0x0EB
 #define FLAG_0x0EC               0x0EC

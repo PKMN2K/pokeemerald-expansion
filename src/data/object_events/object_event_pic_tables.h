@@ -2573,3 +2573,31 @@ static const struct SpriteFrameImage sPicTable_PolishedMom[] = {
 static const struct SpriteFrameImage sPicTable_PolishedMatron[] = {
     overworld_ascending_frames(gObjectEventPic_PolishedMatron, 2, 4),
 };
+
+static const struct SpriteFrameImage sPicTable_PolishedTeacher[] = {
+    overworld_ascending_frames(gObjectEventPic_PolishedTeacher, 2, 4),
+};
+
+static const struct SpriteFrameImage sPicTable_PolishedCoolDude[] = {
+    overworld_ascending_frames(gObjectEventPic_PolishedCoolDude, 2, 4),
+};
+
+static const struct SpriteFrameImage sPicTable_PolishedOfficer[] = {
+    overworld_ascending_frames(gObjectEventPic_PolishedOfficer, 2, 4),
+};
+
+static const struct SpriteFrameImage sPicTable_PolishedCamper[] = {
+    overworld_ascending_frames(gObjectEventPic_PolishedCamper, 2, 4),
+};
+
+static const struct SpriteFrameImage sPicTable_PolishedCutTree[] = {
+    overworld_frame(gObjectEventPic_PolishedCutTree, 2, 4, 0),
+};
+
+static const struct SpriteFrameImage sPicTable_PolishedFruit[] = {
+    overworld_frame(gObjectEventPic_PolishedFruit, 2, 4, 0),
+};
+
+static const struct SpriteFrameImage sPicTable_PolishedFruitPicked[] = {
+    overworld_frame(gObjectEventPic_PolishedFruitPicked, 2, 4, 0),
+};

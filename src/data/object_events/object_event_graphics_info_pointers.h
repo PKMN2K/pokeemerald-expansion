@@ -1,3 +1,12 @@
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_PolishedTeacher;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_PolishedCoolDude;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_PolishedOfficer;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_PolishedCamper;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_PolishedSchoolboyGreen;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_PolishedFatGuyBlue;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_PolishedCutTree;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_PolishedFruit;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_PolishedFruitPicked;
 extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_PolishedBallGreen;
 extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_PolishedBallBlue;
 extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_PolishedBallRed;
@@ -426,6 +435,15 @@ const struct ObjectEventGraphicsInfo *const gObjectEventGraphicsInfoPointers[NUM
     [OBJ_EVENT_GFX_POLISHED_POKEFAN] = &gObjectEventGraphicsInfo_PolishedPokefan,
     [OBJ_EVENT_GFX_POLISHED_MOM] = &gObjectEventGraphicsInfo_PolishedMom,
     [OBJ_EVENT_GFX_POLISHED_MATRON] = &gObjectEventGraphicsInfo_PolishedMatron,
+    [OBJ_EVENT_GFX_POLISHED_TEACHER] = &gObjectEventGraphicsInfo_PolishedTeacher,
+    [OBJ_EVENT_GFX_POLISHED_COOL_DUDE] = &gObjectEventGraphicsInfo_PolishedCoolDude,
+    [OBJ_EVENT_GFX_POLISHED_OFFICER] = &gObjectEventGraphicsInfo_PolishedOfficer,
+    [OBJ_EVENT_GFX_POLISHED_CAMPER] = &gObjectEventGraphicsInfo_PolishedCamper,
+    [OBJ_EVENT_GFX_POLISHED_SCHOOLBOY_GREEN] = &gObjectEventGraphicsInfo_PolishedSchoolboyGreen,
+    [OBJ_EVENT_GFX_POLISHED_FAT_GUY_BLUE] = &gObjectEventGraphicsInfo_PolishedFatGuyBlue,
+    [OBJ_EVENT_GFX_POLISHED_CUT_TREE] = &gObjectEventGraphicsInfo_PolishedCutTree,
+    [OBJ_EVENT_GFX_POLISHED_FRUIT] = &gObjectEventGraphicsInfo_PolishedFruit,
+    [OBJ_EVENT_GFX_POLISHED_FRUIT_PICKED] = &gObjectEventGraphicsInfo_PolishedFruitPicked,
     [OBJ_EVENT_GFX_POLISHED_RIVAL] = &gObjectEventGraphicsInfo_PolishedRival,
     [OBJ_EVENT_GFX_POLISHED_BALL_GREEN] = &gObjectEventGraphicsInfo_PolishedBallGreen,
     [OBJ_EVENT_GFX_POLISHED_BALL_BLUE] = &gObjectEventGraphicsInfo_PolishedBallBlue,

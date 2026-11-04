@@ -3,6 +3,7 @@ PolishedNewBarkTown_MapScripts::
 	map_script MAP_SCRIPT_ON_LOAD, PolishedNewBarkTown_ResidentSchedule
 	map_script MAP_SCRIPT_ON_RETURN_TO_FIELD, PolishedNewBarkTown_ResidentSchedule_Restore
 	map_script MAP_SCRIPT_ON_TRANSITION, PolishedIntro_TownSetup
+	map_script MAP_SCRIPT_ON_TRANSITION, PolishedRoute29_SetRespawn
 	.byte 0
 
 @ Map-local visibility, recomputed on entry and save loading.
@@ -202,3 +203,98 @@ PolishedIntro_TownApproaches:
 
 PolishedIntro_Text_LyraIntro:
 	.string "Lyra: Oh, hello,\n{PLAYER}!\pI came by your\nhouse earlier,\pbut you were\nstill sleeping.\pYou know how I\nassist Prof.Elm\lsometimes?\pHe's starting new\nPOKéMON research\pand would like us\nboth to help.\pLet's go and see\nwhat he wants!$"
+
+PolishedRoute29_SetRespawn::
+	setrespawn HEAL_LOCATION_POLISHED_NEW_BARK_TOWN
+	end
+
+PolishedRoute29_Stop1::
+	lockall
+	msgbox PolishedRoute29_Text_WaitPlayer, MSGBOX_DEFAULT
+	closemessage
+	turnobject OBJ_EVENT_ID_PLAYER, DIR_EAST
+	applymovement LOCALID_NEW_BARK_TEACHER, PolishedRoute29_Stop1_Approach
+	waitmovement 0
+	msgbox PolishedRoute29_Text_WhatDoYouThinkYoureDoing, MSGBOX_DEFAULT
+	closemessage
+	applymovement LOCALID_NEW_BARK_TEACHER, PolishedRoute29_Stop1_Return
+	applymovement OBJ_EVENT_ID_PLAYER, PolishedRoute29_Stop1_Follow
+	waitmovement OBJ_EVENT_ID_PLAYER
+	waitmovement LOCALID_NEW_BARK_TEACHER
+	msgbox PolishedRoute29_Text_ItsDangerousToGoAlone, MSGBOX_DEFAULT
+	releaseall
+	end
+
+PolishedRoute29_Stop1_Approach:
+	walk_left
+	walk_left
+	walk_left
+	walk_left
+	step_end
+
+PolishedRoute29_Stop1_Return:
+	walk_right
+	walk_right
+	walk_right
+	walk_right
+	face_left
+	step_end
+
+PolishedRoute29_Stop1_Follow:
+	walk_right
+	walk_right
+	walk_right
+	walk_right
+	step_end
+
+PolishedRoute29_Stop2::
+	lockall
+	msgbox PolishedRoute29_Text_WaitPlayer, MSGBOX_DEFAULT
+	closemessage
+	turnobject OBJ_EVENT_ID_PLAYER, DIR_EAST
+	applymovement LOCALID_NEW_BARK_TEACHER, PolishedRoute29_Stop2_Approach
+	waitmovement 0
+	msgbox PolishedRoute29_Text_WhatDoYouThinkYoureDoing, MSGBOX_DEFAULT
+	closemessage
+	applymovement LOCALID_NEW_BARK_TEACHER, PolishedRoute29_Stop2_Return
+	applymovement OBJ_EVENT_ID_PLAYER, PolishedRoute29_Stop2_Follow
+	waitmovement OBJ_EVENT_ID_PLAYER
+	waitmovement LOCALID_NEW_BARK_TEACHER
+	msgbox PolishedRoute29_Text_ItsDangerousToGoAlone, MSGBOX_DEFAULT
+	releaseall
+	end
+
+PolishedRoute29_Stop2_Approach:
+	walk_left
+	walk_left
+	walk_left
+	walk_left
+	walk_left
+	face_down
+	step_end
+
+PolishedRoute29_Stop2_Return:
+	walk_right
+	walk_right
+	walk_right
+	walk_right
+	walk_right
+	face_left
+	step_end
+
+PolishedRoute29_Stop2_Follow:
+	walk_up
+	walk_right
+	walk_right
+	walk_right
+	walk_right
+	step_end
+
+PolishedRoute29_Text_WaitPlayer:
+	.string "Wait, {PLAYER}!$"
+
+PolishedRoute29_Text_WhatDoYouThinkYoureDoing:
+	.string "What do you think\nyou're doing?$"
+
+PolishedRoute29_Text_ItsDangerousToGoAlone:
+	.string "It's dangerous to\ngo out without a\lPOKéMON!\pWild POKéMON\njump out of the\pgrass on the way\nto the next town.$"

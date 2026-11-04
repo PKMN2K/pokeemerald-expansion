@@ -1758,6 +1758,17 @@ static const union AnimCmd *const sAnimTable_CuttableTree[] = {
     [ANIM_REMOVE_OBSTACLE] = sAnim_TreeCut,
 };
 
+// The source Cut tree has one intact frame. Use the native removal/blink
+// sequence without indexing Emerald's extra tree frames in this small sheet.
+static const union AnimCmd sAnim_PolishedTreeCut[] = {
+    ANIMCMD_FRAME(0, 32),
+    ANIMCMD_END,
+};
+static const union AnimCmd *const sAnimTable_PolishedCutTree[] = {
+    [ANIM_STAY_STILL] = sAnim_StayStill,
+    [ANIM_REMOVE_OBSTACLE] = sAnim_PolishedTreeCut,
+};
+
 static const union AnimCmd *const sAnimTable_Fishing[] = {
     [ANIM_TAKE_OUT_ROD_SOUTH] = sAnim_TakeOutRodSouth,
     [ANIM_TAKE_OUT_ROD_NORTH] = sAnim_TakeOutRodNorth,

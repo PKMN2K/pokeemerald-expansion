@@ -268,7 +268,7 @@
 #define VAR_RIVAL_RAYQUAZA_CALL_STEP_COUNTER             0x40F6
 #define VAR_POLISHED_HOME_SCENE                         0x40F7 // 0: Mom opening pending, 1: complete
 #define VAR_POLISHED_WEEKDAY_OFFSET                     0x40F8 // 0-6: Johto weekday bias relative to the native RTC
-#define VAR_UNUSED_0x40F9                                0x40F9 // Unused Var
+#define VAR_POLISHED_ROUTE29_FRUIT_DAY                                0x40F9 // Last successful Oran harvest: native RTC day + 1
 #define VAR_UNUSED_0x40FA                                0x40FA // Unused Var
 #define VAR_UNUSED_0x40FB                                0x40FB // Unused Var
 #define VAR_UNUSED_0x40FC                                0x40FC // Unused Var

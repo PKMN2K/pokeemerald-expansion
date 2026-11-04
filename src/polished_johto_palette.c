@@ -39,6 +39,10 @@ static const struct PolishedJohtoMapPaletteRegistration sJohtoMapRegistrations[]
      &gTileset_PolishedNewBarkOutdoorPrimary,
      &gTileset_PolishedNewBarkOutdoorSecondary,
      24, JOHTO_PALETTE_STANDARD, 0},
+    {LAYOUT_POLISHED_ROUTE_29,
+     &gTileset_PolishedNewBarkOutdoorPrimary,
+     &gTileset_PolishedNewBarkOutdoorSecondary,
+     24, JOHTO_PALETTE_STANDARD, 0},
 };
 
 static const struct PolishedJohtoMapPaletteRegistration *FindJohtoMapRegistration(const struct MapLayout *layout)
@@ -165,6 +169,10 @@ bool8 PolishedJohtoTryApplySpritePalette(u8 paletteNum)
     tag = GetSpritePaletteTagByPaletteNum(paletteNum);
     switch (tag)
     {
+    case OBJ_EVENT_PAL_TAG_POLISHED_BG_GREEN:
+        // Source COPY_BG_GREEN copies background palette 2 for Cut trees.
+        LoadPaletteFast(&gPlttBufferUnfaded[2 * 16], OBJ_PLTT_ID(paletteNum), PLTT_SIZE_4BPP);
+        return TRUE;
     case OBJ_EVENT_PAL_TAG_POLISHED_CHRIS:
     case OBJ_EVENT_PAL_TAG_POLISHED_POKEFAN:
         palettes = sJohtoRedSpritePalettes;

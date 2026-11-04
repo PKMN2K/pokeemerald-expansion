@@ -57,13 +57,14 @@ jobs:
         run: |
           python3 tools/polished_port/scripts/build_johto_demo.py --check
           python3 tools/polished_port/scripts/build_new_bark.py --check
+          python3 tools/polished_port/scripts/test_route29.py
 
       - name: Build playable Johto demo
         timeout-minutes: 20
         run: make -j$(nproc) -O POLISHED_JOHTO_DEMO=1
 
       - name: Exercise Johto maps in mGBA
-        timeout-minutes: 5
+        timeout-minutes: 8
         run: |
           gcc -std=gnu11 -O2 -Wall -Wextra -Werror tools/polished_port/tests/mgba_johto_driver.c -lmgba -o /tmp/johto-demo-driver
           python3 tools/polished_port/scripts/test_johto_demo_emulator.py --driver /tmp/johto-demo-driver --rom pokeemerald-johto-demo.gba --elf pokeemerald-johto-demo.elf --output /tmp/johto-validation

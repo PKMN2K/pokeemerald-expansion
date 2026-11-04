@@ -22,6 +22,7 @@
 #include "script.h"
 #include "tv.h"
 #include "wild_encounter.h"
+#include "polished_route29.h"
 #include "battle_debug.h"
 #include "battle_pike.h"
 #include "battle_pyramid.h"
@@ -452,6 +453,17 @@ enum TimeOfDay GetTimeOfDayForEncounters(u32 headerId, enum WildPokemonArea area
 {
     const struct WildPokemonInfo *wildMonInfo;
     enum TimeOfDay timeOfDay = GetTimeOfDay();
+
+    // Opt only the imported route into its pinned source clock rules, even
+    // when the host game's global time-of-day encounters are disabled.
+    if (headerId != HEADER_NONE
+        && gWildMonHeaders[headerId].mapGroup == MAP_GROUP(MAP_POLISHED_ROUTE_29)
+        && gWildMonHeaders[headerId].mapNum == MAP_NUM(MAP_POLISHED_ROUTE_29))
+    {
+        RtcCalcLocalTime();
+        return PolishedRoute29EncounterTime(gLocalTime.hours,
+            gLocalTime.hours >= 17 && gLocalTime.hours < 21 ? Random() : 0);
+    }
 
     if (!OW_TIME_OF_DAY_ENCOUNTERS)
         return TIME_OF_DAY_DEFAULT;

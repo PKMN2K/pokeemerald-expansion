@@ -9433,6 +9433,28 @@
       "border_filepath": "data/layouts/PolishedElmsHouse/border.bin",
       "blockdata_filepath": "data/layouts/PolishedElmsHouse/map.bin",
       "layout_version": "emerald"
+    },
+    {
+      "id": "LAYOUT_POLISHED_ROUTE_29",
+      "name": "PolishedRoute29_Layout",
+      "width": 60,
+      "height": 18,
+      "primary_tileset": "gTileset_PolishedNewBarkOutdoorPrimary",
+      "secondary_tileset": "gTileset_PolishedNewBarkOutdoorSecondary",
+      "border_filepath": "data/layouts/PolishedRoute29/border.bin",
+      "blockdata_filepath": "data/layouts/PolishedRoute29/map.bin",
+      "layout_version": "emerald"
+    },
+    {
+      "id": "LAYOUT_POLISHED_ROUTE_29_46_GATE",
+      "name": "PolishedRoute2946Gate_Layout",
+      "width": 10,
+      "height": 8,
+      "primary_tileset": "gTileset_PolishedNewBarkGatePrimary",
+      "secondary_tileset": "gTileset_PolishedNewBarkGateSecondary",
+      "border_filepath": "data/layouts/PolishedRoute2946Gate/border.bin",
+      "blockdata_filepath": "data/layouts/PolishedRoute2946Gate/map.bin",
+      "layout_version": "emerald"
     }
   ]
 }

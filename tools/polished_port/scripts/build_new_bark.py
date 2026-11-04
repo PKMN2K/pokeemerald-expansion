@@ -1,11 +1,10 @@
 #!/usr/bin/env python3
-"""Reproduce New Bark Town's source geography and all seven connected interiors.
+"""Reproduce New Bark Town, its seven interiors, Route 29 and its gatehouse.
 
 This imports map blocks, door/stair coordinates, reading interactions and the
 six ambient residents, the rival's lab-window encounter, and Lyra/Elm's
 introduction, starter selection, Lyra battle, first Potion and Mom's opening.
-Further events and room decorations are separate work. Route 29/27 connections
-await those maps.
+Further story events, Route 27, Cherrygrove and Route 46 are separate work.
 """
 import argparse
 import base64
@@ -27,8 +26,9 @@ from convert_player_walking import (convert as convert_npc, _read_png_2bit_grays
 import new_bark_intro
 import new_bark_battle
 import new_bark_mom
+import polished_route29
 
-MAPS = {
+NEW_BARK_MAPS = {
     "NewBarkTown": "NEW_BARK_TOWN",
     "ElmsLab": "ELMS_LAB",
     "PlayersHouse1F": "PLAYERS_HOUSE_1F",
@@ -38,6 +38,7 @@ MAPS = {
     "LyrasHouse2F": "LYRAS_HOUSE_2F",
     "ElmsHouse": "ELMS_HOUSE",
 }
+MAPS = {**NEW_BARK_MAPS, "Route29": "ROUTE_29", "Route2946Gate": "ROUTE_29_46_GATE"}
 BEHAVIORS = {**BEHAVIORS,
     "WINDOW": ("MB_NORMAL", True),
     "COUNTER": ("MB_COUNTER", True),
@@ -58,6 +59,8 @@ INLINE_TEXT = {"PlayersHouse1FTVScript", "LyrasFridgeScript", "LyrasTVScript"}
 # Only source jumptextfaceplayer residents with no story flag are imported.
 # The teacher retains the explicitly separate demo travel prompt.
 RESIDENTS = {
+    "Route29": {"Route29YoungsterText": "ROUTE29_YOUNGSTER", "Route29TeacherText": "ROUTE29_TEACHER", "Route29FisherText": "ROUTE29_FISHER"},
+    "Route2946Gate": {"Route29Route46GateOfficerText": "ROUTE29_GATE_OFFICER", "Route29Route46GateYoungsterText": "ROUTE29_GATE_CAMPER"},
     "NewBarkTown": {"Text_ElmDiscoveredNewMon": "NEW_BARK_FAT_GUY",
                     "Text_GearIsImpressive": "NEW_BARK_SCHOOLBOY"},
     "PlayersNeighborsHouse": {"PlayersNeighborsDaughterText": "NEIGHBORS_DAUGHTER",
@@ -65,6 +68,11 @@ RESIDENTS = {
     "ElmsHouse": {"ElmsWifeText": "ELMS_WIFE", "ElmsSonText": "ELMS_SON"},
 }
 NPC_GRAPHICS = {
+    ("SPRITE_SCHOOLBOY", "GREEN"): "POLISHED_SCHOOLBOY_GREEN",
+    ("SPRITE_FAT_GUY", "BLUE"): "POLISHED_FAT_GUY_BLUE",
+    ("SPRITE_TEACHER", "GREEN"): "POLISHED_TEACHER",
+    ("SPRITE_OFFICER", "RED"): "POLISHED_OFFICER",
+    ("SPRITE_CAMPER", "GREEN"): "POLISHED_CAMPER",
     ("SPRITE_FAT_GUY", "GREEN"): "POLISHED_FAT_GUY",
     ("SPRITE_SCHOOLBOY", "BLUE"): "POLISHED_SCHOOLBOY",
     ("SPRITE_BATTLE_GIRL", "RED"): "POLISHED_BATTLE_GIRL",
@@ -158,8 +166,8 @@ def residents(name, script, files):
         assert (kind, command, flag) == ("OBJECTTYPE_COMMAND", "jumptextfaceplayer", "-1")
         if palette == "0":
             # A source default is sprite-specific; it is not palette zero.
-            assert sprite == "SPRITE_SCHOOLBOY"
-            palette = "PAL_NPC_" + re.search(r"SchoolboySpriteGFX, WALKING_SPRITE, PAL_OW_(\w+)",
+            sprite_name = {"SPRITE_SCHOOLBOY": "Schoolboy", "SPRITE_TEACHER": "Teacher", "SPRITE_CAMPER": "Camper"}[sprite]
+            palette = "PAL_NPC_" + re.search(sprite_name + r"SpriteGFX, WALKING_SPRITE, PAL_OW_(\w+)",
                 files["data/sprites/sprites.asm"].decode())[1]
         color = palette.removeprefix("PAL_NPC_")
         event = "Polished" + name + "_" + label
@@ -235,7 +243,7 @@ def resident_assets(files):
                 *([0] * 12)) for period in range(4))
     with tempfile.TemporaryDirectory() as tmp:
         inp, out = Path(tmp) / "npc.png", Path(tmp) / "walking.png"
-        for sprite in ("fat_guy", "schoolboy", "battle_girl", "child", "rival", "elm", "lyra", "scientist", "mom", "matron"):
+        for sprite in ("fat_guy", "schoolboy", "battle_girl", "child", "rival", "elm", "lyra", "scientist", "mom", "matron", "teacher", "cool_dude", "officer", "camper"):
             inp.write_bytes(files[f"gfx/sprites/{sprite}.png"])
             convert_npc(inp, out)
             products[f"graphics/object_events/polished_{sprite}/walking.png"] = out.read_bytes()
@@ -247,6 +255,15 @@ def resident_assets(files):
         frame = [[0] * 16 for _ in range(16)] + [[3 - p for p in row] for row in pixels[:16]]
         _write_indexed_4bit_png(out, frame)
         products["graphics/object_events/polished_starter_ball/ball.png"] = out.read_bytes()
+        # Native bottom anchoring: retain the exact source Cut tiles and the
+        # berry overlay (tile 8), without copying the apricorn/picked frames.
+        for name, body in (("cut_tree", [[3-p for p in row] for row in pixels[16:32]]),
+                           ("fruit", [[0]*3 + [3-p for p in row[:8]] + [0]*5 for row in pixels[32:40]]),
+                           ("fruit_picked", [[3-p for p in row[8:16]] + [0]*8 for row in pixels[40:48]])):
+            frame = [[0]*16 for _ in range(32-len(body))] + body
+            _write_indexed_4bit_png(out, frame)
+            products[f"graphics/object_events/polished_{name}/object.png"] = out.read_bytes()
+    products["graphics/object_events/polished_npc_palettes/bg_green.bin"] = stage(load_source_palettes())[0]["standard.day"][64:96]
     return products
 
 
@@ -332,8 +349,8 @@ def map_header(name, constant, width, height, script, files):
         "layout": "LAYOUT_POLISHED_" + constant,
         "music": "MUS_DUMMY", "region": "REGION_JOHTO", "region_map_section": "MAPSEC_NONE",
         "requires_flash": False, "weather": "WEATHER_NONE",
-        "map_type": "MAP_TYPE_TOWN" if name == "NewBarkTown" else "MAP_TYPE_INDOOR",
-        "allow_cycling": name == "NewBarkTown", "allow_escaping": False,
+        "map_type": "MAP_TYPE_TOWN" if name == "NewBarkTown" else "MAP_TYPE_ROUTE" if name == "Route29" else "MAP_TYPE_INDOOR",
+        "allow_cycling": name in ("NewBarkTown", "Route29"), "allow_escaping": False,
         "allow_running": True, "show_map_name": False, "battle_scene": "MAP_BATTLE_SCENE_NORMAL",
         "connections": None, "object_events": [], "warp_events": [], "coord_events": [], "bg_events": [],
     }
@@ -341,6 +358,10 @@ def map_header(name, constant, width, height, script, files):
     schedule_header, schedule_code = schedule_script(name, resident_info, files)
     code = f"@ Generated from pinned {name}.asm: geography, static text and ambient residents.\n{prefix}_MapScripts::\n{schedule_header}\t.byte 0\n\n" + schedule_code
     for x, y, destination, warp in re.findall(r"^\s*warp_event\s+(\d+),\s*(\d+),\s*(\w+),\s*(\d+)", script, re.M):
+        if name == "Route2946Gate" and destination == "ROUTE_46":
+            continue  # North door is blocked until Route 46 is imported.
+        if destination == "ROUTE_29_46_GATE":
+            warp = str(int(warp) - 2)  # Source warp 3 -> native warp 0.
         assert destination in MAPS.values(), (name, destination)
         assert 0 <= int(x) < width and 0 <= int(y) < height
         header["warp_events"].append({"x": int(x), "y": int(y), "elevation": 0,
@@ -425,6 +446,15 @@ def map_header(name, constant, width, height, script, files):
         code = code.replace("\t.byte 0\n", hooks + "\t.byte 0\n", 1)
         code += scene
         story.append(report)
+    if name in ("NewBarkTown", "Route29", "Route2946Gate"):
+        hooks, scene, report = polished_route29.events(name, script, header, files, source_text, text_definition)
+        code = code.replace("\t.byte 0\n", hooks + "\t.byte 0\n", 1)
+        code += scene
+        story.append(report)
+        if name == "Route29":
+            # The GBC title-screen shortcuts are unavailable in this engine.
+            code = code.replace(source_text(script, "Route29AdvancedTipsSignText"),
+                "Advanced Tips!\\pSome POKéMON appear\\nonly at certain times.\\pLook during both the\\nday and the night!$")
     return header, (code.rstrip() + "\n").encode(), resident_info, story
 
 
@@ -443,16 +473,19 @@ def generate():
         "House": (house_graphics, house_geometry, indoor_palette,
                   collisions(files["data/tilesets/johto_house_collision.asm"].decode())),
         "Lab": (*lab_geometry(files), indoor_palette, collisions(files["data/tilesets/lab_collision.asm"].decode())),
+        "Gate": (*lab_geometry(files, "gate"), indoor_palette, collisions(files["data/tilesets/gate_collision.asm"].decode())),
     }
     used_by_bank = {key: set() for key in banks}
     # Invert without collapsing the many source symbols sharing a permission.
     permissions = {symbol: permission for permission, symbol in re.findall(
         r"db (LAND_TILE|WALL_TILE|WATER_TILE)\s*; COLL_(\w+)", files["data/collision/collision_permissions.asm"].decode())}
     for name, constant in MAPS.items():
-        bank = "Outdoor" if name == "NewBarkTown" else "Lab" if name == "ElmsLab" else "House"
-        source_tileset = {"Outdoor": "JOHTO_TRADITIONAL", "Lab": "LAB", "House": "JOHTO_HOUSE"}[bank]
+        bank = "Outdoor" if name in ("NewBarkTown", "Route29") else "Lab" if name == "ElmsLab" else "Gate" if name == "Route2946Gate" else "House"
+        source_tileset = {"Outdoor": "JOHTO_TRADITIONAL", "Lab": "LAB", "House": "JOHTO_HOUSE", "Gate": "GATE"}[bank]
         assert re.search(r"map " + name + r", TILESET_" + source_tileset + r",", files["data/maps/maps.asm"].decode())
         source_layout = "JohtoHouse4" if name == "PlayersNeighborsHouse" else name
+        if name == "Route2946Gate":
+            source_layout = "NorthSouthGate"
         if name == "PlayersNeighborsHouse":
             assert re.search(r'PlayersNeighborsHouse_BlockData:(?:\s*\w+_BlockData:)*\s*INCBIN "maps/JohtoHouse4.ablk.lz"', files["data/maps/blocks.asm"].decode())
         width, height = map(int, re.search(r"map_const " + constant + r",\s*(\d+),\s*(\d+)", files["constants/map_constants.asm"].decode()).groups())
@@ -460,6 +493,11 @@ def generate():
         assert len(blocks) == width * height
         symbols = banks[bank][3]
         raw, used = map_cells(blocks, width, symbols, BEHAVIORS)
+        if name == "Route2946Gate":
+            cells = list(struct.unpack(f"<{len(raw)//2}H", raw))
+            for x in (4, 5):
+                cells[x] |= 0xC00  # Keep source art; no dangling Route 46 warp.
+            raw = struct.pack(f"<{len(cells)}H", *cells)
         border = 5 if bank == "Outdoor" else 0
         assert re.search(r"map_attributes " + name + ", " + constant + r", \$" + str(border) + ",", files["data/maps/attributes.asm"].decode())
         border_raw, border_used = map_cells(bytes([border]), 1, symbols, BEHAVIORS)
@@ -526,9 +564,15 @@ def generate():
 
 """
     products["src/data/tilesets/polished_new_bark.h"] = (header_text.rstrip() + "\n").encode()
-    report = {"source_commit": PIN, "scope": "source geography, connected interiors, static interactions, six ambient residents, rival window encounter, Lyra/Elm introduction, all three starter choices, first Lyra battle, aide Potion and Mom's opening with weekday/DST setup, schedules and neighbor; later story progression deferred",
+    report = {"source_commit": PIN, "scope": "source geography, connected interiors, static interactions, six ambient residents, rival window encounter, Lyra/Elm introduction, all three starter choices, first Lyra battle, aide Potion and Mom's opening with weekday/DST setup, schedules and neighbor; Route 29 first visit, gatehouse and native wild encounters; later story progression deferred",
         "maps": maps, "layouts": layouts, "output_sha256": {p: hashlib.sha256(raw).hexdigest() for p, raw in products.items()}}
     products["tools/polished_port/manifests/new_bark.json"] = json_bytes(report)
+    products["tools/polished_port/manifests/route29_wild.json"] = json_bytes({
+        "source_commit": PIN, "source_weights": [30, 30, 20, 10, 5, 3, 2],
+        "native_weights": [20, 20, 10, 10, 10, 10, 5, 5, 4, 4, 1, 1],
+        "rate_translation": "18 * 16 / 2880 = 10% base check; native step cooldown, abilities and other modifiers remain",
+        "evening": "17-21 hours: source day table for 153/256 rolls; night for 103/256",
+        "encounters": polished_route29.wild_entries(files)})
     return products
 
 
@@ -547,7 +591,7 @@ def main():
                 path.write_bytes(raw)
     report = json.loads(products["tools/polished_port/manifests/new_bark.json"])
     warps = sum(len(info["warps"]) for info in report["maps"].values())
-    print(f"PASS: {len(products)} deterministic New Bark assets; 8 maps, {warps} reciprocal warp events")
+    print(f"PASS: {len(products)} deterministic Johto assets; {len(report['maps'])} maps, {warps} reciprocal warp events")
 
 
 if __name__ == "__main__":
