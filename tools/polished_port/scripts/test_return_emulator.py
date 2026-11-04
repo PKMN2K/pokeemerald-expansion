@@ -228,7 +228,11 @@ def check_return(game,city,checks):
     walk(game,town,(6,9));game.face(UP);game.press(A,100)
     advance(game,lambda:text_matches(game,'PolishedReturn_Text_TellMomIfLeaving'))
     choice_prompt(game,'PolishedNewBarkTown_Garden');game.press(B,60)
-    advance(game,lambda:not script_active(game));go_to_city(game,town)
+    advance(game,lambda:not script_active(game))
+    from test_post_egg_emulator import check_departure, balance
+    from test_cherrygrove_emulator import money
+    check_departure(game,town,checks)
+    go_to_city(game,town)
     walk(game,city,(17,0));game.step(UP);game.frames(100)
     route=map_data('PolishedRoute30')
     travel(game,route,(3,29),[])
@@ -236,10 +240,15 @@ def check_return(game,city,checks):
     advance(game,lambda:text_matches(game,'PolishedReturn_JoeySeen'))
     assert not any(n in actors(game) for n in (1,2,3))
     data=layout()
+    bank_before, wallet_before = balance(game), money(game)
     joey=battle(game,'joey',[(data['Rattata'],5,0,[data['tackle'],data['leer'],constants()['quick'],0])])
     advance(game,lambda:not script_active(game))
     save_game(game);continue_game(game)
     assert flag(game,constants()['trainer_flags']+constants()['joey'])
+    saved = balance(game) - bank_before
+    earned = money(game) - wallet_before + saved
+    assert saved == earned // 4 and saved > 0, (saved,earned)
+    checks.append(f'Mom keeps {saved} of Joey’s {earned} prize money; wallet and savings survive native Save/Continue')
     # Re-cross his sight after saving: beaten trainer must not restart a battle.
     walk(game,route,(3,29));walk(game,route,(3,28));game.frames(90)
     assert not task_active(game,'Task_BattleStart') and not script_active(game)

@@ -1,8 +1,9 @@
 """Route 29 first-visit events from Polished Crystal v3.2.3.
 
-The west/north onward maps and post-Mystery-Egg scenes are deliberately absent.
+Tuscany and the catching tutorial are activated by their original quest conditions.
 """
 import re
+import polished_departure
 from new_bark_intro import coord, movement, obj
 
 
@@ -141,12 +142,31 @@ PolishedFruit_End::
         code += define("PolishedRoute29_Fruit" + label, text(common, source))
     for key, label in (("WantMulch", "_WantToUseMulchText"), ("UsedMulch", "_UsedMulchText")):
         code += define("PolishedFruit_" + key, text(common, label))
+    code = code.replace("PolishedRoute29_Setup::\n", "PolishedRoute29_Setup::\n\tcall PolishedDeparture_RouteSetup\n")
+    code += polished_departure.route(script, header, text, define, object_at)
+    code += """PolishedDeparture_Restore::
+    call PolishedDeparture_RouteSetup
+    special PolishedRoute29RefreshFruit
+    goto_if_unset FLAG_TEMP_2, PolishedDeparture_ShowLyra
+    removeobject LOCALID_ROUTE29_LYRA
+    goto PolishedDeparture_RestoreTuscany
+PolishedDeparture_ShowLyra::
+    addobject LOCALID_ROUTE29_LYRA
+PolishedDeparture_RestoreTuscany::
+    goto_if_unset FLAG_TEMP_3, PolishedDeparture_ShowTuscany
+    removeobject LOCALID_ROUTE29_TUSCANY
+    end
+PolishedDeparture_ShowTuscany::
+    addobject LOCALID_ROUTE29_TUSCANY
+    end
+"""
     return ("\tmap_script MAP_SCRIPT_ON_LOAD, PolishedRoute29_Setup\n"
-            "\tmap_script MAP_SCRIPT_ON_RETURN_TO_FIELD, PolishedRoute29_Setup\n"), code, {
+            "\tmap_script MAP_SCRIPT_ON_RETURN_TO_FIELD, PolishedDeparture_Restore\n"), code, {
         "first_visit": "4 residents, 3 signs, Potion, 2 persistent Cut trees, daily Oran Berry tree",
         "berry_yield": "Random 1-3, falls back to fitting quantity; commit daily stamp only after addition",
         "tips_translation": "Unavailable GBC title shortcuts replaced by encounter-time advice",
-        "deferred": ["Route46", "Lyra tutorial", "Tuscany"]}
+        "post_egg": "Two Lyra approaches, optional Pidgey tutorial, five Balls, Tuesday Tuscany",
+        "deferred": ["Route46"]}
 
 
 def wild_entries(files):

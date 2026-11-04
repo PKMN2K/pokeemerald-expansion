@@ -137,6 +137,34 @@
       "trainer_sight_or_berry_tree_id": "0",
       "script": "PolishedRoute29_Potion",
       "flag": "FLAG_POLISHED_ROUTE29_POTION"
+    },
+    {
+      "local_id": "LOCALID_ROUTE29_LYRA",
+      "graphics_id": "OBJ_EVENT_GFX_POLISHED_LYRA",
+      "x": 50,
+      "y": 12,
+      "elevation": 3,
+      "movement_type": "MOVEMENT_TYPE_LOOK_AROUND",
+      "movement_range_x": 0,
+      "movement_range_y": 0,
+      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_sight_or_berry_tree_id": "0",
+      "script": "PolishedDeparture_Silent",
+      "flag": "FLAG_TEMP_2"
+    },
+    {
+      "local_id": "LOCALID_ROUTE29_TUSCANY",
+      "graphics_id": "OBJ_EVENT_GFX_POLISHED_POKEFAN_PURPLE",
+      "x": 29,
+      "y": 12,
+      "elevation": 3,
+      "movement_type": "MOVEMENT_TYPE_LOOK_AROUND",
+      "movement_range_x": 0,
+      "movement_range_y": 0,
+      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_sight_or_berry_tree_id": "0",
+      "script": "PolishedDeparture_Tuscany",
+      "flag": "FLAG_TEMP_3"
     }
   ],
   "warp_events": [
@@ -148,7 +176,26 @@
       "dest_warp_id": "0"
     }
   ],
-  "coord_events": [],
+  "coord_events": [
+    {
+      "type": "trigger",
+      "x": 53,
+      "y": 8,
+      "elevation": 3,
+      "var": "VAR_TEMP_2",
+      "var_value": "1",
+      "script": "PolishedDeparture_Approach1"
+    },
+    {
+      "type": "trigger",
+      "x": 53,
+      "y": 9,
+      "elevation": 3,
+      "var": "VAR_TEMP_2",
+      "var_value": "1",
+      "script": "PolishedDeparture_Approach2"
+    }
+  ],
   "bg_events": [
     {
       "type": "sign",

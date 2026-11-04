@@ -6,6 +6,7 @@ records the flag in the source, so it must not add an hour to the running RTC.
 import hashlib
 import json
 import re
+import polished_departure
 
 from build_johto_demo import FIXTURES, PIN
 from new_bark_intro import coord
@@ -123,6 +124,9 @@ PolishedMom_Talk::
 \tlock
 \tfaceplayer
 \tgoto_if_eq VAR_POLISHED_HOME_SCENE, 0, PolishedMom_Intro
+\tgoto_if_set FLAG_POLISHED_MOM_FIRST_VISIT, PolishedMom_FirstVisitAgain
+\tgoto_if_set FLAG_POLISHED_MOM_BANK_OPEN, PolishedMom_Bank
+\tgoto_if_set FLAG_POLISHED_GAVE_MYSTERY_EGG, PolishedMom_FirstBank
 \tgoto_if_ne VAR_POLISHED_STARTER, 0, PolishedMom_Errand
 \tmsgbox PolishedMom_ElmWaitingText, MSGBOX_DEFAULT
 \trelease
@@ -199,13 +203,12 @@ PolishedMom_NeighborMain::
     texts = {name: source_text(script, name) for name in (
         "MomIntroText", "MomPokegearText", "MomDSTText", "MomRunningShoesText",
         "MomInstructionsText", "MomOutroText", "MomErrandText")}
-    # Describe controls that exist now. Restore these paragraphs with the
-    # corresponding Pokégear clock/Options screens; never advertise dead UI.
+    # The bank now supports returning to Mom to adjust the clock. The always-run
+    # option still awaits its native Options entry.
     remove_clock = "Come home to\\nadjust your clock\\pfor Daylight\\nSaving Time.\\p"
     remove_option = "\\pOr use the Option\\nto always run, and\\lhold B to walk."
     assert texts["MomRunningShoesText"].startswith(remove_clock)
     assert texts["MomInstructionsText"].endswith(remove_option + "$")
-    texts["MomRunningShoesText"] = texts["MomRunningShoesText"].removeprefix(remove_clock)
     texts["MomInstructionsText"] = texts["MomInstructionsText"].removesuffix(remove_option + "$") + "$"
     waiting = script.split("MomScript:\n", 1)[1].split(".FirstTimeBanking:", 1)[0]
     waiting = "ElmWaitingText:\n" + waiting.split("jumpthisopenedtext\n", 1)[1]
@@ -220,11 +223,13 @@ PolishedMom_NeighborMain::
         ConfirmTimeText="{STR_VAR_1}" + source_text(clock_text, "_TimeAskOkayText"))
     for name, text in texts.items():
         code += text_definition(prefix + "_" + name, text)
+    code += polished_departure.bank(script, files, source_text, text_definition)
     return hooks, code, {
         "source_script": "MomEventScript", "source_scene": 0, "next_scene": 1,
         "source_triggers": [[10, 4], [11, 4], [9, 1], [9, 2]],
         "source_schedule_hours": hours, "objects": header["object_events"],
         "clock": "native RTC weekday bias; initial DST flag does not adjust hours",
-        "deferred": ["Pokégear clock/phone interface", "always-run option", "Mystery Egg banking"],
-        "text_adaptations": ["omit unavailable clock-adjustment and always-run option instructions"],
+        "bank": "Post-Egg offer, prize sharing, Get/Save/Change and DST",
+        "deferred": ["Pokégear phone interface", "always-run option", "Mom's remote shopping"],
+        "text_adaptations": ["omit unavailable always-run option instructions"],
     }

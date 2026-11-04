@@ -1,4 +1,5 @@
 #include "global.h"
+#include "battle_setup.h"
 #include "battle.h"
 #include "battle_anim.h"
 #include "battle_controllers.h"
@@ -686,7 +687,7 @@ static void OakOldManHandleDrawTrainerPic(enum BattlerId battler)
     if (gBattleTypeFlags & BATTLE_TYPE_FIRST_BATTLE)
         trainerPicId = GetPlayerTrainerPic(gSaveBlock2Ptr->playerGender, GAME_VERSION);
     else
-        trainerPicId = TRAINER_PIC_OLD_MAN;
+        trainerPicId = IsPolishedLyraTutorial() ? TRAINER_PIC_POLISHED_LYRA : TRAINER_PIC_OLD_MAN;
 
     BtlController_HandleDrawTrainerPic(battler, trainerPicId, FALSE, 80, (8 - GetTrainerBackPicCoords(trainerPicId)->size) * 4 + 80, 30);
 }
@@ -698,7 +699,7 @@ static void OakOldManHandleTrainerSlide(enum BattlerId battler)
     if (gBattleTypeFlags & BATTLE_TYPE_FIRST_BATTLE)
         trainerPicId = GetPlayerTrainerPic(gSaveBlock2Ptr->playerGender, GAME_VERSION);
     else
-        trainerPicId = TRAINER_PIC_OLD_MAN;
+        trainerPicId = IsPolishedLyraTutorial() ? TRAINER_PIC_POLISHED_LYRA : TRAINER_PIC_OLD_MAN;
 
     BtlController_HandleTrainerSlide(battler, trainerPicId);
 }
@@ -785,7 +786,7 @@ static void OakOldManHandleChooseAction(enum BattlerId battler)
         BattleStringExpandPlaceholdersToDisplayedString(gText_WhatWillPkmnDo);
     }
     else
-        BattleStringExpandPlaceholdersToDisplayedString(gText_WhatWillOldManDo);
+        BattleStringExpandPlaceholdersToDisplayedString(IsPolishedLyraTutorial() ? COMPOUND_STRING("What will Lyra do?") : gText_WhatWillOldManDo);
     BattlePutTextOnWindow(gDisplayedStringBattle, B_WIN_ACTION_PROMPT);
 }
 

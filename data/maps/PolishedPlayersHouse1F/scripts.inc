@@ -160,6 +160,9 @@ PolishedMom_Talk::
 	lock
 	faceplayer
 	goto_if_eq VAR_POLISHED_HOME_SCENE, 0, PolishedMom_Intro
+	goto_if_set FLAG_POLISHED_MOM_FIRST_VISIT, PolishedMom_FirstVisitAgain
+	goto_if_set FLAG_POLISHED_MOM_BANK_OPEN, PolishedMom_Bank
+	goto_if_set FLAG_POLISHED_GAVE_MYSTERY_EGG, PolishedMom_FirstBank
 	goto_if_ne VAR_POLISHED_STARTER, 0, PolishedMom_Errand
 	msgbox PolishedMom_ElmWaitingText, MSGBOX_DEFAULT
 	release
@@ -242,7 +245,7 @@ PolishedMom_MomDSTText:
 	.string "Is it Daylight\nSaving Time now?$"
 
 PolishedMom_MomRunningShoesText:
-	.string "By the way, do\nyou know how to\puse your new\nRunning Shoes?$"
+	.string "Come home to\nadjust your clock\pfor Daylight\nSaving Time.\pBy the way, do\nyou know how to\puse your new\nRunning Shoes?$"
 
 PolishedMom_MomInstructionsText:
 	.string "I'll read the\ninstructions.\pJust hold down the\nB Button to run,\lindoors or out.$"
@@ -282,3 +285,168 @@ PolishedMom_ConfirmDSTText:
 
 PolishedMom_ConfirmTimeText:
 	.string "{STR_VAR_1},\nis that OK?$"
+
+PolishedMom_FirstBank::
+    setflag FLAG_POLISHED_MOM_FIRST_VISIT
+    msgbox PolishedMom_LeavingText1, MSGBOX_YESNO
+    clearflag FLAG_POLISHED_MOM_SAVES_MONEY
+    goto_if_eq VAR_RESULT, NO, PolishedMom_Opened
+    setflag FLAG_POLISHED_MOM_SAVES_MONEY
+    msgbox PolishedMom_LeavingText2, MSGBOX_DEFAULT
+PolishedMom_Opened::
+    setflag FLAG_POLISHED_MOM_BANK_OPEN
+    msgbox PolishedMom_LeavingText3, MSGBOX_DEFAULT
+    goto PolishedMom_Done
+PolishedMom_FirstVisitAgain::
+    msgbox PolishedMom_DoItText, MSGBOX_DEFAULT
+    goto PolishedMom_Done
+PolishedMom_Bank::
+    msgbox PolishedMom_IsThisAboutYourMoneyText, MSGBOX_YESNO
+    goto_if_eq VAR_RESULT, NO, PolishedMom_DSTCheck
+    msgbox PolishedMom_BankWhatDoYouWantToDoText, MSGBOX_DEFAULT
+    multichoice 0, 0, MULTI_POLISHED_MOM_BANK, FALSE
+    goto_if_eq VAR_RESULT, 0, PolishedMom_Withdraw
+    goto_if_eq VAR_RESULT, 1, PolishedMom_Deposit
+    goto_if_eq VAR_RESULT, 2, PolishedMom_Change
+    goto PolishedMom_Cancel
+PolishedMom_Withdraw::
+    setvar VAR_0x8004, 0
+    msgbox PolishedMom_TakeMoneyText, MSGBOX_DEFAULT
+    goto PolishedMom_Transfer
+PolishedMom_Deposit::
+    setvar VAR_0x8004, 1
+    msgbox PolishedMom_StoreMoneyText, MSGBOX_DEFAULT
+PolishedMom_Transfer::
+    closemessage
+    specialvar VAR_RESULT, PolishedMomOpenTransfer
+    goto_if_eq VAR_RESULT, FALSE, PolishedMom_Cancel
+    waitstate
+    goto_if_eq VAR_RESULT, 0, PolishedMom_Cancel
+    goto_if_eq VAR_RESULT, 2, PolishedMom_Insufficient
+    goto_if_eq VAR_RESULT, 3, PolishedMom_NoRoom
+    playse SE_SHOP
+    goto_if_eq VAR_0x8004, 0, PolishedMom_Taken
+    msgbox PolishedMom_StoredMoneyText, MSGBOX_DEFAULT
+    goto PolishedMom_Done
+PolishedMom_Taken::
+    msgbox PolishedMom_TakenMoneyText, MSGBOX_DEFAULT
+    goto PolishedMom_Done
+PolishedMom_Insufficient::
+    goto_if_eq VAR_0x8004, 0, PolishedMom_InsufficientBank
+    msgbox PolishedMom_InsufficientFundsInWalletText, MSGBOX_DEFAULT
+    goto PolishedMom_Deposit
+PolishedMom_InsufficientBank::
+    msgbox PolishedMom_HaventSavedThatMuchText, MSGBOX_DEFAULT
+    goto PolishedMom_Withdraw
+PolishedMom_NoRoom::
+    goto_if_eq VAR_0x8004, 0, PolishedMom_WalletFull
+    msgbox PolishedMom_NotEnoughRoomInBankText, MSGBOX_DEFAULT
+    goto PolishedMom_Deposit
+PolishedMom_WalletFull::
+    msgbox PolishedMom_NotEnoughRoomInWalletText, MSGBOX_DEFAULT
+    goto PolishedMom_Withdraw
+PolishedMom_Change::
+    msgbox PolishedMom_SaveMoneyText, MSGBOX_YESNO
+    goto_if_eq VAR_RESULT, NO, PolishedMom_Stop
+    setflag FLAG_POLISHED_MOM_SAVES_MONEY
+    msgbox PolishedMom_StartSavingMoneyText, MSGBOX_DEFAULT
+    goto PolishedMom_Done
+PolishedMom_Stop::
+    clearflag FLAG_POLISHED_MOM_SAVES_MONEY
+PolishedMom_Cancel::
+    msgbox PolishedMom_JustDoWhatYouCanText, MSGBOX_DEFAULT
+PolishedMom_Done::
+    release
+    end
+PolishedMom_DSTCheck::
+    gettime
+    goto_if_set FLAG_POLISHED_DAYLIGHT_SAVING, PolishedMom_DSTBack
+    goto_if_eq VAR_0x8000, 23, PolishedMom_DSTBoundary
+    msgbox PolishedMom_AskDSTText, MSGBOX_YESNO
+    goto_if_eq VAR_RESULT, NO, PolishedMom_Cancel
+    specialvar VAR_RESULT, PolishedMomAdjustClock
+    goto_if_eq VAR_RESULT, FALSE, PolishedMom_DSTLost
+    msgbox PolishedMom_DSTText, MSGBOX_DEFAULT
+    goto PolishedMom_Cancel
+PolishedMom_DSTBack::
+    goto_if_eq VAR_0x8000, 0, PolishedMom_DSTBoundary
+    msgbox PolishedMom_AskNotDSTText, MSGBOX_YESNO
+    goto_if_eq VAR_RESULT, NO, PolishedMom_Cancel
+    specialvar VAR_RESULT, PolishedMomAdjustClock
+    goto_if_eq VAR_RESULT, FALSE, PolishedMom_DSTLost
+    msgbox PolishedMom_NotDSTText, MSGBOX_DEFAULT
+    goto PolishedMom_Cancel
+PolishedMom_DSTBoundary::
+    msgbox PolishedMom_AskAdjustDSTText, MSGBOX_YESNO
+    goto_if_eq VAR_RESULT, NO, PolishedMom_Cancel
+PolishedMom_DSTLost::
+    msgbox PolishedMom_LostGearBookletText, MSGBOX_DEFAULT
+    goto PolishedMom_Cancel
+PolishedMom_DoItText:
+	.string "{PLAYER}, do it!\pI'm behind you all\nthe way!$"
+
+PolishedMom_LeavingText1:
+	.string "Wow, that's a cute\nPOKéMON.\pWhere did you get\nit?\p…\pSo, you're leaving\non an adventure…\pOK!\nI'll help too.\pBut what can I do\nfor you?\pI know! I'll save\nmoney for you.\pOn a long journey,\nmoney's important.\pDo you want me to\nsave your money?$"
+
+PolishedMom_LeavingText2:
+	.string "OK, I'll take care\nof your money.\p………………$"
+
+PolishedMom_LeavingText3:
+	.string "Be careful.\pPOKéMON are your\nfriends. You need\lto work as a team.\pNow, go on!$"
+
+PolishedMom_IsThisAboutYourMoneyText:
+	.string "Hi! Welcome home!\nYou're trying very\lhard, I see.\pI've kept your\nroom tidy.\pOr is this about\nyour money?$"
+
+PolishedMom_BankWhatDoYouWantToDoText:
+	.string "What do you want\nto do?$"
+
+PolishedMom_TakeMoneyText:
+	.string "How much do you\nwant to take?$"
+
+PolishedMom_StoreMoneyText:
+	.string "How much do you\nwant to save?$"
+
+PolishedMom_SaveMoneyText:
+	.string "Do you want to\nsave some money?$"
+
+PolishedMom_HaventSavedThatMuchText:
+	.string "You haven't saved\nthat much.$"
+
+PolishedMom_NotEnoughRoomInWalletText:
+	.string "You can't take\nthat much.$"
+
+PolishedMom_InsufficientFundsInWalletText:
+	.string "You don't have\nthat much.$"
+
+PolishedMom_NotEnoughRoomInBankText:
+	.string "You can't save\nthat much.$"
+
+PolishedMom_StartSavingMoneyText:
+	.string "OK, I'll save your\nmoney. Trust me!\p{PLAYER}, stick\nwith it!$"
+
+PolishedMom_StoredMoneyText:
+	.string "Your money's safe\nhere! Get going!$"
+
+PolishedMom_TakenMoneyText:
+	.string "{PLAYER}, don't\ngive up!$"
+
+PolishedMom_JustDoWhatYouCanText:
+	.string "Just do what\nyou can.$"
+
+PolishedMom_LostGearBookletText:
+	.string "I lost the in-\nstruction booklet\lfor the POKégear.\pCome back again in\na while.$"
+
+PolishedMom_AskDSTText:
+	.string "Do you want to\nswitch to Daylight\lSaving Time?$"
+
+PolishedMom_DSTText:
+	.string "I set the clock\nforward by one\lhour.$"
+
+PolishedMom_AskNotDSTText:
+	.string "Is Daylight Saving\nTime over?$"
+
+PolishedMom_NotDSTText:
+	.string "I put the clock\nback one hour.$"
+
+PolishedMom_AskAdjustDSTText:
+	.string "Do you want to\nadjust your clock\pfor Daylight\nSaving Time?$"

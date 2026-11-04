@@ -658,3 +658,7 @@ gSpecials::
 
 	def_special PolishedErrandNameRival
 	def_special PolishedErrandBufferRivalName
+	def_special PolishedMomOpenTransfer
+	def_special PolishedMomAdjustClock
+	def_special PolishedJohtoGetWeekday
+	def_special StartPolishedLyraTutorial

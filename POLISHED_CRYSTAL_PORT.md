@@ -315,11 +315,10 @@ event counters. `PolishedJohtoGetWeekday` exposes that chosen weekday for later
 Johto events. Initial DST selection records a flag without adding an hour,
 exactly as the source's `Special_InitialSetDSTFlag` does.
 
-The Pokégear clock/phone screens and always-run option are not implemented by
-this scene. Their two instruction paragraphs are omitted so Mom describes the
-available hold-B running controls. The full source text remains pinned for the
-later interface port. Ownership/contact flags do not grant Emerald's PokéNav
-or insert a substitute Bag item. Existing demo running equipment is preserved.
+Mom's opening explains the hold-B Running Shoes controls and invites the player
+home for a later daylight-saving adjustment. That adjustment becomes available
+through her post-errand conversation. The always-run option and general
+Pokégear screens remain future UI work.
 
 After a map reload, Mom uses her source positions: morning `(3,2)` at 05:00,
 day `(9,4)` at 09:00, evening `(6,3)` at 17:00 and night `(1,2)` at 21:00.
@@ -327,7 +326,7 @@ She remains at the opening position until that visit ends, including after
 menu returns. Save/Continue recomputes the correct visibility without showing
 multiple Moms. The visiting neighbor gives all three source greetings and
 returns to face right. Mom's repeat text changes from Elm's waiting message to
-the errand conversation after the starter; banking awaits the Mystery Egg quest.
+the errand conversation after the starter. Delivering the Mystery Egg unlocks her bank.
 
 Four unused shared flags (`0x22`–`0x25`) and two unused vars (`0x40F7`–`0x40F8`)
 hold ownership/contact/DST, home scene and weekday offset. Save sizes and all
@@ -377,8 +376,7 @@ harvest and the next RTC day replenishes it. Cut uses native field-move
 requirements, source tree pixels/background green colors, persistent removal,
 and a one-frame native removal animation rather than unimported GBC particles.
 The Advanced Tips sign replaces unsupported GBC title shortcuts with encounter
-time advice. Source music, Mulch, later Lyra/Tuscany events and Route 46
-are deferred. Cherrygrove is connected below. Headbutt remains dormant.
+time advice. Mulch, Lyra and Tuscany become available through the later story events below. Route 46 and source music remain pending.
 
 Shared unused flags `0x26`, `0x27`, `0xE9` hold the Potion and two Cut trees;
 unused var `0x40F9` holds the last successful berry day plus one. Existing IDs
@@ -489,7 +487,7 @@ use temporary visibility flags derived from the saved scene. The return stage
 queues Elm's call; the city and lab scenes independently arm the rival and
 theft investigation. Fishing tables and source music remain pending.
 
-Deterministic generation reproduces 195 source-map products. Host checks compare
+Deterministic generation reproduces 196 source-map products. Host checks compare
 connections, source encounter weights, item pixels/palettes, safe flag allocation
 and walkable scene paths. Native tests exercise independent harvests, conditional
 Mulch consumption, clock reversal and reciprocal door landings. The real-input
@@ -540,8 +538,49 @@ extend trainer tracking deliberately; an additional ID would cross that limit.
 `test_return.py` checks source parties, choreography, flags and trainer capacity.
 The campaign emulator uses normal controller input to reach all three rival
 variants, both battle outcomes, both lab approaches, name entry, saved Egg
-delivery and Joey's battle. The next story events are Mom's money-saving
-conversation and Lyra's catching tutorial on Route 29. Route 31 remains closed.
+delivery and Joey's battle.
+
+### Leaving New Bark after the errand
+
+After the Egg delivery, Mom offers to save money. Either reply opens the bank.
+Saying Yes sends one quarter of subsequent trainer prizes to Mom after prize
+multipliers. Pay Day earnings and money lost in a whiteout follow Expansion's
+normal rules. Like the source, the bank saturates at ¥9,999,999. Once it is
+full, the entire next prize goes to the wallet. The native wallet uses its
+existing ¥999,999 cap.
+
+On the first visit, Mom encourages the player if spoken to again. Leave the
+house for New Bark and return to access Get, Save, Change or Cancel. The native
+seven-digit amount picker displays both balances, uses left/right to select a
+place and up/down to change the amount. Zero and B cancel. An overdraft or an
+amount that would overflow its destination leaves both accounts intact and
+lets the player retry. Selecting No when Mom asks about money opens the source
+daylight-saving conversation. Changing the clock moves exactly one hour and
+is blocked if it would change the date.
+
+At either of the two original Route 29 triggers, Lyra offers to demonstrate
+catching a Lv5 Pidgey. Accepting follows her into the grass and starts the
+native throw-only tutorial. The 48×48 Crystal back sprite and its two original
+colors appear over a 64×64 native canvas. Its throw cue holds the same source
+pixels across both animation commands. The native Bag opens directly to
+Lyra's ten Poké Balls and one Premier Ball. The demonstration catches Pidgey
+for Lyra, restores the player's Bag and party, and returns to her dialogue.
+Declining skips the demonstration and records the source refusal flag. Either
+choice gives five Poké Balls once. Lyra waits if the Bag lacks space.
+
+After the player first discusses savings with Mom, Tuscany appears on Route 29
+on the chosen Tuesday and gives one Silk Scarf. The New Bark teacher directs
+the player to visit Mom while outbound Pokégear calls await their UI phase.
+Mom's phone shopping and gift deliveries are deferred with that phone system.
+
+The bank uses two unused native vars, 0x4091 and 0x409B, for the low and high
+words of the balance. Flags 0x4C0–0x4C6 hold the opening, saving choice,
+first visit, tutorial result and Tuscany events. These assignments use existing
+save space. The source fixture audit checks both movement paths, portrait pixels
+and allocations. The emulator campaign checks actual deposits and withdrawals,
+Joey's prize, Lyra's accepted/declined branches from both rows, party and Ball
+preservation, Tuesday's gift, and native Save/Continue. Route 31 toward Violet
+City is the next map phase and requires room for additional trainer IDs.
 
 The playable visual slice and dormant Headbutt encounter selection are complete
 parts of the port. **The whole Polished Crystal migration is not complete.**

@@ -296,9 +296,14 @@ PolishedReturn_ElmRecover::
 
 def adapt(name, script, header, files, code, text, define):
     if name == 'NewBarkTown':
-        code=code.replace('\tmsgbox PolishedNewBarkTown_Breeze, MSGBOX_DEFAULT\n','''	goto_if_set FLAG_POLISHED_GAVE_MYSTERY_EGG, PolishedReturn_TeacherAfterEgg
+        code=code.replace('PolishedNewBarkTown_ResidentSchedule::\n','PolishedNewBarkTown_ResidentSchedule::\n\tclearflag FLAG_POLISHED_MOM_FIRST_VISIT\n')
+        code=code.replace('\tmsgbox PolishedNewBarkTown_Breeze, MSGBOX_DEFAULT\n','''	goto_if_set FLAG_POLISHED_MOM_BANK_OPEN, PolishedReturn_TeacherAfterMom
+	goto_if_set FLAG_POLISHED_GAVE_MYSTERY_EGG, PolishedReturn_TeacherAfterEgg
 	goto_if_ne VAR_POLISHED_STARTER, 0, PolishedReturn_TeacherAfterStarter
 	msgbox PolishedNewBarkTown_Breeze, MSGBOX_DEFAULT
+	goto PolishedReturn_TeacherTravel
+PolishedReturn_TeacherAfterMom::
+	msgbox PolishedReturn_Text_CallMomOnGear, MSGBOX_DEFAULT
 	goto PolishedReturn_TeacherTravel
 PolishedReturn_TeacherAfterEgg::
 	msgbox PolishedReturn_Text_TellMomIfLeaving, MSGBOX_DEFAULT
@@ -309,6 +314,10 @@ PolishedReturn_TeacherTravel::
 ''')
         for s in ('Text_TellMomIfLeaving','Text_YourMonIsAdorable'):
             code+=define('PolishedReturn_'+s,text(script,s))
+        # Direct the player to the live home interaction until outbound phone calls exist.
+        advice=text(script,'Text_CallMomOnGear')
+        assert advice.startswith('Call your mom on\\nyour POKégear to')
+        code+=define('PolishedReturn_Text_CallMomOnGear',advice.replace('Call your mom on\\nyour POKégear to','Visit your mom to'))
     elif name == 'CherrygroveCity':
         hooks, extra = city(script,header,text,define)
         code = code.replace('\t.byte 0\n',hooks+'\t.byte 0\n',1)+extra

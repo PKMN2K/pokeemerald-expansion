@@ -1,4 +1,5 @@
 #include "global.h"
+#include "battle_setup.h"
 #include "item_menu.h"
 #include "battle.h"
 #include "battle_controllers.h"
@@ -1188,6 +1189,14 @@ void UpdatePocketItemList(enum Pocket pocketId)
 static void UpdatePocketItemLists(void)
 {
     u8 i;
+    // Lyra only opens her own Ball pocket. The normal list setup would also
+    // sort the player's Berries and TMs and compact their unrelated pockets.
+    if (IsWallysBag() && IsPolishedLyraTutorial())
+    {
+        UpdatePocketItemList(POCKET_POKE_BALLS);
+        return;
+    }
+
     for (i = 0; i < POCKETS_COUNT; i++)
         UpdatePocketItemList(i);
 }
@@ -2457,6 +2466,13 @@ void DoWallyTutorialBagMenu(void)
 void InitOldManBag(void)
 {
     PrepareBagForWallyTutorial();
+    if (IsPolishedLyraTutorial())
+    {
+        AddBagItem(ITEM_POKE_BALL, 10);
+        AddBagItem(ITEM_PREMIER_BALL, 1);
+        GoToBagMenu(ITEMMENULOCATION_WALLY, POCKET_POKE_BALLS, CB2_SetUpReshowBattleScreenAfterMenu2);
+        return;
+    }
     AddBagItem(ITEM_POTION, 1);
     AddBagItem(ITEM_POKE_BALL, 1);
     GoToBagMenu(ITEMMENULOCATION_WALLY, POCKET_ITEMS, CB2_SetUpReshowBattleScreenAfterMenu2);
@@ -2474,8 +2490,11 @@ static void Task_WallyTutorialBagMenu(u8 taskId)
         switch (tTimer)
         {
         case WALLY_BAG_DELAY * 1:
-            PlaySE(SE_SELECT);
-            SwitchBagPocket(taskId, MENU_CURSOR_DELTA_RIGHT, FALSE);
+            if (!IsPolishedLyraTutorial())
+            {
+                PlaySE(SE_SELECT);
+                SwitchBagPocket(taskId, MENU_CURSOR_DELTA_RIGHT, FALSE);
+            }
             tTimer++;
             break;
         case WALLY_BAG_DELAY * 2:

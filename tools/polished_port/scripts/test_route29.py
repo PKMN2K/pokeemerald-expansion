@@ -39,9 +39,11 @@ def main():
     assert all(cells[x] & 0xC00 for x in (4,5))
     assert all(not cells[70+x] & 0xC00 for x in (4,5))
     # Source callbacks for late-game Lyra/Tuscany must not spawn them early.
-    assert len(route["object_events"]) == 8 and len(gate["object_events"]) == 2
-    assert not route["coord_events"] and len(route["bg_events"]) == 3
-    flags = [r["flag"] for r in route["object_events"] if r["flag"] != "0"]
+    assert len(route["object_events"]) == 10 and len(gate["object_events"]) == 2
+    assert [(e["x"], e["y"], e["var"], e["var_value"]) for e in route["coord_events"]] == [(53,8,"VAR_TEMP_2","1"),(53,9,"VAR_TEMP_2","1")]
+    assert len(route["bg_events"]) == 3
+    assert [n["flag"] for n in route["object_events"][-2:]] == ["FLAG_TEMP_2", "FLAG_TEMP_3"]
+    flags = [r["flag"] for r in route["object_events"] if r["flag"].startswith("FLAG_POLISHED_")]
     assert len(flags) == len(set(flags)) == 3
     # Persistent flags must use previously unused IDs in every supported game.
     common = (ROOT / "include/constants/flags.h").read_text()

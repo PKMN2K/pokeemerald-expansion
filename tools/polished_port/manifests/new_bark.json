@@ -1,6 +1,6 @@
 {
   "source_commit": "3fa43192379df5c3e7b09a08e4d5d79af4f02f42",
-  "scope": "source geography, connected interiors, static interactions, six ambient residents, rival window encounter, Lyra/Elm introduction, all three starter choices, first Lyra battle, aide Potion and Mom's opening with weekday/DST setup, schedules and neighbor; Route 29, Cherrygrove services, Route 30 with Mulch, native encounters, Mystery Egg and Oak; Elm's disaster call, first rival battle, theft investigation, rival naming, Egg delivery and Joey's first battle",
+  "scope": "source geography, connected interiors, static interactions, six ambient residents, rival window encounter, Lyra/Elm introduction, all three starter choices, first Lyra battle, aide Potion and Mom's opening with weekday/DST setup, schedules and neighbor; Route 29, Cherrygrove services, Route 30 with Mulch, native encounters, Mystery Egg and Oak; Elm's disaster call, first rival battle, theft investigation, rival naming, Egg delivery, Joey, Mom's savings, the Route 29 catching tutorial and Tuscany",
   "maps": {
     "NEW_BARK_TOWN": {
       "name": "NewBarkTown",
@@ -754,13 +754,14 @@
             }
           ],
           "clock": "native RTC weekday bias; initial DST flag does not adjust hours",
+          "bank": "Post-Egg offer, prize sharing, Get/Save/Change and DST",
           "deferred": [
-            "Pok\u00e9gear clock/phone interface",
+            "Pok\u00e9gear phone interface",
             "always-run option",
-            "Mystery Egg banking"
+            "Mom's remote shopping"
           ],
           "text_adaptations": [
-            "omit unavailable clock-adjustment and always-run option instructions"
+            "omit unavailable always-run option instructions"
           ]
         }
       ]
@@ -1483,10 +1484,9 @@
           "first_visit": "4 residents, 3 signs, Potion, 2 persistent Cut trees, daily Oran Berry tree",
           "berry_yield": "Random 1-3, falls back to fitting quantity; commit daily stamp only after addition",
           "tips_translation": "Unavailable GBC title shortcuts replaced by encounter-time advice",
+          "post_egg": "Two Lyra approaches, optional Pidgey tutorial, five Balls, Tuesday Tuscany",
           "deferred": [
-            "Route46",
-            "Lyra tutorial",
-            "Tuscany"
+            "Route46"
           ]
         }
       ]
@@ -3271,10 +3271,11 @@
     "graphics/trainers/front_pics/polished_rival.png": "14aa048e357549340e926f557c4c4737b45a7c4d51f6807ee7c74068f8814d10",
     "graphics/trainers/palettes/polished_rival.pal": "bbc303be54aea8bbd4c70bcacdbd205d922b345702d45a013bcc37fa824e95b6",
     "src/data/polished_return.party": "c3ff98fb424914ef7de50d2dcd587bdf514b7f88efc82a864d16e5fb2b2439a0",
+    "graphics/trainers/back_pics/polished_lyra.png": "71762933cba9582f143ff9f8d5cdf188b304cdf771fcf0583870ad71bd6a32f2",
     "data/layouts/PolishedNewBarkTown/map.bin": "0cfa1f14ae1edc366416d1cb39410cc6fa621759dad4eb7aa1c9eb0007a919c3",
     "data/layouts/PolishedNewBarkTown/border.bin": "310f01837605c39f0e0a084ab8e536b47e44c21cab74534066b2413ce33f2119",
     "data/maps/PolishedNewBarkTown/map.json": "3aa008e443f5336a3ab8e97852aac79e15422103b64c12ee6b5b7dd952d96aa2",
-    "data/maps/PolishedNewBarkTown/scripts.inc": "7167aa549668efe81a7f1963563dbe900a90deb4ddf9812e0d305a14864a8205",
+    "data/maps/PolishedNewBarkTown/scripts.inc": "a052fcef9234a218996ebd63271b9040f117a991578497d54390ad4aff2490a9",
     "data/layouts/PolishedElmsLab/map.bin": "edcb44c979918661055b6aef0e304340121f55a0ad53d73d592ab07ba797a681",
     "data/layouts/PolishedElmsLab/border.bin": "58b6ce2870c231fbe07a763ac9c4dc612e669cfbebfb93760435a9dbbdced76e",
     "data/maps/PolishedElmsLab/map.json": "76a64456615d3ca286c7469bae548c230d99020eafdd352b77c5281f4acbc58a",
@@ -3282,7 +3283,7 @@
     "data/layouts/PolishedPlayersHouse1F/map.bin": "66eb31dcc753d0fa08c180c8693f007c2bad0204b6ded6b0e4411c854e27c559",
     "data/layouts/PolishedPlayersHouse1F/border.bin": "58b6ce2870c231fbe07a763ac9c4dc612e669cfbebfb93760435a9dbbdced76e",
     "data/maps/PolishedPlayersHouse1F/map.json": "f6182e8995f8ae5efae60232ccd395e037f6c1544b4684803efad8af82cc012b",
-    "data/maps/PolishedPlayersHouse1F/scripts.inc": "b7cf39f7e6275b173db72004f21533496bb1b6ad6c3478ee50b30d9d7cb12b6e",
+    "data/maps/PolishedPlayersHouse1F/scripts.inc": "3e118feecc3d25b5ae31a67b59c79d3b013f5af69b184c852bc7c01d432fa504",
     "data/layouts/PolishedPlayersHouse2F/map.bin": "d250290a259126e36aa2f8719c8d72b3c56c9cc040d368772a6d59147ac29c02",
     "data/layouts/PolishedPlayersHouse2F/border.bin": "58b6ce2870c231fbe07a763ac9c4dc612e669cfbebfb93760435a9dbbdced76e",
     "data/maps/PolishedPlayersHouse2F/map.json": "8f5a349401e473b66f451788009d335acf3fa5d439c210f2a56d09fcbfa7ab65",
@@ -3305,8 +3306,8 @@
     "data/maps/PolishedElmsHouse/scripts.inc": "8ee9fe2211ff81e89c073b96b40a3cfe44a7e32121cd6f9af99499f008e82276",
     "data/layouts/PolishedRoute29/map.bin": "991646503d0a6b747bdb08434a72ac03ee707d84fc7fc08dac7d6584eac04b07",
     "data/layouts/PolishedRoute29/border.bin": "310f01837605c39f0e0a084ab8e536b47e44c21cab74534066b2413ce33f2119",
-    "data/maps/PolishedRoute29/map.json": "cea6ff1c164fb7dfefa688723aa5b8406d87a046caf3fe16a75a2945a812387b",
-    "data/maps/PolishedRoute29/scripts.inc": "6ea6de742581d6ff1699c8c154afed539d5c6993087a512877329145c1813f38",
+    "data/maps/PolishedRoute29/map.json": "7117ebee196c87081284bb1f6efdc1327a53f5d48481346b3923afbf6ef33815",
+    "data/maps/PolishedRoute29/scripts.inc": "290816363b0db3beb76957bf753b237e5446f43bb0f254c99e945105cb6b7220",
     "data/layouts/PolishedRoute2946Gate/map.bin": "d9bec6f64e2dc771644758c159a6ec80dda23c2d5b11da2255222539e757e5c1",
     "data/layouts/PolishedRoute2946Gate/border.bin": "58b6ce2870c231fbe07a763ac9c4dc612e669cfbebfb93760435a9dbbdced76e",
     "data/maps/PolishedRoute2946Gate/map.json": "8302f8992141ef6b85e0032d2bf01f6f49dff8dbf7aedd5681340c456d5239fd",

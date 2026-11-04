@@ -8,6 +8,7 @@ PolishedNewBarkTown_MapScripts::
 
 @ Map-local visibility, recomputed on entry and save loading.
 PolishedNewBarkTown_ResidentSchedule::
+	clearflag FLAG_POLISHED_MOM_FIRST_VISIT
 	gettime
 	goto_if_lt VAR_0x8000, 5, PolishedNewBarkTown_ResidentSchedule_Evening
 	goto_if_ge VAR_0x8000, 17, PolishedNewBarkTown_ResidentSchedule_Evening
@@ -58,9 +59,13 @@ PolishedNewBarkTown_LyrasHouseSignText_Text:
 PolishedNewBarkTown_Teacher::
 	lock
 	faceplayer
+	goto_if_set FLAG_POLISHED_MOM_BANK_OPEN, PolishedReturn_TeacherAfterMom
 	goto_if_set FLAG_POLISHED_GAVE_MYSTERY_EGG, PolishedReturn_TeacherAfterEgg
 	goto_if_ne VAR_POLISHED_STARTER, 0, PolishedReturn_TeacherAfterStarter
 	msgbox PolishedNewBarkTown_Breeze, MSGBOX_DEFAULT
+	goto PolishedReturn_TeacherTravel
+PolishedReturn_TeacherAfterMom::
+	msgbox PolishedReturn_Text_CallMomOnGear, MSGBOX_DEFAULT
 	goto PolishedReturn_TeacherTravel
 PolishedReturn_TeacherAfterEgg::
 	msgbox PolishedReturn_Text_TellMomIfLeaving, MSGBOX_DEFAULT
@@ -313,3 +318,6 @@ PolishedReturn_Text_TellMomIfLeaving:
 
 PolishedReturn_Text_YourMonIsAdorable:
 	.string "Oh! Your POKéMON\nis adorable!\lI wish I had one!$"
+
+PolishedReturn_Text_CallMomOnGear:
+	.string "Visit your mom to\plet her know how\nyou're doing.$"

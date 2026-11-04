@@ -1,0 +1,40 @@
+{
+  "commit": "3fa43192379df5c3e7b09a08e4d5d79af4f02f42",
+  "extracts": [
+    {
+      "path": "engine/battle/core.asm",
+      "blob": "37e76be94949c77bf7fd12814675a27943c7d85f",
+      "line": 2289,
+      "sha256": "3bab82e6ebae9db61be2f0df0e725fec6e00a96b7e1bd56d95d8f26e43ccaf95",
+      "text": "\tcall .CheckMaxedOutMomMoney\n\tpush af\n\tlb bc, 0, $4\n\tjr nc, .loop\n\tld a, [wMomSavingMoney]\n\tand $7\n\tcp $3\n\tld b, a\n\tjr nz, .loop\n\tinc b\n\n.loop\n\tld a, b\n\tand a\n\tjr z, .loop2\n\tcall .SendMoneyToMom\n\tdec c\n\tdec b\n\tjr .loop\n\n.loop2\n\tld a, c\n\tand a\n\tjr z, .done\n\tcall .AddMoneyToWallet\n\tdec c\n\tjr .loop2\n\n.done\n\tcall .DoubleReward\n\tcall .DoubleReward\n\tpop af\n\tjr nc, .KeepItAll\n\tld a, [wMomSavingMoney]\n\tand MOM_SAVING_MONEY_MASK\n\tjr z, .KeepItAll\n\tld hl, SentToMomTexts\n\tdec a\n\tld c, a\n\tld b, 0\n\tadd hl, bc\n\tadd hl, bc\n\tld a, [hli]\n\tld h, [hl]\n\tld l, a\n\tjmp StdBattleTextbox\n\n.KeepItAll:\n\tld hl, GotMoneyForWinningText\n\tjmp StdBattleTextbox\n\n.SendMoneyToMom:\n\tpush bc\n\tld hl, wBattleReward + 2\n\tld de, wMomsMoney + 2\n\tcall AddBattleMoneyToAccount\n\tpop bc\n\tret\n\n.AddMoneyToWallet:\n\tpush bc\n\tld hl, wBattleReward + 2\n\tld de, wMoney + 2\n\tcall AddBattleMoneyToAccount\n\tpop bc\n\tret\n\n.DoubleReward:\n\tld hl, wBattleReward + 2\n\tsla [hl]\n\tdec hl\n\trl [hl]\n\tdec hl\n\trl [hl]\n\tret nc\n\tld a, $ff\n\tld [hli], a\n\tld [hli], a\n\tld [hl], a\n\tret\n\n.CheckMaxedOutMomMoney:\n\tld hl, wMomsMoney + 2\n\tld a, [hld]\n\tcp LOW(9999999)\n\tld a, [hld]\n\tsbc LOW(9999999 / $100)\n\tld a, [hl]\n\tsbc LOW(9999999 / $10000)\n\tret\n\nSentToMomTexts:\n\tfarbank BattleText\n\tfardw SentSomeToMomText\n\tfardw SentHalfToMomText\n\tfardw SentAllToMomText\n\nAddBattleMoneyToAccount:\n\tld c, $3\n\tand a\n\tpush de\n.loop\n\tld a, [de]\n\tadc [hl]\n\tld [de], a\n\tdec de\n\tdec hl\n\tdec c\n\tjr nz, .loop\n\tpop hl\n\tld a, [hld]\n\tcp LOW(9999999)\n\tld a, [hld]\n\tsbc LOW(9999999 / $100)\n\tld a, [hl]\n\tsbc LOW(9999999 / $10000)\n\tret c\n\tld a, LOW(9999999 / $10000)\n\tld [hli], a\n\tld a, LOW(9999999 / $100)\n\tld [hli], a\n\tld [hl], LOW(9999999)\n\tret\n\n"
+    },
+    {
+      "path": "engine/battle/core.asm",
+      "blob": "37e76be94949c77bf7fd12814675a27943c7d85f",
+      "line": 8712,
+      "sha256": "1b1c17882a1cc843eb4c074f4d678b32c1a0092b8976cb0420b7248141c6e6c2",
+      "text": "GetTrainerBackpic:\n; Load the player character's backpic (6x6) into VRAM starting from vTiles2 tile $31.\n\n; Special exception for Lyra.\n\tld hl, LyraBackpic\n\tld a, [wBattleType]\n\tcp BATTLETYPE_TUTORIAL\n\tjr z, .Decompress\n\n; What gender are we?\n\tld a, [wPlayerGender]\n\tld hl, ChrisBackpic\n\tand a ; PLAYER_MALE\n\tjr z, .Decompress\n\tld hl, KrisBackpic\n\tdec a ; PLAYER_FEMALE\n\tjr z, .Decompress\n\t; PLAYER_ENBY\n\tld hl, CrysBackpic\n\n.Decompress:\n\tld de, vTiles2 tile $31\n\tlb bc, BANK(\"Trainer Backpics\"), 6 * 6\n\tjmp DecompressRequest2bpp\n\n"
+    },
+    {
+      "path": "engine/gfx/color.asm",
+      "blob": "87f6543b753f9bbd0e6a23134709eaefc8d3b960",
+      "line": 586,
+      "sha256": "bdd11a0b2b938f00283f8cdfe1d4a8c49762804889cadfe475c637757afbb413",
+      "text": "GetPlayerOrMonPalettePointer:\n\tand a\n\tjr nz, GetMonNormalOrShinyPalettePointer\n\n\tld hl, Lyra1Palette\n\tld a, [wBattleType]\n\tcp BATTLETYPE_TUTORIAL"
+    },
+    {
+      "path": "gfx/misc.asm",
+      "blob": "0cf6e78ec5fb6e22d441fd6dc2a82aa124482210",
+      "line": 97,
+      "sha256": "62e6f9ca15cb57dce0faf05bcdb1275067b62783ee86ef2b5b6e8eef4460ce2a",
+      "text": "LyraBackpic::  INCBIN \"gfx/battle/lyra_back.2bpp.lz\""
+    },
+    {
+      "path": "data/text/battle.asm",
+      "blob": "c21b2d96477128757e7458f013d02f984fa2693e",
+      "line": 354,
+      "sha256": "9b62d585262a31e4c196c572bba92a1787323d80cd44b05d3897df645ee82b74",
+      "text": "SentSomeToMomText:\n\ttext \"<PLAYER> got \u00a5\"\n\ttext_decimal wBattleReward, 3, 6\n\tline \"for winning!\"\n\tcont \"Sent some to Mom!\"\n\tprompt\n\n"
+    }
+  ]
+}

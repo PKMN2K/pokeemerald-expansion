@@ -475,6 +475,7 @@ const u32 gTrainerFrontPic_PolishedBugCatcher[] = INCGFX_U32("graphics/trainers/
 const u16 gTrainerPalette_PolishedBugCatcher[] = INCGFX_U16("graphics/trainers/palettes/polished_bug_catcher.pal", ".gbapal");
 const u32 gTrainerFrontPic_PolishedRival[] = INCGFX_U32("graphics/trainers/front_pics/polished_rival.png", ".4bpp.smol");
 const u16 gTrainerPalette_PolishedRival[] = INCGFX_U16("graphics/trainers/palettes/polished_rival.pal", ".gbapal");
+const u8 gTrainerBackPic_PolishedLyra[] = INCGFX_U8("graphics/trainers/back_pics/polished_lyra.png", ".4bpp");
 const u32 gTrainerFrontPic_PolishedLyra[] = INCGFX_U32("graphics/trainers/front_pics/polished_lyra.png", ".4bpp.smol");
 const u16 gTrainerPalette_PolishedLyra[] = INCGFX_U16("graphics/trainers/palettes/polished_lyra.pal", ".gbapal");
 
@@ -542,6 +543,19 @@ static const union AnimCmd sAnimCmd_Point_HGSS_Red_Leaf[] =
     ANIMCMD_FRAME(3, 24),
     ANIMCMD_FRAME(0, 50),
     ANIMCMD_END,
+};
+
+// The standing-trainer throw releases the Ball on animation command 1.
+// Crystal supplies a single back frame; hold the same artwork through the cue.
+static const union AnimCmd sPolishedLyraThrow[] = {
+    ANIMCMD_FRAME(0, 8),
+    ANIMCMD_FRAME(0, 24),
+    ANIMCMD_END,
+};
+static const union AnimCmd *const sPolishedLyraBackAnims[] = {
+    sAnim_GeneralFrame0,
+    sPolishedLyraThrow,
+    sAnim_GeneralFrame0,
 };
 
 static const union AnimCmd *const sBackAnims_None[] = {
@@ -1250,5 +1264,6 @@ const struct TrainerPicInfo gTrainerPicInfo[TRAINER_PIC_COUNT] =
     [TRAINER_PIC_POLISHED_LYRA] =
     {
         .frontPic = TRAINER_FRONT_PIC(gTrainerFrontPic_PolishedLyra, gTrainerPalette_PolishedLyra),
+        .backPic = TRAINER_BACK_PIC(4, gTrainerBackPic_PolishedLyra, gTrainerPalette_PolishedLyra, sPolishedLyraBackAnims),
     },
 };

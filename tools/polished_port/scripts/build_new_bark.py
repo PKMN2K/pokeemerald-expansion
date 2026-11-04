@@ -7,7 +7,7 @@ introduction, starter selection, Lyra battle, first Potion and Mom's opening.
 Cherrygrove includes the guide tour, Town Map, residents and native services.
 Route 30 includes Mulch, the Mystery Egg and Oak. The return errand includes
 Elm's call, the rival, the theft investigation, Egg delivery and Joey's battle.
-The catching tutorial, Routes 27/31/46 and the bay remain separate work.
+Mom's savings, Lyra's catching tutorial and Tuesday's Tuscany follow Egg delivery.
 """
 import argparse
 import base64
@@ -33,6 +33,7 @@ import polished_route29
 import polished_cherrygrove
 import polished_route30
 import polished_return
+import polished_departure
 
 NEW_BARK_MAPS = {
     "NewBarkTown": "NEW_BARK_TOWN",
@@ -499,7 +500,7 @@ def map_header(name, constant, width, height, script, files):
 def generate():
     files = source_files()
     ids = behavior_ids()
-    products, maps, layouts = {**resident_assets(files), **new_bark_battle.battle_assets(files), **polished_cherrygrove.assets(files), **polished_route30.assets(files), **polished_return.assets(files)}, {}, []
+    products, maps, layouts = {**resident_assets(files), **new_bark_battle.battle_assets(files), **polished_cherrygrove.assets(files), **polished_route30.assets(files), **polished_return.assets(files), **polished_departure.assets(files)}, {}, []
     indoor = palette_rows((FIXTURES / "johto_bg_tiles.pal").read_text())[32:39]
     indoor_palette = b"".join(struct.pack("<16H", *p, p[0], *([0] * 11)) for p in indoor).ljust(512, b"\0")
     outdoor = apply_new_bark_roof(build_graphics()[0], files)
@@ -615,7 +616,7 @@ def generate():
 
 """
     products["src/data/tilesets/polished_new_bark.h"] = (header_text.rstrip() + "\n").encode()
-    report = {"source_commit": PIN, "scope": "source geography, connected interiors, static interactions, six ambient residents, rival window encounter, Lyra/Elm introduction, all three starter choices, first Lyra battle, aide Potion and Mom's opening with weekday/DST setup, schedules and neighbor; Route 29, Cherrygrove services, Route 30 with Mulch, native encounters, Mystery Egg and Oak; Elm's disaster call, first rival battle, theft investigation, rival naming, Egg delivery and Joey's first battle",
+    report = {"source_commit": PIN, "scope": "source geography, connected interiors, static interactions, six ambient residents, rival window encounter, Lyra/Elm introduction, all three starter choices, first Lyra battle, aide Potion and Mom's opening with weekday/DST setup, schedules and neighbor; Route 29, Cherrygrove services, Route 30 with Mulch, native encounters, Mystery Egg and Oak; Elm's disaster call, first rival battle, theft investigation, rival naming, Egg delivery, Joey, Mom's savings, the Route 29 catching tutorial and Tuscany",
         "maps": maps, "layouts": layouts, "output_sha256": {p: hashlib.sha256(raw).hexdigest() for p, raw in products.items()}}
     products["tools/polished_port/manifests/new_bark.json"] = json_bytes(report)
     products["tools/polished_port/manifests/route29_wild.json"] = json_bytes({

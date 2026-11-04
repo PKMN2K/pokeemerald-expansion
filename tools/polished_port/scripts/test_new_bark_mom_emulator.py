@@ -194,4 +194,4 @@ def check_mom_after_starter(game, maps, checks):
     assert text_matches(game, "PolishedMom_MomErrandText")
     close_resident_dialogue(game)
     travel(game, house, town)
-    checks.append("Mom switches to her original errand conversation after the starter; later banking remains gated by the unported Mystery Egg quest")
+    checks.append("Mom switches to her original errand conversation after the starter; banking stays gated until Elm receives the Mystery Egg")

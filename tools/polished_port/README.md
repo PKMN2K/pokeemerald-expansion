@@ -17,9 +17,9 @@ Both original west-exit approaches run the teacher's safeguard before an Elm
 starter is selected. Entering New Bark records a native blackout destination
 at (6,5), where native recovery heals the party without a Hoenn nurse script.
 The gate's source warps 3/4 become native warps 0/1; its northern door cells are
-blocked until Route 46 exists. Cherrygrove and Route 46 connections, Lyra's
-post-Mystery-Egg tutorial and Tuscany's quest-dependent appearance remain
-deferred. No dangling warp or placeholder destination is used.
+blocked until Route 46 exists. The west exit connects to Cherrygrove. After
+the return errand, Lyra offers her tutorial. Tuscany appears on Tuesdays
+after Mom opens her bank.
 
 Wild encounter species, levels and combined probabilities match all three
 source tables. Native twelve-slot tables preserve the seven-slot distribution
@@ -249,3 +249,13 @@ flag assignments. The New Bark emulator campaign invokes `test_return_emulator.p
 after Mr. Pokémon. It branches from each starter's actual gameplay, checks
 the trainer portrait in VRAM, plays both win/loss outcomes and saves through
 the native game menu before checking the persistent name and quest state.
+
+
+## Post-Egg departure
+
+`polished_departure.py` converts Lyra's back sprite and generates the bank,
+tutorial and Tuscany scripts. Run `test_post_egg.py` for the graphics, movement
+and ID audit and `make check TESTS=Johto` for native transfer and prize limits.
+`test_post_egg_emulator.py` runs from the existing campaign after Elm receives
+the Egg. It covers both tutorial rows and answers, transfers through the native
+amount picker, a real trainer payout, clock safeguards, and Tuscany's saved gift.

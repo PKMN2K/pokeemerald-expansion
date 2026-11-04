@@ -2867,7 +2867,12 @@ BattleScript_LocalBattleWonLoseTexts::
 	printstring STRINGID_TRAINER2LOSETEXT
 BattleScript_LocalBattleWonReward::
 	getmoneyreward
+	jumpifbyte CMP_EQUAL, cMULTISTRING_CHOOSER, 0, BattleScript_FullPrize
+	printstring STRINGID_POLISHED_SENT_SOME_TO_MOM
+	goto BattleScript_WaitForPrizeMessage
+BattleScript_FullPrize:
 	printstring STRINGID_PLAYERGOTMONEY
+BattleScript_WaitForPrizeMessage:
 	waitmessage B_WAIT_TIME_LONG
 BattleScript_PayDayMoneyAndPickUpItems::
 	givepaydaymoney

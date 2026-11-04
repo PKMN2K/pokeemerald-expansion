@@ -711,6 +711,21 @@
       "path": "engine/events/specials.asm",
       "fixture": "engine__events__specials.asm.b64",
       "git_blob_sha1": "59e7d8e1cc1f1bb8c0392848694eff7abad8b230"
+    },
+    {
+      "path": "engine/events/catch_tutorial.asm",
+      "fixture": "engine__events__catch_tutorial.asm.b64",
+      "git_blob_sha1": "81922ee827a7bea090eb6ac700e1a5d2b1c58b14"
+    },
+    {
+      "path": "engine/events/mom.asm",
+      "fixture": "engine__events__mom.asm.b64",
+      "git_blob_sha1": "72b376decec3c0fbb1be18475cc42c2fd5e63cc5"
+    },
+    {
+      "path": "gfx/battle/lyra_back.png",
+      "fixture": "gfx__battle__lyra_back.png.b64",
+      "git_blob_sha1": "a77248da6541eba5f13c2fe3edd08e48557805d4"
     }
   ]
 }

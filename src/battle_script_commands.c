@@ -29,6 +29,7 @@
 #include "main.h"
 #include "palette.h"
 #include "money.h"
+#include "polished_mom_bank.h"
 #include "malloc.h"
 #include "bg.h"
 #include "string_util.h"
@@ -4048,7 +4049,9 @@ static void Cmd_getmoneyreward(void)
         money = GetTrainerMoneyToGive(TRAINER_BATTLE_PARAM.opponentA);
         if (gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS)
             money += GetTrainerMoneyToGive(TRAINER_BATTLE_PARAM.opponentB);
-        AddMoney(&gSaveBlock1Ptr->money, money);
+        u32 sent = PolishedMomSavePrize(money);
+        gBattleCommunication[MULTISTRING_CHOOSER] = (sent != 0);
+        AddMoney(&gSaveBlock1Ptr->money, money - sent);
     }
     else
     {

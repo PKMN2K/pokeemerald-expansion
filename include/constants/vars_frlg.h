@@ -158,7 +158,7 @@
 #define VAR_0x408E                 0x408E
 #define VAR_0x408F                 0x408F
 #define VAR_0x4090                 0x4090
-#define VAR_0x4091                 0x4091
+// Reserved for VAR_POLISHED_MOM_BALANCE_LO
 #define VAR_0x4092                 0x4092
 #define VAR_0x4093                 0x4093
 #define VAR_0x4094                 0x4094
@@ -168,7 +168,7 @@
 #define VAR_0x4098                 0x4098
 #define VAR_0x4099                 0x4099
 #define VAR_0x409A                 0x409A
-#define VAR_0x409B                 0x409B
+// Reserved for VAR_POLISHED_MOM_BALANCE_HI
 #define VAR_0x409C                 0x409C
 #define VAR_0x409D                 0x409D
 #define VAR_0x409E                 0x409E

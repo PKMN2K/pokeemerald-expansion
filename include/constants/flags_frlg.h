@@ -1214,13 +1214,13 @@
 // Reserved by shared FLAG_POLISHED_CHERRYGROVE_RIVAL_DONE
 // Reserved by shared FLAG_POLISHED_ELM_THEFT_REPORTED
 // Reserved by shared FLAG_POLISHED_GAVE_MYSTERY_EGG
-#define FLAG_0x4C0               0x4C0
-#define FLAG_0x4C1               0x4C1
-#define FLAG_0x4C2               0x4C2
-#define FLAG_0x4C3               0x4C3
-#define FLAG_0x4C4               0x4C4
-#define FLAG_0x4C5               0x4C5
-#define FLAG_0x4C6               0x4C6
+// Reserved for FLAG_POLISHED_MOM_BANK_OPEN
+// Reserved for FLAG_POLISHED_MOM_SAVES_MONEY
+// Reserved for FLAG_POLISHED_MOM_FIRST_VISIT
+// Reserved for FLAG_POLISHED_CAUGHT_TUTORIAL
+// Reserved for FLAG_POLISHED_DECLINED_TUTORIAL
+// Reserved for FLAG_POLISHED_MET_TUSCANY
+// Reserved for FLAG_POLISHED_TUSCANY_SILK_SCARF
 #define FLAG_0x4C7               0x4C7
 #define FLAG_0x4C8               0x4C8
 #define FLAG_0x4C9               0x4C9

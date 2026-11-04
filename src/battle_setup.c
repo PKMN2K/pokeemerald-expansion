@@ -506,23 +506,39 @@ static void DoBattlePyramidTrainerHillBattle(void)
     TryUpdateGymLeaderRematchFromTrainer();
 }
 
-// Initiates battle where Wally catches Ralts
-void StartWallyTutorialBattle(void)
+// Chosen by the initiating special, including when a tutorial is launched from a debug map.
+EWRAM_DATA static bool8 sTutorialIsLyra = FALSE;
+
+static void StartCatchTutorialBattle(enum Species species, bool32 isLyra)
 {
-    CreateMaleMon(&gParties[B_TRAINER_OPPONENT_A][0], SPECIES_RALTS, 5);
+    sTutorialIsLyra = isLyra;
+    if (isLyra)
+        ZeroEnemyPartyMons();
+    CreateMaleMon(&gParties[B_TRAINER_OPPONENT_A][0], species, 5);
     LockPlayerFieldControls();
     gMain.savedCallback = CB2_ReturnToFieldContinueScriptPlayMapMusic;
     gBattleTypeFlags = BATTLE_TYPE_CATCH_TUTORIAL;
-    CreateBattleStartTask(B_TRANSITION_SLICE, 0);
+    CreateBattleStartTask(isLyra ? GetWildBattleTransition() : B_TRANSITION_SLICE, 0);
+}
+
+bool32 IsPolishedLyraTutorial(void)
+{
+    return (gBattleTypeFlags & BATTLE_TYPE_CATCH_TUTORIAL) && sTutorialIsLyra;
+}
+
+void StartWallyTutorialBattle(void)
+{
+    StartCatchTutorialBattle(SPECIES_RALTS, FALSE);
 }
 
 void StartOldManTutorialBattle(void)
 {
-    CreateMaleMon(&gParties[B_TRAINER_OPPONENT_A][0], SPECIES_WEEDLE, 5);
-    LockPlayerFieldControls();
-    gMain.savedCallback = CB2_ReturnToFieldContinueScriptPlayMapMusic;
-    gBattleTypeFlags = BATTLE_TYPE_CATCH_TUTORIAL;
-    CreateBattleStartTask(B_TRANSITION_SLICE, 0);
+    StartCatchTutorialBattle(SPECIES_WEEDLE, FALSE);
+}
+
+void StartPolishedLyraTutorial(void)
+{
+    StartCatchTutorialBattle(SPECIES_PIDGEY, TRUE);
 }
 
 void BattleSetup_StartScriptedWildBattle(void)
