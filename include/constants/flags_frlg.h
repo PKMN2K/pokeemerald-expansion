@@ -3,7 +3,7 @@
 
 
 // 0x020 is FLAG_HIDE_POLISHED_NEW_BARK_RIVAL, shared in flags.h.
-#define FLAG_0x021               0x021
+// 0x021 reserved for FLAG_POLISHED_HAS_ELM_CONTACT in flags.h.
 #define FLAG_0x022               0x022
 #define FLAG_0x023               0x023
 #define FLAG_0x024               0x024

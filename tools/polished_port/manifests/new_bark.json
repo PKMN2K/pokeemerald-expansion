@@ -1,6 +1,6 @@
 {
   "source_commit": "3fa43192379df5c3e7b09a08e4d5d79af4f02f42",
-  "scope": "source geography, connected interiors, static interactions, six ambient residents and the rival's lab-window encounter; further story progression deferred",
+  "scope": "source geography, connected interiors, static interactions, six ambient residents, rival window encounter, Lyra/Elm introduction and all three starter choices; Lyra battle and later story progression deferred",
   "maps": {
     "NEW_BARK_TOWN": {
       "name": "NewBarkTown",
@@ -235,6 +235,33 @@
           "sound_translation": {
             "SFX_TACKLE": "SE_M_COMET_PUNCH"
           }
+        },
+        {
+          "source_script": "NewBarkTown_LyraIntroTrigger",
+          "trigger": [
+            6,
+            4
+          ],
+          "source_scene": 0,
+          "next_scene": 2,
+          "arrival": [
+            4,
+            11
+          ],
+          "event": {
+            "local_id": "LOCALID_NEW_BARK_LYRA",
+            "graphics_id": "OBJ_EVENT_GFX_POLISHED_LYRA",
+            "x": 1,
+            "y": 6,
+            "elevation": 3,
+            "movement_type": "MOVEMENT_TYPE_FACE_RIGHT",
+            "movement_range_x": 0,
+            "movement_range_y": 0,
+            "trainer_type": "TRAINER_TYPE_NONE",
+            "trainer_sight_or_berry_tree_id": "0",
+            "script": "PolishedIntro_NewBarkTownLyraScript",
+            "flag": "FLAG_TEMP_2"
+          }
         }
       ]
     },
@@ -320,7 +347,129 @@
       ],
       "static_interactions": 6,
       "residents": [],
-      "story_encounters": []
+      "story_encounters": [
+        {
+          "source_script": "ElmsLab_AutowalkUpToElm",
+          "scenes": [
+            0,
+            1,
+            6
+          ],
+          "choices": [
+            {
+              "value": 1,
+              "species": "Cyndaquil",
+              "level": 5,
+              "held_item": "ORAN_BERRY",
+              "lyra_species": "Chikorita",
+              "lyra_nickname": "Chicory"
+            },
+            {
+              "value": 2,
+              "species": "Totodile",
+              "level": 5,
+              "held_item": "ORAN_BERRY",
+              "lyra_species": "Cyndaquil",
+              "lyra_nickname": "Cinder"
+            },
+            {
+              "value": 3,
+              "species": "Chikorita",
+              "level": 5,
+              "held_item": "ORAN_BERRY",
+              "lyra_species": "Totodile",
+              "lyra_nickname": "Toto"
+            }
+          ],
+          "events": [
+            {
+              "local_id": "LOCALID_ELMS_LAB_ELM",
+              "graphics_id": "OBJ_EVENT_GFX_POLISHED_ELM",
+              "x": 5,
+              "y": 2,
+              "elevation": 3,
+              "movement_type": "MOVEMENT_TYPE_FACE_DOWN",
+              "movement_range_x": 0,
+              "movement_range_y": 0,
+              "trainer_type": "TRAINER_TYPE_NONE",
+              "trainer_sight_or_berry_tree_id": "0",
+              "script": "PolishedIntro_ProfElmScript",
+              "flag": "0"
+            },
+            {
+              "local_id": "LOCALID_ELMS_LAB_AIDE",
+              "graphics_id": "OBJ_EVENT_GFX_POLISHED_SCIENTIST",
+              "x": 2,
+              "y": 9,
+              "elevation": 3,
+              "movement_type": "MOVEMENT_TYPE_LOOK_AROUND",
+              "movement_range_x": 0,
+              "movement_range_y": 0,
+              "trainer_type": "TRAINER_TYPE_NONE",
+              "trainer_sight_or_berry_tree_id": "0",
+              "script": "PolishedIntro_ElmsAideScript",
+              "flag": "0"
+            },
+            {
+              "local_id": "LOCALID_ELMS_LAB_CYNDAQUIL",
+              "graphics_id": "OBJ_EVENT_GFX_POLISHED_BALL_RED",
+              "x": 6,
+              "y": 3,
+              "elevation": 3,
+              "movement_type": "MOVEMENT_TYPE_FACE_DOWN",
+              "movement_range_x": 0,
+              "movement_range_y": 0,
+              "trainer_type": "TRAINER_TYPE_NONE",
+              "trainer_sight_or_berry_tree_id": "0",
+              "script": "PolishedIntro_CyndaquilPokeBallScript",
+              "flag": "FLAG_TEMP_2"
+            },
+            {
+              "local_id": "LOCALID_ELMS_LAB_TOTODILE",
+              "graphics_id": "OBJ_EVENT_GFX_POLISHED_BALL_BLUE",
+              "x": 7,
+              "y": 3,
+              "elevation": 3,
+              "movement_type": "MOVEMENT_TYPE_FACE_DOWN",
+              "movement_range_x": 0,
+              "movement_range_y": 0,
+              "trainer_type": "TRAINER_TYPE_NONE",
+              "trainer_sight_or_berry_tree_id": "0",
+              "script": "PolishedIntro_TotodilePokeBallScript",
+              "flag": "FLAG_TEMP_3"
+            },
+            {
+              "local_id": "LOCALID_ELMS_LAB_CHIKORITA",
+              "graphics_id": "OBJ_EVENT_GFX_POLISHED_BALL_GREEN",
+              "x": 8,
+              "y": 3,
+              "elevation": 3,
+              "movement_type": "MOVEMENT_TYPE_FACE_DOWN",
+              "movement_range_x": 0,
+              "movement_range_y": 0,
+              "trainer_type": "TRAINER_TYPE_NONE",
+              "trainer_sight_or_berry_tree_id": "0",
+              "script": "PolishedIntro_ChikoritaPokeBallScript",
+              "flag": "FLAG_TEMP_4"
+            },
+            {
+              "local_id": "LOCALID_ELMS_LAB_LYRA",
+              "graphics_id": "OBJ_EVENT_GFX_POLISHED_LYRA",
+              "x": 5,
+              "y": 11,
+              "elevation": 3,
+              "movement_type": "MOVEMENT_TYPE_FACE_UP",
+              "movement_range_x": 0,
+              "movement_range_y": 0,
+              "trainer_type": "TRAINER_TYPE_NONE",
+              "trainer_sight_or_berry_tree_id": "0",
+              "script": "PolishedIntro_ElmsLabLyraScript",
+              "flag": "0"
+            }
+          ],
+          "next_phase": "LyraBattleScript"
+        }
+      ]
     },
     "PLAYERS_HOUSE_1F": {
       "name": "PlayersHouse1F",
@@ -1066,19 +1215,26 @@
     "graphics/object_events/polished_npc_palettes/green_time.bin": "877eb47eafd08623ccd14b06fc26a03da5e4a527dd41267f8c7215f64530f496",
     "graphics/object_events/polished_npc_palettes/brown.bin": "70b9442959b732002832c4e9cf8a98018ad51282a77d01531563f756e646a5b7",
     "graphics/object_events/polished_npc_palettes/brown_time.bin": "b52af0e28bfc0e0a31fe38bfb3e69fe7b02e832f45feb335310b8c96afa29965",
+    "graphics/object_events/polished_npc_palettes/poke_ball.bin": "fb5093b9aae70dd95d91c6e665dbede8e084ce596e8eb5aa8a0d5eedb310cabc",
+    "graphics/object_events/polished_npc_palettes/deco_item.bin": "b061e5fd4dc9989bc9ea96df8fd793dce9daf1a0fbb1a0a9dedd587c3ba6c7c2",
+    "graphics/object_events/polished_npc_palettes/key_item.bin": "613bab02493110e1e5b05f30211e6950f5febd46d16f5478dea81be70e87f2a7",
     "graphics/object_events/polished_fat_guy/walking.png": "dbb4e839dd7b8b2b1429235c707222f1be980b9d6e8e1447c2e62151e2569949",
     "graphics/object_events/polished_schoolboy/walking.png": "aa15916926e8e2fa77a6dd3a4d8a4a2a294f3df7bffca000bf36d489b608497b",
     "graphics/object_events/polished_battle_girl/walking.png": "cb6843e84c7b9b5f6d6ea69717aa54f3841ff837cd1c93f51b0515cfe469cb02",
     "graphics/object_events/polished_child/walking.png": "5d207fa020abf4a5d96b2fe62529b08f019f452878e9d6c4a124da0e2ad4f050",
     "graphics/object_events/polished_rival/walking.png": "550b7d2da34033dfdd3d1573bfca9da8c20d0c7cf117ee1f5831b416fdade70b",
+    "graphics/object_events/polished_elm/walking.png": "1ec669240544a70600ff9a373cd5a5330f2e9ec7dc082f74c55c20f60712f811",
+    "graphics/object_events/polished_lyra/walking.png": "eb961be1a8c23b5dd9009aac778f56641176eade8655c944b9bce6ecadecd398",
+    "graphics/object_events/polished_scientist/walking.png": "f53ad5927627a0507f3707dba0d77ecd7ce43827ff4b843cca2e4cd9ed1142b4",
+    "graphics/object_events/polished_starter_ball/ball.png": "4bffc1d93f9a170a67dd221c9ead8323e406f5c0a79baafef34359e02e60107e",
     "data/layouts/PolishedNewBarkTown/map.bin": "0cfa1f14ae1edc366416d1cb39410cc6fa621759dad4eb7aa1c9eb0007a919c3",
     "data/layouts/PolishedNewBarkTown/border.bin": "310f01837605c39f0e0a084ab8e536b47e44c21cab74534066b2413ce33f2119",
-    "data/maps/PolishedNewBarkTown/map.json": "1ee357c6b1d0e08fc50013b1be9c174b2959d561207154a15944ce23896b526a",
-    "data/maps/PolishedNewBarkTown/scripts.inc": "308cf3d46467634befd3228da5e78f795809fde968dc145326cb410b57a5b658",
+    "data/maps/PolishedNewBarkTown/map.json": "45ee7ffc934af74beb61ed52eb3facbd09a0091f39119548c23a648f57fcb861",
+    "data/maps/PolishedNewBarkTown/scripts.inc": "c6470022c2eac243665701cb3b380aa1af662a90a700feeaff238e18204f4453",
     "data/layouts/PolishedElmsLab/map.bin": "edcb44c979918661055b6aef0e304340121f55a0ad53d73d592ab07ba797a681",
     "data/layouts/PolishedElmsLab/border.bin": "58b6ce2870c231fbe07a763ac9c4dc612e669cfbebfb93760435a9dbbdced76e",
-    "data/maps/PolishedElmsLab/map.json": "a8053948e3e4e28b3c52e6191c4f8fc002272ec314a24e703803b958a43ec1a4",
-    "data/maps/PolishedElmsLab/scripts.inc": "cda7ae0cd87e9e34c85a3d5accb689e148b07d0e7160942553fe21cde74bc6cd",
+    "data/maps/PolishedElmsLab/map.json": "85d9f3b6192087d9a52aebf598177aec6d0f72f1a71c8e3a49bdfcc3f78b4cb8",
+    "data/maps/PolishedElmsLab/scripts.inc": "e7a88c557b4376b9db571af0c282e5580c0d04f6c8c4283ee3c47c89666925f3",
     "data/layouts/PolishedPlayersHouse1F/map.bin": "66eb31dcc753d0fa08c180c8693f007c2bad0204b6ded6b0e4411c854e27c559",
     "data/layouts/PolishedPlayersHouse1F/border.bin": "58b6ce2870c231fbe07a763ac9c4dc612e669cfbebfb93760435a9dbbdced76e",
     "data/maps/PolishedPlayersHouse1F/map.json": "9ae41b767c92ecd16a374072c195894bf9d36889bb4796ad2c17e99dd59aefd7",

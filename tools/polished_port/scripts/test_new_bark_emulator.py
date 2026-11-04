@@ -33,10 +33,14 @@ def walk(game, data, goal):
     width, height = data["width"], data["height"]
     blocked = {(row["x"], row["y"]) for row in data["warp_events"]}
     # Reserve each resident's whole walking range, not just its spawn tile.
-    for row in data["object_events"]:
+    live = actors(game)
+    for local_id, row in enumerate(data["object_events"], 1):
+        if local_id not in live or live[local_id]["invisible"]:
+            continue
+        x, y = live[local_id]["position"]
         for dx in range(-row["movement_range_x"], row["movement_range_x"] + 1):
             for dy in range(-row["movement_range_y"], row["movement_range_y"] + 1):
-                blocked.add((row["x"] + dx, row["y"] + dy))
+                blocked.add((x + dx, y + dy))
     blocked.discard(goal)
     start = game.position()
     queue = deque([start])
@@ -436,6 +440,10 @@ def run(args):
                 game.check_sprite_palettes(obj[period])
                 game.screenshot("new-bark-" + period)
             checks.append("original town uses all four source background, roof and sprite palettes")
+            # Complete the real first-entry story before testing ordinary doors.
+            # Independent choice branches use snapshots reached by real input.
+            from test_new_bark_intro_emulator import check_intro
+            check_intro(game, maps, rows, checks)
             game.snapshot("PolishedNewBarkTown")
             # Breadth-first traversal creates snapshots only by normal gameplay.
             # Then every directed door/stair edge is tested, including both

@@ -176,6 +176,26 @@
       "path": "gfx/sprites/rival.png",
       "fixture": "gfx__sprites__rival.png.b64",
       "git_blob_sha1": "4931317a7b521f9664bb8c320046113d5adf38f9"
+    },
+    {
+      "path": "gfx/sprites/elm.png",
+      "fixture": "gfx__sprites__elm.png.b64",
+      "git_blob_sha1": "ed1439b6954119aea416df5607c2d489161630ec"
+    },
+    {
+      "path": "gfx/sprites/lyra.png",
+      "fixture": "gfx__sprites__lyra.png.b64",
+      "git_blob_sha1": "daa8b7cb7517f6dd3cb3f6cf2d82f3bb635e55fb"
+    },
+    {
+      "path": "gfx/sprites/scientist.png",
+      "fixture": "gfx__sprites__scientist.png.b64",
+      "git_blob_sha1": "ff223e5b1deaef4e131bca892e0e8e57d77a5f43"
+    },
+    {
+      "path": "gfx/sprites/ball_cut_fruit.png",
+      "fixture": "gfx__sprites__ball_cut_fruit.png.b64",
+      "git_blob_sha1": "f9e4531d803f04e6fabf3e9a5d73381447b6a784"
     }
   ]
 }

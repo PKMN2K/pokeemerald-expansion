@@ -70,6 +70,20 @@
       "trainer_sight_or_berry_tree_id": "0",
       "script": "PolishedNewBarkTown_Rival",
       "flag": "FLAG_HIDE_POLISHED_NEW_BARK_RIVAL"
+    },
+    {
+      "local_id": "LOCALID_NEW_BARK_LYRA",
+      "graphics_id": "OBJ_EVENT_GFX_POLISHED_LYRA",
+      "x": 1,
+      "y": 6,
+      "elevation": 3,
+      "movement_type": "MOVEMENT_TYPE_FACE_RIGHT",
+      "movement_range_x": 0,
+      "movement_range_y": 0,
+      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_sight_or_berry_tree_id": "0",
+      "script": "PolishedIntro_NewBarkTownLyraScript",
+      "flag": "FLAG_TEMP_2"
     }
   ],
   "warp_events": [
@@ -109,7 +123,17 @@
       "dest_warp_id": "1"
     }
   ],
-  "coord_events": [],
+  "coord_events": [
+    {
+      "type": "trigger",
+      "x": 6,
+      "y": 4,
+      "elevation": 3,
+      "var": "VAR_POLISHED_NEW_BARK_SCENE",
+      "var_value": "0",
+      "script": "PolishedIntro_TownApproach"
+    }
+  ],
   "bg_events": [
     {
       "type": "sign",

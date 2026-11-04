@@ -1,5 +1,9 @@
 @ Generated from pinned ElmsLab.asm: geography, static text and ambient residents.
 PolishedElmsLab_MapScripts::
+	map_script MAP_SCRIPT_ON_LOAD, PolishedIntro_LabVisibility
+	map_script MAP_SCRIPT_ON_TRANSITION, PolishedIntro_LabPositions
+	map_script MAP_SCRIPT_ON_RETURN_TO_FIELD, PolishedIntro_LabRestore
+	map_script MAP_SCRIPT_ON_FRAME_TABLE, PolishedIntro_LabFrame
 	.byte 0
 
 PolishedElmsLab_ElmsLabTravelTip1Text::
@@ -39,6 +43,7 @@ PolishedElmsLab_ElmsLabTrashcanText_Text:
 
 PolishedElmsLab_Heal::
 	lockall
+	goto_if_eq VAR_POLISHED_STARTER, 0, PolishedElmsLab_CannotHeal
 	msgbox PolishedElmsLab_HealText, MSGBOX_YESNO
 	goto_if_eq VAR_RESULT, NO, PolishedElmsLab_HealDone
 	special HealPlayerParty
@@ -46,5 +51,502 @@ PolishedElmsLab_HealDone::
 	releaseall
 	end
 
+PolishedElmsLab_CannotHeal::
+	msgbox PolishedElmsLab_CannotHealText, MSGBOX_DEFAULT
+	releaseall
+	end
+
 PolishedElmsLab_HealText:
 	.string "Would you like to\nheal your POKéMON?$"
+
+PolishedElmsLab_CannotHealText:
+	.string "I wonder what this\ndoes?$"
+
+@ Ball visibility derives from the saved choice; no extra permanent flags.
+PolishedIntro_LabVisibility::
+	clearflag FLAG_TEMP_2
+	clearflag FLAG_TEMP_3
+	clearflag FLAG_TEMP_4
+	goto_if_eq VAR_POLISHED_STARTER, 1, PolishedIntro_HideCyndaquilChikorita
+	goto_if_eq VAR_POLISHED_STARTER, 2, PolishedIntro_HideTotodileCyndaquil
+	goto_if_eq VAR_POLISHED_STARTER, 3, PolishedIntro_HideChikoritaTotodile
+	end
+PolishedIntro_HideCyndaquilChikorita::
+	setflag FLAG_TEMP_2
+	setflag FLAG_TEMP_4
+	end
+PolishedIntro_HideTotodileCyndaquil::
+	setflag FLAG_TEMP_3
+	setflag FLAG_TEMP_2
+	end
+PolishedIntro_HideChikoritaTotodile::
+	setflag FLAG_TEMP_4
+	setflag FLAG_TEMP_3
+	end
+
+@ Continue restores saved actors; reconcile them with the map-load masks.
+@ Nickname/menu returns retain the current masks and choreography.
+PolishedIntro_LabRestore::
+	call_if_set FLAG_TEMP_2, PolishedIntro_RemoveCyndaquil
+	call_if_set FLAG_TEMP_3, PolishedIntro_RemoveTotodile
+	call_if_set FLAG_TEMP_4, PolishedIntro_RemoveChikorita
+	end
+PolishedIntro_RemoveCyndaquil::
+	removeobject LOCALID_ELMS_LAB_CYNDAQUIL
+	return
+PolishedIntro_RemoveTotodile::
+	removeobject LOCALID_ELMS_LAB_TOTODILE
+	return
+PolishedIntro_RemoveChikorita::
+	removeobject LOCALID_ELMS_LAB_CHIKORITA
+	return
+
+PolishedIntro_LabPositions::
+	goto_if_eq VAR_POLISHED_ELMS_LAB_SCENE, 0, PolishedIntro_LabInitialPositions
+	setobjectxyperm LOCALID_ELMS_LAB_ELM, 5, 2
+	goto_if_eq VAR_POLISHED_ELMS_LAB_SCENE, 1, PolishedIntro_LabChoosingPositions
+	setobjectxyperm LOCALID_ELMS_LAB_LYRA, 5, 5
+	end
+PolishedIntro_LabChoosingPositions::
+	setobjectxyperm LOCALID_ELMS_LAB_LYRA, 4, 5
+	end
+PolishedIntro_LabInitialPositions::
+	setobjectxyperm LOCALID_ELMS_LAB_ELM, 3, 4
+	setobjectxyperm LOCALID_ELMS_LAB_LYRA, 5, 11
+	end
+
+PolishedIntro_LabFrame:
+	map_script_2 VAR_POLISHED_ELMS_LAB_SCENE, 0, PolishedIntro_WalkToElm
+	.2byte 0
+
+PolishedIntro_WalkToElm::
+	lockall
+	showplayer
+	applymovement LOCALID_PLAYER, PolishedIntro_WalkUpToElm
+	applymovement LOCALID_ELMS_LAB_LYRA, PolishedIntro_LyraFollowElm
+	waitmovement 0
+	applymovement LOCALID_ELMS_LAB_ELM, PolishedIntro_Exclamation
+	waitmovement 0
+	turnobject LOCALID_ELMS_LAB_ELM, DIR_EAST
+	msgbox PolishedIntro_ElmText_Intro, MSGBOX_YESNO
+	goto_if_eq VAR_RESULT, YES, PolishedIntro_ElmAccepted
+PolishedIntro_ElmRefused::
+	msgbox PolishedIntro_ElmText_Refused, MSGBOX_YESNO
+	goto_if_eq VAR_RESULT, NO, PolishedIntro_ElmRefused
+PolishedIntro_ElmAccepted::
+	msgbox PolishedIntro_ElmText_Accepted, MSGBOX_DEFAULT
+	msgbox PolishedIntro_ElmText_ResearchAmbitions, MSGBOX_DEFAULT
+	closemessage
+	playse SE_PC_LOGIN
+	delay 30
+	applymovement LOCALID_ELMS_LAB_ELM, PolishedIntro_Exclamation
+	waitmovement 0
+	turnobject LOCALID_ELMS_LAB_ELM, DIR_SOUTH
+	msgbox PolishedIntro_ElmText_GotAnEmail, MSGBOX_DEFAULT
+	turnobject LOCALID_ELMS_LAB_ELM, DIR_EAST
+	msgbox PolishedIntro_ElmText_MissionFromMrPokemon, MSGBOX_DEFAULT
+	closemessage
+	applymovement LOCALID_ELMS_LAB_ELM, PolishedIntro_StepUp
+	waitmovement 0
+	turnobject LOCALID_PLAYER, DIR_NORTH
+	applymovement LOCALID_ELMS_LAB_ELM, PolishedIntro_ElmDefaultPosition
+	waitmovement 0
+	turnobject LOCALID_PLAYER, DIR_EAST
+	msgbox PolishedIntro_ElmText_ChooseAPokemon, MSGBOX_DEFAULT
+	setvar VAR_POLISHED_ELMS_LAB_SCENE, 1
+	releaseall
+	end
+
+PolishedIntro_ProfElmScript::
+	lock
+	faceplayer
+	goto_if_ne VAR_POLISHED_STARTER, 0, PolishedIntro_ElmAfterStarter
+	msgbox PolishedIntro_ElmText_LetYourMonBattleIt, MSGBOX_DEFAULT
+	release
+	end
+PolishedIntro_ElmAfterStarter::
+	msgbox PolishedIntro_ElmDescribesMrPokemonText, MSGBOX_DEFAULT
+	release
+	end
+PolishedIntro_ElmsLabLyraScript::
+	lock
+	faceplayer
+	goto_if_ne VAR_POLISHED_STARTER, 0, PolishedIntro_LyraAfterStarter
+	msgbox PolishedIntro_ElmsLabLyraWhichPokemonText, MSGBOX_DEFAULT
+	release
+	end
+PolishedIntro_LyraAfterStarter::
+	msgbox PolishedIntro_ElmsLabLyraGoodChoiceText, MSGBOX_DEFAULT
+	release
+	end
+PolishedIntro_ElmsAideScript::
+	msgbox PolishedIntro_AideText_AlwaysBusy, MSGBOX_NPC
+	end
+
+PolishedIntro_TryToLeave::
+	lockall
+	turnobject LOCALID_ELMS_LAB_ELM, DIR_SOUTH
+	msgbox PolishedIntro_LabWhereGoingText, MSGBOX_DEFAULT
+	closemessage
+	applymovement LOCALID_PLAYER, PolishedIntro_StepUp
+	waitmovement 0
+	releaseall
+	end
+
+PolishedIntro_DidNotChoose::
+	msgbox PolishedIntro_DidntChooseStarterText, MSGBOX_DEFAULT
+	releaseall
+	end
+PolishedIntro_RemainingBall::
+	msgbox PolishedIntro_ElmPokeBallText, MSGBOX_DEFAULT
+	releaseall
+	end
+PolishedIntro_NoRoom::
+	msgbox gText_NoMoreRoomForPokemon, MSGBOX_DEFAULT
+	releaseall
+	end
+
+PolishedIntro_NicknameParty::
+	msgbox gText_NicknameThisPokemon, MSGBOX_YESNO
+	call_if_eq VAR_RESULT, YES, PolishedIntro_NameParty
+	return
+PolishedIntro_NameParty::
+	call Common_EventScript_GetGiftMonPartySlot
+	call Common_EventScript_NameReceivedPartyMon
+	lockall
+	return
+PolishedIntro_NicknameBox::
+	msgbox gText_NicknameThisPokemon, MSGBOX_YESNO
+	call_if_eq VAR_RESULT, YES, PolishedIntro_NameBox
+	return
+PolishedIntro_NameBox::
+	call Common_EventScript_NameReceivedBoxMon
+	lockall
+	return
+
+PolishedIntro_Directions::
+	turnobject LOCALID_PLAYER, DIR_NORTH
+	msgbox PolishedIntro_ElmDirectionsText1, MSGBOX_DEFAULT
+	setflag FLAG_POLISHED_HAS_ELM_CONTACT
+	playfanfare MUS_REGISTER_MATCH_CALL
+	msgbox PolishedIntro_GotElmsNumberText, MSGBOX_DEFAULT
+	waitfanfare
+	turnobject LOCALID_ELMS_LAB_ELM, DIR_WEST
+	msgbox PolishedIntro_ElmDirectionsText2, MSGBOX_DEFAULT
+	turnobject LOCALID_ELMS_LAB_ELM, DIR_SOUTH
+	msgbox PolishedIntro_ElmDirectionsText3, MSGBOX_DEFAULT
+	setvar VAR_POLISHED_ELMS_LAB_SCENE, 6
+	releaseall
+	end
+
+PolishedIntro_LyraFollowElm:
+	walk_left
+	walk_up
+	walk_up
+	walk_up
+	walk_up
+	walk_up
+	walk_up
+	face_up
+	step_end
+
+PolishedIntro_CyndaquilPokeBallScript::
+	lockall
+	goto_if_ne VAR_POLISHED_STARTER, 0, PolishedIntro_RemainingBall
+	getobjectfacingdirection LOCALID_PLAYER, VAR_TEMP_6
+	turnobject LOCALID_ELMS_LAB_ELM, DIR_SOUTH
+	showmonpic SPECIES_CYNDAQUIL, 10, 3
+	playmoncry SPECIES_CYNDAQUIL, CRY_MODE_NORMAL
+	waitmoncry
+	waitbuttonpress
+	hidemonpic
+	msgbox PolishedIntro_TakeCyndaquilText, MSGBOX_YESNO
+	goto_if_eq VAR_RESULT, NO, PolishedIntro_DidNotChoose
+	msgbox PolishedIntro_ChoseStarterText, MSGBOX_DEFAULT
+	setvar VAR_TEMP_TRANSFERRED_SPECIES, SPECIES_CYNDAQUIL
+	givemon SPECIES_CYNDAQUIL, 5, ITEM_ORAN_BERRY
+	goto_if_eq VAR_RESULT, MON_CANT_GIVE, PolishedIntro_NoRoom
+	copyvar VAR_TEMP_5, VAR_RESULT
+	setvar VAR_POLISHED_STARTER, 1
+	removeobject LOCALID_ELMS_LAB_CYNDAQUIL
+	bufferspeciesname STR_VAR_1, SPECIES_CYNDAQUIL
+	playfanfare MUS_OBTAIN_ITEM
+	msgbox PolishedIntro_ReceivedGift, MSGBOX_DEFAULT
+	waitfanfare
+	call_if_eq VAR_TEMP_5, MON_GIVEN_TO_PARTY, PolishedIntro_NicknameParty
+	call_if_eq VAR_TEMP_5, MON_GIVEN_TO_PC, PolishedIntro_NicknameBox
+	call_if_eq VAR_TEMP_5, MON_GIVEN_TO_PC, Common_EventScript_TransferredToPC
+	msgbox PolishedIntro_LyraChoosesStarterText, MSGBOX_DEFAULT
+	closemessage
+	applymovement LOCALID_ELMS_LAB_LYRA, PolishedIntro_Cyndaquil_LyraPick
+	waitmovement 0
+	delay 15
+	removeobject LOCALID_ELMS_LAB_CHIKORITA
+	bufferspeciesname STR_VAR_3, SPECIES_CHIKORITA
+	playfanfare MUS_OBTAIN_ITEM
+	msgbox PolishedIntro_LyraReceivedStarterText, MSGBOX_DEFAULT
+	waitfanfare
+	msgbox PolishedIntro_LyraNicknamedChikoritaText, MSGBOX_DEFAULT
+	closemessage
+	applymovement LOCALID_ELMS_LAB_LYRA, PolishedIntro_Cyndaquil_LyraAfter
+	waitmovement 0
+	goto_if_eq VAR_TEMP_6, DIR_EAST, PolishedIntro_Directions
+	applymovement LOCALID_PLAYER, PolishedIntro_Cyndaquil_PlayerAfter
+	waitmovement 0
+	goto PolishedIntro_Directions
+
+PolishedIntro_Cyndaquil_LyraPick:
+	walk_right
+	walk_right
+	walk_right
+	walk_right
+	walk_up
+	step_end
+
+PolishedIntro_Cyndaquil_LyraAfter:
+	walk_down
+	walk_left
+	walk_left
+	walk_left
+	face_up
+	step_end
+
+PolishedIntro_Cyndaquil_PlayerAfter:
+	walk_left
+	walk_up
+	face_up
+	step_end
+
+PolishedIntro_TotodilePokeBallScript::
+	lockall
+	goto_if_ne VAR_POLISHED_STARTER, 0, PolishedIntro_RemainingBall
+	getobjectfacingdirection LOCALID_PLAYER, VAR_TEMP_6
+	turnobject LOCALID_ELMS_LAB_ELM, DIR_SOUTH
+	showmonpic SPECIES_TOTODILE, 10, 3
+	playmoncry SPECIES_TOTODILE, CRY_MODE_NORMAL
+	waitmoncry
+	waitbuttonpress
+	hidemonpic
+	msgbox PolishedIntro_TakeTotodileText, MSGBOX_YESNO
+	goto_if_eq VAR_RESULT, NO, PolishedIntro_DidNotChoose
+	msgbox PolishedIntro_ChoseStarterText, MSGBOX_DEFAULT
+	setvar VAR_TEMP_TRANSFERRED_SPECIES, SPECIES_TOTODILE
+	givemon SPECIES_TOTODILE, 5, ITEM_ORAN_BERRY
+	goto_if_eq VAR_RESULT, MON_CANT_GIVE, PolishedIntro_NoRoom
+	copyvar VAR_TEMP_5, VAR_RESULT
+	setvar VAR_POLISHED_STARTER, 2
+	removeobject LOCALID_ELMS_LAB_TOTODILE
+	bufferspeciesname STR_VAR_1, SPECIES_TOTODILE
+	playfanfare MUS_OBTAIN_ITEM
+	msgbox PolishedIntro_ReceivedGift, MSGBOX_DEFAULT
+	waitfanfare
+	call_if_eq VAR_TEMP_5, MON_GIVEN_TO_PARTY, PolishedIntro_NicknameParty
+	call_if_eq VAR_TEMP_5, MON_GIVEN_TO_PC, PolishedIntro_NicknameBox
+	call_if_eq VAR_TEMP_5, MON_GIVEN_TO_PC, Common_EventScript_TransferredToPC
+	msgbox PolishedIntro_LyraChoosesStarterText, MSGBOX_DEFAULT
+	closemessage
+	applymovement LOCALID_ELMS_LAB_LYRA, PolishedIntro_Totodile_LyraPick
+	waitmovement 0
+	delay 15
+	removeobject LOCALID_ELMS_LAB_CYNDAQUIL
+	bufferspeciesname STR_VAR_3, SPECIES_CYNDAQUIL
+	playfanfare MUS_OBTAIN_ITEM
+	msgbox PolishedIntro_LyraReceivedStarterText, MSGBOX_DEFAULT
+	waitfanfare
+	msgbox PolishedIntro_LyraNicknamedCyndaquilText, MSGBOX_DEFAULT
+	closemessage
+	applymovement LOCALID_ELMS_LAB_LYRA, PolishedIntro_Totodile_LyraAfter
+	waitmovement 0
+	applymovement LOCALID_PLAYER, PolishedIntro_Totodile_PlayerAfter
+	waitmovement 0
+	goto PolishedIntro_Directions
+
+PolishedIntro_Totodile_LyraPick:
+	walk_right
+	walk_right
+	walk_up
+	step_end
+
+PolishedIntro_Totodile_LyraAfter:
+	walk_down
+	walk_left
+	face_up
+	step_end
+
+PolishedIntro_Totodile_PlayerAfter:
+	walk_left
+	walk_left
+	walk_up
+	face_up
+	step_end
+
+PolishedIntro_ChikoritaPokeBallScript::
+	lockall
+	goto_if_ne VAR_POLISHED_STARTER, 0, PolishedIntro_RemainingBall
+	getobjectfacingdirection LOCALID_PLAYER, VAR_TEMP_6
+	turnobject LOCALID_ELMS_LAB_ELM, DIR_SOUTH
+	showmonpic SPECIES_CHIKORITA, 10, 3
+	playmoncry SPECIES_CHIKORITA, CRY_MODE_NORMAL
+	waitmoncry
+	waitbuttonpress
+	hidemonpic
+	msgbox PolishedIntro_TakeChikoritaText, MSGBOX_YESNO
+	goto_if_eq VAR_RESULT, NO, PolishedIntro_DidNotChoose
+	msgbox PolishedIntro_ChoseStarterText, MSGBOX_DEFAULT
+	setvar VAR_TEMP_TRANSFERRED_SPECIES, SPECIES_CHIKORITA
+	givemon SPECIES_CHIKORITA, 5, ITEM_ORAN_BERRY
+	goto_if_eq VAR_RESULT, MON_CANT_GIVE, PolishedIntro_NoRoom
+	copyvar VAR_TEMP_5, VAR_RESULT
+	setvar VAR_POLISHED_STARTER, 3
+	removeobject LOCALID_ELMS_LAB_CHIKORITA
+	bufferspeciesname STR_VAR_1, SPECIES_CHIKORITA
+	playfanfare MUS_OBTAIN_ITEM
+	msgbox PolishedIntro_ReceivedGift, MSGBOX_DEFAULT
+	waitfanfare
+	call_if_eq VAR_TEMP_5, MON_GIVEN_TO_PARTY, PolishedIntro_NicknameParty
+	call_if_eq VAR_TEMP_5, MON_GIVEN_TO_PC, PolishedIntro_NicknameBox
+	call_if_eq VAR_TEMP_5, MON_GIVEN_TO_PC, Common_EventScript_TransferredToPC
+	msgbox PolishedIntro_LyraChoosesStarterText, MSGBOX_DEFAULT
+	closemessage
+	applymovement LOCALID_ELMS_LAB_LYRA, PolishedIntro_Chikorita_LyraPick
+	waitmovement 0
+	delay 15
+	removeobject LOCALID_ELMS_LAB_TOTODILE
+	bufferspeciesname STR_VAR_3, SPECIES_TOTODILE
+	playfanfare MUS_OBTAIN_ITEM
+	msgbox PolishedIntro_LyraReceivedStarterText, MSGBOX_DEFAULT
+	waitfanfare
+	msgbox PolishedIntro_LyraNicknamedTotodileText, MSGBOX_DEFAULT
+	closemessage
+	applymovement LOCALID_ELMS_LAB_LYRA, PolishedIntro_Chikorita_LyraAfter
+	waitmovement 0
+	applymovement LOCALID_PLAYER, PolishedIntro_Chikorita_PlayerAfter
+	waitmovement 0
+	goto PolishedIntro_Directions
+
+PolishedIntro_Chikorita_LyraPick:
+	walk_right
+	walk_right
+	walk_right
+	walk_up
+	step_end
+
+PolishedIntro_Chikorita_LyraAfter:
+	walk_down
+	walk_left
+	walk_left
+	face_up
+	step_end
+
+PolishedIntro_Chikorita_PlayerAfter:
+	walk_left
+	walk_left
+	walk_left
+	walk_up
+	face_up
+	step_end
+
+PolishedIntro_WalkUpToElm:
+	walk_up
+	walk_up
+	walk_up
+	walk_up
+	walk_up
+	walk_up
+	walk_up
+	face_left
+	step_end
+
+PolishedIntro_ElmDefaultPosition:
+	walk_right
+	walk_right
+	walk_up
+	face_down
+	step_end
+
+PolishedIntro_ElmText_Intro:
+	.string "Elm: {PLAYER}!\nThere you are!\pHello to you too,\nLyra.\pI needed to ask\nyou both a favor.\pYou see…\pI'm writing a\npaper that I want\pto present at a\nconference.\pBut there are some\nthings I don't\pquite understand\nyet.\pSo!\pI'd like you both\nto raise POKéMON\pthat I recently\ncaught.$"
+
+PolishedIntro_ElmText_Refused:
+	.string "But… Please, I\nneed your help!$"
+
+PolishedIntro_ElmText_Accepted:
+	.string "Thanks, {PLAYER}!\pYou're a great\nhelp!$"
+
+PolishedIntro_ElmText_ResearchAmbitions:
+	.string "When I announce my\nfindings, I'm sure\pwe'll delve a bit\ndeeper into the\pmany mysteries of\nPOKéMON.\pYou can count on\nit!$"
+
+PolishedIntro_ElmText_GotAnEmail:
+	.string "Oh, hey! I got an\ne-mail!\p………………\nHm… Uh-huh…\pOK…$"
+
+PolishedIntro_ElmText_MissionFromMrPokemon:
+	.string "Hey, listen.\pI have an acquain-\ntance called Mr.\lPOKéMON.\pHe keeps finding\nweird things and\praving about his\ndiscoveries.\pAnyway, I just got\nan e-mail from him\psaying that this\ntime it's real.\pIt is intriguing,\nbut we're busy\pwith our POKéMON\nresearch…\pWait!\pI know!\p{PLAYER}, can you\ngo in our place?$"
+
+PolishedIntro_ElmText_ChooseAPokemon:
+	.string "I want you to\nraise one of the\pPOKéMON contained\nin these Balls.\pYou'll be that\nPOKéMON's first\lpartner, {PLAYER}!\pGo on. Pick one!$"
+
+PolishedIntro_ElmText_LetYourMonBattleIt:
+	.string "If a wild POKéMON\nappears, let your\lPOKéMON battle it!$"
+
+PolishedIntro_ElmDescribesMrPokemonText:
+	.string "Mr.POKéMON goes\neverywhere and\lfinds rarities.\pToo bad they're\njust rare and\lnot very useful…$"
+
+PolishedIntro_ElmsLabLyraWhichPokemonText:
+	.string "Which POKéMON are\nyou going to pick,\l{PLAYER}?$"
+
+PolishedIntro_ElmsLabLyraGoodChoiceText:
+	.string "Your POKéMON\nlooks cute too!$"
+
+PolishedIntro_AideText_AlwaysBusy:
+	.string "There are only two\nof us, so we're\lalways busy.$"
+
+PolishedIntro_LabWhereGoingText:
+	.string "Elm: Wait! Where\nare you going?$"
+
+PolishedIntro_DidntChooseStarterText:
+	.string "Elm: Think it over\ncarefully.\pYour partner is\nimportant.$"
+
+PolishedIntro_ElmPokeBallText:
+	.string "It contains a\nPOKéMON caught by\lProf.Elm.$"
+
+PolishedIntro_ElmDirectionsText1:
+	.string "Mr.POKéMON lives a\nlittle bit beyond\pCherrygrove, the\nnext city over.\pIt's almost a\ndirect route\pthere, so you\ncan't miss it.\pBut just in case,\nhere's my phone\pnumber. Call me if\nanything comes up!$"
+
+PolishedIntro_ElmDirectionsText2:
+	.string "If your POKéMON is\nhurt, you should\pheal it with this\nmachine.\pFeel free to use\nit anytime.$"
+
+PolishedIntro_ElmDirectionsText3:
+	.string "{PLAYER}, I'm\ncounting on you!$"
+
+PolishedIntro_GotElmsNumberText:
+	.string "{PLAYER} got Elm's\nphone number.$"
+
+PolishedIntro_ChoseStarterText:
+	.string "Elm: I think\nthat's a great\lPOKéMON too!$"
+
+PolishedIntro_LyraChoosesStarterText:
+	.string "Lyra: Then I'll\npick this one!$"
+
+PolishedIntro_LyraReceivedStarterText:
+	.string "Lyra received\n{STR_VAR_3}!$"
+
+PolishedIntro_TakeCyndaquilText:
+	.string "Elm: You'll take\nCyndaquil, the\lfire POKéMON?$"
+
+PolishedIntro_TakeTotodileText:
+	.string "Elm: Do you want\nTotodile, the\lwater POKéMON?$"
+
+PolishedIntro_TakeChikoritaText:
+	.string "Elm: So, you like\nChikorita, the\lgrass POKéMON?$"
+
+PolishedIntro_LyraNicknamedCyndaquilText:
+	.string "Lyra: It's so\ncute! I'll nick-\lname it Cinder!$"
+
+PolishedIntro_LyraNicknamedTotodileText:
+	.string "Lyra: It's so\ncute! I'll nick-\lname it Toto!$"
+
+PolishedIntro_LyraNicknamedChikoritaText:
+	.string "Lyra: It's so\ncute! I'll nick-\lname it Chicory!$"
+
+PolishedIntro_ReceivedGift:
+	.string "{PLAYER} received\n{STR_VAR_1}!$"

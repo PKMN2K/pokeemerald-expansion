@@ -231,8 +231,8 @@
 #define VAR_0x40D8                 0x40D8
 #define VAR_0x40D9                 0x40D9
 #define VAR_0x40DA                 0x40DA
-#define VAR_0x40DB                 0x40DB
-#define VAR_0x40DC                 0x40DC
+// 0x40DB reserved for the shared Polished Johto vars in vars.h.
+// 0x40DC reserved for the shared Polished Johto vars in vars.h.
 #define VAR_0x40DD                 0x40DD
 #define VAR_0x40DE                 0x40DE
 #define VAR_0x40DF                 0x40DF
@@ -241,7 +241,7 @@
 #define VAR_0x40E2                 0x40E2
 #define VAR_0x40E3                 0x40E3
 #define VAR_0x40E4                 0x40E4
-#define VAR_0x40E5                 0x40E5
+// 0x40E5 reserved for the shared Polished Johto vars in vars.h.
 #define VAR_DAILY_SLOTS            0x40E6
 #define VAR_DAILY_WILDS            0x40E7
 #define VAR_DAILY_BLENDER          0x40E8

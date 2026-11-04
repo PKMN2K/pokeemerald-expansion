@@ -2,6 +2,7 @@
 PolishedNewBarkTown_MapScripts::
 	map_script MAP_SCRIPT_ON_LOAD, PolishedNewBarkTown_ResidentSchedule
 	map_script MAP_SCRIPT_ON_RETURN_TO_FIELD, PolishedNewBarkTown_ResidentSchedule_Restore
+	map_script MAP_SCRIPT_ON_TRANSITION, PolishedIntro_TownSetup
 	.byte 0
 
 @ Map-local visibility, recomputed on entry and save loading.
@@ -142,3 +143,62 @@ PolishedNewBarkTown_Rival_Text1:
 
 PolishedNewBarkTown_Rival_Text2:
 	.string "…What are you\nstaring at?$"
+
+PolishedIntro_TownSetup::
+	setflag FLAG_TEMP_2
+	end
+
+PolishedIntro_NewBarkTownLyraScript::
+	end
+
+PolishedIntro_TownApproach::
+	lockall
+	addobject LOCALID_NEW_BARK_LYRA
+	applymovement LOCALID_NEW_BARK_LYRA, PolishedIntro_TownEnters
+	waitmovement 0
+	applymovement LOCALID_NEW_BARK_LYRA, PolishedIntro_Exclamation
+	waitmovement 0
+	applymovement LOCALID_NEW_BARK_LYRA, PolishedIntro_TownApproaches
+	waitmovement 0
+	turnobject LOCALID_PLAYER, DIR_WEST
+	msgbox PolishedIntro_Text_LyraIntro, MSGBOX_DEFAULT
+	closemessage
+	applymovement LOCALID_PLAYER, PolishedIntro_StepUp
+	applymovement LOCALID_NEW_BARK_LYRA, PolishedIntro_StepRight
+	waitmovement 0
+	playse SE_DOOR
+	hideplayer
+	applymovement LOCALID_NEW_BARK_LYRA, PolishedIntro_StepUp
+	waitmovement 0
+	playse SE_DOOR
+	removeobject LOCALID_NEW_BARK_LYRA
+	setvar VAR_POLISHED_NEW_BARK_SCENE, 2
+	warp MAP_POLISHED_ELMS_LAB, 4, 11
+	waitstate
+	releaseall
+	end
+
+PolishedIntro_StepUp:
+	walk_up
+	step_end
+PolishedIntro_StepRight:
+	walk_right
+	step_end
+PolishedIntro_Exclamation:
+	emote_exclamation_mark
+	step_end
+
+PolishedIntro_TownEnters:
+	walk_right
+	walk_right
+	step_end
+
+PolishedIntro_TownApproaches:
+	walk_right
+	walk_up
+	walk_up
+	walk_right
+	step_end
+
+PolishedIntro_Text_LyraIntro:
+	.string "Lyra: Oh, hello,\n{PLAYER}!\pI came by your\nhouse earlier,\pbut you were\nstill sleeping.\pYou know how I\nassist Prof.Elm\lsometimes?\pHe's starting new\nPOKéMON research\pand would like us\nboth to help.\pLet's go and see\nwhat he wants!$"

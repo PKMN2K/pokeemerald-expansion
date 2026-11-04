@@ -120,10 +120,10 @@ use the source's fixed daytime colors. Existing map/layout IDs stay unchanged.
 
 This completes the town's **geography and traversal phase**. The ambient
 resident phase below populates the source's unconditional dialogue NPCs.
-Story-dependent NPCs, starter selection, the rival/Lyra scenes, Mom's events,
-hidden items, room decorations and Route 29/27 connections are still
-pending. The unconnected town boundaries remain closed by source border
-collision. No story flags or Headbutt source-map assignments are invented.
+The window rival and opening starter sequence are covered below. Mom's events,
+later story-dependent NPCs, hidden items, room decorations and Route 29/27
+connections are still pending. The unconnected town boundaries remain closed
+by source border collision. No Headbutt source-map assignments are invented.
 New Bark's original `TREEMON_SET_CITY` encounter data remains in the dormant
 selector. Registering its geography does not enable that data in live play;
 the audit checks that the selector still has no production caller. The seven
@@ -166,8 +166,7 @@ and walking bounds, verifies outdoor period colors and indoor daytime colors,
 checks both schedules around all four source time boundaries and midnight, and
 tests native Save/reset/Continue with visibility changes in both directions.
 The source schoolboy's Pokégear dialogue is retained; it does not add Pokégear
-functionality. The remaining story-dependent cast and main opening sequence
-remain pending.
+functionality. Further story-dependent cast members remain pending.
 
 ### Rival at Elm's lab window
 
@@ -196,8 +195,60 @@ four source sprite palettes, intermediate positions/facings, jump height,
 native impact playback, input locking and control restoration. It repeats the
 scene immediately, after leaving/re-entering town, after native Save/Continue,
 and while riding the demo's Mach Bike. Frame traces and screenshots accompany
-the validation report. Elm/Lyra's introduction, starter selection, Mom's events
-and later rival progression are separate unfinished phases.
+the validation report. Mom's events and later rival progression are separate
+unfinished phases.
+
+### Elm and Lyra's introduction and starter choice
+
+Walk to the lab entrance at `(6,4)` in New Bark Town. Lyra approaches from her
+source position and leads the player inside. Elm's full release dialogue,
+refusal loop, email reaction and request play before choosing a starter.
+Elm and Lyra follow their original paths and finish at the source positions.
+Trying to leave before choosing triggers Elm's original reminder.
+
+All three choices use the pinned colored ball artwork, a species preview and
+cry, confirmation, native gift/nickname handling, and Lyra's matching choice:
+
+| Player's Lv5 starter | Held item | Lyra's choice | Lyra's nickname |
+| --- | --- | --- | --- |
+| Cyndaquil | Oran Berry | Chikorita | Chicory |
+| Totodile | Oran Berry | Cyndaquil | Cinder |
+| Chikorita | Oran Berry | Totodile | Toto |
+
+The existing demo Totodile and equipment remain available. The gift uses the
+normal party/PC transfer behavior; if neither has space, the choice is not
+committed and no ball disappears. Declining a starter leaves every choice
+available. Elm gives directions and registers his contact, then the lab reaches
+source scene 6. The remaining ball is descriptive and cannot grant another gift.
+The real lab's healing machine becomes usable after the gift; the garden lab's
+testing facilities remain available independently.
+
+Elm, Lyra, the aide and the three balls use exact v3.2.3 source pixels and
+daytime indoor palettes. Lyra uses the existing red time palette outdoors.
+Ball frames use only the source standing ball, not its cut-tree/fruit frames.
+`new_bark_intro.py` translates the selected source movement and dialogue labels;
+`build_new_bark.py --check` reproduces all 76 products.
+
+Three previously unused vars shared by Emerald and FRLG hold town scene
+(`0x40DB`), lab scene (`0x40DC`) and starter choice (`0x40E5`). Contact bit `0x21`
+is also unused by both base games. Save sizes and existing IDs are unchanged.
+Ball visibility derives from the saved choice on entry/Continue. Native menu
+returns retain the current cutscene state, including the nickname-screen return.
+Use NEW GAME for this expanded demo; old exploratory saves predate these actors
+and scenes.
+
+The mGBA suite takes all three starter branches using real button input. It
+checks refusal and decline, both Cyndaquil approach directions, the healing gate,
+actor positions and palettes, nickname entry, the
+actual encrypted Pokémon's species/level/item/checksum, preservation of the demo
+party, duplicate-gift prevention, and native Save/reset/Continue plus reentry.
+Snapshots include cartridge savedata and are taken only through gameplay.
+
+This phase ends before `LyraBattleScript`. Her first battle, the aide's potion
+handoff, Mom's events, the Mr. Pokémon journey and the usable Pokégear phone
+interface remain pending. Elm's contact is stored for that later interface.
+Sound cues and battle previews currently use Expansion's assets; this does not
+claim a Polished Crystal soundtrack or battle-art migration.
 
 The playable visual slice and dormant Headbutt encounter selection are complete
 parts of the port. **The whole Polished Crystal migration is not complete.**

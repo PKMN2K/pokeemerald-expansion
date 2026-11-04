@@ -2,8 +2,9 @@
 """Reproduce New Bark Town's source geography and all seven connected interiors.
 
 This imports map blocks, door/stair coordinates, reading interactions and the
-six ambient residents and the rival's lab-window encounter. Further story
-scenes, item events and room decorations are separate work. Route 29/27
+six ambient residents, the rival's lab-window encounter, and Lyra/Elm's
+introduction through starter selection. Further story scenes, item events
+and room decorations are separate work. Route 29/27
 connections await those maps.
 """
 import argparse
@@ -21,7 +22,9 @@ from convert_johto_traditional_blocks import convert
 from stage_johto_tile_graphics import build_graphics
 from stage_johto_time_palettes import stage, load_source_palettes
 from test_johto_metatile_banks import load_binary_fixture
-from convert_player_walking import convert as convert_npc
+from convert_player_walking import (convert as convert_npc, _read_png_2bit_grayscale,
+    _write_indexed_4bit_png)
+import new_bark_intro
 
 MAPS = {
     "NewBarkTown": "NEW_BARK_TOWN",
@@ -92,11 +95,35 @@ def json_bytes(value):
 
 
 def source_text(script, label):
-    match = re.search(r"^" + re.escape(label) + r":\n(.*?)(?=^\S|\Z)", script, re.M | re.S)
+    match = re.search(r"^" + re.escape(label) + r":\n(.*?)(?=^\w+:|\Z)", script, re.M | re.S)
     assert match, label
     body = match[1]
     assert re.search(r"^\s*done\s*$", body, re.M), f"Not plain text: {label}"
-    lines = re.findall(r'^\s*(text|line|cont|para) "(.*)"$', body, re.M)
+    # Import release text, including Elm's !DEBUG-only introduction. Fail on
+    # other conditionals or unsupported commands instead of dropping dialogue.
+    lines = []
+    conditional = False
+    for raw in body.splitlines():
+        raw = raw.strip()
+        if not raw or raw.startswith(";"):
+            continue
+        if raw == "jumpthistext" and label in INLINE_TEXT and not lines:
+            continue
+        if raw == "if !DEF(DEBUG)":
+            assert not conditional, label
+            conditional = True
+        elif raw == "endc":
+            assert conditional, label
+            conditional = False
+        elif raw == "done":
+            assert not conditional, label
+            break
+        elif raw == "text_ram wStringBuffer3":
+            lines.append(("text", "{STR_VAR_3}"))
+        else:
+            part = re.fullmatch(r'(text|line|cont|para) "(.*)"', raw)
+            assert part, (label, raw)
+            lines.append(part.groups())
     assert lines and lines[0][0] == "text", label
     result = ""
     for command, line in lines:
@@ -189,18 +216,27 @@ def resident_assets(files):
     colors = re.findall(r"^\s*ow_npc_pal_const (\w+)", files["constants/sprite_data_constants.asm"].decode(), re.M)
     rows = palette_rows(files["gfx/overworld/npc_sprites.pal"].decode())
     assert colors[:4] == ["RED", "BLUE", "GREEN", "BROWN"] and len(rows) == 80
-    for color in ("BLUE", "GREEN", "BROWN"):
+    for color in ("BLUE", "GREEN", "BROWN", "POKE_BALL", "DECO_ITEM", "KEY_ITEM"):
         index = colors.index(color)
         base = "graphics/object_events/polished_npc_palettes/" + color.lower()
         products[base + ".bin"] = struct.pack("<16H", *rows[20 + index], *([0] * 12))
-        products[base + "_time.bin"] = b"".join(struct.pack("<16H", *rows[period * 20 + index],
-            *([0] * 12)) for period in range(4))
+        if color in ("BLUE", "GREEN", "BROWN"):
+            products[base + "_time.bin"] = b"".join(struct.pack("<16H", *rows[period * 20 + index],
+                *([0] * 12)) for period in range(4))
     with tempfile.TemporaryDirectory() as tmp:
         inp, out = Path(tmp) / "npc.png", Path(tmp) / "walking.png"
-        for sprite in ("fat_guy", "schoolboy", "battle_girl", "child", "rival"):
+        for sprite in ("fat_guy", "schoolboy", "battle_girl", "child", "rival", "elm", "lyra", "scientist"):
             inp.write_bytes(files[f"gfx/sprites/{sprite}.png"])
             convert_npc(inp, out)
             products[f"graphics/object_events/polished_{sprite}/walking.png"] = out.read_bytes()
+        inp.write_bytes(files["gfx/sprites/ball_cut_fruit.png"])
+        w, h, pixels = _read_png_2bit_grayscale(inp)
+        assert (w, h) == (16, 48)
+        # Standing-down is the first 16x16 source frame; cut tree and fruit
+        # frames are not part of the starter-ball object. Keep exact pixels.
+        frame = [[0] * 16 for _ in range(16)] + [[3 - p for p in row] for row in pixels[:16]]
+        _write_indexed_4bit_png(out, frame)
+        products["graphics/object_events/polished_starter_ball/ball.png"] = out.read_bytes()
     return products
 
 
@@ -340,6 +376,7 @@ def map_header(name, constant, width, height, script, files):
             "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY", "script": prefix + "_Heal"})
         code += f"""{prefix}_Heal::
 \tlockall
+\tgoto_if_eq VAR_POLISHED_STARTER, 0, {prefix}_CannotHeal
 \tmsgbox {prefix}_HealText, MSGBOX_YESNO
 \tgoto_if_eq VAR_RESULT, NO, {prefix}_HealDone
 \tspecial HealPlayerParty
@@ -347,14 +384,26 @@ def map_header(name, constant, width, height, script, files):
 \treleaseall
 \tend
 
+{prefix}_CannotHeal::
+\tmsgbox {prefix}_CannotHealText, MSGBOX_DEFAULT
+\treleaseall
+\tend
+
 """
         code += text_definition(prefix + "_HealText", source_text(script, "ElmsLabHealingMachineText2"))
+        code += text_definition(prefix + "_CannotHealText", source_text(script, "ElmsLabHealingMachineText1"))
     header["object_events"].extend(objects)
     code += resident_code
     story = []
     if name == "NewBarkTown":
         obj, scene, report = rival_scene(script, files)
         header["object_events"].append(obj)  # Preserve all existing local IDs.
+        code += scene
+        story.append(report)
+    if name in ("NewBarkTown", "ElmsLab"):
+        hooks, scene, report = (new_bark_intro.town if name == "NewBarkTown" else new_bark_intro.lab)(
+            script, header, source_text, text_definition)
+        code = code.replace("\t.byte 0\n", hooks + "\t.byte 0\n", 1)
         code += scene
         story.append(report)
     return header, (code.rstrip() + "\n").encode(), resident_info, story
@@ -414,7 +463,7 @@ def generate():
             "source_blocks": source_layout, "used_metatiles": sorted(used | border_used),
             "warps": header["warp_events"], "static_interactions": len(header["bg_events"]),
             "residents": resident_info, "story_encounters": story}
-        if story:
+        if name == "NewBarkTown":
             cells = struct.unpack(f"<{len(raw) // 2}H", raw)
             def walkable(x, y):
                 return not cells[y * width * 2 + x] & 0xC00 and cells[y * width * 2 + x] >> 12 == 3
@@ -458,7 +507,7 @@ def generate():
 
 """
     products["src/data/tilesets/polished_new_bark.h"] = (header_text.rstrip() + "\n").encode()
-    report = {"source_commit": PIN, "scope": "source geography, connected interiors, static interactions, six ambient residents and the rival's lab-window encounter; further story progression deferred",
+    report = {"source_commit": PIN, "scope": "source geography, connected interiors, static interactions, six ambient residents, rival window encounter, Lyra/Elm introduction and all three starter choices; Lyra battle and later story progression deferred",
         "maps": maps, "layouts": layouts, "output_sha256": {p: hashlib.sha256(raw).hexdigest() for p, raw in products.items()}}
     products["tools/polished_port/manifests/new_bark.json"] = json_bytes(report)
     return products

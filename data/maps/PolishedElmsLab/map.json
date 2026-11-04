@@ -14,7 +14,92 @@
   "show_map_name": false,
   "battle_scene": "MAP_BATTLE_SCENE_NORMAL",
   "connections": null,
-  "object_events": [],
+  "object_events": [
+    {
+      "local_id": "LOCALID_ELMS_LAB_ELM",
+      "graphics_id": "OBJ_EVENT_GFX_POLISHED_ELM",
+      "x": 5,
+      "y": 2,
+      "elevation": 3,
+      "movement_type": "MOVEMENT_TYPE_FACE_DOWN",
+      "movement_range_x": 0,
+      "movement_range_y": 0,
+      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_sight_or_berry_tree_id": "0",
+      "script": "PolishedIntro_ProfElmScript",
+      "flag": "0"
+    },
+    {
+      "local_id": "LOCALID_ELMS_LAB_AIDE",
+      "graphics_id": "OBJ_EVENT_GFX_POLISHED_SCIENTIST",
+      "x": 2,
+      "y": 9,
+      "elevation": 3,
+      "movement_type": "MOVEMENT_TYPE_LOOK_AROUND",
+      "movement_range_x": 0,
+      "movement_range_y": 0,
+      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_sight_or_berry_tree_id": "0",
+      "script": "PolishedIntro_ElmsAideScript",
+      "flag": "0"
+    },
+    {
+      "local_id": "LOCALID_ELMS_LAB_CYNDAQUIL",
+      "graphics_id": "OBJ_EVENT_GFX_POLISHED_BALL_RED",
+      "x": 6,
+      "y": 3,
+      "elevation": 3,
+      "movement_type": "MOVEMENT_TYPE_FACE_DOWN",
+      "movement_range_x": 0,
+      "movement_range_y": 0,
+      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_sight_or_berry_tree_id": "0",
+      "script": "PolishedIntro_CyndaquilPokeBallScript",
+      "flag": "FLAG_TEMP_2"
+    },
+    {
+      "local_id": "LOCALID_ELMS_LAB_TOTODILE",
+      "graphics_id": "OBJ_EVENT_GFX_POLISHED_BALL_BLUE",
+      "x": 7,
+      "y": 3,
+      "elevation": 3,
+      "movement_type": "MOVEMENT_TYPE_FACE_DOWN",
+      "movement_range_x": 0,
+      "movement_range_y": 0,
+      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_sight_or_berry_tree_id": "0",
+      "script": "PolishedIntro_TotodilePokeBallScript",
+      "flag": "FLAG_TEMP_3"
+    },
+    {
+      "local_id": "LOCALID_ELMS_LAB_CHIKORITA",
+      "graphics_id": "OBJ_EVENT_GFX_POLISHED_BALL_GREEN",
+      "x": 8,
+      "y": 3,
+      "elevation": 3,
+      "movement_type": "MOVEMENT_TYPE_FACE_DOWN",
+      "movement_range_x": 0,
+      "movement_range_y": 0,
+      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_sight_or_berry_tree_id": "0",
+      "script": "PolishedIntro_ChikoritaPokeBallScript",
+      "flag": "FLAG_TEMP_4"
+    },
+    {
+      "local_id": "LOCALID_ELMS_LAB_LYRA",
+      "graphics_id": "OBJ_EVENT_GFX_POLISHED_LYRA",
+      "x": 5,
+      "y": 11,
+      "elevation": 3,
+      "movement_type": "MOVEMENT_TYPE_FACE_UP",
+      "movement_range_x": 0,
+      "movement_range_y": 0,
+      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_sight_or_berry_tree_id": "0",
+      "script": "PolishedIntro_ElmsLabLyraScript",
+      "flag": "0"
+    }
+  ],
   "warp_events": [
     {
       "x": 4,
@@ -31,7 +116,26 @@
       "dest_warp_id": "0"
     }
   ],
-  "coord_events": [],
+  "coord_events": [
+    {
+      "type": "trigger",
+      "x": 4,
+      "y": 6,
+      "elevation": 3,
+      "var": "VAR_POLISHED_ELMS_LAB_SCENE",
+      "var_value": "1",
+      "script": "PolishedIntro_TryToLeave"
+    },
+    {
+      "type": "trigger",
+      "x": 5,
+      "y": 6,
+      "elevation": 3,
+      "var": "VAR_POLISHED_ELMS_LAB_SCENE",
+      "var_value": "1",
+      "script": "PolishedIntro_TryToLeave"
+    }
+  ],
   "bg_events": [
     {
       "type": "sign",

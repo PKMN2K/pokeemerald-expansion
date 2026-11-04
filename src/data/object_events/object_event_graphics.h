@@ -650,3 +650,11 @@ const u16 gObjectEventPal_PolishedNpcBlue[] = INCBIN_U16("graphics/object_events
 const u16 gObjectEventPal_PolishedNpcGreen[] = INCBIN_U16("graphics/object_events/polished_npc_palettes/green.bin");
 const u16 gObjectEventPal_PolishedNpcBrown[] = INCBIN_U16("graphics/object_events/polished_npc_palettes/brown.bin");
 const u32 gObjectEventPic_PolishedRival[] = INCGFX_U32("graphics/object_events/polished_rival/walking.png", ".4bpp", "-mwidth 2 -mheight 4");
+
+const u32 gObjectEventPic_PolishedElm[] = INCGFX_U32("graphics/object_events/polished_elm/walking.png", ".4bpp", "-mwidth 2 -mheight 4");
+const u32 gObjectEventPic_PolishedLyra[] = INCGFX_U32("graphics/object_events/polished_lyra/walking.png", ".4bpp", "-mwidth 2 -mheight 4");
+const u32 gObjectEventPic_PolishedScientist[] = INCGFX_U32("graphics/object_events/polished_scientist/walking.png", ".4bpp", "-mwidth 2 -mheight 4");
+const u32 gObjectEventPic_PolishedStarterBall[] = INCGFX_U32("graphics/object_events/polished_starter_ball/ball.png", ".4bpp", "-mwidth 2 -mheight 4");
+const u16 gObjectEventPal_PolishedBallRed[] = INCBIN_U16("graphics/object_events/polished_npc_palettes/poke_ball.bin");
+const u16 gObjectEventPal_PolishedBallBlue[] = INCBIN_U16("graphics/object_events/polished_npc_palettes/deco_item.bin");
+const u16 gObjectEventPal_PolishedBallGreen[] = INCBIN_U16("graphics/object_events/polished_npc_palettes/key_item.bin");
