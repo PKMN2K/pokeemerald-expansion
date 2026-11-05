@@ -1,6 +1,9 @@
 # Polished Crystal -> pokeemerald-expansion Port
 
-This branch is the clean base for a visual/content port of Polished Crystal onto pokeemerald-expansion.
+This branch ports the complete Polished Crystal game onto pokeemerald-expansion.
+Polished Crystal is the source of truth for gameplay, Pokemon data, graphics,
+sprite metadata, presentation and content. pokeemerald-expansion supplies the
+GBA runtime and implementation framework.
 
 ## Engine base
 
@@ -29,19 +32,59 @@ Some authentic Polished Crystal assets were added after v3.2.3. When one is deli
 
 ## Porting rule
 
-pokeemerald-expansion remains the engine. Do not translate Polished Crystal wholesale from RGBDS assembly into C.
+The user's scope clarification on 2026-11-05 explicitly includes the battle
+engine, all Pokemon data and sprites, and all supporting sprite data. This
+applies to ordinary mechanics as well as Polished Crystal-specific changes.
 
-Port, adapt, or reproduce:
-- authentic graphics and palettes
-- overworld sprites and animation sets
-- tilesets, metatiles, maps, and collision intent
-- UI presentation
-- battle presentation
-- data/content choices
-- scripts/events
-- mechanics that are genuinely unique to Polished Crystal
+Port or reproduce the pinned source in the GBA runtime. RGBDS assembly cannot
+run directly on the GBA; implement its required behavior in C and native
+scripts/data. Reuse an Expansion implementation only when its behavior matches
+Polished Crystal. A matching move/species name or a generation preset is not
+evidence of parity, and `GEN_LATEST` is not the port's target specification.
 
-Prefer pokeemerald-expansion's native implementation when it already provides an equivalent mechanic.
+| Area | Required source coverage |
+| --- | --- |
+| Battle engine | Damage/stat calculations, turn order, RNG/probabilities, status, move effects, abilities, held items, weather, AI, capture and battle rewards |
+| Pokemon data | Species/forms, stats, types, abilities, evolutions, level/egg/TM/tutor learnsets, growth, breeding, catch/EXP/EV data, held items and Pokedex data |
+| Pokemon graphics | Front/back sprites, icons, overworld art, normal/shiny palettes and supported form/gender variants |
+| Sprite data | Dimensions, frame/tile mappings, animation sequences and timing, palette selection, positioning/anchors and visible effects |
+| Other graphics and presentation | Trainer/player/NPC art, tilesets, maps, collision, UI, battle presentation and source audio |
+| Game content | Trainer parties and AI, encounter tables, items, scripts/events, progression and the complete Johto/Kanto campaign |
+
+Conversions may change binary layout, compression, numeric IDs and canvas
+padding where required by the GBA. Preserve the source pixels, colors and
+observable behavior; record the source-to-target mapping. Target storage
+differences such as DV/IV representation must also preserve the intended
+source behavior rather than silently changing balance.
+
+Existing separately requested additions retain their documented scope. In
+particular, the standalone HGSS music backups are not authorized for live
+integration by this clarification.
+
+### Battle and Pokemon parity: current gaps
+
+At `d6911800`, the campaign through Falkner is playable, but this full scope
+is **not yet implemented**:
+
+- `include/config/battle.h` still selects many Expansion generation defaults.
+  They need comparison with Polished Crystal's actual battle implementation.
+- `include/config/pokemon.h` and `src/data/pokemon/species_info/` still supply
+  Expansion species data, learnsets and sprite/animation bindings. Importing
+  selected trainer parties or encounter tables does not replace these tables.
+- Pokemon battle sprites, palettes, icons and animation metadata still need
+  the comprehensive source import. Imported trainer and overworld artwork does
+  not establish completion of Pokemon battle graphics.
+- Native ability/nature selection, trainer AI and the current DV-to-IV/EV
+  adaptations need a source-parity audit. Earlier phase descriptions identify
+  the current implementation, not an accepted final substitution.
+- The 16 generic battle-test repairs in `d6911800` maintain the runtime. Their
+  passing tests do not verify Polished Crystal rules or approve extra mechanics
+  absent from the source.
+
+The next battle/data work must inventory the pinned source and current live
+bindings, then import data/assets and adapt mechanics with source-based tests.
+Every temporary native fallback remains an open parity gap. Retain the existing
+campaign replay as regression coverage when changing the battle foundation.
 
 ## First milestone
 
@@ -785,10 +828,12 @@ storage boundaries; controller-driven tests exercise the playable sequence.
 
 The playable visual slice and dormant Headbutt encounter selection are complete
 parts of the port. **The whole Polished Crystal migration is not complete.**
-Remaining areas include the broader tileset/map and NPC conversion, live unique
-field interactions (including Headbutt), Crystal UI and battle presentation, and
-the selected game content and scripts. No complete Johto/Kanto campaign,
-Pokégear, Wing Case, or source story progression is claimed by this demo.
+Remaining areas include the full battle engine behavior and AI, Pokemon data,
+Pokemon sprites and their animation metadata, broader tileset/map and NPC
+conversion, live field interactions (including Headbutt), Crystal UI and battle
+presentation, and all remaining game content and scripts. No complete
+Johto/Kanto campaign, Pokégear, Wing Case, or source story progression is
+claimed by this demo.
 
 ## Dormant Headbutt encounter phase
 
@@ -802,7 +847,8 @@ original Polished Crystal map identity to an Expansion species/form and level:
   three separate Rock Smash species, for 25 candidate species total.
 - Hisuian Voltorb and Electrode resolve to their dedicated Expansion species IDs.
   Original form value 4 is never used as an Expansion form-table index. The
-  existing engine's stats, abilities, graphics and learnsets remain authoritative.
+  current implementation still uses Expansion's stats, abilities, graphics and
+  learnsets; these are temporary gaps pending the full Polished Crystal import.
 - Tree score, 10/50/80 percent battle gates, weighted selection, and all 17 badge
   counts compose into `JohtoHeadbuttSelectEncounterFromSourceMap`.
 - Missing sets, unsuccessful rolls, invalid inputs and configured-out species

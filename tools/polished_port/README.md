@@ -1,6 +1,12 @@
 # Polished Crystal Port Tools
 
-This directory contains conversion tooling and manifests for moving authentic Polished Crystal assets into pokeemerald-expansion without replacing the engine.
+This directory contains conversion tooling and manifests for the complete
+Polished Crystal port into the pokeemerald-expansion GBA runtime. Polished
+Crystal defines battle behavior, Pokemon data, all graphics and supporting
+sprite/animation data, as well as maps and events. Expansion implementations
+are reusable only where they reproduce that source behavior. See
+[`POLISHED_CRYSTAL_PORT.md`](../../POLISHED_CRYSTAL_PORT.md#porting-rule) for
+the required scope and the current battle/data gaps.
 
 ## Route 29 first visit
 
