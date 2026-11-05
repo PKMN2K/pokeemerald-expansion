@@ -3,6 +3,21 @@
 This branch ports the complete Polished Crystal game to pokeemerald-expansion.
 Read `POLISHED_CRYSTAL_PORT.md` for the source pin and implemented phases.
 
+## Playable baseline and future customization
+
+The deliverable is Polished Crystal running on the GBA engine, with Expansion's
+capabilities retained for later hacking. Preserve support for additional
+Pokemon, moves, larger map data and other engine extensions. Do not shrink
+target tables, identifiers or tools to Game Boy Color limits to reproduce the
+source game. Use explicit mappings/adapters where the storage formats differ.
+
+The default playable game must use Polished Crystal's roster, data, balance,
+art and progression. Extra Expansion content and mechanics may remain available
+for future customization, but must not enter the baseline's encounters,
+trainers, learnsets, evolutions, rewards or rules just because the engine
+supports them. Retaining unused optional data is not itself a migration gap;
+using it in place of the corresponding Polished Crystal content is a gap.
+
 ## Source of truth
 
 - Polished Crystal defines the game's battle behavior, Pokemon data, graphics,
@@ -31,8 +46,9 @@ Read `POLISHED_CRYSTAL_PORT.md` for the source pin and implemented phases.
 
 ## Completion and verification
 
-- Remaining Expansion data, art and behavior in the port must be recorded as
-  temporary gaps until checked against and replaced/adapted to the source.
+- Expansion data, art and behavior still substituting for Polished Crystal in
+  the playable baseline must be recorded as temporary gaps until checked
+  against and replaced/adapted to the source.
 - Preserve source provenance and deterministic conversion wherever possible.
   Test migrated data and behavior against pinned source fixtures; verify live
   graphics and gameplay when those are affected.

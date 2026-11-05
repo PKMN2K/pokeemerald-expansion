@@ -5,6 +5,26 @@ Polished Crystal is the source of truth for gameplay, Pokemon data, graphics,
 sprite metadata, presentation and content. pokeemerald-expansion supplies the
 GBA runtime and implementation framework.
 
+## Intended deliverable
+
+The baseline is **Polished Crystal running in a GBA engine**, with its complete
+data and identity migrated. Expansion's added capacity and capabilities remain
+available for later hack customization.
+
+| Responsibility | Target |
+| --- | --- |
+| Default playable game | Polished Crystal's roster, data, balance, battle behavior, art, UI, maps, events and progression |
+| Engine capacity | Retain Expansion's support for more Pokemon, more moves, larger map data and other extensions |
+| Future customization | Additional content and mechanics stay available for deliberate use after the source baseline is established |
+
+Source fidelity does not require GBC memory banking, narrow identifiers, table
+limits or identical binary records. Preserve the GBA engine's extensible data
+structures and use explicit source-to-target mappings. Conversely, retained
+Expansion content must not silently enter the source campaign through default
+species data, encounters, trainer parties, learnsets, evolutions, rewards or
+battle rules. Unused optional content can remain in the repository; its presence
+does not make it part of the Polished Crystal baseline.
+
 ## Engine base
 
 - Repository: PKMN2K/pokeemerald-expansion
@@ -83,8 +103,10 @@ is **not yet implemented**:
 
 The next battle/data work must inventory the pinned source and current live
 bindings, then import data/assets and adapt mechanics with source-based tests.
-Every temporary native fallback remains an open parity gap. Retain the existing
-campaign replay as regression coverage when changing the battle foundation.
+Every temporary native fallback for Polished Crystal content remains an open
+parity gap. Unused Expansion content retained for later customization is not a
+gap. Retain the existing campaign replay as regression coverage when changing
+the battle foundation.
 
 ## First milestone
 
