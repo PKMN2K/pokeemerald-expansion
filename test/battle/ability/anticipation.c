@@ -321,8 +321,12 @@ SINGLE_BATTLE_TEST("Anticipation does not consider ate-abilities")
 
 SINGLE_BATTLE_TEST("Anticipation treats Hidden Power as its dynamic type (Gen6+)")
 {
-    KNOWN_FAILING;
+    u32 generation;
+    PARAMETRIZE { generation = GEN_5; }
+    PARAMETRIZE { generation = GEN_6; }
+    PARAMETRIZE { generation = GEN_9; }
     GIVEN {
+        WITH_CONFIG(B_ANTICIPATION_HIDDEN_POWER, generation);
         ASSUME(GetSpeciesType(SPECIES_EEVEE, 0) == TYPE_NORMAL);
         ASSUME(GetSpeciesType(SPECIES_EEVEE, 1) == TYPE_NORMAL);
         PLAYER(SPECIES_EEVEE) { Ability(ABILITY_ANTICIPATION); Item(ITEM_CHOPLE_BERRY); }
@@ -330,10 +334,13 @@ SINGLE_BATTLE_TEST("Anticipation treats Hidden Power as its dynamic type (Gen6+)
     } WHEN {
         TURN { MOVE(opponent, MOVE_HIDDEN_POWER); }
     } SCENE {
-        ABILITY_POPUP(player, ABILITY_ANTICIPATION);
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent); // Check that the item is triggered
+        if (generation >= GEN_6)
+            ABILITY_POPUP(player, ABILITY_ANTICIPATION);
+        else
+            NOT ABILITY_POPUP(player, ABILITY_ANTICIPATION);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, player);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_HIDDEN_POWER, opponent);
-        HP_BAR(opponent);
+        HP_BAR(player);
         MESSAGE("It's super effective!");
     }
 }

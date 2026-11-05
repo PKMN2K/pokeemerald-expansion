@@ -78,7 +78,7 @@ SINGLE_BATTLE_TEST("Berserk does not activate if move is boosted by Sheer Force 
 {
     u16 maxHp = 500;
     GIVEN {
-        // WITH_CONFIG(B_SHEER_FORCE_AGAINST_ABILITIES, GEN_9);
+        WITH_CONFIG(B_SHEER_FORCE_AGAINST_ABILITIES, GEN_9);
         PLAYER(SPECIES_DRAMPA) { Ability(ABILITY_BERSERK); MaxHP(maxHp); HP(maxHp / 2 + 1); }
         OPPONENT(SPECIES_NIDOKING) { Ability(ABILITY_SHEER_FORCE); }
     } WHEN {
@@ -97,22 +97,21 @@ SINGLE_BATTLE_TEST("Berserk does not activate if move is boosted by Sheer Force 
 
 SINGLE_BATTLE_TEST("Berserk does activate if move is boosted by Sheer Force (Champions)")
 {
-    KNOWN_FAILING;
     u16 maxHp = 500;
     GIVEN {
-        // WITH_CONFIG(B_SHEER_FORCE_AGAINST_ABILITIES, GEN_CHAMPIONS);
+        WITH_CONFIG(B_SHEER_FORCE_AGAINST_ABILITIES, GEN_CHAMPIONS);
         PLAYER(SPECIES_DRAMPA) { Ability(ABILITY_BERSERK); MaxHP(maxHp); HP(maxHp / 2 + 1); }
         OPPONENT(SPECIES_NIDOKING) { Ability(ABILITY_SHEER_FORCE); }
     } WHEN {
         TURN { MOVE(opponent, MOVE_EMBER); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_EMBER, opponent);
-        NOT ABILITY_POPUP(player, ABILITY_BERSERK);
+        ABILITY_POPUP(player, ABILITY_BERSERK);
     } THEN {
         EXPECT_EQ(player->statStages[STAT_DEF], DEFAULT_STAT_STAGE);
         EXPECT_EQ(player->statStages[STAT_SPDEF], DEFAULT_STAT_STAGE);
-        EXPECT_EQ(player->statStages[STAT_ATK], DEFAULT_STAT_STAGE + 1);
-        EXPECT_EQ(player->statStages[STAT_SPATK], DEFAULT_STAT_STAGE);
+        EXPECT_EQ(player->statStages[STAT_ATK], DEFAULT_STAT_STAGE);
+        EXPECT_EQ(player->statStages[STAT_SPATK], DEFAULT_STAT_STAGE + 1);
         EXPECT_EQ(player->statStages[STAT_SPEED], DEFAULT_STAT_STAGE);
     }
 }

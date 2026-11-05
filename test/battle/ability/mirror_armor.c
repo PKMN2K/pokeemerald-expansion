@@ -144,11 +144,13 @@ SINGLE_BATTLE_TEST("Mirror Armor doesn't lower the stat of the attacking Pokemon
     }
 }
 
-// This behaviour needs to be verified in the actual games. Currently it's written to follow Showdown's logic.
-DOUBLE_BATTLE_TEST("Mirror Armor lowers Speed of the partner Pokemon after Court Change was used by the opponent after it set up Sticky Web")
+DOUBLE_BATTLE_TEST("Mirror Armor reflects Court Changed Sticky Web to its setter only in Gen8")
 {
-    KNOWN_FAILING;
+    u32 generation;
+    PARAMETRIZE { generation = GEN_8; }
+    PARAMETRIZE { generation = GEN_9; }
     GIVEN {
+        WITH_CONFIG(B_MIRROR_ARMOR_STICKY_WEB, generation);
         ASSUME(GetMoveEffect(MOVE_STICKY_WEB) == EFFECT_STICKY_WEB);
         ASSUME(GetMoveEffect(MOVE_COURT_CHANGE) == EFFECT_COURT_CHANGE);
         PLAYER(SPECIES_WOBBUFFET);
@@ -169,8 +171,16 @@ DOUBLE_BATTLE_TEST("Mirror Armor lowers Speed of the partner Pokemon after Court
         SEND_IN_MESSAGE("Corviknight");
         MESSAGE("Corviknight was caught in a sticky web!");
         ABILITY_POPUP(playerRight, ABILITY_MIRROR_ARMOR);
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerLeft);
-        MESSAGE("Wobbuffet's Speed fell!");
+        if (generation == GEN_8)
+        {
+            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerLeft);
+            MESSAGE("Wobbuffet's Speed fell!");
+        }
+        else
+            NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerLeft);
+    } THEN {
+        EXPECT_EQ(playerLeft->statStages[STAT_SPEED], DEFAULT_STAT_STAGE - (generation == GEN_8));
+        EXPECT_EQ(playerRight->statStages[STAT_SPEED], DEFAULT_STAT_STAGE);
     }
 }
 

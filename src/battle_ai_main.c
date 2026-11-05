@@ -13,6 +13,7 @@
 #include "battle_factory.h"
 #include "battle_setup.h"
 #include "battle_z_move.h"
+#include "battle_dynamax.h"
 #include "battle_terastal.h"
 #include "data.h"
 #include "debug.h"
@@ -49,8 +50,8 @@ struct ChosenAction
 static struct ChosenAction ChooseMoveOrAction(enum BattlerId battler);
 static struct ChosenAction ChooseMoveOrAction_Singles(enum BattlerId battler);
 static struct ChosenAction ChooseMoveOrAction_Doubles(enum BattlerId battlerAtk);
-static inline void BattleAI_DoAIProcessing(struct AiThinkingStruct *aiThink, enum BattlerId battlerAtk, enum BattlerId battlerDef);
-static inline void BattleAI_DoAIProcessing_PredictedSwitchin(struct AiThinkingStruct *aiThink, struct AiLogicData *aiData, enum BattlerId battlerAtk, enum BattlerId battlerDef);
+static inline void BattleAI_DoAIProcessing(struct AiThinkingStruct *aiThink, enum BattlerId battlerAtk, enum BattlerId battlerDef, const enum Move *consideredMoves);
+static inline void BattleAI_DoAIProcessing_PredictedSwitchin(struct AiThinkingStruct *aiThink, struct AiLogicData *aiData, enum BattlerId battlerAtk, enum BattlerId battlerDef, const enum Move *consideredMoves);
 static bool32 IsPinchBerryItemEffect(enum HoldEffect holdEffect);
 static bool32 DoesAbilityBenefitFromSunOrRain(enum BattlerId battler, enum Ability ability, u32 weather);
 static void AI_CompareDamagingMoves(enum BattlerId battlerAtk, enum BattlerId battlerDef);
@@ -441,11 +442,19 @@ void ComputeAiBattlerDecisions(enum BattlerId battler)
 void ReconsiderGimmick(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Move move)
 {
     // After choosing a move for battlerAtk assuming that a gimmick will be used, reconsider whether the gimmick is necessary.
+    uq4_12_t typeEffectiveness;
 
     if (gBattleStruct->gimmick.usableGimmick[battlerAtk] == GIMMICK_Z_MOVE && !ShouldUseZMove(battlerAtk, battlerDef, move))
         SetAIUsingGimmick(battlerAtk, NO_GIMMICK);
 
     if (gBattleStruct->gimmick.usableGimmick[battlerAtk] == GIMMICK_TERA && GetMoveEffect(move) == EFFECT_PROTECT)
+        SetAIUsingGimmick(battlerAtk, NO_GIMMICK);
+
+    if (gBattleStruct->gimmick.usableGimmick[battlerAtk] == GIMMICK_DYNAMAX
+     && GetActiveGimmick(battlerAtk) != GIMMICK_DYNAMAX
+     && move == MOVE_FAKE_OUT && IsBattlersFirstTurn(battlerAtk)
+     && IsFlinchGuaranteed(battlerAtk, battlerDef, move)
+     && AI_CalcDamageSaveBattlers(move, battlerAtk, battlerDef, &typeEffectiveness, GIMMICK_NONE, GIMMICK_NONE).median > 0)
         SetAIUsingGimmick(battlerAtk, NO_GIMMICK);
 }
 
@@ -805,6 +814,8 @@ void CalcBattlerAiMovesData(struct AiLogicData *aiData, enum BattlerId battlerAt
         .terrain = terrain,
     };
 
+    bool32 isDynamax = aiCalc.gimmickAtk == GIMMICK_DYNAMAX || GetActiveGimmick(battlerAtk) == GIMMICK_DYNAMAX;
+
     for (u32 moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
     {
         struct SimulatedDamage dmg = {0};
@@ -822,7 +833,8 @@ void CalcBattlerAiMovesData(struct AiLogicData *aiData, enum BattlerId battlerAt
 
         // Also get effectiveness of status moves
         dmg = AI_CalcDamage(&aiCalc, battlerAtk, battlerDef);
-        aiData->moveAccuracy[battlerAtk][battlerDef][moveIndex] = Ai_SetMoveAccuracy(aiData, battlerAtk, battlerDef, aiCalc.move);
+        aiData->moveAccuracy[battlerAtk][battlerDef][moveIndex] = Ai_SetMoveAccuracy(aiData, battlerAtk, battlerDef,
+            isDynamax ? GetMaxMove(battlerAtk, aiCalc.move) : aiCalc.move);
 
         aiData->simulatedDmg[battlerAtk][battlerDef][moveIndex] = dmg;
         aiData->effectiveness[battlerAtk][battlerDef][moveIndex] = aiCalc.typeEffectiveness;
@@ -842,7 +854,7 @@ static void SetBattlerAiMovesData(struct AiLogicData *aiData, enum BattlerId bat
 
         SaveBattlerData(battlerDef);
         SetBattlerData(battlerDef);
-        CalcBattlerAiMovesData(aiData, battlerAtk, battlerDef, weather, gFieldStatuses);
+        CalcBattlerAiMovesData(aiData, battlerAtk, battlerDef, weather, gFieldTimers.terrain);
         RestoreBattlerData(battlerDef);
     }
     RestoreBattlerData(battlerAtk);
@@ -942,6 +954,10 @@ static u32 PpStallReduction(enum Move move, enum BattlerId battlerAtk, enum Batt
 static void DoAIScoreProcessing(enum BattlerId battlerAtk, enum BattlerId battlerDef)
 {
     u64 flags = gAiThinkingStruct->aiFlags[battlerAtk];
+    enum Move consideredMoves[MAX_MON_MOVES];
+    if (flags != 0)
+        for (u32 i = 0; i < MAX_MON_MOVES; i++)
+            consideredMoves[i] = AI_GetConsideredMove(battlerAtk, gBattleMons[battlerAtk].moves[i]);
     gAiThinkingStruct->aiLogicId = 0;
     gAiThinkingStruct->movesetIndex = 0;
 
@@ -955,9 +971,9 @@ static void DoAIScoreProcessing(enum BattlerId battlerAtk, enum BattlerId battle
         if (flags & 1)
         {
             if (IsBattlerPredictedToSwitch(battlerDef) && (gAiThinkingStruct->aiFlags[battlerAtk] & AI_FLAG_PREDICT_INCOMING_MON))
-                BattleAI_DoAIProcessing_PredictedSwitchin(gAiThinkingStruct, gAiLogicData, battlerAtk, battlerDef);
+                BattleAI_DoAIProcessing_PredictedSwitchin(gAiThinkingStruct, gAiLogicData, battlerAtk, battlerDef, consideredMoves);
             else
-                BattleAI_DoAIProcessing(gAiThinkingStruct, battlerAtk, battlerDef);
+                BattleAI_DoAIProcessing(gAiThinkingStruct, battlerAtk, battlerDef, consideredMoves);
         }
         flags >>= (u64)1;
         gAiThinkingStruct->aiLogicId++;
@@ -1046,7 +1062,7 @@ static struct ChosenAction ChooseMoveOrAction_Doubles(enum BattlerId battlerAtk)
             {
                 if (gBattleMons[battlerAtk].moves[moveIndex] != 0)
                 {
-                    if (!CanTargetBattler(battlerAtk, battlerDef, gBattleMons[battlerAtk].moves[moveIndex]))
+                    if (!CanTargetBattler(battlerAtk, battlerDef, AI_GetConsideredMove(battlerAtk, gBattleMons[battlerAtk].moves[moveIndex])))
                         continue;
 
                     if (mostViableMovesScores[0] == gAiThinkingStruct->score[moveIndex])
@@ -1130,14 +1146,14 @@ static inline bool32 ShouldConsiderMoveForBattler(enum BattlerId battlerAi, enum
     return TRUE;
 }
 
-static inline void BattleAI_DoAIProcessing(struct AiThinkingStruct *aiThink, enum BattlerId battlerAtk, enum BattlerId battlerDef)
+static inline void BattleAI_DoAIProcessing(struct AiThinkingStruct *aiThink, enum BattlerId battlerAtk, enum BattlerId battlerDef, const enum Move *consideredMoves)
 {
     do
     {
         if (gBattleMons[battlerAtk].pp[aiThink->movesetIndex] == 0)
             aiThink->moveConsidered = MOVE_NONE;
         else
-            aiThink->moveConsidered = gBattleMons[battlerAtk].moves[aiThink->movesetIndex];
+            aiThink->moveConsidered = consideredMoves[aiThink->movesetIndex];
 
         // There is no point in calculating scores for all 3 battlers(2 opponents + 1 ally) with certain moves.
         if (aiThink->moveConsidered != MOVE_NONE
@@ -1165,7 +1181,7 @@ static inline void BattleAI_DoAIProcessing(struct AiThinkingStruct *aiThink, enu
     aiThink->movesetIndex = 0;
 }
 
-void BattleAI_DoAIProcessing_PredictedSwitchin(struct AiThinkingStruct *aiThink, struct AiLogicData *aiData, enum BattlerId battlerAtk, enum BattlerId battlerDef)
+void BattleAI_DoAIProcessing_PredictedSwitchin(struct AiThinkingStruct *aiThink, struct AiLogicData *aiData, enum BattlerId battlerAtk, enum BattlerId battlerDef, const enum Move *consideredMoves)
 {
     struct BattlePokemon switchoutCandidate = gBattleMons[battlerDef];
     struct SimulatedDamage simulatedDamageSwitchout[MAX_MON_MOVES];
@@ -1193,7 +1209,7 @@ void BattleAI_DoAIProcessing_PredictedSwitchin(struct AiThinkingStruct *aiThink,
     gBattleMons[battlerDef] = switchinCandidate;
     gAiThinkingStruct->saved[battlerDef].saved = TRUE;
     SetBattlerAiData(battlerDef, aiData);
-    CalcBattlerAiMovesData(aiData, battlerAtk, battlerDef, AI_GetWeather(), gFieldStatuses);
+    CalcBattlerAiMovesData(aiData, battlerAtk, battlerDef, AI_GetWeather(), gFieldTimers.terrain);
     gAiThinkingStruct->saved[battlerDef].saved = FALSE;
 
     // Regular processing with new battler
@@ -1202,7 +1218,7 @@ void BattleAI_DoAIProcessing_PredictedSwitchin(struct AiThinkingStruct *aiThink,
         if (gBattleMons[battlerAtk].pp[aiThink->movesetIndex] == 0)
             aiThink->moveConsidered = MOVE_NONE;
         else
-            aiThink->moveConsidered = gBattleMons[battlerAtk].moves[aiThink->movesetIndex];
+            aiThink->moveConsidered = consideredMoves[aiThink->movesetIndex];
 
         // There is no point in calculating scores for all 3 battlers(2 opponents + 1 ally) with certain moves.
         if (aiThink->moveConsidered != MOVE_NONE
@@ -3123,6 +3139,38 @@ static bool32 ShouldTriggerPartnerAbility(enum BattlerId battlerAtk, enum Move m
     }
 }
 
+// Compare attacking with the extra damage Helping Hand would contribute.
+static u32 GetBestDoublesDamage(enum BattlerId battler, enum Move chosenMove, bool32 helpingHandGain)
+{
+    struct AiLogicData *aiData = gAiLogicData;
+    enum Move *moves = GetMovesArray(battler);
+    u32 bestDamage = 0;
+
+    for (u32 i = 0; i < MAX_MON_MOVES; i++)
+    {
+        if (IsMoveUnusable(i, moves[i], aiData->moveLimitations[battler])
+         || (chosenMove != MOVE_NONE && chosenMove != moves[i]))
+            continue;
+
+        bool32 spread = IsSpreadMove(AI_GetBattlerMoveTargetType(battler, AI_GetConsideredMove(battler, moves[i])));
+        u32 moveDamage = 0;
+        for (enum BattlerId foe = 0; foe < gBattlersCount; foe++)
+        {
+            if (IsBattlerAlly(battler, foe) || !IsBattlerAlive(foe))
+                continue;
+            u32 damage = AI_GetDamage(battler, foe, i, AI_ATTACKING, aiData);
+            u32 hp = gBattleMons[foe].hp;
+            if (helpingHandGain)
+                damage = damage >= hp ? 0 : min(damage / 2, hp - damage);
+            else
+                damage = min(damage, hp);
+            moveDamage = spread ? moveDamage + damage : max(moveDamage, damage);
+        }
+        bestDamage = max(bestDamage, moveDamage);
+    }
+    return bestDamage;
+}
+
 // double battle logic
 static s32 AI_DoubleBattle(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Move move, s32 score)
 {
@@ -3149,6 +3197,15 @@ static s32 AI_DoubleBattle(enum BattlerId battlerAtk, enum BattlerId battlerDef,
     u32 noOfHitsToKOPartner = GetNoOfHitsToKOBattler(battlerAtk, battlerAtkPartner, gAiThinkingStruct->movesetIndex, AI_ATTACKING_PARTNER, CONSIDER_ENDURE);
     bool32 wouldPartnerFaint = hasPartner && CanIndexMoveFaintTarget(battlerAtk, battlerAtkPartner, gAiThinkingStruct->movesetIndex, AI_ATTACKING_PARTNER) && !partnerProtecting;
     bool32 isFriendlyFireOK = !wouldPartnerFaint && (noOfHitsToKOPartner == 0 || noOfHitsToKOPartner > friendlyFireThreshold);
+
+    // The partner will rescore Protect after we commit to a beneficial Beat Up.
+    // Do not let its provisional Protect prevent the combination from being chosen.
+    if (partnerProtecting && effect == EFFECT_BEAT_UP
+     && !(aiData->battlerMovesScored & (1u << battlerAtkPartner))
+     && !CanIndexMoveFaintTarget(battlerAtk, battlerAtkPartner, gAiThinkingStruct->movesetIndex, AI_ATTACKING_PARTNER)
+     && (ShouldBeatUpForJustified(battlerAtk, battlerAtkPartner, move, moveType, FALSE, aiData)
+      || ShouldBeatUpForRageFist(battlerAtk, battlerAtkPartner, move, FALSE, aiData)))
+        partnerProtecting = FALSE;
 
     // check what effect partner is using
     if (aiData->partnerMove != MOVE_NONE && hasPartner)
@@ -3227,6 +3284,10 @@ static s32 AI_DoubleBattle(enum BattlerId battlerAtk, enum BattlerId battlerDef,
         }
         else
         {
+            if (GetBestDoublesDamage(battlerAtkPartner, aiData->partnerMove, TRUE)
+             > GetBestDoublesDamage(battlerAtk, MOVE_NONE, FALSE))
+                ADJUST_SCORE(DECENT_EFFECT);
+
             u32 ownHitsToKOFoe1 = GetBestNoOfHitsToKO(battlerAtk, GetBattlerLeftFoe(battlerAtk), AI_ATTACKING);
             u32 partnerHitsToKOFoe1 = GetBestNoOfHitsToKO(battlerAtkPartner, GetBattlerLeftFoe(battlerAtk), AI_ATTACKING);
             u32 ownHitsToKOFoe2 = GetBestNoOfHitsToKO(battlerAtk, GetBattlerRightFoe(battlerAtk), AI_ATTACKING);
@@ -4095,6 +4156,9 @@ static void AI_CompareDamagingMoves(enum BattlerId battlerAtk, enum BattlerId ba
     s32 noOfHits[MAX_MON_MOVES];
     s32 leastHits = 1000;
     enum Move *moves = GetMovesArray(battlerAtk);
+    enum Move effectMoves[MAX_MON_MOVES];
+    for (u32 i = 0; i < MAX_MON_MOVES; i++)
+        effectMoves[i] = AI_GetConsideredMove(battlerAtk, moves[i]);
     enum Move predictedMove = GetPredictedMove(battlerAtk, battlerDef, gAiLogicData);
     bool32 moveIsFaster[MAX_MON_MOVES];
 
@@ -4105,12 +4169,12 @@ static void AI_CompareDamagingMoves(enum BattlerId battlerAtk, enum BattlerId ba
             continue;
         for (u32 compareId = 0; compareId < MAX_MON_MOVES; compareId++)
         {
-            if (moves[compareId] != MOVE_NONE && GetMovePower(moves[compareId]) != 0)
+            if (moves[compareId] != MOVE_NONE && GetMovePower(effectMoves[compareId]) != 0)
             {
                 noOfHits[compareId] = GetNoOfHitsToKOBattler(battlerAtk, battlerDef, compareId, AI_ATTACKING, CONSIDER_ENDURE);
-                moveIsFaster[compareId] = AI_IsFaster(battlerAtk, battlerDef, moves[compareId], predictedMove, CONSIDER_PRIORITY);
+                moveIsFaster[compareId] = AI_IsFaster(battlerAtk, battlerDef, effectMoves[compareId], predictedMove, CONSIDER_PRIORITY);
                 tempMoveScores[compareId] = AI_SCORE_DEFAULT;
-                if (ShouldUseSpreadDamageMove(battlerAtk,moves[compareId], compareId, noOfHits[compareId]))
+                if (ShouldUseSpreadDamageMove(battlerAtk, effectMoves[compareId], compareId, noOfHits[compareId]))
                 {
                     noOfHits[compareId] = -1;
                 }
@@ -4119,7 +4183,7 @@ static void AI_CompareDamagingMoves(enum BattlerId battlerAtk, enum BattlerId ba
                     leastHits = noOfHits[compareId];
                 }
                 // Decided against using self sacrifice effect this turn
-                if (IsSelfSacrificeEffect(moves[compareId]) && !ShouldConsiderSelfSacrificeDamageEffect(battlerAtk, battlerDef, moves[compareId], moveIsFaster[compareId]))
+                if (IsSelfSacrificeEffect(effectMoves[compareId]) && !ShouldConsiderSelfSacrificeDamageEffect(battlerAtk, battlerDef, effectMoves[compareId], moveIsFaster[compareId]))
                 {
                     noOfHits[compareId] = gBattleMons[battlerDef].maxHP;
                     tempMoveScores[compareId] = 0;
@@ -4192,7 +4256,7 @@ static void AI_CompareDamagingMoves(enum BattlerId battlerAtk, enum BattlerId ba
                             break;
                         }
                     }
-                    switch (CompareMoveTwoTurnEffect(battlerAtk, moves[currId], moves[compareId]))
+                    switch (CompareMoveTwoTurnEffect(battlerAtk, effectMoves[currId], effectMoves[compareId]))
                     {
                     case MOVE_WON_COMPARISON:
                         tempMoveScores[currId] += MathUtil_Exponent(MAX_MON_MOVES, PRIORITY_NOT_CHARGING);
@@ -4214,7 +4278,7 @@ static void AI_CompareDamagingMoves(enum BattlerId battlerAtk, enum BattlerId ba
                     case MOVE_NEUTRAL_COMPARISON:
                         break;
                     }
-                    switch (CompareMoveSelfSacrifice(battlerAtk, battlerDef, moves[currId], moves[compareId]))
+                    switch (CompareMoveSelfSacrifice(battlerAtk, battlerDef, effectMoves[currId], effectMoves[compareId]))
                     {
                     case MOVE_WON_COMPARISON:
                         tempMoveScores[currId] += MathUtil_Exponent(MAX_MON_MOVES, PRIORITY_AVOID_SELF_SACRIFICE);

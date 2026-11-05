@@ -15,25 +15,61 @@ AI_SINGLE_BATTLE_TEST("AI uses Dynamax")
 
 AI_SINGLE_BATTLE_TEST("AI uses Dynamax -- Max Moves are scored based on max move effects, not base effects")
 {
-    KNOWN_FAILING;
+    enum Move baseMove;
+    PARAMETRIZE { baseMove = MOVE_EXPLOSION; }
+    PARAMETRIZE { baseMove = MOVE_HYPER_BEAM; }
     GIVEN {
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_OMNISCIENT );
         PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_SCRATCH, MOVE_EXPLOSION); DynamaxLevel(10); }
+        OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_SCRATCH, baseMove); DynamaxLevel(10); }
     } WHEN {
-        TURN { EXPECT_MOVE(opponent, MOVE_EXPLOSION, gimmick: GIMMICK_DYNAMAX); }
+        TURN { EXPECT_MOVE(opponent, baseMove, gimmick: GIMMICK_DYNAMAX); }
+    }
+}
+
+AI_SINGLE_BATTLE_TEST("AI Max Move damage retains the base move's physical or special category")
+{
+    bool32 physical;
+    PARAMETRIZE { physical = TRUE; }
+    PARAMETRIZE { physical = FALSE; }
+    GIVEN {
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_OMNISCIENT);
+        PLAYER(SPECIES_WOBBUFFET) { MaxHP(2000); Defense(1000); SpDefense(1000); }
+        OPPONENT(SPECIES_WOBBUFFET) {
+            Moves(MOVE_SCRATCH, MOVE_HYPER_BEAM);
+            Attack(physical ? 300 : 10);
+            SpAttack(physical ? 10 : 300);
+            DynamaxLevel(10);
+        }
+    } WHEN {
+        TURN { EXPECT_MOVE(opponent, physical ? MOVE_SCRATCH : MOVE_HYPER_BEAM, gimmick: GIMMICK_DYNAMAX); }
+    } THEN {
+        enum BattlerId atk = GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT);
+        enum BattlerId def = GetBattlerAtPosition(B_POSITION_PLAYER_LEFT);
+        EXPECT_EQ(gAiLogicData->simulatedDmg[atk][def][0].median > gAiLogicData->simulatedDmg[atk][def][1].median, physical);
     }
 }
 
 AI_SINGLE_BATTLE_TEST("AI uses Dynamax -- AI does not dynamax before using a utility move")
 {
-    KNOWN_FAILING;
     GIVEN {
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_OMNISCIENT );
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_FAKE_OUT); DynamaxLevel(10); }
     } WHEN {
         TURN { EXPECT_MOVE(opponent, MOVE_FAKE_OUT, gimmick: GIMMICK_NONE); }
+        TURN { EXPECT_MOVE(opponent, MOVE_FAKE_OUT, gimmick: GIMMICK_DYNAMAX); }
+    }
+}
+
+AI_SINGLE_BATTLE_TEST("AI does not defer Dynamax when Fake Out cannot flinch")
+{
+    GIVEN {
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_OMNISCIENT);
+        PLAYER(SPECIES_WOBBUFFET) { Ability(ABILITY_INNER_FOCUS); }
+        OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_FAKE_OUT); DynamaxLevel(10); }
+    } WHEN {
+        TURN { EXPECT_MOVE(opponent, MOVE_FAKE_OUT, gimmick: GIMMICK_DYNAMAX); }
     }
 }
 

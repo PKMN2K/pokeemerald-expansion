@@ -1,5 +1,6 @@
 #include "global.h"
 #include "battle_z_move.h"
+#include "battle_dynamax.h"
 #include "malloc.h"
 #include "battle.h"
 #include "battle_anim.h"
@@ -505,10 +506,8 @@ bool32 IsTruantMonVulnerable(enum BattlerId battlerAI, enum BattlerId opposingBa
     return FALSE;
 }
 
-bool32 Ai_IsPriorityBlocked(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Move move, struct AiLogicData *aiData)
+static bool32 IsPriorityBlocked(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Move move, struct AiLogicData *aiData, s32 atkPriority)
 {
-    s32 atkPriority = GetBattleMovePriority(battlerAtk, aiData->abilities[battlerAtk], move);
-
     if (atkPriority <= 0 || IsBattlerAlly(battlerAtk, battlerDef))
         return FALSE;
 
@@ -522,6 +521,12 @@ bool32 Ai_IsPriorityBlocked(enum BattlerId battlerAtk, enum BattlerId battlerDef
         return TRUE;
 
     return FALSE;
+}
+
+bool32 Ai_IsPriorityBlocked(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Move move, struct AiLogicData *aiData)
+{
+    return IsPriorityBlocked(battlerAtk, battlerDef, move, aiData,
+        GetBattleMovePriority(battlerAtk, aiData->abilities[battlerAtk], move));
 }
 
 bool32 AI_CanMoveBeBlockedByTarget(struct DamageContext *ctx)
@@ -592,10 +597,12 @@ bool32 IsDamageMoveUnusable(struct DamageContext *ctx)
     if (gBattleStruct->battlerState[ctx->battlerDef].commandingDondozo)
         return TRUE;
 
-    if (Ai_IsPriorityBlocked(ctx->battlerAtk, ctx->battlerDef, ctx->move, aiData))
+    s32 movePriority = GetBattleMovePriority(ctx->battlerAtk, ctx->abilities[ctx->battlerAtk], ctx->move);
+    if (IsPriorityBlocked(ctx->battlerAtk, ctx->battlerDef, ctx->move, aiData, movePriority)
+     || (ctx->terrain == B_TERRAIN_PSYCHIC && CanPsychicTerrainProtectTarget(ctx, movePriority)))
         return TRUE;
 
-    if (AI_CanMoveBeBlockedByTarget(ctx))
+    if (CanMoveBeBlockedByTarget(ctx, movePriority))
         return TRUE;
 
     // Limited to Lighning Rod and Storm Drain because otherwise the AI would consider Water Absorb, etc...
@@ -838,7 +845,7 @@ static s32 HandleKOThroughBerryReduction(struct DamageContext *ctx, s32 dmg)
     {
         // Only indicate move is ignoring berry resist if it doesn't already OHKO even if resisted
         if (dmg < gBattleMons[ctx->battlerDef].hp)
-            gAiLogicData->resistBerryAffected[ctx->battlerAtk][ctx->battlerDef][GetMoveIndex(ctx->battlerAtk, ctx->move)] = TRUE;
+            gAiLogicData->resistBerryAffected[ctx->battlerAtk][ctx->battlerDef][GetMoveIndex(ctx->battlerAtk, ctx->baseMove)] = TRUE;
 
         // Ignore resist berry if appropriate
         u32 berryModifier = gAiLogicData->abilities[ctx->battlerDef] == ABILITY_RIPEN ? 4 : 2;
@@ -875,6 +882,9 @@ struct SimulatedDamage AI_CalcDamage(struct AiCalcValues *aiCalc, enum BattlerId
     struct AiLogicData *aiData = gAiLogicData;
     gAiLogicData->aiCalcInProgress = TRUE;
     enum Move baseMove = move;
+    enum Gimmick activeGimmickAtk = GetActiveGimmick(battlerAtk);
+    bool32 isDynamax = activeGimmickAtk == GIMMICK_DYNAMAX
+        || (activeGimmickAtk == GIMMICK_NONE && aiCalc->gimmickAtk == GIMMICK_DYNAMAX);
 
     if (moveEffect == EFFECT_HIT_ENEMY_HEAL_ALLY
      && battlerDef == GetPartnerBattler(battlerAtk))
@@ -883,14 +893,14 @@ struct SimulatedDamage AI_CalcDamage(struct AiCalcValues *aiCalc, enum BattlerId
         return simDamage;
     }
 
-    if (moveEffect == EFFECT_NATURE_POWER)
+    if (moveEffect == EFFECT_NATURE_POWER && !isDynamax)
     {
         move = baseMove = GetNaturePowerMove();
         moveEffect = GetMoveEffect(move);
     }
 
     // Temporarily enable gimmicks for damage calcs if planned
-    if (aiCalc->gimmickAtk != GIMMICK_NONE && GetActiveGimmick(battlerAtk) == GIMMICK_NONE)
+    if (aiCalc->gimmickAtk != GIMMICK_NONE && activeGimmickAtk == GIMMICK_NONE)
     {
         toggledGimmickAtk = TRUE;
         SetActiveGimmick(battlerAtk, aiCalc->gimmickAtk);
@@ -900,6 +910,12 @@ struct SimulatedDamage AI_CalcDamage(struct AiCalcValues *aiCalc, enum BattlerId
     {
         toggledGimmickDef = TRUE;
         SetActiveGimmick(battlerDef, aiCalc->gimmickDef);
+    }
+
+    if (isDynamax)
+    {
+        move = GetMaxMove(battlerAtk, baseMove);
+        moveEffect = GetMoveEffect(move);
     }
 
     // We can set those globals because they are going to get rerolled on attack execution
@@ -931,6 +947,8 @@ struct SimulatedDamage AI_CalcDamage(struct AiCalcValues *aiCalc, enum BattlerId
 
     SetDynamicMoveCategory(battlerAtk, battlerDef, move);
     SetTypeBeforeUsingMove(move, battlerAtk, ctx.abilities[battlerAtk], ctx.holdEffects[battlerAtk]);
+    if (isDynamax)
+        gBattleStruct->dynamicMoveCategory = GetMoveCategory(baseMove);
 
     ctx.moveType = GetBattleMoveType(move);
     ctx.isCrit = ShouldCalcCritDamage(&ctx);
@@ -1256,12 +1274,27 @@ static bool32 AI_IsMoveEffectInMinus(enum BattlerId battlerAtk, enum BattlerId b
     return FALSE;
 }
 
+enum Move AI_GetConsideredMove(enum BattlerId battler, enum Move baseMove)
+{
+    if (baseMove != MOVE_NONE && baseMove != MOVE_UNAVAILABLE
+     && (GetActiveGimmick(battler) == GIMMICK_DYNAMAX
+      || (gBattleStruct->gimmick.usableGimmick[battler] == GIMMICK_DYNAMAX
+       && (gAiBattleData->aiUsingGimmick & (1u << battler)))))
+        return GetMaxMove(battler, baseMove);
+    return baseMove;
+}
+
 // Checks if one of the moves has side effects or perks, assuming equal dmg or equal no of hits to KO
 enum MoveComparisonResult CompareMoveEffects(enum Move move1, enum Move move2, enum BattlerId battlerAtk, enum BattlerId battlerDef, s32 noOfHitsToKo)
 {
     bool32 effect1minus, effect1plus, effect2minus, effect2plus;
     enum Ability defAbility = gAiLogicData->abilities[battlerDef];
     enum Ability atkAbility = gAiLogicData->abilities[battlerAtk];
+
+    u32 moveIndex1 = GetMoveIndex(battlerAtk, move1);
+    u32 moveIndex2 = GetMoveIndex(battlerAtk, move2);
+    move1 = AI_GetConsideredMove(battlerAtk, move1);
+    move2 = AI_GetConsideredMove(battlerAtk, move2);
 
     // Check if physical moves hurt.
     if (gAiLogicData->holdEffects[battlerAtk] != HOLD_EFFECT_PROTECTIVE_PADS && atkAbility != ABILITY_LONG_REACH
@@ -1277,11 +1310,11 @@ enum MoveComparisonResult CompareMoveEffects(enum Move move1, enum Move move2, e
     }
 
     // Check additional effects.
-    gAiThinkingStruct->movesetIndex = GetMoveIndex(battlerAtk, move1);
+    gAiThinkingStruct->movesetIndex = moveIndex1;
     effect1minus = AI_IsMoveEffectInMinus(battlerAtk, battlerDef, move1, noOfHitsToKo);
     effect1plus = AI_IsMoveEffectInPlus(battlerAtk, battlerDef, move1, noOfHitsToKo);
 
-    gAiThinkingStruct->movesetIndex = GetMoveIndex(battlerAtk, move2);
+    gAiThinkingStruct->movesetIndex = moveIndex2;
     effect2plus = AI_IsMoveEffectInPlus(battlerAtk, battlerDef, move2, noOfHitsToKo);
     effect2minus = AI_IsMoveEffectInMinus(battlerAtk, battlerDef, move2, noOfHitsToKo);
 
@@ -1594,6 +1627,13 @@ bool32 IsBestDmgMove(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum 
 {
     enum Move bestMoves[MAX_MON_MOVES] = {MOVE_NONE};
     u32 index = GetMoveIndex(battlerAtk, move);
+    if (index == MAX_MON_MOVES)
+    {
+        index = gAiThinkingStruct->movesetIndex;
+        if (index >= MAX_MON_MOVES || AI_GetConsideredMove(battlerAtk, GetMovesArray(battlerAtk)[index]) != move)
+            return FALSE;
+        move = GetMovesArray(battlerAtk)[index];
+    }
 
     if (CanIndexMoveFaintTarget(battlerAtk, battlerDef, index, calcContext))
         return TRUE;

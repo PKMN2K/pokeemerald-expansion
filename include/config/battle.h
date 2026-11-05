@@ -47,6 +47,8 @@
 #define B_PRANKSTER_DARK_TYPES      GEN_LATEST // In Gen7+, Prankster-elevated status moves do not affect Dark-types.
 #define B_SHEER_COLD_IMMUNITY       GEN_LATEST // In Gen7+, Ice-types are immune to Sheer Cold.
 #define B_ROOST_PURE_FLYING         GEN_LATEST // In Gen5+, Roost turns pure Flying-types into Normal-types.
+#define B_HALF_HP_HEALING_ROUNDING  GEN_LATEST // In Gen5+, half-max-HP recovery moves round up instead of down.
+#define B_ANTICIPATION_HIDDEN_POWER GEN_LATEST // In Gen6+, Anticipation checks Hidden Power's IV-derived type.
 #define B_STATUS_TYPE_IMMUNITY      GEN_LATEST // In Gen1, Pokémon were immune to additional effects of attacking moves if they shared a type with the move.
 
 // Turn settings

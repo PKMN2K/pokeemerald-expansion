@@ -46,6 +46,8 @@
     F(B_PRANKSTER_DARK_TYPES,      pranksterDarkTypes,      (u32, GEN_COUNT - 1)) \
     F(B_SHEER_COLD_IMMUNITY,       sheerColdImmunity,       (u32, GEN_COUNT - 1)) \
     F(B_ROOST_PURE_FLYING,         roostPureFlying,         (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
+    F(B_HALF_HP_HEALING_ROUNDING,  halfHpHealingRounding,  (u32, GEN_COUNT - 1)) \
+    F(B_ANTICIPATION_HIDDEN_POWER, anticipationHiddenPower,(u32, GEN_COUNT - 1)) \
     F(B_STATUS_TYPE_IMMUNITY,      statusTypeImmunity,      (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
     F(B_HIDDEN_POWER_COUNTER,      hiddenPowerCounter,      (u32, GEN_COUNT - 1)) \
     /* Turn settings */ \

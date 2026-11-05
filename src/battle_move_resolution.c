@@ -4176,7 +4176,12 @@ static enum MoveEndResult MoveEndMoveBlockRecoil(struct BattleCalcValues *cv)
 static enum MoveEndResult MoveEndSheerForce(struct BattleCalcValues *cv)
 {
     if (IsSheerForceAffected(cv->move, cv->abilities[cv->battlerAtk]))
-        gBattleScripting.moveendState = MOVEEND_ITEMS_EFFECTS_ALL;
+    {
+        if (GetConfig(B_SHEER_FORCE_AGAINST_ABILITIES) >= GEN_CHAMPIONS)
+            gBattleScripting.moveendState = MOVEEND_COLOR_CHANGE;
+        else
+            gBattleScripting.moveendState = MOVEEND_ITEMS_EFFECTS_ALL;
+    }
     else
         gBattleScripting.moveendState++;
 
@@ -4521,7 +4526,12 @@ static enum MoveEndResult MoveEndColorChange(struct BattleCalcValues *cv)
     }
 
     gBattleStruct->eventState.moveEndBattler = 0;
-    gBattleScripting.moveendState++;
+    // Champions restores these abilities and Pickpocket, while the intervening
+    // item effects (including Life Orb) remain suppressed by Sheer Force.
+    if (IsSheerForceAffected(cv->move, cv->abilities[cv->battlerAtk]))
+        gBattleScripting.moveendState = MOVEEND_PICKPOCKET;
+    else
+        gBattleScripting.moveendState++;
     return MOVEEND_RESULT_CONTINUE;
 }
 

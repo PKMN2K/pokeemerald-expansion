@@ -1,4 +1,5 @@
 #include "global.h"
+#include "battle_ai_items.h"
 #include "test/battle.h"
 
 ASSUMPTIONS
@@ -25,22 +26,29 @@ SINGLE_BATTLE_TEST("Embargo blocks the effect of an affected Pokémon's held ite
     }
 }
 
-SINGLE_BATTLE_TEST("Embargo blocks an affected Pokémon's trainer from using items")
+SINGLE_BATTLE_TEST("Embargo prevents an NPC trainer from choosing a healing item")
 {
-    // As of writing, the battle tests system doesn't perform all the operations involved
-    // in the action of an NPC using an item in battle.
-    KNOWN_FAILING;
+    bool32 embargo;
+    PARAMETRIZE { embargo = FALSE; }
+    PARAMETRIZE { embargo = TRUE; }
     GIVEN {
         ASSUME(gItemsInfo[ITEM_POTION].battleUsage == EFFECT_ITEM_RESTORE_HP);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET) { HP(1); }
     } WHEN {
-        TURN { MOVE(player, MOVE_EMBARGO); }
-        TURN { USE_ITEM(opponent, ITEM_POTION, partyIndex: 0); }
+        TURN { MOVE(player, embargo ? MOVE_EMBARGO : MOVE_CELEBRATE); }
     } SCENE {
-        MESSAGE("Wobbuffet used Embargo!");
-        MESSAGE("The opposing Wobbuffet can't use items anymore!");
+        if (embargo)
+        {
+            MESSAGE("Wobbuffet used Embargo!");
+            MESSAGE("The opposing Wobbuffet can't use items anymore!");
+        }
     } THEN {
+        // USE_ITEM forces a recorded action, bypassing the NPC's selection
+        // checks. Exercise the same decision path the opponent controller uses.
+        gBattleHistory->trainerItems[0] = ITEM_POTION;
+        EXPECT_EQ(ShouldUseItem(GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT)), !embargo);
+        EXPECT_EQ(gBattleHistory->trainerItems[0], embargo ? ITEM_POTION : ITEM_NONE);
         EXPECT_EQ(opponent->hp, 1);
     }
 }

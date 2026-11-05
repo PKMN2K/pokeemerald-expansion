@@ -5058,13 +5058,6 @@ u32 IsAbilityStatusProtected(enum BattlerId battler, enum Ability ability)
     SWAP(sideTimerPlayer->structField, sideTimerOpp->structField, temp);\
 }                                                                       \
 
-#define UPDATE_COURTCHANGED_BATTLER(structField)\
-{                                               \
-    temp = sideTimerPlayer->structField;        \
-    sideTimerPlayer->structField = ((sideTimerOpp->structField) ^ BIT_SIDE);        \
-    sideTimerOpp->structField = (temp ^ BIT_SIDE);        \
-}                                               \
-
 void BS_CourtChangeSwapSideStatuses(void)
 {
     NATIVE_ARGS();
@@ -5100,8 +5093,9 @@ void BS_CourtChangeSwapSideStatuses(void)
     SWAP(sideTimerPlayer->spikesAmount, sideTimerOpp->spikesAmount, temp);
     SWAP(sideTimerPlayer->toxicSpikesAmount, sideTimerOpp->toxicSpikesAmount, temp);
 
-    // Change battler IDs of swapped effects. Needed for the correct string when they expire
-    UPDATE_COURTCHANGED_BATTLER(stickyWebBattlerId);
+    // The hazard changes sides, but its original setter does not. Preserve
+    // that battler (and the 0xFF sentinel) for Gen8 Mirror Armor reflection.
+    SWAP(sideTimerPlayer->stickyWebBattlerId, sideTimerOpp->stickyWebBattlerId, temp);
 
     // Track which side originally set the Sticky Web
     SWAP(sideTimerPlayer->stickyWebBattlerSide, sideTimerOpp->stickyWebBattlerSide, temp);
@@ -5203,7 +5197,8 @@ static void Cmd_tryhealhalfhealth(void)
     if (cmd->battler == BS_ATTACKER)
         gBattlerTarget = gBattlerAttacker;
 
-    SetHealAmount(gBattlerTarget, GetNonDynamaxMaxHP(gBattlerTarget) / 2);
+    u32 maxHP = GetNonDynamaxMaxHP(gBattlerTarget);
+    SetHealAmount(gBattlerTarget, (maxHP + (GetConfig(B_HALF_HP_HEALING_ROUNDING) >= GEN_5)) / 2);
     if (gBattleMons[gBattlerTarget].hp == gBattleMons[gBattlerTarget].maxHP)
         gBattlescriptCurrInstr = failInstr;
     else
@@ -7675,6 +7670,8 @@ bool32 IsSubstituteProtected(enum BattlerId battlerAtk, enum BattlerId battlerDe
     else if (IsBattleMoveStatus(move) && battlerAtk == battlerDef)
         return FALSE;
     else if (MoveIgnoresSubstitute(move))
+        return FALSE;
+    else if (GetMoveEffect(move) == EFFECT_DEFOG && GetConfig(B_DEFOG_EFFECT_CLEARING) == GEN_4)
         return FALSE;
     else if (GetConfig(B_INFILTRATOR_SUBSTITUTE) < GEN_6)
         return TRUE;

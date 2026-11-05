@@ -3226,6 +3226,8 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
                             move = gBattleMons[i].moves[j];
                             enum BattleMoveEffects moveEffect = GetMoveEffect(move);
                             moveType = GetBattleMoveType(move);
+                            if (moveEffect == EFFECT_HIDDEN_POWER && GetConfig(B_ANTICIPATION_HIDDEN_POWER) >= GEN_6)
+                                moveType = GetDynamicMoveType(GetBattlerMon(i), move, i, ABILITY_NONE, HOLD_EFFECT_NONE, MON_IN_BATTLE);
 
                             ctx.battlerAtk = i;
                             ctx.battlerDef = battler;

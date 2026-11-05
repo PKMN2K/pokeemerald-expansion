@@ -1130,15 +1130,15 @@ SINGLE_BATTLE_TEST("Sleep Clause: Sleep clause is deactivated when a sleeping mo
     enum Ability ability;
     PARAMETRIZE { ability = ABILITY_VITAL_SPIRIT; }
     PARAMETRIZE { ability = ABILITY_INSOMNIA; }
-    KNOWN_FAILING; // Sleep Clause parts work, but Imposter seems broken with battle messages / targeting. Issue #5565 https://github.com/rh-hideout/pokeemerald-expansion/issues/5565
     GIVEN {
         FLAG_SET(B_FLAG_SLEEP_CLAUSE);
         ASSUME(GetMoveEffect(MOVE_SPORE) == EFFECT_NON_VOLATILE_STATUS);
         ASSUME(GetMoveNonVolatileStatus(MOVE_SPORE) == MOVE_EFFECT_SLEEP);
         ASSUME(gItemsInfo[ITEM_LAGGING_TAIL].holdEffect == HOLD_EFFECT_LAGGING_TAIL);
-        PLAYER(SPECIES_ZIGZAGOON)
+        PLAYER(SPECIES_ZIGZAGOON);
         PLAYER(SPECIES_DELIBIRD) { Ability(ability); }
-        OPPONENT(SPECIES_DITTO) { Ability(ABILITY_IMPOSTER); }
+        // Imposter copies Spore and Speed; make sure Zigzagoon puts Ditto to sleep first.
+        OPPONENT(SPECIES_DITTO) { Ability(ABILITY_IMPOSTER); Item(ITEM_LAGGING_TAIL); }
         OPPONENT(SPECIES_ZIGZAGOON);
     } WHEN {
         TURN { MOVE(player, MOVE_SPORE); }
@@ -1146,7 +1146,8 @@ SINGLE_BATTLE_TEST("Sleep Clause: Sleep clause is deactivated when a sleeping mo
         TURN { SWITCH(opponent, 0); }
         TURN { SWITCH(opponent, 1); MOVE(player, MOVE_SPORE); }
     } SCENE {
-        MESSAGE("The opposing Ditto transformed into Zigzagoon using Imposter!");
+        ABILITY_POPUP(opponent, ABILITY_IMPOSTER);
+        MESSAGE("The opposing Ditto transformed into Zigzagoon!");
         MESSAGE("Zigzagoon used Spore!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SPORE, player);
         ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_SLP, opponent);

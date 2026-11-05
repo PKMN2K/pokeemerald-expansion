@@ -190,15 +190,20 @@ SINGLE_BATTLE_TEST("Color Change does not activate if move is boosted by Sheer F
 
 SINGLE_BATTLE_TEST("Color Change does activate if move is boosted by Sheer Force (Champions)")
 {
-    KNOWN_FAILING;
+    enum Item item;
+    PARAMETRIZE { item = ITEM_NONE; }
+    PARAMETRIZE { item = ITEM_LIFE_ORB; }
     GIVEN {
         WITH_CONFIG(B_SHEER_FORCE_AGAINST_ABILITIES, GEN_CHAMPIONS);
         PLAYER(SPECIES_KECLEON) { Ability(ABILITY_COLOR_CHANGE); }
-        OPPONENT(SPECIES_NIDOKING) { Ability(ABILITY_SHEER_FORCE); }
+        OPPONENT(SPECIES_NIDOKING) { Ability(ABILITY_SHEER_FORCE); Item(item); }
     } WHEN {
         TURN { MOVE(opponent, MOVE_EMBER); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_EMBER, opponent);
         ABILITY_POPUP(player, ABILITY_COLOR_CHANGE);
+        NOT HP_BAR(opponent);
+    } THEN {
+        EXPECT_EQ(opponent->hp, opponent->maxHP);
     }
 }
