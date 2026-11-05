@@ -134,7 +134,9 @@ void PolishedTownMapInit(MainCallback callback)
     else if (gSaveBlock1Ptr->location.mapNum == MAP_NUM(MAP_POLISHED_VIOLET_CITY)
           || gSaveBlock1Ptr->location.mapNum == MAP_NUM(MAP_POLISHED_VIOLET_POKECENTER_1F)
           || gSaveBlock1Ptr->location.mapNum == MAP_NUM(MAP_POLISHED_EARLS_POKEMON_ACADEMY)
-          || gSaveBlock1Ptr->location.mapNum == MAP_NUM(MAP_POLISHED_VIOLET_MART))
+          || gSaveBlock1Ptr->location.mapNum == MAP_NUM(MAP_POLISHED_VIOLET_MART)
+          || gSaveBlock1Ptr->location.mapNum == MAP_NUM(MAP_POLISHED_VIOLET_NICKNAME_SPEECH_HOUSE)
+          || gSaveBlock1Ptr->location.mapNum == MAP_NUM(MAP_POLISHED_VIOLET_ONIX_TRADE_HOUSE))
         sJohtoMap->location = 6;
     else if (gSaveBlock1Ptr->location.mapNum >= MAP_NUM(MAP_POLISHED_ROUTE_30))
         sJohtoMap->location = 4;

@@ -51,7 +51,7 @@ def service_palettes(files, key):
 
 def furniture(name, header, raw, width, symbols, files, text, define):
     """Source collision interactions, overridden by explicit map events."""
-    labels = {"BOOKSHELF":"MagazineBookshelfText", "TRASH_CAN":"TrashCanText",
+    labels = {"BOOKSHELF":"MagazineBookshelfText", "TRASH_CAN":"TrashCanText", "INCENSE":"IncenseBurnerText",
         "MART_SHELF":"MerchandiseShelfText", "TV":"TVText", "WINDOW":"WindowText",
         "FRIDGE":"RefrigeratorText", "SINK":"SinkText", "STOVE":"StoveText",
         "POKECENTER_SIGN":"PokeCenterSignText", "MART_SIGN":"MartSignText"}

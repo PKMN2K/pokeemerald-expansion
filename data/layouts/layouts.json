@@ -9620,6 +9620,28 @@
       "border_filepath": "data/layouts/PolishedVioletMart/border.bin",
       "blockdata_filepath": "data/layouts/PolishedVioletMart/map.bin",
       "layout_version": "emerald"
+    },
+    {
+      "id": "LAYOUT_POLISHED_VIOLET_NICKNAME_SPEECH_HOUSE",
+      "name": "PolishedVioletNicknameSpeechHouse_Layout",
+      "width": 8,
+      "height": 8,
+      "primary_tileset": "gTileset_PolishedNewBarkTraditionalHousePrimary",
+      "secondary_tileset": "gTileset_PolishedNewBarkTraditionalHouseSecondary",
+      "border_filepath": "data/layouts/PolishedVioletNicknameSpeechHouse/border.bin",
+      "blockdata_filepath": "data/layouts/PolishedVioletNicknameSpeechHouse/map.bin",
+      "layout_version": "emerald"
+    },
+    {
+      "id": "LAYOUT_POLISHED_VIOLET_ONIX_TRADE_HOUSE",
+      "name": "PolishedVioletOnixTradeHouse_Layout",
+      "width": 8,
+      "height": 8,
+      "primary_tileset": "gTileset_PolishedNewBarkTraditionalHousePrimary",
+      "secondary_tileset": "gTileset_PolishedNewBarkTraditionalHouseSecondary",
+      "border_filepath": "data/layouts/PolishedVioletOnixTradeHouse/border.bin",
+      "blockdata_filepath": "data/layouts/PolishedVioletOnixTradeHouse/map.bin",
+      "layout_version": "emerald"
     }
   ]
 }

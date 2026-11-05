@@ -120,6 +120,36 @@ const struct Tileset gTileset_PolishedNewBarkGateSecondary =
     .callback = NULL,
 };
 
+static const u32 sPolishedNewBarkTraditionalHousePrimaryTiles[] = INCBIN_U32("data/tilesets/primary/polished_new_bark_traditionalhouse/tiles.bin");
+static const u16 sPolishedNewBarkTraditionalHousePrimaryPalettes[] = INCBIN_U16("data/tilesets/primary/polished_new_bark_traditionalhouse/palettes.bin");
+static const u16 sPolishedNewBarkTraditionalHousePrimaryMetatiles[] = INCBIN_U16("data/tilesets/primary/polished_new_bark_traditionalhouse/metatiles.bin");
+static const u16 sPolishedNewBarkTraditionalHousePrimaryAttributes[] = INCBIN_U16("data/tilesets/primary/polished_new_bark_traditionalhouse/metatile_attributes.bin");
+const struct Tileset gTileset_PolishedNewBarkTraditionalHousePrimary =
+{
+    .isCompressed = FALSE,
+    .isSecondary = FALSE,
+    .tiles = sPolishedNewBarkTraditionalHousePrimaryTiles,
+    .palettes = (const u16 (*)[16])sPolishedNewBarkTraditionalHousePrimaryPalettes,
+    .metatiles = sPolishedNewBarkTraditionalHousePrimaryMetatiles,
+    .metatileAttributes = sPolishedNewBarkTraditionalHousePrimaryAttributes,
+    .callback = NULL,
+};
+
+static const u32 sPolishedNewBarkTraditionalHouseSecondaryTiles[] = INCBIN_U32("data/tilesets/secondary/polished_new_bark_traditionalhouse/tiles.bin");
+static const u16 sPolishedNewBarkTraditionalHouseSecondaryPalettes[] = INCBIN_U16("data/tilesets/secondary/polished_new_bark_traditionalhouse/palettes.bin");
+static const u16 sPolishedNewBarkTraditionalHouseSecondaryMetatiles[] = INCBIN_U16("data/tilesets/secondary/polished_new_bark_traditionalhouse/metatiles.bin");
+static const u16 sPolishedNewBarkTraditionalHouseSecondaryAttributes[] = INCBIN_U16("data/tilesets/secondary/polished_new_bark_traditionalhouse/metatile_attributes.bin");
+const struct Tileset gTileset_PolishedNewBarkTraditionalHouseSecondary =
+{
+    .isCompressed = FALSE,
+    .isSecondary = TRUE,
+    .tiles = sPolishedNewBarkTraditionalHouseSecondaryTiles,
+    .palettes = (const u16 (*)[16])sPolishedNewBarkTraditionalHouseSecondaryPalettes,
+    .metatiles = sPolishedNewBarkTraditionalHouseSecondaryMetatiles,
+    .metatileAttributes = sPolishedNewBarkTraditionalHouseSecondaryAttributes,
+    .callback = NULL,
+};
+
 static const u32 sPolishedNewBarkMartPrimaryTiles[] = INCBIN_U32("data/tilesets/primary/polished_new_bark_mart/tiles.bin");
 static const u16 sPolishedNewBarkMartPrimaryPalettes[] = INCBIN_U16("data/tilesets/primary/polished_new_bark_mart/palettes.bin");
 static const u16 sPolishedNewBarkMartPrimaryMetatiles[] = INCBIN_U16("data/tilesets/primary/polished_new_bark_mart/metatiles.bin");

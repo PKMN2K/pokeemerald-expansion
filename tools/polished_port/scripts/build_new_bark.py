@@ -36,6 +36,7 @@ import polished_route31
 import polished_violet
 import polished_academy
 import polished_mart
+import polished_violet_houses
 import polished_return
 import polished_departure
 
@@ -49,7 +50,7 @@ NEW_BARK_MAPS = {
     "LyrasHouse2F": "LYRAS_HOUSE_2F",
     "ElmsHouse": "ELMS_HOUSE",
 }
-MAPS = {**NEW_BARK_MAPS, "Route29": "ROUTE_29", "Route2946Gate": "ROUTE_29_46_GATE", **polished_cherrygrove.MAPS, **polished_route30.MAPS, **polished_route31.MAPS, **polished_violet.MAPS, **polished_academy.MAPS, **polished_mart.MAPS}
+MAPS = {**NEW_BARK_MAPS, "Route29": "ROUTE_29", "Route2946Gate": "ROUTE_29_46_GATE", **polished_cherrygrove.MAPS, **polished_route30.MAPS, **polished_route31.MAPS, **polished_violet.MAPS, **polished_academy.MAPS, **polished_mart.MAPS, **polished_violet_houses.MAPS}
 BEHAVIORS = {**BEHAVIORS,
     "TOP_WALL": ("MB_IMPASSABLE_NORTH", False),
     "BOTTOM_WALL": ("MB_IMPASSABLE_SOUTH", False),
@@ -71,6 +72,7 @@ BEHAVIORS = {**BEHAVIORS,
     "MART_SIGN": ("MB_NORMAL", True),
     "POKECENTER_SIGN": ("MB_NORMAL", True),
     "TRASH_CAN": ("MB_NORMAL", True),
+    "INCENSE": ("MB_NORMAL", True),
 }
 # Scripts with an unconditional inline text body, rather than a story branch.
 INLINE_TEXT = {"PlayersHouse1FTVScript", "LyrasFridgeScript", "LyrasTVScript"}
@@ -78,6 +80,9 @@ INLINE_TEXT = {"PlayersHouse1FTVScript", "LyrasFridgeScript", "LyrasTVScript"}
 # Only source jumptextfaceplayer residents with no story flag are imported.
 # The teacher retains the explicitly separate demo travel prompt.
 RESIDENTS = {
+    "VioletNicknameSpeechHouse": {"VioletNicknameSpeechHouseTeacherText": "VIOLET_NICKNAME_TEACHER",
+        "VioletNicknameSpeechHouseLassText": "VIOLET_NICKNAME_TWIN", "VioletNicknameSpeechHouseGrampsText": "VIOLET_NICKNAME_GRAMPS"},
+    "VioletOnixTradeHouse": {"VioletKylesHousePokefanMText": "VIOLET_TRADE_POKEFAN"},
     "Route31": {"Route31YoungsterText": "ROUTE31_SCHOOLBOY"},
     "Route31VioletGate": {"Route31VioletGateOfficerText": "ROUTE31_GATE_OFFICER", "Route31VioletGateCooltrainerFText":"ROUTE31_GATE_BATTLE_GIRL"},
     "Route29": {"Route29YoungsterText": "ROUTE29_YOUNGSTER", "Route29TeacherText": "ROUTE29_TEACHER", "Route29FisherText": "ROUTE29_FISHER"},
@@ -89,6 +94,10 @@ RESIDENTS = {
     "ElmsHouse": {"ElmsWifeText": "ELMS_WIFE", "ElmsSonText": "ELMS_SON"},
 }
 NPC_GRAPHICS = {
+    ("SPRITE_POKEFAN_F", "RED"): "POLISHED_POKEFAN",
+    ("SPRITE_TWIN", "GREEN"): "POLISHED_TWIN",
+    ("SPRITE_GRAMPS", "PURPLE"): "POLISHED_GRAMPS_PURPLE",
+    ("SPRITE_POKEFAN_M", "BROWN"): "POLISHED_POKEFAN_M_BROWN",
     ("SPRITE_SCHOOLBOY", "GREEN"): "POLISHED_SCHOOLBOY_GREEN",
     ("SPRITE_FAT_GUY", "BLUE"): "POLISHED_FAT_GUY_BLUE",
     ("SPRITE_TEACHER", "GREEN"): "POLISHED_TEACHER",
@@ -384,7 +393,7 @@ def playable_warps(files):
             active = {number: active[number] for number in (3, 4, 1, 2)}
         if name == "VioletCity":
             # Keep the Center and east gate at their previous saved warp indices.
-            active = {number: active[number] for number in (5, 8, 9, 3, 1)}
+            active = {number: active[number] for number in (5, 8, 9, 3, 1, 4, 6)}
         tables[constant] = active
     return tables
 
@@ -529,6 +538,10 @@ def map_header(name, constant, width, height, script, files, warps):
         code = code.replace("\t.byte 0\n", hooks + "\t.byte 0\n", 1)
         code += scene
         story.append(report)
+    if name in polished_violet_houses.MAPS:
+        scene, report = polished_violet_houses.events(name, script, header, files, source_text, text_definition)
+        code += scene
+        story.append(report)
     if name in polished_mart.MAPS:
         hooks, scene, report = polished_mart.events(script, header, files, source_text, text_definition)
         code = code.replace(prefix + "_MapScripts::\n", prefix + "_MapScripts::\n" + hooks)
@@ -557,7 +570,7 @@ def map_header(name, constant, width, height, script, files, warps):
 def generate():
     files = source_files()
     ids = behavior_ids()
-    products, maps, layouts = {**resident_assets(files), **new_bark_battle.battle_assets(files), **polished_cherrygrove.assets(files), **polished_route30.assets(files), **polished_route31.assets(files), **polished_violet.assets(files), **polished_academy.assets(files), **polished_mart.assets(files), **polished_return.assets(files), **polished_departure.assets(files)}, {}, []
+    products, maps, layouts = {**resident_assets(files), **new_bark_battle.battle_assets(files), **polished_cherrygrove.assets(files), **polished_route30.assets(files), **polished_route31.assets(files), **polished_violet.assets(files), **polished_academy.assets(files), **polished_mart.assets(files), **polished_violet_houses.assets(files), **polished_return.assets(files), **polished_departure.assets(files)}, {}, []
     indoor = palette_rows((FIXTURES / "johto_bg_tiles.pal").read_text())[32:39]
     indoor_palette = b"".join(struct.pack("<16H", *p, p[0], *([0] * 11)) for p in indoor).ljust(512, b"\0")
     base_graphics = build_graphics()[0]
@@ -572,6 +585,8 @@ def generate():
         "Lab": (*lab_geometry(files), indoor_palette, collisions(files["data/tilesets/lab_collision.asm"].decode())),
         "Gate": (*lab_geometry(files, "gate"), indoor_palette, collisions(files["data/tilesets/gate_collision.asm"].decode())),
     }
+    banks["TraditionalHouse"] = (*lab_geometry(files, "traditional_house"), indoor_palette,
+        collisions(files["data/tilesets/traditional_house_collision.asm"].decode()))
     for key in ("Mart", "PokeCenter"):
         name = key.lower()
         rows = polished_cherrygrove.service_palettes(files, key)
@@ -584,10 +599,14 @@ def generate():
     warps = playable_warps(files)
     for name, constant in MAPS.items():
         bank = "Outdoor" if name in ("NewBarkTown", "Route29", "Route30", "Route31", "CherrygroveCity", "VioletCity") else "Lab" if name in ("ElmsLab", "EarlsPokemonAcademy") else "Gate" if name in ("Route2946Gate", "Route31VioletGate") else "Mart" if name in ("CherrygroveMart", "VioletMart") else "PokeCenter" if name in ("CherrygrovePokeCenter1F", "VioletPokeCenter1F") else "House"
-        source_tileset = {"Outdoor": "JOHTO_TRADITIONAL", "Lab": "LAB", "House": "JOHTO_HOUSE", "Gate": "GATE", "Mart": "MART", "PokeCenter": "POKECENTER"}[bank]
+        if name in polished_violet_houses.MAPS:
+            bank = "TraditionalHouse"
+        source_tileset = {"TraditionalHouse": "TRADITIONAL_HOUSE", "Outdoor": "JOHTO_TRADITIONAL", "Lab": "LAB", "House": "JOHTO_HOUSE", "Gate": "GATE", "Mart": "MART", "PokeCenter": "POKECENTER"}[bank]
         assert re.search(r"map " + name + r", TILESET_" + source_tileset + r",", files["data/maps/maps.asm"].decode())
         source_layout = "JohtoHouse4" if name in ("PlayersNeighborsHouse", "Route30BerrySpeechHouse") else name
         source_layout = polished_cherrygrove.BLOCKS.get(name, source_layout)
+        if name in polished_violet_houses.MAPS:
+            source_layout = "TraditionalHouse"
         if name == "VioletMart":
             source_layout = "Mart"
         if name == "VioletPokeCenter1F":
@@ -620,7 +639,7 @@ def generate():
         products[f"data/layouts/{prefix}/map.bin"] = raw
         products[f"data/layouts/{prefix}/border.bin"] = border_raw
         header, script, resident_info, story = map_header(name, constant, width * 2, height * 2, files[f"maps/{name}.asm"].decode(), files, warps)
-        if name in (*polished_cherrygrove.MAPS, *polished_route30.MAPS, *polished_violet.MAPS, *polished_academy.MAPS, *polished_mart.MAPS):
+        if name in (*polished_cherrygrove.MAPS, *polished_route30.MAPS, *polished_violet.MAPS, *polished_academy.MAPS, *polished_mart.MAPS, *polished_violet_houses.MAPS):
             script += polished_cherrygrove.furniture(name, header, raw, width * 2, symbols, files, source_text, text_definition).encode()
             script = script.rstrip() + b"\n"
         products[f"data/maps/{prefix}/map.json"] = json_bytes(header)
@@ -694,7 +713,7 @@ const struct Tileset gTileset_PolishedVioletOutdoorPrimary =
 }};
 '''
     products["src/data/tilesets/polished_new_bark.h"] = (header_text.rstrip() + "\n").encode()
-    report = {"source_commit": PIN, "scope": "source geography, connected interiors, static interactions, six ambient residents, rival window encounter, Lyra/Elm introduction, all three starter choices, first Lyra battle, aide Potion and Mom's opening with weekday/DST setup, schedules and neighbor; Route 29, Cherrygrove services, Route 30 with Mulch, native encounters, Mystery Egg and Oak; Elm's disaster call, first rival battle, theft investigation, rival naming, Egg delivery, Joey, Mom's savings, the Route 29 catching tutorial and Tuscany; Route 31 with Wade, Finch, Mom’s worried call and the Violet gate; Violet City first visit, Pokémon Center, Earl’s tour, Academy and usable Type Chart; Violet Mart and Flower Mail",
+    report = {"source_commit": PIN, "scope": "source geography, connected interiors, static interactions, six ambient residents, rival window encounter, Lyra/Elm introduction, all three starter choices, first Lyra battle, aide Potion and Mom's opening with weekday/DST setup, schedules and neighbor; Route 29, Cherrygrove services, Route 30 with Mulch, native encounters, Mystery Egg and Oak; Elm's disaster call, first rival battle, theft investigation, rival naming, Egg delivery, Joey, Mom's savings, the Route 29 catching tutorial and Tuscany; Route 31 with Wade, Finch, Mom’s worried call and the Violet gate; Violet City first visit, Pokémon Center, Earl’s tour, Academy and usable Type Chart; Violet Mart and Flower Mail; Violet nickname house, Strawberry, evening Gramps and Kyle’s source trade",
         "maps": maps, "layouts": layouts, "output_sha256": {p: hashlib.sha256(raw).hexdigest() for p, raw in products.items()}}
     products["tools/polished_port/manifests/new_bark.json"] = json_bytes(report)
     products["tools/polished_port/manifests/route29_wild.json"] = json_bytes({

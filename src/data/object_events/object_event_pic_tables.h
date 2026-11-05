@@ -2695,3 +2695,11 @@ static const struct SpriteFrameImage sPicTable_PolishedAcademyBook[] = {
 static const struct SpriteFrameImage sPicTable_PolishedGranny[] = {
     overworld_ascending_frames(gObjectEventPic_PolishedGranny, 2, 4),
 };
+
+static const struct SpriteFrameImage sPicTable_PolishedTwin[] = {
+    overworld_ascending_frames(gObjectEventPic_PolishedTwin, 2, 4),
+};
+
+static const struct SpriteFrameImage sPicTable_PolishedEevee[] = {
+    overworld_ascending_frames(gObjectEventPic_PolishedEevee, 2, 4),
+};

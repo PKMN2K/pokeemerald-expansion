@@ -906,6 +906,66 @@
       "path": "gfx/mail.asm",
       "fixture": "gfx__mail.asm.b64",
       "git_blob_sha1": "fe42eb88c8762240b5dc7a1b276f113c4eeb6efd"
+    },
+    {
+      "path": "maps/VioletNicknameSpeechHouse.asm",
+      "fixture": "maps__VioletNicknameSpeechHouse.asm.b64",
+      "git_blob_sha1": "60d015b9f50ce4e0e934c9c18ef29c1f192db9e0"
+    },
+    {
+      "path": "maps/VioletOnixTradeHouse.asm",
+      "fixture": "maps__VioletOnixTradeHouse.asm.b64",
+      "git_blob_sha1": "a6ede158c93db6b7dd37a4c8204daccd9c2f3779"
+    },
+    {
+      "path": "maps/TraditionalHouse.ablk",
+      "fixture": "maps__TraditionalHouse.ablk.b64",
+      "git_blob_sha1": "c1383fa4dcdac191b10a6b25a5d92e860216977f"
+    },
+    {
+      "path": "gfx/tilesets/traditional_house.png",
+      "fixture": "gfx__tilesets__traditional_house.png.b64",
+      "git_blob_sha1": "36ff2418ded492a669ab93977a6dcb09a5a102fb"
+    },
+    {
+      "path": "data/tilesets/traditional_house_metatiles.bin",
+      "fixture": "data__tilesets__traditional_house_metatiles.bin.b64",
+      "git_blob_sha1": "eefff40756bac2abda6e6d317a6d1bc9e02f8f00"
+    },
+    {
+      "path": "data/tilesets/traditional_house_attributes.bin",
+      "fixture": "data__tilesets__traditional_house_attributes.bin.b64",
+      "git_blob_sha1": "50836c1b0462135f9003058d6562a6dcbf73d738"
+    },
+    {
+      "path": "data/tilesets/traditional_house_collision.asm",
+      "fixture": "data__tilesets__traditional_house_collision.asm.b64",
+      "git_blob_sha1": "1d731d7b0fcd58b22ece68efd98580cefff4d20e"
+    },
+    {
+      "path": "gfx/sprites/twin.png",
+      "fixture": "gfx__sprites__twin.png.b64",
+      "git_blob_sha1": "3e312fadeb444d691e37b7fb706aaa326347d879"
+    },
+    {
+      "path": "gfx/sprites/eevee.png",
+      "fixture": "gfx__sprites__eevee.png.b64",
+      "git_blob_sha1": "7df8d4958afc15bf2a86f526ede6bdafa9dd15a5"
+    },
+    {
+      "path": "data/events/npc_trades.asm",
+      "fixture": "data__events__npc_trades.asm.b64",
+      "git_blob_sha1": "570d357d1d53e1d10f6b8af79cf140ae26a8db40"
+    },
+    {
+      "path": "engine/events/npc_trade.asm",
+      "fixture": "engine__events__npc_trade.asm.b64",
+      "git_blob_sha1": "21f0ea8bbed859649dfd02163e15ff61c2856ae7"
+    },
+    {
+      "path": "constants/npc_trade_constants.asm",
+      "fixture": "constants__npc_trade_constants.asm.b64",
+      "git_blob_sha1": "f45b4feafdd4b1be4db15af5fa97c90efddb6c5e"
     }
   ]
 }

@@ -1,6 +1,6 @@
 {
   "source_commit": "3fa43192379df5c3e7b09a08e4d5d79af4f02f42",
-  "scope": "source geography, connected interiors, static interactions, six ambient residents, rival window encounter, Lyra/Elm introduction, all three starter choices, first Lyra battle, aide Potion and Mom's opening with weekday/DST setup, schedules and neighbor; Route 29, Cherrygrove services, Route 30 with Mulch, native encounters, Mystery Egg and Oak; Elm's disaster call, first rival battle, theft investigation, rival naming, Egg delivery, Joey, Mom's savings, the Route 29 catching tutorial and Tuscany; Route 31 with Wade, Finch, Mom\u2019s worried call and the Violet gate; Violet City first visit, Pok\u00e9mon Center, Earl\u2019s tour, Academy and usable Type Chart; Violet Mart and Flower Mail",
+  "scope": "source geography, connected interiors, static interactions, six ambient residents, rival window encounter, Lyra/Elm introduction, all three starter choices, first Lyra battle, aide Potion and Mom's opening with weekday/DST setup, schedules and neighbor; Route 29, Cherrygrove services, Route 30 with Mulch, native encounters, Mystery Egg and Oak; Elm's disaster call, first rival battle, theft investigation, rival naming, Egg delivery, Joey, Mom's savings, the Route 29 catching tutorial and Tuscany; Route 31 with Wade, Finch, Mom\u2019s worried call and the Violet gate; Violet City first visit, Pok\u00e9mon Center, Earl\u2019s tour, Academy and usable Type Chart; Violet Mart and Flower Mail; Violet nickname house, Strawberry, evening Gramps and Kyle\u2019s source trade",
   "maps": {
     "NEW_BARK_TOWN": {
       "name": "NewBarkTown",
@@ -3700,6 +3700,20 @@
           "elevation": 0,
           "dest_map": "MAP_POLISHED_VIOLET_MART",
           "dest_warp_id": "1"
+        },
+        {
+          "x": 3,
+          "y": 15,
+          "elevation": 0,
+          "dest_map": "MAP_POLISHED_VIOLET_NICKNAME_SPEECH_HOUSE",
+          "dest_warp_id": "0"
+        },
+        {
+          "x": 21,
+          "y": 29,
+          "elevation": 0,
+          "dest_map": "MAP_POLISHED_VIOLET_ONIX_TRADE_HOUSE",
+          "dest_warp_id": "0"
         }
       ],
       "static_interactions": 8,
@@ -3709,7 +3723,6 @@
           "roof_group": 10,
           "palette": "VioletEcruteakPalette",
           "deferred": [
-            "houses",
             "Gym",
             "Sprout Tower",
             "Route 36 gate and adjoining routes"
@@ -4015,6 +4028,295 @@
           "mail": "source Flower Mail artwork with native stationery layout and Easy Chat"
         }
       ]
+    },
+    "VIOLET_NICKNAME_SPEECH_HOUSE": {
+      "name": "VioletNicknameSpeechHouse",
+      "width": 8,
+      "height": 8,
+      "tileset": "TraditionalHouse",
+      "source_blocks": "TraditionalHouse",
+      "used_metatiles": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        76,
+        77,
+        78,
+        79,
+        96,
+        97,
+        98,
+        99,
+        100,
+        101,
+        102,
+        103,
+        108,
+        109,
+        110,
+        111,
+        112,
+        113,
+        114,
+        115,
+        164,
+        165,
+        166,
+        167,
+        168,
+        169,
+        170,
+        171
+      ],
+      "warps": [
+        {
+          "x": 3,
+          "y": 7,
+          "elevation": 0,
+          "dest_map": "MAP_POLISHED_VIOLET_CITY",
+          "dest_warp_id": "5"
+        },
+        {
+          "x": 4,
+          "y": 7,
+          "elevation": 0,
+          "dest_map": "MAP_POLISHED_VIOLET_CITY",
+          "dest_warp_id": "5"
+        }
+      ],
+      "static_interactions": 2,
+      "residents": [
+        {
+          "local_id": "LOCALID_VIOLET_NICKNAME_TEACHER",
+          "source_sprite": "SPRITE_POKEFAN_F",
+          "source_palette": "RED",
+          "source_text": "VioletNicknameSpeechHouseTeacherText",
+          "source_movement": "SPRITEMOVEDATA_STANDING_RIGHT",
+          "source_time": "-1",
+          "event": {
+            "local_id": "LOCALID_VIOLET_NICKNAME_TEACHER",
+            "graphics_id": "OBJ_EVENT_GFX_POLISHED_POKEFAN",
+            "x": 2,
+            "y": 3,
+            "elevation": 3,
+            "movement_type": "MOVEMENT_TYPE_FACE_RIGHT",
+            "movement_range_x": 0,
+            "movement_range_y": 0,
+            "trainer_type": "TRAINER_TYPE_NONE",
+            "trainer_sight_or_berry_tree_id": "0",
+            "script": "PolishedVioletNicknameSpeechHouse_VioletNicknameSpeechHouseTeacherText",
+            "flag": "0"
+          }
+        },
+        {
+          "local_id": "LOCALID_VIOLET_NICKNAME_TWIN",
+          "source_sprite": "SPRITE_TWIN",
+          "source_palette": "GREEN",
+          "source_text": "VioletNicknameSpeechHouseLassText",
+          "source_movement": "SPRITEMOVEDATA_STANDING_UP",
+          "source_time": "-1",
+          "event": {
+            "local_id": "LOCALID_VIOLET_NICKNAME_TWIN",
+            "graphics_id": "OBJ_EVENT_GFX_POLISHED_TWIN",
+            "x": 6,
+            "y": 4,
+            "elevation": 3,
+            "movement_type": "MOVEMENT_TYPE_FACE_UP",
+            "movement_range_x": 0,
+            "movement_range_y": 0,
+            "trainer_type": "TRAINER_TYPE_NONE",
+            "trainer_sight_or_berry_tree_id": "0",
+            "script": "PolishedVioletNicknameSpeechHouse_VioletNicknameSpeechHouseLassText",
+            "flag": "0"
+          }
+        },
+        {
+          "local_id": "LOCALID_VIOLET_NICKNAME_GRAMPS",
+          "source_sprite": "SPRITE_GRAMPS",
+          "source_palette": "PURPLE",
+          "source_text": "VioletNicknameSpeechHouseGrampsText",
+          "source_movement": "SPRITEMOVEDATA_STANDING_UP",
+          "source_time": "(1 << EVE) | (1 << NITE)",
+          "event": {
+            "local_id": "LOCALID_VIOLET_NICKNAME_GRAMPS",
+            "graphics_id": "OBJ_EVENT_GFX_POLISHED_GRAMPS_PURPLE",
+            "x": 0,
+            "y": 2,
+            "elevation": 3,
+            "movement_type": "MOVEMENT_TYPE_FACE_UP",
+            "movement_range_x": 0,
+            "movement_range_y": 0,
+            "trainer_type": "TRAINER_TYPE_NONE",
+            "trainer_sight_or_berry_tree_id": "0",
+            "script": "PolishedVioletNicknameSpeechHouse_VioletNicknameSpeechHouseGrampsText",
+            "flag": "FLAG_TEMP_1"
+          }
+        }
+      ],
+      "story_encounters": [
+        {
+          "cry": "EEVEE",
+          "scheduled_resident": "GRAMPS, 17:00 through 04:59"
+        }
+      ]
+    },
+    "VIOLET_ONIX_TRADE_HOUSE": {
+      "name": "VioletOnixTradeHouse",
+      "width": 8,
+      "height": 8,
+      "tileset": "TraditionalHouse",
+      "source_blocks": "TraditionalHouse",
+      "used_metatiles": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        76,
+        77,
+        78,
+        79,
+        96,
+        97,
+        98,
+        99,
+        100,
+        101,
+        102,
+        103,
+        108,
+        109,
+        110,
+        111,
+        112,
+        113,
+        114,
+        115,
+        164,
+        165,
+        166,
+        167,
+        168,
+        169,
+        170,
+        171
+      ],
+      "warps": [
+        {
+          "x": 3,
+          "y": 7,
+          "elevation": 0,
+          "dest_map": "MAP_POLISHED_VIOLET_CITY",
+          "dest_warp_id": "6"
+        },
+        {
+          "x": 4,
+          "y": 7,
+          "elevation": 0,
+          "dest_map": "MAP_POLISHED_VIOLET_CITY",
+          "dest_warp_id": "6"
+        }
+      ],
+      "static_interactions": 2,
+      "residents": [
+        {
+          "local_id": "LOCALID_VIOLET_TRADE_POKEFAN",
+          "source_sprite": "SPRITE_POKEFAN_M",
+          "source_palette": "BROWN",
+          "source_text": "VioletKylesHousePokefanMText",
+          "source_movement": "SPRITEMOVEDATA_SPINRANDOM_SLOW",
+          "source_time": "-1",
+          "event": {
+            "local_id": "LOCALID_VIOLET_TRADE_POKEFAN",
+            "graphics_id": "OBJ_EVENT_GFX_POLISHED_POKEFAN_M_BROWN",
+            "x": 2,
+            "y": 3,
+            "elevation": 3,
+            "movement_type": "MOVEMENT_TYPE_LOOK_AROUND",
+            "movement_range_x": 0,
+            "movement_range_y": 0,
+            "trainer_type": "TRAINER_TYPE_NONE",
+            "trainer_sight_or_berry_tree_id": "0",
+            "script": "PolishedVioletOnixTradeHouse_VioletKylesHousePokefanMText",
+            "flag": "0"
+          }
+        }
+      ],
+      "story_encounters": [
+        {
+          "trade": "NPC_TRADE_KYLE",
+          "wanted": "POLIWAG",
+          "given": "VOLTORB",
+          "nickname": "Mimic",
+          "ot": "Kyle",
+          "id": 48926,
+          "ball": "PREMIER_BALL",
+          "item": "PERSIM_BERRY",
+          "ability": "AFTERMATH",
+          "nature": "HASTY",
+          "ivs": [
+            28,
+            28,
+            28,
+            28,
+            28,
+            28
+          ],
+          "level": "same as offered Pokemon",
+          "native_adaptations": [
+            "PC or party selection",
+            "Expansion moves, stats and trade animation"
+          ]
+        }
+      ]
     }
   },
   "layouts": [
@@ -4292,6 +4594,28 @@
       "border_filepath": "data/layouts/PolishedVioletMart/border.bin",
       "blockdata_filepath": "data/layouts/PolishedVioletMart/map.bin",
       "layout_version": "emerald"
+    },
+    {
+      "id": "LAYOUT_POLISHED_VIOLET_NICKNAME_SPEECH_HOUSE",
+      "name": "PolishedVioletNicknameSpeechHouse_Layout",
+      "width": 8,
+      "height": 8,
+      "primary_tileset": "gTileset_PolishedNewBarkTraditionalHousePrimary",
+      "secondary_tileset": "gTileset_PolishedNewBarkTraditionalHouseSecondary",
+      "border_filepath": "data/layouts/PolishedVioletNicknameSpeechHouse/border.bin",
+      "blockdata_filepath": "data/layouts/PolishedVioletNicknameSpeechHouse/map.bin",
+      "layout_version": "emerald"
+    },
+    {
+      "id": "LAYOUT_POLISHED_VIOLET_ONIX_TRADE_HOUSE",
+      "name": "PolishedVioletOnixTradeHouse_Layout",
+      "width": 8,
+      "height": 8,
+      "primary_tileset": "gTileset_PolishedNewBarkTraditionalHousePrimary",
+      "secondary_tileset": "gTileset_PolishedNewBarkTraditionalHouseSecondary",
+      "border_filepath": "data/layouts/PolishedVioletOnixTradeHouse/border.bin",
+      "blockdata_filepath": "data/layouts/PolishedVioletOnixTradeHouse/map.bin",
+      "layout_version": "emerald"
     }
   ],
   "output_sha256": {
@@ -4380,6 +4704,9 @@
     "graphics/mail/polished_flower/tiles.bin": "2ec9b3283c06b80f0e95ae0f331ad0b6c65aa7cf5c02965386874f9c6460abab",
     "graphics/mail/polished_flower/map.bin": "0f8122b2e0690bdd6d8db68a98f8d2d93090249dc2e92c18ba4ef0ce83b0d72b",
     "graphics/mail/polished_flower/palette.bin": "c8a3057bf8d1e8b2ff3f00c98120d7da1916f51a5554f93f4e2ec4bd55e053dd",
+    "src/data/polished_kyle_trade.h": "d87c12c7d8714515b964f239cd033002deecfdc38f97bea7deab0813c8e63732",
+    "graphics/object_events/polished_twin/walking.png": "febfaca176f1d30cf6dc3e8867863f70dc682d4956444cb87b099b4982238f9d",
+    "graphics/object_events/polished_eevee/walking.png": "59e2af69884fbeaa546cdcb609de3f8dc816617dbbf4656c8992faee79cac764",
     "graphics/trainers/front_pics/polished_rival.png": "14aa048e357549340e926f557c4c4737b45a7c4d51f6807ee7c74068f8814d10",
     "graphics/trainers/palettes/polished_rival.pal": "bbc303be54aea8bbd4c70bcacdbd205d922b345702d45a013bcc37fa824e95b6",
     "src/data/polished_return.party": "c3ff98fb424914ef7de50d2dcd587bdf514b7f88efc82a864d16e5fb2b2439a0",
@@ -4468,10 +4795,10 @@
     "data/layouts/PolishedRoute31VioletGate/border.bin": "58b6ce2870c231fbe07a763ac9c4dc612e669cfbebfb93760435a9dbbdced76e",
     "data/maps/PolishedRoute31VioletGate/map.json": "6435d938ee14b59cd211a9cc7fe87a7113db5f3aec9e13bf54a4899b6abfd07c",
     "data/maps/PolishedRoute31VioletGate/scripts.inc": "e2671c233b2951c52ade9c0efc1bb84d91d12b219f8ac98bbebcf749141d98dd",
-    "data/layouts/PolishedVioletCity/map.bin": "76fe06f121a27da70025d0a09d00b467471423995b9c9c2e88c8d00fa302305b",
+    "data/layouts/PolishedVioletCity/map.bin": "dad7ceac1d53acef87ae040d56f789ce9bce1cdc2e6b46c403eab75482b2873e",
     "data/layouts/PolishedVioletCity/border.bin": "310f01837605c39f0e0a084ab8e536b47e44c21cab74534066b2413ce33f2119",
-    "data/maps/PolishedVioletCity/map.json": "669d92f2d71c3c206545238d78e027f18c998fa6cbdd94c489eb961cbd3b8066",
-    "data/maps/PolishedVioletCity/scripts.inc": "d74532e97b2fabba270b8ad5a52e8a57216e4426b63b3fa175e6e9d1977c72f4",
+    "data/maps/PolishedVioletCity/map.json": "c4a2153d23d012ada81c20c88c4d6216efb1a93e64c4c3aa41df7ec5047c6066",
+    "data/maps/PolishedVioletCity/scripts.inc": "e6b030019abb318cb98e15f5a7f9d973ff306c592b5465e83344403be88b1ef5",
     "data/layouts/PolishedVioletPokeCenter1F/map.bin": "3cd23e389054c1e943d56dd23893e1b3978620d84b7a4fd66ed44dae1f5b99d4",
     "data/layouts/PolishedVioletPokeCenter1F/border.bin": "58b6ce2870c231fbe07a763ac9c4dc612e669cfbebfb93760435a9dbbdced76e",
     "data/maps/PolishedVioletPokeCenter1F/map.json": "65669606ccbf2b72c67e7f32ffdc866665ea020fc1cb2f6ba1429b46e4fbdbbd",
@@ -4484,6 +4811,14 @@
     "data/layouts/PolishedVioletMart/border.bin": "58b6ce2870c231fbe07a763ac9c4dc612e669cfbebfb93760435a9dbbdced76e",
     "data/maps/PolishedVioletMart/map.json": "6cba0bee348e9cdd56ed52b6413dd11912ceb1e8bc79cdd0821bdcf65d168e39",
     "data/maps/PolishedVioletMart/scripts.inc": "254cba09777e29e79afdd0db3734a4b7e6b166d4cc000f43a9b22920f727d6fa",
+    "data/layouts/PolishedVioletNicknameSpeechHouse/map.bin": "ea5b7b9b7239e1c1b156ef2817452e856f06d929010d8f3b3c3a490ec0c49ea2",
+    "data/layouts/PolishedVioletNicknameSpeechHouse/border.bin": "58b6ce2870c231fbe07a763ac9c4dc612e669cfbebfb93760435a9dbbdced76e",
+    "data/maps/PolishedVioletNicknameSpeechHouse/map.json": "1b7cfbd0c96d30f9c71e4eedf1d0ab9112aca44269217eb279c14cad9dbdb298",
+    "data/maps/PolishedVioletNicknameSpeechHouse/scripts.inc": "feb52f1555aff6d11b81bf53e40789ef221c0f8758a114b9b7629a6afba7c766",
+    "data/layouts/PolishedVioletOnixTradeHouse/map.bin": "ea5b7b9b7239e1c1b156ef2817452e856f06d929010d8f3b3c3a490ec0c49ea2",
+    "data/layouts/PolishedVioletOnixTradeHouse/border.bin": "58b6ce2870c231fbe07a763ac9c4dc612e669cfbebfb93760435a9dbbdced76e",
+    "data/maps/PolishedVioletOnixTradeHouse/map.json": "c11d61242bd790162041eb594117066e12337159e66f5fdf96a3e6f7e85909a9",
+    "data/maps/PolishedVioletOnixTradeHouse/scripts.inc": "3b92bbc9da6444be09957e3a3ea2614041aa364cbae61b1b28fee49d52061d67",
     "data/tilesets/primary/polished_new_bark_outdoor/tiles.bin": "4606596e49129db4f858005c54f71865f818549f252026016bec23bee8e89b45",
     "data/tilesets/primary/polished_new_bark_outdoor/palettes.bin": "fe14bfb5c6092799d53593ab4638bb4a3502ef83e72cf6de0aace0745c8694a8",
     "data/tilesets/primary/polished_new_bark_outdoor/metatiles.bin": "db29314040e9c515e27686a5e202bbf69030e5631d0efe24da69fbac66c739fa",
@@ -4516,6 +4851,14 @@
     "data/tilesets/secondary/polished_new_bark_gate/palettes.bin": "31e92357047703d92d502c2f0f60cc17f642e8d2e036c037559bca6c154c3e93",
     "data/tilesets/secondary/polished_new_bark_gate/metatiles.bin": "9f1dcbc35c350d6027f98be0f5c8b43b42ca52b7604459c0c42be3aa88913d47",
     "data/tilesets/secondary/polished_new_bark_gate/metatile_attributes.bin": "2ca4aef156cee0d1537ea735650ad6af7da58bf528dcf0dabdef9901c39dc4ed",
+    "data/tilesets/primary/polished_new_bark_traditionalhouse/tiles.bin": "6ec6309530e2c6f33c58581c4744f8ceaa1f8de1ad92c1acd0b66b351911e796",
+    "data/tilesets/primary/polished_new_bark_traditionalhouse/palettes.bin": "31e92357047703d92d502c2f0f60cc17f642e8d2e036c037559bca6c154c3e93",
+    "data/tilesets/primary/polished_new_bark_traditionalhouse/metatiles.bin": "0f6e743baa01f146dd9559f3a9cdc2277e477185d92d8eecaf091dee8e5133f6",
+    "data/tilesets/primary/polished_new_bark_traditionalhouse/metatile_attributes.bin": "70e28203c1e614335eefdb9197b3860035102c6263e147527cc1812cda8a80b0",
+    "data/tilesets/secondary/polished_new_bark_traditionalhouse/tiles.bin": "4fe7b59af6de3b665b67788cc2f99892ab827efae3a467342b3bb4e3bc8e5bfe",
+    "data/tilesets/secondary/polished_new_bark_traditionalhouse/palettes.bin": "31e92357047703d92d502c2f0f60cc17f642e8d2e036c037559bca6c154c3e93",
+    "data/tilesets/secondary/polished_new_bark_traditionalhouse/metatiles.bin": "9f1dcbc35c350d6027f98be0f5c8b43b42ca52b7604459c0c42be3aa88913d47",
+    "data/tilesets/secondary/polished_new_bark_traditionalhouse/metatile_attributes.bin": "2ca4aef156cee0d1537ea735650ad6af7da58bf528dcf0dabdef9901c39dc4ed",
     "data/tilesets/primary/polished_new_bark_mart/tiles.bin": "add5be0eefe828bfa70b7c2b8c86cd3b7897dddac572fa028f943e654753a817",
     "data/tilesets/primary/polished_new_bark_mart/palettes.bin": "7fc4dd4aa47fe070928369c88b097eeec7c53fa47b405a7d37e37d7c589f4c31",
     "data/tilesets/primary/polished_new_bark_mart/metatiles.bin": "22e0eab73d27f493037c5b462589d59559f8b900ecd5405dedb9dc921d7d0ae7",
@@ -4533,6 +4876,6 @@
     "data/tilesets/secondary/polished_new_bark_pokecenter/metatiles.bin": "9f1dcbc35c350d6027f98be0f5c8b43b42ca52b7604459c0c42be3aa88913d47",
     "data/tilesets/secondary/polished_new_bark_pokecenter/metatile_attributes.bin": "2ca4aef156cee0d1537ea735650ad6af7da58bf528dcf0dabdef9901c39dc4ed",
     "data/tilesets/primary/polished_violet_outdoor/tiles.bin": "fdc2c6d23b6868b84cbd3760221ad71c3f0ea023565674c40c560cc8919ef260",
-    "src/data/tilesets/polished_new_bark.h": "4e3934f3b88e784877712be3081f84ce1e6d7a29ad981a188c586b61f49f5b8b"
+    "src/data/tilesets/polished_new_bark.h": "0893350338f5555473f967b54fb8228b0eb38e216c69d677ca942d9a42fe0016"
   }
 }

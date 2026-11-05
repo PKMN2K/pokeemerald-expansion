@@ -225,6 +225,20 @@
       "elevation": 0,
       "dest_map": "MAP_POLISHED_VIOLET_MART",
       "dest_warp_id": "1"
+    },
+    {
+      "x": 3,
+      "y": 15,
+      "elevation": 0,
+      "dest_map": "MAP_POLISHED_VIOLET_NICKNAME_SPEECH_HOUSE",
+      "dest_warp_id": "0"
+    },
+    {
+      "x": 21,
+      "y": 29,
+      "elevation": 0,
+      "dest_map": "MAP_POLISHED_VIOLET_ONIX_TRADE_HOUSE",
+      "dest_warp_id": "0"
     }
   ],
   "coord_events": [],

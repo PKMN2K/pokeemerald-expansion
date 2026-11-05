@@ -97,6 +97,7 @@
 #define FLAG_POLISHED_READ_FALKNER_JOURNAL 0x4D5
 #define FLAG_POLISHED_EARL_IN_ACADEMY 0x4D6
 #define FLAG_POLISHED_READ_WALKER_JOURNAL 0x4D7
+#define FLAG_POLISHED_KYLE_TRADE 0x4D8
 
 #if IS_FRLG
 
@@ -1335,7 +1336,7 @@
 // Reserved for FLAG_POLISHED_READ_FALKNER_JOURNAL.
 // Reserved for FLAG_POLISHED_EARL_IN_ACADEMY.
 // Reserved for FLAG_POLISHED_READ_WALKER_JOURNAL.
-#define FLAG_UNUSED_0x4D8                                           0x4D8 // Unused Flag
+// Reserved for FLAG_POLISHED_KYLE_TRADE.
 #define FLAG_UNUSED_0x4D9                                           0x4D9 // Unused Flag
 #define FLAG_UNUSED_0x4DA                                           0x4DA // Unused Flag
 #define FLAG_UNUSED_0x4DB                                           0x4DB // Unused Flag

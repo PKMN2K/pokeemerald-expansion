@@ -162,6 +162,7 @@ struct InGameTrade {
     u8 otGender;
     u8 sheen;
     enum Species requestedSpecies;
+    enum Item ball; // Zero retains the native Poke Ball for existing trades.
 };
 
 static EWRAM_DATA u8 *sMenuTextTileBuffer = NULL;
@@ -4554,7 +4555,12 @@ static void BufferInGameTradeMonName(void)
 {
     u8 nickname[max(32, POKEMON_NAME_BUFFER_SIZE)];
     const struct InGameTrade *inGameTrade = &sIngameTrades[gSpecialVar_0x8005];
-    GetMonData(&gParties[B_TRAINER_PLAYER][gSpecialVar_0x8005], MON_DATA_NICKNAME, nickname);
+    // The trade ID is independent of the offered party slot and can exceed
+    // PARTY_SIZE. PC trades keep the received mon in this staging slot.
+    struct Pokemon *received = gSpecialVar_0x8004 == PC_MON_CHOSEN
+        ? &gParties[B_TRAINER_OPPONENT_A][TRADEMON_FROM_PC]
+        : &gParties[B_TRAINER_PLAYER][gSpecialVar_0x8004];
+    GetMonData(received, MON_DATA_NICKNAME, nickname);
     StringCopy_Nickname(gStringVar1, nickname);
     StringCopy(gStringVar2, GetSpeciesName(inGameTrade->species));
 }
@@ -4590,6 +4596,8 @@ static void CreateInGameTradePokemonInternal(u8 whichPlayerMon, u8 whichInGameTr
     SetMonData(pokemon, MON_DATA_TOUGH, &inGameTrade->conditions[4]);
     SetMonData(pokemon, MON_DATA_SHEEN, &inGameTrade->sheen);
     SetMonData(pokemon, MON_DATA_MET_LOCATION, &metLocation);
+    if (inGameTrade->ball != ITEM_NONE)
+        SetMonData(pokemon, MON_DATA_POKEBALL, &inGameTrade->ball);
 
     mailNum = 0;
     if (inGameTrade->heldItem != ITEM_NONE)

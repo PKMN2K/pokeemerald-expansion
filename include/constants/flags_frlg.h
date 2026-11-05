@@ -1238,7 +1238,7 @@
 // Reserved for FLAG_POLISHED_READ_FALKNER_JOURNAL.
 // Reserved for FLAG_POLISHED_EARL_IN_ACADEMY.
 // Reserved for FLAG_POLISHED_READ_WALKER_JOURNAL.
-#define FLAG_0x4D8               0x4D8
+// Reserved for FLAG_POLISHED_KYLE_TRADE.
 #define FLAG_0x4D9               0x4D9
 #define FLAG_0x4DA               0x4DA
 #define FLAG_0x4DB               0x4DB

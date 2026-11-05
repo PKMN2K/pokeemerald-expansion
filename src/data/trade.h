@@ -968,6 +968,7 @@ static const union AffineAnimCmd *const sAffineAnims_CrossingMonPics[] =
 
 static const struct InGameTrade sIngameTrades[] =
 {
+    #include "polished_kyle_trade.h"
     [INGAME_TRADE_SEEDOT] =
     {
         .nickname = _("DOTS"),

@@ -678,9 +678,28 @@ every stock entry, cancellation, insufficient funds, selling, mail reading
 and cartridge Save/Continue. Native tests cover held mail, the PC mailbox,
 full item pockets and existing warp identities.
 
-The campaign now covers 25 source maps and 60 reciprocal door/stair events,
-plus the two garden maps. Violet's two houses are the next local stops.
-Sprout Tower, Falkner's Gym and the post-badge Togepi Egg follow.
+### Violet's nickname and trade houses
+
+The houses at (3,15) and (21,29) use the source Traditional House tiles,
+layout, furniture and residents. Strawberry wanders and plays Eevee's cry.
+Gramps appears from 17:00 through 04:59, including when continuing a save;
+ordinary menu returns retain the schedule established for the current visit.
+Both exit tiles in each house return to its original city doorway. Existing
+map, layout and doorway IDs remain unchanged, and city loading refreshes the
+two new entrances for earlier saves.
+
+The source map is named `VioletOnixTradeHouse`, but its actual Kyle trade in
+the pinned Polished Crystal revision is **Poliwag for Voltorb**, nicknamed
+Mimic. It keeps Kyle's trainer ID 48926, Hasty nature, Aftermath hidden
+ability, Premier Ball and Persim Berry. All six source DVs of 14 become IVs
+of 28, preserving their base stat contribution. Mimic matches the offered
+Poliwag's level. The trade uses Expansion's party/PC selector, moves, stat
+calculation and animation. Its persistent completion flag prevents a second
+trade and restores Kyle's source follow-up dialogue after Save/Continue.
+
+The campaign now covers 27 source maps and 66 reciprocal door/stair events,
+plus the two garden maps. Sprout Tower, Falkner's Gym and the post-badge
+Togepi Egg follow.
 
 The playable visual slice and dormant Headbutt encounter selection are complete
 parts of the port. **The whole Polished Crystal migration is not complete.**
