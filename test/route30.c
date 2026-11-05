@@ -14,7 +14,10 @@ TEST("Route 30 fruit trees keep separate saved harvests and consume Mulch only o
 {
     struct Time clock = gSaveBlock2Ptr->localTimeOffset;
     struct ItemSlot berries[BAG_BERRIES_COUNT], items[BAG_ITEMS_COUNT];
-    const u16 vars[] = {VAR_POLISHED_ROUTE29_FRUIT_DAY, VAR_POLISHED_ROUTE30_ORAN_DAY, VAR_POLISHED_ROUTE30_PECHA_DAY, VAR_POLISHED_ROUTE31_PERSIM_DAY};
+    const u16 vars[] = {
+        VAR_POLISHED_ROUTE29_FRUIT_DAY, VAR_POLISHED_ROUTE30_ORAN_DAY, VAR_POLISHED_ROUTE30_PECHA_DAY,
+        VAR_POLISHED_ROUTE31_PERSIM_DAY, VAR_POLISHED_VIOLET_CHERI_DAY,
+    };
     u16 saved[ARRAY_COUNT(vars)], selected = gSpecialVar_0x8005;
     u32 i;
     memcpy(berries, gSaveBlock1Ptr->bag.berries, sizeof(berries));
@@ -64,6 +67,16 @@ TEST("Route 30 fruit trees keep separate saved harvests and consume Mulch only o
     EXPECT(PolishedFruitAvailable());
     PolishedFruitPick();
     EXPECT(gSpecialVar_Result >= 1 && gSpecialVar_Result <= 3);
+    EXPECT(!PolishedFruitAvailable());
+    gSpecialVar_0x8005 = 4;
+    PolishedFruitPrepare();
+    EXPECT_EQ(gSpecialVar_0x8006, ITEM_CHERI_BERRY);
+    EXPECT(PolishedFruitAvailable());
+    PolishedFruitPick();
+    EXPECT(CheckBagHasItem(ITEM_CHERI_BERRY, 1));
+    EXPECT_EQ(VarGet(vars[4]), 12);
+    EXPECT_EQ(VarGet(vars[3]), 12);
+    EXPECT_EQ(VarGet(vars[1]), 11);
     EXPECT(!PolishedFruitAvailable());
     gSpecialVar_0x8005 = ARRAY_COUNT(vars);
     PolishedFruitPick();
