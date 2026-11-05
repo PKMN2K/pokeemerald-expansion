@@ -1,0 +1,63 @@
+/* Generated from Polished Crystal v3.2.3. */
+
+=== TRAINER_POLISHED_WADE ===
+Name: Wade
+Class: Bug Catcher
+Pic: Polished Bug Catcher
+Gender: Male
+Music: Male
+Double Battle: No
+
+Caterpie (M)
+Level: 2
+IVs: 12 HP / 12 Atk / 12 Def / 12 SpA / 12 SpD / 12 Spe
+- Tackle
+- String Shot
+
+Caterpie (M)
+Level: 2
+IVs: 12 HP / 12 Atk / 12 Def / 12 SpA / 12 SpD / 12 Spe
+- Tackle
+- String Shot
+
+Weedle (M)
+Level: 3
+IVs: 12 HP / 12 Atk / 12 Def / 12 SpA / 12 SpD / 12 Spe
+- Poison Sting
+- String Shot
+
+Caterpie (M)
+Level: 2
+IVs: 12 HP / 12 Atk / 12 Def / 12 SpA / 12 SpD / 12 Spe
+- Tackle
+- String Shot
+
+=== TRAINER_POLISHED_FINCH ===
+Name: Finch
+Class: Cooltrainer
+Pic: Polished Cooltrainer M
+Gender: Male
+Music: Male
+Double Battle: No
+
+Geodude (M) @ Air Balloon
+Level: 8
+Ability: Sturdy
+Nature: Relaxed
+EVs: 12 HP
+IVs: 26 HP / 26 Atk / 26 Def / 26 SpA / 26 SpD / 26 Spe
+- MOVE_TACKLE
+- MOVE_DEFENSE_CURL
+- MOVE_MUD_SLAP
+- MOVE_ROLLOUT
+
+Mareep (M) @ Air Balloon
+Level: 9
+Ability: Static
+Nature: Rash
+EVs: 12 HP
+IVs: 26 HP / 26 Atk / 26 Def / 26 SpA / 26 SpD / 26 Spe
+- MOVE_TACKLE
+- MOVE_THUNDER_WAVE
+- MOVE_THUNDER_SHOCK
+- MOVE_MUD_SLAP

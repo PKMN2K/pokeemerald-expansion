@@ -90,17 +90,13 @@ def trainers(files):
     return code
 
 
-def wild_entries(files):
+def wild_entries(files, route=30):
     # Both routes have the same seven-slot weights and identical final slots.
-    adapted=dict(files)
-    adapted["data/wild/johto_grass.asm"] = re.sub(rb"def_grass_wildmons ROUTE_29\n.*?end_grass_wildmons",b"",files["data/wild/johto_grass.asm"],flags=re.S).replace(b"def_grass_wildmons ROUTE_30\n",b"def_grass_wildmons ROUTE_29\n")
-    entries=route29_wild(adapted)
-    water=re.search(r"def_water_wildmons ROUTE_30\n(.*?)end_water_wildmons",files["data/wild/johto_water.asm"].decode(),re.S)[1]
+    entries=route29_wild(files, route)
+    water=re.search(rf"def_water_wildmons ROUTE_{route}\n(.*?)end_water_wildmons",files["data/wild/johto_water.asm"].decode(),re.S)[1]
     assert "2 percent" in water
     slots=[{"min_level":int(lv),"max_level":int(lv),"species":"SPECIES_"+s} for lv,s in re.findall(r"wildmon (\d+), (\w+)",water)]
     for entry in entries:
-        entry["map"]="MAP_POLISHED_ROUTE_30"
-        entry["base_label"]=entry["base_label"].replace("Route29","Route30")
         entry["water_mons"]={"encounter_rate":4,"mons":[slots[i] for i in (0,1,2,2,2)]}
     return entries
 
@@ -130,7 +126,8 @@ def events(name, script, header, files, text, define):
         return "",code,{"gift":"Mulch, committed only after Bag insertion; replenishes one picked tree"}
     if name=="MrPokemonsHouse":
         return mr_pokemon(script,header,text,define)
-    header["connections"]=[{"map":"MAP_POLISHED_CHERRYGROVE_CITY","offset":-10,"direction":"down"}]
+    header["connections"]=[{"map":"MAP_POLISHED_CHERRYGROVE_CITY","offset":-10,"direction":"down"},
+                           {"map":"MAP_POLISHED_ROUTE_31","offset":-20,"direction":"up"}]
     code=""
     for local,gfx,x,y,label,facing in (
         ("JOEY","YOUNGSTER_BLUE",5,26,"Joey","UP"),
@@ -206,7 +203,7 @@ def events(name, script, header, files, text, define):
         code+=define(p+"_"+who+"After",plain_text(script,"GenericTrainer"+source,text))
     return (f"\tmap_script MAP_SCRIPT_ON_LOAD, {p}_Setup\n\tmap_script MAP_SCRIPT_ON_RETURN_TO_FIELD, {p}_Setup\n",code,
         {"first_visit":"Joey's battle barrier, original residents, Mikey/Don, six signs, Antidote, hidden Potion, Cut and two daily fruit trees",
-         "deferred":["Route31 north connection","Joey phone registration and rematches","fishing","source music"]})
+         "deferred":["Joey phone registration and rematches","fishing","source music"]})
 
 
 def mr_pokemon(script,header,text,define):

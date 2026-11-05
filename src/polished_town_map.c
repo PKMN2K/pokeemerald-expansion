@@ -128,8 +128,11 @@ void PolishedTownMapInit(MainCallback callback)
         sJohtoMap->location = 1;
     else if (gSaveBlock1Ptr->location.mapNum == MAP_NUM(MAP_POLISHED_ROUTE_29_46_GATE))
         sJohtoMap->location = 1;
+    else if (gSaveBlock1Ptr->location.mapNum == MAP_NUM(MAP_POLISHED_ROUTE_31)
+          || gSaveBlock1Ptr->location.mapNum == MAP_NUM(MAP_POLISHED_ROUTE_31_VIOLET_GATE))
+        sJohtoMap->location = 5;
     else if (gSaveBlock1Ptr->location.mapNum >= MAP_NUM(MAP_POLISHED_ROUTE_30))
-        sJohtoMap->location = 3;
+        sJohtoMap->location = 4;
     else if (gSaveBlock1Ptr->location.mapNum >= MAP_NUM(MAP_POLISHED_CHERRYGROVE_CITY))
         sJohtoMap->location = 2;
     sJohtoMap->selected = sJohtoMap->location;

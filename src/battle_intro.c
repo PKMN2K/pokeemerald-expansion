@@ -1,4 +1,5 @@
 #include "global.h"
+#include "data.h"
 #include "battle.h"
 #include "battle_anim.h"
 #include "battle_environment.h"
@@ -28,7 +29,7 @@ void HandleIntroSlide(u8 environment)
 {
     u8 taskId;
 
-    if ((gBattleTypeFlags & BATTLE_TYPE_INGAME_PARTNER) && gPartnerTrainerId < TRAINER_PARTNER(PARTNER_NONE))
+    if ((gBattleTypeFlags & BATTLE_TYPE_INGAME_PARTNER) && IsRegularTrainerId(gPartnerTrainerId))
     {
         taskId = CreateTask(BattleIntroSlidePartner, 0);
     }

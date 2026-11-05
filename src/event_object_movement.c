@@ -9886,7 +9886,10 @@ enum Direction GetLedgeJumpDirection(s16 x, s16 y, enum Direction direction)
         index -= DIR_EAST;
 
     index--;
-    if (gMapHeader.mapLayoutId == LAYOUT_POLISHED_ROUTE_29 || gMapHeader.mapLayoutId == LAYOUT_POLISHED_CHERRYGROVE_CITY || gMapHeader.mapLayoutId == LAYOUT_POLISHED_ROUTE_30)
+    if (gMapHeader.mapLayoutId == LAYOUT_POLISHED_ROUTE_29
+     || gMapHeader.mapLayoutId == LAYOUT_POLISHED_CHERRYGROVE_CITY
+     || gMapHeader.mapLayoutId == LAYOUT_POLISHED_ROUTE_30
+     || gMapHeader.mapLayoutId == LAYOUT_POLISHED_ROUTE_31)
     {
         s16 originX = x, originY = y;
         s16 landingX = x, landingY = y;

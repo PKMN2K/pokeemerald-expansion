@@ -2240,8 +2240,8 @@ static void ParseObjectEventScript(const u8 *script)
         return;
     sDebugMenuListData->data[0] = TRAINER_BATTLE_PARAM.opponentA;
     sDebugMenuListData->data[2] = TRAINER_BATTLE_PARAM.opponentB;
-    if (gPartnerTrainerId)
-        sDebugMenuListData->data[4] = gPartnerTrainerId - MAX_TRAINERS_COUNT;
+    if (IsPartnerTrainerId(gPartnerTrainerId))
+        sDebugMenuListData->data[4] = GetPartnerIdFromTrainerId(gPartnerTrainerId);
     InitTrainerBattleParameter();
     gPartnerTrainerId = 0;
 }
@@ -2435,7 +2435,7 @@ static void DebugAction_Trainers_SetRematch(u8 taskId)
 
     if (rematchId == -1)
     {
-        FlagToggle(TRAINER_FLAGS_START + sDebugMenuListData->data[0]);
+        FlagToggle(GetTrainerFlagId(sDebugMenuListData->data[0]));
         return;
     }
 
@@ -2446,7 +2446,7 @@ static void DebugAction_Trainers_SetRematch(u8 taskId)
 
         if (!HasTrainerBeenFought(gRematchTable[rematchId].trainerIds[i]))
         {
-            FlagToggle(TRAINER_FLAGS_START + gRematchTable[rematchId].trainerIds[i]);
+            FlagToggle(GetTrainerFlagId(gRematchTable[rematchId].trainerIds[i]));
             return;
         }
     }
@@ -2456,7 +2456,7 @@ static void DebugAction_Trainers_SetRematch(u8 taskId)
         if (gRematchTable[rematchId].trainerIds[i] == 0)
             break;
 
-        FlagToggle(TRAINER_FLAGS_START + gRematchTable[rematchId].trainerIds[i]);
+        FlagToggle(GetTrainerFlagId(gRematchTable[rematchId].trainerIds[i]));
     }
 }
 

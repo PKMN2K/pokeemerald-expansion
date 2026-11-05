@@ -864,18 +864,17 @@
 #define TRAINER_POLISHED_LYRA_CYNDAQUIL      856
 #define TRAINER_POLISHED_LYRA_TOTODILE       857
 
-// NOTE: Because each Trainer uses a flag to determine when they are defeated, all Emerald trainer slots are allocated; adding trainers requires a reviewed flag allocation
-//       More space can be made by shifting flags around in constants/flags.h or changing how trainer flags are handled
-//       MAX_TRAINERS_COUNT can be increased but will take up additional saveblock space
-
 #define TRAINER_POLISHED_MIKEY 858
 #define TRAINER_POLISHED_DON 859
 #define TRAINER_POLISHED_RIVAL_CHIKORITA 860
 #define TRAINER_POLISHED_RIVAL_CYNDAQUIL 861
 #define TRAINER_POLISHED_RIVAL_TOTODILE 862
 #define TRAINER_POLISHED_JOEY 863
-#define TRAINERS_COUNT_EMERALD     864
+// Keep the save flag range and existing battle partner IDs (864/865) stable.
 #define MAX_TRAINERS_COUNT_EMERALD 864
+#define TRAINER_POLISHED_WADE (MAX_TRAINERS_COUNT_EMERALD + PARTNER_COUNT)
+#define TRAINER_POLISHED_FINCH (TRAINER_POLISHED_WADE + 1)
+#define TRAINERS_COUNT_EMERALD (TRAINER_POLISHED_FINCH + 1)
 
 #if IS_FRLG
 #define TRAINERS_COUNT                      TRAINERS_COUNT_FRLG

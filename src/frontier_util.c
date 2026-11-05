@@ -2749,6 +2749,9 @@ void ClearEnemyPartyAfterChallenge()
 
 bool8 IsFrontierTrainerFemale(u16 trainerId)
 {
+    if (IsExtendedTrainerId(trainerId))
+        return GetTrainerStructFromId(trainerId)->gender == FEMALE;
+
     u32 i;
     u8 facilityClass;
 
@@ -3029,6 +3032,9 @@ u16 GetBattleFacilityTrainerGfxId(u16 trainerId)
 
 u8 GetFrontierTrainerFrontSpriteId(u16 trainerId)
 {
+    if (IsExtendedTrainerId(trainerId))
+        return GetTrainerPicFromId(trainerId);
+
     SetFacilityPtrsGetLevel();
 
 #if FREE_BATTLE_TOWER_E_READER == FALSE
@@ -3065,6 +3071,9 @@ u8 GetFrontierTrainerFrontSpriteId(u16 trainerId)
 
 enum TrainerClassID GetFrontierOpponentClass(u16 trainerId)
 {
+    if (IsExtendedTrainerId(trainerId))
+        return GetTrainerClassFromId(trainerId);
+
     u8 trainerClass = 0;
     enum DifficultyLevel difficulty = GetBattlePartnerDifficultyLevel(trainerId);
     SetFacilityPtrsGetLevel();
@@ -3081,7 +3090,7 @@ enum TrainerClassID GetFrontierOpponentClass(u16 trainerId)
     {
         return GetFrontierBrainTrainerClass();
     }
-    else if (trainerId > TRAINER_PARTNER(PARTNER_NONE))
+    else if (IsPartnerTrainerId(trainerId))
     {
         trainerClass = gBattlePartners[difficulty][trainerId - TRAINER_PARTNER(PARTNER_NONE)].trainerClass;
     }
@@ -3152,6 +3161,12 @@ u8 GetFrontierTrainerFacilityClass(u16 trainerId)
 
 void GetFrontierTrainerName(u8 *dst, u16 trainerId)
 {
+    if (IsExtendedTrainerId(trainerId))
+        {
+        StringCopy(dst, GetTrainerNameFromId(trainerId));
+        return;
+    }
+
     s32 i = 0;
     enum DifficultyLevel difficulty = GetBattlePartnerDifficultyLevel(trainerId);
     SetFacilityPtrsGetLevel();
@@ -3168,7 +3183,7 @@ void GetFrontierTrainerName(u8 *dst, u16 trainerId)
         CopyFrontierBrainTrainerName(dst);
         return;
     }
-    else if (trainerId > TRAINER_PARTNER(PARTNER_NONE))
+    else if (IsPartnerTrainerId(trainerId))
     {
         for (i = 0; gBattlePartners[difficulty][trainerId - TRAINER_PARTNER(PARTNER_NONE)].trainerName[i] != EOS; i++)
             dst[i] = gBattlePartners[difficulty][trainerId - TRAINER_PARTNER(PARTNER_NONE)].trainerName[i];

@@ -259,3 +259,14 @@ and ID audit and `make check TESTS=Johto` for native transfer and prize limits.
 `test_post_egg_emulator.py` runs from the existing campaign after Elm receives
 the Egg. It covers both tutorial rows and answers, transfers through the native
 amount picker, a real trainer payout, clock safeguards, and Tuscany's saved gift.
+
+
+## Route 31 and the Violet gate
+
+`polished_route31.py` generates the two maps, Finch's artwork, both parties,
+the worried call and route interactions. Use `build_new_bark.py --check` and
+`test_route31.py` for geography, encounter weights and flag allocations.
+`make check TESTS='Route 31'` exercises the extended trainer flags and Finch's
+badge levels. The mGBA campaign walks north after Joey, completes all four
+prerequisite battles, tests the reward across Save/Continue, visits both
+rows of the western gate and returns to Route 30.

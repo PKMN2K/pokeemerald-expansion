@@ -58,7 +58,7 @@ def finish_wild(game, observed, label):
 
 def route_walk(game, data, goal, observed, battle_handler=finish_wild):
     width, height = data["width"], data["height"]
-    stem = "outdoor" if data["name"] in ("PolishedRoute29", "PolishedRoute30") else "gate"
+    stem = "outdoor" if data["name"] in ("PolishedRoute29", "PolishedRoute30", "PolishedRoute31") else "gate"
     attr = b"".join((ROOT / f"data/tilesets/{side}/polished_new_bark_{stem}/metatile_attributes.bin").read_bytes()
                     for side in ("primary", "secondary"))
     attrs = struct.unpack("<1024H", attr)

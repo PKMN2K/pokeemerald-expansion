@@ -217,7 +217,7 @@ static void RecordedPartnerHandleDrawTrainerPic(enum BattlerId battler)
 
     enum DifficultyLevel difficulty = GetBattlePartnerDifficultyLevel(gPartnerTrainerId);
 
-    if (gPartnerTrainerId > TRAINER_PARTNER(PARTNER_NONE))
+    if (IsPartnerTrainerId(gPartnerTrainerId))
     {
         trainerPicId = gBattlePartners[difficulty][gPartnerTrainerId - TRAINER_PARTNER(PARTNER_NONE)].trainerPic;
         xPos = 90;
@@ -237,7 +237,7 @@ static void RecordedPartnerHandleDrawTrainerPic(enum BattlerId battler)
     }
 
     // Use back pic only if the partner Steven or is custom.
-    if (gPartnerTrainerId > TRAINER_PARTNER(PARTNER_NONE))
+    if (IsPartnerTrainerId(gPartnerTrainerId))
         isFrontPic = FALSE;
     else
         isFrontPic = TRUE;
@@ -290,7 +290,7 @@ static void RecordedPartnerHandleIntroTrainerBallThrow(enum BattlerId battler)
     const u16 *trainerPal;
     enum DifficultyLevel difficulty = GetBattlePartnerDifficultyLevel(gPartnerTrainerId);
 
-    if (gPartnerTrainerId > TRAINER_PARTNER(PARTNER_NONE))
+    if (IsPartnerTrainerId(gPartnerTrainerId))
         trainerPal = GetTrainerBackPicPalette(gBattlePartners[difficulty][gPartnerTrainerId - TRAINER_PARTNER(PARTNER_NONE)].trainerPic);
     else if (IsAiVsAiBattle())
         trainerPal = GetTrainerFrontPicPalette(GetTrainerPicFromId(gPartnerTrainerId));

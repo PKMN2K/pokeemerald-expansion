@@ -726,6 +726,51 @@
       "path": "gfx/battle/lyra_back.png",
       "fixture": "gfx__battle__lyra_back.png.b64",
       "git_blob_sha1": "a77248da6541eba5f13c2fe3edd08e48557805d4"
+    },
+    {
+      "path": "maps/Route31.ablk",
+      "fixture": "maps__Route31.ablk.b64",
+      "git_blob_sha1": "509c65654b16c7eb365532e2a25d80a230e44db0"
+    },
+    {
+      "path": "maps/Route31.asm",
+      "fixture": "maps__Route31.asm.b64",
+      "git_blob_sha1": "48d613d2edb14632a033fb4f7da529d23faa4af9"
+    },
+    {
+      "path": "maps/Route31VioletGate.asm",
+      "fixture": "maps__Route31VioletGate.asm.b64",
+      "git_blob_sha1": "7c448b161b57fbb6dc7ce208533363ae8c260176"
+    },
+    {
+      "path": "maps/EastWestGate.ablk",
+      "fixture": "maps__EastWestGate.ablk.b64",
+      "git_blob_sha1": "9a2cb756ef729cd2e3a579262adebde7a224f63c"
+    },
+    {
+      "path": "gfx/sprites/ace_trainer_m.png",
+      "fixture": "gfx__sprites__ace_trainer_m.png.b64",
+      "git_blob_sha1": "392adf5c357c24a40dd05c80a852de53f66e14b1"
+    },
+    {
+      "path": "gfx/trainers/cooltrainer_m.png",
+      "fixture": "gfx__trainers__cooltrainer_m.png.b64",
+      "git_blob_sha1": "61082536cd694a20341e89bceb5300a52585622c"
+    },
+    {
+      "path": "gfx/trainers/cooltrainer_m.pal",
+      "fixture": "gfx__trainers__cooltrainer_m.pal.b64",
+      "git_blob_sha1": "bdeefabf85dc7fcfa23ed1e190f73018583388fa"
+    },
+    {
+      "path": "engine/phone/scripts/mom.asm",
+      "fixture": "engine__phone__scripts__mom.asm.b64",
+      "git_blob_sha1": "916433c94c891a0b339d5daaa47c3c658a730305"
+    },
+    {
+      "path": "data/phone/text/mom.asm",
+      "fixture": "data__phone__text__mom.asm.b64",
+      "git_blob_sha1": "ed1083047b5ee16d98b066392068a6f31c97d7d4"
     }
   ]
 }

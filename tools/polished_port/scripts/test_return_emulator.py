@@ -40,12 +40,12 @@ def rival_name(game):
     return game.read(game.u32(game.sym['gSaveBlock2Ptr'])+constants()['name'],8).split(b'\xff',1)[0]
 
 
-def battle(game, label, expected, lose=False, portrait=False):
+def battle(game, label, expected, lose=False, portrait=False, iv=30, hp_ev=0):
     observed, portrait_seen = None, False
     switches = status_turns = 0
     for _ in range(3000):
         if portrait and not portrait_seen and observed is None:
-            portrait_seen = check_portrait(game, 'return-'+label, 'rival1')
+            portrait_seen = check_portrait(game, 'return-'+label, 'rival1' if portrait is True else portrait)
         if task_active(game,'Task_HandleChooseMonInput'):
             healthy = [i for i,m in enumerate(party(game,details=True)) if m['hp']]
             assert healthy
@@ -58,7 +58,7 @@ def battle(game, label, expected, lose=False, portrait=False):
             if observed is None:
                 observed = party(game,enemy=True,details=True)
                 assert [(m['species'],m['level'],m['item'],m['moves']) for m in observed] == expected, observed
-                assert all(m['ivs']==[30]*6 and m['evs']==[0]*6 for m in observed),observed
+                assert all(m['ivs']==[iv]*6 and m['evs']==[hp_ev,0,0,0,0,0] for m in observed),observed
                 game.screenshot('return-'+label+'-first-turn')
             if lose and sum(bool(m['hp']) for m in party(game,details=True))>1:
                 choose_cell(game,'gActionSelectionCursor',2)
@@ -254,6 +254,9 @@ def check_return(game,city,checks):
     assert not task_active(game,'Task_BattleStart') and not script_active(game)
     game.screenshot('return-joey-defeated')
     checks.append('Delivering the Egg removes Joey/Pidgey/Rattata staging and activates the source Lv5 Joey battle; victory persists through Save/Continue')
+    from test_route31_emulator import check_route31
+    game.command('save '+str(game.output/'route31-start.state'))
+    check_route31(game, route, checks)
     for species in ('Totodile','Chikorita'):
         game.command('load '+str(game.output/('return-starter-'+species.lower()+'.state')))
         game.frames(2);game.set_hour(10)

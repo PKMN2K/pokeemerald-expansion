@@ -170,7 +170,7 @@
 #define VAR_0x409A                 0x409A
 // Reserved for VAR_POLISHED_MOM_BALANCE_HI
 #define VAR_0x409C                 0x409C
-#define VAR_0x409D                 0x409D
+// Reserved for VAR_POLISHED_EARNED_BADGES.
 #define VAR_0x409E                 0x409E
 #define VAR_0x409F                 0x409F
 #define VAR_0x40A0                 0x40A0
@@ -267,7 +267,7 @@
 // Reserved by VAR_POLISHED_ROUTE30_PECHA_DAY in vars.h.
 // Reserved by VAR_POLISHED_MR_POKEMON_SCENE in vars.h.
 // Reserved by VAR_POLISHED_ERRAND_STATE in vars.h.
-#define VAR_0x40FF                 0x40FF
+// Reserved for VAR_POLISHED_ROUTE31_PERSIM_DAY.
 
 #define VARS_END_FRLG              0x40FF
 #define VARS_COUNT_FRLG            (VARS_END_FRLG - VARS_START_FRLG + 1)

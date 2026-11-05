@@ -579,8 +579,39 @@ first visit, tutorial result and Tuscany events. These assignments use existing
 save space. The source fixture audit checks both movement paths, portrait pixels
 and allocations. The emulator campaign checks actual deposits and withdrawals,
 Joey's prize, Lyra's accepted/declined branches from both rows, party and Ball
-preservation, Tuesday's gift, and native Save/Continue. Route 31 toward Violet
-City is the next map phase and requires room for additional trainer IDs.
+preservation, Tuesday's gift, and native Save/Continue.
+
+### Route 31 and the Violet gate
+
+Walk north from Route 30 after returning the Mystery Egg. Route 31 uses the
+original 44×18 layout, group 26 outdoor colors, standing-tile ledges, and the
+morning, day and night grass and pond encounter tables. The eastern entrance
+to the gate has two working rows. The gate's western doors and the Dark Cave
+entrance stay closed until their destinations are ported.
+
+The route has its Potion, Poké Ball, both Cut trees, daily Persim tree, three
+signs and two residents. If the player left home without opening the bank,
+Mom calls on arrival and offers to save prize money. Either answer opens the
+account and persists. The sleepy man's later mail exchange needs Goldenrod.
+Wade's phone registration and rematches await the Pokégear phone interface.
+
+Bug Catcher Wade uses his four source Pokémon. After Joey, Mikey, Don and
+Wade have all been defeated, Finch offers a battle. His Geodude and Mareep
+each hold an Air Balloon and use their source moves, natures, abilities and
+stat investments. Their starting levels are 8 and 9. Badge-based levels feed
+team creation, the battle transition and the prize calculation. A win grants
+one Air Balloon. A full pocket leaves the reward available on the next visit.
+
+Emerald's original trainer flags end at 0x85F. The two new trainers use
+IDs 866/867 and independent saved bits 0x4CC/0x4CD. The partner IDs between
+Joey and Wade remain available to older recorded battles. Item, obstacle,
+reward and introduction flags occupy the other reserved slots in 0x4C7–0x4CE.
+The Persim harvest uses var 0x40FF. Var 0x409D stores the 16 earned Johto
+and Kanto badges, separately from the demo's starting Surf permission. Older
+cartridge saves enter Route 31 with zero earned badges.
+
+The campaign now covers 21 source maps and 47 reciprocal door/stair events,
+plus the two garden maps. Violet City is the next campaign destination.
 
 The playable visual slice and dormant Headbutt encounter selection are complete
 parts of the port. **The whole Polished Crystal migration is not complete.**

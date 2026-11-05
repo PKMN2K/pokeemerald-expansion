@@ -244,6 +244,19 @@ static inline bool8 IsPartnerTrainerId(u16 trainerId)
     return FALSE;
 }
 
+static inline bool32 IsExtendedTrainerId(u16 trainerId)
+{
+    return trainerId >= TRAINER_PARTNER(PARTNER_COUNT) && trainerId < TRAINERS_COUNT;
+}
+
+// An ordinary trainer can serve as an in-game partner as well. Emerald's
+// additional trainers follow the reserved partner IDs; older recordings keep
+// the original numerical ID for Steven.
+static inline bool32 IsRegularTrainerId(u16 trainerId)
+{
+    return trainerId < TRAINER_PARTNER(PARTNER_NONE) || IsExtendedTrainerId(trainerId);
+}
+
 static inline bool32 IsSpecialTrainer(u16 trainerId)
 {
     if (trainerId == TRAINER_SECRET_BASE ||

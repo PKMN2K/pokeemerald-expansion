@@ -176,7 +176,7 @@
 #define VAR_RUSTURF_TUNNEL_STATE                         0x409A
 #define VAR_POLISHED_MOM_BALANCE_HI 0x409B
 #define VAR_ELITE_4_STATE                                0x409C
-#define VAR_UNUSED_0x409D                                0x409D // Unused Var
+#define VAR_POLISHED_EARNED_BADGES                       0x409D // Johto bits 0–7, Kanto bits 8–15.
 #define VAR_MOSSDEEP_SPACE_CENTER_STAIR_GUARD_STATE      0x409E
 #define VAR_MOSSDEEP_SPACE_CENTER_STATE                  0x409F
 #define VAR_SLATEPORT_HARBOR_STATE                       0x40A0
@@ -274,7 +274,7 @@
 #define VAR_POLISHED_ROUTE30_PECHA_DAY 0x40FC
 #define VAR_POLISHED_MR_POKEMON_SCENE 0x40FD
 #define VAR_POLISHED_ERRAND_STATE 0x40FE
-#define VAR_UNUSED_0x40FF                                0x40FF // Unused Var
+#define VAR_POLISHED_ROUTE31_PERSIM_DAY                   0x40FF
 
 #define VARS_END                                         0x40FF
 #define VARS_COUNT                                       (VARS_END - VARS_START + 1)

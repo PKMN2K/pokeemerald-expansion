@@ -32,6 +32,10 @@ struct PolishedJohtoMapPaletteRegistration
 
 static const struct PolishedJohtoMapPaletteRegistration sJohtoMapRegistrations[] =
 {
+    {LAYOUT_POLISHED_ROUTE_31,
+     &gTileset_PolishedNewBarkOutdoorPrimary,
+     &gTileset_PolishedNewBarkOutdoorSecondary,
+     26, JOHTO_PALETTE_STANDARD, 0},
     {LAYOUT_POLISHED_ROUTE_30,
      &gTileset_PolishedNewBarkOutdoorPrimary,
      &gTileset_PolishedNewBarkOutdoorSecondary,

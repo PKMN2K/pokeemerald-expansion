@@ -32,6 +32,7 @@ import new_bark_mom
 import polished_route29
 import polished_cherrygrove
 import polished_route30
+import polished_route31
 import polished_return
 import polished_departure
 
@@ -45,8 +46,10 @@ NEW_BARK_MAPS = {
     "LyrasHouse2F": "LYRAS_HOUSE_2F",
     "ElmsHouse": "ELMS_HOUSE",
 }
-MAPS = {**NEW_BARK_MAPS, "Route29": "ROUTE_29", "Route2946Gate": "ROUTE_29_46_GATE", **polished_cherrygrove.MAPS, **polished_route30.MAPS}
+MAPS = {**NEW_BARK_MAPS, "Route29": "ROUTE_29", "Route2946Gate": "ROUTE_29_46_GATE", **polished_cherrygrove.MAPS, **polished_route30.MAPS, **polished_route31.MAPS}
 BEHAVIORS = {**BEHAVIORS,
+    "BOTTOM_WALL": ("MB_IMPASSABLE_SOUTH", False),
+    "CAVE": ("MB_NON_ANIMATED_DOOR", False),
     "WINDOW": ("MB_NORMAL", True),
     "COUNTER": ("MB_COUNTER", True),
     "FRIDGE": ("MB_NORMAL", True),
@@ -71,6 +74,8 @@ INLINE_TEXT = {"PlayersHouse1FTVScript", "LyrasFridgeScript", "LyrasTVScript"}
 # Only source jumptextfaceplayer residents with no story flag are imported.
 # The teacher retains the explicitly separate demo travel prompt.
 RESIDENTS = {
+    "Route31": {"Route31YoungsterText": "ROUTE31_SCHOOLBOY"},
+    "Route31VioletGate": {"Route31VioletGateOfficerText": "ROUTE31_GATE_OFFICER", "Route31VioletGateCooltrainerFText":"ROUTE31_GATE_BATTLE_GIRL"},
     "Route29": {"Route29YoungsterText": "ROUTE29_YOUNGSTER", "Route29TeacherText": "ROUTE29_TEACHER", "Route29FisherText": "ROUTE29_FISHER"},
     "Route2946Gate": {"Route29Route46GateOfficerText": "ROUTE29_GATE_OFFICER", "Route29Route46GateYoungsterText": "ROUTE29_GATE_CAMPER"},
     "NewBarkTown": {"Text_ElmDiscoveredNewMon": "NEW_BARK_FAT_GUY",
@@ -87,11 +92,15 @@ NPC_GRAPHICS = {
     ("SPRITE_CAMPER", "GREEN"): "POLISHED_CAMPER",
     ("SPRITE_FAT_GUY", "GREEN"): "POLISHED_FAT_GUY",
     ("SPRITE_SCHOOLBOY", "BLUE"): "POLISHED_SCHOOLBOY",
+    ("SPRITE_BATTLE_GIRL", "BLUE"): "POLISHED_BATTLE_GIRL_BLUE",
     ("SPRITE_BATTLE_GIRL", "RED"): "POLISHED_BATTLE_GIRL",
     ("SPRITE_POKEFAN_F", "GREEN"): "POLISHED_POKEFAN_GREEN",
     ("SPRITE_CHILD", "BROWN"): "POLISHED_CHILD",
 }
 NPC_MOVEMENTS = {
+    "SPRITEMOVEDATA_WANDER": "MOVEMENT_TYPE_WANDER_AROUND",
+    "SPRITEMOVEDATA_STANDING_DOWN": "MOVEMENT_TYPE_FACE_DOWN",
+    "SPRITEMOVEDATA_SPINRANDOM_SLOW": "MOVEMENT_TYPE_LOOK_AROUND",
     "SPRITEMOVEDATA_WALK_UP_DOWN": "MOVEMENT_TYPE_WANDER_UP_AND_DOWN",
     "SPRITEMOVEDATA_WALK_LEFT_RIGHT": "MOVEMENT_TYPE_WANDER_LEFT_AND_RIGHT",
     "SPRITEMOVEDATA_STANDING_UP": "MOVEMENT_TYPE_FACE_UP",
@@ -176,7 +185,7 @@ def residents(name, script, files):
             continue
         x, y, sprite, movement, ry, rx, time, palette, kind, command, label, flag = fields
         assert (kind, command, flag) == ("OBJECTTYPE_COMMAND", "jumptextfaceplayer", "-1")
-        if palette == "0":
+        if palette in ("0", "-1"):
             # A source default is sprite-specific; it is not palette zero.
             sprite_name = {"SPRITE_SCHOOLBOY": "Schoolboy", "SPRITE_TEACHER": "Teacher", "SPRITE_CAMPER": "Camper"}[sprite]
             palette = "PAL_NPC_" + re.search(sprite_name + r"SpriteGFX, WALKING_SPRITE, PAL_OW_(\w+)",
@@ -361,8 +370,8 @@ def map_header(name, constant, width, height, script, files):
         "layout": "LAYOUT_POLISHED_" + constant,
         "music": "MUS_DUMMY", "region": "REGION_JOHTO", "region_map_section": "MAPSEC_NONE",
         "requires_flash": False, "weather": "WEATHER_NONE",
-        "map_type": "MAP_TYPE_TOWN" if name in ("NewBarkTown", "CherrygroveCity") else "MAP_TYPE_ROUTE" if name in ("Route29", "Route30") else "MAP_TYPE_INDOOR",
-        "allow_cycling": name in ("NewBarkTown", "Route29", "Route30", "CherrygroveCity"), "allow_escaping": False,
+        "map_type": "MAP_TYPE_TOWN" if name in ("NewBarkTown", "CherrygroveCity") else "MAP_TYPE_ROUTE" if name in ("Route29", "Route30", "Route31") else "MAP_TYPE_INDOOR",
+        "allow_cycling": name in ("NewBarkTown", "Route29", "Route30", "Route31", "CherrygroveCity"), "allow_escaping": False,
         "allow_running": True, "show_map_name": False, "battle_scene": "MAP_BATTLE_SCENE_NORMAL",
         "connections": None, "object_events": [], "warp_events": [], "coord_events": [], "bg_events": [],
     }
@@ -374,6 +383,10 @@ def map_header(name, constant, width, height, script, files):
             continue  # Closed in the source first-visit story state.
         if name == "Route2946Gate" and destination == "ROUTE_46":
             continue  # North door is blocked until Route 46 is imported.
+        if (int(x),int(y)) in polished_route31.CLOSED.get(name, ()):
+            continue
+        if destination == "ROUTE_31_VIOLET_GATE":
+            warp = str(int(warp) - 2)  # Omit the two western exits to Violet.
         if destination == "ROUTE_29_46_GATE":
             warp = str(int(warp) - 2)  # Source warp 3 -> native warp 0.
         assert destination in MAPS.values(), (name, destination)
@@ -482,6 +495,11 @@ def map_header(name, constant, width, height, script, files):
         if name == "Route30":
             code = code.replace(source_text(script, "Route30AdvancedTipsText"),
                 "Advanced Tips!\\pDuring battle, choose\\nPOKéMON to switch partners.\\pChoose BAG to use an item,\\nor RUN to leave a wild battle!$")
+    if name in polished_route31.MAPS:
+        hooks, scene, report = polished_route31.events(name, script, header, files, source_text, text_definition)
+        code = code.replace("\t.byte 0\n", hooks + "\t.byte 0\n", 1)
+        code += scene
+        story.append(report)
     if name == "PlayersNeighborsHouse":
         npc = polished_route29.object_at("LOCALID_RETURNED_NEIGHBOR", "POLISHED_MATRON", 5, 3,
             "PolishedRoute30_NeighborHome", "FLAG_TEMP_2")
@@ -500,7 +518,7 @@ def map_header(name, constant, width, height, script, files):
 def generate():
     files = source_files()
     ids = behavior_ids()
-    products, maps, layouts = {**resident_assets(files), **new_bark_battle.battle_assets(files), **polished_cherrygrove.assets(files), **polished_route30.assets(files), **polished_return.assets(files), **polished_departure.assets(files)}, {}, []
+    products, maps, layouts = {**resident_assets(files), **new_bark_battle.battle_assets(files), **polished_cherrygrove.assets(files), **polished_route30.assets(files), **polished_route31.assets(files), **polished_return.assets(files), **polished_departure.assets(files)}, {}, []
     indoor = palette_rows((FIXTURES / "johto_bg_tiles.pal").read_text())[32:39]
     indoor_palette = b"".join(struct.pack("<16H", *p, p[0], *([0] * 11)) for p in indoor).ljust(512, b"\0")
     outdoor = apply_new_bark_roof(build_graphics()[0], files)
@@ -524,13 +542,15 @@ def generate():
     permissions = {symbol: permission for permission, symbol in re.findall(
         r"db (LAND_TILE|WALL_TILE|WATER_TILE)\s*; COLL_(\w+)", files["data/collision/collision_permissions.asm"].decode())}
     for name, constant in MAPS.items():
-        bank = "Outdoor" if name in ("NewBarkTown", "Route29", "Route30", "CherrygroveCity") else "Lab" if name == "ElmsLab" else "Gate" if name == "Route2946Gate" else "Mart" if name == "CherrygroveMart" else "PokeCenter" if name == "CherrygrovePokeCenter1F" else "House"
+        bank = "Outdoor" if name in ("NewBarkTown", "Route29", "Route30", "Route31", "CherrygroveCity") else "Lab" if name == "ElmsLab" else "Gate" if name in ("Route2946Gate", "Route31VioletGate") else "Mart" if name == "CherrygroveMart" else "PokeCenter" if name == "CherrygrovePokeCenter1F" else "House"
         source_tileset = {"Outdoor": "JOHTO_TRADITIONAL", "Lab": "LAB", "House": "JOHTO_HOUSE", "Gate": "GATE", "Mart": "MART", "PokeCenter": "POKECENTER"}[bank]
         assert re.search(r"map " + name + r", TILESET_" + source_tileset + r",", files["data/maps/maps.asm"].decode())
         source_layout = "JohtoHouse4" if name in ("PlayersNeighborsHouse", "Route30BerrySpeechHouse") else name
         source_layout = polished_cherrygrove.BLOCKS.get(name, source_layout)
         if name == "Route2946Gate":
             source_layout = "NorthSouthGate"
+        if name == "Route31VioletGate":
+            source_layout = "EastWestGate"
         if name == "PlayersNeighborsHouse":
             assert re.search(r'PlayersNeighborsHouse_BlockData:(?:\s*\w+_BlockData:)*\s*INCBIN "maps/JohtoHouse4.ablk.lz"', files["data/maps/blocks.asm"].decode())
         width, height = map(int, re.search(r"map_const " + constant + r",\s*(\d+),\s*(\d+)", files["constants/map_constants.asm"].decode()).groups())
@@ -546,6 +566,11 @@ def generate():
             cells = list(struct.unpack(f"<{len(raw)//2}H", raw))
             for x in (4, 5):
                 cells[x] |= 0xC00  # Keep source art; no dangling Route 46 warp.
+            raw = struct.pack(f"<{len(cells)}H", *cells)
+        if name in polished_route31.CLOSED:
+            cells = list(struct.unpack(f"<{len(raw)//2}H", raw))
+            for x,y in polished_route31.CLOSED[name]:
+                cells[y * width * 2 + x] |= 0xC00
             raw = struct.pack(f"<{len(cells)}H", *cells)
         border = 5 if bank == "Outdoor" else 0
         assert re.search(r"map_attributes " + name + ", " + constant + r", \$" + str(border) + ",", files["data/maps/attributes.asm"].decode())
@@ -616,7 +641,7 @@ def generate():
 
 """
     products["src/data/tilesets/polished_new_bark.h"] = (header_text.rstrip() + "\n").encode()
-    report = {"source_commit": PIN, "scope": "source geography, connected interiors, static interactions, six ambient residents, rival window encounter, Lyra/Elm introduction, all three starter choices, first Lyra battle, aide Potion and Mom's opening with weekday/DST setup, schedules and neighbor; Route 29, Cherrygrove services, Route 30 with Mulch, native encounters, Mystery Egg and Oak; Elm's disaster call, first rival battle, theft investigation, rival naming, Egg delivery, Joey, Mom's savings, the Route 29 catching tutorial and Tuscany",
+    report = {"source_commit": PIN, "scope": "source geography, connected interiors, static interactions, six ambient residents, rival window encounter, Lyra/Elm introduction, all three starter choices, first Lyra battle, aide Potion and Mom's opening with weekday/DST setup, schedules and neighbor; Route 29, Cherrygrove services, Route 30 with Mulch, native encounters, Mystery Egg and Oak; Elm's disaster call, first rival battle, theft investigation, rival naming, Egg delivery, Joey, Mom's savings, the Route 29 catching tutorial and Tuscany; Route 31 with Wade, Finch, Mom’s worried call and the Violet gate",
         "maps": maps, "layouts": layouts, "output_sha256": {p: hashlib.sha256(raw).hexdigest() for p, raw in products.items()}}
     products["tools/polished_port/manifests/new_bark.json"] = json_bytes(report)
     products["tools/polished_port/manifests/route29_wild.json"] = json_bytes({

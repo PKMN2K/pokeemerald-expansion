@@ -7404,6 +7404,24 @@ const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_PolishedBattleGirl
     .anims = sAnimTable_Standard,
     .images = sPicTable_PolishedBattleGirl,
 };
+const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_PolishedBattleGirlBlue = {
+    .tileTag = TAG_NONE,
+    .paletteTag = OBJ_EVENT_PAL_TAG_POLISHED_NPC_BLUE,
+    .reflectionPaletteTag = OBJ_EVENT_PAL_TAG_NONE,
+    .size = 256,
+    .width = 16,
+    .height = 32,
+    .paletteSlot = PALSLOT_NPC_1,
+    .shadowSize = SHADOW_SIZE_M,
+    .inanimate = FALSE,
+    .compressed = FALSE,
+    .tracks = TRACKS_FOOT,
+    .oam = &gObjectEventBaseOam_16x32,
+    .subspriteTables = sOamTables_16x32,
+    .anims = sAnimTable_Standard,
+    .images = sPicTable_PolishedBattleGirl,
+};
+
 
 const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_PolishedChild = {
     .tileTag = TAG_NONE,
@@ -8124,6 +8142,24 @@ const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_PolishedBugCatcher
     .anims = sAnimTable_Standard,
     .images = sPicTable_PolishedBugCatcher,
 };
+const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_PolishedAceTrainerM = {
+    .tileTag = TAG_NONE,
+    .paletteTag = OBJ_EVENT_PAL_TAG_POLISHED_POKEFAN,
+    .reflectionPaletteTag = OBJ_EVENT_PAL_TAG_NONE,
+    .size = 256,
+    .width = 16,
+    .height = 32,
+    .paletteSlot = PALSLOT_NPC_1,
+    .shadowSize = SHADOW_SIZE_M,
+    .inanimate = FALSE,
+    .compressed = FALSE,
+    .tracks = TRACKS_FOOT,
+    .oam = &gObjectEventBaseOam_16x32,
+    .subspriteTables = sOamTables_16x32,
+    .anims = sAnimTable_Standard,
+    .images = sPicTable_PolishedAceTrainerM,
+};
+
 
 const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_PolishedOak = {
     .tileTag = TAG_NONE,

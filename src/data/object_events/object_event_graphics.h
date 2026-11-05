@@ -683,6 +683,8 @@ const u16 gObjectEventPal_PolishedNpcPink[] = INCBIN_U16("graphics/object_events
 const u32 gObjectEventPic_PolishedOak[] = INCGFX_U32("graphics/object_events/polished_oak/walking.png", ".4bpp", "-mwidth 2 -mheight 4");
 const u32 gObjectEventPic_PolishedLass[] = INCGFX_U32("graphics/object_events/polished_lass/walking.png", ".4bpp", "-mwidth 2 -mheight 4");
 const u32 gObjectEventPic_PolishedBugCatcher[] = INCGFX_U32("graphics/object_events/polished_bug_catcher/walking.png", ".4bpp", "-mwidth 2 -mheight 4");
+const u32 gObjectEventPic_PolishedAceTrainerM[] = INCGFX_U32("graphics/object_events/polished_ace_trainer_m/walking.png", ".4bpp", "-mwidth 2 -mheight 4");
+
 const u32 gObjectEventPic_PolishedRattataBack[] = INCGFX_U32("graphics/object_events/polished_rattata_back/walking.png", ".4bpp", "-mwidth 2 -mheight 4");
 const u32 gObjectEventPic_PolishedPokedex[] = INCGFX_U32("graphics/object_events/polished_book_paper_pokedex/walking.png", ".4bpp", "-mwidth 2 -mheight 4");
 const u16 gObjectEventPal_PolishedNpcPurple[] = INCBIN_U16("graphics/object_events/polished_npc_palettes/purple.bin");

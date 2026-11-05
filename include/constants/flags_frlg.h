@@ -1221,14 +1221,14 @@
 // Reserved for FLAG_POLISHED_DECLINED_TUTORIAL
 // Reserved for FLAG_POLISHED_MET_TUSCANY
 // Reserved for FLAG_POLISHED_TUSCANY_SILK_SCARF
-#define FLAG_0x4C7               0x4C7
-#define FLAG_0x4C8               0x4C8
-#define FLAG_0x4C9               0x4C9
-#define FLAG_0x4CA               0x4CA
-#define FLAG_0x4CB               0x4CB
-#define FLAG_0x4CC               0x4CC
-#define FLAG_0x4CD               0x4CD
-#define FLAG_0x4CE               0x4CE
+// Reserved for FLAG_POLISHED_ROUTE31_CUT_1.
+// Reserved for FLAG_POLISHED_ROUTE31_CUT_2.
+// Reserved for FLAG_POLISHED_ROUTE31_POTION.
+// Reserved for FLAG_POLISHED_ROUTE31_POKE_BALL.
+// Reserved for FLAG_POLISHED_ROUTE31_AIR_BALLOON.
+// Reserved for FLAG_POLISHED_ROUTE31_WADE.
+// Reserved for FLAG_POLISHED_ROUTE31_FINCH.
+// Reserved for FLAG_POLISHED_ROUTE31_MET_FINCH.
 #define FLAG_0x4CF               0x4CF
 #define FLAG_0x4D0               0x4D0
 #define FLAG_0x4D1               0x4D1

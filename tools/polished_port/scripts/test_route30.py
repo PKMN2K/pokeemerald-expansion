@@ -19,7 +19,7 @@ def main():
     attrs=files['data/maps/attributes.asm'].decode()
     assert 'connection north, Route30, ROUTE_30, 5' in attrs
     assert 'connection south, CherrygroveCity, CHERRYGROVE_CITY, -5' in attrs
-    assert route['connections']==[{'map':city['id'],'offset':-10,'direction':'down'}]
+    assert {'map':city['id'],'offset':-10,'direction':'down'} in route['connections']
     assert {'map':route['id'],'offset':10,'direction':'up'} in city['connections']
     for name,const in MAPS.items():
         live=json.loads((ROOT/f'data/maps/Polished{name}/map.json').read_text())

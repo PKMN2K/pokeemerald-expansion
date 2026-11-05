@@ -169,8 +169,8 @@ PolishedDeparture_ShowTuscany::
         "deferred": ["Route46"]}
 
 
-def wild_entries(files):
-    body = re.search(r"def_grass_wildmons ROUTE_29\n(.*?)end_grass_wildmons",
+def wild_entries(files, route=29):
+    body = re.search(rf"def_grass_wildmons ROUTE_{route}\n(.*?)end_grass_wildmons",
         files["data/wild/johto_grass.asm"].decode(), re.S)[1]
     slots = [(int(level), species) for level, species in re.findall(r"wildmon (\d+), (\w+)", body)]
     assert len(slots) == 21 and "10 percent, 10 percent, 10 percent" in body
@@ -181,7 +181,7 @@ def wild_entries(files):
     for n, period in enumerate(("Morning", "Day", "Night")):
         group = slots[n*7:n*7+7]
         assert group[5] == group[6]
-        result.append({"map": "MAP_POLISHED_ROUTE_29", "base_label": "gPolishedRoute29_" + period,
+        result.append({"map": f"MAP_POLISHED_ROUTE_{route}", "base_label": f"gPolishedRoute{route}_" + period,
             "always_time_of_day": True, "land_mons": {"encounter_rate": 18,
                 "mons": [{"min_level": group[i][0], "max_level": group[i][0], "species": "SPECIES_" + group[i][1]} for i in assignment]}})
     return result

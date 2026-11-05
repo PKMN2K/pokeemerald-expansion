@@ -9554,6 +9554,28 @@
       "border_filepath": "data/layouts/PolishedMrPokemonsHouse/border.bin",
       "blockdata_filepath": "data/layouts/PolishedMrPokemonsHouse/map.bin",
       "layout_version": "emerald"
+    },
+    {
+      "id": "LAYOUT_POLISHED_ROUTE_31",
+      "name": "PolishedRoute31_Layout",
+      "width": 44,
+      "height": 18,
+      "primary_tileset": "gTileset_PolishedNewBarkOutdoorPrimary",
+      "secondary_tileset": "gTileset_PolishedNewBarkOutdoorSecondary",
+      "border_filepath": "data/layouts/PolishedRoute31/border.bin",
+      "blockdata_filepath": "data/layouts/PolishedRoute31/map.bin",
+      "layout_version": "emerald"
+    },
+    {
+      "id": "LAYOUT_POLISHED_ROUTE_31_VIOLET_GATE",
+      "name": "PolishedRoute31VioletGate_Layout",
+      "width": 10,
+      "height": 8,
+      "primary_tileset": "gTileset_PolishedNewBarkGatePrimary",
+      "secondary_tileset": "gTileset_PolishedNewBarkGateSecondary",
+      "border_filepath": "data/layouts/PolishedRoute31VioletGate/border.bin",
+      "blockdata_filepath": "data/layouts/PolishedRoute31VioletGate/map.bin",
+      "layout_version": "emerald"
     }
   ]
 }

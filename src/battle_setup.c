@@ -1,4 +1,5 @@
 #include "global.h"
+#include "field_move.h"
 #include "data.h"
 #include "main.h"
 #include "battle.h"
@@ -875,6 +876,27 @@ static u16 GetSumOfPlayerPartyLevel(u8 numMons)
     return sum;
 }
 
+u8 GetPolishedTrainerLevel(u16 trainerId, u8 level)
+{
+#if !IS_FRLG
+    if (trainerId == TRAINER_POLISHED_FINCH)
+    {
+        u8 badges = 0, base;
+        // The garden grants Emerald's Surf permission before a Johto badge
+        // is earned. Count the source regions' actual badges in their own mask.
+        u16 earned = VarGet(VAR_POLISHED_EARNED_BADGES);
+        while (earned)
+        {
+            earned &= earned - 1;
+            badges++;
+        }
+        if (JohtoHeadbuttGetBadgeBaseLevel(badges, &base))
+            return level + base - 4; // Finch's party stores its zero-badge levels.
+    }
+#endif
+    return level;
+}
+
 static u8 GetSumOfEnemyPartyLevel(u16 opponentId, u8 numMons)
 {
     u8 i;
@@ -889,7 +911,7 @@ static u8 GetSumOfEnemyPartyLevel(u16 opponentId, u8 numMons)
 
     party = GetTrainerPartyFromId(opponentId);
     for (i = 0; i < count && party != NULL; i++)
-        sum += party[i].lvl;
+        sum += GetPolishedTrainerLevel(opponentId, party[i].lvl);
 
     return sum;
 }
@@ -1068,14 +1090,23 @@ static void TryUpdateGymLeaderRematchFromTrainer(void)
         UpdateGymLeaderRematch();
 }
 
-static u16 GetTrainerAFlag(void)
-{
-    return TRAINER_FLAGS_START + TRAINER_BATTLE_PARAM.opponentA;
-}
+#if !IS_FRLG
+// Post-partner trainer IDs use spare persistent bits in the original save.
+static const u16 sExtraTrainerFlags[] = {FLAG_POLISHED_ROUTE31_WADE, FLAG_POLISHED_ROUTE31_FINCH};
+STATIC_ASSERT(ARRAY_COUNT(sExtraTrainerFlags) == TRAINERS_COUNT - TRAINER_POLISHED_WADE, MissingTrainerFlags);
+#endif
 
-static u16 GetTrainerBFlag(void)
+u16 GetTrainerFlagId(u16 trainerId)
 {
-    return TRAINER_FLAGS_START + TRAINER_BATTLE_PARAM.opponentB;
+    if (trainerId < MAX_TRAINERS_COUNT)
+        return TRAINER_FLAGS_START + trainerId;
+#if !IS_FRLG
+    // IDs immediately after the original roster belong to battle partners.
+    // Map only real additional trainers; zero is the engine's inert flag.
+    if (trainerId >= TRAINER_POLISHED_WADE && trainerId < TRAINERS_COUNT)
+        return sExtraTrainerFlags[trainerId - TRAINER_POLISHED_WADE];
+#endif
+    return 0;
 }
 
 static bool32 IsPlayerDefeated(u32 battleOutcome)
@@ -1385,7 +1416,7 @@ void ConfigureApproachingFacilityTrainerBattle(struct ApproachingTrainer *approa
 bool32 GetTrainerFlagFromScriptPointer(const u8 *data)
 {
     TrainerBattleParameter *temp = (TrainerBattleParameter*)(data + TRAINERBATTLE_OPCODE_OFFSET);
-    return FlagGet(TRAINER_FLAGS_START + temp->params.opponentA);
+    return HasTrainerBeenFought(temp->params.opponentA);
 }
 
 bool32 GetRematchFromScriptPointer(const u8 *data)
@@ -1423,34 +1454,34 @@ bool8 GetTrainerFlag(void)
     else if (InTrainerHill())
         return GetHillTrainerFlag(gSelectedObjectEvent);
     else
-        return FlagGet(GetTrainerAFlag());
+        return HasTrainerBeenFought(TRAINER_BATTLE_PARAM.opponentA);
 }
 
 static void SetBattledTrainersFlags(void)
 {
     if (TRAINER_BATTLE_PARAM.opponentB != 0)
-        FlagSet(GetTrainerBFlag());
-    FlagSet(GetTrainerAFlag());
+        SetTrainerFlag(TRAINER_BATTLE_PARAM.opponentB);
+    SetTrainerFlag(TRAINER_BATTLE_PARAM.opponentA);
 }
 
 static void UNUSED SetBattledTrainerFlag(void)
 {
-    FlagSet(GetTrainerAFlag());
+    SetTrainerFlag(TRAINER_BATTLE_PARAM.opponentA);
 }
 
 bool8 HasTrainerBeenFought(u16 trainerId)
 {
-    return FlagGet(TRAINER_FLAGS_START + trainerId);
+    return FlagGet(GetTrainerFlagId(trainerId));
 }
 
 void SetTrainerFlag(u16 trainerId)
 {
-    FlagSet(TRAINER_FLAGS_START + trainerId);
+    FlagSet(GetTrainerFlagId(trainerId));
 }
 
 void ClearTrainerFlag(u16 trainerId)
 {
-    FlagClear(TRAINER_FLAGS_START + trainerId);
+    FlagClear(GetTrainerFlagId(trainerId));
 }
 
 void BattleSetup_StartTrainerBattle(void)
@@ -2245,7 +2276,7 @@ void SetMultiTrainerBattle(struct ScriptContext *ctx)
     gPartnerTrainerId = TRAINER_PARTNER(ScriptReadHalfword(ctx));
 };
 
-void CreateNPCTrainerPartyFromTrainer(struct Pokemon *party, const struct Trainer *trainer)
+static void GenerateNPCParty(struct Pokemon *party, const struct Trainer *trainer, u16 trainerId)
 {
     s32 i;
     u8 monsCount;
@@ -2267,16 +2298,30 @@ void CreateNPCTrainerPartyFromTrainer(struct Pokemon *party, const struct Traine
     for (i = 0; i < monsCount; i++)
     {
         u32 monIndex = monIndices[i];
-        GenerateMonFromTrainerMon(&party[i], &trainer->party[monIndex], trainerGen);
+        const struct TrainerMon *mon = &trainer->party[monIndex];
+        u8 level = GetPolishedTrainerLevel(trainerId, mon->lvl);
+        if (mon->lvl == level)
+            GenerateMonFromTrainerMon(&party[i], mon, trainerGen);
+        else
+        {
+            struct TrainerMon scaled = *mon;
+            scaled.lvl = level;
+            GenerateMonFromTrainerMon(&party[i], &scaled, trainerGen);
+        }
     }
     Free(trainerGen);
+}
+
+void CreateNPCTrainerPartyFromTrainer(struct Pokemon *party, const struct Trainer *trainer)
+{
+    GenerateNPCParty(party, trainer, TRAINER_NONE);
 }
 
 static void CreateNPCTrainerParty(struct Pokemon *party, u16 trainerNum)
 {
     if (!GetTrainerStructFromId(trainerNum)->overrideTrainer)
     {
-        CreateNPCTrainerPartyFromTrainer(party, GetTrainerStructFromId(trainerNum));
+        GenerateNPCParty(party, GetTrainerStructFromId(trainerNum), trainerNum);
         return;
     }
 
@@ -2289,7 +2334,7 @@ static void CreateNPCTrainerParty(struct Pokemon *party, u16 trainerNum)
     tempTrainer.poolSize = origTrainer->poolSize;
     if (tempTrainer.partySize == 0)
         tempTrainer.partySize = origTrainer->partySize;
-    CreateNPCTrainerPartyFromTrainer(party, (const struct Trainer *)(&tempTrainer));
+    GenerateNPCParty(party, &tempTrainer, trainerNum);
 }
 
 void CreateTrainerPartyForPlayer(void)
@@ -2297,5 +2342,5 @@ void CreateTrainerPartyForPlayer(void)
     Script_RequestEffects(SCREFF_V1);
 
     gPartnerTrainerId = gSpecialVar_0x8004;
-    CreateNPCTrainerPartyFromTrainer(gParties[B_TRAINER_PLAYER], GetTrainerStructFromId(gSpecialVar_0x8004));
+    GenerateNPCParty(gParties[B_TRAINER_PLAYER], GetTrainerStructFromId(gSpecialVar_0x8004), gSpecialVar_0x8004);
 }

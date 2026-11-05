@@ -39,7 +39,7 @@ def main():
         assert [f for f,v in flags if int(v,16)==n]==['FLAG_POLISHED_'+name]
     trainers=(ROOT/'include/constants/opponents.h').read_text()
     numbers=dict((n,int(v)) for n,v in re.findall(r'^#define (\w+)\s+(\d+)\s*(?://[^\n]*)?$',trainers,re.M))
-    assert numbers['TRAINERS_COUNT_EMERALD']==numbers['MAX_TRAINERS_COUNT_EMERALD']==864
+    assert numbers['MAX_TRAINERS_COUNT_EMERALD']==864
     assert [numbers['TRAINER_POLISHED_'+n] for n in ('RIVAL_CHIKORITA','RIVAL_CYNDAQUIL','RIVAL_TOTODILE','JOEY')]==list(range(860,864))
     lab=json.loads((ROOT/'data/maps/PolishedElmsLab/map.json').read_text())
     coords=[(v['x'],v['y']) for v in lab['coord_events'] if int(v['var_value'])==3]

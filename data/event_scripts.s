@@ -1762,3 +1762,5 @@ EventScript_PalletTown_PlayersHouse_2F_TurnOnPC::
 	.include "data/maps/PolishedRoute30/scripts.inc"
 	.include "data/maps/PolishedRoute30BerrySpeechHouse/scripts.inc"
 	.include "data/maps/PolishedMrPokemonsHouse/scripts.inc"
+	.include "data/maps/PolishedRoute31/scripts.inc"
+	.include "data/maps/PolishedRoute31VioletGate/scripts.inc"

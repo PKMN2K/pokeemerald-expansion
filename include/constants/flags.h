@@ -79,6 +79,14 @@
 #define FLAG_POLISHED_DECLINED_TUTORIAL 0x4C4
 #define FLAG_POLISHED_MET_TUSCANY 0x4C5
 #define FLAG_POLISHED_TUSCANY_SILK_SCARF 0x4C6
+#define FLAG_POLISHED_ROUTE31_CUT_1 0x4C7
+#define FLAG_POLISHED_ROUTE31_CUT_2 0x4C8
+#define FLAG_POLISHED_ROUTE31_POTION 0x4C9
+#define FLAG_POLISHED_ROUTE31_POKE_BALL 0x4CA
+#define FLAG_POLISHED_ROUTE31_AIR_BALLOON 0x4CB
+#define FLAG_POLISHED_ROUTE31_WADE 0x4CC
+#define FLAG_POLISHED_ROUTE31_FINCH 0x4CD
+#define FLAG_POLISHED_ROUTE31_MET_FINCH 0x4CE
 
 #if IS_FRLG
 
@@ -1300,14 +1308,14 @@
 // Reserved for FLAG_POLISHED_DECLINED_TUTORIAL
 // Reserved for FLAG_POLISHED_MET_TUSCANY
 // Reserved for FLAG_POLISHED_TUSCANY_SILK_SCARF
-#define FLAG_UNUSED_0x4C7                                           0x4C7 // Unused Flag
-#define FLAG_UNUSED_0x4C8                                           0x4C8 // Unused Flag
-#define FLAG_UNUSED_0x4C9                                           0x4C9 // Unused Flag
-#define FLAG_UNUSED_0x4CA                                           0x4CA // Unused Flag
-#define FLAG_UNUSED_0x4CB                                           0x4CB // Unused Flag
-#define FLAG_UNUSED_0x4CC                                           0x4CC // Unused Flag
-#define FLAG_UNUSED_0x4CD                                           0x4CD // Unused Flag
-#define FLAG_UNUSED_0x4CE                                           0x4CE // Unused Flag
+// Reserved for FLAG_POLISHED_ROUTE31_CUT_1.
+// Reserved for FLAG_POLISHED_ROUTE31_CUT_2.
+// Reserved for FLAG_POLISHED_ROUTE31_POTION.
+// Reserved for FLAG_POLISHED_ROUTE31_POKE_BALL.
+// Reserved for FLAG_POLISHED_ROUTE31_AIR_BALLOON.
+// Reserved for FLAG_POLISHED_ROUTE31_WADE.
+// Reserved for FLAG_POLISHED_ROUTE31_FINCH.
+// Reserved for FLAG_POLISHED_ROUTE31_MET_FINCH.
 #define FLAG_UNUSED_0x4CF                                           0x4CF // Unused Flag
 #define FLAG_UNUSED_0x4D0                                           0x4D0 // Unused Flag
 #define FLAG_UNUSED_0x4D1                                           0x4D1 // Unused Flag
@@ -1363,8 +1371,8 @@
 #define FLAG_UNUSED_0x4FF                                           0x4FF // Unused Flag
 
 // Trainer Flags
-// Trainer flags occupy 0x500 - 0x85F, the last 9 of which are unused
-// See constants/opponents.h. The values there + FLAG_TRAINER_FLAG_START are the flag IDs
+// The original contiguous range covers trainer IDs 0–863. Route 31 uses
+// dedicated persistent flags outside this range (see GetTrainerFlagId).
 
 #define TRAINER_FLAGS_START                                         0x500
 #define TRAINER_FLAGS_END                                           (TRAINER_FLAGS_START + MAX_TRAINERS_COUNT - 1) // 0x85F

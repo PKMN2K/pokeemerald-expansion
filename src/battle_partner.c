@@ -33,7 +33,7 @@ void FillPartnerParty(u16 trainerId)
     SetFacilityPtrsGetLevel();
     ZeroPartyMons(gParties[B_TRAINER_PARTNER]);
 
-    if (trainerId > TRAINER_PARTNER(PARTNER_NONE))
+    if (IsPartnerTrainerId(trainerId) || IsExtendedTrainerId(trainerId))
     {
         s32 lastIndex = AreMultiPartiesFullTeams() ? PARTY_SIZE : MULTI_PARTY_SIZE;
 

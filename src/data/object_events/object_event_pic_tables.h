@@ -2660,6 +2660,10 @@ static const struct SpriteFrameImage sPicTable_PolishedLass[] = {
 static const struct SpriteFrameImage sPicTable_PolishedBugCatcher[] = {
     overworld_ascending_frames(gObjectEventPic_PolishedBugCatcher, 2, 4),
 };
+static const struct SpriteFrameImage sPicTable_PolishedAceTrainerM[] = {
+    overworld_ascending_frames(gObjectEventPic_PolishedAceTrainerM, 2, 4),
+};
+
 
 static const struct SpriteFrameImage sPicTable_PolishedRattataBack[] = {
     overworld_frame(gObjectEventPic_PolishedRattataBack, 2, 4, 0),

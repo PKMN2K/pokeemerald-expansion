@@ -18,6 +18,11 @@
       "map": "MAP_POLISHED_CHERRYGROVE_CITY",
       "offset": -10,
       "direction": "down"
+    },
+    {
+      "map": "MAP_POLISHED_ROUTE_31",
+      "offset": -20,
+      "direction": "up"
     }
   ],
   "object_events": [

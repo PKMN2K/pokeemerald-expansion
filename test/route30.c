@@ -14,8 +14,8 @@ TEST("Route 30 fruit trees keep separate saved harvests and consume Mulch only o
 {
     struct Time clock = gSaveBlock2Ptr->localTimeOffset;
     struct ItemSlot berries[BAG_BERRIES_COUNT], items[BAG_ITEMS_COUNT];
-    const u16 vars[] = {VAR_POLISHED_ROUTE29_FRUIT_DAY, VAR_POLISHED_ROUTE30_ORAN_DAY, VAR_POLISHED_ROUTE30_PECHA_DAY};
-    u16 saved[3], selected = gSpecialVar_0x8005;
+    const u16 vars[] = {VAR_POLISHED_ROUTE29_FRUIT_DAY, VAR_POLISHED_ROUTE30_ORAN_DAY, VAR_POLISHED_ROUTE30_PECHA_DAY, VAR_POLISHED_ROUTE31_PERSIM_DAY};
+    u16 saved[ARRAY_COUNT(vars)], selected = gSpecialVar_0x8005;
     u32 i;
     memcpy(berries, gSaveBlock1Ptr->bag.berries, sizeof(berries));
     memcpy(items, gSaveBlock1Ptr->bag.items, sizeof(items));
@@ -23,7 +23,7 @@ TEST("Route 30 fruit trees keep separate saved harvests and consume Mulch only o
         BagPocket_SetSlotItemIdAndCount(&gBagPockets[POCKET_ITEMS], i, ITEM_NONE, 0);
     for (i = 0; i < BAG_BERRIES_COUNT; i++)
         BagPocket_SetSlotItemIdAndCount(&gBagPockets[POCKET_BERRIES], i, ITEM_NONE, 0);
-    for (i = 0; i < 3; i++)
+    for (i = 0; i < ARRAY_COUNT(vars); i++)
     {
         saved[i] = VarGet(vars[i]);
         VarSet(vars[i], 0);
@@ -59,11 +59,18 @@ TEST("Route 30 fruit trees keep separate saved harvests and consume Mulch only o
     RtcCalcLocalTimeOffset(11, 0, 0, 0);
     EXPECT(PolishedFruitAvailable());
     gSpecialVar_0x8005 = 3;
+    PolishedFruitPrepare();
+    EXPECT_EQ(gSpecialVar_0x8006, ITEM_PERSIM_BERRY);
+    EXPECT(PolishedFruitAvailable());
+    PolishedFruitPick();
+    EXPECT(gSpecialVar_Result >= 1 && gSpecialVar_Result <= 3);
+    EXPECT(!PolishedFruitAvailable());
+    gSpecialVar_0x8005 = ARRAY_COUNT(vars);
     PolishedFruitPick();
     EXPECT_EQ(gSpecialVar_Result, 0);
     PolishedFruitUseMulch();
     EXPECT_EQ(gSpecialVar_Result, FALSE);
-    for (i = 0; i < 3; i++)
+    for (i = 0; i < ARRAY_COUNT(vars); i++)
         VarSet(vars[i], saved[i]);
     memcpy(gSaveBlock1Ptr->bag.berries, berries, sizeof(berries));
     memcpy(gSaveBlock1Ptr->bag.items, items, sizeof(items));
