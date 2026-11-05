@@ -4,7 +4,6 @@ import struct
 import tempfile
 from pathlib import Path
 
-from PIL import Image
 from convert_player_walking import convert, _read_png_2bit_grayscale, _write_indexed_4bit_png
 from polished_route29 import object_at
 from polished_route30 import palette
@@ -22,6 +21,9 @@ def stock(files):
 
 
 def stationery(files, temporary):
+    # Data-only audits import MAPS without needing the image build dependency.
+    from PIL import Image
+
     # Original one-bit tiles and RGB555 colors, arranged across the GBA's
     # 30x20 screen, leaving space for all nine native Easy Chat words.
     tiles = [bytes([4] * 64), bytes([4] * 64)]
