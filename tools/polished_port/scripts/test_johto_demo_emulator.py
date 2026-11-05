@@ -156,14 +156,18 @@ class Game:
         else:
             raise AssertionError("Could not select the Bag")
         self.press(A, 120)
+        self.choose_bag_key_item(index)
+
+    def choose_bag_key_item(self, index):
         for _ in range(5):
             if self.read(self.sym["gBagPosition"] + 5, 1)[0] == 4:  # POCKET_KEY_ITEMS
                 break
             self.press(RIGHT)
         else:
             raise AssertionError("Could not select Key Items")
-        for _ in range(5):
+        for _ in range(64):
             cursor = struct.unpack("<H", self.read(self.sym["gBagPosition"] + 16, 2))[0]
+            cursor += struct.unpack("<H", self.read(self.sym["gBagPosition"] + 26, 2))[0]
             if cursor == index:
                 break
             self.press(DOWN if cursor < index else UP)

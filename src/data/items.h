@@ -16123,6 +16123,18 @@ const struct ItemInfo gItemsInfo[] =
         .iconPalette = gItemIconPalette_PolishedMysteryEgg,
     },
 
+    [ITEM_POLISHED_TYPE_CHART] =
+    {
+        .name = ITEM_NAME("Type Chart"),
+        .price = 0,
+        .description = COMPOUND_STRING("Summarizes all\ntype advantages."),
+        .importance = 1,
+        .pocket = POCKET_KEY_ITEMS,
+        .type = ITEM_USE_BAG_MENU,
+        .fieldUseFunc = ItemUse_TypeChart,
+        .iconPic = gItemIcon_PolishedTypeChart,
+        .iconPalette = gItemIconPalette_PolishedTypeChart,
+    },
 };
 
 #undef ITEM_NAME

@@ -2118,3 +2118,5 @@ const u16 gItemIconPalette_PolishedMulch[] = INCGFX_U16("graphics/items/icon_pal
 
 const u32 gItemIcon_PolishedMysteryEgg[] = INCGFX_U32("graphics/items/icons/polished_mystery_egg.png", ".4bpp.smol");
 const u16 gItemIconPalette_PolishedMysteryEgg[] = INCGFX_U16("graphics/items/icon_palettes/polished_mystery_egg.pal", ".gbapal");
+const u32 gItemIcon_PolishedTypeChart[] = INCGFX_U32("graphics/items/icons/polished_type_chart.png", ".4bpp.smol");
+const u16 gItemIconPalette_PolishedTypeChart[] = INCGFX_U16("graphics/items/icon_palettes/polished_type_chart.pal", ".gbapal");

@@ -628,10 +628,31 @@ The Center offers healing, PC storage, a wall map and Falkner's journal.
 Visiting makes it the blackout destination. The city entrance, both Center
 exit tiles, journal and berry harvest support cartridge Save/Continue.
 
-The campaign now covers 23 source maps and 54 reciprocal door/stair events,
-plus the two garden maps. Earl's Academy and his Type Chart are the next
-city story step. Violet Mart, the two houses, Sprout Tower, Falkner's Gym,
-the post-badge Togepi Egg and the surrounding routes have later phases.
+### Earl’s Pokémon Academy and Type Chart
+
+Speak to Earl by the Violet Gym at (13,16). Answer Yes to his question
+about beating Falkner and he stays there. Answer No and he spins, leads
+you to the Academy and gives you the Type Chart. His movement follows
+the original route from any of the four adjacent squares. Afterward Earl
+teaches inside. If the Key Items pocket was full, speak to him there after
+making room to receive the chart. His location and the chart survive saving
+and reloading.
+
+Open the chart from Key Items in the field or during a battle. The original
+160×144 diagram is centered on the GBA screen. A and B both return to the
+same Bag pocket. During a battle you can then choose your action for the
+current turn. The chart uses the original picture, palettes and object overlays.
+
+Both Academy exits return to the same Violet doorway. Inside, Earl teaches
+about party order and experience. The blackboard covers five status conditions,
+the notebook has four pages, the four students retain their conversations,
+and reading Walker’s journal sets its saved flag. You can enter before Earl
+takes his tour. A cartridge save from the previous Violet release can also
+open the formerly blocked Academy door on Continue.
+
+The campaign now covers 24 source maps and 57 reciprocal door/stair events,
+plus the two garden maps. Violet Mart and the city’s two houses are the next
+local stops. Sprout Tower, Falkner’s Gym and the post-badge Togepi Egg follow.
 
 The playable visual slice and dormant Headbutt encounter selection are complete
 parts of the port. **The whole Polished Crystal migration is not complete.**

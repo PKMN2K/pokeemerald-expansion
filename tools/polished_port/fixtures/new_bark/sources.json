@@ -806,6 +806,56 @@
       "path": "gfx/tilesets/roofs/violet.png",
       "fixture": "gfx__tilesets__roofs__violet.png.b64",
       "git_blob_sha1": "1d68754f95749426f88b7f885ab953beecf0617c"
+    },
+    {
+      "path": "maps/EarlsPokemonAcademy.asm",
+      "fixture": "maps__EarlsPokemonAcademy.asm.b64",
+      "git_blob_sha1": "4233da9768b10f42376276513e7ebfaadf6398f2"
+    },
+    {
+      "path": "maps/EarlsPokemonAcademy.ablk",
+      "fixture": "maps__EarlsPokemonAcademy.ablk.b64",
+      "git_blob_sha1": "391c13d424e348a4db6d7866d4a4c005e160af38"
+    },
+    {
+      "path": "gfx/sprites/gamer_girl.png",
+      "fixture": "gfx__sprites__gamer_girl.png.b64",
+      "git_blob_sha1": "fb7eef5c09803ab532b4a31c3cdbaa4d8e359aa6"
+    },
+    {
+      "path": "gfx/items/type_chart.png",
+      "fixture": "gfx__items__type_chart.png.b64",
+      "git_blob_sha1": "aa6386ce95d30eda38c56fbb756705d64ba56b44"
+    },
+    {
+      "path": "engine/items/type_chart.asm",
+      "fixture": "engine__items__type_chart.asm.b64",
+      "git_blob_sha1": "2e935e67da65ee181dfd8b2b78b05c83bdbf486c"
+    },
+    {
+      "path": "gfx/type_chart/bg.png",
+      "fixture": "gfx__type_chart__bg.png.b64",
+      "git_blob_sha1": "e32aa5853283276dc311128c5b6b26960e8b947f"
+    },
+    {
+      "path": "gfx/type_chart/ob.png",
+      "fixture": "gfx__type_chart__ob.png.b64",
+      "git_blob_sha1": "a16d30983bd6e0a401798eae442a4f322ebc00fa"
+    },
+    {
+      "path": "gfx/type_chart/type_chart.pal",
+      "fixture": "gfx__type_chart__type_chart.pal.b64",
+      "git_blob_sha1": "db9c3f71f2e00dd2bc8ac51fcc80102fc4e83b4f"
+    },
+    {
+      "path": "gfx/type_chart/type_chart.tilemap",
+      "fixture": "gfx__type_chart__type_chart.tilemap.b64",
+      "git_blob_sha1": "672fd3732c20f2a6e206cd665136f2076fbdeae7"
+    },
+    {
+      "path": "gfx/type_chart/type_chart.attrmap",
+      "fixture": "gfx__type_chart__type_chart.attrmap.b64",
+      "git_blob_sha1": "04e594c6f0746c85138d7366a65de91097890382"
     }
   ]
 }

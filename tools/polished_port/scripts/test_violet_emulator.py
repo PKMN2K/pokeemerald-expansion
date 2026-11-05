@@ -116,5 +116,8 @@ def check_violet(game, gate, checks):
     assert all(m["hp"]==m["max_hp"] and m["status"]==0 for m in party(game,details=True))
     game.screenshot("violet-blackout")
     checks.append("A real Violet pond encounter uses the source species and level; defeat returns the healed party to Violet Center")
+    game.restore("violet-day")
+    from test_academy_emulator import check_academy
+    check_academy(game,city,checks)
     game.restore("violet-before-gate")
     print("PASS: Violet City doors, time palettes, residents, Pokémon Center and Save/Continue",flush=True)

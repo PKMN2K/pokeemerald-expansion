@@ -340,6 +340,11 @@ static const u8 sContextMenuItems_BerriesPocket[] = {
     ACTION_TOSS,        ACTION_CANCEL
 };
 
+// A reference page returns to the current Bag without issuing a battle action.
+static const u8 sContextMenuItems_TypeChart[] = {
+    ACTION_USE, ACTION_CANCEL
+};
+
 static const u8 sContextMenuItems_BattleUse[] = {
     ACTION_BATTLE_USE,  ACTION_CANCEL
 };
@@ -1632,7 +1637,12 @@ static void OpenContextMenu(u8 taskId)
     case ITEMMENULOCATION_BATTLE:
     case ITEMMENULOCATION_WALLY:
     case ITEMMENULOCATION_RAIDEND:
-        if (GetItemBattleUsage(gSpecialVar_ItemId))
+        if (gBagPosition.location == ITEMMENULOCATION_BATTLE && gSpecialVar_ItemId == ITEM_POLISHED_TYPE_CHART)
+        {
+            gBagMenu->contextMenuItemsPtr = sContextMenuItems_TypeChart;
+            gBagMenu->contextMenuNumItems = ARRAY_COUNT(sContextMenuItems_TypeChart);
+        }
+        else if (GetItemBattleUsage(gSpecialVar_ItemId))
         {
             gBagMenu->contextMenuItemsPtr = sContextMenuItems_BattleUse;
             gBagMenu->contextMenuNumItems = ARRAY_COUNT(sContextMenuItems_BattleUse);
@@ -1714,6 +1724,12 @@ static void OpenContextMenu(u8 taskId)
                     gBagMenu->contextMenuItemsBuffer[0] = ACTION_CHECK;
                 break;
             case POCKET_KEY_ITEMS:
+                if (gSpecialVar_ItemId == ITEM_POLISHED_TYPE_CHART)
+                {
+                    gBagMenu->contextMenuItemsPtr = sContextMenuItems_TypeChart;
+                    gBagMenu->contextMenuNumItems = ARRAY_COUNT(sContextMenuItems_TypeChart);
+                    break;
+                }
                 gBagMenu->contextMenuItemsPtr = gBagMenu->contextMenuItemsBuffer;
                 gBagMenu->contextMenuNumItems = ARRAY_COUNT(sContextMenuItems_KeyItemsPocket);
                 memcpy(&gBagMenu->contextMenuItemsBuffer, &sContextMenuItems_KeyItemsPocket, sizeof(sContextMenuItems_KeyItemsPocket));

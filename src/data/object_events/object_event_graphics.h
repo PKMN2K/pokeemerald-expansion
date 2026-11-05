@@ -691,3 +691,5 @@ const u16 gObjectEventPal_PolishedNpcPurple[] = INCBIN_U16("graphics/object_even
 const u32 gObjectEventPic_PolishedAceTrainerF[] = INCGFX_U32("graphics/object_events/polished_ace_trainer_f/walking.png", ".4bpp", "-mwidth 2 -mheight 4");
 const u32 gObjectEventPic_PolishedSage[] = INCGFX_U32("graphics/object_events/polished_sage/walking.png", ".4bpp", "-mwidth 2 -mheight 4");
 const u32 gObjectEventPic_PolishedGameboyKid[] = INCGFX_U32("graphics/object_events/polished_gameboy_kid/walking.png", ".4bpp", "-mwidth 2 -mheight 4");
+const u32 gObjectEventPic_PolishedGamerGirl[] = INCGFX_U32("graphics/object_events/polished_gamer_girl/walking.png", ".4bpp", "-mwidth 2 -mheight 4");
+const u32 gObjectEventPic_PolishedAcademyBook[] = INCGFX_U32("graphics/object_events/polished_academy_book/book.png", ".4bpp", "-mwidth 2 -mheight 4");

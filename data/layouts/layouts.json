@@ -9598,6 +9598,17 @@
       "border_filepath": "data/layouts/PolishedVioletPokeCenter1F/border.bin",
       "blockdata_filepath": "data/layouts/PolishedVioletPokeCenter1F/map.bin",
       "layout_version": "emerald"
+    },
+    {
+      "id": "LAYOUT_POLISHED_EARLS_POKEMON_ACADEMY",
+      "name": "PolishedEarlsPokemonAcademy_Layout",
+      "width": 8,
+      "height": 16,
+      "primary_tileset": "gTileset_PolishedNewBarkLabPrimary",
+      "secondary_tileset": "gTileset_PolishedNewBarkLabSecondary",
+      "border_filepath": "data/layouts/PolishedEarlsPokemonAcademy/border.bin",
+      "blockdata_filepath": "data/layouts/PolishedEarlsPokemonAcademy/map.bin",
+      "layout_version": "emerald"
     }
   ]
 }

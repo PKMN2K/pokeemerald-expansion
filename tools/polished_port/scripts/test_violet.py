@@ -16,10 +16,11 @@ def map_data(name):
 
 def main():
     files = source_files()
-    city, center, gate, route = map(map_data, ("VioletCity", "VioletPokeCenter1F", "Route31VioletGate", "Route31"))
-    maps = {row["id"]: row for row in (city, center, gate, route)}
+    city, center, gate, route, academy = map(map_data, ("VioletCity", "VioletPokeCenter1F", "Route31VioletGate", "Route31", "EarlsPokemonAcademy"))
+    maps = {row["id"]: row for row in (city, center, gate, route, academy)}
     for row, expected in (
-        (city, [(31, 25), (39, 24), (39, 25)]),
+        (city, [(31, 25), (39, 24), (39, 25), (30, 17)]),
+        (academy, [(3, 15), (4, 15)]),
         (center, [(5, 7), (6, 7)]),
         (gate, [(9, 4), (9, 5), (0, 4), (0, 5)]),
     ):
@@ -62,9 +63,8 @@ def main():
         assert struct.unpack_from("<H", attrs, tile*2)[0] == ids["MB_IMPASSABLE_NORTH"]
 
     src = files["maps/VioletCity.asm"].decode()
-    # Every first-visit outdoor actor except Earl, whose script needs the Academy.
+    # Earl is appended so earlier city saves keep their resident IDs.
     coordinates = [(int(x),int(y)) for x,y in re.findall(r"(?:object|cuttree|fruittree|itemball)_event\s+(\d+),\s*(\d+),", src)]
-    coordinates.remove((13,16))
     assert Counter((o["x"],o["y"]) for o in city["object_events"]) == Counter(coordinates)
     hidden = [(int(x),int(y),"ITEM_"+item) for x,y,item in re.findall(r"bg_event\s+(\d+),\s*(\d+), BGEVENT_ITEM \+ (\w+),",src)]
     assert [(e["x"],e["y"],e["item"]) for e in city["bg_events"] if e["type"]=="hidden_item"] == hidden

@@ -81,6 +81,7 @@
 #include "constants/event_object_movement.h"
 #include "constants/event_objects.h"
 #include "constants/layouts.h"
+#include "constants/map_event_ids.h"
 #include "constants/region_map_sections.h"
 #include "constants/rgb.h"
 #include "constants/songs.h"
@@ -571,8 +572,15 @@ void LoadSaveblockObjEventScripts(void)
     struct ObjectEventTemplate *savObjTemplates = gSaveBlock1Ptr->objectEventTemplates;
     s32 i;
 
-    for (i = 0; i < OBJECT_EVENT_TEMPLATES_COUNT; i++)
-        savObjTemplates[i].script = mapHeaderObjTemplates[i].script;
+    for (i = 0; i < gMapHeader.events->objectEventCount; i++)
+    {
+        // Earlier Violet saves contain an empty slot for Earl.
+        if (gMapHeader.mapLayoutId == LAYOUT_POLISHED_VIOLET_CITY
+         && mapHeaderObjTemplates[i].localId == LOCALID_VIOLET_EARL && savObjTemplates[i].localId == 0)
+            savObjTemplates[i] = mapHeaderObjTemplates[i];
+        else
+            savObjTemplates[i].script = mapHeaderObjTemplates[i].script;
+    }
 }
 
 static struct ObjectEventTemplate *GetObjectEventTemplate(u8 localId)

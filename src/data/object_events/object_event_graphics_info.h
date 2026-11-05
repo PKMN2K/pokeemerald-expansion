@@ -8376,3 +8376,57 @@ const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_PolishedFruitPicke
     .anims = sAnimTable_PolishedFixed,
     .images = sPicTable_PolishedFruitPicked,
 };
+
+const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_PolishedGamerGirl = {
+    .tileTag = TAG_NONE,
+    .paletteTag = OBJ_EVENT_PAL_TAG_POLISHED_NPC_BLUE,
+    .reflectionPaletteTag = OBJ_EVENT_PAL_TAG_NONE,
+    .size = 256,
+    .width = 16,
+    .height = 32,
+    .paletteSlot = PALSLOT_NPC_1,
+    .shadowSize = SHADOW_SIZE_M,
+    .inanimate = FALSE,
+    .compressed = FALSE,
+    .tracks = TRACKS_FOOT,
+    .oam = &gObjectEventBaseOam_16x32,
+    .subspriteTables = sOamTables_16x32,
+    .anims = sAnimTable_PolishedBowingNurse,
+    .images = sPicTable_PolishedGamerGirl,
+};
+
+const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_PolishedGameboyKidRed = {
+    .tileTag = TAG_NONE,
+    .paletteTag = OBJ_EVENT_PAL_TAG_POLISHED_POKEFAN,
+    .reflectionPaletteTag = OBJ_EVENT_PAL_TAG_NONE,
+    .size = 256,
+    .width = 16,
+    .height = 32,
+    .paletteSlot = PALSLOT_NPC_1,
+    .shadowSize = SHADOW_SIZE_M,
+    .inanimate = FALSE,
+    .compressed = FALSE,
+    .tracks = TRACKS_FOOT,
+    .oam = &gObjectEventBaseOam_16x32,
+    .subspriteTables = sOamTables_16x32,
+    .anims = sAnimTable_PolishedBowingNurse,
+    .images = sPicTable_PolishedGameboyKid,
+};
+
+const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_PolishedAcademyBook = {
+    .tileTag = TAG_NONE,
+    .paletteTag = OBJ_EVENT_PAL_TAG_POLISHED_NPC_BROWN,
+    .reflectionPaletteTag = OBJ_EVENT_PAL_TAG_NONE,
+    .size = 256,
+    .width = 16,
+    .height = 32,
+    .paletteSlot = PALSLOT_NPC_1,
+    .shadowSize = SHADOW_SIZE_M,
+    .inanimate = TRUE,
+    .compressed = FALSE,
+    .tracks = TRACKS_NONE,
+    .oam = &gObjectEventBaseOam_16x32,
+    .subspriteTables = sOamTables_16x32,
+    .anims = sAnimTable_PolishedFixed,
+    .images = sPicTable_PolishedAcademyBook,
+};

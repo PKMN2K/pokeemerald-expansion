@@ -44,7 +44,8 @@ def assets(files):
             else:
                 convert(src,out)
             result[f"graphics/object_events/polished_{sprite}/walking.png"] = out.read_bytes()
-        for item, bank, label in (("mulch","items","MULCH"),("mystery_egg","key_items","MYSTERY EGG")):
+        for item, bank, label in (("mulch","items","MULCH"),("mystery_egg","key_items","MYSTERY EGG"),
+                                 ("type_chart","key_items","TYPE CHART")):
             src.write_bytes(files[f"gfx/items/{item}.png"])
             w,h,pixels = _read_png_2bit_grayscale(src)
             assert (w,h) == (24,24)

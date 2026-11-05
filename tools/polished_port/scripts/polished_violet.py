@@ -4,12 +4,13 @@ import tempfile
 from pathlib import Path
 
 from convert_player_walking import convert
+from polished_academy import outdoor
 from polished_cherrygrove import center, standing_sheet
 from polished_route29 import object_at
 
 MAPS = {"VioletCity": "VIOLET_CITY", "VioletPokeCenter1F": "VIOLET_POKECENTER_1F"}
 # Keep source artwork at entrances whose destination has a later campaign phase.
-CLOSED = {"VioletCity": ((9, 17), (18, 17), (30, 17), (3, 15), (21, 29),
+CLOSED = {"VioletCity": ((9, 17), (18, 17), (3, 15), (21, 29),
                         (23, 1), (2, 8), (2, 9))}
 GRAPHICS = {
     ("CUTE_GIRL", "GREEN"): "CUTE_GIRL_GREEN", ("ACE_TRAINER_M", "RED"): "ACE_TRAINER_M",
@@ -45,7 +46,7 @@ def events(name, script, header, files, text, define):
         x, y, sprite, move, ry, rx, schedule, color, kind, command, label, flag = (
             field.strip() for field in raw.split(","))
         if kind == "OBJECTTYPE_SCRIPT":
-            # Earl starts his Academy tour. Elm's aide arrives after Falkner.
+            # Earl is appended after the existing local IDs. The aide arrives after Falkner.
             assert label in ("VioletCityEarlScript", "VioletPokeCenter1FElmsAideScript")
             continue
         assert kind == "OBJECTTYPE_COMMAND" and command == "jumptextfaceplayer" and flag == "-1"
@@ -91,11 +92,14 @@ def events(name, script, header, files, text, define):
     header["object_events"].append(object_at("LOCALID_VIOLET_CHERI", "VAR_B", 14, 29, prefix+"_Cheri"))
     hooks = ("\tmap_script MAP_SCRIPT_ON_LOAD, PolishedVioletCity_Setup\n"
              "\tmap_script MAP_SCRIPT_ON_RETURN_TO_FIELD, PolishedVioletCity_Restore\n")
-    code += """PolishedVioletCity_Cheri::
+    earl, door = outdoor(script, header, files, text, define)
+    code += earl
+    code += f"""PolishedVioletCity_Cheri::
     setvar VAR_0x8005, 4
     goto PolishedFruit_Interact
 
 PolishedVioletCity_Setup::
+    setmetatile 30, 17, {door}, FALSE
     setflag FLAG_POLISHED_VISITED_VIOLET
     special PolishedFruitRefreshAll
     gettime
@@ -111,6 +115,9 @@ PolishedVioletCity_Night::
     end
 
 PolishedVioletCity_Restore::
+    goto_if_set FLAG_POLISHED_EARL_IN_ACADEMY, PolishedVioletCity_RestoreResidents
+    addobject LOCALID_VIOLET_EARL
+PolishedVioletCity_RestoreResidents::
     goto_if_set FLAG_TEMP_1, PolishedVioletCity_ShowNight
     removeobject LOCALID_VIOLET_CITY_ACE_TRAINER_F
     addobject LOCALID_VIOLET_CITY_ACE_TRAINER_M
@@ -122,5 +129,5 @@ PolishedVioletCity_ShowNight::
     end
 """
     return hooks, code, {"roof_group": 10, "palette": "VioletEcruteakPalette",
-                         "deferred": ["Earl and the Academy", "houses and Mart", "Gym",
+                         "deferred": ["houses and Mart", "Gym",
                                       "Sprout Tower", "Route 36 gate and adjoining routes"]}

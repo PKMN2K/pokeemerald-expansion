@@ -1236,8 +1236,8 @@
 // Reserved for FLAG_POLISHED_VIOLET_RARE_CANDY.
 // Reserved for FLAG_POLISHED_VIOLET_CUT.
 // Reserved for FLAG_POLISHED_READ_FALKNER_JOURNAL.
-#define FLAG_0x4D6               0x4D6
-#define FLAG_0x4D7               0x4D7
+// Reserved for FLAG_POLISHED_EARL_IN_ACADEMY.
+// Reserved for FLAG_POLISHED_READ_WALKER_JOURNAL.
 #define FLAG_0x4D8               0x4D8
 #define FLAG_0x4D9               0x4D9
 #define FLAG_0x4DA               0x4DA

@@ -1,6 +1,6 @@
 {
   "source_commit": "3fa43192379df5c3e7b09a08e4d5d79af4f02f42",
-  "scope": "source geography, connected interiors, static interactions, six ambient residents, rival window encounter, Lyra/Elm introduction, all three starter choices, first Lyra battle, aide Potion and Mom's opening with weekday/DST setup, schedules and neighbor; Route 29, Cherrygrove services, Route 30 with Mulch, native encounters, Mystery Egg and Oak; Elm's disaster call, first rival battle, theft investigation, rival naming, Egg delivery, Joey, Mom's savings, the Route 29 catching tutorial and Tuscany; Route 31 with Wade, Finch, Mom\u2019s worried call and the Violet gate; Violet City first visit and Pok\u00e9mon Center",
+  "scope": "source geography, connected interiors, static interactions, six ambient residents, rival window encounter, Lyra/Elm introduction, all three starter choices, first Lyra battle, aide Potion and Mom's opening with weekday/DST setup, schedules and neighbor; Route 29, Cherrygrove services, Route 30 with Mulch, native encounters, Mystery Egg and Oak; Elm's disaster call, first rival battle, theft investigation, rival naming, Egg delivery, Joey, Mom's savings, the Route 29 catching tutorial and Tuscany; Route 31 with Wade, Finch, Mom\u2019s worried call and the Violet gate; Violet City first visit, Pok\u00e9mon Center, Earl\u2019s tour, Academy and usable Type Chart",
   "maps": {
     "NEW_BARK_TOWN": {
       "name": "NewBarkTown",
@@ -3686,6 +3686,13 @@
           "elevation": 0,
           "dest_map": "MAP_POLISHED_ROUTE_31_VIOLET_GATE",
           "dest_warp_id": "3"
+        },
+        {
+          "x": 30,
+          "y": 17,
+          "elevation": 0,
+          "dest_map": "MAP_POLISHED_EARLS_POKEMON_ACADEMY",
+          "dest_warp_id": "0"
         }
       ],
       "static_interactions": 8,
@@ -3695,7 +3702,6 @@
           "roof_group": 10,
           "palette": "VioletEcruteakPalette",
           "deferred": [
-            "Earl and the Academy",
             "houses and Mart",
             "Gym",
             "Sprout Tower",
@@ -3830,6 +3836,83 @@
           "deferred": [
             "post-badge Togepi Egg",
             "communication floor"
+          ]
+        }
+      ]
+    },
+    "EARLS_POKEMON_ACADEMY": {
+      "name": "EarlsPokemonAcademy",
+      "width": 8,
+      "height": 16,
+      "tileset": "Lab",
+      "source_blocks": "EarlsPokemonAcademy",
+      "used_metatiles": [
+        0,
+        1,
+        2,
+        3,
+        56,
+        57,
+        58,
+        59,
+        60,
+        61,
+        62,
+        63,
+        64,
+        65,
+        66,
+        67,
+        68,
+        69,
+        70,
+        71,
+        72,
+        73,
+        74,
+        75,
+        76,
+        77,
+        78,
+        79,
+        80,
+        81,
+        82,
+        83,
+        84,
+        85,
+        86,
+        87,
+        88,
+        89,
+        90,
+        91
+      ],
+      "warps": [
+        {
+          "x": 3,
+          "y": 15,
+          "elevation": 0,
+          "dest_map": "MAP_POLISHED_VIOLET_CITY",
+          "dest_warp_id": "3"
+        },
+        {
+          "x": 4,
+          "y": 15,
+          "elevation": 0,
+          "dest_map": "MAP_POLISHED_VIOLET_CITY",
+          "dest_warp_id": "3"
+        }
+      ],
+      "static_interactions": 4,
+      "residents": [],
+      "story_encounters": [
+        {
+          "activities": [
+            "Earl's lessons",
+            "status blackboard",
+            "student notebook",
+            "Walker's journal"
           ]
         }
       ]
@@ -4088,6 +4171,17 @@
       "border_filepath": "data/layouts/PolishedVioletPokeCenter1F/border.bin",
       "blockdata_filepath": "data/layouts/PolishedVioletPokeCenter1F/map.bin",
       "layout_version": "emerald"
+    },
+    {
+      "id": "LAYOUT_POLISHED_EARLS_POKEMON_ACADEMY",
+      "name": "PolishedEarlsPokemonAcademy_Layout",
+      "width": 8,
+      "height": 16,
+      "primary_tileset": "gTileset_PolishedNewBarkLabPrimary",
+      "secondary_tileset": "gTileset_PolishedNewBarkLabSecondary",
+      "border_filepath": "data/layouts/PolishedEarlsPokemonAcademy/border.bin",
+      "blockdata_filepath": "data/layouts/PolishedEarlsPokemonAcademy/map.bin",
+      "layout_version": "emerald"
     }
   ],
   "output_sha256": {
@@ -4148,6 +4242,8 @@
     "graphics/items/icon_palettes/polished_mulch.pal": "0f835aaad7a4801f7b521d3f1171d8620cc8d43ed5d3e95482e494012b425be0",
     "graphics/items/icons/polished_mystery_egg.png": "0727eb23cde3da98e954703b52fac35deeb9a20c16ff49e80abe9c967228c056",
     "graphics/items/icon_palettes/polished_mystery_egg.pal": "b5bfb83b173d67a13176311b068a6cabf24151be0b05bb366f3050dc2d0eb378",
+    "graphics/items/icons/polished_type_chart.png": "307e9ba716ba8ac66831a87dd74d8a1e1bc31686b5b25a45fdfb692f61cf8145",
+    "graphics/items/icon_palettes/polished_type_chart.pal": "8dae71af1d4dfd6688b45dead5c0760d32e0c121755e6ab252c1c9268504476b",
     "graphics/trainers/front_pics/polished_youngster.png": "f32653b28a771d6c045973ee7a6463678a689c74de614bc9fea47e02964b8e7d",
     "graphics/trainers/palettes/polished_youngster.pal": "c3fda7c28aab4d6ea3dded13867273848bd93db8aef7d5268322f90ae10a0c93",
     "graphics/trainers/front_pics/polished_bug_catcher.png": "a87bedaa2856a899570d683887d966da7c65151a4dccc066a5a645b56e8d0d24",
@@ -4163,6 +4259,11 @@
     "graphics/object_events/polished_ace_trainer_f/walking.png": "9f8e81d365577ee934c48d4c5373a131c9c68d64c00424ab81895753ae52dda1",
     "graphics/object_events/polished_sage/walking.png": "5aa9296fb5de257bb6e82817cc7e7b56bd45e0aa275b3598a2b88b78123ca4cd",
     "graphics/object_events/polished_gameboy_kid/walking.png": "a63c67e5efe6e0fb6f5103f8807682721f1a418352035045b7ae586c5a00b202",
+    "graphics/polished_type_chart/tiles.bin": "065f0fa3705632f89298ff3f6afec2d238eb4b2cfcd1463d2718f5f3e7fef50e",
+    "graphics/polished_type_chart/map.bin": "f5a8dd3854cc32206b2fd52eb8e78ca29c9082e3455a5b1ca8c1b939a4c9e150",
+    "graphics/polished_type_chart/palette.bin": "60ff10a148bc75e554e0fd93f554d182ef3370c99ce225a735aecebc4d6645ee",
+    "graphics/object_events/polished_gamer_girl/walking.png": "425bc8ec1600556f3cf9e82dab716cd9bb50e444f2b8a8288db3433bc9a4adf6",
+    "graphics/object_events/polished_academy_book/book.png": "28bcf600e092ec1a152b0ee1675127ad9a5c6c92e206de7d398e4d48959792c7",
     "graphics/trainers/front_pics/polished_rival.png": "14aa048e357549340e926f557c4c4737b45a7c4d51f6807ee7c74068f8814d10",
     "graphics/trainers/palettes/polished_rival.pal": "bbc303be54aea8bbd4c70bcacdbd205d922b345702d45a013bcc37fa824e95b6",
     "src/data/polished_return.party": "c3ff98fb424914ef7de50d2dcd587bdf514b7f88efc82a864d16e5fb2b2439a0",
@@ -4251,14 +4352,18 @@
     "data/layouts/PolishedRoute31VioletGate/border.bin": "58b6ce2870c231fbe07a763ac9c4dc612e669cfbebfb93760435a9dbbdced76e",
     "data/maps/PolishedRoute31VioletGate/map.json": "6435d938ee14b59cd211a9cc7fe87a7113db5f3aec9e13bf54a4899b6abfd07c",
     "data/maps/PolishedRoute31VioletGate/scripts.inc": "e2671c233b2951c52ade9c0efc1bb84d91d12b219f8ac98bbebcf749141d98dd",
-    "data/layouts/PolishedVioletCity/map.bin": "3ca0ddbf6711d9f6f094ffbaa61ce6a5eac64ab847c201bb6e880a4b037b1a86",
+    "data/layouts/PolishedVioletCity/map.bin": "b53e3bb728983ec647f946883a5ac503e69ab56f09c3d8d434194f50dd26d553",
     "data/layouts/PolishedVioletCity/border.bin": "310f01837605c39f0e0a084ab8e536b47e44c21cab74534066b2413ce33f2119",
-    "data/maps/PolishedVioletCity/map.json": "50b346fa2f4029936e34dc3746743fd1dec444e34c6227aec0c9b1be563af3be",
-    "data/maps/PolishedVioletCity/scripts.inc": "c18bbb7bda83b4383d0c00c1cc9b174532cc8a4f209820f3f670a4e8ca180d24",
+    "data/maps/PolishedVioletCity/map.json": "da606f1d43ee6db5a77b92d9e18a9750f1a449a2e2e679cb5c2c1ce4729ed12c",
+    "data/maps/PolishedVioletCity/scripts.inc": "d56affa81a0ca1c1821d52d3089101090a9dfe3d19fff41df40002fa7f34854f",
     "data/layouts/PolishedVioletPokeCenter1F/map.bin": "3cd23e389054c1e943d56dd23893e1b3978620d84b7a4fd66ed44dae1f5b99d4",
     "data/layouts/PolishedVioletPokeCenter1F/border.bin": "58b6ce2870c231fbe07a763ac9c4dc612e669cfbebfb93760435a9dbbdced76e",
     "data/maps/PolishedVioletPokeCenter1F/map.json": "65669606ccbf2b72c67e7f32ffdc866665ea020fc1cb2f6ba1429b46e4fbdbbd",
     "data/maps/PolishedVioletPokeCenter1F/scripts.inc": "f972a82161eb6ed82fa63b26f42af39d5693c2852726b433ab5ba7a352226621",
+    "data/layouts/PolishedEarlsPokemonAcademy/map.bin": "12a0b8c35fdf021fa5c29dfaa432e5709c7b89c44ea2b16768b21db571ed4e07",
+    "data/layouts/PolishedEarlsPokemonAcademy/border.bin": "58b6ce2870c231fbe07a763ac9c4dc612e669cfbebfb93760435a9dbbdced76e",
+    "data/maps/PolishedEarlsPokemonAcademy/map.json": "f9fcc97f58c7a4ab5cfa15b66748ac4703e3bcfcfcf70522cc76e60d2b77219c",
+    "data/maps/PolishedEarlsPokemonAcademy/scripts.inc": "54f851abf5d394f1be95512457c9f629f812935b545fe1b09af8a4b067e42198",
     "data/tilesets/primary/polished_new_bark_outdoor/tiles.bin": "4606596e49129db4f858005c54f71865f818549f252026016bec23bee8e89b45",
     "data/tilesets/primary/polished_new_bark_outdoor/palettes.bin": "fe14bfb5c6092799d53593ab4638bb4a3502ef83e72cf6de0aace0745c8694a8",
     "data/tilesets/primary/polished_new_bark_outdoor/metatiles.bin": "db29314040e9c515e27686a5e202bbf69030e5631d0efe24da69fbac66c739fa",
@@ -4278,7 +4383,7 @@
     "data/tilesets/primary/polished_new_bark_lab/tiles.bin": "fa2eff44a934a8c06af72e99a8539316bb651de4956782f123e5d1621cf603d1",
     "data/tilesets/primary/polished_new_bark_lab/palettes.bin": "31e92357047703d92d502c2f0f60cc17f642e8d2e036c037559bca6c154c3e93",
     "data/tilesets/primary/polished_new_bark_lab/metatiles.bin": "46e1933e83e3b202ff398ba36ea0a0e06ddd018fb2ca82214bec540f55d4c7f5",
-    "data/tilesets/primary/polished_new_bark_lab/metatile_attributes.bin": "c3a268ccb0aab2f135dfa00a5fba847ff3abcfef4b866f6fc9a230645e736de4",
+    "data/tilesets/primary/polished_new_bark_lab/metatile_attributes.bin": "9a28e7dcc89845d28bb8677c03c4080eeddf9fd7f0019c087735373ccea20209",
     "data/tilesets/secondary/polished_new_bark_lab/tiles.bin": "4fe7b59af6de3b665b67788cc2f99892ab827efae3a467342b3bb4e3bc8e5bfe",
     "data/tilesets/secondary/polished_new_bark_lab/palettes.bin": "31e92357047703d92d502c2f0f60cc17f642e8d2e036c037559bca6c154c3e93",
     "data/tilesets/secondary/polished_new_bark_lab/metatiles.bin": "9f1dcbc35c350d6027f98be0f5c8b43b42ca52b7604459c0c42be3aa88913d47",

@@ -95,6 +95,8 @@
 #define FLAG_POLISHED_VIOLET_RARE_CANDY 0x4D3
 #define FLAG_POLISHED_VIOLET_CUT 0x4D4
 #define FLAG_POLISHED_READ_FALKNER_JOURNAL 0x4D5
+#define FLAG_POLISHED_EARL_IN_ACADEMY 0x4D6
+#define FLAG_POLISHED_READ_WALKER_JOURNAL 0x4D7
 
 #if IS_FRLG
 
@@ -1331,8 +1333,8 @@
 // Reserved for FLAG_POLISHED_VIOLET_RARE_CANDY.
 // Reserved for FLAG_POLISHED_VIOLET_CUT.
 // Reserved for FLAG_POLISHED_READ_FALKNER_JOURNAL.
-#define FLAG_UNUSED_0x4D6                                           0x4D6 // Unused Flag
-#define FLAG_UNUSED_0x4D7                                           0x4D7 // Unused Flag
+// Reserved for FLAG_POLISHED_EARL_IN_ACADEMY.
+// Reserved for FLAG_POLISHED_READ_WALKER_JOURNAL.
 #define FLAG_UNUSED_0x4D8                                           0x4D8 // Unused Flag
 #define FLAG_UNUSED_0x4D9                                           0x4D9 // Unused Flag
 #define FLAG_UNUSED_0x4DA                                           0x4DA // Unused Flag

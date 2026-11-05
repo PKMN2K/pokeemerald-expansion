@@ -1138,6 +1138,12 @@ static const struct MenuAction MultichoiceList_PolishedWeekdays[] =
     {COMPOUND_STRING("Saturday")},
 };
 
+static const struct MenuAction sPolishedBlackboard[] = {
+    {COMPOUND_STRING("Psn")}, {COMPOUND_STRING("Par")},
+    {COMPOUND_STRING("Slp")}, {COMPOUND_STRING("Brn")},
+    {COMPOUND_STRING("Frz")}, {COMPOUND_STRING("Quit")},
+};
+
 static const struct MenuAction sPolishedMomBank[] = {
     {COMPOUND_STRING("Get")},
     {COMPOUND_STRING("Save")},
@@ -1153,6 +1159,7 @@ struct MultichoiceListStruct
 
 static const struct MultichoiceListStruct sMultichoiceLists[] =
 {
+    [MULTI_POLISHED_BLACKBOARD]         = MULTICHOICE(sPolishedBlackboard),
     [MULTI_POLISHED_MOM_BANK]           = MULTICHOICE(sPolishedMomBank),
     [MULTI_POLISHED_WEEKDAYS]           = MULTICHOICE(MultichoiceList_PolishedWeekdays),
     [MULTI_BRINEY_ON_DEWFORD]          = MULTICHOICE(MultichoiceList_BrineyOnDewford),

@@ -3439,6 +3439,8 @@ extern const u16 gBattleIcons_Pal2[];
 extern const u32 gGhostFrontPic[];
 extern const u16 gGhostPalette[];
 
+extern const u32 gItemIcon_PolishedTypeChart[];
+extern const u16 gItemIconPalette_PolishedTypeChart[];
 extern const u32 gItemIcon_PolishedMulch[];
 extern const u16 gItemIconPalette_PolishedMulch[];
 extern const u32 gItemIcon_PolishedMysteryEgg[];

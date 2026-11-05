@@ -285,3 +285,18 @@ tiles, doors, side connections, encounter weights and save allocations.
 The campaign emulator visits the city through both gate rows, compares all
 four palettes and the roof tiles in VRAM, visits the Center and exercises
 cartridge Save/Continue, a Cheri harvest and a genuine pond battle.
+
+## Earl’s Academy and the portable Type Chart
+
+The Violet tour follows the source movement commands in `maps/VioletCity.asm`.
+The generator appends Earl after the existing Violet object IDs and keeps
+the Academy door after the three previous city warps. The map-load hook
+restores the original door tile in older cartridge saves.
+
+The Academy’s chart generator uses both GBC graphics banks, the color
+attributes and 40 OAM entries to reproduce the 160×144 page on a native
+GBA background. The Bag opens it in field and battle contexts. Run
+`python3 tools/polished_port/scripts/test_academy.py` to check the map,
+movements and the full chart against the source RGB555 frame. The campaign
+mGBA replay also reads the chart from both Bags, checks both close buttons,
+and verifies that consulting it preserves the battle turn.
