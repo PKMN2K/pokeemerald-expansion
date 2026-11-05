@@ -9642,6 +9642,39 @@
       "border_filepath": "data/layouts/PolishedVioletOnixTradeHouse/border.bin",
       "blockdata_filepath": "data/layouts/PolishedVioletOnixTradeHouse/map.bin",
       "layout_version": "emerald"
+    },
+    {
+      "id": "LAYOUT_POLISHED_SPROUT_TOWER_1F",
+      "name": "PolishedSproutTower1F_Layout",
+      "width": 16,
+      "height": 16,
+      "primary_tileset": "gTileset_PolishedNewBarkSproutPrimary",
+      "secondary_tileset": "gTileset_PolishedNewBarkSproutSecondary",
+      "border_filepath": "data/layouts/PolishedSproutTower1F/border.bin",
+      "blockdata_filepath": "data/layouts/PolishedSproutTower1F/map.bin",
+      "layout_version": "emerald"
+    },
+    {
+      "id": "LAYOUT_POLISHED_SPROUT_TOWER_2F",
+      "name": "PolishedSproutTower2F_Layout",
+      "width": 16,
+      "height": 16,
+      "primary_tileset": "gTileset_PolishedNewBarkSproutPrimary",
+      "secondary_tileset": "gTileset_PolishedNewBarkSproutSecondary",
+      "border_filepath": "data/layouts/PolishedSproutTower2F/border.bin",
+      "blockdata_filepath": "data/layouts/PolishedSproutTower2F/map.bin",
+      "layout_version": "emerald"
+    },
+    {
+      "id": "LAYOUT_POLISHED_SPROUT_TOWER_3F",
+      "name": "PolishedSproutTower3F_Layout",
+      "width": 16,
+      "height": 16,
+      "primary_tileset": "gTileset_PolishedNewBarkSproutPrimary",
+      "secondary_tileset": "gTileset_PolishedNewBarkSproutSecondary",
+      "border_filepath": "data/layouts/PolishedSproutTower3F/border.bin",
+      "blockdata_filepath": "data/layouts/PolishedSproutTower3F/map.bin",
+      "layout_version": "emerald"
     }
   ]
 }

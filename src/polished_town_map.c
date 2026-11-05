@@ -138,6 +138,9 @@ void PolishedTownMapInit(MainCallback callback)
           || gSaveBlock1Ptr->location.mapNum == MAP_NUM(MAP_POLISHED_VIOLET_NICKNAME_SPEECH_HOUSE)
           || gSaveBlock1Ptr->location.mapNum == MAP_NUM(MAP_POLISHED_VIOLET_ONIX_TRADE_HOUSE))
         sJohtoMap->location = 6;
+    else if (gSaveBlock1Ptr->location.mapNum >= MAP_NUM(MAP_POLISHED_SPROUT_TOWER_1F)
+          && gSaveBlock1Ptr->location.mapNum <= MAP_NUM(MAP_POLISHED_SPROUT_TOWER_3F))
+        sJohtoMap->location = 7;
     else if (gSaveBlock1Ptr->location.mapNum >= MAP_NUM(MAP_POLISHED_ROUTE_30))
         sJohtoMap->location = 4;
     else if (gSaveBlock1Ptr->location.mapNum >= MAP_NUM(MAP_POLISHED_CHERRYGROVE_CITY))

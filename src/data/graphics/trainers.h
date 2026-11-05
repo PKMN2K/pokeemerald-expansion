@@ -473,6 +473,12 @@ const u32 gTrainerFrontPic_PolishedYoungster[] = INCGFX_U32("graphics/trainers/f
 const u16 gTrainerPalette_PolishedYoungster[] = INCGFX_U16("graphics/trainers/palettes/polished_youngster.pal", ".gbapal");
 const u32 gTrainerFrontPic_PolishedBugCatcher[] = INCGFX_U32("graphics/trainers/front_pics/polished_bug_catcher.png", ".4bpp.smol");
 const u16 gTrainerPalette_PolishedBugCatcher[] = INCGFX_U16("graphics/trainers/palettes/polished_bug_catcher.pal", ".gbapal");
+const u32 gTrainerFrontPic_PolishedSage[] = INCGFX_U32("graphics/trainers/front_pics/polished_sage.png", ".4bpp.smol");
+const u16 gTrainerPalette_PolishedSage[] = INCGFX_U16("graphics/trainers/palettes/polished_sage.pal", ".gbapal");
+
+const u32 gTrainerFrontPic_PolishedElder[] = INCGFX_U32("graphics/trainers/front_pics/polished_elder.png", ".4bpp.smol");
+const u16 gTrainerPalette_PolishedElder[] = INCGFX_U16("graphics/trainers/palettes/polished_elder.pal", ".gbapal");
+
 const u32 gTrainerFrontPic_PolishedCooltrainerM[] = INCGFX_U32("graphics/trainers/front_pics/polished_cooltrainer_m.png", ".4bpp.smol");
 const u16 gTrainerPalette_PolishedCooltrainerM[] = INCGFX_U16("graphics/trainers/palettes/polished_cooltrainer_m.pal", ".gbapal");
 
@@ -1259,6 +1265,14 @@ const struct TrainerPicInfo gTrainerPicInfo[TRAINER_PIC_COUNT] =
     [TRAINER_PIC_POLISHED_BUG_CATCHER] =
     {
         .frontPic = TRAINER_FRONT_PIC(gTrainerFrontPic_PolishedBugCatcher, gTrainerPalette_PolishedBugCatcher),
+    },
+    [TRAINER_PIC_POLISHED_SAGE] =
+    {
+        .frontPic = TRAINER_FRONT_PIC(gTrainerFrontPic_PolishedSage, gTrainerPalette_PolishedSage),
+    },
+    [TRAINER_PIC_POLISHED_ELDER] =
+    {
+        .frontPic = TRAINER_FRONT_PIC(gTrainerFrontPic_PolishedElder, gTrainerPalette_PolishedElder),
     },
     [TRAINER_PIC_POLISHED_COOLTRAINER_M] =
     {

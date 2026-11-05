@@ -697,9 +697,46 @@ Poliwag's level. The trade uses Expansion's party/PC selector, moves, stat
 calculation and animation. Its persistent completion flag prevents a second
 trade and restores Kyle's source follow-up dialogue after Save/Continue.
 
-The campaign now covers 27 source maps and 66 reciprocal door/stair events,
-plus the two garden maps. Sprout Tower, Falkner's Gym and the post-badge
-Togepi Egg follow.
+### Sprout Tower first visit
+
+The north door at (23,1) now opens all three original 16-by-16 floors. Their
+tiles, palettes, collision, stair destinations, statues, painting, residents
+and four item balls come from the pinned source. The central pillar uses
+all ten source tile strips and the original 16-command animation order,
+including the five-frame forward/backward sway. Existing map and warp IDs
+remain unchanged; loading Violet refreshes the new door in older saves.
+
+Sages Chow, Nico, Edmond, Jin, Troy and Neal and Elder Li use their source
+parties, levels and learned moves, with authentic Sage/Elder battle art.
+The class DVs become doubled native IVs; the source modern-EV conversion
+gives 16 EVs per stat for Sages and 18 for Li. Li retains his Super Potion.
+Expansion supplies the battle AI, ability selection, battle effects and
+prize-money calculation. Each trainer has an independent persistent flag
+outside the original trainer/partner ranges.
+
+The upstairs encounters retain all seven source species/level probabilities
+for morning, day and night, including the distinct 3% and 2% Bellsprout
+levels. A tower-only native slot selector preserves that distinction.
+The native encounter rate is 4 (about 2.22% before native cooldowns and
+modifiers); the source rate is 2%. The first floor has no wild encounters.
+
+The summit coordinate scene retains the Elder's lecture, the player's and
+Rival's paths, and the Rival's Escape Rope departure. His visibility and
+the completed scene survive saving and loading. Defeating Li awards Flash
+once. If the Bag cannot accept it, his next interaction retries the gift
+without requiring another battle. The source reusable TM70 is represented
+by Expansion's reusable HM05 Flash, using native teaching, field-move and
+badge rules; the dialogue explains the native usage. This phase does not
+implement Crystal's press-A-without-teaching Flash mechanic. The actual
+Escape Rope item works from the tower and returns to its Violet entrance.
+
+Mako has her original first-visit conversation. Her later challenge and Rare
+Candy still require the five Ecruteak Kimono Girl victories and will be
+connected with that campaign phase. Source music remains a separate phase.
+Granny uses the imperial source text, matching the current engine setting.
+
+The campaign now covers 30 source maps and 77 reciprocal door/stair events,
+plus the two garden maps. Falkner's Gym and the post-badge Togepi Egg follow.
 
 The playable visual slice and dormant Headbutt encounter selection are complete
 parts of the port. **The whole Polished Crystal migration is not complete.**

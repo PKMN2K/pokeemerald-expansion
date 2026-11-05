@@ -1,3 +1,5 @@
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_PolishedKimonoGirlGreen;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_PolishedElder;
 extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_PolishedYoungsterBlue;
 extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_PolishedYoungsterBrown;
 extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_PolishedLassGreen;
@@ -513,6 +515,8 @@ const struct ObjectEventGraphicsInfo *const gObjectEventGraphicsInfoPointers[NUM
     [OBJ_EVENT_GFX_POLISHED_YOUNGSTER_GREEN] = &gObjectEventGraphicsInfo_PolishedYoungsterGreen,
     [OBJ_EVENT_GFX_POLISHED_COOL_DUDE_PURPLE] = &gObjectEventGraphicsInfo_PolishedCoolDudePurple,
     [OBJ_EVENT_GFX_POLISHED_GAMEBOY_KID] = &gObjectEventGraphicsInfo_PolishedGameboyKid,
+    [OBJ_EVENT_GFX_POLISHED_ELDER] = &gObjectEventGraphicsInfo_PolishedElder,
+    [OBJ_EVENT_GFX_POLISHED_KIMONO_GIRL_GREEN] = &gObjectEventGraphicsInfo_PolishedKimonoGirlGreen,
     [OBJ_EVENT_GFX_POLISHED_SAGE] = &gObjectEventGraphicsInfo_PolishedSage,
     [OBJ_EVENT_GFX_POLISHED_FRUIT_RED] = &gObjectEventGraphicsInfo_PolishedFruitRed,
     [OBJ_EVENT_GFX_POLISHED_FRUIT_PICKED_RED] = &gObjectEventGraphicsInfo_PolishedFruitPickedRed,

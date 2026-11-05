@@ -12,6 +12,7 @@ void InitTilesetAnim_PolishedJohtoOutdoor(const u8 *initialScrollTile);
 void InitTilesetAnim_PolishedJohtoOutdoorAuthentic(void);
 // Opt-in Johto tileset callback entry point.
 void InitTilesetAnim_PolishedJohtoOutdoorPrimary(void);
+void InitTilesetAnim_PolishedSproutPrimary(void);
 void TilesetAnim_PolishedJohtoOutdoor(u16 timer);
 
 void InitTilesetAnim_General(void);

@@ -11,9 +11,9 @@ def main():
     files=source_files()
     city=json.loads((ROOT/"data/maps/PolishedVioletCity/map.json").read_text())
     groups=json.loads((ROOT/"data/maps/map_groups.json").read_text())["gMapGroup_PolishedJohtoDemo"]
-    assert groups[23:]==["Polished"+n for n in ("VioletCity","VioletPokeCenter1F",
+    assert groups[23:29]==["Polished"+n for n in ("VioletCity","VioletPokeCenter1F",
         "EarlsPokemonAcademy","VioletMart","VioletNicknameSpeechHouse","VioletOnixTradeHouse")]
-    assert [(w["x"],w["y"]) for w in city["warp_events"]]==[(31,25),(39,24),(39,25),(30,17),(9,17),(3,15),(21,29)]
+    assert [(w["x"],w["y"]) for w in city["warp_events"][:7]]==[(31,25),(39,24),(39,25),(30,17),(9,17),(3,15),(21,29)]
     blocks=files["maps/TraditionalHouse.ablk"]
     for name,index in (("VioletNicknameSpeechHouse",5),("VioletOnixTradeHouse",6)):
         original=files["maps/"+name+".asm"].decode()

@@ -239,6 +239,13 @@
       "elevation": 0,
       "dest_map": "MAP_POLISHED_VIOLET_ONIX_TRADE_HOUSE",
       "dest_warp_id": "0"
+    },
+    {
+      "x": 23,
+      "y": 1,
+      "elevation": 0,
+      "dest_map": "MAP_POLISHED_SPROUT_TOWER_1F",
+      "dest_warp_id": "0"
     }
   ],
   "coord_events": [],

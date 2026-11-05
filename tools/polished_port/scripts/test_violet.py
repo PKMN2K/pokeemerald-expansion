@@ -16,10 +16,10 @@ def map_data(name):
 
 def main():
     files = source_files()
-    city, center, gate, route, academy, mart, nickname, trade = map(map_data, ("VioletCity", "VioletPokeCenter1F", "Route31VioletGate", "Route31", "EarlsPokemonAcademy", "VioletMart", "VioletNicknameSpeechHouse", "VioletOnixTradeHouse"))
-    maps = {row["id"]: row for row in (city, center, gate, route, academy, mart, nickname, trade)}
+    city, center, gate, route, academy, mart, nickname, trade, sprout = map(map_data, ("VioletCity", "VioletPokeCenter1F", "Route31VioletGate", "Route31", "EarlsPokemonAcademy", "VioletMart", "VioletNicknameSpeechHouse", "VioletOnixTradeHouse", "SproutTower1F"))
+    maps = {row["id"]: row for row in (city, center, gate, route, academy, mart, nickname, trade, sprout)}
     for row, expected in (
-        (city, [(31, 25), (39, 24), (39, 25), (30, 17), (9, 17), (3, 15), (21, 29)]),
+        (city, [(31, 25), (39, 24), (39, 25), (30, 17), (9, 17), (3, 15), (21, 29), (23, 1)]),
         (academy, [(3, 15), (4, 15)]),
         (mart, [(2, 7), (3, 7)]),
         (center, [(5, 7), (6, 7)]),

@@ -37455,6 +37455,426 @@
               }
             ]
           }
+        },
+        {
+          "map": "MAP_POLISHED_SPROUT_TOWER_2F",
+          "base_label": "gPolishedSproutTower2F_Morning",
+          "always_time_of_day": true,
+          "land_mons": {
+            "encounter_rate": 4,
+            "mons": [
+              {
+                "min_level": 3,
+                "max_level": 3,
+                "species": "SPECIES_RATTATA"
+              },
+              {
+                "min_level": 4,
+                "max_level": 4,
+                "species": "SPECIES_RATTATA"
+              },
+              {
+                "min_level": 3,
+                "max_level": 3,
+                "species": "SPECIES_RATTATA"
+              },
+              {
+                "min_level": 4,
+                "max_level": 4,
+                "species": "SPECIES_RATTATA"
+              },
+              {
+                "min_level": 5,
+                "max_level": 5,
+                "species": "SPECIES_RATTATA"
+              },
+              {
+                "min_level": 5,
+                "max_level": 5,
+                "species": "SPECIES_RATTATA"
+              },
+              {
+                "min_level": 3,
+                "max_level": 3,
+                "species": "SPECIES_BELLSPROUT"
+              },
+              {
+                "min_level": 3,
+                "max_level": 3,
+                "species": "SPECIES_BELLSPROUT"
+              },
+              {
+                "min_level": 6,
+                "max_level": 6,
+                "species": "SPECIES_RATTATA"
+              },
+              {
+                "min_level": 5,
+                "max_level": 5,
+                "species": "SPECIES_BELLSPROUT"
+              },
+              {
+                "min_level": 6,
+                "max_level": 6,
+                "species": "SPECIES_BELLSPROUT"
+              },
+              {
+                "min_level": 6,
+                "max_level": 6,
+                "species": "SPECIES_BELLSPROUT"
+              }
+            ]
+          }
+        },
+        {
+          "map": "MAP_POLISHED_SPROUT_TOWER_2F",
+          "base_label": "gPolishedSproutTower2F_Day",
+          "always_time_of_day": true,
+          "land_mons": {
+            "encounter_rate": 4,
+            "mons": [
+              {
+                "min_level": 3,
+                "max_level": 3,
+                "species": "SPECIES_RATTATA"
+              },
+              {
+                "min_level": 4,
+                "max_level": 4,
+                "species": "SPECIES_RATTATA"
+              },
+              {
+                "min_level": 3,
+                "max_level": 3,
+                "species": "SPECIES_RATTATA"
+              },
+              {
+                "min_level": 4,
+                "max_level": 4,
+                "species": "SPECIES_RATTATA"
+              },
+              {
+                "min_level": 5,
+                "max_level": 5,
+                "species": "SPECIES_RATTATA"
+              },
+              {
+                "min_level": 5,
+                "max_level": 5,
+                "species": "SPECIES_RATTATA"
+              },
+              {
+                "min_level": 3,
+                "max_level": 3,
+                "species": "SPECIES_BELLSPROUT"
+              },
+              {
+                "min_level": 3,
+                "max_level": 3,
+                "species": "SPECIES_BELLSPROUT"
+              },
+              {
+                "min_level": 6,
+                "max_level": 6,
+                "species": "SPECIES_RATTATA"
+              },
+              {
+                "min_level": 5,
+                "max_level": 5,
+                "species": "SPECIES_BELLSPROUT"
+              },
+              {
+                "min_level": 6,
+                "max_level": 6,
+                "species": "SPECIES_BELLSPROUT"
+              },
+              {
+                "min_level": 6,
+                "max_level": 6,
+                "species": "SPECIES_BELLSPROUT"
+              }
+            ]
+          }
+        },
+        {
+          "map": "MAP_POLISHED_SPROUT_TOWER_2F",
+          "base_label": "gPolishedSproutTower2F_Night",
+          "always_time_of_day": true,
+          "land_mons": {
+            "encounter_rate": 4,
+            "mons": [
+              {
+                "min_level": 3,
+                "max_level": 3,
+                "species": "SPECIES_RATTATA"
+              },
+              {
+                "min_level": 4,
+                "max_level": 4,
+                "species": "SPECIES_RATTATA"
+              },
+              {
+                "min_level": 3,
+                "max_level": 3,
+                "species": "SPECIES_RATTATA"
+              },
+              {
+                "min_level": 4,
+                "max_level": 4,
+                "species": "SPECIES_RATTATA"
+              },
+              {
+                "min_level": 5,
+                "max_level": 5,
+                "species": "SPECIES_GASTLY"
+              },
+              {
+                "min_level": 5,
+                "max_level": 5,
+                "species": "SPECIES_GASTLY"
+              },
+              {
+                "min_level": 3,
+                "max_level": 3,
+                "species": "SPECIES_BELLSPROUT"
+              },
+              {
+                "min_level": 3,
+                "max_level": 3,
+                "species": "SPECIES_BELLSPROUT"
+              },
+              {
+                "min_level": 6,
+                "max_level": 6,
+                "species": "SPECIES_GASTLY"
+              },
+              {
+                "min_level": 5,
+                "max_level": 5,
+                "species": "SPECIES_BELLSPROUT"
+              },
+              {
+                "min_level": 6,
+                "max_level": 6,
+                "species": "SPECIES_BELLSPROUT"
+              },
+              {
+                "min_level": 6,
+                "max_level": 6,
+                "species": "SPECIES_BELLSPROUT"
+              }
+            ]
+          }
+        },
+        {
+          "map": "MAP_POLISHED_SPROUT_TOWER_3F",
+          "base_label": "gPolishedSproutTower3F_Morning",
+          "always_time_of_day": true,
+          "land_mons": {
+            "encounter_rate": 4,
+            "mons": [
+              {
+                "min_level": 4,
+                "max_level": 4,
+                "species": "SPECIES_RATTATA"
+              },
+              {
+                "min_level": 5,
+                "max_level": 5,
+                "species": "SPECIES_RATTATA"
+              },
+              {
+                "min_level": 4,
+                "max_level": 4,
+                "species": "SPECIES_RATTATA"
+              },
+              {
+                "min_level": 5,
+                "max_level": 5,
+                "species": "SPECIES_RATTATA"
+              },
+              {
+                "min_level": 6,
+                "max_level": 6,
+                "species": "SPECIES_RATTATA"
+              },
+              {
+                "min_level": 6,
+                "max_level": 6,
+                "species": "SPECIES_RATTATA"
+              },
+              {
+                "min_level": 4,
+                "max_level": 4,
+                "species": "SPECIES_BELLSPROUT"
+              },
+              {
+                "min_level": 4,
+                "max_level": 4,
+                "species": "SPECIES_BELLSPROUT"
+              },
+              {
+                "min_level": 7,
+                "max_level": 7,
+                "species": "SPECIES_RATTATA"
+              },
+              {
+                "min_level": 6,
+                "max_level": 6,
+                "species": "SPECIES_BELLSPROUT"
+              },
+              {
+                "min_level": 7,
+                "max_level": 7,
+                "species": "SPECIES_BELLSPROUT"
+              },
+              {
+                "min_level": 7,
+                "max_level": 7,
+                "species": "SPECIES_BELLSPROUT"
+              }
+            ]
+          }
+        },
+        {
+          "map": "MAP_POLISHED_SPROUT_TOWER_3F",
+          "base_label": "gPolishedSproutTower3F_Day",
+          "always_time_of_day": true,
+          "land_mons": {
+            "encounter_rate": 4,
+            "mons": [
+              {
+                "min_level": 4,
+                "max_level": 4,
+                "species": "SPECIES_RATTATA"
+              },
+              {
+                "min_level": 5,
+                "max_level": 5,
+                "species": "SPECIES_RATTATA"
+              },
+              {
+                "min_level": 4,
+                "max_level": 4,
+                "species": "SPECIES_RATTATA"
+              },
+              {
+                "min_level": 5,
+                "max_level": 5,
+                "species": "SPECIES_RATTATA"
+              },
+              {
+                "min_level": 6,
+                "max_level": 6,
+                "species": "SPECIES_RATTATA"
+              },
+              {
+                "min_level": 6,
+                "max_level": 6,
+                "species": "SPECIES_RATTATA"
+              },
+              {
+                "min_level": 4,
+                "max_level": 4,
+                "species": "SPECIES_BELLSPROUT"
+              },
+              {
+                "min_level": 4,
+                "max_level": 4,
+                "species": "SPECIES_BELLSPROUT"
+              },
+              {
+                "min_level": 7,
+                "max_level": 7,
+                "species": "SPECIES_RATTATA"
+              },
+              {
+                "min_level": 6,
+                "max_level": 6,
+                "species": "SPECIES_BELLSPROUT"
+              },
+              {
+                "min_level": 7,
+                "max_level": 7,
+                "species": "SPECIES_BELLSPROUT"
+              },
+              {
+                "min_level": 7,
+                "max_level": 7,
+                "species": "SPECIES_BELLSPROUT"
+              }
+            ]
+          }
+        },
+        {
+          "map": "MAP_POLISHED_SPROUT_TOWER_3F",
+          "base_label": "gPolishedSproutTower3F_Night",
+          "always_time_of_day": true,
+          "land_mons": {
+            "encounter_rate": 4,
+            "mons": [
+              {
+                "min_level": 4,
+                "max_level": 4,
+                "species": "SPECIES_RATTATA"
+              },
+              {
+                "min_level": 5,
+                "max_level": 5,
+                "species": "SPECIES_RATTATA"
+              },
+              {
+                "min_level": 4,
+                "max_level": 4,
+                "species": "SPECIES_RATTATA"
+              },
+              {
+                "min_level": 5,
+                "max_level": 5,
+                "species": "SPECIES_RATTATA"
+              },
+              {
+                "min_level": 6,
+                "max_level": 6,
+                "species": "SPECIES_GASTLY"
+              },
+              {
+                "min_level": 6,
+                "max_level": 6,
+                "species": "SPECIES_GASTLY"
+              },
+              {
+                "min_level": 4,
+                "max_level": 4,
+                "species": "SPECIES_BELLSPROUT"
+              },
+              {
+                "min_level": 4,
+                "max_level": 4,
+                "species": "SPECIES_BELLSPROUT"
+              },
+              {
+                "min_level": 7,
+                "max_level": 7,
+                "species": "SPECIES_GASTLY"
+              },
+              {
+                "min_level": 6,
+                "max_level": 6,
+                "species": "SPECIES_BELLSPROUT"
+              },
+              {
+                "min_level": 7,
+                "max_level": 7,
+                "species": "SPECIES_BELLSPROUT"
+              },
+              {
+                "min_level": 7,
+                "max_level": 7,
+                "species": "SPECIES_BELLSPROUT"
+              }
+            ]
+          }
         }
       ]
     },

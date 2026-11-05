@@ -23,6 +23,7 @@
 #include "tv.h"
 #include "wild_encounter.h"
 #include "polished_route29.h"
+#include "polished_sprout.h"
 #include "battle_debug.h"
 #include "battle_pike.h"
 #include "battle_pyramid.h"
@@ -203,6 +204,11 @@ u32 ChooseWildMonIndex_Land(void)
         wildMonIndex = 10;
     else
         wildMonIndex = 11;
+
+    if (gSaveBlock1Ptr->location.mapGroup == MAP_GROUP(MAP_POLISHED_SPROUT_TOWER_2F)
+        && (gSaveBlock1Ptr->location.mapNum == MAP_NUM(MAP_POLISHED_SPROUT_TOWER_2F)
+         || gSaveBlock1Ptr->location.mapNum == MAP_NUM(MAP_POLISHED_SPROUT_TOWER_3F)))
+        wildMonIndex = PolishedSproutLandSlot(rand);
 
     if (LURE_STEP_COUNT != 0 && (Random() % 10 < 2))
         swap = TRUE;
@@ -460,7 +466,9 @@ enum TimeOfDay GetTimeOfDayForEncounters(u32 headerId, enum WildPokemonArea area
         && gWildMonHeaders[headerId].mapGroup == MAP_GROUP(MAP_POLISHED_ROUTE_29)
         && (gWildMonHeaders[headerId].mapNum == MAP_NUM(MAP_POLISHED_ROUTE_29)
          || gWildMonHeaders[headerId].mapNum == MAP_NUM(MAP_POLISHED_ROUTE_30)
-         || gWildMonHeaders[headerId].mapNum == MAP_NUM(MAP_POLISHED_ROUTE_31)))
+         || gWildMonHeaders[headerId].mapNum == MAP_NUM(MAP_POLISHED_ROUTE_31)
+         || gWildMonHeaders[headerId].mapNum == MAP_NUM(MAP_POLISHED_SPROUT_TOWER_2F)
+         || gWildMonHeaders[headerId].mapNum == MAP_NUM(MAP_POLISHED_SPROUT_TOWER_3F)))
     {
         RtcCalcLocalTime();
         return PolishedRoute29EncounterTime(gLocalTime.hours,

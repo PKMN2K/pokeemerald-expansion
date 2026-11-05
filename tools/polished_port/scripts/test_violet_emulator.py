@@ -123,5 +123,7 @@ def check_violet(game, gate, checks):
     check_mart(game,city,checks)
     from test_violet_houses_emulator import check_houses
     check_houses(game,city,checks)
+    from test_sprout_emulator import check_sprout
+    check_sprout(game,city,checks)
     game.restore("violet-before-gate")
     print("PASS: Violet City doors, time palettes, residents, Pokémon Center and Save/Continue",flush=True)

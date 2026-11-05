@@ -1773,3 +1773,7 @@ EventScript_PalletTown_PlayersHouse_2F_TurnOnPC::
 	.include "data/maps/PolishedVioletNicknameSpeechHouse/scripts.inc"
 
 	.include "data/maps/PolishedVioletOnixTradeHouse/scripts.inc"
+
+	.include "data/maps/PolishedSproutTower1F/scripts.inc"
+	.include "data/maps/PolishedSproutTower2F/scripts.inc"
+	.include "data/maps/PolishedSproutTower3F/scripts.inc"

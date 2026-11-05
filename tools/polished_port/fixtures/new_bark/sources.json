@@ -966,6 +966,146 @@
       "path": "constants/npc_trade_constants.asm",
       "fixture": "constants__npc_trade_constants.asm.b64",
       "git_blob_sha1": "f45b4feafdd4b1be4db15af5fa97c90efddb6c5e"
+    },
+    {
+      "path": "maps/SproutTower1F.asm",
+      "fixture": "maps__SproutTower1F.asm.b64",
+      "git_blob_sha1": "247d3d687f46f567cbef2c0b3722c4c4843d1717"
+    },
+    {
+      "path": "maps/SproutTower1F.ablk",
+      "fixture": "maps__SproutTower1F.ablk.b64",
+      "git_blob_sha1": "0bb42949b8ec63937fe1af07d13c78e3f6920bc2"
+    },
+    {
+      "path": "maps/SproutTower2F.asm",
+      "fixture": "maps__SproutTower2F.asm.b64",
+      "git_blob_sha1": "3a441ea7958c3301455a2fd578b1a77138ed063e"
+    },
+    {
+      "path": "maps/SproutTower2F.ablk",
+      "fixture": "maps__SproutTower2F.ablk.b64",
+      "git_blob_sha1": "a41cd7b4510cf19eaffd918b7a4d05376c18b4da"
+    },
+    {
+      "path": "maps/SproutTower3F.asm",
+      "fixture": "maps__SproutTower3F.asm.b64",
+      "git_blob_sha1": "3967a802fa771e36867fc2b03603253662a14328"
+    },
+    {
+      "path": "maps/SproutTower3F.ablk",
+      "fixture": "maps__SproutTower3F.ablk.b64",
+      "git_blob_sha1": "7a8e8ae4ae6d6af981409996a603bb9fd07d87c3"
+    },
+    {
+      "path": "gfx/tilesets/sprout_tower.png",
+      "fixture": "gfx__tilesets__sprout_tower.png.b64",
+      "git_blob_sha1": "f012a946808cc5ef32335b4a59806b3f6300b276"
+    },
+    {
+      "path": "data/tilesets/sprout_tower_metatiles.bin",
+      "fixture": "data__tilesets__sprout_tower_metatiles.bin.b64",
+      "git_blob_sha1": "7e29bff9b7358e965be900c74fdf88a1c43998b6"
+    },
+    {
+      "path": "data/tilesets/sprout_tower_attributes.bin",
+      "fixture": "data__tilesets__sprout_tower_attributes.bin.b64",
+      "git_blob_sha1": "7ab1fc891c8685e1a78ec736c5efc8ab2251a310"
+    },
+    {
+      "path": "data/tilesets/sprout_tower_collision.asm",
+      "fixture": "data__tilesets__sprout_tower_collision.asm.b64",
+      "git_blob_sha1": "c72814ebaea6a061c88917197c9d9f80196c7f9e"
+    },
+    {
+      "path": "gfx/tilesets/tower-pillar/1.png",
+      "fixture": "gfx__tilesets__tower-pillar__1.png.b64",
+      "git_blob_sha1": "c22fb2a13ff317539e88e50d04a675ca5eea6b84"
+    },
+    {
+      "path": "gfx/tilesets/tower-pillar/2.png",
+      "fixture": "gfx__tilesets__tower-pillar__2.png.b64",
+      "git_blob_sha1": "76fae403b0886b935571bc36c9c6fdab50cce9c9"
+    },
+    {
+      "path": "gfx/tilesets/tower-pillar/3.png",
+      "fixture": "gfx__tilesets__tower-pillar__3.png.b64",
+      "git_blob_sha1": "80ce4657c7ab53234592290a7a33e1035238dd6d"
+    },
+    {
+      "path": "gfx/tilesets/tower-pillar/4.png",
+      "fixture": "gfx__tilesets__tower-pillar__4.png.b64",
+      "git_blob_sha1": "9d523c4bc2166f4c9bdbddfe323d81cd22db96f6"
+    },
+    {
+      "path": "gfx/tilesets/tower-pillar/5.png",
+      "fixture": "gfx__tilesets__tower-pillar__5.png.b64",
+      "git_blob_sha1": "b7796c8d67c9da2ba053565d2e38cdbc35186efa"
+    },
+    {
+      "path": "gfx/tilesets/tower-pillar/6.png",
+      "fixture": "gfx__tilesets__tower-pillar__6.png.b64",
+      "git_blob_sha1": "0ca0e5936f67ef8b5599d0c5628c6e2e0ad9841e"
+    },
+    {
+      "path": "gfx/tilesets/tower-pillar/7.png",
+      "fixture": "gfx__tilesets__tower-pillar__7.png.b64",
+      "git_blob_sha1": "3aa4b4e94a0c426dfa28b592177d4780f48c3c6c"
+    },
+    {
+      "path": "gfx/tilesets/tower-pillar/8.png",
+      "fixture": "gfx__tilesets__tower-pillar__8.png.b64",
+      "git_blob_sha1": "e81475618ffab1ec64e4b7bd8970588d45f35567"
+    },
+    {
+      "path": "gfx/tilesets/tower-pillar/9.png",
+      "fixture": "gfx__tilesets__tower-pillar__9.png.b64",
+      "git_blob_sha1": "da74607be7de782f163c52b5b23b547b9bd0edd4"
+    },
+    {
+      "path": "gfx/tilesets/tower-pillar/10.png",
+      "fixture": "gfx__tilesets__tower-pillar__10.png.b64",
+      "git_blob_sha1": "01dbe1afc5e8d61be45acb90ca983070014cf004"
+    },
+    {
+      "path": "engine/tilesets/tileset_anims.asm",
+      "fixture": "engine__tilesets__tileset_anims.asm.b64",
+      "git_blob_sha1": "803c7d15c8e22ed434f4b27c24f79672c9942242"
+    },
+    {
+      "path": "gfx/trainers/sage.png",
+      "fixture": "gfx__trainers__sage.png.b64",
+      "git_blob_sha1": "d108975eb5ce62c7cd1137566a5798aeb3f29c40"
+    },
+    {
+      "path": "gfx/trainers/sage.pal",
+      "fixture": "gfx__trainers__sage.pal.b64",
+      "git_blob_sha1": "d61b39ec39b82f06363acf462c6ca672000d0752"
+    },
+    {
+      "path": "gfx/trainers/elder.png",
+      "fixture": "gfx__trainers__elder.png.b64",
+      "git_blob_sha1": "a6234126249ae923a8d8c921e380850c47f2d4fb"
+    },
+    {
+      "path": "gfx/trainers/elder.pal",
+      "fixture": "gfx__trainers__elder.pal.b64",
+      "git_blob_sha1": "bdf698db048d9e50dbe72f544dbb05b2a1ebaa89"
+    },
+    {
+      "path": "gfx/sprites/elder.png",
+      "fixture": "gfx__sprites__elder.png.b64",
+      "git_blob_sha1": "e6d1855c417871c5cf67a11f0b18e567e0e3774a"
+    },
+    {
+      "path": "gfx/sprites/kimono_girl.png",
+      "fixture": "gfx__sprites__kimono_girl.png.b64",
+      "git_blob_sha1": "57dfdadc25cf1b4619b20e248b76bf59fbaffecc"
+    },
+    {
+      "path": "data/trainers/attributes.asm",
+      "fixture": "data__trainers__attributes.asm.b64",
+      "git_blob_sha1": "20dbdf29a3f13627a7ea4709b6dd3f083045f574"
     }
   ]
 }

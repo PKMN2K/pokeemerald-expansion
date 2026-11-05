@@ -650,6 +650,33 @@ void InitTilesetAnim_PolishedJohtoOutdoorPrimary(void)
     sPrimaryTilesetAnimCallback = TilesetAnim_PolishedJohtoOutdoor;
 }
 
+static const u16 sPolishedSproutPillarFrames[] = INCBIN_U16("graphics/polished_sprout/pillar.bin");
+
+static void TilesetAnim_PolishedSprout(u16 timer)
+{
+    // Original sixteen-command dispatcher: ten writes from bottom to top,
+    // StandingTileFrame, four idle commands, then DoneTileAnimation.
+    static const u8 order[] = {8, 9, 6, 7, 4, 5, 2, 3, 0, 1};
+    static const u8 frames[] = {0, 1, 2, 3, 4, 3, 2, 1};
+    static const u8 tiles[] = {0x2d, 0x2f, 0x3d, 0x3f, 0x3c, 0x2c, 0x4d, 0x4f, 0x5d, 0x5f};
+    u32 tick = (timer + 127) % 128;
+    u32 command = tick % 16;
+    if (command < ARRAY_COUNT(order))
+    {
+        u32 tile = order[command];
+        u32 frame = frames[tick / 16];
+        AppendTilesetAnimToBuffer(&sPolishedSproutPillarFrames[(tile * 5 + frame) * 16],
+            (u16 *)(BG_VRAM + TILE_OFFSET_4BPP(tiles[tile] + 1)), TILE_SIZE_4BPP);
+    }
+}
+
+void InitTilesetAnim_PolishedSproutPrimary(void)
+{
+    sPrimaryTilesetAnimCounter = 0;
+    sPrimaryTilesetAnimCounterMax = 128;
+    sPrimaryTilesetAnimCallback = TilesetAnim_PolishedSprout;
+}
+
 void InitTilesetAnim_General(void)
 {
     sPrimaryTilesetAnimCounter = 0;
