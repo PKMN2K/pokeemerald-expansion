@@ -18,6 +18,8 @@ enum PolishedJohtoPaletteFamily
 #define JOHTO_GBA_PALETTE_COUNT 7
 #define JOHTO_GBA_PALETTE_COLORS 16
 
+enum TimeOfDay PolishedJohtoTimeFromHour(u32 hour);
+
 // Compose RGB555 colors without modifying the game's palette buffers.
 // Source map groups are 1..37 (NOT Emerald map groups); weather indices
 // are original GetOvercastIndex values, 0 for no overcast or 1..3.

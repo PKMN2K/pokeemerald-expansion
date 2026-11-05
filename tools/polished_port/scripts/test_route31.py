@@ -16,15 +16,15 @@ def main():
     attrs = files["data/maps/attributes.asm"].decode()
     assert "connection north, Route31, ROUTE_31, -10" in attrs
     assert "connection south, Route30, ROUTE_30, 10" in attrs
-    assert route["connections"] == [{"map":south["id"],"offset":20,"direction":"down"}]
+    assert {"map":south["id"],"offset":20,"direction":"down"} in route["connections"]
     assert {"map":route["id"],"offset":-20,"direction":"up"} in south["connections"]
     for m, name, expected in ((route, "Route31", [(4,6),(4,7)]),
-                              (gate, "Route31VioletGate", [(9,4),(9,5)])):
+                              (gate, "Route31VioletGate", [(9,4),(9,5),(0,4),(0,5)])):
         assert [(w["x"],w["y"]) for w in m["warp_events"]] == expected
-        assert [int(w["dest_warp_id"]) for w in m["warp_events"]] == [0,1]
+        assert [int(w["dest_warp_id"]) for w in m["warp_events"][:2]] == [0,1]
         raw = (ROOT/f"data/layouts/Polished{name}/map.bin").read_bytes()
         width = 44 if name == "Route31" else 10
-        for x,y in CLOSED[name]:
+        for x,y in CLOSED.get(name, ()):
             assert struct.unpack_from("<H", raw, 2*(width*y+x))[0] & 0xC00
         script = files[f"maps/{name}.asm"].decode()
         assert len(m["object_events"]) == len(re.findall(r"^\s*(?:object|cuttree|fruittree|itemball)_event ",script,re.M))
@@ -50,7 +50,7 @@ def main():
     for val in range(0x4C7,0x4CF):
         matches=[name for name,n in defs if int(n,16)==val]
         assert len(matches)==1 and matches[0].startswith("FLAG_POLISHED_ROUTE31_"),(val,matches)
-    print("PASS: Route 31 connections and both reciprocal gate doors, blocked onward exits, source objects, encounters and save allocations")
+    print("PASS: Route 31 connections and both reciprocal gate doors, closed Dark Cave entrance, source objects, encounters and save allocations")
 
 
 if __name__ == "__main__":

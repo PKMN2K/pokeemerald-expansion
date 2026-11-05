@@ -79,9 +79,18 @@ def furniture(name, header, raw, width, symbols, files, text, define):
     return code
 
 
+def standing_sheet(inp, out, height):
+    from convert_player_walking import _read_png_2bit_grayscale, _write_indexed_4bit_png
+    w, h, pixels = _read_png_2bit_grayscale(inp)
+    assert (w, h) == (16, height)
+    frames = [[[0]*16 for _ in range(16)] + [[3-v for v in row] for row in pixels[y:y+16]]
+              for y in range(0, h, 16)]
+    _write_indexed_4bit_png(out, [sum((frame[y] for frame in frames), []) for y in range(32)])
+
+
 def assets(files):
     from build_johto_demo import palette_rows
-    from convert_player_walking import convert, _read_png_2bit_grayscale, _write_indexed_4bit_png
+    from convert_player_walking import convert
     result = {}
     with tempfile.TemporaryDirectory() as tmp:
         inp, out = Path(tmp) / "in.png", Path(tmp) / "out.png"
@@ -91,12 +100,7 @@ def assets(files):
             path = f"gfx/icons/{sprite}.png" if sprite == "pidgey" else f"gfx/sprites/{sprite}.png"
             inp.write_bytes(files[path])
             if sprite in ("bowing_nurse", "pidgey"):
-                w, h, pixels = _read_png_2bit_grayscale(inp)
-                assert w == 16 and h == (48 if sprite == "bowing_nurse" else 32)
-                # Pad each exact source 16x16 frame to native bottom anchoring.
-                frames = [[[0]*16 for _ in range(16)] + [[3-v for v in row] for row in pixels[y:y+16]]
-                          for y in range(0, h, 16)]
-                _write_indexed_4bit_png(out, [sum((f[y] for f in frames), []) for y in range(32)])
+                standing_sheet(inp, out, 48 if sprite == "bowing_nurse" else 32)
             else:
                 convert(inp, out)
             result[f"graphics/object_events/polished_{sprite}/walking.png"] = out.read_bytes()
@@ -364,10 +368,11 @@ PolishedCherrygroveCity_CherrygroveCityGuideGent::
     return code, report
 
 
-def center(script, files, text, define):
-    p = "PolishedCherrygrovePokeCenter1F"
+def center(script, files, text, define, *, city="Cherrygrove", journal="Red"):
+    p = "Polished" + city + "PokeCenter1F"
+    tag = city.upper()
     code = f"""{p}_Respawn::
-\tsetrespawn HEAL_LOCATION_POLISHED_CHERRYGROVE
+\tsetrespawn HEAL_LOCATION_POLISHED_{tag}
 \tend
 
 {p}_Nurse::
@@ -393,16 +398,16 @@ def center(script, files, text, define):
 \tgoto_if_eq VAR_RESULT, NO, {p}_Goodbye
 \tmsgbox {p}_NurseTakePokemonText, MSGBOX_DEFAULT
 \tclosemessage
-\tturnobject LOCALID_CHERRYGROVE_NURSE, DIR_WEST
+\tturnobject LOCALID_{tag}_NURSE, DIR_WEST
 \tplayfanfare MUS_HEAL
 \twaitfanfare
 \tspecial HealPlayerParty
-\tturnobject LOCALID_CHERRYGROVE_NURSE, DIR_SOUTH
+\tturnobject LOCALID_{tag}_NURSE, DIR_SOUTH
 \tmsgbox {p}_NurseReturnPokemonText, MSGBOX_DEFAULT
 {p}_Goodbye::
-\tturnobject LOCALID_CHERRYGROVE_NURSE, DIR_NORTH
+\tturnobject LOCALID_{tag}_NURSE, DIR_NORTH
 \tdelay 10
-\tturnobject LOCALID_CHERRYGROVE_NURSE, DIR_SOUTH
+\tturnobject LOCALID_{tag}_NURSE, DIR_SOUTH
 \tmsgbox {p}_NurseGoodbyeText, MSGBOX_DEFAULT
 \treleaseall
 \tend
@@ -415,7 +420,7 @@ def center(script, files, text, define):
 \tgoto EventScript_PCMainMenu
 
 {p}_Journal::
-\tsetflag FLAG_POLISHED_READ_RED_JOURNAL
+\tsetflag FLAG_POLISHED_READ_{journal.upper()}_JOURNAL
 \tmsgbox {p}_JournalText, MSGBOX_SIGN
 \tend
 
@@ -423,5 +428,5 @@ def center(script, files, text, define):
     for label in ("NurseMornText", "NurseDayText", "NurseEveText", "NurseNiteText", "NurseAskHealText",
                   "NurseTakePokemonText", "NurseReturnPokemonText", "NurseGoodbyeText"):
         code += define(p+"_"+label, text(files["data/text/std_text.asm"].decode(), label))
-    code += define(p+"_JournalText", plain_text(script, "PokemonJournalRedScript", text))
+    code += define(p+"_JournalText", plain_text(script, f"PokemonJournal{journal}Script", text))
     return code

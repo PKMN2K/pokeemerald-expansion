@@ -1,6 +1,13 @@
 extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_PolishedYoungsterBlue;
 extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_PolishedYoungsterBrown;
 extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_PolishedLassGreen;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_PolishedAceTrainerF;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_PolishedYoungsterGreen;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_PolishedCoolDudePurple;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_PolishedGameboyKid;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_PolishedSage;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_PolishedFruitRed;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_PolishedFruitPickedRed;
 extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_PolishedAceTrainerM;
 extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_PolishedBattleGirlBlue;
 extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_PolishedBugCatcher;
@@ -488,6 +495,13 @@ const struct ObjectEventGraphicsInfo *const gObjectEventGraphicsInfoPointers[NUM
     [OBJ_EVENT_GFX_POLISHED_YOUNGSTER_BLUE] = &gObjectEventGraphicsInfo_PolishedYoungsterBlue,
     [OBJ_EVENT_GFX_POLISHED_YOUNGSTER_BROWN] = &gObjectEventGraphicsInfo_PolishedYoungsterBrown,
     [OBJ_EVENT_GFX_POLISHED_LASS_GREEN] = &gObjectEventGraphicsInfo_PolishedLassGreen,
+    [OBJ_EVENT_GFX_POLISHED_ACE_TRAINER_F] = &gObjectEventGraphicsInfo_PolishedAceTrainerF,
+    [OBJ_EVENT_GFX_POLISHED_YOUNGSTER_GREEN] = &gObjectEventGraphicsInfo_PolishedYoungsterGreen,
+    [OBJ_EVENT_GFX_POLISHED_COOL_DUDE_PURPLE] = &gObjectEventGraphicsInfo_PolishedCoolDudePurple,
+    [OBJ_EVENT_GFX_POLISHED_GAMEBOY_KID] = &gObjectEventGraphicsInfo_PolishedGameboyKid,
+    [OBJ_EVENT_GFX_POLISHED_SAGE] = &gObjectEventGraphicsInfo_PolishedSage,
+    [OBJ_EVENT_GFX_POLISHED_FRUIT_RED] = &gObjectEventGraphicsInfo_PolishedFruitRed,
+    [OBJ_EVENT_GFX_POLISHED_FRUIT_PICKED_RED] = &gObjectEventGraphicsInfo_PolishedFruitPickedRed,
     [OBJ_EVENT_GFX_POLISHED_ACE_TRAINER_M] = &gObjectEventGraphicsInfo_PolishedAceTrainerM,
     [OBJ_EVENT_GFX_POLISHED_BATTLE_GIRL_BLUE] = &gObjectEventGraphicsInfo_PolishedBattleGirlBlue,
     [OBJ_EVENT_GFX_POLISHED_BUG_CATCHER] = &gObjectEventGraphicsInfo_PolishedBugCatcher,

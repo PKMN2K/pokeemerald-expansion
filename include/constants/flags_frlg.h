@@ -1229,13 +1229,13 @@
 // Reserved for FLAG_POLISHED_ROUTE31_WADE.
 // Reserved for FLAG_POLISHED_ROUTE31_FINCH.
 // Reserved for FLAG_POLISHED_ROUTE31_MET_FINCH.
-#define FLAG_0x4CF               0x4CF
-#define FLAG_0x4D0               0x4D0
-#define FLAG_0x4D1               0x4D1
-#define FLAG_0x4D2               0x4D2
-#define FLAG_0x4D3               0x4D3
-#define FLAG_0x4D4               0x4D4
-#define FLAG_0x4D5               0x4D5
+// Reserved for FLAG_POLISHED_VISITED_VIOLET.
+// Reserved for FLAG_POLISHED_VIOLET_HIDDEN_HYPER_POTION.
+// Reserved for FLAG_POLISHED_VIOLET_HIDDEN_POKE_BALL.
+// Reserved for FLAG_POLISHED_VIOLET_PP_UP.
+// Reserved for FLAG_POLISHED_VIOLET_RARE_CANDY.
+// Reserved for FLAG_POLISHED_VIOLET_CUT.
+// Reserved for FLAG_POLISHED_READ_FALKNER_JOURNAL.
 #define FLAG_0x4D6               0x4D6
 #define FLAG_0x4D7               0x4D7
 #define FLAG_0x4D8               0x4D8

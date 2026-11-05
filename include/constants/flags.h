@@ -88,6 +88,14 @@
 #define FLAG_POLISHED_ROUTE31_FINCH 0x4CD
 #define FLAG_POLISHED_ROUTE31_MET_FINCH 0x4CE
 
+#define FLAG_POLISHED_VISITED_VIOLET 0x4CF
+#define FLAG_POLISHED_VIOLET_HIDDEN_HYPER_POTION 0x4D0
+#define FLAG_POLISHED_VIOLET_HIDDEN_POKE_BALL 0x4D1
+#define FLAG_POLISHED_VIOLET_PP_UP 0x4D2
+#define FLAG_POLISHED_VIOLET_RARE_CANDY 0x4D3
+#define FLAG_POLISHED_VIOLET_CUT 0x4D4
+#define FLAG_POLISHED_READ_FALKNER_JOURNAL 0x4D5
+
 #if IS_FRLG
 
 #include "constants/flags_frlg.h"
@@ -1316,13 +1324,13 @@
 // Reserved for FLAG_POLISHED_ROUTE31_WADE.
 // Reserved for FLAG_POLISHED_ROUTE31_FINCH.
 // Reserved for FLAG_POLISHED_ROUTE31_MET_FINCH.
-#define FLAG_UNUSED_0x4CF                                           0x4CF // Unused Flag
-#define FLAG_UNUSED_0x4D0                                           0x4D0 // Unused Flag
-#define FLAG_UNUSED_0x4D1                                           0x4D1 // Unused Flag
-#define FLAG_UNUSED_0x4D2                                           0x4D2 // Unused Flag
-#define FLAG_UNUSED_0x4D3                                           0x4D3 // Unused Flag
-#define FLAG_UNUSED_0x4D4                                           0x4D4 // Unused Flag
-#define FLAG_UNUSED_0x4D5                                           0x4D5 // Unused Flag
+// Reserved for FLAG_POLISHED_VISITED_VIOLET.
+// Reserved for FLAG_POLISHED_VIOLET_HIDDEN_HYPER_POTION.
+// Reserved for FLAG_POLISHED_VIOLET_HIDDEN_POKE_BALL.
+// Reserved for FLAG_POLISHED_VIOLET_PP_UP.
+// Reserved for FLAG_POLISHED_VIOLET_RARE_CANDY.
+// Reserved for FLAG_POLISHED_VIOLET_CUT.
+// Reserved for FLAG_POLISHED_READ_FALKNER_JOURNAL.
 #define FLAG_UNUSED_0x4D6                                           0x4D6 // Unused Flag
 #define FLAG_UNUSED_0x4D7                                           0x4D7 // Unused Flag
 #define FLAG_UNUSED_0x4D8                                           0x4D8 // Unused Flag

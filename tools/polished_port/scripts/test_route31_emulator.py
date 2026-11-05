@@ -174,6 +174,8 @@ def check_route31(game, route30, checks):
         if row==6:
             walk(game,gate,(5,4));talk(game,UP,"PolishedRoute31VioletGate_Route31VioletGateOfficerText_Text");close_resident_dialogue(game)
             walk(game,gate,(1,3));talk(game,UP,"PolishedRoute31VioletGate_Route31VioletGateCooltrainerFText_Text");close_resident_dialogue(game)
+            from test_violet_emulator import check_violet
+            check_violet(game, gate, checks)
         walk(game,gate,(8,row-2));enter(game,route,RIGHT)
         assert game.position()==(4,row),(row,game.position())
     travel(game,route,(24,17),seen);enter(game,route30,DOWN)

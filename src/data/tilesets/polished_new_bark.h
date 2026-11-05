@@ -179,3 +179,15 @@ const struct Tileset gTileset_PolishedNewBarkPokeCenterSecondary =
     .metatileAttributes = sPolishedNewBarkPokeCenterSecondaryAttributes,
     .callback = NULL,
 };
+
+static const u32 sPolishedVioletOutdoorTiles[] = INCBIN_U32("data/tilesets/primary/polished_violet_outdoor/tiles.bin");
+const struct Tileset gTileset_PolishedVioletOutdoorPrimary =
+{
+    .isCompressed = FALSE,
+    .isSecondary = FALSE,
+    .tiles = sPolishedVioletOutdoorTiles,
+    .palettes = (const u16 (*)[16])sPolishedNewBarkOutdoorPrimaryPalettes,
+    .metatiles = sPolishedNewBarkOutdoorPrimaryMetatiles,
+    .metatileAttributes = sPolishedNewBarkOutdoorPrimaryAttributes,
+    .callback = InitTilesetAnim_PolishedJohtoOutdoorPrimary,
+};

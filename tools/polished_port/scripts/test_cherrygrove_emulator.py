@@ -24,9 +24,10 @@ from build_new_bark import source_files
 @lru_cache
 def extra_layout():
     fields={"money":"offsetof(struct SaveBlock1, money)","item_size":"sizeof(struct ItemInfo)",
-        "key_items":"offsetof(struct SaveBlock1, bag.keyItems)", "key_count":"BAG_KEYITEMS_COUNT",
+        "heal":"offsetof(struct SaveBlock1, lastHealLocation)", "key_items":"offsetof(struct SaveBlock1, bag.keyItems)", "key_count":"BAG_KEYITEMS_COUNT",
         "town_map":"ITEM_TOWN_MAP", "nugget":"ITEM_NUGGET", "mystic":"ITEM_MYSTIC_WATER",
-        "tentacool":"SPECIES_TENTACOOL", "tentacruel":"SPECIES_TENTACRUEL"}
+        "tentacool":"SPECIES_TENTACOOL", "tentacruel":"SPECIES_TENTACRUEL",
+        "poliwag":"SPECIES_POLIWAG", "poliwhirl":"SPECIES_POLIWHIRL", "cheri":"ITEM_CHERI_BERRY"}
     code='#include "global.h"\n#include "item.h"\nconst u32 values[] = {'+','.join(fields.values())+'};\n'
     r=subprocess.run(["arm-none-eabi-gcc","-mcpu=arm7tdmi","-mthumb","-mabi=apcs-gnu","-DMODERN=1","-DEMERALD",
         "-std=gnu17","-iquote","include","-iquote",".","-S","-x","c","-o","-","-"],cwd=ROOT,input=code,text=True,capture_output=True,check=True)
@@ -101,7 +102,7 @@ def finish_tour(game):
     assert 1 not in actors(game)
 
 
-def sea_battle(game, lose=False):
+def sea_battle(game, lose=False, water_table=None, area="cherrygrove"):
     seen = None
     for _ in range(1800):
         if task_active(game,"Task_BattleStart"):
@@ -123,9 +124,11 @@ def sea_battle(game, lose=False):
         elif controller(game,"HandleInputChooseAction"):
             if seen is None:
                 seen=party(game,enemy=True,details=True)[0]
-                assert (seen["species"],seen["level"]) in ((extra_layout()["tentacool"],15),
-                    (extra_layout()["tentacool"],20),(extra_layout()["tentacruel"],20)),seen
-                game.screenshot("cherrygrove-water-battle")
+                if water_table is None:
+                    water_table = ((extra_layout()["tentacool"],15), (extra_layout()["tentacool"],20),
+                                   (extra_layout()["tentacruel"],20))
+                assert (seen["species"],seen["level"]) in water_table,seen
+                game.screenshot(area+"-water-battle")
             if lose:
                 # Tentacool can trap the lead with Wrap. Keep spending real
                 # turns on Leer/Growl; repeatedly asking to switch while
@@ -139,11 +142,11 @@ def sea_battle(game, lose=False):
             choose_cell(game,"gMoveSelectionCursor",1)
         else:
             game.press(A,30)
-    game.command(f"save {game.output / 'cherrygrove-water-failure.state'}")
-    raise AssertionError(("Cherrygrove water battle did not finish", seen, party(game,details=True)))
+    game.command(f"save {game.output / (area+'-water-failure.state')}")
+    raise AssertionError((area+" water battle did not finish", seen, party(game,details=True)))
 
 
-def sea_step(game, direction, lose=False):
+def sea_step(game, direction, lose=False, water_table=None, area="cherrygrove"):
     """Finish real encounter transitions before issuing another field step."""
     origin = game.position()
     original_map = game.map_number()
@@ -154,7 +157,7 @@ def sea_step(game, direction, lose=False):
         return task_active(game,"Task_BattleStart") or game.u32(game.sym["gMain"]+4)!=game.sym["CB2_Overworld"]|1
     for _ in range(3):
         if battle_active():
-            seen = sea_battle(game,lose) or seen
+            seen = sea_battle(game,lose,water_table,area) or seen
             if lose and seen:
                 return seen
             assert game.map_number()==original_map,"Unexpected defeat during sea traversal"
@@ -169,7 +172,7 @@ def sea_step(game, direction, lose=False):
                 raise
             continue
         game.frames(45)
-        seen = sea_battle(game,lose) or seen
+        seen = sea_battle(game,lose,water_table,area) or seen
         if lose and seen:
             return seen
         assert game.map_number()==original_map,"Unexpected defeat during sea traversal"

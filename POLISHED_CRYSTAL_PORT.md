@@ -585,9 +585,8 @@ preservation, Tuesday's gift, and native Save/Continue.
 
 Walk north from Route 30 after returning the Mystery Egg. Route 31 uses the
 original 44×18 layout, group 26 outdoor colors, standing-tile ledges, and the
-morning, day and night grass and pond encounter tables. The eastern entrance
-to the gate has two working rows. The gate's western doors and the Dark Cave
-entrance stay closed until their destinations are ported.
+morning, day and night grass and pond encounter tables. Both rows of the gate connect Route 31 to Violet City. The Dark Cave
+entrance awaits its map.
 
 The route has its Potion, Poké Ball, both Cut trees, daily Persim tree, three
 signs and two residents. If the player left home without opening the bank,
@@ -610,8 +609,29 @@ The Persim harvest uses var 0x40FF. Var 0x409D stores the 16 earned Johto
 and Kanto badges, separately from the demo's starting Surf permission. Older
 cartridge saves enter Route 31 with zero earned badges.
 
-The campaign now covers 21 source maps and 47 reciprocal door/stair events,
-plus the two garden maps. Violet City is the next campaign destination.
+### Violet City and its Pokémon Center
+
+Continue west through the Route 31 gate to reach Violet City. Either row
+lands at its original city tile. A cartridge save made inside the previous
+gate opens both western doors on Continue. The city uses its original 40×36
+layout, group 10 roof tiles, Violet/Ecruteak colors and source priority masks.
+The imported outdoor maps change colors at 05:00, 09:00, 17:00 and 21:00.
+The two trainers who share a street corner take turns at 05:00 and 17:00.
+
+The city has its signs, seven ambient residents, two hidden items, PP Up,
+Rare Candy, Cut tree and daily Cheri tree. Its pond has the original Poliwag
+and Poliwhirl encounter levels and weights. Entering the city records the
+visit for future Fly integration. The Town Map selects Violet City here and
+inside its Center.
+
+The Center offers healing, PC storage, a wall map and Falkner's journal.
+Visiting makes it the blackout destination. The city entrance, both Center
+exit tiles, journal and berry harvest support cartridge Save/Continue.
+
+The campaign now covers 23 source maps and 54 reciprocal door/stair events,
+plus the two garden maps. Earl's Academy and his Type Chart are the next
+city story step. Violet Mart, the two houses, Sprout Tower, Falkner's Gym,
+the post-badge Togepi Egg and the surrounding routes have later phases.
 
 The playable visual slice and dormant Headbutt encounter selection are complete
 parts of the port. **The whole Polished Crystal migration is not complete.**

@@ -19,7 +19,7 @@ import tempfile
 from pathlib import Path
 
 from build_johto_demo import (ROOT, FIXTURES, PIN, BEHAVIORS, source_files as demo_sources,
-    behavior_ids, collisions, map_cells, lab_geometry, palette_rows, apply_new_bark_roof)
+    behavior_ids, collisions, map_cells, lab_geometry, palette_rows, apply_group_roof)
 from convert_johto_traditional_blocks import convert
 from stage_johto_tile_graphics import build_graphics
 from stage_johto_time_palettes import stage, load_source_palettes
@@ -33,6 +33,7 @@ import polished_route29
 import polished_cherrygrove
 import polished_route30
 import polished_route31
+import polished_violet
 import polished_return
 import polished_departure
 
@@ -46,8 +47,9 @@ NEW_BARK_MAPS = {
     "LyrasHouse2F": "LYRAS_HOUSE_2F",
     "ElmsHouse": "ELMS_HOUSE",
 }
-MAPS = {**NEW_BARK_MAPS, "Route29": "ROUTE_29", "Route2946Gate": "ROUTE_29_46_GATE", **polished_cherrygrove.MAPS, **polished_route30.MAPS, **polished_route31.MAPS}
+MAPS = {**NEW_BARK_MAPS, "Route29": "ROUTE_29", "Route2946Gate": "ROUTE_29_46_GATE", **polished_cherrygrove.MAPS, **polished_route30.MAPS, **polished_route31.MAPS, **polished_violet.MAPS}
 BEHAVIORS = {**BEHAVIORS,
+    "TOP_WALL": ("MB_IMPASSABLE_NORTH", False),
     "BOTTOM_WALL": ("MB_IMPASSABLE_SOUTH", False),
     "CAVE": ("MB_NON_ANIMATED_DOOR", False),
     "WINDOW": ("MB_NORMAL", True),
@@ -363,36 +365,53 @@ def rival_scene(script, files):
     return obj, code, report
 
 
-def map_header(name, constant, width, height, script, files):
+def playable_warps(files):
+    # Resolve source one-based warp numbers after removing closed destinations.
+    # The original two east doors keep their IDs in existing Route 31 saves.
+    tables = {}
+    for name, constant in MAPS.items():
+        script = files[f"maps/{name}.asm"].decode()
+        warps = re.findall(r"^\s*warp_event\s+(\d+),\s*(\d+),\s*(\w+),\s*(\d+)", script, re.M)
+        active = {}
+        for number, (x, y, dest, target) in enumerate(warps, start=1):
+            if (int(x), int(y)) in closed_cells(name):
+                continue
+            assert dest in MAPS.values(), (name, dest)
+            active[number] = (int(x), int(y), dest, int(target))
+        if name == "Route31VioletGate":
+            active = {number: active[number] for number in (3, 4, 1, 2)}
+        tables[constant] = active
+    return tables
+
+
+def closed_cells(name):
+    if name in ("CherrygrovePokeCenter1F", "VioletPokeCenter1F"):
+        return ((0, 7),)
+    if name == "Route2946Gate":
+        return ((4, 0), (5, 0))
+    return polished_route31.CLOSED.get(name, polished_violet.CLOSED.get(name, ()))
+
+
+def map_header(name, constant, width, height, script, files, warps):
     prefix = "Polished" + name
     header = {
         "id": "MAP_POLISHED_" + constant, "name": prefix,
         "layout": "LAYOUT_POLISHED_" + constant,
         "music": "MUS_DUMMY", "region": "REGION_JOHTO", "region_map_section": "MAPSEC_NONE",
         "requires_flash": False, "weather": "WEATHER_NONE",
-        "map_type": "MAP_TYPE_TOWN" if name in ("NewBarkTown", "CherrygroveCity") else "MAP_TYPE_ROUTE" if name in ("Route29", "Route30", "Route31") else "MAP_TYPE_INDOOR",
-        "allow_cycling": name in ("NewBarkTown", "Route29", "Route30", "Route31", "CherrygroveCity"), "allow_escaping": False,
+        "map_type": "MAP_TYPE_TOWN" if name in ("NewBarkTown", "CherrygroveCity", "VioletCity") else "MAP_TYPE_ROUTE" if name in ("Route29", "Route30", "Route31") else "MAP_TYPE_INDOOR",
+        "allow_cycling": name in ("NewBarkTown", "Route29", "Route30", "Route31", "CherrygroveCity", "VioletCity"), "allow_escaping": False,
         "allow_running": True, "show_map_name": False, "battle_scene": "MAP_BATTLE_SCENE_NORMAL",
         "connections": None, "object_events": [], "warp_events": [], "coord_events": [], "bg_events": [],
     }
     objects, resident_code, resident_info = residents(name, script, files)
     schedule_header, schedule_code = schedule_script(name, resident_info, files)
     code = f"@ Generated from pinned {name}.asm: geography, static text and ambient residents.\n{prefix}_MapScripts::\n{schedule_header}\t.byte 0\n\n" + schedule_code
-    for x, y, destination, warp in re.findall(r"^\s*warp_event\s+(\d+),\s*(\d+),\s*(\w+),\s*(\d+)", script, re.M):
-        if destination == "POKECENTER_2F":
-            continue  # Closed in the source first-visit story state.
-        if name == "Route2946Gate" and destination == "ROUTE_46":
-            continue  # North door is blocked until Route 46 is imported.
-        if (int(x),int(y)) in polished_route31.CLOSED.get(name, ()):
-            continue
-        if destination == "ROUTE_31_VIOLET_GATE":
-            warp = str(int(warp) - 2)  # Omit the two western exits to Violet.
-        if destination == "ROUTE_29_46_GATE":
-            warp = str(int(warp) - 2)  # Source warp 3 -> native warp 0.
-        assert destination in MAPS.values(), (name, destination)
-        assert 0 <= int(x) < width and 0 <= int(y) < height
-        header["warp_events"].append({"x": int(x), "y": int(y), "elevation": 0,
-            "dest_map": "MAP_POLISHED_" + destination, "dest_warp_id": str(int(warp) - 1)})
+    for x, y, destination, source_target in warps[constant].values():
+        assert 0 <= x < width and 0 <= y < height
+        native_index = list(warps[destination]).index(source_target)
+        header["warp_events"].append({"x": x, "y": y, "elevation": 0,
+            "dest_map": "MAP_POLISHED_" + destination, "dest_warp_id": str(native_index)})
     imported = set()
     for x, y, kind, label in re.findall(r"^\s*bg_event\s+(\d+),\s*(\d+),\s*(BGEVENT_\w+),\s*(\w+)\s*$", script, re.M):
         if kind != "BGEVENT_JUMPTEXT" and label not in INLINE_TEXT:
@@ -500,6 +519,11 @@ def map_header(name, constant, width, height, script, files):
         code = code.replace("\t.byte 0\n", hooks + "\t.byte 0\n", 1)
         code += scene
         story.append(report)
+    if name in polished_violet.MAPS:
+        hooks, scene, report = polished_violet.events(name, script, header, files, source_text, text_definition)
+        code = code.replace("\t.byte 0\n", hooks + "\t.byte 0\n", 1)
+        code += scene
+        story.append(report)
     if name == "PlayersNeighborsHouse":
         npc = polished_route29.object_at("LOCALID_RETURNED_NEIGHBOR", "POLISHED_MATRON", 5, 3,
             "PolishedRoute30_NeighborHome", "FLAG_TEMP_2")
@@ -518,10 +542,11 @@ def map_header(name, constant, width, height, script, files):
 def generate():
     files = source_files()
     ids = behavior_ids()
-    products, maps, layouts = {**resident_assets(files), **new_bark_battle.battle_assets(files), **polished_cherrygrove.assets(files), **polished_route30.assets(files), **polished_route31.assets(files), **polished_return.assets(files), **polished_departure.assets(files)}, {}, []
+    products, maps, layouts = {**resident_assets(files), **new_bark_battle.battle_assets(files), **polished_cherrygrove.assets(files), **polished_route30.assets(files), **polished_route31.assets(files), **polished_violet.assets(files), **polished_return.assets(files), **polished_departure.assets(files)}, {}, []
     indoor = palette_rows((FIXTURES / "johto_bg_tiles.pal").read_text())[32:39]
     indoor_palette = b"".join(struct.pack("<16H", *p, p[0], *([0] * 11)) for p in indoor).ljust(512, b"\0")
-    outdoor = apply_new_bark_roof(build_graphics()[0], files)
+    base_graphics = build_graphics()[0]
+    outdoor = apply_group_roof(base_graphics, files, "new_bark", 24)
     geometry = convert(load_binary_fixture("metatiles"), load_binary_fixture("attributes"))
     house_graphics, house_geometry = lab_geometry(files, "johto_house")
     banks = {
@@ -541,12 +566,15 @@ def generate():
     # Invert without collapsing the many source symbols sharing a permission.
     permissions = {symbol: permission for permission, symbol in re.findall(
         r"db (LAND_TILE|WALL_TILE|WATER_TILE)\s*; COLL_(\w+)", files["data/collision/collision_permissions.asm"].decode())}
+    warps = playable_warps(files)
     for name, constant in MAPS.items():
-        bank = "Outdoor" if name in ("NewBarkTown", "Route29", "Route30", "Route31", "CherrygroveCity") else "Lab" if name == "ElmsLab" else "Gate" if name in ("Route2946Gate", "Route31VioletGate") else "Mart" if name == "CherrygroveMart" else "PokeCenter" if name == "CherrygrovePokeCenter1F" else "House"
+        bank = "Outdoor" if name in ("NewBarkTown", "Route29", "Route30", "Route31", "CherrygroveCity", "VioletCity") else "Lab" if name == "ElmsLab" else "Gate" if name in ("Route2946Gate", "Route31VioletGate") else "Mart" if name == "CherrygroveMart" else "PokeCenter" if name in ("CherrygrovePokeCenter1F", "VioletPokeCenter1F") else "House"
         source_tileset = {"Outdoor": "JOHTO_TRADITIONAL", "Lab": "LAB", "House": "JOHTO_HOUSE", "Gate": "GATE", "Mart": "MART", "PokeCenter": "POKECENTER"}[bank]
         assert re.search(r"map " + name + r", TILESET_" + source_tileset + r",", files["data/maps/maps.asm"].decode())
         source_layout = "JohtoHouse4" if name in ("PlayersNeighborsHouse", "Route30BerrySpeechHouse") else name
         source_layout = polished_cherrygrove.BLOCKS.get(name, source_layout)
+        if name == "VioletPokeCenter1F":
+            source_layout = "JohtoPokeCenter1F"
         if name == "Route2946Gate":
             source_layout = "NorthSouthGate"
         if name == "Route31VioletGate":
@@ -558,18 +586,10 @@ def generate():
         assert len(blocks) == width * height
         symbols = banks[bank][3]
         raw, used = map_cells(blocks, width, symbols, BEHAVIORS)
-        if name == "CherrygrovePokeCenter1F":
+        closed = closed_cells(name)
+        if closed:
             cells = list(struct.unpack(f"<{len(raw)//2}H", raw))
-            cells[7 * width * 2] |= 0xC00  # Communication floor opens after the Mystery Egg quest.
-            raw = struct.pack(f"<{len(cells)}H", *cells)
-        if name == "Route2946Gate":
-            cells = list(struct.unpack(f"<{len(raw)//2}H", raw))
-            for x in (4, 5):
-                cells[x] |= 0xC00  # Keep source art; no dangling Route 46 warp.
-            raw = struct.pack(f"<{len(cells)}H", *cells)
-        if name in polished_route31.CLOSED:
-            cells = list(struct.unpack(f"<{len(raw)//2}H", raw))
-            for x,y in polished_route31.CLOSED[name]:
+            for x, y in closed:
                 cells[y * width * 2 + x] |= 0xC00
             raw = struct.pack(f"<{len(cells)}H", *cells)
         border = 5 if bank == "Outdoor" else 0
@@ -582,8 +602,8 @@ def generate():
         prefix = "Polished" + name
         products[f"data/layouts/{prefix}/map.bin"] = raw
         products[f"data/layouts/{prefix}/border.bin"] = border_raw
-        header, script, resident_info, story = map_header(name, constant, width * 2, height * 2, files[f"maps/{name}.asm"].decode(), files)
-        if name in (*polished_cherrygrove.MAPS, *polished_route30.MAPS):
+        header, script, resident_info, story = map_header(name, constant, width * 2, height * 2, files[f"maps/{name}.asm"].decode(), files, warps)
+        if name in (*polished_cherrygrove.MAPS, *polished_route30.MAPS, *polished_violet.MAPS):
             script += polished_cherrygrove.furniture(name, header, raw, width * 2, symbols, files, source_text, text_definition).encode()
             script = script.rstrip() + b"\n"
         products[f"data/maps/{prefix}/map.json"] = json_bytes(header)
@@ -593,6 +613,8 @@ def generate():
             "primary_tileset": f"gTileset_{tileset}Primary", "secondary_tileset": f"gTileset_{tileset}Secondary",
             "border_filepath": f"data/layouts/{prefix}/border.bin", "blockdata_filepath": f"data/layouts/{prefix}/map.bin",
             "layout_version": "emerald"})
+        if name == "VioletCity":
+            layouts[-1]["primary_tileset"] = "gTileset_PolishedVioletOutdoorPrimary"
         maps[constant] = {"name": name, "width": width * 2, "height": height * 2, "tileset": bank,
             "source_blocks": source_layout, "used_metatiles": sorted(used | border_used),
             "warps": header["warp_events"], "static_interactions": len(header["bg_events"]),
@@ -640,8 +662,22 @@ def generate():
 }};
 
 """
+    violet_path = "data/tilesets/primary/polished_violet_outdoor/tiles.bin"
+    products[violet_path] = apply_group_roof(base_graphics, files, "violet", 10)
+    header_text += f'''static const u32 sPolishedVioletOutdoorTiles[] = INCBIN_U32("{violet_path}");
+const struct Tileset gTileset_PolishedVioletOutdoorPrimary =
+{{
+    .isCompressed = FALSE,
+    .isSecondary = FALSE,
+    .tiles = sPolishedVioletOutdoorTiles,
+    .palettes = (const u16 (*)[16])sPolishedNewBarkOutdoorPrimaryPalettes,
+    .metatiles = sPolishedNewBarkOutdoorPrimaryMetatiles,
+    .metatileAttributes = sPolishedNewBarkOutdoorPrimaryAttributes,
+    .callback = InitTilesetAnim_PolishedJohtoOutdoorPrimary,
+}};
+'''
     products["src/data/tilesets/polished_new_bark.h"] = (header_text.rstrip() + "\n").encode()
-    report = {"source_commit": PIN, "scope": "source geography, connected interiors, static interactions, six ambient residents, rival window encounter, Lyra/Elm introduction, all three starter choices, first Lyra battle, aide Potion and Mom's opening with weekday/DST setup, schedules and neighbor; Route 29, Cherrygrove services, Route 30 with Mulch, native encounters, Mystery Egg and Oak; Elm's disaster call, first rival battle, theft investigation, rival naming, Egg delivery, Joey, Mom's savings, the Route 29 catching tutorial and Tuscany; Route 31 with Wade, Finch, Mom’s worried call and the Violet gate",
+    report = {"source_commit": PIN, "scope": "source geography, connected interiors, static interactions, six ambient residents, rival window encounter, Lyra/Elm introduction, all three starter choices, first Lyra battle, aide Potion and Mom's opening with weekday/DST setup, schedules and neighbor; Route 29, Cherrygrove services, Route 30 with Mulch, native encounters, Mystery Egg and Oak; Elm's disaster call, first rival battle, theft investigation, rival naming, Egg delivery, Joey, Mom's savings, the Route 29 catching tutorial and Tuscany; Route 31 with Wade, Finch, Mom’s worried call and the Violet gate; Violet City first visit and Pokémon Center",
         "maps": maps, "layouts": layouts, "output_sha256": {p: hashlib.sha256(raw).hexdigest() for p, raw in products.items()}}
     products["tools/polished_port/manifests/new_bark.json"] = json_bytes(report)
     products["tools/polished_port/manifests/route29_wild.json"] = json_bytes({

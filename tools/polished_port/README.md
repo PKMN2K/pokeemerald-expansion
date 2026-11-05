@@ -270,3 +270,18 @@ the worried call and route interactions. Use `build_new_bark.py --check` and
 badge levels. The mGBA campaign walks north after Joey, completes all four
 prerequisite battles, tests the reward across Save/Continue, visits both
 rows of the western gate and returns to Route 30.
+
+## Violet City and its Pokémon Center
+
+The first-visit maps come from the same source pin as Route 31. The city
+shares the existing outdoor metatiles and supplies its own roof artwork.
+Warp targets are matched by original source index, including maps whose
+unavailable entrances have been closed. The gate keeps its two existing
+Route 31 indices and restores the western carpets after loading a cartridge save.
+
+Run `test_violet.py` alongside `build_new_bark.py --check` to verify the source
+tiles, doors, side connections, encounter weights and save allocations.
+`make check TESTS='Violet City'` covers clock boundaries and blackout registration.
+The campaign emulator visits the city through both gate rows, compares all
+four palettes and the roof tiles in VRAM, visits the Center and exercises
+cartridge Save/Continue, a Cheri harvest and a genuine pond battle.

@@ -136,12 +136,12 @@ def palette_rows(text):
     return rows
 
 
-def apply_new_bark_roof(graphics, files):
+def apply_group_roof(graphics, files, name, group):
     # LoadMapGroupRoof overwrites nine bank-0 tiles at $0a. Common PNG roof
     # slots are intentionally blank until this source overlay has been loaded.
     assert "vTiles2 tile $0a" in files["engine/tilesets/mapgroup_roofs.asm"].decode()
-    assert "ROOF_NEW_BARK ; 24" in files["data/maps/roofs.asm"].decode()
-    png = files["gfx/tilesets/roofs/new_bark.png"]
+    assert re.search(rf"db ROOF_{name.upper()}\s*; {group}\b", files["data/maps/roofs.asm"].decode())
+    png = files[f"gfx/tilesets/roofs/{name}.png"]
     width, height = struct.unpack_from(">II", png, 16)
     pixels = parse_grayscale2_png(png, expected_width=width, expected_height=height)
     roof = b"".join(gba_tile([row[x:x + 8] for row in pixels[y:y + 8]])
@@ -182,7 +182,7 @@ def generate():
     ids = behavior_ids()
     products = {}
     meta = convert(load_binary_fixture("metatiles"), load_binary_fixture("attributes"))
-    outdoor = apply_new_bark_roof(build_graphics()[0], files)
+    outdoor = apply_group_roof(build_graphics()[0], files, "new_bark", 24)
     lab, lab_meta = lab_geometry(files)
     outdoor_symbols = collisions((FIXTURES / "johto_traditional_collision.asm").read_text())
     lab_symbols = collisions(files["data/tilesets/lab_collision.asm"].decode())

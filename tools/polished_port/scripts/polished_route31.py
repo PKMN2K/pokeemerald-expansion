@@ -10,7 +10,7 @@ from convert_player_walking import convert, _read_png_2bit_grayscale, _write_ind
 
 MAPS = {"Route31": "ROUTE_31", "Route31VioletGate": "ROUTE_31_VIOLET_GATE"}
 # Preserve the original art at doors whose destination has not been imported.
-CLOSED = {"Route31": ((34, 5),), "Route31VioletGate": ((0, 4), (0, 5))}
+CLOSED = {"Route31": ((34, 5),)}
 
 
 def trainers(files):
@@ -66,9 +66,18 @@ def assets(files):
 def events(name, script, header, files, text, define):
     prefix = "Polished" + name
     if name == "Route31VioletGate":
-        return "", "", {"gate": "Both eastern warps return to Route 31. Western exits await Violet City."}
+        # Emerald restores a saved 15x14 map view before running this hook.
+        # Saves made inside the old gate may still contain its two solid tiles.
+        blocks = files["maps/EastWestGate.ablk"]
+        code = "PolishedRoute31VioletGate_OpenWest::\n"
+        for y in (4, 5):
+            tile = blocks[(y // 2) * 5] * 4 + (y % 2) * 2
+            code += f"\tsetmetatile 0, {y}, {tile}, FALSE\n"
+        return "\tmap_script MAP_SCRIPT_ON_LOAD, PolishedRoute31VioletGate_OpenWest\n", code+"\tend\n", {
+            "gate": "East doors return to Route 31; west doors enter Violet City, including old cartridge saves."}
 
-    header["connections"] = [{"map":"MAP_POLISHED_ROUTE_30","offset":20,"direction":"down"}]
+    header["connections"] = [{"map":"MAP_POLISHED_ROUTE_30","offset":20,"direction":"down"},
+                             {"map":"MAP_POLISHED_VIOLET_CITY","offset":-18,"direction":"left"}]
     actors = [
         ("FINCH", "POLISHED_ACE_TRAINER_M", 28,7, "Finch"),
         ("SLEEPY_MAN", "POLISHED_FAT_GUY_BLUE", 17,7, "Sleepy"),
@@ -182,4 +191,4 @@ PolishedRoute31_PokeBall::
                       ("MomNo","MomPhoneWontSaveMoneyText"),("MomBye","MomPhoneHangUpText")):
         code += define(prefix+"_"+out,text(phone,label))
     return hooks, code, {"trainers":["Wade","Finch"], "sight": "Finch explains his challenge once; four earlier victories unlock the optional battle.",
-                         "phone": "Mom calls if the player has not opened the bank.", "deferred":["Dark Cave","Violet City","Wade phone/rematches","Kenya mail quest"]}
+                         "phone": "Mom calls if the player has not opened the bank.", "deferred":["Dark Cave","Wade phone/rematches","Kenya mail quest"]}

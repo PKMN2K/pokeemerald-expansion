@@ -9576,6 +9576,28 @@
       "border_filepath": "data/layouts/PolishedRoute31VioletGate/border.bin",
       "blockdata_filepath": "data/layouts/PolishedRoute31VioletGate/map.bin",
       "layout_version": "emerald"
+    },
+    {
+      "id": "LAYOUT_POLISHED_VIOLET_CITY",
+      "name": "PolishedVioletCity_Layout",
+      "width": 40,
+      "height": 36,
+      "primary_tileset": "gTileset_PolishedVioletOutdoorPrimary",
+      "secondary_tileset": "gTileset_PolishedNewBarkOutdoorSecondary",
+      "border_filepath": "data/layouts/PolishedVioletCity/border.bin",
+      "blockdata_filepath": "data/layouts/PolishedVioletCity/map.bin",
+      "layout_version": "emerald"
+    },
+    {
+      "id": "LAYOUT_POLISHED_VIOLET_POKECENTER_1F",
+      "name": "PolishedVioletPokeCenter1F_Layout",
+      "width": 12,
+      "height": 8,
+      "primary_tileset": "gTileset_PolishedNewBarkPokeCenterPrimary",
+      "secondary_tileset": "gTileset_PolishedNewBarkPokeCenterSecondary",
+      "border_filepath": "data/layouts/PolishedVioletPokeCenter1F/border.bin",
+      "blockdata_filepath": "data/layouts/PolishedVioletPokeCenter1F/map.bin",
+      "layout_version": "emerald"
     }
   ]
 }

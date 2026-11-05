@@ -346,7 +346,7 @@ def export(output: Path, headbutt_review: dict):
     assert registered_source_sets == {
         "NEW_BARK_TOWN": "TREEMON_SET_CITY", "ROUTE_29": "TREEMON_SET_ROUTE",
         "CHERRYGROVE_CITY": "TREEMON_SET_CITY", "ROUTE_30": "TREEMON_SET_ROUTE",
-        "ROUTE_31": "TREEMON_SET_ROUTE",
+        "ROUTE_31": "TREEMON_SET_ROUTE", "VIOLET_CITY": "TREEMON_SET_CITY",
     }
     # Production still contains only the dormant selector's definition, with
     # no live caller or function-pointer binding. A future field phase must

@@ -3,6 +3,7 @@
 #include "event_object_movement.h"
 #include "item.h"
 #include "polished_route29.h"
+#include "polished_johto_palette.h"
 #include "random.h"
 #include "string_util.h"
 #include "constants/event_objects.h"
@@ -13,15 +14,11 @@
 
 enum TimeOfDay PolishedRoute29EncounterTime(u32 hour, u32 roll)
 {
-    // Source MORN=5, DAY=9, EVE=17, NITE=21. GetTimeOfDayNotEve
-    // compares an 8-bit random value with `60 percent` (153).
-    if (hour < 5 || hour >= 21)
-        return TIME_NIGHT;
-    if (hour < 9)
-        return TIME_MORNING;
-    if (hour < 17 || (roll & 255) < 153)
-        return TIME_DAY;
-    return TIME_NIGHT;
+    enum TimeOfDay time = PolishedJohtoTimeFromHour(hour);
+    // GetTimeOfDayNotEve uses the day table for 153 of the 256 evening rolls.
+    if (time == TIME_EVENING)
+        return (roll & 255) < 153 ? TIME_DAY : TIME_NIGHT;
+    return time;
 }
 
 static u32 FruitDay(void)
@@ -43,6 +40,8 @@ static const struct PolishedFruitTree
      VAR_OBJ_GFX_ID_D, OBJ_EVENT_GFX_POLISHED_FRUIT_PINK, OBJ_EVENT_GFX_POLISHED_FRUIT_PICKED_PINK},
     {VAR_POLISHED_ROUTE31_PERSIM_DAY, ITEM_PERSIM_BERRY, MAP_POLISHED_ROUTE_31, LOCALID_ROUTE31_PERSIM,
      VAR_OBJ_GFX_ID_C, OBJ_EVENT_GFX_POLISHED_FRUIT_PINK, OBJ_EVENT_GFX_POLISHED_FRUIT_PICKED_PINK},
+    {VAR_POLISHED_VIOLET_CHERI_DAY, ITEM_CHERI_BERRY, MAP_POLISHED_VIOLET_CITY, LOCALID_VIOLET_CHERI,
+     VAR_OBJ_GFX_ID_B, OBJ_EVENT_GFX_POLISHED_FRUIT_RED, OBJ_EVENT_GFX_POLISHED_FRUIT_PICKED_RED},
 };
 
 static bool32 FruitAvailable(u32 index)

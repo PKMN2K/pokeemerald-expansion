@@ -369,6 +369,16 @@
       "respawn_npc": "LOCALID_NONE",
       "respawn_x": 5,
       "respawn_y": 3
+    },
+    {
+      "id": "HEAL_LOCATION_POLISHED_VIOLET",
+      "map": "MAP_POLISHED_VIOLET_POKECENTER_1F",
+      "x": 5,
+      "y": 3,
+      "respawn_map": "MAP_POLISHED_VIOLET_POKECENTER_1F",
+      "respawn_npc": "LOCALID_NONE",
+      "respawn_x": 5,
+      "respawn_y": 3
     }
   ]
 }

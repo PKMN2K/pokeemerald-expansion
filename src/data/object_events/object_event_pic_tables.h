@@ -2672,3 +2672,14 @@ static const struct SpriteFrameImage sPicTable_PolishedRattataBack[] = {
 static const struct SpriteFrameImage sPicTable_PolishedPokedex[] = {
     overworld_frame(gObjectEventPic_PolishedPokedex, 2, 4, 0),
 };
+static const struct SpriteFrameImage sPicTable_PolishedAceTrainerF[] = {
+    overworld_ascending_frames(gObjectEventPic_PolishedAceTrainerF, 2, 4),
+};
+static const struct SpriteFrameImage sPicTable_PolishedSage[] = {
+    overworld_ascending_frames(gObjectEventPic_PolishedSage, 2, 4),
+};
+static const struct SpriteFrameImage sPicTable_PolishedGameboyKid[] = {
+    overworld_frame(gObjectEventPic_PolishedGameboyKid, 2, 4, 0),
+    overworld_frame(gObjectEventPic_PolishedGameboyKid, 2, 4, 1),
+    overworld_frame(gObjectEventPic_PolishedGameboyKid, 2, 4, 2),
+};

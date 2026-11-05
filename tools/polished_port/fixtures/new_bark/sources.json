@@ -771,6 +771,41 @@
       "path": "data/phone/text/mom.asm",
       "fixture": "data__phone__text__mom.asm.b64",
       "git_blob_sha1": "ed1083047b5ee16d98b066392068a6f31c97d7d4"
+    },
+    {
+      "path": "maps/VioletCity.asm",
+      "fixture": "maps__VioletCity.asm.b64",
+      "git_blob_sha1": "135c496a6f124da0c45bd8c95324dd63148281d5"
+    },
+    {
+      "path": "maps/VioletCity.ablk",
+      "fixture": "maps__VioletCity.ablk.b64",
+      "git_blob_sha1": "b2e2fa695604f5187095201fe82d7e4de2100e3d"
+    },
+    {
+      "path": "maps/VioletPokeCenter1F.asm",
+      "fixture": "maps__VioletPokeCenter1F.asm.b64",
+      "git_blob_sha1": "6c317cb7b9980119ab7bfdffbbda2776a5482bf1"
+    },
+    {
+      "path": "gfx/sprites/ace_trainer_f.png",
+      "fixture": "gfx__sprites__ace_trainer_f.png.b64",
+      "git_blob_sha1": "945dd224da0afae6ae0cefb19eb0a3662f9b7523"
+    },
+    {
+      "path": "gfx/sprites/gameboy_kid.png",
+      "fixture": "gfx__sprites__gameboy_kid.png.b64",
+      "git_blob_sha1": "0ca4acef975b2f984f70938a241954513b2f7405"
+    },
+    {
+      "path": "gfx/sprites/sage.png",
+      "fixture": "gfx__sprites__sage.png.b64",
+      "git_blob_sha1": "ae3bce4a594019fb4eb0037fe53e7a93a46897f2"
+    },
+    {
+      "path": "gfx/tilesets/roofs/violet.png",
+      "fixture": "gfx__tilesets__roofs__violet.png.b64",
+      "git_blob_sha1": "1d68754f95749426f88b7f885ab953beecf0617c"
     }
   ]
 }

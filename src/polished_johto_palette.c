@@ -17,8 +17,8 @@ static const u16 sJohtoPinkSpritePalettes[] = INCBIN_U16("graphics/object_events
 static const u16 sJohtoPurpleSpritePalettes[] = INCBIN_U16("graphics/object_events/polished_npc_palettes/purple_time.bin");
 static const u16 sJohtoBrownSpritePalettes[] = INCBIN_U16("graphics/object_events/polished_npc_palettes/brown_time.bin");
 
-// The garden, New Bark and Route 29 use source roof group 24; Cherrygrove
-// uses source group 26. Interiors have fixed palettes without an override.
+// The Violet/Ecruteak palette and Violet roof use source group 10.
+// New Bark and Cherrygrove use groups 24 and 26. Interiors have fixed palettes without an override.
 // Source roof groups are never interpreted as Emerald map groups.
 struct PolishedJohtoMapPaletteRegistration
 {
@@ -32,6 +32,10 @@ struct PolishedJohtoMapPaletteRegistration
 
 static const struct PolishedJohtoMapPaletteRegistration sJohtoMapRegistrations[] =
 {
+    {LAYOUT_POLISHED_VIOLET_CITY,
+     &gTileset_PolishedVioletOutdoorPrimary,
+     &gTileset_PolishedNewBarkOutdoorSecondary,
+     10, JOHTO_PALETTE_VIOLET_ECRUTEAK, 0},
     {LAYOUT_POLISHED_ROUTE_31,
      &gTileset_PolishedNewBarkOutdoorPrimary,
      &gTileset_PolishedNewBarkOutdoorSecondary,
@@ -88,6 +92,24 @@ static const struct PolishedJohtoMapPaletteRegistration *FindJohtoMapRegistratio
 bool8 PolishedJohtoIsRegisteredMapLayout(const struct MapLayout *mapLayout)
 {
     return FindJohtoMapRegistration(mapLayout) != NULL;
+}
+
+// Polished Crystal's clock switches at 05:00, 09:00, 17:00 and 21:00.
+enum TimeOfDay PolishedJohtoTimeFromHour(u32 hour)
+{
+    if (hour < 5 || hour >= 21)
+        return TIME_NIGHT;
+    if (hour < 9)
+        return TIME_MORNING;
+    if (hour < 17)
+        return TIME_DAY;
+    return TIME_EVENING;
+}
+
+static enum TimeOfDay GetJohtoTimeOfDay(void)
+{
+    RtcCalcLocalTime();
+    return PolishedJohtoTimeFromHour(gLocalTime.hours);
 }
 
 // Emerald enum: MORNING, DAY, EVENING, NIGHT.
@@ -208,7 +230,7 @@ bool8 PolishedJohtoTryApplySpritePalette(u8 paletteNum)
     default:
         return FALSE;
     }
-    if (!GetJohtoTimeIndices(GetTimeOfDay(), &sourcePeriod, &roofPeriod))
+    if (!GetJohtoTimeIndices(GetJohtoTimeOfDay(), &sourcePeriod, &roofPeriod))
         return FALSE;
 
     LoadPaletteFast(&palettes[sourcePeriod * 16], OBJ_PLTT_ID(paletteNum), PLTT_SIZE_4BPP);
@@ -228,7 +250,7 @@ bool8 PolishedJohtoTryApplyRegisteredMapPalette(const struct MapLayout *mapLayou
         return FALSE;
 
     if (!PolishedJohtoComposePalette((enum PolishedJohtoPaletteFamily)registration->family,
-                                     GetTimeOfDay(), registration->sourceMapGroup,
+                                     GetJohtoTimeOfDay(), registration->sourceMapGroup,
                                      registration->overcastIndex, palette))
         return FALSE;
 
