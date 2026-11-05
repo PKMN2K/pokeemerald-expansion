@@ -34,6 +34,7 @@ PolishedRoute31_Route31YoungsterText_Text:
 	.string "I found a good\nPOKéMON in Dark\lCave.\pI'm going to raise\nit to take on\lFalkner.\pHe's the leader of\nViolet City's Gym.$"
 
 PolishedRoute31_Setup::
+    setmetatile 34, 5, 462, FALSE
     special PolishedFruitRefreshAll
     setvar VAR_TEMP_4, 0
     goto_if_unset FLAG_POLISHED_ROUTE31_MET_FINCH, PolishedRoute31_End

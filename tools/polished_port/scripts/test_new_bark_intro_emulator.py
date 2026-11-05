@@ -84,6 +84,8 @@ def party(game, enemy=False, details=False):
                 status=struct.unpack_from("<I", raw, data["status"])[0],
                 moves=[move & 0x7ff for move in struct.unpack_from("<4H", decoded, attacks)],
                 pp=[pp & 0x7f for pp in decoded[attacks + 8:attacks + 12]])
+            misc_offset = game.read(game.sym['sSubstructOffsets'] + 24 * 3 + personality % 24, 1)[0] * data['substruct_size']
+            result[-1]['is_egg'] = bool(struct.unpack_from('<I', decoded, misc_offset + 4)[0] & (1 << 30))
             if enemy:
                 efforts, misc = [game.read(game.sym['sSubstructOffsets']+24*block+personality%24,1)[0]*data['substruct_size'] for block in (2,3)]
                 iv_word = struct.unpack_from('<I',decoded,misc+4)[0]

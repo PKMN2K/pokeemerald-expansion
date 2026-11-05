@@ -245,7 +245,6 @@ void NewGameInitData(void)
     gPartiesCount[B_TRAINER_PLAYER] = 1;
     FlagSet(FLAG_SYS_POKEMON_GET);
     FlagSet(FLAG_SYS_B_DASH);
-    FlagSet(FLAG_BADGE05_GET);
     AddBagItem(ITEM_OLD_ROD, 1);
     AddBagItem(ITEM_MACH_BIKE, 1);
 #endif

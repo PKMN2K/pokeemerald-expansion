@@ -1,0 +1,84 @@
+/* Generated from Polished Crystal v3.2.3; source first Gym teams. */
+
+=== TRAINER_POLISHED_ROD ===
+Name: Rod
+Class: Bird Keeper
+Pic: Polished Bird Keeper
+Gender: Male
+Music: Male
+Double Battle: No
+
+Pidgey (M)
+Level: 7
+Nature: Hardy
+IVs: 16 HP / 16 Atk / 16 Def / 16 SpA / 16 SpD / 16 Spe
+EVs: 5 HP / 5 Atk / 5 Def / 5 SpA / 5 SpD / 5 Spe
+- MOVE_TACKLE
+- MOVE_GUST
+
+Hoothoot (M)
+Level: 8
+Nature: Hardy
+IVs: 16 HP / 16 Atk / 16 Def / 16 SpA / 16 SpD / 16 Spe
+EVs: 5 HP / 5 Atk / 5 Def / 5 SpA / 5 SpD / 5 Spe
+- MOVE_GROWL
+- MOVE_FORESIGHT
+- MOVE_HYPNOSIS
+- MOVE_PECK
+
+=== TRAINER_POLISHED_ABE ===
+Name: Abe
+Class: Bird Keeper
+Pic: Polished Bird Keeper
+Gender: Male
+Music: Male
+Double Battle: No
+
+Spearow (M)
+Level: 9
+Nature: Hardy
+IVs: 16 HP / 16 Atk / 16 Def / 16 SpA / 16 SpD / 16 Spe
+EVs: 5 HP / 5 Atk / 5 Def / 5 SpA / 5 SpD / 5 Spe
+- MOVE_PECK
+- MOVE_GROWL
+- MOVE_LEER
+- MOVE_PURSUIT
+
+=== TRAINER_POLISHED_FALKNER ===
+Name: Falkner
+Class: Leader
+Pic: Polished Falkner
+Gender: Male
+Music: Male
+Double Battle: No
+Items: Super Potion
+
+Natu (M)
+Level: 10
+Nature: Hardy
+IVs: 22 HP / 22 Atk / 22 Def / 22 SpA / 22 SpD / 22 Spe
+EVs: 32 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+- MOVE_PECK
+- MOVE_LEER
+- MOVE_NIGHT_SHADE
+- MOVE_MUD_SLAP
+
+Hoothoot (M)
+Level: 11
+Nature: Hardy
+IVs: 22 HP / 22 Atk / 22 Def / 22 SpA / 22 SpD / 22 Spe
+EVs: 32 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+- MOVE_TACKLE
+- MOVE_HYPNOSIS
+- MOVE_PECK
+- MOVE_CONFUSION
+
+Pidgeotto (M) @ Pecha Berry
+Level: 13
+Nature: Hardy
+IVs: 22 HP / 22 Atk / 22 Def / 22 SpA / 22 SpD / 22 Spe
+EVs: 32 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+- MOVE_GUST
+- MOVE_MUD_SLAP
+- MOVE_QUICK_ATTACK
+- MOVE_ROOST

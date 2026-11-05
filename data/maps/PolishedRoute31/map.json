@@ -167,6 +167,13 @@
       "elevation": 0,
       "dest_map": "MAP_POLISHED_ROUTE_31_VIOLET_GATE",
       "dest_warp_id": "1"
+    },
+    {
+      "x": 34,
+      "y": 5,
+      "elevation": 0,
+      "dest_map": "MAP_POLISHED_DARK_CAVE_VIOLET_ENTRANCE",
+      "dest_warp_id": "0"
     }
   ],
   "coord_events": [

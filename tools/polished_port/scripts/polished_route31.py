@@ -10,7 +10,7 @@ from convert_player_walking import convert, _read_png_2bit_grayscale, _write_ind
 
 MAPS = {"Route31": "ROUTE_31", "Route31VioletGate": "ROUTE_31_VIOLET_GATE"}
 # Preserve the original art at doors whose destination has not been imported.
-CLOSED = {"Route31": ((34, 5),)}
+CLOSED = {}
 
 
 def trainers(files):
@@ -191,4 +191,4 @@ PolishedRoute31_PokeBall::
                       ("MomNo","MomPhoneWontSaveMoneyText"),("MomBye","MomPhoneHangUpText")):
         code += define(prefix+"_"+out,text(phone,label))
     return hooks, code, {"trainers":["Wade","Finch"], "sight": "Finch explains his challenge once; four earlier victories unlock the optional battle.",
-                         "phone": "Mom calls if the player has not opened the bank.", "deferred":["Dark Cave","Wade phone/rematches","Kenya mail quest"]}
+                         "phone": "Mom calls if the player has not opened the bank.", "deferred":["Wade phone/rematches","Kenya mail quest"]}

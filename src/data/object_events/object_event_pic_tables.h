@@ -2711,3 +2711,27 @@ static const struct SpriteFrameImage sPicTable_PolishedElder[] = {
 static const struct SpriteFrameImage sPicTable_PolishedKimonoGirlGreen[] = {
     overworld_ascending_frames(gObjectEventPic_PolishedKimonoGirlGreen, 2, 4),
 };
+
+static const struct SpriteFrameImage sPicTable_PolishedFalkner[] = {
+    overworld_ascending_frames(gObjectEventPic_PolishedFalkner, 2, 4),
+};
+
+static const struct SpriteFrameImage sPicTable_PolishedBirdKeeper[] = {
+    overworld_ascending_frames(gObjectEventPic_PolishedBirdKeeper, 2, 4),
+};
+
+static const struct SpriteFrameImage sPicTable_PolishedGymGuy[] = {
+    overworld_ascending_frames(gObjectEventPic_PolishedGymGuy, 2, 4),
+};
+
+static const struct SpriteFrameImage sPicTable_PolishedPidgeottoSide[] = {
+    overworld_ascending_frames(gObjectEventPic_PolishedPidgeottoSide, 2, 4),
+};
+
+static const struct SpriteFrameImage sPicTable_PolishedUrsaring[] = {
+    overworld_ascending_frames(gObjectEventPic_PolishedUrsaring, 2, 4),
+};
+
+static const struct SpriteFrameImage sPicTable_PolishedRock[] = {
+    overworld_ascending_frames(gObjectEventPic_PolishedRock, 2, 4),
+};

@@ -246,6 +246,13 @@
       "elevation": 0,
       "dest_map": "MAP_POLISHED_SPROUT_TOWER_1F",
       "dest_warp_id": "0"
+    },
+    {
+      "x": 18,
+      "y": 17,
+      "elevation": 0,
+      "dest_map": "MAP_POLISHED_VIOLET_GYM",
+      "dest_warp_id": "0"
     }
   ],
   "coord_events": [],

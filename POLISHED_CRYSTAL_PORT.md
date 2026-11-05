@@ -716,7 +716,7 @@ outside the original trainer/partner ranges.
 
 The upstairs encounters retain all seven source species/level probabilities
 for morning, day and night, including the distinct 3% and 2% Bellsprout
-levels. A tower-only native slot selector preserves that distinction.
+levels. A native slot selector shared with Dark Cave preserves that distinction.
 The native encounter rate is 4 (about 2.22% before native cooldowns and
 modifiers); the source rate is 2%. The first floor has no wild encounters.
 
@@ -735,8 +735,53 @@ Candy still require the five Ecruteak Kimono Girl victories and will be
 connected with that campaign phase. Source music remains a separate phase.
 Granny uses the imperial source text, matching the current engine setting.
 
-The campaign now covers 30 source maps and 77 reciprocal door/stair events,
-plus the two garden maps. Falkner's Gym and the post-badge Togepi Egg follow.
+### Dark Cave, Violet Gym and the Togepi Egg
+
+The Route 31 cave entrance and Violet Gym now open their original source
+maps. Dark Cave retains the source night palettes, collision, four pickups,
+hidden Elixir and four smashable rocks. Its morning/day/night land slots
+preserve all seven source species/level probabilities, and its Magikarp
+water slots preserve the 60/30/10 level distribution. Native base rates are
+7/180 for land and 4/180 for water, approximating the source 4% and 2% before
+native movement, ability and encounter modifiers. The Blackthorn and Route
+46 exits remain closed until those destinations are ported.
+
+The Gym guide turns the player away until Falkner returns. At Dark Cave's
+source trigger, he warns and steps the player back before Flash is obtained.
+After the Sprout Tower reward, the original darkness branch allows the
+rescue: Pidgeotto attacks Ursaring, both Pokémon leave, and Falkner follows
+the source exit path. This does not require teaching Flash before the badge.
+Native Flash field use retains Expansion's badge requirement. The rescue
+and all three actors' departure persist through Save/Continue.
+
+Abe, Rod and Falkner use authentic overworld and battle graphics. Abe has
+Spearow at level 9; Rod has Pidgey 7 and Hoothoot 8. Falkner has Natu 10,
+Hoothoot 11 and Pidgeotto 13, their explicit source moves, 32 HP EVs, doubled
+class DVs (22 IVs), Pidgeotto's Pecha Berry and his Super Potion. Bird Keepers
+use doubled class DVs (16 IVs) and the source modern conversion of 5 EVs per
+stat. Native Expansion AI, ability selection and prizes still apply.
+
+Victory grants the Zephyr Badge in the native first badge slot, updates
+Johto's earned-badge bitmask and awards reusable TM51 Roost. The reserved
+TM51 item ID is activated without renumbering old TMs or HMs. Retries after a
+failed reward do not repeat the battle or badge. The old demonstration-only
+fifth badge is removed when entering Violet/Gym; demonstration Surf access
+is now separate from badge progress. The native Trainer Card still uses
+Emerald badge art; Johto badge graphics belong to the presentation phase.
+
+On leaving the Gym, Elm's one-time call sends his aide to Violet Center and
+removes him from the lab. The source offer and refusal lead to one native
+Togepi Egg, sent to the PC if the party is full. Full party and PC leave the
+gift pending; success alone records it and returns the aide to the lab.
+Egg creation and hatching use Expansion's native engine. The later hatch
+report, Odd Souvenir reward, Elm battles and outbound phone interface are
+still later campaign work. Source music remains a separate phase.
+
+The campaign now covers 32 source maps and 82 reciprocal door/stair events,
+plus the two garden maps. Existing map, warp, trainer, item and save IDs are
+preserved. Shared save flags are allocated only from unused Emerald/FRLG
+slots. Native tests cover reward idempotence, TM compatibility and all Egg
+storage boundaries; controller-driven tests exercise the playable sequence.
 
 The playable visual slice and dormant Headbutt encounter selection are complete
 parts of the port. **The whole Polished Crystal migration is not complete.**

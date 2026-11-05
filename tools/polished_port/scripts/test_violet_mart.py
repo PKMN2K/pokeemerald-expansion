@@ -12,7 +12,7 @@ def main():
     files = source_files()
     mart = json.loads((ROOT/"data/maps/PolishedVioletMart/map.json").read_text())
     city = json.loads((ROOT/"data/maps/PolishedVioletCity/map.json").read_text())
-    assert [(w["x"],w["y"]) for w in city["warp_events"]] == [(31,25),(39,24),(39,25),(30,17),(9,17),(3,15),(21,29),(23,1)]
+    assert [(w["x"],w["y"]) for w in city["warp_events"]] == [(31,25),(39,24),(39,25),(30,17),(9,17),(3,15),(21,29),(23,1),(18,17)]
     assert city["warp_events"][4]["dest_warp_id"] == "1"
     assert [(w["x"],w["y"],w["dest_warp_id"]) for w in mart["warp_events"]] == [(2,7,"4"),(3,7,"4")]
     objects = mart["object_events"]

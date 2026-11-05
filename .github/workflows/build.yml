@@ -68,6 +68,7 @@ jobs:
           python3 tools/polished_port/scripts/test_violet_mart.py
           python3 tools/polished_port/scripts/test_violet_houses.py
           python3 tools/polished_port/scripts/test_sprout.py
+          python3 tools/polished_port/scripts/test_falkner.py
 
       - name: Build playable Johto demo
         timeout-minutes: 20

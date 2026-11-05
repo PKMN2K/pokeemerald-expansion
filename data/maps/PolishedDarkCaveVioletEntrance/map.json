@@ -1,0 +1,203 @@
+{
+  "id": "MAP_POLISHED_DARK_CAVE_VIOLET_ENTRANCE",
+  "name": "PolishedDarkCaveVioletEntrance",
+  "layout": "LAYOUT_POLISHED_DARK_CAVE_VIOLET_ENTRANCE",
+  "music": "MUS_DUMMY",
+  "region": "REGION_JOHTO",
+  "region_map_section": "MAPSEC_NONE",
+  "requires_flash": true,
+  "weather": "WEATHER_NONE",
+  "map_type": "MAP_TYPE_UNDERGROUND",
+  "allow_cycling": false,
+  "allow_escaping": true,
+  "allow_running": true,
+  "show_map_name": false,
+  "battle_scene": "MAP_BATTLE_SCENE_NORMAL",
+  "connections": null,
+  "object_events": [
+    {
+      "local_id": "LOCALID_DARK_CAVE_1",
+      "graphics_id": "OBJ_EVENT_GFX_POLISHED_URSARING",
+      "x": 10,
+      "y": 2,
+      "elevation": 3,
+      "movement_type": "MOVEMENT_TYPE_FACE_DOWN",
+      "movement_range_x": 0,
+      "movement_range_y": 0,
+      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_sight_or_berry_tree_id": "0",
+      "script": "PolishedDarkCave_Nothing",
+      "flag": "FLAG_POLISHED_CAVE_DONE"
+    },
+    {
+      "local_id": "LOCALID_DARK_CAVE_2",
+      "graphics_id": "OBJ_EVENT_GFX_POLISHED_PIDGEOTTO_SIDE",
+      "x": 9,
+      "y": 2,
+      "elevation": 3,
+      "movement_type": "MOVEMENT_TYPE_FACE_DOWN",
+      "movement_range_x": 0,
+      "movement_range_y": 0,
+      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_sight_or_berry_tree_id": "0",
+      "script": "PolishedDarkCave_Nothing",
+      "flag": "FLAG_POLISHED_CAVE_DONE"
+    },
+    {
+      "local_id": "LOCALID_DARK_CAVE_3",
+      "graphics_id": "OBJ_EVENT_GFX_POLISHED_FALKNER",
+      "x": 8,
+      "y": 2,
+      "elevation": 3,
+      "movement_type": "MOVEMENT_TYPE_FACE_RIGHT",
+      "movement_range_x": 0,
+      "movement_range_y": 0,
+      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_sight_or_berry_tree_id": "0",
+      "script": "PolishedDarkCave_Nothing",
+      "flag": "FLAG_POLISHED_CAVE_DONE"
+    },
+    {
+      "local_id": "LOCALID_DARK_CAVE_4",
+      "graphics_id": "OBJ_EVENT_GFX_POLISHED_BALL_RED",
+      "x": 6,
+      "y": 8,
+      "elevation": 3,
+      "movement_type": "MOVEMENT_TYPE_FACE_DOWN",
+      "movement_range_x": 0,
+      "movement_range_y": 0,
+      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_sight_or_berry_tree_id": "0",
+      "script": "PolishedDarkCave_POTION",
+      "flag": "FLAG_POLISHED_CAVE_POTION"
+    },
+    {
+      "local_id": "LOCALID_DARK_CAVE_5",
+      "graphics_id": "OBJ_EVENT_GFX_POLISHED_ROCK",
+      "x": 16,
+      "y": 14,
+      "elevation": 3,
+      "movement_type": "MOVEMENT_TYPE_FACE_DOWN",
+      "movement_range_x": 0,
+      "movement_range_y": 0,
+      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_sight_or_berry_tree_id": "0",
+      "script": "EventScript_RockSmash",
+      "flag": "FLAG_TEMP_1"
+    },
+    {
+      "local_id": "LOCALID_DARK_CAVE_6",
+      "graphics_id": "OBJ_EVENT_GFX_POLISHED_ROCK",
+      "x": 27,
+      "y": 6,
+      "elevation": 3,
+      "movement_type": "MOVEMENT_TYPE_FACE_DOWN",
+      "movement_range_x": 0,
+      "movement_range_y": 0,
+      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_sight_or_berry_tree_id": "0",
+      "script": "EventScript_RockSmash",
+      "flag": "FLAG_TEMP_2"
+    },
+    {
+      "local_id": "LOCALID_DARK_CAVE_7",
+      "graphics_id": "OBJ_EVENT_GFX_POLISHED_ROCK",
+      "x": 7,
+      "y": 14,
+      "elevation": 3,
+      "movement_type": "MOVEMENT_TYPE_FACE_DOWN",
+      "movement_range_x": 0,
+      "movement_range_y": 0,
+      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_sight_or_berry_tree_id": "0",
+      "script": "EventScript_RockSmash",
+      "flag": "FLAG_TEMP_3"
+    },
+    {
+      "local_id": "LOCALID_DARK_CAVE_8",
+      "graphics_id": "OBJ_EVENT_GFX_POLISHED_ROCK",
+      "x": 36,
+      "y": 31,
+      "elevation": 3,
+      "movement_type": "MOVEMENT_TYPE_FACE_DOWN",
+      "movement_range_x": 0,
+      "movement_range_y": 0,
+      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_sight_or_berry_tree_id": "0",
+      "script": "EventScript_RockSmash",
+      "flag": "FLAG_TEMP_4"
+    },
+    {
+      "local_id": "LOCALID_DARK_CAVE_9",
+      "graphics_id": "OBJ_EVENT_GFX_POLISHED_BALL_RED",
+      "x": 36,
+      "y": 22,
+      "elevation": 3,
+      "movement_type": "MOVEMENT_TYPE_FACE_DOWN",
+      "movement_range_x": 0,
+      "movement_range_y": 0,
+      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_sight_or_berry_tree_id": "0",
+      "script": "PolishedDarkCave_DUSK_STONE",
+      "flag": "FLAG_POLISHED_CAVE_DUSK_STONE"
+    },
+    {
+      "local_id": "LOCALID_DARK_CAVE_10",
+      "graphics_id": "OBJ_EVENT_GFX_POLISHED_BALL_RED",
+      "x": 35,
+      "y": 9,
+      "elevation": 3,
+      "movement_type": "MOVEMENT_TYPE_FACE_DOWN",
+      "movement_range_x": 0,
+      "movement_range_y": 0,
+      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_sight_or_berry_tree_id": "0",
+      "script": "PolishedDarkCave_HYPER_POTION",
+      "flag": "FLAG_POLISHED_CAVE_HYPER_POTION"
+    },
+    {
+      "local_id": "LOCALID_DARK_CAVE_11",
+      "graphics_id": "OBJ_EVENT_GFX_POLISHED_BALL_RED",
+      "x": 30,
+      "y": 28,
+      "elevation": 3,
+      "movement_type": "MOVEMENT_TYPE_FACE_DOWN",
+      "movement_range_x": 0,
+      "movement_range_y": 0,
+      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_sight_or_berry_tree_id": "0",
+      "script": "PolishedDarkCave_DIRE_HIT",
+      "flag": "FLAG_POLISHED_CAVE_DIRE_HIT"
+    }
+  ],
+  "warp_events": [
+    {
+      "x": 3,
+      "y": 15,
+      "elevation": 0,
+      "dest_map": "MAP_POLISHED_ROUTE_31",
+      "dest_warp_id": "2"
+    }
+  ],
+  "coord_events": [
+    {
+      "type": "trigger",
+      "x": 6,
+      "y": 2,
+      "elevation": 3,
+      "var": "VAR_TEMP_4",
+      "var_value": "0",
+      "script": "PolishedDarkCave_Scene"
+    }
+  ],
+  "bg_events": [
+    {
+      "type": "hidden_item",
+      "x": 26,
+      "y": 3,
+      "elevation": 0,
+      "item": "ITEM_ELIXIR",
+      "flag": "FLAG_POLISHED_CAVE_ELIXIR"
+    }
+  ]
+}

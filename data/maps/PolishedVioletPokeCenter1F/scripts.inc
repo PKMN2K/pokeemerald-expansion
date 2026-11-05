@@ -1,6 +1,7 @@
 @ Generated from pinned VioletPokeCenter1F.asm: geography, static text and ambient residents.
 PolishedVioletPokeCenter1F_MapScripts::
 	map_script MAP_SCRIPT_ON_TRANSITION, PolishedVioletPokeCenter1F_Respawn
+	map_script MAP_SCRIPT_ON_LOAD, PolishedEgg_Visibility
 	.byte 0
 
 PolishedVioletPokeCenter1F_VioletPokeCenter1FGameboyKidText::
@@ -110,3 +111,94 @@ PolishedVioletPokeCenter1F_NurseGoodbyeText:
 
 PolishedVioletPokeCenter1F_JournalText:
 	.string "POKéMON Journal\pSpecial Feature:\nLeader Falkner!\pPeople say that\nFalkner reveres\lhis father, who\pled the Violet Gym\nbefore him.$"
+
+PolishedEgg_Visibility::
+    setflag FLAG_TEMP_3
+    goto_if_unset FLAG_POLISHED_EGG_CALL, PolishedEgg_End
+    goto_if_set FLAG_POLISHED_EGG_GIVEN, PolishedEgg_End
+    clearflag FLAG_TEMP_3
+PolishedEgg_End::
+    end
+PolishedEgg_Aide::
+    lockall
+    faceplayer
+    goto_if_set FLAG_POLISHED_EGG_GIVEN, PolishedEgg_Done
+    goto_if_set FLAG_POLISHED_EGG_REFUSED, PolishedEgg_AskAgain
+    msgbox PolishedEgg_Intro, MSGBOX_YESNO
+    goto PolishedEgg_Answer
+PolishedEgg_AskAgain::
+    msgbox PolishedEgg_Question, MSGBOX_YESNO
+PolishedEgg_Answer::
+    goto_if_eq VAR_RESULT, NO, PolishedEgg_Refuse
+    specialvar VAR_RESULT, PolishedFalknerGiveEgg
+    goto_if_eq VAR_RESULT, MON_CANT_GIVE, PolishedEgg_Full
+    goto_if_eq VAR_RESULT, MON_GIVEN_TO_PC, PolishedEgg_Box
+    msgbox PolishedEgg_Received, MSGBOX_DEFAULT
+    goto PolishedEgg_Goodbye
+PolishedEgg_Box::
+    msgbox PolishedEgg_BoxText, MSGBOX_DEFAULT
+PolishedEgg_Goodbye::
+    msgbox PolishedEgg_GoodbyeText, MSGBOX_DEFAULT
+    closemessage
+    getplayerxy VAR_0x8004, VAR_0x8005
+    goto_if_eq VAR_0x8005, 3, PolishedEgg_Around
+    applymovement LOCALID_VIOLET_EGG_AIDE, PolishedEgg_Straight
+    goto PolishedEgg_Leave
+PolishedEgg_Around::
+    applymovement LOCALID_VIOLET_EGG_AIDE, PolishedEgg_WalkAround
+PolishedEgg_Leave::
+    waitmovement 0
+    removeobject LOCALID_VIOLET_EGG_AIDE
+    setflag FLAG_TEMP_3
+    goto PolishedEgg_Done
+PolishedEgg_Refuse::
+    setflag FLAG_POLISHED_EGG_REFUSED
+    msgbox PolishedEgg_RefusalText, MSGBOX_DEFAULT
+    goto PolishedEgg_Done
+PolishedEgg_Full::
+    msgbox PolishedEgg_FullText, MSGBOX_DEFAULT
+PolishedEgg_Done::
+    releaseall
+    end
+PolishedEgg_Straight:
+    walk_down
+    walk_left
+    walk_left
+    walk_left
+    walk_left
+    walk_down
+    walk_down
+    walk_down
+    walk_down
+    step_end
+PolishedEgg_WalkAround:
+    walk_left
+    walk_left
+    walk_down
+    walk_left
+    walk_left
+    walk_down
+    walk_down
+    walk_down
+    walk_down
+    step_end
+PolishedEgg_Intro:
+	.string "{PLAYER}, long\ntime, no see.\pI was browsing the\nPOKéMON Journal\lwhile I waited.\pIts gossip is a\ngood pastime…\pAnyway, Prof.Elm\nhas another favor\lto ask you.\pWould you take the\nPOKéMON Egg?$"
+
+PolishedEgg_Question:
+	.string "{PLAYER}, will you\ntake the Egg?$"
+
+PolishedEgg_FullText:
+	.string "Oh, no. You can't\ncarry any more\lPOKéMON with you.\pYou have no space\nin your Box, too.\pI'll wait here\nwhile you make\lroom for the Egg.$"
+
+PolishedEgg_GoodbyeText:
+	.string "We discovered that\na POKéMON will not\phatch until it\ngrows in the Egg.\pIt also has to be\nwith other active\lPOKéMON to hatch.\p{PLAYER}, you're\nthe only person\lwe can rely on.\pPlease call Prof.\nElm when that Egg\lhatches!$"
+
+PolishedEgg_RefusalText:
+	.string "B-but… Prof.Elm\nasked for you…$"
+
+PolishedEgg_Received:
+	.string "{PLAYER} received the\nPOKéMON Egg!$"
+
+PolishedEgg_BoxText:
+	.string "{PLAYER} received the Egg!\pYour party is full, so the\nEgg was sent to your PC.$"

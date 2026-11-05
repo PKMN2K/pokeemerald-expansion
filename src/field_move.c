@@ -1,4 +1,5 @@
 #include "global.h"
+#include "constants/maps.h"
 #include "event_data.h"
 #include "field_move.h"
 #include "fldeff.h"
@@ -21,6 +22,11 @@ static bool32 IsAlwaysTrue(enum FieldMove fieldMove)
 
 static bool32 HasBadgeForFieldMove(enum FieldMove fieldMove)
 {
+#if POLISHED_JOHTO_DEMO
+    // Preserve the demo's Surf access without claiming a fifth campaign badge.
+    if (fieldMove == FIELD_MOVE_SURF && gSaveBlock1Ptr->location.mapGroup == MAP_GROUP(MAP_POLISHED_JOHTO_DEMO_OUTDOOR))
+        return TRUE;
+#endif
     return FlagGet(gFieldMoveInfo[fieldMove].arg + FLAG_BADGE01_GET);
 }
 

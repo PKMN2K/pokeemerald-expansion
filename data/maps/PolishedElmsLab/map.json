@@ -41,7 +41,7 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "PolishedIntro_ElmsAideScript",
-      "flag": "0"
+      "flag": "FLAG_POLISHED_AIDE_IN_VIOLET"
     },
     {
       "local_id": "LOCALID_ELMS_LAB_CYNDAQUIL",

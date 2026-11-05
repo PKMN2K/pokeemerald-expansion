@@ -9675,6 +9675,28 @@
       "border_filepath": "data/layouts/PolishedSproutTower3F/border.bin",
       "blockdata_filepath": "data/layouts/PolishedSproutTower3F/map.bin",
       "layout_version": "emerald"
+    },
+    {
+      "id": "LAYOUT_POLISHED_DARK_CAVE_VIOLET_ENTRANCE",
+      "name": "PolishedDarkCaveVioletEntrance_Layout",
+      "width": 40,
+      "height": 36,
+      "primary_tileset": "gTileset_PolishedNewBarkCavePrimary",
+      "secondary_tileset": "gTileset_PolishedNewBarkCaveSecondary",
+      "border_filepath": "data/layouts/PolishedDarkCaveVioletEntrance/border.bin",
+      "blockdata_filepath": "data/layouts/PolishedDarkCaveVioletEntrance/map.bin",
+      "layout_version": "emerald"
+    },
+    {
+      "id": "LAYOUT_POLISHED_VIOLET_GYM",
+      "name": "PolishedVioletGym_Layout",
+      "width": 10,
+      "height": 16,
+      "primary_tileset": "gTileset_PolishedNewBarkGymPrimary",
+      "secondary_tileset": "gTileset_PolishedNewBarkGymSecondary",
+      "border_filepath": "data/layouts/PolishedVioletGym/border.bin",
+      "blockdata_filepath": "data/layouts/PolishedVioletGym/map.bin",
+      "layout_version": "emerald"
     }
   ]
 }

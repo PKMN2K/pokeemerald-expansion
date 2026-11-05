@@ -2,6 +2,7 @@
 PolishedVioletCity_MapScripts::
 	map_script MAP_SCRIPT_ON_LOAD, PolishedVioletCity_Setup
 	map_script MAP_SCRIPT_ON_RETURN_TO_FIELD, PolishedVioletCity_Restore
+	map_script MAP_SCRIPT_ON_FRAME_TABLE, PolishedEgg_Frame
 	.byte 0
 
 PolishedVioletCity_VioletCitySignText::
@@ -367,6 +368,8 @@ PolishedVioletCity_Cheri::
     goto PolishedFruit_Interact
 
 PolishedVioletCity_Setup::
+    call PolishedEgg_Ready
+    setmetatile 18, 17, 118, FALSE
     setmetatile 30, 17, 158, FALSE
     setmetatile 9, 17, 503, FALSE
     setmetatile 3, 15, 187, FALSE
@@ -399,6 +402,28 @@ PolishedVioletCity_ShowNight::
     removeobject LOCALID_VIOLET_CITY_ACE_TRAINER_M
     addobject LOCALID_VIOLET_CITY_ACE_TRAINER_F
     end
+PolishedEgg_Ready::
+    special PolishedFalknerPrepareBadges
+    setvar VAR_TEMP_4, 0
+    goto_if_unset FLAG_POLISHED_ZEPHYR_BADGE, PolishedEgg_ReadyDone
+    goto_if_set FLAG_POLISHED_EGG_CALL, PolishedEgg_ReadyDone
+    setvar VAR_TEMP_4, 1
+PolishedEgg_ReadyDone::
+    return
+PolishedEgg_Frame::
+    map_script_2 VAR_TEMP_4, 1, PolishedEgg_Call
+    .2byte 0
+PolishedEgg_Call::
+    lockall
+    playse SE_PIN
+    msgbox PolishedEgg_CallText, MSGBOX_DEFAULT
+    setflag FLAG_POLISHED_EGG_CALL
+    setflag FLAG_POLISHED_AIDE_IN_VIOLET
+    setvar VAR_TEMP_4, 0
+    releaseall
+    end
+PolishedEgg_CallText:
+	.string "Hello, {PLAYER}? We\ndiscovered some-\pthing about the\nEgg!\pMy assistant is at\nthe POKéMON Center\pin Violet City.\nCould you talk to\lhim?$"
 PolishedVioletCity_MartSign::
 	msgbox PolishedVioletCity_MartSign_Text, MSGBOX_SIGN
 	end

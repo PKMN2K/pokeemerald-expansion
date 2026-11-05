@@ -703,3 +703,15 @@ const u32 gObjectEventPic_PolishedEevee[] = INCGFX_U32("graphics/object_events/p
 const u32 gObjectEventPic_PolishedElder[] = INCGFX_U32("graphics/object_events/polished_elder/walking.png", ".4bpp", "-mwidth 2 -mheight 4");
 
 const u32 gObjectEventPic_PolishedKimonoGirlGreen[] = INCGFX_U32("graphics/object_events/polished_kimono_girl/walking.png", ".4bpp", "-mwidth 2 -mheight 4");
+
+const u32 gObjectEventPic_PolishedFalkner[] = INCGFX_U32("graphics/object_events/polished_falkner/walking.png", ".4bpp", "-mwidth 2 -mheight 4");
+
+const u32 gObjectEventPic_PolishedBirdKeeper[] = INCGFX_U32("graphics/object_events/polished_bird_keeper/walking.png", ".4bpp", "-mwidth 2 -mheight 4");
+
+const u32 gObjectEventPic_PolishedGymGuy[] = INCGFX_U32("graphics/object_events/polished_gym_guy/walking.png", ".4bpp", "-mwidth 2 -mheight 4");
+
+const u32 gObjectEventPic_PolishedPidgeottoSide[] = INCGFX_U32("graphics/object_events/polished_pidgeotto_side/walking.png", ".4bpp", "-mwidth 2 -mheight 4");
+
+const u32 gObjectEventPic_PolishedUrsaring[] = INCGFX_U32("graphics/object_events/polished_ursaring/walking.png", ".4bpp", "-mwidth 2 -mheight 4");
+
+const u32 gObjectEventPic_PolishedRock[] = INCGFX_U32("graphics/object_events/polished_rock/walking.png", ".4bpp", "-mwidth 2 -mheight 4");

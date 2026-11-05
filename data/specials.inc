@@ -662,3 +662,8 @@ gSpecials::
 	def_special PolishedMomAdjustClock
 	def_special PolishedJohtoGetWeekday
 	def_special StartPolishedLyraTutorial
+
+	def_special PolishedFalknerFlashLevel
+	def_special PolishedFalknerPrepareBadges
+	def_special PolishedFalknerAwardBadge
+	def_special PolishedFalknerGiveEgg

@@ -16885,3 +16885,5 @@ IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 #include "src/data/polished_sprout.party"
 
 #include "src/data/polished_return.party"
+
+#include "src/data/polished_falkner.party"

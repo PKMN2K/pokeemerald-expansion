@@ -1106,6 +1106,121 @@
       "path": "data/trainers/attributes.asm",
       "fixture": "data__trainers__attributes.asm.b64",
       "git_blob_sha1": "20dbdf29a3f13627a7ea4709b6dd3f083045f574"
+    },
+    {
+      "path": "maps/VioletGym.asm",
+      "fixture": "maps__VioletGym.asm.b64",
+      "git_blob_sha1": "7e4fa7b32c1fd45ce1aba5a7dbae387b71327a53"
+    },
+    {
+      "path": "maps/DarkCaveVioletEntrance.asm",
+      "fixture": "maps__DarkCaveVioletEntrance.asm.b64",
+      "git_blob_sha1": "61859cb4e7f3d982472963681ec3c30d2051ae7e"
+    },
+    {
+      "path": "maps/VioletGym.ablk",
+      "fixture": "maps__VioletGym.ablk.b64",
+      "git_blob_sha1": "400d21c91edc0322a1ce20257243fd83a0b214b8"
+    },
+    {
+      "path": "maps/DarkCaveVioletEntrance.ablk",
+      "fixture": "maps__DarkCaveVioletEntrance.ablk.b64",
+      "git_blob_sha1": "3435f8c5ae170895a7ae1e18f197496da116156a"
+    },
+    {
+      "path": "gfx/tilesets/gym.png",
+      "fixture": "gfx__tilesets__gym.png.b64",
+      "git_blob_sha1": "d5b410003a8bb7d7dea1e9c54acfe9228a27651c"
+    },
+    {
+      "path": "data/tilesets/gym_metatiles.bin",
+      "fixture": "data__tilesets__gym_metatiles.bin.b64",
+      "git_blob_sha1": "349d52e6b79434895d80b8f249f8caa3f011a755"
+    },
+    {
+      "path": "data/tilesets/gym_attributes.bin",
+      "fixture": "data__tilesets__gym_attributes.bin.b64",
+      "git_blob_sha1": "d178ad010a81a2ab64c7ad40a4cae22038e0295c"
+    },
+    {
+      "path": "data/tilesets/gym_collision.asm",
+      "fixture": "data__tilesets__gym_collision.asm.b64",
+      "git_blob_sha1": "4f41534033c54fcc711ac4965bd19685264c784c"
+    },
+    {
+      "path": "gfx/tilesets/cave.png",
+      "fixture": "gfx__tilesets__cave.png.b64",
+      "git_blob_sha1": "867726c03597561234aea2a8435ca8e862acb2cf"
+    },
+    {
+      "path": "data/tilesets/cave_metatiles.bin",
+      "fixture": "data__tilesets__cave_metatiles.bin.b64",
+      "git_blob_sha1": "dee34c05701c4d31519f7894c14d982eb6f14941"
+    },
+    {
+      "path": "data/tilesets/cave_attributes.bin",
+      "fixture": "data__tilesets__cave_attributes.bin.b64",
+      "git_blob_sha1": "d3ef2fd3a4c899c685ef809a110d038ba521c74a"
+    },
+    {
+      "path": "data/tilesets/cave_collision.asm",
+      "fixture": "data__tilesets__cave_collision.asm.b64",
+      "git_blob_sha1": "c203b7a199f7b99c3566dbd3e9a10b9f2b100336"
+    },
+    {
+      "path": "gfx/sprites/falkner.png",
+      "fixture": "gfx__sprites__falkner.png.b64",
+      "git_blob_sha1": "a9bc75dbde264c9e60f90b0d03e249c7fbc7c081"
+    },
+    {
+      "path": "gfx/sprites/bird_keeper.png",
+      "fixture": "gfx__sprites__bird_keeper.png.b64",
+      "git_blob_sha1": "425771963f84ddce52c6ac490f0e29679d397c66"
+    },
+    {
+      "path": "gfx/sprites/gym_guy.png",
+      "fixture": "gfx__sprites__gym_guy.png.b64",
+      "git_blob_sha1": "a1f74da03e4df89499a61a262ab52972ebceddc7"
+    },
+    {
+      "path": "gfx/minis/ursaring.png",
+      "fixture": "gfx__minis__ursaring.png.b64",
+      "git_blob_sha1": "fbe412cc1cd3756b3f081eb84da1f336d0320cf4"
+    },
+    {
+      "path": "gfx/sprites/pidgeotto_side.png",
+      "fixture": "gfx__sprites__pidgeotto_side.png.b64",
+      "git_blob_sha1": "3fc1570bf3abbeffe433b20dd504989105080688"
+    },
+    {
+      "path": "gfx/trainers/falkner.png",
+      "fixture": "gfx__trainers__falkner.png.b64",
+      "git_blob_sha1": "fede996bbd0ed85e2bf4998aff491f73dd297542"
+    },
+    {
+      "path": "gfx/trainers/falkner.pal",
+      "fixture": "gfx__trainers__falkner.pal.b64",
+      "git_blob_sha1": "bc78f2fafe2c1a177e25d9cd745c5073d0ebeab3"
+    },
+    {
+      "path": "gfx/trainers/bird_keeper.png",
+      "fixture": "gfx__trainers__bird_keeper.png.b64",
+      "git_blob_sha1": "207a49c54541b4575874a601546f5241f9a59527"
+    },
+    {
+      "path": "gfx/trainers/bird_keeper.pal",
+      "fixture": "gfx__trainers__bird_keeper.pal.b64",
+      "git_blob_sha1": "ca0407a3bce3a9ad9024f435e9945f0de707fcd4"
+    },
+    {
+      "path": "gfx/sprites/boulder_rock_fossil.png",
+      "fixture": "gfx__sprites__boulder_rock_fossil.png.b64",
+      "git_blob_sha1": "27678774699eb0c253efbf791705419731f31aeb"
+    },
+    {
+      "path": "data/maps/environment_colors.asm",
+      "fixture": "data__maps__environment_colors.asm.b64",
+      "git_blob_sha1": "cb9989119e83d39e2b1a1ea07b8baf2563043da8"
     }
   ]
 }

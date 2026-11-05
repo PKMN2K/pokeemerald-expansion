@@ -798,6 +798,8 @@ PolishedReturn_ElmDone::
 	releaseall
 	end
 PolishedReturn_ElmStudying::
+    goto_if_set FLAG_POLISHED_EGG_GIVEN, PolishedEgg_ElmWaiting
+    goto_if_set FLAG_POLISHED_ZEPHYR_BADGE, PolishedEgg_ElmAide
 	msgbox PolishedReturn_ElmStudyingEggText, MSGBOX_DEFAULT
 	releaseall
 	end
@@ -942,3 +944,17 @@ PolishedReturn_ElmsLabWindowText1:
 
 PolishedReturn_ElmsLabWindowText2:
 	.string "He broke in\nthrough here!$"
+
+PolishedEgg_ElmWaiting::
+    msgbox PolishedEgg_ElmWaitingText, MSGBOX_DEFAULT
+    releaseall
+    end
+PolishedEgg_ElmWaitingText:
+	.string "Elm: Hey, has that\nEgg changed any?$"
+
+PolishedEgg_ElmAide::
+    msgbox PolishedEgg_ElmAideText, MSGBOX_DEFAULT
+    releaseall
+    end
+PolishedEgg_ElmAideText:
+	.string "Elm: {PLAYER}?\nDidn't you meet my\lassistant?\pHe should have met\nyou with the Egg\pat Violet City's\nPOKéMON Center.\pYou must have just\nmissed him. Try to\lcatch him there.$"

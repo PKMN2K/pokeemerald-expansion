@@ -207,7 +207,8 @@ u32 ChooseWildMonIndex_Land(void)
 
     if (gSaveBlock1Ptr->location.mapGroup == MAP_GROUP(MAP_POLISHED_SPROUT_TOWER_2F)
         && (gSaveBlock1Ptr->location.mapNum == MAP_NUM(MAP_POLISHED_SPROUT_TOWER_2F)
-         || gSaveBlock1Ptr->location.mapNum == MAP_NUM(MAP_POLISHED_SPROUT_TOWER_3F)))
+         || gSaveBlock1Ptr->location.mapNum == MAP_NUM(MAP_POLISHED_SPROUT_TOWER_3F)
+         || gSaveBlock1Ptr->location.mapNum == MAP_NUM(MAP_POLISHED_DARK_CAVE_VIOLET_ENTRANCE)))
         wildMonIndex = PolishedSproutLandSlot(rand);
 
     if (LURE_STEP_COUNT != 0 && (Random() % 10 < 2))
@@ -468,7 +469,8 @@ enum TimeOfDay GetTimeOfDayForEncounters(u32 headerId, enum WildPokemonArea area
          || gWildMonHeaders[headerId].mapNum == MAP_NUM(MAP_POLISHED_ROUTE_30)
          || gWildMonHeaders[headerId].mapNum == MAP_NUM(MAP_POLISHED_ROUTE_31)
          || gWildMonHeaders[headerId].mapNum == MAP_NUM(MAP_POLISHED_SPROUT_TOWER_2F)
-         || gWildMonHeaders[headerId].mapNum == MAP_NUM(MAP_POLISHED_SPROUT_TOWER_3F)))
+         || gWildMonHeaders[headerId].mapNum == MAP_NUM(MAP_POLISHED_SPROUT_TOWER_3F)
+         || gWildMonHeaders[headerId].mapNum == MAP_NUM(MAP_POLISHED_DARK_CAVE_VIOLET_ENTRANCE)))
     {
         RtcCalcLocalTime();
         return PolishedRoute29EncounterTime(gLocalTime.hours,

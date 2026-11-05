@@ -1,3 +1,9 @@
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_PolishedFalkner;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_PolishedBirdKeeper;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_PolishedGymGuy;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_PolishedPidgeottoSide;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_PolishedUrsaring;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_PolishedRock;
 extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_PolishedKimonoGirlGreen;
 extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_PolishedElder;
 extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_PolishedYoungsterBlue;
@@ -515,6 +521,12 @@ const struct ObjectEventGraphicsInfo *const gObjectEventGraphicsInfoPointers[NUM
     [OBJ_EVENT_GFX_POLISHED_YOUNGSTER_GREEN] = &gObjectEventGraphicsInfo_PolishedYoungsterGreen,
     [OBJ_EVENT_GFX_POLISHED_COOL_DUDE_PURPLE] = &gObjectEventGraphicsInfo_PolishedCoolDudePurple,
     [OBJ_EVENT_GFX_POLISHED_GAMEBOY_KID] = &gObjectEventGraphicsInfo_PolishedGameboyKid,
+    [OBJ_EVENT_GFX_POLISHED_FALKNER] = &gObjectEventGraphicsInfo_PolishedFalkner,
+    [OBJ_EVENT_GFX_POLISHED_BIRD_KEEPER] = &gObjectEventGraphicsInfo_PolishedBirdKeeper,
+    [OBJ_EVENT_GFX_POLISHED_GYM_GUY] = &gObjectEventGraphicsInfo_PolishedGymGuy,
+    [OBJ_EVENT_GFX_POLISHED_PIDGEOTTO_SIDE] = &gObjectEventGraphicsInfo_PolishedPidgeottoSide,
+    [OBJ_EVENT_GFX_POLISHED_URSARING] = &gObjectEventGraphicsInfo_PolishedUrsaring,
+    [OBJ_EVENT_GFX_POLISHED_ROCK] = &gObjectEventGraphicsInfo_PolishedRock,
     [OBJ_EVENT_GFX_POLISHED_ELDER] = &gObjectEventGraphicsInfo_PolishedElder,
     [OBJ_EVENT_GFX_POLISHED_KIMONO_GIRL_GREEN] = &gObjectEventGraphicsInfo_PolishedKimonoGirlGreen,
     [OBJ_EVENT_GFX_POLISHED_SAGE] = &gObjectEventGraphicsInfo_PolishedSage,

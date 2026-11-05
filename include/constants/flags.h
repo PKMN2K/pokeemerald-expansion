@@ -111,6 +111,21 @@
 #define FLAG_POLISHED_SPROUT_TROY 0x4E3
 #define FLAG_POLISHED_SPROUT_NEAL 0x4E4
 #define FLAG_POLISHED_SPROUT_LI 0x4E5
+#define FLAG_POLISHED_CAVE_DONE 0x4E6
+#define FLAG_POLISHED_CAVE_POTION 0x4E7
+#define FLAG_POLISHED_CAVE_DUSK_STONE 0x4E8
+#define FLAG_POLISHED_CAVE_HYPER_POTION 0x4E9
+#define FLAG_POLISHED_CAVE_DIRE_HIT 0x4EA
+#define FLAG_POLISHED_CAVE_ELIXIR 0x4EB
+#define FLAG_POLISHED_ROD 0x4EC
+#define FLAG_POLISHED_ABE 0x4ED
+#define FLAG_POLISHED_FALKNER 0x4EE
+#define FLAG_POLISHED_ZEPHYR_BADGE 0x4EF
+#define FLAG_POLISHED_ROOST 0x4F9
+#define FLAG_POLISHED_EGG_CALL 0x4FA
+#define FLAG_POLISHED_EGG_GIVEN 0x28E
+#define FLAG_POLISHED_EGG_REFUSED 0x28F
+#define FLAG_POLISHED_AIDE_IN_VIOLET 0x299
 
 #if IS_FRLG
 
@@ -764,8 +779,8 @@
 #define FLAG_UNUSED_0x28B  0x28B // Unused Flag
 #define FLAG_UNUSED_0x28C  0x28C // Unused Flag
 #define FLAG_UNUSED_0x28D  0x28D // Unused Flag
-#define FLAG_UNUSED_0x28E  0x28E // Unused Flag
-#define FLAG_UNUSED_0x28F  0x28F // Unused Flag
+// Reserved for shared FLAG_POLISHED_EGG_GIVEN.
+// Reserved for shared FLAG_POLISHED_EGG_REFUSED.
 #define FLAG_UNUSED_0x290  0x290 // Unused Flag
 #define FLAG_UNUSED_0x291  0x291 // Unused Flag
 #define FLAG_UNUSED_0x292  0x292 // Unused Flag
@@ -775,7 +790,7 @@
 #define FLAG_UNUSED_0x296  0x296 // Unused Flag
 #define FLAG_UNUSED_0x297  0x297 // Unused Flag
 #define FLAG_UNUSED_0x298  0x298 // Unused Flag
-#define FLAG_UNUSED_0x299  0x299 // Unused Flag
+// Reserved for shared FLAG_POLISHED_AIDE_IN_VIOLET.
 #define FLAG_UNUSED_0x29A  0x29A // Unused Flag
 #define FLAG_UNUSED_0x29B  0x29B // Unused Flag
 #define FLAG_UNUSED_0x29C  0x29C // Unused Flag
@@ -1363,16 +1378,16 @@
 // Reserved for shared FLAG_POLISHED_SPROUT_TROY.
 // Reserved for shared FLAG_POLISHED_SPROUT_NEAL.
 // Reserved for shared FLAG_POLISHED_SPROUT_LI.
-#define FLAG_UNUSED_0x4E6                                           0x4E6 // Unused Flag
-#define FLAG_UNUSED_0x4E7                                           0x4E7 // Unused Flag
-#define FLAG_UNUSED_0x4E8                                           0x4E8 // Unused Flag
-#define FLAG_UNUSED_0x4E9                                           0x4E9 // Unused Flag
-#define FLAG_UNUSED_0x4EA                                           0x4EA // Unused Flag
-#define FLAG_UNUSED_0x4EB                                           0x4EB // Unused Flag
-#define FLAG_UNUSED_0x4EC                                           0x4EC // Unused Flag
-#define FLAG_UNUSED_0x4ED                                           0x4ED // Unused Flag
-#define FLAG_UNUSED_0x4EE                                           0x4EE // Unused Flag
-#define FLAG_UNUSED_0x4EF                                           0x4EF // Unused Flag
+// Reserved for shared FLAG_POLISHED_CAVE_DONE.
+// Reserved for shared FLAG_POLISHED_CAVE_POTION.
+// Reserved for shared FLAG_POLISHED_CAVE_DUSK_STONE.
+// Reserved for shared FLAG_POLISHED_CAVE_HYPER_POTION.
+// Reserved for shared FLAG_POLISHED_CAVE_DIRE_HIT.
+// Reserved for shared FLAG_POLISHED_CAVE_ELIXIR.
+// Reserved for shared FLAG_POLISHED_ROD.
+// Reserved for shared FLAG_POLISHED_ABE.
+// Reserved for shared FLAG_POLISHED_FALKNER.
+// Reserved for shared FLAG_POLISHED_ZEPHYR_BADGE.
 
 #define FLAG_DEFEATED_RUSTBORO_GYM                                  0x4F0
 #define FLAG_DEFEATED_DEWFORD_GYM                                   0x4F1
@@ -1384,8 +1399,8 @@
 #define FLAG_DEFEATED_SOOTOPOLIS_GYM                                0x4F7
 #define FLAG_DEFEATED_METEOR_FALLS_STEVEN                           0x4F8
 
-#define FLAG_UNUSED_0x4F9                                           0x4F9 // Unused Flag
-#define FLAG_UNUSED_0x4FA                                           0x4FA // Unused Flag
+// Reserved for shared FLAG_POLISHED_ROOST.
+// Reserved for shared FLAG_POLISHED_EGG_CALL.
 
 #define FLAG_DEFEATED_ELITE_4_SIDNEY                                0x4FB
 #define FLAG_DEFEATED_ELITE_4_PHOEBE                                0x4FC

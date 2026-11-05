@@ -98,7 +98,7 @@ def gba_tile(rows, transparent=False):
 
 
 def lab_geometry(files, tileset="lab"):
-    """Convert a source indoor tileset with no foreground-priority tiles."""
+    """Convert indoors, retaining CGB color-zero-masked foreground priority."""
     png = files[f"gfx/tilesets/{tileset}.png"]
     width, height = struct.unpack_from(">II", png, 16)
     pixels = parse_grayscale2_png(png, expected_width=width, expected_height=height)
@@ -109,11 +109,18 @@ def lab_geometry(files, tileset="lab"):
     tiles = files[f"data/tilesets/{tileset}_metatiles.bin"]
     attrs = files[f"data/tilesets/{tileset}_attributes.bin"]
     assert len(tiles) == len(attrs) and len(tiles) % 16 == 0
-    assert not any(a & 0x80 for a in attrs), "Review new foreground priority before importing"
+    overlays = {}
+    for tile, attr in zip(tiles, attrs):
+        tile += 128 if attr & 8 else 0
+        if attr & 0x80 and tile not in overlays:
+            overlays[tile] = len(graphics) // 32
+            x, y = tile % (width // 8) * 8, tile // (width // 8) * 8
+            graphics.extend(gba_tile([row[x:x + 8] for row in pixels[y:y + 8]], transparent=True))
+    assert len(graphics) <= 16384
     result = bytearray()
     for b in range(len(tiles) // 16):
         for q in range(4):
-            words = []
+            words, foreground = [], []
             for n in range(4):
                 index = b * 16 + (q // 2 * 2 + n // 2) * 4 + q % 2 * 2 + n % 2
                 a = attrs[index]
@@ -121,7 +128,8 @@ def lab_geometry(files, tileset="lab"):
                 assert tile * 32 < len(graphics)
                 assert a & 7 < 7
                 words.append(tile | (0x400 if a & 0x20 else 0) | (0x800 if a & 0x40 else 0) | (a & 7) << 12)
-            result.extend(struct.pack("<8H", *words, 0, 0, 0, 0))
+                foreground.append((words[-1] & ~0x3ff) | overlays[tile - 1] if a & 0x80 else 0)
+            result.extend(struct.pack("<8H", *words, *foreground))
     return bytes(graphics).ljust(16384, b"\0"), bytes(result)
 
 

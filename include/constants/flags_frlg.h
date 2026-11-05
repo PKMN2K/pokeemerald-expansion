@@ -632,8 +632,8 @@
 #define FLAG_SILPH_9F_DOOR_4                             0x28B
 #define FLAG_SILPH_10F_DOOR                              0x28C
 #define FLAG_SILPH_11F_DOOR                              0x28D
-#define FLAG_0x28E                                       0x28E
-#define FLAG_0x28F                                       0x28F
+// Reserved for shared FLAG_POLISHED_EGG_GIVEN.
+// Reserved for shared FLAG_POLISHED_EGG_REFUSED.
 #define FLAG_MET_STICKER_MAN                             0x290
 #define FLAG_PALLET_LADY_NOT_BLOCKING_SIGN               0x291
 #define FLAG_GOT_VS_SEEKER                               0x292
@@ -643,7 +643,7 @@
 #define FLAG_GOT_TM16_FROM_THIRSTY_GIRL                  0x296
 #define FLAG_GOT_TM03_FROM_MISTY                         0x297
 #define FLAG_GOT_TM26_FROM_GIOVANNI                      0x298
-#define FLAG_0x299                                       0x299
+// Reserved for shared FLAG_POLISHED_AIDE_IN_VIOLET.
 #define FLAG_GOT_TM04_FROM_SABRINA                       0x29A
 #define FLAG_GOT_FAME_CHECKER                            0x29B
 #define FLAG_GOT_RECORD_SETTING_MAGIKARP                 0x29C
@@ -1252,16 +1252,16 @@
 // Reserved for shared FLAG_POLISHED_SPROUT_TROY.
 // Reserved for shared FLAG_POLISHED_SPROUT_NEAL.
 // Reserved for shared FLAG_POLISHED_SPROUT_LI.
-#define FLAG_0x4E6               0x4E6
-#define FLAG_0x4E7               0x4E7
-#define FLAG_0x4E8               0x4E8
-#define FLAG_0x4E9               0x4E9
-#define FLAG_0x4EA               0x4EA
-#define FLAG_0x4EB               0x4EB
-#define FLAG_0x4EC               0x4EC
-#define FLAG_0x4ED               0x4ED
-#define FLAG_0x4EE               0x4EE
-#define FLAG_0x4EF               0x4EF
+// Reserved for shared FLAG_POLISHED_CAVE_DONE.
+// Reserved for shared FLAG_POLISHED_CAVE_POTION.
+// Reserved for shared FLAG_POLISHED_CAVE_DUSK_STONE.
+// Reserved for shared FLAG_POLISHED_CAVE_HYPER_POTION.
+// Reserved for shared FLAG_POLISHED_CAVE_DIRE_HIT.
+// Reserved for shared FLAG_POLISHED_CAVE_ELIXIR.
+// Reserved for shared FLAG_POLISHED_ROD.
+// Reserved for shared FLAG_POLISHED_ABE.
+// Reserved for shared FLAG_POLISHED_FALKNER.
+// Reserved for shared FLAG_POLISHED_ZEPHYR_BADGE.
 #define FLAG_0x4F0               0x4F0
 #define FLAG_0x4F1               0x4F1
 #define FLAG_0x4F2               0x4F2
@@ -1271,8 +1271,8 @@
 #define FLAG_0x4F6               0x4F6
 #define FLAG_0x4F7               0x4F7
 #define FLAG_0x4F8               0x4F8
-#define FLAG_0x4F9               0x4F9
-#define FLAG_0x4FA               0x4FA
+// Reserved for shared FLAG_POLISHED_ROOST.
+// Reserved for shared FLAG_POLISHED_EGG_CALL.
 #define FLAG_0x4FB               0x4FB
 #define FLAG_0x4FC               0x4FC
 #define FLAG_0x4FD               0x4FD

@@ -10,8 +10,7 @@ from polished_route29 import object_at
 
 MAPS = {"VioletCity": "VIOLET_CITY", "VioletPokeCenter1F": "VIOLET_POKECENTER_1F"}
 # Keep source artwork at entrances whose destination has a later campaign phase.
-CLOSED = {"VioletCity": ((18, 17),
-                        (2, 8), (2, 9))}
+CLOSED = {"VioletCity": ((2, 8), (2, 9))}
 GRAPHICS = {
     ("CUTE_GIRL", "GREEN"): "CUTE_GIRL_GREEN", ("ACE_TRAINER_M", "RED"): "ACE_TRAINER_M",
     ("ACE_TRAINER_F", "RED"): "ACE_TRAINER_F", ("GRAMPS", "BROWN"): "GRAMPS",
@@ -76,7 +75,7 @@ def events(name, script, header, files, text, define):
         code += center(script, files, text, define, city="Violet", journal="Falkner")
         return f"\tmap_script MAP_SCRIPT_ON_TRANSITION, {prefix}_Respawn\n", code, {
             "services": ["heal", "blackout recovery", "storage", "wall map", "Falkner journal"],
-            "deferred": ["post-badge Togepi Egg", "communication floor"]}
+            "deferred": ["communication floor"]}
 
     header["connections"] = [{"map": "MAP_POLISHED_ROUTE_31", "offset": 18, "direction": "right"}]
     for x, y, item in re.findall(r"^\s*bg_event\s+(\d+),\s*(\d+), BGEVENT_ITEM \+ (\w+),", script, re.M):
@@ -136,5 +135,4 @@ PolishedVioletCity_ShowNight::
     end
 """
     return hooks, code, {"roof_group": 10, "palette": "VioletEcruteakPalette",
-                         "deferred": ["Gym",
-                                      "Route 36 gate and adjoining routes"]}
+                         "deferred": ["Route 36 gate and adjoining routes"]}
