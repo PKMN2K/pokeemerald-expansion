@@ -69,7 +69,10 @@ def tour(game,city,checks):
     game.snapshot("academy-before-tour")
     earl=resident_id(city,"LOCALID_VIOLET_EARL")
     for n,(pos,direction) in enumerate(approaches):
-        game.restore("academy-before-tour");walk(game,city,pos)
+        game.restore("academy-before-tour")
+        # From across town, Earl is outside the active object list. His
+        # stationary square is still occupied when the player reaches it.
+        walk(game,city,pos,avoid=((13,16),))
         assert earl in actors(game) and actors(game)[earl]["position"]==(13,16)
         game.face(direction);game.press(A,35)
         choice_prompt(game,"PolishedEarl_Text_EarlAsksIfYouBeatFalkner")

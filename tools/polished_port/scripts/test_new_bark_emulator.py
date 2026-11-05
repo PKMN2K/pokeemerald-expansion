@@ -28,10 +28,11 @@ def map_data(name):
     return data
 
 
-def walk(game, data, goal):
+def walk(game, data, goal, avoid=()):
     """Use the actual converted collision grid, avoiding other warp tiles."""
     width, height = data["width"], data["height"]
     blocked = {(row["x"], row["y"]) for row in data["warp_events"]}
+    blocked.update(avoid)
     # Reserve each resident's whole walking range, not just its spawn tile.
     live = actors(game)
     for local_id, row in enumerate(data["object_events"], 1):
