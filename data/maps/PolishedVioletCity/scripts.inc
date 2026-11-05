@@ -368,6 +368,7 @@ PolishedVioletCity_Cheri::
 
 PolishedVioletCity_Setup::
     setmetatile 30, 17, 158, FALSE
+    setmetatile 9, 17, 503, FALSE
     setflag FLAG_POLISHED_VISITED_VIOLET
     special PolishedFruitRefreshAll
     gettime

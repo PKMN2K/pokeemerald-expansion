@@ -1055,6 +1055,8 @@ enum __attribute__((packed)) Item
     ITEM_POLISHED_MULCH = 874,
     ITEM_POLISHED_MYSTERY_EGG = 875,
     ITEM_POLISHED_TYPE_CHART = 876,
+    ITEM_POLISHED_FLOWER_MAIL = 877,
+    ITEM_POLISHED_ESCAPE_ROPE = 878,
 
     ITEMS_COUNT,
     ITEM_FIELD_ARROW = ITEMS_COUNT,
@@ -1086,7 +1088,7 @@ enum BerryId
 
 #undef UNPACK_BERRY_ID
 
-#define ITEM_TO_MAIL(itemId) ((itemId) - FIRST_MAIL_INDEX)
+#define ITEM_TO_MAIL(itemId) ((itemId) == ITEM_POLISHED_FLOWER_MAIL ? 12 : (itemId) - FIRST_MAIL_INDEX)
 #define MAIL_NONE 0xFF
 #define ITEM_TO_MULCH(itemId)(((itemId) - ITEM_GROWTH_MULCH) + 1)
 

@@ -856,6 +856,56 @@
       "path": "gfx/type_chart/type_chart.attrmap",
       "fixture": "gfx__type_chart__type_chart.attrmap.b64",
       "git_blob_sha1": "04e594c6f0746c85138d7366a65de91097890382"
+    },
+    {
+      "path": "maps/VioletMart.asm",
+      "fixture": "maps__VioletMart.asm.b64",
+      "git_blob_sha1": "65ce56b11983d6beb69192909f348f991f3a1685"
+    },
+    {
+      "path": "gfx/sprites/granny.png",
+      "fixture": "gfx__sprites__granny.png.b64",
+      "git_blob_sha1": "763b2a2b1637f45eacf88c1f77bae04226dd4b8a"
+    },
+    {
+      "path": "gfx/items/flower_mail.png",
+      "fixture": "gfx__items__flower_mail.png.b64",
+      "git_blob_sha1": "56b1014b218b90663c97a729ff8eb2d3c3a2112c"
+    },
+    {
+      "path": "gfx/mail/flower_mail_border.png",
+      "fixture": "gfx__mail__flower_mail_border.png.b64",
+      "git_blob_sha1": "4d2ade2a7b6e8fec5230e5fc2cbcfe360d580c77"
+    },
+    {
+      "path": "gfx/mail/oddish.png",
+      "fixture": "gfx__mail__oddish.png.b64",
+      "git_blob_sha1": "7614323692f6d69127e2cfaac6f5b1ca1a523fb2"
+    },
+    {
+      "path": "gfx/mail/flower_1.png",
+      "fixture": "gfx__mail__flower_1.png.b64",
+      "git_blob_sha1": "2147bef318d081d6ba9cb47239c9cb52475c3580"
+    },
+    {
+      "path": "gfx/mail/flower_2.png",
+      "fixture": "gfx__mail__flower_2.png.b64",
+      "git_blob_sha1": "3f0d34edce07ac2d02f9e70533ed8fcc1593102a"
+    },
+    {
+      "path": "gfx/mail/mail.pal",
+      "fixture": "gfx__mail__mail.pal.b64",
+      "git_blob_sha1": "3e90a585fbe8a89eb37550d7b560e4f9be919f46"
+    },
+    {
+      "path": "engine/pokemon/mail_2.asm",
+      "fixture": "engine__pokemon__mail_2.asm.b64",
+      "git_blob_sha1": "b91611464289da093ec7aaf3f4e9d71f846077d3"
+    },
+    {
+      "path": "gfx/mail.asm",
+      "fixture": "gfx__mail.asm.b64",
+      "git_blob_sha1": "fe42eb88c8762240b5dc7a1b276f113c4eeb6efd"
     }
   ]
 }

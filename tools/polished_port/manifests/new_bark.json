@@ -1,6 +1,6 @@
 {
   "source_commit": "3fa43192379df5c3e7b09a08e4d5d79af4f02f42",
-  "scope": "source geography, connected interiors, static interactions, six ambient residents, rival window encounter, Lyra/Elm introduction, all three starter choices, first Lyra battle, aide Potion and Mom's opening with weekday/DST setup, schedules and neighbor; Route 29, Cherrygrove services, Route 30 with Mulch, native encounters, Mystery Egg and Oak; Elm's disaster call, first rival battle, theft investigation, rival naming, Egg delivery, Joey, Mom's savings, the Route 29 catching tutorial and Tuscany; Route 31 with Wade, Finch, Mom\u2019s worried call and the Violet gate; Violet City first visit, Pok\u00e9mon Center, Earl\u2019s tour, Academy and usable Type Chart",
+  "scope": "source geography, connected interiors, static interactions, six ambient residents, rival window encounter, Lyra/Elm introduction, all three starter choices, first Lyra battle, aide Potion and Mom's opening with weekday/DST setup, schedules and neighbor; Route 29, Cherrygrove services, Route 30 with Mulch, native encounters, Mystery Egg and Oak; Elm's disaster call, first rival battle, theft investigation, rival naming, Egg delivery, Joey, Mom's savings, the Route 29 catching tutorial and Tuscany; Route 31 with Wade, Finch, Mom\u2019s worried call and the Violet gate; Violet City first visit, Pok\u00e9mon Center, Earl\u2019s tour, Academy and usable Type Chart; Violet Mart and Flower Mail",
   "maps": {
     "NEW_BARK_TOWN": {
       "name": "NewBarkTown",
@@ -3693,6 +3693,13 @@
           "elevation": 0,
           "dest_map": "MAP_POLISHED_EARLS_POKEMON_ACADEMY",
           "dest_warp_id": "0"
+        },
+        {
+          "x": 9,
+          "y": 17,
+          "elevation": 0,
+          "dest_map": "MAP_POLISHED_VIOLET_MART",
+          "dest_warp_id": "1"
         }
       ],
       "static_interactions": 8,
@@ -3702,7 +3709,7 @@
           "roof_group": 10,
           "palette": "VioletEcruteakPalette",
           "deferred": [
-            "houses and Mart",
+            "houses",
             "Gym",
             "Sprout Tower",
             "Route 36 gate and adjoining routes"
@@ -3914,6 +3921,98 @@
             "student notebook",
             "Walker's journal"
           ]
+        }
+      ]
+    },
+    "VIOLET_MART": {
+      "name": "VioletMart",
+      "width": 12,
+      "height": 8,
+      "tileset": "Mart",
+      "source_blocks": "Mart",
+      "used_metatiles": [
+        0,
+        1,
+        2,
+        3,
+        76,
+        77,
+        78,
+        79,
+        80,
+        81,
+        82,
+        83,
+        84,
+        85,
+        86,
+        87,
+        136,
+        137,
+        138,
+        139,
+        156,
+        157,
+        158,
+        159,
+        160,
+        161,
+        162,
+        163,
+        168,
+        169,
+        170,
+        171,
+        364,
+        365,
+        366,
+        367,
+        380,
+        381,
+        382,
+        383
+      ],
+      "warps": [
+        {
+          "x": 2,
+          "y": 7,
+          "elevation": 0,
+          "dest_map": "MAP_POLISHED_VIOLET_CITY",
+          "dest_warp_id": "4"
+        },
+        {
+          "x": 3,
+          "y": 7,
+          "elevation": 0,
+          "dest_map": "MAP_POLISHED_VIOLET_CITY",
+          "dest_warp_id": "4"
+        }
+      ],
+      "static_interactions": 23,
+      "residents": [],
+      "story_encounters": [
+        {
+          "stock": [
+            "POKE_BALL",
+            "REPEAT_BALL",
+            "POTION",
+            "ESCAPE_ROPE",
+            "ANTIDOTE",
+            "PARALYZEHEAL",
+            "AWAKENING",
+            "X_ATTACK",
+            "X_DEFEND",
+            "X_SPEED",
+            "FLOWER_MAIL"
+          ],
+          "item_mapping": {
+            "PARALYZEHEAL": "PARALYZE_HEAL",
+            "X_DEFEND": "X_DEFENSE",
+            "FLOWER_MAIL": "POLISHED_FLOWER_MAIL",
+            "ESCAPE_ROPE": "POLISHED_ESCAPE_ROPE"
+          },
+          "prices": "native Expansion item prices",
+          "mail": "source Flower Mail artwork with native stationery layout and Easy Chat"
         }
       ]
     }
@@ -4182,6 +4281,17 @@
       "border_filepath": "data/layouts/PolishedEarlsPokemonAcademy/border.bin",
       "blockdata_filepath": "data/layouts/PolishedEarlsPokemonAcademy/map.bin",
       "layout_version": "emerald"
+    },
+    {
+      "id": "LAYOUT_POLISHED_VIOLET_MART",
+      "name": "PolishedVioletMart_Layout",
+      "width": 12,
+      "height": 8,
+      "primary_tileset": "gTileset_PolishedNewBarkMartPrimary",
+      "secondary_tileset": "gTileset_PolishedNewBarkMartSecondary",
+      "border_filepath": "data/layouts/PolishedVioletMart/border.bin",
+      "blockdata_filepath": "data/layouts/PolishedVioletMart/map.bin",
+      "layout_version": "emerald"
     }
   ],
   "output_sha256": {
@@ -4264,6 +4374,12 @@
     "graphics/polished_type_chart/palette.bin": "60ff10a148bc75e554e0fd93f554d182ef3370c99ce225a735aecebc4d6645ee",
     "graphics/object_events/polished_gamer_girl/walking.png": "425bc8ec1600556f3cf9e82dab716cd9bb50e444f2b8a8288db3433bc9a4adf6",
     "graphics/object_events/polished_academy_book/book.png": "28bcf600e092ec1a152b0ee1675127ad9a5c6c92e206de7d398e4d48959792c7",
+    "graphics/object_events/polished_granny/walking.png": "9877089cb65fe4ed2f798996eaa893b69b4685cbe3388d7790b931a7f087e6b1",
+    "graphics/items/icons/polished_flower_mail.png": "e7e58c204a2c06586c74b51dc32a6f1db322ec25ffdfc17426355d8c8eb9d7e4",
+    "graphics/items/icon_palettes/polished_flower_mail.pal": "da83ddd422d1da8bbc91422b2c21e05b905cca9cfb0c1dc678da76a279f74bef",
+    "graphics/mail/polished_flower/tiles.bin": "2ec9b3283c06b80f0e95ae0f331ad0b6c65aa7cf5c02965386874f9c6460abab",
+    "graphics/mail/polished_flower/map.bin": "0f8122b2e0690bdd6d8db68a98f8d2d93090249dc2e92c18ba4ef0ce83b0d72b",
+    "graphics/mail/polished_flower/palette.bin": "c8a3057bf8d1e8b2ff3f00c98120d7da1916f51a5554f93f4e2ec4bd55e053dd",
     "graphics/trainers/front_pics/polished_rival.png": "14aa048e357549340e926f557c4c4737b45a7c4d51f6807ee7c74068f8814d10",
     "graphics/trainers/palettes/polished_rival.pal": "bbc303be54aea8bbd4c70bcacdbd205d922b345702d45a013bcc37fa824e95b6",
     "src/data/polished_return.party": "c3ff98fb424914ef7de50d2dcd587bdf514b7f88efc82a864d16e5fb2b2439a0",
@@ -4352,10 +4468,10 @@
     "data/layouts/PolishedRoute31VioletGate/border.bin": "58b6ce2870c231fbe07a763ac9c4dc612e669cfbebfb93760435a9dbbdced76e",
     "data/maps/PolishedRoute31VioletGate/map.json": "6435d938ee14b59cd211a9cc7fe87a7113db5f3aec9e13bf54a4899b6abfd07c",
     "data/maps/PolishedRoute31VioletGate/scripts.inc": "e2671c233b2951c52ade9c0efc1bb84d91d12b219f8ac98bbebcf749141d98dd",
-    "data/layouts/PolishedVioletCity/map.bin": "b53e3bb728983ec647f946883a5ac503e69ab56f09c3d8d434194f50dd26d553",
+    "data/layouts/PolishedVioletCity/map.bin": "76fe06f121a27da70025d0a09d00b467471423995b9c9c2e88c8d00fa302305b",
     "data/layouts/PolishedVioletCity/border.bin": "310f01837605c39f0e0a084ab8e536b47e44c21cab74534066b2413ce33f2119",
-    "data/maps/PolishedVioletCity/map.json": "da606f1d43ee6db5a77b92d9e18a9750f1a449a2e2e679cb5c2c1ce4729ed12c",
-    "data/maps/PolishedVioletCity/scripts.inc": "d56affa81a0ca1c1821d52d3089101090a9dfe3d19fff41df40002fa7f34854f",
+    "data/maps/PolishedVioletCity/map.json": "669d92f2d71c3c206545238d78e027f18c998fa6cbdd94c489eb961cbd3b8066",
+    "data/maps/PolishedVioletCity/scripts.inc": "d74532e97b2fabba270b8ad5a52e8a57216e4426b63b3fa175e6e9d1977c72f4",
     "data/layouts/PolishedVioletPokeCenter1F/map.bin": "3cd23e389054c1e943d56dd23893e1b3978620d84b7a4fd66ed44dae1f5b99d4",
     "data/layouts/PolishedVioletPokeCenter1F/border.bin": "58b6ce2870c231fbe07a763ac9c4dc612e669cfbebfb93760435a9dbbdced76e",
     "data/maps/PolishedVioletPokeCenter1F/map.json": "65669606ccbf2b72c67e7f32ffdc866665ea020fc1cb2f6ba1429b46e4fbdbbd",
@@ -4364,6 +4480,10 @@
     "data/layouts/PolishedEarlsPokemonAcademy/border.bin": "58b6ce2870c231fbe07a763ac9c4dc612e669cfbebfb93760435a9dbbdced76e",
     "data/maps/PolishedEarlsPokemonAcademy/map.json": "f9fcc97f58c7a4ab5cfa15b66748ac4703e3bcfcfcf70522cc76e60d2b77219c",
     "data/maps/PolishedEarlsPokemonAcademy/scripts.inc": "54f851abf5d394f1be95512457c9f629f812935b545fe1b09af8a4b067e42198",
+    "data/layouts/PolishedVioletMart/map.bin": "272ff1bbe2e97632e2e284949ee86c7b405d3db3694639e8c68f881031dd4049",
+    "data/layouts/PolishedVioletMart/border.bin": "58b6ce2870c231fbe07a763ac9c4dc612e669cfbebfb93760435a9dbbdced76e",
+    "data/maps/PolishedVioletMart/map.json": "6cba0bee348e9cdd56ed52b6413dd11912ceb1e8bc79cdd0821bdcf65d168e39",
+    "data/maps/PolishedVioletMart/scripts.inc": "254cba09777e29e79afdd0db3734a4b7e6b166d4cc000f43a9b22920f727d6fa",
     "data/tilesets/primary/polished_new_bark_outdoor/tiles.bin": "4606596e49129db4f858005c54f71865f818549f252026016bec23bee8e89b45",
     "data/tilesets/primary/polished_new_bark_outdoor/palettes.bin": "fe14bfb5c6092799d53593ab4638bb4a3502ef83e72cf6de0aace0745c8694a8",
     "data/tilesets/primary/polished_new_bark_outdoor/metatiles.bin": "db29314040e9c515e27686a5e202bbf69030e5631d0efe24da69fbac66c739fa",

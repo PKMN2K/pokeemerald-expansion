@@ -1080,7 +1080,7 @@ void Task_UseDigEscapeRopeOnField(u8 taskId)
 static void ItemUseOnFieldCB_EscapeRope(u8 taskId)
 {
     Overworld_ResetStateAfterDigEscRope();
-    if (I_KEY_ESCAPE_ROPE < GEN_8)
+    if (I_KEY_ESCAPE_ROPE < GEN_8 || gSpecialVar_ItemId == ITEM_POLISHED_ESCAPE_ROPE)
         RemoveBagItem(gSpecialVar_ItemId, 1);
 
     CopyItemName(gSpecialVar_ItemId, gStringVar2);

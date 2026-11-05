@@ -133,7 +133,18 @@ static const u16 sBgColors[GENDER_COUNT][2] = {
     [FEMALE] = { RGB(28, 15, 17), RGB(20, 6, 14) }
 };
 
+static const u16 sFlowerMailPalette[] = INCBIN_U16("graphics/mail/polished_flower/palette.bin");
+static const u32 sFlowerMailTiles[] = INCBIN_U32("graphics/mail/polished_flower/tiles.bin.smol");
+static const u32 sFlowerMailMap[] = INCBIN_U32("graphics/mail/polished_flower/map.bin.smolTM");
+
 static const struct MailGraphics sMailGraphics[] = {
+    [ITEM_TO_MAIL(ITEM_POLISHED_FLOWER_MAIL)] = {
+        .palette = sFlowerMailPalette,
+        .tiles = sFlowerMailTiles,
+        .tileMap = sFlowerMailMap,
+        .textColor = RGB_BLACK,
+        .textShadow = RGB(20, 31, 11),
+    },
     [ITEM_TO_MAIL(ITEM_ORANGE_MAIL)] = {
         .palette = gMailPalette_Orange,
         .tiles = gMailTiles_Orange,
@@ -238,7 +249,23 @@ static const struct MailLineLayout sLineLayouts_Wide[] = {
     { .numEasyChatWords = 3, .xOffset = 0, .height = 16 }
 };
 
+static const struct MailLineLayout sLineLayouts_Flower[] = {
+    { .numEasyChatWords = 2, .xOffset = 0, .height = 16 },
+    { .numEasyChatWords = 2, .xOffset = 0, .height = 16 },
+    { .numEasyChatWords = 2, .xOffset = 0, .height = 16 },
+    { .numEasyChatWords = 2, .xOffset = 0, .height = 16 },
+    { .numEasyChatWords = 1, .xOffset = 0, .height = 16 },
+};
+
 static const struct MailLayout sMailLayouts_Wide[] = {
+    [ITEM_TO_MAIL(ITEM_POLISHED_FLOWER_MAIL)] = {
+        .numLines = ARRAY_COUNT(sLineLayouts_Flower),
+        .signatureYPos = 16,
+        .signatureWidth = 96,
+        .wordsYPos = 16,
+        .wordsXPos = 14,
+        .lines = sLineLayouts_Flower,
+    },
     [ITEM_TO_MAIL(ITEM_ORANGE_MAIL)] = {
         .numLines = ARRAY_COUNT(sLineLayouts_Wide),
         .signatureYPos = 0,
@@ -346,6 +373,14 @@ static const struct MailLineLayout sLineLayouts_Tall[] = {
 };
 
 static const struct MailLayout sMailLayouts_Tall[] = {
+    [ITEM_TO_MAIL(ITEM_POLISHED_FLOWER_MAIL)] = {
+        .numLines = ARRAY_COUNT(sLineLayouts_Flower),
+        .signatureYPos = 16,
+        .signatureWidth = 96,
+        .wordsYPos = 16,
+        .wordsXPos = 14,
+        .lines = sLineLayouts_Flower,
+    },
     [ITEM_TO_MAIL(ITEM_ORANGE_MAIL)] = {
         .numLines = ARRAY_COUNT(sLineLayouts_Tall),
         .signatureYPos = 7,

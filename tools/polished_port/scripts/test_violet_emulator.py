@@ -119,5 +119,7 @@ def check_violet(game, gate, checks):
     game.restore("violet-day")
     from test_academy_emulator import check_academy
     check_academy(game,city,checks)
+    from test_violet_mart_emulator import check_mart
+    check_mart(game,city,checks)
     game.restore("violet-before-gate")
     print("PASS: Violet City doors, time palettes, residents, Pokémon Center and Save/Continue",flush=True)

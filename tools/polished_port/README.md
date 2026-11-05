@@ -300,3 +300,18 @@ GBA background. The Bag opens it in field and battle contexts. Run
 movements and the full chart against the source RGB555 frame. The campaign
 mGBA replay also reads the chart from both Bags, checks both close buttons,
 and verifies that consulting it preserves the battle turn.
+
+## Violet Mart and Flower Mail
+
+`polished_mart.py` imports the source stock, customers and Flower Mail tiles.
+The shared generator reuses the Mart tileset and appends its map and city warp.
+The city load script repairs the newly opened door in old cartridge saves.
+Items 877 and 878 hold Flower Mail and the consumable Escape Rope. The mail
+type maps to index 12, after the existing twelve stationery types.
+
+Run `python3 tools/polished_port/scripts/test_violet_mart.py` for the source
+audit and `make check TESTS='Violet Mart'` for the cartridge tests. The full
+campaign replay checks normal purchases, cancellation, insufficient funds,
+selling, mail reading, both exits and saving. Shop prices, resale values and
+item effects follow Expansion configuration. The original Flower Mail tiles
+and colors surround a native nine-word Easy Chat message on the GBA screen.

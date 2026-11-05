@@ -2120,3 +2120,6 @@ const u32 gItemIcon_PolishedMysteryEgg[] = INCGFX_U32("graphics/items/icons/poli
 const u16 gItemIconPalette_PolishedMysteryEgg[] = INCGFX_U16("graphics/items/icon_palettes/polished_mystery_egg.pal", ".gbapal");
 const u32 gItemIcon_PolishedTypeChart[] = INCGFX_U32("graphics/items/icons/polished_type_chart.png", ".4bpp.smol");
 const u16 gItemIconPalette_PolishedTypeChart[] = INCGFX_U16("graphics/items/icon_palettes/polished_type_chart.pal", ".gbapal");
+
+const u32 gItemIcon_PolishedFlowerMail[] = INCGFX_U32("graphics/items/icons/polished_flower_mail.png", ".4bpp.smol");
+const u16 gItemIconPalette_PolishedFlowerMail[] = INCGFX_U16("graphics/items/icon_palettes/polished_flower_mail.pal", ".gbapal");

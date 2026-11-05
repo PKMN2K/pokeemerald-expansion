@@ -20,6 +20,7 @@ extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_PolishedPok
 extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_PolishedFruitPink;
 extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_PolishedFruitPickedPink;
 extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_PolishedGramps;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_PolishedGranny;
 extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_PolishedYoungsterRed;
 extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_PolishedPokefanBlue;
 extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_PolishedPokefanPurple;
@@ -480,6 +481,7 @@ const struct ObjectEventGraphicsInfo *const gObjectEventGraphicsInfoPointers[NUM
     [OBJ_EVENT_GFX_POLISHED_FAT_GUY_BLUE] = &gObjectEventGraphicsInfo_PolishedFatGuyBlue,
     [OBJ_EVENT_GFX_POLISHED_CUT_TREE] = &gObjectEventGraphicsInfo_PolishedCutTree,
     [OBJ_EVENT_GFX_POLISHED_FRUIT] = &gObjectEventGraphicsInfo_PolishedFruit,
+    [OBJ_EVENT_GFX_POLISHED_GRANNY] = &gObjectEventGraphicsInfo_PolishedGranny,
     [OBJ_EVENT_GFX_POLISHED_GRAMPS] = &gObjectEventGraphicsInfo_PolishedGramps,
     [OBJ_EVENT_GFX_POLISHED_YOUNGSTER_RED] = &gObjectEventGraphicsInfo_PolishedYoungsterRed,
     [OBJ_EVENT_GFX_POLISHED_POKEFAN_PURPLE] = &gObjectEventGraphicsInfo_PolishedPokefanPurple,

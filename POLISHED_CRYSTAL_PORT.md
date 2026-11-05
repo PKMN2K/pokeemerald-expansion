@@ -650,9 +650,37 @@ and reading Walker’s journal sets its saved flag. You can enter before Earl
 takes his tour. A cartridge save from the previous Violet release can also
 open the formerly blocked Academy door on Continue.
 
-The campaign now covers 24 source maps and 57 reciprocal door/stair events,
-plus the two garden maps. Violet Mart and the city’s two houses are the next
-local stops. Sprout Tower, Falkner’s Gym and the post-badge Togepi Egg follow.
+### Violet Mart and Flower Mail
+
+The Mart opens at its original Violet City doorway at (9,17). Both interior
+exit tiles return there. The source clerk, Granny and male Ace Trainer use
+their original artwork, positions, movement and dialogue. Its shared Mart
+tileset uses the original blue palette and interactive merchandise shelves.
+
+The native shop sells all eleven source stock entries. Flower Mail has its
+original item icon, colors and stationery tiles arranged for the GBA screen.
+It uses native Easy Chat, held mail, reading and PC mailbox handling. The
+consumable Escape Rope is a separate item in the Items pocket, priced at
+1,000 and removed after a successful escape. Both new items have appended
+IDs for cartridge-save compatibility. Escape destinations become available
+as the campaign's caves and dungeons are imported.
+
+Buying, selling, item effects and prices use Expansion's settings. In this
+configuration Paralyze Heal and Awakening each cost 200, and X Defense costs
+1,000. The pinned Crystal shop charges 300, 100 and 2,000 respectively. The
+other eight stock prices match. The native resale fraction is one quarter.
+Flower Mail sells for 12.
+
+The city map-load script refreshes the Mart entrance in earlier saved maps.
+Its new warp is appended after the Center, eastern gate and Academy warps.
+The emulator campaign exercises both exits, customer and shelf dialogue,
+every stock entry, cancellation, insufficient funds, selling, mail reading
+and cartridge Save/Continue. Native tests cover held mail, the PC mailbox,
+full item pockets and existing warp identities.
+
+The campaign now covers 25 source maps and 60 reciprocal door/stair events,
+plus the two garden maps. Violet's two houses are the next local stops.
+Sprout Tower, Falkner's Gym and the post-badge Togepi Egg follow.
 
 The playable visual slice and dormant Headbutt encounter selection are complete
 parts of the port. **The whole Polished Crystal migration is not complete.**

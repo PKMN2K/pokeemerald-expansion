@@ -1767,3 +1767,5 @@ EventScript_PalletTown_PlayersHouse_2F_TurnOnPC::
 	.include "data/maps/PolishedVioletCity/scripts.inc"
 	.include "data/maps/PolishedVioletPokeCenter1F/scripts.inc"
 	.include "data/maps/PolishedEarlsPokemonAcademy/scripts.inc"
+
+	.include "data/maps/PolishedVioletMart/scripts.inc"

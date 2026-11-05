@@ -10,7 +10,7 @@ from polished_route29 import object_at
 
 MAPS = {"VioletCity": "VIOLET_CITY", "VioletPokeCenter1F": "VIOLET_POKECENTER_1F"}
 # Keep source artwork at entrances whose destination has a later campaign phase.
-CLOSED = {"VioletCity": ((9, 17), (18, 17), (3, 15), (21, 29),
+CLOSED = {"VioletCity": ((18, 17), (3, 15), (21, 29),
                         (23, 1), (2, 8), (2, 9))}
 GRAPHICS = {
     ("CUTE_GIRL", "GREEN"): "CUTE_GIRL_GREEN", ("ACE_TRAINER_M", "RED"): "ACE_TRAINER_M",
@@ -94,12 +94,15 @@ def events(name, script, header, files, text, define):
              "\tmap_script MAP_SCRIPT_ON_RETURN_TO_FIELD, PolishedVioletCity_Restore\n")
     earl, door = outdoor(script, header, files, text, define)
     code += earl
+    blocks = files["maps/VioletCity.ablk"]
+    mart_door = blocks[(17//2)*20+9//2]*4+3
     code += f"""PolishedVioletCity_Cheri::
     setvar VAR_0x8005, 4
     goto PolishedFruit_Interact
 
 PolishedVioletCity_Setup::
     setmetatile 30, 17, {door}, FALSE
+    setmetatile 9, 17, {mart_door}, FALSE
     setflag FLAG_POLISHED_VISITED_VIOLET
     special PolishedFruitRefreshAll
     gettime
@@ -129,5 +132,5 @@ PolishedVioletCity_ShowNight::
     end
 """
     return hooks, code, {"roof_group": 10, "palette": "VioletEcruteakPalette",
-                         "deferred": ["houses and Mart", "Gym",
+                         "deferred": ["houses", "Gym",
                                       "Sprout Tower", "Route 36 gate and adjoining routes"]}

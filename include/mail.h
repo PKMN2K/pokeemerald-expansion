@@ -14,7 +14,8 @@
                               || itemId == ITEM_TROPIC_MAIL         \
                               || itemId == ITEM_DREAM_MAIL          \
                               || itemId == ITEM_FAB_MAIL            \
-                              || itemId == ITEM_RETRO_MAIL))
+                              || itemId == ITEM_RETRO_MAIL           \
+                              || itemId == ITEM_POLISHED_FLOWER_MAIL))
 
 // mail.h
 void ReadMail(struct Mail *mail, MainCallback exitCallback, bool8 hasText);

@@ -2691,3 +2691,7 @@ static const struct SpriteFrameImage sPicTable_PolishedGamerGirl[] = {
 static const struct SpriteFrameImage sPicTable_PolishedAcademyBook[] = {
     overworld_frame(gObjectEventPic_PolishedAcademyBook, 2, 4, 0),
 };
+
+static const struct SpriteFrameImage sPicTable_PolishedGranny[] = {
+    overworld_ascending_frames(gObjectEventPic_PolishedGranny, 2, 4),
+};

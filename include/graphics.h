@@ -3445,4 +3445,6 @@ extern const u32 gItemIcon_PolishedMulch[];
 extern const u16 gItemIconPalette_PolishedMulch[];
 extern const u32 gItemIcon_PolishedMysteryEgg[];
 extern const u16 gItemIconPalette_PolishedMysteryEgg[];
+extern const u32 gItemIcon_PolishedFlowerMail[];
+extern const u16 gItemIconPalette_PolishedFlowerMail[];
 #endif //GUARD_GRAPHICS_H

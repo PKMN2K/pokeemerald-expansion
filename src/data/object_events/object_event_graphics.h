@@ -693,3 +693,5 @@ const u32 gObjectEventPic_PolishedSage[] = INCGFX_U32("graphics/object_events/po
 const u32 gObjectEventPic_PolishedGameboyKid[] = INCGFX_U32("graphics/object_events/polished_gameboy_kid/walking.png", ".4bpp", "-mwidth 2 -mheight 4");
 const u32 gObjectEventPic_PolishedGamerGirl[] = INCGFX_U32("graphics/object_events/polished_gamer_girl/walking.png", ".4bpp", "-mwidth 2 -mheight 4");
 const u32 gObjectEventPic_PolishedAcademyBook[] = INCGFX_U32("graphics/object_events/polished_academy_book/book.png", ".4bpp", "-mwidth 2 -mheight 4");
+
+const u32 gObjectEventPic_PolishedGranny[] = INCGFX_U32("graphics/object_events/polished_granny/walking.png", ".4bpp", "-mwidth 2 -mheight 4");

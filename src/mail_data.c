@@ -185,6 +185,7 @@ bool8 ItemIsMail(enum Item itemId)
     case ITEM_DREAM_MAIL:
     case ITEM_FAB_MAIL:
     case ITEM_RETRO_MAIL:
+    case ITEM_POLISHED_FLOWER_MAIL:
         return TRUE;
     default:
         return FALSE;

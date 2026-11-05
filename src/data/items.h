@@ -16123,6 +16123,33 @@ const struct ItemInfo gItemsInfo[] =
         .iconPalette = gItemIconPalette_PolishedMysteryEgg,
     },
 
+    [ITEM_POLISHED_FLOWER_MAIL] =
+    {
+        .name = ITEM_NAME("Flower Mail"),
+        .pluralName = ITEM_PLURAL_NAME("Flower Mail"),
+        .price = 50,
+        .description = COMPOUND_STRING("Flower-print Mail.\nGive it to a Pokémon\nto hold a message."),
+        .pocket = POCKET_ITEMS,
+        .sortType = ITEM_TYPE_MAIL,
+        .type = ITEM_USE_MAIL,
+        .fieldUseFunc = ItemUseOutOfBattle_Mail,
+        .secondaryId = ITEM_TO_MAIL(ITEM_POLISHED_FLOWER_MAIL),
+        .iconPic = gItemIcon_PolishedFlowerMail,
+        .iconPalette = gItemIconPalette_PolishedFlowerMail,
+    },
+    [ITEM_POLISHED_ESCAPE_ROPE] =
+    {
+        .name = ITEM_NAME("Escape Rope"),
+        .price = 1000,
+        .description = COMPOUND_STRING("Use to escape\ninstantly from a\ncave or a dungeon."),
+        .pocket = POCKET_ITEMS,
+        .sortType = ITEM_TYPE_FIELD_USE,
+        .type = ITEM_USE_FIELD,
+        .fieldUseFunc = ItemUseOutOfBattle_EscapeRope,
+        .flingPower = 30,
+        .iconPic = gItemIcon_EscapeRope,
+        .iconPalette = gItemIconPalette_EscapeRope,
+    },
     [ITEM_POLISHED_TYPE_CHART] =
     {
         .name = ITEM_NAME("Type Chart"),
