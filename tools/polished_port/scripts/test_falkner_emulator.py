@@ -11,9 +11,9 @@ from test_johto_demo_emulator import A, B, UP, DOWN, LEFT, RIGHT
 from test_new_bark_emulator import map_data, actors, save_game, continue_game, walk as indoor_walk
 from test_new_bark_intro_emulator import layout, advance, task_active, text_matches, party, script_active, choice_prompt
 from test_new_bark_battle_emulator import controller, choose_cell, check_portrait
-from test_cherrygrove_emulator import map_id, flag, leave, interact
+from test_cherrygrove_emulator import map_id, flag, leave, interact, money
 from test_violet_houses_emulator import enter, walk_city
-from test_violet_mart_emulator import count, select_bag_item
+from test_violet_mart_emulator import count, select_bag_item, open_shop, purchase, close_shop, stock
 from test_academy_emulator import wait_for
 from test_route31_emulator import enter as transition
 from test_sprout_emulator import constants as sprout_constants, heal
@@ -280,6 +280,14 @@ def check_gym(game, city, checks, report):
         walk(game,gym,pos,report)
     walk(game,gym,(5,2),report)
     leave(game,gym,city)
+    # Source learnsets change the climb's damage and item use. Replenish the
+    # boss supplies with earned money instead of assuming Sprout left Potions.
+    mart=map_data('PolishedVioletMart')
+    enter_building(game,city,mart,report);open_shop(game,mart)
+    potion=stock(game)[2]
+    for n in range(min(max(0,8-count(game,potion)),money(game)//300)):
+        purchase(game,2 if n==0 else 0,potion)
+    close_shop(game);leave(game,mart,city)
     enter_building(game,city,center,report);interact(game,center,(5,3),UP)
     advance(game,lambda:not script_active(game),limit=400);leave(game,center,city)
     enter_building(game,city,gym,report);walk(game,gym,(5,2),report)

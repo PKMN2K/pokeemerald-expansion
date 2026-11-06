@@ -906,8 +906,9 @@ original Polished Crystal map identity to an Expansion species/form and level:
   three separate Rock Smash species, for 25 candidate species total.
 - Hisuian Voltorb and Electrode resolve to their dedicated Expansion species IDs.
   Original form value 4 is never used as an Expansion form-table index. The
-  current implementation still uses Expansion's stats, abilities, graphics and
-  learnsets; these are temporary gaps pending the full Polished Crystal import.
+  current implementation still uses Expansion's stats, abilities and graphics;
+  these are temporary gaps pending the full Polished Crystal import. Level-up
+  moves now use the source tables when `P_POLISHED_LEVEL_UP_LEARNSETS` is enabled.
 - Tree score, 10/50/80 percent battle gates, weighted selection, and all 17 badge
   counts compose into `JohtoHeadbuttSelectEncounterFromSourceMap`.
 - Missing sets, unsuccessful rolls, invalid inputs and configured-out species

@@ -27,7 +27,7 @@ def constants():
     party_text = (ROOT / "src/data/polished_sprout.party").read_text()
     names = sorted(set(re.findall(r"\b(?:MOVE|TRAINER)_\w+", party_text)))
     names += ["SPECIES_BELLSPROUT", "SPECIES_HOOTHOOT", "SPECIES_GASTLY", "SPECIES_RATTATA"]
-    names += ["MOVE_SURF", "MOVE_WATER_GUN", "MOVE_EMBER", "MOVE_BITE", "MOVE_RAZOR_LEAF"]
+    names += ["MOVE_SURF", "MOVE_WATER_GUN", "MOVE_EMBER", "MOVE_BITE", "MOVE_RAZOR_LEAF", "MOVE_LEER"]
     names += ["ITEM_HM_FLASH", "ITEM_PARALYZE_HEAL", "ITEM_X_ACCURACY", "ITEM_POTION", "ITEM_POLISHED_ESCAPE_ROPE"]
     names += ["B_SCR_OP_YESNOBOXLEARNMOVE", "B_SCR_OP_YESNOBOXSTOPLEARNINGMOVE"]
     names += re.findall(r"^#define (FLAG_POLISHED_SPROUT_\w+)", (ROOT / "include/constants/flags.h").read_text(), re.M)
@@ -80,7 +80,24 @@ def settle(game, report):
                 portrait_seen = check_portrait(game, "sprout-" + name.lower(), "elder" if name == "Li" else "sage")
         opcode = game.read(game.u32(game.sym["gBattlescriptCurrInstr"]), 1)[0] if not on_field else -1
         if opcode == constants()["B_SCR_OP_YESNOBOXLEARNMOVE"]:
-            game.press(B, 20)  # Keep the existing moves and their PP.
+            move = int.from_bytes(game.read(game.sym["gMoveToLearn"], 2), "little")
+            if move == constants()["MOVE_BITE"]:
+                mon = party(game, details=True)[0]
+                assert mon["level"] == 13, mon  # Pinned source Totodile learn level.
+                slot = mon["moves"].index(constants()["MOVE_LEER"])
+                advance(game, lambda: task_active(game, "Task_HandleReplaceMoveInput"))
+                game.frames(30)
+                for _ in range(slot):
+                    game.press(DOWN, 30)
+                game.press(A, 120)
+                advance(game, lambda: party(game, details=True)[0]["moves"][slot] == move)
+                expected = list(mon["moves"])
+                expected[slot] = move
+                assert party(game, details=True)[0]["moves"] == expected
+                report["learned_bite_at"] = mon["level"]
+                print("PASS: Totodile learns source Bite at level 13 through the real move selector", flush=True)
+            else:
+                game.press(B, 20)
         elif opcode == constants()["B_SCR_OP_YESNOBOXSTOPLEARNINGMOVE"]:
             game.press(A, 20)
         elif game.u32(game.sym["gMain"] + 4) == game.sym["CB2_UpdatePartyMenu"] | 1:
@@ -93,6 +110,13 @@ def settle(game, report):
                 selected = game.read(game.sym["gPartyMenu"] + 9, 1)[0]
                 game.press(A if selected == healthy else RIGHT if healthy else LEFT, 30)
         elif not on_field and controller(game, "HandleInputChooseAction"):
+            if name and observed is not None:
+                active = game.read(game.sym["gBattlerPartyIndexes"], 2)[0]
+                mon = party(game, details=True)[active]
+                if 0 < mon["hp"] <= 20 and count(game, constants()["ITEM_POTION"]):
+                    from test_falkner_emulator import battle_item
+                    battle_item(game, constants()["ITEM_POTION"], active)
+                    continue
             if observed is None:
                 observed = party(game, enemy=True, details=True)
                 if name:
@@ -233,21 +257,48 @@ def stair(game, data, index, target, report):
 
 def interact_object(game, data, number, report):
     obj = data["object_events"][number - 1]
-    x, y = actors(game).get(number, {}).get("position", (obj["x"], obj["y"]))
-    for key, dx, dy in DIRECTIONS:
-        goal = x - dx, y - dy
-        if not (0 <= goal[0] < 16 and 0 <= goal[1] < 16) or data["cells"][goal[1] * 16 + goal[0]] & 0xc00:
-            continue
-        try:
-            path(game, data, goal)
-        except AssertionError:
-            continue
-        walk(game, data, goal, report)
-        game.face(key)
-        game.press(A, 30)
-        settle(game, report)
-        return
-    raise AssertionError(("No approach to Sprout object", data["name"], number))
+    for _ in range(8):
+        x, y = actors(game).get(number, {}).get("position", (obj["x"], obj["y"]))
+        for key, dx, dy in DIRECTIONS:
+            goal = x - dx, y - dy
+            if not (0 <= goal[0] < 16 and 0 <= goal[1] < 16) or data["cells"][goal[1] * 16 + goal[0]] & 0xc00:
+                continue
+            try:
+                path(game, data, goal)
+            except AssertionError:
+                continue
+            walk(game, data, goal, report)
+            # A trainer can approach and battle during the walk. Reacquire
+            # that actor instead of talking to its now-empty original tile.
+            current = actors(game).get(number, {}).get("position", (obj["x"], obj["y"]))
+            if current != (x, y):
+                break
+            # Position can update before the final movement finishes. Confirm
+            # that A actually started the interaction before settling it.
+            started = False
+            for _ in range(8):
+                game.face(key)
+                game.press(A, 30)
+                if (game.u32(game.sym["gMain"] + 4) == game.sym["CB2_Overworld"] | 1
+                        and script_active(game)
+                        and int.from_bytes(game.read(game.sym["gSpecialVar_LastTalked"], 2), "little") == number):
+                    started = True
+                    break
+                if (task_active(game, "Task_BattleStart")
+                        or game.u32(game.sym["gMain"] + 4) != game.sym["CB2_Overworld"] | 1):
+                    # A wild encounter on the final step does not complete
+                    # the intended pickup/conversation. Flee and approach again.
+                    settle(game, report)
+                    break
+            else:
+                raise AssertionError(("Sprout interaction did not start", data["name"], number, goal))
+            if not started:
+                break
+            settle(game, report)
+            return
+        else:
+            raise AssertionError(("No approach to Sprout object", data["name"], number))
+    raise AssertionError(("Sprout object kept moving", data["name"], number))
 
 
 def take(game, data, item, report):
@@ -273,6 +324,36 @@ def pillar(game):
     assert all(len(seen) == len({raw[(n * 5 + f) * 32:(n * 5 + f + 1) * 32] for f in range(5)}) for n, seen in enumerate(observed))
 
 
+def refill_for_summit(game, floors, city, report):
+    # The source Totodile does not start with Expansion's early Bite. The
+    # water moves can run out during the climb, so replenish them through
+    # ordinary play instead of depending on the previous native learnset.
+    mon = party(game, details=True)[0]
+    surf = mon["moves"].index(constants()["MOVE_SURF"])
+    if mon["pp"][surf] >= 6:
+        return
+    one, two, three = floors
+    stair(game, three, 0, two, report)
+    stair(game, two, 1, one, report)
+    stair(game, one, 4, two, report)
+    stair(game, two, 0, one, report)
+    leave(game, one, city)
+    center = map_data("PolishedVioletPokeCenter1F")
+    enter(game, city, center)
+    interact(game, center, (5, 3), UP)
+    advance(game, lambda: not script_active(game), limit=400)
+    healed = party(game, details=True)[0]
+    assert healed["hp"] == healed["max_hp"] and healed["status"] == 0
+    assert healed["pp"][surf] > mon["pp"][surf]
+    leave(game, center, city)
+    enter(game, city, one)
+    stair(game, one, 2, two, report)
+    stair(game, two, 2, one, report)
+    stair(game, one, 3, two, report)
+    stair(game, two, 3, three, report)
+    print("PASS: source learnset PP restored by walking to Violet Center and back", flush=True)
+
+
 def check_sprout(game, city, checks):
     report = {"trainers": {}, "wild": [], "stairs": [], "items": []}
     floors = [map_data("PolishedSproutTower" + str(n) + "F") for n in (1, 2, 3)]
@@ -287,7 +368,7 @@ def check_sprout(game, city, checks):
     enter(game, city, mart)
     open_shop(game, mart)
     potion = stock(game)[2]
-    for n in range(min(5, money(game) // 300)):
+    for n in range(min(10, money(game) // 300)):
         purchase(game, 2 if n == 0 else 0, potion)
     close_shop(game)
     leave(game, mart, city)
@@ -311,6 +392,7 @@ def check_sprout(game, city, checks):
     game.screenshot("sprout-3f")
     take(game, three, "POTION", report)
     for number in (2, 4, 3):
+        refill_for_summit(game, floors, city, report)
         interact_object(game, three, number, report)
     game.snapshot("sprout-before-summit")
     walk(game, three, (9, 9), report, allow_scene=True)
@@ -324,6 +406,7 @@ def check_sprout(game, city, checks):
     advance(game, lambda: not script_active(game), limit=400)
     assert flag(game, constants()["FLAG_POLISHED_SPROUT_RIVAL_LEFT"]) and 1 not in actors(game)
     take(game, three, "ESCAPE_ROPE", report)
+    refill_for_summit(game, floors, city, report)
     before = count(game, constants()["ITEM_HM_FLASH"])
     interact_object(game, three, 5, report)
     assert flag(game, constants()["FLAG_POLISHED_SPROUT_FLASH"])

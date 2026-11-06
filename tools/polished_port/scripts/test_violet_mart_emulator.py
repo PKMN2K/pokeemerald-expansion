@@ -64,17 +64,17 @@ def open_bag_item(game,item):
     select_bag_item(game,item)
 
 
-def select_bag_item(game,item):
+def select_bag_item(game,item,pocket=0):
     for _ in range(5):
-        if game.read(game.sym["gBagPosition"]+5,1)[0]==0:
+        if game.read(game.sym["gBagPosition"]+5,1)[0]==pocket:
             break
         game.press(RIGHT)
-    base=game.sym["gBagPockets"]
+    base=game.sym["gBagPockets"]+8*pocket
     ptr,capacity=struct.unpack("<IH",game.read(base,6))
     capacity &= 0x3ff
     index=next(i for i,(ident,qty) in enumerate(struct.iter_unpack("<HH",game.read(ptr,capacity*4))) if ident==item)
     for _ in range(capacity+1):
-        cursor,scroll=struct.unpack("<HH",game.read(game.sym["gBagPosition"]+8,2)+game.read(game.sym["gBagPosition"]+18,2))
+        cursor,scroll=struct.unpack("<HH",game.read(game.sym["gBagPosition"]+8+2*pocket,2)+game.read(game.sym["gBagPosition"]+18+2*pocket,2))
         if cursor+scroll==index:
             break
         game.press(DOWN if cursor+scroll<index else UP)

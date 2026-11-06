@@ -6,12 +6,12 @@ from test_johto_demo_emulator import A, B, UP, DOWN, LEFT, RIGHT, START
 from test_new_bark_emulator import (map_data, walk, actors, talk_to_resident,
     close_resident_dialogue, save_game, continue_game, check_resident_palette)
 from test_new_bark_intro_emulator import (advance, task_active, text_matches,
-    choice_prompt, party, script_active)
+    choice_prompt, party, script_active, layout)
 from test_cherrygrove_emulator import enter as enter_building, leave, interact, flag
 from test_academy_emulator import wait_for, cb
 from test_new_bark_battle_emulator import controller, choose_cell
 from test_cherrygrove_emulator import extra_layout, sea_battle
-from test_violet_mart_emulator import count, open_shop, purchase, close_shop, stock
+from test_violet_mart_emulator import count, open_shop, purchase, close_shop, stock, select_bag_item
 
 P = "PolishedVioletOnixTradeHouse_"
 
@@ -102,18 +102,23 @@ def catch_poliwag(game,city):
         if cb(game,"CB2_Overworld") and not task_active(game,"Task_BattleStart"):
             if len(party(game))==before+1:
                 break
-        if controller(game,"HandleInputChooseAction"):
+        opcode=game.read(game.u32(game.sym["gBattlescriptCurrInstr"]),1)[0] if cb(game,"BattleMainCB2") else -1
+        # Catch EXP can reach a source learn level. Repeated B would alternate
+        # between declining the move and declining to stop learning it.
+        if opcode==layout()["learn_move_opcode"]:
+            game.press(B,20)
+        elif opcode==layout()["stop_learning_opcode"]:
+            game.press(A,20)
+        elif controller(game,"HandleInputChooseAction"):
             offered=party(game,enemy=True,details=True)[0]
             assert offered["species"]==extra_layout()["poliwag"],offered
             assert count(game,ball)>0,"Ran out of Poké Balls"
             choose_cell(game,"gActionSelectionCursor",1)
             wait_for(game,lambda:task_active(game,"Task_BagMenu_HandleInput"),"battle Bag")
             game.frames(90)
-            for _ in range(5):
-                if game.read(game.sym["gBagPosition"]+5,1)==b"\x01":
-                    break
-                game.press(RIGHT,60)
-            game.press(A,60);game.press(A,180)
+            # The pocket retains its cursor; select the real ball stack.
+            select_bag_item(game,ball,pocket=1)
+            game.press(A,180)
         elif task_active(game,"Task_HandleChooseMonInput"):
             healthy=[i for i,m in enumerate(party(game,details=True)) if m["hp"]]
             assert healthy,"Party lost before catching Poliwag"
@@ -124,7 +129,9 @@ def catch_poliwag(game,city):
             # B advances battle text and declines the captured-mon nickname.
             game.press(B,30)
     else:
-        raise AssertionError("Poliwag capture did not finish")
+        raise AssertionError(("Poliwag capture did not finish", opcode,
+            int.from_bytes(game.read(game.sym["gMoveToLearn"],2),"little"),
+            count(game,ball),party(game,details=True)))
     assert party(game)[-1]["species"]==extra_layout()["poliwag"]
     assert party(game)[-1]["level"]==offered["level"]
     game.screenshot("violet-poliwag-caught")

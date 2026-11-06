@@ -43,9 +43,11 @@ def layout():
         "mom_contact": "FLAG_POLISHED_HAS_MOM_CONTACT", "dst": "FLAG_POLISHED_DAYLIGHT_SAVING",
         "time_offset": "offsetof(struct SaveBlock2, localTimeOffset)", "time_size": "sizeof(struct Time)",
         "battle_pp": "offsetof(struct BattlePokemon, pp)",
+        "learn_move_opcode": "B_SCR_OP_YESNOBOXLEARNMOVE",
+        "stop_learning_opcode": "B_SCR_OP_YESNOBOXSTOPLEARNINGMOVE",
     }
     source = ('#include "global.h"\n#include "battle.h"\n#include "constants/items.h"\n#include "constants/species.h"\n'
-              '#include "constants/vars.h"\n#include "constants/flags.h"\n'
+              '#include "constants/vars.h"\n#include "constants/flags.h"\n#include "constants/battle_script_commands.h"\n'
               'const u32 layout[] = {' + ','.join(fields.values()) + '};\n')
     result = subprocess.run(["arm-none-eabi-gcc", "-mcpu=arm7tdmi", "-mthumb", "-mabi=apcs-gnu",
         "-DMODERN=1", "-DEMERALD", "-std=gnu17", "-iquote", "include", "-iquote", ".", "-S", "-x", "c", "-o", "-", "-"],
