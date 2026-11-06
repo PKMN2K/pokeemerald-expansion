@@ -17,12 +17,12 @@ regression coverage, but are not evidence of complete source-game parity.
 | Area | Evidence from the existing port | Required correction / current disposition |
 | --- | --- | --- |
 | Source build variant | Previous trainer scripts read selected source text, while global data uses `GEN_LATEST`. Source files contain `FAITHFUL` branches. | Resolve the pinned default branch explicitly in importers; reject unknown conditionals. The learnset importer now does this. |
-| Level-up moves | `GetSpeciesLevelUpLearnset` previously returned Expansion tables for player starters, gifts, eggs, trades and wild Pokemon even where trainer parties had source moves. | **Imported:** 361 mapped species/form entries, including source evolution moves and cosmetic aliases. The Johto build selects these through the shared accessor. Existing Pokemon keep saved moves; subsequent learning uses the new source tables. |
-| Species/form identities | Native numeric IDs do not equal source IDs or form values. Some cosmetic variants and Armored Mewtwo have no registered target identity. | All 391 source species/form identities are inventoried. Thirty remain explicit gaps in `manifests/pokemon_learnsets.json`; no base-form substitution is made. Source data for them is retained. |
+| Level-up moves | `GetSpeciesLevelUpLearnset` previously returned Expansion tables for player starters, gifts, eggs, trades and wild Pokemon even where trainer parties had source moves. | **Imported:** all 391 mapped species/form entries, including source evolution moves and cosmetic aliases. The Johto build selects these through the shared accessor. Existing Pokemon keep saved moves; subsequent learning uses the new source tables. |
+| Species/form identities | Native numeric IDs do not equal source IDs or form values. Thirty source forms previously lacked target IDs. | **Registered:** all 391 identities now resolve. Thirty forms have distinct appended IDs 1573..1602, with base/form-table round trips. Their original artwork, metadata and evolution rules are still pending. |
 | Custom move identities | Fury Strikes, HealingLight and Fresh Snack do not exist as separate Expansion moves. | **Added:** distinct ordinary move IDs and generated source names, descriptions and basic data. Native battle adapters implement source multi-hit probability and healing fractions/rounding. Original battle animations and Fresh Snack's field use remain open. |
 | Other move data and effects | `src/data/moves_info.h` still supplies most move definitions; battle configuration selects many latest-generation rules. | Import all source move data/flags and audit effect implementations, damage/stat rules, status, weather and RNG. A matching move name is insufficient. |
-| Species stats and related data | `include/config/pokemon.h` and `src/data/pokemon/species_info/` supply native stats, types, abilities, growth, catch/EXP/EV data and Pokedex metadata. For example, default source Chikorita has Natural Cure as its second ability; the target has no second ability. | Full source import remains open. Preserve Expansion's wider IDs and storage capacity while mapping the source values explicitly. |
-| Evolution conditions, breeding and teaching | Native evolution tables, egg moves, hatch rules, TM/tutor compatibility and item mappings remain. Importing an evolution move does not import its evolution condition. | Import source conditions, egg/TM/tutor data and mechanics; validate all related item-to-move mappings. Existing Roost/Flash reward tests prove only those selected paths. |
+| Species stats and related data | Native generation presets previously supplied these values. | **Imported:** all 391 base-data mappings provide default-source stats, types, three ability slots, growth, catch/EXP/EV data, gender, egg groups/cycles and initial happiness. Gameplay uses `GetSpeciesBaseData`; additional Expansion species retain native data. Held items, Pokedex/presentation data, ability effects and battle/creation rules remain open. |
+| Evolution conditions, breeding and teaching | Native evolution tables, egg moves, hatch-step timing, breeding rules, TM/tutor compatibility and item mappings remain. Source egg groups and initial cycle counts are imported. | Import source conditions, egg/TM/tutor data and mechanics; validate all related item-to-move mappings. Importing an evolution move does not import its evolution condition. Existing Roost/Flash reward tests prove only those selected paths. |
 | Trainer construction and AI | Imported parties preserve selected species, levels and moves, but use native AI/ability selection, fixed Hardy natures and DV/IV/EV adaptations. | Audit source trainer attributes and construction semantics. Recheck actual battle stats and behavior after species data import. |
 | Pokemon graphics and sprite data | Source trainer portraits and several overworld sprites are live; Pokemon battle graphics, palettes, icons and animation bindings mostly remain native. | Import source pixels, normal/shiny palettes, dimensions, frame maps, sequences, timing, positions and form/gender handling. Include all unresolved forms. |
 | Startup and player identity | `POLISHED_JOHTO_DEMO` starts in a test garden with a Lv10 Totodile, Surf, an Old Rod and a Mach Bike. Existing campaign replays use that harness. | Implement the real source startup separately from the test garden, with the source initial party/inventory, opening flow and supported protagonists. Add a campaign run starting from that baseline. |
@@ -55,7 +55,7 @@ receive source moves, and subsequent level/evolution/relearner operations use
 source tables. Fresh saves are required for evaluating the intended initial
 conditions; old demo saves are not proof of an authentic starting game.
 
-## Verification of this phase
+## Earlier learnset verification
 
 Deterministic source regeneration, fixture checks, both native and Johto ROM
 builds, and 44 focused native tests passed. The engine CI suite at `c54bd5ce`
@@ -80,10 +80,64 @@ compiler-dependent addresses can be inspected accurately. The Nico dialogue
 and wild-battle replacement prompt regressions were reproduced and passed
 using the actual CI ROM and matching ELF.
 
+## Species base-data phase
+
+`P_POLISHED_SPECIES_DATA` defaults to `POLISHED_JOHTO_DEMO`. The global
+`GetSpeciesBaseData` accessor selects source records for all 391 identities.
+Stats/types/abilities, growth, catch/base EXP/EV yields, gender, egg groups,
+initial egg cycles and initial happiness now come from 333 pinned base files.
+Native creation, trainer ability/gender selection, battle/capture/reward paths,
+breeding, summary bars and Pokedex stat displays use the accessor. The direct
+native HP check in `IsSpeciesEnabled` remains to avoid recursive sanitation.
+Unused Expansion species fall back to native records; flags and capacities are
+not reduced. The native profile remains available for engine regression tests.
+
+Thirty appended species IDs preserve previously missing form identities.
+Existing Pokemon/save IDs 1..1572 and existing form-table indices are unchanged.
+Only the non-saved Egg graphics sentinel moves past the appended IDs; encrypted
+eggs retain their actual species plus the Egg flag. Existing saved moves,
+experience, IVs and EVs are not rewritten. Their derived stats/levels and
+stored ability-slot interpretation follow the selected source profile when
+recomputed; fresh saves are the baseline for progression validation.
+
+Female fractions are mapped exactly to the target's personality thresholds,
+using 32 low-byte values per source eighth (not percentages of 255). Hatch
+nibbles use the source daycare formula `(n + 1) * 5`; this includes the literal
+4 for Galarian Mr. Mime and the unknown nibble 15. Step timing, inheritance and
+other breeding behavior are still separate gaps. Initial happiness is 70.
+
+The new forms deliberately retain documented temporary native art, Pokedex
+metadata and evolution rules. Source held-item rows and teaching lists are
+retained in the base-data manifest but are not wired by this phase. Ability
+slots are imported; ability effects, trainer attributes, move definitions and
+battle-rule parity remain open. These boundaries apply to every source species,
+not only the newly registered forms.
+
+### Species-phase verification
+
+The final source generation and fixture checks pass for all 391 mappings and
+333 unique base-data files. Native tests cover source creation, ability slots,
+hatch cycles, every mapped identity, distinct form IDs, exact female eighths
+across all 256 personality low bytes, native fallback, and Noctowl's Ghost
+immunity during battle. The shared accessor also covers Battle Dome's macro
+stat reads; its field parameter must not bypass the direct-read audit.
+
+With GCC 13.2.1, both the standard Emerald and Johto ROM builds pass. The full
+native suite passes 5,239 tests, with nine expected failures and 586 existing
+TODO entries; no unexpected failures remain. All six AI timing limits pass.
+
+The final Johto ROM passes all 100 recorded controller campaign checks and the
+19 New Bark warp traversals. This includes all three starter choices, capture
+and trade, the source level-13 Bite selector, all seven Sprout Tower trainers,
+Dark Cave, all three Gym battles, badge/Roost/Togepi rewards, duplicate guards,
+and Save/reset/Continue. These remain demo-start regression checks, not proof
+of the still-unported authentic opening. The tested Johto ROM SHA-256 is
+`53bc61bb3c5bf3c65d4f935fdd16e3db3d2478cd8d41db147c4102d28bcf7d4f`.
+
 ## Next priorities
 
-1. Register missing source forms and import base stats/types/abilities, growth,
-   evolution conditions, egg moves and teaching compatibility.
+1. Import evolution conditions, egg moves, teaching compatibility and held-item
+   data/probabilities. Complete breeding/hatching behavior beyond base data.
 2. Import remaining move data and implement a source battle profile, including
    trainer creation and AI. Validate source probabilities and rounding directly.
 3. Import Pokemon graphics and complete the associated sprite metadata.

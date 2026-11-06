@@ -1,160 +1,9 @@
 {
   "source_commit": "3fa43192379df5c3e7b09a08e4d5d79af4f02f42",
   "source_variant": "default; FAITHFUL undefined",
-  "scope": "Level-up and evolution moves only; stats, evolution conditions, egg/TM/tutor data and battle effects are separate gaps.",
-  "mapped_target_count": 361,
-  "unmapped_forms": [
-    {
-      "species": "GYARADOS",
-      "form": "GYARADOS_RED_FORM",
-      "reason": "No exact source form identity is registered in the target yet; do not substitute its base species."
-    },
-    {
-      "species": "MEWTWO",
-      "form": "MEWTWO_ARMORED_FORM",
-      "reason": "No exact source form identity is registered in the target yet; do not substitute its base species."
-    },
-    {
-      "species": "ARBOK",
-      "form": "ARBOK_KANTO_FORM",
-      "reason": "No exact source form identity is registered in the target yet; do not substitute its base species."
-    },
-    {
-      "species": "ARBOK",
-      "form": "ARBOK_KOGA_FORM",
-      "reason": "No exact source form identity is registered in the target yet; do not substitute its base species."
-    },
-    {
-      "species": "ARBOK",
-      "form": "ARBOK_AGATHA_FORM",
-      "reason": "No exact source form identity is registered in the target yet; do not substitute its base species."
-    },
-    {
-      "species": "ARBOK",
-      "form": "ARBOK_ARIANA_FORM",
-      "reason": "No exact source form identity is registered in the target yet; do not substitute its base species."
-    },
-    {
-      "species": "PIKACHU",
-      "form": "PIKACHU_FLY_FORM",
-      "reason": "No exact source form identity is registered in the target yet; do not substitute its base species."
-    },
-    {
-      "species": "PIKACHU",
-      "form": "PIKACHU_SURF_FORM",
-      "reason": "No exact source form identity is registered in the target yet; do not substitute its base species."
-    },
-    {
-      "species": "PIKACHU",
-      "form": "PIKACHU_RED_FORM",
-      "reason": "No exact source form identity is registered in the target yet; do not substitute its base species."
-    },
-    {
-      "species": "PIKACHU",
-      "form": "PIKACHU_YELLOW_FORM",
-      "reason": "No exact source form identity is registered in the target yet; do not substitute its base species."
-    },
-    {
-      "species": "PIKACHU",
-      "form": "PIKACHU_SPARK_FORM",
-      "reason": "No exact source form identity is registered in the target yet; do not substitute its base species."
-    },
-    {
-      "species": "MAGIKARP",
-      "form": "MAGIKARP_SKELLY_FORM",
-      "reason": "No exact source form identity is registered in the target yet; do not substitute its base species."
-    },
-    {
-      "species": "MAGIKARP",
-      "form": "MAGIKARP_CALICO1_FORM",
-      "reason": "No exact source form identity is registered in the target yet; do not substitute its base species."
-    },
-    {
-      "species": "MAGIKARP",
-      "form": "MAGIKARP_CALICO2_FORM",
-      "reason": "No exact source form identity is registered in the target yet; do not substitute its base species."
-    },
-    {
-      "species": "MAGIKARP",
-      "form": "MAGIKARP_CALICO3_FORM",
-      "reason": "No exact source form identity is registered in the target yet; do not substitute its base species."
-    },
-    {
-      "species": "MAGIKARP",
-      "form": "MAGIKARP_TWO_TONE_FORM",
-      "reason": "No exact source form identity is registered in the target yet; do not substitute its base species."
-    },
-    {
-      "species": "MAGIKARP",
-      "form": "MAGIKARP_ORCA_FORM",
-      "reason": "No exact source form identity is registered in the target yet; do not substitute its base species."
-    },
-    {
-      "species": "MAGIKARP",
-      "form": "MAGIKARP_DAPPLES_FORM",
-      "reason": "No exact source form identity is registered in the target yet; do not substitute its base species."
-    },
-    {
-      "species": "MAGIKARP",
-      "form": "MAGIKARP_TIGER_FORM",
-      "reason": "No exact source form identity is registered in the target yet; do not substitute its base species."
-    },
-    {
-      "species": "MAGIKARP",
-      "form": "MAGIKARP_ZEBRA_FORM",
-      "reason": "No exact source form identity is registered in the target yet; do not substitute its base species."
-    },
-    {
-      "species": "MAGIKARP",
-      "form": "MAGIKARP_STRIPE_FORM",
-      "reason": "No exact source form identity is registered in the target yet; do not substitute its base species."
-    },
-    {
-      "species": "MAGIKARP",
-      "form": "MAGIKARP_BUBBLES_FORM",
-      "reason": "No exact source form identity is registered in the target yet; do not substitute its base species."
-    },
-    {
-      "species": "MAGIKARP",
-      "form": "MAGIKARP_DIAMONDS_FORM",
-      "reason": "No exact source form identity is registered in the target yet; do not substitute its base species."
-    },
-    {
-      "species": "MAGIKARP",
-      "form": "MAGIKARP_PATCHES_FORM",
-      "reason": "No exact source form identity is registered in the target yet; do not substitute its base species."
-    },
-    {
-      "species": "MAGIKARP",
-      "form": "MAGIKARP_FOREHEAD1_FORM",
-      "reason": "No exact source form identity is registered in the target yet; do not substitute its base species."
-    },
-    {
-      "species": "MAGIKARP",
-      "form": "MAGIKARP_MASK1_FORM",
-      "reason": "No exact source form identity is registered in the target yet; do not substitute its base species."
-    },
-    {
-      "species": "MAGIKARP",
-      "form": "MAGIKARP_FOREHEAD2_FORM",
-      "reason": "No exact source form identity is registered in the target yet; do not substitute its base species."
-    },
-    {
-      "species": "MAGIKARP",
-      "form": "MAGIKARP_MASK2_FORM",
-      "reason": "No exact source form identity is registered in the target yet; do not substitute its base species."
-    },
-    {
-      "species": "MAGIKARP",
-      "form": "MAGIKARP_SAUCY_FORM",
-      "reason": "No exact source form identity is registered in the target yet; do not substitute its base species."
-    },
-    {
-      "species": "MAGIKARP",
-      "form": "MAGIKARP_RAINDROP_FORM",
-      "reason": "No exact source form identity is registered in the target yet; do not substitute its base species."
-    }
-  ],
+  "scope": "Level-up and evolution moves; base data is imported separately. Evolution conditions, egg/TM/tutor data and battle effects remain separate gaps.",
+  "mapped_target_count": 391,
+  "unmapped_forms": [],
   "custom_moves": [
     {
       "source_move": "FRESH_SNACK",
@@ -24857,7 +24706,7 @@
       "source_species": "GYARADOS",
       "source_form": "GYARADOS_RED_FORM",
       "source_learnset": "Gyarados",
-      "target_species": null,
+      "target_species": "SPECIES_GYARADOS_RED",
       "evolution_move": "MOVE_BITE",
       "moves": [
         {
@@ -24957,7 +24806,7 @@
       "source_species": "MEWTWO",
       "source_form": "MEWTWO_ARMORED_FORM",
       "source_learnset": "Mewtwo",
-      "target_species": null,
+      "target_species": "SPECIES_MEWTWO_ARMORED",
       "evolution_move": "MOVE_NONE",
       "moves": [
         {
@@ -29354,7 +29203,7 @@
       "source_species": "ARBOK",
       "source_form": "ARBOK_KANTO_FORM",
       "source_learnset": "Arbok",
-      "target_species": null,
+      "target_species": "SPECIES_ARBOK_KANTO",
       "evolution_move": "MOVE_CRUNCH",
       "moves": [
         {
@@ -29445,7 +29294,7 @@
       "source_species": "ARBOK",
       "source_form": "ARBOK_KOGA_FORM",
       "source_learnset": "Arbok",
-      "target_species": null,
+      "target_species": "SPECIES_ARBOK_KOGA",
       "evolution_move": "MOVE_CRUNCH",
       "moves": [
         {
@@ -29536,7 +29385,7 @@
       "source_species": "ARBOK",
       "source_form": "ARBOK_AGATHA_FORM",
       "source_learnset": "Arbok",
-      "target_species": null,
+      "target_species": "SPECIES_ARBOK_AGATHA",
       "evolution_move": "MOVE_CRUNCH",
       "moves": [
         {
@@ -29627,7 +29476,7 @@
       "source_species": "ARBOK",
       "source_form": "ARBOK_ARIANA_FORM",
       "source_learnset": "Arbok",
-      "target_species": null,
+      "target_species": "SPECIES_ARBOK_ARIANA",
       "evolution_move": "MOVE_CRUNCH",
       "moves": [
         {
@@ -29718,7 +29567,7 @@
       "source_species": "PIKACHU",
       "source_form": "PIKACHU_FLY_FORM",
       "source_learnset": "Pikachu",
-      "target_species": null,
+      "target_species": "SPECIES_PIKACHU_FLY",
       "evolution_move": "MOVE_NONE",
       "moves": [
         {
@@ -29819,7 +29668,7 @@
       "source_species": "PIKACHU",
       "source_form": "PIKACHU_SURF_FORM",
       "source_learnset": "Pikachu",
-      "target_species": null,
+      "target_species": "SPECIES_PIKACHU_SURF",
       "evolution_move": "MOVE_NONE",
       "moves": [
         {
@@ -29920,7 +29769,7 @@
       "source_species": "PIKACHU",
       "source_form": "PIKACHU_RED_FORM",
       "source_learnset": "Pikachu",
-      "target_species": null,
+      "target_species": "SPECIES_PIKACHU_RED",
       "evolution_move": "MOVE_NONE",
       "moves": [
         {
@@ -30021,7 +29870,7 @@
       "source_species": "PIKACHU",
       "source_form": "PIKACHU_YELLOW_FORM",
       "source_learnset": "Pikachu",
-      "target_species": null,
+      "target_species": "SPECIES_PIKACHU_YELLOW",
       "evolution_move": "MOVE_NONE",
       "moves": [
         {
@@ -30122,7 +29971,7 @@
       "source_species": "PIKACHU",
       "source_form": "PIKACHU_SPARK_FORM",
       "source_learnset": "Pikachu",
-      "target_species": null,
+      "target_species": "SPECIES_PIKACHU_SPARK",
       "evolution_move": "MOVE_NONE",
       "moves": [
         {
@@ -30279,7 +30128,7 @@
       "source_species": "MAGIKARP",
       "source_form": "MAGIKARP_SKELLY_FORM",
       "source_learnset": "Magikarp",
-      "target_species": null,
+      "target_species": "SPECIES_MAGIKARP_SKELLY",
       "evolution_move": "MOVE_NONE",
       "moves": [
         {
@@ -30305,7 +30154,7 @@
       "source_species": "MAGIKARP",
       "source_form": "MAGIKARP_CALICO1_FORM",
       "source_learnset": "Magikarp",
-      "target_species": null,
+      "target_species": "SPECIES_MAGIKARP_CALICO1",
       "evolution_move": "MOVE_NONE",
       "moves": [
         {
@@ -30331,7 +30180,7 @@
       "source_species": "MAGIKARP",
       "source_form": "MAGIKARP_CALICO2_FORM",
       "source_learnset": "Magikarp",
-      "target_species": null,
+      "target_species": "SPECIES_MAGIKARP_CALICO2",
       "evolution_move": "MOVE_NONE",
       "moves": [
         {
@@ -30357,7 +30206,7 @@
       "source_species": "MAGIKARP",
       "source_form": "MAGIKARP_CALICO3_FORM",
       "source_learnset": "Magikarp",
-      "target_species": null,
+      "target_species": "SPECIES_MAGIKARP_CALICO3",
       "evolution_move": "MOVE_NONE",
       "moves": [
         {
@@ -30383,7 +30232,7 @@
       "source_species": "MAGIKARP",
       "source_form": "MAGIKARP_TWO_TONE_FORM",
       "source_learnset": "Magikarp",
-      "target_species": null,
+      "target_species": "SPECIES_MAGIKARP_TWO_TONE",
       "evolution_move": "MOVE_NONE",
       "moves": [
         {
@@ -30409,7 +30258,7 @@
       "source_species": "MAGIKARP",
       "source_form": "MAGIKARP_ORCA_FORM",
       "source_learnset": "Magikarp",
-      "target_species": null,
+      "target_species": "SPECIES_MAGIKARP_ORCA",
       "evolution_move": "MOVE_NONE",
       "moves": [
         {
@@ -30435,7 +30284,7 @@
       "source_species": "MAGIKARP",
       "source_form": "MAGIKARP_DAPPLES_FORM",
       "source_learnset": "Magikarp",
-      "target_species": null,
+      "target_species": "SPECIES_MAGIKARP_DAPPLES",
       "evolution_move": "MOVE_NONE",
       "moves": [
         {
@@ -30461,7 +30310,7 @@
       "source_species": "MAGIKARP",
       "source_form": "MAGIKARP_TIGER_FORM",
       "source_learnset": "Magikarp",
-      "target_species": null,
+      "target_species": "SPECIES_MAGIKARP_TIGER",
       "evolution_move": "MOVE_NONE",
       "moves": [
         {
@@ -30487,7 +30336,7 @@
       "source_species": "MAGIKARP",
       "source_form": "MAGIKARP_ZEBRA_FORM",
       "source_learnset": "Magikarp",
-      "target_species": null,
+      "target_species": "SPECIES_MAGIKARP_ZEBRA",
       "evolution_move": "MOVE_NONE",
       "moves": [
         {
@@ -30513,7 +30362,7 @@
       "source_species": "MAGIKARP",
       "source_form": "MAGIKARP_STRIPE_FORM",
       "source_learnset": "Magikarp",
-      "target_species": null,
+      "target_species": "SPECIES_MAGIKARP_STRIPE",
       "evolution_move": "MOVE_NONE",
       "moves": [
         {
@@ -30539,7 +30388,7 @@
       "source_species": "MAGIKARP",
       "source_form": "MAGIKARP_BUBBLES_FORM",
       "source_learnset": "Magikarp",
-      "target_species": null,
+      "target_species": "SPECIES_MAGIKARP_BUBBLES",
       "evolution_move": "MOVE_NONE",
       "moves": [
         {
@@ -30565,7 +30414,7 @@
       "source_species": "MAGIKARP",
       "source_form": "MAGIKARP_DIAMONDS_FORM",
       "source_learnset": "Magikarp",
-      "target_species": null,
+      "target_species": "SPECIES_MAGIKARP_DIAMONDS",
       "evolution_move": "MOVE_NONE",
       "moves": [
         {
@@ -30591,7 +30440,7 @@
       "source_species": "MAGIKARP",
       "source_form": "MAGIKARP_PATCHES_FORM",
       "source_learnset": "Magikarp",
-      "target_species": null,
+      "target_species": "SPECIES_MAGIKARP_PATCHES",
       "evolution_move": "MOVE_NONE",
       "moves": [
         {
@@ -30617,7 +30466,7 @@
       "source_species": "MAGIKARP",
       "source_form": "MAGIKARP_FOREHEAD1_FORM",
       "source_learnset": "Magikarp",
-      "target_species": null,
+      "target_species": "SPECIES_MAGIKARP_FOREHEAD1",
       "evolution_move": "MOVE_NONE",
       "moves": [
         {
@@ -30643,7 +30492,7 @@
       "source_species": "MAGIKARP",
       "source_form": "MAGIKARP_MASK1_FORM",
       "source_learnset": "Magikarp",
-      "target_species": null,
+      "target_species": "SPECIES_MAGIKARP_MASK1",
       "evolution_move": "MOVE_NONE",
       "moves": [
         {
@@ -30669,7 +30518,7 @@
       "source_species": "MAGIKARP",
       "source_form": "MAGIKARP_FOREHEAD2_FORM",
       "source_learnset": "Magikarp",
-      "target_species": null,
+      "target_species": "SPECIES_MAGIKARP_FOREHEAD2",
       "evolution_move": "MOVE_NONE",
       "moves": [
         {
@@ -30695,7 +30544,7 @@
       "source_species": "MAGIKARP",
       "source_form": "MAGIKARP_MASK2_FORM",
       "source_learnset": "Magikarp",
-      "target_species": null,
+      "target_species": "SPECIES_MAGIKARP_MASK2",
       "evolution_move": "MOVE_NONE",
       "moves": [
         {
@@ -30721,7 +30570,7 @@
       "source_species": "MAGIKARP",
       "source_form": "MAGIKARP_SAUCY_FORM",
       "source_learnset": "Magikarp",
-      "target_species": null,
+      "target_species": "SPECIES_MAGIKARP_SAUCY",
       "evolution_move": "MOVE_NONE",
       "moves": [
         {
@@ -30747,7 +30596,7 @@
       "source_species": "MAGIKARP",
       "source_form": "MAGIKARP_RAINDROP_FORM",
       "source_learnset": "Magikarp",
-      "target_species": null,
+      "target_species": "SPECIES_MAGIKARP_RAINDROP",
       "evolution_move": "MOVE_NONE",
       "moves": [
         {

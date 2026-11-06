@@ -92,10 +92,9 @@ import described below:
 
 - `include/config/battle.h` still selects many Expansion generation defaults.
   They need comparison with Polished Crystal's actual battle implementation.
-- `include/config/pokemon.h` and `src/data/pokemon/species_info/` still supply
-  Expansion stats, abilities, evolution conditions, egg/teaching data and
-  sprite/animation bindings. The source level-up/evolution-move tables are now
-  selected by the shared accessor in the Johto build.
+- Source base stats, types, ability slots and level-up/evolution-move tables now
+  use shared accessors in the Johto build. Expansion still supplies ability
+  effects, evolution conditions, egg/teaching data and sprite/animation bindings.
 - Pokemon battle sprites, palettes, icons and animation metadata still need
   the comprehensive source import. Imported trainer and overworld artwork does
   not establish completion of Pokemon battle graphics.
@@ -113,15 +112,15 @@ parity gap. Unused Expansion content retained for later customization is not a
 gap. Retain the existing campaign replay as regression coverage when changing
 the battle foundation.
 
-### Source level-up data and missing-identity audit
+### Source level-up data and species identities
 
 `build_pokemon_learnsets.py` imports the pinned default release's level-up and
 evolution moves through its species/form pointer tables. It resolves source
 conditionals explicitly and retains blob hashes for all inputs. All **391**
-source species/form identities are inventoried: **361** bind to existing
-Expansion species IDs, while **30** forms remain explicitly unresolved. These
-include Armored Mewtwo, the source red Gyarados form, and cosmetic Arbok,
-Pikachu and Magikarp variants; no similar base form is substituted.
+source species/form identities now resolve: **361** bind to existing Expansion
+species IDs and **30** have new, separate IDs. These include Armored Mewtwo,
+the source red Gyarados form, and cosmetic Arbok, Pikachu and Magikarp variants.
+Their original art remains pending; registering data does not complete artwork.
 
 `P_POLISHED_LEVEL_UP_LEARNSETS` is enabled in the Johto demo build. The shared
 accessor now supplies source moves for new starters, gifts, eggs, trades and
@@ -137,13 +136,59 @@ adapters preserve the source six-slot multi-hit distribution, floor-before-
 doubling sun healing, Utility Umbrella's rain/sun limits and rounded-down
 half-HP healing. Existing ordinary move IDs remain unchanged. Their original
 battle animations and Fresh Snack's field use are still pending, as are other
-source move data/effects, species stats and evolution conditions.
+source move data/effects and evolution conditions.
 
 Checks include deterministic regeneration, all source identity counts and
 variant handling, native construction/learning/form/capacity tests, custom-move
 battle tests, and player starter-move assertions in the real-input emulator
 campaign. Passing these checks completes this data import for the currently
 mapped identities; it does not complete the broader Pokemon or battle port.
+
+### Source species base data
+
+`build_pokemon_base_data.py` joins the pinned `BaseData` INCLUDE order to the
+source species/form indices. Default-release conditionals are resolved before
+conversion, and all inputs have Git blob hashes. The resulting 391 mappings
+cover base stats, both types, all three ability slots, growth, catch rate, base
+experience, EV yields, gender, egg groups, egg-cycle counts and initial happiness.
+
+`P_POLISHED_SPECIES_DATA` defaults to the Johto demo profile. A shared accessor
+selects compact source records for all gameplay consumers: Pokemon/trainer
+creation, battle typing/stats/rewards/capture, growth, breeding and stat displays.
+Other Expansion species and the native profile retain their existing values.
+Examples include Bug/Psychic Butterfree with 110 Special Attack and Special
+Defense, Ghost/Flying Noctowl, Chikorita's second ability Natural Cure, and
+Armored Mewtwo's Psychic/Steel typing and distinct stats/EV yields.
+
+Source female fractions map exactly to GBA personality thresholds: each eighth
+uses 32 of the 256 possible low-byte values. Fixed-gender species retain the
+native female-only and genderless sentinels. Source hatch nibbles
+become `(n + 1) * 5` cycles, including literal nibble 4 for Galarian Mr. Mime;
+`HATCH_UNKNOWN` becomes 80. Step timing and breeding rules still need their own
+source parity work. Initial happiness uses source `BASE_HAPPINESS` (70).
+
+All existing Pokemon IDs 1..1572 remain unchanged; new forms occupy 1573..1602.
+The non-saved Egg graphics sentinel moves to 1603. Saved eggs contain their
+actual species and an Egg flag, not that sentinel. Existing form-table indices
+are retained by appending the new entries. A saved Pokemon's species, moves,
+experience and EVs are not rewritten. Its derived stats and level calculations
+use the selected profile when recalculated; use a fresh save to evaluate source
+progression, especially when a species changes growth curve.
+
+The form registrations still use temporary native art, metadata and evolution
+rules. Held-item tables/probabilities, evolution conditions, egg moves,
+TM/HM/tutor compatibility, ability effects and trainer/battle rules remain open.
+See `tools/polished_port/PARITY_AUDIT.md`; this is a base-data import, not a
+claim that the full Pokemon or battle-engine migration is complete.
+
+Regenerate and check with:
+
+```sh
+python3 tools/polished_port/scripts/build_pokemon_learnsets.py --check
+python3 tools/polished_port/scripts/build_pokemon_base_data.py --check
+python3 tools/polished_port/scripts/test_pokemon_learnsets.py
+python3 tools/polished_port/scripts/test_pokemon_base_data.py
+```
 
 ## First milestone
 
@@ -906,9 +951,9 @@ original Polished Crystal map identity to an Expansion species/form and level:
   three separate Rock Smash species, for 25 candidate species total.
 - Hisuian Voltorb and Electrode resolve to their dedicated Expansion species IDs.
   Original form value 4 is never used as an Expansion form-table index. The
-  current implementation still uses Expansion's stats, abilities and graphics;
-  these are temporary gaps pending the full Polished Crystal import. Level-up
-  moves now use the source tables when `P_POLISHED_LEVEL_UP_LEARNSETS` is enabled.
+  implementation now uses source base data when `P_POLISHED_SPECIES_DATA` is
+  enabled and source level-up moves with `P_POLISHED_LEVEL_UP_LEARNSETS`.
+  Graphics and ability implementations remain pending source parity work.
 - Tree score, 10/50/80 percent battle gates, weighted selection, and all 17 badge
   counts compose into `JohtoHeadbuttSelectEncounterFromSourceMap`.
 - Missing sets, unsuccessful rolls, invalid inputs and configured-out species
@@ -940,5 +985,5 @@ interaction phase. Prism mining assets and rewards are outside this work.
 Additional fixtures retain the same v3.2.3 pin: `data/wild/badge_base_levels.asm`,
 the `SetBadgeBaseLevel`/`AdjustLevelForBadges` excerpt from
 `engine/overworld/wildmons.asm`, and `data/pokemon/base_stats/voltorb_hisuian.asm`
-and `electrode_hisuian.asm`. They substantiate progression and form identity;
-they do not import Polished Crystal's battle balance.
+and `electrode_hisuian.asm`. The global base-data importer now imports these
+species' source stats as well; battle-effect parity remains separate work.

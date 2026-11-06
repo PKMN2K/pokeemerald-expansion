@@ -2,8 +2,8 @@
 """Import the pinned default Polished Crystal level-up and evolution moves.
 
 The source species/form pointer tables, rather than similar labels or numeric
-IDs, define which learnset belongs to each Pokemon. Missing target forms stay
-explicitly unresolved in the manifest; they are never replaced by a base form.
+IDs, define which learnset belongs to each Pokemon. Every source form must
+resolve to a registered target identity; base-form substitutions are rejected.
 """
 import argparse
 import base64
@@ -127,8 +127,10 @@ def target_species(species, form, available):
         target = name + "_" + REGIONS[form]
     elif species == "UNOWN":
         target = form.removesuffix("_FORM")
+    elif species in ("GYARADOS", "MEWTWO", "ARBOK", "PIKACHU", "MAGIKARP"):
+        target = form.removesuffix("_FORM")
     else:
-        return None
+        raise AssertionError(("Unmapped source identity", species, form))
     target = "SPECIES_" + target
     assert target in available, (species, form, target)
     return target
@@ -228,7 +230,7 @@ def build():
     lines.extend(["};", ""])
     custom_header, custom_metadata = custom_moves(files)
     manifest = {"source_commit": PIN, "source_variant": "default; FAITHFUL undefined",
-                "scope": "Level-up and evolution moves only; stats, evolution conditions, egg/TM/tutor data and battle effects are separate gaps.",
+                "scope": "Level-up and evolution moves; base data is imported separately. Evolution conditions, egg/TM/tutor data and battle effects remain separate gaps.",
                 "mapped_target_count": len(targets),
                 "unmapped_forms": [{"species": r["source_species"], "form": r["source_form"],
                     "reason": "No exact source form identity is registered in the target yet; do not substitute its base species."}

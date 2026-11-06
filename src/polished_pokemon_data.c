@@ -10,3 +10,12 @@ const struct LevelUpMove *PolishedGetLevelUpLearnset(enum Species species)
         return NULL;
     return gPolishedLevelUpLearnsets[species];
 }
+
+#include "data/polished_species_base_data.h"
+
+const struct SpeciesBaseData *PolishedGetSpeciesBaseData(enum Species species)
+{
+    if ((u32)species >= NUM_SPECIES)
+        return NULL;
+    return gPolishedSpeciesBaseData[species];
+}

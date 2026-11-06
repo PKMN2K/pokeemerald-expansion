@@ -391,33 +391,52 @@ struct Evolution
     const struct EvolutionParam *params;
 };
 
-struct SpeciesInfo /*0xC4*/
+// Shared field declarations preserve native designated initializers while letting
+// gameplay select a compact source-data record. The union members have the same
+// common initial sequence; no pointer casts or mutable table copies are needed.
+#define SPECIES_BASE_DATA_FIELDS(_tera, _itemCommon, _itemRare) \
+    u8 baseHP; \
+    u8 baseAttack; \
+    u8 baseDefense; \
+    u8 baseSpeed; \
+    u8 baseSpAttack; \
+    u8 baseSpDefense; \
+    enum Type types[2]; \
+    u8 catchRate; \
+    u8 _tera; \
+    u16 expYield; \
+    u16 evYield_HP:2; \
+    u16 evYield_Attack:2; \
+    u16 evYield_Defense:2; \
+    u16 evYield_Speed:2; \
+    u16 evYield_SpAttack:2; \
+    u16 evYield_SpDefense:2; \
+    u16 padding2:4; \
+    enum Item _itemCommon; \
+    enum Item _itemRare; \
+    u8 genderRatio; \
+    u8 eggCycles; \
+    u8 friendship; \
+    u8 growthRate; \
+    enum EggGroup eggGroups[EGG_GROUPS_PER_MON]; \
+    enum Ability abilities[NUM_ABILITY_SLOTS];
+
+struct __attribute__((packed, aligned(2))) SpeciesBaseData
 {
-    u8 baseHP;
-    u8 baseAttack;
-    u8 baseDefense;
-    u8 baseSpeed;
-    u8 baseSpAttack;
-    u8 baseSpDefense;
-    enum Type types[2];
-    u8 catchRate;
-    u8 forceTeraType;
-    u16 expYield; // expYield was changed from u8 to u16 for the new Exp System.
-    u16 evYield_HP:2;
-    u16 evYield_Attack:2;
-    u16 evYield_Defense:2;
-    u16 evYield_Speed:2;
-    u16 evYield_SpAttack:2;
-    u16 evYield_SpDefense:2;
-    u16 padding2:4;
-    enum Item itemCommon;
-    enum Item itemRare;
-    u8 genderRatio;
-    u8 eggCycles;
-    u8 friendship;
-    u8 growthRate;
-    enum EggGroup eggGroups[EGG_GROUPS_PER_MON];
-    enum Ability abilities[NUM_ABILITY_SLOTS]; // 3 abilities, no longer u8 because we have over 255 abilities now.
+    // Reserved fields keep SpeciesInfo's native layout/stride unchanged.
+    // These three fields remain native data until their separate import.
+    SPECIES_BASE_DATA_FIELDS(reservedForceTeraType, reservedItemCommon, reservedItemRare)
+};
+
+struct SpeciesInfo
+{
+    // The native prefix is 30 bytes. Keep its two-byte alignment so the union
+    // does not add padding before safariZoneFleeRate on the GBA ABI.
+    union __attribute__((packed, aligned(2)))
+    {
+        struct SpeciesBaseData baseData;
+        struct __attribute__((packed, aligned(2))) { SPECIES_BASE_DATA_FIELDS(forceTeraType, itemCommon, itemRare) };
+    };
     u8 safariZoneFleeRate;
 
     // Pokédex data
@@ -524,6 +543,8 @@ struct SpeciesInfo /*0xC4*/
 #endif //OW_POKEMON_OBJECT_EVENTS
     enum OverworldWildEncounterBehaviors overworldEncounterBehavior;
 };
+
+#undef SPECIES_BASE_DATA_FIELDS
 
 // This struct represent values from user input (createmon/givemon) that have not been sanitized
 // The absence of enum and the use of large data types is there to reflect the full range of user input
@@ -753,6 +774,7 @@ extern u8 gTriedEvolving;
 extern const u16 gFacilityClassToPicIndex[];
 extern const enum TrainerClassID gFacilityClassToTrainerClass[];
 extern const struct SpeciesInfo gSpeciesInfo[];
+const struct SpeciesBaseData *GetSpeciesBaseData(enum Species species);
 extern const u32 gExperienceTables[][MAX_LEVEL + 1];
 extern const u8 gPPUpGetMask[];
 extern const u8 gPPUpClearMask[];

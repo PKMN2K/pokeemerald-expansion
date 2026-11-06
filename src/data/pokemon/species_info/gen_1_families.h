@@ -2786,6 +2786,7 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
         )
         .levelUpLearnset = sArbokLevelUpLearnset,
         .teachableLearnset = sArbokTeachableLearnset,
+        .formSpeciesIdTable = sArbokFormSpeciesIdTable,
     },
 #endif //P_FAMILY_EKANS
 
@@ -17749,6 +17750,7 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
         .levelUpLearnset = sMagikarpLevelUpLearnset,
         .teachableLearnset = sMagikarpTeachableLearnset,
         .evolutions = EVOLUTION({EVO_LEVEL, 20, SPECIES_GYARADOS}),
+        .formSpeciesIdTable = sMagikarpFormSpeciesIdTable,
     },
 
     [SPECIES_GYARADOS] =

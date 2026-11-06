@@ -4,6 +4,7 @@
 #include "pokemon.h"
 
 extern const struct LevelUpMove *const gPolishedLevelUpLearnsets[NUM_SPECIES];
+const struct SpeciesBaseData *PolishedGetSpeciesBaseData(enum Species species);
 const struct LevelUpMove *PolishedGetLevelUpLearnset(enum Species species);
 
 #endif

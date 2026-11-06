@@ -67,6 +67,1691 @@
       "path": "engine/battle/effect_commands.asm",
       "fixture": "engine__battle__effect_commands.asm.b64",
       "git_blob_sha1": "dd1df8310c56895b3165c1e5b5dd26c73a44734c"
+    },
+    {
+      "path": "constants/pokemon_data_constants.asm",
+      "fixture": "constants__pokemon_data_constants.asm.b64",
+      "git_blob_sha1": "b8bf0452f937d95f6e63bccf055412fe3b4b0b9c"
+    },
+    {
+      "path": "data/pokemon/base_stats.asm",
+      "fixture": "data__pokemon__base_stats.asm.b64",
+      "git_blob_sha1": "f09cda3ffabee9e98fea61d1db2b2e5e9aa1cef4"
+    },
+    {
+      "path": "data/pokemon/base_stats/abra.asm",
+      "fixture": "data__pokemon__base_stats__abra.asm.b64",
+      "git_blob_sha1": "51a6b3fd786bf674df497e8f03a693952a9d9830"
+    },
+    {
+      "path": "data/pokemon/base_stats/aerodactyl.asm",
+      "fixture": "data__pokemon__base_stats__aerodactyl.asm.b64",
+      "git_blob_sha1": "16612bc79fad4abd938f510704fe0017e9f4a973"
+    },
+    {
+      "path": "data/pokemon/base_stats/aipom.asm",
+      "fixture": "data__pokemon__base_stats__aipom.asm.b64",
+      "git_blob_sha1": "63862a624f76d0aae12f31c5618820b0b1205fbd"
+    },
+    {
+      "path": "data/pokemon/base_stats/alakazam.asm",
+      "fixture": "data__pokemon__base_stats__alakazam.asm.b64",
+      "git_blob_sha1": "5054408535e48e7f413a9fec18e0ef61af418a0f"
+    },
+    {
+      "path": "data/pokemon/base_stats/ambipom.asm",
+      "fixture": "data__pokemon__base_stats__ambipom.asm.b64",
+      "git_blob_sha1": "9407d73b3258ec27e38f7e6c8d56e0e2724fd147"
+    },
+    {
+      "path": "data/pokemon/base_stats/ampharos.asm",
+      "fixture": "data__pokemon__base_stats__ampharos.asm.b64",
+      "git_blob_sha1": "4558510d70c6c22b5cd203088bf9e0264d22ce04"
+    },
+    {
+      "path": "data/pokemon/base_stats/annihilape.asm",
+      "fixture": "data__pokemon__base_stats__annihilape.asm.b64",
+      "git_blob_sha1": "e5996fc36c4f813441c52da12c6288a1f2a72db9"
+    },
+    {
+      "path": "data/pokemon/base_stats/arbok.asm",
+      "fixture": "data__pokemon__base_stats__arbok.asm.b64",
+      "git_blob_sha1": "29c070d82333a8ccb5234e7ebfa3e9de02c1061c"
+    },
+    {
+      "path": "data/pokemon/base_stats/arcanine_hisuian.asm",
+      "fixture": "data__pokemon__base_stats__arcanine_hisuian.asm.b64",
+      "git_blob_sha1": "347531f2e6e7e6621eba511f754a7b4faae2f8f5"
+    },
+    {
+      "path": "data/pokemon/base_stats/arcanine_plain.asm",
+      "fixture": "data__pokemon__base_stats__arcanine_plain.asm.b64",
+      "git_blob_sha1": "2477b6a51b7381144e99db62381a095f9936d406"
+    },
+    {
+      "path": "data/pokemon/base_stats/ariados.asm",
+      "fixture": "data__pokemon__base_stats__ariados.asm.b64",
+      "git_blob_sha1": "6bf6d0debe96b5c5a131b721869252750609320c"
+    },
+    {
+      "path": "data/pokemon/base_stats/articuno_galarian.asm",
+      "fixture": "data__pokemon__base_stats__articuno_galarian.asm.b64",
+      "git_blob_sha1": "bd5d04d6fc449fce5f8a157c5f87a0cc2af3a561"
+    },
+    {
+      "path": "data/pokemon/base_stats/articuno_plain.asm",
+      "fixture": "data__pokemon__base_stats__articuno_plain.asm.b64",
+      "git_blob_sha1": "b52cbad902dc698b2b096bbe7dc8916fe239fa94"
+    },
+    {
+      "path": "data/pokemon/base_stats/azumarill.asm",
+      "fixture": "data__pokemon__base_stats__azumarill.asm.b64",
+      "git_blob_sha1": "0627951ddbaff0717ce7dc90e9c23aa95be98cc7"
+    },
+    {
+      "path": "data/pokemon/base_stats/azurill.asm",
+      "fixture": "data__pokemon__base_stats__azurill.asm.b64",
+      "git_blob_sha1": "106b209f7f86126a65c16735826f6b5a611d4f36"
+    },
+    {
+      "path": "data/pokemon/base_stats/bayleef.asm",
+      "fixture": "data__pokemon__base_stats__bayleef.asm.b64",
+      "git_blob_sha1": "e4b10d6cf2eaf7e9c0756870d6d4263d6046aa47"
+    },
+    {
+      "path": "data/pokemon/base_stats/beedrill.asm",
+      "fixture": "data__pokemon__base_stats__beedrill.asm.b64",
+      "git_blob_sha1": "27baa9542658ee15c9734135c5ed596323ab35cf"
+    },
+    {
+      "path": "data/pokemon/base_stats/bellossom.asm",
+      "fixture": "data__pokemon__base_stats__bellossom.asm.b64",
+      "git_blob_sha1": "0e05a2d643095ff4b900482056203f23acf47963"
+    },
+    {
+      "path": "data/pokemon/base_stats/bellsprout.asm",
+      "fixture": "data__pokemon__base_stats__bellsprout.asm.b64",
+      "git_blob_sha1": "29836a781b3ed6889a86ca8be0e70dccabb7770f"
+    },
+    {
+      "path": "data/pokemon/base_stats/blastoise.asm",
+      "fixture": "data__pokemon__base_stats__blastoise.asm.b64",
+      "git_blob_sha1": "c14e3fe81f7a015091f4ef768488e5b90a61bb4e"
+    },
+    {
+      "path": "data/pokemon/base_stats/blissey.asm",
+      "fixture": "data__pokemon__base_stats__blissey.asm.b64",
+      "git_blob_sha1": "31b8624184a7bfad56c7fbe609488d36ad188d86"
+    },
+    {
+      "path": "data/pokemon/base_stats/bonsly.asm",
+      "fixture": "data__pokemon__base_stats__bonsly.asm.b64",
+      "git_blob_sha1": "247e4e97bea023fb8039f6c84b03543621bece6d"
+    },
+    {
+      "path": "data/pokemon/base_stats/bulbasaur.asm",
+      "fixture": "data__pokemon__base_stats__bulbasaur.asm.b64",
+      "git_blob_sha1": "7736856bb5db68d6761160423f381485421d06d5"
+    },
+    {
+      "path": "data/pokemon/base_stats/butterfree.asm",
+      "fixture": "data__pokemon__base_stats__butterfree.asm.b64",
+      "git_blob_sha1": "06360d7a4d70edf8ea4010bf59038f460615d428"
+    },
+    {
+      "path": "data/pokemon/base_stats/caterpie.asm",
+      "fixture": "data__pokemon__base_stats__caterpie.asm.b64",
+      "git_blob_sha1": "e94cc93aa9bb0e09c8864c7aea731a3effaaeac7"
+    },
+    {
+      "path": "data/pokemon/base_stats/celebi.asm",
+      "fixture": "data__pokemon__base_stats__celebi.asm.b64",
+      "git_blob_sha1": "0cb21913fce13efae837428b28888a078be88e68"
+    },
+    {
+      "path": "data/pokemon/base_stats/chansey.asm",
+      "fixture": "data__pokemon__base_stats__chansey.asm.b64",
+      "git_blob_sha1": "691ebb5659795a440c0966374b722ad17e81039a"
+    },
+    {
+      "path": "data/pokemon/base_stats/charizard.asm",
+      "fixture": "data__pokemon__base_stats__charizard.asm.b64",
+      "git_blob_sha1": "b3d189ff62ea12db0400afb1def75cdaab98562e"
+    },
+    {
+      "path": "data/pokemon/base_stats/charmander.asm",
+      "fixture": "data__pokemon__base_stats__charmander.asm.b64",
+      "git_blob_sha1": "b5794e5aaf7999a1154230ac2e86e0f484f42f64"
+    },
+    {
+      "path": "data/pokemon/base_stats/charmeleon.asm",
+      "fixture": "data__pokemon__base_stats__charmeleon.asm.b64",
+      "git_blob_sha1": "8131f9347d7040e45cb2b7b171664d8e757fe804"
+    },
+    {
+      "path": "data/pokemon/base_stats/chikorita.asm",
+      "fixture": "data__pokemon__base_stats__chikorita.asm.b64",
+      "git_blob_sha1": "44149015c340e21ee12430293b8e1426995a62b8"
+    },
+    {
+      "path": "data/pokemon/base_stats/chinchou.asm",
+      "fixture": "data__pokemon__base_stats__chinchou.asm.b64",
+      "git_blob_sha1": "97ab1e8bd9d8e564188169bf020f84a1eeaf7846"
+    },
+    {
+      "path": "data/pokemon/base_stats/clefable.asm",
+      "fixture": "data__pokemon__base_stats__clefable.asm.b64",
+      "git_blob_sha1": "4602674418ab59c347e4933e3f244484a230ca14"
+    },
+    {
+      "path": "data/pokemon/base_stats/clefairy.asm",
+      "fixture": "data__pokemon__base_stats__clefairy.asm.b64",
+      "git_blob_sha1": "1cc1e7d45a08bf94ed520bbe21618bda68acc4f9"
+    },
+    {
+      "path": "data/pokemon/base_stats/cleffa.asm",
+      "fixture": "data__pokemon__base_stats__cleffa.asm.b64",
+      "git_blob_sha1": "5b060a7ef1676871e0eb0707a93a2eae426a26f8"
+    },
+    {
+      "path": "data/pokemon/base_stats/clodsire.asm",
+      "fixture": "data__pokemon__base_stats__clodsire.asm.b64",
+      "git_blob_sha1": "eabdaf9a0adee204c6ecee38cf7fd08aaf45d367"
+    },
+    {
+      "path": "data/pokemon/base_stats/cloyster.asm",
+      "fixture": "data__pokemon__base_stats__cloyster.asm.b64",
+      "git_blob_sha1": "0578c83bda1a189ae12fff72dcf599210dacc0af"
+    },
+    {
+      "path": "data/pokemon/base_stats/corsola_galarian.asm",
+      "fixture": "data__pokemon__base_stats__corsola_galarian.asm.b64",
+      "git_blob_sha1": "ae9ccd3cbb7ded48dd68ab5fcb493c9d8e38f1d8"
+    },
+    {
+      "path": "data/pokemon/base_stats/corsola_plain.asm",
+      "fixture": "data__pokemon__base_stats__corsola_plain.asm.b64",
+      "git_blob_sha1": "e34bea9b2323c3d98927aaed533b7e0da0592b40"
+    },
+    {
+      "path": "data/pokemon/base_stats/crobat.asm",
+      "fixture": "data__pokemon__base_stats__crobat.asm.b64",
+      "git_blob_sha1": "9d28925ec6edf9b832e1b802384d527c1b18fe48"
+    },
+    {
+      "path": "data/pokemon/base_stats/croconaw.asm",
+      "fixture": "data__pokemon__base_stats__croconaw.asm.b64",
+      "git_blob_sha1": "31b1f1ba7bf2263e6fd333d5c948847a6dc17d80"
+    },
+    {
+      "path": "data/pokemon/base_stats/cubone.asm",
+      "fixture": "data__pokemon__base_stats__cubone.asm.b64",
+      "git_blob_sha1": "7cef0659b2739a62f76741cd4bb142e33dbf0ea8"
+    },
+    {
+      "path": "data/pokemon/base_stats/cursola.asm",
+      "fixture": "data__pokemon__base_stats__cursola.asm.b64",
+      "git_blob_sha1": "9292c7201347c8026ed83425db106bbc71c97463"
+    },
+    {
+      "path": "data/pokemon/base_stats/cyndaquil.asm",
+      "fixture": "data__pokemon__base_stats__cyndaquil.asm.b64",
+      "git_blob_sha1": "7ca008f284dfdacc1a03a3596a7311ee9911002c"
+    },
+    {
+      "path": "data/pokemon/base_stats/delibird.asm",
+      "fixture": "data__pokemon__base_stats__delibird.asm.b64",
+      "git_blob_sha1": "cc82bed70a96f1e393e32be2ff85efc52ba16093"
+    },
+    {
+      "path": "data/pokemon/base_stats/dewgong.asm",
+      "fixture": "data__pokemon__base_stats__dewgong.asm.b64",
+      "git_blob_sha1": "332cf3e67df4fe53cf213a5b00d4918557e92b2c"
+    },
+    {
+      "path": "data/pokemon/base_stats/diglett_alolan.asm",
+      "fixture": "data__pokemon__base_stats__diglett_alolan.asm.b64",
+      "git_blob_sha1": "28a7b98e00cf403f398cacda3ed14a90db67f26d"
+    },
+    {
+      "path": "data/pokemon/base_stats/diglett_plain.asm",
+      "fixture": "data__pokemon__base_stats__diglett_plain.asm.b64",
+      "git_blob_sha1": "1c8a08cf505ce84c9a8188972b47d7527717c70a"
+    },
+    {
+      "path": "data/pokemon/base_stats/ditto.asm",
+      "fixture": "data__pokemon__base_stats__ditto.asm.b64",
+      "git_blob_sha1": "3127b4a226512bf82ea57997297df6037bafe27c"
+    },
+    {
+      "path": "data/pokemon/base_stats/dodrio.asm",
+      "fixture": "data__pokemon__base_stats__dodrio.asm.b64",
+      "git_blob_sha1": "7becc649935a9d0f05e9cfd1aa8de6e403b2fda2"
+    },
+    {
+      "path": "data/pokemon/base_stats/doduo.asm",
+      "fixture": "data__pokemon__base_stats__doduo.asm.b64",
+      "git_blob_sha1": "82d8d2cdae6d143d3f45ebc16c8dc7054858557b"
+    },
+    {
+      "path": "data/pokemon/base_stats/donphan.asm",
+      "fixture": "data__pokemon__base_stats__donphan.asm.b64",
+      "git_blob_sha1": "a6656c539bf86147bc97e011ee86997a62086d5c"
+    },
+    {
+      "path": "data/pokemon/base_stats/dragonair.asm",
+      "fixture": "data__pokemon__base_stats__dragonair.asm.b64",
+      "git_blob_sha1": "3aa2614736a984cae1f28ccebca1d43b9658e5e7"
+    },
+    {
+      "path": "data/pokemon/base_stats/dragonite.asm",
+      "fixture": "data__pokemon__base_stats__dragonite.asm.b64",
+      "git_blob_sha1": "4cf8b1ab64686d0a3ed88b064d84070cca797448"
+    },
+    {
+      "path": "data/pokemon/base_stats/dratini.asm",
+      "fixture": "data__pokemon__base_stats__dratini.asm.b64",
+      "git_blob_sha1": "50370725135ac4bd58fb9ff1b1b1f11214173ea4"
+    },
+    {
+      "path": "data/pokemon/base_stats/drowzee.asm",
+      "fixture": "data__pokemon__base_stats__drowzee.asm.b64",
+      "git_blob_sha1": "c041766f55a9cb3c207b2723de4ac785e1860909"
+    },
+    {
+      "path": "data/pokemon/base_stats/dudunsparce.asm",
+      "fixture": "data__pokemon__base_stats__dudunsparce.asm.b64",
+      "git_blob_sha1": "ab1647001aa46083363c84cebbff30942d8256ab"
+    },
+    {
+      "path": "data/pokemon/base_stats/dugtrio_alolan.asm",
+      "fixture": "data__pokemon__base_stats__dugtrio_alolan.asm.b64",
+      "git_blob_sha1": "ff6b7fdd803463d6e655e7c512fa088589e99d22"
+    },
+    {
+      "path": "data/pokemon/base_stats/dugtrio_plain.asm",
+      "fixture": "data__pokemon__base_stats__dugtrio_plain.asm.b64",
+      "git_blob_sha1": "cfe7d7065f972a7d53bdcd0be04d0e76885a39ba"
+    },
+    {
+      "path": "data/pokemon/base_stats/dunsparce.asm",
+      "fixture": "data__pokemon__base_stats__dunsparce.asm.b64",
+      "git_blob_sha1": "c55467e3332d02cb68ae17b55fde459deb066be8"
+    },
+    {
+      "path": "data/pokemon/base_stats/eevee.asm",
+      "fixture": "data__pokemon__base_stats__eevee.asm.b64",
+      "git_blob_sha1": "1c0b70774b1b2ab7b25f699240188e0afa47b031"
+    },
+    {
+      "path": "data/pokemon/base_stats/egg.asm",
+      "fixture": "data__pokemon__base_stats__egg.asm.b64",
+      "git_blob_sha1": "c441c9017451507cc9e558cc0802016bfaf6b52c"
+    },
+    {
+      "path": "data/pokemon/base_stats/ekans.asm",
+      "fixture": "data__pokemon__base_stats__ekans.asm.b64",
+      "git_blob_sha1": "7495c1092ba112ba60f7471026b0cd3835b17bad"
+    },
+    {
+      "path": "data/pokemon/base_stats/electabuzz.asm",
+      "fixture": "data__pokemon__base_stats__electabuzz.asm.b64",
+      "git_blob_sha1": "03a3d81d91315a474b87ac970e7e584cd294660c"
+    },
+    {
+      "path": "data/pokemon/base_stats/electivire.asm",
+      "fixture": "data__pokemon__base_stats__electivire.asm.b64",
+      "git_blob_sha1": "cff01f53728f62edbde1adfea84c466d748e7b22"
+    },
+    {
+      "path": "data/pokemon/base_stats/electrode_hisuian.asm",
+      "fixture": "data__pokemon__base_stats__electrode_hisuian.asm.b64",
+      "git_blob_sha1": "dd245cc36ea5242cab2ce5564f252a7f382cacbb"
+    },
+    {
+      "path": "data/pokemon/base_stats/electrode_plain.asm",
+      "fixture": "data__pokemon__base_stats__electrode_plain.asm.b64",
+      "git_blob_sha1": "17009e5249e302e87ff208fb8eea91b9b5f6a9aa"
+    },
+    {
+      "path": "data/pokemon/base_stats/elekid.asm",
+      "fixture": "data__pokemon__base_stats__elekid.asm.b64",
+      "git_blob_sha1": "ccd3c541f5f2918d3bea6874cbf739472fec44a9"
+    },
+    {
+      "path": "data/pokemon/base_stats/entei.asm",
+      "fixture": "data__pokemon__base_stats__entei.asm.b64",
+      "git_blob_sha1": "a289f17f85bdd5f0291a2697cb8543fcb0d28580"
+    },
+    {
+      "path": "data/pokemon/base_stats/espeon.asm",
+      "fixture": "data__pokemon__base_stats__espeon.asm.b64",
+      "git_blob_sha1": "14848086d64970c50e08d60ba427163005ba93d4"
+    },
+    {
+      "path": "data/pokemon/base_stats/exeggcute.asm",
+      "fixture": "data__pokemon__base_stats__exeggcute.asm.b64",
+      "git_blob_sha1": "32c987dbe84b8deab30f24f95914f50f4000f45b"
+    },
+    {
+      "path": "data/pokemon/base_stats/exeggutor_alolan.asm",
+      "fixture": "data__pokemon__base_stats__exeggutor_alolan.asm.b64",
+      "git_blob_sha1": "741f2b993224a4e05f2e88ec3beefd934eab3912"
+    },
+    {
+      "path": "data/pokemon/base_stats/exeggutor_plain.asm",
+      "fixture": "data__pokemon__base_stats__exeggutor_plain.asm.b64",
+      "git_blob_sha1": "abcf606517c4c55128f0b915b6b5db87425a1dd1"
+    },
+    {
+      "path": "data/pokemon/base_stats/farfetch_d_galarian.asm",
+      "fixture": "data__pokemon__base_stats__farfetch_d_galarian.asm.b64",
+      "git_blob_sha1": "ad181e99b7606f5efce96ee5c639c564438e593f"
+    },
+    {
+      "path": "data/pokemon/base_stats/farfetch_d_plain.asm",
+      "fixture": "data__pokemon__base_stats__farfetch_d_plain.asm.b64",
+      "git_blob_sha1": "5df8753faf03c4b17aac8e81f7c44104b7f09d71"
+    },
+    {
+      "path": "data/pokemon/base_stats/farigiraf.asm",
+      "fixture": "data__pokemon__base_stats__farigiraf.asm.b64",
+      "git_blob_sha1": "623f86f5e8b0454cc1ab20ab1edcac77e8e50e5b"
+    },
+    {
+      "path": "data/pokemon/base_stats/fearow.asm",
+      "fixture": "data__pokemon__base_stats__fearow.asm.b64",
+      "git_blob_sha1": "6bacf66bc20b337b4956c0fc50cf515478f9bdf3"
+    },
+    {
+      "path": "data/pokemon/base_stats/feraligatr.asm",
+      "fixture": "data__pokemon__base_stats__feraligatr.asm.b64",
+      "git_blob_sha1": "70825db28ed0c0302c185abc456ac901b5d98dc5"
+    },
+    {
+      "path": "data/pokemon/base_stats/flaaffy.asm",
+      "fixture": "data__pokemon__base_stats__flaaffy.asm.b64",
+      "git_blob_sha1": "1876c6d7b2d979f5040361dee105087d6f075663"
+    },
+    {
+      "path": "data/pokemon/base_stats/flareon.asm",
+      "fixture": "data__pokemon__base_stats__flareon.asm.b64",
+      "git_blob_sha1": "7f17638ea0c72c02d04442fe8673d6a27c3508ec"
+    },
+    {
+      "path": "data/pokemon/base_stats/forretress.asm",
+      "fixture": "data__pokemon__base_stats__forretress.asm.b64",
+      "git_blob_sha1": "c84d5bc75ad40fea41071f9aff507e60360f6ce9"
+    },
+    {
+      "path": "data/pokemon/base_stats/furret.asm",
+      "fixture": "data__pokemon__base_stats__furret.asm.b64",
+      "git_blob_sha1": "04a30b1a62b4df2b3793881b972f4b795ad535a0"
+    },
+    {
+      "path": "data/pokemon/base_stats/gastly.asm",
+      "fixture": "data__pokemon__base_stats__gastly.asm.b64",
+      "git_blob_sha1": "6f97c8f3fc6c2453db8f8a6049e03f9439459fdf"
+    },
+    {
+      "path": "data/pokemon/base_stats/gengar.asm",
+      "fixture": "data__pokemon__base_stats__gengar.asm.b64",
+      "git_blob_sha1": "05b5da72a8782c20ef3500f2eedfa9a2dcb131f3"
+    },
+    {
+      "path": "data/pokemon/base_stats/geodude_alolan.asm",
+      "fixture": "data__pokemon__base_stats__geodude_alolan.asm.b64",
+      "git_blob_sha1": "7bea7451cdbc652cb7ecb28c04bb0e6b5ffed631"
+    },
+    {
+      "path": "data/pokemon/base_stats/geodude_plain.asm",
+      "fixture": "data__pokemon__base_stats__geodude_plain.asm.b64",
+      "git_blob_sha1": "5c35cb1d16ffaaf9365fa6c77a1afc6fd25e277c"
+    },
+    {
+      "path": "data/pokemon/base_stats/girafarig.asm",
+      "fixture": "data__pokemon__base_stats__girafarig.asm.b64",
+      "git_blob_sha1": "7780b45eba46a69b05f66bdfe2af6a2e9156d636"
+    },
+    {
+      "path": "data/pokemon/base_stats/glaceon.asm",
+      "fixture": "data__pokemon__base_stats__glaceon.asm.b64",
+      "git_blob_sha1": "eb05d406de90644331ce622ef29314eb4f3fcb8d"
+    },
+    {
+      "path": "data/pokemon/base_stats/gligar.asm",
+      "fixture": "data__pokemon__base_stats__gligar.asm.b64",
+      "git_blob_sha1": "ac003b7ea430de14b4a10acf20b85b2b3adf8d10"
+    },
+    {
+      "path": "data/pokemon/base_stats/gliscor.asm",
+      "fixture": "data__pokemon__base_stats__gliscor.asm.b64",
+      "git_blob_sha1": "330c90ba85be4b6741fa31568fdea5f3a3d90a08"
+    },
+    {
+      "path": "data/pokemon/base_stats/gloom.asm",
+      "fixture": "data__pokemon__base_stats__gloom.asm.b64",
+      "git_blob_sha1": "e40d4e96d10688501424ac7faa3d6d73ed6f7062"
+    },
+    {
+      "path": "data/pokemon/base_stats/golbat.asm",
+      "fixture": "data__pokemon__base_stats__golbat.asm.b64",
+      "git_blob_sha1": "a3b309967e09ac649cc09a3f6cd4e5fb86c3c8ea"
+    },
+    {
+      "path": "data/pokemon/base_stats/goldeen.asm",
+      "fixture": "data__pokemon__base_stats__goldeen.asm.b64",
+      "git_blob_sha1": "6d41d9a4241c74e3131d2d1317f6d15cae19229b"
+    },
+    {
+      "path": "data/pokemon/base_stats/golduck.asm",
+      "fixture": "data__pokemon__base_stats__golduck.asm.b64",
+      "git_blob_sha1": "42a2251c6ec31397b6d00c6eeb760170abbc8d3b"
+    },
+    {
+      "path": "data/pokemon/base_stats/golem_alolan.asm",
+      "fixture": "data__pokemon__base_stats__golem_alolan.asm.b64",
+      "git_blob_sha1": "1ca0f0fcb9ca27abf12457e8ca7fa887603dca83"
+    },
+    {
+      "path": "data/pokemon/base_stats/golem_plain.asm",
+      "fixture": "data__pokemon__base_stats__golem_plain.asm.b64",
+      "git_blob_sha1": "09490a2b0b0d6cf53b295a51df5b5c6a10a689c9"
+    },
+    {
+      "path": "data/pokemon/base_stats/granbull.asm",
+      "fixture": "data__pokemon__base_stats__granbull.asm.b64",
+      "git_blob_sha1": "ee72c270c541cb71268b908ca2abfa7b2a2a6815"
+    },
+    {
+      "path": "data/pokemon/base_stats/graveler_alolan.asm",
+      "fixture": "data__pokemon__base_stats__graveler_alolan.asm.b64",
+      "git_blob_sha1": "eab7266f3e5a8245da0a3b54bc88f2af311b812a"
+    },
+    {
+      "path": "data/pokemon/base_stats/graveler_plain.asm",
+      "fixture": "data__pokemon__base_stats__graveler_plain.asm.b64",
+      "git_blob_sha1": "ab83ce51708811a38187fd2752836677bf37eca9"
+    },
+    {
+      "path": "data/pokemon/base_stats/grimer_alolan.asm",
+      "fixture": "data__pokemon__base_stats__grimer_alolan.asm.b64",
+      "git_blob_sha1": "967e80e0e641f75f21dbd686adaf0583c1b89595"
+    },
+    {
+      "path": "data/pokemon/base_stats/grimer_plain.asm",
+      "fixture": "data__pokemon__base_stats__grimer_plain.asm.b64",
+      "git_blob_sha1": "30d369924dba6eb7b6602fdd5dc95a0b8cb77f0d"
+    },
+    {
+      "path": "data/pokemon/base_stats/growlithe_hisuian.asm",
+      "fixture": "data__pokemon__base_stats__growlithe_hisuian.asm.b64",
+      "git_blob_sha1": "3eed7de854cf2dc1401a18d93346f359098a3c30"
+    },
+    {
+      "path": "data/pokemon/base_stats/growlithe_plain.asm",
+      "fixture": "data__pokemon__base_stats__growlithe_plain.asm.b64",
+      "git_blob_sha1": "7ac1952d2665f527090bae2a687b5ca352b1b9e3"
+    },
+    {
+      "path": "data/pokemon/base_stats/gyarados.asm",
+      "fixture": "data__pokemon__base_stats__gyarados.asm.b64",
+      "git_blob_sha1": "063b1102c8f09793d18293f6859aa2261a8a4e4f"
+    },
+    {
+      "path": "data/pokemon/base_stats/happiny.asm",
+      "fixture": "data__pokemon__base_stats__happiny.asm.b64",
+      "git_blob_sha1": "2e8eba14f74655e32f232146a04d67134039ac25"
+    },
+    {
+      "path": "data/pokemon/base_stats/haunter.asm",
+      "fixture": "data__pokemon__base_stats__haunter.asm.b64",
+      "git_blob_sha1": "8ebda0196e6af8a104e3a7cdfcab3ab003344070"
+    },
+    {
+      "path": "data/pokemon/base_stats/heracross.asm",
+      "fixture": "data__pokemon__base_stats__heracross.asm.b64",
+      "git_blob_sha1": "ea436d5f76644ef49ceb91e8b6e8d042e20c7e3e"
+    },
+    {
+      "path": "data/pokemon/base_stats/hitmonchan.asm",
+      "fixture": "data__pokemon__base_stats__hitmonchan.asm.b64",
+      "git_blob_sha1": "705dc38ed3439cc89f80dc74c6bc206faa44efe3"
+    },
+    {
+      "path": "data/pokemon/base_stats/hitmonlee.asm",
+      "fixture": "data__pokemon__base_stats__hitmonlee.asm.b64",
+      "git_blob_sha1": "152189ed6d41fe728b9fd625376488903d2a9300"
+    },
+    {
+      "path": "data/pokemon/base_stats/hitmontop.asm",
+      "fixture": "data__pokemon__base_stats__hitmontop.asm.b64",
+      "git_blob_sha1": "a48bc77a1181e46bd8c6375564ec141337381847"
+    },
+    {
+      "path": "data/pokemon/base_stats/ho_oh.asm",
+      "fixture": "data__pokemon__base_stats__ho_oh.asm.b64",
+      "git_blob_sha1": "024e224fa760efe5f0162393bedf6220cf33eba9"
+    },
+    {
+      "path": "data/pokemon/base_stats/honchkrow.asm",
+      "fixture": "data__pokemon__base_stats__honchkrow.asm.b64",
+      "git_blob_sha1": "1f192e1f196f8af647847182d7e1e243b6a1a3f4"
+    },
+    {
+      "path": "data/pokemon/base_stats/hoothoot.asm",
+      "fixture": "data__pokemon__base_stats__hoothoot.asm.b64",
+      "git_blob_sha1": "5c4940a212534c34bbbcc2d722db4041babc3b73"
+    },
+    {
+      "path": "data/pokemon/base_stats/hoppip.asm",
+      "fixture": "data__pokemon__base_stats__hoppip.asm.b64",
+      "git_blob_sha1": "4aaa6f67c5deff946626447fc31fd91cba844dcd"
+    },
+    {
+      "path": "data/pokemon/base_stats/horsea.asm",
+      "fixture": "data__pokemon__base_stats__horsea.asm.b64",
+      "git_blob_sha1": "55f7d49a16143b1544f7e948d0238e313e598e00"
+    },
+    {
+      "path": "data/pokemon/base_stats/houndoom.asm",
+      "fixture": "data__pokemon__base_stats__houndoom.asm.b64",
+      "git_blob_sha1": "beee3567911fdb43a8ac51217575681ab087fc93"
+    },
+    {
+      "path": "data/pokemon/base_stats/houndour.asm",
+      "fixture": "data__pokemon__base_stats__houndour.asm.b64",
+      "git_blob_sha1": "28360a688d9e3a349e0e46c8dd41bb7367b1dad5"
+    },
+    {
+      "path": "data/pokemon/base_stats/hypno.asm",
+      "fixture": "data__pokemon__base_stats__hypno.asm.b64",
+      "git_blob_sha1": "6886073e08b85535e72191f4dbeee880b7255c29"
+    },
+    {
+      "path": "data/pokemon/base_stats/igglybuff.asm",
+      "fixture": "data__pokemon__base_stats__igglybuff.asm.b64",
+      "git_blob_sha1": "d3ea1f0e5053dd275562812fd6ef1d8338ae99c4"
+    },
+    {
+      "path": "data/pokemon/base_stats/ivysaur.asm",
+      "fixture": "data__pokemon__base_stats__ivysaur.asm.b64",
+      "git_blob_sha1": "9a810e9dc02abfb1e986f386361abaf567fb42e8"
+    },
+    {
+      "path": "data/pokemon/base_stats/jigglypuff.asm",
+      "fixture": "data__pokemon__base_stats__jigglypuff.asm.b64",
+      "git_blob_sha1": "6bfeabd3835e57803891eb2fa75f08d1016ac3c3"
+    },
+    {
+      "path": "data/pokemon/base_stats/jolteon.asm",
+      "fixture": "data__pokemon__base_stats__jolteon.asm.b64",
+      "git_blob_sha1": "74844727c7e7f81530df5203ba78fab3daa243dc"
+    },
+    {
+      "path": "data/pokemon/base_stats/jumpluff.asm",
+      "fixture": "data__pokemon__base_stats__jumpluff.asm.b64",
+      "git_blob_sha1": "baa5f1ad444f04a57899f21b3d1da103b6b30b2a"
+    },
+    {
+      "path": "data/pokemon/base_stats/jynx.asm",
+      "fixture": "data__pokemon__base_stats__jynx.asm.b64",
+      "git_blob_sha1": "667b165415e0d302eee0ed4b248812d30a3ddae3"
+    },
+    {
+      "path": "data/pokemon/base_stats/kabuto.asm",
+      "fixture": "data__pokemon__base_stats__kabuto.asm.b64",
+      "git_blob_sha1": "b450f3522604744cce57fc37e870ec2d3c52e287"
+    },
+    {
+      "path": "data/pokemon/base_stats/kabutops.asm",
+      "fixture": "data__pokemon__base_stats__kabutops.asm.b64",
+      "git_blob_sha1": "ad214a201a8ecd918eaa3e8b7c398121644376e8"
+    },
+    {
+      "path": "data/pokemon/base_stats/kadabra.asm",
+      "fixture": "data__pokemon__base_stats__kadabra.asm.b64",
+      "git_blob_sha1": "559b20106d7061d5e8a758026b4a98eef329d911"
+    },
+    {
+      "path": "data/pokemon/base_stats/kakuna.asm",
+      "fixture": "data__pokemon__base_stats__kakuna.asm.b64",
+      "git_blob_sha1": "6eb6884d21226efb2b6fbb355a22b3ece6eddc61"
+    },
+    {
+      "path": "data/pokemon/base_stats/kangaskhan.asm",
+      "fixture": "data__pokemon__base_stats__kangaskhan.asm.b64",
+      "git_blob_sha1": "04b2af14e2c052e364fb8e6d2e3d92f6c7616c1b"
+    },
+    {
+      "path": "data/pokemon/base_stats/kingdra.asm",
+      "fixture": "data__pokemon__base_stats__kingdra.asm.b64",
+      "git_blob_sha1": "cbd917ffb2f363e9184c1217063474e441a4b854"
+    },
+    {
+      "path": "data/pokemon/base_stats/kingler.asm",
+      "fixture": "data__pokemon__base_stats__kingler.asm.b64",
+      "git_blob_sha1": "4a2427c1b504f97a75f4c49ed85721a272fe6cda"
+    },
+    {
+      "path": "data/pokemon/base_stats/kleavor.asm",
+      "fixture": "data__pokemon__base_stats__kleavor.asm.b64",
+      "git_blob_sha1": "546c63d55bb95b659e1a8acd9fb9d837da52f2bd"
+    },
+    {
+      "path": "data/pokemon/base_stats/koffing.asm",
+      "fixture": "data__pokemon__base_stats__koffing.asm.b64",
+      "git_blob_sha1": "d26631423f773d54536db09e88012d732e3da3ee"
+    },
+    {
+      "path": "data/pokemon/base_stats/krabby.asm",
+      "fixture": "data__pokemon__base_stats__krabby.asm.b64",
+      "git_blob_sha1": "061c201e116b0dc0658abb522a9d11b42ba4045a"
+    },
+    {
+      "path": "data/pokemon/base_stats/lanturn.asm",
+      "fixture": "data__pokemon__base_stats__lanturn.asm.b64",
+      "git_blob_sha1": "83c90530f4ad92cec2ce76765c6c4b3e9293df65"
+    },
+    {
+      "path": "data/pokemon/base_stats/lapras.asm",
+      "fixture": "data__pokemon__base_stats__lapras.asm.b64",
+      "git_blob_sha1": "fea5a384369807574b92bd16ba8a549c21aeb432"
+    },
+    {
+      "path": "data/pokemon/base_stats/larvitar.asm",
+      "fixture": "data__pokemon__base_stats__larvitar.asm.b64",
+      "git_blob_sha1": "e25c178558a048dca04fbadd66d4f9c83c5d3571"
+    },
+    {
+      "path": "data/pokemon/base_stats/leafeon.asm",
+      "fixture": "data__pokemon__base_stats__leafeon.asm.b64",
+      "git_blob_sha1": "af372ea646e19966a2bb179f3b8761a1b0fc5bc3"
+    },
+    {
+      "path": "data/pokemon/base_stats/ledian.asm",
+      "fixture": "data__pokemon__base_stats__ledian.asm.b64",
+      "git_blob_sha1": "015b4208e45953dd7bb7f576d30ef3beef931067"
+    },
+    {
+      "path": "data/pokemon/base_stats/ledyba.asm",
+      "fixture": "data__pokemon__base_stats__ledyba.asm.b64",
+      "git_blob_sha1": "bdd9cd21a21e0a03f8db75e9cfb5384c8cf85428"
+    },
+    {
+      "path": "data/pokemon/base_stats/lickilicky.asm",
+      "fixture": "data__pokemon__base_stats__lickilicky.asm.b64",
+      "git_blob_sha1": "9f68cc9dd86351d9c04a1264be9263196aa01c95"
+    },
+    {
+      "path": "data/pokemon/base_stats/lickitung.asm",
+      "fixture": "data__pokemon__base_stats__lickitung.asm.b64",
+      "git_blob_sha1": "3668a1f9d1e9cbf29fd3ddbb0b5cfca95dfb6435"
+    },
+    {
+      "path": "data/pokemon/base_stats/lugia.asm",
+      "fixture": "data__pokemon__base_stats__lugia.asm.b64",
+      "git_blob_sha1": "9dfd78859fb6ca28dbf70eabb451d27ab288d5f0"
+    },
+    {
+      "path": "data/pokemon/base_stats/machamp.asm",
+      "fixture": "data__pokemon__base_stats__machamp.asm.b64",
+      "git_blob_sha1": "4909265abe1053e83a9f78c7c720bb2f00352665"
+    },
+    {
+      "path": "data/pokemon/base_stats/machoke.asm",
+      "fixture": "data__pokemon__base_stats__machoke.asm.b64",
+      "git_blob_sha1": "baf1f47ac568bbbf6848787eca56b96a48cab548"
+    },
+    {
+      "path": "data/pokemon/base_stats/machop.asm",
+      "fixture": "data__pokemon__base_stats__machop.asm.b64",
+      "git_blob_sha1": "22535841f1fbba6e5bd2e4b459c2be10e3f964ba"
+    },
+    {
+      "path": "data/pokemon/base_stats/magby.asm",
+      "fixture": "data__pokemon__base_stats__magby.asm.b64",
+      "git_blob_sha1": "e305f8f28ba946c0e7f16d6de8c87ad965635378"
+    },
+    {
+      "path": "data/pokemon/base_stats/magcargo.asm",
+      "fixture": "data__pokemon__base_stats__magcargo.asm.b64",
+      "git_blob_sha1": "4dfc2febe3aeb258afab8a5eaada5f81f0e81ad3"
+    },
+    {
+      "path": "data/pokemon/base_stats/magikarp.asm",
+      "fixture": "data__pokemon__base_stats__magikarp.asm.b64",
+      "git_blob_sha1": "dc2b915150d81a1e22d567edf1b13ac3cf4205d1"
+    },
+    {
+      "path": "data/pokemon/base_stats/magmar.asm",
+      "fixture": "data__pokemon__base_stats__magmar.asm.b64",
+      "git_blob_sha1": "ab74e39f4cf4b2808d6358c2c977070b514c8836"
+    },
+    {
+      "path": "data/pokemon/base_stats/magmortar.asm",
+      "fixture": "data__pokemon__base_stats__magmortar.asm.b64",
+      "git_blob_sha1": "cefcaec0ef5a996e17a918604ead20b88c5ded75"
+    },
+    {
+      "path": "data/pokemon/base_stats/magnemite.asm",
+      "fixture": "data__pokemon__base_stats__magnemite.asm.b64",
+      "git_blob_sha1": "3779a714b5e10dbc88997bbc5e8b072e91f87ed8"
+    },
+    {
+      "path": "data/pokemon/base_stats/magneton.asm",
+      "fixture": "data__pokemon__base_stats__magneton.asm.b64",
+      "git_blob_sha1": "cdc9349f6d055e63fb7172ca4f691be74f2fba28"
+    },
+    {
+      "path": "data/pokemon/base_stats/magnezone.asm",
+      "fixture": "data__pokemon__base_stats__magnezone.asm.b64",
+      "git_blob_sha1": "e9edf2c811b3fd06f00b7e1bc94924ebca9bdce7"
+    },
+    {
+      "path": "data/pokemon/base_stats/mamoswine.asm",
+      "fixture": "data__pokemon__base_stats__mamoswine.asm.b64",
+      "git_blob_sha1": "dca27904628525478ac39ccbc4e092d4294cea7c"
+    },
+    {
+      "path": "data/pokemon/base_stats/mankey.asm",
+      "fixture": "data__pokemon__base_stats__mankey.asm.b64",
+      "git_blob_sha1": "d3e4c6b560055bcdf62d1d6a5f536c551be5f639"
+    },
+    {
+      "path": "data/pokemon/base_stats/mantine.asm",
+      "fixture": "data__pokemon__base_stats__mantine.asm.b64",
+      "git_blob_sha1": "7fb8d0647e908bcc377c41efbca2a8a000aad0fb"
+    },
+    {
+      "path": "data/pokemon/base_stats/mantyke.asm",
+      "fixture": "data__pokemon__base_stats__mantyke.asm.b64",
+      "git_blob_sha1": "3fc08e3febce09966ac4675f541068ec3d69f9f8"
+    },
+    {
+      "path": "data/pokemon/base_stats/mareep.asm",
+      "fixture": "data__pokemon__base_stats__mareep.asm.b64",
+      "git_blob_sha1": "d12e359e8ca3663dad84cf5bda6d0d1f7120db20"
+    },
+    {
+      "path": "data/pokemon/base_stats/marill.asm",
+      "fixture": "data__pokemon__base_stats__marill.asm.b64",
+      "git_blob_sha1": "621fa8688bb9cb6d1a795312427cdc985ca772cd"
+    },
+    {
+      "path": "data/pokemon/base_stats/marowak_alolan.asm",
+      "fixture": "data__pokemon__base_stats__marowak_alolan.asm.b64",
+      "git_blob_sha1": "cf8d9802aa68b8979a24a48a90f81ffb24aa3087"
+    },
+    {
+      "path": "data/pokemon/base_stats/marowak_plain.asm",
+      "fixture": "data__pokemon__base_stats__marowak_plain.asm.b64",
+      "git_blob_sha1": "8eae192fde8c2ab9d4a11bd5995df414310ba179"
+    },
+    {
+      "path": "data/pokemon/base_stats/meganium.asm",
+      "fixture": "data__pokemon__base_stats__meganium.asm.b64",
+      "git_blob_sha1": "1b1facbfe12435f27c849ef4292cf6883c2fc1ac"
+    },
+    {
+      "path": "data/pokemon/base_stats/meowth_alolan.asm",
+      "fixture": "data__pokemon__base_stats__meowth_alolan.asm.b64",
+      "git_blob_sha1": "8dfdb9d3d8801d2d2ed0a8debec8dc2781c8cbe1"
+    },
+    {
+      "path": "data/pokemon/base_stats/meowth_galarian.asm",
+      "fixture": "data__pokemon__base_stats__meowth_galarian.asm.b64",
+      "git_blob_sha1": "24d0d80fcadd0520555e158cde6194afae95afd8"
+    },
+    {
+      "path": "data/pokemon/base_stats/meowth_plain.asm",
+      "fixture": "data__pokemon__base_stats__meowth_plain.asm.b64",
+      "git_blob_sha1": "f65bdf34205287ef1a062250fdd4fc7ae666812a"
+    },
+    {
+      "path": "data/pokemon/base_stats/metapod.asm",
+      "fixture": "data__pokemon__base_stats__metapod.asm.b64",
+      "git_blob_sha1": "8610ae293ec9283aeed1d855515f95dd2f7dfc65"
+    },
+    {
+      "path": "data/pokemon/base_stats/mew.asm",
+      "fixture": "data__pokemon__base_stats__mew.asm.b64",
+      "git_blob_sha1": "c04f3faef19011562127b0bfb55453178a80444b"
+    },
+    {
+      "path": "data/pokemon/base_stats/mewtwo_armored.asm",
+      "fixture": "data__pokemon__base_stats__mewtwo_armored.asm.b64",
+      "git_blob_sha1": "40de8300542e42b06c6615e1fc7c1aff06311ac7"
+    },
+    {
+      "path": "data/pokemon/base_stats/mewtwo_plain.asm",
+      "fixture": "data__pokemon__base_stats__mewtwo_plain.asm.b64",
+      "git_blob_sha1": "71515563b7e46c0025b11742973385258058ac69"
+    },
+    {
+      "path": "data/pokemon/base_stats/miltank.asm",
+      "fixture": "data__pokemon__base_stats__miltank.asm.b64",
+      "git_blob_sha1": "4ad93fd67aad62d3f48b5eaeebe8ab0e60046f43"
+    },
+    {
+      "path": "data/pokemon/base_stats/mime_jr_.asm",
+      "fixture": "data__pokemon__base_stats__mime_jr_.asm.b64",
+      "git_blob_sha1": "ac76cbc463b6ccbe7259b056467d380d1582c6d1"
+    },
+    {
+      "path": "data/pokemon/base_stats/misdreavus.asm",
+      "fixture": "data__pokemon__base_stats__misdreavus.asm.b64",
+      "git_blob_sha1": "65993c4626684b89f7e93a6d5d76a3e9a71be169"
+    },
+    {
+      "path": "data/pokemon/base_stats/mismagius.asm",
+      "fixture": "data__pokemon__base_stats__mismagius.asm.b64",
+      "git_blob_sha1": "5b4a83196b51b9ace2b07bb90f0e1839c7300aa1"
+    },
+    {
+      "path": "data/pokemon/base_stats/moltres_galarian.asm",
+      "fixture": "data__pokemon__base_stats__moltres_galarian.asm.b64",
+      "git_blob_sha1": "724e6a2f6f94bae570dceebce7cd434e7094ef7e"
+    },
+    {
+      "path": "data/pokemon/base_stats/moltres_plain.asm",
+      "fixture": "data__pokemon__base_stats__moltres_plain.asm.b64",
+      "git_blob_sha1": "d3fc200f8f74ca40e127241924069265433d1758"
+    },
+    {
+      "path": "data/pokemon/base_stats/mr__mime_galarian.asm",
+      "fixture": "data__pokemon__base_stats__mr__mime_galarian.asm.b64",
+      "git_blob_sha1": "a5b99448f28c3b11a78985ec4f1eaf2af7f1c652"
+    },
+    {
+      "path": "data/pokemon/base_stats/mr__mime_plain.asm",
+      "fixture": "data__pokemon__base_stats__mr__mime_plain.asm.b64",
+      "git_blob_sha1": "df60eaa2625fabc410b0f396fa9ec2affc1eccc3"
+    },
+    {
+      "path": "data/pokemon/base_stats/mr__rime.asm",
+      "fixture": "data__pokemon__base_stats__mr__rime.asm.b64",
+      "git_blob_sha1": "5e000394338ed4a9e451e455d9c676f0ce44cdb4"
+    },
+    {
+      "path": "data/pokemon/base_stats/muk_alolan.asm",
+      "fixture": "data__pokemon__base_stats__muk_alolan.asm.b64",
+      "git_blob_sha1": "ac09c8849738ba7042bcfa9fdb87ee223cb2cbe5"
+    },
+    {
+      "path": "data/pokemon/base_stats/muk_plain.asm",
+      "fixture": "data__pokemon__base_stats__muk_plain.asm.b64",
+      "git_blob_sha1": "b7f319f0f522a5dcc9fc4051356866d02e30a97b"
+    },
+    {
+      "path": "data/pokemon/base_stats/munchlax.asm",
+      "fixture": "data__pokemon__base_stats__munchlax.asm.b64",
+      "git_blob_sha1": "3394da0660fca4e38ab4fb3a67456809e04456c2"
+    },
+    {
+      "path": "data/pokemon/base_stats/murkrow.asm",
+      "fixture": "data__pokemon__base_stats__murkrow.asm.b64",
+      "git_blob_sha1": "1f7d982b0eef1941061498b1a5dcbda4a93c7982"
+    },
+    {
+      "path": "data/pokemon/base_stats/natu.asm",
+      "fixture": "data__pokemon__base_stats__natu.asm.b64",
+      "git_blob_sha1": "399363b51ef7e70e7bd37085ad976879fb89edb0"
+    },
+    {
+      "path": "data/pokemon/base_stats/nidoking.asm",
+      "fixture": "data__pokemon__base_stats__nidoking.asm.b64",
+      "git_blob_sha1": "099dda1a753ccaeca0e9e53772e1d4a7929101e4"
+    },
+    {
+      "path": "data/pokemon/base_stats/nidoqueen.asm",
+      "fixture": "data__pokemon__base_stats__nidoqueen.asm.b64",
+      "git_blob_sha1": "acecf29bfd3488462aec6d578b78915b1e2c3afa"
+    },
+    {
+      "path": "data/pokemon/base_stats/nidoran_f.asm",
+      "fixture": "data__pokemon__base_stats__nidoran_f.asm.b64",
+      "git_blob_sha1": "8b5ba6e459a53e7b6569babd46eccec2be4ee47a"
+    },
+    {
+      "path": "data/pokemon/base_stats/nidoran_m.asm",
+      "fixture": "data__pokemon__base_stats__nidoran_m.asm.b64",
+      "git_blob_sha1": "b6603e7f9524ab46aca18eb15b7217472771af6e"
+    },
+    {
+      "path": "data/pokemon/base_stats/nidorina.asm",
+      "fixture": "data__pokemon__base_stats__nidorina.asm.b64",
+      "git_blob_sha1": "f57510d8480ce4dc0f35890ff902aaa268e094f7"
+    },
+    {
+      "path": "data/pokemon/base_stats/nidorino.asm",
+      "fixture": "data__pokemon__base_stats__nidorino.asm.b64",
+      "git_blob_sha1": "5bee0601b54e90d62706ec3a33a4081264d4c5aa"
+    },
+    {
+      "path": "data/pokemon/base_stats/ninetales_alolan.asm",
+      "fixture": "data__pokemon__base_stats__ninetales_alolan.asm.b64",
+      "git_blob_sha1": "f2252f2c3695fc87a9dedc504beb2a715f17bdc2"
+    },
+    {
+      "path": "data/pokemon/base_stats/ninetales_plain.asm",
+      "fixture": "data__pokemon__base_stats__ninetales_plain.asm.b64",
+      "git_blob_sha1": "3ccbf619230188b4201d4a9629384d4e7227fa6d"
+    },
+    {
+      "path": "data/pokemon/base_stats/noctowl.asm",
+      "fixture": "data__pokemon__base_stats__noctowl.asm.b64",
+      "git_blob_sha1": "25b3fecb5c7e12f3455c10c743943a1e6668172c"
+    },
+    {
+      "path": "data/pokemon/base_stats/octillery.asm",
+      "fixture": "data__pokemon__base_stats__octillery.asm.b64",
+      "git_blob_sha1": "34d68e657054a89befa429f974d3ada30ed4c33e"
+    },
+    {
+      "path": "data/pokemon/base_stats/oddish.asm",
+      "fixture": "data__pokemon__base_stats__oddish.asm.b64",
+      "git_blob_sha1": "afef677e5d9a84ab1d2a301abe75b0d7fbf97d63"
+    },
+    {
+      "path": "data/pokemon/base_stats/omanyte.asm",
+      "fixture": "data__pokemon__base_stats__omanyte.asm.b64",
+      "git_blob_sha1": "552c06c9db968137c25e746564a37b49a1003b96"
+    },
+    {
+      "path": "data/pokemon/base_stats/omastar.asm",
+      "fixture": "data__pokemon__base_stats__omastar.asm.b64",
+      "git_blob_sha1": "508665c764532f0dad88d4915d11c2a194f96aaf"
+    },
+    {
+      "path": "data/pokemon/base_stats/onix.asm",
+      "fixture": "data__pokemon__base_stats__onix.asm.b64",
+      "git_blob_sha1": "0890cb07e121e6752fb57b703e0f74bd98ec7779"
+    },
+    {
+      "path": "data/pokemon/base_stats/overqwil.asm",
+      "fixture": "data__pokemon__base_stats__overqwil.asm.b64",
+      "git_blob_sha1": "85455f74bc96f6e02ecbc19c379d5528f67793b0"
+    },
+    {
+      "path": "data/pokemon/base_stats/paras.asm",
+      "fixture": "data__pokemon__base_stats__paras.asm.b64",
+      "git_blob_sha1": "cad27f08c196d7660cb912fd8942b0d40215e39d"
+    },
+    {
+      "path": "data/pokemon/base_stats/parasect.asm",
+      "fixture": "data__pokemon__base_stats__parasect.asm.b64",
+      "git_blob_sha1": "2b0c7297bc2d0f32e480336d82ed91220dbd3d1d"
+    },
+    {
+      "path": "data/pokemon/base_stats/perrserker.asm",
+      "fixture": "data__pokemon__base_stats__perrserker.asm.b64",
+      "git_blob_sha1": "638fd9b78b79481f39ecd919b6974e5e87e780eb"
+    },
+    {
+      "path": "data/pokemon/base_stats/persian_alolan.asm",
+      "fixture": "data__pokemon__base_stats__persian_alolan.asm.b64",
+      "git_blob_sha1": "fb0faa810610e6338f0947191301ae0d63ed01fb"
+    },
+    {
+      "path": "data/pokemon/base_stats/persian_plain.asm",
+      "fixture": "data__pokemon__base_stats__persian_plain.asm.b64",
+      "git_blob_sha1": "f0a11af1a0f6274e80a02da9b3fb19b5d5c24154"
+    },
+    {
+      "path": "data/pokemon/base_stats/phanpy.asm",
+      "fixture": "data__pokemon__base_stats__phanpy.asm.b64",
+      "git_blob_sha1": "5c3dbecf9b89abec57c6b5a983d23a444d007cf1"
+    },
+    {
+      "path": "data/pokemon/base_stats/pichu.asm",
+      "fixture": "data__pokemon__base_stats__pichu.asm.b64",
+      "git_blob_sha1": "df3cb8bed7a662f38dbe4deda4aa9e63b3ae7e97"
+    },
+    {
+      "path": "data/pokemon/base_stats/pidgeot.asm",
+      "fixture": "data__pokemon__base_stats__pidgeot.asm.b64",
+      "git_blob_sha1": "6f914f5f8660a8dae58a454e3bcdb78233fb8534"
+    },
+    {
+      "path": "data/pokemon/base_stats/pidgeotto.asm",
+      "fixture": "data__pokemon__base_stats__pidgeotto.asm.b64",
+      "git_blob_sha1": "b9dd790005b1f9d0f08e21221f2de1455a3b5850"
+    },
+    {
+      "path": "data/pokemon/base_stats/pidgey.asm",
+      "fixture": "data__pokemon__base_stats__pidgey.asm.b64",
+      "git_blob_sha1": "231bfdfb516e6d832da72fe61aaef1e3c11d32ca"
+    },
+    {
+      "path": "data/pokemon/base_stats/pikachu.asm",
+      "fixture": "data__pokemon__base_stats__pikachu.asm.b64",
+      "git_blob_sha1": "1ef86cf1278c57745b7f438191b6379b7b75eca3"
+    },
+    {
+      "path": "data/pokemon/base_stats/piloswine.asm",
+      "fixture": "data__pokemon__base_stats__piloswine.asm.b64",
+      "git_blob_sha1": "eaa6ad5b4e68ddaac45082a23549c6afeaa84a90"
+    },
+    {
+      "path": "data/pokemon/base_stats/pineco.asm",
+      "fixture": "data__pokemon__base_stats__pineco.asm.b64",
+      "git_blob_sha1": "b9b1055d2879311c41f4ccb20fa221aad91b4179"
+    },
+    {
+      "path": "data/pokemon/base_stats/pinsir.asm",
+      "fixture": "data__pokemon__base_stats__pinsir.asm.b64",
+      "git_blob_sha1": "cef5be8355234d81fa2101bb3d5edfbfbe0dc606"
+    },
+    {
+      "path": "data/pokemon/base_stats/politoed.asm",
+      "fixture": "data__pokemon__base_stats__politoed.asm.b64",
+      "git_blob_sha1": "a0ef1783e9d61ec168970e3cae3f50562c16f3bc"
+    },
+    {
+      "path": "data/pokemon/base_stats/poliwag.asm",
+      "fixture": "data__pokemon__base_stats__poliwag.asm.b64",
+      "git_blob_sha1": "5692ee4c8bd6e498d0b46dfb4fbfcd9a53af7fa2"
+    },
+    {
+      "path": "data/pokemon/base_stats/poliwhirl.asm",
+      "fixture": "data__pokemon__base_stats__poliwhirl.asm.b64",
+      "git_blob_sha1": "f1ddeccc1847cb7f302323f80fbc96cb8ba09469"
+    },
+    {
+      "path": "data/pokemon/base_stats/poliwrath.asm",
+      "fixture": "data__pokemon__base_stats__poliwrath.asm.b64",
+      "git_blob_sha1": "1d43dd3e8bf2edcd65578a463becfb5936361be8"
+    },
+    {
+      "path": "data/pokemon/base_stats/ponyta_galarian.asm",
+      "fixture": "data__pokemon__base_stats__ponyta_galarian.asm.b64",
+      "git_blob_sha1": "3235c7adee6d31fc8bfb572389962c68be74c9fd"
+    },
+    {
+      "path": "data/pokemon/base_stats/ponyta_plain.asm",
+      "fixture": "data__pokemon__base_stats__ponyta_plain.asm.b64",
+      "git_blob_sha1": "db763798e5e1e62ff020bd03075ed6c4630e2c57"
+    },
+    {
+      "path": "data/pokemon/base_stats/porygon.asm",
+      "fixture": "data__pokemon__base_stats__porygon.asm.b64",
+      "git_blob_sha1": "2f1ad60f3f154dedf05599ba9ce48abee868c38a"
+    },
+    {
+      "path": "data/pokemon/base_stats/porygon2.asm",
+      "fixture": "data__pokemon__base_stats__porygon2.asm.b64",
+      "git_blob_sha1": "109b06887da6c7e12df4e68d71f00148c2ddd4dc"
+    },
+    {
+      "path": "data/pokemon/base_stats/porygon_z.asm",
+      "fixture": "data__pokemon__base_stats__porygon_z.asm.b64",
+      "git_blob_sha1": "ad9e07fe209dedb6ba037a0265dbfc1293450770"
+    },
+    {
+      "path": "data/pokemon/base_stats/primeape.asm",
+      "fixture": "data__pokemon__base_stats__primeape.asm.b64",
+      "git_blob_sha1": "c6292059c7d5171cdb1cff2e2005d6901578db78"
+    },
+    {
+      "path": "data/pokemon/base_stats/psyduck.asm",
+      "fixture": "data__pokemon__base_stats__psyduck.asm.b64",
+      "git_blob_sha1": "17f4c918ebb68d4b5c461ea9db701bfd65858eb6"
+    },
+    {
+      "path": "data/pokemon/base_stats/pupitar.asm",
+      "fixture": "data__pokemon__base_stats__pupitar.asm.b64",
+      "git_blob_sha1": "b6522b0b796edb3e4f3a5ac1e9c5f9e4753d0a78"
+    },
+    {
+      "path": "data/pokemon/base_stats/quagsire.asm",
+      "fixture": "data__pokemon__base_stats__quagsire.asm.b64",
+      "git_blob_sha1": "3e7c82cb3914a1eeb08af6e89eb225cc28b70f19"
+    },
+    {
+      "path": "data/pokemon/base_stats/quilava.asm",
+      "fixture": "data__pokemon__base_stats__quilava.asm.b64",
+      "git_blob_sha1": "6f2b2f092229bbf6f7c5a163a2a58a9ae10aacc6"
+    },
+    {
+      "path": "data/pokemon/base_stats/qwilfish_hisuian.asm",
+      "fixture": "data__pokemon__base_stats__qwilfish_hisuian.asm.b64",
+      "git_blob_sha1": "c9d8583b50ef402e74886719e35d186d48201f37"
+    },
+    {
+      "path": "data/pokemon/base_stats/qwilfish_plain.asm",
+      "fixture": "data__pokemon__base_stats__qwilfish_plain.asm.b64",
+      "git_blob_sha1": "447f22252c5f8af3f2c046164ae7e090b4da96fa"
+    },
+    {
+      "path": "data/pokemon/base_stats/raichu_alolan.asm",
+      "fixture": "data__pokemon__base_stats__raichu_alolan.asm.b64",
+      "git_blob_sha1": "c347eac4ffc5cc3dccb091ceb35dd752f42758dc"
+    },
+    {
+      "path": "data/pokemon/base_stats/raichu_plain.asm",
+      "fixture": "data__pokemon__base_stats__raichu_plain.asm.b64",
+      "git_blob_sha1": "c84dfad2e893c238ddd89750fda233b0ffec1c6e"
+    },
+    {
+      "path": "data/pokemon/base_stats/raikou.asm",
+      "fixture": "data__pokemon__base_stats__raikou.asm.b64",
+      "git_blob_sha1": "222e4262b53686dca395ace8537160ed05afada2"
+    },
+    {
+      "path": "data/pokemon/base_stats/rapidash_galarian.asm",
+      "fixture": "data__pokemon__base_stats__rapidash_galarian.asm.b64",
+      "git_blob_sha1": "2a0ec474e19d5d5157d31a8ffcb28c2e936cdf1b"
+    },
+    {
+      "path": "data/pokemon/base_stats/rapidash_plain.asm",
+      "fixture": "data__pokemon__base_stats__rapidash_plain.asm.b64",
+      "git_blob_sha1": "de4170aa66be1e006f3d3d10d37ea37dfe41078f"
+    },
+    {
+      "path": "data/pokemon/base_stats/raticate_alolan.asm",
+      "fixture": "data__pokemon__base_stats__raticate_alolan.asm.b64",
+      "git_blob_sha1": "dc361bfc366e3dbe26f43e0cdd38e593b9b8c838"
+    },
+    {
+      "path": "data/pokemon/base_stats/raticate_plain.asm",
+      "fixture": "data__pokemon__base_stats__raticate_plain.asm.b64",
+      "git_blob_sha1": "d01b790f8a160b809ff47877dc54625ffa326bf1"
+    },
+    {
+      "path": "data/pokemon/base_stats/rattata_alolan.asm",
+      "fixture": "data__pokemon__base_stats__rattata_alolan.asm.b64",
+      "git_blob_sha1": "6487199ee9c430fe06fb2987d4c424d1104a1464"
+    },
+    {
+      "path": "data/pokemon/base_stats/rattata_plain.asm",
+      "fixture": "data__pokemon__base_stats__rattata_plain.asm.b64",
+      "git_blob_sha1": "1beca5cf84e008eccd6820a1fb3d601a00815ba8"
+    },
+    {
+      "path": "data/pokemon/base_stats/remoraid.asm",
+      "fixture": "data__pokemon__base_stats__remoraid.asm.b64",
+      "git_blob_sha1": "f089200ed9ce4a1763d1e17df335592823310a85"
+    },
+    {
+      "path": "data/pokemon/base_stats/rhydon.asm",
+      "fixture": "data__pokemon__base_stats__rhydon.asm.b64",
+      "git_blob_sha1": "febe7f383abb0d7a1e15cff4742259d8dad870eb"
+    },
+    {
+      "path": "data/pokemon/base_stats/rhyhorn.asm",
+      "fixture": "data__pokemon__base_stats__rhyhorn.asm.b64",
+      "git_blob_sha1": "30932d830d3a342ef6c8199ed98449893a79a0a3"
+    },
+    {
+      "path": "data/pokemon/base_stats/rhyperior.asm",
+      "fixture": "data__pokemon__base_stats__rhyperior.asm.b64",
+      "git_blob_sha1": "f87163d1850e2e018fea4d8404536b36cff21a90"
+    },
+    {
+      "path": "data/pokemon/base_stats/sandshrew_alolan.asm",
+      "fixture": "data__pokemon__base_stats__sandshrew_alolan.asm.b64",
+      "git_blob_sha1": "a9a0f5759e4a5353162c1f2cb53818b071c417c3"
+    },
+    {
+      "path": "data/pokemon/base_stats/sandshrew_plain.asm",
+      "fixture": "data__pokemon__base_stats__sandshrew_plain.asm.b64",
+      "git_blob_sha1": "ac8f399ec16b637b22bab559ef112f13422f0b2e"
+    },
+    {
+      "path": "data/pokemon/base_stats/sandslash_alolan.asm",
+      "fixture": "data__pokemon__base_stats__sandslash_alolan.asm.b64",
+      "git_blob_sha1": "25df0bfcbce812037a9ffa9a3e46e33e833ddd66"
+    },
+    {
+      "path": "data/pokemon/base_stats/sandslash_plain.asm",
+      "fixture": "data__pokemon__base_stats__sandslash_plain.asm.b64",
+      "git_blob_sha1": "8a49b6fa482b0699af3222339174ea125ce3e7ac"
+    },
+    {
+      "path": "data/pokemon/base_stats/scizor.asm",
+      "fixture": "data__pokemon__base_stats__scizor.asm.b64",
+      "git_blob_sha1": "28c6cec1e1e958cc5d731fd46f2b9eb03aefb707"
+    },
+    {
+      "path": "data/pokemon/base_stats/scyther.asm",
+      "fixture": "data__pokemon__base_stats__scyther.asm.b64",
+      "git_blob_sha1": "eb2bc2884250950622c3ca5008ac0a6969ce0e5f"
+    },
+    {
+      "path": "data/pokemon/base_stats/seadra.asm",
+      "fixture": "data__pokemon__base_stats__seadra.asm.b64",
+      "git_blob_sha1": "4749284b698244748fde28263bc82e8302b1f4f4"
+    },
+    {
+      "path": "data/pokemon/base_stats/seaking.asm",
+      "fixture": "data__pokemon__base_stats__seaking.asm.b64",
+      "git_blob_sha1": "ea169bb84e52f80eb180ad99cb77a301771be718"
+    },
+    {
+      "path": "data/pokemon/base_stats/seel.asm",
+      "fixture": "data__pokemon__base_stats__seel.asm.b64",
+      "git_blob_sha1": "9d271e1131d3aa591f2a7844eb4060f4de1673a4"
+    },
+    {
+      "path": "data/pokemon/base_stats/sentret.asm",
+      "fixture": "data__pokemon__base_stats__sentret.asm.b64",
+      "git_blob_sha1": "40bf863de8865959d475c5676e5be231bc63cb85"
+    },
+    {
+      "path": "data/pokemon/base_stats/shellder.asm",
+      "fixture": "data__pokemon__base_stats__shellder.asm.b64",
+      "git_blob_sha1": "e7e47c40e7624cdcff11bf3154e4befdd7563efb"
+    },
+    {
+      "path": "data/pokemon/base_stats/shuckle.asm",
+      "fixture": "data__pokemon__base_stats__shuckle.asm.b64",
+      "git_blob_sha1": "855e01fb2524b67ab8235ab8048eb61f532d9277"
+    },
+    {
+      "path": "data/pokemon/base_stats/sirfetch_d.asm",
+      "fixture": "data__pokemon__base_stats__sirfetch_d.asm.b64",
+      "git_blob_sha1": "12e172b3b6da9cc66486ee36ef5e4f89158f4d47"
+    },
+    {
+      "path": "data/pokemon/base_stats/skarmory.asm",
+      "fixture": "data__pokemon__base_stats__skarmory.asm.b64",
+      "git_blob_sha1": "82c44a3a87cac55c200834695155a709ac953566"
+    },
+    {
+      "path": "data/pokemon/base_stats/skiploom.asm",
+      "fixture": "data__pokemon__base_stats__skiploom.asm.b64",
+      "git_blob_sha1": "3e1f2cf035f39c9302526b7436604751e8f7b203"
+    },
+    {
+      "path": "data/pokemon/base_stats/slowbro_galarian.asm",
+      "fixture": "data__pokemon__base_stats__slowbro_galarian.asm.b64",
+      "git_blob_sha1": "7c6cb7c2b38881396ca337b6baa5c16c809329b7"
+    },
+    {
+      "path": "data/pokemon/base_stats/slowbro_plain.asm",
+      "fixture": "data__pokemon__base_stats__slowbro_plain.asm.b64",
+      "git_blob_sha1": "b1f264fafe6a34a9ce4a96e66f58518cedb23c2f"
+    },
+    {
+      "path": "data/pokemon/base_stats/slowking_galarian.asm",
+      "fixture": "data__pokemon__base_stats__slowking_galarian.asm.b64",
+      "git_blob_sha1": "7a70da5707b13a161ea89c69360ae0c46fdb5593"
+    },
+    {
+      "path": "data/pokemon/base_stats/slowking_plain.asm",
+      "fixture": "data__pokemon__base_stats__slowking_plain.asm.b64",
+      "git_blob_sha1": "f932058a35da9d98f59749e6e14b01c8e2e2366a"
+    },
+    {
+      "path": "data/pokemon/base_stats/slowpoke_galarian.asm",
+      "fixture": "data__pokemon__base_stats__slowpoke_galarian.asm.b64",
+      "git_blob_sha1": "7a7258b134b783d01f41d3df1b7f4d86723c006b"
+    },
+    {
+      "path": "data/pokemon/base_stats/slowpoke_plain.asm",
+      "fixture": "data__pokemon__base_stats__slowpoke_plain.asm.b64",
+      "git_blob_sha1": "7684848ce3aec6a45be4d0de38ae71eacea0e429"
+    },
+    {
+      "path": "data/pokemon/base_stats/slugma.asm",
+      "fixture": "data__pokemon__base_stats__slugma.asm.b64",
+      "git_blob_sha1": "a2a625bb93f9c60ab357266a521645be60202129"
+    },
+    {
+      "path": "data/pokemon/base_stats/smeargle.asm",
+      "fixture": "data__pokemon__base_stats__smeargle.asm.b64",
+      "git_blob_sha1": "be0f78b0eeb76a4cf4ca93c0ef35522f83133178"
+    },
+    {
+      "path": "data/pokemon/base_stats/smoochum.asm",
+      "fixture": "data__pokemon__base_stats__smoochum.asm.b64",
+      "git_blob_sha1": "27b3560e2fbceed1c8aafc8062c4260afc710586"
+    },
+    {
+      "path": "data/pokemon/base_stats/sneasel_hisuian.asm",
+      "fixture": "data__pokemon__base_stats__sneasel_hisuian.asm.b64",
+      "git_blob_sha1": "5cd7cdaa271a66cf3ade3bd1bf1b6abc3f55d436"
+    },
+    {
+      "path": "data/pokemon/base_stats/sneasel_plain.asm",
+      "fixture": "data__pokemon__base_stats__sneasel_plain.asm.b64",
+      "git_blob_sha1": "721cc820baa4630e23bc29f3277e97668a53c148"
+    },
+    {
+      "path": "data/pokemon/base_stats/sneasler.asm",
+      "fixture": "data__pokemon__base_stats__sneasler.asm.b64",
+      "git_blob_sha1": "a474444ecd167b955ff9c47de7660f6c83b0c1e3"
+    },
+    {
+      "path": "data/pokemon/base_stats/snorlax.asm",
+      "fixture": "data__pokemon__base_stats__snorlax.asm.b64",
+      "git_blob_sha1": "d5db56b4e126295d2aeb19cf0d0b1c47fa6f1c34"
+    },
+    {
+      "path": "data/pokemon/base_stats/snubbull.asm",
+      "fixture": "data__pokemon__base_stats__snubbull.asm.b64",
+      "git_blob_sha1": "8a944f74f4ec107675f5b39976b35ae959f0fd52"
+    },
+    {
+      "path": "data/pokemon/base_stats/spearow.asm",
+      "fixture": "data__pokemon__base_stats__spearow.asm.b64",
+      "git_blob_sha1": "aedcfecb4337fed449f221e9a11573f9c767378a"
+    },
+    {
+      "path": "data/pokemon/base_stats/spinarak.asm",
+      "fixture": "data__pokemon__base_stats__spinarak.asm.b64",
+      "git_blob_sha1": "c5dcaa8d36cc425f5d81c32ddaaffba461f05d43"
+    },
+    {
+      "path": "data/pokemon/base_stats/squirtle.asm",
+      "fixture": "data__pokemon__base_stats__squirtle.asm.b64",
+      "git_blob_sha1": "d618397d21a31e4c40dc77ed5f5a93d5672d4dab"
+    },
+    {
+      "path": "data/pokemon/base_stats/stantler.asm",
+      "fixture": "data__pokemon__base_stats__stantler.asm.b64",
+      "git_blob_sha1": "7564b65ab3a2c6f507859a74bbdd6bae965382a3"
+    },
+    {
+      "path": "data/pokemon/base_stats/starmie.asm",
+      "fixture": "data__pokemon__base_stats__starmie.asm.b64",
+      "git_blob_sha1": "789c6af5072b395472f308b02341bfdde34a8452"
+    },
+    {
+      "path": "data/pokemon/base_stats/staryu.asm",
+      "fixture": "data__pokemon__base_stats__staryu.asm.b64",
+      "git_blob_sha1": "337d5af9ff10c14ff8f8a7f5037f1767695ec8ac"
+    },
+    {
+      "path": "data/pokemon/base_stats/steelix.asm",
+      "fixture": "data__pokemon__base_stats__steelix.asm.b64",
+      "git_blob_sha1": "e3ef8b6ced47584a727be8268c4e85459ad956cf"
+    },
+    {
+      "path": "data/pokemon/base_stats/sudowoodo.asm",
+      "fixture": "data__pokemon__base_stats__sudowoodo.asm.b64",
+      "git_blob_sha1": "86db3dd0c60e78b117df6f21d5ec1fb3d57480d9"
+    },
+    {
+      "path": "data/pokemon/base_stats/suicune.asm",
+      "fixture": "data__pokemon__base_stats__suicune.asm.b64",
+      "git_blob_sha1": "ca0a134c04a65db549cdfe6db7708346ad46cb3e"
+    },
+    {
+      "path": "data/pokemon/base_stats/sunflora.asm",
+      "fixture": "data__pokemon__base_stats__sunflora.asm.b64",
+      "git_blob_sha1": "5b6fddec75195e2d8e91df334c8f9c2b65e22acc"
+    },
+    {
+      "path": "data/pokemon/base_stats/sunkern.asm",
+      "fixture": "data__pokemon__base_stats__sunkern.asm.b64",
+      "git_blob_sha1": "32eeba74627a250fb77233a6189431c64fcf222d"
+    },
+    {
+      "path": "data/pokemon/base_stats/swinub.asm",
+      "fixture": "data__pokemon__base_stats__swinub.asm.b64",
+      "git_blob_sha1": "130725f5b971736b2ba3e708cc5f4b5d8e86d696"
+    },
+    {
+      "path": "data/pokemon/base_stats/sylveon.asm",
+      "fixture": "data__pokemon__base_stats__sylveon.asm.b64",
+      "git_blob_sha1": "86feb39470684e2258ee8e897dcd46859107e401"
+    },
+    {
+      "path": "data/pokemon/base_stats/tangela.asm",
+      "fixture": "data__pokemon__base_stats__tangela.asm.b64",
+      "git_blob_sha1": "7bebf53937d17d97b7e2ffbd0f9c86eb7d655828"
+    },
+    {
+      "path": "data/pokemon/base_stats/tangrowth.asm",
+      "fixture": "data__pokemon__base_stats__tangrowth.asm.b64",
+      "git_blob_sha1": "961fde1e1ceea3bf07f3c40d5aab62b2ee3fa3a5"
+    },
+    {
+      "path": "data/pokemon/base_stats/tauros_paldean.asm",
+      "fixture": "data__pokemon__base_stats__tauros_paldean.asm.b64",
+      "git_blob_sha1": "2a1c43f1f57e2ec3dfb8710212a8adc486dd5f42"
+    },
+    {
+      "path": "data/pokemon/base_stats/tauros_paldean_fire.asm",
+      "fixture": "data__pokemon__base_stats__tauros_paldean_fire.asm.b64",
+      "git_blob_sha1": "2d60608cb425306a9f73e5fc5d228d1a429e25f1"
+    },
+    {
+      "path": "data/pokemon/base_stats/tauros_paldean_water.asm",
+      "fixture": "data__pokemon__base_stats__tauros_paldean_water.asm.b64",
+      "git_blob_sha1": "477db4a2904c2ab9c9686f4320b2da98970b2ecf"
+    },
+    {
+      "path": "data/pokemon/base_stats/tauros_plain.asm",
+      "fixture": "data__pokemon__base_stats__tauros_plain.asm.b64",
+      "git_blob_sha1": "bd1ab073b5d8b07fbd1f3b6b2a8e4682e7d494ff"
+    },
+    {
+      "path": "data/pokemon/base_stats/teddiursa.asm",
+      "fixture": "data__pokemon__base_stats__teddiursa.asm.b64",
+      "git_blob_sha1": "bfcc095b6dd62f91596256f78fd3ddea78e63757"
+    },
+    {
+      "path": "data/pokemon/base_stats/tentacool.asm",
+      "fixture": "data__pokemon__base_stats__tentacool.asm.b64",
+      "git_blob_sha1": "7183d019b13a3c22647c78fac6f6ada183d0a048"
+    },
+    {
+      "path": "data/pokemon/base_stats/tentacruel.asm",
+      "fixture": "data__pokemon__base_stats__tentacruel.asm.b64",
+      "git_blob_sha1": "0dfe6a88b9383d0f4aef9e280904a487763825b5"
+    },
+    {
+      "path": "data/pokemon/base_stats/togekiss.asm",
+      "fixture": "data__pokemon__base_stats__togekiss.asm.b64",
+      "git_blob_sha1": "17c1b2eab57eca6a1484a1fade0cdb3b4dd0d9a2"
+    },
+    {
+      "path": "data/pokemon/base_stats/togepi.asm",
+      "fixture": "data__pokemon__base_stats__togepi.asm.b64",
+      "git_blob_sha1": "c1bb0be3dd81e059cedb8c927e5b7ca0f8095e74"
+    },
+    {
+      "path": "data/pokemon/base_stats/togetic.asm",
+      "fixture": "data__pokemon__base_stats__togetic.asm.b64",
+      "git_blob_sha1": "4da35cf376b433daf935e5f48848da1ac279e90d"
+    },
+    {
+      "path": "data/pokemon/base_stats/totodile.asm",
+      "fixture": "data__pokemon__base_stats__totodile.asm.b64",
+      "git_blob_sha1": "5e0bae7725e9268bc185dc49b96722be63cfb6bc"
+    },
+    {
+      "path": "data/pokemon/base_stats/typhlosion_hisuian.asm",
+      "fixture": "data__pokemon__base_stats__typhlosion_hisuian.asm.b64",
+      "git_blob_sha1": "3221d9a59305627b078bb2c4f216676f0df54b31"
+    },
+    {
+      "path": "data/pokemon/base_stats/typhlosion_plain.asm",
+      "fixture": "data__pokemon__base_stats__typhlosion_plain.asm.b64",
+      "git_blob_sha1": "fba94bcb7f8d43b7836f91324b7536e86c4717f5"
+    },
+    {
+      "path": "data/pokemon/base_stats/tyranitar.asm",
+      "fixture": "data__pokemon__base_stats__tyranitar.asm.b64",
+      "git_blob_sha1": "4c6e6a84423ff00f290bdc864ca6966f2f3bcf15"
+    },
+    {
+      "path": "data/pokemon/base_stats/tyrogue.asm",
+      "fixture": "data__pokemon__base_stats__tyrogue.asm.b64",
+      "git_blob_sha1": "643c07480727a76000af02ede84d8cdaae15ac75"
+    },
+    {
+      "path": "data/pokemon/base_stats/umbreon.asm",
+      "fixture": "data__pokemon__base_stats__umbreon.asm.b64",
+      "git_blob_sha1": "d395a759afd6c6fec97fed225049cd69a578fb0f"
+    },
+    {
+      "path": "data/pokemon/base_stats/unown.asm",
+      "fixture": "data__pokemon__base_stats__unown.asm.b64",
+      "git_blob_sha1": "0548e47cb62e074029d15581c1de7b9ac0421b5c"
+    },
+    {
+      "path": "data/pokemon/base_stats/ursaluna_bloodmoon.asm",
+      "fixture": "data__pokemon__base_stats__ursaluna_bloodmoon.asm.b64",
+      "git_blob_sha1": "c85007de4cf43d0a3f69931b535fa407f793543a"
+    },
+    {
+      "path": "data/pokemon/base_stats/ursaluna_plain.asm",
+      "fixture": "data__pokemon__base_stats__ursaluna_plain.asm.b64",
+      "git_blob_sha1": "52fa864ab9d4c868ccafc67eb178a1abf474d0b3"
+    },
+    {
+      "path": "data/pokemon/base_stats/ursaring.asm",
+      "fixture": "data__pokemon__base_stats__ursaring.asm.b64",
+      "git_blob_sha1": "34e98450c5b53bbcf8dae197f83fa10bfb7c8ed6"
+    },
+    {
+      "path": "data/pokemon/base_stats/vaporeon.asm",
+      "fixture": "data__pokemon__base_stats__vaporeon.asm.b64",
+      "git_blob_sha1": "26b7c928e09f77bd9ba7a07c0d066152b1cca4df"
+    },
+    {
+      "path": "data/pokemon/base_stats/venomoth.asm",
+      "fixture": "data__pokemon__base_stats__venomoth.asm.b64",
+      "git_blob_sha1": "f871879ca39370644539787076cde0e088b66826"
+    },
+    {
+      "path": "data/pokemon/base_stats/venonat.asm",
+      "fixture": "data__pokemon__base_stats__venonat.asm.b64",
+      "git_blob_sha1": "3548c1378313bebff29750df66666630375eff6d"
+    },
+    {
+      "path": "data/pokemon/base_stats/venusaur.asm",
+      "fixture": "data__pokemon__base_stats__venusaur.asm.b64",
+      "git_blob_sha1": "62d89997a59a694a8ba9b2ab07928db1147056c3"
+    },
+    {
+      "path": "data/pokemon/base_stats/victreebel.asm",
+      "fixture": "data__pokemon__base_stats__victreebel.asm.b64",
+      "git_blob_sha1": "15540130ea619778fd3fbfe9493b2443c39be1d3"
+    },
+    {
+      "path": "data/pokemon/base_stats/vileplume.asm",
+      "fixture": "data__pokemon__base_stats__vileplume.asm.b64",
+      "git_blob_sha1": "2e759c1a3a52570a0c6d3e8a9520a67dfde3b926"
+    },
+    {
+      "path": "data/pokemon/base_stats/voltorb_hisuian.asm",
+      "fixture": "data__pokemon__base_stats__voltorb_hisuian.asm.b64",
+      "git_blob_sha1": "d1e3cac52fe4c641115f8d3b0265cd18bff9c6c1"
+    },
+    {
+      "path": "data/pokemon/base_stats/voltorb_plain.asm",
+      "fixture": "data__pokemon__base_stats__voltorb_plain.asm.b64",
+      "git_blob_sha1": "22926cb4653eb4dfd939a8f4261a98e2fdb05468"
+    },
+    {
+      "path": "data/pokemon/base_stats/vulpix_alolan.asm",
+      "fixture": "data__pokemon__base_stats__vulpix_alolan.asm.b64",
+      "git_blob_sha1": "7705c45b74293dd315e300cc3d12ef1a82006b96"
+    },
+    {
+      "path": "data/pokemon/base_stats/vulpix_plain.asm",
+      "fixture": "data__pokemon__base_stats__vulpix_plain.asm.b64",
+      "git_blob_sha1": "de8c57d3b43b19615b4f5edaca02af411d3e03a2"
+    },
+    {
+      "path": "data/pokemon/base_stats/wartortle.asm",
+      "fixture": "data__pokemon__base_stats__wartortle.asm.b64",
+      "git_blob_sha1": "08f33c07ede58d8e26ecf94f524f7f449f42b434"
+    },
+    {
+      "path": "data/pokemon/base_stats/weavile.asm",
+      "fixture": "data__pokemon__base_stats__weavile.asm.b64",
+      "git_blob_sha1": "1fe5b1f0a29d5745860b64ec4d170b6aa9c1d7c1"
+    },
+    {
+      "path": "data/pokemon/base_stats/weedle.asm",
+      "fixture": "data__pokemon__base_stats__weedle.asm.b64",
+      "git_blob_sha1": "367daaac7ca501502b58a5fe42c2ee8f63688c85"
+    },
+    {
+      "path": "data/pokemon/base_stats/weepinbell.asm",
+      "fixture": "data__pokemon__base_stats__weepinbell.asm.b64",
+      "git_blob_sha1": "91b51e73e595ac822811b6e7313fc8f749a4c5d1"
+    },
+    {
+      "path": "data/pokemon/base_stats/weezing_galarian.asm",
+      "fixture": "data__pokemon__base_stats__weezing_galarian.asm.b64",
+      "git_blob_sha1": "a450aeeed24c337e3aa3bd5b87cb1fbb037be37e"
+    },
+    {
+      "path": "data/pokemon/base_stats/weezing_plain.asm",
+      "fixture": "data__pokemon__base_stats__weezing_plain.asm.b64",
+      "git_blob_sha1": "cff5ccd6f84967b1fa6e2b0aae6419b984eb6a2e"
+    },
+    {
+      "path": "data/pokemon/base_stats/wigglytuff.asm",
+      "fixture": "data__pokemon__base_stats__wigglytuff.asm.b64",
+      "git_blob_sha1": "9b736a0538a5bbb6cfebf0299eedea0a1dfbf3fd"
+    },
+    {
+      "path": "data/pokemon/base_stats/wobbuffet.asm",
+      "fixture": "data__pokemon__base_stats__wobbuffet.asm.b64",
+      "git_blob_sha1": "e2a1a481ce0e82cb3955217ce2f4f76c8325d152"
+    },
+    {
+      "path": "data/pokemon/base_stats/wooper_paldean.asm",
+      "fixture": "data__pokemon__base_stats__wooper_paldean.asm.b64",
+      "git_blob_sha1": "b6eb2c0f5e8e0142e2ab9e86e04d905453a24add"
+    },
+    {
+      "path": "data/pokemon/base_stats/wooper_plain.asm",
+      "fixture": "data__pokemon__base_stats__wooper_plain.asm.b64",
+      "git_blob_sha1": "8d7a9983da21c6bf20a5457c3c342d7fe611b567"
+    },
+    {
+      "path": "data/pokemon/base_stats/wynaut.asm",
+      "fixture": "data__pokemon__base_stats__wynaut.asm.b64",
+      "git_blob_sha1": "49fcf9d3b74094fe30f6cde1ea71057825bc2d94"
+    },
+    {
+      "path": "data/pokemon/base_stats/wyrdeer.asm",
+      "fixture": "data__pokemon__base_stats__wyrdeer.asm.b64",
+      "git_blob_sha1": "f795242c85a6b5c28e78408908a8daccff3a7697"
+    },
+    {
+      "path": "data/pokemon/base_stats/xatu.asm",
+      "fixture": "data__pokemon__base_stats__xatu.asm.b64",
+      "git_blob_sha1": "cd491fdeb39939a5baec10568b8e5afe6817c034"
+    },
+    {
+      "path": "data/pokemon/base_stats/yanma.asm",
+      "fixture": "data__pokemon__base_stats__yanma.asm.b64",
+      "git_blob_sha1": "d5740f42c8e6a20dd4c514c05cdd85bcd01da39f"
+    },
+    {
+      "path": "data/pokemon/base_stats/yanmega.asm",
+      "fixture": "data__pokemon__base_stats__yanmega.asm.b64",
+      "git_blob_sha1": "ee7d28027980427ce621a696111d8a9695368929"
+    },
+    {
+      "path": "data/pokemon/base_stats/zapdos_galarian.asm",
+      "fixture": "data__pokemon__base_stats__zapdos_galarian.asm.b64",
+      "git_blob_sha1": "2fbd9c7a6d61e7ed390e67521b334066323f106d"
+    },
+    {
+      "path": "data/pokemon/base_stats/zapdos_plain.asm",
+      "fixture": "data__pokemon__base_stats__zapdos_plain.asm.b64",
+      "git_blob_sha1": "6a9516a55d65edafed4230ebf93c7e3b0c28ae5e"
+    },
+    {
+      "path": "data/pokemon/base_stats/zubat.asm",
+      "fixture": "data__pokemon__base_stats__zubat.asm.b64",
+      "git_blob_sha1": "d3f6fa5aec44f39a1bc9999372bf3c5b5ed811fa"
+    },
+    {
+      "path": "engine/events/daycare.asm",
+      "fixture": "engine__events__daycare.asm.b64",
+      "git_blob_sha1": "245a13b576e862ef59e6e77e30e6cd20be314d83"
     }
   ]
 }

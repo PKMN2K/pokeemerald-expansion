@@ -57,8 +57,18 @@ def expected_party(name):
 def settle(game, report):
     observed, portrait_seen, name = None, False, None
     attempted, last_slot, unavailable = None, None, set()
-    for _ in range(3500):
+    battle_steps, field_steps = 0, 0
+    # Source stats can make the boss battle use most of its input budget.
+    # Reserve a separate bounded window for the badge fanfare/reward script;
+    # a won battle must not time out with its fanfare still counting down.
+    for _ in range(3900):
         on_field = game.u32(game.sym["gMain"] + 4) == game.sym["CB2_Overworld"] | 1
+        if on_field:
+            field_steps += 1
+        else:
+            battle_steps += 1
+        if battle_steps > 3500 or field_steps > 400:
+            break
         if (on_field and not task_active(game, "Task_BattleStart") and not script_active(game)
                 and not game.read(game.sym["sLockFieldControls"], 1)[0]):
             if observed is not None:

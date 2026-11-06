@@ -13,9 +13,9 @@ def main():
     manifest = json.loads(MANIFEST.read_text())
     assert manifest["source_variant"] == "default; FAITHFUL undefined"
     assert len(manifest["records"]) == 391
-    assert manifest["mapped_target_count"] == 361
-    assert len(manifest["unmapped_forms"]) == 30
-    assert len({r["target_species"] for r in manifest["records"] if r["target_species"]}) == 361
+    assert manifest["mapped_target_count"] == 391
+    assert len(manifest["unmapped_forms"]) == 0
+    assert len({r["target_species"] for r in manifest["records"] if r["target_species"]}) == 391
     records = {(r["source_species"], r["source_form"]): r for r in manifest["records"]}
 
     def levels(species, form="PLAIN_FORM"):
@@ -30,8 +30,8 @@ def main():
     assert levels("VOLTORB", "HISUIAN_FORM") != levels("VOLTORB")
     assert levels("MR__RIME") == levels("MR__MIME", "GALARIAN_FORM")
     assert levels("FARIGIRAF") == levels("GIRAFARIG")
-    assert records["MEWTWO", "MEWTWO_ARMORED_FORM"]["target_species"] is None
-    assert records["GYARADOS", "GYARADOS_RED_FORM"]["target_species"] is None
+    assert records["MEWTWO", "MEWTWO_ARMORED_FORM"]["target_species"] == "SPECIES_MEWTWO_ARMORED"
+    assert records["GYARADOS", "GYARADOS_RED_FORM"]["target_species"] == "SPECIES_GYARADOS_RED"
     assert records["TAUROS", "TAUROS_PALDEAN_FIRE_FORM"]["target_species"] == "SPECIES_TAUROS_PALDEA_BLAZE"
     assert records["TAUROS", "TAUROS_PALDEAN_WATER_FORM"]["target_species"] == "SPECIES_TAUROS_PALDEA_AQUA"
 
@@ -54,7 +54,7 @@ def main():
     assert re.search(r"call GetThirdMaxHP\s+sla c\s+rl b", heal)
     umbrella = files["home/battle.asm"].split("GetWeatherAfterUserUmbrella::", 1)[1].split("GetWeatherAfterCloudNine::", 1)[0]
     assert re.search(r"cp WEATHER_HAIL\s+ret z\s+cp WEATHER_SANDSTORM\s+ret z", umbrella)
-    print("PASS: 391 source identities audited; 361 live learnsets, 30 explicit missing forms, default source branch and 3 custom move definitions")
+    print("PASS: 391 source identities audited; 391 live learnsets, all source forms mapped, default source branch and 3 custom move definitions")
 
 
 if __name__ == "__main__":
