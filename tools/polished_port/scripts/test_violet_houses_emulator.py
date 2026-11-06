@@ -97,6 +97,15 @@ def catch_poliwag(game,city):
     else:
         raise AssertionError("No Poliwag after 30 pond encounters")
     game.snapshot("kyle-wild-encounter")
+    finish_poliwag_capture(game,before,ball)
+    game.frames(180)
+    while game.position()[1]>10:
+        game.step(UP)
+    game.frames(90)
+    return before
+
+
+def finish_poliwag_capture(game,before,ball):
     offered=None
     for _ in range(1800):
         if cb(game,"CB2_Overworld") and not task_active(game,"Task_BattleStart"):
@@ -119,7 +128,9 @@ def catch_poliwag(game,city):
             # The pocket retains its cursor; select the real ball stack.
             select_bag_item(game,ball,pocket=1)
             game.press(A,180)
-        elif task_active(game,"Task_HandleChooseMonInput"):
+        elif cb(game,"CB2_UpdatePartyMenu"):
+            # A fainted lead opens both the party selector and a separate
+            # Send Out menu. Confirm both; B would cancel the second forever.
             healthy=[i for i,m in enumerate(party(game,details=True)) if m["hp"]]
             assert healthy,"Party lost before catching Poliwag"
             target=healthy[0]
@@ -135,11 +146,6 @@ def catch_poliwag(game,city):
     assert party(game)[-1]["species"]==extra_layout()["poliwag"]
     assert party(game)[-1]["level"]==offered["level"]
     game.screenshot("violet-poliwag-caught")
-    game.frames(180)
-    while game.position()[1]>10:
-        game.step(UP)
-    game.frames(90)
-    return before
 
 
 def check_houses(game,city,checks):

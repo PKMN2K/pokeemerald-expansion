@@ -31,7 +31,7 @@ regression coverage, but are not evidence of complete source-game parity.
 | Field rules and encounters | Source encounter distributions are imported for selected maps, but native encounter modifiers, field-move gates and other engine rules still apply. Headbutt's source selector is dormant. | Audit source field behavior and enable each feature with an explicit map identity and source rules. |
 | Save compatibility | Target save IDs are already allocated and tested. Source DVs/records cannot be copied byte-for-byte into native encrypted Pokemon. | Preserve stable regular move/species/item/save IDs where possible; document representation changes and migration requirements. Source behavior, not GBC table width, is the target. |
 | Completion criteria | Generic native battle tests can pass with entirely native data. | Require source fixture/provenance checks, source-specific native tests, and live emulator assertions for each migration phase. Keep the broader suite as regression coverage. |
-| Replay assumptions | The old tower replay relied on Expansion's early Bite and remaining Surf PP, confused the returning Start menu with field control, and could accept an interrupted interaction as complete. Capture input assumed the remembered Bag row was a ball and did not handle newly reached learn levels. | Replays now learn the source level-13 Bite through the real selector, use purchased Potions and Center visits, confirm the intended object interaction, select the actual ball stack, and handle learning prompts. Changed source data must drive test input instead of being changed to preserve the old replay. |
+| Replay assumptions | The old tower replay relied on Expansion's early Bite and remaining Surf PP, confused the returning Start menu with field control, and could accept an interrupted interaction as complete. Capture input assumed the remembered Bag row was a ball and did not handle newly reached learn levels. | Replays now learn the source level-13 Bite through the real selector, use purchased Potions and Center visits, confirm the intended object interaction, select the actual ball stack, handle learning prompts, and confirm Send Out after a lead faints. Changed source data must drive test input instead of being changed to preserve the old replay. |
 
 ## This implementation's boundaries
 
@@ -64,7 +64,8 @@ passed 5,232 tests, with nine expected failures and 586 existing TODO entries.
 That suite is regression evidence, not proof of unported source mechanics.
 
 Local controller replays verified all three starters' source moves, Violet's
-Poliwag capture and trade, all seven Sprout trainers, learning Bite at level 13,
+Poliwag capture and trade (including capture after replacing a fainted lead),
+all seven Sprout trainers, learning Bite at level 13,
 the rival/Flash sequence, Dark Cave, all three gym trainers, the badge/Roost
 rewards and the Togepi Egg sequence. Save/Continue and repeat-interaction guards
 passed. Later sections were replayed from checkpoints earned by the same ROM's

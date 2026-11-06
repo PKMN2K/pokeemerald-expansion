@@ -555,6 +555,7 @@ def run(args):
             checks.append("teacher's return prompt restores the original demo garden")
         except Exception:
             game.screenshot("failure")
+            game.command(f"save {args.output / 'failure.state'}")
             raise
         finally:
             game.close()
