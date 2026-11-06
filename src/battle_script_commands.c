@@ -1,4 +1,5 @@
 #include "global.h"
+#include "polished_evolution.h"
 #include "battle.h"
 #include "battle_hold_effects.h"
 #include "battle_message.h"
@@ -2384,6 +2385,7 @@ static void Cmd_getexp(void)
                 PREPARE_BYTE_NUMBER_BUFFER(gBattleTextBuff2, 3, GetMonData(&gParties[B_TRAINER_PLAYER][*expMonId], MON_DATA_LEVEL));
 
                 gLeveledUpInBattle |= 1 << *expMonId;
+                gBattleStruct->polishedLevelUp = TRUE;
                 BattleScriptCall(BattleScript_LevelUp);
                 gBattleStruct->battlerExpReward = T1_READ_32(&gBattleResources->bufferB[0][2]);
                 AdjustFriendship(&gParties[B_TRAINER_PLAYER][*expMonId], FRIENDSHIP_EVENT_GROW_LEVEL);
@@ -2420,6 +2422,10 @@ static void Cmd_getexp(void)
         }
         else
         {
+            // Source GiveExperiencePoints finishes every level/move from this
+            // award before evolving, while the defeated opponent is still out.
+            if (PolishedTryBattleEvolution(*expMonId))
+                break;
             if ((++gBattleStruct->expOrderId) < PARTY_SIZE)
             {
                 *expMonId = gBattleStruct->expGettersOrder[gBattleStruct->expOrderId];

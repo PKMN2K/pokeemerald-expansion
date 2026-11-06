@@ -22,7 +22,7 @@ regression coverage, but are not evidence of complete source-game parity.
 | Custom move identities | Fury Strikes, HealingLight and Fresh Snack do not exist as separate Expansion moves. | **Added:** distinct ordinary move IDs and generated source names, descriptions and basic data. Native battle adapters implement source multi-hit probability and healing fractions/rounding. Original battle animations and Fresh Snack's field use remain open. |
 | Other move data and effects | `src/data/moves_info.h` still supplies most move definitions; battle configuration selects many latest-generation rules. | Import all source move data/flags and audit effect implementations, damage/stat rules, status, weather and RNG. A matching move name is insufficient. |
 | Species stats and related data | Native generation presets previously supplied these values. | **Imported:** all 391 base-data mappings provide default-source stats, types, three ability slots, growth, catch/EXP/EV data, gender, egg groups/cycles and initial happiness. Gameplay uses `GetSpeciesBaseData`; additional Expansion species retain native data. Held items, Pokedex/presentation data, ability effects and battle/creation rules remain open. |
-| Evolution conditions, breeding and teaching | Source evolution rows now replace native conditions for all 391 registered identities, with a source evaluator and shared family/Pokedex metadata. Source egg groups and initial cycle counts are imported. | Evolution timing inside trainer battles, hidden pre-evolution form bits and unported evolution locations remain open, as detailed below. Import egg/TM/tutor data, hatch-step timing, breeding rules and item mappings. Existing Roost/Flash reward tests prove only those selected paths. |
+| Evolution conditions, breeding and teaching | Source evolution rows now replace native conditions for all 391 registered identities, with a source evaluator, shared family/Pokedex metadata and default evolution timing inside trainer battles. Source egg groups and initial cycle counts are imported. | Hidden pre-evolution form bits, remaining options and unported evolution locations remain open, as detailed below. Import egg/TM/tutor data, hatch-step timing, breeding rules and item mappings. Existing Roost/Flash reward tests prove only those selected paths. |
 | Trainer construction and AI | Imported parties preserve selected species, levels and moves, but use native AI/ability selection, fixed Hardy natures and DV/IV/EV adaptations. | Audit source trainer attributes and construction semantics. Recheck actual battle stats and behavior after species data import. |
 | Pokemon graphics and sprite data | Source trainer portraits and several overworld sprites are live; Pokemon battle graphics, palettes, icons and animation bindings mostly remain native. | Import source pixels, normal/shiny palettes, dimensions, frame maps, sequences, timing, positions and form/gender handling. Include all unresolved forms. |
 | Startup and player identity | `POLISHED_JOHTO_DEMO` starts in a test garden with a Lv10 Totodile, Surf, an Old Rod and a Mach Bike. Existing campaign replays use that harness. | Implement the real source startup separately from the test garden, with the source initial party/inventory, opening flow and supported protagonists. Add a campaign run starting from that baseline. |
@@ -174,36 +174,63 @@ item ID 879, its source name, description and 3000 price, and its three source
 regional evolution uses. Its icon is a temporary native souvenir substitute.
 Existing Pokemon and item save IDs are not renumbered.
 
-This is **not complete evolution-mechanic parity**. The source default options
-enable evolution between opponents during trainer battles; that scene/return
-integration remains unported, so the current adapter uses the engine's
-after-battle timing. Source hidden form bits on Ekans/Dunsparce and inherited
-Magikarp/Gyarados pattern bits also need a creation/inheritance/save adapter;
+The default `EVOLVE_IN_BATTLE_OPT` timing is implemented from pinned
+`engine/battle/core.asm`, `evolve_battle.asm` and `abilities.asm`. Each EXP
+recipient finishes all level-ups and move learning before a mid-trainer
+evolution attempt. Bench recipients use their own party slot; wild battles and
+the final opposing Pokemon retain deferred evolution. Cancellation/no matching
+rule does not create a deferred level-up attempt; separately earned critical-hit
+eligibility remains intact, matching the source flags.
+
+The evolution UI retains battle logic allocations and script stacks while
+replacing/rebuilding display resources. It restores the environment and music
+sequencer, reloads the active party member, preserves stat stages/volatiles and
+refreshes the evolved active mon's ability. Foe-dependent entry abilities are
+skipped when the current opponent has fainted; weather and immunity effects can run.
+The GBA adapter synchronizes new move PP and consumed items into the live battle
+record, and prevents trainer-battle item restoration from refunding an evolution
+item. Cancelled and benched evolutions do not activate the active mon's ability.
+Native profiles and optional Expansion species keep their existing timing.
+
+This is **not complete evolution-mechanic parity**. Source hidden form bits on
+Ekans/Dunsparce and inherited Magikarp/Gyarados pattern bits also need a
+creation/inheritance/save adapter;
 registered plain identities currently produce their plain evolved identity.
 The 20 maps belonging to eight evolution landmarks are recorded in the
 manifest but have not yet been ported. The generator registers their exact
 source map identities when they are added; no Hoenn location is substituted.
-The source EV-disabled option's special IV comparison and source evolution
-animation are also pending. Default EV-enabled Tyrogue uses actual stats.
+The initial-options toggle for disabling mid-battle evolution, the EV-disabled
+option's special IV comparison and source evolution animation are also pending.
+Default EV-enabled Tyrogue uses actual stats. General ability/battle rules remain
+part of the battle-profile audit; this phase implements their evolution trigger.
 
 Source fixtures retain evolution, item-use, default-option, battle and animation
 code with verified Git blob hashes, so these boundaries can be checked directly
 against the pin. Dedicated native tests cover the rules above and source/native
 profile isolation; Python checks verify row counts, alias boundaries and reject
 unknown source syntax. Both standard Emerald and Johto builds pass with GCC
-13.2.1. All 33 focused Polished tests and the full 5,255-test native suite pass,
-with nine expected failures and 586 existing TODO entries.
+14.2.1. With CI's GCC 13.2.1, all 38 focused Polished tests and the full
+5,260-test native suite pass, with nine expected failures and 586 existing
+TODO entries. All six AI timing limits pass unchanged.
+
+The native battle tests exercise active and successive bench evolution,
+evolution moves, ability activation and permanent held-item consumption through
+trainer cleanup. A separate mGBA button-input replay completes and cancels the
+real evolution UI, then checks the restored battle display, party/battle data,
+held item, ability/weather, environment, music and deferred level-up flag. It
+patches only test-runner selection/headless flags, never gameplay state. CI
+runs this replay and retains its screenshots and JSON evidence.
 
 The final Johto ROM passes all 12 demo checks, all 100 campaign checks through
 Falkner and the Togepi Egg, and all 19 New Bark warp traversals, including
 Save/reset/Continue and repeat-interaction guards. These are regression checks
 from the existing demo startup, not evidence of the unported authentic opening
 or every later-game evolution. Johto ROM SHA-256:
-`38809d264926111f50ff08d8fa03fc2a410d82895b983f5ccc8b0b80f101f7e3`.
+`0b032c95554198c552c3e86a034f5090efbfd9b54447687c20f6471d3447c843`.
 
 ## Next priorities
 
-1. Complete the remaining evolution timing and hidden-form adapters above.
+1. Complete hidden-form generation/inheritance and the remaining options above.
    Import egg moves, teaching compatibility and held-item data/probabilities.
    Complete breeding/hatching behavior beyond base data.
 2. Import remaining move data and implement a source battle profile, including

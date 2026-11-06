@@ -706,7 +706,10 @@ static void Task_EvolutionScene(u8 taskId)
         if (!IsSEPlaying())
         {
             // Start music, fade background to black
-            PlayNewMapMusic(MUS_EVOLUTION);
+            if (PolishedBattleEvolutionIsRunning())
+                PlayBGM(MUS_EVOLUTION);
+            else
+                PlayNewMapMusic(MUS_EVOLUTION);
             gTasks[taskId].tState++;
             BeginNormalPaletteFade(0x1C, 4, 0, 0x10, RGB_BLACK);
         }
@@ -802,7 +805,7 @@ static void Task_EvolutionScene(u8 taskId)
             if (var != MOVE_NONE && !gTasks[taskId].tEvoWasStopped)
             {
                 u8 nickname[POKEMON_NAME_BUFFER_SIZE];
-                if (!(gTasks[taskId].tBits & TASK_BIT_LEARN_MOVE))
+                if (!(gTasks[taskId].tBits & TASK_BIT_LEARN_MOVE) && !PolishedBattleEvolutionIsRunning())
                 {
                     StopMapMusic();
                     Overworld_PlaySpecialMapMusic();
@@ -831,7 +834,7 @@ static void Task_EvolutionScene(u8 taskId)
     case EVOSTATE_END:
         if (!gPaletteFade.active)
         {
-            if (!(gTasks[taskId].tBits & TASK_BIT_LEARN_MOVE))
+            if (!(gTasks[taskId].tBits & TASK_BIT_LEARN_MOVE) && !PolishedBattleEvolutionIsRunning())
             {
                 StopMapMusic();
                 Overworld_PlaySpecialMapMusic();

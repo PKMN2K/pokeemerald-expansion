@@ -95,7 +95,8 @@ import described below:
 - Source base stats, types, ability slots and level-up/evolution-move tables now
   use shared accessors in the Johto build. Expansion still supplies ability
   effects, egg/teaching data and sprite/animation bindings. Evolution rules are
-  imported separately below; timing and hidden-form gaps remain explicit.
+  imported separately below, including default mid-trainer timing; hidden-form
+  and optional-setting gaps remain explicit.
 - Pokemon battle sprites, palettes, icons and animation metadata still need
   the comprehensive source import. Imported trainer and overworld artwork does
   not establish completion of Pokemon battle graphics.
@@ -206,13 +207,21 @@ native evolution. Held evolution items are consumed after animation success,
 so checks and cancellation preserve them. Odd Souvenir has stable appended
 item ID 879 and the source's three regional evolution uses.
 
+The default source timing is now active: after all levels/moves from an EXP
+award, a party member can evolve before a trainer's next Pokemon. This includes
+bench recipients. Wild battles and the final trainer opponent still defer
+evolution until after battle. The ordinary evolution UI supports cancellation
+and learning evolution moves, then restores the battlefield and music. An
+active evolved Pokemon reloads its stats/types/moves/ability without resetting
+stat stages or volatile battle state, and runs its source entry-ability timing.
+Consumed evolution items cannot be restored by native trainer-battle cleanup.
+
 The [baseline audit](tools/polished_port/PARITY_AUDIT.md#evolution-data-and-rule-adapter)
-records the remaining work: default-source evolution between trainer opponents,
-hidden pre-evolution/inherited form bits, unported landmark maps, the optional
-EV-disabled stat comparison, and source animation/item artwork. The current
-engine still evolves after battle, and never substitutes a Hoenn location for
-an unported source landmark. This phase imports the registered identities'
-conditions; it does not claim complete evolution mechanics.
+records the remaining work: hidden pre-evolution/inherited form bits, unported
+landmark maps, optional initial options (including disabling mid-battle
+evolution and EV-disabled stat comparison), and source animation/item artwork.
+No Hoenn location substitutes for an unported source landmark. These phases
+do not claim complete evolution or battle-mechanic parity.
 
 ## First milestone
 

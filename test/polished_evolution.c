@@ -5,6 +5,71 @@
 #include "polished_evolution.h"
 #include "test/test.h"
 
+TEST("Polished mid-battle evolution excludes wild, final opponent, link, facility and native profiles")
+{
+    SetConfig(CONFIG_POLISHED_EVOLUTIONS, TRUE);
+    gBattlersCount = 2;
+    gBattlerPositions[0] = B_POSITION_PLAYER_LEFT;
+    gBattlerPositions[1] = B_POSITION_OPPONENT_LEFT;
+    gBattleTypeFlags = BATTLE_TYPE_TRAINER;
+    gBattleOutcome = 0;
+    ZeroPlayerPartyMons();
+    ZeroEnemyPartyMons();
+    CreateRandomMon(&gParties[B_TRAINER_PLAYER][0], SPECIES_CATERPIE, 7);
+    EXPECT(!PolishedCanEvolveDuringBattle(0));
+    CreateRandomMon(&gParties[B_TRAINER_OPPONENT_A][1], SPECIES_RATTATA, 5);
+    EXPECT(PolishedCanEvolveDuringBattle(0));
+    const u32 blocked[] = {0, BATTLE_TYPE_TRAINER | BATTLE_TYPE_LINK, BATTLE_TYPE_TRAINER | BATTLE_TYPE_RECORDED_LINK,
+        BATTLE_TYPE_TRAINER | BATTLE_TYPE_FRONTIER, BATTLE_TYPE_TRAINER | BATTLE_TYPE_TRAINER_HILL};
+    for (u32 i = 0; i < ARRAY_COUNT(blocked); i++)
+    {
+        gBattleTypeFlags = blocked[i];
+        EXPECT(!PolishedCanEvolveDuringBattle(0));
+    }
+    gBattleTypeFlags = BATTLE_TYPE_TRAINER;
+    gBattleOutcome = B_OUTCOME_WON;
+    EXPECT(!PolishedCanEvolveDuringBattle(0));
+    gBattleOutcome = 0;
+    EXPECT(!PolishedCanEvolveDuringBattle(PARTY_SIZE));
+    SetConfig(CONFIG_POLISHED_EVOLUTIONS, FALSE);
+    EXPECT(!PolishedCanEvolveDuringBattle(0));
+}
+
+TEST("Polished battle reload preserves stages and volatiles while refreshing evolved data")
+{
+    SetConfig(CONFIG_POLISHED_SPECIES_DATA, TRUE);
+    gBattlersCount = 2;
+    gBattlerPositions[0] = B_POSITION_PLAYER_LEFT;
+    gBattlerPositions[1] = B_POSITION_OPPONENT_LEFT;
+    gBattleTypeFlags = BATTLE_TYPE_TRAINER;
+    gBattlerPartyIndexes[0] = 0;
+    struct Pokemon *mon = &gParties[B_TRAINER_PLAYER][0];
+    struct BattleSpriteInfo battlerSprites[MAX_BATTLERS_COUNT] = {0};
+    struct BattleSpriteData sprites = {.battlerData = battlerSprites};
+    gBattleSpritesDataPtr = &sprites;
+    sprites.battlerData[0].transformSpecies = SPECIES_MEW;
+    CreateRandomMon(mon, SPECIES_METAPOD, 7);
+    PokemonToBattleMon(mon, &gBattleMons[0]);
+    gBattleMons[0].species = SPECIES_CATERPIE;
+    gBattleMons[0].statStages[STAT_ATK] = DEFAULT_STAT_STAGE + 2;
+    gBattleMons[0].volatiles.confusionTimer = 3;
+    gBattleMons[0].volatiles.substitute = TRUE;
+    gBattleMons[0].volatiles.overwrittenAbility = ABILITY_LEVITATE;
+    gBattleMons[0].ability = ABILITY_LEVITATE;
+    PolishedReloadBattleMonAfterEvolution(0, FALSE);
+    EXPECT_EQ(gBattleMons[0].ability, ABILITY_LEVITATE);
+    EXPECT_EQ(sprites.battlerData[0].transformSpecies, SPECIES_NONE);
+    PolishedReloadBattleMonAfterEvolution(0, TRUE);
+    EXPECT_EQ(gBattleMons[0].species, SPECIES_METAPOD);
+    EXPECT_EQ(gBattleMons[0].ability, GetMonAbility(mon));
+    EXPECT_EQ((u32)gBattleMons[0].volatiles.overwrittenAbility, ABILITY_NONE);
+    EXPECT_EQ(gBattleMons[0].statStages[STAT_ATK], DEFAULT_STAT_STAGE + 2);
+    EXPECT_EQ((u32)gBattleMons[0].volatiles.confusionTimer, 3);
+    EXPECT(gBattleMons[0].volatiles.substitute);
+    EXPECT_EQ(gBattleMons[0].maxHP, GetMonData(mon, MON_DATA_MAX_HP));
+    gBattleSpritesDataPtr = NULL;
+}
+
 static enum Species At(struct Pokemon *mon, enum EvolutionMode mode, enum Item item, u32 hour)
 {
     return PolishedFindEvolution(mon, mode, item, hour, POLISHED_LANDMARK_NONE, 0);

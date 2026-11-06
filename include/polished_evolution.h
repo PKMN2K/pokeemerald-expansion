@@ -42,4 +42,9 @@ bool32 PolishedEvolutionTimeMatches(u32 period, u32 hour);
 u32 PolishedGetEvolutionLandmark(void);
 const u8 *PolishedEvolutionLandmarkName(u32 landmark);
 
+bool32 PolishedCanEvolveDuringBattle(u32 partyId);
+bool32 PolishedTryBattleEvolution(u32 partyId);
+bool32 PolishedBattleEvolutionIsRunning(void);
+void PolishedReloadBattleMonAfterEvolution(enum BattlerId battler, bool32 evolved);
+
 #endif

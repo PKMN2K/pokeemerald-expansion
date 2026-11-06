@@ -215,7 +215,7 @@ jobs:
       - name: Install binutils
         run: |
           sudo apt-get update
-          sudo apt-get install -y --no-install-recommends binutils-arm-none-eabi gcc-arm-none-eabi libnewlib-arm-none-eabi libpng-dev python3
+          sudo apt-get install -y --no-install-recommends binutils-arm-none-eabi gcc-arm-none-eabi libnewlib-arm-none-eabi libpng-dev python3 libmgba-dev
 
       - name: Cache build tools
         uses: actions/cache@v4
@@ -1069,6 +1069,19 @@ jobs:
           GAME_VERSION: EMERALD
           TEST: 1
         run: make -j$(nproc) check
+
+      - name: Exercise evolution completion and cancellation in mGBA
+        timeout-minutes: 5
+        run: |
+          gcc -std=gnu11 -O2 -Wall -Wextra -Werror tools/polished_port/tests/mgba_johto_driver.c -lmgba -o /tmp/evolution-input-driver
+          python3 tools/polished_port/scripts/test_battle_evolution_emulator.py --driver /tmp/evolution-input-driver --elf pokeemerald-test.elf --output /tmp/evolution-input-validation
+
+      - name: Upload battle evolution evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: battle-evolution-evidence
+          path: /tmp/evolution-input-validation
 
   # Gate job: satisfies the "build" branch protection rule.
   # Passes only when all parallel build/test jobs succeed.

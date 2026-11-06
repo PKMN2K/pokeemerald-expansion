@@ -187,6 +187,13 @@ void PolishedCommitEvolution(struct Pokemon *mon, enum Species targetSpecies)
         {
             enum Item none = ITEM_NONE;
             SetMonData(mon, MON_DATA_HELD_ITEM, &none);
+            // Trainer battles normally restore original held items. An item
+            // spent on a completed source evolution is permanently consumed.
+            if (PolishedBattleEvolutionIsRunning())
+                for (u32 i = 0; i < PARTY_SIZE; i++)
+                    if (mon == &gParties[B_TRAINER_PLAYER][i]
+                        && gBattleStruct->itemLost[B_TRAINER_PLAYER][i].originalItem == heldItem)
+                        gBattleStruct->itemLost[B_TRAINER_PLAYER][i].originalItem = ITEM_NONE;
             return;
         }
 }

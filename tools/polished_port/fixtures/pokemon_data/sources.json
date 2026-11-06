@@ -1802,6 +1802,16 @@
       "path": "engine/battle/core.asm",
       "fixture": "engine__battle__core.asm.b64",
       "git_blob_sha1": "37e76be94949c77bf7fd12814675a27943c7d85f"
+    },
+    {
+      "path": "engine/battle/evolve_battle.asm",
+      "fixture": "engine__battle__evolve_battle.asm.b64",
+      "git_blob_sha1": "4a1c3e305a6e5ec25a1b679e1e33bf92f17b8f8f"
+    },
+    {
+      "path": "engine/battle/abilities.asm",
+      "fixture": "engine__battle__abilities.asm.b64",
+      "git_blob_sha1": "8ea962089921b262a1c3b050c77e5521fba6d921"
     }
   ]
 }

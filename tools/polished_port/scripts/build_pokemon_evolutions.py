@@ -138,7 +138,7 @@ def build():
                     friendship_threshold=friendship, locations=locations,
                     remaining_gaps=["Hidden Ekans/Dunsparce and inherited Magikarp/Gyarados form bits need a creation/inheritance/save adapter; ordinary registered identities retain plain evolutions.",
                                     "Evolution landmarks await their campaign maps; no Hoenn replacements are enabled.",
-                                    "Default-source mid-trainer-battle evolution timing is not yet implemented; current runtime evolves after the battle.",
+                                    "Default-source mid-trainer evolution is enabled; the optional initial-options toggle awaits the source options system.",
                                     "Optional source EV-disabled stat comparison is not imported with the initial-options system.",
                                     "Source evolution animation/presentation and item artwork remain pending."], records=records)
     return {OUTPUT: "\n".join(lines), MANIFEST: json.dumps(manifest, indent=2) + "\n"}
