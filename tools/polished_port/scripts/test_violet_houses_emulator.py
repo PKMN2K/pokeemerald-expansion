@@ -7,7 +7,7 @@ from test_new_bark_emulator import (map_data, walk, actors, talk_to_resident,
     close_resident_dialogue, save_game, continue_game, check_resident_palette)
 from test_new_bark_intro_emulator import (advance, task_active, text_matches,
     choice_prompt, party, script_active, layout)
-from test_cherrygrove_emulator import enter as enter_building, leave, interact, flag
+from test_cherrygrove_emulator import enter as enter_building, leave, interact, flag, map_id, money
 from test_academy_emulator import wait_for, cb
 from test_new_bark_battle_emulator import controller, choose_cell
 from test_cherrygrove_emulator import extra_layout, sea_battle
@@ -56,12 +56,23 @@ def select_party(game, slot):
 
 
 def catch_poliwag(game,city):
+    for attempt in range(5):
+        slot=try_catch_poliwag(game,city)
+        if slot is not None:
+            return slot
+        print("PASS: pond blackout recovered through Violet Center; retry",attempt+1,flush=True)
+    raise AssertionError("Party lost five Poliwag capture attempts")
+
+
+def try_catch_poliwag(game,city):
     mart=map_data("PolishedVioletMart")
     enter(game,city,mart)
     open_shop(game,mart)
     ball=stock(game)[0]
-    for _ in range(5):
+    price=game.u32(game.sym["gItemsInfo"]+ball*extra_layout()["item_size"])
+    for _ in range(min(max(0,8-count(game,ball)),money(game)//price)):
         purchase(game,0,ball)
+    assert count(game,ball)>0,"No funds or Poké Balls for the pond encounter"
     close_shop(game);leave(game,mart,city)
     center=map_data("PolishedVioletPokeCenter1F")
     enter(game,city,center)
@@ -97,7 +108,15 @@ def catch_poliwag(game,city):
     else:
         raise AssertionError("No Poliwag after 30 pond encounters")
     game.snapshot("kyle-wild-encounter")
-    finish_poliwag_capture(game,before,ball)
+    if not finish_poliwag_capture(game,before,ball):
+        # A failed ball can cost a turn against the source level-20 encounter.
+        # A real blackout must end this attempt, not leave the replay polling
+        # an already healed party forever on the field.
+        advance(game,lambda:not script_active(game))
+        assert game.map_number()==map_id(game,center)
+        assert all(m["hp"]==m["max_hp"] for m in party(game,details=True))
+        leave(game,center,city)
+        return None
     game.frames(180)
     while game.position()[1]>10:
         game.step(UP)
@@ -111,6 +130,8 @@ def finish_poliwag_capture(game,before,ball):
         if cb(game,"CB2_Overworld") and not task_active(game,"Task_BattleStart"):
             if len(party(game))==before+1:
                 break
+            if game.read(game.sym["gBattleOutcome"],1)[0]==2:  # B_OUTCOME_LOST
+                return False
         opcode=game.read(game.u32(game.sym["gBattlescriptCurrInstr"]),1)[0] if cb(game,"BattleMainCB2") else -1
         # Catch EXP can reach a source learn level. Repeated B would alternate
         # between declining the move and declining to stop learning it.
@@ -146,6 +167,7 @@ def finish_poliwag_capture(game,before,ball):
     assert party(game)[-1]["species"]==extra_layout()["poliwag"]
     assert party(game)[-1]["level"]==offered["level"]
     game.screenshot("violet-poliwag-caught")
+    return True
 
 
 def check_houses(game,city,checks):
