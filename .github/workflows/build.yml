@@ -78,6 +78,8 @@ jobs:
           python3 tools/polished_port/scripts/test_pokemon_forms.py
           python3 tools/polished_port/scripts/build_pokemon_learning.py --check
           python3 tools/polished_port/scripts/test_pokemon_learning.py
+          python3 tools/polished_port/scripts/build_pokemon_held_items.py --check
+          python3 tools/polished_port/scripts/test_pokemon_held_items.py
 
       - name: Build playable Johto demo
         timeout-minutes: 20

@@ -32,6 +32,7 @@
 #include "party_menu.h"
 #include "pokedex.h"
 #include "pokemon.h"
+#include "polished_items.h"
 #include "pokemon_icon.h"
 #include "pokemon_summary_screen.h"
 #include "random.h"
@@ -1286,6 +1287,10 @@ static void DexNavGenerateMoveset(enum Species species, u8 searchLevel, u8 encou
 
 static enum Item DexNavGenerateHeldItem(enum Species species, u8 searchLevel)
 {
+    enum Item polishedItem;
+    if (PolishedGenerateWildHeldItem(species, FALSE, &polishedItem))
+        return polishedItem;
+
     u16 randVal = Random() % 100;
     u8 searchLevelInfluence = searchLevel >> 1;
     enum Item item1 = gSpeciesInfo[species].itemCommon;

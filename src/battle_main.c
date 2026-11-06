@@ -602,7 +602,8 @@ static void CB2_InitBattleInternal(void)
 
     if (!(gBattleTypeFlags & BATTLE_TYPE_TRAINER))
     {
-        if (!(gBattleTypeFlags & (BATTLE_TYPE_LEGENDARY | BATTLE_TYPE_PYRAMID | BATTLE_TYPE_PIKE)))
+        if (!(gBattleTypeFlags & (BATTLE_TYPE_PYRAMID | BATTLE_TYPE_PIKE))
+            && (!(gBattleTypeFlags & BATTLE_TYPE_LEGENDARY) || GetConfig(POLISHED_WILD_HELD_ITEMS)))
             SetWildMonHeldItem();
         TryFormChange(&gParties[B_TRAINER_OPPONENT_A][0], FORM_CHANGE_BEGIN_WILD_ENCOUNTER, B_TRAINER_OPPONENT_A);
         if (IsDoubleBattle())

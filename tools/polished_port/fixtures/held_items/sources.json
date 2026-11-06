@@ -1,0 +1,67 @@
+{
+  "repository": "Rangi42/polishedcrystal",
+  "commit": "3fa43192379df5c3e7b09a08e4d5d79af4f02f42",
+  "variant": "default (FAITHFUL and MONOCHROME undefined)",
+  "files": [
+    {
+      "path": "constants/item_constants.asm",
+      "fixture": "constants__item_constants.asm.b64",
+      "git_blob_sha1": "5c212ef25519857b64479f79d481cb08acc22e93"
+    },
+    {
+      "path": "data/items/attributes.asm",
+      "fixture": "data__items__attributes.asm.b64",
+      "git_blob_sha1": "462f69887a4fc6eea7b160892df8b515d306ded1"
+    },
+    {
+      "path": "data/items/names.asm",
+      "fixture": "data__items__names.asm.b64",
+      "git_blob_sha1": "592c192da8c9880179637911f17d2a47283d37ce"
+    },
+    {
+      "path": "data/items/descriptions.asm",
+      "fixture": "data__items__descriptions.asm.b64",
+      "git_blob_sha1": "166e93e79f6c3cea2cac3f7916cade54364a2fd5"
+    },
+    {
+      "path": "data/items/icon_pointers.asm",
+      "fixture": "data__items__icon_pointers.asm.b64",
+      "git_blob_sha1": "03df75ed7a38529fcfbe6e4c5bb91a35d59d215e"
+    },
+    {
+      "path": "gfx/items.asm",
+      "fixture": "gfx__items.asm.b64",
+      "git_blob_sha1": "682f452348e3a26528c25c53d0f45c41765e1a3d"
+    },
+    {
+      "path": "gfx/items/items.pal",
+      "fixture": "gfx__items__items.pal.b64",
+      "git_blob_sha1": "d06245a3daca89077fade89d3caa633287c9b6c5"
+    },
+    {
+      "path": "gfx/items/pink_bow.png",
+      "fixture": "gfx__items__pink_bow.png.b64",
+      "git_blob_sha1": "9beac4f150296104ee0e24999b3a4292213e55c8"
+    },
+    {
+      "path": "gfx/items/leaf.png",
+      "fixture": "gfx__items__leaf.png.b64",
+      "git_blob_sha1": "3eac6161e0441f3200e6d25a05eba8916569d18d"
+    },
+    {
+      "path": "engine/gfx/color.asm",
+      "fixture": "engine__gfx__color.asm.b64",
+      "git_blob_sha1": "87f6543b753f9bbd0e6a23134709eaefc8d3b960"
+    },
+    {
+      "path": "engine/gfx/item_icons.asm",
+      "fixture": "engine__gfx__item_icons.asm.b64",
+      "git_blob_sha1": "105c2ea5c5f2a9507ce07fed92d63082b78f0bb6"
+    },
+    {
+      "path": "data/text/plural_table.asm",
+      "fixture": "data__text__plural_table.asm.b64",
+      "git_blob_sha1": "2e243c62553ddb359e1109155580f2d81c68b8fa"
+    }
+  ]
+}

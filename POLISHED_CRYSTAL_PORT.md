@@ -178,8 +178,9 @@ use the selected profile when recalculated; use a fresh save to evaluate source
 progression, especially when a species changes growth curve.
 
 The form registrations still use temporary native art and metadata. The later
-evolution phase overrides their native rules. Held-item tables/probabilities, egg moves,
-TM/HM/tutor compatibility, ability effects and trainer/battle rules remain open.
+evolution phase overrides their native rules. Egg/teaching lists and held-item
+tables/probabilities are imported in the later phases below. Ability effects,
+remaining item mechanics and trainer/battle rules remain open.
 See `tools/polished_port/PARITY_AUDIT.md`; this is a base-data import, not a
 claim that the full Pokemon or battle-engine migration is complete.
 
@@ -266,6 +267,51 @@ breeding attributes and regional offspring selection are still open. Ordinary
 move PP and effects remain native pending the move-data phase. See the
 [baseline audit](tools/polished_port/PARITY_AUDIT.md#egg-moves-and-teaching-compatibility)
 for scope and verification.
+
+## Source wild held items
+
+`build_pokemon_held_items.py` joins all 391 source species/form identities to
+pinned held-item pairs. The manifest records explicit mappings for 70 actual
+items plus `NO_ITEM`, source item IDs and attributes, and the separate
+`ALWAYS_ITEM_2` sentinel. `P_POLISHED_WILD_HELD_ITEMS` enables this data/rule
+adapter by default in the Johto build. Unmapped Expansion species retain their
+native tables, and explicitly assigned nonzero encounter items are preserved.
+
+The source guarantee sentinel takes priority over the legendary encounter
+flag. Legendary encounters otherwise take item one without rolling; this is
+an encounter flag, not a species classification. Ordinary encounters make two
+independent, short-circuited byte rolls. The RGBDS `percent` macro multiplies
+by 255: ordinary thresholds are 127/25, boosted thresholds 153/127. Even empty
+or equal-item pairs follow these rolls. Compound Eyes, Super Luck or an Amulet
+Coin on physical party slot zero provide the one boosted profile. A fainted
+lead still counts; an Egg cannot supply an ability. The default source checks
+the Amulet Coin independently. Native Altering Cave tables cannot override
+mapped source data. Optional DexNav uses the same generator and preserves its
+already-rolled empty result; it remains disabled in the baseline.
+
+Pink Bow, Silver Leaf and Gold Leaf have appended stable IDs 880..882 with
+source singular/plural names, prices, descriptions and original 24x24 Bag
+icons/RGB555 palettes.
+Pink Bow boosts **Fairy**, not Normal, using the native 20% type-power adapter.
+The leaves' tutor exchanges remain part of the unported source map services.
+Existing item IDs and Pokemon/save record layouts are unchanged.
+
+Source hash/regeneration checks cover all mappings, the 131,072 ordinary and
+boosted byte pairs, and exact icon pixels/colors. Native tests cover lead
+selection, boundaries, guaranteed/legendary ordering, equal/empty pairs,
+short-circuited RNG consumption, doubles, explicit items, native isolation,
+Altering Cave/DexNav bypasses, capture/PC flash saves, live item-icon loading,
+wild battle initialization and Pink Bow's type-specific damage adapter.
+All 71 focused Polished tests pass; the full native suite passes 5,293 tests
+with nine expected failures and 586 existing TODOs. The final Johto ROM passes
+all 100 campaign checks, 19 warp checks and 12 visual demo checks. See the
+parity audit for the final ROM hash and validation sequence.
+
+This does not complete the item catalog or battle profile: existing mapped
+items still need source price/description/art/effect audits; source damage
+order and rounding, TM inventory/numbering, tutor placements and general item
+mechanics remain explicit gaps. The GBA RNG supplies the byte draws; its
+sequence is not a reproduction of the GBC RNG.
 
 ## First milestone
 

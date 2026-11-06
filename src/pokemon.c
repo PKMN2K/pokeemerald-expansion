@@ -1,5 +1,6 @@
 #include "global.h"
 #include "polished_forms.h"
+#include "polished_items.h"
 #include "malloc.h"
 #include "apprentice.h"
 #include "battle.h"
@@ -5491,8 +5492,24 @@ void SetWildMonHeldItem(void)
         if (GetMonData(&gParties[B_TRAINER_OPPONENT_A][i], MON_DATA_HELD_ITEM) != ITEM_NONE)
             continue; // prevent overwriting previously set item
 
-        rnd = Random() % 100;
         species = GetMonData(&gParties[B_TRAINER_OPPONENT_A][i], MON_DATA_SPECIES, 0);
+        // Optional DexNav already rolled its displayed item. Preserve an
+        // authoritative empty result as well as a nonzero item.
+        if (i == 0 && gDexNavSpecies != SPECIES_NONE
+            && GetConfig(POLISHED_WILD_HELD_ITEMS)
+            && PolishedGetWildHeldItems(gDexNavSpecies) != NULL)
+            continue;
+        enum Item polishedItem;
+        if (PolishedGenerateWildHeldItem(species, gBattleTypeFlags & BATTLE_TYPE_LEGENDARY, &polishedItem))
+        {
+            SetMonData(&gParties[B_TRAINER_OPPONENT_A][i], MON_DATA_HELD_ITEM, &polishedItem);
+            continue;
+        }
+        // The source profile enables this call for legendary encounters;
+        // preserve the native itemless behavior for unmapped species.
+        if (gBattleTypeFlags & BATTLE_TYPE_LEGENDARY)
+            continue;
+        rnd = Random() % 100;
         if (gMapHeader.mapLayoutId == LAYOUT_ALTERING_CAVE)
         {
             s32 alteringCaveId = GetWildMonTableIdInAlteringCave(species);

@@ -1,0 +1,41 @@
+/* Generated source identities; existing native item IDs are unchanged. */
+    [ITEM_POLISHED_PINK_BOW] =
+    {
+        .name = ITEM_NAME("Pink Bow"),
+        .pluralName = ITEM_PLURAL_NAME("Pink Bows"),
+        .price = 1000,
+        .description = COMPOUND_STRING("Powers up Fairy-\ntype moves. (Hold)"),
+        .pocket = POCKET_ITEMS,
+        .type = ITEM_USE_BAG_MENU,
+        .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
+        .iconPic = gItemIcon_PolishedPinkBow,
+        .iconPalette = gItemIconPalette_PolishedPinkBow,
+        .holdEffect = HOLD_EFFECT_TYPE_POWER,
+        .holdEffectParam = 20,
+        .secondaryId = TYPE_FAIRY,
+        .sortType = ITEM_TYPE_TYPE_BOOST_HELD_ITEM,
+    },
+    [ITEM_POLISHED_SILVER_LEAF] =
+    {
+        .name = ITEM_NAME("Silver Leaf"),
+        .pluralName = ITEM_PLURAL_NAME("Silver Leaves"),
+        .price = 500,
+        .description = COMPOUND_STRING("A strange, silver-\ncolored leaf."),
+        .pocket = POCKET_ITEMS,
+        .type = ITEM_USE_BAG_MENU,
+        .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
+        .iconPic = gItemIcon_PolishedSilverLeaf,
+        .iconPalette = gItemIconPalette_PolishedSilverLeaf,
+    },
+    [ITEM_POLISHED_GOLD_LEAF] =
+    {
+        .name = ITEM_NAME("Gold Leaf"),
+        .pluralName = ITEM_PLURAL_NAME("Gold Leaves"),
+        .price = 500,
+        .description = COMPOUND_STRING("A strange, gold-\ncolored leaf."),
+        .pocket = POCKET_ITEMS,
+        .type = ITEM_USE_BAG_MENU,
+        .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
+        .iconPic = gItemIcon_PolishedGoldLeaf,
+        .iconPalette = gItemIconPalette_PolishedGoldLeaf,
+    },

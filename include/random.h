@@ -260,6 +260,8 @@ enum RandomTag
     RNG_RANDOM_BALL,
     RNG_POLISHED_WILD_FORM,
     RNG_POLISHED_FORM_PARENT,
+    RNG_POLISHED_HELD_ITEM_COMMON,
+    RNG_POLISHED_HELD_ITEM_RARE,
 };
 
 #define RandomWeighted(tag, ...) \

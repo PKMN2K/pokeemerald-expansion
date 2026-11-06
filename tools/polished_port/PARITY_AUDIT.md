@@ -21,7 +21,8 @@ regression coverage, but are not evidence of complete source-game parity.
 | Species/form identities | Native numeric IDs do not equal source IDs or form values. Thirty source forms previously lacked target IDs. | **Registered:** all 391 identities now resolve. Thirty forms have distinct appended IDs 1573..1602, with base/form-table round trips. Their original artwork and metadata are still pending; source evolution rules are now selected separately. |
 | Custom move identities | Fury Strikes, HealingLight and Fresh Snack do not exist as separate Expansion moves. | **Added:** distinct ordinary move IDs and generated source names, descriptions and basic data. Native battle adapters implement source multi-hit probability and healing fractions/rounding. Original battle animations and Fresh Snack's field use remain open. |
 | Other move data and effects | `src/data/moves_info.h` still supplies most move definitions; battle configuration selects many latest-generation rules. | Import all source move data/flags and audit effect implementations, damage/stat rules, status, weather and RNG. A matching move name is insufficient. |
-| Species stats and related data | Native generation presets previously supplied these values. | **Imported:** all 391 base-data mappings provide default-source stats, types, three ability slots, growth, catch/EXP/EV data, gender, egg groups/cycles and initial happiness. Gameplay uses `GetSpeciesBaseData`; additional Expansion species retain native data. Held items, Pokedex/presentation data, ability effects and battle/creation rules remain open. |
+| Species stats and related data | Native generation presets previously supplied these values. | **Imported:** all 391 base-data mappings provide default-source stats, types, three ability slots, growth, catch/EXP/EV data, gender, egg groups/cycles and initial happiness. Gameplay uses `GetSpeciesBaseData`; additional Expansion species retain native data. Held-item pairs/probabilities are imported separately below. Pokedex/presentation data, existing item/ability effects and other battle/creation rules remain open. |
+| Wild held items | Native pairs and one percent roll previously selected source species items. | **Imported:** all 391 source pairs, exact two-byte branch rules, guaranteed/legendary priority, lead boosts and 70 item mappings. Pink Bow and both leaves have distinct appended IDs and original Bag icons. Existing mapped item data/effects, source battle rounding and leaf tutors remain open. |
 | Evolution conditions, breeding and teaching | Source evolution rows now replace native conditions for all 391 registered identities, with a source evaluator, shared family/Pokedex metadata and default evolution timing inside trainer battles. Source egg groups and initial cycle counts are imported. | Hidden forms for the Ekans, Magikarp and Dunsparce families, all 391 egg/teaching lists and source egg-move inheritance are now adapted. Remaining evolution options/locations, hatch-step timing, breeding attributes/regional offspring selection and item mappings remain open. |
 | Trainer construction and AI | Imported parties preserve selected species, levels and moves, but use native AI/ability selection, fixed Hardy natures and DV/IV/EV adaptations. | Audit source trainer attributes and construction semantics. Recheck actual battle stats and behavior after species data import. |
 | Pokemon graphics and sprite data | Source trainer portraits and several overworld sprites are live; Pokemon battle graphics, palettes, icons and animation bindings mostly remain native. | Import source pixels, normal/shiny palettes, dimensions, frame maps, sequences, timing, positions and form/gender handling. Include all unresolved forms. |
@@ -373,11 +374,57 @@ placement and reminder UI; broader offspring selection, IVs, abilities,
 natures, balls and hatch timing; ordinary move PP/effects and source artwork.
 The imported compatibility lists do not establish parity for those systems.
 
+## Wild held-item identities and generation
+
+`build_pokemon_held_items.py` imports all 391 source pairs with 70 real item
+mappings, `NO_ITEM` and a separate `ALWAYS_ITEM_2` flag. The pinned fixtures
+include item constants, attributes, names, descriptions, icon pointers,
+original PNGs and RGB555 palettes. The shared species/form base-data fixtures
+retain the battle routine, ability lookup and percent macro.
+
+`P_POLISHED_WILD_HELD_ITEMS` is on for Johto. Guaranteed item two precedes the
+legendary encounter's item-one rule; neither consumes RNG. Otherwise, the
+first byte uses threshold 127 (ordinary) or 153 (boosted), and a failed first
+roll alone permits a second byte with threshold 25 or 127. This reproduces
+`percent = n * 255 / 100`, including empty/equal slots. The exact numerators
+over 65,536 byte pairs are 32,512/3,225/29,799 for common/rare/none ordinarily,
+and 39,168/13,081/13,287 when boosted. GBA random bytes replace the GBC RNG
+sequence without replacing those probabilities.
+
+The physical lead's Compound Eyes or Super Luck works even when fainted, but
+not when an Egg/empty. The default source's independent Amulet Coin check also
+boosts, without stacking. Native species-based legendary guesses and native
+Altering Cave item tables do not participate. Explicit nonzero scripted items
+remain intact. Unmapped species and the disabled profile preserve native data;
+unmapped legendary encounters remain itemless. The disabled optional DexNav
+uses this generator if enabled and cannot reroll its selected empty result.
+
+Appended items 880..882 are Pink Bow, Silver Leaf and Gold Leaf; prior regular
+item IDs and all saved Pokemon layouts are unchanged. Source names, prices,
+descriptions, Bag-icon pixels and palettes are generated. Pink Bow uses the
+native 20% Fairy-type power adapter; the source also specifies Fairy and 6/5,
+but complete damage-stage order/rounding parity is still pending. Existing
+mapped item definitions/effects are not certified by their identity mappings.
+Source leaf tutors, source TM numbering/inventory and broader item mechanics
+remain open. Source UI layout and contextual icon-corner handling remain part
+of presentation work; the new graphics reproduce the original Bag assets.
+
+Held-item validation: all source fixture checks and deterministic generators
+pass. The full native suite passes 5,293 tests, with nine expected failures and
+586 existing TODOs (5,888 total). After the final source plural-name metadata
+import (Pink Bows, Silver Leaves, Gold Leaves), all 71 focused Polished tests
+pass again. Standard Emerald and Johto production builds succeed; all 12
+visual demo checks pass on final ROM
+`066342bbcae086738bdf55b014d0f943b37d656710886265113a5ba612fac452`.
+The complete controller campaign on this same final ROM passes all 100 checks
+and 19 warp checks, including Falkner, Zephyr Badge/Roost, Togepi and native
+Save/Continue. All 26 CI source/asset commands also pass on the final files.
+
 ## Next priorities
 
-1. Complete the remaining evolution options above. Import source item mappings
-   and held-item data/probabilities.
-   Complete breeding/hatching behavior beyond base data.
+1. Complete the remaining evolution options above, broader item definitions/
+   effects and source TM/tutor inventories. Complete breeding/hatching behavior
+   beyond base data and inherited moves.
 2. Import remaining move data and implement a source battle profile, including
    trainer creation and AI. Validate source probabilities and rounding directly.
 3. Import Pokemon graphics and complete the associated sprite metadata.

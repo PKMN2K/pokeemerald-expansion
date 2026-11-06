@@ -2123,3 +2123,12 @@ const u16 gItemIconPalette_PolishedTypeChart[] = INCGFX_U16("graphics/items/icon
 
 const u32 gItemIcon_PolishedFlowerMail[] = INCGFX_U32("graphics/items/icons/polished_flower_mail.png", ".4bpp.smol");
 const u16 gItemIconPalette_PolishedFlowerMail[] = INCGFX_U16("graphics/items/icon_palettes/polished_flower_mail.pal", ".gbapal");
+
+const u32 gItemIcon_PolishedPinkBow[] = INCGFX_U32("graphics/items/icons/polished_pink_bow.png", ".4bpp.smol");
+const u16 gItemIconPalette_PolishedPinkBow[] = INCGFX_U16("graphics/items/icon_palettes/polished_pink_bow.pal", ".gbapal");
+
+const u32 gItemIcon_PolishedSilverLeaf[] = INCGFX_U32("graphics/items/icons/polished_silver_leaf.png", ".4bpp.smol");
+const u16 gItemIconPalette_PolishedSilverLeaf[] = INCGFX_U16("graphics/items/icon_palettes/polished_silver_leaf.pal", ".gbapal");
+
+const u32 gItemIcon_PolishedGoldLeaf[] = INCGFX_U32("graphics/items/icons/polished_gold_leaf.png", ".4bpp.smol");
+const u16 gItemIconPalette_PolishedGoldLeaf[] = INCGFX_U16("graphics/items/icon_palettes/polished_gold_leaf.pal", ".gbapal");

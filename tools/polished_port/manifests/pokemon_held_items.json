@@ -1,0 +1,6261 @@
+{
+  "source_commit": "3fa43192379df5c3e7b09a08e4d5d79af4f02f42",
+  "source_variant": "default; FAITHFUL and MONOCHROME undefined",
+  "mapped_target_count": 391,
+  "byte_thresholds": {
+    "common": 127,
+    "rare": 25,
+    "boost_common": 153,
+    "boost_rare": 127
+  },
+  "semantics": [
+    "ALWAYS_ITEM_2 precedes legendary encounter override; legendary selects common without rolls.",
+    "Two independent 0..255 rolls; second only after first fails, including empty and equal-item rows.",
+    "Physical lead Compound Eyes/Super Luck (unless Egg/empty) or Amulet Coin; fainting does not disable boosts.",
+    "Mapped source rows override native and Altering Cave tables; explicit nonzero scripted items are preserved.",
+    "Unmapped species and disabled source profile retain native behavior; legendary fallback stays itemless."
+  ],
+  "item_mapping": [
+    {
+      "source_item": "AMULET_COIN",
+      "target_item": "ITEM_AMULET_COIN",
+      "source_id": 143,
+      "source_name": "Amulet Coin",
+      "source_attributes": [
+        "10000",
+        "HELD_AMULET_COIN",
+        "10",
+        "ITEM",
+        "ITEMMENU_NOUSE",
+        "ITEMMENU_NOUSE"
+      ],
+      "source_description": "Doubles monetary\\nearnings. (Hold)"
+    },
+    {
+      "source_item": "ASPEAR_BERRY",
+      "target_item": "ITEM_ASPEAR_BERRY",
+      "source_id": 66,
+      "source_name": "Aspear Berry",
+      "source_attributes": [
+        "10",
+        "HELD_HEAL_STATUS",
+        "1 << FRZ",
+        "BERRIES",
+        "ITEMMENU_PARTY",
+        "ITEMMENU_PARTY"
+      ],
+      "source_description": "A self-cure for\\nfreezing. (Hold)"
+    },
+    {
+      "source_item": "BERRY_JUICE",
+      "target_item": "ITEM_BERRY_JUICE",
+      "source_id": 92,
+      "source_name": "Berry Juice",
+      "source_attributes": [
+        "100",
+        "HELD_BERRY",
+        "20",
+        "BERRIES",
+        "ITEMMENU_PARTY",
+        "ITEMMENU_PARTY"
+      ],
+      "source_description": "A self-restore\\nitem. (20HP, Hold)"
+    },
+    {
+      "source_item": "BIG_MUSHROOM",
+      "target_item": "ITEM_BIG_MUSHROOM",
+      "source_id": 232,
+      "source_name": "Big Mushroom",
+      "source_attributes": [
+        "5000",
+        "0",
+        "0",
+        "ITEM",
+        "ITEMMENU_NOUSE",
+        "ITEMMENU_NOUSE"
+      ],
+      "source_description": "A rare mushroom.\\nSell high."
+    },
+    {
+      "source_item": "BIG_PEARL",
+      "target_item": "ITEM_BIG_PEARL",
+      "source_id": 235,
+      "source_name": "Big Pearl",
+      "source_attributes": [
+        "8000",
+        "0",
+        "0",
+        "ITEM",
+        "ITEMMENU_NOUSE",
+        "ITEMMENU_NOUSE"
+      ],
+      "source_description": "A big, beautiful\\npearl. Sell high."
+    },
+    {
+      "source_item": "BIG_ROOT",
+      "target_item": "ITEM_BIG_ROOT",
+      "source_id": 163,
+      "source_name": "Big Root",
+      "source_attributes": [
+        "4000",
+        "HELD_BIG_ROOT",
+        "0",
+        "ITEM",
+        "ITEMMENU_NOUSE",
+        "ITEMMENU_NOUSE"
+      ],
+      "source_description": "Powers up draining\\nmoves. (Hold)"
+    },
+    {
+      "source_item": "BLACK_SLUDGE",
+      "target_item": "ITEM_BLACK_SLUDGE",
+      "source_id": 206,
+      "source_name": "Black Sludge",
+      "source_attributes": [
+        "4000",
+        "HELD_BLACK_SLUDGE",
+        "0",
+        "ITEM",
+        "ITEMMENU_NOUSE",
+        "ITEMMENU_NOUSE"
+      ],
+      "source_description": "Restores HP for\\nPoison #mon."
+    },
+    {
+      "source_item": "BRIGHTPOWDER",
+      "target_item": "ITEM_BRIGHT_POWDER",
+      "source_id": 140,
+      "source_name": "BrightPowder",
+      "source_attributes": [
+        "4000",
+        "HELD_BRIGHTPOWDER",
+        "$9a",
+        "ITEM",
+        "ITEMMENU_NOUSE",
+        "ITEMMENU_NOUSE"
+      ],
+      "source_description": "Lowers the foe's\\naccuracy. (Hold)"
+    },
+    {
+      "source_item": "CHARCOAL",
+      "target_item": "ITEM_CHARCOAL",
+      "source_id": 130,
+      "source_name": "Charcoal",
+      "source_attributes": [
+        "1000",
+        "HELD_TYPE_BOOST",
+        "FIRE",
+        "ITEM",
+        "ITEMMENU_NOUSE",
+        "ITEMMENU_NOUSE"
+      ],
+      "source_description": "Powers up Fire-\\ntype moves. (Hold)"
+    },
+    {
+      "source_item": "CHESTO_BERRY",
+      "target_item": "ITEM_CHESTO_BERRY",
+      "source_id": 63,
+      "source_name": "Chesto Berry",
+      "source_attributes": [
+        "10",
+        "HELD_HEAL_STATUS",
+        "SLP_MASK",
+        "BERRIES",
+        "ITEMMENU_PARTY",
+        "ITEMMENU_PARTY"
+      ],
+      "source_description": "A self-awakening\\nfor sleep. (Hold)"
+    },
+    {
+      "source_item": "DRAGON_SCALE",
+      "target_item": "ITEM_DRAGON_SCALE",
+      "source_id": 214,
+      "source_name": "Dragon Scale",
+      "source_attributes": [
+        "2000",
+        "0",
+        "0",
+        "ITEM",
+        "ITEMMENU_NOUSE",
+        "ITEMMENU_NOUSE"
+      ],
+      "source_description": "A rare Dragon-type\\nitem."
+    },
+    {
+      "source_item": "DUBIOUS_DISC",
+      "target_item": "ITEM_DUBIOUS_DISC",
+      "source_id": 216,
+      "source_name": "Dubious Disc",
+      "source_attributes": [
+        "2000",
+        "0",
+        "0",
+        "ITEM",
+        "ITEMMENU_NOUSE",
+        "ITEMMENU_NOUSE"
+      ],
+      "source_description": "A transparent disc\\nof unknown origin."
+    },
+    {
+      "source_item": "ELECTIRIZER",
+      "target_item": "ITEM_ELECTIRIZER",
+      "source_id": 218,
+      "source_name": "Electirizer",
+      "source_attributes": [
+        "2000",
+        "0",
+        "0",
+        "ITEM",
+        "ITEMMENU_NOUSE",
+        "ITEMMENU_NOUSE"
+      ],
+      "source_description": "A box packed with\\nelectric energy."
+    },
+    {
+      "source_item": "EVERSTONE",
+      "target_item": "ITEM_EVERSTONE",
+      "source_id": 119,
+      "source_name": "Everstone",
+      "source_attributes": [
+        "3000",
+        "0",
+        "0",
+        "ITEM",
+        "ITEMMENU_NOUSE",
+        "ITEMMENU_NOUSE"
+      ],
+      "source_description": "Stops evolution.\\n(Hold)"
+    },
+    {
+      "source_item": "FOCUS_BAND",
+      "target_item": "ITEM_FOCUS_BAND",
+      "source_id": 146,
+      "source_name": "Focus Band",
+      "source_attributes": [
+        "4000",
+        "HELD_FOCUS_BAND",
+        "30",
+        "ITEM",
+        "ITEMMENU_NOUSE",
+        "ITEMMENU_NOUSE"
+      ],
+      "source_description": "May prevent faint-\\ning. (Hold)"
+    },
+    {
+      "source_item": "GOLD_LEAF",
+      "target_item": "ITEM_POLISHED_GOLD_LEAF",
+      "source_id": 226,
+      "source_name": "Gold Leaf",
+      "source_attributes": [
+        "500",
+        "0",
+        "0",
+        "ITEM",
+        "ITEMMENU_NOUSE",
+        "ITEMMENU_NOUSE"
+      ],
+      "source_description": "A strange, gold-\\ncolored leaf.",
+      "source_plural_name": "Gold Leaves"
+    },
+    {
+      "source_item": "GRIP_CLAW",
+      "target_item": "ITEM_GRIP_CLAW",
+      "source_id": 161,
+      "source_name": "Grip Claw",
+      "source_attributes": [
+        "4000",
+        "HELD_PROLONG_WRAP",
+        "7",
+        "ITEM",
+        "ITEMMENU_NOUSE",
+        "ITEMMENU_NOUSE"
+      ],
+      "source_description": "Extends duration\\nof trapping moves."
+    },
+    {
+      "source_item": "HARD_STONE",
+      "target_item": "ITEM_HARD_STONE",
+      "source_id": 126,
+      "source_name": "Hard Stone",
+      "source_attributes": [
+        "1000",
+        "HELD_TYPE_BOOST",
+        "ROCK",
+        "ITEM",
+        "ITEMMENU_NOUSE",
+        "ITEMMENU_NOUSE"
+      ],
+      "source_description": "Powers up Rock-\\ntype moves. (Hold)"
+    },
+    {
+      "source_item": "KEE_BERRY",
+      "target_item": "ITEM_KEE_BERRY",
+      "source_id": 90,
+      "source_name": "Kee Berry",
+      "source_attributes": [
+        "10",
+        "HELD_DEFEND_HIT",
+        "PHYSICAL",
+        "BERRIES",
+        "ITEMMENU_PARTY",
+        "ITEMMENU_PARTY"
+      ],
+      "source_description": "Raises Defense on\\na physical hit."
+    },
+    {
+      "source_item": "KINGS_ROCK",
+      "target_item": "ITEM_KINGS_ROCK",
+      "source_id": 142,
+      "source_name": "King's Rock",
+      "source_attributes": [
+        "5000",
+        "HELD_FLINCH_UP",
+        "10",
+        "ITEM",
+        "ITEMMENU_NOUSE",
+        "ITEMMENU_NOUSE"
+      ],
+      "source_description": "May make the foe\\nflinch. (Hold)"
+    },
+    {
+      "source_item": "LAGGING_TAIL",
+      "target_item": "ITEM_LAGGING_TAIL",
+      "source_id": 159,
+      "source_name": "Lagging Tail",
+      "source_attributes": [
+        "4000",
+        "HELD_LAGGING_TAIL",
+        "0",
+        "ITEM",
+        "ITEMMENU_NOUSE",
+        "ITEMMENU_NOUSE"
+      ],
+      "source_description": "Always moves last.\\n(Hold)"
+    },
+    {
+      "source_item": "LANSAT_BERRY",
+      "target_item": "ITEM_LANSAT_BERRY",
+      "source_id": 84,
+      "source_name": "Lansat Berry",
+      "source_attributes": [
+        "10",
+        "HELD_RAISE_CRIT",
+        "0",
+        "BERRIES",
+        "ITEMMENU_PARTY",
+        "ITEMMENU_PARTY"
+      ],
+      "source_description": "Ups critical hit\\nratio in a pinch."
+    },
+    {
+      "source_item": "LEEK",
+      "target_item": "ITEM_LEEK",
+      "source_id": 185,
+      "source_name": "Leek",
+      "source_attributes": [
+        "2000",
+        "0",
+        "0",
+        "ITEM",
+        "ITEMMENU_NOUSE",
+        "ITEMMENU_NOUSE"
+      ],
+      "source_description": "An ordinary leek.\\nSell low."
+    },
+    {
+      "source_item": "LEFTOVERS",
+      "target_item": "ITEM_LEFTOVERS",
+      "source_id": 148,
+      "source_name": "Leftovers",
+      "source_attributes": [
+        "4000",
+        "HELD_LEFTOVERS",
+        "10",
+        "ITEM",
+        "ITEMMENU_NOUSE",
+        "ITEMMENU_NOUSE"
+      ],
+      "source_description": "Restores HP during\\nbattle. (Hold)"
+    },
+    {
+      "source_item": "LEPPA_BERRY",
+      "target_item": "ITEM_LEPPA_BERRY",
+      "source_id": 67,
+      "source_name": "Leppa Berry",
+      "source_attributes": [
+        "10",
+        "HELD_RESTORE_PP",
+        "-1",
+        "BERRIES",
+        "ITEMMENU_PARTY",
+        "ITEMMENU_PARTY"
+      ],
+      "source_description": "A self-restore\\nitem. (10<BOLDP><BOLDP>, Hold)"
+    },
+    {
+      "source_item": "LIGHT_BALL",
+      "target_item": "ITEM_LIGHT_BALL",
+      "source_id": 184,
+      "source_name": "Light Ball",
+      "source_attributes": [
+        "1000",
+        "0",
+        "0",
+        "ITEM",
+        "ITEMMENU_NOUSE",
+        "ITEMMENU_NOUSE"
+      ],
+      "source_description": "Boost Pikachu's\\nAttack and Sp.Atk."
+    },
+    {
+      "source_item": "LUCKY_EGG",
+      "target_item": "ITEM_LUCKY_EGG",
+      "source_id": 147,
+      "source_name": "Lucky Egg",
+      "source_attributes": [
+        "4000",
+        "0",
+        "0",
+        "ITEM",
+        "ITEMMENU_NOUSE",
+        "ITEMMENU_NOUSE"
+      ],
+      "source_description": "Earns extra Exp.\\npoints. (Hold)"
+    },
+    {
+      "source_item": "LUM_BERRY",
+      "target_item": "ITEM_LUM_BERRY",
+      "source_id": 70,
+      "source_name": "Lum Berry",
+      "source_attributes": [
+        "10",
+        "HELD_HEAL_STATUS",
+        "-1",
+        "BERRIES",
+        "ITEMMENU_PARTY",
+        "ITEMMENU_PARTY"
+      ],
+      "source_description": "Cures all status\\nproblems. (Hold)"
+    },
+    {
+      "source_item": "MAGMARIZER",
+      "target_item": "ITEM_MAGMARIZER",
+      "source_id": 219,
+      "source_name": "Magmarizer",
+      "source_attributes": [
+        "2000",
+        "0",
+        "0",
+        "ITEM",
+        "ITEMMENU_NOUSE",
+        "ITEMMENU_NOUSE"
+      ],
+      "source_description": "A box packed with\\nmagma energy."
+    },
+    {
+      "source_item": "MAGNET",
+      "target_item": "ITEM_MAGNET",
+      "source_id": 133,
+      "source_name": "Magnet",
+      "source_attributes": [
+        "1000",
+        "HELD_TYPE_BOOST",
+        "ELECTRIC",
+        "ITEM",
+        "ITEMMENU_NOUSE",
+        "ITEMMENU_NOUSE"
+      ],
+      "source_description": "Boosts Electric-\\ntype moves. (Hold)"
+    },
+    {
+      "source_item": "MARANGABERRY",
+      "target_item": "ITEM_MARANGA_BERRY",
+      "source_id": 91,
+      "source_name": "MarangaBerry",
+      "source_attributes": [
+        "10",
+        "HELD_DEFEND_HIT",
+        "SPECIAL",
+        "BERRIES",
+        "ITEMMENU_PARTY",
+        "ITEMMENU_PARTY"
+      ],
+      "source_description": "Raises Sp.Def on\\na special hit."
+    },
+    {
+      "source_item": "METAL_COAT",
+      "target_item": "ITEM_METAL_COAT",
+      "source_id": 129,
+      "source_name": "Metal Coat",
+      "source_attributes": [
+        "1000",
+        "HELD_TYPE_BOOST",
+        "STEEL",
+        "ITEM",
+        "ITEMMENU_NOUSE",
+        "ITEMMENU_NOUSE"
+      ],
+      "source_description": "Powers up Steel-\\ntype moves. (Hold)"
+    },
+    {
+      "source_item": "METAL_POWDER",
+      "target_item": "ITEM_METAL_POWDER",
+      "source_id": 188,
+      "source_name": "Metal Powder",
+      "source_attributes": [
+        "100",
+        "HELD_METAL_POWDER",
+        "10",
+        "ITEM",
+        "ITEMMENU_NOUSE",
+        "ITEMMENU_NOUSE"
+      ],
+      "source_description": "Raises Defense of\\nDitto. (Hold)"
+    },
+    {
+      "source_item": "MIRACLE_SEED",
+      "target_item": "ITEM_MIRACLE_SEED",
+      "source_id": 132,
+      "source_name": "Miracle Seed",
+      "source_attributes": [
+        "1000",
+        "HELD_TYPE_BOOST",
+        "GRASS",
+        "ITEM",
+        "ITEMMENU_NOUSE",
+        "ITEMMENU_NOUSE"
+      ],
+      "source_description": "Powers up Grass-\\ntype moves. (Hold)"
+    },
+    {
+      "source_item": "MOOMOO_MILK",
+      "target_item": "ITEM_MOOMOO_MILK",
+      "source_id": 54,
+      "source_name": "Moomoo Milk",
+      "source_attributes": [
+        "500",
+        "0",
+        "100",
+        "MEDICINE",
+        "ITEMMENU_PARTY",
+        "ITEMMENU_PARTY"
+      ],
+      "source_description": "Restores #mon\\nHP by 100."
+    },
+    {
+      "source_item": "MOON_STONE",
+      "target_item": "ITEM_MOON_STONE",
+      "source_id": 115,
+      "source_name": "Moon Stone",
+      "source_attributes": [
+        "3000",
+        "0",
+        "0",
+        "ITEM",
+        "ITEMMENU_PARTY",
+        "ITEMMENU_NOUSE"
+      ],
+      "source_description": "Evolves certain\\nkinds of #mon."
+    },
+    {
+      "source_item": "MYSTIC_WATER",
+      "target_item": "ITEM_MYSTIC_WATER",
+      "source_id": 131,
+      "source_name": "Mystic Water",
+      "source_attributes": [
+        "1000",
+        "HELD_TYPE_BOOST",
+        "WATER",
+        "ITEM",
+        "ITEMMENU_NOUSE",
+        "ITEMMENU_NOUSE"
+      ],
+      "source_description": "Powers up Water-\\ntype moves. (Hold)"
+    },
+    {
+      "source_item": "NEVERMELTICE",
+      "target_item": "ITEM_NEVER_MELT_ICE",
+      "source_id": 135,
+      "source_name": "NeverMeltIce",
+      "source_attributes": [
+        "1000",
+        "HELD_TYPE_BOOST",
+        "ICE",
+        "ITEM",
+        "ITEMMENU_NOUSE",
+        "ITEMMENU_NOUSE"
+      ],
+      "source_description": "Powers up Ice-type\\nmoves. (Hold)"
+    },
+    {
+      "source_item": "NO_ITEM",
+      "target_item": "ITEM_NONE",
+      "source_id": 0
+    },
+    {
+      "source_item": "NUGGET",
+      "target_item": "ITEM_NUGGET",
+      "source_id": 229,
+      "source_name": "Nugget",
+      "source_attributes": [
+        "10000",
+        "0",
+        "0",
+        "ITEM",
+        "ITEMMENU_NOUSE",
+        "ITEMMENU_NOUSE"
+      ],
+      "source_description": "Made of pure gold.\\nSell high."
+    },
+    {
+      "source_item": "ORAN_BERRY",
+      "target_item": "ITEM_ORAN_BERRY",
+      "source_id": 68,
+      "source_name": "Oran Berry",
+      "source_attributes": [
+        "10",
+        "HELD_BERRY",
+        "10",
+        "BERRIES",
+        "ITEMMENU_PARTY",
+        "ITEMMENU_PARTY"
+      ],
+      "source_description": "A self-restore\\nitem. (10HP, Hold)"
+    },
+    {
+      "source_item": "OVAL_STONE",
+      "target_item": "ITEM_OVAL_STONE",
+      "source_id": 222,
+      "source_name": "Oval Stone",
+      "source_attributes": [
+        "2000",
+        "0",
+        "0",
+        "ITEM",
+        "ITEMMENU_PARTY",
+        "ITEMMENU_NOUSE"
+      ],
+      "source_description": "A stone as round\\nas a #mon Egg."
+    },
+    {
+      "source_item": "PEARL",
+      "target_item": "ITEM_PEARL",
+      "source_id": 234,
+      "source_name": "Pearl",
+      "source_attributes": [
+        "2000",
+        "0",
+        "0",
+        "ITEM",
+        "ITEMMENU_NOUSE",
+        "ITEMMENU_NOUSE"
+      ],
+      "source_description": "A beautiful pearl.\\nSell low."
+    },
+    {
+      "source_item": "PECHA_BERRY",
+      "target_item": "ITEM_PECHA_BERRY",
+      "source_id": 64,
+      "source_name": "Pecha Berry",
+      "source_attributes": [
+        "10",
+        "HELD_HEAL_STATUS",
+        "1 << PSN",
+        "BERRIES",
+        "ITEMMENU_PARTY",
+        "ITEMMENU_PARTY"
+      ],
+      "source_description": "A self-cure for\\npoison. (Hold)"
+    },
+    {
+      "source_item": "PERSIM_BERRY",
+      "target_item": "ITEM_PERSIM_BERRY",
+      "source_id": 69,
+      "source_name": "Persim Berry",
+      "source_attributes": [
+        "10",
+        "HELD_HEAL_CONFUSE",
+        "0",
+        "BERRIES",
+        "ITEMMENU_NOUSE",
+        "ITEMMENU_PARTY"
+      ],
+      "source_description": "A self-cure for\\nconfusion. (Hold)"
+    },
+    {
+      "source_item": "PETAYA_BERRY",
+      "target_item": "ITEM_PETAYA_BERRY",
+      "source_id": 82,
+      "source_name": "Petaya Berry",
+      "source_attributes": [
+        "10",
+        "HELD_RAISE_STAT",
+        "SP_ATTACK",
+        "BERRIES",
+        "ITEMMENU_PARTY",
+        "ITEMMENU_PARTY"
+      ],
+      "source_description": "Raises Sp.Atk in\\na pinch."
+    },
+    {
+      "source_item": "PINK_BOW",
+      "target_item": "ITEM_POLISHED_PINK_BOW",
+      "source_id": 138,
+      "source_name": "Pink Bow",
+      "source_attributes": [
+        "1000",
+        "HELD_TYPE_BOOST",
+        "FAIRY",
+        "ITEM",
+        "ITEMMENU_NOUSE",
+        "ITEMMENU_NOUSE"
+      ],
+      "source_description": "Powers up Fairy-\\ntype moves. (Hold)",
+      "source_plural_name": "Pink Bows"
+    },
+    {
+      "source_item": "POISON_BARB",
+      "target_item": "ITEM_POISON_BARB",
+      "source_id": 124,
+      "source_name": "Poison Barb",
+      "source_attributes": [
+        "1000",
+        "HELD_TYPE_BOOST",
+        "POISON",
+        "ITEM",
+        "ITEMMENU_NOUSE",
+        "ITEMMENU_NOUSE"
+      ],
+      "source_description": "Powers up Poison-\\ntype moves. (Hold)"
+    },
+    {
+      "source_item": "PROTECTOR",
+      "target_item": "ITEM_PROTECTOR",
+      "source_id": 217,
+      "source_name": "Protector",
+      "source_attributes": [
+        "2000",
+        "0",
+        "0",
+        "ITEM",
+        "ITEMMENU_NOUSE",
+        "ITEMMENU_NOUSE"
+      ],
+      "source_description": "A protective item.\\nStiff and heavy."
+    },
+    {
+      "source_item": "QUICK_CLAW",
+      "target_item": "ITEM_QUICK_CLAW",
+      "source_id": 141,
+      "source_name": "Quick Claw",
+      "source_attributes": [
+        "4000",
+        "HELD_QUICK_CLAW",
+        "20",
+        "ITEM",
+        "ITEMMENU_NOUSE",
+        "ITEMMENU_NOUSE"
+      ],
+      "source_description": "Boosts chances of\\nmoving 1st. (Hold)"
+    },
+    {
+      "source_item": "QUICK_POWDER",
+      "target_item": "ITEM_QUICK_POWDER",
+      "source_id": 189,
+      "source_name": "Quick Powder",
+      "source_attributes": [
+        "100",
+        "HELD_QUICK_POWDER",
+        "0",
+        "ITEM",
+        "ITEMMENU_NOUSE",
+        "ITEMMENU_NOUSE"
+      ],
+      "source_description": "Raises Speed of\\nDitto. (Hold)"
+    },
+    {
+      "source_item": "RAWST_BERRY",
+      "target_item": "ITEM_RAWST_BERRY",
+      "source_id": 65,
+      "source_name": "Rawst Berry",
+      "source_attributes": [
+        "10",
+        "HELD_HEAL_STATUS",
+        "1 << BRN",
+        "BERRIES",
+        "ITEMMENU_PARTY",
+        "ITEMMENU_PARTY"
+      ],
+      "source_description": "A self-heal for a\\nburn. (Hold)"
+    },
+    {
+      "source_item": "RAZOR_CLAW",
+      "target_item": "ITEM_RAZOR_CLAW",
+      "source_id": 221,
+      "source_name": "Razor Claw",
+      "source_attributes": [
+        "5000",
+        "HELD_CRITICAL_UP",
+        "0",
+        "ITEM",
+        "ITEMMENU_NOUSE",
+        "ITEMMENU_NOUSE"
+      ],
+      "source_description": "Raises critical\\nhit ratio. (Hold)"
+    },
+    {
+      "source_item": "RAZOR_FANG",
+      "target_item": "ITEM_RAZOR_FANG",
+      "source_id": 220,
+      "source_name": "Razor Fang",
+      "source_attributes": [
+        "5000",
+        "HELD_FLINCH_UP",
+        "10",
+        "ITEM",
+        "ITEMMENU_NOUSE",
+        "ITEMMENU_NOUSE"
+      ],
+      "source_description": "May make the foe\\nflinch. (Hold)"
+    },
+    {
+      "source_item": "SACRED_ASH",
+      "target_item": "ITEM_SACRED_ASH",
+      "source_id": 61,
+      "source_name": "Sacred Ash",
+      "source_attributes": [
+        "50000",
+        "0",
+        "0",
+        "MEDICINE",
+        "ITEMMENU_CLOSE",
+        "ITEMMENU_NOUSE"
+      ],
+      "source_description": "Fully revives all\\nfainted #mon."
+    },
+    {
+      "source_item": "SHARP_BEAK",
+      "target_item": "ITEM_SHARP_BEAK",
+      "source_id": 123,
+      "source_name": "Sharp Beak",
+      "source_attributes": [
+        "1000",
+        "HELD_TYPE_BOOST",
+        "FLYING",
+        "ITEM",
+        "ITEMMENU_NOUSE",
+        "ITEMMENU_NOUSE"
+      ],
+      "source_description": "Powers up Flying-\\ntype moves. (Hold)"
+    },
+    {
+      "source_item": "SHED_SHELL",
+      "target_item": "ITEM_SHED_SHELL",
+      "source_id": 162,
+      "source_name": "Shed Shell",
+      "source_attributes": [
+        "4000",
+        "HELD_SHED_SHELL",
+        "0",
+        "ITEM",
+        "ITEMMENU_NOUSE",
+        "ITEMMENU_NOUSE"
+      ],
+      "source_description": "Allows switching\\nout. (Hold)"
+    },
+    {
+      "source_item": "SILVERPOWDER",
+      "target_item": "ITEM_SILVER_POWDER",
+      "source_id": 127,
+      "source_name": "SilverPowder",
+      "source_attributes": [
+        "1000",
+        "HELD_TYPE_BOOST",
+        "BUG",
+        "ITEM",
+        "ITEMMENU_NOUSE",
+        "ITEMMENU_NOUSE"
+      ],
+      "source_description": "Powers up Bug-type\\nmoves. (Hold)"
+    },
+    {
+      "source_item": "SILVER_LEAF",
+      "target_item": "ITEM_POLISHED_SILVER_LEAF",
+      "source_id": 225,
+      "source_name": "Silver Leaf",
+      "source_attributes": [
+        "500",
+        "0",
+        "0",
+        "ITEM",
+        "ITEMMENU_NOUSE",
+        "ITEMMENU_NOUSE"
+      ],
+      "source_description": "A strange, silver-\\ncolored leaf.",
+      "source_plural_name": "Silver Leaves"
+    },
+    {
+      "source_item": "SITRUS_BERRY",
+      "target_item": "ITEM_SITRUS_BERRY",
+      "source_id": 71,
+      "source_name": "Sitrus Berry",
+      "source_attributes": [
+        "10",
+        "HELD_BERRY",
+        "0",
+        "BERRIES",
+        "ITEMMENU_PARTY",
+        "ITEMMENU_PARTY"
+      ],
+      "source_description": "Self-restore item.\\n(1/4 max HP, Hold)"
+    },
+    {
+      "source_item": "SMOKE_BALL",
+      "target_item": "ITEM_SMOKE_BALL",
+      "source_id": 145,
+      "source_name": "Smoke Ball",
+      "source_attributes": [
+        "4000",
+        "HELD_ESCAPE",
+        "0",
+        "ITEM",
+        "ITEMMENU_NOUSE",
+        "ITEMMENU_NOUSE"
+      ],
+      "source_description": "Escape from wild\\n#mon. (Hold)"
+    },
+    {
+      "source_item": "SOFT_SAND",
+      "target_item": "ITEM_SOFT_SAND",
+      "source_id": 125,
+      "source_name": "Soft Sand",
+      "source_attributes": [
+        "1000",
+        "HELD_TYPE_BOOST",
+        "GROUND",
+        "ITEM",
+        "ITEMMENU_NOUSE",
+        "ITEMMENU_NOUSE"
+      ],
+      "source_description": "Powers up Ground-\\ntype moves. (Hold)"
+    },
+    {
+      "source_item": "SPELL_TAG",
+      "target_item": "ITEM_SPELL_TAG",
+      "source_id": 128,
+      "source_name": "Spell Tag",
+      "source_attributes": [
+        "1000",
+        "HELD_TYPE_BOOST",
+        "GHOST",
+        "ITEM",
+        "ITEMMENU_NOUSE",
+        "ITEMMENU_NOUSE"
+      ],
+      "source_description": "Powers up Ghost-\\ntype moves. (Hold)"
+    },
+    {
+      "source_item": "STARDUST",
+      "target_item": "ITEM_STARDUST",
+      "source_id": 237,
+      "source_name": "Stardust",
+      "source_attributes": [
+        "3000",
+        "0",
+        "0",
+        "ITEM",
+        "ITEMMENU_NOUSE",
+        "ITEMMENU_NOUSE"
+      ],
+      "source_description": "Pretty, red sand.\\nSell high."
+    },
+    {
+      "source_item": "STARF_BERRY",
+      "target_item": "ITEM_STARF_BERRY",
+      "source_id": 85,
+      "source_name": "Starf Berry",
+      "source_attributes": [
+        "10",
+        "HELD_RAISE_STAT",
+        "$10 | MULTIPLE_STATS",
+        "BERRIES",
+        "ITEMMENU_PARTY",
+        "ITEMMENU_PARTY"
+      ],
+      "source_description": "Ups a random stat\\nin a pinch."
+    },
+    {
+      "source_item": "STAR_PIECE",
+      "target_item": "ITEM_STAR_PIECE",
+      "source_id": 238,
+      "source_name": "Star Piece",
+      "source_attributes": [
+        "12000",
+        "0",
+        "0",
+        "ITEM",
+        "ITEMMENU_NOUSE",
+        "ITEMMENU_NOUSE"
+      ],
+      "source_description": "A hunk of red gem.\\nSell very high."
+    },
+    {
+      "source_item": "THICK_CLUB",
+      "target_item": "ITEM_THICK_CLUB",
+      "source_id": 186,
+      "source_name": "Thick Club",
+      "source_attributes": [
+        "5000",
+        "0",
+        "0",
+        "ITEM",
+        "ITEMMENU_NOUSE",
+        "ITEMMENU_NOUSE"
+      ],
+      "source_description": "Boost Cubone's and\\nMarowak's Attack."
+    },
+    {
+      "source_item": "TINYMUSHROOM",
+      "target_item": "ITEM_TINY_MUSHROOM",
+      "source_id": 231,
+      "source_name": "TinyMushroom",
+      "source_attributes": [
+        "500",
+        "0",
+        "0",
+        "ITEM",
+        "ITEMMENU_NOUSE",
+        "ITEMMENU_NOUSE"
+      ],
+      "source_description": "An ordinary mush-\\nroom. Sell low."
+    },
+    {
+      "source_item": "TWISTEDSPOON",
+      "target_item": "ITEM_TWISTED_SPOON",
+      "source_id": 134,
+      "source_name": "TwistedSpoon",
+      "source_attributes": [
+        "1000",
+        "HELD_TYPE_BOOST",
+        "PSYCHIC",
+        "ITEM",
+        "ITEMMENU_NOUSE",
+        "ITEMMENU_NOUSE"
+      ],
+      "source_description": "Powers up Psychic-\\ntype moves. (Hold)"
+    },
+    {
+      "source_item": "UPGRADE",
+      "target_item": "ITEM_UPGRADE",
+      "source_id": 215,
+      "source_name": "Upgrade",
+      "source_attributes": [
+        "2000",
+        "0",
+        "0",
+        "ITEM",
+        "ITEMMENU_NOUSE",
+        "ITEMMENU_NOUSE"
+      ],
+      "source_description": "A mysterious box\\nmade by Silph Co."
+    },
+    {
+      "source_item": "WIDE_LENS",
+      "target_item": "ITEM_WIDE_LENS",
+      "source_id": 192,
+      "source_name": "Wide Lens",
+      "source_attributes": [
+        "4000",
+        "HELD_ACCURACY_BOOST",
+        "$ba",
+        "ITEM",
+        "ITEMMENU_NOUSE",
+        "ITEMMENU_NOUSE"
+      ],
+      "source_description": "Slightly boosts\\naccuracy. (Hold)"
+    }
+  ],
+  "new_items": [
+    {
+      "source_item": "PINK_BOW",
+      "target_item": "ITEM_POLISHED_PINK_BOW",
+      "target_id": 880,
+      "source_icon": "gfx/items/pink_bow.png",
+      "source_rgb555": [
+        [
+          31,
+          18,
+          23
+        ],
+        [
+          28,
+          12,
+          17
+        ]
+      ],
+      "source_id": 138,
+      "source_name": "Pink Bow",
+      "source_attributes": [
+        "1000",
+        "HELD_TYPE_BOOST",
+        "FAIRY",
+        "ITEM",
+        "ITEMMENU_NOUSE",
+        "ITEMMENU_NOUSE"
+      ],
+      "source_description": "Powers up Fairy-\\ntype moves. (Hold)",
+      "source_plural_name": "Pink Bows"
+    },
+    {
+      "source_item": "SILVER_LEAF",
+      "target_item": "ITEM_POLISHED_SILVER_LEAF",
+      "target_id": 881,
+      "source_icon": "gfx/items/leaf.png",
+      "source_rgb555": [
+        [
+          19,
+          24,
+          22
+        ],
+        [
+          12,
+          16,
+          15
+        ]
+      ],
+      "source_id": 225,
+      "source_name": "Silver Leaf",
+      "source_attributes": [
+        "500",
+        "0",
+        "0",
+        "ITEM",
+        "ITEMMENU_NOUSE",
+        "ITEMMENU_NOUSE"
+      ],
+      "source_description": "A strange, silver-\\ncolored leaf.",
+      "source_plural_name": "Silver Leaves"
+    },
+    {
+      "source_item": "GOLD_LEAF",
+      "target_item": "ITEM_POLISHED_GOLD_LEAF",
+      "target_id": 882,
+      "source_icon": "gfx/items/leaf.png",
+      "source_rgb555": [
+        [
+          31,
+          25,
+          8
+        ],
+        [
+          27,
+          18,
+          1
+        ]
+      ],
+      "source_id": 226,
+      "source_name": "Gold Leaf",
+      "source_attributes": [
+        "500",
+        "0",
+        "0",
+        "ITEM",
+        "ITEMMENU_NOUSE",
+        "ITEMMENU_NOUSE"
+      ],
+      "source_description": "A strange, gold-\\ncolored leaf.",
+      "source_plural_name": "Gold Leaves"
+    }
+  ],
+  "records": [
+    {
+      "source_species": "BULBASAUR",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_BULBASAUR",
+      "source_file": "data/pokemon/base_stats/bulbasaur.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "IVYSAUR",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_IVYSAUR",
+      "source_file": "data/pokemon/base_stats/ivysaur.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "VENUSAUR",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_VENUSAUR",
+      "source_file": "data/pokemon/base_stats/venusaur.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "CHARMANDER",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_CHARMANDER",
+      "source_file": "data/pokemon/base_stats/charmander.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "CHARMELEON",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_CHARMELEON",
+      "source_file": "data/pokemon/base_stats/charmeleon.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "CHARIZARD",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_CHARIZARD",
+      "source_file": "data/pokemon/base_stats/charizard.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "SQUIRTLE",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_SQUIRTLE",
+      "source_file": "data/pokemon/base_stats/squirtle.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "WARTORTLE",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_WARTORTLE",
+      "source_file": "data/pokemon/base_stats/wartortle.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "BLASTOISE",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_BLASTOISE",
+      "source_file": "data/pokemon/base_stats/blastoise.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "CATERPIE",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_CATERPIE",
+      "source_file": "data/pokemon/base_stats/caterpie.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "METAPOD",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_METAPOD",
+      "source_file": "data/pokemon/base_stats/metapod.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "BUTTERFREE",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_BUTTERFREE",
+      "source_file": "data/pokemon/base_stats/butterfree.asm",
+      "source_held_items": [
+        "SHED_SHELL",
+        "SILVERPOWDER"
+      ],
+      "common": "ITEM_SHED_SHELL",
+      "rare": "ITEM_SILVER_POWDER",
+      "always_rare": false
+    },
+    {
+      "source_species": "WEEDLE",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_WEEDLE",
+      "source_file": "data/pokemon/base_stats/weedle.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "KAKUNA",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_KAKUNA",
+      "source_file": "data/pokemon/base_stats/kakuna.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "BEEDRILL",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_BEEDRILL",
+      "source_file": "data/pokemon/base_stats/beedrill.asm",
+      "source_held_items": [
+        "SHED_SHELL",
+        "POISON_BARB"
+      ],
+      "common": "ITEM_SHED_SHELL",
+      "rare": "ITEM_POISON_BARB",
+      "always_rare": false
+    },
+    {
+      "source_species": "PIDGEY",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_PIDGEY",
+      "source_file": "data/pokemon/base_stats/pidgey.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "PIDGEOTTO",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_PIDGEOTTO",
+      "source_file": "data/pokemon/base_stats/pidgeotto.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "PIDGEOT",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_PIDGEOT",
+      "source_file": "data/pokemon/base_stats/pidgeot.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "RATTATA",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_RATTATA",
+      "source_file": "data/pokemon/base_stats/rattata_plain.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "LANSAT_BERRY"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_LANSAT_BERRY",
+      "always_rare": false
+    },
+    {
+      "source_species": "RATICATE",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_RATICATE",
+      "source_file": "data/pokemon/base_stats/raticate_plain.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "LANSAT_BERRY"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_LANSAT_BERRY",
+      "always_rare": false
+    },
+    {
+      "source_species": "SPEAROW",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_SPEAROW",
+      "source_file": "data/pokemon/base_stats/spearow.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "SHARP_BEAK"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_SHARP_BEAK",
+      "always_rare": false
+    },
+    {
+      "source_species": "FEAROW",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_FEAROW",
+      "source_file": "data/pokemon/base_stats/fearow.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "SHARP_BEAK"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_SHARP_BEAK",
+      "always_rare": false
+    },
+    {
+      "source_species": "EKANS",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_EKANS",
+      "source_file": "data/pokemon/base_stats/ekans.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "ARBOK",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_ARBOK",
+      "source_file": "data/pokemon/base_stats/arbok.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "POISON_BARB"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_POISON_BARB",
+      "always_rare": false
+    },
+    {
+      "source_species": "PIKACHU",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_PIKACHU",
+      "source_file": "data/pokemon/base_stats/pikachu.asm",
+      "source_held_items": [
+        "ORAN_BERRY",
+        "LIGHT_BALL"
+      ],
+      "common": "ITEM_ORAN_BERRY",
+      "rare": "ITEM_LIGHT_BALL",
+      "always_rare": false
+    },
+    {
+      "source_species": "RAICHU",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_RAICHU",
+      "source_file": "data/pokemon/base_stats/raichu_plain.asm",
+      "source_held_items": [
+        "ORAN_BERRY",
+        "LIGHT_BALL"
+      ],
+      "common": "ITEM_ORAN_BERRY",
+      "rare": "ITEM_LIGHT_BALL",
+      "always_rare": false
+    },
+    {
+      "source_species": "SANDSHREW",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_SANDSHREW",
+      "source_file": "data/pokemon/base_stats/sandshrew_plain.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "QUICK_CLAW"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_QUICK_CLAW",
+      "always_rare": false
+    },
+    {
+      "source_species": "SANDSLASH",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_SANDSLASH",
+      "source_file": "data/pokemon/base_stats/sandslash_plain.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "QUICK_CLAW"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_QUICK_CLAW",
+      "always_rare": false
+    },
+    {
+      "source_species": "NIDORAN_F",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_NIDORAN_F",
+      "source_file": "data/pokemon/base_stats/nidoran_f.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "NIDORINA",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_NIDORINA",
+      "source_file": "data/pokemon/base_stats/nidorina.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "NIDOQUEEN",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_NIDOQUEEN",
+      "source_file": "data/pokemon/base_stats/nidoqueen.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "NIDORAN_M",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_NIDORAN_M",
+      "source_file": "data/pokemon/base_stats/nidoran_m.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "NIDORINO",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_NIDORINO",
+      "source_file": "data/pokemon/base_stats/nidorino.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "NIDOKING",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_NIDOKING",
+      "source_file": "data/pokemon/base_stats/nidoking.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "CLEFAIRY",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_CLEFAIRY",
+      "source_file": "data/pokemon/base_stats/clefairy.asm",
+      "source_held_items": [
+        "LEPPA_BERRY",
+        "MOON_STONE"
+      ],
+      "common": "ITEM_LEPPA_BERRY",
+      "rare": "ITEM_MOON_STONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "CLEFABLE",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_CLEFABLE",
+      "source_file": "data/pokemon/base_stats/clefable.asm",
+      "source_held_items": [
+        "LEPPA_BERRY",
+        "MOON_STONE"
+      ],
+      "common": "ITEM_LEPPA_BERRY",
+      "rare": "ITEM_MOON_STONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "VULPIX",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_VULPIX",
+      "source_file": "data/pokemon/base_stats/vulpix_plain.asm",
+      "source_held_items": [
+        "ALWAYS_ITEM_2",
+        "ASPEAR_BERRY"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_ASPEAR_BERRY",
+      "always_rare": true
+    },
+    {
+      "source_species": "NINETALES",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_NINETALES",
+      "source_file": "data/pokemon/base_stats/ninetales_plain.asm",
+      "source_held_items": [
+        "ALWAYS_ITEM_2",
+        "ASPEAR_BERRY"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_ASPEAR_BERRY",
+      "always_rare": true
+    },
+    {
+      "source_species": "JIGGLYPUFF",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_JIGGLYPUFF",
+      "source_file": "data/pokemon/base_stats/jigglypuff.asm",
+      "source_held_items": [
+        "ORAN_BERRY",
+        "ORAN_BERRY"
+      ],
+      "common": "ITEM_ORAN_BERRY",
+      "rare": "ITEM_ORAN_BERRY",
+      "always_rare": false
+    },
+    {
+      "source_species": "WIGGLYTUFF",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_WIGGLYTUFF",
+      "source_file": "data/pokemon/base_stats/wigglytuff.asm",
+      "source_held_items": [
+        "ORAN_BERRY",
+        "ORAN_BERRY"
+      ],
+      "common": "ITEM_ORAN_BERRY",
+      "rare": "ITEM_ORAN_BERRY",
+      "always_rare": false
+    },
+    {
+      "source_species": "ZUBAT",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_ZUBAT",
+      "source_file": "data/pokemon/base_stats/zubat.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "GOLBAT",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_GOLBAT",
+      "source_file": "data/pokemon/base_stats/golbat.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "ODDISH",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_ODDISH",
+      "source_file": "data/pokemon/base_stats/oddish.asm",
+      "source_held_items": [
+        "SILVER_LEAF",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_POLISHED_SILVER_LEAF",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "GLOOM",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_GLOOM",
+      "source_file": "data/pokemon/base_stats/gloom.asm",
+      "source_held_items": [
+        "SILVER_LEAF",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_POLISHED_SILVER_LEAF",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "VILEPLUME",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_VILEPLUME",
+      "source_file": "data/pokemon/base_stats/vileplume.asm",
+      "source_held_items": [
+        "ALWAYS_ITEM_2",
+        "MIRACLE_SEED"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_MIRACLE_SEED",
+      "always_rare": true
+    },
+    {
+      "source_species": "PARAS",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_PARAS",
+      "source_file": "data/pokemon/base_stats/paras.asm",
+      "source_held_items": [
+        "TINYMUSHROOM",
+        "BIG_MUSHROOM"
+      ],
+      "common": "ITEM_TINY_MUSHROOM",
+      "rare": "ITEM_BIG_MUSHROOM",
+      "always_rare": false
+    },
+    {
+      "source_species": "PARASECT",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_PARASECT",
+      "source_file": "data/pokemon/base_stats/parasect.asm",
+      "source_held_items": [
+        "TINYMUSHROOM",
+        "BIG_MUSHROOM"
+      ],
+      "common": "ITEM_TINY_MUSHROOM",
+      "rare": "ITEM_BIG_MUSHROOM",
+      "always_rare": false
+    },
+    {
+      "source_species": "VENONAT",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_VENONAT",
+      "source_file": "data/pokemon/base_stats/venonat.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "VENOMOTH",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_VENOMOTH",
+      "source_file": "data/pokemon/base_stats/venomoth.asm",
+      "source_held_items": [
+        "SHED_SHELL",
+        "SILVERPOWDER"
+      ],
+      "common": "ITEM_SHED_SHELL",
+      "rare": "ITEM_SILVER_POWDER",
+      "always_rare": false
+    },
+    {
+      "source_species": "DIGLETT",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_DIGLETT",
+      "source_file": "data/pokemon/base_stats/diglett_plain.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "SOFT_SAND"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_SOFT_SAND",
+      "always_rare": false
+    },
+    {
+      "source_species": "DUGTRIO",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_DUGTRIO",
+      "source_file": "data/pokemon/base_stats/dugtrio_plain.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "SOFT_SAND"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_SOFT_SAND",
+      "always_rare": false
+    },
+    {
+      "source_species": "MEOWTH",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_MEOWTH",
+      "source_file": "data/pokemon/base_stats/meowth_plain.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "AMULET_COIN"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_AMULET_COIN",
+      "always_rare": false
+    },
+    {
+      "source_species": "PERSIAN",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_PERSIAN",
+      "source_file": "data/pokemon/base_stats/persian_plain.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "QUICK_CLAW"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_QUICK_CLAW",
+      "always_rare": false
+    },
+    {
+      "source_species": "PSYDUCK",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_PSYDUCK",
+      "source_file": "data/pokemon/base_stats/psyduck.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "GOLDUCK",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_GOLDUCK",
+      "source_file": "data/pokemon/base_stats/golduck.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "MANKEY",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_MANKEY",
+      "source_file": "data/pokemon/base_stats/mankey.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "KEE_BERRY"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_KEE_BERRY",
+      "always_rare": false
+    },
+    {
+      "source_species": "PRIMEAPE",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_PRIMEAPE",
+      "source_file": "data/pokemon/base_stats/primeape.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "KEE_BERRY"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_KEE_BERRY",
+      "always_rare": false
+    },
+    {
+      "source_species": "GROWLITHE",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_GROWLITHE",
+      "source_file": "data/pokemon/base_stats/growlithe_plain.asm",
+      "source_held_items": [
+        "ALWAYS_ITEM_2",
+        "ASPEAR_BERRY"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_ASPEAR_BERRY",
+      "always_rare": true
+    },
+    {
+      "source_species": "ARCANINE",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_ARCANINE",
+      "source_file": "data/pokemon/base_stats/arcanine_plain.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "ASPEAR_BERRY"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_ASPEAR_BERRY",
+      "always_rare": false
+    },
+    {
+      "source_species": "POLIWAG",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_POLIWAG",
+      "source_file": "data/pokemon/base_stats/poliwag.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "POLIWHIRL",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_POLIWHIRL",
+      "source_file": "data/pokemon/base_stats/poliwhirl.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "KINGS_ROCK"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_KINGS_ROCK",
+      "always_rare": false
+    },
+    {
+      "source_species": "POLIWRATH",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_POLIWRATH",
+      "source_file": "data/pokemon/base_stats/poliwrath.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "KINGS_ROCK"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_KINGS_ROCK",
+      "always_rare": false
+    },
+    {
+      "source_species": "ABRA",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_ABRA",
+      "source_file": "data/pokemon/base_stats/abra.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "TWISTEDSPOON"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_TWISTED_SPOON",
+      "always_rare": false
+    },
+    {
+      "source_species": "KADABRA",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_KADABRA",
+      "source_file": "data/pokemon/base_stats/kadabra.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "TWISTEDSPOON"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_TWISTED_SPOON",
+      "always_rare": false
+    },
+    {
+      "source_species": "ALAKAZAM",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_ALAKAZAM",
+      "source_file": "data/pokemon/base_stats/alakazam.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "TWISTEDSPOON"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_TWISTED_SPOON",
+      "always_rare": false
+    },
+    {
+      "source_species": "MACHOP",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_MACHOP",
+      "source_file": "data/pokemon/base_stats/machop.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "FOCUS_BAND"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_FOCUS_BAND",
+      "always_rare": false
+    },
+    {
+      "source_species": "MACHOKE",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_MACHOKE",
+      "source_file": "data/pokemon/base_stats/machoke.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "FOCUS_BAND"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_FOCUS_BAND",
+      "always_rare": false
+    },
+    {
+      "source_species": "MACHAMP",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_MACHAMP",
+      "source_file": "data/pokemon/base_stats/machamp.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "FOCUS_BAND"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_FOCUS_BAND",
+      "always_rare": false
+    },
+    {
+      "source_species": "BELLSPROUT",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_BELLSPROUT",
+      "source_file": "data/pokemon/base_stats/bellsprout.asm",
+      "source_held_items": [
+        "GOLD_LEAF",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_POLISHED_GOLD_LEAF",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "WEEPINBELL",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_WEEPINBELL",
+      "source_file": "data/pokemon/base_stats/weepinbell.asm",
+      "source_held_items": [
+        "GOLD_LEAF",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_POLISHED_GOLD_LEAF",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "VICTREEBEL",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_VICTREEBEL",
+      "source_file": "data/pokemon/base_stats/victreebel.asm",
+      "source_held_items": [
+        "ALWAYS_ITEM_2",
+        "BIG_ROOT"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_BIG_ROOT",
+      "always_rare": true
+    },
+    {
+      "source_species": "TENTACOOL",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_TENTACOOL",
+      "source_file": "data/pokemon/base_stats/tentacool.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "POISON_BARB"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_POISON_BARB",
+      "always_rare": false
+    },
+    {
+      "source_species": "TENTACRUEL",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_TENTACRUEL",
+      "source_file": "data/pokemon/base_stats/tentacruel.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "POISON_BARB"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_POISON_BARB",
+      "always_rare": false
+    },
+    {
+      "source_species": "GEODUDE",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_GEODUDE",
+      "source_file": "data/pokemon/base_stats/geodude_plain.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "EVERSTONE"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_EVERSTONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "GRAVELER",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_GRAVELER",
+      "source_file": "data/pokemon/base_stats/graveler_plain.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "EVERSTONE"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_EVERSTONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "GOLEM",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_GOLEM",
+      "source_file": "data/pokemon/base_stats/golem_plain.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "EVERSTONE"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_EVERSTONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "PONYTA",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_PONYTA",
+      "source_file": "data/pokemon/base_stats/ponyta_plain.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "MARANGABERRY"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_MARANGA_BERRY",
+      "always_rare": false
+    },
+    {
+      "source_species": "RAPIDASH",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_RAPIDASH",
+      "source_file": "data/pokemon/base_stats/rapidash_plain.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "MARANGABERRY"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_MARANGA_BERRY",
+      "always_rare": false
+    },
+    {
+      "source_species": "SLOWPOKE",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_SLOWPOKE",
+      "source_file": "data/pokemon/base_stats/slowpoke_plain.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "KINGS_ROCK"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_KINGS_ROCK",
+      "always_rare": false
+    },
+    {
+      "source_species": "SLOWBRO",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_SLOWBRO",
+      "source_file": "data/pokemon/base_stats/slowbro_plain.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "KINGS_ROCK"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_KINGS_ROCK",
+      "always_rare": false
+    },
+    {
+      "source_species": "MAGNEMITE",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_MAGNEMITE",
+      "source_file": "data/pokemon/base_stats/magnemite.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "METAL_COAT"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_METAL_COAT",
+      "always_rare": false
+    },
+    {
+      "source_species": "MAGNETON",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_MAGNETON",
+      "source_file": "data/pokemon/base_stats/magneton.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "METAL_COAT"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_METAL_COAT",
+      "always_rare": false
+    },
+    {
+      "source_species": "FARFETCH_D",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_FARFETCHD",
+      "source_file": "data/pokemon/base_stats/farfetch_d_plain.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "LEEK"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_LEEK",
+      "always_rare": false
+    },
+    {
+      "source_species": "DODUO",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_DODUO",
+      "source_file": "data/pokemon/base_stats/doduo.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "SHARP_BEAK"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_SHARP_BEAK",
+      "always_rare": false
+    },
+    {
+      "source_species": "DODRIO",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_DODRIO",
+      "source_file": "data/pokemon/base_stats/dodrio.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "SHARP_BEAK"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_SHARP_BEAK",
+      "always_rare": false
+    },
+    {
+      "source_species": "SEEL",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_SEEL",
+      "source_file": "data/pokemon/base_stats/seel.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "RAWST_BERRY"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_RAWST_BERRY",
+      "always_rare": false
+    },
+    {
+      "source_species": "DEWGONG",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_DEWGONG",
+      "source_file": "data/pokemon/base_stats/dewgong.asm",
+      "source_held_items": [
+        "RAWST_BERRY",
+        "NEVERMELTICE"
+      ],
+      "common": "ITEM_RAWST_BERRY",
+      "rare": "ITEM_NEVER_MELT_ICE",
+      "always_rare": false
+    },
+    {
+      "source_species": "GRIMER",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_GRIMER",
+      "source_file": "data/pokemon/base_stats/grimer_plain.asm",
+      "source_held_items": [
+        "BLACK_SLUDGE",
+        "NUGGET"
+      ],
+      "common": "ITEM_BLACK_SLUDGE",
+      "rare": "ITEM_NUGGET",
+      "always_rare": false
+    },
+    {
+      "source_species": "MUK",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_MUK",
+      "source_file": "data/pokemon/base_stats/muk_plain.asm",
+      "source_held_items": [
+        "BLACK_SLUDGE",
+        "NUGGET"
+      ],
+      "common": "ITEM_BLACK_SLUDGE",
+      "rare": "ITEM_NUGGET",
+      "always_rare": false
+    },
+    {
+      "source_species": "SHELLDER",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_SHELLDER",
+      "source_file": "data/pokemon/base_stats/shellder.asm",
+      "source_held_items": [
+        "PEARL",
+        "BIG_PEARL"
+      ],
+      "common": "ITEM_PEARL",
+      "rare": "ITEM_BIG_PEARL",
+      "always_rare": false
+    },
+    {
+      "source_species": "CLOYSTER",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_CLOYSTER",
+      "source_file": "data/pokemon/base_stats/cloyster.asm",
+      "source_held_items": [
+        "PEARL",
+        "BIG_PEARL"
+      ],
+      "common": "ITEM_PEARL",
+      "rare": "ITEM_BIG_PEARL",
+      "always_rare": false
+    },
+    {
+      "source_species": "GASTLY",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_GASTLY",
+      "source_file": "data/pokemon/base_stats/gastly.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "SPELL_TAG"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_SPELL_TAG",
+      "always_rare": false
+    },
+    {
+      "source_species": "HAUNTER",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_HAUNTER",
+      "source_file": "data/pokemon/base_stats/haunter.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "SPELL_TAG"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_SPELL_TAG",
+      "always_rare": false
+    },
+    {
+      "source_species": "GENGAR",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_GENGAR",
+      "source_file": "data/pokemon/base_stats/gengar.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "SPELL_TAG"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_SPELL_TAG",
+      "always_rare": false
+    },
+    {
+      "source_species": "ONIX",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_ONIX",
+      "source_file": "data/pokemon/base_stats/onix.asm",
+      "source_held_items": [
+        "LAGGING_TAIL",
+        "HARD_STONE"
+      ],
+      "common": "ITEM_LAGGING_TAIL",
+      "rare": "ITEM_HARD_STONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "DROWZEE",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_DROWZEE",
+      "source_file": "data/pokemon/base_stats/drowzee.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "HYPNO",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_HYPNO",
+      "source_file": "data/pokemon/base_stats/hypno.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "KRABBY",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_KRABBY",
+      "source_file": "data/pokemon/base_stats/krabby.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "KINGLER",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_KINGLER",
+      "source_file": "data/pokemon/base_stats/kingler.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "VOLTORB",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_VOLTORB",
+      "source_file": "data/pokemon/base_stats/voltorb_plain.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "ELECTRODE",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_ELECTRODE",
+      "source_file": "data/pokemon/base_stats/electrode_plain.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "EXEGGCUTE",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_EXEGGCUTE",
+      "source_file": "data/pokemon/base_stats/exeggcute.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "MARANGABERRY"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_MARANGA_BERRY",
+      "always_rare": false
+    },
+    {
+      "source_species": "EXEGGUTOR",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_EXEGGUTOR",
+      "source_file": "data/pokemon/base_stats/exeggutor_plain.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "MARANGABERRY"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_MARANGA_BERRY",
+      "always_rare": false
+    },
+    {
+      "source_species": "CUBONE",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_CUBONE",
+      "source_file": "data/pokemon/base_stats/cubone.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "THICK_CLUB"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_THICK_CLUB",
+      "always_rare": false
+    },
+    {
+      "source_species": "MAROWAK",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_MAROWAK",
+      "source_file": "data/pokemon/base_stats/marowak_plain.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "THICK_CLUB"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_THICK_CLUB",
+      "always_rare": false
+    },
+    {
+      "source_species": "HITMONLEE",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_HITMONLEE",
+      "source_file": "data/pokemon/base_stats/hitmonlee.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "HITMONCHAN",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_HITMONCHAN",
+      "source_file": "data/pokemon/base_stats/hitmonchan.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "LICKITUNG",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_LICKITUNG",
+      "source_file": "data/pokemon/base_stats/lickitung.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "LAGGING_TAIL"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_LAGGING_TAIL",
+      "always_rare": false
+    },
+    {
+      "source_species": "KOFFING",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_KOFFING",
+      "source_file": "data/pokemon/base_stats/koffing.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "SMOKE_BALL"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_SMOKE_BALL",
+      "always_rare": false
+    },
+    {
+      "source_species": "WEEZING",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_WEEZING",
+      "source_file": "data/pokemon/base_stats/weezing_plain.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "SMOKE_BALL"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_SMOKE_BALL",
+      "always_rare": false
+    },
+    {
+      "source_species": "RHYHORN",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_RHYHORN",
+      "source_file": "data/pokemon/base_stats/rhyhorn.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "PROTECTOR"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_PROTECTOR",
+      "always_rare": false
+    },
+    {
+      "source_species": "RHYDON",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_RHYDON",
+      "source_file": "data/pokemon/base_stats/rhydon.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "PROTECTOR"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_PROTECTOR",
+      "always_rare": false
+    },
+    {
+      "source_species": "CHANSEY",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_CHANSEY",
+      "source_file": "data/pokemon/base_stats/chansey.asm",
+      "source_held_items": [
+        "OVAL_STONE",
+        "LUCKY_EGG"
+      ],
+      "common": "ITEM_OVAL_STONE",
+      "rare": "ITEM_LUCKY_EGG",
+      "always_rare": false
+    },
+    {
+      "source_species": "TANGELA",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_TANGELA",
+      "source_file": "data/pokemon/base_stats/tangela.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "KANGASKHAN",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_KANGASKHAN",
+      "source_file": "data/pokemon/base_stats/kangaskhan.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "HORSEA",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_HORSEA",
+      "source_file": "data/pokemon/base_stats/horsea.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "DRAGON_SCALE"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_DRAGON_SCALE",
+      "always_rare": false
+    },
+    {
+      "source_species": "SEADRA",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_SEADRA",
+      "source_file": "data/pokemon/base_stats/seadra.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "DRAGON_SCALE"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_DRAGON_SCALE",
+      "always_rare": false
+    },
+    {
+      "source_species": "GOLDEEN",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_GOLDEEN",
+      "source_file": "data/pokemon/base_stats/goldeen.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "SEAKING",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_SEAKING",
+      "source_file": "data/pokemon/base_stats/seaking.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "STARYU",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_STARYU",
+      "source_file": "data/pokemon/base_stats/staryu.asm",
+      "source_held_items": [
+        "STARDUST",
+        "STAR_PIECE"
+      ],
+      "common": "ITEM_STARDUST",
+      "rare": "ITEM_STAR_PIECE",
+      "always_rare": false
+    },
+    {
+      "source_species": "STARMIE",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_STARMIE",
+      "source_file": "data/pokemon/base_stats/starmie.asm",
+      "source_held_items": [
+        "STARDUST",
+        "STAR_PIECE"
+      ],
+      "common": "ITEM_STARDUST",
+      "rare": "ITEM_STAR_PIECE",
+      "always_rare": false
+    },
+    {
+      "source_species": "MR__MIME",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_MR_MIME",
+      "source_file": "data/pokemon/base_stats/mr__mime_plain.asm",
+      "source_held_items": [
+        "PERSIM_BERRY",
+        "PERSIM_BERRY"
+      ],
+      "common": "ITEM_PERSIM_BERRY",
+      "rare": "ITEM_PERSIM_BERRY",
+      "always_rare": false
+    },
+    {
+      "source_species": "SCYTHER",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_SCYTHER",
+      "source_file": "data/pokemon/base_stats/scyther.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "JYNX",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_JYNX",
+      "source_file": "data/pokemon/base_stats/jynx.asm",
+      "source_held_items": [
+        "RAWST_BERRY",
+        "RAWST_BERRY"
+      ],
+      "common": "ITEM_RAWST_BERRY",
+      "rare": "ITEM_RAWST_BERRY",
+      "always_rare": false
+    },
+    {
+      "source_species": "ELECTABUZZ",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_ELECTABUZZ",
+      "source_file": "data/pokemon/base_stats/electabuzz.asm",
+      "source_held_items": [
+        "PERSIM_BERRY",
+        "ELECTIRIZER"
+      ],
+      "common": "ITEM_PERSIM_BERRY",
+      "rare": "ITEM_ELECTIRIZER",
+      "always_rare": false
+    },
+    {
+      "source_species": "MAGMAR",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_MAGMAR",
+      "source_file": "data/pokemon/base_stats/magmar.asm",
+      "source_held_items": [
+        "ASPEAR_BERRY",
+        "MAGMARIZER"
+      ],
+      "common": "ITEM_ASPEAR_BERRY",
+      "rare": "ITEM_MAGMARIZER",
+      "always_rare": false
+    },
+    {
+      "source_species": "PINSIR",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_PINSIR",
+      "source_file": "data/pokemon/base_stats/pinsir.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "TAUROS",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_TAUROS",
+      "source_file": "data/pokemon/base_stats/tauros_plain.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "MAGIKARP",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_MAGIKARP",
+      "source_file": "data/pokemon/base_stats/magikarp.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "GYARADOS",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_GYARADOS",
+      "source_file": "data/pokemon/base_stats/gyarados.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "LAPRAS",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_LAPRAS",
+      "source_file": "data/pokemon/base_stats/lapras.asm",
+      "source_held_items": [
+        "ALWAYS_ITEM_2",
+        "MYSTIC_WATER"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_MYSTIC_WATER",
+      "always_rare": true
+    },
+    {
+      "source_species": "DITTO",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_DITTO",
+      "source_file": "data/pokemon/base_stats/ditto.asm",
+      "source_held_items": [
+        "QUICK_POWDER",
+        "METAL_POWDER"
+      ],
+      "common": "ITEM_QUICK_POWDER",
+      "rare": "ITEM_METAL_POWDER",
+      "always_rare": false
+    },
+    {
+      "source_species": "EEVEE",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_EEVEE",
+      "source_file": "data/pokemon/base_stats/eevee.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "VAPOREON",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_VAPOREON",
+      "source_file": "data/pokemon/base_stats/vaporeon.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "JOLTEON",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_JOLTEON",
+      "source_file": "data/pokemon/base_stats/jolteon.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "FLAREON",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_FLAREON",
+      "source_file": "data/pokemon/base_stats/flareon.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "PORYGON",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_PORYGON",
+      "source_file": "data/pokemon/base_stats/porygon.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "UPGRADE"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_UPGRADE",
+      "always_rare": false
+    },
+    {
+      "source_species": "OMANYTE",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_OMANYTE",
+      "source_file": "data/pokemon/base_stats/omanyte.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "OMASTAR",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_OMASTAR",
+      "source_file": "data/pokemon/base_stats/omastar.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "KABUTO",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_KABUTO",
+      "source_file": "data/pokemon/base_stats/kabuto.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "KABUTOPS",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_KABUTOPS",
+      "source_file": "data/pokemon/base_stats/kabutops.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "AERODACTYL",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_AERODACTYL",
+      "source_file": "data/pokemon/base_stats/aerodactyl.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "SNORLAX",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_SNORLAX",
+      "source_file": "data/pokemon/base_stats/snorlax.asm",
+      "source_held_items": [
+        "ALWAYS_ITEM_2",
+        "LEFTOVERS"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_LEFTOVERS",
+      "always_rare": true
+    },
+    {
+      "source_species": "ARTICUNO",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_ARTICUNO",
+      "source_file": "data/pokemon/base_stats/articuno_plain.asm",
+      "source_held_items": [
+        "ALWAYS_ITEM_2",
+        "LUM_BERRY"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_LUM_BERRY",
+      "always_rare": true
+    },
+    {
+      "source_species": "ZAPDOS",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_ZAPDOS",
+      "source_file": "data/pokemon/base_stats/zapdos_plain.asm",
+      "source_held_items": [
+        "ALWAYS_ITEM_2",
+        "LUM_BERRY"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_LUM_BERRY",
+      "always_rare": true
+    },
+    {
+      "source_species": "MOLTRES",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_MOLTRES",
+      "source_file": "data/pokemon/base_stats/moltres_plain.asm",
+      "source_held_items": [
+        "ALWAYS_ITEM_2",
+        "LUM_BERRY"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_LUM_BERRY",
+      "always_rare": true
+    },
+    {
+      "source_species": "DRATINI",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_DRATINI",
+      "source_file": "data/pokemon/base_stats/dratini.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "DRAGON_SCALE"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_DRAGON_SCALE",
+      "always_rare": false
+    },
+    {
+      "source_species": "DRAGONAIR",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_DRAGONAIR",
+      "source_file": "data/pokemon/base_stats/dragonair.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "DRAGON_SCALE"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_DRAGON_SCALE",
+      "always_rare": false
+    },
+    {
+      "source_species": "DRAGONITE",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_DRAGONITE",
+      "source_file": "data/pokemon/base_stats/dragonite.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "DRAGON_SCALE"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_DRAGON_SCALE",
+      "always_rare": false
+    },
+    {
+      "source_species": "MEWTWO",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_MEWTWO",
+      "source_file": "data/pokemon/base_stats/mewtwo_plain.asm",
+      "source_held_items": [
+        "ALWAYS_ITEM_2",
+        "PETAYA_BERRY"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_PETAYA_BERRY",
+      "always_rare": true
+    },
+    {
+      "source_species": "MEW",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_MEW",
+      "source_file": "data/pokemon/base_stats/mew.asm",
+      "source_held_items": [
+        "ALWAYS_ITEM_2",
+        "LUM_BERRY"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_LUM_BERRY",
+      "always_rare": true
+    },
+    {
+      "source_species": "CHIKORITA",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_CHIKORITA",
+      "source_file": "data/pokemon/base_stats/chikorita.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "BAYLEEF",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_BAYLEEF",
+      "source_file": "data/pokemon/base_stats/bayleef.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "MEGANIUM",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_MEGANIUM",
+      "source_file": "data/pokemon/base_stats/meganium.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "CYNDAQUIL",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_CYNDAQUIL",
+      "source_file": "data/pokemon/base_stats/cyndaquil.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "QUILAVA",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_QUILAVA",
+      "source_file": "data/pokemon/base_stats/quilava.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "TYPHLOSION",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_TYPHLOSION",
+      "source_file": "data/pokemon/base_stats/typhlosion_plain.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "TOTODILE",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_TOTODILE",
+      "source_file": "data/pokemon/base_stats/totodile.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "CROCONAW",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_CROCONAW",
+      "source_file": "data/pokemon/base_stats/croconaw.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "FERALIGATR",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_FERALIGATR",
+      "source_file": "data/pokemon/base_stats/feraligatr.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "SENTRET",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_SENTRET",
+      "source_file": "data/pokemon/base_stats/sentret.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "ORAN_BERRY"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_ORAN_BERRY",
+      "always_rare": false
+    },
+    {
+      "source_species": "FURRET",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_FURRET",
+      "source_file": "data/pokemon/base_stats/furret.asm",
+      "source_held_items": [
+        "ORAN_BERRY",
+        "SITRUS_BERRY"
+      ],
+      "common": "ITEM_ORAN_BERRY",
+      "rare": "ITEM_SITRUS_BERRY",
+      "always_rare": false
+    },
+    {
+      "source_species": "HOOTHOOT",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_HOOTHOOT",
+      "source_file": "data/pokemon/base_stats/hoothoot.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "NOCTOWL",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_NOCTOWL",
+      "source_file": "data/pokemon/base_stats/noctowl.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "LEDYBA",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_LEDYBA",
+      "source_file": "data/pokemon/base_stats/ledyba.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "LEDIAN",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_LEDIAN",
+      "source_file": "data/pokemon/base_stats/ledian.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "SPINARAK",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_SPINARAK",
+      "source_file": "data/pokemon/base_stats/spinarak.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "ARIADOS",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_ARIADOS",
+      "source_file": "data/pokemon/base_stats/ariados.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "CROBAT",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_CROBAT",
+      "source_file": "data/pokemon/base_stats/crobat.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "CHINCHOU",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_CHINCHOU",
+      "source_file": "data/pokemon/base_stats/chinchou.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "BRIGHTPOWDER"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_BRIGHT_POWDER",
+      "always_rare": false
+    },
+    {
+      "source_species": "LANTURN",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_LANTURN",
+      "source_file": "data/pokemon/base_stats/lanturn.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "BRIGHTPOWDER"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_BRIGHT_POWDER",
+      "always_rare": false
+    },
+    {
+      "source_species": "PICHU",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_PICHU",
+      "source_file": "data/pokemon/base_stats/pichu.asm",
+      "source_held_items": [
+        "ORAN_BERRY",
+        "LIGHT_BALL"
+      ],
+      "common": "ITEM_ORAN_BERRY",
+      "rare": "ITEM_LIGHT_BALL",
+      "always_rare": false
+    },
+    {
+      "source_species": "CLEFFA",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_CLEFFA",
+      "source_file": "data/pokemon/base_stats/cleffa.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "MOON_STONE"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_MOON_STONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "IGGLYBUFF",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_IGGLYBUFF",
+      "source_file": "data/pokemon/base_stats/igglybuff.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "TOGEPI",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_TOGEPI",
+      "source_file": "data/pokemon/base_stats/togepi.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "TOGETIC",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_TOGETIC",
+      "source_file": "data/pokemon/base_stats/togetic.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "NATU",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_NATU",
+      "source_file": "data/pokemon/base_stats/natu.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "XATU",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_XATU",
+      "source_file": "data/pokemon/base_stats/xatu.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "MAREEP",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_MAREEP",
+      "source_file": "data/pokemon/base_stats/mareep.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "FLAAFFY",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_FLAAFFY",
+      "source_file": "data/pokemon/base_stats/flaaffy.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "AMPHAROS",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_AMPHAROS",
+      "source_file": "data/pokemon/base_stats/ampharos.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "BELLOSSOM",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_BELLOSSOM",
+      "source_file": "data/pokemon/base_stats/bellossom.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "MIRACLE_SEED"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_MIRACLE_SEED",
+      "always_rare": false
+    },
+    {
+      "source_species": "MARILL",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_MARILL",
+      "source_file": "data/pokemon/base_stats/marill.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "AZUMARILL",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_AZUMARILL",
+      "source_file": "data/pokemon/base_stats/azumarill.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "SUDOWOODO",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_SUDOWOODO",
+      "source_file": "data/pokemon/base_stats/sudowoodo.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "POLITOED",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_POLITOED",
+      "source_file": "data/pokemon/base_stats/politoed.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "KINGS_ROCK"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_KINGS_ROCK",
+      "always_rare": false
+    },
+    {
+      "source_species": "HOPPIP",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_HOPPIP",
+      "source_file": "data/pokemon/base_stats/hoppip.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "SKIPLOOM",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_SKIPLOOM",
+      "source_file": "data/pokemon/base_stats/skiploom.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "JUMPLUFF",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_JUMPLUFF",
+      "source_file": "data/pokemon/base_stats/jumpluff.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "AIPOM",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_AIPOM",
+      "source_file": "data/pokemon/base_stats/aipom.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "SUNKERN",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_SUNKERN",
+      "source_file": "data/pokemon/base_stats/sunkern.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "STARF_BERRY"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_STARF_BERRY",
+      "always_rare": false
+    },
+    {
+      "source_species": "SUNFLORA",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_SUNFLORA",
+      "source_file": "data/pokemon/base_stats/sunflora.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "YANMA",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_YANMA",
+      "source_file": "data/pokemon/base_stats/yanma.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "WIDE_LENS"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_WIDE_LENS",
+      "always_rare": false
+    },
+    {
+      "source_species": "WOOPER",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_WOOPER",
+      "source_file": "data/pokemon/base_stats/wooper_plain.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "CHESTO_BERRY"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_CHESTO_BERRY",
+      "always_rare": false
+    },
+    {
+      "source_species": "QUAGSIRE",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_QUAGSIRE",
+      "source_file": "data/pokemon/base_stats/quagsire.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "CHESTO_BERRY"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_CHESTO_BERRY",
+      "always_rare": false
+    },
+    {
+      "source_species": "ESPEON",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_ESPEON",
+      "source_file": "data/pokemon/base_stats/espeon.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "UMBREON",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_UMBREON",
+      "source_file": "data/pokemon/base_stats/umbreon.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "MURKROW",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_MURKROW",
+      "source_file": "data/pokemon/base_stats/murkrow.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "SLOWKING",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_SLOWKING",
+      "source_file": "data/pokemon/base_stats/slowking_plain.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "KINGS_ROCK"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_KINGS_ROCK",
+      "always_rare": false
+    },
+    {
+      "source_species": "MISDREAVUS",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_MISDREAVUS",
+      "source_file": "data/pokemon/base_stats/misdreavus.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "SPELL_TAG"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_SPELL_TAG",
+      "always_rare": false
+    },
+    {
+      "source_species": "UNOWN",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_UNOWN",
+      "source_file": "data/pokemon/base_stats/unown.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "WOBBUFFET",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_WOBBUFFET",
+      "source_file": "data/pokemon/base_stats/wobbuffet.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "GIRAFARIG",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_GIRAFARIG",
+      "source_file": "data/pokemon/base_stats/girafarig.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "PERSIM_BERRY"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_PERSIM_BERRY",
+      "always_rare": false
+    },
+    {
+      "source_species": "PINECO",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_PINECO",
+      "source_file": "data/pokemon/base_stats/pineco.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "FORRETRESS",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_FORRETRESS",
+      "source_file": "data/pokemon/base_stats/forretress.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "DUNSPARCE",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_DUNSPARCE",
+      "source_file": "data/pokemon/base_stats/dunsparce.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "GLIGAR",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_GLIGAR",
+      "source_file": "data/pokemon/base_stats/gligar.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "RAZOR_FANG"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_RAZOR_FANG",
+      "always_rare": false
+    },
+    {
+      "source_species": "STEELIX",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_STEELIX",
+      "source_file": "data/pokemon/base_stats/steelix.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "METAL_COAT"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_METAL_COAT",
+      "always_rare": false
+    },
+    {
+      "source_species": "SNUBBULL",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_SNUBBULL",
+      "source_file": "data/pokemon/base_stats/snubbull.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "GRANBULL",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_GRANBULL",
+      "source_file": "data/pokemon/base_stats/granbull.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "QWILFISH",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_QWILFISH",
+      "source_file": "data/pokemon/base_stats/qwilfish_plain.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "POISON_BARB"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_POISON_BARB",
+      "always_rare": false
+    },
+    {
+      "source_species": "SCIZOR",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_SCIZOR",
+      "source_file": "data/pokemon/base_stats/scizor.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "METAL_COAT"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_METAL_COAT",
+      "always_rare": false
+    },
+    {
+      "source_species": "SHUCKLE",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_SHUCKLE",
+      "source_file": "data/pokemon/base_stats/shuckle.asm",
+      "source_held_items": [
+        "ALWAYS_ITEM_2",
+        "BERRY_JUICE"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_BERRY_JUICE",
+      "always_rare": true
+    },
+    {
+      "source_species": "HERACROSS",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_HERACROSS",
+      "source_file": "data/pokemon/base_stats/heracross.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "SNEASEL",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_SNEASEL",
+      "source_file": "data/pokemon/base_stats/sneasel_plain.asm",
+      "source_held_items": [
+        "GRIP_CLAW",
+        "RAZOR_CLAW"
+      ],
+      "common": "ITEM_GRIP_CLAW",
+      "rare": "ITEM_RAZOR_CLAW",
+      "always_rare": false
+    },
+    {
+      "source_species": "TEDDIURSA",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_TEDDIURSA",
+      "source_file": "data/pokemon/base_stats/teddiursa.asm",
+      "source_held_items": [
+        "ALWAYS_ITEM_2",
+        "ORAN_BERRY"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_ORAN_BERRY",
+      "always_rare": true
+    },
+    {
+      "source_species": "URSARING",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_URSARING",
+      "source_file": "data/pokemon/base_stats/ursaring.asm",
+      "source_held_items": [
+        "ALWAYS_ITEM_2",
+        "SITRUS_BERRY"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_SITRUS_BERRY",
+      "always_rare": true
+    },
+    {
+      "source_species": "SLUGMA",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_SLUGMA",
+      "source_file": "data/pokemon/base_stats/slugma.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "MAGCARGO",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_MAGCARGO",
+      "source_file": "data/pokemon/base_stats/magcargo.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "SWINUB",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_SWINUB",
+      "source_file": "data/pokemon/base_stats/swinub.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "RAWST_BERRY"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_RAWST_BERRY",
+      "always_rare": false
+    },
+    {
+      "source_species": "PILOSWINE",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_PILOSWINE",
+      "source_file": "data/pokemon/base_stats/piloswine.asm",
+      "source_held_items": [
+        "RAWST_BERRY",
+        "NEVERMELTICE"
+      ],
+      "common": "ITEM_RAWST_BERRY",
+      "rare": "ITEM_NEVER_MELT_ICE",
+      "always_rare": false
+    },
+    {
+      "source_species": "CORSOLA",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_CORSOLA",
+      "source_file": "data/pokemon/base_stats/corsola_plain.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "HARD_STONE"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_HARD_STONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "REMORAID",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_REMORAID",
+      "source_file": "data/pokemon/base_stats/remoraid.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "OCTILLERY",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_OCTILLERY",
+      "source_file": "data/pokemon/base_stats/octillery.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "DELIBIRD",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_DELIBIRD",
+      "source_file": "data/pokemon/base_stats/delibird.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NEVERMELTICE"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NEVER_MELT_ICE",
+      "always_rare": false
+    },
+    {
+      "source_species": "MANTINE",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_MANTINE",
+      "source_file": "data/pokemon/base_stats/mantine.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "SKARMORY",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_SKARMORY",
+      "source_file": "data/pokemon/base_stats/skarmory.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "SHARP_BEAK"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_SHARP_BEAK",
+      "always_rare": false
+    },
+    {
+      "source_species": "HOUNDOUR",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_HOUNDOUR",
+      "source_file": "data/pokemon/base_stats/houndour.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "HOUNDOOM",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_HOUNDOOM",
+      "source_file": "data/pokemon/base_stats/houndoom.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "KINGDRA",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_KINGDRA",
+      "source_file": "data/pokemon/base_stats/kingdra.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "DRAGON_SCALE"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_DRAGON_SCALE",
+      "always_rare": false
+    },
+    {
+      "source_species": "PHANPY",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_PHANPY",
+      "source_file": "data/pokemon/base_stats/phanpy.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "KEE_BERRY"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_KEE_BERRY",
+      "always_rare": false
+    },
+    {
+      "source_species": "DONPHAN",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_DONPHAN",
+      "source_file": "data/pokemon/base_stats/donphan.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "KEE_BERRY"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_KEE_BERRY",
+      "always_rare": false
+    },
+    {
+      "source_species": "PORYGON2",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_PORYGON2",
+      "source_file": "data/pokemon/base_stats/porygon2.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "UPGRADE"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_UPGRADE",
+      "always_rare": false
+    },
+    {
+      "source_species": "STANTLER",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_STANTLER",
+      "source_file": "data/pokemon/base_stats/stantler.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "SMEARGLE",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_SMEARGLE",
+      "source_file": "data/pokemon/base_stats/smeargle.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "TYROGUE",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_TYROGUE",
+      "source_file": "data/pokemon/base_stats/tyrogue.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "HITMONTOP",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_HITMONTOP",
+      "source_file": "data/pokemon/base_stats/hitmontop.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "SMOOCHUM",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_SMOOCHUM",
+      "source_file": "data/pokemon/base_stats/smoochum.asm",
+      "source_held_items": [
+        "ALWAYS_ITEM_2",
+        "ASPEAR_BERRY"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_ASPEAR_BERRY",
+      "always_rare": true
+    },
+    {
+      "source_species": "ELEKID",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_ELEKID",
+      "source_file": "data/pokemon/base_stats/elekid.asm",
+      "source_held_items": [
+        "PERSIM_BERRY",
+        "ELECTIRIZER"
+      ],
+      "common": "ITEM_PERSIM_BERRY",
+      "rare": "ITEM_ELECTIRIZER",
+      "always_rare": false
+    },
+    {
+      "source_species": "MAGBY",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_MAGBY",
+      "source_file": "data/pokemon/base_stats/magby.asm",
+      "source_held_items": [
+        "ASPEAR_BERRY",
+        "MAGMARIZER"
+      ],
+      "common": "ITEM_ASPEAR_BERRY",
+      "rare": "ITEM_MAGMARIZER",
+      "always_rare": false
+    },
+    {
+      "source_species": "MILTANK",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_MILTANK",
+      "source_file": "data/pokemon/base_stats/miltank.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "MOOMOO_MILK"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_MOOMOO_MILK",
+      "always_rare": false
+    },
+    {
+      "source_species": "BLISSEY",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_BLISSEY",
+      "source_file": "data/pokemon/base_stats/blissey.asm",
+      "source_held_items": [
+        "OVAL_STONE",
+        "LUCKY_EGG"
+      ],
+      "common": "ITEM_OVAL_STONE",
+      "rare": "ITEM_LUCKY_EGG",
+      "always_rare": false
+    },
+    {
+      "source_species": "RAIKOU",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_RAIKOU",
+      "source_file": "data/pokemon/base_stats/raikou.asm",
+      "source_held_items": [
+        "ALWAYS_ITEM_2",
+        "MAGNET"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_MAGNET",
+      "always_rare": true
+    },
+    {
+      "source_species": "ENTEI",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_ENTEI",
+      "source_file": "data/pokemon/base_stats/entei.asm",
+      "source_held_items": [
+        "ALWAYS_ITEM_2",
+        "CHARCOAL"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_CHARCOAL",
+      "always_rare": true
+    },
+    {
+      "source_species": "SUICUNE",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_SUICUNE",
+      "source_file": "data/pokemon/base_stats/suicune.asm",
+      "source_held_items": [
+        "ALWAYS_ITEM_2",
+        "MYSTIC_WATER"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_MYSTIC_WATER",
+      "always_rare": true
+    },
+    {
+      "source_species": "LARVITAR",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_LARVITAR",
+      "source_file": "data/pokemon/base_stats/larvitar.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "PUPITAR",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_PUPITAR",
+      "source_file": "data/pokemon/base_stats/pupitar.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "TYRANITAR",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_TYRANITAR",
+      "source_file": "data/pokemon/base_stats/tyranitar.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "LUGIA",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_LUGIA",
+      "source_file": "data/pokemon/base_stats/lugia.asm",
+      "source_held_items": [
+        "ALWAYS_ITEM_2",
+        "LUM_BERRY"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_LUM_BERRY",
+      "always_rare": true
+    },
+    {
+      "source_species": "HO_OH",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_HO_OH",
+      "source_file": "data/pokemon/base_stats/ho_oh.asm",
+      "source_held_items": [
+        "ALWAYS_ITEM_2",
+        "SACRED_ASH"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_SACRED_ASH",
+      "always_rare": true
+    },
+    {
+      "source_species": "CELEBI",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_CELEBI",
+      "source_file": "data/pokemon/base_stats/celebi.asm",
+      "source_held_items": [
+        "ALWAYS_ITEM_2",
+        "LUM_BERRY"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_LUM_BERRY",
+      "always_rare": true
+    },
+    {
+      "source_species": "AZURILL",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_AZURILL",
+      "source_file": "data/pokemon/base_stats/azurill.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "WYNAUT",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_WYNAUT",
+      "source_file": "data/pokemon/base_stats/wynaut.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "AMBIPOM",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_AMBIPOM",
+      "source_file": "data/pokemon/base_stats/ambipom.asm",
+      "source_held_items": [
+        "ALWAYS_ITEM_2",
+        "SITRUS_BERRY"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_SITRUS_BERRY",
+      "always_rare": true
+    },
+    {
+      "source_species": "MISMAGIUS",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_MISMAGIUS",
+      "source_file": "data/pokemon/base_stats/mismagius.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "SPELL_TAG"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_SPELL_TAG",
+      "always_rare": false
+    },
+    {
+      "source_species": "HONCHKROW",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_HONCHKROW",
+      "source_file": "data/pokemon/base_stats/honchkrow.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "BONSLY",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_BONSLY",
+      "source_file": "data/pokemon/base_stats/bonsly.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "MIME_JR_",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_MIME_JR",
+      "source_file": "data/pokemon/base_stats/mime_jr_.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "LEPPA_BERRY"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_LEPPA_BERRY",
+      "always_rare": false
+    },
+    {
+      "source_species": "HAPPINY",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_HAPPINY",
+      "source_file": "data/pokemon/base_stats/happiny.asm",
+      "source_held_items": [
+        "HARD_STONE",
+        "LUCKY_EGG"
+      ],
+      "common": "ITEM_HARD_STONE",
+      "rare": "ITEM_LUCKY_EGG",
+      "always_rare": false
+    },
+    {
+      "source_species": "MUNCHLAX",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_MUNCHLAX",
+      "source_file": "data/pokemon/base_stats/munchlax.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "LEFTOVERS"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_LEFTOVERS",
+      "always_rare": false
+    },
+    {
+      "source_species": "MANTYKE",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_MANTYKE",
+      "source_file": "data/pokemon/base_stats/mantyke.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "WEAVILE",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_WEAVILE",
+      "source_file": "data/pokemon/base_stats/weavile.asm",
+      "source_held_items": [
+        "GRIP_CLAW",
+        "QUICK_CLAW"
+      ],
+      "common": "ITEM_GRIP_CLAW",
+      "rare": "ITEM_QUICK_CLAW",
+      "always_rare": false
+    },
+    {
+      "source_species": "MAGNEZONE",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_MAGNEZONE",
+      "source_file": "data/pokemon/base_stats/magnezone.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "METAL_COAT"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_METAL_COAT",
+      "always_rare": false
+    },
+    {
+      "source_species": "LICKILICKY",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_LICKILICKY",
+      "source_file": "data/pokemon/base_stats/lickilicky.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "LAGGING_TAIL"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_LAGGING_TAIL",
+      "always_rare": false
+    },
+    {
+      "source_species": "RHYPERIOR",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_RHYPERIOR",
+      "source_file": "data/pokemon/base_stats/rhyperior.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "TANGROWTH",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_TANGROWTH",
+      "source_file": "data/pokemon/base_stats/tangrowth.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "ELECTIVIRE",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_ELECTIVIRE",
+      "source_file": "data/pokemon/base_stats/electivire.asm",
+      "source_held_items": [
+        "PERSIM_BERRY",
+        "ELECTIRIZER"
+      ],
+      "common": "ITEM_PERSIM_BERRY",
+      "rare": "ITEM_ELECTIRIZER",
+      "always_rare": false
+    },
+    {
+      "source_species": "MAGMORTAR",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_MAGMORTAR",
+      "source_file": "data/pokemon/base_stats/magmortar.asm",
+      "source_held_items": [
+        "ASPEAR_BERRY",
+        "MAGMARIZER"
+      ],
+      "common": "ITEM_ASPEAR_BERRY",
+      "rare": "ITEM_MAGMARIZER",
+      "always_rare": false
+    },
+    {
+      "source_species": "TOGEKISS",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_TOGEKISS",
+      "source_file": "data/pokemon/base_stats/togekiss.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "YANMEGA",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_YANMEGA",
+      "source_file": "data/pokemon/base_stats/yanmega.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "WIDE_LENS"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_WIDE_LENS",
+      "always_rare": false
+    },
+    {
+      "source_species": "LEAFEON",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_LEAFEON",
+      "source_file": "data/pokemon/base_stats/leafeon.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "GLACEON",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_GLACEON",
+      "source_file": "data/pokemon/base_stats/glaceon.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "GLISCOR",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_GLISCOR",
+      "source_file": "data/pokemon/base_stats/gliscor.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "MAMOSWINE",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_MAMOSWINE",
+      "source_file": "data/pokemon/base_stats/mamoswine.asm",
+      "source_held_items": [
+        "RAWST_BERRY",
+        "NEVERMELTICE"
+      ],
+      "common": "ITEM_RAWST_BERRY",
+      "rare": "ITEM_NEVER_MELT_ICE",
+      "always_rare": false
+    },
+    {
+      "source_species": "PORYGON_Z",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_PORYGON_Z",
+      "source_file": "data/pokemon/base_stats/porygon_z.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "DUBIOUS_DISC"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_DUBIOUS_DISC",
+      "always_rare": false
+    },
+    {
+      "source_species": "SYLVEON",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_SYLVEON",
+      "source_file": "data/pokemon/base_stats/sylveon.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "PINK_BOW"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_POLISHED_PINK_BOW",
+      "always_rare": false
+    },
+    {
+      "source_species": "PERRSERKER",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_PERRSERKER",
+      "source_file": "data/pokemon/base_stats/perrserker.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "CURSOLA",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_CURSOLA",
+      "source_file": "data/pokemon/base_stats/cursola.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "SIRFETCH_D",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_SIRFETCHD",
+      "source_file": "data/pokemon/base_stats/sirfetch_d.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "LEEK"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_LEEK",
+      "always_rare": false
+    },
+    {
+      "source_species": "MR__RIME",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_MR_RIME",
+      "source_file": "data/pokemon/base_stats/mr__rime.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "WYRDEER",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_WYRDEER",
+      "source_file": "data/pokemon/base_stats/wyrdeer.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "KLEAVOR",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_KLEAVOR",
+      "source_file": "data/pokemon/base_stats/kleavor.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "URSALUNA",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_URSALUNA",
+      "source_file": "data/pokemon/base_stats/ursaluna_plain.asm",
+      "source_held_items": [
+        "ALWAYS_ITEM_2",
+        "SITRUS_BERRY"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_SITRUS_BERRY",
+      "always_rare": true
+    },
+    {
+      "source_species": "SNEASLER",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_SNEASLER",
+      "source_file": "data/pokemon/base_stats/sneasler.asm",
+      "source_held_items": [
+        "GRIP_CLAW",
+        "QUICK_CLAW"
+      ],
+      "common": "ITEM_GRIP_CLAW",
+      "rare": "ITEM_QUICK_CLAW",
+      "always_rare": false
+    },
+    {
+      "source_species": "OVERQWIL",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_OVERQWIL",
+      "source_file": "data/pokemon/base_stats/overqwil.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "POISON_BARB"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_POISON_BARB",
+      "always_rare": false
+    },
+    {
+      "source_species": "DUDUNSPARCE",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_DUDUNSPARCE",
+      "source_file": "data/pokemon/base_stats/dudunsparce.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "FARIGIRAF",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_FARIGIRAF",
+      "source_file": "data/pokemon/base_stats/farigiraf.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "PERSIM_BERRY"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_PERSIM_BERRY",
+      "always_rare": false
+    },
+    {
+      "source_species": "CLODSIRE",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_CLODSIRE",
+      "source_file": "data/pokemon/base_stats/clodsire.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "CHESTO_BERRY"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_CHESTO_BERRY",
+      "always_rare": false
+    },
+    {
+      "source_species": "ANNIHILAPE",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_ANNIHILAPE",
+      "source_file": "data/pokemon/base_stats/annihilape.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "GYARADOS",
+      "source_form": "GYARADOS_RED_FORM",
+      "target_species": "SPECIES_GYARADOS_RED",
+      "source_file": "data/pokemon/base_stats/gyarados.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "MEWTWO",
+      "source_form": "MEWTWO_ARMORED_FORM",
+      "target_species": "SPECIES_MEWTWO_ARMORED",
+      "source_file": "data/pokemon/base_stats/mewtwo_armored.asm",
+      "source_held_items": [
+        "ALWAYS_ITEM_2",
+        "PETAYA_BERRY"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_PETAYA_BERRY",
+      "always_rare": true
+    },
+    {
+      "source_species": "DUDUNSPARCE",
+      "source_form": "DUDUNSPARCE_THREE_SEGMENT_FORM",
+      "target_species": "SPECIES_DUDUNSPARCE_THREE_SEGMENT",
+      "source_file": "data/pokemon/base_stats/dudunsparce.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "RATTATA",
+      "source_form": "ALOLAN_FORM",
+      "target_species": "SPECIES_RATTATA_ALOLA",
+      "source_file": "data/pokemon/base_stats/rattata_alolan.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "PECHA_BERRY"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_PECHA_BERRY",
+      "always_rare": false
+    },
+    {
+      "source_species": "RATICATE",
+      "source_form": "ALOLAN_FORM",
+      "target_species": "SPECIES_RATICATE_ALOLA",
+      "source_file": "data/pokemon/base_stats/raticate_alolan.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "PECHA_BERRY"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_PECHA_BERRY",
+      "always_rare": false
+    },
+    {
+      "source_species": "RAICHU",
+      "source_form": "ALOLAN_FORM",
+      "target_species": "SPECIES_RAICHU_ALOLA",
+      "source_file": "data/pokemon/base_stats/raichu_alolan.asm",
+      "source_held_items": [
+        "ORAN_BERRY",
+        "LIGHT_BALL"
+      ],
+      "common": "ITEM_ORAN_BERRY",
+      "rare": "ITEM_LIGHT_BALL",
+      "always_rare": false
+    },
+    {
+      "source_species": "SANDSHREW",
+      "source_form": "ALOLAN_FORM",
+      "target_species": "SPECIES_SANDSHREW_ALOLA",
+      "source_file": "data/pokemon/base_stats/sandshrew_alolan.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "GRIP_CLAW"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_GRIP_CLAW",
+      "always_rare": false
+    },
+    {
+      "source_species": "SANDSLASH",
+      "source_form": "ALOLAN_FORM",
+      "target_species": "SPECIES_SANDSLASH_ALOLA",
+      "source_file": "data/pokemon/base_stats/sandslash_alolan.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "GRIP_CLAW"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_GRIP_CLAW",
+      "always_rare": false
+    },
+    {
+      "source_species": "VULPIX",
+      "source_form": "ALOLAN_FORM",
+      "target_species": "SPECIES_VULPIX_ALOLA",
+      "source_file": "data/pokemon/base_stats/vulpix_alolan.asm",
+      "source_held_items": [
+        "ALWAYS_ITEM_2",
+        "ASPEAR_BERRY"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_ASPEAR_BERRY",
+      "always_rare": true
+    },
+    {
+      "source_species": "NINETALES",
+      "source_form": "ALOLAN_FORM",
+      "target_species": "SPECIES_NINETALES_ALOLA",
+      "source_file": "data/pokemon/base_stats/ninetales_alolan.asm",
+      "source_held_items": [
+        "ALWAYS_ITEM_2",
+        "ASPEAR_BERRY"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_ASPEAR_BERRY",
+      "always_rare": true
+    },
+    {
+      "source_species": "DIGLETT",
+      "source_form": "ALOLAN_FORM",
+      "target_species": "SPECIES_DIGLETT_ALOLA",
+      "source_file": "data/pokemon/base_stats/diglett_alolan.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "SOFT_SAND"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_SOFT_SAND",
+      "always_rare": false
+    },
+    {
+      "source_species": "DUGTRIO",
+      "source_form": "ALOLAN_FORM",
+      "target_species": "SPECIES_DUGTRIO_ALOLA",
+      "source_file": "data/pokemon/base_stats/dugtrio_alolan.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "SOFT_SAND"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_SOFT_SAND",
+      "always_rare": false
+    },
+    {
+      "source_species": "MEOWTH",
+      "source_form": "ALOLAN_FORM",
+      "target_species": "SPECIES_MEOWTH_ALOLA",
+      "source_file": "data/pokemon/base_stats/meowth_alolan.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "AMULET_COIN"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_AMULET_COIN",
+      "always_rare": false
+    },
+    {
+      "source_species": "PERSIAN",
+      "source_form": "ALOLAN_FORM",
+      "target_species": "SPECIES_PERSIAN_ALOLA",
+      "source_file": "data/pokemon/base_stats/persian_alolan.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "QUICK_CLAW"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_QUICK_CLAW",
+      "always_rare": false
+    },
+    {
+      "source_species": "GEODUDE",
+      "source_form": "ALOLAN_FORM",
+      "target_species": "SPECIES_GEODUDE_ALOLA",
+      "source_file": "data/pokemon/base_stats/geodude_alolan.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "EVERSTONE"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_EVERSTONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "GRAVELER",
+      "source_form": "ALOLAN_FORM",
+      "target_species": "SPECIES_GRAVELER_ALOLA",
+      "source_file": "data/pokemon/base_stats/graveler_alolan.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "EVERSTONE"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_EVERSTONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "GOLEM",
+      "source_form": "ALOLAN_FORM",
+      "target_species": "SPECIES_GOLEM_ALOLA",
+      "source_file": "data/pokemon/base_stats/golem_alolan.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "EVERSTONE"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_EVERSTONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "GRIMER",
+      "source_form": "ALOLAN_FORM",
+      "target_species": "SPECIES_GRIMER_ALOLA",
+      "source_file": "data/pokemon/base_stats/grimer_alolan.asm",
+      "source_held_items": [
+        "BLACK_SLUDGE",
+        "NUGGET"
+      ],
+      "common": "ITEM_BLACK_SLUDGE",
+      "rare": "ITEM_NUGGET",
+      "always_rare": false
+    },
+    {
+      "source_species": "MUK",
+      "source_form": "ALOLAN_FORM",
+      "target_species": "SPECIES_MUK_ALOLA",
+      "source_file": "data/pokemon/base_stats/muk_alolan.asm",
+      "source_held_items": [
+        "BLACK_SLUDGE",
+        "NUGGET"
+      ],
+      "common": "ITEM_BLACK_SLUDGE",
+      "rare": "ITEM_NUGGET",
+      "always_rare": false
+    },
+    {
+      "source_species": "EXEGGUTOR",
+      "source_form": "ALOLAN_FORM",
+      "target_species": "SPECIES_EXEGGUTOR_ALOLA",
+      "source_file": "data/pokemon/base_stats/exeggutor_alolan.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "SITRUS_BERRY"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_SITRUS_BERRY",
+      "always_rare": false
+    },
+    {
+      "source_species": "MAROWAK",
+      "source_form": "ALOLAN_FORM",
+      "target_species": "SPECIES_MAROWAK_ALOLA",
+      "source_file": "data/pokemon/base_stats/marowak_alolan.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "THICK_CLUB"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_THICK_CLUB",
+      "always_rare": false
+    },
+    {
+      "source_species": "MEOWTH",
+      "source_form": "GALARIAN_FORM",
+      "target_species": "SPECIES_MEOWTH_GALAR",
+      "source_file": "data/pokemon/base_stats/meowth_galarian.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "PONYTA",
+      "source_form": "GALARIAN_FORM",
+      "target_species": "SPECIES_PONYTA_GALAR",
+      "source_file": "data/pokemon/base_stats/ponyta_galarian.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "MARANGABERRY"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_MARANGA_BERRY",
+      "always_rare": false
+    },
+    {
+      "source_species": "RAPIDASH",
+      "source_form": "GALARIAN_FORM",
+      "target_species": "SPECIES_RAPIDASH_GALAR",
+      "source_file": "data/pokemon/base_stats/rapidash_galarian.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "MARANGABERRY"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_MARANGA_BERRY",
+      "always_rare": false
+    },
+    {
+      "source_species": "SLOWPOKE",
+      "source_form": "GALARIAN_FORM",
+      "target_species": "SPECIES_SLOWPOKE_GALAR",
+      "source_file": "data/pokemon/base_stats/slowpoke_galarian.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "KINGS_ROCK"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_KINGS_ROCK",
+      "always_rare": false
+    },
+    {
+      "source_species": "SLOWBRO",
+      "source_form": "GALARIAN_FORM",
+      "target_species": "SPECIES_SLOWBRO_GALAR",
+      "source_file": "data/pokemon/base_stats/slowbro_galarian.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "KINGS_ROCK"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_KINGS_ROCK",
+      "always_rare": false
+    },
+    {
+      "source_species": "FARFETCH_D",
+      "source_form": "GALARIAN_FORM",
+      "target_species": "SPECIES_FARFETCHD_GALAR",
+      "source_file": "data/pokemon/base_stats/farfetch_d_galarian.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "LEEK"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_LEEK",
+      "always_rare": false
+    },
+    {
+      "source_species": "WEEZING",
+      "source_form": "GALARIAN_FORM",
+      "target_species": "SPECIES_WEEZING_GALAR",
+      "source_file": "data/pokemon/base_stats/weezing_galarian.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "SMOKE_BALL"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_SMOKE_BALL",
+      "always_rare": false
+    },
+    {
+      "source_species": "MR__MIME",
+      "source_form": "GALARIAN_FORM",
+      "target_species": "SPECIES_MR_MIME_GALAR",
+      "source_file": "data/pokemon/base_stats/mr__mime_galarian.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "ARTICUNO",
+      "source_form": "GALARIAN_FORM",
+      "target_species": "SPECIES_ARTICUNO_GALAR",
+      "source_file": "data/pokemon/base_stats/articuno_galarian.asm",
+      "source_held_items": [
+        "ALWAYS_ITEM_2",
+        "LUM_BERRY"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_LUM_BERRY",
+      "always_rare": true
+    },
+    {
+      "source_species": "ZAPDOS",
+      "source_form": "GALARIAN_FORM",
+      "target_species": "SPECIES_ZAPDOS_GALAR",
+      "source_file": "data/pokemon/base_stats/zapdos_galarian.asm",
+      "source_held_items": [
+        "ALWAYS_ITEM_2",
+        "LUM_BERRY"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_LUM_BERRY",
+      "always_rare": true
+    },
+    {
+      "source_species": "MOLTRES",
+      "source_form": "GALARIAN_FORM",
+      "target_species": "SPECIES_MOLTRES_GALAR",
+      "source_file": "data/pokemon/base_stats/moltres_galarian.asm",
+      "source_held_items": [
+        "ALWAYS_ITEM_2",
+        "LUM_BERRY"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_LUM_BERRY",
+      "always_rare": true
+    },
+    {
+      "source_species": "SLOWKING",
+      "source_form": "GALARIAN_FORM",
+      "target_species": "SPECIES_SLOWKING_GALAR",
+      "source_file": "data/pokemon/base_stats/slowking_galarian.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "KINGS_ROCK"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_KINGS_ROCK",
+      "always_rare": false
+    },
+    {
+      "source_species": "CORSOLA",
+      "source_form": "GALARIAN_FORM",
+      "target_species": "SPECIES_CORSOLA_GALAR",
+      "source_file": "data/pokemon/base_stats/corsola_galarian.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "GROWLITHE",
+      "source_form": "HISUIAN_FORM",
+      "target_species": "SPECIES_GROWLITHE_HISUI",
+      "source_file": "data/pokemon/base_stats/growlithe_hisuian.asm",
+      "source_held_items": [
+        "ALWAYS_ITEM_2",
+        "ASPEAR_BERRY"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_ASPEAR_BERRY",
+      "always_rare": true
+    },
+    {
+      "source_species": "ARCANINE",
+      "source_form": "HISUIAN_FORM",
+      "target_species": "SPECIES_ARCANINE_HISUI",
+      "source_file": "data/pokemon/base_stats/arcanine_hisuian.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "ASPEAR_BERRY"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_ASPEAR_BERRY",
+      "always_rare": false
+    },
+    {
+      "source_species": "VOLTORB",
+      "source_form": "HISUIAN_FORM",
+      "target_species": "SPECIES_VOLTORB_HISUI",
+      "source_file": "data/pokemon/base_stats/voltorb_hisuian.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "ELECTRODE",
+      "source_form": "HISUIAN_FORM",
+      "target_species": "SPECIES_ELECTRODE_HISUI",
+      "source_file": "data/pokemon/base_stats/electrode_hisuian.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "TYPHLOSION",
+      "source_form": "HISUIAN_FORM",
+      "target_species": "SPECIES_TYPHLOSION_HISUI",
+      "source_file": "data/pokemon/base_stats/typhlosion_hisuian.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "QWILFISH",
+      "source_form": "HISUIAN_FORM",
+      "target_species": "SPECIES_QWILFISH_HISUI",
+      "source_file": "data/pokemon/base_stats/qwilfish_hisuian.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "POISON_BARB"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_POISON_BARB",
+      "always_rare": false
+    },
+    {
+      "source_species": "SNEASEL",
+      "source_form": "HISUIAN_FORM",
+      "target_species": "SPECIES_SNEASEL_HISUI",
+      "source_file": "data/pokemon/base_stats/sneasel_hisuian.asm",
+      "source_held_items": [
+        "GRIP_CLAW",
+        "QUICK_CLAW"
+      ],
+      "common": "ITEM_GRIP_CLAW",
+      "rare": "ITEM_QUICK_CLAW",
+      "always_rare": false
+    },
+    {
+      "source_species": "WOOPER",
+      "source_form": "PALDEAN_FORM",
+      "target_species": "SPECIES_WOOPER_PALDEA",
+      "source_file": "data/pokemon/base_stats/wooper_paldean.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "CHESTO_BERRY"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_CHESTO_BERRY",
+      "always_rare": false
+    },
+    {
+      "source_species": "TAUROS",
+      "source_form": "PALDEAN_FORM",
+      "target_species": "SPECIES_TAUROS_PALDEA_COMBAT",
+      "source_file": "data/pokemon/base_stats/tauros_paldean.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "TAUROS",
+      "source_form": "TAUROS_PALDEAN_FIRE_FORM",
+      "target_species": "SPECIES_TAUROS_PALDEA_BLAZE",
+      "source_file": "data/pokemon/base_stats/tauros_paldean_fire.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "TAUROS",
+      "source_form": "TAUROS_PALDEAN_WATER_FORM",
+      "target_species": "SPECIES_TAUROS_PALDEA_AQUA",
+      "source_file": "data/pokemon/base_stats/tauros_paldean_water.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "URSALUNA",
+      "source_form": "URSALUNA_BLOODMOON_FORM",
+      "target_species": "SPECIES_URSALUNA_BLOODMOON",
+      "source_file": "data/pokemon/base_stats/ursaluna_bloodmoon.asm",
+      "source_held_items": [
+        "ALWAYS_ITEM_2",
+        "LUM_BERRY"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_LUM_BERRY",
+      "always_rare": true
+    },
+    {
+      "source_species": "UNOWN",
+      "source_form": "UNOWN_B_FORM",
+      "target_species": "SPECIES_UNOWN_B",
+      "source_file": "data/pokemon/base_stats/unown.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "UNOWN",
+      "source_form": "UNOWN_C_FORM",
+      "target_species": "SPECIES_UNOWN_C",
+      "source_file": "data/pokemon/base_stats/unown.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "UNOWN",
+      "source_form": "UNOWN_D_FORM",
+      "target_species": "SPECIES_UNOWN_D",
+      "source_file": "data/pokemon/base_stats/unown.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "UNOWN",
+      "source_form": "UNOWN_E_FORM",
+      "target_species": "SPECIES_UNOWN_E",
+      "source_file": "data/pokemon/base_stats/unown.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "UNOWN",
+      "source_form": "UNOWN_F_FORM",
+      "target_species": "SPECIES_UNOWN_F",
+      "source_file": "data/pokemon/base_stats/unown.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "UNOWN",
+      "source_form": "UNOWN_G_FORM",
+      "target_species": "SPECIES_UNOWN_G",
+      "source_file": "data/pokemon/base_stats/unown.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "UNOWN",
+      "source_form": "UNOWN_H_FORM",
+      "target_species": "SPECIES_UNOWN_H",
+      "source_file": "data/pokemon/base_stats/unown.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "UNOWN",
+      "source_form": "UNOWN_I_FORM",
+      "target_species": "SPECIES_UNOWN_I",
+      "source_file": "data/pokemon/base_stats/unown.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "UNOWN",
+      "source_form": "UNOWN_J_FORM",
+      "target_species": "SPECIES_UNOWN_J",
+      "source_file": "data/pokemon/base_stats/unown.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "UNOWN",
+      "source_form": "UNOWN_K_FORM",
+      "target_species": "SPECIES_UNOWN_K",
+      "source_file": "data/pokemon/base_stats/unown.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "UNOWN",
+      "source_form": "UNOWN_L_FORM",
+      "target_species": "SPECIES_UNOWN_L",
+      "source_file": "data/pokemon/base_stats/unown.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "UNOWN",
+      "source_form": "UNOWN_M_FORM",
+      "target_species": "SPECIES_UNOWN_M",
+      "source_file": "data/pokemon/base_stats/unown.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "UNOWN",
+      "source_form": "UNOWN_N_FORM",
+      "target_species": "SPECIES_UNOWN_N",
+      "source_file": "data/pokemon/base_stats/unown.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "UNOWN",
+      "source_form": "UNOWN_O_FORM",
+      "target_species": "SPECIES_UNOWN_O",
+      "source_file": "data/pokemon/base_stats/unown.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "UNOWN",
+      "source_form": "UNOWN_P_FORM",
+      "target_species": "SPECIES_UNOWN_P",
+      "source_file": "data/pokemon/base_stats/unown.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "UNOWN",
+      "source_form": "UNOWN_Q_FORM",
+      "target_species": "SPECIES_UNOWN_Q",
+      "source_file": "data/pokemon/base_stats/unown.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "UNOWN",
+      "source_form": "UNOWN_R_FORM",
+      "target_species": "SPECIES_UNOWN_R",
+      "source_file": "data/pokemon/base_stats/unown.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "UNOWN",
+      "source_form": "UNOWN_S_FORM",
+      "target_species": "SPECIES_UNOWN_S",
+      "source_file": "data/pokemon/base_stats/unown.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "UNOWN",
+      "source_form": "UNOWN_T_FORM",
+      "target_species": "SPECIES_UNOWN_T",
+      "source_file": "data/pokemon/base_stats/unown.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "UNOWN",
+      "source_form": "UNOWN_U_FORM",
+      "target_species": "SPECIES_UNOWN_U",
+      "source_file": "data/pokemon/base_stats/unown.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "UNOWN",
+      "source_form": "UNOWN_V_FORM",
+      "target_species": "SPECIES_UNOWN_V",
+      "source_file": "data/pokemon/base_stats/unown.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "UNOWN",
+      "source_form": "UNOWN_W_FORM",
+      "target_species": "SPECIES_UNOWN_W",
+      "source_file": "data/pokemon/base_stats/unown.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "UNOWN",
+      "source_form": "UNOWN_X_FORM",
+      "target_species": "SPECIES_UNOWN_X",
+      "source_file": "data/pokemon/base_stats/unown.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "UNOWN",
+      "source_form": "UNOWN_Y_FORM",
+      "target_species": "SPECIES_UNOWN_Y",
+      "source_file": "data/pokemon/base_stats/unown.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "UNOWN",
+      "source_form": "UNOWN_Z_FORM",
+      "target_species": "SPECIES_UNOWN_Z",
+      "source_file": "data/pokemon/base_stats/unown.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "UNOWN",
+      "source_form": "UNOWN_EXCLAMATION_FORM",
+      "target_species": "SPECIES_UNOWN_EXCLAMATION",
+      "source_file": "data/pokemon/base_stats/unown.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "UNOWN",
+      "source_form": "UNOWN_QUESTION_FORM",
+      "target_species": "SPECIES_UNOWN_QUESTION",
+      "source_file": "data/pokemon/base_stats/unown.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "ARBOK",
+      "source_form": "ARBOK_KANTO_FORM",
+      "target_species": "SPECIES_ARBOK_KANTO",
+      "source_file": "data/pokemon/base_stats/arbok.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "POISON_BARB"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_POISON_BARB",
+      "always_rare": false
+    },
+    {
+      "source_species": "ARBOK",
+      "source_form": "ARBOK_KOGA_FORM",
+      "target_species": "SPECIES_ARBOK_KOGA",
+      "source_file": "data/pokemon/base_stats/arbok.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "POISON_BARB"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_POISON_BARB",
+      "always_rare": false
+    },
+    {
+      "source_species": "ARBOK",
+      "source_form": "ARBOK_AGATHA_FORM",
+      "target_species": "SPECIES_ARBOK_AGATHA",
+      "source_file": "data/pokemon/base_stats/arbok.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "POISON_BARB"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_POISON_BARB",
+      "always_rare": false
+    },
+    {
+      "source_species": "ARBOK",
+      "source_form": "ARBOK_ARIANA_FORM",
+      "target_species": "SPECIES_ARBOK_ARIANA",
+      "source_file": "data/pokemon/base_stats/arbok.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "POISON_BARB"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_POISON_BARB",
+      "always_rare": false
+    },
+    {
+      "source_species": "PIKACHU",
+      "source_form": "PIKACHU_FLY_FORM",
+      "target_species": "SPECIES_PIKACHU_FLY",
+      "source_file": "data/pokemon/base_stats/pikachu.asm",
+      "source_held_items": [
+        "ORAN_BERRY",
+        "LIGHT_BALL"
+      ],
+      "common": "ITEM_ORAN_BERRY",
+      "rare": "ITEM_LIGHT_BALL",
+      "always_rare": false
+    },
+    {
+      "source_species": "PIKACHU",
+      "source_form": "PIKACHU_SURF_FORM",
+      "target_species": "SPECIES_PIKACHU_SURF",
+      "source_file": "data/pokemon/base_stats/pikachu.asm",
+      "source_held_items": [
+        "ORAN_BERRY",
+        "LIGHT_BALL"
+      ],
+      "common": "ITEM_ORAN_BERRY",
+      "rare": "ITEM_LIGHT_BALL",
+      "always_rare": false
+    },
+    {
+      "source_species": "PIKACHU",
+      "source_form": "PIKACHU_RED_FORM",
+      "target_species": "SPECIES_PIKACHU_RED",
+      "source_file": "data/pokemon/base_stats/pikachu.asm",
+      "source_held_items": [
+        "ORAN_BERRY",
+        "LIGHT_BALL"
+      ],
+      "common": "ITEM_ORAN_BERRY",
+      "rare": "ITEM_LIGHT_BALL",
+      "always_rare": false
+    },
+    {
+      "source_species": "PIKACHU",
+      "source_form": "PIKACHU_YELLOW_FORM",
+      "target_species": "SPECIES_PIKACHU_YELLOW",
+      "source_file": "data/pokemon/base_stats/pikachu.asm",
+      "source_held_items": [
+        "ORAN_BERRY",
+        "LIGHT_BALL"
+      ],
+      "common": "ITEM_ORAN_BERRY",
+      "rare": "ITEM_LIGHT_BALL",
+      "always_rare": false
+    },
+    {
+      "source_species": "PIKACHU",
+      "source_form": "PIKACHU_SPARK_FORM",
+      "target_species": "SPECIES_PIKACHU_SPARK",
+      "source_file": "data/pokemon/base_stats/pikachu.asm",
+      "source_held_items": [
+        "ORAN_BERRY",
+        "LIGHT_BALL"
+      ],
+      "common": "ITEM_ORAN_BERRY",
+      "rare": "ITEM_LIGHT_BALL",
+      "always_rare": false
+    },
+    {
+      "source_species": "PICHU",
+      "source_form": "PICHU_SPIKY_EARED_FORM",
+      "target_species": "SPECIES_PICHU_SPIKY_EARED",
+      "source_file": "data/pokemon/base_stats/pichu.asm",
+      "source_held_items": [
+        "ORAN_BERRY",
+        "LIGHT_BALL"
+      ],
+      "common": "ITEM_ORAN_BERRY",
+      "rare": "ITEM_LIGHT_BALL",
+      "always_rare": false
+    },
+    {
+      "source_species": "MAGIKARP",
+      "source_form": "MAGIKARP_SKELLY_FORM",
+      "target_species": "SPECIES_MAGIKARP_SKELLY",
+      "source_file": "data/pokemon/base_stats/magikarp.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "MAGIKARP",
+      "source_form": "MAGIKARP_CALICO1_FORM",
+      "target_species": "SPECIES_MAGIKARP_CALICO1",
+      "source_file": "data/pokemon/base_stats/magikarp.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "MAGIKARP",
+      "source_form": "MAGIKARP_CALICO2_FORM",
+      "target_species": "SPECIES_MAGIKARP_CALICO2",
+      "source_file": "data/pokemon/base_stats/magikarp.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "MAGIKARP",
+      "source_form": "MAGIKARP_CALICO3_FORM",
+      "target_species": "SPECIES_MAGIKARP_CALICO3",
+      "source_file": "data/pokemon/base_stats/magikarp.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "MAGIKARP",
+      "source_form": "MAGIKARP_TWO_TONE_FORM",
+      "target_species": "SPECIES_MAGIKARP_TWO_TONE",
+      "source_file": "data/pokemon/base_stats/magikarp.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "MAGIKARP",
+      "source_form": "MAGIKARP_ORCA_FORM",
+      "target_species": "SPECIES_MAGIKARP_ORCA",
+      "source_file": "data/pokemon/base_stats/magikarp.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "MAGIKARP",
+      "source_form": "MAGIKARP_DAPPLES_FORM",
+      "target_species": "SPECIES_MAGIKARP_DAPPLES",
+      "source_file": "data/pokemon/base_stats/magikarp.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "MAGIKARP",
+      "source_form": "MAGIKARP_TIGER_FORM",
+      "target_species": "SPECIES_MAGIKARP_TIGER",
+      "source_file": "data/pokemon/base_stats/magikarp.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "MAGIKARP",
+      "source_form": "MAGIKARP_ZEBRA_FORM",
+      "target_species": "SPECIES_MAGIKARP_ZEBRA",
+      "source_file": "data/pokemon/base_stats/magikarp.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "MAGIKARP",
+      "source_form": "MAGIKARP_STRIPE_FORM",
+      "target_species": "SPECIES_MAGIKARP_STRIPE",
+      "source_file": "data/pokemon/base_stats/magikarp.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "MAGIKARP",
+      "source_form": "MAGIKARP_BUBBLES_FORM",
+      "target_species": "SPECIES_MAGIKARP_BUBBLES",
+      "source_file": "data/pokemon/base_stats/magikarp.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "MAGIKARP",
+      "source_form": "MAGIKARP_DIAMONDS_FORM",
+      "target_species": "SPECIES_MAGIKARP_DIAMONDS",
+      "source_file": "data/pokemon/base_stats/magikarp.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "MAGIKARP",
+      "source_form": "MAGIKARP_PATCHES_FORM",
+      "target_species": "SPECIES_MAGIKARP_PATCHES",
+      "source_file": "data/pokemon/base_stats/magikarp.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "MAGIKARP",
+      "source_form": "MAGIKARP_FOREHEAD1_FORM",
+      "target_species": "SPECIES_MAGIKARP_FOREHEAD1",
+      "source_file": "data/pokemon/base_stats/magikarp.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "MAGIKARP",
+      "source_form": "MAGIKARP_MASK1_FORM",
+      "target_species": "SPECIES_MAGIKARP_MASK1",
+      "source_file": "data/pokemon/base_stats/magikarp.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "MAGIKARP",
+      "source_form": "MAGIKARP_FOREHEAD2_FORM",
+      "target_species": "SPECIES_MAGIKARP_FOREHEAD2",
+      "source_file": "data/pokemon/base_stats/magikarp.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "MAGIKARP",
+      "source_form": "MAGIKARP_MASK2_FORM",
+      "target_species": "SPECIES_MAGIKARP_MASK2",
+      "source_file": "data/pokemon/base_stats/magikarp.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "MAGIKARP",
+      "source_form": "MAGIKARP_SAUCY_FORM",
+      "target_species": "SPECIES_MAGIKARP_SAUCY",
+      "source_file": "data/pokemon/base_stats/magikarp.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    },
+    {
+      "source_species": "MAGIKARP",
+      "source_form": "MAGIKARP_RAINDROP_FORM",
+      "target_species": "SPECIES_MAGIKARP_RAINDROP",
+      "source_file": "data/pokemon/base_stats/magikarp.asm",
+      "source_held_items": [
+        "NO_ITEM",
+        "NO_ITEM"
+      ],
+      "common": "ITEM_NONE",
+      "rare": "ITEM_NONE",
+      "always_rare": false
+    }
+  ],
+  "remaining_gaps": [
+    "Existing mapped item prices/descriptions/art/effects still use native definitions until individually ported.",
+    "Pink Bow uses the native 20% Fairy-type damage adapter; full source damage order/rounding remains pending.",
+    "Leaf tutor placements, full item catalog, source TM inventory/numbering and broader item mechanics remain pending.",
+    "GBA RNG supplies uniform bytes; this ports source branch probabilities, not the GBC RNG sequence."
+  ]
+}
