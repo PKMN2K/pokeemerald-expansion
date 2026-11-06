@@ -31,7 +31,7 @@ regression coverage, but are not evidence of complete source-game parity.
 | Field rules and encounters | Source encounter distributions are imported for selected maps, but native encounter modifiers, field-move gates and other engine rules still apply. Headbutt's source selector is dormant. | Audit source field behavior and enable each feature with an explicit map identity and source rules. |
 | Save compatibility | Target save IDs are already allocated and tested. Source DVs/records cannot be copied byte-for-byte into native encrypted Pokemon. | Preserve stable regular move/species/item/save IDs where possible; document representation changes and migration requirements. Source behavior, not GBC table width, is the target. |
 | Completion criteria | Generic native battle tests can pass with entirely native data. | Require source fixture/provenance checks, source-specific native tests, and live emulator assertions for each migration phase. Keep the broader suite as regression coverage. |
-| Replay assumptions | The old tower replay relied on Expansion's early Bite and remaining Surf PP, confused the returning Start menu with field control, and could accept an interrupted interaction as complete. Capture input assumed the remembered Bag row was a ball and did not handle newly reached learn levels. | Replays now learn the source level-13 Bite through the real selector, use purchased Potions and Center visits, confirm the intended object interaction, select the actual ball stack, handle learning prompts, confirm Send Out after a lead faints, and recover from a real capture blackout with bounded retries and ordinary ball purchases. Changed source data must drive test input instead of being changed to preserve the old replay. |
+| Replay assumptions | The old tower replay relied on Expansion's early Bite and remaining Surf PP, confused the returning Start menu with field control, and could accept an interrupted interaction as complete. Capture input assumed the remembered Bag row was a ball and did not handle newly reached learn levels. | Replays now learn the source level-13 Bite through the real selector, use purchased Potions and Center visits, confirm the intended object interaction, select the actual ball stack, handle learning prompts, confirm the wild-battle replacement question and Send Out after a lead faints, and recover from a real capture blackout with bounded retries and ordinary ball purchases. Changed source data must drive test input instead of being changed to preserve the old replay. |
 
 ## This implementation's boundaries
 
@@ -76,7 +76,9 @@ demo campaign checks until the authentic startup is implemented.
 Trainer interaction checks also recognize the intended source intro while the
 field is locked; the script/last-talked probes alone missed a live Nico dialogue
 in CI. Failure bundles retain both the emulator state and matching ELF so
-compiler-dependent addresses can be inspected accurately.
+compiler-dependent addresses can be inspected accurately. The Nico dialogue
+and wild-battle replacement prompt regressions were reproduced and passed
+using the actual CI ROM and matching ELF.
 
 ## Next priorities
 

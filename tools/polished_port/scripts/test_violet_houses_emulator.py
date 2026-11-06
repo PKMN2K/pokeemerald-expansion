@@ -130,8 +130,10 @@ def finish_poliwag_capture(game,before,ball):
         if cb(game,"CB2_Overworld") and not task_active(game,"Task_BattleStart"):
             if len(party(game))==before+1:
                 break
-            if game.read(game.sym["gBattleOutcome"],1)[0]==2:  # B_OUTCOME_LOST
+            outcome=game.read(game.sym["gBattleOutcome"],1)[0]
+            if outcome==2:  # B_OUTCOME_LOST
                 return False
+            raise AssertionError(("Pond battle ended without a capture",outcome,party(game,details=True)))
         opcode=game.read(game.u32(game.sym["gBattlescriptCurrInstr"]),1)[0] if cb(game,"BattleMainCB2") else -1
         # Catch EXP can reach a source learn level. Repeated B would alternate
         # between declining the move and declining to stop learning it.
@@ -139,6 +141,15 @@ def finish_poliwag_capture(game,before,ball):
             game.press(B,20)
         elif opcode==layout()["stop_learning_opcode"]:
             game.press(A,20)
+        elif opcode==layout()["yes_no_opcode"]:
+            # In a wild battle, a fainted lead prompts "Use next POKéMON?".
+            # B attempts to flee; it is not merely advancing battle text.
+            active=int.from_bytes(game.read(game.sym["gBattlerPartyIndexes"],2),"little")
+            if party(game,details=True)[active]["hp"]==0:
+                cursor=game.read(game.sym["gBattleCommunication"]+1,1)[0]
+                game.press(UP if cursor else A,30)
+            else:
+                game.press(B,30)
         elif controller(game,"HandleInputChooseAction"):
             offered=party(game,enemy=True,details=True)[0]
             assert offered["species"]==extra_layout()["poliwag"],offered
