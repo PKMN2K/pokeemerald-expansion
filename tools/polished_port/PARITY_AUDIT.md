@@ -134,6 +134,17 @@ and Save/reset/Continue. These remain demo-start regression checks, not proof
 of the still-unported authentic opening. The tested Johto ROM SHA-256 is
 `53bc61bb3c5bf3c65d4f935fdd16e3db3d2478cd8d41db147c4102d28bcf7d4f`.
 
+### CI replay repair
+
+CI #1471 exposed a loss-replay assumption after the species import:
+Cyndaquil's source Flame Body burned Lyra's Chikorita and won a battle driven
+only by switching. The replay had observed the opponent only in the move menu,
+so it missed that the battle had already ended. The deliberate Lyra defeat now
+uses the real Totodile starter branch, and opponent validation happens at the
+first action menu. The outcome assertion still requires a genuine loss, followed
+by healing, the Potion handoff, Save/Continue and the no-rematch checks. Source
+abilities, species data and gameplay remain unchanged.
+
 ## Next priorities
 
 1. Import evolution conditions, egg moves, teaching compatibility and held-item

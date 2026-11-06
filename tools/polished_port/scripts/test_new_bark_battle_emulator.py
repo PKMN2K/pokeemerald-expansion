@@ -105,15 +105,9 @@ def finish_battle(game, maps, label, lose=False, expected=None):
             else:
                 game.press(A, 30)
         elif controller(game, 'HandleInputChooseAction'):
-            if lose and sum(bool(mon['hp']) for mon in party(game, details=True)) > 1:
-                # Spend native turns switching while both Pokémon are alive.
-                # Burning all of the lead's Leer PP before its partner fainted
-                # could leave this test endlessly selecting an exhausted move.
-                choose_cell(game, 'gActionSelectionCursor', 2)
-                switches += 1
-            else:
-                choose_cell(game, 'gActionSelectionCursor', 0)
-        elif controller(game, 'HandleInputChooseMove'):
+            # A switching-only battle can end without opening the move menu.
+            # Observe the opponent before choosing any action so its result is
+            # still checked immediately when the game returns to the field.
             if observed is None:
                 observed = party(game, enemy=True, details=True)
                 assert len(observed) == 1
@@ -128,6 +122,15 @@ def finish_battle(game, maps, label, lose=False, expected=None):
                     assert bytes.fromhex(observed[0]['nickname']).split(b'\xff', 1)[0] == encoded
                     assert observed[0]['moves'] == [*(layout()[move] for move in moves), 0, 0]
                 game.screenshot('battle-' + label + '-first-turn')
+            if lose and sum(bool(mon['hp']) for mon in party(game, details=True)) > 1:
+                # Spend native turns switching while both Pokémon are alive.
+                # Burning all of the lead's Leer PP before its partner fainted
+                # could leave this test endlessly selecting an exhausted move.
+                choose_cell(game, 'gActionSelectionCursor', 2)
+                switches += 1
+            else:
+                choose_cell(game, 'gActionSelectionCursor', 0)
+        elif controller(game, 'HandleInputChooseMove'):
             # Once only one Pokémon remains, its untouched status move permits
             # a genuine defeat. Fail immediately with useful diagnostics if a
             # future roster change removes that input, instead of stalling.
@@ -193,7 +196,10 @@ def check_battle(game, maps, species, lyra_species, index, checks):
     assert potion_count(game) == amount
     result['potion_count'] = amount
     (game.output / ('battle-' + species.lower() + '.json')).write_text(json.dumps(result, indent=2) + '\n')
-    if index == 1:
+    # Cyndaquil's source Flame Body can defeat Lyra through burn damage even
+    # when the player only switches. Use the actual Totodile starter branch
+    # for a deliberate loss, preserving the source abilities and real inputs.
+    if species == 'Totodile':
         game.snapshot('after-lyra-win')
         game.restore('before-lyra-battle')
         loss = finish_battle(game, maps, 'loss', lose=True, expected=lyra_species)
