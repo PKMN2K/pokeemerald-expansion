@@ -5845,12 +5845,12 @@ void ItemUseCB_RareCandy(u8 taskId, TaskFunc task)
 
         if (holdEffectParam == 0) // Rare Candy
         {
-            targetSpecies = GetEvolutionTargetSpecies(mon, EVO_MODE_NORMAL, ITEM_NONE, NULL, &canStopEvo, CHECK_EVO);
+            targetSpecies = GetEvolutionTargetSpecies(mon, EVO_MODE_NORMAL, *itemPtr, NULL, &canStopEvo, CHECK_EVO);
         }
 
         if (targetSpecies != SPECIES_NONE)
         {
-            GetEvolutionTargetSpecies(mon, EVO_MODE_NORMAL, ITEM_NONE, NULL, &canStopEvo, DO_EVO);
+            GetEvolutionTargetSpecies(mon, EVO_MODE_NORMAL, *itemPtr, NULL, &canStopEvo, DO_EVO);
             RemoveBagItem(gSpecialVar_ItemId, 1);
             FreePartyPointers();
             gCB2_AfterEvolution = gPartyMenu.exitCallback;

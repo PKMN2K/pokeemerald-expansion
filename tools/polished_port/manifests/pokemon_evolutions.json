@@ -1,0 +1,4571 @@
+{
+  "source_commit": "3fa43192379df5c3e7b09a08e4d5d79af4f02f42",
+  "source_variant": "default; FAITHFUL undefined",
+  "mapped_target_count": 391,
+  "source_evolution_row_count": 190,
+  "friendship_threshold": 160,
+  "locations": [
+    {
+      "source_map": "IlexForest",
+      "landmark": "ILEX_FOREST",
+      "target_map": null
+    },
+    {
+      "source_map": "IcePath1F",
+      "landmark": "ICE_PATH",
+      "target_map": null
+    },
+    {
+      "source_map": "IcePathB1F",
+      "landmark": "ICE_PATH",
+      "target_map": null
+    },
+    {
+      "source_map": "IcePathB2FMahoganySide",
+      "landmark": "ICE_PATH",
+      "target_map": null
+    },
+    {
+      "source_map": "IcePathB2FBlackthornSide",
+      "landmark": "ICE_PATH",
+      "target_map": null
+    },
+    {
+      "source_map": "IcePathB3F",
+      "landmark": "ICE_PATH",
+      "target_map": null
+    },
+    {
+      "source_map": "MagnetTunnelInside",
+      "landmark": "MAGNET_TUNNEL",
+      "target_map": null
+    },
+    {
+      "source_map": "DimCave1F",
+      "landmark": "DIM_CAVE",
+      "target_map": null
+    },
+    {
+      "source_map": "DimCave2F",
+      "landmark": "DIM_CAVE",
+      "target_map": null
+    },
+    {
+      "source_map": "DimCave3F",
+      "landmark": "DIM_CAVE",
+      "target_map": null
+    },
+    {
+      "source_map": "DimCave4F",
+      "landmark": "DIM_CAVE",
+      "target_map": null
+    },
+    {
+      "source_map": "DimCave5F",
+      "landmark": "DIM_CAVE",
+      "target_map": null
+    },
+    {
+      "source_map": "SinjohRuins",
+      "landmark": "SINJOH_RUINS",
+      "target_map": null
+    },
+    {
+      "source_map": "SinjohRuinsHouse",
+      "landmark": "SINJOH_RUINS",
+      "target_map": null
+    },
+    {
+      "source_map": "MystriStage",
+      "landmark": "MYSTRI_STAGE",
+      "target_map": null
+    },
+    {
+      "source_map": "RuggedRoadNorth",
+      "landmark": "RUGGED_ROAD",
+      "target_map": null
+    },
+    {
+      "source_map": "RuggedRoadSouth",
+      "landmark": "RUGGED_ROAD",
+      "target_map": null
+    },
+    {
+      "source_map": "SnowtopMountainInside",
+      "landmark": "SNOWTOP_MOUNTAIN",
+      "target_map": null
+    },
+    {
+      "source_map": "SnowtopMountainOutside",
+      "landmark": "SNOWTOP_MOUNTAIN",
+      "target_map": null
+    },
+    {
+      "source_map": "SnowtopPokeCenter1F",
+      "landmark": "SNOWTOP_MOUNTAIN",
+      "target_map": null
+    }
+  ],
+  "remaining_gaps": [
+    "Hidden Ekans/Dunsparce and inherited Magikarp/Gyarados form bits need a creation/inheritance/save adapter; ordinary registered identities retain plain evolutions.",
+    "Evolution landmarks await their campaign maps; no Hoenn replacements are enabled.",
+    "Default-source mid-trainer-battle evolution timing is not yet implemented; current runtime evolves after the battle.",
+    "Optional source EV-disabled stat comparison is not imported with the initial-options system.",
+    "Source evolution animation/presentation and item artwork remain pending."
+  ],
+  "records": [
+    {
+      "source_species": "BULBASAUR",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Bulbasaur",
+      "target_species": "SPECIES_BULBASAUR",
+      "rules": [
+        {
+          "method": "LEVEL",
+          "argument": "16",
+          "extra": "0",
+          "species": "IVYSAUR",
+          "form": "PLAIN_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "IVYSAUR",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Ivysaur",
+      "target_species": "SPECIES_IVYSAUR",
+      "rules": [
+        {
+          "method": "LEVEL",
+          "argument": "32",
+          "extra": "0",
+          "species": "VENUSAUR",
+          "form": "PLAIN_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "VENUSAUR",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Venusaur",
+      "target_species": "SPECIES_VENUSAUR",
+      "rules": []
+    },
+    {
+      "source_species": "CHARMANDER",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Charmander",
+      "target_species": "SPECIES_CHARMANDER",
+      "rules": [
+        {
+          "method": "LEVEL",
+          "argument": "16",
+          "extra": "0",
+          "species": "CHARMELEON",
+          "form": "PLAIN_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "CHARMELEON",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Charmeleon",
+      "target_species": "SPECIES_CHARMELEON",
+      "rules": [
+        {
+          "method": "LEVEL",
+          "argument": "36",
+          "extra": "0",
+          "species": "CHARIZARD",
+          "form": "PLAIN_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "CHARIZARD",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Charizard",
+      "target_species": "SPECIES_CHARIZARD",
+      "rules": []
+    },
+    {
+      "source_species": "SQUIRTLE",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Squirtle",
+      "target_species": "SPECIES_SQUIRTLE",
+      "rules": [
+        {
+          "method": "LEVEL",
+          "argument": "16",
+          "extra": "0",
+          "species": "WARTORTLE",
+          "form": "PLAIN_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "WARTORTLE",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Wartortle",
+      "target_species": "SPECIES_WARTORTLE",
+      "rules": [
+        {
+          "method": "LEVEL",
+          "argument": "36",
+          "extra": "0",
+          "species": "BLASTOISE",
+          "form": "PLAIN_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "BLASTOISE",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Blastoise",
+      "target_species": "SPECIES_BLASTOISE",
+      "rules": []
+    },
+    {
+      "source_species": "CATERPIE",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Caterpie",
+      "target_species": "SPECIES_CATERPIE",
+      "rules": [
+        {
+          "method": "LEVEL",
+          "argument": "7",
+          "extra": "0",
+          "species": "METAPOD",
+          "form": "PLAIN_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "METAPOD",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Metapod",
+      "target_species": "SPECIES_METAPOD",
+      "rules": [
+        {
+          "method": "LEVEL",
+          "argument": "10",
+          "extra": "0",
+          "species": "BUTTERFREE",
+          "form": "PLAIN_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "BUTTERFREE",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Butterfree",
+      "target_species": "SPECIES_BUTTERFREE",
+      "rules": []
+    },
+    {
+      "source_species": "WEEDLE",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Weedle",
+      "target_species": "SPECIES_WEEDLE",
+      "rules": [
+        {
+          "method": "LEVEL",
+          "argument": "7",
+          "extra": "0",
+          "species": "KAKUNA",
+          "form": "PLAIN_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "KAKUNA",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Kakuna",
+      "target_species": "SPECIES_KAKUNA",
+      "rules": [
+        {
+          "method": "LEVEL",
+          "argument": "10",
+          "extra": "0",
+          "species": "BEEDRILL",
+          "form": "PLAIN_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "BEEDRILL",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Beedrill",
+      "target_species": "SPECIES_BEEDRILL",
+      "rules": []
+    },
+    {
+      "source_species": "PIDGEY",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Pidgey",
+      "target_species": "SPECIES_PIDGEY",
+      "rules": [
+        {
+          "method": "LEVEL",
+          "argument": "18",
+          "extra": "0",
+          "species": "PIDGEOTTO",
+          "form": "PLAIN_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "PIDGEOTTO",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Pidgeotto",
+      "target_species": "SPECIES_PIDGEOTTO",
+      "rules": [
+        {
+          "method": "LEVEL",
+          "argument": "36",
+          "extra": "0",
+          "species": "PIDGEOT",
+          "form": "PLAIN_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "PIDGEOT",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Pidgeot",
+      "target_species": "SPECIES_PIDGEOT",
+      "rules": []
+    },
+    {
+      "source_species": "RATTATA",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "RattataPlain",
+      "target_species": "SPECIES_RATTATA",
+      "rules": [
+        {
+          "method": "LEVEL",
+          "argument": "20",
+          "extra": "0",
+          "species": "RATICATE",
+          "form": "PLAIN_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "RATICATE",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "RaticatePlain",
+      "target_species": "SPECIES_RATICATE",
+      "rules": []
+    },
+    {
+      "source_species": "SPEAROW",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Spearow",
+      "target_species": "SPECIES_SPEAROW",
+      "rules": [
+        {
+          "method": "LEVEL",
+          "argument": "20",
+          "extra": "0",
+          "species": "FEAROW",
+          "form": "PLAIN_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "FEAROW",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Fearow",
+      "target_species": "SPECIES_FEAROW",
+      "rules": []
+    },
+    {
+      "source_species": "EKANS",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Ekans",
+      "target_species": "SPECIES_EKANS",
+      "rules": [
+        {
+          "method": "LEVEL",
+          "argument": "22",
+          "extra": "0",
+          "species": "ARBOK",
+          "form": "NO_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "ARBOK",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Arbok",
+      "target_species": "SPECIES_ARBOK",
+      "rules": []
+    },
+    {
+      "source_species": "PIKACHU",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Pikachu",
+      "target_species": "SPECIES_PIKACHU",
+      "rules": [
+        {
+          "method": "ITEM",
+          "argument": "THUNDERSTONE",
+          "extra": "0",
+          "species": "RAICHU",
+          "form": "PLAIN_FORM"
+        },
+        {
+          "method": "ITEM",
+          "argument": "ODD_SOUVENIR",
+          "extra": "0",
+          "species": "RAICHU",
+          "form": "ALOLAN_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "RAICHU",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "RaichuPlain",
+      "target_species": "SPECIES_RAICHU",
+      "rules": []
+    },
+    {
+      "source_species": "SANDSHREW",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "SandshrewPlain",
+      "target_species": "SPECIES_SANDSHREW",
+      "rules": [
+        {
+          "method": "LEVEL",
+          "argument": "22",
+          "extra": "0",
+          "species": "SANDSLASH",
+          "form": "PLAIN_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "SANDSLASH",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "SandslashPlain",
+      "target_species": "SPECIES_SANDSLASH",
+      "rules": []
+    },
+    {
+      "source_species": "NIDORAN_F",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "NidoranF",
+      "target_species": "SPECIES_NIDORAN_F",
+      "rules": [
+        {
+          "method": "LEVEL",
+          "argument": "16",
+          "extra": "0",
+          "species": "NIDORINA",
+          "form": "PLAIN_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "NIDORINA",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Nidorina",
+      "target_species": "SPECIES_NIDORINA",
+      "rules": [
+        {
+          "method": "ITEM",
+          "argument": "MOON_STONE",
+          "extra": "0",
+          "species": "NIDOQUEEN",
+          "form": "PLAIN_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "NIDOQUEEN",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Nidoqueen",
+      "target_species": "SPECIES_NIDOQUEEN",
+      "rules": []
+    },
+    {
+      "source_species": "NIDORAN_M",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "NidoranM",
+      "target_species": "SPECIES_NIDORAN_M",
+      "rules": [
+        {
+          "method": "LEVEL",
+          "argument": "16",
+          "extra": "0",
+          "species": "NIDORINO",
+          "form": "PLAIN_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "NIDORINO",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Nidorino",
+      "target_species": "SPECIES_NIDORINO",
+      "rules": [
+        {
+          "method": "ITEM",
+          "argument": "MOON_STONE",
+          "extra": "0",
+          "species": "NIDOKING",
+          "form": "PLAIN_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "NIDOKING",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Nidoking",
+      "target_species": "SPECIES_NIDOKING",
+      "rules": []
+    },
+    {
+      "source_species": "CLEFAIRY",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Clefairy",
+      "target_species": "SPECIES_CLEFAIRY",
+      "rules": [
+        {
+          "method": "ITEM",
+          "argument": "MOON_STONE",
+          "extra": "0",
+          "species": "CLEFABLE",
+          "form": "PLAIN_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "CLEFABLE",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Clefable",
+      "target_species": "SPECIES_CLEFABLE",
+      "rules": []
+    },
+    {
+      "source_species": "VULPIX",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "VulpixPlain",
+      "target_species": "SPECIES_VULPIX",
+      "rules": [
+        {
+          "method": "ITEM",
+          "argument": "FIRE_STONE",
+          "extra": "0",
+          "species": "NINETALES",
+          "form": "PLAIN_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "NINETALES",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "NinetalesPlain",
+      "target_species": "SPECIES_NINETALES",
+      "rules": []
+    },
+    {
+      "source_species": "JIGGLYPUFF",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Jigglypuff",
+      "target_species": "SPECIES_JIGGLYPUFF",
+      "rules": [
+        {
+          "method": "ITEM",
+          "argument": "MOON_STONE",
+          "extra": "0",
+          "species": "WIGGLYTUFF",
+          "form": "PLAIN_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "WIGGLYTUFF",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Wigglytuff",
+      "target_species": "SPECIES_WIGGLYTUFF",
+      "rules": []
+    },
+    {
+      "source_species": "ZUBAT",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Zubat",
+      "target_species": "SPECIES_ZUBAT",
+      "rules": [
+        {
+          "method": "LEVEL",
+          "argument": "22",
+          "extra": "0",
+          "species": "GOLBAT",
+          "form": "PLAIN_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "GOLBAT",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Golbat",
+      "target_species": "SPECIES_GOLBAT",
+      "rules": [
+        {
+          "method": "HAPPINESS",
+          "argument": "TR_ANYTIME",
+          "extra": "0",
+          "species": "CROBAT",
+          "form": "PLAIN_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "ODDISH",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Oddish",
+      "target_species": "SPECIES_ODDISH",
+      "rules": [
+        {
+          "method": "LEVEL",
+          "argument": "21",
+          "extra": "0",
+          "species": "GLOOM",
+          "form": "PLAIN_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "GLOOM",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Gloom",
+      "target_species": "SPECIES_GLOOM",
+      "rules": [
+        {
+          "method": "ITEM",
+          "argument": "LEAF_STONE",
+          "extra": "0",
+          "species": "VILEPLUME",
+          "form": "PLAIN_FORM"
+        },
+        {
+          "method": "ITEM",
+          "argument": "SUN_STONE",
+          "extra": "0",
+          "species": "BELLOSSOM",
+          "form": "PLAIN_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "VILEPLUME",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Vileplume",
+      "target_species": "SPECIES_VILEPLUME",
+      "rules": []
+    },
+    {
+      "source_species": "PARAS",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Paras",
+      "target_species": "SPECIES_PARAS",
+      "rules": [
+        {
+          "method": "LEVEL",
+          "argument": "24",
+          "extra": "0",
+          "species": "PARASECT",
+          "form": "PLAIN_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "PARASECT",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Parasect",
+      "target_species": "SPECIES_PARASECT",
+      "rules": []
+    },
+    {
+      "source_species": "VENONAT",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Venonat",
+      "target_species": "SPECIES_VENONAT",
+      "rules": [
+        {
+          "method": "LEVEL",
+          "argument": "31",
+          "extra": "0",
+          "species": "VENOMOTH",
+          "form": "PLAIN_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "VENOMOTH",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Venomoth",
+      "target_species": "SPECIES_VENOMOTH",
+      "rules": []
+    },
+    {
+      "source_species": "DIGLETT",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "DiglettPlain",
+      "target_species": "SPECIES_DIGLETT",
+      "rules": [
+        {
+          "method": "LEVEL",
+          "argument": "26",
+          "extra": "0",
+          "species": "DUGTRIO",
+          "form": "PLAIN_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "DUGTRIO",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "DugtrioPlain",
+      "target_species": "SPECIES_DUGTRIO",
+      "rules": []
+    },
+    {
+      "source_species": "MEOWTH",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "MeowthPlain",
+      "target_species": "SPECIES_MEOWTH",
+      "rules": [
+        {
+          "method": "LEVEL",
+          "argument": "28",
+          "extra": "0",
+          "species": "PERSIAN",
+          "form": "PLAIN_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "PERSIAN",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "PersianPlain",
+      "target_species": "SPECIES_PERSIAN",
+      "rules": []
+    },
+    {
+      "source_species": "PSYDUCK",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Psyduck",
+      "target_species": "SPECIES_PSYDUCK",
+      "rules": [
+        {
+          "method": "LEVEL",
+          "argument": "33",
+          "extra": "0",
+          "species": "GOLDUCK",
+          "form": "PLAIN_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "GOLDUCK",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Golduck",
+      "target_species": "SPECIES_GOLDUCK",
+      "rules": []
+    },
+    {
+      "source_species": "MANKEY",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Mankey",
+      "target_species": "SPECIES_MANKEY",
+      "rules": [
+        {
+          "method": "LEVEL",
+          "argument": "28",
+          "extra": "0",
+          "species": "PRIMEAPE",
+          "form": "PLAIN_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "PRIMEAPE",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Primeape",
+      "target_species": "SPECIES_PRIMEAPE",
+      "rules": [
+        {
+          "method": "MOVE",
+          "argument": "OUTRAGE",
+          "extra": "0",
+          "species": "ANNIHILAPE",
+          "form": "PLAIN_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "GROWLITHE",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "GrowlithePlain",
+      "target_species": "SPECIES_GROWLITHE",
+      "rules": [
+        {
+          "method": "ITEM",
+          "argument": "FIRE_STONE",
+          "extra": "0",
+          "species": "ARCANINE",
+          "form": "PLAIN_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "ARCANINE",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "ArcaninePlain",
+      "target_species": "SPECIES_ARCANINE",
+      "rules": []
+    },
+    {
+      "source_species": "POLIWAG",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Poliwag",
+      "target_species": "SPECIES_POLIWAG",
+      "rules": [
+        {
+          "method": "LEVEL",
+          "argument": "25",
+          "extra": "0",
+          "species": "POLIWHIRL",
+          "form": "PLAIN_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "POLIWHIRL",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Poliwhirl",
+      "target_species": "SPECIES_POLIWHIRL",
+      "rules": [
+        {
+          "method": "TRADE",
+          "argument": "KINGS_ROCK",
+          "extra": "0",
+          "species": "POLITOED",
+          "form": "PLAIN_FORM"
+        },
+        {
+          "method": "ITEM",
+          "argument": "WATER_STONE",
+          "extra": "0",
+          "species": "POLIWRATH",
+          "form": "PLAIN_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "POLIWRATH",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Poliwrath",
+      "target_species": "SPECIES_POLIWRATH",
+      "rules": []
+    },
+    {
+      "source_species": "ABRA",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Abra",
+      "target_species": "SPECIES_ABRA",
+      "rules": [
+        {
+          "method": "LEVEL",
+          "argument": "16",
+          "extra": "0",
+          "species": "KADABRA",
+          "form": "PLAIN_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "KADABRA",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Kadabra",
+      "target_species": "SPECIES_KADABRA",
+      "rules": [
+        {
+          "method": "TRADE",
+          "argument": "LINKING_CORD",
+          "extra": "0",
+          "species": "ALAKAZAM",
+          "form": "PLAIN_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "ALAKAZAM",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Alakazam",
+      "target_species": "SPECIES_ALAKAZAM",
+      "rules": []
+    },
+    {
+      "source_species": "MACHOP",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Machop",
+      "target_species": "SPECIES_MACHOP",
+      "rules": [
+        {
+          "method": "LEVEL",
+          "argument": "28",
+          "extra": "0",
+          "species": "MACHOKE",
+          "form": "PLAIN_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "MACHOKE",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Machoke",
+      "target_species": "SPECIES_MACHOKE",
+      "rules": [
+        {
+          "method": "TRADE",
+          "argument": "LINKING_CORD",
+          "extra": "0",
+          "species": "MACHAMP",
+          "form": "PLAIN_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "MACHAMP",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Machamp",
+      "target_species": "SPECIES_MACHAMP",
+      "rules": []
+    },
+    {
+      "source_species": "BELLSPROUT",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Bellsprout",
+      "target_species": "SPECIES_BELLSPROUT",
+      "rules": [
+        {
+          "method": "LEVEL",
+          "argument": "21",
+          "extra": "0",
+          "species": "WEEPINBELL",
+          "form": "PLAIN_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "WEEPINBELL",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Weepinbell",
+      "target_species": "SPECIES_WEEPINBELL",
+      "rules": [
+        {
+          "method": "ITEM",
+          "argument": "LEAF_STONE",
+          "extra": "0",
+          "species": "VICTREEBEL",
+          "form": "PLAIN_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "VICTREEBEL",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Victreebel",
+      "target_species": "SPECIES_VICTREEBEL",
+      "rules": []
+    },
+    {
+      "source_species": "TENTACOOL",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Tentacool",
+      "target_species": "SPECIES_TENTACOOL",
+      "rules": [
+        {
+          "method": "LEVEL",
+          "argument": "30",
+          "extra": "0",
+          "species": "TENTACRUEL",
+          "form": "PLAIN_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "TENTACRUEL",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Tentacruel",
+      "target_species": "SPECIES_TENTACRUEL",
+      "rules": []
+    },
+    {
+      "source_species": "GEODUDE",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "GeodudePlain",
+      "target_species": "SPECIES_GEODUDE",
+      "rules": [
+        {
+          "method": "LEVEL",
+          "argument": "25",
+          "extra": "0",
+          "species": "GRAVELER",
+          "form": "PLAIN_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "GRAVELER",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "GravelerPlain",
+      "target_species": "SPECIES_GRAVELER",
+      "rules": [
+        {
+          "method": "TRADE",
+          "argument": "LINKING_CORD",
+          "extra": "0",
+          "species": "GOLEM",
+          "form": "PLAIN_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "GOLEM",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "GolemPlain",
+      "target_species": "SPECIES_GOLEM",
+      "rules": []
+    },
+    {
+      "source_species": "PONYTA",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "PonytaPlain",
+      "target_species": "SPECIES_PONYTA",
+      "rules": [
+        {
+          "method": "LEVEL",
+          "argument": "40",
+          "extra": "0",
+          "species": "RAPIDASH",
+          "form": "PLAIN_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "RAPIDASH",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "RapidashPlain",
+      "target_species": "SPECIES_RAPIDASH",
+      "rules": []
+    },
+    {
+      "source_species": "SLOWPOKE",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "SlowpokePlain",
+      "target_species": "SPECIES_SLOWPOKE",
+      "rules": [
+        {
+          "method": "TRADE",
+          "argument": "KINGS_ROCK",
+          "extra": "0",
+          "species": "SLOWKING",
+          "form": "PLAIN_FORM"
+        },
+        {
+          "method": "LEVEL",
+          "argument": "37",
+          "extra": "0",
+          "species": "SLOWBRO",
+          "form": "PLAIN_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "SLOWBRO",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "SlowbroPlain",
+      "target_species": "SPECIES_SLOWBRO",
+      "rules": []
+    },
+    {
+      "source_species": "MAGNEMITE",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Magnemite",
+      "target_species": "SPECIES_MAGNEMITE",
+      "rules": [
+        {
+          "method": "LEVEL",
+          "argument": "30",
+          "extra": "0",
+          "species": "MAGNETON",
+          "form": "PLAIN_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "MAGNETON",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Magneton",
+      "target_species": "SPECIES_MAGNETON",
+      "rules": [
+        {
+          "method": "ITEM",
+          "argument": "THUNDERSTONE",
+          "extra": "0",
+          "species": "MAGNEZONE",
+          "form": "PLAIN_FORM"
+        },
+        {
+          "method": "LOCATION",
+          "argument": "MAGNET_TUNNEL",
+          "extra": "0",
+          "species": "MAGNEZONE",
+          "form": "PLAIN_FORM"
+        },
+        {
+          "method": "LOCATION",
+          "argument": "DIM_CAVE",
+          "extra": "0",
+          "species": "MAGNEZONE",
+          "form": "PLAIN_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "FARFETCH_D",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "FarfetchDPlain",
+      "target_species": "SPECIES_FARFETCHD",
+      "rules": []
+    },
+    {
+      "source_species": "DODUO",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Doduo",
+      "target_species": "SPECIES_DODUO",
+      "rules": [
+        {
+          "method": "LEVEL",
+          "argument": "31",
+          "extra": "0",
+          "species": "DODRIO",
+          "form": "PLAIN_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "DODRIO",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Dodrio",
+      "target_species": "SPECIES_DODRIO",
+      "rules": []
+    },
+    {
+      "source_species": "SEEL",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Seel",
+      "target_species": "SPECIES_SEEL",
+      "rules": [
+        {
+          "method": "LEVEL",
+          "argument": "34",
+          "extra": "0",
+          "species": "DEWGONG",
+          "form": "PLAIN_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "DEWGONG",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Dewgong",
+      "target_species": "SPECIES_DEWGONG",
+      "rules": []
+    },
+    {
+      "source_species": "GRIMER",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "GrimerPlain",
+      "target_species": "SPECIES_GRIMER",
+      "rules": [
+        {
+          "method": "LEVEL",
+          "argument": "38",
+          "extra": "0",
+          "species": "MUK",
+          "form": "PLAIN_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "MUK",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "MukPlain",
+      "target_species": "SPECIES_MUK",
+      "rules": []
+    },
+    {
+      "source_species": "SHELLDER",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Shellder",
+      "target_species": "SPECIES_SHELLDER",
+      "rules": [
+        {
+          "method": "ITEM",
+          "argument": "WATER_STONE",
+          "extra": "0",
+          "species": "CLOYSTER",
+          "form": "PLAIN_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "CLOYSTER",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Cloyster",
+      "target_species": "SPECIES_CLOYSTER",
+      "rules": []
+    },
+    {
+      "source_species": "GASTLY",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Gastly",
+      "target_species": "SPECIES_GASTLY",
+      "rules": [
+        {
+          "method": "LEVEL",
+          "argument": "25",
+          "extra": "0",
+          "species": "HAUNTER",
+          "form": "PLAIN_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "HAUNTER",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Haunter",
+      "target_species": "SPECIES_HAUNTER",
+      "rules": [
+        {
+          "method": "TRADE",
+          "argument": "LINKING_CORD",
+          "extra": "0",
+          "species": "GENGAR",
+          "form": "PLAIN_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "GENGAR",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Gengar",
+      "target_species": "SPECIES_GENGAR",
+      "rules": []
+    },
+    {
+      "source_species": "ONIX",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Onix",
+      "target_species": "SPECIES_ONIX",
+      "rules": [
+        {
+          "method": "TRADE",
+          "argument": "METAL_COAT",
+          "extra": "0",
+          "species": "STEELIX",
+          "form": "PLAIN_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "DROWZEE",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Drowzee",
+      "target_species": "SPECIES_DROWZEE",
+      "rules": [
+        {
+          "method": "LEVEL",
+          "argument": "26",
+          "extra": "0",
+          "species": "HYPNO",
+          "form": "PLAIN_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "HYPNO",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Hypno",
+      "target_species": "SPECIES_HYPNO",
+      "rules": []
+    },
+    {
+      "source_species": "KRABBY",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Krabby",
+      "target_species": "SPECIES_KRABBY",
+      "rules": [
+        {
+          "method": "LEVEL",
+          "argument": "28",
+          "extra": "0",
+          "species": "KINGLER",
+          "form": "PLAIN_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "KINGLER",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Kingler",
+      "target_species": "SPECIES_KINGLER",
+      "rules": []
+    },
+    {
+      "source_species": "VOLTORB",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "VoltorbPlain",
+      "target_species": "SPECIES_VOLTORB",
+      "rules": [
+        {
+          "method": "LEVEL",
+          "argument": "30",
+          "extra": "0",
+          "species": "ELECTRODE",
+          "form": "PLAIN_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "ELECTRODE",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "ElectrodePlain",
+      "target_species": "SPECIES_ELECTRODE",
+      "rules": []
+    },
+    {
+      "source_species": "EXEGGCUTE",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Exeggcute",
+      "target_species": "SPECIES_EXEGGCUTE",
+      "rules": [
+        {
+          "method": "ITEM",
+          "argument": "LEAF_STONE",
+          "extra": "0",
+          "species": "EXEGGUTOR",
+          "form": "PLAIN_FORM"
+        },
+        {
+          "method": "ITEM",
+          "argument": "ODD_SOUVENIR",
+          "extra": "0",
+          "species": "EXEGGUTOR",
+          "form": "ALOLAN_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "EXEGGUTOR",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "ExeggutorPlain",
+      "target_species": "SPECIES_EXEGGUTOR",
+      "rules": []
+    },
+    {
+      "source_species": "CUBONE",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Cubone",
+      "target_species": "SPECIES_CUBONE",
+      "rules": [
+        {
+          "method": "LEVEL",
+          "argument": "28",
+          "extra": "0",
+          "species": "MAROWAK",
+          "form": "PLAIN_FORM"
+        },
+        {
+          "method": "ITEM",
+          "argument": "ODD_SOUVENIR",
+          "extra": "0",
+          "species": "MAROWAK",
+          "form": "ALOLAN_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "MAROWAK",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "MarowakPlain",
+      "target_species": "SPECIES_MAROWAK",
+      "rules": []
+    },
+    {
+      "source_species": "HITMONLEE",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Hitmonlee",
+      "target_species": "SPECIES_HITMONLEE",
+      "rules": []
+    },
+    {
+      "source_species": "HITMONCHAN",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Hitmonchan",
+      "target_species": "SPECIES_HITMONCHAN",
+      "rules": []
+    },
+    {
+      "source_species": "LICKITUNG",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Lickitung",
+      "target_species": "SPECIES_LICKITUNG",
+      "rules": [
+        {
+          "method": "MOVE",
+          "argument": "ROLLOUT",
+          "extra": "0",
+          "species": "LICKILICKY",
+          "form": "PLAIN_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "KOFFING",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Koffing",
+      "target_species": "SPECIES_KOFFING",
+      "rules": [
+        {
+          "method": "TRADE",
+          "argument": "CHARCOAL",
+          "extra": "0",
+          "species": "WEEZING",
+          "form": "GALARIAN_FORM"
+        },
+        {
+          "method": "LEVEL",
+          "argument": "35",
+          "extra": "0",
+          "species": "WEEZING",
+          "form": "PLAIN_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "WEEZING",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "WeezingPlain",
+      "target_species": "SPECIES_WEEZING",
+      "rules": []
+    },
+    {
+      "source_species": "RHYHORN",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Rhyhorn",
+      "target_species": "SPECIES_RHYHORN",
+      "rules": [
+        {
+          "method": "LEVEL",
+          "argument": "42",
+          "extra": "0",
+          "species": "RHYDON",
+          "form": "PLAIN_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "RHYDON",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Rhydon",
+      "target_species": "SPECIES_RHYDON",
+      "rules": [
+        {
+          "method": "TRADE",
+          "argument": "PROTECTOR",
+          "extra": "0",
+          "species": "RHYPERIOR",
+          "form": "PLAIN_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "CHANSEY",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Chansey",
+      "target_species": "SPECIES_CHANSEY",
+      "rules": [
+        {
+          "method": "HAPPINESS",
+          "argument": "TR_ANYTIME",
+          "extra": "0",
+          "species": "BLISSEY",
+          "form": "PLAIN_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "TANGELA",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Tangela",
+      "target_species": "SPECIES_TANGELA",
+      "rules": [
+        {
+          "method": "MOVE",
+          "argument": "ANCIENTPOWER",
+          "extra": "0",
+          "species": "TANGROWTH",
+          "form": "PLAIN_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "KANGASKHAN",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Kangaskhan",
+      "target_species": "SPECIES_KANGASKHAN",
+      "rules": []
+    },
+    {
+      "source_species": "HORSEA",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Horsea",
+      "target_species": "SPECIES_HORSEA",
+      "rules": [
+        {
+          "method": "LEVEL",
+          "argument": "32",
+          "extra": "0",
+          "species": "SEADRA",
+          "form": "PLAIN_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "SEADRA",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Seadra",
+      "target_species": "SPECIES_SEADRA",
+      "rules": [
+        {
+          "method": "TRADE",
+          "argument": "DRAGON_SCALE",
+          "extra": "0",
+          "species": "KINGDRA",
+          "form": "PLAIN_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "GOLDEEN",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Goldeen",
+      "target_species": "SPECIES_GOLDEEN",
+      "rules": [
+        {
+          "method": "LEVEL",
+          "argument": "33",
+          "extra": "0",
+          "species": "SEAKING",
+          "form": "PLAIN_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "SEAKING",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Seaking",
+      "target_species": "SPECIES_SEAKING",
+      "rules": []
+    },
+    {
+      "source_species": "STARYU",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Staryu",
+      "target_species": "SPECIES_STARYU",
+      "rules": [
+        {
+          "method": "ITEM",
+          "argument": "WATER_STONE",
+          "extra": "0",
+          "species": "STARMIE",
+          "form": "PLAIN_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "STARMIE",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Starmie",
+      "target_species": "SPECIES_STARMIE",
+      "rules": []
+    },
+    {
+      "source_species": "MR__MIME",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "MrMimePlain",
+      "target_species": "SPECIES_MR_MIME",
+      "rules": []
+    },
+    {
+      "source_species": "SCYTHER",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Scyther",
+      "target_species": "SPECIES_SCYTHER",
+      "rules": [
+        {
+          "method": "TRADE",
+          "argument": "METAL_COAT",
+          "extra": "0",
+          "species": "SCIZOR",
+          "form": "PLAIN_FORM"
+        },
+        {
+          "method": "HOLDING",
+          "argument": "HARD_STONE",
+          "extra": "TR_ANYTIME",
+          "species": "KLEAVOR",
+          "form": "PLAIN_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "JYNX",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Jynx",
+      "target_species": "SPECIES_JYNX",
+      "rules": []
+    },
+    {
+      "source_species": "ELECTABUZZ",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Electabuzz",
+      "target_species": "SPECIES_ELECTABUZZ",
+      "rules": [
+        {
+          "method": "TRADE",
+          "argument": "ELECTIRIZER",
+          "extra": "0",
+          "species": "ELECTIVIRE",
+          "form": "PLAIN_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "MAGMAR",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Magmar",
+      "target_species": "SPECIES_MAGMAR",
+      "rules": [
+        {
+          "method": "TRADE",
+          "argument": "MAGMARIZER",
+          "extra": "0",
+          "species": "MAGMORTAR",
+          "form": "PLAIN_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "PINSIR",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Pinsir",
+      "target_species": "SPECIES_PINSIR",
+      "rules": []
+    },
+    {
+      "source_species": "TAUROS",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "TaurosPlain",
+      "target_species": "SPECIES_TAUROS",
+      "rules": []
+    },
+    {
+      "source_species": "MAGIKARP",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Magikarp",
+      "target_species": "SPECIES_MAGIKARP",
+      "rules": [
+        {
+          "method": "LEVEL",
+          "argument": "20",
+          "extra": "0",
+          "species": "GYARADOS",
+          "form": "NO_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "GYARADOS",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Gyarados",
+      "target_species": "SPECIES_GYARADOS",
+      "rules": []
+    },
+    {
+      "source_species": "LAPRAS",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Lapras",
+      "target_species": "SPECIES_LAPRAS",
+      "rules": []
+    },
+    {
+      "source_species": "DITTO",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Ditto",
+      "target_species": "SPECIES_DITTO",
+      "rules": []
+    },
+    {
+      "source_species": "EEVEE",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Eevee",
+      "target_species": "SPECIES_EEVEE",
+      "rules": [
+        {
+          "method": "ITEM",
+          "argument": "THUNDERSTONE",
+          "extra": "0",
+          "species": "JOLTEON",
+          "form": "PLAIN_FORM"
+        },
+        {
+          "method": "ITEM",
+          "argument": "WATER_STONE",
+          "extra": "0",
+          "species": "VAPOREON",
+          "form": "PLAIN_FORM"
+        },
+        {
+          "method": "ITEM",
+          "argument": "FIRE_STONE",
+          "extra": "0",
+          "species": "FLAREON",
+          "form": "PLAIN_FORM"
+        },
+        {
+          "method": "ITEM",
+          "argument": "SUN_STONE",
+          "extra": "0",
+          "species": "ESPEON",
+          "form": "PLAIN_FORM"
+        },
+        {
+          "method": "ITEM",
+          "argument": "MOON_STONE",
+          "extra": "0",
+          "species": "UMBREON",
+          "form": "PLAIN_FORM"
+        },
+        {
+          "method": "ITEM",
+          "argument": "LEAF_STONE",
+          "extra": "0",
+          "species": "LEAFEON",
+          "form": "PLAIN_FORM"
+        },
+        {
+          "method": "ITEM",
+          "argument": "ICE_STONE",
+          "extra": "0",
+          "species": "GLACEON",
+          "form": "PLAIN_FORM"
+        },
+        {
+          "method": "ITEM",
+          "argument": "SHINY_STONE",
+          "extra": "0",
+          "species": "SYLVEON",
+          "form": "PLAIN_FORM"
+        },
+        {
+          "method": "LOCATION",
+          "argument": "ILEX_FOREST",
+          "extra": "0",
+          "species": "LEAFEON",
+          "form": "PLAIN_FORM"
+        },
+        {
+          "method": "LOCATION",
+          "argument": "ICE_PATH",
+          "extra": "0",
+          "species": "GLACEON",
+          "form": "PLAIN_FORM"
+        },
+        {
+          "method": "HAPPINESS",
+          "argument": "TR_MORNDAY",
+          "extra": "0",
+          "species": "ESPEON",
+          "form": "PLAIN_FORM"
+        },
+        {
+          "method": "HAPPINESS",
+          "argument": "TR_EVENITE",
+          "extra": "0",
+          "species": "UMBREON",
+          "form": "PLAIN_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "VAPOREON",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Vaporeon",
+      "target_species": "SPECIES_VAPOREON",
+      "rules": []
+    },
+    {
+      "source_species": "JOLTEON",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Jolteon",
+      "target_species": "SPECIES_JOLTEON",
+      "rules": []
+    },
+    {
+      "source_species": "FLAREON",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Flareon",
+      "target_species": "SPECIES_FLAREON",
+      "rules": []
+    },
+    {
+      "source_species": "PORYGON",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Porygon",
+      "target_species": "SPECIES_PORYGON",
+      "rules": [
+        {
+          "method": "TRADE",
+          "argument": "UPGRADE",
+          "extra": "0",
+          "species": "PORYGON2",
+          "form": "PLAIN_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "OMANYTE",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Omanyte",
+      "target_species": "SPECIES_OMANYTE",
+      "rules": [
+        {
+          "method": "LEVEL",
+          "argument": "40",
+          "extra": "0",
+          "species": "OMASTAR",
+          "form": "PLAIN_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "OMASTAR",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Omastar",
+      "target_species": "SPECIES_OMASTAR",
+      "rules": []
+    },
+    {
+      "source_species": "KABUTO",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Kabuto",
+      "target_species": "SPECIES_KABUTO",
+      "rules": [
+        {
+          "method": "LEVEL",
+          "argument": "40",
+          "extra": "0",
+          "species": "KABUTOPS",
+          "form": "PLAIN_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "KABUTOPS",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Kabutops",
+      "target_species": "SPECIES_KABUTOPS",
+      "rules": []
+    },
+    {
+      "source_species": "AERODACTYL",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Aerodactyl",
+      "target_species": "SPECIES_AERODACTYL",
+      "rules": []
+    },
+    {
+      "source_species": "SNORLAX",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Snorlax",
+      "target_species": "SPECIES_SNORLAX",
+      "rules": []
+    },
+    {
+      "source_species": "ARTICUNO",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "ArticunoPlain",
+      "target_species": "SPECIES_ARTICUNO",
+      "rules": []
+    },
+    {
+      "source_species": "ZAPDOS",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "ZapdosPlain",
+      "target_species": "SPECIES_ZAPDOS",
+      "rules": []
+    },
+    {
+      "source_species": "MOLTRES",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "MoltresPlain",
+      "target_species": "SPECIES_MOLTRES",
+      "rules": []
+    },
+    {
+      "source_species": "DRATINI",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Dratini",
+      "target_species": "SPECIES_DRATINI",
+      "rules": [
+        {
+          "method": "LEVEL",
+          "argument": "30",
+          "extra": "0",
+          "species": "DRAGONAIR",
+          "form": "PLAIN_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "DRAGONAIR",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Dragonair",
+      "target_species": "SPECIES_DRAGONAIR",
+      "rules": [
+        {
+          "method": "LEVEL",
+          "argument": "55",
+          "extra": "0",
+          "species": "DRAGONITE",
+          "form": "PLAIN_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "DRAGONITE",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Dragonite",
+      "target_species": "SPECIES_DRAGONITE",
+      "rules": []
+    },
+    {
+      "source_species": "MEWTWO",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Mewtwo",
+      "target_species": "SPECIES_MEWTWO",
+      "rules": []
+    },
+    {
+      "source_species": "MEW",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Mew",
+      "target_species": "SPECIES_MEW",
+      "rules": []
+    },
+    {
+      "source_species": "CHIKORITA",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Chikorita",
+      "target_species": "SPECIES_CHIKORITA",
+      "rules": [
+        {
+          "method": "LEVEL",
+          "argument": "16",
+          "extra": "0",
+          "species": "BAYLEEF",
+          "form": "PLAIN_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "BAYLEEF",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Bayleef",
+      "target_species": "SPECIES_BAYLEEF",
+      "rules": [
+        {
+          "method": "LEVEL",
+          "argument": "32",
+          "extra": "0",
+          "species": "MEGANIUM",
+          "form": "PLAIN_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "MEGANIUM",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Meganium",
+      "target_species": "SPECIES_MEGANIUM",
+      "rules": []
+    },
+    {
+      "source_species": "CYNDAQUIL",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Cyndaquil",
+      "target_species": "SPECIES_CYNDAQUIL",
+      "rules": [
+        {
+          "method": "LEVEL",
+          "argument": "14",
+          "extra": "0",
+          "species": "QUILAVA",
+          "form": "PLAIN_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "QUILAVA",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Quilava",
+      "target_species": "SPECIES_QUILAVA",
+      "rules": [
+        {
+          "method": "LEVEL",
+          "argument": "36",
+          "extra": "0",
+          "species": "TYPHLOSION",
+          "form": "PLAIN_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "TYPHLOSION",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "TyphlosionPlain",
+      "target_species": "SPECIES_TYPHLOSION",
+      "rules": []
+    },
+    {
+      "source_species": "TOTODILE",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Totodile",
+      "target_species": "SPECIES_TOTODILE",
+      "rules": [
+        {
+          "method": "LEVEL",
+          "argument": "18",
+          "extra": "0",
+          "species": "CROCONAW",
+          "form": "PLAIN_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "CROCONAW",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Croconaw",
+      "target_species": "SPECIES_CROCONAW",
+      "rules": [
+        {
+          "method": "LEVEL",
+          "argument": "30",
+          "extra": "0",
+          "species": "FERALIGATR",
+          "form": "PLAIN_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "FERALIGATR",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Feraligatr",
+      "target_species": "SPECIES_FERALIGATR",
+      "rules": []
+    },
+    {
+      "source_species": "SENTRET",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Sentret",
+      "target_species": "SPECIES_SENTRET",
+      "rules": [
+        {
+          "method": "LEVEL",
+          "argument": "15",
+          "extra": "0",
+          "species": "FURRET",
+          "form": "PLAIN_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "FURRET",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Furret",
+      "target_species": "SPECIES_FURRET",
+      "rules": []
+    },
+    {
+      "source_species": "HOOTHOOT",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Hoothoot",
+      "target_species": "SPECIES_HOOTHOOT",
+      "rules": [
+        {
+          "method": "LEVEL",
+          "argument": "20",
+          "extra": "0",
+          "species": "NOCTOWL",
+          "form": "PLAIN_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "NOCTOWL",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Noctowl",
+      "target_species": "SPECIES_NOCTOWL",
+      "rules": []
+    },
+    {
+      "source_species": "LEDYBA",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Ledyba",
+      "target_species": "SPECIES_LEDYBA",
+      "rules": [
+        {
+          "method": "LEVEL",
+          "argument": "18",
+          "extra": "0",
+          "species": "LEDIAN",
+          "form": "PLAIN_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "LEDIAN",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Ledian",
+      "target_species": "SPECIES_LEDIAN",
+      "rules": []
+    },
+    {
+      "source_species": "SPINARAK",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Spinarak",
+      "target_species": "SPECIES_SPINARAK",
+      "rules": [
+        {
+          "method": "LEVEL",
+          "argument": "22",
+          "extra": "0",
+          "species": "ARIADOS",
+          "form": "PLAIN_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "ARIADOS",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Ariados",
+      "target_species": "SPECIES_ARIADOS",
+      "rules": []
+    },
+    {
+      "source_species": "CROBAT",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Crobat",
+      "target_species": "SPECIES_CROBAT",
+      "rules": []
+    },
+    {
+      "source_species": "CHINCHOU",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Chinchou",
+      "target_species": "SPECIES_CHINCHOU",
+      "rules": [
+        {
+          "method": "LEVEL",
+          "argument": "27",
+          "extra": "0",
+          "species": "LANTURN",
+          "form": "PLAIN_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "LANTURN",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Lanturn",
+      "target_species": "SPECIES_LANTURN",
+      "rules": []
+    },
+    {
+      "source_species": "PICHU",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Pichu",
+      "target_species": "SPECIES_PICHU",
+      "rules": [
+        {
+          "method": "HAPPINESS",
+          "argument": "TR_ANYTIME",
+          "extra": "0",
+          "species": "PIKACHU",
+          "form": "PLAIN_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "CLEFFA",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Cleffa",
+      "target_species": "SPECIES_CLEFFA",
+      "rules": [
+        {
+          "method": "HAPPINESS",
+          "argument": "TR_ANYTIME",
+          "extra": "0",
+          "species": "CLEFAIRY",
+          "form": "PLAIN_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "IGGLYBUFF",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Igglybuff",
+      "target_species": "SPECIES_IGGLYBUFF",
+      "rules": [
+        {
+          "method": "HAPPINESS",
+          "argument": "TR_ANYTIME",
+          "extra": "0",
+          "species": "JIGGLYPUFF",
+          "form": "PLAIN_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "TOGEPI",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Togepi",
+      "target_species": "SPECIES_TOGEPI",
+      "rules": [
+        {
+          "method": "HAPPINESS",
+          "argument": "TR_ANYTIME",
+          "extra": "0",
+          "species": "TOGETIC",
+          "form": "PLAIN_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "TOGETIC",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Togetic",
+      "target_species": "SPECIES_TOGETIC",
+      "rules": [
+        {
+          "method": "ITEM",
+          "argument": "SHINY_STONE",
+          "extra": "0",
+          "species": "TOGEKISS",
+          "form": "PLAIN_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "NATU",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Natu",
+      "target_species": "SPECIES_NATU",
+      "rules": [
+        {
+          "method": "LEVEL",
+          "argument": "25",
+          "extra": "0",
+          "species": "XATU",
+          "form": "PLAIN_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "XATU",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Xatu",
+      "target_species": "SPECIES_XATU",
+      "rules": []
+    },
+    {
+      "source_species": "MAREEP",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Mareep",
+      "target_species": "SPECIES_MAREEP",
+      "rules": [
+        {
+          "method": "LEVEL",
+          "argument": "15",
+          "extra": "0",
+          "species": "FLAAFFY",
+          "form": "PLAIN_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "FLAAFFY",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Flaaffy",
+      "target_species": "SPECIES_FLAAFFY",
+      "rules": [
+        {
+          "method": "LEVEL",
+          "argument": "36",
+          "extra": "0",
+          "species": "AMPHAROS",
+          "form": "PLAIN_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "AMPHAROS",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Ampharos",
+      "target_species": "SPECIES_AMPHAROS",
+      "rules": []
+    },
+    {
+      "source_species": "BELLOSSOM",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Bellossom",
+      "target_species": "SPECIES_BELLOSSOM",
+      "rules": []
+    },
+    {
+      "source_species": "MARILL",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Marill",
+      "target_species": "SPECIES_MARILL",
+      "rules": [
+        {
+          "method": "LEVEL",
+          "argument": "18",
+          "extra": "0",
+          "species": "AZUMARILL",
+          "form": "PLAIN_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "AZUMARILL",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Azumarill",
+      "target_species": "SPECIES_AZUMARILL",
+      "rules": []
+    },
+    {
+      "source_species": "SUDOWOODO",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Sudowoodo",
+      "target_species": "SPECIES_SUDOWOODO",
+      "rules": []
+    },
+    {
+      "source_species": "POLITOED",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Politoed",
+      "target_species": "SPECIES_POLITOED",
+      "rules": []
+    },
+    {
+      "source_species": "HOPPIP",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Hoppip",
+      "target_species": "SPECIES_HOPPIP",
+      "rules": [
+        {
+          "method": "LEVEL",
+          "argument": "18",
+          "extra": "0",
+          "species": "SKIPLOOM",
+          "form": "PLAIN_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "SKIPLOOM",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Skiploom",
+      "target_species": "SPECIES_SKIPLOOM",
+      "rules": [
+        {
+          "method": "LEVEL",
+          "argument": "27",
+          "extra": "0",
+          "species": "JUMPLUFF",
+          "form": "PLAIN_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "JUMPLUFF",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Jumpluff",
+      "target_species": "SPECIES_JUMPLUFF",
+      "rules": []
+    },
+    {
+      "source_species": "AIPOM",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Aipom",
+      "target_species": "SPECIES_AIPOM",
+      "rules": [
+        {
+          "method": "MOVE",
+          "argument": "DOUBLE_SLAP",
+          "extra": "0",
+          "species": "AMBIPOM",
+          "form": "PLAIN_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "SUNKERN",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Sunkern",
+      "target_species": "SPECIES_SUNKERN",
+      "rules": [
+        {
+          "method": "ITEM",
+          "argument": "SUN_STONE",
+          "extra": "0",
+          "species": "SUNFLORA",
+          "form": "PLAIN_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "SUNFLORA",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Sunflora",
+      "target_species": "SPECIES_SUNFLORA",
+      "rules": []
+    },
+    {
+      "source_species": "YANMA",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Yanma",
+      "target_species": "SPECIES_YANMA",
+      "rules": [
+        {
+          "method": "MOVE",
+          "argument": "ANCIENTPOWER",
+          "extra": "0",
+          "species": "YANMEGA",
+          "form": "PLAIN_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "WOOPER",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "WooperPlain",
+      "target_species": "SPECIES_WOOPER",
+      "rules": [
+        {
+          "method": "LEVEL",
+          "argument": "20",
+          "extra": "0",
+          "species": "QUAGSIRE",
+          "form": "PLAIN_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "QUAGSIRE",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Quagsire",
+      "target_species": "SPECIES_QUAGSIRE",
+      "rules": []
+    },
+    {
+      "source_species": "ESPEON",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Espeon",
+      "target_species": "SPECIES_ESPEON",
+      "rules": []
+    },
+    {
+      "source_species": "UMBREON",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Umbreon",
+      "target_species": "SPECIES_UMBREON",
+      "rules": []
+    },
+    {
+      "source_species": "MURKROW",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Murkrow",
+      "target_species": "SPECIES_MURKROW",
+      "rules": [
+        {
+          "method": "ITEM",
+          "argument": "DUSK_STONE",
+          "extra": "0",
+          "species": "HONCHKROW",
+          "form": "PLAIN_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "SLOWKING",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "SlowkingPlain",
+      "target_species": "SPECIES_SLOWKING",
+      "rules": []
+    },
+    {
+      "source_species": "MISDREAVUS",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Misdreavus",
+      "target_species": "SPECIES_MISDREAVUS",
+      "rules": [
+        {
+          "method": "ITEM",
+          "argument": "DUSK_STONE",
+          "extra": "0",
+          "species": "MISMAGIUS",
+          "form": "PLAIN_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "UNOWN",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Unown",
+      "target_species": "SPECIES_UNOWN",
+      "rules": []
+    },
+    {
+      "source_species": "WOBBUFFET",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Wobbuffet",
+      "target_species": "SPECIES_WOBBUFFET",
+      "rules": []
+    },
+    {
+      "source_species": "GIRAFARIG",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Girafarig",
+      "target_species": "SPECIES_GIRAFARIG",
+      "rules": [
+        {
+          "method": "MOVE",
+          "argument": "ZEN_HEADBUTT",
+          "extra": "0",
+          "species": "FARIGIRAF",
+          "form": "PLAIN_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "PINECO",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Pineco",
+      "target_species": "SPECIES_PINECO",
+      "rules": [
+        {
+          "method": "LEVEL",
+          "argument": "31",
+          "extra": "0",
+          "species": "FORRETRESS",
+          "form": "PLAIN_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "FORRETRESS",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Forretress",
+      "target_species": "SPECIES_FORRETRESS",
+      "rules": []
+    },
+    {
+      "source_species": "DUNSPARCE",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Dunsparce",
+      "target_species": "SPECIES_DUNSPARCE",
+      "rules": [
+        {
+          "method": "LEVEL",
+          "argument": "32",
+          "extra": "0",
+          "species": "DUDUNSPARCE",
+          "form": "NO_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "GLIGAR",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Gligar",
+      "target_species": "SPECIES_GLIGAR",
+      "rules": [
+        {
+          "method": "HOLDING",
+          "argument": "RAZOR_FANG",
+          "extra": "TR_EVENITE",
+          "species": "GLISCOR",
+          "form": "PLAIN_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "STEELIX",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Steelix",
+      "target_species": "SPECIES_STEELIX",
+      "rules": []
+    },
+    {
+      "source_species": "SNUBBULL",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Snubbull",
+      "target_species": "SPECIES_SNUBBULL",
+      "rules": [
+        {
+          "method": "LEVEL",
+          "argument": "23",
+          "extra": "0",
+          "species": "GRANBULL",
+          "form": "PLAIN_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "GRANBULL",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Granbull",
+      "target_species": "SPECIES_GRANBULL",
+      "rules": []
+    },
+    {
+      "source_species": "QWILFISH",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "QwilfishPlain",
+      "target_species": "SPECIES_QWILFISH",
+      "rules": []
+    },
+    {
+      "source_species": "SCIZOR",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Scizor",
+      "target_species": "SPECIES_SCIZOR",
+      "rules": []
+    },
+    {
+      "source_species": "SHUCKLE",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Shuckle",
+      "target_species": "SPECIES_SHUCKLE",
+      "rules": []
+    },
+    {
+      "source_species": "HERACROSS",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Heracross",
+      "target_species": "SPECIES_HERACROSS",
+      "rules": []
+    },
+    {
+      "source_species": "SNEASEL",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "SneaselPlain",
+      "target_species": "SPECIES_SNEASEL",
+      "rules": [
+        {
+          "method": "HOLDING",
+          "argument": "RAZOR_CLAW",
+          "extra": "TR_EVENITE",
+          "species": "WEAVILE",
+          "form": "PLAIN_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "TEDDIURSA",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Teddiursa",
+      "target_species": "SPECIES_TEDDIURSA",
+      "rules": [
+        {
+          "method": "LEVEL",
+          "argument": "30",
+          "extra": "0",
+          "species": "URSARING",
+          "form": "PLAIN_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "URSARING",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Ursaring",
+      "target_species": "SPECIES_URSARING",
+      "rules": [
+        {
+          "method": "ITEM",
+          "argument": "MOON_STONE",
+          "extra": "0",
+          "species": "URSALUNA",
+          "form": "PLAIN_FORM"
+        },
+        {
+          "method": "LOCATION",
+          "argument": "SINJOH_RUINS",
+          "extra": "0",
+          "species": "URSALUNA",
+          "form": "PLAIN_FORM"
+        },
+        {
+          "method": "LOCATION",
+          "argument": "MYSTRI_STAGE",
+          "extra": "0",
+          "species": "URSALUNA",
+          "form": "PLAIN_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "SLUGMA",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Slugma",
+      "target_species": "SPECIES_SLUGMA",
+      "rules": [
+        {
+          "method": "LEVEL",
+          "argument": "38",
+          "extra": "0",
+          "species": "MAGCARGO",
+          "form": "PLAIN_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "MAGCARGO",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Magcargo",
+      "target_species": "SPECIES_MAGCARGO",
+      "rules": []
+    },
+    {
+      "source_species": "SWINUB",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Swinub",
+      "target_species": "SPECIES_SWINUB",
+      "rules": [
+        {
+          "method": "LEVEL",
+          "argument": "33",
+          "extra": "0",
+          "species": "PILOSWINE",
+          "form": "PLAIN_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "PILOSWINE",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Piloswine",
+      "target_species": "SPECIES_PILOSWINE",
+      "rules": [
+        {
+          "method": "MOVE",
+          "argument": "ANCIENTPOWER",
+          "extra": "0",
+          "species": "MAMOSWINE",
+          "form": "PLAIN_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "CORSOLA",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "CorsolaPlain",
+      "target_species": "SPECIES_CORSOLA",
+      "rules": []
+    },
+    {
+      "source_species": "REMORAID",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Remoraid",
+      "target_species": "SPECIES_REMORAID",
+      "rules": [
+        {
+          "method": "LEVEL",
+          "argument": "25",
+          "extra": "0",
+          "species": "OCTILLERY",
+          "form": "PLAIN_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "OCTILLERY",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Octillery",
+      "target_species": "SPECIES_OCTILLERY",
+      "rules": []
+    },
+    {
+      "source_species": "DELIBIRD",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Delibird",
+      "target_species": "SPECIES_DELIBIRD",
+      "rules": []
+    },
+    {
+      "source_species": "MANTINE",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Mantine",
+      "target_species": "SPECIES_MANTINE",
+      "rules": []
+    },
+    {
+      "source_species": "SKARMORY",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Skarmory",
+      "target_species": "SPECIES_SKARMORY",
+      "rules": []
+    },
+    {
+      "source_species": "HOUNDOUR",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Houndour",
+      "target_species": "SPECIES_HOUNDOUR",
+      "rules": [
+        {
+          "method": "LEVEL",
+          "argument": "24",
+          "extra": "0",
+          "species": "HOUNDOOM",
+          "form": "PLAIN_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "HOUNDOOM",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Houndoom",
+      "target_species": "SPECIES_HOUNDOOM",
+      "rules": []
+    },
+    {
+      "source_species": "KINGDRA",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Kingdra",
+      "target_species": "SPECIES_KINGDRA",
+      "rules": []
+    },
+    {
+      "source_species": "PHANPY",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Phanpy",
+      "target_species": "SPECIES_PHANPY",
+      "rules": [
+        {
+          "method": "LEVEL",
+          "argument": "25",
+          "extra": "0",
+          "species": "DONPHAN",
+          "form": "PLAIN_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "DONPHAN",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Donphan",
+      "target_species": "SPECIES_DONPHAN",
+      "rules": []
+    },
+    {
+      "source_species": "PORYGON2",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Porygon2",
+      "target_species": "SPECIES_PORYGON2",
+      "rules": [
+        {
+          "method": "TRADE",
+          "argument": "DUBIOUS_DISC",
+          "extra": "0",
+          "species": "PORYGON_Z",
+          "form": "PLAIN_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "STANTLER",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Stantler",
+      "target_species": "SPECIES_STANTLER",
+      "rules": [
+        {
+          "method": "LOCATION",
+          "argument": "RUGGED_ROAD",
+          "extra": "0",
+          "species": "WYRDEER",
+          "form": "PLAIN_FORM"
+        },
+        {
+          "method": "LOCATION",
+          "argument": "SNOWTOP_MOUNTAIN",
+          "extra": "0",
+          "species": "WYRDEER",
+          "form": "PLAIN_FORM"
+        },
+        {
+          "method": "LOCATION",
+          "argument": "SINJOH_RUINS",
+          "extra": "0",
+          "species": "WYRDEER",
+          "form": "PLAIN_FORM"
+        },
+        {
+          "method": "LOCATION",
+          "argument": "MYSTRI_STAGE",
+          "extra": "0",
+          "species": "WYRDEER",
+          "form": "PLAIN_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "SMEARGLE",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Smeargle",
+      "target_species": "SPECIES_SMEARGLE",
+      "rules": []
+    },
+    {
+      "source_species": "TYROGUE",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Tyrogue",
+      "target_species": "SPECIES_TYROGUE",
+      "rules": [
+        {
+          "method": "STAT",
+          "argument": "20",
+          "extra": "ATK_LT_DEF",
+          "species": "HITMONCHAN",
+          "form": "PLAIN_FORM"
+        },
+        {
+          "method": "STAT",
+          "argument": "20",
+          "extra": "ATK_GT_DEF",
+          "species": "HITMONLEE",
+          "form": "PLAIN_FORM"
+        },
+        {
+          "method": "STAT",
+          "argument": "20",
+          "extra": "ATK_EQ_DEF",
+          "species": "HITMONTOP",
+          "form": "PLAIN_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "HITMONTOP",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Hitmontop",
+      "target_species": "SPECIES_HITMONTOP",
+      "rules": []
+    },
+    {
+      "source_species": "SMOOCHUM",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Smoochum",
+      "target_species": "SPECIES_SMOOCHUM",
+      "rules": [
+        {
+          "method": "LEVEL",
+          "argument": "30",
+          "extra": "0",
+          "species": "JYNX",
+          "form": "PLAIN_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "ELEKID",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Elekid",
+      "target_species": "SPECIES_ELEKID",
+      "rules": [
+        {
+          "method": "LEVEL",
+          "argument": "30",
+          "extra": "0",
+          "species": "ELECTABUZZ",
+          "form": "PLAIN_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "MAGBY",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Magby",
+      "target_species": "SPECIES_MAGBY",
+      "rules": [
+        {
+          "method": "LEVEL",
+          "argument": "30",
+          "extra": "0",
+          "species": "MAGMAR",
+          "form": "PLAIN_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "MILTANK",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Miltank",
+      "target_species": "SPECIES_MILTANK",
+      "rules": []
+    },
+    {
+      "source_species": "BLISSEY",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Blissey",
+      "target_species": "SPECIES_BLISSEY",
+      "rules": []
+    },
+    {
+      "source_species": "RAIKOU",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Raikou",
+      "target_species": "SPECIES_RAIKOU",
+      "rules": []
+    },
+    {
+      "source_species": "ENTEI",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Entei",
+      "target_species": "SPECIES_ENTEI",
+      "rules": []
+    },
+    {
+      "source_species": "SUICUNE",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Suicune",
+      "target_species": "SPECIES_SUICUNE",
+      "rules": []
+    },
+    {
+      "source_species": "LARVITAR",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Larvitar",
+      "target_species": "SPECIES_LARVITAR",
+      "rules": [
+        {
+          "method": "LEVEL",
+          "argument": "30",
+          "extra": "0",
+          "species": "PUPITAR",
+          "form": "PLAIN_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "PUPITAR",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Pupitar",
+      "target_species": "SPECIES_PUPITAR",
+      "rules": [
+        {
+          "method": "LEVEL",
+          "argument": "55",
+          "extra": "0",
+          "species": "TYRANITAR",
+          "form": "PLAIN_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "TYRANITAR",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Tyranitar",
+      "target_species": "SPECIES_TYRANITAR",
+      "rules": []
+    },
+    {
+      "source_species": "LUGIA",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Lugia",
+      "target_species": "SPECIES_LUGIA",
+      "rules": []
+    },
+    {
+      "source_species": "HO_OH",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "HoOh",
+      "target_species": "SPECIES_HO_OH",
+      "rules": []
+    },
+    {
+      "source_species": "CELEBI",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Celebi",
+      "target_species": "SPECIES_CELEBI",
+      "rules": []
+    },
+    {
+      "source_species": "AZURILL",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Azurill",
+      "target_species": "SPECIES_AZURILL",
+      "rules": [
+        {
+          "method": "HAPPINESS",
+          "argument": "TR_ANYTIME",
+          "extra": "0",
+          "species": "MARILL",
+          "form": "PLAIN_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "WYNAUT",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Wynaut",
+      "target_species": "SPECIES_WYNAUT",
+      "rules": [
+        {
+          "method": "LEVEL",
+          "argument": "15",
+          "extra": "0",
+          "species": "WOBBUFFET",
+          "form": "PLAIN_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "AMBIPOM",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Ambipom",
+      "target_species": "SPECIES_AMBIPOM",
+      "rules": []
+    },
+    {
+      "source_species": "MISMAGIUS",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Mismagius",
+      "target_species": "SPECIES_MISMAGIUS",
+      "rules": []
+    },
+    {
+      "source_species": "HONCHKROW",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Honchkrow",
+      "target_species": "SPECIES_HONCHKROW",
+      "rules": []
+    },
+    {
+      "source_species": "BONSLY",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Bonsly",
+      "target_species": "SPECIES_BONSLY",
+      "rules": [
+        {
+          "method": "MOVE",
+          "argument": "ROCK_THROW",
+          "extra": "0",
+          "species": "SUDOWOODO",
+          "form": "PLAIN_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "MIME_JR_",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "MimeJr",
+      "target_species": "SPECIES_MIME_JR",
+      "rules": [
+        {
+          "method": "LOCATION",
+          "argument": "ICE_PATH",
+          "extra": "0",
+          "species": "MR__MIME",
+          "form": "GALARIAN_FORM"
+        },
+        {
+          "method": "LEVEL",
+          "argument": "30",
+          "extra": "0",
+          "species": "MR__MIME",
+          "form": "PLAIN_FORM"
+        },
+        {
+          "method": "ITEM",
+          "argument": "ICE_STONE",
+          "extra": "0",
+          "species": "MR__MIME",
+          "form": "GALARIAN_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "HAPPINY",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Happiny",
+      "target_species": "SPECIES_HAPPINY",
+      "rules": [
+        {
+          "method": "HOLDING",
+          "argument": "OVAL_STONE",
+          "extra": "TR_MORNDAY",
+          "species": "CHANSEY",
+          "form": "PLAIN_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "MUNCHLAX",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Munchlax",
+      "target_species": "SPECIES_MUNCHLAX",
+      "rules": [
+        {
+          "method": "HAPPINESS",
+          "argument": "TR_ANYTIME",
+          "extra": "0",
+          "species": "SNORLAX",
+          "form": "PLAIN_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "MANTYKE",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Mantyke",
+      "target_species": "SPECIES_MANTYKE",
+      "rules": [
+        {
+          "method": "PARTY",
+          "argument": "REMORAID",
+          "extra": "0",
+          "species": "MANTINE",
+          "form": "PLAIN_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "WEAVILE",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Weavile",
+      "target_species": "SPECIES_WEAVILE",
+      "rules": []
+    },
+    {
+      "source_species": "MAGNEZONE",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Magnezone",
+      "target_species": "SPECIES_MAGNEZONE",
+      "rules": []
+    },
+    {
+      "source_species": "LICKILICKY",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Lickilicky",
+      "target_species": "SPECIES_LICKILICKY",
+      "rules": []
+    },
+    {
+      "source_species": "RHYPERIOR",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Rhyperior",
+      "target_species": "SPECIES_RHYPERIOR",
+      "rules": []
+    },
+    {
+      "source_species": "TANGROWTH",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Tangrowth",
+      "target_species": "SPECIES_TANGROWTH",
+      "rules": []
+    },
+    {
+      "source_species": "ELECTIVIRE",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Electivire",
+      "target_species": "SPECIES_ELECTIVIRE",
+      "rules": []
+    },
+    {
+      "source_species": "MAGMORTAR",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Magmortar",
+      "target_species": "SPECIES_MAGMORTAR",
+      "rules": []
+    },
+    {
+      "source_species": "TOGEKISS",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Togekiss",
+      "target_species": "SPECIES_TOGEKISS",
+      "rules": []
+    },
+    {
+      "source_species": "YANMEGA",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Yanmega",
+      "target_species": "SPECIES_YANMEGA",
+      "rules": []
+    },
+    {
+      "source_species": "LEAFEON",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Leafeon",
+      "target_species": "SPECIES_LEAFEON",
+      "rules": []
+    },
+    {
+      "source_species": "GLACEON",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Glaceon",
+      "target_species": "SPECIES_GLACEON",
+      "rules": []
+    },
+    {
+      "source_species": "GLISCOR",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Gliscor",
+      "target_species": "SPECIES_GLISCOR",
+      "rules": []
+    },
+    {
+      "source_species": "MAMOSWINE",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Mamoswine",
+      "target_species": "SPECIES_MAMOSWINE",
+      "rules": []
+    },
+    {
+      "source_species": "PORYGON_Z",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "PorygonZ",
+      "target_species": "SPECIES_PORYGON_Z",
+      "rules": []
+    },
+    {
+      "source_species": "SYLVEON",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Sylveon",
+      "target_species": "SPECIES_SYLVEON",
+      "rules": []
+    },
+    {
+      "source_species": "PERRSERKER",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Perrserker",
+      "target_species": "SPECIES_PERRSERKER",
+      "rules": []
+    },
+    {
+      "source_species": "CURSOLA",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Cursola",
+      "target_species": "SPECIES_CURSOLA",
+      "rules": []
+    },
+    {
+      "source_species": "SIRFETCH_D",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "SirfetchD",
+      "target_species": "SPECIES_SIRFETCHD",
+      "rules": []
+    },
+    {
+      "source_species": "MR__RIME",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "MrRime",
+      "target_species": "SPECIES_MR_RIME",
+      "rules": []
+    },
+    {
+      "source_species": "WYRDEER",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Wyrdeer",
+      "target_species": "SPECIES_WYRDEER",
+      "rules": []
+    },
+    {
+      "source_species": "KLEAVOR",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Kleavor",
+      "target_species": "SPECIES_KLEAVOR",
+      "rules": []
+    },
+    {
+      "source_species": "URSALUNA",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "UrsalunaPlain",
+      "target_species": "SPECIES_URSALUNA",
+      "rules": []
+    },
+    {
+      "source_species": "SNEASLER",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Sneasler",
+      "target_species": "SPECIES_SNEASLER",
+      "rules": []
+    },
+    {
+      "source_species": "OVERQWIL",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Overqwil",
+      "target_species": "SPECIES_OVERQWIL",
+      "rules": []
+    },
+    {
+      "source_species": "DUDUNSPARCE",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Dudunsparce",
+      "target_species": "SPECIES_DUDUNSPARCE",
+      "rules": []
+    },
+    {
+      "source_species": "FARIGIRAF",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Farigiraf",
+      "target_species": "SPECIES_FARIGIRAF",
+      "rules": []
+    },
+    {
+      "source_species": "CLODSIRE",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Clodsire",
+      "target_species": "SPECIES_CLODSIRE",
+      "rules": []
+    },
+    {
+      "source_species": "ANNIHILAPE",
+      "source_form": "PLAIN_FORM",
+      "source_learnset": "Annihilape",
+      "target_species": "SPECIES_ANNIHILAPE",
+      "rules": []
+    },
+    {
+      "source_species": "GYARADOS",
+      "source_form": "GYARADOS_RED_FORM",
+      "source_learnset": "Gyarados",
+      "target_species": "SPECIES_GYARADOS_RED",
+      "rules": []
+    },
+    {
+      "source_species": "MEWTWO",
+      "source_form": "MEWTWO_ARMORED_FORM",
+      "source_learnset": "Mewtwo",
+      "target_species": "SPECIES_MEWTWO_ARMORED",
+      "rules": []
+    },
+    {
+      "source_species": "DUDUNSPARCE",
+      "source_form": "DUDUNSPARCE_THREE_SEGMENT_FORM",
+      "source_learnset": "Dudunsparce",
+      "target_species": "SPECIES_DUDUNSPARCE_THREE_SEGMENT",
+      "rules": []
+    },
+    {
+      "source_species": "RATTATA",
+      "source_form": "ALOLAN_FORM",
+      "source_learnset": "RattataAlolan",
+      "target_species": "SPECIES_RATTATA_ALOLA",
+      "rules": [
+        {
+          "method": "LEVEL",
+          "argument": "20",
+          "extra": "0",
+          "species": "RATICATE",
+          "form": "ALOLAN_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "RATICATE",
+      "source_form": "ALOLAN_FORM",
+      "source_learnset": "RaticatePlain",
+      "target_species": "SPECIES_RATICATE_ALOLA",
+      "rules": []
+    },
+    {
+      "source_species": "RAICHU",
+      "source_form": "ALOLAN_FORM",
+      "source_learnset": "RaichuAlolan",
+      "target_species": "SPECIES_RAICHU_ALOLA",
+      "rules": []
+    },
+    {
+      "source_species": "SANDSHREW",
+      "source_form": "ALOLAN_FORM",
+      "source_learnset": "SandshrewAlolan",
+      "target_species": "SPECIES_SANDSHREW_ALOLA",
+      "rules": [
+        {
+          "method": "ITEM",
+          "argument": "ICE_STONE",
+          "extra": "0",
+          "species": "SANDSLASH",
+          "form": "ALOLAN_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "SANDSLASH",
+      "source_form": "ALOLAN_FORM",
+      "source_learnset": "SandslashAlolan",
+      "target_species": "SPECIES_SANDSLASH_ALOLA",
+      "rules": []
+    },
+    {
+      "source_species": "VULPIX",
+      "source_form": "ALOLAN_FORM",
+      "source_learnset": "VulpixAlolan",
+      "target_species": "SPECIES_VULPIX_ALOLA",
+      "rules": [
+        {
+          "method": "ITEM",
+          "argument": "ICE_STONE",
+          "extra": "0",
+          "species": "NINETALES",
+          "form": "ALOLAN_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "NINETALES",
+      "source_form": "ALOLAN_FORM",
+      "source_learnset": "NinetalesAlolan",
+      "target_species": "SPECIES_NINETALES_ALOLA",
+      "rules": []
+    },
+    {
+      "source_species": "DIGLETT",
+      "source_form": "ALOLAN_FORM",
+      "source_learnset": "DiglettAlolan",
+      "target_species": "SPECIES_DIGLETT_ALOLA",
+      "rules": [
+        {
+          "method": "LEVEL",
+          "argument": "26",
+          "extra": "0",
+          "species": "DUGTRIO",
+          "form": "ALOLAN_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "DUGTRIO",
+      "source_form": "ALOLAN_FORM",
+      "source_learnset": "DugtrioAlolan",
+      "target_species": "SPECIES_DUGTRIO_ALOLA",
+      "rules": []
+    },
+    {
+      "source_species": "MEOWTH",
+      "source_form": "ALOLAN_FORM",
+      "source_learnset": "MeowthAlolan",
+      "target_species": "SPECIES_MEOWTH_ALOLA",
+      "rules": [
+        {
+          "method": "LEVEL",
+          "argument": "28",
+          "extra": "0",
+          "species": "PERSIAN",
+          "form": "ALOLAN_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "PERSIAN",
+      "source_form": "ALOLAN_FORM",
+      "source_learnset": "PersianAlolan",
+      "target_species": "SPECIES_PERSIAN_ALOLA",
+      "rules": []
+    },
+    {
+      "source_species": "GEODUDE",
+      "source_form": "ALOLAN_FORM",
+      "source_learnset": "GeodudeAlolan",
+      "target_species": "SPECIES_GEODUDE_ALOLA",
+      "rules": [
+        {
+          "method": "LEVEL",
+          "argument": "25",
+          "extra": "0",
+          "species": "GRAVELER",
+          "form": "ALOLAN_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "GRAVELER",
+      "source_form": "ALOLAN_FORM",
+      "source_learnset": "GravelerAlolan",
+      "target_species": "SPECIES_GRAVELER_ALOLA",
+      "rules": [
+        {
+          "method": "TRADE",
+          "argument": "LINKING_CORD",
+          "extra": "0",
+          "species": "GOLEM",
+          "form": "ALOLAN_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "GOLEM",
+      "source_form": "ALOLAN_FORM",
+      "source_learnset": "GolemAlolan",
+      "target_species": "SPECIES_GOLEM_ALOLA",
+      "rules": []
+    },
+    {
+      "source_species": "GRIMER",
+      "source_form": "ALOLAN_FORM",
+      "source_learnset": "GrimerAlolan",
+      "target_species": "SPECIES_GRIMER_ALOLA",
+      "rules": [
+        {
+          "method": "LEVEL",
+          "argument": "38",
+          "extra": "0",
+          "species": "MUK",
+          "form": "ALOLAN_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "MUK",
+      "source_form": "ALOLAN_FORM",
+      "source_learnset": "MukAlolan",
+      "target_species": "SPECIES_MUK_ALOLA",
+      "rules": []
+    },
+    {
+      "source_species": "EXEGGUTOR",
+      "source_form": "ALOLAN_FORM",
+      "source_learnset": "ExeggutorAlolan",
+      "target_species": "SPECIES_EXEGGUTOR_ALOLA",
+      "rules": []
+    },
+    {
+      "source_species": "MAROWAK",
+      "source_form": "ALOLAN_FORM",
+      "source_learnset": "MarowakAlolan",
+      "target_species": "SPECIES_MAROWAK_ALOLA",
+      "rules": []
+    },
+    {
+      "source_species": "MEOWTH",
+      "source_form": "GALARIAN_FORM",
+      "source_learnset": "MeowthGalarian",
+      "target_species": "SPECIES_MEOWTH_GALAR",
+      "rules": [
+        {
+          "method": "LEVEL",
+          "argument": "28",
+          "extra": "0",
+          "species": "PERRSERKER",
+          "form": "PLAIN_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "PONYTA",
+      "source_form": "GALARIAN_FORM",
+      "source_learnset": "PonytaGalarian",
+      "target_species": "SPECIES_PONYTA_GALAR",
+      "rules": [
+        {
+          "method": "LEVEL",
+          "argument": "40",
+          "extra": "0",
+          "species": "RAPIDASH",
+          "form": "GALARIAN_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "RAPIDASH",
+      "source_form": "GALARIAN_FORM",
+      "source_learnset": "RapidashGalarian",
+      "target_species": "SPECIES_RAPIDASH_GALAR",
+      "rules": []
+    },
+    {
+      "source_species": "SLOWPOKE",
+      "source_form": "GALARIAN_FORM",
+      "source_learnset": "SlowpokeGalarian",
+      "target_species": "SPECIES_SLOWPOKE_GALAR",
+      "rules": [
+        {
+          "method": "TRADE",
+          "argument": "KINGS_ROCK",
+          "extra": "0",
+          "species": "SLOWKING",
+          "form": "GALARIAN_FORM"
+        },
+        {
+          "method": "LEVEL",
+          "argument": "37",
+          "extra": "0",
+          "species": "SLOWBRO",
+          "form": "GALARIAN_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "SLOWBRO",
+      "source_form": "GALARIAN_FORM",
+      "source_learnset": "SlowbroGalarian",
+      "target_species": "SPECIES_SLOWBRO_GALAR",
+      "rules": []
+    },
+    {
+      "source_species": "FARFETCH_D",
+      "source_form": "GALARIAN_FORM",
+      "source_learnset": "FarfetchDGalarian",
+      "target_species": "SPECIES_FARFETCHD_GALAR",
+      "rules": [
+        {
+          "method": "CRIT",
+          "argument": "TR_ANYTIME",
+          "extra": "0",
+          "species": "SIRFETCH_D",
+          "form": "PLAIN_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "WEEZING",
+      "source_form": "GALARIAN_FORM",
+      "source_learnset": "WeezingGalarian",
+      "target_species": "SPECIES_WEEZING_GALAR",
+      "rules": []
+    },
+    {
+      "source_species": "MR__MIME",
+      "source_form": "GALARIAN_FORM",
+      "source_learnset": "MrMimeGalarian",
+      "target_species": "SPECIES_MR_MIME_GALAR",
+      "rules": [
+        {
+          "method": "LEVEL",
+          "argument": "42",
+          "extra": "0",
+          "species": "MR__RIME",
+          "form": "PLAIN_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "ARTICUNO",
+      "source_form": "GALARIAN_FORM",
+      "source_learnset": "ArticunoGalarian",
+      "target_species": "SPECIES_ARTICUNO_GALAR",
+      "rules": []
+    },
+    {
+      "source_species": "ZAPDOS",
+      "source_form": "GALARIAN_FORM",
+      "source_learnset": "ZapdosGalarian",
+      "target_species": "SPECIES_ZAPDOS_GALAR",
+      "rules": []
+    },
+    {
+      "source_species": "MOLTRES",
+      "source_form": "GALARIAN_FORM",
+      "source_learnset": "MoltresGalarian",
+      "target_species": "SPECIES_MOLTRES_GALAR",
+      "rules": []
+    },
+    {
+      "source_species": "SLOWKING",
+      "source_form": "GALARIAN_FORM",
+      "source_learnset": "SlowkingGalarian",
+      "target_species": "SPECIES_SLOWKING_GALAR",
+      "rules": []
+    },
+    {
+      "source_species": "CORSOLA",
+      "source_form": "GALARIAN_FORM",
+      "source_learnset": "CorsolaGalarian",
+      "target_species": "SPECIES_CORSOLA_GALAR",
+      "rules": [
+        {
+          "method": "LEVEL",
+          "argument": "38",
+          "extra": "0",
+          "species": "CURSOLA",
+          "form": "PLAIN_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "GROWLITHE",
+      "source_form": "HISUIAN_FORM",
+      "source_learnset": "GrowlitheHisuian",
+      "target_species": "SPECIES_GROWLITHE_HISUI",
+      "rules": [
+        {
+          "method": "ITEM",
+          "argument": "FIRE_STONE",
+          "extra": "0",
+          "species": "ARCANINE",
+          "form": "HISUIAN_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "ARCANINE",
+      "source_form": "HISUIAN_FORM",
+      "source_learnset": "ArcanineHisuian",
+      "target_species": "SPECIES_ARCANINE_HISUI",
+      "rules": []
+    },
+    {
+      "source_species": "VOLTORB",
+      "source_form": "HISUIAN_FORM",
+      "source_learnset": "VoltorbHisuian",
+      "target_species": "SPECIES_VOLTORB_HISUI",
+      "rules": [
+        {
+          "method": "ITEM",
+          "argument": "LEAF_STONE",
+          "extra": "0",
+          "species": "ELECTRODE",
+          "form": "HISUIAN_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "ELECTRODE",
+      "source_form": "HISUIAN_FORM",
+      "source_learnset": "ElectrodeHisuian",
+      "target_species": "SPECIES_ELECTRODE_HISUI",
+      "rules": []
+    },
+    {
+      "source_species": "TYPHLOSION",
+      "source_form": "HISUIAN_FORM",
+      "source_learnset": "TyphlosionHisuian",
+      "target_species": "SPECIES_TYPHLOSION_HISUI",
+      "rules": []
+    },
+    {
+      "source_species": "QWILFISH",
+      "source_form": "HISUIAN_FORM",
+      "source_learnset": "QwilfishHisuian",
+      "target_species": "SPECIES_QWILFISH_HISUI",
+      "rules": [
+        {
+          "method": "LEVEL",
+          "argument": "33",
+          "extra": "0",
+          "species": "OVERQWIL",
+          "form": "PLAIN_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "SNEASEL",
+      "source_form": "HISUIAN_FORM",
+      "source_learnset": "SneaselHisuian",
+      "target_species": "SPECIES_SNEASEL_HISUI",
+      "rules": [
+        {
+          "method": "HOLDING",
+          "argument": "RAZOR_CLAW",
+          "extra": "TR_MORNDAY",
+          "species": "SNEASLER",
+          "form": "PLAIN_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "WOOPER",
+      "source_form": "PALDEAN_FORM",
+      "source_learnset": "WooperPaldean",
+      "target_species": "SPECIES_WOOPER_PALDEA",
+      "rules": [
+        {
+          "method": "LEVEL",
+          "argument": "20",
+          "extra": "0",
+          "species": "CLODSIRE",
+          "form": "PLAIN_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "TAUROS",
+      "source_form": "PALDEAN_FORM",
+      "source_learnset": "TaurosPaldean",
+      "target_species": "SPECIES_TAUROS_PALDEA_COMBAT",
+      "rules": []
+    },
+    {
+      "source_species": "TAUROS",
+      "source_form": "TAUROS_PALDEAN_FIRE_FORM",
+      "source_learnset": "TaurosPaldeanFire",
+      "target_species": "SPECIES_TAUROS_PALDEA_BLAZE",
+      "rules": []
+    },
+    {
+      "source_species": "TAUROS",
+      "source_form": "TAUROS_PALDEAN_WATER_FORM",
+      "source_learnset": "TaurosPaldeanWater",
+      "target_species": "SPECIES_TAUROS_PALDEA_AQUA",
+      "rules": []
+    },
+    {
+      "source_species": "URSALUNA",
+      "source_form": "URSALUNA_BLOODMOON_FORM",
+      "source_learnset": "UrsalunaBloodmoon",
+      "target_species": "SPECIES_URSALUNA_BLOODMOON",
+      "rules": []
+    },
+    {
+      "source_species": "UNOWN",
+      "source_form": "UNOWN_B_FORM",
+      "source_learnset": "Unown",
+      "target_species": "SPECIES_UNOWN_B",
+      "rules": []
+    },
+    {
+      "source_species": "UNOWN",
+      "source_form": "UNOWN_C_FORM",
+      "source_learnset": "Unown",
+      "target_species": "SPECIES_UNOWN_C",
+      "rules": []
+    },
+    {
+      "source_species": "UNOWN",
+      "source_form": "UNOWN_D_FORM",
+      "source_learnset": "Unown",
+      "target_species": "SPECIES_UNOWN_D",
+      "rules": []
+    },
+    {
+      "source_species": "UNOWN",
+      "source_form": "UNOWN_E_FORM",
+      "source_learnset": "Unown",
+      "target_species": "SPECIES_UNOWN_E",
+      "rules": []
+    },
+    {
+      "source_species": "UNOWN",
+      "source_form": "UNOWN_F_FORM",
+      "source_learnset": "Unown",
+      "target_species": "SPECIES_UNOWN_F",
+      "rules": []
+    },
+    {
+      "source_species": "UNOWN",
+      "source_form": "UNOWN_G_FORM",
+      "source_learnset": "Unown",
+      "target_species": "SPECIES_UNOWN_G",
+      "rules": []
+    },
+    {
+      "source_species": "UNOWN",
+      "source_form": "UNOWN_H_FORM",
+      "source_learnset": "Unown",
+      "target_species": "SPECIES_UNOWN_H",
+      "rules": []
+    },
+    {
+      "source_species": "UNOWN",
+      "source_form": "UNOWN_I_FORM",
+      "source_learnset": "Unown",
+      "target_species": "SPECIES_UNOWN_I",
+      "rules": []
+    },
+    {
+      "source_species": "UNOWN",
+      "source_form": "UNOWN_J_FORM",
+      "source_learnset": "Unown",
+      "target_species": "SPECIES_UNOWN_J",
+      "rules": []
+    },
+    {
+      "source_species": "UNOWN",
+      "source_form": "UNOWN_K_FORM",
+      "source_learnset": "Unown",
+      "target_species": "SPECIES_UNOWN_K",
+      "rules": []
+    },
+    {
+      "source_species": "UNOWN",
+      "source_form": "UNOWN_L_FORM",
+      "source_learnset": "Unown",
+      "target_species": "SPECIES_UNOWN_L",
+      "rules": []
+    },
+    {
+      "source_species": "UNOWN",
+      "source_form": "UNOWN_M_FORM",
+      "source_learnset": "Unown",
+      "target_species": "SPECIES_UNOWN_M",
+      "rules": []
+    },
+    {
+      "source_species": "UNOWN",
+      "source_form": "UNOWN_N_FORM",
+      "source_learnset": "Unown",
+      "target_species": "SPECIES_UNOWN_N",
+      "rules": []
+    },
+    {
+      "source_species": "UNOWN",
+      "source_form": "UNOWN_O_FORM",
+      "source_learnset": "Unown",
+      "target_species": "SPECIES_UNOWN_O",
+      "rules": []
+    },
+    {
+      "source_species": "UNOWN",
+      "source_form": "UNOWN_P_FORM",
+      "source_learnset": "Unown",
+      "target_species": "SPECIES_UNOWN_P",
+      "rules": []
+    },
+    {
+      "source_species": "UNOWN",
+      "source_form": "UNOWN_Q_FORM",
+      "source_learnset": "Unown",
+      "target_species": "SPECIES_UNOWN_Q",
+      "rules": []
+    },
+    {
+      "source_species": "UNOWN",
+      "source_form": "UNOWN_R_FORM",
+      "source_learnset": "Unown",
+      "target_species": "SPECIES_UNOWN_R",
+      "rules": []
+    },
+    {
+      "source_species": "UNOWN",
+      "source_form": "UNOWN_S_FORM",
+      "source_learnset": "Unown",
+      "target_species": "SPECIES_UNOWN_S",
+      "rules": []
+    },
+    {
+      "source_species": "UNOWN",
+      "source_form": "UNOWN_T_FORM",
+      "source_learnset": "Unown",
+      "target_species": "SPECIES_UNOWN_T",
+      "rules": []
+    },
+    {
+      "source_species": "UNOWN",
+      "source_form": "UNOWN_U_FORM",
+      "source_learnset": "Unown",
+      "target_species": "SPECIES_UNOWN_U",
+      "rules": []
+    },
+    {
+      "source_species": "UNOWN",
+      "source_form": "UNOWN_V_FORM",
+      "source_learnset": "Unown",
+      "target_species": "SPECIES_UNOWN_V",
+      "rules": []
+    },
+    {
+      "source_species": "UNOWN",
+      "source_form": "UNOWN_W_FORM",
+      "source_learnset": "Unown",
+      "target_species": "SPECIES_UNOWN_W",
+      "rules": []
+    },
+    {
+      "source_species": "UNOWN",
+      "source_form": "UNOWN_X_FORM",
+      "source_learnset": "Unown",
+      "target_species": "SPECIES_UNOWN_X",
+      "rules": []
+    },
+    {
+      "source_species": "UNOWN",
+      "source_form": "UNOWN_Y_FORM",
+      "source_learnset": "Unown",
+      "target_species": "SPECIES_UNOWN_Y",
+      "rules": []
+    },
+    {
+      "source_species": "UNOWN",
+      "source_form": "UNOWN_Z_FORM",
+      "source_learnset": "Unown",
+      "target_species": "SPECIES_UNOWN_Z",
+      "rules": []
+    },
+    {
+      "source_species": "UNOWN",
+      "source_form": "UNOWN_EXCLAMATION_FORM",
+      "source_learnset": "Unown",
+      "target_species": "SPECIES_UNOWN_EXCLAMATION",
+      "rules": []
+    },
+    {
+      "source_species": "UNOWN",
+      "source_form": "UNOWN_QUESTION_FORM",
+      "source_learnset": "Unown",
+      "target_species": "SPECIES_UNOWN_QUESTION",
+      "rules": []
+    },
+    {
+      "source_species": "ARBOK",
+      "source_form": "ARBOK_KANTO_FORM",
+      "source_learnset": "Arbok",
+      "target_species": "SPECIES_ARBOK_KANTO",
+      "rules": []
+    },
+    {
+      "source_species": "ARBOK",
+      "source_form": "ARBOK_KOGA_FORM",
+      "source_learnset": "Arbok",
+      "target_species": "SPECIES_ARBOK_KOGA",
+      "rules": []
+    },
+    {
+      "source_species": "ARBOK",
+      "source_form": "ARBOK_AGATHA_FORM",
+      "source_learnset": "Arbok",
+      "target_species": "SPECIES_ARBOK_AGATHA",
+      "rules": []
+    },
+    {
+      "source_species": "ARBOK",
+      "source_form": "ARBOK_ARIANA_FORM",
+      "source_learnset": "Arbok",
+      "target_species": "SPECIES_ARBOK_ARIANA",
+      "rules": []
+    },
+    {
+      "source_species": "PIKACHU",
+      "source_form": "PIKACHU_FLY_FORM",
+      "source_learnset": "Pikachu",
+      "target_species": "SPECIES_PIKACHU_FLY",
+      "rules": [
+        {
+          "method": "ITEM",
+          "argument": "THUNDERSTONE",
+          "extra": "0",
+          "species": "RAICHU",
+          "form": "PLAIN_FORM"
+        },
+        {
+          "method": "ITEM",
+          "argument": "ODD_SOUVENIR",
+          "extra": "0",
+          "species": "RAICHU",
+          "form": "ALOLAN_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "PIKACHU",
+      "source_form": "PIKACHU_SURF_FORM",
+      "source_learnset": "Pikachu",
+      "target_species": "SPECIES_PIKACHU_SURF",
+      "rules": [
+        {
+          "method": "ITEM",
+          "argument": "THUNDERSTONE",
+          "extra": "0",
+          "species": "RAICHU",
+          "form": "PLAIN_FORM"
+        },
+        {
+          "method": "ITEM",
+          "argument": "ODD_SOUVENIR",
+          "extra": "0",
+          "species": "RAICHU",
+          "form": "ALOLAN_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "PIKACHU",
+      "source_form": "PIKACHU_RED_FORM",
+      "source_learnset": "Pikachu",
+      "target_species": "SPECIES_PIKACHU_RED",
+      "rules": [
+        {
+          "method": "ITEM",
+          "argument": "THUNDERSTONE",
+          "extra": "0",
+          "species": "RAICHU",
+          "form": "PLAIN_FORM"
+        },
+        {
+          "method": "ITEM",
+          "argument": "ODD_SOUVENIR",
+          "extra": "0",
+          "species": "RAICHU",
+          "form": "ALOLAN_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "PIKACHU",
+      "source_form": "PIKACHU_YELLOW_FORM",
+      "source_learnset": "Pikachu",
+      "target_species": "SPECIES_PIKACHU_YELLOW",
+      "rules": [
+        {
+          "method": "ITEM",
+          "argument": "THUNDERSTONE",
+          "extra": "0",
+          "species": "RAICHU",
+          "form": "PLAIN_FORM"
+        },
+        {
+          "method": "ITEM",
+          "argument": "ODD_SOUVENIR",
+          "extra": "0",
+          "species": "RAICHU",
+          "form": "ALOLAN_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "PIKACHU",
+      "source_form": "PIKACHU_SPARK_FORM",
+      "source_learnset": "Pikachu",
+      "target_species": "SPECIES_PIKACHU_SPARK",
+      "rules": [
+        {
+          "method": "ITEM",
+          "argument": "THUNDERSTONE",
+          "extra": "0",
+          "species": "RAICHU",
+          "form": "PLAIN_FORM"
+        },
+        {
+          "method": "ITEM",
+          "argument": "ODD_SOUVENIR",
+          "extra": "0",
+          "species": "RAICHU",
+          "form": "ALOLAN_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "PICHU",
+      "source_form": "PICHU_SPIKY_EARED_FORM",
+      "source_learnset": "Pichu",
+      "target_species": "SPECIES_PICHU_SPIKY_EARED",
+      "rules": []
+    },
+    {
+      "source_species": "MAGIKARP",
+      "source_form": "MAGIKARP_SKELLY_FORM",
+      "source_learnset": "Magikarp",
+      "target_species": "SPECIES_MAGIKARP_SKELLY",
+      "rules": [
+        {
+          "method": "LEVEL",
+          "argument": "20",
+          "extra": "0",
+          "species": "GYARADOS",
+          "form": "NO_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "MAGIKARP",
+      "source_form": "MAGIKARP_CALICO1_FORM",
+      "source_learnset": "Magikarp",
+      "target_species": "SPECIES_MAGIKARP_CALICO1",
+      "rules": [
+        {
+          "method": "LEVEL",
+          "argument": "20",
+          "extra": "0",
+          "species": "GYARADOS",
+          "form": "NO_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "MAGIKARP",
+      "source_form": "MAGIKARP_CALICO2_FORM",
+      "source_learnset": "Magikarp",
+      "target_species": "SPECIES_MAGIKARP_CALICO2",
+      "rules": [
+        {
+          "method": "LEVEL",
+          "argument": "20",
+          "extra": "0",
+          "species": "GYARADOS",
+          "form": "NO_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "MAGIKARP",
+      "source_form": "MAGIKARP_CALICO3_FORM",
+      "source_learnset": "Magikarp",
+      "target_species": "SPECIES_MAGIKARP_CALICO3",
+      "rules": [
+        {
+          "method": "LEVEL",
+          "argument": "20",
+          "extra": "0",
+          "species": "GYARADOS",
+          "form": "NO_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "MAGIKARP",
+      "source_form": "MAGIKARP_TWO_TONE_FORM",
+      "source_learnset": "Magikarp",
+      "target_species": "SPECIES_MAGIKARP_TWO_TONE",
+      "rules": [
+        {
+          "method": "LEVEL",
+          "argument": "20",
+          "extra": "0",
+          "species": "GYARADOS",
+          "form": "NO_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "MAGIKARP",
+      "source_form": "MAGIKARP_ORCA_FORM",
+      "source_learnset": "Magikarp",
+      "target_species": "SPECIES_MAGIKARP_ORCA",
+      "rules": [
+        {
+          "method": "LEVEL",
+          "argument": "20",
+          "extra": "0",
+          "species": "GYARADOS",
+          "form": "NO_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "MAGIKARP",
+      "source_form": "MAGIKARP_DAPPLES_FORM",
+      "source_learnset": "Magikarp",
+      "target_species": "SPECIES_MAGIKARP_DAPPLES",
+      "rules": [
+        {
+          "method": "LEVEL",
+          "argument": "20",
+          "extra": "0",
+          "species": "GYARADOS",
+          "form": "NO_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "MAGIKARP",
+      "source_form": "MAGIKARP_TIGER_FORM",
+      "source_learnset": "Magikarp",
+      "target_species": "SPECIES_MAGIKARP_TIGER",
+      "rules": [
+        {
+          "method": "LEVEL",
+          "argument": "20",
+          "extra": "0",
+          "species": "GYARADOS",
+          "form": "NO_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "MAGIKARP",
+      "source_form": "MAGIKARP_ZEBRA_FORM",
+      "source_learnset": "Magikarp",
+      "target_species": "SPECIES_MAGIKARP_ZEBRA",
+      "rules": [
+        {
+          "method": "LEVEL",
+          "argument": "20",
+          "extra": "0",
+          "species": "GYARADOS",
+          "form": "NO_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "MAGIKARP",
+      "source_form": "MAGIKARP_STRIPE_FORM",
+      "source_learnset": "Magikarp",
+      "target_species": "SPECIES_MAGIKARP_STRIPE",
+      "rules": [
+        {
+          "method": "LEVEL",
+          "argument": "20",
+          "extra": "0",
+          "species": "GYARADOS",
+          "form": "NO_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "MAGIKARP",
+      "source_form": "MAGIKARP_BUBBLES_FORM",
+      "source_learnset": "Magikarp",
+      "target_species": "SPECIES_MAGIKARP_BUBBLES",
+      "rules": [
+        {
+          "method": "LEVEL",
+          "argument": "20",
+          "extra": "0",
+          "species": "GYARADOS",
+          "form": "NO_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "MAGIKARP",
+      "source_form": "MAGIKARP_DIAMONDS_FORM",
+      "source_learnset": "Magikarp",
+      "target_species": "SPECIES_MAGIKARP_DIAMONDS",
+      "rules": [
+        {
+          "method": "LEVEL",
+          "argument": "20",
+          "extra": "0",
+          "species": "GYARADOS",
+          "form": "NO_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "MAGIKARP",
+      "source_form": "MAGIKARP_PATCHES_FORM",
+      "source_learnset": "Magikarp",
+      "target_species": "SPECIES_MAGIKARP_PATCHES",
+      "rules": [
+        {
+          "method": "LEVEL",
+          "argument": "20",
+          "extra": "0",
+          "species": "GYARADOS",
+          "form": "NO_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "MAGIKARP",
+      "source_form": "MAGIKARP_FOREHEAD1_FORM",
+      "source_learnset": "Magikarp",
+      "target_species": "SPECIES_MAGIKARP_FOREHEAD1",
+      "rules": [
+        {
+          "method": "LEVEL",
+          "argument": "20",
+          "extra": "0",
+          "species": "GYARADOS",
+          "form": "NO_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "MAGIKARP",
+      "source_form": "MAGIKARP_MASK1_FORM",
+      "source_learnset": "Magikarp",
+      "target_species": "SPECIES_MAGIKARP_MASK1",
+      "rules": [
+        {
+          "method": "LEVEL",
+          "argument": "20",
+          "extra": "0",
+          "species": "GYARADOS",
+          "form": "NO_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "MAGIKARP",
+      "source_form": "MAGIKARP_FOREHEAD2_FORM",
+      "source_learnset": "Magikarp",
+      "target_species": "SPECIES_MAGIKARP_FOREHEAD2",
+      "rules": [
+        {
+          "method": "LEVEL",
+          "argument": "20",
+          "extra": "0",
+          "species": "GYARADOS",
+          "form": "NO_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "MAGIKARP",
+      "source_form": "MAGIKARP_MASK2_FORM",
+      "source_learnset": "Magikarp",
+      "target_species": "SPECIES_MAGIKARP_MASK2",
+      "rules": [
+        {
+          "method": "LEVEL",
+          "argument": "20",
+          "extra": "0",
+          "species": "GYARADOS",
+          "form": "NO_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "MAGIKARP",
+      "source_form": "MAGIKARP_SAUCY_FORM",
+      "source_learnset": "Magikarp",
+      "target_species": "SPECIES_MAGIKARP_SAUCY",
+      "rules": [
+        {
+          "method": "LEVEL",
+          "argument": "20",
+          "extra": "0",
+          "species": "GYARADOS",
+          "form": "NO_FORM"
+        }
+      ]
+    },
+    {
+      "source_species": "MAGIKARP",
+      "source_form": "MAGIKARP_RAINDROP_FORM",
+      "source_learnset": "Magikarp",
+      "target_species": "SPECIES_MAGIKARP_RAINDROP",
+      "rules": [
+        {
+          "method": "LEVEL",
+          "argument": "20",
+          "extra": "0",
+          "species": "GYARADOS",
+          "form": "NO_FORM"
+        }
+      ]
+    }
+  ]
+}

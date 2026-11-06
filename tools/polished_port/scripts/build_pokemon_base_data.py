@@ -3,7 +3,7 @@
 
 The source BaseData INCLUDE order is joined to the same species/form indices as
 the learnsets, not inferred from filenames. Cosmetic forms explicitly share the
-source base row. Held items, evolution rules, artwork and ability implementations
+source base row. Held items, artwork and ability implementations
 are separate work; the manifest retains their outstanding scope.
 """
 import argparse
@@ -145,7 +145,7 @@ def build():
 
     native = (ROOT / "src/data/pokemon/species_info/gen_1_families.h").read_text()
     forms = ["/* Generated data registrations. Native presentation is a documented temporary gap.",
-             " * Do not report these graphics, Pokedex text or native evolution rules as imported. */", ""]
+             " * Source evolution rules are selected separately through the shared accessor. */", ""]
     new_forms = []
     for r in records:
         if r["source_species"] not in FORM_FAMILIES or r["source_form"] == "PLAIN_FORM":
@@ -163,7 +163,7 @@ def build():
                               "save_ids": "Existing Pokemon IDs 1..1572 unchanged; 30 forms appended at 1573..1602. EGG rendering sentinel moves to 1603; saved eggs contain their actual species and the isEgg flag."},
                     remaining_gaps=["Original Pokemon graphics, palettes, Pokedex data and form animations.",
                                     "Held items and their encounter probabilities (source values retained here).",
-                                    "Evolution conditions, egg moves, TM/HM/tutor compatibility and breeding rules.",
+                                    "Egg moves, TM/HM/tutor compatibility and breeding rules; see the separate evolution manifest.",
                                     "Ability effects, battle rules, IV/EV creation, hatch-step timing and source trainer attributes."],
                     records=records)
     return {OUTPUT: "\n".join(lines), FORMS: "\n".join(forms), MANIFEST: json.dumps(manifest, indent=2) + "\n"}

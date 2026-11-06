@@ -18,11 +18,11 @@ regression coverage, but are not evidence of complete source-game parity.
 | --- | --- | --- |
 | Source build variant | Previous trainer scripts read selected source text, while global data uses `GEN_LATEST`. Source files contain `FAITHFUL` branches. | Resolve the pinned default branch explicitly in importers; reject unknown conditionals. The learnset importer now does this. |
 | Level-up moves | `GetSpeciesLevelUpLearnset` previously returned Expansion tables for player starters, gifts, eggs, trades and wild Pokemon even where trainer parties had source moves. | **Imported:** all 391 mapped species/form entries, including source evolution moves and cosmetic aliases. The Johto build selects these through the shared accessor. Existing Pokemon keep saved moves; subsequent learning uses the new source tables. |
-| Species/form identities | Native numeric IDs do not equal source IDs or form values. Thirty source forms previously lacked target IDs. | **Registered:** all 391 identities now resolve. Thirty forms have distinct appended IDs 1573..1602, with base/form-table round trips. Their original artwork, metadata and evolution rules are still pending. |
+| Species/form identities | Native numeric IDs do not equal source IDs or form values. Thirty source forms previously lacked target IDs. | **Registered:** all 391 identities now resolve. Thirty forms have distinct appended IDs 1573..1602, with base/form-table round trips. Their original artwork and metadata are still pending; source evolution rules are now selected separately. |
 | Custom move identities | Fury Strikes, HealingLight and Fresh Snack do not exist as separate Expansion moves. | **Added:** distinct ordinary move IDs and generated source names, descriptions and basic data. Native battle adapters implement source multi-hit probability and healing fractions/rounding. Original battle animations and Fresh Snack's field use remain open. |
 | Other move data and effects | `src/data/moves_info.h` still supplies most move definitions; battle configuration selects many latest-generation rules. | Import all source move data/flags and audit effect implementations, damage/stat rules, status, weather and RNG. A matching move name is insufficient. |
 | Species stats and related data | Native generation presets previously supplied these values. | **Imported:** all 391 base-data mappings provide default-source stats, types, three ability slots, growth, catch/EXP/EV data, gender, egg groups/cycles and initial happiness. Gameplay uses `GetSpeciesBaseData`; additional Expansion species retain native data. Held items, Pokedex/presentation data, ability effects and battle/creation rules remain open. |
-| Evolution conditions, breeding and teaching | Native evolution tables, egg moves, hatch-step timing, breeding rules, TM/tutor compatibility and item mappings remain. Source egg groups and initial cycle counts are imported. | Import source conditions, egg/TM/tutor data and mechanics; validate all related item-to-move mappings. Importing an evolution move does not import its evolution condition. Existing Roost/Flash reward tests prove only those selected paths. |
+| Evolution conditions, breeding and teaching | Source evolution rows now replace native conditions for all 391 registered identities, with a source evaluator and shared family/Pokedex metadata. Source egg groups and initial cycle counts are imported. | Evolution timing inside trainer battles, hidden pre-evolution form bits and unported evolution locations remain open, as detailed below. Import egg/TM/tutor data, hatch-step timing, breeding rules and item mappings. Existing Roost/Flash reward tests prove only those selected paths. |
 | Trainer construction and AI | Imported parties preserve selected species, levels and moves, but use native AI/ability selection, fixed Hardy natures and DV/IV/EV adaptations. | Audit source trainer attributes and construction semantics. Recheck actual battle stats and behavior after species data import. |
 | Pokemon graphics and sprite data | Source trainer portraits and several overworld sprites are live; Pokemon battle graphics, palettes, icons and animation bindings mostly remain native. | Import source pixels, normal/shiny palettes, dimensions, frame maps, sequences, timing, positions and form/gender handling. Include all unresolved forms. |
 | Startup and player identity | `POLISHED_JOHTO_DEMO` starts in a test garden with a Lv10 Totodile, Surf, an Old Rod and a Mach Bike. Existing campaign replays use that harness. | Implement the real source startup separately from the test garden, with the source initial party/inventory, opening flow and supported protagonists. Add a campaign run starting from that baseline. |
@@ -106,8 +106,9 @@ nibbles use the source daycare formula `(n + 1) * 5`; this includes the literal
 4 for Galarian Mr. Mime and the unknown nibble 15. Step timing, inheritance and
 other breeding behavior are still separate gaps. Initial happiness is 70.
 
-The new forms deliberately retain documented temporary native art, Pokedex
-metadata and evolution rules. Source held-item rows and teaching lists are
+The new forms deliberately retain documented temporary native art and Pokedex
+metadata. The later evolution phase overrides their native evolution rules.
+Source held-item rows and teaching lists are
 retained in the base-data manifest but are not wired by this phase. Ability
 slots are imported; ability effects, trainer attributes, move definitions and
 battle-rule parity remain open. These boundaries apply to every source species,
@@ -145,10 +146,66 @@ first action menu. The outcome assertion still requires a genuine loss, followed
 by healing, the Potion handoff, Save/Continue and the no-rematch checks. Source
 abilities, species data and gameplay remain unchanged.
 
+## Evolution data and rule adapter
+
+`P_POLISHED_EVOLUTIONS` defaults to the Johto profile. The deterministic importer
+reads all 190 ordered evolution rows from the pinned default source and binds
+all 391 registered species/form identities, including explicit empty tables for
+terminal species and spiky-eared Pichu. Mr. Rime and Farigiraf share learnsets
+with earlier species but do not inherit those species' evolution rows. Native
+Expansion species outside the source registry keep their own rules and IDs.
+
+Gameplay and the shared evolution/family/Pokedex accessor now select the source
+tables. The adapter implements level, stone, trade/Linking Cord, held-item,
+160-friendship, morning/day versus evening/night, stat comparison, known move,
+party species, landmark and three-critical conditions. The counter increments when a critical hit lands,
+not when an immune-target damage roll is calculated, and excludes link/facility
+battles. A level-100 Rare Candy evolution is forced as in the source. Row order is preserved,
+including Mime Jr.'s location before level and Poliwhirl's held King's Rock
+before Water Stone. Source trade-held items also work on level-up, and Koffing's
+Charcoal produces Galarian Weezing. Everstone behavior follows both the source
+item-use precheck and the individual source evolution branches, including
+Kadabra's trade protection and the source move/location/party exceptions.
+
+Held evolution items stay on the Pokemon during eligibility checks and the
+animation, and are consumed only when an evolution succeeds. Both normal and
+trade animation completion paths apply this commit. Odd Souvenir has appended
+item ID 879, its source name, description and 3000 price, and its three source
+regional evolution uses. Its icon is a temporary native souvenir substitute.
+Existing Pokemon and item save IDs are not renumbered.
+
+This is **not complete evolution-mechanic parity**. The source default options
+enable evolution between opponents during trainer battles; that scene/return
+integration remains unported, so the current adapter uses the engine's
+after-battle timing. Source hidden form bits on Ekans/Dunsparce and inherited
+Magikarp/Gyarados pattern bits also need a creation/inheritance/save adapter;
+registered plain identities currently produce their plain evolved identity.
+The 20 maps belonging to eight evolution landmarks are recorded in the
+manifest but have not yet been ported. The generator registers their exact
+source map identities when they are added; no Hoenn location is substituted.
+The source EV-disabled option's special IV comparison and source evolution
+animation are also pending. Default EV-enabled Tyrogue uses actual stats.
+
+Source fixtures retain evolution, item-use, default-option, battle and animation
+code with verified Git blob hashes, so these boundaries can be checked directly
+against the pin. Dedicated native tests cover the rules above and source/native
+profile isolation; Python checks verify row counts, alias boundaries and reject
+unknown source syntax. Both standard Emerald and Johto builds pass with GCC
+13.2.1. All 33 focused Polished tests and the full 5,255-test native suite pass,
+with nine expected failures and 586 existing TODO entries.
+
+The final Johto ROM passes all 12 demo checks, all 100 campaign checks through
+Falkner and the Togepi Egg, and all 19 New Bark warp traversals, including
+Save/reset/Continue and repeat-interaction guards. These are regression checks
+from the existing demo startup, not evidence of the unported authentic opening
+or every later-game evolution. Johto ROM SHA-256:
+`38809d264926111f50ff08d8fa03fc2a410d82895b983f5ccc8b0b80f101f7e3`.
+
 ## Next priorities
 
-1. Import evolution conditions, egg moves, teaching compatibility and held-item
-   data/probabilities. Complete breeding/hatching behavior beyond base data.
+1. Complete the remaining evolution timing and hidden-form adapters above.
+   Import egg moves, teaching compatibility and held-item data/probabilities.
+   Complete breeding/hatching behavior beyond base data.
 2. Import remaining move data and implement a source battle profile, including
    trainer creation and AI. Validate source probabilities and rounding directly.
 3. Import Pokemon graphics and complete the associated sprite metadata.

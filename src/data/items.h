@@ -15496,6 +15496,22 @@ const struct ItemInfo gItemsInfo[] =
         .iconPalette = gItemIconPalette_BlackAugurite,
     },
 
+    // Source Odd Souvenir uses its own stable ID, price, name and effect.
+    // Native souvenir artwork is temporary until the item-art import.
+    [ITEM_POLISHED_ODD_SOUVENIR] =
+    {
+        .name = ITEM_NAME("Odd Souvenir"),
+        .price = 3000,
+        .description = COMPOUND_STRING("An ornament from\na far-away place."),
+        .pocket = POCKET_ITEMS,
+        .sortType = ITEM_TYPE_EVOLUTION_ITEM,
+        .type = ITEM_USE_PARTY_MENU,
+        .fieldUseFunc = ItemUseOutOfBattle_EvolutionStone,
+        .effect = gItemEffect_EvoItem,
+        .iconPic = gItemIcon_StrangeSouvenir,
+        .iconPalette = gItemIconPalette_StrangeSouvenir,
+    },
+
     [ITEM_LINKING_CORD] =
     {
         .name = ITEM_NAME("Linking Cord"),

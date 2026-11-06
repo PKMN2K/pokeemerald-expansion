@@ -230,7 +230,7 @@ def build():
     lines.extend(["};", ""])
     custom_header, custom_metadata = custom_moves(files)
     manifest = {"source_commit": PIN, "source_variant": "default; FAITHFUL undefined",
-                "scope": "Level-up and evolution moves; base data is imported separately. Evolution conditions, egg/TM/tutor data and battle effects remain separate gaps.",
+                "scope": "Level-up and evolution moves; base data is imported separately. Evolution rules are imported separately; egg/TM/tutor data and battle effects remain separate gaps.",
                 "mapped_target_count": len(targets),
                 "unmapped_forms": [{"species": r["source_species"], "form": r["source_form"],
                     "reason": "No exact source form identity is registered in the target yet; do not substitute its base species."}

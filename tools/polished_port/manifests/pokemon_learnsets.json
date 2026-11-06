@@ -1,7 +1,7 @@
 {
   "source_commit": "3fa43192379df5c3e7b09a08e4d5d79af4f02f42",
   "source_variant": "default; FAITHFUL undefined",
-  "scope": "Level-up and evolution moves; base data is imported separately. Evolution conditions, egg/TM/tutor data and battle effects remain separate gaps.",
+  "scope": "Level-up and evolution moves; base data is imported separately. Evolution rules are imported separately; egg/TM/tutor data and battle effects remain separate gaps.",
   "mapped_target_count": 391,
   "unmapped_forms": [],
   "custom_moves": [

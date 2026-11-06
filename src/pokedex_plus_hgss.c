@@ -1,4 +1,5 @@
 #include "global.h"
+#include "polished_evolution.h"
 #include "battle_main.h"
 #include "battle_util.h"
 #include "bg.h"
@@ -3715,6 +3716,13 @@ static void PrintEvolutionTargetSpeciesAndMethod(u8 taskId, enum Species species
                     break;
                 case IF_ATK_LT_DEF:
                     StringAppend(gStringVar4, COMPOUND_STRING("Atk < Def"));
+                    break;
+                case IF_POLISHED_LANDMARK:
+                    StringAppend(gStringVar4, PolishedEvolutionLandmarkName(evolutions[i].params[j].arg1));
+                    break;
+                case IF_POLISHED_TIME:
+                    StringAppend(gStringVar4, evolutions[i].params[j].arg1 == POLISHED_TR_MORNDAY
+                        ? COMPOUND_STRING("Morning/Day") : COMPOUND_STRING("Evening/Night"));
                     break;
                 case IF_TIME:
                     switch (evolutions[i].params[j].arg1)

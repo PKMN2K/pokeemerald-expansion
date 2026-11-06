@@ -1752,6 +1752,56 @@
       "path": "engine/events/daycare.asm",
       "fixture": "engine__events__daycare.asm.b64",
       "git_blob_sha1": "245a13b576e862ef59e6e77e30e6cd20be314d83"
+    },
+    {
+      "path": "engine/pokemon/evolve.asm",
+      "fixture": "engine__pokemon__evolve.asm.b64",
+      "git_blob_sha1": "4c7d28a10a4d8570dd66d17a138e7c5cf33e8058"
+    },
+    {
+      "path": "engine/items/item_effects.asm",
+      "fixture": "engine__items__item_effects.asm.b64",
+      "git_blob_sha1": "a5dbe8085e512a363d0c27666626040342c756eb"
+    },
+    {
+      "path": "engine/movie/evolution_animation.asm",
+      "fixture": "engine__movie__evolution_animation.asm.b64",
+      "git_blob_sha1": "e586a31df5959a3cbd54b8f35bc67d7ba83c10bf"
+    },
+    {
+      "path": "engine/battle/random_wild_forms.asm",
+      "fixture": "engine__battle__random_wild_forms.asm.b64",
+      "git_blob_sha1": "ed94e940b2354b8b1beef5abe63f0e59c1b5802f"
+    },
+    {
+      "path": "constants/ram_constants.asm",
+      "fixture": "constants__ram_constants.asm.b64",
+      "git_blob_sha1": "940fcea92fc205afc7d64a4615e2ae9705bd30a0"
+    },
+    {
+      "path": "data/maps/maps.asm",
+      "fixture": "data__maps__maps.asm.b64",
+      "git_blob_sha1": "8e9e46b753ff22de7300f1d08b80525cffb4bf97"
+    },
+    {
+      "path": "data/items/attributes.asm",
+      "fixture": "data__items__attributes.asm.b64",
+      "git_blob_sha1": "462f69887a4fc6eea7b160892df8b515d306ded1"
+    },
+    {
+      "path": "data/items/descriptions.asm",
+      "fixture": "data__items__descriptions.asm.b64",
+      "git_blob_sha1": "166e93e79f6c3cea2cac3f7916cade54364a2fd5"
+    },
+    {
+      "path": "data/options/default_options.asm",
+      "fixture": "data__options__default_options.asm.b64",
+      "git_blob_sha1": "74dbc6463c87138116b7ae80b7c8ecdb1d582ffb"
+    },
+    {
+      "path": "engine/battle/core.asm",
+      "fixture": "engine__battle__core.asm.b64",
+      "git_blob_sha1": "37e76be94949c77bf7fd12814675a27943c7d85f"
     }
   ]
 }

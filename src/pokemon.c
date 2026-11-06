@@ -39,6 +39,7 @@
 #include "pokeblock.h"
 #include "pokemon.h"
 #include "polished_pokemon_data.h"
+#include "polished_evolution.h"
 #include "pokemon_animation.h"
 #include "pokemon_icon.h"
 #include "pokemon_summary_screen.h"
@@ -3351,7 +3352,15 @@ bool32 SpeciesHasEggMove(enum Species species, enum Move move)
 
 const struct Evolution *GetSpeciesEvolutions(enum Species species)
 {
-    const struct Evolution *evolutions = gSpeciesInfo[SanitizeSpeciesId(species)].evolutions;
+    const struct Evolution *evolutions;
+    species = SanitizeSpeciesId(species);
+    if (GetConfig(POLISHED_EVOLUTIONS))
+    {
+        evolutions = PolishedGetSpeciesEvolutions(species);
+        if (evolutions != NULL)
+            return evolutions;
+    }
+    evolutions = gSpeciesInfo[species].evolutions;
     if (evolutions == NULL)
         return gSpeciesInfo[SPECIES_NONE].evolutions;
     return evolutions;
@@ -4411,6 +4420,13 @@ bool32 DoesMonMeetAdditionalConditions(struct Pokemon *mon, const struct Evoluti
             if (GetCurrentRegion() != params[i].arg1)
                 currentCondition = TRUE;
             break;
+        case IF_POLISHED_TIME:
+            RtcCalcLocalTime();
+            currentCondition = PolishedEvolutionTimeMatches(params[i].arg1, gLocalTime.hours);
+            break;
+        case IF_POLISHED_LANDMARK:
+            currentCondition = PolishedGetEvolutionLandmark() == params[i].arg1;
+            break;
         case CONDITIONS_END:
             break;
         }
@@ -4444,6 +4460,9 @@ enum Species GetEvolutionTargetSpecies(struct Pokemon *mon, enum EvolutionMode m
     u32 level = GetMonData(mon, MON_DATA_LEVEL, 0);
     enum HoldEffect holdEffect;
     const struct Evolution *evolutions = GetSpeciesEvolutions(species);
+
+    if (GetConfig(POLISHED_EVOLUTIONS) && PolishedGetSpeciesEvolutions(species) != NULL)
+        return PolishedGetEvolutionTargetSpecies(mon, mode, evolutionItem, canStopEvo);
 
     if (evolutions == NULL)
         return SPECIES_NONE;

@@ -94,7 +94,8 @@ import described below:
   They need comparison with Polished Crystal's actual battle implementation.
 - Source base stats, types, ability slots and level-up/evolution-move tables now
   use shared accessors in the Johto build. Expansion still supplies ability
-  effects, evolution conditions, egg/teaching data and sprite/animation bindings.
+  effects, egg/teaching data and sprite/animation bindings. Evolution rules are
+  imported separately below; timing and hidden-form gaps remain explicit.
 - Pokemon battle sprites, palettes, icons and animation metadata still need
   the comprehensive source import. Imported trainer and overworld artwork does
   not establish completion of Pokemon battle graphics.
@@ -136,7 +137,7 @@ adapters preserve the source six-slot multi-hit distribution, floor-before-
 doubling sun healing, Utility Umbrella's rain/sun limits and rounded-down
 half-HP healing. Existing ordinary move IDs remain unchanged. Their original
 battle animations and Fresh Snack's field use are still pending, as are other
-source move data/effects and evolution conditions.
+source move data/effects. Evolution rules are imported in the separate phase below.
 
 Checks include deterministic regeneration, all source identity counts and
 variant handling, native construction/learning/form/capacity tests, custom-move
@@ -175,8 +176,8 @@ experience and EVs are not rewritten. Its derived stats and level calculations
 use the selected profile when recalculated; use a fresh save to evaluate source
 progression, especially when a species changes growth curve.
 
-The form registrations still use temporary native art, metadata and evolution
-rules. Held-item tables/probabilities, evolution conditions, egg moves,
+The form registrations still use temporary native art and metadata. The later
+evolution phase overrides their native rules. Held-item tables/probabilities, egg moves,
 TM/HM/tutor compatibility, ability effects and trainer/battle rules remain open.
 See `tools/polished_port/PARITY_AUDIT.md`; this is a base-data import, not a
 claim that the full Pokemon or battle-engine migration is complete.
@@ -188,7 +189,30 @@ python3 tools/polished_port/scripts/build_pokemon_learnsets.py --check
 python3 tools/polished_port/scripts/build_pokemon_base_data.py --check
 python3 tools/polished_port/scripts/test_pokemon_learnsets.py
 python3 tools/polished_port/scripts/test_pokemon_base_data.py
+python3 tools/polished_port/scripts/build_pokemon_evolutions.py --check
+python3 tools/polished_port/scripts/test_pokemon_evolutions.py
 ```
+
+
+### Source evolution rules
+
+`build_pokemon_evolutions.py` imports all 190 ordered evolution rows and binds
+all 391 registered source identities. `P_POLISHED_EVOLUTIONS` selects them in
+the Johto build through the shared evolution accessor and source rule adapter.
+It covers source level/stone/trade-held-item conditions, 160 friendship,
+morning/day versus evening/night, move/stat/party/location requirements and
+three critical hits. Terminal aliases and spiky-eared Pichu cannot inherit a
+native evolution. Held evolution items are consumed after animation success,
+so checks and cancellation preserve them. Odd Souvenir has stable appended
+item ID 879 and the source's three regional evolution uses.
+
+The [baseline audit](tools/polished_port/PARITY_AUDIT.md#evolution-data-and-rule-adapter)
+records the remaining work: default-source evolution between trainer opponents,
+hidden pre-evolution/inherited form bits, unported landmark maps, the optional
+EV-disabled stat comparison, and source animation/item artwork. The current
+engine still evolves after battle, and never substitutes a Hoenn location for
+an unported source landmark. This phase imports the registered identities'
+conditions; it does not claim complete evolution mechanics.
 
 ## First milestone
 

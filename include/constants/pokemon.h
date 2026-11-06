@@ -318,6 +318,8 @@ enum EvolutionConditions {
     IF_BAG_ITEM_COUNT,                  // The Player has the specific amount of an item in the bag. It then removes those items.
     IF_REGION,                          // The Player is in the specific region.
     IF_NOT_REGION,                      // The Player is NOT in the specific region.
+    IF_POLISHED_TIME,                   // Source morning/day or evening/night group.
+    IF_POLISHED_LANDMARK,               // Explicit source map identity; never a Hoenn substitute.
     CONDITIONS_END
 };
 

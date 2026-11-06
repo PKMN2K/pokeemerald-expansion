@@ -1,5 +1,5 @@
 /* Generated data registrations. Native presentation is a documented temporary gap.
- * Do not report these graphics, Pokedex text or native evolution rules as imported. */
+ * Source evolution rules are selected separately through the shared accessor. */
 
 #if P_FAMILY_MAGIKARP
     [SPECIES_GYARADOS_RED] =

@@ -8051,7 +8051,7 @@ static bool32 IsCriticalHit(struct DamageContext *ctx)
         isCrit = RandomChance(RNG_CRITICAL_HIT, 1, GetCriticalHitOdds(critChance));
 
     // Counter for IF_CRITICAL_HITS_GE evolution condition.
-    if (isCrit && IsOnPlayerSide(ctx->battlerAtk)
+    if (!GetConfig(POLISHED_EVOLUTIONS) && isCrit && IsOnPlayerSide(ctx->battlerAtk)
      && !(gBattleTypeFlags & BATTLE_TYPE_MULTI && GetBattlerPosition(ctx->battlerAtk) == B_POSITION_PLAYER_LEFT))
         gPartyCriticalHits[gBattlerPartyIndexes[ctx->battlerAtk]]++;
 

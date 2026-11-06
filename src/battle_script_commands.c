@@ -1260,6 +1260,13 @@ static void Cmd_critmessage(void)
     {
         if (gSpecialStatuses[gBattlerTarget].criticalHit && !IsBattlerUnaffectedByMove(gBattlerTarget))
         {
+            // Source BattleCommand_criticaltext counts landed critical hits,
+            // not prospective damage rolls against an immune target.
+            if (GetConfig(POLISHED_EVOLUTIONS) && IsOnPlayerSide(gBattlerAttacker)
+                && !(gBattleTypeFlags & (BATTLE_TYPE_LINK | BATTLE_TYPE_RECORDED_LINK | BATTLE_TYPE_FRONTIER))
+                && !(gBattleTypeFlags & BATTLE_TYPE_MULTI && GetBattlerPosition(gBattlerAttacker) == B_POSITION_PLAYER_LEFT))
+                gPartyCriticalHits[gBattlerPartyIndexes[gBattlerAttacker]]++;
+
             if (IsDoubleSpreadMove())
                 PrepareStringBattleWithWait(STRINGID_CRITICALHITONDEF, gBattlerTarget);
             else

@@ -252,6 +252,7 @@
 #define POKEMON_CONFIG_DEFINITIONS(F) \
     F(POLISHED_LEVEL_UP_LEARNSETS, polishedLevelUpLearnsets, (u32, TRUE))       \
     F(POLISHED_SPECIES_DATA, polishedSpeciesData, (u32, TRUE))                 \
+    F(POLISHED_EVOLUTIONS, polishedEvolutions, (u32, TRUE))                     \
     F(POKERUS_ENABLED,           pokerusEnabled,          (u32, TRUE))          \
     F(POKERUS_SPREAD_ADJACENCY,  pokerusSpreadAdjacency,  (u32, GEN_COUNT - 1)) \
     F(POKERUS_SPREAD_DAYS_LEFT,  pokerusSpreadDaysLeft,   (u32, GEN_COUNT - 1)) \
