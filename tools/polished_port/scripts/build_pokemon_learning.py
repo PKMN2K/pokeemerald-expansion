@@ -1,0 +1,129 @@
+#!/usr/bin/env python3
+"""Import pinned egg moves and TM/HM/tutor compatibility by source table index."""
+import argparse
+import json
+import re
+
+import build_pokemon_learnsets as level
+import build_pokemon_base_data as base
+
+ROOT = level.ROOT
+OUTPUT = ROOT / "src/data/polished_learning.h"
+MANIFEST = ROOT / "tools/polished_port/manifests/pokemon_learning.json"
+
+
+def build():
+    files = level.sources()
+    identities = json.loads(level.build()[level.MANIFEST])["records"]
+    bases = {r["target_species"]: r for r in json.loads(base.build()[base.MANIFEST])["records"]}
+    available = set(re.findall(r"\bMOVE_\w+", (ROOT / "include/constants/moves.h").read_text()))
+
+    def move_id(name):
+        target = "MOVE_" + level.MOVE_ALIASES.get(name, name)
+        assert target in available, name
+        return target
+
+    catalog = []
+    for name, kind, number in re.findall(r"\bdb (\w+)\s*; (TM|HM|MT)(\d+)", files["data/moves/tmhm_moves.asm"]):
+        catalog.append(dict(kind=kind, number=int(number), source_move=name, target_move=move_id(name)))
+    for kind, count in (("TM", 75), ("HM", 6), ("MT", 31)):
+        assert [r["number"] for r in catalog if r["kind"] == kind] == list(range(1, count + 1))
+    teaching_order = [r["source_move"] for r in catalog]
+    assert len(set(teaching_order)) == 112
+    registry = re.findall(r"^\s*add_(tm|hm|mt) (\w+)", files["constants/tmhm_constants.asm"], re.M)
+    assert [(kind.upper(), "PSYCHIC_M" if name == "PSYCHIC" else name) for kind, name in registry] == [
+        (r["kind"], r["source_move"]) for r in catalog]
+
+    pointers = re.findall(r"\bdw (\w+EggSpeciesMoves)", files["data/pokemon/egg_move_pointers.asm"])
+    assert len(pointers) == len(re.findall(r"\bdw \w+EvosAttacks", files["data/pokemon/evos_attacks_pointers.asm"]))
+    eggs = {}
+    current = None
+    for line in level.default_lines(files["data/pokemon/egg_moves.asm"].split("EggSpeciesMoves::", 1)[1]):
+        if line.endswith("EggSpeciesMoves:"):
+            current = line[:-1]
+            assert current not in eggs
+            eggs[current] = dict(offspring=None, moves=[])
+        elif line.startswith("dp "):
+            assert current is not None
+            if eggs[current]["offspring"] is None:
+                eggs[current]["offspring"] = [x.strip() for x in line[3:].split(",")]
+            else:
+                # The pinned plain Slowpoke list contains a second dp. The
+                # engine skips only the first two bytes, so these are moves
+                # $4f/$03 (Sleep Powder/Double Slap), not another header.
+                assert current == "SlowpokePlainEggSpeciesMoves" and line == "dp SLOWPOKE, GALARIAN_FORM"
+                species_ids = re.findall(r"^\s*const (\w+)", files["constants/pokemon_constants.asm"].split("DEF NUM_SPECIES", 1)[0], re.M)
+                move_ids = re.findall(r"^\s*const (\w+)", files["constants/move_constants.asm"], re.M)
+                assert species_ids.index("SLOWPOKE") + 1 == 0x4f
+                assert re.search(r"DEF GALARIAN_FORM EQU 3\b", files["constants/pokemon_constants.asm"])
+                assert [move_ids[0x4f], move_ids[3]] == ["SLEEP_POWDER", "DOUBLE_SLAP"]
+                eggs[current]["moves"].extend([move_ids[0x4f], move_ids[3]])
+        elif line.startswith("db "):
+            assert current is not None
+            value = line[3:]
+            if value == "$ff":
+                assert eggs[current]["offspring"] or current == "NoEggSpeciesMoves"
+                current = None
+            else:
+                eggs[current]["moves"].append(value)
+        else:
+            assert not line, line
+    assert current is None and set(pointers) == set(eggs)
+
+    records = []
+    for identity in identities:
+        index = identity["source_table_index"]
+        if index is None:
+            index = next(r["source_table_index"] for r in identities
+                         if r["source_species"] == identity["source_species"] and r["source_form"] == "PLAIN_FORM")
+        pointer = pointers[index - 1]
+        egg = eggs[pointer]
+        # tmhm uses PSYCHIC_TMNUM; the move constant is PSYCHIC_M.
+        source_teaching = ["PSYCHIC_M" if m == "PSYCHIC" else m
+                           for m in bases[identity["target_species"]]["source_teaching_moves"]]
+        assert len(source_teaching) == len(set(source_teaching))
+        assert set(source_teaching) <= set(teaching_order), identity
+        records.append(dict(source_species=identity["source_species"], source_form=identity["source_form"],
+                            source_table_index=index, target_species=identity["target_species"],
+                            source_egg_pointer=pointer, source_offspring=egg["offspring"],
+                            egg_moves=[move_id(m) for m in egg["moves"]],
+                            teaching_moves=[move_id(m) for m in teaching_order if m in source_teaching]))
+    assert len(records) == 391
+    lines = ["/* Generated by build_pokemon_learning.py; pinned default Polished Crystal. */", ""]
+    for key, table in (("egg_moves", "gPolishedEggMoves"), ("teaching_moves", "gPolishedTeachableLearnsets")):
+        arrays = {}
+        for record in records:
+            moves = tuple(record[key])
+            if moves not in arrays:
+                name = "sPolished_" + key + "_" + str(len(arrays))
+                arrays[moves] = name
+                lines.append("static const u16 " + name + "[] = {")
+                lines.extend("    " + move + "," for move in moves)
+                lines.extend(["    MOVE_UNAVAILABLE,", "};", ""])
+        lines.append("const u16 *const " + table + "[NUM_SPECIES] = {")
+        lines.extend("    [" + r["target_species"] + "] = " + arrays[tuple(r[key])] + "," for r in records)
+        lines.extend(["};", ""])
+    manifest = dict(source_commit=level.PIN, source_variant="default; FAITHFUL undefined",
+                    scope="391 egg move lists and compatibility with the 75 TMs, 6 HMs and 31 tutors; explicit empty lists never fall back to native data.",
+                    inheritance="Defaults, shared level-up moves in physical parent-1 order, father egg moves, mother/non-Ditto egg moves. No TM or held-item move injection.",
+                    remaining_gaps=["Source TM item numbering, inventory descriptions, tutor placement and reminder UI.",
+                                    "Breeding species/forms outside the hidden-form adapter, IVs, abilities, nature, balls and egg timing.",
+                                    "Move PP/effects are still native except the three already imported custom moves."],
+                    teaching_catalog=catalog, records=records)
+    return {OUTPUT: "\n".join(lines), MANIFEST: json.dumps(manifest, indent=2) + "\n"}
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--check", action="store_true")
+    args = parser.parse_args()
+    for path, content in build().items():
+        if args.check:
+            assert path.read_text() == content, f"Regenerate {path.relative_to(ROOT)}"
+        else:
+            path.write_text(content)
+    print("PASS: 391 pinned egg/teaching lists and 112 source TM/HM/tutor mappings")
+
+
+if __name__ == "__main__":
+    main()

@@ -1,5 +1,6 @@
 #include "global.h"
 #include "polished_forms.h"
+#include "polished_pokemon_data.h"
 #include "pokemon.h"
 #include "battle.h"
 #include "daycare.h"
@@ -822,7 +823,7 @@ static void GiveParentSharedLevelUpMoves(struct Pokemon *egg, enum Move *fatherM
     {
         if (sharedMoves[i] == MOVE_NONE)
             break;
-        for (j = 0; levelupLearnset[j].move != LEVEL_UP_MOVE_END; i++)
+        for (j = 0; levelupLearnset[j].move != LEVEL_UP_MOVE_END; j++)
         {
             if (sharedMoves[i] == levelupLearnset[j].move)
             {
@@ -887,6 +888,62 @@ static void BuildEggMoveset(struct Pokemon *egg, struct BoxPokemon *father, stru
         GiveParentEggMoves(egg, motherMoves, eggSpecies);
         GiveMoveIfParentHeldItem(egg, father, mother, eggSpecies);
     }
+}
+
+static bool32 BuildPolishedEggMoveset(struct Pokemon *egg, struct DayCare *daycare)
+{
+    enum Species species = GetMonData(egg, MON_DATA_SPECIES);
+    const struct LevelUpMove *learnset = PolishedGetLevelUpLearnset(species);
+    enum Move moves[DAYCARE_MON_COUNT][MAX_MON_MOVES];
+    u32 mother = 0;
+
+    if (!GetConfig(POLISHED_LEARNING_DATA) || PolishedGetEggMoves(species) == NULL)
+        return FALSE;
+
+    // Source InitEggMoves / FillMoves uses level one and excludes evolution
+    // moves. Read the source list directly, independent of native presets.
+    for (u32 i = 0; i < MAX_MON_MOVES; i++)
+        SetMonMoveSlot(egg, MOVE_NONE, i);
+    for (u32 i = 0; learnset[i].move != LEVEL_UP_MOVE_END; i++)
+    {
+        if (learnset[i].level == 1)
+        {
+            ADD_OR_REPLACE_MOVE(learnset[i].move)
+        }
+    }
+
+    for (u32 i = 0; i < DAYCARE_MON_COUNT; i++)
+    {
+        struct BoxPokemon *parent = &daycare->mons[i].mon;
+        for (u32 j = 0; j < MAX_MON_MOVES; j++)
+            moves[i][j] = GetBoxMonData(parent, MON_DATA_MOVE1 + j);
+        if (GetBoxMonData(parent, MON_DATA_SPECIES) != SPECIES_DITTO
+            && (GetBoxMonData(&daycare->mons[i ^ 1].mon, MON_DATA_SPECIES) == SPECIES_DITTO
+                || GetBoxMonGender(parent) == MON_FEMALE))
+            mother = i;
+    }
+
+    // The source scans physical slot 1 first, regardless of parental roles.
+    for (u32 i = 0; i < MAX_MON_MOVES && moves[0][i] != MOVE_NONE; i++)
+        for (u32 j = 0; j < MAX_MON_MOVES && moves[1][j] != MOVE_NONE; j++)
+            if (moves[0][i] == moves[1][j])
+            {
+                for (u32 k = 0; learnset[k].move != LEVEL_UP_MOVE_END; k++)
+                    if (learnset[k].level != 0 && learnset[k].move == moves[0][i])
+                    {
+                        ADD_OR_REPLACE_MOVE(moves[0][i])
+                        break;
+                    }
+                break;
+            }
+
+    GiveParentEggMoves(egg, moves[mother ^ 1], species);
+    GiveParentEggMoves(egg, moves[mother], species);
+    // No TM inheritance or Light Ball / Volt Tackle branch in the source.
+    u32 ppBonuses = 0;
+    SetMonData(egg, MON_DATA_PP_BONUSES, &ppBonuses);
+    MonRestorePP(egg);
+    return TRUE;
 }
 
 static void RemoveEggFromDayCare(struct DayCare *daycare)
@@ -1015,7 +1072,8 @@ static void _GiveEggFromDaycare(struct DayCare *daycare)
         SetMonData(&egg, MON_DATA_POLISHED_FORM, &polishedForm);
     InheritIVs(&egg, daycare);
     InheritPokeball(&egg, daycare);
-    BuildEggMoveset(&egg, &daycare->mons[parentSlots[1]].mon, &daycare->mons[parentSlots[0]].mon);
+    if (!BuildPolishedEggMoveset(&egg, daycare))
+        BuildEggMoveset(&egg, &daycare->mons[parentSlots[1]].mon, &daycare->mons[parentSlots[0]].mon);
     InheritAbility(&egg, daycare);
 
     isEgg = TRUE;

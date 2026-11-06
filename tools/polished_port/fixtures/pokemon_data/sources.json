@@ -1862,6 +1862,36 @@
       "path": "macros/rst.asm",
       "fixture": "macros__rst.asm.b64",
       "git_blob_sha1": "7579252f4cb7033e409e12bf83c4a05e9cf06692"
+    },
+    {
+      "path": "data/moves/tmhm_moves.asm",
+      "fixture": "data__moves__tmhm_moves.asm.b64",
+      "git_blob_sha1": "dbb61771a5d4b4efbb95ced76188fdb9c4b7ada1"
+    },
+    {
+      "path": "engine/items/tmhm.asm",
+      "fixture": "engine__items__tmhm.asm.b64",
+      "git_blob_sha1": "3b0c1684511e6c1c29890354ea45e3ee75dc6a6c"
+    },
+    {
+      "path": "engine/events/move_tutor.asm",
+      "fixture": "engine__events__move_tutor.asm.b64",
+      "git_blob_sha1": "e7dd2a9868722c2c7c6ee5b358894008f77eecee"
+    },
+    {
+      "path": "engine/pokemon/breeding.asm",
+      "fixture": "engine__pokemon__breeding.asm.b64",
+      "git_blob_sha1": "b860c62564f38714a7cdcaab1ea66eb671e46208"
+    },
+    {
+      "path": "macros/data.asm",
+      "fixture": "macros__data.asm.b64",
+      "git_blob_sha1": "a5c752f3a1ba70bf2a09a1f30afedc908eaa60cb"
+    },
+    {
+      "path": "constants/tmhm_constants.asm",
+      "fixture": "constants__tmhm_constants.asm.b64",
+      "git_blob_sha1": "91c337cced606d5336cad10bd679c8aa6f7f60fd"
     }
   ]
 }

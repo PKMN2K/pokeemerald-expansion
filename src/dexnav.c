@@ -1275,7 +1275,13 @@ static void DexNavGenerateMoveset(enum Species species, u8 searchLevel, u8 encou
 
     // set first move slot to a random egg move if search level is good enough
     if (genMove)
-        moveDst[0] = GetRandomEggMove(GetEggSpecies(species));
+    {
+        enum Species eggSpecies = GetEggSpecies(species);
+        // An authoritative empty list must retain the initial move, not
+        // request a random element from a zero-length array.
+        if (GetSpeciesEggMoves(eggSpecies)[0] != MOVE_UNAVAILABLE)
+            moveDst[0] = GetRandomEggMove(eggSpecies);
+    }
 }
 
 static enum Item DexNavGenerateHeldItem(enum Species species, u8 searchLevel)

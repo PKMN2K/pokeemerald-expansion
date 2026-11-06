@@ -163,7 +163,7 @@ def build():
                               "save_ids": "Existing Pokemon IDs 1..1572 unchanged; 30 forms appended at 1573..1602. EGG rendering sentinel moves to 1603; saved eggs contain their actual species and the isEgg flag."},
                     remaining_gaps=["Original Pokemon graphics, palettes, Pokedex data and form animations.",
                                     "Held items and their encounter probabilities (source values retained here).",
-                                    "Egg moves, TM/HM/tutor compatibility and breeding rules; see the separate evolution manifest.",
+                                    "Remaining breeding rules; egg moves, move inheritance and teaching compatibility are imported separately.",
                                     "Ability effects, battle rules, IV/EV creation, hatch-step timing and source trainer attributes."],
                     records=records)
     return {OUTPUT: "\n".join(lines), FORMS: "\n".join(forms), MANIFEST: json.dumps(manifest, indent=2) + "\n"}

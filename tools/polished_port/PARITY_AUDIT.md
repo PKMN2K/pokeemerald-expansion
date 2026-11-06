@@ -22,7 +22,7 @@ regression coverage, but are not evidence of complete source-game parity.
 | Custom move identities | Fury Strikes, HealingLight and Fresh Snack do not exist as separate Expansion moves. | **Added:** distinct ordinary move IDs and generated source names, descriptions and basic data. Native battle adapters implement source multi-hit probability and healing fractions/rounding. Original battle animations and Fresh Snack's field use remain open. |
 | Other move data and effects | `src/data/moves_info.h` still supplies most move definitions; battle configuration selects many latest-generation rules. | Import all source move data/flags and audit effect implementations, damage/stat rules, status, weather and RNG. A matching move name is insufficient. |
 | Species stats and related data | Native generation presets previously supplied these values. | **Imported:** all 391 base-data mappings provide default-source stats, types, three ability slots, growth, catch/EXP/EV data, gender, egg groups/cycles and initial happiness. Gameplay uses `GetSpeciesBaseData`; additional Expansion species retain native data. Held items, Pokedex/presentation data, ability effects and battle/creation rules remain open. |
-| Evolution conditions, breeding and teaching | Source evolution rows now replace native conditions for all 391 registered identities, with a source evaluator, shared family/Pokedex metadata and default evolution timing inside trainer battles. Source egg groups and initial cycle counts are imported. | Hidden-form generation, persistence, NO_FORM evolution and inheritance for the Ekans, Magikarp and Dunsparce families are now adapted. Remaining options and unported evolution locations are open, as detailed below. Import egg/TM/tutor data, hatch-step timing, breeding rules and item mappings. Existing Roost/Flash reward tests prove only those selected paths. |
+| Evolution conditions, breeding and teaching | Source evolution rows now replace native conditions for all 391 registered identities, with a source evaluator, shared family/Pokedex metadata and default evolution timing inside trainer battles. Source egg groups and initial cycle counts are imported. | Hidden forms for the Ekans, Magikarp and Dunsparce families, all 391 egg/teaching lists and source egg-move inheritance are now adapted. Remaining evolution options/locations, hatch-step timing, breeding attributes/regional offspring selection and item mappings remain open. |
 | Trainer construction and AI | Imported parties preserve selected species, levels and moves, but use native AI/ability selection, fixed Hardy natures and DV/IV/EV adaptations. | Audit source trainer attributes and construction semantics. Recheck actual battle stats and behavior after species data import. |
 | Pokemon graphics and sprite data | Source trainer portraits and several overworld sprites are live; Pokemon battle graphics, palettes, icons and animation bindings mostly remain native. | Import source pixels, normal/shiny palettes, dimensions, frame maps, sequences, timing, positions and form/gender handling. Include all unresolved forms. |
 | Startup and player identity | `POLISHED_JOHTO_DEMO` starts in a test garden with a Lv10 Totodile, Surf, an Old Rod and a Mach Bike. Existing campaign replays use that harness. | Implement the real source startup separately from the test garden, with the source initial party/inventory, opening flow and supported protagonists. Add a campaign run starting from that baseline. |
@@ -289,7 +289,7 @@ source fixtures and register-flow checks preserve this behavior explicitly;
 this is not a silent upgrade or correction to a newer source version.
 
 Original form artwork, palettes and animation metadata remain pending. Unown's
-unlock-dependent generation, source egg moves, inheritance of other attributes,
+unlock-dependent generation, inheritance of other attributes,
 hatch-step timing and the broader creation/battle rules are separate gaps.
 Unported encounter and trainer maps must retain explicit source forms when
 imported; no claim is made that those maps have already been migrated.
@@ -313,15 +313,70 @@ ordinary native capture handoff for every Magikarp pattern. The unchanged
 Johto campaign passes all 100 checks and 19 warp checks; all 12 demo checks
 also pass (ROM SHA-256 `cffcd80ecad935fb897a50c2793e035b9c9bc1b171f409c9a23dfd08dcda0483`).
 
-The hatching checks cover player-owned daycare eggs. Traded-egg ownership
-changes still require an audit: native `AddHatchedMonToParty` writes
-`MON_DATA_OT_ID` directly, whose setter changes a key used by the encrypted
-payload. This phase does not establish parity for that wider hatching path.
+Those hatching checks covered player-owned daycare eggs. The later learning
+phase below reproduces and fixes the traded-egg encryption defect.
+
+## Egg moves and teaching compatibility
+
+`build_pokemon_learning.py` joins all 391 mapped identities to the pinned
+`EggSpeciesMovesPointers` and base-data teaching bits. Cosmetic forms explicitly
+share the source base row. The manifest retains the 75 TM, six HM and 31 tutor
+move mappings without renumbering native item or move IDs. Shared gameplay
+accessors select the imported lists under `P_POLISHED_LEARNING_DATA`, enabled
+by default in the Johto profile. Mapped empty lists are authoritative, including
+Magikarp; unmapped Expansion species retain their native data.
+The optional native DexNav retains its initial move when the source egg list
+is empty instead of calling the random-array selector with a zero count.
+
+The pinned plain Slowpoke list has two `dp` entries. `InheritEggMove` skips only
+the first two bytes, so the second pair (`SLOWPOKE` = `$4f`, `GALARIAN_FORM` = 3)
+is interpreted as Sleep Powder and Double Slap. These moves are retained for
+plain Slowpoke's family and excluded from the separate Galarian list. The
+generator asserts this exact source anomaly and rejects unknown extra headers.
+
+The live daycare adapter follows `InitEggMoves`: level-one defaults, common
+level-up moves in physical parent-one order, father's egg moves, then the
+mother/non-Ditto parent's egg moves. Evolution-only entries cannot be inherited
+as shared level moves. Duplicates do not gain priority; later overflow can
+remove an earlier duplicate. PP is filled for the resulting moves. There is no
+source TM-inheritance or held-Light-Ball move-injection branch. The native
+shared-level scan also had `i++` in its inner `j` loop; this is corrected and
+covered with a native-profile Magikarp inheritance regression.
+
+The traded-egg regression failed before the ownership fix with invalid move
+1739 during `BoxMonRestorePP`. The OT-ID setter now XORs the old/new key
+difference through the encrypted payload and preserves actual shiny status.
+It does not reorder substructs, alter checksums or bless already corrupt data.
+Creation sets the OT before the first encryption. Hatching, capture and the
+battle controller use the same safe setter; boxed/party sizes remain 80/100.
+
+Source fixture hashes, deterministic regeneration and 60 focused native tests
+pass. New cases cover all 391 accessor mappings, regional/empty lists, physical
+slot order, duplicate overflow, both genders with Ditto in either slot,
+forbidden native inheritance, all 24 encrypted layouts with both shiny states,
+corruption detection and a traded-egg hatch/party/PC flash save round trip.
+
+The full native suite passes 5,282 tests, with nine expected failures and 586
+existing TODOs (5,877 total). After the final optional DexNav guard, all 60
+focused tests pass again; standard and Johto production builds succeed.
+The controller campaign passes all 100 checks and 19 warp checks on ROM
+`8545ae60eec4bc07ba8c38e1a8bb60b90555ed1844fc276b9b45e350c12f734e`.
+The final Johto rebuild, `ec19f73c2ed754a65176ae87c5d6d8e04815e0b681b52b30f3070be9e3b564d4`,
+also passes all 12 demo checks. A binary comparison shows that its only change
+from the campaign ROM is the diagnostic source-line literal at `0x1118a8`
+(2289 to 2295) in `Task_OpenDexNavFromStartMenu`; DexNav is disabled in this
+profile, and the gameplay code/data are otherwise identical. The guard remains
+available when the optional feature is enabled for future customization.
+
+Remaining scope: source TM item numbering/descriptions/inventory, tutor map
+placement and reminder UI; broader offspring selection, IVs, abilities,
+natures, balls and hatch timing; ordinary move PP/effects and source artwork.
+The imported compatibility lists do not establish parity for those systems.
 
 ## Next priorities
 
-1. Complete the remaining evolution options above. Import egg moves, teaching
-   compatibility and held-item data/probabilities.
+1. Complete the remaining evolution options above. Import source item mappings
+   and held-item data/probabilities.
    Complete breeding/hatching behavior beyond base data.
 2. Import remaining move data and implement a source battle profile, including
    trainer creation and AI. Validate source probabilities and rounding directly.

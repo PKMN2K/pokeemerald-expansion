@@ -995,7 +995,9 @@ void CreateBoxMon(struct BoxPokemon *boxMon, enum Species species, u8 level, u32
     }
 
     SetBoxMonData(boxMon, MON_DATA_PERSONALITY, &personality);
-    SetBoxMonData(boxMon, MON_DATA_OT_ID, &value);
+    // The secure area is still plaintext during initialization. The public
+    // OT setter rekeys an already encrypted record instead.
+    boxMon->otId = value;
 
     checksum = CalculateBoxMonChecksum(boxMon);
     SetBoxMonData(boxMon, MON_DATA_CHECKSUM, &checksum);
@@ -2894,8 +2896,19 @@ void SetBoxMonData(struct BoxPokemon *boxMon, s32 field, const void *dataArg)
             SET32(boxMon->personality);
             break;
         case MON_DATA_OT_ID:
-            SET32(boxMon->otId);
+        {
+            u32 otId;
+            bool32 wasShiny = GetBoxMonData(boxMon, MON_DATA_IS_SHINY);
+            SET32(otId);
+            // OT ID is half of the encryption key. XOR the key difference
+            // without moving substructs or changing the payload/checksum.
+            // This also leaves an already invalid checksum invalid.
+            for (u32 i = 0; i < ARRAY_COUNT(boxMon->secure.raw); i++)
+                boxMon->secure.raw[i] ^= boxMon->otId ^ otId;
+            boxMon->otId = otId;
+            SetBoxMonData(boxMon, MON_DATA_IS_SHINY, &wasShiny);
             break;
+        }
         case MON_DATA_LANGUAGE:
             SET8(boxMon->language);
             break;
@@ -3336,7 +3349,15 @@ const struct LevelUpMove *GetSpeciesLevelUpLearnset(enum Species species)
 
 const u16 *GetSpeciesTeachableLearnset(enum Species species)
 {
-    const u16 *learnset = gSpeciesInfo[SanitizeSpeciesId(species)].teachableLearnset;
+    const u16 *learnset;
+    species = SanitizeSpeciesId(species);
+    if (GetConfig(POLISHED_LEARNING_DATA))
+    {
+        learnset = PolishedGetTeachableLearnset(species);
+        if (learnset != NULL)
+            return learnset;
+    }
+    learnset = gSpeciesInfo[species].teachableLearnset;
     if (learnset == NULL)
         return gSpeciesInfo[SPECIES_NONE].teachableLearnset;
     return learnset;
@@ -3344,7 +3365,15 @@ const u16 *GetSpeciesTeachableLearnset(enum Species species)
 
 const u16 *GetSpeciesEggMoves(enum Species species)
 {
-    const u16 *learnset = gSpeciesInfo[SanitizeSpeciesId(species)].eggMoveLearnset;
+    const u16 *learnset;
+    species = SanitizeSpeciesId(species);
+    if (GetConfig(POLISHED_LEARNING_DATA))
+    {
+        learnset = PolishedGetEggMoves(species);
+        if (learnset != NULL)
+            return learnset;
+    }
+    learnset = gSpeciesInfo[species].eggMoveLearnset;
     if (learnset == NULL)
         return gSpeciesInfo[SPECIES_NONE].eggMoveLearnset;
     return learnset;

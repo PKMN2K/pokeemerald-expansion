@@ -15,6 +15,7 @@
 
 // Learnsets
 #define P_POLISHED_LEVEL_UP_LEARNSETS POLISHED_JOHTO_DEMO // Pinned default Polished Crystal data in the Johto port; extra Expansion species retain their own data.
+#define P_POLISHED_LEARNING_DATA     POLISHED_JOHTO_DEMO // Source egg moves, teaching compatibility and egg move inheritance order.
 #define P_LVL_UP_LEARNSETS          GEN_LATEST  // Choose which set of Level Up Learnsets to use.
                                                 // For generations that hadn't introduced a species yet, we use their first appearence (eg. Chikorita's Gen2 data if the config is set to GEN_1).
                                                 // For generations that don't include a previously introduced species, we use their last apperance (eg. Snivy's Gen7 data if the config is set to GEN_8).

@@ -94,7 +94,7 @@ import described below:
   They need comparison with Polished Crystal's actual battle implementation.
 - Source base stats, types, ability slots and level-up/evolution-move tables now
   use shared accessors in the Johto build. Expansion still supplies ability
-  effects, egg/teaching data and sprite/animation bindings. Evolution rules are
+  effects and sprite/animation bindings. Egg/teaching data and evolution rules are
   imported separately below, including default mid-trainer timing; hidden-form
   and optional-setting gaps remain explicit.
 - Pokemon battle sprites, palettes, icons and animation metadata still need
@@ -238,6 +238,34 @@ cancellation preserve the saved value. Daycare follows the source parent/form
 selection and its pinned special-form inheritance quirk, documented in the
 [baseline audit](tools/polished_port/PARITY_AUDIT.md#hidden-forms-and-inheritance).
 Original form art and the remaining breeding/creation rules are still pending.
+
+## Egg moves and teaching compatibility
+
+`P_POLISHED_LEARNING_DATA` selects pinned egg moves and compatibility with
+Polished Crystal's 75 TMs, six HMs and 31 tutors for all 391 source identities.
+The shared accessors cover daycare, move teaching and the Dex's move lists.
+Source lists can be explicitly empty; they never fall through to Expansion
+data. Expansion-only species retain their native lists. Existing species,
+move and item IDs, saved moves and Pokemon record sizes are unchanged.
+
+The source egg-move sequence is live: level-one defaults, shared level-up moves
+in physical parent-one order, father egg moves, then mother/non-Ditto egg moves.
+Duplicates retain their slot and overflow removes the oldest move. Source eggs
+do not inherit arbitrary TM moves or gain Volt Tackle from a Light Ball.
+The pinned plain Slowpoke table's extra `dp` is preserved as the two bytes the
+source engine reads: Sleep Powder and Double Slap. This is documented in the
+generated learning manifest rather than silently correcting the source.
+
+Traded eggs also retain their encrypted payload and shiny state when ownership
+changes on hatching. The shared OT setter now changes the encryption key safely;
+new-record initialization remains separate. A native daycare loop-counter error
+that could overrun the shared-move scan is corrected as well.
+
+The source TM item catalog/numbering, tutor locations, reminder UI, remaining
+breeding attributes and regional offspring selection are still open. Ordinary
+move PP and effects remain native pending the move-data phase. See the
+[baseline audit](tools/polished_port/PARITY_AUDIT.md#egg-moves-and-teaching-compatibility)
+for scope and verification.
 
 ## First milestone
 
