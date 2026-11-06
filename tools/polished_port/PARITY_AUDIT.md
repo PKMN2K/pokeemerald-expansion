@@ -73,6 +73,11 @@ demo campaign, using ordinary movement, purchases, healing and battle inputs;
 no Pokemon or inventory was injected to make those checks pass. These remain
 demo campaign checks until the authentic startup is implemented.
 
+Trainer interaction checks also recognize the intended source intro while the
+field is locked; the script/last-talked probes alone missed a live Nico dialogue
+in CI. Failure bundles retain both the emulator state and matching ELF so
+compiler-dependent addresses can be inspected accurately.
+
 ## Next priorities
 
 1. Register missing source forms and import base stats/types/abilities, growth,

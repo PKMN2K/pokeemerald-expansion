@@ -58,7 +58,8 @@ def settle(game, report):
     attempted, last_slot, unavailable = None, None, set()
     for _ in range(3500):
         on_field = game.u32(game.sym["gMain"] + 4) == game.sym["CB2_Overworld"] | 1
-        if on_field and not task_active(game, "Task_BattleStart") and not script_active(game):
+        if (on_field and not task_active(game, "Task_BattleStart") and not script_active(game)
+                and not game.read(game.sym["sLockFieldControls"], 1)[0]):
             if observed is not None:
                 outcome = game.read(game.sym["gBattleOutcome"], 1)[0]
                 assert outcome == (1 if name else 4), (name, outcome, party(game, details=True))
@@ -279,9 +280,16 @@ def interact_object(game, data, number, report):
             for _ in range(8):
                 game.face(key)
                 game.press(A, 30)
+                intro = obj["script"] + "_Seen"
+                # A sightline-triggered trainer intro is also proof of the
+                # intended interaction. The script/last-talked probes alone
+                # can miss it while the field is still locked for dialogue.
+                trainer_intro = (intro in game.sym
+                    and game.read(game.sym["sLockFieldControls"], 1)[0]
+                    and text_matches(game, intro))
                 if (game.u32(game.sym["gMain"] + 4) == game.sym["CB2_Overworld"] | 1
-                        and script_active(game)
-                        and int.from_bytes(game.read(game.sym["gSpecialVar_LastTalked"], 2), "little") == number):
+                        and (trainer_intro or (script_active(game)
+                        and int.from_bytes(game.read(game.sym["gSpecialVar_LastTalked"], 2), "little") == number))):
                     started = True
                     break
                 if (task_active(game, "Task_BattleStart")
@@ -291,7 +299,11 @@ def interact_object(game, data, number, report):
                     settle(game, report)
                     break
             else:
-                raise AssertionError(("Sprout interaction did not start", data["name"], number, goal))
+                raise AssertionError(("Sprout interaction did not start", data["name"], number, goal,
+                    {"script_active": script_active(game),
+                     "last_talked": int.from_bytes(game.read(game.sym["gSpecialVar_LastTalked"], 2), "little"),
+                     "field_locked": game.read(game.sym["sLockFieldControls"], 1)[0],
+                     "callback": hex(game.u32(game.sym["gMain"] + 4))}))
             if not started:
                 break
             settle(game, report)

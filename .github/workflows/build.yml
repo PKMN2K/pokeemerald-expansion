@@ -91,6 +91,7 @@ jobs:
           if-no-files-found: error
           path: |
             pokeemerald-johto-demo.gba
+            pokeemerald-johto-demo.elf
             /tmp/johto-validation
 
   build-firered:

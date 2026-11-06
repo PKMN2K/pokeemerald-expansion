@@ -59,7 +59,8 @@ def settle(game, report):
     attempted, last_slot, unavailable = None, None, set()
     for _ in range(3500):
         on_field = game.u32(game.sym["gMain"] + 4) == game.sym["CB2_Overworld"] | 1
-        if on_field and not task_active(game, "Task_BattleStart") and not script_active(game):
+        if (on_field and not task_active(game, "Task_BattleStart") and not script_active(game)
+                and not game.read(game.sym["sLockFieldControls"], 1)[0]):
             if observed is not None:
                 outcome = game.read(game.sym["gBattleOutcome"], 1)[0]
                 assert outcome == (1 if name else 4), (name, outcome, party(game, details=True))
