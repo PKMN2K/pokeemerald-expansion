@@ -1,0 +1,72 @@
+{
+  "repository": "Rangi42/polishedcrystal",
+  "commit": "3fa43192379df5c3e7b09a08e4d5d79af4f02f42",
+  "variant": "default (FAITHFUL undefined)",
+  "files": [
+    {
+      "path": "Makefile",
+      "fixture": "Makefile.b64",
+      "git_blob_sha1": "d096349b08875a26d1fc1c2df6b98d09461e8cf8"
+    },
+    {
+      "path": "constants/pokemon_constants.asm",
+      "fixture": "constants__pokemon_constants.asm.b64",
+      "git_blob_sha1": "cd0636347e46509a4725fd2a023cd6d8432c252f"
+    },
+    {
+      "path": "constants/move_constants.asm",
+      "fixture": "constants__move_constants.asm.b64",
+      "git_blob_sha1": "72821964495ae923aadbe7d6be6cde7f25790207"
+    },
+    {
+      "path": "data/pokemon/variant_forms.asm",
+      "fixture": "data__pokemon__variant_forms.asm.b64",
+      "git_blob_sha1": "32a2a35f140b8615cc3f9f5814f490c18f07f5ab"
+    },
+    {
+      "path": "data/pokemon/evos_attacks_pointers.asm",
+      "fixture": "data__pokemon__evos_attacks_pointers.asm.b64",
+      "git_blob_sha1": "273fcdac74b2b8f0ac035fe35ff8205ebedf2f44"
+    },
+    {
+      "path": "data/pokemon/evolution_moves.asm",
+      "fixture": "data__pokemon__evolution_moves.asm.b64",
+      "git_blob_sha1": "0789f7fbb94462c6dc9986f5149d6085ca31e4fb"
+    },
+    {
+      "path": "data/moves/moves.asm",
+      "fixture": "data__moves__moves.asm.b64",
+      "git_blob_sha1": "6cef5184456f4e7b82d31fca1964bc7e0e1f8d2c"
+    },
+    {
+      "path": "data/moves/names.asm",
+      "fixture": "data__moves__names.asm.b64",
+      "git_blob_sha1": "1325f2a4416b1c153e1bc2bfed4b8730cb7f9266"
+    },
+    {
+      "path": "data/moves/descriptions.asm",
+      "fixture": "data__moves__descriptions.asm.b64",
+      "git_blob_sha1": "7035e9a9d00eff0634bf31a108b143274ad4b5fa"
+    },
+    {
+      "path": "engine/battle/move_effects/healinglight.asm",
+      "fixture": "engine__battle__move_effects__healinglight.asm.b64",
+      "git_blob_sha1": "e016df5f7a82776af4995f8862b2bea6a38f917b"
+    },
+    {
+      "path": "data/pokemon/evos_attacks.asm",
+      "fixture": "../new_bark/data__pokemon__evos_attacks.asm.b64",
+      "git_blob_sha1": "69299b45bba2bc3e19588642fab8e3e57d065f08"
+    },
+    {
+      "path": "home/battle.asm",
+      "fixture": "home__battle.asm.b64",
+      "git_blob_sha1": "a8edadebfb195fb5c08b97ac4ad343042fe6cec5"
+    },
+    {
+      "path": "engine/battle/effect_commands.asm",
+      "fixture": "engine__battle__effect_commands.asm.b64",
+      "git_blob_sha1": "dd1df8310c56895b3165c1e5b5dd26c73a44734c"
+    }
+  ]
+}

@@ -625,6 +625,10 @@ AI_DOUBLE_BATTLE_TEST("AI values moves above Splash, 801-900")
         // tests exist elsewhere
         case EFFECT_STAT_CHANGE:
         case EFFECT_DRAGON_CHEER:
+        // Healing needs a damaged battler and a viable recovery strategy;
+        // covered by the dedicated Polished move AI cases.
+        case EFFECT_RESTORE_HP:
+        case EFFECT_MORNING_SUN:
             break;
         case EFFECT_WEATHER:
             if (GetMoveWeatherType(j) == BATTLE_WEATHER_SNOW)

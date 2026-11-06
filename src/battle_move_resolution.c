@@ -2310,6 +2310,10 @@ static void SetRandomMultiHitCounter(enum HoldEffect holdEffect)
 {
     if (holdEffect == HOLD_EFFECT_LOADED_DICE)
         gMultiHitCounter = RandomUniform(RNG_LOADED_DICE, 4, 5);
+    else if (gCurrentMove == MOVE_POLISHED_FURY_STRIKES)
+        // Polished Crystal BattleCommand_startloop: six equiprobable slots,
+        // (roll mod 4) + 2. This differs from both native generation presets.
+        gMultiHitCounter = RandomWeighted(RNG_HITS, 0, 0, 2, 2, 1, 1);
     else if (GetConfig(B_MULTI_HIT_CHANCE) >= GEN_5)
         gMultiHitCounter = RandomWeighted(RNG_HITS, 0, 0, 7, 7, 3, 3); // 35%: 2 hits, 35%: 3 hits, 15% 4 hits, 15% 5 hits.
     else

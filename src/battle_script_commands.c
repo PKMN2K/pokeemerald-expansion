@@ -5198,7 +5198,11 @@ static void Cmd_tryhealhalfhealth(void)
         gBattlerTarget = gBattlerAttacker;
 
     u32 maxHP = GetNonDynamaxMaxHP(gBattlerTarget);
-    SetHealAmount(gBattlerTarget, (maxHP + (GetConfig(B_HALF_HP_HEALING_ROUNDING) >= GEN_5)) / 2);
+    bool32 roundUp = gCurrentMove != MOVE_POLISHED_FRESH_SNACK && GetConfig(B_HALF_HP_HEALING_ROUNDING) >= GEN_5;
+    u32 healAmount = (maxHP + roundUp) / 2;
+    if (gCurrentMove == MOVE_POLISHED_FRESH_SNACK)
+        healAmount = max(1, healAmount);
+    SetHealAmount(gBattlerTarget, healAmount);
     if (gBattleMons[gBattlerTarget].hp == gBattleMons[gBattlerTarget].maxHP)
         gBattlescriptCurrInstr = failInstr;
     else
@@ -6772,7 +6776,19 @@ static void Cmd_recoverbasedonsunlight(void)
         u32 attackerWeather = GetAttackerWeather(GetBattlerHoldEffect(gBattlerAttacker), ability, weather);
         u32 healingWeather = attackerWeather & ~B_WEATHER_STRONG_WINDS;
         bool32 isAffectedByMegaSol = FALSE;
-        if (GetMoveEffect(gCurrentMove) == EFFECT_SHORE_UP)
+        if (gCurrentMove == MOVE_POLISHED_HEALING_LIGHT)
+        {
+            // Source GetThirdMaxHP floors before doubling. Umbrella masks sun
+            // and rain through GetAttackerWeather, but not hail or sandstorm.
+            u32 maxHP = GetNonDynamaxMaxHP(gBattlerAttacker);
+            if (attackerWeather & B_WEATHER_SUN)
+                recoverAmount = 2 * max(1, maxHP / 3);
+            else if (healingWeather & B_WEATHER_ANY)
+                recoverAmount = max(1, maxHP / 4);
+            else
+                recoverAmount = max(1, maxHP / 2);
+        }
+        else if (GetMoveEffect(gCurrentMove) == EFFECT_SHORE_UP)
         {
             if (attackerWeather & B_WEATHER_SANDSTORM)
                 recoverAmount = 20 * GetNonDynamaxMaxHP(gBattlerAttacker) / 30;

@@ -906,8 +906,11 @@ enum __attribute__((packed)) Move
     MOVES_COUNT_GEN9,
 
     // Add any custom moves here, not further down!
+    MOVE_POLISHED_FURY_STRIKES = MOVES_COUNT_GEN9,
+    MOVE_POLISHED_HEALING_LIGHT,
+    MOVE_POLISHED_FRESH_SNACK,
 
-    MOVES_COUNT = MOVES_COUNT_GEN9,
+    MOVES_COUNT,
 
     // Z Moves
     FIRST_Z_MOVE = MOVES_COUNT,

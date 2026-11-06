@@ -9,7 +9,7 @@ import subprocess
 from build_new_bark import ROOT, source_files
 from polished_sprout import TRAINERS, PILLAR_TILES
 from test_johto_demo_emulator import A, B, UP, DOWN, LEFT, RIGHT
-from test_new_bark_emulator import map_data, actors, save_game, continue_game, close_resident_dialogue
+from test_new_bark_emulator import map_data, actors, save_game, continue_game, close_resident_dialogue, player_state
 from test_new_bark_intro_emulator import layout, advance, task_active, text_matches, party, script_active
 from test_new_bark_battle_emulator import controller, choose_cell, check_portrait
 from test_cherrygrove_emulator import map_id, flag, leave, interact
@@ -150,7 +150,11 @@ def heal(game):
     game.press(A, 90)
     wait_for(game, lambda: party(game, details=True)[0]["hp"] > mon["hp"], "Potion recovery")
     for _ in range(30):
-        if game.u32(game.sym["gMain"] + 4) == game.sym["CB2_Overworld"] | 1 and not script_active(game):
+        # Closing the Bag returns through the Start menu, which already uses
+        # CB2_Overworld. Wait until that menu releases the player as well.
+        if (game.u32(game.sym["gMain"] + 4) == game.sym["CB2_Overworld"] | 1
+                and not script_active(game) and not task_active(game, "Task_ShowStartMenu")
+                and not player_state(game)["frozen"]):
             return
         game.press(B, 45)
     raise AssertionError("Potion did not return to the field")

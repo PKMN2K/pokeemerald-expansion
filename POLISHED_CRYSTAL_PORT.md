@@ -37,6 +37,8 @@ does not make it part of the Polished Crystal baseline.
 - Repository: Rangi42/polishedcrystal
 - Release: v3.2.3
 - Source commit: 3fa43192379df5c3e7b09a08e4d5d79af4f02f42
+- Source variant: default release build (`FAITHFUL` undefined), including the
+  hack's own rebalanced data; other optional source build modifiers are off.
 
 Do not silently advance this source pin. Any future source upgrade should be deliberate and recorded here.
 
@@ -83,14 +85,17 @@ integration by this clarification.
 
 ### Battle and Pokemon parity: current gaps
 
-At `d6911800`, the campaign through Falkner is playable, but this full scope
-is **not yet implemented**:
+The campaign through Falkner is playable, but this full scope is **not yet
+implemented**. The [baseline audit](tools/polished_port/PARITY_AUDIT.md) records
+the inherited assumptions and the work still required after the learnset
+import described below:
 
 - `include/config/battle.h` still selects many Expansion generation defaults.
   They need comparison with Polished Crystal's actual battle implementation.
 - `include/config/pokemon.h` and `src/data/pokemon/species_info/` still supply
-  Expansion species data, learnsets and sprite/animation bindings. Importing
-  selected trainer parties or encounter tables does not replace these tables.
+  Expansion stats, abilities, evolution conditions, egg/teaching data and
+  sprite/animation bindings. The source level-up/evolution-move tables are now
+  selected by the shared accessor in the Johto build.
 - Pokemon battle sprites, palettes, icons and animation metadata still need
   the comprehensive source import. Imported trainer and overworld artwork does
   not establish completion of Pokemon battle graphics.
@@ -101,12 +106,44 @@ is **not yet implemented**:
   passing tests do not verify Polished Crystal rules or approve extra mechanics
   absent from the source.
 
-The next battle/data work must inventory the pinned source and current live
-bindings, then import data/assets and adapt mechanics with source-based tests.
+The next battle/data work must use the pinned source inventory and current live
+bindings to import remaining data/assets and adapt mechanics with source-based tests.
 Every temporary native fallback for Polished Crystal content remains an open
 parity gap. Unused Expansion content retained for later customization is not a
 gap. Retain the existing campaign replay as regression coverage when changing
 the battle foundation.
+
+### Source level-up data and missing-identity audit
+
+`build_pokemon_learnsets.py` imports the pinned default release's level-up and
+evolution moves through its species/form pointer tables. It resolves source
+conditionals explicitly and retains blob hashes for all inputs. All **391**
+source species/form identities are inventoried: **361** bind to existing
+Expansion species IDs, while **30** forms remain explicitly unresolved. These
+include Armored Mewtwo, the source red Gyarados form, and cosmetic Arbok,
+Pikachu and Magikarp variants; no similar base form is substituted.
+
+`P_POLISHED_LEVEL_UP_LEARNSETS` is enabled in the Johto demo build. The shared
+accessor now supplies source moves for new starters, gifts, eggs, trades and
+wild Pokemon, subsequent level-up, evolution moves and relearning. Source
+examples include Cyndaquil learning Ember at level 10, Chikorita learning
+HealingLight at level 12 and both screens at level 17, and Togepi learning
+Fresh Snack at level 29. Extra Expansion species keep their own tables.
+Existing saved moves are not rewritten.
+
+Fury Strikes, HealingLight and Fresh Snack have distinct new ordinary move IDs,
+with generated source names, descriptions and basic data. Their native battle
+adapters preserve the source six-slot multi-hit distribution, floor-before-
+doubling sun healing, Utility Umbrella's rain/sun limits and rounded-down
+half-HP healing. Existing ordinary move IDs remain unchanged. Their original
+battle animations and Fresh Snack's field use are still pending, as are other
+source move data/effects, species stats and evolution conditions.
+
+Checks include deterministic regeneration, all source identity counts and
+variant handling, native construction/learning/form/capacity tests, custom-move
+battle tests, and player starter-move assertions in the real-input emulator
+campaign. Passing these checks completes this data import for the currently
+mapped identities; it does not complete the broader Pokemon or battle port.
 
 ## First milestone
 

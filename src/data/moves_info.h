@@ -22,6 +22,7 @@ const u8 gNotDoneYetDescription[] = _(
 
 const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
 {
+#include "polished_custom_moves.h"
     [MOVE_NONE] =
     {
         .name = COMPOUND_STRING("-"),

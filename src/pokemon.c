@@ -38,6 +38,7 @@
 #include "pokedex.h"
 #include "pokeblock.h"
 #include "pokemon.h"
+#include "polished_pokemon_data.h"
 #include "pokemon_animation.h"
 #include "pokemon_icon.h"
 #include "pokemon_summary_screen.h"
@@ -3282,7 +3283,15 @@ u32 GetSpeciesBaseStatTotal(enum Species species)
 
 const struct LevelUpMove *GetSpeciesLevelUpLearnset(enum Species species)
 {
-    const struct LevelUpMove *learnset = gSpeciesInfo[SanitizeSpeciesId(species)].levelUpLearnset;
+    const struct LevelUpMove *learnset;
+    species = SanitizeSpeciesId(species);
+    if (GetConfig(POLISHED_LEVEL_UP_LEARNSETS))
+    {
+        learnset = PolishedGetLevelUpLearnset(species);
+        if (learnset != NULL)
+            return learnset;
+    }
+    learnset = gSpeciesInfo[species].levelUpLearnset;
     if (learnset == NULL)
         return gSpeciesInfo[SPECIES_NONE].levelUpLearnset;
     return learnset;

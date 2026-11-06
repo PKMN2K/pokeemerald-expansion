@@ -223,6 +223,12 @@ def check_intro(game, maps, rows, checks):
         actual = party(game)
         assert len(actual) == 2 and actual[0] == old_party[0]
         assert (actual[1]["species"], actual[1]["level"], actual[1]["item"]) == (layout()[species], 5, layout()["berry"])
+        # Read the actual encrypted gift. Source trainer parties alone cannot
+        # prove that the player's Pokemon use the imported global learnsets.
+        expected_moves = {"Cyndaquil": ("tackle", "leer"),
+                          "Totodile": ("scratch", "leer"),
+                          "Chikorita": ("tackle", "growl")}[species]
+        assert party(game, details=True)[1]["moves"] == [*(layout()[m] for m in expected_moves), 0, 0]
         if index == 1:
             assert bytes.fromhex(actual[1]["nickname"]).split(b"\xff", 1)[0] == b"\xbb", actual[1]  # A
         addr = game.u32(game.sym["gSaveBlock1Ptr"]) + layout()["flags"] + layout()["contact"] // 8
@@ -254,6 +260,7 @@ def check_intro(game, maps, rows, checks):
             "party": actual, "scene": var(game, "lab_scene"), "saved_and_reentered": True})
         print("PASS: starter", species, "-> Lyra", lyra_species, "with save, reentry and duplicate-gift guard", flush=True)
     checks.append("all three Lv5 Oran Berry gifts preserve the demo Totodile, support native nicknames and select Lyra's corresponding partner")
+    checks.append("all three player starter gifts use the source level-up moves in the live ROM")
     checks.append("all three choices retain Elm's contact, remaining ball and actor positions across Save/Continue and reentry; no duplicate gifts")
     (game.output / "starter-branches.json").write_text(json.dumps(report, indent=2) + "\n")
     # Cyndaquil can also be selected from the west, where the player is already

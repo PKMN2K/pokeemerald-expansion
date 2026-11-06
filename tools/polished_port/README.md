@@ -8,6 +8,13 @@ are reusable only where they reproduce that source behavior. See
 [`POLISHED_CRYSTAL_PORT.md`](../../POLISHED_CRYSTAL_PORT.md#porting-rule) for
 the required scope and the current battle/data gaps.
 
+The [baseline audit](PARITY_AUDIT.md) records missed source dependencies and
+remaining native substitutions. `scripts/build_pokemon_learnsets.py --check`
+and `scripts/test_pokemon_learnsets.py` validate the source default build's
+level-up/evolution moves, explicit species/form mappings and three custom move
+identities. The Johto ROM uses the imported learnsets through the shared
+Pokemon accessor; extra Expansion species remain available for customization.
+
 ## Route 29 first visit
 
 `build_new_bark.py` now reproduces ten connected source maps: New Bark and its

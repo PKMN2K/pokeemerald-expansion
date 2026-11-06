@@ -2,6 +2,8 @@
 
 This branch ports the complete Polished Crystal game to pokeemerald-expansion.
 Read `POLISHED_CRYSTAL_PORT.md` for the source pin and implemented phases.
+Read `tools/polished_port/PARITY_AUDIT.md` before selecting the next phase;
+it records inherited defaults and incomplete source coverage from earlier work.
 
 ## Playable baseline and future customization
 
@@ -26,6 +28,8 @@ using it in place of the corresponding Polished Crystal content is a gap.
 - Use the pinned Polished Crystal source, currently v3.2.3 at
   `3fa43192379df5c3e7b09a08e4d5d79af4f02f42`, plus individually documented
   supplemental sources. Do not silently upgrade it or mix source variants.
+  The baseline is the source's default release build, with `FAITHFUL` undefined;
+  preserving Polished Crystal's identity includes its own rebalances.
 - pokeemerald-expansion supplies the GBA runtime and implementation framework.
   Port the source behavior into C/data/scripts when necessary. Retain a native
   implementation only where it reproduces the relevant Polished Crystal
