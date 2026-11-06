@@ -127,7 +127,9 @@ class WildEncounterAssembler:
             species = mon["species"]
             min_level = 2 if "min_level" not in mon else mon["min_level"]
             max_level = 100 if "max_level" not in mon else mon["max_level"]
-            self.WriteLine(f"{{ {min_level}, {max_level}, {species} }},", 1)
+            form = mon.get("polished_form", 0)
+            assert isinstance(form, int) and 0 <= form <= 31, "Invalid source form"
+            self.WriteLine(f"{{ {min_level}, {max_level}, {species}, {form} }},", 1)
 
         self.WriteLine("};")
         self.WriteLine()

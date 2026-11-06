@@ -3,6 +3,7 @@
 
 // Species data settings
 #define P_POLISHED_SPECIES_DATA      POLISHED_JOHTO_DEMO // Pinned source stats, types, abilities, growth and breeding data.
+#define P_POLISHED_FORMS             POLISHED_JOHTO_DEMO // Source hidden-form creation, evolution and inheritance.
 #define P_POLISHED_EVOLUTIONS        POLISHED_JOHTO_DEMO // Pinned source evolution rules and trigger semantics.
 #define P_UPDATED_TYPES             GEN_LATEST  // Some Pokémon have received type updates after their introduction.
 #define P_UPDATED_STATS             GEN_LATEST  // Some Pokémon have received base stat updates after their introduction.

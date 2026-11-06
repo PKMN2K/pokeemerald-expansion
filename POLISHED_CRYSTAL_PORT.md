@@ -217,11 +217,27 @@ stat stages or volatile battle state, and runs its source entry-ability timing.
 Consumed evolution items cannot be restored by native trainer-battle cleanup.
 
 The [baseline audit](tools/polished_port/PARITY_AUDIT.md#evolution-data-and-rule-adapter)
-records the remaining work: hidden pre-evolution/inherited form bits, unported
-landmark maps, optional initial options (including disabling mid-battle
+records the remaining work: unported landmark maps, optional initial options
+(including disabling mid-battle
 evolution and EV-disabled stat comparison), and source animation/item artwork.
 No Hoenn location substitutes for an unported source landmark. These phases
 do not claim complete evolution or battle-mechanic parity.
+
+## Hidden-form lifecycle
+
+The Johto profile now preserves source form values for Ekans/Arbok,
+Dunsparce/Dudunsparce and Magikarp/Gyarados through wild creation, evolution,
+breeding, hatching, capture and PC/save storage. Wild Magikarp uses all 20
+patterns, and the three-segment chance is the source's 1 in 25. Explicit
+encounter forms bypass random generation, including explicitly plain forms.
+
+The adapter uses five unused encrypted Pokemon bits; existing species IDs and
+boxed/party record sizes remain unchanged. Older zero-field saves retain their
+registered visible identity without rerolling. Evolution previews and B
+cancellation preserve the saved value. Daycare follows the source parent/form
+selection and its pinned special-form inheritance quirk, documented in the
+[baseline audit](tools/polished_port/PARITY_AUDIT.md#hidden-forms-and-inheritance).
+Original form art and the remaining breeding/creation rules are still pending.
 
 ## First milestone
 

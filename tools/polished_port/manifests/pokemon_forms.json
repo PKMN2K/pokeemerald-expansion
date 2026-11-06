@@ -1,0 +1,297 @@
+{
+  "source_commit": "3fa43192379df5c3e7b09a08e4d5d79af4f02f42",
+  "source_variant": "default; FAITHFUL undefined",
+  "records": [
+    {
+      "source_species": "EKANS",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_EKANS",
+      "form": 1,
+      "base_species": "SPECIES_EKANS",
+      "egg_species": "SPECIES_EKANS",
+      "max_hidden_form": 5
+    },
+    {
+      "source_species": "ARBOK",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_ARBOK",
+      "form": 1,
+      "base_species": "SPECIES_ARBOK",
+      "egg_species": "SPECIES_EKANS",
+      "max_hidden_form": 0
+    },
+    {
+      "source_species": "MAGIKARP",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_MAGIKARP",
+      "form": 1,
+      "base_species": "SPECIES_MAGIKARP",
+      "egg_species": "SPECIES_MAGIKARP",
+      "max_hidden_form": 21
+    },
+    {
+      "source_species": "GYARADOS",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_GYARADOS",
+      "form": 1,
+      "base_species": "SPECIES_GYARADOS",
+      "egg_species": "SPECIES_MAGIKARP",
+      "max_hidden_form": 20
+    },
+    {
+      "source_species": "DUNSPARCE",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_DUNSPARCE",
+      "form": 1,
+      "base_species": "SPECIES_DUNSPARCE",
+      "egg_species": "SPECIES_DUNSPARCE",
+      "max_hidden_form": 2
+    },
+    {
+      "source_species": "DUDUNSPARCE",
+      "source_form": "PLAIN_FORM",
+      "target_species": "SPECIES_DUDUNSPARCE",
+      "form": 1,
+      "base_species": "SPECIES_DUDUNSPARCE",
+      "egg_species": "SPECIES_DUNSPARCE",
+      "max_hidden_form": 0
+    },
+    {
+      "source_species": "GYARADOS",
+      "source_form": "GYARADOS_RED_FORM",
+      "target_species": "SPECIES_GYARADOS_RED",
+      "form": 21,
+      "base_species": "SPECIES_GYARADOS",
+      "egg_species": "SPECIES_MAGIKARP",
+      "max_hidden_form": 0
+    },
+    {
+      "source_species": "DUDUNSPARCE",
+      "source_form": "DUDUNSPARCE_THREE_SEGMENT_FORM",
+      "target_species": "SPECIES_DUDUNSPARCE_THREE_SEGMENT",
+      "form": 2,
+      "base_species": "SPECIES_DUDUNSPARCE",
+      "egg_species": "SPECIES_DUNSPARCE",
+      "max_hidden_form": 0
+    },
+    {
+      "source_species": "ARBOK",
+      "source_form": "ARBOK_KANTO_FORM",
+      "target_species": "SPECIES_ARBOK_KANTO",
+      "form": 2,
+      "base_species": "SPECIES_ARBOK",
+      "egg_species": "SPECIES_EKANS",
+      "max_hidden_form": 0
+    },
+    {
+      "source_species": "ARBOK",
+      "source_form": "ARBOK_KOGA_FORM",
+      "target_species": "SPECIES_ARBOK_KOGA",
+      "form": 3,
+      "base_species": "SPECIES_ARBOK",
+      "egg_species": "SPECIES_EKANS",
+      "max_hidden_form": 0
+    },
+    {
+      "source_species": "ARBOK",
+      "source_form": "ARBOK_AGATHA_FORM",
+      "target_species": "SPECIES_ARBOK_AGATHA",
+      "form": 4,
+      "base_species": "SPECIES_ARBOK",
+      "egg_species": "SPECIES_EKANS",
+      "max_hidden_form": 0
+    },
+    {
+      "source_species": "ARBOK",
+      "source_form": "ARBOK_ARIANA_FORM",
+      "target_species": "SPECIES_ARBOK_ARIANA",
+      "form": 5,
+      "base_species": "SPECIES_ARBOK",
+      "egg_species": "SPECIES_EKANS",
+      "max_hidden_form": 0
+    },
+    {
+      "source_species": "MAGIKARP",
+      "source_form": "MAGIKARP_SKELLY_FORM",
+      "target_species": "SPECIES_MAGIKARP_SKELLY",
+      "form": 2,
+      "base_species": "SPECIES_MAGIKARP",
+      "egg_species": "SPECIES_MAGIKARP",
+      "max_hidden_form": 0
+    },
+    {
+      "source_species": "MAGIKARP",
+      "source_form": "MAGIKARP_CALICO1_FORM",
+      "target_species": "SPECIES_MAGIKARP_CALICO1",
+      "form": 3,
+      "base_species": "SPECIES_MAGIKARP",
+      "egg_species": "SPECIES_MAGIKARP",
+      "max_hidden_form": 0
+    },
+    {
+      "source_species": "MAGIKARP",
+      "source_form": "MAGIKARP_CALICO2_FORM",
+      "target_species": "SPECIES_MAGIKARP_CALICO2",
+      "form": 4,
+      "base_species": "SPECIES_MAGIKARP",
+      "egg_species": "SPECIES_MAGIKARP",
+      "max_hidden_form": 0
+    },
+    {
+      "source_species": "MAGIKARP",
+      "source_form": "MAGIKARP_CALICO3_FORM",
+      "target_species": "SPECIES_MAGIKARP_CALICO3",
+      "form": 5,
+      "base_species": "SPECIES_MAGIKARP",
+      "egg_species": "SPECIES_MAGIKARP",
+      "max_hidden_form": 0
+    },
+    {
+      "source_species": "MAGIKARP",
+      "source_form": "MAGIKARP_TWO_TONE_FORM",
+      "target_species": "SPECIES_MAGIKARP_TWO_TONE",
+      "form": 6,
+      "base_species": "SPECIES_MAGIKARP",
+      "egg_species": "SPECIES_MAGIKARP",
+      "max_hidden_form": 0
+    },
+    {
+      "source_species": "MAGIKARP",
+      "source_form": "MAGIKARP_ORCA_FORM",
+      "target_species": "SPECIES_MAGIKARP_ORCA",
+      "form": 7,
+      "base_species": "SPECIES_MAGIKARP",
+      "egg_species": "SPECIES_MAGIKARP",
+      "max_hidden_form": 0
+    },
+    {
+      "source_species": "MAGIKARP",
+      "source_form": "MAGIKARP_DAPPLES_FORM",
+      "target_species": "SPECIES_MAGIKARP_DAPPLES",
+      "form": 8,
+      "base_species": "SPECIES_MAGIKARP",
+      "egg_species": "SPECIES_MAGIKARP",
+      "max_hidden_form": 0
+    },
+    {
+      "source_species": "MAGIKARP",
+      "source_form": "MAGIKARP_TIGER_FORM",
+      "target_species": "SPECIES_MAGIKARP_TIGER",
+      "form": 9,
+      "base_species": "SPECIES_MAGIKARP",
+      "egg_species": "SPECIES_MAGIKARP",
+      "max_hidden_form": 0
+    },
+    {
+      "source_species": "MAGIKARP",
+      "source_form": "MAGIKARP_ZEBRA_FORM",
+      "target_species": "SPECIES_MAGIKARP_ZEBRA",
+      "form": 10,
+      "base_species": "SPECIES_MAGIKARP",
+      "egg_species": "SPECIES_MAGIKARP",
+      "max_hidden_form": 0
+    },
+    {
+      "source_species": "MAGIKARP",
+      "source_form": "MAGIKARP_STRIPE_FORM",
+      "target_species": "SPECIES_MAGIKARP_STRIPE",
+      "form": 11,
+      "base_species": "SPECIES_MAGIKARP",
+      "egg_species": "SPECIES_MAGIKARP",
+      "max_hidden_form": 0
+    },
+    {
+      "source_species": "MAGIKARP",
+      "source_form": "MAGIKARP_BUBBLES_FORM",
+      "target_species": "SPECIES_MAGIKARP_BUBBLES",
+      "form": 12,
+      "base_species": "SPECIES_MAGIKARP",
+      "egg_species": "SPECIES_MAGIKARP",
+      "max_hidden_form": 0
+    },
+    {
+      "source_species": "MAGIKARP",
+      "source_form": "MAGIKARP_DIAMONDS_FORM",
+      "target_species": "SPECIES_MAGIKARP_DIAMONDS",
+      "form": 13,
+      "base_species": "SPECIES_MAGIKARP",
+      "egg_species": "SPECIES_MAGIKARP",
+      "max_hidden_form": 0
+    },
+    {
+      "source_species": "MAGIKARP",
+      "source_form": "MAGIKARP_PATCHES_FORM",
+      "target_species": "SPECIES_MAGIKARP_PATCHES",
+      "form": 14,
+      "base_species": "SPECIES_MAGIKARP",
+      "egg_species": "SPECIES_MAGIKARP",
+      "max_hidden_form": 0
+    },
+    {
+      "source_species": "MAGIKARP",
+      "source_form": "MAGIKARP_FOREHEAD1_FORM",
+      "target_species": "SPECIES_MAGIKARP_FOREHEAD1",
+      "form": 15,
+      "base_species": "SPECIES_MAGIKARP",
+      "egg_species": "SPECIES_MAGIKARP",
+      "max_hidden_form": 0
+    },
+    {
+      "source_species": "MAGIKARP",
+      "source_form": "MAGIKARP_MASK1_FORM",
+      "target_species": "SPECIES_MAGIKARP_MASK1",
+      "form": 16,
+      "base_species": "SPECIES_MAGIKARP",
+      "egg_species": "SPECIES_MAGIKARP",
+      "max_hidden_form": 0
+    },
+    {
+      "source_species": "MAGIKARP",
+      "source_form": "MAGIKARP_FOREHEAD2_FORM",
+      "target_species": "SPECIES_MAGIKARP_FOREHEAD2",
+      "form": 17,
+      "base_species": "SPECIES_MAGIKARP",
+      "egg_species": "SPECIES_MAGIKARP",
+      "max_hidden_form": 0
+    },
+    {
+      "source_species": "MAGIKARP",
+      "source_form": "MAGIKARP_MASK2_FORM",
+      "target_species": "SPECIES_MAGIKARP_MASK2",
+      "form": 18,
+      "base_species": "SPECIES_MAGIKARP",
+      "egg_species": "SPECIES_MAGIKARP",
+      "max_hidden_form": 0
+    },
+    {
+      "source_species": "MAGIKARP",
+      "source_form": "MAGIKARP_SAUCY_FORM",
+      "target_species": "SPECIES_MAGIKARP_SAUCY",
+      "form": 19,
+      "base_species": "SPECIES_MAGIKARP",
+      "egg_species": "SPECIES_MAGIKARP",
+      "max_hidden_form": 0
+    },
+    {
+      "source_species": "MAGIKARP",
+      "source_form": "MAGIKARP_RAINDROP_FORM",
+      "target_species": "SPECIES_MAGIKARP_RAINDROP",
+      "form": 20,
+      "base_species": "SPECIES_MAGIKARP",
+      "egg_species": "SPECIES_MAGIKARP",
+      "max_hidden_form": 0
+    }
+  ],
+  "wild_segment_probability": {
+    "numerator": 1,
+    "denominator": 25
+  },
+  "storage": "Five previously unused encrypted substruct-0 bits; record sizes, existing fields and IDs unchanged. Zero reads the registered identity's form without RNG.",
+  "inheritance": "Mother/non-Ditto, or an independent equal choice between parents of the same source species (cosmetic/variant IDs normalized). No Everstone requirement.",
+  "pinned_source_quirk": "DayCare_GenerateEgg keeps the selected form in d across CheckInvalidVariants and both GetFarWord calls, then restores d for NO_FORM offspring. Named Arbok forms and Red Gyarados form 21 survive. Form-21 Magikarp uses plain presentation and evolves back to Red Gyarados.",
+  "remaining_gaps": [
+    "Original form graphics/palettes/animation metadata.",
+    "Unown unlock-dependent generation and broader source breeding/creation rules.",
+    "Unported encounter/trainer maps must supply explicit source forms, including plain form 1, instead of dropping them."
+  ]
+}

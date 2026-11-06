@@ -1,4 +1,5 @@
 #include "global.h"
+#include "polished_forms.h"
 #include "pokemon.h"
 #include "battle.h"
 #include "daycare.h"
@@ -476,6 +477,10 @@ enum Species GetEggSpecies(enum Species species)
 {
     int i, j, k;
     bool8 found;
+
+    enum Species polishedEgg = PolishedEggSpecies(species);
+    if (polishedEgg != SPECIES_NONE)
+        return polishedEgg;
 
     // Working backwards up to 5 times seems arbitrary, since the maximum number
     // of times would only be 3 for 3-stage evolutions.
@@ -1004,7 +1009,10 @@ static void _GiveEggFromDaycare(struct DayCare *daycare)
     species = DetermineEggSpeciesAndParentSlots(daycare, parentSlots);
     if (P_INCENSE_BREEDING < GEN_9)
         AlterEggSpeciesWithIncenseItem(&species, daycare);
+    u8 polishedForm = PolishedInheritEggForm(daycare, &species);
     SetInitialEggData(&egg, species, daycare);
+    if (polishedForm != 0)
+        SetMonData(&egg, MON_DATA_POLISHED_FORM, &polishedForm);
     InheritIVs(&egg, daycare);
     InheritPokeball(&egg, daycare);
     BuildEggMoveset(&egg, &daycare->mons[parentSlots[1]].mon, &daycare->mons[parentSlots[0]].mon);

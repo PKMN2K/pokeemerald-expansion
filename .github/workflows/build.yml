@@ -74,6 +74,8 @@ jobs:
           python3 tools/polished_port/scripts/test_pokemon_base_data.py
           python3 tools/polished_port/scripts/build_pokemon_evolutions.py --check
           python3 tools/polished_port/scripts/test_pokemon_evolutions.py
+          python3 tools/polished_port/scripts/build_pokemon_forms.py --check
+          python3 tools/polished_port/scripts/test_pokemon_forms.py
 
       - name: Build playable Johto demo
         timeout-minutes: 20
@@ -1073,6 +1075,7 @@ jobs:
         run: |
           gcc -std=gnu11 -O2 -Wall -Wextra -Werror tools/polished_port/tests/mgba_johto_driver.c -lmgba -o /tmp/evolution-input-driver
           python3 tools/polished_port/scripts/test_battle_evolution_emulator.py --driver /tmp/evolution-input-driver --elf pokeemerald-test.elf --output /tmp/evolution-input-validation
+          python3 tools/polished_port/scripts/test_form_evolution_emulator.py --driver /tmp/evolution-input-driver --elf pokeemerald-test.elf --output /tmp/evolution-input-validation/forms
 
       - name: Upload battle evolution evidence
         if: always()

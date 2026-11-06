@@ -1,4 +1,5 @@
 #include "global.h"
+#include "polished_forms.h"
 #include "battle_setup.h"
 #include "battle_pike.h"
 #include "battle_pyramid.h"
@@ -536,9 +537,17 @@ static u8 PickWildMonNature(enum Species species)
 
 void CreateWildMon(enum Species species, u8 level)
 {
+    CreateWildMonWithForm(species, level, 0);
+}
+
+void CreateWildMonWithForm(enum Species species, u8 level, u8 sourceForm)
+{
+    u8 form = PolishedSelectWildForm(&species, sourceForm);
     ZeroEnemyPartyMons();
     u32 personality = GetMonPersonality(species, GetSynchronizedGender(WILDMON_ORIGIN, species), PickWildMonNature(species), RANDOM_UNOWN_LETTER);
     CreateMonWithIVs(&gParties[B_TRAINER_OPPONENT_A][0], species, level, personality, OTID_STRUCT_PLAYER_ID, USE_RANDOM_IVS);
+    if (form != 0)
+        SetMonData(&gParties[B_TRAINER_OPPONENT_A][0], MON_DATA_POLISHED_FORM, &form);
     GiveMonInitialMoveset(&gParties[B_TRAINER_OPPONENT_A][0]);
 }
 
@@ -602,7 +611,7 @@ bool8 TryGenerateWildMon(const struct WildPokemonInfo *wildMonInfo, enum WildPok
     if (gMapHeader.mapLayoutId != LAYOUT_BATTLE_FRONTIER_BATTLE_PIKE_ROOM_WILD_MONS && flags & WILD_CHECK_KEEN_EYE && !IsAbilityAllowingEncounter(level))
         return FALSE;
 
-    CreateWildMon(wildMonInfo->wildPokemon[wildMonIndex].species, level);
+    CreateWildMonWithForm(wildMonInfo->wildPokemon[wildMonIndex].species, level, wildMonInfo->wildPokemon[wildMonIndex].polishedForm);
     return TRUE;
 }
 
@@ -613,7 +622,7 @@ static u16 GenerateFishingWildMon(const struct WildPokemonInfo *wildMonInfo, u8 
     u8 level = ChooseWildMonLevel(wildMonInfo->wildPokemon, wildMonIndex, WILD_AREA_FISHING);
 
     UpdateChainFishingStreak();
-    CreateWildMon(wildMonSpecies, level);
+    CreateWildMonWithForm(wildMonSpecies, level, wildMonInfo->wildPokemon[wildMonIndex].polishedForm);
     return wildMonSpecies;
 }
 

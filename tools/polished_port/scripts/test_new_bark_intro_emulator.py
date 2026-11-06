@@ -81,6 +81,7 @@ def party(game, enemy=False, details=False):
         result.append({"species": species & 0x7FF, "item": item & 0x3FF, "level": raw[data["level"]],
             "personality": personality, "trainer": trainer, "nickname": raw[8:18].hex()})
         if details:
+            result[-1]["polished_form"] = (item >> 10) & 31
             attacks = game.read(game.sym["sSubstructOffsets"] + 24 + personality % 24, 1)[0] * data["substruct_size"]
             result[-1].update(hp=struct.unpack_from("<H", raw, data["hp"])[0],
                 max_hp=struct.unpack_from("<H", raw, data["max_hp"])[0],

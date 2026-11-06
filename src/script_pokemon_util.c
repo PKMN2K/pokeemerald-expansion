@@ -1,4 +1,5 @@
 #include "global.h"
+#include "polished_forms.h"
 #include "battle.h"
 #include "battle_gfx_sfx_util.h"
 #include "berry.h"
@@ -123,6 +124,7 @@ bool8 DoesPartyHaveEnigmaBerry(void)
 void CreateScriptedWildMon(enum Species species, u8 level, enum Item item)
 {
     u8 heldItem[2];
+    u8 form = PolishedSelectWildForm(&species, 0);
 
     ZeroEnemyPartyMons();
     u32 personality = GetMonPersonality(species,
@@ -130,6 +132,8 @@ void CreateScriptedWildMon(enum Species species, u8 level, enum Item item)
         GetSynchronizedNature(STATIC_WILDMON_ORIGIN, species),
         RANDOM_UNOWN_LETTER);
     CreateMonWithIVs(&gParties[B_TRAINER_OPPONENT_A][0], species, level, personality, OTID_STRUCT_PLAYER_ID, USE_RANDOM_IVS);
+    if (form != 0)
+        SetMonData(&gParties[B_TRAINER_OPPONENT_A][0], MON_DATA_POLISHED_FORM, &form);
     GiveMonInitialMoveset(&gParties[B_TRAINER_OPPONENT_A][0]);
     if (item)
     {
@@ -142,6 +146,8 @@ void CreateScriptedDoubleWildMon(enum Species species1, u8 level1, enum Item ite
 {
     u8 heldItem1[2];
     u8 heldItem2[2];
+    u8 form1 = PolishedSelectWildForm(&species1, 0);
+    u8 form2 = PolishedSelectWildForm(&species2, 0);
 
     ZeroEnemyPartyMons();
     u32 personality = GetMonPersonality(species1,
@@ -149,6 +155,8 @@ void CreateScriptedDoubleWildMon(enum Species species1, u8 level1, enum Item ite
         GetSynchronizedNature(STATIC_WILDMON_ORIGIN, species1),
         RANDOM_UNOWN_LETTER);
     CreateMonWithIVs(&gParties[B_TRAINER_OPPONENT_A][0], species1, level1, personality, OTID_STRUCT_PLAYER_ID, USE_RANDOM_IVS);
+    if (form1 != 0)
+        SetMonData(&gParties[B_TRAINER_OPPONENT_A][0], MON_DATA_POLISHED_FORM, &form1);
     GiveMonInitialMoveset(&gParties[B_TRAINER_OPPONENT_A][0]);
     if (item1)
     {
@@ -162,6 +170,8 @@ void CreateScriptedDoubleWildMon(enum Species species1, u8 level1, enum Item ite
         GetSynchronizedNature(STATIC_WILDMON_ORIGIN, species2),
         RANDOM_UNOWN_LETTER);
     CreateMonWithIVs(&gParties[B_TRAINER_OPPONENT_A][1], species2, level2, personality, OTID_STRUCT_PLAYER_ID, USE_RANDOM_IVS);
+    if (form2 != 0)
+        SetMonData(&gParties[B_TRAINER_OPPONENT_A][1], MON_DATA_POLISHED_FORM, &form2);
     GiveMonInitialMoveset(&gParties[B_TRAINER_OPPONENT_A][1]);
     if (item2)
     {

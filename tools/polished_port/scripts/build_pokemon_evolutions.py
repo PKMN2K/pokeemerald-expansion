@@ -64,9 +64,6 @@ def build():
             for row in source:
                 method, argument, extra = row["method"], row["argument"], row["extra"]
                 form = row["form"]
-                # Source NO_FORM preserves hidden form bits. The current registry
-                # represents ordinary Ekans/Dunsparce; their hidden variants are
-                # explicitly tracked as a remaining creation/save-data gap.
                 target = learnsets.target_species(row["species"], "PLAIN_FORM" if form == "NO_FORM" else form, available)
                 native_method, level, conditions = "EVO_LEVEL", "1", []
                 if method in ("ITEM", "TRADE", "HOLDING"):
@@ -108,7 +105,8 @@ def build():
                     assert argument == "TR_ANYTIME"
                     argument, native_method = "3", "EVO_BATTLE_END"
                     conditions.append(("IF_CRITICAL_HITS_GE", "3"))
-                raw.append(f"    {{POLISHED_EVOLVE_{method}, {argument}, {extra}, {target}}},")
+                preserve = "TRUE" if form == "NO_FORM" else "FALSE"
+                raw.append(f"    {{POLISHED_EVOLVE_{method}, {argument}, {extra}, {target}, {preserve}}},")
                 params = "NULL"
                 if conditions:
                     params = "(const struct EvolutionParam[]) {" + ", ".join("{" + a + ", " + b + "}" for a, b in conditions) + ", {CONDITIONS_END}}"
@@ -136,7 +134,7 @@ def build():
     manifest = dict(source_commit=learnsets.PIN, source_variant="default; FAITHFUL undefined",
                     mapped_target_count=len(records), source_evolution_row_count=sum(map(len, groups.values())),
                     friendship_threshold=friendship, locations=locations,
-                    remaining_gaps=["Hidden Ekans/Dunsparce and inherited Magikarp/Gyarados form bits need a creation/inheritance/save adapter; ordinary registered identities retain plain evolutions.",
+                    remaining_gaps=["NO_FORM evolutions use the hidden-form adapter; source form graphics remain pending.",
                                     "Evolution landmarks await their campaign maps; no Hoenn replacements are enabled.",
                                     "Default-source mid-trainer evolution is enabled; the optional initial-options toggle awaits the source options system.",
                                     "Optional source EV-disabled stat comparison is not imported with the initial-options system.",

@@ -1,4 +1,5 @@
 #include "global.h"
+#include "polished_forms.h"
 #include "battle.h"
 #include "config_changes.h"
 #include "overworld.h"
@@ -11,6 +12,7 @@ struct PolishedEvolution
 {
     u16 method, argument, extra;
     enum Species targetSpecies;
+    bool8 preserveForm;
 };
 
 struct PolishedEvolutionLocation
@@ -145,7 +147,9 @@ enum Species PolishedFindEvolution(struct Pokemon *mon, enum EvolutionMode mode,
             break;
         }
         if (matches)
-            return rules->targetSpecies;
+            return rules->preserveForm && GetConfig(POLISHED_FORMS)
+                ? PolishedSpeciesForForm(rules->targetSpecies, PolishedGetBoxMonForm(&mon->box))
+                : rules->targetSpecies;
     }
     return SPECIES_NONE;
 }
@@ -178,6 +182,16 @@ void PolishedCommitEvolution(struct Pokemon *mon, enum Species targetSpecies)
     rules = sPolishedEvolutionRules[species];
     if (rules == NULL)
         return;
+    if (GetConfig(POLISHED_FORMS))
+    {
+        u8 form = PolishedGetBoxMonForm(&mon->box);
+        for (const struct PolishedEvolution *rule = rules; rule->method != POLISHED_EVOLVE_END; rule++)
+            if (rule->preserveForm && PolishedSpeciesForForm(rule->targetSpecies, form) == targetSpecies)
+            {
+                SetMonData(mon, MON_DATA_POLISHED_FORM, &form);
+                break;
+            }
+    }
     // The source modifies a temporary mon and copies it back only after the
     // animation succeeds. CHECK_EVO, DO_EVO and B cancellation must keep items.
     for (; rules->method != POLISHED_EVOLVE_END; rules++)

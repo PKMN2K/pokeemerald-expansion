@@ -1,4 +1,5 @@
 #include "global.h"
+#include "polished_forms.h"
 #include "malloc.h"
 #include "apprentice.h"
 #include "battle.h"
@@ -1005,6 +1006,11 @@ void CreateBoxMon(struct BoxPokemon *boxMon, enum Species species, u8 level, u32
     SetBoxMonData(boxMon, MON_DATA_LANGUAGE, &gGameLanguage);
     SetBoxMonData(boxMon, MON_DATA_OT_NAME, gSaveBlock2Ptr->playerName);
     SetBoxMonData(boxMon, MON_DATA_SPECIES, &species);
+    if (GetConfig(POLISHED_FORMS))
+    {
+        u8 form = PolishedInitialForm(species);
+        SetBoxMonData(boxMon, MON_DATA_POLISHED_FORM, &form);
+    }
     SetBoxMonData(boxMon, MON_DATA_EXP, &gExperienceTables[GetSpeciesBaseData(species)->growthRate][level]);
     SetBoxMonData(boxMon, MON_DATA_FRIENDSHIP, &GetSpeciesBaseData(species)->friendship);
     value = GetCurrentRegionMapSectionId();
@@ -2419,6 +2425,9 @@ u32 GetBoxMonData3(struct BoxPokemon *boxMon, s32 field, u8 *data)
                 }
             }
             break;
+        case MON_DATA_POLISHED_FORM:
+            retVal = GetSubstruct0(boxMon)->polishedForm;
+            break;
         case MON_DATA_EVOLUTION_TRACKER:
             {
                 struct PokemonSubstruct1 *substruct1 = GetSubstruct1(boxMon);
@@ -2850,6 +2859,9 @@ void SetBoxMonData(struct BoxPokemon *boxMon, s32 field, const void *dataArg)
             break;
         case MON_DATA_TERA_TYPE:
             SET8(GetSubstruct0(boxMon)->teraType);
+            break;
+        case MON_DATA_POLISHED_FORM:
+            SET8(GetSubstruct0(boxMon)->polishedForm);
             break;
         case MON_DATA_EVOLUTION_TRACKER:
         {

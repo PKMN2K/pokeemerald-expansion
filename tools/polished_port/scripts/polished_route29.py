@@ -4,6 +4,7 @@ Tuscany and the catching tutorial are activated by their original quest conditio
 """
 import re
 import polished_departure
+from build_pokemon_forms import wild_mon
 from new_bark_intro import coord, movement, obj
 
 
@@ -172,7 +173,13 @@ PolishedDeparture_ShowTuscany::
 def wild_entries(files, route=29):
     body = re.search(rf"def_grass_wildmons ROUTE_{route}\n(.*?)end_grass_wildmons",
         files["data/wild/johto_grass.asm"].decode(), re.S)[1]
-    slots = [(int(level), species) for level, species in re.findall(r"wildmon (\d+), (\w+)", body)]
+    slots = []
+    for line in body.splitlines():
+        line = line.split(";", 1)[0].strip()
+        if line.startswith("wildmon "):
+            match = re.fullmatch(r"wildmon (\d+),\s*(\w+)(?:,\s*(\w+))?", line)
+            assert match, line
+            slots.append(wild_mon(*match.groups()))
     assert len(slots) == 21 and "10 percent, 10 percent, 10 percent" in body
     # Native 12-slot weights reproduce the source species/level distribution.
     # Source slots 5/6 are identical, so their 3%+2% can use native 4%+1%.
@@ -183,5 +190,5 @@ def wild_entries(files, route=29):
         assert group[5] == group[6]
         result.append({"map": f"MAP_POLISHED_ROUTE_{route}", "base_label": f"gPolishedRoute{route}_" + period,
             "always_time_of_day": True, "land_mons": {"encounter_rate": 18,
-                "mons": [{"min_level": group[i][0], "max_level": group[i][0], "species": "SPECIES_" + group[i][1]} for i in assignment]}})
+                "mons": [group[i].copy() for i in assignment]}})
     return result

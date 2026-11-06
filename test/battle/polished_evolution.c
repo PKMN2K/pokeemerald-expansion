@@ -1,6 +1,32 @@
 #include "global.h"
 #include "test/battle.h"
 #include "polished_evolution.h"
+#include "polished_forms.h"
+
+AI_SINGLE_BATTLE_TEST("Polished patterned Magikarp evolves through the real battle UI and retains its breeding pattern")
+{
+    GIVEN {
+        WITH_CONFIG(POLISHED_FORMS, TRUE);
+        WITH_CONFIG(POLISHED_EVOLUTIONS, TRUE);
+        WITH_CONFIG(POLISHED_SPECIES_DATA, TRUE);
+        WITH_CONFIG(POLISHED_LEVEL_UP_LEARNSETS, TRUE);
+        WITH_CONFIG(B_SCALED_EXP, GEN_4);
+        AI_FLAGS(0);
+        PLAYER(SPECIES_MAGIKARP_RAINDROP) { Level(19); Speed(100); Attack(100); Moves(MOVE_TACKLE, MOVE_SPLASH); }
+        OPPONENT(SPECIES_WOBBUFFET) { Level(70); HP(1); Speed(1); Moves(MOVE_SPLASH); }
+        OPPONENT(SPECIES_WOBBUFFET) { Level(10); Speed(1); Moves(MOVE_SPLASH); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_TACKLE); EXPECT_SEND_OUT(opponent, 1); }
+        TURN { MOVE(player, MOVE_SPLASH); }
+    } SCENE {
+        MESSAGE("Magikarp used Tackle!");
+        MESSAGE("Gyarados used Splash!");
+    } THEN {
+        EXPECT_EQ(player->species, SPECIES_GYARADOS);
+        EXPECT_EQ(PolishedGetBoxMonForm(&gParties[B_TRAINER_PLAYER][0].box), 20);
+        EXPECT(!PolishedBattleEvolutionIsRunning());
+    }
+}
 
 AI_SINGLE_BATTLE_TEST("Polished evolution refreshes source types, consumes the held item and runs the new entry ability")
 {

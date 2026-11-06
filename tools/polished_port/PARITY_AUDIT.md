@@ -22,7 +22,7 @@ regression coverage, but are not evidence of complete source-game parity.
 | Custom move identities | Fury Strikes, HealingLight and Fresh Snack do not exist as separate Expansion moves. | **Added:** distinct ordinary move IDs and generated source names, descriptions and basic data. Native battle adapters implement source multi-hit probability and healing fractions/rounding. Original battle animations and Fresh Snack's field use remain open. |
 | Other move data and effects | `src/data/moves_info.h` still supplies most move definitions; battle configuration selects many latest-generation rules. | Import all source move data/flags and audit effect implementations, damage/stat rules, status, weather and RNG. A matching move name is insufficient. |
 | Species stats and related data | Native generation presets previously supplied these values. | **Imported:** all 391 base-data mappings provide default-source stats, types, three ability slots, growth, catch/EXP/EV data, gender, egg groups/cycles and initial happiness. Gameplay uses `GetSpeciesBaseData`; additional Expansion species retain native data. Held items, Pokedex/presentation data, ability effects and battle/creation rules remain open. |
-| Evolution conditions, breeding and teaching | Source evolution rows now replace native conditions for all 391 registered identities, with a source evaluator, shared family/Pokedex metadata and default evolution timing inside trainer battles. Source egg groups and initial cycle counts are imported. | Hidden pre-evolution form bits, remaining options and unported evolution locations remain open, as detailed below. Import egg/TM/tutor data, hatch-step timing, breeding rules and item mappings. Existing Roost/Flash reward tests prove only those selected paths. |
+| Evolution conditions, breeding and teaching | Source evolution rows now replace native conditions for all 391 registered identities, with a source evaluator, shared family/Pokedex metadata and default evolution timing inside trainer battles. Source egg groups and initial cycle counts are imported. | Hidden-form generation, persistence, NO_FORM evolution and inheritance for the Ekans, Magikarp and Dunsparce families are now adapted. Remaining options and unported evolution locations are open, as detailed below. Import egg/TM/tutor data, hatch-step timing, breeding rules and item mappings. Existing Roost/Flash reward tests prove only those selected paths. |
 | Trainer construction and AI | Imported parties preserve selected species, levels and moves, but use native AI/ability selection, fixed Hardy natures and DV/IV/EV adaptations. | Audit source trainer attributes and construction semantics. Recheck actual battle stats and behavior after species data import. |
 | Pokemon graphics and sprite data | Source trainer portraits and several overworld sprites are live; Pokemon battle graphics, palettes, icons and animation bindings mostly remain native. | Import source pixels, normal/shiny palettes, dimensions, frame maps, sequences, timing, positions and form/gender handling. Include all unresolved forms. |
 | Startup and player identity | `POLISHED_JOHTO_DEMO` starts in a test garden with a Lv10 Totodile, Surf, an Old Rod and a Mach Bike. Existing campaign replays use that harness. | Implement the real source startup separately from the test garden, with the source initial party/inventory, opening flow and supported protagonists. Add a campaign run starting from that baseline. |
@@ -192,10 +192,9 @@ record, and prevents trainer-battle item restoration from refunding an evolution
 item. Cancelled and benched evolutions do not activate the active mon's ability.
 Native profiles and optional Expansion species keep their existing timing.
 
-This is **not complete evolution-mechanic parity**. Source hidden form bits on
-Ekans/Dunsparce and inherited Magikarp/Gyarados pattern bits also need a
-creation/inheritance/save adapter;
-registered plain identities currently produce their plain evolved identity.
+This is **not complete evolution-mechanic parity**. The later hidden-form
+adapter below now preserves Ekans/Dunsparce and Magikarp/Gyarados form values
+through creation, evolution, breeding and save storage.
 The 20 maps belonging to eight evolution landmarks are recorded in the
 manifest but have not yet been ported. The generator registers their exact
 source map identities when they are added; no Hoenn location is substituted.
@@ -245,10 +244,84 @@ installation step also has a 12-minute outer limit. Recovery tests cover the
 normal path, a real simulated download timeout, metadata failure, both mirrors
 failing without installation, and propagation of an installation failure.
 
+## Hidden forms and inheritance
+
+`P_POLISHED_FORMS` defaults to the Johto profile. A generated mapping joins the
+31 registered identities in the Ekans/Arbok, Magikarp/Gyarados and
+Dunsparce/Dudunsparce families to the pinned source form numbers. It does not
+allocate new species IDs or treat form numbers as Expansion table indices.
+
+Wild Ekans/Arbok choose forms 1 or 2 equally, Magikarp chooses among its 20
+patterns, and Dunsparce/Dudunsparce choose three segments on exactly one of 25
+outcomes. Scripted wild creation shares those rules. Explicit forms, including
+plain form 1, bypass the roll. Encounter records now accept `polished_form`,
+and the source grass importer retains it; this extends ROM data only. Ordinary
+gifts and generic/trainer creation retain their specified registered identity.
+Trainer-specific regional defaults and further source creation rules remain
+part of the trainer audit, rather than randomizing every newly created mon.
+
+Five unused bits in encrypted Pokemon substruct 0 store the source value.
+Species/item IDs, all existing fields and the 80-byte boxed/100-byte party
+record sizes stay unchanged. Zero in an older save reads the registered
+identity's form without rewriting or rerolling that Pokemon. Thus an old
+patterned Magikarp retains its known pattern, while an old ordinary Gyarados
+has no recoverable earlier pattern and defaults to plain. Native profiles keep
+the new field unused. The 31 registered source identities are selected only
+under the source profile; optional Expansion species keep native behavior.
+
+Evolution rows retain the source `NO_FORM` marker. Previewing or cancelling an
+evolution leaves the saved record unchanged. Successful evolution preserves
+Ekans' future Arbok pattern, Dunsparce's segment value and all Magikarp patterns
+inside ordinary Gyarados. Daycare chooses the mother/non-Ditto parent's form,
+or independently chooses either parent when their *source species* matches,
+even when their registered target variant IDs differ. Everstone is not required
+for this form choice. Egg creation resolves the form before choosing moves,
+stats and other species data. Native capture, boxing, daycare egg hatching and flash
+save/reload preserve the stored value.
+
+The pin contains a daycare quirk: `DayCare_GenerateEgg` holds the selected
+form in register `d` across `CheckInvalidVariants` and the egg-pointer lookups,
+then restores it for `NO_FORM` offspring. The comments describe rejecting named
+Arbok and Red Gyarados forms, but the executed path retains those values. The
+adapter therefore carries Arbok forms 3–5 into Ekans and Red Gyarados form 21
+into a plain-identity Magikarp, which can evolve back to Red Gyarados. Verified
+source fixtures and register-flow checks preserve this behavior explicitly;
+this is not a silent upgrade or correction to a newer source version.
+
+Original form artwork, palettes and animation metadata remain pending. Unown's
+unlock-dependent generation, source egg moves, inheritance of other attributes,
+hatch-step timing and the broader creation/battle rules are separate gaps.
+Unported encounter and trainer maps must retain explicit source forms when
+imported; no claim is made that those maps have already been migrated.
+
+### Hidden-form verification
+
+Pinned source generation and encounter-regression checks pass. Dedicated
+native tests exercise every Magikarp pattern, all 25 segment outcomes, hidden
+evolution targets, daycare with both Ditto slots and genders, native hatching,
+explicit encounters, old zero-field saves and native-profile isolation. All
+24 encryption/substruct orders retain neighboring fields and the existing
+record sizes. Native flash save/reload preserves both party and boxed forms.
+Real controller input completes and cancels patterned Magikarp's evolution,
+then verifies the restored battle and saved pattern in the encrypted record.
+
+Both standard Emerald and Johto ROM builds pass with GCC 14.2.1. With CI's
+GCC 13.2.1, the 51 focused Polished tests and full native suite pass: 5,273
+passed, nine expected failures and 586 existing TODO entries. All six AI
+timing limits pass unchanged. The additional capture assertions exercise the
+ordinary native capture handoff for every Magikarp pattern. The unchanged
+Johto campaign passes all 100 checks and 19 warp checks; all 12 demo checks
+also pass (ROM SHA-256 `cffcd80ecad935fb897a50c2793e035b9c9bc1b171f409c9a23dfd08dcda0483`).
+
+The hatching checks cover player-owned daycare eggs. Traded-egg ownership
+changes still require an audit: native `AddHatchedMonToParty` writes
+`MON_DATA_OT_ID` directly, whose setter changes a key used by the encrypted
+payload. This phase does not establish parity for that wider hatching path.
+
 ## Next priorities
 
-1. Complete hidden-form generation/inheritance and the remaining options above.
-   Import egg moves, teaching compatibility and held-item data/probabilities.
+1. Complete the remaining evolution options above. Import egg moves, teaching
+   compatibility and held-item data/probabilities.
    Complete breeding/hatching behavior beyond base data.
 2. Import remaining move data and implement a source battle profile, including
    trainer creation and AI. Validate source probabilities and rounding directly.

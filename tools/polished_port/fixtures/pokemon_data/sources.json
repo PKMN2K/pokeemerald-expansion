@@ -1812,6 +1812,56 @@
       "path": "engine/battle/abilities.asm",
       "fixture": "engine__battle__abilities.asm.b64",
       "git_blob_sha1": "8ea962089921b262a1c3b050c77e5521fba6d921"
+    },
+    {
+      "path": "engine/battle/read_trainer_party.asm",
+      "fixture": "engine__battle__read_trainer_party.asm.b64",
+      "git_blob_sha1": "a8aedd3a23294e4b16b9cf999f90bc9389337da4"
+    },
+    {
+      "path": "engine/events/wonder_trade.asm",
+      "fixture": "engine__events__wonder_trade.asm.b64",
+      "git_blob_sha1": "fe1347a2d4d26db4d1b1eac8ffd0680a79f540ea"
+    },
+    {
+      "path": "data/pokemon/invalid_variants.asm",
+      "fixture": "data__pokemon__invalid_variants.asm.b64",
+      "git_blob_sha1": "b0085cc3e8187b3b1dae1166751df32b743faea9"
+    },
+    {
+      "path": "data/pokemon/egg_move_pointers.asm",
+      "fixture": "data__pokemon__egg_move_pointers.asm.b64",
+      "git_blob_sha1": "06bccc8bbd3934b5f10027b82d699b16dcc83690"
+    },
+    {
+      "path": "data/pokemon/egg_moves.asm",
+      "fixture": "data__pokemon__egg_moves.asm.b64",
+      "git_blob_sha1": "ff5ed83ce2e12d0b4eeb7279c555fd6785df8253"
+    },
+    {
+      "path": "home/pokemon.asm",
+      "fixture": "home__pokemon.asm.b64",
+      "git_blob_sha1": "2a90912d47d20bc8ab3945c85c8bdc07fab143dc"
+    },
+    {
+      "path": "home/copy.asm",
+      "fixture": "home__copy.asm.b64",
+      "git_blob_sha1": "e3288b2e0ff4343542471dfdc1b2e77485aec3d3"
+    },
+    {
+      "path": "home/header.asm",
+      "fixture": "home__header.asm.b64",
+      "git_blob_sha1": "21f60cb5c96c591cf28b888310a2d317b3f150a3"
+    },
+    {
+      "path": "home/farcall.asm",
+      "fixture": "home__farcall.asm.b64",
+      "git_blob_sha1": "5a022afd7f196869af5a505f888577fc4eb163d3"
+    },
+    {
+      "path": "macros/rst.asm",
+      "fixture": "macros__rst.asm.b64",
+      "git_blob_sha1": "7579252f4cb7033e409e12bf83c4a05e9cf06692"
     }
   ]
 }
