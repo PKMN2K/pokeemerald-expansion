@@ -18,15 +18,14 @@ env:
 jobs:
   build-emerald:
     if: github.actor != 'allcontributors[bot]'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Install binutils
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y --no-install-recommends binutils-arm-none-eabi gcc-arm-none-eabi libnewlib-arm-none-eabi libpng-dev python3 python3-pil libmgba-dev
+      - name: Install build dependencies
+        timeout-minutes: 12
+        run: bash .github/scripts/install-dependencies.sh python3-pil libmgba-dev
 
       - name: Cache build tools
         uses: actions/cache@v4
@@ -100,15 +99,14 @@ jobs:
 
   build-firered:
     if: github.actor != 'allcontributors[bot]'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Install binutils
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y --no-install-recommends binutils-arm-none-eabi gcc-arm-none-eabi libnewlib-arm-none-eabi libpng-dev python3
+      - name: Install build dependencies
+        timeout-minutes: 12
+        run: bash .github/scripts/install-dependencies.sh
 
       - name: Cache build tools
         uses: actions/cache@v4
@@ -135,15 +133,14 @@ jobs:
 
   build-leafgreen:
     if: github.actor != 'allcontributors[bot]'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Install binutils
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y --no-install-recommends binutils-arm-none-eabi gcc-arm-none-eabi libnewlib-arm-none-eabi libpng-dev python3
+      - name: Install build dependencies
+        timeout-minutes: 12
+        run: bash .github/scripts/install-dependencies.sh
 
       - name: Cache build tools
         uses: actions/cache@v4
@@ -170,15 +167,14 @@ jobs:
 
   release:
     if: github.actor != 'allcontributors[bot]'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Install binutils
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y --no-install-recommends binutils-arm-none-eabi gcc-arm-none-eabi libnewlib-arm-none-eabi libpng-dev python3
+      - name: Install build dependencies
+        timeout-minutes: 12
+        run: bash .github/scripts/install-dependencies.sh
 
       - name: Cache build tools
         uses: actions/cache@v4
@@ -207,15 +203,17 @@ jobs:
 
   test:
     if: github.actor != 'allcontributors[bot]'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Install binutils
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y --no-install-recommends binutils-arm-none-eabi gcc-arm-none-eabi libnewlib-arm-none-eabi libpng-dev python3 libmgba-dev
+      - name: Test dependency installer recovery
+        run: python3 .github/scripts/test_install_dependencies.py
+
+      - name: Install build dependencies
+        timeout-minutes: 12
+        run: bash .github/scripts/install-dependencies.sh libmgba-dev
 
       - name: Cache build tools
         uses: actions/cache@v4

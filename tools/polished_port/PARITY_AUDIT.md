@@ -228,6 +228,23 @@ from the existing demo startup, not evidence of the unported authentic opening
 or every later-game evolution. Johto ROM SHA-256:
 `0b032c95554198c552c3e86a034f5090efbfd9b54447687c20f6471d3447c843`.
 
+## CI dependency installation
+
+[CI #1474](https://github.com/PKMN2K/pokeemerald-expansion/actions/runs/42230082975)
+passed, but its FireRed job spent 43 minutes 57 seconds fetching packages from
+`azure.archive.ubuntu.com` at a reported 26.3 kB/s. This was a toolchain download
+delay before compilation. The five dependency-installing jobs now pin
+`ubuntu-24.04` and share `.github/scripts/install-dependencies.sh`.
+
+The installer tries Ubuntu's main archive first and Azure once as a fallback,
+with signed Noble repositories and the same package lists as before. Metadata
+fetches have a 90-second deadline and package downloads a 180-second deadline
+per mirror, with bounded connection waits and retries. Only after all packages
+are downloaded does it install from cache without further downloads. Each
+installation step also has a 12-minute outer limit. Recovery tests cover the
+normal path, a real simulated download timeout, metadata failure, both mirrors
+failing without installation, and propagation of an installation failure.
+
 ## Next priorities
 
 1. Complete hidden-form generation/inheritance and the remaining options above.
