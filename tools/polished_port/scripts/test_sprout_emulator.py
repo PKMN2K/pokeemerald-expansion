@@ -150,11 +150,14 @@ def heal(game):
     game.press(A, 90)
     wait_for(game, lambda: party(game, details=True)[0]["hp"] > mon["hp"], "Potion recovery")
     for _ in range(30):
-        # Closing the Bag returns through the Start menu, which already uses
-        # CB2_Overworld. Wait until that menu releases the player as well.
-        if (game.u32(game.sym["gMain"] + 4) == game.sym["CB2_Overworld"] | 1
-                and not script_active(game) and not task_active(game, "Task_ShowStartMenu")
-                and not player_state(game)["frozen"]):
+        # The field callback runs before the returning Start menu is created.
+        # Wait for its input task, then close it; a transient CB2_Overworld
+        # with no menu task is not proof that field input has been restored.
+        if (task_active(game, "Task_ShowStartMenu")
+                and game.u32(game.sym["gMenuCallback"]) == game.sym["HandleStartMenuInput"] | 1):
+            game.press(B, 45)
+            assert not task_active(game, "Task_ShowStartMenu")
+            assert not script_active(game) and not player_state(game)["frozen"]
             return
         game.press(B, 45)
     raise AssertionError("Potion did not return to the field")
