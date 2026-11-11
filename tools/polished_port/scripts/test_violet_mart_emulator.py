@@ -31,9 +31,24 @@ def open_shop(game, mart):
     assert task_active(game,"Task_BuyMenu")
 
 
+# Source price overrides enabled by POLISHED_JOHTO_DEMO in GetItemPrice.
+# These IDs are stable in include/constants/items.h; the remaining entries
+# retain their native item-table prices until the full source item import.
+SOURCE_PRICE_OVERRIDES = {
+    44: 300,   # ITEM_PARALYZE_HEAL
+    47: 100,   # ITEM_AWAKENING
+    122: 2000, # ITEM_X_DEFENSE
+}
+
+
+def shop_price(game,item):
+    native = game.u32(game.sym["gItemsInfo"]+item*extra_layout()["item_size"])
+    return SOURCE_PRICE_OVERRIDES.get(item, native)
+
+
 def purchase(game,index,item):
     before,cash = count(game,item),money(game)
-    price = game.u32(game.sym["gItemsInfo"]+item*extra_layout()["item_size"])
+    price = shop_price(game,item)
     assert cash >= price,(item,cash,price)
     for _ in range(index):
         game.press(DOWN)
@@ -120,7 +135,7 @@ def check_mart(game,city,checks):
     advance(game,lambda:task_active(game,"Task_BuyHowManyDialogueHandleInput"))
     game.press(B)
     assert task_active(game,"Task_BuyMenu") and money(game)==cash and count(game,items[3])==qty
-    price=game.u32(game.sym["gItemsInfo"]+items[3]*extra_layout()["item_size"])
+    price=shop_price(game,items[3])
     purchases=cash//price
     for _ in range(purchases):
         purchase(game,0,items[3])
