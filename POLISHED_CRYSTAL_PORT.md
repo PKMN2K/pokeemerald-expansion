@@ -935,11 +935,13 @@ consumable Escape Rope is a separate item in the Items pocket, priced at
 IDs for cartridge-save compatibility. Escape destinations become available
 as the campaign's caves and dungeons are imported.
 
-Buying, selling, item effects and prices use Expansion's settings. In this
-configuration Paralyze Heal and Awakening each cost 200, and X Defense costs
-1,000. The pinned Crystal shop charges 300, 100 and 2,000 respectively. The
-other eight stock prices match. The native resale fraction is one quarter.
-Flower Mail sells for 12.
+The Johto profile now applies the pinned source's Violet Mart price
+corrections through the shared item-price accessor: Paralyze Heal costs 300,
+Awakening costs 100 and X Defense costs 2,000. The other eight stock prices
+already agree. The Johto profile also restores half-price resale (including
+Flower Mail at 25), while ordinary Expansion builds retain their native
+prices and resale configuration. This is an initial source shop-economy
+correction, **not** a complete item metadata/effect parity audit.
 
 The city map-load script refreshes the Mart entrance in earlier saved maps.
 Its new warp is appended after the Center, eastern gate and Academy warps.
