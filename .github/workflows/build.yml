@@ -262,8 +262,8 @@ jobs:
           [[ "$head" =~ ^[a-f0-9]{40}$ ]] || exit 1
           # Avoid duplicate dispatches for the same head, including failures;
           # startup_failure requires a repository Actions settings repair.
-          count="$(gh api --method GET "repos/$GH_REPO/actions/workflows/build.yml/runs" \\
-            -f branch="$branch" -f head_sha="$head" -f per_page=1 \\
+          count="$(gh api --method GET "repos/$GH_REPO/actions/workflows/build.yml/runs" \
+            -f branch="$branch" -f head_sha="$head" -f per_page=1 \
             --jq '.total_count')"
           [[ "$count" =~ ^[0-9]+$ ]] || exit 1
           if (( count > 0 )); then
