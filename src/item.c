@@ -819,6 +819,21 @@ const u8 *GetItemName(enum Item itemId)
 
 u32 GetItemPrice(enum Item itemId)
 {
+#if POLISHED_JOHTO_DEMO
+    // Source: pinned Polished Crystal v3.2.3 default build. Do not change
+    // the native Expansion item catalog for non-Johto builds.
+    switch (SanitizeItemId(itemId))
+    {
+    case ITEM_PARALYZE_HEAL:
+        return 300;
+    case ITEM_AWAKENING:
+        return 100;
+    case ITEM_X_DEFENSE:
+        return 2000;
+    default:
+        break;
+    }
+#endif
     return gItemsInfo[SanitizeItemId(itemId)].price;
 }
 
@@ -957,7 +972,12 @@ u32 GetItemStatus1Mask(enum Item itemId)
 
 u32 GetItemSellPrice(enum Item itemId)
 {
+#if POLISHED_JOHTO_DEMO
+    // Crystal's half-price resale rule; keep native resale elsewhere.
+    return GetItemPrice(itemId) / 2;
+#else
     return GetItemPrice(itemId) / ITEM_SELL_FACTOR;
+#endif
 }
 
 bool32 IsHoldEffectChoice(enum HoldEffect holdEffect)
