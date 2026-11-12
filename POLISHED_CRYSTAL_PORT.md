@@ -943,9 +943,11 @@ Flower Mail at 25), while ordinary Expansion builds retain their native
 prices and resale configuration. This is an initial source shop-economy
 correction, **not** a complete item metadata/effect parity audit.
 
-The next source-price phase additionally wires the pinned held-item manifest's
-**70 mapped item prices** through `GetItemPrice` in the Johto profile. Its
-zero-initialized source-price table leaves items without a source mapping on
+The source-price importer now generates **73 item prices** from pinned Polished
+Crystal item attributes: the 70 held-item mappings and Violet Mart's Paralyze
+Heal, Awakening and X Defense. The three formerly hard-coded exceptions are
+validated against the source item catalog, then resolved through the same
+`GetItemPrice` table. Its zero-initialized entries leave unmapped items on
 their native Expansion price, and non-Johto builds do not compile the adapter.
 The table is regenerated deterministically from the previously pinned and
 hash-validated item fixture inventory; CI checks regeneration and runtime
