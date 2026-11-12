@@ -168,8 +168,8 @@ def check_mart(game,city,checks):
     game.press(B,140)
     game.press(B,60)
     checks.append("Flower Mail purchase and money survive Save/Continue; its source-derived stationery opens from the Bag and returns with the item preserved")
-    # Sell through the regular Bag. The displayed quote is read back, so the
-    # same check supports the engine's configured resale fraction.
+    # Source-profile parity: Flower Mail is 50 to buy and 25 to resell.
+    # Do not accept an arbitrary native quote as proof of correct economics.
     interact(game,mart,(3,3),LEFT)
     advance(game,lambda:task_active(game,"Task_ShopMenu"))
     game.press(DOWN)
@@ -179,13 +179,15 @@ def check_mart(game,city,checks):
     wait_for(game,lambda:task_active(game,"Task_CallYesOrNoCallback"),"sale confirmation")
     quote=game.read(game.sym["gStringVar1"],10).split(b"\xff",1)[0]
     value=int("".join(str(ch-0xa1) for ch in quote))
+    assert shop_price(game,items[10]) == 50, ("Flower Mail purchase price",shop_price(game,items[10]))
+    assert value == 25, ("Flower Mail source resale value",value)
     game.press(A)
     advance(game,lambda:task_active(game,"WaitAfterItemSell"))
-    assert count(game,items[10])==qty-1 and money(game)==cash+value
+    assert count(game,items[10])==qty-1 and money(game)==cash+25
     game.press(A,100)
     game.press(B,180)
     advance(game,lambda:task_active(game,"Task_ShopMenu"))
     game.press(B)
     close_resident_dialogue(game)
-    checks.append("Selling Flower Mail removes exactly one item and credits the displayed native resale value")
+    checks.append("Selling Flower Mail removes one item and credits exactly 25, half its source purchase price")
     game.restore("mart-city")
