@@ -39,8 +39,25 @@ static bool8 ShouldAnimBeDoneRegardlessOfSubstitute(u8 animId);
 static void Task_ClearBitWhenBattleTableAnimDone(u8 taskId);
 static void Task_ClearBitWhenSpecialAnimDone(u8 taskId);
 static void ClearSpritesBattlerHealthboxAnimData(void);
+static bool32 ConfigureBattlerPicLayout(enum BattlerId battler, enum BattlerPosition position, bool32 useGen5Layout);
+static bool32 LoadBattleMonPicData(enum BattlerId battler, enum BattlerPosition position, enum Species species, u32 personalityValue);
+static void PackGen5BattlePic(const u8 *src, u8 *dst);
 
 // const rom data
+static const struct Subsprite sGen5BattleSubsprites[] =
+{
+    // A 96x96 frame is packed into 64x64, 32x64, 64x32 and 32x32 OBJ blocks.
+    {.x = 0,  .y = 0,  .shape = SPRITE_SHAPE(64x64), .size = SPRITE_SIZE(64x64), .tileOffset = 0,   .priority = 0},
+    {.x = 64, .y = 0,  .shape = SPRITE_SHAPE(32x64), .size = SPRITE_SIZE(32x64), .tileOffset = 64,  .priority = 0},
+    {.x = 0,  .y = 64, .shape = SPRITE_SHAPE(64x32), .size = SPRITE_SIZE(64x32), .tileOffset = 96,  .priority = 0},
+    {.x = 64, .y = 64, .shape = SPRITE_SHAPE(32x32), .size = SPRITE_SIZE(32x32), .tileOffset = 128, .priority = 0},
+};
+
+static const struct SubspriteTable sGen5BattleSubspriteTable[] =
+{
+    {ARRAY_COUNT(sGen5BattleSubsprites), sGen5BattleSubsprites},
+};
+
 static const struct CompressedSpriteSheet sSpriteSheet_SinglesPlayerHealthbox =
 {
     gHealthboxSinglesPlayerGfx, 0x1000, TAG_HEALTHBOX_PLAYER1_TILE
@@ -621,6 +638,123 @@ bool8 IsBattleSEPlaying(enum BattlerId battler)
     return TRUE;
 }
 
+static bool32 IsBattlerSpriteCreated(enum BattlerId battler, enum BattlerPosition position)
+{
+    u8 spriteId = gBattlerSpriteIds[battler];
+
+    return spriteId < MAX_SPRITES
+        && gSprites[spriteId].inUse
+        && gSprites[spriteId].images == gMonSpritesGfxPtr->frameImages[position];
+}
+
+static bool32 ConfigureBattlerPicLayout(enum BattlerId battler, enum BattlerPosition position, bool32 useGen5Layout)
+{
+    struct Sprite *sprite = NULL;
+    u16 desiredSize = useGen5Layout ? GEN5_BATTLE_PIC_SIZE : MON_PIC_SIZE;
+
+    if (IsBattlerSpriteCreated(battler, position))
+    {
+        sprite = &gSprites[gBattlerSpriteIds[battler]];
+        if (sprite->images->size != desiredSize
+         && ResizeDynamicSpriteTiles(sprite, desiredSize / TILE_SIZE_4BPP) < 0)
+            return FALSE;
+    }
+
+    for (u32 i = 0; i < MAX_MON_PIC_FRAMES; i++)
+    {
+        if (useGen5Layout)
+        {
+            // Both animation frame slots point at the same packed image so the
+            // asset remains static even if legacy animation code selects frame 1.
+            gMonSpritesGfxPtr->frameImages[position][i].data = gMonSpritesGfxPtr->spritesGfx[position];
+            gMonSpritesGfxPtr->frameImages[position][i].size = GEN5_BATTLE_PIC_SIZE;
+        }
+        else
+        {
+            gMonSpritesGfxPtr->frameImages[position][i].data = gMonSpritesGfxPtr->spritesGfx[position] + (i * MON_PIC_SIZE);
+            gMonSpritesGfxPtr->frameImages[position][i].size = MON_PIC_SIZE;
+        }
+    }
+
+    gMonSpritesGfxPtr->templates[position].images = gMonSpritesGfxPtr->frameImages[position];
+    if (sprite != NULL)
+        sprite->images = gMonSpritesGfxPtr->frameImages[position];
+
+    return TRUE;
+}
+
+static void PackGen5BattlePic(const u8 *src, u8 *dst)
+{
+    u32 dstTile = 0;
+
+    // Top-left 64x64 block.
+    for (u32 y = 0; y < 8; y++)
+        for (u32 x = 0; x < 8; x++)
+            CpuCopy32(src + ((y * 12 + x) * TILE_SIZE_4BPP), dst + (dstTile++ * TILE_SIZE_4BPP), TILE_SIZE_4BPP);
+
+    // Top-right 32x64 block.
+    for (u32 y = 0; y < 8; y++)
+        for (u32 x = 8; x < 12; x++)
+            CpuCopy32(src + ((y * 12 + x) * TILE_SIZE_4BPP), dst + (dstTile++ * TILE_SIZE_4BPP), TILE_SIZE_4BPP);
+
+    // Bottom-left 64x32 block.
+    for (u32 y = 8; y < 12; y++)
+        for (u32 x = 0; x < 8; x++)
+            CpuCopy32(src + ((y * 12 + x) * TILE_SIZE_4BPP), dst + (dstTile++ * TILE_SIZE_4BPP), TILE_SIZE_4BPP);
+
+    // Bottom-right 32x32 block.
+    for (u32 y = 8; y < 12; y++)
+        for (u32 x = 8; x < 12; x++)
+            CpuCopy32(src + ((y * 12 + x) * TILE_SIZE_4BPP), dst + (dstTile++ * TILE_SIZE_4BPP), TILE_SIZE_4BPP);
+}
+
+void SetupBattlerSpriteForSpecies(enum BattlerId battler, enum Species species)
+{
+    enum BattlerPosition position = GetBattlerPosition(battler);
+    struct Sprite *sprite;
+
+    if (!IsBattlerSpriteCreated(battler, position))
+        return;
+
+    sprite = &gSprites[gBattlerSpriteIds[battler]];
+
+    if (HasGen5BattleSprite(species) && sprite->images->size == GEN5_BATTLE_PIC_SIZE)
+    {
+        SetSubspriteTables(sprite, sGen5BattleSubspriteTable);
+        sprite->subspriteMode = SUBSPRITES_IGNORE_PRIORITY;
+        // The logical battler coordinate remains the center of the full 96x96
+        // image. Subsprite offsets are measured from its top-left corner.
+        sprite->centerToCornerVecX = GEN5_BATTLE_PIC_WIDTH / 2;
+        sprite->centerToCornerVecY = GEN5_BATTLE_PIC_HEIGHT / 2;
+    }
+    else
+    {
+        sprite->subspriteMode = SUBSPRITES_OFF;
+        sprite->subspriteTables = NULL;
+        CalcCenterToCornerVec(sprite, sprite->oam.shape, sprite->oam.size, sprite->oam.affineMode);
+    }
+}
+
+static bool32 LoadBattleMonPicData(enum BattlerId battler, enum BattlerPosition position, enum Species species, u32 personalityValue)
+{
+    const u32 *gen5Pic = GetGen5BattleSpritePic(species, !IsOnPlayerSide(battler));
+
+    if (!IsContest() && gen5Pic != NULL && ConfigureBattlerPicLayout(battler, position, TRUE))
+    {
+        DecompressDataWithHeaderWram(gen5Pic, gMonSpritesGfxPtr->largeSpriteBuffer);
+        PackGen5BattlePic(gMonSpritesGfxPtr->largeSpriteBuffer, gMonSpritesGfxPtr->spritesGfx[position]);
+        SetupBattlerSpriteForSpecies(battler, species);
+        return TRUE;
+    }
+
+    ConfigureBattlerPicLayout(battler, position, FALSE);
+    HandleLoadSpecialPokePic(!IsOnPlayerSide(battler),
+                             gMonSpritesGfxPtr->spritesGfx[position],
+                             species, personalityValue);
+    SetupBattlerSpriteForSpecies(battler, species);
+    return FALSE;
+}
+
 void BattleLoadMonSpriteGfx(struct Pokemon *mon, enum BattlerId battler)
 {
     u32 personalityValue, paletteOffset;
@@ -654,9 +788,7 @@ void BattleLoadMonSpriteGfx(struct Pokemon *mon, enum BattlerId battler)
     }
 
     position = GetBattlerPosition(battler);
-    HandleLoadSpecialPokePic(!IsOnPlayerSide(battler),
-                             gMonSpritesGfxPtr->spritesGfx[position],
-                             species, personalityValue);
+    LoadBattleMonPicData(battler, position, species, personalityValue);
 
     paletteOffset = OBJ_PLTT_ID(battler);
 
@@ -895,6 +1027,7 @@ void HandleSpeciesGfxDataChange(enum BattlerId battlerAtk, enum BattlerId battle
     enum Species targetSpecies;
     enum BattlerPosition position;
     bool32 isShiny;
+    bool32 usesGen5Layout = FALSE;
     const void *src;
     const u16 *paletteData;
     struct Pokemon *monAtk = GetBattlerMon(battlerAtk);
@@ -942,14 +1075,13 @@ void HandleSpeciesGfxDataChange(enum BattlerId battlerAtk, enum BattlerId battle
             personalityValue = GetMonData(monAtk, MON_DATA_PERSONALITY);
             isShiny = GetMonData(monAtk, MON_DATA_IS_SHINY);
         }
-        HandleLoadSpecialPokePic(!IsOnPlayerSide(battlerAtk),
-                                 gMonSpritesGfxPtr->spritesGfx[position],
-                                 targetSpecies,
-                                 personalityValue);
+        usesGen5Layout = LoadBattleMonPicData(battlerAtk, position, targetSpecies, personalityValue);
     }
     src = gMonSpritesGfxPtr->spritesGfx[position];
-    dst = (void *)(OBJ_VRAM0 + gSprites[gBattlerSpriteIds[battlerAtk]].oam.tileNum * 32);
-    DmaCopy32(3, src, dst, MON_PIC_SIZE);
+    dst = (void *)(OBJ_VRAM0 + gSprites[gBattlerSpriteIds[battlerAtk]].oam.tileNum * TILE_SIZE_4BPP);
+    DmaCopy32(3, src, dst, usesGen5Layout ? GEN5_BATTLE_PIC_SIZE : MON_PIC_SIZE);
+    if (!IsContest())
+        SetupBattlerSpriteForSpecies(battlerAtk, targetSpecies);
     paletteOffset = OBJ_PLTT_ID(battlerAtk);
     paletteData = GetMonSpritePalFromSpeciesAndPersonality(targetSpecies, isShiny, personalityValue);
     LoadPalette(paletteData, paletteOffset, PLTT_SIZE_4BPP);
@@ -999,6 +1131,12 @@ void BattleLoadSubstituteOrMonSpriteGfx(enum BattlerId battler, bool8 loadMonSpr
             position = B_POSITION_PLAYER_LEFT;
         else
             position = GetBattlerPosition(battler);
+
+        if (!IsContest())
+        {
+            ConfigureBattlerPicLayout(battler, position, FALSE);
+            SetupBattlerSpriteForSpecies(battler, SPECIES_NONE);
+        }
 
         if (IsContest())
             DecompressDataWithHeaderVram(gBattleAnimSpriteGfx_SubstituteBack, gMonSpritesGfxPtr->spritesGfx[position]);
@@ -1381,11 +1519,12 @@ void AllocateMonSpritesGfx(void)
 {
     gMonSpritesGfxPtr = NULL;
     gMonSpritesGfxPtr = AllocZeroed(sizeof(*gMonSpritesGfxPtr));
-    gMonSpritesGfxPtr->firstDecompressed = AllocZeroed(MON_PIC_SIZE * MAX_MON_PIC_FRAMES * MAX_BATTLERS_COUNT);
+    gMonSpritesGfxPtr->firstDecompressed = AllocZeroed(BATTLE_MON_PIC_SLOT_SIZE * MAX_BATTLERS_COUNT);
+    gMonSpritesGfxPtr->largeSpriteBuffer = AllocZeroed(GEN5_BATTLE_PIC_SIZE);
 
     for (u32 i = 0; i < MAX_BATTLERS_COUNT; i++)
     {
-        gMonSpritesGfxPtr->spritesGfx[i] = gMonSpritesGfxPtr->firstDecompressed + (i * MON_PIC_SIZE * MAX_MON_PIC_FRAMES);
+        gMonSpritesGfxPtr->spritesGfx[i] = gMonSpritesGfxPtr->firstDecompressed + (i * BATTLE_MON_PIC_SLOT_SIZE);
         gMonSpritesGfxPtr->templates[i] = gBattlerSpriteTemplates[i];
 
         for (u32 j = 0; j < MAX_MON_PIC_FRAMES; j++)
@@ -1409,6 +1548,7 @@ void FreeMonSpritesGfx(void)
         return;
 
     TRY_FREE_AND_SET_NULL(gMonSpritesGfxPtr->buffer);
+    FREE_AND_SET_NULL(gMonSpritesGfxPtr->largeSpriteBuffer);
     FREE_AND_SET_NULL(gMonSpritesGfxPtr->barFontGfx);
     FREE_AND_SET_NULL(gMonSpritesGfxPtr->firstDecompressed);
     gMonSpritesGfxPtr->spritesGfx[B_POSITION_PLAYER_LEFT] = NULL;

@@ -1834,6 +1834,8 @@ enum Species GetUnownSpeciesId(u32 personality)
 
 void SetMultiuseSpriteTemplateToPokemon(enum Species speciesTag, enum BattlerPosition battlerPosition)
 {
+    enum Species gfxSpecies = speciesTag;
+
     if (gMonSpritesGfxPtr != NULL)
         gMultiuseSpriteTemplate = gMonSpritesGfxPtr->templates[battlerPosition];
     else if (sMonSpritesGfxManagers[MON_SPR_GFX_MANAGER_A])
@@ -1844,19 +1846,20 @@ void SetMultiuseSpriteTemplateToPokemon(enum Species speciesTag, enum BattlerPos
         gMultiuseSpriteTemplate = gBattlerSpriteTemplates[battlerPosition];
 
     gMultiuseSpriteTemplate.paletteTag = speciesTag;
-    if (battlerPosition == B_POSITION_PLAYER_LEFT || battlerPosition == B_POSITION_PLAYER_RIGHT)
-        gMultiuseSpriteTemplate.anims = gAnims_MonPic;
-    else
-    {
-        if (speciesTag > SPECIES_SHINY_TAG)
-            speciesTag = speciesTag - SPECIES_SHINY_TAG;
 
-        speciesTag = SanitizeSpeciesId(speciesTag);
-        if (gSpeciesInfo[speciesTag].frontAnimFrames != NULL)
-            gMultiuseSpriteTemplate.anims = gSpeciesInfo[speciesTag].frontAnimFrames;
-        else
-            gMultiuseSpriteTemplate.anims = gSpeciesInfo[SPECIES_NONE].frontAnimFrames;
-    }
+    if (gfxSpecies > SPECIES_SHINY_TAG)
+        gfxSpecies = gfxSpecies - SPECIES_SHINY_TAG;
+    gfxSpecies = SanitizeSpeciesId(gfxSpecies);
+
+    // 96x96 Gen 5 battlers are intentionally one static frame.
+    if (HasGen5BattleSprite(gfxSpecies))
+        gMultiuseSpriteTemplate.anims = gDummySpriteAnimTable;
+    else if (battlerPosition == B_POSITION_PLAYER_LEFT || battlerPosition == B_POSITION_PLAYER_RIGHT)
+        gMultiuseSpriteTemplate.anims = gAnims_MonPic;
+    else if (gSpeciesInfo[gfxSpecies].frontAnimFrames != NULL)
+        gMultiuseSpriteTemplate.anims = gSpeciesInfo[gfxSpecies].frontAnimFrames;
+    else
+        gMultiuseSpriteTemplate.anims = gSpeciesInfo[SPECIES_NONE].frontAnimFrames;
 }
 
 void SetMultiuseSpriteTemplateToTrainerBack(enum TrainerPicID trainerPicId, enum BattlerPosition battlerPosition)
