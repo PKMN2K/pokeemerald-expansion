@@ -43,6 +43,7 @@ EWRAM_DATA struct BagPocket gBagPockets[POCKETS_COUNT] = {0};
 #include "data/items.h"
 #if POLISHED_JOHTO_DEMO
 #include "data/polished_item_prices.h"
+#include "data/polished_item_descriptions.h"
 #endif
 
 #define UNPACK_TM_ITEM_ID(_tm) [CAT(ENUM_TM_HM_, _tm) + 1] = { CAT(ITEM_TM_, _tm), CAT(MOVE_, _tm) },
@@ -873,7 +874,14 @@ u32 GetItemHoldEffectParam(enum Item itemId)
 
 const u8 *GetItemDescription(enum Item itemId)
 {
-    return gItemsInfo[SanitizeItemId(itemId)].description;
+    itemId = SanitizeItemId(itemId);
+#if POLISHED_JOHTO_DEMO
+    // Preserve source item prose in the GBA profile. Unknown Expansion items
+    // retain their native descriptions for future customization.
+    if (sPolishedItemDescriptions[itemId] != NULL)
+        return sPolishedItemDescriptions[itemId];
+#endif
+    return gItemsInfo[itemId].description;
 }
 
 u8 GetItemImportance(enum Item itemId)
