@@ -1,0 +1,413 @@
+{
+  "source_commit": "3fa43192379df5c3e7b09a08e4d5d79af4f02f42",
+  "observed_target_commit": "7e32866f06f02d8328ffb6dc5ede7b6e46021cd2",
+  "scope": "Explicit unfinished source data/identity/lesson work. Not certified behavior. New or changed findings fail CI; resolved findings are allowed.",
+  "findings": {
+    "move/MOVE_CUT/power": {
+      "source": 60,
+      "target": 50
+    },
+    "move/MOVE_CUT/accuracy": {
+      "source": 100,
+      "target": 95
+    },
+    "move/MOVE_CUT/type": {
+      "source": "STEEL",
+      "target": "NORMAL"
+    },
+    "move/MOVE_FLY/accuracy": {
+      "source": 100,
+      "target": 95
+    },
+    "move/MOVE_TAKE_DOWN/accuracy": {
+      "source": 100,
+      "target": 85
+    },
+    "move/MOVE_SING/accuracy": {
+      "source": 75,
+      "target": 55
+    },
+    "move/MOVE_SUPERSONIC/accuracy": {
+      "source": 65,
+      "target": 55
+    },
+    "move/MOVE_SONIC_BOOM/power": {
+      "source": 20,
+      "target": 1
+    },
+    "move/MOVE_COUNTER/accuracy": {
+      "source": 0,
+      "target": 100
+    },
+    "move/MOVE_STRENGTH/type": {
+      "source": "FIGHTING",
+      "target": "NORMAL"
+    },
+    "move/MOVE_DRAGON_RAGE/power": {
+      "source": 40,
+      "target": 1
+    },
+    "move/MOVE_FIRE_SPIN/power": {
+      "source": 40,
+      "target": 35
+    },
+    "move/MOVE_FIRE_SPIN/accuracy": {
+      "source": 90,
+      "target": 85
+    },
+    "move/MOVE_DIG/power": {
+      "source": 90,
+      "target": 80
+    },
+    "move/MOVE_METRONOME/type": {
+      "source": "UNKNOWN_T",
+      "target": "NORMAL"
+    },
+    "move/MOVE_SCALD/power": {
+      "source": 70,
+      "target": 80
+    },
+    "move/MOVE_DRAGON_DANCE/accuracy": {
+      "source": 100,
+      "target": 0
+    },
+    "move/MOVE_CRABHAMMER/accuracy": {
+      "source": 95,
+      "target": 90
+    },
+    "move/MOVE_OCTAZOOKA/power": {
+      "source": 75,
+      "target": 65
+    },
+    "move/MOVE_OCTAZOOKA/accuracy": {
+      "source": 95,
+      "target": 85
+    },
+    "move/MOVE_SLEEP_TALK/accuracy": {
+      "source": 100,
+      "target": 0
+    },
+    "move/MOVE_PAIN_SPLIT/type": {
+      "source": "GHOST",
+      "target": "NORMAL"
+    },
+    "move/MOVE_HIDDEN_POWER/power": {
+      "source": 70,
+      "target": 60
+    },
+    "move/MOVE_HIDDEN_POWER/type": {
+      "source": "UNKNOWN_T",
+      "target": "NORMAL"
+    },
+    "move/MOVE_MIRROR_COAT/accuracy": {
+      "source": 0,
+      "target": 100
+    },
+    "move/MOVE_WHIRLPOOL/power": {
+      "source": 40,
+      "target": 35
+    },
+    "move/MOVE_WHIRLPOOL/accuracy": {
+      "source": 90,
+      "target": 85
+    },
+    "move/MOVE_STRUGGLE/type": {
+      "source": "UNKNOWN_T",
+      "target": "NORMAL"
+    },
+    "machine/TM01/identity": {
+      "target_move": "MOVE_DYNAMICPUNCH",
+      "actual_move": "MOVE_FOCUS_PUNCH",
+      "display_number": 1,
+      "is_hm": false
+    },
+    "machine/TM01/source_lesson_adapter": false,
+    "machine/TM02/source_lesson_adapter": false,
+    "machine/TM03/identity": {
+      "target_move": "MOVE_CURSE",
+      "actual_move": "MOVE_WATER_PULSE",
+      "display_number": 3,
+      "is_hm": false
+    },
+    "machine/TM03/source_lesson_adapter": false,
+    "machine/TM04/source_lesson_adapter": false,
+    "machine/TM05/source_lesson_adapter": false,
+    "machine/TM06/source_lesson_adapter": false,
+    "machine/TM07/source_lesson_adapter": false,
+    "machine/TM08/source_lesson_adapter": false,
+    "machine/TM09/identity": {
+      "target_move": "MOVE_VENOSHOCK",
+      "actual_move": "MOVE_BULLET_SEED",
+      "display_number": 9,
+      "is_hm": false
+    },
+    "machine/TM09/source_lesson_adapter": false,
+    "machine/TM10/source_lesson_adapter": false,
+    "machine/TM11/source_lesson_adapter": false,
+    "machine/TM12/identity": {
+      "target_move": "MOVE_HONE_CLAWS",
+      "actual_move": "MOVE_TAUNT",
+      "display_number": 12,
+      "is_hm": false
+    },
+    "machine/TM12/source_lesson_adapter": false,
+    "machine/TM13/source_lesson_adapter": false,
+    "machine/TM14/source_lesson_adapter": false,
+    "machine/TM15/source_lesson_adapter": false,
+    "machine/TM16/source_lesson_adapter": false,
+    "machine/TM17/source_lesson_adapter": false,
+    "machine/TM18/source_lesson_adapter": false,
+    "machine/TM19/source_lesson_adapter": false,
+    "machine/TM20/source_lesson_adapter": false,
+    "machine/TM21/identity": {
+      "target_move": "MOVE_BULLDOZE",
+      "actual_move": "MOVE_FRUSTRATION",
+      "display_number": 21,
+      "is_hm": false
+    },
+    "machine/TM21/source_lesson_adapter": false,
+    "machine/TM22/source_lesson_adapter": false,
+    "machine/TM23/source_lesson_adapter": false,
+    "machine/TM24/source_lesson_adapter": false,
+    "machine/TM25/source_lesson_adapter": false,
+    "machine/TM26/source_lesson_adapter": false,
+    "machine/TM27/source_lesson_adapter": false,
+    "machine/TM28/source_lesson_adapter": false,
+    "machine/TM29/source_lesson_adapter": false,
+    "machine/TM30/source_lesson_adapter": false,
+    "machine/TM32/source_lesson_adapter": false,
+    "machine/TM33/source_lesson_adapter": false,
+    "machine/TM34/identity": {
+      "target_move": "MOVE_FLASH_CANNON",
+      "actual_move": "MOVE_SHOCK_WAVE",
+      "display_number": 34,
+      "is_hm": false
+    },
+    "machine/TM34/source_lesson_adapter": false,
+    "machine/TM35/source_lesson_adapter": false,
+    "machine/TM36/source_lesson_adapter": false,
+    "machine/TM37/source_lesson_adapter": false,
+    "machine/TM38/source_lesson_adapter": false,
+    "machine/TM39/identity": {
+      "target_move": "MOVE_SWIFT",
+      "actual_move": "MOVE_ROCK_TOMB",
+      "display_number": 39,
+      "is_hm": false
+    },
+    "machine/TM39/source_lesson_adapter": false,
+    "machine/TM40/source_lesson_adapter": false,
+    "machine/TM41/identity": {
+      "target_move": "MOVE_SUBSTITUTE",
+      "actual_move": "MOVE_TORMENT",
+      "display_number": 41,
+      "is_hm": false
+    },
+    "machine/TM41/source_lesson_adapter": false,
+    "machine/TM42/source_lesson_adapter": false,
+    "machine/TM43/identity": {
+      "target_move": "MOVE_FLAME_CHARGE",
+      "actual_move": "MOVE_SECRET_POWER",
+      "display_number": 43,
+      "is_hm": false
+    },
+    "machine/TM43/source_lesson_adapter": false,
+    "machine/TM44/source_lesson_adapter": false,
+    "machine/TM45/source_lesson_adapter": false,
+    "machine/TM46/source_lesson_adapter": false,
+    "machine/TM47/source_lesson_adapter": false,
+    "machine/TM48/identity": {
+      "target_move": "MOVE_ROCK_SLIDE",
+      "actual_move": "MOVE_SKILL_SWAP",
+      "display_number": 48,
+      "is_hm": false
+    },
+    "machine/TM48/source_lesson_adapter": false,
+    "machine/TM49/identity": {
+      "target_move": "MOVE_DAZZLING_GLEAM",
+      "actual_move": "MOVE_SNATCH",
+      "display_number": 49,
+      "is_hm": false
+    },
+    "machine/TM49/source_lesson_adapter": false,
+    "machine/TM50/identity": {
+      "target_move": "MOVE_LEECH_LIFE",
+      "actual_move": "MOVE_OVERHEAT",
+      "display_number": 50,
+      "is_hm": false
+    },
+    "machine/TM50/source_lesson_adapter": false,
+    "machine/TM52/identity": {
+      "target_move": "MOVE_FOCUS_BLAST",
+      "actual_move": "MOVE_NONE",
+      "display_number": 0,
+      "is_hm": false
+    },
+    "machine/TM52/source_lesson_adapter": false,
+    "machine/TM53/identity": {
+      "target_move": "MOVE_ENERGY_BALL",
+      "actual_move": "MOVE_NONE",
+      "display_number": 0,
+      "is_hm": false
+    },
+    "machine/TM53/source_lesson_adapter": false,
+    "machine/TM54/identity": {
+      "target_move": "MOVE_FALSE_SWIPE",
+      "actual_move": "MOVE_NONE",
+      "display_number": 0,
+      "is_hm": false
+    },
+    "machine/TM54/source_lesson_adapter": false,
+    "machine/TM55/identity": {
+      "target_move": "MOVE_SCALD",
+      "actual_move": "MOVE_NONE",
+      "display_number": 0,
+      "is_hm": false
+    },
+    "machine/TM55/source_lesson_adapter": false,
+    "machine/TM56/identity": {
+      "target_move": "MOVE_X_SCISSOR",
+      "actual_move": "MOVE_NONE",
+      "display_number": 0,
+      "is_hm": false
+    },
+    "machine/TM56/source_lesson_adapter": false,
+    "machine/TM57/identity": {
+      "target_move": "MOVE_WILD_CHARGE",
+      "actual_move": "MOVE_NONE",
+      "display_number": 0,
+      "is_hm": false
+    },
+    "machine/TM57/source_lesson_adapter": false,
+    "machine/TM58/identity": {
+      "target_move": "MOVE_DARK_PULSE",
+      "actual_move": "MOVE_NONE",
+      "display_number": 0,
+      "is_hm": false
+    },
+    "machine/TM58/source_lesson_adapter": false,
+    "machine/TM59/identity": {
+      "target_move": "MOVE_DRAGON_PULSE",
+      "actual_move": "MOVE_NONE",
+      "display_number": 0,
+      "is_hm": false
+    },
+    "machine/TM59/source_lesson_adapter": false,
+    "machine/TM60/identity": {
+      "target_move": "MOVE_DRAIN_PUNCH",
+      "actual_move": "MOVE_NONE",
+      "display_number": 0,
+      "is_hm": false
+    },
+    "machine/TM60/source_lesson_adapter": false,
+    "machine/TM61/identity": {
+      "target_move": "MOVE_WILL_O_WISP",
+      "actual_move": "MOVE_NONE",
+      "display_number": 0,
+      "is_hm": false
+    },
+    "machine/TM61/source_lesson_adapter": false,
+    "machine/TM62/identity": {
+      "target_move": "MOVE_ACROBATICS",
+      "actual_move": "MOVE_NONE",
+      "display_number": 0,
+      "is_hm": false
+    },
+    "machine/TM62/source_lesson_adapter": false,
+    "machine/TM63/identity": {
+      "target_move": "MOVE_WATER_PULSE",
+      "actual_move": "MOVE_NONE",
+      "display_number": 0,
+      "is_hm": false
+    },
+    "machine/TM63/source_lesson_adapter": false,
+    "machine/TM64/identity": {
+      "target_move": "MOVE_EXPLOSION",
+      "actual_move": "MOVE_NONE",
+      "display_number": 0,
+      "is_hm": false
+    },
+    "machine/TM64/source_lesson_adapter": false,
+    "machine/TM65/identity": {
+      "target_move": "MOVE_SHADOW_CLAW",
+      "actual_move": "MOVE_NONE",
+      "display_number": 0,
+      "is_hm": false
+    },
+    "machine/TM65/source_lesson_adapter": false,
+    "machine/TM66/identity": {
+      "target_move": "MOVE_POISON_JAB",
+      "actual_move": "MOVE_NONE",
+      "display_number": 0,
+      "is_hm": false
+    },
+    "machine/TM66/source_lesson_adapter": false,
+    "machine/TM67/identity": {
+      "target_move": "MOVE_AVALANCHE",
+      "actual_move": "MOVE_NONE",
+      "display_number": 0,
+      "is_hm": false
+    },
+    "machine/TM67/source_lesson_adapter": false,
+    "machine/TM68/identity": {
+      "target_move": "MOVE_GIGA_IMPACT",
+      "actual_move": "MOVE_NONE",
+      "display_number": 0,
+      "is_hm": false
+    },
+    "machine/TM68/source_lesson_adapter": false,
+    "machine/TM69/identity": {
+      "target_move": "MOVE_U_TURN",
+      "actual_move": "MOVE_NONE",
+      "display_number": 0,
+      "is_hm": false
+    },
+    "machine/TM69/source_lesson_adapter": false,
+    "machine/TM71/identity": {
+      "target_move": "MOVE_STONE_EDGE",
+      "actual_move": "MOVE_NONE",
+      "display_number": 0,
+      "is_hm": false
+    },
+    "machine/TM71/source_lesson_adapter": false,
+    "machine/TM72/identity": {
+      "target_move": "MOVE_VOLT_SWITCH",
+      "actual_move": "MOVE_NONE",
+      "display_number": 0,
+      "is_hm": false
+    },
+    "machine/TM72/source_lesson_adapter": false,
+    "machine/TM73/identity": {
+      "target_move": "MOVE_THUNDER_WAVE",
+      "actual_move": "MOVE_NONE",
+      "display_number": 0,
+      "is_hm": false
+    },
+    "machine/TM73/source_lesson_adapter": false,
+    "machine/TM74/identity": {
+      "target_move": "MOVE_GYRO_BALL",
+      "actual_move": "MOVE_NONE",
+      "display_number": 0,
+      "is_hm": false
+    },
+    "machine/TM74/source_lesson_adapter": false,
+    "machine/TM75/identity": {
+      "target_move": "MOVE_SWORDS_DANCE",
+      "actual_move": "MOVE_NONE",
+      "display_number": 0,
+      "is_hm": false
+    },
+    "machine/TM75/source_lesson_adapter": false,
+    "machine/HM05/identity": {
+      "target_move": "MOVE_WHIRLPOOL",
+      "actual_move": "MOVE_FLASH",
+      "display_number": 5,
+      "is_hm": true
+    },
+    "machine/HM06/identity": {
+      "target_move": "MOVE_WATERFALL",
+      "actual_move": "MOVE_ROCK_SMASH",
+      "display_number": 6,
+      "is_hm": true
+    }
+  }
+}

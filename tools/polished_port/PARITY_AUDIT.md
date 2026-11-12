@@ -14,6 +14,20 @@ regression coverage, but are not evidence of complete source-game parity.
 
 ## Findings and disposition
 
+The [complete move/machine data audit](reports/moves-machines-7e32866f.md)
+checks all 255 source moves, 75 TM and six HM identities, and all 43,792
+species/form compatibility combinations across the 112 machines/tutors against
+production Johto accessors. At `7e32866f`, 22 move rows have basic-data differences,
+35 TM and two HM identities differ, and only TM31/TM51/TM70 use the explicit
+source lesson adapter. All source PP/PP Up and compatibility checks match.
+These are not claims of complete move effect or machine UI parity. Some move
+table differences are representation differences requiring behavioral review.
+
+CI now runs `audit_moves_machines.py` with an explicit known-gap inventory.
+New or changed findings fail; resolved gaps are permitted. Strict mode without
+`--known-gaps` exits nonzero for the currently unfinished work. The generated
+Markdown/JSON evidence is included in the Johto artifact and job summary.
+
 | Area | Evidence from the existing port | Required correction / current disposition |
 | --- | --- | --- |
 | Source build variant | Previous trainer scripts read selected source text, while global data uses `GEN_LATEST`. Source files contain `FAITHFUL` branches. | Resolve the pinned default branch explicitly in importers; reject unknown conditionals. The learnset importer now does this. |

@@ -118,6 +118,12 @@ jobs:
         timeout-minutes: 10
         run: python3 tools/polished_port/scripts/test_rock_smash_emulator.py --driver /tmp/johto-demo-driver --output /tmp/johto-validation/rocks
 
+      - name: Audit all source moves and machines against documented gaps
+        timeout-minutes: 5
+        run: |
+          python3 tools/polished_port/scripts/audit_moves_machines.py --driver /tmp/johto-demo-driver --output /tmp/johto-validation/moves-machines --known-gaps tools/polished_port/tests/move_machine_known_gaps.json
+          cat /tmp/johto-validation/moves-machines/moves-machines.md >> "$GITHUB_STEP_SUMMARY"
+
       - name: Exercise source Flash in mGBA
         timeout-minutes: 10
         run: python3 tools/polished_port/scripts/test_flash_emulator.py --driver /tmp/johto-demo-driver --output /tmp/johto-validation/flash
