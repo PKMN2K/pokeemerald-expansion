@@ -823,22 +823,8 @@ const u8 *GetItemName(enum Item itemId)
 u32 GetItemPrice(enum Item itemId)
 {
 #if POLISHED_JOHTO_DEMO
-    // Source: pinned Polished Crystal v3.2.3 default build. Do not change
-    // the native Expansion item catalog for non-Johto builds.
-    switch (SanitizeItemId(itemId))
-    {
-    case ITEM_PARALYZE_HEAL:
-        return 300;
-    case ITEM_AWAKENING:
-        return 100;
-    case ITEM_X_DEFENSE:
-        return 2000;
-    default:
-        break;
-    }
-#endif
-#if POLISHED_JOHTO_DEMO
-    // Mapped items use source prices; zero entries retain native Expansion
+    // Source-mapped items and three Violet Mart exceptions use pinned prices;
+    // zero entries retain native Expansion
     // definitions, including future custom and non-Polished species items.
     if (sPolishedMappedItemPrices[SanitizeItemId(itemId)] != 0)
         return sPolishedMappedItemPrices[SanitizeItemId(itemId)];
