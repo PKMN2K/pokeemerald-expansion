@@ -16,6 +16,7 @@
 #include "battle_tower.h"
 #include "battle_z_move.h"
 #include "battle_gimmick.h"
+#include "battle_gfx_sfx_util.h"
 #include "berry.h"
 #include "bg.h"
 #include "data.h"
@@ -2463,6 +2464,9 @@ void SpriteCB_FaintOpponentMon(struct Sprite *sprite)
 
     sprite->data[3] = 8 - yOffset / 8;
     sprite->data[4] = 1;
+    sprite->data[5] = SpeciesUses96x96BattlePic(species, FALSE);
+    if (sprite->data[5])
+        sprite->data[3] += (MON_PIC_HEIGHT_96 - MON_PIC_HEIGHT) / 8;
     sprite->callback = SpriteCB_AnimFaintOpponent;
 }
 
@@ -2479,7 +2483,7 @@ static void SpriteCB_AnimFaintOpponent(struct Sprite *sprite)
             FreeSpriteOamMatrix(sprite);
             DestroySprite(sprite);
         }
-        else // Erase bottom part of the sprite to create a smooth illusion of mon falling down.
+        else if (!sprite->data[5]) // 64x64 tile rows are linear and can be erased directly.
         {
             u8 *dst = &gMonSpritesGfxPtr->spritesGfx[GetBattlerPosition(sprite->sBattler)][(sprite->data[3] << 8)];
 
@@ -2488,6 +2492,9 @@ static void SpriteCB_AnimFaintOpponent(struct Sprite *sprite)
 
             StartSpriteAnim(sprite, 0);
         }
+        // 96x96 data is stored as 32x32 metatiles, so its rows are not linear.
+        // Moving the composite downward gives the same fainting motion without
+        // corrupting adjacent metatiles.
     }
 }
 
