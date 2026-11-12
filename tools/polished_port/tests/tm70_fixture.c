@@ -16,6 +16,20 @@
 #include "constants/pokeball.h"
 #include "constants/vars.h"
 
+#if FIXTURE_TM == 31
+#define FIXTURE_ITEM ITEM_TM_BRICK_BREAK
+#define FIXTURE_MOVE MOVE_BRICK_BREAK
+#define FIXTURE_SPECIES SPECIES_SANDSHREW
+#elif FIXTURE_TM == 51
+#define FIXTURE_ITEM ITEM_TM_ROOST
+#define FIXTURE_MOVE MOVE_ROOST
+#define FIXTURE_SPECIES SPECIES_PIDGEY
+#else
+#define FIXTURE_ITEM ITEM_TM70
+#define FIXTURE_MOVE MOVE_FLASH
+#define FIXTURE_SPECIES SPECIES_BELLSPROUT
+#endif
+
 void CB2_PolishedTM70Fixture(void)
 {
     SetSaveBlocksPointers(0);
@@ -37,7 +51,7 @@ void CB2_PolishedTM70Fixture(void)
     for (u32 slot = 0; slot < 2; slot++)
     {
         struct Pokemon *mon = &gParties[B_TRAINER_PLAYER][slot];
-        CreateRandomMon(mon, FIXTURE_MODE == 2 && slot == 0 ? SPECIES_MAGIKARP : SPECIES_BELLSPROUT, 20);
+        CreateRandomMon(mon, FIXTURE_MODE == 2 && slot == 0 ? SPECIES_MAGIKARP : FIXTURE_SPECIES, 20);
         for (u32 move = 0; move < MAX_MON_MOVES; move++) SetMonMoveSlot(mon, MOVE_NONE, move);
         SetMonMoveSlot(mon, MOVE_VINE_WHIP, 0);
         if (FIXTURE_MODE == 1 || FIXTURE_MODE == 5)
@@ -49,7 +63,7 @@ void CB2_PolishedTM70Fixture(void)
             SetMonData(mon, MON_DATA_PP_BONUSES, &bonuses);
             SetMonData(mon, MON_DATA_PP1, &pp);
         }
-        if (FIXTURE_MODE == 3) SetMonMoveSlot(mon, MOVE_FLASH, 1);
+        if (FIXTURE_MODE == 3) SetMonMoveSlot(mon, FIXTURE_MOVE, 1);
         if (FIXTURE_MODE == 4 && slot == 0)
         {
             u8 egg = TRUE;
@@ -63,7 +77,7 @@ void CB2_PolishedTM70Fixture(void)
         SetMonData(mon, MON_DATA_POKEBALL, &ball);
     }
     gPartiesCount[B_TRAINER_PLAYER] = 2;
-    AddBagItem(ITEM_TM70, 1);
+    AddBagItem(FIXTURE_ITEM, 1);
     AddBagItem(ITEM_TM_TOXIC, 1);
     FlagSet(FLAG_SYS_POKEMON_GET);
     FlagSet(FLAG_SYS_B_DASH);

@@ -1315,3 +1315,26 @@ the complete 100-check campaign and 19 warp traversals, including Elder Li's
 TM70 reward, Falkner and Togepi. ROM SHA-256:
 `b1b96ab1c4c6150d2e557bebdab93137edd5ffedb795ea9990dfd333fe8f10a1`.
 The campaign still uses the documented demo start, not the authentic opening.
+
+### Source TM31 Brick Break and TM51 Roost
+
+The existing TM31 (612) and TM51 (632) save IDs now use Polished Crystal's
+item descriptions, original shared 24x24 machine artwork and source Fighting
+and Flying palettes in the Johto profile. The default source's ROCK_SMASH
+constant resolves to Brick Break; Falkner's instruction awards TM_ROOST, which
+is TM51 despite the source's older event flag still mentioning TM31.
+
+These two machines now share TM70's source lesson friendship and reusable,
+nontradable ownership adapter. The native profile and other machines keep
+their existing definitions. Successful lessons use imported compatibility and
+base PP (Brick Break 15, Roost 5), reset replaced-slot PP Ups and apply the
+source additive friendship bonuses once. Rejection, cancellation and attempts
+to give an owned machine leave party/inventory unchanged.
+
+`build_source_tms.py --check` verifies the pinned source identity, descriptions
+and palettes. Production-linked controller fixtures cover both machines;
+the campaign additionally checks the original icon and item definition on
+Falkner's actual reward. No new TM31 acquisition event is claimed. Broader
+machine/tutor inventory, source ownership-bit storage, learning UI/audio and
+move battle-effect parity retain their separate audit boundaries. See the
+[parity audit](tools/polished_port/PARITY_AUDIT.md) for final validation evidence.

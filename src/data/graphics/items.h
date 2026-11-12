@@ -2136,5 +2136,7 @@ const u16 gItemIconPalette_PolishedGoldLeaf[] = INCGFX_U16("graphics/items/icon_
 const u32 gItemIcon_PolishedBrickPiece[] = INCGFX_U32("graphics/items/icons/polished_brick_piece.png", ".4bpp.smol");
 const u16 gItemIconPalette_PolishedBrickPiece[] = INCGFX_U16("graphics/items/icon_palettes/polished_brick_piece.pal", ".gbapal");
 
-const u32 gItemIcon_PolishedFlashTM[] = INCGFX_U32("graphics/items/icons/polished_flash_tm.png", ".4bpp.smol");
-const u16 gItemIconPalette_PolishedFlashTM[] = INCGFX_U16("graphics/items/icon_palettes/polished_flash_tm.pal", ".gbapal");
+const u32 gItemIcon_PolishedTM[] = INCGFX_U32("graphics/items/icons/polished_tm.png", ".4bpp.smol");
+const u16 gItemIconPalette_PolishedTMNormal[] = INCGFX_U16("graphics/items/icon_palettes/polished_tm_normal.pal", ".gbapal");
+const u16 gItemIconPalette_PolishedTMFighting[] = INCGFX_U16("graphics/items/icon_palettes/polished_tm_fighting.pal", ".gbapal");
+const u16 gItemIconPalette_PolishedTMFlying[] = INCGFX_U16("graphics/items/icon_palettes/polished_tm_flying.pal", ".gbapal");

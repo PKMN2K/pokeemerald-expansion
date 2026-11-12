@@ -1,0 +1,73 @@
+{
+  "source_commit": "3fa43192379df5c3e7b09a08e4d5d79af4f02f42",
+  "source_variant": "default (FAITHFUL undefined)",
+  "machines": [
+    {
+      "number": 31,
+      "source_constant": "ROCK_SMASH",
+      "source_move": "BRICK_BREAK",
+      "target_item": "ITEM_TM_BRICK_BREAK",
+      "target_id": 612,
+      "target_move": "MOVE_BRICK_BREAK",
+      "source_type": "FIGHTING",
+      "source_rgb555": [
+        [
+          30,
+          24,
+          18
+        ],
+        [
+          31,
+          13,
+          0
+        ]
+      ],
+      "source_dimensions": [
+        24,
+        24
+      ],
+      "source_pp": 15,
+      "description": "Removes Reflect\\nand Light Screen."
+    },
+    {
+      "number": 51,
+      "source_constant": "ROOST",
+      "source_move": "ROOST",
+      "target_item": "ITEM_TM_ROOST",
+      "target_id": 632,
+      "target_move": "MOVE_ROOST",
+      "source_type": "FLYING",
+      "source_rgb555": [
+        [
+          21,
+          29,
+          31
+        ],
+        [
+          24,
+          24,
+          23
+        ]
+      ],
+      "source_dimensions": [
+        24,
+        24
+      ],
+      "source_pp": 5,
+      "description": "Lands to restore\\n1/2 the max HP."
+    }
+  ],
+  "rules": [
+    "Original shared machine icon; source Fighting and Flying palettes selected by source move type.",
+    "Existing target/save IDs, machine indices and numbers retained; no inventory migration.",
+    "Reusable, nontradable bag items adapt source machine ownership bits.",
+    "Source compatibility, lesson friendship and actual Bag PP flow are shared with TM70.",
+    "Falkner already awards TM51 once; its existing item ID now receives the source definition."
+  ],
+  "gaps": [
+    "Other source TM/HM/tutor identities and source ownership-bit inventory remain incomplete.",
+    "Native Bag, party, learning text, sound and animation remain presentation gaps.",
+    "TM31 acquisition beyond the imported campaign remains unported; fixture ownership is not campaign acquisition.",
+    "Move battle effects and other move data remain separately audited; this suite covers item identity and teaching."
+  ]
+}

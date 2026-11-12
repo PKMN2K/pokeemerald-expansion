@@ -12777,6 +12777,9 @@ const struct ItemInfo gItemsInfo[] =
         .fieldUseFunc = ItemUseOutOfBattle_TMHM,
     },
 
+#if POLISHED_JOHTO_DEMO
+#include "polished_tm31_item.h"
+#else
     [ITEM_TM_BRICK_BREAK] =
     {
         .name = ITEM_NAME("TM31"),
@@ -12790,6 +12793,7 @@ const struct ItemInfo gItemsInfo[] =
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_TMHM,
     },
+#endif
 
     [ITEM_TM_DOUBLE_TEAM] =
     {
@@ -13057,6 +13061,9 @@ const struct ItemInfo gItemsInfo[] =
         .fieldUseFunc = ItemUseOutOfBattle_TMHM,
     },
 
+#if POLISHED_JOHTO_DEMO
+#include "polished_tm51_item.h"
+#else
     [ITEM_TM_ROOST] =
     {
         .name = ITEM_NAME("TM51"),
@@ -13067,6 +13074,7 @@ const struct ItemInfo gItemsInfo[] =
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_TMHM,
     },
+#endif
 
     [ITEM_TM52] =
     {

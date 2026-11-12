@@ -101,6 +101,7 @@ jobs:
           python3 tools/polished_port/scripts/test_rock_smash.py
           python3 tools/polished_port/scripts/build_flash.py --check
           python3 tools/polished_port/scripts/build_tm70.py --check
+          python3 tools/polished_port/scripts/build_source_tms.py --check
 
       - name: Build playable Johto demo
         timeout-minutes: 20
@@ -124,6 +125,10 @@ jobs:
       - name: Validate source TM70 teaching in emulator
         timeout-minutes: 15
         run: python3 tools/polished_port/scripts/test_tm70_emulator.py --driver /tmp/johto-demo-driver --output /tmp/johto-validation/tm70
+
+      - name: Validate source TM31 and TM51 teaching in emulator
+        timeout-minutes: 15
+        run: python3 tools/polished_port/scripts/test_source_tms_emulator.py --driver /tmp/johto-demo-driver --output /tmp/johto-validation/source-tms
 
       - name: Upload Johto demo and emulator evidence
         if: always()

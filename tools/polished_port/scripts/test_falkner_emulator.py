@@ -309,6 +309,13 @@ def check_gym(game, city, checks, report):
     assert not flag(game,c['FLAG_BADGE05_GET'])
     assert flag(game,c['FLAG_POLISHED_ROOST']) and count(game,c['ITEM_TM_ROOST'])==1
     game.screenshot('falkner-badge-received')
+    from test_tm70_emulator import open_bag, close, icon, machine, constants as tm_constants
+    open_bag(game)
+    select_bag_item(game,c['ITEM_TM_ROOST'],pocket=2)
+    icon(game,machine(tm_constants(),51))
+    game.screenshot('falkner-source-tm51')
+    close(game)
+    checks.append('Falkner actual TM51 reward uses source name, description, non-sale price and original live icon pixels/Flying palette')
     save_game(game);continue_game(game)
     game.face(UP);game.press(A,60);settle(game,report)
     assert count(game,c['ITEM_TM_ROOST'])==1

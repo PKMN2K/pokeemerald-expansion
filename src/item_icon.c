@@ -1,4 +1,5 @@
 #include "global.h"
+#include "polished_tm.h"
 #include "battle_main.h"
 #include "decompress.h"
 #include "graphics.h"
@@ -161,7 +162,7 @@ const void *GetItemIconPic(enum Item itemId)
     if (itemId >= ITEMS_COUNT)
         return gItemsInfo[0].iconPic;
 #if POLISHED_JOHTO_DEMO
-    if (itemId == ITEM_TM70)
+    if (IsPolishedTM(itemId))
         return gItemsInfo[itemId].iconPic;
 #endif
     if (gItemsInfo[itemId].pocket == POCKET_TM_HM)
@@ -181,7 +182,7 @@ const u16 *GetItemIconPalette(enum Item itemId)
     if (itemId >= ITEMS_COUNT)
         return gItemsInfo[0].iconPalette;
 #if POLISHED_JOHTO_DEMO
-    if (itemId == ITEM_TM70)
+    if (IsPolishedTM(itemId))
         return gItemsInfo[itemId].iconPalette;
 #endif
     if (gItemsInfo[itemId].pocket == POCKET_TM_HM)

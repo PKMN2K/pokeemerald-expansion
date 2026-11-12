@@ -857,6 +857,45 @@ TM70 reward, Falkner and Togepi. ROM SHA-256:
 `b1b96ab1c4c6150d2e557bebdab93137edd5ffedb795ea9990dfd333fe8f10a1`.
 The campaign still uses the documented demo start, not the authentic opening.
 
+## Source TM31 / TM51 identity and teaching
+
+Source TM31 Brick Break and TM51 Roost now retain their existing target/save
+IDs 612 and 632 while importing source descriptions, original 24x24 machine
+pixels and Fighting/Flying RGB555 palettes. The pinned default release maps
+ROCK_SMASH to Brick Break. Falkner's actual `verbosegivetmhm TM_ROOST` awards
+TM51; the older source event label `EVENT_GOT_TM31_ROOST` is not a number map.
+
+Both items use the shared source TM lesson path introduced for TM70: reusable
+ownership, source compatibility, +1/+1/+0 friendship with additive Soothe Bell
+and Luxury Ball bonuses, full source base PP and replacement-slot PP Up reset.
+Roost has five base PP; Brick Break has fifteen. The common icon/friendship
+code now has generic names. Source rules apply only to these three migrated
+machines in the Johto profile; native items and legacy HM05 retain their rules.
+
+`build_source_tms.py` reuses hash-verified pinned machine, move, palette and
+Violet Gym fixtures, with an additional pinned type-order fixture. Native tests
+cover the exact three-item scope and stable IDs/categories, alongside the full
+friendship matrix. Fourteen controller-only TM31/TM51 fixtures link production
+Johto objects and check empty/replacement lessons, source PP, ordinary forgetting,
+reuse, incompatible/known-move/Egg rejection, cancellation, refusal to give,
+Save/Continue, ROM item prose/price and live icon pixels/palettes. The campaign
+checks the source item/art on Falkner's actual one-time reward separately.
+
+Remaining gaps: TM31 acquisition beyond the currently imported campaign,
+remaining source machines/tutors and source owned-bit storage, Bag/party/lesson
+layout, dialogue/audio/animation, and separately audited move battle effects.
+Fixture parties and machine ownership do not establish campaign acquisition.
+
+Validation with GCC 13.2.1: both production ROMs build; all 5,349 native tests
+pass (nine expected failures and 586 existing TODOs; 5,944 total). All 41
+source/asset checks, twelve ARM layout probes, twelve demo checks, eight rock
+fixtures, eight Flash fixtures, six TM70 fixtures and fourteen TM31/TM51
+fixtures pass. Final Johto ROM SHA-256:
+`cb159439b932cc6cb0cb29e2d8f7e11e074d6a950dca0e4577e0fc7f2f376fd5`.
+The same final ROM passes all 101 campaign checks and 19 warp traversals,
+including Elder Li, Falkner's original TM51 artwork/definition and Togepi.
+These remain demo-start regressions until the authentic source opening is ported.
+
 ## Next priorities
 
 1. Continue the source field-rule audit. Headbutt remains dormant; other field

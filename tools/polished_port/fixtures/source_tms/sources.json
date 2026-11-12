@@ -1,0 +1,10 @@
+{
+  "commit": "3fa43192379df5c3e7b09a08e4d5d79af4f02f42",
+  "files": [
+    {
+      "path": "constants/type_constants.asm",
+      "fixture": "00.b64",
+      "git_blob_sha1": "ca7bfe89bdcaea420467ba94547e9567252832b1"
+    }
+  ]
+}

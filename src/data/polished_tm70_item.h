@@ -8,6 +8,6 @@
         .pocket = POCKET_TM_HM,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_TMHM,
-        .iconPic = gItemIcon_PolishedFlashTM,
-        .iconPalette = gItemIconPalette_PolishedFlashTM,
+        .iconPic = gItemIcon_PolishedTM,
+        .iconPalette = gItemIconPalette_PolishedTMNormal,
     },

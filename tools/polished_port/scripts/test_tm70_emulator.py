@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
-"""Controller-only TM70 lessons against unchanged production Johto objects."""
+"""Controller-only source TM lessons against unchanged production Johto objects."""
 import argparse
+import ast
 import hashlib
 import json
 from pathlib import Path
@@ -20,19 +21,23 @@ COMPILER = 'arm-none-eabi-gcc'
 
 def constants():
     c=rock.constants()
-    fields={'tm':'ITEM_TM70', 'toxic_tm':'ITEM_TM_TOXIC', 'flash':'MOVE_FLASH', 'toxic':'MOVE_TOXIC',
+    fields={'tm70':'ITEM_TM70', 'tm31':'ITEM_TM31', 'tm51':'ITEM_TM51',
+            'move70':'MOVE_FLASH', 'move31':'MOVE_BRICK_BREAK', 'move51':'MOVE_ROOST',
+            'toxic_tm':'ITEM_TM_TOXIC', 'toxic':'MOVE_TOXIC',
             'bag_sprites':'offsetof(struct BagMenu, spriteIds)', 'item_sprite':'ITEMMENUSPRITE_ITEM',
+            'item_size':'sizeof(struct ItemInfo)', 'item_description':'offsetof(struct ItemInfo, description)',
+            'item_name':'offsetof(struct ItemInfo, name)',
             'friendship':'offsetof(struct PokemonSubstruct0, friendship)',
             'bonuses':'offsetof(struct PokemonSubstruct0, ppBonuses)', 'party_slot':'offsetof(struct PartyMenu, slotId)'}
-    code='#include "global.h"\n#include "item_menu.h"\n#include "party_menu.h"\nconst u32 values[]={'+','.join(fields.values())+'};'
+    code='#include "global.h"\n#include "item.h"\n#include "item_menu.h"\n#include "party_menu.h"\nconst u32 values[]={'+','.join(fields.values())+'};'
     r=subprocess.run(['arm-none-eabi-gcc','-mcpu=arm7tdmi','-mthumb','-mabi=apcs-gnu','-DMODERN=1','-DEMERALD','-std=gnu17','-iquote','include','-iquote','.','-S','-x','c','-o','-','-'],cwd=ROOT,input=code,text=True,capture_output=True,check=True)
     c.update(zip(fields,map(int,re.findall(r'\.word\s+(\d+)',r.stdout)),strict=True))
     return c
 
 
-def fixture(directory,mode):
+def fixture(directory,mode,number):
     elf=directory/'tm70.elf';obj=directory/'fixture.o';linker=directory/'fixture.ld'
-    subprocess.run([COMPILER,'-c','-Wa,-meabi=5','-mthumb','-mthumb-interwork','-O2','-mabi=apcs-gnu','-march=armv4t','-std=gnu17','-DMODERN=1','-DTESTING=0','-DEMERALD','-DPOLISHED_JOHTO_DEMO=1',f'-DFIXTURE_MODE={mode}','-Wall','-Werror','-iquote','include','-iquote','.',str(ROOT/'tools/polished_port/tests/tm70_fixture.c'),'-o',str(obj)],cwd=ROOT,check=True)
+    subprocess.run([COMPILER,'-c','-Wa,-meabi=5','-mthumb','-mthumb-interwork','-O2','-mabi=apcs-gnu','-march=armv4t','-std=gnu17','-DMODERN=1','-DTESTING=0','-DEMERALD','-DPOLISHED_JOHTO_DEMO=1',f'-DFIXTURE_MODE={mode}',f'-DFIXTURE_TM={number}','-Wall','-Werror','-iquote','include','-iquote','.',str(ROOT/'tools/polished_port/tests/tm70_fixture.c'),'-o',str(obj)],cwd=ROOT,check=True)
     linker.write_text((ROOT/'ld_script_modern.ld').read_text().replace('gInitialMainCB2 = CB2_InitCopyrightScreenAfterBootup;','gInitialMainCB2 = CB2_PolishedTM70Fixture;'))
     objects=[line[5:] for line in (ROOT/'pokeemerald-johto-demo.map').read_text().splitlines() if line.startswith('LOAD ') and line!='LOAD linker stubs']
     subprocess.run(['arm-none-eabi-ld','--gc-sections','-T',str(linker),'-o',str(elf),str(obj),*objects],cwd=ROOT/'build/emerald-johto-demo',check=True)
@@ -53,17 +58,25 @@ def details(game,c):
 
 def icon(game,c):
     from PIL import Image
+    charmap={ast.literal_eval("'"+char+"'"):int(value,16) for char,value in
+             re.findall(r"^'(.+)'\s*=\s*([0-9A-F]{2})",(ROOT/'charmap.txt').read_text(),re.M)
+             if len(char)==1 or char in (r"\'",r"\n")}
+    record=game.sym['gItemsInfo']+c['tm']*c['item_size']
+    assert game.u32(record)==0, 'Source machine must have no sale price'
+    for field,text in (('item_name',f"TM{c['number']}"),('item_description',c['description'].replace('\\n','\n'))):
+        expected=bytes(charmap[char] for char in text)+b'\xff'
+        assert game.read(game.u32(record+c[field]),len(expected))==expected,(field,text)
     sprites=game.read(game.u32(game.sym['gBagMenu'])+c['bag_sprites']+c['item_sprite'],2)
     ids=[s for s in sprites if s<64]
     assert len(ids)==1, list(sprites)
     attr=int.from_bytes(game.read(game.sym['gSprites']+ids[0]*c['sprite_size']+c['sprite_oam']+4,2),'little')
     tiles=game.read(0x6010000+(attr&0x3ff)*32,512)
-    expected=Image.open(ROOT/'graphics/items/icons/polished_flash_tm.png')
+    expected=Image.open(ROOT/'graphics/items/icons/polished_tm.png')
     for y in range(32):
         for x in range(32):
             byte=tiles[((y//8)*4+x//8)*32+(y%8)*4+(x%8)//2]
             assert (byte>>(4*(x&1)))&15 == (expected.getpixel((x,y)) if x<24 and y<24 else 0),(x,y)
-    colors=json.loads((ROOT/'tools/polished_port/manifests/tm70.json').read_text())['source_rgb555']
+    colors=c['source_rgb555']
     expected_palette=[0x7fff]+[r|(g<<5)|(b<<10) for r,g,b in colors]+[0]*13
     assert list(struct.unpack('<16H',game.read(game.sym['gPlttBufferUnfaded']+(16+(attr>>12))*32,32)))==expected_palette
 
@@ -80,10 +93,10 @@ def open_bag(game):
 def use(game,c,item,slot=0,check_icon=False):
     select_bag_item(game,item,pocket=2)
     if check_icon:
-        icon(game,c);game.screenshot('tm70-bag')
+        icon(game,c);game.screenshot('tm-bag')
     game.press(A,80)
     wait_for(game,lambda:task_active(game,'Task_ShowTMHMContainedMessage'),'TM boot text')
-    if item==c['tm']:assert text_matches(game,'sText_BootedUpTM'), 'TM70 booted as HM'
+    if item==c['tm']:assert text_matches(game,'sText_BootedUpTM'), 'Source TM booted as HM'
     game.press(A,90)
     advance(game,lambda:task_active(game,'Task_HandleChooseMonInput'))
     game.frames(50)
@@ -107,13 +120,38 @@ def close(game):
     raise AssertionError('Bag did not return to field')
 
 
-def run(driver,out,mode,c):
+def machine(c,number):
+    c=c.copy()
+    c['tm'],c['move']=c[f'tm{number}'],c[f'move{number}']
+    if number==70:
+        info=json.loads((ROOT/'tools/polished_port/manifests/tm70.json').read_text())
+        c['pp']=20
+    else:
+        info=next(r for r in json.loads((ROOT/'tools/polished_port/manifests/source_tms.json').read_text())['machines'] if r['number']==number)
+        c['pp']=info['source_pp']
+    c['source_rgb555']=info['source_rgb555']
+    c['description'],c['number']=info['description'],number
+    return c
+
+
+def run(driver,out,mode,c,number=70):
+    c=machine(c,number)
     out.mkdir(parents=True,exist_ok=True)
     with tempfile.TemporaryDirectory() as directory:
-        tmp=Path(directory);elf=fixture(tmp,mode);game=Game(driver,elf,elf,out,tmp)
+        tmp=Path(directory);elf=fixture(tmp,mode,number);game=Game(driver,elf,elf,out,tmp)
         try:
             rock.boot(game);before=details(game,c);bag=flash.inventory(game)
-            open_bag(game);use(game,c,c['tm'],check_icon=True)
+            open_bag(game)
+            if mode==6:
+                select_bag_item(game,c['tm'],pocket=2);icon(game,c)
+                game.press(RIGHT);game.press(A,80)
+                wait_for(game,lambda:text_matches(game,'gText_Var1CantBeHeld'),'nontradable TM refusal')
+                game.frames(40)
+                game.screenshot('cannot-give-tm')
+                assert details(game,c)==before and flash.inventory(game)==bag
+                finish(game);close(game)
+                return dict(mode=mode,give_refused=True,unchanged=True,icon_verified=True)
+            use(game,c,c['tm'],check_icon=True)
             if mode in (2,3,4):
                 # Eggs remain on the selector instead of opening a lesson.
                 if mode==4:
@@ -134,8 +172,8 @@ def run(driver,out,mode,c):
                 game.press(A,80)
             finish(game)
             after=details(game,c);slot=0 if mode==1 else 1
-            expected=dict(before[0]);expected['moves']=before[0]['moves'].copy();expected['moves'][slot]=c['flash']
-            expected['pp']=before[0]['pp'].copy();expected['pp'][slot]=20
+            expected=dict(before[0]);expected['moves']=before[0]['moves'].copy();expected['moves'][slot]=c['move']
+            expected['pp']=before[0]['pp'].copy();expected['pp'][slot]=c['pp']
             expected['bonuses']=before[0]['bonuses'] & ~(3<<(slot*2));expected['friendship']=162
             assert after[0]==expected,(after[0],expected)
             assert after[1]==before[1] and flash.inventory(game)==bag
@@ -146,17 +184,17 @@ def run(driver,out,mode,c):
             if mode==1:
                 advance(game,lambda:task_active(game,'Task_HandleReplaceMoveInput'));game.frames(50);game.press(A,80)
             finish(game);after=details(game,c)
-            assert after[1]['moves'][slot]==c['flash'] and after[1]['friendship']==160
+            assert after[1]['moves'][slot]==c['move'] and after[1]['friendship']==160
             assert flash.inventory(game)==bag
             if mode==1:
-                # Full moveset: ordinary machine teaching must allow Flash to
+                # Full moveset: ordinary machine teaching must allow the move to
                 # be selected and forgotten without a move-deleter visit.
                 use(game,c,c['toxic_tm'])
                 advance(game,lambda:task_active(game,'Task_HandleReplaceMoveInput'));game.frames(50);game.press(A,80)
                 finish(game)
                 assert details(game,c)[0]['moves'][0]==c['toxic'],details(game,c)
                 assert count(game,c['tm'])==1
-                game.screenshot('forgot-flash')
+                game.screenshot('forgot-source-move')
             close(game);saved=details(game,c);saved_bag=flash.inventory(game)
             save_game(game);game.command('reset');rock.boot(game)
             assert details(game,c)==saved and flash.inventory(game)==saved_bag
