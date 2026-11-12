@@ -2,6 +2,7 @@
 /* Zero denotes native fallback for items absent from the source mapping. */
 static const u32 sPolishedMappedItemPrices[ITEMS_COUNT] = {
     [ITEM_AMULET_COIN] = 10000, /* AMULET_COIN */
+    [ITEM_ANTIDOTE] = 200, /* ANTIDOTE */
     [ITEM_ASPEAR_BERRY] = 10, /* ASPEAR_BERRY */
     [ITEM_AWAKENING] = 100, /* AWAKENING */
     [ITEM_BERRY_JUICE] = 100, /* BERRY_JUICE */
@@ -48,15 +49,20 @@ static const u32 sPolishedMappedItemPrices[ITEMS_COUNT] = {
     [ITEM_PERSIM_BERRY] = 10, /* PERSIM_BERRY */
     [ITEM_PETAYA_BERRY] = 10, /* PETAYA_BERRY */
     [ITEM_POISON_BARB] = 1000, /* POISON_BARB */
+    [ITEM_POKE_BALL] = 200, /* POKE_BALL */
+    [ITEM_POLISHED_ESCAPE_ROPE] = 1000, /* ESCAPE_ROPE */
+    [ITEM_POLISHED_FLOWER_MAIL] = 50, /* FLOWER_MAIL */
     [ITEM_POLISHED_GOLD_LEAF] = 500, /* GOLD_LEAF */
     [ITEM_POLISHED_PINK_BOW] = 1000, /* PINK_BOW */
     [ITEM_POLISHED_SILVER_LEAF] = 500, /* SILVER_LEAF */
+    [ITEM_POTION] = 200, /* POTION */
     [ITEM_PROTECTOR] = 2000, /* PROTECTOR */
     [ITEM_QUICK_CLAW] = 4000, /* QUICK_CLAW */
     [ITEM_QUICK_POWDER] = 100, /* QUICK_POWDER */
     [ITEM_RAWST_BERRY] = 10, /* RAWST_BERRY */
     [ITEM_RAZOR_CLAW] = 5000, /* RAZOR_CLAW */
     [ITEM_RAZOR_FANG] = 5000, /* RAZOR_FANG */
+    [ITEM_REPEAT_BALL] = 1000, /* REPEAT_BALL */
     [ITEM_SACRED_ASH] = 50000, /* SACRED_ASH */
     [ITEM_SHARP_BEAK] = 1000, /* SHARP_BEAK */
     [ITEM_SHED_SHELL] = 4000, /* SHED_SHELL */
@@ -73,5 +79,7 @@ static const u32 sPolishedMappedItemPrices[ITEMS_COUNT] = {
     [ITEM_TWISTED_SPOON] = 1000, /* TWISTEDSPOON */
     [ITEM_UPGRADE] = 2000, /* UPGRADE */
     [ITEM_WIDE_LENS] = 4000, /* WIDE_LENS */
+    [ITEM_X_ATTACK] = 1000, /* X_ATTACK */
     [ITEM_X_DEFENSE] = 2000, /* X_DEFEND */
+    [ITEM_X_SPEED] = 1000, /* X_SPEED */
 };
