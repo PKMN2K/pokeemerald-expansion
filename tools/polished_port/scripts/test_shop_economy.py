@@ -9,8 +9,8 @@ price = item.split("u32 GetItemPrice(enum Item itemId)", 1)[1].split("static boo
 sell = item.split("u32 GetItemSellPrice(enum Item itemId)", 1)[1].split("bool32 IsHoldEffectChoice", 1)[0]
 
 # Verify the source price adapter is restricted to the Johto configuration.
-assert price.count("#if POLISHED_JOHTO_DEMO") == 1
-assert price.count("#endif") == 1
+assert price.count("#if POLISHED_JOHTO_DEMO") == 2
+assert price.count("#endif") == 2
 for symbol, expected in {
     "ITEM_PARALYZE_HEAL": 300,
     "ITEM_AWAKENING": 100,
@@ -18,6 +18,13 @@ for symbol, expected in {
 }.items():
     assert re.search(r"case\s+" + symbol + r":\s*return\s+" + str(expected) + r";", price), symbol
 assert "return gItemsInfo[SanitizeItemId(itemId)].price;" in price
+assert "sPolishedMappedItemPrices[SanitizeItemId(itemId)]" in price
+source_prices = ROOT / "src/data/polished_item_prices.h"
+assert source_prices.is_file()
+from build_item_prices import build as build_prices
+assert source_prices.read_bytes() == build_prices()
+assert "#include \"data/polished_item_prices.h\"" in item
+
 assert "#if POLISHED_JOHTO_DEMO" in sell
 assert "return GetItemPrice(itemId) / 2;" in sell
 assert "#else" in sell and "return GetItemPrice(itemId) / ITEM_SELL_FACTOR;" in sell
