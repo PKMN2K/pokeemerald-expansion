@@ -70,4 +70,5 @@ static const u32 sPolishedMappedItemPrices[ITEMS_COUNT] = {
     [ITEM_TINY_MUSHROOM] = 500, /* TINYMUSHROOM */
     [ITEM_TWISTED_SPOON] = 1000, /* TWISTEDSPOON */
     [ITEM_UPGRADE] = 2000, /* UPGRADE */
-    [ITEM_WIDE_LENS] = 4000, /* WIDE_LENS */};
+    [ITEM_WIDE_LENS] = 4000, /* WIDE_LENS */
+};
