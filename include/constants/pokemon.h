@@ -396,6 +396,13 @@ enum GeneratedMonOrigin
 #define MON_PIC_HEIGHT 64
 #define MON_PIC_SIZE (MON_PIC_WIDTH * MON_PIC_HEIGHT / 2)
 
+// Battle-only opt-in canvas for static Gen 5-style battlers.
+// Normal species and all non-battle Pokémon UI continue to use MON_PIC_SIZE.
+#define GEN5_STATIC_MON_PIC_WIDTH 96
+#define GEN5_STATIC_MON_PIC_HEIGHT 96
+#define GEN5_STATIC_MON_PIC_SIZE (GEN5_STATIC_MON_PIC_WIDTH * GEN5_STATIC_MON_PIC_HEIGHT / 2)
+#define BATTLE_MON_GFX_BUFFER_SIZE GEN5_STATIC_MON_PIC_SIZE
+
 // Most Pokémon have 2 frames (a default and an alternate for their animation).
 // There are 4 exceptions:
 // - Deoxys has 2 frames, 1 for each form

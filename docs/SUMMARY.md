@@ -49,6 +49,7 @@
   - [How to delete vanilla maps](tutorials/how_to_delete_vanilla_maps.md)
   - [How to use Map Previews](tutorials/how_to_map_preview_screen.md)
   - [Quickstart Documentation](tutorials/quickstart.md)
+  - [Static 96x96 Gen 5 battle sprites](static_gen5_battlers.md)
   - [How to use Generic Spots](tutorials/how_to_spots.md)
   - [How to use Dynamic Shop](tutorials/how_to_dynamic_shop.md)
   - [How to use Mass Outbreak](tutorials/how_to_mass_outbreak.md)
