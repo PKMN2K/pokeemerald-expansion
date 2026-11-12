@@ -10,7 +10,13 @@
 #define TYPE_BOOST_PARAM ((I_TYPE_BOOST_POWER >= GEN_4) ? 20 : 10) // For non Pokémon-specific type-boosting held items.
 #define POWER_ITEM_BOOST ((I_POWER_ITEM_BOOST >= GEN_7) ? 8 : 4)
 
+// Pinned Polished Crystal X-item attributes encode one stat stage ($10);
+// preserve the configured modern Expansion behavior outside the Johto profile.
+#if POLISHED_JOHTO_DEMO
+#define X_ITEM_STAGES 1
+#else
 #define X_ITEM_STAGES ((B_X_ITEMS_BUFF >= GEN_7) ? 2 : 1)
+#endif
 
 #define TREASURE_FACTOR ((I_SELL_VALUE_FRACTION >= GEN_9) ? 2 : 1)
 
