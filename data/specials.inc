@@ -672,3 +672,5 @@ gSpecials::
 	def_special PolishedRockSmashEncounter
 	def_special PolishedRockSmashShowItem
 	def_special PolishedRockSmashHideItem
+
+	def_special PolishedFlashIlluminate

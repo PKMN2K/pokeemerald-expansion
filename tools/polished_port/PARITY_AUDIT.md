@@ -29,7 +29,7 @@ regression coverage, but are not evidence of complete source-game parity.
 | Startup and player identity | `POLISHED_JOHTO_DEMO` starts in a test garden with a Lv10 Totodile, Surf, an Old Rod and a Mach Bike. Existing campaign replays use that harness. | Implement the real source startup separately from the test garden, with the source initial party/inventory, opening flow and supported protagonists. Add a campaign run starting from that baseline. |
 | UI, Pokedex and audio | Native Bag/party/storage/battle UI, National Dex ordering and native audio are still used in imported events. A source Type Chart does not complete the UI. | Port source presentation and ordering. Keep separately requested HGSS backups unwired. |
 | Map and event coverage | Thirty-two source maps and selected events through Falkner are live. Door, collision, time-palette, schedule, reward and Save/Continue checks cover those implementations. | Preserve these checks; audit their documented native substitutions and incomplete interactions. Broader Johto/Kanto geography and story, Pokégear, source services and field interactions remain open. |
-| Field rules and encounters | Dark Cave rock interactions now use source eligibility, repeats and encounter/reward rolls. Other selected encounters/field moves still use native modifiers and gates. Headbutt's source selector is dormant. | Audit source field behavior and enable each feature with an explicit map identity and source rules. |
+| Field rules and encounters | Dark Cave rocks use source eligibility, repeats and encounter/reward rolls. Flash now uses source eligibility, confirmation, full-map lighting and persistence; its stable HM05 item adapter and presentation gaps remain explicit. Other selected encounters/field moves still use native modifiers and gates. Headbutt's source selector is dormant. | Audit source field behavior and enable each feature with an explicit map identity and source rules. |
 | Save compatibility | Target save IDs are already allocated and tested. Source DVs/records cannot be copied byte-for-byte into native encrypted Pokemon. | Preserve stable regular move/species/item/save IDs where possible; document representation changes and migration requirements. Source behavior, not GBC table width, is the target. |
 | Completion criteria | Generic native battle tests can pass with entirely native data. | Require source fixture/provenance checks, source-specific native tests, and live emulator assertions for each migration phase. Keep the broader suite as regression coverage. |
 | Replay assumptions | The old tower replay relied on Expansion's early Bite and remaining Surf PP, confused the returning Start menu with field control, and could accept an interrupted interaction as complete. Capture input assumed the remembered Bag row was a ball and did not handle newly reached learn levels. | Replays now learn the source level-13 Bite through the real selector, use purchased Potions and Center visits, confirm the intended object interaction, select the actual ball stack, handle learning prompts, confirm the wild-battle replacement question and Send Out after a lead faints, and recover from a real capture blackout with bounded retries and ordinary ball purchases. Changed source data must drive test input instead of being changed to preserve the old replay. |
@@ -762,6 +762,52 @@ Strength/item audio and message-box styling still use native assets/UI;
 existing mapped item properties and broader wild creation/battle behavior retain
 their previously recorded gaps. This phase does not enable dormant Headbutt or
 claim source parity for unrelated field moves, additional maps or Prism mining.
+
+## Dark Cave Flash field rules
+
+The registered Dark Cave map now offers Flash as the A-button fallback after
+object/background/metatile/Surf interactions. The pinned `CheckPartyMove` order
+selects the first non-Egg knower in physical party order, then the first
+source-compatible non-Egg when the Flash machine is owned. HP, PP and badges
+are not gates. Declining leaves the cave dark; accepting does not teach Flash,
+spend PP, or consume the item. The party menu requires the selected Pokemon to
+know Flash and skips the Yes/No prompt. All 391 source teaching tables remain
+authoritative; optional native species do not gain source TM compatibility.
+
+The field script shows the Pokemon, presents the source Flash message, fades to
+white and lights the entire map. Emerald's small lit circle is removed. The
+existing Flash flag and flash-level save fields persist through menus, battles
+and Save/Continue; entering outdoors resets them. Loading an older demo save
+with Flash already active normalizes its native radius to full brightness on
+this registered source map. Map, item, species and save IDs remain unchanged.
+Elder Li's explanatory dialogue now comes directly from his original inline
+text, including pressing A without teaching the move.
+
+Source TM70 still uses the established reusable HM05 item/save adapter. Its
+numbering, HM presentation/teaching restrictions and full source TM inventory
+remain incomplete. Pre-use darkness, Pokemon pictures/cries, the Flash sound,
+message styling and exact fade timing also retain native presentation. The
+Aerodactyl chamber exception is explicitly deferred with its unported map.
+This phase does not enable Headbutt or certify other field moves.
+
+`build_flash.py --check` verifies pinned assembly, input priority, reset rules
+and generated dialogue. Four native tests cover party order, zero HP/PP, Eggs,
+all 391 species/form compatibility tables, map/lit-state gates and no mutation of
+party, items, badges or RNG during selection. `test_flash_emulator.py` uses
+separate boot fixtures linked to production objects; subsequent actions use
+normal controller input. The entrance/reentry and rock/battle fixtures are
+separate because source terrain prevents walking between those areas without
+additional traversal. Fixture parties/items are not campaign acquisition proof.
+
+Validation with GCC 13.2.1: both production ROMs build and all 5,345 native
+tests pass (nine expected failures and 586 existing TODOs; 5,940 total).
+All 39 source/asset checks, eleven standalone ARM layout probes, twelve demo
+checks and seven dedicated Flash scenarios pass. The dedicated checks use
+Johto ROM SHA-256
+`d19ed9b9b950810fe55d7d8c952cab754136ee316b7369e1d78202bcc5788d1d`.
+The same final ROM passes all 100 campaign checks and 19 warp traversals,
+including the Sprout reward, Dark Cave rescue, Falkner, Roost and Togepi Egg.
+These remain demo-start campaign regressions until the authentic opening is ported.
 
 ## Next priorities
 

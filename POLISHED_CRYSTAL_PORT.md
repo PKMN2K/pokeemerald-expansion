@@ -1100,10 +1100,10 @@ The summit coordinate scene retains the Elder's lecture, the player's and
 Rival's paths, and the Rival's Escape Rope departure. His visibility and
 the completed scene survive saving and loading. Defeating Li awards Flash
 once. If the Bag cannot accept it, his next interaction retries the gift
-without requiring another battle. The source reusable TM70 is represented
-by Expansion's reusable HM05 Flash, using native teaching, field-move and
-badge rules; the dialogue explains the native usage. This phase does not
-implement Crystal's press-A-without-teaching Flash mechanic. The actual
+without requiring another battle. The source reusable TM70 retains the stable HM05 Flash item adapter and native
+teaching UI. Dark Cave now uses source press-A-without-teaching eligibility,
+no badge requirement and full-map illumination; Elder Li gives his source
+instructions. Source TM numbering and presentation remain separate work. The actual
 Escape Rope item works from the tower and returns to its Violet entrance.
 
 Mako has her original first-visit conversation. Her later challenge and Rare
@@ -1127,7 +1127,7 @@ source trigger, he warns and steps the player back before Flash is obtained.
 After the Sprout Tower reward, the original darkness branch allows the
 rescue: Pidgeotto attacks Ursaring, both Pokémon leave, and Falkner follows
 the source exit path. This does not require teaching Flash before the badge.
-Native Flash field use retains Expansion's badge requirement. The rescue
+Flash field use now follows the source's badge-free rules on this map. The rescue
 and all three actors' departure persist through Save/Continue.
 
 Abe, Rod and Falkner use authentic overworld and battle graphics. Abe has
@@ -1236,3 +1236,33 @@ Regenerate and verify with `build_rock_smash.py`, `test_rock_smash.py` and the
 `Polished rocks` native tests. `test_rock_smash_emulator.py` links an isolated
 test boot fixture against production Johto objects for controller checks; it
 does not add test parties or debug events to the playable ROM.
+
+## Flash field-rule suite
+
+Dark Cave now supports the source A-button Flash interaction: first a non-Egg
+knower, otherwise a source-compatible non-Egg while the Flash machine is owned.
+Fainted Pokemon and zero PP qualify. The player can decline; accepting consumes
+neither the machine nor PP and requires no badge or teaching. Party-menu use
+selects a knower directly. Existing objects and Surf interactions retain priority.
+
+The source message and Elder Li's instructions are generated from pinned text.
+Flash fades to white, lights the whole map, persists through battles and saves,
+and resets outdoors. Older saves with an active native Flash circle are restored
+to full brightness on the registered Dark Cave map. Existing save IDs are kept.
+
+Run `build_flash.py --check`, the `Polished Flash` native tests, and
+`test_flash_emulator.py` for this suite. Controller fixtures cover eligibility,
+refusal, party-menu use, no item/PP consumption, interaction priority, battle
+return, Save/Continue, outdoor reset and legacy-save normalization. They use
+explicit test parties; the ordinary campaign replay remains separate evidence.
+
+TM70 still uses the existing HM05 item adapter. Source machine numbering, HM
+presentation/teaching restrictions, pre-use darkness, Pokemon pictures/cries,
+audio, message style and exact fade timing remain recorded gaps. The unported
+Aerodactyl chamber exception is deferred with its map.
+
+Validation: both production builds, 5,345 native tests, 39 source/asset checks,
+eleven ARM layout probes, twelve demo checks, all seven Flash fixtures and the
+complete 100-check campaign with 19 warp traversals pass using GCC 13.2.1.
+The native suite retains nine expected failures and 586 existing TODOs. Tested
+Johto ROM SHA-256: `d19ed9b9b950810fe55d7d8c952cab754136ee316b7369e1d78202bcc5788d1d`.

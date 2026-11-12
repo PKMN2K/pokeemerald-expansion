@@ -90,7 +90,7 @@ PolishedSproutTower3F_ElderLiScript_AfterText:
 	.string "I hope you learn\nand grow from your\ljourney.$"
 
 PolishedSproutTower3F_ElderLiScript_Explain:
-	.string "Flash illuminates\neven the darkest places.\pTeach it to a POKéMON.\nWith the required BADGE,\lit can light dark caves.$"
+	.string "Flash illuminates\neven the darkest\lof all places.\pYou need not teach\nit to your POKéMON\punless you wish\nto use Flash in\lbattle.\pSimply press A in\nthe darkness, and\pif any of your\nPOKéMON can use\lFlash, they will.$"
 
 PolishedSproutTower3F_POTION::
 	finditem ITEM_POTION, 1

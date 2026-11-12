@@ -1,4 +1,5 @@
 #include "global.h"
+#include "polished_flash.h"
 #include "battle_setup.h"
 #include "bike.h"
 #include "coord_event_weather.h"
@@ -323,7 +324,11 @@ static const u8 *GetInteractionScript(struct MapPosition *position, u8 metatileB
     if (script != NULL)
         return script;
 
+#if POLISHED_JOHTO_DEMO
+    return PolishedFlashInteraction();
+#else
     return NULL;
+#endif
 }
 
 const u8 *GetInteractedLinkPlayerScript(struct MapPosition *position, u8 metatileBehavior, enum Direction direction)

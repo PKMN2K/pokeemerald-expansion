@@ -1,0 +1,15 @@
+{
+  "commit": "3fa43192379df5c3e7b09a08e4d5d79af4f02f42",
+  "files": [
+    {
+      "path": "engine/events/field_moves.asm",
+      "fixture": "00.b64",
+      "git_blob_sha1": "a3ad10a881fe96a024ecd9a999d1ddb16309bfad"
+    },
+    {
+      "path": "engine/overworld/events.asm",
+      "fixture": "01.b64",
+      "git_blob_sha1": "9b5001284cbdd2f3d69d9bbc2a3df01f508879e6"
+    }
+  ]
+}

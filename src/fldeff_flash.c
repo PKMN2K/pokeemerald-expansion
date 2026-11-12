@@ -1,4 +1,5 @@
 #include "global.h"
+#include "polished_flash.h"
 #include "braille_puzzles.h"
 #include "decompress.h"
 #include "event_data.h"
@@ -71,6 +72,9 @@ static const u32 sCaveTransitionTiles[] = INCGFX_U32("graphics/cave_transition/t
 
 bool32 SetUpFieldMove_Flash(void)
 {
+#if POLISHED_JOHTO_DEMO
+    return PolishedFlashFromMenu();
+#endif
     // In Ruby and Sapphire, Registeel's tomb is opened by using Fly. In Emerald,
     // Flash is used instead.
     if (ShouldDoBrailleRegisteelEffect())

@@ -142,7 +142,7 @@ def events(name, script, header, files, text, define):
         code += summit(script, text, define)
     return hooks, code, {"trainers": [n for n in TRAINERS if f"Sage{n}SeenText:" in script],
         "items": [o["flag"] for o in header["object_events"] if "_ITEM" in o["script"] or "BALL" in o["graphics_id"]],
-        "reward_translation": "Source reusable TM70 Flash uses the native reusable HM05 Flash; native field-move rules apply.",
+        "reward_translation": "Source reusable TM70 Flash uses the stable HM05 item adapter; Dark Cave uses source Flash eligibility and lighting rules.",
         "deferred": ["Mako's post-Ecruteak challenge and Rare Candy", "source music"],
         "granny_units": "Imperial source wording, matching the engine's configured default."}
 
@@ -171,7 +171,8 @@ def elder(script, text, define):
 """
     for suffix, label in (("Seen", "SageLiSeenText"), ("Beaten", "SageLiBeatenText"), ("Take", "SageLiTakeThisFlashText"), ("AfterText", "SageLiAfterBattleText")):
         code += define(p + "_" + suffix, text(script, label).replace("TM.", "HM."))
-    code += define(p + "_Explain", "Flash illuminates\\neven the darkest places.\\pTeach it to a POKéMON.\\nWith the required BADGE,\\lit can light dark caves.$")
+    explanation = inline_text(script, "ElderLiScript", text)
+    code += define(p + "_Explain", explanation)
     return code
 
 

@@ -99,6 +99,7 @@ jobs:
           python3 tools/polished_port/scripts/build_move_pp.py --check
           python3 tools/polished_port/scripts/build_rock_smash.py --check
           python3 tools/polished_port/scripts/test_rock_smash.py
+          python3 tools/polished_port/scripts/build_flash.py --check
 
       - name: Build playable Johto demo
         timeout-minutes: 20
@@ -114,6 +115,10 @@ jobs:
       - name: Exercise source Dark Cave rocks in mGBA
         timeout-minutes: 10
         run: python3 tools/polished_port/scripts/test_rock_smash_emulator.py --driver /tmp/johto-demo-driver --output /tmp/johto-validation/rocks
+
+      - name: Exercise source Flash in mGBA
+        timeout-minutes: 10
+        run: python3 tools/polished_port/scripts/test_flash_emulator.py --driver /tmp/johto-demo-driver --output /tmp/johto-validation/flash
 
       - name: Upload Johto demo and emulator evidence
         if: always()

@@ -1,4 +1,5 @@
 #include "global.h"
+#include "polished_flash.h"
 #include "overworld.h"
 #include "battle_pyramid.h"
 #include "battle_setup.h"
@@ -1117,7 +1118,14 @@ void SetDefaultFlashLevel(void)
     if (!gMapHeader.cave)
         gSaveBlock1Ptr->flashLevel = 0;
     else if (FlagGet(FLAG_SYS_USE_FLASH))
-        gSaveBlock1Ptr->flashLevel = 1;
+    {
+#if POLISHED_JOHTO_DEMO
+        if (PolishedFlashMap(gSaveBlock1Ptr->location.mapGroup, gSaveBlock1Ptr->location.mapNum))
+            gSaveBlock1Ptr->flashLevel = 0;
+        else
+#endif
+            gSaveBlock1Ptr->flashLevel = 1;
+    }
     else
         gSaveBlock1Ptr->flashLevel = gMaxFlashLevel - 1;
 }
@@ -2248,6 +2256,13 @@ static void VBlankCB_Field(void)
 static void InitCurrentFlashLevelScanlineEffect(void)
 {
     u8 flashLevel;
+
+#if POLISHED_JOHTO_DEMO
+    // Older demo saves may have the native lit radius (1). Keep their existing
+    // Flash flag and normalize only registered source maps to full brightness.
+    if (FlagGet(FLAG_SYS_USE_FLASH) && PolishedFlashMap(gSaveBlock1Ptr->location.mapGroup, gSaveBlock1Ptr->location.mapNum))
+        SetFlashLevel(0);
+#endif
 
     if (InBattlePyramid())
     {

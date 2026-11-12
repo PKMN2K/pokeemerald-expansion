@@ -65,7 +65,7 @@ const struct FieldMoveInfo gFieldMoveInfo[FIELD_MOVES_COUNT] =
     [FIELD_MOVE_FLASH] =
     {
         .fieldMoveFunc = SetUpFieldMove_Flash,
-        .unlockType = BADGE_UNLOCK,
+        .unlockType = POLISHED_JOHTO_DEMO ? ALWAYS_UNLOCKED : BADGE_UNLOCK,
         .moveID = MOVE_FLASH,
         .partyMsgID = PARTY_MSG_CANT_USE_HERE,
         .arg = IS_FRLG ? FLAG_TO_BADGE(FLAG_BADGE01_GET) : FLAG_TO_BADGE(FLAG_BADGE02_GET),
