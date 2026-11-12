@@ -943,6 +943,16 @@ Flower Mail at 25), while ordinary Expansion builds retain their native
 prices and resale configuration. This is an initial source shop-economy
 correction, **not** a complete item metadata/effect parity audit.
 
+The next source-price phase additionally wires the pinned held-item manifest's
+**70 mapped item prices** through `GetItemPrice` in the Johto profile. Its
+zero-initialized source-price table leaves items without a source mapping on
+their native Expansion price, and non-Johto builds do not compile the adapter.
+The table is regenerated deterministically from the previously pinned and
+hash-validated item fixture inventory; CI checks regeneration and runtime
+source-profile selection. Price parity alone does not imply parity for item
+icons, descriptions, field use, hold effects or battle mechanics.
+
+
 The city map-load script refreshes the Mart entrance in earlier saved maps.
 Its new warp is appended after the Center, eastern gate and Academy warps.
 The emulator campaign exercises both exits, customer and shelf dialogue,
