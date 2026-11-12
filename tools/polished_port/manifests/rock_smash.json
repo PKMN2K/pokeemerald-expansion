@@ -1,0 +1,136 @@
+{
+  "source_commit": "3fa43192379df5c3e7b09a08e4d5d79af4f02f42",
+  "source_variant": "default; FAITHFUL undefined",
+  "map": "MAP_POLISHED_DARK_CAVE_VIOLET_ENTRANCE",
+  "battle_gate": {
+    "range": 10,
+    "hits": 4
+  },
+  "encounters": [
+    {
+      "weight": 70,
+      "species": "SPECIES_KRABBY",
+      "level": 15
+    },
+    {
+      "weight": 25,
+      "species": "SPECIES_GEODUDE",
+      "level": 15
+    },
+    {
+      "weight": 5,
+      "species": "SPECIES_SHUCKLE",
+      "level": 15
+    }
+  ],
+  "items": [
+    {
+      "weight": 1,
+      "source": "HELIX_FOSSIL",
+      "target": "ITEM_HELIX_FOSSIL"
+    },
+    {
+      "weight": 1,
+      "source": "DOME_FOSSIL",
+      "target": "ITEM_DOME_FOSSIL"
+    },
+    {
+      "weight": 1,
+      "source": "OLD_AMBER",
+      "target": "ITEM_OLD_AMBER"
+    },
+    {
+      "weight": 1,
+      "source": "BIG_NUGGET",
+      "target": "ITEM_BIG_NUGGET"
+    },
+    {
+      "weight": 2,
+      "source": "RARE_BONE",
+      "target": "ITEM_RARE_BONE"
+    },
+    {
+      "weight": 4,
+      "source": "NUGGET",
+      "target": "ITEM_NUGGET"
+    },
+    {
+      "weight": 6,
+      "source": "STAR_PIECE",
+      "target": "ITEM_STAR_PIECE"
+    },
+    {
+      "weight": 12,
+      "source": "BIG_PEARL",
+      "target": "ITEM_BIG_PEARL"
+    },
+    {
+      "weight": 18,
+      "source": "STARDUST",
+      "target": "ITEM_STARDUST"
+    },
+    {
+      "weight": 24,
+      "source": "HARD_STONE",
+      "target": "ITEM_HARD_STONE"
+    },
+    {
+      "weight": 24,
+      "source": "SOFT_SAND",
+      "target": "ITEM_SOFT_SAND"
+    },
+    {
+      "weight": 48,
+      "source": "PEARL",
+      "target": "ITEM_PEARL"
+    },
+    {
+      "weight": 64,
+      "source": "BRICK_PIECE",
+      "target": "ITEM_POLISHED_BRICK_PIECE"
+    },
+    {
+      "weight": 50,
+      "source": "NO_ITEM",
+      "target": "ITEM_NONE"
+    }
+  ],
+  "brick_piece": {
+    "target_id": 883,
+    "source_rgb555": [
+      [
+        31,
+        22,
+        10
+      ],
+      [
+        25,
+        12,
+        2
+      ]
+    ],
+    "source_id": 239,
+    "source_name": "Brick Piece",
+    "source_attributes": [
+      "100",
+      "0",
+      "0",
+      "ITEM",
+      "ITEMMENU_NOUSE",
+      "ITEMMENU_NOUSE"
+    ],
+    "source_description": "A chunk of tile.\\nSell low."
+  },
+  "rules": [
+    "First non-Egg knower in physical party order, otherwise first source-compatible non-Egg with owned TM31; HP and badges ignored.",
+    "Recheck eligibility before auto-use; only accepted use sets map-visit active state.",
+    "Menu requires known Brick Break and uses the selected party member, without asking.",
+    "Battle gate then encounter slot OR item byte; never an item after a battle.",
+    "Warp/connection resets; battle reload and Save/Continue preserve active state and removed rocks."
+  ],
+  "gaps": [
+    "Native Pokemon pictures/cry, Strength/item SFX and message-box styling remain presentation substitutions.",
+    "Existing mapped item properties and the broader battle/creation engine retain documented parity gaps.",
+    "Uniform GBA RNG preserves source probabilities, not the original GBC random sequence."
+  ]
+}

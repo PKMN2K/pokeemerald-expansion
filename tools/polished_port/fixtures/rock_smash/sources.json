@@ -1,0 +1,85 @@
+{
+  "commit": "3fa43192379df5c3e7b09a08e4d5d79af4f02f42",
+  "files": [
+    {
+      "path": "data/items/rock_items.asm",
+      "fixture": "00.b64",
+      "git_blob_sha1": "5be1dd899e13580025efdd215c7e49a029ef5a2e"
+    },
+    {
+      "path": "engine/events/treemons.asm",
+      "fixture": "01.b64",
+      "git_blob_sha1": "aeb88321c5fddf39b8125937aff03fe3cfac035b"
+    },
+    {
+      "path": "engine/events/overworld.asm",
+      "fixture": "02.b64",
+      "git_blob_sha1": "2e734363a9fc261aca3feffc37d6df858ccc3825"
+    },
+    {
+      "path": "data/wild/treemons.asm",
+      "fixture": "03.b64",
+      "git_blob_sha1": "d4d846b5023ff3b88e627996662bf0a55c69e565"
+    },
+    {
+      "path": "data/wild/treemon_maps.asm",
+      "fixture": "04.b64",
+      "git_blob_sha1": "107a3784dad6deecd8e794b53bfc975a0acbbdcc"
+    },
+    {
+      "path": "data/text/common.asm",
+      "fixture": "05.b64",
+      "git_blob_sha1": "d76b34846468a29aa36ff83795a1ecb87330cfb7"
+    },
+    {
+      "path": "engine/overworld/warp_connection.asm",
+      "fixture": "06.b64",
+      "git_blob_sha1": "47de6a69ca96c6e6340962089a7e68d7e3d1e5a9"
+    },
+    {
+      "path": "data/maps/setup_scripts.asm",
+      "fixture": "07.b64",
+      "git_blob_sha1": "f7f0c3a08d11366708df857d79d876d9d6c76b62"
+    },
+    {
+      "path": "engine/pokemon/mon_submenu.asm",
+      "fixture": "08.b64",
+      "git_blob_sha1": "fac305a62d9fa789828b21f5eb5a99d35a66e71f"
+    },
+    {
+      "path": "engine/overworld/map_objects.asm",
+      "fixture": "09.b64",
+      "git_blob_sha1": "759e69884127f8725234855773b9b987e8966da7"
+    },
+    {
+      "path": "engine/overworld/movement.asm",
+      "fixture": "10.b64",
+      "git_blob_sha1": "fb226c07950a7300161a3daae454cc342d1b44ab"
+    },
+    {
+      "path": "engine/overworld/scripting.asm",
+      "fixture": "11.b64",
+      "git_blob_sha1": "e279653d8b6473ffc69e363f603011c0a7aaea1f"
+    },
+    {
+      "path": "gfx/items/brick_piece.png",
+      "fixture": "12.b64",
+      "git_blob_sha1": "3e461d1fa7efc1d71695162f8435c55d0c28e498"
+    },
+    {
+      "path": "home/random.asm",
+      "fixture": "13.b64",
+      "git_blob_sha1": "f220961e7e6563afc236b0aaa95018548e888532"
+    },
+    {
+      "path": "data/items/pocket_names.asm",
+      "fixture": "14.b64",
+      "git_blob_sha1": "8500c7e110128febb829696b65e43cb8c5f010f8"
+    },
+    {
+      "path": "engine/gfx/item_icons.asm",
+      "fixture": "15.b64",
+      "git_blob_sha1": "105c2ea5c5f2a9507ce07fed92d63082b78f0bb6"
+    }
+  ]
+}

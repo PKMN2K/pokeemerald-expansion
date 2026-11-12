@@ -2132,3 +2132,6 @@ const u16 gItemIconPalette_PolishedSilverLeaf[] = INCGFX_U16("graphics/items/ico
 
 const u32 gItemIcon_PolishedGoldLeaf[] = INCGFX_U32("graphics/items/icons/polished_gold_leaf.png", ".4bpp.smol");
 const u16 gItemIconPalette_PolishedGoldLeaf[] = INCGFX_U16("graphics/items/icon_palettes/polished_gold_leaf.pal", ".gbapal");
+
+const u32 gItemIcon_PolishedBrickPiece[] = INCGFX_U32("graphics/items/icons/polished_brick_piece.png", ".4bpp.smol");
+const u16 gItemIconPalette_PolishedBrickPiece[] = INCGFX_U16("graphics/items/icon_palettes/polished_brick_piece.pal", ".gbapal");

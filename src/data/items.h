@@ -16185,6 +16185,7 @@ const struct ItemInfo gItemsInfo[] =
         .iconPalette = gItemIconPalette_PolishedTypeChart,
     },
 #include "polished_held_item_definitions.h"
+#include "polished_rock_smash_item.h"
 };
 
 #undef ITEM_NAME

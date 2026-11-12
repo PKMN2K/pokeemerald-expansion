@@ -1780,3 +1780,5 @@ EventScript_PalletTown_PlayersHouse_2F_TurnOnPC::
 
 	.include "data/maps/PolishedDarkCaveVioletEntrance/scripts.inc"
 	.include "data/maps/PolishedVioletGym/scripts.inc"
+
+	.include "data/scripts/polished_rock_smash.inc"

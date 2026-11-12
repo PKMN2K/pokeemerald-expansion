@@ -74,8 +74,8 @@ const struct FieldMoveInfo gFieldMoveInfo[FIELD_MOVES_COUNT] =
     [FIELD_MOVE_ROCK_SMASH] =
     {
         .fieldMoveFunc = SetUpFieldMove_RockSmash,
-        .unlockType = BADGE_UNLOCK,
-        .moveID = MOVE_ROCK_SMASH,
+        .unlockType = POLISHED_JOHTO_DEMO ? ALWAYS_UNLOCKED : BADGE_UNLOCK,
+        .moveID = POLISHED_JOHTO_DEMO ? MOVE_BRICK_BREAK : MOVE_ROCK_SMASH,
         .partyMsgID = PARTY_MSG_CANT_USE_HERE,
         .arg = IS_FRLG ? FLAG_TO_BADGE(FLAG_BADGE06_GET) : FLAG_TO_BADGE(FLAG_BADGE03_GET),
     },

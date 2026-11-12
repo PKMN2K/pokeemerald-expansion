@@ -1216,3 +1216,23 @@ the `SetBadgeBaseLevel`/`AdjustLevelForBadges` excerpt from
 `engine/overworld/wildmons.asm`, and `data/pokemon/base_stats/voltorb_hisuian.asm`
 and `electrode_hisuian.asm`. The global base-data importer now imports these
 species' source stats as well; battle-effect parity remains separate work.
+
+## Dark Cave Brick Break field interactions
+
+The four breakable rocks use the pinned default Polished Crystal rules: known
+Brick Break or owned TM31 plus source compatibility, no badge/HP gate, first-use
+confirmation and automatic repeats with a fresh eligibility check. Party-menu
+use requires the selected Pokemon to know the move. Broken rocks and repeat-use
+state survive battles and Save/Continue and reset on entering a new map.
+
+Source battle probability is 40%, with level-15 Krabby/Geodude/Shuckle at
+70/25/5. A no-battle result rolls the source item table, including the newly
+imported Brick Piece (stable appended item ID 883). Full inventory still removes
+the rock. The original Brick Piece pixels/palette and source event text are
+generated from hash-verified fixtures. Native Pokemon pictures, cries, audio
+and message-window styling remain recorded presentation gaps.
+
+Regenerate and verify with `build_rock_smash.py`, `test_rock_smash.py` and the
+`Polished rocks` native tests. `test_rock_smash_emulator.py` links an isolated
+test boot fixture against production Johto objects for controller checks; it
+does not add test parties or debug events to the playable ROM.

@@ -29,7 +29,7 @@ regression coverage, but are not evidence of complete source-game parity.
 | Startup and player identity | `POLISHED_JOHTO_DEMO` starts in a test garden with a Lv10 Totodile, Surf, an Old Rod and a Mach Bike. Existing campaign replays use that harness. | Implement the real source startup separately from the test garden, with the source initial party/inventory, opening flow and supported protagonists. Add a campaign run starting from that baseline. |
 | UI, Pokedex and audio | Native Bag/party/storage/battle UI, National Dex ordering and native audio are still used in imported events. A source Type Chart does not complete the UI. | Port source presentation and ordering. Keep separately requested HGSS backups unwired. |
 | Map and event coverage | Thirty-two source maps and selected events through Falkner are live. Door, collision, time-palette, schedule, reward and Save/Continue checks cover those implementations. | Preserve these checks; audit their documented native substitutions and incomplete interactions. Broader Johto/Kanto geography and story, Pokégear, source services and field interactions remain open. |
-| Field rules and encounters | Source encounter distributions are imported for selected maps, but native encounter modifiers, field-move gates and other engine rules still apply. Headbutt's source selector is dormant. | Audit source field behavior and enable each feature with an explicit map identity and source rules. |
+| Field rules and encounters | Dark Cave rock interactions now use source eligibility, repeats and encounter/reward rolls. Other selected encounters/field moves still use native modifiers and gates. Headbutt's source selector is dormant. | Audit source field behavior and enable each feature with an explicit map identity and source rules. |
 | Save compatibility | Target save IDs are already allocated and tested. Source DVs/records cannot be copied byte-for-byte into native encrypted Pokemon. | Preserve stable regular move/species/item/save IDs where possible; document representation changes and migration requirements. Source behavior, not GBC table width, is the target. |
 | Completion criteria | Generic native battle tests can pass with entirely native data. | Require source fixture/provenance checks, source-specific native tests, and live emulator assertions for each migration phase. Keep the broader suite as regression coverage. |
 | Replay assumptions | The old tower replay relied on Expansion's early Bite and remaining Surf PP, confused the returning Start menu with field control, and could accept an interrupted interaction as complete. Capture input assumed the remembered Bag row was a ball and did not handle newly reached learn levels. | Replays now learn the source level-13 Bite through the real selector, use purchased Potions and Center visits, confirm the intended object interaction, select the actual ball stack, handle learning prompts, confirm the wild-battle replacement question and Send Out after a lead faints, and recover from a real capture blackout with bounded retries and ordinary ball purchases. Changed source data must drive test input instead of being changed to preserve the old replay. |
@@ -695,12 +695,11 @@ and encrypted party/PC save reload with both target moves present. Broader
 move effects and source TM inventory/numbering, tutor placement and field
 Rock Smash behavior remain separate work.
 
-In particular, the four breakable rocks in `PolishedDarkCaveVioletEntrance`
-still call native `EventScript_RockSmash`. Their move, item and badge gates
-have not been adapted to the source field routine. Completing that field
-adapter must use the default source identity (Brick Break) and source rules;
-reintroducing native Rock Smash into these corrected learnsets would hide
-the field-system gap. The replayed rescue route does not certify these rocks.
+At the end of the move-identity phase, the four breakable rocks in
+`PolishedDarkCaveVioletEntrance` still called native `EventScript_RockSmash`.
+The field adapter below now uses the default source identity (Brick Break)
+and source rules. The rescue campaign alone did not certify these rocks;
+dedicated controller fixtures cover their interaction branches.
 
 Validation with GCC 13.2.1: all 5,335 native tests pass (nine expected failures
 and 586 existing TODOs; 5,930 total), including the four new tests and all six
@@ -709,10 +708,65 @@ all 12 Johto demo checks, and the full controller campaign through Falkner
 and the post-battle rewards pass. The tested Johto ROM SHA-256 is
 `8d86d6d044b4eefc792cc17de2175b0fe20c97adb023a90f1bd155d106eea848`.
 
+## Live Dark Cave rock interactions
+
+The four original rocks now use the pinned default-source Brick Break routine.
+Physical party order is preserved: a non-Egg knower anywhere in the party wins
+before the fallback scan for a source-compatible Pokemon while TM31 is owned.
+Fainted Pokemon qualify; no badge is required; the TM is neither taught nor
+consumed. The party menu offers the move only to a knower and uses that selected
+Pokemon without a Yes/No question. Native-profile Rock Smash remains available.
+
+The first accepted field interaction displays the source prompt, nickname/move
+text, Pokemon picture and cry. Later rocks in the same visit recheck eligibility
+and skip the prompt/picture. The source 40-frame, two-pixel vertical earthquake
+and ten-frame rock blink precede disappearance. Existing `FLAG_TEMP_1` through
+`FLAG_TEMP_4` record the broken rocks; `VAR_TEMP_5` records repeat-use state.
+Warp/connection loading clears them; battle reload and Save/Continue retain them.
+
+A rejection-sampled byte range gives the source 4-in-10 battle gate. Encounters
+are level-15 Krabby/Geodude/Shuckle at 70/25/5, independent of Repel, badges or
+native rock encounter modifiers. A battle uses ordinary wild capture/escape
+rules and resumes the event script on return. Only a no-battle result rolls the
+source 256-weight item table. Source receipt/full-pocket text is used, and full
+inventory does not restore the rock. Brick Piece is appended as item 883 with
+its source name, plural, price, description, 24x24 pixels and RGB555 palette.
+Existing item/save IDs remain unchanged.
+
+Original assembly, text, animation and item-art files are hash-checked against
+the established source pin. `build_rock_smash.py` regenerates tables, text, icon
+and manifest. Source contract checks and native tests cover eligibility/order,
+all 207 compatible species, every encounter/item roll, random-call ordering and
+map-visit reset behavior. Controller fixtures link unchanged production Johto
+objects to a separate test boot module; supplied test parties are explicitly
+fixture state, not proof of obtaining TM31 in the current campaign. These checks
+are separate from the ordinary campaign replay.
+
+Validation: 5,341 native tests pass, with nine expected failures and 586
+existing TODOs. All 38 source checks, ten standalone ARM probes, both production
+builds, twelve demo checks and the campaign regression through Falkner/Togepi
+pass. The eight dedicated rock scenarios cover all four objects, cancellation,
+party-menu use, TM-only access, rejection, automatic use with battle return,
+full inventory, Save/Continue and reentry. Reentry uses a separately documented
+fixture at the exit because the eastern rocks are separated from it by source
+terrain; it does not claim a naturally obtained Surf route. Brick Piece's live
+24x24 pixels, transparent 32x32 padding and original RGB555 colors are read back
+from OBJ VRAM/palette memory. Full-pocket failure leaves inventory unchanged.
+Final rock fixtures validate Johto ROM SHA-256
+`0e5c8021101ac9f62e74cee6a4a3cff793f83ce4f80daa0ce5203510e9f88991`;
+the broader campaign regression used the preceding build before the dedicated
+item-icon renderer was added. CI reruns the complete pipeline on publication.
+
+Remaining presentation/engine gaps are explicit: Pokemon pictures and cries,
+Strength/item audio and message-box styling still use native assets/UI;
+existing mapped item properties and broader wild creation/battle behavior retain
+their previously recorded gaps. This phase does not enable dormant Headbutt or
+claim source parity for unrelated field moves, additional maps or Prism mining.
+
 ## Next priorities
 
-1. Adapt the four Dark Cave rock interactions to the source field routine,
-   including its default move identity, item/badge gates and repeat behavior.
+1. Continue the source field-rule audit. Headbutt remains dormant; other field
+   moves and ordinary encounters still need their source gates and modifiers.
 2. Complete the remaining evolution options above, broader item definitions/
    effects and source TM/tutor inventories. Complete breeding/hatching behavior
    beyond base data and inherited moves.

@@ -112,7 +112,7 @@ def cave(script, header, files, text, define):
             continue
         kind, x, y, item = m.groups()
         number = len(header["object_events"]) + 1
-        action = p + "_" + item if item else "EventScript_RockSmash"
+        action = p + "_" + item if item else "PolishedRockSmash_Interact"
         obj = object_at("LOCALID_DARK_CAVE_" + str(number), "POLISHED_BALL_RED" if item else "POLISHED_ROCK", int(x), int(y), action,
                         "FLAG_POLISHED_CAVE_" + item if item else "FLAG_TEMP_" + str(number - 4))
         header["object_events"].append(obj)

@@ -667,3 +667,8 @@ gSpecials::
 	def_special PolishedFalknerPrepareBadges
 	def_special PolishedFalknerAwardBadge
 	def_special PolishedFalknerGiveEgg
+	def_special PolishedRockSmashPrepare
+	def_special PolishedRockSmashAnimate
+	def_special PolishedRockSmashEncounter
+	def_special PolishedRockSmashShowItem
+	def_special PolishedRockSmashHideItem

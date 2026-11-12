@@ -9,6 +9,7 @@
 #include "item_use.h"
 #include "overworld.h"
 #include "party_menu.h"
+#include "polished_rock_smash.h"
 #include "script.h"
 #include "sound.h"
 #include "sprite.h"
@@ -33,7 +34,7 @@ bool8 CheckObjectGraphicsInFrontOfPlayer(u16 graphicsId)
     GetXYCoordsOneStepInFrontOfPlayer(&gPlayerFacingPosition.x, &gPlayerFacingPosition.y);
     gPlayerFacingPosition.elevation = PlayerGetElevation();
     objEventId = GetObjectEventIdByPosition(gPlayerFacingPosition.x, gPlayerFacingPosition.y, gPlayerFacingPosition.elevation);
-    if (gObjectEvents[objEventId].graphicsId != graphicsId)
+    if (objEventId >= OBJECT_EVENTS_COUNT || gObjectEvents[objEventId].graphicsId != graphicsId)
     {
         return FALSE;
     }
@@ -121,6 +122,9 @@ static void Task_DoFieldMove_RunFunc(u8 taskId)
 // For interacting with a smashable rock in the field, see EventScript_RockSmash
 bool32 SetUpFieldMove_RockSmash(void)
 {
+#if POLISHED_JOHTO_DEMO
+    return PolishedRockSmashFromMenu();
+#endif
     // In Ruby and Sapphire, Regirock's tomb is opened by using Strength. In Emerald,
     // it is opened by using Rock Smash.
     if (ShouldDoBrailleRegirockEffect())

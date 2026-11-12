@@ -344,6 +344,15 @@ void BattleSetup_StartWildBattle(void)
         DoStandardWildBattle(FALSE);
 }
 
+// Ordinary wild flags/escape/capture rules, with a script-resuming return.
+// Field events such as source rock encounters must finish their script after
+// battle rather than leave a waiting context behind.
+void BattleSetup_StartWildBattleContinueScript(void)
+{
+    DoStandardWildBattle(FALSE);
+    gMain.savedCallback = CB2_EndScriptedWildBattle;
+}
+
 void BattleSetup_StartDoubleWildBattle(void)
 {
     DoStandardWildBattle(TRUE);
