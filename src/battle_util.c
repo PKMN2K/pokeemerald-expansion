@@ -14,6 +14,7 @@
 #include "battle_hold_effects.h"
 #include "battle_stat_change.h"
 #include "config_changes.h"
+#include "polished_battle.h"
 #include "party_menu.h"
 #include "pokemon.h"
 #include "international_string_util.h"
@@ -6217,6 +6218,9 @@ static inline u32 CalcMoveBasePower(struct DamageContext *ctx)
         basePower = sFlailHpScaleToPowerTable[i + 1];
         break;
     case EFFECT_RETURN:
+        // Pika Papow and Veevee Volley share this effect, but are not source moves.
+        if (PolishedReturnEnabled() && move == MOVE_RETURN)
+            return PolishedReturnPower(gBattleMons[battlerAtk].friendship);
         basePower = 10 * (gBattleMons[battlerAtk].friendship) / 25;
         break;
     case EFFECT_FRUSTRATION:
@@ -7676,6 +7680,16 @@ static inline uq4_12_t GetOtherModifiers(struct DamageContext *ctx)
     dmg = uq4_12_multiply_by_int_half_down(modifier, dmg); \
 } while (0)
 
+static inline bool32 IsPolishedZeroPowerReturn(struct DamageContext *ctx)
+{
+    return ctx->move == MOVE_RETURN
+        && PolishedReturnEnabled()
+        && !ctx->fixedBasePower
+        && gBattleMons[ctx->battlerAtk].friendship < POLISHED_RETURN_MIN_HAPPINESS
+        && GetActiveGimmick(ctx->battlerAtk) != GIMMICK_Z_MOVE
+        && GetActiveGimmick(ctx->battlerAtk) != GIMMICK_DYNAMAX;
+}
+
 static inline s32 DoMoveDamageCalcVars(struct DamageContext *ctx)
 {
     s32 dmg;
@@ -7686,6 +7700,11 @@ static inline s32 DoMoveDamageCalcVars(struct DamageContext *ctx)
         gBattleMovePower = ctx->fixedBasePower;
     else
         gBattleMovePower = CalcMoveBasePowerAfterModifiers(ctx);
+
+    // Source damagecalc skips zero power; the later stab command floors the
+    // resulting zero to 1, after modifiers. Do not run a 1-power damage formula.
+    if (IsPolishedZeroPowerReturn(ctx))
+        return 1;
 
     userFinalAttack = CalcAttackStat(ctx);
     targetFinalDefense = CalcDefenseStat(ctx);
@@ -7718,6 +7737,11 @@ static inline s32 DoMoveDamageCalcVars(struct DamageContext *ctx)
 
 s32 ApplyModifiersAfterDmgRoll(struct DamageContext *ctx, s32 dmg)
 {
+    // AI applies these separately. Preserve the same source floor for its
+    // estimates, including rolls rounded down to zero, without bypassing immunity.
+    if (IsPolishedZeroPowerReturn(ctx))
+        return ctx->typeEffectivenessModifier == UQ_4_12(0.0) ? 0 : 1;
+
     if (GetActiveGimmick(ctx->battlerAtk) == GIMMICK_TERA)
         DAMAGE_APPLY_MODIFIER(GetTeraMultiplier(ctx));
     else

@@ -26,6 +26,7 @@
 #define B_RECALCULATE_STATS         GEN_LATEST // In Gen5+, the stats of Pokémon that participate in battle are recalculated at the end of battle, rather than upon level up or being deposited in the PC.
 
 // Damage settings
+#define B_POLISHED_RETURN           POLISHED_JOHTO_DEMO // Pinned Return power, 160 happiness cap and zero-power damage floor.
 #define B_BURN_DAMAGE               GEN_LATEST // In Gen1 and Gen7+, burn damage is 1/16 of max HP instead of 1/8. This also applies to Frostbite.
 #define B_BURN_FACADE_DMG           GEN_LATEST // In Gen6+, burn's Attack halving effect no longer applies to Facade.
 #define B_BINDING_DAMAGE            GEN_LATEST // In Gen6+, binding damage is 1/8 of max HP instead of 1/16. If the user is holding a Binding Band, it is 1/6 instead of 1/8.

@@ -1902,6 +1902,16 @@
       "path": "data/events/happiness_changes.asm",
       "fixture": "data__events__happiness_changes.asm.b64",
       "git_blob_sha1": "bd515f5c886b68815df66c376bd29a3a2d37346a"
+    },
+    {
+      "path": "engine/battle/move_effects/return.asm",
+      "fixture": "engine__battle__move_effects__return.asm.b64",
+      "git_blob_sha1": "e0feb01f71d9766af366fb0d2b0611636e64f7f6"
+    },
+    {
+      "path": "data/moves/effects.asm",
+      "fixture": "data__moves__effects.asm.b64",
+      "git_blob_sha1": "112d722b6aa298e518b6ad097bf50bd4ccdc7979"
     }
   ]
 }

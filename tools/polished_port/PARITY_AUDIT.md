@@ -47,8 +47,9 @@ as a superficially similar form.
 The three custom moves are appended at Expansion's designated ordinary custom
 move boundary. Existing ordinary move IDs through 847 remain unchanged. The
 derived Z/Max move ranges move by three entries; these are engine-generated
-battle moves, not legal saved party moves. Ordinary source moves still use
-Expansion effects/data pending the next battle-data phase. The new custom moves
+battle moves, not legal saved party moves. Apart from Return's happiness power
+below, ordinary source moves still use Expansion effects/data pending further
+battle-data work. The new custom moves
 also use native animation assets pending the presentation import.
 
 No existing saved Pokemon's moves are rewritten by this phase. New Pokemon
@@ -517,8 +518,8 @@ rewritten; the existing save representation is unchanged.
 
 Native profiles, unmapped Expansion medicines and all other friendship events
 retain their existing behavior. This phase does not certify source gain
-events, friendship bonuses outside these losses, Return/Frustration damage
-formulas, complete status/revival semantics, battle-facility rules or source
+events, friendship bonuses outside these losses, Return's damage calculation,
+complete status/revival semantics, battle-facility rules or source
 item-use text/animations. Those remain separate migration work.
 
 Eight new native tests cover all 256 happiness values for each medicine,
@@ -538,6 +539,52 @@ The final tested Johto ROM SHA-256 is
 Automatic CI reruns the complete native suite and controller campaign on the
 published commit; local demo checks are regression coverage for the existing
 overworld, while the medicine tests execute the new effects in mGBA.
+
+## Return happiness power
+
+`B_POLISHED_RETURN` defaults to `POLISHED_JOHTO_DEMO` and imports the pinned
+Return formula: `min(102, floor(happiness * 102 / 160))`. Both battle sides and
+the shared AI damage estimator read the active battler's current happiness.
+The bitter-medicine synchronization above therefore changes Return immediately:
+Energy Powder at 160 happiness changes power from 102 to 95 after its 10-point
+penalty. No saved happiness, move IDs or Pokemon structures are rewritten.
+
+The new hashed `engine/battle/move_effects/return.asm` and
+`data/moves/effects.asm` fixtures join the existing move table, constants and
+damage-command fixtures. `build_return_power.py --check` verifies the formula,
+cap, Normal/physical/100 accuracy/20 PP record and damage-command order. Raw
+power is zero at happiness 0 or 1. The source skips its main damage formula,
+then its `stab` command floors a successful non-immune hit to one after
+modifiers. This is preserved even with high Attack, Technician, Choice Band,
+critical hits, STAB and resistance; Ghost immunity is not bypassed. AI's
+separate post-roll path uses that same floor. Do not substitute vanilla Gen2's
+zero-damage behavior merely because the source is a GBC game.
+
+Only `MOVE_RETURN` receives this behavior. Pika Papow and Veevee Volley share
+Expansion's effect handler but keep their own native scaling. Frustration is
+absent from the pinned source and remains optional Expansion content, not a
+missing source move. The native profile, fixed-power overrides and Z/Max move
+power paths remain available. Source trainer parties with custom Return moves
+will also need their explicit 160 happiness imported when those parties are
+ported; the currently imported parties contain no Return. General trainer
+creation/AI, other move data, source damage modifiers and rounding, effects,
+animations and presentation are still incomplete. This phase establishes
+Return's happiness-power rule and zero-power floor, not complete battle parity.
+
+Seven new native mGBA tests cover all 256 happiness values on both sides in
+both profiles, the 160 cap, boosted/resisted low-happiness hits, immunity,
+live medicine interaction, optional moves/fixed power and actual AI move
+selection between Return and Tackle under both profiles.
+
+Validation on the final code uses GCC 13.2.1, matching CI: all 5,322 native
+tests pass, with nine expected failures and 586 existing TODOs (5,917 total),
+including all six AI timing checks. Both standard Emerald and Johto production
+ROMs build, all 35 source/asset checks pass, and all 12 Johto demo emulator
+checks pass. The tested Johto ROM SHA-256 is
+`545d0b2f6a66cb55dfedf85fc77441bbfced99a6cbd857cc99ba2836338ff113`.
+The seven native tests execute Return behavior in mGBA; the demo checks cover
+the existing overworld. Automatic CI additionally reruns the full controller
+campaign on the published commit.
 
 ## Next priorities
 

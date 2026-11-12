@@ -1012,8 +1012,21 @@ Expansion battle slots remain supported. Native profiles and optional
 Expansion medicines keep their existing rules. Source fixtures and CI
 regeneration cover the table, negative-value handler and item dispatch.
 This imports these four happiness penalties, not the complete source
-friendship system, medicine UI, status/revival rules or Return/Frustration
-damage formula. Existing saved happiness values and identifiers are preserved.
+friendship system, medicine UI or status/revival rules. Existing saved happiness
+values and identifiers are preserved.
+
+Return now uses pinned source happiness scaling under `B_POLISHED_RETURN`,
+enabled by default in the Johto build: `min(102, floor(happiness * 102 / 160))`.
+Live battles and AI estimates share the rule, including immediate changes
+after bitter medicine. At happiness 0 or 1 the raw power is zero, but the
+source's later damage floor yields one HP for a successful non-immune hit;
+boosts and resistance do not turn that into a one-power damage calculation.
+Verified source fixtures and `build_return_power.py --check` cover its
+constants, cap and command sequence. Native profiles, optional shared-effect
+moves and fixed/Z/Max power paths are retained. Frustration is absent from
+the source and remains optional Expansion content. Broader source move data,
+damage/ability rules, trainer creation/AI and animations remain separate work;
+see `tools/polished_port/PARITY_AUDIT.md` for the exact coverage.
 
 Price and description parity still do not imply full item icon, field use,
 other held effects, battle mechanic or source-layout parity. The original GBC text
