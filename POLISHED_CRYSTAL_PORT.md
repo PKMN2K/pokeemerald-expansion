@@ -1338,3 +1338,30 @@ Falkner's actual reward. No new TM31 acquisition event is claimed. Broader
 machine/tutor inventory, source ownership-bit storage, learning UI/audio and
 move battle-effect parity retain their separate audit boundaries. See the
 [parity audit](tools/polished_port/PARITY_AUDIT.md) for final validation evidence.
+
+### Source move-balance corrections
+
+Twelve ordinary move rows now match pinned default-source power, accuracy, type
+and category. Seventeen changed power/accuracy/type fields are selected directly
+in the ROM move table; matching native fields are verified and retained.
+`B_POLISHED_MOVE_BALANCE`
+defaults to the Johto profile; the native profile and all other move rows retain
+their existing data. Stable move/species/item IDs and save layout are unchanged.
+The affected moves are Cut, Fly, Take Down, Sing, Supersonic, Strength, Fire Spin,
+Dig, Scald, Crabhammer, Octazooka and Whirlpool.
+
+Cut is now Steel-type with 60 power and 100 accuracy; Strength is Fighting-type.
+The generated source constants also supply the other ten moves' balance values.
+Battle damage, accuracy, type effectiveness, AI estimates and menu information
+all use these accessors. Effects, flags, secondary chances, priority, source RNG,
+damage rounding and original animations remain separately audited work.
+
+Six test groups run in separate native and source-balance ROMs and cover the
+imported rows, ordinary and two-turn damage, hit thresholds, Cut/Strength
+effectiveness, Ghost immunity and AI move selection. Both ROMs run the existing
+AI timing benchmarks without relaxing their limits. Compile-time data selection
+keeps the normal move getters unchanged and adds no runtime lookup overhead. The production-linked audit confirms all twelve rows;
+it rejects reintroduction of any of the seventeen repaired field differences.
+The remaining ten differing rows include variable/fixed damage and typeless or
+accuracy-bypass representations that require separate behavioral review.
+See the [parity audit](tools/polished_port/PARITY_AUDIT.md) for validation evidence.

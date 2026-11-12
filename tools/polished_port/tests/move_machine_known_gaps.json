@@ -3,34 +3,6 @@
   "observed_target_commit": "7e32866f06f02d8328ffb6dc5ede7b6e46021cd2",
   "scope": "Explicit unfinished source data/identity/lesson work. Not certified behavior. New or changed findings fail CI; resolved findings are allowed.",
   "findings": {
-    "move/MOVE_CUT/power": {
-      "source": 60,
-      "target": 50
-    },
-    "move/MOVE_CUT/accuracy": {
-      "source": 100,
-      "target": 95
-    },
-    "move/MOVE_CUT/type": {
-      "source": "STEEL",
-      "target": "NORMAL"
-    },
-    "move/MOVE_FLY/accuracy": {
-      "source": 100,
-      "target": 95
-    },
-    "move/MOVE_TAKE_DOWN/accuracy": {
-      "source": 100,
-      "target": 85
-    },
-    "move/MOVE_SING/accuracy": {
-      "source": 75,
-      "target": 55
-    },
-    "move/MOVE_SUPERSONIC/accuracy": {
-      "source": 65,
-      "target": 55
-    },
     "move/MOVE_SONIC_BOOM/power": {
       "source": 20,
       "target": 1
@@ -39,49 +11,17 @@
       "source": 0,
       "target": 100
     },
-    "move/MOVE_STRENGTH/type": {
-      "source": "FIGHTING",
-      "target": "NORMAL"
-    },
     "move/MOVE_DRAGON_RAGE/power": {
       "source": 40,
       "target": 1
-    },
-    "move/MOVE_FIRE_SPIN/power": {
-      "source": 40,
-      "target": 35
-    },
-    "move/MOVE_FIRE_SPIN/accuracy": {
-      "source": 90,
-      "target": 85
-    },
-    "move/MOVE_DIG/power": {
-      "source": 90,
-      "target": 80
     },
     "move/MOVE_METRONOME/type": {
       "source": "UNKNOWN_T",
       "target": "NORMAL"
     },
-    "move/MOVE_SCALD/power": {
-      "source": 70,
-      "target": 80
-    },
     "move/MOVE_DRAGON_DANCE/accuracy": {
       "source": 100,
       "target": 0
-    },
-    "move/MOVE_CRABHAMMER/accuracy": {
-      "source": 95,
-      "target": 90
-    },
-    "move/MOVE_OCTAZOOKA/power": {
-      "source": 75,
-      "target": 65
-    },
-    "move/MOVE_OCTAZOOKA/accuracy": {
-      "source": 95,
-      "target": 85
     },
     "move/MOVE_SLEEP_TALK/accuracy": {
       "source": 100,
@@ -102,14 +42,6 @@
     "move/MOVE_MIRROR_COAT/accuracy": {
       "source": 0,
       "target": 100
-    },
-    "move/MOVE_WHIRLPOOL/power": {
-      "source": 40,
-      "target": 35
-    },
-    "move/MOVE_WHIRLPOOL/accuracy": {
-      "source": 90,
-      "target": 85
     },
     "move/MOVE_STRUGGLE/type": {
       "source": "UNKNOWN_T",
@@ -409,5 +341,20 @@
       "display_number": 6,
       "is_hm": true
     }
-  }
+  },
+  "resolved_move_balance_rows": [
+    "CUT",
+    "FLY",
+    "TAKE_DOWN",
+    "SING",
+    "SUPERSONIC",
+    "STRENGTH",
+    "FIRE_SPIN",
+    "DIG",
+    "SCALD",
+    "CRABHAMMER",
+    "OCTAZOOKA",
+    "WHIRLPOOL"
+  ],
+  "resolution_note": "Twelve source power/accuracy/type/category rows now use explicit imports. Their 17 former field differences are no longer permitted by this gate."
 }

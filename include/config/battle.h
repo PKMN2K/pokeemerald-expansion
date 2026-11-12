@@ -71,6 +71,10 @@
 
 // Move data settings
 #define B_POLISHED_MOVE_PP          POLISHED_JOHTO_DEMO // Pinned move PP and source PP Up increments; optional moves retain native limits.
+#ifndef POLISHED_MOVE_BALANCE_TEST
+#define POLISHED_MOVE_BALANCE_TEST 0
+#endif
+#define B_POLISHED_MOVE_BALANCE     (POLISHED_JOHTO_DEMO || POLISHED_MOVE_BALANCE_TEST) // Source ROM data; separate test build avoids runtime lookup overhead.
 #define B_UPDATED_MOVE_DATA         GEN_LATEST // Updates move data in gMovesInfo, including Power, Accuracy, PP, category, range, and additional effects.
 #define B_UPDATED_MOVE_TYPES        GEN_LATEST // Updates move types in gMovesInfo.
 #define B_UPDATED_MOVE_FLAGS        GEN_LATEST // Updates move flags in gMovesInfo.

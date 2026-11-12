@@ -1,3 +1,4 @@
+#include "polished_move_balance.h"
 #include "battle_dynamax.h"
 #include "battle_anim_scripts.h"
 #include "constants/battle.h"
@@ -415,9 +416,9 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
             "Cuts the foe with sharp\n"
             "scythes, claws, etc."),
         .effect = EFFECT_HIT,
-        .power = 50,
-        .type = TYPE_NORMAL,
-        .accuracy = 95,
+        .power = POLISHED_BALANCE(POLISHED_CUT_POWER, 50),
+        .type = POLISHED_BALANCE(POLISHED_CUT_TYPE, TYPE_NORMAL),
+        .accuracy = POLISHED_BALANCE(POLISHED_CUT_ACCURACY, 95),
         .pp = 30,
         .target = TARGET_SELECTED,
         .priority = 0,
@@ -526,7 +527,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .effect = EFFECT_SEMI_INVULNERABLE,
         .power = B_UPDATED_MOVE_DATA >= GEN_4 ? 90 : 70,
         .type = TYPE_FLYING,
-        .accuracy = 95,
+        .accuracy = POLISHED_BALANCE(POLISHED_FLY_ACCURACY, 95),
         .pp = 15,
         .target = TARGET_SELECTED,
         .priority = 0,
@@ -976,7 +977,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .effect = EFFECT_RECOIL,
         .power = 90,
         .type = TYPE_NORMAL,
-        .accuracy = 85,
+        .accuracy = POLISHED_BALANCE(POLISHED_TAKE_DOWN_ACCURACY, 85),
         .pp = 20,
         .target = TARGET_SELECTED,
         .priority = 0,
@@ -1273,7 +1274,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .effect = EFFECT_NON_VOLATILE_STATUS,
         .power = 0,
         .type = TYPE_NORMAL,
-        .accuracy = 55,
+        .accuracy = POLISHED_BALANCE(POLISHED_SING_ACCURACY, 55),
         .pp = 15,
         .target = TARGET_SELECTED,
         .priority = 0,
@@ -1300,7 +1301,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .effect = EFFECT_CONFUSE,
         .power = 0,
         .type = TYPE_NORMAL,
-        .accuracy = 55,
+        .accuracy = POLISHED_BALANCE(POLISHED_SUPERSONIC_ACCURACY, 55),
         .pp = 20,
         .target = TARGET_SELECTED,
         .priority = 0,
@@ -1897,7 +1898,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
             "then slams the foe."),
         .effect = EFFECT_HIT,
         .power = 80,
-        .type = TYPE_NORMAL,
+        .type = POLISHED_BALANCE(POLISHED_STRENGTH_TYPE, TYPE_NORMAL),
         .accuracy = 100,
         .pp = 15,
         .target = TARGET_SELECTED,
@@ -2251,9 +2252,9 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
             "Traps the foe in a ring of\n"
             "fire for "BINDING_TURNS" turns."),
         .effect = EFFECT_HIT,
-        .power = B_UPDATED_MOVE_DATA >= GEN_5 ? 35 : 15,
+        .power = POLISHED_BALANCE(POLISHED_FIRE_SPIN_POWER, B_UPDATED_MOVE_DATA >= GEN_5 ? 35 : 15),
         .type = TYPE_FIRE,
-        .accuracy = B_UPDATED_MOVE_DATA >= GEN_5 ? 85 : 70,
+        .accuracy = POLISHED_BALANCE(POLISHED_FIRE_SPIN_ACCURACY, B_UPDATED_MOVE_DATA >= GEN_5 ? 85 : 70),
         .pp = 15,
         .target = TARGET_SELECTED,
         .priority = 0,
@@ -2454,11 +2455,11 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
             "turn and strikes next turn."),
         .effect = EFFECT_SEMI_INVULNERABLE,
     #if B_UPDATED_MOVE_DATA >= GEN_4
-        .power = 80,
+        .power = POLISHED_BALANCE(POLISHED_DIG_POWER, 80),
     #elif B_UPDATED_MOVE_DATA >= GEN_2
-        .power = 60,
+        .power = POLISHED_BALANCE(POLISHED_DIG_POWER, 60),
     #else
-        .power = 100,
+        .power = POLISHED_BALANCE(POLISHED_DIG_POWER, 100),
     #endif
         .type = TYPE_GROUND,
         .accuracy = 100,
@@ -4160,11 +4161,11 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .power = B_UPDATED_MOVE_DATA >= GEN_6 ? 100 : 90,
         .type = TYPE_WATER,
         #if B_UPDATED_MOVE_DATA >= GEN_CHAMPIONS
-            .accuracy = 95,
+            .accuracy = POLISHED_BALANCE(POLISHED_CRABHAMMER_ACCURACY, 95),
         #elif B_UPDATED_MOVE_DATA >= GEN_5
-            .accuracy = 90,
+            .accuracy = POLISHED_BALANCE(POLISHED_CRABHAMMER_ACCURACY, 90),
         #else
-            .accuracy = 85,
+            .accuracy = POLISHED_BALANCE(POLISHED_CRABHAMMER_ACCURACY, 85),
         #endif
         .criticalHitStage = B_UPDATED_MOVE_DATA >= GEN_3 ? 1 : 2,
         .pp = 10,
@@ -5212,9 +5213,9 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
             "Fires a lump of ink to\n"
             "damage. May lower accuracy."),
         .effect = EFFECT_HIT,
-        .power = 65,
+        .power = POLISHED_BALANCE(POLISHED_OCTAZOOKA_POWER, 65),
         .type = TYPE_WATER,
-        .accuracy = 85,
+        .accuracy = POLISHED_BALANCE(POLISHED_OCTAZOOKA_ACCURACY, 85),
         .pp = 10,
         .target = TARGET_SELECTED,
         .priority = 0,
@@ -6849,9 +6850,9 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
             "Traps and hurts the foe in\n"
             "a whirlpool for "BINDING_TURNS" turns."),
         .effect = EFFECT_HIT,
-        .power = B_UPDATED_MOVE_DATA >= GEN_5 ? 35 : 15,
+        .power = POLISHED_BALANCE(POLISHED_WHIRLPOOL_POWER, B_UPDATED_MOVE_DATA >= GEN_5 ? 35 : 15),
         .type = TYPE_WATER,
-        .accuracy = B_UPDATED_MOVE_DATA >= GEN_5 ? 85 : 70,
+        .accuracy = POLISHED_BALANCE(POLISHED_WHIRLPOOL_ACCURACY, B_UPDATED_MOVE_DATA >= GEN_5 ? 85 : 70),
         .pp = 15,
         .target = TARGET_SELECTED,
         .priority = 0,
@@ -13483,7 +13484,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
             "Shoots boiling water at the\n"
             "foe. May inflict a burn."),
         .effect = EFFECT_HIT,
-        .power = 80,
+        .power = POLISHED_BALANCE(POLISHED_SCALD_POWER, 80),
         .type = TYPE_WATER,
         .accuracy = 100,
         .pp = 15,

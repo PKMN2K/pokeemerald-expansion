@@ -1,0 +1,173 @@
+{
+  "source_repository": "Rangi42/polishedcrystal",
+  "source_commit": "3fa43192379df5c3e7b09a08e4d5d79af4f02f42",
+  "source_variant": "default (FAITHFUL undefined)",
+  "source_files": [
+    "data/moves/moves.asm",
+    "constants/move_constants.asm"
+  ],
+  "moves": [
+    {
+      "source_id": 15,
+      "source_constant": "CUT",
+      "source_move": "CUT",
+      "source_aliases": [],
+      "target_move": "MOVE_CUT",
+      "power": 60,
+      "accuracy": 100,
+      "type": "STEEL",
+      "category": "PHYSICAL",
+      "source_effect": "EFFECT_NORMAL_HIT",
+      "source_chance": 0
+    },
+    {
+      "source_id": 19,
+      "source_constant": "FLY",
+      "source_move": "FLY",
+      "source_aliases": [],
+      "target_move": "MOVE_FLY",
+      "power": 90,
+      "accuracy": 100,
+      "type": "FLYING",
+      "category": "PHYSICAL",
+      "source_effect": "EFFECT_FLY",
+      "source_chance": 0
+    },
+    {
+      "source_id": 36,
+      "source_constant": "TAKE_DOWN",
+      "source_move": "TAKE_DOWN",
+      "source_aliases": [],
+      "target_move": "MOVE_TAKE_DOWN",
+      "power": 90,
+      "accuracy": 100,
+      "type": "NORMAL",
+      "category": "PHYSICAL",
+      "source_effect": "EFFECT_RECOIL_HIT",
+      "source_chance": 0
+    },
+    {
+      "source_id": 47,
+      "source_constant": "SING",
+      "source_move": "SING",
+      "source_aliases": [],
+      "target_move": "MOVE_SING",
+      "power": 0,
+      "accuracy": 75,
+      "type": "NORMAL",
+      "category": "STATUS",
+      "source_effect": "EFFECT_SLEEP",
+      "source_chance": 0
+    },
+    {
+      "source_id": 48,
+      "source_constant": "SUPERSONIC",
+      "source_move": "SUPERSONIC",
+      "source_aliases": [],
+      "target_move": "MOVE_SUPERSONIC",
+      "power": 0,
+      "accuracy": 65,
+      "type": "NORMAL",
+      "category": "STATUS",
+      "source_effect": "EFFECT_CONFUSE",
+      "source_chance": 0
+    },
+    {
+      "source_id": 70,
+      "source_constant": "STRENGTH",
+      "source_move": "STRENGTH",
+      "source_aliases": [],
+      "target_move": "MOVE_STRENGTH",
+      "power": 80,
+      "accuracy": 100,
+      "type": "FIGHTING",
+      "category": "PHYSICAL",
+      "source_effect": "EFFECT_NORMAL_HIT",
+      "source_chance": 0
+    },
+    {
+      "source_id": 83,
+      "source_constant": "FIRE_SPIN",
+      "source_move": "FIRE_SPIN",
+      "source_aliases": [],
+      "target_move": "MOVE_FIRE_SPIN",
+      "power": 40,
+      "accuracy": 90,
+      "type": "FIRE",
+      "category": "SPECIAL",
+      "source_effect": "EFFECT_TRAP",
+      "source_chance": 0
+    },
+    {
+      "source_id": 91,
+      "source_constant": "DIG",
+      "source_move": "DIG",
+      "source_aliases": [],
+      "target_move": "MOVE_DIG",
+      "power": 90,
+      "accuracy": 100,
+      "type": "GROUND",
+      "category": "PHYSICAL",
+      "source_effect": "EFFECT_FLY",
+      "source_chance": 0
+    },
+    {
+      "source_id": 119,
+      "source_constant": "SCALD",
+      "source_move": "SCALD",
+      "source_aliases": [],
+      "target_move": "MOVE_SCALD",
+      "power": 70,
+      "accuracy": 100,
+      "type": "WATER",
+      "category": "SPECIAL",
+      "source_effect": "EFFECT_BURN_HIT",
+      "source_chance": 30
+    },
+    {
+      "source_id": 152,
+      "source_constant": "CRABHAMMER",
+      "source_move": "CRABHAMMER",
+      "source_aliases": [],
+      "target_move": "MOVE_CRABHAMMER",
+      "power": 100,
+      "accuracy": 95,
+      "type": "WATER",
+      "category": "PHYSICAL",
+      "source_effect": "EFFECT_NORMAL_HIT",
+      "source_chance": 0
+    },
+    {
+      "source_id": 190,
+      "source_constant": "OCTAZOOKA",
+      "source_move": "OCTAZOOKA",
+      "source_aliases": [],
+      "target_move": "MOVE_OCTAZOOKA",
+      "power": 75,
+      "accuracy": 95,
+      "type": "WATER",
+      "category": "SPECIAL",
+      "source_effect": "EFFECT_ACCURACY_DOWN_HIT",
+      "source_chance": 30
+    },
+    {
+      "source_id": 250,
+      "source_constant": "WHIRLPOOL",
+      "source_move": "WHIRLPOOL",
+      "source_aliases": [],
+      "target_move": "MOVE_WHIRLPOOL",
+      "power": 40,
+      "accuracy": 90,
+      "type": "WATER",
+      "category": "SPECIAL",
+      "source_effect": "EFFECT_TRAP",
+      "source_chance": 0
+    }
+  ],
+  "scope": "Power, accuracy, type and physical/special/status category for twelve reviewed ordinary rows. Stable target move IDs.",
+  "gaps": [
+    "Other source move rows remain under their separately documented adapters or native definitions.",
+    "Fixed/variable damage and typeless/accuracy-bypass differences need behavioral review.",
+    "Effect implementations, secondary chances, flags, priority, damage rounding, accuracy RNG and animation remain separate source-parity work."
+  ]
+}

@@ -35,6 +35,8 @@ COMPARE     ?= 0
 TEST         ?= 0
 # Opt-in visual port demonstration; separate ROM and object directory.
 POLISHED_JOHTO_DEMO ?= 0
+# Isolate source move-data regression tests without other Johto profile changes.
+POLISHED_MOVE_BALANCE_TEST ?= 0
 # Enables -fanalyzer C flag to analyze in depth potential UBs
 ANALYZE      ?= 0
 # Count unused warnings as errors. Used by RH-Hideout's repo
@@ -104,6 +106,12 @@ ifeq ($(POLISHED_JOHTO_DEMO),1)
   endif
   FILE_NAME := $(FILE_NAME)-johto-demo
 endif
+ifeq ($(POLISHED_MOVE_BALANCE_TEST),1)
+  ifneq ($(TEST),1)
+    $(error POLISHED_MOVE_BALANCE_TEST requires TEST=1)
+  endif
+  FILE_NAME := $(FILE_NAME)-polished-moves
+endif
 ROM_NAME := $(FILE_NAME).gba
 OBJ_DIR_NAME := $(BUILD_DIR)/$(BUILD_NAME)
 OBJ_DIR_NAME_TEST := $(BUILD_DIR)/$(BUILD_NAME)-test
@@ -134,6 +142,9 @@ ifeq ($(RELEASE),1)
 endif
 ifeq ($(POLISHED_JOHTO_DEMO),1)
   OBJ_DIR := $(OBJ_DIR)-johto-demo
+endif
+ifeq ($(POLISHED_MOVE_BALANCE_TEST),1)
+  OBJ_DIR := $(OBJ_DIR)-polished-moves
 endif
 ELF := $(ROM:.gba=.elf)
 MAP := $(ROM:.gba=.map)
@@ -168,7 +179,7 @@ else
 O_LEVEL ?= 2
 endif
 CPPFLAGS := $(INCLUDE_CPP_ARGS) -Wno-trigraphs -DMODERN=1 -DTESTING=$(TEST) -D$(GAME_VERSION) -std=gnu17
-override CPPFLAGS += -DPOLISHED_JOHTO_DEMO=$(POLISHED_JOHTO_DEMO)
+override CPPFLAGS += -DPOLISHED_JOHTO_DEMO=$(POLISHED_JOHTO_DEMO) -DPOLISHED_MOVE_BALANCE_TEST=$(POLISHED_MOVE_BALANCE_TEST)
 ifeq ($(RELEASE),1)
 	override CPPFLAGS += -DRELEASE
 	ifeq ($(USE_LTO_ON_RELEASE),1)

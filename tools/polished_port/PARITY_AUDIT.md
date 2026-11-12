@@ -23,6 +23,11 @@ source lesson adapter. All source PP/PP Up and compatibility checks match.
 These are not claims of complete move effect or machine UI parity. Some move
 table differences are representation differences requiring behavioral review.
 
+The subsequent [move-balance correction](#source-move-balance-corrections)
+imports twelve of those rows and removes their seventeen field discrepancies.
+The production-linked audit now reports ten remaining differing rows. Machine
+identity/lesson gaps remain as recorded in the original report.
+
 CI now runs `audit_moves_machines.py` with an explicit known-gap inventory.
 New or changed findings fail; resolved gaps are permitted. Strict mode without
 `--known-gaps` exits nonzero for the currently unfinished work. The generated
@@ -909,6 +914,78 @@ fixtures pass. Final Johto ROM SHA-256:
 The same final ROM passes all 101 campaign checks and 19 warp traversals,
 including Elder Li, Falkner's original TM51 artwork/definition and Togepi.
 These remain demo-start regressions until the authentic source opening is ported.
+
+## Source move-balance corrections
+
+`build_move_balance.py` resolves the pinned default release and generates source
+constants for twelve ordinary rows: Cut, Fly, Take Down, Sing, Supersonic,
+Strength, Fire Spin, Dig, Scald, Crabhammer, Octazooka and Whirlpool. Seventeen
+changed fields are selected directly in the ROM's `gMovesInfo` initializers.
+`B_POLISHED_MOVE_BALANCE` defaults to the Johto build; ordinary/native builds
+retain their existing values. No save fields or persistent IDs change.
+
+| Move | Imported power | Imported accuracy | Imported type |
+| --- | --- | --- | --- |
+| Cut | 60 | 100 | Steel |
+| Fly | 90 | 100 | Flying |
+| Take Down | 90 | 100 | Normal |
+| Sing | 0 | 75 | Normal |
+| Supersonic | 0 | 65 | Normal |
+| Strength | 80 | 100 | Fighting |
+| Fire Spin | 40 | 90 | Fire |
+| Dig | 90 | 100 | Ground |
+| Scald | 70 | 100 | Water |
+| Crabhammer | 100 | 95 | Water |
+| Octazooka | 75 | 95 | Water |
+| Whirlpool | 40 | 90 | Water |
+
+The existing shared getters read the selected ROM values for actual damage,
+hit checks, AI estimates, summary screens and machine information. Matching
+native categories and other fields are retained and checked against the source.
+Compile-time selection adds no per-lookup branch or secondary table read. All
+six existing AI timing benchmarks run with their original ceilings in both the
+native test ROM and a separate source-balance test ROM. The latter uses
+`TEST=1 POLISHED_MOVE_BALANCE_TEST=1`, a separate object directory and ELF, so
+other Johto profiles cannot mask balance regressions or contaminate native tests.
+
+The original move effect implementations and flags are retained: this completes
+these four data fields for twelve moves, not every effect's source behavior.
+Remaining source gaps include secondary chances, priority/flags, source accuracy
+RNG and rounding/modifiers, damage rules and animations. Ten other differing rows
+remain for separate review; fixed damage and typeless/bypass sentinels must not
+be mechanically copied into native storage. Broader machine identity/lesson gaps
+remain unchanged.
+
+Six test groups run in both ROM profiles to verify the twelve imported rows,
+ordinary and two-turn damage, all nine changed accuracy thresholds, Steel Cut /
+Fighting Strength effectiveness, Cut versus Ghosts and AI move choice.
+The threshold tests exercise the existing engine RNG and do not certify source
+byte-RNG/ability/item modifier parity. All 255 moves are additionally inspected
+through production-linked Johto accessors; the twelve corrected rows match,
+and all 43,792 teaching combinations still match. The known-gap inventory now
+rejects all seventeen repaired field differences if they reappear; injected
+regressions verify that gate.
+
+Validation: both Emerald and Johto ROMs build with unused/deprecated
+warnings treated as errors. All 42 source checks and all 12 emulator ARM probes
+pass, including native/Johto/isolated-balance profile selection. All six
+move-balance groups pass in both separate ROM profiles, as do all six unchanged
+AI timing benchmarks. All 12 demo checks pass. Production-linked inspection
+confirms the twelve corrected rows, 255 PP rows and dispatch bindings, 43,792
+teaching combinations and rejection of all seventeen injected old differences.
+The full native run passed 5,354 groups, with nine existing expected failures and
+586 TODOs. Its sole new failure was the accuracy test counting Fly's charging
+animation as a hit. The assertion now also requires second-turn damage; all six
+balance groups pass when rerun in both profiles. No gameplay or frame-budget
+failure remains from that run. CI repeats the full suite on the final commit.
+The production campaign passes all 101 checks and 19 warps, including all three
+starter paths, Sprout Tower, Falkner, the badge/reward/Togepi sequence and
+Save/Continue.
+
+Johto ROM SHA-256:
+`af3fd547a7c6a3f52ab5499427aa4eaddfc05303c4bf85429a0364707625e0d0`.
+The local audit identifies this as a working tree based on `3fdd1511`; the
+unchanged clean-source guard remains enabled for CI's exact-commit report.
 
 ## Next priorities
 
