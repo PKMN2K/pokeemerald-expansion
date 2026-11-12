@@ -6,6 +6,9 @@ from test_new_bark_emulator import map_data, walk, save_game, continue_game, clo
 from test_new_bark_intro_emulator import layout, advance, task_active
 from test_cherrygrove_emulator import enter, leave, interact, money, extra_layout
 from test_academy_emulator import wait_for, cb
+from build_new_bark import source_files
+from build_pokemon_held_items import catalog, sources
+from polished_mart import stock as source_stock
 
 
 def stock(game):
@@ -46,9 +49,9 @@ def shop_price(game,item):
     return SOURCE_PRICE_OVERRIDES.get(item, native)
 
 
-def purchase(game,index,item):
+def purchase(game,index,item,expected_price=None):
     before,cash = count(game,item),money(game)
-    price = shop_price(game,item)
+    price = shop_price(game,item) if expected_price is None else expected_price
     assert cash >= price,(item,cash,price)
     for _ in range(index):
         game.press(DOWN)
@@ -116,14 +119,20 @@ def check_mart(game,city,checks):
         assert game.position()==(9,18),game.position()
     checks.append("Violet Mart opens at the source doorway, both exit tiles return correctly, and both customers and shelves are usable")
     items=stock(game)
+    # All eleven source prices are read from the pinned RGBDS item catalog,
+    # independently of native GBA price tables and manual overrides.
+    source_names = source_stock(source_files())
+    assert len(items) == len(source_names) == 11
+    item_catalog = catalog(sources())
+    source_prices = [int(item_catalog[name]["source_attributes"][0]) for name in source_names]
     for index,item in enumerate(items):
         game.restore("mart-inside")
         open_shop(game,mart)
-        purchase(game,index,item)
+        purchase(game,index,item,expected_price=source_prices[index])
         game.screenshot("violet-mart-purchase-"+str(index))
         close_shop(game)
         print("PASS: Violet Mart purchase",index,item,flush=True)
-    checks.append("All 11 source-stock items can be purchased from the scrolling native shop with exact live-price deductions")
+    checks.append("All 11 source-stock items can be purchased for exact independently pinned Crystal catalog prices")
     # Cancel quantity selection, then spend down through the regular shop so
     # a real unaffordable purchase is rejected without losing any inventory.
     game.restore("mart-inside")
