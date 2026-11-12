@@ -9,8 +9,9 @@ ROOT = Path(__file__).resolve().parents[3]
 data = build()
 assert (ROOT / "src/data/polished_item_descriptions.h").read_bytes() == data
 generated = data.decode()
-assert len(re.findall(r"^static const u8 sPolishedDesc_", generated, re.M)) == 73
-assert len(re.findall(r"^    \[ITEM_\w+\] = sPolishedDesc_", generated, re.M)) == 73
+assert "static const u8 *const sPolishedItemDescriptions[ITEMS_COUNT]" in generated
+assert len(re.findall(r'^    \[ITEM_\w+\] = COMPOUND_STRING\("', generated, re.M)) == 73
+assert "static const u8 sPolishedDesc_" not in generated
 assert convert_description("Cures #mon\n<" + "BOLDP><BOLDP>") == "Cures POKéMON\nPP"
 assert "#mon." not in generated and "<BOLDP>" not in generated
 
