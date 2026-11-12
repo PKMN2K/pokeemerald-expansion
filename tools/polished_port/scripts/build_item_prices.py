@@ -8,11 +8,20 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[3]
 SOURCE = ROOT / "tools/polished_port/manifests/pokemon_held_items.json"
 OUTPUT = ROOT / "src/data/polished_item_prices.h"
-# Names in the pinned RGBDS item catalog which differ from their GBA IDs.
+# Explicitly map all eleven source Violet Mart stock identities. The price
+# assertions pin the source; the compiled values come from source attributes.
 MART_ALIASES = {
+    "POKE_BALL": ("ITEM_POKE_BALL", 200),
+    "REPEAT_BALL": ("ITEM_REPEAT_BALL", 1000),
+    "POTION": ("ITEM_POTION", 200),
+    "ESCAPE_ROPE": ("ITEM_POLISHED_ESCAPE_ROPE", 1000),
+    "ANTIDOTE": ("ITEM_ANTIDOTE", 200),
     "PARALYZEHEAL": ("ITEM_PARALYZE_HEAL", 300),
     "AWAKENING": ("ITEM_AWAKENING", 100),
+    "X_ATTACK": ("ITEM_X_ATTACK", 1000),
     "X_DEFEND": ("ITEM_X_DEFENSE", 2000),
+    "X_SPEED": ("ITEM_X_SPEED", 1000),
+    "FLOWER_MAIL": ("ITEM_POLISHED_FLOWER_MAIL", 50),
 }
 
 
@@ -29,7 +38,7 @@ def build():
         assert int(attributes[0]) == expected_price, (source_name, attributes[0])
         rows.append({"source_item": source_name, "target_item": target_item,
                      "source_attributes": attributes})
-    assert len(rows) == 73
+    assert len(rows) == 81
     names = set(re.findall(r"\bITEM_\w+", (ROOT / "include/constants/items.h").read_text()))
     assert len({r["target_item"] for r in rows}) == len(rows)
     out = ["/* Generated from pinned default Polished Crystal item attributes. */",
@@ -54,7 +63,7 @@ def main():
         assert OUTPUT.read_bytes() == data, "Regenerate source mapped item prices"
     else:
         OUTPUT.write_bytes(data)
-    print("PASS: 73 pinned source item prices (70 mapped held items plus 3 Violet Mart corrections)")
+    print("PASS: 81 pinned source item prices (70 mapped held items plus all 11 Violet Mart items)")
 
 
 if __name__ == "__main__":
