@@ -3466,9 +3466,10 @@ void UseItem(u32 sourceLine, struct BattlePokemon *battler, struct ItemContext c
     if (ctxItemType == ITEM_USE_PARTY_MENU_MOVES)
     {
         INVALID_IF(!ctx.explicitMove, "%S requires an explicit move", GetItemName(ctx.itemId));
+        struct Pokemon *recipient = &DATA.recordedBattle.parties[Test_GetBattlerTrainer(battlerId)][ctx.partyIndex];
         for (i = 0; i < MAX_MON_MOVES; i++)
         {
-            if (GetMonData(CurrentMon(battlerId), MON_DATA_MOVE1 + i) == ctx.move)
+            if (GetMonData(recipient, MON_DATA_MOVE1 + i) == ctx.move)
                 break;
         }
         INVALID_IF(i == MAX_MON_MOVES, "USE_ITEM on invalid move: %d", ctx.move);

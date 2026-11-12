@@ -10,6 +10,7 @@
 #include "constants/battle_z_move_effects.h"
 #include "constants/battle_set_effect.h"
 #include "constants/moves.h"
+#include "polished_moves.h"
 
 #define STAT_CHANGE_FORCE_MAX 7 // Used for belly drum as a way to show that stats are maxed
 
@@ -298,7 +299,9 @@ static inline enum MoveTarget GetMoveTarget(enum Move moveId)
 
 static inline u32 GetMovePP(enum Move moveId)
 {
-    return gMovesInfo[SanitizeMoveId(moveId)].pp;
+    moveId = SanitizeMoveId(moveId);
+    u32 sourcePP = PolishedGetMovePP(moveId);
+    return sourcePP ? sourcePP : gMovesInfo[moveId].pp;
 }
 
 static inline enum ZEffect GetMoveZEffect(enum Move moveId)

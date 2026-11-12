@@ -3,6 +3,7 @@
 
 /* Config definitions */
 #define BATTLE_CONFIG_DEFINITIONS(F) \
+    F(B_POLISHED_MOVE_PP,          polishedMovePP,          (u32, TRUE)) \
     F(B_POLISHED_RETURN,           polishedReturn,          (u32, TRUE)) \
     /* Calculation settings */ \
     F(B_CRIT_CHANCE,               critChance,              (u32, GEN_COUNT - 1)) \

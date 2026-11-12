@@ -3427,6 +3427,9 @@ const struct FormChange *GetSpeciesFormChanges(enum Species species)
 u8 CalculatePPWithBonus(enum Move move, u8 ppBonuses, u8 moveIndex)
 {
     u8 basePP = GetMovePP(move);
+    u32 count = (gPPUpGetMask[moveIndex] & ppBonuses) >> (2 * moveIndex);
+    if (PolishedGetMovePP(move))
+        return basePP + min(basePP / POLISHED_PP_UP_DIVISOR, POLISHED_PP_UP_MAX_INCREMENT) * count;
     return basePP + ((basePP * 20 * ((gPPUpGetMask[moveIndex] & ppBonuses) >> (2 * moveIndex))) / 100);
 }
 

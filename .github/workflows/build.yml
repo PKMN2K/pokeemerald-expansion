@@ -90,6 +90,7 @@ jobs:
           python3 tools/polished_port/scripts/test_figy_held_effect.py
           python3 tools/polished_port/scripts/build_medicine_friendship.py --check
           python3 tools/polished_port/scripts/build_return_power.py --check
+          python3 tools/polished_port/scripts/build_move_pp.py --check
 
       - name: Build playable Johto demo
         timeout-minutes: 20

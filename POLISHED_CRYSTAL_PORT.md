@@ -1028,6 +1028,18 @@ the source and remains optional Expansion content. Broader source move data,
 damage/ability rules, trainer creation/AI and animations remain separate work;
 see `tools/polished_port/PARITY_AUDIT.md` for the exact coverage.
 
+All 255 pinned default move PP records now use explicit target IDs under
+`B_POLISHED_MOVE_PP`, enabled in the Johto build. Initial/learned moves,
+PP displays and refill paths share these values. PP Ups add the source's
+per-use increment, capped at seven: source 40-PP moves reach 61 PP after
+three PP Ups. Optional Expansion moves retain native maxima and capacities.
+`build_move_pp.py --check` reproduces the table, constants and provenance
+manifest. Save IDs and PP storage layouts remain unchanged; existing current
+PP is not rewritten on load. Broader move effects, positive item friendship
+changes and presentation remain separate work. The audit also records an
+earlier default-variant Rock Smash/Brick Break alias defect in learning data
+for the next identity correction.
+
 Price and description parity still do not imply full item icon, field use,
 other held effects, battle mechanic or source-layout parity. The original GBC text
 glyph styling is not claimed to be pixel-identical on the GBA.

@@ -70,6 +70,7 @@
                                                // As of Champions, freeze has a 25% chance of being thawed out with a hard cap of 3 turns.
 
 // Move data settings
+#define B_POLISHED_MOVE_PP          POLISHED_JOHTO_DEMO // Pinned move PP and source PP Up increments; optional moves retain native limits.
 #define B_UPDATED_MOVE_DATA         GEN_LATEST // Updates move data in gMovesInfo, including Power, Accuracy, PP, category, range, and additional effects.
 #define B_UPDATED_MOVE_TYPES        GEN_LATEST // Updates move types in gMovesInfo.
 #define B_UPDATED_MOVE_FLAGS        GEN_LATEST // Updates move flags in gMovesInfo.

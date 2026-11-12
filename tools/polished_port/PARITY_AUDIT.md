@@ -20,7 +20,7 @@ regression coverage, but are not evidence of complete source-game parity.
 | Level-up moves | `GetSpeciesLevelUpLearnset` previously returned Expansion tables for player starters, gifts, eggs, trades and wild Pokemon even where trainer parties had source moves. | **Imported:** all 391 mapped species/form entries, including source evolution moves and cosmetic aliases. The Johto build selects these through the shared accessor. Existing Pokemon keep saved moves; subsequent learning uses the new source tables. |
 | Species/form identities | Native numeric IDs do not equal source IDs or form values. Thirty source forms previously lacked target IDs. | **Registered:** all 391 identities now resolve. Thirty forms have distinct appended IDs 1573..1602, with base/form-table round trips. Their original artwork and metadata are still pending; source evolution rules are now selected separately. |
 | Custom move identities | Fury Strikes, HealingLight and Fresh Snack do not exist as separate Expansion moves. | **Added:** distinct ordinary move IDs and generated source names, descriptions and basic data. Native battle adapters implement source multi-hit probability and healing fractions/rounding. Original battle animations and Fresh Snack's field use remain open. |
-| Other move data and effects | `src/data/moves_info.h` still supplies most move definitions; battle configuration selects many latest-generation rules. | Import all source move data/flags and audit effect implementations, damage/stat rules, status, weather and RNG. A matching move name is insufficient. |
+| Other move data and effects | `src/data/moves_info.h` still supplies most move definitions; battle configuration selects many latest-generation rules. | All 255 source PP records and source PP Up maxima are imported; Return happiness power is adapted. Import the remaining source move data/flags and audit effect implementations, damage/stat rules, status, weather and RNG. A matching move name is insufficient. |
 | Species stats and related data | Native generation presets previously supplied these values. | **Imported:** all 391 base-data mappings provide default-source stats, types, three ability slots, growth, catch/EXP/EV data, gender, egg groups/cycles and initial happiness. Gameplay uses `GetSpeciesBaseData`; additional Expansion species retain native data. Held-item pairs/probabilities are imported separately below. Pokedex/presentation data, existing item/ability effects and other battle/creation rules remain open. |
 | Wild held items | Native pairs and one percent roll previously selected source species items. | **Imported:** all 391 source pairs, exact two-byte branch rules, guaranteed/legendary priority, lead boosts and 70 item mappings. Pink Bow and both leaves have distinct appended IDs and original Bag icons. Existing mapped item data/effects, source battle rounding and leaf tutors remain open. |
 | Evolution conditions, breeding and teaching | Source evolution rows now replace native conditions for all 391 registered identities, with a source evaluator, shared family/Pokedex metadata and default evolution timing inside trainer battles. Source egg groups and initial cycle counts are imported. | Hidden forms for the Ekans, Magikarp and Dunsparce families, all 391 egg/teaching lists and source egg-move inheritance are now adapted. Remaining evolution options/locations, hatch-step timing, breeding attributes/regional offspring selection and item mappings remain open. |
@@ -47,8 +47,8 @@ as a superficially similar form.
 The three custom moves are appended at Expansion's designated ordinary custom
 move boundary. Existing ordinary move IDs through 847 remain unchanged. The
 derived Z/Max move ranges move by three entries; these are engine-generated
-battle moves, not legal saved party moves. Apart from Return's happiness power
-below, ordinary source moves still use Expansion effects/data pending further
+battle moves, not legal saved party moves. Apart from source PP and Return's
+happiness power below, ordinary source moves still use Expansion effects/data pending further
 battle-data work. The new custom moves
 also use native animation assets pending the presentation import.
 
@@ -586,12 +586,73 @@ The seven native tests execute Return behavior in mGBA; the demo checks cover
 the existing overworld. Automatic CI additionally reruns the full controller
 campaign on the published commit.
 
+## Move PP data and maximum PP
+
+`B_POLISHED_MOVE_PP` defaults to `POLISHED_JOHTO_DEMO`. A generated sparse
+table maps all 255 pinned default move records to stable Expansion move IDs.
+`GetMovePP` now selects those values globally: initial moves, learning, trainer
+construction, battle/summary displays and PP consumers share the source data.
+For example, Hone Claws has 40 PP, Rock Blast 25, Metronome 20, Rapid Spin 20
+and Take Down 15. Native presets previously supplied 15, 10, 10, 40 and 20
+respectively. Unmapped Expansion moves, Z/Max moves, invalid IDs and the
+disabled source profile retain their native/sanitized behavior.
+
+`CalculatePPWithBonus` uses the source's per-PP-Up increment for mapped moves:
+`base + min(floor(base / 5), 7) * count`. A source 40-PP move therefore has
+40/47/54/61 PP with zero/one/two/three PP Ups. The 61 limit follows the source
+behavior without importing its packed six-bit storage: Expansion's separate
+current-PP bytes and bonus fields, move IDs and extra capacity are unchanged.
+An optional 40-PP Leafage still reaches 64 PP. Existing saved current PP is
+not rewritten on load; subsequent ordinary healing/refill uses the selected
+maximum, while new/replaced moves start with their source base PP.
+
+`build_move_pp.py --check` verifies the existing hashed move constants, default
+move table and item-effect fixture, including PP Up/Max counts, Sketch's
+exclusion, maximum lookup and the original 7-point increment cap. It generates
+the table, constants and a provenance manifest with all four maximum values
+per source move. Party/Box refill and PP restoration item paths already use
+the shared accessors; no duplicate item formula was introduced. PP Up/Max
+preserve spent PP by adding only the increase in maximum PP. The native
+one-PP guard also excludes Sketch; source Struggle is not a learnable move.
+Positive friendship changes from these items, their UI/text/animations,
+broader PP-use effects and battle event ordering are not certified by this
+data/maximum phase.
+
+The source has a noteworthy identity alias: in its default build, constant
+`ROCK_SMASH` (source ID 249) is named `BRICK_BREAK` in the move table. This
+PP table explicitly maps that record to `MOVE_BRICK_BREAK`, not the native
+Rock Smash effect. Earlier learnset/teaching imports still resolve some
+`ROCK_SMASH` tokens by name. That is a separate, now-recorded identity defect
+to correct across those imports before claiming full source move parity;
+both moves currently have 15 PP, so it does not change this phase's PP values.
+
+Nine new native tests cover all records and profiles, all four bonus counts
+in every slot, all 256 packed bonus bytes for a 40-PP move, invalid/optional
+IDs, move initialization and depletion, party/Box refill, PP Up/Max spent-PP
+preservation and no-effect guards, Ether/Elixir limits, both battle sides,
+benched restoration followed by switching and the targeted doubles partner.
+The battle-test item selector now resolves the requested move on the selected
+recipient, rather than the item user's active Pokemon. This fixes test input
+generation for Ether used on a bench member or partner with different moves;
+the production item-selection UI is unchanged.
+
+Final validation uses GCC 13.2.1, matching CI. All 5,331 native tests pass,
+with nine expected failures and 586 existing TODOs (5,926 total), including
+all six AI timing checks. Both standard Emerald and Johto ROMs build; all
+36 source/asset checks and all 12 Johto demo emulator checks pass. The tested
+Johto ROM SHA-256 is
+`6a5668b200b0235f7a7c3f927da6c361deb7aee85d58a45649543fd37589397c`.
+The nine new tests execute the PP behavior in mGBA. The local demo checks
+cover existing overworld behavior; automatic CI additionally reruns the full
+controller campaign on the published commit.
+
 ## Next priorities
 
 1. Complete the remaining evolution options above, broader item definitions/
    effects and source TM/tutor inventories. Complete breeding/hatching behavior
    beyond base data and inherited moves.
-2. Import remaining move data and implement a source battle profile, including
+2. Correct the default source Rock Smash/Brick Break alias across learning and
+   teaching imports. Import remaining move data and implement a source battle profile, including
    trainer creation and AI. Validate source probabilities and rounding directly.
 3. Import Pokemon graphics and complete the associated sprite metadata.
 4. Establish the real source startup and rerun the existing campaign from its

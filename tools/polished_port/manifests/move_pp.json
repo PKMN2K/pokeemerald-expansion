@@ -1,0 +1,3329 @@
+{
+  "repository": "Rangi42/polishedcrystal",
+  "commit": "3fa43192379df5c3e7b09a08e4d5d79af4f02f42",
+  "variant": "default (FAITHFUL undefined)",
+  "source_files": [
+    "data/moves/moves.asm",
+    "constants/move_constants.asm",
+    "engine/items/item_effects.asm"
+  ],
+  "pp_up_divisor": 5,
+  "pp_up_max_increment": 7,
+  "moves": [
+    {
+      "source_id": 1,
+      "source_constant": "ACROBATICS",
+      "source_move": "ACROBATICS",
+      "target_move": "MOVE_ACROBATICS",
+      "pp": 15,
+      "max_pp": [
+        15,
+        18,
+        21,
+        24
+      ]
+    },
+    {
+      "source_id": 2,
+      "source_constant": "KARATE_CHOP",
+      "source_move": "KARATE_CHOP",
+      "target_move": "MOVE_KARATE_CHOP",
+      "pp": 25,
+      "max_pp": [
+        25,
+        30,
+        35,
+        40
+      ]
+    },
+    {
+      "source_id": 3,
+      "source_constant": "DOUBLE_SLAP",
+      "source_move": "DOUBLE_SLAP",
+      "target_move": "MOVE_DOUBLE_SLAP",
+      "pp": 10,
+      "max_pp": [
+        10,
+        12,
+        14,
+        16
+      ]
+    },
+    {
+      "source_id": 4,
+      "source_constant": "AERIAL_ACE",
+      "source_move": "AERIAL_ACE",
+      "target_move": "MOVE_AERIAL_ACE",
+      "pp": 20,
+      "max_pp": [
+        20,
+        24,
+        28,
+        32
+      ]
+    },
+    {
+      "source_id": 5,
+      "source_constant": "DRAGON_CLAW",
+      "source_move": "DRAGON_CLAW",
+      "target_move": "MOVE_DRAGON_CLAW",
+      "pp": 15,
+      "max_pp": [
+        15,
+        18,
+        21,
+        24
+      ]
+    },
+    {
+      "source_id": 6,
+      "source_constant": "PAY_DAY",
+      "source_move": "PAY_DAY",
+      "target_move": "MOVE_PAY_DAY",
+      "pp": 20,
+      "max_pp": [
+        20,
+        24,
+        28,
+        32
+      ]
+    },
+    {
+      "source_id": 7,
+      "source_constant": "FIRE_PUNCH",
+      "source_move": "FIRE_PUNCH",
+      "target_move": "MOVE_FIRE_PUNCH",
+      "pp": 15,
+      "max_pp": [
+        15,
+        18,
+        21,
+        24
+      ]
+    },
+    {
+      "source_id": 8,
+      "source_constant": "ICE_PUNCH",
+      "source_move": "ICE_PUNCH",
+      "target_move": "MOVE_ICE_PUNCH",
+      "pp": 15,
+      "max_pp": [
+        15,
+        18,
+        21,
+        24
+      ]
+    },
+    {
+      "source_id": 9,
+      "source_constant": "THUNDERPUNCH",
+      "source_move": "THUNDERPUNCH",
+      "target_move": "MOVE_THUNDERPUNCH",
+      "pp": 15,
+      "max_pp": [
+        15,
+        18,
+        21,
+        24
+      ]
+    },
+    {
+      "source_id": 10,
+      "source_constant": "SCRATCH",
+      "source_move": "SCRATCH",
+      "target_move": "MOVE_SCRATCH",
+      "pp": 35,
+      "max_pp": [
+        35,
+        42,
+        49,
+        56
+      ]
+    },
+    {
+      "source_id": 11,
+      "source_constant": "X_SCISSOR",
+      "source_move": "X_SCISSOR",
+      "target_move": "MOVE_X_SCISSOR",
+      "pp": 15,
+      "max_pp": [
+        15,
+        18,
+        21,
+        24
+      ]
+    },
+    {
+      "source_id": 12,
+      "source_constant": "NIGHT_SLASH",
+      "source_move": "NIGHT_SLASH",
+      "target_move": "MOVE_NIGHT_SLASH",
+      "pp": 15,
+      "max_pp": [
+        15,
+        18,
+        21,
+        24
+      ]
+    },
+    {
+      "source_id": 13,
+      "source_constant": "AIR_SLASH",
+      "source_move": "AIR_SLASH",
+      "target_move": "MOVE_AIR_SLASH",
+      "pp": 15,
+      "max_pp": [
+        15,
+        18,
+        21,
+        24
+      ]
+    },
+    {
+      "source_id": 14,
+      "source_constant": "SWORDS_DANCE",
+      "source_move": "SWORDS_DANCE",
+      "target_move": "MOVE_SWORDS_DANCE",
+      "pp": 20,
+      "max_pp": [
+        20,
+        24,
+        28,
+        32
+      ]
+    },
+    {
+      "source_id": 15,
+      "source_constant": "CUT",
+      "source_move": "CUT",
+      "target_move": "MOVE_CUT",
+      "pp": 30,
+      "max_pp": [
+        30,
+        36,
+        42,
+        48
+      ]
+    },
+    {
+      "source_id": 16,
+      "source_constant": "GUST",
+      "source_move": "GUST",
+      "target_move": "MOVE_GUST",
+      "pp": 35,
+      "max_pp": [
+        35,
+        42,
+        49,
+        56
+      ]
+    },
+    {
+      "source_id": 17,
+      "source_constant": "WING_ATTACK",
+      "source_move": "WING_ATTACK",
+      "target_move": "MOVE_WING_ATTACK",
+      "pp": 35,
+      "max_pp": [
+        35,
+        42,
+        49,
+        56
+      ]
+    },
+    {
+      "source_id": 18,
+      "source_constant": "SUCKER_PUNCH",
+      "source_move": "SUCKER_PUNCH",
+      "target_move": "MOVE_SUCKER_PUNCH",
+      "pp": 5,
+      "max_pp": [
+        5,
+        6,
+        7,
+        8
+      ]
+    },
+    {
+      "source_id": 19,
+      "source_constant": "FLY",
+      "source_move": "FLY",
+      "target_move": "MOVE_FLY",
+      "pp": 15,
+      "max_pp": [
+        15,
+        18,
+        21,
+        24
+      ]
+    },
+    {
+      "source_id": 20,
+      "source_constant": "DAZZLINGLEAM",
+      "source_move": "DAZZLINGLEAM",
+      "target_move": "MOVE_DAZZLING_GLEAM",
+      "pp": 10,
+      "max_pp": [
+        10,
+        12,
+        14,
+        16
+      ]
+    },
+    {
+      "source_id": 21,
+      "source_constant": "VOLT_SWITCH",
+      "source_move": "VOLT_SWITCH",
+      "target_move": "MOVE_VOLT_SWITCH",
+      "pp": 20,
+      "max_pp": [
+        20,
+        24,
+        28,
+        32
+      ]
+    },
+    {
+      "source_id": 22,
+      "source_constant": "VINE_WHIP",
+      "source_move": "VINE_WHIP",
+      "target_move": "MOVE_VINE_WHIP",
+      "pp": 25,
+      "max_pp": [
+        25,
+        30,
+        35,
+        40
+      ]
+    },
+    {
+      "source_id": 23,
+      "source_constant": "STOMP",
+      "source_move": "STOMP",
+      "target_move": "MOVE_STOMP",
+      "pp": 20,
+      "max_pp": [
+        20,
+        24,
+        28,
+        32
+      ]
+    },
+    {
+      "source_id": 24,
+      "source_constant": "DOUBLE_KICK",
+      "source_move": "DOUBLE_KICK",
+      "target_move": "MOVE_DOUBLE_KICK",
+      "pp": 30,
+      "max_pp": [
+        30,
+        36,
+        42,
+        48
+      ]
+    },
+    {
+      "source_id": 25,
+      "source_constant": "FLARE_BLITZ",
+      "source_move": "FLARE_BLITZ",
+      "target_move": "MOVE_FLARE_BLITZ",
+      "pp": 15,
+      "max_pp": [
+        15,
+        18,
+        21,
+        24
+      ]
+    },
+    {
+      "source_id": 26,
+      "source_constant": "STONE_EDGE",
+      "source_move": "STONE_EDGE",
+      "target_move": "MOVE_STONE_EDGE",
+      "pp": 5,
+      "max_pp": [
+        5,
+        6,
+        7,
+        8
+      ]
+    },
+    {
+      "source_id": 27,
+      "source_constant": "FOCUS_BLAST",
+      "source_move": "FOCUS_BLAST",
+      "target_move": "MOVE_FOCUS_BLAST",
+      "pp": 5,
+      "max_pp": [
+        5,
+        6,
+        7,
+        8
+      ]
+    },
+    {
+      "source_id": 28,
+      "source_constant": "TOXIC_SPIKES",
+      "source_move": "TOXIC_SPIKES",
+      "target_move": "MOVE_TOXIC_SPIKES",
+      "pp": 20,
+      "max_pp": [
+        20,
+        24,
+        28,
+        32
+      ]
+    },
+    {
+      "source_id": 29,
+      "source_constant": "HEADBUTT",
+      "source_move": "HEADBUTT",
+      "target_move": "MOVE_HEADBUTT",
+      "pp": 15,
+      "max_pp": [
+        15,
+        18,
+        21,
+        24
+      ]
+    },
+    {
+      "source_id": 30,
+      "source_constant": "HORN_ATTACK",
+      "source_move": "HORN_ATTACK",
+      "target_move": "MOVE_HORN_ATTACK",
+      "pp": 25,
+      "max_pp": [
+        25,
+        30,
+        35,
+        40
+      ]
+    },
+    {
+      "source_id": 31,
+      "source_constant": "TRICK",
+      "source_move": "TRICK",
+      "target_move": "MOVE_TRICK",
+      "pp": 10,
+      "max_pp": [
+        10,
+        12,
+        14,
+        16
+      ]
+    },
+    {
+      "source_id": 32,
+      "source_constant": "HEX",
+      "source_move": "HEX",
+      "target_move": "MOVE_HEX",
+      "pp": 10,
+      "max_pp": [
+        10,
+        12,
+        14,
+        16
+      ]
+    },
+    {
+      "source_id": 33,
+      "source_constant": "TACKLE",
+      "source_move": "TACKLE",
+      "target_move": "MOVE_TACKLE",
+      "pp": 35,
+      "max_pp": [
+        35,
+        42,
+        49,
+        56
+      ]
+    },
+    {
+      "source_id": 34,
+      "source_constant": "BODY_SLAM",
+      "source_move": "BODY_SLAM",
+      "target_move": "MOVE_BODY_SLAM",
+      "pp": 15,
+      "max_pp": [
+        15,
+        18,
+        21,
+        24
+      ]
+    },
+    {
+      "source_id": 35,
+      "source_constant": "WRAP",
+      "source_move": "WRAP",
+      "target_move": "MOVE_WRAP",
+      "pp": 20,
+      "max_pp": [
+        20,
+        24,
+        28,
+        32
+      ]
+    },
+    {
+      "source_id": 36,
+      "source_constant": "TAKE_DOWN",
+      "source_move": "TAKE_DOWN",
+      "target_move": "MOVE_TAKE_DOWN",
+      "pp": 15,
+      "max_pp": [
+        15,
+        18,
+        21,
+        24
+      ]
+    },
+    {
+      "source_id": 37,
+      "source_constant": "THRASH",
+      "source_move": "THRASH",
+      "target_move": "MOVE_THRASH",
+      "pp": 10,
+      "max_pp": [
+        10,
+        12,
+        14,
+        16
+      ]
+    },
+    {
+      "source_id": 38,
+      "source_constant": "DOUBLE_EDGE",
+      "source_move": "DOUBLE_EDGE",
+      "target_move": "MOVE_DOUBLE_EDGE",
+      "pp": 15,
+      "max_pp": [
+        15,
+        18,
+        21,
+        24
+      ]
+    },
+    {
+      "source_id": 39,
+      "source_constant": "HAIL",
+      "source_move": "HAIL",
+      "target_move": "MOVE_HAIL",
+      "pp": 10,
+      "max_pp": [
+        10,
+        12,
+        14,
+        16
+      ]
+    },
+    {
+      "source_id": 40,
+      "source_constant": "POISON_STING",
+      "source_move": "POISON_STING",
+      "target_move": "MOVE_POISON_STING",
+      "pp": 35,
+      "max_pp": [
+        35,
+        42,
+        49,
+        56
+      ]
+    },
+    {
+      "source_id": 41,
+      "source_constant": "U_TURN",
+      "source_move": "U_TURN",
+      "target_move": "MOVE_U_TURN",
+      "pp": 20,
+      "max_pp": [
+        20,
+        24,
+        28,
+        32
+      ]
+    },
+    {
+      "source_id": 42,
+      "source_constant": "PIN_MISSILE",
+      "source_move": "PIN_MISSILE",
+      "target_move": "MOVE_PIN_MISSILE",
+      "pp": 20,
+      "max_pp": [
+        20,
+        24,
+        28,
+        32
+      ]
+    },
+    {
+      "source_id": 43,
+      "source_constant": "LEER",
+      "source_move": "LEER",
+      "target_move": "MOVE_LEER",
+      "pp": 30,
+      "max_pp": [
+        30,
+        36,
+        42,
+        48
+      ]
+    },
+    {
+      "source_id": 44,
+      "source_constant": "BITE",
+      "source_move": "BITE",
+      "target_move": "MOVE_BITE",
+      "pp": 25,
+      "max_pp": [
+        25,
+        30,
+        35,
+        40
+      ]
+    },
+    {
+      "source_id": 45,
+      "source_constant": "GROWL",
+      "source_move": "GROWL",
+      "target_move": "MOVE_GROWL",
+      "pp": 40,
+      "max_pp": [
+        40,
+        47,
+        54,
+        61
+      ]
+    },
+    {
+      "source_id": 46,
+      "source_constant": "ROAR",
+      "source_move": "ROAR",
+      "target_move": "MOVE_ROAR",
+      "pp": 20,
+      "max_pp": [
+        20,
+        24,
+        28,
+        32
+      ]
+    },
+    {
+      "source_id": 47,
+      "source_constant": "SING",
+      "source_move": "SING",
+      "target_move": "MOVE_SING",
+      "pp": 15,
+      "max_pp": [
+        15,
+        18,
+        21,
+        24
+      ]
+    },
+    {
+      "source_id": 48,
+      "source_constant": "SUPERSONIC",
+      "source_move": "SUPERSONIC",
+      "target_move": "MOVE_SUPERSONIC",
+      "pp": 20,
+      "max_pp": [
+        20,
+        24,
+        28,
+        32
+      ]
+    },
+    {
+      "source_id": 49,
+      "source_constant": "SONIC_BOOM",
+      "source_move": "SONIC_BOOM",
+      "target_move": "MOVE_SONIC_BOOM",
+      "pp": 20,
+      "max_pp": [
+        20,
+        24,
+        28,
+        32
+      ]
+    },
+    {
+      "source_id": 50,
+      "source_constant": "DISABLE",
+      "source_move": "DISABLE",
+      "target_move": "MOVE_DISABLE",
+      "pp": 20,
+      "max_pp": [
+        20,
+        24,
+        28,
+        32
+      ]
+    },
+    {
+      "source_id": 51,
+      "source_constant": "ACID",
+      "source_move": "ACID",
+      "target_move": "MOVE_ACID",
+      "pp": 30,
+      "max_pp": [
+        30,
+        36,
+        42,
+        48
+      ]
+    },
+    {
+      "source_id": 52,
+      "source_constant": "EMBER",
+      "source_move": "EMBER",
+      "target_move": "MOVE_EMBER",
+      "pp": 25,
+      "max_pp": [
+        25,
+        30,
+        35,
+        40
+      ]
+    },
+    {
+      "source_id": 53,
+      "source_constant": "FLAMETHROWER",
+      "source_move": "FLAMETHROWER",
+      "target_move": "MOVE_FLAMETHROWER",
+      "pp": 15,
+      "max_pp": [
+        15,
+        18,
+        21,
+        24
+      ]
+    },
+    {
+      "source_id": 54,
+      "source_constant": "CALM_MIND",
+      "source_move": "CALM_MIND",
+      "target_move": "MOVE_CALM_MIND",
+      "pp": 20,
+      "max_pp": [
+        20,
+        24,
+        28,
+        32
+      ]
+    },
+    {
+      "source_id": 55,
+      "source_constant": "WATER_GUN",
+      "source_move": "WATER_GUN",
+      "target_move": "MOVE_WATER_GUN",
+      "pp": 25,
+      "max_pp": [
+        25,
+        30,
+        35,
+        40
+      ]
+    },
+    {
+      "source_id": 56,
+      "source_constant": "HYDRO_PUMP",
+      "source_move": "HYDRO_PUMP",
+      "target_move": "MOVE_HYDRO_PUMP",
+      "pp": 5,
+      "max_pp": [
+        5,
+        6,
+        7,
+        8
+      ]
+    },
+    {
+      "source_id": 57,
+      "source_constant": "SURF",
+      "source_move": "SURF",
+      "target_move": "MOVE_SURF",
+      "pp": 15,
+      "max_pp": [
+        15,
+        18,
+        21,
+        24
+      ]
+    },
+    {
+      "source_id": 58,
+      "source_constant": "ICE_BEAM",
+      "source_move": "ICE_BEAM",
+      "target_move": "MOVE_ICE_BEAM",
+      "pp": 10,
+      "max_pp": [
+        10,
+        12,
+        14,
+        16
+      ]
+    },
+    {
+      "source_id": 59,
+      "source_constant": "BLIZZARD",
+      "source_move": "BLIZZARD",
+      "target_move": "MOVE_BLIZZARD",
+      "pp": 5,
+      "max_pp": [
+        5,
+        6,
+        7,
+        8
+      ]
+    },
+    {
+      "source_id": 60,
+      "source_constant": "PSYBEAM",
+      "source_move": "PSYBEAM",
+      "target_move": "MOVE_PSYBEAM",
+      "pp": 20,
+      "max_pp": [
+        20,
+        24,
+        28,
+        32
+      ]
+    },
+    {
+      "source_id": 61,
+      "source_constant": "BUBBLE_BEAM",
+      "source_move": "BUBBLE_BEAM",
+      "target_move": "MOVE_BUBBLE_BEAM",
+      "pp": 20,
+      "max_pp": [
+        20,
+        24,
+        28,
+        32
+      ]
+    },
+    {
+      "source_id": 62,
+      "source_constant": "AURORA_BEAM",
+      "source_move": "AURORA_BEAM",
+      "target_move": "MOVE_AURORA_BEAM",
+      "pp": 20,
+      "max_pp": [
+        20,
+        24,
+        28,
+        32
+      ]
+    },
+    {
+      "source_id": 63,
+      "source_constant": "HYPER_BEAM",
+      "source_move": "HYPER_BEAM",
+      "target_move": "MOVE_HYPER_BEAM",
+      "pp": 5,
+      "max_pp": [
+        5,
+        6,
+        7,
+        8
+      ]
+    },
+    {
+      "source_id": 64,
+      "source_constant": "PECK",
+      "source_move": "PECK",
+      "target_move": "MOVE_PECK",
+      "pp": 35,
+      "max_pp": [
+        35,
+        42,
+        49,
+        56
+      ]
+    },
+    {
+      "source_id": 65,
+      "source_constant": "DRILL_PECK",
+      "source_move": "DRILL_PECK",
+      "target_move": "MOVE_DRILL_PECK",
+      "pp": 20,
+      "max_pp": [
+        20,
+        24,
+        28,
+        32
+      ]
+    },
+    {
+      "source_id": 66,
+      "source_constant": "CLOSE_COMBAT",
+      "source_move": "CLOSE_COMBAT",
+      "target_move": "MOVE_CLOSE_COMBAT",
+      "pp": 5,
+      "max_pp": [
+        5,
+        6,
+        7,
+        8
+      ]
+    },
+    {
+      "source_id": 67,
+      "source_constant": "LOW_KICK",
+      "source_move": "LOW_KICK",
+      "target_move": "MOVE_LOW_KICK",
+      "pp": 20,
+      "max_pp": [
+        20,
+        24,
+        28,
+        32
+      ]
+    },
+    {
+      "source_id": 68,
+      "source_constant": "COUNTER",
+      "source_move": "COUNTER",
+      "target_move": "MOVE_COUNTER",
+      "pp": 20,
+      "max_pp": [
+        20,
+        24,
+        28,
+        32
+      ]
+    },
+    {
+      "source_id": 69,
+      "source_constant": "SEISMIC_TOSS",
+      "source_move": "SEISMIC_TOSS",
+      "target_move": "MOVE_SEISMIC_TOSS",
+      "pp": 20,
+      "max_pp": [
+        20,
+        24,
+        28,
+        32
+      ]
+    },
+    {
+      "source_id": 70,
+      "source_constant": "STRENGTH",
+      "source_move": "STRENGTH",
+      "target_move": "MOVE_STRENGTH",
+      "pp": 15,
+      "max_pp": [
+        15,
+        18,
+        21,
+        24
+      ]
+    },
+    {
+      "source_id": 71,
+      "source_constant": "ABSORB",
+      "source_move": "ABSORB",
+      "target_move": "MOVE_ABSORB",
+      "pp": 25,
+      "max_pp": [
+        25,
+        30,
+        35,
+        40
+      ]
+    },
+    {
+      "source_id": 72,
+      "source_constant": "MEGA_DRAIN",
+      "source_move": "MEGA_DRAIN",
+      "target_move": "MOVE_MEGA_DRAIN",
+      "pp": 15,
+      "max_pp": [
+        15,
+        18,
+        21,
+        24
+      ]
+    },
+    {
+      "source_id": 73,
+      "source_constant": "LEECH_SEED",
+      "source_move": "LEECH_SEED",
+      "target_move": "MOVE_LEECH_SEED",
+      "pp": 10,
+      "max_pp": [
+        10,
+        12,
+        14,
+        16
+      ]
+    },
+    {
+      "source_id": 74,
+      "source_constant": "GROWTH",
+      "source_move": "GROWTH",
+      "target_move": "MOVE_GROWTH",
+      "pp": 20,
+      "max_pp": [
+        20,
+        24,
+        28,
+        32
+      ]
+    },
+    {
+      "source_id": 75,
+      "source_constant": "RAZOR_LEAF",
+      "source_move": "RAZOR_LEAF",
+      "target_move": "MOVE_RAZOR_LEAF",
+      "pp": 25,
+      "max_pp": [
+        25,
+        30,
+        35,
+        40
+      ]
+    },
+    {
+      "source_id": 76,
+      "source_constant": "SOLAR_BEAM",
+      "source_move": "SOLAR_BEAM",
+      "target_move": "MOVE_SOLAR_BEAM",
+      "pp": 10,
+      "max_pp": [
+        10,
+        12,
+        14,
+        16
+      ]
+    },
+    {
+      "source_id": 77,
+      "source_constant": "POISONPOWDER",
+      "source_move": "POISONPOWDER",
+      "target_move": "MOVE_POISONPOWDER",
+      "pp": 35,
+      "max_pp": [
+        35,
+        42,
+        49,
+        56
+      ]
+    },
+    {
+      "source_id": 78,
+      "source_constant": "STUN_SPORE",
+      "source_move": "STUN_SPORE",
+      "target_move": "MOVE_STUN_SPORE",
+      "pp": 30,
+      "max_pp": [
+        30,
+        36,
+        42,
+        48
+      ]
+    },
+    {
+      "source_id": 79,
+      "source_constant": "SLEEP_POWDER",
+      "source_move": "SLEEP_POWDER",
+      "target_move": "MOVE_SLEEP_POWDER",
+      "pp": 15,
+      "max_pp": [
+        15,
+        18,
+        21,
+        24
+      ]
+    },
+    {
+      "source_id": 80,
+      "source_constant": "PETAL_DANCE",
+      "source_move": "PETAL_DANCE",
+      "target_move": "MOVE_PETAL_DANCE",
+      "pp": 10,
+      "max_pp": [
+        10,
+        12,
+        14,
+        16
+      ]
+    },
+    {
+      "source_id": 81,
+      "source_constant": "STRING_SHOT",
+      "source_move": "STRING_SHOT",
+      "target_move": "MOVE_STRING_SHOT",
+      "pp": 40,
+      "max_pp": [
+        40,
+        47,
+        54,
+        61
+      ]
+    },
+    {
+      "source_id": 82,
+      "source_constant": "DRAGON_RAGE",
+      "source_move": "DRAGON_RAGE",
+      "target_move": "MOVE_DRAGON_RAGE",
+      "pp": 10,
+      "max_pp": [
+        10,
+        12,
+        14,
+        16
+      ]
+    },
+    {
+      "source_id": 83,
+      "source_constant": "FIRE_SPIN",
+      "source_move": "FIRE_SPIN",
+      "target_move": "MOVE_FIRE_SPIN",
+      "pp": 15,
+      "max_pp": [
+        15,
+        18,
+        21,
+        24
+      ]
+    },
+    {
+      "source_id": 84,
+      "source_constant": "THUNDERSHOCK",
+      "source_move": "THUNDERSHOCK",
+      "target_move": "MOVE_THUNDERSHOCK",
+      "pp": 30,
+      "max_pp": [
+        30,
+        36,
+        42,
+        48
+      ]
+    },
+    {
+      "source_id": 85,
+      "source_constant": "THUNDERBOLT",
+      "source_move": "THUNDERBOLT",
+      "target_move": "MOVE_THUNDERBOLT",
+      "pp": 15,
+      "max_pp": [
+        15,
+        18,
+        21,
+        24
+      ]
+    },
+    {
+      "source_id": 86,
+      "source_constant": "THUNDER_WAVE",
+      "source_move": "THUNDER_WAVE",
+      "target_move": "MOVE_THUNDER_WAVE",
+      "pp": 20,
+      "max_pp": [
+        20,
+        24,
+        28,
+        32
+      ]
+    },
+    {
+      "source_id": 87,
+      "source_constant": "THUNDER",
+      "source_move": "THUNDER",
+      "target_move": "MOVE_THUNDER",
+      "pp": 10,
+      "max_pp": [
+        10,
+        12,
+        14,
+        16
+      ]
+    },
+    {
+      "source_id": 88,
+      "source_constant": "ROCK_THROW",
+      "source_move": "ROCK_THROW",
+      "target_move": "MOVE_ROCK_THROW",
+      "pp": 15,
+      "max_pp": [
+        15,
+        18,
+        21,
+        24
+      ]
+    },
+    {
+      "source_id": 89,
+      "source_constant": "EARTHQUAKE",
+      "source_move": "EARTHQUAKE",
+      "target_move": "MOVE_EARTHQUAKE",
+      "pp": 10,
+      "max_pp": [
+        10,
+        12,
+        14,
+        16
+      ]
+    },
+    {
+      "source_id": 90,
+      "source_constant": "AVALANCHE",
+      "source_move": "AVALANCHE",
+      "target_move": "MOVE_AVALANCHE",
+      "pp": 10,
+      "max_pp": [
+        10,
+        12,
+        14,
+        16
+      ]
+    },
+    {
+      "source_id": 91,
+      "source_constant": "DIG",
+      "source_move": "DIG",
+      "target_move": "MOVE_DIG",
+      "pp": 10,
+      "max_pp": [
+        10,
+        12,
+        14,
+        16
+      ]
+    },
+    {
+      "source_id": 92,
+      "source_constant": "TOXIC",
+      "source_move": "TOXIC",
+      "target_move": "MOVE_TOXIC",
+      "pp": 10,
+      "max_pp": [
+        10,
+        12,
+        14,
+        16
+      ]
+    },
+    {
+      "source_id": 93,
+      "source_constant": "CONFUSION",
+      "source_move": "CONFUSION",
+      "target_move": "MOVE_CONFUSION",
+      "pp": 25,
+      "max_pp": [
+        25,
+        30,
+        35,
+        40
+      ]
+    },
+    {
+      "source_id": 94,
+      "source_constant": "PSYCHIC_M",
+      "source_move": "PSYCHIC_M",
+      "target_move": "MOVE_PSYCHIC",
+      "pp": 10,
+      "max_pp": [
+        10,
+        12,
+        14,
+        16
+      ]
+    },
+    {
+      "source_id": 95,
+      "source_constant": "HYPNOSIS",
+      "source_move": "HYPNOSIS",
+      "target_move": "MOVE_HYPNOSIS",
+      "pp": 20,
+      "max_pp": [
+        20,
+        24,
+        28,
+        32
+      ]
+    },
+    {
+      "source_id": 96,
+      "source_constant": "HONE_CLAWS",
+      "source_move": "HONE_CLAWS",
+      "target_move": "MOVE_HONE_CLAWS",
+      "pp": 40,
+      "max_pp": [
+        40,
+        47,
+        54,
+        61
+      ]
+    },
+    {
+      "source_id": 97,
+      "source_constant": "AGILITY",
+      "source_move": "AGILITY",
+      "target_move": "MOVE_AGILITY",
+      "pp": 30,
+      "max_pp": [
+        30,
+        36,
+        42,
+        48
+      ]
+    },
+    {
+      "source_id": 98,
+      "source_constant": "QUICK_ATTACK",
+      "source_move": "QUICK_ATTACK",
+      "target_move": "MOVE_QUICK_ATTACK",
+      "pp": 30,
+      "max_pp": [
+        30,
+        36,
+        42,
+        48
+      ]
+    },
+    {
+      "source_id": 99,
+      "source_constant": "RAGE",
+      "source_move": "RAGE",
+      "target_move": "MOVE_RAGE",
+      "pp": 20,
+      "max_pp": [
+        20,
+        24,
+        28,
+        32
+      ]
+    },
+    {
+      "source_id": 100,
+      "source_constant": "TELEPORT",
+      "source_move": "TELEPORT",
+      "target_move": "MOVE_TELEPORT",
+      "pp": 20,
+      "max_pp": [
+        20,
+        24,
+        28,
+        32
+      ]
+    },
+    {
+      "source_id": 101,
+      "source_constant": "NIGHT_SHADE",
+      "source_move": "NIGHT_SHADE",
+      "target_move": "MOVE_NIGHT_SHADE",
+      "pp": 15,
+      "max_pp": [
+        15,
+        18,
+        21,
+        24
+      ]
+    },
+    {
+      "source_id": 102,
+      "source_constant": "DRAGON_PULSE",
+      "source_move": "DRAGON_PULSE",
+      "target_move": "MOVE_DRAGON_PULSE",
+      "pp": 10,
+      "max_pp": [
+        10,
+        12,
+        14,
+        16
+      ]
+    },
+    {
+      "source_id": 103,
+      "source_constant": "SCREECH",
+      "source_move": "SCREECH",
+      "target_move": "MOVE_SCREECH",
+      "pp": 40,
+      "max_pp": [
+        40,
+        47,
+        54,
+        61
+      ]
+    },
+    {
+      "source_id": 104,
+      "source_constant": "DOUBLE_TEAM",
+      "source_move": "DOUBLE_TEAM",
+      "target_move": "MOVE_DOUBLE_TEAM",
+      "pp": 15,
+      "max_pp": [
+        15,
+        18,
+        21,
+        24
+      ]
+    },
+    {
+      "source_id": 105,
+      "source_constant": "RECOVER",
+      "source_move": "RECOVER",
+      "target_move": "MOVE_RECOVER",
+      "pp": 5,
+      "max_pp": [
+        5,
+        6,
+        7,
+        8
+      ]
+    },
+    {
+      "source_id": 106,
+      "source_constant": "ROCK_BLAST",
+      "source_move": "ROCK_BLAST",
+      "target_move": "MOVE_ROCK_BLAST",
+      "pp": 25,
+      "max_pp": [
+        25,
+        30,
+        35,
+        40
+      ]
+    },
+    {
+      "source_id": 107,
+      "source_constant": "MINIMIZE",
+      "source_move": "MINIMIZE",
+      "target_move": "MOVE_MINIMIZE",
+      "pp": 10,
+      "max_pp": [
+        10,
+        12,
+        14,
+        16
+      ]
+    },
+    {
+      "source_id": 108,
+      "source_constant": "SMOKESCREEN",
+      "source_move": "SMOKESCREEN",
+      "target_move": "MOVE_SMOKESCREEN",
+      "pp": 20,
+      "max_pp": [
+        20,
+        24,
+        28,
+        32
+      ]
+    },
+    {
+      "source_id": 109,
+      "source_constant": "CONFUSE_RAY",
+      "source_move": "CONFUSE_RAY",
+      "target_move": "MOVE_CONFUSE_RAY",
+      "pp": 10,
+      "max_pp": [
+        10,
+        12,
+        14,
+        16
+      ]
+    },
+    {
+      "source_id": 110,
+      "source_constant": "AQUA_TAIL",
+      "source_move": "AQUA_TAIL",
+      "target_move": "MOVE_AQUA_TAIL",
+      "pp": 10,
+      "max_pp": [
+        10,
+        12,
+        14,
+        16
+      ]
+    },
+    {
+      "source_id": 111,
+      "source_constant": "DEFENSE_CURL",
+      "source_move": "DEFENSE_CURL",
+      "target_move": "MOVE_DEFENSE_CURL",
+      "pp": 40,
+      "max_pp": [
+        40,
+        47,
+        54,
+        61
+      ]
+    },
+    {
+      "source_id": 112,
+      "source_constant": "BARRIER",
+      "source_move": "BARRIER",
+      "target_move": "MOVE_BARRIER",
+      "pp": 20,
+      "max_pp": [
+        20,
+        24,
+        28,
+        32
+      ]
+    },
+    {
+      "source_id": 113,
+      "source_constant": "LIGHT_SCREEN",
+      "source_move": "LIGHT_SCREEN",
+      "target_move": "MOVE_LIGHT_SCREEN",
+      "pp": 30,
+      "max_pp": [
+        30,
+        36,
+        42,
+        48
+      ]
+    },
+    {
+      "source_id": 114,
+      "source_constant": "HAZE",
+      "source_move": "HAZE",
+      "target_move": "MOVE_HAZE",
+      "pp": 30,
+      "max_pp": [
+        30,
+        36,
+        42,
+        48
+      ]
+    },
+    {
+      "source_id": 115,
+      "source_constant": "REFLECT",
+      "source_move": "REFLECT",
+      "target_move": "MOVE_REFLECT",
+      "pp": 20,
+      "max_pp": [
+        20,
+        24,
+        28,
+        32
+      ]
+    },
+    {
+      "source_id": 116,
+      "source_constant": "FOCUS_ENERGY",
+      "source_move": "FOCUS_ENERGY",
+      "target_move": "MOVE_FOCUS_ENERGY",
+      "pp": 30,
+      "max_pp": [
+        30,
+        36,
+        42,
+        48
+      ]
+    },
+    {
+      "source_id": 117,
+      "source_constant": "FLASH_CANNON",
+      "source_move": "FLASH_CANNON",
+      "target_move": "MOVE_FLASH_CANNON",
+      "pp": 10,
+      "max_pp": [
+        10,
+        12,
+        14,
+        16
+      ]
+    },
+    {
+      "source_id": 118,
+      "source_constant": "METRONOME",
+      "source_move": "METRONOME",
+      "target_move": "MOVE_METRONOME",
+      "pp": 20,
+      "max_pp": [
+        20,
+        24,
+        28,
+        32
+      ]
+    },
+    {
+      "source_id": 119,
+      "source_constant": "SCALD",
+      "source_move": "SCALD",
+      "target_move": "MOVE_SCALD",
+      "pp": 15,
+      "max_pp": [
+        15,
+        18,
+        21,
+        24
+      ]
+    },
+    {
+      "source_id": 120,
+      "source_constant": "TRICK_ROOM",
+      "source_move": "TRICK_ROOM",
+      "target_move": "MOVE_TRICK_ROOM",
+      "pp": 5,
+      "max_pp": [
+        5,
+        6,
+        7,
+        8
+      ]
+    },
+    {
+      "source_id": 121,
+      "source_constant": "SKILL_SWAP",
+      "source_move": "SKILL_SWAP",
+      "target_move": "MOVE_SKILL_SWAP",
+      "pp": 10,
+      "max_pp": [
+        10,
+        12,
+        14,
+        16
+      ]
+    },
+    {
+      "source_id": 122,
+      "source_constant": "LICK",
+      "source_move": "LICK",
+      "target_move": "MOVE_LICK",
+      "pp": 30,
+      "max_pp": [
+        30,
+        36,
+        42,
+        48
+      ]
+    },
+    {
+      "source_id": 123,
+      "source_constant": "GUNK_SHOT",
+      "source_move": "GUNK_SHOT",
+      "target_move": "MOVE_GUNK_SHOT",
+      "pp": 5,
+      "max_pp": [
+        5,
+        6,
+        7,
+        8
+      ]
+    },
+    {
+      "source_id": 124,
+      "source_constant": "VENOSHOCK",
+      "source_move": "VENOSHOCK",
+      "target_move": "MOVE_VENOSHOCK",
+      "pp": 10,
+      "max_pp": [
+        10,
+        12,
+        14,
+        16
+      ]
+    },
+    {
+      "source_id": 125,
+      "source_constant": "EARTH_POWER",
+      "source_move": "EARTH_POWER",
+      "target_move": "MOVE_EARTH_POWER",
+      "pp": 10,
+      "max_pp": [
+        10,
+        12,
+        14,
+        16
+      ]
+    },
+    {
+      "source_id": 126,
+      "source_constant": "FIRE_BLAST",
+      "source_move": "FIRE_BLAST",
+      "target_move": "MOVE_FIRE_BLAST",
+      "pp": 5,
+      "max_pp": [
+        5,
+        6,
+        7,
+        8
+      ]
+    },
+    {
+      "source_id": 127,
+      "source_constant": "WATERFALL",
+      "source_move": "WATERFALL",
+      "target_move": "MOVE_WATERFALL",
+      "pp": 15,
+      "max_pp": [
+        15,
+        18,
+        21,
+        24
+      ]
+    },
+    {
+      "source_id": 128,
+      "source_constant": "ICICLE_CRASH",
+      "source_move": "ICICLE_CRASH",
+      "target_move": "MOVE_ICICLE_CRASH",
+      "pp": 10,
+      "max_pp": [
+        10,
+        12,
+        14,
+        16
+      ]
+    },
+    {
+      "source_id": 129,
+      "source_constant": "SWIFT",
+      "source_move": "SWIFT",
+      "target_move": "MOVE_SWIFT",
+      "pp": 20,
+      "max_pp": [
+        20,
+        24,
+        28,
+        32
+      ]
+    },
+    {
+      "source_id": 130,
+      "source_constant": "IRON_HEAD",
+      "source_move": "IRON_HEAD",
+      "target_move": "MOVE_IRON_HEAD",
+      "pp": 15,
+      "max_pp": [
+        15,
+        18,
+        21,
+        24
+      ]
+    },
+    {
+      "source_id": 131,
+      "source_constant": "ICICLE_SPEAR",
+      "source_move": "ICICLE_SPEAR",
+      "target_move": "MOVE_ICICLE_SPEAR",
+      "pp": 30,
+      "max_pp": [
+        30,
+        36,
+        42,
+        48
+      ]
+    },
+    {
+      "source_id": 132,
+      "source_constant": "BULLDOZE",
+      "source_move": "BULLDOZE",
+      "target_move": "MOVE_BULLDOZE",
+      "pp": 20,
+      "max_pp": [
+        20,
+        24,
+        28,
+        32
+      ]
+    },
+    {
+      "source_id": 133,
+      "source_constant": "AMNESIA",
+      "source_move": "AMNESIA",
+      "target_move": "MOVE_AMNESIA",
+      "pp": 20,
+      "max_pp": [
+        20,
+        24,
+        28,
+        32
+      ]
+    },
+    {
+      "source_id": 134,
+      "source_constant": "ROOST",
+      "source_move": "ROOST",
+      "target_move": "MOVE_ROOST",
+      "pp": 5,
+      "max_pp": [
+        5,
+        6,
+        7,
+        8
+      ]
+    },
+    {
+      "source_id": 135,
+      "source_constant": "FRESH_SNACK",
+      "source_move": "FRESH_SNACK",
+      "target_move": "MOVE_POLISHED_FRESH_SNACK",
+      "pp": 10,
+      "max_pp": [
+        10,
+        12,
+        14,
+        16
+      ]
+    },
+    {
+      "source_id": 136,
+      "source_constant": "HI_JUMP_KICK",
+      "source_move": "HI_JUMP_KICK",
+      "target_move": "MOVE_HI_JUMP_KICK",
+      "pp": 10,
+      "max_pp": [
+        10,
+        12,
+        14,
+        16
+      ]
+    },
+    {
+      "source_id": 137,
+      "source_constant": "GLARE",
+      "source_move": "GLARE",
+      "target_move": "MOVE_GLARE",
+      "pp": 30,
+      "max_pp": [
+        30,
+        36,
+        42,
+        48
+      ]
+    },
+    {
+      "source_id": 138,
+      "source_constant": "DREAM_EATER",
+      "source_move": "DREAM_EATER",
+      "target_move": "MOVE_DREAM_EATER",
+      "pp": 15,
+      "max_pp": [
+        15,
+        18,
+        21,
+        24
+      ]
+    },
+    {
+      "source_id": 139,
+      "source_constant": "POISON_JAB",
+      "source_move": "POISON_JAB",
+      "target_move": "MOVE_POISON_JAB",
+      "pp": 20,
+      "max_pp": [
+        20,
+        24,
+        28,
+        32
+      ]
+    },
+    {
+      "source_id": 140,
+      "source_constant": "BULLET_PUNCH",
+      "source_move": "BULLET_PUNCH",
+      "target_move": "MOVE_BULLET_PUNCH",
+      "pp": 30,
+      "max_pp": [
+        30,
+        36,
+        42,
+        48
+      ]
+    },
+    {
+      "source_id": 141,
+      "source_constant": "LEECH_LIFE",
+      "source_move": "LEECH_LIFE",
+      "target_move": "MOVE_LEECH_LIFE",
+      "pp": 10,
+      "max_pp": [
+        10,
+        12,
+        14,
+        16
+      ]
+    },
+    {
+      "source_id": 142,
+      "source_constant": "DRAINING_KISS",
+      "source_move": "DRAINING_KISS",
+      "target_move": "MOVE_DRAINING_KISS",
+      "pp": 10,
+      "max_pp": [
+        10,
+        12,
+        14,
+        16
+      ]
+    },
+    {
+      "source_id": 143,
+      "source_constant": "BRAVE_BIRD",
+      "source_move": "BRAVE_BIRD",
+      "target_move": "MOVE_BRAVE_BIRD",
+      "pp": 15,
+      "max_pp": [
+        15,
+        18,
+        21,
+        24
+      ]
+    },
+    {
+      "source_id": 144,
+      "source_constant": "TRANSFORM",
+      "source_move": "TRANSFORM",
+      "target_move": "MOVE_TRANSFORM",
+      "pp": 10,
+      "max_pp": [
+        10,
+        12,
+        14,
+        16
+      ]
+    },
+    {
+      "source_id": 145,
+      "source_constant": "WATER_PULSE",
+      "source_move": "WATER_PULSE",
+      "target_move": "MOVE_WATER_PULSE",
+      "pp": 20,
+      "max_pp": [
+        20,
+        24,
+        28,
+        32
+      ]
+    },
+    {
+      "source_id": 146,
+      "source_constant": "DIZZY_PUNCH",
+      "source_move": "DIZZY_PUNCH",
+      "target_move": "MOVE_DIZZY_PUNCH",
+      "pp": 10,
+      "max_pp": [
+        10,
+        12,
+        14,
+        16
+      ]
+    },
+    {
+      "source_id": 147,
+      "source_constant": "SPORE",
+      "source_move": "SPORE",
+      "target_move": "MOVE_SPORE",
+      "pp": 15,
+      "max_pp": [
+        15,
+        18,
+        21,
+        24
+      ]
+    },
+    {
+      "source_id": 148,
+      "source_constant": "FLASH",
+      "source_move": "FLASH",
+      "target_move": "MOVE_FLASH",
+      "pp": 20,
+      "max_pp": [
+        20,
+        24,
+        28,
+        32
+      ]
+    },
+    {
+      "source_id": 149,
+      "source_constant": "EXTRASENSORY",
+      "source_move": "EXTRASENSORY",
+      "target_move": "MOVE_EXTRASENSORY",
+      "pp": 20,
+      "max_pp": [
+        20,
+        24,
+        28,
+        32
+      ]
+    },
+    {
+      "source_id": 150,
+      "source_constant": "SPLASH",
+      "source_move": "SPLASH",
+      "target_move": "MOVE_SPLASH",
+      "pp": 40,
+      "max_pp": [
+        40,
+        47,
+        54,
+        61
+      ]
+    },
+    {
+      "source_id": 151,
+      "source_constant": "DRAGON_DANCE",
+      "source_move": "DRAGON_DANCE",
+      "target_move": "MOVE_DRAGON_DANCE",
+      "pp": 20,
+      "max_pp": [
+        20,
+        24,
+        28,
+        32
+      ]
+    },
+    {
+      "source_id": 152,
+      "source_constant": "CRABHAMMER",
+      "source_move": "CRABHAMMER",
+      "target_move": "MOVE_CRABHAMMER",
+      "pp": 10,
+      "max_pp": [
+        10,
+        12,
+        14,
+        16
+      ]
+    },
+    {
+      "source_id": 153,
+      "source_constant": "EXPLOSION",
+      "source_move": "EXPLOSION",
+      "target_move": "MOVE_EXPLOSION",
+      "pp": 5,
+      "max_pp": [
+        5,
+        6,
+        7,
+        8
+      ]
+    },
+    {
+      "source_id": 154,
+      "source_constant": "FURY_STRIKES",
+      "source_move": "FURY_STRIKES",
+      "target_move": "MOVE_POLISHED_FURY_STRIKES",
+      "pp": 15,
+      "max_pp": [
+        15,
+        18,
+        21,
+        24
+      ]
+    },
+    {
+      "source_id": 155,
+      "source_constant": "BONEMERANG",
+      "source_move": "BONEMERANG",
+      "target_move": "MOVE_BONEMERANG",
+      "pp": 10,
+      "max_pp": [
+        10,
+        12,
+        14,
+        16
+      ]
+    },
+    {
+      "source_id": 156,
+      "source_constant": "REST",
+      "source_move": "REST",
+      "target_move": "MOVE_REST",
+      "pp": 5,
+      "max_pp": [
+        5,
+        6,
+        7,
+        8
+      ]
+    },
+    {
+      "source_id": 157,
+      "source_constant": "ROCK_SLIDE",
+      "source_move": "ROCK_SLIDE",
+      "target_move": "MOVE_ROCK_SLIDE",
+      "pp": 10,
+      "max_pp": [
+        10,
+        12,
+        14,
+        16
+      ]
+    },
+    {
+      "source_id": 158,
+      "source_constant": "HYPER_FANG",
+      "source_move": "HYPER_FANG",
+      "target_move": "MOVE_HYPER_FANG",
+      "pp": 15,
+      "max_pp": [
+        15,
+        18,
+        21,
+        24
+      ]
+    },
+    {
+      "source_id": 159,
+      "source_constant": "BULK_UP",
+      "source_move": "BULK_UP",
+      "target_move": "MOVE_BULK_UP",
+      "pp": 20,
+      "max_pp": [
+        20,
+        24,
+        28,
+        32
+      ]
+    },
+    {
+      "source_id": 160,
+      "source_constant": "CONVERSION",
+      "source_move": "CONVERSION",
+      "target_move": "MOVE_CONVERSION",
+      "pp": 30,
+      "max_pp": [
+        30,
+        36,
+        42,
+        48
+      ]
+    },
+    {
+      "source_id": 161,
+      "source_constant": "TRI_ATTACK",
+      "source_move": "TRI_ATTACK",
+      "target_move": "MOVE_TRI_ATTACK",
+      "pp": 10,
+      "max_pp": [
+        10,
+        12,
+        14,
+        16
+      ]
+    },
+    {
+      "source_id": 162,
+      "source_constant": "SUPER_FANG",
+      "source_move": "SUPER_FANG",
+      "target_move": "MOVE_SUPER_FANG",
+      "pp": 10,
+      "max_pp": [
+        10,
+        12,
+        14,
+        16
+      ]
+    },
+    {
+      "source_id": 163,
+      "source_constant": "SLASH",
+      "source_move": "SLASH",
+      "target_move": "MOVE_SLASH",
+      "pp": 20,
+      "max_pp": [
+        20,
+        24,
+        28,
+        32
+      ]
+    },
+    {
+      "source_id": 164,
+      "source_constant": "SUBSTITUTE",
+      "source_move": "SUBSTITUTE",
+      "target_move": "MOVE_SUBSTITUTE",
+      "pp": 10,
+      "max_pp": [
+        10,
+        12,
+        14,
+        16
+      ]
+    },
+    {
+      "source_id": 165,
+      "source_constant": "GIGA_IMPACT",
+      "source_move": "GIGA_IMPACT",
+      "target_move": "MOVE_GIGA_IMPACT",
+      "pp": 5,
+      "max_pp": [
+        5,
+        6,
+        7,
+        8
+      ]
+    },
+    {
+      "source_id": 166,
+      "source_constant": "SKETCH",
+      "source_move": "SKETCH",
+      "target_move": "MOVE_SKETCH",
+      "pp": 1,
+      "max_pp": [
+        1,
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "source_id": 167,
+      "source_constant": "DRAIN_PUNCH",
+      "source_move": "DRAIN_PUNCH",
+      "target_move": "MOVE_DRAIN_PUNCH",
+      "pp": 10,
+      "max_pp": [
+        10,
+        12,
+        14,
+        16
+      ]
+    },
+    {
+      "source_id": 168,
+      "source_constant": "THIEF",
+      "source_move": "THIEF",
+      "target_move": "MOVE_THIEF",
+      "pp": 25,
+      "max_pp": [
+        25,
+        30,
+        35,
+        40
+      ]
+    },
+    {
+      "source_id": 169,
+      "source_constant": "WILL_O_WISP",
+      "source_move": "WILL_O_WISP",
+      "target_move": "MOVE_WILL_O_WISP",
+      "pp": 15,
+      "max_pp": [
+        15,
+        18,
+        21,
+        24
+      ]
+    },
+    {
+      "source_id": 170,
+      "source_constant": "ZEN_HEADBUTT",
+      "source_move": "ZEN_HEADBUTT",
+      "target_move": "MOVE_ZEN_HEADBUTT",
+      "pp": 15,
+      "max_pp": [
+        15,
+        18,
+        21,
+        24
+      ]
+    },
+    {
+      "source_id": 171,
+      "source_constant": "FACADE",
+      "source_move": "FACADE",
+      "target_move": "MOVE_FACADE",
+      "pp": 20,
+      "max_pp": [
+        20,
+        24,
+        28,
+        32
+      ]
+    },
+    {
+      "source_id": 172,
+      "source_constant": "FLAME_CHARGE",
+      "source_move": "FLAME_CHARGE",
+      "target_move": "MOVE_FLAME_CHARGE",
+      "pp": 20,
+      "max_pp": [
+        20,
+        24,
+        28,
+        32
+      ]
+    },
+    {
+      "source_id": 173,
+      "source_constant": "HYPER_VOICE",
+      "source_move": "HYPER_VOICE",
+      "target_move": "MOVE_HYPER_VOICE",
+      "pp": 10,
+      "max_pp": [
+        10,
+        12,
+        14,
+        16
+      ]
+    },
+    {
+      "source_id": 174,
+      "source_constant": "CURSE",
+      "source_move": "CURSE",
+      "target_move": "MOVE_CURSE",
+      "pp": 10,
+      "max_pp": [
+        10,
+        12,
+        14,
+        16
+      ]
+    },
+    {
+      "source_id": 175,
+      "source_constant": "GYRO_BALL",
+      "source_move": "GYRO_BALL",
+      "target_move": "MOVE_GYRO_BALL",
+      "pp": 5,
+      "max_pp": [
+        5,
+        6,
+        7,
+        8
+      ]
+    },
+    {
+      "source_id": 176,
+      "source_constant": "ENERGY_BALL",
+      "source_move": "ENERGY_BALL",
+      "target_move": "MOVE_ENERGY_BALL",
+      "pp": 10,
+      "max_pp": [
+        10,
+        12,
+        14,
+        16
+      ]
+    },
+    {
+      "source_id": 177,
+      "source_constant": "AEROBLAST",
+      "source_move": "AEROBLAST",
+      "target_move": "MOVE_AEROBLAST",
+      "pp": 5,
+      "max_pp": [
+        5,
+        6,
+        7,
+        8
+      ]
+    },
+    {
+      "source_id": 178,
+      "source_constant": "SEED_BOMB",
+      "source_move": "SEED_BOMB",
+      "target_move": "MOVE_SEED_BOMB",
+      "pp": 15,
+      "max_pp": [
+        15,
+        18,
+        21,
+        24
+      ]
+    },
+    {
+      "source_id": 179,
+      "source_constant": "REVERSAL",
+      "source_move": "REVERSAL",
+      "target_move": "MOVE_REVERSAL",
+      "pp": 15,
+      "max_pp": [
+        15,
+        18,
+        21,
+        24
+      ]
+    },
+    {
+      "source_id": 180,
+      "source_constant": "ASTONISH",
+      "source_move": "ASTONISH",
+      "target_move": "MOVE_ASTONISH",
+      "pp": 15,
+      "max_pp": [
+        15,
+        18,
+        21,
+        24
+      ]
+    },
+    {
+      "source_id": 181,
+      "source_constant": "ICE_SHARD",
+      "source_move": "ICE_SHARD",
+      "target_move": "MOVE_ICE_SHARD",
+      "pp": 30,
+      "max_pp": [
+        30,
+        36,
+        42,
+        48
+      ]
+    },
+    {
+      "source_id": 182,
+      "source_constant": "PROTECT",
+      "source_move": "PROTECT",
+      "target_move": "MOVE_PROTECT",
+      "pp": 10,
+      "max_pp": [
+        10,
+        12,
+        14,
+        16
+      ]
+    },
+    {
+      "source_id": 183,
+      "source_constant": "MACH_PUNCH",
+      "source_move": "MACH_PUNCH",
+      "target_move": "MOVE_MACH_PUNCH",
+      "pp": 30,
+      "max_pp": [
+        30,
+        36,
+        42,
+        48
+      ]
+    },
+    {
+      "source_id": 184,
+      "source_constant": "SCARY_FACE",
+      "source_move": "SCARY_FACE",
+      "target_move": "MOVE_SCARY_FACE",
+      "pp": 10,
+      "max_pp": [
+        10,
+        12,
+        14,
+        16
+      ]
+    },
+    {
+      "source_id": 185,
+      "source_constant": "FEINT_ATTACK",
+      "source_move": "FEINT_ATTACK",
+      "target_move": "MOVE_FEINT_ATTACK",
+      "pp": 20,
+      "max_pp": [
+        20,
+        24,
+        28,
+        32
+      ]
+    },
+    {
+      "source_id": 186,
+      "source_constant": "SWEET_KISS",
+      "source_move": "SWEET_KISS",
+      "target_move": "MOVE_SWEET_KISS",
+      "pp": 10,
+      "max_pp": [
+        10,
+        12,
+        14,
+        16
+      ]
+    },
+    {
+      "source_id": 187,
+      "source_constant": "BELLY_DRUM",
+      "source_move": "BELLY_DRUM",
+      "target_move": "MOVE_BELLY_DRUM",
+      "pp": 10,
+      "max_pp": [
+        10,
+        12,
+        14,
+        16
+      ]
+    },
+    {
+      "source_id": 188,
+      "source_constant": "SLUDGE_BOMB",
+      "source_move": "SLUDGE_BOMB",
+      "target_move": "MOVE_SLUDGE_BOMB",
+      "pp": 10,
+      "max_pp": [
+        10,
+        12,
+        14,
+        16
+      ]
+    },
+    {
+      "source_id": 189,
+      "source_constant": "MUD_SLAP",
+      "source_move": "MUD_SLAP",
+      "target_move": "MOVE_MUD_SLAP",
+      "pp": 10,
+      "max_pp": [
+        10,
+        12,
+        14,
+        16
+      ]
+    },
+    {
+      "source_id": 190,
+      "source_constant": "OCTAZOOKA",
+      "source_move": "OCTAZOOKA",
+      "target_move": "MOVE_OCTAZOOKA",
+      "pp": 10,
+      "max_pp": [
+        10,
+        12,
+        14,
+        16
+      ]
+    },
+    {
+      "source_id": 191,
+      "source_constant": "SPIKES",
+      "source_move": "SPIKES",
+      "target_move": "MOVE_SPIKES",
+      "pp": 20,
+      "max_pp": [
+        20,
+        24,
+        28,
+        32
+      ]
+    },
+    {
+      "source_id": 192,
+      "source_constant": "ZAP_CANNON",
+      "source_move": "ZAP_CANNON",
+      "target_move": "MOVE_ZAP_CANNON",
+      "pp": 5,
+      "max_pp": [
+        5,
+        6,
+        7,
+        8
+      ]
+    },
+    {
+      "source_id": 193,
+      "source_constant": "FORESIGHT",
+      "source_move": "FORESIGHT",
+      "target_move": "MOVE_FORESIGHT",
+      "pp": 40,
+      "max_pp": [
+        40,
+        47,
+        54,
+        61
+      ]
+    },
+    {
+      "source_id": 194,
+      "source_constant": "DESTINY_BOND",
+      "source_move": "DESTINY_BOND",
+      "target_move": "MOVE_DESTINY_BOND",
+      "pp": 5,
+      "max_pp": [
+        5,
+        6,
+        7,
+        8
+      ]
+    },
+    {
+      "source_id": 195,
+      "source_constant": "PERISH_SONG",
+      "source_move": "PERISH_SONG",
+      "target_move": "MOVE_PERISH_SONG",
+      "pp": 5,
+      "max_pp": [
+        5,
+        6,
+        7,
+        8
+      ]
+    },
+    {
+      "source_id": 196,
+      "source_constant": "ICY_WIND",
+      "source_move": "ICY_WIND",
+      "target_move": "MOVE_ICY_WIND",
+      "pp": 15,
+      "max_pp": [
+        15,
+        18,
+        21,
+        24
+      ]
+    },
+    {
+      "source_id": 197,
+      "source_constant": "POWER_GEM",
+      "source_move": "POWER_GEM",
+      "target_move": "MOVE_POWER_GEM",
+      "pp": 20,
+      "max_pp": [
+        20,
+        24,
+        28,
+        32
+      ]
+    },
+    {
+      "source_id": 198,
+      "source_constant": "WILD_CHARGE",
+      "source_move": "WILD_CHARGE",
+      "target_move": "MOVE_WILD_CHARGE",
+      "pp": 15,
+      "max_pp": [
+        15,
+        18,
+        21,
+        24
+      ]
+    },
+    {
+      "source_id": 199,
+      "source_constant": "POWER_WHIP",
+      "source_move": "POWER_WHIP",
+      "target_move": "MOVE_POWER_WHIP",
+      "pp": 10,
+      "max_pp": [
+        10,
+        12,
+        14,
+        16
+      ]
+    },
+    {
+      "source_id": 200,
+      "source_constant": "OUTRAGE",
+      "source_move": "OUTRAGE",
+      "target_move": "MOVE_OUTRAGE",
+      "pp": 10,
+      "max_pp": [
+        10,
+        12,
+        14,
+        16
+      ]
+    },
+    {
+      "source_id": 201,
+      "source_constant": "SANDSTORM",
+      "source_move": "SANDSTORM",
+      "target_move": "MOVE_SANDSTORM",
+      "pp": 10,
+      "max_pp": [
+        10,
+        12,
+        14,
+        16
+      ]
+    },
+    {
+      "source_id": 202,
+      "source_constant": "GIGA_DRAIN",
+      "source_move": "GIGA_DRAIN",
+      "target_move": "MOVE_GIGA_DRAIN",
+      "pp": 10,
+      "max_pp": [
+        10,
+        12,
+        14,
+        16
+      ]
+    },
+    {
+      "source_id": 203,
+      "source_constant": "ENDURE",
+      "source_move": "ENDURE",
+      "target_move": "MOVE_ENDURE",
+      "pp": 10,
+      "max_pp": [
+        10,
+        12,
+        14,
+        16
+      ]
+    },
+    {
+      "source_id": 204,
+      "source_constant": "CHARM",
+      "source_move": "CHARM",
+      "target_move": "MOVE_CHARM",
+      "pp": 20,
+      "max_pp": [
+        20,
+        24,
+        28,
+        32
+      ]
+    },
+    {
+      "source_id": 205,
+      "source_constant": "ROLLOUT",
+      "source_move": "ROLLOUT",
+      "target_move": "MOVE_ROLLOUT",
+      "pp": 20,
+      "max_pp": [
+        20,
+        24,
+        28,
+        32
+      ]
+    },
+    {
+      "source_id": 206,
+      "source_constant": "FALSE_SWIPE",
+      "source_move": "FALSE_SWIPE",
+      "target_move": "MOVE_FALSE_SWIPE",
+      "pp": 40,
+      "max_pp": [
+        40,
+        47,
+        54,
+        61
+      ]
+    },
+    {
+      "source_id": 207,
+      "source_constant": "SWAGGER",
+      "source_move": "SWAGGER",
+      "target_move": "MOVE_SWAGGER",
+      "pp": 15,
+      "max_pp": [
+        15,
+        18,
+        21,
+        24
+      ]
+    },
+    {
+      "source_id": 208,
+      "source_constant": "SHELL_SMASH",
+      "source_move": "SHELL_SMASH",
+      "target_move": "MOVE_SHELL_SMASH",
+      "pp": 15,
+      "max_pp": [
+        15,
+        18,
+        21,
+        24
+      ]
+    },
+    {
+      "source_id": 209,
+      "source_constant": "SPARK",
+      "source_move": "SPARK",
+      "target_move": "MOVE_SPARK",
+      "pp": 20,
+      "max_pp": [
+        20,
+        24,
+        28,
+        32
+      ]
+    },
+    {
+      "source_id": 210,
+      "source_constant": "BUG_BITE",
+      "source_move": "BUG_BITE",
+      "target_move": "MOVE_BUG_BITE",
+      "pp": 20,
+      "max_pp": [
+        20,
+        24,
+        28,
+        32
+      ]
+    },
+    {
+      "source_id": 211,
+      "source_constant": "STEEL_WING",
+      "source_move": "STEEL_WING",
+      "target_move": "MOVE_STEEL_WING",
+      "pp": 25,
+      "max_pp": [
+        25,
+        30,
+        35,
+        40
+      ]
+    },
+    {
+      "source_id": 212,
+      "source_constant": "MEAN_LOOK",
+      "source_move": "MEAN_LOOK",
+      "target_move": "MOVE_MEAN_LOOK",
+      "pp": 5,
+      "max_pp": [
+        5,
+        6,
+        7,
+        8
+      ]
+    },
+    {
+      "source_id": 213,
+      "source_constant": "ATTRACT",
+      "source_move": "ATTRACT",
+      "target_move": "MOVE_ATTRACT",
+      "pp": 15,
+      "max_pp": [
+        15,
+        18,
+        21,
+        24
+      ]
+    },
+    {
+      "source_id": 214,
+      "source_constant": "SLEEP_TALK",
+      "source_move": "SLEEP_TALK",
+      "target_move": "MOVE_SLEEP_TALK",
+      "pp": 10,
+      "max_pp": [
+        10,
+        12,
+        14,
+        16
+      ]
+    },
+    {
+      "source_id": 215,
+      "source_constant": "HEAL_BELL",
+      "source_move": "HEAL_BELL",
+      "target_move": "MOVE_HEAL_BELL",
+      "pp": 5,
+      "max_pp": [
+        5,
+        6,
+        7,
+        8
+      ]
+    },
+    {
+      "source_id": 216,
+      "source_constant": "RETURN",
+      "source_move": "RETURN",
+      "target_move": "MOVE_RETURN",
+      "pp": 20,
+      "max_pp": [
+        20,
+        24,
+        28,
+        32
+      ]
+    },
+    {
+      "source_id": 217,
+      "source_constant": "PSYSTRIKE",
+      "source_move": "PSYSTRIKE",
+      "target_move": "MOVE_PSYSTRIKE",
+      "pp": 10,
+      "max_pp": [
+        10,
+        12,
+        14,
+        16
+      ]
+    },
+    {
+      "source_id": 218,
+      "source_constant": "BUG_BUZZ",
+      "source_move": "BUG_BUZZ",
+      "target_move": "MOVE_BUG_BUZZ",
+      "pp": 10,
+      "max_pp": [
+        10,
+        12,
+        14,
+        16
+      ]
+    },
+    {
+      "source_id": 219,
+      "source_constant": "SAFEGUARD",
+      "source_move": "SAFEGUARD",
+      "target_move": "MOVE_SAFEGUARD",
+      "pp": 25,
+      "max_pp": [
+        25,
+        30,
+        35,
+        40
+      ]
+    },
+    {
+      "source_id": 220,
+      "source_constant": "PAIN_SPLIT",
+      "source_move": "PAIN_SPLIT",
+      "target_move": "MOVE_PAIN_SPLIT",
+      "pp": 20,
+      "max_pp": [
+        20,
+        24,
+        28,
+        32
+      ]
+    },
+    {
+      "source_id": 221,
+      "source_constant": "SACRED_FIRE",
+      "source_move": "SACRED_FIRE",
+      "target_move": "MOVE_SACRED_FIRE",
+      "pp": 5,
+      "max_pp": [
+        5,
+        6,
+        7,
+        8
+      ]
+    },
+    {
+      "source_id": 222,
+      "source_constant": "MAGNITUDE",
+      "source_move": "MAGNITUDE",
+      "target_move": "MOVE_MAGNITUDE",
+      "pp": 30,
+      "max_pp": [
+        30,
+        36,
+        42,
+        48
+      ]
+    },
+    {
+      "source_id": 223,
+      "source_constant": "DYNAMICPUNCH",
+      "source_move": "DYNAMICPUNCH",
+      "target_move": "MOVE_DYNAMICPUNCH",
+      "pp": 5,
+      "max_pp": [
+        5,
+        6,
+        7,
+        8
+      ]
+    },
+    {
+      "source_id": 224,
+      "source_constant": "MEGAHORN",
+      "source_move": "MEGAHORN",
+      "target_move": "MOVE_MEGAHORN",
+      "pp": 10,
+      "max_pp": [
+        10,
+        12,
+        14,
+        16
+      ]
+    },
+    {
+      "source_id": 225,
+      "source_constant": "DRAGONBREATH",
+      "source_move": "DRAGONBREATH",
+      "target_move": "MOVE_DRAGONBREATH",
+      "pp": 20,
+      "max_pp": [
+        20,
+        24,
+        28,
+        32
+      ]
+    },
+    {
+      "source_id": 226,
+      "source_constant": "BATON_PASS",
+      "source_move": "BATON_PASS",
+      "target_move": "MOVE_BATON_PASS",
+      "pp": 40,
+      "max_pp": [
+        40,
+        47,
+        54,
+        61
+      ]
+    },
+    {
+      "source_id": 227,
+      "source_constant": "ENCORE",
+      "source_move": "ENCORE",
+      "target_move": "MOVE_ENCORE",
+      "pp": 5,
+      "max_pp": [
+        5,
+        6,
+        7,
+        8
+      ]
+    },
+    {
+      "source_id": 228,
+      "source_constant": "PURSUIT",
+      "source_move": "PURSUIT",
+      "target_move": "MOVE_PURSUIT",
+      "pp": 20,
+      "max_pp": [
+        20,
+        24,
+        28,
+        32
+      ]
+    },
+    {
+      "source_id": 229,
+      "source_constant": "RAPID_SPIN",
+      "source_move": "RAPID_SPIN",
+      "target_move": "MOVE_RAPID_SPIN",
+      "pp": 20,
+      "max_pp": [
+        20,
+        24,
+        28,
+        32
+      ]
+    },
+    {
+      "source_id": 230,
+      "source_constant": "SHADOW_CLAW",
+      "source_move": "SHADOW_CLAW",
+      "target_move": "MOVE_SHADOW_CLAW",
+      "pp": 15,
+      "max_pp": [
+        15,
+        18,
+        21,
+        24
+      ]
+    },
+    {
+      "source_id": 231,
+      "source_constant": "IRON_TAIL",
+      "source_move": "IRON_TAIL",
+      "target_move": "MOVE_IRON_TAIL",
+      "pp": 15,
+      "max_pp": [
+        15,
+        18,
+        21,
+        24
+      ]
+    },
+    {
+      "source_id": 232,
+      "source_constant": "METAL_CLAW",
+      "source_move": "METAL_CLAW",
+      "target_move": "MOVE_METAL_CLAW",
+      "pp": 35,
+      "max_pp": [
+        35,
+        42,
+        49,
+        56
+      ]
+    },
+    {
+      "source_id": 233,
+      "source_constant": "AURA_SPHERE",
+      "source_move": "AURA_SPHERE",
+      "target_move": "MOVE_AURA_SPHERE",
+      "pp": 20,
+      "max_pp": [
+        20,
+        24,
+        28,
+        32
+      ]
+    },
+    {
+      "source_id": 234,
+      "source_constant": "HEALINGLIGHT",
+      "source_move": "HEALINGLIGHT",
+      "target_move": "MOVE_POLISHED_HEALING_LIGHT",
+      "pp": 5,
+      "max_pp": [
+        5,
+        6,
+        7,
+        8
+      ]
+    },
+    {
+      "source_id": 235,
+      "source_constant": "HURRICANE",
+      "source_move": "HURRICANE",
+      "target_move": "MOVE_HURRICANE",
+      "pp": 10,
+      "max_pp": [
+        10,
+        12,
+        14,
+        16
+      ]
+    },
+    {
+      "source_id": 236,
+      "source_constant": "KNOCK_OFF",
+      "source_move": "KNOCK_OFF",
+      "target_move": "MOVE_KNOCK_OFF",
+      "pp": 20,
+      "max_pp": [
+        20,
+        24,
+        28,
+        32
+      ]
+    },
+    {
+      "source_id": 237,
+      "source_constant": "HIDDEN_POWER",
+      "source_move": "HIDDEN_POWER",
+      "target_move": "MOVE_HIDDEN_POWER",
+      "pp": 15,
+      "max_pp": [
+        15,
+        18,
+        21,
+        24
+      ]
+    },
+    {
+      "source_id": 238,
+      "source_constant": "CROSS_CHOP",
+      "source_move": "CROSS_CHOP",
+      "target_move": "MOVE_CROSS_CHOP",
+      "pp": 5,
+      "max_pp": [
+        5,
+        6,
+        7,
+        8
+      ]
+    },
+    {
+      "source_id": 239,
+      "source_constant": "AQUA_JET",
+      "source_move": "AQUA_JET",
+      "target_move": "MOVE_AQUA_JET",
+      "pp": 20,
+      "max_pp": [
+        20,
+        24,
+        28,
+        32
+      ]
+    },
+    {
+      "source_id": 240,
+      "source_constant": "RAIN_DANCE",
+      "source_move": "RAIN_DANCE",
+      "target_move": "MOVE_RAIN_DANCE",
+      "pp": 5,
+      "max_pp": [
+        5,
+        6,
+        7,
+        8
+      ]
+    },
+    {
+      "source_id": 241,
+      "source_constant": "SUNNY_DAY",
+      "source_move": "SUNNY_DAY",
+      "target_move": "MOVE_SUNNY_DAY",
+      "pp": 5,
+      "max_pp": [
+        5,
+        6,
+        7,
+        8
+      ]
+    },
+    {
+      "source_id": 242,
+      "source_constant": "CRUNCH",
+      "source_move": "CRUNCH",
+      "target_move": "MOVE_CRUNCH",
+      "pp": 15,
+      "max_pp": [
+        15,
+        18,
+        21,
+        24
+      ]
+    },
+    {
+      "source_id": 243,
+      "source_constant": "MIRROR_COAT",
+      "source_move": "MIRROR_COAT",
+      "target_move": "MOVE_MIRROR_COAT",
+      "pp": 20,
+      "max_pp": [
+        20,
+        24,
+        28,
+        32
+      ]
+    },
+    {
+      "source_id": 244,
+      "source_constant": "NASTY_PLOT",
+      "source_move": "NASTY_PLOT",
+      "target_move": "MOVE_NASTY_PLOT",
+      "pp": 20,
+      "max_pp": [
+        20,
+        24,
+        28,
+        32
+      ]
+    },
+    {
+      "source_id": 245,
+      "source_constant": "EXTREMESPEED",
+      "source_move": "EXTREMESPEED",
+      "target_move": "MOVE_EXTREMESPEED",
+      "pp": 5,
+      "max_pp": [
+        5,
+        6,
+        7,
+        8
+      ]
+    },
+    {
+      "source_id": 246,
+      "source_constant": "ANCIENTPOWER",
+      "source_move": "ANCIENTPOWER",
+      "target_move": "MOVE_ANCIENTPOWER",
+      "pp": 5,
+      "max_pp": [
+        5,
+        6,
+        7,
+        8
+      ]
+    },
+    {
+      "source_id": 247,
+      "source_constant": "SHADOW_BALL",
+      "source_move": "SHADOW_BALL",
+      "target_move": "MOVE_SHADOW_BALL",
+      "pp": 15,
+      "max_pp": [
+        15,
+        18,
+        21,
+        24
+      ]
+    },
+    {
+      "source_id": 248,
+      "source_constant": "FUTURE_SIGHT",
+      "source_move": "FUTURE_SIGHT",
+      "target_move": "MOVE_FUTURE_SIGHT",
+      "pp": 10,
+      "max_pp": [
+        10,
+        12,
+        14,
+        16
+      ]
+    },
+    {
+      "source_id": 249,
+      "source_constant": "ROCK_SMASH",
+      "source_move": "BRICK_BREAK",
+      "target_move": "MOVE_BRICK_BREAK",
+      "pp": 15,
+      "max_pp": [
+        15,
+        18,
+        21,
+        24
+      ]
+    },
+    {
+      "source_id": 250,
+      "source_constant": "WHIRLPOOL",
+      "source_move": "WHIRLPOOL",
+      "target_move": "MOVE_WHIRLPOOL",
+      "pp": 15,
+      "max_pp": [
+        15,
+        18,
+        21,
+        24
+      ]
+    },
+    {
+      "source_id": 251,
+      "source_constant": "DARK_PULSE",
+      "source_move": "DARK_PULSE",
+      "target_move": "MOVE_DARK_PULSE",
+      "pp": 15,
+      "max_pp": [
+        15,
+        18,
+        21,
+        24
+      ]
+    },
+    {
+      "source_id": 252,
+      "source_constant": "MOONBLAST",
+      "source_move": "MOONBLAST",
+      "target_move": "MOVE_MOONBLAST",
+      "pp": 15,
+      "max_pp": [
+        15,
+        18,
+        21,
+        24
+      ]
+    },
+    {
+      "source_id": 253,
+      "source_constant": "PLAY_ROUGH",
+      "source_move": "PLAY_ROUGH",
+      "target_move": "MOVE_PLAY_ROUGH",
+      "pp": 10,
+      "max_pp": [
+        10,
+        12,
+        14,
+        16
+      ]
+    },
+    {
+      "source_id": 254,
+      "source_constant": "DISARM_VOICE",
+      "source_move": "DISARM_VOICE",
+      "target_move": "MOVE_DISARMING_VOICE",
+      "pp": 15,
+      "max_pp": [
+        15,
+        18,
+        21,
+        24
+      ]
+    },
+    {
+      "source_id": 255,
+      "source_constant": "STRUGGLE",
+      "source_move": "STRUGGLE",
+      "target_move": "MOVE_STRUGGLE",
+      "pp": 1,
+      "max_pp": [
+        1,
+        1,
+        1,
+        1
+      ]
+    }
+  ]
+}
