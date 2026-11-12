@@ -15,7 +15,7 @@ def build():
     assert doc["mapped_target_count"] == 391
     rows = [row for row in doc["item_mapping"] if "source_attributes" in row]
     assert len(rows) == 70
-    names = set(re.findall(r"\\bITEM_\\w+", (ROOT / "include/constants/items.h").read_text()))
+    names = set(re.findall(r"\bITEM_\w+", (ROOT / "include/constants/items.h").read_text()))
     assert len({r["target_item"] for r in rows}) == len(rows)
     out = ["/* Generated from pinned default Polished Crystal item attributes. */",
            "/* Zero denotes native fallback for items absent from the source mapping. */",
