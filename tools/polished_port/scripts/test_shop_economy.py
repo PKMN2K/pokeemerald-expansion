@@ -19,7 +19,7 @@ for symbol, expected in {
     "ITEM_AWAKENING": 100,
     "ITEM_X_DEFENSE": 2000,
 }.items():
-    assert re.search(r"\\[" + symbol + r"\\] = " + str(expected) + r",", generated), symbol
+    assert re.search(r"\[" + symbol + r"\] = " + str(expected) + r",", generated), symbol
     assert "case " + symbol not in price
 assert "return gItemsInfo[SanitizeItemId(itemId)].price;" in price
 assert "sPolishedMappedItemPrices[SanitizeItemId(itemId)]" in price
