@@ -88,6 +88,7 @@ jobs:
           python3 tools/polished_port/scripts/test_x_item_stages.py
           python3 tools/polished_port/scripts/build_item_healing.py --check
           python3 tools/polished_port/scripts/test_figy_held_effect.py
+          python3 tools/polished_port/scripts/build_medicine_friendship.py --check
 
       - name: Build playable Johto demo
         timeout-minutes: 20

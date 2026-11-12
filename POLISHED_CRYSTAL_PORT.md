@@ -978,8 +978,8 @@ The generator checks the existing hashed source fixtures and menu/effect
 dispatch, and CI checks deterministic regeneration. Native tests cover all
 14 party and battle amounts, caps, fainted/full-health rejection, fractional
 rounding, bench healing and profile isolation. The held Figy adapter below
-extends this work. Herb happiness, revival/status/PP effects and source trainer
-item AI remain separate gaps.
+extends this work. The bitter-medicine phase below imports herb happiness;
+revival/status/PP effects and source trainer item AI remain separate gaps.
 
 Held Figy now follows the pinned source's `HELD_BERRY` behavior: it restores
 one third of maximum HP, rounded down with a one-HP minimum, without
@@ -997,6 +997,23 @@ berries remain available unchanged. Existing item and save IDs are preserved.
 The adapter uses the engine's existing berry dispatch and consumption scripts;
 it does not certify source event timing, animations, broader ability rules,
 other held healing items or the source trainer AI.
+
+Energy Powder, Energy Root, Heal Powder and Revival Herb now use the pinned
+source's happiness penalties under `P_POLISHED_ITEM_HEALING`. The generated
+table retains the source's 100/160 thresholds: Powder/Heal Powder subtract
+5 below 160 and 10 from 160 onward, Energy Root subtracts 10/15, and Revival
+Herb subtracts 15/20. Losses stop at zero and receive no Soothe Bell, Luxury
+Ball or capture-location bonus. They apply only after a successful item
+effect; the happiness adapter excludes eggs.
+
+Both stored party happiness and the treated active battler's value update
+together. Benched targets do not alter another active Pokemon; additional
+Expansion battle slots remain supported. Native profiles and optional
+Expansion medicines keep their existing rules. Source fixtures and CI
+regeneration cover the table, negative-value handler and item dispatch.
+This imports these four happiness penalties, not the complete source
+friendship system, medicine UI, status/revival rules or Return/Frustration
+damage formula. Existing saved happiness values and identifiers are preserved.
 
 Price and description parity still do not imply full item icon, field use,
 other held effects, battle mechanic or source-layout parity. The original GBC text

@@ -9364,6 +9364,9 @@ void BS_ItemRestoreHP(void)
         if (hp + healAmount > maxHP)
             healAmount = maxHP - hp;
 
+        if (PolishedItemHealingEnabled() && healAmount != 0 && !ShouldSkipFriendshipChange())
+            PolishedApplyMedicineFriendship(&party[gBattleStruct->itemPartyIndex[gBattlerAttacker]], gLastUsedItem);
+
         gBattleScripting.battler = battler;
         PREPARE_SPECIES_BUFFER(gBattleTextBuff1, GetMonData(&party[gBattleStruct->itemPartyIndex[gBattlerAttacker]], MON_DATA_SPECIES));
 
@@ -9416,7 +9419,7 @@ void BS_ItemCureStatus(void)
     if (!HealStatusConditions(&party[gBattleStruct->itemPartyIndex[gBattlerAttacker]], GetItemStatus1Mask(gLastUsedItem), targetBattler))
     {
         statusChanged = TRUE;
-        if (GetItemStatus1Mask(gLastUsedItem) & STATUS1_SLEEP)
+        if (targetBattler != MAX_BATTLERS_COUNT && (GetItemStatus1Mask(gLastUsedItem) & STATUS1_SLEEP))
             gBattleMons[targetBattler].volatiles.nightmare = FALSE;
     }
 
@@ -9425,6 +9428,9 @@ void BS_ItemCureStatus(void)
         gBattlescriptCurrInstr = cmd->noStatusInstr;
         return;
     }
+
+    if (PolishedItemHealingEnabled() && !ShouldSkipFriendshipChange())
+        PolishedApplyMedicineFriendship(&party[gBattleStruct->itemPartyIndex[gBattlerAttacker]], gLastUsedItem);
 
     PREPARE_SPECIES_BUFFER(gBattleTextBuff1, GetMonData(&party[gBattleStruct->itemPartyIndex[gBattlerAttacker]], MON_DATA_SPECIES));
     if (targetBattler == MAX_BATTLERS_COUNT)

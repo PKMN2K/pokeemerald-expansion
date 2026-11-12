@@ -15,6 +15,7 @@ const struct PolishedWildHeldItems *PolishedGetWildHeldItems(enum Species specie
 bool32 PolishedGenerateWildHeldItem(enum Species species, bool32 legendary, enum Item *item);
 u32 PolishedGetItemHealAmountInternal(enum Item item, u32 maxHP);
 bool32 PolishedFigyCanHeal(u32 hp, u32 maxHP, bool32 gluttony, bool32 forced);
+bool32 PolishedApplyMedicineFriendshipInternal(struct Pokemon *mon, enum Item item);
 // Keep the native profile free of out-of-line calls, including repeated AI
 // item estimates. Tests can select either profile without paying for the
 // generic configuration switch on each lookup.
@@ -32,6 +33,12 @@ static ALWAYS_INLINE bool32 PolishedItemHealingEnabled(void)
 static ALWAYS_INLINE u32 PolishedGetItemHealAmount(enum Item item, u32 maxHP)
 {
     return PolishedItemHealingEnabled() ? PolishedGetItemHealAmountInternal(item, maxHP) : 0;
+}
+
+// TRUE includes the source's egg exclusion; FALSE selects native friendship.
+static ALWAYS_INLINE bool32 PolishedApplyMedicineFriendship(struct Pokemon *mon, enum Item item)
+{
+    return PolishedItemHealingEnabled() && PolishedApplyMedicineFriendshipInternal(mon, item);
 }
 
 #endif

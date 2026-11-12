@@ -1892,6 +1892,16 @@
       "path": "constants/tmhm_constants.asm",
       "fixture": "constants__tmhm_constants.asm.b64",
       "git_blob_sha1": "91c337cced606d5336cad10bd679c8aa6f7f60fd"
+    },
+    {
+      "path": "engine/events/happiness_egg.asm",
+      "fixture": "engine__events__happiness_egg.asm.b64",
+      "git_blob_sha1": "be9157bae4334d1d90645f84efe664ce13abdcfb"
+    },
+    {
+      "path": "data/events/happiness_changes.asm",
+      "fixture": "data__events__happiness_changes.asm.b64",
+      "git_blob_sha1": "bd515f5c886b68815df66c376bd29a3a2d37346a"
     }
   ]
 }

@@ -439,7 +439,7 @@ party checks remain in the shared use handler.
 This phase covers **Bag HP-recovery amounts and Figy use availability**, not
 all healing/held-item semantics. The following held Figy phase removes its
 native flavor-based confusion in the source profile. Berry event timing,
-herb happiness, status/revival/PP effects, trainer item decisions, source UI,
+other friendship events, status/revival/PP effects, trainer item decisions, source UI,
 item icons and the remainder of the item catalog remain separate gaps.
 
 Validation covers source-fixture regeneration, six new native healing tests,
@@ -490,6 +490,54 @@ demo emulator checks pass. The tested Johto ROM SHA-256 is
 These demo checks cover the existing overworld; the eight native tests above
 exercise the new Figy behavior in mGBA. The full controller campaign remains
 part of automatic CI.
+
+## Bitter-medicine happiness
+
+The four source bitter medicines now use generated happiness penalties under
+`P_POLISHED_ITEM_HEALING`. The importer reads the pinned item-effect dispatch,
+event constants, happiness table and negative-change routine. It verifies
+their source Git blob hashes and keeps the original 100/160 thresholds.
+Energy Powder and Heal Powder subtract 5 below 160 and 10 at or above 160;
+Energy Root subtracts 10/15 and Revival Herb subtracts 15/20. Previously the
+native 200 threshold delayed the larger penalty, and native capture-location
+or Luxury Ball bonuses could soften a loss. The source negative branch skips
+all happiness bonuses and clamps at zero.
+
+The party-item handler and the separate battle HP/status handlers apply the
+penalty only when the medicine successfully has an effect. The source egg
+exclusion is retained. Stored
+party happiness and the exact active battler's happiness are synchronized,
+so current-battle consumers do not retain a stale value. The pointer mapping
+also supports both battle sides and the partner slot in doubles without
+changing another Pokemon's happiness. Benched targets retain their new value
+when subsequently switched in. Status curing also guards the absent active
+battler index before clearing Nightmare; treating a benched Pokemon must not
+write past the active-battler array. No existing saved happiness or item IDs are
+rewritten; the existing save representation is unchanged.
+
+Native profiles, unmapped Expansion medicines and all other friendship events
+retain their existing behavior. This phase does not certify source gain
+events, friendship bonuses outside these losses, Return/Frustration damage
+formulas, complete status/revival semantics, battle-facility rules or source
+item-use text/animations. Those remain separate migration work.
+
+Eight new native tests cover all 256 happiness values for each medicine,
+the zero clamp, ignored bonuses, unsuccessful party/battle uses, egg exclusion,
+native and optional-medicine isolation, both active battle sides, all four
+medicines on benched targets followed by switching, and the targeted partner
+in doubles.
+
+Validation uses GCC 13.2.1, matching CI. The full native run passed 5,315 tests,
+with nine expected failures and 586 existing TODOs (5,910 total), including
+all six AI timing limits. After the final bench-status bounds guard, all 93
+Polished tests, 23 native status-cure tests and six Full Restore tests pass
+on the final code. Both production ROMs were rebuilt after that guard, and
+all 12 Johto demo emulator checks pass. All 34 source/asset checks pass.
+The final tested Johto ROM SHA-256 is
+`00c07e1c09b4d480cffc7f5d8583010265474a84b750351de2873713fab46d42`.
+Automatic CI reruns the complete native suite and controller campaign on the
+published commit; local demo checks are regression coverage for the existing
+overworld, while the medicine tests execute the new effects in mGBA.
 
 ## Next priorities
 

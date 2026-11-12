@@ -1,5 +1,8 @@
 #include "global.h"
+#include "battle.h"
+#include "battle_util.h"
 #include "config_changes.h"
+#include "main.h"
 #include "polished_items.h"
 #include "random.h"
 
@@ -12,6 +15,44 @@ struct PolishedItemHealing
 };
 
 #include "data/polished_item_healing.h"
+
+struct PolishedMedicineFriendship
+{
+    u16 item;
+    s8 changes[3];
+};
+
+#include "data/polished_medicine_friendship.h"
+
+bool32 PolishedApplyMedicineFriendshipInternal(struct Pokemon *mon, enum Item item)
+{
+    for (u32 i = 0; i < ARRAY_COUNT(sPolishedMedicineFriendship); i++)
+    {
+        const struct PolishedMedicineFriendship *data = &sPolishedMedicineFriendship[i];
+        if (data->item != item)
+            continue;
+        if (GetMonData(mon, MON_DATA_IS_EGG))
+            return TRUE;
+
+        s32 friendship = GetMonData(mon, MON_DATA_FRIENDSHIP);
+        u32 column = (friendship >= POLISHED_MEDICINE_FRIENDSHIP_LOW)
+                   + (friendship >= POLISHED_MEDICINE_FRIENDSHIP_HIGH);
+        // The source's negative branch never calls GetExtraHappiness.
+        friendship = max(0, friendship + data->changes[column]);
+        SetMonData(mon, MON_DATA_FRIENDSHIP, &friendship);
+
+        // Keep Return/Frustration's live value synchronized for this exact
+        // party member, including the other active slot in a double battle.
+        if (gMain.inBattle)
+        {
+            for (enum BattlerId battler = 0; battler < gBattlersCount; battler++)
+                if (GetBattlerMon(battler) == mon)
+                    gBattleMons[battler].friendship = friendship;
+        }
+        return TRUE;
+    }
+    return FALSE;
+}
 
 u32 PolishedGetItemHealAmountInternal(enum Item item, u32 maxHP)
 {

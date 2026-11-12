@@ -3507,13 +3507,16 @@ bool8 ExecuteTableBasedItemEffect(struct Pokemon *mon, enum Item item, u8 partyI
     if ((!retVal || friendshipOnly) && !ShouldSkipFriendshipChange() && friendshipChange == 0)      \
     {                                                                                                   \
         friendshipChange = itemEffect[itemEffectParam];                                                 \
-        friendship = GetMonData(mon, MON_DATA_FRIENDSHIP);                                        \
-        friendship += CalculateFriendshipBonuses(mon,friendshipChange,holdEffect);                      \
-        if (friendship < 0)                                                                             \
-            friendship = 0;                                                                             \
-        if (friendship > MAX_FRIENDSHIP)                                                                \
-            friendship = MAX_FRIENDSHIP;                                                                \
-        SetMonData(mon, MON_DATA_FRIENDSHIP, &friendship);                                              \
+        if (!PolishedApplyMedicineFriendship(mon, item))                                                \
+        {                                                                                              \
+            friendship = GetMonData(mon, MON_DATA_FRIENDSHIP);                                          \
+            friendship += CalculateFriendshipBonuses(mon, friendshipChange, holdEffect);                \
+            if (friendship < 0)                                                                         \
+                friendship = 0;                                                                         \
+            if (friendship > MAX_FRIENDSHIP)                                                            \
+                friendship = MAX_FRIENDSHIP;                                                            \
+            SetMonData(mon, MON_DATA_FRIENDSHIP, &friendship);                                          \
+        }                                                                                              \
         retVal = FALSE;                                                                                 \
     }                                                                                                   \
 }
