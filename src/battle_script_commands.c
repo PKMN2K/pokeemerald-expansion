@@ -1,5 +1,6 @@
 #include "global.h"
 #include "polished_evolution.h"
+#include "polished_items.h"
 #include "battle.h"
 #include "battle_hold_effects.h"
 #include "battle_message.h"
@@ -9350,10 +9351,16 @@ void BS_ItemRestoreHP(void)
         case ITEM6_HEAL_HP_QUARTER:
             healAmount = maxHP / 4;
             break;
+        case ITEM6_HEAL_HP_THIRD:
+            healAmount = max(1, maxHP / 3);
+            break;
         default:
             healAmount = healParam;
             break;
         }
+        u32 sourceHeal = PolishedGetItemHealAmount(gLastUsedItem, maxHP);
+        if (sourceHeal != 0)
+            healAmount = sourceHeal;
         if (hp + healAmount > maxHP)
             healAmount = maxHP - hp;
 

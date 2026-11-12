@@ -3772,7 +3772,14 @@ bool8 PokemonUseItemEffects(struct Pokemon *mon, enum Item item, u8 partyIndex, 
                             if (dataUnsigned == 0)
                                 dataUnsigned = 1;
                             break;
+                        case ITEM6_HEAL_HP_THIRD:
+                            dataUnsigned = max(1, maxHP / 3);
+                            break;
                         }
+
+                        u32 sourceHeal = PolishedGetItemHealAmount(item, maxHP);
+                        if (sourceHeal != 0)
+                            dataUnsigned = sourceHeal;
 
                         // Only restore HP if not at max health
                         if (maxHP != currentHP)

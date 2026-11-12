@@ -253,6 +253,7 @@
     F(POLISHED_LEVEL_UP_LEARNSETS, polishedLevelUpLearnsets, (u32, TRUE))       \
     F(POLISHED_LEARNING_DATA, polishedLearningData, (u32, TRUE))                \
     F(POLISHED_WILD_HELD_ITEMS, polishedWildHeldItems, (u32, TRUE))              \
+    F(POLISHED_ITEM_HEALING, polishedItemHealing, (u32, TRUE))                  \
     F(POLISHED_SPECIES_DATA, polishedSpeciesData, (u32, TRUE))                 \
     F(POLISHED_EVOLUTIONS, polishedEvolutions, (u32, TRUE))                     \
     F(POLISHED_FORMS, polishedForms, (u32, TRUE))                             \

@@ -420,6 +420,37 @@ The complete controller campaign on this same final ROM passes all 100 checks
 and 19 warp checks, including Falkner, Zephyr Badge/Roost, Togepi and native
 Save/Continue. All 26 CI source/asset commands also pass on the final files.
 
+## Bag HP-recovery items
+
+`P_POLISHED_ITEM_HEALING` defaults to the Johto profile. The generator selects
+all 14 HP-use entries from the pinned item-effect dispatch table and reads
+their amounts from source attributes. Party use, player/opponent battle use
+and the native AI's healing estimate share the source amount adapter.
+Potions, drinks, bitter healing herbs, Oran Berry and Berry Juice use their
+source fixed amounts. Max Potion's `-1` parameter means 999 HP in the source;
+Sitrus heals one quarter and Figy one third, rounded down with a one-HP minimum.
+The GBA calculation retains capacity above the source's 767-HP routine limit.
+
+Figy now supports the source party-menu and battle Bag use. The native profile
+retains its held-only Figy behavior, and unmapped items keep native handling.
+No saved item identifiers change. Existing HP caps and fainted/full-health
+party checks remain in the shared use handler.
+
+This phase covers **Bag HP-recovery amounts and Figy use availability**, not
+all healing/held-item semantics. Held Figy still has Expansion's flavor-based
+confusion behavior pending the held-effect pass. Berry activation timing,
+herb happiness, status/revival/PP effects, trainer item decisions, source UI,
+item icons and the remainder of the item catalog remain separate gaps.
+
+Validation covers source-fixture regeneration, six new native healing tests,
+both standard/Johto production builds and all 12 visual demo checks. All six
+AI frame limits pass with CI's GCC 13.2.1. GCC 14.2.1 reports 29 frames against
+the 28-frame smart-doubles limit on both this change and the untouched
+`55d71ec` baseline; no performance ceilings were relaxed. The native profile's
+healing lookup is inlined away, while tests can still select either profile.
+The tested Johto ROM SHA-256 is
+`24d566080db200fbae5245c48e0c43e132e8a5592fafb9dbcf0ad14f24c8eabd`.
+
 ## Next priorities
 
 1. Complete the remaining evolution options above, broader item definitions/

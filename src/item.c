@@ -1,5 +1,6 @@
 #include "global.h"
 #include "item.h"
+#include "config_changes.h"
 #include "berry.h"
 #include "pokeball.h"
 #include "string_util.h"
@@ -845,6 +846,8 @@ static const u8 *GetItemPluralName(enum Item itemId)
 
 const u8 *GetItemEffect(enum Item itemId)
 {
+    if (itemId == ITEM_FIGY_BERRY && GetConfig(POLISHED_ITEM_HEALING))
+        return sItemEffect_PolishedFigyBerry;
     if (itemId == ITEM_ENIGMA_BERRY_E_READER)
     #if FREE_ENIGMA_BERRY == FALSE
         return gSaveBlock1Ptr->enigmaBerry.itemEffect;
@@ -901,17 +904,23 @@ enum Pocket GetItemPocket(enum Item itemId)
 
 enum ItemType GetItemType(enum Item itemId)
 {
+    if (itemId == ITEM_FIGY_BERRY && GetConfig(POLISHED_ITEM_HEALING))
+        return ITEM_USE_PARTY_MENU;
     return gItemsInfo[SanitizeItemId(itemId)].type;
 }
 
 ItemUseFunc GetItemFieldFunc(enum Item itemId)
 {
+    if (itemId == ITEM_FIGY_BERRY && GetConfig(POLISHED_ITEM_HEALING))
+        return ItemUseOutOfBattle_Medicine;
     return gItemsInfo[SanitizeItemId(itemId)].fieldUseFunc;
 }
 
 // Returns an item's battle effect script ID.
 enum EffectItem GetItemBattleUsage(enum Item itemId)
 {
+    if (itemId == ITEM_FIGY_BERRY && GetConfig(POLISHED_ITEM_HEALING))
+        return EFFECT_ITEM_RESTORE_HP;
     enum Item item = SanitizeItemId(itemId);
     // Handle E-Reader berries.
     if (item == ITEM_ENIGMA_BERRY_E_READER)

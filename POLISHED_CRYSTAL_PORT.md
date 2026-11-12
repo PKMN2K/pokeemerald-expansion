@@ -965,6 +965,22 @@ two stages under its modern battle setting; the source-profile adapter instead
 uses one. Non-Johto builds retain their existing configuration. A source
 fixture test guards all six parameter identities and runtime definitions.
 
+The next item-effect phase explicitly imports all **14 Bag HP-recovery items**
+from the pinned source dispatch/attribute tables. `P_POLISHED_ITEM_HEALING`
+selects those amounts for party use, both battle sides and native AI healing
+estimates. Fixed healing values no longer depend on Expansion's generation
+preset. Sitrus restores one quarter and Figy one third of maximum HP, rounded
+down with a minimum of one; Max Potion follows the source's 999-HP amount.
+Figy can now be used from the party menu and battle Bag as in Polished Crystal.
+Native builds retain their prior item handling, and saved IDs stay unchanged.
+
+The generator checks the existing hashed source fixtures and menu/effect
+dispatch, and CI checks deterministic regeneration. Native tests cover all
+14 party and battle amounts, caps, fainted/full-health rejection, fractional
+rounding, bench healing and profile isolation. Held Figy confusion/activation,
+herb happiness, revival/status/PP effects and source trainer item AI are still
+open; this phase does not certify those behaviors.
+
 Price and description parity still do not imply full item icon, field use,
 other held effects, battle mechanic or source-layout parity. The original GBC text
 glyph styling is not claimed to be pixel-identical on the GBA.

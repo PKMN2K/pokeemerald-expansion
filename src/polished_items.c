@@ -5,6 +5,24 @@
 
 #include "data/polished_wild_held_items.h"
 
+struct PolishedItemHealing
+{
+    u16 amount;
+    u8 divisor;
+};
+
+#include "data/polished_item_healing.h"
+
+u32 PolishedGetItemHealAmountInternal(enum Item item, u32 maxHP)
+{
+    if ((u32)item >= ITEMS_COUNT)
+        return 0;
+    const struct PolishedItemHealing *data = &sPolishedItemHealing[item];
+    if (data->divisor != 0)
+        return max(1, maxHP / data->divisor);
+    return data->amount;
+}
+
 const struct PolishedWildHeldItems *PolishedGetWildHeldItems(enum Species species)
 {
     return (u32)species < NUM_SPECIES ? sPolishedWildHeldItems[species] : NULL;

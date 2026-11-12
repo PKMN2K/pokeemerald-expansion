@@ -11,6 +11,7 @@
 #include "battle_setup.h"
 #include "data.h"
 #include "item.h"
+#include "polished_items.h"
 #include "party_menu.h"
 #include "pokemon.h"
 #include "random.h"
@@ -23,7 +24,7 @@
 
 // this file's functions
 static bool32 AI_ShouldHeal(enum BattlerId battler, u32 healAmount);
-static u32 GetHPHealAmount(u8 itemEffectParam, struct Pokemon *mon);
+static u32 GetHPHealAmount(enum Item item, u8 itemEffectParam, struct Pokemon *mon);
 
 bool32 ShouldUseItem(enum BattlerId battler)
 {
@@ -60,11 +61,11 @@ bool32 ShouldUseItem(enum BattlerId battler)
         switch (GetItemBattleUsage(item))
         {
         case EFFECT_ITEM_HEAL_AND_CURE_STATUS:
-            healAmount = GetHPHealAmount(itemEffects[GetItemEffectParamOffset(battler, item, 4, ITEM4_HEAL_HP)], GetBattlerMon(battler));
+            healAmount = GetHPHealAmount(item, itemEffects[GetItemEffectParamOffset(battler, item, 4, ITEM4_HEAL_HP)], GetBattlerMon(battler));
             shouldUse = AI_ShouldHeal(battler, healAmount);
             break;
         case EFFECT_ITEM_RESTORE_HP:
-            healAmount = GetHPHealAmount(itemEffects[GetItemEffectParamOffset(battler, item, 4, ITEM4_HEAL_HP)], GetBattlerMon(battler));
+            healAmount = GetHPHealAmount(item, itemEffects[GetItemEffectParamOffset(battler, item, 4, ITEM4_HEAL_HP)], GetBattlerMon(battler));
             shouldUse = AI_ShouldHeal(battler, healAmount);
             break;
         case EFFECT_ITEM_CURE_STATUS:
@@ -230,8 +231,11 @@ static bool32 AI_ShouldHeal(enum BattlerId battler, u32 healAmount)
     return shouldHeal;
 }
 
-static u32 GetHPHealAmount(u8 itemEffectParam, struct Pokemon *mon)
+static u32 GetHPHealAmount(enum Item item, u8 itemEffectParam, struct Pokemon *mon)
 {
+    u32 sourceHeal = PolishedGetItemHealAmount(item, GetMonData(mon, MON_DATA_MAX_HP));
+    if (sourceHeal != 0)
+        return min(sourceHeal, GetMonData(mon, MON_DATA_MAX_HP) - GetMonData(mon, MON_DATA_HP));
     switch (itemEffectParam)
     {
     case ITEM6_HEAL_HP_FULL:
@@ -250,6 +254,8 @@ static u32 GetHPHealAmount(u8 itemEffectParam, struct Pokemon *mon)
         if (itemEffectParam == 0)
             itemEffectParam = 1;
         break;
+    case ITEM6_HEAL_HP_THIRD:
+        return max(1, GetMonData(mon, MON_DATA_MAX_HP) / 3);
     }
 
     return itemEffectParam;
