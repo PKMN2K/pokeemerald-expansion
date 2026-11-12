@@ -959,7 +959,9 @@ The city map-load script refreshes the Mart entrance in earlier saved maps.
 Its new warp is appended after the Center, eastern gate and Academy warps.
 The emulator campaign exercises both exits, customer and shelf dialogue,
 every stock entry, cancellation, insufficient funds, selling, mail reading
-and cartridge Save/Continue. Native tests cover held mail, the PC mailbox,
+and cartridge Save/Continue. All eleven live purchases are now compared
+against prices independently read from the pinned Polished Crystal catalog,
+so a matching native GBA price is still source-verified rather than assumed. Native tests cover held mail, the PC mailbox,
 full item pockets and existing warp identities.
 
 ### Violet's nickname and trade houses
