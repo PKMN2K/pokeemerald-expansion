@@ -956,8 +956,17 @@ abbreviation is rendered as `POKéMON`, and the bold PP glyphs become regular
 `PP` because their text encodings differ. CI checks regeneration and the
 source-profile adapters.
 
+The first item-effect parity correction restores the source **one-stage**
+boost for all six X items in the Johto profile. Polished Crystal's pinned item
+attribute parameters are `$10 | ATTACK`, `DEFENSE`, `SPEED`, `SP_ATTACK`,
+`SP_DEFENSE` and `ACCURACY`, and its X-item battle handler forwards that
+parameter to the stat-change routine. The Expansion build ordinarily chooses
+two stages under its modern battle setting; the source-profile adapter instead
+uses one. Non-Johto builds retain their existing configuration. A source
+fixture test guards all six parameter identities and runtime definitions.
+
 Price and description parity still do not imply full item icon, field use,
-held effect, battle mechanic or source-layout parity. The original GBC text
+other held effects, battle mechanic or source-layout parity. The original GBC text
 glyph styling is not claimed to be pixel-identical on the GBA.
 
 
