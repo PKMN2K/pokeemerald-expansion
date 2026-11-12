@@ -48,6 +48,12 @@ jobs:
             tools/wav2agb/wav2agb
           key: tools-${{ runner.os }}-${{ hashFiles('tools/*/Makefile', 'tools/**/*.c', 'tools/**/*.cpp', 'tools/**/*.h') }}
 
+      - name: Generate headers and compile emulator layout probes
+        run: |
+          make -j$(nproc) -f make_tools.mk
+          make generated
+          python3 tools/polished_port/scripts/test_arm_header_probes.py
+
       - name: ROM (Emerald)
         env:
           GAME_VERSION: EMERALD
@@ -230,7 +236,7 @@ jobs:
 
       - name: Install build dependencies
         timeout-minutes: 12
-        run: bash .github/scripts/install-dependencies.sh libmgba-dev
+        run: bash .github/scripts/install-dependencies.sh python3-pil libmgba-dev
 
       - name: Cache build tools
         uses: actions/cache@v4
@@ -253,6 +259,12 @@ jobs:
             tools/patchelf/patchelf
             tools/mgba-rom-test-hydra/mgba-rom-test-hydra
           key: tools-check-${{ runner.os }}-${{ hashFiles('tools/*/Makefile', 'tools/**/*.c', 'tools/**/*.cpp', 'tools/**/*.h') }}
+
+      - name: Generate headers and compile emulator layout probes
+        run: |
+          make -j$(nproc) -f make_tools.mk
+          make generated
+          python3 tools/polished_port/scripts/test_arm_header_probes.py
 
       - name: Validate Polished Crystal field artwork wiring
         run: python3 tools/polished_port/scripts/check_field_art_wiring.py

@@ -646,6 +646,27 @@ The nine new tests execute the PP behavior in mGBA. The local demo checks
 cover existing overworld behavior; automatic CI additionally reruns the full
 controller campaign on the published commit.
 
+## Standalone emulator compiler repair
+
+CI #1530 on `66a7091e` passed all 5,331 native tests and both production
+ROM builds, but failed before the evolution and New Bark controller replays
+could execute. Their standalone ARM compiler commands do not use Make's
+`-DPOLISHED_JOHTO_DEMO` option. The new shared PP accessor exposed that
+missing definition as a C compilation error.
+
+`config/general.h` now supplies Make's native default only when the option
+is absent. Explicit native and Johto selections remain intact. Both affected
+CI jobs generate the normal headers and compile all nine emulator layout
+helpers before building ROMs or running the long test suite. The preflight
+also checks omitted/zero/one profile values and reports compiler stderr.
+The test job installs Pillow for the campaign helpers' imports.
+
+The preflight passes from a fresh checkout with GCC 13.2.1. Both real
+evolution replays pass, including completion/cancellation and persistent
+form-pattern checks. Rebuilding standard Emerald and Johto produces exactly
+the same ROM bytes as `66a7091e`; this repair changes neither game rules nor
+saved data. The full campaign replay remains a required automatic CI check.
+
 ## Next priorities
 
 1. Complete the remaining evolution options above, broader item definitions/
