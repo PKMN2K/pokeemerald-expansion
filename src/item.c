@@ -41,6 +41,9 @@ EWRAM_DATA struct BagPocket gBagPockets[POCKETS_COUNT] = {0};
 
 #include "data/pokemon/item_effects.h"
 #include "data/items.h"
+#if POLISHED_JOHTO_DEMO
+#include "data/polished_item_prices.h"
+#endif
 
 #define UNPACK_TM_ITEM_ID(_tm) [CAT(ENUM_TM_HM_, _tm) + 1] = { CAT(ITEM_TM_, _tm), CAT(MOVE_, _tm) },
 #define UNPACK_HM_ITEM_ID(_hm) [CAT(ENUM_TM_HM_, _hm) + 1] = { CAT(ITEM_HM_, _hm), CAT(MOVE_, _hm) },
@@ -833,6 +836,12 @@ u32 GetItemPrice(enum Item itemId)
     default:
         break;
     }
+#endif
+#if POLISHED_JOHTO_DEMO
+    // Mapped items use source prices; zero entries retain native Expansion
+    // definitions, including future custom and non-Polished species items.
+    if (sPolishedMappedItemPrices[SanitizeItemId(itemId)] != 0)
+        return sPolishedMappedItemPrices[SanitizeItemId(itemId)];
 #endif
     return gItemsInfo[SanitizeItemId(itemId)].price;
 }
