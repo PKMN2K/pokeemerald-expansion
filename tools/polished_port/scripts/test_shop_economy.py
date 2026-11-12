@@ -14,6 +14,11 @@ assert price.count("#endif") == 1
 # The prices formerly hard-coded in GetItemPrice are now pinned source data.
 from build_item_prices import build as build_prices
 generated = build_prices().decode()
+from build_item_prices import MART_ALIASES
+assert len(MART_ALIASES) == 11
+for token, (target, expected) in MART_ALIASES.items():
+    assert re.search(r"\[" + target + r"\] = " + str(expected) + r",", generated), token
+
 for symbol, expected in {
     "ITEM_PARALYZE_HEAL": 300,
     "ITEM_AWAKENING": 100,
