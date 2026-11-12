@@ -943,20 +943,18 @@ Flower Mail at 25), while ordinary Expansion builds retain their native
 prices and resale configuration. This is an initial source shop-economy
 correction, **not** a complete item metadata/effect parity audit.
 
-The source-price importer now generates **73 item prices** from pinned Polished
-Crystal item attributes: the 70 held-item mappings and Violet Mart's Paralyze
-Heal, Awakening and X Defense. The three formerly hard-coded exceptions are
-validated against the source item catalog, then resolved through the same
-`GetItemPrice` table. Its zero-initialized entries leave unmapped items on
-their native Expansion price, and non-Johto builds do not compile the adapter.
-The table is regenerated deterministically from the previously pinned and
-hash-validated item fixture inventory; CI checks regeneration and runtime
-source-profile selection. The next import supplies the original source descriptions for the same 73
-mapped items through the Johto `GetItemDescription` accessor. Their original
-wording and line breaks are preserved; the GBC `#mon` abbreviation is rendered
-as `POKéMON` and the two bold PP glyphs as regular `PP` because their native
-text encodings differ. Entries without a source mapping and ordinary Expansion
-builds retain the native item descriptions.
+The item catalog now imports **81 source prices and descriptions**:
+70 held-item mappings plus all eleven Violet Mart stock entries. This includes
+the original Paralyze Heal, Awakening and X Defense corrections, along with the
+Poké Balls, Potion, Antidote, X items, Escape Rope and Flower Mail. Their mappings
+and prices are checked against the pinned Polished Crystal v3.2.3 item catalog.
+Both tables are deterministically generated, and the native Expansion price
+and description remain available for unmapped items and non-Johto builds.
+
+The original source wording and line breaks are preserved. The GBC `#mon`
+abbreviation is rendered as `POKéMON`, and the bold PP glyphs become regular
+`PP` because their text encodings differ. CI checks regeneration and the
+source-profile adapters.
 
 Price and description parity still do not imply full item icon, field use,
 held effect, battle mechanic or source-layout parity. The original GBC text
