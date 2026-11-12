@@ -37,7 +37,7 @@ def build():
     for token, (target, _) in MART_ALIASES.items():
         assert target not in entries
         entries[target] = (token, convert_description(pinned[token]["source_description"]))
-    assert len(entries) == 73
+    assert len(entries) == 81
     names = set(re.findall(r"\bITEM_\w+", (ROOT / "include/constants/items.h").read_text()))
     assert set(entries) <= names
     output = ["/* Generated from SHA-pinned default Polished Crystal item descriptions. */",
@@ -59,7 +59,7 @@ def main():
         assert OUTPUT.read_bytes() == data, "Regenerate Polished Crystal item descriptions"
     else:
         OUTPUT.write_bytes(data)
-    print("PASS: 73 source item descriptions and explicit GBA glyph substitutions")
+    print("PASS: 81 source item descriptions and explicit GBA glyph substitutions")
 
 
 if __name__ == "__main__":
