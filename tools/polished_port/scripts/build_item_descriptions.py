@@ -41,12 +41,11 @@ def build():
     names = set(re.findall(r"\bITEM_\w+", (ROOT / "include/constants/items.h").read_text()))
     assert set(entries) <= names
     output = ["/* Generated from SHA-pinned default Polished Crystal item descriptions. */",
-              "/* Source #mon -> POKéMON and bold PP glyphs -> PP (GBA text). */"]
+              "/* Source #mon -> POKéMON and bold PP glyphs -> PP (GBA text). */",
+              "/* COMPOUND_STRING produces a pointer, not a u8 array initializer. */",
+              "static const u8 *const sPolishedItemDescriptions[ITEMS_COUNT] = {"]
     for target, (token, value) in sorted(entries.items()):
-        output.append(f'static const u8 sPolishedDesc_{target[5:]}[] = COMPOUND_STRING("{value}");')
-    output += ["", "static const u8 *const sPolishedItemDescriptions[ITEMS_COUNT] = {"]
-    for target in sorted(entries):
-        output.append(f'    [{target}] = sPolishedDesc_{target[5:]},')
+        output.append(f'    [{target}] = COMPOUND_STRING("{value}"),')
     output += ["};", ""]
     return "\n".join(output).encode()
 
