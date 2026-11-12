@@ -8,6 +8,7 @@
 #include "battle_stat_change.h"
 #include "battle_scripts.h"
 #include "item.h"
+#include "polished_items.h"
 #include "string_util.h"
 #include "data/hold_effects.h"
 #include "constants/berry.h"
@@ -889,6 +890,18 @@ static enum ItemEffect ItemRestorePp(enum BattlerId battler, enum Item itemId)
 
 static enum ItemEffect HealConfuseBerry(enum BattlerId battler, enum Item itemId, enum Flavor flavorId)
 {
+    if (itemId == ITEM_FIGY_BERRY && PolishedItemHealingEnabled())
+    {
+        // The source routes Figy through HELD_BERRY, not a flavor/confusion
+        // effect. Retain the engine's berry dispatch and consumption scripts.
+        if (!PolishedFigyCanHeal(gBattleMons[battler].hp, gBattleMons[battler].maxHP,
+                                GetBattlerAbility(battler) == ABILITY_GLUTTONY,
+                                gBattleScripting.overrideBerryRequirements))
+            return ITEM_NO_EFFECT;
+        SetHealAmount(battler, PolishedGetItemHealAmount(itemId, GetNonDynamaxMaxHP(battler)));
+        BattleScriptCall(BattleScript_ItemHealHP_RemoveBerry);
+        return ITEM_HP_CHANGE;
+    }
     enum ItemEffect effect = ITEM_NO_EFFECT;
     u32 hpFraction = B_CONFUSE_BERRIES_HEAL >= GEN_7 ? 4 : 2;
     enum Ability ability = GetBattlerAbility(battler);

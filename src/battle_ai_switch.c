@@ -11,6 +11,7 @@
 #include "battle_setup.h"
 #include "data.h"
 #include "item.h"
+#include "polished_items.h"
 #include "party_menu.h"
 #include "pokemon.h"
 #include "random.h"
@@ -1612,6 +1613,13 @@ static u32 GetSwitchinSingleUseItemHealing(enum BattlerId battler, enum BattlerI
         }
         break;
     case HOLD_EFFECT_CONFUSE_FLAVOR:
+        if (aiItem == ITEM_FIGY_BERRY && PolishedItemHealingEnabled())
+        {
+            if (PolishedFigyCanHeal(currentHP, maxHP,
+                                   gAiLogicData->abilities[battler] == ABILITY_GLUTTONY, FALSE))
+                itemHeal = min(PolishedGetItemHealAmount(aiItem, maxHP), maxHP - currentHP);
+            break;
+        }
         if (currentHP < maxHP / CONFUSE_BERRY_HP_FRACTION)
         {
             itemHeal = maxHP / GetItemHoldEffectParam(aiItem);

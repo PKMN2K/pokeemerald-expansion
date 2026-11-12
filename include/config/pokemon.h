@@ -4,7 +4,7 @@
 // Species data settings
 #define P_POLISHED_SPECIES_DATA      POLISHED_JOHTO_DEMO // Pinned source stats, types, abilities, growth and breeding data.
 #define P_POLISHED_WILD_HELD_ITEMS   POLISHED_JOHTO_DEMO // Source held-item identities, byte rolls and lead boosts.
-#define P_POLISHED_ITEM_HEALING      POLISHED_JOHTO_DEMO // Source Bag HP recovery and Figy Berry use.
+#define P_POLISHED_ITEM_HEALING      POLISHED_JOHTO_DEMO // Source Bag HP recovery and held/used Figy Berry effects.
 #define P_POLISHED_FORMS             POLISHED_JOHTO_DEMO // Source hidden-form creation, evolution and inheritance.
 #define P_POLISHED_EVOLUTIONS        POLISHED_JOHTO_DEMO // Pinned source evolution rules and trigger semantics.
 #define P_UPDATED_TYPES             GEN_LATEST  // Some Pokémon have received type updates after their introduction.

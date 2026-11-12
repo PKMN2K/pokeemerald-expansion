@@ -23,6 +23,17 @@ u32 PolishedGetItemHealAmountInternal(enum Item item, u32 maxHP)
     return data->amount;
 }
 
+bool32 PolishedFigyCanHeal(u32 hp, u32 maxHP, bool32 gluttony, bool32 forced)
+{
+    if (hp == 0 || maxHP == 0)
+        return FALSE;
+    // StealHPHealingItem/ReconsumeHPHealingItem bypass the pinch check but
+    // explicitly reject full HP. Normal consumption uses FloorBC's minimum 1.
+    if (forced)
+        return hp < maxHP;
+    return hp <= max(1, maxHP / (gluttony ? 2 : 4));
+}
+
 const struct PolishedWildHeldItems *PolishedGetWildHeldItems(enum Species species)
 {
     return (u32)species < NUM_SPECIES ? sPolishedWildHeldItems[species] : NULL;

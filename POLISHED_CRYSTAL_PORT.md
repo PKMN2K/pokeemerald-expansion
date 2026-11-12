@@ -977,9 +977,26 @@ Native builds retain their prior item handling, and saved IDs stay unchanged.
 The generator checks the existing hashed source fixtures and menu/effect
 dispatch, and CI checks deterministic regeneration. Native tests cover all
 14 party and battle amounts, caps, fainted/full-health rejection, fractional
-rounding, bench healing and profile isolation. Held Figy confusion/activation,
-herb happiness, revival/status/PP effects and source trainer item AI are still
-open; this phase does not certify those behaviors.
+rounding, bench healing and profile isolation. The held Figy adapter below
+extends this work. Herb happiness, revival/status/PP effects and source trainer
+item AI remain separate gaps.
+
+Held Figy now follows the pinned source's `HELD_BERRY` behavior: it restores
+one third of maximum HP, rounded down with a one-HP minimum, without
+flavor/nature confusion. Normal consumption requires HP at or below one
+quarter, or one half with Gluttony; both thresholds round down with a one-HP
+minimum. Bug Bite and Cud Chew bypass the pinch check but reject full HP, as
+the source's steal/reconsume routines specify. The native switch-in AI's
+Figy estimate uses the same source threshold and capped amount.
+
+Eight new native tests exercise all 25 natures, threshold boundaries, damage
+crossing the threshold, repeated consumption, Unnerve/Klutz, forced use,
+rounding and native-profile isolation. A pinned-source guard runs in CI.
+Native builds retain Figy's flavor behavior, and the other Expansion flavor
+berries remain available unchanged. Existing item and save IDs are preserved.
+The adapter uses the engine's existing berry dispatch and consumption scripts;
+it does not certify source event timing, animations, broader ability rules,
+other held healing items or the source trainer AI.
 
 Price and description parity still do not imply full item icon, field use,
 other held effects, battle mechanic or source-layout parity. The original GBC text

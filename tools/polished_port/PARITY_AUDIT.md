@@ -437,8 +437,8 @@ No saved item identifiers change. Existing HP caps and fainted/full-health
 party checks remain in the shared use handler.
 
 This phase covers **Bag HP-recovery amounts and Figy use availability**, not
-all healing/held-item semantics. Held Figy still has Expansion's flavor-based
-confusion behavior pending the held-effect pass. Berry activation timing,
+all healing/held-item semantics. The following held Figy phase removes its
+native flavor-based confusion in the source profile. Berry event timing,
 herb happiness, status/revival/PP effects, trainer item decisions, source UI,
 item icons and the remainder of the item catalog remain separate gaps.
 
@@ -450,6 +450,46 @@ the 28-frame smart-doubles limit on both this change and the untouched
 healing lookup is inlined away, while tests can still select either profile.
 The tested Johto ROM SHA-256 is
 `24d566080db200fbae5245c48e0c43e132e8a5592fafb9dbcf0ad14f24c8eabd`.
+
+## Held Figy Berry
+
+The same `P_POLISHED_ITEM_HEALING` profile now maps Figy's held effect to the
+pinned source's `HELD_BERRY` behavior. It restores `max(1, floor(maxHP / 3))`
+without flavor/nature confusion. Natural consumption uses the inclusive
+quarter-HP threshold, or half HP with Gluttony; each threshold also has a
+one-HP minimum. The source steal/reconsume routines bypass the pinch check
+but reject full HP. Bug Bite and Cud Chew use those forced-consumption rules.
+Fainted Pokemon cannot heal. The switch-in AI estimates the same source
+threshold and amount, capped at missing HP; this is an estimate correction,
+not an import of Polished Crystal's trainer AI.
+
+Figy keeps its existing item ID and native dispatch category. Only its live
+effect is overridden before the native flavor-confusion handler. Other flavor
+berries and the disabled source profile retain native behavior. The source
+effect does not apply the native Ripen multiplier or native Heal Block test;
+those are absent from the pinned `HELD_BERRY` routine. Existing engine dispatch
+still supplies Unnerve/Klutz checks, berry scripts and consumption timing.
+Complete ability interactions, source event ordering, text and animation are
+separate gaps. No saved IDs or Pokemon layouts change.
+
+The source guard verifies the hashed item attributes, natural and forced
+healing dispatch, Gluttony threshold, minimum-one arithmetic and absence of
+flavor confusion. Eight new native tests cover all 25 natures, inclusive
+thresholds, damage crossing the threshold, one-time consumption, Unnerve/Klutz,
+Bug Bite above pinch and at full HP, Cud Chew, all source rounding inputs and
+profile isolation. Other held healing items remain unaudited; Berry Juice's
+source Berries pocket versus the existing target Items pocket also needs an
+explicit save-compatible migration before changing its dispatch.
+
+Validation: all 33 CI source/asset commands pass. With CI's GCC 13.2.1, the
+full native suite passes 5,307 tests, with nine expected failures and 586
+existing TODOs (5,902 total), including all six AI timing limits. Standard
+Emerald and Johto production builds succeed with GCC 14.2.1, and all 12 Johto
+demo emulator checks pass. The tested Johto ROM SHA-256 is
+`bf1a860dc9addf6d14a631eee8663e3563a81cf3f74da9bdd9008b219c796512`.
+These demo checks cover the existing overworld; the eight native tests above
+exercise the new Figy behavior in mGBA. The full controller campaign remains
+part of automatic CI.
 
 ## Next priorities
 

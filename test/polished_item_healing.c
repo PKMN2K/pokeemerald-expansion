@@ -14,6 +14,25 @@ static const struct { enum Item item; u16 hp; } sSourceHealing[] = {
     {ITEM_SITRUS_BERRY, 100}, {ITEM_FIGY_BERRY, 133}, // maxHP = 401
 };
 
+TEST("Polished Figy pinch arithmetic preserves source rounding and forced-use boundaries")
+{
+    for (u32 hp = 1; hp < 768; hp++)
+    {
+        u32 quarter = max(1, hp / 4), half = max(1, hp / 2);
+        EXPECT(PolishedFigyCanHeal(quarter, hp, FALSE, FALSE));
+        EXPECT(!PolishedFigyCanHeal(quarter + 1, hp, FALSE, FALSE));
+        EXPECT(PolishedFigyCanHeal(half, hp, TRUE, FALSE));
+        EXPECT(!PolishedFigyCanHeal(half + 1, hp, TRUE, FALSE));
+        EXPECT(!PolishedFigyCanHeal(0, hp, TRUE, TRUE));
+        EXPECT(!PolishedFigyCanHeal(hp, hp, FALSE, TRUE));
+        if (hp > 1)
+            EXPECT(PolishedFigyCanHeal(hp - 1, hp, FALSE, TRUE));
+    }
+    EXPECT(!PolishedFigyCanHeal(0, 0, FALSE, TRUE));
+    EXPECT(PolishedFigyCanHeal(300, 1200, FALSE, FALSE));
+    EXPECT(!PolishedFigyCanHeal(301, 1200, FALSE, FALSE));
+}
+
 TEST("Polished healing uses all fourteen source amounts through the party item handler")
 {
     u32 index = 0;
