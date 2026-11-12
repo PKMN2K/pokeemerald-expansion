@@ -82,6 +82,8 @@ jobs:
           python3 tools/polished_port/scripts/build_pokemon_held_items.py --check
           python3 tools/polished_port/scripts/test_pokemon_held_items.py
           python3 tools/polished_port/scripts/build_item_prices.py --check
+          python3 tools/polished_port/scripts/build_item_descriptions.py --check
+          python3 tools/polished_port/scripts/test_item_descriptions.py
           python3 tools/polished_port/scripts/test_shop_economy.py
 
       - name: Build playable Johto demo
