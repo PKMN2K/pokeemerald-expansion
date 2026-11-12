@@ -3,6 +3,7 @@
 static const u32 sPolishedMappedItemPrices[ITEMS_COUNT] = {
     [ITEM_AMULET_COIN] = 10000, /* AMULET_COIN */
     [ITEM_ASPEAR_BERRY] = 10, /* ASPEAR_BERRY */
+    [ITEM_AWAKENING] = 100, /* AWAKENING */
     [ITEM_BERRY_JUICE] = 100, /* BERRY_JUICE */
     [ITEM_BIG_MUSHROOM] = 5000, /* BIG_MUSHROOM */
     [ITEM_BIG_PEARL] = 8000, /* BIG_PEARL */
@@ -41,6 +42,7 @@ static const u32 sPolishedMappedItemPrices[ITEMS_COUNT] = {
     [ITEM_NUGGET] = 10000, /* NUGGET */
     [ITEM_ORAN_BERRY] = 10, /* ORAN_BERRY */
     [ITEM_OVAL_STONE] = 2000, /* OVAL_STONE */
+    [ITEM_PARALYZE_HEAL] = 300, /* PARALYZEHEAL */
     [ITEM_PEARL] = 2000, /* PEARL */
     [ITEM_PECHA_BERRY] = 10, /* PECHA_BERRY */
     [ITEM_PERSIM_BERRY] = 10, /* PERSIM_BERRY */
@@ -71,4 +73,5 @@ static const u32 sPolishedMappedItemPrices[ITEMS_COUNT] = {
     [ITEM_TWISTED_SPOON] = 1000, /* TWISTEDSPOON */
     [ITEM_UPGRADE] = 2000, /* UPGRADE */
     [ITEM_WIDE_LENS] = 4000, /* WIDE_LENS */
+    [ITEM_X_DEFENSE] = 2000, /* X_DEFEND */
 };
