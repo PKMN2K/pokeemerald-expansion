@@ -951,8 +951,16 @@ validated against the source item catalog, then resolved through the same
 their native Expansion price, and non-Johto builds do not compile the adapter.
 The table is regenerated deterministically from the previously pinned and
 hash-validated item fixture inventory; CI checks regeneration and runtime
-source-profile selection. Price parity alone does not imply parity for item
-icons, descriptions, field use, hold effects or battle mechanics.
+source-profile selection. The next import supplies the original source descriptions for the same 73
+mapped items through the Johto `GetItemDescription` accessor. Their original
+wording and line breaks are preserved; the GBC `#mon` abbreviation is rendered
+as `POKéMON` and the two bold PP glyphs as regular `PP` because their native
+text encodings differ. Entries without a source mapping and ordinary Expansion
+builds retain the native item descriptions.
+
+Price and description parity still do not imply full item icon, field use,
+held effect, battle mechanic or source-layout parity. The original GBC text
+glyph styling is not claimed to be pixel-identical on the GBA.
 
 
 The city map-load script refreshes the Mart entrance in earlier saved maps.
