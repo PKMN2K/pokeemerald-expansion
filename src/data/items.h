@@ -13266,6 +13266,9 @@ const struct ItemInfo gItemsInfo[] =
         .fieldUseFunc = ItemUseOutOfBattle_TMHM,
     },
 
+#if POLISHED_JOHTO_DEMO
+#include "polished_tm70_item.h"
+#else
     [ITEM_TM70] =
     {
         .name = ITEM_NAME("TM70"),
@@ -13277,6 +13280,7 @@ const struct ItemInfo gItemsInfo[] =
         .fieldUseFunc = ItemUseOutOfBattle_TMHM,
     },
 
+#endif
     [ITEM_TM71] =
     {
         .name = ITEM_NAME("TM71"),

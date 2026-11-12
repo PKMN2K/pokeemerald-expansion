@@ -64,9 +64,9 @@ const u8 *PolishedFlashInteraction(void)
 {
     if (!IsDark())
         return NULL;
-    // Preserve the established save ID: source TM70 is currently represented
-    // by HM05. Source TM numbering/inventory remains a separate migration.
-    u8 slot = PolishedFlashPartyUser(gParties[B_TRAINER_PLAYER], gPartiesCount[B_TRAINER_PLAYER], CheckBagHasItem(ITEM_HM_FLASH, 1));
+    // Older saves retain HM05; new rewards use the source TM70 item.
+    bool32 ownsTM = CheckBagHasItem(ITEM_TM70, 1) || CheckBagHasItem(ITEM_HM_FLASH, 1);
+    u8 slot = PolishedFlashPartyUser(gParties[B_TRAINER_PLAYER], gPartiesCount[B_TRAINER_PLAYER], ownsTM);
     if (slot == PARTY_SIZE)
         return NULL;
     PrepareMon(slot);

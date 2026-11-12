@@ -1,0 +1,70 @@
+{
+  "commit": "3fa43192379df5c3e7b09a08e4d5d79af4f02f42",
+  "files": [
+    {
+      "path": "constants/tmhm_constants.asm",
+      "fixture": "00.b64",
+      "git_blob_sha1": "91c337cced606d5336cad10bd679c8aa6f7f60fd"
+    },
+    {
+      "path": "data/moves/tmhm_moves.asm",
+      "fixture": "01.b64",
+      "git_blob_sha1": "dbb61771a5d4b4efbb95ced76188fdb9c4b7ada1"
+    },
+    {
+      "path": "data/moves/descriptions.asm",
+      "fixture": "02.b64",
+      "git_blob_sha1": "7035e9a9d00eff0634bf31a108b143274ad4b5fa"
+    },
+    {
+      "path": "gfx/items/tm_hm.png",
+      "fixture": "03.b64",
+      "git_blob_sha1": "300a7302c0ad2195f6143b1432f040f7d321cdbe"
+    },
+    {
+      "path": "gfx/items/tm_hm_types.pal",
+      "fixture": "04.b64",
+      "git_blob_sha1": "c02c24123cb6f7d5a76f4d9870234d602f44477e"
+    },
+    {
+      "path": "engine/gfx/color.asm",
+      "fixture": "05.b64",
+      "git_blob_sha1": "87f6543b753f9bbd0e6a23134709eaefc8d3b960"
+    },
+    {
+      "path": "engine/items/tmhm2.asm",
+      "fixture": "06.b64",
+      "git_blob_sha1": "bbe677df3a35b62102712d84c527716252935713"
+    },
+    {
+      "path": "engine/items/pack.asm",
+      "fixture": "07.b64",
+      "git_blob_sha1": "34a03ff2f64aac2e3c7ccbdf81eb56761db427c1"
+    },
+    {
+      "path": "engine/pokemon/learn.asm",
+      "fixture": "08.b64",
+      "git_blob_sha1": "b5b2a3658df09bef633db8c0ffad150fdd778dbd"
+    },
+    {
+      "path": "engine/events/happiness_egg.asm",
+      "fixture": "09.b64",
+      "git_blob_sha1": "be9157bae4334d1d90645f84efe664ce13abdcfb"
+    },
+    {
+      "path": "data/events/happiness_changes.asm",
+      "fixture": "10.b64",
+      "git_blob_sha1": "bd515f5c886b68815df66c376bd29a3a2d37346a"
+    },
+    {
+      "path": "constants/pokemon_data_constants.asm",
+      "fixture": "11.b64",
+      "git_blob_sha1": "b8bf0452f937d95f6e63bccf055412fe3b4b0b9c"
+    },
+    {
+      "path": "gfx/items.asm",
+      "fixture": "12.b64",
+      "git_blob_sha1": "682f452348e3a26528c25c53d0f45c41765e1a3d"
+    }
+  ]
+}

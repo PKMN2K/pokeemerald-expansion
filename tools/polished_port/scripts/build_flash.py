@@ -47,13 +47,13 @@ def build():
         output += ['PolishedFlash_' + target + 'Text:', '    .string "' + text + '$"']
     report = dict(source_commit=PIN, source_variant='default release',
         source_map='DARK_CAVE_VIOLET_ENTRANCE', target_map='MAP_POLISHED_DARK_CAVE_VIOLET_ENTRANCE',
-        source_move='FLASH', target_move='MOVE_FLASH', source_item='TM70', target_item='ITEM_HM_FLASH',
+        source_move='FLASH', target_move='MOVE_FLASH', source_item='TM70', target_item='ITEM_TM70', legacy_item='ITEM_HM_FLASH',
         rules=['A-button fallback after objects, backgrounds, metatiles and Surf.',
                'First non-Egg knower; otherwise first source-compatible non-Egg if the Flash machine is owned.',
                'No HP, PP or badge gate. No teaching, item consumption or PP deduction.',
                'A-button confirmation can be declined; party menu requires the selected Pokemon to know Flash and skips confirmation.',
                'White fade then full-map lighting. Battle/menu reload and Save/Continue preserve illumination; outdoors resets it.'],
-        gaps=['Source TM70 still uses the established HM05 save/item adapter; TM inventory/numbering is not migrated here.',
+        gaps=['Full source TM/HM inventory remains incomplete; TM70 is imported separately.',
               'Darkness before use, Pokemon picture/cry, Flash sound, message styling and exact fade timing retain native presentation.',
               'The Aerodactyl chamber exception is deferred until its map is ported.'])
     return {ROOT/'data/text/polished_flash.inc': ('\n'.join(output)+'\n').encode(),

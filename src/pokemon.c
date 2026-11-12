@@ -5374,6 +5374,10 @@ const u16 *GetMonSpritePalFromSpeciesIsEgg(enum Species species, bool32 isShiny,
 
 bool32 IsMoveHM(enum Move move)
 {
+#if POLISHED_JOHTO_DEMO
+    if (move == MOVE_FLASH)
+        return FALSE;
+#endif
     return FALSE FOREACH_HM(OR_MOVE_IS_HM);
 }
 

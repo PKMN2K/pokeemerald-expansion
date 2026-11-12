@@ -1100,10 +1100,11 @@ The summit coordinate scene retains the Elder's lecture, the player's and
 Rival's paths, and the Rival's Escape Rope departure. His visibility and
 the completed scene survive saving and loading. Defeating Li awards Flash
 once. If the Bag cannot accept it, his next interaction retries the gift
-without requiring another battle. The source reusable TM70 retains the stable HM05 Flash item adapter and native
-teaching UI. Dark Cave now uses source press-A-without-teaching eligibility,
-no badge requirement and full-map illumination; Elder Li gives his source
-instructions. Source TM numbering and presentation remain separate work. The actual
+without requiring another battle. The reward now uses reusable ITEM_TM70 with
+source numbering, description, icon and teaching behavior; older saves retain
+HM05 and its field access. Dark Cave uses source press-A-without-teaching
+eligibility, no badge requirement and full-map illumination; Elder Li gives his
+source instructions. Broader machine identities and native UI remain separate work. The actual
 Escape Rope item works from the tower and returns to its Violet entrance.
 
 Mako has her original first-visit conversation. Her later challenge and Rare
@@ -1256,9 +1257,9 @@ refusal, party-menu use, no item/PP consumption, interaction priority, battle
 return, Save/Continue, outdoor reset and legacy-save normalization. They use
 explicit test parties; the ordinary campaign replay remains separate evidence.
 
-TM70 still uses the existing HM05 item adapter. Source machine numbering, HM
-presentation/teaching restrictions, pre-use darkness, Pokemon pictures/cries,
-audio, message style and exact fade timing remain recorded gaps. The unported
+The subsequent TM70 suite below replaces the HM05 reward adapter and Flash's
+HM forgetting restriction. Pre-use darkness, Pokemon pictures/cries, audio,
+message style and exact fade timing remain recorded gaps. The unported
 Aerodactyl chamber exception is deferred with its map.
 
 Validation: both production builds, 5,345 native tests, 39 source/asset checks,
@@ -1266,3 +1267,51 @@ eleven ARM layout probes, twelve demo checks, all seven Flash fixtures and the
 complete 100-check campaign with 19 warp traversals pass using GCC 13.2.1.
 The native suite retains nine expected failures and 586 existing TODOs. Tested
 Johto ROM SHA-256: `d19ed9b9b950810fe55d7d8c952cab754136ee316b7369e1d78202bcc5788d1d`.
+
+### Source TM70 Flash identity and teaching
+
+Elder Li now awards source TM70 using the existing unused ITEM_TM70 ID (651).
+The source 24x24 machine icon, Normal-type RGB555 palette and move description
+are converted deterministically from the established pin. The Bag displays
+number 70 and Flash, uses TM boot text, and treats the item as reusable and
+nontradable. Machine lookup position, visible number and HM category are now
+separate; native IDs and lookup positions remain unchanged. No bag/save layout
+or capacity changes are introduced. Old HM05 (686) items remain readable and
+usable for field Flash without a save rewrite; new rewards do not issue HM05.
+
+Source compatibility tables govern teaching. Flash is no longer HM-protected
+in the Johto profile, so ordinary learning can replace it. A successful TM70
+lesson gives source friendship +1 below 160 and +0 otherwise, with the original
+100/160 tiers and additive Soothe Bell/Luxury Ball bonuses, including at zero
+base gain; the result saturates at 255. Rejection, cancellation and an already
+known move do not change friendship or consume the item.
+
+Following the complete pinned Bag call chain reveals that AskTeachTMHM clears
+LEARNING_TM before TeachTMHM calls LearnMove. Consequently the conditional
+"TMs won't give free PP" branch is inactive in this version's normal Bag flow.
+The port preserves the actual behavior: both empty and replacement slots get
+base PP; replacement clears that slot's PP Ups. It does not activate the
+unreachable intended behavior described by the source comment.
+
+`build_tm70.py --check` verifies source blobs and generated identity, palette,
+art and lesson rules. Native tests exercise all 1,024 friendship/bonus cases,
+Egg/empty guards and native machine mappings. Separate controller fixtures
+cover live Bag presentation and icon VRAM/palette, empty/full movesets, reuse,
+incompatibility, already-known moves, Eggs, cancellation, ordinary forgetting
+and Save/Continue. Fixture parties/items are supplied at boot; Elder Li's
+actual reward remains covered by the separate complete campaign replay.
+
+Broader source machines/tutors, Bag/party layout, learning dialogue/audio and
+animation remain incomplete. Legacy HM05 retains native item presentation and
+lesson friendship. Source owned bits use a reusable GBA bag item; importance
+and zero price prevent giving, tossing and selling it. Expansion content and
+capacities remain available for later customization.
+
+Validation with GCC 13.2.1: both production ROMs build; 5,348 native tests pass
+(nine expected failures and 586 existing TODOs; 5,943 total). All 40 source/asset
+checks, twelve standalone ARM probes, twelve demo checks, eight Flash field
+fixtures and six TM70 teaching fixtures pass. The same final Johto ROM passes
+the complete 100-check campaign and 19 warp traversals, including Elder Li's
+TM70 reward, Falkner and Togepi. ROM SHA-256:
+`b1b96ab1c4c6150d2e557bebdab93137edd5ffedb795ea9990dfd333fe8f10a1`.
+The campaign still uses the documented demo start, not the authentic opening.

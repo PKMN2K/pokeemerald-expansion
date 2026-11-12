@@ -985,7 +985,13 @@ static u32 GetRelearnerTMMoves(struct BoxPokemon *mon, u16 *moves)
             continue;
 
         if (!BoxMonKnowsMove(mon, move))
-            moves[numMoves++] = move;
+        {
+            // A migrated machine and its legacy save item may teach one move.
+            u32 j;
+            for (j = 0; j < numMoves && moves[j] != move; j++);
+            if (j == numMoves)
+                moves[numMoves++] = move;
+        }
     }
 
     return numMoves;

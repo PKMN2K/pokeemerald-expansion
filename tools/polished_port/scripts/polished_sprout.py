@@ -142,7 +142,7 @@ def events(name, script, header, files, text, define):
         code += summit(script, text, define)
     return hooks, code, {"trainers": [n for n in TRAINERS if f"Sage{n}SeenText:" in script],
         "items": [o["flag"] for o in header["object_events"] if "_ITEM" in o["script"] or "BALL" in o["graphics_id"]],
-        "reward_translation": "Source reusable TM70 Flash uses the stable HM05 item adapter; Dark Cave uses source Flash eligibility and lighting rules.",
+        "reward_translation": "Source reusable TM70 Flash uses ITEM_TM70; older HM05 saves retain field access. Dark Cave uses source Flash eligibility and lighting rules.",
         "deferred": ["Mako's post-Ecruteak challenge and Rare Candy", "source music"],
         "granny_units": "Imperial source wording, matching the engine's configured default."}
 
@@ -158,7 +158,7 @@ def elder(script, text, define):
     trainerbattle_no_intro TRAINER_POLISHED_SPROUT_LI, {p}_Beaten
 {p}_Gift::
     msgbox {p}_Take, MSGBOX_DEFAULT
-    giveitem ITEM_HM_FLASH
+    giveitem ITEM_TM70
     goto_if_eq VAR_RESULT, FALSE, {p}_Done
     setflag FLAG_POLISHED_SPROUT_FLASH
     msgbox {p}_Explain, MSGBOX_DEFAULT
@@ -170,7 +170,7 @@ def elder(script, text, define):
     end
 """
     for suffix, label in (("Seen", "SageLiSeenText"), ("Beaten", "SageLiBeatenText"), ("Take", "SageLiTakeThisFlashText"), ("AfterText", "SageLiAfterBattleText")):
-        code += define(p + "_" + suffix, text(script, label).replace("TM.", "HM."))
+        code += define(p + "_" + suffix, text(script, label))
     explanation = inline_text(script, "ElderLiScript", text)
     code += define(p + "_Explain", explanation)
     return code

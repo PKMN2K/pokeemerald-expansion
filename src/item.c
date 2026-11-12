@@ -55,6 +55,9 @@ const struct TmHmIndexKey gTMHMItemMoveIds[NUM_ALL_MACHINES + 1] =
     [0] = { ITEM_NONE, MOVE_NONE }, // Failsafe
     FOREACH_TM(UNPACK_TM_ITEM_ID)
     FOREACH_HM(UNPACK_HM_ITEM_ID)
+#if POLISHED_JOHTO_DEMO
+    [ENUM_TM_HM_POLISHED_FLASH + 1] = { ITEM_TM70, MOVE_FLASH },
+#endif
     /*
      * Expands to the following:
      *

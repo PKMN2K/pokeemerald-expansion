@@ -952,16 +952,16 @@ static void GetItemNameFromPocket(u8 *dest, enum Item itemId)
     case POCKET_TM_HM:
         end = StringCopy(gStringVar2, GetMoveName(ItemIdToBattleMoveId(itemId)));
         PrependFontIdToFit(gStringVar2, end, FONT_NARROW, NUM_TECHNICAL_MACHINES >= 100 ? 60 : 65);
-        if (GetItemTMHMIndex(itemId) > NUM_TECHNICAL_MACHINES)
+        if (IsItemHM(itemId))
         {
             // Get HM number
-            ConvertIntToDecimalStringN(gStringVar1, GetItemTMHMIndex(itemId) - NUM_TECHNICAL_MACHINES, STR_CONV_MODE_LEADING_ZEROS, 1);
+            ConvertIntToDecimalStringN(gStringVar1, GetMachineDisplayNumber(itemId), STR_CONV_MODE_LEADING_ZEROS, 1);
             StringExpandPlaceholders(dest, gText_NumberItem_HM);
         }
         else
         {
             // Get TM number
-            ConvertIntToDecimalStringN(gStringVar1, GetItemTMHMIndex(itemId), STR_CONV_MODE_LEADING_ZEROS, NUM_TECHNICAL_MACHINES >= 100 ? 3 : 2);
+            ConvertIntToDecimalStringN(gStringVar1, GetMachineDisplayNumber(itemId), STR_CONV_MODE_LEADING_ZEROS, NUM_TECHNICAL_MACHINES >= 100 ? 3 : 2);
             StringExpandPlaceholders(dest, gText_NumberItem_TMBerry);
         }
         break;
@@ -1016,7 +1016,7 @@ static void BagMenu_ItemPrintCallback(u8 windowId, u32 itemIndex, u8 y)
         struct ItemSlot itemSlot = GetBagItemIdAndQuantity(gBagPosition.pocket, itemIndex);
 
         // Draw HM icon
-        if (gBagPosition.pocket == POCKET_TM_HM && GetItemTMHMIndex(itemSlot.itemId) > NUM_TECHNICAL_MACHINES)
+        if (gBagPosition.pocket == POCKET_TM_HM && IsItemHM(itemSlot.itemId))
             BlitBitmapToWindow(windowId, gBagMenuHMIcon_Gfx, 8, y - 1, 16, 16);
 
         if (gBagPosition.pocket != POCKET_KEY_ITEMS && GetItemImportance(itemSlot.itemId) == FALSE)
@@ -3058,8 +3058,8 @@ static s32 CompareItemsByIndex(enum Pocket pocketId, struct ItemSlot item1, stru
     switch (pocketId)
     {
     case POCKET_TM_HM:
-        index1 = GetItemTMHMIndex(item1.itemId);
-        index2 = GetItemTMHMIndex(item2.itemId);
+        index1 = GetMachineSortKey(item1.itemId);
+        index2 = GetMachineSortKey(item2.itemId);
         break;
     case POCKET_BERRIES: // To do - requires #7305
         index1 = item1.itemId;

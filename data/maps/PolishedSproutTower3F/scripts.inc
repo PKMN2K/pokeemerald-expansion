@@ -67,7 +67,7 @@ PolishedSproutTower3F_ElderLiScript::
     trainerbattle_no_intro TRAINER_POLISHED_SPROUT_LI, PolishedSproutTower3F_ElderLiScript_Beaten
 PolishedSproutTower3F_ElderLiScript_Gift::
     msgbox PolishedSproutTower3F_ElderLiScript_Take, MSGBOX_DEFAULT
-    giveitem ITEM_HM_FLASH
+    giveitem ITEM_TM70
     goto_if_eq VAR_RESULT, FALSE, PolishedSproutTower3F_ElderLiScript_Done
     setflag FLAG_POLISHED_SPROUT_FLASH
     msgbox PolishedSproutTower3F_ElderLiScript_Explain, MSGBOX_DEFAULT
@@ -84,7 +84,7 @@ PolishedSproutTower3F_ElderLiScript_Beaten:
 	.string "Ah, excellent!$"
 
 PolishedSproutTower3F_ElderLiScript_Take:
-	.string "You and your POKé-\nmon should have\pno problem using\nthis move.\pTake this Flash\nHM.$"
+	.string "You and your POKé-\nmon should have\pno problem using\nthis move.\pTake this Flash\nTM.$"
 
 PolishedSproutTower3F_ElderLiScript_AfterText:
 	.string "I hope you learn\nand grow from your\ljourney.$"

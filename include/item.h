@@ -17,6 +17,10 @@
 enum TMHMIndex
 {
     FOREACH_TMHM(UNPACK_TM_HM_ENUM)
+#if POLISHED_JOHTO_DEMO
+    // Sparse source machine: append the lookup entry without renumbering IDs.
+    ENUM_TM_HM_POLISHED_FLASH,
+#endif
     NUM_ALL_MACHINES,
     NUM_TECHNICAL_MACHINES = (0 FOREACH_TM(PLUS_ONE)),
     NUM_HIDDEN_MACHINES = (0 FOREACH_HM(PLUS_ONE)),
@@ -124,11 +128,39 @@ static inline enum TMHMIndex GetItemTMHMIndex(enum Item item)
         * case ITEM_TM_DRAGON_CLAW:
         *      return 2;
         * etc */
+#if POLISHED_JOHTO_DEMO
+    case ITEM_TM70: return ENUM_TM_HM_POLISHED_FLASH + 1;
+#endif
     FOREACH_TM(UNPACK_ITEM_TO_TM_INDEX)
     FOREACH_HM(UNPACK_ITEM_TO_HM_INDEX)
     default:
         return 0;
     }
+}
+
+// Lookup position, display number and machine category are distinct for
+// sparse source imports. Native machines retain their existing mappings.
+static inline bool32 IsItemHM(enum Item item)
+{
+#if POLISHED_JOHTO_DEMO
+    if (item == ITEM_TM70)
+        return FALSE;
+#endif
+    return GetItemTMHMIndex(item) > NUM_TECHNICAL_MACHINES;
+}
+
+static inline u32 GetMachineDisplayNumber(enum Item item)
+{
+#if POLISHED_JOHTO_DEMO
+    if (item == ITEM_TM70)
+        return 70;
+#endif
+    return GetItemTMHMIndex(item) - (IsItemHM(item) ? NUM_TECHNICAL_MACHINES : 0);
+}
+
+static inline u32 GetMachineSortKey(enum Item item)
+{
+    return GetMachineDisplayNumber(item) + (IsItemHM(item) ? 0x100 : 0);
 }
 
 static inline enum Move GetItemTMHMMoveId(enum Item item)
@@ -141,6 +173,9 @@ static inline enum Move GetItemTMHMMoveId(enum Item item)
         * case ITEM_TM_DRAGON_CLAW:
         *      return MOVE_DRAGON_CLAW;
         * etc */
+#if POLISHED_JOHTO_DEMO
+    case ITEM_TM70: return MOVE_FLASH;
+#endif
     FOREACH_TM(UNPACK_ITEM_TO_TM_MOVE_ID)
     FOREACH_HM(UNPACK_ITEM_TO_HM_MOVE_ID)
     default:
@@ -150,6 +185,10 @@ static inline enum Move GetItemTMHMMoveId(enum Item item)
 
 static inline enum Item GetTMHMItemIdFromMoveId(enum Move move)
 {
+#if POLISHED_JOHTO_DEMO
+    if (move == MOVE_FLASH)
+        return ITEM_TM70;
+#endif
     switch (move)
     {
     /* Expands to:

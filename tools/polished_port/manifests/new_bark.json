@@ -4470,7 +4470,7 @@
           "items": [
             "FLAG_POLISHED_SPROUT_1F_PARALYZE_HEAL"
           ],
-          "reward_translation": "Source reusable TM70 Flash uses the stable HM05 item adapter; Dark Cave uses source Flash eligibility and lighting rules.",
+          "reward_translation": "Source reusable TM70 Flash uses ITEM_TM70; older HM05 saves retain field access. Dark Cave uses source Flash eligibility and lighting rules.",
           "deferred": [
             "Mako's post-Ecruteak challenge and Rare Candy",
             "source music"
@@ -4612,7 +4612,7 @@
           "items": [
             "FLAG_POLISHED_SPROUT_2F_X_ACCURACY"
           ],
-          "reward_translation": "Source reusable TM70 Flash uses the stable HM05 item adapter; Dark Cave uses source Flash eligibility and lighting rules.",
+          "reward_translation": "Source reusable TM70 Flash uses ITEM_TM70; older HM05 saves retain field access. Dark Cave uses source Flash eligibility and lighting rules.",
           "deferred": [
             "Mako's post-Ecruteak challenge and Rare Candy",
             "source music"
@@ -4744,7 +4744,7 @@
             "FLAG_POLISHED_SPROUT_3F_POTION",
             "FLAG_POLISHED_SPROUT_3F_ESCAPE_ROPE"
           ],
-          "reward_translation": "Source reusable TM70 Flash uses the stable HM05 item adapter; Dark Cave uses source Flash eligibility and lighting rules.",
+          "reward_translation": "Source reusable TM70 Flash uses ITEM_TM70; older HM05 saves retain field access. Dark Cave uses source Flash eligibility and lighting rules.",
           "deferred": [
             "Mako's post-Ecruteak challenge and Rare Candy",
             "source music"
@@ -5606,7 +5606,7 @@
     "data/layouts/PolishedSproutTower3F/map.bin": "f188cae059c93a3e2eb65fac6b4700fcc615d63cd4996cd13a1b7dd31b316a39",
     "data/layouts/PolishedSproutTower3F/border.bin": "58b6ce2870c231fbe07a763ac9c4dc612e669cfbebfb93760435a9dbbdced76e",
     "data/maps/PolishedSproutTower3F/map.json": "d896b83a324617d490bed58db2fdaa66582b9b72185288bda935ff612ac02dca",
-    "data/maps/PolishedSproutTower3F/scripts.inc": "5ece07ed79969c63760b1ddf12ff393320b538522f145c47ad9b8eff2270a717",
+    "data/maps/PolishedSproutTower3F/scripts.inc": "7da8392d41f2634b2cab6963091af349ceadd18d39fc8f1fcf08cbaa4db6a6e4",
     "data/layouts/PolishedDarkCaveVioletEntrance/map.bin": "a588ebfae3cc4705298e9698ccd6f72386d241b3b2acd3dddde8bd17833df6c9",
     "data/layouts/PolishedDarkCaveVioletEntrance/border.bin": "133289f8395457bcd42946311a526b03fd2de95bf33242f3c85b41837db604b5",
     "data/maps/PolishedDarkCaveVioletEntrance/map.json": "062738cf984b0f7c0607d7c3052f68a8662f008b46e2249d8eed7aa155654c3f",

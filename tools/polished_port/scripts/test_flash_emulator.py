@@ -23,7 +23,7 @@ COMPILER = "arm-none-eabi-gcc"
 def constants():
     c=rock.constants()
     fields={'flash_level':'offsetof(struct SaveBlock1, flashLevel)', 'flash_flag':'FLAG_SYS_USE_FLASH',
-            'badge':'FLAG_BADGE01_GET', 'rock_move':'FIELD_MOVE_FLASH', 'tm':'ITEM_HM_FLASH',
+            'badge':'FLAG_BADGE01_GET', 'rock_move':'FIELD_MOVE_FLASH', 'tm':'ITEM_TM70',
             'bellsprout':'SPECIES_BELLSPROUT','mareep':'SPECIES_MAREEP'}
     code='#include "global.h"\n#include "constants/field_move.h"\nconst u32 values[]={'+','.join(fields.values())+'};'
     r=subprocess.run(['arm-none-eabi-gcc','-mcpu=arm7tdmi','-mthumb','-mabi=apcs-gnu','-DMODERN=1','-DEMERALD','-std=gnu17','-iquote','include','-iquote','.','-S','-x','c','-o','-','-'],cwd=ROOT,input=code,text=True,capture_output=True,check=True)
@@ -155,7 +155,7 @@ def run(driver,out,mode,c):
 def main():
     p=argparse.ArgumentParser(description=__doc__);p.add_argument('--driver',type=Path,required=True);p.add_argument('--output',type=Path,required=True);p.add_argument('--quick',action='store_true');a=p.parse_args()
     c=constants();results=[]
-    for mode in ([1] if a.quick else range(7)):
+    for mode in ([1] if a.quick else range(8)):
         results.append(run(a.driver.resolve(),a.output.resolve()/str(mode),mode,c))
         print(f'PASS: Flash fixture {mode}: {results[-1]}',flush=True)
     (a.output/'report.json').write_text(json.dumps(dict(production_sha256=hashlib.sha256((ROOT/'pokeemerald-johto-demo.gba').read_bytes()).hexdigest(),fixture_only=True,results=results),indent=2)+'\n')

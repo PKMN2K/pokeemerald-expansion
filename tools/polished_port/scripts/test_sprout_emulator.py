@@ -28,7 +28,7 @@ def constants():
     names = sorted(set(re.findall(r"\b(?:MOVE|TRAINER)_\w+", party_text)))
     names += ["SPECIES_BELLSPROUT", "SPECIES_HOOTHOOT", "SPECIES_GASTLY", "SPECIES_RATTATA"]
     names += ["MOVE_SURF", "MOVE_WATER_GUN", "MOVE_EMBER", "MOVE_BITE", "MOVE_RAZOR_LEAF", "MOVE_LEER"]
-    names += ["ITEM_HM_FLASH", "ITEM_PARALYZE_HEAL", "ITEM_X_ACCURACY", "ITEM_POTION", "ITEM_POLISHED_ESCAPE_ROPE"]
+    names += ["ITEM_TM70", "ITEM_PARALYZE_HEAL", "ITEM_X_ACCURACY", "ITEM_POTION", "ITEM_POLISHED_ESCAPE_ROPE"]
     names += ["B_SCR_OP_YESNOBOXLEARNMOVE", "B_SCR_OP_YESNOBOXSTOPLEARNINGMOVE"]
     names += re.findall(r"^#define (FLAG_POLISHED_SPROUT_\w+)", (ROOT / "include/constants/flags.h").read_text(), re.M)
     names = sorted(set(names))
@@ -419,10 +419,10 @@ def check_sprout(game, city, checks):
     assert flag(game, constants()["FLAG_POLISHED_SPROUT_RIVAL_LEFT"]) and 1 not in actors(game)
     take(game, three, "ESCAPE_ROPE", report)
     refill_for_summit(game, floors, city, report)
-    before = count(game, constants()["ITEM_HM_FLASH"])
+    before = count(game, constants()["ITEM_TM70"])
     interact_object(game, three, 5, report)
     assert flag(game, constants()["FLAG_POLISHED_SPROUT_FLASH"])
-    assert count(game, constants()["ITEM_HM_FLASH"]) == before + 1
+    assert count(game, constants()["ITEM_TM70"]) == before + 1
     assert set(report["trainers"]) == set(TRAINERS), report
     game.screenshot("sprout-flash-received")
     save_game(game)
@@ -431,7 +431,7 @@ def check_sprout(game, city, checks):
     for suffix in ("RIVAL_LEFT", "FLASH", *(n.upper() for n in TRAINERS)):
         assert flag(game, constants()["FLAG_POLISHED_SPROUT_" + suffix]), suffix
     interact_object(game, three, 5, report)
-    assert count(game, constants()["ITEM_HM_FLASH"]) == before + 1
+    assert count(game, constants()["ITEM_TM70"]) == before + 1
     walk(game, three, (9, 9), report, allow_scene=True)
     game.frames(200)
     assert not script_active(game)

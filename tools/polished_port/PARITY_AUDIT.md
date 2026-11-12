@@ -29,7 +29,7 @@ regression coverage, but are not evidence of complete source-game parity.
 | Startup and player identity | `POLISHED_JOHTO_DEMO` starts in a test garden with a Lv10 Totodile, Surf, an Old Rod and a Mach Bike. Existing campaign replays use that harness. | Implement the real source startup separately from the test garden, with the source initial party/inventory, opening flow and supported protagonists. Add a campaign run starting from that baseline. |
 | UI, Pokedex and audio | Native Bag/party/storage/battle UI, National Dex ordering and native audio are still used in imported events. A source Type Chart does not complete the UI. | Port source presentation and ordering. Keep separately requested HGSS backups unwired. |
 | Map and event coverage | Thirty-two source maps and selected events through Falkner are live. Door, collision, time-palette, schedule, reward and Save/Continue checks cover those implementations. | Preserve these checks; audit their documented native substitutions and incomplete interactions. Broader Johto/Kanto geography and story, Pokégear, source services and field interactions remain open. |
-| Field rules and encounters | Dark Cave rocks use source eligibility, repeats and encounter/reward rolls. Flash now uses source eligibility, confirmation, full-map lighting and persistence; its stable HM05 item adapter and presentation gaps remain explicit. Other selected encounters/field moves still use native modifiers and gates. Headbutt's source selector is dormant. | Audit source field behavior and enable each feature with an explicit map identity and source rules. |
+| Field rules and encounters | Dark Cave rocks use source eligibility, repeats and encounter/reward rolls. Flash now uses source eligibility, confirmation, full-map lighting and persistence; source TM70 is live, with old HM05 saves still supported and presentation gaps explicit. Other selected encounters/field moves still use native modifiers and gates. Headbutt's source selector is dormant. | Audit source field behavior and enable each feature with an explicit map identity and source rules. |
 | Save compatibility | Target save IDs are already allocated and tested. Source DVs/records cannot be copied byte-for-byte into native encrypted Pokemon. | Preserve stable regular move/species/item/save IDs where possible; document representation changes and migration requirements. Source behavior, not GBC table width, is the target. |
 | Completion criteria | Generic native battle tests can pass with entirely native data. | Require source fixture/provenance checks, source-specific native tests, and live emulator assertions for each migration phase. Keep the broader suite as regression coverage. |
 | Replay assumptions | The old tower replay relied on Expansion's early Bite and remaining Surf PP, confused the returning Start menu with field control, and could accept an interrupted interaction as complete. Capture input assumed the remembered Bag row was a ball and did not handle newly reached learn levels. | Replays now learn the source level-13 Bite through the real selector, use purchased Potions and Center visits, confirm the intended object interaction, select the actual ball stack, handle learning prompts, confirm the wild-battle replacement question and Send Out after a lead faints, and recover from a real capture blackout with bounded retries and ordinary ball purchases. Changed source data must drive test input instead of being changed to preserve the old replay. |
@@ -783,9 +783,9 @@ this registered source map. Map, item, species and save IDs remain unchanged.
 Elder Li's explanatory dialogue now comes directly from his original inline
 text, including pressing A without teaching the move.
 
-Source TM70 still uses the established reusable HM05 item/save adapter. Its
-numbering, HM presentation/teaching restrictions and full source TM inventory
-remain incomplete. Pre-use darkness, Pokemon pictures/cries, the Flash sound,
+The subsequent TM70 identity suite replaces the HM05 reward adapter and
+Flash's HM forgetting restriction. Full source machine inventory remains
+incomplete; old HM05 saves retain their legacy item and field access. Pre-use darkness, Pokemon pictures/cries, the Flash sound,
 message styling and exact fade timing also retain native presentation. The
 Aerodactyl chamber exception is explicitly deferred with its unported map.
 This phase does not enable Headbutt or certify other field moves.
@@ -808,6 +808,54 @@ Johto ROM SHA-256
 The same final ROM passes all 100 campaign checks and 19 warp traversals,
 including the Sprout reward, Dark Cave rescue, Falkner, Roost and Togepi Egg.
 These remain demo-start campaign regressions until the authentic opening is ported.
+
+## Source TM70 identity and teaching
+
+TM70 Flash now occupies the existing target item ID 651, with source number,
+move description, original 24x24 pixels and Normal-type RGB555 colors. Elder Li
+awards it once; his original TM wording is restored. Machine lookup entries,
+display numbers and HM classification are independent, so the sparse entry
+neither renumbers native machines nor inherits HM presentation. Existing
+HM05/save ID 686 is retained and still grants field Flash access. There is no
+save or bag-capacity change. Move-relearner machine candidates are deduplicated
+when a legacy and migrated item teach the same move.
+
+Successful teaching uses the imported compatibility lists and source lesson
+friendship: +1/+1/+0 at the 100/160 thresholds, +1 each for Soothe Bell and
+Luxury Ball, saturation at 255, and no met-location bonus. Source bonuses apply
+even when the base gain is zero. Eggs, incompatible/already-knowing Pokemon
+and cancellation do not change Pokemon or inventory. Flash is ordinarily
+forgettable in this profile; native builds keep their existing HM behavior.
+
+The complete pinned Bag call chain clears LEARNING_TM before LearnMove, making
+its PP-conservation branch inactive for ordinary TM teaching. Empty and
+replacement slots therefore receive full base PP, with replacement PP Ups
+cleared, as in the actual source flow. The importer records this distinction
+rather than implementing the dormant comment as a new rule.
+
+Fixtures are git-blob-verified against the existing source pin. Deterministic
+generation covers the item, icon, palette, description and friendship table.
+Native tests cover all 1,024 friendship/bonus combinations, Egg/empty guards
+and stable native machine mappings. Dedicated emulator fixtures are linked to
+unchanged production Johto objects and use controller-only input after boot;
+they verify learning, reuse, refusal/cancellation, ordinary forgetting, save
+persistence and live original icon pixels/colors. They are separate from the
+campaign regression proving the actual Elder reward.
+
+Remaining gaps: full source TM/HM/tutor inventory and machine-owned-bit storage,
+Bag/party/learning UI, text, sounds and animation. The reusable nontradable bag
+item is an explicit storage adapter. Older HM05 items keep native presentation
+and lesson friendship; no legacy inventory is rewritten. Other move data and
+battle mechanics retain the existing audit boundaries.
+
+Validation with GCC 13.2.1: both production ROMs build; 5,348 native tests pass
+(nine expected failures and 586 existing TODOs; 5,943 total). All 40 source/asset
+checks, twelve standalone ARM probes, twelve demo checks, eight Flash field
+fixtures and six TM70 teaching fixtures pass. The same final Johto ROM passes
+the complete 100-check campaign and 19 warp traversals, including Elder Li's
+TM70 reward, Falkner and Togepi. ROM SHA-256:
+`b1b96ab1c4c6150d2e557bebdab93137edd5ffedb795ea9990dfd333fe8f10a1`.
+The campaign still uses the documented demo start, not the authentic opening.
 
 ## Next priorities
 

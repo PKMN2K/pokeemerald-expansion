@@ -1,4 +1,5 @@
 #include "global.h"
+#include "polished_tm70.h"
 #include "malloc.h"
 #include "battle.h"
 #include "battle_anim.h"
@@ -5603,7 +5604,12 @@ static void Task_LearnedMove(u8 taskId)
 
     if (gPartyMenu.learnMoveState == 0)
     {
-        AdjustFriendship(mon, FRIENDSHIP_EVENT_LEARN_TMHM);
+#if POLISHED_JOHTO_DEMO
+        if (item == ITEM_TM70)
+            PolishedTM70Friendship(mon);
+        else
+#endif
+            AdjustFriendship(mon, FRIENDSHIP_EVENT_LEARN_TMHM);
         if (!GetItemImportance(item))
             RemoveBagItem(item, 1);
     }

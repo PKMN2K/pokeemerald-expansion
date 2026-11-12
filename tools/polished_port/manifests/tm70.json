@@ -1,0 +1,39 @@
+{
+  "source_commit": "3fa43192379df5c3e7b09a08e4d5d79af4f02f42",
+  "source_variant": "default release",
+  "source_item": "TM70 FLASH",
+  "target_item": "ITEM_TM70",
+  "target_id": 651,
+  "legacy_item": "ITEM_HM_FLASH",
+  "legacy_id": 686,
+  "source_rgb555": [
+    [
+      28,
+      28,
+      29
+    ],
+    [
+      24,
+      24,
+      23
+    ]
+  ],
+  "source_dimensions": [
+    24,
+    24
+  ],
+  "description": "A move that lowers\\nthe foe's accuracy.",
+  "rules": [
+    "Reusable TM; normal move forgetting; source species/form teaching compatibility.",
+    "Elder Li awards TM70; existing HM05 saves keep their item and field access.",
+    "No item/save ID or bag-capacity changes; sparse machine index is distinct from display number and HM category.",
+    "Successful lesson friendship: +1/+1/+0 below 100/below 160/otherwise, additive Soothe Bell and Luxury Ball +1 each, clamp at 255.",
+    "Actual source Bag flow clears LEARNING_TM before LearnMove: empty and replacement slots receive base PP, old PP Ups reset. The conditional PP-conservation code is unreachable through this flow."
+  ],
+  "gaps": [
+    "Other source TM/HM/tutor identities remain incomplete.",
+    "Legacy HM05 retains native item presentation and lesson friendship; Flash itself can now be forgotten.",
+    "Bag/menu layout, boot-up and learning text, sound and animation retain native presentation.",
+    "TM ownership uses a reusable GBA bag item, rather than source bit flags; no sale/hold/toss and price zero are storage adapters."
+  ]
+}

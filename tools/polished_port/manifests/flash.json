@@ -6,7 +6,8 @@
   "source_move": "FLASH",
   "target_move": "MOVE_FLASH",
   "source_item": "TM70",
-  "target_item": "ITEM_HM_FLASH",
+  "target_item": "ITEM_TM70",
+  "legacy_item": "ITEM_HM_FLASH",
   "rules": [
     "A-button fallback after objects, backgrounds, metatiles and Surf.",
     "First non-Egg knower; otherwise first source-compatible non-Egg if the Flash machine is owned.",
@@ -15,7 +16,7 @@
     "White fade then full-map lighting. Battle/menu reload and Save/Continue preserve illumination; outdoors resets it."
   ],
   "gaps": [
-    "Source TM70 still uses the established HM05 save/item adapter; TM inventory/numbering is not migrated here.",
+    "Full source TM/HM inventory remains incomplete; TM70 is imported separately.",
     "Darkness before use, Pokemon picture/cry, Flash sound, message styling and exact fade timing retain native presentation.",
     "The Aerodactyl chamber exception is deferred until its map is ported."
   ]

@@ -55,7 +55,8 @@ void CB2_PolishedFlashFixture(void)
     SetMonMoveSlot(&gParties[B_TRAINER_PLAYER][1], MOVE_TACKLE, 0);
     if (FIXTURE_MODE == 0) SetMonMoveSlot(&gParties[B_TRAINER_PLAYER][1], MOVE_FLASH, 3);
     if (FIXTURE_MODE == 4) SetMonMoveSlot(&gParties[B_TRAINER_PLAYER][0], MOVE_FLASH, 3);
-    if (FIXTURE_MODE == 1 || FIXTURE_MODE == 2 || FIXTURE_MODE == 3 || FIXTURE_MODE == 5) AddBagItem(ITEM_HM_FLASH, 1);
+    if (FIXTURE_MODE == 1 || FIXTURE_MODE == 2 || FIXTURE_MODE == 3 || FIXTURE_MODE == 5) AddBagItem(ITEM_TM70, 1);
+    if (FIXTURE_MODE == 7) AddBagItem(ITEM_HM_FLASH, 1);
     if (FIXTURE_MODE == 2) gPartiesCount[B_TRAINER_PLAYER] = 1;
     if (FIXTURE_MODE == 3)
     {
