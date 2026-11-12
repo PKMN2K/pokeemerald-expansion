@@ -621,10 +621,10 @@ data/maximum phase.
 The source has a noteworthy identity alias: in its default build, constant
 `ROCK_SMASH` (source ID 249) is named `BRICK_BREAK` in the move table. This
 PP table explicitly maps that record to `MOVE_BRICK_BREAK`, not the native
-Rock Smash effect. Earlier learnset/teaching imports still resolve some
-`ROCK_SMASH` tokens by name. That is a separate, now-recorded identity defect
-to correct across those imports before claiming full source move parity;
-both moves currently have 15 PP, so it does not change this phase's PP values.
+Rock Smash effect. Earlier learnset/teaching imports resolved some
+`ROCK_SMASH` tokens by name. The move-identity correction below now resolves
+those references through the source table too. Both moves have 15 PP, so the
+correction does not change the PP table.
 
 Nine new native tests cover all records and profiles, all four bonus counts
 in every slot, all 256 packed bonus bytes for a 40-PP move, invalid/optional
@@ -666,17 +666,60 @@ evolution replays pass, including completion/cancellation and persistent
 form-pattern checks. Rebuilding standard Emerald and Johto produces exactly
 the same ROM bytes as `66a7091e`; this repair changes neither game rules nor
 saved data. The full campaign replay remains a required automatic CI check.
+CI #1531 on `202f2f1b` subsequently passed every required job, including
+the full campaign and evolution replays.
+
+## Default source move identities
+
+The shared importer now resolves all 255 moves and the empty-move sentinel
+through the pinned default constant IDs, aliases and move-table rows before
+mapping them to Expansion IDs. `move_identities.json` records that contract;
+the existing learnset regeneration check verifies it in CI. Unknown source
+symbols fail lookup instead of silently selecting a same-named native move.
+Level-up/evolution moves, egg moves, teaching lists, move-based evolution
+conditions and PP generation share this resolver.
+
+Source ID 249 has constant `ROCK_SMASH`, alias `BRICK_BREAK`, and default move
+table entry Brick Break. Both source spellings now resolve to stable target
+`MOVE_BRICK_BREAK` (280). This corrects Cubone at 41, Marowak and Alolan
+Marowak at 49, Hitmonlee at 21, Pinsir at 26, Sirfetch'd and Galarian Farfetch'd
+at 40, and Galarian Zapdos at 43. Source TM31 now supplies Brick Break
+compatibility to its 207 eligible species/forms. All other learnset entries,
+egg lists, evolution conditions and PP records regenerate unchanged.
+
+Target `MOVE_ROCK_SMASH` (249) remains a distinct optional native move. No
+target IDs or save layouts are changed, and existing saved moves are not
+rewritten. The four native test cases cover creation and learning at all
+eight source levels, all 391 source compatibility lists, native fallback,
+and encrypted party/PC save reload with both target moves present. Broader
+move effects and source TM inventory/numbering, tutor placement and field
+Rock Smash behavior remain separate work.
+
+In particular, the four breakable rocks in `PolishedDarkCaveVioletEntrance`
+still call native `EventScript_RockSmash`. Their move, item and badge gates
+have not been adapted to the source field routine. Completing that field
+adapter must use the default source identity (Brick Break) and source rules;
+reintroducing native Rock Smash into these corrected learnsets would hide
+the field-system gap. The replayed rescue route does not certify these rocks.
+
+Validation with GCC 13.2.1: all 5,335 native tests pass (nine expected failures
+and 586 existing TODOs; 5,930 total), including the four new tests and all six
+AI timing checks. All 36 source/asset checks, both production ROM builds,
+all 12 Johto demo checks, and the full controller campaign through Falkner
+and the post-battle rewards pass. The tested Johto ROM SHA-256 is
+`8d86d6d044b4eefc792cc17de2175b0fe20c97adb023a90f1bd155d106eea848`.
 
 ## Next priorities
 
-1. Complete the remaining evolution options above, broader item definitions/
+1. Adapt the four Dark Cave rock interactions to the source field routine,
+   including its default move identity, item/badge gates and repeat behavior.
+2. Complete the remaining evolution options above, broader item definitions/
    effects and source TM/tutor inventories. Complete breeding/hatching behavior
    beyond base data and inherited moves.
-2. Correct the default source Rock Smash/Brick Break alias across learning and
-   teaching imports. Import remaining move data and implement a source battle profile, including
+3. Import remaining move data and implement a source battle profile, including
    trainer creation and AI. Validate source probabilities and rounding directly.
-3. Import Pokemon graphics and complete the associated sprite metadata.
-4. Establish the real source startup and rerun the existing campaign from its
+4. Import Pokemon graphics and complete the associated sprite metadata.
+5. Establish the real source startup and rerun the existing campaign from its
    authentic initial state; continue correcting field/UI/audio gaps and the
    remaining campaign with the same source-based completion criteria.
 

@@ -16,6 +16,7 @@ ROOT = Path(__file__).resolve().parents[3]
 FIXTURES = ROOT / "tools/polished_port/fixtures/pokemon_data"
 PIN = "3fa43192379df5c3e7b09a08e4d5d79af4f02f42"
 MANIFEST = ROOT / "tools/polished_port/manifests/pokemon_learnsets.json"
+MOVE_IDENTITIES = ROOT / "tools/polished_port/manifests/move_identities.json"
 OUTPUT = ROOT / "src/data/polished_level_up_learnsets.h"
 CUSTOM_MOVES = ROOT / "src/data/polished_custom_moves.h"
 MOVE_ALIASES = {
@@ -136,8 +137,43 @@ def target_species(species, form, available):
     return target
 
 
+def move_identities(files):
+    """Resolve source constants through the default move table, before renaming.
+
+    In the default source, ROCK_SMASH and BRICK_BREAK both encode $f9, whose
+    table entry is Brick Break. A target move with the same constant spelling
+    is not sufficient evidence of identity.
+    """
+    constants = list(default_lines(files["constants/move_constants.asm"].split("DEF NUM_ATTACKS", 1)[0]))
+    ids = [line.split()[1] for line in constants if line.startswith("const ")]
+    assert constants.count("const_def") == 1
+    assert ids[0] == "NO_MOVE" and len(ids) == len(set(ids)) == 256
+    aliases = dict(re.findall(r"^DEF (\w+) EQU (\w+)$", "\n".join(constants), re.M))
+    assert aliases == {"BRICK_BREAK": "ROCK_SMASH"}, "Review aliases when changing the source pin"
+    rows = [line[5:].split(",")[0].strip() for line in
+            default_lines(files["data/moves/moves.asm"].split("Moves::", 1)[1])
+            if line.startswith("move ")]
+    assert ids == ["NO_MOVE"] + [aliases.get(name, name) for name in rows]
+    available = set(re.findall(r"\bMOVE_\w+", (ROOT / "include/constants/moves.h").read_text()))
+    records = []
+    for index, (constant, name) in enumerate(zip(ids, ["NO_MOVE"] + rows)):
+        target = "MOVE_NONE" if index == 0 else "MOVE_" + MOVE_ALIASES.get(name, name)
+        assert target in available, (constant, name, target)
+        records.append(dict(source_id=index, source_constant=constant, source_move=name,
+                            source_aliases=[alias for alias, original in aliases.items() if original == constant],
+                            target_move=target))
+    assert len({r["target_move"] for r in records}) == len(records)
+    return records
+
+
+def move_targets(files):
+    return {symbol: record["target_move"] for record in move_identities(files)
+            for symbol in [record["source_constant"]] + record["source_aliases"]}
+
+
 def build():
     files = sources()
+    moves = move_targets(files)
     constants = files["constants/pokemon_constants.asm"].split("DEF NUM_SPECIES", 1)[0]
     base = []
     for line in constants.splitlines():
@@ -178,16 +214,7 @@ def build():
                 assert not learnsets[current]
                 learnsets[alias] = learnsets[current]
     assert all(v for k, v in learnsets.items()), "Empty or unresolved learnset"
-    move_header = (ROOT / "include/constants/moves.h").read_text()
-    move_ids = set(re.findall(r"\bMOVE_\w+", move_header))
     species_ids = set(re.findall(r"\bSPECIES_\w+", (ROOT / "include/constants/species.h").read_text()))
-
-    def move_id(move):
-        if move == "NO_MOVE":
-            return "MOVE_NONE"
-        target = "MOVE_" + MOVE_ALIASES.get(move, move)
-        assert target in move_ids, (move, target)
-        return target
 
     records = []
     for index, ((species, form), label, evo) in enumerate(zip(
@@ -199,8 +226,8 @@ def build():
         records.append({"source_table_index": index, "source_species": species,
             "source_form": form, "source_learnset": label,
             "target_species": target_species(species, form, species_ids),
-            "evolution_move": move_id(evo),
-            "moves": [{"level": lv, "source_move": mv, "target_move": move_id(mv)}
+            "evolution_move": moves[evo],
+            "moves": [{"level": lv, "source_move": mv, "target_move": moves[mv]}
                       for lv, mv in learnsets[label]]})
     for species, form in cosmetics:
         original = next(r for r in records if r["source_species"] == species and r["source_form"] == "PLAIN_FORM")
@@ -235,7 +262,12 @@ def build():
                 "unmapped_forms": [{"species": r["source_species"], "form": r["source_form"],
                     "reason": "No exact source form identity is registered in the target yet; do not substitute its base species."}
                     for r in records if not r["target_species"]], "custom_moves": custom_metadata, "records": records}
-    return {OUTPUT: "\n".join(lines), CUSTOM_MOVES: custom_header, MANIFEST: json.dumps(manifest, indent=2) + "\n"}
+    identities = dict(source_commit=PIN, source_variant="default; FAITHFUL undefined",
+                      source_files=["constants/move_constants.asm", "data/moves/moves.asm"],
+                      scope="Source constant/alias identities; target move and save IDs are unchanged.",
+                      records=move_identities(files))
+    return {OUTPUT: "\n".join(lines), CUSTOM_MOVES: custom_header, MANIFEST: json.dumps(manifest, indent=2) + "\n",
+            MOVE_IDENTITIES: json.dumps(identities, indent=2) + "\n"}
 
 
 def main():

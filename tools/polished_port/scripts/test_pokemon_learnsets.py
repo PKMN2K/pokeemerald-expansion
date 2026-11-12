@@ -3,7 +3,7 @@
 import json
 import re
 
-from build_pokemon_learnsets import ROOT, MANIFEST, build, default_lines, sources
+from build_pokemon_learnsets import ROOT, MANIFEST, MOVE_IDENTITIES, build, default_lines, sources, move_targets
 
 
 def main():
@@ -34,6 +34,21 @@ def main():
     assert records["GYARADOS", "GYARADOS_RED_FORM"]["target_species"] == "SPECIES_GYARADOS_RED"
     assert records["TAUROS", "TAUROS_PALDEAN_FIRE_FORM"]["target_species"] == "SPECIES_TAUROS_PALDEA_BLAZE"
     assert records["TAUROS", "TAUROS_PALDEAN_WATER_FORM"]["target_species"] == "SPECIES_TAUROS_PALDEA_AQUA"
+
+    identities = json.loads(MOVE_IDENTITIES.read_text())["records"]
+    assert len(identities) == 256
+    assert identities[249] == dict(source_id=249, source_constant="ROCK_SMASH", source_move="BRICK_BREAK",
+                                   source_aliases=["BRICK_BREAK"], target_move="MOVE_BRICK_BREAK")
+    targets = move_targets(files)
+    assert targets["ROCK_SMASH"] == targets["BRICK_BREAK"] == "MOVE_BRICK_BREAK"
+    assert targets["NO_MOVE"] == "MOVE_NONE"
+    assert "TERA_BLAST" not in targets  # Optional native moves are not source identities.
+    affected = {(r["target_species"], m["level"]) for r in records.values() for m in r["moves"]
+                if m["target_move"] == "MOVE_BRICK_BREAK"}
+    assert affected == {("SPECIES_CUBONE", 41), ("SPECIES_MAROWAK", 49), ("SPECIES_HITMONLEE", 21),
+                        ("SPECIES_PINSIR", 26), ("SPECIES_SIRFETCHD", 40), ("SPECIES_MAROWAK_ALOLA", 49),
+                        ("SPECIES_FARFETCHD_GALAR", 40), ("SPECIES_ZAPDOS_GALAR", 43)}
+    assert all(m["target_move"] != "MOVE_ROCK_SMASH" for r in records.values() for m in r["moves"])
 
     assert list(default_lines("if DEF(FAITHFUL)\nwrong\nelse\nright\nendc")) == ["right"]
     try:

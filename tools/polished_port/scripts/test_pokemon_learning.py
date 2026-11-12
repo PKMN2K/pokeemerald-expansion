@@ -31,14 +31,17 @@ def main():
     assert len(catalog) == 112
     assert catalog["TM", 1] == "MOVE_DYNAMICPUNCH"
     assert catalog["TM", 29] == "MOVE_PSYCHIC"
+    assert catalog["TM", 31] == "MOVE_BRICK_BREAK"
     assert catalog["TM", 51] == "MOVE_ROOST"
     assert catalog["TM", 70] == "MOVE_FLASH"
     assert catalog["HM", 5] == "MOVE_WHIRLPOOL"
     assert catalog["MT", 31] == "MOVE_ZEN_HEADBUTT"
+    assert sum("MOVE_BRICK_BREAK" in r["teaching_moves"] for r in rows.values()) == 207
     for row in rows.values():
         assert set(row["teaching_moves"]) <= set(catalog.values())
         assert len(row["egg_moves"]) == len(set(row["egg_moves"]))
         assert "MOVE_TERA_BLAST" not in row["teaching_moves"]
+        assert "MOVE_ROCK_SMASH" not in row["teaching_moves"]
     # Retain the actual engine contracts behind the native behavioral tests.
     inherit = files["engine/pokemon/breeding.asm"].split("InitEggMoves:", 1)[1].split("InheritLevelMove:", 1)[0]
     assert inherit.index("wBreedMon1Moves") < inherit.index("call InheritLevelMove")

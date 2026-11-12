@@ -16,16 +16,8 @@ def build():
     rows = [[part.strip() for part in line[5:].split(",")] for line in
             source.default_lines(files["data/moves/moves.asm"].split("Moves::", 1)[1])
             if line.startswith("move ")]
-    move_constants = "\n".join(source.default_lines(
-        files["constants/move_constants.asm"].split("DEF NUM_ATTACKS", 1)[0]))
-    ids = re.findall(r"^const (\w+)", move_constants, re.M)
-    # The default build names source ID 249 Brick Break; ROCK_SMASH is its
-    # original constant name, not the native target's different Rock Smash move.
-    aliases = dict(re.findall(r"^DEF (\w+) EQU (\w+)$", move_constants, re.M))
-    assert aliases == {"BRICK_BREAK": "ROCK_SMASH"}
-    assert ids == ["NO_MOVE"] + [aliases.get(row[0], row[0]) for row in rows]
-    assert len(rows) == 255 and len(set(ids)) == 256
-    available = set(re.findall(r"\bMOVE_\w+", (source.ROOT / "include/constants/moves.h").read_text()))
+    identities = source.move_identities(files)[1:]
+    assert len(rows) == len(identities) == 255
     effects = files["engine/items/item_effects.asm"]
     compute = effects.split("\nComputeMaxPP:\n", 1)[1].split("\nRestoreTempPP:", 1)[0]
     divisor = int(re.search(r"ld a, (\d+)\n\tldh \[hDivisor\], a", compute)[1])
@@ -41,12 +33,12 @@ def build():
     assert "call ComputeMaxPP" in maximum and "and PP_MASK" in maximum
 
     records = []
-    for index, row in enumerate(rows, 1):
+    for identity, row in zip(identities, rows):
         assert len(row) == 8
         name, pp = row[0], int(row[5])
-        target = "MOVE_" + source.MOVE_ALIASES.get(name, name)
-        assert target in available and 1 <= pp <= 40, (name, pp, target)
-        records.append(dict(source_id=index, source_constant=ids[index], source_move=name, target_move=target,
+        target = identity["target_move"]
+        assert identity["source_move"] == name and 1 <= pp <= 40, (name, pp, target)
+        records.append(dict(source_id=identity["source_id"], source_constant=identity["source_constant"], source_move=name, target_move=target,
                             pp=pp, max_pp=[pp + min(pp // divisor, increment) * n for n in range(4)]))
     assert len({r["target_move"] for r in records}) == len(records)
     assert {r["source_move"] for r in records if r["pp"] == 1} == {"SKETCH", "STRUGGLE"}

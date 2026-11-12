@@ -8547,7 +8547,7 @@
         {
           "level": 41,
           "source_move": "ROCK_SMASH",
-          "target_move": "MOVE_ROCK_SMASH"
+          "target_move": "MOVE_BRICK_BREAK"
         },
         {
           "level": 43,
@@ -8642,7 +8642,7 @@
         {
           "level": 49,
           "source_move": "ROCK_SMASH",
-          "target_move": "MOVE_ROCK_SMASH"
+          "target_move": "MOVE_BRICK_BREAK"
         },
         {
           "level": 53,
@@ -8702,7 +8702,7 @@
         {
           "level": 21,
           "source_move": "ROCK_SMASH",
-          "target_move": "MOVE_ROCK_SMASH"
+          "target_move": "MOVE_BRICK_BREAK"
         },
         {
           "level": 25,
@@ -10527,7 +10527,7 @@
         {
           "level": 26,
           "source_move": "ROCK_SMASH",
-          "target_move": "MOVE_ROCK_SMASH"
+          "target_move": "MOVE_BRICK_BREAK"
         },
         {
           "level": 29,
@@ -23642,7 +23642,7 @@
         {
           "level": 40,
           "source_move": "ROCK_SMASH",
-          "target_move": "MOVE_ROCK_SMASH"
+          "target_move": "MOVE_BRICK_BREAK"
         },
         {
           "level": 45,
@@ -26477,7 +26477,7 @@
         {
           "level": 49,
           "source_move": "ROCK_SMASH",
-          "target_move": "MOVE_ROCK_SMASH"
+          "target_move": "MOVE_BRICK_BREAK"
         },
         {
           "level": 53,
@@ -26972,7 +26972,7 @@
         {
           "level": 40,
           "source_move": "ROCK_SMASH",
-          "target_move": "MOVE_ROCK_SMASH"
+          "target_move": "MOVE_BRICK_BREAK"
         },
         {
           "level": 45,
@@ -27352,7 +27352,7 @@
         {
           "level": 43,
           "source_move": "ROCK_SMASH",
-          "target_move": "MOVE_ROCK_SMASH"
+          "target_move": "MOVE_BRICK_BREAK"
         },
         {
           "level": 50,
