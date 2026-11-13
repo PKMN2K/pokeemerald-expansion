@@ -1449,6 +1449,57 @@ The authentic source startup remains separate from this demo-campaign gate.
 Johto ROM SHA-256:
 `3b710e351738bcc821913c3c5da015f107a734d91cc3d12b61965e2343f69e55`.
 
+## Source Sleep Talk selection and last-move history
+
+The source call chain is explicit: `SleepTalk` announces the parent and spends
+PP, `BattleCommand_sleeptalk` immediately calls `ClearLastMove`, and `ResetTurn`
+marks the called move with charging value 1. `DisplayUsedMoveText` skips both
+last-move updates for that marker. Encore/Disable read the cleared last-counter
+record and fail. Native Expansion instead records Sleep Talk and permits Disable
+to attach to it. The source profile now clears `gLastMoves` at PP deduction and
+move end, including an awake/no-candidate failure or a failed called attack.
+Disable rejects this empty history before scanning move slots, so an empty
+slot cannot become a false match. Ordinary following moves
+restore their own history. Native profiles and the engine's separate effective-
+move record are preserved.
+
+The source fixture generator verifies the command, shared Disable/Encore reader,
+charging marker and announcement code, with exact pinned Git blob hashes. It
+also derives static eligibility for all 254 ordinary source entries from the
+five excluded effects (six moves). Struggle is never a legal source known move;
+the source loop does not implement the extra ban claimed by its comment, so
+retaining the native defensive ban is explicitly outside that comparison.
+
+The ordinary candidate pool remains the matching native implementation. Disable
+excludes its move; zero PP and Choice locks do not prevent calling it. The source
+also discards Encore during candidate selection, but clears the history needed
+to Encore Sleep Talk. Artificial pre-encored states are not claimed as ported.
+The production-linked audit now rejects any static eligibility mismatch.
+
+Remaining scope: exact source RNG and slot ordering, sleep duration, interrupted
+turn/history semantics and other move-calling consumers, complete Encore/Disable
+timing, individual called effects, smart AI, source presentation and optional
+Expansion interactions. A static eligibility match is not effect-level parity.
+
+Both native Emerald and Johto production ROMs build. All nine focused test
+groups pass in both profiles, including 27 battle cases per profile and the
+254-entry static check. All earlier source move suites and six AI timing checks
+pass, together with 51 source checks and 12 ARM probes. The full native run
+passes 5,435 tests, with the same nine expected failures and 585 existing TODOs
+(6,029 total), and no unexpected failures.
+
+The production-linked audit matches all 254 Sleep Talk eligibility entries,
+all 255 basic move/PP records, all 18 target stat-drop secondary records and all
+43,792 teaching combinations. The same 109 explicitly recorded machine/lesson
+gap entries remain; there are no new or changed findings. The same final Johto
+ROM passes all 12 demo checks, 101 campaign checks and 19 directed warp
+traversals, including all starter branches, Sprout Tower, Falkner, the
+badge/Roost/Togepi rewards, resident schedules and Save/reset/Continue.
+The authentic source startup remains separate from this demo-campaign gate.
+
+Johto ROM SHA-256:
+`c0c4af6d0c3db46708ca1c7774119d047bc8e26531f83562d9a3c34e4ce634fc`.
+
 ## Next priorities
 
 1. Continue the source field-rule audit. Headbutt remains dormant; other field

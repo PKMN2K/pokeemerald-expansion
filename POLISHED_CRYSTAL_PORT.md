@@ -1588,3 +1588,40 @@ checks pass. All 50 source checks, 12 ARM probes, 12 demo checks, 101 campaign
 checks and 19 warp traversals pass. The production audit matches all 18
 secondary records with no new gaps; nine expected failures and 585 existing
 native TODOs remain unchanged.
+
+### Source Sleep Talk selection and last-move history
+
+The pinned source clears both last-move records at the beginning of Sleep Talk,
+before checking sleep or candidate availability. Called moves run with the
+source charging marker and skip recording those fields again. Consequently a
+following Disable or Encore fails, including after an awake/no-candidate failure.
+The source profile now clears the GBA last-move record at PP deduction and
+move end, including failed called attacks. Disable explicitly rejects the
+cleared record before it can match an empty move slot. Native Expansion
+retains its own recording behavior. The effective-move record used
+by other engine consumers remains available. IDs and save layouts are unchanged.
+
+`build_sleep_talk_selection.py` verifies the complete pinned call chain and
+imports test expectations for all 254 ordinary source move entries. Their
+static eligibility agrees with the source effect exclusions: Metronome, Sketch,
+Sleep Talk, Solar Beam, Fly and Dig are excluded. Struggle is not a legal source
+known move; its defensive native ban is retained without treating a source
+comment as an executable exclusion. The production-linked move audit checks
+every ordinary entry independently of the battle regressions.
+
+Focused battles cover both sides, subsequent Disable/Encore, failed calls,
+misses/protection, existing Disable, Choice locks, zero-PP called moves in every
+slot, self targets and restoration of ordinary history on the next move. The
+parent consumes PP while the called move does not. Sleep duration, interrupted
+turns, global called-move bookkeeping, exact source RNG/slot ordering, smart AI,
+original animation and UI remain separate audits. This suite does not certify
+artificial pre-encored Sleep Talk states or all optional Expansion interactions.
+
+Both production ROM builds pass. All nine focused groups pass in native and
+source profiles, along with every earlier source move suite, six AI timing
+checks, 51 source checks and 12 ARM probes. The full native suite passes 5,435
+tests, with the same nine expected failures and 585 existing TODOs. The linked
+production audit matches all 254 eligibility entries, all 255 basic move/PP
+records and all 43,792 teaching combinations, with no new or changed gaps.
+The same rebuilt Johto ROM passes all 12 demo checks, 101 campaign checks and
+19 directed warp traversals, including Falkner's battle and post-battle rewards.

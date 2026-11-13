@@ -22,6 +22,7 @@
 
 static void ValidateBattlers(void);
 static enum Move GetOriginallyUsedMove(enum Move chosenMove);
+static enum Move GetRecordedMove(void);
 static void SetSameMoveTurnValues(enum BattleMoveEffects moveEffect);
 static void TryClearChargeVolatile(enum Type moveType);
 static inline bool32 IsBattlerUsingBeakBlast(enum BattlerId battler);
@@ -1038,7 +1039,7 @@ static enum CancelerResult CancelerPPDeduction(struct BattleCalcValues *cv)
     else
         gBattleMons[cv->battlerAtk].pp[movePosition] = 0;
 
-    gLastMoves[cv->battlerAtk] = gChosenMove;
+    gLastMoves[cv->battlerAtk] = GetRecordedMove();
 
     if (MOVE_IS_PERMANENT(cv->battlerAtk, movePosition))
     {
@@ -3777,7 +3778,7 @@ static enum MoveEndResult MoveEndUpdateLastMoves(struct BattleCalcValues *cv)
         {
             if (!gSpecialStatuses[cv->battlerAtk].dancerUsedMove)
             {
-                gLastMoves[cv->battlerAtk] = gChosenMove;
+                gLastMoves[cv->battlerAtk] = GetRecordedMove();
                 gLastResultingMoves[cv->battlerAtk] = cv->move;
                 gLastUsedMoveType[cv->battlerAtk] = GetBattleMoveType(cv->move);
             }
@@ -5806,6 +5807,16 @@ static void ValidateBattlers(void)
 static enum Move GetOriginallyUsedMove(enum Move chosenMove)
 {
     return (gChosenMove == MOVE_UNAVAILABLE) ? MOVE_NONE : gChosenMove;
+}
+
+static enum Move GetRecordedMove(void)
+{
+    // Sleep Talk clears the source's last/counter-move records, even when no
+    // move can be called. Called-move text does not restore them. Apply this
+    // at PP deduction as well as move end, including submove failure paths.
+    if (B_POLISHED_MOVE_BALANCE && GetMoveEffect(GetOriginallyUsedMove(gChosenMove)) == EFFECT_SLEEP_TALK)
+        return MOVE_NONE;
+    return gChosenMove;
 }
 
 static void SetSameMoveTurnValues(enum BattleMoveEffects moveEffect)

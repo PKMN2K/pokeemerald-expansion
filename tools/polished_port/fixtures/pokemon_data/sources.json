@@ -1977,6 +1977,21 @@
       "path": "constants/battle_constants.asm",
       "fixture": "constants__battle_constants.asm.b64",
       "git_blob_sha1": "d89caac630f3e83f5b88e7b292243261fadb3107"
+    },
+    {
+      "path": "data/moves/sleep_talk_exception_move_effects.asm",
+      "fixture": "data__moves__sleep_talk_exception_move_effects.asm.b64",
+      "git_blob_sha1": "c24effd6ca3ff9d04e340431c739d3b99c6ed7d2"
+    },
+    {
+      "path": "engine/battle/used_move_text.asm",
+      "fixture": "engine__battle__used_move_text.asm.b64",
+      "git_blob_sha1": "37da05df2ba751f067c80e947ca97a0b781bf0e7"
+    },
+    {
+      "path": "engine/battle/move_effects/encore_disable.asm",
+      "fixture": "engine__battle__move_effects__encore_disable.asm.b64",
+      "git_blob_sha1": "288cc693f6b8fe95b8d589760574fca84ae7a663"
     }
   ]
 }

@@ -6094,6 +6094,14 @@ static void Cmd_disablelastusedattack(void)
 
     s32 i;
 
+    // The source rejects a cleared history before scanning the known slots.
+    // In particular, MOVE_NONE must never match an empty slot after Sleep Talk.
+    if (B_POLISHED_MOVE_BALANCE && gLastMoves[gBattlerTarget] == MOVE_NONE)
+    {
+        gBattlescriptCurrInstr = cmd->failInstr;
+        return;
+    }
+
     for (i = 0; i < MAX_MON_MOVES; i++)
     {
         if (gBattleMons[gBattlerTarget].moves[i] == gLastMoves[gBattlerTarget])

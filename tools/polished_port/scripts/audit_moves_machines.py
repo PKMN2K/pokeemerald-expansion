@@ -24,6 +24,7 @@ import build_self_move_accuracy as self_accuracy
 import build_typeless_moves as typeless
 import build_metronome_struggle as metronome_struggle
 import build_secondary_stat_drops as stat_drops
+import build_sleep_talk_selection as sleep_talk
 from test_johto_demo_emulator import Game
 
 ROOT = source.ROOT
@@ -44,7 +45,7 @@ def inputs():
                           type=type_, accuracy=0 if accuracy == '-1' else int(accuracy),
                           pp=int(base_pp), chance=int(chance), category=category))
     outputs = learning.build()
-    for path, expected in {**outputs, **pp.build(), **pain_split.build(), **fixed_damage.build(), **retaliation.build(), **self_accuracy.build(), **typeless.build(), **metronome_struggle.build(), **stat_drops.build()}.items():
+    for path, expected in {**outputs, **pp.build(), **pain_split.build(), **fixed_damage.build(), **retaliation.build(), **self_accuracy.build(), **typeless.build(), **metronome_struggle.build(), **stat_drops.build(), **sleep_talk.build()}.items():
         assert path.read_text() == expected, f'Stale imported source data: {path}'
     catalog = json.loads(outputs[learning.MANIFEST])
     assert [r['kind'] for r in catalog['teaching_catalog']] == ['TM']*75 + ['HM']*6 + ['MT']*31
@@ -115,6 +116,7 @@ void CB2_MoveMachineAudit(void)
         gAuditResult[16] = GetMoveEffect(m) == EFFECT_FIXED_HP_DAMAGE;
         gAuditResult[17] = gAuditResult[16] ? GetMoveFixedHPDamage(m) : 0;
         gAuditResult[18] = GetMoveDisplayPower(m);
+        gAuditResult[30] = !IsMoveSleepTalkBanned(m) && !gBattleMoveEffects[GetMoveEffect(m)].twoTurnEffect;
         for (u32 n = 19; n < 30; n++)
             gAuditResult[n] = 0;
         gAuditResult[19] = GetMoveAdditionalEffectCount(m);
@@ -211,6 +213,8 @@ def fixed_damage_differences(source_power, actual):
 def run(game, moves, catalog, species):
     pain_split_contract = json.loads((ROOT/'tools/polished_port/manifests/pain_split.json').read_text())
     secondary_contract = {r['target_move']: r for r in stat_drops.records()}
+    sleep_contract = {r['target_move']: r['eligible'] for r in json.loads(
+        (ROOT/'tools/polished_port/manifests/sleep_talk_selection.json').read_text())['candidates']}
     stats = ['STAT_ATK', 'STAT_DEF', 'STAT_SPEED', 'STAT_SPATK', 'STAT_SPDEF', 'STAT_ACC', 'STAT_EVASION']
     move_results = []
     ids = {}
@@ -219,7 +223,7 @@ def run(game, moves, catalog, species):
     type_names = {int(value): name for name, value in re.findall(
         r'\bTYPE_(\w+)\s*=\s*(\d+)\s*,', (ROOT/'include/constants/pokemon.h').read_text())}
     for i, m in enumerate(moves):
-        actual = sample(game, 0, i, 30)
+        actual = sample(game, 0, i, 31)
         assert actual[0] > 0 and actual[0] not in ids.values(), 'Invalid or duplicate move ID'
         ids[m['target_move']] = actual[0]
         differences = {}
@@ -247,6 +251,8 @@ def run(game, moves, catalog, species):
                 if bool(actual[index]) != pain_split_contract[key]:
                     differences[field] = dict(source=pain_split_contract[key], target=bool(actual[index]))
         secondary = None
+        if m['target_move'] in sleep_contract and bool(actual[30]) != sleep_contract[m['target_move']]:
+            differences['sleep_talk_eligible'] = dict(source=sleep_contract[m['target_move']], target=bool(actual[30]))
         if m['target_move'] in secondary_contract:
             contract = secondary_contract[m['target_move']]
             expected = dict(count=1, stat_minus=True, chance=contract['chance'], flags=0,
@@ -262,7 +268,8 @@ def run(game, moves, catalog, species):
                                              placeholder=bool(actual[6]), animation=bool(actual[7]), battle_script=bool(actual[8]),
                                              ignores_substitute=bool(actual[14]), ignores_protect=bool(actual[15]),
                                              fixed_hp_effect=bool(actual[16]), fixed_hp_payload=actual[17], display_power=actual[18],
-                                             secondary_stat_drop=secondary),
+                                             secondary_stat_drop=secondary,
+                                             sleep_talk_eligible=bool(actual[30]) if m['target_move'] in sleep_contract else None),
                                  fixed_damage_adapter=fixed,
                                  variable_power_requires_behavior_test=m['power'] == 1,
                                  differences=differences))
@@ -309,6 +316,7 @@ def markdown(report):
              f"| TM number/move/category identity | {sum(m['identity_matches'] for m in report['machines'] if m['kind']=='TM')}/75 match |",
              f"| HM number/move/category identity | {sum(m['identity_matches'] for m in report['machines'] if m['kind']=='HM')}/6 match |",
              f"| Target stat-drop secondary data | {s['secondary_stat_drop_matches']}/{s['secondary_stat_drop_moves']} match |",
+             f"| Sleep Talk source known-move eligibility | {s['sleep_talk_eligibility_matches']}/{s['sleep_talk_known_moves']} match |",
              f"| TMs routed through the explicit source lesson adapter | {s['source_tm_lesson_adapters']}/75 |",
              f"| Species/form × TM/HM/tutor compatibility | {s['compatibility_checks']-s['compatibility_mismatches']}/{s['compatibility_checks']} match |", '',
              '## Audited move-data differences', '',
@@ -408,6 +416,8 @@ def main():
                    dispatch_bound=sum(not m['actual']['placeholder'] and m['actual']['animation'] and m['actual']['battle_script'] for m in report['moves']),
                    secondary_stat_drop_moves=sum(m['actual']['secondary_stat_drop'] is not None for m in report['moves']),
                    secondary_stat_drop_matches=sum(m['actual']['secondary_stat_drop'] is not None and 'secondary_stat_drop' not in m['differences'] for m in report['moves']),
+                   sleep_talk_known_moves=sum(m['actual']['sleep_talk_eligible'] is not None for m in report['moves']),
+                   sleep_talk_eligibility_matches=sum(m['actual']['sleep_talk_eligible'] is not None and 'sleep_talk_eligible' not in m['differences'] for m in report['moves']),
                    machine_identities_matching=sum(m['identity_matches'] for m in report['machines']),
                    machines=len(report['machines']), source_tm_lesson_adapters=sum(m['source_lesson_adapter'] for m in report['machines'] if m['kind'] == 'TM'),
                    compatibility_checks=report['compatibility']['combinations'], compatibility_mismatches=len(report['compatibility']['mismatches']))
