@@ -1,0 +1,242 @@
+{
+  "source_repository": "Rangi42/polishedcrystal",
+  "source_commit": "3fa43192379df5c3e7b09a08e4d5d79af4f02f42",
+  "source_variant": "default (FAITHFUL undefined)",
+  "type": "GHOST",
+  "accuracy": "-1 mapped to target 0",
+  "power": 0,
+  "pp": 20,
+  "category": "STATUS",
+  "bypasses_substitute": true,
+  "bypasses_protect": true,
+  "bypass_explanation": "The hit check records failure, but the Pain Split command does not consume wAttackMissed; there is no failuretext command in this effect script.",
+  "hidden_target_rule": "Fly/Dig fail even after No Guard or Lock-On bypasses the general hit check.",
+  "hp_rule": "Subtract ceil(difference/2) from the healthier battler first; restore floor(difference/2) to the other, capped at its max HP.",
+  "cases": [
+    {
+      "user_hp": 1,
+      "user_max": 1200,
+      "target_hp": 1,
+      "target_max": 1200,
+      "result": [
+        1,
+        1
+      ]
+    },
+    {
+      "user_hp": 1,
+      "user_max": 1200,
+      "target_hp": 2,
+      "target_max": 1200,
+      "result": [
+        1,
+        1
+      ]
+    },
+    {
+      "user_hp": 2,
+      "user_max": 1200,
+      "target_hp": 1,
+      "target_max": 1200,
+      "result": [
+        1,
+        1
+      ]
+    },
+    {
+      "user_hp": 1,
+      "user_max": 1200,
+      "target_hp": 3,
+      "target_max": 1200,
+      "result": [
+        2,
+        2
+      ]
+    },
+    {
+      "user_hp": 3,
+      "user_max": 1200,
+      "target_hp": 1,
+      "target_max": 1200,
+      "result": [
+        2,
+        2
+      ]
+    },
+    {
+      "user_hp": 10,
+      "user_max": 1200,
+      "target_hp": 100,
+      "target_max": 1200,
+      "result": [
+        55,
+        55
+      ]
+    },
+    {
+      "user_hp": 100,
+      "user_max": 1200,
+      "target_hp": 10,
+      "target_max": 1200,
+      "result": [
+        55,
+        55
+      ]
+    },
+    {
+      "user_hp": 10,
+      "user_max": 1200,
+      "target_hp": 101,
+      "target_max": 1200,
+      "result": [
+        55,
+        55
+      ]
+    },
+    {
+      "user_hp": 101,
+      "user_max": 1200,
+      "target_hp": 10,
+      "target_max": 1200,
+      "result": [
+        55,
+        55
+      ]
+    },
+    {
+      "user_hp": 55,
+      "user_max": 1200,
+      "target_hp": 55,
+      "target_max": 1200,
+      "result": [
+        55,
+        55
+      ]
+    },
+    {
+      "user_hp": 254,
+      "user_max": 1200,
+      "target_hp": 255,
+      "target_max": 1200,
+      "result": [
+        254,
+        254
+      ]
+    },
+    {
+      "user_hp": 255,
+      "user_max": 1200,
+      "target_hp": 254,
+      "target_max": 1200,
+      "result": [
+        254,
+        254
+      ]
+    },
+    {
+      "user_hp": 255,
+      "user_max": 1200,
+      "target_hp": 256,
+      "target_max": 1200,
+      "result": [
+        255,
+        255
+      ]
+    },
+    {
+      "user_hp": 256,
+      "user_max": 1200,
+      "target_hp": 255,
+      "target_max": 1200,
+      "result": [
+        255,
+        255
+      ]
+    },
+    {
+      "user_hp": 1023,
+      "user_max": 1200,
+      "target_hp": 511,
+      "target_max": 1200,
+      "result": [
+        767,
+        767
+      ]
+    },
+    {
+      "user_hp": 511,
+      "user_max": 1200,
+      "target_hp": 1023,
+      "target_max": 1200,
+      "result": [
+        767,
+        767
+      ]
+    },
+    {
+      "user_hp": 20,
+      "user_max": 30,
+      "target_hp": 180,
+      "target_max": 200,
+      "result": [
+        30,
+        100
+      ]
+    },
+    {
+      "user_hp": 180,
+      "user_max": 200,
+      "target_hp": 20,
+      "target_max": 30,
+      "result": [
+        100,
+        30
+      ]
+    },
+    {
+      "user_hp": 30,
+      "user_max": 30,
+      "target_hp": 180,
+      "target_max": 200,
+      "result": [
+        30,
+        105
+      ]
+    },
+    {
+      "user_hp": 180,
+      "user_max": 200,
+      "target_hp": 30,
+      "target_max": 30,
+      "result": [
+        105,
+        30
+      ]
+    },
+    {
+      "user_hp": 1,
+      "user_max": 1,
+      "target_hp": 256,
+      "target_max": 300,
+      "result": [
+        1,
+        128
+      ]
+    },
+    {
+      "user_hp": 256,
+      "user_max": 300,
+      "target_hp": 1,
+      "target_max": 1,
+      "result": [
+        128,
+        1
+      ]
+    }
+  ],
+  "gaps": [
+    "Native animation, dialogue, general accuracy RNG and ability/item interaction timing remain separately audited.",
+    "Source-specific smart AI scoring is not imported here; shared target gates are available to native AI.",
+    "Optional Expansion-only gimmicks retain their native adapters."
+  ]
+}

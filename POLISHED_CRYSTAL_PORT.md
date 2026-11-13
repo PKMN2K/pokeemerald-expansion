@@ -1389,3 +1389,23 @@ separate migration work. The pinned fixture generator and eight native/source
 test groups cover the data, all 64 type patterns, 4,096 relevant IV combinations,
 effectiveness, immunity, AI choice and Anticipation. See the
 [parity audit](tools/polished_port/PARITY_AUDIT.md) for validation evidence.
+
+### Source Pain Split
+
+Pain Split now uses the pinned default source's Ghost type and target rules in
+Johto. It bypasses Substitute and Protect, while its explicit Fly/Dig guard
+still rejects targets hidden by those moves even with No Guard or Lock-On.
+These behaviors follow the source effect script and command implementation;
+its recorded hit-failure flag is not consumed by the HP-sharing command.
+
+The existing integer average matches the source's rounded HP difference after
+maximum-HP clamping. The source profile now removes HP from the healthier
+battler before restoring the other, with both battle and party HP updated.
+Normal/Ghost damage immunities do not block sharing, and the native profile
+retains its own rules. Move IDs, save layout and engine capacities are unchanged.
+
+Pinned fixtures generate independent HP expectations and ten test groups cover
+rounding, caps, both user sides, update order, PP, target gates and retaliation.
+Source animation/dialogue, broader item/ability timing, smart-AI scoring and
+UI remain separate work. See the [parity audit](tools/polished_port/PARITY_AUDIT.md)
+for the exact scope and validation evidence.

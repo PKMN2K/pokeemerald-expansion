@@ -10619,6 +10619,13 @@ bool32 IsSemiInvulnerable(enum BattlerId battler, enum SemiInvulnerableExclusion
 
 static bool32 CanBreakThroughSemiInvulnerablityInternal(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Ability abilityAtk, enum Ability abilityDef, enum Move move, enum SemiInvulnerableState state)
 {
+    // The source effect has its own Fly/Dig guard after the general hit check.
+    // No Guard and Lock-On cannot bypass that effect-level condition.
+    if (B_POLISHED_PAIN_SPLIT
+     && (state == STATE_ON_AIR || state == STATE_UNDERGROUND)
+     && GetMoveEffect(move) == EFFECT_PAIN_SPLIT)
+        return FALSE;
+
     if (state != STATE_COMMANDER)
     {
         if (CanMoveSkipAccuracyCheck(battlerAtk, move))

@@ -6195,7 +6195,12 @@ static void Cmd_painsplitdmgcalc(void)
         gBattleStruct->passiveHpUpdate[gBattlerTarget] = GetNonDynamaxHP(gBattlerTarget) - hpDiff;
         gBattleStruct->passiveHpUpdate[gBattlerAttacker] = gBattleMons[gBattlerAttacker].hp - hpDiff;
 
-        gBattlescriptCurrInstr = cmd->nextInstr;
+        // Source removes HP from the healthier battler before restoring the
+        // other battler, regardless of which side used the move.
+        if (B_POLISHED_PAIN_SPLIT && gBattleMons[gBattlerAttacker].hp < GetNonDynamaxHP(gBattlerTarget))
+            gBattlescriptCurrInstr = BattleScript_PolishedPainSplitTargetFirst;
+        else
+            gBattlescriptCurrInstr = cmd->nextInstr;
     }
     else
     {

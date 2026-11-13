@@ -17,6 +17,7 @@ import tempfile
 import build_pokemon_learnsets as source
 import build_pokemon_learning as learning
 import build_move_pp as pp
+import build_pain_split as pain_split
 from test_johto_demo_emulator import Game
 
 ROOT = source.ROOT
@@ -37,7 +38,7 @@ def inputs():
                           type=type_, accuracy=0 if accuracy == '-1' else int(accuracy),
                           pp=int(base_pp), chance=int(chance), category=category))
     outputs = learning.build()
-    for path, expected in {**outputs, **pp.build()}.items():
+    for path, expected in {**outputs, **pp.build(), **pain_split.build()}.items():
         assert path.read_text() == expected, f'Stale imported source data: {path}'
     catalog = json.loads(outputs[learning.MANIFEST])
     assert [r['kind'] for r in catalog['teaching_catalog']] == ['TM']*75 + ['HM']*6 + ['MT']*31
@@ -103,6 +104,8 @@ void CB2_MoveMachineAudit(void)
         for (u32 n = 0; n < 4; n++)
             gAuditResult[9+n] = CalculatePPWithBonus(m, n << 6, 3);
         gAuditResult[13] = GetMoveType(m);
+        gAuditResult[14] = MoveIgnoresSubstitute(m);
+        gAuditResult[15] = MoveIgnoresProtect(m);
     }
     else if (gAuditKind == 1 && gAuditCursor < ARRAY_COUNT(machines))
     {
@@ -171,6 +174,7 @@ def sample(game, kind, cursor, size):
 
 
 def run(game, moves, catalog, species):
+    pain_split_contract = json.loads((ROOT/'tools/polished_port/manifests/pain_split.json').read_text())
     move_results = []
     ids = {}
     native_names = {int(value): name for name, value in re.findall(
@@ -178,7 +182,7 @@ def run(game, moves, catalog, species):
     type_names = {int(value): name for name, value in re.findall(
         r'\bTYPE_(\w+)\s*=\s*(\d+)\s*,', (ROOT/'include/constants/pokemon.h').read_text())}
     for i, m in enumerate(moves):
-        actual = sample(game, 0, i, 14)
+        actual = sample(game, 0, i, 16)
         assert actual[0] > 0 and actual[0] not in ids.values(), 'Invalid or duplicate move ID'
         ids[m['target_move']] = actual[0]
         differences = {}
@@ -197,11 +201,17 @@ def run(game, moves, catalog, species):
             differences['pp_up'] = dict(source=maximum, target=actual[9:13])
         if actual[6] or not actual[7] or not actual[8]:
             differences['dispatch'] = dict(placeholder=bool(actual[6]), animation=bool(actual[7]), battle_script=bool(actual[8]))
+        if m['target_move'] == 'MOVE_PAIN_SPLIT':
+            for field, key, index in [('ignores_substitute', 'bypasses_substitute', 14),
+                                      ('ignores_protect', 'bypasses_protect', 15)]:
+                if bool(actual[index]) != pain_split_contract[key]:
+                    differences[field] = dict(source=pain_split_contract[key], target=bool(actual[index]))
         move_results.append(dict(source_move=m['source_move'], target_move=m['target_move'],
                                  source_effect=m['source_effect'], source_chance=m['chance'],
                                  actual=dict(id=actual[0], power=actual[1], accuracy=actual[2], pp=actual[3],
                                              type=type_names.get(actual[13], actual[13]), pp_up=actual[9:13], type_matches=bool(actual[4]), category_matches=bool(actual[5]),
-                                             placeholder=bool(actual[6]), animation=bool(actual[7]), battle_script=bool(actual[8])),
+                                             placeholder=bool(actual[6]), animation=bool(actual[7]), battle_script=bool(actual[8]),
+                                             ignores_substitute=bool(actual[14]), ignores_protect=bool(actual[15])),
                                  variable_power_requires_behavior_test=m['power'] == 1,
                                  differences=differences))
     machines = []

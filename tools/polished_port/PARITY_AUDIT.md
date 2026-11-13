@@ -26,8 +26,9 @@ table differences are representation differences requiring behavioral review.
 The subsequent [move-balance correction](#source-move-balance-corrections)
 imports twelve of those rows and removes their seventeen field discrepancies.
 The subsequent Hidden Power suite imports its remaining power/type fields and
-the default source's dynamic type calculation. Nine differing move rows remain;
-machine identity/lesson gaps remain as recorded in the original report.
+the default source's dynamic type calculation. The Pain Split suite below
+imports its Ghost type and source HP-sharing rules, leaving eight differing
+move rows. Machine identity/lesson gaps remain as recorded in the original report.
 
 CI now runs `audit_moves_machines.py` with an explicit known-gap inventory.
 New or changed findings fail; resolved gaps are permitted. Strict mode without
@@ -1034,6 +1035,64 @@ this does not certify the source startup or the rest of the unfinished game.
 
 Johto ROM SHA-256:
 `7f29127eebbe6fdc0405db2cec44c7ff0d3f7cbe0f05d9b1cd5fd8853913d371`.
+
+## Source Pain Split
+
+The default source lists Pain Split as Ghost, with zero power, 20 PP and
+perfect accuracy. `B_POLISHED_PAIN_SPLIT` selects the source row and behavior
+for Johto and the isolated source-move test profile. Stable move/save IDs and
+Expansion's optional content remain available.
+
+The pinned effect uses the HP difference: subtract its rounded-up half from
+the healthier battler first, then restore its rounded-down half to the other,
+capped at that battler's maximum HP. The existing GBA integer-average result
+is equivalent and retained; a source branch corrects the HP update order when
+the target is healthier. Both active battle HP and party HP are checked.
+
+Source Pain Split bypasses Substitute and Protect. This follows the pinned
+script literally: `checkhit` records a failure flag, but this effect does not
+read that flag or run `failuretext` before redistributing HP. Its own explicit
+Fly/Dig guard still fails even if No Guard or Lock-On bypasses the earlier hit
+check. The imported bypass flags and shared semi-invulnerability helper expose
+these target rules to the engine and AI. Normal/Ghost damage immunities do not
+block HP sharing; Prankster's Dark immunity remains enforced separately.
+
+`build_pain_split.py --check` verifies the original command interpreter, effect
+script, effect routine and data. Its independent difference-based reference
+checks all 65,025 positive byte-sized HP pairs and generates 22 boundary/cap
+fixtures. Tests exercise those fixtures with either side using the move, exact
+HP update order, party synchronization and one-PP consumption. Additional
+groups cover Substitute, Protect, Fly/Dig with No Guard or Lock-On, type
+immunities, accuracy/evasion, Prankster and Counter/Mirror Coat.
+
+Native move animation/dialogue (including the hidden-target failure message),
+general accuracy RNG and ability/item interaction timing, source smart-AI
+scoring and original UI remain separately audited work. Optional Expansion-only
+gimmicks retain their native adapters. This suite certifies the listed core
+redistribution and target rules, not every possible interaction.
+
+Validation with GCC 13.2.1: both production ROMs build. All 44 source checks,
+12 ARM profile/header probes and 12 demo checks pass. All ten Pain Split groups
+pass in both native and isolated source profiles, including 44 boundary cases
+with either side using the move. The source profile also passes all eight
+Hidden Power groups, six prior move-balance groups and six unchanged AI timing
+benchmarks. Production-linked inspection confirms Pain Split's Ghost type and
+both bypass flags, all 255 dispatch/PP rows and 43,792 teaching combinations
+without a compatibility mismatch. Eight move rows still differ; there are no
+new gaps. The known-gap gate rejects all three simulated old Pain Split field
+values.
+
+The full native run passes 5,373 groups, with nine existing expected failures
+and 585 TODOs (5,967 total), and no unexpected failures. The old Pain Split
+placeholder TODO has been replaced with the ten implemented test groups.
+
+The same production Johto ROM passes all 101 campaign checks and 19 warp
+traversals, including all three starter paths, Sprout Tower, Falkner, the
+badge/reward/Togepi sequence and Save/Continue. The documented demo opening
+remains in use; the authentic source startup is still separate work.
+
+Johto ROM SHA-256:
+`8326d112000c1acd11972bb535b4f7973f39c448eb0eb31a80325bfcbbd2ca2c`.
 
 ## Next priorities
 

@@ -1969,9 +1969,19 @@ BattleScript_EffectPainSplit::
 	datahpupdate BS_ATTACKER, ASSURANCE_IGNORE
 	healthbarupdate BS_TARGET
 	datahpupdate BS_TARGET, ASSURANCE_IGNORE
+BattleScript_PainSplitMessage:
 	printstring STRINGID_SHAREDPAIN
 	waitmessage B_WAIT_TIME_LONG
 	goto BattleScript_MoveEnd
+
+BattleScript_PolishedPainSplitTargetFirst::
+	attackanimation
+	waitanimation
+	healthbarupdate BS_TARGET
+	datahpupdate BS_TARGET, ASSURANCE_IGNORE
+	healthbarupdate BS_ATTACKER
+	datahpupdate BS_ATTACKER, ASSURANCE_IGNORE
+	goto BattleScript_PainSplitMessage
 
 BattleScript_EffectConversion2::
 	attackcanceler

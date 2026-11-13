@@ -1,5 +1,6 @@
 #include "polished_move_balance.h"
 #include "constants/polished_hidden_power.h"
+#include "constants/polished_pain_split.h"
 #include "battle_dynamax.h"
 #include "battle_anim_scripts.h"
 #include "constants/battle.h"
@@ -6028,12 +6029,14 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
             "then shares them equally."),
         .effect = EFFECT_PAIN_SPLIT,
         .power = 0,
-        .type = TYPE_NORMAL,
-        .accuracy = B_UPDATED_MOVE_DATA >= GEN_3 ? 0 : 100,
+        .type = B_POLISHED_PAIN_SPLIT ? POLISHED_PAIN_SPLIT_TYPE : TYPE_NORMAL,
+        .accuracy = B_POLISHED_PAIN_SPLIT ? POLISHED_PAIN_SPLIT_ACCURACY : B_UPDATED_MOVE_DATA >= GEN_3 ? 0 : 100,
         .pp = 20,
         .target = TARGET_SELECTED,
         .priority = 0,
         .category = DAMAGE_CATEGORY_STATUS,
+        .ignoresSubstitute = B_POLISHED_PAIN_SPLIT,
+        .ignoresProtect = B_POLISHED_PAIN_SPLIT,
         .zMove = { .effect = Z_EFFECT_DEF_UP_1 },
         .contestEffect = C_UPDATED_MOVE_EFFECTS >= GEN_6 ? CONTEST_EFFECT_APPEAL_AS_GOOD_AS_PREV_ONES : CONTEST_EFFECT_BADLY_STARTLE_FRONT_MON,
         .contestCategory = CONTEST_CATEGORY_SMART,
