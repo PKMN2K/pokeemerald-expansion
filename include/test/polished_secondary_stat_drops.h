@@ -1,0 +1,30 @@
+#ifndef GUARD_TEST_POLISHED_SECONDARY_STAT_DROPS_H
+#define GUARD_TEST_POLISHED_SECONDARY_STAT_DROPS_H
+
+// Independent test expectations transcribed from the pinned default move rows.
+static const struct {
+    enum Move move;
+    enum Stat stat;
+    u8 chance;
+} sSourceStatDrops[] = {
+    {MOVE_FOCUS_BLAST, STAT_SPDEF, 10},
+    {MOVE_ACID, STAT_SPDEF, 10},
+    {MOVE_BUBBLE_BEAM, STAT_SPEED, 10},
+    {MOVE_AURORA_BEAM, STAT_ATK, 10},
+    {MOVE_PSYCHIC, STAT_SPDEF, 10},
+    {MOVE_FLASH_CANNON, STAT_SPDEF, 10},
+    {MOVE_EARTH_POWER, STAT_SPDEF, 10},
+    {MOVE_BULLDOZE, STAT_SPEED, 100},
+    {MOVE_ENERGY_BALL, STAT_SPDEF, 10},
+    {MOVE_MUD_SLAP, STAT_ACC, 100},
+    {MOVE_OCTAZOOKA, STAT_ACC, 30},
+    {MOVE_ICY_WIND, STAT_SPEED, 100},
+    {MOVE_BUG_BUZZ, STAT_SPDEF, 10},
+    {MOVE_IRON_TAIL, STAT_DEF, 30},
+    {MOVE_CRUNCH, STAT_DEF, 20},
+    {MOVE_SHADOW_BALL, STAT_SPDEF, 20},
+    {MOVE_MOONBLAST, STAT_SPATK, 30},
+    {MOVE_PLAY_ROUGH, STAT_ATK, 10},
+};
+
+#endif

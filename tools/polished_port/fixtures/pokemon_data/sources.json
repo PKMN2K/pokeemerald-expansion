@@ -1967,6 +1967,16 @@
       "path": "data/types/names.asm",
       "fixture": "data__types__names.asm.b64",
       "git_blob_sha1": "54104f7bd677a2769f93d88f6492aa2bca2dadbd"
+    },
+    {
+      "path": "engine/battle/stats.asm",
+      "fixture": "engine__battle__stats.asm.b64",
+      "git_blob_sha1": "7b4567cac318ab0af2fa1a98f0ad89507fc21b54"
+    },
+    {
+      "path": "constants/battle_constants.asm",
+      "fixture": "constants__battle_constants.asm.b64",
+      "git_blob_sha1": "d89caac630f3e83f5b88e7b292243261fadb3107"
     }
   ]
 }

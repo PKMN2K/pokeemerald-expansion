@@ -1396,6 +1396,59 @@ remains an independent migration task.
 Johto ROM SHA-256:
 `99020af9ac3f6ad682a05b3c5f290b7119ce45c3a1625c6b2e918952b675fd59`.
 
+## Source secondary stat-drop suite
+
+The pinned default move table has 18 damaging moves using the six target
+stat-drop effects. Each corresponding effect script applies damage, checks
+effect chance, then calls loweroppstathit with one bare stat ID. The pinned
+stat-change routine decodes that zero amount nibble as one stage. The source
+chance command compares BattleRandomRange(100) against the listed chance,
+doubles it for Serene Grace, and suppresses it for Sheer Force. Target gates
+include fainting, Substitute, Shield Dust and Covert Cloak.
+
+These 18 chances and stage amounts now have explicit compile-time source
+adapters under B_POLISHED_MOVE_BALANCE. Octazooka previously retained native
+50% despite the default source specifying 30%; its source chance is now 30%,
+or 60% with Serene Grace. Acid's Special Defense and Crunch's Defense payloads
+also have source guards against native generation-dependent alternatives.
+No target IDs or save layouts change, and native Expansion data remains intact.
+
+The deterministic generator verifies hash-pinned move/effect/stat assembly and
+emits the imported constants and provenance manifest. The production-linked
+audit checks the exact additional-effect count, stat-minus dispatch, chance,
+stat payload and target/phase flags for these 18 moves; other secondary families
+are not covered by this new audit. Eight native/source test groups exercise
+all 18 payloads on both sides, the 15 probabilistic moves with/without Serene
+Grace, Shield Dust/Covert Cloak/Sheer Force/Clear Body, Mold Breaker ability
+bypass, intact/broken substitutes, misses, Protect, Water Absorb, target
+knockouts, the stat floor and PP consumption.
+
+The retained engine probability framework supplies the tested percentage
+thresholds. Its random stream and global RNG call ordering are not source
+imports. This suite also does not establish complete source stat-change,
+ability/item, damage, accuracy or AI behavior. Source animation/UI art and
+all other secondary families remain separate audits. Optional Expansion-only
+mechanics remain available through the native framework.
+
+Validation with Arm GNU GCC 13.2.1: both ROM builds, all eight new test groups
+in native/source profiles, 50 source/asset checks, 12 ARM probes and 12 demo
+checks pass. Earlier move-balance (6), Hidden Power (8), Pain Split (10),
+fixed-damage (9), retaliation (7), self-move accuracy (9), typeless (8),
+Metronome/Struggle (12) and AI frame-budget (6) groups all pass in the source
+profile. The final production audit matches all 18 secondary records, all 255
+audited basic move/PP rows and 43,792 teaching combinations. Its 109 existing
+machine identity/lesson gaps are unchanged, with no new findings.
+The full native run passes 5,426 tests, with the same nine expected failures
+and 585 existing TODOs (6,020 total), and no unexpected failures.
+
+The same Johto ROM passes all 101 campaign checks and 19 directed warp
+traversals, including all starter branches, Sprout Tower, Falkner, the
+badge/Roost/Togepi rewards, resident schedules and Save/reset/Continue.
+The authentic source startup remains separate from this demo-campaign gate.
+
+Johto ROM SHA-256:
+`3b710e351738bcc821913c3c5da015f107a734d91cc3d12b61965e2343f69e55`.
+
 ## Next priorities
 
 1. Continue the source field-rule audit. Headbutt remains dormant; other field

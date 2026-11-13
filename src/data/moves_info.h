@@ -5,6 +5,7 @@
 #include "constants/polished_retaliation.h"
 #include "constants/polished_self_move_accuracy.h"
 #include "constants/polished_typeless_moves.h"
+#include "constants/polished_secondary_stat_drops.h"
 #include "battle_dynamax.h"
 #include "battle_anim_scripts.h"
 #include "constants/battle.h"
@@ -1404,9 +1405,9 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .category = DAMAGE_CATEGORY_SPECIAL,
             .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_STAT_MINUS,
-            .defense = B_UPDATED_MOVE_DATA < GEN_4 ? 1 : 0,
-            .spDef = B_UPDATED_MOVE_DATA >= GEN_4 ? 1 : 0,
-            .chance = B_UPDATED_MOVE_DATA >= GEN_2 ? 10 : 33,
+            .defense = POLISHED_BALANCE(0, B_UPDATED_MOVE_DATA < GEN_4 ? 1 : 0),
+            .spDef = POLISHED_BALANCE(POLISHED_SECONDARY_STAT_DROP_STAGES, B_UPDATED_MOVE_DATA >= GEN_4 ? 1 : 0),
+            .chance = POLISHED_BALANCE(POLISHED_ACID_SECONDARY_CHANCE, B_UPDATED_MOVE_DATA >= GEN_2 ? 10 : 33),
         }),
         .contestEffect = C_UPDATED_MOVE_EFFECTS >= GEN_6 ? CONTEST_EFFECT_WORSEN_CONDITION_OF_PREV_MONS : CONTEST_EFFECT_BADLY_STARTLE_FRONT_MON,
         .contestCategory = CONTEST_CATEGORY_SMART,
@@ -1669,8 +1670,8 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .category = DAMAGE_CATEGORY_SPECIAL,
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_STAT_MINUS,
-            .speed = 1,
-            .chance = B_UPDATED_MOVE_DATA >= GEN_2 ? 10 : 33,
+            .speed = POLISHED_BALANCE(POLISHED_SECONDARY_STAT_DROP_STAGES, 1),
+            .chance = POLISHED_BALANCE(POLISHED_BUBBLE_BEAM_SECONDARY_CHANCE, B_UPDATED_MOVE_DATA >= GEN_2 ? 10 : 33),
         }),
         .contestEffect = C_UPDATED_MOVE_EFFECTS >= GEN_6 ? CONTEST_EFFECT_STARTLE_PREV_MON : CONTEST_EFFECT_BADLY_STARTLE_PREV_MONS,
         .contestCategory = CONTEST_CATEGORY_BEAUTY,
@@ -1695,8 +1696,8 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .category = DAMAGE_CATEGORY_SPECIAL,
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_STAT_MINUS,
-            .attack = 1,
-            .chance = B_UPDATED_MOVE_DATA >= GEN_2 ? 10 : 33,
+            .attack = POLISHED_BALANCE(POLISHED_SECONDARY_STAT_DROP_STAGES, 1),
+            .chance = POLISHED_BALANCE(POLISHED_AURORA_BEAM_SECONDARY_CHANCE, B_UPDATED_MOVE_DATA >= GEN_2 ? 10 : 33),
         }),
         .contestEffect = C_UPDATED_MOVE_EFFECTS >= GEN_6 ? CONTEST_EFFECT_STARTLE_PREV_MON : CONTEST_EFFECT_STARTLE_MONS_SAME_TYPE_APPEAL,
         .contestCategory = CONTEST_CATEGORY_BEAUTY,
@@ -2554,8 +2555,8 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .category = DAMAGE_CATEGORY_SPECIAL,
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_STAT_MINUS,
-            .spDef = 1,
-            .chance = B_UPDATED_MOVE_DATA >= GEN_2 ? 10 : 33,
+            .spDef = POLISHED_BALANCE(POLISHED_SECONDARY_STAT_DROP_STAGES, 1),
+            .chance = POLISHED_BALANCE(POLISHED_PSYCHIC_M_SECONDARY_CHANCE, B_UPDATED_MOVE_DATA >= GEN_2 ? 10 : 33),
         }),
         .contestEffect = C_UPDATED_MOVE_EFFECTS >= GEN_6 ? CONTEST_EFFECT_HIGHLY_APPEALING : CONTEST_EFFECT_BADLY_STARTLE_PREV_MONS,
         .contestCategory = CONTEST_CATEGORY_SMART,
@@ -5201,8 +5202,8 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .category = DAMAGE_CATEGORY_SPECIAL,
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_STAT_MINUS,
-            .accuracy = 1,
-            .chance = 100,
+            .accuracy = POLISHED_BALANCE(POLISHED_SECONDARY_STAT_DROP_STAGES, 1),
+            .chance = POLISHED_BALANCE(POLISHED_MUD_SLAP_SECONDARY_CHANCE, 100),
         }),
         .contestEffect = C_UPDATED_MOVE_EFFECTS >= GEN_6 ? CONTEST_EFFECT_WORSEN_CONDITION_OF_PREV_MONS : CONTEST_EFFECT_STARTLE_MON_WITH_JUDGES_ATTENTION,
         .contestCategory = CONTEST_CATEGORY_CUTE,
@@ -5229,8 +5230,8 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .ballisticMove = TRUE,
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_STAT_MINUS,
-            .accuracy = 1,
-            .chance = 50,
+            .accuracy = POLISHED_BALANCE(POLISHED_SECONDARY_STAT_DROP_STAGES, 1),
+            .chance = POLISHED_BALANCE(POLISHED_OCTAZOOKA_SECONDARY_CHANCE, 50),
         }),
         .contestEffect = C_UPDATED_MOVE_EFFECTS >= GEN_6 ? CONTEST_EFFECT_REPETITION_NOT_BORING : CONTEST_EFFECT_STARTLE_MON_WITH_JUDGES_ATTENTION,
         .contestCategory = CONTEST_CATEGORY_TOUGH,
@@ -5393,8 +5394,8 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .windMove = TRUE,
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_STAT_MINUS,
-            .speed = 1,
-            .chance = 100,
+            .speed = POLISHED_BALANCE(POLISHED_SECONDARY_STAT_DROP_STAGES, 1),
+            .chance = POLISHED_BALANCE(POLISHED_ICY_WIND_SECONDARY_CHANCE, 100),
         }),
         .contestEffect = CONTEST_EFFECT_BADLY_STARTLE_PREV_MONS,
         .contestCategory = CONTEST_CATEGORY_BEAUTY,
@@ -6345,8 +6346,8 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .makesContact = TRUE,
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_STAT_MINUS,
-            .defense = 1,
-            .chance = 30,
+            .defense = POLISHED_BALANCE(POLISHED_SECONDARY_STAT_DROP_STAGES, 1),
+            .chance = POLISHED_BALANCE(POLISHED_IRON_TAIL_SECONDARY_CHANCE, 30),
         }),
         .contestEffect = C_UPDATED_MOVE_EFFECTS >= GEN_6 ? CONTEST_EFFECT_HIGHLY_APPEALING : CONTEST_EFFECT_BADLY_STARTLE_FRONT_MON,
         .contestCategory = CONTEST_CATEGORY_COOL,
@@ -6638,9 +6639,9 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .bitingMove = TRUE,
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_STAT_MINUS,
-            .defense = B_UPDATED_MOVE_DATA >= GEN_4 ? 1 : 0,
-            .spDef = B_UPDATED_MOVE_DATA < GEN_4 ? 1 : 0,
-            .chance = 20,
+            .defense = POLISHED_BALANCE(POLISHED_SECONDARY_STAT_DROP_STAGES, B_UPDATED_MOVE_DATA >= GEN_4 ? 1 : 0),
+            .spDef = POLISHED_BALANCE(0, B_UPDATED_MOVE_DATA < GEN_4 ? 1 : 0),
+            .chance = POLISHED_BALANCE(POLISHED_CRUNCH_SECONDARY_CHANCE, 20),
         }),
         .contestEffect = CONTEST_EFFECT_BADLY_STARTLE_FRONT_MON,
         .contestCategory = CONTEST_CATEGORY_TOUGH,
@@ -6782,8 +6783,8 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .ballisticMove = TRUE,
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_STAT_MINUS,
-            .spDef = 1,
-            .chance = 20,
+            .spDef = POLISHED_BALANCE(POLISHED_SECONDARY_STAT_DROP_STAGES, 1),
+            .chance = POLISHED_BALANCE(POLISHED_SHADOW_BALL_SECONDARY_CHANCE, 20),
         }),
         .contestEffect = C_UPDATED_MOVE_EFFECTS >= GEN_6 ? CONTEST_EFFECT_HIGHLY_APPEALING : CONTEST_EFFECT_SHIFT_JUDGE_ATTENTION,
         .contestCategory = CONTEST_CATEGORY_SMART,
@@ -11008,8 +11009,8 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .ignoresSubstitute = B_UPDATED_MOVE_FLAGS >= GEN_6,
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_STAT_MINUS,
-            .spDef = 1,
-            .chance = 10,
+            .spDef = POLISHED_BALANCE(POLISHED_SECONDARY_STAT_DROP_STAGES, 1),
+            .chance = POLISHED_BALANCE(POLISHED_BUG_BUZZ_SECONDARY_CHANCE, 10),
         }),
         .contestEffect = CONTEST_EFFECT_BADLY_STARTLE_FRONT_MON,
         .contestCategory = C_UPDATED_MOVE_CATEGORIES >= GEN_6 ? CONTEST_CATEGORY_BEAUTIFUL : CONTEST_CATEGORY_CUTE,
@@ -11154,8 +11155,8 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .ballisticMove = TRUE,
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_STAT_MINUS,
-            .spDef = 1,
-            .chance = 10,
+            .spDef = POLISHED_BALANCE(POLISHED_SECONDARY_STAT_DROP_STAGES, 1),
+            .chance = POLISHED_BALANCE(POLISHED_FOCUS_BLAST_SECONDARY_CHANCE, 10),
         }),
         .contestEffect = CONTEST_EFFECT_HIGHLY_APPEALING,
         .contestCategory = CONTEST_CATEGORY_COOL,
@@ -11181,8 +11182,8 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .ballisticMove = TRUE,
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_STAT_MINUS,
-            .spDef = 1,
-            .chance = 10,
+            .spDef = POLISHED_BALANCE(POLISHED_SECONDARY_STAT_DROP_STAGES, 1),
+            .chance = POLISHED_BALANCE(POLISHED_ENERGY_BALL_SECONDARY_CHANCE, 10),
         }),
         .contestEffect = CONTEST_EFFECT_HIGHLY_APPEALING,
         .contestCategory = CONTEST_CATEGORY_BEAUTY,
@@ -11231,8 +11232,8 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .skyBattleBanned = TRUE,
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_STAT_MINUS,
-            .spDef = 1,
-            .chance = 10,
+            .spDef = POLISHED_BALANCE(POLISHED_SECONDARY_STAT_DROP_STAGES, 1),
+            .chance = POLISHED_BALANCE(POLISHED_EARTH_POWER_SECONDARY_CHANCE, 10),
         }),
         .contestEffect = CONTEST_EFFECT_HIGHLY_APPEALING,
         .contestCategory = C_UPDATED_MOVE_CATEGORIES >= GEN_6 ? CONTEST_CATEGORY_BEAUTY : CONTEST_CATEGORY_SMART,
@@ -11653,8 +11654,8 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .category = DAMAGE_CATEGORY_SPECIAL,
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_STAT_MINUS,
-            .spDef = 1,
-            .chance = 10,
+            .spDef = POLISHED_BALANCE(POLISHED_SECONDARY_STAT_DROP_STAGES, 1),
+            .chance = POLISHED_BALANCE(POLISHED_FLASH_CANNON_SECONDARY_CHANCE, 10),
         }),
         .contestEffect = CONTEST_EFFECT_HIGHLY_APPEALING,
         .contestCategory = C_UPDATED_MOVE_CATEGORIES >= GEN_6 ? CONTEST_CATEGORY_BEAUTY : CONTEST_CATEGORY_SMART,
@@ -14027,8 +14028,8 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .skyBattleBanned = TRUE,
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_STAT_MINUS,
-            .speed = 1,
-            .chance = 100,
+            .speed = POLISHED_BALANCE(POLISHED_SECONDARY_STAT_DROP_STAGES, 1),
+            .chance = POLISHED_BALANCE(POLISHED_BULLDOZE_SECONDARY_CHANCE, 100),
         }),
         .contestEffect = CONTEST_EFFECT_STARTLE_PREV_MONS,
         .contestCategory = CONTEST_CATEGORY_TOUGH,
@@ -15594,8 +15595,8 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .makesContact = TRUE,
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_STAT_MINUS,
-            .attack = 1,
-            .chance = 10,
+            .attack = POLISHED_BALANCE(POLISHED_SECONDARY_STAT_DROP_STAGES, 1),
+            .chance = POLISHED_BALANCE(POLISHED_PLAY_ROUGH_SECONDARY_CHANCE, 10),
         }),
         .contestEffect = CONTEST_EFFECT_WORSEN_CONDITION_OF_PREV_MONS,
         .contestCategory = CONTEST_CATEGORY_CUTE,
@@ -15642,8 +15643,8 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .category = DAMAGE_CATEGORY_SPECIAL,
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_STAT_MINUS,
-            .spAtk = 1,
-            .chance = B_UPDATED_MOVE_DATA >= GEN_CHAMPIONS ? 10 : 30,
+            .spAtk = POLISHED_BALANCE(POLISHED_SECONDARY_STAT_DROP_STAGES, 1),
+            .chance = POLISHED_BALANCE(POLISHED_MOONBLAST_SECONDARY_CHANCE, B_UPDATED_MOVE_DATA >= GEN_CHAMPIONS ? 10 : 30),
         }),
         .contestEffect = CONTEST_EFFECT_BADLY_STARTLE_FRONT_MON,
         .contestCategory = CONTEST_CATEGORY_BEAUTY,

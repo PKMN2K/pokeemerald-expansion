@@ -105,6 +105,7 @@ jobs:
           python3 tools/polished_port/scripts/build_self_move_accuracy.py --check
           python3 tools/polished_port/scripts/build_typeless_moves.py --check
           python3 tools/polished_port/scripts/build_metronome_struggle.py --check
+          python3 tools/polished_port/scripts/build_secondary_stat_drops.py --check
           python3 tools/polished_port/scripts/build_rock_smash.py --check
           python3 tools/polished_port/scripts/test_rock_smash.py
           python3 tools/polished_port/scripts/build_flash.py --check
@@ -1163,6 +1164,7 @@ jobs:
           make -j$(nproc) -O TEST=1 POLISHED_MOVE_BALANCE_TEST=1 check TESTS='Polished self move accuracy'
           make -j$(nproc) -O TEST=1 POLISHED_MOVE_BALANCE_TEST=1 check TESTS='Polished typeless moves'
           make -j$(nproc) -O TEST=1 POLISHED_MOVE_BALANCE_TEST=1 check TESTS='Polished Metronome and Struggle'
+          make -j$(nproc) -O TEST=1 POLISHED_MOVE_BALANCE_TEST=1 check TESTS='Polished secondary stat drops'
           make -j$(nproc) -O TEST=1 POLISHED_MOVE_BALANCE_TEST=1 check TESTS='AI thinking time'
 
       - name: Exercise evolution completion and cancellation in mGBA

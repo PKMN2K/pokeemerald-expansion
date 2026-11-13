@@ -1558,3 +1558,33 @@ production adapter matches all 256 source draws and 976 known-slot cases.
 The same Johto ROM passes 101 campaign checks and 19 warp traversals; the
 move/machine audit reports no new gaps. Nine expected native test failures
 and 585 pre-existing TODOs remain unchanged.
+
+### Source secondary stat-drop suite
+
+The source profile now pins secondary chances, target stats and one-stage
+amounts for all 18 default-source damaging target stat-drop moves. Octazooka's
+Accuracy-drop chance is corrected from native 50% to source 30% (60% with
+Serene Grace). Acid targets Special Defense and Crunch targets Defense in the
+source profile independently of native generation switches. Native Expansion
+keeps its configured data; move IDs, saves and optional capacities are unchanged.
+
+`build_secondary_stat_drops.py` derives the records from the pinned move table
+and verifies the effect scripts, chance routine and stat-change encoding.
+The production move/machine audit now checks these 18 secondary records as well
+as the existing basic fields. Eight native/source test groups cover the data,
+actual target stat and stage on both sides, probabilistic activation, Serene
+Grace, defensive abilities/items, Sheer Force, Mold Breaker, substitutes,
+miss/protection/immunity/knockout gates, the stat floor and parent PP.
+
+This closes the selected secondary-data gap, not all secondary-effect behavior.
+Other secondary families, complete source ability/item/stat-change rules,
+damage/accuracy/AI, the source random stream and global RNG call order, original
+animations and source UI remain separate work. See the parity audit for final
+validation and the exact production ROM used.
+
+Validation: both production builds, all eight new groups in both profiles,
+5,426 native regressions, earlier source move suites and all six AI timing
+checks pass. All 50 source checks, 12 ARM probes, 12 demo checks, 101 campaign
+checks and 19 warp traversals pass. The production audit matches all 18
+secondary records with no new gaps; nine expected failures and 585 existing
+native TODOs remain unchanged.

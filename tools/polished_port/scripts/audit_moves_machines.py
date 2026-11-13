@@ -23,6 +23,7 @@ import build_retaliation_accuracy as retaliation
 import build_self_move_accuracy as self_accuracy
 import build_typeless_moves as typeless
 import build_metronome_struggle as metronome_struggle
+import build_secondary_stat_drops as stat_drops
 from test_johto_demo_emulator import Game
 
 ROOT = source.ROOT
@@ -43,7 +44,7 @@ def inputs():
                           type=type_, accuracy=0 if accuracy == '-1' else int(accuracy),
                           pp=int(base_pp), chance=int(chance), category=category))
     outputs = learning.build()
-    for path, expected in {**outputs, **pp.build(), **pain_split.build(), **fixed_damage.build(), **retaliation.build(), **self_accuracy.build(), **typeless.build(), **metronome_struggle.build()}.items():
+    for path, expected in {**outputs, **pp.build(), **pain_split.build(), **fixed_damage.build(), **retaliation.build(), **self_accuracy.build(), **typeless.build(), **metronome_struggle.build(), **stat_drops.build()}.items():
         assert path.read_text() == expected, f'Stale imported source data: {path}'
     catalog = json.loads(outputs[learning.MANIFEST])
     assert [r['kind'] for r in catalog['teaching_catalog']] == ['TM']*75 + ['HM']*6 + ['MT']*31
@@ -56,7 +57,7 @@ def probe_code(moves, catalog, species):
     definitions = [
         '#include "global.h"', '#include "main.h"', '#include "pokemon.h"',
         '#include "item.h"', '#include "item_use.h"', '#include "move.h"',
-        '#include "polished_tm.h"',
+        '#include "polished_tm.h"', '#include "battle.h"', '#include "battle_stat_change.h"',
         'struct Expected { u16 move, type, category; };',
         'static const struct Expected expected[] = {',
     ]
@@ -114,6 +115,20 @@ void CB2_MoveMachineAudit(void)
         gAuditResult[16] = GetMoveEffect(m) == EFFECT_FIXED_HP_DAMAGE;
         gAuditResult[17] = gAuditResult[16] ? GetMoveFixedHPDamage(m) : 0;
         gAuditResult[18] = GetMoveDisplayPower(m);
+        for (u32 n = 19; n < 30; n++)
+            gAuditResult[n] = 0;
+        gAuditResult[19] = GetMoveAdditionalEffectCount(m);
+        if (gAuditResult[19])
+        {
+            const struct AdditionalEffect *effect = GetMoveAdditionalEffectById(m, 0);
+            gAuditResult[20] = effect->moveEffect == MOVE_EFFECT_STAT_MINUS;
+            gAuditResult[21] = effect->chance;
+            gAuditResult[22] = effect->self | effect->preAttackEffect << 1 | effect->onChargeTurnOnly << 2
+                | effect->onSide << 3 | effect->onlyIfTargetRaisedStats << 4 | effect->pledgeCombo << 5
+                | effect->sheerForceOverride << 6;
+            for (u32 stat = STAT_ATK; stat <= STAT_EVASION; stat++)
+                gAuditResult[23 + stat - STAT_ATK] = GetStatStage(stat, effect);
+        }
     }
     else if (gAuditKind == 1 && gAuditCursor < ARRAY_COUNT(machines))
     {
@@ -195,6 +210,8 @@ def fixed_damage_differences(source_power, actual):
 
 def run(game, moves, catalog, species):
     pain_split_contract = json.loads((ROOT/'tools/polished_port/manifests/pain_split.json').read_text())
+    secondary_contract = {r['target_move']: r for r in stat_drops.records()}
+    stats = ['STAT_ATK', 'STAT_DEF', 'STAT_SPEED', 'STAT_SPATK', 'STAT_SPDEF', 'STAT_ACC', 'STAT_EVASION']
     move_results = []
     ids = {}
     native_names = {int(value): name for name, value in re.findall(
@@ -202,7 +219,7 @@ def run(game, moves, catalog, species):
     type_names = {int(value): name for name, value in re.findall(
         r'\bTYPE_(\w+)\s*=\s*(\d+)\s*,', (ROOT/'include/constants/pokemon.h').read_text())}
     for i, m in enumerate(moves):
-        actual = sample(game, 0, i, 19)
+        actual = sample(game, 0, i, 30)
         assert actual[0] > 0 and actual[0] not in ids.values(), 'Invalid or duplicate move ID'
         ids[m['target_move']] = actual[0]
         differences = {}
@@ -229,13 +246,23 @@ def run(game, moves, catalog, species):
                                       ('ignores_protect', 'bypasses_protect', 15)]:
                 if bool(actual[index]) != pain_split_contract[key]:
                     differences[field] = dict(source=pain_split_contract[key], target=bool(actual[index]))
+        secondary = None
+        if m['target_move'] in secondary_contract:
+            contract = secondary_contract[m['target_move']]
+            expected = dict(count=1, stat_minus=True, chance=contract['chance'], flags=0,
+                            stages={stat: int(stat == contract['target_stat']) for stat in stats})
+            secondary = dict(count=actual[19], stat_minus=bool(actual[20]), chance=actual[21], flags=actual[22],
+                             stages=dict(zip(stats, actual[23:30], strict=True)))
+            if secondary != expected:
+                differences['secondary_stat_drop'] = dict(source=expected, target=secondary)
         move_results.append(dict(source_move=m['source_move'], target_move=m['target_move'],
                                  source_effect=m['source_effect'], source_chance=m['chance'],
                                  actual=dict(id=actual[0], power=actual[1], accuracy=actual[2], pp=actual[3],
                                              type=type_names.get(actual[13], actual[13]), pp_up=actual[9:13], type_matches=bool(actual[4]), category_matches=bool(actual[5]),
                                              placeholder=bool(actual[6]), animation=bool(actual[7]), battle_script=bool(actual[8]),
                                              ignores_substitute=bool(actual[14]), ignores_protect=bool(actual[15]),
-                                             fixed_hp_effect=bool(actual[16]), fixed_hp_payload=actual[17], display_power=actual[18]),
+                                             fixed_hp_effect=bool(actual[16]), fixed_hp_payload=actual[17], display_power=actual[18],
+                                             secondary_stat_drop=secondary),
                                  fixed_damage_adapter=fixed,
                                  variable_power_requires_behavior_test=m['power'] == 1,
                                  differences=differences))
@@ -270,18 +297,21 @@ def markdown(report):
              'This probe links unchanged production Johto objects with a separate test boot.',
              'It checks the real accessors, PP calculations, teaching dispatch and compatibility.',
              'It does not play each move, teach every machine, or certify source battle effects,',
-             'secondary chances, priorities, animation playback, field uses, inventory ownership,',
+             'all secondary families, priorities, animation playback, field uses, inventory ownership,',
              'UI, save persistence or campaign acquisition. Engine regression tests and controller',
              'teaching scenarios are separate checks. A matching table row is not complete parity.', '',
+             'Secondary data coverage is limited to the 18 source damaging target stat-drop moves:',
+             'chance, stat payload, amount and target flags. RNG and gate behavior have separate tests.', '',
              '| Check | Result |', '| --- | --- |',
              f"| Move PP and all four PP Up levels | {s['move_pp_matches']}/{s['moves']} match |",
              f"| Non-placeholder effects and script/animation bindings | {s['dispatch_bound']}/{s['moves']} present |",
-             f"| Move rows with basic-data differences | {s['move_data_differences']} |",
+             f"| Move rows with audited data differences | {s['move_data_differences']} |",
              f"| TM number/move/category identity | {sum(m['identity_matches'] for m in report['machines'] if m['kind']=='TM')}/75 match |",
              f"| HM number/move/category identity | {sum(m['identity_matches'] for m in report['machines'] if m['kind']=='HM')}/6 match |",
+             f"| Target stat-drop secondary data | {s['secondary_stat_drop_matches']}/{s['secondary_stat_drop_moves']} match |",
              f"| TMs routed through the explicit source lesson adapter | {s['source_tm_lesson_adapters']}/75 |",
              f"| Species/form × TM/HM/tutor compatibility | {s['compatibility_checks']-s['compatibility_mismatches']}/{s['compatibility_checks']} match |", '',
-             '## Basic move-data differences', '',
+             '## Audited move-data differences', '',
              'These are table differences requiring source-behavior review, not all confirmed',
              'gameplay bugs. Typeless move sentinels and',
              'accuracy on moves that bypass accuracy may use different representations.',
@@ -376,6 +406,8 @@ def main():
     summary = dict(moves=len(report['moves']), move_data_differences=sum(bool(m['differences']) for m in report['moves']),
                    move_pp_matches=sum('pp' not in m['differences'] and 'pp_up' not in m['differences'] for m in report['moves']),
                    dispatch_bound=sum(not m['actual']['placeholder'] and m['actual']['animation'] and m['actual']['battle_script'] for m in report['moves']),
+                   secondary_stat_drop_moves=sum(m['actual']['secondary_stat_drop'] is not None for m in report['moves']),
+                   secondary_stat_drop_matches=sum(m['actual']['secondary_stat_drop'] is not None and 'secondary_stat_drop' not in m['differences'] for m in report['moves']),
                    machine_identities_matching=sum(m['identity_matches'] for m in report['machines']),
                    machines=len(report['machines']), source_tm_lesson_adapters=sum(m['source_lesson_adapter'] for m in report['machines'] if m['kind'] == 'TM'),
                    compatibility_checks=report['compatibility']['combinations'], compatibility_mismatches=len(report['compatibility']['mismatches']))
