@@ -39,8 +39,8 @@ def build():
         scope='Static move type identity and summary icons, with focused typeless/called-move regression coverage.',
         runtime_contract=['Struggle skips STAB and type matchups in the pinned source; the native runtime already bypasses both.',
                           'Metronome loads the called move data and restarts execution; its parent type must not replace the called move type.'],
-        gaps=['Metronome still uses the native candidate pool and RNG. Source excludes already-known moves and its own exception list; importing this selector is separate work.',
-              'Struggle source recoil uses floored quarter maximum HP, minimum one, unlike native modern rounding. Recoil, damage rounding, PP-exhaustion selection and move bookkeeping are not certified here.',
+        gaps=['This type-only contract does not certify selection or recoil. The later metronome_struggle.json contract imports the source pool, exceptions, known-slot exclusions and floored recoil.',
+              'The source random stream, general damage rounding, PP-exhaustion selection and move bookkeeping remain separate audits.',
               'General type-changing abilities, Conversion/Conversion 2, weather, held-item behavior and AI scoring need separate source audits.',
               'Original source UI layout/art and move animations remain unported. Extra Expansion capabilities remain available.'])
     return {source.ROOT/'include/constants/polished_typeless_moves.h': header,

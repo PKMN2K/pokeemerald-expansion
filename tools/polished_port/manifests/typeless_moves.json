@@ -29,8 +29,8 @@
     "Metronome loads the called move data and restarts execution; its parent type must not replace the called move type."
   ],
   "gaps": [
-    "Metronome still uses the native candidate pool and RNG. Source excludes already-known moves and its own exception list; importing this selector is separate work.",
-    "Struggle source recoil uses floored quarter maximum HP, minimum one, unlike native modern rounding. Recoil, damage rounding, PP-exhaustion selection and move bookkeeping are not certified here.",
+    "This type-only contract does not certify selection or recoil. The later metronome_struggle.json contract imports the source pool, exceptions, known-slot exclusions and floored recoil.",
+    "The source random stream, general damage rounding, PP-exhaustion selection and move bookkeeping remain separate audits.",
     "General type-changing abilities, Conversion/Conversion 2, weather, held-item behavior and AI scoring need separate source audits.",
     "Original source UI layout/art and move animations remain unported. Extra Expansion capabilities remain available."
   ]

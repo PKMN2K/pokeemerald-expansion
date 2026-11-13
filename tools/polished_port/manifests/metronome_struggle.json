@@ -1,0 +1,2097 @@
+{
+  "source_repository": "Rangi42/polishedcrystal",
+  "source_commit": "3fa43192379df5c3e7b09a08e4d5d79af4f02f42",
+  "source_variant": "default (FAITHFUL undefined)",
+  "profile": "B_POLISHED_MOVE_BALANCE",
+  "metronome": {
+    "draw_range": [
+      0,
+      255
+    ],
+    "rejection_sampling": true,
+    "excludes_current_moves": true,
+    "checks_all_four_slots": true,
+    "ignores_known_move_pp": true,
+    "excludes_native_bans": false,
+    "base_pool_size": 244,
+    "excluded_source_constants": [
+      "NO_MOVE",
+      "COUNTER",
+      "DESTINY_BOND",
+      "ENDURE",
+      "METRONOME",
+      "MIRROR_COAT",
+      "PROTECT",
+      "SKETCH",
+      "SLEEP_TALK",
+      "THIEF",
+      "TRANSFORM",
+      "STRUGGLE"
+    ],
+    "rolls": [
+      {
+        "source_id": 0,
+        "source_constant": "NO_MOVE",
+        "source_move": "NO_MOVE",
+        "source_aliases": [],
+        "target_move": "MOVE_NONE",
+        "excluded": true
+      },
+      {
+        "source_id": 1,
+        "source_constant": "ACROBATICS",
+        "source_move": "ACROBATICS",
+        "source_aliases": [],
+        "target_move": "MOVE_ACROBATICS",
+        "excluded": false
+      },
+      {
+        "source_id": 2,
+        "source_constant": "KARATE_CHOP",
+        "source_move": "KARATE_CHOP",
+        "source_aliases": [],
+        "target_move": "MOVE_KARATE_CHOP",
+        "excluded": false
+      },
+      {
+        "source_id": 3,
+        "source_constant": "DOUBLE_SLAP",
+        "source_move": "DOUBLE_SLAP",
+        "source_aliases": [],
+        "target_move": "MOVE_DOUBLE_SLAP",
+        "excluded": false
+      },
+      {
+        "source_id": 4,
+        "source_constant": "AERIAL_ACE",
+        "source_move": "AERIAL_ACE",
+        "source_aliases": [],
+        "target_move": "MOVE_AERIAL_ACE",
+        "excluded": false
+      },
+      {
+        "source_id": 5,
+        "source_constant": "DRAGON_CLAW",
+        "source_move": "DRAGON_CLAW",
+        "source_aliases": [],
+        "target_move": "MOVE_DRAGON_CLAW",
+        "excluded": false
+      },
+      {
+        "source_id": 6,
+        "source_constant": "PAY_DAY",
+        "source_move": "PAY_DAY",
+        "source_aliases": [],
+        "target_move": "MOVE_PAY_DAY",
+        "excluded": false
+      },
+      {
+        "source_id": 7,
+        "source_constant": "FIRE_PUNCH",
+        "source_move": "FIRE_PUNCH",
+        "source_aliases": [],
+        "target_move": "MOVE_FIRE_PUNCH",
+        "excluded": false
+      },
+      {
+        "source_id": 8,
+        "source_constant": "ICE_PUNCH",
+        "source_move": "ICE_PUNCH",
+        "source_aliases": [],
+        "target_move": "MOVE_ICE_PUNCH",
+        "excluded": false
+      },
+      {
+        "source_id": 9,
+        "source_constant": "THUNDERPUNCH",
+        "source_move": "THUNDERPUNCH",
+        "source_aliases": [],
+        "target_move": "MOVE_THUNDERPUNCH",
+        "excluded": false
+      },
+      {
+        "source_id": 10,
+        "source_constant": "SCRATCH",
+        "source_move": "SCRATCH",
+        "source_aliases": [],
+        "target_move": "MOVE_SCRATCH",
+        "excluded": false
+      },
+      {
+        "source_id": 11,
+        "source_constant": "X_SCISSOR",
+        "source_move": "X_SCISSOR",
+        "source_aliases": [],
+        "target_move": "MOVE_X_SCISSOR",
+        "excluded": false
+      },
+      {
+        "source_id": 12,
+        "source_constant": "NIGHT_SLASH",
+        "source_move": "NIGHT_SLASH",
+        "source_aliases": [],
+        "target_move": "MOVE_NIGHT_SLASH",
+        "excluded": false
+      },
+      {
+        "source_id": 13,
+        "source_constant": "AIR_SLASH",
+        "source_move": "AIR_SLASH",
+        "source_aliases": [],
+        "target_move": "MOVE_AIR_SLASH",
+        "excluded": false
+      },
+      {
+        "source_id": 14,
+        "source_constant": "SWORDS_DANCE",
+        "source_move": "SWORDS_DANCE",
+        "source_aliases": [],
+        "target_move": "MOVE_SWORDS_DANCE",
+        "excluded": false
+      },
+      {
+        "source_id": 15,
+        "source_constant": "CUT",
+        "source_move": "CUT",
+        "source_aliases": [],
+        "target_move": "MOVE_CUT",
+        "excluded": false
+      },
+      {
+        "source_id": 16,
+        "source_constant": "GUST",
+        "source_move": "GUST",
+        "source_aliases": [],
+        "target_move": "MOVE_GUST",
+        "excluded": false
+      },
+      {
+        "source_id": 17,
+        "source_constant": "WING_ATTACK",
+        "source_move": "WING_ATTACK",
+        "source_aliases": [],
+        "target_move": "MOVE_WING_ATTACK",
+        "excluded": false
+      },
+      {
+        "source_id": 18,
+        "source_constant": "SUCKER_PUNCH",
+        "source_move": "SUCKER_PUNCH",
+        "source_aliases": [],
+        "target_move": "MOVE_SUCKER_PUNCH",
+        "excluded": false
+      },
+      {
+        "source_id": 19,
+        "source_constant": "FLY",
+        "source_move": "FLY",
+        "source_aliases": [],
+        "target_move": "MOVE_FLY",
+        "excluded": false
+      },
+      {
+        "source_id": 20,
+        "source_constant": "DAZZLINGLEAM",
+        "source_move": "DAZZLINGLEAM",
+        "source_aliases": [],
+        "target_move": "MOVE_DAZZLING_GLEAM",
+        "excluded": false
+      },
+      {
+        "source_id": 21,
+        "source_constant": "VOLT_SWITCH",
+        "source_move": "VOLT_SWITCH",
+        "source_aliases": [],
+        "target_move": "MOVE_VOLT_SWITCH",
+        "excluded": false
+      },
+      {
+        "source_id": 22,
+        "source_constant": "VINE_WHIP",
+        "source_move": "VINE_WHIP",
+        "source_aliases": [],
+        "target_move": "MOVE_VINE_WHIP",
+        "excluded": false
+      },
+      {
+        "source_id": 23,
+        "source_constant": "STOMP",
+        "source_move": "STOMP",
+        "source_aliases": [],
+        "target_move": "MOVE_STOMP",
+        "excluded": false
+      },
+      {
+        "source_id": 24,
+        "source_constant": "DOUBLE_KICK",
+        "source_move": "DOUBLE_KICK",
+        "source_aliases": [],
+        "target_move": "MOVE_DOUBLE_KICK",
+        "excluded": false
+      },
+      {
+        "source_id": 25,
+        "source_constant": "FLARE_BLITZ",
+        "source_move": "FLARE_BLITZ",
+        "source_aliases": [],
+        "target_move": "MOVE_FLARE_BLITZ",
+        "excluded": false
+      },
+      {
+        "source_id": 26,
+        "source_constant": "STONE_EDGE",
+        "source_move": "STONE_EDGE",
+        "source_aliases": [],
+        "target_move": "MOVE_STONE_EDGE",
+        "excluded": false
+      },
+      {
+        "source_id": 27,
+        "source_constant": "FOCUS_BLAST",
+        "source_move": "FOCUS_BLAST",
+        "source_aliases": [],
+        "target_move": "MOVE_FOCUS_BLAST",
+        "excluded": false
+      },
+      {
+        "source_id": 28,
+        "source_constant": "TOXIC_SPIKES",
+        "source_move": "TOXIC_SPIKES",
+        "source_aliases": [],
+        "target_move": "MOVE_TOXIC_SPIKES",
+        "excluded": false
+      },
+      {
+        "source_id": 29,
+        "source_constant": "HEADBUTT",
+        "source_move": "HEADBUTT",
+        "source_aliases": [],
+        "target_move": "MOVE_HEADBUTT",
+        "excluded": false
+      },
+      {
+        "source_id": 30,
+        "source_constant": "HORN_ATTACK",
+        "source_move": "HORN_ATTACK",
+        "source_aliases": [],
+        "target_move": "MOVE_HORN_ATTACK",
+        "excluded": false
+      },
+      {
+        "source_id": 31,
+        "source_constant": "TRICK",
+        "source_move": "TRICK",
+        "source_aliases": [],
+        "target_move": "MOVE_TRICK",
+        "excluded": false
+      },
+      {
+        "source_id": 32,
+        "source_constant": "HEX",
+        "source_move": "HEX",
+        "source_aliases": [],
+        "target_move": "MOVE_HEX",
+        "excluded": false
+      },
+      {
+        "source_id": 33,
+        "source_constant": "TACKLE",
+        "source_move": "TACKLE",
+        "source_aliases": [],
+        "target_move": "MOVE_TACKLE",
+        "excluded": false
+      },
+      {
+        "source_id": 34,
+        "source_constant": "BODY_SLAM",
+        "source_move": "BODY_SLAM",
+        "source_aliases": [],
+        "target_move": "MOVE_BODY_SLAM",
+        "excluded": false
+      },
+      {
+        "source_id": 35,
+        "source_constant": "WRAP",
+        "source_move": "WRAP",
+        "source_aliases": [],
+        "target_move": "MOVE_WRAP",
+        "excluded": false
+      },
+      {
+        "source_id": 36,
+        "source_constant": "TAKE_DOWN",
+        "source_move": "TAKE_DOWN",
+        "source_aliases": [],
+        "target_move": "MOVE_TAKE_DOWN",
+        "excluded": false
+      },
+      {
+        "source_id": 37,
+        "source_constant": "THRASH",
+        "source_move": "THRASH",
+        "source_aliases": [],
+        "target_move": "MOVE_THRASH",
+        "excluded": false
+      },
+      {
+        "source_id": 38,
+        "source_constant": "DOUBLE_EDGE",
+        "source_move": "DOUBLE_EDGE",
+        "source_aliases": [],
+        "target_move": "MOVE_DOUBLE_EDGE",
+        "excluded": false
+      },
+      {
+        "source_id": 39,
+        "source_constant": "HAIL",
+        "source_move": "HAIL",
+        "source_aliases": [],
+        "target_move": "MOVE_HAIL",
+        "excluded": false
+      },
+      {
+        "source_id": 40,
+        "source_constant": "POISON_STING",
+        "source_move": "POISON_STING",
+        "source_aliases": [],
+        "target_move": "MOVE_POISON_STING",
+        "excluded": false
+      },
+      {
+        "source_id": 41,
+        "source_constant": "U_TURN",
+        "source_move": "U_TURN",
+        "source_aliases": [],
+        "target_move": "MOVE_U_TURN",
+        "excluded": false
+      },
+      {
+        "source_id": 42,
+        "source_constant": "PIN_MISSILE",
+        "source_move": "PIN_MISSILE",
+        "source_aliases": [],
+        "target_move": "MOVE_PIN_MISSILE",
+        "excluded": false
+      },
+      {
+        "source_id": 43,
+        "source_constant": "LEER",
+        "source_move": "LEER",
+        "source_aliases": [],
+        "target_move": "MOVE_LEER",
+        "excluded": false
+      },
+      {
+        "source_id": 44,
+        "source_constant": "BITE",
+        "source_move": "BITE",
+        "source_aliases": [],
+        "target_move": "MOVE_BITE",
+        "excluded": false
+      },
+      {
+        "source_id": 45,
+        "source_constant": "GROWL",
+        "source_move": "GROWL",
+        "source_aliases": [],
+        "target_move": "MOVE_GROWL",
+        "excluded": false
+      },
+      {
+        "source_id": 46,
+        "source_constant": "ROAR",
+        "source_move": "ROAR",
+        "source_aliases": [],
+        "target_move": "MOVE_ROAR",
+        "excluded": false
+      },
+      {
+        "source_id": 47,
+        "source_constant": "SING",
+        "source_move": "SING",
+        "source_aliases": [],
+        "target_move": "MOVE_SING",
+        "excluded": false
+      },
+      {
+        "source_id": 48,
+        "source_constant": "SUPERSONIC",
+        "source_move": "SUPERSONIC",
+        "source_aliases": [],
+        "target_move": "MOVE_SUPERSONIC",
+        "excluded": false
+      },
+      {
+        "source_id": 49,
+        "source_constant": "SONIC_BOOM",
+        "source_move": "SONIC_BOOM",
+        "source_aliases": [],
+        "target_move": "MOVE_SONIC_BOOM",
+        "excluded": false
+      },
+      {
+        "source_id": 50,
+        "source_constant": "DISABLE",
+        "source_move": "DISABLE",
+        "source_aliases": [],
+        "target_move": "MOVE_DISABLE",
+        "excluded": false
+      },
+      {
+        "source_id": 51,
+        "source_constant": "ACID",
+        "source_move": "ACID",
+        "source_aliases": [],
+        "target_move": "MOVE_ACID",
+        "excluded": false
+      },
+      {
+        "source_id": 52,
+        "source_constant": "EMBER",
+        "source_move": "EMBER",
+        "source_aliases": [],
+        "target_move": "MOVE_EMBER",
+        "excluded": false
+      },
+      {
+        "source_id": 53,
+        "source_constant": "FLAMETHROWER",
+        "source_move": "FLAMETHROWER",
+        "source_aliases": [],
+        "target_move": "MOVE_FLAMETHROWER",
+        "excluded": false
+      },
+      {
+        "source_id": 54,
+        "source_constant": "CALM_MIND",
+        "source_move": "CALM_MIND",
+        "source_aliases": [],
+        "target_move": "MOVE_CALM_MIND",
+        "excluded": false
+      },
+      {
+        "source_id": 55,
+        "source_constant": "WATER_GUN",
+        "source_move": "WATER_GUN",
+        "source_aliases": [],
+        "target_move": "MOVE_WATER_GUN",
+        "excluded": false
+      },
+      {
+        "source_id": 56,
+        "source_constant": "HYDRO_PUMP",
+        "source_move": "HYDRO_PUMP",
+        "source_aliases": [],
+        "target_move": "MOVE_HYDRO_PUMP",
+        "excluded": false
+      },
+      {
+        "source_id": 57,
+        "source_constant": "SURF",
+        "source_move": "SURF",
+        "source_aliases": [],
+        "target_move": "MOVE_SURF",
+        "excluded": false
+      },
+      {
+        "source_id": 58,
+        "source_constant": "ICE_BEAM",
+        "source_move": "ICE_BEAM",
+        "source_aliases": [],
+        "target_move": "MOVE_ICE_BEAM",
+        "excluded": false
+      },
+      {
+        "source_id": 59,
+        "source_constant": "BLIZZARD",
+        "source_move": "BLIZZARD",
+        "source_aliases": [],
+        "target_move": "MOVE_BLIZZARD",
+        "excluded": false
+      },
+      {
+        "source_id": 60,
+        "source_constant": "PSYBEAM",
+        "source_move": "PSYBEAM",
+        "source_aliases": [],
+        "target_move": "MOVE_PSYBEAM",
+        "excluded": false
+      },
+      {
+        "source_id": 61,
+        "source_constant": "BUBBLE_BEAM",
+        "source_move": "BUBBLE_BEAM",
+        "source_aliases": [],
+        "target_move": "MOVE_BUBBLE_BEAM",
+        "excluded": false
+      },
+      {
+        "source_id": 62,
+        "source_constant": "AURORA_BEAM",
+        "source_move": "AURORA_BEAM",
+        "source_aliases": [],
+        "target_move": "MOVE_AURORA_BEAM",
+        "excluded": false
+      },
+      {
+        "source_id": 63,
+        "source_constant": "HYPER_BEAM",
+        "source_move": "HYPER_BEAM",
+        "source_aliases": [],
+        "target_move": "MOVE_HYPER_BEAM",
+        "excluded": false
+      },
+      {
+        "source_id": 64,
+        "source_constant": "PECK",
+        "source_move": "PECK",
+        "source_aliases": [],
+        "target_move": "MOVE_PECK",
+        "excluded": false
+      },
+      {
+        "source_id": 65,
+        "source_constant": "DRILL_PECK",
+        "source_move": "DRILL_PECK",
+        "source_aliases": [],
+        "target_move": "MOVE_DRILL_PECK",
+        "excluded": false
+      },
+      {
+        "source_id": 66,
+        "source_constant": "CLOSE_COMBAT",
+        "source_move": "CLOSE_COMBAT",
+        "source_aliases": [],
+        "target_move": "MOVE_CLOSE_COMBAT",
+        "excluded": false
+      },
+      {
+        "source_id": 67,
+        "source_constant": "LOW_KICK",
+        "source_move": "LOW_KICK",
+        "source_aliases": [],
+        "target_move": "MOVE_LOW_KICK",
+        "excluded": false
+      },
+      {
+        "source_id": 68,
+        "source_constant": "COUNTER",
+        "source_move": "COUNTER",
+        "source_aliases": [],
+        "target_move": "MOVE_COUNTER",
+        "excluded": true
+      },
+      {
+        "source_id": 69,
+        "source_constant": "SEISMIC_TOSS",
+        "source_move": "SEISMIC_TOSS",
+        "source_aliases": [],
+        "target_move": "MOVE_SEISMIC_TOSS",
+        "excluded": false
+      },
+      {
+        "source_id": 70,
+        "source_constant": "STRENGTH",
+        "source_move": "STRENGTH",
+        "source_aliases": [],
+        "target_move": "MOVE_STRENGTH",
+        "excluded": false
+      },
+      {
+        "source_id": 71,
+        "source_constant": "ABSORB",
+        "source_move": "ABSORB",
+        "source_aliases": [],
+        "target_move": "MOVE_ABSORB",
+        "excluded": false
+      },
+      {
+        "source_id": 72,
+        "source_constant": "MEGA_DRAIN",
+        "source_move": "MEGA_DRAIN",
+        "source_aliases": [],
+        "target_move": "MOVE_MEGA_DRAIN",
+        "excluded": false
+      },
+      {
+        "source_id": 73,
+        "source_constant": "LEECH_SEED",
+        "source_move": "LEECH_SEED",
+        "source_aliases": [],
+        "target_move": "MOVE_LEECH_SEED",
+        "excluded": false
+      },
+      {
+        "source_id": 74,
+        "source_constant": "GROWTH",
+        "source_move": "GROWTH",
+        "source_aliases": [],
+        "target_move": "MOVE_GROWTH",
+        "excluded": false
+      },
+      {
+        "source_id": 75,
+        "source_constant": "RAZOR_LEAF",
+        "source_move": "RAZOR_LEAF",
+        "source_aliases": [],
+        "target_move": "MOVE_RAZOR_LEAF",
+        "excluded": false
+      },
+      {
+        "source_id": 76,
+        "source_constant": "SOLAR_BEAM",
+        "source_move": "SOLAR_BEAM",
+        "source_aliases": [],
+        "target_move": "MOVE_SOLAR_BEAM",
+        "excluded": false
+      },
+      {
+        "source_id": 77,
+        "source_constant": "POISONPOWDER",
+        "source_move": "POISONPOWDER",
+        "source_aliases": [],
+        "target_move": "MOVE_POISONPOWDER",
+        "excluded": false
+      },
+      {
+        "source_id": 78,
+        "source_constant": "STUN_SPORE",
+        "source_move": "STUN_SPORE",
+        "source_aliases": [],
+        "target_move": "MOVE_STUN_SPORE",
+        "excluded": false
+      },
+      {
+        "source_id": 79,
+        "source_constant": "SLEEP_POWDER",
+        "source_move": "SLEEP_POWDER",
+        "source_aliases": [],
+        "target_move": "MOVE_SLEEP_POWDER",
+        "excluded": false
+      },
+      {
+        "source_id": 80,
+        "source_constant": "PETAL_DANCE",
+        "source_move": "PETAL_DANCE",
+        "source_aliases": [],
+        "target_move": "MOVE_PETAL_DANCE",
+        "excluded": false
+      },
+      {
+        "source_id": 81,
+        "source_constant": "STRING_SHOT",
+        "source_move": "STRING_SHOT",
+        "source_aliases": [],
+        "target_move": "MOVE_STRING_SHOT",
+        "excluded": false
+      },
+      {
+        "source_id": 82,
+        "source_constant": "DRAGON_RAGE",
+        "source_move": "DRAGON_RAGE",
+        "source_aliases": [],
+        "target_move": "MOVE_DRAGON_RAGE",
+        "excluded": false
+      },
+      {
+        "source_id": 83,
+        "source_constant": "FIRE_SPIN",
+        "source_move": "FIRE_SPIN",
+        "source_aliases": [],
+        "target_move": "MOVE_FIRE_SPIN",
+        "excluded": false
+      },
+      {
+        "source_id": 84,
+        "source_constant": "THUNDERSHOCK",
+        "source_move": "THUNDERSHOCK",
+        "source_aliases": [],
+        "target_move": "MOVE_THUNDERSHOCK",
+        "excluded": false
+      },
+      {
+        "source_id": 85,
+        "source_constant": "THUNDERBOLT",
+        "source_move": "THUNDERBOLT",
+        "source_aliases": [],
+        "target_move": "MOVE_THUNDERBOLT",
+        "excluded": false
+      },
+      {
+        "source_id": 86,
+        "source_constant": "THUNDER_WAVE",
+        "source_move": "THUNDER_WAVE",
+        "source_aliases": [],
+        "target_move": "MOVE_THUNDER_WAVE",
+        "excluded": false
+      },
+      {
+        "source_id": 87,
+        "source_constant": "THUNDER",
+        "source_move": "THUNDER",
+        "source_aliases": [],
+        "target_move": "MOVE_THUNDER",
+        "excluded": false
+      },
+      {
+        "source_id": 88,
+        "source_constant": "ROCK_THROW",
+        "source_move": "ROCK_THROW",
+        "source_aliases": [],
+        "target_move": "MOVE_ROCK_THROW",
+        "excluded": false
+      },
+      {
+        "source_id": 89,
+        "source_constant": "EARTHQUAKE",
+        "source_move": "EARTHQUAKE",
+        "source_aliases": [],
+        "target_move": "MOVE_EARTHQUAKE",
+        "excluded": false
+      },
+      {
+        "source_id": 90,
+        "source_constant": "AVALANCHE",
+        "source_move": "AVALANCHE",
+        "source_aliases": [],
+        "target_move": "MOVE_AVALANCHE",
+        "excluded": false
+      },
+      {
+        "source_id": 91,
+        "source_constant": "DIG",
+        "source_move": "DIG",
+        "source_aliases": [],
+        "target_move": "MOVE_DIG",
+        "excluded": false
+      },
+      {
+        "source_id": 92,
+        "source_constant": "TOXIC",
+        "source_move": "TOXIC",
+        "source_aliases": [],
+        "target_move": "MOVE_TOXIC",
+        "excluded": false
+      },
+      {
+        "source_id": 93,
+        "source_constant": "CONFUSION",
+        "source_move": "CONFUSION",
+        "source_aliases": [],
+        "target_move": "MOVE_CONFUSION",
+        "excluded": false
+      },
+      {
+        "source_id": 94,
+        "source_constant": "PSYCHIC_M",
+        "source_move": "PSYCHIC_M",
+        "source_aliases": [],
+        "target_move": "MOVE_PSYCHIC",
+        "excluded": false
+      },
+      {
+        "source_id": 95,
+        "source_constant": "HYPNOSIS",
+        "source_move": "HYPNOSIS",
+        "source_aliases": [],
+        "target_move": "MOVE_HYPNOSIS",
+        "excluded": false
+      },
+      {
+        "source_id": 96,
+        "source_constant": "HONE_CLAWS",
+        "source_move": "HONE_CLAWS",
+        "source_aliases": [],
+        "target_move": "MOVE_HONE_CLAWS",
+        "excluded": false
+      },
+      {
+        "source_id": 97,
+        "source_constant": "AGILITY",
+        "source_move": "AGILITY",
+        "source_aliases": [],
+        "target_move": "MOVE_AGILITY",
+        "excluded": false
+      },
+      {
+        "source_id": 98,
+        "source_constant": "QUICK_ATTACK",
+        "source_move": "QUICK_ATTACK",
+        "source_aliases": [],
+        "target_move": "MOVE_QUICK_ATTACK",
+        "excluded": false
+      },
+      {
+        "source_id": 99,
+        "source_constant": "RAGE",
+        "source_move": "RAGE",
+        "source_aliases": [],
+        "target_move": "MOVE_RAGE",
+        "excluded": false
+      },
+      {
+        "source_id": 100,
+        "source_constant": "TELEPORT",
+        "source_move": "TELEPORT",
+        "source_aliases": [],
+        "target_move": "MOVE_TELEPORT",
+        "excluded": false
+      },
+      {
+        "source_id": 101,
+        "source_constant": "NIGHT_SHADE",
+        "source_move": "NIGHT_SHADE",
+        "source_aliases": [],
+        "target_move": "MOVE_NIGHT_SHADE",
+        "excluded": false
+      },
+      {
+        "source_id": 102,
+        "source_constant": "DRAGON_PULSE",
+        "source_move": "DRAGON_PULSE",
+        "source_aliases": [],
+        "target_move": "MOVE_DRAGON_PULSE",
+        "excluded": false
+      },
+      {
+        "source_id": 103,
+        "source_constant": "SCREECH",
+        "source_move": "SCREECH",
+        "source_aliases": [],
+        "target_move": "MOVE_SCREECH",
+        "excluded": false
+      },
+      {
+        "source_id": 104,
+        "source_constant": "DOUBLE_TEAM",
+        "source_move": "DOUBLE_TEAM",
+        "source_aliases": [],
+        "target_move": "MOVE_DOUBLE_TEAM",
+        "excluded": false
+      },
+      {
+        "source_id": 105,
+        "source_constant": "RECOVER",
+        "source_move": "RECOVER",
+        "source_aliases": [],
+        "target_move": "MOVE_RECOVER",
+        "excluded": false
+      },
+      {
+        "source_id": 106,
+        "source_constant": "ROCK_BLAST",
+        "source_move": "ROCK_BLAST",
+        "source_aliases": [],
+        "target_move": "MOVE_ROCK_BLAST",
+        "excluded": false
+      },
+      {
+        "source_id": 107,
+        "source_constant": "MINIMIZE",
+        "source_move": "MINIMIZE",
+        "source_aliases": [],
+        "target_move": "MOVE_MINIMIZE",
+        "excluded": false
+      },
+      {
+        "source_id": 108,
+        "source_constant": "SMOKESCREEN",
+        "source_move": "SMOKESCREEN",
+        "source_aliases": [],
+        "target_move": "MOVE_SMOKESCREEN",
+        "excluded": false
+      },
+      {
+        "source_id": 109,
+        "source_constant": "CONFUSE_RAY",
+        "source_move": "CONFUSE_RAY",
+        "source_aliases": [],
+        "target_move": "MOVE_CONFUSE_RAY",
+        "excluded": false
+      },
+      {
+        "source_id": 110,
+        "source_constant": "AQUA_TAIL",
+        "source_move": "AQUA_TAIL",
+        "source_aliases": [],
+        "target_move": "MOVE_AQUA_TAIL",
+        "excluded": false
+      },
+      {
+        "source_id": 111,
+        "source_constant": "DEFENSE_CURL",
+        "source_move": "DEFENSE_CURL",
+        "source_aliases": [],
+        "target_move": "MOVE_DEFENSE_CURL",
+        "excluded": false
+      },
+      {
+        "source_id": 112,
+        "source_constant": "BARRIER",
+        "source_move": "BARRIER",
+        "source_aliases": [],
+        "target_move": "MOVE_BARRIER",
+        "excluded": false
+      },
+      {
+        "source_id": 113,
+        "source_constant": "LIGHT_SCREEN",
+        "source_move": "LIGHT_SCREEN",
+        "source_aliases": [],
+        "target_move": "MOVE_LIGHT_SCREEN",
+        "excluded": false
+      },
+      {
+        "source_id": 114,
+        "source_constant": "HAZE",
+        "source_move": "HAZE",
+        "source_aliases": [],
+        "target_move": "MOVE_HAZE",
+        "excluded": false
+      },
+      {
+        "source_id": 115,
+        "source_constant": "REFLECT",
+        "source_move": "REFLECT",
+        "source_aliases": [],
+        "target_move": "MOVE_REFLECT",
+        "excluded": false
+      },
+      {
+        "source_id": 116,
+        "source_constant": "FOCUS_ENERGY",
+        "source_move": "FOCUS_ENERGY",
+        "source_aliases": [],
+        "target_move": "MOVE_FOCUS_ENERGY",
+        "excluded": false
+      },
+      {
+        "source_id": 117,
+        "source_constant": "FLASH_CANNON",
+        "source_move": "FLASH_CANNON",
+        "source_aliases": [],
+        "target_move": "MOVE_FLASH_CANNON",
+        "excluded": false
+      },
+      {
+        "source_id": 118,
+        "source_constant": "METRONOME",
+        "source_move": "METRONOME",
+        "source_aliases": [],
+        "target_move": "MOVE_METRONOME",
+        "excluded": true
+      },
+      {
+        "source_id": 119,
+        "source_constant": "SCALD",
+        "source_move": "SCALD",
+        "source_aliases": [],
+        "target_move": "MOVE_SCALD",
+        "excluded": false
+      },
+      {
+        "source_id": 120,
+        "source_constant": "TRICK_ROOM",
+        "source_move": "TRICK_ROOM",
+        "source_aliases": [],
+        "target_move": "MOVE_TRICK_ROOM",
+        "excluded": false
+      },
+      {
+        "source_id": 121,
+        "source_constant": "SKILL_SWAP",
+        "source_move": "SKILL_SWAP",
+        "source_aliases": [],
+        "target_move": "MOVE_SKILL_SWAP",
+        "excluded": false
+      },
+      {
+        "source_id": 122,
+        "source_constant": "LICK",
+        "source_move": "LICK",
+        "source_aliases": [],
+        "target_move": "MOVE_LICK",
+        "excluded": false
+      },
+      {
+        "source_id": 123,
+        "source_constant": "GUNK_SHOT",
+        "source_move": "GUNK_SHOT",
+        "source_aliases": [],
+        "target_move": "MOVE_GUNK_SHOT",
+        "excluded": false
+      },
+      {
+        "source_id": 124,
+        "source_constant": "VENOSHOCK",
+        "source_move": "VENOSHOCK",
+        "source_aliases": [],
+        "target_move": "MOVE_VENOSHOCK",
+        "excluded": false
+      },
+      {
+        "source_id": 125,
+        "source_constant": "EARTH_POWER",
+        "source_move": "EARTH_POWER",
+        "source_aliases": [],
+        "target_move": "MOVE_EARTH_POWER",
+        "excluded": false
+      },
+      {
+        "source_id": 126,
+        "source_constant": "FIRE_BLAST",
+        "source_move": "FIRE_BLAST",
+        "source_aliases": [],
+        "target_move": "MOVE_FIRE_BLAST",
+        "excluded": false
+      },
+      {
+        "source_id": 127,
+        "source_constant": "WATERFALL",
+        "source_move": "WATERFALL",
+        "source_aliases": [],
+        "target_move": "MOVE_WATERFALL",
+        "excluded": false
+      },
+      {
+        "source_id": 128,
+        "source_constant": "ICICLE_CRASH",
+        "source_move": "ICICLE_CRASH",
+        "source_aliases": [],
+        "target_move": "MOVE_ICICLE_CRASH",
+        "excluded": false
+      },
+      {
+        "source_id": 129,
+        "source_constant": "SWIFT",
+        "source_move": "SWIFT",
+        "source_aliases": [],
+        "target_move": "MOVE_SWIFT",
+        "excluded": false
+      },
+      {
+        "source_id": 130,
+        "source_constant": "IRON_HEAD",
+        "source_move": "IRON_HEAD",
+        "source_aliases": [],
+        "target_move": "MOVE_IRON_HEAD",
+        "excluded": false
+      },
+      {
+        "source_id": 131,
+        "source_constant": "ICICLE_SPEAR",
+        "source_move": "ICICLE_SPEAR",
+        "source_aliases": [],
+        "target_move": "MOVE_ICICLE_SPEAR",
+        "excluded": false
+      },
+      {
+        "source_id": 132,
+        "source_constant": "BULLDOZE",
+        "source_move": "BULLDOZE",
+        "source_aliases": [],
+        "target_move": "MOVE_BULLDOZE",
+        "excluded": false
+      },
+      {
+        "source_id": 133,
+        "source_constant": "AMNESIA",
+        "source_move": "AMNESIA",
+        "source_aliases": [],
+        "target_move": "MOVE_AMNESIA",
+        "excluded": false
+      },
+      {
+        "source_id": 134,
+        "source_constant": "ROOST",
+        "source_move": "ROOST",
+        "source_aliases": [],
+        "target_move": "MOVE_ROOST",
+        "excluded": false
+      },
+      {
+        "source_id": 135,
+        "source_constant": "FRESH_SNACK",
+        "source_move": "FRESH_SNACK",
+        "source_aliases": [],
+        "target_move": "MOVE_POLISHED_FRESH_SNACK",
+        "excluded": false
+      },
+      {
+        "source_id": 136,
+        "source_constant": "HI_JUMP_KICK",
+        "source_move": "HI_JUMP_KICK",
+        "source_aliases": [],
+        "target_move": "MOVE_HI_JUMP_KICK",
+        "excluded": false
+      },
+      {
+        "source_id": 137,
+        "source_constant": "GLARE",
+        "source_move": "GLARE",
+        "source_aliases": [],
+        "target_move": "MOVE_GLARE",
+        "excluded": false
+      },
+      {
+        "source_id": 138,
+        "source_constant": "DREAM_EATER",
+        "source_move": "DREAM_EATER",
+        "source_aliases": [],
+        "target_move": "MOVE_DREAM_EATER",
+        "excluded": false
+      },
+      {
+        "source_id": 139,
+        "source_constant": "POISON_JAB",
+        "source_move": "POISON_JAB",
+        "source_aliases": [],
+        "target_move": "MOVE_POISON_JAB",
+        "excluded": false
+      },
+      {
+        "source_id": 140,
+        "source_constant": "BULLET_PUNCH",
+        "source_move": "BULLET_PUNCH",
+        "source_aliases": [],
+        "target_move": "MOVE_BULLET_PUNCH",
+        "excluded": false
+      },
+      {
+        "source_id": 141,
+        "source_constant": "LEECH_LIFE",
+        "source_move": "LEECH_LIFE",
+        "source_aliases": [],
+        "target_move": "MOVE_LEECH_LIFE",
+        "excluded": false
+      },
+      {
+        "source_id": 142,
+        "source_constant": "DRAINING_KISS",
+        "source_move": "DRAINING_KISS",
+        "source_aliases": [],
+        "target_move": "MOVE_DRAINING_KISS",
+        "excluded": false
+      },
+      {
+        "source_id": 143,
+        "source_constant": "BRAVE_BIRD",
+        "source_move": "BRAVE_BIRD",
+        "source_aliases": [],
+        "target_move": "MOVE_BRAVE_BIRD",
+        "excluded": false
+      },
+      {
+        "source_id": 144,
+        "source_constant": "TRANSFORM",
+        "source_move": "TRANSFORM",
+        "source_aliases": [],
+        "target_move": "MOVE_TRANSFORM",
+        "excluded": true
+      },
+      {
+        "source_id": 145,
+        "source_constant": "WATER_PULSE",
+        "source_move": "WATER_PULSE",
+        "source_aliases": [],
+        "target_move": "MOVE_WATER_PULSE",
+        "excluded": false
+      },
+      {
+        "source_id": 146,
+        "source_constant": "DIZZY_PUNCH",
+        "source_move": "DIZZY_PUNCH",
+        "source_aliases": [],
+        "target_move": "MOVE_DIZZY_PUNCH",
+        "excluded": false
+      },
+      {
+        "source_id": 147,
+        "source_constant": "SPORE",
+        "source_move": "SPORE",
+        "source_aliases": [],
+        "target_move": "MOVE_SPORE",
+        "excluded": false
+      },
+      {
+        "source_id": 148,
+        "source_constant": "FLASH",
+        "source_move": "FLASH",
+        "source_aliases": [],
+        "target_move": "MOVE_FLASH",
+        "excluded": false
+      },
+      {
+        "source_id": 149,
+        "source_constant": "EXTRASENSORY",
+        "source_move": "EXTRASENSORY",
+        "source_aliases": [],
+        "target_move": "MOVE_EXTRASENSORY",
+        "excluded": false
+      },
+      {
+        "source_id": 150,
+        "source_constant": "SPLASH",
+        "source_move": "SPLASH",
+        "source_aliases": [],
+        "target_move": "MOVE_SPLASH",
+        "excluded": false
+      },
+      {
+        "source_id": 151,
+        "source_constant": "DRAGON_DANCE",
+        "source_move": "DRAGON_DANCE",
+        "source_aliases": [],
+        "target_move": "MOVE_DRAGON_DANCE",
+        "excluded": false
+      },
+      {
+        "source_id": 152,
+        "source_constant": "CRABHAMMER",
+        "source_move": "CRABHAMMER",
+        "source_aliases": [],
+        "target_move": "MOVE_CRABHAMMER",
+        "excluded": false
+      },
+      {
+        "source_id": 153,
+        "source_constant": "EXPLOSION",
+        "source_move": "EXPLOSION",
+        "source_aliases": [],
+        "target_move": "MOVE_EXPLOSION",
+        "excluded": false
+      },
+      {
+        "source_id": 154,
+        "source_constant": "FURY_STRIKES",
+        "source_move": "FURY_STRIKES",
+        "source_aliases": [],
+        "target_move": "MOVE_POLISHED_FURY_STRIKES",
+        "excluded": false
+      },
+      {
+        "source_id": 155,
+        "source_constant": "BONEMERANG",
+        "source_move": "BONEMERANG",
+        "source_aliases": [],
+        "target_move": "MOVE_BONEMERANG",
+        "excluded": false
+      },
+      {
+        "source_id": 156,
+        "source_constant": "REST",
+        "source_move": "REST",
+        "source_aliases": [],
+        "target_move": "MOVE_REST",
+        "excluded": false
+      },
+      {
+        "source_id": 157,
+        "source_constant": "ROCK_SLIDE",
+        "source_move": "ROCK_SLIDE",
+        "source_aliases": [],
+        "target_move": "MOVE_ROCK_SLIDE",
+        "excluded": false
+      },
+      {
+        "source_id": 158,
+        "source_constant": "HYPER_FANG",
+        "source_move": "HYPER_FANG",
+        "source_aliases": [],
+        "target_move": "MOVE_HYPER_FANG",
+        "excluded": false
+      },
+      {
+        "source_id": 159,
+        "source_constant": "BULK_UP",
+        "source_move": "BULK_UP",
+        "source_aliases": [],
+        "target_move": "MOVE_BULK_UP",
+        "excluded": false
+      },
+      {
+        "source_id": 160,
+        "source_constant": "CONVERSION",
+        "source_move": "CONVERSION",
+        "source_aliases": [],
+        "target_move": "MOVE_CONVERSION",
+        "excluded": false
+      },
+      {
+        "source_id": 161,
+        "source_constant": "TRI_ATTACK",
+        "source_move": "TRI_ATTACK",
+        "source_aliases": [],
+        "target_move": "MOVE_TRI_ATTACK",
+        "excluded": false
+      },
+      {
+        "source_id": 162,
+        "source_constant": "SUPER_FANG",
+        "source_move": "SUPER_FANG",
+        "source_aliases": [],
+        "target_move": "MOVE_SUPER_FANG",
+        "excluded": false
+      },
+      {
+        "source_id": 163,
+        "source_constant": "SLASH",
+        "source_move": "SLASH",
+        "source_aliases": [],
+        "target_move": "MOVE_SLASH",
+        "excluded": false
+      },
+      {
+        "source_id": 164,
+        "source_constant": "SUBSTITUTE",
+        "source_move": "SUBSTITUTE",
+        "source_aliases": [],
+        "target_move": "MOVE_SUBSTITUTE",
+        "excluded": false
+      },
+      {
+        "source_id": 165,
+        "source_constant": "GIGA_IMPACT",
+        "source_move": "GIGA_IMPACT",
+        "source_aliases": [],
+        "target_move": "MOVE_GIGA_IMPACT",
+        "excluded": false
+      },
+      {
+        "source_id": 166,
+        "source_constant": "SKETCH",
+        "source_move": "SKETCH",
+        "source_aliases": [],
+        "target_move": "MOVE_SKETCH",
+        "excluded": true
+      },
+      {
+        "source_id": 167,
+        "source_constant": "DRAIN_PUNCH",
+        "source_move": "DRAIN_PUNCH",
+        "source_aliases": [],
+        "target_move": "MOVE_DRAIN_PUNCH",
+        "excluded": false
+      },
+      {
+        "source_id": 168,
+        "source_constant": "THIEF",
+        "source_move": "THIEF",
+        "source_aliases": [],
+        "target_move": "MOVE_THIEF",
+        "excluded": true
+      },
+      {
+        "source_id": 169,
+        "source_constant": "WILL_O_WISP",
+        "source_move": "WILL_O_WISP",
+        "source_aliases": [],
+        "target_move": "MOVE_WILL_O_WISP",
+        "excluded": false
+      },
+      {
+        "source_id": 170,
+        "source_constant": "ZEN_HEADBUTT",
+        "source_move": "ZEN_HEADBUTT",
+        "source_aliases": [],
+        "target_move": "MOVE_ZEN_HEADBUTT",
+        "excluded": false
+      },
+      {
+        "source_id": 171,
+        "source_constant": "FACADE",
+        "source_move": "FACADE",
+        "source_aliases": [],
+        "target_move": "MOVE_FACADE",
+        "excluded": false
+      },
+      {
+        "source_id": 172,
+        "source_constant": "FLAME_CHARGE",
+        "source_move": "FLAME_CHARGE",
+        "source_aliases": [],
+        "target_move": "MOVE_FLAME_CHARGE",
+        "excluded": false
+      },
+      {
+        "source_id": 173,
+        "source_constant": "HYPER_VOICE",
+        "source_move": "HYPER_VOICE",
+        "source_aliases": [],
+        "target_move": "MOVE_HYPER_VOICE",
+        "excluded": false
+      },
+      {
+        "source_id": 174,
+        "source_constant": "CURSE",
+        "source_move": "CURSE",
+        "source_aliases": [],
+        "target_move": "MOVE_CURSE",
+        "excluded": false
+      },
+      {
+        "source_id": 175,
+        "source_constant": "GYRO_BALL",
+        "source_move": "GYRO_BALL",
+        "source_aliases": [],
+        "target_move": "MOVE_GYRO_BALL",
+        "excluded": false
+      },
+      {
+        "source_id": 176,
+        "source_constant": "ENERGY_BALL",
+        "source_move": "ENERGY_BALL",
+        "source_aliases": [],
+        "target_move": "MOVE_ENERGY_BALL",
+        "excluded": false
+      },
+      {
+        "source_id": 177,
+        "source_constant": "AEROBLAST",
+        "source_move": "AEROBLAST",
+        "source_aliases": [],
+        "target_move": "MOVE_AEROBLAST",
+        "excluded": false
+      },
+      {
+        "source_id": 178,
+        "source_constant": "SEED_BOMB",
+        "source_move": "SEED_BOMB",
+        "source_aliases": [],
+        "target_move": "MOVE_SEED_BOMB",
+        "excluded": false
+      },
+      {
+        "source_id": 179,
+        "source_constant": "REVERSAL",
+        "source_move": "REVERSAL",
+        "source_aliases": [],
+        "target_move": "MOVE_REVERSAL",
+        "excluded": false
+      },
+      {
+        "source_id": 180,
+        "source_constant": "ASTONISH",
+        "source_move": "ASTONISH",
+        "source_aliases": [],
+        "target_move": "MOVE_ASTONISH",
+        "excluded": false
+      },
+      {
+        "source_id": 181,
+        "source_constant": "ICE_SHARD",
+        "source_move": "ICE_SHARD",
+        "source_aliases": [],
+        "target_move": "MOVE_ICE_SHARD",
+        "excluded": false
+      },
+      {
+        "source_id": 182,
+        "source_constant": "PROTECT",
+        "source_move": "PROTECT",
+        "source_aliases": [],
+        "target_move": "MOVE_PROTECT",
+        "excluded": true
+      },
+      {
+        "source_id": 183,
+        "source_constant": "MACH_PUNCH",
+        "source_move": "MACH_PUNCH",
+        "source_aliases": [],
+        "target_move": "MOVE_MACH_PUNCH",
+        "excluded": false
+      },
+      {
+        "source_id": 184,
+        "source_constant": "SCARY_FACE",
+        "source_move": "SCARY_FACE",
+        "source_aliases": [],
+        "target_move": "MOVE_SCARY_FACE",
+        "excluded": false
+      },
+      {
+        "source_id": 185,
+        "source_constant": "FEINT_ATTACK",
+        "source_move": "FEINT_ATTACK",
+        "source_aliases": [],
+        "target_move": "MOVE_FEINT_ATTACK",
+        "excluded": false
+      },
+      {
+        "source_id": 186,
+        "source_constant": "SWEET_KISS",
+        "source_move": "SWEET_KISS",
+        "source_aliases": [],
+        "target_move": "MOVE_SWEET_KISS",
+        "excluded": false
+      },
+      {
+        "source_id": 187,
+        "source_constant": "BELLY_DRUM",
+        "source_move": "BELLY_DRUM",
+        "source_aliases": [],
+        "target_move": "MOVE_BELLY_DRUM",
+        "excluded": false
+      },
+      {
+        "source_id": 188,
+        "source_constant": "SLUDGE_BOMB",
+        "source_move": "SLUDGE_BOMB",
+        "source_aliases": [],
+        "target_move": "MOVE_SLUDGE_BOMB",
+        "excluded": false
+      },
+      {
+        "source_id": 189,
+        "source_constant": "MUD_SLAP",
+        "source_move": "MUD_SLAP",
+        "source_aliases": [],
+        "target_move": "MOVE_MUD_SLAP",
+        "excluded": false
+      },
+      {
+        "source_id": 190,
+        "source_constant": "OCTAZOOKA",
+        "source_move": "OCTAZOOKA",
+        "source_aliases": [],
+        "target_move": "MOVE_OCTAZOOKA",
+        "excluded": false
+      },
+      {
+        "source_id": 191,
+        "source_constant": "SPIKES",
+        "source_move": "SPIKES",
+        "source_aliases": [],
+        "target_move": "MOVE_SPIKES",
+        "excluded": false
+      },
+      {
+        "source_id": 192,
+        "source_constant": "ZAP_CANNON",
+        "source_move": "ZAP_CANNON",
+        "source_aliases": [],
+        "target_move": "MOVE_ZAP_CANNON",
+        "excluded": false
+      },
+      {
+        "source_id": 193,
+        "source_constant": "FORESIGHT",
+        "source_move": "FORESIGHT",
+        "source_aliases": [],
+        "target_move": "MOVE_FORESIGHT",
+        "excluded": false
+      },
+      {
+        "source_id": 194,
+        "source_constant": "DESTINY_BOND",
+        "source_move": "DESTINY_BOND",
+        "source_aliases": [],
+        "target_move": "MOVE_DESTINY_BOND",
+        "excluded": true
+      },
+      {
+        "source_id": 195,
+        "source_constant": "PERISH_SONG",
+        "source_move": "PERISH_SONG",
+        "source_aliases": [],
+        "target_move": "MOVE_PERISH_SONG",
+        "excluded": false
+      },
+      {
+        "source_id": 196,
+        "source_constant": "ICY_WIND",
+        "source_move": "ICY_WIND",
+        "source_aliases": [],
+        "target_move": "MOVE_ICY_WIND",
+        "excluded": false
+      },
+      {
+        "source_id": 197,
+        "source_constant": "POWER_GEM",
+        "source_move": "POWER_GEM",
+        "source_aliases": [],
+        "target_move": "MOVE_POWER_GEM",
+        "excluded": false
+      },
+      {
+        "source_id": 198,
+        "source_constant": "WILD_CHARGE",
+        "source_move": "WILD_CHARGE",
+        "source_aliases": [],
+        "target_move": "MOVE_WILD_CHARGE",
+        "excluded": false
+      },
+      {
+        "source_id": 199,
+        "source_constant": "POWER_WHIP",
+        "source_move": "POWER_WHIP",
+        "source_aliases": [],
+        "target_move": "MOVE_POWER_WHIP",
+        "excluded": false
+      },
+      {
+        "source_id": 200,
+        "source_constant": "OUTRAGE",
+        "source_move": "OUTRAGE",
+        "source_aliases": [],
+        "target_move": "MOVE_OUTRAGE",
+        "excluded": false
+      },
+      {
+        "source_id": 201,
+        "source_constant": "SANDSTORM",
+        "source_move": "SANDSTORM",
+        "source_aliases": [],
+        "target_move": "MOVE_SANDSTORM",
+        "excluded": false
+      },
+      {
+        "source_id": 202,
+        "source_constant": "GIGA_DRAIN",
+        "source_move": "GIGA_DRAIN",
+        "source_aliases": [],
+        "target_move": "MOVE_GIGA_DRAIN",
+        "excluded": false
+      },
+      {
+        "source_id": 203,
+        "source_constant": "ENDURE",
+        "source_move": "ENDURE",
+        "source_aliases": [],
+        "target_move": "MOVE_ENDURE",
+        "excluded": true
+      },
+      {
+        "source_id": 204,
+        "source_constant": "CHARM",
+        "source_move": "CHARM",
+        "source_aliases": [],
+        "target_move": "MOVE_CHARM",
+        "excluded": false
+      },
+      {
+        "source_id": 205,
+        "source_constant": "ROLLOUT",
+        "source_move": "ROLLOUT",
+        "source_aliases": [],
+        "target_move": "MOVE_ROLLOUT",
+        "excluded": false
+      },
+      {
+        "source_id": 206,
+        "source_constant": "FALSE_SWIPE",
+        "source_move": "FALSE_SWIPE",
+        "source_aliases": [],
+        "target_move": "MOVE_FALSE_SWIPE",
+        "excluded": false
+      },
+      {
+        "source_id": 207,
+        "source_constant": "SWAGGER",
+        "source_move": "SWAGGER",
+        "source_aliases": [],
+        "target_move": "MOVE_SWAGGER",
+        "excluded": false
+      },
+      {
+        "source_id": 208,
+        "source_constant": "SHELL_SMASH",
+        "source_move": "SHELL_SMASH",
+        "source_aliases": [],
+        "target_move": "MOVE_SHELL_SMASH",
+        "excluded": false
+      },
+      {
+        "source_id": 209,
+        "source_constant": "SPARK",
+        "source_move": "SPARK",
+        "source_aliases": [],
+        "target_move": "MOVE_SPARK",
+        "excluded": false
+      },
+      {
+        "source_id": 210,
+        "source_constant": "BUG_BITE",
+        "source_move": "BUG_BITE",
+        "source_aliases": [],
+        "target_move": "MOVE_BUG_BITE",
+        "excluded": false
+      },
+      {
+        "source_id": 211,
+        "source_constant": "STEEL_WING",
+        "source_move": "STEEL_WING",
+        "source_aliases": [],
+        "target_move": "MOVE_STEEL_WING",
+        "excluded": false
+      },
+      {
+        "source_id": 212,
+        "source_constant": "MEAN_LOOK",
+        "source_move": "MEAN_LOOK",
+        "source_aliases": [],
+        "target_move": "MOVE_MEAN_LOOK",
+        "excluded": false
+      },
+      {
+        "source_id": 213,
+        "source_constant": "ATTRACT",
+        "source_move": "ATTRACT",
+        "source_aliases": [],
+        "target_move": "MOVE_ATTRACT",
+        "excluded": false
+      },
+      {
+        "source_id": 214,
+        "source_constant": "SLEEP_TALK",
+        "source_move": "SLEEP_TALK",
+        "source_aliases": [],
+        "target_move": "MOVE_SLEEP_TALK",
+        "excluded": true
+      },
+      {
+        "source_id": 215,
+        "source_constant": "HEAL_BELL",
+        "source_move": "HEAL_BELL",
+        "source_aliases": [],
+        "target_move": "MOVE_HEAL_BELL",
+        "excluded": false
+      },
+      {
+        "source_id": 216,
+        "source_constant": "RETURN",
+        "source_move": "RETURN",
+        "source_aliases": [],
+        "target_move": "MOVE_RETURN",
+        "excluded": false
+      },
+      {
+        "source_id": 217,
+        "source_constant": "PSYSTRIKE",
+        "source_move": "PSYSTRIKE",
+        "source_aliases": [],
+        "target_move": "MOVE_PSYSTRIKE",
+        "excluded": false
+      },
+      {
+        "source_id": 218,
+        "source_constant": "BUG_BUZZ",
+        "source_move": "BUG_BUZZ",
+        "source_aliases": [],
+        "target_move": "MOVE_BUG_BUZZ",
+        "excluded": false
+      },
+      {
+        "source_id": 219,
+        "source_constant": "SAFEGUARD",
+        "source_move": "SAFEGUARD",
+        "source_aliases": [],
+        "target_move": "MOVE_SAFEGUARD",
+        "excluded": false
+      },
+      {
+        "source_id": 220,
+        "source_constant": "PAIN_SPLIT",
+        "source_move": "PAIN_SPLIT",
+        "source_aliases": [],
+        "target_move": "MOVE_PAIN_SPLIT",
+        "excluded": false
+      },
+      {
+        "source_id": 221,
+        "source_constant": "SACRED_FIRE",
+        "source_move": "SACRED_FIRE",
+        "source_aliases": [],
+        "target_move": "MOVE_SACRED_FIRE",
+        "excluded": false
+      },
+      {
+        "source_id": 222,
+        "source_constant": "MAGNITUDE",
+        "source_move": "MAGNITUDE",
+        "source_aliases": [],
+        "target_move": "MOVE_MAGNITUDE",
+        "excluded": false
+      },
+      {
+        "source_id": 223,
+        "source_constant": "DYNAMICPUNCH",
+        "source_move": "DYNAMICPUNCH",
+        "source_aliases": [],
+        "target_move": "MOVE_DYNAMICPUNCH",
+        "excluded": false
+      },
+      {
+        "source_id": 224,
+        "source_constant": "MEGAHORN",
+        "source_move": "MEGAHORN",
+        "source_aliases": [],
+        "target_move": "MOVE_MEGAHORN",
+        "excluded": false
+      },
+      {
+        "source_id": 225,
+        "source_constant": "DRAGONBREATH",
+        "source_move": "DRAGONBREATH",
+        "source_aliases": [],
+        "target_move": "MOVE_DRAGONBREATH",
+        "excluded": false
+      },
+      {
+        "source_id": 226,
+        "source_constant": "BATON_PASS",
+        "source_move": "BATON_PASS",
+        "source_aliases": [],
+        "target_move": "MOVE_BATON_PASS",
+        "excluded": false
+      },
+      {
+        "source_id": 227,
+        "source_constant": "ENCORE",
+        "source_move": "ENCORE",
+        "source_aliases": [],
+        "target_move": "MOVE_ENCORE",
+        "excluded": false
+      },
+      {
+        "source_id": 228,
+        "source_constant": "PURSUIT",
+        "source_move": "PURSUIT",
+        "source_aliases": [],
+        "target_move": "MOVE_PURSUIT",
+        "excluded": false
+      },
+      {
+        "source_id": 229,
+        "source_constant": "RAPID_SPIN",
+        "source_move": "RAPID_SPIN",
+        "source_aliases": [],
+        "target_move": "MOVE_RAPID_SPIN",
+        "excluded": false
+      },
+      {
+        "source_id": 230,
+        "source_constant": "SHADOW_CLAW",
+        "source_move": "SHADOW_CLAW",
+        "source_aliases": [],
+        "target_move": "MOVE_SHADOW_CLAW",
+        "excluded": false
+      },
+      {
+        "source_id": 231,
+        "source_constant": "IRON_TAIL",
+        "source_move": "IRON_TAIL",
+        "source_aliases": [],
+        "target_move": "MOVE_IRON_TAIL",
+        "excluded": false
+      },
+      {
+        "source_id": 232,
+        "source_constant": "METAL_CLAW",
+        "source_move": "METAL_CLAW",
+        "source_aliases": [],
+        "target_move": "MOVE_METAL_CLAW",
+        "excluded": false
+      },
+      {
+        "source_id": 233,
+        "source_constant": "AURA_SPHERE",
+        "source_move": "AURA_SPHERE",
+        "source_aliases": [],
+        "target_move": "MOVE_AURA_SPHERE",
+        "excluded": false
+      },
+      {
+        "source_id": 234,
+        "source_constant": "HEALINGLIGHT",
+        "source_move": "HEALINGLIGHT",
+        "source_aliases": [],
+        "target_move": "MOVE_POLISHED_HEALING_LIGHT",
+        "excluded": false
+      },
+      {
+        "source_id": 235,
+        "source_constant": "HURRICANE",
+        "source_move": "HURRICANE",
+        "source_aliases": [],
+        "target_move": "MOVE_HURRICANE",
+        "excluded": false
+      },
+      {
+        "source_id": 236,
+        "source_constant": "KNOCK_OFF",
+        "source_move": "KNOCK_OFF",
+        "source_aliases": [],
+        "target_move": "MOVE_KNOCK_OFF",
+        "excluded": false
+      },
+      {
+        "source_id": 237,
+        "source_constant": "HIDDEN_POWER",
+        "source_move": "HIDDEN_POWER",
+        "source_aliases": [],
+        "target_move": "MOVE_HIDDEN_POWER",
+        "excluded": false
+      },
+      {
+        "source_id": 238,
+        "source_constant": "CROSS_CHOP",
+        "source_move": "CROSS_CHOP",
+        "source_aliases": [],
+        "target_move": "MOVE_CROSS_CHOP",
+        "excluded": false
+      },
+      {
+        "source_id": 239,
+        "source_constant": "AQUA_JET",
+        "source_move": "AQUA_JET",
+        "source_aliases": [],
+        "target_move": "MOVE_AQUA_JET",
+        "excluded": false
+      },
+      {
+        "source_id": 240,
+        "source_constant": "RAIN_DANCE",
+        "source_move": "RAIN_DANCE",
+        "source_aliases": [],
+        "target_move": "MOVE_RAIN_DANCE",
+        "excluded": false
+      },
+      {
+        "source_id": 241,
+        "source_constant": "SUNNY_DAY",
+        "source_move": "SUNNY_DAY",
+        "source_aliases": [],
+        "target_move": "MOVE_SUNNY_DAY",
+        "excluded": false
+      },
+      {
+        "source_id": 242,
+        "source_constant": "CRUNCH",
+        "source_move": "CRUNCH",
+        "source_aliases": [],
+        "target_move": "MOVE_CRUNCH",
+        "excluded": false
+      },
+      {
+        "source_id": 243,
+        "source_constant": "MIRROR_COAT",
+        "source_move": "MIRROR_COAT",
+        "source_aliases": [],
+        "target_move": "MOVE_MIRROR_COAT",
+        "excluded": true
+      },
+      {
+        "source_id": 244,
+        "source_constant": "NASTY_PLOT",
+        "source_move": "NASTY_PLOT",
+        "source_aliases": [],
+        "target_move": "MOVE_NASTY_PLOT",
+        "excluded": false
+      },
+      {
+        "source_id": 245,
+        "source_constant": "EXTREMESPEED",
+        "source_move": "EXTREMESPEED",
+        "source_aliases": [],
+        "target_move": "MOVE_EXTREMESPEED",
+        "excluded": false
+      },
+      {
+        "source_id": 246,
+        "source_constant": "ANCIENTPOWER",
+        "source_move": "ANCIENTPOWER",
+        "source_aliases": [],
+        "target_move": "MOVE_ANCIENTPOWER",
+        "excluded": false
+      },
+      {
+        "source_id": 247,
+        "source_constant": "SHADOW_BALL",
+        "source_move": "SHADOW_BALL",
+        "source_aliases": [],
+        "target_move": "MOVE_SHADOW_BALL",
+        "excluded": false
+      },
+      {
+        "source_id": 248,
+        "source_constant": "FUTURE_SIGHT",
+        "source_move": "FUTURE_SIGHT",
+        "source_aliases": [],
+        "target_move": "MOVE_FUTURE_SIGHT",
+        "excluded": false
+      },
+      {
+        "source_id": 249,
+        "source_constant": "ROCK_SMASH",
+        "source_move": "BRICK_BREAK",
+        "source_aliases": [
+          "BRICK_BREAK"
+        ],
+        "target_move": "MOVE_BRICK_BREAK",
+        "excluded": false
+      },
+      {
+        "source_id": 250,
+        "source_constant": "WHIRLPOOL",
+        "source_move": "WHIRLPOOL",
+        "source_aliases": [],
+        "target_move": "MOVE_WHIRLPOOL",
+        "excluded": false
+      },
+      {
+        "source_id": 251,
+        "source_constant": "DARK_PULSE",
+        "source_move": "DARK_PULSE",
+        "source_aliases": [],
+        "target_move": "MOVE_DARK_PULSE",
+        "excluded": false
+      },
+      {
+        "source_id": 252,
+        "source_constant": "MOONBLAST",
+        "source_move": "MOONBLAST",
+        "source_aliases": [],
+        "target_move": "MOVE_MOONBLAST",
+        "excluded": false
+      },
+      {
+        "source_id": 253,
+        "source_constant": "PLAY_ROUGH",
+        "source_move": "PLAY_ROUGH",
+        "source_aliases": [],
+        "target_move": "MOVE_PLAY_ROUGH",
+        "excluded": false
+      },
+      {
+        "source_id": 254,
+        "source_constant": "DISARM_VOICE",
+        "source_move": "DISARM_VOICE",
+        "source_aliases": [],
+        "target_move": "MOVE_DISARMING_VOICE",
+        "excluded": false
+      },
+      {
+        "source_id": 255,
+        "source_constant": "STRUGGLE",
+        "source_move": "STRUGGLE",
+        "source_aliases": [],
+        "target_move": "MOVE_STRUGGLE",
+        "excluded": true
+      }
+    ]
+  },
+  "struggle": {
+    "recoil": "max(1, floor(maximum HP / 4))",
+    "divisor": 4,
+    "minimum": 1,
+    "bypasses_rock_head_and_magic_guard": true
+  },
+  "scope": "Metronome source candidate identities, rejection predicates and conditional uniform probabilities; Struggle recoil amount and focused ordinary singles gates.",
+  "gaps": [
+    "The random generator remains the GBA engine PRNG: this preserves the byte-domain rejection distribution, not the source hardware/link random stream or global RNG call timing.",
+    "The selected moves retain their individual documented effect/flag/probability gaps; importing the pool does not certify every called effect.",
+    "Move-calling bookkeeping, PP-exhaustion selection, general damage and AI rules, source UI and animations remain separate audits.",
+    "Expansion-only battle formats, abilities and gimmicks retain their native framework."
+  ]
+}

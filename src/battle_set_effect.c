@@ -20,6 +20,7 @@
 #include "random.h"
 #include "string_util.h"
 #include "config/battle.h"
+#include "constants/polished_metronome_struggle.h"
 
 static inline bool32 IgnoreTargetingForMoveEffect(enum MoveEffect moveEffect);
 static bool32 DoesSubstituteBlockMoveEffectOnTarget(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum MoveEffect moveEffect);
@@ -490,11 +491,12 @@ static void HandleSetEffectBugBite(struct BattleCalcValues *cv, struct SetEffect
 
 static void HandleSetEffectRecoilHp25(struct BattleCalcValues *cv, struct SetEffect *se)
 {
-    s32 recoil = (gBattleMons[se->effectBattler].maxHP) / 4;
-    if (B_UPDATED_MOVE_DATA >= GEN_5 && (gBattleMons[se->effectBattler].maxHP % 4) >= 2) // Account for standard rounding (Gen5+)
+    bool32 sourceStruggle = B_POLISHED_MOVE_BALANCE && cv->move == MOVE_STRUGGLE;
+    s32 recoil = gBattleMons[se->effectBattler].maxHP / (sourceStruggle ? POLISHED_STRUGGLE_RECOIL_DIVISOR : 4);
+    if (!sourceStruggle && B_UPDATED_MOVE_DATA >= GEN_5 && (gBattleMons[se->effectBattler].maxHP % 4) >= 2) // Account for standard rounding (Gen5+)
         recoil++;
     if (recoil == 0)
-        recoil = 1;
+        recoil = sourceStruggle ? POLISHED_STRUGGLE_RECOIL_MINIMUM : 1;
 
     SetPassiveDamageAmount(se->effectBattler, recoil);
     TryUpdateEvolutionTracker(IF_RECOIL_DAMAGE_GE, gBattleStruct->passiveHpUpdate[cv->battlerAtk], MOVE_NONE);

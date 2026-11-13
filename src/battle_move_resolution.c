@@ -14,6 +14,8 @@
 #include "item.h"
 #include "battle_controllers.h"
 #include "move.h"
+#include "polished_metronome.h"
+#include "constants/polished_metronome_struggle.h"
 #include "test_runner.h"
 #include "constants/battle_move_resolution.h"
 #include "constants/songs.h"
@@ -5915,12 +5917,23 @@ static enum Move GetMirrorMoveMove(void)
 
 static bool32 InvalidMetronomeMove(u32 move)
 {
+    if (B_POLISHED_MOVE_BALANCE)
+        return PolishedMetronomeMoveFromRoll(move, gBattleMons[gBattlerAttacker].moves) == MOVE_NONE;
+
     return GetMoveEffect(move) == EFFECT_PLACEHOLDER
         || IsMoveMetronomeBanned(move);
 }
 
 static enum Move GetMetronomeMove(void)
 {
+    if (B_POLISHED_MOVE_BALANCE)
+    {
+        // Draw source bytes, reject the source exceptions and all current
+        // move slots, then map the accepted identity to a stable GBA move ID.
+        u32 roll = RandomUniformExcept(RNG_METRONOME, 0, POLISHED_METRONOME_ROLL_COUNT - 1, InvalidMetronomeMove);
+        return PolishedMetronomeMoveFromRoll(roll, gBattleMons[gBattlerAttacker].moves);
+    }
+
     enum Move move = MOVE_NONE;
 
 #if B_METRONOME_MOVES >= GEN_9

@@ -1521,3 +1521,40 @@ checks, 12 ARM probes and both live icon comparisons pass. The same Johto ROM
 passes all 101 campaign checks and 19 warp traversals. The production audit now
 reports zero differences in its audited basic move fields; broader behavior,
 secondary-effect probabilities and machine gaps remain open.
+
+### Source Metronome selection and Struggle recoil suite
+
+The source move-balance profile now draws Metronome candidates from the pinned
+source's 256 byte values. Its twelve exceptions and all four current battle
+move slots are rejected, including moves with zero PP and moves copied by
+Transform. The 244 base candidates map to stable Expansion IDs; source aliases
+include Brick Break at draw 249 and the three custom source moves. Native
+Metronome bans do not replace the source list. Native Expansion keeps its own
+selection behavior and its full optional move capacity.
+
+Struggle now uses the source's `max(1, floor(maximum HP / 4))` recoil in that
+profile. Other profiles retain their configured rounding. Focused battles
+exercise both sides, HP boundaries, Rock Head/Magic Guard, a target knockout,
+substitute damage and recoil fainting. The preceding typeless suite continues
+to check Protect without recoil and called-move type/STAB behavior.
+
+`build_metronome_struggle.py` verifies pinned selection/recoil assembly and
+generates the adapter data and provenance manifest. An independent fixture
+links production Johto objects and compares all 256 source draws plus every
+eligible move in each of four known slots. CI runs both this fixture and the
+source-profile battle suite. See the parity audit for final validation.
+
+The engine PRNG remains in use: the source draw domain and rejection rules are
+imported, not its hardware/link random stream or global RNG call timing.
+Individual called-move effects/probabilities, general damage and AI, broader
+move-calling bookkeeping, PP-exhaustion selection, original UI and animations
+remain separate audits. This supersedes the candidate-pool and recoil-rounding
+gaps in the preceding type-suite entry without closing those broader gaps.
+
+Validation: both production builds, 12 new native/source test groups, 5,418
+native regression tests, the earlier source move and six AI timing groups,
+49 source checks, 12 ARM probes and 12 demo checks pass. The independent
+production adapter matches all 256 source draws and 976 known-slot cases.
+The same Johto ROM passes 101 campaign checks and 19 warp traversals; the
+move/machine audit reports no new gaps. Nine expected native test failures
+and 585 pre-existing TODOs remain unchanged.

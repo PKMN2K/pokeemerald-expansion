@@ -1335,6 +1335,67 @@ source opening is still a separate migration task.
 Johto ROM SHA-256:
 `b51696127e0c5b1b8a93cc4cf0a4c25fbee72f4c45320ca5243ffd94b5fb55f7`.
 
+## Source Metronome selection and Struggle recoil suite
+
+The default-source Metronome handler draws a byte, rejects its exception table
+and each of the user's four current battle moves, then reloads the chosen move
+and restarts execution. This suite imports that draw domain, rejection rules
+and identity mapping under `B_POLISHED_MOVE_BALANCE`. All 256 source values are
+mapped explicitly: 12 are excluded and 244 remain before known-slot rejection.
+The default-source alias at 249 is Brick Break, not the old Rock Smash constant
+name; Fresh Snack, Fury Strikes and HealingLight use their dedicated target IDs.
+Known-slot checks include zero PP and transformed moves. Expansion's optional
+move tables, native Metronome selection and stable save IDs are retained.
+
+The pinned recoil command branches to Struggle before its Rock Head/Magic Guard
+checks and calls GetQuarterMaxHP/FloorBC. The imported amount is therefore
+`max(1, floor(maximum HP / 4))`. The source profile now bypasses native modern
+rounding specifically for Struggle; other users of the recoil handler retain
+their configured behavior. Focused battles check HP residues, both sides,
+abilities, target HP/knockout, substitute damage and self-fainting. Existing
+typeless tests retain coverage of Protect without recoil and called-move types.
+
+The generator verifies these contracts against hash-pinned assembly. Unit tests
+sweep the complete pool, uniqueness, exclusions, aliases, all known slots and
+out-of-range inputs. The independent production-linked fixture derives expected
+identities from the source assembly rather than the generated C table and
+checks 256 draws plus 976 eligible-move/known-slot cases. Battle tests exercise
+actual dispatch, parent PP, source custom moves and transformed move slots.
+
+The target still uses the GBA PRNG. Conditional uniform selection over the
+source candidates is preserved by byte-domain rejection sampling; this does
+not reproduce the source hardware/link random stream or global RNG call timing.
+Each called move retains its separately documented effect/flag/probability
+gaps. General damage and AI rules, broader move-calling bookkeeping,
+PP-exhaustion selection, source UI/art/animations and optional Expansion-only
+battle formats/gimmicks remain outside this suite. The previous type-suite
+entry's unported candidate-pool and recoil-rounding gaps are superseded here.
+
+
+Validation with Arm GNU GCC 13.2.1: both production ROM builds, all 49 source
+checks, 12 ARM probes, 12 demo checks and all 12 new native/source test groups
+pass. The production-linked adapter reports zero mismatches across 256 draw
+identities and 976 known-slot checks. Earlier source move-balance (6), Hidden
+Power (8), Pain Split (10), fixed-damage (9), retaliation (7), self-move accuracy
+(9), typeless (8) and AI frame-budget (6) groups also pass.
+The full native regression run passes 5,418 tests with the same nine expected
+failures and 585 existing TODOs (6,012 total); there are no unexpected failures.
+
+The same production Johto ROM retains zero audited basic move-field differences
+across 255 source moves, matching PP/PP Up records, valid dispatch bindings and
+43,792 matching teaching combinations. The 109 documented machine identity/
+lesson gaps are unchanged, with no new findings. These checks do not establish
+complete secondary-effect or move-behavior parity.
+
+The same Johto ROM passes all 101 campaign checks and 19 directed warp
+traversals: all three starter paths, seven Sprout Tower victories, Falkner,
+the badge/Roost/Togepi rewards, resident schedules and Save/reset/Continue.
+This validates the documented demo campaign; the authentic source opening
+remains an independent migration task.
+
+Johto ROM SHA-256:
+`99020af9ac3f6ad682a05b3c5f290b7119ce45c3a1625c6b2e918952b675fd59`.
+
 ## Next priorities
 
 1. Continue the source field-rule audit. Headbutt remains dormant; other field
