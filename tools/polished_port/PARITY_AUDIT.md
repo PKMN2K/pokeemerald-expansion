@@ -30,8 +30,9 @@ the default source's dynamic type calculation. The Pain Split suite below
 imports its Ghost type and source HP-sharing rules. The fixed-damage adapter
 below accounts for Sonic Boom/Dragon Rage, leaving six differing
 move rows. The subsequent Counter/Mirror Coat accuracy suite resolves two more,
-leaving four basic-data rows. Machine identity/lesson gaps remain as recorded in
-the original report.
+leaving four basic-data rows. The subsequent Dragon Dance/Sleep Talk listed-
+accuracy suite resolves two more, leaving the Metronome and Struggle type rows.
+Machine identity/lesson gaps remain as recorded in the original report.
 
 CI now runs `audit_moves_machines.py` with an explicit known-gap inventory.
 New or changed findings fail; resolved gaps are permitted. Strict mode without
@@ -1208,6 +1209,63 @@ campaign; the authentic source opening is separate work.
 
 Johto ROM SHA-256:
 `a71c38d5e376d0f6756f4bb9da8bdaed4c4ec6ec8449bbe51f4b23dddbb24d84`.
+
+## Source Dragon Dance and Sleep Talk listed accuracy
+
+The pinned default move rows list accuracy 100 for Dragon Dance and Sleep Talk.
+Their source effect scripts contain no checkhit command: Dragon Dance performs
+its two stat increases directly, while Sleep Talk loads the chosen move's data
+and restarts execution. The source summary and field move menus print the
+numeric table value. The existing B_POLISHED_MOVE_BALANCE profile now selects
+imported 100 constants for Johto and the isolated source test ROM; native
+Expansion retains zero accuracy and its dash presentation.
+
+The unchanged GBA stat-change handler skips accuracy checks for the user.
+Sleep Talk dispatches its called move before hit resolution and uses that move's
+hit rules. An AI adapter preserves the existing accuracy-bypass estimate for
+both parent effects, instead of treating their listed 100 as a hit probability.
+Target IDs, save fields and capacities are unchanged.
+The importer verifies the pinned move rows, effect scripts, Sleep Talk command
+and source numeric-display path. The production-linked summary fixture verifies
+both changed moves with controller input against numeric/dash references in
+both profiles. It does not add parties or debug code to the shipping ROMs.
+
+Nine test groups cover the data and these ordinary singles scenarios: Dragon
+Dance under accuracy drops/evasion boosts/Bright Powder, partial/full stat caps,
+and opposing Protect/Fly/Dig; Sleep Talk calling Dragon Dance, zero-PP attacks,
+ordinary hit/miss checks and Swift's bypass, protection/type immunity, and awake
+or no-eligible-move failures; and AI estimates under extreme accuracy/evasion
+stages. The AI test reproduced a 33-versus-101 estimate before the adapter; it
+requires the bypass sentinel for both parents while retaining reduced accuracy
+for an ordinary damaging move. This certifies the listed-accuracy correction and
+the stated regression cases. The complete Sleep Talk selection pool, disabled/
+encored move handling, source RNG/sleep timing/calling bookkeeping, general stat
+and item/ability rules, source animations/UI and smart AI remain open.
+
+Validation with GCC 13.2.1: both production ROMs build; all 47 source/asset
+checks, 12 ARM probes and 12 demo checks pass. All nine new groups pass in both
+native and source profiles. Earlier move-balance, Hidden Power, Pain Split,
+fixed-damage and retaliation groups pass, along with all six unchanged AI
+frame-budget checks. The AI regression fails before the correction and passes
+afterward; the native shipping ROM is byte-identical across that AI-only change.
+The final rendered summary comparison passes in both profiles, with eight
+controller-selected move screenshots.
+
+The production audit checks all 255 move PP/PP Up and dispatch rows and all
+43,792 teaching combinations with no compatibility mismatch. Only the Metronome
+and Struggle type rows remain as basic-data differences. There are 111 documented
+gap entries and no new findings; restoring either old zero-accuracy row is
+rejected by the gate. Machine identity and lesson-coverage gaps remain open.
+
+The final full native run passes 5,398 groups, with nine existing expected
+failures and 585 TODOs (5,992 total), and no unexpected failures. The same final
+Johto ROM passes all 101 campaign checks and 19 directed warp traversals,
+including three starter paths, Sprout Tower, Falkner, badge/Roost/Togepi rewards,
+resident schedules and Save/Continue. This remains the documented demo campaign;
+the authentic source opening is separate work.
+
+Johto ROM SHA-256:
+`f06de64f7a2afbd94f8bf8f336edc2fd18f412de3bebfef7fc7ea7dfb1a567f0`.
 
 ## Next priorities
 

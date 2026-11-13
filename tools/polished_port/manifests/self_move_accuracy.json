@@ -1,0 +1,31 @@
+{
+  "source_repository": "Rangi42/polishedcrystal",
+  "source_commit": "3fa43192379df5c3e7b09a08e4d5d79af4f02f42",
+  "source_variant": "default (FAITHFUL undefined)",
+  "moves": {
+    "DRAGON_DANCE": {
+      "effect": "EFFECT_DRAGON_DANCE",
+      "type": "DRAGON",
+      "accuracy": 100,
+      "pp": 20
+    },
+    "SLEEP_TALK": {
+      "effect": "EFFECT_SLEEP_TALK",
+      "type": "NORMAL",
+      "accuracy": 100,
+      "pp": 10
+    }
+  },
+  "selection": "Existing B_POLISHED_MOVE_BALANCE / POLISHED_BALANCE compile-time data profile.",
+  "scope": "Listed accuracy, parent AI accuracy estimates and ordinary self-effect/called-move hit-check regression coverage.",
+  "runtime_contract": [
+    "Dragon Dance raises user Attack and Speed without an accuracy check.",
+    "Sleep Talk replaces current move data and restarts move execution; the called move uses its own hit rules.",
+    "The native AI represents both parent effects with its accuracy-bypass sentinel; their numeric listing must not introduce a miss estimate."
+  ],
+  "gaps": [
+    "This does not certify the complete Sleep Talk eligible-move pool, disabled/encored move rules, source RNG, sleep duration, or general move-calling bookkeeping.",
+    "Original animations, source UI layout/art, general stat-change/item/ability rules and smart AI scoring remain separate audits.",
+    "Expansion-only mechanics retain native behavior."
+  ]
+}

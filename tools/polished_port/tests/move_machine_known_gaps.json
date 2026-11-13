@@ -7,14 +7,6 @@
       "source": "UNKNOWN_T",
       "target": "NORMAL"
     },
-    "move/MOVE_DRAGON_DANCE/accuracy": {
-      "source": 100,
-      "target": 0
-    },
-    "move/MOVE_SLEEP_TALK/accuracy": {
-      "source": 100,
-      "target": 0
-    },
     "move/MOVE_STRUGGLE/type": {
       "source": "UNKNOWN_T",
       "target": "NORMAL"

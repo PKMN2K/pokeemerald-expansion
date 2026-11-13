@@ -1947,6 +1947,11 @@
       "path": "engine/battle/move_effects/counter.asm",
       "fixture": "engine__battle__move_effects__counter.asm.b64",
       "git_blob_sha1": "64030a817551c817382a52354b4708b4947e80f0"
+    },
+    {
+      "path": "engine/battle/move_effects/sleep_talk.asm",
+      "fixture": "engine__battle__move_effects__sleep_talk.asm.b64",
+      "git_blob_sha1": "09c4c4bd1737301510e4b92010c6df2158b6165a"
     }
   ]
 }

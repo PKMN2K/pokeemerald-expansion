@@ -3,6 +3,7 @@
 #include "constants/polished_pain_split.h"
 #include "constants/polished_fixed_damage.h"
 #include "constants/polished_retaliation.h"
+#include "constants/polished_self_move_accuracy.h"
 #include "battle_dynamax.h"
 #include "battle_anim_scripts.h"
 #include "constants/battle.h"
@@ -5877,7 +5878,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .effect = EFFECT_SLEEP_TALK,
         .power = 0,
         .type = TYPE_NORMAL,
-        .accuracy = 0,
+        .accuracy = POLISHED_BALANCE(POLISHED_SLEEP_TALK_ACCURACY, 0),
         .pp = 10,
         .target = TARGET_DEPENDS,
         .priority = 0,
@@ -9602,7 +9603,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .effect = EFFECT_STAT_CHANGE,
         .power = 0,
         .type = TYPE_DRAGON,
-        .accuracy = 0,
+        .accuracy = POLISHED_BALANCE(POLISHED_DRAGON_DANCE_ACCURACY, 0),
         .pp = 20,
         .target = TARGET_USER,
         .priority = 0,

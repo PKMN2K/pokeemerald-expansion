@@ -768,6 +768,11 @@ static u32 Ai_SetMoveAccuracy(struct AiLogicData *aiData, enum BattlerId battler
 {
     u32 accuracy;
 
+    // The source lists 100, but these parent effects do not make a hit roll.
+    // Sleep Talk's called move retains its own accuracy estimate.
+    if (B_POLISHED_MOVE_BALANCE && (move == MOVE_DRAGON_DANCE || move == MOVE_SLEEP_TALK))
+        return BYPASSES_ACCURACY_CALC;
+
     struct BattleCalcValues cv = {
         .battlerAtk = battlerAtk,
         .battlerDef = battlerDef,

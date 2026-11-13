@@ -20,6 +20,7 @@ import build_move_pp as pp
 import build_pain_split as pain_split
 import build_fixed_damage as fixed_damage
 import build_retaliation_accuracy as retaliation
+import build_self_move_accuracy as self_accuracy
 from test_johto_demo_emulator import Game
 
 ROOT = source.ROOT
@@ -40,7 +41,7 @@ def inputs():
                           type=type_, accuracy=0 if accuracy == '-1' else int(accuracy),
                           pp=int(base_pp), chance=int(chance), category=category))
     outputs = learning.build()
-    for path, expected in {**outputs, **pp.build(), **pain_split.build(), **fixed_damage.build(), **retaliation.build()}.items():
+    for path, expected in {**outputs, **pp.build(), **pain_split.build(), **fixed_damage.build(), **retaliation.build(), **self_accuracy.build()}.items():
         assert path.read_text() == expected, f'Stale imported source data: {path}'
     catalog = json.loads(outputs[learning.MANIFEST])
     assert [r['kind'] for r in catalog['teaching_catalog']] == ['TM']*75 + ['HM']*6 + ['MT']*31

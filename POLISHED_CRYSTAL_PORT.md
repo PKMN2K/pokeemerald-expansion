@@ -1462,3 +1462,40 @@ Validation: both production builds, all seven new groups in each profile,
 The same Johto ROM passes 101 campaign checks and 19 warp traversals. The nine
 existing expected failures and 585 TODOs are unchanged. Four basic move-data
 rows remain in the audit, alongside the previously documented machine gaps.
+
+
+### Source Dragon Dance and Sleep Talk listed accuracy
+
+The Johto move table now lists 100 accuracy for Dragon Dance and Sleep Talk,
+matching the pinned default source. Native Expansion keeps its zero/dash values.
+The existing source move-balance profile selects these constants at compile time;
+there is no runtime table lookup and no change to move IDs or saved data.
+
+Both source effect scripts omit checkhit for the parent move. Dragon Dance
+raises the user's Attack and Speed directly. Sleep Talk loads the selected
+move's data and restarts execution, so the called move supplies its own accuracy
+and target rules. The retained GBA paths reproduce these tested cases even with
+100 in the parent rows: no new parent accuracy check is introduced. A small AI
+adapter preserves the existing accuracy-bypass estimate for these two parent
+effects while ordinary called moves retain their own estimates.
+
+`build_self_move_accuracy.py` pins the rows, effect scripts, Sleep Talk command
+and numeric accuracy display. Nine native/source test groups cover data,
+accuracy/evasion and item modifiers, Dragon Dance stat caps, opponent protection
+and hiding, Sleep Talk calling Dragon Dance or damaging moves, hit/miss and
+always-hit behavior, protection/immunity, PP, awake and no-candidate failures,
+and AI estimates under extreme accuracy/evasion stages.
+The production-linked controller fixture compares actual summary glyphs against
+Water Gun's 100 in Johto and Swift's dashes in native mode.
+
+This is the listed-accuracy suite, not a complete Sleep Talk port. Its eligible
+move pool, Disable/Encore interactions, source random selection, sleep timing,
+move-calling bookkeeping, smart AI, original animation and source UI layout/art
+remain separate audits. See the parity audit for final validation evidence.
+
+Validation: both production builds, all nine new groups in each profile,
+5,398 native regression tests, 47 source/asset checks and 12 ARM probes pass.
+The final Johto ROM passes 101 campaign checks and 19 warp traversals. Nine
+existing expected failures and 585 TODOs remain unchanged. The basic move-data
+audit now has only the Metronome and Struggle type rows left; broader effect
+and machine gaps remain documented separately.
