@@ -2,6 +2,7 @@
 #include "constants/polished_hidden_power.h"
 #include "constants/polished_pain_split.h"
 #include "constants/polished_fixed_damage.h"
+#include "constants/polished_retaliation.h"
 #include "battle_dynamax.h"
 #include "battle_anim_scripts.h"
 #include "constants/battle.h"
@@ -1844,7 +1845,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .effect = EFFECT_REFLECT_DAMAGE,
         .power = 1,
         .type = TYPE_FIGHTING,
-        .accuracy = 100,
+        .accuracy = B_POLISHED_RETALIATION_ACCURACY ? POLISHED_COUNTER_ACCURACY : 100,
         .pp = 20,
         .target = TARGET_DEPENDS,
         .priority = -5,
@@ -6656,7 +6657,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .effect = EFFECT_REFLECT_DAMAGE,
         .power = 1,
         .type = TYPE_PSYCHIC,
-        .accuracy = 100,
+        .accuracy = B_POLISHED_RETALIATION_ACCURACY ? POLISHED_MIRROR_COAT_ACCURACY : 100,
         .pp = 20,
         .target = TARGET_DEPENDS,
         .priority = -5,

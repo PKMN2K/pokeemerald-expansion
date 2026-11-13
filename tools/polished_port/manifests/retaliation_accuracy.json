@@ -1,0 +1,27 @@
+{
+  "source_repository": "Rangi42/polishedcrystal",
+  "source_commit": "3fa43192379df5c3e7b09a08e4d5d79af4f02f42",
+  "source_variant": "default (FAITHFUL undefined)",
+  "moves": {
+    "COUNTER": {
+      "type": "FIGHTING",
+      "category": "PHYSICAL",
+      "accuracy": -1,
+      "pp": 20
+    },
+    "MIRROR_COAT": {
+      "type": "PSYCHIC",
+      "category": "SPECIAL",
+      "accuracy": -1,
+      "pp": 20
+    }
+  },
+  "accuracy_adapter": "Source -1 / EFFECT_COUNTER bypass maps to target accuracy 0.",
+  "scope": "Accuracy/evasion/item bypass and displayed accuracy, with ordinary singles retaliation regression checks.",
+  "retained_runtime": "EFFECT_REFLECT_DAMAGE: physical/special category masks and 200 percent damage.",
+  "gaps": [
+    "Full source retaliation behavior is not certified by this accuracy suite: multi-hit/Parental Bond, damage saturation, move-state bookkeeping, unusual target/protection interactions and smart AI scoring still need dedicated audits.",
+    "Original source animation, UI art/layout, general damage rules and item/ability timing remain open.",
+    "Expansion-only double battles and moves retain native rules."
+  ]
+}

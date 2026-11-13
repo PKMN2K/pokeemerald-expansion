@@ -3,10 +3,6 @@
   "observed_target_commit": "7e32866f06f02d8328ffb6dc5ede7b6e46021cd2",
   "scope": "Explicit unfinished source data/identity/lesson work. Not certified behavior. New or changed findings fail CI; resolved findings are allowed.",
   "findings": {
-    "move/MOVE_COUNTER/accuracy": {
-      "source": 0,
-      "target": 100
-    },
     "move/MOVE_METRONOME/type": {
       "source": "UNKNOWN_T",
       "target": "NORMAL"
@@ -18,10 +14,6 @@
     "move/MOVE_SLEEP_TALK/accuracy": {
       "source": 100,
       "target": 0
-    },
-    "move/MOVE_MIRROR_COAT/accuracy": {
-      "source": 0,
-      "target": 100
     },
     "move/MOVE_STRUGGLE/type": {
       "source": "UNKNOWN_T",

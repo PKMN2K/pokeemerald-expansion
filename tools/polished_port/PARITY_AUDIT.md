@@ -29,7 +29,9 @@ The subsequent Hidden Power suite imports its remaining power/type fields and
 the default source's dynamic type calculation. The Pain Split suite below
 imports its Ghost type and source HP-sharing rules. The fixed-damage adapter
 below accounts for Sonic Boom/Dragon Rage, leaving six differing
-move rows. Machine identity/lesson gaps remain as recorded in the original report.
+move rows. The subsequent Counter/Mirror Coat accuracy suite resolves two more,
+leaving four basic-data rows. Machine identity/lesson gaps remain as recorded in
+the original report.
 
 CI now runs `audit_moves_machines.py` with an explicit known-gap inventory.
 New or changed findings fail; resolved gaps are permitted. Strict mode without
@@ -1157,6 +1159,55 @@ demo opening remains; authentic source startup is still separate work.
 
 Johto ROM SHA-256:
 `4dc414e11889acb3ccac2bc4b4cb37561afd4fecc6a3c94dbd1a3d3f9b70a146`.
+
+## Source Counter and Mirror Coat accuracy
+
+The pinned default rows encode accuracy -1 for Counter and Mirror Coat. The
+shared source hit-check routine returns for EFFECT_COUNTER before the ordinary
+accuracy/evasion calculation; the source summary and field move menus print
+three dashes for these rows. Target accuracy 0 is the explicit storage adapter.
+`B_POLISHED_RETALIATION_ACCURACY` selects it only for the Johto/source-test
+profiles, retaining native 100 accuracy and the existing shared reflect-damage
+runtime. There is no per-call lookup or new runtime branch.
+
+The deterministic importer pins and verifies the source counter command, move
+rows, hit check and presentation contract. Its manifest limits completion to the
+accuracy correction and ordinary singles regression scenarios. Full source
+retaliation parity, including multi-hit/Parental Bond, saturation, damage-state
+bookkeeping, unusual target/protection interactions and AI scoring, is still open.
+Source move animations, UI art/layout and general damage/item/ability rules also
+remain separate work. Doubles and Expansion-only mechanics keep native adapters.
+
+Seven test groups cover source/native data identity, forced miss rolls under
+accuracy/evasion/item modifiers, double damage on either side across neutral,
+resisted and super-effective matchups, category/turn requirements, type immunity,
+Substitute and stale damage. The source cases must succeed where the native
+accuracy roll is forced to fail. A separate controller fixture links production
+objects and compares rendered accuracy with Swift/Water Gun references in both
+profiles; fixture parties never enter the shipping ROMs.
+
+Validation with GCC 13.2.1: both production ROMs build; all 46 source/asset
+checks, 12 ARM header/profile probes and 12 demo checks pass. All seven new
+groups pass in both native and isolated source profiles. The source profile
+also passes six move-balance, eight Hidden Power, ten Pain Split and nine
+fixed-damage groups, plus all six unchanged AI timing benchmarks. Both summary
+profiles pass the rendered comparison, with eight move selections captured.
+
+The production audit checks all 255 move PP/PP Up and dispatch rows and all
+43,792 teaching combinations, with no compatibility mismatch. Four basic-data
+rows and 113 documented gap entries remain, with no new findings. Reintroducing
+either old 100-accuracy value is rejected by the known-gap gate. Machine identity
+and lesson-coverage gaps are unchanged.
+
+The full native run passes 5,389 groups, with nine existing expected failures
+and 585 TODOs (5,983 total), and no unexpected failures. The same production
+Johto ROM passes all 101 campaign checks and 19 directed warp traversals,
+including all three starter paths, Sprout Tower, Falkner, the badge/Roost/Togepi
+rewards, resident schedules and Save/Continue. This remains the documented demo
+campaign; the authentic source opening is separate work.
+
+Johto ROM SHA-256:
+`a71c38d5e376d0f6756f4bb9da8bdaed4c4ec6ec8449bbe51f4b23dddbb24d84`.
 
 ## Next priorities
 

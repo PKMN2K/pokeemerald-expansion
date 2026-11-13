@@ -1433,3 +1433,32 @@ and data coverage, not individual controller replays. Original source UI art,
 layout, move animations, general accuracy RNG, ability/item timing and smart-AI
 scoring remain separate work. Stable IDs, saves and engine capacities remain
 unchanged. See the [parity audit](tools/polished_port/PARITY_AUDIT.md) for evidence.
+
+
+### Source Counter and Mirror Coat accuracy
+
+Counter and Mirror Coat now bypass the ordinary accuracy roll in the Johto
+profile, matching the pinned source's -1 accuracy and explicit EFFECT_COUNTER
+checkhit exemption. `B_POLISHED_RETALIATION_ACCURACY` selects target accuracy 0
+at compile time. Native Expansion retains accuracy 100. Move IDs, save data,
+retaliation category masks, damage multiplier and engine capacities are unchanged.
+
+`build_retaliation_accuracy.py` verifies the source rows, hit-check exemption,
+counter command and summary/field move-menu dash display against pinned blobs.
+The production summary fixture compares both moves with Swift's dashes in Johto
+and Water Gun's numeric 100 in native mode. It links unchanged production objects
+with a separate test boot and does not alter either shipping ROM.
+
+Battle regression cases cover accuracy drops, evasion boosts, Bright Powder,
+both user sides, nonzero type matchups, category/turn requirements, Ghost/Dark
+immunity and damage absorbed by the user's Substitute. This suite certifies the
+accuracy correction and these ordinary singles cases. Multi-hit/Parental Bond,
+damage saturation, full source damage-state/target/protection semantics, smart AI,
+original animation and UI layout remain separate audits. Expansion-only battle
+formats and moves keep their existing behavior. See the parity audit for results.
+
+Validation: both production builds, all seven new groups in each profile,
+5,389 native regression tests, 46 source/asset checks and 12 ARM probes pass.
+The same Johto ROM passes 101 campaign checks and 19 warp traversals. The nine
+existing expected failures and 585 TODOs are unchanged. Four basic move-data
+rows remain in the audit, alongside the previously documented machine gaps.
