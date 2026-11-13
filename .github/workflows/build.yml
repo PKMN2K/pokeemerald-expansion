@@ -98,6 +98,7 @@ jobs:
           python3 tools/polished_port/scripts/build_return_power.py --check
           python3 tools/polished_port/scripts/build_move_pp.py --check
           python3 tools/polished_port/scripts/build_move_balance.py --check
+          python3 tools/polished_port/scripts/build_hidden_power.py --check
           python3 tools/polished_port/scripts/build_rock_smash.py --check
           python3 tools/polished_port/scripts/test_rock_smash.py
           python3 tools/polished_port/scripts/build_flash.py --check
@@ -1129,6 +1130,7 @@ jobs:
         timeout-minutes: 20
         run: |
           make -j$(nproc) -O TEST=1 POLISHED_MOVE_BALANCE_TEST=1 check TESTS='Polished move balance'
+          make -j$(nproc) -O TEST=1 POLISHED_MOVE_BALANCE_TEST=1 check TESTS='Polished Hidden Power'
           make -j$(nproc) -O TEST=1 POLISHED_MOVE_BALANCE_TEST=1 check TESTS='AI thinking time'
 
       - name: Exercise evolution completion and cancellation in mGBA

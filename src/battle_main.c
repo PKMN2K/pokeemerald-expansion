@@ -1,4 +1,8 @@
 #include "global.h"
+#include "constants/polished_hidden_power.h"
+#if B_POLISHED_HIDDEN_POWER
+#include "data/polished_hidden_power_types.h"
+#endif
 #include "battle.h"
 #include "battle_anim.h"
 #include "battle_ai_main.h"
@@ -5604,25 +5608,31 @@ enum Type GetDynamicMoveType(struct Pokemon *mon, enum Move move, enum BattlerId
     case EFFECT_HIDDEN_POWER:
         {
             u32 typeBits = 0;
+            // Recover source DV parity from the port's DV*2 IV representation.
+            // Native builds retain the modern IV least-significant-bit rule.
+            const u32 shift = B_POLISHED_HIDDEN_POWER ? POLISHED_HIDDEN_POWER_IV_SHIFT : 0;
             if (state == MON_IN_BATTLE)
             {
-                typeBits = ((gBattleMons[battler].hpIV & 1) << 0)
-                        | ((gBattleMons[battler].attackIV & 1) << 1)
-                        | ((gBattleMons[battler].defenseIV & 1) << 2)
-                        | ((gBattleMons[battler].speedIV & 1) << 3)
-                        | ((gBattleMons[battler].spAttackIV & 1) << 4)
-                        | ((gBattleMons[battler].spDefenseIV & 1) << 5);
+                typeBits = (((gBattleMons[battler].hpIV >> shift) & 1) << 0)
+                        | (((gBattleMons[battler].attackIV >> shift) & 1) << 1)
+                        | (((gBattleMons[battler].defenseIV >> shift) & 1) << 2)
+                        | (((gBattleMons[battler].speedIV >> shift) & 1) << 3)
+                        | (((gBattleMons[battler].spAttackIV >> shift) & 1) << 4)
+                        | (((gBattleMons[battler].spDefenseIV >> shift) & 1) << 5);
             }
             else
             {
-                typeBits = ((GetMonData(mon, MON_DATA_HP_IV) & 1) << 0)
-                        | ((GetMonData(mon, MON_DATA_ATK_IV) & 1) << 1)
-                        | ((GetMonData(mon, MON_DATA_DEF_IV) & 1) << 2)
-                        | ((GetMonData(mon, MON_DATA_SPEED_IV) & 1) << 3)
-                        | ((GetMonData(mon, MON_DATA_SPATK_IV) & 1) << 4)
-                        | ((GetMonData(mon, MON_DATA_SPDEF_IV) & 1) << 5);
+                typeBits = (((GetMonData(mon, MON_DATA_HP_IV) >> shift) & 1) << 0)
+                        | (((GetMonData(mon, MON_DATA_ATK_IV) >> shift) & 1) << 1)
+                        | (((GetMonData(mon, MON_DATA_DEF_IV) >> shift) & 1) << 2)
+                        | (((GetMonData(mon, MON_DATA_SPEED_IV) >> shift) & 1) << 3)
+                        | (((GetMonData(mon, MON_DATA_SPATK_IV) >> shift) & 1) << 4)
+                        | (((GetMonData(mon, MON_DATA_SPDEF_IV) >> shift) & 1) << 5);
             }
 
+#if B_POLISHED_HIDDEN_POWER
+            return sPolishedHiddenPowerTypes[typeBits];
+#else
             u32 hpTypes[NUMBER_OF_MON_TYPES] = {0};
             u32 i, hpTypeCount = 0;
             for (i = 0; i < NUMBER_OF_MON_TYPES; i++)
@@ -5632,6 +5642,7 @@ enum Type GetDynamicMoveType(struct Pokemon *mon, enum Move move, enum BattlerId
             }
             moveType = ((hpTypeCount - 1) * typeBits) / 63;
             return hpTypes[moveType];
+#endif
         }
         break;
     case EFFECT_CHANGE_TYPE_ON_ITEM:

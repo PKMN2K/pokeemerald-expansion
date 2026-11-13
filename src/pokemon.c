@@ -6680,7 +6680,9 @@ void UpdateDaysPassedSinceFormChange(u16 days)
 
 enum Type CheckDynamicMoveType(struct Pokemon *mon, enum Move move, enum BattlerId battler, enum MonState state)
 {
-    enum Type moveType = GetDynamicMoveType(mon, move, battler, GetBattlerAbility(battler), GetBattlerHoldEffect(battler), state);
+    enum Ability ability = state == MON_IN_BATTLE ? GetBattlerAbility(battler) : GetMonAbility(mon);
+    enum HoldEffect holdEffect = state == MON_IN_BATTLE ? GetBattlerHoldEffect(battler) : GetItemHoldEffect(GetMonData(mon, MON_DATA_HELD_ITEM));
+    enum Type moveType = GetDynamicMoveType(mon, move, battler, ability, holdEffect, state);
     if (moveType != TYPE_NONE)
         return moveType;
     return GetMoveType(move);

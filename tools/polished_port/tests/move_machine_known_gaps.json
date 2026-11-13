@@ -31,14 +31,6 @@
       "source": "GHOST",
       "target": "NORMAL"
     },
-    "move/MOVE_HIDDEN_POWER/power": {
-      "source": 70,
-      "target": 60
-    },
-    "move/MOVE_HIDDEN_POWER/type": {
-      "source": "UNKNOWN_T",
-      "target": "NORMAL"
-    },
     "move/MOVE_MIRROR_COAT/accuracy": {
       "source": 0,
       "target": 100
@@ -356,5 +348,11 @@
     "OCTAZOOKA",
     "WHIRLPOOL"
   ],
-  "resolution_note": "Twelve source power/accuracy/type/category rows now use explicit imports. Their 17 former field differences are no longer permitted by this gate."
+  "resolution_note": "Twelve source power/accuracy/type/category rows now use explicit imports. Their 17 former field differences are no longer permitted by this gate.",
+  "resolved_hidden_power": {
+    "power": 70,
+    "table_type": "UNKNOWN_T via TYPE_MYSTERY",
+    "dynamic_type": "six projected source DV parity bits, including Fairy",
+    "scope": "Basic data and type-selection behavior; other engine parity remains separately audited"
+  }
 }

@@ -25,8 +25,9 @@ table differences are representation differences requiring behavioral review.
 
 The subsequent [move-balance correction](#source-move-balance-corrections)
 imports twelve of those rows and removes their seventeen field discrepancies.
-The production-linked audit now reports ten remaining differing rows. Machine
-identity/lesson gaps remain as recorded in the original report.
+The subsequent Hidden Power suite imports its remaining power/type fields and
+the default source's dynamic type calculation. Nine differing move rows remain;
+machine identity/lesson gaps remain as recorded in the original report.
 
 CI now runs `audit_moves_machines.py` with an explicit known-gap inventory.
 New or changed findings fail; resolved gaps are permitted. Strict mode without
@@ -986,6 +987,53 @@ Johto ROM SHA-256:
 `af3fd547a7c6a3f52ab5499427aa4eaddfc05303c4bf85429a0364707625e0d0`.
 The local audit identifies this as a working tree based on `3fdd1511`; the
 unchanged clean-source guard remains enabled for CI's exact-commit report.
+
+## Source Hidden Power
+
+The pinned default build uses fixed power 70 and `UNKNOWN_T` in the move table.
+The port maps that listed type to `TYPE_MYSTERY` and imports the six-DV dynamic
+selection in `GetDynamicMoveType`, shared by battle damage, AI and optional
+dynamic display. The source type constants and routines are pinned fixtures;
+`build_hidden_power.py --check` validates them and all generated outputs.
+
+The adapter reads each source DV as `IV >> 1`, matching the existing trainer
+conversion `IV = DV * 2`. No saved IVs, identifier widths, native stat formulas
+or save layouts are rewritten. Source parity bits pack HP, Attack, Defense,
+Speed, SpAttack and SpDefense in that order. Fighting through Dragon receive
+four patterns each, Dark receives three and Fairy receives the all-odd-DV
+pattern. This is the default source distribution, not the native sixteen-type
+formula extended by one type.
+
+Source Anticipation reads Hidden Power's listed unknown type rather than its
+calculated attack type. The optional display helper now reads party abilities
+and items outside battle without accessing an absent battle allocation. The
+baseline's static-type display setting is unchanged. Native Expansion retains
+its own configured Hidden Power rules and wider engine capacities.
+
+Eight groups in each profile cover fixed data, all 4,096 relevant IV parity
+combinations, all 64 DV patterns in 128 real battle cases, Fairy effectiveness,
+Ghost immunity, AI choice, Anticipation and display without battle allocation.
+The known-gap gate no longer accepts the old Hidden Power power/type values.
+General damage rounding/modifiers, accuracy RNG, broader abilities/AI, DV/stat
+generation, source animation and the Hidden Power guru/UI remain separate work.
+
+Validation with GCC 13.2.1: both production ROMs build; all 43 source checks,
+12 ARM profile/header probes and 12 demo checks pass. All eight Hidden Power
+groups pass in both ROM profiles. The source profile also passes the six prior
+move-balance groups and all six unchanged AI timing benchmarks. The full native
+suite passes 5,363 groups, with nine existing expected failures and 586 TODOs
+(5,958 total); no unexpected failures. Production-linked inspection confirms
+all 255 move dispatch bindings and PP rows, no mismatch in 43,792 teaching
+combinations, and nine remaining differing move rows. Both injected old Hidden
+Power field values are rejected by the known-gap gate.
+
+The same production Johto ROM passes all 101 campaign checks and 19 warp
+traversals, including three starters, Sprout Tower, Falkner, badge/reward/Togepi
+flow and Save/Continue. The campaign still uses the documented demo opening;
+this does not certify the source startup or the rest of the unfinished game.
+
+Johto ROM SHA-256:
+`7f29127eebbe6fdc0405db2cec44c7ff0d3f7cbe0f05d9b1cd5fd8853913d371`.
 
 ## Next priorities
 

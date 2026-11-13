@@ -1365,3 +1365,27 @@ it rejects reintroduction of any of the seventeen repaired field differences.
 The remaining ten differing rows include variable/fixed damage and typeless or
 accuracy-bypass representations that require separate behavioral review.
 See the [parity audit](tools/polished_port/PARITY_AUDIT.md) for validation evidence.
+
+### Source Hidden Power
+
+Hidden Power now uses the pinned default source's fixed 70 power, listed unknown
+type and six-DV type selection, including Fairy. `B_POLISHED_HIDDEN_POWER` selects
+these rules for Johto and the isolated source-move test profile. Native Expansion
+keeps its configured power and sixteen-type IV calculation.
+
+The explicit storage adapter projects each saved IV to `DV = IV >> 1`, consistent
+with the port's existing trainer conversion `IV = DV * 2`. It preserves all
+0..31 saved IV values and does not change their stat calculation or save layout.
+Source parity bits are ordered HP, Attack, Defense, Speed, SpAttack, SpDefense:
+patterns 0..59 select Fighting through Dragon, 60..62 select Dark, and 63 selects
+Fairy. A generated 64-entry table preserves source type order despite differing
+target type IDs. Battle and AI calculations share this accessor.
+
+Anticipation checks the source's listed unknown type for Hidden Power. Optional
+dynamic move display uses party data safely outside battle; the baseline keeps
+its existing static-type display setting. Source animations, the Hidden Power
+guru/UI, general damage/accuracy rules and broader DV/stat generation remain
+separate migration work. The pinned fixture generator and eight native/source
+test groups cover the data, all 64 type patterns, 4,096 relevant IV combinations,
+effectiveness, immunity, AI choice and Anticipation. See the
+[parity audit](tools/polished_port/PARITY_AUDIT.md) for validation evidence.

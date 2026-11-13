@@ -3227,8 +3227,13 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
                             move = gBattleMons[i].moves[j];
                             enum BattleMoveEffects moveEffect = GetMoveEffect(move);
                             moveType = GetBattleMoveType(move);
-                            if (moveEffect == EFFECT_HIDDEN_POWER && GetConfig(B_ANTICIPATION_HIDDEN_POWER) >= GEN_6)
-                                moveType = GetDynamicMoveType(GetBattlerMon(i), move, i, ABILITY_NONE, HOLD_EFFECT_NONE, MON_IN_BATTLE);
+                            if (moveEffect == EFFECT_HIDDEN_POWER)
+                            {
+                                if (B_POLISHED_HIDDEN_POWER)
+                                    moveType = GetMoveType(move); // Source Anticipation always reads the listed type.
+                                else if (GetConfig(B_ANTICIPATION_HIDDEN_POWER) >= GEN_6)
+                                    moveType = GetDynamicMoveType(GetBattlerMon(i), move, i, ABILITY_NONE, HOLD_EFFECT_NONE, MON_IN_BATTLE);
+                            }
 
                             ctx.battlerAtk = i;
                             ctx.battlerDef = battler;
@@ -6393,7 +6398,7 @@ static inline u32 CalcMoveBasePower(struct DamageContext *ctx)
         break;
     case EFFECT_HIDDEN_POWER:
     {
-        if (B_HIDDEN_POWER_DMG < GEN_6)
+        if (!B_POLISHED_HIDDEN_POWER && B_HIDDEN_POWER_DMG < GEN_6)
         {
             u8 powerBits = ((gBattleMons[battlerAtk].hpIV & 2) >> 1)
                          | ((gBattleMons[battlerAtk].attackIV & 2) << 0)

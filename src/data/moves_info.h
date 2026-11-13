@@ -1,4 +1,5 @@
 #include "polished_move_balance.h"
+#include "constants/polished_hidden_power.h"
 #include "battle_dynamax.h"
 #include "battle_anim_scripts.h"
 #include "constants/battle.h"
@@ -6488,9 +6489,9 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .description = COMPOUND_STRING(
             "The effectiveness varies\n"
             "with the user."),
-        .power = B_HIDDEN_POWER_DMG >= GEN_6 ? 60 : 1,
+        .power = B_POLISHED_HIDDEN_POWER ? POLISHED_HIDDEN_POWER_POWER : (B_HIDDEN_POWER_DMG >= GEN_6 ? 60 : 1),
         .effect = EFFECT_HIDDEN_POWER,
-        .type = TYPE_NORMAL,
+        .type = B_POLISHED_HIDDEN_POWER ? POLISHED_HIDDEN_POWER_TYPE : TYPE_NORMAL,
         .accuracy = 100,
         .pp = 15,
         .target = TARGET_SELECTED,
