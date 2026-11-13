@@ -1,0 +1,21 @@
+#include "global.h"
+#include "battle.h"
+#include "test/test.h"
+
+TEST("Polished typeless moves import source type identities and retain native fallback")
+{
+    EXPECT_EQ(GetMoveType(MOVE_METRONOME), B_POLISHED_MOVE_BALANCE ? TYPE_MYSTERY : TYPE_NORMAL);
+    EXPECT_EQ(GetMoveType(MOVE_STRUGGLE), B_POLISHED_MOVE_BALANCE ? TYPE_MYSTERY : TYPE_NORMAL);
+    EXPECT_EQ(GetMovePower(MOVE_METRONOME), 0);
+    EXPECT_EQ(GetMovePower(MOVE_STRUGGLE), 50);
+    EXPECT_EQ(GetMoveAccuracy(MOVE_METRONOME), 0);
+    EXPECT_EQ(GetMoveAccuracy(MOVE_STRUGGLE), 0);
+    EXPECT_EQ(GetMoveCategory(MOVE_METRONOME), DAMAGE_CATEGORY_STATUS);
+    EXPECT_EQ(GetMoveCategory(MOVE_STRUGGLE), DAMAGE_CATEGORY_PHYSICAL);
+    EXPECT_EQ(GetMoveEffect(MOVE_METRONOME), EFFECT_METRONOME);
+    EXPECT_EQ(GetMoveEffect(MOVE_STRUGGLE), EFFECT_STRUGGLE);
+    EXPECT_EQ(GetMovePP(MOVE_METRONOME), B_POLISHED_MOVE_PP ? 20 : 10);
+    EXPECT_EQ(GetMovePP(MOVE_STRUGGLE), 1);
+    EXPECT_EQ(GetMoveType(MOVE_SWIFT), TYPE_NORMAL);
+    EXPECT_EQ(GetMoveType(MOVE_WATER_GUN), TYPE_WATER);
+}

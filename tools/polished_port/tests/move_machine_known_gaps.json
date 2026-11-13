@@ -3,14 +3,6 @@
   "observed_target_commit": "7e32866f06f02d8328ffb6dc5ede7b6e46021cd2",
   "scope": "Explicit unfinished source data/identity/lesson work. Not certified behavior. New or changed findings fail CI; resolved findings are allowed.",
   "findings": {
-    "move/MOVE_METRONOME/type": {
-      "source": "UNKNOWN_T",
-      "target": "NORMAL"
-    },
-    "move/MOVE_STRUGGLE/type": {
-      "source": "UNKNOWN_T",
-      "target": "NORMAL"
-    },
     "machine/TM01/identity": {
       "target_move": "MOVE_DYNAMICPUNCH",
       "actual_move": "MOVE_FOCUS_PUNCH",

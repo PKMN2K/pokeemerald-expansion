@@ -1499,3 +1499,25 @@ The final Johto ROM passes 101 campaign checks and 19 warp traversals. Nine
 existing expected failures and 585 TODOs remain unchanged. The basic move-data
 audit now has only the Metronome and Struggle type rows left; broader effect
 and machine gaps remain documented separately.
+
+### Source Metronome and Struggle type suite
+
+Both default-source move rows use UNKNOWN_T (???), now explicitly mapped to
+TYPE_MYSTERY in the Johto and isolated source move-balance profiles. Native
+Expansion retains Normal. Existing Struggle type/STAB bypass and Metronome
+called-move dispatch receive focused regression coverage. The live summary
+fixture checks the type icons in both production profiles. IDs and save layouts
+are unchanged, and Expansion's extra capacity remains available.
+
+This closes the final two currently audited basic move-data discrepancies;
+matching those fields does not establish complete move behavior. The source
+Metronome candidate/exclusion rules and RNG, Struggle recoil rounding and wider
+battle rules, source UI/art/animations and machine identity/lesson gaps remain
+open. See the parity audit for the precise scope and validation evidence.
+
+Validation: both production builds, all eight new groups in native and source
+profiles, earlier source move regressions, six AI timing checks, 48 source
+checks, 12 ARM probes and both live icon comparisons pass. The same Johto ROM
+passes all 101 campaign checks and 19 warp traversals. The production audit now
+reports zero differences in its audited basic move fields; broader behavior,
+secondary-effect probabilities and machine gaps remain open.

@@ -1,0 +1,37 @@
+{
+  "source_repository": "Rangi42/polishedcrystal",
+  "source_commit": "3fa43192379df5c3e7b09a08e4d5d79af4f02f42",
+  "source_variant": "default (FAITHFUL undefined)",
+  "moves": {
+    "METRONOME": {
+      "effect": "EFFECT_METRONOME",
+      "power": 0,
+      "source_type": "UNKNOWN_T",
+      "target_type": "TYPE_MYSTERY",
+      "accuracy": -1,
+      "pp": 20,
+      "category": "STATUS"
+    },
+    "STRUGGLE": {
+      "effect": "EFFECT_RECOIL_HIT",
+      "power": 50,
+      "source_type": "UNKNOWN_T",
+      "target_type": "TYPE_MYSTERY",
+      "accuracy": -1,
+      "pp": 1,
+      "category": "PHYSICAL"
+    }
+  },
+  "selection": "Existing B_POLISHED_MOVE_BALANCE / POLISHED_BALANCE compile-time data profile.",
+  "scope": "Static move type identity and summary icons, with focused typeless/called-move regression coverage.",
+  "runtime_contract": [
+    "Struggle skips STAB and type matchups in the pinned source; the native runtime already bypasses both.",
+    "Metronome loads the called move data and restarts execution; its parent type must not replace the called move type."
+  ],
+  "gaps": [
+    "Metronome still uses the native candidate pool and RNG. Source excludes already-known moves and its own exception list; importing this selector is separate work.",
+    "Struggle source recoil uses floored quarter maximum HP, minimum one, unlike native modern rounding. Recoil, damage rounding, PP-exhaustion selection and move bookkeeping are not certified here.",
+    "General type-changing abilities, Conversion/Conversion 2, weather, held-item behavior and AI scoring need separate source audits.",
+    "Original source UI layout/art and move animations remain unported. Extra Expansion capabilities remain available."
+  ]
+}

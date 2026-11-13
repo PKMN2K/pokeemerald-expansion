@@ -4,6 +4,7 @@
 #include "constants/polished_fixed_damage.h"
 #include "constants/polished_retaliation.h"
 #include "constants/polished_self_move_accuracy.h"
+#include "constants/polished_typeless_moves.h"
 #include "battle_dynamax.h"
 #include "battle_anim_scripts.h"
 #include "constants/battle.h"
@@ -3217,7 +3218,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
             "Pokémon move at random."),
         .effect = EFFECT_METRONOME,
         .power = 0,
-        .type = TYPE_NORMAL,
+        .type = POLISHED_BALANCE(POLISHED_METRONOME_TYPE, TYPE_NORMAL),
         .accuracy = 0,
         .pp = 10,
         .target = TARGET_DEPENDS,
@@ -4534,7 +4535,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .argument = { .recoilPercentage = 50 },
     #endif
         .power = 50,
-        .type = TYPE_NORMAL,
+        .type = POLISHED_BALANCE(POLISHED_STRUGGLE_TYPE, TYPE_NORMAL),
         .accuracy = B_UPDATED_MOVE_DATA >= GEN_4 ? 0 : 100,
         .pp = B_UPDATED_MOVE_DATA >= GEN_2 ? 1: 10,
         .target = TARGET_SELECTED,

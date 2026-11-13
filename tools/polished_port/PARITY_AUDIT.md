@@ -31,7 +31,11 @@ imports its Ghost type and source HP-sharing rules. The fixed-damage adapter
 below accounts for Sonic Boom/Dragon Rage, leaving six differing
 move rows. The subsequent Counter/Mirror Coat accuracy suite resolves two more,
 leaving four basic-data rows. The subsequent Dragon Dance/Sleep Talk listed-
-accuracy suite resolves two more, leaving the Metronome and Struggle type rows.
+accuracy suite resolves two more. The subsequent typeless-move suite imports
+the Metronome and Struggle type rows, completing the currently audited basic
+move fields (power with sentinel adapters, type, accuracy, PP/PP Up and category).
+Secondary-effect probabilities, move effects, flags, candidate pools, battle
+rules and source presentation are not certified by that data audit.
 Machine identity/lesson gaps remain as recorded in the original report.
 
 CI now runs `audit_moves_machines.py` with an explicit known-gap inventory.
@@ -1266,6 +1270,70 @@ the authentic source opening is separate work.
 
 Johto ROM SHA-256:
 `f06de64f7a2afbd94f8bf8f336edc2fd18f412de3bebfef7fc7ea7dfb1a567f0`.
+
+## Source Metronome and Struggle type entries
+
+The pinned default build gives both Metronome and Struggle `UNKNOWN_T`, whose
+source label is `???`. The source's optional FAITHFUL Metronome row remains
+Normal and is deliberately not selected. The importer explicitly maps this
+source type to Expansion's `TYPE_MYSTERY` through the existing compile-time
+move-balance profile; native Expansion retains its Normal table entries.
+Move IDs, save fields, type-table capacity and optional engine content are
+unchanged. Source Metronome's 20 PP was already supplied by the PP adapter.
+
+Struggle's source STAB handler returns before both STAB and matchup calculation.
+The existing GBA runtime already treats in-battle Struggle as typeless and skips
+both. Metronome's source handler loads the selected move's data and restarts
+execution; the parent's unknown type does not replace the called move's type.
+This suite imports the table identities and verifies those narrow contracts.
+It does not certify the complete implementations of either move.
+
+The source generator verifies the move rows, source type label, early Struggle
+return, and Metronome dispatch against hash-pinned fixtures. Eight native/source
+test groups cover table identity/fallback, Struggle neutral damage against Ghost,
+Rock, Steel and ordinary types, absence of Normal STAB/item boosts, native
+Normalize/Pixilate regression behavior, Protect without recoil, and Metronome's
+called-move STAB/effectiveness, Ghost immunity, protection and Water Absorb.
+The production-linked controller fixture opens the real summary and selects
+Metronome, Struggle, Hidden Power and Swift. Johto's changed icons must match
+Hidden Power's mystery icon and differ from Swift's Normal icon; native icons
+must all remain Normal. This is a separate fixture, absent from shipping ROMs.
+Original source UI artwork/layout and battle animations remain open.
+
+The audit also identifies further work explicitly: Metronome still selects
+from the native pool/RNG instead of the source roster, exception list and
+already-known-move exclusions. Source Struggle recoil floors quarter maximum
+HP (minimum one), while native modern recoil rounds. Recoil, damage rounding,
+PP-exhaustion selection, move bookkeeping, Conversion/Conversion 2, general
+ability/item/weather rules and AI scoring remain separate source audits.
+Tests of optional native abilities do not assert those abilities belong to the
+source roster. No data match or passing regression closes these broader gaps.
+
+Validation with Arm GNU GCC 13.2.1: both production ROM builds, all 48 source
+checks, 12 ARM layout probes, 12 demo checks and both rendered summary profiles
+pass. All eight new test groups pass in both native and source profiles. The
+source profile also passes all six AI frame budgets and the earlier move-balance
+(6), Hidden Power (8), Pain Split (10), fixed-damage (9), retaliation (7), and
+self-move accuracy (9) groups. Existing native Metronome regressions pass all
+10 groups; Struggle passes five with its one pre-existing TODO. The full native
+suite remains part of CI; it was not rerun locally for this table-only change.
+
+The production-linked audit reports zero differences in its audited basic
+fields across 255 source moves, 255 matching PP/PP Up records, valid dispatch
+bindings, and 43,792 matching teaching combinations. Its 109 machine identity/
+lesson entries remain, with no new findings. Reintroducing either removed
+Normal-type discrepancy is rejected by the known-gap gate. These results do
+not certify secondary-effect chances or full move behavior. The audit, icon
+comparison and demo checks all use the same production Johto ROM.
+
+The same Johto ROM passes all 101 campaign checks and 19 directed warp
+traversals, including all three starter branches, seven Sprout Tower battles,
+Falkner, the badge/Roost/Togepi rewards, resident schedules and Save/reset/
+Continue. These are checks of the documented demo campaign; the authentic
+source opening is still a separate migration task.
+
+Johto ROM SHA-256:
+`b51696127e0c5b1b8a93cc4cf0a4c25fbee72f4c45320ca5243ffd94b5fb55f7`.
 
 ## Next priorities
 
