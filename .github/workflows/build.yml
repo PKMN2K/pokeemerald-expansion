@@ -100,6 +100,7 @@ jobs:
           python3 tools/polished_port/scripts/build_move_balance.py --check
           python3 tools/polished_port/scripts/build_hidden_power.py --check
           python3 tools/polished_port/scripts/build_pain_split.py --check
+          python3 tools/polished_port/scripts/build_fixed_damage.py --check
           python3 tools/polished_port/scripts/build_rock_smash.py --check
           python3 tools/polished_port/scripts/test_rock_smash.py
           python3 tools/polished_port/scripts/build_flash.py --check
@@ -126,6 +127,10 @@ jobs:
         run: |
           python3 tools/polished_port/scripts/audit_moves_machines.py --driver /tmp/johto-demo-driver --output /tmp/johto-validation/moves-machines --known-gaps tools/polished_port/tests/move_machine_known_gaps.json
           cat /tmp/johto-validation/moves-machines/moves-machines.md >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Verify fixed-damage power display in both production profiles
+        timeout-minutes: 5
+        run: python3 tools/polished_port/scripts/test_fixed_damage_display_emulator.py --driver /tmp/johto-demo-driver --output /tmp/johto-validation/fixed-damage-display
 
       - name: Exercise source Flash in mGBA
         timeout-minutes: 10
@@ -1133,6 +1138,7 @@ jobs:
           make -j$(nproc) -O TEST=1 POLISHED_MOVE_BALANCE_TEST=1 check TESTS='Polished move balance'
           make -j$(nproc) -O TEST=1 POLISHED_MOVE_BALANCE_TEST=1 check TESTS='Polished Hidden Power'
           make -j$(nproc) -O TEST=1 POLISHED_MOVE_BALANCE_TEST=1 check TESTS='Polished Pain Split'
+          make -j$(nproc) -O TEST=1 POLISHED_MOVE_BALANCE_TEST=1 check TESTS='Polished fixed damage'
           make -j$(nproc) -O TEST=1 POLISHED_MOVE_BALANCE_TEST=1 check TESTS='AI thinking time'
 
       - name: Exercise evolution completion and cancellation in mGBA

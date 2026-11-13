@@ -18,6 +18,7 @@ import build_pokemon_learnsets as source
 import build_pokemon_learning as learning
 import build_move_pp as pp
 import build_pain_split as pain_split
+import build_fixed_damage as fixed_damage
 from test_johto_demo_emulator import Game
 
 ROOT = source.ROOT
@@ -38,7 +39,7 @@ def inputs():
                           type=type_, accuracy=0 if accuracy == '-1' else int(accuracy),
                           pp=int(base_pp), chance=int(chance), category=category))
     outputs = learning.build()
-    for path, expected in {**outputs, **pp.build(), **pain_split.build()}.items():
+    for path, expected in {**outputs, **pp.build(), **pain_split.build(), **fixed_damage.build()}.items():
         assert path.read_text() == expected, f'Stale imported source data: {path}'
     catalog = json.loads(outputs[learning.MANIFEST])
     assert [r['kind'] for r in catalog['teaching_catalog']] == ['TM']*75 + ['HM']*6 + ['MT']*31
@@ -106,6 +107,9 @@ void CB2_MoveMachineAudit(void)
         gAuditResult[13] = GetMoveType(m);
         gAuditResult[14] = MoveIgnoresSubstitute(m);
         gAuditResult[15] = MoveIgnoresProtect(m);
+        gAuditResult[16] = GetMoveEffect(m) == EFFECT_FIXED_HP_DAMAGE;
+        gAuditResult[17] = gAuditResult[16] ? GetMoveFixedHPDamage(m) : 0;
+        gAuditResult[18] = GetMoveDisplayPower(m);
     }
     else if (gAuditKind == 1 && gAuditCursor < ARRAY_COUNT(machines))
     {
@@ -173,6 +177,18 @@ def sample(game, kind, cursor, size):
     raise AssertionError(f'Production-linked API probe stalled: {kind}/{cursor}')
 
 
+def fixed_damage_differences(source_power, actual):
+    """Accept only the explicit fixed-HP adapter, never an ordinary power row."""
+    differences = {}
+    expected = dict(power=1, fixed_hp_effect=True, fixed_hp_payload=source_power)
+    observed = dict(power=actual[1], fixed_hp_effect=bool(actual[16]), fixed_hp_payload=actual[17])
+    if observed != expected:
+        differences['fixed_damage_adapter'] = dict(source=expected, target=observed)
+    if actual[18] != source_power:
+        differences['display_power'] = dict(source=source_power, target=actual[18])
+    return differences
+
+
 def run(game, moves, catalog, species):
     pain_split_contract = json.loads((ROOT/'tools/polished_port/manifests/pain_split.json').read_text())
     move_results = []
@@ -182,14 +198,17 @@ def run(game, moves, catalog, species):
     type_names = {int(value): name for name, value in re.findall(
         r'\bTYPE_(\w+)\s*=\s*(\d+)\s*,', (ROOT/'include/constants/pokemon.h').read_text())}
     for i, m in enumerate(moves):
-        actual = sample(game, 0, i, 16)
+        actual = sample(game, 0, i, 19)
         assert actual[0] > 0 and actual[0] not in ids.values(), 'Invalid or duplicate move ID'
         ids[m['target_move']] = actual[0]
         differences = {}
+        fixed = m['source_effect'] == 'EFFECT_STATIC_DAMAGE'
+        if fixed:
+            differences.update(fixed_damage_differences(m['power'], actual))
         for field, index in [('power', 1), ('accuracy', 2), ('pp', 3)]:
             # Source power 1 is a sentinel for fixed/variable damage; target
             # storage may use 0 instead. Record that separately, not as a bug.
-            if field == 'power' and m[field] == 1:
+            if field == 'power' and (m[field] == 1 or fixed):
                 continue
             if m[field] != actual[index]:
                 differences[field] = dict(source=m[field], target=actual[index])
@@ -211,7 +230,9 @@ def run(game, moves, catalog, species):
                                  actual=dict(id=actual[0], power=actual[1], accuracy=actual[2], pp=actual[3],
                                              type=type_names.get(actual[13], actual[13]), pp_up=actual[9:13], type_matches=bool(actual[4]), category_matches=bool(actual[5]),
                                              placeholder=bool(actual[6]), animation=bool(actual[7]), battle_script=bool(actual[8]),
-                                             ignores_substitute=bool(actual[14]), ignores_protect=bool(actual[15])),
+                                             ignores_substitute=bool(actual[14]), ignores_protect=bool(actual[15]),
+                                             fixed_hp_effect=bool(actual[16]), fixed_hp_payload=actual[17], display_power=actual[18]),
+                                 fixed_damage_adapter=fixed,
                                  variable_power_requires_behavior_test=m['power'] == 1,
                                  differences=differences))
     machines = []
@@ -258,8 +279,10 @@ def markdown(report):
              f"| Species/form × TM/HM/tutor compatibility | {s['compatibility_checks']-s['compatibility_mismatches']}/{s['compatibility_checks']} match |", '',
              '## Basic move-data differences', '',
              'These are table differences requiring source-behavior review, not all confirmed',
-             'gameplay bugs. Fixed damage (Sonic Boom/Dragon Rage), typeless move sentinels and',
+             'gameplay bugs. Typeless move sentinels and',
              'accuracy on moves that bypass accuracy may use different representations.',
+             'Sonic Boom/Dragon Rage require the explicit power-1 fixed-HP adapter with',
+             'payload and display power 20/40; raw runtime power remains visible in JSON.',
              'Source power 1 denotes variable/fixed damage and is recorded separately in JSON.', '',
              '| Move | Field | Source | Target |', '| --- | --- | --- | --- |']
     for m in report['moves']:

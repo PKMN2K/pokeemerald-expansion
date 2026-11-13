@@ -1409,3 +1409,27 @@ rounding, caps, both user sides, update order, PP, target gates and retaliation.
 Source animation/dialogue, broader item/ability timing, smart-AI scoring and
 UI remain separate work. See the [parity audit](tools/polished_port/PARITY_AUDIT.md)
 for the exact scope and validation evidence.
+
+### Source Sonic Boom and Dragon Rage
+
+The pinned source deals exactly 20 HP with Sonic Boom and 40 HP with Dragon
+Rage. The source effect preserves type immunities while removing other type
+multipliers; level, offensive/defensive stats, STAB, critical hits and normal
+damage modifiers do not scale the fixed HP amount.
+
+`B_POLISHED_FIXED_DAMAGE` selects imported payload constants for Johto and the
+isolated source-move test profile. Expansion's existing fixed-HP effect is
+retained with runtime power 1 and `argument.fixedDamage` 20/40. This explicit
+representation adapter preserves engine decisions that depend on the sentinel;
+changing ordinary base power to 20/40 would not represent the source effect.
+The production audit verifies the sentinel, effect, payload and display value.
+
+`GetMoveDisplayPower` exposes the source's numeric 20/40 in the summary, move
+relearner, TM information, battle description and optional HGSS Pokédex displays.
+The native profile retains its existing display. A controller-driven summary
+fixture compares both moves' rendered glyphs with ordinary 20/40-power moves in
+both production profiles; the other presentation paths have accessor wiring
+and data coverage, not individual controller replays. Original source UI art,
+layout, move animations, general accuracy RNG, ability/item timing and smart-AI
+scoring remain separate work. Stable IDs, saves and engine capacities remain
+unchanged. See the [parity audit](tools/polished_port/PARITY_AUDIT.md) for evidence.

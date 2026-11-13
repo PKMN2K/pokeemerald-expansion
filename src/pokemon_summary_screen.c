@@ -4079,7 +4079,7 @@ static void PrintMovePowerAndAccuracy(enum Move moveIndex)
     {
         FillWindowPixelRect(PSS_LABEL_WINDOW_MOVES_POWER_ACC, PIXEL_FILL(0), 53, 0, 19, 32);
 
-        u32 power = GetMovePower(moveIndex);
+        u32 power = GetMoveDisplayPower(moveIndex);
         if (power < 2)
         {
             text = gText_ThreeDashes;

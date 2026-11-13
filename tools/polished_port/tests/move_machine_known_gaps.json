@@ -3,17 +3,9 @@
   "observed_target_commit": "7e32866f06f02d8328ffb6dc5ede7b6e46021cd2",
   "scope": "Explicit unfinished source data/identity/lesson work. Not certified behavior. New or changed findings fail CI; resolved findings are allowed.",
   "findings": {
-    "move/MOVE_SONIC_BOOM/power": {
-      "source": 20,
-      "target": 1
-    },
     "move/MOVE_COUNTER/accuracy": {
       "source": 0,
       "target": 100
-    },
-    "move/MOVE_DRAGON_RAGE/power": {
-      "source": 40,
-      "target": 1
     },
     "move/MOVE_METRONOME/type": {
       "source": "UNKNOWN_T",
@@ -354,5 +346,13 @@
   "resolved_pain_split": {
     "type": "GHOST",
     "scope": "Source HP redistribution, Substitute/Protect bypass and Fly/Dig target guard; source animation, smart AI scoring and general interaction timing remain separate."
+  },
+  "resolved_fixed_damage": {
+    "source_powers": {
+      "SONIC_BOOM": 20,
+      "DRAGON_RAGE": 40
+    },
+    "adapter": "Runtime power 1 and EFFECT_FIXED_HP_DAMAGE with source HP payload; display power is 20/40.",
+    "scope": "Fixed HP behavior, immunities, protection/substitute, AI damage use and source numeric power display; general source timing, RNG, AI scoring and animations remain separate."
   }
 }

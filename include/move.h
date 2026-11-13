@@ -284,6 +284,16 @@ static inline u32 GetMovePower(enum Move moveId)
     return gMovesInfo[SanitizeMoveId(moveId)].power;
 }
 
+// Presentation must not reinterpret the runtime's fixed-damage power sentinel
+// as ordinary base power. The source shows the fixed HP amount for these moves.
+static inline u32 GetMoveDisplayPower(enum Move moveId)
+{
+    moveId = SanitizeMoveId(moveId);
+    if (B_POLISHED_FIXED_DAMAGE && (moveId == MOVE_SONIC_BOOM || moveId == MOVE_DRAGON_RAGE))
+        return gMovesInfo[moveId].argument.fixedDamage;
+    return gMovesInfo[moveId].power;
+}
+
 static inline u32 GetMoveAccuracy(enum Move moveId)
 {
     return gMovesInfo[SanitizeMoveId(moveId)].accuracy;

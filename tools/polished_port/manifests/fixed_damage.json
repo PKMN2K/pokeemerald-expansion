@@ -1,0 +1,30 @@
+{
+  "source_repository": "Rangi42/polishedcrystal",
+  "source_commit": "3fa43192379df5c3e7b09a08e4d5d79af4f02f42",
+  "source_variant": "default (FAITHFUL undefined)",
+  "moves": {
+    "SONIC_BOOM": {
+      "power": 20,
+      "type": "NORMAL",
+      "accuracy": 90,
+      "pp": 20
+    },
+    "DRAGON_RAGE": {
+      "power": 40,
+      "type": "DRAGON",
+      "accuracy": 100,
+      "pp": 10
+    }
+  },
+  "adapter": {
+    "runtime_power": 1,
+    "runtime_effect": "EFFECT_FIXED_HP_DAMAGE",
+    "payload": "argument.fixedDamage",
+    "display": "GetMoveDisplayPower returns the imported fixed HP payload"
+  },
+  "scope": "Fixed damage amount, type immunities, protection/substitute behavior, AI damage use and source numeric power display.",
+  "gaps": [
+    "Source accuracy RNG, general ability/item interaction timing, AI scoring and original move animations remain separate audits.",
+    "Current GBA UI surfaces use source power values; original source layout/art is not imported by this suite."
+  ]
+}

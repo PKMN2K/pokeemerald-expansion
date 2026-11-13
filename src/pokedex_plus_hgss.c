@@ -2377,7 +2377,7 @@ static void PrintStatsScreen_Moves_Bottom(u8 taskId)
     if (gTasks[taskId].data[5] == 0)
     {
         //Power
-        u32 power = GetMovePower(move);
+        u32 power = GetMoveDisplayPower(move);
         if (power < 2)
             StringCopy(gStringVar1, gText_ThreeDashes);
         else

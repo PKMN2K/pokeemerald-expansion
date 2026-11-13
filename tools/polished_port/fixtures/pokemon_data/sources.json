@@ -1932,6 +1932,16 @@
       "path": "engine/battle/move_effects/pain_split.asm",
       "fixture": "engine__battle__move_effects__pain_split.asm.b64",
       "git_blob_sha1": "b9a55347643f33d5ad46e23f74f9bc4d6bba5ca9"
+    },
+    {
+      "path": "engine/pokemon/summary/green_page.asm",
+      "fixture": "engine__pokemon__summary__green_page.asm.b64",
+      "git_blob_sha1": "ce9ca3a02a4db0f59260815e552ee739c7c1829e"
+    },
+    {
+      "path": "engine/pokemon/mon_menu.asm",
+      "fixture": "engine__pokemon__mon_menu.asm.b64",
+      "git_blob_sha1": "42039b6df1c80dcfeb5fec531c76799c25b54657"
     }
   ]
 }

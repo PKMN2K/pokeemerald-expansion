@@ -27,7 +27,8 @@ The subsequent [move-balance correction](#source-move-balance-corrections)
 imports twelve of those rows and removes their seventeen field discrepancies.
 The subsequent Hidden Power suite imports its remaining power/type fields and
 the default source's dynamic type calculation. The Pain Split suite below
-imports its Ghost type and source HP-sharing rules, leaving eight differing
+imports its Ghost type and source HP-sharing rules. The fixed-damage adapter
+below accounts for Sonic Boom/Dragon Rage, leaving six differing
 move rows. Machine identity/lesson gaps remain as recorded in the original report.
 
 CI now runs `audit_moves_machines.py` with an explicit known-gap inventory.
@@ -1093,6 +1094,69 @@ remains in use; the authentic source startup is still separate work.
 
 Johto ROM SHA-256:
 `8326d112000c1acd11972bb535b4f7973f39c448eb0eb31a80325bfcbbd2ca2c`.
+
+## Source Sonic Boom and Dragon Rage
+
+Pinned default-source rows encode static damage directly as power 20/40.
+Their effect script runs `constantdamage` and `resettypematchup` without normal
+damage calculation, variation or critical-hit commands. The command reads the
+move power directly; type immunities still fail, while nonzero effectiveness
+is reset to neutral. Source summary and move-menu routines print these values.
+The generator checks these pinned routines and imports the damage constants.
+
+The target retains `EFFECT_FIXED_HP_DAMAGE`, runtime power 1 and an explicit
+20/40 `argument.fixedDamage` payload. This preserves Expansion's sentinel-based
+runtime behavior and its shared battle/AI fixed-damage calculation.
+`GetMoveDisplayPower` supplies source numbers in five presentation paths while
+battle/AI power accessors retain their original meaning. Both profile choices
+are compile-time selected, and stable IDs/save storage remain unchanged.
+
+The new test groups exercise the data adapter; levels 5/50/100, stat extremes,
+STAB and neutral/resisted/super-effective matchups; Ghost/Fairy immunity;
+Technician, Choice Specs, Multiscale and Light Screen; Protect; Substitute;
+HP immediately below/at/above the KO threshold; AI damage selection and immune
+target avoidance; and Fly/Dig with and without No Guard. The production audit
+accepts only the explicit effect/sentinel/payload combination and source display
+value. It keeps the raw power in its report instead of hiding that storage
+representation. The two old power mismatches are removed from the known-gap
+inventory.
+
+A separate test boot links unchanged production objects and opens the real
+summary with Sonic Boom, Dragon Rage, Absorb and Water Gun. Controller input
+selects each move; cropped rendered power glyphs must match ordinary 20/40
+references in Johto, and retain native dashes in the native profile. Eight
+screenshots and profile/ROM hashes are retained. This fixture is not included
+in either shipping ROM. Other UI call sites are wired to the tested accessor,
+but do not yet have their own controller replay.
+
+Source accuracy RNG, general item/ability interaction timing, smart-AI scoring,
+original animations and source UI art/layout remain separate gaps. These
+checks certify the listed adapter and fixed-HP scenarios, not full battle parity.
+
+Validation with GCC 13.2.1: both production ROMs build; all 45 source/asset
+checks, 12 ARM profile/header probes and 12 demo checks pass. All nine new test
+groups pass in both native and isolated source profiles. The source profile
+also passes eight Hidden Power groups, ten Pain Split groups, six move-balance
+groups and six unchanged AI timing benchmarks. The live summary comparison
+passes for both profiles, with eight captured move selections.
+
+Production-linked inspection confirms both fixed-HP adapters, all 255 PP/PP Up
+and dispatch rows, and 43,792 teaching combinations with no compatibility
+mismatch. Six basic move-data rows still differ, with 115 documented gap entries
+and no new findings. The gate rejects all eight injected sentinel, effect,
+payload and display regressions across the two moves. Machine identities and
+lesson coverage are unchanged by this suite.
+
+The full native run passes 5,382 groups, with nine existing expected failures
+and 585 TODOs (5,976 total), and no unexpected failures.
+
+The same production Johto ROM passes all 101 campaign checks and 19 warp
+traversals, including three starter paths, Sprout Tower, Falkner, the badge/
+reward/Togepi sequence, resident schedules and Save/Continue. The documented
+demo opening remains; authentic source startup is still separate work.
+
+Johto ROM SHA-256:
+`4dc414e11889acb3ccac2bc4b4cb37561afd4fecc6a3c94dbd1a3d3f9b70a146`.
 
 ## Next priorities
 

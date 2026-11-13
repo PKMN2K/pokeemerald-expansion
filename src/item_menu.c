@@ -2740,7 +2740,7 @@ static void PrintTMHMMoveData(enum Item itemId)
         BlitMenuInfoIcon(WIN_TMHM_INFO, GetMoveType(move) + 1, 0, 0);
 
         // Print TMHM power
-        u32 power = GetMovePower(move);
+        u32 power = GetMoveDisplayPower(move);
         if (power <= 1)
         {
             text = gText_ThreeDashes;
