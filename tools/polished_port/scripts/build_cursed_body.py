@@ -34,6 +34,28 @@ def build():
     post = commands.split('\nBattleCommand_posthiteffects:', 1)[1].split('\n\tfarcall RunHitAbilities', 1)[0]
     assert 'call nz, CheckSubstituteOpp\n\tret nz' in post
     assert 'ld a, [wAttackMissed]\n\tand a\n\tret nz' in post
+    # Damage is applied before post-hit abilities. A breaking Substitute clears
+    # its active flag immediately; post-hit uses that flag, not CheckSubHit.
+    normal = files['data/moves/effects.asm'].split('\nNormalHit:', 1)[1].split('\nSuckerPunch:', 1)[0]
+    assert normal.index('\tapplydamage') < normal.index('\tposthiteffects')
+    apply = commands.split('\nBattleCommand_applydamage:', 1)[1].split('\nBattleCommand_', 1)[0]
+    assert '\tcall TakeDamage' in apply
+    damage = commands.split('\nTakeDamage:', 1)[1].split('\nSelfInflictDamageToSubstitute:', 1)[0]
+    assert 'bit SUBSTATUS_SUBSTITUTE, a\n\tjr nz, SelfInflictDamageToSubstitute' in damage
+    sub_damage = commands.split('\nSelfInflictDamageToSubstitute:', 1)[1].split('\nUpdateMoveData:', 1)[0]
+    assert sub_damage.startswith('\n\tcall SetSubHit')
+    assert 'sub [hl]\n\tjr z, .broke\n\tjr c, .broke\n\tld [de], a\n\tret' in sub_damage
+    broken = sub_damage.split('\n.broke', 1)[1]
+    assert broken.index('res SUBSTATUS_SUBSTITUTE, [hl]') < broken.index('ld hl, SubFadedText')
+    check_sub = commands.split('\nCheckSubstituteOpp:', 1)[1].split('\nCheckUserMove:', 1)[0]
+    assert 'cp INFILTRATOR\n\tret z' in check_sub
+    assert 'ld hl, SoundMoves\n\tcall IsInByteArray' in check_sub
+    assert 'ld a, BATTLE_VARS_SUBSTATUS4_OPP\n\tcall GetBattleVar\n\tbit SUBSTATUS_SUBSTITUTE, a' in check_sub
+    assert 'CheckSubHit' not in post and 'CheckSubHit' not in check_sub
+    substitute = files['engine/battle/move_effects/substitute.asm']
+    assert '\tcall GetQuarterMaxHP' in substitute
+    assert 'predef SubtractHPFromUser' in substitute and 'set SUBSTATUS_SUBSTITUTE, [hl]' in substitute
+    assert '\tdb HYPER_VOICE\n' in files['data/moves/sound_moves.asm']
     for name, label in (('metronome', 'metronome'), ('sleep_talk', 'sleeptalk')):
         caller = files[f'engine/battle/move_effects/{name}.asm']
         assert caller.startswith(f'BattleCommand_{label}:\n\tcall ClearLastMove\n')
@@ -47,13 +69,16 @@ def build():
     assert used.index('jr z, .charging') < used.index('; update last move') < used.index('\n.charging')
     report = dict(source_repository='Rangi42/polishedcrystal', source_commit=source.PIN,
         source_variant='default (FAITHFUL undefined)', profile='B_POLISHED_MOVE_BALANCE',
-        scope='Ordinary singles Cursed Body known-move/remaining-PP gate, called-move history, duration and exits.',
+        scope='Ordinary singles Cursed Body known-move/remaining-PP gate, called-move history, Substitute breaking/bypass, duration and exits.',
         rules=dict(chance_numerator=3, chance_denominator=10, uses_shared_disable_command=True,
                    requires_known_move_with_remaining_pp=True, sleep_talk_and_metronome_clear_history=True,
                    works_on_holder_knockout=True, suppressed_by_mold_breaker=False,
-                   triggers_on_future_sight=False, mental_herb_cures_disable=True),
-        adapter='Use the source-profile recorded move and validate its live known slot/PP before applying Disable. Import the existing source five-tick initialization; the post-action tick reduces it to four. Metronome joins Sleep Talk in clearing the source history record at PP deduction and move end.',
+                   triggers_on_future_sight=False, mental_herb_cures_disable=True,
+                   substitute_break_allows_activation=True, intact_substitute_blocks_activation=True,
+                   infiltrator_and_sound_bypass_substitute=True),
+        adapter='Use the source-profile recorded move and validate its live known slot/PP before applying Disable. Import the existing source five-tick initialization; the post-action tick reduces it to four. Metronome joins Sleep Talk in clearing the source history record at PP deduction and move end. Recognize a damaging Substitute-breaking hit by its exhausted HP before the native delayed flag cleanup; retain direct HP hits and native/gimmick behavior.',
         gaps=['Exact source RNG stream and call ordering are not ported; native hit/ability/item scheduling remains in use.',
+              'Other post-hit abilities still use native Substitute gates; this adapter only changes Cursed Body.',
               'All multi-hit, recoil/self-faint, charging/recharge, disobedience, reflected moves, simultaneous cure ordering, other history consumers and original presentation remain separate audits.',
               'Expansion-only move callers, battle formats and gimmicks are not certified as source behavior; active gimmicks retain native Cursed Body selection and duration.'])
     return {source.ROOT/'tools/polished_port/manifests/cursed_body.json': json.dumps(report, indent=2)+'\n'}
@@ -68,4 +93,4 @@ if __name__ == '__main__':
             assert path.read_text() == expected, f'Regenerate {path}'
         else:
             path.write_text(expected)
-    print('PASS: source Cursed Body Disable gates, called history, chance and exits')
+    print('PASS: source Cursed Body Disable gates, called history, Substitute breaking/bypass, chance and exits')

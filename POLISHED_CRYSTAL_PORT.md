@@ -1739,3 +1739,43 @@ same nine expected failures and 585 existing TODOs. The production audit has
 no new or changed gaps. The same final Johto ROM passes all 12 demo checks,
 101 campaign checks and 19 directed warp traversals, including Falkner, rewards
 and Save/reset/Continue.
+
+### Source Cursed Body after Substitute breaks
+
+The pinned source removes Substitute's active flag as soon as a damaging hit
+exhausts its HP. Its subsequent post-hit ability gate checks that current flag,
+so Cursed Body can activate on the breaking hit even though the holder loses
+no HP. Expansion's direct-damage gate previously blocked that activation.
+
+The source profile now recognizes the breaking hit through positive move damage
+and the exhausted Substitute HP before Expansion's delayed flag cleanup. The
+existing known-move, remaining-PP, history and Mental Herb checks still apply.
+Intact substitutes block it; sound and Infiltrator attacks that hit the holder
+continue to work. Native profiles and active gimmicks retain their behavior.
+No identifiers, state fields, save layouts or capacities change.
+
+The existing pinned Cursed Body generator now verifies the complete damage,
+flag-clear and post-hit call chain, with additional source Substitute and sound
+list fixtures. Seven new battle groups cover 30 cases per profile: one HP below,
+equal to and above the break threshold; contact/noncontact attacks; both sides;
+last PP and Mental Herb; Sleep Talk/Metronome; sound/Infiltrator bypass; a
+following miss, protection or status move; and native Z-move behavior. The
+boundary and Mental Herb groups reproduced the missing activation before the
+runtime fix. Existing CI prefixes include all these tests and source checks.
+
+This closes ordinary damaging Substitute-breaking hits for Cursed Body.
+Other post-hit abilities' Substitute gates, complete multi-hit and recoil rules,
+source RNG/order, presentation and optional Expansion formats remain separate
+audits. The previous suite's Substitute-breaking exclusion is superseded for
+this bounded case.
+
+Both production ROMs build. All seven new groups pass in both profiles, together
+with all 112 earlier source move groups, six AI timing checks, 54 source checks
+and 12 ARM probes. The full native suite passes 5,468 tests, with the same nine
+expected failures and 585 existing TODOs. The production move/machine audit has
+no new or changed gaps.
+
+The same final Johto ROM passes all 12 demo checks, 101 campaign checks and
+19 directed warp traversals, including all starter branches, Sprout Tower,
+Falkner, the badge/Roost/Togepi rewards and Save/reset/Continue. Authentic source
+startup remains separate from this demo campaign.

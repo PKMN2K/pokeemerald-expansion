@@ -3070,6 +3070,23 @@ static enum Move GetCursedBodyDisabledMove(enum BattlerId battler)
     return MOVE_NONE;
 }
 
+static bool32 CanHitTriggerCursedBody(enum BattlerId attacker, enum BattlerId target)
+{
+    if (IsBattlerTurnDamaged(target, EXCLUDING_SUBSTITUTES))
+        return TRUE;
+
+    // Source post-hit abilities check the current Substitute, whose flag is
+    // already cleared on a breaking hit. The target delays clearing its flag
+    // until MoveEndSubstitute, so recognize that hit by its exhausted HP.
+    return B_POLISHED_MOVE_BALANCE
+        && GetActiveGimmick(attacker) == GIMMICK_NONE
+        && gBattleMons[target].volatiles.substitute
+        && gBattleMons[target].volatiles.substituteHP == 0
+        && gBattleStruct->moveDamage[target] > 0
+        && !IsBattlerUnaffectedByMove(target)
+        && !gBattleStruct->unableToUseMove;
+}
+
 u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum Ability ability, enum Move move, bool32 shouldAbilityTrigger)
 {
     u32 effect = 0;
@@ -3967,7 +3984,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
         case ABILITY_CURSED_BODY:
         {
             enum Move disabledMove = GetCursedBodyDisabledMove(gBattlerAttacker);
-            if (IsBattlerTurnDamaged(gBattlerTarget, EXCLUDING_SUBSTITUTES)
+            if (CanHitTriggerCursedBody(gBattlerAttacker, gBattlerTarget)
              && GetMoveEffect(move) != EFFECT_FUTURE_SIGHT
              && gBattleMons[gBattlerAttacker].volatiles.disabledMove == MOVE_NONE
              && IsBattlerAlive(gBattlerAttacker)

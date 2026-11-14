@@ -2022,6 +2022,16 @@
       "path": "data/abilities/mold_breaker_suppressed_abilities.asm",
       "fixture": "data__abilities__mold_breaker_suppressed_abilities.asm.b64",
       "git_blob_sha1": "e138a17d07f1f3a56f96076176f1ad36395015f0"
+    },
+    {
+      "path": "engine/battle/move_effects/substitute.asm",
+      "fixture": "engine__battle__move_effects__substitute.asm.b64",
+      "git_blob_sha1": "e9e3be7f79ebac4e738ede49c65ab4155d419f2d"
+    },
+    {
+      "path": "data/moves/sound_moves.asm",
+      "fixture": "data__moves__sound_moves.asm.b64",
+      "git_blob_sha1": "fdb9256cf8fe39a2641a3c362a8cc279d105e218"
     }
   ]
 }

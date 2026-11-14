@@ -1666,6 +1666,59 @@ demo-campaign gate.
 Johto ROM SHA-256:
 `c958387e6754c237ca81296f0f1050ccb4760dee5a349c251fcb82bf50d1119b`.
 
+## Source Cursed Body after Substitute breaks
+
+The pinned `NormalHit` effect applies damage before post-hit effects.
+`SelfInflictDamageToSubstitute` clears `SUBSTATUS_SUBSTITUTE` when damage equals
+or exceeds the remaining Substitute HP. `BattleCommand_posthiteffects` then
+uses `CheckSubstituteOpp`, which reads that current flag rather than the
+separate record that a Substitute absorbed this hit. Consequently Cursed Body
+can activate on the breaking hit. Expansion's direct-HP-damage check prevented
+this source behavior.
+
+The source-profile adapter recognizes positive damage against an exhausted
+Substitute before the native delayed flag cleanup. It keeps the direct HP hit
+path, misses/failures, intact Substitute protection, existing recorded-move/PP
+gate and Mental Herb handling. Sound and Infiltrator bypasses retain their
+existing working path. Native profiles, active gimmicks, stable IDs, state/save
+layouts and engine capacities are unchanged.
+
+The existing generator now verifies the pinned apply-damage, flag-clear and
+post-hit chain. Two additional exact-blob fixtures supply Substitute creation
+and the sound-move list. Its generated manifest records the extended scope,
+and the existing CI generator and battle prefix enforce it.
+
+Seven new groups cover 30 cases per profile: both sides,
+Substitute HP at 49/50/51 against 50 damage, contact/noncontact breaks, last PP,
+Mental Herb, Sleep Talk/Metronome history, sound/Infiltrator bypasses, later
+miss/protection/status actions, and native Z-move behavior. The threshold and
+Mental Herb groups failed against the original runtime's missing activation.
+
+This supersedes the preceding suite's exclusion of ordinary damaging
+Substitute-breaking hits. Other post-hit abilities still have native Substitute
+gates; this is not a general post-hit import. All multi-hit, recoil/self-faint,
+global RNG/order, simultaneous item/ability cases, original presentation and
+optional Expansion formats remain independent audits.
+
+Validation with Arm GNU GCC 13.2.1: both production ROMs build. All seven new
+groups pass in source/native profiles, together with all 112 earlier source
+move groups, six AI timing checks, 54 source checks and 12 ARM compiler probes.
+The full native suite passes 5,468 tests, with nine unchanged expected failures
+and 585 existing TODOs (6,062 total), and no unexpected failures.
+
+The production-linked audit matches all 255 basic move/PP records, 18 target
+stat-drop records, 254 Sleep Talk eligibility entries and 43,792 teaching
+combinations. The 109 recorded machine/lesson gaps are unchanged, with no new
+or changed findings.
+
+The same final Johto ROM passes all 12 demo checks, 101 campaign checks and
+19 directed warp traversals, including all starter branches, Sprout Tower,
+Falkner, the badge/Roost/Togepi rewards, resident schedules and Save/reset/
+Continue. The authentic source opening remains separate from this demo gate.
+
+Johto ROM SHA-256:
+`4f5cfa5b3905c020d6fc1350e5dcb9ff41ae5312dc0548ead64ed2f02c3029eb`.
+
 ## Next priorities
 
 1. Continue the source field-rule audit. Headbutt remains dormant; other field
