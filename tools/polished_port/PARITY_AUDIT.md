@@ -2077,6 +2077,68 @@ Continue. The authentic source opening remains separate from this demo gate.
 Johto ROM SHA-256:
 `9ca4fc8a6cc95de330fbdbb1e488bcb81f74867348c6e834967d99d553f222ea`.
 
+## Source Run Away voluntary switching
+
+In the pinned default release (`FAITHFUL` undefined), `UserCanSwitch` checks
+Run Away before trapping abilities, wrapping and the opponent's CANT_RUN flag.
+The player uses this rule directly. `AI_UserCanSwitch` first checks for another
+living party member, then uses the same rule. `GetTrueUserAbility` respects
+Neutralizing Gas. The source's ability description only mentions wild escape;
+the executable default-build switch rule is authoritative here.
+
+Expansion previously allowed Run Away to flee from wild battles but still
+blocked voluntary switching through these traps. The source profile now
+permits ordinary singles switches through Mean Look, Wrap, Arena Trap, Magnet
+Pull and Shadow Tag. The shared move/field and ability trap checks serve the
+player's selection path; a matching AI eligibility gate lets the existing
+switching logic consider a legal switch. This does not replace source AI
+strategy or certify its estimates. No identifiers, save fields or capacities
+change, and the trap state remains intact until normal switch cleanup. Wrap
+still deals residual damage while the Pokemon stays in battle.
+
+The exemption respects ability suppression, including the native optional
+Gastro Acid control. Native profiles, doubles and active gimmicks retain their
+native paths. Optional Ingrain, Fairy Lock, Sky Drop, Commander and Battle Arena
+restrictions remain active. Optional moves sharing the permanent-trap field
+receive the same exemption in scoped singles; their complete behavior is not
+certified as source content.
+
+`build_run_away.py` verifies the default-build branch, ordered switch gates,
+player/AI call sites, ability suppression and trapping-ability identities from
+existing exact-blob fixtures. CI and the production audit verify the generated
+manifest and run the dedicated battle prefix. Eight groups cover 72 parameter
+cases per profile: both sides; positive and neutral-ability eligibility;
+ordinary switches through each selected trap; residual damage and retained
+trap state; Neutralizing Gas/Gastro Acid; either side's Terastal; optional field
+restrictions and doubles; and actual AI switching at the end of a Perish Song
+countdown. Live eligibility and AI tests reproduced inherited failures before
+the correction. Negative controls explicitly use Keen Eye because forcing
+ABILITY_NONE can leave a species' default ability active in the test harness.
+
+Wild fleeing, forced switching, the full source trapping-ability rules,
+Shed Shell/item suppression, Ghost exemptions and other non-Run Away switching
+rules remain separate audits. Full source AI choices and estimates remain open.
+
+Validation with Arm GNU GCC 13.2.1: both production ROMs build. All eight
+focused groups (72 cases per profile), all 175 earlier source move groups and
+six AI timing checks pass, along with 61 source checks and 12 ARM compiler
+probes. The full native suite passes 5,532 tests, with nine unchanged expected
+failures and 585 existing TODOs (6,126 total), and no unexpected failures.
+The AI timing ceilings remain unchanged.
+
+The production-linked audit matches all 255 basic move/PP records, 18 target
+stat-drop records, 254 Sleep Talk eligibility entries and 43,792 teaching
+combinations. The 109 recorded machine/lesson gaps are unchanged, with no new
+or changed findings.
+
+The same final Johto ROM passes all 12 demo checks, 101 campaign checks and
+19 directed warp traversals, including all starter branches, Sprout Tower,
+Falkner, the badge/Roost/Togepi rewards, resident schedules and Save/reset/
+Continue. The authentic source opening remains separate from this demo gate.
+
+Johto ROM SHA-256:
+`7a0d077f8190c84f066401101bdd60847166a41a9726ae665bc5610ce14d989f`.
+
 ## Next priorities
 
 1. Continue the source field-rule audit. Headbutt remains dormant; other field

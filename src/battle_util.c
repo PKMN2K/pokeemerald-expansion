@@ -5098,8 +5098,29 @@ u32 IsAbilityOnField(enum Ability ability)
     return 0;
 }
 
+bool32 CanPolishedRunAwayEscape(enum BattlerId battler)
+{
+    // Default source UserCanSwitch checks Run Away before all source traps.
+    // Keep optional formats and extra field restrictions on their native path.
+    return B_POLISHED_MOVE_BALANCE
+        && gBattleMons[battler].ability == ABILITY_RUN_AWAY
+        && !IsDoubleBattle()
+        && !(gBattleTypeFlags & BATTLE_TYPE_ARENA)
+        && GetActiveGimmick(battler) == GIMMICK_NONE
+        && GetActiveGimmick(GetOppositeBattler(battler)) == GIMMICK_NONE
+        && !gBattleStruct->battlerState[battler].commanderSpecies
+        && !gBattleMons[battler].volatiles.root
+        && !(gFieldStatuses & STATUS_FIELD_FAIRY_LOCK)
+        && gBattleMons[battler].volatiles.semiInvulnerable != STATE_SKY_DROP_TARGET
+        && GetBattlerAbilityIgnoreMoldBreaker(battler) == ABILITY_RUN_AWAY;
+}
+
 u32 IsAbilityPreventingEscape(enum BattlerId battler)
 {
+    if (B_POLISHED_MOVE_BALANCE && gBattleMons[battler].ability == ABILITY_RUN_AWAY
+     && CanPolishedRunAwayEscape(battler))
+        return 0;
+
     if (GetConfig(B_GHOSTS_ESCAPE) >= GEN_6 && IS_BATTLER_OF_TYPE(battler, TYPE_GHOST))
         return 0;
 
@@ -5124,8 +5145,12 @@ u32 IsAbilityPreventingEscape(enum BattlerId battler)
     return 0;
 }
 
-bool32 CanBattlerEscape(enum BattlerId battler) // no ability check
+bool32 CanBattlerEscape(enum BattlerId battler) // Move/field traps, plus the scoped source Run Away exemption.
 {
+    if (B_POLISHED_MOVE_BALANCE && gBattleMons[battler].ability == ABILITY_RUN_AWAY
+     && CanPolishedRunAwayEscape(battler))
+        return TRUE;
+
     if (gBattleStruct->battlerState[battler].commanderSpecies != SPECIES_NONE)
         return FALSE;
     else if (GetConfig(B_GHOSTS_ESCAPE) >= GEN_6 && IS_BATTLER_OF_TYPE(battler, TYPE_GHOST))

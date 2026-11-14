@@ -1308,6 +1308,11 @@ bool32 ShouldSwitchDynFuncExample(struct SwitchAiContext *switchContext)
 
 static bool32 CanBattlerConsiderSwitch(enum BattlerId battler)
 {
+    // Source AI_UserCanSwitch shares the player's Run Away exemption.
+    if (B_POLISHED_MOVE_BALANCE && gBattleMons[battler].ability == ABILITY_RUN_AWAY
+     && CanPolishedRunAwayEscape(battler))
+        return TRUE;
+
     if (gBattleMons[battler].volatiles.wrapped)
         return FALSE;
     if (gBattleMons[battler].volatiles.escapePrevention)

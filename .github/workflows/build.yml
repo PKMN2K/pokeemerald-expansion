@@ -116,6 +116,7 @@ jobs:
           python3 tools/polished_port/scripts/build_perish_song.py --check
           python3 tools/polished_port/scripts/build_foresight.py --check
           python3 tools/polished_port/scripts/build_mean_look.py --check
+          python3 tools/polished_port/scripts/build_run_away.py --check
           python3 tools/polished_port/scripts/build_rock_smash.py --check
           python3 tools/polished_port/scripts/test_rock_smash.py
           python3 tools/polished_port/scripts/build_flash.py --check
@@ -1185,6 +1186,7 @@ jobs:
           make -j$(nproc) -O TEST=1 POLISHED_MOVE_BALANCE_TEST=1 check TESTS='Polished Perish Song'
           make -j$(nproc) -O TEST=1 POLISHED_MOVE_BALANCE_TEST=1 check TESTS='Polished Foresight'
           make -j$(nproc) -O TEST=1 POLISHED_MOVE_BALANCE_TEST=1 check TESTS='Polished Mean Look'
+          make -j$(nproc) -O TEST=1 POLISHED_MOVE_BALANCE_TEST=1 check TESTS='Polished Run Away'
           make -j$(nproc) -O TEST=1 POLISHED_MOVE_BALANCE_TEST=1 check TESTS='AI thinking time'
 
       - name: Exercise evolution completion and cancellation in mGBA
