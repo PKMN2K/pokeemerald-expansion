@@ -2082,6 +2082,11 @@
       "path": "home/math.asm",
       "fixture": "home__math.asm.b64",
       "git_blob_sha1": "491f6505e3d470682adec09de0fe50ad821d0c14"
+    },
+    {
+      "path": "engine/battle/move_effects/mean_look.asm",
+      "fixture": "engine__battle__move_effects__mean_look.asm.b64",
+      "git_blob_sha1": "548c4db7ae476cfb954fde5410cd13b99c204644"
     }
   ]
 }

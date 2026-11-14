@@ -2281,6 +2281,15 @@ u32 NumFaintedBattlersByAttacker(enum BattlerId battlerAtk)
     return numMonsFainted;
 }
 
+bool32 IsPolishedMeanLook(enum Move move, enum BattlerId battlerAtk, enum BattlerId battlerDef)
+{
+    return B_POLISHED_MOVE_BALANCE
+        && move == MOVE_MEAN_LOOK
+        && !IsDoubleBattle()
+        && GetActiveGimmick(battlerAtk) == GIMMICK_NONE
+        && GetActiveGimmick(battlerDef) == GIMMICK_NONE;
+}
+
 bool32 IsPolishedPerishSong(enum Move move, enum BattlerId battler)
 {
     return B_POLISHED_MOVE_BALANCE

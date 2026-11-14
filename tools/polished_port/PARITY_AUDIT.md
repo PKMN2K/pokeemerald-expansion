@@ -2018,6 +2018,65 @@ Continue. The authentic source opening remains separate from this demo gate.
 Johto ROM SHA-256:
 `17f56e947ac4b0066565195baf945a067ea2b315ea5a7e01a82870a15dc9ee2b`.
 
+## Source Mean Look application and reflection gates
+
+The pinned Mean Look effect script has no general hit check. Its trap bypasses
+Substitute and Protect, but the effect explicitly rejects Fly/Dig targets even
+with No Guard or Lock-On. Ghost targets remain immune and repeat trapping fails.
+The separate Magic Bounce command respects Substitute unless the original
+attacker has Infiltrator; Mold Breaker prevents reflection. A reflected Mean
+Look still applies through the original user's Substitute and cannot bounce
+again. Protect does not block this reflection because Mean Look never performs
+the general hit check that marks protection in the source.
+
+Expansion previously blocked direct/reflected trap application through
+Substitute, allowed No Guard/Lock-On to trap hidden targets, and reflected
+through a defender's Substitute. Move-specific execution gates now reproduce
+these source cases in ordinary singles without active gimmicks. Native
+profiles, optional trapping moves, doubles and active gimmicks retain their
+native gates. The native target-side trap and trapper fields adapt the source's
+user-side CANT_RUN bit without new state, identifiers or save-layout changes.
+Ordinary switching by the trapper releases the target.
+
+`build_mean_look.py` verifies the pinned effect command order, absence of a hit
+check, hidden/repeat/Ghost gates, reflection ordering and both switch-reset
+routines. One exact-blob move fixture supplements the existing source files.
+CI and the production move/machine audit verify the generated manifest and
+run the dedicated battle prefix.
+
+Nine groups cover 60 parameter cases per profile: both sides; Substitute,
+Protect and ordinary application; Fly/Dig with ordinary, either-side No Guard
+and Lock-On; the Magic Bounce/Substitute/Infiltrator/Mold Breaker matrix;
+reflected application without recursion; Ghost immunity, repeat failure and
+PP consumption; trapper switch release; and native Spider Web, Terastal and
+double-battle controls. Four groups reproduced the inherited discrepancies
+before the implementation changed.
+
+This suite covers application and the selected controls, not the entire
+trapping lifecycle. Baton Pass, Run Away/Shed Shell switching, fleeing, forced
+switches, complete called-move/ability/priority ordering, accuracy modifiers,
+source failure text/animations and AI estimates/choices remain separate audits.
+
+Validation with Arm GNU GCC 13.2.1: both production ROMs build. All nine
+focused groups (60 cases per profile), all 166 earlier source move groups and
+six AI timing checks pass, along with 60 source checks and 12 ARM compiler
+probes. The full native suite passes 5,524 tests, with nine unchanged expected
+failures and 585 existing TODOs (6,118 total), and no unexpected failures.
+The AI timing ceilings remain unchanged.
+
+The production-linked audit matches all 255 basic move/PP records, 18 target
+stat-drop records, 254 Sleep Talk eligibility entries and 43,792 teaching
+combinations. The 109 recorded machine/lesson gaps are unchanged, with no new
+or changed findings.
+
+The same final Johto ROM passes all 12 demo checks, 101 campaign checks and
+19 directed warp traversals, including all starter branches, Sprout Tower,
+Falkner, the badge/Roost/Togepi rewards, resident schedules and Save/reset/
+Continue. The authentic source opening remains separate from this demo gate.
+
+Johto ROM SHA-256:
+`9ca4fc8a6cc95de330fbdbb1e488bcb81f74867348c6e834967d99d553f222ea`.
+
 ## Next priorities
 
 1. Continue the source field-rule audit. Headbutt remains dormant; other field

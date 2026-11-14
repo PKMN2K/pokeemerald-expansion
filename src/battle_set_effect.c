@@ -1512,6 +1512,11 @@ static inline bool32 IgnoreTargetingForMoveEffect(enum MoveEffect moveEffect) //
 
 static bool32 DoesSubstituteBlockMoveEffectOnTarget(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum MoveEffect moveEffect)
 {
+    if (B_POLISHED_MOVE_BALANCE && gCurrentMove == MOVE_MEAN_LOOK
+     && moveEffect == MOVE_EFFECT_PREVENT_ESCAPE
+     && IsPolishedMeanLook(gCurrentMove, battlerAtk, battlerDef))
+        return FALSE;
+
     if (battlerAtk == battlerDef)
         return FALSE;
 

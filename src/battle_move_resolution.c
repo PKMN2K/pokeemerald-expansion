@@ -2411,6 +2411,21 @@ static enum CancelerResult CancelerMultihitMoves(struct BattleCalcValues *cv)
 
 static enum CancelerResult CancelerSubstitute(struct BattleCalcValues *cv)
 {
+    // Source Mean Look has no general checkhit, but its effect explicitly
+    // rejects Fly/Dig regardless of No Guard or Lock-On accuracy bypasses.
+    if (B_POLISHED_MOVE_BALANCE && cv->move == MOVE_MEAN_LOOK
+     && IsPolishedMeanLook(cv->move, cv->battlerAtk, cv->battlerDef))
+    {
+        if (gBattleMons[cv->battlerDef].volatiles.semiInvulnerable == STATE_ON_AIR
+         || gBattleMons[cv->battlerDef].volatiles.semiInvulnerable == STATE_UNDERGROUND)
+        {
+            gBattlescriptCurrInstr = BattleScript_ButItFailed;
+            gBattleStruct->eventState.atkCanceler = CANCELER_END;
+            return CANCELER_RESULT_END;
+        }
+        return CANCELER_RESULT_SUCCESS;
+    }
+
     if (!IsBattleMoveStatus(cv->move)
      || IsStatChangeMove(cv->move)
      || (cv->moveEffect == EFFECT_TRANSFORM && GetConfig(B_TRANSFORM_SUBSTITUTE_FAIL) < GEN_5))
@@ -6132,6 +6147,14 @@ static bool32 TryMagicBounce(struct BattleCalcValues *cv)
         return FALSE;
 
     if (cv->abilities[cv->battlerDef] != ABILITY_MAGIC_BOUNCE)
+        return FALSE;
+
+    // The source reflection check still respects Substitute even though
+    // Mean Look's eventual trap application does not.
+    if (B_POLISHED_MOVE_BALANCE && cv->move == MOVE_MEAN_LOOK
+     && IsPolishedMeanLook(cv->move, cv->battlerAtk, cv->battlerDef)
+     && gBattleMons[cv->battlerDef].volatiles.substitute
+     && cv->abilities[cv->battlerAtk] != ABILITY_INFILTRATOR)
         return FALSE;
 
     gBattleStruct->magicBouncePending |= 1u << cv->battlerDef;

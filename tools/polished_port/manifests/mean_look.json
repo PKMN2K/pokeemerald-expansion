@@ -1,0 +1,22 @@
+{
+  "source_repository": "Rangi42/polishedcrystal",
+  "source_commit": "3fa43192379df5c3e7b09a08e4d5d79af4f02f42",
+  "source_variant": "default (FAITHFUL undefined)",
+  "profile": "B_POLISHED_MOVE_BALANCE",
+  "scope": "Ordinary singles Mean Look application and selected reflection/switch-release controls.",
+  "pp": 5,
+  "rules": [
+    "The effect script has no checkhit: Substitute and Protect do not prevent application.",
+    "Fly and Dig fail at the effect itself, including No Guard and Lock-On cases.",
+    "Ghost targets are immune; repeating an existing trap fails.",
+    "Magic Bounce does not reflect through Substitute unless the attacker bypasses it with Infiltrator; Mold Breaker suppresses reflection.",
+    "A reflected Mean Look still bypasses Substitute on the original user; reflection cannot recur.",
+    "Ordinary switching by the trapper releases the target."
+  ],
+  "adapter": "Keep native target-side escapePrevention/battlerPreventingEscape instead of the source user-side CANT_RUN bit. Use move-specific execution gates, retaining native profiles, optional trapping moves, doubles and active gimmicks.",
+  "gaps": [
+    "Source failure messages/animations, complete called-move/ability ordering and AI estimates/choices remain separate.",
+    "Baton Pass, Run Away/Shed Shell switching, fleeing, forced switches and broader trapping lifecycle remain separate audits.",
+    "Accuracy modifiers and all priority interactions beyond existing native handling are not certified by this suite."
+  ]
+}
