@@ -1,0 +1,178 @@
+{
+  "source_repository": "Rangi42/polishedcrystal",
+  "source_commit": "3fa43192379df5c3e7b09a08e4d5d79af4f02f42",
+  "source_variant": "default (FAITHFUL undefined)",
+  "profile": "B_POLISHED_MOVE_BALANCE",
+  "scope": "Ordinary Belly Drum Attack-limit eligibility, effective Contrary, HP boundary/cost and selected reset regressions.",
+  "hp_cost": "max(1, floor(maxHP / 2)); current HP must be strictly greater; no HP is spent when no stat change is possible.",
+  "source_stat_levels": {
+    "minimum": 1,
+    "neutral": 7,
+    "maximum": 13
+  },
+  "source_forced_stages": 16,
+  "stage_cases": [
+    {
+      "starting_stage": -6,
+      "contrary": false,
+      "succeeds": true,
+      "ending_stage": 6
+    },
+    {
+      "starting_stage": -5,
+      "contrary": false,
+      "succeeds": true,
+      "ending_stage": 6
+    },
+    {
+      "starting_stage": -4,
+      "contrary": false,
+      "succeeds": true,
+      "ending_stage": 6
+    },
+    {
+      "starting_stage": -3,
+      "contrary": false,
+      "succeeds": true,
+      "ending_stage": 6
+    },
+    {
+      "starting_stage": -2,
+      "contrary": false,
+      "succeeds": true,
+      "ending_stage": 6
+    },
+    {
+      "starting_stage": -1,
+      "contrary": false,
+      "succeeds": true,
+      "ending_stage": 6
+    },
+    {
+      "starting_stage": 0,
+      "contrary": false,
+      "succeeds": true,
+      "ending_stage": 6
+    },
+    {
+      "starting_stage": 1,
+      "contrary": false,
+      "succeeds": true,
+      "ending_stage": 6
+    },
+    {
+      "starting_stage": 2,
+      "contrary": false,
+      "succeeds": true,
+      "ending_stage": 6
+    },
+    {
+      "starting_stage": 3,
+      "contrary": false,
+      "succeeds": true,
+      "ending_stage": 6
+    },
+    {
+      "starting_stage": 4,
+      "contrary": false,
+      "succeeds": true,
+      "ending_stage": 6
+    },
+    {
+      "starting_stage": 5,
+      "contrary": false,
+      "succeeds": true,
+      "ending_stage": 6
+    },
+    {
+      "starting_stage": 6,
+      "contrary": false,
+      "succeeds": false,
+      "ending_stage": 6
+    },
+    {
+      "starting_stage": -6,
+      "contrary": true,
+      "succeeds": false,
+      "ending_stage": -6
+    },
+    {
+      "starting_stage": -5,
+      "contrary": true,
+      "succeeds": true,
+      "ending_stage": -6
+    },
+    {
+      "starting_stage": -4,
+      "contrary": true,
+      "succeeds": true,
+      "ending_stage": -6
+    },
+    {
+      "starting_stage": -3,
+      "contrary": true,
+      "succeeds": true,
+      "ending_stage": -6
+    },
+    {
+      "starting_stage": -2,
+      "contrary": true,
+      "succeeds": true,
+      "ending_stage": -6
+    },
+    {
+      "starting_stage": -1,
+      "contrary": true,
+      "succeeds": true,
+      "ending_stage": -6
+    },
+    {
+      "starting_stage": 0,
+      "contrary": true,
+      "succeeds": true,
+      "ending_stage": -6
+    },
+    {
+      "starting_stage": 1,
+      "contrary": true,
+      "succeeds": true,
+      "ending_stage": -6
+    },
+    {
+      "starting_stage": 2,
+      "contrary": true,
+      "succeeds": true,
+      "ending_stage": -6
+    },
+    {
+      "starting_stage": 3,
+      "contrary": true,
+      "succeeds": true,
+      "ending_stage": -6
+    },
+    {
+      "starting_stage": 4,
+      "contrary": true,
+      "succeeds": true,
+      "ending_stage": -6
+    },
+    {
+      "starting_stage": 5,
+      "contrary": true,
+      "succeeds": true,
+      "ending_stage": -6
+    },
+    {
+      "starting_stage": 6,
+      "contrary": true,
+      "succeeds": true,
+      "ending_stage": -6
+    }
+  ],
+  "adapter": "Use the effective ability when checking the existing upper-limit comparator, which reverses the bound for Contrary. Keep the existing target max-stat effect and HP arithmetic; no new state or identifiers. Native profiles and active gimmicks retain the native gate.",
+  "gaps": [
+    "Original Contrary success/failure text, animation and HP-versus-stat/item-event ordering remain native and need a separate presentation/ordering audit.",
+    "Complete held-item/ability interactions, called/reflected moves, disobedience, global stat/damage/AI rules and source RNG remain separate audits.",
+    "Expansion-only formats and gimmicks remain available without certifying them as source behavior."
+  ]
+}

@@ -6204,7 +6204,16 @@ static void UpdateStallMons(struct BattleCalcValues *cv)
 
 static bool32 TryBellyDrum(enum BattlerId battler)
 {
-    if (CompareStat(battler, STAT_ATK, MAX_STAT_STAGE, CMP_EQUAL, ABILITY_NONE))
+    enum Ability ability = ABILITY_NONE;
+
+    // Source Belly Drum requires a change in the effective stat direction
+    // before spending HP. Contrary therefore checks the lower Attack limit.
+    if (B_POLISHED_MOVE_BALANCE
+     && gCurrentMove == MOVE_BELLY_DRUM
+     && GetActiveGimmick(battler) == GIMMICK_NONE)
+        ability = GetBattlerAbility(battler);
+
+    if (CompareStat(battler, STAT_ATK, MAX_STAT_STAGE, CMP_EQUAL, ability))
         return FALSE;
 
     u32 halfHp = GetNonDynamaxMaxHP(battler) / 2;

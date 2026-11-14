@@ -1768,6 +1768,62 @@ Continue. The authentic source opening remains separate from this demo gate.
 Johto ROM SHA-256:
 `432b133d2a8fbbf7525e9cf68688739ce0f51ca2d471a75f973ad20fa3e1ac2c`.
 
+## Source Belly Drum eligibility and HP cost
+
+The pinned Belly Drum command first requires current HP strictly greater than
+`max(1, floor(maxHP / 2))`. It then requests a forced Attack increase through
+the source stat engine, which reverses the direction for effective Contrary.
+If no stat change is possible, it fails without spending HP. Otherwise it
+charges that half-maximum cost. The encoded sixteen-stage request reaches
++6 normally or -6 with Contrary from every starting stage.
+
+Expansion's native gate always checks the upper Attack limit: Contrary at +6
+fails, while Contrary at -6 can spend HP without changing Attack. The source
+profile now supplies the effective ability to the existing limit comparator,
+so Contrary instead checks the lower limit. The native max-stat operation and
+HP calculation already produce the source final stage and cost, and remain in
+use. Native profiles, optional effect users and active gimmicks retain their
+existing gate. IDs, state/save layouts and engine capacities are unchanged.
+
+`build_belly_drum.py` validates the pinned command, forced-stat dispatch,
+Contrary reversal, source stage bounds, no-change failure, minimum/floored HP
+cost and ability lookup after Neutralizing Gas. One new exact-blob fixture
+supplies the command; the other fixtures are already pinned. Its generated
+manifest records the source contract and stage cases, and is checked by CI and
+the production audit.
+
+Eight battle groups cover 84 cases per profile: both sides, ordinary and
+Contrary users at -6/-4/0/+4/+6, even/odd HP and half-HP boundaries, one-to-three
+maximum HP, other-stat preservation, repeated attempts after healing,
+switch/reentry, suppressed Contrary and native Z-move healing/limits. The
+stage-limit group reproduced the old runtime's source mismatch before the fix.
+
+This closes the selected ordinary eligibility/final-stage/HP-cost scope.
+Original Contrary success/failure text and animations, HP-versus-stat/item-event
+ordering, complete held-item/ability interactions, called/reflected moves,
+disobedience, global stat/damage/AI rules and exact source RNG remain separate
+audits. Optional Expansion formats and gimmicks are not certified as source
+behavior.
+
+Validation with Arm GNU GCC 13.2.1: both production ROMs build. All eight
+focused groups (84 cases per profile), all 128 earlier source move groups and
+six AI timing checks pass, along with 56 source checks and 12 ARM compiler
+probes. The full native suite passes 5,485 tests, with nine unchanged expected
+failures and 585 existing TODOs (6,079 total), and no unexpected failures.
+
+The production-linked audit matches all 255 basic move/PP records, 18 target
+stat-drop records, 254 Sleep Talk eligibility entries and 43,792 teaching
+combinations. The 109 recorded machine/lesson gaps are unchanged, with no new
+or changed findings.
+
+The same final Johto ROM passes all 12 demo checks, 101 campaign checks and
+19 directed warp traversals, including all starter branches, Sprout Tower,
+Falkner, the badge/Roost/Togepi rewards, resident schedules and Save/reset/
+Continue. The authentic source opening remains separate from this demo gate.
+
+Johto ROM SHA-256:
+`e30d830793b012f7290cfeba6dc3de9e567455a209a99eeac8ef56928d1c5a39`.
+
 ## Next priorities
 
 1. Continue the source field-rule audit. Headbutt remains dormant; other field

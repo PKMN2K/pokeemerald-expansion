@@ -2042,6 +2042,11 @@
       "path": "engine/battle/move_effects/endure.asm",
       "fixture": "engine__battle__move_effects__endure.asm.b64",
       "git_blob_sha1": "077bad9cc1ed482c9189f143f7e7be42d75e5547"
+    },
+    {
+      "path": "engine/battle/move_effects/belly_drum.asm",
+      "fixture": "engine__battle__move_effects__belly_drum.asm.b64",
+      "git_blob_sha1": "857e8db7b10104138f62ce08274776dc5663676c"
     }
   ]
 }
