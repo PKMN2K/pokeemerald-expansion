@@ -1500,6 +1500,56 @@ The authentic source startup remains separate from this demo-campaign gate.
 Johto ROM SHA-256:
 `c0c4af6d0c3db46708ca1c7774119d047bc8e26531f83562d9a3c34e4ce634fc`.
 
+## Source Disable and Encore duration
+
+The pinned shared command initializes Disable at 5 and Encore at 4. Source
+`PerformMove` calls `TickDisableAfterMove` after `DoTurn`, including a failed
+action. That tick only changes 5 to 4 and skips a fainted battler. Both active
+counters then decrement at end of turn; Encore also ends when its move's PP
+reaches zero. Switching clears both counters, and Mental Herb clears the active
+restriction while preserving the source's separate Choice bookkeeping.
+
+The source profile now imports these initial counters and ticks a newly applied
+Disable after the action owner finishes. Native Expansion previously used 4
+for Disable regardless of action order, losing one affected opportunity when
+the target had already acted. Its Encore initialization also subtracted a tick
+for a target still to act; that adjustment is now confined to native profiles.
+No counter field, stable ID or save layout is changed.
+
+The fixture generator verifies the command, complete action/timer call chain,
+end-turn handlers and exits against exact source blobs, and records expected
+end-turn traces for both action orders. Eight battle groups cover both sides,
+expiration messages and resumed selection, no active refresh, rejection with
+missing history or zero PP, Encore's early PP exit, switch-out/return, Mental
+Herb clearing/consumption and counters after full paralysis.
+
+Mental Herb tests use the already-selected matching move. The source writes the
+pending move before curing Encore; preserving that choice when it originally
+differed, plus Unnerve, remains outside this timer suite. Full called-move
+history/eligibility, disobedience, move replacement, Cursed Body application
+gates, other restriction interactions, global action/end-turn ordering, AI and
+presentation remain separate audits. Expansion-only formats and gimmicks keep
+the native framework and are not certified as source behavior.
+
+Validation with Arm GNU GCC 13.2.1: both production ROMs build. All eight
+focused groups (30 battle cases per profile), every earlier source move suite
+and six AI timing checks pass, together with 52 source checks and 12 ARM
+compiler probes. The full native run passes 5,443 tests, with the same nine
+expected failures and 585 existing TODOs (6,037 total), and no unexpected
+failures.
+
+The production-linked audit matches all 255 basic move/PP records, 18 target
+stat-drop records, 254 Sleep Talk eligibility entries and 43,792 teaching
+combinations. Its 109 explicitly recorded machine/lesson gaps are unchanged;
+there are no new or changed findings. The same final Johto ROM passes all
+12 demo checks, 101 campaign checks and 19 directed warp traversals, including
+all starter branches, Sprout Tower, Falkner, the badge/Roost/Togepi rewards,
+resident schedules and Save/reset/Continue. The authentic source startup
+remains separate from this demo-campaign gate.
+
+Johto ROM SHA-256:
+`63e849ba3887279713370940d3e2030cd07213536f0ff23144a918e28989e22f`.
+
 ## Next priorities
 
 1. Continue the source field-rule audit. Headbutt remains dormant; other field

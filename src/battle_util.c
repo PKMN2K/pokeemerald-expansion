@@ -15,6 +15,7 @@
 #include "battle_stat_change.h"
 #include "config_changes.h"
 #include "polished_battle.h"
+#include "constants/polished_move_restrictions.h"
 #include "party_menu.h"
 #include "pokemon.h"
 #include "international_string_util.h"
@@ -1008,6 +1009,16 @@ void HandleAction_NothingIsFainted(void)
 void HandleAction_ActionFinished(void)
 {
     u32 i, j;
+    enum BattlerId battler = gBattlerByTurnOrder[gCurrentTurnActionNumber];
+
+    // Source PerformMove ticks a newly applied Disable after the affected
+    // battler's action, even if that action failed. Later turns only use the
+    // normal end-turn tick. Use the action owner rather than the last script's
+    // attacker, which may have changed during move resolution.
+    if (B_POLISHED_MOVE_BALANCE && IsBattlerAlive(battler)
+     && gBattleMons[battler].volatiles.disableTimer == POLISHED_DISABLE_INITIAL_TICKS)
+        gBattleMons[battler].volatiles.disableTimer--;
+
     bool32 afterYouActive = gSpecialStatuses[gBattlerByTurnOrder[gCurrentTurnActionNumber + 1]].afterYou;
     gBattleStruct->monToSwitchIntoId[gBattlerByTurnOrder[gCurrentTurnActionNumber]] = gSelectedMonPartyId = PARTY_SIZE;
     gCurrentTurnActionNumber++;

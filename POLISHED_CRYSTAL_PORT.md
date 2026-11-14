@@ -1625,3 +1625,38 @@ production audit matches all 254 eligibility entries, all 255 basic move/PP
 records and all 43,792 teaching combinations, with no new or changed gaps.
 The same rebuilt Johto ROM passes all 12 demo checks, 101 campaign checks and
 19 directed warp traversals, including Falkner's battle and post-battle rewards.
+
+### Source Disable and Encore duration
+
+The pinned source initializes Disable to five ticks. `PerformMove` then applies
+a one-time 5-to-4 tick after the affected battler's action, even when the action
+is blocked; the ordinary end-turn handler decrements the timer thereafter.
+This preserves four affected action opportunities whether Disable lands before
+or after the target acts. Native Expansion's unconditional four-tick start
+previously expired one turn early when Disable landed after the target's action.
+
+Encore always starts at four source ticks. Native Expansion subtracts a tick
+when Encore lands before the target acts; the source profile now retains all
+four. The existing forced-move selection, PP-exhaustion release and end-turn
+cleanup remain in use. The native profile keeps its configurable generation
+rules. No IDs, counter fields or save layouts change.
+
+`build_move_restrictions.py` pins the shared command, post-action call site,
+end-turn countdown and exit rules, with source Git blob provenance. Eight
+battle groups cover both sides and action orders, expiration and resumed move
+selection, active reapplication, missing history/PP, early Encore exhaustion,
+Mental Herb clearing, switching and a paralysis-interrupted action. Mental Herb
+tests select the already-matching move: the source's prewritten same-turn move
+after curing Encore and Unnerve interactions remain outside this timer suite.
+Full called-move eligibility/history, disobedience, move replacement, Cursed
+Body application gates, global turn ordering, AI and presentation remain
+separate audits. Passing these tests does not certify every Encore/Disable
+interaction or optional Expansion format.
+
+Both production ROMs build. All eight focused groups (30 battle cases per
+profile), earlier source move suites and six AI timing checks pass, along with
+52 source checks and 12 ARM probes. The full native suite passes 5,443 tests;
+the nine expected failures and 585 existing TODOs are unchanged. The production
+move/machine audit has no new or changed gaps. The same rebuilt Johto ROM
+passes all 12 demo checks, 101 campaign checks and 19 directed warp traversals,
+including Falkner and the post-battle rewards.

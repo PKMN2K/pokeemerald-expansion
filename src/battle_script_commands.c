@@ -1,6 +1,7 @@
 #include "global.h"
 #include "polished_evolution.h"
 #include "polished_items.h"
+#include "constants/polished_move_restrictions.h"
 #include "battle.h"
 #include "battle_hold_effects.h"
 #include "battle_message.h"
@@ -6113,7 +6114,9 @@ static void Cmd_disablelastusedattack(void)
         PREPARE_MOVE_BUFFER(gBattleTextBuff1, gBattleMons[gBattlerTarget].moves[i])
 
         gBattleMons[gBattlerTarget].volatiles.disabledMove = gBattleMons[gBattlerTarget].moves[i];
-        if (B_DISABLE_TURNS >= GEN_5)
+        if (B_POLISHED_MOVE_BALANCE)
+            gBattleMons[gBattlerTarget].volatiles.disableTimer = POLISHED_DISABLE_INITIAL_TICKS;
+        else if (B_DISABLE_TURNS >= GEN_5)
             gBattleMons[gBattlerTarget].volatiles.disableTimer = B_DISABLE_TIMER;
         else if (B_DISABLE_TURNS >= GEN_4)
             gBattleMons[gBattlerTarget].volatiles.disableTimer = (Random() & 3) + B_DISABLE_TIMER; // 4-7 turns
@@ -6172,7 +6175,13 @@ static void Cmd_trysetencore(void)
             gBattleStruct->moveTarget[gBattlerTarget] = SetRandomTarget(gBattlerTarget);
 
         u8 turns;
-        if (GetConfig(B_ENCORE_TURNS) >= GEN_5)
+        if (B_POLISHED_MOVE_BALANCE)
+        {
+            // The source always starts at four, including a target that has
+            // yet to act. Both profiles decrement at the end of the turn.
+            turns = POLISHED_ENCORE_INITIAL_TICKS;
+        }
+        else if (GetConfig(B_ENCORE_TURNS) >= GEN_5)
         {
             turns = B_ENCORE_TIMER; // 4 turns
             if (!HasBattlerActedThisTurn(gBattlerTarget))

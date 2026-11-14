@@ -1992,6 +1992,16 @@
       "path": "engine/battle/move_effects/encore_disable.asm",
       "fixture": "engine__battle__move_effects__encore_disable.asm.b64",
       "git_blob_sha1": "288cc693f6b8fe95b8d589760574fca84ae7a663"
+    },
+    {
+      "path": "engine/battle/endturn.asm",
+      "fixture": "engine__battle__endturn.asm.b64",
+      "git_blob_sha1": "53dff9c5eff2ca69b0f37f94d52391842a204740"
+    },
+    {
+      "path": "engine/battle/move_effects/attract.asm",
+      "fixture": "engine__battle__move_effects__attract.asm.b64",
+      "git_blob_sha1": "16b99ac6e25eadd52c4d134217662b7a5e2b3e54"
     }
   ]
 }

@@ -1,0 +1,8 @@
+/* Generated from Polished Crystal 3fa43192379df5c3e7b09a08e4d5d79af4f02f42 by build_move_restrictions.py. */
+#ifndef GUARD_CONSTANTS_POLISHED_MOVE_RESTRICTIONS_H
+#define GUARD_CONSTANTS_POLISHED_MOVE_RESTRICTIONS_H
+
+#define POLISHED_DISABLE_INITIAL_TICKS 5
+#define POLISHED_ENCORE_INITIAL_TICKS 4
+
+#endif
