@@ -16,6 +16,7 @@
 #include "config_changes.h"
 #include "polished_battle.h"
 #include "constants/polished_move_restrictions.h"
+#include "constants/polished_protect_chain.h"
 #include "party_menu.h"
 #include "pokemon.h"
 #include "international_string_util.h"
@@ -11078,6 +11079,21 @@ static const u16 sGen5ProtectFailChances[] =
 bool32 CanUseMoveConsecutively(enum BattlerId battler)
 {
     u32 moveUses = gBattleMons[battler].volatiles.consecutiveMoveUses;
+    if (B_POLISHED_MOVE_BALANCE
+     && (gCurrentMove == MOVE_PROTECT || gCurrentMove == MOVE_ENDURE)
+     && GetActiveGimmick(battler) == GIMMICK_NONE)
+    {
+        static const u16 denominators[] = POLISHED_PROTECT_DENOMINATORS;
+        u32 denominator = denominators[min(moveUses, POLISHED_PROTECT_MAX_USES)];
+
+        if (denominator == 1)
+            return TRUE;
+
+        // Preserve the total probability of the source's successive ternary
+        // rolls. Expansion keeps its own RNG stream and tagged test interface.
+        return RandomChance(RNG_PROTECT_FAIL, 1, denominator);
+    }
+
     if (moveUses >= ARRAY_COUNT(sProtectFailChances))
         moveUses = ARRAY_COUNT(sProtectFailChances) - 1;
 

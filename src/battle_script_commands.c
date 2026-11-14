@@ -2,6 +2,7 @@
 #include "polished_evolution.h"
 #include "polished_items.h"
 #include "constants/polished_move_restrictions.h"
+#include "constants/polished_protect_chain.h"
 #include "battle.h"
 #include "battle_hold_effects.h"
 #include "battle_message.h"
@@ -5142,7 +5143,13 @@ static void Cmd_setprotectlike(void)
         gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_PROTECTED_ITSELF;
     }
 
-    gBattleMons[gBattlerAttacker].volatiles.consecutiveMoveUses++;
+    if (B_POLISHED_MOVE_BALANCE
+     && (gCurrentMove == MOVE_PROTECT || gCurrentMove == MOVE_ENDURE)
+     && GetActiveGimmick(gBattlerAttacker) == GIMMICK_NONE)
+        gBattleMons[gBattlerAttacker].volatiles.consecutiveMoveUses = min(
+            gBattleMons[gBattlerAttacker].volatiles.consecutiveMoveUses + 1, POLISHED_PROTECT_MAX_USES);
+    else
+        gBattleMons[gBattlerAttacker].volatiles.consecutiveMoveUses++;
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 

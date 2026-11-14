@@ -1779,3 +1779,49 @@ The same final Johto ROM passes all 12 demo checks, 101 campaign checks and
 19 directed warp traversals, including all starter branches, Sprout Tower,
 Falkner, the badge/Roost/Togepi rewards and Save/reset/Continue. Authentic source
 startup remains separate from this demo campaign.
+
+### Source Protect/Endure successive-use rules
+
+The pinned Protect and Endure commands share `ProtectChance`. After each prior
+success, it requires another successful 1-in-3 roll, up to six rolls: the
+success denominators are 1, 3, 9, 27, 81, 243 and 729. The stored count saturates
+at six, so later attempts stay at 1-in-729. Expansion previously capped the
+odds at 1-in-27 and continued increasing the stored count.
+
+The source profile now uses the imported denominators and saturates the
+existing counter for ordinary Protect/Endure. One tagged weighted roll preserves
+the aggregate probability; it does not reproduce the source RNG stream or its
+sequence of ternary draws. Native profiles, optional protection moves and
+active gimmicks retain their existing paths. No identifiers, save/state layouts
+or engine capacities change.
+
+`build_protect_chain.py` verifies exact pinned Protect/Endure fixtures, the
+shared loop, cap, failure reset, selected-other-move reset, switch reset and
+opponent-first gate. CI and the production audit enforce its generated header
+and manifest. Nine battle groups cover 62 cases per profile: both sides and
+moves, first-use protection/survival and PP, every probability stage, alternating
+Protect/Endure, count saturation, failure, ordinary moves, switching/reentry,
+acting after the opponent and optional Detect's retained native odds. The
+saturation group reproduced the old runtime's source mismatch before the fix.
+
+This closes the ordinary direct-use probability/counter scope. Interrupted or
+called actions, disobedience, item/switch action ordering, global priority and
+AI, all protection interactions, exact RNG and source presentation remain
+separate audits. Optional Expansion formats and gimmicks are not certified as
+source behavior.
+
+Validation with Arm GNU GCC 13.2.1: both production ROMs build. All nine
+focused groups (62 cases per profile), all 119 earlier source move groups and
+six AI timing checks pass, along with 55 source checks and 12 ARM compiler
+probes. The full native suite passes 5,477 tests, with nine unchanged expected
+failures and 585 existing TODOs (6,071 total), and no unexpected failures.
+
+The production-linked audit matches all 255 basic move/PP records, 18 target
+stat-drop records, 254 Sleep Talk eligibility entries and 43,792 teaching
+combinations. The 109 recorded machine/lesson gaps are unchanged, with no new
+or changed findings.
+
+The same final Johto ROM passes all 12 demo checks, 101 campaign checks and
+19 directed warp traversals, including all starter branches, Sprout Tower,
+Falkner, the badge/Roost/Togepi rewards, resident schedules and Save/reset/
+Continue. The authentic source opening remains separate from this demo gate.

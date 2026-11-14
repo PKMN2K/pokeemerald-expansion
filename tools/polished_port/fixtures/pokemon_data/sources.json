@@ -2032,6 +2032,16 @@
       "path": "data/moves/sound_moves.asm",
       "fixture": "data__moves__sound_moves.asm.b64",
       "git_blob_sha1": "fdb9256cf8fe39a2641a3c362a8cc279d105e218"
+    },
+    {
+      "path": "engine/battle/move_effects/protect.asm",
+      "fixture": "engine__battle__move_effects__protect.asm.b64",
+      "git_blob_sha1": "3154c89a3bf77d6d418f0f62db730612cdf9247b"
+    },
+    {
+      "path": "engine/battle/move_effects/endure.asm",
+      "fixture": "engine__battle__move_effects__endure.asm.b64",
+      "git_blob_sha1": "077bad9cc1ed482c9189f143f7e7be42d75e5547"
     }
   ]
 }
