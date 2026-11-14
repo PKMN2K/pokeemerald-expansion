@@ -1942,6 +1942,82 @@ Continue. The authentic source opening remains separate from this demo gate.
 Johto ROM SHA-256:
 `da3f7b0c2b73cc801dd8798f8058567e011aef128dae882902cd6b3b94d1486d`.
 
+## Source Foresight gates and identification accuracy
+
+The pinned Foresight command rejects Fly/Dig targets after the normal hit
+check, so No Guard and Lock-On cannot bypass its effect-level guard. Repeating
+identification fails; Substitute does not block it. The source type table
+removes only Normal/Fighting versus Ghost immunity after identification.
+
+Source identification ignores only positive target evasion and keeps negative
+evasion and the user's accuracy changes. Expansion previously discarded all
+evasion stages. The source profile now preserves those reductions and uses
+the source's exact stage fractions for attacks against an identified opponent.
+The combined stage is capped at -6..6 before applying (3+n)/3 or 3/(3-n).
+Native percentage approximations are retained outside this scope.
+
+The source's listed Foresight accuracy of -1 is stored as the byte 255. Despite
+the table comment describing an accuracy bypass, this pinned effect calls
+`checkhit`, copies that byte unchanged, and applies stat/ability/item modifiers.
+For example, with no other modifiers a -6 accuracy stage produces floor(255 *
+3 / 9) = 85 percent, and -5 produces 95 percent. Wonder Skin replaces the base
+with 50 before stage modifiers. The port retains the public zero sentinel for
+listed data, but uses the raw source byte in this execution path instead of
+unconditionally bypassing accuracy. No Guard and Mold Breaker retain their
+selected visible-target interactions.
+
+These corrections are scoped to ordinary singles with no active gimmick.
+Native profiles, doubles, active gimmicks and the optional Miracle Eye flag
+keep their native paths. No identifiers, save structures, counters or engine
+capacities change. `build_foresight.py` verifies the exact source command,
+effect-script order, raw byte copying, immunity marker, hidden-target and
+reflection gates, stage arithmetic, Wonder Skin and multiply/divide behavior.
+Battle execution uses a separate source accuracy path to keep the existing
+native AI estimation cost intact. The six timing checks retain their original
+ceilings, including 24 frames for the smart Steven multi-battle case. Full
+source AI accuracy estimates remain a separate gap.
+
+Five new exact-blob fixtures supply the move, reflection, bypass list, type
+table and math helper. CI and the production audit check the generated header,
+manifest and dedicated battle prefix.
+
+Ten groups cover 90 parameter combinations per profile, with weighted
+probability trials: both sides; Fly/Dig with ordinary, either-side No Guard and
+Lock-On; raw accuracy and Wonder Skin at selected severe/neutral stages; all
+even evasion stages from -6 to +6 with neutral/reduced user accuracy; Ghost
+versus unrelated immunities; Substitute/Protect; PP, repeated use and switch/
+reentry; visible No Guard/Mold Breaker; and optional Miracle Eye, Terastal and
+doubles. The initial tests reproduced the three discrepancies; the raw-byte
+cases also exposed the native table's rounded -5 ratio before it was corrected.
+
+Scope remains these gates and stage calculations. Source failure messages,
+animations and complete reflected/called-move ordering remain separate.
+Affection, other accuracy item/ability/weather modifiers, global accuracy/RNG,
+Baton Pass and AI accuracy estimates/choices remain separate audits. Other
+moves with a source -1 accuracy byte are not certified by this suite.
+
+Validation with Arm GNU GCC 13.2.1: both production ROMs build. All ten
+focused groups (90 parameter combinations per profile, including weighted
+probability trials), all 156 earlier source move groups and six AI timing
+checks pass, along with 59 source checks and 12 ARM compiler probes. The full
+native suite passes 5,515 tests, with nine unchanged expected failures and 585
+existing TODOs (6,109 total), and no unexpected failures. The final source
+execution/AI separation was rerun through all source prefixes and the full
+native suite without relaxing the AI timing ceilings.
+
+The production-linked audit matches all 255 basic move/PP records, 18 target
+stat-drop records, 254 Sleep Talk eligibility entries and 43,792 teaching
+combinations. The 109 recorded machine/lesson gaps are unchanged, with no new
+or changed findings.
+
+The same final Johto ROM passes all 12 demo checks, 101 campaign checks and
+19 directed warp traversals, including all starter branches, Sprout Tower,
+Falkner, the badge/Roost/Togepi rewards, resident schedules and Save/reset/
+Continue. The authentic source opening remains separate from this demo gate.
+
+Johto ROM SHA-256:
+`17f56e947ac4b0066565195baf945a067ea2b315ea5a7e01a82870a15dc9ee2b`.
+
 ## Next priorities
 
 1. Continue the source field-rule audit. Headbutt remains dormant; other field

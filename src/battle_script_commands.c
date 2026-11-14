@@ -6615,7 +6615,21 @@ static void Cmd_setvolatile(void)
 {
     CMD_ARGS(u8 battler, u8 _volatile, u8 value);
 
-    SetMonVolatile(GetBattlerForBattleScript(cmd->battler), cmd->_volatile, cmd->value);
+    enum BattlerId battler = GetBattlerForBattleScript(cmd->battler);
+    // Source Foresight rejects Fly/Dig at the effect itself, even when an
+    // earlier hit check passed through No Guard or Lock-On.
+    if (B_POLISHED_MOVE_BALANCE && cmd->_volatile == VOLATILE_FORESIGHT
+     && gCurrentMove == MOVE_FORESIGHT && !IsDoubleBattle()
+     && GetActiveGimmick(gBattlerAttacker) == GIMMICK_NONE
+     && GetActiveGimmick(battler) == GIMMICK_NONE
+     && (gBattleMons[battler].volatiles.semiInvulnerable == STATE_ON_AIR
+         || gBattleMons[battler].volatiles.semiInvulnerable == STATE_UNDERGROUND))
+    {
+        gBattlescriptCurrInstr = BattleScript_ButItFailed;
+        return;
+    }
+
+    SetMonVolatile(battler, cmd->_volatile, cmd->value);
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 

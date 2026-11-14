@@ -2057,6 +2057,31 @@
       "path": "engine/battle/move_effects/perish_song.asm",
       "fixture": "engine__battle__move_effects__perish_song.asm.b64",
       "git_blob_sha1": "39f50120879628d5e8bd30b6d17f693a92f7d85a"
+    },
+    {
+      "path": "engine/battle/move_effects/foresight.asm",
+      "fixture": "engine__battle__move_effects__foresight.asm.b64",
+      "git_blob_sha1": "93beaa83cc1e17297c532c4db10b4f25bfc015b8"
+    },
+    {
+      "path": "engine/battle/move_effects/magic_bounce.asm",
+      "fixture": "engine__battle__move_effects__magic_bounce.asm.b64",
+      "git_blob_sha1": "9a2753a4713fe2525673f92cec9148ecee14a306"
+    },
+    {
+      "path": "data/moves/substitute_bypass_moves.asm",
+      "fixture": "data__moves__substitute_bypass_moves.asm.b64",
+      "git_blob_sha1": "7459376d0618dcde42aa30cd003186b42ff57fe7"
+    },
+    {
+      "path": "data/types/type_matchups.asm",
+      "fixture": "data__types__type_matchups.asm.b64",
+      "git_blob_sha1": "4971822c1d8aa1045228fdca90d05ea1b7fddb86"
+    },
+    {
+      "path": "home/math.asm",
+      "fixture": "home__math.asm.b64",
+      "git_blob_sha1": "491f6505e3d470682adec09de0fe50ad821d0c14"
     }
   ]
 }

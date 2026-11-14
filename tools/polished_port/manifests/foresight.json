@@ -1,0 +1,156 @@
+{
+  "source_repository": "Rangi42/polishedcrystal",
+  "source_commit": "3fa43192379df5c3e7b09a08e4d5d79af4f02f42",
+  "source_variant": "default (FAITHFUL undefined)",
+  "profile": "B_POLISHED_MOVE_BALANCE",
+  "scope": "Ordinary singles Foresight hit/effect gates and accuracy stage treatment after identification.",
+  "listed_accuracy": -1,
+  "raw_accuracy": 255,
+  "pp": 40,
+  "rules": [
+    "Fly and Dig reject identification even after No Guard or Lock-On.",
+    "The raw accuracy byte goes through checkhit; it is not an unconditional bypass in this pinned implementation.",
+    "Wonder Skin replaces the raw base with 50 before stage modifiers.",
+    "Identification ignores positive target evasion, preserves negative evasion and leaves user accuracy changes active.",
+    "The combined accuracy-minus-evasion stage is capped to -6..6, then uses exact (3+n)/3 or 3/(3-n) fractions.",
+    "Identification removes only Normal/Fighting versus Ghost immunity; repeat use fails."
+  ],
+  "raw_stage_checks": [
+    {
+      "stage": -6,
+      "base": 255,
+      "chance": 85
+    },
+    {
+      "stage": -5,
+      "base": 255,
+      "chance": 95
+    },
+    {
+      "stage": -4,
+      "base": 255,
+      "chance": 100
+    },
+    {
+      "stage": -3,
+      "base": 255,
+      "chance": 100
+    },
+    {
+      "stage": -2,
+      "base": 255,
+      "chance": 100
+    },
+    {
+      "stage": -1,
+      "base": 255,
+      "chance": 100
+    },
+    {
+      "stage": 0,
+      "base": 255,
+      "chance": 100
+    },
+    {
+      "stage": 1,
+      "base": 255,
+      "chance": 100
+    },
+    {
+      "stage": 2,
+      "base": 255,
+      "chance": 100
+    },
+    {
+      "stage": 3,
+      "base": 255,
+      "chance": 100
+    },
+    {
+      "stage": 4,
+      "base": 255,
+      "chance": 100
+    },
+    {
+      "stage": 5,
+      "base": 255,
+      "chance": 100
+    },
+    {
+      "stage": 6,
+      "base": 255,
+      "chance": 100
+    },
+    {
+      "stage": -6,
+      "base": 50,
+      "chance": 16
+    },
+    {
+      "stage": -5,
+      "base": 50,
+      "chance": 18
+    },
+    {
+      "stage": -4,
+      "base": 50,
+      "chance": 21
+    },
+    {
+      "stage": -3,
+      "base": 50,
+      "chance": 25
+    },
+    {
+      "stage": -2,
+      "base": 50,
+      "chance": 30
+    },
+    {
+      "stage": -1,
+      "base": 50,
+      "chance": 37
+    },
+    {
+      "stage": 0,
+      "base": 50,
+      "chance": 50
+    },
+    {
+      "stage": 1,
+      "base": 50,
+      "chance": 66
+    },
+    {
+      "stage": 2,
+      "base": 50,
+      "chance": 83
+    },
+    {
+      "stage": 3,
+      "base": 50,
+      "chance": 100
+    },
+    {
+      "stage": 4,
+      "base": 50,
+      "chance": 100
+    },
+    {
+      "stage": 5,
+      "base": 50,
+      "chance": 100
+    },
+    {
+      "stage": 6,
+      "base": 50,
+      "chance": 100
+    }
+  ],
+  "adapter": "Keep the public move-data sentinel, native IDs and volatile flag. Adapt the scoped runtime accuracy payload, stage fractions and hidden gate. Retain native profiles, doubles, active gimmicks and the optional Miracle Eye flag.",
+  "gaps": [
+    "Source failure text, animations and complete reflected/called-move ordering remain separate.",
+    "Affection, other accuracy item/ability/weather modifiers, global accuracy/RNG, Baton Pass and AI accuracy estimates/choices remain separate audits.",
+    "Extra formats, species, moves and gimmicks remain available without certifying them as source content."
+  ]
+}
