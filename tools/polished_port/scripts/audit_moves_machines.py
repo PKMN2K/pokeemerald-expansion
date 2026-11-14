@@ -30,6 +30,7 @@ import build_encore_commitment as encore_commitment
 import build_cursed_body as cursed_body
 import build_protect_chain as protect_chain
 import build_belly_drum as belly_drum
+import build_rapid_spin as rapid_spin
 from test_johto_demo_emulator import Game
 
 ROOT = source.ROOT
@@ -50,7 +51,7 @@ def inputs():
                           type=type_, accuracy=0 if accuracy == '-1' else int(accuracy),
                           pp=int(base_pp), chance=int(chance), category=category))
     outputs = learning.build()
-    for path, expected in {**outputs, **pp.build(), **pain_split.build(), **fixed_damage.build(), **retaliation.build(), **self_accuracy.build(), **typeless.build(), **metronome_struggle.build(), **stat_drops.build(), **sleep_talk.build(), **restrictions.build(), **encore_commitment.build(), **cursed_body.build(), **protect_chain.build(), **belly_drum.build()}.items():
+    for path, expected in {**outputs, **pp.build(), **pain_split.build(), **fixed_damage.build(), **retaliation.build(), **self_accuracy.build(), **typeless.build(), **metronome_struggle.build(), **stat_drops.build(), **sleep_talk.build(), **restrictions.build(), **encore_commitment.build(), **cursed_body.build(), **protect_chain.build(), **belly_drum.build(), **rapid_spin.build()}.items():
         assert path.read_text() == expected, f'Stale imported source data: {path}'
     catalog = json.loads(outputs[learning.MANIFEST])
     assert [r['kind'] for r in catalog['teaching_catalog']] == ['TM']*75 + ['HM']*6 + ['MT']*31

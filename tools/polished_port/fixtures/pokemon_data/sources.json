@@ -2047,6 +2047,11 @@
       "path": "engine/battle/move_effects/belly_drum.asm",
       "fixture": "engine__battle__move_effects__belly_drum.asm.b64",
       "git_blob_sha1": "857e8db7b10104138f62ce08274776dc5663676c"
+    },
+    {
+      "path": "engine/battle/move_effects/rapid_spin.asm",
+      "fixture": "engine__battle__move_effects__rapid_spin.asm.b64",
+      "git_blob_sha1": "50c40ff00a97f96745fa5390a2529a578c643488"
     }
   ]
 }

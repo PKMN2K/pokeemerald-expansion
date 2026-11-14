@@ -4188,6 +4188,23 @@ static enum MoveEndResult MoveEndSheerForce(struct BattleCalcValues *cv)
             gBattleScripting.moveendState = MOVEEND_COLOR_CHANGE;
         else
             gBattleScripting.moveendState = MOVEEND_ITEMS_EFFECTS_ALL;
+
+        // The source's separate clearhazards command survives Sheer Force.
+        // Resume at the native skip destination so Speed, Life Orb, Shell
+        // Bell and other suppressed end effects are not re-enabled.
+        if (B_POLISHED_MOVE_BALANCE
+         && cv->move == MOVE_RAPID_SPIN
+         && !IsDoubleBattle()
+         && GetActiveGimmick(cv->battlerAtk) == GIMMICK_NONE
+         && IsBattlerAlive(cv->battlerAtk)
+         && !gBattleStruct->unableToUseMove
+         && !(gBattleStruct->moveResultFlags[cv->battlerDef] & MOVE_RESULT_NO_EFFECT)
+         && IsBattlerTurnDamaged(cv->battlerDef, INCLUDING_SUBSTITUTES))
+        {
+            gBattleStruct->eventState.moveEndBattler = 0;
+            BattleScriptCall(BattleScript_RapidSpinAway);
+            return MOVEEND_RESULT_RUN_SCRIPT;
+        }
     }
     else
         gBattleScripting.moveendState++;

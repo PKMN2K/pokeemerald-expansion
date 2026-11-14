@@ -1878,3 +1878,58 @@ The same final Johto ROM passes all 12 demo checks, 101 campaign checks and
 19 directed warp traversals, including all starter branches, Sprout Tower,
 Falkner, the badge/Roost/Togepi rewards, resident schedules and Save/reset/
 Continue. The authentic source opening remains separate from this demo gate.
+
+### Source Rapid Spin cleanup under Sheer Force
+
+The pinned Rapid Spin script treats its Speed increase and cleanup separately.
+Sheer Force marks the secondary effect as failed, so Speed does not rise, but
+the later `clearhazards` command still removes the user's Leech Seed, binding
+move, and every layer of Spikes/Toxic Spikes on the user's side. Move failure
+ends the script before cleanup; post-hit processing also aborts the remaining
+sequence if the user faints. An intact or broken target Substitute does not
+block the separate cleanup command. The source end-effect gate continues to
+suppress Life Orb and Shell Bell.
+
+Expansion's Sheer Force skip previously bypassed the cleanup along with other
+move-end effects. The source profile now runs the existing cleanup script once
+for successful ordinary singles Rapid Spin damage by a living user, then resumes
+at the native skip destination. This keeps the Speed boost and other suppressed
+end effects disabled. Native profiles, other moves, double battles and active
+gimmicks retain their existing paths. No new state, identifiers, save-layout
+changes or capacity limits are introduced.
+
+`build_rapid_spin.py` checks the pinned default move row, effect-script order,
+secondary-effect failure, cleanup operations, hit/faint gates and end-item
+suppression. One new exact-blob fixture supplies the cleanup command; existing
+fixtures provide the rest. CI and the production audit check the generated
+manifest and the dedicated battle prefix.
+
+Eleven groups cover 66 cases per profile: both sides, ordinary and Sheer Force
+users, individual minimum/maximum hazard layers, the untouched opposite side,
+combined binding/Leech Seed/stacked hazards, miss/protection/Ghost immunity/full
+paralysis, intact/broken substitutes, target knockout, user contact knockout,
+Life Orb/Shell Bell suppression, Neutralizing Gas, repeated cleanup through the
+last PP and a following move, optional Mortal Spin, Terastal and double battles.
+The hazard-layer group reproduced the old runtime's missing source cleanup.
+
+Scope remains this bounded ordinary cleanup interaction. Native cleanup
+message/animation order is retained. Complete contact/faint/switch/item/ability
+scheduling, called/reflected/multi-hit moves, full Sheer Force damage/AI/RNG
+rules and hazard/trapping mechanics remain separate audits. Expansion-only
+hazards, formats and gimmicks are not certified as source behavior.
+
+Validation with Arm GNU GCC 13.2.1: both production ROMs build. All eleven
+focused groups (66 cases per profile), all 136 earlier source move groups and
+six AI timing checks pass, along with 57 source checks and 12 ARM compiler
+probes. The full native suite passes 5,496 tests, with nine unchanged expected
+failures and 585 existing TODOs (6,090 total), and no unexpected failures.
+
+The production-linked audit matches all 255 basic move/PP records, 18 target
+stat-drop records, 254 Sleep Talk eligibility entries and 43,792 teaching
+combinations. The 109 recorded machine/lesson gaps are unchanged, with no new
+or changed findings.
+
+The same final Johto ROM passes all 12 demo checks, 101 campaign checks and
+19 directed warp traversals, including all starter branches, Sprout Tower,
+Falkner, the badge/Roost/Togepi rewards, resident schedules and Save/reset/
+Continue. The authentic source opening remains separate from this demo gate.
