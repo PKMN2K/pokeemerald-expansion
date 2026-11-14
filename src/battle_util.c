@@ -3052,6 +3052,24 @@ static bool32 TryDancer(void)
     return FALSE;
 }
 
+static enum Move GetCursedBodyDisabledMove(enum BattlerId battler)
+{
+    if (!B_POLISHED_MOVE_BALANCE || GetActiveGimmick(battler) != GIMMICK_NONE)
+        return gChosenMove;
+
+    // Source Cursed Body calls Disable: it uses recorded history, then checks
+    // that the move is still known and has PP after the attack's deduction.
+    enum Move recorded = gLastMoves[battler];
+    if (recorded == MOVE_NONE || recorded == MOVE_UNAVAILABLE || recorded == MOVE_STRUGGLE)
+        return MOVE_NONE;
+    for (u32 i = 0; i < MAX_MON_MOVES; i++)
+    {
+        if (gBattleMons[battler].moves[i] == recorded)
+            return gBattleMons[battler].pp[i] != 0 ? recorded : MOVE_NONE;
+    }
+    return MOVE_NONE;
+}
+
 u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum Ability ability, enum Move move, bool32 shouldAbilityTrigger)
 {
     u32 effect = 0;
@@ -3947,6 +3965,8 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
             }
             break;
         case ABILITY_CURSED_BODY:
+        {
+            enum Move disabledMove = GetCursedBodyDisabledMove(gBattlerAttacker);
             if (IsBattlerTurnDamaged(gBattlerTarget, EXCLUDING_SUBSTITUTES)
              && GetMoveEffect(move) != EFFECT_FUTURE_SIGHT
              && gBattleMons[gBattlerAttacker].volatiles.disabledMove == MOVE_NONE
@@ -3955,15 +3975,18 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
              && !IsAbilityOnSide(gBattlerAttacker, ABILITY_AROMA_VEIL)
              && gChosenMove != MOVE_STRUGGLE
              && GetActiveGimmick(gBattlerAttacker) != GIMMICK_DYNAMAX
+             && (!B_POLISHED_MOVE_BALANCE || GetActiveGimmick(gBattlerAttacker) != GIMMICK_NONE || disabledMove != MOVE_NONE)
              && RandomPercentage(RNG_CURSED_BODY, 30))
             {
-                gBattleMons[gBattlerAttacker].volatiles.disabledMove = gChosenMove;
-                gBattleMons[gBattlerAttacker].volatiles.disableTimer = B_DISABLE_TIMER;
-                PREPARE_MOVE_BUFFER(gBattleTextBuff1, gChosenMove);
+                gBattleMons[gBattlerAttacker].volatiles.disabledMove = disabledMove;
+                gBattleMons[gBattlerAttacker].volatiles.disableTimer = B_POLISHED_MOVE_BALANCE && GetActiveGimmick(gBattlerAttacker) == GIMMICK_NONE
+                    ? POLISHED_DISABLE_INITIAL_TICKS : B_DISABLE_TIMER;
+                PREPARE_MOVE_BUFFER(gBattleTextBuff1, disabledMove);
                 BattleScriptCall(BattleScript_CursedBodyActivates);
                 effect++;
             }
             break;
+        }
         case ABILITY_LINGERING_AROMA:
         case ABILITY_MUMMY:
             if (IsBattlerAlive(gBattlerAttacker)

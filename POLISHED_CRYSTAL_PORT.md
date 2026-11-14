@@ -1698,3 +1698,44 @@ same nine expected failures and 585 existing TODOs. The production audit has
 no new or changed gaps. The same rebuilt Johto ROM passes all 12 demo checks,
 101 campaign checks and 19 directed warp traversals, including Falkner and
 the post-battle rewards.
+
+### Source Cursed Body eligibility and called-move history
+
+The source Cursed Body ability rolls a 3-in-10 chance, then invokes the shared
+Disable command. That command requires recorded move history, a matching known
+slot, and PP remaining after the attack. Native Expansion instead disabled
+the selected move directly, including its last-PP use and Sleep Talk/Metronome
+calls. The source profile now validates the recorded move and live slot before
+applying the effect. It uses the imported five-tick Disable start and existing
+post-action/end-turn transitions. Native profiles and active gimmicks retain
+their Cursed Body selection and duration.
+
+Both source move callers clear last/counter-move history before selecting a
+called move, whose text deliberately leaves it cleared. Metronome now joins
+Sleep Talk in the source history adapter. This also makes subsequent Disable
+fail after Metronome; Encore continues to reject it. Ordinary later actions
+restore their own history. No target identifiers, save layouts or capacities
+change.
+
+`build_cursed_body.py` pins the ability, shared Disable, called-move history,
+post-hit gates, Future Sight exclusion and Mold Breaker exception list. Eleven
+battle groups (82 cases per profile) cover both sides, all four slots, last PP,
+contact/noncontact moves, the 30% chance, miss/protection/immunity gates,
+intact substitutes, holder knockouts, Mold Breaker, existing Disable, Mental
+Herb retention or consumption, expiry, switching, Future Sight and reactions to
+Metronome after a hit, miss or protection. Three direct Cursed Body groups
+reproduced the old runtime's eligibility failures before the fix.
+
+Exact source RNG/call ordering, substitute-breaking hits, all multi-hit and
+recoil/self-faint cases, charging/recharge, disobedience, reflected moves, item-cure order,
+other history consumers and original presentation remain separate audits.
+Expansion-only callers, formats and gimmicks are not certified as source
+behavior. The existing native hit/ability/item scheduling remains in use.
+
+Both production ROMs build. All eleven focused groups pass in both profiles,
+along with all 101 earlier source move groups, six AI timing checks, 54 source
+checks and 12 ARM probes. The full native suite passes 5,461 tests, with the
+same nine expected failures and 585 existing TODOs. The production audit has
+no new or changed gaps. The same final Johto ROM passes all 12 demo checks,
+101 campaign checks and 19 directed warp traversals, including Falkner, rewards
+and Save/reset/Continue.

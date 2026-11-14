@@ -1605,6 +1605,67 @@ demo-campaign gate.
 Johto ROM SHA-256:
 `795cb088ae9b985fafde0ccd8ed5bef30ad1fdfdc6abcf3956ab531640f53bba`.
 
+## Source Cursed Body eligibility and called-move history
+
+Source `CursedBodyAbility` checks Future Sight, rolls 3/10, and calls the shared
+`BattleCommand_disable`. The command rejects cleared history, Struggle, an
+already-active Disable, unknown moves and zero remaining PP before showing
+the ability. It starts the existing source Disable counter at five and checks
+Mental Herb. The ordinary post-action tick makes that four, followed by the
+normal end-turn countdown. Native Cursed Body previously bypassed the source
+history/PP validation by directly disabling the selected move.
+
+The source profile now resolves Cursed Body through the live recorded move and
+known slot, requiring remaining PP. Sleep Talk and Metronome clear both source
+last-move records before calling a move, and the called move's text skips
+restoring them. The existing history adapter now clears Metronome as well as
+Sleep Talk at PP deduction and move end. Ordinary subsequent moves restore
+their own history. Native Cursed Body behavior and active gimmick selection/
+duration are retained; IDs, save/volatile layouts and capacities do not change.
+
+The fixture generator verifies that Cursed Body can run when its holder is
+knocked out, that Mold Breaker does not suppress it, and that Future Sight
+cannot activate it. Two new exact-blob fixtures cover the Future Sight user
+predicate and Mold Breaker exception list. The other command, ability, history,
+PP and counter fixtures are already pinned. CI and the production audit now
+enforce this generated contract.
+
+Eleven focused groups cover 82 cases per profile: both sides; all four known
+slots; one/two PP; contact and noncontact attacks; statistical 30% activation;
+miss/protection/type-immunity gates; intact defender substitutes; attacker substitutes;
+Mold Breaker; holder knockout; active Disable; Mental Herb retained after a
+rejected attempt and consumed after a valid one; expiration and restored use;
+switch/reentry; Future Sight; Sleep Talk/Metronome history; and subsequent
+Disable/Encore after Metronome hits, misses or protection. Three direct Cursed
+Body groups reproduced the original runtime's eligibility failures. All eleven
+groups now pass in native and source profiles.
+
+Scope remains ordinary singles. Exact source RNG and call order,
+substitute-breaking hits, all multi-hit, recoil/self-faint, charging/recharge,
+disobedience, reflected moves, simultaneous
+cure ordering, other history consumers and original presentation are separate
+audits. Expansion-only callers, formats and gimmicks are not certified as source
+behavior. This closes the selected ordinary Cursed Body gate/history gap, not
+all Cursed Body or called-move behavior.
+
+Validation with Arm GNU GCC 13.2.1: both production ROMs build. All eleven
+focused groups (82 cases per profile), all 101 earlier source move groups and
+six AI timing checks pass, together with 54 source checks and 12 ARM compiler
+probes. The full native suite passes 5,461 tests, with the same nine expected
+failures and 585 existing TODOs (6,055 total), and no unexpected failures.
+
+The production-linked audit matches all 255 basic move/PP records, 18 target
+stat-drop records, 254 Sleep Talk eligibility entries and 43,792 teaching
+combinations. Its 109 recorded machine/lesson gaps remain unchanged, with no
+new findings. The same final Johto ROM passes all 12 demo checks, 101 campaign
+checks and 19 directed warp traversals, including starter branches, Sprout
+Tower, Falkner, the badge/Roost/Togepi rewards, resident schedules and
+Save/reset/Continue. Authentic source startup remains separate from this
+demo-campaign gate.
+
+Johto ROM SHA-256:
+`c958387e6754c237ca81296f0f1050ccb4760dee5a349c251fcb82bf50d1119b`.
+
 ## Next priorities
 
 1. Continue the source field-rule audit. Headbutt remains dormant; other field

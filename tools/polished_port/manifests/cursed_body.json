@@ -1,0 +1,24 @@
+{
+  "source_repository": "Rangi42/polishedcrystal",
+  "source_commit": "3fa43192379df5c3e7b09a08e4d5d79af4f02f42",
+  "source_variant": "default (FAITHFUL undefined)",
+  "profile": "B_POLISHED_MOVE_BALANCE",
+  "scope": "Ordinary singles Cursed Body known-move/remaining-PP gate, called-move history, duration and exits.",
+  "rules": {
+    "chance_numerator": 3,
+    "chance_denominator": 10,
+    "uses_shared_disable_command": true,
+    "requires_known_move_with_remaining_pp": true,
+    "sleep_talk_and_metronome_clear_history": true,
+    "works_on_holder_knockout": true,
+    "suppressed_by_mold_breaker": false,
+    "triggers_on_future_sight": false,
+    "mental_herb_cures_disable": true
+  },
+  "adapter": "Use the source-profile recorded move and validate its live known slot/PP before applying Disable. Import the existing source five-tick initialization; the post-action tick reduces it to four. Metronome joins Sleep Talk in clearing the source history record at PP deduction and move end.",
+  "gaps": [
+    "Exact source RNG stream and call ordering are not ported; native hit/ability/item scheduling remains in use.",
+    "All multi-hit, recoil/self-faint, charging/recharge, disobedience, reflected moves, simultaneous cure ordering, other history consumers and original presentation remain separate audits.",
+    "Expansion-only move callers, battle formats and gimmicks are not certified as source behavior; active gimmicks retain native Cursed Body selection and duration."
+  ]
+}

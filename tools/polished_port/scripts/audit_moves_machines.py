@@ -27,6 +27,7 @@ import build_secondary_stat_drops as stat_drops
 import build_sleep_talk_selection as sleep_talk
 import build_move_restrictions as restrictions
 import build_encore_commitment as encore_commitment
+import build_cursed_body as cursed_body
 from test_johto_demo_emulator import Game
 
 ROOT = source.ROOT
@@ -47,7 +48,7 @@ def inputs():
                           type=type_, accuracy=0 if accuracy == '-1' else int(accuracy),
                           pp=int(base_pp), chance=int(chance), category=category))
     outputs = learning.build()
-    for path, expected in {**outputs, **pp.build(), **pain_split.build(), **fixed_damage.build(), **retaliation.build(), **self_accuracy.build(), **typeless.build(), **metronome_struggle.build(), **stat_drops.build(), **sleep_talk.build(), **restrictions.build(), **encore_commitment.build()}.items():
+    for path, expected in {**outputs, **pp.build(), **pain_split.build(), **fixed_damage.build(), **retaliation.build(), **self_accuracy.build(), **typeless.build(), **metronome_struggle.build(), **stat_drops.build(), **sleep_talk.build(), **restrictions.build(), **encore_commitment.build(), **cursed_body.build()}.items():
         assert path.read_text() == expected, f'Stale imported source data: {path}'
     catalog = json.loads(outputs[learning.MANIFEST])
     assert [r['kind'] for r in catalog['teaching_catalog']] == ['TM']*75 + ['HM']*6 + ['MT']*31
