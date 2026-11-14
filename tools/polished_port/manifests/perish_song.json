@@ -1,0 +1,42 @@
+{
+  "source_repository": "Rangi42/polishedcrystal",
+  "source_commit": "3fa43192379df5c3e7b09a08e4d5d79af4f02f42",
+  "source_variant": "default (FAITHFUL undefined)",
+  "profile": "B_POLISHED_MOVE_BALANCE",
+  "scope": "Ordinary singles Perish Song opponent ability/type gates and independent user countdown.",
+  "rules": [
+    "Start the user counter even when the opponent is immune.",
+    "Bypass the general hit check and Fly/Dig hiding; retain the listed source accuracy.",
+    "Never refresh an existing counter; check opponent immunity only if that opponent has no counter.",
+    "Positive-priority Armor Tail immunity precedes the Prankster branch.",
+    "Prankster checks Dark typing, including hidden targets, and returns before Soundproof.",
+    "Other users check opponent Soundproof with Mold Breaker respected."
+  ],
+  "countdown": {
+    "source_initial": 4,
+    "displayed_counts": [
+      3,
+      2,
+      1,
+      0
+    ],
+    "faint_on_turn_including_use": 4,
+    "adapter": "Keep the native timer, initialized to 3 and displayed before decrement; it produces the same four end-turn counts."
+  },
+  "adapter": "Replace only the scoped per-target immunity decision and defer the global priority cancellation to it. Existing move-result flags feed the native counter setter. Retain target IDs, saves, counters and capacities.",
+  "controls": [
+    "both battle sides",
+    "Mold Breaker",
+    "Soundproof user",
+    "repeat failure and PP",
+    "switch/recast",
+    "Protect/Substitute/hiding",
+    "native profiles",
+    "active Terastal",
+    "doubles"
+  ],
+  "gaps": [
+    "Native animation/message scheduling is retained; source checks the user counter before displaying opponent immunity.",
+    "Complete end-turn faint ordering, Baton Pass, ability changes during a turn, called moves, AI choice, dynamic move types, formats and gimmicks remain separate audits."
+  ]
+}

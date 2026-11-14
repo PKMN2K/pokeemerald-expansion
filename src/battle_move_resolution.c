@@ -1549,6 +1549,11 @@ bool32 IsDazzlingAbility(enum Ability ability)
 
 static enum CancelerResult CancelerPriorityBlock(struct BattleCalcValues *cv)
 {
+    // Source Perish Song's opponent immunity cannot cancel the user's counter.
+    // Resolve it per target alongside Soundproof and Prankster instead.
+    if (IsPolishedPerishSong(cv->move, cv->battlerAtk))
+        return CANCELER_RESULT_SUCCESS;
+
     bool32 effect = FALSE;
     s32 priority = GetChosenMovePriority(cv->battlerAtk, cv->abilities[cv->battlerAtk]);
     enum MoveTarget moveTarget = GetBattlerMoveTargetType(cv->battlerAtk, cv->move);

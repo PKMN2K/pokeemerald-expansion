@@ -1933,3 +1933,60 @@ The same final Johto ROM passes all 12 demo checks, 101 campaign checks and
 19 directed warp traversals, including all starter branches, Sprout Tower,
 Falkner, the badge/Roost/Togepi rewards, resident schedules and Save/reset/
 Continue. The authentic source opening remains separate from this demo gate.
+
+### Source Perish Song target gates and countdown
+
+The pinned `perish_song.asm` starts the user's counter independently of the
+opponent, never refreshes an existing counter, and calls `checkpriority` only
+for an opponent without a counter. That command checks positive-priority Armor
+Tail first. Its Prankster branch checks Dark typing and returns before the
+Soundproof branch; other users check Soundproof with Mold Breaker respected.
+The effect script has no general hit check or Fly/Dig hidden-target gate.
+
+Expansion previously cancelled the entire Prankster move against Armor Tail,
+blocked a non-Dark Soundproof opponent even under Prankster, and applied its
+general hiding check to Fly/Dig targets. The source profile now
+resolves these gates per opponent, leaves the user's counter independent, and
+bypasses Fly/Dig hiding while retaining the separate ability/type immunities.
+Native profiles, doubles, active gimmicks and dynamically retyped Perish Song
+retain their existing paths. No new counters, IDs, save layouts or capacity
+limits are introduced.
+
+The native countdown representation is retained: it starts at three and prints
+before decrement, whereas the source starts at four and decrements before
+printing. Both display 3, 2, 1, 0 and faint on the fourth end turn including use.
+`build_perish_song.py` verifies the exact pinned command, effect-script command
+list, priority and immunity branch order, counter non-refresh and end-turn
+countdown. One new exact-blob fixture supplies the move command; existing
+fixtures supply the other routines. CI and the production audit check the
+manifest and dedicated battle prefix.
+
+Nine groups cover 56 cases per profile: both sides; the ordinary/Prankster/Mold
+Breaker versus ordinary/Soundproof/Armor Tail matrix; hidden Dark targets;
+each countdown turn through fainting; repeat failure through the last PP;
+switch/recast without refreshing the user; Protect, Substitute, Fly and Dig;
+a Soundproof user; and native Terastal/double-battle controls. The ability
+matrix reproduced the original failure before the runtime correction. The
+hidden-target control separately reproduced the inherited hiding-check gap.
+
+Scope remains these ordinary singles gates and countdown controls. Native
+animation/message scheduling is retained: the source updates the user counter
+before displaying opponent immunity. Complete end-turn faint ordering, Baton
+Pass, mid-turn ability changes, called moves, AI choice, dynamically retyped
+moves and optional formats/gimmicks remain separate audits.
+
+Validation with Arm GNU GCC 13.2.1: both production ROMs build. All nine
+focused groups (56 cases per profile), all 147 earlier source move groups and
+six AI timing checks pass, along with 58 source checks and 12 ARM compiler
+probes. The full native suite passes 5,505 tests, with nine unchanged expected
+failures and 585 existing TODOs (6,099 total), and no unexpected failures.
+
+The production-linked audit matches all 255 basic move/PP records, 18 target
+stat-drop records, 254 Sleep Talk eligibility entries and 43,792 teaching
+combinations. The 109 recorded machine/lesson gaps are unchanged, with no new
+or changed findings.
+
+The same final Johto ROM passes all 12 demo checks, 101 campaign checks and
+19 directed warp traversals, including all starter branches, Sprout Tower,
+Falkner, the badge/Roost/Togepi rewards, resident schedules and Save/reset/
+Continue. The authentic source opening remains separate from this demo gate.

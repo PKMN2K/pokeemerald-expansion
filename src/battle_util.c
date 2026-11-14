@@ -2280,8 +2280,57 @@ u32 NumFaintedBattlersByAttacker(enum BattlerId battlerAtk)
     return numMonsFainted;
 }
 
+bool32 IsPolishedPerishSong(enum Move move, enum BattlerId battler)
+{
+    return B_POLISHED_MOVE_BALANCE
+        && move == MOVE_PERISH_SONG
+        && !IsDoubleBattle()
+        && GetActiveGimmick(battler) == GIMMICK_NONE
+        && GetActiveGimmick(GetOppositeBattler(battler)) == GIMMICK_NONE
+        && GetBattleMoveType(move) == TYPE_NORMAL;
+}
+
+static bool32 CanTargetBlockPolishedPerishSong(struct DamageContext *ctx)
+{
+    const u8 *script = NULL;
+    bool32 prankster = ctx->abilities[ctx->battlerAtk] == ABILITY_PRANKSTER;
+
+    // Source starts the user's counter independently, and never refreshes an
+    // existing counter. Only an unaffected opponent reaches checkpriority.
+    if (ctx->battlerAtk == ctx->battlerDef || gBattleMons[ctx->battlerDef].volatiles.perishSong)
+        return FALSE;
+
+    if (prankster && ctx->abilities[ctx->battlerDef] == ABILITY_ARMOR_TAIL)
+        script = BattleScript_AbilityProtectedTarget;
+    else if (prankster)
+    {
+        // The source Prankster branch returns before its Soundproof check.
+        if (IS_BATTLER_OF_TYPE(ctx->battlerDef, TYPE_DARK))
+            script = BattleScript_DoesntAffectScripting;
+    }
+    else if (ctx->abilities[ctx->battlerDef] == ABILITY_SOUNDPROOF)
+        script = BattleScript_AbilityProtectedTarget;
+
+    if (script == NULL)
+        return FALSE;
+    if (ctx->runScript)
+    {
+        gBattleScripting.battler = ctx->battlerDef;
+        if (script == BattleScript_AbilityProtectedTarget)
+        {
+            gLastUsedAbility = ctx->abilities[ctx->battlerDef];
+            gBattlerAbility = ctx->battlerDef;
+        }
+        BattleScriptCall(script);
+    }
+    return TRUE;
+}
+
 bool32 CanMoveBeBlockedByTarget(struct DamageContext *ctx, s32 movePriority)
 {
+    if (IsPolishedPerishSong(ctx->move, ctx->battlerAtk))
+        return CanTargetBlockPolishedPerishSong(ctx);
+
     return CanAbilityAbsorbMove(ctx)
         || CanTargetBlockPranksterMove(ctx, movePriority)
         || IsPowderMoveBlocked(ctx);
@@ -10671,6 +10720,11 @@ bool32 IsSemiInvulnerable(enum BattlerId battler, enum SemiInvulnerableExclusion
 
 static bool32 CanBreakThroughSemiInvulnerablityInternal(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Ability abilityAtk, enum Ability abilityDef, enum Move move, enum SemiInvulnerableState state)
 {
+    // Source Perish Song has neither a hit check nor a hidden-opponent gate.
+    if (IsPolishedPerishSong(move, battlerAtk)
+     && (state == STATE_ON_AIR || state == STATE_UNDERGROUND))
+        return TRUE;
+
     // The source effect has its own Fly/Dig guard after the general hit check.
     // No Guard and Lock-On cannot bypass that effect-level condition.
     if (B_POLISHED_PAIN_SPLIT

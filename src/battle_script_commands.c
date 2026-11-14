@@ -6629,7 +6629,8 @@ static void Cmd_trysetperishsong(void)
     {
         if (gBattleMons[i].volatiles.perishSong
             || IsBattlerUnaffectedByMove(i)
-            || BlocksPrankster(gCurrentMove, gBattlerAttacker, i, TRUE)
+            || (!IsPolishedPerishSong(gCurrentMove, gBattlerAttacker)
+                && BlocksPrankster(gCurrentMove, gBattlerAttacker, i, TRUE))
             || gBattleMons[i].volatiles.semiInvulnerable == STATE_COMMANDER)
         {
             notAffectedCount++;
