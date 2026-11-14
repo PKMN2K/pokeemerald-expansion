@@ -1647,7 +1647,7 @@ battle groups cover both sides and action orders, expiration and resumed move
 selection, active reapplication, missing history/PP, early Encore exhaustion,
 Mental Herb clearing, switching and a paralysis-interrupted action. Mental Herb
 tests select the already-matching move: the source's prewritten same-turn move
-after curing Encore and Unnerve interactions remain outside this timer suite.
+after curing Encore and Unnerve interactions are covered by the next suite below.
 Full called-move eligibility/history, disobedience, move replacement, Cursed
 Body application gates, global turn ordering, AI and presentation remain
 separate audits. Passing these tests does not certify every Encore/Disable
@@ -1660,3 +1660,41 @@ the nine expected failures and 585 existing TODOs are unchanged. The production
 move/machine audit has no new or changed gaps. The same rebuilt Johto ROM
 passes all 12 demo checks, 101 campaign checks and 19 directed warp traversals,
 including Falkner and the post-battle rewards.
+
+### Source Encore commitment through Mental Herb
+
+Source Encore writes the target's pending move before checking Mental Herb.
+The item clears Encore but does not restore the original selection. When the
+slower target acts, `DoTurn` reloads that pending move and resolves its known
+move slot for PP consumption. Native Expansion instead resumed the original
+selection after the cure. The source profile now commits the pending ordinary
+move slot before item resolution, so the forced move still runs on that turn.
+Normal action selection restores free choice next turn. Already-acted targets
+are unaffected. No new state, IDs or save fields are introduced.
+
+`build_encore_commitment.py` verifies the complete pinned command, battle-variable
+mapping, cure, execution and PP path. It also checks that source Unnerve only
+suppresses edible berries; Mental Herb remains usable. The native implementation
+already matches that rule and is retained with live regression coverage.
+
+Seven battle groups (56 cases per profile) cover both sides, every remembered
+move slot, damaging and self-target moves, correct PP consumption, next-turn
+choice, already-acted targets, active Encore without a herb, rejected Encore,
+full paralysis, switching/reentry, and Encore/Disable/Attract cures with and
+without Unnerve. Before the runtime fix, the two pending-choice groups failed
+in the source profile. Both profiles now pass all seven groups.
+
+The adapter only rewrites a pending ordinary move action without an active
+gimmick. Full called-move eligibility/history, disobedience, charging/recharge,
+priority/order edges, simultaneous Mental Herb conditions, complete item/ability
+suppression and source presentation remain separate audits. Expansion-only
+formats and gimmicks retain their native framework. This suite does not claim
+complete Encore or Mental Herb parity.
+
+Both production ROMs build. All seven focused groups pass in both profiles,
+along with every earlier source move suite, six AI timing checks, 53 source
+checks and 12 ARM probes. The full native suite passes 5,450 tests, with the
+same nine expected failures and 585 existing TODOs. The production audit has
+no new or changed gaps. The same rebuilt Johto ROM passes all 12 demo checks,
+101 campaign checks and 19 directed warp traversals, including Falkner and
+the post-battle rewards.

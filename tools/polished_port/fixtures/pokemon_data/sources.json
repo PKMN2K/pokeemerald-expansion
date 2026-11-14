@@ -2002,6 +2002,16 @@
       "path": "engine/battle/move_effects/attract.asm",
       "fixture": "engine__battle__move_effects__attract.asm.b64",
       "git_blob_sha1": "16b99ac6e25eadd52c4d134217662b7a5e2b3e54"
+    },
+    {
+      "path": "home/battle_vars.asm",
+      "fixture": "home__battle_vars.asm.b64",
+      "git_blob_sha1": "23d6ec172bec2c3dd0dc948df3b32477990e5dc4"
+    },
+    {
+      "path": "data/items/edible_berries.asm",
+      "fixture": "data__items__edible_berries.asm.b64",
+      "git_blob_sha1": "4296a383167270922c050bfe2f1d9481f8822067"
     }
   ]
 }

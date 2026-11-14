@@ -108,6 +108,7 @@ jobs:
           python3 tools/polished_port/scripts/build_secondary_stat_drops.py --check
           python3 tools/polished_port/scripts/build_sleep_talk_selection.py --check
           python3 tools/polished_port/scripts/build_move_restrictions.py --check
+          python3 tools/polished_port/scripts/build_encore_commitment.py --check
           python3 tools/polished_port/scripts/build_rock_smash.py --check
           python3 tools/polished_port/scripts/test_rock_smash.py
           python3 tools/polished_port/scripts/build_flash.py --check
@@ -1169,6 +1170,7 @@ jobs:
           make -j$(nproc) -O TEST=1 POLISHED_MOVE_BALANCE_TEST=1 check TESTS='Polished secondary stat drops'
           make -j$(nproc) -O TEST=1 POLISHED_MOVE_BALANCE_TEST=1 check TESTS='Polished Sleep Talk selection'
           make -j$(nproc) -O TEST=1 POLISHED_MOVE_BALANCE_TEST=1 check TESTS='Polished move restrictions'
+          make -j$(nproc) -O TEST=1 POLISHED_MOVE_BALANCE_TEST=1 check TESTS='Polished Encore commitment'
           make -j$(nproc) -O TEST=1 POLISHED_MOVE_BALANCE_TEST=1 check TESTS='AI thinking time'
 
       - name: Exercise evolution completion and cancellation in mGBA

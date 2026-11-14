@@ -1,0 +1,19 @@
+{
+  "source_repository": "Rangi42/polishedcrystal",
+  "source_commit": "3fa43192379df5c3e7b09a08e4d5d79af4f02f42",
+  "source_variant": "default (FAITHFUL undefined)",
+  "profile": "B_POLISHED_MOVE_BALANCE",
+  "scope": "Ordinary singles Encore pending move after a Mental Herb cure, correct move-slot PP, subsequent free selection and Mental Herb immunity to Unnerve.",
+  "rules": {
+    "encore_writes_pending_move_before_cure": true,
+    "cure_clears_encore_without_restoring_pending_move": true,
+    "move_execution_updates_pp_slot_from_pending_move": true,
+    "unnerve_blocks_mental_herb": false
+  },
+  "adapter": "Commit an unacted ordinary move action to the validated Encore slot before item resolution. Existing action selection replaces that slot on the next turn; no new saved or volatile fields.",
+  "gaps": [
+    "Full called-move eligibility/history, disobedience, charging/recharge and priority/order edge cases remain separate audits.",
+    "Mental Herb cure ordering with simultaneous conditions, full item/ability suppression, and source presentation remain separate audits.",
+    "Expansion-only formats and gimmicks retain their native framework; pending selection is only rewritten for ordinary move actions without an active gimmick."
+  ]
+}

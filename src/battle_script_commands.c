@@ -6174,6 +6174,15 @@ static void Cmd_trysetencore(void)
         if (gBattleMons[gBattlerTarget].volatiles.encoredMove != GetBattlerChosenMove(gBattlerTarget))
             gBattleStruct->moveTarget[gBattlerTarget] = SetRandomTarget(gBattlerTarget);
 
+        // Source Encore writes the pending move before checking Mental Herb.
+        // The cure clears the lock, but DoTurn still executes that move and
+        // consumes its PP. Normal selection replaces this slot next turn.
+        if (B_POLISHED_MOVE_BALANCE
+         && !HasBattlerActedThisTurn(gBattlerTarget)
+         && gChosenActionByBattler[gBattlerTarget] == B_ACTION_USE_MOVE
+         && GetActiveGimmick(gBattlerTarget) == GIMMICK_NONE)
+            gBattleStruct->chosenMovePositions[gBattlerTarget] = i;
+
         u8 turns;
         if (B_POLISHED_MOVE_BALANCE)
         {

@@ -59,7 +59,7 @@ def build():
                'encore': 'Always starts at 4; no adjustment for whether the target has acted. Clear early if the move has no PP.',
                'active_reapplication': 'Fails without refreshing the counter.'},
         gaps=['Full called-move history/eligibility, disobedience, move replacement and every interaction with other move restrictions remain separate audits.',
-              'Mental Herb tests use an already-matching selected move: the source prewritten same-turn move after an Encore cure, and Unnerve interactions, remain outside this timer suite.',
+              'Mental Herb timer tests use an already-matching selected move. The separate encore_commitment suite covers ordinary pending-move preservation after a cure and Mental Herb under Unnerve.',
               'Cursed Body application gates, ability/item interactions beyond the tested cases, smart AI and source presentation remain separate audits.',
               'Global source action order, end-turn order, RNG streams and optional Expansion formats/gimmicks are not imported by this timer adapter.'])
     return {source.ROOT/'include/constants/polished_move_restrictions.h': header,

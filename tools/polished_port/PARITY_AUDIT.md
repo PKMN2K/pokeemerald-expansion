@@ -1525,7 +1525,7 @@ Herb clearing/consumption and counters after full paralysis.
 
 Mental Herb tests use the already-selected matching move. The source writes the
 pending move before curing Encore; preserving that choice when it originally
-differed, plus Unnerve, remains outside this timer suite. Full called-move
+differed, plus Unnerve, is covered by the following commitment suite. Full called-move
 history/eligibility, disobedience, move replacement, Cursed Body application
 gates, other restriction interactions, global action/end-turn ordering, AI and
 presentation remain separate audits. Expansion-only formats and gimmicks keep
@@ -1549,6 +1549,61 @@ remains separate from this demo-campaign gate.
 
 Johto ROM SHA-256:
 `63e849ba3887279713370940d3e2030cd07213536f0ff23144a918e28989e22f`.
+
+## Source Encore commitment through Mental Herb
+
+Pinned source Encore assigns `BATTLE_VARS_MOVE_OPP` before calling the Mental
+Herb handler. `home/battle_vars.asm` maps that variable to the opponent's pending
+move. The cure clears the Encore nibble while preserving Choice bookkeeping;
+it never restores the pending move. `DoTurn` later calls `UpdateMoveData`, which
+finds that move's current known slot for `BattleConsumePP`. Thus a slower target
+still executes the Encore-selected move after its herb cures the lock. The
+native engine instead resumed the original selection in this situation.
+
+The source profile now copies the validated Encore slot into the target's
+pending ordinary move action before item resolution. This retains correct PP
+and normal target resolution, and ordinary selection replaces it on the next
+turn. Already-acted targets, non-move actions and active gimmicks are not
+rewritten. Native profiles retain their own behavior. IDs, saved/volatile
+layouts, capacities and the existing active-Encore path remain unchanged.
+
+`build_encore_commitment.py` verifies the entire pinned call chain with two
+additional exact-blob fixtures. It also checks source `GetUserItemAfterUnnerve`
+against all 22 edible berries: Mental Herb is not suppressed. The matching
+native item behavior is retained. The generator is enforced in CI and the
+production move/machine audit's source-input checks.
+
+Seven focused groups cover 56 battle cases per profile: both sides; all four
+remembered slots; Tackle and Splash; correct PP and herb consumption; next-turn
+free choice; already-acted targets; active Encore without a herb; no history,
+exhausted PP and failed Sleep Talk rejection; an action stopped by paralysis;
+switch/reentry; and Encore, Disable and Attract cures with/without Unnerve.
+Both pending-choice groups failed against the original runtime before the fix.
+All seven groups now pass in source and native profiles.
+
+Scope remains ordinary singles. Full called-move history/eligibility,
+disobedience, charging/recharge, priority/order edge cases, Mental Herb cure
+ordering with simultaneous conditions, complete item/ability suppression,
+source presentation and Expansion-only formats/gimmicks are separate audits.
+No claim of complete Encore or Mental Herb parity is made.
+
+Validation with Arm GNU GCC 13.2.1: both production ROMs build. All seven
+focused groups (56 cases per profile), the 94 earlier source move groups and
+six AI timing checks pass, together with 53 source checks and 12 ARM compiler
+probes. The full native suite passes 5,450 tests, with the same nine expected
+failures and 585 existing TODOs (6,044 total), and no unexpected failures.
+
+The production-linked audit matches all 255 basic move/PP records, 18 target
+stat-drop records, 254 Sleep Talk eligibility entries and 43,792 teaching
+combinations. Its 109 recorded machine/lesson gaps remain unchanged, with no
+new findings. The same final Johto ROM passes all 12 demo checks, 101 campaign
+checks and 19 directed warp traversals, including all starter branches, Sprout
+Tower, Falkner, the badge/Roost/Togepi rewards, resident schedules and
+Save/reset/Continue. Authentic source startup remains separate from this
+demo-campaign gate.
+
+Johto ROM SHA-256:
+`795cb088ae9b985fafde0ccd8ed5bef30ad1fdfdc6abcf3956ab531640f53bba`.
 
 ## Next priorities
 
