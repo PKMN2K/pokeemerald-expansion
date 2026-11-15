@@ -45,13 +45,19 @@ def build():
     assert 'call GetOpponentAbilityAfterMoldBreaker\n\tcp SUCTION_CUPS' in roar
     assert 'call CheckAnyOtherAliveOpponentMons\n\tjr nz, .trainer_success' in roar
     assert 'ld a, c\n\tcp b\n\tjr nc, .wild_succeed' in roar
-    assert 'cp BATTLETYPE_ROAMING\n\tjr nz, .but_it_failed' in roar
+    wild = [line for line in source.default_lines(roar.split('\n.wild_got_party_vars\n', 1)[1].split('\n.wild_succeed\n', 1)[0]) if line]
+    assert wild == ['ld a, c', 'cp b', 'jr nc, .wild_succeed', 'pop af',
+                    'jr z, .but_it_failed', 'ld a, [wBattleType]',
+                    'cp BATTLETYPE_ROAMING', 'jr nz, .but_it_failed', 'push af']
+    turn = roar.split('\n.wild\n', 1)[1].split('\n.wild_got_party_vars\n', 1)[0]
+    assert 'ldh a, [hBattleTurn]\n\tand a\n\tpush af\n\tjr z, .wild_got_party_vars' in turn
+    assert 'ld a, b\n\tld b, c\n\tld c, a' in turn
     assert 'ld a, 1 << SWITCH_DEFERRED | 1 << SWITCH_TARGET | 1 << SWITCH_FORCED' in roar
     bounce = files['engine/battle/move_effects/magic_bounce.asm']
     assert 'cp ATKFAIL_PROTECT\n\tret z' in bounce
     report = dict(source_repository='Rangi42/polishedcrystal', source_commit=source.PIN,
         source_variant='default (FAITHFUL undefined)', profile='B_POLISHED_MOVE_BALANCE',
-        scope='Roar execution hit gates and Normal-type Prankster/Dark/Soundproof ordering in singles without active gimmicks; selected native forced-switch regressions.',
+        scope='Roar execution hit gates and Normal-type Prankster/Dark/Soundproof ordering in singles without active gimmicks; roaming-opponent level exemption; selected native forced-switch regressions.',
         rules=['Roar calls checkhit before priority, reflection and forced switching.',
                'Protect blocks Roar even with No Guard or Substitute, and prevents Magic Bounce reflection.',
                'No Guard on either side bypasses Fly/Dig, but Lock-On is checked after Fly/Dig and cannot bypass them.',
@@ -59,9 +65,10 @@ def build():
                'Roar priority is -6, raised to -5 by Prankster; Armor Tail does not block either negative priority.',
                'Prankster Roar fails against Dark targets before Magic Bounce; its non-Dark branch returns before the Soundproof check.',
                'Trainer Roar needs a living replacement. Ordinary wild Roar requires user level at least target level on either side.',
+               'Only a roaming opponent may use Roar against a higher-level target; the player still needs an equal or higher level, including after reflection.',
                'Suction Cups is checked after Mold Breaker; selected Soundproof/Mold Breaker cases retain the native result.'],
-        adapter='Apply Protect and hidden-target rules during move execution. Resolve source Prankster Dark immunity before reflection and bypass Soundproof for non-Dark targets of Prankster Roar. Preserve native AI estimation and the existing switch/party machinery.',
-        gaps=['Source special encounter prohibitions and the roaming opponent level exemption remain separate from ordinary wild coverage.',
+        adapter='Apply Protect and hidden-target rules during move execution. Resolve source Prankster Dark immunity before reflection and bypass Soundproof for non-Dark targets of Prankster Roar. Allow the source roaming opponent level exception only for Roar in singles without active gimmicks. Preserve native AI estimation and the existing switch/party machinery. Clear completed reflection target bookkeeping in both profiles so the reflector can attack on later turns.',
+        gaps=['Source special encounter prohibitions, roaming encounter selection, flee AI and post-battle roaming persistence remain separate audits.',
               'Full source reflected-move execution, turn ordering beyond Roar priority, deferred switch timing, candidate selection, ability activation order and presentation remain separate audits.',
               'Roar reflection through Substitute is covered by the subsequent Magic Bounce suite: Roar belongs to the source sound bypass list.',
               'Doubles, active gimmicks and Whirlwind retain native behavior. Whirlwind is not a move in the pinned source; broader combinations with optional protective effects remain unaudited.',

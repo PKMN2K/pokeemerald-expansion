@@ -5643,8 +5643,16 @@ static void Cmd_forcerandomswitch(void)
     }
     else
     {
-        // In normal wild doubles, Roar will always fail if the user's level is less than the target's.
-        if (gBattleMons[gBattlerAttacker].level >= gBattleMons[gBattlerTarget].level)
+        // Source Roar exempts only the roaming opponent from the wild level check.
+        // Use the actual attacker here, including after Magic Bounce.
+        bool32 polishedRoamer = B_POLISHED_MOVE_BALANCE
+            && gCurrentMove == MOVE_ROAR
+            && (gBattleTypeFlags & BATTLE_TYPE_ROAMER)
+            && !IsOnPlayerSide(gBattlerAttacker)
+            && !IsDoubleBattle()
+            && GetActiveGimmick(gBattlerAttacker) == GIMMICK_NONE
+            && GetActiveGimmick(gBattlerTarget) == GIMMICK_NONE;
+        if (gBattleMons[gBattlerAttacker].level >= gBattleMons[gBattlerTarget].level || polishedRoamer)
             gBattlescriptCurrInstr = BattleScript_RoarSuccessEndBattle;
         else
             gBattlescriptCurrInstr = cmd->failInstr;

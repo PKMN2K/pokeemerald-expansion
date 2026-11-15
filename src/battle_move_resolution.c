@@ -5230,6 +5230,11 @@ static enum MoveEndResult MoveEndClearBits(struct BattleCalcValues *cv)
     // go to next Bouncer or original attacker if possible
     if (gBattleStruct->bouncedMoveIsUsed)
     {
+        // The reflected action is finished. Clear its target bookkeeping
+        // before restoring the original attacker, or the reflector's next
+        // attack can skip damage against these targets.
+        for (enum BattlerId battler = 0; battler < gBattlersCount; battler++)
+            gBattleStruct->battlerState[cv->battlerAtk].targetsDone[battler] = FALSE;
         RestoreAttacker();
         RestoreTarget();
         gBattleStruct->bouncedMoveIsUsed = FALSE;

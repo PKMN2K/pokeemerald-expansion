@@ -2670,6 +2670,54 @@ Falkner, badge/Roost/Togepi rewards and Save/reset/Continue.
 Validated Johto ROM SHA-256:
 `fb45d6078e956b443d0849c22e11955eccffc4640b3adef16f84b6670d659ab3`.
 
+## Source Roar roaming level exemption
+
+Source `roar.asm` compares the user and target levels, then exempts only the
+opponent in `BATTLETYPE_ROAMING`. The player never receives that exemption.
+The existing engine rejected every lower-level user. The source profile now
+allows the roaming opponent's Roar through the final level gate in singles
+without active gimmicks. Earlier hit/ability gates remain in force; a reflected
+Roar uses its actual post-reflection user. Ordinary wild battles, trainer
+switches, optional Whirlwind, doubles and active gimmicks retain their paths.
+No move IDs, save layout, roster capacities or shared AI estimates change.
+
+The pinned fixture check now validates the complete level/side/roaming branch
+and the preceding side-dependent level swap. `ROAMING_BATTLE_TEST` adds the
+real roamer flag to scripted wild battle tests; it does not replace the live
+Roar command or claim flee-AI coverage. Six groups cover 56 cases per profile:
+both sides and three level relations with/without a reserve; ability gates
+including Mold Breaker and Prankster; Protect/Substitute; either-side Terastal
+and Whirlwind controls; and both directions of Magic Bounce at unequal levels.
+Failed escape cases execute a later damaging move to prove battle continuation.
+That check exposed stale `targetsDone` state in the native reflection return:
+the reflector's following attack played its animation but dealt no damage.
+`MoveEndClearBits` now clears the reflector's target bookkeeping before
+restoring the original attacker, in both profiles. Eight of these cases
+cover both sides, failed Roar and successful Growl, and Magic Bounce/Magic Coat.
+The unchanged runtime failed both the roaming-level and reflection-continuation
+regressions. This cleanup does not change which moves can be reflected.
+
+This closes the roaming opponent's Roar level exemption. Source special
+encounter prohibitions, roaming encounter selection, flee AI, post-battle
+roaming persistence, deferred switching, presentation and broader optional
+interactions remain separate audits.
+
+Validation: both production builds, all 67 source checks and all 12 ARM
+compiler probes passed. The full native suite passed 5,623 groups, with nine
+expected failures and 585 existing TODOs; no unexpected failures occurred.
+The source profile passed 274 source-rule groups and six AI timing groups
+without changing timing ceilings. All six new groups (56 cases per profile)
+passed with deprecated/unused warning errors enabled.
+
+The production-linked audit retains zero audited move-data differences,
+255 matching reflection flags and zero teaching compatibility mismatches;
+its 109 known gaps have no new or changed entries. The same final Johto ROM
+passed all 12 demo checks and 101 campaign checks, including 19 directed warps,
+Falkner, badge/Roost/Togepi rewards and Save/reset/Continue.
+
+Validated Johto ROM SHA-256:
+`f7b7e88a93cc10d1f3d133bc4d18246db957257843420bf890a8afdfd892b2f2`.
+
 ## Next priorities
 
 1. Continue the source field-rule audit. Headbutt remains dormant; other field
