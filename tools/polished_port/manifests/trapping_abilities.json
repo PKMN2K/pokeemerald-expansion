@@ -1,0 +1,4822 @@
+{
+  "source_repository": "Rangi42/polishedcrystal",
+  "source_commit": "3fa43192379df5c3e7b09a08e4d5d79af4f02f42",
+  "source_variant": "default (FAITHFUL undefined)",
+  "profile": "B_POLISHED_MOVE_BALANCE",
+  "scope": "Ordinary singles ability-trap eligibility and mutual cancellation; native grounding supplies optional field extensions.",
+  "rules": [
+    "Ghost targets cannot be trapped by these abilities.",
+    "Shadow Tag traps other targets; Magnet Pull requires Steel; Arena Trap requires a grounded target.",
+    "Check each direction independently. If both apply, neither battler is ability-trapped.",
+    "Same-name abilities do not grant an independent exemption: a Ghost Shadow Tag holder can trap a non-Ghost Shadow Tag holder.",
+    "Neutralizing Gas suppresses the ability before eligibility. Run Away remains an earlier switch exemption; move traps remain separate."
+  ],
+  "matrix_vectors": [
+    {
+      "species": [
+        "RATTATA",
+        "RATTATA"
+      ],
+      "abilities": [
+        "KEEN_EYE",
+        "KEEN_EYE"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 0
+    },
+    {
+      "species": [
+        "RATTATA",
+        "MAGNEMITE"
+      ],
+      "abilities": [
+        "KEEN_EYE",
+        "KEEN_EYE"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 0
+    },
+    {
+      "species": [
+        "RATTATA",
+        "PIDGEY"
+      ],
+      "abilities": [
+        "KEEN_EYE",
+        "KEEN_EYE"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 0
+    },
+    {
+      "species": [
+        "RATTATA",
+        "GASTLY"
+      ],
+      "abilities": [
+        "KEEN_EYE",
+        "KEEN_EYE"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 0
+    },
+    {
+      "species": [
+        "RATTATA",
+        "SKARMORY"
+      ],
+      "abilities": [
+        "KEEN_EYE",
+        "KEEN_EYE"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 0
+    },
+    {
+      "species": [
+        "MAGNEMITE",
+        "RATTATA"
+      ],
+      "abilities": [
+        "KEEN_EYE",
+        "KEEN_EYE"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 0
+    },
+    {
+      "species": [
+        "MAGNEMITE",
+        "MAGNEMITE"
+      ],
+      "abilities": [
+        "KEEN_EYE",
+        "KEEN_EYE"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 0
+    },
+    {
+      "species": [
+        "MAGNEMITE",
+        "PIDGEY"
+      ],
+      "abilities": [
+        "KEEN_EYE",
+        "KEEN_EYE"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 0
+    },
+    {
+      "species": [
+        "MAGNEMITE",
+        "GASTLY"
+      ],
+      "abilities": [
+        "KEEN_EYE",
+        "KEEN_EYE"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 0
+    },
+    {
+      "species": [
+        "MAGNEMITE",
+        "SKARMORY"
+      ],
+      "abilities": [
+        "KEEN_EYE",
+        "KEEN_EYE"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 0
+    },
+    {
+      "species": [
+        "PIDGEY",
+        "RATTATA"
+      ],
+      "abilities": [
+        "KEEN_EYE",
+        "KEEN_EYE"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 0
+    },
+    {
+      "species": [
+        "PIDGEY",
+        "MAGNEMITE"
+      ],
+      "abilities": [
+        "KEEN_EYE",
+        "KEEN_EYE"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 0
+    },
+    {
+      "species": [
+        "PIDGEY",
+        "PIDGEY"
+      ],
+      "abilities": [
+        "KEEN_EYE",
+        "KEEN_EYE"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 0
+    },
+    {
+      "species": [
+        "PIDGEY",
+        "GASTLY"
+      ],
+      "abilities": [
+        "KEEN_EYE",
+        "KEEN_EYE"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 0
+    },
+    {
+      "species": [
+        "PIDGEY",
+        "SKARMORY"
+      ],
+      "abilities": [
+        "KEEN_EYE",
+        "KEEN_EYE"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 0
+    },
+    {
+      "species": [
+        "GASTLY",
+        "RATTATA"
+      ],
+      "abilities": [
+        "KEEN_EYE",
+        "KEEN_EYE"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 0
+    },
+    {
+      "species": [
+        "GASTLY",
+        "MAGNEMITE"
+      ],
+      "abilities": [
+        "KEEN_EYE",
+        "KEEN_EYE"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 0
+    },
+    {
+      "species": [
+        "GASTLY",
+        "PIDGEY"
+      ],
+      "abilities": [
+        "KEEN_EYE",
+        "KEEN_EYE"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 0
+    },
+    {
+      "species": [
+        "GASTLY",
+        "GASTLY"
+      ],
+      "abilities": [
+        "KEEN_EYE",
+        "KEEN_EYE"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 0
+    },
+    {
+      "species": [
+        "GASTLY",
+        "SKARMORY"
+      ],
+      "abilities": [
+        "KEEN_EYE",
+        "KEEN_EYE"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 0
+    },
+    {
+      "species": [
+        "SKARMORY",
+        "RATTATA"
+      ],
+      "abilities": [
+        "KEEN_EYE",
+        "KEEN_EYE"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 0
+    },
+    {
+      "species": [
+        "SKARMORY",
+        "MAGNEMITE"
+      ],
+      "abilities": [
+        "KEEN_EYE",
+        "KEEN_EYE"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 0
+    },
+    {
+      "species": [
+        "SKARMORY",
+        "PIDGEY"
+      ],
+      "abilities": [
+        "KEEN_EYE",
+        "KEEN_EYE"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 0
+    },
+    {
+      "species": [
+        "SKARMORY",
+        "GASTLY"
+      ],
+      "abilities": [
+        "KEEN_EYE",
+        "KEEN_EYE"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 0
+    },
+    {
+      "species": [
+        "SKARMORY",
+        "SKARMORY"
+      ],
+      "abilities": [
+        "KEEN_EYE",
+        "KEEN_EYE"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 0
+    },
+    {
+      "species": [
+        "RATTATA",
+        "RATTATA"
+      ],
+      "abilities": [
+        "KEEN_EYE",
+        "ARENA_TRAP"
+      ],
+      "source_trapped_mask": 1,
+      "native_trapped_mask": 1
+    },
+    {
+      "species": [
+        "RATTATA",
+        "MAGNEMITE"
+      ],
+      "abilities": [
+        "KEEN_EYE",
+        "ARENA_TRAP"
+      ],
+      "source_trapped_mask": 1,
+      "native_trapped_mask": 1
+    },
+    {
+      "species": [
+        "RATTATA",
+        "PIDGEY"
+      ],
+      "abilities": [
+        "KEEN_EYE",
+        "ARENA_TRAP"
+      ],
+      "source_trapped_mask": 1,
+      "native_trapped_mask": 1
+    },
+    {
+      "species": [
+        "RATTATA",
+        "GASTLY"
+      ],
+      "abilities": [
+        "KEEN_EYE",
+        "ARENA_TRAP"
+      ],
+      "source_trapped_mask": 1,
+      "native_trapped_mask": 1
+    },
+    {
+      "species": [
+        "RATTATA",
+        "SKARMORY"
+      ],
+      "abilities": [
+        "KEEN_EYE",
+        "ARENA_TRAP"
+      ],
+      "source_trapped_mask": 1,
+      "native_trapped_mask": 1
+    },
+    {
+      "species": [
+        "MAGNEMITE",
+        "RATTATA"
+      ],
+      "abilities": [
+        "KEEN_EYE",
+        "ARENA_TRAP"
+      ],
+      "source_trapped_mask": 1,
+      "native_trapped_mask": 1
+    },
+    {
+      "species": [
+        "MAGNEMITE",
+        "MAGNEMITE"
+      ],
+      "abilities": [
+        "KEEN_EYE",
+        "ARENA_TRAP"
+      ],
+      "source_trapped_mask": 1,
+      "native_trapped_mask": 1
+    },
+    {
+      "species": [
+        "MAGNEMITE",
+        "PIDGEY"
+      ],
+      "abilities": [
+        "KEEN_EYE",
+        "ARENA_TRAP"
+      ],
+      "source_trapped_mask": 1,
+      "native_trapped_mask": 1
+    },
+    {
+      "species": [
+        "MAGNEMITE",
+        "GASTLY"
+      ],
+      "abilities": [
+        "KEEN_EYE",
+        "ARENA_TRAP"
+      ],
+      "source_trapped_mask": 1,
+      "native_trapped_mask": 1
+    },
+    {
+      "species": [
+        "MAGNEMITE",
+        "SKARMORY"
+      ],
+      "abilities": [
+        "KEEN_EYE",
+        "ARENA_TRAP"
+      ],
+      "source_trapped_mask": 1,
+      "native_trapped_mask": 1
+    },
+    {
+      "species": [
+        "PIDGEY",
+        "RATTATA"
+      ],
+      "abilities": [
+        "KEEN_EYE",
+        "ARENA_TRAP"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 0
+    },
+    {
+      "species": [
+        "PIDGEY",
+        "MAGNEMITE"
+      ],
+      "abilities": [
+        "KEEN_EYE",
+        "ARENA_TRAP"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 0
+    },
+    {
+      "species": [
+        "PIDGEY",
+        "PIDGEY"
+      ],
+      "abilities": [
+        "KEEN_EYE",
+        "ARENA_TRAP"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 0
+    },
+    {
+      "species": [
+        "PIDGEY",
+        "GASTLY"
+      ],
+      "abilities": [
+        "KEEN_EYE",
+        "ARENA_TRAP"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 0
+    },
+    {
+      "species": [
+        "PIDGEY",
+        "SKARMORY"
+      ],
+      "abilities": [
+        "KEEN_EYE",
+        "ARENA_TRAP"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 0
+    },
+    {
+      "species": [
+        "GASTLY",
+        "RATTATA"
+      ],
+      "abilities": [
+        "KEEN_EYE",
+        "ARENA_TRAP"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 0
+    },
+    {
+      "species": [
+        "GASTLY",
+        "MAGNEMITE"
+      ],
+      "abilities": [
+        "KEEN_EYE",
+        "ARENA_TRAP"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 0
+    },
+    {
+      "species": [
+        "GASTLY",
+        "PIDGEY"
+      ],
+      "abilities": [
+        "KEEN_EYE",
+        "ARENA_TRAP"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 0
+    },
+    {
+      "species": [
+        "GASTLY",
+        "GASTLY"
+      ],
+      "abilities": [
+        "KEEN_EYE",
+        "ARENA_TRAP"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 0
+    },
+    {
+      "species": [
+        "GASTLY",
+        "SKARMORY"
+      ],
+      "abilities": [
+        "KEEN_EYE",
+        "ARENA_TRAP"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 0
+    },
+    {
+      "species": [
+        "SKARMORY",
+        "RATTATA"
+      ],
+      "abilities": [
+        "KEEN_EYE",
+        "ARENA_TRAP"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 0
+    },
+    {
+      "species": [
+        "SKARMORY",
+        "MAGNEMITE"
+      ],
+      "abilities": [
+        "KEEN_EYE",
+        "ARENA_TRAP"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 0
+    },
+    {
+      "species": [
+        "SKARMORY",
+        "PIDGEY"
+      ],
+      "abilities": [
+        "KEEN_EYE",
+        "ARENA_TRAP"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 0
+    },
+    {
+      "species": [
+        "SKARMORY",
+        "GASTLY"
+      ],
+      "abilities": [
+        "KEEN_EYE",
+        "ARENA_TRAP"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 0
+    },
+    {
+      "species": [
+        "SKARMORY",
+        "SKARMORY"
+      ],
+      "abilities": [
+        "KEEN_EYE",
+        "ARENA_TRAP"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 0
+    },
+    {
+      "species": [
+        "RATTATA",
+        "RATTATA"
+      ],
+      "abilities": [
+        "KEEN_EYE",
+        "MAGNET_PULL"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 0
+    },
+    {
+      "species": [
+        "RATTATA",
+        "MAGNEMITE"
+      ],
+      "abilities": [
+        "KEEN_EYE",
+        "MAGNET_PULL"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 0
+    },
+    {
+      "species": [
+        "RATTATA",
+        "PIDGEY"
+      ],
+      "abilities": [
+        "KEEN_EYE",
+        "MAGNET_PULL"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 0
+    },
+    {
+      "species": [
+        "RATTATA",
+        "GASTLY"
+      ],
+      "abilities": [
+        "KEEN_EYE",
+        "MAGNET_PULL"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 0
+    },
+    {
+      "species": [
+        "RATTATA",
+        "SKARMORY"
+      ],
+      "abilities": [
+        "KEEN_EYE",
+        "MAGNET_PULL"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 0
+    },
+    {
+      "species": [
+        "MAGNEMITE",
+        "RATTATA"
+      ],
+      "abilities": [
+        "KEEN_EYE",
+        "MAGNET_PULL"
+      ],
+      "source_trapped_mask": 1,
+      "native_trapped_mask": 1
+    },
+    {
+      "species": [
+        "MAGNEMITE",
+        "MAGNEMITE"
+      ],
+      "abilities": [
+        "KEEN_EYE",
+        "MAGNET_PULL"
+      ],
+      "source_trapped_mask": 1,
+      "native_trapped_mask": 1
+    },
+    {
+      "species": [
+        "MAGNEMITE",
+        "PIDGEY"
+      ],
+      "abilities": [
+        "KEEN_EYE",
+        "MAGNET_PULL"
+      ],
+      "source_trapped_mask": 1,
+      "native_trapped_mask": 1
+    },
+    {
+      "species": [
+        "MAGNEMITE",
+        "GASTLY"
+      ],
+      "abilities": [
+        "KEEN_EYE",
+        "MAGNET_PULL"
+      ],
+      "source_trapped_mask": 1,
+      "native_trapped_mask": 1
+    },
+    {
+      "species": [
+        "MAGNEMITE",
+        "SKARMORY"
+      ],
+      "abilities": [
+        "KEEN_EYE",
+        "MAGNET_PULL"
+      ],
+      "source_trapped_mask": 1,
+      "native_trapped_mask": 1
+    },
+    {
+      "species": [
+        "PIDGEY",
+        "RATTATA"
+      ],
+      "abilities": [
+        "KEEN_EYE",
+        "MAGNET_PULL"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 0
+    },
+    {
+      "species": [
+        "PIDGEY",
+        "MAGNEMITE"
+      ],
+      "abilities": [
+        "KEEN_EYE",
+        "MAGNET_PULL"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 0
+    },
+    {
+      "species": [
+        "PIDGEY",
+        "PIDGEY"
+      ],
+      "abilities": [
+        "KEEN_EYE",
+        "MAGNET_PULL"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 0
+    },
+    {
+      "species": [
+        "PIDGEY",
+        "GASTLY"
+      ],
+      "abilities": [
+        "KEEN_EYE",
+        "MAGNET_PULL"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 0
+    },
+    {
+      "species": [
+        "PIDGEY",
+        "SKARMORY"
+      ],
+      "abilities": [
+        "KEEN_EYE",
+        "MAGNET_PULL"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 0
+    },
+    {
+      "species": [
+        "GASTLY",
+        "RATTATA"
+      ],
+      "abilities": [
+        "KEEN_EYE",
+        "MAGNET_PULL"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 0
+    },
+    {
+      "species": [
+        "GASTLY",
+        "MAGNEMITE"
+      ],
+      "abilities": [
+        "KEEN_EYE",
+        "MAGNET_PULL"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 0
+    },
+    {
+      "species": [
+        "GASTLY",
+        "PIDGEY"
+      ],
+      "abilities": [
+        "KEEN_EYE",
+        "MAGNET_PULL"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 0
+    },
+    {
+      "species": [
+        "GASTLY",
+        "GASTLY"
+      ],
+      "abilities": [
+        "KEEN_EYE",
+        "MAGNET_PULL"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 0
+    },
+    {
+      "species": [
+        "GASTLY",
+        "SKARMORY"
+      ],
+      "abilities": [
+        "KEEN_EYE",
+        "MAGNET_PULL"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 0
+    },
+    {
+      "species": [
+        "SKARMORY",
+        "RATTATA"
+      ],
+      "abilities": [
+        "KEEN_EYE",
+        "MAGNET_PULL"
+      ],
+      "source_trapped_mask": 1,
+      "native_trapped_mask": 1
+    },
+    {
+      "species": [
+        "SKARMORY",
+        "MAGNEMITE"
+      ],
+      "abilities": [
+        "KEEN_EYE",
+        "MAGNET_PULL"
+      ],
+      "source_trapped_mask": 1,
+      "native_trapped_mask": 1
+    },
+    {
+      "species": [
+        "SKARMORY",
+        "PIDGEY"
+      ],
+      "abilities": [
+        "KEEN_EYE",
+        "MAGNET_PULL"
+      ],
+      "source_trapped_mask": 1,
+      "native_trapped_mask": 1
+    },
+    {
+      "species": [
+        "SKARMORY",
+        "GASTLY"
+      ],
+      "abilities": [
+        "KEEN_EYE",
+        "MAGNET_PULL"
+      ],
+      "source_trapped_mask": 1,
+      "native_trapped_mask": 1
+    },
+    {
+      "species": [
+        "SKARMORY",
+        "SKARMORY"
+      ],
+      "abilities": [
+        "KEEN_EYE",
+        "MAGNET_PULL"
+      ],
+      "source_trapped_mask": 1,
+      "native_trapped_mask": 1
+    },
+    {
+      "species": [
+        "RATTATA",
+        "RATTATA"
+      ],
+      "abilities": [
+        "KEEN_EYE",
+        "SHADOW_TAG"
+      ],
+      "source_trapped_mask": 1,
+      "native_trapped_mask": 1
+    },
+    {
+      "species": [
+        "RATTATA",
+        "MAGNEMITE"
+      ],
+      "abilities": [
+        "KEEN_EYE",
+        "SHADOW_TAG"
+      ],
+      "source_trapped_mask": 1,
+      "native_trapped_mask": 1
+    },
+    {
+      "species": [
+        "RATTATA",
+        "PIDGEY"
+      ],
+      "abilities": [
+        "KEEN_EYE",
+        "SHADOW_TAG"
+      ],
+      "source_trapped_mask": 1,
+      "native_trapped_mask": 1
+    },
+    {
+      "species": [
+        "RATTATA",
+        "GASTLY"
+      ],
+      "abilities": [
+        "KEEN_EYE",
+        "SHADOW_TAG"
+      ],
+      "source_trapped_mask": 1,
+      "native_trapped_mask": 1
+    },
+    {
+      "species": [
+        "RATTATA",
+        "SKARMORY"
+      ],
+      "abilities": [
+        "KEEN_EYE",
+        "SHADOW_TAG"
+      ],
+      "source_trapped_mask": 1,
+      "native_trapped_mask": 1
+    },
+    {
+      "species": [
+        "MAGNEMITE",
+        "RATTATA"
+      ],
+      "abilities": [
+        "KEEN_EYE",
+        "SHADOW_TAG"
+      ],
+      "source_trapped_mask": 1,
+      "native_trapped_mask": 1
+    },
+    {
+      "species": [
+        "MAGNEMITE",
+        "MAGNEMITE"
+      ],
+      "abilities": [
+        "KEEN_EYE",
+        "SHADOW_TAG"
+      ],
+      "source_trapped_mask": 1,
+      "native_trapped_mask": 1
+    },
+    {
+      "species": [
+        "MAGNEMITE",
+        "PIDGEY"
+      ],
+      "abilities": [
+        "KEEN_EYE",
+        "SHADOW_TAG"
+      ],
+      "source_trapped_mask": 1,
+      "native_trapped_mask": 1
+    },
+    {
+      "species": [
+        "MAGNEMITE",
+        "GASTLY"
+      ],
+      "abilities": [
+        "KEEN_EYE",
+        "SHADOW_TAG"
+      ],
+      "source_trapped_mask": 1,
+      "native_trapped_mask": 1
+    },
+    {
+      "species": [
+        "MAGNEMITE",
+        "SKARMORY"
+      ],
+      "abilities": [
+        "KEEN_EYE",
+        "SHADOW_TAG"
+      ],
+      "source_trapped_mask": 1,
+      "native_trapped_mask": 1
+    },
+    {
+      "species": [
+        "PIDGEY",
+        "RATTATA"
+      ],
+      "abilities": [
+        "KEEN_EYE",
+        "SHADOW_TAG"
+      ],
+      "source_trapped_mask": 1,
+      "native_trapped_mask": 1
+    },
+    {
+      "species": [
+        "PIDGEY",
+        "MAGNEMITE"
+      ],
+      "abilities": [
+        "KEEN_EYE",
+        "SHADOW_TAG"
+      ],
+      "source_trapped_mask": 1,
+      "native_trapped_mask": 1
+    },
+    {
+      "species": [
+        "PIDGEY",
+        "PIDGEY"
+      ],
+      "abilities": [
+        "KEEN_EYE",
+        "SHADOW_TAG"
+      ],
+      "source_trapped_mask": 1,
+      "native_trapped_mask": 1
+    },
+    {
+      "species": [
+        "PIDGEY",
+        "GASTLY"
+      ],
+      "abilities": [
+        "KEEN_EYE",
+        "SHADOW_TAG"
+      ],
+      "source_trapped_mask": 1,
+      "native_trapped_mask": 1
+    },
+    {
+      "species": [
+        "PIDGEY",
+        "SKARMORY"
+      ],
+      "abilities": [
+        "KEEN_EYE",
+        "SHADOW_TAG"
+      ],
+      "source_trapped_mask": 1,
+      "native_trapped_mask": 1
+    },
+    {
+      "species": [
+        "GASTLY",
+        "RATTATA"
+      ],
+      "abilities": [
+        "KEEN_EYE",
+        "SHADOW_TAG"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 0
+    },
+    {
+      "species": [
+        "GASTLY",
+        "MAGNEMITE"
+      ],
+      "abilities": [
+        "KEEN_EYE",
+        "SHADOW_TAG"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 0
+    },
+    {
+      "species": [
+        "GASTLY",
+        "PIDGEY"
+      ],
+      "abilities": [
+        "KEEN_EYE",
+        "SHADOW_TAG"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 0
+    },
+    {
+      "species": [
+        "GASTLY",
+        "GASTLY"
+      ],
+      "abilities": [
+        "KEEN_EYE",
+        "SHADOW_TAG"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 0
+    },
+    {
+      "species": [
+        "GASTLY",
+        "SKARMORY"
+      ],
+      "abilities": [
+        "KEEN_EYE",
+        "SHADOW_TAG"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 0
+    },
+    {
+      "species": [
+        "SKARMORY",
+        "RATTATA"
+      ],
+      "abilities": [
+        "KEEN_EYE",
+        "SHADOW_TAG"
+      ],
+      "source_trapped_mask": 1,
+      "native_trapped_mask": 1
+    },
+    {
+      "species": [
+        "SKARMORY",
+        "MAGNEMITE"
+      ],
+      "abilities": [
+        "KEEN_EYE",
+        "SHADOW_TAG"
+      ],
+      "source_trapped_mask": 1,
+      "native_trapped_mask": 1
+    },
+    {
+      "species": [
+        "SKARMORY",
+        "PIDGEY"
+      ],
+      "abilities": [
+        "KEEN_EYE",
+        "SHADOW_TAG"
+      ],
+      "source_trapped_mask": 1,
+      "native_trapped_mask": 1
+    },
+    {
+      "species": [
+        "SKARMORY",
+        "GASTLY"
+      ],
+      "abilities": [
+        "KEEN_EYE",
+        "SHADOW_TAG"
+      ],
+      "source_trapped_mask": 1,
+      "native_trapped_mask": 1
+    },
+    {
+      "species": [
+        "SKARMORY",
+        "SKARMORY"
+      ],
+      "abilities": [
+        "KEEN_EYE",
+        "SHADOW_TAG"
+      ],
+      "source_trapped_mask": 1,
+      "native_trapped_mask": 1
+    },
+    {
+      "species": [
+        "RATTATA",
+        "RATTATA"
+      ],
+      "abilities": [
+        "ARENA_TRAP",
+        "KEEN_EYE"
+      ],
+      "source_trapped_mask": 2,
+      "native_trapped_mask": 2
+    },
+    {
+      "species": [
+        "RATTATA",
+        "MAGNEMITE"
+      ],
+      "abilities": [
+        "ARENA_TRAP",
+        "KEEN_EYE"
+      ],
+      "source_trapped_mask": 2,
+      "native_trapped_mask": 2
+    },
+    {
+      "species": [
+        "RATTATA",
+        "PIDGEY"
+      ],
+      "abilities": [
+        "ARENA_TRAP",
+        "KEEN_EYE"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 0
+    },
+    {
+      "species": [
+        "RATTATA",
+        "GASTLY"
+      ],
+      "abilities": [
+        "ARENA_TRAP",
+        "KEEN_EYE"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 0
+    },
+    {
+      "species": [
+        "RATTATA",
+        "SKARMORY"
+      ],
+      "abilities": [
+        "ARENA_TRAP",
+        "KEEN_EYE"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 0
+    },
+    {
+      "species": [
+        "MAGNEMITE",
+        "RATTATA"
+      ],
+      "abilities": [
+        "ARENA_TRAP",
+        "KEEN_EYE"
+      ],
+      "source_trapped_mask": 2,
+      "native_trapped_mask": 2
+    },
+    {
+      "species": [
+        "MAGNEMITE",
+        "MAGNEMITE"
+      ],
+      "abilities": [
+        "ARENA_TRAP",
+        "KEEN_EYE"
+      ],
+      "source_trapped_mask": 2,
+      "native_trapped_mask": 2
+    },
+    {
+      "species": [
+        "MAGNEMITE",
+        "PIDGEY"
+      ],
+      "abilities": [
+        "ARENA_TRAP",
+        "KEEN_EYE"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 0
+    },
+    {
+      "species": [
+        "MAGNEMITE",
+        "GASTLY"
+      ],
+      "abilities": [
+        "ARENA_TRAP",
+        "KEEN_EYE"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 0
+    },
+    {
+      "species": [
+        "MAGNEMITE",
+        "SKARMORY"
+      ],
+      "abilities": [
+        "ARENA_TRAP",
+        "KEEN_EYE"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 0
+    },
+    {
+      "species": [
+        "PIDGEY",
+        "RATTATA"
+      ],
+      "abilities": [
+        "ARENA_TRAP",
+        "KEEN_EYE"
+      ],
+      "source_trapped_mask": 2,
+      "native_trapped_mask": 2
+    },
+    {
+      "species": [
+        "PIDGEY",
+        "MAGNEMITE"
+      ],
+      "abilities": [
+        "ARENA_TRAP",
+        "KEEN_EYE"
+      ],
+      "source_trapped_mask": 2,
+      "native_trapped_mask": 2
+    },
+    {
+      "species": [
+        "PIDGEY",
+        "PIDGEY"
+      ],
+      "abilities": [
+        "ARENA_TRAP",
+        "KEEN_EYE"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 0
+    },
+    {
+      "species": [
+        "PIDGEY",
+        "GASTLY"
+      ],
+      "abilities": [
+        "ARENA_TRAP",
+        "KEEN_EYE"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 0
+    },
+    {
+      "species": [
+        "PIDGEY",
+        "SKARMORY"
+      ],
+      "abilities": [
+        "ARENA_TRAP",
+        "KEEN_EYE"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 0
+    },
+    {
+      "species": [
+        "GASTLY",
+        "RATTATA"
+      ],
+      "abilities": [
+        "ARENA_TRAP",
+        "KEEN_EYE"
+      ],
+      "source_trapped_mask": 2,
+      "native_trapped_mask": 2
+    },
+    {
+      "species": [
+        "GASTLY",
+        "MAGNEMITE"
+      ],
+      "abilities": [
+        "ARENA_TRAP",
+        "KEEN_EYE"
+      ],
+      "source_trapped_mask": 2,
+      "native_trapped_mask": 2
+    },
+    {
+      "species": [
+        "GASTLY",
+        "PIDGEY"
+      ],
+      "abilities": [
+        "ARENA_TRAP",
+        "KEEN_EYE"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 0
+    },
+    {
+      "species": [
+        "GASTLY",
+        "GASTLY"
+      ],
+      "abilities": [
+        "ARENA_TRAP",
+        "KEEN_EYE"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 0
+    },
+    {
+      "species": [
+        "GASTLY",
+        "SKARMORY"
+      ],
+      "abilities": [
+        "ARENA_TRAP",
+        "KEEN_EYE"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 0
+    },
+    {
+      "species": [
+        "SKARMORY",
+        "RATTATA"
+      ],
+      "abilities": [
+        "ARENA_TRAP",
+        "KEEN_EYE"
+      ],
+      "source_trapped_mask": 2,
+      "native_trapped_mask": 2
+    },
+    {
+      "species": [
+        "SKARMORY",
+        "MAGNEMITE"
+      ],
+      "abilities": [
+        "ARENA_TRAP",
+        "KEEN_EYE"
+      ],
+      "source_trapped_mask": 2,
+      "native_trapped_mask": 2
+    },
+    {
+      "species": [
+        "SKARMORY",
+        "PIDGEY"
+      ],
+      "abilities": [
+        "ARENA_TRAP",
+        "KEEN_EYE"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 0
+    },
+    {
+      "species": [
+        "SKARMORY",
+        "GASTLY"
+      ],
+      "abilities": [
+        "ARENA_TRAP",
+        "KEEN_EYE"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 0
+    },
+    {
+      "species": [
+        "SKARMORY",
+        "SKARMORY"
+      ],
+      "abilities": [
+        "ARENA_TRAP",
+        "KEEN_EYE"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 0
+    },
+    {
+      "species": [
+        "RATTATA",
+        "RATTATA"
+      ],
+      "abilities": [
+        "ARENA_TRAP",
+        "ARENA_TRAP"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 3
+    },
+    {
+      "species": [
+        "RATTATA",
+        "MAGNEMITE"
+      ],
+      "abilities": [
+        "ARENA_TRAP",
+        "ARENA_TRAP"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 3
+    },
+    {
+      "species": [
+        "RATTATA",
+        "PIDGEY"
+      ],
+      "abilities": [
+        "ARENA_TRAP",
+        "ARENA_TRAP"
+      ],
+      "source_trapped_mask": 1,
+      "native_trapped_mask": 1
+    },
+    {
+      "species": [
+        "RATTATA",
+        "GASTLY"
+      ],
+      "abilities": [
+        "ARENA_TRAP",
+        "ARENA_TRAP"
+      ],
+      "source_trapped_mask": 1,
+      "native_trapped_mask": 1
+    },
+    {
+      "species": [
+        "RATTATA",
+        "SKARMORY"
+      ],
+      "abilities": [
+        "ARENA_TRAP",
+        "ARENA_TRAP"
+      ],
+      "source_trapped_mask": 1,
+      "native_trapped_mask": 1
+    },
+    {
+      "species": [
+        "MAGNEMITE",
+        "RATTATA"
+      ],
+      "abilities": [
+        "ARENA_TRAP",
+        "ARENA_TRAP"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 3
+    },
+    {
+      "species": [
+        "MAGNEMITE",
+        "MAGNEMITE"
+      ],
+      "abilities": [
+        "ARENA_TRAP",
+        "ARENA_TRAP"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 3
+    },
+    {
+      "species": [
+        "MAGNEMITE",
+        "PIDGEY"
+      ],
+      "abilities": [
+        "ARENA_TRAP",
+        "ARENA_TRAP"
+      ],
+      "source_trapped_mask": 1,
+      "native_trapped_mask": 1
+    },
+    {
+      "species": [
+        "MAGNEMITE",
+        "GASTLY"
+      ],
+      "abilities": [
+        "ARENA_TRAP",
+        "ARENA_TRAP"
+      ],
+      "source_trapped_mask": 1,
+      "native_trapped_mask": 1
+    },
+    {
+      "species": [
+        "MAGNEMITE",
+        "SKARMORY"
+      ],
+      "abilities": [
+        "ARENA_TRAP",
+        "ARENA_TRAP"
+      ],
+      "source_trapped_mask": 1,
+      "native_trapped_mask": 1
+    },
+    {
+      "species": [
+        "PIDGEY",
+        "RATTATA"
+      ],
+      "abilities": [
+        "ARENA_TRAP",
+        "ARENA_TRAP"
+      ],
+      "source_trapped_mask": 2,
+      "native_trapped_mask": 2
+    },
+    {
+      "species": [
+        "PIDGEY",
+        "MAGNEMITE"
+      ],
+      "abilities": [
+        "ARENA_TRAP",
+        "ARENA_TRAP"
+      ],
+      "source_trapped_mask": 2,
+      "native_trapped_mask": 2
+    },
+    {
+      "species": [
+        "PIDGEY",
+        "PIDGEY"
+      ],
+      "abilities": [
+        "ARENA_TRAP",
+        "ARENA_TRAP"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 0
+    },
+    {
+      "species": [
+        "PIDGEY",
+        "GASTLY"
+      ],
+      "abilities": [
+        "ARENA_TRAP",
+        "ARENA_TRAP"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 0
+    },
+    {
+      "species": [
+        "PIDGEY",
+        "SKARMORY"
+      ],
+      "abilities": [
+        "ARENA_TRAP",
+        "ARENA_TRAP"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 0
+    },
+    {
+      "species": [
+        "GASTLY",
+        "RATTATA"
+      ],
+      "abilities": [
+        "ARENA_TRAP",
+        "ARENA_TRAP"
+      ],
+      "source_trapped_mask": 2,
+      "native_trapped_mask": 2
+    },
+    {
+      "species": [
+        "GASTLY",
+        "MAGNEMITE"
+      ],
+      "abilities": [
+        "ARENA_TRAP",
+        "ARENA_TRAP"
+      ],
+      "source_trapped_mask": 2,
+      "native_trapped_mask": 2
+    },
+    {
+      "species": [
+        "GASTLY",
+        "PIDGEY"
+      ],
+      "abilities": [
+        "ARENA_TRAP",
+        "ARENA_TRAP"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 0
+    },
+    {
+      "species": [
+        "GASTLY",
+        "GASTLY"
+      ],
+      "abilities": [
+        "ARENA_TRAP",
+        "ARENA_TRAP"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 0
+    },
+    {
+      "species": [
+        "GASTLY",
+        "SKARMORY"
+      ],
+      "abilities": [
+        "ARENA_TRAP",
+        "ARENA_TRAP"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 0
+    },
+    {
+      "species": [
+        "SKARMORY",
+        "RATTATA"
+      ],
+      "abilities": [
+        "ARENA_TRAP",
+        "ARENA_TRAP"
+      ],
+      "source_trapped_mask": 2,
+      "native_trapped_mask": 2
+    },
+    {
+      "species": [
+        "SKARMORY",
+        "MAGNEMITE"
+      ],
+      "abilities": [
+        "ARENA_TRAP",
+        "ARENA_TRAP"
+      ],
+      "source_trapped_mask": 2,
+      "native_trapped_mask": 2
+    },
+    {
+      "species": [
+        "SKARMORY",
+        "PIDGEY"
+      ],
+      "abilities": [
+        "ARENA_TRAP",
+        "ARENA_TRAP"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 0
+    },
+    {
+      "species": [
+        "SKARMORY",
+        "GASTLY"
+      ],
+      "abilities": [
+        "ARENA_TRAP",
+        "ARENA_TRAP"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 0
+    },
+    {
+      "species": [
+        "SKARMORY",
+        "SKARMORY"
+      ],
+      "abilities": [
+        "ARENA_TRAP",
+        "ARENA_TRAP"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 0
+    },
+    {
+      "species": [
+        "RATTATA",
+        "RATTATA"
+      ],
+      "abilities": [
+        "ARENA_TRAP",
+        "MAGNET_PULL"
+      ],
+      "source_trapped_mask": 2,
+      "native_trapped_mask": 2
+    },
+    {
+      "species": [
+        "RATTATA",
+        "MAGNEMITE"
+      ],
+      "abilities": [
+        "ARENA_TRAP",
+        "MAGNET_PULL"
+      ],
+      "source_trapped_mask": 2,
+      "native_trapped_mask": 2
+    },
+    {
+      "species": [
+        "RATTATA",
+        "PIDGEY"
+      ],
+      "abilities": [
+        "ARENA_TRAP",
+        "MAGNET_PULL"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 0
+    },
+    {
+      "species": [
+        "RATTATA",
+        "GASTLY"
+      ],
+      "abilities": [
+        "ARENA_TRAP",
+        "MAGNET_PULL"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 0
+    },
+    {
+      "species": [
+        "RATTATA",
+        "SKARMORY"
+      ],
+      "abilities": [
+        "ARENA_TRAP",
+        "MAGNET_PULL"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 0
+    },
+    {
+      "species": [
+        "MAGNEMITE",
+        "RATTATA"
+      ],
+      "abilities": [
+        "ARENA_TRAP",
+        "MAGNET_PULL"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 3
+    },
+    {
+      "species": [
+        "MAGNEMITE",
+        "MAGNEMITE"
+      ],
+      "abilities": [
+        "ARENA_TRAP",
+        "MAGNET_PULL"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 3
+    },
+    {
+      "species": [
+        "MAGNEMITE",
+        "PIDGEY"
+      ],
+      "abilities": [
+        "ARENA_TRAP",
+        "MAGNET_PULL"
+      ],
+      "source_trapped_mask": 1,
+      "native_trapped_mask": 1
+    },
+    {
+      "species": [
+        "MAGNEMITE",
+        "GASTLY"
+      ],
+      "abilities": [
+        "ARENA_TRAP",
+        "MAGNET_PULL"
+      ],
+      "source_trapped_mask": 1,
+      "native_trapped_mask": 1
+    },
+    {
+      "species": [
+        "MAGNEMITE",
+        "SKARMORY"
+      ],
+      "abilities": [
+        "ARENA_TRAP",
+        "MAGNET_PULL"
+      ],
+      "source_trapped_mask": 1,
+      "native_trapped_mask": 1
+    },
+    {
+      "species": [
+        "PIDGEY",
+        "RATTATA"
+      ],
+      "abilities": [
+        "ARENA_TRAP",
+        "MAGNET_PULL"
+      ],
+      "source_trapped_mask": 2,
+      "native_trapped_mask": 2
+    },
+    {
+      "species": [
+        "PIDGEY",
+        "MAGNEMITE"
+      ],
+      "abilities": [
+        "ARENA_TRAP",
+        "MAGNET_PULL"
+      ],
+      "source_trapped_mask": 2,
+      "native_trapped_mask": 2
+    },
+    {
+      "species": [
+        "PIDGEY",
+        "PIDGEY"
+      ],
+      "abilities": [
+        "ARENA_TRAP",
+        "MAGNET_PULL"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 0
+    },
+    {
+      "species": [
+        "PIDGEY",
+        "GASTLY"
+      ],
+      "abilities": [
+        "ARENA_TRAP",
+        "MAGNET_PULL"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 0
+    },
+    {
+      "species": [
+        "PIDGEY",
+        "SKARMORY"
+      ],
+      "abilities": [
+        "ARENA_TRAP",
+        "MAGNET_PULL"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 0
+    },
+    {
+      "species": [
+        "GASTLY",
+        "RATTATA"
+      ],
+      "abilities": [
+        "ARENA_TRAP",
+        "MAGNET_PULL"
+      ],
+      "source_trapped_mask": 2,
+      "native_trapped_mask": 2
+    },
+    {
+      "species": [
+        "GASTLY",
+        "MAGNEMITE"
+      ],
+      "abilities": [
+        "ARENA_TRAP",
+        "MAGNET_PULL"
+      ],
+      "source_trapped_mask": 2,
+      "native_trapped_mask": 2
+    },
+    {
+      "species": [
+        "GASTLY",
+        "PIDGEY"
+      ],
+      "abilities": [
+        "ARENA_TRAP",
+        "MAGNET_PULL"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 0
+    },
+    {
+      "species": [
+        "GASTLY",
+        "GASTLY"
+      ],
+      "abilities": [
+        "ARENA_TRAP",
+        "MAGNET_PULL"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 0
+    },
+    {
+      "species": [
+        "GASTLY",
+        "SKARMORY"
+      ],
+      "abilities": [
+        "ARENA_TRAP",
+        "MAGNET_PULL"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 0
+    },
+    {
+      "species": [
+        "SKARMORY",
+        "RATTATA"
+      ],
+      "abilities": [
+        "ARENA_TRAP",
+        "MAGNET_PULL"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 3
+    },
+    {
+      "species": [
+        "SKARMORY",
+        "MAGNEMITE"
+      ],
+      "abilities": [
+        "ARENA_TRAP",
+        "MAGNET_PULL"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 3
+    },
+    {
+      "species": [
+        "SKARMORY",
+        "PIDGEY"
+      ],
+      "abilities": [
+        "ARENA_TRAP",
+        "MAGNET_PULL"
+      ],
+      "source_trapped_mask": 1,
+      "native_trapped_mask": 1
+    },
+    {
+      "species": [
+        "SKARMORY",
+        "GASTLY"
+      ],
+      "abilities": [
+        "ARENA_TRAP",
+        "MAGNET_PULL"
+      ],
+      "source_trapped_mask": 1,
+      "native_trapped_mask": 1
+    },
+    {
+      "species": [
+        "SKARMORY",
+        "SKARMORY"
+      ],
+      "abilities": [
+        "ARENA_TRAP",
+        "MAGNET_PULL"
+      ],
+      "source_trapped_mask": 1,
+      "native_trapped_mask": 1
+    },
+    {
+      "species": [
+        "RATTATA",
+        "RATTATA"
+      ],
+      "abilities": [
+        "ARENA_TRAP",
+        "SHADOW_TAG"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 3
+    },
+    {
+      "species": [
+        "RATTATA",
+        "MAGNEMITE"
+      ],
+      "abilities": [
+        "ARENA_TRAP",
+        "SHADOW_TAG"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 3
+    },
+    {
+      "species": [
+        "RATTATA",
+        "PIDGEY"
+      ],
+      "abilities": [
+        "ARENA_TRAP",
+        "SHADOW_TAG"
+      ],
+      "source_trapped_mask": 1,
+      "native_trapped_mask": 1
+    },
+    {
+      "species": [
+        "RATTATA",
+        "GASTLY"
+      ],
+      "abilities": [
+        "ARENA_TRAP",
+        "SHADOW_TAG"
+      ],
+      "source_trapped_mask": 1,
+      "native_trapped_mask": 1
+    },
+    {
+      "species": [
+        "RATTATA",
+        "SKARMORY"
+      ],
+      "abilities": [
+        "ARENA_TRAP",
+        "SHADOW_TAG"
+      ],
+      "source_trapped_mask": 1,
+      "native_trapped_mask": 1
+    },
+    {
+      "species": [
+        "MAGNEMITE",
+        "RATTATA"
+      ],
+      "abilities": [
+        "ARENA_TRAP",
+        "SHADOW_TAG"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 3
+    },
+    {
+      "species": [
+        "MAGNEMITE",
+        "MAGNEMITE"
+      ],
+      "abilities": [
+        "ARENA_TRAP",
+        "SHADOW_TAG"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 3
+    },
+    {
+      "species": [
+        "MAGNEMITE",
+        "PIDGEY"
+      ],
+      "abilities": [
+        "ARENA_TRAP",
+        "SHADOW_TAG"
+      ],
+      "source_trapped_mask": 1,
+      "native_trapped_mask": 1
+    },
+    {
+      "species": [
+        "MAGNEMITE",
+        "GASTLY"
+      ],
+      "abilities": [
+        "ARENA_TRAP",
+        "SHADOW_TAG"
+      ],
+      "source_trapped_mask": 1,
+      "native_trapped_mask": 1
+    },
+    {
+      "species": [
+        "MAGNEMITE",
+        "SKARMORY"
+      ],
+      "abilities": [
+        "ARENA_TRAP",
+        "SHADOW_TAG"
+      ],
+      "source_trapped_mask": 1,
+      "native_trapped_mask": 1
+    },
+    {
+      "species": [
+        "PIDGEY",
+        "RATTATA"
+      ],
+      "abilities": [
+        "ARENA_TRAP",
+        "SHADOW_TAG"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 3
+    },
+    {
+      "species": [
+        "PIDGEY",
+        "MAGNEMITE"
+      ],
+      "abilities": [
+        "ARENA_TRAP",
+        "SHADOW_TAG"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 3
+    },
+    {
+      "species": [
+        "PIDGEY",
+        "PIDGEY"
+      ],
+      "abilities": [
+        "ARENA_TRAP",
+        "SHADOW_TAG"
+      ],
+      "source_trapped_mask": 1,
+      "native_trapped_mask": 1
+    },
+    {
+      "species": [
+        "PIDGEY",
+        "GASTLY"
+      ],
+      "abilities": [
+        "ARENA_TRAP",
+        "SHADOW_TAG"
+      ],
+      "source_trapped_mask": 1,
+      "native_trapped_mask": 1
+    },
+    {
+      "species": [
+        "PIDGEY",
+        "SKARMORY"
+      ],
+      "abilities": [
+        "ARENA_TRAP",
+        "SHADOW_TAG"
+      ],
+      "source_trapped_mask": 1,
+      "native_trapped_mask": 1
+    },
+    {
+      "species": [
+        "GASTLY",
+        "RATTATA"
+      ],
+      "abilities": [
+        "ARENA_TRAP",
+        "SHADOW_TAG"
+      ],
+      "source_trapped_mask": 2,
+      "native_trapped_mask": 2
+    },
+    {
+      "species": [
+        "GASTLY",
+        "MAGNEMITE"
+      ],
+      "abilities": [
+        "ARENA_TRAP",
+        "SHADOW_TAG"
+      ],
+      "source_trapped_mask": 2,
+      "native_trapped_mask": 2
+    },
+    {
+      "species": [
+        "GASTLY",
+        "PIDGEY"
+      ],
+      "abilities": [
+        "ARENA_TRAP",
+        "SHADOW_TAG"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 0
+    },
+    {
+      "species": [
+        "GASTLY",
+        "GASTLY"
+      ],
+      "abilities": [
+        "ARENA_TRAP",
+        "SHADOW_TAG"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 0
+    },
+    {
+      "species": [
+        "GASTLY",
+        "SKARMORY"
+      ],
+      "abilities": [
+        "ARENA_TRAP",
+        "SHADOW_TAG"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 0
+    },
+    {
+      "species": [
+        "SKARMORY",
+        "RATTATA"
+      ],
+      "abilities": [
+        "ARENA_TRAP",
+        "SHADOW_TAG"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 3
+    },
+    {
+      "species": [
+        "SKARMORY",
+        "MAGNEMITE"
+      ],
+      "abilities": [
+        "ARENA_TRAP",
+        "SHADOW_TAG"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 3
+    },
+    {
+      "species": [
+        "SKARMORY",
+        "PIDGEY"
+      ],
+      "abilities": [
+        "ARENA_TRAP",
+        "SHADOW_TAG"
+      ],
+      "source_trapped_mask": 1,
+      "native_trapped_mask": 1
+    },
+    {
+      "species": [
+        "SKARMORY",
+        "GASTLY"
+      ],
+      "abilities": [
+        "ARENA_TRAP",
+        "SHADOW_TAG"
+      ],
+      "source_trapped_mask": 1,
+      "native_trapped_mask": 1
+    },
+    {
+      "species": [
+        "SKARMORY",
+        "SKARMORY"
+      ],
+      "abilities": [
+        "ARENA_TRAP",
+        "SHADOW_TAG"
+      ],
+      "source_trapped_mask": 1,
+      "native_trapped_mask": 1
+    },
+    {
+      "species": [
+        "RATTATA",
+        "RATTATA"
+      ],
+      "abilities": [
+        "MAGNET_PULL",
+        "KEEN_EYE"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 0
+    },
+    {
+      "species": [
+        "RATTATA",
+        "MAGNEMITE"
+      ],
+      "abilities": [
+        "MAGNET_PULL",
+        "KEEN_EYE"
+      ],
+      "source_trapped_mask": 2,
+      "native_trapped_mask": 2
+    },
+    {
+      "species": [
+        "RATTATA",
+        "PIDGEY"
+      ],
+      "abilities": [
+        "MAGNET_PULL",
+        "KEEN_EYE"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 0
+    },
+    {
+      "species": [
+        "RATTATA",
+        "GASTLY"
+      ],
+      "abilities": [
+        "MAGNET_PULL",
+        "KEEN_EYE"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 0
+    },
+    {
+      "species": [
+        "RATTATA",
+        "SKARMORY"
+      ],
+      "abilities": [
+        "MAGNET_PULL",
+        "KEEN_EYE"
+      ],
+      "source_trapped_mask": 2,
+      "native_trapped_mask": 2
+    },
+    {
+      "species": [
+        "MAGNEMITE",
+        "RATTATA"
+      ],
+      "abilities": [
+        "MAGNET_PULL",
+        "KEEN_EYE"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 0
+    },
+    {
+      "species": [
+        "MAGNEMITE",
+        "MAGNEMITE"
+      ],
+      "abilities": [
+        "MAGNET_PULL",
+        "KEEN_EYE"
+      ],
+      "source_trapped_mask": 2,
+      "native_trapped_mask": 2
+    },
+    {
+      "species": [
+        "MAGNEMITE",
+        "PIDGEY"
+      ],
+      "abilities": [
+        "MAGNET_PULL",
+        "KEEN_EYE"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 0
+    },
+    {
+      "species": [
+        "MAGNEMITE",
+        "GASTLY"
+      ],
+      "abilities": [
+        "MAGNET_PULL",
+        "KEEN_EYE"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 0
+    },
+    {
+      "species": [
+        "MAGNEMITE",
+        "SKARMORY"
+      ],
+      "abilities": [
+        "MAGNET_PULL",
+        "KEEN_EYE"
+      ],
+      "source_trapped_mask": 2,
+      "native_trapped_mask": 2
+    },
+    {
+      "species": [
+        "PIDGEY",
+        "RATTATA"
+      ],
+      "abilities": [
+        "MAGNET_PULL",
+        "KEEN_EYE"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 0
+    },
+    {
+      "species": [
+        "PIDGEY",
+        "MAGNEMITE"
+      ],
+      "abilities": [
+        "MAGNET_PULL",
+        "KEEN_EYE"
+      ],
+      "source_trapped_mask": 2,
+      "native_trapped_mask": 2
+    },
+    {
+      "species": [
+        "PIDGEY",
+        "PIDGEY"
+      ],
+      "abilities": [
+        "MAGNET_PULL",
+        "KEEN_EYE"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 0
+    },
+    {
+      "species": [
+        "PIDGEY",
+        "GASTLY"
+      ],
+      "abilities": [
+        "MAGNET_PULL",
+        "KEEN_EYE"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 0
+    },
+    {
+      "species": [
+        "PIDGEY",
+        "SKARMORY"
+      ],
+      "abilities": [
+        "MAGNET_PULL",
+        "KEEN_EYE"
+      ],
+      "source_trapped_mask": 2,
+      "native_trapped_mask": 2
+    },
+    {
+      "species": [
+        "GASTLY",
+        "RATTATA"
+      ],
+      "abilities": [
+        "MAGNET_PULL",
+        "KEEN_EYE"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 0
+    },
+    {
+      "species": [
+        "GASTLY",
+        "MAGNEMITE"
+      ],
+      "abilities": [
+        "MAGNET_PULL",
+        "KEEN_EYE"
+      ],
+      "source_trapped_mask": 2,
+      "native_trapped_mask": 2
+    },
+    {
+      "species": [
+        "GASTLY",
+        "PIDGEY"
+      ],
+      "abilities": [
+        "MAGNET_PULL",
+        "KEEN_EYE"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 0
+    },
+    {
+      "species": [
+        "GASTLY",
+        "GASTLY"
+      ],
+      "abilities": [
+        "MAGNET_PULL",
+        "KEEN_EYE"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 0
+    },
+    {
+      "species": [
+        "GASTLY",
+        "SKARMORY"
+      ],
+      "abilities": [
+        "MAGNET_PULL",
+        "KEEN_EYE"
+      ],
+      "source_trapped_mask": 2,
+      "native_trapped_mask": 2
+    },
+    {
+      "species": [
+        "SKARMORY",
+        "RATTATA"
+      ],
+      "abilities": [
+        "MAGNET_PULL",
+        "KEEN_EYE"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 0
+    },
+    {
+      "species": [
+        "SKARMORY",
+        "MAGNEMITE"
+      ],
+      "abilities": [
+        "MAGNET_PULL",
+        "KEEN_EYE"
+      ],
+      "source_trapped_mask": 2,
+      "native_trapped_mask": 2
+    },
+    {
+      "species": [
+        "SKARMORY",
+        "PIDGEY"
+      ],
+      "abilities": [
+        "MAGNET_PULL",
+        "KEEN_EYE"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 0
+    },
+    {
+      "species": [
+        "SKARMORY",
+        "GASTLY"
+      ],
+      "abilities": [
+        "MAGNET_PULL",
+        "KEEN_EYE"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 0
+    },
+    {
+      "species": [
+        "SKARMORY",
+        "SKARMORY"
+      ],
+      "abilities": [
+        "MAGNET_PULL",
+        "KEEN_EYE"
+      ],
+      "source_trapped_mask": 2,
+      "native_trapped_mask": 2
+    },
+    {
+      "species": [
+        "RATTATA",
+        "RATTATA"
+      ],
+      "abilities": [
+        "MAGNET_PULL",
+        "ARENA_TRAP"
+      ],
+      "source_trapped_mask": 1,
+      "native_trapped_mask": 1
+    },
+    {
+      "species": [
+        "RATTATA",
+        "MAGNEMITE"
+      ],
+      "abilities": [
+        "MAGNET_PULL",
+        "ARENA_TRAP"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 3
+    },
+    {
+      "species": [
+        "RATTATA",
+        "PIDGEY"
+      ],
+      "abilities": [
+        "MAGNET_PULL",
+        "ARENA_TRAP"
+      ],
+      "source_trapped_mask": 1,
+      "native_trapped_mask": 1
+    },
+    {
+      "species": [
+        "RATTATA",
+        "GASTLY"
+      ],
+      "abilities": [
+        "MAGNET_PULL",
+        "ARENA_TRAP"
+      ],
+      "source_trapped_mask": 1,
+      "native_trapped_mask": 1
+    },
+    {
+      "species": [
+        "RATTATA",
+        "SKARMORY"
+      ],
+      "abilities": [
+        "MAGNET_PULL",
+        "ARENA_TRAP"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 3
+    },
+    {
+      "species": [
+        "MAGNEMITE",
+        "RATTATA"
+      ],
+      "abilities": [
+        "MAGNET_PULL",
+        "ARENA_TRAP"
+      ],
+      "source_trapped_mask": 1,
+      "native_trapped_mask": 1
+    },
+    {
+      "species": [
+        "MAGNEMITE",
+        "MAGNEMITE"
+      ],
+      "abilities": [
+        "MAGNET_PULL",
+        "ARENA_TRAP"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 3
+    },
+    {
+      "species": [
+        "MAGNEMITE",
+        "PIDGEY"
+      ],
+      "abilities": [
+        "MAGNET_PULL",
+        "ARENA_TRAP"
+      ],
+      "source_trapped_mask": 1,
+      "native_trapped_mask": 1
+    },
+    {
+      "species": [
+        "MAGNEMITE",
+        "GASTLY"
+      ],
+      "abilities": [
+        "MAGNET_PULL",
+        "ARENA_TRAP"
+      ],
+      "source_trapped_mask": 1,
+      "native_trapped_mask": 1
+    },
+    {
+      "species": [
+        "MAGNEMITE",
+        "SKARMORY"
+      ],
+      "abilities": [
+        "MAGNET_PULL",
+        "ARENA_TRAP"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 3
+    },
+    {
+      "species": [
+        "PIDGEY",
+        "RATTATA"
+      ],
+      "abilities": [
+        "MAGNET_PULL",
+        "ARENA_TRAP"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 0
+    },
+    {
+      "species": [
+        "PIDGEY",
+        "MAGNEMITE"
+      ],
+      "abilities": [
+        "MAGNET_PULL",
+        "ARENA_TRAP"
+      ],
+      "source_trapped_mask": 2,
+      "native_trapped_mask": 2
+    },
+    {
+      "species": [
+        "PIDGEY",
+        "PIDGEY"
+      ],
+      "abilities": [
+        "MAGNET_PULL",
+        "ARENA_TRAP"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 0
+    },
+    {
+      "species": [
+        "PIDGEY",
+        "GASTLY"
+      ],
+      "abilities": [
+        "MAGNET_PULL",
+        "ARENA_TRAP"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 0
+    },
+    {
+      "species": [
+        "PIDGEY",
+        "SKARMORY"
+      ],
+      "abilities": [
+        "MAGNET_PULL",
+        "ARENA_TRAP"
+      ],
+      "source_trapped_mask": 2,
+      "native_trapped_mask": 2
+    },
+    {
+      "species": [
+        "GASTLY",
+        "RATTATA"
+      ],
+      "abilities": [
+        "MAGNET_PULL",
+        "ARENA_TRAP"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 0
+    },
+    {
+      "species": [
+        "GASTLY",
+        "MAGNEMITE"
+      ],
+      "abilities": [
+        "MAGNET_PULL",
+        "ARENA_TRAP"
+      ],
+      "source_trapped_mask": 2,
+      "native_trapped_mask": 2
+    },
+    {
+      "species": [
+        "GASTLY",
+        "PIDGEY"
+      ],
+      "abilities": [
+        "MAGNET_PULL",
+        "ARENA_TRAP"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 0
+    },
+    {
+      "species": [
+        "GASTLY",
+        "GASTLY"
+      ],
+      "abilities": [
+        "MAGNET_PULL",
+        "ARENA_TRAP"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 0
+    },
+    {
+      "species": [
+        "GASTLY",
+        "SKARMORY"
+      ],
+      "abilities": [
+        "MAGNET_PULL",
+        "ARENA_TRAP"
+      ],
+      "source_trapped_mask": 2,
+      "native_trapped_mask": 2
+    },
+    {
+      "species": [
+        "SKARMORY",
+        "RATTATA"
+      ],
+      "abilities": [
+        "MAGNET_PULL",
+        "ARENA_TRAP"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 0
+    },
+    {
+      "species": [
+        "SKARMORY",
+        "MAGNEMITE"
+      ],
+      "abilities": [
+        "MAGNET_PULL",
+        "ARENA_TRAP"
+      ],
+      "source_trapped_mask": 2,
+      "native_trapped_mask": 2
+    },
+    {
+      "species": [
+        "SKARMORY",
+        "PIDGEY"
+      ],
+      "abilities": [
+        "MAGNET_PULL",
+        "ARENA_TRAP"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 0
+    },
+    {
+      "species": [
+        "SKARMORY",
+        "GASTLY"
+      ],
+      "abilities": [
+        "MAGNET_PULL",
+        "ARENA_TRAP"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 0
+    },
+    {
+      "species": [
+        "SKARMORY",
+        "SKARMORY"
+      ],
+      "abilities": [
+        "MAGNET_PULL",
+        "ARENA_TRAP"
+      ],
+      "source_trapped_mask": 2,
+      "native_trapped_mask": 2
+    },
+    {
+      "species": [
+        "RATTATA",
+        "RATTATA"
+      ],
+      "abilities": [
+        "MAGNET_PULL",
+        "MAGNET_PULL"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 0
+    },
+    {
+      "species": [
+        "RATTATA",
+        "MAGNEMITE"
+      ],
+      "abilities": [
+        "MAGNET_PULL",
+        "MAGNET_PULL"
+      ],
+      "source_trapped_mask": 2,
+      "native_trapped_mask": 2
+    },
+    {
+      "species": [
+        "RATTATA",
+        "PIDGEY"
+      ],
+      "abilities": [
+        "MAGNET_PULL",
+        "MAGNET_PULL"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 0
+    },
+    {
+      "species": [
+        "RATTATA",
+        "GASTLY"
+      ],
+      "abilities": [
+        "MAGNET_PULL",
+        "MAGNET_PULL"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 0
+    },
+    {
+      "species": [
+        "RATTATA",
+        "SKARMORY"
+      ],
+      "abilities": [
+        "MAGNET_PULL",
+        "MAGNET_PULL"
+      ],
+      "source_trapped_mask": 2,
+      "native_trapped_mask": 2
+    },
+    {
+      "species": [
+        "MAGNEMITE",
+        "RATTATA"
+      ],
+      "abilities": [
+        "MAGNET_PULL",
+        "MAGNET_PULL"
+      ],
+      "source_trapped_mask": 1,
+      "native_trapped_mask": 1
+    },
+    {
+      "species": [
+        "MAGNEMITE",
+        "MAGNEMITE"
+      ],
+      "abilities": [
+        "MAGNET_PULL",
+        "MAGNET_PULL"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 3
+    },
+    {
+      "species": [
+        "MAGNEMITE",
+        "PIDGEY"
+      ],
+      "abilities": [
+        "MAGNET_PULL",
+        "MAGNET_PULL"
+      ],
+      "source_trapped_mask": 1,
+      "native_trapped_mask": 1
+    },
+    {
+      "species": [
+        "MAGNEMITE",
+        "GASTLY"
+      ],
+      "abilities": [
+        "MAGNET_PULL",
+        "MAGNET_PULL"
+      ],
+      "source_trapped_mask": 1,
+      "native_trapped_mask": 1
+    },
+    {
+      "species": [
+        "MAGNEMITE",
+        "SKARMORY"
+      ],
+      "abilities": [
+        "MAGNET_PULL",
+        "MAGNET_PULL"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 3
+    },
+    {
+      "species": [
+        "PIDGEY",
+        "RATTATA"
+      ],
+      "abilities": [
+        "MAGNET_PULL",
+        "MAGNET_PULL"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 0
+    },
+    {
+      "species": [
+        "PIDGEY",
+        "MAGNEMITE"
+      ],
+      "abilities": [
+        "MAGNET_PULL",
+        "MAGNET_PULL"
+      ],
+      "source_trapped_mask": 2,
+      "native_trapped_mask": 2
+    },
+    {
+      "species": [
+        "PIDGEY",
+        "PIDGEY"
+      ],
+      "abilities": [
+        "MAGNET_PULL",
+        "MAGNET_PULL"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 0
+    },
+    {
+      "species": [
+        "PIDGEY",
+        "GASTLY"
+      ],
+      "abilities": [
+        "MAGNET_PULL",
+        "MAGNET_PULL"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 0
+    },
+    {
+      "species": [
+        "PIDGEY",
+        "SKARMORY"
+      ],
+      "abilities": [
+        "MAGNET_PULL",
+        "MAGNET_PULL"
+      ],
+      "source_trapped_mask": 2,
+      "native_trapped_mask": 2
+    },
+    {
+      "species": [
+        "GASTLY",
+        "RATTATA"
+      ],
+      "abilities": [
+        "MAGNET_PULL",
+        "MAGNET_PULL"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 0
+    },
+    {
+      "species": [
+        "GASTLY",
+        "MAGNEMITE"
+      ],
+      "abilities": [
+        "MAGNET_PULL",
+        "MAGNET_PULL"
+      ],
+      "source_trapped_mask": 2,
+      "native_trapped_mask": 2
+    },
+    {
+      "species": [
+        "GASTLY",
+        "PIDGEY"
+      ],
+      "abilities": [
+        "MAGNET_PULL",
+        "MAGNET_PULL"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 0
+    },
+    {
+      "species": [
+        "GASTLY",
+        "GASTLY"
+      ],
+      "abilities": [
+        "MAGNET_PULL",
+        "MAGNET_PULL"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 0
+    },
+    {
+      "species": [
+        "GASTLY",
+        "SKARMORY"
+      ],
+      "abilities": [
+        "MAGNET_PULL",
+        "MAGNET_PULL"
+      ],
+      "source_trapped_mask": 2,
+      "native_trapped_mask": 2
+    },
+    {
+      "species": [
+        "SKARMORY",
+        "RATTATA"
+      ],
+      "abilities": [
+        "MAGNET_PULL",
+        "MAGNET_PULL"
+      ],
+      "source_trapped_mask": 1,
+      "native_trapped_mask": 1
+    },
+    {
+      "species": [
+        "SKARMORY",
+        "MAGNEMITE"
+      ],
+      "abilities": [
+        "MAGNET_PULL",
+        "MAGNET_PULL"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 3
+    },
+    {
+      "species": [
+        "SKARMORY",
+        "PIDGEY"
+      ],
+      "abilities": [
+        "MAGNET_PULL",
+        "MAGNET_PULL"
+      ],
+      "source_trapped_mask": 1,
+      "native_trapped_mask": 1
+    },
+    {
+      "species": [
+        "SKARMORY",
+        "GASTLY"
+      ],
+      "abilities": [
+        "MAGNET_PULL",
+        "MAGNET_PULL"
+      ],
+      "source_trapped_mask": 1,
+      "native_trapped_mask": 1
+    },
+    {
+      "species": [
+        "SKARMORY",
+        "SKARMORY"
+      ],
+      "abilities": [
+        "MAGNET_PULL",
+        "MAGNET_PULL"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 3
+    },
+    {
+      "species": [
+        "RATTATA",
+        "RATTATA"
+      ],
+      "abilities": [
+        "MAGNET_PULL",
+        "SHADOW_TAG"
+      ],
+      "source_trapped_mask": 1,
+      "native_trapped_mask": 1
+    },
+    {
+      "species": [
+        "RATTATA",
+        "MAGNEMITE"
+      ],
+      "abilities": [
+        "MAGNET_PULL",
+        "SHADOW_TAG"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 3
+    },
+    {
+      "species": [
+        "RATTATA",
+        "PIDGEY"
+      ],
+      "abilities": [
+        "MAGNET_PULL",
+        "SHADOW_TAG"
+      ],
+      "source_trapped_mask": 1,
+      "native_trapped_mask": 1
+    },
+    {
+      "species": [
+        "RATTATA",
+        "GASTLY"
+      ],
+      "abilities": [
+        "MAGNET_PULL",
+        "SHADOW_TAG"
+      ],
+      "source_trapped_mask": 1,
+      "native_trapped_mask": 1
+    },
+    {
+      "species": [
+        "RATTATA",
+        "SKARMORY"
+      ],
+      "abilities": [
+        "MAGNET_PULL",
+        "SHADOW_TAG"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 3
+    },
+    {
+      "species": [
+        "MAGNEMITE",
+        "RATTATA"
+      ],
+      "abilities": [
+        "MAGNET_PULL",
+        "SHADOW_TAG"
+      ],
+      "source_trapped_mask": 1,
+      "native_trapped_mask": 1
+    },
+    {
+      "species": [
+        "MAGNEMITE",
+        "MAGNEMITE"
+      ],
+      "abilities": [
+        "MAGNET_PULL",
+        "SHADOW_TAG"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 3
+    },
+    {
+      "species": [
+        "MAGNEMITE",
+        "PIDGEY"
+      ],
+      "abilities": [
+        "MAGNET_PULL",
+        "SHADOW_TAG"
+      ],
+      "source_trapped_mask": 1,
+      "native_trapped_mask": 1
+    },
+    {
+      "species": [
+        "MAGNEMITE",
+        "GASTLY"
+      ],
+      "abilities": [
+        "MAGNET_PULL",
+        "SHADOW_TAG"
+      ],
+      "source_trapped_mask": 1,
+      "native_trapped_mask": 1
+    },
+    {
+      "species": [
+        "MAGNEMITE",
+        "SKARMORY"
+      ],
+      "abilities": [
+        "MAGNET_PULL",
+        "SHADOW_TAG"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 3
+    },
+    {
+      "species": [
+        "PIDGEY",
+        "RATTATA"
+      ],
+      "abilities": [
+        "MAGNET_PULL",
+        "SHADOW_TAG"
+      ],
+      "source_trapped_mask": 1,
+      "native_trapped_mask": 1
+    },
+    {
+      "species": [
+        "PIDGEY",
+        "MAGNEMITE"
+      ],
+      "abilities": [
+        "MAGNET_PULL",
+        "SHADOW_TAG"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 3
+    },
+    {
+      "species": [
+        "PIDGEY",
+        "PIDGEY"
+      ],
+      "abilities": [
+        "MAGNET_PULL",
+        "SHADOW_TAG"
+      ],
+      "source_trapped_mask": 1,
+      "native_trapped_mask": 1
+    },
+    {
+      "species": [
+        "PIDGEY",
+        "GASTLY"
+      ],
+      "abilities": [
+        "MAGNET_PULL",
+        "SHADOW_TAG"
+      ],
+      "source_trapped_mask": 1,
+      "native_trapped_mask": 1
+    },
+    {
+      "species": [
+        "PIDGEY",
+        "SKARMORY"
+      ],
+      "abilities": [
+        "MAGNET_PULL",
+        "SHADOW_TAG"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 3
+    },
+    {
+      "species": [
+        "GASTLY",
+        "RATTATA"
+      ],
+      "abilities": [
+        "MAGNET_PULL",
+        "SHADOW_TAG"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 0
+    },
+    {
+      "species": [
+        "GASTLY",
+        "MAGNEMITE"
+      ],
+      "abilities": [
+        "MAGNET_PULL",
+        "SHADOW_TAG"
+      ],
+      "source_trapped_mask": 2,
+      "native_trapped_mask": 2
+    },
+    {
+      "species": [
+        "GASTLY",
+        "PIDGEY"
+      ],
+      "abilities": [
+        "MAGNET_PULL",
+        "SHADOW_TAG"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 0
+    },
+    {
+      "species": [
+        "GASTLY",
+        "GASTLY"
+      ],
+      "abilities": [
+        "MAGNET_PULL",
+        "SHADOW_TAG"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 0
+    },
+    {
+      "species": [
+        "GASTLY",
+        "SKARMORY"
+      ],
+      "abilities": [
+        "MAGNET_PULL",
+        "SHADOW_TAG"
+      ],
+      "source_trapped_mask": 2,
+      "native_trapped_mask": 2
+    },
+    {
+      "species": [
+        "SKARMORY",
+        "RATTATA"
+      ],
+      "abilities": [
+        "MAGNET_PULL",
+        "SHADOW_TAG"
+      ],
+      "source_trapped_mask": 1,
+      "native_trapped_mask": 1
+    },
+    {
+      "species": [
+        "SKARMORY",
+        "MAGNEMITE"
+      ],
+      "abilities": [
+        "MAGNET_PULL",
+        "SHADOW_TAG"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 3
+    },
+    {
+      "species": [
+        "SKARMORY",
+        "PIDGEY"
+      ],
+      "abilities": [
+        "MAGNET_PULL",
+        "SHADOW_TAG"
+      ],
+      "source_trapped_mask": 1,
+      "native_trapped_mask": 1
+    },
+    {
+      "species": [
+        "SKARMORY",
+        "GASTLY"
+      ],
+      "abilities": [
+        "MAGNET_PULL",
+        "SHADOW_TAG"
+      ],
+      "source_trapped_mask": 1,
+      "native_trapped_mask": 1
+    },
+    {
+      "species": [
+        "SKARMORY",
+        "SKARMORY"
+      ],
+      "abilities": [
+        "MAGNET_PULL",
+        "SHADOW_TAG"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 3
+    },
+    {
+      "species": [
+        "RATTATA",
+        "RATTATA"
+      ],
+      "abilities": [
+        "SHADOW_TAG",
+        "KEEN_EYE"
+      ],
+      "source_trapped_mask": 2,
+      "native_trapped_mask": 2
+    },
+    {
+      "species": [
+        "RATTATA",
+        "MAGNEMITE"
+      ],
+      "abilities": [
+        "SHADOW_TAG",
+        "KEEN_EYE"
+      ],
+      "source_trapped_mask": 2,
+      "native_trapped_mask": 2
+    },
+    {
+      "species": [
+        "RATTATA",
+        "PIDGEY"
+      ],
+      "abilities": [
+        "SHADOW_TAG",
+        "KEEN_EYE"
+      ],
+      "source_trapped_mask": 2,
+      "native_trapped_mask": 2
+    },
+    {
+      "species": [
+        "RATTATA",
+        "GASTLY"
+      ],
+      "abilities": [
+        "SHADOW_TAG",
+        "KEEN_EYE"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 0
+    },
+    {
+      "species": [
+        "RATTATA",
+        "SKARMORY"
+      ],
+      "abilities": [
+        "SHADOW_TAG",
+        "KEEN_EYE"
+      ],
+      "source_trapped_mask": 2,
+      "native_trapped_mask": 2
+    },
+    {
+      "species": [
+        "MAGNEMITE",
+        "RATTATA"
+      ],
+      "abilities": [
+        "SHADOW_TAG",
+        "KEEN_EYE"
+      ],
+      "source_trapped_mask": 2,
+      "native_trapped_mask": 2
+    },
+    {
+      "species": [
+        "MAGNEMITE",
+        "MAGNEMITE"
+      ],
+      "abilities": [
+        "SHADOW_TAG",
+        "KEEN_EYE"
+      ],
+      "source_trapped_mask": 2,
+      "native_trapped_mask": 2
+    },
+    {
+      "species": [
+        "MAGNEMITE",
+        "PIDGEY"
+      ],
+      "abilities": [
+        "SHADOW_TAG",
+        "KEEN_EYE"
+      ],
+      "source_trapped_mask": 2,
+      "native_trapped_mask": 2
+    },
+    {
+      "species": [
+        "MAGNEMITE",
+        "GASTLY"
+      ],
+      "abilities": [
+        "SHADOW_TAG",
+        "KEEN_EYE"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 0
+    },
+    {
+      "species": [
+        "MAGNEMITE",
+        "SKARMORY"
+      ],
+      "abilities": [
+        "SHADOW_TAG",
+        "KEEN_EYE"
+      ],
+      "source_trapped_mask": 2,
+      "native_trapped_mask": 2
+    },
+    {
+      "species": [
+        "PIDGEY",
+        "RATTATA"
+      ],
+      "abilities": [
+        "SHADOW_TAG",
+        "KEEN_EYE"
+      ],
+      "source_trapped_mask": 2,
+      "native_trapped_mask": 2
+    },
+    {
+      "species": [
+        "PIDGEY",
+        "MAGNEMITE"
+      ],
+      "abilities": [
+        "SHADOW_TAG",
+        "KEEN_EYE"
+      ],
+      "source_trapped_mask": 2,
+      "native_trapped_mask": 2
+    },
+    {
+      "species": [
+        "PIDGEY",
+        "PIDGEY"
+      ],
+      "abilities": [
+        "SHADOW_TAG",
+        "KEEN_EYE"
+      ],
+      "source_trapped_mask": 2,
+      "native_trapped_mask": 2
+    },
+    {
+      "species": [
+        "PIDGEY",
+        "GASTLY"
+      ],
+      "abilities": [
+        "SHADOW_TAG",
+        "KEEN_EYE"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 0
+    },
+    {
+      "species": [
+        "PIDGEY",
+        "SKARMORY"
+      ],
+      "abilities": [
+        "SHADOW_TAG",
+        "KEEN_EYE"
+      ],
+      "source_trapped_mask": 2,
+      "native_trapped_mask": 2
+    },
+    {
+      "species": [
+        "GASTLY",
+        "RATTATA"
+      ],
+      "abilities": [
+        "SHADOW_TAG",
+        "KEEN_EYE"
+      ],
+      "source_trapped_mask": 2,
+      "native_trapped_mask": 2
+    },
+    {
+      "species": [
+        "GASTLY",
+        "MAGNEMITE"
+      ],
+      "abilities": [
+        "SHADOW_TAG",
+        "KEEN_EYE"
+      ],
+      "source_trapped_mask": 2,
+      "native_trapped_mask": 2
+    },
+    {
+      "species": [
+        "GASTLY",
+        "PIDGEY"
+      ],
+      "abilities": [
+        "SHADOW_TAG",
+        "KEEN_EYE"
+      ],
+      "source_trapped_mask": 2,
+      "native_trapped_mask": 2
+    },
+    {
+      "species": [
+        "GASTLY",
+        "GASTLY"
+      ],
+      "abilities": [
+        "SHADOW_TAG",
+        "KEEN_EYE"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 0
+    },
+    {
+      "species": [
+        "GASTLY",
+        "SKARMORY"
+      ],
+      "abilities": [
+        "SHADOW_TAG",
+        "KEEN_EYE"
+      ],
+      "source_trapped_mask": 2,
+      "native_trapped_mask": 2
+    },
+    {
+      "species": [
+        "SKARMORY",
+        "RATTATA"
+      ],
+      "abilities": [
+        "SHADOW_TAG",
+        "KEEN_EYE"
+      ],
+      "source_trapped_mask": 2,
+      "native_trapped_mask": 2
+    },
+    {
+      "species": [
+        "SKARMORY",
+        "MAGNEMITE"
+      ],
+      "abilities": [
+        "SHADOW_TAG",
+        "KEEN_EYE"
+      ],
+      "source_trapped_mask": 2,
+      "native_trapped_mask": 2
+    },
+    {
+      "species": [
+        "SKARMORY",
+        "PIDGEY"
+      ],
+      "abilities": [
+        "SHADOW_TAG",
+        "KEEN_EYE"
+      ],
+      "source_trapped_mask": 2,
+      "native_trapped_mask": 2
+    },
+    {
+      "species": [
+        "SKARMORY",
+        "GASTLY"
+      ],
+      "abilities": [
+        "SHADOW_TAG",
+        "KEEN_EYE"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 0
+    },
+    {
+      "species": [
+        "SKARMORY",
+        "SKARMORY"
+      ],
+      "abilities": [
+        "SHADOW_TAG",
+        "KEEN_EYE"
+      ],
+      "source_trapped_mask": 2,
+      "native_trapped_mask": 2
+    },
+    {
+      "species": [
+        "RATTATA",
+        "RATTATA"
+      ],
+      "abilities": [
+        "SHADOW_TAG",
+        "ARENA_TRAP"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 3
+    },
+    {
+      "species": [
+        "RATTATA",
+        "MAGNEMITE"
+      ],
+      "abilities": [
+        "SHADOW_TAG",
+        "ARENA_TRAP"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 3
+    },
+    {
+      "species": [
+        "RATTATA",
+        "PIDGEY"
+      ],
+      "abilities": [
+        "SHADOW_TAG",
+        "ARENA_TRAP"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 3
+    },
+    {
+      "species": [
+        "RATTATA",
+        "GASTLY"
+      ],
+      "abilities": [
+        "SHADOW_TAG",
+        "ARENA_TRAP"
+      ],
+      "source_trapped_mask": 1,
+      "native_trapped_mask": 1
+    },
+    {
+      "species": [
+        "RATTATA",
+        "SKARMORY"
+      ],
+      "abilities": [
+        "SHADOW_TAG",
+        "ARENA_TRAP"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 3
+    },
+    {
+      "species": [
+        "MAGNEMITE",
+        "RATTATA"
+      ],
+      "abilities": [
+        "SHADOW_TAG",
+        "ARENA_TRAP"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 3
+    },
+    {
+      "species": [
+        "MAGNEMITE",
+        "MAGNEMITE"
+      ],
+      "abilities": [
+        "SHADOW_TAG",
+        "ARENA_TRAP"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 3
+    },
+    {
+      "species": [
+        "MAGNEMITE",
+        "PIDGEY"
+      ],
+      "abilities": [
+        "SHADOW_TAG",
+        "ARENA_TRAP"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 3
+    },
+    {
+      "species": [
+        "MAGNEMITE",
+        "GASTLY"
+      ],
+      "abilities": [
+        "SHADOW_TAG",
+        "ARENA_TRAP"
+      ],
+      "source_trapped_mask": 1,
+      "native_trapped_mask": 1
+    },
+    {
+      "species": [
+        "MAGNEMITE",
+        "SKARMORY"
+      ],
+      "abilities": [
+        "SHADOW_TAG",
+        "ARENA_TRAP"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 3
+    },
+    {
+      "species": [
+        "PIDGEY",
+        "RATTATA"
+      ],
+      "abilities": [
+        "SHADOW_TAG",
+        "ARENA_TRAP"
+      ],
+      "source_trapped_mask": 2,
+      "native_trapped_mask": 2
+    },
+    {
+      "species": [
+        "PIDGEY",
+        "MAGNEMITE"
+      ],
+      "abilities": [
+        "SHADOW_TAG",
+        "ARENA_TRAP"
+      ],
+      "source_trapped_mask": 2,
+      "native_trapped_mask": 2
+    },
+    {
+      "species": [
+        "PIDGEY",
+        "PIDGEY"
+      ],
+      "abilities": [
+        "SHADOW_TAG",
+        "ARENA_TRAP"
+      ],
+      "source_trapped_mask": 2,
+      "native_trapped_mask": 2
+    },
+    {
+      "species": [
+        "PIDGEY",
+        "GASTLY"
+      ],
+      "abilities": [
+        "SHADOW_TAG",
+        "ARENA_TRAP"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 0
+    },
+    {
+      "species": [
+        "PIDGEY",
+        "SKARMORY"
+      ],
+      "abilities": [
+        "SHADOW_TAG",
+        "ARENA_TRAP"
+      ],
+      "source_trapped_mask": 2,
+      "native_trapped_mask": 2
+    },
+    {
+      "species": [
+        "GASTLY",
+        "RATTATA"
+      ],
+      "abilities": [
+        "SHADOW_TAG",
+        "ARENA_TRAP"
+      ],
+      "source_trapped_mask": 2,
+      "native_trapped_mask": 2
+    },
+    {
+      "species": [
+        "GASTLY",
+        "MAGNEMITE"
+      ],
+      "abilities": [
+        "SHADOW_TAG",
+        "ARENA_TRAP"
+      ],
+      "source_trapped_mask": 2,
+      "native_trapped_mask": 2
+    },
+    {
+      "species": [
+        "GASTLY",
+        "PIDGEY"
+      ],
+      "abilities": [
+        "SHADOW_TAG",
+        "ARENA_TRAP"
+      ],
+      "source_trapped_mask": 2,
+      "native_trapped_mask": 2
+    },
+    {
+      "species": [
+        "GASTLY",
+        "GASTLY"
+      ],
+      "abilities": [
+        "SHADOW_TAG",
+        "ARENA_TRAP"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 0
+    },
+    {
+      "species": [
+        "GASTLY",
+        "SKARMORY"
+      ],
+      "abilities": [
+        "SHADOW_TAG",
+        "ARENA_TRAP"
+      ],
+      "source_trapped_mask": 2,
+      "native_trapped_mask": 2
+    },
+    {
+      "species": [
+        "SKARMORY",
+        "RATTATA"
+      ],
+      "abilities": [
+        "SHADOW_TAG",
+        "ARENA_TRAP"
+      ],
+      "source_trapped_mask": 2,
+      "native_trapped_mask": 2
+    },
+    {
+      "species": [
+        "SKARMORY",
+        "MAGNEMITE"
+      ],
+      "abilities": [
+        "SHADOW_TAG",
+        "ARENA_TRAP"
+      ],
+      "source_trapped_mask": 2,
+      "native_trapped_mask": 2
+    },
+    {
+      "species": [
+        "SKARMORY",
+        "PIDGEY"
+      ],
+      "abilities": [
+        "SHADOW_TAG",
+        "ARENA_TRAP"
+      ],
+      "source_trapped_mask": 2,
+      "native_trapped_mask": 2
+    },
+    {
+      "species": [
+        "SKARMORY",
+        "GASTLY"
+      ],
+      "abilities": [
+        "SHADOW_TAG",
+        "ARENA_TRAP"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 0
+    },
+    {
+      "species": [
+        "SKARMORY",
+        "SKARMORY"
+      ],
+      "abilities": [
+        "SHADOW_TAG",
+        "ARENA_TRAP"
+      ],
+      "source_trapped_mask": 2,
+      "native_trapped_mask": 2
+    },
+    {
+      "species": [
+        "RATTATA",
+        "RATTATA"
+      ],
+      "abilities": [
+        "SHADOW_TAG",
+        "MAGNET_PULL"
+      ],
+      "source_trapped_mask": 2,
+      "native_trapped_mask": 2
+    },
+    {
+      "species": [
+        "RATTATA",
+        "MAGNEMITE"
+      ],
+      "abilities": [
+        "SHADOW_TAG",
+        "MAGNET_PULL"
+      ],
+      "source_trapped_mask": 2,
+      "native_trapped_mask": 2
+    },
+    {
+      "species": [
+        "RATTATA",
+        "PIDGEY"
+      ],
+      "abilities": [
+        "SHADOW_TAG",
+        "MAGNET_PULL"
+      ],
+      "source_trapped_mask": 2,
+      "native_trapped_mask": 2
+    },
+    {
+      "species": [
+        "RATTATA",
+        "GASTLY"
+      ],
+      "abilities": [
+        "SHADOW_TAG",
+        "MAGNET_PULL"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 0
+    },
+    {
+      "species": [
+        "RATTATA",
+        "SKARMORY"
+      ],
+      "abilities": [
+        "SHADOW_TAG",
+        "MAGNET_PULL"
+      ],
+      "source_trapped_mask": 2,
+      "native_trapped_mask": 2
+    },
+    {
+      "species": [
+        "MAGNEMITE",
+        "RATTATA"
+      ],
+      "abilities": [
+        "SHADOW_TAG",
+        "MAGNET_PULL"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 3
+    },
+    {
+      "species": [
+        "MAGNEMITE",
+        "MAGNEMITE"
+      ],
+      "abilities": [
+        "SHADOW_TAG",
+        "MAGNET_PULL"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 3
+    },
+    {
+      "species": [
+        "MAGNEMITE",
+        "PIDGEY"
+      ],
+      "abilities": [
+        "SHADOW_TAG",
+        "MAGNET_PULL"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 3
+    },
+    {
+      "species": [
+        "MAGNEMITE",
+        "GASTLY"
+      ],
+      "abilities": [
+        "SHADOW_TAG",
+        "MAGNET_PULL"
+      ],
+      "source_trapped_mask": 1,
+      "native_trapped_mask": 1
+    },
+    {
+      "species": [
+        "MAGNEMITE",
+        "SKARMORY"
+      ],
+      "abilities": [
+        "SHADOW_TAG",
+        "MAGNET_PULL"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 3
+    },
+    {
+      "species": [
+        "PIDGEY",
+        "RATTATA"
+      ],
+      "abilities": [
+        "SHADOW_TAG",
+        "MAGNET_PULL"
+      ],
+      "source_trapped_mask": 2,
+      "native_trapped_mask": 2
+    },
+    {
+      "species": [
+        "PIDGEY",
+        "MAGNEMITE"
+      ],
+      "abilities": [
+        "SHADOW_TAG",
+        "MAGNET_PULL"
+      ],
+      "source_trapped_mask": 2,
+      "native_trapped_mask": 2
+    },
+    {
+      "species": [
+        "PIDGEY",
+        "PIDGEY"
+      ],
+      "abilities": [
+        "SHADOW_TAG",
+        "MAGNET_PULL"
+      ],
+      "source_trapped_mask": 2,
+      "native_trapped_mask": 2
+    },
+    {
+      "species": [
+        "PIDGEY",
+        "GASTLY"
+      ],
+      "abilities": [
+        "SHADOW_TAG",
+        "MAGNET_PULL"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 0
+    },
+    {
+      "species": [
+        "PIDGEY",
+        "SKARMORY"
+      ],
+      "abilities": [
+        "SHADOW_TAG",
+        "MAGNET_PULL"
+      ],
+      "source_trapped_mask": 2,
+      "native_trapped_mask": 2
+    },
+    {
+      "species": [
+        "GASTLY",
+        "RATTATA"
+      ],
+      "abilities": [
+        "SHADOW_TAG",
+        "MAGNET_PULL"
+      ],
+      "source_trapped_mask": 2,
+      "native_trapped_mask": 2
+    },
+    {
+      "species": [
+        "GASTLY",
+        "MAGNEMITE"
+      ],
+      "abilities": [
+        "SHADOW_TAG",
+        "MAGNET_PULL"
+      ],
+      "source_trapped_mask": 2,
+      "native_trapped_mask": 2
+    },
+    {
+      "species": [
+        "GASTLY",
+        "PIDGEY"
+      ],
+      "abilities": [
+        "SHADOW_TAG",
+        "MAGNET_PULL"
+      ],
+      "source_trapped_mask": 2,
+      "native_trapped_mask": 2
+    },
+    {
+      "species": [
+        "GASTLY",
+        "GASTLY"
+      ],
+      "abilities": [
+        "SHADOW_TAG",
+        "MAGNET_PULL"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 0
+    },
+    {
+      "species": [
+        "GASTLY",
+        "SKARMORY"
+      ],
+      "abilities": [
+        "SHADOW_TAG",
+        "MAGNET_PULL"
+      ],
+      "source_trapped_mask": 2,
+      "native_trapped_mask": 2
+    },
+    {
+      "species": [
+        "SKARMORY",
+        "RATTATA"
+      ],
+      "abilities": [
+        "SHADOW_TAG",
+        "MAGNET_PULL"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 3
+    },
+    {
+      "species": [
+        "SKARMORY",
+        "MAGNEMITE"
+      ],
+      "abilities": [
+        "SHADOW_TAG",
+        "MAGNET_PULL"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 3
+    },
+    {
+      "species": [
+        "SKARMORY",
+        "PIDGEY"
+      ],
+      "abilities": [
+        "SHADOW_TAG",
+        "MAGNET_PULL"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 3
+    },
+    {
+      "species": [
+        "SKARMORY",
+        "GASTLY"
+      ],
+      "abilities": [
+        "SHADOW_TAG",
+        "MAGNET_PULL"
+      ],
+      "source_trapped_mask": 1,
+      "native_trapped_mask": 1
+    },
+    {
+      "species": [
+        "SKARMORY",
+        "SKARMORY"
+      ],
+      "abilities": [
+        "SHADOW_TAG",
+        "MAGNET_PULL"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 3
+    },
+    {
+      "species": [
+        "RATTATA",
+        "RATTATA"
+      ],
+      "abilities": [
+        "SHADOW_TAG",
+        "SHADOW_TAG"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 0
+    },
+    {
+      "species": [
+        "RATTATA",
+        "MAGNEMITE"
+      ],
+      "abilities": [
+        "SHADOW_TAG",
+        "SHADOW_TAG"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 0
+    },
+    {
+      "species": [
+        "RATTATA",
+        "PIDGEY"
+      ],
+      "abilities": [
+        "SHADOW_TAG",
+        "SHADOW_TAG"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 0
+    },
+    {
+      "species": [
+        "RATTATA",
+        "GASTLY"
+      ],
+      "abilities": [
+        "SHADOW_TAG",
+        "SHADOW_TAG"
+      ],
+      "source_trapped_mask": 1,
+      "native_trapped_mask": 0
+    },
+    {
+      "species": [
+        "RATTATA",
+        "SKARMORY"
+      ],
+      "abilities": [
+        "SHADOW_TAG",
+        "SHADOW_TAG"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 0
+    },
+    {
+      "species": [
+        "MAGNEMITE",
+        "RATTATA"
+      ],
+      "abilities": [
+        "SHADOW_TAG",
+        "SHADOW_TAG"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 0
+    },
+    {
+      "species": [
+        "MAGNEMITE",
+        "MAGNEMITE"
+      ],
+      "abilities": [
+        "SHADOW_TAG",
+        "SHADOW_TAG"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 0
+    },
+    {
+      "species": [
+        "MAGNEMITE",
+        "PIDGEY"
+      ],
+      "abilities": [
+        "SHADOW_TAG",
+        "SHADOW_TAG"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 0
+    },
+    {
+      "species": [
+        "MAGNEMITE",
+        "GASTLY"
+      ],
+      "abilities": [
+        "SHADOW_TAG",
+        "SHADOW_TAG"
+      ],
+      "source_trapped_mask": 1,
+      "native_trapped_mask": 0
+    },
+    {
+      "species": [
+        "MAGNEMITE",
+        "SKARMORY"
+      ],
+      "abilities": [
+        "SHADOW_TAG",
+        "SHADOW_TAG"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 0
+    },
+    {
+      "species": [
+        "PIDGEY",
+        "RATTATA"
+      ],
+      "abilities": [
+        "SHADOW_TAG",
+        "SHADOW_TAG"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 0
+    },
+    {
+      "species": [
+        "PIDGEY",
+        "MAGNEMITE"
+      ],
+      "abilities": [
+        "SHADOW_TAG",
+        "SHADOW_TAG"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 0
+    },
+    {
+      "species": [
+        "PIDGEY",
+        "PIDGEY"
+      ],
+      "abilities": [
+        "SHADOW_TAG",
+        "SHADOW_TAG"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 0
+    },
+    {
+      "species": [
+        "PIDGEY",
+        "GASTLY"
+      ],
+      "abilities": [
+        "SHADOW_TAG",
+        "SHADOW_TAG"
+      ],
+      "source_trapped_mask": 1,
+      "native_trapped_mask": 0
+    },
+    {
+      "species": [
+        "PIDGEY",
+        "SKARMORY"
+      ],
+      "abilities": [
+        "SHADOW_TAG",
+        "SHADOW_TAG"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 0
+    },
+    {
+      "species": [
+        "GASTLY",
+        "RATTATA"
+      ],
+      "abilities": [
+        "SHADOW_TAG",
+        "SHADOW_TAG"
+      ],
+      "source_trapped_mask": 2,
+      "native_trapped_mask": 0
+    },
+    {
+      "species": [
+        "GASTLY",
+        "MAGNEMITE"
+      ],
+      "abilities": [
+        "SHADOW_TAG",
+        "SHADOW_TAG"
+      ],
+      "source_trapped_mask": 2,
+      "native_trapped_mask": 0
+    },
+    {
+      "species": [
+        "GASTLY",
+        "PIDGEY"
+      ],
+      "abilities": [
+        "SHADOW_TAG",
+        "SHADOW_TAG"
+      ],
+      "source_trapped_mask": 2,
+      "native_trapped_mask": 0
+    },
+    {
+      "species": [
+        "GASTLY",
+        "GASTLY"
+      ],
+      "abilities": [
+        "SHADOW_TAG",
+        "SHADOW_TAG"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 0
+    },
+    {
+      "species": [
+        "GASTLY",
+        "SKARMORY"
+      ],
+      "abilities": [
+        "SHADOW_TAG",
+        "SHADOW_TAG"
+      ],
+      "source_trapped_mask": 2,
+      "native_trapped_mask": 0
+    },
+    {
+      "species": [
+        "SKARMORY",
+        "RATTATA"
+      ],
+      "abilities": [
+        "SHADOW_TAG",
+        "SHADOW_TAG"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 0
+    },
+    {
+      "species": [
+        "SKARMORY",
+        "MAGNEMITE"
+      ],
+      "abilities": [
+        "SHADOW_TAG",
+        "SHADOW_TAG"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 0
+    },
+    {
+      "species": [
+        "SKARMORY",
+        "PIDGEY"
+      ],
+      "abilities": [
+        "SHADOW_TAG",
+        "SHADOW_TAG"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 0
+    },
+    {
+      "species": [
+        "SKARMORY",
+        "GASTLY"
+      ],
+      "abilities": [
+        "SHADOW_TAG",
+        "SHADOW_TAG"
+      ],
+      "source_trapped_mask": 1,
+      "native_trapped_mask": 0
+    },
+    {
+      "species": [
+        "SKARMORY",
+        "SKARMORY"
+      ],
+      "abilities": [
+        "SHADOW_TAG",
+        "SHADOW_TAG"
+      ],
+      "source_trapped_mask": 0,
+      "native_trapped_mask": 0
+    }
+  ],
+  "adapter": "Compute both eligible directions from live types, unsuppressed abilities and grounding, and return the existing native trapper identifier only for one-way trapping. Keep native profiles, doubles, active gimmicks, fields, IDs and save state.",
+  "gaps": [
+    "Complete wild fleeing/Teleport, source AI strategy and estimates, forced switches and full switch timing remain separate.",
+    "Shed Shell/item suppression, all grounding modifiers and optional formats/gimmicks are not certified as source behavior.",
+    "The native Air Balloon/Iron Ball/Levitate controls verify selected ordinary grounding cases; Unnerve and other item/ability modifiers remain separate."
+  ]
+}

@@ -5115,11 +5115,42 @@ bool32 CanPolishedRunAwayEscape(enum BattlerId battler)
         && GetBattlerAbilityIgnoreMoldBreaker(battler) == ABILITY_RUN_AWAY;
 }
 
+static bool32 PolishedAbilityCanTrap(enum BattlerId target, enum BattlerId trapper)
+{
+    // Source CheckTrap tests actual eligibility, not matching ability names.
+    if (IS_BATTLER_OF_TYPE(target, TYPE_GHOST))
+        return FALSE;
+
+    switch (GetBattlerAbilityIgnoreMoldBreaker(trapper))
+    {
+    case ABILITY_SHADOW_TAG:
+        return TRUE;
+    case ABILITY_MAGNET_PULL:
+        return IS_BATTLER_OF_TYPE(target, TYPE_STEEL);
+    case ABILITY_ARENA_TRAP:
+        return IsBattlerGrounded(target, GetBattlerAbilityIgnoreMoldBreaker(target), GetBattlerHoldEffect(target));
+    default:
+        return FALSE;
+    }
+}
+
 u32 IsAbilityPreventingEscape(enum BattlerId battler)
 {
     if (B_POLISHED_MOVE_BALANCE && gBattleMons[battler].ability == ABILITY_RUN_AWAY
      && CanPolishedRunAwayEscape(battler))
         return 0;
+
+    if (B_POLISHED_MOVE_BALANCE && !IsDoubleBattle()
+     && GetActiveGimmick(battler) == GIMMICK_NONE
+     && GetActiveGimmick(GetOppositeBattler(battler)) == GIMMICK_NONE)
+    {
+        enum BattlerId opponent = GetOppositeBattler(battler);
+        // Source CheckIfTrappedByAbility cancels only mutually eligible traps.
+        if (PolishedAbilityCanTrap(battler, opponent)
+         && !PolishedAbilityCanTrap(opponent, battler))
+            return opponent + 1;
+        return 0;
+    }
 
     if (GetConfig(B_GHOSTS_ESCAPE) >= GEN_6 && IS_BATTLER_OF_TYPE(battler, TYPE_GHOST))
         return 0;

@@ -2178,3 +2178,65 @@ The same final Johto ROM passes all 12 demo checks, 101 campaign checks and
 19 directed warp traversals, including all starter branches, Sprout Tower,
 Falkner, the badge/Roost/Togepi rewards, resident schedules and Save/reset/
 Continue. The authentic source opening remains separate from this demo gate.
+
+### Source mutual trapping abilities
+
+The pinned `CheckIfTrappedByAbility` checks trapping in both directions. If the
+opponent can trap the user, it reverses the turn context and checks whether the
+user can also trap the opponent. If both checks succeed, neither Pokemon is
+ability-trapped. The wrapper preserves the result flags when restoring turn
+context. Ghost targets are immune, Magnet Pull requires Steel typing, Arena
+Trap requires grounding, and Shadow Tag applies to other targets.
+
+Expansion only exempted matching Shadow Tag holders. The source profile now
+cancels all mutually eligible trapping abilities in ordinary singles without
+active gimmicks, while preserving one-way traps. This also removes the native
+blanket same-Shadow-Tag exemption in this scope: a Ghost Shadow Tag holder can
+trap a non-Ghost Shadow Tag holder because the reverse trap does not apply.
+The shared eligibility query serves player selection and the existing AI
+switch gate; no AI strategy or estimates are replaced.
+
+Eligibility uses current types, abilities after suppression and grounding.
+The existing Run Away switch exemption remains earlier in the path. Cancelled
+ability traps do not clear Mean Look or Wrap, and no counters, identifiers,
+save fields or capacities change. Native profiles, doubles and active gimmicks
+retain their native path. The native grounding helper retains optional field
+extensions; selected Flying, Levitate, Air Balloon and Iron Ball cases match
+the source's ordinary grounding checks.
+
+`build_trapping_abilities.py` verifies the pinned wrapper, reversed-turn helper,
+Ghost/type/grounding predicates, suppression and switch-gate ordering from
+existing exact-blob fixtures. It generates 400 independent expected source
+and native-control vectors over three trapping abilities plus neutral Keen
+Eye, and Normal, Steel, Flying, Ghost and Steel/Flying examples. CI and the
+production audit verify both the manifest and generated test header.
+
+Eight groups cover 439 cases per profile: the 400-case matrix; Neutralizing
+Gas; selected grounding/item cases on both sides; eligibility after optional
+Gastro Acid suppression; retained Mean Look/Wrap effects; native Terastal and
+doubles; and actual AI switching when an imminent Perish Song faint prompts a
+legal switch. Four groups reproduced the inherited failures before the fix.
+Neutral controls use explicit Keen Eye rather than ABILITY_NONE.
+
+This closes the selected ability-trap eligibility and mutual-cancellation
+scope. Complete wild fleeing/Teleport, source AI choices/estimates, forced
+switching, full switch timing, Shed Shell/item suppression, Unnerve and all
+other grounding modifiers remain separate audits. Optional content remains
+available without certifying it as source behavior.
+
+Validation with Arm GNU GCC 13.2.1: both production ROMs build. All eight
+focused groups (439 cases per profile), all 183 earlier source battle groups
+and six AI timing checks pass, along with 62 source checks and 12 ARM compiler
+probes. The full native suite passes 5,540 tests, with nine unchanged expected
+failures and 585 existing TODOs (6,134 total), and no unexpected failures.
+The AI timing ceilings remain unchanged.
+
+The production-linked audit matches all 255 basic move/PP records, 18 target
+stat-drop records, 254 Sleep Talk eligibility entries and 43,792 teaching
+combinations. The 109 recorded machine/lesson gaps are unchanged, with no new
+or changed findings.
+
+The same final Johto ROM passes all 12 demo checks, 101 campaign checks and
+19 directed warp traversals, including all starter branches, Sprout Tower,
+Falkner, the badge/Roost/Togepi rewards, resident schedules and Save/reset/
+Continue. The authentic source opening remains separate from this demo gate.
