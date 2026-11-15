@@ -2408,6 +2408,60 @@ eligibility change, not full battle or campaign parity.
 Validated production ROM SHA-256:
 `0c787965ebf8c403aae58c94433f09fcbff1701e04a2c5f93388673f1587c24f`.
 
+## Source Roar protection and hidden-target hit gates
+
+The pinned Roar script calls `checkhit` before priority, reflection and forced
+switching. That hit check tests Protect before No Guard, tests either side's
+No Guard before Fly/Dig, and tests Lock-On only after Fly/Dig. Its perfect-hit
+exception follows those gates. Substitute does not block Roar.
+
+Expansion's ordinary Roar bypassed Protect and let Lock-On bypass Fly/Dig.
+The source profile now blocks Roar with Protect, including before Magic Bounce,
+and rejects a hidden Fly/Dig target unless either side has effective No Guard.
+The override applies only to Roar execution in singles without active gimmicks.
+Native AI hit estimates, move/species/item identifiers, save fields, capacities,
+party selection and the existing forced-switch machinery are unchanged.
+Whirlwind is absent from the pinned source and retains its native behavior,
+as do doubles, active gimmicks and optional protective effects.
+
+`build_roar_hit_rules.py` verifies the source effect sequence and gate ordering,
+Protect, Substitute and No Guard checks, and selected existing forced-switch
+rules. The original Roar effect is added as an exact-blob fixture from the
+existing source pin; no source version or variant changes. CI and the
+production move/machine audit verify the generated manifest.
+
+Nine emulator battle groups cover 63 cases per profile: both sides' Protect,
+Substitute, Fly/Dig, No Guard and Lock-On interactions; reduced accuracy and
+raised evasion; living/fainted/absent trainer replacements; Suction Cups and
+Soundproof with Mold Breaker; Protect before Magic Bounce; optional Whirlwind,
+Terastal on either side and doubles; and ordinary wild level comparisons with
+and without a player reserve. Failed wild Roar is followed by a damaging move
+to establish that combat continues, rather than relying only on the recorded
+test teardown's outcome. The first two groups reproduced both inherited
+hit-gate failures before the runtime correction.
+
+This is a scoped hit-gate correction. Source special-encounter prohibitions,
+the roaming opponent's level exemption, full reflection eligibility (including
+Roar against Magic Bounce behind Substitute), Prankster/Soundproof ordering,
+turn priority, deferred switch timing, candidate selection, ability activation
+order, AI and source presentation remain separate audits. Ordinary wild level
+and trainer reserve checks are regression coverage of matching native paths.
+
+Validation: both production ROM builds, all 66 source checks and 12 ARM
+compiler probes passed. The source profile passed 236 battle groups plus six
+AI timing groups without changing timing ceilings. The full native suite
+passed 5,585 groups, including all nine new Roar groups (63 cases), with nine
+expected failures and 585 existing TODOs; there were no unexpected failures.
+The production ELF audit retained zero basic move-data differences and zero
+teaching compatibility mismatches, with 109 known gaps and no new or changed
+entries. The same final Johto ROM passed all 12 demo checks and 101 campaign
+checks, including all 19 source warps, Falkner and the post-battle rewards.
+These checks validate the scoped hit-gate correction, not full Roar, battle
+or campaign parity.
+
+Validated production ROM SHA-256:
+`203964fd1a5fa2a42710a7341a3e0732831799fa32f68fd83b2074bfe116861a`.
+
 ## Next priorities
 
 1. Continue the source field-rule audit. Headbutt remains dormant; other field

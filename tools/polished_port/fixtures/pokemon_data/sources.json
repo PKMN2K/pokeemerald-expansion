@@ -2092,6 +2092,11 @@
       "path": "engine/battle/move_effects/teleport.asm",
       "fixture": "engine__battle__move_effects__teleport.asm.b64",
       "git_blob_sha1": "f35a8303bc87fb78a8a5183248d0fda873cedaa1"
+    },
+    {
+      "path": "engine/battle/move_effects/roar.asm",
+      "fixture": "engine__battle__move_effects__roar.asm.b64",
+      "git_blob_sha1": "8080f4af709174e5d30d1a2440d0e4f3aaf775ec"
     }
   ]
 }

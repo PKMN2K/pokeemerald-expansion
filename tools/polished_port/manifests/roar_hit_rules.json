@@ -1,0 +1,23 @@
+{
+  "source_repository": "Rangi42/polishedcrystal",
+  "source_commit": "3fa43192379df5c3e7b09a08e4d5d79af4f02f42",
+  "source_variant": "default (FAITHFUL undefined)",
+  "profile": "B_POLISHED_MOVE_BALANCE",
+  "scope": "Roar execution hit gates in singles without active gimmicks; selected native forced-switch regressions.",
+  "rules": [
+    "Roar calls checkhit before priority, reflection and forced switching.",
+    "Protect blocks Roar even with No Guard or Substitute, and prevents Magic Bounce reflection.",
+    "No Guard on either side bypasses Fly/Dig, but Lock-On is checked after Fly/Dig and cannot bypass them.",
+    "Roar bypasses Substitute and the ordinary accuracy/evasion calculation after those gates.",
+    "Trainer Roar needs a living replacement. Ordinary wild Roar requires user level at least target level on either side.",
+    "Suction Cups is checked after Mold Breaker; selected Soundproof/Mold Breaker cases retain the native result."
+  ],
+  "adapter": "Apply Protect and hidden-target rules during move execution, preserving native AI estimation and the existing switch/party machinery.",
+  "gaps": [
+    "Source special encounter prohibitions and the roaming opponent level exemption remain separate from ordinary wild coverage.",
+    "Full source reflection, Prankster/Soundproof ordering, turn priority, deferred switch timing, candidate selection, ability activation order and presentation remain separate audits.",
+    "In particular, Roar reflection behind Substitute still needs the source reflection eligibility rule.",
+    "Doubles, active gimmicks, Whirlwind and optional protective effects retain native behavior. Whirlwind is not a move in the pinned source.",
+    "Native AI hit estimates remain unchanged; passing runtime tests does not certify full AI parity."
+  ]
+}

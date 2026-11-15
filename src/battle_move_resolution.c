@@ -2106,6 +2106,15 @@ static enum CancelerResult TargetAvoidedAttack(enum BattlerId battlerAtk, enum B
     return CANCELER_RESULT_RUN_SCRIPT;
 }
 
+static bool32 UsesPolishedRoarHitRules(struct BattleCalcValues *cv)
+{
+    return B_POLISHED_MOVE_BALANCE
+        && cv->move == MOVE_ROAR
+        && !IsDoubleBattle()
+        && GetActiveGimmick(cv->battlerAtk) == GIMMICK_NONE
+        && GetActiveGimmick(cv->battlerDef) == GIMMICK_NONE;
+}
+
 static enum CancelerResult CancelerTargetFailure(struct BattleCalcValues *cv)
 {
     bool32 bounced = FALSE;
@@ -2128,7 +2137,15 @@ static enum CancelerResult CancelerTargetFailure(struct BattleCalcValues *cv)
             if (ShouldSkipFailureCheckOnBattler(cv->battlerAtk, cv->battlerDef))
                 continue;
 
-            if (!CanBreakThroughSemiInvulnerablity(cv->battlerAtk, cv->battlerDef, cv->abilities[cv->battlerAtk], cv->abilities[cv->battlerDef], cv->move))
+            // Source Roar checks No Guard before Fly/Dig, but Lock-On after it.
+            // Keep this execution adapter separate from native AI estimates.
+            bool32 sourceRoarMisses = B_POLISHED_MOVE_BALANCE && cv->move == MOVE_ROAR
+                && (gBattleMons[cv->battlerDef].volatiles.semiInvulnerable == STATE_ON_AIR
+                 || gBattleMons[cv->battlerDef].volatiles.semiInvulnerable == STATE_UNDERGROUND)
+                && cv->abilities[cv->battlerAtk] != ABILITY_NO_GUARD
+                && cv->abilities[cv->battlerDef] != ABILITY_NO_GUARD
+                && UsesPolishedRoarHitRules(cv);
+            if (sourceRoarMisses || !CanBreakThroughSemiInvulnerablity(cv->battlerAtk, cv->battlerDef, cv->abilities[cv->battlerAtk], cv->abilities[cv->battlerDef], cv->move))
             {
                 gBattleStruct->moveResultFlags[cv->battlerDef] |= MOVE_RESULT_FAILED;
                 if (cv->moveEffect == EFFECT_FLING)
@@ -2169,7 +2186,10 @@ static enum CancelerResult CancelerTargetFailure(struct BattleCalcValues *cv)
             if (ShouldSkipFailureCheckOnBattler(cv->battlerAtk, cv->battlerDef))
                 continue;
 
-            if (IsBattlerProtected(cv))
+            // Roar's source checkhit respects Protect despite perfect accuracy.
+            if ((B_POLISHED_MOVE_BALANCE && cv->move == MOVE_ROAR
+              && gProtectStructs[cv->battlerDef].protected == PROTECT_NORMAL
+              && UsesPolishedRoarHitRules(cv)) || IsBattlerProtected(cv))
             {
                 SetOrClearRageVolatile();
                 gBattleStruct->moveResultFlags[cv->battlerDef] |= MOVE_RESULT_PROTECTED;
