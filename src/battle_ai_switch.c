@@ -5,6 +5,7 @@
 #include "battle_ai_switch.h"
 #include "battle_ai_util.h"
 #include "battle_util.h"
+#include "battle_gimmick.h"
 #include "battle_anim.h"
 #include "battle_controllers.h"
 #include "battle_main.h"
@@ -1306,8 +1307,30 @@ bool32 ShouldSwitchDynFuncExample(struct SwitchAiContext *switchContext)
     return FALSE;
 }
 
+static bool32 CanPolishedItemOrTypeSwitch(enum BattlerId battler)
+{
+    // Source AI_UserCanSwitch shares the player's Shed Shell and Ghost exemptions.
+    // Leave optional formats, gimmicks and field restrictions on the native path.
+    return !IsDoubleBattle()
+        && !(gBattleTypeFlags & BATTLE_TYPE_ARENA)
+        && GetActiveGimmick(battler) == GIMMICK_NONE
+        && GetActiveGimmick(GetOppositeBattler(battler)) == GIMMICK_NONE
+        && !gBattleMons[battler].volatiles.root
+        && !(gFieldStatuses & STATUS_FIELD_FAIRY_LOCK)
+        && gBattleStruct->battlerState[battler].commanderSpecies == SPECIES_NONE
+        && gBattleMons[battler].volatiles.semiInvulnerable != STATE_SKY_DROP_TARGET
+        && (IS_BATTLER_OF_TYPE(battler, TYPE_GHOST)
+         || GetBattlerHoldEffect(battler) == HOLD_EFFECT_SHED_SHELL);
+}
+
 static bool32 CanBattlerConsiderSwitch(enum BattlerId battler)
 {
+    if (B_POLISHED_MOVE_BALANCE
+     && (IS_BATTLER_OF_TYPE(battler, TYPE_GHOST)
+      || GetItemHoldEffect(gBattleMons[battler].item) == HOLD_EFFECT_SHED_SHELL)
+     && CanPolishedItemOrTypeSwitch(battler))
+        return TRUE;
+
     // Source AI_UserCanSwitch shares the player's Run Away exemption.
     if (B_POLISHED_MOVE_BALANCE && gBattleMons[battler].ability == ABILITY_RUN_AWAY
      && CanPolishedRunAwayEscape(battler))

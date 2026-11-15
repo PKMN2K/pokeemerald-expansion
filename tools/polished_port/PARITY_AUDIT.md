@@ -2344,6 +2344,70 @@ Continue. The authentic source opening remains separate from this demo gate.
 Johto ROM SHA-256:
 `c7030ccab1ce66811797d6d473f42d1823e12f962c48a73754b11d507310426d`.
 
+
+## Source Shed Shell and Ghost AI switch exemptions
+
+The pinned `AI_UserCanSwitch` first requires another living party Pokemon,
+then uses the same `UserCanSwitch` rule as player selection. Shed Shell is
+checked before trapping abilities, Wrap and Mean Look. The default-build
+Run Away exemption and a live Ghost-type check also precede those traps.
+Unnerve only suppresses edible berries, so it does not disable Shed Shell.
+
+Expansion's AI eligibility gate directly rejected binding and escape-prevention
+state and trapping abilities. Unlike the normal player path, it did not honor
+Shed Shell, and it rejected Ghost Pokemon still affected by binding moves.
+The source profile now applies those two exemptions before the AI trap checks
+in ordinary singles without active gimmicks. Existing switch strategy,
+candidate selection and the living-reserve requirement remain in place.
+This does not add these exemptions to general wild-flee predicates.
+
+The gate reads current battle types and the current effective held item.
+Gaining or losing Shed Shell through Trick, adding Ghost typing after Mean
+Look, and removing Ghost typing while bound update the next eligibility check.
+The item is not consumed and trap state is not cleared merely by considering
+a switch. Native profiles, doubles, active gimmicks and optional Ingrain,
+Fairy Lock, Sky Drop, Commander and Battle Arena restrictions retain the
+native AI path. The previous Run Away adapter remains in place. No identifiers,
+save fields or capacities change.
+
+`build_switch_exemptions.py` verifies the shared player/AI call sites, gate
+order, live type lookup, Shed Shell held-effect identity and the Unnerve berry
+exclusion from existing exact-blob source fixtures. CI and the production
+audit check its generated manifest.
+
+Nine actual AI battle groups cover 39 cases per profile. They test Shed Shell
+against Mean Look, Wrap, Arena Trap, Magnet Pull and Shadow Tag, with Smoke
+Ball and no-item controls; two Ghost species under Fire Spin and Whirlpool;
+item/type gains and losses; Unnerve and Neutralizing Gas; optional Klutz and
+Embargo suppression; player Terastal and Fairy Lock controls; and absent or
+fainted reserves. An imminent Perish Song faint prompts the existing AI to
+switch. The tests distinguish a chosen switch from a replacement after
+fainting and check the departing Pokemon's saved HP and held item. Seven
+groups reproduced the inherited blocked-switch failures before the fix.
+
+This closes the selected AI eligibility gap. Full source AI strategy, scoring
+and estimates, player eligibility under every optional item-suppression case,
+general fleeing, forced switching, Pursuit and full switch timing remain
+separate audits. Optional moves sharing the permanent-trap field receive the
+same scoped exemption without certifying those moves as source content.
+Klutz, Embargo, Trick-or-Treat and Soak are selected native extension controls.
+
+Validation: both production ROM builds, all 65 source checks and 12 ARM
+compiler probes passed. The source profile passed 227 battle groups plus six
+AI timing groups without changing timing ceilings. The full native suite
+passed 5,576 groups (nine expected failures and 585 TODOs). After replacing a
+deprecated test-only party alias, all nine new groups passed again in both
+profiles with CI's deprecated/unused warning errors enabled. The production
+ELF audit matched all 255 move/PP records, 18 secondary stat drops, 254
+Sleep Talk eligibility entries and 43,792 teaching combinations; its 109
+known gap entries had no new or changed entries. The same final Johto ROM
+passed all 12 demo checks and 101 campaign checks, including 19 source warps,
+Falkner's gym and the post-battle rewards. These results certify this scoped
+eligibility change, not full battle or campaign parity.
+
+Validated production ROM SHA-256:
+`0c787965ebf8c403aae58c94433f09fcbff1701e04a2c5f93388673f1587c24f`.
+
 ## Next priorities
 
 1. Continue the source field-rule audit. Headbutt remains dormant; other field

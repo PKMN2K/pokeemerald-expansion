@@ -38,6 +38,7 @@ import build_run_away as run_away
 import build_trapping_abilities as trapping_abilities
 import build_binding_moves as binding_moves
 import build_teleport as teleport
+import build_switch_exemptions as switch_exemptions
 from test_johto_demo_emulator import Game
 
 ROOT = source.ROOT
@@ -58,7 +59,7 @@ def inputs():
                           type=type_, accuracy=0 if accuracy == '-1' else int(accuracy),
                           pp=int(base_pp), chance=int(chance), category=category))
     outputs = learning.build()
-    for path, expected in {**outputs, **pp.build(), **pain_split.build(), **fixed_damage.build(), **retaliation.build(), **self_accuracy.build(), **typeless.build(), **metronome_struggle.build(), **stat_drops.build(), **sleep_talk.build(), **restrictions.build(), **encore_commitment.build(), **cursed_body.build(), **protect_chain.build(), **belly_drum.build(), **rapid_spin.build(), **perish_song.build(), **foresight.build(), **mean_look.build(), **run_away.build(), **trapping_abilities.build(), **binding_moves.build(), **teleport.build()}.items():
+    for path, expected in {**outputs, **pp.build(), **pain_split.build(), **fixed_damage.build(), **retaliation.build(), **self_accuracy.build(), **typeless.build(), **metronome_struggle.build(), **stat_drops.build(), **sleep_talk.build(), **restrictions.build(), **encore_commitment.build(), **cursed_body.build(), **protect_chain.build(), **belly_drum.build(), **rapid_spin.build(), **perish_song.build(), **foresight.build(), **mean_look.build(), **run_away.build(), **trapping_abilities.build(), **binding_moves.build(), **teleport.build(), **switch_exemptions.build()}.items():
         assert path.read_text() == expected, f'Stale imported source data: {path}'
     catalog = json.loads(outputs[learning.MANIFEST])
     assert [r['kind'] for r in catalog['teaching_catalog']] == ['TM']*75 + ['HM']*6 + ['MT']*31

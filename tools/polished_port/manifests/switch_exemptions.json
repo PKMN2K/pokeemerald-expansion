@@ -1,0 +1,22 @@
+{
+  "source_repository": "Rangi42/polishedcrystal",
+  "source_commit": "3fa43192379df5c3e7b09a08e4d5d79af4f02f42",
+  "source_variant": "default (FAITHFUL undefined)",
+  "profile": "B_POLISHED_MOVE_BALANCE",
+  "scope": "AI voluntary switch eligibility for live Shed Shell and Ghost exemptions in ordinary singles without active gimmicks.",
+  "rules": [
+    "AI_UserCanSwitch requires another living party Pokemon and then uses the same UserCanSwitch rule as player selection.",
+    "Shed Shell permits a switch before trapping abilities, Wrap or Mean Look are considered.",
+    "Unnerve only suppresses edible berries; it does not disable Shed Shell.",
+    "The Ghost test reads current battle types and permits a switch before those traps.",
+    "Default-build Run Away remains another exemption; this suite preserves the earlier adapter."
+  ],
+  "adapter": "Extend the existing AI eligibility gate using live effective held items and types, retaining existing switch strategy, reserve validation, trap cleanup and player selection. Do not clear trap state or consume Shed Shell.",
+  "gaps": [
+    "Complete source AI strategy, scoring and estimates, and player/item eligibility under every optional suppression condition remain separate audits.",
+    "General fleeing, forced switching, Pursuit and full switch timing remain separate; this exemption is not added to wild escape predicates.",
+    "Native profiles, doubles, active gimmicks and optional Ingrain/Fairy Lock/Sky Drop/Commander/Battle Arena restrictions retain their native AI path.",
+    "Klutz, Embargo, Trick-or-Treat and Soak are selected native extension controls, not certification of their complete source behavior.",
+    "Optional moves sharing the permanent-trap field receive the same scoped exemption; their whole behavior is not certified."
+  ]
+}
