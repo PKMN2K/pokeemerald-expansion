@@ -17,3 +17,11 @@ static const u8 sPolishedMagicBounceSubstituteBypass[MOVES_COUNT] = {
     [MOVE_SUPERSONIC] = TRUE,
     [MOVE_TOXIC_SPIKES] = TRUE,
 };
+
+static const u8 sPolishedSoundPriorityMoves[MOVES_COUNT] = {
+    [MOVE_GROWL] = TRUE,
+    [MOVE_ROAR] = TRUE,
+    [MOVE_SING] = TRUE,
+    [MOVE_SUPERSONIC] = TRUE,
+    [MOVE_SCREECH] = TRUE,
+};

@@ -2718,6 +2718,61 @@ Falkner, badge/Roost/Togepi rewards and Save/reset/Continue.
 Validated Johto ROM SHA-256:
 `f7b7e88a93cc10d1f3d133bc4d18246db957257843420bf890a8afdfd892b2f2`.
 
+## Source sound-status Prankster ordering
+
+The pinned `checkpriority` command checks positive-priority Armor Tail, then
+branches on the user's actual ability. Its Prankster branch checks Dark typing
+and returns before Soundproof. The source scripts for Growl, Sing, Supersonic
+and Screech invoke that command before `bounceback`. Those four moves have
+base priority zero, so Prankster raises them to +1; Armor Tail still blocks
+them. This extends the earlier Roar execution correction to those four moves.
+
+The existing native path blocked Prankster sound moves with Soundproof and
+reflected them before applying Dark immunity. A generated five-entry table
+now selects the source sound status moves with `checkhit`, `checkpriority`
+and `bounceback` in that order, including the already-covered Roar. It is
+derived from the pinned move category/type, sound list and effect scripts;
+Perish Song and Heal Bell are excluded because their scripts use separate
+handlers. The existing source priority-table fixture confirms the four new
+moves use default priority zero. Existing fixture checks retain the exact
+Prankster/Soundproof branch and failure-before-reflection evidence.
+
+The runtime adapter remains in execution, outside shared AI estimates. Scope
+is Normal-type source sound status moves in singles without active gimmicks.
+Native Armor Tail and Mold Breaker decisions remain in use. No identifiers,
+move priorities, save fields or engine capacities change.
+
+Eight new battle groups cover 130 cases per profile: both sides, ordinary/
+Prankster/Mold Breaker users, Dark and non-Dark Soundproof targets, Armor Tail,
+Dark immunity before Magic Bounce, the actual reflector ability, Protect and
+Substitute, optional Noble Roar, either-side Terastal, doubles and Ion Deluge.
+The unchanged parent failed the Soundproof, pre-reflection Dark and Substitute
+regression groups. The hidden Fly/Dig reflection gate was inspected and found
+already implemented and covered by existing tests; it needed no code change.
+
+This closes these four sound moves' Prankster Dark/Soundproof decisions and
+pre-reflection ordering. Other source moves' priority decisions, broader
+returned effects, conditional gates, full turn ordering, AI and presentation
+remain separate audits. Dynamically retyped moves and optional formats retain
+the tested native paths. Mixed Magic Coat interactions with these source
+priority gates remain unaudited. CI includes the new source-test prefix.
+
+Validation: both production builds, all 67 source checks and all 12 ARM
+compiler probes passed. The full native suite passed 5,631 groups, with nine
+expected failures and 585 existing TODOs; no unexpected failures occurred.
+The source profile passed 282 source-rule groups and six AI timing groups
+without changing timing ceilings. All eight new groups (130 cases per profile)
+passed with deprecated/unused warning errors enabled.
+
+The production-linked audit retains zero audited move-data differences,
+255 matching reflection flags and zero teaching compatibility mismatches;
+its 109 known gaps have no new or changed entries. The same final Johto ROM
+passed all 12 demo checks and 101 campaign checks, including 19 directed warps,
+Falkner, badge/Roost/Togepi rewards and Save/reset/Continue.
+
+Validated Johto ROM SHA-256:
+`e37d7b9a443dddb024277d40ec52d280035d657017860d915a03596a728ba420`.
+
 ## Next priorities
 
 1. Continue the source field-rule audit. Headbutt remains dormant; other field

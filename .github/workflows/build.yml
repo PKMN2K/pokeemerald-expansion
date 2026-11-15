@@ -1198,6 +1198,7 @@ jobs:
           make -j$(nproc) -O TEST=1 POLISHED_MOVE_BALANCE_TEST=1 check TESTS='Polished Teleport'
           make -j$(nproc) -O TEST=1 POLISHED_MOVE_BALANCE_TEST=1 check TESTS='Polished switch exemptions'
           make -j$(nproc) -O TEST=1 POLISHED_MOVE_BALANCE_TEST=1 check TESTS='Polished Roar'
+          make -j$(nproc) -O TEST=1 POLISHED_MOVE_BALANCE_TEST=1 check TESTS='Polished sound priority'
           make -j$(nproc) -O TEST=1 POLISHED_MOVE_BALANCE_TEST=1 check TESTS='Polished Magic Bounce'
           make -j$(nproc) -O TEST=1 POLISHED_MOVE_BALANCE_TEST=1 check TESTS='AI thinking time'
 

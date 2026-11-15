@@ -2116,9 +2116,15 @@ static bool32 UsesPolishedRoarHitRules(struct BattleCalcValues *cv)
         && GetActiveGimmick(cv->battlerDef) == GIMMICK_NONE;
 }
 
-static bool32 UsesPolishedRoarPriorityRules(struct BattleCalcValues *cv)
+static bool32 UsesPolishedSoundPriorityRules(struct BattleCalcValues *cv)
 {
-    return UsesPolishedRoarHitRules(cv) && GetBattleMoveType(cv->move) == TYPE_NORMAL;
+    return B_POLISHED_MOVE_BALANCE
+        && (u32)cv->move < MOVES_COUNT
+        && sPolishedSoundPriorityMoves[cv->move]
+        && GetBattleMoveType(cv->move) == TYPE_NORMAL
+        && !IsDoubleBattle()
+        && GetActiveGimmick(cv->battlerAtk) == GIMMICK_NONE
+        && GetActiveGimmick(cv->battlerDef) == GIMMICK_NONE;
 }
 
 static enum CancelerResult CancelerTargetFailure(struct BattleCalcValues *cv)
@@ -2215,11 +2221,11 @@ static enum CancelerResult CancelerTargetFailure(struct BattleCalcValues *cv)
             if (ShouldSkipFailureCheckOnBattler(cv->battlerAtk, cv->battlerDef))
                 continue;
 
-            // Source checkpriority precedes bounceback. Prankster's Dark
-            // immunity applies even though Roar remains at negative priority.
+            // Source sound-status scripts check priority before bounceback.
+            // Prankster Dark immunity includes negative-priority Roar.
             if (cv->abilities[cv->battlerAtk] == ABILITY_PRANKSTER
              && IS_BATTLER_OF_TYPE(cv->battlerDef, TYPE_DARK)
-             && UsesPolishedRoarPriorityRules(cv))
+             && UsesPolishedSoundPriorityRules(cv))
             {
                 gBattleStruct->moveResultFlags[cv->battlerDef] |= MOVE_RESULT_FAILED;
                 gBattleScripting.battler = cv->battlerDef;
@@ -2259,7 +2265,7 @@ static enum CancelerResult CancelerTargetFailure(struct BattleCalcValues *cv)
             if (cv->abilities[cv->battlerAtk] == ABILITY_PRANKSTER
              && cv->abilities[cv->battlerDef] == ABILITY_SOUNDPROOF
              && !IS_BATTLER_OF_TYPE(cv->battlerDef, TYPE_DARK)
-             && UsesPolishedRoarPriorityRules(cv))
+             && UsesPolishedSoundPriorityRules(cv))
                 continue;
 
             if (CanMoveBeBlockedByTarget(&ctx, movePriority))
