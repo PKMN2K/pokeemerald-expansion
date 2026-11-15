@@ -2504,7 +2504,7 @@ checks establish. Mold Breaker suppression and the no-recursion gate remain.
 The earlier adapter covered only Mean Look. The source profile now applies
 this reflection gate to all 255 mapped source moves in ordinary singles
 without active gimmicks. Native reflection-pool flags still decide whether a
-move is a reflection candidate; this suite does not certify that entire pool.
+move is a reflection candidate; the following inventory suite certifies that static pool.
 Source membership uses the pinned PP registry independently of whether the
 PP override is enabled. The generated exception table preserves source move
 identity mappings, including Disarm Voice. Optional Expansion moves, Magic
@@ -2528,7 +2528,7 @@ on the unchanged parent runtime and pass with the adapter. Reflection
 activation for Encore is checked even when its returned effect has no legal
 last move; this is not certification of reflected Encore execution.
 
-Full reflection-pool parity, reflected-effect execution/accuracy, nested
+Static reflection-pool coverage is recorded below. Reflected-effect execution/accuracy, nested
 ability-triggered moves, timing/priority/ability ordering and source
 presentation remain separate audits. The existing native protect, hidden,
 Mold Breaker and recursion paths are regression controls, not newly imported
@@ -2550,4 +2550,45 @@ rewards and Save/reset/Continue. These results certify this scoped reflection
 gate, not full Magic Bounce, battle or campaign parity.
 
 Validated production ROM SHA-256:
+`09f1a862fc2ca9960eea56613473323f336c602b2666109e80ef8b99e948a7df`.
+
+### Source Magic Bounce reflection candidate inventory
+
+The pinned default move table, 152 effect constants and indexed script
+pointers now define an independent reflection inventory for all 255 mapped
+moves. Exactly 31 moves select scripts containing `bounceback`; 224 do not.
+The source Fly label aliases Dig and is resolved explicitly. The two newly imported pointer
+and constant fixtures are verified against their GitHub blobs at the existing
+source pin. PoisonPowder correctly maps to the target Poison Powder alias.
+
+The existing compiled reflection accessor matches that source inventory, so
+this suite retains the runtime. A generated test table checks all 255 flags,
+and the production-linked move/machine audit now reports the same comparison.
+Two new battle groups exercise all 31 candidates from either side, with and
+without Mold Breaker (124 cases), plus six self/field/nonreflecting sound
+controls from either side (12 cases). These checks run under both native and
+source profiles through the existing Magic Bounce CI prefix.
+
+This completes static reflection-candidate coverage and ordinary activation
+coverage. It does not certify all returned effects, reflected accuracy,
+conditional pre-reflection gates, nested ability execution, timing, AI or
+presentation. Generation presets are not the specification: the source-derived
+expectations fail if future flags drift. No production data, runtime, saved
+identifiers, optional mechanics or table capacities change.
+
+Validation: both production builds, all 67 source checks and all 12 ARM
+compiler probes passed. The source profile passed 248 source-rule groups and
+six AI timing groups without changing timing ceilings. The full native suite
+passed 5,597 groups, with nine expected failures and 585 existing TODOs; no
+unexpected failures occurred. The new inventory check and both new battle
+groups passed in both profiles with deprecated/unused warning errors enabled.
+
+The production-linked audit matches all 255 reflection flags (31 candidates),
+retains zero audited move-data differences and zero teaching compatibility
+mismatches, and records the same 109 known gaps with no new or changed entries.
+The final Johto ROM passed all 12 demo checks and 101 campaign checks,
+including 19 directed warps, Falkner, rewards and Save/reset/Continue.
+Both production ROM hashes are unchanged from the previous suite.
+
+Validated Johto ROM SHA-256:
 `09f1a862fc2ca9960eea56613473323f336c602b2666109e80ef8b99e948a7df`.

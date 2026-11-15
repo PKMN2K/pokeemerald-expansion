@@ -2097,6 +2097,16 @@
       "path": "engine/battle/move_effects/roar.asm",
       "fixture": "engine__battle__move_effects__roar.asm.b64",
       "git_blob_sha1": "8080f4af709174e5d30d1a2440d0e4f3aaf775ec"
+    },
+    {
+      "path": "constants/move_effect_constants.asm",
+      "fixture": "constants__move_effect_constants.asm.b64",
+      "git_blob_sha1": "f0079362f2830b6ecfc8f7bcae2faceb7c2e15b9"
+    },
+    {
+      "path": "data/moves/effects_pointers.asm",
+      "fixture": "data__moves__effects_pointers.asm.b64",
+      "git_blob_sha1": "05c6861de1465ac9ce6de0ccf8ac2200b6768976"
     }
   ]
 }

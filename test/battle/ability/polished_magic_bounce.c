@@ -1,5 +1,51 @@
 #include "global.h"
 #include "test/battle.h"
+#include "test/polished_magic_bounce.h"
+
+SINGLE_BATTLE_TEST("Polished Magic Bounce activates for every source candidate and respects Mold Breaker")
+{
+    struct BattlePokemon *user = player, *target = opponent;
+    enum Move move = MOVE_NONE;
+    enum Ability ability = ABILITY_NONE;
+    for (u32 entry = 0; entry < ARRAY_COUNT(sSourceMagicBounceMoves); entry++)
+        if (sSourceMagicBounceMoves[entry].candidate)
+            for (u32 side = 0; side < 2; side++)
+                for (u32 breaker = 0; breaker < 2; breaker++)
+                    PARAMETRIZE {
+                        move = sSourceMagicBounceMoves[entry].move;
+                        user = side ? opponent : player; target = side ? player : opponent;
+                        ability = breaker ? ABILITY_MOLD_BREAKER : ABILITY_NONE;
+                    }
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) { Ability(user == player ? ability : ABILITY_MAGIC_BOUNCE); Gender(MON_MALE); Speed(100); }
+        PLAYER(SPECIES_WYNAUT) { Ability(ABILITY_NONE); Speed(75); }
+        OPPONENT(SPECIES_WOBBUFFET) { Ability(user == opponent ? ability : ABILITY_MAGIC_BOUNCE); Gender(MON_FEMALE); Speed(50); }
+        OPPONENT(SPECIES_WYNAUT) { Ability(ABILITY_NONE); Speed(25); }
+    } WHEN {
+        TURN { MOVE(user, move, hit: TRUE); }
+    } SCENE {
+        if (ability == ABILITY_MOLD_BREAKER) NOT ABILITY_POPUP(target, ABILITY_MAGIC_BOUNCE);
+        else ABILITY_POPUP(target, ABILITY_MAGIC_BOUNCE);
+    }
+}
+
+SINGLE_BATTLE_TEST("Polished Magic Bounce excludes source self field and nonreflecting sound effects")
+{
+    static const enum Move excluded[] = {MOVE_HAZE, MOVE_PERISH_SONG, MOVE_HEAL_BELL, MOVE_SAFEGUARD, MOVE_DRAGON_DANCE, MOVE_POLISHED_HEALING_LIGHT};
+    struct BattlePokemon *user = player, *target = opponent;
+    enum Move move = MOVE_NONE;
+    for (u32 entry = 0; entry < ARRAY_COUNT(excluded); entry++)
+        for (u32 side = 0; side < 2; side++)
+            PARAMETRIZE { move = excluded[entry]; user = side ? opponent : player; target = side ? player : opponent; }
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) { Ability(user == player ? ABILITY_NONE : ABILITY_MAGIC_BOUNCE); Speed(100); MaxHP(200); HP(100); }
+        OPPONENT(SPECIES_WOBBUFFET) { Ability(user == opponent ? ABILITY_NONE : ABILITY_MAGIC_BOUNCE); Speed(50); MaxHP(200); HP(100); }
+    } WHEN {
+        TURN { MOVE(user, move); }
+    } SCENE {
+        NOT ABILITY_POPUP(target, ABILITY_MAGIC_BOUNCE);
+    }
+}
 
 SINGLE_BATTLE_TEST("Polished Magic Bounce respects Substitute for ordinary status moves")
 {
