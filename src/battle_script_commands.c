@@ -10649,10 +10649,44 @@ void BS_CancelMultiTurnMoves(void)
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
+static bool32 IsPolishedWildTeleport(void)
+{
+    // Normal wild encounters (including their replays), without optional formats
+    // or field restrictions. Special encounter classification remains separate.
+    return B_POLISHED_MOVE_BALANCE
+        && gCurrentMove == MOVE_TELEPORT
+        && !(gBattleTypeFlags & ~(BATTLE_TYPE_IS_MASTER | BATTLE_TYPE_RECORDED | BATTLE_TYPE_RECORDED_IS_MASTER))
+        && GetActiveGimmick(gBattlerAttacker) == GIMMICK_NONE
+        && GetActiveGimmick(GetOppositeBattler(gBattlerAttacker)) == GIMMICK_NONE
+        && !gBattleMons[gBattlerAttacker].volatiles.root
+        && !(gFieldStatuses & STATUS_FIELD_FAIRY_LOCK)
+        && gBattleStruct->battlerState[gBattlerAttacker].commanderSpecies == SPECIES_NONE
+        && gBattleMons[gBattlerAttacker].volatiles.semiInvulnerable != STATE_SKY_DROP_TARGET;
+}
+
+void BS_JumpIfPolishedWildTeleport(void)
+{
+    NATIVE_ARGS(const u8 *jumpInstr);
+    gBattlescriptCurrInstr = IsPolishedWildTeleport() ? cmd->jumpInstr : cmd->nextInstr;
+}
+
 void BS_IsRunningImpossible(void)
 {
     NATIVE_ARGS();
-    gBattleCommunication[0] = IsRunningFromBattleImpossible(gBattlerAttacker);
+    if (IsPolishedWildTeleport())
+    {
+        // Source Teleport checks Run Away, Mean Look and ability trapping only.
+        // Wrap and escape items do not participate. Failure uses the plain text.
+        bool32 allowed = !FlagGet(WE_FLAG_NO_RUNNING)
+            && (GetBattlerAbilityIgnoreMoldBreaker(gBattlerAttacker) == ABILITY_RUN_AWAY
+             || (!gBattleMons[gBattlerAttacker].volatiles.escapePrevention
+              && !IsAbilityPreventingEscape(gBattlerAttacker)));
+        gBattleCommunication[0] = allowed ? BATTLE_RUN_SUCCESS : BATTLE_RUN_FORBIDDEN;
+    }
+    else
+    {
+        gBattleCommunication[0] = IsRunningFromBattleImpossible(gBattlerAttacker);
+    }
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 

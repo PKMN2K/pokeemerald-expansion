@@ -6,6 +6,7 @@
 #include "constants/polished_self_move_accuracy.h"
 #include "constants/polished_typeless_moves.h"
 #include "constants/polished_secondary_stat_drops.h"
+#include "constants/polished_teleport.h"
 #include "battle_dynamax.h"
 #include "battle_anim_scripts.h"
 #include "constants/battle.h"
@@ -2704,7 +2705,9 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
     {
         .name = COMPOUND_STRING("Teleport"),
         .description = COMPOUND_STRING(
-        #if B_TELEPORT_BEHAVIOR >= GEN_8
+        #if B_POLISHED_MOVE_BALANCE
+            POLISHED_TELEPORT_DESCRIPTION),
+        #elif B_TELEPORT_BEHAVIOR >= GEN_8
             "The user switches places\n"
             "with another party Pokémon."),
         #else

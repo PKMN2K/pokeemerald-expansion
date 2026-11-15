@@ -2301,3 +2301,76 @@ The same final Johto ROM passes all 12 demo checks, 101 campaign checks and
 19 directed warp traversals, including all starter branches, Sprout Tower,
 Falkner, the badge/Roost/Togepi rewards, resident schedules and Save/reset/
 Continue. The authentic source opening remains separate from this demo gate.
+
+
+### Source Teleport in ordinary wild battles
+
+The pinned `BattleCommand_teleport` distinguishes wild escape from trainer
+switching. In ordinary wild battles it ends the encounter on either side,
+without checking levels or requiring another living party Pokemon. Expansion
+instead used its trainer-style switch path for the player under the default
+modern preset, so Teleport switched to a reserve or failed without one. The
+source profile now routes ordinary wild singles to the existing flee path.
+
+The source checks unsuppressed Run Away first, then the opponent's Mean Look
+flag, then source trapping-ability eligibility. Wrap does not prevent Teleport.
+Smoke Ball and Shed Shell do not override these Teleport checks. Neutralizing
+Gas suppresses Run Away, mutually eligible trapping abilities cancel, and a
+Mean Look already in effect still blocks escape after a later Ghost-type
+change. Both sides now use that ordered eligibility check. Existing move
+cancelers, party updates and native teleport outcome handling remain in place.
+
+Trainer Teleport still switches through source move/ability traps when a
+living replacement exists, without passing Baton Pass state. Optional legacy
+trainer generation presets retain their native selection. Doubles, link and
+special encounter formats, active gimmicks and optional Ingrain/Fairy Lock/
+Commander/Sky Drop restrictions retain native execution. Ordinary recordings
+use the same source rule. No identifiers, save fields or capacities change.
+
+`build_teleport.py` verifies the ordered wild gates, excluded item/Wrap checks,
+trainer distinction, source suppression/mutual trapping and special-type
+boundary. The new Teleport fixture is pinned to its exact Git blob alongside
+existing source fixtures. The generator also imports the original two-line
+move description into the source profile; native descriptions remain intact.
+CI and the production audit verify the generated manifest and description.
+
+Thirteen groups cover 102 cases per profile: level and reserve variations;
+both native wild generation presets; Mean Look/Wrap with Run Away, Smoke Ball
+and Shed Shell; type-sensitive ability traps and mutual cancellation;
+Neutralizing Gas; an existing trap after a live Ghost-type change; sleep,
+paralysis and Taunt; living/fainted/missing trainer reserves; trainer traps;
+and native controls for doubles, player Terastal and optional field effects.
+They also check the live move-description string. The initial wild player
+cases reproduced the inherited failure before the correction.
+
+Wild opponents use the actual random-move controller in this test harness.
+Each focused wild opponent therefore has one available move, with the player
+providing setup and follow-up actions. Continued combat after failed escape
+is checked through a subsequent player action. Recorded-test teardown itself
+sets a teleport outcome, so outcome values alone are not used to prove that a
+player successfully escaped.
+
+This closes ordinary wild Teleport execution, not all source escape rules.
+The source's TRAP/FORCEITEM/NEVER_SHINY/LEGENDARY encounter prohibition still
+needs complete encounter-type mapping. Native special flags and the optional
+no-running guard are preserved. Source AI choices, general fleeing, Pursuit
+and full switch/party persistence timing, source flee presentation and other
+special cases remain separate. Trick-or-Treat only supplies the optional live
+type change used by one regression; its whole behavior is not certified.
+
+Validation with Arm GNU GCC 13.2.1: both production ROMs build. All thirteen
+focused groups (102 cases per profile), all 205 earlier source battle groups
+and six AI timing checks pass, along with 64 source checks and 12 ARM compiler
+probes. The full native suite passes 5,567 tests, with nine unchanged expected
+failures and 585 existing TODOs (6,161 total), and no unexpected failures.
+The AI timing ceilings remain unchanged.
+
+The production-linked audit matches all 255 basic move/PP records, 18 target
+stat-drop records, 254 Sleep Talk eligibility entries and 43,792 teaching
+combinations. The 109 recorded machine/lesson gaps are unchanged, with no new
+or changed findings.
+
+The same final Johto ROM passes all 12 demo checks, 101 campaign checks and
+19 directed warp traversals, including all starter branches, Sprout Tower,
+Falkner, the badge/Roost/Togepi rewards, resident schedules and Save/reset/
+Continue. The authentic source opening remains separate from this demo gate.

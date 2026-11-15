@@ -1,0 +1,22 @@
+{
+  "source_repository": "Rangi42/polishedcrystal",
+  "source_commit": "3fa43192379df5c3e7b09a08e4d5d79af4f02f42",
+  "source_variant": "default (FAITHFUL undefined)",
+  "profile": "B_POLISHED_MOVE_BALANCE",
+  "scope": "Ordinary wild singles Teleport execution, including recordings, without active gimmicks or optional field restrictions.",
+  "rules": [
+    "Wild Teleport ends the battle by fleeing on either side; it does not require a replacement or compare levels.",
+    "After the special battle-type prohibition, unsuppressed Run Away bypasses move and ability traps.",
+    "Without Run Away, an existing Mean Look flag blocks escape before checking trapping abilities.",
+    "Ability eligibility includes the source type/grounding and mutual-cancellation rules.",
+    "Wrap and escape items do not participate in the Teleport eligibility check. Smoke Ball and Shed Shell do not bypass Mean Look or trapping abilities.",
+    "Trainer Teleport switches if another living party Pokemon exists; it does not check those traps and does not Baton Pass."
+  ],
+  "adapter": "Route scoped player wild Teleport to the existing flee script and supply source eligibility on both sides. Reuse native move cancellation, party persistence and teleport outcomes; retain trainer and optional-format paths.",
+  "gaps": [
+    "Complete source special encounter classification and its TRAP/FORCEITEM/NEVER_SHINY/LEGENDARY prohibition remain separate. Native encounter flags and the optional no-running guard remain intact.",
+    "Source trainer AI choices, full switching/party persistence audits, Pursuit timing and source flee presentation remain separate.",
+    "The selected native trainer Gen8 switch path is verified; overriding optional legacy trainer generation presets is not part of this adapter.",
+    "Doubles, link/facility/special formats, active gimmicks, Ingrain, Fairy Lock, Commander and Sky Drop retain native execution. Trick-or-Treat is used only to exercise an existing trap after a live type change."
+  ]
+}

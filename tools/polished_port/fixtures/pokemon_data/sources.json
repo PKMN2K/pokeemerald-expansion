@@ -2087,6 +2087,11 @@
       "path": "engine/battle/move_effects/mean_look.asm",
       "fixture": "engine__battle__move_effects__mean_look.asm.b64",
       "git_blob_sha1": "548c4db7ae476cfb954fde5410cd13b99c204644"
+    },
+    {
+      "path": "engine/battle/move_effects/teleport.asm",
+      "fixture": "engine__battle__move_effects__teleport.asm.b64",
+      "git_blob_sha1": "f35a8303bc87fb78a8a5183248d0fda873cedaa1"
     }
   ]
 }
