@@ -215,7 +215,22 @@ static void HandleSetEffectWrap(struct BattleCalcValues *cv, struct SetEffect *s
     }
     else
     {
-        SetWrapTurns(se->effectBattler, GetBattlerHoldEffect(cv->battlerAtk));
+        enum HoldEffect holdEffect = GetBattlerHoldEffect(cv->battlerAtk);
+        if (B_POLISHED_MOVE_BALANCE
+         && (cv->move == MOVE_WRAP || cv->move == MOVE_FIRE_SPIN || cv->move == MOVE_WHIRLPOOL)
+         && !IsDoubleBattle()
+         && GetActiveGimmick(cv->battlerAtk) == GIMMICK_NONE
+         && GetActiveGimmick(se->effectBattler) == GIMMICK_NONE)
+        {
+            // Source counts the release turn; native stores remaining damage ticks.
+            // Keep that representation so existing cleanup and optional formats work.
+            gBattleMons[se->effectBattler].volatiles.wrapTurns = holdEffect == HOLD_EFFECT_GRIP_CLAW ? 6 : RandomUniform(RNG_WRAP, 4, 5) - 1;
+            gBattleMons[se->effectBattler].volatiles.wrappedBindingBand = holdEffect == HOLD_EFFECT_BINDING_BAND;
+        }
+        else
+        {
+            SetWrapTurns(se->effectBattler, holdEffect);
+        }
         gBattleMons[se->effectBattler].volatiles.wrapped = TRUE;
         gBattleMons[se->effectBattler].volatiles.wrappedMove = cv->move;
         gBattleMons[se->effectBattler].volatiles.wrappedBy = cv->battlerAtk;

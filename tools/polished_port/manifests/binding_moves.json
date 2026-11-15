@@ -1,0 +1,48 @@
+{
+  "source_repository": "Rangi42/polishedcrystal",
+  "source_commit": "3fa43192379df5c3e7b09a08e4d5d79af4f02f42",
+  "source_variant": "default (FAITHFUL undefined)",
+  "profile": "B_POLISHED_MOVE_BALANCE",
+  "source_moves": [
+    "WRAP",
+    "FIRE_SPIN",
+    "WHIRLPOOL"
+  ],
+  "scope": "Binding countdown and residual damage in ordinary singles without active gimmicks.",
+  "rules": [
+    "Apply a random count of 4 or 5 with equal probability, or 7 with Grip Claw. Do not refresh an existing count.",
+    "Magic Guard, fainting and Substitute return before decrement or release.",
+    "Creating Substitute clears an existing bind. Infiltrator can apply a new bind through an existing Substitute, which then pauses it.",
+    "Decrement first. Zero releases the target without residual damage; otherwise damage is floor(max HP / 8), minimum 1.",
+    "Read the current opponent item at every damage tick; Binding Band changes the divisor to 6, minimum 1.",
+    "Unnerve only rejects edible berries and does not suppress Binding Band.",
+    "Fly and Dig skip the source animation, but do not pause the countdown or prevent residual damage."
+  ],
+  "ordinary_duration_vectors": [
+    {
+      "initial_source_count": 4,
+      "damaging_turns": 3,
+      "release_turn": 4,
+      "target_remaining_damage_ticks": 3
+    },
+    {
+      "initial_source_count": 5,
+      "damaging_turns": 4,
+      "release_turn": 5,
+      "target_remaining_damage_ticks": 4
+    },
+    {
+      "initial_source_count": 7,
+      "damaging_turns": 6,
+      "release_turn": 7,
+      "target_remaining_damage_ticks": 6
+    }
+  ],
+  "adapter": "Store one fewer native damage tick at application; pause before native decrement/release; read live effective Binding Band for scoped residual damage. Preserve native storage and cleanup.",
+  "gaps": [
+    "Initial hit/secondary-effect ordering and all immunity interactions, complete switching and Baton Pass cleanup, and source AI estimates remain separate audits.",
+    "Native animations/messages remain presentation gaps, including source Fly/Dig residual-animation suppression.",
+    "Optional item suppression, Gastro Acid, doubles, active gimmicks and other binding moves remain available; optional behavior is not certified as source content.",
+    "An already-created counter keeps its stored value if an optional gimmick starts later; no retroactive duration conversion is introduced."
+  ]
+}

@@ -671,10 +671,23 @@ static bool32 HandleEndTurnWrap(enum BattlerId battler)
     if (gBattleMons[battler].volatiles.wrapped
      && IsBattlerPresent(battler))
     {
+        enum Move move = gBattleMons[battler].volatiles.wrappedMove;
+        bool32 polishedBinding = B_POLISHED_MOVE_BALANCE
+            && (move == MOVE_WRAP || move == MOVE_FIRE_SPIN || move == MOVE_WHIRLPOOL)
+            && !IsDoubleBattle()
+            && GetActiveGimmick(battler) == GIMMICK_NONE
+            && GetActiveGimmick(GetOppositeBattler(battler)) == GIMMICK_NONE;
+
+        // The source returns before decrementing (including on the release turn).
+        if (polishedBinding
+         && (IsAbilityAndRecord(battler, GetBattlerAbility(battler), ABILITY_MAGIC_GUARD)
+          || gBattleMons[battler].volatiles.substitute))
+            return effect;
+
         if (gBattleMons[battler].volatiles.wrapTurns != 0)
         {
             gBattleMons[battler].volatiles.wrapTurns--;
-            if (IsAbilityAndRecord(battler, GetBattlerAbility(battler), ABILITY_MAGIC_GUARD))
+            if (!polishedBinding && IsAbilityAndRecord(battler, GetBattlerAbility(battler), ABILITY_MAGIC_GUARD))
                 return effect;
 
             gBattleScripting.animArg1 = gBattleMons[battler].volatiles.wrappedMove;
@@ -682,7 +695,10 @@ static bool32 HandleEndTurnWrap(enum BattlerId battler)
             PREPARE_MOVE_BUFFER(gBattleTextBuff1, gBattleMons[battler].volatiles.wrappedMove);
             BattleScriptCall(BattleScript_WrapTurnDmg);
             s32 bindDamage = 0;
-            if (gBattleMons[battler].volatiles.wrappedBindingBand)
+            // Source reads the opponent's current item, rather than an application snapshot.
+            if (polishedBinding)
+                bindDamage = GetNonDynamaxMaxHP(battler) / (GetBattlerHoldEffect(GetOppositeBattler(battler)) == HOLD_EFFECT_BINDING_BAND ? 6 : 8);
+            else if (gBattleMons[battler].volatiles.wrappedBindingBand)
                 bindDamage = GetNonDynamaxMaxHP(battler) / (GetConfig(B_BINDING_DAMAGE) >= GEN_6 ? 6 : 8);
             else
                 bindDamage = GetNonDynamaxMaxHP(battler) / (GetConfig(B_BINDING_DAMAGE) >= GEN_6 ? 8 : 16);

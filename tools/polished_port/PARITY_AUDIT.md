@@ -2204,6 +2204,70 @@ Continue. The authentic source opening remains separate from this demo gate.
 Johto ROM SHA-256:
 `dd7856d217d652f23cff2da7d97ef24f2ec54abefd9ab291d2565f54fba78737`.
 
+
+## Source binding countdown and residual damage
+
+The pinned `BattleCommand_traptarget` applies a uniformly chosen count of four
+or five, or seven with Grip Claw. `HandleWrap` decrements before checking for
+release: the last countdown turn prints release without dealing damage.
+Expansion instead treated those counts as damaging turns and released the
+Pokemon one turn later. The source profile now adapts Wrap, Fire Spin and
+Whirlpool to the source timing in ordinary singles without active gimmicks.
+It stores one fewer native damage tick, preserving existing fields, cleanup,
+identifiers, save layouts and capacities.
+
+The source returns before decrementing or releasing when Magic Guard prevents
+residual damage or a Substitute is present. Creating a new Substitute clears
+an existing bind in both engines; the pause applies when Infiltrator binds a
+Pokemon already behind a Substitute. The new path preserves that pause and
+resumes on the turn the protection disappears, including when only release
+remains. Fly and Dig do not prevent damage or pause the countdown.
+
+Residual damage is one eighth of maximum HP, or one sixth with Binding Band,
+rounded down with a minimum of one. The source reads the opponent's current
+item each turn, so gaining or losing Binding Band changes the next tick.
+Unnerve does not suppress this non-berry item. The source profile now follows
+that live item rule. Native profiles retain their cached item behavior.
+
+`build_binding_moves.py` verifies the ordered source gates, duration selection,
+Grip Claw parameter, Substitute cleanup/Infiltrator interaction, live item
+lookup and HP-fraction helpers using existing exact-blob fixtures. CI and the
+production audit check its generated manifest. Fourteen battle groups cover
+108 cases per profile: all three moves, both sides, both random durations and
+Grip Claw; paused and resumed damage; the release boundary; Binding Band gained
+and lost with and without Unnerve; repeated binds; Fly/Dig; normal Substitute
+creation/blocking; and native controls for optional binding moves, doubles and
+Terastal. Countdown, damage-pause and item-change tests reproduced inherited
+failures before the correction.
+
+This closes the selected countdown and residual-damage scope. Initial hit and
+secondary-effect ordering, all immunity interactions, broader switching/Baton
+Pass cleanup and source AI estimates remain separate audits. Native messages
+and animations remain presentation gaps, including source suppression of the
+residual animation during Fly/Dig. Optional item suppression and Gastro Acid
+remain engine extensions. Counters already created retain their stored values
+if an optional gimmick starts later; no retroactive conversion is introduced.
+
+Validation with Arm GNU GCC 13.2.1: both production ROMs build. All fourteen
+focused groups (108 cases per profile), all 191 earlier source battle groups
+and six AI timing checks pass, along with 63 source checks and 12 ARM compiler
+probes. The full native suite passes 5,554 tests, with nine unchanged expected
+failures and 585 existing TODOs (6,148 total), and no unexpected failures.
+The AI timing ceilings remain unchanged.
+
+The production-linked audit matches all 255 basic move/PP records, 18 target
+stat-drop records, 254 Sleep Talk eligibility entries and 43,792 teaching
+combinations. The 109 recorded machine/lesson gaps are unchanged, with no new
+or changed findings.
+
+The same final Johto ROM passes all 12 demo checks, 101 campaign checks and
+19 directed warp traversals, including all starter branches, Sprout Tower,
+Falkner, the badge/Roost/Togepi rewards, resident schedules and Save/reset/
+Continue. The authentic source opening remains separate from this demo gate.
+
+Johto ROM SHA-256:
+`6617659f5337e391e876961d19030979862689656dd73e295db997d6d8c3b473`.
+
 ## Next priorities
 
 1. Continue the source field-rule audit. Headbutt remains dormant; other field
