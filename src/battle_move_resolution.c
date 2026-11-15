@@ -19,6 +19,7 @@
 #include "test_runner.h"
 #include "constants/battle_move_resolution.h"
 #include "constants/songs.h"
+#include "data/polished_magic_bounce.h"
 
 static void ValidateBattlers(void);
 static enum Move GetOriginallyUsedMove(enum Move chosenMove);
@@ -6169,11 +6170,16 @@ static bool32 TryMagicBounce(struct BattleCalcValues *cv)
     if (cv->abilities[cv->battlerDef] != ABILITY_MAGIC_BOUNCE)
         return FALSE;
 
-    // The source reflection check still respects Substitute even though
-    // Mean Look's eventual trap application does not.
-    if (B_POLISHED_MOVE_BALANCE && cv->move == MOVE_MEAN_LOOK
-     && IsPolishedMeanLook(cv->move, cv->battlerAtk, cv->battlerDef)
+    // The source checks Substitute before reflecting, independently of the
+    // move's eventual effect. Sound moves and its explicit list bypass it.
+    // Keep optional Expansion moves, doubles and active gimmicks native.
+    if (B_POLISHED_MOVE_BALANCE && (u32)cv->move < MOVES_COUNT
+     && gPolishedMovePP[cv->move] != 0
+     && !IsDoubleBattle()
+     && GetActiveGimmick(cv->battlerAtk) == GIMMICK_NONE
+     && GetActiveGimmick(cv->battlerDef) == GIMMICK_NONE
      && gBattleMons[cv->battlerDef].volatiles.substitute
+     && !sPolishedMagicBounceSubstituteBypass[cv->move]
      && cv->abilities[cv->battlerAtk] != ABILITY_INFILTRATOR)
         return FALSE;
 

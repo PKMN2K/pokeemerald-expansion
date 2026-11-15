@@ -2469,11 +2469,13 @@ test teardown's outcome. The first two groups reproduced both inherited
 hit-gate failures before the runtime correction.
 
 This is a scoped hit-gate correction. Source special-encounter prohibitions,
-the roaming opponent's level exemption, full reflection eligibility (including
-Roar against Magic Bounce behind Substitute), Prankster/Soundproof ordering,
+the roaming opponent's level exemption, full reflected-move execution,
+Prankster/Soundproof ordering,
 turn priority, deferred switch timing, candidate selection, ability activation
 order, AI and source presentation remain separate audits. Ordinary wild level
-and trainer reserve checks are regression coverage of matching native paths.
+and trainer reserve checks are regression coverage of matching native paths. The subsequent
+Magic Bounce suite verifies that Roar reflects through Substitute as a source
+sound exception and imports the general Substitute reflection gate.
 
 Validation: both production ROM builds, all 66 source checks and 12 ARM
 compiler probes passed. The source profile passed 236 battle groups plus six
@@ -2489,3 +2491,63 @@ or campaign parity.
 
 Validated production ROM SHA-256:
 `203964fd1a5fa2a42710a7341a3e0732831799fa32f68fd83b2074bfe116861a`.
+
+### Source Magic Bounce Substitute eligibility
+
+The pinned reflection command checks Protect failure and Fly/Dig before
+Substitute. Ordinary moves cannot reflect through Substitute unless the
+original user has Infiltrator, the move is one of the six explicit bypass
+entries, or it is one of the ten source sound moves. Roar is a sound move:
+its existing reflection through Substitute is correct, as the new battle
+checks establish. Mold Breaker suppression and the no-recursion gate remain.
+
+The earlier adapter covered only Mean Look. The source profile now applies
+this reflection gate to all 255 mapped source moves in ordinary singles
+without active gimmicks. Native reflection-pool flags still decide whether a
+move is a reflection candidate; this suite does not certify that entire pool.
+Source membership uses the pinned PP registry independently of whether the
+PP override is enabled. The generated exception table preserves source move
+identity mappings, including Disarm Voice. Optional Expansion moves, Magic
+Coat, doubles and active gimmicks retain native behavior. No identifiers,
+capacities or save fields change, and AI estimates remain untouched.
+
+`build_magic_bounce.py` verifies the pinned reflection/Substitute command
+ordering and imports the six explicit exceptions and ten sound entries. All
+source inputs already have exact-blob fixtures at the existing source pin.
+CI and the production move/machine audit verify both the generated table and
+its 255-row identity manifest. The shared rule replaces the previous
+Mean Look-specific reflection check.
+
+Nine battle groups cover 78 cases per profile: both sides' Toxic, Thunder
+Wave and Will-O-Wisp with/without Substitute and with Infiltrator/Mold Breaker;
+Leer, Charm and Scary Face; all six explicit bypass entries; Growl, Screech,
+Sing, Supersonic and Roar; Protect/Fly/Dig with No Guard; no recursive bounce;
+reflection after breaking a live Substitute; and optional Spider Web, Magic
+Coat, either-side Terastal and doubles. The status and stat-drop groups fail
+on the unchanged parent runtime and pass with the adapter. Reflection
+activation for Encore is checked even when its returned effect has no legal
+last move; this is not certification of reflected Encore execution.
+
+Full reflection-pool parity, reflected-effect execution/accuracy, nested
+ability-triggered moves, timing/priority/ability ordering and source
+presentation remain separate audits. The existing native protect, hidden,
+Mold Breaker and recursion paths are regression controls, not newly imported
+implementations. Other Roar special-encounter and forced-switch gaps remain.
+
+Validation: both production ROM builds, all 67 source checks and all 12 ARM
+compiler probes passed. All 245 source battle groups and six AI timing groups
+passed without relaxing timing ceilings. The full native suite passed 5,594
+groups with nine expected failures and 585 existing TODOs; there were no
+unexpected failures. All nine new groups (78 cases per profile) passed in
+both source and native profiles, with CI's deprecated/unused warning errors
+enabled for the new code and tests.
+
+The production audit retains zero basic move-data differences and zero
+teaching compatibility mismatches; its 109 known gap entries have no new or
+changed findings. The same final Johto ROM passed all 12 demo checks and 101
+campaign checks, including 19 directed warps, Falkner, the badge/Roost/Togepi
+rewards and Save/reset/Continue. These results certify this scoped reflection
+gate, not full Magic Bounce, battle or campaign parity.
+
+Validated production ROM SHA-256:
+`09f1a862fc2ca9960eea56613473323f336c602b2666109e80ef8b99e948a7df`.

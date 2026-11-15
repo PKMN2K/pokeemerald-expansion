@@ -1,0 +1,1316 @@
+{
+  "source_repository": "Rangi42/polishedcrystal",
+  "source_commit": "3fa43192379df5c3e7b09a08e4d5d79af4f02f42",
+  "source_variant": "default (FAITHFUL undefined)",
+  "profile": "B_POLISHED_MOVE_BALANCE",
+  "scope": "Magic Bounce Substitute eligibility for ordinary source moves in singles without active gimmicks.",
+  "explicit_exceptions": [
+    "ATTRACT",
+    "DISABLE",
+    "ENCORE",
+    "FORESIGHT",
+    "SPIKES",
+    "TOXIC_SPIKES"
+  ],
+  "sound_exceptions": [
+    "BUG_BUZZ",
+    "DISARM_VOICE",
+    "GROWL",
+    "HYPER_VOICE",
+    "PERISH_SONG",
+    "ROAR",
+    "SCREECH",
+    "SING",
+    "SUPERSONIC",
+    "HEAL_BELL"
+  ],
+  "moves": [
+    {
+      "source_move": "ACROBATICS",
+      "target_move": "MOVE_ACROBATICS",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "KARATE_CHOP",
+      "target_move": "MOVE_KARATE_CHOP",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "DOUBLE_SLAP",
+      "target_move": "MOVE_DOUBLE_SLAP",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "AERIAL_ACE",
+      "target_move": "MOVE_AERIAL_ACE",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "DRAGON_CLAW",
+      "target_move": "MOVE_DRAGON_CLAW",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "PAY_DAY",
+      "target_move": "MOVE_PAY_DAY",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "FIRE_PUNCH",
+      "target_move": "MOVE_FIRE_PUNCH",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "ICE_PUNCH",
+      "target_move": "MOVE_ICE_PUNCH",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "THUNDERPUNCH",
+      "target_move": "MOVE_THUNDERPUNCH",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "SCRATCH",
+      "target_move": "MOVE_SCRATCH",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "X_SCISSOR",
+      "target_move": "MOVE_X_SCISSOR",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "NIGHT_SLASH",
+      "target_move": "MOVE_NIGHT_SLASH",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "AIR_SLASH",
+      "target_move": "MOVE_AIR_SLASH",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "SWORDS_DANCE",
+      "target_move": "MOVE_SWORDS_DANCE",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "CUT",
+      "target_move": "MOVE_CUT",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "GUST",
+      "target_move": "MOVE_GUST",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "WING_ATTACK",
+      "target_move": "MOVE_WING_ATTACK",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "SUCKER_PUNCH",
+      "target_move": "MOVE_SUCKER_PUNCH",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "FLY",
+      "target_move": "MOVE_FLY",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "DAZZLINGLEAM",
+      "target_move": "MOVE_DAZZLING_GLEAM",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "VOLT_SWITCH",
+      "target_move": "MOVE_VOLT_SWITCH",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "VINE_WHIP",
+      "target_move": "MOVE_VINE_WHIP",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "STOMP",
+      "target_move": "MOVE_STOMP",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "DOUBLE_KICK",
+      "target_move": "MOVE_DOUBLE_KICK",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "FLARE_BLITZ",
+      "target_move": "MOVE_FLARE_BLITZ",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "STONE_EDGE",
+      "target_move": "MOVE_STONE_EDGE",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "FOCUS_BLAST",
+      "target_move": "MOVE_FOCUS_BLAST",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "TOXIC_SPIKES",
+      "target_move": "MOVE_TOXIC_SPIKES",
+      "bypass_substitute": true
+    },
+    {
+      "source_move": "HEADBUTT",
+      "target_move": "MOVE_HEADBUTT",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "HORN_ATTACK",
+      "target_move": "MOVE_HORN_ATTACK",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "TRICK",
+      "target_move": "MOVE_TRICK",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "HEX",
+      "target_move": "MOVE_HEX",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "TACKLE",
+      "target_move": "MOVE_TACKLE",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "BODY_SLAM",
+      "target_move": "MOVE_BODY_SLAM",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "WRAP",
+      "target_move": "MOVE_WRAP",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "TAKE_DOWN",
+      "target_move": "MOVE_TAKE_DOWN",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "THRASH",
+      "target_move": "MOVE_THRASH",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "DOUBLE_EDGE",
+      "target_move": "MOVE_DOUBLE_EDGE",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "HAIL",
+      "target_move": "MOVE_HAIL",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "POISON_STING",
+      "target_move": "MOVE_POISON_STING",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "U_TURN",
+      "target_move": "MOVE_U_TURN",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "PIN_MISSILE",
+      "target_move": "MOVE_PIN_MISSILE",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "LEER",
+      "target_move": "MOVE_LEER",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "BITE",
+      "target_move": "MOVE_BITE",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "GROWL",
+      "target_move": "MOVE_GROWL",
+      "bypass_substitute": true
+    },
+    {
+      "source_move": "ROAR",
+      "target_move": "MOVE_ROAR",
+      "bypass_substitute": true
+    },
+    {
+      "source_move": "SING",
+      "target_move": "MOVE_SING",
+      "bypass_substitute": true
+    },
+    {
+      "source_move": "SUPERSONIC",
+      "target_move": "MOVE_SUPERSONIC",
+      "bypass_substitute": true
+    },
+    {
+      "source_move": "SONIC_BOOM",
+      "target_move": "MOVE_SONIC_BOOM",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "DISABLE",
+      "target_move": "MOVE_DISABLE",
+      "bypass_substitute": true
+    },
+    {
+      "source_move": "ACID",
+      "target_move": "MOVE_ACID",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "EMBER",
+      "target_move": "MOVE_EMBER",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "FLAMETHROWER",
+      "target_move": "MOVE_FLAMETHROWER",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "CALM_MIND",
+      "target_move": "MOVE_CALM_MIND",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "WATER_GUN",
+      "target_move": "MOVE_WATER_GUN",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "HYDRO_PUMP",
+      "target_move": "MOVE_HYDRO_PUMP",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "SURF",
+      "target_move": "MOVE_SURF",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "ICE_BEAM",
+      "target_move": "MOVE_ICE_BEAM",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "BLIZZARD",
+      "target_move": "MOVE_BLIZZARD",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "PSYBEAM",
+      "target_move": "MOVE_PSYBEAM",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "BUBBLE_BEAM",
+      "target_move": "MOVE_BUBBLE_BEAM",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "AURORA_BEAM",
+      "target_move": "MOVE_AURORA_BEAM",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "HYPER_BEAM",
+      "target_move": "MOVE_HYPER_BEAM",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "PECK",
+      "target_move": "MOVE_PECK",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "DRILL_PECK",
+      "target_move": "MOVE_DRILL_PECK",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "CLOSE_COMBAT",
+      "target_move": "MOVE_CLOSE_COMBAT",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "LOW_KICK",
+      "target_move": "MOVE_LOW_KICK",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "COUNTER",
+      "target_move": "MOVE_COUNTER",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "SEISMIC_TOSS",
+      "target_move": "MOVE_SEISMIC_TOSS",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "STRENGTH",
+      "target_move": "MOVE_STRENGTH",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "ABSORB",
+      "target_move": "MOVE_ABSORB",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "MEGA_DRAIN",
+      "target_move": "MOVE_MEGA_DRAIN",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "LEECH_SEED",
+      "target_move": "MOVE_LEECH_SEED",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "GROWTH",
+      "target_move": "MOVE_GROWTH",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "RAZOR_LEAF",
+      "target_move": "MOVE_RAZOR_LEAF",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "SOLAR_BEAM",
+      "target_move": "MOVE_SOLAR_BEAM",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "POISONPOWDER",
+      "target_move": "MOVE_POISONPOWDER",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "STUN_SPORE",
+      "target_move": "MOVE_STUN_SPORE",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "SLEEP_POWDER",
+      "target_move": "MOVE_SLEEP_POWDER",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "PETAL_DANCE",
+      "target_move": "MOVE_PETAL_DANCE",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "STRING_SHOT",
+      "target_move": "MOVE_STRING_SHOT",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "DRAGON_RAGE",
+      "target_move": "MOVE_DRAGON_RAGE",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "FIRE_SPIN",
+      "target_move": "MOVE_FIRE_SPIN",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "THUNDERSHOCK",
+      "target_move": "MOVE_THUNDERSHOCK",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "THUNDERBOLT",
+      "target_move": "MOVE_THUNDERBOLT",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "THUNDER_WAVE",
+      "target_move": "MOVE_THUNDER_WAVE",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "THUNDER",
+      "target_move": "MOVE_THUNDER",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "ROCK_THROW",
+      "target_move": "MOVE_ROCK_THROW",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "EARTHQUAKE",
+      "target_move": "MOVE_EARTHQUAKE",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "AVALANCHE",
+      "target_move": "MOVE_AVALANCHE",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "DIG",
+      "target_move": "MOVE_DIG",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "TOXIC",
+      "target_move": "MOVE_TOXIC",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "CONFUSION",
+      "target_move": "MOVE_CONFUSION",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "PSYCHIC_M",
+      "target_move": "MOVE_PSYCHIC",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "HYPNOSIS",
+      "target_move": "MOVE_HYPNOSIS",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "HONE_CLAWS",
+      "target_move": "MOVE_HONE_CLAWS",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "AGILITY",
+      "target_move": "MOVE_AGILITY",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "QUICK_ATTACK",
+      "target_move": "MOVE_QUICK_ATTACK",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "RAGE",
+      "target_move": "MOVE_RAGE",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "TELEPORT",
+      "target_move": "MOVE_TELEPORT",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "NIGHT_SHADE",
+      "target_move": "MOVE_NIGHT_SHADE",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "DRAGON_PULSE",
+      "target_move": "MOVE_DRAGON_PULSE",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "SCREECH",
+      "target_move": "MOVE_SCREECH",
+      "bypass_substitute": true
+    },
+    {
+      "source_move": "DOUBLE_TEAM",
+      "target_move": "MOVE_DOUBLE_TEAM",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "RECOVER",
+      "target_move": "MOVE_RECOVER",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "ROCK_BLAST",
+      "target_move": "MOVE_ROCK_BLAST",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "MINIMIZE",
+      "target_move": "MOVE_MINIMIZE",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "SMOKESCREEN",
+      "target_move": "MOVE_SMOKESCREEN",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "CONFUSE_RAY",
+      "target_move": "MOVE_CONFUSE_RAY",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "AQUA_TAIL",
+      "target_move": "MOVE_AQUA_TAIL",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "DEFENSE_CURL",
+      "target_move": "MOVE_DEFENSE_CURL",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "BARRIER",
+      "target_move": "MOVE_BARRIER",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "LIGHT_SCREEN",
+      "target_move": "MOVE_LIGHT_SCREEN",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "HAZE",
+      "target_move": "MOVE_HAZE",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "REFLECT",
+      "target_move": "MOVE_REFLECT",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "FOCUS_ENERGY",
+      "target_move": "MOVE_FOCUS_ENERGY",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "FLASH_CANNON",
+      "target_move": "MOVE_FLASH_CANNON",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "METRONOME",
+      "target_move": "MOVE_METRONOME",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "SCALD",
+      "target_move": "MOVE_SCALD",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "TRICK_ROOM",
+      "target_move": "MOVE_TRICK_ROOM",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "SKILL_SWAP",
+      "target_move": "MOVE_SKILL_SWAP",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "LICK",
+      "target_move": "MOVE_LICK",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "GUNK_SHOT",
+      "target_move": "MOVE_GUNK_SHOT",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "VENOSHOCK",
+      "target_move": "MOVE_VENOSHOCK",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "EARTH_POWER",
+      "target_move": "MOVE_EARTH_POWER",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "FIRE_BLAST",
+      "target_move": "MOVE_FIRE_BLAST",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "WATERFALL",
+      "target_move": "MOVE_WATERFALL",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "ICICLE_CRASH",
+      "target_move": "MOVE_ICICLE_CRASH",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "SWIFT",
+      "target_move": "MOVE_SWIFT",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "IRON_HEAD",
+      "target_move": "MOVE_IRON_HEAD",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "ICICLE_SPEAR",
+      "target_move": "MOVE_ICICLE_SPEAR",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "BULLDOZE",
+      "target_move": "MOVE_BULLDOZE",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "AMNESIA",
+      "target_move": "MOVE_AMNESIA",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "ROOST",
+      "target_move": "MOVE_ROOST",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "FRESH_SNACK",
+      "target_move": "MOVE_POLISHED_FRESH_SNACK",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "HI_JUMP_KICK",
+      "target_move": "MOVE_HI_JUMP_KICK",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "GLARE",
+      "target_move": "MOVE_GLARE",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "DREAM_EATER",
+      "target_move": "MOVE_DREAM_EATER",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "POISON_JAB",
+      "target_move": "MOVE_POISON_JAB",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "BULLET_PUNCH",
+      "target_move": "MOVE_BULLET_PUNCH",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "LEECH_LIFE",
+      "target_move": "MOVE_LEECH_LIFE",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "DRAINING_KISS",
+      "target_move": "MOVE_DRAINING_KISS",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "BRAVE_BIRD",
+      "target_move": "MOVE_BRAVE_BIRD",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "TRANSFORM",
+      "target_move": "MOVE_TRANSFORM",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "WATER_PULSE",
+      "target_move": "MOVE_WATER_PULSE",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "DIZZY_PUNCH",
+      "target_move": "MOVE_DIZZY_PUNCH",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "SPORE",
+      "target_move": "MOVE_SPORE",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "FLASH",
+      "target_move": "MOVE_FLASH",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "EXTRASENSORY",
+      "target_move": "MOVE_EXTRASENSORY",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "SPLASH",
+      "target_move": "MOVE_SPLASH",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "DRAGON_DANCE",
+      "target_move": "MOVE_DRAGON_DANCE",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "CRABHAMMER",
+      "target_move": "MOVE_CRABHAMMER",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "EXPLOSION",
+      "target_move": "MOVE_EXPLOSION",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "FURY_STRIKES",
+      "target_move": "MOVE_POLISHED_FURY_STRIKES",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "BONEMERANG",
+      "target_move": "MOVE_BONEMERANG",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "REST",
+      "target_move": "MOVE_REST",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "ROCK_SLIDE",
+      "target_move": "MOVE_ROCK_SLIDE",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "HYPER_FANG",
+      "target_move": "MOVE_HYPER_FANG",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "BULK_UP",
+      "target_move": "MOVE_BULK_UP",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "CONVERSION",
+      "target_move": "MOVE_CONVERSION",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "TRI_ATTACK",
+      "target_move": "MOVE_TRI_ATTACK",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "SUPER_FANG",
+      "target_move": "MOVE_SUPER_FANG",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "SLASH",
+      "target_move": "MOVE_SLASH",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "SUBSTITUTE",
+      "target_move": "MOVE_SUBSTITUTE",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "GIGA_IMPACT",
+      "target_move": "MOVE_GIGA_IMPACT",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "SKETCH",
+      "target_move": "MOVE_SKETCH",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "DRAIN_PUNCH",
+      "target_move": "MOVE_DRAIN_PUNCH",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "THIEF",
+      "target_move": "MOVE_THIEF",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "WILL_O_WISP",
+      "target_move": "MOVE_WILL_O_WISP",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "ZEN_HEADBUTT",
+      "target_move": "MOVE_ZEN_HEADBUTT",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "FACADE",
+      "target_move": "MOVE_FACADE",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "FLAME_CHARGE",
+      "target_move": "MOVE_FLAME_CHARGE",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "HYPER_VOICE",
+      "target_move": "MOVE_HYPER_VOICE",
+      "bypass_substitute": true
+    },
+    {
+      "source_move": "CURSE",
+      "target_move": "MOVE_CURSE",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "GYRO_BALL",
+      "target_move": "MOVE_GYRO_BALL",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "ENERGY_BALL",
+      "target_move": "MOVE_ENERGY_BALL",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "AEROBLAST",
+      "target_move": "MOVE_AEROBLAST",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "SEED_BOMB",
+      "target_move": "MOVE_SEED_BOMB",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "REVERSAL",
+      "target_move": "MOVE_REVERSAL",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "ASTONISH",
+      "target_move": "MOVE_ASTONISH",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "ICE_SHARD",
+      "target_move": "MOVE_ICE_SHARD",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "PROTECT",
+      "target_move": "MOVE_PROTECT",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "MACH_PUNCH",
+      "target_move": "MOVE_MACH_PUNCH",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "SCARY_FACE",
+      "target_move": "MOVE_SCARY_FACE",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "FEINT_ATTACK",
+      "target_move": "MOVE_FEINT_ATTACK",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "SWEET_KISS",
+      "target_move": "MOVE_SWEET_KISS",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "BELLY_DRUM",
+      "target_move": "MOVE_BELLY_DRUM",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "SLUDGE_BOMB",
+      "target_move": "MOVE_SLUDGE_BOMB",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "MUD_SLAP",
+      "target_move": "MOVE_MUD_SLAP",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "OCTAZOOKA",
+      "target_move": "MOVE_OCTAZOOKA",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "SPIKES",
+      "target_move": "MOVE_SPIKES",
+      "bypass_substitute": true
+    },
+    {
+      "source_move": "ZAP_CANNON",
+      "target_move": "MOVE_ZAP_CANNON",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "FORESIGHT",
+      "target_move": "MOVE_FORESIGHT",
+      "bypass_substitute": true
+    },
+    {
+      "source_move": "DESTINY_BOND",
+      "target_move": "MOVE_DESTINY_BOND",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "PERISH_SONG",
+      "target_move": "MOVE_PERISH_SONG",
+      "bypass_substitute": true
+    },
+    {
+      "source_move": "ICY_WIND",
+      "target_move": "MOVE_ICY_WIND",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "POWER_GEM",
+      "target_move": "MOVE_POWER_GEM",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "WILD_CHARGE",
+      "target_move": "MOVE_WILD_CHARGE",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "POWER_WHIP",
+      "target_move": "MOVE_POWER_WHIP",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "OUTRAGE",
+      "target_move": "MOVE_OUTRAGE",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "SANDSTORM",
+      "target_move": "MOVE_SANDSTORM",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "GIGA_DRAIN",
+      "target_move": "MOVE_GIGA_DRAIN",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "ENDURE",
+      "target_move": "MOVE_ENDURE",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "CHARM",
+      "target_move": "MOVE_CHARM",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "ROLLOUT",
+      "target_move": "MOVE_ROLLOUT",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "FALSE_SWIPE",
+      "target_move": "MOVE_FALSE_SWIPE",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "SWAGGER",
+      "target_move": "MOVE_SWAGGER",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "SHELL_SMASH",
+      "target_move": "MOVE_SHELL_SMASH",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "SPARK",
+      "target_move": "MOVE_SPARK",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "BUG_BITE",
+      "target_move": "MOVE_BUG_BITE",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "STEEL_WING",
+      "target_move": "MOVE_STEEL_WING",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "MEAN_LOOK",
+      "target_move": "MOVE_MEAN_LOOK",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "ATTRACT",
+      "target_move": "MOVE_ATTRACT",
+      "bypass_substitute": true
+    },
+    {
+      "source_move": "SLEEP_TALK",
+      "target_move": "MOVE_SLEEP_TALK",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "HEAL_BELL",
+      "target_move": "MOVE_HEAL_BELL",
+      "bypass_substitute": true
+    },
+    {
+      "source_move": "RETURN",
+      "target_move": "MOVE_RETURN",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "PSYSTRIKE",
+      "target_move": "MOVE_PSYSTRIKE",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "BUG_BUZZ",
+      "target_move": "MOVE_BUG_BUZZ",
+      "bypass_substitute": true
+    },
+    {
+      "source_move": "SAFEGUARD",
+      "target_move": "MOVE_SAFEGUARD",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "PAIN_SPLIT",
+      "target_move": "MOVE_PAIN_SPLIT",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "SACRED_FIRE",
+      "target_move": "MOVE_SACRED_FIRE",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "MAGNITUDE",
+      "target_move": "MOVE_MAGNITUDE",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "DYNAMICPUNCH",
+      "target_move": "MOVE_DYNAMICPUNCH",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "MEGAHORN",
+      "target_move": "MOVE_MEGAHORN",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "DRAGONBREATH",
+      "target_move": "MOVE_DRAGONBREATH",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "BATON_PASS",
+      "target_move": "MOVE_BATON_PASS",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "ENCORE",
+      "target_move": "MOVE_ENCORE",
+      "bypass_substitute": true
+    },
+    {
+      "source_move": "PURSUIT",
+      "target_move": "MOVE_PURSUIT",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "RAPID_SPIN",
+      "target_move": "MOVE_RAPID_SPIN",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "SHADOW_CLAW",
+      "target_move": "MOVE_SHADOW_CLAW",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "IRON_TAIL",
+      "target_move": "MOVE_IRON_TAIL",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "METAL_CLAW",
+      "target_move": "MOVE_METAL_CLAW",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "AURA_SPHERE",
+      "target_move": "MOVE_AURA_SPHERE",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "HEALINGLIGHT",
+      "target_move": "MOVE_POLISHED_HEALING_LIGHT",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "HURRICANE",
+      "target_move": "MOVE_HURRICANE",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "KNOCK_OFF",
+      "target_move": "MOVE_KNOCK_OFF",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "HIDDEN_POWER",
+      "target_move": "MOVE_HIDDEN_POWER",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "CROSS_CHOP",
+      "target_move": "MOVE_CROSS_CHOP",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "AQUA_JET",
+      "target_move": "MOVE_AQUA_JET",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "RAIN_DANCE",
+      "target_move": "MOVE_RAIN_DANCE",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "SUNNY_DAY",
+      "target_move": "MOVE_SUNNY_DAY",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "CRUNCH",
+      "target_move": "MOVE_CRUNCH",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "MIRROR_COAT",
+      "target_move": "MOVE_MIRROR_COAT",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "NASTY_PLOT",
+      "target_move": "MOVE_NASTY_PLOT",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "EXTREMESPEED",
+      "target_move": "MOVE_EXTREMESPEED",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "ANCIENTPOWER",
+      "target_move": "MOVE_ANCIENTPOWER",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "SHADOW_BALL",
+      "target_move": "MOVE_SHADOW_BALL",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "FUTURE_SIGHT",
+      "target_move": "MOVE_FUTURE_SIGHT",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "BRICK_BREAK",
+      "target_move": "MOVE_BRICK_BREAK",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "WHIRLPOOL",
+      "target_move": "MOVE_WHIRLPOOL",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "DARK_PULSE",
+      "target_move": "MOVE_DARK_PULSE",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "MOONBLAST",
+      "target_move": "MOVE_MOONBLAST",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "PLAY_ROUGH",
+      "target_move": "MOVE_PLAY_ROUGH",
+      "bypass_substitute": false
+    },
+    {
+      "source_move": "DISARM_VOICE",
+      "target_move": "MOVE_DISARMING_VOICE",
+      "bypass_substitute": true
+    },
+    {
+      "source_move": "STRUGGLE",
+      "target_move": "MOVE_STRUGGLE",
+      "bypass_substitute": false
+    }
+  ],
+  "rules": [
+    "Protect failure and a hidden Fly/Dig target prevent reflection before the Substitute check.",
+    "Ordinary reflection is blocked by Substitute unless the move is in the explicit bypass or sound list, or its original user has Infiltrator.",
+    "Roar is a sound exception: Substitute does not prevent its reflection.",
+    "Mold Breaker suppresses Magic Bounce; reflected moves cannot bounce again."
+  ],
+  "adapter": "Use the pinned 255-move PP registry for source membership and a generated 16-entry exception table. Replace the earlier Mean Look-only reflection gate.",
+  "gaps": [
+    "Reflection move-pool flags, reflected-effect execution/accuracy, full timing/priority/ability ordering, AI and presentation remain separate audits.",
+    "Ability-triggered nested move execution is outside this ordinary-move scope.",
+    "Optional moves, Magic Coat, doubles and active gimmicks retain native reflection behavior."
+  ]
+}

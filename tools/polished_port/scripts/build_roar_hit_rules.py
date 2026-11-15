@@ -44,8 +44,8 @@ def build():
                'Suction Cups is checked after Mold Breaker; selected Soundproof/Mold Breaker cases retain the native result.'],
         adapter='Apply Protect and hidden-target rules during move execution, preserving native AI estimation and the existing switch/party machinery.',
         gaps=['Source special encounter prohibitions and the roaming opponent level exemption remain separate from ordinary wild coverage.',
-              'Full source reflection, Prankster/Soundproof ordering, turn priority, deferred switch timing, candidate selection, ability activation order and presentation remain separate audits.',
-              'In particular, Roar reflection behind Substitute still needs the source reflection eligibility rule.',
+              'Full source reflected-move execution, Prankster/Soundproof ordering, turn priority, deferred switch timing, candidate selection, ability activation order and presentation remain separate audits.',
+              'Roar reflection through Substitute is covered by the subsequent Magic Bounce suite: Roar belongs to the source sound bypass list.',
               'Doubles, active gimmicks, Whirlwind and optional protective effects retain native behavior. Whirlwind is not a move in the pinned source.',
               'Native AI hit estimates remain unchanged; passing runtime tests does not certify full AI parity.'])
     return {source.ROOT/'tools/polished_port/manifests/roar_hit_rules.json': json.dumps(report, indent=2)+'\n'}
