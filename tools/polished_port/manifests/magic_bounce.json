@@ -3,7 +3,7 @@
   "source_commit": "3fa43192379df5c3e7b09a08e4d5d79af4f02f42",
   "source_variant": "default (FAITHFUL undefined)",
   "profile": "B_POLISHED_MOVE_BALANCE",
-  "scope": "Static reflection candidacy for all 255 mapped source moves; ordinary singles Magic Bounce activation, Substitute eligibility, returned-move accuracy and five Normal-type sound-status priority gates without active gimmicks.",
+  "scope": "Static reflection candidacy for all 255 mapped source moves; ordinary singles Magic Bounce activation, Substitute eligibility, returned-move accuracy, five Normal-type sound-status priority gates and pre-reflection Prankster Dark immunity for 29 source-typed moves without active gimmicks.",
   "explicit_exceptions": [
     "ATTRACT",
     "DISABLE",
@@ -30,6 +30,153 @@
     "SING",
     "SUPERSONIC",
     "SCREECH"
+  ],
+  "pre_reflection_priority_moves": [
+    {
+      "source_move": "LEER",
+      "target_move": "MOVE_LEER",
+      "source_type": "NORMAL"
+    },
+    {
+      "source_move": "GROWL",
+      "target_move": "MOVE_GROWL",
+      "source_type": "NORMAL"
+    },
+    {
+      "source_move": "ROAR",
+      "target_move": "MOVE_ROAR",
+      "source_type": "NORMAL"
+    },
+    {
+      "source_move": "SING",
+      "target_move": "MOVE_SING",
+      "source_type": "NORMAL"
+    },
+    {
+      "source_move": "SUPERSONIC",
+      "target_move": "MOVE_SUPERSONIC",
+      "source_type": "NORMAL"
+    },
+    {
+      "source_move": "DISABLE",
+      "target_move": "MOVE_DISABLE",
+      "source_type": "NORMAL"
+    },
+    {
+      "source_move": "LEECH_SEED",
+      "target_move": "MOVE_LEECH_SEED",
+      "source_type": "GRASS"
+    },
+    {
+      "source_move": "POISONPOWDER",
+      "target_move": "MOVE_POISONPOWDER",
+      "source_type": "POISON"
+    },
+    {
+      "source_move": "STUN_SPORE",
+      "target_move": "MOVE_STUN_SPORE",
+      "source_type": "GRASS"
+    },
+    {
+      "source_move": "SLEEP_POWDER",
+      "target_move": "MOVE_SLEEP_POWDER",
+      "source_type": "GRASS"
+    },
+    {
+      "source_move": "STRING_SHOT",
+      "target_move": "MOVE_STRING_SHOT",
+      "source_type": "BUG"
+    },
+    {
+      "source_move": "THUNDER_WAVE",
+      "target_move": "MOVE_THUNDER_WAVE",
+      "source_type": "ELECTRIC"
+    },
+    {
+      "source_move": "TOXIC",
+      "target_move": "MOVE_TOXIC",
+      "source_type": "POISON"
+    },
+    {
+      "source_move": "HYPNOSIS",
+      "target_move": "MOVE_HYPNOSIS",
+      "source_type": "PSYCHIC"
+    },
+    {
+      "source_move": "SCREECH",
+      "target_move": "MOVE_SCREECH",
+      "source_type": "NORMAL"
+    },
+    {
+      "source_move": "SMOKESCREEN",
+      "target_move": "MOVE_SMOKESCREEN",
+      "source_type": "NORMAL"
+    },
+    {
+      "source_move": "CONFUSE_RAY",
+      "target_move": "MOVE_CONFUSE_RAY",
+      "source_type": "GHOST"
+    },
+    {
+      "source_move": "GLARE",
+      "target_move": "MOVE_GLARE",
+      "source_type": "NORMAL"
+    },
+    {
+      "source_move": "SPORE",
+      "target_move": "MOVE_SPORE",
+      "source_type": "GRASS"
+    },
+    {
+      "source_move": "FLASH",
+      "target_move": "MOVE_FLASH",
+      "source_type": "NORMAL"
+    },
+    {
+      "source_move": "WILL_O_WISP",
+      "target_move": "MOVE_WILL_O_WISP",
+      "source_type": "FIRE"
+    },
+    {
+      "source_move": "SCARY_FACE",
+      "target_move": "MOVE_SCARY_FACE",
+      "source_type": "NORMAL"
+    },
+    {
+      "source_move": "SWEET_KISS",
+      "target_move": "MOVE_SWEET_KISS",
+      "source_type": "FAIRY"
+    },
+    {
+      "source_move": "FORESIGHT",
+      "target_move": "MOVE_FORESIGHT",
+      "source_type": "NORMAL"
+    },
+    {
+      "source_move": "CHARM",
+      "target_move": "MOVE_CHARM",
+      "source_type": "FAIRY"
+    },
+    {
+      "source_move": "SWAGGER",
+      "target_move": "MOVE_SWAGGER",
+      "source_type": "NORMAL"
+    },
+    {
+      "source_move": "MEAN_LOOK",
+      "target_move": "MOVE_MEAN_LOOK",
+      "source_type": "NORMAL"
+    },
+    {
+      "source_move": "ATTRACT",
+      "target_move": "MOVE_ATTRACT",
+      "source_type": "NORMAL"
+    },
+    {
+      "source_move": "ENCORE",
+      "target_move": "MOVE_ENCORE",
+      "source_type": "NORMAL"
+    }
   ],
   "moves": [
     {
@@ -2849,13 +2996,14 @@
     "Roar is a sound exception: Substitute does not prevent its reflection.",
     "Mold Breaker suppresses Magic Bounce; reflected moves cannot bounce again.",
     "Magic Bounce sets IN_ABILITY around ResetTurn, so the returned move skips the accuracy roll; ordinary later actions still check accuracy.",
+    "Twenty-nine source reflection candidates check priority before bounceback; their Dark immunity prevents Magic Bounce activation. Spikes and Toxic Spikes omit checkpriority.",
     "Growl, Roar, Sing, Supersonic and Screech check priority before reflection. Their Prankster branch checks Dark immunity and returns before Soundproof; positive-priority Armor Tail still blocks the four priority-zero moves after Prankster raises them."
   ],
-  "adapter": "Retain the matching native reflection-candidate accessor, verified against independently generated source expectations for all 255 moves. Use the pinned PP registry for source membership and a generated 16-entry Substitute exception table. Track the reflection origin in an existing battle-only padding bit so source Magic Bounce skips returned accuracy without changing Magic Coat. Derive the five Normal-type sound status moves whose scripts check priority before reflection; apply source Prankster Dark/Soundproof ordering only during execution.",
+  "adapter": "Retain the matching native reflection-candidate accessor, verified against independently generated source expectations for all 255 moves. Use the pinned PP registry for source membership and a generated 16-entry Substitute exception table. Track the reflection origin in an existing battle-only padding bit so source Magic Bounce skips returned accuracy without changing Magic Coat. Derive the five Normal-type sound status moves whose scripts check priority before reflection; apply source Prankster Dark/Soundproof ordering only during execution. Derive source types for all 29 candidates with pre-reflection priority checks and apply their Dark immunity before Magic Bounce in singles without active gimmicks. The 24 newly covered moves retain native Magic Coat ordering and shared AI estimates.",
   "gaps": [
-    "Reflected-effect execution and non-accuracy hit gates, conditional pre-reflection gates beyond the five Normal-type sound status moves, full timing/priority/ability ordering, AI and presentation remain separate audits.",
+    "Reflected-effect execution and non-accuracy hit gates, other conditional pre-reflection gates, full timing/priority/ability ordering, AI and presentation remain separate audits.",
     "The original pre-reflection hit-check RNG consumption and source random stream are not imported by the returned-accuracy adapter.",
     "Ability-triggered nested move execution is outside this ordinary-move scope.",
-    "Optional moves, doubles and active gimmicks retain native reflection paths. Magic Coat keeps native returned accuracy; combinations with the five source priority adapters remain unaudited."
+    "Optional moves, doubles and active gimmicks retain native reflection paths. Magic Coat keeps native returned accuracy and the tested ordering for the 24 newly covered moves; combinations with the five earlier sound priority adapters remain unaudited."
   ]
 }

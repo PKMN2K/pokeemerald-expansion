@@ -2127,6 +2127,19 @@ static bool32 UsesPolishedSoundPriorityRules(struct BattleCalcValues *cv)
         && GetActiveGimmick(cv->battlerDef) == GIMMICK_NONE;
 }
 
+static bool32 UsesPolishedPreReflectionPriorityRules(struct BattleCalcValues *cv)
+{
+    return B_POLISHED_MOVE_BALANCE
+        && (u32)cv->move < MOVES_COUNT
+        && sPolishedPreReflectionPriorityTypes[cv->move] != 0
+        && sPolishedPreReflectionPriorityTypes[cv->move] == GetBattleMoveType(cv->move) + 1
+        // Preserve the existing sound rules; scope the new ordering to Magic Bounce.
+        && (sPolishedSoundPriorityMoves[cv->move] || cv->abilities[cv->battlerDef] == ABILITY_MAGIC_BOUNCE)
+        && !IsDoubleBattle()
+        && GetActiveGimmick(cv->battlerAtk) == GIMMICK_NONE
+        && GetActiveGimmick(cv->battlerDef) == GIMMICK_NONE;
+}
+
 static enum CancelerResult CancelerTargetFailure(struct BattleCalcValues *cv)
 {
     bool32 bounced = FALSE;
@@ -2221,11 +2234,11 @@ static enum CancelerResult CancelerTargetFailure(struct BattleCalcValues *cv)
             if (ShouldSkipFailureCheckOnBattler(cv->battlerAtk, cv->battlerDef))
                 continue;
 
-            // Source sound-status scripts check priority before bounceback.
-            // Prankster Dark immunity includes negative-priority Roar.
+            // Source scripts check priority before bounceback, except hazards.
+            // Use the actual attacker, including during a returned move.
             if (cv->abilities[cv->battlerAtk] == ABILITY_PRANKSTER
              && IS_BATTLER_OF_TYPE(cv->battlerDef, TYPE_DARK)
-             && UsesPolishedSoundPriorityRules(cv))
+             && UsesPolishedPreReflectionPriorityRules(cv))
             {
                 gBattleStruct->moveResultFlags[cv->battlerDef] |= MOVE_RESULT_FAILED;
                 gBattleScripting.battler = cv->battlerDef;

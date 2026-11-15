@@ -2773,6 +2773,53 @@ Falkner, badge/Roost/Togepi rewards and Save/reset/Continue.
 Validated Johto ROM SHA-256:
 `e37d7b9a443dddb024277d40ec52d280035d657017860d915a03596a728ba420`.
 
+## Source pre-reflection Prankster Dark immunity
+
+Of the pinned source's 31 reflection candidates, 29 invoke `checkpriority`
+before `bounceback`. The user's actual Prankster ability triggers Dark immunity,
+and the later `failuretext` exits before reflection. Spikes and Toxic Spikes
+omit this check. The preceding sound-status suite covered five candidates;
+this suite extends the pre-reflection decision to the remaining 24 moves.
+
+The generator derives eligibility and source types from the pinned move rows,
+effect mapping and scripts, and checks the failure exit. A source-profile
+execution adapter now applies Dark immunity before Magic Bounce for those
+moves in singles, with matching source types and no active gimmicks. The new
+24-move scope requires the target's actual Magic Bounce ability; optional
+Magic Coat alone retains its existing ordering. The previous five sound
+adapters keep their behavior. Shared AI estimates, identifiers, priorities,
+save layout and Expansion capacities are unchanged.
+
+Nine battle groups cover 184 cases per profile: all 24 moves on both sides
+against Dark and non-Dark targets; PP consumption; returned status, stat,
+seed and trapping effects; the reflector's actual ability; both source hazard
+exceptions; and optional Noble Roar, Magic Coat, doubles, either-side Terastal
+and dynamically retyped controls. Existing all-candidate ordinary-user and
+Mold Breaker tests remain in the source suite. Two new groups failed against
+the unchanged runtime and pass with this correction.
+
+This closes pre-reflection Prankster Dark immunity for the 29 source candidates
+within the stated scope. Full reflected-effect parity, other conditional gates,
+pre-reflection accuracy RNG, type-immunity ordering, broader priority rules,
+AI and presentation remain separate audits. Magic Coat combinations with the
+five earlier sound adapters remain unaudited.
+
+Validation: both production builds, all 67 source checks and all 12 ARM
+compiler probes passed. The full native suite passed 5,640 groups, with nine
+expected failures and 585 existing TODOs; no unexpected failures occurred.
+The source profile passed 291 source-rule groups and six AI timing groups
+without changing timing ceilings. All nine new groups (184 cases per profile)
+passed with deprecated/unused warning errors enabled.
+
+The production-linked audit retains zero audited move-data differences,
+255 matching reflection flags and zero teaching compatibility mismatches;
+its 109 known gaps have no new or changed entries. The same final Johto ROM
+passed all 12 demo checks and 101 campaign checks, including 19 directed warps,
+Falkner, badge/Roost/Togepi rewards and Save/reset/Continue.
+
+Validated Johto ROM SHA-256:
+`12aaf1ef1ee3bc58b4c2f7e463146c083b238ed696975d0594ac89ecc816c843`.
+
 ## Next priorities
 
 1. Continue the source field-rule audit. Headbutt remains dormant; other field
