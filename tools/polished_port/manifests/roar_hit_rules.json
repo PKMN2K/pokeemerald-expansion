@@ -3,21 +3,24 @@
   "source_commit": "3fa43192379df5c3e7b09a08e4d5d79af4f02f42",
   "source_variant": "default (FAITHFUL undefined)",
   "profile": "B_POLISHED_MOVE_BALANCE",
-  "scope": "Roar execution hit gates in singles without active gimmicks; selected native forced-switch regressions.",
+  "scope": "Roar execution hit gates and Normal-type Prankster/Dark/Soundproof ordering in singles without active gimmicks; selected native forced-switch regressions.",
   "rules": [
     "Roar calls checkhit before priority, reflection and forced switching.",
     "Protect blocks Roar even with No Guard or Substitute, and prevents Magic Bounce reflection.",
     "No Guard on either side bypasses Fly/Dig, but Lock-On is checked after Fly/Dig and cannot bypass them.",
     "Roar bypasses Substitute and the ordinary accuracy/evasion calculation after those gates.",
+    "Roar priority is -6, raised to -5 by Prankster; Armor Tail does not block either negative priority.",
+    "Prankster Roar fails against Dark targets before Magic Bounce; its non-Dark branch returns before the Soundproof check.",
     "Trainer Roar needs a living replacement. Ordinary wild Roar requires user level at least target level on either side.",
     "Suction Cups is checked after Mold Breaker; selected Soundproof/Mold Breaker cases retain the native result."
   ],
-  "adapter": "Apply Protect and hidden-target rules during move execution, preserving native AI estimation and the existing switch/party machinery.",
+  "adapter": "Apply Protect and hidden-target rules during move execution. Resolve source Prankster Dark immunity before reflection and bypass Soundproof for non-Dark targets of Prankster Roar. Preserve native AI estimation and the existing switch/party machinery.",
   "gaps": [
     "Source special encounter prohibitions and the roaming opponent level exemption remain separate from ordinary wild coverage.",
-    "Full source reflected-move execution, Prankster/Soundproof ordering, turn priority, deferred switch timing, candidate selection, ability activation order and presentation remain separate audits.",
+    "Full source reflected-move execution, turn ordering beyond Roar priority, deferred switch timing, candidate selection, ability activation order and presentation remain separate audits.",
     "Roar reflection through Substitute is covered by the subsequent Magic Bounce suite: Roar belongs to the source sound bypass list.",
-    "Doubles, active gimmicks, Whirlwind and optional protective effects retain native behavior. Whirlwind is not a move in the pinned source.",
+    "Doubles, active gimmicks and Whirlwind retain native behavior. Whirlwind is not a move in the pinned source; broader combinations with optional protective effects remain unaudited.",
+    "Dynamically retyped Roar retains native priority-immunity handling; other source moves using checkpriority remain separate audits.",
     "Native AI hit estimates remain unchanged; passing runtime tests does not certify full AI parity."
   ]
 }

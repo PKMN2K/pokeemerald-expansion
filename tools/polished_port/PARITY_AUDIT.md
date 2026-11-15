@@ -2442,7 +2442,7 @@ hit-gate failures before the runtime correction.
 
 This is a scoped hit-gate correction. Source special-encounter prohibitions,
 the roaming opponent's level exemption, full reflected-move execution,
-Prankster/Soundproof ordering,
+Prankster/Soundproof ordering (covered in the later Roar priority suite),
 turn priority, deferred switch timing, candidate selection, ability activation
 order, AI and source presentation remain separate audits. Ordinary wild level
 and trainer reserve checks are regression coverage of matching native paths. The subsequent
@@ -2614,6 +2614,61 @@ Falkner, badge/Roost/Togepi rewards and Save/reset/Continue.
 
 Validated Johto ROM SHA-256:
 `601fb85597bf9794ae9538d07e4cdc661c0a24a89c1eda2c6d570d8c083dbe97`.
+
+## Source Roar Prankster and Soundproof ordering
+
+The pinned priority table gives Roar priority -6; Prankster raises it to -5.
+`checkpriority` checks positive-priority Armor Tail separately, then its
+Prankster branch checks Dark typing and returns before Soundproof. A failed
+Roar ends its effect script before `bounceback`. Thus Prankster Roar is blocked
+by Dark targets despite its negative priority, while non-Dark Soundproof
+targets do not block it. Ordinary users still respect Soundproof; Mold Breaker
+still suppresses it and Suction Cups.
+
+The previous native path required positive priority for Dark immunity, checked
+Soundproof first and processed reflection before that immunity decision. The
+source profile now checks Prankster/Dark immunity before reflection and bypasses
+the Soundproof decision for non-Dark targets of Prankster Roar. Both adaptations
+are in move execution, outside shared AI estimates. Scope is Normal-type Roar
+in singles without active gimmicks. Dynamically retyped Roar, Whirlwind, doubles
+and active gimmicks retain the tested native paths. No move IDs, save fields,
+party capacities or move priority values change.
+
+The new priority-table fixture is verified against its exact GitHub blob at
+the existing source pin. `build_roar_hit_rules.py` verifies that table, the
+Prankster increment, ordered immunity branches and the failure exit before
+reflection. The existing CI Roar prefix and source/production audit include
+these checks without adding a second source pin.
+
+Ten battle groups cover 90 cases per profile: both sides; ordinary, Prankster
+and Mold Breaker users against ordinary, Soundproof, Suction Cups and Armor
+Tail targets with and without Dark typing; Dark immunity before Magic Bounce;
+the actual reflector ability on a returned Roar; Fly/Dig reached with No Guard;
+Protect and Substitute; ordinary wild continuation/escape outcomes; and native
+Whirlwind, either-side Terastal, Electrify and doubles controls. The unchanged
+parent failed the Dark-target, Soundproof and pre-reflection regression groups.
+
+This closes these Roar immunity decisions and their ordering before reflection.
+Source special-encounter bans, the roaming opponent's level exemption, broader
+returned effects, deferred switch timing, candidate choice, full turn ordering,
+AI and presentation remain separate audits. Other moves using `checkpriority`
+and broader combinations with optional protective effects remain unaudited.
+
+Validation: both production builds, all 67 source checks and all 12 ARM
+compiler probes passed. The full native suite passed 5,617 groups, with nine
+expected failures and 585 existing TODOs; no unexpected failures occurred.
+The source profile passed 268 source-rule groups and six AI timing groups
+without changing timing ceilings. All ten new groups (90 cases per profile)
+passed with deprecated/unused warning errors enabled.
+
+The production-linked audit retains zero audited move-data differences,
+255 matching reflection flags and zero teaching compatibility mismatches;
+its 109 known gaps have no new or changed entries. The same final Johto ROM
+passed all 12 demo checks and 101 campaign checks, including 19 directed warps,
+Falkner, badge/Roost/Togepi rewards and Save/reset/Continue.
+
+Validated Johto ROM SHA-256:
+`fb45d6078e956b443d0849c22e11955eccffc4640b3adef16f84b6670d659ab3`.
 
 ## Next priorities
 

@@ -2107,6 +2107,11 @@
       "path": "data/moves/effects_pointers.asm",
       "fixture": "data__moves__effects_pointers.asm.b64",
       "git_blob_sha1": "05c6861de1465ac9ce6de0ccf8ac2200b6768976"
+    },
+    {
+      "path": "data/moves/priorities.asm",
+      "fixture": "data__moves__priorities.asm.b64",
+      "git_blob_sha1": "f1a56dad01d359da7e66a2de450359aa4e7cd34f"
     }
   ]
 }

@@ -17,6 +17,22 @@ def build():
              'call .LockOn', 'cp EFFECT_ROAR\n\tret z']
     offsets = [hit.index(gate) for gate in gates]
     assert offsets == sorted(offsets)
+    priorities = [line for line in source.default_lines(files['data/moves/priorities.asm'])
+                  if line.startswith('db ROAR,')]
+    assert len(priorities) == 1 and int(priorities[0].split(',')[1]) == -6
+    priority = files['engine/battle/core.asm'].split('\nGetMovePriority:', 1)[1].split('\nINCLUDE', 1)[0]
+    assert 'cp PRANKSTER\n\tjr nz, .no_priority' in priority
+    assert 'cp STATUS\n\tjr nz, .no_priority\n\tinc b' in priority
+    gates = commands.split('\nBattleCommand_checkpriority:', 1)[1].split('\nBattleCommand_effectchance:', 1)[0]
+    assert 'cp $81\n\tjr c, .check_prankster' in gates
+    assert gates.index('cp ARMOR_TAIL') < gates.index('cp PRANKSTER') < gates.index('cp SOUNDPROOF')
+    assert 'call GetTrueUserAbility\n\tcp PRANKSTER\n\tjr z, .prankster' in gates
+    assert 'call GetOpponentAbilityAfterMoldBreaker\n\tcp SOUNDPROOF\n\tret nz' in gates
+    prankster = gates.split('\n.prankster\n', 1)[1]
+    assert 'cp STATUS\n\tret nz\n\tcall CheckIfTargetIsDarkType\n\tret nz' in prankster
+    assert 'SOUNDPROOF' not in prankster and 'jmp BattleCommand_failuretext' in prankster
+    failure = commands.split('\nBattleCommand_failuretext:', 1)[1].split('\nBattleCommand_applydamage:', 1)[0]
+    assert 'cp EFFECT_DOUBLE_HIT\n\tjmp nz, EndMoveEffect' in failure
     protect = commands.split('\n.Protect:', 1)[1].split('\n.Substitute:', 1)[0]
     assert 'bit SUBSTATUS_PROTECT, a\n\tret' in protect
     substitute = commands.split('\n.Substitute:', 1)[1].split('\n.LockOn:', 1)[0]
@@ -35,18 +51,21 @@ def build():
     assert 'cp ATKFAIL_PROTECT\n\tret z' in bounce
     report = dict(source_repository='Rangi42/polishedcrystal', source_commit=source.PIN,
         source_variant='default (FAITHFUL undefined)', profile='B_POLISHED_MOVE_BALANCE',
-        scope='Roar execution hit gates in singles without active gimmicks; selected native forced-switch regressions.',
+        scope='Roar execution hit gates and Normal-type Prankster/Dark/Soundproof ordering in singles without active gimmicks; selected native forced-switch regressions.',
         rules=['Roar calls checkhit before priority, reflection and forced switching.',
                'Protect blocks Roar even with No Guard or Substitute, and prevents Magic Bounce reflection.',
                'No Guard on either side bypasses Fly/Dig, but Lock-On is checked after Fly/Dig and cannot bypass them.',
                'Roar bypasses Substitute and the ordinary accuracy/evasion calculation after those gates.',
+               'Roar priority is -6, raised to -5 by Prankster; Armor Tail does not block either negative priority.',
+               'Prankster Roar fails against Dark targets before Magic Bounce; its non-Dark branch returns before the Soundproof check.',
                'Trainer Roar needs a living replacement. Ordinary wild Roar requires user level at least target level on either side.',
                'Suction Cups is checked after Mold Breaker; selected Soundproof/Mold Breaker cases retain the native result.'],
-        adapter='Apply Protect and hidden-target rules during move execution, preserving native AI estimation and the existing switch/party machinery.',
+        adapter='Apply Protect and hidden-target rules during move execution. Resolve source Prankster Dark immunity before reflection and bypass Soundproof for non-Dark targets of Prankster Roar. Preserve native AI estimation and the existing switch/party machinery.',
         gaps=['Source special encounter prohibitions and the roaming opponent level exemption remain separate from ordinary wild coverage.',
-              'Full source reflected-move execution, Prankster/Soundproof ordering, turn priority, deferred switch timing, candidate selection, ability activation order and presentation remain separate audits.',
+              'Full source reflected-move execution, turn ordering beyond Roar priority, deferred switch timing, candidate selection, ability activation order and presentation remain separate audits.',
               'Roar reflection through Substitute is covered by the subsequent Magic Bounce suite: Roar belongs to the source sound bypass list.',
-              'Doubles, active gimmicks, Whirlwind and optional protective effects retain native behavior. Whirlwind is not a move in the pinned source.',
+              'Doubles, active gimmicks and Whirlwind retain native behavior. Whirlwind is not a move in the pinned source; broader combinations with optional protective effects remain unaudited.',
+              'Dynamically retyped Roar retains native priority-immunity handling; other source moves using checkpriority remain separate audits.',
               'Native AI hit estimates remain unchanged; passing runtime tests does not certify full AI parity.'])
     return {source.ROOT/'tools/polished_port/manifests/roar_hit_rules.json': json.dumps(report, indent=2)+'\n'}
 

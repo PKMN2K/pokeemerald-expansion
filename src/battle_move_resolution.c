@@ -2116,6 +2116,11 @@ static bool32 UsesPolishedRoarHitRules(struct BattleCalcValues *cv)
         && GetActiveGimmick(cv->battlerDef) == GIMMICK_NONE;
 }
 
+static bool32 UsesPolishedRoarPriorityRules(struct BattleCalcValues *cv)
+{
+    return UsesPolishedRoarHitRules(cv) && GetBattleMoveType(cv->move) == TYPE_NORMAL;
+}
+
 static enum CancelerResult CancelerTargetFailure(struct BattleCalcValues *cv)
 {
     bool32 bounced = FALSE;
@@ -2210,6 +2215,18 @@ static enum CancelerResult CancelerTargetFailure(struct BattleCalcValues *cv)
             if (ShouldSkipFailureCheckOnBattler(cv->battlerAtk, cv->battlerDef))
                 continue;
 
+            // Source checkpriority precedes bounceback. Prankster's Dark
+            // immunity applies even though Roar remains at negative priority.
+            if (cv->abilities[cv->battlerAtk] == ABILITY_PRANKSTER
+             && IS_BATTLER_OF_TYPE(cv->battlerDef, TYPE_DARK)
+             && UsesPolishedRoarPriorityRules(cv))
+            {
+                gBattleStruct->moveResultFlags[cv->battlerDef] |= MOVE_RESULT_FAILED;
+                gBattleScripting.battler = cv->battlerDef;
+                BattleScriptCall(BattleScript_DoesntAffectScripting);
+                return TargetAvoidedAttack(cv->battlerAtk, cv->battlerDef);
+            }
+
             if (!IsSemiInvulnerable(cv->battlerDef, CHECK_ALL) && CanBattlerBounceBackMove(cv))
             {
                 gBattleStruct->moveResultFlags[cv->battlerDef] |= MOVE_RESULT_FAILED;
@@ -2235,6 +2252,14 @@ static enum CancelerResult CancelerTargetFailure(struct BattleCalcValues *cv)
                 continue;
 
             if (ShouldSkipFailureCheckOnBattler(cv->battlerAtk, cv->battlerDef))
+                continue;
+
+            // The source Prankster branch returns before checking Soundproof.
+            // Keep the exception in execution, outside shared AI estimates.
+            if (cv->abilities[cv->battlerAtk] == ABILITY_PRANKSTER
+             && cv->abilities[cv->battlerDef] == ABILITY_SOUNDPROOF
+             && !IS_BATTLER_OF_TYPE(cv->battlerDef, TYPE_DARK)
+             && UsesPolishedRoarPriorityRules(cv))
                 continue;
 
             if (CanMoveBeBlockedByTarget(&ctx, movePriority))
