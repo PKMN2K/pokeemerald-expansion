@@ -3,7 +3,7 @@
   "source_commit": "3fa43192379df5c3e7b09a08e4d5d79af4f02f42",
   "source_variant": "default (FAITHFUL undefined)",
   "profile": "B_POLISHED_MOVE_BALANCE",
-  "scope": "Static reflection candidacy for all 255 mapped source moves; ordinary singles Magic Bounce activation and Substitute eligibility without active gimmicks.",
+  "scope": "Static reflection candidacy for all 255 mapped source moves; ordinary singles Magic Bounce activation, Substitute eligibility and returned-move accuracy without active gimmicks.",
   "explicit_exceptions": [
     "ATTRACT",
     "DISABLE",
@@ -2840,11 +2840,13 @@
     "Protect failure and a hidden Fly/Dig target prevent reflection before the Substitute check.",
     "Ordinary reflection is blocked by Substitute unless the move is in the explicit bypass or sound list, or its original user has Infiltrator.",
     "Roar is a sound exception: Substitute does not prevent its reflection.",
-    "Mold Breaker suppresses Magic Bounce; reflected moves cannot bounce again."
+    "Mold Breaker suppresses Magic Bounce; reflected moves cannot bounce again.",
+    "Magic Bounce sets IN_ABILITY around ResetTurn, so the returned move skips the accuracy roll; ordinary later actions still check accuracy."
   ],
-  "adapter": "Retain the matching native reflection-candidate accessor, verified against independently generated source expectations for all 255 moves. Use the pinned PP registry for source membership and a generated 16-entry Substitute exception table.",
+  "adapter": "Retain the matching native reflection-candidate accessor, verified against independently generated source expectations for all 255 moves. Use the pinned PP registry for source membership and a generated 16-entry Substitute exception table. Track the reflection origin in an existing battle-only padding bit so source Magic Bounce skips returned accuracy without changing Magic Coat.",
   "gaps": [
-    "Reflected-effect execution/accuracy, conditional pre-reflection gates, full timing/priority/ability ordering, AI and presentation remain separate audits.",
+    "Reflected-effect execution and non-accuracy hit gates, conditional pre-reflection gates, full timing/priority/ability ordering, AI and presentation remain separate audits.",
+    "The original pre-reflection hit-check RNG consumption and source random stream are not imported by the returned-accuracy adapter.",
     "Ability-triggered nested move execution is outside this ordinary-move scope.",
     "Optional moves, Magic Coat, doubles and active gimmicks retain native reflection behavior."
   ]

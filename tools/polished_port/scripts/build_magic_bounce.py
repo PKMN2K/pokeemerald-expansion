@@ -64,6 +64,10 @@ def build():
     offsets = [bounce.index(gate) for gate in gates]
     assert offsets == sorted(offsets)
     commands = files['engine/battle/effect_commands.asm']
+    checkhit = commands.split('BattleCommand_checkhit:\n', 1)[1].split('\n\tcall .DreamEater', 1)[0]
+    assert list(line for line in source.default_lines(checkhit) if line) == [
+        'ld a, BATTLE_VARS_SUBSTATUS2', 'call GetBattleVar', 'bit SUBSTATUS_IN_ABILITY, a', 'ret nz']
+    assert bounce.index('set SUBSTATUS_IN_ABILITY, [hl]') < bounce.index('call ResetTurn') < bounce.index('res SUBSTATUS_IN_ABILITY, [hl]')
     sub = commands.split('\nCheckSubstituteOpp:', 1)[1].split('\nCheckUserMove:', 1)[0]
     assert 'call GetTrueUserAbility\n\tcp INFILTRATOR\n\tret z' in sub
     assert 'ld a, [wInAbility]\n\tand a\n\tjr nz, .no_sound_move' in sub
@@ -88,16 +92,18 @@ def build():
     header += '};\n\n#endif\n'
     report = dict(source_repository='Rangi42/polishedcrystal', source_commit=source.PIN,
         source_variant='default (FAITHFUL undefined)', profile='B_POLISHED_MOVE_BALANCE',
-        scope='Static reflection candidacy for all 255 mapped source moves; ordinary singles Magic Bounce activation and Substitute eligibility without active gimmicks.',
+        scope='Static reflection candidacy for all 255 mapped source moves; ordinary singles Magic Bounce activation, Substitute eligibility and returned-move accuracy without active gimmicks.',
         explicit_exceptions=bypass, sound_exceptions=sounds, moves=rows,
         reflection_candidates=31, reflection_non_candidates=224,
         rules=['The default source move table selects an effect constant, the indexed pointer selects its script, and only scripts containing bounceback are reflection candidates.',
                'Protect failure and a hidden Fly/Dig target prevent reflection before the Substitute check.',
                'Ordinary reflection is blocked by Substitute unless the move is in the explicit bypass or sound list, or its original user has Infiltrator.',
                'Roar is a sound exception: Substitute does not prevent its reflection.',
-               'Mold Breaker suppresses Magic Bounce; reflected moves cannot bounce again.'],
-        adapter='Retain the matching native reflection-candidate accessor, verified against independently generated source expectations for all 255 moves. Use the pinned PP registry for source membership and a generated 16-entry Substitute exception table.',
-        gaps=['Reflected-effect execution/accuracy, conditional pre-reflection gates, full timing/priority/ability ordering, AI and presentation remain separate audits.',
+               'Mold Breaker suppresses Magic Bounce; reflected moves cannot bounce again.',
+               'Magic Bounce sets IN_ABILITY around ResetTurn, so the returned move skips the accuracy roll; ordinary later actions still check accuracy.'],
+        adapter='Retain the matching native reflection-candidate accessor, verified against independently generated source expectations for all 255 moves. Use the pinned PP registry for source membership and a generated 16-entry Substitute exception table. Track the reflection origin in an existing battle-only padding bit so source Magic Bounce skips returned accuracy without changing Magic Coat.',
+        gaps=['Reflected-effect execution and non-accuracy hit gates, conditional pre-reflection gates, full timing/priority/ability ordering, AI and presentation remain separate audits.',
+              'The original pre-reflection hit-check RNG consumption and source random stream are not imported by the returned-accuracy adapter.',
               'Ability-triggered nested move execution is outside this ordinary-move scope.',
               'Optional moves, Magic Coat, doubles and active gimmicks retain native reflection behavior.'])
     return {TABLE: table, EXPECTATIONS: header, MANIFEST: json.dumps(report, indent=2) + '\n'}

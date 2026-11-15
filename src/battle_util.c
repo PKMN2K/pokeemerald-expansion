@@ -15,6 +15,7 @@
 #include "battle_stat_change.h"
 #include "config_changes.h"
 #include "polished_battle.h"
+#include "polished_moves.h"
 #include "constants/polished_move_restrictions.h"
 #include "constants/polished_protect_chain.h"
 #include "constants/polished_foresight.h"
@@ -1033,6 +1034,7 @@ void HandleAction_ActionFinished(void)
     gBattleScripting.animTargetsHit = 0;
     gBattleStruct->dynamicMoveType = 0;
     gBattleStruct->bouncedMoveIsUsed = FALSE;
+    gBattleStruct->bouncedMoveIsMagicBounce = FALSE;
     gBattleStruct->snatchedMoveIsUsed = FALSE;
     gBattleScripting.moveendState = 0;
     gBattleCommunication[3] = 0;
@@ -10990,6 +10992,17 @@ bool32 DoesOHKOMoveMissTarget(struct BattleCalcValues *cv)
 
 bool32 DoesMoveMissTarget(struct BattleCalcValues *cv)
 {
+    // Source bounceback sets IN_ABILITY around ResetTurn; checkhit returns
+    // before the accuracy roll. Track Magic Bounce separately from Magic Coat.
+    // Keep this execution-only rule out of AI estimates and optional formats.
+    if (B_POLISHED_MOVE_BALANCE && gBattleStruct->bouncedMoveIsUsed
+     && gBattleStruct->bouncedMoveIsMagicBounce
+     && (u32)cv->move < MOVES_COUNT && gPolishedMovePP[cv->move] != 0
+     && !IsDoubleBattle()
+     && GetActiveGimmick(cv->battlerAtk) == GIMMICK_NONE
+     && GetActiveGimmick(cv->battlerDef) == GIMMICK_NONE)
+        return FALSE;
+
     if (GetMoveEffect(cv->move) == EFFECT_OHKO)
         return DoesOHKOMoveMissTarget(cv);
 

@@ -3973,12 +3973,14 @@ static enum MoveEndResult MoveEndBouncedMove(struct BattleCalcValues *cv)
 
             if (gBattleStruct->magicBouncePending & 1u << bounceBattler)
             {
+                gBattleStruct->bouncedMoveIsMagicBounce = TRUE;
                 gBattlerAbility = bounceBattler;
                 gBattlescriptCurrInstr = GetMoveBattleScript(gCurrentMove);
                 BattleScriptCall(BattleScript_MagicBounce);
             }
             else if (gBattleStruct->magicCoatPending & 1u << bounceBattler)
             {
+                gBattleStruct->bouncedMoveIsMagicBounce = FALSE;
                 gBattlescriptCurrInstr = GetMoveBattleScript(gCurrentMove);
                 BattleScriptCall(BattleScript_MagicCoat);
             }
@@ -5206,6 +5208,7 @@ static enum MoveEndResult MoveEndClearBits(struct BattleCalcValues *cv)
         RestoreAttacker();
         RestoreTarget();
         gBattleStruct->bouncedMoveIsUsed = FALSE;
+        gBattleStruct->bouncedMoveIsMagicBounce = FALSE;
         gBattleScripting.moveendState = MOVEEND_BOUNCED_MOVE;
         for (enum BattlerId battler = B_BATTLER_0; battler < gBattlersCount; battler++)
             gBattleStruct->moveResultFlags[battler] = gBattleStruct->savedMoveResultFlags[battler];

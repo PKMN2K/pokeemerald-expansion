@@ -2542,9 +2542,9 @@ controls from either side (12 cases). These checks run under both native and
 source profiles through the existing Magic Bounce CI prefix.
 
 This completes static reflection-candidate coverage and ordinary activation
-coverage. It does not certify all returned effects, reflected accuracy,
-conditional pre-reflection gates, nested ability execution, timing, AI or
-presentation. Generation presets are not the specification: the source-derived
+coverage. Returned accuracy is audited in the following suite; other returned
+effects, conditional pre-reflection gates, nested ability execution, timing,
+AI and presentation remain separate work. Generation presets are not the specification: the source-derived
 expectations fail if future flags drift. No production data, runtime, saved
 identifiers, optional mechanics or table capacities change.
 
@@ -2564,6 +2564,56 @@ Both production ROM hashes are unchanged from the previous suite.
 
 Validated Johto ROM SHA-256:
 `09f1a862fc2ca9960eea56613473323f336c602b2666109e80ef8b99e948a7df`.
+
+## Source Magic Bounce returned-move accuracy
+
+The pinned `bounceback` command sets `SUBSTATUS_IN_ABILITY` around `ResetTurn`;
+`BattleCommand_checkhit` immediately returns on that flag before its accuracy
+roll. The port previously rolled accuracy again for the reflected move. The
+source profile now skips that returned roll for mapped source moves in singles
+without active gimmicks, including status effects and the separate stat-change
+accuracy path. The source builder verifies this command ordering against the
+existing exact-blob fixtures.
+
+An existing battle-only padding bit records whether reflection originated from
+Magic Bounce or Magic Coat. It is assigned for each reflection and cleared on
+reflection completion and ordinary action cleanup. Magic Coat, Expansion-only
+moves, doubles, active gimmicks and native profiles retain their own accuracy
+behavior. Source membership uses the pinned PP registry independently of the
+PP override. The adjustment is in execution, outside the AI accuracy estimator;
+no save layout, target identifier or capacity changes.
+
+Ten battle groups cover 56 cases per profile: both sides' Toxic, Thunder Wave,
+Will-O-Wisp and Sing; seven stat drops; Supersonic, Leech Seed and Foresight;
+raised evasion and Bright Powder; original-user PP consumption and unchanged
+reflector PP; ordinary accuracy after reflection; type/Insomnia immunities;
+no reflection and Mold Breaker controls; optional Grass Whistle, Magic Coat,
+either-side Terastal and doubles; and Magic Bounce precedence over Magic Coat.
+The status, stat-drop and confusion groups reproduced missed returned moves
+on the unchanged parent runtime.
+
+This certifies the returned accuracy-roll bypass, not full Magic Bounce.
+Original pre-reflection hit-check RNG consumption, source random-stream timing,
+non-accuracy hit gates, full reflected effects, nested execution, priority,
+AI and presentation remain separate audits. Existing gates and immune effects
+are regression controls; this suite does not import all of those rules.
+
+Validation: both production ROM builds, all 67 source checks and all 12 ARM
+compiler probes passed. The full native suite passed 5,607 groups with nine
+expected failures and 585 existing TODOs; there were no unexpected failures.
+The source profile passed 258 source-rule groups and six AI timing groups
+without relaxing timing ceilings. All ten new groups (56 cases per profile)
+passed with deprecated/unused warning errors enabled. A separate ARM compile
+probe confirms the battle-state structure remains 1,192 bytes.
+
+The production-linked audit retains zero audited move-data differences,
+255 matching reflection flags and zero teaching compatibility mismatches;
+its 109 known gaps have no new or changed entries. The final Johto ROM passed
+all 12 demo checks and 101 campaign checks, including 19 directed warps,
+Falkner, badge/Roost/Togepi rewards and Save/reset/Continue.
+
+Validated Johto ROM SHA-256:
+`601fb85597bf9794ae9538d07e4cdc661c0a24a89c1eda2c6d570d8c083dbe97`.
 
 ## Next priorities
 
