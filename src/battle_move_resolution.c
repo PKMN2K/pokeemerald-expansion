@@ -2140,6 +2140,17 @@ static bool32 UsesPolishedPreReflectionPriorityRules(struct BattleCalcValues *cv
         && GetActiveGimmick(cv->battlerDef) == GIMMICK_NONE;
 }
 
+static bool32 UsesPolishedCorrosionPowderRules(struct BattleCalcValues *cv)
+{
+    return B_POLISHED_MOVE_BALANCE
+        && cv->move == MOVE_POISONPOWDER && GetBattleMoveType(cv->move) == TYPE_POISON
+        && cv->abilities[cv->battlerAtk] == ABILITY_CORROSION
+        && !IsDoubleBattle()
+        && GetActiveGimmick(cv->battlerAtk) == GIMMICK_NONE
+        && GetActiveGimmick(cv->battlerDef) == GIMMICK_NONE
+        && (!gBattleStruct->bouncedMoveIsUsed || gBattleStruct->bouncedMoveIsMagicBounce);
+}
+
 static enum CancelerResult CancelerTargetFailure(struct BattleCalcValues *cv)
 {
     bool32 bounced = FALSE;
@@ -2281,7 +2292,14 @@ static enum CancelerResult CancelerTargetFailure(struct BattleCalcValues *cv)
              && UsesPolishedSoundPriorityRules(cv))
                 continue;
 
-            if (CanMoveBeBlockedByTarget(&ctx, movePriority))
+            // Source Corrosion PoisonPowder skips only the powder matchup.
+            // Keep the shared AI checker and its timing budget unchanged.
+            bool32 blocked;
+            if (UsesPolishedCorrosionPowderRules(cv))
+                blocked = CanAbilityAbsorbMove(&ctx) || CanTargetBlockPranksterMove(&ctx, movePriority);
+            else
+                blocked = CanMoveBeBlockedByTarget(&ctx, movePriority);
+            if (blocked)
             {
                 gBattleStruct->moveResultFlags[cv->battlerDef] |= MOVE_RESULT_FAILED;
                 gSpecialStatuses[cv->battlerDef].updateStallMons = TRUE;

@@ -123,6 +123,7 @@ jobs:
           python3 tools/polished_port/scripts/build_switch_exemptions.py --check
           python3 tools/polished_port/scripts/build_roar_hit_rules.py --check
           python3 tools/polished_port/scripts/build_magic_bounce.py --check
+          python3 tools/polished_port/scripts/build_corrosion_powder.py --check
           python3 tools/polished_port/scripts/build_rock_smash.py --check
           python3 tools/polished_port/scripts/test_rock_smash.py
           python3 tools/polished_port/scripts/build_flash.py --check
@@ -1200,6 +1201,7 @@ jobs:
           make -j$(nproc) -O TEST=1 POLISHED_MOVE_BALANCE_TEST=1 check TESTS='Polished Roar'
           make -j$(nproc) -O TEST=1 POLISHED_MOVE_BALANCE_TEST=1 check TESTS='Polished sound priority'
           make -j$(nproc) -O TEST=1 POLISHED_MOVE_BALANCE_TEST=1 check TESTS='Polished Magic Bounce'
+          make -j$(nproc) -O TEST=1 POLISHED_MOVE_BALANCE_TEST=1 check TESTS='Polished Corrosion powder'
           make -j$(nproc) -O TEST=1 POLISHED_MOVE_BALANCE_TEST=1 check TESTS='AI thinking time'
 
       - name: Exercise evolution completion and cancellation in mGBA

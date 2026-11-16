@@ -2820,6 +2820,56 @@ Falkner, badge/Roost/Togepi rewards and Save/reset/Continue.
 Validated Johto ROM SHA-256:
 `12aaf1ef1ee3bc58b4c2f7e463146c083b238ed696975d0594ac89ecc816c843`.
 
+## Source Corrosion powder-immunity exception
+
+The pinned `checkpowder` handler returns early for PoisonPowder or Toxic when
+the actual attacker has Corrosion. Of the four source powder moves, only
+PoisonPowder takes that branch. It skips the matchup checks for Safety Goggles,
+either Grass type and Overcoat. Native Expansion retained those powder
+immunities even with Corrosion, so the source profile now skips that blocker
+for Poison-type PoisonPowder during execution in singles without active gimmicks.
+
+The adapter uses the actual, suppression-aware attacker ability and leaves
+shared AI estimates and the later status handlers unchanged. Magic Coat
+returns, doubles, active gimmicks and dynamically retyped moves retain their
+tested native behavior. No identifiers, save fields or capacities change.
+
+The original powder list and Safeguard command are now authenticated fixtures.
+The new verifier checks the exact Corrosion branch, powder matchup gates,
+status-stage continuation and Safeguard exit. Source powder immunity records
+a failed matchup but does not itself end the move; an otherwise eligible
+Magic Bounce target still reflects it. That native reflection result already
+matched, and the new tests retain it. Reflected moves use Magic Bounce's
+actual ability, not the original user's Corrosion.
+
+Ten battle groups cover 121 cases per profile: all four powders and all three
+powder barriers on both sides, ordinary/Mold Breaker/Corrosion users, PP,
+Protect, Safeguard, existing status, misses, both reflection directions,
+ability suppression, Magic Coat, doubles, either-side Terastal and Electrify.
+The unchanged parent failed the Corrosion bypass and ability-comparison groups;
+all ten pass after the correction. CI includes the new verifier and test prefix.
+
+This closes the powder-immunity stage only. Source Corrosion's later status-
+immunity and Substitute bypasses, Toxic, Toxic Orb and damaging poison effects
+remain separate audits, as do general status rules, the source random stream,
+full returned-effect ordering, AI and presentation.
+
+Validation: both production builds, all 68 source checks and all 12 ARM
+compiler probes passed. The final full native suite passed 5,650 groups, with
+nine expected failures and 585 existing TODOs; no unexpected failures occurred.
+The final source profile passed 301 source-rule groups and six AI timing groups
+without changing timing ceilings. All ten new groups (121 cases per profile)
+passed with deprecated/unused warning errors enabled.
+
+The production-linked audit retains zero audited move-data differences,
+255 matching reflection flags and zero teaching compatibility mismatches;
+its 109 known gaps have no new or changed entries. The same final Johto ROM
+passed all 12 demo checks and 101 campaign checks, including 19 directed warps,
+Falkner, badge/Roost/Togepi rewards and Save/reset/Continue.
+
+Validated Johto ROM SHA-256:
+`bd344bc31a03d1d6172bdec6741e86a339909c40ba90599fb10b62c2fa19aa97`.
+
 ## Next priorities
 
 1. Continue the source field-rule audit. Headbutt remains dormant; other field
