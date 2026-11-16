@@ -1,0 +1,26 @@
+{
+  "source_repository": "Rangi42/polishedcrystal",
+  "source_commit": "3fa43192379df5c3e7b09a08e4d5d79af4f02f42",
+  "source_variant": "default (FAITHFUL undefined)",
+  "profile": "B_POLISHED_MOVE_BALANCE",
+  "scope": "Effective Heavy Boots on entry in singles without either active battler using a gimmick.",
+  "item": {
+    "source_item": "HEAVY_BOOTS",
+    "source_hold_effect": "HELD_HEAVY_BOOTS",
+    "target_item": "ITEM_HEAVY_DUTY_BOOTS",
+    "target_hold_effect": "HOLD_EFFECT_HEAVY_DUTY_BOOTS"
+  },
+  "rules": [
+    "The shared hazard entry checks airborne state, then the effective held item, before calling Spikes or Toxic Spikes.",
+    "Heavy Boots return before the Poison-type absorption branch, preserving all Toxic Spikes layers.",
+    "Ordinary and forced entry both reach the same boots gate.",
+    "Without effective boots, grounded Poison types clear Toxic Spikes; airborne Poison types do not.",
+    "Toxic Spikes placement caps at two layers; layers preserved by boots remain active for later susceptible entrants."
+  ],
+  "adapter": "Add the scoped boots gate before Poison-type absorption in the switch-in execution path. Retain effective-item suppression, item retention and hazard counter advancement; leave shared hazard/AI queries unchanged.",
+  "gaps": [
+    "This covers the boots/absorption order and selected entry controls, not all source hazard grounding, Mold Breaker interactions, status immunity, rounding, entry-item order, AI decisions or presentation.",
+    "The source item identity is mapped to the existing target held effect. Full source name, price, description, icon and inventory migration remain separate work.",
+    "Doubles and active gimmicks retain native absorption; optional Klutz, Magic Room and Knock Off controls exercise existing item suppression/removal paths."
+  ]
+}

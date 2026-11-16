@@ -3083,6 +3083,57 @@ Falkner, badge/Roost/Togepi rewards and Save/reset/Continue.
 Validated Johto ROM SHA-256:
 `fea2f96d56b51c6fca90cb6da69c04b469c510a86322b630603b58c5ec503089`.
 
+## Source Heavy Boots and Toxic Spikes absorption
+
+The pinned hazard entry routine checks airborne state, then the effective
+held item, before dispatching either Spikes or Toxic Spikes. Heavy Boots
+return before the Poison-type absorption branch. A grounded Poison-type
+holder therefore leaves Toxic Spikes in place, including both layers. The
+same gate applies to ordinary and forced entry.
+
+Expansion absorbed Toxic Spikes before consulting Heavy-Duty Boots. The
+source profile now checks effective boots before that absorption branch in
+the switch-in execution path. It preserves the item, skips absorption and
+advances the existing hazard counter normally. Shared hazard/AI queries,
+identifiers, save fields and Expansion capacities remain unchanged. The
+adapter is limited to singles without an active gimmick on either battler.
+
+The new verifier authenticates the Heavy Boots held effect, common ordinary/
+forced entry path, ordering before both hazard handlers and grounded Poison
+absorption. An additional fixture from the same source pin authenticates the
+two-layer Toxic Spikes cap. The source item maps to the existing target
+`ITEM_HEAVY_DUTY_BOOTS` held effect; full source name, price, description, art
+and inventory migration remain separate work.
+
+Eleven battle groups cover 108 cases per profile: both sides and layers,
+boots and no-item controls, later susceptible entrants, preserved layer counts,
+stacked Spikes/Toxic Spikes in either order, ordinary and Steel-type targets,
+Flying and Levitate, effective-item suppression, Knock Off and reentry,
+Roar/Whirlwind, doubles and either active Terastal. Six groups failed against
+the unchanged parent. CI includes the new source verifier and battle prefix.
+
+This closes the scoped boots/absorption ordering gap. Full source hazard
+grounding, forced-switch Mold Breaker interactions, status immunity, damage
+rounding, entry-item ordering, AI decisions and presentation remain separate
+audits. Doubles and active gimmicks retain native absorption; optional item
+suppression/removal continues through the existing engine paths.
+
+Validation: both production builds, all 73 source checks and all 12 ARM
+compiler probes passed. The final full native suite passed 5,708 groups, with
+nine expected failures and 585 existing TODOs; no unexpected failures occurred.
+The final source profile passed 359 source-rule groups and six AI timing groups
+without changing timing ceilings. All eleven new groups (108 cases per profile)
+passed with deprecated/unused warning errors enabled.
+
+The production-linked audit retains zero audited move-data differences,
+255 matching reflection flags and zero teaching compatibility mismatches;
+its 109 known gaps have no new or changed entries. The same final Johto ROM
+passed all 12 demo checks and 101 campaign checks, including 19 directed warps,
+Falkner, badge/Roost/Togepi rewards and Save/reset/Continue.
+
+Validated Johto ROM SHA-256:
+`060f80e5d4f806b68a0ac4de6a3ad12bf9d1c869fc8d348c405266c5afe7593d`.
+
 ## Next priorities
 
 1. Continue the source field-rule audit. Headbutt remains dormant; other field

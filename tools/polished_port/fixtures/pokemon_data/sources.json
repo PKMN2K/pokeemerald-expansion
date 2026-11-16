@@ -2127,6 +2127,11 @@
       "path": "engine/battle/move_effects/toxic.asm",
       "fixture": "engine__battle__move_effects__toxic.asm.b64",
       "git_blob_sha1": "98dcb84649793de43a99f946f56a7db05380c2ad"
+    },
+    {
+      "path": "engine/battle/move_effects/spikes.asm",
+      "fixture": "engine__battle__move_effects__spikes.asm.b64",
+      "git_blob_sha1": "37b33b71ccbaeb2bf0d4295e7e3df2adaba19eab"
     }
   ]
 }

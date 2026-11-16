@@ -3,10 +3,13 @@
 #include "battle_hold_effects.h"
 #include "battle_stat_change.h"
 #include "battle_util.h"
+#include "battle_ai_record.h"
+#include "battle_gimmick.h"
 #include "battle_scripts.h"
 #include "battle_switch_in.h"
 #include "battle_controllers.h"
 #include "config_changes.h"
+#include "config/battle.h"
 #include "constants/battle.h"
 #include "constants/moves.h"
 
@@ -338,6 +341,15 @@ static bool32 TryHazardsOnSwitchIn(enum BattlerId battler, enum Ability ability,
         if (!IsBattlerGrounded(battler, ability, holdEffect))
         {
             effect = FALSE;
+        }
+        else if (B_POLISHED_MOVE_BALANCE
+              && holdEffect == HOLD_EFFECT_HEAVY_DUTY_BOOTS
+              && !IsDoubleBattle()
+              && GetActiveGimmick(battler) == GIMMICK_NONE
+              && GetActiveGimmick(GetOppositeBattler(battler)) == GIMMICK_NONE)
+        {
+            // Source Heavy Boots skip hazards before Poison-type absorption.
+            RecordItemEffectBattle(battler, holdEffect);
         }
         else if (IS_BATTLER_OF_TYPE(battler, TYPE_POISON)) // Absorb the toxic spikes.
         {
