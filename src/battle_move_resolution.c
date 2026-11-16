@@ -2495,7 +2495,7 @@ static enum CancelerResult CancelerMultihitMoves(struct BattleCalcValues *cv)
 static enum CancelerResult CancelerSubstitute(struct BattleCalcValues *cv)
 {
     // Source poison-status Corrosion skips the status-stage Substitute gate.
-    if (IsPolishedCorrosionSubstituteBypass(cv->battlerAtk, cv->battlerDef, cv->move))
+    if (UsesPolishedCorrosionStatusRules(cv->battlerAtk, cv->battlerDef, cv->move))
         return CANCELER_RESULT_SUCCESS;
 
     // Source Mean Look has no general checkhit, but its effect explicitly
@@ -3618,6 +3618,15 @@ static enum MoveEndResult MoveEndQueueDancer(struct BattleCalcValues *cv)
 static enum MoveEndResult MoveEndStatusImmunityAbilities(struct BattleCalcValues *cv)
 {
     enum MoveEndResult result = MOVEEND_RESULT_CONTINUE;
+
+    // Source PostStatus consumes a healing berry before the poison-curing
+    // ability. Retry this phase after the item script so normal healing can run.
+    if (UsesPolishedCorrosionStatusRules(cv->battlerAtk, cv->battlerDef, cv->move)
+     && (cv->abilities[cv->battlerDef] == ABILITY_IMMUNITY || cv->abilities[cv->battlerDef] == ABILITY_PASTEL_VEIL)
+     && (gBattleMons[cv->battlerDef].status1 & (STATUS1_POISON | STATUS1_TOXIC_POISON))
+     && (cv->holdEffects[cv->battlerDef] == HOLD_EFFECT_CURE_PSN || cv->holdEffects[cv->battlerDef] == HOLD_EFFECT_CURE_STATUS)
+     && ItemBattleEffects(cv->battlerDef, cv->battlerAtk, cv->holdEffects[cv->battlerDef], IsOnStatusChangeActivation))
+        return MOVEEND_RESULT_RUN_SCRIPT;
 
     for (enum BattlerId battler = 0; battler < gBattlersCount; battler++)
     {

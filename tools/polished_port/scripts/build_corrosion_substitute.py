@@ -61,8 +61,8 @@ def build():
                'Corrosion skips the later Substitute check and leaves the substitute intact while applying poison to its owner.',
                'Earlier Protect, Safeguard and accuracy gates still apply; an existing major status is not overwritten.',
                'Corrosion does not bypass the separate Magic Bounce Substitute gate. A protected reflector is poisoned without reflecting; returned moves do not inherit the original user ability.'],
-        adapter='Use one execution-only eligibility helper at both the move canceler and trynonvolatilestatus Substitute checks. Preserve shared Substitute/AI helpers, reflection eligibility and the later native status-immunity checks. Exclude optional Magic Coat returns, doubles, active gimmicks and retyped moves.',
-        gaps=['Corrosion status-stage ability/item immunity bypasses, Toxic Orb, damaging poison effects, general status rules and their healing lifecycle remain separate audits.',
+        adapter='Use one execution-only eligibility helper at both the move canceler and trynonvolatilestatus Substitute checks. Preserve shared Substitute/AI helpers and reflection eligibility. The corrosion_status suite separately covers the later source ability checks and healing order. Exclude optional Magic Coat returns, doubles, active gimmicks and retyped moves.',
+        gaps=['The corrosion_status suite covers Immunity/Pastel Veil/Leaf Guard prevention and immediate berry/ability healing. Toxic Orb, broader damaging poison effects and general status rules remain separate audits.',
               'Full source accuracy/RNG, reflected-effect ordering beyond the tested cases, AI decisions and presentation remain separate audits.',
               'Optional mechanics retain native paths; broader Magic Coat combinations are not certified.'])
     return {source.ROOT/'tools/polished_port/manifests/corrosion_substitute.json': json.dumps(report, indent=2)+'\n'}

@@ -5453,7 +5453,7 @@ static void Cmd_trynonvolatilestatus(void)
         canInflictStatus = FALSE;
 
     if (canInflictStatus
-     && !IsPolishedCorrosionSubstituteBypass(gBattlerAttacker, gBattlerTarget, gCurrentMove)
+     && !UsesPolishedCorrosionStatusRules(gBattlerAttacker, gBattlerTarget, gCurrentMove)
      && DoesSubstituteBlockMove(gBattlerAttacker, gBattlerTarget, gCurrentMove))
     {
         canInflictStatus = FALSE;
@@ -7754,9 +7754,9 @@ static void Cmd_settypebasedhalvers(void)
         gBattlescriptCurrInstr = cmd->failInstr;
 }
 
-// Only execution callers use this exception. Shared Substitute/AI queries and
-// Magic Bounce's separate Substitute eligibility keep their existing paths.
-bool32 IsPolishedCorrosionSubstituteBypass(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Move move)
+// Only execution callers use this scope. Shared status/Substitute AI queries
+// and Magic Bounce's separate Substitute eligibility keep their existing paths.
+bool32 UsesPolishedCorrosionStatusRules(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Move move)
 {
     return B_POLISHED_MOVE_BALANCE
         && (move == MOVE_POISONPOWDER || move == MOVE_TOXIC)

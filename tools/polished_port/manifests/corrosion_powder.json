@@ -23,7 +23,7 @@
   ],
   "adapter": "Skip only the powder blocker during execution for matching source PoisonPowder and actual Corrosion. Preserve shared AI estimates and the later status/substitute handlers. Exclude optional Magic Coat returns, doubles, active gimmicks and dynamically retyped moves.",
   "gaps": [
-    "The separate corrosion_substitute suite covers Toxic/PoisonPowder Substitute bypass. Status-stage ability/item immunity bypasses, Toxic Orb and damaging poison effects remain separate audits.",
+    "The separate corrosion_substitute suite covers Toxic/PoisonPowder Substitute bypass. The corrosion_status suite covers status-ability prevention and immediate berry/ability healing. Toxic Orb and broader damaging poison effects remain separate audits.",
     "The full source accuracy/random stream, general status rules, returned-effect ordering, AI and presentation remain separate audits.",
     "Optional moves and mechanics retain native behavior; optional protective combinations outside the tests are not certified."
   ]

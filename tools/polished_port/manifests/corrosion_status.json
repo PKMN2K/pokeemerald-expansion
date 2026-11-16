@@ -1,0 +1,28 @@
+{
+  "source_repository": "Rangi42/polishedcrystal",
+  "source_commit": "3fa43192379df5c3e7b09a08e4d5d79af4f02f42",
+  "source_variant": "default (FAITHFUL undefined)",
+  "profile": "B_POLISHED_MOVE_BALANCE",
+  "scope": "Actual Corrosion using Poison-type Toxic or PoisonPowder in singles without active gimmicks.",
+  "moves": [
+    "POISONPOWDER",
+    "TOXIC"
+  ],
+  "prevention_bypassed": [
+    "IMMUNITY",
+    "PASTEL_VEIL",
+    "LEAF_GUARD"
+  ],
+  "rules": [
+    "The direct-user Corrosion branch skips the status ability checks as well as Substitute.",
+    "Poison is applied and displayed before post-status healing. Immunity and Pastel Veil then cure it; Leaf Guard does not cure an existing status.",
+    "The post-status path checks Synchronize, then held status healing, then status-healing abilities.",
+    "Pecha and Lum Berries are consumed before Immunity or Pastel Veil can cure the poison.",
+    "Protect, Safeguard, accuracy and existing major status gates remain; the source has no live item using HELD_PREVENT_POISON."
+  ],
+  "adapter": "Reuse the execution-only Corrosion status scope at RUN_SCRIPT ability checks. At the existing move-end immunity phase, offer poison-healing berries first for eligible poisoned Immunity/Pastel Veil targets; resume ordinary ability healing afterward. Shared AI/status estimates retain native behavior.",
+  "gaps": [
+    "Toxic Orb, broader damaging-poison and hazard behavior, general status/Synchronize rules, full RNG, AI decisions and presentation remain separate audits.",
+    "Optional Magic Coat returns, doubles, active gimmicks, retyped moves and non-source ability/terrain barriers retain native paths. Broader optional combinations are not certified."
+  ]
+}

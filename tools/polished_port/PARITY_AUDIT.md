@@ -2926,6 +2926,60 @@ Falkner, badge/Roost/Togepi rewards and Save/reset/Continue.
 Validated Johto ROM SHA-256:
 `2518fd04f160ddf198f581490338232f4637876f32eb52071d80545c7cef428f`.
 
+## Source Corrosion status abilities and healing order
+
+The pinned source's direct-user Corrosion branch for PoisonPowder and Toxic
+also skips Immunity, Pastel Veil and Leaf Guard prevention. It applies and
+displays poison, then runs post-status healing. Immunity and Pastel Veil cure
+that poison before the next battler acts; Leaf Guard does not cure existing
+status, so its owner stays poisoned even in sun.
+
+Healing order matters: the source checks held status-healing items before
+status-healing abilities. A Pecha or Lum Berry is consumed first, leaving
+nothing for Immunity or Pastel Veil to cure. Native Expansion instead rejected
+the initial status and, if allowed through, would run the ability cure before
+the berry. The source profile now bypasses those three ability-prevention
+checks during actual Toxic/PoisonPowder execution and offers the two healing
+berry effects before the normal move-end immunity phase.
+
+The adapter shares the earlier Corrosion status eligibility helper: actual,
+suppression-aware Corrosion; Poison-type Toxic/PoisonPowder; singles; no active
+gimmick; and no optional Magic Coat return. It does not change shared AI/status
+estimates, identifiers, save fields or Expansion capacities. Protect,
+Safeguard, accuracy and existing major status still gate application. Optional
+ability barriers, other status moves and damaging poison effects keep their
+native paths. The source defines HELD_PREVENT_POISON but assigns it to no live
+item, so no speculative item mapping was introduced.
+
+The new verifier authenticates the prevention branch, sun check, status
+application, post-status order, healing ability table and routines, and Pecha/
+Lum source item records. Twelve groups cover 198 cases per profile, including
+both moves and sides, ordinary and Corrosion users, visible poison then cure,
+PP, no residual damage after healing, berry consumption before ability healing,
+Substitute, prevention gates, suppression and optional-mechanic controls.
+Three groups failed against the unchanged parent. CI runs the new source
+verifier and battle prefix.
+
+This closes the scoped status-ability bypass and immediate healing sequence.
+Toxic Orb, broader damaging-poison/hazard behavior, general status/Synchronize
+rules, full RNG, AI decisions and source presentation remain separate audits.
+
+Validation: both production builds, all 70 source checks and all 12 ARM
+compiler probes passed. The final full native suite passed 5,673 groups, with
+nine expected failures and 585 existing TODOs; no unexpected failures occurred.
+The final source profile passed 324 source-rule groups and six AI timing groups
+without changing timing ceilings. All twelve new groups (198 cases per profile)
+passed with deprecated/unused warning errors enabled.
+
+The production-linked audit retains zero audited move-data differences,
+255 matching reflection flags and zero teaching compatibility mismatches;
+its 109 known gaps have no new or changed entries. The same final Johto ROM
+passed all 12 demo checks and 101 campaign checks, including 19 directed warps,
+Falkner, badge/Roost/Togepi rewards and Save/reset/Continue.
+
+Validated Johto ROM SHA-256:
+`d598bdc4ceca3d16b991ba9534465239425aa5bcd7f75228d3d9fc9141e9d845`.
+
 ## Next priorities
 
 1. Continue the source field-rule audit. Headbutt remains dormant; other field
