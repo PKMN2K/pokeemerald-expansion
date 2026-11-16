@@ -3033,6 +3033,56 @@ Falkner, badge/Roost/Togepi rewards and Save/reset/Continue.
 Validated Johto ROM SHA-256:
 `fea02657406b2e896f22378f364c5e59debff897ab273a1584ced8728b9eb30b`.
 
+## Source damaging poison and Corrosion
+
+The pinned source uses `EFFECT_POISON_HIT` for Poison Sting, Gunk Shot,
+Poison Jab and Sludge Bomb. Their scripts apply damage, roll the secondary
+chance and call `CanPoisonTarget` in direct-user mode. The Corrosion shortcut
+accepts only `EFFECT_POISON` and `EFFECT_TOXIC`, so damaging poison moves still
+check Poison/Steel immunity and the ordinary status protections.
+
+Expansion allowed Corrosion to bypass those type checks for damaging moves.
+The source profile now uses an authenticated, generated four-move membership
+table in the additional-effect handler. During eligible poison effects, the
+ordinary status query receives no Corrosion exception. The actual attacker
+ability and shared AI/status estimates remain unchanged. Toxic and PoisonPowder
+keep their already audited Corrosion behavior.
+
+The adapter is limited to these four moves with Poison battle type in singles
+without an active gimmick on either battler. Optional damaging poison moves,
+dynamically retyped moves, doubles and active gimmicks retain native behavior.
+No identifiers, save fields or Expansion capacities change.
+
+Eleven groups cover 174 cases per profile: all four moves and both sides,
+ordinary and Corrosion users, damage and PP, susceptible and Poison/Steel
+victims, secondary-effect success/failure, Immunity, Pastel Veil, Leaf Guard
+with and without sun, Protect, Safeguard, Substitute, existing status, misses,
+ability suppression, poison-status controls and optional-mechanic boundaries.
+The Corrosion/Poison-type group fails against the unchanged parent. The new
+source verifier and battle prefix are wired into CI.
+
+This closes the scoped damaging-poison Corrosion/type distinction and selected
+protection gates. The source's 30% secondary records are authenticated; the
+battle tests force both outcomes and do not certify the full source RNG.
+General status/hazard behavior, damage rounding, complete post-hit ordering,
+AI decisions and source presentation remain separate audits.
+
+Validation: both production builds, all 72 source checks and all 12 ARM
+compiler probes passed. The final full native suite passed 5,697 groups, with
+nine expected failures and 585 existing TODOs; no unexpected failures occurred.
+The final source profile passed 348 source-rule groups and six AI timing groups
+without changing timing ceilings. All eleven new groups (174 cases per profile)
+passed with deprecated/unused warning errors enabled.
+
+The production-linked audit retains zero audited move-data differences,
+255 matching reflection flags and zero teaching compatibility mismatches;
+its 109 known gaps have no new or changed entries. The same final Johto ROM
+passed all 12 demo checks and 101 campaign checks, including 19 directed warps,
+Falkner, badge/Roost/Togepi rewards and Save/reset/Continue.
+
+Validated Johto ROM SHA-256:
+`fea2f96d56b51c6fca90cb6da69c04b469c510a86322b630603b58c5ec503089`.
+
 ## Next priorities
 
 1. Continue the source field-rule audit. Headbutt remains dormant; other field

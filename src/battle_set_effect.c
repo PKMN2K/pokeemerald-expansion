@@ -21,6 +21,7 @@
 #include "string_util.h"
 #include "config/battle.h"
 #include "constants/polished_metronome_struggle.h"
+#include "data/polished_poison_hit.h"
 
 static inline bool32 IgnoreTargetingForMoveEffect(enum MoveEffect moveEffect);
 static bool32 DoesSubstituteBlockMoveEffectOnTarget(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum MoveEffect moveEffect);
@@ -35,6 +36,20 @@ static void HandleSetEffectNone(struct BattleCalcValues *cv, struct SetEffect *s
 
 static void HandleSetEffectNonVolatile(struct BattleCalcValues *cv, struct SetEffect *se)
 {
+    enum Ability abilityAtk = cv->abilities[cv->battlerAtk];
+
+    // Source Corrosion bypasses type immunity only for poison-status moves,
+    // not PoisonHit. Keep this adjustment local to additional-effect execution.
+    if (B_POLISHED_MOVE_BALANCE
+     && abilityAtk == ABILITY_CORROSION
+     && se->moveEffect == MOVE_EFFECT_POISON
+     && sPolishedPoisonHitMoves[cv->move]
+     && GetBattleMoveType(cv->move) == TYPE_POISON
+     && !IsDoubleBattle()
+     && GetActiveGimmick(cv->battlerAtk) == GIMMICK_NONE
+     && GetActiveGimmick(se->effectBattler) == GIMMICK_NONE)
+        abilityAtk = ABILITY_NONE;
+
     if (IsSafeguardProtected(cv->battlerAtk, se->effectBattler, cv->abilities[cv->battlerAtk]) && !se->primary)
     {
         gBattlescriptCurrInstr = se->script;
@@ -42,7 +57,7 @@ static void HandleSetEffectNonVolatile(struct BattleCalcValues *cv, struct SetEf
     else if (CanSetNonVolatileStatus(
                 cv->battlerAtk,
                 se->effectBattler,
-                cv->abilities[cv->battlerAtk],
+                abilityAtk,
                 cv->abilities[se->effectBattler],
                 se->moveEffect,
                 CHECK_TRIGGER))

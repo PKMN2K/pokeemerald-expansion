@@ -1,0 +1,57 @@
+{
+  "source_repository": "Rangi42/polishedcrystal",
+  "source_commit": "3fa43192379df5c3e7b09a08e4d5d79af4f02f42",
+  "source_variant": "default (FAITHFUL undefined)",
+  "profile": "B_POLISHED_MOVE_BALANCE",
+  "scope": "The four source PoisonHit moves with Poison battle type in singles without active gimmicks.",
+  "moves": [
+    {
+      "source_id": 40,
+      "source_constant": "POISON_STING",
+      "source_move": "POISON_STING",
+      "source_aliases": [],
+      "target_move": "MOVE_POISON_STING",
+      "source_effect": "EFFECT_POISON_HIT",
+      "secondary_percent": 30
+    },
+    {
+      "source_id": 123,
+      "source_constant": "GUNK_SHOT",
+      "source_move": "GUNK_SHOT",
+      "source_aliases": [],
+      "target_move": "MOVE_GUNK_SHOT",
+      "source_effect": "EFFECT_POISON_HIT",
+      "secondary_percent": 30
+    },
+    {
+      "source_id": 139,
+      "source_constant": "POISON_JAB",
+      "source_move": "POISON_JAB",
+      "source_aliases": [],
+      "target_move": "MOVE_POISON_JAB",
+      "source_effect": "EFFECT_POISON_HIT",
+      "secondary_percent": 30
+    },
+    {
+      "source_id": 188,
+      "source_constant": "SLUDGE_BOMB",
+      "source_move": "SLUDGE_BOMB",
+      "source_aliases": [],
+      "target_move": "MOVE_SLUDGE_BOMB",
+      "source_effect": "EFFECT_POISON_HIT",
+      "secondary_percent": 30
+    }
+  ],
+  "rules": [
+    "PoisonHit applies damage before effectchance and poisontarget.",
+    "poisontarget passes mode zero to CanPoisonTarget, which checks Poison and Steel immunity.",
+    "Only EFFECT_POISON and EFFECT_TOXIC enter the direct-user Corrosion bypass; EFFECT_POISON_HIT takes the ordinary type and protection checks.",
+    "Steel remains immune to Poison damage. Eligible susceptible targets may receive regular poison after a successful secondary roll.",
+    "Existing status, ability protections, Substitute, Safeguard, hit and protection gates still apply."
+  ],
+  "adapter": "Use a generated source move-membership table at execution of the nonvolatile additional effect. For eligible poison effects, supply ABILITY_NONE instead of Corrosion only to the ordinary eligibility query, preserving the actual battler ability and shared AI queries.",
+  "gaps": [
+    "This verifies the Corrosion/type distinction and selected protection gates, not full secondary-effect RNG, rounding, post-hit ordering, AI decisions or presentation.",
+    "Optional damaging poison moves, retyped moves, doubles and active gimmicks retain native paths. General status, hazard and optional combinations remain separate audits."
+  ]
+}
