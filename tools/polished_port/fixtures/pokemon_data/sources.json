@@ -2122,6 +2122,11 @@
       "path": "engine/battle/move_effects/safeguard.asm",
       "fixture": "engine__battle__move_effects__safeguard.asm.b64",
       "git_blob_sha1": "bb56331c2f6da9d33526e0310721612906a5b451"
+    },
+    {
+      "path": "engine/battle/move_effects/toxic.asm",
+      "fixture": "engine__battle__move_effects__toxic.asm.b64",
+      "git_blob_sha1": "98dcb84649793de43a99f946f56a7db05380c2ad"
     }
   ]
 }

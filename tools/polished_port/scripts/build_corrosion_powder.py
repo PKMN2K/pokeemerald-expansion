@@ -60,7 +60,7 @@ def build():
                'Returned moves use the actual reflector ability; Magic Bounce does not inherit the original attacker Corrosion.',
                'Protect, Safeguard, accuracy and existing major status still prevent successful poisoning in the tested direct-move cases.'],
         adapter='Skip only the powder blocker during execution for matching source PoisonPowder and actual Corrosion. Preserve shared AI estimates and the later status/substitute handlers. Exclude optional Magic Coat returns, doubles, active gimmicks and dynamically retyped moves.',
-        gaps=['This does not complete Corrosion: the source status-stage immunity and Substitute bypasses, Toxic, Toxic Orb and damaging poison effects remain separate audits.',
+        gaps=['The separate corrosion_substitute suite covers Toxic/PoisonPowder Substitute bypass. Status-stage ability/item immunity bypasses, Toxic Orb and damaging poison effects remain separate audits.',
               'The full source accuracy/random stream, general status rules, returned-effect ordering, AI and presentation remain separate audits.',
               'Optional moves and mechanics retain native behavior; optional protective combinations outside the tests are not certified.'])
     return {source.ROOT/'tools/polished_port/manifests/corrosion_powder.json': json.dumps(report, indent=2)+'\n'}

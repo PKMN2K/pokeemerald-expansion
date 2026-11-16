@@ -2897,3 +2897,59 @@ Falkner, badge/Roost/Togepi rewards and Save/reset/Continue.
 
 Validated Johto ROM SHA-256:
 `bd344bc31a03d1d6172bdec6741e86a339909c40ba90599fb10b62c2fa19aa97`.
+
+### Source Corrosion Substitute bypass
+
+The pinned source selects only PoisonPowder and Toxic for the direct-user
+Corrosion branch in `CanStatusTarget`. That branch jumps past the status-stage
+Substitute check. The earlier `checkhit` Substitute gate rejects Swagger and
+trapping effects, so it does not stop these two moves. Both can poison the
+owner of a Substitute without damaging or removing it. Protect, Safeguard,
+misses and existing major status still prevent the tested applications.
+
+Native execution blocked this interaction in two places: its move canceler
+and `trynonvolatilestatus` handler. One execution-only eligibility helper now
+bypasses both Substitute checks for Poison-type PoisonPowder/Toxic with the
+actual, suppression-aware Corrosion user, in singles without active gimmicks.
+The shared Substitute/AI helpers and reflection eligibility remain unchanged.
+Magic Coat returns, doubles, active gimmicks and dynamically retyped moves
+retain their tested native paths. No identifiers, save fields or capacities
+change.
+
+The distinction from reflection is deliberate: Corrosion does not bypass
+Magic Bounce's separate Substitute gate. A protected Magic Bounce target
+therefore receives poison without reflecting. A reflected move uses the
+reflector's actual ability and cannot borrow the original user's Corrosion
+to reach that user's Substitute. The native ability checks later in status
+application remain outside this suite.
+
+The Toxic command is now an authenticated fixture. A new source verifier
+checks both effect scripts, the early Substitute gate, the exact Corrosion
+branch, existing-status checks, Safeguard exit and separate reflection gate.
+Eleven groups cover 98 cases per profile: both moves and sides; ordinary,
+Corrosion, Infiltrator and Mold Breaker users; Poison/Steel targets; PP and
+unchanged Substitute HP; Protect, Safeguard, existing status and misses;
+both reflection directions; suppression; and optional move/format controls.
+Three groups failed against the unchanged parent before the correction.
+CI includes the new verifier and source-test prefix.
+
+This closes the two moves' Corrosion Substitute bypass within the stated
+scope. Corrosion's status-stage ability/item immunity bypasses, Toxic Orb,
+damaging poison effects and their healing lifecycle remain separate audits,
+as do general status rules, full RNG, AI decisions and presentation.
+
+Validation: both production builds, all 69 source checks and all 12 ARM
+compiler probes passed. The final full native suite passed 5,661 groups, with
+nine expected failures and 585 existing TODOs; no unexpected failures occurred.
+The final source profile passed 312 source-rule groups and six AI timing groups
+without changing timing ceilings. All eleven new groups (98 cases per profile)
+passed with deprecated/unused warning errors enabled.
+
+The production-linked audit retains zero audited move-data differences,
+255 matching reflection flags and zero teaching compatibility mismatches;
+its 109 known gaps have no new or changed entries. The same final Johto ROM
+passed all 12 demo checks and 101 campaign checks, including 19 directed warps,
+Falkner, badge/Roost/Togepi rewards and Save/reset/Continue.
+
+Validated Johto ROM SHA-256:
+`2518fd04f160ddf198f581490338232f4637876f32eb52071d80545c7cef428f`.

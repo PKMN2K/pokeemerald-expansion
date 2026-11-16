@@ -5452,7 +5452,9 @@ static void Cmd_trynonvolatilestatus(void)
             RUN_SCRIPT))
         canInflictStatus = FALSE;
 
-    if (canInflictStatus && DoesSubstituteBlockMove(gBattlerAttacker, gBattlerTarget, gCurrentMove))
+    if (canInflictStatus
+     && !IsPolishedCorrosionSubstituteBypass(gBattlerAttacker, gBattlerTarget, gCurrentMove)
+     && DoesSubstituteBlockMove(gBattlerAttacker, gBattlerTarget, gCurrentMove))
     {
         canInflictStatus = FALSE;
         gBattlescriptCurrInstr = BattleScript_ButItFailed;
@@ -7750,6 +7752,20 @@ static void Cmd_settypebasedhalvers(void)
         gBattlescriptCurrInstr = cmd->nextInstr;
     else
         gBattlescriptCurrInstr = cmd->failInstr;
+}
+
+// Only execution callers use this exception. Shared Substitute/AI queries and
+// Magic Bounce's separate Substitute eligibility keep their existing paths.
+bool32 IsPolishedCorrosionSubstituteBypass(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Move move)
+{
+    return B_POLISHED_MOVE_BALANCE
+        && (move == MOVE_POISONPOWDER || move == MOVE_TOXIC)
+        && GetBattleMoveType(move) == TYPE_POISON
+        && GetBattlerAbility(battlerAtk) == ABILITY_CORROSION
+        && !IsDoubleBattle()
+        && GetActiveGimmick(battlerAtk) == GIMMICK_NONE
+        && GetActiveGimmick(battlerDef) == GIMMICK_NONE
+        && (!gBattleStruct->bouncedMoveIsUsed || gBattleStruct->bouncedMoveIsMagicBounce);
 }
 
 bool32 IsSubstituteProtected(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Ability abilityAtk, enum Move move)

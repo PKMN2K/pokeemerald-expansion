@@ -2494,6 +2494,10 @@ static enum CancelerResult CancelerMultihitMoves(struct BattleCalcValues *cv)
 
 static enum CancelerResult CancelerSubstitute(struct BattleCalcValues *cv)
 {
+    // Source poison-status Corrosion skips the status-stage Substitute gate.
+    if (IsPolishedCorrosionSubstituteBypass(cv->battlerAtk, cv->battlerDef, cv->move))
+        return CANCELER_RESULT_SUCCESS;
+
     // Source Mean Look has no general checkhit, but its effect explicitly
     // rejects Fly/Dig regardless of No Guard or Lock-On accuracy bypasses.
     if (B_POLISHED_MOVE_BALANCE && cv->move == MOVE_MEAN_LOOK
