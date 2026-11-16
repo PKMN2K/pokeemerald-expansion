@@ -567,9 +567,8 @@ static enum ItemEffect TryStickyBarbOnEndTurn(enum BattlerId battler, enum Item 
 static enum ItemEffect TryToxicOrb(enum BattlerId battler)
 {
     enum ItemEffect effect = ITEM_NO_EFFECT;
-    enum Ability ability = GetBattlerAbility(battler);
 
-    if (CanBePoisoned(battler, battler, ability, ability)) // Corrosion bypasses Poison/Steel-type poison immunity
+    if (CanStatusOrbInflictStatus(battler, MOVE_EFFECT_TOXIC)) // Corrosion bypasses Poison/Steel-type poison immunity
     {
         gBattleMons[battler].status1 = STATUS1_TOXIC_POISON;
         gEffectBattler = battler;
@@ -584,9 +583,8 @@ static enum ItemEffect TryToxicOrb(enum BattlerId battler)
 static enum ItemEffect TryFlameOrb(enum BattlerId battler)
 {
     enum ItemEffect effect = ITEM_NO_EFFECT;
-    enum Ability ability = GetBattlerAbility(battler);
 
-    if (CanBeBurned(battler, battler, ability))
+    if (CanStatusOrbInflictStatus(battler, MOVE_EFFECT_BURN))
     {
         gBattleMons[battler].status1 = STATUS1_BURN;
         gEffectBattler = battler;

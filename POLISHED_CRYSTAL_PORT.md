@@ -3007,3 +3007,56 @@ Falkner, badge/Roost/Togepi rewards and Save/reset/Continue.
 
 Validated Johto ROM SHA-256:
 `d598bdc4ceca3d16b991ba9534465239425aa5bcd7f75228d3d9fc9141e9d845`.
+
+### Source status orbs and Safeguard
+
+The pinned `HandleStatusOrbs` passes mode 2 into `CanStatusTarget`. That mode
+explicitly skips Safeguard, Substitute and Mold Breaker checks. It still uses
+the living holder's type, actual ability and existing status. Toxic Orb checks
+the holder's own Corrosion for the Poison/Steel exception; an opposing
+Corrosion user cannot supply it, and Corrosion does not bypass Fire immunity
+to Flame Orb.
+
+The port's ordinary status eligibility routine blocked these held items behind
+Safeguard. The two orb handlers now use an explicit orb eligibility entry point
+which requests the source Safeguard exception in singles without an active
+gimmick on either battler. Both entry points share the same private status
+checker, and ordinary move/ability/AI queries always retain the normal gate.
+All other type, ability, existing-status and item-suppression checks remain.
+No identifiers, save fields or Expansion capacities change.
+
+The source runs status orbs after that turn's poison/burn damage and does not
+consume the held item. The existing native activation timing and item retention
+already match these cases. Tests verify no residual damage on the activation
+turn, then damage on the following turn while the orb remains held. Damage
+rounding and the complete end-turn sequence remain separate audits.
+
+The verifier authenticates both orb item records, exact activation dispatch,
+mode-2 Safeguard/Substitute/Mold Breaker gates, actual-holder Corrosion and
+placement after poison/burn damage. Thirteen groups cover 136 cases per
+profile: both orbs and sides, Safeguard controls, type and ability protections,
+Corrosion ownership and suppression, existing status, Protect/Substitute,
+item retention, first residual timing, doubles, either active Terastal,
+optional item suppression and ordinary status-move controls. Five groups
+failed against the unchanged parent. CI includes the new verifier and prefix.
+
+This closes the scoped activation gates, item retention and first residual
+turn. Complete item definitions/art, broader orb/status/Synchronize behavior,
+end-turn ordering, damage rounding and presentation remain separate audits.
+Doubles, active gimmicks and optional mechanics retain their native paths.
+
+Validation: both production builds, all 71 source checks and all 12 ARM
+compiler probes passed. The final full native suite passed 5,686 groups, with
+nine expected failures and 585 existing TODOs; no unexpected failures occurred.
+The final source profile passed 337 source-rule groups and six AI timing groups
+without changing timing ceilings. All thirteen new groups (136 cases per profile)
+passed with deprecated/unused warning errors enabled.
+
+The production-linked audit retains zero audited move-data differences,
+255 matching reflection flags and zero teaching compatibility mismatches;
+its 109 known gaps have no new or changed entries. The same final Johto ROM
+passed all 12 demo checks and 101 campaign checks, including 19 directed warps,
+Falkner, badge/Roost/Togepi rewards and Save/reset/Continue.
+
+Validated Johto ROM SHA-256:
+`fea02657406b2e896f22378f364c5e59debff897ab273a1584ced8728b9eb30b`.

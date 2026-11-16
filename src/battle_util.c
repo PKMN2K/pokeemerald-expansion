@@ -5467,7 +5467,7 @@ bool32 IsSafeguardProtected(enum BattlerId battlerAtk, enum BattlerId battlerDef
     return TRUE;
 }
 
-bool32 CanSetNonVolatileStatus(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Ability abilityAtk, enum Ability abilityDef, enum MoveEffect effect, enum ResultOption option)
+static bool32 CanSetNonVolatileStatusInternal(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Ability abilityAtk, enum Ability abilityDef, enum MoveEffect effect, enum ResultOption option, bool32 ignoreSafeguard)
 {
     const u8 *battleScript = NULL;
     u32 sideBattler = 0;
@@ -5623,7 +5623,7 @@ bool32 CanSetNonVolatileStatus(enum BattlerId battlerAtk, enum BattlerId battler
         abilityDef = ABILITY_FLOWER_VEIL;
         battleScript = BattleScript_FlowerVeilProtects;
     }
-    else if (IsSafeguardProtected(battlerAtk, battlerDef, abilityAtk))
+    else if (!ignoreSafeguard && IsSafeguardProtected(battlerAtk, battlerDef, abilityAtk))
     {
         battleScript = BattleScript_SafeguardProtected;
     }
@@ -5636,6 +5636,29 @@ bool32 CanSetNonVolatileStatus(enum BattlerId battlerAtk, enum BattlerId battler
         return FALSE;
 
     return TRUE;
+}
+
+bool32 CanSetNonVolatileStatus(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Ability abilityAtk, enum Ability abilityDef, enum MoveEffect effect, enum ResultOption option)
+{
+    return CanSetNonVolatileStatusInternal(battlerAtk, battlerDef, abilityAtk, abilityDef, effect, option, FALSE);
+}
+
+bool32 CanStatusOrbInflictStatus(enum BattlerId battler, enum MoveEffect effect)
+{
+    if (effect != MOVE_EFFECT_TOXIC && effect != MOVE_EFFECT_BURN)
+        return FALSE;
+
+    enum Ability ability = GetBattlerAbility(battler);
+    // Source CanStatusTarget mode 2 skips Safeguard, but still checks the
+    // holder's own ability/type and existing status. Keep AI queries separate.
+    bool32 ignoreSafeguard = B_POLISHED_MOVE_BALANCE
+        && !IsDoubleBattle()
+        && GetActiveGimmick(battler) == GIMMICK_NONE
+        && GetActiveGimmick(GetOppositeBattler(battler)) == GIMMICK_NONE;
+
+    return CanSetNonVolatileStatusInternal(battler, battler,
+        effect == MOVE_EFFECT_TOXIC ? ability : ABILITY_NONE, ability,
+        effect, CHECK_TRIGGER, ignoreSafeguard);
 }
 
 static bool32 IsNonVolatileStatusBlocked(enum BattlerId battlerDef, enum Ability abilityDef, bool32 abilityAffected, const u8 *battleScript, enum ResultOption option)

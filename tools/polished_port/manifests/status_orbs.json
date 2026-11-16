@@ -1,0 +1,28 @@
+{
+  "source_repository": "Rangi42/polishedcrystal",
+  "source_commit": "3fa43192379df5c3e7b09a08e4d5d79af4f02f42",
+  "source_variant": "default (FAITHFUL undefined)",
+  "profile": "B_POLISHED_MOVE_BALANCE",
+  "scope": "Toxic Orb and Flame Orb Safeguard exemption in singles without either battler using an active gimmick.",
+  "items": {
+    "TOXIC_ORB": {
+      "held_effect": "HELD_SELF_PSN",
+      "status": "bad poison"
+    },
+    "FLAME_ORB": {
+      "held_effect": "HELD_SELF_BRN",
+      "status": "burn"
+    }
+  },
+  "rules": [
+    "HandleStatusOrbs checks the living holder, clears residual move ineffectiveness and uses CanStatusTarget mode 2.",
+    "Mode 2 skips Safeguard, Substitute and Mold Breaker checks while retaining the holder type, actual ability and existing-status gates.",
+    "Only the Toxic Orb holder own Corrosion bypasses Poison/Steel immunity; the opposing ability cannot supply that exception, and Fire immunity to Flame Orb remains.",
+    "The handler does not consume the orb. It runs after poison/burn damage for that turn, so newly inflicted status first damages on the next turn."
+  ],
+  "adapter": "Reuse one private status eligibility routine with an explicit Safeguard exception. Ordinary move/ability/AI queries always use the normal gate; only the two held-orb callers request the scoped exception. Native type, ability, status, item suppression and activation handlers remain in place.",
+  "gaps": [
+    "This verifies the scoped activation gates, item retention and first residual-damage timing, not all orb item definitions, icons, broader end-turn ordering, damage rounding, status/Synchronize behavior or presentation.",
+    "Doubles, active gimmicks, optional item suppression and non-source ability/terrain barriers retain native paths. Broader optional combinations remain separate audits."
+  ]
+}

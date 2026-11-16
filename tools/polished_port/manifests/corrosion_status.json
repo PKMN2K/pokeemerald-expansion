@@ -22,7 +22,7 @@
   ],
   "adapter": "Reuse the execution-only Corrosion status scope at RUN_SCRIPT ability checks. At the existing move-end immunity phase, offer poison-healing berries first for eligible poisoned Immunity/Pastel Veil targets; resume ordinary ability healing afterward. Shared AI/status estimates retain native behavior.",
   "gaps": [
-    "Toxic Orb, broader damaging-poison and hazard behavior, general status/Synchronize rules, full RNG, AI decisions and presentation remain separate audits.",
+    "The status_orbs suite covers scoped Toxic/Flame Orb activation gates and first residual timing. Broader damaging-poison and hazard behavior, general status/Synchronize rules, full RNG, AI decisions and presentation remain separate audits.",
     "Optional Magic Coat returns, doubles, active gimmicks, retyped moves and non-source ability/terrain barriers retain native paths. Broader optional combinations are not certified."
   ]
 }

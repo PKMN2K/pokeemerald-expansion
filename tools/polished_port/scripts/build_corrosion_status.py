@@ -61,7 +61,7 @@ def build():
                'Pecha and Lum Berries are consumed before Immunity or Pastel Veil can cure the poison.',
                'Protect, Safeguard, accuracy and existing major status gates remain; the source has no live item using HELD_PREVENT_POISON.'],
         adapter='Reuse the execution-only Corrosion status scope at RUN_SCRIPT ability checks. At the existing move-end immunity phase, offer poison-healing berries first for eligible poisoned Immunity/Pastel Veil targets; resume ordinary ability healing afterward. Shared AI/status estimates retain native behavior.',
-        gaps=['Toxic Orb, broader damaging-poison and hazard behavior, general status/Synchronize rules, full RNG, AI decisions and presentation remain separate audits.',
+        gaps=['The status_orbs suite covers scoped Toxic/Flame Orb activation gates and first residual timing. Broader damaging-poison and hazard behavior, general status/Synchronize rules, full RNG, AI decisions and presentation remain separate audits.',
               'Optional Magic Coat returns, doubles, active gimmicks, retyped moves and non-source ability/terrain barriers retain native paths. Broader optional combinations are not certified.'])
     return {source.ROOT/'tools/polished_port/manifests/corrosion_status.json': json.dumps(report, indent=2)+'\n'}
 
