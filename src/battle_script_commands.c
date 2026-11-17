@@ -81,6 +81,7 @@
 #include "test/battle.h"
 #include "follower_npc.h"
 #include "load_save.h"
+#include "data/polished_synchronize_substitute.h"
 
 // Helper for accessing command arguments and advancing gBattlescriptCurrInstr.
 //
@@ -1666,6 +1667,22 @@ bool32 TrySetLightScreen(enum BattlerId battler)
     return FALSE;
 }
 
+static bool32 IsPolishedSynchronizeBlockedBySubstitute(enum BattlerId battlerAtk, enum BattlerId effectBattler)
+{
+    u32 sourceType = sPolishedSynchronizeStatusTypes[gCurrentMove];
+
+    // Source Synchronize re-enters the direct status gate as the reflector.
+    // The original attacker's Infiltrator/Corrosion cannot bypass its own sub.
+    return B_POLISHED_MOVE_BALANCE
+        && gBattleMons[battlerAtk].volatiles.substituteHP != 0
+        && sourceType != 0
+        && GetBattleMoveType(gCurrentMove) == sourceType - 1
+        && !IsDoubleBattle()
+        && GetActiveGimmick(battlerAtk) == GIMMICK_NONE
+        && GetActiveGimmick(effectBattler) == GIMMICK_NONE
+        && (!gBattleStruct->bouncedMoveIsUsed || gBattleStruct->bouncedMoveIsMagicBounce);
+}
+
 void TrySynchronizeActivation(enum BattlerId battlerAtk, enum BattlerId effectBattler, enum MoveEffect effect)
 {
     if (battlerAtk == effectBattler || gBattleStruct->synchronizeState == SYNCH_STATE_SET_STATUS)
@@ -1680,7 +1697,8 @@ void TrySynchronizeActivation(enum BattlerId battlerAtk, enum BattlerId effectBa
      || effect == MOVE_EFFECT_PARALYSIS
      || effect == MOVE_EFFECT_BURN)
     {
-        if (CanSetNonVolatileStatus(
+        if (!IsPolishedSynchronizeBlockedBySubstitute(battlerAtk, effectBattler)
+         && CanSetNonVolatileStatus(
                 effectBattler,
                 battlerAtk,
                 effectAbility,

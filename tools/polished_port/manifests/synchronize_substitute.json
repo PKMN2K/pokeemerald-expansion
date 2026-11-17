@@ -1,0 +1,76 @@
+{
+  "source_repository": "Rangi42/polishedcrystal",
+  "source_commit": "3fa43192379df5c3e7b09a08e4d5d79af4f02f42",
+  "source_variant": "default (FAITHFUL undefined)",
+  "profile": "B_POLISHED_MOVE_BALANCE",
+  "scope": "Synchronize returns after the six source direct poison/burn/paralysis moves with original battle type in singles without active gimmicks.",
+  "moves": [
+    {
+      "source_id": 77,
+      "source_constant": "POISONPOWDER",
+      "source_move": "POISONPOWDER",
+      "source_aliases": [],
+      "target_move": "MOVE_POISONPOWDER",
+      "source_effect": "EFFECT_POISON",
+      "source_type": "POISON"
+    },
+    {
+      "source_id": 78,
+      "source_constant": "STUN_SPORE",
+      "source_move": "STUN_SPORE",
+      "source_aliases": [],
+      "target_move": "MOVE_STUN_SPORE",
+      "source_effect": "EFFECT_PARALYZE",
+      "source_type": "GRASS"
+    },
+    {
+      "source_id": 86,
+      "source_constant": "THUNDER_WAVE",
+      "source_move": "THUNDER_WAVE",
+      "source_aliases": [],
+      "target_move": "MOVE_THUNDER_WAVE",
+      "source_effect": "EFFECT_PARALYZE",
+      "source_type": "ELECTRIC"
+    },
+    {
+      "source_id": 92,
+      "source_constant": "TOXIC",
+      "source_move": "TOXIC",
+      "source_aliases": [],
+      "target_move": "MOVE_TOXIC",
+      "source_effect": "EFFECT_TOXIC",
+      "source_type": "POISON"
+    },
+    {
+      "source_id": 137,
+      "source_constant": "GLARE",
+      "source_move": "GLARE",
+      "source_aliases": [],
+      "target_move": "MOVE_GLARE",
+      "source_effect": "EFFECT_PARALYZE",
+      "source_type": "NORMAL"
+    },
+    {
+      "source_id": 169,
+      "source_constant": "WILL_O_WISP",
+      "source_move": "WILL_O_WISP",
+      "source_aliases": [],
+      "target_move": "MOVE_WILL_O_WISP",
+      "source_effect": "EFFECT_BURN",
+      "source_type": "FIRE"
+    }
+  ],
+  "rules": [
+    "Synchronize switches perspective and checks the actual holder ability before returning poison, bad poison, paralysis or burn.",
+    "Returned statuses enter StatusTargetVerbose mode zero and its Substitute check.",
+    "The reflector has Synchronize, not the original attacker Infiltrator or Corrosion. Ability processing also skips move-based sound bypasses.",
+    "The original attacker Substitute remains intact and blocks the returned status; Synchronize activation remains visible.",
+    "Synchronize is checked before the holder healing berry. A protected original attacker retains its healing berry."
+  ],
+  "adapter": "Use a generated source move/type table to add the Substitute gate at Synchronize activation. Preserve the existing failed-activation popup and ordinary status eligibility; do not change shared AI/status queries.",
+  "gaps": [
+    "This covers the Substitute return gate for direct source status moves, not full Synchronize behavior after damaging effects, contact abilities or other status sources.",
+    "Full status ordering, failure text, source animation/presentation, RNG and AI decisions remain separate audits.",
+    "Optional status moves, dynamically retyped moves, Magic Coat returns, doubles and active gimmicks retain native paths."
+  ]
+}

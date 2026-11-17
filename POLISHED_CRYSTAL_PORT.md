@@ -3161,3 +3161,57 @@ Falkner, badge/Roost/Togepi rewards and Save/reset/Continue.
 
 Validated Johto ROM SHA-256:
 `060f80e5d4f806b68a0ac4de6a3ad12bf9d1c869fc8d348c405266c5afe7593d`.
+
+### Source Synchronize and Substitute after direct status moves
+
+The pinned `SynchronizeAbility` switches perspective to the actual holder,
+then returns poison, bad poison, paralysis or burn through the ordinary status
+commands. Those commands use `StatusTargetVerbose` mode zero, including
+`CheckSubstituteOpp`. The original attacker's Substitute therefore blocks the
+returned status. The reflector has Synchronize; it does not inherit the
+original attacker's Infiltrator or Corrosion. Ability processing also skips
+move-based sound exceptions in the source Substitute check.
+
+Expansion's Synchronize eligibility query did not check Substitute. The source
+profile now adds this gate at actual Synchronize activation for the six direct
+source status moves: PoisonPowder, Stun Spore, Thunder Wave, Toxic, Glare and
+Will-O-Wisp. A generated table authenticates their identities and source types.
+The adapter requires their original battle type, singles, no active gimmick,
+and no optional Magic Coat return. It uses the existing failed-activation
+popup while keeping the substitute intact and preventing status application.
+Shared status/AI queries, identifiers, save fields and capacities are unchanged.
+
+Synchronize is checked before the holder's healing berry in the source. The
+existing native sequence already matches the tested cases: the holder can
+heal after the return attempt, while an original attacker protected by
+Substitute keeps its own Lum Berry. Ordinary returns without Substitute still
+apply, including bad poison from Toxic.
+
+Eleven groups cover 178 cases per profile: all six moves and both sides,
+with/without Substitute, PP and substitute HP, actual reflector ability,
+original Infiltrator/Corrosion/Mold Breaker, substitutes on both sides,
+both berry owners, ability suppression, doubles, either active Terastal,
+retyped moves and out-of-scope status/damaging effects. Six groups failed
+against the unchanged parent. CI includes the source verifier and battle prefix.
+
+This closes the scoped Substitute return gate for direct source status moves.
+Synchronize after damaging effects, contact abilities and other status sources,
+full ordering, failure text, source animations, RNG and AI decisions remain
+separate audits. Optional moves, retyped moves, Magic Coat returns, doubles and
+active gimmicks retain native paths.
+
+Validation: both production builds, all 74 source checks and all 12 ARM
+compiler probes passed. The final full native suite passed 5,719 groups, with
+nine expected failures and 585 existing TODOs; no unexpected failures occurred.
+The final source profile passed 370 source-rule groups and six AI timing groups
+without changing timing ceilings. All eleven new groups (178 cases per profile)
+passed with deprecated/unused warning errors enabled.
+
+The production-linked audit retains zero audited move-data differences,
+255 matching reflection flags and zero teaching compatibility mismatches;
+its 109 known gaps have no new or changed entries. The same final Johto ROM
+passed all 12 demo checks and 101 campaign checks, including 19 directed warps,
+Falkner, badge/Roost/Togepi rewards and Save/reset/Continue.
+
+Validated Johto ROM SHA-256:
+`4d0e075c94e2e39f544b021ac6305004310b48bb20568294602535d7edce18f3`.
