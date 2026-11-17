@@ -3248,6 +3248,67 @@ Falkner, badge/Roost/Togepi rewards and Save/reset/Continue.
 Validated Johto ROM SHA-256:
 `912dd2b46b1a19ab8625850ddcdb44a376d1ed14cace240e9e881c7c2e979f11`.
 
+## Source natural freeze and thaw duration
+
+The pinned frozen-action block checks Sacred Fire, Scald and Flare Blitz for
+self-thaw, then compares one `BattleRandom` byte against `1 + (20 percent)`.
+The source `percent` macro expands to integer multiplication by 255 divided by
+100, so rolls 0 through 51 thaw and 52 through 255 do not: 52/256, rather than
+a generic 20% or 25% preset. Failed checks prevent the action. There is no
+freeze duration counter or forced-thaw limit in this complete source block.
+
+The inherited engine initializes newly applied `freezeTurns` to two and also
+uses two as its forced-thaw limit. A freshly frozen battler therefore thawed
+on its next attempted action even when its random thaw roll failed. In the
+source profile's ordinary singles scope, the natural action gate now uses
+the authenticated byte threshold and ignores the native duration counter.
+It neither advances that counter nor lets existing counter contents force a
+thaw. Existing status clearing and party updates still run on a successful
+thaw. No new status-origin metadata, save fields or identifiers are introduced.
+
+The scope checks both actual opposing battlers, including when the frozen
+battler chooses a self-targeted move. Doubles and either active gimmick keep
+native natural-thaw behavior. This is a status rule independent of the move
+that caused freezing: optional freezing moves in ordinary source-profile
+singles use the same natural check. Their other effects remain unaudited.
+Basic source self-thaw moves, optional Flame Wheel and berry cures retain
+their existing paths.
+
+Eleven battle groups cover 128 deterministic cases and two probability cases.
+They include Ice Punch, Ice Beam, Blizzard and Tri Attack on both sides,
+fresh freeze before and after the holder acts, PP preservation, successful
+and failed rolls, five successive blocked actions, byte-boundary checks under
+two generation presets, switching, Lum/Aspear cures, refreezing after a consumed
+berry, self-thaw moves, doubles, either Terastal and optional freezing attacks.
+The source probability cases enumerate all 256 byte values on each side.
+Seven groups failed on the unchanged runtime; the four boundary/control
+groups passed. CI includes the new authenticated verifier and battle prefix.
+
+This resolves the natural-thaw portion of the previously recorded freeze gap.
+The source RNG stream and full action-cancellation order are not ported here.
+In particular, self-thaw versus confusion and other blockers, freeze versus
+flinch/recharge/disobedience, incoming thaw attacks, freeze eligibility,
+optional ability/item interactions and source presentation remain separate
+audits. Native-profile battles retain their existing implementation.
+
+Validation: both production builds, all 76 source checks and all 12 ARM
+compiler probes passed. The final full native suite passed 5,742 groups, with
+nine expected failures and 585 existing TODOs; no unexpected failures occurred.
+The final source profile passed 393 source-rule groups and six AI timing groups
+without changing timing ceilings. All eleven new groups passed with
+deprecated/unused warning errors enabled:
+128 deterministic cases and two probability cases. The source probability
+checks exercised all 256 byte values on each side.
+
+The production-linked audit retains zero audited move-data differences,
+255 matching reflection flags and zero teaching compatibility mismatches;
+its 109 known gaps have no new or changed entries. The same final Johto ROM
+passed all 12 demo checks and 101 campaign checks, including 19 directed warps,
+Falkner, badge/Roost/Togepi rewards and Save/reset/Continue.
+
+Validated Johto ROM SHA-256:
+`f18792c635a0887cd592bbc9b10e0f3204822bb49a77ac40fc2278da6324c384`.
+
 ## Next priorities
 
 1. Continue the source field-rule audit. Headbutt remains dormant; other field

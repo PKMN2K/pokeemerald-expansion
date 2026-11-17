@@ -1,0 +1,31 @@
+{
+  "source_repository": "Rangi42/polishedcrystal",
+  "source_commit": "3fa43192379df5c3e7b09a08e4d5d79af4f02f42",
+  "source_variant": "default (FAITHFUL undefined)",
+  "profile": "B_POLISHED_MOVE_BALANCE",
+  "scope": "Ordinary natural freeze checks in singles without either active battler using a gimmick.",
+  "rules": {
+    "random_range": 256,
+    "thaw_below": 52,
+    "thaw_numerator": 52,
+    "thaw_denominator": 256,
+    "turn_cap": null,
+    "self_thaw_moves": [
+      "SACRED_FIRE",
+      "SCALD",
+      "FLARE_BLITZ"
+    ]
+  },
+  "evidence": [
+    "The complete source frozen-action block checks the three self-thaw moves, then compares one BattleRandom byte against 1 + (20 percent).",
+    "The pinned percent macro uses integer multiplication by 255 and division by 100, giving a threshold of 52.",
+    "Failed rolls call CantMove and EndTurn; there is no duration counter or forced-thaw cap in the block.",
+    "DefrostUser clears freeze and updates the party status before displaying the thaw message."
+  ],
+  "adapter": "Use the exact byte threshold at the existing natural-freeze action gate and ignore the native freeze counter in the source scope. Do not add status-origin metadata or change saved identifiers. Existing self-thaw, item cure and native out-of-scope paths remain available.",
+  "gaps": [
+    "This ports the natural-thaw decision and probability, not the source RNG stream, animation or complete action-cancellation ordering.",
+    "Self-thaw ordering against confusion, flinch, disobedience and other move blockers, incoming thaw attacks, freeze eligibility and optional ability/item combinations remain separate audits.",
+    "Native-profile battles, doubles and either active gimmick retain native timer and chance rules. Optional freezing attacks in ordinary source-profile singles use the same natural status rule; their other effects are not certified."
+  ]
+}

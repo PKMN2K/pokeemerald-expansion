@@ -16,6 +16,7 @@
 #include "move.h"
 #include "polished_metronome.h"
 #include "constants/polished_metronome_struggle.h"
+#include "constants/polished_freeze.h"
 #include "test_runner.h"
 #include "constants/battle_move_resolution.h"
 #include "constants/songs.h"
@@ -122,6 +123,14 @@ static void DefrostBattler(enum BattlerId battler, u32 status)
     RequestNonVolatileChange(battler);
 }
 
+static bool32 UsesPolishedNaturalFreeze(enum BattlerId battler)
+{
+    return B_POLISHED_MOVE_BALANCE
+        && !IsDoubleBattle()
+        && GetActiveGimmick(battler) == GIMMICK_NONE
+        && GetActiveGimmick(GetOppositeBattler(battler)) == GIMMICK_NONE;
+}
+
 static enum CancelerResult CancelerAsleepOrFrozen(struct BattleCalcValues *cv)
 {
     enum CancelerResult result = CANCELER_RESULT_RUN_SCRIPT_AND_INCREMENT;
@@ -181,10 +190,17 @@ static enum CancelerResult CancelerAsleepOrFrozen(struct BattleCalcValues *cv)
     }
     else if (gBattleMons[cv->battlerAtk].status1 & STATUS1_FREEZE && !MoveThawsUser(cv->move))
     {
-        if (!RandomPercentage(RNG_FROZEN, (GetConfig(B_FREEZE_TURNS) >= GEN_CHAMPIONS ? 25 : 20)) && GetBattlerPartyState(cv->battlerAtk)->freezeTurns < 2)
+        bool32 sourceFreeze = UsesPolishedNaturalFreeze(cv->battlerAtk);
+        bool32 thaw = sourceFreeze
+            ? RandomUniform(RNG_FROZEN, 0, POLISHED_FREEZE_ROLL_RANGE - 1) < POLISHED_FREEZE_THAW_THRESHOLD
+            : RandomPercentage(RNG_FROZEN, (GetConfig(B_FREEZE_TURNS) >= GEN_CHAMPIONS ? 25 : 20));
+
+        // The source checks a byte roll on each attempt, with no duration cap.
+        // Native status application may already have populated freezeTurns.
+        if (!thaw && (sourceFreeze || GetBattlerPartyState(cv->battlerAtk)->freezeTurns < 2))
         {
             result = CANCELER_RESULT_FAILURE;
-            if (GetConfig(B_FREEZE_TURNS) >= GEN_CHAMPIONS)
+            if (!sourceFreeze && GetConfig(B_FREEZE_TURNS) >= GEN_CHAMPIONS)
                 GetBattlerPartyState(cv->battlerAtk)->freezeTurns++;
             gBattlescriptCurrInstr = BattleScript_MoveUsedIsFrozen;
         }
