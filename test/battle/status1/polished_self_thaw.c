@@ -108,10 +108,11 @@ SINGLE_BATTLE_TEST("Polished self-thaw remains after effective flinch and respec
             for (u32 a = 0; a < ARRAY_COUNT(abilities); a++)
                 PARAMETRIZE { move = sSelfThawMoves[m]; holder = side ? opponent : player; other = side ? player : opponent; ability = abilities[a]; }
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Speed(holder == player ? 50 : 100); Gender(MON_FEMALE); MaxHP(1000); HP(1000); Attack(10); SpAttack(10); Ability(holder == player ? ability : ABILITY_NONE); if (holder == player) { Status1(STATUS1_FREEZE); MovesWithPP({move, 5}, {MOVE_TACKLE, 5}, {MOVE_CELEBRATE, 10}); } }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(holder == opponent ? 50 : 100); Gender(MON_MALE); MaxHP(1000); HP(1000); Attack(10); SpAttack(10); Ability(holder == opponent ? ability : ABILITY_NONE); if (holder == opponent) { Status1(STATUS1_FREEZE); MovesWithPP({move, 5}, {MOVE_TACKLE, 5}, {MOVE_CELEBRATE, 10}); } }
+        PLAYER(SPECIES_WOBBUFFET) { Speed(holder == player ? 50 : 100); Gender(MON_FEMALE); MaxHP(1000); HP(1000); Attack(10); SpAttack(10); Ability(holder == player ? ability : ABILITY_NONE); Item(holder == player ? ITEM_NONE : ITEM_KINGS_ROCK); if (holder == player) { Status1(STATUS1_FREEZE); MovesWithPP({move, 5}, {MOVE_TACKLE, 5}, {MOVE_CELEBRATE, 10}); } }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(holder == opponent ? 50 : 100); Gender(MON_MALE); MaxHP(1000); HP(1000); Attack(10); SpAttack(10); Ability(holder == opponent ? ability : ABILITY_NONE); Item(holder == opponent ? ITEM_NONE : ITEM_KINGS_ROCK); if (holder == opponent) { Status1(STATUS1_FREEZE); MovesWithPP({move, 5}, {MOVE_TACKLE, 5}, {MOVE_CELEBRATE, 10}); } }
     } WHEN {
-        TURN { MOVE(other, MOVE_BITE, secondaryEffect: TRUE); MOVE(holder, move, hit: TRUE, secondaryEffect: FALSE); }
+        // Source move-effect flinches reject freeze; held-item flinches do not.
+        TURN { MOVE(other, MOVE_TACKLE, WITH_RNG(RNG_HOLD_EFFECT_FLINCH, TRUE)); MOVE(holder, move, hit: TRUE, secondaryEffect: FALSE); }
     } THEN {
         EXPECT_EQ(holder->status1, ability == ABILITY_INNER_FOCUS ? STATUS1_NONE : STATUS1_FREEZE);
         EXPECT_EQ(holder->pp[0], ability == ABILITY_INNER_FOCUS ? 4 : 5);
@@ -127,11 +128,12 @@ SINGLE_BATTLE_TEST("Polished self-thaw does not clear freeze when flinch stops a
         for (u32 side = 0; side < 2; side++)
             PARAMETRIZE { move = sSelfThawMoves[m]; holder = side ? opponent : player; other = side ? player : opponent; }
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Speed(holder == player ? 50 : 100); Gender(MON_FEMALE); MaxHP(1000); HP(1000); Attack(10); SpAttack(10); Ability(holder == player ? ABILITY_NONE : ABILITY_NONE); if (holder == player) { Status1(STATUS1_FREEZE); MovesWithPP({move, 5}, {MOVE_TACKLE, 5}, {MOVE_CELEBRATE, 10}); } }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(holder == opponent ? 50 : 100); Gender(MON_MALE); MaxHP(1000); HP(1000); Attack(10); SpAttack(10); Ability(holder == opponent ? ABILITY_NONE : ABILITY_NONE); if (holder == opponent) { Status1(STATUS1_FREEZE); MovesWithPP({move, 5}, {MOVE_TACKLE, 5}, {MOVE_CELEBRATE, 10}); } }
+        PLAYER(SPECIES_WOBBUFFET) { Speed(holder == player ? 50 : 100); Gender(MON_FEMALE); MaxHP(1000); HP(1000); Attack(10); SpAttack(10); Ability(holder == player ? ABILITY_NONE : ABILITY_NONE); Item(holder == player ? ITEM_NONE : ITEM_KINGS_ROCK); if (holder == player) { Status1(STATUS1_FREEZE); MovesWithPP({move, 5}, {MOVE_TACKLE, 5}, {MOVE_CELEBRATE, 10}); } }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(holder == opponent ? 50 : 100); Gender(MON_MALE); MaxHP(1000); HP(1000); Attack(10); SpAttack(10); Ability(holder == opponent ? ABILITY_NONE : ABILITY_NONE); Item(holder == opponent ? ITEM_NONE : ITEM_KINGS_ROCK); if (holder == opponent) { Status1(STATUS1_FREEZE); MovesWithPP({move, 5}, {MOVE_TACKLE, 5}, {MOVE_CELEBRATE, 10}); } }
     } WHEN {
+        // Source move-effect flinches reject freeze; held-item flinches do not.
         TURN { MOVE(other, MOVE_CONFUSE_RAY); MOVE(holder, MOVE_TACKLE, WITH_RNG(RNG_FROZEN, B_POLISHED_MOVE_BALANCE ? 255 : FALSE)); }
-        TURN { MOVE(other, MOVE_BITE, secondaryEffect: TRUE); MOVE(holder, move, WITH_RNG(RNG_CONFUSION, TRUE)); }
+        TURN { MOVE(other, MOVE_TACKLE, WITH_RNG(RNG_HOLD_EFFECT_FLINCH, TRUE)); MOVE(holder, move, WITH_RNG(RNG_CONFUSION, TRUE)); }
     } SCENE {
         NONE_OF { STATUS_ICON(holder, none: TRUE); ANIMATION(ANIM_TYPE_MOVE, move, holder); }
     } THEN {

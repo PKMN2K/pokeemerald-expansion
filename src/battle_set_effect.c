@@ -22,6 +22,7 @@
 #include "config/battle.h"
 #include "constants/polished_metronome_struggle.h"
 #include "data/polished_poison_hit.h"
+#include "data/polished_flinch_hit.h"
 
 static inline bool32 IgnoreTargetingForMoveEffect(enum MoveEffect moveEffect);
 static bool32 DoesSubstituteBlockMoveEffectOnTarget(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum MoveEffect moveEffect);
@@ -86,6 +87,19 @@ static void HandleSetEffectConfusion(struct BattleCalcValues *cv, struct SetEffe
 
 static void HandleSetEffectFlinch(struct BattleCalcValues *cv, struct SetEffect *se)
 {
+    // Source flinchtarget rejects sleep/freeze at effect execution, even if
+    // the target will wake or thaw when it acts. Item/Stench paths are separate.
+    if (B_POLISHED_MOVE_BALANCE
+     && sPolishedFlinchHitMoves[cv->move]
+     && (gBattleMons[se->effectBattler].status1 & (STATUS1_SLEEP | STATUS1_FREEZE))
+     && !IsDoubleBattle()
+     && GetActiveGimmick(cv->battlerAtk) == GIMMICK_NONE
+     && GetActiveGimmick(se->effectBattler) == GIMMICK_NONE)
+    {
+        gBattlescriptCurrInstr = se->script;
+        return;
+    }
+
     if (cv->abilities[se->effectBattler] == ABILITY_INNER_FOCUS)
     {
         if (se->primary || se->certain)

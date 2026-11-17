@@ -1,0 +1,125 @@
+{
+  "source_repository": "Rangi42/polishedcrystal",
+  "source_commit": "3fa43192379df5c3e7b09a08e4d5d79af4f02f42",
+  "source_variant": "default (FAITHFUL undefined)",
+  "profile": "B_POLISHED_MOVE_BALANCE",
+  "scope": "The thirteen source FlinchHit/Stomp moves in singles without either active gimmick.",
+  "moves": [
+    {
+      "source_id": 13,
+      "source_constant": "AIR_SLASH",
+      "source_move": "AIR_SLASH",
+      "source_aliases": [],
+      "target_move": "MOVE_AIR_SLASH",
+      "source_effect": "EFFECT_FLINCH_HIT"
+    },
+    {
+      "source_id": 23,
+      "source_constant": "STOMP",
+      "source_move": "STOMP",
+      "source_aliases": [],
+      "target_move": "MOVE_STOMP",
+      "source_effect": "EFFECT_STOMP"
+    },
+    {
+      "source_id": 29,
+      "source_constant": "HEADBUTT",
+      "source_move": "HEADBUTT",
+      "source_aliases": [],
+      "target_move": "MOVE_HEADBUTT",
+      "source_effect": "EFFECT_FLINCH_HIT"
+    },
+    {
+      "source_id": 44,
+      "source_constant": "BITE",
+      "source_move": "BITE",
+      "source_aliases": [],
+      "target_move": "MOVE_BITE",
+      "source_effect": "EFFECT_FLINCH_HIT"
+    },
+    {
+      "source_id": 127,
+      "source_constant": "WATERFALL",
+      "source_move": "WATERFALL",
+      "source_aliases": [],
+      "target_move": "MOVE_WATERFALL",
+      "source_effect": "EFFECT_FLINCH_HIT"
+    },
+    {
+      "source_id": 128,
+      "source_constant": "ICICLE_CRASH",
+      "source_move": "ICICLE_CRASH",
+      "source_aliases": [],
+      "target_move": "MOVE_ICICLE_CRASH",
+      "source_effect": "EFFECT_FLINCH_HIT"
+    },
+    {
+      "source_id": 130,
+      "source_constant": "IRON_HEAD",
+      "source_move": "IRON_HEAD",
+      "source_aliases": [],
+      "target_move": "MOVE_IRON_HEAD",
+      "source_effect": "EFFECT_FLINCH_HIT"
+    },
+    {
+      "source_id": 149,
+      "source_constant": "EXTRASENSORY",
+      "source_move": "EXTRASENSORY",
+      "source_aliases": [],
+      "target_move": "MOVE_EXTRASENSORY",
+      "source_effect": "EFFECT_FLINCH_HIT"
+    },
+    {
+      "source_id": 157,
+      "source_constant": "ROCK_SLIDE",
+      "source_move": "ROCK_SLIDE",
+      "source_aliases": [],
+      "target_move": "MOVE_ROCK_SLIDE",
+      "source_effect": "EFFECT_FLINCH_HIT"
+    },
+    {
+      "source_id": 158,
+      "source_constant": "HYPER_FANG",
+      "source_move": "HYPER_FANG",
+      "source_aliases": [],
+      "target_move": "MOVE_HYPER_FANG",
+      "source_effect": "EFFECT_FLINCH_HIT"
+    },
+    {
+      "source_id": 170,
+      "source_constant": "ZEN_HEADBUTT",
+      "source_move": "ZEN_HEADBUTT",
+      "source_aliases": [],
+      "target_move": "MOVE_ZEN_HEADBUTT",
+      "source_effect": "EFFECT_FLINCH_HIT"
+    },
+    {
+      "source_id": 180,
+      "source_constant": "ASTONISH",
+      "source_move": "ASTONISH",
+      "source_aliases": [],
+      "target_move": "MOVE_ASTONISH",
+      "source_effect": "EFFECT_FLINCH_HIT"
+    },
+    {
+      "source_id": 251,
+      "source_constant": "DARK_PULSE",
+      "source_move": "DARK_PULSE",
+      "source_aliases": [],
+      "target_move": "MOVE_DARK_PULSE",
+      "source_effect": "EFFECT_FLINCH_HIT"
+    }
+  ],
+  "rules": [
+    "After damage and effectchance, flinchtarget rejects Substitute, sleep and freeze before setting a flinch.",
+    "The target status is checked when the effect executes, before that target wakes or thaws during its action.",
+    "Sleep Talk, natural thaw and source self-thaw can therefore proceed without a move-effect flinch; a rejected flinch does not activate Steadfast.",
+    "King's Rock, other HELD_FLINCH_UP items and Stench use a separate direct FlinchTarget path and do not inherit the sleep/freeze rejection."
+  ],
+  "adapter": "Reject only the mapped move-effect flinch at its existing execution gate when the target is asleep or frozen. Preserve native hit, Substitute, ability, acted-turn and format gates; do not change status timers or action canceler ordering.",
+  "gaps": [
+    "This ports sleep/freeze eligibility for these thirteen moves, not all flinch eligibility, source chance rolls, recharge clearing, ability suppression, AI or original presentation.",
+    "Natural freeze versus effective item/Stench flinch, sleep versus effective flinch and full action-cancellation ordering remain separate audits.",
+    "Optional flinching moves, other statuses, doubles and either active gimmick retain their existing paths. Item/Stench behavior beyond this gate distinction is not certified."
+  ]
+}

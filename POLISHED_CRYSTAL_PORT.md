@@ -3390,3 +3390,64 @@ Falkner, badge/Roost/Togepi rewards and Save/reset/Continue.
 
 Validated Johto ROM SHA-256:
 `ad6559ba11ecd5dfb6fe10298bb9e85a9848dc0cba5afdc3df4c236e21884945`.
+
+### Source move-effect flinch eligibility
+
+Pinned source: Polished Crystal v3.2.3 at
+`3fa43192379df5c3e7b09a08e4d5d79af4f02f42`, default release variant.
+`build_flinch_hit.py` authenticates all thirteen default-source FlinchHit/Stomp
+identities, their effect-script mappings and the complete `flinchtarget` gate.
+After damage and the secondary-effect roll, this gate rejects Substitute,
+sleep and freeze before checking turn order and effect failure. The status is
+checked when the effect executes, before the target's own wake/thaw check.
+
+The GBA execution adapter now rejects the mapped move-effect flinch against
+sleeping or frozen targets in source-profile singles without either active
+gimmick. Consequently a natural thaw, Sacred Fire/Scald/Flare Blitz self-thaw,
+waking on the current action or Sleep Talk can proceed without a move-effect
+flinch. A rejected flinch does not activate Steadfast. The adapter does not
+change status timers, cancellation order, move/save IDs or table capacities.
+
+This distinction matters for the preceding self-thaw suite: its two flinch
+controls used Bite against an already frozen target, an inherited native
+eligibility assumption. They now use Tackle with King's Rock to test an actual
+source-eligible flinch. The authenticated item/Stench post-hit path calls
+`FlinchTarget` directly and bypasses the move-effect sleep/freeze gate; the new
+adapter does not impose that gate on it. Natural freeze versus effective
+item/Stench flinch and sleep versus effective flinch remain separate ordering
+gaps. No natural-freeze cancellation reorder is included here.
+
+Twelve new battle groups cover 308 cases per profile: every mapped move on both
+sides, successful/failed natural thaw, all three source self-thaw moves, waking
+on the current action, Sleep Talk while still asleep, healthy targets, Inner
+Focus, Shield Dust, Steadfast, other nonvolatile statuses, a subsequent healthy
+turn, optional Fake Out, doubles, either Terastal, King's Rock, Razor Fang and
+Stench. Five groups failed before the runtime change; seven control groups
+passed. CI includes the source verifier and new battle prefix. The existing
+self-thaw suite retains twelve groups and 128 cases with corrected flinch
+setup.
+
+This closes sleep/freeze eligibility for the thirteen source move effects.
+It does not certify complete flinch eligibility, secondary-effect probability,
+recharge clearing, Mold Breaker/ability suppression, item/Stench behavior,
+AI, original presentation or the full source action sequence. Optional moves,
+other statuses, doubles and either active gimmick keep their existing paths.
+
+Validation: both production builds, all 78 source checks and all 12 ARM
+compiler probes passed. The final full native suite passed 5,766 groups, with
+nine expected failures and 585 existing TODOs; no unexpected failures occurred.
+The final source profile passed 417 source-rule groups and six AI timing groups
+without changing timing ceilings. All twelve new groups (308 cases per profile)
+passed with deprecated/unused warning errors enabled. An initial native run
+reached its 20-minute local outer limit after 5,535 passes with no reported
+test failures; the complete rerun used eight workers and a 40-minute outer
+limit. The battle tests and AI frame ceilings were unchanged.
+
+The production-linked audit retains zero audited move-data differences,
+255 matching reflection flags and zero teaching compatibility mismatches;
+its 109 known gaps have no new or changed entries. The same final Johto ROM
+passed all 12 demo checks and 101 campaign checks, including 19 directed warps,
+Falkner, badge/Roost/Togepi rewards and Save/reset/Continue.
+
+Validated Johto ROM SHA-256:
+`727bc7fffabf6c54967aa0271c8b70a3a2afe6a42e5d0d7ff5508b224d052019`.
