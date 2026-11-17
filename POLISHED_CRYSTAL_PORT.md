@@ -3336,3 +3336,57 @@ Falkner, badge/Roost/Togepi rewards and Save/reset/Continue.
 
 Validated Johto ROM SHA-256:
 `f18792c635a0887cd592bbc9b10e0f3204822bb49a77ac40fc2278da6324c384`.
+
+### Source self-thaw before confusion, infatuation and Disable
+
+The pinned frozen-action block recognizes Sacred Fire, Scald and Flare Blitz
+by move identity. It calls `DefrostUser` before the source checks confusion,
+infatuation and Disable. Thus a later blocker can prevent an attack, but the
+battler remains thawed and keeps the move's PP. Recharge and effective flinch
+occur earlier and prevent the self-thaw stage. The source move-identity check
+has no battle-type restriction and does not use the natural-thaw random roll.
+
+The engine previously deferred self-thaw until after these action blockers.
+For the three authenticated source moves, ordinary source-profile singles now
+clear freeze immediately before the Disable canceler, after flinch. The thaw
+script uses the existing generic thaw message and status/party update. Execution
+then resumes at the same canceler, so Disable still blocks its selected move.
+Cleared freeze also prevents a second thaw at the original later stage.
+No canceler IDs, save fields, move capacities or shared AI queries change.
+
+The shared freeze scope checks both actual opposing battlers. Doubles and
+either active gimmick keep native ordering. Optional self-thaw moves and
+Frostbite also retain their existing paths. Normalize does not remove the
+source move-identity exemption. Ordinary Fire and Water attacks receive no
+new thaw exemption.
+
+Twelve battle groups cover 128 cases per profile: all three moves and both
+sides, successful and self-hitting confusion, acting and blocked infatuation,
+Disable applied after legal move selection, PP, thaw/volatile animation order,
+flinch, Inner Focus, Steadfast, combined flinch/confusion, optional thaw moves,
+doubles, either Terastal, Normalize, non-thawing attacks, Frostbite and party
+status persistence after switching. Five groups failed on the unchanged runtime;
+seven control groups passed. CI includes the new source verifier and prefix.
+
+This closes the self-thaw relationship to Disable, confusion and infatuation.
+It does not reorder those blockers relative to each other or port the entire
+source action sequence. Obedience, PP validation, Truant and other earlier
+native cancelers, natural freeze versus flinch, source confusion probability
+and damage, incoming thaw attacks, freeze eligibility, optional combinations
+and original presentation remain separate audits.
+
+Validation: both production builds, all 77 source checks and all 12 ARM
+compiler probes passed. The final full native suite passed 5,754 groups, with
+nine expected failures and 585 existing TODOs; no unexpected failures occurred.
+The final source profile passed 405 source-rule groups and six AI timing groups
+without changing timing ceilings. All twelve new groups (128 cases per profile)
+passed with deprecated/unused warning errors enabled.
+
+The production-linked audit retains zero audited move-data differences,
+255 matching reflection flags and zero teaching compatibility mismatches;
+its 109 known gaps have no new or changed entries. The same final Johto ROM
+passed all 12 demo checks and 101 campaign checks, including 19 directed warps,
+Falkner, badge/Roost/Togepi rewards and Save/reset/Continue.
+
+Validated Johto ROM SHA-256:
+`ad6559ba11ecd5dfb6fe10298bb9e85a9848dc0cba5afdc3df4c236e21884945`.

@@ -21,6 +21,7 @@
 #include "constants/battle_move_resolution.h"
 #include "constants/songs.h"
 #include "data/polished_magic_bounce.h"
+#include "data/polished_self_thaw.h"
 
 static void ValidateBattlers(void);
 static enum Move GetOriginallyUsedMove(enum Move chosenMove);
@@ -123,7 +124,7 @@ static void DefrostBattler(enum BattlerId battler, u32 status)
     RequestNonVolatileChange(battler);
 }
 
-static bool32 UsesPolishedNaturalFreeze(enum BattlerId battler)
+static bool32 UsesPolishedFreezeRules(enum BattlerId battler)
 {
     return B_POLISHED_MOVE_BALANCE
         && !IsDoubleBattle()
@@ -190,7 +191,7 @@ static enum CancelerResult CancelerAsleepOrFrozen(struct BattleCalcValues *cv)
     }
     else if (gBattleMons[cv->battlerAtk].status1 & STATUS1_FREEZE && !MoveThawsUser(cv->move))
     {
-        bool32 sourceFreeze = UsesPolishedNaturalFreeze(cv->battlerAtk);
+        bool32 sourceFreeze = UsesPolishedFreezeRules(cv->battlerAtk);
         bool32 thaw = sourceFreeze
             ? RandomUniform(RNG_FROZEN, 0, POLISHED_FREEZE_ROLL_RANGE - 1) < POLISHED_FREEZE_THAW_THRESHOLD
             : RandomPercentage(RNG_FROZEN, (GetConfig(B_FREEZE_TURNS) >= GEN_CHAMPIONS ? 25 : 20));
@@ -346,6 +347,18 @@ static enum CancelerResult CancelerFlinch(struct BattleCalcValues *cv)
 
 static enum CancelerResult CancelerDisabled(struct BattleCalcValues *cv)
 {
+    // Source self-thaw follows flinch but precedes Disable/confusion/infatuation.
+    if (gBattleMons[cv->battlerAtk].status1 & STATUS1_FREEZE
+     && sPolishedSelfThawMoves[cv->move]
+     && UsesPolishedFreezeRules(cv->battlerAtk))
+    {
+        DefrostBattler(cv->battlerAtk, STATUS1_FREEZE);
+        BattleScriptCall(BattleScript_BattlerDefrosted);
+        gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_DEFROSTED;
+        // Resume this stage after the script so Disable still checks the move.
+        return CANCELER_RESULT_RUN_SCRIPT;
+    }
+
     if (GetActiveGimmick(cv->battlerAtk) != GIMMICK_Z_MOVE
      && gBattleMons[cv->battlerAtk].volatiles.disabledMove == cv->move
      && gBattleMons[cv->battlerAtk].volatiles.disabledMove != MOVE_NONE)
