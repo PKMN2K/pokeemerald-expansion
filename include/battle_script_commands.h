@@ -31,7 +31,7 @@ bool32 NoAliveMonsForPlayer(void);
 bool32 NoAliveMonsForEitherParty(void);
 bool32 TrySetReflect(enum BattlerId battler);
 bool32 TrySetLightScreen(enum BattlerId battler);
-void TrySynchronizeActivation(enum BattlerId battlerAtk, enum BattlerId effectBattler, enum MoveEffect effect);
+void TrySynchronizeActivation(enum BattlerId battlerAtk, enum BattlerId effectBattler, enum MoveEffect effect, enum StatusTrigger trigger);
 void SetNonVolatileStatus(enum BattlerId battlerAtk, enum BattlerId effectBattler, enum MoveEffect effect, const u8 *battleScript, enum StatusTrigger trigger);
 bool32 CanBattlerSwitch(enum BattlerId battlerId);
 void BattleDestroyYesNoCursorAt(u8 cursorPosition);

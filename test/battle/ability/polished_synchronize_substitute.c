@@ -9,12 +9,12 @@ static u32 SyncStatus(enum Move move)
     {
     case MOVE_POISONPOWDER:
     case MOVE_POISON_GAS:
-    case MOVE_POISON_STING:
+    case MOVE_SLUDGE:
         return STATUS1_POISON;
     case MOVE_TOXIC:
         return STATUS1_TOXIC_POISON;
     case MOVE_WILL_O_WISP:
-    case MOVE_EMBER:
+    case MOVE_FLAME_WHEEL:
         return STATUS1_BURN;
     default:
         return STATUS1_PARALYSIS;
@@ -244,9 +244,9 @@ SINGLE_BATTLE_TEST("Polished Synchronize Substitute leaves either active Terasta
     }
 }
 
-SINGLE_BATTLE_TEST("Polished Synchronize Substitute leaves optional status moves and damaging effects native")
+SINGLE_BATTLE_TEST("Polished Synchronize Substitute leaves optional status and damaging moves native")
 {
-    static const enum Move moves[] = {MOVE_POISON_GAS, MOVE_POISON_STING, MOVE_EMBER, MOVE_THUNDER_SHOCK};
+    static const enum Move moves[] = {MOVE_POISON_GAS, MOVE_SLUDGE, MOVE_FLAME_WHEEL, MOVE_NUZZLE};
     struct BattlePokemon *user = player, *target = opponent;
     enum Move move = MOVE_POISON_GAS;
     for (u32 m = 0; m < ARRAY_COUNT(moves); m++)

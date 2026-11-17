@@ -1,0 +1,316 @@
+{
+  "source_repository": "Rangi42/polishedcrystal",
+  "source_commit": "3fa43192379df5c3e7b09a08e4d5d79af4f02f42",
+  "source_variant": "default (FAITHFUL undefined)",
+  "profile": "B_POLISHED_MOVE_BALANCE",
+  "scope": "Synchronize returns from the 21 source secondary-status moves with original battle type in singles without active gimmicks.",
+  "moves": [
+    {
+      "source_id": 7,
+      "source_constant": "FIRE_PUNCH",
+      "source_move": "FIRE_PUNCH",
+      "source_aliases": [],
+      "target_move": "MOVE_FIRE_PUNCH",
+      "source_effect": "EFFECT_BURN_HIT",
+      "source_script": "BurnHit",
+      "source_type": "FIRE",
+      "secondary_percent": 10,
+      "reflected_statuses": [
+        "BURN"
+      ]
+    },
+    {
+      "source_id": 9,
+      "source_constant": "THUNDERPUNCH",
+      "source_move": "THUNDERPUNCH",
+      "source_aliases": [],
+      "target_move": "MOVE_THUNDERPUNCH",
+      "source_effect": "EFFECT_PARALYZE_HIT",
+      "source_script": "ParalyzeHit",
+      "source_type": "ELECTRIC",
+      "secondary_percent": 10,
+      "reflected_statuses": [
+        "PARALYSIS"
+      ]
+    },
+    {
+      "source_id": 25,
+      "source_constant": "FLARE_BLITZ",
+      "source_move": "FLARE_BLITZ",
+      "source_aliases": [],
+      "target_move": "MOVE_FLARE_BLITZ",
+      "source_effect": "EFFECT_FLARE_BLITZ",
+      "source_script": "FlareBlitz",
+      "source_type": "FIRE",
+      "secondary_percent": 10,
+      "reflected_statuses": [
+        "BURN"
+      ]
+    },
+    {
+      "source_id": 34,
+      "source_constant": "BODY_SLAM",
+      "source_move": "BODY_SLAM",
+      "source_aliases": [],
+      "target_move": "MOVE_BODY_SLAM",
+      "source_effect": "EFFECT_BODY_SLAM",
+      "source_script": "BodySlam",
+      "source_type": "NORMAL",
+      "secondary_percent": 30,
+      "reflected_statuses": [
+        "PARALYSIS"
+      ]
+    },
+    {
+      "source_id": 40,
+      "source_constant": "POISON_STING",
+      "source_move": "POISON_STING",
+      "source_aliases": [],
+      "target_move": "MOVE_POISON_STING",
+      "source_effect": "EFFECT_POISON_HIT",
+      "source_script": "PoisonHit",
+      "source_type": "POISON",
+      "secondary_percent": 30,
+      "reflected_statuses": [
+        "POISON"
+      ]
+    },
+    {
+      "source_id": 52,
+      "source_constant": "EMBER",
+      "source_move": "EMBER",
+      "source_aliases": [],
+      "target_move": "MOVE_EMBER",
+      "source_effect": "EFFECT_BURN_HIT",
+      "source_script": "BurnHit",
+      "source_type": "FIRE",
+      "secondary_percent": 10,
+      "reflected_statuses": [
+        "BURN"
+      ]
+    },
+    {
+      "source_id": 53,
+      "source_constant": "FLAMETHROWER",
+      "source_move": "FLAMETHROWER",
+      "source_aliases": [],
+      "target_move": "MOVE_FLAMETHROWER",
+      "source_effect": "EFFECT_BURN_HIT",
+      "source_script": "BurnHit",
+      "source_type": "FIRE",
+      "secondary_percent": 10,
+      "reflected_statuses": [
+        "BURN"
+      ]
+    },
+    {
+      "source_id": 84,
+      "source_constant": "THUNDERSHOCK",
+      "source_move": "THUNDERSHOCK",
+      "source_aliases": [],
+      "target_move": "MOVE_THUNDERSHOCK",
+      "source_effect": "EFFECT_PARALYZE_HIT",
+      "source_script": "ParalyzeHit",
+      "source_type": "ELECTRIC",
+      "secondary_percent": 10,
+      "reflected_statuses": [
+        "PARALYSIS"
+      ]
+    },
+    {
+      "source_id": 85,
+      "source_constant": "THUNDERBOLT",
+      "source_move": "THUNDERBOLT",
+      "source_aliases": [],
+      "target_move": "MOVE_THUNDERBOLT",
+      "source_effect": "EFFECT_PARALYZE_HIT",
+      "source_script": "ParalyzeHit",
+      "source_type": "ELECTRIC",
+      "secondary_percent": 10,
+      "reflected_statuses": [
+        "PARALYSIS"
+      ]
+    },
+    {
+      "source_id": 87,
+      "source_constant": "THUNDER",
+      "source_move": "THUNDER",
+      "source_aliases": [],
+      "target_move": "MOVE_THUNDER",
+      "source_effect": "EFFECT_THUNDER",
+      "source_script": "Thunder",
+      "source_type": "ELECTRIC",
+      "secondary_percent": 30,
+      "reflected_statuses": [
+        "PARALYSIS"
+      ]
+    },
+    {
+      "source_id": 119,
+      "source_constant": "SCALD",
+      "source_move": "SCALD",
+      "source_aliases": [],
+      "target_move": "MOVE_SCALD",
+      "source_effect": "EFFECT_BURN_HIT",
+      "source_script": "BurnHit",
+      "source_type": "WATER",
+      "secondary_percent": 30,
+      "reflected_statuses": [
+        "BURN"
+      ]
+    },
+    {
+      "source_id": 122,
+      "source_constant": "LICK",
+      "source_move": "LICK",
+      "source_aliases": [],
+      "target_move": "MOVE_LICK",
+      "source_effect": "EFFECT_PARALYZE_HIT",
+      "source_script": "ParalyzeHit",
+      "source_type": "GHOST",
+      "secondary_percent": 30,
+      "reflected_statuses": [
+        "PARALYSIS"
+      ]
+    },
+    {
+      "source_id": 123,
+      "source_constant": "GUNK_SHOT",
+      "source_move": "GUNK_SHOT",
+      "source_aliases": [],
+      "target_move": "MOVE_GUNK_SHOT",
+      "source_effect": "EFFECT_POISON_HIT",
+      "source_script": "PoisonHit",
+      "source_type": "POISON",
+      "secondary_percent": 30,
+      "reflected_statuses": [
+        "POISON"
+      ]
+    },
+    {
+      "source_id": 126,
+      "source_constant": "FIRE_BLAST",
+      "source_move": "FIRE_BLAST",
+      "source_aliases": [],
+      "target_move": "MOVE_FIRE_BLAST",
+      "source_effect": "EFFECT_BURN_HIT",
+      "source_script": "BurnHit",
+      "source_type": "FIRE",
+      "secondary_percent": 10,
+      "reflected_statuses": [
+        "BURN"
+      ]
+    },
+    {
+      "source_id": 139,
+      "source_constant": "POISON_JAB",
+      "source_move": "POISON_JAB",
+      "source_aliases": [],
+      "target_move": "MOVE_POISON_JAB",
+      "source_effect": "EFFECT_POISON_HIT",
+      "source_script": "PoisonHit",
+      "source_type": "POISON",
+      "secondary_percent": 30,
+      "reflected_statuses": [
+        "POISON"
+      ]
+    },
+    {
+      "source_id": 161,
+      "source_constant": "TRI_ATTACK",
+      "source_move": "TRI_ATTACK",
+      "source_aliases": [],
+      "target_move": "MOVE_TRI_ATTACK",
+      "source_effect": "EFFECT_TRI_ATTACK",
+      "source_script": "TriAttack",
+      "source_type": "NORMAL",
+      "secondary_percent": 20,
+      "reflected_statuses": [
+        "BURN",
+        "PARALYSIS"
+      ]
+    },
+    {
+      "source_id": 188,
+      "source_constant": "SLUDGE_BOMB",
+      "source_move": "SLUDGE_BOMB",
+      "source_aliases": [],
+      "target_move": "MOVE_SLUDGE_BOMB",
+      "source_effect": "EFFECT_POISON_HIT",
+      "source_script": "PoisonHit",
+      "source_type": "POISON",
+      "secondary_percent": 30,
+      "reflected_statuses": [
+        "POISON"
+      ]
+    },
+    {
+      "source_id": 192,
+      "source_constant": "ZAP_CANNON",
+      "source_move": "ZAP_CANNON",
+      "source_aliases": [],
+      "target_move": "MOVE_ZAP_CANNON",
+      "source_effect": "EFFECT_PARALYZE_HIT",
+      "source_script": "ParalyzeHit",
+      "source_type": "ELECTRIC",
+      "secondary_percent": 100,
+      "reflected_statuses": [
+        "PARALYSIS"
+      ]
+    },
+    {
+      "source_id": 209,
+      "source_constant": "SPARK",
+      "source_move": "SPARK",
+      "source_aliases": [],
+      "target_move": "MOVE_SPARK",
+      "source_effect": "EFFECT_PARALYZE_HIT",
+      "source_script": "ParalyzeHit",
+      "source_type": "ELECTRIC",
+      "secondary_percent": 30,
+      "reflected_statuses": [
+        "PARALYSIS"
+      ]
+    },
+    {
+      "source_id": 221,
+      "source_constant": "SACRED_FIRE",
+      "source_move": "SACRED_FIRE",
+      "source_aliases": [],
+      "target_move": "MOVE_SACRED_FIRE",
+      "source_effect": "EFFECT_SACRED_FIRE",
+      "source_script": "SacredFire",
+      "source_type": "FIRE",
+      "secondary_percent": 50,
+      "reflected_statuses": [
+        "BURN"
+      ]
+    },
+    {
+      "source_id": 225,
+      "source_constant": "DRAGONBREATH",
+      "source_move": "DRAGONBREATH",
+      "source_aliases": [],
+      "target_move": "MOVE_DRAGONBREATH",
+      "source_effect": "EFFECT_PARALYZE_HIT",
+      "source_script": "ParalyzeHit",
+      "source_type": "DRAGON",
+      "secondary_percent": 30,
+      "reflected_statuses": [
+        "PARALYSIS"
+      ]
+    }
+  ],
+  "rules": [
+    "Successful secondary burn, poison and paralysis pass through StatusTarget and PostStatusWithSynchronize after damage.",
+    "Synchronize returns those statuses through the direct status gate, where the original attacker Substitute blocks them.",
+    "Tri Attack burn and paralysis return through Synchronize; its freeze outcome does not activate Synchronize.",
+    "The original attacker Infiltrator or Corrosion does not become the reflector ability.",
+    "The return is checked before the Synchronize holder healing berry; a protected attacker retains its berry."
+  ],
+  "adapter": "Extend the source Synchronize Substitute gate with generated move/type/status membership. Carry the status trigger into activation so contact-ability effects during the same move remain outside this adapter.",
+  "gaps": [
+    "This covers the Substitute return gate, not full secondary-effect RNG, status eligibility, damage/recoil order, animations or AI parity.",
+    "Contact-ability status sources, optional moves, dynamic retyping, Magic Coat, doubles and active gimmicks retain their existing paths."
+  ]
+}

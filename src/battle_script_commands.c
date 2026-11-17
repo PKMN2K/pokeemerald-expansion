@@ -82,6 +82,7 @@
 #include "follower_npc.h"
 #include "load_save.h"
 #include "data/polished_synchronize_substitute.h"
+#include "data/polished_synchronize_hit.h"
 
 // Helper for accessing command arguments and advancing gBattlescriptCurrInstr.
 //
@@ -1667,15 +1668,33 @@ bool32 TrySetLightScreen(enum BattlerId battler)
     return FALSE;
 }
 
-static bool32 IsPolishedSynchronizeBlockedBySubstitute(enum BattlerId battlerAtk, enum BattlerId effectBattler)
+static bool32 IsPolishedSynchronizeBlockedBySubstitute(enum BattlerId battlerAtk, enum BattlerId effectBattler, enum MoveEffect effect, enum StatusTrigger trigger)
 {
-    u32 sourceType = sPolishedSynchronizeStatusTypes[gCurrentMove];
+    u32 sourceType, status;
+
+    // Contact abilities can set status while a source move is still current.
+    if (!B_POLISHED_MOVE_BALANCE || trigger != TRIGGER_ON_MOVE
+     || gBattleMons[battlerAtk].volatiles.substituteHP == 0)
+        return FALSE;
+
+    sourceType = sPolishedSynchronizeStatusTypes[gCurrentMove];
+    if (sourceType == 0)
+    {
+        switch (effect)
+        {
+        case MOVE_EFFECT_POISON: status = STATUS1_POISON; break;
+        case MOVE_EFFECT_BURN: status = STATUS1_BURN; break;
+        case MOVE_EFFECT_PARALYSIS: status = STATUS1_PARALYSIS; break;
+        default: return FALSE;
+        }
+        if (!(sPolishedSynchronizeHitRules[gCurrentMove].statuses & status))
+            return FALSE;
+        sourceType = sPolishedSynchronizeHitRules[gCurrentMove].sourceTypePlusOne;
+    }
 
     // Source Synchronize re-enters the direct status gate as the reflector.
     // The original attacker's Infiltrator/Corrosion cannot bypass its own sub.
-    return B_POLISHED_MOVE_BALANCE
-        && gBattleMons[battlerAtk].volatiles.substituteHP != 0
-        && sourceType != 0
+    return sourceType != 0
         && GetBattleMoveType(gCurrentMove) == sourceType - 1
         && !IsDoubleBattle()
         && GetActiveGimmick(battlerAtk) == GIMMICK_NONE
@@ -1683,7 +1702,7 @@ static bool32 IsPolishedSynchronizeBlockedBySubstitute(enum BattlerId battlerAtk
         && (!gBattleStruct->bouncedMoveIsUsed || gBattleStruct->bouncedMoveIsMagicBounce);
 }
 
-void TrySynchronizeActivation(enum BattlerId battlerAtk, enum BattlerId effectBattler, enum MoveEffect effect)
+void TrySynchronizeActivation(enum BattlerId battlerAtk, enum BattlerId effectBattler, enum MoveEffect effect, enum StatusTrigger trigger)
 {
     if (battlerAtk == effectBattler || gBattleStruct->synchronizeState == SYNCH_STATE_SET_STATUS)
         return;
@@ -1697,7 +1716,7 @@ void TrySynchronizeActivation(enum BattlerId battlerAtk, enum BattlerId effectBa
      || effect == MOVE_EFFECT_PARALYSIS
      || effect == MOVE_EFFECT_BURN)
     {
-        if (!IsPolishedSynchronizeBlockedBySubstitute(battlerAtk, effectBattler)
+        if (!IsPolishedSynchronizeBlockedBySubstitute(battlerAtk, effectBattler, effect, trigger)
          && CanSetNonVolatileStatus(
                 effectBattler,
                 battlerAtk,
@@ -1777,7 +1796,7 @@ void SetNonVolatileStatus(enum BattlerId battlerAtk, enum BattlerId effectBattle
 
     gBattleScripting.moveEffect = MOVE_EFFECT_NONE;
 
-    TrySynchronizeActivation(battlerAtk, effectBattler, effect);
+    TrySynchronizeActivation(battlerAtk, effectBattler, effect, trigger);
 
     if ((effect == MOVE_EFFECT_POISON || effect == MOVE_EFFECT_TOXIC) && trigger == TRIGGER_ON_MOVE)
         gSpecialStatuses[effectBattler].poisonPuppeteer = TRUE;
@@ -11464,7 +11483,7 @@ void BS_TryPsychoShift(void)
         &gBattleMons[gBattlerTarget].status1);
     MarkBattlerForControllerExec(gBattlerTarget);
     TryActivateSleepClause(gBattlerTarget, gBattlerPartyIndexes[gBattlerTarget]);
-    TrySynchronizeActivation(gBattlerAttacker, gBattlerTarget, synchronizeEffect);
+    TrySynchronizeActivation(gBattlerAttacker, gBattlerTarget, synchronizeEffect, TRIGGER_ON_MOVE);
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 

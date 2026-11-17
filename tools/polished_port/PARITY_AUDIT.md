@@ -3188,6 +3188,66 @@ Falkner, badge/Roost/Togepi rewards and Save/reset/Continue.
 Validated Johto ROM SHA-256:
 `4d0e075c94e2e39f544b021ac6305004310b48bb20568294602535d7edce18f3`.
 
+## Source Synchronize and Substitute after damaging moves
+
+The pinned secondary burn, poison and paralysis commands apply their status
+through `StatusTarget` and `PostStatusWithSynchronize`. The return therefore
+reuses the same direct-status Substitute check as the previous suite. A source
+move-script audit identifies 21 damaging moves in this path; Tri Attack has
+both burn and paralysis outcomes, while freeze does not trigger Synchronize.
+The new authenticated Tri Attack fixture pins its three-way dispatch.
+
+The source profile extends the existing activation gate with generated move,
+original type and status membership. A Substitute protecting the original
+attacker now blocks the return while leaving Synchronize's activation visible.
+The actual reflector ability governs the return, so the original attacker's
+Infiltrator, Corrosion or Mold Breaker cannot bypass its own Substitute.
+The holder's healing berry still resolves after the return attempt; a protected
+attacker retains its own berry.
+
+The activation helper now receives the existing status-trigger context.
+Poison Touch during the same source move remains a separate ability effect,
+even for Poison Jab where both sources produce poison. Shared eligibility/AI
+queries, save fields, identifiers and optional capacities are unchanged.
+The adapter keeps its singles, original battle type and no-active-gimmick gates.
+
+Twelve groups cover 234 cases per profile: every source move, both sides and
+Substitute/no-Substitute controls, both reflectable Tri Attack outcomes and
+freeze, original attacker abilities, outgoing Substitute/Infiltrator, berry
+ownership, suppression, failed secondary rolls, misses, Protect, doubles,
+either active Terastal, dynamic retyping and Poison Touch. The all-move group
+failed on the unchanged runtime before the adapter was added. The previous
+direct-status suite now uses three non-source damaging moves for its optional
+move boundary. CI includes the new source verifier and battle prefix.
+
+This closes the scoped Substitute return gate for source damaging status
+moves. Full Synchronize behavior for contact abilities and other status sources,
+secondary RNG, damage/recoil and status ordering, failure text, source animation
+and AI remain separate audits. Optional moves, retyping, Magic Coat, doubles
+and active gimmicks retain their existing paths.
+
+An adjacent freeze gap surfaced during validation: applied freeze initializes
+`freezeTurns` to two, while the action check thaws at two, even when the random
+thaw roll fails. The freeze boundary test lets the holder act first to isolate
+Synchronize. Source freeze duration/thaw handling needs its own correction and
+regression suite; this change does not claim to resolve it.
+
+Validation: both production builds, all 75 source checks and all 12 ARM
+compiler probes passed. The final full native suite passed 5,731 groups, with
+nine expected failures and 585 existing TODOs; no unexpected failures occurred.
+The final source profile passed 382 source-rule groups and six AI timing groups
+without changing timing ceilings. All twelve new groups (234 cases per profile)
+passed with deprecated/unused warning errors enabled.
+
+The production-linked audit retains zero audited move-data differences,
+255 matching reflection flags and zero teaching compatibility mismatches;
+its 109 known gaps have no new or changed entries. The same final Johto ROM
+passed all 12 demo checks and 101 campaign checks, including 19 directed warps,
+Falkner, badge/Roost/Togepi rewards and Save/reset/Continue.
+
+Validated Johto ROM SHA-256:
+`912dd2b46b1a19ab8625850ddcdb44a376d1ed14cace240e9e881c7c2e979f11`.
+
 ## Next priorities
 
 1. Continue the source field-rule audit. Headbutt remains dormant; other field
