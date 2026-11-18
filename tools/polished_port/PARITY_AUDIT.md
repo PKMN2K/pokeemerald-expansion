@@ -3424,6 +3424,65 @@ Falkner, badge/Roost/Togepi rewards and Save/reset/Continue.
 Validated Johto ROM SHA-256:
 `727bc7fffabf6c54967aa0271c8b70a3a2afe6a42e5d0d7ff5508b224d052019`.
 
+## Source effective flinch before frozen actions
+
+Pinned source: Polished Crystal v3.2.3 at
+`3fa43192379df5c3e7b09a08e4d5d79af4f02f42`, default release variant.
+`build_frozen_flinch.py` authenticates the flinch/freeze ordering, the direct
+item/Stench flinch path, the true-user ability query and Steadfast's Speed
+selection. Effective flinch calls `CantMove` and `EndTurn` before the source
+reaches either natural thaw or its three self-thaw moves. Thus the frozen
+battler retains status and PP, while active Steadfast still raises Speed.
+
+The source-profile frozen-battler branch now invokes the existing flinch
+canceler before the sleep/freeze gate. This prevents both successful and failed
+natural-thaw outcomes from replacing the source flinch response, and prevents
+flinched attempts from reaching the freeze timer or random roll. The existing
+flinch script handles cancellation and Steadfast once; a subsequent non-flinched
+attempt still checks its own thaw roll or self-thaw move.
+
+The source also rechecks `GetTrueUserAbility` when the target acts. This query
+accounts for Neutralizing Gas but does not apply the previous attacker's Mold
+Breaker bypass. The adapter uses the acting battler's active ability, clearing
+a pending flinch if Inner Focus protects it. Clearing the flag also prevents
+the later native flinch stage from blocking a naturally thawed or self-thawing
+battler. Neutralizing Gas can still suppress Inner Focus and Steadfast.
+
+Fourteen new battle groups cover 172 cases per profile: King's Rock, Razor Fang
+and Stench on both sides; both natural-thaw outcomes; failed flinch rolls;
+Steadfast and repeated flinches; the next non-flinched attempt; Inner Focus with
+and without Mold Breaker; all three source self-thaw moves; Neutralizing Gas;
+Shield Dust; confusion/infatuation; party status across switching; optional
+Fake Out; doubles; either Terastal with a self-targeting move; and sleeping
+target controls. Nine groups failed before the runtime change; five controls
+passed. CI includes the new source verifier and battle prefix.
+
+This closes effective-flinch precedence for frozen battlers in ordinary
+source-profile singles without either active gimmick. Any effective optional
+flinch producer in that scope inherits the frozen-status rule, while its own
+move effect remains outside this parity claim. Doubles, either active gimmick
+and sleeping targets keep their existing ordering. Healthy-battler action
+ordering, recharge clearing, earlier native cancelers, full item/Stench
+eligibility and probabilities, other suppression combinations, incoming thaw,
+source RNG stream, AI and presentation remain separate audits. Stable move,
+item, species and save identifiers and the engine's capacities are preserved.
+
+Validation: both production builds, all 79 source checks and all 12 ARM
+compiler probes passed. The final full native suite passed 5,780 groups, with
+nine expected failures and 585 existing TODOs; no unexpected failures occurred.
+The final source profile passed 431 source-rule groups and six AI timing groups
+without changing timing ceilings. All fourteen new groups (172 cases per profile)
+passed with deprecated/unused warning errors enabled.
+
+The production-linked audit retains zero audited move-data differences,
+255 matching reflection flags and zero teaching compatibility mismatches;
+its 109 known gaps have no new or changed entries. The same final Johto ROM
+passed all 12 demo checks and 101 campaign checks, including 19 directed warps,
+Falkner, badge/Roost/Togepi rewards and Save/reset/Continue.
+
+Validated Johto ROM SHA-256:
+`4bf349bdf43f9ca9fa6644023ee148e22336b09107b0141509420d7500cf0410`.
+
 ## Next priorities
 
 1. Continue the source field-rule audit. Headbutt remains dormant; other field

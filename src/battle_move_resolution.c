@@ -36,6 +36,7 @@ static bool32 TryMagicCoat(struct BattleCalcValues *cv);
 static bool32 TryActivatePowderStatus(enum Move move);
 static void CalculateMagnitudeDamage(void);
 static void UpdateStallMons(struct BattleCalcValues *cv);
+static enum CancelerResult CancelerFlinch(struct BattleCalcValues *cv);
 
 // Submoves
 static enum Move GetMirrorMoveMove(void);
@@ -135,6 +136,20 @@ static bool32 UsesPolishedFreezeRules(enum BattlerId battler)
 static enum CancelerResult CancelerAsleepOrFrozen(struct BattleCalcValues *cv)
 {
     enum CancelerResult result = CANCELER_RESULT_RUN_SCRIPT_AND_INCREMENT;
+
+    // Source flinch ends a frozen action before any natural or move-based thaw.
+    // Recheck the acting battler's active ability, after suppression but without
+    // the previous attacker's Mold Breaker bypass.
+    if (gBattleMons[cv->battlerAtk].status1 & STATUS1_FREEZE
+     && gBattleMons[cv->battlerAtk].volatiles.flinched
+     && UsesPolishedFreezeRules(cv->battlerAtk))
+    {
+        if (cv->abilities[cv->battlerAtk] != ABILITY_INNER_FOCUS)
+            return CancelerFlinch(cv);
+
+        // Inner Focus rejects this flinch; do not reconsider it at the later stage.
+        gBattleMons[cv->battlerAtk].volatiles.flinched = FALSE;
+    }
 
     if (gBattleMons[cv->battlerAtk].status1 & STATUS1_SLEEP)
     {

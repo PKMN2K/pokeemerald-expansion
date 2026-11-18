@@ -1,0 +1,20 @@
+{
+  "source_repository": "Rangi42/polishedcrystal",
+  "source_commit": "3fa43192379df5c3e7b09a08e4d5d79af4f02f42",
+  "source_variant": "default (FAITHFUL undefined)",
+  "profile": "B_POLISHED_MOVE_BALANCE",
+  "scope": "Pending flinch on a frozen battler in ordinary singles without either active gimmick.",
+  "rules": [
+    "The source resolves effective flinch before entering its freeze block, so neither the natural thaw roll nor self-thaw runs on that attempt.",
+    "The flinch block calls CantMove and EndTurn; freeze and PP remain unchanged, while active Steadfast raises Speed.",
+    "GetTrueUserAbility rechecks the acting battler after Neutralizing Gas, without applying the opponent's Mold Breaker bypass. Active Inner Focus discards the pending flinch and permits the freeze stage.",
+    "King's Rock, other HELD_FLINCH_UP items and Stench can set the flag through their direct FlinchTarget path even while the target is frozen.",
+    "A later non-flinched attempt still uses the ordinary source freeze roll or self-thaw rule."
+  ],
+  "adapter": "Before the existing sleep/freeze action gate, route a frozen source-profile battler with pending flinch through the existing flinch canceler. Clear a pending flinch protected by active Inner Focus so it cannot recur at the later native stage. Preserve the existing status/PP/Steadfast scripts and actual opposing-battler format gate.",
+  "gaps": [
+    "Only the frozen-battler branch is moved. Sleep, healthy-battler cancellation order, recharge clearing, full item/Stench eligibility and probability, source RNG stream, AI and presentation remain separate audits.",
+    "Earlier native cancellation stages and the complete source action sequence are not certified. Existing freeze eligibility, incoming thaw attacks and optional suppression/ability combinations remain separate work.",
+    "Doubles and either active gimmick retain native ordering. Optional flinch producers in ordinary source singles inherit this general frozen-status ordering; their move effects are not otherwise certified."
+  ]
+}
