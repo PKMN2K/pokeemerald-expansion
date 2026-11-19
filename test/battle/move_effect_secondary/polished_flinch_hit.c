@@ -180,7 +180,7 @@ SINGLE_BATTLE_TEST("Polished flinch-hit keeps Inner Focus and Shield Dust protec
     }
 }
 
-SINGLE_BATTLE_TEST("Polished flinch-hit leaves optional Fake Out on its native path")
+SINGLE_BATTLE_TEST("Polished flinch-hit keeps optional Fake Out eligible against sleeping and frozen targets")
 {
     struct BattlePokemon *holder = player, *other = opponent;
     bool32 asleep = FALSE;
@@ -194,7 +194,7 @@ SINGLE_BATTLE_TEST("Polished flinch-hit leaves optional Fake Out on its native p
     } WHEN {
         TURN { MOVE(other, MOVE_FAKE_OUT); MOVE(holder, chosen); }
     } THEN {
-        EXPECT_EQ(holder->status1, asleep ? STATUS1_SLEEP_TURN(2) : STATUS1_FREEZE);
+        EXPECT_EQ(holder->status1, asleep ? STATUS1_SLEEP_TURN(B_POLISHED_MOVE_BALANCE ? 3 : 2) : STATUS1_FREEZE);
         EXPECT_EQ(holder->pp[0], 5);
         EXPECT_EQ(holder->statStages[STAT_SPEED], DEFAULT_STAT_STAGE + 1);
     }
@@ -261,7 +261,7 @@ SINGLE_BATTLE_TEST("Polished flinch-hit keeps item and Stench flinches separate 
     } WHEN {
         TURN { MOVE(other, MOVE_TACKLE, WITH_RNG(stench ? RNG_STENCH : RNG_HOLD_EFFECT_FLINCH, TRUE)); MOVE(holder, chosen); }
     } THEN {
-        EXPECT_EQ(holder->status1, asleep ? STATUS1_SLEEP_TURN(2) : STATUS1_FREEZE);
+        EXPECT_EQ(holder->status1, asleep ? STATUS1_SLEEP_TURN(B_POLISHED_MOVE_BALANCE ? 3 : 2) : STATUS1_FREEZE);
         EXPECT_EQ(holder->pp[0], 5);
         EXPECT_EQ(holder->statStages[STAT_SPEED], DEFAULT_STAT_STAGE + 1);
     }

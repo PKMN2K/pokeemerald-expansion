@@ -269,7 +269,7 @@ SINGLE_BATTLE_TEST("Polished frozen flinch checks either active Terastal even fo
     }
 }
 
-SINGLE_BATTLE_TEST("Polished frozen flinch leaves sleeping targets at their existing stage")
+SINGLE_BATTLE_TEST("Polished frozen flinch shares source precedence with sleeping targets")
 {
     struct BattlePokemon *holder = player, *other = opponent;
     bool32 wake = FALSE;
@@ -286,7 +286,7 @@ SINGLE_BATTLE_TEST("Polished frozen flinch leaves sleeping targets at their exis
     } WHEN {
         TURN { MOVE(other, MOVE_TACKLE, WITH_RNG(stench ? RNG_STENCH : RNG_HOLD_EFFECT_FLINCH, TRUE)); MOVE(holder, chosen); }
     } THEN {
-        EXPECT_EQ(holder->status1, wake ? STATUS1_NONE : STATUS1_SLEEP_TURN(2));
+        EXPECT_EQ(holder->status1, B_POLISHED_MOVE_BALANCE ? STATUS1_SLEEP_TURN(wake ? 1 : 3) : wake ? STATUS1_NONE : STATUS1_SLEEP_TURN(2));
         EXPECT_EQ(holder->pp[0], 5);
         EXPECT_EQ(holder->statStages[STAT_SPEED], DEFAULT_STAT_STAGE + 1);
     }

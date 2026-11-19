@@ -125,7 +125,7 @@ static void DefrostBattler(enum BattlerId battler, u32 status)
     RequestNonVolatileChange(battler);
 }
 
-static bool32 UsesPolishedFreezeRules(enum BattlerId battler)
+static bool32 UsesPolishedStatusActionRules(enum BattlerId battler)
 {
     return B_POLISHED_MOVE_BALANCE
         && !IsDoubleBattle()
@@ -137,12 +137,13 @@ static enum CancelerResult CancelerAsleepOrFrozen(struct BattleCalcValues *cv)
 {
     enum CancelerResult result = CANCELER_RESULT_RUN_SCRIPT_AND_INCREMENT;
 
-    // Source flinch ends a frozen action before any natural or move-based thaw.
+    // Source flinch ends a sleeping or frozen action before sleep decrement,
+    // waking, Sleep Talk, or any natural or move-based thaw.
     // Recheck the acting battler's active ability, after suppression but without
     // the previous attacker's Mold Breaker bypass.
-    if (gBattleMons[cv->battlerAtk].status1 & STATUS1_FREEZE
+    if (gBattleMons[cv->battlerAtk].status1 & (STATUS1_SLEEP | STATUS1_FREEZE)
      && gBattleMons[cv->battlerAtk].volatiles.flinched
-     && UsesPolishedFreezeRules(cv->battlerAtk))
+     && UsesPolishedStatusActionRules(cv->battlerAtk))
     {
         if (cv->abilities[cv->battlerAtk] != ABILITY_INNER_FOCUS)
             return CancelerFlinch(cv);
@@ -206,7 +207,7 @@ static enum CancelerResult CancelerAsleepOrFrozen(struct BattleCalcValues *cv)
     }
     else if (gBattleMons[cv->battlerAtk].status1 & STATUS1_FREEZE && !MoveThawsUser(cv->move))
     {
-        bool32 sourceFreeze = UsesPolishedFreezeRules(cv->battlerAtk);
+        bool32 sourceFreeze = UsesPolishedStatusActionRules(cv->battlerAtk);
         bool32 thaw = sourceFreeze
             ? RandomUniform(RNG_FROZEN, 0, POLISHED_FREEZE_ROLL_RANGE - 1) < POLISHED_FREEZE_THAW_THRESHOLD
             : RandomPercentage(RNG_FROZEN, (GetConfig(B_FREEZE_TURNS) >= GEN_CHAMPIONS ? 25 : 20));
@@ -365,7 +366,7 @@ static enum CancelerResult CancelerDisabled(struct BattleCalcValues *cv)
     // Source self-thaw follows flinch but precedes Disable/confusion/infatuation.
     if (gBattleMons[cv->battlerAtk].status1 & STATUS1_FREEZE
      && sPolishedSelfThawMoves[cv->move]
-     && UsesPolishedFreezeRules(cv->battlerAtk))
+     && UsesPolishedStatusActionRules(cv->battlerAtk))
     {
         DefrostBattler(cv->battlerAtk, STATUS1_FREEZE);
         BattleScriptCall(BattleScript_BattlerDefrosted);

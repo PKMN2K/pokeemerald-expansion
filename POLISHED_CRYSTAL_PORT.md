@@ -3510,3 +3510,60 @@ Falkner, badge/Roost/Togepi rewards and Save/reset/Continue.
 
 Validated Johto ROM SHA-256:
 `4bf349bdf43f9ca9fa6644023ee148e22336b09107b0141509420d7500cf0410`.
+
+### Source effective flinch before sleeping actions
+
+Pinned source: Polished Crystal v3.2.3 at
+`3fa43192379df5c3e7b09a08e4d5d79af4f02f42`, default release variant.
+`build_sleeping_flinch.py` authenticates the complete source sleep-action block
+and its position after effective flinch. It also verifies the preceding suite's
+flinch block, active ability query and separate item/Stench path. Effective
+flinch ends the action before either ordinary or Early Bird sleep decrement,
+waking or Sleep Talk execution. Sleep status and move PP remain unchanged;
+active Steadfast still raises Speed even when sleep would prevent acting.
+
+The existing early-flinch adapter now handles sleeping as well as frozen
+battlers in source-profile singles without either active gimmick. It rechecks
+the acting battler's active Inner Focus after suppression, without the previous
+attacker's Mold Breaker bypass. Inner Focus discards the pending flag and lets
+ordinary sleep progression run; Neutralizing Gas can still suppress it or
+Steadfast. A subsequent non-flinched attempt resumes the sleep check, while
+repeated flinches preserve the timer. No saved fields, identifiers, capacities
+or non-flinched sleep processing change.
+
+Thirteen new battle groups cover 116 cases per profile: both sides, all three
+item/Stench producers, waking and non-waking counters, Steadfast, Early Bird,
+Sleep Talk and called-move PP, repeated flinches, the next non-flinched attempt,
+failed flinch rolls, Inner Focus with and without Mold Breaker, Neutralizing
+Gas, Shield Dust, optional Fake Out, doubles, either Terastal with a self-targeted
+move, and party status after switching. Eight groups failed on the unchanged
+runtime; five controls passed. The preceding frozen-flinch and move-effect
+flinch suites' item/Stench and optional Fake Out sleep controls now expect the
+newly imported ordering.
+CI includes the authenticated source verifier and the new battle prefix.
+
+This closes effective-flinch precedence for sleeping battlers in the stated
+scope. It supersedes the preceding suite's recorded sleep-order gap. Sleep
+application and duration, Rest, sleep clause, complete Sleep Talk selection,
+full item/Stench eligibility and probability, healthy-battler ordering, recharge
+clearing, earlier native cancelers, source RNG stream, AI and presentation
+remain separate audits. Optional flinch producers inherit this general status
+rule without certifying their own effects. Native-profile battles, doubles and
+either active gimmick retain their existing order.
+
+Validation: both production builds, all 80 source checks and all 12 ARM
+compiler probes passed. The full native suite passed 5,793 groups, with nine
+expected failures and 585 existing TODOs; no unexpected failures occurred.
+The source profile passed 444 source-rule groups and six AI timing groups
+without changing timing ceilings. All thirteen new groups (116 cases per
+profile) passed with deprecated/unused warning errors enabled. A final native
+focused run also passed the strengthened Sleep Talk animation assertions.
+
+The production-linked audit retains zero audited move-data differences,
+255 matching reflection flags and zero teaching compatibility mismatches;
+its 109 known gaps have no new or changed entries. The same final Johto ROM
+passed all 12 demo checks and 101 campaign checks, including 19 directed warps,
+Falkner, badge/Roost/Togepi rewards and Save/reset/Continue.
+
+Validated Johto ROM SHA-256:
+`5da09c4390999936ba792b142a4ff6151aa651032b59bc5042b07b1110814b8a`.
