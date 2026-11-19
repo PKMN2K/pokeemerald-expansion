@@ -442,7 +442,7 @@ SINGLE_BATTLE_TEST("Polished proc recharge does not add a proc when a source mov
     }
 }
 
-SINGLE_BATTLE_TEST("Polished proc recharge retains inherited Shield Dust Covert Cloak and Sheer Force gates")
+SINGLE_BATTLE_TEST("Polished proc recharge retains Shield Dust and integrates source Covert Cloak and Sheer Force rules")
 {
     struct BattlePokemon *holder = player, *other = opponent;
     enum Move recharge = MOVE_HYPER_BEAM;
@@ -472,11 +472,16 @@ SINGLE_BATTLE_TEST("Polished proc recharge retains inherited Shield Dust Covert 
         TURN { MOVE(other, blocker == 2 ? MOVE_THUNDERBOLT : MOVE_SCRATCH, secondaryEffect: FALSE, WITH_RNG(mode == 2 ? RNG_STENCH : RNG_HOLD_EFFECT_FLINCH, TRUE)); SKIP_TURN(holder); }
         TURN { MOVE(other, MOVE_CELEBRATE); MOVE(holder, MOVE_TACKLE); }
     } SCENE {
-        if (holder == player) MESSAGE("Wobbuffet must recharge!");
-        else MESSAGE("The opposing Wobbuffet must recharge!");
+        if (B_POLISHED_MOVE_BALANCE && blocker != 0) {
+            if (holder == player) MESSAGE("Wobbuffet flinched and couldn't move!");
+            else MESSAGE("The opposing Wobbuffet flinched and couldn't move!");
+        } else {
+            if (holder == player) MESSAGE("Wobbuffet must recharge!");
+            else MESSAGE("The opposing Wobbuffet must recharge!");
+        }
     } THEN {
         EXPECT_EQ(holder->pp[0], 4);
-        EXPECT_EQ(holder->statStages[STAT_SPEED], DEFAULT_STAT_STAGE);
+        EXPECT_EQ(holder->statStages[STAT_SPEED], DEFAULT_STAT_STAGE + (B_POLISHED_MOVE_BALANCE && blocker != 0));
     }
 }
 

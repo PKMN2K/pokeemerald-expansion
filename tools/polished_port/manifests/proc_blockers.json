@@ -1,0 +1,20 @@
+{
+  "source_repository": "Rangi42/polishedcrystal",
+  "source_commit": "3fa43192379df5c3e7b09a08e4d5d79af4f02f42",
+  "source_variant": "default (FAITHFUL undefined)",
+  "profile": "B_POLISHED_MOVE_BALANCE",
+  "scope": "Covert Cloak and Sheer Force versus successful held-item/Stench flinch procs in ordinary singles without either active gimmick.",
+  "rules": [
+    "The source direct flinch helper checks Shield Dust after Mold Breaker. It does not check Covert Cloak or reject a held-item proc because the attacker has Sheer Force.",
+    "Move effectchance separately rejects Covert Cloak and Sheer Force. A suppressed intrinsic secondary effect does not skip posthiteffects or its direct item flinch helper.",
+    "Thunderbolt, Ice Beam and Flamethrower execute effectchance and their status command before posthiteffects; Sheer Force still suppresses their intrinsic status while permitting a successful held-item flinch.",
+    "Active Inner Focus is rechecked when the target acts. Existing recharge clearing, before/after-action behavior and Steadfast rules apply to newly eligible procs.",
+    "Moves already containing flinchtarget do not gain a second item/Stench roll. Intrinsic flinch and other secondary effects retain their separate Covert Cloak and Sheer Force checks."
+  ],
+  "adapter": "Use the explicit proc-origin marker and existing ordinary-singles gate to bypass only Covert Cloak and Sheer Force rejection in SetMoveEffect. Preserve Shield Dust blocking and recording, fainted-target/Substitute gates, and all unmarked effect paths.",
+  "gaps": [
+    "This closes these two proc-blocker gaps, not full proc eligibility. Broken Substitute, attacker fainting to Rocky Helmet, multi-hit attacks, other item/ability combinations and optional content remain separate audits.",
+    "Chance calculations/RNG stream, general recharge application, complete action order, AI and original presentation are not certified by these checks.",
+    "Native-profile battles, doubles and either active gimmick retain native behavior. Optional damage and recharge moves inherit the scoped proc adapter without certification of their own effects."
+  ]
+}

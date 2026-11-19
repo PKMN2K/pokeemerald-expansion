@@ -85,17 +85,23 @@ static void HandleSetEffectConfusion(struct BattleCalcValues *cv, struct SetEffe
     }
 }
 
+static bool32 UsesPolishedFlinchProcRules(struct BattleCalcValues *cv, struct SetEffect *se)
+{
+    return B_POLISHED_MOVE_BALANCE
+        && se->moveEffect == MOVE_EFFECT_FLINCH
+        && se->flinchFromItemOrAbility
+        && !IsDoubleBattle()
+        && GetActiveGimmick(cv->battlerAtk) == GIMMICK_NONE
+        && GetActiveGimmick(se->effectBattler) == GIMMICK_NONE;
+}
+
 static void HandleSetEffectFlinch(struct BattleCalcValues *cv, struct SetEffect *se)
 {
     // Source item/Stench procs call FlinchTarget directly: unlike move effects,
     // they end recharge even after the target acted or while it is asleep/frozen.
     // Inner Focus is checked by the acting battler after recharge has ended.
-    if (B_POLISHED_MOVE_BALANCE
-     && se->flinchFromItemOrAbility
-     && gBattleMons[se->effectBattler].volatiles.rechargeTimer
-     && !IsDoubleBattle()
-     && GetActiveGimmick(cv->battlerAtk) == GIMMICK_NONE
-     && GetActiveGimmick(se->effectBattler) == GIMMICK_NONE)
+    if (UsesPolishedFlinchProcRules(cv, se)
+     && gBattleMons[se->effectBattler].volatiles.rechargeTimer)
     {
         gBattleMons[se->effectBattler].volatiles.rechargeTimer = 0;
         gBattleMons[se->effectBattler].volatiles.flinched = TRUE;
@@ -1486,6 +1492,7 @@ static void (*const sSetEffectHandlers[])(struct BattleCalcValues *cv, struct Se
 void SetMoveEffect(struct BattleCalcValues *cv, struct SetEffect *se)
 {
     bool32 affectsUser = (cv->battlerAtk == se->effectBattler);
+    bool32 polishedFlinchProc = UsesPolishedFlinchProcRules(cv, se);
 
     if (gSpecialStatuses[cv->battlerAtk].parentalBondState == PARENTAL_BOND_1ST_HIT
      && IsBattlerAlive(se->effectBattler)
@@ -1498,9 +1505,15 @@ void SetMoveEffect(struct BattleCalcValues *cv, struct SetEffect *se)
     gBattleScripting.battler = cv->battlerAtk;
     gEffectBattler = se->effectBattler;
 
-    if (!se->primary && !affectsUser && IsMoveEffectBlockedByTarget(cv->abilities[se->effectBattler]))
+    // Source direct item/Stench flinches check Shield Dust, but do not use
+    // effectchance's Covert Cloak or Sheer Force rejection. Keep recording
+    // Shield Dust through the normal handler when it actually blocks a proc.
+    if (!se->primary && !affectsUser
+     && (!polishedFlinchProc || cv->abilities[se->effectBattler] == ABILITY_SHIELD_DUST)
+     && IsMoveEffectBlockedByTarget(cv->abilities[se->effectBattler]))
         se->moveEffect = MOVE_EFFECT_NONE;
     else if (!se->primary
+          && !polishedFlinchProc
           && IsSheerForceAffected(cv->move, cv->abilities[cv->battlerAtk])
           && !(se->moveEffect == MOVE_EFFECT_ORDER_UP && gBattleStruct->battlerState[cv->battlerAtk].commanderSpecies != SPECIES_NONE))
         se->moveEffect = MOVE_EFFECT_NONE;
