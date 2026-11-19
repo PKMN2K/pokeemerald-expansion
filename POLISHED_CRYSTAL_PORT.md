@@ -3671,3 +3671,58 @@ Falkner, badge/Roost/Togepi rewards and Save/reset/Continue.
 
 Validated Johto ROM SHA-256:
 `0bd7cb6aaaa681a21cc1869f3d87376118f34281983500867e70c567029b4590`.
+
+### Source item and Stench flinch clears recharge
+
+Pinned source: Polished Crystal v3.2.3 at
+`3fa43192379df5c3e7b09a08e4d5d79af4f02f42`, default release variant.
+`build_proc_recharge.py` authenticates the held-item/Stench selection, complete
+`.flinch_up` helper, both flinch-item attributes and end-turn flag clearing,
+with the prior recharge and active Inner Focus verifiers as dependencies.
+The direct helper calls `FlinchTarget` without the move-effect sleep/freeze or
+acted-turn gates. Active Inner Focus is checked later when the target acts.
+
+Successful existing King's Rock, Razor Fang and Stench procs now clear pending
+recharge in ordinary source-profile singles without either active gimmick.
+An explicit transient origin flag marks only those two producer call sites;
+optional Fling and intrinsic move effects retain their separate paths. The
+adapter runs after inherited effect eligibility gates, sets flinch and clears
+recharge even if the target already acted. Pending actions retain the existing
+Inner Focus, Steadfast, sleep/freeze, move-slot and PP behavior. After an already
+completed action, the target can choose again next turn without a stale flinch.
+No save fields, stable IDs, capacities or probabilities change.
+
+Sixteen new groups cover 272 cases per profile: both items and Stench, both
+source recharge moves on both sides, before/after-action timing, Inner Focus,
+Steadfast, Mold Breaker, Neutralizing Gas, all four move slots, frozen/asleep
+targets, missed hits and failed rolls, no-damage moves, all thirteen intrinsic
+source flinch moves, Substitute, Shield Dust, Covert Cloak, Sheer Force,
+optional Fling, doubles and either Terastal. Eight groups fail with the parent
+runtime and eight controls pass. The previous move-effect suite's item/Stench
+control is updated to assert this source adapter. CI runs the new verifier
+and battle prefix.
+
+This supersedes the pending item/Stench recharge-clearing gap in the previous
+suite for successful inherited procs. It does not certify full proc eligibility
+or chance/RNG behavior. Covert Cloak, broken Substitute, Sheer Force, attacker
+fainting to Rocky Helmet, multi-hit attacks and optional interactions still
+need their own source audits. General recharge application, full cancellation
+order, AI and original presentation remain open. Native-profile battles,
+doubles and either active gimmick retain native behavior. Optional recharge
+and damage moves inherit the adapter without certification of their effects.
+
+Validation: both production builds, all 83 source checks and all 12 ARM
+compiler probes passed. The full native suite passed 5,838 groups, with nine
+expected failures and 585 existing TODOs; no unexpected failures occurred.
+The source profile passed 489 source-rule groups and six AI timing groups
+without changing timing ceilings. All sixteen new groups (272 cases per profile)
+passed with deprecated/unused warning errors enabled.
+
+The production-linked audit retains zero audited move-data differences,
+255 matching reflection flags and zero teaching compatibility mismatches;
+its 109 known gaps have no new or changed entries. The same final Johto ROM
+passed all 12 demo checks and 101 campaign checks, including 19 directed warps,
+Falkner, badge/Roost/Togepi rewards and Save/reset/Continue.
+
+Validated Johto ROM SHA-256:
+`4e7d7599376605d29833c6c20828beebfaddc05fcea3b939dbc198eb9599959d`.

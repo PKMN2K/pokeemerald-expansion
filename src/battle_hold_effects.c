@@ -174,7 +174,7 @@ static enum ItemEffect TryKingsRock(enum BattlerId battlerAtk, enum BattlerId ba
         holdEffectParam *= 2;
     if (ability != ABILITY_STENCH && RandomPercentage(RNG_HOLD_EFFECT_FLINCH, holdEffectParam))
     {
-        SetMoveEffectHelper(battlerAtk, battlerDef, MOVE_EFFECT_FLINCH, gBattlescriptCurrInstr, NO_FLAGS);
+        SetMoveEffectHelper(battlerAtk, battlerDef, MOVE_EFFECT_FLINCH, gBattlescriptCurrInstr, EFFECT_FLINCH_FROM_ITEM_OR_ABILITY);
         effect = ITEM_EFFECT_OTHER;
     }
 

@@ -4518,7 +4518,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
              && IsBattlerTurnDamaged(gBattlerTarget, EXCLUDING_SUBSTITUTES)
              && !MoveHasAdditionalEffect(gCurrentMove, MOVE_EFFECT_FLINCH))
             {
-                SetMoveEffectHelper(gBattlerAttacker, gBattlerTarget, MOVE_EFFECT_FLINCH, gBattlescriptCurrInstr, NO_FLAGS);
+                SetMoveEffectHelper(gBattlerAttacker, gBattlerTarget, MOVE_EFFECT_FLINCH, gBattlescriptCurrInstr, EFFECT_FLINCH_FROM_ITEM_OR_ABILITY);
                 effect++;
             }
             break;

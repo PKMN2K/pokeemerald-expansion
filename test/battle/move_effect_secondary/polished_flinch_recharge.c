@@ -422,7 +422,7 @@ SINGLE_BATTLE_TEST("Polished flinch recharge does not clear newly set recharge w
     }
 }
 
-SINGLE_BATTLE_TEST("Polished flinch recharge leaves the separately audited item and Stench recharge paths unchanged")
+SINGLE_BATTLE_TEST("Polished flinch recharge integrates the source item and Stench pending-recharge adapter")
 {
     struct BattlePokemon *holder = player, *other = opponent;
     enum Move recharge = MOVE_HYPER_BEAM;
@@ -450,11 +450,16 @@ SINGLE_BATTLE_TEST("Polished flinch recharge leaves the separately audited item 
         TURN { MOVE(other, MOVE_TACKLE, WITH_RNG(mode == 2 ? RNG_STENCH : RNG_HOLD_EFFECT_FLINCH, TRUE)); SKIP_TURN(holder); }
         TURN { MOVE(other, MOVE_CELEBRATE); MOVE(holder, MOVE_TACKLE); }
     } SCENE {
-        if (holder == player) MESSAGE("Wobbuffet must recharge!");
-        else MESSAGE("The opposing Wobbuffet must recharge!");
+        if (B_POLISHED_MOVE_BALANCE) {
+            if (holder == player) MESSAGE("Wobbuffet flinched and couldn't move!");
+            else MESSAGE("The opposing Wobbuffet flinched and couldn't move!");
+        } else {
+            if (holder == player) MESSAGE("Wobbuffet must recharge!");
+            else MESSAGE("The opposing Wobbuffet must recharge!");
+        }
     } THEN {
         EXPECT_EQ(holder->pp[0], 4);
-        EXPECT_EQ(holder->statStages[STAT_SPEED], DEFAULT_STAT_STAGE);
+        EXPECT_EQ(holder->statStages[STAT_SPEED], DEFAULT_STAT_STAGE + B_POLISHED_MOVE_BALANCE);
     }
 }
 

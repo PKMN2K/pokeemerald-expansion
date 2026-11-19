@@ -87,6 +87,22 @@ static void HandleSetEffectConfusion(struct BattleCalcValues *cv, struct SetEffe
 
 static void HandleSetEffectFlinch(struct BattleCalcValues *cv, struct SetEffect *se)
 {
+    // Source item/Stench procs call FlinchTarget directly: unlike move effects,
+    // they end recharge even after the target acted or while it is asleep/frozen.
+    // Inner Focus is checked by the acting battler after recharge has ended.
+    if (B_POLISHED_MOVE_BALANCE
+     && se->flinchFromItemOrAbility
+     && gBattleMons[se->effectBattler].volatiles.rechargeTimer
+     && !IsDoubleBattle()
+     && GetActiveGimmick(cv->battlerAtk) == GIMMICK_NONE
+     && GetActiveGimmick(se->effectBattler) == GIMMICK_NONE)
+    {
+        gBattleMons[se->effectBattler].volatiles.rechargeTimer = 0;
+        gBattleMons[se->effectBattler].volatiles.flinched = TRUE;
+        gBattlescriptCurrInstr = se->script;
+        return;
+    }
+
     // Source flinchtarget rejects sleep/freeze at effect execution, even if
     // the target will wake or thaw when it acts. Item/Stench paths are separate.
     if (B_POLISHED_MOVE_BALANCE
@@ -1517,6 +1533,7 @@ void SetMoveEffectHelper(enum BattlerId battlerAtk, enum BattlerId effectBattler
     se.effectBattler = effectBattler;
     se.primary = effectFlags & EFFECT_PRIMARY;
     se.certain = effectFlags & EFFECT_CERTAIN;
+    se.flinchFromItemOrAbility = (effectFlags & EFFECT_FLINCH_FROM_ITEM_OR_ABILITY) != 0;
 
     SetMoveEffect(&cv, &se);
 }
