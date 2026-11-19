@@ -3592,6 +3592,58 @@ Falkner, badge/Roost/Togepi rewards and Save/reset/Continue.
 Validated Johto ROM SHA-256:
 `0063daf63557f4b677b55af5ce4c7d14ad84695255f6a5c0792358c42587f048`.
 
+## Source move-effect flinch clears recharge
+
+Pinned source: Polished Crystal v3.2.3 at
+`3fa43192379df5c3e7b09a08e4d5d79af4f02f42`, default release variant.
+`build_flinch_recharge.py` authenticates all thirteen FlinchHit/Stomp mappings
+and gates, `FlinchTarget`, `EndRechargeOpp`, the secondary-effect checks,
+Hyper Beam/Giga Impact recharge scripts, both sides' locked move selection,
+and the existing action-time Inner Focus rule.
+
+For the thirteen mapped moves in ordinary source-profile singles without
+either active gimmick, an eligible flinch now clears pending recharge before
+the target's action check. It sets the pending flinch even if Inner Focus is
+active: the source checks that ability only when the target acts. Unprotected
+targets flinch instead of displaying recharge, and Steadfast activates. Active
+Inner Focus permits the already selected move to proceed through later checks;
+a repeated Hyper Beam or Giga Impact consumes PP and starts recharge again.
+The engine's selected move slot, action and PP handlers are reused. No IDs,
+save fields, capacities or probabilities change.
+
+Fourteen battle groups cover 176 cases per profile: all thirteen moves against
+both source recharge moves on both sides, Inner Focus, Mold Breaker, all four
+move slots, Steadfast, Neutralizing Gas, failed secondary rolls and misses,
+Shield Dust/Covert Cloak/Sheer Force, intact and broken Substitute, sleep/freeze,
+targets that already acted, and subsequent actions. Doubles and either Terastal
+are native controls. Item/Stench and optional Dragon Rush controls explicitly
+retain their separate paths. Six groups fail with the parent runtime; eight
+controls pass. CI includes the source verifier and battle prefix.
+
+This closes move-effect recharge clearing for the mapped source moves. The
+separate direct item/Stench path, including after-action behavior, remains open.
+General recharge application, fainted targets, broader flinch eligibility,
+probabilities/RNG stream, full cancellation order, AI and original presentation
+remain separate audits. Optional recharge producers inherit this pending-state
+adapter without certification of their effects. Optional flinch producers,
+native-profile battles, doubles and either active gimmick retain native behavior.
+
+Validation: both production builds, all 82 source checks and all 12 ARM
+compiler probes passed. The full native suite passed 5,822 groups, with nine
+expected failures and 585 existing TODOs; no unexpected failures occurred.
+The source profile passed 473 source-rule groups and six AI timing groups
+without changing timing ceilings. All fourteen new groups (176 cases per profile)
+passed with deprecated/unused warning errors enabled.
+
+The production-linked audit retains zero audited move-data differences,
+255 matching reflection flags and zero teaching compatibility mismatches;
+its 109 known gaps have no new or changed entries. The same final Johto ROM
+passed all 12 demo checks and 101 campaign checks, including 19 directed warps,
+Falkner, badge/Roost/Togepi rewards and Save/reset/Continue.
+
+Validated Johto ROM SHA-256:
+`0bd7cb6aaaa681a21cc1869f3d87376118f34281983500867e70c567029b4590`.
+
 ## Next priorities
 
 1. Continue the source field-rule audit. Headbutt remains dormant; other field

@@ -91,13 +91,26 @@ static void HandleSetEffectFlinch(struct BattleCalcValues *cv, struct SetEffect 
     // the target will wake or thaw when it acts. Item/Stench paths are separate.
     if (B_POLISHED_MOVE_BALANCE
      && sPolishedFlinchHitMoves[cv->move]
-     && (gBattleMons[se->effectBattler].status1 & (STATUS1_SLEEP | STATUS1_FREEZE))
      && !IsDoubleBattle()
      && GetActiveGimmick(cv->battlerAtk) == GIMMICK_NONE
      && GetActiveGimmick(se->effectBattler) == GIMMICK_NONE)
     {
-        gBattlescriptCurrInstr = se->script;
-        return;
+        if (gBattleMons[se->effectBattler].status1 & (STATUS1_SLEEP | STATUS1_FREEZE))
+        {
+            gBattlescriptCurrInstr = se->script;
+            return;
+        }
+
+        // Source FlinchTarget ends recharge before CheckTurn, even when
+        // active Inner Focus will discard the flinch at the action gate.
+        if (gBattleMons[se->effectBattler].volatiles.rechargeTimer
+         && !HasBattlerActedThisTurn(se->effectBattler))
+        {
+            gBattleMons[se->effectBattler].volatiles.rechargeTimer = 0;
+            gBattleMons[se->effectBattler].volatiles.flinched = TRUE;
+            gBattlescriptCurrInstr = se->script;
+            return;
+        }
     }
 
     if (cv->abilities[se->effectBattler] == ABILITY_INNER_FOCUS)
