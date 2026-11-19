@@ -145,11 +145,9 @@ static enum CancelerResult CancelerAsleepOrFrozen(struct BattleCalcValues *cv)
      && gBattleMons[cv->battlerAtk].volatiles.flinched
      && UsesPolishedStatusActionRules(cv->battlerAtk))
     {
-        if (cv->abilities[cv->battlerAtk] != ABILITY_INNER_FOCUS)
-            return CancelerFlinch(cv);
-
-        // Inner Focus rejects this flinch; do not reconsider it at the later stage.
-        gBattleMons[cv->battlerAtk].volatiles.flinched = FALSE;
+        enum CancelerResult flinchResult = CancelerFlinch(cv);
+        if (flinchResult != CANCELER_RESULT_SUCCESS)
+            return flinchResult;
     }
 
     if (gBattleMons[cv->battlerAtk].status1 & STATUS1_SLEEP)
@@ -345,6 +343,15 @@ static enum CancelerResult CancelerFlinch(struct BattleCalcValues *cv)
 {
     if (gBattleMons[cv->battlerAtk].volatiles.flinched)
     {
+        // Source checks the acting battler's active ability, independently of
+        // status and without the previous attacker's Mold Breaker bypass.
+        if (UsesPolishedStatusActionRules(cv->battlerAtk)
+         && cv->abilities[cv->battlerAtk] == ABILITY_INNER_FOCUS)
+        {
+            gBattleMons[cv->battlerAtk].volatiles.flinched = FALSE;
+            return CANCELER_RESULT_SUCCESS;
+        }
+
         CancelMultiTurnMoves(cv->battlerAtk);
         if (cv->abilities[cv->battlerAtk] == ABILITY_STEADFAST)
         {

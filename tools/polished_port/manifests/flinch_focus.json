@@ -1,0 +1,19 @@
+{
+  "source_repository": "Rangi42/polishedcrystal",
+  "source_commit": "3fa43192379df5c3e7b09a08e4d5d79af4f02f42",
+  "source_variant": "default (FAITHFUL undefined)",
+  "profile": "B_POLISHED_MOVE_BALANCE",
+  "scope": "The active Inner Focus recheck for pending flinch when the acting battler reaches the flinch gate, in ordinary singles without either active gimmick.",
+  "rules": [
+    "The source clears the pending flinch flag and checks GetTrueUserAbility before calling CantMove. This check has no sleep/freeze or other nonvolatile-status prerequisite.",
+    "Active Inner Focus rejects the flinch even if the preceding hit used Mold Breaker; the acting-battler query does not apply that bypass.",
+    "Neutralizing Gas can suppress Inner Focus. Without active protection, the existing flinch cancellation and Steadfast response apply.",
+    "Rejecting flinch lets later action checks run and does not cancel a charged move through the flinch path. It does not guarantee that another blocker will allow the move."
+  ],
+  "adapter": "Centralize the active Inner Focus recheck in the flinch canceler. The existing early sleep/freeze dispatch calls that canceler and continues status processing on success; other battlers use their existing flinch stage. Clear only a protected pending flinch before cancellation.",
+  "gaps": [
+    "Full flinch application/eligibility, recharge clearing, source probability and RNG stream, earlier native action cancelers, the complete cancellation order, AI and original presentation remain separate audits.",
+    "Native-profile battles, doubles and either active gimmick retain native behavior. Optional flinch producers inherit this general acting-battler check without certifying their own effects.",
+    "Optional Gastro Acid and Ability Shield retain the engine's existing suppression/protection behavior. Their source parity is not asserted; broader ability/item combinations remain separate work."
+  ]
+}

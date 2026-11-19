@@ -3540,6 +3540,58 @@ Falkner, badge/Roost/Togepi rewards and Save/reset/Continue.
 Validated Johto ROM SHA-256:
 `5da09c4390999936ba792b142a4ff6151aa651032b59bc5042b07b1110814b8a`.
 
+## Source action-time Inner Focus recheck
+
+Pinned source: Polished Crystal v3.2.3 at
+`3fa43192379df5c3e7b09a08e4d5d79af4f02f42`, default release variant.
+`build_flinch_focus.py` authenticates the source flinch block and true-user
+ability query through the existing source verifiers. The block clears the
+pending flag and checks active Inner Focus before `CantMove`, without any
+nonvolatile-status prerequisite. The previous attacker's Mold Breaker does
+not bypass this acting-battler check; Neutralizing Gas can still suppress it.
+
+The flinch canceler now performs that recheck for any acting battler in ordinary
+source-profile singles without either active gimmick. Protected flinch is
+cleared before `CancelMultiTurnMoves`, so a charged move is not cancelled by
+the rejected flinch. Later action blockers still apply. The earlier sleep/freeze
+dispatch delegates to the same handler and continues its existing status checks
+when Inner Focus rejects the flinch. Unprotected flinches retain cancellation
+and Steadfast. No save fields, IDs, capacities or probabilities change.
+
+Fifteen battle groups cover 94 cases per profile: all thirteen source flinch
+moves on both sides, King's Rock and Razor Fang, successful/failed effect rolls,
+ordinary Inner Focus protection, Steadfast, Neutralizing Gas and protection
+after it switches out, burn/poison/paralysis, confusion/infatuation, charged
+Solar Beam, the following turn, optional Fake Out, doubles and either Terastal
+with a self-targeted move. Optional Gastro Acid and Ability Shield retain their
+existing engine behavior as regression controls. Nine groups failed before the
+runtime change; six controls passed. CI runs the authenticated source verifier
+and the new battle prefix.
+
+This completes the active Inner Focus recheck beyond the previously adapted
+sleeping/frozen cases. It does not move healthy-battler flinch ahead of earlier
+native cancelers, change flinch application/eligibility or recharge clearing,
+port probabilities or the RNG stream, or certify full action order, AI or
+presentation. Optional flinch producers inherit this general action check;
+their own effects and optional item/ability parity remain separate audits.
+Native-profile battles, doubles and either active gimmick keep native behavior.
+
+Validation: both production builds, all 81 source checks and all 12 ARM
+compiler probes passed. The full native suite passed 5,808 groups, with nine
+expected failures and 585 existing TODOs; no unexpected failures occurred.
+The source profile passed 459 source-rule groups and six AI timing groups
+without changing timing ceilings. All fifteen new groups (94 cases per profile)
+passed with deprecated/unused warning errors enabled.
+
+The production-linked audit retains zero audited move-data differences,
+255 matching reflection flags and zero teaching compatibility mismatches;
+its 109 known gaps have no new or changed entries. The same final Johto ROM
+passed all 12 demo checks and 101 campaign checks, including 19 directed warps,
+Falkner, badge/Roost/Togepi rewards and Save/reset/Continue.
+
+Validated Johto ROM SHA-256:
+`0063daf63557f4b677b55af5ce4c7d14ad84695255f6a5c0792358c42587f048`.
+
 ## Next priorities
 
 1. Continue the source field-rule audit. Headbutt remains dormant; other field

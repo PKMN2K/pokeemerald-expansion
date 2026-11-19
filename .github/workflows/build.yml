@@ -136,6 +136,7 @@ jobs:
           python3 tools/polished_port/scripts/build_flinch_hit.py --check
           python3 tools/polished_port/scripts/build_frozen_flinch.py --check
           python3 tools/polished_port/scripts/build_sleeping_flinch.py --check
+          python3 tools/polished_port/scripts/build_flinch_focus.py --check
           python3 tools/polished_port/scripts/build_rock_smash.py --check
           python3 tools/polished_port/scripts/test_rock_smash.py
           python3 tools/polished_port/scripts/build_flash.py --check
@@ -1226,6 +1227,7 @@ jobs:
           make -j$(nproc) -O TEST=1 POLISHED_MOVE_BALANCE_TEST=1 check TESTS='Polished flinch-hit'
           make -j$(nproc) -O TEST=1 POLISHED_MOVE_BALANCE_TEST=1 check TESTS='Polished frozen flinch'
           make -j$(nproc) -O TEST=1 POLISHED_MOVE_BALANCE_TEST=1 check TESTS='Polished sleeping flinch'
+          make -j$(nproc) -O TEST=1 POLISHED_MOVE_BALANCE_TEST=1 check TESTS='Polished flinch focus'
           make -j$(nproc) -O TEST=1 POLISHED_MOVE_BALANCE_TEST=1 check TESTS='AI thinking time'
 
       - name: Exercise evolution completion and cancellation in mGBA
