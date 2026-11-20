@@ -168,6 +168,7 @@ static bool32 HandleEndTurnWeatherDamage(enum BattlerId battler)
         {
             if (ability != ABILITY_SNOW_CLOAK
              && ability != ABILITY_OVERCOAT
+             && !(ability == ABILITY_SLUSH_RUSH && UsesPolishedBattleRules(battler, GetOppositeBattler(battler)))
              && !IS_BATTLER_OF_TYPE(battler, TYPE_ICE)
              && gBattleMons[battler].volatiles.semiInvulnerable != STATE_UNDERGROUND
              && gBattleMons[battler].volatiles.semiInvulnerable != STATE_UNDERWATER

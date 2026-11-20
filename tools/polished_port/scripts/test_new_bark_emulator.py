@@ -28,7 +28,7 @@ def map_data(name):
     return data
 
 
-def walk(game, data, goal, avoid=()):
+def walk(game, data, goal, avoid=(), _replans=0):
     """Use the actual converted collision grid, avoiding other warp tiles."""
     width, height = data["width"], data["height"]
     blocked = {(row["x"], row["y"]) for row in data["warp_events"]}
@@ -50,7 +50,22 @@ def walk(game, data, goal, avoid=()):
         pos = queue.popleft()
         if pos == goal:
             for key in paths[pos]:
-                game.step(key)
+                before = game.position()
+                try:
+                    game.step(key)
+                except AssertionError as error:
+                    # Violet's narrow street must permit crossing a patrol's
+                    # range. A resident can enter the planned next tile while
+                    # input advances the game. Replan only for a live actor on
+                    # that tile; static collision failures still fail at once.
+                    dx, dy = next((dx, dy) for direction, dx, dy in DIRECTIONS if direction == key)
+                    target = before[0] + dx, before[1] + dy
+                    occupied = any(actor["position"] == target and not actor["invisible"]
+                                   for actor in actors(game).values())
+                    if (_replans >= 8 or not str(error).startswith("Blocked at ")
+                            or game.position() != before or not occupied):
+                        raise
+                    return walk(game, data, goal, avoid, _replans + 1)
             return
         for key, dx, dy in DIRECTIONS:
             target = pos[0] + dx, pos[1] + dy

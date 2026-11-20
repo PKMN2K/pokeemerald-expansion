@@ -20,11 +20,11 @@ source groups and expected source failures are rejected.
 
 ## Coverage and remaining work
 
-The source archive contains **326 files authenticated back to the pinned Git
+The source archive contains **331 files authenticated back to the pinned Git
 commit**. It includes every assembly file under the battle engine/data,
 trainer/facility data, item/Pokemon engines, shared home routines, constants and
 macros. Missing or edited blobs/trees fail authentication. The generated ledger
-records **3,927 global lexical blocks**, their exact source hashes, local-label
+records **4,062 global lexical blocks**, their exact source hashes, local-label
 and branch-site counts, **255 moves, 133 effects and 129 command names**, every
 source ability/held-effect identifier and all registered source tests.
 
@@ -56,7 +56,7 @@ All fifteen domains remain open. Existing manifests and passing scenarios are
 retained as scoped evidence; no names, inventory totals, native tests or AI
 performance checks automatically close a source block/domain.
 
-## Foundation corrections in this suite
+## Foundation corrections
 
 Fifteen new parameterized battle groups verify source confusion self-hit odds
 (85/256), full paralysis (64/256), half-Speed paralysis with Quick Feet's
@@ -70,12 +70,77 @@ Umbrella, odd Defense rounding, and native controls for doubles and either
 Terastal participant. Effect Spore's separately ported 1–3 initial counters
 and Rest's dedicated path remain separate. Optional attacks use these shared
 status/weather rules inside the source battle profile. Exact RNG stream,
-self-confusion damage and complete damage/action/event ordering remain open.
+complete damage/action/event ordering remain open; the following suite adds scoped self-confusion damage evidence.
+
+## Shared battle calculation corrections
+
+Twenty-six additional groups cover source confusion arithmetic, Speed order,
+critical chances, default affection and weather. The confusion reference includes
+8,112 generated boundary vectors, all 169 stage pairs in the damage entry point,
+and live cases on both sides. It checks simultaneous raw-stat compression,
+numerator-stage rounding and the source saturation value; ability/item/burn
+modifiers and survival clamps cannot enter the source self-hit calculation.
+Berry consumption and full faint sequencing remain open.
+
+The Speed matrix covers 25,480 combinations of raw stats, stages, paralysis,
+abilities, items and weather, plus live action-order checks. Tests also cover
+fainted raw Speed, the 65,535 cap, native badge-boost exclusion and Quick Powder
+using the copied species after Transform. These checks do not establish all
+priority, tie-breaking or AI decision rules.
+
+Critical tests exercise source stages under native generation 3/6/9 settings,
+all nine high-critical moves, armor/Mold Breaker, Leek species/form eligibility,
+zero-power Return, both sides, and native doubles/Terastal controls. Ordinary
+source singles suppress affection bonuses as required by the pinned default
+options. Wild-battle tests keep the native affection path active as a control;
+scripted singles otherwise disable it through their recorded-link flags.
+Optional affection settings/thresholds and external Future Sight remain open.
+
+Weather checks cover all four source weather abilities, both sides, older and
+modern native settings, five/eight-turn expiry boundaries, Snow Warning's Hail,
+Slush Rush immunity, Cloud Nine/Goggles, overworld replacement and same-weather
+no-refresh. The suite does not certify complete weather/ability/residual event
+order. Optional formats and gimmicks retain native behavior.
+
+The archive additionally authenticates math internals, default options, high
+critical move data and HRAM definitions. `battle_core.json` records the exact
+source paths and limits. All fifteen domain-level obligations remain open.
+
+## Shared accuracy and action ordering
+
+Thirty-three additional groups cover the raw accuracy and priority records for
+all 255 mapped moves. The 2,028 generated stage vectors drive 43,433 calls through
+the runtime accuracy calculation, including the sun-specific Thunder/Hurricane
+value. A separate 1,248-case matrix checks flooring between ability/item stages;
+1,020 priority comparisons cover both sides and Prankster.
+
+The source uses exact three-based accuracy ratios. Keen Eye, Illuminate and
+Mind's Eye preserve negative evasion; Wonder Skin sets checked status accuracy
+to 50 before stages. Weather accuracy checks use the target's Utility Umbrella.
+The pinned `50 percent + 1` expression evaluates to **128**, because this source
+macro still uses 255; the suite deliberately preserves that executable value.
+Raw 255 is scaled unless the source effect explicitly bypasses the hit check.
+Zoom Lens recognizes a prior switch, and Lock-On cannot bypass Fly/Dig.
+
+Quick Draw/Claw and Custap activate only within equal priority brackets. Unnerve
+blocks Custap, Quick Draw overrides its holder's Lagging Tail, and pure Speed
+comparisons ignore move-only quick/lagging flags. Tests include odd HP thresholds,
+Gluttony, both sides, suppression, immunity/protection, native profiles, optional
+moves, doubles and either active Terastal. Shared quick-item rules also apply
+to optional attacks in ordinary source singles; unmapped move accuracy/priority
+definitions retain their prior rules.
+
+These scenarios do not certify full damage, action, cancellation, residual or
+faint sequencing. Lock-On lifetime, external Future Sight, exact RNG stream,
+source AI choices, capture/rewards and facility/link behavior remain open. The
+fifteen domain-level obligations and strict completion failure are retained.
 
 Regenerate the ledger after adding tests:
 
 ```sh
 python3 tools/polished_port/scripts/build_battle_foundations.py
+python3 tools/polished_port/scripts/build_battle_core.py
+python3 tools/polished_port/scripts/build_accuracy_order.py
 python3 tools/polished_port/scripts/build_battle_suite.py
 python3 tools/polished_port/scripts/test_battle_suite.py
 ```

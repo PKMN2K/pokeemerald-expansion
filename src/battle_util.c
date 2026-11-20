@@ -16,6 +16,9 @@
 #include "battle_stat_change.h"
 #include "config_changes.h"
 #include "polished_battle.h"
+#include "polished_battle_core.h"
+#include "data/polished_critical_hits.h"
+#include "data/polished_accuracy.h"
 #include "polished_moves.h"
 #include "constants/polished_contact_status.h"
 #include "data/polished_contact_status.h"
@@ -1789,6 +1792,13 @@ u32 GetBattlerAffectionHearts(enum BattlerId battler)
                                 | BATTLE_TYPE_SECRET_BASE)))
         return AFFECTION_NO_HEARTS;
 
+    // Check the inexpensive native exclusions first: AI damage estimates call
+    // this repeatedly for off-field/opponent/recorded-link battlers.
+    // The pinned default options leave AFFECTION_OPT unset, not friendship.
+    if (B_POLISHED_MOVE_BALANCE && !IsDoubleBattle()
+     && UsesPolishedBattleRules(battler, GetOppositeBattler(battler)))
+        return AFFECTION_NO_HEARTS;
+
     return gBattleMons[battler].affectionHearts;
 }
 
@@ -2079,10 +2089,13 @@ static bool32 TryChangeWeatherWithAbility(enum BattlerId battler, u32 battleWeat
 
 enum WeatherFailure TryChangeBattleWeather(enum BattlerId battler, u32 battleWeatherId, enum Ability ability)
 {
+    bool32 sourceFieldWeather = UsesPolishedBattleRules(battler, GetOppositeBattler(battler))
+        && (battleWeatherId == BATTLE_WEATHER_RAIN || battleWeatherId == BATTLE_WEATHER_SUN
+         || battleWeatherId == BATTLE_WEATHER_SANDSTORM || battleWeatherId == BATTLE_WEATHER_HAIL);
     if (gBattleWeather & gBattleWeatherInfo[battleWeatherId].flag)
         return WEATHER_FAILURE_SAME_WEATHER;
 
-    if (gBattleStruct->overworldWeatherPresent)
+    if (gBattleStruct->overworldWeatherPresent && !sourceFieldWeather)
         return WEATHER_FAILURE_OVERWORLD;
 
     if (gBattleWeather & B_WEATHER_PRIMAL_ANY
@@ -2093,7 +2106,13 @@ enum WeatherFailure TryChangeBattleWeather(enum BattlerId battler, u32 battleWea
         return WEATHER_FAILURE_PRIMAL;
     }
 
-    if (GetConfig(B_ABILITY_WEATHER) < GEN_6 && ability != ABILITY_NONE)
+    if (sourceFieldWeather)
+        gBattleStruct->overworldWeatherPresent = FALSE;
+
+    bool32 sourceWeather = UsesPolishedBattleRules(battler, GetOppositeBattler(battler))
+        && (ability == ABILITY_DRIZZLE || ability == ABILITY_DROUGHT
+         || ability == ABILITY_SAND_STREAM || ability == ABILITY_SNOW_WARNING);
+    if (!sourceWeather && GetConfig(B_ABILITY_WEATHER) < GEN_6 && ability != ABILITY_NONE)
     {
         gBattleWeather = gBattleWeatherInfo[battleWeatherId].flag;
     }
@@ -3529,7 +3548,9 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
                 effect++;
             break;
         case ABILITY_SNOW_WARNING:
-            if (shouldAbilityTrigger && TryChangeWeatherWithAbility(battler, GetConfig(B_SNOW_WARNING) >= GEN_9 ? BATTLE_WEATHER_SNOW : BATTLE_WEATHER_HAIL, gLastUsedAbility))
+            if (shouldAbilityTrigger && TryChangeWeatherWithAbility(battler,
+                UsesPolishedBattleRules(battler, GetOppositeBattler(battler)) || GetConfig(B_SNOW_WARNING) < GEN_9
+                    ? BATTLE_WEATHER_HAIL : BATTLE_WEATHER_SNOW, gLastUsedAbility))
                 effect++;
             break;
         case ABILITY_ELECTRIC_SURGE:
@@ -8225,7 +8246,19 @@ static inline u32 GetHoldEffectCritChanceIncrease(enum BattlerId battler, enum H
     return critStageIncrease;
 }
 
-s32 CalcCritChanceStage(struct DamageContext *ctx)
+static bool32 UsesPolishedCriticalRules(struct DamageContext *ctx)
+{
+    return UsesPolishedBattleRules(ctx->battlerAtk, ctx->battlerDef)
+        && ctx->move < MOVES_COUNT && sPolishedCriticalMoves[ctx->move] != 0
+        && !gSpecialStatuses[ctx->battlerAtk].attackerInParty
+        && ctx->move != MOVE_FUTURE_SIGHT
+        && !gBattleMons[ctx->battlerAtk].volatiles.laserFocusTimer
+        && !gBattleMons[ctx->battlerAtk].volatiles.dragonCheer
+        && !gBattleMons[ctx->battlerAtk].volatiles.bonusCritStages
+        && ctx->abilities[ctx->battlerAtk] != ABILITY_MERCILESS;
+}
+
+static ALWAYS_INLINE s32 CalcCritChanceStageForRules(struct DamageContext *ctx, bool32 sourceRules)
 {
     s32 critChance = 0;
 
@@ -8243,9 +8276,14 @@ s32 CalcCritChanceStage(struct DamageContext *ctx)
     {
         critChance  = (gBattleMons[ctx->battlerAtk].volatiles.focusEnergy != 0 ? 2 : 0)
                     + (gBattleMons[ctx->battlerAtk].volatiles.dragonCheer != 0 ? 1 : 0)
-                    + GetMoveCriticalHitStage(ctx->move)
-                    + GetHoldEffectCritChanceIncrease(ctx->battlerAtk, ctx->holdEffects[ctx->battlerAtk])
-                    + ((B_AFFECTION_MECHANICS == TRUE && GetBattlerAffectionHearts(ctx->battlerAtk) == AFFECTION_FIVE_HEARTS) ? 2 : 0)
+                    + (sourceRules ? sPolishedCriticalMoves[ctx->move] - 1 : GetMoveCriticalHitStage(ctx->move))
+                    + (sourceRules && ctx->holdEffects[ctx->battlerAtk] == HOLD_EFFECT_LEEK
+                        && gBattleMons[ctx->battlerAtk].species != SPECIES_FARFETCHD
+                        && gBattleMons[ctx->battlerAtk].species != SPECIES_SIRFETCHD ? 0
+                        : GetHoldEffectCritChanceIncrease(ctx->battlerAtk, ctx->holdEffects[ctx->battlerAtk]))
+                    + ((B_AFFECTION_MECHANICS == TRUE
+                        && gBattleMons[ctx->battlerAtk].affectionHearts == AFFECTION_FIVE_HEARTS
+                        && GetBattlerAffectionHearts(ctx->battlerAtk) == AFFECTION_FIVE_HEARTS) ? 2 : 0)
                     + (ctx->abilities[ctx->battlerAtk] == ABILITY_SUPER_LUCK ? 1 : 0)
                     + gBattleMons[ctx->battlerAtk].volatiles.bonusCritStages;
 
@@ -8267,6 +8305,15 @@ s32 CalcCritChanceStage(struct DamageContext *ctx)
     }
 
     return critChance;
+}
+
+s32 CalcCritChanceStage(struct DamageContext *ctx)
+{
+    // Constant arguments let the compiler remove source table/species branches
+    // from the native path used repeatedly by doubles AI damage estimates.
+    if (B_POLISHED_MOVE_BALANCE && !IsDoubleBattle() && UsesPolishedCriticalRules(ctx))
+        return CalcCritChanceStageForRules(ctx, TRUE);
+    return CalcCritChanceStageForRules(ctx, FALSE);
 }
 
 // Bulbapedia: https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Generation_I
@@ -8335,7 +8382,11 @@ static bool32 IsCriticalHit(struct DamageContext *ctx)
     bool32 isCrit = FALSE;
     s32 critChance = 0;
 
-    if (GetConfig(B_CRIT_CHANCE) == GEN_1)
+    bool32 sourceRules = UsesPolishedCriticalRules(ctx);
+    if (sourceRules && IsPolishedZeroPowerReturn(ctx))
+        return FALSE;
+
+    if (!sourceRules && GetConfig(B_CRIT_CHANCE) == GEN_1)
         critChance = CalcCritChanceStageGen1(ctx);
     else
         critChance = CalcCritChanceStage(ctx);
@@ -8344,6 +8395,8 @@ static bool32 IsCriticalHit(struct DamageContext *ctx)
         isCrit = FALSE;
     else if (critChance == CRITICAL_HIT_ALWAYS)
         isCrit = TRUE;
+    else if (sourceRules)
+        isCrit = critChance >= 3 || RandomChance(RNG_CRITICAL_HIT, sPolishedCriticalNumerators[critChance], 24);
     else if (GetConfig(B_CRIT_CHANCE) == GEN_1)
         isCrit = RandomChance(RNG_CRITICAL_HIT, critChance, 256);
     else if (GetConfig(B_CRIT_CHANCE) == GEN_2)
@@ -8427,6 +8480,18 @@ s32 GetAdjustedDamage(struct DamageContext *ctx, s32 damage)
 s32 CalculateMoveDamage(struct DamageContext *ctx)
 {
     s32 damage = 0;
+
+    if (ctx->isSelfInflicted && ctx->move == MOVE_NONE
+     && UsesPolishedBattleRules(ctx->battlerAtk, GetOppositeBattler(ctx->battlerAtk))
+     && ctx->abilities[ctx->battlerAtk] != ABILITY_DISGUISE
+     && ctx->abilities[ctx->battlerAtk] != ABILITY_ICE_FACE)
+    {
+        const struct BattlePokemon *mon = &gBattleMons[ctx->battlerAtk];
+        // TakeOpponentDamage subtracts HP directly, bypassing Endure, Sturdy
+        // and held survival items. Optional form-changing abilities stay native.
+        return PolishedConfusionDamage(mon->level, mon->attack, mon->defense,
+            mon->statStages[STAT_ATK], mon->statStages[STAT_DEF]);
+    }
 
     if (gSpecialStatuses[ctx->battlerAtk].attackerInParty)
         damage = DoFutureSightAttackDamageCalc(ctx);
@@ -10599,17 +10664,12 @@ static bool32 UsesPolishedIdentificationRules(enum BattlerId battlerAtk, enum Ba
         && GetActiveGimmick(battlerDef) == GIMMICK_NONE;
 }
 
-static bool32 IsPolishedForesight(enum Move move, enum BattlerId battlerAtk, enum BattlerId battlerDef)
-{
-    return move == MOVE_FORESIGHT && UsesPolishedIdentificationRules(battlerAtk, battlerDef);
-}
-
 static bool32 CanMoveSkipAccuracyCheck(enum BattlerId battlerAtk, enum Move move)
 {
     return MoveAlwaysHitsOnSameType(move) && IS_BATTLER_OF_TYPE(battlerAtk, GetMoveType(move));
 }
 
-static ALWAYS_INLINE bool32 CanMoveSkipAccuracyCalcInternal(struct BattleCalcValues *cv, u32 weather, enum ResultOption option, bool32 polishedForesight)
+static ALWAYS_INLINE bool32 CanMoveSkipAccuracyCalcInternal(struct BattleCalcValues *cv, u32 weather, enum ResultOption option, bool32 sourceRules)
 {
     bool32 effect = FALSE;
     enum BattlerId battlerAtk = cv->battlerAtk;
@@ -10654,19 +10714,19 @@ static ALWAYS_INLINE bool32 CanMoveSkipAccuracyCalcInternal(struct BattleCalcVal
     {
         effect = TRUE;
     }
-    else if (B_MINIMIZE_DMG_ACC >= GEN_6
+    else if ((sourceRules || B_MINIMIZE_DMG_ACC >= GEN_6)
      && gBattleMons[battlerDef].volatiles.minimize
      && MoveIncreasesPowerToMinimizedTargets(cv->move))
     {
         effect = TRUE;
     }
-    else if (GetMoveAccuracy(cv->move) == 0 && !polishedForesight)
+    else if (sourceRules ? sPolishedAccuracyRules[cv->move].bypass : GetMoveAccuracy(cv->move) == 0)
     {
         effect = TRUE;
     }
     else
     {
-        u32 attackerWeather = GetAttackerWeather(cv->holdEffects[battlerAtk], cv->abilities[battlerAtk], weather);
+        u32 attackerWeather = GetAttackerWeather(cv->holdEffects[sourceRules ? battlerDef : battlerAtk], cv->abilities[battlerAtk], weather);
 
         if ((attackerWeather & B_WEATHER_RAIN) && MoveAlwaysHitsInRain(cv->move))
             effect = TRUE;
@@ -10896,9 +10956,10 @@ u32 GetTotalAccuracy(struct BattleCalcValues *cv, u32 weather)
 }
 
 // Separate source execution keeps native AI accuracy costs and estimates intact.
-static NOINLINE u32 GetPolishedTotalAccuracy(struct BattleCalcValues *cv, u32 weather)
+NOINLINE u32 GetPolishedTotalAccuracy(struct BattleCalcValues *cv, u32 weather)
 {
     s32 buff, accStage, evasionStage;
+    bool32 sourceMove = (u32)cv->move < MOVES_COUNT && gPolishedMovePP[cv->move] != 0;
 
     enum BattlerId battlerAtk = cv->battlerAtk;
     enum BattlerId battlerDef = cv->battlerDef;
@@ -10911,11 +10972,12 @@ static NOINLINE u32 GetPolishedTotalAccuracy(struct BattleCalcValues *cv, u32 we
     accStage = gBattleMons[battlerAtk].statStages[STAT_ACC];
     evasionStage = gBattleMons[battlerDef].statStages[STAT_EVASION];
 
-    if (cv->abilities[battlerAtk] == ABILITY_UNAWARE
-     || cv->abilities[battlerAtk] == ABILITY_KEEN_EYE
-     || cv->abilities[battlerAtk] == ABILITY_MINDS_EYE
-     || (GetConfig(B_ILLUMINATE_EFFECT) >= GEN_9 && cv->abilities[battlerAtk] == ABILITY_ILLUMINATE))
+    if (cv->abilities[battlerAtk] == ABILITY_UNAWARE)
         evasionStage = DEFAULT_STAT_STAGE;
+    else if (cv->abilities[battlerAtk] == ABILITY_KEEN_EYE
+     || cv->abilities[battlerAtk] == ABILITY_MINDS_EYE
+     || ((sourceMove || GetConfig(B_ILLUMINATE_EFFECT) >= GEN_9) && cv->abilities[battlerAtk] == ABILITY_ILLUMINATE))
+        evasionStage = sourceMove ? min(evasionStage, DEFAULT_STAT_STAGE) : DEFAULT_STAT_STAGE;
     if (MoveIgnoresDefenseEvasionStages(cv->move))
         evasionStage = DEFAULT_STAT_STAGE;
     if (cv->abilities[battlerDef] == ABILITY_UNAWARE)
@@ -10931,14 +10993,14 @@ static NOINLINE u32 GetPolishedTotalAccuracy(struct BattleCalcValues *cv, u32 we
     if (buff > MAX_STAT_STAGE)
         buff = MAX_STAT_STAGE;
 
-    u32 moveAcc = cv->move == MOVE_FORESIGHT ? POLISHED_FORESIGHT_RAW_ACCURACY : GetMoveAccuracy(cv->move);
-    u32 attackerWeather = GetAttackerWeather(cv->holdEffects[battlerAtk], cv->abilities[battlerAtk], weather);
+    u32 moveAcc = sourceMove ? sPolishedAccuracyRules[cv->move].accuracy : GetMoveAccuracy(cv->move);
+    u32 attackerWeather = GetAttackerWeather(cv->holdEffects[sourceMove ? battlerDef : battlerAtk], cv->abilities[battlerAtk], weather);
 
     // Check Thunder and Hurricane on sunny weather.
     if ((attackerWeather & B_WEATHER_SUN) && MoveHas50AccuracyInSun(cv->move))
-        moveAcc = 50;
+        moveAcc = sourceMove ? POLISHED_SUN_THUNDER_ACCURACY : 50;
     // Check Wonder Skin.
-    if (cv->abilities[battlerDef] == ABILITY_WONDER_SKIN && IsBattleMoveStatus(cv->move) && moveAcc > 50)
+    if (cv->abilities[battlerDef] == ABILITY_WONDER_SKIN && IsBattleMoveStatus(cv->move) && (sourceMove || moveAcc > 50))
         moveAcc = 50;
 
     u32 calc = moveAcc * (3 + max(0, buff - DEFAULT_STAT_STAGE));
@@ -11002,7 +11064,7 @@ static NOINLINE u32 GetPolishedTotalAccuracy(struct BattleCalcValues *cv, u32 we
         calc = (calc * (100 + atkParam)) / 100;
         break;
     case HOLD_EFFECT_ZOOM_LENS:
-        if (HasBattlerActedThisTurn(battlerDef) && !BattlerJustSwitchedIn(battlerDef))
+        if (HasBattlerActedThisTurn(battlerDef) && (sourceMove || !BattlerJustSwitchedIn(battlerDef)))
             calc = (calc * (100 + atkParam)) / 100;
         break;
     default:
@@ -11113,7 +11175,8 @@ bool32 DoesMoveMissTarget(struct BattleCalcValues *cv)
 
     // Source execution is separate from the native AI estimates, whose full
     // source parity is a distinct audit. Avoid burdening unrelated AI calls.
-    if (IsPolishedForesight(cv->move, cv->battlerAtk, cv->battlerDef))
+    if (UsesPolishedBattleRules(cv->battlerAtk, cv->battlerDef)
+     && (u32)cv->move < MOVES_COUNT && gPolishedMovePP[cv->move] != 0)
     {
         if (CanMoveSkipAccuracyCalcInternal(cv, weather, RUN_SCRIPT, TRUE))
             return FALSE;
@@ -11161,7 +11224,12 @@ static bool32 CanBreakThroughSemiInvulnerablityInternal(enum BattlerId battlerAt
             return TRUE;
         if (abilityAtk == ABILITY_NO_GUARD || abilityDef == ABILITY_NO_GUARD)
             return TRUE;
-        if (gBattleMons[battlerAtk].volatiles.battlerWithSureHit == battlerDef + 1)
+        // checkhit rejects Fly/Dig before it reaches Lock-On. Optional hidden
+        // states and moves retain their native behavior.
+        if (gBattleMons[battlerAtk].volatiles.battlerWithSureHit == battlerDef + 1
+         && !((state == STATE_ON_AIR || state == STATE_UNDERGROUND)
+           && UsesPolishedBattleRules(battlerAtk, battlerDef)
+           && (u32)move < MOVES_COUNT && gPolishedMovePP[move] != 0))
             return TRUE;
     }
 

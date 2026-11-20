@@ -4048,3 +4048,97 @@ warps, Falkner, badge/Roost/Togepi rewards and Save/reset/Continue.
 
 Validated Johto ROM SHA-256:
 `f3c5391e6b3529f62136127886369ade8f72fc6b37256a6b8e7aeff099f0793b`.
+
+
+## Shared battle calculations and weather suite
+
+The whole-battle suite now authenticates 330 pinned source files and 4,061
+lexical blocks. Twenty-six new groups add executable evidence for shared rules:
+confusion uses raw-stat compression and numerator-stage rounding; Speed applies
+paralysis before ability/item modifiers, omits native badges, returns the raw
+fainted stat and caps at 65,535. Quick Powder checks the current copied species.
+Source critical chances are 1/24, 3/24, 12/24 and guaranteed from stage three;
+nine source high-critical moves, Leek eligibility and zero-power Return are
+explicit. Source default options disable affection battle bonuses while keeping
+friendship intact. Weather abilities last five/eight turns; Snow Warning starts
+Hail, Slush Rush prevents its damage, and source weather can replace overworld
+weather without refreshing an unchanged weather type.
+
+The tests include 8,112 confusion vectors, 169 live-state stage combinations,
+a 25,480-case Speed matrix, both sides, expiry boundaries, ordinary wild
+battles and native doubles/Terastal controls. The source fixture includes math
+internals and default options. Optional abilities, forms and gimmicks remain
+available through scoped adapters.
+
+This is additional behavior coverage, not closure of all remaining battle
+logic. All fifteen domains and 133 effect families retain open obligations.
+Full damage/action/residual/faint ordering, confusion berries, optional affection
+settings, external Future Sight, exact RNG stream, AI choices, capture/rewards
+and facility/link behavior still need source parity evidence. See
+`tools/polished_port/BATTLE_SUITE.md` and `manifests/battle_core.json`.
+
+The AI hot paths skip source-only critical branches in doubles and avoid an
+affection lookup when five hearts are impossible; the original six frame limits
+remain enforced. The campaign driver now replans only when a live NPC occupies
+the blocked next tile, with an eight-replan limit. Three negative/route controls
+ensure that static collision failures remain fatal and retries cannot loop.
+
+The final validation of this previously unpushed suite is carried forward into
+the shared accuracy/action-order suite below, which includes all 26 core groups.
+
+
+## Shared accuracy and action-order suite
+
+The next suite adds 33 executable groups and authenticates the source priority
+table, bringing the battle inventory to 331 files and 4,062 lexical blocks.
+All 255 mapped move accuracy/priority records are generated from the pinned
+release. The accuracy tests exercise 43,433 stage calculations using 2,028
+source-derived vectors, 1,248 ordered ability/item combinations, and 1,020
+priority checks across both sides and Prankster.
+
+Ordinary source singles now use exact three-based accuracy ratios. Keen Eye,
+Illuminate and Mind's Eye preserve beneficial negative evasion; Illuminate is
+independent of native generation presets. Wonder Skin sets checked status
+accuracy to 50 before stage/ability/item arithmetic. Thunder/Hurricane weather
+checks use the target's Utility Umbrella. The pinned sun expression evaluates
+to raw accuracy 128 (its percent macro uses 255), and that executable behavior
+is preserved deliberately. Raw 255 is scaled normally unless the effect has
+an explicit hit-check bypass. Zoom Lens boosts a hit after the opposing side
+switches. Lock-On no longer bypasses Fly/Dig; No Guard and Poison-type Toxic
+still do, with Protect and the previously ported effect-specific guards intact.
+
+Source quick-turn effects now wait for matching selected priorities: Custap is
+not consumed across a different priority bracket or an opposing switch. Unnerve
+blocks Custap, Quick Draw takes precedence over its holder's Lagging Tail, and
+pure Speed comparisons exclude move-only quick/lagging flags. Odd HP thresholds,
+Gluttony, both sides, probabilities, native profiles, optional moves, doubles
+and either active Terastal are covered. Six initial accuracy groups reproduced
+failures on the parent runtime; expanded Custap testing exposed the missing
+Unnerve gate. Source-specific adjustments retain the optional engine's capacity
+and stable save identifiers.
+
+This adds scoped evidence across accuracy, abilities, items, weather, switching
+and action order. It does not close the fifteen battle domains or 133 effect
+families. Full damage/cancellation/residual/faint sequencing, Lock-On lifetime,
+external Future Sight, exact RNG stream, source AI choices, capture/rewards and
+facility/link behavior remain open. Shared quick-item rules apply throughout
+ordinary source singles, including optional attacks; unmapped move accuracy
+and priorities retain their previously defined behavior.
+
+Validation: both production ROM builds, all 95 source checks and all twelve
+ARM compiler probes passed. The complete native suite passed 6,031 groups,
+with nine existing expected failures and 585 existing TODOs; there were no
+unexpected failures. All 809 source groups (707 battle groups and 102 unit/data
+groups) and six AI timing groups passed without relaxed limits. The 33 new
+accuracy/action-order groups and the previous 26 shared-core groups passed in
+both profiles. Strict completion still correctly exits 2 for fifteen open
+domains, 4,062 unverified lexical blocks and 133 effect families.
+
+The production move/machine audit retains zero audited move-data differences,
+255 matching reflection flags and zero teaching-compatibility mismatches.
+Its 109 known machine/lesson gaps have no new or changed entries. The Johto ROM
+passed all twelve demo checks and 101 campaign checks, including nineteen
+directed warps, Falkner, badge/Roost/Togepi rewards and Save/reset/Continue.
+
+Validated Johto ROM SHA-256:
+`832e8080c1ef0e4e6c6174af2d645b20d74d48c1e8069aac104f93175be0f221`.

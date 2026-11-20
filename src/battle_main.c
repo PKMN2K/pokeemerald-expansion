@@ -13,6 +13,8 @@
 #include "battle_hold_effects.h"
 #include "battle_interface.h"
 #include "battle_main.h"
+#include "polished_moves.h"
+#include "data/polished_priorities.h"
 #include "battle_message.h"
 #include "battle_pyramid.h"
 #include "battle_scripts.h"
@@ -4392,10 +4394,18 @@ void SwapTurnOrder(u8 id1, u8 id2)
 u32 GetBattlerTotalSpeedStat(enum BattlerId battler, enum Ability ability, enum HoldEffect holdEffect)
 {
     u32 speed = gBattleMons[battler].speed;
+    bool32 sourceRules = B_POLISHED_MOVE_BALANCE && !IsDoubleBattle()
+        && UsesPolishedBattleRules(battler, GetOppositeBattler(battler));
+
+    if (sourceRules && gBattleMons[battler].hp == 0)
+        return speed;
 
     // stat stages
     speed *= gStatStageRatios[gBattleMons[battler].statStages[STAT_SPEED]][0];
     speed /= gStatStageRatios[gBattleMons[battler].statStages[STAT_SPEED]][1];
+
+    if (sourceRules && gBattleMons[battler].status1 & STATUS1_PARALYSIS && ability != ABILITY_QUICK_FEET)
+        speed /= 2;
 
     u32 weather = GetWeather();
     // weather abilities
@@ -4423,7 +4433,7 @@ u32 GetBattlerTotalSpeedStat(enum BattlerId battler, enum Ability ability, enum 
         speed *= 2;
 
     // player's badge boost
-    if (!(gBattleTypeFlags & (BATTLE_TYPE_LINK | BATTLE_TYPE_RECORDED_LINK | BATTLE_TYPE_FRONTIER))
+    if (!sourceRules && !(gBattleTypeFlags & (BATTLE_TYPE_LINK | BATTLE_TYPE_RECORDED_LINK | BATTLE_TYPE_FRONTIER))
         && ShouldGetStatBadgeBoost(B_FLAG_BADGE_BOOST_SPEED, battler)
         && IsOnPlayerSide(battler))
     {
@@ -4437,7 +4447,8 @@ u32 GetBattlerTotalSpeedStat(enum BattlerId battler, enum Ability ability, enum 
         speed /= 2;
     else if (holdEffect == HOLD_EFFECT_CHOICE_SCARF && GetActiveGimmick(battler) != GIMMICK_DYNAMAX)
         speed = (speed * 150) / 100;
-    else if (holdEffect == HOLD_EFFECT_QUICK_POWDER && gBattleMons[battler].species == SPECIES_DITTO && !(gBattleMons[battler].volatiles.transformed))
+    else if (holdEffect == HOLD_EFFECT_QUICK_POWDER && gBattleMons[battler].species == SPECIES_DITTO
+          && (sourceRules || !gBattleMons[battler].volatiles.transformed))
         speed *= 2;
 
     // various effects
@@ -4445,13 +4456,13 @@ u32 GetBattlerTotalSpeedStat(enum BattlerId battler, enum Ability ability, enum 
         speed *= 2;
 
     // paralysis drop
-    if (gBattleMons[battler].status1 & STATUS1_PARALYSIS && ability != ABILITY_QUICK_FEET)
-        speed /= UsesPolishedBattleRules(battler, GetOppositeBattler(battler)) || GetConfig(B_PARALYSIS_SPEED) >= GEN_7 ? 2 : 4;
+    if (!sourceRules && gBattleMons[battler].status1 & STATUS1_PARALYSIS && ability != ABILITY_QUICK_FEET)
+        speed /= GetConfig(B_PARALYSIS_SPEED) >= GEN_7 ? 2 : 4;
 
     if (gSideStatuses[GetBattlerSide(battler)] & SIDE_STATUS_SWAMP)
         speed /= 4;
 
-    return speed;
+    return sourceRules ? min(speed, 0xFFFF) : speed;
 }
 
 s32 GetChosenMovePriority(enum BattlerId battler, enum Ability ability)
@@ -4477,6 +4488,9 @@ s32 GetBattleMovePriority(enum BattlerId battler, enum Ability ability, enum Mov
         move = GetUsableZMove(battler, move);
 
     priority = GetMovePriority(move);
+    if (B_POLISHED_MOVE_BALANCE && !IsDoubleBattle() && UsesPolishedBattleRules(battler, GetOppositeBattler(battler))
+     && (u32)move < MOVES_COUNT && gPolishedMovePP[move] != 0)
+        priority = sPolishedMovePriorities[move];
 
     // Max Guard check
     if (GetActiveGimmick(battler) == GIMMICK_DYNAMAX && GetMoveCategory(move) == DAMAGE_CATEGORY_STATUS)
@@ -4526,6 +4540,25 @@ s32 GetWhichBattlerFasterArgs(struct BattleCalcValues *calcValues, bool32 ignore
         bool32 battler2HasStallingAbility = calcValues->abilities[calcValues->battlerDef] == ABILITY_STALL || gProtectStructs[calcValues->battlerDef].myceliumMight;
         bool32 battler1HasSlowEffect = battler1HasStallingAbility || gProtectStructs[calcValues->battlerAtk].laggingTail;
         bool32 battler2HasSlowEffect = battler2HasStallingAbility || gProtectStructs[calcValues->battlerDef].laggingTail;
+
+        if (B_POLISHED_MOVE_BALANCE && !IsDoubleBattle() && UsesPolishedBattleRules(calcValues->battlerAtk, calcValues->battlerDef))
+        {
+            // CheckSpeed (entries/residuals) excludes move-order effects.
+            // CheckMoveSpeed returns immediately after Quick Draw succeeds,
+            // so that holder's Lagging Tail cannot participate in a tie.
+            if (ignoreChosenMoves)
+            {
+                battler1HasQuickEffect = battler2HasQuickEffect = FALSE;
+                battler1HasSlowEffect = battler2HasSlowEffect = FALSE;
+            }
+            else
+            {
+                if (battler1HasQuickEffect)
+                    battler1HasSlowEffect = FALSE;
+                if (battler2HasQuickEffect)
+                    battler2HasSlowEffect = FALSE;
+            }
+        }
 
         if (battler1HasQuickEffect && !battler2HasQuickEffect)
             strikesFirst = 1;
@@ -4945,6 +4978,21 @@ static void TryChangingTurnOrderEffects(struct BattleCalcValues *calcValues, u32
     enum Ability ability2 = calcValues->abilities[calcValues->battlerDef];
     enum HoldEffect holdEffectBattler1 = calcValues->holdEffects[calcValues->battlerAtk];
     enum HoldEffect holdEffectBattler2 = calcValues->holdEffects[calcValues->battlerDef];
+
+    if (B_POLISHED_MOVE_BALANCE && !IsDoubleBattle() && UsesPolishedBattleRules(battler1, battler2))
+    {
+        // Source switching/items are NO_MOVE (+10). A priority difference
+        // returns before CheckMoveSpeed, so Custap is not consumed and neither
+        // Quick Draw nor Quick Claw activates in that case.
+        s32 priority1 = gChosenActionByBattler[battler1] == B_ACTION_USE_MOVE ? GetChosenMovePriority(battler1, ability1) : 10;
+        s32 priority2 = gChosenActionByBattler[battler2] == B_ACTION_USE_MOVE ? GetChosenMovePriority(battler2, ability2) : 10;
+        if (priority1 != priority2)
+            return;
+        if (holdEffectBattler1 == HOLD_EFFECT_CUSTAP_BERRY && IsUnnerveBlocked(battler1, gBattleMons[battler1].item))
+            holdEffectBattler1 = HOLD_EFFECT_NONE;
+        if (holdEffectBattler2 == HOLD_EFFECT_CUSTAP_BERRY && IsUnnerveBlocked(battler2, gBattleMons[battler2].item))
+            holdEffectBattler2 = HOLD_EFFECT_NONE;
+    }
 
     // Battler 1
     // Quick Draw

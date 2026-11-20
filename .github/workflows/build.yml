@@ -145,8 +145,11 @@ jobs:
           python3 tools/polished_port/scripts/build_contact_status.py --check
           python3 tools/polished_port/scripts/build_contact_volatile.py --check
           python3 tools/polished_port/scripts/build_battle_foundations.py --check
+          python3 tools/polished_port/scripts/build_battle_core.py --check
+          python3 tools/polished_port/scripts/build_accuracy_order.py --check
           python3 tools/polished_port/scripts/build_battle_suite.py --check
           python3 tools/polished_port/scripts/test_battle_suite.py
+          python3 tools/polished_port/scripts/test_emulator_walk.py
           python3 tools/polished_port/scripts/test_attack_suite.py
           python3 tools/polished_port/scripts/build_rock_smash.py --check
           python3 tools/polished_port/scripts/test_rock_smash.py

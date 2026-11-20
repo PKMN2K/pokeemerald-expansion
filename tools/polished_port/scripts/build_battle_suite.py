@@ -28,7 +28,8 @@ PREFIXES = ('engine/battle/', 'data/battle/', 'home/', 'engine/items/',
             'engine/pokemon/', 'data/items/', 'data/abilities/', 'constants/',
             'macros/', 'data/trainers/', 'engine/events/battle_tower/',
             'data/battle_tower/')
-EXTRA = ('engine/events/trainer_scripts.asm',)
+EXTRA = ('engine/events/trainer_scripts.asm', 'engine/math/math.asm',
+         'data/options/default_options.asm', 'data/moves/critical_hit_moves.asm', 'ram/hram.asm', 'data/moves/priorities.asm')
 
 DOMAINS = {
     'setup': ('Battle setup and trainer/wild construction', ['engine/battle/core.asm', 'engine/battle/read_trainer_party.asm', 'engine/battle/read_trainer_dvs.asm', 'engine/battle/read_trainer_attributes.asm'],
@@ -177,7 +178,7 @@ def build():
         semantic_evidence_policy='Existing tests establish only their asserted scenarios. Names, dispatch, inventory, code presence, native passes and AI frame budgets do not close a source block or domain.',
         scoped_evidence=[dict(manifest=str(p.relative_to(ROOT)), sha256=hashlib.sha256(p.read_bytes()).hexdigest())
             for p in sorted((ROOT/'tools/polished_port/manifests').glob('*.json'))
-            if p.name in ('attack_suite.json', 'multihit.json', 'contact_status.json', 'contact_volatile.json', 'battle_foundations.json')])
+            if p.name in ('attack_suite.json', 'multihit.json', 'contact_status.json', 'contact_volatile.json', 'battle_foundations.json', 'battle_core.json', 'accuracy_order.json')])
     return {MANIFEST: json.dumps(report, indent=2)+'\n', **foundations.build()}
 
 

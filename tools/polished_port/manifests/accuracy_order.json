@@ -1,0 +1,1566 @@
+{
+  "source_commit": "3fa43192379df5c3e7b09a08e4d5d79af4f02f42",
+  "source_variant": "default release, FAITHFUL undefined",
+  "moves": [
+    {
+      "move": "MOVE_ACROBATICS",
+      "accuracy": 100,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_KARATE_CHOP",
+      "accuracy": 100,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_DOUBLE_SLAP",
+      "accuracy": 85,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_AERIAL_ACE",
+      "accuracy": 255,
+      "bypass": true,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_DRAGON_CLAW",
+      "accuracy": 100,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_PAY_DAY",
+      "accuracy": 100,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_FIRE_PUNCH",
+      "accuracy": 100,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_ICE_PUNCH",
+      "accuracy": 100,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_THUNDERPUNCH",
+      "accuracy": 100,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_SCRATCH",
+      "accuracy": 100,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_X_SCISSOR",
+      "accuracy": 100,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_NIGHT_SLASH",
+      "accuracy": 100,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_AIR_SLASH",
+      "accuracy": 95,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_SWORDS_DANCE",
+      "accuracy": 255,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_CUT",
+      "accuracy": 100,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_GUST",
+      "accuracy": 100,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_WING_ATTACK",
+      "accuracy": 100,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_SUCKER_PUNCH",
+      "accuracy": 100,
+      "bypass": false,
+      "priority": 1
+    },
+    {
+      "move": "MOVE_FLY",
+      "accuracy": 100,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_DAZZLING_GLEAM",
+      "accuracy": 100,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_VOLT_SWITCH",
+      "accuracy": 100,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_VINE_WHIP",
+      "accuracy": 100,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_STOMP",
+      "accuracy": 100,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_DOUBLE_KICK",
+      "accuracy": 100,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_FLARE_BLITZ",
+      "accuracy": 100,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_STONE_EDGE",
+      "accuracy": 80,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_FOCUS_BLAST",
+      "accuracy": 70,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_TOXIC_SPIKES",
+      "accuracy": 255,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_HEADBUTT",
+      "accuracy": 100,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_HORN_ATTACK",
+      "accuracy": 100,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_TRICK",
+      "accuracy": 100,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_HEX",
+      "accuracy": 100,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_TACKLE",
+      "accuracy": 100,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_BODY_SLAM",
+      "accuracy": 100,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_WRAP",
+      "accuracy": 90,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_TAKE_DOWN",
+      "accuracy": 100,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_THRASH",
+      "accuracy": 100,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_DOUBLE_EDGE",
+      "accuracy": 100,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_HAIL",
+      "accuracy": 255,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_POISON_STING",
+      "accuracy": 100,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_U_TURN",
+      "accuracy": 100,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_PIN_MISSILE",
+      "accuracy": 95,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_LEER",
+      "accuracy": 100,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_BITE",
+      "accuracy": 100,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_GROWL",
+      "accuracy": 100,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_ROAR",
+      "accuracy": 255,
+      "bypass": true,
+      "priority": -6
+    },
+    {
+      "move": "MOVE_SING",
+      "accuracy": 75,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_SUPERSONIC",
+      "accuracy": 65,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_SONIC_BOOM",
+      "accuracy": 90,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_DISABLE",
+      "accuracy": 100,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_ACID",
+      "accuracy": 100,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_EMBER",
+      "accuracy": 100,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_FLAMETHROWER",
+      "accuracy": 100,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_CALM_MIND",
+      "accuracy": 255,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_WATER_GUN",
+      "accuracy": 100,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_HYDRO_PUMP",
+      "accuracy": 80,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_SURF",
+      "accuracy": 100,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_ICE_BEAM",
+      "accuracy": 100,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_BLIZZARD",
+      "accuracy": 70,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_PSYBEAM",
+      "accuracy": 100,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_BUBBLE_BEAM",
+      "accuracy": 100,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_AURORA_BEAM",
+      "accuracy": 100,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_HYPER_BEAM",
+      "accuracy": 90,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_PECK",
+      "accuracy": 100,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_DRILL_PECK",
+      "accuracy": 100,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_CLOSE_COMBAT",
+      "accuracy": 100,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_LOW_KICK",
+      "accuracy": 100,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_COUNTER",
+      "accuracy": 255,
+      "bypass": true,
+      "priority": -5
+    },
+    {
+      "move": "MOVE_SEISMIC_TOSS",
+      "accuracy": 100,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_STRENGTH",
+      "accuracy": 100,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_ABSORB",
+      "accuracy": 100,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_MEGA_DRAIN",
+      "accuracy": 100,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_LEECH_SEED",
+      "accuracy": 90,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_GROWTH",
+      "accuracy": 255,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_RAZOR_LEAF",
+      "accuracy": 95,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_SOLAR_BEAM",
+      "accuracy": 100,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_POISONPOWDER",
+      "accuracy": 75,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_STUN_SPORE",
+      "accuracy": 75,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_SLEEP_POWDER",
+      "accuracy": 75,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_PETAL_DANCE",
+      "accuracy": 100,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_STRING_SHOT",
+      "accuracy": 95,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_DRAGON_RAGE",
+      "accuracy": 100,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_FIRE_SPIN",
+      "accuracy": 90,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_THUNDERSHOCK",
+      "accuracy": 100,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_THUNDERBOLT",
+      "accuracy": 100,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_THUNDER_WAVE",
+      "accuracy": 90,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_THUNDER",
+      "accuracy": 70,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_ROCK_THROW",
+      "accuracy": 90,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_EARTHQUAKE",
+      "accuracy": 100,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_AVALANCHE",
+      "accuracy": 100,
+      "bypass": false,
+      "priority": -4
+    },
+    {
+      "move": "MOVE_DIG",
+      "accuracy": 100,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_TOXIC",
+      "accuracy": 90,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_CONFUSION",
+      "accuracy": 100,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_PSYCHIC",
+      "accuracy": 100,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_HYPNOSIS",
+      "accuracy": 60,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_HONE_CLAWS",
+      "accuracy": 255,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_AGILITY",
+      "accuracy": 255,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_QUICK_ATTACK",
+      "accuracy": 100,
+      "bypass": false,
+      "priority": 1
+    },
+    {
+      "move": "MOVE_RAGE",
+      "accuracy": 100,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_TELEPORT",
+      "accuracy": 255,
+      "bypass": false,
+      "priority": -6
+    },
+    {
+      "move": "MOVE_NIGHT_SHADE",
+      "accuracy": 100,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_DRAGON_PULSE",
+      "accuracy": 100,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_SCREECH",
+      "accuracy": 85,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_DOUBLE_TEAM",
+      "accuracy": 255,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_RECOVER",
+      "accuracy": 255,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_ROCK_BLAST",
+      "accuracy": 90,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_MINIMIZE",
+      "accuracy": 255,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_SMOKESCREEN",
+      "accuracy": 100,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_CONFUSE_RAY",
+      "accuracy": 100,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_AQUA_TAIL",
+      "accuracy": 90,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_DEFENSE_CURL",
+      "accuracy": 255,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_BARRIER",
+      "accuracy": 255,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_LIGHT_SCREEN",
+      "accuracy": 255,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_HAZE",
+      "accuracy": 255,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_REFLECT",
+      "accuracy": 255,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_FOCUS_ENERGY",
+      "accuracy": 255,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_FLASH_CANNON",
+      "accuracy": 100,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_METRONOME",
+      "accuracy": 255,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_SCALD",
+      "accuracy": 100,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_TRICK_ROOM",
+      "accuracy": 255,
+      "bypass": false,
+      "priority": -7
+    },
+    {
+      "move": "MOVE_SKILL_SWAP",
+      "accuracy": 255,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_LICK",
+      "accuracy": 100,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_GUNK_SHOT",
+      "accuracy": 80,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_VENOSHOCK",
+      "accuracy": 100,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_EARTH_POWER",
+      "accuracy": 100,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_FIRE_BLAST",
+      "accuracy": 85,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_WATERFALL",
+      "accuracy": 100,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_ICICLE_CRASH",
+      "accuracy": 90,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_SWIFT",
+      "accuracy": 255,
+      "bypass": true,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_IRON_HEAD",
+      "accuracy": 100,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_ICICLE_SPEAR",
+      "accuracy": 100,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_BULLDOZE",
+      "accuracy": 100,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_AMNESIA",
+      "accuracy": 255,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_ROOST",
+      "accuracy": 255,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_POLISHED_FRESH_SNACK",
+      "accuracy": 255,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_HI_JUMP_KICK",
+      "accuracy": 90,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_GLARE",
+      "accuracy": 100,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_DREAM_EATER",
+      "accuracy": 100,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_POISON_JAB",
+      "accuracy": 100,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_BULLET_PUNCH",
+      "accuracy": 100,
+      "bypass": false,
+      "priority": 1
+    },
+    {
+      "move": "MOVE_LEECH_LIFE",
+      "accuracy": 100,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_DRAINING_KISS",
+      "accuracy": 100,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_BRAVE_BIRD",
+      "accuracy": 100,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_TRANSFORM",
+      "accuracy": 255,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_WATER_PULSE",
+      "accuracy": 100,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_DIZZY_PUNCH",
+      "accuracy": 100,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_SPORE",
+      "accuracy": 100,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_FLASH",
+      "accuracy": 100,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_EXTRASENSORY",
+      "accuracy": 100,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_SPLASH",
+      "accuracy": 255,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_DRAGON_DANCE",
+      "accuracy": 100,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_CRABHAMMER",
+      "accuracy": 95,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_EXPLOSION",
+      "accuracy": 100,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_POLISHED_FURY_STRIKES",
+      "accuracy": 85,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_BONEMERANG",
+      "accuracy": 90,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_REST",
+      "accuracy": 255,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_ROCK_SLIDE",
+      "accuracy": 90,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_HYPER_FANG",
+      "accuracy": 90,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_BULK_UP",
+      "accuracy": 255,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_CONVERSION",
+      "accuracy": 255,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_TRI_ATTACK",
+      "accuracy": 100,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_SUPER_FANG",
+      "accuracy": 90,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_SLASH",
+      "accuracy": 100,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_SUBSTITUTE",
+      "accuracy": 255,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_GIGA_IMPACT",
+      "accuracy": 90,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_SKETCH",
+      "accuracy": 255,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_DRAIN_PUNCH",
+      "accuracy": 100,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_THIEF",
+      "accuracy": 100,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_WILL_O_WISP",
+      "accuracy": 85,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_ZEN_HEADBUTT",
+      "accuracy": 90,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_FACADE",
+      "accuracy": 100,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_FLAME_CHARGE",
+      "accuracy": 100,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_HYPER_VOICE",
+      "accuracy": 100,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_CURSE",
+      "accuracy": 255,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_GYRO_BALL",
+      "accuracy": 100,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_ENERGY_BALL",
+      "accuracy": 100,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_AEROBLAST",
+      "accuracy": 95,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_SEED_BOMB",
+      "accuracy": 100,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_REVERSAL",
+      "accuracy": 100,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_ASTONISH",
+      "accuracy": 100,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_ICE_SHARD",
+      "accuracy": 100,
+      "bypass": false,
+      "priority": 1
+    },
+    {
+      "move": "MOVE_PROTECT",
+      "accuracy": 255,
+      "bypass": false,
+      "priority": 4
+    },
+    {
+      "move": "MOVE_MACH_PUNCH",
+      "accuracy": 100,
+      "bypass": false,
+      "priority": 1
+    },
+    {
+      "move": "MOVE_SCARY_FACE",
+      "accuracy": 100,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_FEINT_ATTACK",
+      "accuracy": 255,
+      "bypass": true,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_SWEET_KISS",
+      "accuracy": 75,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_BELLY_DRUM",
+      "accuracy": 255,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_SLUDGE_BOMB",
+      "accuracy": 100,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_MUD_SLAP",
+      "accuracy": 100,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_OCTAZOOKA",
+      "accuracy": 95,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_SPIKES",
+      "accuracy": 255,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_ZAP_CANNON",
+      "accuracy": 50,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_FORESIGHT",
+      "accuracy": 255,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_DESTINY_BOND",
+      "accuracy": 255,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_PERISH_SONG",
+      "accuracy": 255,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_ICY_WIND",
+      "accuracy": 95,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_POWER_GEM",
+      "accuracy": 100,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_WILD_CHARGE",
+      "accuracy": 100,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_POWER_WHIP",
+      "accuracy": 85,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_OUTRAGE",
+      "accuracy": 100,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_SANDSTORM",
+      "accuracy": 255,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_GIGA_DRAIN",
+      "accuracy": 100,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_ENDURE",
+      "accuracy": 255,
+      "bypass": false,
+      "priority": 4
+    },
+    {
+      "move": "MOVE_CHARM",
+      "accuracy": 100,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_ROLLOUT",
+      "accuracy": 90,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_FALSE_SWIPE",
+      "accuracy": 100,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_SWAGGER",
+      "accuracy": 85,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_SHELL_SMASH",
+      "accuracy": 255,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_SPARK",
+      "accuracy": 100,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_BUG_BITE",
+      "accuracy": 100,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_STEEL_WING",
+      "accuracy": 90,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_MEAN_LOOK",
+      "accuracy": 255,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_ATTRACT",
+      "accuracy": 100,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_SLEEP_TALK",
+      "accuracy": 100,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_HEAL_BELL",
+      "accuracy": 255,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_RETURN",
+      "accuracy": 100,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_PSYSTRIKE",
+      "accuracy": 100,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_BUG_BUZZ",
+      "accuracy": 100,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_SAFEGUARD",
+      "accuracy": 255,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_PAIN_SPLIT",
+      "accuracy": 255,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_SACRED_FIRE",
+      "accuracy": 95,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_MAGNITUDE",
+      "accuracy": 100,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_DYNAMICPUNCH",
+      "accuracy": 50,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_MEGAHORN",
+      "accuracy": 85,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_DRAGONBREATH",
+      "accuracy": 100,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_BATON_PASS",
+      "accuracy": 255,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_ENCORE",
+      "accuracy": 100,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_PURSUIT",
+      "accuracy": 100,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_RAPID_SPIN",
+      "accuracy": 100,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_SHADOW_CLAW",
+      "accuracy": 100,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_IRON_TAIL",
+      "accuracy": 75,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_METAL_CLAW",
+      "accuracy": 95,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_AURA_SPHERE",
+      "accuracy": 255,
+      "bypass": true,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_POLISHED_HEALING_LIGHT",
+      "accuracy": 255,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_HURRICANE",
+      "accuracy": 70,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_KNOCK_OFF",
+      "accuracy": 100,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_HIDDEN_POWER",
+      "accuracy": 100,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_CROSS_CHOP",
+      "accuracy": 80,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_AQUA_JET",
+      "accuracy": 100,
+      "bypass": false,
+      "priority": 1
+    },
+    {
+      "move": "MOVE_RAIN_DANCE",
+      "accuracy": 255,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_SUNNY_DAY",
+      "accuracy": 255,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_CRUNCH",
+      "accuracy": 100,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_MIRROR_COAT",
+      "accuracy": 255,
+      "bypass": true,
+      "priority": -5
+    },
+    {
+      "move": "MOVE_NASTY_PLOT",
+      "accuracy": 255,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_EXTREMESPEED",
+      "accuracy": 100,
+      "bypass": false,
+      "priority": 2
+    },
+    {
+      "move": "MOVE_ANCIENTPOWER",
+      "accuracy": 100,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_SHADOW_BALL",
+      "accuracy": 100,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_FUTURE_SIGHT",
+      "accuracy": 100,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_BRICK_BREAK",
+      "accuracy": 100,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_WHIRLPOOL",
+      "accuracy": 90,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_DARK_PULSE",
+      "accuracy": 100,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_MOONBLAST",
+      "accuracy": 100,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_PLAY_ROUGH",
+      "accuracy": 90,
+      "bypass": false,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_DISARMING_VOICE",
+      "accuracy": 255,
+      "bypass": true,
+      "priority": 0
+    },
+    {
+      "move": "MOVE_STRUGGLE",
+      "accuracy": 255,
+      "bypass": true,
+      "priority": 0
+    }
+  ],
+  "stage_vectors": 2028,
+  "sunny_thunder_hurricane_raw_accuracy": 128,
+  "rules": [
+    "Exact combined stages: clamp accuracy minus evasion to -6..6, then multiply by the 3-based rational with flooring.",
+    "Keen Eye, Illuminate, Minds Eye and identification ignore only positive evasion; Unaware ignores all opposing stages.",
+    "Wonder Skin sets checked status accuracy to 50. User ability, target ability, user item and target item apply in that order.",
+    "Thunder/Hurricane weather and guaranteed rain hits use target Utility Umbrella. The pinned sun byte is 128, not 50.",
+    "Snow Cloak and Sand Veil use target weather. Zoom Lens follows selected action order, including a prior switch.",
+    "Raw 255 is scaled normally unless the effect explicitly bypasses checkhit; it is not itself a guaranteed-hit flag.",
+    "Fly/Dig precede Lock-On but follow No Guard and Poison-type Toxic.",
+    "Quick Draw/Claw and Custap are considered only when selected action priorities match; Quick Draw overrides Lagging Tail and Unnerve blocks Custap."
+  ],
+  "source_paths": [
+    "engine/battle/effect_commands.asm",
+    "engine/battle/abilities.asm",
+    "engine/battle/core.asm",
+    "engine/battle/move_effects/thunder.asm",
+    "home/battle.asm",
+    "home/random.asm",
+    "data/moves/priorities.asm",
+    "data/moves/moves.asm",
+    "data/items/attributes.asm",
+    "macros/data.asm"
+  ],
+  "limits": [
+    "Scoped execution evidence, not complete action, accuracy, status or move-effect parity.",
+    "Exact RNG stream/call count, Lock-On lifetime/consumption, external Future Sight, optional affection, obedience and complete cancellation order remain open.",
+    "Native AI accuracy estimates remain separate. Unmapped moves retain prior accuracy/priority rules; shared quick-item rules apply throughout ordinary source singles. Doubles and active gimmicks retain native behavior.",
+    "Global damage/residual/faint order, capture/rewards, facility/link and all other whole-battle domain obligations remain open."
+  ]
+}

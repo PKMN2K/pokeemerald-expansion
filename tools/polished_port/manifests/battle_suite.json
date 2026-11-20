@@ -19,7 +19,12 @@
       "data/battle_tower/"
     ],
     "additional_files": [
-      "engine/events/trainer_scripts.asm"
+      "engine/events/trainer_scripts.asm",
+      "engine/math/math.asm",
+      "data/options/default_options.asm",
+      "data/moves/critical_hit_moves.asm",
+      "ram/hram.asm",
+      "data/moves/priorities.asm"
     ],
     "limitation": "This is the battle boundary and shared dependencies, not a proof of transitive call-graph closure. External field scripts, UI and data references still require end-to-end evidence."
   },
@@ -7424,6 +7429,56 @@
           "label": "WingNames",
           "line": 1,
           "sha256": "d1abd8d068ffbe23a24e5e9296586ffd8d5329cce60746bf6b8a9164c010d803",
+          "local_labels": 0,
+          "branch_sites": 0,
+          "behavior": "unverified"
+        }
+      ]
+    },
+    {
+      "path": "data/moves/critical_hit_moves.asm",
+      "git_blob_sha1": "9cea48f55f8b864398776661b41235c0f565f427",
+      "blocks": [
+        {
+          "label": "CriticalHitMoves",
+          "line": 1,
+          "sha256": "6aa5ee269d26dc498b9e8c44c8f6729ff0533d08cef98a4028760ed954d103b3",
+          "local_labels": 0,
+          "branch_sites": 0,
+          "behavior": "unverified"
+        }
+      ]
+    },
+    {
+      "path": "data/moves/priorities.asm",
+      "git_blob_sha1": "f1a56dad01d359da7e66a2de450359aa4e7cd34f",
+      "blocks": [
+        {
+          "label": "MovePriorities",
+          "line": 1,
+          "sha256": "cfea3070fabca0de6e053db0aed64334d41596fec8130873b08b5fc0c99dfe6f",
+          "local_labels": 0,
+          "branch_sites": 0,
+          "behavior": "unverified"
+        }
+      ]
+    },
+    {
+      "path": "data/options/default_options.asm",
+      "git_blob_sha1": "74dbc6463c87138116b7ae80b7c8ecdb1d582ffb",
+      "blocks": [
+        {
+          "label": "DefaultOptions3",
+          "line": 1,
+          "sha256": "a7d33bbd9385db2cd0ea84d4b07f3e08feea5e9d7a6e1d7353f671272210f896",
+          "local_labels": 0,
+          "branch_sites": 0,
+          "behavior": "unverified"
+        },
+        {
+          "label": "DefaultOptions",
+          "line": 5,
+          "sha256": "2cd2ba9265c77fd15e5034f15f04a4ca6cc2ee28f797c6b89dbca02938ca8366",
           "local_labels": 0,
           "branch_sites": 0,
           "behavior": "unverified"
@@ -24162,6 +24217,36 @@
       ]
     },
     {
+      "path": "engine/math/math.asm",
+      "git_blob_sha1": "678ee869551f68c0166f5d82c8fd2a94aac6770f",
+      "blocks": [
+        {
+          "label": "Multiply",
+          "line": 1,
+          "sha256": "222278d5795d2edd00e1dc243bfc0e388a031a2925b4cfff7f1b1999c1700c22",
+          "local_labels": 3,
+          "branch_sites": 3,
+          "behavior": "unverified"
+        },
+        {
+          "label": "Divide",
+          "line": 63,
+          "sha256": "66a3ab6ce712da0d4755b3df24f2bdef94cb87a4a778325e098fac551d944e2d",
+          "local_labels": 7,
+          "branch_sites": 8,
+          "behavior": "unverified"
+        },
+        {
+          "label": "Divide16",
+          "line": 154,
+          "sha256": "7a74dc6a2dfdb3bdf9c5bed2a0400898625935c66441acabbf831f88b492e08d",
+          "local_labels": 6,
+          "branch_sites": 5,
+          "behavior": "unverified"
+        }
+      ]
+    },
+    {
       "path": "engine/pokemon/abilities.asm",
       "git_blob_sha1": "af8fe16f67145871bfd70f319e45927b8707946a",
       "blocks": [
@@ -33511,6 +33596,1036 @@
       "path": "macros/vc.asm",
       "git_blob_sha1": "bef120a791470e875eab5e6baafcf7451471d1bd",
       "blocks": []
+    },
+    {
+      "path": "ram/hram.asm",
+      "git_blob_sha1": "54f2d9f731dd348c2a2bcf296f39a457acae60fa",
+      "blocks": [
+        {
+          "label": "hScriptVar",
+          "line": 3,
+          "sha256": "db7192b9f2e2a413a19a00f68824bcaa5b9f4f38a156d6f8ba7544f56bff2bae",
+          "local_labels": 0,
+          "branch_sites": 0,
+          "behavior": "unverified"
+        },
+        {
+          "label": "hROMBank",
+          "line": 5,
+          "sha256": "cd985f1ca8e372ae422e90bdfcff8001dedba660bd99dccb2060b688d04cf3fc",
+          "local_labels": 0,
+          "branch_sites": 0,
+          "behavior": "unverified"
+        },
+        {
+          "label": "hROMBankBackup",
+          "line": 6,
+          "sha256": "eadaf2233d375146dec8e1a4ffdf96e016bd054698372afb4c5eae79186d0b0b",
+          "local_labels": 0,
+          "branch_sites": 0,
+          "behavior": "unverified"
+        },
+        {
+          "label": "hHours",
+          "line": 9,
+          "sha256": "9bd2622b58793fe1d524a2e6085ed05df8a0c7fc2f9bbad150bcf7df8b571c89",
+          "local_labels": 0,
+          "branch_sites": 0,
+          "behavior": "unverified"
+        },
+        {
+          "label": "hMinutes",
+          "line": 10,
+          "sha256": "aad335198e191e9b8f34ba3fe2c6a843a44171387dbcafe0bced823dd2f43843",
+          "local_labels": 0,
+          "branch_sites": 0,
+          "behavior": "unverified"
+        },
+        {
+          "label": "hSeconds",
+          "line": 11,
+          "sha256": "2f425953e9bed60d9507933caf3ee51802084c84f69da4a0a631a53927130336",
+          "local_labels": 0,
+          "branch_sites": 0,
+          "behavior": "unverified"
+        },
+        {
+          "label": "hVBlank",
+          "line": 13,
+          "sha256": "53b95859e4fe0714042b0bddc2a774744913e44babeb4baca6079ee7445d29ed",
+          "local_labels": 0,
+          "branch_sites": 0,
+          "behavior": "unverified"
+        },
+        {
+          "label": "hVBlankCounter",
+          "line": 14,
+          "sha256": "7a2014e9501e2ba43eeda2fc11245dde1804fb39079e632bf222d03e75bf3c9c",
+          "local_labels": 0,
+          "branch_sites": 0,
+          "behavior": "unverified"
+        },
+        {
+          "label": "hVBlankOccurred",
+          "line": 15,
+          "sha256": "45c4eb596bf0ace564ec7edcf6a2d5b8f3e1a2f42a5d67f8253f6594b2ab6b40",
+          "local_labels": 0,
+          "branch_sites": 0,
+          "behavior": "unverified"
+        },
+        {
+          "label": "hMapEntryMethod",
+          "line": 17,
+          "sha256": "a6f9ac59a53670c536ca430c8b1de4f36bb4470c8481091fc5498314b19e25b5",
+          "local_labels": 0,
+          "branch_sites": 0,
+          "behavior": "unverified"
+        },
+        {
+          "label": "hMenuReturn",
+          "line": 18,
+          "sha256": "c4d4d52a18f47d56e334c82d934666128ac0c17ac1c2f3ab63318af191bd2fa2",
+          "local_labels": 0,
+          "branch_sites": 0,
+          "behavior": "unverified"
+        },
+        {
+          "label": "hJoypadReleased",
+          "line": 20,
+          "sha256": "9187a2f3fa39b77bd5a363bd787bc670d69bcc99e8d325470314607b625515c5",
+          "local_labels": 0,
+          "branch_sites": 0,
+          "behavior": "unverified"
+        },
+        {
+          "label": "hJoypadPressed",
+          "line": 21,
+          "sha256": "b19c3f08537db32e13b8d0a2a31514929d61c024213eb2059cb19bdb1243ba19",
+          "local_labels": 0,
+          "branch_sites": 0,
+          "behavior": "unverified"
+        },
+        {
+          "label": "hJoypadDown",
+          "line": 22,
+          "sha256": "3da8d71201400309ad898199c2490a597a66bfa725f34cfc38a191efb50e6d48",
+          "local_labels": 0,
+          "branch_sites": 0,
+          "behavior": "unverified"
+        },
+        {
+          "label": "hJoypadSum",
+          "line": 23,
+          "sha256": "589ca84c72812eac3135e4c3f35b4ef4854e17490884ba8bc4dd0af76e61af14",
+          "local_labels": 0,
+          "branch_sites": 0,
+          "behavior": "unverified"
+        },
+        {
+          "label": "hJoyReleased",
+          "line": 24,
+          "sha256": "8c8aa11c067e29bb0f8e9d7ab31890336655f291d501d16c7bbef57c4c998e41",
+          "local_labels": 0,
+          "branch_sites": 0,
+          "behavior": "unverified"
+        },
+        {
+          "label": "hJoyPressed",
+          "line": 25,
+          "sha256": "5aa352ad94f28c1e7fa7809f395cfea5b7c9c8abff4832c49506851c4b79f312",
+          "local_labels": 0,
+          "branch_sites": 0,
+          "behavior": "unverified"
+        },
+        {
+          "label": "hJoyDown",
+          "line": 26,
+          "sha256": "2a762ff6272845b312f7e51ed8fd9dc4832831f6c70e86e6e9ba55212c3b216b",
+          "local_labels": 0,
+          "branch_sites": 0,
+          "behavior": "unverified"
+        },
+        {
+          "label": "hJoyLast",
+          "line": 27,
+          "sha256": "29b708e2b538f797555e0f7b748e7e630d435dc7475012d68b61b409e87a4a65",
+          "local_labels": 0,
+          "branch_sites": 0,
+          "behavior": "unverified"
+        },
+        {
+          "label": "hInMenu",
+          "line": 29,
+          "sha256": "a77a5cc2b805b09f3232e676bf104dc8f702f3c6a467879356a2fc5827f132c0",
+          "local_labels": 0,
+          "branch_sites": 0,
+          "behavior": "unverified"
+        },
+        {
+          "label": "hGraphicStartTile",
+          "line": 32,
+          "sha256": "8fbd3fa09efc110a0044265580af30c66666f487128cd1337b0a0d4ac2470f42",
+          "local_labels": 0,
+          "branch_sites": 0,
+          "behavior": "unverified"
+        },
+        {
+          "label": "hIsMapObject",
+          "line": 33,
+          "sha256": "ea8564c8485a3b2e56571343337f5bea373d3320c0cd3d86cedb563bf1539640",
+          "local_labels": 0,
+          "branch_sites": 0,
+          "behavior": "unverified"
+        },
+        {
+          "label": "hMapObjectIndexBuffer",
+          "line": 34,
+          "sha256": "b8781c0426c69972ae74e5afe77b42d0fe72f354ca6f14ff7b97ad4b48a82939",
+          "local_labels": 0,
+          "branch_sites": 0,
+          "behavior": "unverified"
+        },
+        {
+          "label": "hObjectStructIndexBuffer",
+          "line": 35,
+          "sha256": "c5183397ee7818582ac7a8089eb7184f10651746fa92a0a03db893abeffb4cb3",
+          "local_labels": 0,
+          "branch_sites": 0,
+          "behavior": "unverified"
+        },
+        {
+          "label": "hMapBorderBlock",
+          "line": 37,
+          "sha256": "c694894f1d744c8ee8ce49d781902ba2dcf60f4c66c6e33c03d842977915f662",
+          "local_labels": 0,
+          "branch_sites": 0,
+          "behavior": "unverified"
+        },
+        {
+          "label": "hMapWidthPlus6",
+          "line": 38,
+          "sha256": "dad1aeed169b785c99740dbcbec5368e3eef15f4968519150dcb77448c0afbe6",
+          "local_labels": 0,
+          "branch_sites": 0,
+          "behavior": "unverified"
+        },
+        {
+          "label": "hConnectionStripLength",
+          "line": 39,
+          "sha256": "285324fbdeef73211232ecff403d3f1c3930a2c1801f096627e67a598e0219c5",
+          "local_labels": 0,
+          "branch_sites": 0,
+          "behavior": "unverified"
+        },
+        {
+          "label": "hConnectedMapWidth",
+          "line": 40,
+          "sha256": "4409a3c52234173e6bdc211865a75b30fef64664b255086a6e1eddf7c86ea58f",
+          "local_labels": 0,
+          "branch_sites": 0,
+          "behavior": "unverified"
+        },
+        {
+          "label": "hMoveMon",
+          "line": 43,
+          "sha256": "d1f483cab93a67ec6e8f53eca5da25141234d94fae595bca3031fa75de7d0a76",
+          "local_labels": 0,
+          "branch_sites": 0,
+          "behavior": "unverified"
+        },
+        {
+          "label": "hPrinter",
+          "line": 46,
+          "sha256": "ce7922efda1d786b50e287c598d8f6389542e43a91bd6e589e7d7fbeca44b997",
+          "local_labels": 0,
+          "branch_sites": 0,
+          "behavior": "unverified"
+        },
+        {
+          "label": "hMultiplicand",
+          "line": 56,
+          "sha256": "0003c67222d4a3d52fda56359d5c05de1dfbd90226e1e697c7424dca43597fef",
+          "local_labels": 0,
+          "branch_sites": 0,
+          "behavior": "unverified"
+        },
+        {
+          "label": "hMultiplier",
+          "line": 57,
+          "sha256": "d244cf26bfac10a184b5ae046751d058bfc16abbecd568fbba970b078765f93f",
+          "local_labels": 0,
+          "branch_sites": 0,
+          "behavior": "unverified"
+        },
+        {
+          "label": "hProduct",
+          "line": 60,
+          "sha256": "75da36d11bd780832890fd9ebec9c612807c14474f8212116bd2006092b8a479",
+          "local_labels": 0,
+          "branch_sites": 0,
+          "behavior": "unverified"
+        },
+        {
+          "label": "hDividend",
+          "line": 63,
+          "sha256": "3dad7830ab4914d700a0036ef4e3372a792a0d7bc76f010dd73f530a4acf3244",
+          "local_labels": 0,
+          "branch_sites": 0,
+          "behavior": "unverified"
+        },
+        {
+          "label": "hDivisor",
+          "line": 64,
+          "sha256": "505d6139b10ad56f483d90e65a8263ab6b69c7fb4643d0f544ff930cfc32ee79",
+          "local_labels": 0,
+          "branch_sites": 0,
+          "behavior": "unverified"
+        },
+        {
+          "label": "hQuotient",
+          "line": 68,
+          "sha256": "bad92f519676772da4c05b3d8a3ddc8bf9ec7b3ab0fab01ddc3a65ed67d883ec",
+          "local_labels": 0,
+          "branch_sites": 0,
+          "behavior": "unverified"
+        },
+        {
+          "label": "hRemainder",
+          "line": 69,
+          "sha256": "9562df5c56c2a9f846ed7c4271dc68d19e942ab0d97de135abfbf310a10494df",
+          "local_labels": 0,
+          "branch_sites": 0,
+          "behavior": "unverified"
+        },
+        {
+          "label": "hMathBuffer",
+          "line": 72,
+          "sha256": "4f695f52fcba58d6343867ec4aed2d5ac1c411344b5a7fa4effbe50da06468ca",
+          "local_labels": 0,
+          "branch_sites": 0,
+          "behavior": "unverified"
+        },
+        {
+          "label": "hPrintNum",
+          "line": 76,
+          "sha256": "fc6e8810df0671b7c7bfc145b3e31f1700684b3da3062a8e5654c693513e2606",
+          "local_labels": 0,
+          "branch_sites": 0,
+          "behavior": "unverified"
+        },
+        {
+          "label": "hUsedSpriteIndex",
+          "line": 80,
+          "sha256": "74a0d98b30c1584fad73a4090b074d2d8a1c205dae93f6847a6b676602349f91",
+          "local_labels": 0,
+          "branch_sites": 0,
+          "behavior": "unverified"
+        },
+        {
+          "label": "hUsedSpriteTile",
+          "line": 81,
+          "sha256": "c4f79011ce3786ad587dc13d1329711d57a6a97a450883f1da9442fe3d098141",
+          "local_labels": 0,
+          "branch_sites": 0,
+          "behavior": "unverified"
+        },
+        {
+          "label": "hCurSpriteXCoord",
+          "line": 84,
+          "sha256": "df0e4c6e21585cc099c829e257ace79101c0a1c1e0d4819d2f803483ab00fe95",
+          "local_labels": 0,
+          "branch_sites": 0,
+          "behavior": "unverified"
+        },
+        {
+          "label": "hCurSpriteYCoord",
+          "line": 85,
+          "sha256": "b093eadbdae5e9cd6b4205142905425b7855370fe04e6a820b45c89985b3d78f",
+          "local_labels": 0,
+          "branch_sites": 0,
+          "behavior": "unverified"
+        },
+        {
+          "label": "hCurSpriteXPixel",
+          "line": 86,
+          "sha256": "5c13d6db88fef2e1686b29f85ef17762de56a9a0912848c8f938d2010c479cae",
+          "local_labels": 0,
+          "branch_sites": 0,
+          "behavior": "unverified"
+        },
+        {
+          "label": "hCurSpriteYPixel",
+          "line": 87,
+          "sha256": "fbba24acc812b56f3b5278d710e782546fc7fc9ea52a899f75b2e1a69ffad705",
+          "local_labels": 0,
+          "branch_sites": 0,
+          "behavior": "unverified"
+        },
+        {
+          "label": "hCurSpriteTile",
+          "line": 88,
+          "sha256": "9881d98396f2c1fbafd15bdd27f8c24128ccea5cda20dc795bb0ac90bd16e217",
+          "local_labels": 0,
+          "branch_sites": 0,
+          "behavior": "unverified"
+        },
+        {
+          "label": "hCurSpriteOAMFlags",
+          "line": 89,
+          "sha256": "9f9216821d2e2e9daa031e01582cb18d387bc1f1265d9fa5ff6286eaab84903f",
+          "local_labels": 0,
+          "branch_sites": 0,
+          "behavior": "unverified"
+        },
+        {
+          "label": "hChartValues",
+          "line": 91,
+          "sha256": "553b0e69c62eae6988722fd300d1c59b3ae86a5e480f38f15acc23b522ce9be5",
+          "local_labels": 0,
+          "branch_sites": 0,
+          "behavior": "unverified"
+        },
+        {
+          "label": "hChartHP",
+          "line": 92,
+          "sha256": "dca36f059377db9edc479ad3599aaa88b884c46406a2547db77e33df9dbcca33",
+          "local_labels": 0,
+          "branch_sites": 0,
+          "behavior": "unverified"
+        },
+        {
+          "label": "hChartAtk",
+          "line": 93,
+          "sha256": "f7e7e6050c1914e399823decb0a547e9f97ba916271d2112ba1353d23013f61c",
+          "local_labels": 0,
+          "branch_sites": 0,
+          "behavior": "unverified"
+        },
+        {
+          "label": "hChartDef",
+          "line": 94,
+          "sha256": "ed1b47a4b64d07715cab7eccb84e6184e215f3f6ec3c300bc7cba56027c677fe",
+          "local_labels": 0,
+          "branch_sites": 0,
+          "behavior": "unverified"
+        },
+        {
+          "label": "hChartSpe",
+          "line": 95,
+          "sha256": "4ab20d60f855e2566aed007c524ec44fd80a690682ecb0097dc103ac6aa1b8fb",
+          "local_labels": 0,
+          "branch_sites": 0,
+          "behavior": "unverified"
+        },
+        {
+          "label": "hChartSat",
+          "line": 96,
+          "sha256": "4e9b7fba5970003c7ebbc030e042ac54298bc742802381f74a2bbe7cd76d10c4",
+          "local_labels": 0,
+          "branch_sites": 0,
+          "behavior": "unverified"
+        },
+        {
+          "label": "hChartSdf",
+          "line": 97,
+          "sha256": "e11171b2b572db8fcc5ce72f1a77fefcc14f1884e9363e549e1b0f6b481faade",
+          "local_labels": 0,
+          "branch_sites": 0,
+          "behavior": "unverified"
+        },
+        {
+          "label": "hMoneyTemp",
+          "line": 100,
+          "sha256": "9273f30d099a9368ce76e160b8d4115210a5ad5e8798e0491d43d87148fb5a08",
+          "local_labels": 0,
+          "branch_sites": 0,
+          "behavior": "unverified"
+        },
+        {
+          "label": "hLCDCPointer",
+          "line": 102,
+          "sha256": "adc470edc0c97509c978ac3a874dba2d1fdc97f76a85642745db3db749313391",
+          "local_labels": 0,
+          "branch_sites": 0,
+          "behavior": "unverified"
+        },
+        {
+          "label": "hLYOverrideStart",
+          "line": 103,
+          "sha256": "e3b25a0eeb4a6fad6f3185ab652642dc72576b27f39972b2f44b5f20b9530a05",
+          "local_labels": 0,
+          "branch_sites": 0,
+          "behavior": "unverified"
+        },
+        {
+          "label": "hLYOverrideEnd",
+          "line": 104,
+          "sha256": "87fd45010c7aa32ade562e764c7b410d35ba39a6dfd2fbf80574542787828e3e",
+          "local_labels": 0,
+          "branch_sites": 0,
+          "behavior": "unverified"
+        },
+        {
+          "label": "hLYOverrideStackCopyAmount",
+          "line": 105,
+          "sha256": "ff953c0263277e2ba76200f4dba19fa1c5d444cf61783255e35e1b9139a47d42",
+          "local_labels": 0,
+          "branch_sites": 0,
+          "behavior": "unverified"
+        },
+        {
+          "label": "hSCX",
+          "line": 107,
+          "sha256": "808b8097f38197c53ae16811f19a958e3f75ea9c435e6357c19de2be650d2d58",
+          "local_labels": 0,
+          "branch_sites": 0,
+          "behavior": "unverified"
+        },
+        {
+          "label": "hSCY",
+          "line": 108,
+          "sha256": "a497a203ec3676e91bfb9f4d1a468e26d955f20eff2de2f71b41ca3ea0d83318",
+          "local_labels": 0,
+          "branch_sites": 0,
+          "behavior": "unverified"
+        },
+        {
+          "label": "hWX",
+          "line": 109,
+          "sha256": "63377bf800dbec23020c255098f37ae32d2bc33c4f1f8c44d65ee619f4d2d91e",
+          "local_labels": 0,
+          "branch_sites": 0,
+          "behavior": "unverified"
+        },
+        {
+          "label": "hWY",
+          "line": 110,
+          "sha256": "e038eb2858ad8d30b8df5443a48548fd8193925aa907facac22e3e9d30440337",
+          "local_labels": 0,
+          "branch_sites": 0,
+          "behavior": "unverified"
+        },
+        {
+          "label": "hTilesPerCycle",
+          "line": 112,
+          "sha256": "40cdaa7564dcbf97b483d285e90244334bc7c7c551acae1fcf300ef4ded3be58",
+          "local_labels": 0,
+          "branch_sites": 0,
+          "behavior": "unverified"
+        },
+        {
+          "label": "hBGMapMode",
+          "line": 119,
+          "sha256": "fe935dd0511111af009eea833925b9258649f4460be3bf5358d1edc8ae294502",
+          "local_labels": 0,
+          "branch_sites": 0,
+          "behavior": "unverified"
+        },
+        {
+          "label": "hBGMapHalf",
+          "line": 124,
+          "sha256": "e4f8f73fc6f219d9b7d1a0ec86ac457f1d7973ebbee28e03e622a4202aff1fe9",
+          "local_labels": 0,
+          "branch_sites": 0,
+          "behavior": "unverified"
+        },
+        {
+          "label": "hBGMapAddress",
+          "line": 125,
+          "sha256": "577ed5a7da15f17ab7be74eae5ab9d1e4b4a7f5b6f61ed2455c1de8df69f1dd2",
+          "local_labels": 0,
+          "branch_sites": 0,
+          "behavior": "unverified"
+        },
+        {
+          "label": "hBGMapUpdate",
+          "line": 127,
+          "sha256": "c0fe9edb5cfaa8c1800d98c091daaf66c78e852ad963b4d3a7174797c282b9a3",
+          "local_labels": 0,
+          "branch_sites": 0,
+          "behavior": "unverified"
+        },
+        {
+          "label": "hBGMapTileCount",
+          "line": 128,
+          "sha256": "4a419ae4042177669f4cbfecb81152307b67c47e8e7f768a29b0ec4a0372838b",
+          "local_labels": 0,
+          "branch_sites": 0,
+          "behavior": "unverified"
+        },
+        {
+          "label": "hOAMUpdate",
+          "line": 130,
+          "sha256": "e035b8a9b8ef25005cf13d85e3d06eb3c5a0316753aa43ac3b0d219ee9a46b20",
+          "local_labels": 0,
+          "branch_sites": 0,
+          "behavior": "unverified"
+        },
+        {
+          "label": "hMapAnims",
+          "line": 132,
+          "sha256": "067ad66ff7a772513ca236163363cbf6dcc2b508da0d149bb3130fd0c4add19f",
+          "local_labels": 0,
+          "branch_sites": 0,
+          "behavior": "unverified"
+        },
+        {
+          "label": "hTileAnimFrame",
+          "line": 133,
+          "sha256": "94f7a0912484b4ea1a41222923ff1a455a0f73d09368ecae5dced73fe4f347c3",
+          "local_labels": 0,
+          "branch_sites": 0,
+          "behavior": "unverified"
+        },
+        {
+          "label": "hLastTalked",
+          "line": 135,
+          "sha256": "cba119cecef0e06e0bf6cb674163d3c0b51464b44e92486f692dc84fdd8df539",
+          "local_labels": 0,
+          "branch_sites": 0,
+          "behavior": "unverified"
+        },
+        {
+          "label": "hRandom",
+          "line": 137,
+          "sha256": "dc501ff6fe2b41ae01aa971b87a4dcdb7a493fcf371fb167f7d5b10959358231",
+          "local_labels": 0,
+          "branch_sites": 0,
+          "behavior": "unverified"
+        },
+        {
+          "label": "hRandomAdd",
+          "line": 138,
+          "sha256": "b1bef10fb68dca0e5485457d826485eecee4d300ab840b1485210ff1b119e4a1",
+          "local_labels": 0,
+          "branch_sites": 0,
+          "behavior": "unverified"
+        },
+        {
+          "label": "hRandomSub",
+          "line": 139,
+          "sha256": "b6dd97d2b6a89edddeaec4589cad879add055ab42fefb47322f8fd6c29f0404f",
+          "local_labels": 0,
+          "branch_sites": 0,
+          "behavior": "unverified"
+        },
+        {
+          "label": "hSerialReceivedNewData",
+          "line": 141,
+          "sha256": "1b8caf017a19b7852a5579012ca003499927082aece72e52ff1ff6451a61c4d9",
+          "local_labels": 0,
+          "branch_sites": 0,
+          "behavior": "unverified"
+        },
+        {
+          "label": "hSerialConnectionStatus",
+          "line": 142,
+          "sha256": "11fb98c74bfe08563df94a17863c3f6e73a5057759b0eda8d26ebdfdc9ba4f21",
+          "local_labels": 0,
+          "branch_sites": 0,
+          "behavior": "unverified"
+        },
+        {
+          "label": "hSerialIgnoringInitialData",
+          "line": 145,
+          "sha256": "f22f81dff34cb2f5a1ea9164ac20bdaec0be01b503460bcd9bd6b16e91fa68ef",
+          "local_labels": 0,
+          "branch_sites": 0,
+          "behavior": "unverified"
+        },
+        {
+          "label": "hSerialSend",
+          "line": 146,
+          "sha256": "5a56eeb5d5aeaa63ef75c2da835f96ec75ce0113160be84083e908e5cf58b0ac",
+          "local_labels": 0,
+          "branch_sites": 0,
+          "behavior": "unverified"
+        },
+        {
+          "label": "hSerialReceive",
+          "line": 147,
+          "sha256": "e95454d9c79ff8677b04afed3d2b41b7496c264de5ad13ff3e3e95b88e862564",
+          "local_labels": 0,
+          "branch_sites": 0,
+          "behavior": "unverified"
+        },
+        {
+          "label": "hSPBuffer",
+          "line": 149,
+          "sha256": "620bb0e3c822df884ab8a6b5cb0b63e0032f5dde51e0ac619e7ece15f6d27560",
+          "local_labels": 0,
+          "branch_sites": 0,
+          "behavior": "unverified"
+        },
+        {
+          "label": "hBattleTurn",
+          "line": 154,
+          "sha256": "afb206118c97be23f986e36e45e27f55e4186516ab533a0ae9a30e2e9d0babdf",
+          "local_labels": 0,
+          "branch_sites": 0,
+          "behavior": "unverified"
+        },
+        {
+          "label": "hBattlePalFadeMode",
+          "line": 155,
+          "sha256": "2ea574a361ee7e77f156aebb69b6192272e000b04232731a9a009b628914987d",
+          "local_labels": 0,
+          "branch_sites": 0,
+          "behavior": "unverified"
+        },
+        {
+          "label": "hTimeOfDayPalOffset",
+          "line": 156,
+          "sha256": "8ce45316dcc527ca5c4dbffe03c5ce035973403200f28e866d224de0abfb8cda",
+          "local_labels": 0,
+          "branch_sites": 0,
+          "behavior": "unverified"
+        },
+        {
+          "label": "hChartScreen",
+          "line": 158,
+          "sha256": "29dec2fd41456ec35f1f63e3a1eba0ec99413fa3da08552989288d2563839834",
+          "local_labels": 0,
+          "branch_sites": 0,
+          "behavior": "unverified"
+        },
+        {
+          "label": "hChartFillCoord",
+          "line": 159,
+          "sha256": "d8ffcf6e81f6d110a6d3acb467dff987fa9a9f682efb4462769484fbf6292138",
+          "local_labels": 0,
+          "branch_sites": 0,
+          "behavior": "unverified"
+        },
+        {
+          "label": "hChartLineCoord",
+          "line": 160,
+          "sha256": "d38a6a9a2e8cb072edb9ed80095510a107b2c2cf90601b70917c6f76265069b0",
+          "local_labels": 0,
+          "branch_sites": 0,
+          "behavior": "unverified"
+        },
+        {
+          "label": "hPokedexAreaMode",
+          "line": 162,
+          "sha256": "c66a5f1c2279112ace2433003eaf8bcbec5687964fec5345833375e506043746",
+          "local_labels": 0,
+          "branch_sites": 0,
+          "behavior": "unverified"
+        },
+        {
+          "label": "hPokedexStatsCurAbil",
+          "line": 163,
+          "sha256": "61c3c9ab600a868e72d9370d2381c10c43b29870ec1d041961767a5dbe6a5959",
+          "local_labels": 0,
+          "branch_sites": 0,
+          "behavior": "unverified"
+        },
+        {
+          "label": "hCGBPalUpdate",
+          "line": 167,
+          "sha256": "61632ce7bd8c83f01078fcdbe4fc98016771a334d3a58cd7311df822e7f6cc5b",
+          "local_labels": 0,
+          "branch_sites": 0,
+          "behavior": "unverified"
+        },
+        {
+          "label": "hCGB",
+          "line": 168,
+          "sha256": "7a6e8a2f5d436ef46a1071c51d475cd4b7578b8d4b1cb6f4a02a10bc3c7e5d7f",
+          "local_labels": 0,
+          "branch_sites": 0,
+          "behavior": "unverified"
+        },
+        {
+          "label": "hDMATransfer",
+          "line": 170,
+          "sha256": "4ff398d856a2d88c2461817a1deff60ef8f41fb60e75099031c98a1cd3943a45",
+          "local_labels": 0,
+          "branch_sites": 0,
+          "behavior": "unverified"
+        },
+        {
+          "label": "hDelayFrameLY",
+          "line": 172,
+          "sha256": "a8e769c319b0facf0894249cc18db1e35c9710cd501baeae6f18728b6947f54e",
+          "local_labels": 0,
+          "branch_sites": 0,
+          "behavior": "unverified"
+        },
+        {
+          "label": "hClockResetTrigger",
+          "line": 174,
+          "sha256": "4941ba7637d3b636166527793c27c4ba94c0c481f2a7141c6f4f33db9c913822",
+          "local_labels": 0,
+          "branch_sites": 0,
+          "behavior": "unverified"
+        },
+        {
+          "label": "hMPState",
+          "line": 176,
+          "sha256": "f73556ee4c554f42094df496b99480c6dafa39e058179c3a550e11f1fe9d2bf6",
+          "local_labels": 0,
+          "branch_sites": 0,
+          "behavior": "unverified"
+        },
+        {
+          "label": "hMPBuffer",
+          "line": 177,
+          "sha256": "03bfca4bb6ce8ed899df0e209383641665e03ada89345d7644ca69e99521084c",
+          "local_labels": 0,
+          "branch_sites": 0,
+          "behavior": "unverified"
+        },
+        {
+          "label": "hRequested2bpp",
+          "line": 179,
+          "sha256": "a9d9331ac3079f91f1d750c5c5df290a7663115ddd5cf096b660412fc109dd03",
+          "local_labels": 0,
+          "branch_sites": 0,
+          "behavior": "unverified"
+        },
+        {
+          "label": "hRequested1bpp",
+          "line": 180,
+          "sha256": "9d24ee90aa480621a6974e021121f31d85ed118a62314fe4e67ca51b8288bfed",
+          "local_labels": 0,
+          "branch_sites": 0,
+          "behavior": "unverified"
+        },
+        {
+          "label": "hRequestedVTileDest",
+          "line": 181,
+          "sha256": "1b7ff64468c2dc286d30d85d2494e771a1fd0f567a53348297b20f61058ded5f",
+          "local_labels": 0,
+          "branch_sites": 0,
+          "behavior": "unverified"
+        },
+        {
+          "label": "hRequestedVTileSource",
+          "line": 182,
+          "sha256": "239480cf2e48e49a8d0f0a37a59696f1ae3718b5d5935f4f458dcde857577ac8",
+          "local_labels": 0,
+          "branch_sites": 0,
+          "behavior": "unverified"
+        },
+        {
+          "label": "hRequestOpaque1bpp",
+          "line": 183,
+          "sha256": "f1412765fa6c0e5a98aa665f3d36801663ccaea67e2f14cdc2665bd37a3e7cfd",
+          "local_labels": 0,
+          "branch_sites": 0,
+          "behavior": "unverified"
+        },
+        {
+          "label": "hTmpd",
+          "line": 186,
+          "sha256": "be061f45a724d79c8a2bcafc5c1a664093f419c214d53e7b6b83984b2324dc55",
+          "local_labels": 0,
+          "branch_sites": 0,
+          "behavior": "unverified"
+        },
+        {
+          "label": "hTmpe",
+          "line": 187,
+          "sha256": "7eae4692c8309a9cc8e67d16b55e87789e630bb3c7a41ade5d6e926c285b91a1",
+          "local_labels": 0,
+          "branch_sites": 0,
+          "behavior": "unverified"
+        },
+        {
+          "label": "hDX",
+          "line": 190,
+          "sha256": "4f360863638351519e3948a3605d7fb3dd6bd426867dad261329292963cbd29e",
+          "local_labels": 0,
+          "branch_sites": 0,
+          "behavior": "unverified"
+        },
+        {
+          "label": "hDY",
+          "line": 191,
+          "sha256": "f2da53db8333e784d73dd05131da230105049ea2e4c754013754055adbcc08e3",
+          "local_labels": 0,
+          "branch_sites": 0,
+          "behavior": "unverified"
+        },
+        {
+          "label": "hErr",
+          "line": 192,
+          "sha256": "18906ddfeb7cc95c8fad07eff8a0f69150412ea557fb68e9c75a7ccb613776ea",
+          "local_labels": 0,
+          "branch_sites": 0,
+          "behavior": "unverified"
+        },
+        {
+          "label": "hCrashCode",
+          "line": 195,
+          "sha256": "78bc955a2e097a8205d749f9622bbf2961454b308cf85d3f1b606b118e035f60",
+          "local_labels": 0,
+          "branch_sites": 0,
+          "behavior": "unverified"
+        },
+        {
+          "label": "hStopPrintingString",
+          "line": 197,
+          "sha256": "7e1a8945b749f7f5e1a65365722fe4462976c069e0ef7b5ee8cbb02ef1ae2f7c",
+          "local_labels": 0,
+          "branch_sites": 0,
+          "behavior": "unverified"
+        },
+        {
+          "label": "hAppendVWFText",
+          "line": 201,
+          "sha256": "54fcc84854e0845ea36565df21deffd232af192cf23f9952504b62efb7aa2969",
+          "local_labels": 0,
+          "branch_sites": 0,
+          "behavior": "unverified"
+        },
+        {
+          "label": "hPlaceStringCoords",
+          "line": 204,
+          "sha256": "76815419f46c74148c0af74e847176676206f5f17a3adf092b3046c9c49dd956",
+          "local_labels": 0,
+          "branch_sites": 0,
+          "behavior": "unverified"
+        },
+        {
+          "label": "hCompressedTextBuffer",
+          "line": 205,
+          "sha256": "b3b58329ddcb882947991a2dbf22c302f55624d2f2b2d445be2815c42cdf0c75",
+          "local_labels": 0,
+          "branch_sites": 0,
+          "behavior": "unverified"
+        },
+        {
+          "label": "hScriptBank",
+          "line": 208,
+          "sha256": "1318dd1be8bc122eda0a688867862f238d3b5e53888f0e9cabbf6d4e574044b1",
+          "local_labels": 0,
+          "branch_sites": 0,
+          "behavior": "unverified"
+        },
+        {
+          "label": "hScriptPos",
+          "line": 209,
+          "sha256": "d4a0febcaa0ed238aa00dbb868149099f3d7e17e7a20180e939eecc10f2c64bd",
+          "local_labels": 0,
+          "branch_sites": 0,
+          "behavior": "unverified"
+        },
+        {
+          "label": "hUsedWeatherSpriteIndex",
+          "line": 211,
+          "sha256": "e3b7317fa1d6dd87d14dc9a9cbc6af4fedacc2aa3b0d9f82da95ae4181d54095",
+          "local_labels": 0,
+          "branch_sites": 0,
+          "behavior": "unverified"
+        },
+        {
+          "label": "hUsedOAMIndex",
+          "line": 212,
+          "sha256": "47d0443620607e367845b7086f60458d7c69ea78cf0e255b0aed98a11094de38",
+          "local_labels": 0,
+          "branch_sites": 0,
+          "behavior": "unverified"
+        },
+        {
+          "label": "hLCDInterruptFunction",
+          "line": 216,
+          "sha256": "80e21a9ffcc78dffdc6ff1ea927e4a05238008627aef076fae65c277013955ee",
+          "local_labels": 0,
+          "branch_sites": 0,
+          "behavior": "unverified"
+        },
+        {
+          "label": "hFunctionJump",
+          "line": 217,
+          "sha256": "c993ec524d2f950bfc80e86a03a4c7d2e0dd5c7fa94945069c4b864a63f204f9",
+          "local_labels": 0,
+          "branch_sites": 0,
+          "behavior": "unverified"
+        },
+        {
+          "label": "hFunctionTarget",
+          "line": 218,
+          "sha256": "334d31393e190056056cd5e819da3da6653708bd60585b5d4bf5d0419d4d4e3a",
+          "local_labels": 0,
+          "branch_sites": 0,
+          "behavior": "unverified"
+        },
+        {
+          "label": "hFunctionTargetLo",
+          "line": 219,
+          "sha256": "8c9da749373dc9e8e70a2d905312a2aa1353c8364a1cdc0a636d7a59c40c67fd",
+          "local_labels": 0,
+          "branch_sites": 0,
+          "behavior": "unverified"
+        },
+        {
+          "label": "hFunctionTargetHi",
+          "line": 220,
+          "sha256": "d7d3510d78873f9f2dee196aee8a396d1fdcb5bd58313f10a00ff31a9ec3ed9d",
+          "local_labels": 0,
+          "branch_sites": 0,
+          "behavior": "unverified"
+        },
+        {
+          "label": "hBitwiseOperation",
+          "line": 222,
+          "sha256": "d44e6357e77ea7fecbe29186db29ade4a6c4b0af927734b4b1e2b5c739454f1e",
+          "local_labels": 0,
+          "branch_sites": 0,
+          "behavior": "unverified"
+        },
+        {
+          "label": "hBitwisePrefix",
+          "line": 223,
+          "sha256": "461c3eb0f05578ecdadacf0ad9141f57b7fd3aa327c157d74ba415210b565329",
+          "local_labels": 0,
+          "branch_sites": 0,
+          "behavior": "unverified"
+        },
+        {
+          "label": "hBitwiseOpcode",
+          "line": 224,
+          "sha256": "3070dd0d899fc39b7153b70a4abc6c8f8ebd04bb2945d4a2116e674b948b76a8",
+          "local_labels": 0,
+          "branch_sites": 0,
+          "behavior": "unverified"
+        },
+        {
+          "label": "hBitwiseRet",
+          "line": 225,
+          "sha256": "f724c96ee1961a6ade98906be740b06361c58a0e82d1f561634a9e7322ed27dd",
+          "local_labels": 0,
+          "branch_sites": 0,
+          "behavior": "unverified"
+        },
+        {
+          "label": "hSingleOperation",
+          "line": 227,
+          "sha256": "e5f18b2e1f1c15151528e0384f2818a5e19f9229eeff7cdf3a77f01abf4b2261",
+          "local_labels": 0,
+          "branch_sites": 0,
+          "behavior": "unverified"
+        },
+        {
+          "label": "hSingleOpcode",
+          "line": 228,
+          "sha256": "a3a29c2c93d51b7254734d104d2032d1aede3594344c70e11de6509aee3c3f17",
+          "local_labels": 0,
+          "branch_sites": 0,
+          "behavior": "unverified"
+        },
+        {
+          "label": "hSingleRet",
+          "line": 229,
+          "sha256": "68782b80aef893fa25b0b5083abb36f0feb2a122f6e04839150706291d0e8f06",
+          "local_labels": 0,
+          "branch_sites": 0,
+          "behavior": "unverified"
+        }
+      ]
     }
   ],
   "source_abilities": [
@@ -36946,6 +38061,301 @@
       "path": "test/battle/move_effect_secondary/polished_proc_recharge.c"
     },
     {
+      "name": "Polished accuracy preserves lowered evasion for Keen Eye Illuminate and Minds Eye",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_accuracy_order.c"
+    },
+    {
+      "name": "Polished accuracy Illuminate ignores positive evasion under old native presets",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_accuracy_order.c"
+    },
+    {
+      "name": "Polished accuracy sun uses the pinned raw Thunder and Hurricane byte",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_accuracy_order.c"
+    },
+    {
+      "name": "Polished accuracy rain checks the targets Utility Umbrella",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_accuracy_order.c"
+    },
+    {
+      "name": "Polished accuracy Zoom Lens activates against a replacement that switched first",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_accuracy_order.c"
+    },
+    {
+      "name": "Polished accuracy Lock On cannot bypass Fly and Dig",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_accuracy_order.c"
+    },
+    {
+      "name": "Polished order Custap waits when the two selected moves have different priority",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_accuracy_order.c"
+    },
+    {
+      "name": "Polished accuracy all 255 source rows use exact combined stage arithmetic",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_accuracy_order.c"
+    },
+    {
+      "name": "Polished accuracy modifier ordering floors stages abilities and each held item separately",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_accuracy_order.c"
+    },
+    {
+      "name": "Polished accuracy Wonder Skin applies before stages Compound Eyes and Wide Lens",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_accuracy_order.c"
+    },
+    {
+      "name": "Polished accuracy Unaware ignores either sign of opposing stages",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_accuracy_order.c"
+    },
+    {
+      "name": "Polished accuracy Mold Breaker bypasses accuracy abilities while Neutralizing Gas suppresses both sides",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_accuracy_order.c"
+    },
+    {
+      "name": "Polished accuracy hail and sand abilities use exact four fifths and ignore Utility Umbrella",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_accuracy_order.c"
+    },
+    {
+      "name": "Polished accuracy Cloud Nine suppresses sun rain hail and sand accuracy changes",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_accuracy_order.c"
+    },
+    {
+      "name": "Polished accuracy No Guard still hits through Fly and Dig on either side",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_accuracy_order.c"
+    },
+    {
+      "name": "Polished accuracy Poison type Toxic bypasses Fly and Dig without spending a hit roll",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_accuracy_order.c"
+    },
+    {
+      "name": "Polished accuracy explicit guaranteed moves bypass stages items and abilities",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_accuracy_order.c"
+    },
+    {
+      "name": "Polished accuracy optional moves retain native accuracy and Illuminate configuration",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_accuracy_order.c"
+    },
+    {
+      "name": "Polished accuracy optional doubles retain native sun and Umbrella rules",
+      "kind": "DOUBLE_BATTLE_TEST",
+      "path": "test/battle/polished_accuracy_order.c"
+    },
+    {
+      "name": "Polished accuracy either active Terastal retains native sun rules",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_accuracy_order.c"
+    },
+    {
+      "name": "Polished order all 255 move priorities and Prankster increments match the source table",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_accuracy_order.c"
+    },
+    {
+      "name": "Polished order Quick Draw overrides its holders Lagging Tail when both quick effects trigger",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_accuracy_order.c"
+    },
+    {
+      "name": "Polished order raw Speed comparisons ignore move only quick and lagging flags",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_accuracy_order.c"
+    },
+    {
+      "name": "Polished order Custap waits through an opposing switch",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_accuracy_order.c"
+    },
+    {
+      "name": "Polished order Quick Claw and Quick Draw do not announce activation across priority brackets",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_accuracy_order.c"
+    },
+    {
+      "name": "Polished accuracy exact fourth and fifth stage penalties reach the live hit roll",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_accuracy_order.c"
+    },
+    {
+      "name": "Polished accuracy Protect blocks No Guard Toxic and guaranteed moves",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_accuracy_order.c"
+    },
+    {
+      "name": "Polished accuracy Blizzard in hail ignores both Umbrellas and accuracy stages",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_accuracy_order.c"
+    },
+    {
+      "name": "Polished accuracy sun Thunder follows target Umbrella and then ability and item rounding",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_accuracy_order.c"
+    },
+    {
+      "name": "Polished order equal priority Quick Draw and Quick Claw retain source probabilities",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_accuracy_order.c"
+    },
+    {
+      "name": "Polished order equal priority Custap checks odd HP Gluttony and Unnerve on both sides",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_accuracy_order.c"
+    },
+    {
+      "name": "Polished order doubles retain native Custap consumption across priorities",
+      "kind": "DOUBLE_BATTLE_TEST",
+      "path": "test/battle/polished_accuracy_order.c"
+    },
+    {
+      "name": "Polished order either active Terastal retains native quick effect speed comparison",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_accuracy_order.c"
+    },
+    {
+      "name": "Polished core confusion matches 8112 source arithmetic vectors",
+      "kind": "TEST",
+      "path": "test/battle/polished_battle_core.c"
+    },
+    {
+      "name": "Polished core confusion uses raw stats and simultaneous byte reduction on both sides",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_battle_core.c"
+    },
+    {
+      "name": "Polished core confusion scales the numerator after compression before dividing by Defense",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_battle_core.c"
+    },
+    {
+      "name": "Polished core confusion ignores attack boosts from abilities items burn and screens",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_battle_core.c"
+    },
+    {
+      "name": "Polished core source confusion bypasses Sturdy Endure and survival item damage clamps",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_battle_core.c"
+    },
+    {
+      "name": "Polished core default affection is disabled without changing friendship",
+      "kind": "WILD_BATTLE_TEST",
+      "path": "test/battle/polished_battle_core.c"
+    },
+    {
+      "name": "Polished core default affection keeps high friendship critical odds at the source base rate",
+      "kind": "WILD_BATTLE_TEST",
+      "path": "test/battle/polished_battle_core.c"
+    },
+    {
+      "name": "Polished core critical stages use source odds independently of native generation",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_battle_core.c"
+    },
+    {
+      "name": "Polished core all nine source high critical moves carry one stage on either side",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_battle_core.c"
+    },
+    {
+      "name": "Polished core critical armor blocks a guaranteed source critical unless bypassed",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_battle_core.c"
+    },
+    {
+      "name": "Polished core Leek follows source species and form eligibility",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_battle_core.c"
+    },
+    {
+      "name": "Polished core zero-power Return cannot announce a critical hit",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_battle_core.c"
+    },
+    {
+      "name": "Polished core Speed applies paralysis before weather abilities and held items",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_battle_core.c"
+    },
+    {
+      "name": "Polished core Speed ignores native badge boosts in ordinary battles",
+      "kind": "WILD_BATTLE_TEST",
+      "path": "test/battle/polished_battle_core.c"
+    },
+    {
+      "name": "Polished core fainted Pokemon use raw Speed without stages status ability or item",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_battle_core.c"
+    },
+    {
+      "name": "Polished core Quick Powder checks copied species after Transform on either side",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_battle_core.c"
+    },
+    {
+      "name": "Polished core odd paralysis weather and Quick Powder rounding changes live action order",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_battle_core.c"
+    },
+    {
+      "name": "Polished core weather abilities use source finite durations under older native presets",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_battle_core.c"
+    },
+    {
+      "name": "Polished core Snow Warning creates source Hail rather than native Snow",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_battle_core.c"
+    },
+    {
+      "name": "Polished core Hail residual ability gates include source Slush Rush",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_battle_core.c"
+    },
+    {
+      "name": "Polished core Safety Goggles and Cloud Nine prevent Hail residual without extending duration",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_battle_core.c"
+    },
+    {
+      "name": "Polished core source weather replaces overworld weather and installs its own timer",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_battle_core.c"
+    },
+    {
+      "name": "Polished core reapplying the same weather does not refresh its timer",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_battle_core.c"
+    },
+    {
+      "name": "Polished core doubles keep native Snow Warning Slush Rush and critical odds",
+      "kind": "DOUBLE_BATTLE_TEST",
+      "path": "test/battle/polished_battle_core.c"
+    },
+    {
+      "name": "Polished core either active gimmick retains native critical odds and affection",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_battle_core.c"
+    },
+    {
+      "name": "Polished core either active gimmick retains native self confusion arithmetic",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_battle_core.c"
+    },
+    {
       "name": "Polished foundations confusion uses the source byte probability independently of generation",
       "kind": "SINGLE_BATTLE_TEST",
       "path": "test/battle/polished_battle_foundations.c"
@@ -37814,8 +39224,16 @@
   "semantic_evidence_policy": "Existing tests establish only their asserted scenarios. Names, dispatch, inventory, code presence, native passes and AI frame budgets do not close a source block or domain.",
   "scoped_evidence": [
     {
+      "manifest": "tools/polished_port/manifests/accuracy_order.json",
+      "sha256": "16abc6e82de6eef1a87d87901a6e8ebc23a050a5c288014bb540e9bafa88302f"
+    },
+    {
       "manifest": "tools/polished_port/manifests/attack_suite.json",
       "sha256": "c5ae5a9594c0a877209a2368cb7101e17511521c732cf52b60a191fe037c343a"
+    },
+    {
+      "manifest": "tools/polished_port/manifests/battle_core.json",
+      "sha256": "a7a30d7d08ac6ceeebbbd2e6dd0794a3b136db73d0b9042492460f2f884e9cfe"
     },
     {
       "manifest": "tools/polished_port/manifests/battle_foundations.json",
