@@ -1,4 +1,6 @@
 #include "global.h"
+#include "polished_capture.h"
+#include "polished_rewards.h"
 #include "battle.h"
 #include "battle_anim.h"
 #include "battle_anim_scripts.h"
@@ -817,7 +819,12 @@ void HandleAction_WatchesCarefully(void)
     gBattlerAttacker = gBattlerByTurnOrder[gCurrentTurnActionNumber];
     gBattle_BG0_X = 0;
     gBattle_BG0_Y = 0;
-    if (IS_FRLG)
+    if (UsesPolishedSafariRules())
+    {
+        gBattleCommunication[MULTISTRING_CHOOSER] = PolishedSafariReaction();
+        gBattlescriptCurrInstr = gBattlescriptsForSafariActions[0];
+    }
+    else if (IS_FRLG)
     {
         if (gBattleStruct->safariRockThrowCounter != 0)
         {
@@ -886,7 +893,12 @@ void HandleAction_ThrowPokeblock(void)
     gBattle_BG0_X = 0;
     gBattle_BG0_Y = 0;
 
-    if (IS_FRLG)
+    if (UsesPolishedSafariRules())
+    {
+        PolishedSafariBaitOrRock(FALSE);
+        gBattlescriptCurrInstr = gBattlescriptsForSafariActions[5];
+    }
+    else if (IS_FRLG)
     {
         // throw bait
         gBattleStruct->safariBaitThrowCounter += Random() % 5 + 2;
@@ -936,7 +948,12 @@ void HandleAction_GoNear(void)
     gBattle_BG0_X = 0;
     gBattle_BG0_Y = 0;
 
-    if (IS_FRLG)
+    if (UsesPolishedSafariRules())
+    {
+        PolishedSafariBaitOrRock(TRUE);
+        gBattlescriptCurrInstr = gBattlescriptsForSafariActions[4];
+    }
+    else if (IS_FRLG)
     {
         // throw rock
         gBattleStruct->safariRockThrowCounter += Random() % 5 + 2;
@@ -10028,6 +10045,8 @@ bool32 MoveEffectIsGuaranteed(enum BattlerId battler, enum Ability battlerAbilit
 
 bool32 IsGen6ExpShareEnabled(void)
 {
+    if (UsesPolishedRewardRules(B_BATTLER_1))
+        return FALSE;
     if (I_EXP_SHARE_FLAG <= TEMP_FLAGS_END)
         return FALSE;
 

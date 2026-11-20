@@ -618,6 +618,8 @@ struct BattleStruct
     u8 safariPkblThrowCounter;
     u8 safariEscapeFactor;
     u8 safariCatchFactor;
+    u8 polishedCatchRate;
+    u16 polishedCatchRateSpecies; // Original wild identity; zero initializes the byte rate.
     u8 linkBattleVsSpriteId_V; // The letter "V"
     u8 linkBattleVsSpriteId_S; // The letter "S"
     u8 chosenMovePositions[MAX_BATTLERS_COUNT];

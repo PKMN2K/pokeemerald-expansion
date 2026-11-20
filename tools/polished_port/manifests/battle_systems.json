@@ -1,0 +1,875 @@
+{
+  "source_commit": "3fa43192379df5c3e7b09a08e4d5d79af4f02f42",
+  "source_variant": "default; FAITHFUL undefined",
+  "wobble_bands": [
+    [
+      1,
+      90
+    ],
+    [
+      2,
+      103
+    ],
+    [
+      3,
+      111
+    ],
+    [
+      4,
+      117
+    ],
+    [
+      5,
+      122
+    ],
+    [
+      6,
+      126
+    ],
+    [
+      7,
+      130
+    ],
+    [
+      8,
+      133
+    ],
+    [
+      9,
+      136
+    ],
+    [
+      10,
+      139
+    ],
+    [
+      11,
+      141
+    ],
+    [
+      12,
+      144
+    ],
+    [
+      13,
+      146
+    ],
+    [
+      14,
+      148
+    ],
+    [
+      15,
+      150
+    ],
+    [
+      16,
+      152
+    ],
+    [
+      17,
+      154
+    ],
+    [
+      18,
+      155
+    ],
+    [
+      19,
+      157
+    ],
+    [
+      20,
+      158
+    ],
+    [
+      21,
+      160
+    ],
+    [
+      22,
+      161
+    ],
+    [
+      23,
+      163
+    ],
+    [
+      24,
+      164
+    ],
+    [
+      25,
+      165
+    ],
+    [
+      26,
+      166
+    ],
+    [
+      27,
+      168
+    ],
+    [
+      28,
+      169
+    ],
+    [
+      29,
+      170
+    ],
+    [
+      30,
+      171
+    ],
+    [
+      31,
+      172
+    ],
+    [
+      32,
+      173
+    ],
+    [
+      33,
+      174
+    ],
+    [
+      34,
+      175
+    ],
+    [
+      35,
+      176
+    ],
+    [
+      36,
+      177
+    ],
+    [
+      37,
+      178
+    ],
+    [
+      38,
+      179
+    ],
+    [
+      39,
+      180
+    ],
+    [
+      41,
+      181
+    ],
+    [
+      42,
+      182
+    ],
+    [
+      43,
+      183
+    ],
+    [
+      44,
+      184
+    ],
+    [
+      46,
+      185
+    ],
+    [
+      47,
+      186
+    ],
+    [
+      48,
+      187
+    ],
+    [
+      50,
+      188
+    ],
+    [
+      51,
+      189
+    ],
+    [
+      52,
+      190
+    ],
+    [
+      54,
+      191
+    ],
+    [
+      55,
+      192
+    ],
+    [
+      57,
+      193
+    ],
+    [
+      59,
+      194
+    ],
+    [
+      60,
+      195
+    ],
+    [
+      62,
+      196
+    ],
+    [
+      64,
+      197
+    ],
+    [
+      65,
+      198
+    ],
+    [
+      67,
+      199
+    ],
+    [
+      69,
+      200
+    ],
+    [
+      71,
+      201
+    ],
+    [
+      73,
+      202
+    ],
+    [
+      75,
+      203
+    ],
+    [
+      76,
+      204
+    ],
+    [
+      78,
+      205
+    ],
+    [
+      81,
+      206
+    ],
+    [
+      83,
+      207
+    ],
+    [
+      85,
+      208
+    ],
+    [
+      87,
+      209
+    ],
+    [
+      89,
+      210
+    ],
+    [
+      91,
+      211
+    ],
+    [
+      94,
+      212
+    ],
+    [
+      96,
+      213
+    ],
+    [
+      99,
+      214
+    ],
+    [
+      101,
+      215
+    ],
+    [
+      104,
+      216
+    ],
+    [
+      106,
+      217
+    ],
+    [
+      109,
+      218
+    ],
+    [
+      111,
+      219
+    ],
+    [
+      114,
+      220
+    ],
+    [
+      117,
+      221
+    ],
+    [
+      120,
+      222
+    ],
+    [
+      123,
+      223
+    ],
+    [
+      126,
+      224
+    ],
+    [
+      129,
+      225
+    ],
+    [
+      132,
+      226
+    ],
+    [
+      135,
+      227
+    ],
+    [
+      138,
+      228
+    ],
+    [
+      141,
+      229
+    ],
+    [
+      145,
+      230
+    ],
+    [
+      148,
+      231
+    ],
+    [
+      151,
+      232
+    ],
+    [
+      155,
+      233
+    ],
+    [
+      158,
+      234
+    ],
+    [
+      162,
+      235
+    ],
+    [
+      166,
+      236
+    ],
+    [
+      170,
+      237
+    ],
+    [
+      173,
+      238
+    ],
+    [
+      177,
+      239
+    ],
+    [
+      181,
+      240
+    ],
+    [
+      185,
+      241
+    ],
+    [
+      189,
+      242
+    ],
+    [
+      194,
+      243
+    ],
+    [
+      198,
+      244
+    ],
+    [
+      202,
+      245
+    ],
+    [
+      207,
+      246
+    ],
+    [
+      211,
+      247
+    ],
+    [
+      216,
+      248
+    ],
+    [
+      220,
+      249
+    ],
+    [
+      225,
+      250
+    ],
+    [
+      230,
+      251
+    ],
+    [
+      235,
+      252
+    ],
+    [
+      240,
+      253
+    ],
+    [
+      245,
+      254
+    ],
+    [
+      250,
+      255
+    ],
+    [
+      255,
+      255
+    ]
+  ],
+  "moon_ball_species": [
+    "SPECIES_NIDORINA",
+    "SPECIES_NIDORINO",
+    "SPECIES_CLEFAIRY",
+    "SPECIES_JIGGLYPUFF",
+    "SPECIES_URSARING"
+  ],
+  "counted_species": 289,
+  "ownership_indices": {
+    "SPECIES_BULBASAUR": 1,
+    "SPECIES_IVYSAUR": 2,
+    "SPECIES_VENUSAUR": 3,
+    "SPECIES_CHARMANDER": 4,
+    "SPECIES_CHARMELEON": 5,
+    "SPECIES_CHARIZARD": 6,
+    "SPECIES_SQUIRTLE": 7,
+    "SPECIES_WARTORTLE": 8,
+    "SPECIES_BLASTOISE": 9,
+    "SPECIES_CATERPIE": 10,
+    "SPECIES_METAPOD": 11,
+    "SPECIES_BUTTERFREE": 12,
+    "SPECIES_WEEDLE": 13,
+    "SPECIES_KAKUNA": 14,
+    "SPECIES_BEEDRILL": 15,
+    "SPECIES_PIDGEY": 16,
+    "SPECIES_PIDGEOTTO": 17,
+    "SPECIES_PIDGEOT": 18,
+    "SPECIES_RATTATA": 19,
+    "SPECIES_RATICATE": 20,
+    "SPECIES_SPEAROW": 21,
+    "SPECIES_FEAROW": 22,
+    "SPECIES_EKANS": 23,
+    "SPECIES_ARBOK": 24,
+    "SPECIES_PIKACHU": 25,
+    "SPECIES_RAICHU": 26,
+    "SPECIES_SANDSHREW": 27,
+    "SPECIES_SANDSLASH": 28,
+    "SPECIES_NIDORAN_F": 29,
+    "SPECIES_NIDORINA": 30,
+    "SPECIES_NIDOQUEEN": 31,
+    "SPECIES_NIDORAN_M": 32,
+    "SPECIES_NIDORINO": 33,
+    "SPECIES_NIDOKING": 34,
+    "SPECIES_CLEFAIRY": 35,
+    "SPECIES_CLEFABLE": 36,
+    "SPECIES_VULPIX": 37,
+    "SPECIES_NINETALES": 38,
+    "SPECIES_JIGGLYPUFF": 39,
+    "SPECIES_WIGGLYTUFF": 40,
+    "SPECIES_ZUBAT": 41,
+    "SPECIES_GOLBAT": 42,
+    "SPECIES_ODDISH": 43,
+    "SPECIES_GLOOM": 44,
+    "SPECIES_VILEPLUME": 45,
+    "SPECIES_PARAS": 46,
+    "SPECIES_PARASECT": 47,
+    "SPECIES_VENONAT": 48,
+    "SPECIES_VENOMOTH": 49,
+    "SPECIES_DIGLETT": 50,
+    "SPECIES_DUGTRIO": 51,
+    "SPECIES_MEOWTH": 52,
+    "SPECIES_PERSIAN": 53,
+    "SPECIES_PSYDUCK": 54,
+    "SPECIES_GOLDUCK": 55,
+    "SPECIES_MANKEY": 56,
+    "SPECIES_PRIMEAPE": 57,
+    "SPECIES_GROWLITHE": 58,
+    "SPECIES_ARCANINE": 59,
+    "SPECIES_POLIWAG": 60,
+    "SPECIES_POLIWHIRL": 61,
+    "SPECIES_POLIWRATH": 62,
+    "SPECIES_ABRA": 63,
+    "SPECIES_KADABRA": 64,
+    "SPECIES_ALAKAZAM": 65,
+    "SPECIES_MACHOP": 66,
+    "SPECIES_MACHOKE": 67,
+    "SPECIES_MACHAMP": 68,
+    "SPECIES_BELLSPROUT": 69,
+    "SPECIES_WEEPINBELL": 70,
+    "SPECIES_VICTREEBEL": 71,
+    "SPECIES_TENTACOOL": 72,
+    "SPECIES_TENTACRUEL": 73,
+    "SPECIES_GEODUDE": 74,
+    "SPECIES_GRAVELER": 75,
+    "SPECIES_GOLEM": 76,
+    "SPECIES_PONYTA": 77,
+    "SPECIES_RAPIDASH": 78,
+    "SPECIES_SLOWPOKE": 79,
+    "SPECIES_SLOWBRO": 80,
+    "SPECIES_MAGNEMITE": 81,
+    "SPECIES_MAGNETON": 82,
+    "SPECIES_FARFETCHD": 83,
+    "SPECIES_DODUO": 84,
+    "SPECIES_DODRIO": 85,
+    "SPECIES_SEEL": 86,
+    "SPECIES_DEWGONG": 87,
+    "SPECIES_GRIMER": 88,
+    "SPECIES_MUK": 89,
+    "SPECIES_SHELLDER": 90,
+    "SPECIES_CLOYSTER": 91,
+    "SPECIES_GASTLY": 92,
+    "SPECIES_HAUNTER": 93,
+    "SPECIES_GENGAR": 94,
+    "SPECIES_ONIX": 95,
+    "SPECIES_DROWZEE": 96,
+    "SPECIES_HYPNO": 97,
+    "SPECIES_KRABBY": 98,
+    "SPECIES_KINGLER": 99,
+    "SPECIES_VOLTORB": 100,
+    "SPECIES_ELECTRODE": 101,
+    "SPECIES_EXEGGCUTE": 102,
+    "SPECIES_EXEGGUTOR": 103,
+    "SPECIES_CUBONE": 104,
+    "SPECIES_MAROWAK": 105,
+    "SPECIES_HITMONLEE": 106,
+    "SPECIES_HITMONCHAN": 107,
+    "SPECIES_LICKITUNG": 108,
+    "SPECIES_KOFFING": 109,
+    "SPECIES_WEEZING": 110,
+    "SPECIES_RHYHORN": 111,
+    "SPECIES_RHYDON": 112,
+    "SPECIES_CHANSEY": 113,
+    "SPECIES_TANGELA": 114,
+    "SPECIES_KANGASKHAN": 115,
+    "SPECIES_HORSEA": 116,
+    "SPECIES_SEADRA": 117,
+    "SPECIES_GOLDEEN": 118,
+    "SPECIES_SEAKING": 119,
+    "SPECIES_STARYU": 120,
+    "SPECIES_STARMIE": 121,
+    "SPECIES_MR_MIME": 122,
+    "SPECIES_SCYTHER": 123,
+    "SPECIES_JYNX": 124,
+    "SPECIES_ELECTABUZZ": 125,
+    "SPECIES_MAGMAR": 126,
+    "SPECIES_PINSIR": 127,
+    "SPECIES_TAUROS": 128,
+    "SPECIES_MAGIKARP": 129,
+    "SPECIES_GYARADOS": 130,
+    "SPECIES_LAPRAS": 131,
+    "SPECIES_DITTO": 132,
+    "SPECIES_EEVEE": 133,
+    "SPECIES_VAPOREON": 134,
+    "SPECIES_JOLTEON": 135,
+    "SPECIES_FLAREON": 136,
+    "SPECIES_PORYGON": 137,
+    "SPECIES_OMANYTE": 138,
+    "SPECIES_OMASTAR": 139,
+    "SPECIES_KABUTO": 140,
+    "SPECIES_KABUTOPS": 141,
+    "SPECIES_AERODACTYL": 142,
+    "SPECIES_SNORLAX": 143,
+    "SPECIES_ARTICUNO": 144,
+    "SPECIES_ZAPDOS": 145,
+    "SPECIES_MOLTRES": 146,
+    "SPECIES_DRATINI": 147,
+    "SPECIES_DRAGONAIR": 148,
+    "SPECIES_DRAGONITE": 149,
+    "SPECIES_MEWTWO": 150,
+    "SPECIES_MEW": 151,
+    "SPECIES_CHIKORITA": 152,
+    "SPECIES_BAYLEEF": 153,
+    "SPECIES_MEGANIUM": 154,
+    "SPECIES_CYNDAQUIL": 155,
+    "SPECIES_QUILAVA": 156,
+    "SPECIES_TYPHLOSION": 157,
+    "SPECIES_TOTODILE": 158,
+    "SPECIES_CROCONAW": 159,
+    "SPECIES_FERALIGATR": 160,
+    "SPECIES_SENTRET": 161,
+    "SPECIES_FURRET": 162,
+    "SPECIES_HOOTHOOT": 163,
+    "SPECIES_NOCTOWL": 164,
+    "SPECIES_LEDYBA": 165,
+    "SPECIES_LEDIAN": 166,
+    "SPECIES_SPINARAK": 167,
+    "SPECIES_ARIADOS": 168,
+    "SPECIES_CROBAT": 169,
+    "SPECIES_CHINCHOU": 170,
+    "SPECIES_LANTURN": 171,
+    "SPECIES_PICHU": 172,
+    "SPECIES_CLEFFA": 173,
+    "SPECIES_IGGLYBUFF": 174,
+    "SPECIES_TOGEPI": 175,
+    "SPECIES_TOGETIC": 176,
+    "SPECIES_NATU": 177,
+    "SPECIES_XATU": 178,
+    "SPECIES_MAREEP": 179,
+    "SPECIES_FLAAFFY": 180,
+    "SPECIES_AMPHAROS": 181,
+    "SPECIES_BELLOSSOM": 182,
+    "SPECIES_MARILL": 183,
+    "SPECIES_AZUMARILL": 184,
+    "SPECIES_SUDOWOODO": 185,
+    "SPECIES_POLITOED": 186,
+    "SPECIES_HOPPIP": 187,
+    "SPECIES_SKIPLOOM": 188,
+    "SPECIES_JUMPLUFF": 189,
+    "SPECIES_AIPOM": 190,
+    "SPECIES_SUNKERN": 191,
+    "SPECIES_SUNFLORA": 192,
+    "SPECIES_YANMA": 193,
+    "SPECIES_WOOPER": 194,
+    "SPECIES_QUAGSIRE": 195,
+    "SPECIES_ESPEON": 196,
+    "SPECIES_UMBREON": 197,
+    "SPECIES_MURKROW": 198,
+    "SPECIES_SLOWKING": 199,
+    "SPECIES_MISDREAVUS": 200,
+    "SPECIES_UNOWN": 201,
+    "SPECIES_WOBBUFFET": 202,
+    "SPECIES_GIRAFARIG": 203,
+    "SPECIES_PINECO": 204,
+    "SPECIES_FORRETRESS": 205,
+    "SPECIES_DUNSPARCE": 206,
+    "SPECIES_GLIGAR": 207,
+    "SPECIES_STEELIX": 208,
+    "SPECIES_SNUBBULL": 209,
+    "SPECIES_GRANBULL": 210,
+    "SPECIES_QWILFISH": 211,
+    "SPECIES_SCIZOR": 212,
+    "SPECIES_SHUCKLE": 213,
+    "SPECIES_HERACROSS": 214,
+    "SPECIES_SNEASEL": 215,
+    "SPECIES_TEDDIURSA": 216,
+    "SPECIES_URSARING": 217,
+    "SPECIES_SLUGMA": 218,
+    "SPECIES_MAGCARGO": 219,
+    "SPECIES_SWINUB": 220,
+    "SPECIES_PILOSWINE": 221,
+    "SPECIES_CORSOLA": 222,
+    "SPECIES_REMORAID": 223,
+    "SPECIES_OCTILLERY": 224,
+    "SPECIES_DELIBIRD": 225,
+    "SPECIES_MANTINE": 226,
+    "SPECIES_SKARMORY": 227,
+    "SPECIES_HOUNDOUR": 228,
+    "SPECIES_HOUNDOOM": 229,
+    "SPECIES_KINGDRA": 230,
+    "SPECIES_PHANPY": 231,
+    "SPECIES_DONPHAN": 232,
+    "SPECIES_PORYGON2": 233,
+    "SPECIES_STANTLER": 234,
+    "SPECIES_SMEARGLE": 235,
+    "SPECIES_TYROGUE": 236,
+    "SPECIES_HITMONTOP": 237,
+    "SPECIES_SMOOCHUM": 238,
+    "SPECIES_ELEKID": 239,
+    "SPECIES_MAGBY": 240,
+    "SPECIES_MILTANK": 241,
+    "SPECIES_BLISSEY": 242,
+    "SPECIES_RAIKOU": 243,
+    "SPECIES_ENTEI": 244,
+    "SPECIES_SUICUNE": 245,
+    "SPECIES_LARVITAR": 246,
+    "SPECIES_PUPITAR": 247,
+    "SPECIES_TYRANITAR": 248,
+    "SPECIES_LUGIA": 249,
+    "SPECIES_HO_OH": 250,
+    "SPECIES_CELEBI": 251,
+    "SPECIES_AZURILL": 252,
+    "SPECIES_WYNAUT": 253,
+    "SPECIES_AMBIPOM": 254,
+    "SPECIES_MISMAGIUS": 257,
+    "SPECIES_HONCHKROW": 258,
+    "SPECIES_BONSLY": 259,
+    "SPECIES_MIME_JR": 260,
+    "SPECIES_HAPPINY": 261,
+    "SPECIES_MUNCHLAX": 262,
+    "SPECIES_MANTYKE": 263,
+    "SPECIES_WEAVILE": 264,
+    "SPECIES_MAGNEZONE": 265,
+    "SPECIES_LICKILICKY": 266,
+    "SPECIES_RHYPERIOR": 267,
+    "SPECIES_TANGROWTH": 268,
+    "SPECIES_ELECTIVIRE": 269,
+    "SPECIES_MAGMORTAR": 270,
+    "SPECIES_TOGEKISS": 271,
+    "SPECIES_YANMEGA": 272,
+    "SPECIES_LEAFEON": 273,
+    "SPECIES_GLACEON": 274,
+    "SPECIES_GLISCOR": 275,
+    "SPECIES_MAMOSWINE": 276,
+    "SPECIES_PORYGON_Z": 277,
+    "SPECIES_SYLVEON": 278,
+    "SPECIES_PERRSERKER": 279,
+    "SPECIES_CURSOLA": 280,
+    "SPECIES_SIRFETCHD": 281,
+    "SPECIES_MR_RIME": 282,
+    "SPECIES_WYRDEER": 283,
+    "SPECIES_KLEAVOR": 284,
+    "SPECIES_URSALUNA": 285,
+    "SPECIES_SNEASLER": 286,
+    "SPECIES_OVERQWIL": 287,
+    "SPECIES_DUDUNSPARCE": 288,
+    "SPECIES_FARIGIRAF": 289,
+    "SPECIES_CLODSIRE": 290,
+    "SPECIES_ANNIHILAPE": 291,
+    "SPECIES_GYARADOS_RED": 292,
+    "SPECIES_MEWTWO_ARMORED": 293,
+    "SPECIES_DUDUNSPARCE_THREE_SEGMENT": 294,
+    "SPECIES_RATTATA_ALOLA": 295,
+    "SPECIES_RATICATE_ALOLA": 296,
+    "SPECIES_RAICHU_ALOLA": 297,
+    "SPECIES_SANDSHREW_ALOLA": 298,
+    "SPECIES_SANDSLASH_ALOLA": 299,
+    "SPECIES_VULPIX_ALOLA": 300,
+    "SPECIES_NINETALES_ALOLA": 301,
+    "SPECIES_DIGLETT_ALOLA": 302,
+    "SPECIES_DUGTRIO_ALOLA": 303,
+    "SPECIES_MEOWTH_ALOLA": 304,
+    "SPECIES_PERSIAN_ALOLA": 305,
+    "SPECIES_GEODUDE_ALOLA": 306,
+    "SPECIES_GRAVELER_ALOLA": 307,
+    "SPECIES_GOLEM_ALOLA": 308,
+    "SPECIES_GRIMER_ALOLA": 309,
+    "SPECIES_MUK_ALOLA": 310,
+    "SPECIES_EXEGGUTOR_ALOLA": 311,
+    "SPECIES_MAROWAK_ALOLA": 312,
+    "SPECIES_MEOWTH_GALAR": 313,
+    "SPECIES_PONYTA_GALAR": 314,
+    "SPECIES_RAPIDASH_GALAR": 315,
+    "SPECIES_SLOWPOKE_GALAR": 316,
+    "SPECIES_SLOWBRO_GALAR": 317,
+    "SPECIES_FARFETCHD_GALAR": 318,
+    "SPECIES_WEEZING_GALAR": 319,
+    "SPECIES_MR_MIME_GALAR": 320,
+    "SPECIES_ARTICUNO_GALAR": 321,
+    "SPECIES_ZAPDOS_GALAR": 322,
+    "SPECIES_MOLTRES_GALAR": 323,
+    "SPECIES_SLOWKING_GALAR": 324,
+    "SPECIES_CORSOLA_GALAR": 325,
+    "SPECIES_GROWLITHE_HISUI": 326,
+    "SPECIES_ARCANINE_HISUI": 327,
+    "SPECIES_VOLTORB_HISUI": 328,
+    "SPECIES_ELECTRODE_HISUI": 329,
+    "SPECIES_TYPHLOSION_HISUI": 330,
+    "SPECIES_QWILFISH_HISUI": 331,
+    "SPECIES_SNEASEL_HISUI": 332,
+    "SPECIES_WOOPER_PALDEA": 333,
+    "SPECIES_TAUROS_PALDEA_COMBAT": 334,
+    "SPECIES_TAUROS_PALDEA_BLAZE": 335,
+    "SPECIES_TAUROS_PALDEA_AQUA": 336,
+    "SPECIES_URSALUNA_BLOODMOON": 337,
+    "SPECIES_UNOWN_B": 201,
+    "SPECIES_UNOWN_C": 201,
+    "SPECIES_UNOWN_D": 201,
+    "SPECIES_UNOWN_E": 201,
+    "SPECIES_UNOWN_F": 201,
+    "SPECIES_UNOWN_G": 201,
+    "SPECIES_UNOWN_H": 201,
+    "SPECIES_UNOWN_I": 201,
+    "SPECIES_UNOWN_J": 201,
+    "SPECIES_UNOWN_K": 201,
+    "SPECIES_UNOWN_L": 201,
+    "SPECIES_UNOWN_M": 201,
+    "SPECIES_UNOWN_N": 201,
+    "SPECIES_UNOWN_O": 201,
+    "SPECIES_UNOWN_P": 201,
+    "SPECIES_UNOWN_Q": 201,
+    "SPECIES_UNOWN_R": 201,
+    "SPECIES_UNOWN_S": 201,
+    "SPECIES_UNOWN_T": 201,
+    "SPECIES_UNOWN_U": 201,
+    "SPECIES_UNOWN_V": 201,
+    "SPECIES_UNOWN_W": 201,
+    "SPECIES_UNOWN_X": 201,
+    "SPECIES_UNOWN_Y": 201,
+    "SPECIES_UNOWN_Z": 201,
+    "SPECIES_UNOWN_EXCLAMATION": 201,
+    "SPECIES_UNOWN_QUESTION": 201,
+    "SPECIES_ARBOK_KANTO": 24,
+    "SPECIES_ARBOK_KOGA": 24,
+    "SPECIES_ARBOK_AGATHA": 24,
+    "SPECIES_ARBOK_ARIANA": 24,
+    "SPECIES_PIKACHU_FLY": 25,
+    "SPECIES_PIKACHU_SURF": 25,
+    "SPECIES_PIKACHU_RED": 25,
+    "SPECIES_PIKACHU_YELLOW": 25,
+    "SPECIES_PIKACHU_SPARK": 25,
+    "SPECIES_PICHU_SPIKY_EARED": 172,
+    "SPECIES_MAGIKARP_SKELLY": 129,
+    "SPECIES_MAGIKARP_CALICO1": 129,
+    "SPECIES_MAGIKARP_CALICO2": 129,
+    "SPECIES_MAGIKARP_CALICO3": 129,
+    "SPECIES_MAGIKARP_TWO_TONE": 129,
+    "SPECIES_MAGIKARP_ORCA": 129,
+    "SPECIES_MAGIKARP_DAPPLES": 129,
+    "SPECIES_MAGIKARP_TIGER": 129,
+    "SPECIES_MAGIKARP_ZEBRA": 129,
+    "SPECIES_MAGIKARP_STRIPE": 129,
+    "SPECIES_MAGIKARP_BUBBLES": 129,
+    "SPECIES_MAGIKARP_DIAMONDS": 129,
+    "SPECIES_MAGIKARP_PATCHES": 129,
+    "SPECIES_MAGIKARP_FOREHEAD1": 129,
+    "SPECIES_MAGIKARP_MASK1": 129,
+    "SPECIES_MAGIKARP_FOREHEAD2": 129,
+    "SPECIES_MAGIKARP_MASK2": 129,
+    "SPECIES_MAGIKARP_SAUCY": 129,
+    "SPECIES_MAGIKARP_RAINDROP": 129
+  },
+  "contracts": [
+    "Ball, catch-rate and status multipliers precede the divisions; HP compression floors at each step.",
+    "Heavy Ball mutates the byte catch rate across throws; high-byte band comparisons are inclusive.",
+    "Timer Ball performs its additions in an eight-bit register before its cap.",
+    "Love Ball compares masked user form to unmasked target form; valid nonzero target forms fail.",
+    "Normal captures use four byte-threshold checks; critical captures use one.",
+    "Default EXP is unscaled, with traded/trainer/Lucky Egg boosts before participant distribution."
+  ]
+}

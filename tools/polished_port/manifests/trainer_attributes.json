@@ -1,0 +1,6845 @@
+{
+  "source_commit": "3fa43192379df5c3e7b09a08e4d5d79af4f02f42",
+  "source_variant": "default; FAITHFUL undefined",
+  "classes": {
+    "CARRIE": {
+      "evs": [
+        84,
+        84,
+        84,
+        84,
+        84,
+        84
+      ],
+      "dvs": [
+        15,
+        15,
+        15,
+        15,
+        15,
+        15
+      ],
+      "gender": "FEMALE",
+      "items": [
+        "MAX_POTION",
+        "0"
+      ],
+      "base_reward": 25,
+      "source_ai_layers": [
+        "AI_BASIC",
+        "AI_SETUP",
+        "AI_TYPES",
+        "AI_SMART",
+        "AI_OPPORTUNIST",
+        "AI_AGGRESSIVE",
+        "AI_CAUTIOUS",
+        "AI_STATUS",
+        "AI_RISKY"
+      ],
+      "source_switch_flags": [
+        "CONTEXT_USE",
+        "SWITCH_OFTEN"
+      ]
+    },
+    "CAL": {
+      "evs": [
+        84,
+        84,
+        84,
+        84,
+        84,
+        84
+      ],
+      "dvs": [
+        15,
+        15,
+        15,
+        15,
+        15,
+        15
+      ],
+      "gender": "MALE",
+      "items": [
+        "MAX_POTION",
+        "0"
+      ],
+      "base_reward": 25,
+      "source_ai_layers": [
+        "AI_BASIC",
+        "AI_SETUP",
+        "AI_TYPES",
+        "AI_SMART",
+        "AI_OPPORTUNIST",
+        "AI_AGGRESSIVE",
+        "AI_CAUTIOUS",
+        "AI_STATUS",
+        "AI_RISKY"
+      ],
+      "source_switch_flags": [
+        "CONTEXT_USE",
+        "SWITCH_OFTEN"
+      ]
+    },
+    "JACKY": {
+      "evs": [
+        84,
+        84,
+        84,
+        84,
+        84,
+        84
+      ],
+      "dvs": [
+        15,
+        15,
+        15,
+        15,
+        15,
+        15
+      ],
+      "gender": "MALE",
+      "items": [
+        "MAX_POTION",
+        "0"
+      ],
+      "base_reward": 25,
+      "source_ai_layers": [
+        "AI_BASIC",
+        "AI_SETUP",
+        "AI_TYPES",
+        "AI_SMART",
+        "AI_OPPORTUNIST",
+        "AI_AGGRESSIVE",
+        "AI_CAUTIOUS",
+        "AI_STATUS",
+        "AI_RISKY"
+      ],
+      "source_switch_flags": [
+        "CONTEXT_USE",
+        "SWITCH_OFTEN"
+      ]
+    },
+    "FALKNER": {
+      "evs": [
+        84,
+        84,
+        84,
+        84,
+        84,
+        84
+      ],
+      "dvs": [
+        11,
+        11,
+        11,
+        11,
+        11,
+        11
+      ],
+      "gender": "MALE",
+      "items": [
+        "SUPER_POTION",
+        "0"
+      ],
+      "base_reward": 25,
+      "source_ai_layers": [
+        "AI_BASIC",
+        "AI_SETUP",
+        "AI_TYPES",
+        "AI_SMART",
+        "AI_OPPORTUNIST",
+        "AI_AGGRESSIVE",
+        "AI_CAUTIOUS",
+        "AI_STATUS",
+        "AI_RISKY"
+      ],
+      "source_switch_flags": [
+        "CONTEXT_USE",
+        "SWITCH_SOMETIMES"
+      ]
+    },
+    "BUGSY": {
+      "evs": [
+        84,
+        84,
+        84,
+        84,
+        84,
+        84
+      ],
+      "dvs": [
+        11,
+        11,
+        11,
+        11,
+        11,
+        11
+      ],
+      "gender": "MALE",
+      "items": [
+        "SUPER_POTION",
+        "0"
+      ],
+      "base_reward": 25,
+      "source_ai_layers": [
+        "AI_BASIC",
+        "AI_SETUP",
+        "AI_TYPES",
+        "AI_SMART",
+        "AI_OPPORTUNIST",
+        "AI_AGGRESSIVE",
+        "AI_CAUTIOUS",
+        "AI_STATUS",
+        "AI_RISKY"
+      ],
+      "source_switch_flags": [
+        "CONTEXT_USE",
+        "SWITCH_SOMETIMES"
+      ]
+    },
+    "WHITNEY": {
+      "evs": [
+        84,
+        84,
+        84,
+        84,
+        84,
+        84
+      ],
+      "dvs": [
+        12,
+        12,
+        12,
+        12,
+        12,
+        12
+      ],
+      "gender": "FEMALE",
+      "items": [
+        "HYPER_POTION",
+        "0"
+      ],
+      "base_reward": 25,
+      "source_ai_layers": [
+        "AI_BASIC",
+        "AI_SETUP",
+        "AI_TYPES",
+        "AI_SMART",
+        "AI_OPPORTUNIST",
+        "AI_AGGRESSIVE",
+        "AI_CAUTIOUS",
+        "AI_STATUS",
+        "AI_RISKY"
+      ],
+      "source_switch_flags": [
+        "CONTEXT_USE",
+        "SWITCH_SOMETIMES"
+      ]
+    },
+    "MORTY": {
+      "evs": [
+        84,
+        84,
+        84,
+        84,
+        84,
+        84
+      ],
+      "dvs": [
+        12,
+        12,
+        12,
+        12,
+        12,
+        12
+      ],
+      "gender": "MALE",
+      "items": [
+        "HYPER_POTION",
+        "0"
+      ],
+      "base_reward": 25,
+      "source_ai_layers": [
+        "AI_BASIC",
+        "AI_SETUP",
+        "AI_TYPES",
+        "AI_SMART",
+        "AI_OPPORTUNIST",
+        "AI_AGGRESSIVE",
+        "AI_CAUTIOUS",
+        "AI_STATUS",
+        "AI_RISKY"
+      ],
+      "source_switch_flags": [
+        "CONTEXT_USE",
+        "SWITCH_SOMETIMES"
+      ]
+    },
+    "CHUCK": {
+      "evs": [
+        84,
+        84,
+        84,
+        84,
+        84,
+        84
+      ],
+      "dvs": [
+        13,
+        13,
+        13,
+        13,
+        13,
+        13
+      ],
+      "gender": "MALE",
+      "items": [
+        "FULL_HEAL",
+        "0"
+      ],
+      "base_reward": 25,
+      "source_ai_layers": [
+        "AI_BASIC",
+        "AI_SETUP",
+        "AI_TYPES",
+        "AI_SMART",
+        "AI_OPPORTUNIST",
+        "AI_AGGRESSIVE",
+        "AI_CAUTIOUS",
+        "AI_STATUS",
+        "AI_RISKY"
+      ],
+      "source_switch_flags": [
+        "CONTEXT_USE",
+        "SWITCH_SOMETIMES"
+      ]
+    },
+    "JASMINE": {
+      "evs": [
+        84,
+        84,
+        84,
+        84,
+        84,
+        84
+      ],
+      "dvs": [
+        13,
+        13,
+        13,
+        13,
+        13,
+        13
+      ],
+      "gender": "FEMALE",
+      "items": [
+        "MAX_POTION",
+        "0"
+      ],
+      "base_reward": 25,
+      "source_ai_layers": [
+        "AI_BASIC",
+        "AI_SETUP",
+        "AI_TYPES",
+        "AI_SMART",
+        "AI_OPPORTUNIST",
+        "AI_AGGRESSIVE",
+        "AI_CAUTIOUS",
+        "AI_STATUS",
+        "AI_RISKY"
+      ],
+      "source_switch_flags": [
+        "CONTEXT_USE",
+        "SWITCH_SOMETIMES"
+      ]
+    },
+    "PRYCE": {
+      "evs": [
+        84,
+        84,
+        84,
+        84,
+        84,
+        84
+      ],
+      "dvs": [
+        14,
+        14,
+        14,
+        14,
+        14,
+        14
+      ],
+      "gender": "MALE",
+      "items": [
+        "MAX_POTION",
+        "0"
+      ],
+      "base_reward": 25,
+      "source_ai_layers": [
+        "AI_BASIC",
+        "AI_SETUP",
+        "AI_TYPES",
+        "AI_SMART",
+        "AI_OPPORTUNIST",
+        "AI_AGGRESSIVE",
+        "AI_CAUTIOUS",
+        "AI_STATUS",
+        "AI_RISKY"
+      ],
+      "source_switch_flags": [
+        "CONTEXT_USE",
+        "SWITCH_SOMETIMES"
+      ]
+    },
+    "CLAIR": {
+      "evs": [
+        84,
+        84,
+        84,
+        84,
+        84,
+        84
+      ],
+      "dvs": [
+        14,
+        14,
+        14,
+        14,
+        14,
+        14
+      ],
+      "gender": "FEMALE",
+      "items": [
+        "FULL_HEAL",
+        "MAX_POTION"
+      ],
+      "base_reward": 25,
+      "source_ai_layers": [
+        "AI_BASIC",
+        "AI_SETUP",
+        "AI_TYPES",
+        "AI_SMART",
+        "AI_OPPORTUNIST",
+        "AI_AGGRESSIVE",
+        "AI_CAUTIOUS",
+        "AI_STATUS",
+        "AI_RISKY"
+      ],
+      "source_switch_flags": [
+        "CONTEXT_USE",
+        "SWITCH_SOMETIMES"
+      ]
+    },
+    "WILL": {
+      "evs": [
+        84,
+        84,
+        84,
+        84,
+        84,
+        84
+      ],
+      "dvs": [
+        15,
+        15,
+        15,
+        15,
+        15,
+        15
+      ],
+      "gender": "MALE",
+      "items": [
+        "MAX_POTION",
+        "0"
+      ],
+      "base_reward": 25,
+      "source_ai_layers": [
+        "AI_BASIC",
+        "AI_SETUP",
+        "AI_TYPES",
+        "AI_SMART",
+        "AI_OPPORTUNIST",
+        "AI_AGGRESSIVE",
+        "AI_CAUTIOUS",
+        "AI_STATUS",
+        "AI_RISKY"
+      ],
+      "source_switch_flags": [
+        "CONTEXT_USE",
+        "SWITCH_SOMETIMES"
+      ]
+    },
+    "KOGA": {
+      "evs": [
+        84,
+        84,
+        84,
+        84,
+        84,
+        84
+      ],
+      "dvs": [
+        15,
+        15,
+        15,
+        15,
+        15,
+        15
+      ],
+      "gender": "MALE",
+      "items": [
+        "FULL_HEAL",
+        "FULL_RESTORE"
+      ],
+      "base_reward": 25,
+      "source_ai_layers": [
+        "AI_BASIC",
+        "AI_SETUP",
+        "AI_TYPES",
+        "AI_SMART",
+        "AI_OPPORTUNIST",
+        "AI_AGGRESSIVE",
+        "AI_CAUTIOUS",
+        "AI_STATUS",
+        "AI_RISKY"
+      ],
+      "source_switch_flags": [
+        "CONTEXT_USE",
+        "SWITCH_SOMETIMES"
+      ]
+    },
+    "BRUNO": {
+      "evs": [
+        84,
+        84,
+        84,
+        84,
+        84,
+        84
+      ],
+      "dvs": [
+        15,
+        15,
+        15,
+        15,
+        15,
+        15
+      ],
+      "gender": "MALE",
+      "items": [
+        "MAX_POTION",
+        "0"
+      ],
+      "base_reward": 25,
+      "source_ai_layers": [
+        "AI_BASIC",
+        "AI_SETUP",
+        "AI_TYPES",
+        "AI_SMART",
+        "AI_OPPORTUNIST",
+        "AI_AGGRESSIVE",
+        "AI_CAUTIOUS",
+        "AI_STATUS",
+        "AI_RISKY"
+      ],
+      "source_switch_flags": [
+        "CONTEXT_USE",
+        "SWITCH_SOMETIMES"
+      ]
+    },
+    "KAREN": {
+      "evs": [
+        84,
+        84,
+        84,
+        84,
+        84,
+        84
+      ],
+      "dvs": [
+        15,
+        15,
+        15,
+        15,
+        15,
+        15
+      ],
+      "gender": "FEMALE",
+      "items": [
+        "FULL_HEAL",
+        "MAX_POTION"
+      ],
+      "base_reward": 25,
+      "source_ai_layers": [
+        "AI_BASIC",
+        "AI_SETUP",
+        "AI_TYPES",
+        "AI_SMART",
+        "AI_OPPORTUNIST",
+        "AI_AGGRESSIVE",
+        "AI_CAUTIOUS",
+        "AI_STATUS",
+        "AI_RISKY"
+      ],
+      "source_switch_flags": [
+        "CONTEXT_USE",
+        "SWITCH_SOMETIMES"
+      ]
+    },
+    "CHAMPION": {
+      "evs": [
+        84,
+        84,
+        84,
+        84,
+        84,
+        84
+      ],
+      "dvs": [
+        15,
+        15,
+        15,
+        15,
+        15,
+        15
+      ],
+      "gender": "MALE",
+      "items": [
+        "FULL_HEAL",
+        "FULL_RESTORE"
+      ],
+      "base_reward": 25,
+      "source_ai_layers": [
+        "AI_BASIC",
+        "AI_SETUP",
+        "AI_TYPES",
+        "AI_SMART",
+        "AI_OPPORTUNIST",
+        "AI_AGGRESSIVE",
+        "AI_CAUTIOUS",
+        "AI_STATUS",
+        "AI_RISKY"
+      ],
+      "source_switch_flags": [
+        "CONTEXT_USE",
+        "SWITCH_SOMETIMES"
+      ]
+    },
+    "BROCK": {
+      "evs": [
+        84,
+        84,
+        84,
+        84,
+        84,
+        84
+      ],
+      "dvs": [
+        15,
+        15,
+        15,
+        15,
+        15,
+        15
+      ],
+      "gender": "MALE",
+      "items": [
+        "MAX_POTION",
+        "0"
+      ],
+      "base_reward": 25,
+      "source_ai_layers": [
+        "AI_BASIC",
+        "AI_SETUP",
+        "AI_TYPES",
+        "AI_SMART",
+        "AI_OPPORTUNIST",
+        "AI_AGGRESSIVE",
+        "AI_CAUTIOUS",
+        "AI_STATUS",
+        "AI_RISKY"
+      ],
+      "source_switch_flags": [
+        "CONTEXT_USE",
+        "SWITCH_SOMETIMES"
+      ]
+    },
+    "MISTY": {
+      "evs": [
+        84,
+        84,
+        84,
+        84,
+        84,
+        84
+      ],
+      "dvs": [
+        15,
+        15,
+        15,
+        15,
+        15,
+        15
+      ],
+      "gender": "FEMALE",
+      "items": [
+        "FULL_HEAL",
+        "0"
+      ],
+      "base_reward": 25,
+      "source_ai_layers": [
+        "AI_BASIC",
+        "AI_SETUP",
+        "AI_TYPES",
+        "AI_SMART",
+        "AI_OPPORTUNIST",
+        "AI_AGGRESSIVE",
+        "AI_CAUTIOUS",
+        "AI_STATUS",
+        "AI_RISKY"
+      ],
+      "source_switch_flags": [
+        "CONTEXT_USE",
+        "SWITCH_SOMETIMES"
+      ]
+    },
+    "LT_SURGE": {
+      "evs": [
+        84,
+        84,
+        84,
+        84,
+        84,
+        84
+      ],
+      "dvs": [
+        15,
+        15,
+        15,
+        15,
+        15,
+        15
+      ],
+      "gender": "MALE",
+      "items": [
+        "MAX_POTION",
+        "0"
+      ],
+      "base_reward": 25,
+      "source_ai_layers": [
+        "AI_BASIC",
+        "AI_SETUP",
+        "AI_TYPES",
+        "AI_SMART",
+        "AI_OPPORTUNIST",
+        "AI_AGGRESSIVE",
+        "AI_CAUTIOUS",
+        "AI_STATUS",
+        "AI_RISKY"
+      ],
+      "source_switch_flags": [
+        "CONTEXT_USE",
+        "SWITCH_SOMETIMES"
+      ]
+    },
+    "ERIKA": {
+      "evs": [
+        84,
+        84,
+        84,
+        84,
+        84,
+        84
+      ],
+      "dvs": [
+        15,
+        15,
+        15,
+        15,
+        15,
+        15
+      ],
+      "gender": "FEMALE",
+      "items": [
+        "MAX_POTION",
+        "0"
+      ],
+      "base_reward": 25,
+      "source_ai_layers": [
+        "AI_BASIC",
+        "AI_SETUP",
+        "AI_TYPES",
+        "AI_SMART",
+        "AI_OPPORTUNIST",
+        "AI_AGGRESSIVE",
+        "AI_CAUTIOUS",
+        "AI_STATUS",
+        "AI_RISKY"
+      ],
+      "source_switch_flags": [
+        "CONTEXT_USE",
+        "SWITCH_SOMETIMES"
+      ]
+    },
+    "JANINE": {
+      "evs": [
+        84,
+        84,
+        84,
+        84,
+        84,
+        84
+      ],
+      "dvs": [
+        15,
+        15,
+        15,
+        15,
+        15,
+        15
+      ],
+      "gender": "FEMALE",
+      "items": [
+        "FULL_HEAL",
+        "FULL_RESTORE"
+      ],
+      "base_reward": 25,
+      "source_ai_layers": [
+        "AI_BASIC",
+        "AI_SETUP",
+        "AI_TYPES",
+        "AI_SMART",
+        "AI_OPPORTUNIST",
+        "AI_AGGRESSIVE",
+        "AI_CAUTIOUS",
+        "AI_STATUS",
+        "AI_RISKY"
+      ],
+      "source_switch_flags": [
+        "CONTEXT_USE",
+        "SWITCH_SOMETIMES"
+      ]
+    },
+    "SABRINA": {
+      "evs": [
+        84,
+        84,
+        84,
+        84,
+        84,
+        84
+      ],
+      "dvs": [
+        15,
+        15,
+        15,
+        15,
+        15,
+        15
+      ],
+      "gender": "FEMALE",
+      "items": [
+        "MAX_POTION",
+        "0"
+      ],
+      "base_reward": 25,
+      "source_ai_layers": [
+        "AI_BASIC",
+        "AI_SETUP",
+        "AI_TYPES",
+        "AI_SMART",
+        "AI_OPPORTUNIST",
+        "AI_AGGRESSIVE",
+        "AI_CAUTIOUS",
+        "AI_STATUS",
+        "AI_RISKY"
+      ],
+      "source_switch_flags": [
+        "CONTEXT_USE",
+        "SWITCH_SOMETIMES"
+      ]
+    },
+    "BLAINE": {
+      "evs": [
+        84,
+        84,
+        84,
+        84,
+        84,
+        84
+      ],
+      "dvs": [
+        15,
+        15,
+        15,
+        15,
+        15,
+        15
+      ],
+      "gender": "MALE",
+      "items": [
+        "MAX_POTION",
+        "FULL_HEAL"
+      ],
+      "base_reward": 25,
+      "source_ai_layers": [
+        "AI_BASIC",
+        "AI_SETUP",
+        "AI_TYPES",
+        "AI_SMART",
+        "AI_OPPORTUNIST",
+        "AI_AGGRESSIVE",
+        "AI_CAUTIOUS",
+        "AI_STATUS",
+        "AI_RISKY"
+      ],
+      "source_switch_flags": [
+        "CONTEXT_USE",
+        "SWITCH_SOMETIMES"
+      ]
+    },
+    "BLUE": {
+      "evs": [
+        84,
+        84,
+        84,
+        84,
+        84,
+        84
+      ],
+      "dvs": [
+        15,
+        15,
+        15,
+        15,
+        15,
+        15
+      ],
+      "gender": "MALE",
+      "items": [
+        "FULL_RESTORE",
+        "FULL_RESTORE"
+      ],
+      "base_reward": 25,
+      "source_ai_layers": [
+        "AI_BASIC",
+        "AI_SETUP",
+        "AI_TYPES",
+        "AI_SMART",
+        "AI_OPPORTUNIST",
+        "AI_AGGRESSIVE",
+        "AI_CAUTIOUS",
+        "AI_STATUS",
+        "AI_RISKY"
+      ],
+      "source_switch_flags": [
+        "CONTEXT_USE",
+        "SWITCH_SOMETIMES"
+      ]
+    },
+    "RED": {
+      "evs": [
+        84,
+        84,
+        84,
+        84,
+        84,
+        84
+      ],
+      "dvs": [
+        15,
+        15,
+        15,
+        15,
+        15,
+        15
+      ],
+      "gender": "MALE",
+      "items": [
+        "FULL_RESTORE",
+        "FULL_RESTORE"
+      ],
+      "base_reward": 25,
+      "source_ai_layers": [
+        "AI_BASIC",
+        "AI_SETUP",
+        "AI_TYPES",
+        "AI_SMART",
+        "AI_OPPORTUNIST",
+        "AI_AGGRESSIVE",
+        "AI_CAUTIOUS",
+        "AI_STATUS",
+        "AI_RISKY"
+      ],
+      "source_switch_flags": [
+        "CONTEXT_USE",
+        "SWITCH_SOMETIMES"
+      ]
+    },
+    "LEAF": {
+      "evs": [
+        84,
+        84,
+        84,
+        84,
+        84,
+        84
+      ],
+      "dvs": [
+        15,
+        15,
+        15,
+        15,
+        15,
+        15
+      ],
+      "gender": "FEMALE",
+      "items": [
+        "FULL_RESTORE",
+        "FULL_RESTORE"
+      ],
+      "base_reward": 25,
+      "source_ai_layers": [
+        "AI_BASIC",
+        "AI_SETUP",
+        "AI_TYPES",
+        "AI_SMART",
+        "AI_OPPORTUNIST",
+        "AI_AGGRESSIVE",
+        "AI_CAUTIOUS",
+        "AI_STATUS",
+        "AI_RISKY"
+      ],
+      "source_switch_flags": [
+        "CONTEXT_USE",
+        "SWITCH_SOMETIMES"
+      ]
+    },
+    "RIVAL0": {
+      "evs": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "dvs": [
+        15,
+        15,
+        15,
+        15,
+        15,
+        15
+      ],
+      "gender": "MALE",
+      "items": [
+        "0",
+        "0"
+      ],
+      "base_reward": 15,
+      "source_ai_layers": [
+        "AI_BASIC",
+        "AI_SETUP",
+        "AI_TYPES",
+        "AI_SMART",
+        "AI_OPPORTUNIST",
+        "AI_AGGRESSIVE",
+        "AI_CAUTIOUS",
+        "AI_STATUS",
+        "AI_RISKY"
+      ],
+      "source_switch_flags": [
+        "CONTEXT_USE",
+        "SWITCH_SOMETIMES"
+      ]
+    },
+    "RIVAL1": {
+      "evs": [
+        48,
+        48,
+        48,
+        48,
+        48,
+        48
+      ],
+      "dvs": [
+        15,
+        15,
+        15,
+        15,
+        15,
+        15
+      ],
+      "gender": "MALE",
+      "items": [
+        "SUPER_POTION",
+        "0"
+      ],
+      "base_reward": 20,
+      "source_ai_layers": [
+        "AI_BASIC",
+        "AI_SETUP",
+        "AI_TYPES",
+        "AI_SMART",
+        "AI_OPPORTUNIST",
+        "AI_AGGRESSIVE",
+        "AI_CAUTIOUS",
+        "AI_STATUS",
+        "AI_RISKY"
+      ],
+      "source_switch_flags": [
+        "CONTEXT_USE",
+        "SWITCH_SOMETIMES"
+      ]
+    },
+    "RIVAL2": {
+      "evs": [
+        84,
+        84,
+        84,
+        84,
+        84,
+        84
+      ],
+      "dvs": [
+        15,
+        15,
+        15,
+        15,
+        15,
+        15
+      ],
+      "gender": "MALE",
+      "items": [
+        "MAX_POTION",
+        "0"
+      ],
+      "base_reward": 25,
+      "source_ai_layers": [
+        "AI_BASIC",
+        "AI_SETUP",
+        "AI_TYPES",
+        "AI_SMART",
+        "AI_OPPORTUNIST",
+        "AI_AGGRESSIVE",
+        "AI_CAUTIOUS",
+        "AI_STATUS",
+        "AI_RISKY"
+      ],
+      "source_switch_flags": [
+        "CONTEXT_USE",
+        "SWITCH_SOMETIMES"
+      ]
+    },
+    "LYRA1": {
+      "evs": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "dvs": [
+        11,
+        11,
+        11,
+        11,
+        11,
+        11
+      ],
+      "gender": "FEMALE",
+      "items": [
+        "0",
+        "0"
+      ],
+      "base_reward": 15,
+      "source_ai_layers": [
+        "AI_BASIC",
+        "AI_SETUP",
+        "AI_TYPES",
+        "AI_SMART",
+        "AI_OPPORTUNIST",
+        "AI_AGGRESSIVE",
+        "AI_CAUTIOUS",
+        "AI_STATUS",
+        "AI_RISKY"
+      ],
+      "source_switch_flags": [
+        "CONTEXT_USE",
+        "SWITCH_SOMETIMES"
+      ]
+    },
+    "LYRA2": {
+      "evs": [
+        84,
+        84,
+        84,
+        84,
+        84,
+        84
+      ],
+      "dvs": [
+        11,
+        11,
+        11,
+        11,
+        11,
+        11
+      ],
+      "gender": "FEMALE",
+      "items": [
+        "FULL_RESTORE",
+        "0"
+      ],
+      "base_reward": 25,
+      "source_ai_layers": [
+        "AI_BASIC",
+        "AI_SETUP",
+        "AI_TYPES",
+        "AI_SMART",
+        "AI_OPPORTUNIST",
+        "AI_AGGRESSIVE",
+        "AI_CAUTIOUS",
+        "AI_STATUS",
+        "AI_RISKY"
+      ],
+      "source_switch_flags": [
+        "CONTEXT_USE",
+        "SWITCH_SOMETIMES"
+      ]
+    },
+    "YOUNGSTER": {
+      "evs": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "dvs": [
+        6,
+        6,
+        6,
+        6,
+        6,
+        6
+      ],
+      "gender": "MALE",
+      "items": [
+        "0",
+        "0"
+      ],
+      "base_reward": 4,
+      "source_ai_layers": [
+        "AI_BASIC",
+        "AI_STATUS"
+      ],
+      "source_switch_flags": [
+        "CONTEXT_USE",
+        "SWITCH_RARELY"
+      ]
+    },
+    "BUG_CATCHER": {
+      "evs": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "dvs": [
+        6,
+        6,
+        6,
+        6,
+        6,
+        6
+      ],
+      "gender": "MALE",
+      "items": [
+        "0",
+        "0"
+      ],
+      "base_reward": 4,
+      "source_ai_layers": [
+        "AI_BASIC",
+        "AI_SETUP",
+        "AI_STATUS"
+      ],
+      "source_switch_flags": [
+        "CONTEXT_USE",
+        "SWITCH_RARELY"
+      ]
+    },
+    "CAMPER": {
+      "evs": [
+        2,
+        2,
+        2,
+        2,
+        2,
+        2
+      ],
+      "dvs": [
+        7,
+        7,
+        7,
+        7,
+        7,
+        7
+      ],
+      "gender": "MALE",
+      "items": [
+        "0",
+        "0"
+      ],
+      "base_reward": 5,
+      "source_ai_layers": [
+        "AI_BASIC",
+        "AI_CAUTIOUS",
+        "AI_STATUS"
+      ],
+      "source_switch_flags": [
+        "CONTEXT_USE",
+        "SWITCH_RARELY"
+      ]
+    },
+    "PICNICKER": {
+      "evs": [
+        2,
+        2,
+        2,
+        2,
+        2,
+        2
+      ],
+      "dvs": [
+        7,
+        7,
+        7,
+        7,
+        7,
+        7
+      ],
+      "gender": "FEMALE",
+      "items": [
+        "0",
+        "0"
+      ],
+      "base_reward": 5,
+      "source_ai_layers": [
+        "AI_BASIC",
+        "AI_CAUTIOUS",
+        "AI_STATUS"
+      ],
+      "source_switch_flags": [
+        "CONTEXT_USE",
+        "SWITCH_RARELY"
+      ]
+    },
+    "TWINS": {
+      "evs": [
+        5,
+        5,
+        5,
+        5,
+        5,
+        5
+      ],
+      "dvs": [
+        8,
+        8,
+        8,
+        8,
+        8,
+        8
+      ],
+      "gender": "FEMALE",
+      "items": [
+        "0",
+        "0"
+      ],
+      "base_reward": 5,
+      "source_ai_layers": [
+        "NO_AI"
+      ],
+      "source_switch_flags": [
+        "CONTEXT_USE",
+        "SWITCH_OFTEN"
+      ]
+    },
+    "FISHER": {
+      "evs": [
+        5,
+        5,
+        5,
+        5,
+        5,
+        5
+      ],
+      "dvs": [
+        8,
+        8,
+        8,
+        8,
+        8,
+        8
+      ],
+      "gender": "MALE",
+      "items": [
+        "0",
+        "0"
+      ],
+      "base_reward": 6,
+      "source_ai_layers": [
+        "AI_BASIC",
+        "AI_TYPES",
+        "AI_OPPORTUNIST",
+        "AI_CAUTIOUS",
+        "AI_STATUS"
+      ],
+      "source_switch_flags": [
+        "CONTEXT_USE",
+        "SWITCH_RARELY"
+      ]
+    },
+    "BIRD_KEEPER": {
+      "evs": [
+        5,
+        5,
+        5,
+        5,
+        5,
+        5
+      ],
+      "dvs": [
+        8,
+        8,
+        8,
+        8,
+        8,
+        8
+      ],
+      "gender": "MALE",
+      "items": [
+        "0",
+        "0"
+      ],
+      "base_reward": 6,
+      "source_ai_layers": [
+        "AI_BASIC",
+        "AI_TYPES",
+        "AI_OFFENSIVE",
+        "AI_OPPORTUNIST",
+        "AI_STATUS"
+      ],
+      "source_switch_flags": [
+        "CONTEXT_USE",
+        "SWITCH_RARELY"
+      ]
+    },
+    "HIKER": {
+      "evs": [
+        8,
+        8,
+        8,
+        8,
+        8,
+        8
+      ],
+      "dvs": [
+        9,
+        9,
+        9,
+        9,
+        9,
+        9
+      ],
+      "gender": "MALE",
+      "items": [
+        "0",
+        "0"
+      ],
+      "base_reward": 8,
+      "source_ai_layers": [
+        "AI_BASIC",
+        "AI_OFFENSIVE",
+        "AI_STATUS"
+      ],
+      "source_switch_flags": [
+        "CONTEXT_USE",
+        "SWITCH_RARELY"
+      ]
+    },
+    "GRUNTM": {
+      "evs": [
+        10,
+        10,
+        10,
+        10,
+        10,
+        10
+      ],
+      "dvs": [
+        10,
+        10,
+        10,
+        10,
+        10,
+        10
+      ],
+      "gender": "MALE",
+      "items": [
+        "0",
+        "0"
+      ],
+      "base_reward": 10,
+      "source_ai_layers": [
+        "AI_BASIC",
+        "AI_SETUP",
+        "AI_TYPES",
+        "AI_OPPORTUNIST",
+        "AI_CAUTIOUS",
+        "AI_STATUS",
+        "AI_RISKY"
+      ],
+      "source_switch_flags": [
+        "CONTEXT_USE",
+        "SWITCH_RARELY"
+      ]
+    },
+    "GRUNTF": {
+      "evs": [
+        10,
+        10,
+        10,
+        10,
+        10,
+        10
+      ],
+      "dvs": [
+        10,
+        10,
+        10,
+        10,
+        10,
+        10
+      ],
+      "gender": "FEMALE",
+      "items": [
+        "0",
+        "0"
+      ],
+      "base_reward": 10,
+      "source_ai_layers": [
+        "AI_BASIC",
+        "AI_SETUP",
+        "AI_TYPES",
+        "AI_OPPORTUNIST",
+        "AI_CAUTIOUS",
+        "AI_STATUS",
+        "AI_RISKY"
+      ],
+      "source_switch_flags": [
+        "CONTEXT_USE",
+        "SWITCH_RARELY"
+      ]
+    },
+    "POKEFANM": {
+      "evs": [
+        10,
+        10,
+        10,
+        10,
+        10,
+        10
+      ],
+      "dvs": [
+        10,
+        10,
+        10,
+        10,
+        10,
+        10
+      ],
+      "gender": "MALE",
+      "items": [
+        "0",
+        "0"
+      ],
+      "base_reward": 15,
+      "source_ai_layers": [
+        "AI_BASIC",
+        "AI_TYPES",
+        "AI_SMART",
+        "AI_STATUS"
+      ],
+      "source_switch_flags": [
+        "CONTEXT_USE",
+        "SWITCH_RARELY"
+      ]
+    },
+    "POKEFANF": {
+      "evs": [
+        10,
+        10,
+        10,
+        10,
+        10,
+        10
+      ],
+      "dvs": [
+        10,
+        10,
+        10,
+        10,
+        10,
+        10
+      ],
+      "gender": "FEMALE",
+      "items": [
+        "0",
+        "0"
+      ],
+      "base_reward": 15,
+      "source_ai_layers": [
+        "AI_BASIC",
+        "AI_TYPES",
+        "AI_SMART",
+        "AI_STATUS"
+      ],
+      "source_switch_flags": [
+        "CONTEXT_USE",
+        "SWITCH_RARELY"
+      ]
+    },
+    "OFFICERM": {
+      "evs": [
+        16,
+        16,
+        16,
+        16,
+        16,
+        16
+      ],
+      "dvs": [
+        13,
+        13,
+        11,
+        11,
+        13,
+        11
+      ],
+      "gender": "MALE",
+      "items": [
+        "FRESH_WATER",
+        "0"
+      ],
+      "base_reward": 15,
+      "source_ai_layers": [
+        "AI_BASIC",
+        "AI_TYPES",
+        "AI_OPPORTUNIST",
+        "AI_STATUS"
+      ],
+      "source_switch_flags": [
+        "CONTEXT_USE",
+        "SWITCH_SOMETIMES"
+      ]
+    },
+    "OFFICERF": {
+      "evs": [
+        16,
+        16,
+        16,
+        16,
+        16,
+        16
+      ],
+      "dvs": [
+        7,
+        11,
+        13,
+        11,
+        15,
+        15
+      ],
+      "gender": "FEMALE",
+      "items": [
+        "FRESH_WATER",
+        "0"
+      ],
+      "base_reward": 15,
+      "source_ai_layers": [
+        "AI_BASIC",
+        "AI_TYPES",
+        "AI_OPPORTUNIST",
+        "AI_STATUS"
+      ],
+      "source_switch_flags": [
+        "CONTEXT_USE",
+        "SWITCH_SOMETIMES"
+      ]
+    },
+    "NURSE": {
+      "evs": [
+        16,
+        16,
+        16,
+        16,
+        16,
+        16
+      ],
+      "dvs": [
+        14,
+        5,
+        15,
+        10,
+        13,
+        6
+      ],
+      "gender": "FEMALE",
+      "items": [
+        "0",
+        "0"
+      ],
+      "base_reward": 16,
+      "source_ai_layers": [
+        "AI_BASIC",
+        "AI_TYPES",
+        "AI_OPPORTUNIST",
+        "AI_STATUS"
+      ],
+      "source_switch_flags": [
+        "CONTEXT_USE",
+        "SWITCH_SOMETIMES"
+      ]
+    },
+    "POKEMANIAC": {
+      "evs": [
+        13,
+        13,
+        13,
+        13,
+        13,
+        13
+      ],
+      "dvs": [
+        11,
+        11,
+        11,
+        11,
+        11,
+        11
+      ],
+      "gender": "MALE",
+      "items": [
+        "X_SPEED",
+        "0"
+      ],
+      "base_reward": 13,
+      "source_ai_layers": [
+        "AI_BASIC",
+        "AI_SETUP",
+        "AI_OFFENSIVE",
+        "AI_AGGRESSIVE",
+        "AI_STATUS"
+      ],
+      "source_switch_flags": [
+        "CONTEXT_USE",
+        "SWITCH_SOMETIMES"
+      ]
+    },
+    "COSPLAYER": {
+      "evs": [
+        13,
+        13,
+        13,
+        13,
+        13,
+        13
+      ],
+      "dvs": [
+        11,
+        11,
+        11,
+        11,
+        11,
+        11
+      ],
+      "gender": "FEMALE",
+      "items": [
+        "FRESH_WATER",
+        "0"
+      ],
+      "base_reward": 13,
+      "source_ai_layers": [
+        "AI_BASIC",
+        "AI_SETUP",
+        "AI_OFFENSIVE",
+        "AI_AGGRESSIVE",
+        "AI_STATUS"
+      ],
+      "source_switch_flags": [
+        "CONTEXT_USE",
+        "SWITCH_SOMETIMES"
+      ]
+    },
+    "SUPER_NERD": {
+      "evs": [
+        13,
+        13,
+        13,
+        13,
+        13,
+        13
+      ],
+      "dvs": [
+        11,
+        11,
+        11,
+        11,
+        11,
+        11
+      ],
+      "gender": "MALE",
+      "items": [
+        "DIRE_HIT",
+        "0"
+      ],
+      "base_reward": 13,
+      "source_ai_layers": [
+        "AI_BASIC",
+        "AI_SETUP",
+        "AI_TYPES",
+        "AI_SMART",
+        "AI_OPPORTUNIST",
+        "AI_CAUTIOUS",
+        "AI_STATUS",
+        "AI_RISKY"
+      ],
+      "source_switch_flags": [
+        "CONTEXT_USE",
+        "SWITCH_SOMETIMES"
+      ]
+    },
+    "LASS": {
+      "evs": [
+        13,
+        13,
+        13,
+        13,
+        13,
+        13
+      ],
+      "dvs": [
+        11,
+        11,
+        11,
+        11,
+        11,
+        11
+      ],
+      "gender": "FEMALE",
+      "items": [
+        "0",
+        "0"
+      ],
+      "base_reward": 15,
+      "source_ai_layers": [
+        "AI_BASIC",
+        "AI_TYPES",
+        "AI_OPPORTUNIST",
+        "AI_CAUTIOUS",
+        "AI_STATUS"
+      ],
+      "source_switch_flags": [
+        "CONTEXT_USE",
+        "SWITCH_RARELY"
+      ]
+    },
+    "BEAUTY": {
+      "evs": [
+        16,
+        16,
+        16,
+        16,
+        16,
+        16
+      ],
+      "dvs": [
+        12,
+        12,
+        12,
+        12,
+        12,
+        12
+      ],
+      "gender": "FEMALE",
+      "items": [
+        "0",
+        "0"
+      ],
+      "base_reward": 20,
+      "source_ai_layers": [
+        "AI_BASIC",
+        "AI_TYPES",
+        "AI_OPPORTUNIST",
+        "AI_CAUTIOUS",
+        "AI_STATUS"
+      ],
+      "source_switch_flags": [
+        "CONTEXT_USE",
+        "SWITCH_SOMETIMES"
+      ]
+    },
+    "BUG_MANIAC": {
+      "evs": [
+        16,
+        16,
+        16,
+        16,
+        16,
+        16
+      ],
+      "dvs": [
+        12,
+        12,
+        12,
+        12,
+        12,
+        12
+      ],
+      "gender": "MALE",
+      "items": [
+        "0",
+        "0"
+      ],
+      "base_reward": 14,
+      "source_ai_layers": [
+        "AI_BASIC",
+        "AI_SETUP",
+        "AI_OFFENSIVE",
+        "AI_AGGRESSIVE",
+        "AI_STATUS"
+      ],
+      "source_switch_flags": [
+        "CONTEXT_USE",
+        "SWITCH_SOMETIMES"
+      ]
+    },
+    "RUIN_MANIAC": {
+      "evs": [
+        16,
+        16,
+        16,
+        16,
+        16,
+        16
+      ],
+      "dvs": [
+        12,
+        12,
+        12,
+        12,
+        12,
+        12
+      ],
+      "gender": "MALE",
+      "items": [
+        "0",
+        "0"
+      ],
+      "base_reward": 14,
+      "source_ai_layers": [
+        "AI_BASIC",
+        "AI_SETUP",
+        "AI_OFFENSIVE",
+        "AI_AGGRESSIVE",
+        "AI_STATUS"
+      ],
+      "source_switch_flags": [
+        "CONTEXT_USE",
+        "SWITCH_SOMETIMES"
+      ]
+    },
+    "FIREBREATHER": {
+      "evs": [
+        16,
+        16,
+        16,
+        16,
+        16,
+        16
+      ],
+      "dvs": [
+        12,
+        12,
+        12,
+        12,
+        12,
+        12
+      ],
+      "gender": "MALE",
+      "items": [
+        "0",
+        "0"
+      ],
+      "base_reward": 15,
+      "source_ai_layers": [
+        "AI_BASIC",
+        "AI_SETUP",
+        "AI_OFFENSIVE",
+        "AI_OPPORTUNIST",
+        "AI_STATUS"
+      ],
+      "source_switch_flags": [
+        "CONTEXT_USE",
+        "SWITCH_SOMETIMES"
+      ]
+    },
+    "JUGGLER": {
+      "evs": [
+        16,
+        16,
+        16,
+        16,
+        16,
+        16
+      ],
+      "dvs": [
+        12,
+        12,
+        12,
+        12,
+        12,
+        12
+      ],
+      "gender": "MALE",
+      "items": [
+        "0",
+        "0"
+      ],
+      "base_reward": 15,
+      "source_ai_layers": [
+        "AI_BASIC",
+        "AI_TYPES",
+        "AI_SMART",
+        "AI_STATUS"
+      ],
+      "source_switch_flags": [
+        "CONTEXT_USE",
+        "SWITCH_OFTEN"
+      ]
+    },
+    "SCHOOLBOY": {
+      "evs": [
+        16,
+        16,
+        16,
+        16,
+        16,
+        16
+      ],
+      "dvs": [
+        12,
+        12,
+        12,
+        12,
+        12,
+        12
+      ],
+      "gender": "MALE",
+      "items": [
+        "SODA_POP",
+        "0"
+      ],
+      "base_reward": 10,
+      "source_ai_layers": [
+        "AI_BASIC",
+        "AI_SETUP",
+        "AI_TYPES",
+        "AI_OPPORTUNIST",
+        "AI_CAUTIOUS",
+        "AI_STATUS"
+      ],
+      "source_switch_flags": [
+        "CONTEXT_USE",
+        "SWITCH_SOMETIMES"
+      ]
+    },
+    "SCHOOLGIRL": {
+      "evs": [
+        16,
+        16,
+        16,
+        16,
+        16,
+        16
+      ],
+      "dvs": [
+        12,
+        12,
+        12,
+        12,
+        12,
+        12
+      ],
+      "gender": "FEMALE",
+      "items": [
+        "SODA_POP",
+        "0"
+      ],
+      "base_reward": 10,
+      "source_ai_layers": [
+        "AI_BASIC",
+        "AI_SETUP",
+        "AI_TYPES",
+        "AI_OPPORTUNIST",
+        "AI_CAUTIOUS",
+        "AI_STATUS"
+      ],
+      "source_switch_flags": [
+        "CONTEXT_USE",
+        "SWITCH_SOMETIMES"
+      ]
+    },
+    "PSYCHIC_T": {
+      "evs": [
+        16,
+        16,
+        16,
+        16,
+        16,
+        16
+      ],
+      "dvs": [
+        10,
+        10,
+        12,
+        12,
+        14,
+        14
+      ],
+      "gender": "MALE",
+      "items": [
+        "0",
+        "0"
+      ],
+      "base_reward": 10,
+      "source_ai_layers": [
+        "AI_BASIC",
+        "AI_TYPES",
+        "AI_OPPORTUNIST",
+        "AI_CAUTIOUS",
+        "AI_STATUS"
+      ],
+      "source_switch_flags": [
+        "CONTEXT_USE",
+        "SWITCH_SOMETIMES"
+      ]
+    },
+    "HEX_MANIAC": {
+      "evs": [
+        16,
+        16,
+        16,
+        16,
+        16,
+        16
+      ],
+      "dvs": [
+        10,
+        10,
+        12,
+        12,
+        14,
+        14
+      ],
+      "gender": "FEMALE",
+      "items": [
+        "0",
+        "0"
+      ],
+      "base_reward": 10,
+      "source_ai_layers": [
+        "AI_BASIC",
+        "AI_TYPES",
+        "AI_OPPORTUNIST",
+        "AI_CAUTIOUS",
+        "AI_STATUS"
+      ],
+      "source_switch_flags": [
+        "CONTEXT_USE",
+        "SWITCH_SOMETIMES"
+      ]
+    },
+    "SAGE": {
+      "evs": [
+        16,
+        16,
+        16,
+        16,
+        16,
+        16
+      ],
+      "dvs": [
+        12,
+        12,
+        12,
+        12,
+        12,
+        12
+      ],
+      "gender": "MALE",
+      "items": [
+        "0",
+        "0"
+      ],
+      "base_reward": 8,
+      "source_ai_layers": [
+        "AI_BASIC",
+        "AI_SETUP",
+        "AI_TYPES",
+        "AI_CAUTIOUS",
+        "AI_STATUS",
+        "AI_RISKY"
+      ],
+      "source_switch_flags": [
+        "CONTEXT_USE",
+        "SWITCH_SOMETIMES"
+      ]
+    },
+    "MEDIUM": {
+      "evs": [
+        16,
+        16,
+        16,
+        16,
+        16,
+        16
+      ],
+      "dvs": [
+        12,
+        12,
+        12,
+        12,
+        12,
+        12
+      ],
+      "gender": "FEMALE",
+      "items": [
+        "0",
+        "0"
+      ],
+      "base_reward": 10,
+      "source_ai_layers": [
+        "AI_BASIC",
+        "AI_SETUP",
+        "AI_TYPES",
+        "AI_CAUTIOUS",
+        "AI_STATUS",
+        "AI_RISKY"
+      ],
+      "source_switch_flags": [
+        "CONTEXT_USE",
+        "SWITCH_SOMETIMES"
+      ]
+    },
+    "KIMONO_GIRL": {
+      "evs": [
+        18,
+        18,
+        18,
+        18,
+        18,
+        18
+      ],
+      "dvs": [
+        13,
+        13,
+        13,
+        13,
+        13,
+        13
+      ],
+      "gender": "FEMALE",
+      "items": [
+        "0",
+        "0"
+      ],
+      "base_reward": 20,
+      "source_ai_layers": [
+        "AI_BASIC",
+        "AI_SETUP",
+        "AI_TYPES",
+        "AI_SMART",
+        "AI_OPPORTUNIST",
+        "AI_AGGRESSIVE",
+        "AI_CAUTIOUS",
+        "AI_STATUS",
+        "AI_RISKY"
+      ],
+      "source_switch_flags": [
+        "CONTEXT_USE",
+        "SWITCH_SOMETIMES"
+      ]
+    },
+    "ELDER": {
+      "evs": [
+        18,
+        18,
+        18,
+        18,
+        18,
+        18
+      ],
+      "dvs": [
+        13,
+        13,
+        13,
+        13,
+        13,
+        13
+      ],
+      "gender": "MALE",
+      "items": [
+        "SUPER_POTION",
+        "0"
+      ],
+      "base_reward": 10,
+      "source_ai_layers": [
+        "AI_BASIC",
+        "AI_SETUP",
+        "AI_TYPES",
+        "AI_SMART",
+        "AI_OPPORTUNIST",
+        "AI_AGGRESSIVE",
+        "AI_CAUTIOUS",
+        "AI_STATUS",
+        "AI_RISKY"
+      ],
+      "source_switch_flags": [
+        "CONTEXT_USE",
+        "SWITCH_SOMETIMES"
+      ]
+    },
+    "SR_AND_JR": {
+      "evs": [
+        16,
+        16,
+        16,
+        16,
+        16,
+        16
+      ],
+      "dvs": [
+        12,
+        12,
+        12,
+        12,
+        12,
+        12
+      ],
+      "gender": "FEMALE",
+      "items": [
+        "LEMONADE",
+        "0"
+      ],
+      "base_reward": 16,
+      "source_ai_layers": [
+        "AI_BASIC",
+        "AI_TYPES",
+        "AI_OPPORTUNIST",
+        "AI_CAUTIOUS",
+        "AI_STATUS"
+      ],
+      "source_switch_flags": [
+        "CONTEXT_USE",
+        "SWITCH_OFTEN"
+      ]
+    },
+    "COUPLE": {
+      "evs": [
+        16,
+        16,
+        16,
+        16,
+        16,
+        16
+      ],
+      "dvs": [
+        12,
+        12,
+        12,
+        12,
+        12,
+        12
+      ],
+      "gender": "MALE",
+      "items": [
+        "LEMONADE",
+        "0"
+      ],
+      "base_reward": 18,
+      "source_ai_layers": [
+        "AI_BASIC",
+        "AI_TYPES",
+        "AI_OPPORTUNIST",
+        "AI_CAUTIOUS",
+        "AI_STATUS"
+      ],
+      "source_switch_flags": [
+        "CONTEXT_USE",
+        "SWITCH_OFTEN"
+      ]
+    },
+    "GENTLEMAN": {
+      "evs": [
+        16,
+        16,
+        16,
+        16,
+        16,
+        16
+      ],
+      "dvs": [
+        12,
+        12,
+        12,
+        12,
+        12,
+        12
+      ],
+      "gender": "MALE",
+      "items": [
+        "0",
+        "0"
+      ],
+      "base_reward": 16,
+      "source_ai_layers": [
+        "AI_BASIC",
+        "AI_SETUP",
+        "AI_AGGRESSIVE",
+        "AI_STATUS"
+      ],
+      "source_switch_flags": [
+        "CONTEXT_USE",
+        "SWITCH_SOMETIMES"
+      ]
+    },
+    "RICH_BOY": {
+      "evs": [
+        33,
+        33,
+        33,
+        33,
+        33,
+        33
+      ],
+      "dvs": [
+        12,
+        12,
+        12,
+        12,
+        12,
+        12
+      ],
+      "gender": "MALE",
+      "items": [
+        "MAX_POTION",
+        "0"
+      ],
+      "base_reward": 50,
+      "source_ai_layers": [
+        "AI_BASIC",
+        "AI_TYPES",
+        "AI_OPPORTUNIST",
+        "AI_CAUTIOUS",
+        "AI_STATUS"
+      ],
+      "source_switch_flags": [
+        "CONTEXT_USE",
+        "SWITCH_SOMETIMES"
+      ]
+    },
+    "LADY": {
+      "evs": [
+        16,
+        16,
+        16,
+        16,
+        16,
+        16
+      ],
+      "dvs": [
+        12,
+        12,
+        12,
+        12,
+        12,
+        12
+      ],
+      "gender": "FEMALE",
+      "items": [
+        "MAX_POTION",
+        "0"
+      ],
+      "base_reward": 50,
+      "source_ai_layers": [
+        "AI_BASIC",
+        "AI_TYPES",
+        "AI_OPPORTUNIST",
+        "AI_CAUTIOUS",
+        "AI_STATUS"
+      ],
+      "source_switch_flags": [
+        "CONTEXT_USE",
+        "SWITCH_SOMETIMES"
+      ]
+    },
+    "BREEDER": {
+      "evs": [
+        18,
+        18,
+        18,
+        18,
+        18,
+        18
+      ],
+      "dvs": [
+        13,
+        13,
+        13,
+        13,
+        13,
+        13
+      ],
+      "gender": "FEMALE",
+      "items": [
+        "SUPER_POTION",
+        "0"
+      ],
+      "base_reward": 16,
+      "source_ai_layers": [
+        "AI_BASIC",
+        "AI_SETUP",
+        "AI_TYPES",
+        "AI_CAUTIOUS",
+        "AI_STATUS"
+      ],
+      "source_switch_flags": [
+        "CONTEXT_USE",
+        "SWITCH_RARELY"
+      ]
+    },
+    "BAKER": {
+      "evs": [
+        16,
+        16,
+        16,
+        16,
+        16,
+        16
+      ],
+      "dvs": [
+        12,
+        12,
+        12,
+        12,
+        12,
+        12
+      ],
+      "gender": "FEMALE",
+      "items": [
+        "MOOMOO_MILK",
+        "0"
+      ],
+      "base_reward": 14,
+      "source_ai_layers": [
+        "AI_BASIC",
+        "AI_OFFENSIVE",
+        "AI_OPPORTUNIST",
+        "AI_STATUS",
+        "AI_RISKY"
+      ],
+      "source_switch_flags": [
+        "CONTEXT_USE",
+        "SWITCH_SOMETIMES"
+      ]
+    },
+    "COWGIRL": {
+      "evs": [
+        16,
+        16,
+        16,
+        16,
+        16,
+        16
+      ],
+      "dvs": [
+        12,
+        12,
+        12,
+        12,
+        12,
+        12
+      ],
+      "gender": "FEMALE",
+      "items": [
+        "MOOMOO_MILK",
+        "0"
+      ],
+      "base_reward": 14,
+      "source_ai_layers": [
+        "AI_BASIC",
+        "AI_OFFENSIVE",
+        "AI_OPPORTUNIST",
+        "AI_STATUS",
+        "AI_RISKY"
+      ],
+      "source_switch_flags": [
+        "CONTEXT_USE",
+        "SWITCH_SOMETIMES"
+      ]
+    },
+    "SAILOR": {
+      "evs": [
+        16,
+        16,
+        16,
+        16,
+        16,
+        16
+      ],
+      "dvs": [
+        12,
+        12,
+        12,
+        12,
+        12,
+        12
+      ],
+      "gender": "MALE",
+      "items": [
+        "0",
+        "0"
+      ],
+      "base_reward": 16,
+      "source_ai_layers": [
+        "AI_BASIC",
+        "AI_OFFENSIVE",
+        "AI_OPPORTUNIST",
+        "AI_STATUS"
+      ],
+      "source_switch_flags": [
+        "CONTEXT_USE",
+        "SWITCH_SOMETIMES"
+      ]
+    },
+    "SWIMMERM": {
+      "evs": [
+        16,
+        16,
+        16,
+        16,
+        16,
+        16
+      ],
+      "dvs": [
+        12,
+        12,
+        12,
+        12,
+        12,
+        12
+      ],
+      "gender": "MALE",
+      "items": [
+        "0",
+        "0"
+      ],
+      "base_reward": 5,
+      "source_ai_layers": [
+        "AI_BASIC",
+        "AI_SETUP",
+        "AI_TYPES",
+        "AI_OFFENSIVE",
+        "AI_STATUS"
+      ],
+      "source_switch_flags": [
+        "CONTEXT_USE",
+        "SWITCH_SOMETIMES"
+      ]
+    },
+    "SWIMMERF": {
+      "evs": [
+        16,
+        16,
+        16,
+        16,
+        16,
+        16
+      ],
+      "dvs": [
+        12,
+        12,
+        12,
+        12,
+        12,
+        12
+      ],
+      "gender": "FEMALE",
+      "items": [
+        "0",
+        "0"
+      ],
+      "base_reward": 5,
+      "source_ai_layers": [
+        "AI_BASIC",
+        "AI_SETUP",
+        "AI_TYPES",
+        "AI_CAUTIOUS",
+        "AI_STATUS"
+      ],
+      "source_switch_flags": [
+        "CONTEXT_USE",
+        "SWITCH_SOMETIMES"
+      ]
+    },
+    "BURGLAR": {
+      "evs": [
+        18,
+        18,
+        18,
+        18,
+        18,
+        18
+      ],
+      "dvs": [
+        13,
+        13,
+        13,
+        13,
+        13,
+        13
+      ],
+      "gender": "MALE",
+      "items": [
+        "0",
+        "0"
+      ],
+      "base_reward": 20,
+      "source_ai_layers": [
+        "AI_BASIC",
+        "AI_OFFENSIVE",
+        "AI_CAUTIOUS",
+        "AI_STATUS"
+      ],
+      "source_switch_flags": [
+        "CONTEXT_USE",
+        "SWITCH_RARELY"
+      ]
+    },
+    "PI": {
+      "evs": [
+        18,
+        18,
+        18,
+        18,
+        18,
+        18
+      ],
+      "dvs": [
+        13,
+        13,
+        13,
+        13,
+        13,
+        13
+      ],
+      "gender": "MALE",
+      "items": [
+        "0",
+        "0"
+      ],
+      "base_reward": 20,
+      "source_ai_layers": [
+        "AI_BASIC",
+        "AI_OFFENSIVE",
+        "AI_CAUTIOUS",
+        "AI_STATUS"
+      ],
+      "source_switch_flags": [
+        "CONTEXT_USE",
+        "SWITCH_SOMETIMES"
+      ]
+    },
+    "SCIENTIST": {
+      "evs": [
+        18,
+        18,
+        18,
+        18,
+        18,
+        18
+      ],
+      "dvs": [
+        13,
+        13,
+        13,
+        13,
+        13,
+        13
+      ],
+      "gender": "MALE",
+      "items": [
+        "FULL_RESTORE",
+        "0"
+      ],
+      "base_reward": 25,
+      "source_ai_layers": [
+        "AI_BASIC",
+        "AI_SETUP",
+        "AI_TYPES",
+        "AI_SMART",
+        "AI_OPPORTUNIST",
+        "AI_CAUTIOUS",
+        "AI_STATUS",
+        "AI_RISKY"
+      ],
+      "source_switch_flags": [
+        "CONTEXT_USE",
+        "SWITCH_SOMETIMES"
+      ]
+    },
+    "ROCKET_SCIENTIST": {
+      "evs": [
+        18,
+        18,
+        18,
+        18,
+        18,
+        18
+      ],
+      "dvs": [
+        13,
+        13,
+        13,
+        13,
+        13,
+        13
+      ],
+      "gender": "MALE",
+      "items": [
+        "FULL_RESTORE",
+        "0"
+      ],
+      "base_reward": 25,
+      "source_ai_layers": [
+        "AI_BASIC",
+        "AI_SETUP",
+        "AI_TYPES",
+        "AI_SMART",
+        "AI_OPPORTUNIST",
+        "AI_CAUTIOUS",
+        "AI_STATUS",
+        "AI_RISKY"
+      ],
+      "source_switch_flags": [
+        "CONTEXT_USE",
+        "SWITCH_SOMETIMES"
+      ]
+    },
+    "BOARDER": {
+      "evs": [
+        18,
+        18,
+        18,
+        18,
+        18,
+        18
+      ],
+      "dvs": [
+        13,
+        13,
+        13,
+        13,
+        13,
+        13
+      ],
+      "gender": "MALE",
+      "items": [
+        "0",
+        "0"
+      ],
+      "base_reward": 18,
+      "source_ai_layers": [
+        "AI_BASIC",
+        "AI_TYPES",
+        "AI_OPPORTUNIST",
+        "AI_STATUS"
+      ],
+      "source_switch_flags": [
+        "CONTEXT_USE",
+        "SWITCH_SOMETIMES"
+      ]
+    },
+    "SKIER": {
+      "evs": [
+        18,
+        18,
+        18,
+        18,
+        18,
+        18
+      ],
+      "dvs": [
+        13,
+        13,
+        13,
+        13,
+        13,
+        13
+      ],
+      "gender": "FEMALE",
+      "items": [
+        "0",
+        "0"
+      ],
+      "base_reward": 18,
+      "source_ai_layers": [
+        "AI_BASIC",
+        "AI_SETUP",
+        "AI_TYPES",
+        "AI_STATUS",
+        "AI_RISKY"
+      ],
+      "source_switch_flags": [
+        "CONTEXT_USE",
+        "SWITCH_SOMETIMES"
+      ]
+    },
+    "BLACKBELT_T": {
+      "evs": [
+        21,
+        21,
+        21,
+        21,
+        21,
+        21
+      ],
+      "dvs": [
+        15,
+        15,
+        13,
+        13,
+        13,
+        13
+      ],
+      "gender": "MALE",
+      "items": [
+        "FRESH_WATER",
+        "0"
+      ],
+      "base_reward": 6,
+      "source_ai_layers": [
+        "AI_BASIC",
+        "AI_OFFENSIVE",
+        "AI_STATUS",
+        "AI_RISKY"
+      ],
+      "source_switch_flags": [
+        "CONTEXT_USE",
+        "SWITCH_SOMETIMES"
+      ]
+    },
+    "BATTLE_GIRL": {
+      "evs": [
+        21,
+        21,
+        21,
+        21,
+        21,
+        21
+      ],
+      "dvs": [
+        15,
+        15,
+        13,
+        13,
+        13,
+        13
+      ],
+      "gender": "FEMALE",
+      "items": [
+        "FRESH_WATER",
+        "0"
+      ],
+      "base_reward": 6,
+      "source_ai_layers": [
+        "AI_BASIC",
+        "AI_OFFENSIVE",
+        "AI_STATUS",
+        "AI_RISKY"
+      ],
+      "source_switch_flags": [
+        "CONTEXT_USE",
+        "SWITCH_SOMETIMES"
+      ]
+    },
+    "DRAGON_TAMER": {
+      "evs": [
+        24,
+        24,
+        24,
+        24,
+        24,
+        24
+      ],
+      "dvs": [
+        13,
+        15,
+        13,
+        15,
+        13,
+        13
+      ],
+      "gender": "MALE",
+      "items": [
+        "HYPER_POTION",
+        "0"
+      ],
+      "base_reward": 15,
+      "source_ai_layers": [
+        "AI_BASIC",
+        "AI_SETUP",
+        "AI_TYPES",
+        "AI_SMART",
+        "AI_OPPORTUNIST",
+        "AI_AGGRESSIVE",
+        "AI_CAUTIOUS",
+        "AI_STATUS",
+        "AI_RISKY"
+      ],
+      "source_switch_flags": [
+        "CONTEXT_USE",
+        "SWITCH_SOMETIMES"
+      ]
+    },
+    "ENGINEER": {
+      "evs": [
+        24,
+        24,
+        24,
+        24,
+        24,
+        24
+      ],
+      "dvs": [
+        13,
+        13,
+        13,
+        13,
+        13,
+        13
+      ],
+      "gender": "MALE",
+      "items": [
+        "0",
+        "0"
+      ],
+      "base_reward": 18,
+      "source_ai_layers": [
+        "AI_BASIC",
+        "AI_SETUP",
+        "AI_TYPES",
+        "AI_SMART",
+        "AI_OPPORTUNIST",
+        "AI_CAUTIOUS",
+        "AI_STATUS",
+        "AI_RISKY"
+      ],
+      "source_switch_flags": [
+        "CONTEXT_USE",
+        "SWITCH_SOMETIMES"
+      ]
+    },
+    "TEACHER_F": {
+      "evs": [
+        24,
+        24,
+        24,
+        24,
+        24,
+        24
+      ],
+      "dvs": [
+        13,
+        13,
+        13,
+        13,
+        13,
+        13
+      ],
+      "gender": "FEMALE",
+      "items": [
+        "0",
+        "0"
+      ],
+      "base_reward": 18,
+      "source_ai_layers": [
+        "AI_BASIC",
+        "AI_OPPORTUNIST",
+        "AI_AGGRESSIVE",
+        "AI_STATUS"
+      ],
+      "source_switch_flags": [
+        "CONTEXT_USE",
+        "SWITCH_SOMETIMES"
+      ]
+    },
+    "TEACHER_M": {
+      "evs": [
+        24,
+        24,
+        24,
+        24,
+        24,
+        24
+      ],
+      "dvs": [
+        13,
+        13,
+        13,
+        13,
+        13,
+        13
+      ],
+      "gender": "MALE",
+      "items": [
+        "0",
+        "0"
+      ],
+      "base_reward": 18,
+      "source_ai_layers": [
+        "AI_BASIC",
+        "AI_OPPORTUNIST",
+        "AI_AGGRESSIVE",
+        "AI_STATUS"
+      ],
+      "source_switch_flags": [
+        "CONTEXT_USE",
+        "SWITCH_SOMETIMES"
+      ]
+    },
+    "GUITARISTM": {
+      "evs": [
+        24,
+        24,
+        24,
+        24,
+        24,
+        24
+      ],
+      "dvs": [
+        13,
+        13,
+        13,
+        13,
+        13,
+        13
+      ],
+      "gender": "MALE",
+      "items": [
+        "0",
+        "0"
+      ],
+      "base_reward": 18,
+      "source_ai_layers": [
+        "AI_BASIC",
+        "AI_SETUP",
+        "AI_TYPES",
+        "AI_AGGRESSIVE",
+        "AI_STATUS",
+        "AI_RISKY"
+      ],
+      "source_switch_flags": [
+        "CONTEXT_USE",
+        "SWITCH_SOMETIMES"
+      ]
+    },
+    "GUITARISTF": {
+      "evs": [
+        24,
+        24,
+        24,
+        24,
+        24,
+        24
+      ],
+      "dvs": [
+        13,
+        13,
+        13,
+        13,
+        13,
+        13
+      ],
+      "gender": "FEMALE",
+      "items": [
+        "0",
+        "0"
+      ],
+      "base_reward": 18,
+      "source_ai_layers": [
+        "AI_BASIC",
+        "AI_SETUP",
+        "AI_TYPES",
+        "AI_AGGRESSIVE",
+        "AI_STATUS",
+        "AI_RISKY"
+      ],
+      "source_switch_flags": [
+        "CONTEXT_USE",
+        "SWITCH_SOMETIMES"
+      ]
+    },
+    "BIKER": {
+      "evs": [
+        24,
+        24,
+        24,
+        24,
+        24,
+        24
+      ],
+      "dvs": [
+        13,
+        13,
+        13,
+        13,
+        13,
+        13
+      ],
+      "gender": "MALE",
+      "items": [
+        "0",
+        "0"
+      ],
+      "base_reward": 18,
+      "source_ai_layers": [
+        "AI_BASIC",
+        "AI_TYPES",
+        "AI_STATUS",
+        "AI_RISKY"
+      ],
+      "source_switch_flags": [
+        "CONTEXT_USE",
+        "SWITCH_SOMETIMES"
+      ]
+    },
+    "ROUGHNECK": {
+      "evs": [
+        24,
+        24,
+        24,
+        24,
+        24,
+        24
+      ],
+      "dvs": [
+        13,
+        13,
+        13,
+        13,
+        13,
+        13
+      ],
+      "gender": "MALE",
+      "items": [
+        "0",
+        "0"
+      ],
+      "base_reward": 18,
+      "source_ai_layers": [
+        "AI_BASIC",
+        "AI_TYPES",
+        "AI_STATUS",
+        "AI_RISKY"
+      ],
+      "source_switch_flags": [
+        "CONTEXT_USE",
+        "SWITCH_SOMETIMES"
+      ]
+    },
+    "TAMER": {
+      "evs": [
+        24,
+        24,
+        24,
+        24,
+        24,
+        24
+      ],
+      "dvs": [
+        13,
+        13,
+        13,
+        13,
+        13,
+        13
+      ],
+      "gender": "MALE",
+      "items": [
+        "0",
+        "0"
+      ],
+      "base_reward": 16,
+      "source_ai_layers": [
+        "AI_BASIC",
+        "AI_OFFENSIVE",
+        "AI_OPPORTUNIST",
+        "AI_AGGRESSIVE",
+        "AI_STATUS"
+      ],
+      "source_switch_flags": [
+        "CONTEXT_USE",
+        "SWITCH_SOMETIMES"
+      ]
+    },
+    "ARTIST": {
+      "evs": [
+        24,
+        24,
+        24,
+        24,
+        24,
+        24
+      ],
+      "dvs": [
+        13,
+        13,
+        13,
+        13,
+        13,
+        13
+      ],
+      "gender": "FEMALE",
+      "items": [
+        "0",
+        "0"
+      ],
+      "base_reward": 14,
+      "source_ai_layers": [
+        "AI_BASIC",
+        "AI_OPPORTUNIST",
+        "AI_AGGRESSIVE",
+        "AI_STATUS"
+      ],
+      "source_switch_flags": [
+        "CONTEXT_USE",
+        "SWITCH_RARELY"
+      ]
+    },
+    "AROMA_LADY": {
+      "evs": [
+        24,
+        24,
+        24,
+        24,
+        24,
+        24
+      ],
+      "dvs": [
+        13,
+        13,
+        13,
+        13,
+        13,
+        13
+      ],
+      "gender": "FEMALE",
+      "items": [
+        "0",
+        "0"
+      ],
+      "base_reward": 14,
+      "source_ai_layers": [
+        "AI_BASIC",
+        "AI_OPPORTUNIST",
+        "AI_CAUTIOUS",
+        "AI_STATUS"
+      ],
+      "source_switch_flags": [
+        "CONTEXT_USE",
+        "SWITCH_RARELY"
+      ]
+    },
+    "SOLDIER": {
+      "evs": [
+        24,
+        24,
+        24,
+        24,
+        24,
+        24
+      ],
+      "dvs": [
+        13,
+        13,
+        13,
+        13,
+        13,
+        13
+      ],
+      "gender": "MALE",
+      "items": [
+        "0",
+        "0"
+      ],
+      "base_reward": 16,
+      "source_ai_layers": [
+        "AI_BASIC",
+        "AI_SETUP",
+        "AI_TYPES",
+        "AI_AGGRESSIVE",
+        "AI_STATUS",
+        "AI_RISKY"
+      ],
+      "source_switch_flags": [
+        "CONTEXT_USE",
+        "SWITCH_SOMETIMES"
+      ]
+    },
+    "WAITER": {
+      "evs": [
+        24,
+        24,
+        24,
+        24,
+        24,
+        24
+      ],
+      "dvs": [
+        13,
+        13,
+        13,
+        13,
+        13,
+        13
+      ],
+      "gender": "MALE",
+      "items": [
+        "0",
+        "0"
+      ],
+      "base_reward": 12,
+      "source_ai_layers": [
+        "AI_BASIC",
+        "AI_OPPORTUNIST",
+        "AI_CAUTIOUS",
+        "AI_STATUS"
+      ],
+      "source_switch_flags": [
+        "CONTEXT_USE",
+        "SWITCH_RARELY"
+      ]
+    },
+    "WAITRESS": {
+      "evs": [
+        24,
+        24,
+        24,
+        24,
+        24,
+        24
+      ],
+      "dvs": [
+        13,
+        13,
+        13,
+        13,
+        13,
+        13
+      ],
+      "gender": "FEMALE",
+      "items": [
+        "0",
+        "0"
+      ],
+      "base_reward": 12,
+      "source_ai_layers": [
+        "AI_BASIC",
+        "AI_OPPORTUNIST",
+        "AI_CAUTIOUS",
+        "AI_STATUS"
+      ],
+      "source_switch_flags": [
+        "CONTEXT_USE",
+        "SWITCH_RARELY"
+      ]
+    },
+    "SIGHTSEERM": {
+      "evs": [
+        24,
+        24,
+        24,
+        24,
+        24,
+        24
+      ],
+      "dvs": [
+        13,
+        13,
+        13,
+        13,
+        13,
+        13
+      ],
+      "gender": "MALE",
+      "items": [
+        "0",
+        "0"
+      ],
+      "base_reward": 18,
+      "source_ai_layers": [
+        "AI_BASIC",
+        "AI_OPPORTUNIST",
+        "AI_AGGRESSIVE",
+        "AI_STATUS"
+      ],
+      "source_switch_flags": [
+        "CONTEXT_USE",
+        "SWITCH_RARELY"
+      ]
+    },
+    "SIGHTSEERF": {
+      "evs": [
+        24,
+        24,
+        24,
+        24,
+        24,
+        24
+      ],
+      "dvs": [
+        13,
+        13,
+        13,
+        13,
+        13,
+        13
+      ],
+      "gender": "FEMALE",
+      "items": [
+        "0",
+        "0"
+      ],
+      "base_reward": 18,
+      "source_ai_layers": [
+        "AI_BASIC",
+        "AI_OPPORTUNIST",
+        "AI_AGGRESSIVE",
+        "AI_STATUS"
+      ],
+      "source_switch_flags": [
+        "CONTEXT_USE",
+        "SWITCH_RARELY"
+      ]
+    },
+    "SIGHTSEERS": {
+      "evs": [
+        24,
+        24,
+        24,
+        24,
+        24,
+        24
+      ],
+      "dvs": [
+        14,
+        14,
+        14,
+        14,
+        14,
+        14
+      ],
+      "gender": "MALE",
+      "items": [
+        "0",
+        "0"
+      ],
+      "base_reward": 20,
+      "source_ai_layers": [
+        "AI_BASIC",
+        "AI_OPPORTUNIST",
+        "AI_AGGRESSIVE",
+        "AI_STATUS"
+      ],
+      "source_switch_flags": [
+        "CONTEXT_USE",
+        "SWITCH_RARELY"
+      ]
+    },
+    "COOLTRAINERM": {
+      "evs": [
+        21,
+        21,
+        21,
+        21,
+        21,
+        21
+      ],
+      "dvs": [
+        14,
+        14,
+        14,
+        14,
+        14,
+        14
+      ],
+      "gender": "MALE",
+      "items": [
+        "FULL_HEAL",
+        "MAX_POTION"
+      ],
+      "base_reward": 15,
+      "source_ai_layers": [
+        "AI_BASIC",
+        "AI_SETUP",
+        "AI_TYPES",
+        "AI_SMART",
+        "AI_OPPORTUNIST",
+        "AI_AGGRESSIVE",
+        "AI_CAUTIOUS",
+        "AI_STATUS",
+        "AI_RISKY"
+      ],
+      "source_switch_flags": [
+        "CONTEXT_USE",
+        "SWITCH_SOMETIMES"
+      ]
+    },
+    "COOLTRAINERF": {
+      "evs": [
+        21,
+        21,
+        21,
+        21,
+        21,
+        21
+      ],
+      "dvs": [
+        14,
+        14,
+        14,
+        14,
+        14,
+        14
+      ],
+      "gender": "FEMALE",
+      "items": [
+        "FULL_HEAL",
+        "MAX_POTION"
+      ],
+      "base_reward": 15,
+      "source_ai_layers": [
+        "AI_BASIC",
+        "AI_SETUP",
+        "AI_TYPES",
+        "AI_SMART",
+        "AI_OPPORTUNIST",
+        "AI_AGGRESSIVE",
+        "AI_CAUTIOUS",
+        "AI_STATUS",
+        "AI_RISKY"
+      ],
+      "source_switch_flags": [
+        "CONTEXT_USE",
+        "SWITCH_SOMETIMES"
+      ]
+    },
+    "ACE_DUO": {
+      "evs": [
+        24,
+        24,
+        24,
+        24,
+        24,
+        24
+      ],
+      "dvs": [
+        14,
+        14,
+        14,
+        14,
+        14,
+        14
+      ],
+      "gender": "MALE",
+      "items": [
+        "FULL_HEAL",
+        "MAX_POTION"
+      ],
+      "base_reward": 16,
+      "source_ai_layers": [
+        "AI_BASIC",
+        "AI_SETUP",
+        "AI_TYPES",
+        "AI_SMART",
+        "AI_OPPORTUNIST",
+        "AI_AGGRESSIVE",
+        "AI_CAUTIOUS",
+        "AI_STATUS",
+        "AI_RISKY"
+      ],
+      "source_switch_flags": [
+        "CONTEXT_USE",
+        "SWITCH_SOMETIMES"
+      ]
+    },
+    "VETERANM": {
+      "evs": [
+        42,
+        42,
+        42,
+        42,
+        42,
+        42
+      ],
+      "dvs": [
+        15,
+        15,
+        15,
+        15,
+        15,
+        15
+      ],
+      "gender": "MALE",
+      "items": [
+        "FULL_HEAL",
+        "MAX_POTION"
+      ],
+      "base_reward": 20,
+      "source_ai_layers": [
+        "AI_BASIC",
+        "AI_SETUP",
+        "AI_TYPES",
+        "AI_SMART",
+        "AI_OPPORTUNIST",
+        "AI_AGGRESSIVE",
+        "AI_CAUTIOUS",
+        "AI_STATUS",
+        "AI_RISKY"
+      ],
+      "source_switch_flags": [
+        "CONTEXT_USE",
+        "SWITCH_SOMETIMES"
+      ]
+    },
+    "VETERANF": {
+      "evs": [
+        42,
+        42,
+        42,
+        42,
+        42,
+        42
+      ],
+      "dvs": [
+        15,
+        15,
+        15,
+        15,
+        15,
+        15
+      ],
+      "gender": "FEMALE",
+      "items": [
+        "FULL_HEAL",
+        "MAX_POTION"
+      ],
+      "base_reward": 20,
+      "source_ai_layers": [
+        "AI_BASIC",
+        "AI_SETUP",
+        "AI_TYPES",
+        "AI_SMART",
+        "AI_OPPORTUNIST",
+        "AI_AGGRESSIVE",
+        "AI_CAUTIOUS",
+        "AI_STATUS",
+        "AI_RISKY"
+      ],
+      "source_switch_flags": [
+        "CONTEXT_USE",
+        "SWITCH_SOMETIMES"
+      ]
+    },
+    "PROTON": {
+      "evs": [
+        26,
+        26,
+        26,
+        26,
+        26,
+        26
+      ],
+      "dvs": [
+        11,
+        11,
+        11,
+        11,
+        11,
+        11
+      ],
+      "gender": "MALE",
+      "items": [
+        "HYPER_POTION",
+        "0"
+      ],
+      "base_reward": 18,
+      "source_ai_layers": [
+        "AI_BASIC",
+        "AI_SETUP",
+        "AI_TYPES",
+        "AI_SMART",
+        "AI_OPPORTUNIST",
+        "AI_AGGRESSIVE",
+        "AI_CAUTIOUS",
+        "AI_STATUS",
+        "AI_RISKY"
+      ],
+      "source_switch_flags": [
+        "CONTEXT_USE",
+        "SWITCH_SOMETIMES"
+      ]
+    },
+    "PETREL": {
+      "evs": [
+        32,
+        32,
+        32,
+        32,
+        32,
+        32
+      ],
+      "dvs": [
+        12,
+        12,
+        12,
+        12,
+        12,
+        12
+      ],
+      "gender": "MALE",
+      "items": [
+        "HYPER_POTION",
+        "0"
+      ],
+      "base_reward": 18,
+      "source_ai_layers": [
+        "AI_BASIC",
+        "AI_SETUP",
+        "AI_TYPES",
+        "AI_SMART",
+        "AI_OPPORTUNIST",
+        "AI_AGGRESSIVE",
+        "AI_CAUTIOUS",
+        "AI_STATUS",
+        "AI_RISKY"
+      ],
+      "source_switch_flags": [
+        "CONTEXT_USE",
+        "SWITCH_SOMETIMES"
+      ]
+    },
+    "ARCHER": {
+      "evs": [
+        42,
+        42,
+        42,
+        42,
+        42,
+        42
+      ],
+      "dvs": [
+        14,
+        14,
+        14,
+        14,
+        14,
+        14
+      ],
+      "gender": "MALE",
+      "items": [
+        "HYPER_POTION",
+        "0"
+      ],
+      "base_reward": 18,
+      "source_ai_layers": [
+        "AI_BASIC",
+        "AI_SETUP",
+        "AI_TYPES",
+        "AI_SMART",
+        "AI_OPPORTUNIST",
+        "AI_AGGRESSIVE",
+        "AI_CAUTIOUS",
+        "AI_STATUS",
+        "AI_RISKY"
+      ],
+      "source_switch_flags": [
+        "CONTEXT_USE",
+        "SWITCH_SOMETIMES"
+      ]
+    },
+    "ARIANA": {
+      "evs": [
+        37,
+        37,
+        37,
+        37,
+        37,
+        37
+      ],
+      "dvs": [
+        13,
+        13,
+        13,
+        13,
+        13,
+        13
+      ],
+      "gender": "FEMALE",
+      "items": [
+        "HYPER_POTION",
+        "0"
+      ],
+      "base_reward": 18,
+      "source_ai_layers": [
+        "AI_BASIC",
+        "AI_SETUP",
+        "AI_TYPES",
+        "AI_SMART",
+        "AI_OPPORTUNIST",
+        "AI_AGGRESSIVE",
+        "AI_CAUTIOUS",
+        "AI_STATUS",
+        "AI_RISKY"
+      ],
+      "source_switch_flags": [
+        "CONTEXT_USE",
+        "SWITCH_SOMETIMES"
+      ]
+    },
+    "GIOVANNI": {
+      "evs": [
+        53,
+        53,
+        53,
+        53,
+        53,
+        53
+      ],
+      "dvs": [
+        15,
+        15,
+        15,
+        15,
+        15,
+        15
+      ],
+      "gender": "MALE",
+      "items": [
+        "MAX_POTION",
+        "0"
+      ],
+      "base_reward": 25,
+      "source_ai_layers": [
+        "AI_BASIC",
+        "AI_SETUP",
+        "AI_TYPES",
+        "AI_SMART",
+        "AI_OPPORTUNIST",
+        "AI_AGGRESSIVE",
+        "AI_CAUTIOUS",
+        "AI_STATUS",
+        "AI_RISKY"
+      ],
+      "source_switch_flags": [
+        "CONTEXT_USE",
+        "SWITCH_SOMETIMES"
+      ]
+    },
+    "PROF_OAK": {
+      "evs": [
+        84,
+        84,
+        84,
+        84,
+        84,
+        84
+      ],
+      "dvs": [
+        15,
+        15,
+        15,
+        15,
+        15,
+        15
+      ],
+      "gender": "MALE",
+      "items": [
+        "FULL_RESTORE",
+        "0"
+      ],
+      "base_reward": 25,
+      "source_ai_layers": [
+        "AI_BASIC",
+        "AI_SETUP",
+        "AI_TYPES",
+        "AI_SMART",
+        "AI_OPPORTUNIST",
+        "AI_AGGRESSIVE",
+        "AI_CAUTIOUS",
+        "AI_STATUS",
+        "AI_RISKY"
+      ],
+      "source_switch_flags": [
+        "CONTEXT_USE",
+        "SWITCH_SOMETIMES"
+      ]
+    },
+    "PROF_ELM": {
+      "evs": [
+        10,
+        10,
+        10,
+        10,
+        10,
+        10
+      ],
+      "dvs": [
+        11,
+        11,
+        11,
+        11,
+        11,
+        11
+      ],
+      "gender": "MALE",
+      "items": [
+        "0",
+        "0"
+      ],
+      "base_reward": 25,
+      "source_ai_layers": [
+        "AI_BASIC",
+        "AI_SETUP",
+        "AI_TYPES",
+        "AI_SMART",
+        "AI_OPPORTUNIST",
+        "AI_AGGRESSIVE",
+        "AI_CAUTIOUS",
+        "AI_STATUS",
+        "AI_RISKY"
+      ],
+      "source_switch_flags": [
+        "CONTEXT_USE",
+        "SWITCH_RARELY"
+      ]
+    },
+    "PROF_IVY": {
+      "evs": [
+        84,
+        84,
+        84,
+        84,
+        84,
+        84
+      ],
+      "dvs": [
+        15,
+        15,
+        15,
+        15,
+        15,
+        15
+      ],
+      "gender": "FEMALE",
+      "items": [
+        "FULL_RESTORE",
+        "0"
+      ],
+      "base_reward": 25,
+      "source_ai_layers": [
+        "AI_BASIC",
+        "AI_SETUP",
+        "AI_TYPES",
+        "AI_SMART",
+        "AI_OPPORTUNIST",
+        "AI_AGGRESSIVE",
+        "AI_CAUTIOUS",
+        "AI_STATUS",
+        "AI_RISKY"
+      ],
+      "source_switch_flags": [
+        "CONTEXT_USE",
+        "SWITCH_SOMETIMES"
+      ]
+    },
+    "MYSTICALMAN": {
+      "evs": [
+        29,
+        29,
+        29,
+        29,
+        29,
+        29
+      ],
+      "dvs": [
+        13,
+        13,
+        13,
+        13,
+        13,
+        13
+      ],
+      "gender": "MALE",
+      "items": [
+        "HYPER_POTION",
+        "0"
+      ],
+      "base_reward": 25,
+      "source_ai_layers": [
+        "AI_BASIC",
+        "AI_SETUP",
+        "AI_TYPES",
+        "AI_SMART",
+        "AI_OPPORTUNIST",
+        "AI_AGGRESSIVE",
+        "AI_CAUTIOUS",
+        "AI_STATUS",
+        "AI_RISKY"
+      ],
+      "source_switch_flags": [
+        "CONTEXT_USE",
+        "SWITCH_SOMETIMES"
+      ]
+    },
+    "KARATE_KING": {
+      "evs": [
+        29,
+        29,
+        29,
+        29,
+        29,
+        29
+      ],
+      "dvs": [
+        15,
+        15,
+        15,
+        15,
+        15,
+        15
+      ],
+      "gender": "MALE",
+      "items": [
+        "HYPER_POTION",
+        "0"
+      ],
+      "base_reward": 25,
+      "source_ai_layers": [
+        "AI_BASIC",
+        "AI_SETUP",
+        "AI_TYPES",
+        "AI_SMART",
+        "AI_OPPORTUNIST",
+        "AI_AGGRESSIVE",
+        "AI_CAUTIOUS",
+        "AI_STATUS",
+        "AI_RISKY"
+      ],
+      "source_switch_flags": [
+        "CONTEXT_USE",
+        "SWITCH_SOMETIMES"
+      ]
+    },
+    "TOWERTYCOON": {
+      "evs": [
+        84,
+        84,
+        84,
+        84,
+        84,
+        84
+      ],
+      "dvs": [
+        15,
+        15,
+        15,
+        15,
+        15,
+        15
+      ],
+      "gender": "MALE",
+      "items": [
+        "MAX_POTION",
+        "0"
+      ],
+      "base_reward": 25,
+      "source_ai_layers": [
+        "AI_BASIC",
+        "AI_SETUP",
+        "AI_TYPES",
+        "AI_SMART",
+        "AI_OPPORTUNIST",
+        "AI_AGGRESSIVE",
+        "AI_CAUTIOUS",
+        "AI_STATUS",
+        "AI_RISKY"
+      ],
+      "source_switch_flags": [
+        "CONTEXT_USE",
+        "SWITCH_SOMETIMES"
+      ]
+    },
+    "FACTORYHEAD": {
+      "evs": [
+        84,
+        84,
+        84,
+        84,
+        84,
+        84
+      ],
+      "dvs": [
+        15,
+        15,
+        15,
+        15,
+        15,
+        15
+      ],
+      "gender": "MALE",
+      "items": [
+        "MAX_POTION",
+        "0"
+      ],
+      "base_reward": 25,
+      "source_ai_layers": [
+        "AI_BASIC",
+        "AI_SETUP",
+        "AI_TYPES",
+        "AI_SMART",
+        "AI_OPPORTUNIST",
+        "AI_AGGRESSIVE",
+        "AI_CAUTIOUS",
+        "AI_STATUS",
+        "AI_RISKY"
+      ],
+      "source_switch_flags": [
+        "CONTEXT_USE",
+        "SWITCH_SOMETIMES"
+      ]
+    },
+    "JESSIE_JAMES": {
+      "evs": [
+        29,
+        29,
+        29,
+        29,
+        29,
+        29
+      ],
+      "dvs": [
+        11,
+        11,
+        11,
+        8,
+        11,
+        11
+      ],
+      "gender": "MALE",
+      "items": [
+        "LEMONADE",
+        "0"
+      ],
+      "base_reward": 10,
+      "source_ai_layers": [
+        "AI_BASIC",
+        "AI_SETUP",
+        "AI_TYPES",
+        "AI_OPPORTUNIST",
+        "AI_CAUTIOUS",
+        "AI_STATUS",
+        "AI_RISKY"
+      ],
+      "source_switch_flags": [
+        "CONTEXT_USE",
+        "SWITCH_SOMETIMES"
+      ]
+    },
+    "LORELEI": {
+      "evs": [
+        84,
+        84,
+        84,
+        84,
+        84,
+        84
+      ],
+      "dvs": [
+        15,
+        15,
+        15,
+        15,
+        15,
+        15
+      ],
+      "gender": "FEMALE",
+      "items": [
+        "MAX_POTION",
+        "0"
+      ],
+      "base_reward": 25,
+      "source_ai_layers": [
+        "AI_BASIC",
+        "AI_SETUP",
+        "AI_TYPES",
+        "AI_SMART",
+        "AI_OPPORTUNIST",
+        "AI_AGGRESSIVE",
+        "AI_CAUTIOUS",
+        "AI_STATUS",
+        "AI_RISKY"
+      ],
+      "source_switch_flags": [
+        "CONTEXT_USE",
+        "SWITCH_SOMETIMES"
+      ]
+    },
+    "AGATHA": {
+      "evs": [
+        84,
+        84,
+        84,
+        84,
+        84,
+        84
+      ],
+      "dvs": [
+        15,
+        15,
+        15,
+        15,
+        15,
+        15
+      ],
+      "gender": "FEMALE",
+      "items": [
+        "MAX_POTION",
+        "0"
+      ],
+      "base_reward": 25,
+      "source_ai_layers": [
+        "AI_BASIC",
+        "AI_SETUP",
+        "AI_TYPES",
+        "AI_SMART",
+        "AI_OPPORTUNIST",
+        "AI_AGGRESSIVE",
+        "AI_CAUTIOUS",
+        "AI_STATUS",
+        "AI_RISKY"
+      ],
+      "source_switch_flags": [
+        "CONTEXT_USE",
+        "SWITCH_SOMETIMES"
+      ]
+    },
+    "STEVEN": {
+      "evs": [
+        84,
+        84,
+        84,
+        84,
+        84,
+        84
+      ],
+      "dvs": [
+        15,
+        15,
+        15,
+        15,
+        15,
+        15
+      ],
+      "gender": "MALE",
+      "items": [
+        "FULL_HEAL",
+        "FULL_RESTORE"
+      ],
+      "base_reward": 25,
+      "source_ai_layers": [
+        "AI_BASIC",
+        "AI_SETUP",
+        "AI_TYPES",
+        "AI_SMART",
+        "AI_OPPORTUNIST",
+        "AI_AGGRESSIVE",
+        "AI_CAUTIOUS",
+        "AI_STATUS",
+        "AI_RISKY"
+      ],
+      "source_switch_flags": [
+        "CONTEXT_USE",
+        "SWITCH_SOMETIMES"
+      ]
+    },
+    "CYNTHIA": {
+      "evs": [
+        84,
+        84,
+        84,
+        84,
+        84,
+        84
+      ],
+      "dvs": [
+        15,
+        15,
+        15,
+        15,
+        15,
+        15
+      ],
+      "gender": "FEMALE",
+      "items": [
+        "FULL_HEAL",
+        "FULL_RESTORE"
+      ],
+      "base_reward": 25,
+      "source_ai_layers": [
+        "AI_BASIC",
+        "AI_SETUP",
+        "AI_TYPES",
+        "AI_SMART",
+        "AI_OPPORTUNIST",
+        "AI_AGGRESSIVE",
+        "AI_CAUTIOUS",
+        "AI_STATUS",
+        "AI_RISKY"
+      ],
+      "source_switch_flags": [
+        "CONTEXT_USE",
+        "SWITCH_SOMETIMES"
+      ]
+    },
+    "INVER": {
+      "evs": [
+        84,
+        84,
+        84,
+        84,
+        84,
+        84
+      ],
+      "dvs": [
+        15,
+        15,
+        15,
+        15,
+        15,
+        15
+      ],
+      "gender": "MALE",
+      "items": [
+        "FULL_RESTORE",
+        "0"
+      ],
+      "base_reward": 16,
+      "source_ai_layers": [
+        "AI_BASIC",
+        "AI_SETUP",
+        "AI_TYPES",
+        "AI_SMART",
+        "AI_OPPORTUNIST",
+        "AI_CAUTIOUS",
+        "AI_STATUS",
+        "AI_RISKY"
+      ],
+      "source_switch_flags": [
+        "CONTEXT_USE",
+        "SWITCH_SOMETIMES"
+      ]
+    },
+    "CHERYL": {
+      "evs": [
+        64,
+        64,
+        64,
+        64,
+        64,
+        64
+      ],
+      "dvs": [
+        14,
+        14,
+        14,
+        14,
+        14,
+        14
+      ],
+      "gender": "FEMALE",
+      "items": [
+        "FULL_RESTORE",
+        "0"
+      ],
+      "base_reward": 16,
+      "source_ai_layers": [
+        "AI_BASIC",
+        "AI_SETUP",
+        "AI_TYPES",
+        "AI_SMART",
+        "AI_OPPORTUNIST",
+        "AI_CAUTIOUS",
+        "AI_STATUS",
+        "AI_RISKY"
+      ],
+      "source_switch_flags": [
+        "CONTEXT_USE",
+        "SWITCH_SOMETIMES"
+      ]
+    },
+    "RILEY": {
+      "evs": [
+        64,
+        64,
+        64,
+        64,
+        64,
+        64
+      ],
+      "dvs": [
+        14,
+        14,
+        14,
+        14,
+        14,
+        14
+      ],
+      "gender": "MALE",
+      "items": [
+        "FULL_RESTORE",
+        "0"
+      ],
+      "base_reward": 16,
+      "source_ai_layers": [
+        "AI_BASIC",
+        "AI_SETUP",
+        "AI_TYPES",
+        "AI_SMART",
+        "AI_OPPORTUNIST",
+        "AI_CAUTIOUS",
+        "AI_STATUS",
+        "AI_RISKY"
+      ],
+      "source_switch_flags": [
+        "CONTEXT_USE",
+        "SWITCH_SOMETIMES"
+      ]
+    },
+    "BUCK": {
+      "evs": [
+        64,
+        64,
+        64,
+        64,
+        64,
+        64
+      ],
+      "dvs": [
+        14,
+        14,
+        14,
+        14,
+        14,
+        14
+      ],
+      "gender": "MALE",
+      "items": [
+        "FULL_RESTORE",
+        "0"
+      ],
+      "base_reward": 16,
+      "source_ai_layers": [
+        "AI_BASIC",
+        "AI_SETUP",
+        "AI_TYPES",
+        "AI_SMART",
+        "AI_OPPORTUNIST",
+        "AI_CAUTIOUS",
+        "AI_STATUS",
+        "AI_RISKY"
+      ],
+      "source_switch_flags": [
+        "CONTEXT_USE",
+        "SWITCH_SOMETIMES"
+      ]
+    },
+    "MARLEY": {
+      "evs": [
+        64,
+        64,
+        64,
+        64,
+        64,
+        64
+      ],
+      "dvs": [
+        14,
+        14,
+        14,
+        14,
+        14,
+        14
+      ],
+      "gender": "FEMALE",
+      "items": [
+        "FULL_RESTORE",
+        "0"
+      ],
+      "base_reward": 16,
+      "source_ai_layers": [
+        "AI_BASIC",
+        "AI_SETUP",
+        "AI_TYPES",
+        "AI_SMART",
+        "AI_OPPORTUNIST",
+        "AI_CAUTIOUS",
+        "AI_STATUS",
+        "AI_RISKY"
+      ],
+      "source_switch_flags": [
+        "CONTEXT_USE",
+        "SWITCH_SOMETIMES"
+      ]
+    },
+    "MIRA": {
+      "evs": [
+        64,
+        64,
+        64,
+        64,
+        64,
+        64
+      ],
+      "dvs": [
+        14,
+        14,
+        14,
+        14,
+        14,
+        14
+      ],
+      "gender": "FEMALE",
+      "items": [
+        "FULL_RESTORE",
+        "0"
+      ],
+      "base_reward": 16,
+      "source_ai_layers": [
+        "AI_BASIC",
+        "AI_SETUP",
+        "AI_TYPES",
+        "AI_SMART",
+        "AI_OPPORTUNIST",
+        "AI_CAUTIOUS",
+        "AI_STATUS",
+        "AI_RISKY"
+      ],
+      "source_switch_flags": [
+        "CONTEXT_USE",
+        "SWITCH_SOMETIMES"
+      ]
+    },
+    "ANABEL": {
+      "evs": [
+        64,
+        64,
+        64,
+        64,
+        64,
+        64
+      ],
+      "dvs": [
+        14,
+        14,
+        14,
+        14,
+        14,
+        14
+      ],
+      "gender": "FEMALE",
+      "items": [
+        "FULL_RESTORE",
+        "0"
+      ],
+      "base_reward": 16,
+      "source_ai_layers": [
+        "AI_BASIC",
+        "AI_SETUP",
+        "AI_TYPES",
+        "AI_SMART",
+        "AI_OPPORTUNIST",
+        "AI_CAUTIOUS",
+        "AI_STATUS",
+        "AI_RISKY"
+      ],
+      "source_switch_flags": [
+        "CONTEXT_USE",
+        "SWITCH_SOMETIMES"
+      ]
+    },
+    "DARACH": {
+      "evs": [
+        84,
+        84,
+        84,
+        84,
+        84,
+        84
+      ],
+      "dvs": [
+        15,
+        15,
+        15,
+        15,
+        15,
+        15
+      ],
+      "gender": "MALE",
+      "items": [
+        "HYPER_POTION",
+        "0"
+      ],
+      "base_reward": 25,
+      "source_ai_layers": [
+        "AI_BASIC",
+        "AI_SETUP",
+        "AI_TYPES",
+        "AI_SMART",
+        "AI_OPPORTUNIST",
+        "AI_AGGRESSIVE",
+        "AI_CAUTIOUS",
+        "AI_STATUS",
+        "AI_RISKY"
+      ],
+      "source_switch_flags": [
+        "CONTEXT_USE",
+        "SWITCH_SOMETIMES"
+      ]
+    },
+    "CAITLIN": {
+      "evs": [
+        84,
+        84,
+        84,
+        84,
+        84,
+        84
+      ],
+      "dvs": [
+        15,
+        15,
+        15,
+        15,
+        15,
+        15
+      ],
+      "gender": "FEMALE",
+      "items": [
+        "HYPER_POTION",
+        "0"
+      ],
+      "base_reward": 25,
+      "source_ai_layers": [
+        "AI_BASIC",
+        "AI_SETUP",
+        "AI_TYPES",
+        "AI_SMART",
+        "AI_OPPORTUNIST",
+        "AI_AGGRESSIVE",
+        "AI_CAUTIOUS",
+        "AI_STATUS",
+        "AI_RISKY"
+      ],
+      "source_switch_flags": [
+        "CONTEXT_USE",
+        "SWITCH_SOMETIMES"
+      ]
+    },
+    "CANDELA": {
+      "evs": [
+        84,
+        84,
+        84,
+        84,
+        84,
+        84
+      ],
+      "dvs": [
+        15,
+        15,
+        15,
+        15,
+        15,
+        15
+      ],
+      "gender": "FEMALE",
+      "items": [
+        "MAX_POTION",
+        "0"
+      ],
+      "base_reward": 25,
+      "source_ai_layers": [
+        "AI_BASIC",
+        "AI_SETUP",
+        "AI_TYPES",
+        "AI_SMART",
+        "AI_OPPORTUNIST",
+        "AI_AGGRESSIVE",
+        "AI_CAUTIOUS",
+        "AI_STATUS",
+        "AI_RISKY"
+      ],
+      "source_switch_flags": [
+        "CONTEXT_USE",
+        "SWITCH_SOMETIMES"
+      ]
+    },
+    "BLANCHE": {
+      "evs": [
+        84,
+        84,
+        84,
+        84,
+        84,
+        84
+      ],
+      "dvs": [
+        15,
+        15,
+        15,
+        15,
+        15,
+        15
+      ],
+      "gender": "FEMALE",
+      "items": [
+        "MAX_POTION",
+        "0"
+      ],
+      "base_reward": 25,
+      "source_ai_layers": [
+        "AI_BASIC",
+        "AI_SETUP",
+        "AI_TYPES",
+        "AI_SMART",
+        "AI_OPPORTUNIST",
+        "AI_AGGRESSIVE",
+        "AI_CAUTIOUS",
+        "AI_STATUS",
+        "AI_RISKY"
+      ],
+      "source_switch_flags": [
+        "CONTEXT_USE",
+        "SWITCH_SOMETIMES"
+      ]
+    },
+    "SPARK_T": {
+      "evs": [
+        84,
+        84,
+        84,
+        84,
+        84,
+        84
+      ],
+      "dvs": [
+        15,
+        15,
+        15,
+        15,
+        15,
+        15
+      ],
+      "gender": "MALE",
+      "items": [
+        "MAX_POTION",
+        "0"
+      ],
+      "base_reward": 25,
+      "source_ai_layers": [
+        "AI_BASIC",
+        "AI_SETUP",
+        "AI_TYPES",
+        "AI_SMART",
+        "AI_OPPORTUNIST",
+        "AI_AGGRESSIVE",
+        "AI_CAUTIOUS",
+        "AI_STATUS",
+        "AI_RISKY"
+      ],
+      "source_switch_flags": [
+        "CONTEXT_USE",
+        "SWITCH_SOMETIMES"
+      ]
+    },
+    "FLANNERY": {
+      "evs": [
+        84,
+        84,
+        84,
+        84,
+        84,
+        84
+      ],
+      "dvs": [
+        15,
+        15,
+        15,
+        15,
+        15,
+        15
+      ],
+      "gender": "FEMALE",
+      "items": [
+        "HYPER_POTION",
+        "0"
+      ],
+      "base_reward": 25,
+      "source_ai_layers": [
+        "AI_BASIC",
+        "AI_SETUP",
+        "AI_TYPES",
+        "AI_SMART",
+        "AI_OPPORTUNIST",
+        "AI_AGGRESSIVE",
+        "AI_CAUTIOUS",
+        "AI_STATUS",
+        "AI_RISKY"
+      ],
+      "source_switch_flags": [
+        "CONTEXT_USE",
+        "SWITCH_SOMETIMES"
+      ]
+    },
+    "MAYLENE": {
+      "evs": [
+        84,
+        84,
+        84,
+        84,
+        84,
+        84
+      ],
+      "dvs": [
+        15,
+        15,
+        15,
+        15,
+        15,
+        15
+      ],
+      "gender": "FEMALE",
+      "items": [
+        "HYPER_POTION",
+        "0"
+      ],
+      "base_reward": 25,
+      "source_ai_layers": [
+        "AI_BASIC",
+        "AI_SETUP",
+        "AI_TYPES",
+        "AI_SMART",
+        "AI_OPPORTUNIST",
+        "AI_AGGRESSIVE",
+        "AI_CAUTIOUS",
+        "AI_STATUS",
+        "AI_RISKY"
+      ],
+      "source_switch_flags": [
+        "CONTEXT_USE",
+        "SWITCH_SOMETIMES"
+      ]
+    },
+    "MARLON": {
+      "evs": [
+        84,
+        84,
+        84,
+        84,
+        84,
+        84
+      ],
+      "dvs": [
+        15,
+        15,
+        15,
+        15,
+        15,
+        15
+      ],
+      "gender": "MALE",
+      "items": [
+        "HYPER_POTION",
+        "0"
+      ],
+      "base_reward": 25,
+      "source_ai_layers": [
+        "AI_BASIC",
+        "AI_SETUP",
+        "AI_TYPES",
+        "AI_SMART",
+        "AI_OPPORTUNIST",
+        "AI_AGGRESSIVE",
+        "AI_CAUTIOUS",
+        "AI_STATUS",
+        "AI_RISKY"
+      ],
+      "source_switch_flags": [
+        "CONTEXT_USE",
+        "SWITCH_SOMETIMES"
+      ]
+    },
+    "VALERIE": {
+      "evs": [
+        84,
+        84,
+        84,
+        84,
+        84,
+        84
+      ],
+      "dvs": [
+        15,
+        15,
+        15,
+        15,
+        15,
+        15
+      ],
+      "gender": "FEMALE",
+      "items": [
+        "HYPER_POTION",
+        "0"
+      ],
+      "base_reward": 25,
+      "source_ai_layers": [
+        "AI_BASIC",
+        "AI_SETUP",
+        "AI_TYPES",
+        "AI_SMART",
+        "AI_OPPORTUNIST",
+        "AI_AGGRESSIVE",
+        "AI_CAUTIOUS",
+        "AI_STATUS",
+        "AI_RISKY"
+      ],
+      "source_switch_flags": [
+        "CONTEXT_USE",
+        "SWITCH_SOMETIMES"
+      ]
+    },
+    "KUKUI": {
+      "evs": [
+        84,
+        84,
+        84,
+        84,
+        84,
+        84
+      ],
+      "dvs": [
+        15,
+        15,
+        15,
+        15,
+        15,
+        15
+      ],
+      "gender": "MALE",
+      "items": [
+        "FULL_RESTORE",
+        "0"
+      ],
+      "base_reward": 25,
+      "source_ai_layers": [
+        "AI_BASIC",
+        "AI_SETUP",
+        "AI_TYPES",
+        "AI_SMART",
+        "AI_OPPORTUNIST",
+        "AI_AGGRESSIVE",
+        "AI_CAUTIOUS",
+        "AI_STATUS",
+        "AI_RISKY"
+      ],
+      "source_switch_flags": [
+        "CONTEXT_USE",
+        "SWITCH_SOMETIMES"
+      ]
+    },
+    "PIERS": {
+      "evs": [
+        84,
+        84,
+        84,
+        84,
+        84,
+        84
+      ],
+      "dvs": [
+        13,
+        13,
+        13,
+        13,
+        13,
+        13
+      ],
+      "gender": "MALE",
+      "items": [
+        "HYPER_POTION",
+        "0"
+      ],
+      "base_reward": 25,
+      "source_ai_layers": [
+        "AI_BASIC",
+        "AI_SETUP",
+        "AI_TYPES",
+        "AI_SMART",
+        "AI_OPPORTUNIST",
+        "AI_AGGRESSIVE",
+        "AI_CAUTIOUS",
+        "AI_STATUS",
+        "AI_RISKY"
+      ],
+      "source_switch_flags": [
+        "CONTEXT_USE",
+        "SWITCH_SOMETIMES"
+      ]
+    },
+    "KATY": {
+      "evs": [
+        84,
+        84,
+        84,
+        84,
+        84,
+        84
+      ],
+      "dvs": [
+        13,
+        13,
+        13,
+        13,
+        13,
+        13
+      ],
+      "gender": "FEMALE",
+      "items": [
+        "HYPER_POTION",
+        "0"
+      ],
+      "base_reward": 25,
+      "source_ai_layers": [
+        "AI_BASIC",
+        "AI_SETUP",
+        "AI_TYPES",
+        "AI_SMART",
+        "AI_OPPORTUNIST",
+        "AI_AGGRESSIVE",
+        "AI_CAUTIOUS",
+        "AI_STATUS",
+        "AI_RISKY"
+      ],
+      "source_switch_flags": [
+        "CONTEXT_USE",
+        "SWITCH_SOMETIMES"
+      ]
+    },
+    "VICTOR": {
+      "evs": [
+        64,
+        64,
+        64,
+        64,
+        64,
+        64
+      ],
+      "dvs": [
+        14,
+        14,
+        14,
+        14,
+        14,
+        14
+      ],
+      "gender": "MALE",
+      "items": [
+        "FULL_RESTORE",
+        "0"
+      ],
+      "base_reward": 20,
+      "source_ai_layers": [
+        "AI_BASIC",
+        "AI_SETUP",
+        "AI_TYPES",
+        "AI_SMART",
+        "AI_OPPORTUNIST",
+        "AI_AGGRESSIVE",
+        "AI_CAUTIOUS",
+        "AI_STATUS",
+        "AI_RISKY"
+      ],
+      "source_switch_flags": [
+        "CONTEXT_USE",
+        "SWITCH_RARELY"
+      ]
+    },
+    "BILL_T": {
+      "evs": [
+        84,
+        84,
+        84,
+        84,
+        84,
+        84
+      ],
+      "dvs": [
+        15,
+        15,
+        15,
+        15,
+        15,
+        15
+      ],
+      "gender": "MALE",
+      "items": [
+        "X_SPEED",
+        "FULL_RESTORE"
+      ],
+      "base_reward": 24,
+      "source_ai_layers": [
+        "AI_BASIC",
+        "AI_SETUP",
+        "AI_TYPES",
+        "AI_SMART",
+        "AI_OPPORTUNIST",
+        "AI_AGGRESSIVE",
+        "AI_CAUTIOUS",
+        "AI_STATUS",
+        "AI_RISKY"
+      ],
+      "source_switch_flags": [
+        "CONTEXT_USE",
+        "SWITCH_SOMETIMES"
+      ]
+    },
+    "YELLOW": {
+      "evs": [
+        84,
+        84,
+        84,
+        84,
+        84,
+        84
+      ],
+      "dvs": [
+        14,
+        14,
+        14,
+        14,
+        14,
+        14
+      ],
+      "gender": "FEMALE",
+      "items": [
+        "FULL_RESTORE",
+        "0"
+      ],
+      "base_reward": 20,
+      "source_ai_layers": [
+        "AI_BASIC",
+        "AI_SETUP",
+        "AI_TYPES",
+        "AI_SMART",
+        "AI_OPPORTUNIST",
+        "AI_CAUTIOUS",
+        "AI_STATUS",
+        "AI_RISKY"
+      ],
+      "source_switch_flags": [
+        "CONTEXT_USE",
+        "SWITCH_SOMETIMES"
+      ]
+    },
+    "WALKER": {
+      "evs": [
+        84,
+        84,
+        84,
+        84,
+        84,
+        84
+      ],
+      "dvs": [
+        14,
+        14,
+        14,
+        14,
+        14,
+        14
+      ],
+      "gender": "MALE",
+      "items": [
+        "FULL_RESTORE",
+        "0"
+      ],
+      "base_reward": 20,
+      "source_ai_layers": [
+        "AI_BASIC",
+        "AI_SETUP",
+        "AI_TYPES",
+        "AI_SMART",
+        "AI_OPPORTUNIST",
+        "AI_CAUTIOUS",
+        "AI_STATUS",
+        "AI_RISKY"
+      ],
+      "source_switch_flags": [
+        "CONTEXT_USE",
+        "SWITCH_SOMETIMES"
+      ]
+    },
+    "IMAKUNI": {
+      "evs": [
+        64,
+        64,
+        64,
+        64,
+        64,
+        64
+      ],
+      "dvs": [
+        14,
+        14,
+        14,
+        14,
+        14,
+        14
+      ],
+      "gender": "MALE",
+      "items": [
+        "AWAKENING",
+        "0"
+      ],
+      "base_reward": 20,
+      "source_ai_layers": [
+        "AI_BASIC",
+        "AI_SETUP",
+        "AI_TYPES",
+        "AI_SMART",
+        "AI_OPPORTUNIST",
+        "AI_CAUTIOUS",
+        "AI_STATUS",
+        "AI_RISKY"
+      ],
+      "source_switch_flags": [
+        "CONTEXT_USE",
+        "SWITCH_SOMETIMES"
+      ]
+    },
+    "LAWRENCE": {
+      "evs": [
+        84,
+        84,
+        84,
+        84,
+        84,
+        84
+      ],
+      "dvs": [
+        15,
+        15,
+        15,
+        15,
+        15,
+        15
+      ],
+      "gender": "MALE",
+      "items": [
+        "MAX_POTION",
+        "FULL_RESTORE"
+      ],
+      "base_reward": 25,
+      "source_ai_layers": [
+        "AI_BASIC",
+        "AI_SETUP",
+        "AI_TYPES",
+        "AI_SMART",
+        "AI_OPPORTUNIST",
+        "AI_AGGRESSIVE",
+        "AI_CAUTIOUS",
+        "AI_STATUS",
+        "AI_RISKY"
+      ],
+      "source_switch_flags": [
+        "CONTEXT_USE",
+        "SWITCH_SOMETIMES"
+      ]
+    },
+    "REI": {
+      "evs": [
+        84,
+        84,
+        84,
+        84,
+        84,
+        84
+      ],
+      "dvs": [
+        14,
+        14,
+        14,
+        14,
+        14,
+        14
+      ],
+      "gender": "FEMALE",
+      "items": [
+        "FULL_HEAL",
+        "0"
+      ],
+      "base_reward": 20,
+      "source_ai_layers": [
+        "AI_BASIC",
+        "AI_SETUP",
+        "AI_TYPES",
+        "AI_SMART",
+        "AI_OPPORTUNIST",
+        "AI_AGGRESSIVE",
+        "AI_CAUTIOUS",
+        "AI_STATUS",
+        "AI_RISKY"
+      ],
+      "source_switch_flags": [
+        "CONTEXT_USE",
+        "SWITCH_SOMETIMES"
+      ]
+    }
+  },
+  "bindings": [
+    {
+      "target_trainer": "TRAINER_POLISHED_LYRA_CHIKORITA",
+      "source_class": "LYRA1",
+      "source_id": 1,
+      "source_name": "Lyra",
+      "items": [
+        "ITEM_NONE",
+        "ITEM_NONE"
+      ],
+      "base_reward": 15,
+      "mons": [
+        {
+          "species": "SPECIES_CHIKORITA",
+          "source_species": "CHIKORITA",
+          "source_level": "5",
+          "ivs": [
+            22,
+            22,
+            22,
+            22,
+            22,
+            22
+          ],
+          "evs": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "ability_slot": 0,
+          "ability": "ABILITY_OVERGROW",
+          "nature": "NATURE_HARDY",
+          "gender": "FEMALE",
+          "friendship": 160
+        }
+      ]
+    },
+    {
+      "target_trainer": "TRAINER_POLISHED_LYRA_CYNDAQUIL",
+      "source_class": "LYRA1",
+      "source_id": 2,
+      "source_name": "Lyra",
+      "items": [
+        "ITEM_NONE",
+        "ITEM_NONE"
+      ],
+      "base_reward": 15,
+      "mons": [
+        {
+          "species": "SPECIES_CYNDAQUIL",
+          "source_species": "CYNDAQUIL",
+          "source_level": "5",
+          "ivs": [
+            22,
+            22,
+            22,
+            22,
+            22,
+            22
+          ],
+          "evs": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "ability_slot": 0,
+          "ability": "ABILITY_BLAZE",
+          "nature": "NATURE_HARDY",
+          "gender": "FEMALE",
+          "friendship": 160
+        }
+      ]
+    },
+    {
+      "target_trainer": "TRAINER_POLISHED_LYRA_TOTODILE",
+      "source_class": "LYRA1",
+      "source_id": 3,
+      "source_name": "Lyra",
+      "items": [
+        "ITEM_NONE",
+        "ITEM_NONE"
+      ],
+      "base_reward": 15,
+      "mons": [
+        {
+          "species": "SPECIES_TOTODILE",
+          "source_species": "TOTODILE",
+          "source_level": "5",
+          "ivs": [
+            22,
+            22,
+            22,
+            22,
+            22,
+            22
+          ],
+          "evs": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "ability_slot": 0,
+          "ability": "ABILITY_TORRENT",
+          "nature": "NATURE_HARDY",
+          "gender": "FEMALE",
+          "friendship": 160
+        }
+      ]
+    },
+    {
+      "target_trainer": "TRAINER_POLISHED_RIVAL_CHIKORITA",
+      "source_class": "RIVAL0",
+      "source_id": 1,
+      "source_name": "boy",
+      "items": [
+        "ITEM_NONE",
+        "ITEM_NONE"
+      ],
+      "base_reward": 15,
+      "mons": [
+        {
+          "species": "SPECIES_RATTATA",
+          "source_species": "RATTATA",
+          "source_level": "4",
+          "ivs": [
+            30,
+            30,
+            30,
+            30,
+            30,
+            30
+          ],
+          "evs": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "ability_slot": 1,
+          "ability": "ABILITY_GUTS",
+          "nature": "NATURE_HARDY",
+          "gender": "MALE",
+          "friendship": 160
+        },
+        {
+          "species": "SPECIES_CHIKORITA",
+          "source_species": "CHIKORITA",
+          "source_level": "5",
+          "ivs": [
+            30,
+            30,
+            30,
+            30,
+            30,
+            30
+          ],
+          "evs": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "ability_slot": 1,
+          "ability": "ABILITY_NATURAL_CURE",
+          "nature": "NATURE_HARDY",
+          "gender": "MALE",
+          "friendship": 160
+        }
+      ]
+    },
+    {
+      "target_trainer": "TRAINER_POLISHED_RIVAL_CYNDAQUIL",
+      "source_class": "RIVAL0",
+      "source_id": 2,
+      "source_name": "boy",
+      "items": [
+        "ITEM_NONE",
+        "ITEM_NONE"
+      ],
+      "base_reward": 15,
+      "mons": [
+        {
+          "species": "SPECIES_RATTATA",
+          "source_species": "RATTATA",
+          "source_level": "4",
+          "ivs": [
+            30,
+            30,
+            30,
+            30,
+            30,
+            30
+          ],
+          "evs": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "ability_slot": 0,
+          "ability": "ABILITY_RUN_AWAY",
+          "nature": "NATURE_HARDY",
+          "gender": "MALE",
+          "friendship": 160
+        },
+        {
+          "species": "SPECIES_CYNDAQUIL",
+          "source_species": "CYNDAQUIL",
+          "source_level": "5",
+          "ivs": [
+            30,
+            30,
+            30,
+            30,
+            30,
+            30
+          ],
+          "evs": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "ability_slot": 1,
+          "ability": "ABILITY_FLAME_BODY",
+          "nature": "NATURE_HARDY",
+          "gender": "MALE",
+          "friendship": 160
+        }
+      ]
+    },
+    {
+      "target_trainer": "TRAINER_POLISHED_RIVAL_TOTODILE",
+      "source_class": "RIVAL0",
+      "source_id": 3,
+      "source_name": "boy",
+      "items": [
+        "ITEM_NONE",
+        "ITEM_NONE"
+      ],
+      "base_reward": 15,
+      "mons": [
+        {
+          "species": "SPECIES_RATTATA",
+          "source_species": "RATTATA",
+          "source_level": "4",
+          "ivs": [
+            30,
+            30,
+            30,
+            30,
+            30,
+            30
+          ],
+          "evs": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "ability_slot": 1,
+          "ability": "ABILITY_GUTS",
+          "nature": "NATURE_HARDY",
+          "gender": "MALE",
+          "friendship": 160
+        },
+        {
+          "species": "SPECIES_TOTODILE",
+          "source_species": "TOTODILE",
+          "source_level": "5",
+          "ivs": [
+            30,
+            30,
+            30,
+            30,
+            30,
+            30
+          ],
+          "evs": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "ability_slot": 1,
+          "ability": "ABILITY_GUTS",
+          "nature": "NATURE_HARDY",
+          "gender": "MALE",
+          "friendship": 160
+        }
+      ]
+    },
+    {
+      "target_trainer": "TRAINER_POLISHED_MIKEY",
+      "source_class": "YOUNGSTER",
+      "source_id": 6,
+      "source_name": "Mikey",
+      "items": [
+        "ITEM_NONE",
+        "ITEM_NONE"
+      ],
+      "base_reward": 4,
+      "mons": [
+        {
+          "species": "SPECIES_RATTATA",
+          "source_species": "RATTATA",
+          "source_level": "2",
+          "ivs": [
+            12,
+            12,
+            12,
+            12,
+            12,
+            12
+          ],
+          "evs": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "ability_slot": 0,
+          "ability": "ABILITY_RUN_AWAY",
+          "nature": "NATURE_HARDY",
+          "gender": "MALE",
+          "friendship": 160
+        },
+        {
+          "species": "SPECIES_PIDGEY",
+          "source_species": "PIDGEY",
+          "source_level": "4",
+          "ivs": [
+            12,
+            12,
+            12,
+            12,
+            12,
+            12
+          ],
+          "evs": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "ability_slot": 0,
+          "ability": "ABILITY_KEEN_EYE",
+          "nature": "NATURE_HARDY",
+          "gender": "MALE",
+          "friendship": 160
+        }
+      ]
+    },
+    {
+      "target_trainer": "TRAINER_POLISHED_DON",
+      "source_class": "BUG_CATCHER",
+      "source_id": 11,
+      "source_name": "Don",
+      "items": [
+        "ITEM_NONE",
+        "ITEM_NONE"
+      ],
+      "base_reward": 4,
+      "mons": [
+        {
+          "species": "SPECIES_CATERPIE",
+          "source_species": "CATERPIE",
+          "source_level": "3",
+          "ivs": [
+            12,
+            12,
+            12,
+            12,
+            12,
+            12
+          ],
+          "evs": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "ability_slot": 0,
+          "ability": "ABILITY_SHIELD_DUST",
+          "nature": "NATURE_HARDY",
+          "gender": "MALE",
+          "friendship": 160
+        },
+        {
+          "species": "SPECIES_CATERPIE",
+          "source_species": "CATERPIE",
+          "source_level": "3",
+          "ivs": [
+            12,
+            12,
+            12,
+            12,
+            12,
+            12
+          ],
+          "evs": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "ability_slot": 1,
+          "ability": "ABILITY_SHIELD_DUST",
+          "nature": "NATURE_HARDY",
+          "gender": "MALE",
+          "friendship": 160
+        }
+      ]
+    },
+    {
+      "target_trainer": "TRAINER_POLISHED_JOEY",
+      "source_class": "YOUNGSTER",
+      "source_id": 1,
+      "source_name": "Joey",
+      "items": [
+        "ITEM_NONE",
+        "ITEM_NONE"
+      ],
+      "base_reward": 4,
+      "mons": [
+        {
+          "species": "SPECIES_RATTATA",
+          "source_species": "RATTATA",
+          "source_level": "5",
+          "ivs": [
+            30,
+            30,
+            30,
+            30,
+            30,
+            30
+          ],
+          "evs": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "ability_slot": 1,
+          "ability": "ABILITY_GUTS",
+          "nature": "NATURE_ADAMANT",
+          "gender": "MALE",
+          "friendship": 160
+        }
+      ]
+    },
+    {
+      "target_trainer": "TRAINER_POLISHED_WADE",
+      "source_class": "BUG_CATCHER",
+      "source_id": 1,
+      "source_name": "Wade",
+      "items": [
+        "ITEM_NONE",
+        "ITEM_NONE"
+      ],
+      "base_reward": 4,
+      "mons": [
+        {
+          "species": "SPECIES_CATERPIE",
+          "source_species": "CATERPIE",
+          "source_level": "2",
+          "ivs": [
+            12,
+            12,
+            12,
+            12,
+            12,
+            12
+          ],
+          "evs": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "ability_slot": 0,
+          "ability": "ABILITY_SHIELD_DUST",
+          "nature": "NATURE_HARDY",
+          "gender": "MALE",
+          "friendship": 160
+        },
+        {
+          "species": "SPECIES_CATERPIE",
+          "source_species": "CATERPIE",
+          "source_level": "2",
+          "ivs": [
+            12,
+            12,
+            12,
+            12,
+            12,
+            12
+          ],
+          "evs": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "ability_slot": 1,
+          "ability": "ABILITY_SHIELD_DUST",
+          "nature": "NATURE_HARDY",
+          "gender": "MALE",
+          "friendship": 160
+        },
+        {
+          "species": "SPECIES_WEEDLE",
+          "source_species": "WEEDLE",
+          "source_level": "3",
+          "ivs": [
+            12,
+            12,
+            12,
+            12,
+            12,
+            12
+          ],
+          "evs": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "ability_slot": 1,
+          "ability": "ABILITY_SHIELD_DUST",
+          "nature": "NATURE_HARDY",
+          "gender": "MALE",
+          "friendship": 160
+        },
+        {
+          "species": "SPECIES_CATERPIE",
+          "source_species": "CATERPIE",
+          "source_level": "2",
+          "ivs": [
+            12,
+            12,
+            12,
+            12,
+            12,
+            12
+          ],
+          "evs": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "ability_slot": 1,
+          "ability": "ABILITY_SHIELD_DUST",
+          "nature": "NATURE_HARDY",
+          "gender": "MALE",
+          "friendship": 160
+        }
+      ]
+    },
+    {
+      "target_trainer": "TRAINER_POLISHED_FINCH",
+      "source_class": "COOLTRAINERM",
+      "source_id": 18,
+      "source_name": "Finch",
+      "items": [
+        "ITEM_FULL_HEAL",
+        "ITEM_MAX_POTION"
+      ],
+      "base_reward": 15,
+      "mons": [
+        {
+          "species": "SPECIES_GEODUDE",
+          "source_species": "GEODUDE",
+          "source_level": "LEVEL_FROM_BADGES + 4",
+          "ivs": [
+            26,
+            26,
+            26,
+            26,
+            26,
+            26
+          ],
+          "evs": [
+            12,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "ability_slot": 1,
+          "ability": "ABILITY_STURDY",
+          "nature": "NATURE_RELAXED",
+          "gender": "MALE",
+          "friendship": 160
+        },
+        {
+          "species": "SPECIES_MAREEP",
+          "source_species": "MAREEP",
+          "source_level": "LEVEL_FROM_BADGES + 5",
+          "ivs": [
+            26,
+            26,
+            26,
+            26,
+            26,
+            26
+          ],
+          "evs": [
+            12,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "ability_slot": 0,
+          "ability": "ABILITY_STATIC",
+          "nature": "NATURE_RASH",
+          "gender": "MALE",
+          "friendship": 160
+        }
+      ]
+    },
+    {
+      "target_trainer": "TRAINER_POLISHED_SPROUT_CHOW",
+      "source_class": "SAGE",
+      "source_id": 1,
+      "source_name": "Chow",
+      "items": [
+        "ITEM_NONE",
+        "ITEM_NONE"
+      ],
+      "base_reward": 8,
+      "mons": [
+        {
+          "species": "SPECIES_BELLSPROUT",
+          "source_species": "BELLSPROUT",
+          "source_level": "3",
+          "ivs": [
+            24,
+            24,
+            24,
+            24,
+            24,
+            24
+          ],
+          "evs": [
+            16,
+            16,
+            16,
+            16,
+            16,
+            16
+          ],
+          "ability_slot": 1,
+          "ability": "ABILITY_CHLOROPHYLL",
+          "nature": "NATURE_HARDY",
+          "gender": "MALE",
+          "friendship": 160
+        },
+        {
+          "species": "SPECIES_BELLSPROUT",
+          "source_species": "BELLSPROUT",
+          "source_level": "3",
+          "ivs": [
+            24,
+            24,
+            24,
+            24,
+            24,
+            24
+          ],
+          "evs": [
+            16,
+            16,
+            16,
+            16,
+            16,
+            16
+          ],
+          "ability_slot": 0,
+          "ability": "ABILITY_CHLOROPHYLL",
+          "nature": "NATURE_HARDY",
+          "gender": "MALE",
+          "friendship": 160
+        },
+        {
+          "species": "SPECIES_BELLSPROUT",
+          "source_species": "BELLSPROUT",
+          "source_level": "3",
+          "ivs": [
+            24,
+            24,
+            24,
+            24,
+            24,
+            24
+          ],
+          "evs": [
+            16,
+            16,
+            16,
+            16,
+            16,
+            16
+          ],
+          "ability_slot": 1,
+          "ability": "ABILITY_CHLOROPHYLL",
+          "nature": "NATURE_HARDY",
+          "gender": "MALE",
+          "friendship": 160
+        }
+      ]
+    },
+    {
+      "target_trainer": "TRAINER_POLISHED_SPROUT_NICO",
+      "source_class": "SAGE",
+      "source_id": 2,
+      "source_name": "Nico",
+      "items": [
+        "ITEM_NONE",
+        "ITEM_NONE"
+      ],
+      "base_reward": 8,
+      "mons": [
+        {
+          "species": "SPECIES_BELLSPROUT",
+          "source_species": "BELLSPROUT",
+          "source_level": "3",
+          "ivs": [
+            24,
+            24,
+            24,
+            24,
+            24,
+            24
+          ],
+          "evs": [
+            16,
+            16,
+            16,
+            16,
+            16,
+            16
+          ],
+          "ability_slot": 0,
+          "ability": "ABILITY_CHLOROPHYLL",
+          "nature": "NATURE_HARDY",
+          "gender": "MALE",
+          "friendship": 160
+        },
+        {
+          "species": "SPECIES_BELLSPROUT",
+          "source_species": "BELLSPROUT",
+          "source_level": "3",
+          "ivs": [
+            24,
+            24,
+            24,
+            24,
+            24,
+            24
+          ],
+          "evs": [
+            16,
+            16,
+            16,
+            16,
+            16,
+            16
+          ],
+          "ability_slot": 1,
+          "ability": "ABILITY_CHLOROPHYLL",
+          "nature": "NATURE_HARDY",
+          "gender": "MALE",
+          "friendship": 160
+        },
+        {
+          "species": "SPECIES_HOOTHOOT",
+          "source_species": "HOOTHOOT",
+          "source_level": "3",
+          "ivs": [
+            24,
+            24,
+            24,
+            24,
+            24,
+            24
+          ],
+          "evs": [
+            16,
+            16,
+            16,
+            16,
+            16,
+            16
+          ],
+          "ability_slot": 0,
+          "ability": "ABILITY_INSOMNIA",
+          "nature": "NATURE_HARDY",
+          "gender": "MALE",
+          "friendship": 160
+        }
+      ]
+    },
+    {
+      "target_trainer": "TRAINER_POLISHED_SPROUT_EDMOND",
+      "source_class": "SAGE",
+      "source_id": 7,
+      "source_name": "Edmond",
+      "items": [
+        "ITEM_NONE",
+        "ITEM_NONE"
+      ],
+      "base_reward": 8,
+      "mons": [
+        {
+          "species": "SPECIES_BELLSPROUT",
+          "source_species": "BELLSPROUT",
+          "source_level": "3",
+          "ivs": [
+            24,
+            24,
+            24,
+            24,
+            24,
+            24
+          ],
+          "evs": [
+            16,
+            16,
+            16,
+            16,
+            16,
+            16
+          ],
+          "ability_slot": 1,
+          "ability": "ABILITY_CHLOROPHYLL",
+          "nature": "NATURE_HARDY",
+          "gender": "MALE",
+          "friendship": 160
+        },
+        {
+          "species": "SPECIES_HOOTHOOT",
+          "source_species": "HOOTHOOT",
+          "source_level": "3",
+          "ivs": [
+            24,
+            24,
+            24,
+            24,
+            24,
+            24
+          ],
+          "evs": [
+            16,
+            16,
+            16,
+            16,
+            16,
+            16
+          ],
+          "ability_slot": 0,
+          "ability": "ABILITY_INSOMNIA",
+          "nature": "NATURE_HARDY",
+          "gender": "MALE",
+          "friendship": 160
+        },
+        {
+          "species": "SPECIES_BELLSPROUT",
+          "source_species": "BELLSPROUT",
+          "source_level": "3",
+          "ivs": [
+            24,
+            24,
+            24,
+            24,
+            24,
+            24
+          ],
+          "evs": [
+            16,
+            16,
+            16,
+            16,
+            16,
+            16
+          ],
+          "ability_slot": 1,
+          "ability": "ABILITY_CHLOROPHYLL",
+          "nature": "NATURE_HARDY",
+          "gender": "MALE",
+          "friendship": 160
+        }
+      ]
+    },
+    {
+      "target_trainer": "TRAINER_POLISHED_SPROUT_JIN",
+      "source_class": "SAGE",
+      "source_id": 3,
+      "source_name": "Jin",
+      "items": [
+        "ITEM_NONE",
+        "ITEM_NONE"
+      ],
+      "base_reward": 8,
+      "mons": [
+        {
+          "species": "SPECIES_BELLSPROUT",
+          "source_species": "BELLSPROUT",
+          "source_level": "7",
+          "ivs": [
+            24,
+            24,
+            24,
+            24,
+            24,
+            24
+          ],
+          "evs": [
+            16,
+            16,
+            16,
+            16,
+            16,
+            16
+          ],
+          "ability_slot": 1,
+          "ability": "ABILITY_CHLOROPHYLL",
+          "nature": "NATURE_HARDY",
+          "gender": "MALE",
+          "friendship": 160
+        }
+      ]
+    },
+    {
+      "target_trainer": "TRAINER_POLISHED_SPROUT_TROY",
+      "source_class": "SAGE",
+      "source_id": 4,
+      "source_name": "Troy",
+      "items": [
+        "ITEM_NONE",
+        "ITEM_NONE"
+      ],
+      "base_reward": 8,
+      "mons": [
+        {
+          "species": "SPECIES_BELLSPROUT",
+          "source_species": "BELLSPROUT",
+          "source_level": "7",
+          "ivs": [
+            24,
+            24,
+            24,
+            24,
+            24,
+            24
+          ],
+          "evs": [
+            16,
+            16,
+            16,
+            16,
+            16,
+            16
+          ],
+          "ability_slot": 0,
+          "ability": "ABILITY_CHLOROPHYLL",
+          "nature": "NATURE_HARDY",
+          "gender": "MALE",
+          "friendship": 160
+        },
+        {
+          "species": "SPECIES_GASTLY",
+          "source_species": "GASTLY",
+          "source_level": "7",
+          "ivs": [
+            24,
+            24,
+            24,
+            24,
+            24,
+            24
+          ],
+          "evs": [
+            16,
+            16,
+            16,
+            16,
+            16,
+            16
+          ],
+          "ability_slot": 0,
+          "ability": "ABILITY_LEVITATE",
+          "nature": "NATURE_HARDY",
+          "gender": "MALE",
+          "friendship": 160
+        }
+      ]
+    },
+    {
+      "target_trainer": "TRAINER_POLISHED_SPROUT_NEAL",
+      "source_class": "SAGE",
+      "source_id": 8,
+      "source_name": "Neal",
+      "items": [
+        "ITEM_NONE",
+        "ITEM_NONE"
+      ],
+      "base_reward": 8,
+      "mons": [
+        {
+          "species": "SPECIES_BELLSPROUT",
+          "source_species": "BELLSPROUT",
+          "source_level": "6",
+          "ivs": [
+            24,
+            24,
+            24,
+            24,
+            24,
+            24
+          ],
+          "evs": [
+            16,
+            16,
+            16,
+            16,
+            16,
+            16
+          ],
+          "ability_slot": 0,
+          "ability": "ABILITY_CHLOROPHYLL",
+          "nature": "NATURE_HARDY",
+          "gender": "MALE",
+          "friendship": 160
+        },
+        {
+          "species": "SPECIES_HOOTHOOT",
+          "source_species": "HOOTHOOT",
+          "source_level": "6",
+          "ivs": [
+            24,
+            24,
+            24,
+            24,
+            24,
+            24
+          ],
+          "evs": [
+            16,
+            16,
+            16,
+            16,
+            16,
+            16
+          ],
+          "ability_slot": 1,
+          "ability": "ABILITY_KEEN_EYE",
+          "nature": "NATURE_HARDY",
+          "gender": "MALE",
+          "friendship": 160
+        }
+      ]
+    },
+    {
+      "target_trainer": "TRAINER_POLISHED_SPROUT_LI",
+      "source_class": "ELDER",
+      "source_id": 1,
+      "source_name": "Li",
+      "items": [
+        "ITEM_SUPER_POTION",
+        "ITEM_NONE"
+      ],
+      "base_reward": 10,
+      "mons": [
+        {
+          "species": "SPECIES_HOOTHOOT",
+          "source_species": "HOOTHOOT",
+          "source_level": "7",
+          "ivs": [
+            26,
+            26,
+            26,
+            26,
+            26,
+            26
+          ],
+          "evs": [
+            18,
+            18,
+            18,
+            18,
+            18,
+            18
+          ],
+          "ability_slot": 1,
+          "ability": "ABILITY_KEEN_EYE",
+          "nature": "NATURE_HARDY",
+          "gender": "MALE",
+          "friendship": 160
+        },
+        {
+          "species": "SPECIES_GASTLY",
+          "source_species": "GASTLY",
+          "source_level": "7",
+          "ivs": [
+            26,
+            26,
+            26,
+            26,
+            26,
+            26
+          ],
+          "evs": [
+            18,
+            18,
+            18,
+            18,
+            18,
+            18
+          ],
+          "ability_slot": 1,
+          "ability": "ABILITY_LEVITATE",
+          "nature": "NATURE_HARDY",
+          "gender": "MALE",
+          "friendship": 160
+        },
+        {
+          "species": "SPECIES_BELLSPROUT",
+          "source_species": "BELLSPROUT",
+          "source_level": "10",
+          "ivs": [
+            26,
+            26,
+            26,
+            26,
+            26,
+            26
+          ],
+          "evs": [
+            18,
+            18,
+            18,
+            18,
+            18,
+            18
+          ],
+          "ability_slot": 1,
+          "ability": "ABILITY_CHLOROPHYLL",
+          "nature": "NATURE_HARDY",
+          "gender": "MALE",
+          "friendship": 160
+        }
+      ]
+    },
+    {
+      "target_trainer": "TRAINER_POLISHED_ROD",
+      "source_class": "BIRD_KEEPER",
+      "source_id": 7,
+      "source_name": "Rod",
+      "items": [
+        "ITEM_NONE",
+        "ITEM_NONE"
+      ],
+      "base_reward": 6,
+      "mons": [
+        {
+          "species": "SPECIES_PIDGEY",
+          "source_species": "PIDGEY",
+          "source_level": "7",
+          "ivs": [
+            16,
+            16,
+            16,
+            16,
+            16,
+            16
+          ],
+          "evs": [
+            5,
+            5,
+            5,
+            5,
+            5,
+            5
+          ],
+          "ability_slot": 0,
+          "ability": "ABILITY_KEEN_EYE",
+          "nature": "NATURE_HARDY",
+          "gender": "MALE",
+          "friendship": 160
+        },
+        {
+          "species": "SPECIES_HOOTHOOT",
+          "source_species": "HOOTHOOT",
+          "source_level": "8",
+          "ivs": [
+            16,
+            16,
+            16,
+            16,
+            16,
+            16
+          ],
+          "evs": [
+            5,
+            5,
+            5,
+            5,
+            5,
+            5
+          ],
+          "ability_slot": 0,
+          "ability": "ABILITY_INSOMNIA",
+          "nature": "NATURE_HARDY",
+          "gender": "MALE",
+          "friendship": 160
+        }
+      ]
+    },
+    {
+      "target_trainer": "TRAINER_POLISHED_ABE",
+      "source_class": "BIRD_KEEPER",
+      "source_id": 8,
+      "source_name": "Abe",
+      "items": [
+        "ITEM_NONE",
+        "ITEM_NONE"
+      ],
+      "base_reward": 6,
+      "mons": [
+        {
+          "species": "SPECIES_SPEAROW",
+          "source_species": "SPEAROW",
+          "source_level": "9",
+          "ivs": [
+            16,
+            16,
+            16,
+            16,
+            16,
+            16
+          ],
+          "evs": [
+            5,
+            5,
+            5,
+            5,
+            5,
+            5
+          ],
+          "ability_slot": 0,
+          "ability": "ABILITY_KEEN_EYE",
+          "nature": "NATURE_HARDY",
+          "gender": "MALE",
+          "friendship": 160
+        }
+      ]
+    },
+    {
+      "target_trainer": "TRAINER_POLISHED_FALKNER",
+      "source_class": "FALKNER",
+      "source_id": 1,
+      "source_name": "Falkner",
+      "items": [
+        "ITEM_SUPER_POTION",
+        "ITEM_NONE"
+      ],
+      "base_reward": 25,
+      "mons": [
+        {
+          "species": "SPECIES_NATU",
+          "source_species": "NATU",
+          "source_level": "10",
+          "ivs": [
+            22,
+            22,
+            22,
+            22,
+            22,
+            22
+          ],
+          "evs": [
+            32,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "ability_slot": 1,
+          "ability": "ABILITY_EARLY_BIRD",
+          "nature": "NATURE_HARDY",
+          "gender": "MALE",
+          "friendship": 160
+        },
+        {
+          "species": "SPECIES_HOOTHOOT",
+          "source_species": "HOOTHOOT",
+          "source_level": "11",
+          "ivs": [
+            22,
+            22,
+            22,
+            22,
+            22,
+            22
+          ],
+          "evs": [
+            32,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "ability_slot": 0,
+          "ability": "ABILITY_INSOMNIA",
+          "nature": "NATURE_HARDY",
+          "gender": "MALE",
+          "friendship": 160
+        },
+        {
+          "species": "SPECIES_PIDGEOTTO",
+          "source_species": "PIDGEOTTO",
+          "source_level": "13",
+          "ivs": [
+            22,
+            22,
+            22,
+            22,
+            22,
+            22
+          ],
+          "evs": [
+            32,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "ability_slot": 1,
+          "ability": "ABILITY_TANGLED_FEET",
+          "nature": "NATURE_HARDY",
+          "gender": "MALE",
+          "friendship": 160
+        }
+      ]
+    }
+  ],
+  "remaining": "Unregistered source parties and source AI are not implemented by this adapter."
+}

@@ -1,4 +1,5 @@
 #include "global.h"
+#include "polished_capture.h"
 #include "frontier_util.h"
 #include "battle_setup.h"
 #include "battle_util.h"
@@ -3110,7 +3111,8 @@ bool8 ScrCmd_checkobjectat(struct ScriptContext *ctx)
 
 bool8 Scrcmd_getsetpokedexflag(struct ScriptContext *ctx)
 {
-    enum NationalDexOrder speciesId = SpeciesToNationalPokedexNum(VarGet(ScriptReadHalfword(ctx)));
+    enum Species species = VarGet(ScriptReadHalfword(ctx));
+    enum NationalDexOrder speciesId = SpeciesToNationalPokedexNum(species);
     u32 desiredFlag = VarGet(ScriptReadHalfword(ctx));
 
     if (desiredFlag == FLAG_SET_CAUGHT || desiredFlag == FLAG_SET_SEEN)
@@ -3118,6 +3120,8 @@ bool8 Scrcmd_getsetpokedexflag(struct ScriptContext *ctx)
     else
         Script_RequestEffects(SCREFF_V1);
 
+    if (desiredFlag == FLAG_SET_CAUGHT)
+        PolishedRecordCaughtSpecies(species);
     gSpecialVar_Result = GetSetPokedexFlag(speciesId, desiredFlag);
 
     if (desiredFlag == FLAG_SET_CAUGHT)

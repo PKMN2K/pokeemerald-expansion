@@ -1,4 +1,5 @@
 #include "global.h"
+#include "polished_capture.h"
 #include "polished_forms.h"
 #include "polished_items.h"
 #include "malloc.h"
@@ -5793,6 +5794,8 @@ void HandleSetPokedexFlag(enum NationalDexOrder nationalNum, u8 caseId, u32 pers
 
 void HandleSetPokedexFlagFromMon(struct Pokemon *mon, u32 caseId)
 {
+    if (caseId == FLAG_SET_CAUGHT)
+        PolishedRecordCaughtSpecies(GetMonData(mon, MON_DATA_SPECIES));
     u32 personality = GetMonData(mon, MON_DATA_PERSONALITY);
     enum NationalDexOrder nationalNum = SpeciesToNationalPokedexNum(GetMonData(mon, MON_DATA_SPECIES));
 

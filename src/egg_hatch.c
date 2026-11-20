@@ -1,4 +1,5 @@
 #include "global.h"
+#include "polished_capture.h"
 #include "pokemon.h"
 #include "egg_hatch.h"
 #include "pokedex.h"
@@ -323,6 +324,7 @@ static void AddHatchedMonToParty(u8 id)
 
     nationalDexNum = SpeciesToNationalPokedexNum(species);
     GetSetPokedexFlag(nationalDexNum, FLAG_SET_SEEN);
+    PolishedRecordCaughtSpecies(species);
     GetSetPokedexFlag(nationalDexNum, FLAG_SET_CAUGHT);
 
     GetMonNickname(mon, gStringVar1);

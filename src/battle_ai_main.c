@@ -1,4 +1,6 @@
 #include "global.h"
+#include "polished_capture.h"
+#include "polished_trainers.h"
 #include "main.h"
 #include "malloc.h"
 #include "battle.h"
@@ -204,6 +206,8 @@ void BattleAI_SetupItems(void)
     if (IsSpecialTrainer(trainerId))
         trainerId = TRAINER_NONE;
     const enum Item *items = GetTrainerItemsFromId(trainerId);
+    if (B_POLISHED_MOVE_BALANCE && PolishedGetTrainerItems(trainerId) != NULL)
+        items = PolishedGetTrainerItems(trainerId);
 
     for (u32 i = 0; i < sizeof(struct BattleHistory); i++)
         data[i] = 0;
@@ -6774,6 +6778,11 @@ static s32 AI_Roaming(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum
 // Safari Pokémon logic
 static s32 AI_Safari(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Move move, s32 score)
 {
+    if (UsesPolishedSafariRules())
+    {
+        AI_Watch(); // Source decides escape after the player's action and counter decrement.
+        return score;
+    }
     u32 safariFleeRate = gBattleStruct->safariEscapeFactor * 5; // Safari flee rate, from 0-20.
 
     if ((Random() % 100) < safariFleeRate)
