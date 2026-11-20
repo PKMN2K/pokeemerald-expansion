@@ -147,6 +147,7 @@ jobs:
           python3 tools/polished_port/scripts/build_battle_foundations.py --check
           python3 tools/polished_port/scripts/build_battle_core.py --check
           python3 tools/polished_port/scripts/build_accuracy_order.py --check
+          python3 tools/polished_port/scripts/build_damage_pipeline.py --check
           python3 tools/polished_port/scripts/build_battle_suite.py --check
           python3 tools/polished_port/scripts/test_battle_suite.py
           python3 tools/polished_port/scripts/test_emulator_walk.py

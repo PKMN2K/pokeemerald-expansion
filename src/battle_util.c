@@ -17,6 +17,7 @@
 #include "config_changes.h"
 #include "polished_battle.h"
 #include "polished_battle_core.h"
+#include "polished_damage.h"
 #include "data/polished_critical_hits.h"
 #include "data/polished_accuracy.h"
 #include "polished_moves.h"
@@ -7988,7 +7989,18 @@ static inline bool32 IsPolishedZeroPowerReturn(struct DamageContext *ctx)
         && GetActiveGimmick(ctx->battlerAtk) != GIMMICK_DYNAMAX;
 }
 
-static inline s32 DoMoveDamageCalcVars(struct DamageContext *ctx)
+// Keep source-only work out of the native AI hot path's register allocation.
+static NOINLINE s32 DoPolishedMoveDamageCalcVars(struct DamageContext *ctx)
+{
+    s32 dmg = PolishedDamageBeforeRoll(ctx, CalcMoveBasePower(ctx));
+    if (!ctx->randomFactor)
+        return dmg;
+    if (dmg > 1)
+        dmg = dmg * (100 - RandomUniform(RNG_DAMAGE_MODIFIER, 0, 15)) / 100;
+    return PolishedDamageAfterRoll(ctx, dmg);
+}
+
+static NOINLINE s32 DoNativeMoveDamageCalcVars(struct DamageContext *ctx)
 {
     s32 dmg;
     u32 userFinalAttack;
@@ -8033,8 +8045,22 @@ static inline s32 DoMoveDamageCalcVars(struct DamageContext *ctx)
     return dmg;
 }
 
+static inline s32 DoMoveDamageCalcVars(struct DamageContext *ctx)
+{
+    ctx->aiOtherModifier = 0;
+    if (B_POLISHED_MOVE_BALANCE)
+    {
+        ctx->polishedDamage = !IsDoubleBattle() && UsesPolishedDamageRules(ctx);
+        if (ctx->polishedDamage)
+            return DoPolishedMoveDamageCalcVars(ctx);
+    }
+    return DoNativeMoveDamageCalcVars(ctx);
+}
+
 s32 ApplyModifiersAfterDmgRoll(struct DamageContext *ctx, s32 dmg)
 {
+    if (B_POLISHED_MOVE_BALANCE && ctx->polishedDamage)
+        return ctx->typeEffectivenessModifier == UQ_4_12(0.0) ? 0 : PolishedDamageAfterRoll(ctx, dmg);
     // AI applies these separately. Preserve the same source floor for its
     // estimates, including rolls rounded down to zero, without bypassing immunity.
     if (IsPolishedZeroPowerReturn(ctx))
@@ -8047,7 +8073,16 @@ s32 ApplyModifiersAfterDmgRoll(struct DamageContext *ctx, s32 dmg)
     DAMAGE_APPLY_MODIFIER(ctx->typeEffectivenessModifier);
     DAMAGE_APPLY_MODIFIER(GetBurnOrFrostBiteModifier(ctx));
     DAMAGE_APPLY_MODIFIER(GetMoveAgainstProtectionModifier(ctx));
-    DAMAGE_APPLY_MODIFIER(GetOtherModifiers(ctx));
+    // AI applies four rolls to the same calculation. These modifiers depend
+    // on its context, not the roll; retain their original integer ordering.
+    uq4_12_t otherModifier = ctx->aiOtherModifier;
+    if (!ctx->aiCalc || otherModifier == 0)
+    {
+        otherModifier = GetOtherModifiers(ctx);
+        if (ctx->aiCalc)
+            ctx->aiOtherModifier = otherModifier;
+    }
+    DAMAGE_APPLY_MODIFIER(otherModifier);
 
     return dmg;
 }

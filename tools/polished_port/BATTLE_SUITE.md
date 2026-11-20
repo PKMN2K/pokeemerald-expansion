@@ -20,11 +20,11 @@ source groups and expected source failures are rejected.
 
 ## Coverage and remaining work
 
-The source archive contains **331 files authenticated back to the pinned Git
+The source archive contains **334 files authenticated back to the pinned Git
 commit**. It includes every assembly file under the battle engine/data,
 trainer/facility data, item/Pokemon engines, shared home routines, constants and
 macros. Missing or edited blobs/trees fail authentication. The generated ledger
-records **4,062 global lexical blocks**, their exact source hashes, local-label
+records **4,065 global lexical blocks**, their exact source hashes, local-label
 and branch-site counts, **255 moves, 133 effects and 129 command names**, every
 source ability/held-effect identifier and all registered source tests.
 
@@ -141,6 +141,7 @@ Regenerate the ledger after adding tests:
 python3 tools/polished_port/scripts/build_battle_foundations.py
 python3 tools/polished_port/scripts/build_battle_core.py
 python3 tools/polished_port/scripts/build_accuracy_order.py
+python3 tools/polished_port/scripts/build_damage_pipeline.py
 python3 tools/polished_port/scripts/build_battle_suite.py
 python3 tools/polished_port/scripts/test_battle_suite.py
 ```
@@ -150,3 +151,64 @@ pinned commit to `build_battle_suite.py --import-source /path/to/source`.
 Import reads immutable Git objects, not checkout files. CI needs no source
 network fetch. The negative tests reject deleted/corrupt source objects and
 false completion claims even when regression execution is marked passed.
+
+## Shared damage pipeline
+
+The shared damage adapter now routes 165 source attacks through the pinned
+`damagestats`, `damagecalc`, `stab` and `damagevariation` arithmetic. It reduces
+raw Attack/Defense together, applies stat stages to the numerator, preserves
+ordered integer ability/item/burn/critical operations and the source saturation
+boundaries, and combines STAB/type/weather before rolling damage. Reflection,
+fixed-damage and other special effect paths retain their existing paths.
+
+Twenty-six groups add 10,816 generated arithmetic vectors, exercised from both
+sides in both attack categories (43,264 runtime comparisons), plus live damage
+rolls, screens, Facade, Acrobatics, Hex, species items and native-extension
+controls. The before/after check reproduced four failures on the parent runtime.
+Source punching, slicing, launcher, Sheer Force and Reckless memberships are
+derived from the pinned lists and scripts. In particular, Reckless does not
+boost this release's separate Flare Blitz effect.
+
+Conditional boosts preserve their script position: Acrobatics, Avalanche, Hex,
+Venoshock, Facade and Rollout act before the roll; Pursuit, Knock Off and the
+Fly/Dig/Minimize multipliers act afterward. Metal Powder uses the original
+Ditto identity even after Transform, boosts physical Defense by 1.5, and leaves
+special Defense unchanged. Critical damage uses 1.5 (2.25 with Sniper) before
+Defense/50 division, independently of the native generation preset. The AI
+numeric interface consumes this same calculation without applying the native
+post-roll modifiers a second time.
+
+Native AI estimates reuse the unchanged final item/ability modifier across
+their damage rolls. The cache is reset for every new calculation; a 64-roll
+comparison checks fresh versus reused results while changing screens,
+abilities, items and type effectiveness, including resist-berry bookkeeping.
+The cache occupies previously unused context bits and changes no saved data.
+
+This is scoped arithmetic evidence, not certification of every attack branch
+or the remaining battle engine. Future Sight, Low Kick and Gyro Ball remain
+explicitly deferred from this adapter. Their external-user and dynamic-power
+rules need dedicated source evidence. Source stat creation, type-chart and
+immunity edge cases, item removal/consumption, all action/end-turn/faint ordering,
+AI decisions, capture/rewards, facilities/link and exact RNG/presentation
+remain open. Optional moves, damage abilities/items, terrain, doubles and
+gimmicks retain native paths. See `manifests/damage_pipeline.json`.
+
+Validation: all 835 source groups and six AI timing groups passed. The complete
+native suite passed 6,057 groups with nine existing expected failures and 585
+existing TODOs, with no unexpected failures. The 26 added groups pass in both
+profiles, and the original AI frame limits remain unchanged. Both production
+ROM builds, all 96 source checks and twelve ARM compiler probes passed.
+
+The production-linked move/machine audit found zero differences in the 255
+mapped move records and zero mismatches across 43,792 teaching-compatibility
+checks. All 109 previously documented machine/lesson gaps remain unchanged.
+Strict completion still deliberately exits 2: fifteen domains, 4,065 lexical
+blocks and 133 effect families retain behavioral verification obligations.
+
+The Johto campaign passed 101 checks and nineteen directed warps, including
+Falkner, badge/Roost/Togepi rewards and Save/reset/Continue, on ROM SHA-256
+`02e314dc00ef53246bf5950777278ecba847becd43b30c011fb5a81b662e0cfd`.
+After the final Me First, Dive and Glaive Rush compatibility guards, the ROM was
+rebuilt and all twelve demo checks passed again; those guards also pass the
+final source and native battle suites. Final Johto ROM SHA-256:
+`9e578a3cbdd4d7743197dcf2eb380fa61cae77d14c7cbfbdd1eb25c2399c518a`.

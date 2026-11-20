@@ -24,7 +24,10 @@
       "data/options/default_options.asm",
       "data/moves/critical_hit_moves.asm",
       "ram/hram.asm",
-      "data/moves/priorities.asm"
+      "data/moves/priorities.asm",
+      "data/moves/punching_moves.asm",
+      "data/moves/launcher_moves.asm",
+      "data/moves/slicing_moves.asm"
     ],
     "limitation": "This is the battle boundary and shared dependencies, not a proof of transitive call-graph closure. External field scripts, UI and data references still require end-to-end evidence."
   },
@@ -7450,6 +7453,20 @@
       ]
     },
     {
+      "path": "data/moves/launcher_moves.asm",
+      "git_blob_sha1": "7fa03ddac7a7628dc2e668b5e9742d0ea461d6dd",
+      "blocks": [
+        {
+          "label": "LauncherMoves",
+          "line": 1,
+          "sha256": "6d0136f9bd7c0d1a1ccda9d54b718435132bc764513bb4b13de21b71c031bd5d",
+          "local_labels": 0,
+          "branch_sites": 0,
+          "behavior": "unverified"
+        }
+      ]
+    },
+    {
       "path": "data/moves/priorities.asm",
       "git_blob_sha1": "f1a56dad01d359da7e66a2de450359aa4e7cd34f",
       "blocks": [
@@ -7457,6 +7474,34 @@
           "label": "MovePriorities",
           "line": 1,
           "sha256": "cfea3070fabca0de6e053db0aed64334d41596fec8130873b08b5fc0c99dfe6f",
+          "local_labels": 0,
+          "branch_sites": 0,
+          "behavior": "unverified"
+        }
+      ]
+    },
+    {
+      "path": "data/moves/punching_moves.asm",
+      "git_blob_sha1": "4e99d50e9ec155a858f5f45ff2fa04ea44de0d7a",
+      "blocks": [
+        {
+          "label": "PunchingMoves",
+          "line": 1,
+          "sha256": "61120f65d8ff7ea66dc38e743cd8cf9defaf4619190a5ba83601765937cec0d5",
+          "local_labels": 0,
+          "branch_sites": 0,
+          "behavior": "unverified"
+        }
+      ]
+    },
+    {
+      "path": "data/moves/slicing_moves.asm",
+      "git_blob_sha1": "bc0a06d171d2798737ef0bc77617c9d644b85acd",
+      "blocks": [
+        {
+          "label": "SlicingMoves",
+          "line": 1,
+          "sha256": "a45b374fc71a5ffd426d16572c2fd90a9f439705f4a5c21a839655f2fa26a775",
           "local_labels": 0,
           "branch_sites": 0,
           "behavior": "unverified"
@@ -38429,6 +38474,136 @@
       "name": "Polished foundations either active gimmick keeps Hail defense native",
       "kind": "SINGLE_BATTLE_TEST",
       "path": "test/battle/polished_battle_foundations.c"
+    },
+    {
+      "name": "Polished damage matches all source stat compression stage and critical vectors",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_damage.c"
+    },
+    {
+      "name": "Polished damage applies offensive ability burn critical and held boosts before adding two",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_damage.c"
+    },
+    {
+      "name": "Polished damage rolls after STAB type and weather on both sides",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_damage.c"
+    },
+    {
+      "name": "Polished damage screens multiply raw Defense before simultaneous compression",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_damage.c"
+    },
+    {
+      "name": "Polished damage burned Facade doubles final damage while retaining the burn penalty",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_damage.c"
+    },
+    {
+      "name": "Polished damage applies Acrobatics and Hex boosts before the roll",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_damage.c"
+    },
+    {
+      "name": "Polished damage uses exact ordered defensive ability and Assault Vest fractions",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_damage.c"
+    },
+    {
+      "name": "Polished damage criticals ignore screens negative Attack positive Defense and native generation",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_damage.c"
+    },
+    {
+      "name": "Polished damage Unaware ignores only the opposing stat stages",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_damage.c"
+    },
+    {
+      "name": "Polished damage weather uses the targets Umbrella and respects suppression",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_damage.c"
+    },
+    {
+      "name": "Polished damage Psystrike uses physical defense modifiers with special attacker boosts",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_damage.c"
+    },
+    {
+      "name": "Polished damage defender abilities reduce numerator before the constant two",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_damage.c"
+    },
+    {
+      "name": "Polished damage applies Filter Tinted Lens and Expert Belt in the source second pass",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_damage.c"
+    },
+    {
+      "name": "Polished damage Knock Off and Pursuit boost after the random roll",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_damage.c"
+    },
+    {
+      "name": "Polished damage Rollout multiplies the completed formula and caps before the roll",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_damage.c"
+    },
+    {
+      "name": "Polished damage Metal Powder boosts transformed Ditto Defense by one half",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_damage.c"
+    },
+    {
+      "name": "Polished damage Light Ball and Thick Club double raw Attack before compression",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_damage.c"
+    },
+    {
+      "name": "Polished damage keeps optional moves abilities items terrain and gimmicks on native paths",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_damage.c"
+    },
+    {
+      "name": "Polished damage leaves doubles arithmetic on the native path",
+      "kind": "DOUBLE_BATTLE_TEST",
+      "path": "test/battle/polished_damage.c"
+    },
+    {
+      "name": "Polished damage Reckless follows source effects including the Flare Blitz exception",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_damage.c"
+    },
+    {
+      "name": "Polished damage punching slicing and launcher boosts use the pinned move memberships",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_damage.c"
+    },
+    {
+      "name": "Polished damage Sheer Force and Punching Glove multiply separately before division",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_damage.c"
+    },
+    {
+      "name": "Polished damage Pixilate boosts only moves actually converted and ignores the native multiplier preset",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_damage.c"
+    },
+    {
+      "name": "Polished damage Hidden Power does not receive a Pixilate bonus from its listed type",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_damage.c"
+    },
+    {
+      "name": "Polished damage preserves immunity and zero power Return through the AI roll interface",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_damage.c"
+    },
+    {
+      "name": "Polished damage AI cached native modifiers match fresh rolls and reset per calculation",
+      "kind": "DOUBLE_BATTLE_TEST",
+      "path": "test/battle/polished_damage.c"
     },
     {
       "name": "Polished patterned Magikarp evolves through the real battle UI and retains its breeding pattern",

@@ -4142,3 +4142,46 @@ directed warps, Falkner, badge/Roost/Togepi rewards and Save/reset/Continue.
 
 Validated Johto ROM SHA-256:
 `832e8080c1ef0e4e6c6174af2d645b20d74d48c1e8069aac104f93175be0f221`.
+
+## Shared source damage pipeline
+
+The next battle suite replaces inherited damage ordering for 165 mapped source
+attacks in ordinary source singles. Raw stat compression, numerator-stage
+modifiers, ordered abilities/items, burn, criticals, screens, STAB/weather/type
+combination and conditional move multipliers follow pinned Polished Crystal.
+The AI calculation interface shares the same numeric path. Native extensions
+retain their existing path and saved identifiers remain unchanged.
+
+The suite includes 26 new groups and 10,816 generated numerical vectors,
+exercised on both sides and with physical/special attacks. Four parent-runtime
+failures establish that the tests detect the previous behavior. Authenticated
+source lists define punching, slicing, launcher, Sheer Force and Reckless
+eligibility; Flare Blitz is deliberately excluded from source Reckless.
+
+This does not close whole-battle parity: all fifteen domains retain outstanding
+obligations. Future Sight, Low Kick and Gyro Ball are not routed through the new
+calculation; their source-specific data and external-user rules require separate
+work. Damage-related event order, suppression/copy interactions, type/immunity
+edge cases, exact RNG, AI choices, capture/rewards and facility/link behavior
+remain open. Full details and evidence are in `tools/polished_port/BATTLE_SUITE.md`
+and `tools/polished_port/manifests/damage_pipeline.json`.
+
+Validation: all 835 source groups and six AI timing groups passed. The complete
+native suite passed 6,057 groups with nine existing expected failures and 585
+existing TODOs, with no unexpected failures. The 26 added groups pass in both
+profiles, and the original AI frame limits remain unchanged. Both production
+ROM builds, all 96 source checks and twelve ARM compiler probes passed.
+
+The production-linked move/machine audit found zero differences in the 255
+mapped move records and zero mismatches across 43,792 teaching-compatibility
+checks. All 109 previously documented machine/lesson gaps remain unchanged.
+Strict completion still deliberately exits 2: fifteen domains, 4,065 lexical
+blocks and 133 effect families retain behavioral verification obligations.
+
+The Johto campaign passed 101 checks and nineteen directed warps, including
+Falkner, badge/Roost/Togepi rewards and Save/reset/Continue, on ROM SHA-256
+`02e314dc00ef53246bf5950777278ecba847becd43b30c011fb5a81b662e0cfd`.
+After the final Me First, Dive and Glaive Rush compatibility guards, the ROM was
+rebuilt and all twelve demo checks passed again; those guards also pass the
+final source and native battle suites. Final Johto ROM SHA-256:
+`9e578a3cbdd4d7743197dcf2eb380fa61cae77d14c7cbfbdd1eb25c2399c518a`.

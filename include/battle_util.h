@@ -37,7 +37,8 @@ struct DamageContext
     u32 runScript:1;  // Used during actual combat where scripts have to be run / flags need to be set
     u32 terrain:4;
     u32 useStoredTypeEffectiveness:1;
-    u32 padding:17;
+    u32 polishedDamage:1; // Source modifiers precede the damage roll.
+    u32 aiOtherModifier:16; // Cached within one AI damage calculation; zero means unset.
 };
 
 // Helper struct to keep the arg list small and prevent constant recalculations of abilities/hold effects.

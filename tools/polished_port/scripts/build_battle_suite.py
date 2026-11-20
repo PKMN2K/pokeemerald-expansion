@@ -29,7 +29,9 @@ PREFIXES = ('engine/battle/', 'data/battle/', 'home/', 'engine/items/',
             'macros/', 'data/trainers/', 'engine/events/battle_tower/',
             'data/battle_tower/')
 EXTRA = ('engine/events/trainer_scripts.asm', 'engine/math/math.asm',
-         'data/options/default_options.asm', 'data/moves/critical_hit_moves.asm', 'ram/hram.asm', 'data/moves/priorities.asm')
+         'data/options/default_options.asm', 'data/moves/critical_hit_moves.asm', 'ram/hram.asm', 'data/moves/priorities.asm',
+         'data/moves/punching_moves.asm', 'data/moves/launcher_moves.asm',
+         'data/moves/slicing_moves.asm')
 
 DOMAINS = {
     'setup': ('Battle setup and trainer/wild construction', ['engine/battle/core.asm', 'engine/battle/read_trainer_party.asm', 'engine/battle/read_trainer_dvs.asm', 'engine/battle/read_trainer_attributes.asm'],
