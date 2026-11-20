@@ -5257,9 +5257,13 @@ static void Cmd_tryhealhalfhealth(void)
         gBattlerTarget = gBattlerAttacker;
 
     u32 maxHP = GetNonDynamaxMaxHP(gBattlerTarget);
-    bool32 roundUp = gCurrentMove != MOVE_POLISHED_FRESH_SNACK && GetConfig(B_HALF_HP_HEALING_ROUNDING) >= GEN_5;
+    bool32 polishedRecovery = B_POLISHED_MOVE_BALANCE && !IsDoubleBattle()
+        && GetActiveGimmick(gBattlerAttacker) == GIMMICK_NONE
+        && GetActiveGimmick(GetOppositeBattler(gBattlerAttacker)) == GIMMICK_NONE
+        && (gCurrentMove == MOVE_RECOVER || gCurrentMove == MOVE_ROOST);
+    bool32 roundUp = !polishedRecovery && gCurrentMove != MOVE_POLISHED_FRESH_SNACK && GetConfig(B_HALF_HP_HEALING_ROUNDING) >= GEN_5;
     u32 healAmount = (maxHP + roundUp) / 2;
-    if (gCurrentMove == MOVE_POLISHED_FRESH_SNACK)
+    if (polishedRecovery || gCurrentMove == MOVE_POLISHED_FRESH_SNACK)
         healAmount = max(1, healAmount);
     SetHealAmount(gBattlerTarget, healAmount);
     if (gBattleMons[gBattlerTarget].hp == gBattleMons[gBattlerTarget].maxHP)

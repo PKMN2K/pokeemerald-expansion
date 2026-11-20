@@ -4335,7 +4335,30 @@ static enum MoveEndResult MoveEndMoveBlockRecoil(struct BattleCalcValues *cv)
             }
             else
             {
-                SetPassiveDamageAmount(cv->battlerAtk, gBattleScripting.savedDmg * max(1, GetMoveRecoil(cv->move)) / 100);
+                u32 divisor = 0;
+                if (B_POLISHED_MOVE_BALANCE && !IsDoubleBattle()
+                 && GetActiveGimmick(cv->battlerAtk) == GIMMICK_NONE
+                 && GetActiveGimmick(cv->battlerDef) == GIMMICK_NONE)
+                {
+                    switch (cv->move)
+                    {
+                    case MOVE_DOUBLE_EDGE:
+                    case MOVE_FLARE_BLITZ:
+                        divisor = 3;
+                        break;
+                    case MOVE_TAKE_DOWN:
+                    case MOVE_BRAVE_BIRD:
+                    case MOVE_WILD_CHARGE:
+                        divisor = 4;
+                        break;
+                    default:
+                        break;
+                    }
+                }
+                // Source divides by three exactly, not a 33 percent approximation.
+                SetPassiveDamageAmount(cv->battlerAtk, divisor
+                    ? gBattleScripting.savedDmg / divisor
+                    : gBattleScripting.savedDmg * max(1, GetMoveRecoil(cv->move)) / 100);
             }
             TryUpdateEvolutionTracker(IF_RECOIL_DAMAGE_GE, gBattleStruct->passiveHpUpdate[cv->battlerAtk], MOVE_NONE);
             BattleScriptCall(BattleScript_MoveEffectRecoil);

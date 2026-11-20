@@ -140,6 +140,8 @@ jobs:
           python3 tools/polished_port/scripts/build_flinch_recharge.py --check
           python3 tools/polished_port/scripts/build_proc_recharge.py --check
           python3 tools/polished_port/scripts/build_proc_blockers.py --check
+          python3 tools/polished_port/scripts/build_attack_suite.py --check
+          python3 tools/polished_port/scripts/test_attack_suite.py
           python3 tools/polished_port/scripts/build_rock_smash.py --check
           python3 tools/polished_port/scripts/test_rock_smash.py
           python3 tools/polished_port/scripts/build_flash.py --check
@@ -1187,54 +1189,16 @@ jobs:
           TEST: 1
         run: make -j$(nproc) check
 
-      - name: Test source move rules and AI frame budgets
-        timeout-minutes: 20
-        run: |
-          make -j$(nproc) -O TEST=1 POLISHED_MOVE_BALANCE_TEST=1 check TESTS='Polished move balance'
-          make -j$(nproc) -O TEST=1 POLISHED_MOVE_BALANCE_TEST=1 check TESTS='Polished Hidden Power'
-          make -j$(nproc) -O TEST=1 POLISHED_MOVE_BALANCE_TEST=1 check TESTS='Polished Pain Split'
-          make -j$(nproc) -O TEST=1 POLISHED_MOVE_BALANCE_TEST=1 check TESTS='Polished fixed damage'
-          make -j$(nproc) -O TEST=1 POLISHED_MOVE_BALANCE_TEST=1 check TESTS='Polished retaliation accuracy'
-          make -j$(nproc) -O TEST=1 POLISHED_MOVE_BALANCE_TEST=1 check TESTS='Polished self move accuracy'
-          make -j$(nproc) -O TEST=1 POLISHED_MOVE_BALANCE_TEST=1 check TESTS='Polished typeless moves'
-          make -j$(nproc) -O TEST=1 POLISHED_MOVE_BALANCE_TEST=1 check TESTS='Polished Metronome and Struggle'
-          make -j$(nproc) -O TEST=1 POLISHED_MOVE_BALANCE_TEST=1 check TESTS='Polished secondary stat drops'
-          make -j$(nproc) -O TEST=1 POLISHED_MOVE_BALANCE_TEST=1 check TESTS='Polished Sleep Talk selection'
-          make -j$(nproc) -O TEST=1 POLISHED_MOVE_BALANCE_TEST=1 check TESTS='Polished move restrictions'
-          make -j$(nproc) -O TEST=1 POLISHED_MOVE_BALANCE_TEST=1 check TESTS='Polished Encore commitment'
-          make -j$(nproc) -O TEST=1 POLISHED_MOVE_BALANCE_TEST=1 check TESTS='Polished Cursed Body'
-          make -j$(nproc) -O TEST=1 POLISHED_MOVE_BALANCE_TEST=1 check TESTS='Polished Protect chain'
-          make -j$(nproc) -O TEST=1 POLISHED_MOVE_BALANCE_TEST=1 check TESTS='Polished Belly Drum'
-          make -j$(nproc) -O TEST=1 POLISHED_MOVE_BALANCE_TEST=1 check TESTS='Polished Rapid Spin'
-          make -j$(nproc) -O TEST=1 POLISHED_MOVE_BALANCE_TEST=1 check TESTS='Polished Perish Song'
-          make -j$(nproc) -O TEST=1 POLISHED_MOVE_BALANCE_TEST=1 check TESTS='Polished Foresight'
-          make -j$(nproc) -O TEST=1 POLISHED_MOVE_BALANCE_TEST=1 check TESTS='Polished Mean Look'
-          make -j$(nproc) -O TEST=1 POLISHED_MOVE_BALANCE_TEST=1 check TESTS='Polished Run Away'
-          make -j$(nproc) -O TEST=1 POLISHED_MOVE_BALANCE_TEST=1 check TESTS='Polished trapping abilities'
-          make -j$(nproc) -O TEST=1 POLISHED_MOVE_BALANCE_TEST=1 check TESTS='Polished binding'
-          make -j$(nproc) -O TEST=1 POLISHED_MOVE_BALANCE_TEST=1 check TESTS='Polished Teleport'
-          make -j$(nproc) -O TEST=1 POLISHED_MOVE_BALANCE_TEST=1 check TESTS='Polished switch exemptions'
-          make -j$(nproc) -O TEST=1 POLISHED_MOVE_BALANCE_TEST=1 check TESTS='Polished Roar'
-          make -j$(nproc) -O TEST=1 POLISHED_MOVE_BALANCE_TEST=1 check TESTS='Polished sound priority'
-          make -j$(nproc) -O TEST=1 POLISHED_MOVE_BALANCE_TEST=1 check TESTS='Polished Magic Bounce'
-          make -j$(nproc) -O TEST=1 POLISHED_MOVE_BALANCE_TEST=1 check TESTS='Polished Corrosion powder'
-          make -j$(nproc) -O TEST=1 POLISHED_MOVE_BALANCE_TEST=1 check TESTS='Polished Corrosion Substitute'
-          make -j$(nproc) -O TEST=1 POLISHED_MOVE_BALANCE_TEST=1 check TESTS='Polished Corrosion status'
-          make -j$(nproc) -O TEST=1 POLISHED_MOVE_BALANCE_TEST=1 check TESTS='Polished status orbs'
-          make -j$(nproc) -O TEST=1 POLISHED_MOVE_BALANCE_TEST=1 check TESTS='Polished poison hit'
-          make -j$(nproc) -O TEST=1 POLISHED_MOVE_BALANCE_TEST=1 check TESTS='Polished Heavy Boots'
-          make -j$(nproc) -O TEST=1 POLISHED_MOVE_BALANCE_TEST=1 check TESTS='Polished Synchronize Substitute'
-          make -j$(nproc) -O TEST=1 POLISHED_MOVE_BALANCE_TEST=1 check TESTS='Polished Synchronize hit'
-          make -j$(nproc) -O TEST=1 POLISHED_MOVE_BALANCE_TEST=1 check TESTS='Polished freeze'
-          make -j$(nproc) -O TEST=1 POLISHED_MOVE_BALANCE_TEST=1 check TESTS='Polished self-thaw'
-          make -j$(nproc) -O TEST=1 POLISHED_MOVE_BALANCE_TEST=1 check TESTS='Polished flinch-hit'
-          make -j$(nproc) -O TEST=1 POLISHED_MOVE_BALANCE_TEST=1 check TESTS='Polished frozen flinch'
-          make -j$(nproc) -O TEST=1 POLISHED_MOVE_BALANCE_TEST=1 check TESTS='Polished sleeping flinch'
-          make -j$(nproc) -O TEST=1 POLISHED_MOVE_BALANCE_TEST=1 check TESTS='Polished flinch focus'
-          make -j$(nproc) -O TEST=1 POLISHED_MOVE_BALANCE_TEST=1 check TESTS='Polished flinch recharge'
-          make -j$(nproc) -O TEST=1 POLISHED_MOVE_BALANCE_TEST=1 check TESTS='Polished proc recharge'
-          make -j$(nproc) -O TEST=1 POLISHED_MOVE_BALANCE_TEST=1 check TESTS='Polished proc blockers'
-          make -j$(nproc) -O TEST=1 POLISHED_MOVE_BALANCE_TEST=1 check TESTS='AI thinking time'
+      - name: Test complete source attack catalog and AI frame budgets
+        timeout-minutes: 30
+        run: python3 tools/polished_port/scripts/run_attack_suite.py --output /tmp/polished-attack-suite
+
+      - name: Upload source attack coverage and execution evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: polished-attack-suite
+          path: /tmp/polished-attack-suite
 
       - name: Exercise evolution completion and cancellation in mGBA
         timeout-minutes: 5

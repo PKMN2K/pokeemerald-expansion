@@ -180,6 +180,21 @@ static void HandleSetEffectAbsorb(struct BattleCalcValues *cv, struct SetEffect 
 
         s32 healAmount = (gBattleStruct->moveDamage[cv->battlerDef] * absorbPercentage / 100);
         healAmount = GetDrainedBigRootHp(cv->battlerAtk, healAmount);
+        if (B_POLISHED_MOVE_BALANCE && !IsDoubleBattle()
+         && GetActiveGimmick(cv->battlerAtk) == GIMMICK_NONE
+         && GetActiveGimmick(cv->battlerDef) == GIMMICK_NONE
+         && (cv->move == MOVE_ABSORB || cv->move == MOVE_MEGA_DRAIN
+          || cv->move == MOVE_LEECH_LIFE || cv->move == MOVE_DRAINING_KISS
+          || cv->move == MOVE_DRAIN_PUNCH || cv->move == MOVE_GIGA_DRAIN))
+        {
+            // Source: Kiss adds floor(damage/2), then Big Root, then HalveBC.
+            healAmount = gBattleStruct->moveDamage[cv->battlerDef];
+            if (cv->move == MOVE_DRAINING_KISS)
+                healAmount += healAmount / 2;
+            if (GetBattlerHoldEffect(cv->battlerAtk) == HOLD_EFFECT_BIG_ROOT)
+                healAmount = healAmount * 13 / 10;
+            healAmount = max(1, healAmount / 2);
+        }
         gEffectBattler = cv->battlerAtk;
         gBattlerAbility = gBattleScripting.battler = cv->battlerDef;
 

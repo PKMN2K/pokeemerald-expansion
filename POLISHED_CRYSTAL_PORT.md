@@ -3781,3 +3781,44 @@ Falkner, badge/Roost/Togepi rewards and Save/reset/Continue.
 
 Validated Johto ROM SHA-256:
 `bcd844ea7b977bb57facbd1ce58aca6e4e4ecaafab2a9837a6716dfaacbac016`.
+
+## Consolidated attack behavior suite
+
+The [attack suite](tools/polished_port/ATTACK_SUITE.md) inventories all 255 source
+moves, 133 effects and 129 script commands. Twelve new battle groups execute
+1,680 cases per profile: all-move dispatch/PP; 124 direct attacks into ordinary
+targets, Protect and Substitute; 21 source stat vectors and saturation; recovery,
+recoil and draining arithmetic; and ability/format/gimmick controls. CI now runs
+all Polished groups together, with exact executed-group accounting and retained
+logs. This includes earlier groups absent from the old prefix list.
+
+The broader matrix exposed and corrects odd-HP Recover/Roost rounding, exact
+third-damage recoil for Double-Edge/Flare Blitz, source quarter-damage Brave Bird
+recoil, and Big Root's position in drain arithmetic. These source changes apply
+to mapped moves in ordinary singles without either active gimmick. Native and
+optional formats keep their prior rules. Parent-runtime tests reproduced the
+three arithmetic-group failures before the fixes.
+
+This does not certify all attack behavior: dispatch and scoped semantic tests
+are distinguished in the generated catalog. Complete source damage/RNG rules,
+effect branches, cross-mechanic interactions, ordering and presentation/AI remain
+open. The strict-completeness gate deliberately fails for that unfinished work.
+
+Validation: both production builds, all 86 source checks and all 12 ARM
+compiler probes passed. The native suite passed 5,864 groups, with nine existing
+expected failures and 585 existing TODOs; no unexpected failures occurred.
+The consolidated source run passed all 642 source groups (541 battle groups and
+101 unit/data groups), plus six AI timing groups without relaxing their limits.
+This includes 127 pre-existing groups absent from the old source command list
+and the twelve new groups (1,680 cases per profile). The catalog now includes
+both TEST and battle-test declarations; an initial accounting rejection for
+omitted unit tests was corrected and the entire source command rerun successfully.
+
+The production audit retains zero audited move-data differences, 255 matching
+reflection flags and zero teaching compatibility mismatches. Its 109 known
+machine/lesson gaps have no new or changed entries. The final Johto ROM passed
+all 12 demo checks and 101 campaign checks, including 19 directed warps,
+Falkner, badge/Roost/Togepi rewards and Save/reset/Continue.
+
+Validated Johto ROM SHA-256:
+`32cbc0ad9f9ac928103d98adeedca2c7876892f2a164552d3149440bbb5f8476`.
