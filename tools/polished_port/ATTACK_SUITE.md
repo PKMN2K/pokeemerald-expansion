@@ -1,5 +1,9 @@
 # Consolidated source attack suite
 
+The [whole battle suite](BATTLE_SUITE.md) now wraps this runner and accounts for
+all remaining battle domains. CI uses that entry point and uploads
+`polished-battle-suite`; the attack JSON remains included for compatibility.
+
 The pinned default Polished Crystal release has **255 moves, 133 used effect
 families and 129 distinct script commands**. The generated
 [catalog](manifests/attack_suite.json) includes every source ID, its target ID,

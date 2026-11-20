@@ -1,0 +1,22 @@
+{
+  "source_commit": "3fa43192379df5c3e7b09a08e4d5d79af4f02f42",
+  "values": {
+    "POLISHED_ACTION_ROLL_RANGE": 256,
+    "POLISHED_CONFUSION_SELF_HIT": 85,
+    "POLISHED_PARALYSIS_STOP": 64,
+    "POLISHED_MOVE_SLEEP_MIN": 2,
+    "POLISHED_MOVE_SLEEP_MAX": 4
+  },
+  "scope": "Source-profile singles without either active gimmick. Shared action rules also apply to optional attacks; move-inflicted sleep is separate from Effect Spore and Rest.",
+  "evidence": [
+    "checkturn: confusion 85/256; paralysis 64/256, with no Magic Guard exemption.",
+    "sleep: uniform stored counters 2, 3, 4; checkturn decrements before waking.",
+    "HailDefenseBoost and SandstormSpDefBoost: Ice physical Defense and Rock special Defense gain floor(stat/2).",
+    "The broader source archive pins GetSpeed (half paralysis speed except Quick Feet) and GetWeatherAfterOpponentUmbrella (hail/sand unaffected by Umbrella)."
+  ],
+  "open": [
+    "Exact RNG stream and call count; full action ordering and self-confusion damage.",
+    "Complete damage/stat modifier ordering, rounding, saturation, criticals, AI estimates and weather lifecycle.",
+    "Optional abilities, formats and gimmicks remain native; passing controls does not certify source behavior."
+  ]
+}

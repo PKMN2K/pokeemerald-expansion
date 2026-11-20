@@ -144,6 +144,9 @@ jobs:
           python3 tools/polished_port/scripts/build_multihit.py --check
           python3 tools/polished_port/scripts/build_contact_status.py --check
           python3 tools/polished_port/scripts/build_contact_volatile.py --check
+          python3 tools/polished_port/scripts/build_battle_foundations.py --check
+          python3 tools/polished_port/scripts/build_battle_suite.py --check
+          python3 tools/polished_port/scripts/test_battle_suite.py
           python3 tools/polished_port/scripts/test_attack_suite.py
           python3 tools/polished_port/scripts/build_rock_smash.py --check
           python3 tools/polished_port/scripts/test_rock_smash.py
@@ -1192,16 +1195,16 @@ jobs:
           TEST: 1
         run: make -j$(nproc) check
 
-      - name: Test complete source attack catalog and AI frame budgets
+      - name: Test whole source battle catalog and AI frame budgets
         timeout-minutes: 30
-        run: python3 tools/polished_port/scripts/run_attack_suite.py --output /tmp/polished-attack-suite
+        run: python3 tools/polished_port/scripts/run_battle_suite.py --output /tmp/polished-battle-suite
 
-      - name: Upload source attack coverage and execution evidence
+      - name: Upload battle coverage, remaining obligations and execution evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: polished-attack-suite
-          path: /tmp/polished-attack-suite
+          name: polished-battle-suite
+          path: /tmp/polished-battle-suite
 
       - name: Exercise evolution completion and cancellation in mGBA
         timeout-minutes: 5

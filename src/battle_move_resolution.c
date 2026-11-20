@@ -17,6 +17,7 @@
 #include "polished_metronome.h"
 #include "constants/polished_metronome_struggle.h"
 #include "constants/polished_freeze.h"
+#include "constants/polished_battle_foundations.h"
 #include "test_runner.h"
 #include "constants/battle_move_resolution.h"
 #include "constants/songs.h"
@@ -128,10 +129,7 @@ static void DefrostBattler(enum BattlerId battler, u32 status)
 
 static bool32 UsesPolishedStatusActionRules(enum BattlerId battler)
 {
-    return B_POLISHED_MOVE_BALANCE
-        && !IsDoubleBattle()
-        && GetActiveGimmick(battler) == GIMMICK_NONE
-        && GetActiveGimmick(GetOppositeBattler(battler)) == GIMMICK_NONE;
+    return UsesPolishedBattleRules(battler, GetOppositeBattler(battler));
 }
 
 static enum CancelerResult CancelerAsleepOrFrozen(struct BattleCalcValues *cv)
@@ -464,7 +462,9 @@ static enum CancelerResult CancelerConfused(struct BattleCalcValues *cv)
         if (vol->confusionTimer)
         {
              // confusion dmg
-            if (RandomPercentage(RNG_CONFUSION, (GetConfig(B_CONFUSION_SELF_DMG_CHANCE) >= GEN_7 ? 33 : 50)))
+            if (UsesPolishedStatusActionRules(cv->battlerAtk)
+                ? RandomChance(RNG_CONFUSION, POLISHED_CONFUSION_SELF_HIT, POLISHED_ACTION_ROLL_RANGE)
+                : RandomPercentage(RNG_CONFUSION, (GetConfig(B_CONFUSION_SELF_DMG_CHANCE) >= GEN_7 ? 33 : 50)))
             {
                 gBattleCommunication[MULTISTRING_CHOOSER] = TRUE;
                 gBattlerTarget = gBattlerAttacker;
@@ -515,9 +515,11 @@ static enum CancelerResult CancelerGhost(struct BattleCalcValues *cv) // GHOST i
 
 static enum CancelerResult CancelerParalyzed(struct BattleCalcValues *cv)
 {
+    bool32 sourceRules = UsesPolishedStatusActionRules(cv->battlerAtk);
     if (gBattleMons[cv->battlerAtk].status1 & STATUS1_PARALYSIS
-        && !(B_MAGIC_GUARD == GEN_4 && IsAbilityAndRecord(cv->battlerAtk, cv->abilities[cv->battlerAtk], ABILITY_MAGIC_GUARD))
-        && (RandomWeighted(RNG_PARALYSIS, (GetConfig(B_PARALYSIS_CHANCE) >= GEN_CHAMPIONS ? 7 : 3), 1)))
+        && (sourceRules || !(B_MAGIC_GUARD == GEN_4 && IsAbilityAndRecord(cv->battlerAtk, cv->abilities[cv->battlerAtk], ABILITY_MAGIC_GUARD)))
+        && (sourceRules ? RandomChance(RNG_PARALYSIS, POLISHED_PARALYSIS_STOP, POLISHED_ACTION_ROLL_RANGE)
+            : RandomWeighted(RNG_PARALYSIS, (GetConfig(B_PARALYSIS_CHANCE) >= GEN_CHAMPIONS ? 7 : 3), 1)))
     {
         CancelMultiTurnMoves(gBattlerAttacker);
         gBattlescriptCurrInstr = BattleScript_MoveUsedIsParalyzed;

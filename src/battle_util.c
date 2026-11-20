@@ -2295,6 +2295,13 @@ bool32 IsPolishedMeanLook(enum Move move, enum BattlerId battlerAtk, enum Battle
         && GetActiveGimmick(battlerDef) == GIMMICK_NONE;
 }
 
+bool32 UsesPolishedBattleRules(enum BattlerId battlerAtk, enum BattlerId battlerDef)
+{
+    return B_POLISHED_MOVE_BALANCE && !IsDoubleBattle()
+        && GetActiveGimmick(battlerAtk) == GIMMICK_NONE
+        && GetActiveGimmick(battlerDef) == GIMMICK_NONE;
+}
+
 bool32 IsPolishedPerishSong(enum Move move, enum BattlerId battler)
 {
     return B_POLISHED_MOVE_BALANCE
@@ -7556,13 +7563,15 @@ static inline u32 CalcDefenseStat(struct DamageContext *ctx)
 
     u32 attackerWeather = GetAttackerWeather(ctx->holdEffects[ctx->battlerAtk], ctx->abilities[ctx->battlerAtk], ctx->weather);
     // sandstorm sp.def boost for rock types
-    if (GetConfig(B_SANDSTORM_SPDEF_BOOST) >= GEN_4
+    bool32 sourceWeatherDefense = UsesPolishedBattleRules(ctx->battlerAtk, ctx->battlerDef)
+        && !ctx->isSelfInflicted;
+    if ((sourceWeatherDefense || GetConfig(B_SANDSTORM_SPDEF_BOOST) >= GEN_4)
 	 && attackerWeather & B_WEATHER_SANDSTORM
 	 && IS_BATTLER_OF_TYPE(battlerDef, TYPE_ROCK)
 	 && !usesDefStat)
         modifier = uq4_12_multiply_half_down(modifier, UQ_4_12(1.5));
     // snow def boost for ice types
-    if (attackerWeather  & B_WEATHER_SNOW
+    if ((attackerWeather & B_WEATHER_SNOW || (sourceWeatherDefense && attackerWeather & B_WEATHER_HAIL))
 	 && IS_BATTLER_OF_TYPE(battlerDef, TYPE_ICE)
 	 && usesDefStat)
         modifier = uq4_12_multiply_half_down(modifier, UQ_4_12(1.5));

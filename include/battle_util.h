@@ -103,6 +103,7 @@ bool32 CanPsychicTerrainProtectTarget(struct DamageContext *ctx, s32 movePriorit
 bool32 CanMoveBeBlockedByTarget(struct DamageContext *ctx, s32 movePriority);
 bool32 IsPolishedPerishSong(enum Move move, enum BattlerId battler);
 bool32 IsPolishedMeanLook(enum Move move, enum BattlerId battlerAtk, enum BattlerId battlerDef);
+bool32 UsesPolishedBattleRules(enum BattlerId battlerAtk, enum BattlerId battlerDef);
 bool32 CanPolishedRunAwayEscape(enum BattlerId battler);
 bool32 CanAbilityAbsorbMove(struct DamageContext *ctx);
 bool32 TryFieldEffects(enum FieldEffectCases caseId);

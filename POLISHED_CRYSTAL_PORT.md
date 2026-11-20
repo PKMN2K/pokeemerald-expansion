@@ -4009,3 +4009,52 @@ Falkner, badge/Roost/Togepi rewards and Save/reset/Continue.
 
 Validated Johto ROM SHA-256:
 `c2a956f0fe5dc194d62361505cb371e1722b3d4e2cf4e8830bc322254842751e`.
+
+## Whole battle coverage and shared-rule foundations
+
+The next suite now inventories the full battle boundary, beyond attack effects:
+326 Git-authenticated source files, 3,927 lexical global blocks, all 255 moves,
+133 effects, 129 command names, source ability/held-effect identifiers and all
+registered source tests. Fifteen domains include setup, actions, formulas,
+status, abilities/items, field/end-turn, switching/fainting, capture/escape,
+rewards, AI, facility/link rules and presentation/RNG. The archive verifies
+commit, tree and blob identities and rejects missing files. Lexical blocks
+include data, presentation and alternate branches; their inventory is not
+semantic coverage or proof that every external dependency has been audited.
+
+The whole-battle runner preserves the old attack report and now emits a domain
+report in CI. Missing/skipped source execution fails; strict completion still
+exits 2 for unverified behavior. All fifteen domains and all 133 effect families
+retain open obligations. This extends the suite's scope to remaining battle
+logic; it does not claim that all remaining logic has been implemented or
+behaviorally certified. Native AI timing is not source decision parity.
+
+Fifteen new battle groups correct and exercise confusion's 85/256 self-hit
+chance, one-in-four full paralysis, half-Speed paralysis independent of native
+presets, direct move sleep's uniform stored counters 2–4, Hail's Ice physical
+Defense boost and source Sandstorm special Defense under older native presets.
+Quick Feet, PP, waking/Early Bird, four sleep moves, both sides, Cloud Nine,
+Utility Umbrella, odd Defense, Psystrike and native doubles/Terastal controls
+are included. Source action/weather rules also govern optional attacks inside
+ordinary source-profile singles. Effect Spore and Rest keep separate counters.
+Exact RNG stream, self-confusion damage and full formula/action/event order are
+still open. See tools/polished_port/BATTLE_SUITE.md for scope and commands.
+
+Validation: both production builds, all 92 source checks (including eight
+whole-suite negative/coverage tests) and all 12 ARM compiler probes passed.
+The native suite passed 5,972 groups, with nine existing expected failures and
+585 existing TODOs; no unexpected failures occurred. The consolidated source
+run passed all 750 source groups (649 battle groups and 101 unit/data groups),
+plus six AI timing groups without relaxing their limits. All fifteen new
+foundation groups passed in both profiles. The strict completion check correctly
+exits 2: fifteen domains and 133 effect families retain unverified behavior;
+3,927 lexical blocks still require behavioral review/triage.
+
+The production audit retains zero audited move-data differences, 255 matching
+reflection flags and zero teaching compatibility mismatches. Its 109 known
+machine/lesson gaps have no new or changed entries. The final Johto ROM passed
+all twelve demo checks and 101 campaign checks, including nineteen directed
+warps, Falkner, badge/Roost/Togepi rewards and Save/reset/Continue.
+
+Validated Johto ROM SHA-256:
+`f3c5391e6b3529f62136127886369ade8f72fc6b37256a6b8e7aeff099f0793b`.
