@@ -3812,3 +3812,58 @@ Falkner, badge/Roost/Togepi rewards and Save/reset/Continue.
 
 Validated Johto ROM SHA-256:
 `32cbc0ad9f9ac928103d98adeedca2c7876892f2a164552d3149440bbb5f8476`.
+
+## Multi-hit selection and action-loop parity
+
+The source-derived `multihit.json` and generated runtime table cover all seven
+source multi-hit attacks: Double Slap, Double Kick, Pin Missile, Rock Blast,
+Icicle Spear, Fury Strikes and Bonemerang. Both source effects use the same
+MultiHit script. Double Kick and Bonemerang always select two strikes. Active
+Skill Link selects five for the other five moves; otherwise Loaded Dice selects
+four/five equally; otherwise six equiprobable source slots produce
+`2, 3, 4, 5, 2, 3` (one-third each for two/three, one-sixth each for four/five).
+Previously only Fury Strikes used that distribution in the port.
+
+The source loop returns to the critical/damage commands, without checking sleep
+again. Effect Spore sleep therefore permits remaining strikes in the current
+attack; the next action observes sleep normally. The mapped source singles
+adapter now follows this boundary. Sleep/flinch before the attack still cancel
+it. Source selection and sleep-loop changes are restricted to these seven moves
+in ordinary singles without either active gimmick; native builds, optional moves,
+doubles and active gimmicks retain their existing rules.
+
+Thirty new battle groups exercise 530 parameter combinations per profile, plus
+repeated probability trials. They cover every raw source slot under both native
+generation presets, both sides, Skill Link/Loaded Dice priority and suppression,
+fixed two-strike attacks, initial sleep/flinch/miss/Protect, once-per-action PP
+and Pressure, a single accuracy check, target/attacker fainting, intact/broken
+Substitute damage, contact sleep/paralysis/burn, Cursed Body, powder immunity,
+per-hit Weak Armor damage changes, critical/ordinary sequences and Metronome
+caller PP. Native Metronome excludes custom Fury Strikes, so its control uses
+Fury Swipes; the source profile calls the actual mapped Fury Strikes identity.
+Parent-runtime checks reproduced both changed behaviors before the fixes.
+
+This closes the audited selection and sleep-loop gaps, not all multi-hit
+interactions. Effect Spore probabilities/duration and complete contact ability
+eligibility/order, broken-Substitute ability/proc eligibility, Rocky Helmet
+faint/proc ordering, full damage/critical formulas and RNG stream, deferred
+switching, AI estimates and original presentation remain open. The tests force
+contact status outcomes to isolate loop behavior. Optional contact freeze and
+other native-only mechanics retain their existing rules. The attack catalog
+keeps both effect families incomplete until their remaining obligations pass.
+
+Validation: both production builds, all 87 source checks and all 12 ARM
+compiler probes passed. The native suite passed 5,894 groups, with nine existing
+expected failures and 585 existing TODOs; no unexpected failures occurred.
+The consolidated source run passed all 672 source groups (571 battle groups and
+101 unit/data groups), plus six AI timing groups without relaxing their limits.
+All 30 new multi-hit groups passed in both profiles.
+
+The production audit retains zero audited move-data differences, 255 matching
+reflection flags and zero teaching compatibility mismatches. Its 109 known
+machine/lesson gaps have no new or changed entries. The final Johto ROM passed
+all 12 demo checks and 101 campaign checks, including 19 directed warps,
+Falkner, badge/Roost/Togepi rewards and Save/reset/Continue.
+
+Validated Johto ROM SHA-256:
+`0702941f337224805f238c76f4e2e88c5c3c64e6ffadb0086c39248010f8508b`.

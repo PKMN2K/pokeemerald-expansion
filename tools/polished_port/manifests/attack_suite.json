@@ -48,7 +48,8 @@
       "stat_changes": [],
       "sound": false,
       "suite_scopes": [
-        "single-turn dispatch and PP on both sides"
+        "single-turn dispatch and PP on both sides",
+        "source hit-count slots/probabilities, Skill Link/Loaded Dice, PP, initial rejection, sleep during the loop, faint interruption and per-hit Substitute/damage reactions; see multihit.json for limits"
       ],
       "complete_behavior_parity": false
     },
@@ -407,7 +408,8 @@
       "stat_changes": [],
       "sound": false,
       "suite_scopes": [
-        "single-turn dispatch and PP on both sides"
+        "single-turn dispatch and PP on both sides",
+        "source hit-count slots/probabilities, Skill Link/Loaded Dice, PP, initial rejection, sleep during the loop, faint interruption and per-hit Substitute/damage reactions; see multihit.json for limits"
       ],
       "complete_behavior_parity": false
     },
@@ -708,7 +710,8 @@
       "stat_changes": [],
       "sound": false,
       "suite_scopes": [
-        "single-turn dispatch and PP on both sides"
+        "single-turn dispatch and PP on both sides",
+        "source hit-count slots/probabilities, Skill Link/Loaded Dice, PP, initial rejection, sleep during the loop, faint interruption and per-hit Substitute/damage reactions; see multihit.json for limits"
       ],
       "complete_behavior_parity": false
     },
@@ -1828,7 +1831,8 @@
       "stat_changes": [],
       "sound": false,
       "suite_scopes": [
-        "single-turn dispatch and PP on both sides"
+        "single-turn dispatch and PP on both sides",
+        "source hit-count slots/probabilities, Skill Link/Loaded Dice, PP, initial rejection, sleep during the loop, faint interruption and per-hit Substitute/damage reactions; see multihit.json for limits"
       ],
       "complete_behavior_parity": false
     },
@@ -2267,7 +2271,8 @@
       "stat_changes": [],
       "sound": false,
       "suite_scopes": [
-        "single-turn dispatch and PP on both sides"
+        "single-turn dispatch and PP on both sides",
+        "source hit-count slots/probabilities, Skill Link/Loaded Dice, PP, initial rejection, sleep during the loop, faint interruption and per-hit Substitute/damage reactions; see multihit.json for limits"
       ],
       "complete_behavior_parity": false
     },
@@ -2676,7 +2681,8 @@
       "stat_changes": [],
       "sound": false,
       "suite_scopes": [
-        "single-turn dispatch and PP on both sides"
+        "single-turn dispatch and PP on both sides",
+        "source hit-count slots/probabilities, Skill Link/Loaded Dice, PP, initial rejection, sleep during the loop, faint interruption and per-hit Substitute/damage reactions; see multihit.json for limits"
       ],
       "complete_behavior_parity": false
     },
@@ -2692,7 +2698,8 @@
       "stat_changes": [],
       "sound": false,
       "suite_scopes": [
-        "single-turn dispatch and PP on both sides"
+        "single-turn dispatch and PP on both sides",
+        "source hit-count slots/probabilities, Skill Link/Loaded Dice, PP, initial rejection, sleep during the loop, faint interruption and per-hit Substitute/damage reactions; see multihit.json for limits"
       ],
       "complete_behavior_parity": false
     },

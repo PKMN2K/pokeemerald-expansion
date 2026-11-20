@@ -22,6 +22,7 @@
 #include "constants/songs.h"
 #include "data/polished_magic_bounce.h"
 #include "data/polished_self_thaw.h"
+#include "data/polished_multihit.h"
 
 static void ValidateBattlers(void);
 static enum Move GetOriginallyUsedMove(enum Move chosenMove);
@@ -2449,10 +2450,20 @@ static void SetPossibleNewSmartTarget(u32 move)
         gBattlerTarget = partner;
 }
 
-static void SetRandomMultiHitCounter(enum HoldEffect holdEffect)
+static bool32 UsesPolishedMultiHitRules(struct BattleCalcValues *cv)
 {
-    if (holdEffect == HOLD_EFFECT_LOADED_DICE)
+    return B_POLISHED_MOVE_BALANCE && cv->move < MOVES_COUNT
+        && sPolishedMultiHitKind[cv->move] != 0 && !IsDoubleBattle()
+        && GetActiveGimmick(cv->battlerAtk) == GIMMICK_NONE
+        && GetActiveGimmick(cv->battlerDef) == GIMMICK_NONE;
+}
+
+static void SetRandomMultiHitCounter(struct BattleCalcValues *cv)
+{
+    if (cv->holdEffects[cv->battlerAtk] == HOLD_EFFECT_LOADED_DICE)
         gMultiHitCounter = RandomUniform(RNG_LOADED_DICE, 4, 5);
+    else if (UsesPolishedMultiHitRules(cv))
+        gMultiHitCounter = sPolishedMultiHitCounts[RandomUniform(RNG_HITS, 0, ARRAY_COUNT(sPolishedMultiHitCounts) - 1)];
     else if (gCurrentMove == MOVE_POLISHED_FURY_STRIKES)
         // Polished Crystal BattleCommand_startloop: six equiprobable slots,
         // (roll mod 4) + 2. This differs from both native generation presets.
@@ -2484,7 +2495,7 @@ static enum CancelerResult CancelerMultihitMoves(struct BattleCalcValues *cv)
         }
         else
         {
-            SetRandomMultiHitCounter(cv->holdEffects[cv->battlerAtk]);
+            SetRandomMultiHitCounter(cv);
         }
 
         PREPARE_BYTE_NUMBER_BUFFER(gBattleScripting.multihitString, 1, 0)
@@ -4203,7 +4214,8 @@ static enum MoveEndResult MoveEndMultihitMove(struct BattleCalcValues *cv)
 
             if (gBattleMons[cv->battlerAtk].hp
              && gBattleMons[cv->battlerDef].hp
-             && (IsUsableWhileAsleepEffect(chosenEffect) || !(gBattleMons[cv->battlerAtk].status1 & STATUS1_SLEEP))
+             // Source loops back to critical, not the action/sleep canceler.
+             && (UsesPolishedMultiHitRules(cv) || IsUsableWhileAsleepEffect(chosenEffect) || !(gBattleMons[cv->battlerAtk].status1 & STATUS1_SLEEP))
              && !(gBattleMons[cv->battlerAtk].status1 & STATUS1_FREEZE))
             {
                 if (gSpecialStatuses[cv->battlerAtk].parentalBondState)

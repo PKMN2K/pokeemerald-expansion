@@ -50,6 +50,25 @@ Big Root applies before the final halving of drain. Draining Kiss first adds
 floor(damage/2), as the source does. These corrections are restricted to their
 mapped source moves in ordinary singles without either active gimmick.
 
+## Multi-hit follow-up
+
+Thirty additional groups cover all seven source multi-hit moves with 530
+parameter combinations per profile and repeated probability trials. The
+[source manifest](manifests/multihit.json) pins selection slots, fixed-strike and
+Skill Link/Loaded Dice priority, PP/accuracy boundaries and the per-hit loop.
+The runtime now uses the source two/three/four/five-hit distribution for all five
+variable-hit moves and allows a mapped attack already in progress to finish
+when Effect Spore causes sleep. Initial sleep still prevents the action.
+
+The tests include both sides, native generation presets, initial rejection,
+Pressure, target/attacker fainting, Substitute damage, contact statuses,
+Cursed Body, powder immunity, Weak Armor damage changes, critical/ordinary
+sequences and Metronome. Native mode, optional moves, doubles and either active
+gimmick are controls. Full contact/proc eligibility and ordering, source status
+probabilities/duration, damage/critical/RNG formulas, deferred switching, AI and
+presentation remain separate obligations. See the phase record in
+[PARITY_AUDIT.md](PARITY_AUDIT.md) for validation and limits.
+
 ## What a passing run does not establish
 
 This is a consolidated regression and coverage suite, **not a declaration that

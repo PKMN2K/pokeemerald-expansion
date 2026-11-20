@@ -1,0 +1,154 @@
+{
+  "source_repository": "Rangi42/polishedcrystal",
+  "source_commit": "3fa43192379df5c3e7b09a08e4d5d79af4f02f42",
+  "source_variant": "default (FAITHFUL undefined)",
+  "moves": [
+    {
+      "source_id": 3,
+      "source_constant": "DOUBLE_SLAP",
+      "source_move": "DOUBLE_SLAP",
+      "source_aliases": [],
+      "target_move": "MOVE_DOUBLE_SLAP",
+      "source_effect": "EFFECT_MULTI_HIT",
+      "source_category": "PHYSICAL",
+      "script": "MultiHit",
+      "stat_changes": [],
+      "sound": false,
+      "suite_scopes": [
+        "single-turn dispatch and PP on both sides",
+        "source hit-count slots/probabilities, Skill Link/Loaded Dice, PP, initial rejection, sleep during the loop, faint interruption and per-hit Substitute/damage reactions; see multihit.json for limits"
+      ],
+      "complete_behavior_parity": false
+    },
+    {
+      "source_id": 24,
+      "source_constant": "DOUBLE_KICK",
+      "source_move": "DOUBLE_KICK",
+      "source_aliases": [],
+      "target_move": "MOVE_DOUBLE_KICK",
+      "source_effect": "EFFECT_DOUBLE_HIT",
+      "source_category": "PHYSICAL",
+      "script": "MultiHit",
+      "stat_changes": [],
+      "sound": false,
+      "suite_scopes": [
+        "single-turn dispatch and PP on both sides",
+        "source hit-count slots/probabilities, Skill Link/Loaded Dice, PP, initial rejection, sleep during the loop, faint interruption and per-hit Substitute/damage reactions; see multihit.json for limits"
+      ],
+      "complete_behavior_parity": false
+    },
+    {
+      "source_id": 42,
+      "source_constant": "PIN_MISSILE",
+      "source_move": "PIN_MISSILE",
+      "source_aliases": [],
+      "target_move": "MOVE_PIN_MISSILE",
+      "source_effect": "EFFECT_MULTI_HIT",
+      "source_category": "PHYSICAL",
+      "script": "MultiHit",
+      "stat_changes": [],
+      "sound": false,
+      "suite_scopes": [
+        "single-turn dispatch and PP on both sides",
+        "source hit-count slots/probabilities, Skill Link/Loaded Dice, PP, initial rejection, sleep during the loop, faint interruption and per-hit Substitute/damage reactions; see multihit.json for limits"
+      ],
+      "complete_behavior_parity": false
+    },
+    {
+      "source_id": 106,
+      "source_constant": "ROCK_BLAST",
+      "source_move": "ROCK_BLAST",
+      "source_aliases": [],
+      "target_move": "MOVE_ROCK_BLAST",
+      "source_effect": "EFFECT_MULTI_HIT",
+      "source_category": "PHYSICAL",
+      "script": "MultiHit",
+      "stat_changes": [],
+      "sound": false,
+      "suite_scopes": [
+        "single-turn dispatch and PP on both sides",
+        "source hit-count slots/probabilities, Skill Link/Loaded Dice, PP, initial rejection, sleep during the loop, faint interruption and per-hit Substitute/damage reactions; see multihit.json for limits"
+      ],
+      "complete_behavior_parity": false
+    },
+    {
+      "source_id": 131,
+      "source_constant": "ICICLE_SPEAR",
+      "source_move": "ICICLE_SPEAR",
+      "source_aliases": [],
+      "target_move": "MOVE_ICICLE_SPEAR",
+      "source_effect": "EFFECT_MULTI_HIT",
+      "source_category": "PHYSICAL",
+      "script": "MultiHit",
+      "stat_changes": [],
+      "sound": false,
+      "suite_scopes": [
+        "single-turn dispatch and PP on both sides",
+        "source hit-count slots/probabilities, Skill Link/Loaded Dice, PP, initial rejection, sleep during the loop, faint interruption and per-hit Substitute/damage reactions; see multihit.json for limits"
+      ],
+      "complete_behavior_parity": false
+    },
+    {
+      "source_id": 154,
+      "source_constant": "FURY_STRIKES",
+      "source_move": "FURY_STRIKES",
+      "source_aliases": [],
+      "target_move": "MOVE_POLISHED_FURY_STRIKES",
+      "source_effect": "EFFECT_MULTI_HIT",
+      "source_category": "PHYSICAL",
+      "script": "MultiHit",
+      "stat_changes": [],
+      "sound": false,
+      "suite_scopes": [
+        "single-turn dispatch and PP on both sides",
+        "source hit-count slots/probabilities, Skill Link/Loaded Dice, PP, initial rejection, sleep during the loop, faint interruption and per-hit Substitute/damage reactions; see multihit.json for limits"
+      ],
+      "complete_behavior_parity": false
+    },
+    {
+      "source_id": 155,
+      "source_constant": "BONEMERANG",
+      "source_move": "BONEMERANG",
+      "source_aliases": [],
+      "target_move": "MOVE_BONEMERANG",
+      "source_effect": "EFFECT_DOUBLE_HIT",
+      "source_category": "PHYSICAL",
+      "script": "MultiHit",
+      "stat_changes": [],
+      "sound": false,
+      "suite_scopes": [
+        "single-turn dispatch and PP on both sides",
+        "source hit-count slots/probabilities, Skill Link/Loaded Dice, PP, initial rejection, sleep during the loop, faint interruption and per-hit Substitute/damage reactions; see multihit.json for limits"
+      ],
+      "complete_behavior_parity": false
+    }
+  ],
+  "source_slots": [
+    2,
+    3,
+    4,
+    5,
+    2,
+    3
+  ],
+  "source_weights": {
+    "2": 2,
+    "3": 2,
+    "4": 1,
+    "5": 1
+  },
+  "rules": [
+    "Double Kick and Bonemerang choose two hits before checking Skill Link or Loaded Dice.",
+    "The five variable attacks choose five with active Skill Link; otherwise Loaded Dice chooses four/five equally; otherwise six equal slots map to 2,3,4,5,2,3.",
+    "PP, action cancellation, accuracy and priority checks occur once. Each later hit returns to critical, recalculating damage and its random variation.",
+    "Target fainting ends the loop; attacker fainting aborts the move. Intact/broken Substitute is processed separately on each hit.",
+    "Effect Spore can inflict sleep between hits, but the loop does not recheck sleep. Remaining strikes complete and the next action observes sleep.",
+    "Per-hit contact/held-item reactions can change HP and stats before the next strike. Parental Bond does not add another strike to an existing multi-hit loop."
+  ],
+  "adapter": "Select all mapped variable attacks through the six source slots and permit the mapped loop to continue through newly inflicted sleep, in ordinary source singles without either active gimmick. Preserve original Fury Strikes distribution outside that scope.",
+  "limits": [
+    "Source Effect Spore probabilities, sleep duration and complete contact-ability eligibility/order are not imported here; tests force its sleep outcome to isolate loop continuation.",
+    "Broken-Substitute ability/proc eligibility, Rocky Helmet faint-order/proc interactions, damage/critical formulas, per-hit RNG stream, deferred switching, AI estimates and original battle animation/message sequencing remain open.",
+    "Optional moves, doubles and either active gimmick retain native loop rules. Existing custom Fury Strikes hit-count behavior remains available outside the source profile."
+  ]
+}

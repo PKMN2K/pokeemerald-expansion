@@ -75,6 +75,8 @@ def inventory():
             scopes.append('source recoil divisor, rounding and Rock Head/Magic Guard')
         if effect == 'EFFECT_LEECH_HIT':
             scopes.append('source drain rounding, Big Root order and Liquid Ooze')
+        if effect in ('EFFECT_MULTI_HIT', 'EFFECT_DOUBLE_HIT'):
+            scopes.append('source hit-count slots/probabilities, Skill Link/Loaded Dice, PP, initial rejection, sleep during the loop, faint interruption and per-hit Substitute/damage reactions; see multihit.json for limits')
         moves.append(dict(**identity, source_effect=effect, source_category=row[7],
                           script=scripts[effect]['label'], stat_changes=changes, sound=row[0] in sounds,
                           suite_scopes=scopes, complete_behavior_parity=False))
