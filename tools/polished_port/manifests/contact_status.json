@@ -1826,7 +1826,7 @@
   ],
   "scope": "Mapped source moves in ordinary singles without either active gimmick; Effect Spore, Poison Point, Static, Flame Body and Poison Touch only.",
   "gaps": [
-    "This is not a general contact-engine or status-engine import. Other contact abilities/items, all status-immunity configuration variants, simultaneous curing/Synchronize chains, recoil/self-faint and global faint/proc ordering need separate audits.",
+    "The scoped Cute Charm, Tangling Hair and Perish Body follow-up is recorded in contact_volatile.json. This is not a general contact-engine or status-engine import; damaging items/Aftermath, all status-immunity variants, simultaneous curing/Synchronize chains and global faint/proc ordering remain open.",
     "Original RNG stream/call alignment, battle animation/message timing and AI estimates remain open. Expansion-only moves, formats, gimmicks and optional ability/terrain prevention retain native behavior."
   ]
 }

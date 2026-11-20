@@ -83,6 +83,17 @@ Native/optional moves, doubles and active gimmicks have separate controls.
 Remaining global contact, status/Synchronize/curing, fainting, RNG, presentation
 and AI obligations stay open in [PARITY_AUDIT.md](PARITY_AUDIT.md).
 
+## Volatile-contact follow-up
+
+Thirty-two additional groups cover 947 cases per profile, including all 124
+direct attacks against Cute Charm, Tangling Hair and Perish Body on both sides.
+The [source manifest](manifests/contact_volatile.json) records the shared
+Substitute boundary, Cute Charm's three-in-ten chance, Tangling Hair's living-
+holder stat gate and Perish Body's activation after holder knockout. Countdown
+asymmetry, switching, gender/protection gates, stat reactions, multi-hit and
+Poison Touch order have dedicated checks, alongside native/optional controls.
+Global contact/faint/curing order, exact RNG, presentation and AI remain open.
+
 ## What a passing run does not establish
 
 This is a consolidated regression and coverage suite, **not a declaration that

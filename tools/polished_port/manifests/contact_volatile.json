@@ -1,0 +1,20 @@
+{
+  "source_repository": "Rangi42/polishedcrystal",
+  "source_commit": "3fa43192379df5c3e7b09a08e4d5d79af4f02f42",
+  "source_variant": "default (FAITHFUL undefined)",
+  "scope": "Mapped source moves in ordinary singles without either active gimmick; Cute Charm, Tangling Hair and Perish Body only.",
+  "contact_classification": "contact_status.json: 255 identities; 124 direct attacks replayed against each ability on both sides.",
+  "rules": [
+    "Post-hit processing permits an exhausted Substitute but rejects an intact one. Contact uses the source classifier, Protective Pads and Punching Glove.",
+    "Cute Charm requires a living holder, opposite non-genderless Pokemon and no existing infatuation; it rolls three in ten independently of native generation presets. Oblivious, Destiny Knot and Mental Herb keep their scoped effects.",
+    "Tangling Hair uses the shared forced opponent stat drop. Both Pokemon must be alive, the attacker Substitute blocks it, and the shared Contrary, Mist, Clear Body, White Smoke, Clear Amulet and stat-limit gates apply.",
+    "Perish Body checks the attacker counter first. An existing attacker count prevents activation, even if the holder lacks one. Otherwise it starts the attacker count and adds a holder count only when missing.",
+    "Perish Body ignores Soundproof and has no holder-faint rejection. Source counter four translates to native timer three, with countdown fainting on the fourth end turn including activation.",
+    "Switching clears Perish state. Repeated contact and multi-hit strikes do not refresh existing counts. Poison Touch precedes these defender contact abilities.",
+    "These three abilities are absent from the source Mold Breaker suppression table. Optional Neutralizing Gas, Long Reach, Aroma Veil, Gooey, formats and gimmicks retain native support."
+  ],
+  "gaps": [
+    "This completes the scoped follow-up to the contact-status table, not all ability or contact-engine parity. Aftermath, damaging items, global faint/recoil order, all curing/reflection chains, all stat reactions and deferred switches need separate audits.",
+    "Exact source RNG stream, presentation, infatuation action timing, full end-turn ordering and AI estimates remain open. Native tests of optional mechanics are regression controls, not source certification."
+  ]
+}

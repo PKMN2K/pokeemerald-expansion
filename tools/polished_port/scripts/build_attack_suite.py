@@ -68,6 +68,7 @@ def inventory():
         if effect in DIRECT:
             scopes.append('unblocked damage, Protect and Substitute on both sides')
             scopes.append('live contact classification against Flame Body; five contact-status ability interactions are scoped in contact_status.json')
+            scopes.append('live contact classification against Cute Charm, Tangling Hair and Perish Body; volatile, stat, faint and countdown interactions are scoped in contact_volatile.json')
         if changes:
             scopes.append('explicit source stat deltas and saturation on both sides')
         if row[0] in ('RECOVER', 'ROOST', 'FRESH_SNACK'):

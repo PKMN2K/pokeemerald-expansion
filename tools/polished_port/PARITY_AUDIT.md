@@ -3943,3 +3943,59 @@ Falkner, badge/Roost/Togepi rewards and Save/reset/Continue.
 
 Validated Johto ROM SHA-256:
 `b3a664d6e4a4c26f55670a0c5ce840c9247758ea56ba9d594d4c9f75f4c26619`.
+
+## Volatile contact abilities, stat gates and countdowns
+
+The next source contact-table suite covers Cute Charm, Tangling Hair and Perish
+Body. All three now share the pinned contact classification and exhausted-
+Substitute eligibility for mapped source moves in ordinary singles without
+either active gimmick. Native builds, optional moves, doubles and active
+gimmicks keep their existing paths; optional Gooey remains independent.
+
+Cute Charm uses the source three-in-ten activation chance even under a native
+Gen 3 preset. Its living-holder, opposite-gender, existing-infatuation and
+Oblivious gates are retained. Tangling Hair's source forced-stat routine checks
+both participants for fainting, so its holder can no longer lower Speed after
+being knocked out. Its existing attacker-Substitute, Mist, Clear Amulet,
+Clear Body/White Smoke, Contrary and stat-limit gates are regression-tested.
+
+Perish Body deliberately has the opposite holder-faint rule: the pinned source
+has no living-holder check, so a knockout hit can start the attacker's count.
+The count survives replacement of the fainted holder. The source tests the
+attacker's existing count first; if absent it starts that count, then adds the
+holder's count only if missing. Repeated contact cannot refresh either count.
+Soundproof does not block it, switching clears it, and the fourth end turn
+including activation faints the affected Pokemon. Source counter four is
+represented by Expansion timer three with the same observed countdown.
+
+Thirty-two new groups cover 947 parameter combinations per profile plus
+exhaustive tagged probability trials. These include all 124 direct attacks
+against each ability on both sides (744 cases), exact 49/50/51-HP Substitute
+boundaries, holder knockout, surviving Perish counts, gender and protection
+gates, Mental Herb/Destiny Knot, stat reactions and saturation, asymmetric
+Perish counts, switching, multi-hit progression and Poison Touch ordering.
+Optional ability, move, doubles and either-active-gimmick controls remain.
+Four groups reproduced failures against the parent runtime. Attacker-Substitute
+protection against Tangling Hair already worked and is retained as a control.
+
+This narrows the previous contact suite's unverified target-table obligations;
+it does not certify all contact abilities, items or post-hit behavior. Aftermath,
+damaging items, recoil/global faint order, complete curing/reflection/stat chains,
+deferred switching, source RNG stream, infatuation action timing, full end-turn
+ordering, original presentation and AI estimates remain separate audits.
+
+Validation: both production builds, all 89 source checks and all 12 ARM
+compiler probes passed. The native suite passed 5,957 groups, with nine existing
+expected failures and 585 existing TODOs; no unexpected failures occurred.
+The consolidated source run passed all 735 source groups (634 battle groups and
+101 unit/data groups), plus six AI timing groups without relaxing their limits.
+All 32 new volatile-contact groups passed in both profiles.
+
+The production audit retains zero audited move-data differences, 255 matching
+reflection flags and zero teaching compatibility mismatches. Its 109 known
+machine/lesson gaps have no new or changed entries. The final Johto ROM passed
+all 12 demo checks and 101 campaign checks, including 19 directed warps,
+Falkner, badge/Roost/Togepi rewards and Save/reset/Continue.
+
+Validated Johto ROM SHA-256:
+`c2a956f0fe5dc194d62361505cb371e1722b3d4e2cf4e8830bc322254842751e`.

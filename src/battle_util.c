@@ -4184,7 +4184,10 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
         case ABILITY_TANGLING_HAIR:
             if (IsBattlerAlive(gBattlerAttacker)
              && !gSpecialStatuses[gBattlerAttacker].attackerInParty
-             && IsBattlerTurnDamaged(gBattlerTarget, EXCLUDING_SUBSTITUTES)
+             && (gLastUsedAbility == ABILITY_TANGLING_HAIR
+                 && UsesPolishedContactStatusRules(gBattlerAttacker, gBattlerTarget, move)
+                 ? IsBattlerAlive(gBattlerTarget) && CanHitTriggerContactStatus(gBattlerAttacker, gBattlerTarget, move)
+                 : IsBattlerTurnDamaged(gBattlerTarget, EXCLUDING_SUBSTITUTES))
              && !gBattleStruct->unableToUseMove)
             {
                 struct BattleCalcValues cv = {
@@ -4210,7 +4213,9 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
                 st.statStageQueue = &change;
                 st.statStageAmount = 1;
 
-                if (CanBattlerAvoidContactEffects(gBattlerAttacker, gBattlerTarget, cv.abilities[gBattlerAttacker], cv.holdEffects[gBattlerAttacker], move))
+                if (gLastUsedAbility == ABILITY_TANGLING_HAIR
+                    ? !DoesContactStatusMoveMakeContact(gBattlerAttacker, gBattlerTarget, move, TRUE)
+                    : CanBattlerAvoidContactEffects(gBattlerAttacker, gBattlerTarget, cv.abilities[gBattlerAttacker], cv.holdEffects[gBattlerAttacker], move))
                     break;
 
                 if (TryStatChange(&cv, &st) == STAT_CHANGE_WORKED || cv.abilities[gBattlerAttacker] == ABILITY_MIRROR_ARMOR)
@@ -4402,13 +4407,13 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
         case ABILITY_CUTE_CHARM:
             if (IsBattlerAlive(gBattlerAttacker)
              && !gSpecialStatuses[gBattlerAttacker].attackerInParty
-             && IsBattlerTurnDamaged(gBattlerTarget, EXCLUDING_SUBSTITUTES)
+             && CanHitTriggerContactStatus(gBattlerAttacker, gBattlerTarget, move)
              && IsBattlerAlive(gBattlerTarget)
-             && (GetConfig(B_ABILITY_TRIGGER_CHANCE) >= GEN_4 ? RandomPercentage(RNG_CUTE_CHARM, 30) : RandomChance(RNG_CUTE_CHARM, 1, 3))
+             && RollContactStatus(RNG_CUTE_CHARM, gBattlerAttacker, gBattlerTarget, move)
              && !(gBattleMons[gBattlerAttacker].volatiles.infatuation)
              && AreBattlersOfOppositeGender(gBattlerAttacker, gBattlerTarget)
              && !IsAbilityAndRecord(gBattlerAttacker, GetBattlerAbility(gBattlerAttacker), ABILITY_OBLIVIOUS)
-             && !CanBattlerAvoidContactEffects(gBattlerAttacker, gBattlerTarget, GetBattlerAbility(gBattlerAttacker), GetBattlerHoldEffect(gBattlerAttacker), move)
+             && DoesContactStatusMoveMakeContact(gBattlerAttacker, gBattlerTarget, move, TRUE)
              && !IsAbilityOnSide(gBattlerAttacker, ABILITY_AROMA_VEIL))
             {
                 gBattleMons[gBattlerAttacker].volatiles.infatuation = INFATUATED_WITH(gBattlerTarget);
@@ -4455,9 +4460,9 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
                 effect++;
             break;
         case ABILITY_PERISH_BODY:
-            if (IsBattlerTurnDamaged(gBattlerTarget, EXCLUDING_SUBSTITUTES)
-             && IsBattlerAlive(battler)
-             && !CanBattlerAvoidContactEffects(gBattlerAttacker, gBattlerTarget, GetBattlerAbility(gBattlerAttacker), GetBattlerHoldEffect(gBattlerAttacker), move)
+            if (CanHitTriggerContactStatus(gBattlerAttacker, gBattlerTarget, move)
+             && (UsesPolishedContactStatusRules(gBattlerAttacker, gBattlerTarget, move) || IsBattlerAlive(battler))
+             && DoesContactStatusMoveMakeContact(gBattlerAttacker, gBattlerTarget, move, TRUE)
              && !gBattleMons[gBattlerAttacker].volatiles.perishSong)
             {
                 if (!gBattleMons[battler].volatiles.perishSong)
