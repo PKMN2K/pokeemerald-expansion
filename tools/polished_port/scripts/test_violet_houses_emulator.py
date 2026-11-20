@@ -1,5 +1,7 @@
 """Visit Violet's houses and trade through normal input; no injected game state."""
 import re
+import json
+from pathlib import Path
 from build_new_bark import source_files
 from build_johto_demo import palette_rows
 from test_johto_demo_emulator import A, B, UP, DOWN, LEFT, RIGHT, START
@@ -14,6 +16,19 @@ from test_cherrygrove_emulator import extra_layout, sea_battle
 from test_violet_mart_emulator import count, open_shop, purchase, close_shop, stock, select_bag_item
 
 P = "PolishedVioletOnixTradeHouse_"
+
+
+def source_ownership(game, *species):
+    data = layout()
+    save = game.u32(game.sym['gSaveBlock2Ptr'])
+    assert game.u32(save + data['pokedex_magic']) == 0x50434F31, 'Source ownership was not initialized'
+    bits = game.read(save + data['pokedex_forms'], data['pokedex_forms_size'])
+    manifest = Path(__file__).resolve().parents[1]/'manifests/battle_systems.json'
+    indices = json.loads(manifest.read_text())['ownership_indices']
+    for name in species:
+        index = indices[name]
+        assert bits[index // 8] & (1 << (index % 8)), ('Source ownership missing', name)
+    return bits
 
 
 def walk_city(game,city,goal):
@@ -257,6 +272,7 @@ def check_houses(game,city,checks):
     checks.append("Offering the wrong species produces Kyle's source refusal without changing the party or consuming the trade")
     game.restore("houses-city")
     slot=catch_poliwag(game,city)
+    source_ownership(game, 'SPECIES_POLIWAG')
     enter(game,city,trade)
     game.snapshot("kyle-ready")
     before=party(game)
@@ -272,8 +288,11 @@ def check_houses(game,city,checks):
     assert after[:slot]==before[:slot]
     assert after[slot]["species"]==100 and after[slot]["level"]==before[slot]["level"]
     assert after[slot]["trainer"]==48926
+    ownership = source_ownership(game, 'SPECIES_POLIWAG', 'SPECIES_VOLTORB')
     save_game(game);continue_game(game)
     assert party(game)==after and flag(game,0x4d8)
+    assert source_ownership(game, 'SPECIES_POLIWAG', 'SPECIES_VOLTORB') == ownership
+    checks.append("Source capture/trade ownership bytes survive real Save/reset/Continue with the party and native Pokedex")
     talk_to_resident(game,trade,2,"violet-kyle-after",leave_open=True)
     advance(game,lambda:text_matches(game,P+"AfterText"))
     close_resident_dialogue(game)

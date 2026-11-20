@@ -1,4 +1,5 @@
 #include "global.h"
+#include "polished_capture.h"
 #include "constants/polished_hidden_power.h"
 #if B_POLISHED_HIDDEN_POWER
 #include "data/polished_hidden_power_types.h"
@@ -3999,7 +4000,7 @@ static void HandleTurnActionSelectionState(void)
                     }
                     break;
                 case B_ACTION_SAFARI_POKEBLOCK:
-                    if (!IS_FRLG)
+                    if (!IS_FRLG && !UsesPolishedSafariRules())
                     {
                         BtlController_EmitChooseItem(battler, B_COMM_TO_CONTROLLER, gBattleStruct->battlerPartyOrders[battler]);
                         MarkBattlerForControllerExec(battler);
@@ -4208,7 +4209,7 @@ static void HandleTurnActionSelectionState(void)
                     gBattleCommunication[battler]++;
                     break;
                 case B_ACTION_SAFARI_POKEBLOCK:
-                    if (IS_FRLG)
+                    if (IS_FRLG || UsesPolishedSafariRules())
                     {
                         gBattleCommunication[battler]++;
                     }

@@ -4268,3 +4268,108 @@ badge/Roost/Togepi rewards and Save/reset/Continue, on Johto ROM SHA-256
 After the final guards, both ROMs were rebuilt and the twelve demo checks and
 production-linked audit passed again. Final Johto ROM SHA-256:
 `4d075879c5bab3e9ef6698e237e0f6cafc83dce3a87bdc0c107decdee15ebea0`.
+
+## Shared capture, rewards and trainer systems
+
+The source-profile singles runtime now uses pinned capture arithmetic, including
+ball-before-catch-rate rounding, HP compression, source ball conditions,
+Heavy Ball catch-rate persistence, inclusive critical-capture ownership bands
+and the 115-band byte wobble table. Timer Ball's byte overflow and the pinned
+Love Ball form-comparison bug are retained deliberately. Original species data
+supplies catch rate, Fast Ball Speed and EXP/EV yields after Transform. Friend
+Ball supplies 200 friendship, captures award EXP, and knocked-off held items
+stay removed when delivering the caught Pokemon. Native profiles, doubles,
+gimmicks, unmapped targets and Expansion-only balls retain native capture paths.
+
+Repeat Ball ownership uses 43 bytes inside the existing Pokedex reserved-byte
+union, without moving later save fields or changing species IDs. Cosmetic
+aliases share ownership; the source's regional/variant entries remain distinct.
+Capture, gifts, evolution, trades, hatching and explicit Pokedex registration
+record the source entry. Old saves have only National Dex ownership: migration
+interprets those flags as base-form ownership. Historical variant ownership
+cannot be reconstructed. A production-linked probe verifies seven captured Pokemon delivered to six
+party slots and one box slot, cosmetic aliases, separate regional ownership,
+legacy migration and two Flash save/reset/load cycles (72 assertions). The
+real-input campaign separately checks capture/trade ownership across
+Save/reset/Continue. These are scoped checks, not certification of every save
+consumer or acquisition path.
+
+Safari now selects source bait/rock actions, mutates the persistent catch-rate
+byte, updates eating/anger counters and then checks raw-Speed escape. Bait can
+reach zero catch rate; anger expiry restores the base rate. Source capture
+rewards exclude the unsent Safari lead and include living held Exp. Shares.
+The tests cover calculations/counters and reward eligibility, not the complete
+Safari controller/menu/end sequence. Exact source random-stream draw counts
+and presentation timing remain open.
+
+EXP uses original-source yield, unscaled level arithmetic, public 16-bit OT ID,
+traded/trainer/Lucky Egg boosts before one combined participant/share division,
+party-order recipients and a minimum eligible award of one. Fainted recipients
+are excluded; level-100 recipients can gain EVs. The source's explicit WONTFIX
+rule is retained: EV power/Macho Brace bonuses use the active player's item.
+Active Pokerus multiplies after the power bonus; cured Pokerus does not. The
+default stat/total caps are 252/510. Existing saved EXP/IV/EV values are not
+rewritten. Level-one growth and broader happiness/post-battle persistence
+remain open.
+
+Authenticated attributes cover 147 trainer classes and all 43 Pokemon in the
+21 currently registered teams. Source party-wide custom flags, class defaults,
+DV-to-IV scaling, gender, nature, deterministic ability slots and 160 friendship
+replace native construction. Source trainer item inventories and class base
+money are selected for these teams. Whiteout loss uses the source payout table
+and actual earned Johto/Kanto badge bits, capped at eight badges, rather than
+the demo's native field-permission badge flags. Unregistered teams and source
+AI move/item/switch heuristics remain unfinished.
+
+The archive now authenticates 340 files. Twenty-six focused runtime groups and
+five host tests cover these adapters, including independent source vectors,
+Transform, caught-item persistence, owned-capture display, Pokerus/caps and
+rejection of a missing trainer binding. The first four capture cases failed
+before the arithmetic adapter. The complete catalog includes 889 source groups
+and six AI timing groups; those six groups establish frame budgets only.
+
+Full battle parity remains OPEN. Capture preflight/tutorial/storage paths,
+complete Safari flow, global residual/faint/replacement sequencing, remaining
+ability/item interactions, source AI, run/roaming, facility/link rules and exact
+RNG/presentation still require behavioral evidence. The existing fifteen-domain
+completion gate continues to reject a full-parity claim.
+
+Validation: all 889 source groups and six AI timing groups passed, with the
+original frame limits unchanged. Earlier source sweeps did not complete: the
+evolution fixtures assumed native EXP and one reached an unhandled full-moveset
+prompt, timing out before later tests also timed out on that runner. The
+Poliwhirl fixture now awards enough EXP to evolve without an unrelated move
+prompt, while Caterpie explicitly expects source Bug Bite before its evolution
+move. All six evolution groups passed in both profiles before the full source
+rerun. Real-input emulator probes also passed evolution completion and B-button
+cancellation in both profiles. No gameplay changes or timing-limit increases
+were needed.
+
+The native sweep passed 6,110 groups and
+exposed one incorrect expectation in the new EXP control: it mixed generation-3
+splitting with the native build's current participation rules. The control now
+uses generation 9, and all 26 focused native groups passed on the final code.
+The six updated evolution controls also passed in the native profile.
+The nine existing expected failures and 585 existing TODOs are unchanged; no
+other unexpected native failures occurred. This is full-sweep plus focused-rerun
+evidence, not a claim of a second full native sweep after the fixture corrections.
+
+Both final production ROM builds, 100 source checks (with focused rechecks after
+the test/manifest updates), twelve ARM probes and twelve final demo checks
+passed. Production-linked checks verified all 21 registered trainers/43 Pokemon
+and 72 capture-storage assertions over two Flash save/reset/load cycles. The
+move/machine audit reports zero differences in 255 move records and zero
+mismatches in 43,792 compatibility checks; all 109 known machine/lesson gaps
+remain unchanged.
+
+The campaign passed 102 checks and nineteen directed warps, including all
+starter branches, Falkner, badge/Roost/Togepi rewards and captured/traded source
+ownership through Save/reset/Continue. Campaign ROM SHA-256:
+`26775c5aa2813c2b880b34d34c4e89d6ea4f2dfc6a405a56e7e1af418986f98a`.
+After the defensive field Exp. Share guard, both ROMs were rebuilt; the twelve
+demo checks, trainer probe, two-reset storage probe and move/machine audit all
+passed again. Final Johto ROM SHA-256:
+`9c1c9d9aa4346568fe12228762c1259aef6998f3e20c4cba205667a462d2f3c1`.
+
+The strict completion gate still exits 2 for fifteen domains, 4,136 lexical
+blocks and 133 effect families awaiting complete behavioral evidence.

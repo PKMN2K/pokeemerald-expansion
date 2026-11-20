@@ -1,4 +1,5 @@
 #include "global.h"
+#include "polished_capture.h"
 #include "battle.h"
 #include "battle_setup.h"
 #include "berry.h"
@@ -2906,6 +2907,7 @@ static void DebugAction_FlagsVars_PokedexFlags_All(u8 taskId)
     u16 i;
     for (i = 0; i < NATIONAL_DEX_COUNT; i++)
     {
+        PolishedRecordCaughtSpecies(NationalPokedexNumToSpecies(i + 1));
         GetSetPokedexFlag(i + 1, FLAG_SET_CAUGHT);
         GetSetPokedexFlag(i + 1, FLAG_SET_SEEN);
     }
@@ -2928,6 +2930,7 @@ static void DebugAction_FlagsVars_PokedexFlags_Reset(u8 taskId)
         if (GetMonData(&gParties[B_TRAINER_PLAYER][partyId], MON_DATA_SANITY_HAS_SPECIES))
         {
             species = GetMonData(&gParties[B_TRAINER_PLAYER][partyId], MON_DATA_SPECIES);
+            PolishedRecordCaughtSpecies(species);
             GetSetPokedexFlag(SpeciesToNationalPokedexNum(species), FLAG_SET_CAUGHT);
             GetSetPokedexFlag(SpeciesToNationalPokedexNum(species), FLAG_SET_SEEN);
         }
@@ -2941,6 +2944,7 @@ static void DebugAction_FlagsVars_PokedexFlags_Reset(u8 taskId)
             if (GetBoxMonData(&gPokemonStoragePtr->boxes[boxId][boxPosition], MON_DATA_SANITY_HAS_SPECIES))
             {
                 species = GetBoxMonData(&gPokemonStoragePtr->boxes[boxId][boxPosition], MON_DATA_SPECIES);
+                PolishedRecordCaughtSpecies(species);
                 GetSetPokedexFlag(SpeciesToNationalPokedexNum(species), FLAG_SET_CAUGHT);
                 GetSetPokedexFlag(SpeciesToNationalPokedexNum(species), FLAG_SET_SEEN);
             }

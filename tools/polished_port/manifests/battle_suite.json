@@ -29,7 +29,11 @@
       "data/moves/launcher_moves.asm",
       "data/moves/slicing_moves.asm",
       "data/moves/low_kick_power.asm",
-      "data/pokemon/body_data.asm"
+      "data/pokemon/body_data.asm",
+      "engine/battle_anims/pokeball_wobble.asm",
+      "engine/pokedex/pokedex.asm",
+      "data/growth_rates.asm",
+      "engine/events/whiteout.asm"
     ],
     "limitation": "This is the battle boundary and shared dependencies, not a proof of transitive call-graph closure. External field scripts, UI and data references still require end-to-end evidence."
   },
@@ -4302,6 +4306,20 @@
           "label": "BattleFactoryText_WinHead",
           "line": 696,
           "sha256": "9bd2a87e9fbc7338999c2a809801cb01f809739ca636bd359293c200344f5052",
+          "local_labels": 0,
+          "branch_sites": 0,
+          "behavior": "unverified"
+        }
+      ]
+    },
+    {
+      "path": "data/growth_rates.asm",
+      "git_blob_sha1": "753af0dc4864c9779ec7c2f429e4f5b726582026",
+      "blocks": [
+        {
+          "label": "GrowthRates",
+          "line": 12,
+          "sha256": "1497fdf995401b6327c6337338d252fd345e2dd1d2b9245ad6069e9847c47cf1",
           "local_labels": 0,
           "branch_sites": 0,
           "behavior": "unverified"
@@ -18476,6 +18494,20 @@
       ]
     },
     {
+      "path": "engine/battle_anims/pokeball_wobble.asm",
+      "git_blob_sha1": "c15f031854f6a6db76fdbaa7f1fc8d3d2100c3c1",
+      "blocks": [
+        {
+          "label": "GetPokeBallWobble",
+          "line": 1,
+          "sha256": "fcb7226e8b31e7c4e82e3e47570ec5dce11165a75a1724ffa02e5a73330951db",
+          "local_labels": 8,
+          "branch_sites": 6,
+          "behavior": "unverified"
+        }
+      ]
+    },
+    {
       "path": "engine/events/battle_tower/battle_tower.asm",
       "git_blob_sha1": "36b4f7346bb212de055b3fa02ddd918047e3003c",
       "blocks": [
@@ -20005,6 +20037,76 @@
           "label": "CheckTrainerClass",
           "line": 36,
           "sha256": "4c29102ac9547d3e7e041b3757c9b0692e54dfab535f1dbeea10ab69b2e39eea",
+          "local_labels": 0,
+          "branch_sites": 0,
+          "behavior": "unverified"
+        }
+      ]
+    },
+    {
+      "path": "engine/events/whiteout.asm",
+      "git_blob_sha1": "6ad11afc39ee46382f9136511367c60b8ec02db6",
+      "blocks": [
+        {
+          "label": "Script_BattleWhiteout",
+          "line": 1,
+          "sha256": "2f5d0e059dbaa0c5b3fd058491ad627943816cfa5ae7e64711453083d7d14aad",
+          "local_labels": 0,
+          "branch_sites": 0,
+          "behavior": "unverified"
+        },
+        {
+          "label": "Script_OverworldWhiteout",
+          "line": 5,
+          "sha256": "06dc370735109bc7ec2746f9a169f294502413df4d061ba75d915c5e38d302d2",
+          "local_labels": 0,
+          "branch_sites": 0,
+          "behavior": "unverified"
+        },
+        {
+          "label": "Script_Whiteout",
+          "line": 9,
+          "sha256": "728b7ec46e13b5180d9015aef02118cff7d8f56c884904feb1e50c525ac4558e",
+          "local_labels": 5,
+          "branch_sites": 0,
+          "behavior": "unverified"
+        },
+        {
+          "label": "OverworldWhiteoutFade",
+          "line": 42,
+          "sha256": "e17bd37c5cbbf6b0e848a092fe4feb95c46c9f480d22a01708866dc36811a743",
+          "local_labels": 0,
+          "branch_sites": 0,
+          "behavior": "unverified"
+        },
+        {
+          "label": "BattleBGMap",
+          "line": 50,
+          "sha256": "a0f5746f80aa11fd3a61cf690d4960b9ba90c297b76e2cc99017b0308960b272",
+          "local_labels": 0,
+          "branch_sites": 0,
+          "behavior": "unverified"
+        },
+        {
+          "label": "LoseMoney",
+          "line": 57,
+          "sha256": "8c5d7092c47a5ea40a05d47640695268492e9d0e90a0be8a050d401c73028ca5",
+          "local_labels": 7,
+          "branch_sites": 5,
+          "behavior": "unverified"
+        },
+        {
+          "label": "DetermineWildBattlePanic",
+          "line": 142,
+          "sha256": "e0dea3c1a1e595c768de56c0a275ed28449b7f4dec3f003dc16979a898af9ade",
+          "local_labels": 0,
+          "branch_sites": 0,
+          "behavior": "unverified"
+        },
+        {
+          "label": "GetWhiteoutSpawn",
+          "line": 151,
+          "sha256": "1f33a70ac397e2520ed1366b9ddc334c48bcc01b6a1732102d18432a6326018b",
           "local_labels": 0,
           "branch_sites": 0,
           "behavior": "unverified"
@@ -24317,6 +24419,484 @@
           "sha256": "7a74dc6a2dfdb3bdf9c5bed2a0400898625935c66441acabbf831f88b492e08d",
           "local_labels": 6,
           "branch_sites": 5,
+          "behavior": "unverified"
+        }
+      ]
+    },
+    {
+      "path": "engine/pokedex/pokedex.asm",
+      "git_blob_sha1": "da52192314e7f00b2ef3c4364c3219b1ab4fe727",
+      "blocks": [
+        {
+          "label": "Pokedex",
+          "line": 1,
+          "sha256": "277f6fb9060a859004a03aa1602fe1a8959a1a7b0118841b2c772bf0ee75a23b",
+          "local_labels": 0,
+          "branch_sites": 0,
+          "behavior": "unverified"
+        },
+        {
+          "label": "Pokedex_LoadTilemap",
+          "line": 21,
+          "sha256": "84b88aaeacd977ed84eebe1ff1ced3e536dc169dcbfcfc22c9c13e52ca43e9b8",
+          "local_labels": 1,
+          "branch_sites": 0,
+          "behavior": "unverified"
+        },
+        {
+          "label": "Pokedex_LoadTilemapWithPokepic",
+          "line": 32,
+          "sha256": "ba7b7c77a0b92adda1f871ce11fc63475a8617f9c851783145b5931498b0646e",
+          "local_labels": 3,
+          "branch_sites": 3,
+          "behavior": "unverified"
+        },
+        {
+          "label": "Pokedex_LoadTilemapWithIconAndForm",
+          "line": 68,
+          "sha256": "4fe7fcd302ad8d7e5cd4199126569bc586630f315f66f235a631b97743ab92a7",
+          "local_labels": 0,
+          "branch_sites": 1,
+          "behavior": "unverified"
+        },
+        {
+          "label": "Pokedex_ChangeForm",
+          "line": 131,
+          "sha256": "609ba224fe6376d98fd24645f646004053262e9661f1da1e3ba0a059c7ab9d2f",
+          "local_labels": 3,
+          "branch_sites": 3,
+          "behavior": "unverified"
+        },
+        {
+          "label": "Pokedex_MonHasCosmeticForms",
+          "line": 160,
+          "sha256": "f73985549edcc0f9d295a4bc696b2c3616d22bba0ae098aca9b4c7da5985c2e8",
+          "local_labels": 0,
+          "branch_sites": 0,
+          "behavior": "unverified"
+        },
+        {
+          "label": "_Pokedex_MonHasCosmeticForms",
+          "line": 164,
+          "sha256": "eafdbf5e8951d5adfea32a6d0f86f1cd3e37198285c5683089fafb79a68bacbc",
+          "local_labels": 2,
+          "branch_sites": 3,
+          "behavior": "unverified"
+        },
+        {
+          "label": "Pokedex_CheckForOtherForms",
+          "line": 183,
+          "sha256": "544b81860415e65e4c32a6866d1721e43a0bbde1aa7acd4d44bedf88496a1ffb",
+          "local_labels": 7,
+          "branch_sites": 17,
+          "behavior": "unverified"
+        },
+        {
+          "label": "Pokedex_SwitchNormalOrShinyPalette",
+          "line": 305,
+          "sha256": "51aec96ae1c7d391aa77eb704174eb523424704e6b86887c54109983e5ad4387",
+          "local_labels": 0,
+          "branch_sites": 1,
+          "behavior": "unverified"
+        },
+        {
+          "label": "Pokedex_SwitchNormalOrShinyPaletteAndUpdate",
+          "line": 324,
+          "sha256": "c4e4cafb1a46ac3e42bc8ba45d1111f6aca8b9d77ba7abdd840cc287d8c43034",
+          "local_labels": 0,
+          "branch_sites": 1,
+          "behavior": "unverified"
+        },
+        {
+          "label": "Pokedex_GetMonIconPalette",
+          "line": 329,
+          "sha256": "b092f4a1d4a35c161fc27dcd413badb7ccbf34e7ed7cfc6e0bc2c507803c2a62",
+          "local_labels": 1,
+          "branch_sites": 0,
+          "behavior": "unverified"
+        },
+        {
+          "label": "Pokedex_PrevPageMon",
+          "line": 349,
+          "sha256": "640e1bd506d82b68d243a7656b07f9f3975b20ed88cfef2179b312d0fdbc3ede",
+          "local_labels": 0,
+          "branch_sites": 0,
+          "behavior": "unverified"
+        },
+        {
+          "label": "Pokedex_NextPageMon",
+          "line": 353,
+          "sha256": "d4fd9e5a8a5cf4999872ba40a82f24b3670dd0ff2626be3140dd35de92f10a93",
+          "local_labels": 0,
+          "branch_sites": 0,
+          "behavior": "unverified"
+        },
+        {
+          "label": "Pokedex_ScrollPageMon",
+          "line": 356,
+          "sha256": "e6368becb9611e23d48459aefab794fecff0144ae2a5d501ca63eae3760dc638",
+          "local_labels": 4,
+          "branch_sites": 5,
+          "behavior": "unverified"
+        },
+        {
+          "label": "Pokedex_GetCursorSpecies",
+          "line": 414,
+          "sha256": "5df118872a950f9229414934f5ad239d173cc3f48868ae6dcc7ad9d2945b230d",
+          "local_labels": 3,
+          "branch_sites": 1,
+          "behavior": "unverified"
+        },
+        {
+          "label": "Pokedex_MainLoop",
+          "line": 455,
+          "sha256": "d4026a906e8df5ccfa190239eed80b10ec50bac7e9e4d2909250943effb96aac",
+          "local_labels": 10,
+          "branch_sites": 10,
+          "behavior": "unverified"
+        },
+        {
+          "label": "Pokedex_SetCursorMon",
+          "line": 513,
+          "sha256": "c3f212e79385384806f93f3112dc39b77c6ffe4b178db9b8369cb4574cf3d9fd",
+          "local_labels": 11,
+          "branch_sites": 14,
+          "behavior": "unverified"
+        },
+        {
+          "label": "Pokedex_UpdateRow",
+          "line": 657,
+          "sha256": "51bb549ef41a36deb00f9f37005f48515188b2e914824f9bd17278918d69f862",
+          "local_labels": 19,
+          "branch_sites": 17,
+          "behavior": "unverified"
+        },
+        {
+          "label": "Pokedex_GetPosData",
+          "line": 974,
+          "sha256": "a93d31496be146906a6200e88f74fb859b8a4ea7ca26cc8e5330c921087f5da9",
+          "local_labels": 3,
+          "branch_sites": 2,
+          "behavior": "unverified"
+        },
+        {
+          "label": "Pokedex_GetDexNumber",
+          "line": 1047,
+          "sha256": "000e8a349d1c43d6cb040b39cfac007f4afc034ceddfaad6e7c35aaf03a222af",
+          "local_labels": 2,
+          "branch_sites": 1,
+          "behavior": "unverified"
+        },
+        {
+          "label": "Pokedex_GetFirstIconTile",
+          "line": 1076,
+          "sha256": "85acc9635bc780418bca36173d0486d7b6be74345b0b0985a8801b228cfebe26",
+          "local_labels": 0,
+          "branch_sites": 0,
+          "behavior": "unverified"
+        },
+        {
+          "label": "PokedexStr_Feet",
+          "line": 1085,
+          "sha256": "8eea788a5b0a2ab0879e383e1c0a468068e06d7c2de5cba216d294d3ffb4a2b1",
+          "local_labels": 0,
+          "branch_sites": 0,
+          "behavior": "unverified"
+        },
+        {
+          "label": "Pokedex_SetDispModeUnlessNewMon",
+          "line": 1089,
+          "sha256": "d6ff73fc7e816df2106d45dce8e07722ba839622dc6f50259a30bb91cf7d2d22",
+          "local_labels": 0,
+          "branch_sites": 1,
+          "behavior": "unverified"
+        },
+        {
+          "label": "Pokedex_Description",
+          "line": 1097,
+          "sha256": "ed6a0f2e49c0d1ceb328c94547543462165e7a5da939883a36be04f36c4323fe",
+          "local_labels": 0,
+          "branch_sites": 0,
+          "behavior": "unverified"
+        },
+        {
+          "label": "_Pokedex_Description",
+          "line": 1105,
+          "sha256": "a9be94d8e187cc986f3d5a309ab9eb204355c2a10bd75a2fcf6777920c94fe1b",
+          "local_labels": 29,
+          "branch_sites": 30,
+          "behavior": "unverified"
+        },
+        {
+          "label": "Pokedex_Main",
+          "line": 1550,
+          "sha256": "7bd0db94c3e7263ac0e4fe7719cffb6f61d2160b6fc04395a0dcf7c1e445659c",
+          "local_labels": 3,
+          "branch_sites": 2,
+          "behavior": "unverified"
+        },
+        {
+          "label": "Pokedex_Bio",
+          "line": 1622,
+          "sha256": "c5e1ae53f3dbca2e4b4d9f3b309efa599e1ff9c8488c2009e60c37cf34ae4636",
+          "local_labels": 19,
+          "branch_sites": 19,
+          "behavior": "unverified"
+        },
+        {
+          "label": "Pokedex_Stats",
+          "line": 1853,
+          "sha256": "d3ed59b406a71967bbc749dd0e2b3b8fda4a3bc5e364d7ef5dbad823eaac35bb",
+          "local_labels": 0,
+          "branch_sites": 0,
+          "behavior": "unverified"
+        },
+        {
+          "label": "_Pokedex_Stats",
+          "line": 1856,
+          "sha256": "04ec6c584ddb4fc730d7be08bee190960dc92c0a23648446a499b80fdc31233e",
+          "local_labels": 12,
+          "branch_sites": 15,
+          "behavior": "unverified"
+        },
+        {
+          "label": "Pokedex_PrintAbilityWithDescription",
+          "line": 2037,
+          "sha256": "ded3a7d6e130e5492c52417d862f5b4cf7e4a943caaebea436826e010117e69c",
+          "local_labels": 0,
+          "branch_sites": 0,
+          "behavior": "unverified"
+        },
+        {
+          "label": "Pokedex_SetModeSearchPals",
+          "line": 2050,
+          "sha256": "efb3bb8029498ff9e9fb6411f6f52a347be586859194005adeaca55761bb81de",
+          "local_labels": 1,
+          "branch_sites": 0,
+          "behavior": "unverified"
+        },
+        {
+          "label": "Pokedex_ResetModeSearchPals",
+          "line": 2060,
+          "sha256": "749d1bfd5343ed71483098d3e6ac3f65eb039d6d4d6cd3eaa44677580750b717",
+          "local_labels": 5,
+          "branch_sites": 3,
+          "behavior": "unverified"
+        },
+        {
+          "label": "Pokedex_Mode",
+          "line": 2097,
+          "sha256": "e99a5121e659d66129f468af7d60a9f9a4f0a50da194daaa4adc311db469a8ae",
+          "local_labels": 0,
+          "branch_sites": 0,
+          "behavior": "unverified"
+        },
+        {
+          "label": "Pokedex_Mode_ReloadPals",
+          "line": 2101,
+          "sha256": "be6cf3f29deaee233630e7e4b564db0769deec42a9eeaae11bdb95374a1cfcb9",
+          "local_labels": 0,
+          "branch_sites": 0,
+          "behavior": "unverified"
+        },
+        {
+          "label": "_Pokedex_Mode",
+          "line": 2106,
+          "sha256": "5eaf79ae00a1b69a1eb40cc205320e294c72929b2df0c8a35bd82384489e1cf1",
+          "local_labels": 11,
+          "branch_sites": 13,
+          "behavior": "unverified"
+        },
+        {
+          "label": "Pokedex_Search",
+          "line": 2223,
+          "sha256": "da91770adab7edb2641869dc0b5d09e070ae1b368a4445621cd6137e08115adc",
+          "local_labels": 0,
+          "branch_sites": 1,
+          "behavior": "unverified"
+        },
+        {
+          "label": "Pokedex_SearchReset",
+          "line": 2239,
+          "sha256": "ad2e8cf59089e12a6e2c3cb078f5df13f2c2071be44571fd235ec770132c88b1",
+          "local_labels": 0,
+          "branch_sites": 0,
+          "behavior": "unverified"
+        },
+        {
+          "label": "_Pokedex_Search",
+          "line": 2246,
+          "sha256": "dbb0a7bcd9afcbdae3f93379592661b8503e23f3d0c86074a3ebf3f90c2b8f59",
+          "local_labels": 25,
+          "branch_sites": 21,
+          "behavior": "unverified"
+        },
+        {
+          "label": "Pokedex_ResetDexMonsAndTemp",
+          "line": 2549,
+          "sha256": "edcb76f1117f76065be1f81c0670e267e8bf88bab4824483b1790ff5936bec0a",
+          "local_labels": 0,
+          "branch_sites": 0,
+          "behavior": "unverified"
+        },
+        {
+          "label": "Pokedex_ConvertFinalEntryToRowCols",
+          "line": 2572,
+          "sha256": "e1a4ea5abf501c0e976150d652470d514027cd1a3e342fc16fd391582d713ce3",
+          "local_labels": 0,
+          "branch_sites": 0,
+          "behavior": "unverified"
+        },
+        {
+          "label": "Pokedex_GetSearchResults",
+          "line": 2591,
+          "sha256": "cfb7a618b756bfd2e4565f8419aa6f5fde3f7fd121188d0492531c5e49ff49d0",
+          "local_labels": 14,
+          "branch_sites": 23,
+          "behavior": "unverified"
+        },
+        {
+          "label": "BodyColorPalsIncludingNull",
+          "line": 2821,
+          "sha256": "806902cf7c61b9eae04600ffd1d847cae84e091f3064b53c9fe0b4fce8001e73",
+          "local_labels": 0,
+          "branch_sites": 0,
+          "behavior": "unverified"
+        },
+        {
+          "label": "BodyColorPals",
+          "line": 2827,
+          "sha256": "f74a8935f10843246d94bf84766c29c0e3107f575026885f25cd98ae90430176",
+          "local_labels": 0,
+          "branch_sites": 0,
+          "behavior": "unverified"
+        },
+        {
+          "label": "Pokedex_InitData",
+          "line": 2832,
+          "sha256": "20628c3afac7b522d275adb79fe0535a7d83606525283bc04e9f3b6b3874efb4",
+          "local_labels": 2,
+          "branch_sites": 2,
+          "behavior": "unverified"
+        },
+        {
+          "label": "Pokedex_CountSeenOwn",
+          "line": 2889,
+          "sha256": "3bc5cea31b62acdcd2eac2be370e6e241f654469767a50d745a58c2cb822f3c9",
+          "local_labels": 2,
+          "branch_sites": 1,
+          "behavior": "unverified"
+        },
+        {
+          "label": "Pokedex_HandleSeenOwn",
+          "line": 2924,
+          "sha256": "9aa3eafbcad82f83fca580bbe33b89939c0710e85026a1d71140ff6c9c23d862",
+          "local_labels": 4,
+          "branch_sites": 5,
+          "behavior": "unverified"
+        },
+        {
+          "label": "Pokedex_IterateSpeciesWithMode",
+          "line": 2990,
+          "sha256": "2f92579d3c1404aa446455eef76d006906fcf4cedd4be486b2463f57ab904fd4",
+          "local_labels": 0,
+          "branch_sites": 0,
+          "behavior": "unverified"
+        },
+        {
+          "label": "Pokedex_IterateSpecies",
+          "line": 2995,
+          "sha256": "0a093f63d49ad5c132fda853fd2c953b6582d398b7e20030cb5e630532e0f5fb",
+          "local_labels": 10,
+          "branch_sites": 12,
+          "behavior": "unverified"
+        },
+        {
+          "label": "Pokedex_GetInput",
+          "line": 3121,
+          "sha256": "a079ea42940823c9ed453d7e5947c4a503b500d723336c554c01ff791a038e81",
+          "local_labels": 0,
+          "branch_sites": 2,
+          "behavior": "unverified"
+        },
+        {
+          "label": "Pokedex_LoadUndiscoveredPokepic",
+          "line": 3141,
+          "sha256": "51c5a118dd980e626d828d87c2e69d176bfa294e859006b3c22dff0a4228997a",
+          "local_labels": 0,
+          "branch_sites": 0,
+          "behavior": "unverified"
+        },
+        {
+          "label": "Pokedex_QuestionMarkPal",
+          "line": 3166,
+          "sha256": "94c05f60fb083f159c00676204137cb2fda08079c1d5f2202b0bc629a58830b0",
+          "local_labels": 0,
+          "branch_sites": 0,
+          "behavior": "unverified"
+        },
+        {
+          "label": "Pokedex_SwitchMonInfoBank",
+          "line": 3169,
+          "sha256": "5c8d11bd2dbc8ced42f02bbf1cf82f639c4be5dbed2d31ab34ecddc4221979fe",
+          "local_labels": 0,
+          "branch_sites": 0,
+          "behavior": "unverified"
+        },
+        {
+          "label": "Pokedex_GetCursorMon",
+          "line": 3179,
+          "sha256": "27559f92a292ad499d21f415e8e8d9651b7e707cee550282648ddbdb7ceb2283",
+          "local_labels": 9,
+          "branch_sites": 10,
+          "behavior": "unverified"
+        },
+        {
+          "label": "Pokedex_ScheduleScreenUpdate",
+          "line": 3474,
+          "sha256": "c8926123911f34d92379ec7ac5380e4c542d01dcb5f76737c658dd13184472aa",
+          "local_labels": 0,
+          "branch_sites": 0,
+          "behavior": "unverified"
+        },
+        {
+          "label": "Pokedex_ScheduleScreenUpdateWithHBlank",
+          "line": 3478,
+          "sha256": "c42cdb6e25445cb66c77a6ba3ed2039595829f62de21b503478804ea7f5a2a1b",
+          "local_labels": 0,
+          "branch_sites": 2,
+          "behavior": "unverified"
+        },
+        {
+          "label": "Pokedex_CopyTypeIconPals",
+          "line": 3506,
+          "sha256": "dfdf64db2e29165673f92c7f0936229db2d04e02b9d92bf4d442330f08d7a9dc",
+          "local_labels": 0,
+          "branch_sites": 0,
+          "behavior": "unverified"
+        },
+        {
+          "label": "NewPokedexEntry",
+          "line": 3521,
+          "sha256": "c715ce8c69b1acfa297d66cf950ee9d5d1f9172673c586765472d1ddb19ad024",
+          "local_labels": 0,
+          "branch_sites": 0,
+          "behavior": "unverified"
+        },
+        {
+          "label": "Pokedex_GetDexEntryPointer",
+          "line": 3538,
+          "sha256": "9af3b38edd95f309d39bdba8a2c2c253e6fb1d51848119445ddfaab12ea9bc4a",
+          "local_labels": 0,
+          "branch_sites": 0,
+          "behavior": "unverified"
+        },
+        {
+          "label": "DexModeSearchPals",
+          "line": 3544,
+          "sha256": "300a6965a7c3d8cb659530b70aacdd8fb308127d17d3f16a91b9cb09115fd5c0",
+          "local_labels": 0,
+          "branch_sites": 0,
           "behavior": "unverified"
         }
       ]
@@ -38811,6 +39391,136 @@
       "path": "test/battle/polished_species.c"
     },
     {
+      "name": "Polished systems trainer generation preserves source slots stats gender and friendship",
+      "kind": "TEST",
+      "path": "test/battle/polished_systems.c"
+    },
+    {
+      "name": "Polished systems trainer ability selection uses source species byte trainer ID and one based slot",
+      "kind": "TEST",
+      "path": "test/battle/polished_systems.c"
+    },
+    {
+      "name": "Polished systems Heavy Ball preserves every inclusive source weight boundary",
+      "kind": "TEST",
+      "path": "test/battle/polished_systems.c"
+    },
+    {
+      "name": "Polished systems critical capture uses inclusive ownership bands and a byte threshold",
+      "kind": "TEST",
+      "path": "test/battle/polished_systems.c"
+    },
+    {
+      "name": "Polished systems ball modifiers and HP compression preserve source integer boundaries",
+      "kind": "TEST",
+      "path": "test/battle/polished_systems.c"
+    },
+    {
+      "name": "Polished systems Timer Ball retains byte overflow and the saturated turn counter",
+      "kind": "TEST",
+      "path": "test/battle/polished_systems.c"
+    },
+    {
+      "name": "Polished systems EXP boosts precede one combined distribution division",
+      "kind": "TEST",
+      "path": "test/battle/polished_systems.c"
+    },
+    {
+      "name": "Polished systems Safari escape uses raw low byte Speed before bait and anger",
+      "kind": "TEST",
+      "path": "test/battle/polished_systems.c"
+    },
+    {
+      "name": "Polished systems Safari bait can reach zero rate and anger expiry restores the base",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_systems.c"
+    },
+    {
+      "name": "Polished systems Repeat Ball shares cosmetic ownership and separates regional variants",
+      "kind": "TEST",
+      "path": "test/battle/polished_systems.c"
+    },
+    {
+      "name": "Polished systems capture floors the ball multiplier before the catch rate",
+      "kind": "WILD_BATTLE_TEST",
+      "path": "test/battle/polished_systems.c"
+    },
+    {
+      "name": "Polished systems Nest Ball uses the source denominator of five",
+      "kind": "WILD_BATTLE_TEST",
+      "path": "test/battle/polished_systems.c"
+    },
+    {
+      "name": "Polished systems Level Ball requires a strictly greater quarter level",
+      "kind": "WILD_BATTLE_TEST",
+      "path": "test/battle/polished_systems.c"
+    },
+    {
+      "name": "Polished systems capture ignores native low level and missing badge modifiers",
+      "kind": "WILD_BATTLE_TEST",
+      "path": "test/battle/polished_systems.c"
+    },
+    {
+      "name": "Polished systems Heavy Ball changes persist into subsequent ordinary throws",
+      "kind": "WILD_BATTLE_TEST",
+      "path": "test/battle/polished_systems.c"
+    },
+    {
+      "name": "Polished systems Friend Ball delivers source friendship with capture EXP",
+      "kind": "WILD_BATTLE_TEST",
+      "path": "test/battle/polished_systems.c"
+    },
+    {
+      "name": "Polished systems EXP uses the source yield and unscaled default",
+      "kind": "WILD_BATTLE_TEST",
+      "path": "test/battle/polished_systems.c"
+    },
+    {
+      "name": "Polished systems a different OT name alone does not boost source EXP",
+      "kind": "WILD_BATTLE_TEST",
+      "path": "test/battle/polished_systems.c"
+    },
+    {
+      "name": "Polished systems EXP combines participant and held share fractions before rounding",
+      "kind": "WILD_BATTLE_TEST",
+      "path": "test/battle/polished_systems.c"
+    },
+    {
+      "name": "Polished systems level 100 share holders gain EVs from the active power item",
+      "kind": "WILD_BATTLE_TEST",
+      "path": "test/battle/polished_systems.c"
+    },
+    {
+      "name": "Polished systems transformed captures retain the original source catch rate",
+      "kind": "WILD_BATTLE_TEST",
+      "path": "test/battle/polished_systems.c"
+    },
+    {
+      "name": "Polished systems transformed rewards retain the original source EXP and EV yields",
+      "kind": "WILD_BATTLE_TEST",
+      "path": "test/battle/polished_systems.c"
+    },
+    {
+      "name": "Polished systems capture does not restore a knocked off held item",
+      "kind": "WILD_BATTLE_TEST",
+      "path": "test/battle/polished_systems.c"
+    },
+    {
+      "name": "Polished systems owned captures do not inherit the native forced critical display",
+      "kind": "WILD_BATTLE_TEST",
+      "path": "test/battle/polished_systems.c"
+    },
+    {
+      "name": "Polished systems Safari rewards exclude the unsent lead and retain held shares",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_systems.c"
+    },
+    {
+      "name": "Polished systems active Pokerus doubles the power item before stat and total EV caps",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_systems.c"
+    },
+    {
       "name": "Polished freeze freshly applied status respects the next natural thaw roll",
       "kind": "SINGLE_BATTLE_TEST",
       "path": "test/battle/status1/polished_freeze.c"
@@ -39585,6 +40295,10 @@
       "sha256": "610de6522d45793a74e4b7970e4b6814048758e93352863b3cb9f8ed4d8a189a"
     },
     {
+      "manifest": "tools/polished_port/manifests/battle_systems.json",
+      "sha256": "d81a8aad27f66258f4eb5543f4a3fc3c6d4b2e0116d9fc89d184c0caad31d980"
+    },
+    {
       "manifest": "tools/polished_port/manifests/contact_status.json",
       "sha256": "134cee47fd6a814cd43d8ea91e365e37d13e06c799348c58f4223f6bf9c0f6c1"
     },
@@ -39595,6 +40309,10 @@
     {
       "manifest": "tools/polished_port/manifests/multihit.json",
       "sha256": "988cc889644a652f4383046f633eac17d29732499026c129247fccc71432572b"
+    },
+    {
+      "manifest": "tools/polished_port/manifests/trainer_attributes.json",
+      "sha256": "d0a1716f81a024d482d26937238993409e194d7e329fd05a7cb037ba186f1b8e"
     }
   ]
 }

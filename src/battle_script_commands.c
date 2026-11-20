@@ -3,6 +3,9 @@
 #include "constants/polished_battle_foundations.h"
 #include "polished_evolution.h"
 #include "polished_items.h"
+#include "polished_capture.h"
+#include "polished_rewards.h"
+#include "polished_trainers.h"
 #include "constants/polished_move_restrictions.h"
 #include "constants/polished_protect_chain.h"
 #include "battle.h"
@@ -2164,12 +2167,24 @@ static bool32 BattleTypeAllowsExp(void)
               | BATTLE_TYPE_RECORDED_LINK
               | BATTLE_TYPE_TRAINER_HILL
               | BATTLE_TYPE_FRONTIER
-              | BATTLE_TYPE_SAFARI
               | BATTLE_TYPE_BATTLE_TOWER
               | BATTLE_TYPE_EREADER_TRAINER))
         return FALSE;
+    else if ((gBattleTypeFlags & BATTLE_TYPE_SAFARI) && !UsesPolishedSafariRules())
+        return FALSE;
     else
         return TRUE;
+}
+
+void BS_PolishedSafariEscape(void)
+{
+    NATIVE_ARGS();
+    if (UsesPolishedSafariRules() && PolishedSafariFlees())
+    {
+        gBattleOutcome = B_OUTCOME_MON_FLED;
+        gCurrentTurnActionNumber = gBattlersCount;
+    }
+    gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
 static enum HoldEffect GetMonHoldEffect(struct Pokemon *mon)
@@ -2201,9 +2216,12 @@ static void Cmd_getexp(void)
     u32 currLvl;
 
     gBattlerFainted = GetBattlerForBattleScript(cmd->battler);
+    bool32 sourceRewards = UsesPolishedRewardRules(gBattlerFainted);
 
     enum Species faintedSpecies;
-    if (!gBattleMons[gBattlerFainted].volatiles.transformed)
+    if (sourceRewards)
+        faintedSpecies = GetMonData(GetBattlerMon(gBattlerFainted), MON_DATA_SPECIES);
+    else if (!gBattleMons[gBattlerFainted].volatiles.transformed)
         faintedSpecies = gBattleMons[gBattlerFainted].species;
     else if (GetConfig(B_TRANSFORM_BATTLE_REWARDS) == GEN_3 || GetConfig(B_TRANSFORM_BATTLE_REWARDS) == GEN_4)
         faintedSpecies = gBattleMons[gBattlerFainted].species;
@@ -2226,6 +2244,11 @@ static void Cmd_getexp(void)
         }
         break;
     case 1: // calculate experience points to redistribute
+        if (sourceRewards)
+        {
+            gBattleScripting.getexpState = PolishedPrepareExperience(gBattlerFainted) ? 2 : 6;
+            break;
+        }
         {
             u32 orderId = 0;
             u32 calculatedExp = 0;
@@ -2313,7 +2336,8 @@ static void Cmd_getexp(void)
             holdEffect = GetMonHoldEffect(&gParties[B_TRAINER_PLAYER][*expMonId]);
 
             if ((holdEffect != HOLD_EFFECT_EXP_SHARE && !wasSentOut && !IsGen6ExpShareEnabled())
-             || GetMonData(&gParties[B_TRAINER_PLAYER][*expMonId], MON_DATA_SPECIES_OR_EGG) == SPECIES_EGG)
+             || GetMonData(&gParties[B_TRAINER_PLAYER][*expMonId], MON_DATA_SPECIES_OR_EGG) == SPECIES_EGG
+             || (sourceRewards && !IsValidForBattle(&gParties[B_TRAINER_PLAYER][*expMonId])))
             {
                 gBattleScripting.getexpState = 5;
                 gBattleStruct->battlerExpReward = 0;
@@ -2322,7 +2346,9 @@ static void Cmd_getexp(void)
             {
                 gBattleScripting.getexpState = 5;
                 gBattleStruct->battlerExpReward = 0;
-                if (B_MAX_LEVEL_EV_GAINS >= GEN_5)
+                if (sourceRewards)
+                    PolishedGainBattleEVs(&gParties[B_TRAINER_PLAYER][*expMonId], faintedSpecies);
+                else if (B_MAX_LEVEL_EV_GAINS >= GEN_5)
                     MonGainEVs(&gParties[B_TRAINER_PLAYER][*expMonId], faintedSpecies);
             }
             else
@@ -2341,20 +2367,23 @@ static void Cmd_getexp(void)
 
                 if (IsValidForBattle(&gParties[B_TRAINER_PLAYER][*expMonId]))
                 {
-                    if (wasSentOut)
+                    if (sourceRewards)
+                        gBattleStruct->battlerExpReward = PolishedBattleExperience(*expMonId, gBattlerFainted);
+                    else if (wasSentOut)
                         gBattleStruct->battlerExpReward = GetSoftLevelCapExpValue(gParties[B_TRAINER_PLAYER][*expMonId].level, gBattleStruct->expValue);
                     else
                         gBattleStruct->battlerExpReward = 0;
 
-                    if ((holdEffect == HOLD_EFFECT_EXP_SHARE || IsGen6ExpShareEnabled())
+                    if (!sourceRewards && (holdEffect == HOLD_EFFECT_EXP_SHARE || IsGen6ExpShareEnabled())
                         && (B_SPLIT_EXP < GEN_6 || gBattleStruct->battlerExpReward == 0)) // only give exp share bonus in later gens if the mon wasn't sent out
                     {
                         gBattleStruct->battlerExpReward += GetSoftLevelCapExpValue(gParties[B_TRAINER_PLAYER][*expMonId].level, gBattleStruct->expShareExpValue);
                     }
 
-                    ApplyExperienceMultipliers(&gBattleStruct->battlerExpReward, *expMonId, gBattlerFainted);
+                    if (!sourceRewards)
+                        ApplyExperienceMultipliers(&gBattleStruct->battlerExpReward, *expMonId, gBattlerFainted);
 
-                    if (B_EXP_CAP_TYPE == EXP_CAP_HARD && gBattleStruct->battlerExpReward != 0)
+                    if (!sourceRewards && B_EXP_CAP_TYPE == EXP_CAP_HARD && gBattleStruct->battlerExpReward != 0)
                     {
                         enum GrowthRate growthRate = GetSpeciesBaseData(GetMonData(&gParties[B_TRAINER_PLAYER][*expMonId], MON_DATA_SPECIES))->growthRate;
                         u32 currentExp = GetMonData(&gParties[B_TRAINER_PLAYER][*expMonId], MON_DATA_EXP);
@@ -2366,7 +2395,7 @@ static void Cmd_getexp(void)
                             gBattleStruct->battlerExpReward = gExperienceTables[growthRate][levelCap] - currentExp;
                     }
 
-                    if (IsTradedMon(&gParties[B_TRAINER_PLAYER][*expMonId]))
+                    if (sourceRewards ? PolishedIsTraded(&gParties[B_TRAINER_PLAYER][*expMonId]) : IsTradedMon(&gParties[B_TRAINER_PLAYER][*expMonId]))
                     {
                         i = STRINGID_ABOOSTED;
                     }
@@ -2391,7 +2420,10 @@ static void Cmd_getexp(void)
                         gBattleStruct->teamGotExpMsgPrinted = TRUE;
                     }
 
-                    MonGainEVs(&gParties[B_TRAINER_PLAYER][*expMonId], faintedSpecies);
+                    if (sourceRewards)
+                        PolishedGainBattleEVs(&gParties[B_TRAINER_PLAYER][*expMonId], faintedSpecies);
+                    else
+                        MonGainEVs(&gParties[B_TRAINER_PLAYER][*expMonId], faintedSpecies);
                 }
                 gBattleScripting.getexpState++;
             }
@@ -4086,6 +4118,8 @@ static u32 GetTrainerMoneyToGive(u16 trainerId)
             return 20;
         lastMonLevel = GetPolishedTrainerLevel(trainerId, party[GetTrainerPartySizeFromId(trainerId) - 1].lvl);
         trainerMoney = gTrainerClasses[GetTrainerClassFromId(trainerId)].money ?: 5;
+        if (B_POLISHED_MOVE_BALANCE && PolishedGetTrainerBaseMoney(trainerId))
+            trainerMoney = PolishedGetTrainerBaseMoney(trainerId);
 
         if (gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS)
             moneyReward = 4 * lastMonLevel * gBattleStruct->moneyMultiplier * trainerMoney;
@@ -4116,7 +4150,7 @@ static void Cmd_getmoneyreward(void)
     }
     else
     {
-        if (B_WHITEOUT_MONEY <= GEN_3)
+        if (!B_POLISHED_MOVE_BALANCE && B_WHITEOUT_MONEY <= GEN_3)
         {
             money = GetMoney(&gSaveBlock1Ptr->money) / 2;
         }
@@ -4136,6 +4170,17 @@ static void Cmd_getmoneyreward(void)
             {
                 if (FlagGet(gBadgeFlags[i]) == TRUE)
                     ++count;
+            }
+            if (B_POLISHED_MOVE_BALANCE)
+            {
+                u32 earned = VarGet(VAR_POLISHED_EARNED_BADGES);
+                count = 0;
+                while (earned)
+                {
+                    count++;
+                    earned &= earned - 1;
+                }
+                count = min(8, count);
             }
             money = sWhiteOutBadgeMoney[count] * sPartyLevel;
         }
@@ -7943,9 +7988,12 @@ u8 GetCatchingBattler(void)
 
 static void FinalizeCapture(void)
 {
+    if (UsesPolishedCaptureRules(gBattlerAttacker, gBattlerTarget))
+        gBattleScripting.expOnCatch = TRUE;
     enum PokeBall ballId = ItemIdToBallId(gLastThrownBall);
     enum NationalDexOrder natDexNo = SpeciesToNationalPokedexNum(gBattleMons[gBattlerTarget].species);
-    if ((GetConfig(B_CRITICAL_CAPTURE_IF_OWNED) >= GEN_9 && GetSetPokedexFlag(natDexNo, FLAG_GET_CAUGHT))
+    if ((!UsesPolishedCaptureRules(gBattlerAttacker, gBattlerTarget)
+        && GetConfig(B_CRITICAL_CAPTURE_IF_OWNED) >= GEN_9 && GetSetPokedexFlag(natDexNo, FLAG_GET_CAUGHT))
         || IsCriticalCapture())
     {
         gBattleSpritesDataPtr->animationData->isCriticalCapture = TRUE;
@@ -7973,7 +8021,8 @@ static void FinalizeCapture(void)
     }
     else if (ballId == BALL_FRIEND)
     {
-        u32 friendship = (B_FRIEND_BALL_MODIFIER >= GEN_8 ? 150 : 200);
+        u32 friendship = UsesPolishedCaptureRules(gBattlerAttacker, gBattlerTarget)
+            ? 200 : (B_FRIEND_BALL_MODIFIER >= GEN_8 ? 150 : 200);
         SetMonData(caughtMon, MON_DATA_FRIENDSHIP, &friendship);
     }
 }
@@ -8205,6 +8254,8 @@ static u32 GetBattleMonCatchRate(struct BattlePokemon *battleMon)
 
 static u32 ComputeCaptureOdds(u32 wildMonBattler, u32 playerBattler)
 {
+    if (UsesPolishedCaptureRules(playerBattler, wildMonBattler))
+        return GetPolishedCaptureOdds(playerBattler, wildMonBattler);
     struct BallData ball;
     ComputeBallData(wildMonBattler, playerBattler, &ball);
 
@@ -8264,6 +8315,10 @@ static bool32 CriticalCapture(u32 odds)
     u32 totalDexCount;
     u32 charmBoost = 1;
 
+    if (UsesPolishedCaptureRules(gBattlerAttacker, gBattlerTarget))
+        return RandomUniform(RNG_POLISHED_CAPTURE_CRITICAL, 0, MAX_u8)
+            < PolishedCriticalCaptureThreshold(odds, PolishedCaptureCaughtCount(), CheckBagHasItem(ITEM_CATCHING_CHARM, 1));
+
     if (B_CRITICAL_CAPTURE == FALSE)
         return FALSE;
 
@@ -8322,7 +8377,8 @@ static void SetBallThrowShakes(void)
     gBattleSpritesDataPtr->animationData->criticalCaptureSuccess = FALSE;
 
     // Master Ball check occurs before critical capture check
-    if (odds == CAPTURE_GUARANTEED || IsVictoryCatchGuaranteed())
+    if (odds == CAPTURE_GUARANTEED
+        || (!UsesPolishedCaptureRules(gBattlerAttacker, gBattlerTarget) && IsVictoryCatchGuaranteed()))
     {
         FinalizeCapture();
         return;
@@ -8346,10 +8402,13 @@ static void SetBallThrowShakes(void)
         FinalizeCapture();
         return;
     }
-    odds = ComputeBallShakeOdds(odds);
+    bool32 sourceCapture = UsesPolishedCaptureRules(gBattlerAttacker, gBattlerTarget);
+    odds = sourceCapture ? PolishedCaptureWobbleThreshold(odds) : ComputeBallShakeOdds(odds);
     for (shakes = 0; shakes < maxShakes; shakes++)
     {
-        if (RandomUniform(RNG_BALLTHROW_SHAKE, 0, MAX_u16) >= odds)
+        u32 roll = sourceCapture ? RandomUniform(RNG_POLISHED_CAPTURE_SHAKE, 0, MAX_u8)
+            : RandomUniform(RNG_BALLTHROW_SHAKE, 0, MAX_u16);
+        if (roll >= odds)
             break;
     }
 
@@ -8512,7 +8571,8 @@ static void Cmd_givecaughtmon(void)
     case GIVECAUGHTMON_GIVE_AND_SHOW_MSG:
     {
         struct Pokemon *caughtMon = GetBattlerMon(GetCatchingBattler());
-        if (B_RESTORE_HELD_BATTLE_ITEMS >= GEN_9)
+        if (B_RESTORE_HELD_BATTLE_ITEMS >= GEN_9
+            && !UsesPolishedCaptureRules(gBattlerAttacker, GetCatchingBattler()))
         {
             enum Item lostItem = gBattleStruct->itemLost[B_TRAINER_OPPONENT_A][gBattlerPartyIndexes[GetCatchingBattler()]].originalItem;
             if (lostItem != ITEM_NONE && GetItemPocket(lostItem) != POCKET_BERRIES)
@@ -8579,6 +8639,7 @@ static void Cmd_trysetcaughtmondexflags(void)
     enum Species species = GetMonData(caughtMon, MON_DATA_SPECIES);
     u32 personality = GetMonData(caughtMon, MON_DATA_PERSONALITY);
 
+    PolishedRecordCaughtSpecies(species);
     if (GetSetPokedexFlag(SpeciesToNationalPokedexNum(species), FLAG_GET_CAUGHT))
     {
         gBattlescriptCurrInstr = cmd->failInstr;

@@ -251,6 +251,7 @@ BattleScript_ActionWatchesCarefully:
 #if IS_FRLG
 	playanimation BS_OPPONENT1, B_ANIM_SAFARI_REACTION
 #endif
+	callnative BS_PolishedSafariEscape
 	end
 
 BattleScript_ActionGetNear:

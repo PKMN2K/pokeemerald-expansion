@@ -1,4 +1,5 @@
 #include "global.h"
+#include "polished_capture.h"
 #include "malloc.h"
 #include "battle_anim.h"
 #include "battle_interface.h"
@@ -3068,6 +3069,7 @@ static void UpdatePokedexForReceivedMon(u8 partyIdx)
         u32 personality = GetMonData(mon, MON_DATA_PERSONALITY);
         enum NationalDexOrder dexNum = SpeciesToNationalPokedexNum(species);
         GetSetPokedexFlag(dexNum, FLAG_SET_SEEN);
+        PolishedRecordCaughtSpecies(species);
         HandleSetPokedexFlag(dexNum, FLAG_SET_CAUGHT, personality);
     }
 }

@@ -1,4 +1,5 @@
 #include "global.h"
+#include "polished_capture.h"
 #include "berry.h"
 #include "battle_special.h"
 #include "easy_chat.h"
@@ -342,6 +343,7 @@ bool8 MEScrCmd_givepokemon(struct ScriptContext *ctx)
         {
             enum NationalDexOrder pokedexNum = SpeciesToNationalPokedexNum(species);
             GetSetPokedexFlag(pokedexNum, FLAG_SET_SEEN);
+            PolishedRecordCaughtSpecies(species);
             GetSetPokedexFlag(pokedexNum, FLAG_SET_CAUGHT);
         }
 

@@ -284,9 +284,13 @@ struct Pokedex
     /*0x03*/ u8 unknown2;
     /*0x04*/ u32 unownPersonality; // set when you first see Unown
     /*0x08*/ u32 spindaPersonality; // set when you first see Spinda
-    /*0x0C*/ u32 unknown3;
+    /*0x0C*/ u32 unknown3; // Polished ownership format marker; formerly unused.
 #if FREE_EXTRA_SEEN_FLAGS_SAVEBLOCK2 == FALSE
-    /*0x10*/ u8 filler[0x68]; // Previously Dex Flags, feel free to remove.
+    /*0x10*/ union
+    {
+        u8 filler[0x68];
+        u8 polishedCaughtForms[43]; // Pinned source indices 1..337; cosmetic forms share a bit.
+    }; // Retains the complete previous 0x68-byte allocation and all save offsets.
 #endif //FREE_EXTRA_SEEN_FLAGS_SAVEBLOCK2
 };
 

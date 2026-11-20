@@ -37,7 +37,9 @@ AI_SINGLE_BATTLE_TEST("Polished evolution refreshes source types, consumes the h
         WITH_CONFIG(B_SCALED_EXP, GEN_4);
         AI_FLAGS(0);
         PLAYER(SPECIES_POLIWHIRL) { Level(6); Speed(100); Ability(ABILITY_SWIFT_SWIM); Item(ITEM_KINGS_ROCK); Moves(MOVE_TACKLE, MOVE_SPLASH, MOVE_DOUBLE_SLAP); }
-        OPPONENT(SPECIES_WOBBUFFET) { Level(15); HP(1); Speed(1); Moves(MOVE_SPLASH); }
+        // Leave room for the evolution move: source EXP from level 15 also
+        // teaches Aqua Jet and opens an unrelated full-moveset prompt.
+        OPPONENT(SPECIES_WOBBUFFET) { Level(12); HP(1); Speed(1); Moves(MOVE_SPLASH); }
         OPPONENT(SPECIES_WOBBUFFET) { Level(10); Speed(1); Moves(MOVE_SPLASH); }
     } WHEN {
         TURN { MOVE(player, MOVE_TACKLE); EXPECT_SEND_OUT(opponent, 1); }
@@ -77,7 +79,10 @@ AI_SINGLE_BATTLE_TEST("Polished evolution resumes the trainer battle with the ev
         EXPECT_EQ(player->species, SPECIES_METAPOD);
         EXPECT_EQ(GetMonData(&gParties[B_TRAINER_PLAYER][0], MON_DATA_SPECIES), SPECIES_METAPOD);
         EXPECT_EQ(player->ability, ABILITY_SHED_SKIN);
-        EXPECT_EQ(player->moves[2], MOVE_DEFENSE_CURL);
+        // Source EXP reaches Caterpie's Bug Bite before evolving. Its new
+        // evolution move must follow that level-up move, preserving both.
+        EXPECT_EQ(player->moves[2], B_POLISHED_MOVE_BALANCE ? MOVE_BUG_BITE : MOVE_DEFENSE_CURL);
+        EXPECT_EQ(player->moves[3], B_POLISHED_MOVE_BALANCE ? MOVE_DEFENSE_CURL : MOVE_NONE);
         EXPECT_EQ(gLeveledUpInBattle & 1, 0);
         EXPECT(!PolishedBattleEvolutionIsRunning());
     }

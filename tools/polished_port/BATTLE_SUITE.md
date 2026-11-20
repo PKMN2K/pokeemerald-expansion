@@ -20,11 +20,11 @@ source groups and expected source failures are rejected.
 
 ## Coverage and remaining work
 
-The source archive contains **334 files authenticated back to the pinned Git
+The source archive contains **340 files authenticated back to the pinned Git
 commit**. It includes every assembly file under the battle engine/data,
 trainer/facility data, item/Pokemon engines, shared home routines, constants and
 macros. Missing or edited blobs/trees fail authentication. The generated ledger
-records **4,065 global lexical blocks**, their exact source hashes, local-label
+records **4,136 global lexical blocks**, their exact source hashes, local-label
 and branch-site counts, **255 moves, 133 effects and 129 command names**, every
 source ability/held-effect identifier and all registered source tests.
 
@@ -284,3 +284,66 @@ badge/Roost/Togepi rewards and Save/reset/Continue, on Johto ROM SHA-256
 After the final guards, both ROMs were rebuilt and the twelve demo checks and
 production-linked audit passed again. Final Johto ROM SHA-256:
 `4d075879c5bab3e9ef6698e237e0f6cafc83dce3a87bdc0c107decdee15ebea0`.
+
+## Capture, rewards and registered trainer construction
+
+Twenty-six runtime groups cover source ball rounding and conditions, persistent
+Heavy Ball rates, critical-capture thresholds, Safari counters and eligibility,
+EXP distribution, EV bonuses/caps, Transform, caught-item persistence and owned
+capture display. Five host tests authenticate the source constants, trainer
+class defaults, party-wide custom flags and all 21 registered team bindings.
+A production-linked probe verifies all 43 trainer Pokemon against independent
+source attributes and stat calculations. AI decision parity remains open.
+
+The ownership adapter uses reserved Pokedex bytes without moving later save
+fields. A second production probe delivers seven Pokemon through the actual
+party/box APIs and checks regional distinctions, cosmetic aliases and legacy
+migration through two Flash save/reset/load cycles (72 assertions). The ordinary
+campaign additionally checks captured/traded ownership through real-input
+Save/reset/Continue. Neither fixture certifies the entire capture UI, all
+acquisition paths or every save consumer. The field Exp. Share accessor avoids
+consulting battle storage outside a battle.
+
+Capture preflight/tutorial paths, complete Safari flow, run/roaming, all
+post-battle persistence and happiness, unregistered trainers and source AI
+remain open along with the other domain obligations.
+
+Validation: all 889 source groups and six AI timing groups passed, with the
+original frame limits unchanged. Earlier source sweeps did not complete: the
+evolution fixtures assumed native EXP and one reached an unhandled full-moveset
+prompt, timing out before later tests also timed out on that runner. The
+Poliwhirl fixture now awards enough EXP to evolve without an unrelated move
+prompt, while Caterpie explicitly expects source Bug Bite before its evolution
+move. All six evolution groups passed in both profiles before the full source
+rerun. Real-input emulator probes also passed evolution completion and B-button
+cancellation in both profiles. No gameplay changes or timing-limit increases
+were needed.
+
+The native sweep passed 6,110 groups and
+exposed one incorrect expectation in the new EXP control: it mixed generation-3
+splitting with the native build's current participation rules. The control now
+uses generation 9, and all 26 focused native groups passed on the final code.
+The six updated evolution controls also passed in the native profile.
+The nine existing expected failures and 585 existing TODOs are unchanged; no
+other unexpected native failures occurred. This is full-sweep plus focused-rerun
+evidence, not a claim of a second full native sweep after the fixture corrections.
+
+Both final production ROM builds, 100 source checks (with focused rechecks after
+the test/manifest updates), twelve ARM probes and twelve final demo checks
+passed. Production-linked checks verified all 21 registered trainers/43 Pokemon
+and 72 capture-storage assertions over two Flash save/reset/load cycles. The
+move/machine audit reports zero differences in 255 move records and zero
+mismatches in 43,792 compatibility checks; all 109 known machine/lesson gaps
+remain unchanged.
+
+The campaign passed 102 checks and nineteen directed warps, including all
+starter branches, Falkner, badge/Roost/Togepi rewards and captured/traded source
+ownership through Save/reset/Continue. Campaign ROM SHA-256:
+`26775c5aa2813c2b880b34d34c4e89d6ea4f2dfc6a405a56e7e1af418986f98a`.
+After the defensive field Exp. Share guard, both ROMs were rebuilt; the twelve
+demo checks, trainer probe, two-reset storage probe and move/machine audit all
+passed again. Final Johto ROM SHA-256:
+`9c1c9d9aa4346568fe12228762c1259aef6998f3e20c4cba205667a462d2f3c1`.
+
+The strict completion gate still exits 2 for fifteen domains, 4,136 lexical
+blocks and 133 effect families awaiting complete behavioral evidence.

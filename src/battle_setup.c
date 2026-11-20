@@ -1,4 +1,5 @@
 #include "global.h"
+#include "polished_trainers.h"
 #include "field_move.h"
 #include "data.h"
 #include "main.h"
@@ -2310,14 +2311,10 @@ static void GenerateNPCParty(struct Pokemon *party, const struct Trainer *traine
         u32 monIndex = monIndices[i];
         const struct TrainerMon *mon = &trainer->party[monIndex];
         u8 level = GetPolishedTrainerLevel(trainerId, mon->lvl);
-        if (mon->lvl == level)
-            GenerateMonFromTrainerMon(&party[i], mon, trainerGen);
-        else
-        {
-            struct TrainerMon scaled = *mon;
-            scaled.lvl = level;
+        struct TrainerMon scaled = *mon;
+        scaled.lvl = level;
+        if (!PolishedGenerateTrainerMon(&party[i], &scaled, trainerGen, trainerId, monIndex))
             GenerateMonFromTrainerMon(&party[i], &scaled, trainerGen);
-        }
     }
     Free(trainerGen);
 }
