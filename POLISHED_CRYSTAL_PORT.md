@@ -3877,3 +3877,79 @@ Falkner, badge/Roost/Togepi rewards and Save/reset/Continue.
 
 Validated Johto ROM SHA-256:
 `0702941f337224805f238c76f4e2e88c5c3c64e6ffadb0086c39248010f8508b`.
+
+## Contact-status selection, eligibility and order
+
+The pinned contact classifier now supplies a scoped table for all 255 source
+move identities. It uses source categories, the 21 abnormal-contact exceptions,
+and Struggle's explicit contact rule. The adapter applies only to Effect Spore,
+Poison Point, Static, Flame Body and Poison Touch during mapped source moves in
+ordinary singles without either active gimmick. Other contact consumers keep
+their existing paths; this is not a general contact-engine certification.
+
+Effect Spore chooses a random byte before a separate three-in-ten activation
+roll. The source percent macro uses 255, giving these exact intervals:
+
+| Outcome | Byte interval | Eligible-hit probability |
+| --- | --- | --- |
+| Poison | 0–84 | 255/2560 |
+| Paralysis | 85–168 | 252/2560 |
+| Sleep | 169–255 | 261/2560 |
+
+Poison Point, Static and Flame Body also use three-in-ten activation regardless
+of the native generation preset. Effect Spore stores a uniform sleep counter of
+one through three, as its actual source instructions specify. The next action
+decrements before checking wake-up, so this blocks zero through two subsequent
+actions without Early Bird. Early Bird decrements twice. This scoped correction
+does not change sleep counters from other moves or optional ability effects.
+
+Source defender contact-status abilities can activate on the hit that exhausts
+a Substitute, because the source clears its live flag before post-hit effects.
+Poison Touch instead checks the hit's Substitute marker, and stays blocked on
+both intact and breaking hits. It becomes eligible on later direct-HP strikes.
+Protective Pads suppresses both sides of contact in the source, including
+Poison Touch; Punching Glove suppresses punches. Optional Long Reach remains
+available with its native prevention behavior.
+
+The source runs Poison Touch before the defender's contact ability. A scoped
+move-end phase now preserves that order without running Poison Touch twice.
+Its source entry also sets b=1 before the shared affliction routine; therefore
+it bypasses that routine's b=0 Shield Dust/Covert Cloak checks. This deliberately
+follows the pinned executable branch despite the nearby more general comment.
+Native builds, optional moves, doubles and either active gimmick retain their
+prior order, protection and probability rules. Saved identifiers and layouts
+are unchanged.
+
+Thirty-one new groups execute 545 parameter combinations per profile, plus
+exhaustive tagged RNG trials. They cover live classification for 124 direct
+attacks on both sides, source byte boundaries/probabilities, independent
+activation, sleep/waking/Early Bird, intact and broken Substitute, both contact
+abilities during Double Kick, Safeguard, existing status, type and ability
+immunity, powder immunity, item prevention, suppression, Mold Breaker, holder
+knockout and native/optional/format/gimmick controls. Five groups reproduced
+failures against the parent runtime. Two earlier multi-hit fixtures now force
+the source sleep-selection byte while retaining the same loop expectations.
+
+This supersedes the preceding multi-hit suite's open Effect Spore selection and
+sleep-counter obligations and its scoped contact-status Substitute boundaries.
+Complete contact ability/item eligibility and ordering, all status-immunity
+configuration variants, simultaneous curing/Synchronize chains, recoil and
+self-faint ordering, other contact consumers, source RNG stream/call alignment,
+original presentation and AI estimates remain open. Passing these checks does
+not mark a whole move effect or ability family fully ported.
+
+Validation: both production builds, all 88 source checks and all 12 ARM
+compiler probes passed. The native suite passed 5,925 groups, with nine existing
+expected failures and 585 existing TODOs; no unexpected failures occurred.
+The consolidated source run passed all 703 source groups (602 battle groups and
+101 unit/data groups), plus six AI timing groups without relaxing their limits.
+All 31 new contact-status groups passed in both profiles.
+
+The production audit retains zero audited move-data differences, 255 matching
+reflection flags and zero teaching compatibility mismatches. Its 109 known
+machine/lesson gaps have no new or changed entries. The final Johto ROM passed
+all 12 demo checks and 101 campaign checks, including 19 directed warps,
+Falkner, badge/Roost/Togepi rewards and Save/reset/Continue.
+
+Validated Johto ROM SHA-256:
+`b3a664d6e4a4c26f55670a0c5ce840c9247758ea56ba9d594d4c9f75f4c26619`.

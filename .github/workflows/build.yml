@@ -142,6 +142,7 @@ jobs:
           python3 tools/polished_port/scripts/build_proc_blockers.py --check
           python3 tools/polished_port/scripts/build_attack_suite.py --check
           python3 tools/polished_port/scripts/build_multihit.py --check
+          python3 tools/polished_port/scripts/build_contact_status.py --check
           python3 tools/polished_port/scripts/test_attack_suite.py
           python3 tools/polished_port/scripts/build_rock_smash.py --check
           python3 tools/polished_port/scripts/test_rock_smash.py

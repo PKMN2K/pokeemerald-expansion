@@ -361,7 +361,7 @@ SINGLE_BATTLE_TEST("Polished multihit powder immunity prevents contact sleep wit
         PLAYER(SPECIES_WOBBUFFET) { MaxHP(1000); HP(1000); Attack(10); Ability(user == player ? goggles ? ABILITY_SKILL_LINK : ABILITY_OVERCOAT : ABILITY_EFFECT_SPORE); Item(user == player ? goggles ? ITEM_SAFETY_GOGGLES : ITEM_LOADED_DICE : ITEM_NONE); }
         OPPONENT(SPECIES_WOBBUFFET) { MaxHP(1000); HP(1000); Attack(10); Ability(user == opponent ? goggles ? ABILITY_SKILL_LINK : ABILITY_OVERCOAT : ABILITY_EFFECT_SPORE); Item(user == opponent ? goggles ? ITEM_SAFETY_GOGGLES : ITEM_LOADED_DICE : ITEM_NONE); }
     } WHEN {
-        TURN { MOVE(user, move, WITH_RNG(RNG_EFFECT_SPORE, 20)); }
+        TURN { MOVE(user, move, WITH_RNG(RNG_EFFECT_SPORE, B_POLISHED_MOVE_BALANCE ? 169 : 20)); }
     } SCENE {
         for (u32 hit = 0; hit < MaxHits(move); hit++) { ANIMATION(ANIM_TYPE_MOVE, move, user); HP_BAR(target); }
     } THEN {
@@ -493,7 +493,7 @@ SINGLE_BATTLE_TEST("Polished multihit completes the current loop after Effect Sp
         PLAYER(SPECIES_WOBBUFFET) { Speed(user == player ? 200 : 100); MaxHP(1000); HP(1000); Attack(10); Ability(user == player ? ABILITY_SKILL_LINK : ABILITY_EFFECT_SPORE); MovesWithPP({move, 10}, {MOVE_TACKLE, 5}); }
         OPPONENT(SPECIES_WOBBUFFET) { Speed(user == opponent ? 200 : 100); MaxHP(1000); HP(1000); Attack(10); Ability(user == opponent ? ABILITY_SKILL_LINK : ABILITY_EFFECT_SPORE); MovesWithPP({move, 10}, {MOVE_TACKLE, 5}); }
     } WHEN {
-        TURN { MOVE(user, move, WITH_RNG(RNG_EFFECT_SPORE, 20)); }
+        TURN { MOVE(user, move, WITH_RNG(RNG_EFFECT_SPORE, B_POLISHED_MOVE_BALANCE ? 169 : 20)); }
         TURN { MOVE(user, MOVE_TACKLE); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, move, user);

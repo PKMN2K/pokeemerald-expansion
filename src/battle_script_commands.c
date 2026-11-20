@@ -1,4 +1,5 @@
 #include "global.h"
+#include "constants/polished_contact_status.h"
 #include "polished_evolution.h"
 #include "polished_items.h"
 #include "constants/polished_move_restrictions.h"
@@ -1749,7 +1750,11 @@ void SetNonVolatileStatus(enum BattlerId battlerAtk, enum BattlerId effectBattle
     switch (effect)
     {
     case MOVE_EFFECT_SLEEP:
-        if (GetConfig(B_SLEEP_TURNS) >= GEN_CHAMPIONS)
+        if (trigger == TRIGGER_ON_ABILITY
+         && GetBattlerAbility(battlerAtk) == ABILITY_EFFECT_SPORE
+         && UsesPolishedContactStatusRules(battlerAtk, effectBattler, gCurrentMove))
+            gBattleMons[effectBattler].status1 |= STATUS1_SLEEP_TURN(RandomUniform(RNG_SLEEP_TURNS, 1, POLISHED_CONTACT_SLEEP_MAX));
+        else if (GetConfig(B_SLEEP_TURNS) >= GEN_CHAMPIONS)
             gBattleMons[effectBattler].status1 |= STATUS1_SLEEP_TURN(RandomWeighted(RNG_SLEEP_TURNS, 0, 0, 1, 2));
         else if (GetConfig(B_SLEEP_TURNS) >= GEN_5)
             gBattleMons[effectBattler].status1 |= STATUS1_SLEEP_TURN(RandomUniform(RNG_SLEEP_TURNS, 2, 4));

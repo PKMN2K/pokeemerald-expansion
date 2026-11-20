@@ -106,6 +106,7 @@ bool32 IsPolishedMeanLook(enum Move move, enum BattlerId battlerAtk, enum Battle
 bool32 CanPolishedRunAwayEscape(enum BattlerId battler);
 bool32 CanAbilityAbsorbMove(struct DamageContext *ctx);
 bool32 TryFieldEffects(enum FieldEffectCases caseId);
+bool32 UsesPolishedContactStatusRules(enum BattlerId attacker, enum BattlerId target, enum Move move);
 u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum Ability ability, enum Move move, bool32 shouldAbilityTrigger);
 bool32 TryPrimalReversion(enum BattlerId battler);
 bool32 IsNeutralizingGasOnField(void);

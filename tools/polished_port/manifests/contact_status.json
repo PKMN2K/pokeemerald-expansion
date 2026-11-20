@@ -1,0 +1,1832 @@
+{
+  "source_repository": "Rangi42/polishedcrystal",
+  "source_commit": "3fa43192379df5c3e7b09a08e4d5d79af4f02f42",
+  "source_variant": "default (FAITHFUL undefined)",
+  "moves": [
+    {
+      "source_move": "ACROBATICS",
+      "target_move": "MOVE_ACROBATICS",
+      "source_id": 1,
+      "contact": true,
+      "direct_damage": false
+    },
+    {
+      "source_move": "KARATE_CHOP",
+      "target_move": "MOVE_KARATE_CHOP",
+      "source_id": 2,
+      "contact": true,
+      "direct_damage": true
+    },
+    {
+      "source_move": "DOUBLE_SLAP",
+      "target_move": "MOVE_DOUBLE_SLAP",
+      "source_id": 3,
+      "contact": true,
+      "direct_damage": false
+    },
+    {
+      "source_move": "AERIAL_ACE",
+      "target_move": "MOVE_AERIAL_ACE",
+      "source_id": 4,
+      "contact": true,
+      "direct_damage": true
+    },
+    {
+      "source_move": "DRAGON_CLAW",
+      "target_move": "MOVE_DRAGON_CLAW",
+      "source_id": 5,
+      "contact": true,
+      "direct_damage": true
+    },
+    {
+      "source_move": "PAY_DAY",
+      "target_move": "MOVE_PAY_DAY",
+      "source_id": 6,
+      "contact": false,
+      "direct_damage": true
+    },
+    {
+      "source_move": "FIRE_PUNCH",
+      "target_move": "MOVE_FIRE_PUNCH",
+      "source_id": 7,
+      "contact": true,
+      "direct_damage": true
+    },
+    {
+      "source_move": "ICE_PUNCH",
+      "target_move": "MOVE_ICE_PUNCH",
+      "source_id": 8,
+      "contact": true,
+      "direct_damage": true
+    },
+    {
+      "source_move": "THUNDERPUNCH",
+      "target_move": "MOVE_THUNDERPUNCH",
+      "source_id": 9,
+      "contact": true,
+      "direct_damage": true
+    },
+    {
+      "source_move": "SCRATCH",
+      "target_move": "MOVE_SCRATCH",
+      "source_id": 10,
+      "contact": true,
+      "direct_damage": true
+    },
+    {
+      "source_move": "X_SCISSOR",
+      "target_move": "MOVE_X_SCISSOR",
+      "source_id": 11,
+      "contact": true,
+      "direct_damage": true
+    },
+    {
+      "source_move": "NIGHT_SLASH",
+      "target_move": "MOVE_NIGHT_SLASH",
+      "source_id": 12,
+      "contact": true,
+      "direct_damage": true
+    },
+    {
+      "source_move": "AIR_SLASH",
+      "target_move": "MOVE_AIR_SLASH",
+      "source_id": 13,
+      "contact": false,
+      "direct_damage": true
+    },
+    {
+      "source_move": "SWORDS_DANCE",
+      "target_move": "MOVE_SWORDS_DANCE",
+      "source_id": 14,
+      "contact": false,
+      "direct_damage": false
+    },
+    {
+      "source_move": "CUT",
+      "target_move": "MOVE_CUT",
+      "source_id": 15,
+      "contact": true,
+      "direct_damage": true
+    },
+    {
+      "source_move": "GUST",
+      "target_move": "MOVE_GUST",
+      "source_id": 16,
+      "contact": false,
+      "direct_damage": true
+    },
+    {
+      "source_move": "WING_ATTACK",
+      "target_move": "MOVE_WING_ATTACK",
+      "source_id": 17,
+      "contact": true,
+      "direct_damage": true
+    },
+    {
+      "source_move": "SUCKER_PUNCH",
+      "target_move": "MOVE_SUCKER_PUNCH",
+      "source_id": 18,
+      "contact": true,
+      "direct_damage": false
+    },
+    {
+      "source_move": "FLY",
+      "target_move": "MOVE_FLY",
+      "source_id": 19,
+      "contact": true,
+      "direct_damage": false
+    },
+    {
+      "source_move": "DAZZLINGLEAM",
+      "target_move": "MOVE_DAZZLING_GLEAM",
+      "source_id": 20,
+      "contact": false,
+      "direct_damage": true
+    },
+    {
+      "source_move": "VOLT_SWITCH",
+      "target_move": "MOVE_VOLT_SWITCH",
+      "source_id": 21,
+      "contact": false,
+      "direct_damage": false
+    },
+    {
+      "source_move": "VINE_WHIP",
+      "target_move": "MOVE_VINE_WHIP",
+      "source_id": 22,
+      "contact": true,
+      "direct_damage": true
+    },
+    {
+      "source_move": "STOMP",
+      "target_move": "MOVE_STOMP",
+      "source_id": 23,
+      "contact": true,
+      "direct_damage": true
+    },
+    {
+      "source_move": "DOUBLE_KICK",
+      "target_move": "MOVE_DOUBLE_KICK",
+      "source_id": 24,
+      "contact": true,
+      "direct_damage": false
+    },
+    {
+      "source_move": "FLARE_BLITZ",
+      "target_move": "MOVE_FLARE_BLITZ",
+      "source_id": 25,
+      "contact": true,
+      "direct_damage": true
+    },
+    {
+      "source_move": "STONE_EDGE",
+      "target_move": "MOVE_STONE_EDGE",
+      "source_id": 26,
+      "contact": false,
+      "direct_damage": true
+    },
+    {
+      "source_move": "FOCUS_BLAST",
+      "target_move": "MOVE_FOCUS_BLAST",
+      "source_id": 27,
+      "contact": false,
+      "direct_damage": true
+    },
+    {
+      "source_move": "TOXIC_SPIKES",
+      "target_move": "MOVE_TOXIC_SPIKES",
+      "source_id": 28,
+      "contact": false,
+      "direct_damage": false
+    },
+    {
+      "source_move": "HEADBUTT",
+      "target_move": "MOVE_HEADBUTT",
+      "source_id": 29,
+      "contact": true,
+      "direct_damage": true
+    },
+    {
+      "source_move": "HORN_ATTACK",
+      "target_move": "MOVE_HORN_ATTACK",
+      "source_id": 30,
+      "contact": true,
+      "direct_damage": true
+    },
+    {
+      "source_move": "TRICK",
+      "target_move": "MOVE_TRICK",
+      "source_id": 31,
+      "contact": false,
+      "direct_damage": false
+    },
+    {
+      "source_move": "HEX",
+      "target_move": "MOVE_HEX",
+      "source_id": 32,
+      "contact": false,
+      "direct_damage": false
+    },
+    {
+      "source_move": "TACKLE",
+      "target_move": "MOVE_TACKLE",
+      "source_id": 33,
+      "contact": true,
+      "direct_damage": true
+    },
+    {
+      "source_move": "BODY_SLAM",
+      "target_move": "MOVE_BODY_SLAM",
+      "source_id": 34,
+      "contact": true,
+      "direct_damage": true
+    },
+    {
+      "source_move": "WRAP",
+      "target_move": "MOVE_WRAP",
+      "source_id": 35,
+      "contact": true,
+      "direct_damage": false
+    },
+    {
+      "source_move": "TAKE_DOWN",
+      "target_move": "MOVE_TAKE_DOWN",
+      "source_id": 36,
+      "contact": true,
+      "direct_damage": true
+    },
+    {
+      "source_move": "THRASH",
+      "target_move": "MOVE_THRASH",
+      "source_id": 37,
+      "contact": true,
+      "direct_damage": false
+    },
+    {
+      "source_move": "DOUBLE_EDGE",
+      "target_move": "MOVE_DOUBLE_EDGE",
+      "source_id": 38,
+      "contact": true,
+      "direct_damage": true
+    },
+    {
+      "source_move": "HAIL",
+      "target_move": "MOVE_HAIL",
+      "source_id": 39,
+      "contact": false,
+      "direct_damage": false
+    },
+    {
+      "source_move": "POISON_STING",
+      "target_move": "MOVE_POISON_STING",
+      "source_id": 40,
+      "contact": false,
+      "direct_damage": true
+    },
+    {
+      "source_move": "U_TURN",
+      "target_move": "MOVE_U_TURN",
+      "source_id": 41,
+      "contact": true,
+      "direct_damage": false
+    },
+    {
+      "source_move": "PIN_MISSILE",
+      "target_move": "MOVE_PIN_MISSILE",
+      "source_id": 42,
+      "contact": false,
+      "direct_damage": false
+    },
+    {
+      "source_move": "LEER",
+      "target_move": "MOVE_LEER",
+      "source_id": 43,
+      "contact": false,
+      "direct_damage": false
+    },
+    {
+      "source_move": "BITE",
+      "target_move": "MOVE_BITE",
+      "source_id": 44,
+      "contact": true,
+      "direct_damage": true
+    },
+    {
+      "source_move": "GROWL",
+      "target_move": "MOVE_GROWL",
+      "source_id": 45,
+      "contact": false,
+      "direct_damage": false
+    },
+    {
+      "source_move": "ROAR",
+      "target_move": "MOVE_ROAR",
+      "source_id": 46,
+      "contact": false,
+      "direct_damage": false
+    },
+    {
+      "source_move": "SING",
+      "target_move": "MOVE_SING",
+      "source_id": 47,
+      "contact": false,
+      "direct_damage": false
+    },
+    {
+      "source_move": "SUPERSONIC",
+      "target_move": "MOVE_SUPERSONIC",
+      "source_id": 48,
+      "contact": false,
+      "direct_damage": false
+    },
+    {
+      "source_move": "SONIC_BOOM",
+      "target_move": "MOVE_SONIC_BOOM",
+      "source_id": 49,
+      "contact": false,
+      "direct_damage": false
+    },
+    {
+      "source_move": "DISABLE",
+      "target_move": "MOVE_DISABLE",
+      "source_id": 50,
+      "contact": false,
+      "direct_damage": false
+    },
+    {
+      "source_move": "ACID",
+      "target_move": "MOVE_ACID",
+      "source_id": 51,
+      "contact": false,
+      "direct_damage": true
+    },
+    {
+      "source_move": "EMBER",
+      "target_move": "MOVE_EMBER",
+      "source_id": 52,
+      "contact": false,
+      "direct_damage": true
+    },
+    {
+      "source_move": "FLAMETHROWER",
+      "target_move": "MOVE_FLAMETHROWER",
+      "source_id": 53,
+      "contact": false,
+      "direct_damage": true
+    },
+    {
+      "source_move": "CALM_MIND",
+      "target_move": "MOVE_CALM_MIND",
+      "source_id": 54,
+      "contact": false,
+      "direct_damage": false
+    },
+    {
+      "source_move": "WATER_GUN",
+      "target_move": "MOVE_WATER_GUN",
+      "source_id": 55,
+      "contact": false,
+      "direct_damage": true
+    },
+    {
+      "source_move": "HYDRO_PUMP",
+      "target_move": "MOVE_HYDRO_PUMP",
+      "source_id": 56,
+      "contact": false,
+      "direct_damage": true
+    },
+    {
+      "source_move": "SURF",
+      "target_move": "MOVE_SURF",
+      "source_id": 57,
+      "contact": false,
+      "direct_damage": true
+    },
+    {
+      "source_move": "ICE_BEAM",
+      "target_move": "MOVE_ICE_BEAM",
+      "source_id": 58,
+      "contact": false,
+      "direct_damage": true
+    },
+    {
+      "source_move": "BLIZZARD",
+      "target_move": "MOVE_BLIZZARD",
+      "source_id": 59,
+      "contact": false,
+      "direct_damage": true
+    },
+    {
+      "source_move": "PSYBEAM",
+      "target_move": "MOVE_PSYBEAM",
+      "source_id": 60,
+      "contact": false,
+      "direct_damage": true
+    },
+    {
+      "source_move": "BUBBLE_BEAM",
+      "target_move": "MOVE_BUBBLE_BEAM",
+      "source_id": 61,
+      "contact": false,
+      "direct_damage": true
+    },
+    {
+      "source_move": "AURORA_BEAM",
+      "target_move": "MOVE_AURORA_BEAM",
+      "source_id": 62,
+      "contact": false,
+      "direct_damage": true
+    },
+    {
+      "source_move": "HYPER_BEAM",
+      "target_move": "MOVE_HYPER_BEAM",
+      "source_id": 63,
+      "contact": false,
+      "direct_damage": false
+    },
+    {
+      "source_move": "PECK",
+      "target_move": "MOVE_PECK",
+      "source_id": 64,
+      "contact": true,
+      "direct_damage": true
+    },
+    {
+      "source_move": "DRILL_PECK",
+      "target_move": "MOVE_DRILL_PECK",
+      "source_id": 65,
+      "contact": true,
+      "direct_damage": true
+    },
+    {
+      "source_move": "CLOSE_COMBAT",
+      "target_move": "MOVE_CLOSE_COMBAT",
+      "source_id": 66,
+      "contact": true,
+      "direct_damage": true
+    },
+    {
+      "source_move": "LOW_KICK",
+      "target_move": "MOVE_LOW_KICK",
+      "source_id": 67,
+      "contact": true,
+      "direct_damage": false
+    },
+    {
+      "source_move": "COUNTER",
+      "target_move": "MOVE_COUNTER",
+      "source_id": 68,
+      "contact": true,
+      "direct_damage": false
+    },
+    {
+      "source_move": "SEISMIC_TOSS",
+      "target_move": "MOVE_SEISMIC_TOSS",
+      "source_id": 69,
+      "contact": true,
+      "direct_damage": false
+    },
+    {
+      "source_move": "STRENGTH",
+      "target_move": "MOVE_STRENGTH",
+      "source_id": 70,
+      "contact": true,
+      "direct_damage": true
+    },
+    {
+      "source_move": "ABSORB",
+      "target_move": "MOVE_ABSORB",
+      "source_id": 71,
+      "contact": false,
+      "direct_damage": true
+    },
+    {
+      "source_move": "MEGA_DRAIN",
+      "target_move": "MOVE_MEGA_DRAIN",
+      "source_id": 72,
+      "contact": false,
+      "direct_damage": true
+    },
+    {
+      "source_move": "LEECH_SEED",
+      "target_move": "MOVE_LEECH_SEED",
+      "source_id": 73,
+      "contact": false,
+      "direct_damage": false
+    },
+    {
+      "source_move": "GROWTH",
+      "target_move": "MOVE_GROWTH",
+      "source_id": 74,
+      "contact": false,
+      "direct_damage": false
+    },
+    {
+      "source_move": "RAZOR_LEAF",
+      "target_move": "MOVE_RAZOR_LEAF",
+      "source_id": 75,
+      "contact": false,
+      "direct_damage": true
+    },
+    {
+      "source_move": "SOLAR_BEAM",
+      "target_move": "MOVE_SOLAR_BEAM",
+      "source_id": 76,
+      "contact": false,
+      "direct_damage": false
+    },
+    {
+      "source_move": "POISONPOWDER",
+      "target_move": "MOVE_POISONPOWDER",
+      "source_id": 77,
+      "contact": false,
+      "direct_damage": false
+    },
+    {
+      "source_move": "STUN_SPORE",
+      "target_move": "MOVE_STUN_SPORE",
+      "source_id": 78,
+      "contact": false,
+      "direct_damage": false
+    },
+    {
+      "source_move": "SLEEP_POWDER",
+      "target_move": "MOVE_SLEEP_POWDER",
+      "source_id": 79,
+      "contact": false,
+      "direct_damage": false
+    },
+    {
+      "source_move": "PETAL_DANCE",
+      "target_move": "MOVE_PETAL_DANCE",
+      "source_id": 80,
+      "contact": true,
+      "direct_damage": false
+    },
+    {
+      "source_move": "STRING_SHOT",
+      "target_move": "MOVE_STRING_SHOT",
+      "source_id": 81,
+      "contact": false,
+      "direct_damage": false
+    },
+    {
+      "source_move": "DRAGON_RAGE",
+      "target_move": "MOVE_DRAGON_RAGE",
+      "source_id": 82,
+      "contact": false,
+      "direct_damage": false
+    },
+    {
+      "source_move": "FIRE_SPIN",
+      "target_move": "MOVE_FIRE_SPIN",
+      "source_id": 83,
+      "contact": false,
+      "direct_damage": false
+    },
+    {
+      "source_move": "THUNDERSHOCK",
+      "target_move": "MOVE_THUNDERSHOCK",
+      "source_id": 84,
+      "contact": false,
+      "direct_damage": true
+    },
+    {
+      "source_move": "THUNDERBOLT",
+      "target_move": "MOVE_THUNDERBOLT",
+      "source_id": 85,
+      "contact": false,
+      "direct_damage": true
+    },
+    {
+      "source_move": "THUNDER_WAVE",
+      "target_move": "MOVE_THUNDER_WAVE",
+      "source_id": 86,
+      "contact": false,
+      "direct_damage": false
+    },
+    {
+      "source_move": "THUNDER",
+      "target_move": "MOVE_THUNDER",
+      "source_id": 87,
+      "contact": false,
+      "direct_damage": false
+    },
+    {
+      "source_move": "ROCK_THROW",
+      "target_move": "MOVE_ROCK_THROW",
+      "source_id": 88,
+      "contact": false,
+      "direct_damage": true
+    },
+    {
+      "source_move": "EARTHQUAKE",
+      "target_move": "MOVE_EARTHQUAKE",
+      "source_id": 89,
+      "contact": false,
+      "direct_damage": true
+    },
+    {
+      "source_move": "AVALANCHE",
+      "target_move": "MOVE_AVALANCHE",
+      "source_id": 90,
+      "contact": true,
+      "direct_damage": false
+    },
+    {
+      "source_move": "DIG",
+      "target_move": "MOVE_DIG",
+      "source_id": 91,
+      "contact": true,
+      "direct_damage": false
+    },
+    {
+      "source_move": "TOXIC",
+      "target_move": "MOVE_TOXIC",
+      "source_id": 92,
+      "contact": false,
+      "direct_damage": false
+    },
+    {
+      "source_move": "CONFUSION",
+      "target_move": "MOVE_CONFUSION",
+      "source_id": 93,
+      "contact": false,
+      "direct_damage": true
+    },
+    {
+      "source_move": "PSYCHIC_M",
+      "target_move": "MOVE_PSYCHIC",
+      "source_id": 94,
+      "contact": false,
+      "direct_damage": true
+    },
+    {
+      "source_move": "HYPNOSIS",
+      "target_move": "MOVE_HYPNOSIS",
+      "source_id": 95,
+      "contact": false,
+      "direct_damage": false
+    },
+    {
+      "source_move": "HONE_CLAWS",
+      "target_move": "MOVE_HONE_CLAWS",
+      "source_id": 96,
+      "contact": false,
+      "direct_damage": false
+    },
+    {
+      "source_move": "AGILITY",
+      "target_move": "MOVE_AGILITY",
+      "source_id": 97,
+      "contact": false,
+      "direct_damage": false
+    },
+    {
+      "source_move": "QUICK_ATTACK",
+      "target_move": "MOVE_QUICK_ATTACK",
+      "source_id": 98,
+      "contact": true,
+      "direct_damage": true
+    },
+    {
+      "source_move": "RAGE",
+      "target_move": "MOVE_RAGE",
+      "source_id": 99,
+      "contact": true,
+      "direct_damage": false
+    },
+    {
+      "source_move": "TELEPORT",
+      "target_move": "MOVE_TELEPORT",
+      "source_id": 100,
+      "contact": false,
+      "direct_damage": false
+    },
+    {
+      "source_move": "NIGHT_SHADE",
+      "target_move": "MOVE_NIGHT_SHADE",
+      "source_id": 101,
+      "contact": false,
+      "direct_damage": false
+    },
+    {
+      "source_move": "DRAGON_PULSE",
+      "target_move": "MOVE_DRAGON_PULSE",
+      "source_id": 102,
+      "contact": false,
+      "direct_damage": true
+    },
+    {
+      "source_move": "SCREECH",
+      "target_move": "MOVE_SCREECH",
+      "source_id": 103,
+      "contact": false,
+      "direct_damage": false
+    },
+    {
+      "source_move": "DOUBLE_TEAM",
+      "target_move": "MOVE_DOUBLE_TEAM",
+      "source_id": 104,
+      "contact": false,
+      "direct_damage": false
+    },
+    {
+      "source_move": "RECOVER",
+      "target_move": "MOVE_RECOVER",
+      "source_id": 105,
+      "contact": false,
+      "direct_damage": false
+    },
+    {
+      "source_move": "ROCK_BLAST",
+      "target_move": "MOVE_ROCK_BLAST",
+      "source_id": 106,
+      "contact": false,
+      "direct_damage": false
+    },
+    {
+      "source_move": "MINIMIZE",
+      "target_move": "MOVE_MINIMIZE",
+      "source_id": 107,
+      "contact": false,
+      "direct_damage": false
+    },
+    {
+      "source_move": "SMOKESCREEN",
+      "target_move": "MOVE_SMOKESCREEN",
+      "source_id": 108,
+      "contact": false,
+      "direct_damage": false
+    },
+    {
+      "source_move": "CONFUSE_RAY",
+      "target_move": "MOVE_CONFUSE_RAY",
+      "source_id": 109,
+      "contact": false,
+      "direct_damage": false
+    },
+    {
+      "source_move": "AQUA_TAIL",
+      "target_move": "MOVE_AQUA_TAIL",
+      "source_id": 110,
+      "contact": true,
+      "direct_damage": true
+    },
+    {
+      "source_move": "DEFENSE_CURL",
+      "target_move": "MOVE_DEFENSE_CURL",
+      "source_id": 111,
+      "contact": false,
+      "direct_damage": false
+    },
+    {
+      "source_move": "BARRIER",
+      "target_move": "MOVE_BARRIER",
+      "source_id": 112,
+      "contact": false,
+      "direct_damage": false
+    },
+    {
+      "source_move": "LIGHT_SCREEN",
+      "target_move": "MOVE_LIGHT_SCREEN",
+      "source_id": 113,
+      "contact": false,
+      "direct_damage": false
+    },
+    {
+      "source_move": "HAZE",
+      "target_move": "MOVE_HAZE",
+      "source_id": 114,
+      "contact": false,
+      "direct_damage": false
+    },
+    {
+      "source_move": "REFLECT",
+      "target_move": "MOVE_REFLECT",
+      "source_id": 115,
+      "contact": false,
+      "direct_damage": false
+    },
+    {
+      "source_move": "FOCUS_ENERGY",
+      "target_move": "MOVE_FOCUS_ENERGY",
+      "source_id": 116,
+      "contact": false,
+      "direct_damage": false
+    },
+    {
+      "source_move": "FLASH_CANNON",
+      "target_move": "MOVE_FLASH_CANNON",
+      "source_id": 117,
+      "contact": false,
+      "direct_damage": true
+    },
+    {
+      "source_move": "METRONOME",
+      "target_move": "MOVE_METRONOME",
+      "source_id": 118,
+      "contact": false,
+      "direct_damage": false
+    },
+    {
+      "source_move": "SCALD",
+      "target_move": "MOVE_SCALD",
+      "source_id": 119,
+      "contact": false,
+      "direct_damage": true
+    },
+    {
+      "source_move": "TRICK_ROOM",
+      "target_move": "MOVE_TRICK_ROOM",
+      "source_id": 120,
+      "contact": false,
+      "direct_damage": false
+    },
+    {
+      "source_move": "SKILL_SWAP",
+      "target_move": "MOVE_SKILL_SWAP",
+      "source_id": 121,
+      "contact": false,
+      "direct_damage": false
+    },
+    {
+      "source_move": "LICK",
+      "target_move": "MOVE_LICK",
+      "source_id": 122,
+      "contact": true,
+      "direct_damage": true
+    },
+    {
+      "source_move": "GUNK_SHOT",
+      "target_move": "MOVE_GUNK_SHOT",
+      "source_id": 123,
+      "contact": false,
+      "direct_damage": true
+    },
+    {
+      "source_move": "VENOSHOCK",
+      "target_move": "MOVE_VENOSHOCK",
+      "source_id": 124,
+      "contact": false,
+      "direct_damage": false
+    },
+    {
+      "source_move": "EARTH_POWER",
+      "target_move": "MOVE_EARTH_POWER",
+      "source_id": 125,
+      "contact": false,
+      "direct_damage": true
+    },
+    {
+      "source_move": "FIRE_BLAST",
+      "target_move": "MOVE_FIRE_BLAST",
+      "source_id": 126,
+      "contact": false,
+      "direct_damage": true
+    },
+    {
+      "source_move": "WATERFALL",
+      "target_move": "MOVE_WATERFALL",
+      "source_id": 127,
+      "contact": true,
+      "direct_damage": true
+    },
+    {
+      "source_move": "ICICLE_CRASH",
+      "target_move": "MOVE_ICICLE_CRASH",
+      "source_id": 128,
+      "contact": false,
+      "direct_damage": true
+    },
+    {
+      "source_move": "SWIFT",
+      "target_move": "MOVE_SWIFT",
+      "source_id": 129,
+      "contact": false,
+      "direct_damage": true
+    },
+    {
+      "source_move": "IRON_HEAD",
+      "target_move": "MOVE_IRON_HEAD",
+      "source_id": 130,
+      "contact": true,
+      "direct_damage": true
+    },
+    {
+      "source_move": "ICICLE_SPEAR",
+      "target_move": "MOVE_ICICLE_SPEAR",
+      "source_id": 131,
+      "contact": false,
+      "direct_damage": false
+    },
+    {
+      "source_move": "BULLDOZE",
+      "target_move": "MOVE_BULLDOZE",
+      "source_id": 132,
+      "contact": false,
+      "direct_damage": true
+    },
+    {
+      "source_move": "AMNESIA",
+      "target_move": "MOVE_AMNESIA",
+      "source_id": 133,
+      "contact": false,
+      "direct_damage": false
+    },
+    {
+      "source_move": "ROOST",
+      "target_move": "MOVE_ROOST",
+      "source_id": 134,
+      "contact": false,
+      "direct_damage": false
+    },
+    {
+      "source_move": "FRESH_SNACK",
+      "target_move": "MOVE_POLISHED_FRESH_SNACK",
+      "source_id": 135,
+      "contact": false,
+      "direct_damage": false
+    },
+    {
+      "source_move": "HI_JUMP_KICK",
+      "target_move": "MOVE_HI_JUMP_KICK",
+      "source_id": 136,
+      "contact": true,
+      "direct_damage": false
+    },
+    {
+      "source_move": "GLARE",
+      "target_move": "MOVE_GLARE",
+      "source_id": 137,
+      "contact": false,
+      "direct_damage": false
+    },
+    {
+      "source_move": "DREAM_EATER",
+      "target_move": "MOVE_DREAM_EATER",
+      "source_id": 138,
+      "contact": false,
+      "direct_damage": false
+    },
+    {
+      "source_move": "POISON_JAB",
+      "target_move": "MOVE_POISON_JAB",
+      "source_id": 139,
+      "contact": true,
+      "direct_damage": true
+    },
+    {
+      "source_move": "BULLET_PUNCH",
+      "target_move": "MOVE_BULLET_PUNCH",
+      "source_id": 140,
+      "contact": true,
+      "direct_damage": true
+    },
+    {
+      "source_move": "LEECH_LIFE",
+      "target_move": "MOVE_LEECH_LIFE",
+      "source_id": 141,
+      "contact": true,
+      "direct_damage": true
+    },
+    {
+      "source_move": "DRAINING_KISS",
+      "target_move": "MOVE_DRAINING_KISS",
+      "source_id": 142,
+      "contact": true,
+      "direct_damage": true
+    },
+    {
+      "source_move": "BRAVE_BIRD",
+      "target_move": "MOVE_BRAVE_BIRD",
+      "source_id": 143,
+      "contact": true,
+      "direct_damage": true
+    },
+    {
+      "source_move": "TRANSFORM",
+      "target_move": "MOVE_TRANSFORM",
+      "source_id": 144,
+      "contact": false,
+      "direct_damage": false
+    },
+    {
+      "source_move": "WATER_PULSE",
+      "target_move": "MOVE_WATER_PULSE",
+      "source_id": 145,
+      "contact": false,
+      "direct_damage": true
+    },
+    {
+      "source_move": "DIZZY_PUNCH",
+      "target_move": "MOVE_DIZZY_PUNCH",
+      "source_id": 146,
+      "contact": true,
+      "direct_damage": true
+    },
+    {
+      "source_move": "SPORE",
+      "target_move": "MOVE_SPORE",
+      "source_id": 147,
+      "contact": false,
+      "direct_damage": false
+    },
+    {
+      "source_move": "FLASH",
+      "target_move": "MOVE_FLASH",
+      "source_id": 148,
+      "contact": false,
+      "direct_damage": false
+    },
+    {
+      "source_move": "EXTRASENSORY",
+      "target_move": "MOVE_EXTRASENSORY",
+      "source_id": 149,
+      "contact": false,
+      "direct_damage": true
+    },
+    {
+      "source_move": "SPLASH",
+      "target_move": "MOVE_SPLASH",
+      "source_id": 150,
+      "contact": false,
+      "direct_damage": false
+    },
+    {
+      "source_move": "DRAGON_DANCE",
+      "target_move": "MOVE_DRAGON_DANCE",
+      "source_id": 151,
+      "contact": false,
+      "direct_damage": false
+    },
+    {
+      "source_move": "CRABHAMMER",
+      "target_move": "MOVE_CRABHAMMER",
+      "source_id": 152,
+      "contact": true,
+      "direct_damage": true
+    },
+    {
+      "source_move": "EXPLOSION",
+      "target_move": "MOVE_EXPLOSION",
+      "source_id": 153,
+      "contact": false,
+      "direct_damage": false
+    },
+    {
+      "source_move": "FURY_STRIKES",
+      "target_move": "MOVE_POLISHED_FURY_STRIKES",
+      "source_id": 154,
+      "contact": true,
+      "direct_damage": false
+    },
+    {
+      "source_move": "BONEMERANG",
+      "target_move": "MOVE_BONEMERANG",
+      "source_id": 155,
+      "contact": false,
+      "direct_damage": false
+    },
+    {
+      "source_move": "REST",
+      "target_move": "MOVE_REST",
+      "source_id": 156,
+      "contact": false,
+      "direct_damage": false
+    },
+    {
+      "source_move": "ROCK_SLIDE",
+      "target_move": "MOVE_ROCK_SLIDE",
+      "source_id": 157,
+      "contact": false,
+      "direct_damage": true
+    },
+    {
+      "source_move": "HYPER_FANG",
+      "target_move": "MOVE_HYPER_FANG",
+      "source_id": 158,
+      "contact": true,
+      "direct_damage": true
+    },
+    {
+      "source_move": "BULK_UP",
+      "target_move": "MOVE_BULK_UP",
+      "source_id": 159,
+      "contact": false,
+      "direct_damage": false
+    },
+    {
+      "source_move": "CONVERSION",
+      "target_move": "MOVE_CONVERSION",
+      "source_id": 160,
+      "contact": false,
+      "direct_damage": false
+    },
+    {
+      "source_move": "TRI_ATTACK",
+      "target_move": "MOVE_TRI_ATTACK",
+      "source_id": 161,
+      "contact": false,
+      "direct_damage": true
+    },
+    {
+      "source_move": "SUPER_FANG",
+      "target_move": "MOVE_SUPER_FANG",
+      "source_id": 162,
+      "contact": true,
+      "direct_damage": false
+    },
+    {
+      "source_move": "SLASH",
+      "target_move": "MOVE_SLASH",
+      "source_id": 163,
+      "contact": true,
+      "direct_damage": true
+    },
+    {
+      "source_move": "SUBSTITUTE",
+      "target_move": "MOVE_SUBSTITUTE",
+      "source_id": 164,
+      "contact": false,
+      "direct_damage": false
+    },
+    {
+      "source_move": "GIGA_IMPACT",
+      "target_move": "MOVE_GIGA_IMPACT",
+      "source_id": 165,
+      "contact": true,
+      "direct_damage": false
+    },
+    {
+      "source_move": "SKETCH",
+      "target_move": "MOVE_SKETCH",
+      "source_id": 166,
+      "contact": false,
+      "direct_damage": false
+    },
+    {
+      "source_move": "DRAIN_PUNCH",
+      "target_move": "MOVE_DRAIN_PUNCH",
+      "source_id": 167,
+      "contact": true,
+      "direct_damage": true
+    },
+    {
+      "source_move": "THIEF",
+      "target_move": "MOVE_THIEF",
+      "source_id": 168,
+      "contact": true,
+      "direct_damage": false
+    },
+    {
+      "source_move": "WILL_O_WISP",
+      "target_move": "MOVE_WILL_O_WISP",
+      "source_id": 169,
+      "contact": false,
+      "direct_damage": false
+    },
+    {
+      "source_move": "ZEN_HEADBUTT",
+      "target_move": "MOVE_ZEN_HEADBUTT",
+      "source_id": 170,
+      "contact": true,
+      "direct_damage": true
+    },
+    {
+      "source_move": "FACADE",
+      "target_move": "MOVE_FACADE",
+      "source_id": 171,
+      "contact": true,
+      "direct_damage": false
+    },
+    {
+      "source_move": "FLAME_CHARGE",
+      "target_move": "MOVE_FLAME_CHARGE",
+      "source_id": 172,
+      "contact": true,
+      "direct_damage": true
+    },
+    {
+      "source_move": "HYPER_VOICE",
+      "target_move": "MOVE_HYPER_VOICE",
+      "source_id": 173,
+      "contact": false,
+      "direct_damage": true
+    },
+    {
+      "source_move": "CURSE",
+      "target_move": "MOVE_CURSE",
+      "source_id": 174,
+      "contact": false,
+      "direct_damage": false
+    },
+    {
+      "source_move": "GYRO_BALL",
+      "target_move": "MOVE_GYRO_BALL",
+      "source_id": 175,
+      "contact": true,
+      "direct_damage": false
+    },
+    {
+      "source_move": "ENERGY_BALL",
+      "target_move": "MOVE_ENERGY_BALL",
+      "source_id": 176,
+      "contact": false,
+      "direct_damage": true
+    },
+    {
+      "source_move": "AEROBLAST",
+      "target_move": "MOVE_AEROBLAST",
+      "source_id": 177,
+      "contact": false,
+      "direct_damage": true
+    },
+    {
+      "source_move": "SEED_BOMB",
+      "target_move": "MOVE_SEED_BOMB",
+      "source_id": 178,
+      "contact": false,
+      "direct_damage": true
+    },
+    {
+      "source_move": "REVERSAL",
+      "target_move": "MOVE_REVERSAL",
+      "source_id": 179,
+      "contact": true,
+      "direct_damage": false
+    },
+    {
+      "source_move": "ASTONISH",
+      "target_move": "MOVE_ASTONISH",
+      "source_id": 180,
+      "contact": true,
+      "direct_damage": true
+    },
+    {
+      "source_move": "ICE_SHARD",
+      "target_move": "MOVE_ICE_SHARD",
+      "source_id": 181,
+      "contact": false,
+      "direct_damage": true
+    },
+    {
+      "source_move": "PROTECT",
+      "target_move": "MOVE_PROTECT",
+      "source_id": 182,
+      "contact": false,
+      "direct_damage": false
+    },
+    {
+      "source_move": "MACH_PUNCH",
+      "target_move": "MOVE_MACH_PUNCH",
+      "source_id": 183,
+      "contact": true,
+      "direct_damage": true
+    },
+    {
+      "source_move": "SCARY_FACE",
+      "target_move": "MOVE_SCARY_FACE",
+      "source_id": 184,
+      "contact": false,
+      "direct_damage": false
+    },
+    {
+      "source_move": "FEINT_ATTACK",
+      "target_move": "MOVE_FEINT_ATTACK",
+      "source_id": 185,
+      "contact": true,
+      "direct_damage": true
+    },
+    {
+      "source_move": "SWEET_KISS",
+      "target_move": "MOVE_SWEET_KISS",
+      "source_id": 186,
+      "contact": false,
+      "direct_damage": false
+    },
+    {
+      "source_move": "BELLY_DRUM",
+      "target_move": "MOVE_BELLY_DRUM",
+      "source_id": 187,
+      "contact": false,
+      "direct_damage": false
+    },
+    {
+      "source_move": "SLUDGE_BOMB",
+      "target_move": "MOVE_SLUDGE_BOMB",
+      "source_id": 188,
+      "contact": false,
+      "direct_damage": true
+    },
+    {
+      "source_move": "MUD_SLAP",
+      "target_move": "MOVE_MUD_SLAP",
+      "source_id": 189,
+      "contact": false,
+      "direct_damage": true
+    },
+    {
+      "source_move": "OCTAZOOKA",
+      "target_move": "MOVE_OCTAZOOKA",
+      "source_id": 190,
+      "contact": false,
+      "direct_damage": true
+    },
+    {
+      "source_move": "SPIKES",
+      "target_move": "MOVE_SPIKES",
+      "source_id": 191,
+      "contact": false,
+      "direct_damage": false
+    },
+    {
+      "source_move": "ZAP_CANNON",
+      "target_move": "MOVE_ZAP_CANNON",
+      "source_id": 192,
+      "contact": false,
+      "direct_damage": true
+    },
+    {
+      "source_move": "FORESIGHT",
+      "target_move": "MOVE_FORESIGHT",
+      "source_id": 193,
+      "contact": false,
+      "direct_damage": false
+    },
+    {
+      "source_move": "DESTINY_BOND",
+      "target_move": "MOVE_DESTINY_BOND",
+      "source_id": 194,
+      "contact": false,
+      "direct_damage": false
+    },
+    {
+      "source_move": "PERISH_SONG",
+      "target_move": "MOVE_PERISH_SONG",
+      "source_id": 195,
+      "contact": false,
+      "direct_damage": false
+    },
+    {
+      "source_move": "ICY_WIND",
+      "target_move": "MOVE_ICY_WIND",
+      "source_id": 196,
+      "contact": false,
+      "direct_damage": true
+    },
+    {
+      "source_move": "POWER_GEM",
+      "target_move": "MOVE_POWER_GEM",
+      "source_id": 197,
+      "contact": false,
+      "direct_damage": true
+    },
+    {
+      "source_move": "WILD_CHARGE",
+      "target_move": "MOVE_WILD_CHARGE",
+      "source_id": 198,
+      "contact": true,
+      "direct_damage": true
+    },
+    {
+      "source_move": "POWER_WHIP",
+      "target_move": "MOVE_POWER_WHIP",
+      "source_id": 199,
+      "contact": true,
+      "direct_damage": true
+    },
+    {
+      "source_move": "OUTRAGE",
+      "target_move": "MOVE_OUTRAGE",
+      "source_id": 200,
+      "contact": true,
+      "direct_damage": false
+    },
+    {
+      "source_move": "SANDSTORM",
+      "target_move": "MOVE_SANDSTORM",
+      "source_id": 201,
+      "contact": false,
+      "direct_damage": false
+    },
+    {
+      "source_move": "GIGA_DRAIN",
+      "target_move": "MOVE_GIGA_DRAIN",
+      "source_id": 202,
+      "contact": false,
+      "direct_damage": true
+    },
+    {
+      "source_move": "ENDURE",
+      "target_move": "MOVE_ENDURE",
+      "source_id": 203,
+      "contact": false,
+      "direct_damage": false
+    },
+    {
+      "source_move": "CHARM",
+      "target_move": "MOVE_CHARM",
+      "source_id": 204,
+      "contact": false,
+      "direct_damage": false
+    },
+    {
+      "source_move": "ROLLOUT",
+      "target_move": "MOVE_ROLLOUT",
+      "source_id": 205,
+      "contact": true,
+      "direct_damage": false
+    },
+    {
+      "source_move": "FALSE_SWIPE",
+      "target_move": "MOVE_FALSE_SWIPE",
+      "source_id": 206,
+      "contact": true,
+      "direct_damage": false
+    },
+    {
+      "source_move": "SWAGGER",
+      "target_move": "MOVE_SWAGGER",
+      "source_id": 207,
+      "contact": false,
+      "direct_damage": false
+    },
+    {
+      "source_move": "SHELL_SMASH",
+      "target_move": "MOVE_SHELL_SMASH",
+      "source_id": 208,
+      "contact": false,
+      "direct_damage": false
+    },
+    {
+      "source_move": "SPARK",
+      "target_move": "MOVE_SPARK",
+      "source_id": 209,
+      "contact": true,
+      "direct_damage": true
+    },
+    {
+      "source_move": "BUG_BITE",
+      "target_move": "MOVE_BUG_BITE",
+      "source_id": 210,
+      "contact": true,
+      "direct_damage": false
+    },
+    {
+      "source_move": "STEEL_WING",
+      "target_move": "MOVE_STEEL_WING",
+      "source_id": 211,
+      "contact": true,
+      "direct_damage": true
+    },
+    {
+      "source_move": "MEAN_LOOK",
+      "target_move": "MOVE_MEAN_LOOK",
+      "source_id": 212,
+      "contact": false,
+      "direct_damage": false
+    },
+    {
+      "source_move": "ATTRACT",
+      "target_move": "MOVE_ATTRACT",
+      "source_id": 213,
+      "contact": false,
+      "direct_damage": false
+    },
+    {
+      "source_move": "SLEEP_TALK",
+      "target_move": "MOVE_SLEEP_TALK",
+      "source_id": 214,
+      "contact": false,
+      "direct_damage": false
+    },
+    {
+      "source_move": "HEAL_BELL",
+      "target_move": "MOVE_HEAL_BELL",
+      "source_id": 215,
+      "contact": false,
+      "direct_damage": false
+    },
+    {
+      "source_move": "RETURN",
+      "target_move": "MOVE_RETURN",
+      "source_id": 216,
+      "contact": true,
+      "direct_damage": false
+    },
+    {
+      "source_move": "PSYSTRIKE",
+      "target_move": "MOVE_PSYSTRIKE",
+      "source_id": 217,
+      "contact": false,
+      "direct_damage": true
+    },
+    {
+      "source_move": "BUG_BUZZ",
+      "target_move": "MOVE_BUG_BUZZ",
+      "source_id": 218,
+      "contact": false,
+      "direct_damage": true
+    },
+    {
+      "source_move": "SAFEGUARD",
+      "target_move": "MOVE_SAFEGUARD",
+      "source_id": 219,
+      "contact": false,
+      "direct_damage": false
+    },
+    {
+      "source_move": "PAIN_SPLIT",
+      "target_move": "MOVE_PAIN_SPLIT",
+      "source_id": 220,
+      "contact": false,
+      "direct_damage": false
+    },
+    {
+      "source_move": "SACRED_FIRE",
+      "target_move": "MOVE_SACRED_FIRE",
+      "source_id": 221,
+      "contact": false,
+      "direct_damage": true
+    },
+    {
+      "source_move": "MAGNITUDE",
+      "target_move": "MOVE_MAGNITUDE",
+      "source_id": 222,
+      "contact": false,
+      "direct_damage": false
+    },
+    {
+      "source_move": "DYNAMICPUNCH",
+      "target_move": "MOVE_DYNAMICPUNCH",
+      "source_id": 223,
+      "contact": true,
+      "direct_damage": true
+    },
+    {
+      "source_move": "MEGAHORN",
+      "target_move": "MOVE_MEGAHORN",
+      "source_id": 224,
+      "contact": true,
+      "direct_damage": true
+    },
+    {
+      "source_move": "DRAGONBREATH",
+      "target_move": "MOVE_DRAGONBREATH",
+      "source_id": 225,
+      "contact": false,
+      "direct_damage": true
+    },
+    {
+      "source_move": "BATON_PASS",
+      "target_move": "MOVE_BATON_PASS",
+      "source_id": 226,
+      "contact": false,
+      "direct_damage": false
+    },
+    {
+      "source_move": "ENCORE",
+      "target_move": "MOVE_ENCORE",
+      "source_id": 227,
+      "contact": false,
+      "direct_damage": false
+    },
+    {
+      "source_move": "PURSUIT",
+      "target_move": "MOVE_PURSUIT",
+      "source_id": 228,
+      "contact": true,
+      "direct_damage": false
+    },
+    {
+      "source_move": "RAPID_SPIN",
+      "target_move": "MOVE_RAPID_SPIN",
+      "source_id": 229,
+      "contact": true,
+      "direct_damage": false
+    },
+    {
+      "source_move": "SHADOW_CLAW",
+      "target_move": "MOVE_SHADOW_CLAW",
+      "source_id": 230,
+      "contact": true,
+      "direct_damage": true
+    },
+    {
+      "source_move": "IRON_TAIL",
+      "target_move": "MOVE_IRON_TAIL",
+      "source_id": 231,
+      "contact": true,
+      "direct_damage": true
+    },
+    {
+      "source_move": "METAL_CLAW",
+      "target_move": "MOVE_METAL_CLAW",
+      "source_id": 232,
+      "contact": true,
+      "direct_damage": true
+    },
+    {
+      "source_move": "AURA_SPHERE",
+      "target_move": "MOVE_AURA_SPHERE",
+      "source_id": 233,
+      "contact": false,
+      "direct_damage": true
+    },
+    {
+      "source_move": "HEALINGLIGHT",
+      "target_move": "MOVE_POLISHED_HEALING_LIGHT",
+      "source_id": 234,
+      "contact": false,
+      "direct_damage": false
+    },
+    {
+      "source_move": "HURRICANE",
+      "target_move": "MOVE_HURRICANE",
+      "source_id": 235,
+      "contact": false,
+      "direct_damage": true
+    },
+    {
+      "source_move": "KNOCK_OFF",
+      "target_move": "MOVE_KNOCK_OFF",
+      "source_id": 236,
+      "contact": true,
+      "direct_damage": false
+    },
+    {
+      "source_move": "HIDDEN_POWER",
+      "target_move": "MOVE_HIDDEN_POWER",
+      "source_id": 237,
+      "contact": false,
+      "direct_damage": false
+    },
+    {
+      "source_move": "CROSS_CHOP",
+      "target_move": "MOVE_CROSS_CHOP",
+      "source_id": 238,
+      "contact": true,
+      "direct_damage": true
+    },
+    {
+      "source_move": "AQUA_JET",
+      "target_move": "MOVE_AQUA_JET",
+      "source_id": 239,
+      "contact": true,
+      "direct_damage": true
+    },
+    {
+      "source_move": "RAIN_DANCE",
+      "target_move": "MOVE_RAIN_DANCE",
+      "source_id": 240,
+      "contact": false,
+      "direct_damage": false
+    },
+    {
+      "source_move": "SUNNY_DAY",
+      "target_move": "MOVE_SUNNY_DAY",
+      "source_id": 241,
+      "contact": false,
+      "direct_damage": false
+    },
+    {
+      "source_move": "CRUNCH",
+      "target_move": "MOVE_CRUNCH",
+      "source_id": 242,
+      "contact": true,
+      "direct_damage": true
+    },
+    {
+      "source_move": "MIRROR_COAT",
+      "target_move": "MOVE_MIRROR_COAT",
+      "source_id": 243,
+      "contact": false,
+      "direct_damage": false
+    },
+    {
+      "source_move": "NASTY_PLOT",
+      "target_move": "MOVE_NASTY_PLOT",
+      "source_id": 244,
+      "contact": false,
+      "direct_damage": false
+    },
+    {
+      "source_move": "EXTREMESPEED",
+      "target_move": "MOVE_EXTREMESPEED",
+      "source_id": 245,
+      "contact": true,
+      "direct_damage": true
+    },
+    {
+      "source_move": "ANCIENTPOWER",
+      "target_move": "MOVE_ANCIENTPOWER",
+      "source_id": 246,
+      "contact": false,
+      "direct_damage": true
+    },
+    {
+      "source_move": "SHADOW_BALL",
+      "target_move": "MOVE_SHADOW_BALL",
+      "source_id": 247,
+      "contact": false,
+      "direct_damage": true
+    },
+    {
+      "source_move": "FUTURE_SIGHT",
+      "target_move": "MOVE_FUTURE_SIGHT",
+      "source_id": 248,
+      "contact": false,
+      "direct_damage": false
+    },
+    {
+      "source_move": "BRICK_BREAK",
+      "target_move": "MOVE_BRICK_BREAK",
+      "source_id": 249,
+      "contact": true,
+      "direct_damage": true
+    },
+    {
+      "source_move": "WHIRLPOOL",
+      "target_move": "MOVE_WHIRLPOOL",
+      "source_id": 250,
+      "contact": false,
+      "direct_damage": false
+    },
+    {
+      "source_move": "DARK_PULSE",
+      "target_move": "MOVE_DARK_PULSE",
+      "source_id": 251,
+      "contact": false,
+      "direct_damage": true
+    },
+    {
+      "source_move": "MOONBLAST",
+      "target_move": "MOVE_MOONBLAST",
+      "source_id": 252,
+      "contact": false,
+      "direct_damage": true
+    },
+    {
+      "source_move": "PLAY_ROUGH",
+      "target_move": "MOVE_PLAY_ROUGH",
+      "source_id": 253,
+      "contact": true,
+      "direct_damage": true
+    },
+    {
+      "source_move": "DISARM_VOICE",
+      "target_move": "MOVE_DISARMING_VOICE",
+      "source_id": 254,
+      "contact": false,
+      "direct_damage": true
+    },
+    {
+      "source_move": "STRUGGLE",
+      "target_move": "MOVE_STRUGGLE",
+      "source_id": 255,
+      "contact": true,
+      "direct_damage": true
+    }
+  ],
+  "effect_spore": {
+    "selection_range": 256,
+    "poison_bytes": 85,
+    "paralysis_bytes": 84,
+    "sleep_bytes": 87,
+    "activation_numerator": 3,
+    "activation_denominator": 10,
+    "joint_probabilities": {
+      "poison": [
+        255,
+        2560
+      ],
+      "paralysis": [
+        252,
+        2560
+      ],
+      "sleep": [
+        261,
+        2560
+      ]
+    },
+    "initial_sleep_counters": [
+      1,
+      2,
+      3
+    ]
+  },
+  "rules": [
+    "Contact uses source physical/special category and 21 exceptions; Struggle is contact. Protective Pads suppresses both sides; Punching Glove suppresses punches.",
+    "Poison Touch is evaluated before the defender contact ability. Its source entry sets b=1, bypassing the b=0 Shield Dust/Covert Cloak checks despite the nearby comment.",
+    "All five status abilities use a separate three-in-ten activation decision; Effect Spore first chooses poison/paralysis/sleep with the byte thresholds 85 and 169.",
+    "Defender contact abilities can run after Substitute breaks or their holder faints. Poison Touch checks the hit Substitute marker and stays blocked on a breaking hit.",
+    "Effect Spore stores counters one through three. The next action decrements first, so without Early Bird it blocks zero through two future actions before waking.",
+    "Status eligibility still checks existing status, type/ability prevention and Safeguard. Effect Spore additionally checks Grass, Overcoat and Safety Goggles."
+  ],
+  "scope": "Mapped source moves in ordinary singles without either active gimmick; Effect Spore, Poison Point, Static, Flame Body and Poison Touch only.",
+  "gaps": [
+    "This is not a general contact-engine or status-engine import. Other contact abilities/items, all status-immunity configuration variants, simultaneous curing/Synchronize chains, recoil/self-faint and global faint/proc ordering need separate audits.",
+    "Original RNG stream/call alignment, battle animation/message timing and AI estimates remain open. Expansion-only moves, formats, gimmicks and optional ability/terrain prevention retain native behavior."
+  ]
+}

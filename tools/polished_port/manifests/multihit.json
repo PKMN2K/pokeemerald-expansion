@@ -147,7 +147,7 @@
   ],
   "adapter": "Select all mapped variable attacks through the six source slots and permit the mapped loop to continue through newly inflicted sleep, in ordinary source singles without either active gimmick. Preserve original Fury Strikes distribution outside that scope.",
   "limits": [
-    "Source Effect Spore probabilities, sleep duration and complete contact-ability eligibility/order are not imported here; tests force its sleep outcome to isolate loop continuation.",
+    "Effect Spore selection/activation, sleep counters and scoped contact-status boundaries are covered separately in contact_status.json. These multi-hit tests force sleep to isolate loop continuation; complete contact eligibility/order remains open.",
     "Broken-Substitute ability/proc eligibility, Rocky Helmet faint-order/proc interactions, damage/critical formulas, per-hit RNG stream, deferred switching, AI estimates and original battle animation/message sequencing remain open.",
     "Optional moves, doubles and either active gimmick retain native loop rules. Existing custom Fury Strikes hit-count behavior remains available outside the source profile."
   ]

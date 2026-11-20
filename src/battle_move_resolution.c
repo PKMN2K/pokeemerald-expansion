@@ -3597,6 +3597,18 @@ static enum MoveEndResult MoveEndBeakBlast(struct BattleCalcValues *cv)
     return result;
 }
 
+static enum MoveEndResult MoveEndPolishedContactAttacker(struct BattleCalcValues *cv)
+{
+    enum MoveEndResult result = MOVEEND_RESULT_CONTINUE;
+    if (cv->abilities[cv->battlerAtk] == ABILITY_POISON_TOUCH
+     && UsesPolishedContactStatusRules(cv->battlerAtk, cv->battlerDef, cv->move)
+     && AbilityBattleEffects(ABILITYEFFECT_MOVE_END_ATTACKER, cv->battlerAtk, 0, 0, TRUE))
+        result = MOVEEND_RESULT_RUN_SCRIPT;
+
+    gBattleScripting.moveendState++;
+    return result;
+}
+
 static enum MoveEndResult MoveEndAbilities(struct BattleCalcValues *cv)
 {
     enum MoveEndResult result = MOVEEND_RESULT_CONTINUE;
@@ -3645,7 +3657,9 @@ static enum MoveEndResult MoveEndAbilitiesAttacker(struct BattleCalcValues *cv)
 {
     enum MoveEndResult result = MOVEEND_RESULT_CONTINUE;
 
-    if (AbilityBattleEffects(ABILITYEFFECT_MOVE_END_ATTACKER, cv->battlerAtk, 0, 0, TRUE))
+    if (!(cv->abilities[cv->battlerAtk] == ABILITY_POISON_TOUCH
+          && UsesPolishedContactStatusRules(cv->battlerAtk, cv->battlerDef, cv->move))
+     && AbilityBattleEffects(ABILITYEFFECT_MOVE_END_ATTACKER, cv->battlerAtk, 0, 0, TRUE))
         result = MOVEEND_RESULT_RUN_SCRIPT;
 
     gBattleScripting.moveendState++;
@@ -5504,6 +5518,7 @@ static enum MoveEndResult (*const sMoveEndHandlers[])(struct BattleCalcValues *c
     [MOVEEND_ABSORB] = MoveEndAbsorb,
     [MOVEEND_RAGE] = MoveEndRage,
     [MOVEEND_BEAK_BLAST] = MoveEndBeakBlast,
+    [MOVEEND_POLISHED_CONTACT_ATTACKER] = MoveEndPolishedContactAttacker,
     [MOVEEND_ABILITIES] = MoveEndAbilities,
     [MOVEEND_RESIST_BERRY_MESSAGE] = MoveEndResistBerryMessage,
     [MOVEEND_FORM_CHANGE_ON_HIT] = MoveEndFormChangeOnHit,

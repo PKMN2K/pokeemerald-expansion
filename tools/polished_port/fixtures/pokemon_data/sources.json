@@ -2137,6 +2137,16 @@
       "path": "engine/battle/move_effects/tri_attack.asm",
       "fixture": "engine__battle__move_effects__tri_attack.asm.b64",
       "git_blob_sha1": "8bf569486f9ffca1fd04c140dd43330f94bc424e"
+    },
+    {
+      "path": "engine/battle/misc.asm",
+      "fixture": "engine__battle__misc.asm.b64",
+      "git_blob_sha1": "8cbfce50eafa329782c5e3ab71a6b77295d7a680"
+    },
+    {
+      "path": "data/moves/abnormal_contact_moves.asm",
+      "fixture": "data__moves__abnormal_contact_moves.asm.b64",
+      "git_blob_sha1": "f9caeae17c59690102ee44d6be50d4f7acdd3470"
     }
   ]
 }

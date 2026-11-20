@@ -17,6 +17,8 @@
 #include "config_changes.h"
 #include "polished_battle.h"
 #include "polished_moves.h"
+#include "constants/polished_contact_status.h"
+#include "data/polished_contact_status.h"
 #include "constants/polished_move_restrictions.h"
 #include "constants/polished_protect_chain.h"
 #include "constants/polished_foresight.h"
@@ -3150,6 +3152,53 @@ static bool32 CanHitTriggerCursedBody(enum BattlerId attacker, enum BattlerId ta
         && !gBattleStruct->unableToUseMove;
 }
 
+bool32 UsesPolishedContactStatusRules(enum BattlerId attacker, enum BattlerId target, enum Move move)
+{
+    return B_POLISHED_MOVE_BALANCE && move < MOVES_COUNT
+        && sPolishedContactStatusMoves[move] != 0 && !IsDoubleBattle()
+        && GetActiveGimmick(attacker) == GIMMICK_NONE
+        && GetActiveGimmick(target) == GIMMICK_NONE;
+}
+
+static bool32 CanHitTriggerContactStatus(enum BattlerId attacker, enum BattlerId target, enum Move move)
+{
+    if (IsBattlerTurnDamaged(target, EXCLUDING_SUBSTITUTES))
+        return TRUE;
+
+    // The source clears Substitute before defender contact abilities, whereas
+    // Poison Touch separately checks whether this hit was absorbed by it.
+    return UsesPolishedContactStatusRules(attacker, target, move)
+        && gBattleMons[target].volatiles.substitute
+        && gBattleMons[target].volatiles.substituteHP == 0
+        && gBattleStruct->moveDamage[target] > 0
+        && !IsBattlerUnaffectedByMove(target)
+        && !gBattleStruct->unableToUseMove;
+}
+
+static bool32 DoesContactStatusMoveMakeContact(enum BattlerId attacker, enum BattlerId target, enum Move move, bool32 defensive)
+{
+    enum Ability ability = GetBattlerAbility(attacker);
+    enum HoldEffect holdEffect = GetBattlerHoldEffect(attacker);
+    if (!UsesPolishedContactStatusRules(attacker, target, move))
+    {
+        if (defensive)
+            return !CanBattlerAvoidContactEffects(attacker, target, ability, holdEffect, move);
+        return IsMoveMakingContact(attacker, target, ability, holdEffect, move);
+    }
+
+    return sPolishedContactStatusMoves[move] == 2
+        && holdEffect != HOLD_EFFECT_PROTECTIVE_PADS
+        && !(holdEffect == HOLD_EFFECT_PUNCHING_GLOVE && IsPunchingMove(move))
+        && ability != ABILITY_LONG_REACH; // Retain this optional ability.
+}
+
+static bool32 RollContactStatus(enum RandomTag tag, enum BattlerId attacker, enum BattlerId target, enum Move move)
+{
+    if (UsesPolishedContactStatusRules(attacker, target, move))
+        return RandomChance(tag, 3, 10);
+    return GetConfig(B_ABILITY_TRIGGER_CHANCE) >= GEN_4 ? RandomPercentage(tag, 30) : RandomChance(tag, 1, 3);
+}
+
 u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum Ability ability, enum Move move, bool32 shouldAbilityTrigger)
 {
     u32 effect = 0;
@@ -4238,25 +4287,37 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
             enum HoldEffect holdEffectAtk = GetBattlerHoldEffect(gBattlerAttacker);
             if (IsBattlerAlive(gBattlerAttacker)
              && !gSpecialStatuses[gBattlerAttacker].attackerInParty
-             && IsBattlerTurnDamaged(gBattlerTarget, EXCLUDING_SUBSTITUTES)
-             && !CanBattlerAvoidContactEffects(gBattlerAttacker, gBattlerTarget, abilityAtk, holdEffectAtk, move)
+             && CanHitTriggerContactStatus(gBattlerAttacker, gBattlerTarget, move)
+             && DoesContactStatusMoveMakeContact(gBattlerAttacker, gBattlerTarget, move, TRUE)
              && IsAffectedByPowderMove(gBattlerAttacker, abilityAtk, holdEffectAtk))
             {
                 u32 poison, paralysis, sleep;
 
-                if (GetConfig(B_ABILITY_TRIGGER_CHANCE) >= GEN_5)
+                if (UsesPolishedContactStatusRules(gBattlerAttacker, gBattlerTarget, move))
                 {
-                    poison = 9;
-                    paralysis = 19;
+                    poison = POLISHED_SPORE_POISON_CUTOFF;
+                    paralysis = POLISHED_SPORE_PARALYSIS_CUTOFF;
+                    sleep = 256;
+                    i = RandomUniform(RNG_EFFECT_SPORE, 0, 255);
+                    if (!RandomChance(RNG_POLISHED_CONTACT_STATUS, 3, 10))
+                        break;
                 }
                 else
                 {
-                    poison = 10;
-                    paralysis = 20;
-                }
-                sleep = 30;
+                    if (GetConfig(B_ABILITY_TRIGGER_CHANCE) >= GEN_5)
+                    {
+                        poison = 9;
+                        paralysis = 19;
+                    }
+                    else
+                    {
+                        poison = 10;
+                        paralysis = 20;
+                    }
+                    sleep = 30;
 
-                i = RandomUniform(RNG_EFFECT_SPORE, 0, GetConfig(B_ABILITY_TRIGGER_CHANCE) >= GEN_4 ? 99 : 299);
+                    i = RandomUniform(RNG_EFFECT_SPORE, 0, GetConfig(B_ABILITY_TRIGGER_CHANCE) >= GEN_4 ? 99 : 299);
+                }
                 if (i < poison)
                     goto POISON_POINT;
                 if (i < paralysis)
@@ -4277,7 +4338,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
         }
             break;
         case ABILITY_POISON_POINT:
-            if (GetConfig(B_ABILITY_TRIGGER_CHANCE) >= GEN_4 ? RandomPercentage(RNG_POISON_POINT, 30) : RandomChance(RNG_POISON_POINT, 1, 3))
+            if (RollContactStatus(RNG_POISON_POINT, gBattlerAttacker, gBattlerTarget, move))
             {
             POISON_POINT:
             {
@@ -4285,9 +4346,9 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
                 if (IsBattlerAlive(gBattlerAttacker)
                  && !gSpecialStatuses[gBattlerAttacker].attackerInParty
                  && !gBattleStruct->unableToUseMove
-                 && IsBattlerTurnDamaged(gBattlerTarget, EXCLUDING_SUBSTITUTES)
+                 && CanHitTriggerContactStatus(gBattlerAttacker, gBattlerTarget, move)
                  && CanBePoisoned(gBattlerTarget, gBattlerAttacker, gLastUsedAbility, abilityAtk)
-                 && !CanBattlerAvoidContactEffects(gBattlerAttacker, gBattlerTarget, abilityAtk, GetBattlerHoldEffect(gBattlerAttacker), move))
+                 && DoesContactStatusMoveMakeContact(gBattlerAttacker, gBattlerTarget, move, TRUE))
                 {
                     gEffectBattler = gBattlerAttacker;
                     gBattleScripting.battler = gBattlerTarget;
@@ -4300,7 +4361,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
             }
             break;
         case ABILITY_STATIC:
-            if (GetConfig(B_ABILITY_TRIGGER_CHANCE) >= GEN_4 ? RandomPercentage(RNG_STATIC, 30) : RandomChance(RNG_STATIC, 1, 3))
+            if (RollContactStatus(RNG_STATIC, gBattlerAttacker, gBattlerTarget, move))
             {
             STATIC:
             {
@@ -4308,9 +4369,9 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
                 if (IsBattlerAlive(gBattlerAttacker)
                  && !gSpecialStatuses[gBattlerAttacker].attackerInParty
                  && !gBattleStruct->unableToUseMove
-                 && IsBattlerTurnDamaged(gBattlerTarget, EXCLUDING_SUBSTITUTES)
+                 && CanHitTriggerContactStatus(gBattlerAttacker, gBattlerTarget, move)
                  && CanBeParalyzed(gBattlerTarget, gBattlerAttacker, abilityAtk)
-                 && !CanBattlerAvoidContactEffects(gBattlerAttacker, gBattlerTarget, abilityAtk, GetBattlerHoldEffect(gBattlerAttacker), move))
+                 && DoesContactStatusMoveMakeContact(gBattlerAttacker, gBattlerTarget, move, TRUE))
                 {
                     gEffectBattler = gBattlerAttacker;
                     gBattleScripting.battler = gBattlerTarget;
@@ -4325,10 +4386,10 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
         case ABILITY_FLAME_BODY:
             if (IsBattlerAlive(gBattlerAttacker)
              && !gSpecialStatuses[gBattlerAttacker].attackerInParty
-             && IsBattlerTurnDamaged(gBattlerTarget, EXCLUDING_SUBSTITUTES)
-             && !CanBattlerAvoidContactEffects(gBattlerAttacker, gBattlerTarget, GetBattlerAbility(gBattlerAttacker), GetBattlerHoldEffect(gBattlerAttacker), move)
+             && CanHitTriggerContactStatus(gBattlerAttacker, gBattlerTarget, move)
+             && DoesContactStatusMoveMakeContact(gBattlerAttacker, gBattlerTarget, move, TRUE)
              && CanBeBurned(gBattlerTarget, gBattlerAttacker, GetBattlerAbility(gBattlerAttacker))
-             && (GetConfig(B_ABILITY_TRIGGER_CHANCE) >= GEN_4 ? RandomPercentage(RNG_FLAME_BODY, 30) : RandomChance(RNG_FLAME_BODY, 1, 3)))
+             && (RollContactStatus(RNG_FLAME_BODY, gBattlerAttacker, gBattlerTarget, move)))
             {
                 gEffectBattler = gBattlerAttacker;
                 gBattleScripting.battler = gBattlerTarget;
@@ -4482,9 +4543,9 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
         {
         case ABILITY_POISON_TOUCH:
             if (IsBattlerAlive(gBattlerTarget)
-             && !IsMoveEffectBlockedByTarget(GetBattlerAbility(gBattlerTarget))
+             && (UsesPolishedContactStatusRules(gBattlerAttacker, gBattlerTarget, move) || !IsMoveEffectBlockedByTarget(GetBattlerAbility(gBattlerTarget)))
              && CanBePoisoned(gBattlerAttacker, gBattlerTarget, gLastUsedAbility, GetBattlerAbility(gBattlerTarget))
-             && IsMoveMakingContact(gBattlerAttacker, gBattlerTarget, GetBattlerAbility(gBattlerAttacker), GetBattlerHoldEffect(gBattlerAttacker), move)
+             && DoesContactStatusMoveMakeContact(gBattlerAttacker, gBattlerTarget, move, FALSE)
              && IsBattlerTurnDamaged(gBattlerTarget, EXCLUDING_SUBSTITUTES) // Need to actually hit the target
              && RandomPercentage(RNG_POISON_TOUCH, 30))
             {

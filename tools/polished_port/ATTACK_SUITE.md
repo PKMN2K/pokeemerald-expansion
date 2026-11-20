@@ -69,6 +69,20 @@ probabilities/duration, damage/critical/RNG formulas, deferred switching, AI and
 presentation remain separate obligations. See the phase record in
 [PARITY_AUDIT.md](PARITY_AUDIT.md) for validation and limits.
 
+## Contact-status follow-up
+
+Thirty-one additional groups exercise 545 parameter combinations per profile,
+including live contact classification for all 124 direct attacks. The
+[source manifest](manifests/contact_status.json) records all 255 contact
+identities and the five affected abilities. The scoped adapter imports Effect
+Spore's byte selection, separate activation and sleep counters; defensive
+status activation on Substitute-breaking hits; and Poison Touch's source
+order, Protective Pads prevention and actual Shield Dust/Covert Cloak branch.
+
+Native/optional moves, doubles and active gimmicks have separate controls.
+Remaining global contact, status/Synchronize/curing, fainting, RNG, presentation
+and AI obligations stay open in [PARITY_AUDIT.md](PARITY_AUDIT.md).
+
 ## What a passing run does not establish
 
 This is a consolidated regression and coverage suite, **not a declaration that

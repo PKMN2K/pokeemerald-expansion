@@ -67,6 +67,7 @@ def inventory():
         scopes = ['single-turn dispatch and PP on both sides']
         if effect in DIRECT:
             scopes.append('unblocked damage, Protect and Substitute on both sides')
+            scopes.append('live contact classification against Flame Body; five contact-status ability interactions are scoped in contact_status.json')
         if changes:
             scopes.append('explicit source stat deltas and saturation on both sides')
         if row[0] in ('RECOVER', 'ROOST', 'FRESH_SNACK'):
