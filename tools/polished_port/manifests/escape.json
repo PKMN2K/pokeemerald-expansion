@@ -1,0 +1,26 @@
+{
+  "source_commit": "3fa43192379df5c3e7b09a08e4d5d79af4f02f42",
+  "source_variant": "default; FAITHFUL undefined",
+  "source_anchors": {
+    "engine/battle/core.asm": "37e76be94949c77bf7fd12814675a27943c7d85f"
+  },
+  "vectors": 5184,
+  "vector_sha256": "792d4b77e58c9e10f4642e5a86cf224b49696fca1bed1130c12414ebcde19f17",
+  "contracts": [
+    "Use effective Speed without Quick Claw; training EV items do not reduce source Speed.",
+    "Increment the byte attempt counter before comparing Speed; only prior attempts add 30.",
+    "Choosing Fight resets flee attempts; switching and items preserve the counter.",
+    "Shift the player word five times, divide by the low byte of enemy Speed / 4, and saturate on carry.",
+    "Escape succeeds on equality with the random byte; zero divisor and high quotient guarantee escape.",
+    "Run Away precedes escape items and Ghost typing; move traps precede trapping abilities.",
+    "A roaming enemy checks traps and sleep/freeze both when choosing and executing its flee action.",
+    "A roamer locked into charging, recharge, Rampage or Rollout does not select a flee action or grant a free player escape.",
+    "Enemy escape ignores Smoke Ball; a source roamer retains ordinary poison after toxic poison."
+  ],
+  "complete_behavior_parity": false,
+  "remaining": [
+    "Source special battle-type bindings, trainer forfeiture, replacement-menu escape and full Safari/controller flow remain open.",
+    "Roamer creation, source map routes, full save/encounter lifecycle and outcome sequencing remain open; native HP capacity is preserved.",
+    "Exact random-stream call order and source text/animation timing remain unverified."
+  ]
+}

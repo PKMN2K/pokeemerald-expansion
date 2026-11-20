@@ -39356,6 +39356,141 @@
       "path": "test/battle/polished_dynamic_damage.c"
     },
     {
+      "name": "Polished escape matches all 5184 source word byte carry and attempt vectors",
+      "kind": "TEST",
+      "path": "test/battle/polished_escape.c"
+    },
+    {
+      "name": "Polished escape awake roamers flee after the source player action",
+      "kind": "WILD_BATTLE_TEST",
+      "path": "test/battle/polished_escape.c"
+    },
+    {
+      "name": "Polished escape real roaming opponents stay asleep or frozen instead of fleeing",
+      "kind": "WILD_BATTLE_TEST",
+      "path": "test/battle/polished_escape.c"
+    },
+    {
+      "name": "Polished escape corrected training item Speed also controls real action order",
+      "kind": "WILD_BATTLE_TEST",
+      "path": "test/battle/polished_escape.c"
+    },
+    {
+      "name": "Polished escape uses the opponents effective Choice Scarf Speed",
+      "kind": "WILD_BATTLE_TEST",
+      "path": "test/battle/polished_escape.c"
+    },
+    {
+      "name": "Polished escape preserves native item precedence with an active Terastal",
+      "kind": "WILD_BATTLE_TEST",
+      "path": "test/battle/polished_escape.c"
+    },
+    {
+      "name": "Polished escape keeps optional doubles and their item precedence native",
+      "kind": "DOUBLE_BATTLE_TEST",
+      "path": "test/battle/polished_escape.c"
+    },
+    {
+      "name": "Polished escape leaves special battle formats and extra field restrictions native",
+      "kind": "WILD_BATTLE_TEST",
+      "path": "test/battle/polished_escape.c"
+    },
+    {
+      "name": "Polished escape attempt byte wraps without losing the guaranteed late attempt",
+      "kind": "WILD_BATTLE_TEST",
+      "path": "test/battle/polished_escape.c"
+    },
+    {
+      "name": "Polished escape locked roamer actions do not grant a free player escape",
+      "kind": "WILD_BATTLE_TEST",
+      "path": "test/battle/polished_escape.c"
+    },
+    {
+      "name": "Polished escape enemy Ghost exemption still respects sleep",
+      "kind": "WILD_BATTLE_TEST",
+      "path": "test/battle/polished_escape.c"
+    },
+    {
+      "name": "Polished escape waking a sleeping roamer does not create a same turn flee action",
+      "kind": "WILD_BATTLE_TEST",
+      "path": "test/battle/polished_escape.c"
+    },
+    {
+      "name": "Polished escape resolves inclusive random boundaries and repeated attempts through Run",
+      "kind": "WILD_BATTLE_TEST",
+      "path": "test/battle/polished_escape.c"
+    },
+    {
+      "name": "Polished escape Fight resets the run bonus but switching preserves it",
+      "kind": "WILD_BATTLE_TEST",
+      "path": "test/battle/polished_escape.c"
+    },
+    {
+      "name": "Polished escape blocked Run returns to action selection without consuming an attempt",
+      "kind": "WILD_BATTLE_TEST",
+      "path": "test/battle/polished_escape.c"
+    },
+    {
+      "name": "Polished escape gives the player an action before a faster roamer flees",
+      "kind": "WILD_BATTLE_TEST",
+      "path": "test/battle/polished_escape.c"
+    },
+    {
+      "name": "Polished escape allows fleeing from an untrapped awake roamer without a speed roll",
+      "kind": "WILD_BATTLE_TEST",
+      "path": "test/battle/polished_escape.c"
+    },
+    {
+      "name": "Polished escape move traps take precedence over trapping ability messages",
+      "kind": "WILD_BATTLE_TEST",
+      "path": "test/battle/polished_escape.c"
+    },
+    {
+      "name": "Polished escape suppressed Run Away falls back to Smoke Ball",
+      "kind": "WILD_BATTLE_TEST",
+      "path": "test/battle/polished_escape.c"
+    },
+    {
+      "name": "Polished escape roamer AI and action execution both reject sleep and freeze",
+      "kind": "WILD_BATTLE_TEST",
+      "path": "test/battle/polished_escape.c"
+    },
+    {
+      "name": "Polished escape enemy Smoke Ball cannot bypass source move traps",
+      "kind": "WILD_BATTLE_TEST",
+      "path": "test/battle/polished_escape.c"
+    },
+    {
+      "name": "Polished escape rechecks newly applied traps when an enemy flee action executes",
+      "kind": "WILD_BATTLE_TEST",
+      "path": "test/battle/polished_escape.c"
+    },
+    {
+      "name": "Polished escape roaming persistence converts toxic poison without shrinking HP",
+      "kind": "WILD_BATTLE_TEST",
+      "path": "test/battle/polished_escape.c"
+    },
+    {
+      "name": "Polished escape prioritizes Run Away over an escape item",
+      "kind": "WILD_BATTLE_TEST",
+      "path": "test/battle/polished_escape.c"
+    },
+    {
+      "name": "Polished escape uses effective paralysis Speed rather than raw Speed",
+      "kind": "WILD_BATTLE_TEST",
+      "path": "test/battle/polished_escape.c"
+    },
+    {
+      "name": "Polished escape Ghost exemption ignores the native generation preset",
+      "kind": "WILD_BATTLE_TEST",
+      "path": "test/battle/polished_escape.c"
+    },
+    {
+      "name": "Polished escape source Speed has no training item penalty",
+      "kind": "WILD_BATTLE_TEST",
+      "path": "test/battle/polished_escape.c"
+    },
+    {
       "name": "Polished patterned Magikarp evolves through the real battle UI and retains its breeding pattern",
       "kind": "AI_SINGLE_BATTLE_TEST",
       "path": "test/battle/polished_evolution.c"

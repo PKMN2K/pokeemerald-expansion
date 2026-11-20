@@ -1,4 +1,5 @@
 #include "global.h"
+#include "polished_escape.h"
 #include "polished_capture.h"
 #include "polished_trainers.h"
 #include "main.h"
@@ -6759,6 +6760,12 @@ static void AI_Watch(void)
 // Roaming Pokémon logic
 static s32 AI_Roaming(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Move move, s32 score)
 {
+    if (UsesPolishedEscapeRules(battlerAtk))
+    {
+        if (CanPolishedRoamerChooseFlee(battlerAtk))
+            AI_Flee();
+        return score;
+    }
     bool32 roamerCanFlee = FALSE;
 
     if (AI_CanBattlerEscape(battlerAtk))

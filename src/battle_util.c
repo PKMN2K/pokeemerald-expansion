@@ -1,4 +1,5 @@
 #include "global.h"
+#include "polished_escape.h"
 #include "polished_capture.h"
 #include "polished_rewards.h"
 #include "battle.h"
@@ -669,6 +670,9 @@ bool32 TryRunFromBattle(enum BattlerId battler)
     if (FlagGet(WE_FLAG_NO_RUNNING))
         return effect;
 
+    if (UsesPolishedEscapeRules(battler))
+        return TryPolishedRun(battler);
+
     if (gBattleMons[battler].item == ITEM_ENIGMA_BERRY_E_READER)
         holdEffect = gEnigmaBerries[battler].holdEffect;
     else
@@ -794,9 +798,11 @@ void HandleAction_Run(void)
         }
         else
         {
-            if (GetBattlerHoldEffect(gBattlerAttacker) != HOLD_EFFECT_CAN_ALWAYS_RUN
+            if ((UsesPolishedEscapeRules(gBattlerAttacker) && !CanPolishedEnemyFlee(gBattlerAttacker))
+             || (!UsesPolishedEscapeRules(gBattlerAttacker)
+             && GetBattlerHoldEffect(gBattlerAttacker) != HOLD_EFFECT_CAN_ALWAYS_RUN
              && GetBattlerAbility(gBattlerAttacker) != ABILITY_RUN_AWAY
-             && !CanBattlerEscape(gBattlerAttacker))
+             && !CanBattlerEscape(gBattlerAttacker)))
             {
                 gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_ATTACKER_CANT_ESCAPE;
                 gBattlescriptCurrInstr = BattleScript_PrintFailedToRunString;

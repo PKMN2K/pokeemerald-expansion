@@ -1,4 +1,5 @@
 #include "global.h"
+#include "polished_escape.h"
 #include "polished_capture.h"
 #include "constants/polished_hidden_power.h"
 #if B_POLISHED_HIDDEN_POWER
@@ -3714,6 +3715,9 @@ u8 IsRunningFromBattleImpossible(enum BattlerId battler)
         return BATTLE_RUN_FORBIDDEN;
     }
 
+    if (UsesPolishedEscapeRules(battler))
+        return PolishedRunPreflight(battler);
+
     if (holdEffect == HOLD_EFFECT_CAN_ALWAYS_RUN)
         return BATTLE_RUN_SUCCESS;
     if (GetConfig(B_GHOSTS_ESCAPE) >= GEN_6 && IS_BATTLER_OF_TYPE(battler, TYPE_GHOST))
@@ -3887,6 +3891,8 @@ static void HandleTurnActionSelectionState(void)
                 switch (gBattleResources->bufferB[battler][1])
                 {
                 case B_ACTION_USE_MOVE:
+                    if (IsOnPlayerSide(battler) && UsesPolishedEscapeRules(battler))
+                        gBattleStruct->runTries = 0; // Source BattleMenu_Fight, even before move selection.
                     if (AreAllMovesUnusable(battler))
                     {
                         gBattleCommunication[battler] = STATE_SELECTION_SCRIPT;
@@ -4442,7 +4448,7 @@ u32 GetBattlerTotalSpeedStat(enum BattlerId battler, enum Ability ability, enum 
     }
 
     // item effects
-    if (holdEffect == HOLD_EFFECT_MACHO_BRACE || holdEffect == HOLD_EFFECT_POWER_ITEM)
+    if (!sourceRules && (holdEffect == HOLD_EFFECT_MACHO_BRACE || holdEffect == HOLD_EFFECT_POWER_ITEM))
         speed /= 2;
     else if (holdEffect == HOLD_EFFECT_IRON_BALL)
         speed /= 2;
@@ -4786,6 +4792,12 @@ static void SetActionsAndBattlersTurnOrder(void)
             }
         }
     }
+    // ProcessEnemyFleeing follows both source actions, before residual effects.
+    // A faster roamer must still give the player a chance to trap/status it.
+    if (UsesPolishedEscapeRules(B_BATTLER_1) && (gBattleTypeFlags & BATTLE_TYPE_ROAMER)
+        && gChosenActionByBattler[B_BATTLER_1] == B_ACTION_RUN
+        && gBattlerByTurnOrder[0] == B_BATTLER_1)
+        SwapTurnOrder(0, 1);
     gBattleMainFunc = CheckChangingTurnOrderEffects;
     gBattleScripting.battler = 0;
 }

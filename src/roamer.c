@@ -1,4 +1,6 @@
 #include "global.h"
+#include "polished_escape.h"
+#include "polished_pokemon_data.h"
 #include "event_data.h"
 #include "ow_abilities.h"
 #include "pokemon.h"
@@ -279,6 +281,8 @@ bool8 TryStartRoamerEncounter(void)
 void UpdateRoamerHPStatus(struct Pokemon *mon)
 {
     u32 status = GetMonData(mon, MON_DATA_STATUS);
+    if (B_POLISHED_MOVE_BALANCE && PolishedGetSpeciesBaseData(GetMonData(mon, MON_DATA_SPECIES)) != NULL)
+        status = PolishedRoamerSavedStatus(status);
 
     ROAMER(gEncounteredRoamerIndex)->hp = GetMonData(mon, MON_DATA_HP);
     ROAMER(gEncounteredRoamerIndex)->statusA = status;

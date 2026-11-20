@@ -268,6 +268,7 @@ enum RandomTag
     RNG_POLISHED_CAPTURE_SHAKE,
     RNG_POLISHED_SAFARI_DURATION,
     RNG_POLISHED_SAFARI_FLEE,
+    RNG_POLISHED_ESCAPE,
 };
 
 #define RandomWeighted(tag, ...) \

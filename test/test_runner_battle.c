@@ -14,6 +14,7 @@
 #include "party_menu.h"
 #include "random.h"
 #include "test/battle.h"
+#include "test/escape.h"
 #include "trainer_pools.h"
 #include "window.h"
 #include "constants/characters.h"
@@ -3388,6 +3389,20 @@ void SkipTurn(u32 sourceLine, struct BattlePokemon *battler)
     enum BattlerId battlerId = battler - gBattleMons;
     INVALID_IF(DATA.turnState == TURN_CLOSED, "SKIP_TURN outside TURN");
     DATA.actionBattlers |= 1 << battlerId;
+}
+
+void TestRunBattle(u32 sourceLine, struct BattlePokemon *battler, struct EscapeContext ctx)
+{
+    enum BattlerId battlerId = battler - gBattleMons;
+    INVALID_IF(DATA.turnState == TURN_CLOSED, "RUN outside TURN");
+    INVALID_IF(DATA.actionBattlers & (1 << battlerId), "Multiple battler actions");
+    INVALID_IF(IsAITest() && (battlerId & BIT_SIDE) == B_SIDE_OPPONENT, "RUN cannot override an AI opponent");
+    INVALID_IF(ctx.explicitAllowed && !ctx.allowed && (battlerId & BIT_SIDE) == B_SIDE_OPPONENT, "Only a player RUN can be denied at selection");
+    if (ctx.explicitRNG)
+        DATA.battleRecordTurns[DATA.turns][battlerId].rng = ctx.rng;
+    PushBattlerAction(sourceLine, battlerId, RECORDED_ACTION_TYPE, B_ACTION_RUN);
+    if (!ctx.explicitAllowed || ctx.allowed)
+        DATA.actionBattlers |= 1 << battlerId;
 }
 
 void SendOut(u32 sourceLine, struct BattlePokemon *battler, u32 partyIndex)

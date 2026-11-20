@@ -4363,3 +4363,63 @@ passed again. Final Johto ROM SHA-256:
 
 The strict completion gate still exits 2 for fifteen domains, 4,136 lexical
 blocks and 133 effect families awaiting complete behavioral evidence.
+
+## Source escape and roaming flee decisions
+
+Twenty-seven additional runtime groups and four host tests cover authenticated
+`CheckRunSpeed`, `EnemyCanFlee`, `CheckLockedIn` and roaming status persistence.
+The independent byte-ALU reference supplies 5,184 vectors, including word
+truncation, zero divisors, quotient overflow, inclusive random-byte equality
+and the 255-to-zero attempt-counter wrap. Run uses effective Speed; choosing
+Fight resets the counter, while switching preserves it. The source does not
+halve Speed for Macho Brace or Power items, including ordinary action ordering.
+Active Run Away precedes Smoke Ball, then Ghost typing; move traps precede
+trapping abilities. Neutralizing Gas still suppresses Run Away.
+
+The real wild opponent controller now selects source roaming actions. Sleep,
+freeze and locked move commitments prevent flee selection; traps and status
+are checked again when the flee action executes. A faster roamer gives the
+player an action before fleeing, so newly applied trapping/status can stop it.
+Enemy Smoke Ball does not bypass source traps, and waking an initially sleeping
+roamer does not invent a flee decision later in the same turn. Eligible roaming
+opponents grant the player's source free-escape shortcut. Doubles, active
+gimmicks, special battle formats and additional native restrictions retain
+their scoped native paths.
+
+The first four valid regression groups failed on the parent runtime: ability
+versus item precedence, effective paralysis Speed, Ghost escape under older
+native settings, and training-item Speed. Full parity remains OPEN. Source
+special battle-type bindings, trainer forfeiture, replacement-menu escape,
+complete Safari flow, roamer creation/routes/encounters and complete battle-end
+outcomes still require evidence. Exact RNG stream and source presentation are
+not certified by these deterministic scenario checks. Expansion's full HP and
+save capacity is retained.
+
+All 916 source groups and six AI timing groups passed with unchanged frame
+budgets. Final review added an Enigma e-Reader control that failed because
+roamer ordering consulted the player's eligibility rather than the fleeing
+opponent's. After correcting that guard, all 27 escape groups passed again in
+both source and native profiles. This is full-source plus focused final-rerun
+evidence; the current suite does not claim a new full native sweep.
+
+All 102 source reproducibility/check commands and twelve ARM compiler probes
+passed. The production Flash probe passed twelve assertions across one
+save/reset/load cycle: source toxic poison became ordinary poison and 300 HP
+survived without truncation. The probe exercises the shipping save APIs; it
+does not certify the full roamer encounter or battle-end lifecycle. Both ROM
+builds, twelve demo checks, 21 registered trainer teams/43 Pokemon and the
+72-assertion capture-storage probe also passed. The production-linked audit
+found zero differences in all 255 mapped moves and zero mismatches across
+43,792 compatibility checks; the 109 known machine/lesson gaps are unchanged.
+The strict completeness gate still exits 2 for fifteen domains, 4,136 lexical
+blocks and 133 effect families awaiting complete behavioral evidence.
+
+The campaign passed 102 checks and nineteen directed warps, including all
+starter/rival branches, Sprout Tower, Falkner, badge/Roost/Togepi rewards and
+Save/reset/Continue, on Johto ROM SHA-256
+`1a1abc0a2e1374980f9d53a0d10be10465ce9151c831c051e97ef359c152f8f8`.
+After the optional Enigma action-order guard, both production ROMs were rebuilt.
+The twelve demo checks, twelve roamer Flash assertions, 21 trainer/43 Pokemon
+probe, 72 capture-storage assertions and production-linked move/machine audit
+all passed again. Final Johto ROM SHA-256:
+`422447102b0ac75aba0e89336e588219d3c27660246e0a63cd9743355ff0549a`.
