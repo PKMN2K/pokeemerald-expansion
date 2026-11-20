@@ -4793,9 +4793,14 @@ static void TurnValuesCleanUp(bool32 endTurn)
 {
     for (enum BattlerId i = 0; i < gBattlersCount; i++)
     {
+        bool32 sourceFutureImpact = endTurn
+            && gBattleStruct->futureSight[i].counter == 1
+            && gBattleStruct->futureSight[i].move == MOVE_FUTURE_SIGHT
+            && UsesPolishedBattleRules(i, GetOppositeBattler(i));
         if (endTurn)
         {
-            gProtectStructs[i].protected = PROTECT_NONE;
+            if (!sourceFutureImpact)
+                gProtectStructs[i].protected = PROTECT_NONE;
             gProtectStructs[i].quash = FALSE;
             gProtectStructs[i].usedCustapBerry = FALSE;
             gProtectStructs[i].quickDraw = FALSE;
@@ -4823,7 +4828,8 @@ static void TurnValuesCleanUp(bool32 endTurn)
         gSpecialStatuses[i].parentalBondState = PARENTAL_BOND_OFF;
         gBattleStruct->battlerState[i].usedEjectItem = FALSE;
         gProtectStructs[i].lashOutAffected = FALSE;
-        gBattleMons[i].volatiles.endured = FALSE;
+        if (!sourceFutureImpact)
+            gBattleMons[i].volatiles.endured = FALSE;
     }
 
     gSideTimers[B_SIDE_PLAYER].followmeTimer = 0;

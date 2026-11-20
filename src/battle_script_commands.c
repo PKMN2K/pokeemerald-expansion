@@ -7821,6 +7821,8 @@ bool32 IsSubstituteProtected(enum BattlerId battlerAtk, enum BattlerId battlerDe
 {
     if (!gBattleMons[battlerDef].volatiles.substitute)
         return FALSE;
+    else if (move == MOVE_FUTURE_SIGHT && UsesPolishedBattleRules(battlerAtk, battlerDef))
+        return FALSE;
     else if (move == MOVE_NONE)
         return TRUE;
     else if (IsBattleMoveStatus(move) && battlerAtk == battlerDef)

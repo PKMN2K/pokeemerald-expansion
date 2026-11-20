@@ -56,6 +56,7 @@
     "MOVE_PECK",
     "MOVE_DRILL_PECK",
     "MOVE_CLOSE_COMBAT",
+    "MOVE_LOW_KICK",
     "MOVE_STRENGTH",
     "MOVE_ABSORB",
     "MOVE_MEGA_DRAIN",
@@ -115,6 +116,7 @@
     "MOVE_FACADE",
     "MOVE_FLAME_CHARGE",
     "MOVE_HYPER_VOICE",
+    "MOVE_GYRO_BALL",
     "MOVE_ENERGY_BALL",
     "MOVE_AEROBLAST",
     "MOVE_SEED_BOMB",
@@ -160,6 +162,7 @@
     "MOVE_EXTREMESPEED",
     "MOVE_ANCIENTPOWER",
     "MOVE_SHADOW_BALL",
+    "MOVE_FUTURE_SIGHT",
     "MOVE_BRICK_BREAK",
     "MOVE_WHIRLPOOL",
     "MOVE_DARK_PULSE",
@@ -168,11 +171,7 @@
     "MOVE_DISARMING_VOICE",
     "MOVE_STRUGGLE"
   ],
-  "deferred_damage_pipeline_moves": [
-    "MOVE_LOW_KICK",
-    "MOVE_GYRO_BALL",
-    "MOVE_FUTURE_SIGHT"
-  ],
+  "deferred_damage_pipeline_moves": [],
   "source_move_flags": {
     "MOVE_BULLET_PUNCH": 1,
     "MOVE_DIZZY_PUNCH": 9,
@@ -269,7 +268,7 @@
   ],
   "limits": [
     "Arithmetic coverage does not establish all move branches, damage event order, or exact RNG stream.",
-    "Future Sight, Low Kick and Gyro Ball keep their existing paths pending dedicated adapters.",
+    "Dynamic powers and Future Sight use the separately authenticated dynamic_damage contracts.",
     "Optional moves, abilities, damage items, terrain, gimmicks and doubles keep native calculation.",
     "AI uses the same numeric calculation, but source AI decision parity remains open."
   ],

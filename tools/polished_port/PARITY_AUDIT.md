@@ -4185,3 +4185,76 @@ After the final Me First, Dive and Glaive Rush compatibility guards, the ROM was
 rebuilt and all twelve demo checks passed again; those guards also pass the
 final source and native battle suites. Final Johto ROM SHA-256:
 `9e578a3cbdd4d7743197dcf2eb380fa61cae77d14c7cbfbdd1eb25c2399c518a`.
+
+## Dynamic powers and delayed attacks
+
+The shared source calculation now includes all 168 mapped attacks whose effect
+scripts call `damagecalc`. The three previously deferred moves have dedicated
+adapters; this is not a claim that every branch of those attacks is certified.
+
+Low Kick reads the pinned body-data row for all 391 mapped species/forms,
+including cosmetic aliases and the current transformed species. It halves that
+weight after Light Metal suppression, then chooses the first strictly lower
+threshold in the source's descending table. The unusual thresholds 2000, 1000,
+50, 25, 10 and 0 are intentional source behavior, not modern weight tiers.
+Unmapped species, Float Stone, Autotomize and Heavy Metal keep native arithmetic.
+Light Metal on weight-one Gastly/Haunter produces zero: the source table scan
+can never terminate. This adapter deliberately retains native arithmetic for
+that ability-copy boundary instead of reproducing the hang; it is an explicit
+source deviation.
+Gyro Ball uses effective Speed, halves both words while the user's exceeds 255,
+omits the native plus-one and clamps to 1–150; a zero user Speed produces one.
+
+Future Sight retains target-indexed native storage while resolving source
+singles in user Speed order, honoring Trick Room and fresh random Speed ties.
+The comparison is skipped when no delayed attack is pending; exact RNG stream
+parity remains open. Impact resets the skipped hit-check loop state,
+checks Protect and Fly/Dig/No Guard, and bypasses Substitute. Protect and Endure
+survive until a pending source impact. Switched-out or fainted original users
+supply their party stats/types, with no attacking stages, ability or held-item
+boost; the active replacement's accuracy stage is ignored. The source damage
+and critical paths are used once per external hit. Active users retain current
+stats/items, but Analytic and Metronome never boost Future Sight. Impact does
+not overwrite selected-move history, change consecutive-use counters, advance
+Rampage, clear Rollout or activate Destiny Bond. Doubles, gimmicks and native
+profiles retain their separate paths.
+
+Twenty-eight groups include all 65,535 positive word-weight values, 391 mapped
+weights, 1,560 both-side/Light Metal damage comparisons plus four zero-weight
+guards, 529 Gyro Ball boundary vectors, 968 effective-Speed comparisons and
+338 external/active accuracy-stage combinations. Live tests cover switching, STAB, held boosts, active stat changes,
+critical probabilities, Dark immunity, protection, Substitute, semi-invulnerable
+targets, repeated scheduling, both-side impact order, Trick Room, tied-Speed
+probabilities, history and native controls.
+The first five groups all failed on the parent runtime. Expanded testing exposed
+additional Substitute, stale hit-check loop, protection-lifetime and delayed
+move bookkeeping gaps before the fixes.
+
+The authenticated archive now has 336 source files and 4,067 lexical blocks.
+All fifteen battle domains and 133 effect families still retain obligations.
+In particular, global residual/faint/replacement ordering (including simultaneous
+lethal delayed attacks), complete ability/item trigger ordering, type and
+suppression edges, source AI decisions, capture/rewards, facility/link rules and
+exact RNG/presentation are still open. The strict completion gate must continue
+to reject full parity; a passing regression suite cannot close those obligations.
+
+Validation: all 863 source groups and six AI timing groups passed after the
+final guards, with the original AI frame limits unchanged. The full native
+run passed 6,084 groups with nine existing expected failures and 585 existing
+TODOs, with no unexpected failures; the final 28-group native rerun also
+passed after the Trick Room, Speed-tie and zero-weight guards. Both final
+production ROM builds, all 97 source checks, twelve ARM compiler probes and
+twelve live demo checks passed.
+
+The final production-linked move/machine audit found zero differences in all
+255 mapped move records and zero mismatches across 43,792 compatibility checks.
+All 109 documented machine/lesson gaps are unchanged. Strict completeness
+continues to exit 2 for the fifteen domains, 4,067 lexical blocks and 133 effect
+families that still need behavioral evidence.
+
+The campaign passed 101 checks and nineteen directed warps, including Falkner,
+badge/Roost/Togepi rewards and Save/reset/Continue, on Johto ROM SHA-256
+`ac3d5192d2d8e51b56586471040930780da85cc253fd071daa8cdd7a00418172`.
+After the final guards, both ROMs were rebuilt and the twelve demo checks and
+production-linked audit passed again. Final Johto ROM SHA-256:
+`4d075879c5bab3e9ef6698e237e0f6cafc83dce3a87bdc0c107decdee15ebea0`.

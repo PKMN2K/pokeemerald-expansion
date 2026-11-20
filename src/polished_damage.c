@@ -6,6 +6,42 @@
 #include "pokemon.h"
 #include "polished_damage.h"
 #include "data/polished_damage.h"
+#include "data/polished_dynamic_damage.h"
+
+bool32 IsPolishedFutureSightImpact(enum BattlerId user, enum BattlerId target, enum Move move)
+{
+    return move == MOVE_FUTURE_SIGHT
+        && gBattleStruct->eventState.endTurn == ENDTURN_FUTURE_SIGHT
+        && gBattleStruct->futureSight[target].counter == 0
+        && UsesPolishedBattleRules(user, target);
+}
+
+u32 PolishedBattleWeight(enum Species species)
+{
+    return species < NUM_SPECIES ? sPolishedBattleWeights[species] : 0;
+}
+
+u32 PolishedLowKickPower(u32 weight)
+{
+    for (u32 i = 0; i < ARRAY_COUNT(sPolishedLowKickBands); i++)
+        if (weight > sPolishedLowKickBands[i].threshold)
+            return sPolishedLowKickBands[i].power;
+    // Zero never terminates the source table scan. The runtime selector keeps
+    // that modified-ability case native; retain a bounded defensive fallback.
+    return 20;
+}
+
+u32 PolishedGyroBallPower(u32 userSpeed, u32 targetSpeed)
+{
+    if (!userSpeed)
+        return 1;
+    while (userSpeed > 255)
+    {
+        userSpeed >>= 1;
+        targetSpeed >>= 1;
+    }
+    return min(150, max(1, 25 * targetSpeed / userSpeed));
+}
 
 static bool32 HasNativeDamageItem(enum HoldEffect effect)
 {
@@ -31,7 +67,11 @@ bool32 UsesPolishedDamageRules(struct DamageContext *ctx)
     return UsesPolishedBattleRules(ctx->battlerAtk, ctx->battlerDef)
         && !ctx->isSelfInflicted && !ctx->fixedBasePower
         && ctx->move < MOVES_COUNT && sPolishedDamageMoves[ctx->move]
-        && !gSpecialStatuses[ctx->battlerAtk].attackerInParty
+        && (!gSpecialStatuses[ctx->battlerAtk].attackerInParty || ctx->move == MOVE_FUTURE_SIGHT)
+        && (ctx->move != MOVE_LOW_KICK
+         || (PolishedBattleWeight(gBattleMons[ctx->battlerDef].species) > (ctx->abilities[ctx->battlerDef] == ABILITY_LIGHT_METAL ? 1 : 0)
+          && !gBattleMons[ctx->battlerDef].volatiles.autotomizeCount
+          && ctx->holdEffects[ctx->battlerDef] != HOLD_EFFECT_FLOAT_STONE))
         && sPolishedDamageAbilities[ctx->abilities[ctx->battlerAtk]]
         && sPolishedDamageAbilities[ctx->abilities[ctx->battlerDef]]
         && !HasNativeDamageItem(ctx->holdEffects[ctx->battlerAtk])
@@ -118,7 +158,7 @@ static u32 OffensiveAbility(struct DamageContext *ctx, u32 value, u32 power)
         if (flags & 8) { numerator = 13; denominator = 10; }
         break;
     case ABILITY_ANALYTIC:
-        if (MovesAfterTarget(ctx))
+        if (ctx->move != MOVE_FUTURE_SIGHT && MovesAfterTarget(ctx))
             { numerator = 13; denominator = 10; }
         break;
     case ABILITY_SOLAR_POWER:
@@ -234,7 +274,7 @@ u32 PolishedDamageBeforeRoll(struct DamageContext *ctx, u32 power)
     }
     defense = max(1, defense);
     damage = (2 * user->level / 5 + 2) * power * attack;
-    if (ctx->abilities[d] != ABILITY_UNAWARE && (!ctx->isCrit || attackStage >= DEFAULT_STAT_STAGE))
+    if (!gSpecialStatuses[a].attackerInParty && ctx->abilities[d] != ABILITY_UNAWARE && (!ctx->isCrit || attackStage >= DEFAULT_STAT_STAGE))
         damage = PolishedDamageStage(damage, attackStage);
     if (ctx->abilities[a] != ABILITY_UNAWARE && (!ctx->isCrit || defenseStage < DEFAULT_STAT_STAGE))
         damage = PolishedDamageStage(damage, 12 - defenseStage);
@@ -265,7 +305,10 @@ u32 PolishedDamageBeforeRoll(struct DamageContext *ctx, u32 power)
         if (!physical) damage = PolishedDamageScale(damage, 3, 2);
         break;
     case HOLD_EFFECT_LIFE_ORB: damage = PolishedDamageScale(damage, 13, 10); break;
-    case HOLD_EFFECT_METRONOME: damage = PolishedDamageScale(damage, 5 + min(5, user->volatiles.metronomeItemCounter), 5); break;
+    case HOLD_EFFECT_METRONOME:
+        if (ctx->move != MOVE_FUTURE_SIGHT)
+            damage = PolishedDamageScale(damage, 5 + min(5, user->volatiles.metronomeItemCounter), 5);
+        break;
     case HOLD_EFFECT_PUNCHING_GLOVE:
         if (sPolishedDamageFlags[ctx->move] & 1) damage = PolishedDamageScale(damage, 11, 10);
         break;

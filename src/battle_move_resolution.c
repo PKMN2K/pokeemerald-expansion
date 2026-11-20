@@ -19,6 +19,7 @@
 #include "constants/polished_freeze.h"
 #include "constants/polished_battle_foundations.h"
 #include "test_runner.h"
+#include "polished_damage.h"
 #include "constants/battle_move_resolution.h"
 #include "constants/songs.h"
 #include "data/polished_magic_bounce.h"
@@ -3916,6 +3917,7 @@ static enum MoveEndResult MoveEndFaintBlock(struct BattleCalcValues *cv)
             break;
         case FAINT_BLOCK_TRY_DESTINY_BOND: // Checked before FAINT_BLOCK_FAINT_TARGET but occurs after since volatiles are cleared on faint
             if (gBattleMons[cv->battlerDef].volatiles.destinyBond
+             && !(B_POLISHED_MOVE_BALANCE && IsPolishedFutureSightImpact(cv->battlerAtk, cv->battlerDef, cv->move))
              && IsBattlerTurnDamaged(cv->battlerDef, EXCLUDING_SUBSTITUTES)
              && IsBattlerAlive(cv->battlerAtk)
              && GetActiveGimmick(cv->battlerAtk) != GIMMICK_DYNAMAX
@@ -3954,6 +3956,11 @@ static enum MoveEndResult MoveEndFaintBlock(struct BattleCalcValues *cv)
 
 static enum MoveEndResult MoveEndUpdateLastMoves(struct BattleCalcValues *cv)
 {
+    if (B_POLISHED_MOVE_BALANCE && IsPolishedFutureSightImpact(cv->battlerAtk, cv->battlerDef, cv->move))
+    {
+        gBattleScripting.moveendState++;
+        return MOVEEND_RESULT_CONTINUE;
+    }
     if (!IsOnPlayerSide(cv->battlerAtk))
         UpdateStallMons(cv);
 
@@ -5293,7 +5300,8 @@ static enum MoveEndResult MoveEndRampage(struct BattleCalcValues *cv)
 {
     enum MoveEndResult result = MOVEEND_RESULT_CONTINUE;
 
-    if (gBattleMons[cv->battlerAtk].volatiles.rampageTurns == 0
+    if ((B_POLISHED_MOVE_BALANCE && IsPolishedFutureSightImpact(cv->battlerAtk, cv->battlerDef, cv->move))
+     || gBattleMons[cv->battlerAtk].volatiles.rampageTurns == 0
      || gSpecialStatuses[cv->battlerAtk].dancerUsedMove
      || B_RAMPAGE_CONFUSION < GEN_5)
     {
@@ -5416,7 +5424,8 @@ static enum MoveEndResult MoveEndClearBits(struct BattleCalcValues *cv)
     if (originallyUsedMove != MOVE_NONE)
         TryUpdateEvolutionTracker(IF_USED_MOVE_X_TIMES, 1, originallyUsedMove);
 
-    SetSameMoveTurnValues(cv->moveEffect);
+    if (!(B_POLISHED_MOVE_BALANCE && IsPolishedFutureSightImpact(cv->battlerAtk, cv->battlerDef, cv->move)))
+        SetSameMoveTurnValues(cv->moveEffect);
     TryClearChargeVolatile(moveType);
     gProtectStructs[cv->battlerAtk].shellTrap = FALSE;
     gBattleStruct->battlerState[cv->battlerAtk].ateBoost = FALSE;

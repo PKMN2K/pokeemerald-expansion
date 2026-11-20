@@ -27,7 +27,9 @@
       "data/moves/priorities.asm",
       "data/moves/punching_moves.asm",
       "data/moves/launcher_moves.asm",
-      "data/moves/slicing_moves.asm"
+      "data/moves/slicing_moves.asm",
+      "data/moves/low_kick_power.asm",
+      "data/pokemon/body_data.asm"
     ],
     "limitation": "This is the battle boundary and shared dependencies, not a proof of transitive call-graph closure. External field scripts, UI and data references still require end-to-end evidence."
   },
@@ -7467,6 +7469,20 @@
       ]
     },
     {
+      "path": "data/moves/low_kick_power.asm",
+      "git_blob_sha1": "6680eb6b17c734b41e84b7ee8f8574c0eb55e7d8",
+      "blocks": [
+        {
+          "label": "LowKickPowerByWeight",
+          "line": 1,
+          "sha256": "319ec78f885d6970c506180d423b39353a18f9f9d5a48d1f2c6d71fc9b4d1b91",
+          "local_labels": 0,
+          "branch_sites": 0,
+          "behavior": "unverified"
+        }
+      ]
+    },
+    {
       "path": "data/moves/priorities.asm",
       "git_blob_sha1": "f1a56dad01d359da7e66a2de450359aa4e7cd34f",
       "blocks": [
@@ -7524,6 +7540,20 @@
           "label": "DefaultOptions",
           "line": 5,
           "sha256": "2cd2ba9265c77fd15e5034f15f04a4ca6cc2ee28f797c6b89dbca02938ca8366",
+          "local_labels": 0,
+          "branch_sites": 0,
+          "behavior": "unverified"
+        }
+      ]
+    },
+    {
+      "path": "data/pokemon/body_data.asm",
+      "git_blob_sha1": "cd841ed5af0dddaad0e5c517d3cb36396ab693da",
+      "blocks": [
+        {
+          "label": "PokemonBodyData",
+          "line": 7,
+          "sha256": "3634ddcda77f758e74ecc609e3c86619bcc4914e8296c6dbd08acc6366fb42d5",
           "local_labels": 0,
           "branch_sites": 0,
           "behavior": "unverified"
@@ -38604,6 +38634,146 @@
       "name": "Polished damage AI cached native modifiers match fresh rolls and reset per calculation",
       "kind": "DOUBLE_BATTLE_TEST",
       "path": "test/battle/polished_damage.c"
+    },
+    {
+      "name": "Polished dynamic damage Low Kick uses strict source weight bands",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_dynamic_damage.c"
+    },
+    {
+      "name": "Polished dynamic damage maps every source species form and Light Metal weight",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_dynamic_damage.c"
+    },
+    {
+      "name": "Polished dynamic damage Low Kick covers every word weight boundary",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_dynamic_damage.c"
+    },
+    {
+      "name": "Polished dynamic damage Gyro Ball includes zero and truncated zero speeds",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_dynamic_damage.c"
+    },
+    {
+      "name": "Polished dynamic damage Low Kick respects Light Metal after Mold Breaker",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_dynamic_damage.c"
+    },
+    {
+      "name": "Polished dynamic damage Gyro Ball uses effective paralysis and held Speed",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_dynamic_damage.c"
+    },
+    {
+      "name": "Polished dynamic damage native weights items and gimmicks retain their paths",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_dynamic_damage.c"
+    },
+    {
+      "name": "Polished dynamic damage leaves all deferred moves native in doubles",
+      "kind": "DOUBLE_BATTLE_TEST",
+      "path": "test/battle/polished_dynamic_damage.c"
+    },
+    {
+      "name": "Polished dynamic damage Future Sight uses original party stats and STAB after switching",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_dynamic_damage.c"
+    },
+    {
+      "name": "Polished dynamic damage Future Sight takes active stages at impact",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_dynamic_damage.c"
+    },
+    {
+      "name": "Polished dynamic damage Future Sight never receives Analytic or Metronome boosts",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_dynamic_damage.c"
+    },
+    {
+      "name": "Polished dynamic damage Future Sight blocks Dark targets after either side switches",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_dynamic_damage.c"
+    },
+    {
+      "name": "Polished dynamic damage Future Sight bypasses Substitute at impact",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_dynamic_damage.c"
+    },
+    {
+      "name": "Polished dynamic damage Future Sight checks Fly Dig and No Guard at impact",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_dynamic_damage.c"
+    },
+    {
+      "name": "Polished dynamic damage Future Sight preserves Endure through impact",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_dynamic_damage.c"
+    },
+    {
+      "name": "Polished dynamic damage Future Sight rejects duplicate scheduling and reopens after impact",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_dynamic_damage.c"
+    },
+    {
+      "name": "Polished dynamic damage Future Sight preserves selected move history and Metronome counter",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_dynamic_damage.c"
+    },
+    {
+      "name": "Polished dynamic damage Future Sight does not advance or clear Rollout",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_dynamic_damage.c"
+    },
+    {
+      "name": "Polished dynamic damage Future Sight does not take its user down through Destiny Bond",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_dynamic_damage.c"
+    },
+    {
+      "name": "Polished dynamic damage Gyro Ball uses source speed division boundaries",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_dynamic_damage.c"
+    },
+    {
+      "name": "Polished dynamic damage Low Kick uses a transformed target current species",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_dynamic_damage.c"
+    },
+    {
+      "name": "Polished dynamic damage Future Sight uses source critical probability with an external user",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_dynamic_damage.c"
+    },
+    {
+      "name": "Polished dynamic damage external Future Sight discards replacement stages and crit items",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_dynamic_damage.c"
+    },
+    {
+      "name": "Polished dynamic damage Future Sight external accuracy retains only target stages",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_dynamic_damage.c"
+    },
+    {
+      "name": "Polished dynamic damage external Future Sight ignores the replacement accuracy stage",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_dynamic_damage.c"
+    },
+    {
+      "name": "Polished dynamic damage Future Sight respects Protect at impact",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_dynamic_damage.c"
+    },
+    {
+      "name": "Polished dynamic damage Future Sight resolves by user speed",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_dynamic_damage.c"
+    },
+    {
+      "name": "Polished dynamic damage Future Sight makes a fresh random choice on tied Speed",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_dynamic_damage.c"
     },
     {
       "name": "Polished patterned Magikarp evolves through the real battle UI and retains its breeding pattern",

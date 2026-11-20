@@ -46,12 +46,9 @@ def build():
     active, deferred = [], []
     for m in moves:
         c = scripts[m['source_effect']]['commands']
-        # Dynamic power adapters need their own source weight/speed evidence.
-        if 'damagecalc' in c and m['source_move'] not in ('FUTURE_SIGHT', 'LOW_KICK', 'GYRO_BALL'):
+        if 'damagecalc' in c:
             active.append(m['target_move'])
             out.append(f'    [{m["target_move"]}] = 1,')
-        elif 'damagecalc' in c:
-            deferred.append(m['target_move'])
     out += ['};', 'static const u8 sPolishedDamageFlags[MOVES_COUNT] = {']
     flags = {}
     for filename, flag in [('punching_moves', 1), ('launcher_moves', 2), ('slicing_moves', 4)]:
@@ -76,7 +73,7 @@ def build():
                     damage_pipeline_moves=active, deferred_damage_pipeline_moves=deferred,
                     source_move_flags=flags, damage_order=order,
                     limits=['Arithmetic coverage does not establish all move branches, damage event order, or exact RNG stream.',
-                            'Future Sight, Low Kick and Gyro Ball keep their existing paths pending dedicated adapters.',
+                            'Dynamic powers and Future Sight use the separately authenticated dynamic_damage contracts.',
                             'Optional moves, abilities, damage items, terrain, gimmicks and doubles keep native calculation.',
                             'AI uses the same numeric calculation, but source AI decision parity remains open.'])
     vectors = []

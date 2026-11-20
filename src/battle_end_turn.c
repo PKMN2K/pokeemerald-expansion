@@ -236,6 +236,9 @@ static bool32 HandleEndTurnAffection(enum BattlerId battler)
 static bool32 IsFutureSightAttackerInParty(enum BattlerId battlerAtk, enum BattlerId battlerDef)
 {
     struct Pokemon *party = GetBattlerParty(battlerAtk);
+    if (gBattleStruct->futureSight[battlerDef].move == MOVE_FUTURE_SIGHT
+     && UsesPolishedBattleRules(battlerAtk, battlerDef) && !IsBattlerAlive(battlerAtk))
+        return TRUE;
     if (IsDoubleBattle())
     {
         return &party[gBattleStruct->futureSight[battlerDef].partyIndex] != &party[gBattlerPartyIndexes[battlerAtk]]
@@ -250,6 +253,33 @@ static bool32 IsFutureSightAttackerInParty(enum BattlerId battlerAtk, enum Battl
 static bool32 HandleEndTurnFutureSight(enum BattlerId battler)
 {
     bool32 effect = FALSE;
+
+    // Source timers belong to the attacking side. CheckSpeed is repeated at
+    // this phase (including Trick Room and a fresh tie), not taken from the
+    // native start-of-end-turn order. battlerSide is otherwise unused here and
+    // the dispatcher clears it when the two singles battlers are complete.
+    if (B_POLISHED_MOVE_BALANCE && UsesPolishedBattleRules(battler, GetOppositeBattler(battler))
+     && (gBattleStruct->futureSight[battler].counter || gBattleStruct->futureSight[GetOppositeBattler(battler)].counter)
+     && gBattleStruct->futureSight[battler].move != MOVE_DOOM_DESIRE
+     && gBattleStruct->futureSight[GetOppositeBattler(battler)].move != MOVE_DOOM_DESIRE)
+    {
+        if (gBattleStruct->eventState.endTurnBattler == 0)
+        {
+            struct BattleCalcValues cv = {0};
+            cv.battlerAtk = GetBattlerAtPosition(B_POSITION_PLAYER_LEFT);
+            cv.battlerDef = GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT);
+            for (u32 i = 0; i < gBattlersCount; i++)
+            {
+                cv.abilities[i] = GetBattlerAbility(i);
+                cv.holdEffects[i] = GetBattlerHoldEffect(i);
+            }
+            s32 first = GetWhichBattlerFasterOrTies(&cv, TRUE);
+            gBattleStruct->eventState.battlerSide = first == 0
+                ? RandomUniform(RNG_POLISHED_FUTURE_SIGHT_SPEED_TIE, 0, 1) : first > 0 ? B_SIDE_PLAYER : B_SIDE_OPPONENT;
+        }
+        enum BattleSide attackerSide = gBattleStruct->eventState.battlerSide ^ gBattleStruct->eventState.endTurnBattler;
+        battler = GetBattlerAtPosition(attackerSide == B_SIDE_PLAYER ? B_POSITION_OPPONENT_LEFT : B_POSITION_PLAYER_LEFT);
+    }
 
     gBattleStruct->eventState.endTurnBattler++;
 
@@ -270,6 +300,13 @@ static bool32 HandleEndTurnFutureSight(enum BattlerId battler)
         gBattlerAttacker = gBattleStruct->futureSight[battler].battlerIndex;
         gCurrentMove = gBattleStruct->futureSight[battler].move;
         gBattleStruct->eventState.atkCanceler = CANCELER_TARGET_FAILURE;
+        if (gCurrentMove == MOVE_FUTURE_SIGHT && UsesPolishedBattleRules(gBattlerAttacker, gBattlerTarget))
+        {
+            // This entry skips CancelerClearFlags and CancelerNoTarget. Do not
+            // inherit their loop state from a charging move or an end-turn item.
+            gBattleStruct->eventState.moveEndBlock = 0;
+            gBattleStruct->eventState.atkCancelerBattler = 0;
+        }
 
         if (IsFutureSightAttackerInParty(gBattlerAttacker, gBattlerTarget))
             gSpecialStatuses[gBattlerAttacker].attackerInParty = TRUE;

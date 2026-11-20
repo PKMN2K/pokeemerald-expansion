@@ -6134,6 +6134,11 @@ static bool32 IsCraftyShieldProtected(u32 battlerAtk, u32 battlerDef, u32 move)
 
 bool32 IsBattlerProtected(struct BattleCalcValues *cv)
 {
+    // The source schedules Future Sight without a hit check, but checks Protect
+    // when it lands. Native Future Sight deliberately ignores protection.
+    if (B_POLISHED_MOVE_BALANCE && IsPolishedFutureSightImpact(cv->battlerAtk, cv->battlerDef, cv->move)
+     && gProtectStructs[cv->battlerDef].protected == PROTECT_NORMAL)
+        return TRUE;
     if (gProtectStructs[cv->battlerDef].protected == PROTECT_NONE
      && gProtectStructs[GetPartnerBattler(cv->battlerDef)].protected == PROTECT_NONE)
         return FALSE;
@@ -6586,6 +6591,14 @@ static inline u32 CalcMoveBasePower(struct DamageContext *ctx)
             basePower *= 2;
         break;
     case EFFECT_LOW_KICK:
+        if (B_POLISHED_MOVE_BALANCE && ctx->polishedDamage)
+        {
+            weight = PolishedBattleWeight(gBattleMons[battlerDef].species);
+            if (ctx->abilities[battlerDef] == ABILITY_LIGHT_METAL)
+                weight >>= 1;
+            basePower = PolishedLowKickPower(weight);
+            break;
+        }
         weight = GetBattlerWeight(battlerDef, ctx->abilities[battlerDef], ctx->holdEffects[battlerDef]);
         for (i = 0; sWeightToDamageTable[i] != 0xFFFF; i += 2)
         {
@@ -6621,6 +6634,11 @@ static inline u32 CalcMoveBasePower(struct DamageContext *ctx)
     case EFFECT_GYRO_BALL:
         {
             u32 attackerSpeed = GetBattlerTotalSpeedStat(battlerAtk, ctx->abilities[battlerAtk], ctx->holdEffects[battlerAtk]);
+            if (B_POLISHED_MOVE_BALANCE && ctx->polishedDamage)
+            {
+                basePower = PolishedGyroBallPower(attackerSpeed, GetBattlerTotalSpeedStat(battlerDef, ctx->abilities[battlerDef], ctx->holdEffects[battlerDef]));
+                break;
+            }
             if (attackerSpeed == 0)
             {
                 basePower = 1;
@@ -8211,6 +8229,14 @@ static inline s32 DoFutureSightAttackDamageCalc(struct DamageContext *ctx)
 
     ctx->abilities[ctx->battlerAtk] = ABILITY_NONE;
     ctx->holdEffects[ctx->battlerAtk] = HOLD_EFFECT_NONE;
+    if (B_POLISHED_MOVE_BALANCE && UsesPolishedDamageRules(ctx))
+    {
+        // DoMoveDamageCalc handles effectiveness and rolls the critical once.
+        // Preserve the native extension path below independently.
+        s32 dmg = DoMoveDamageCalc(ctx);
+        FreeRestoreBattleMons(savedBattleMons);
+        return dmg;
+    }
     ctx->typeEffectivenessModifier = CalcTypeEffectivenessMultiplier(ctx);
     ctx->isCrit = IsCriticalHit(ctx);
 
@@ -8285,8 +8311,7 @@ static bool32 UsesPolishedCriticalRules(struct DamageContext *ctx)
 {
     return UsesPolishedBattleRules(ctx->battlerAtk, ctx->battlerDef)
         && ctx->move < MOVES_COUNT && sPolishedCriticalMoves[ctx->move] != 0
-        && !gSpecialStatuses[ctx->battlerAtk].attackerInParty
-        && ctx->move != MOVE_FUTURE_SIGHT
+        && (!gSpecialStatuses[ctx->battlerAtk].attackerInParty || ctx->move == MOVE_FUTURE_SIGHT)
         && !gBattleMons[ctx->battlerAtk].volatiles.laserFocusTimer
         && !gBattleMons[ctx->battlerAtk].volatiles.dragonCheer
         && !gBattleMons[ctx->battlerAtk].volatiles.bonusCritStages
@@ -8306,6 +8331,10 @@ static ALWAYS_INLINE s32 CalcCritChanceStageForRules(struct DamageContext *ctx, 
           || (ctx->abilities[ctx->battlerAtk] == ABILITY_MERCILESS && gBattleMons[ctx->battlerDef].status1 & STATUS1_PSN_ANY))
     {
         critChance = CRITICAL_HIT_ALWAYS;
+    }
+    else if (sourceRules && gSpecialStatuses[ctx->battlerAtk].attackerInParty)
+    {
+        critChance = 0;
     }
     else
     {
@@ -10228,6 +10257,7 @@ enum Type GetBattleMoveType(enum Move move)
 
         enum BattleMoveEffects effect = GetMoveEffect(move);
         if (B_UPDATED_MOVE_TYPES < GEN_5
+         && !(move == MOVE_FUTURE_SIGHT && UsesPolishedBattleRules(gBattlerAttacker, gBattlerTarget))
          && (effect == EFFECT_BEAT_UP || effect == EFFECT_FUTURE_SIGHT))
           return TYPE_MYSTERY;
     }
@@ -11004,7 +11034,8 @@ NOINLINE u32 GetPolishedTotalAccuracy(struct BattleCalcValues *cv, u32 weather)
 
     gPotentialItemEffectBattler = battlerDef;
 
-    accStage = gBattleMons[battlerAtk].statStages[STAT_ACC];
+    accStage = cv->move == MOVE_FUTURE_SIGHT && gSpecialStatuses[battlerAtk].attackerInParty
+        ? DEFAULT_STAT_STAGE : gBattleMons[battlerAtk].statStages[STAT_ACC];
     evasionStage = gBattleMons[battlerDef].statStages[STAT_EVASION];
 
     if (cv->abilities[battlerAtk] == ABILITY_UNAWARE)
