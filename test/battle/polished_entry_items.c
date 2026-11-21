@@ -146,7 +146,7 @@ SINGLE_BATTLE_TEST("Polished entry Gas departure prevents a nested Pack switch")
         SEND_IN_MESSAGE("Chansey");
     } THEN {
         EXPECT_EQ(player->species, SPECIES_CHANSEY);
-        EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_HELD_ITEM), ITEM_EJECT_PACK);
+        EXPECT_EQ(GetMonData(&gParties[B_TRAINER_PLAYER][0], MON_DATA_HELD_ITEM), ITEM_EJECT_PACK);
     }
 }
 

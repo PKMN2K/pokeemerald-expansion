@@ -4752,3 +4752,19 @@ Finch, menu-item use and native Save/reset/Continue. Johto ROM SHA-256:
 `bad34386bebaf7d3e45961e1546faf653f99f85e69df87b248256d07f4766e47`.
 The strict gate still exits 2: all fifteen domains, 4,143 lexical source blocks
 and 133 effect families retain explicit closure obligations.
+
+## CI #1634 repair — deprecated party alias in an entry test
+
+The native test job stopped during compilation at
+`test/battle/polished_entry_items.c:149`: `gPlayerParty` expands to the deprecated
+`gPlayerPartyPtr`. Replace it with `gParties[B_TRAINER_PLAYER]`; the assertion
+still checks that the departing Gas holder retains its Eject Pack.
+
+The earlier local runtime results remain valid, but reused objects had hidden
+this strict compilation failure: Make does not track changes to
+`UNUSED_ERROR`/`DEPRECATED_ERROR`. Reproduced the failure with both flags set to
+1 and `-W test/battle/polished_entry_items.c`, then forced the same rebuild after
+the fix. All nineteen entry groups pass in both native and source profiles.
+When tightening warning flags on an existing build, force affected objects to
+rebuild (or use a clean build) before treating it as CI-equivalent evidence.
+Battle runtime, production ROMs and the three-suite closure status are unchanged.
