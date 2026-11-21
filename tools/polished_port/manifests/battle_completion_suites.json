@@ -1,0 +1,65 @@
+{
+  "source_commit": "3fa43192379df5c3e7b09a08e4d5d79af4f02f42",
+  "source_variant": "default; FAITHFUL undefined",
+  "starting_target": "7e88f8f9f2b68240951c97b2a222429283b7a302",
+  "complete_behavior_parity": false,
+  "suites": [
+    {
+      "id": 1,
+      "title": "End-turn, entry and replacement foundations",
+      "status": "implemented and regression-validated; domain closure pending",
+      "domains": [
+        "field"
+      ],
+      "contracts": [
+        "Source residual and timer phase order, per-phase Speed comparisons and faint checkpoints.",
+        "Shared entry hazard/item/ability order, deferred replacements and hazard KO loops.",
+        "Source residual arithmetic, Baton Pass state and entry status corrections with live regressions."
+      ]
+    },
+    {
+      "id": 2,
+      "title": "Action and attack resolution",
+      "status": "planned",
+      "domains": [
+        "actions",
+        "damage",
+        "moves",
+        "status",
+        "abilities",
+        "items",
+        "switching",
+        "fainting"
+      ],
+      "contracts": [
+        "All branches of 133 effect families, 129 commands and 255 move identities.",
+        "Action ordering/cancellation, arithmetic, accuracy, statuses, abilities and items.",
+        "Complete voluntary/forced/pivot/Pursuit switching and action-triggered faint chains, including cross-phase effects using Suite 1 foundations."
+      ]
+    },
+    {
+      "id": 3,
+      "title": "Battle contexts and integration",
+      "status": "planned",
+      "domains": [
+        "setup",
+        "capture_escape",
+        "rewards",
+        "ai",
+        "facility_link",
+        "presentation_rng"
+      ],
+      "contracts": [
+        "Trainer/wild setup and AI; capture/escape/roamers; rewards and saved outcomes.",
+        "Tower/link rules, RNG stream/call count, source presentation and observable order.",
+        "Full source/native, production, campaign and save validation; strict completion closure."
+      ]
+    }
+  ],
+  "effect_family_owner": 2,
+  "source_move_count": 255,
+  "source_effect_count": 133,
+  "source_command_count": 129,
+  "audit_inventory": "tools/polished_port/manifests/battle_suite.json",
+  "closure_policy": "No suite closes until every owned obligation has authenticated source, live bindings and distinguishing branch evidence. Passing regression tests alone does not certify parity."
+}

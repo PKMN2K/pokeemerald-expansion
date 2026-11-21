@@ -1,4 +1,5 @@
 #include "global.h"
+#include "polished_lifecycle.h"
 #include "polished_escape.h"
 #include "polished_capture.h"
 #include "constants/polished_hidden_power.h"
@@ -2778,6 +2779,7 @@ static void ClearSetBScriptingStruct(void)
 
 static void BattleStartClearSetData(void)
 {
+    ResetPolishedEndTurn();
     s32 i;
 
     TurnValuesCleanUp(FALSE);
@@ -2900,6 +2902,8 @@ static void BattleStartClearSetData(void)
 
 static void ClearSetDataOnLeave(enum BattlerId battler)
 {
+    bool32 sourceBaton = UsesPolishedLifecycle() && IsBattlerAlive(battler)
+        && gCurrentMove == MOVE_BATON_PASS;
     // Clear Rage Fist stacks
     if (GetConfig(B_RAGE_FIST) >= GEN_CHAMPIONS)
         GetBattlerPartyState(battler)->timesGotHit = 0;
@@ -2957,7 +2961,10 @@ static void ClearSetDataOnLeave(enum BattlerId battler)
 
         if (gBattleMons[i].volatiles.infatuation == INFATUATED_WITH(battler))
             gBattleMons[i].volatiles.infatuation = 0;
-        if (gBattleMons[i].volatiles.wrapped && gBattleMons[i].volatiles.wrappedBy == battler)
+        if (gBattleMons[i].volatiles.wrapped && gBattleMons[i].volatiles.wrappedBy == battler
+         && !(sourceBaton && (gBattleMons[i].volatiles.wrappedMove == MOVE_WRAP
+             || gBattleMons[i].volatiles.wrappedMove == MOVE_FIRE_SPIN
+             || gBattleMons[i].volatiles.wrappedMove == MOVE_WHIRLPOOL)))
             gBattleMons[i].volatiles.wrapped = FALSE;
         if (gBattleMons[i].volatiles.syrupBomb && gBattleMons[i].volatiles.stickySyrupedBy == battler)
             gBattleMons[i].volatiles.syrupBomb = FALSE;
@@ -2977,6 +2984,7 @@ static void ClearSetDataOnLeave(enum BattlerId battler)
 void SwitchInClearSetData(enum BattlerId battler, struct Volatiles *volatilesCopy)
 {
     enum BattleMoveEffects effect = GetMoveEffect(gCurrentMove);
+    bool32 sourceBaton = UsesPolishedLifecycle() && gCurrentMove == MOVE_BATON_PASS;
 
     // Data cleared both on switch and faint
     ClearSetDataOnLeave(battler);
@@ -2995,7 +3003,7 @@ void SwitchInClearSetData(enum BattlerId battler, struct Volatiles *volatilesCop
                 gBattleMons[i].volatiles.battlerWithSureHit = 0;
         }
     }
-    if (effect != EFFECT_BATON_PASS || GetConfig(B_BATON_PASS_TRAPPING) >= GEN_5)
+    if (effect != EFFECT_BATON_PASS || sourceBaton || GetConfig(B_BATON_PASS_TRAPPING) >= GEN_5)
     {
         for (enum BattlerId i = 0; i < gBattlersCount; i++)
         {
@@ -3032,6 +3040,23 @@ void SwitchInClearSetData(enum BattlerId battler, struct Volatiles *volatilesCop
         gBattleMons[battler].volatiles.battlerPreventingEscape = volatilesCopy->battlerPreventingEscape;
         gBattleMons[battler].volatiles.embargoTimer = volatilesCopy->embargoTimer;
         gBattleMons[battler].volatiles.healBlockTimer = volatilesCopy->healBlockTimer;
+        if (sourceBaton)
+        {
+            // Source CANT_RUN belongs to the trap's user. Clearing the
+            // departing user's bit frees its target (above); the opponent's
+            // bit survives, so the replacement inherits escapePrevention.
+            // Skipping NewBattleMonStatus also preserves both binding
+            // counters and Perish Song's separate counter.
+            if (volatilesCopy->wrappedMove == MOVE_WRAP || volatilesCopy->wrappedMove == MOVE_FIRE_SPIN
+             || volatilesCopy->wrappedMove == MOVE_WHIRLPOOL)
+            {
+                gBattleMons[battler].volatiles.wrapped = volatilesCopy->wrapped;
+                gBattleMons[battler].volatiles.wrapTurns = volatilesCopy->wrapTurns;
+                gBattleMons[battler].volatiles.wrappedBy = volatilesCopy->wrappedBy;
+                gBattleMons[battler].volatiles.wrappedMove = volatilesCopy->wrappedMove;
+                gBattleMons[battler].volatiles.wrappedBindingBand = volatilesCopy->wrappedBindingBand;
+            }
+        }
     }
     else if (effect == EFFECT_SHED_TAIL)
     {
@@ -3071,8 +3096,11 @@ void FaintClearSetData(enum BattlerId battler)
     // Data cleared both on switch and faint
     ClearSetDataOnLeave(battler);
 
-    for (enum Stat i = 0; i < NUM_BATTLE_STATS; i++)
-        gBattleMons[battler].statStages[i] = DEFAULT_STAT_STAGE;
+    // FaintUserPokemon leaves stages in place; SendInUserPkmn resets them.
+    // Source GetSpeed separately ignores stages while the battler is fainted.
+    if (!UsesPolishedLifecycle())
+        for (enum Stat i = 0; i < NUM_BATTLE_STATS; i++)
+            gBattleMons[battler].statStages[i] = DEFAULT_STAT_STAGE;
 
     bool32 keepTransformed = gBattleMons[battler].volatiles.transformed;
     enum Species originalSpecies = gBattleMons[battler].volatiles.transformedMonSpecies;
@@ -3593,6 +3621,7 @@ static void HandleEndTurn_ContinueBattle(void)
 {
     if (gBattleControllerExecFlags == 0)
     {
+        ResetPolishedEndTurn();
         gBattleMainFunc = BattleTurnPassed;
         for (u32 i = 0; i < BATTLE_COMMUNICATION_ENTRIES_COUNT; i++)
             gBattleCommunication[i] = 0;

@@ -1,4 +1,5 @@
 #include "global.h"
+#include "polished_lifecycle.h"
 #include "battle.h"
 #include "battle_hold_effects.h"
 #include "battle_stat_change.h"
@@ -16,6 +17,35 @@
 static bool32 FirstEventBlockEvents(struct BattleCalcValues *calcValues);
 static bool32 TryHazardsOnSwitchIn(enum BattlerId battler, enum Ability ability, enum HoldEffect holdEffect, enum Hazards hazardType);
 static bool32 SecondEventBlockEvents(struct BattleCalcValues *calcValues);
+
+static enum Hazards GetPolishedEntryHazard(enum BattleSide side)
+{
+    // SpikesDamage always handles Spikes before Toxic Spikes, irrespective
+    // of the order they were laid. Keep optional hazards in their native order.
+    while (gBattleStruct->hazardsCounter < HAZARDS_MAX_COUNT)
+    {
+        u32 index = gBattleStruct->hazardsCounter;
+        if (index == 0 && gSideTimers[side].spikesAmount)
+            return HAZARDS_SPIKES;
+        if (index == 1 && gSideTimers[side].toxicSpikesAmount)
+            return HAZARDS_TOXIC_SPIKES;
+        if (index >= 2)
+        {
+            u32 optional = 2;
+            for (u32 i = 0; i < HAZARDS_MAX_COUNT; i++)
+            {
+                enum Hazards hazard = gBattleStruct->hazardsQueue[side][i];
+                if (hazard == HAZARDS_NONE)
+                    break;
+                if (hazard != HAZARDS_SPIKES && hazard != HAZARDS_TOXIC_SPIKES && optional++ == index)
+                    return hazard;
+            }
+            return HAZARDS_NONE;
+        }
+        gBattleStruct->hazardsCounter++;
+    }
+    return HAZARDS_NONE;
+}
 
 bool32 DoSwitchInEvents(void)
 {
@@ -35,7 +65,13 @@ bool32 DoSwitchInEvents(void)
     case SWITCH_IN_EVENTS_ORDER_BY_SPEED:
         for (enum BattlerId i = 0; i < gBattlersCount; i++)
             gBattlersBySpeed[i] = i;
-        SortBattlersBySpeed(gBattlersBySpeed, FALSE);
+        if (UsesPolishedLifecycle())
+        {
+            PolishedBeginEntryHazards();
+            SortPolishedBattlersBySpeed(gBattlersBySpeed);
+        }
+        else
+            SortBattlersBySpeed(gBattlersBySpeed, FALSE);
         SortBattlersByRawSpeed(gBattlersByRawSpeed);
         gBattleStruct->battlersSorted = TRUE;
         gBattleStruct->switchInBattlerCounter = 0;
@@ -50,7 +86,36 @@ bool32 DoSwitchInEvents(void)
                 return TRUE;
         }
         gBattleStruct->switchInBattlerCounter = 0;
-        gBattleStruct->eventState.switchIn++;
+        gBattleStruct->eventState.switchIn = UsesPolishedLifecycle() ? SWITCH_IN_EVENTS_POLISHED_HAZARDS : SWITCH_IN_EVENTS_NEUTRALIZING_GAS;
+        break;
+    case SWITCH_IN_EVENTS_POLISHED_HAZARDS:
+        // Source SpikesDamageBoth precedes RunBothEntryAbilities. Reuse the
+        // optional Healing Wish/hazard handlers, but finish them for BOTH
+        // battlers before any incoming ability can remove hazards or weather.
+        while (gBattleStruct->switchInBattlerCounter < gBattlersCount)
+        {
+            battler = gBattlersBySpeed[gBattleStruct->switchInBattlerCounter];
+            calcValues.battlerAtk = battler;
+            while (gBattleStruct->eventState.battlerSwitchIn < FIRST_EVENT_BLOCK_GENERAL_ABILITIES)
+                if (FirstEventBlockEvents(&calcValues))
+                    return TRUE;
+            // SpikesDamage ends with HandleEntryItems for this battler,
+            // before the other side's hazards and either entry ability.
+            if (gBattleStruct->eventState.battlerSwitchIn == FIRST_EVENT_BLOCK_GENERAL_ABILITIES)
+            {
+                gBattleStruct->eventState.battlerSwitchIn++;
+                enum HoldEffect holdEffect = GetBattlerHoldEffect(battler);
+                if (gBattleStruct->battlerState[battler].switchIn
+                 && (holdEffect == HOLD_EFFECT_AIR_BALLOON || holdEffect == HOLD_EFFECT_ROOM_SERVICE)
+                 && ItemBattleEffects(battler, 0, holdEffect, IsOnSwitchInActivation))
+                    return TRUE;
+            }
+            gBattleStruct->switchInBattlerCounter++;
+            gBattleStruct->eventState.battlerSwitchIn = 0;
+        }
+        SortPolishedBattlersBySpeed(gBattlersBySpeed);
+        gBattleStruct->switchInBattlerCounter = 0;
+        gBattleStruct->eventState.switchIn = SWITCH_IN_EVENTS_FIRST_BLOCK;
         break;
     case SWITCH_IN_EVENTS_NEUTRALIZING_GAS:
         while (gBattleStruct->switchInBattlerCounter < gBattlersCount)
@@ -77,6 +142,9 @@ bool32 DoSwitchInEvents(void)
         {
             battler = gBattlersBySpeed[gBattleStruct->switchInBattlerCounter];
 
+            if (UsesPolishedLifecycle() && gBattleStruct->eventState.battlerSwitchIn < FIRST_EVENT_BLOCK_GENERAL_ABILITIES)
+                gBattleStruct->eventState.battlerSwitchIn = FIRST_EVENT_BLOCK_POLISHED_GAS;
+
             if (!IsBattlerAlive(battler) && gBattleStruct->eventState.battlerSwitchIn != FIRST_EVENT_BLOCK_HAZARDS)
             {
                 gBattleStruct->switchInBattlerCounter++;
@@ -85,7 +153,7 @@ bool32 DoSwitchInEvents(void)
             }
 
             calcValues.battlerAtk = battler;
-            while (gBattleStruct->eventState.battlerSwitchIn < FIRST_EVENT_BLOCK_COUNT)
+            while (gBattleStruct->eventState.battlerSwitchIn != FIRST_EVENT_BLOCK_COUNT)
             {
                 if (FirstEventBlockEvents(&calcValues))
                     return TRUE;
@@ -163,6 +231,8 @@ bool32 DoSwitchInEvents(void)
         gBattleStruct->eventState.switchIn++;
         break;
     case SWITCH_IN_EVENTS_CLEAR_SET_VALUES:
+        if (UsesPolishedLifecycle() && PolishedResolveEntryFaints())
+            return TRUE;
         for (battler = 0; battler < gBattlersCount; battler++)
         {
             if (gBattleStruct->battlerState[battler].switchIn)
@@ -216,6 +286,27 @@ static bool32 FirstEventBlockEvents(struct BattleCalcValues *calcValues)
 
     switch (gBattleStruct->eventState.battlerSwitchIn)
     {
+    case FIRST_EVENT_BLOCK_POLISHED_GAS:
+        gBattleStruct->eventState.battlerSwitchIn = FIRST_EVENT_BLOCK_POLISHED_UNNERVE;
+        if (gBattleStruct->battlerState[battler].switchIn
+         && calcValues->abilities[battler] == ABILITY_NEUTRALIZING_GAS)
+        {
+            enum BattlerId first = gBattlersBySpeed[0];
+            // RunBothEntryAbilities shows dual Gas only once, fastest first.
+            if (battler == first || !IsBattlerAlive(first)
+             || gBattleMons[first].ability != ABILITY_NEUTRALIZING_GAS)
+            {
+                gBattleMons[battler].volatiles.neutralizingGas = FALSE;
+                effect = AbilityBattleEffects(ABILITYEFFECT_NEUTRALIZINGGAS, battler,
+                    calcValues->abilities[battler], MOVE_NONE, TRUE);
+            }
+        }
+        break;
+    case FIRST_EVENT_BLOCK_POLISHED_UNNERVE:
+        gBattleStruct->eventState.battlerSwitchIn = FIRST_EVENT_BLOCK_GENERAL_ABILITIES;
+        effect = AbilityBattleEffects(ABILITYEFFECT_UNNERVE, battler,
+            calcValues->abilities[battler], MOVE_NONE, gBattleStruct->battlerState[battler].switchIn);
+        break;
     case FIRST_EVENT_BLOCK_HEALING_WISH:
         if (!gBattleStruct->battlerState[battler].switchIn || !CanBattlerBeHealed(battler))
         {
@@ -263,7 +354,8 @@ static bool32 FirstEventBlockEvents(struct BattleCalcValues *calcValues)
         }
         else
         {
-            enum Hazards hazard = gBattleStruct->hazardsQueue[GetBattlerSide(battler)][gBattleStruct->hazardsCounter];
+            enum Hazards hazard = UsesPolishedLifecycle() ? GetPolishedEntryHazard(GetBattlerSide(battler))
+                : gBattleStruct->hazardsQueue[GetBattlerSide(battler)][gBattleStruct->hazardsCounter];
             if (hazard == HAZARDS_NONE || gBattleStruct->hazardsCounter >= HAZARDS_MAX_COUNT)
             {
                 gBattleStruct->hazardsCounter = 0;
@@ -288,7 +380,9 @@ static bool32 FirstEventBlockEvents(struct BattleCalcValues *calcValues)
         gBattleStruct->eventState.battlerSwitchIn++;
         break;
     case FIRST_EVENT_BLOCK_ITEMS:
-        if (ItemBattleEffects(battler, 0, calcValues->holdEffects[battler], IsOnSwitchInActivation))
+        if (!(UsesPolishedLifecycle() && (calcValues->holdEffects[battler] == HOLD_EFFECT_AIR_BALLOON
+                                      || calcValues->holdEffects[battler] == HOLD_EFFECT_ROOM_SERVICE))
+         && ItemBattleEffects(battler, 0, calcValues->holdEffects[battler], IsOnSwitchInActivation))
             effect = TRUE;
         gBattleStruct->eventState.battlerSwitchIn++;
         break;
@@ -407,7 +501,7 @@ static bool32 TryHazardsOnSwitchIn(enum BattlerId battler, enum Ability ability,
         break;
     }
 
-    if (!clearedToxicSpikes)
+    if (!clearedToxicSpikes || UsesPolishedLifecycle())
         gBattleStruct->hazardsCounter++;
 
     return effect;

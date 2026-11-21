@@ -358,6 +358,8 @@ BattleScript_MoveSwitchOpenPartyScreenRet:
 BattleScript_MoveSwitchOpenPartyScreenReturnWithNoAnim:
 	returntoball BS_ATTACKER, FALSE
 	switchoutabilities BS_ATTACKER
+	callnative BS_PolishedUnnerveExit
+	.byte BS_ATTACKER
 	openpartyscreen BS_ATTACKER, BattleScript_MoveSwitchEnd
 	waitstate
 	switchhandleorder BS_ATTACKER, 2
@@ -2227,6 +2229,8 @@ BattleScript_EffectBatonPass::
 	waitanimation
 	returntoball BS_ATTACKER, FALSE
 	switchoutabilities BS_ATTACKER
+	callnative BS_PolishedUnnerveExit
+	.byte BS_ATTACKER
 	openpartyscreen BS_ATTACKER, BattleScript_ButItFailed
 	waitstate
 	switchhandleorder BS_ATTACKER, 2
@@ -2727,6 +2731,8 @@ BattleScript_FaintBattler::
 	printstring STRINGID_BATTLERFAINTED
 	tryconfusionafterskydrop BS_FAINTED
 	cleareffectsonfaint BS_FAINTED
+	callnative BS_PolishedUnnerveExit
+	.byte BS_FAINTED
 	trytoclearprimalweather
 	call BattleScript_TryRevertWeatherform
 	flushtextbox
@@ -2783,6 +2789,8 @@ BattleScript_FaintedMonTryChoose:
 	hpthresholds2 BS_ATTACKER
 	printstring STRINGID_RETURNMON
 	switchoutabilities BS_ATTACKER
+	callnative BS_PolishedUnnerveExit
+	.byte BS_ATTACKER
 	waitstate
 	returnatktoball
 	waitstate
@@ -2832,6 +2840,7 @@ BattleScript_HandleFaintedMonMultipleStart::
 	switchhandleorder BS_FAINTED, 0
 	openpartyscreen BS_FAINTED_MULTIPLE_2, BattleScript_HandleFaintedMonMultipleEnd
 	switchhandleorder BS_FAINTED, 0
+	callnative BS_PolishedOrderReplacements
 BattleScript_HandleFaintedMonLoop::
 	switchhandleorder BS_FAINTED, 3
 	drawpartystatussummary BS_FAINTED
@@ -2860,6 +2869,22 @@ BattleScript_FirstTurnSwitchInEvents::
 BattleScript_EndTurnEvents::
 	endturnevents
 	end
+
+@ Source residual checkpoints finish the phase before faint/EXP/outcomes.
+@ These return to the end-turn scheduler and never choose a replacement.
+BattleScript_PolishedEndTurnFaint::
+	tryfaintmon BS_SCRIPTING
+	return
+
+BattleScript_PolishedEndTurnExp::
+	setbyte sGIVEEXP_STATE, 0
+	getexp BS_TARGET
+	return
+
+BattleScript_PolishedEndTurnOutcome::
+	checkteamslost BattleScript_PolishedEndTurnOutcomeDone
+BattleScript_PolishedEndTurnOutcomeDone:
+	return
 
 BattleScript_LocalTrainerBattleWon::
 	jumpifbattletype BATTLE_TYPE_TWO_OPPONENTS, BattleScript_LocalTwoTrainersDefeated
@@ -3080,6 +3105,8 @@ BattleScript_DoSwitchOut::
 	returnatktoball
 	waitstate
 	switchoutabilities BS_ATTACKER
+	callnative BS_PolishedUnnerveExit
+	.byte BS_ATTACKER
 	drawpartystatussummary BS_ATTACKER
 	switchhandleorder BS_ATTACKER, 1
 	getswitchedmondata BS_ATTACKER
@@ -3330,6 +3357,20 @@ BattleScript_LeechSeedTurnDrainLiquidOoze::
 	jumpifability BS_EFFECT_BATTLER, ABILITY_MAGIC_GUARD, BattleScript_LeechSeedTurnDrainHealBlockRet
 	goto BattleScript_LeechSeedTurnDrainGainHp
 
+BattleScript_PolishedLeechSeedOoze::
+	call BattleScript_LeechSeedTurnDrain
+	call BattleScript_AbilityPopUp
+	copybyte gEffectBattler, gBattlerAttacker
+	healthbarupdate BS_ATTACKER
+	datahpupdate BS_ATTACKER, ASSURANCE_DOUBLE
+	tryactivateitem BS_ATTACKER, ACTIVATION_ON_STATUS_CHANGE
+	tryactivateitem BS_ATTACKER, ACTIVATION_ON_HP_THRESHOLD
+	copybyte gEffectBattler, gBattlerAttacker
+	printfromtable gLeechSeedStringIds
+	waitmessage B_WAIT_TIME_LONG
+	tryfaintmon BS_ATTACKER
+	return
+
 BattleScript_LeechSeedTurnDrainHealBlock::
 	call BattleScript_LeechSeedTurnDrain
 BattleScript_LeechSeedTurnDrainHealBlockRet:
@@ -3405,6 +3446,8 @@ BattleScript_RoarSuccessRet_Ret:
 	returntoball BS_TARGET, FALSE
 	waitstate
 	switchoutabilities BS_TARGET
+	callnative BS_PolishedUnnerveExit
+	.byte BS_TARGET
 	return
 
 BattleScript_MistProtected::
@@ -3483,6 +3526,7 @@ BattleScript_ToxicSpikesPoisoned::
 	statusanimation BS_SCRIPTING
 	updatestatusicon BS_SCRIPTING
 	waitstate
+	callnative BS_PolishedEntryStatus
 	return
 
 BattleScript_ToxicSpikesBadlyPoisoned::
@@ -3491,6 +3535,13 @@ BattleScript_ToxicSpikesBadlyPoisoned::
 	statusanimation BS_SCRIPTING
 	updatestatusicon BS_SCRIPTING
 	waitstate
+	callnative BS_PolishedEntryStatus
+	return
+
+BattleScript_PolishedEntryStatus::
+	trysynchronize
+	tryactivateitem BS_EFFECT_BATTLER, ACTIVATION_ON_STATUS_CHANGE
+	callnative BS_PolishedEntryStatusHeal
 	return
 
 BattleScript_StickyWebOnSwitchIn::
@@ -4556,6 +4607,8 @@ BattleScript_EmergencyExit::
 BattleScript_SwitchOutEffects::
 	returntoball BS_SCRIPTING, FALSE
 	switchoutabilities BS_SCRIPTING
+	callnative BS_PolishedUnnerveExit
+	.byte BS_SCRIPTING
 	return
 
 BattleScript_EmergencyExitSendReplacement::
@@ -5906,6 +5959,8 @@ BattleScript_EjectItemActivates::
 	makeinvisible BS_SCRIPTING
 	returntoball BS_SCRIPTING, FALSE
 	switchoutabilities BS_SCRIPTING
+	callnative BS_PolishedUnnerveExit
+	.byte BS_SCRIPTING
 	return
 
 BattleScript_EjectPackActivates_SendReplacement::

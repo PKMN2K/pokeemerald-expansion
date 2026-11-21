@@ -61,6 +61,10 @@ enum EndTurnResolutionOrder
     ENDTURN_TRAINER_B_SLIDES,
     ENDTURN_TRAINER_PARTNER_SLIDES,
     ENDTURN_COUNT,
+    // Source scheduler-only phases, outside the native sequential dispatcher.
+    ENDTURN_POLISHED_CHECKPOINT,
+    ENDTURN_POLISHED_LEPPA,
+    ENDTURN_POLISHED_HEALING_ITEMS,
 };
 
 // Block that handles effects for each individual battler on the field (eg residual damage)
@@ -71,6 +75,7 @@ enum FirstEventBlock
     FIRST_EVENT_BLOCK_THRASH, // Thrash isn't handled here in vanilla but for now it is that best place for it.
     FIRST_EVENT_BLOCK_GRASSY_TERRAIN_HEAL,
     FIRST_EVENT_BLOCK_ABILITIES,
+    FIRST_EVENT_BLOCK_STATUS_ABILITIES,
     FIRST_EVENT_BLOCK_HEAL_ITEMS,
 };
 
@@ -94,6 +99,7 @@ enum ThirdEventBlock
 {
     THIRD_EVENT_BLOCK_UPROAR,
     THIRD_EVENT_BLOCK_ABILITIES,
+    THIRD_EVENT_BLOCK_STATUS_ABILITIES,
     THIRD_EVENT_BLOCK_ITEMS,
 };
 

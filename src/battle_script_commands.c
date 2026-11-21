@@ -1,4 +1,5 @@
 #include "global.h"
+#include "polished_lifecycle.h"
 #include "polished_friendship.h"
 #include "constants/polished_contact_status.h"
 #include "constants/polished_battle_foundations.h"
@@ -1936,6 +1937,11 @@ static void Cmd_tryfaintmon(void)
     enum BattlerId battler;
 
     battler = GetBattlerForBattleScript(cmd->battler);
+    if (!cmd->isSpikes && PolishedQueueEndTurnFaint(battler))
+    {
+        gBattlescriptCurrInstr = cmd->nextInstr;
+        return;
+    }
     if (cmd->isSpikes)
     {
         if (gHitMarker & HITMARKER_FAINTED(battler))
@@ -2640,10 +2646,19 @@ static void Cmd_checkteamslost(void)
     if (gBattleControllerExecFlags)
         return;
 
+    if (PolishedEndTurnDefersFaints())
+    {
+        gBattlescriptCurrInstr = cmd->nextInstr;
+        return;
+    }
+
     if (NoAliveMonsForPlayer())
         gBattleOutcome |= B_OUTCOME_LOST;
     if (NoAliveMonsForOpponent())
         gBattleOutcome |= B_OUTCOME_WON;
+    // ResolveFaints: simultaneous campaign knockouts are losses, not draws.
+    if (UsesPolishedLifecycle() && gBattleOutcome == B_OUTCOME_DREW)
+        gBattleOutcome = B_OUTCOME_LOST;
 
     // Fair switching - everyone has to switch in most at the same time, without knowing which Pokémon the other trainer selected.
     // In vanilla Emerald this was only used for link battles, in expansion it's also used for regular trainer battles.
@@ -3358,6 +3373,10 @@ static void Cmd_switchindataupdate(void)
         {
             gBattleMons[battler].statStages[i] = oldData.statStages[i];
         }
+        if (UsesPolishedLifecycle() && gCurrentMove == MOVE_BATON_PASS
+         && (gBattleMons[battler].status1 & STATUS1_TOXIC_POISON))
+            gBattleMons[battler].status1 = (gBattleMons[battler].status1 & ~STATUS1_TOXIC_COUNTER)
+                | (oldData.status1 & STATUS1_TOXIC_COUNTER);
     }
 
     SwitchInClearSetData(battler, &oldData.volatiles);
@@ -3745,6 +3764,7 @@ static void UpdateSentMonFlags(enum BattlerId battler)
     gHitMarker &= ~HITMARKER_FAINTED(battler);
     gSpecialStatuses[battler].faintedHasReplacement = FALSE;
     gBattleStruct->battlerState[battler].switchIn = TRUE;
+    PolishedRecordForcedEntry(battler, gProtectStructs[battler].forcedSwitch);
     gProtectStructs[battler].forcedSwitch = FALSE;
 
     // There is a hack here to ensure the truant counter will be 0 when the battler's next turn starts.
@@ -3762,6 +3782,52 @@ static void UpdateSentMonFlags(enum BattlerId battler)
     }
 }
 
+void BS_PolishedOrderReplacements(void)
+{
+    NATIVE_ARGS();
+    PolishedOrderReplacements();
+    gBattlescriptCurrInstr = cmd->nextInstr;
+}
+
+void BS_PolishedEntryStatus(void)
+{
+    NATIVE_ARGS();
+    enum BattlerId battler = gBattleScripting.battler;
+    enum BattlerId foe = GetOppositeBattler(battler);
+    gBattlescriptCurrInstr = cmd->nextInstr;
+    if (!UsesPolishedLifecycle())
+        return;
+
+    // SpikesDamage calls PostStatusWithSynchronize for ordinary entry and
+    // PostStatus for forced entry. Reflection precedes the entrant's berry.
+    gEffectBattler = battler;
+    if (!PolishedIsForcedEntry(battler) && GetBattlerAbility(battler) == ABILITY_SYNCHRONIZE)
+    {
+        if (gBattleMons[foe].volatiles.substituteHP)
+        {
+            gBattleStruct->synchronizeState = SYNCH_STATE_SHOW_ABILITY_POPUP;
+            gBattlerAbility = battler;
+        }
+        else
+        {
+            enum MoveEffect effect = (gBattleMons[battler].status1 & STATUS1_TOXIC_POISON)
+                ? MOVE_EFFECT_TOXIC : MOVE_EFFECT_POISON;
+            TrySynchronizeActivation(foe, battler, effect, TRIGGER_ON_ABILITY);
+        }
+    }
+    BattleScriptCall(BattleScript_PolishedEntryStatus);
+}
+
+void BS_PolishedEntryStatusHeal(void)
+{
+    NATIVE_ARGS();
+    gBattlescriptCurrInstr = cmd->nextInstr;
+    // PostStatus heals an innate immunity even when forced entry used Mold
+    // Breaker to apply the status. It runs before the next entrant's hazards.
+    AbilityBattleEffects(ABILITYEFFECT_IMMUNITY, gEffectBattler,
+        GetBattlerAbilityIgnoreMoldBreaker(gEffectBattler), MOVE_NONE, TRUE);
+}
+
 static void Cmd_switchineffects(void)
 {
     CMD_ARGS(u8 battler);
@@ -3769,7 +3835,7 @@ static void Cmd_switchineffects(void)
 
     UpdateSentMonFlags(battler);
 
-    if (cmd->battler == BS_FAINTED_MULTIPLE_1)
+    if (cmd->battler == BS_FAINTED_MULTIPLE_1 && !PolishedNextReplacement())
     {
         do // Increment fainted battler
         {
@@ -3788,7 +3854,7 @@ static void Cmd_switchineffects(void)
 static void Cmd_switchinevents(void)
 {
     CMD_ARGS();
-    while (gBattleStruct->eventState.switchIn < SWITCH_IN_EVENTS_COUNT)
+    while (gBattleStruct->eventState.switchIn != SWITCH_IN_EVENTS_COUNT)
     {
         if (DoSwitchInEvents())
             return;
@@ -6846,6 +6912,10 @@ static void Cmd_tryactivateitem(void)
 
     gBattlescriptCurrInstr = cmd->nextInstr;
 
+    if (PolishedEndTurnDefersItems()
+     && (cmd->flag == ACTIVATION_ON_HARVEST || cmd->flag == ACTIVATION_ON_PICK_UP))
+        return;
+
     switch ((enum ItemActivationState)cmd->flag)
     {
     case ACTIVATION_ON_USABLE_AGAIN:
@@ -7641,6 +7711,13 @@ static void Cmd_trysetsnatch(void)
         gProtectStructs[gBattlerAttacker].stealMove = TRUE;
         gBattlescriptCurrInstr = cmd->nextInstr;
     }
+}
+
+void BS_PolishedUnnerveExit(void)
+{
+    NATIVE_ARGS(u8 battler);
+    if (!PolishedHandleUnnerveExit(GetBattlerForBattleScript(cmd->battler)))
+        gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
 static void Cmd_switchoutabilities(void)

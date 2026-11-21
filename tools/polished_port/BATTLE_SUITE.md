@@ -1,6 +1,6 @@
 # Whole battle parity suite
 
-The current catalog contains 936 source unit/battle groups and six AI timing
+The current catalog contains 977 source unit/battle groups and six AI timing
 groups. Run every registered group:
 
 ```sh
@@ -469,3 +469,49 @@ Strict completeness correctly exits
 
 Validated Johto ROM SHA-256:
 `84e3ac873fc3dce29e507ca0327fd183b79bae90bd54da582a174975c39769a4`.
+
+## Three-suite completion plan
+
+See [BATTLE_PARITY_PLAN.md](BATTLE_PARITY_PLAN.md) for the complete three-suite
+assignment and completion contracts. Suite 1 implements the shared end-turn,
+entry and replacement runtime. Suite 2 owns action-specific behavior, including
+complete switching and faint chains; Suite 3 owns context and final closure.
+All fifteen domains retain a primary completion owner and remain OPEN.
+
+The lifecycle implementation adds 41 source/native regression groups. The
+authenticated phase/checkpoint manifest and three-suite ownership checks run
+in CI. Regression review corrected the Baton Pass trap direction: the source
+stores CANT_RUN on the trapping user, whereas Emerald stores escapePrevention
+on the target. Baton Pass releases the user's target and inherits an opponent's
+trap. Toxic Spikes now synchronizes on ordinary entry before the entrant's
+status berry; forced entry skips reflection. Controls cover an opposing
+Substitute, later voluntary entry, both replacements and Mold Breaker hazards.
+
+Validation: all 977 source groups and six AI timing groups passed. The full
+native sweep passed 6,197 groups with nine existing expected failures and 585
+existing TODOs. Its only two failures were incorrect expectations in the new
+Trick Room/Room Service scenes: native residual/entry sorting remains
+fast-to-slow under Trick Room. After correcting only those test expectations,
+all 35 lifecycle groups passed in a focused native rerun; all six entry-status
+groups had passed in the full native sweep. All 41 added groups therefore have
+passing source and native evidence. This is a full native sweep plus focused
+test corrections, not a second full native sweep; runtime code was unchanged.
+
+All 106 source reproducibility checks and twelve ARM compiler probes passed.
+Both production ROMs built. The Johto ROM passed twelve demo checks, 21 trainer
+teams/43 Pokemon, 72 capture-storage, twelve roamer-storage and thirty
+friendship/growth Flash assertions. The production-linked move/machine audit
+found zero audited move-data differences and zero mismatches in 43,792
+compatibility checks; all 109 previously recorded machine/lesson gaps remain.
+
+The complete campaign passed 102 checks and nineteen directed warps, including
+all starter/rival branches, Sprout Tower, Falkner, badge/Roost/Togepi rewards and
+Save/reset/Continue. Its initial wrapper reached a ten-minute execution limit;
+the successful rerun used a thirty-minute limit without changing the ROM.
+Strict completeness still exits 2 for fifteen domains, 4,143 lexical blocks
+and 133 effect families. Suite 1 is implemented and regression-validated;
+domain closure remains pending the later suites.
+
+Validated Johto ROM SHA-256:
+`cb255c31a399a03ef468b51ee8d1a9cbf25302e83b4c42a25f72a0bc686ecec0`. Passing these scoped scenarios
+does not certify every branch in any whole battle domain.

@@ -4494,3 +4494,95 @@ Strict completeness correctly exits
 
 Validated Johto ROM SHA-256:
 `84e3ac873fc3dce29e507ca0327fd183b79bae90bd54da582a174975c39769a4`.
+
+
+## Three-suite completion plan: lifecycle implementation
+
+The remaining battle work is assigned to exactly three milestones in
+`tools/polished_port/BATTLE_PARITY_PLAN.md`: (1) end-turn/entry/replacement
+foundations, (2) actions/damage/moves/status/abilities/items plus complete
+switching and faint chains, and (3) setup, AI,
+capture/escape, rewards, facility/link and presentation/RNG integration.
+The generated ownership manifest rejects missing/duplicate domains or a fourth
+suite. Each milestone can require multiple implementation commits; no unfinished
+obligation is discarded to fit the three-suite organization.
+
+The first lifecycle implementation adds an authenticated source phase schedule
+and live faint checkpoints. Both battlers finish each residual phase before
+faint animations, EXP and whole-party outcome checks. Delayed Future Sight
+attacks participate in the same checkpoint. Ordinary simultaneous final KOs
+produce a campaign loss. Replacements wait until the residual/item phases end;
+both outgoing battlers determine send-out order, incoming battlers determine
+hazard/ability order, and hazard KOs can require another replacement pass without
+repeating end-turn damage. Per-phase Speed comparisons include weather and Trick
+Room expiry; screens expire by effect and then current Speed.
+
+Source residual corrections freeze the Toxic counter under Magic Guard, retain
+Poison Heal's counter increase at full HP, use maxHP/16 burn even under Heatproof,
+and allow non-Poison Black Sludge to hurt Magic Guard holders. Leech Seed heals
+half its nominal drain after Big Root, with the source minimum of one; Liquid
+Ooze damages the recipient despite its Magic Guard. Three initial distinguishing
+regressions failed on the parent before the arithmetic fixes. An initial
+all-berries-delayed assumption was rejected after tracing SubtractHP: ordinary
+HP/status changes still activate healing immediately. Final Leppa/healing checks
+are additional sweeps. Leppa no longer activates at ordinary move end; Harvest
+and Pickup defer their forced consumption to the final sweep, and Unnerve exit
+runs both item sweeps immediately, including between residual phases.
+
+Entry handling applies Spikes before Toxic Spikes regardless of placement order,
+finishes both sides' hazards/entry items before entry abilities, applies passive
+Neutralizing Gas before hazards, announces dual Gas once, and orders Unnerve with
+other entry abilities by Speed. Air Balloon/Room Service run during their source
+entry-item phase, and Room Service can change the subsequent ability order.
+Baton Pass preserves the source binding and Toxic counters. Source CANT_RUN
+is stored on the trapping Pokemon: the replacement inherits the opponent's
+trap and the departing user's Mean Look target is freed. Ordinary
+switching keeps its reset behavior; Perish Song's already-supported transfer is
+retained. Runtime state is transient; party/save layouts and native phase IDs
+are unchanged. Native optional phases remain available, and actual link,
+facilities, doubles and active gimmicks retain their existing scoped paths.
+
+Forty-one new parameterized live battle groups cover these corrections,
+including low-HP rounding, simultaneous poison/weather/Future Sight KOs,
+replacement loops, both ordering directions, item interception and native
+profile controls. Review caught and corrected the reversed Baton Pass trap
+mapping with a failing-before/passing-after test. Six of those entry-status
+groups cover voluntary Toxic Spikes Synchronize before berry cures, forced
+entry's no-reflection branch, opposing Substitute, forced-to-voluntary context
+reset, simultaneous entrants and Mold Breaker/Levitate/Magic Guard controls.
+
+Suite 1 is the shared lifecycle implementation milestone. Suite 2 owns the
+remaining action-triggered faint chains, voluntary/forced/pivot/Pursuit behavior
+and all move/status/ability/item branches, including interactions with this
+runtime. Suite 3 owns exact RNG, source presentation, special contexts and final
+cross-system closure. No whole behavioral domain is certified solely by these
+regressions. All fifteen domains, 133 effect families and 4,143 lexical blocks
+remain open under the unchanged strict completeness gate.
+
+Validation: all 977 source groups and six AI timing groups passed. The full
+native sweep passed 6,197 groups with nine existing expected failures and 585
+existing TODOs. Its only two failures were incorrect expectations in the new
+Trick Room/Room Service scenes: native residual/entry sorting remains
+fast-to-slow under Trick Room. After correcting only those test expectations,
+all 35 lifecycle groups passed in a focused native rerun; all six entry-status
+groups had passed in the full native sweep. All 41 added groups therefore have
+passing source and native evidence. This is a full native sweep plus focused
+test corrections, not a second full native sweep; runtime code was unchanged.
+
+All 106 source reproducibility checks and twelve ARM compiler probes passed.
+Both production ROMs built. The Johto ROM passed twelve demo checks, 21 trainer
+teams/43 Pokemon, 72 capture-storage, twelve roamer-storage and thirty
+friendship/growth Flash assertions. The production-linked move/machine audit
+found zero audited move-data differences and zero mismatches in 43,792
+compatibility checks; all 109 previously recorded machine/lesson gaps remain.
+
+The complete campaign passed 102 checks and nineteen directed warps, including
+all starter/rival branches, Sprout Tower, Falkner, badge/Roost/Togepi rewards and
+Save/reset/Continue. Its initial wrapper reached a ten-minute execution limit;
+the successful rerun used a thirty-minute limit without changing the ROM.
+Strict completeness still exits 2 for fifteen domains, 4,143 lexical blocks
+and 133 effect families. Suite 1 is implemented and regression-validated;
+domain closure remains pending the later suites.
+
+Validated Johto ROM SHA-256:
+`cb255c31a399a03ef468b51ee8d1a9cbf25302e83b4c42a25f72a0bc686ecec0`.

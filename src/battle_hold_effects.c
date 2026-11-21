@@ -1,4 +1,5 @@
 #include "global.h"
+#include "polished_lifecycle.h"
 #include "battle.h"
 #include "battle_anim.h"
 #include "battle_ai_record.h"
@@ -616,7 +617,7 @@ static enum ItemEffect TryBlackSludgeDamage(enum BattlerId battler, enum HoldEff
 {
     enum ItemEffect effect = ITEM_NO_EFFECT;
 
-    if (!IsAbilityAndRecord(battler, GetBattlerAbility(battler), ABILITY_MAGIC_GUARD))
+    if (UsesPolishedLifecycle() || !IsAbilityAndRecord(battler, GetBattlerAbility(battler), ABILITY_MAGIC_GUARD))
     {
         SetPassiveDamageAmount(battler, GetNonDynamaxMaxHP(battler) / 8);
         RecordItemEffectBattle(battler, holdEffect);
@@ -1018,6 +1019,13 @@ enum ItemEffect ItemBattleEffects(enum BattlerId itemBattler, enum BattlerId bat
 {
     enum ItemEffect effect = ITEM_NO_EFFECT;
     enum Item item;
+
+    // Source Leppa runs in its end-turn phase (or when Unnerve leaves), not
+    // at move end. HP/status berries still trigger from SubtractHP/PostStatus;
+    // HandleHealingItems is an additional final sweep, not their only trigger.
+    if (UsesPolishedLifecycle() && holdEffect == HOLD_EFFECT_RESTORE_PP
+     && timing == IsSprayLeppaBlunderActivation)
+        return effect;
 
     if (timing == IsOnBerryActivation || timing == IsOnFlingActivation)
         item = gLastUsedItem;

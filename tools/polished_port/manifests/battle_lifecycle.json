@@ -1,0 +1,183 @@
+{
+  "source_commit": "3fa43192379df5c3e7b09a08e4d5d79af4f02f42",
+  "complete_behavior_parity": false,
+  "source_anchors": {
+    "engine/battle/endturn.asm": "53dff9c5eff2ca69b0f37f94d52391842a204740",
+    "engine/battle/core.asm": "37e76be94949c77bf7fd12814675a27943c7d85f",
+    "engine/battle/abilities.asm": "8ea962089921b262a1c3b050c77e5521fba6d921",
+    "engine/battle/effect_commands.asm": "dd1df8310c56895b3165c1e5b5dd26c73a44734c",
+    "home/battle.asm": "a8edadebfb195fb5c08b97ac4ad343042fe6cec5"
+  },
+  "source_calls": [
+    "CheckFaint",
+    "HandleWeather",
+    "CheckFaint",
+    "HandleAffectionSelfCure",
+    "HandleFutureSight",
+    "CheckFaint",
+    "HandleEndturnBlockA",
+    "CheckFaint",
+    "HandleLeechSeed",
+    "CheckFaint",
+    "HandlePoison",
+    "CheckFaint",
+    "HandleBurn",
+    "CheckFaint",
+    "HandleCurse",
+    "CheckFaint",
+    "HandleWrap",
+    "CheckFaint",
+    "HandleEncore",
+    "HandleDisable",
+    "HandlePerishSong",
+    "CheckFaint",
+    "HandleRoost",
+    "HandleReflect",
+    "HandleLightScreen",
+    "HandleSafeguard",
+    "HandleMist",
+    "HandleTrickRoom",
+    "HandleEndturnBlockB",
+    "CheckFaint",
+    "HandleLeppaBerry",
+    "HandleHealingItems"
+  ],
+  "target_phases": [
+    "ENDTURN_ORDER",
+    "ENDTURN_VARIOUS",
+    "ENDTURN_POLISHED_CHECKPOINT",
+    "ENDTURN_WEATHER",
+    "ENDTURN_WEATHER_DAMAGE",
+    "ENDTURN_POLISHED_CHECKPOINT",
+    "ENDTURN_SEND_OUT_REPLACEMENTS_1",
+    "ENDTURN_AFFECTION",
+    "ENDTURN_FUTURE_SIGHT",
+    "ENDTURN_POLISHED_CHECKPOINT",
+    "ENDTURN_WISH",
+    "ENDTURN_FIRST_EVENT_BLOCK",
+    "ENDTURN_POLISHED_CHECKPOINT",
+    "ENDTURN_SEND_OUT_REPLACEMENTS_2",
+    "ENDTURN_AQUA_RING",
+    "ENDTURN_INGRAIN",
+    "ENDTURN_LEECH_SEED",
+    "ENDTURN_POLISHED_CHECKPOINT",
+    "ENDTURN_POISON",
+    "ENDTURN_POLISHED_CHECKPOINT",
+    "ENDTURN_BURN",
+    "ENDTURN_POLISHED_CHECKPOINT",
+    "ENDTURN_FROSTBITE",
+    "ENDTURN_NIGHTMARE",
+    "ENDTURN_CURSE",
+    "ENDTURN_POLISHED_CHECKPOINT",
+    "ENDTURN_WRAP",
+    "ENDTURN_POLISHED_CHECKPOINT",
+    "ENDTURN_SALT_CURE",
+    "ENDTURN_OCTOLOCK",
+    "ENDTURN_SYRUP_BOMB",
+    "ENDTURN_TAUNT",
+    "ENDTURN_TORMENT",
+    "ENDTURN_ENCORE",
+    "ENDTURN_DISABLE",
+    "ENDTURN_MAGNET_RISE",
+    "ENDTURN_TELEKINESIS",
+    "ENDTURN_HEAL_BLOCK",
+    "ENDTURN_EMBARGO",
+    "ENDTURN_YAWN",
+    "ENDTURN_PERISH_SONG",
+    "ENDTURN_POLISHED_CHECKPOINT",
+    "ENDTURN_ROOST",
+    "ENDTURN_SEND_OUT_REPLACEMENTS_3",
+    "ENDTURN_SECOND_EVENT_BLOCK",
+    "ENDTURN_TRICK_ROOM",
+    "ENDTURN_GRAVITY",
+    "ENDTURN_WATER_SPORT",
+    "ENDTURN_MUD_SPORT",
+    "ENDTURN_WONDER_ROOM",
+    "ENDTURN_MAGIC_ROOM",
+    "ENDTURN_TERRAIN",
+    "ENDTURN_THIRD_EVENT_BLOCK",
+    "ENDTURN_POLISHED_CHECKPOINT",
+    "ENDTURN_POLISHED_LEPPA",
+    "ENDTURN_POLISHED_HEALING_ITEMS",
+    "ENDTURN_OPPORTUNIST",
+    "ENDTURN_MIRROR_HERB",
+    "ENDTURN_SEND_OUT_REPLACEMENTS_4",
+    "ENDTURN_FORM_CHANGE",
+    "ENDTURN_EJECT_PACK",
+    "ENDTURN_SEND_OUT_REPLACEMENTS_5",
+    "ENDTURN_ARENA_TURN_END",
+    "ENDTURN_POLISHED_CHECKPOINT",
+    "ENDTURN_FAINTED_MON_ACTIONS",
+    "ENDTURN_DYNAMAX",
+    "ENDTURN_TRAINER_A_SLIDES",
+    "ENDTURN_TRAINER_B_SLIDES",
+    "ENDTURN_TRAINER_PARTNER_SLIDES"
+  ],
+  "contracts": [
+    "Finish both battlers in each residual phase before faint animations, EXP and outcome checks.",
+    "New Speed comparisons for each source phase and each screen effect; Trick Room expires before block B.",
+    "Final Leppa and healing items run after block B. Replacements follow residuals and items.",
+    "SubtractHP/PostStatus can trigger healing immediately; the final item sweep is additional. Unnerve exit immediately runs Leppa and healing sweeps.",
+    "Magic Guard freezes Toxic; Poison Heal advances it even at full HP; burn is maxHP/16 without Heatproof halving.",
+    "Non-Poison Black Sludge ignores Magic Guard. Seed restores half nominal drain after Big Root and Ooze ignores receiver Magic Guard.",
+    "Baton Pass preserves binding/Toxic counters, inherits a trap from the opponent, and frees the departing users Mean Look target; source CANT_RUN is stored on the trap user.",
+    "Both sides finish hazards and entry items before entry abilities; Spikes precede Toxic Spikes. Replacements repeat after hazard KOs.",
+    "Ordinary Toxic Spikes entry synchronizes before berries; forced entry skips reflection; Substitute blocks the returned status.",
+    "Simultaneous campaign knockouts count as losses. Optional battle contexts keep native behavior."
+  ],
+  "live_bindings": [
+    {
+      "source": [
+        "HandleBetweenTurnEffects",
+        "CheckFaint",
+        "HandleHealingItems",
+        "HandleLeppaBerry"
+      ],
+      "target": [
+        "src/battle_end_turn.c",
+        "src/battle_move_resolution.c",
+        "data/battle_scripts_1.s"
+      ],
+      "tests": [
+        "test/battle/polished_lifecycle.c"
+      ]
+    },
+    {
+      "source": [
+        "SpikesDamageBoth",
+        "SpikesDamage",
+        "HandleEntryItems",
+        "RunBothEntryAbilities",
+        "SuppressUserAbilities"
+      ],
+      "target": [
+        "src/battle_switch_in.c",
+        "src/battle_end_turn.c",
+        "src/battle_script_commands.c"
+      ],
+      "tests": [
+        "test/battle/polished_lifecycle.c",
+        "test/battle/polished_switch_lifecycle.c",
+        "test/battle/polished_entry_status.c"
+      ]
+    },
+    {
+      "source": [
+        "SendInUserPkmn",
+        "NewBattleMonStatus",
+        "FaintUserPokemon"
+      ],
+      "target": [
+        "src/battle_main.c",
+        "src/battle_script_commands.c"
+      ],
+      "tests": [
+        "test/battle/polished_switch_lifecycle.c"
+      ]
+    }
+  ],
+  "remaining": [
+    "Suite 2 owns remaining switching/Pursuit/action-faint chains and all move/status/ability/item branches, including interactions with these shared phases.",
+    "Exact RNG stream, source messages/animations/timing and Tower/link-specific contracts belong to Suite 3."
+  ]
+}

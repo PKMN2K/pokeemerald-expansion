@@ -158,6 +158,8 @@ jobs:
           python3 tools/polished_port/scripts/test_battle_systems.py
           python3 tools/polished_port/scripts/build_battle_suite.py --check
           python3 tools/polished_port/scripts/test_battle_suite.py
+          python3 tools/polished_port/scripts/build_battle_completion_plan.py --check
+          python3 tools/polished_port/scripts/test_battle_completion_plan.py
           python3 tools/polished_port/scripts/test_emulator_walk.py
           python3 tools/polished_port/scripts/test_attack_suite.py
           python3 tools/polished_port/scripts/build_rock_smash.py --check

@@ -1,4 +1,5 @@
 #include "global.h"
+#include "polished_lifecycle.h"
 #include "battle.h"
 #include "battle_arena.h"
 #include "battle_environment.h"
@@ -3843,6 +3844,16 @@ static enum MoveEndResult MoveEndSubstitute(struct BattleCalcValues *cv)
 static enum MoveEndResult MoveEndFaintBlock(struct BattleCalcValues *cv)
 {
     enum MoveEndResult result = MOVEEND_RESULT_CONTINUE;
+
+    // Delayed attacks use the ordinary move-end pipeline, but their faints
+    // belong to the shared source residual checkpoint after both impacts.
+    if (PolishedEndTurnDefersFaints())
+    {
+        PolishedQueueEndTurnFaint(cv->battlerDef);
+        gBattleStruct->eventState.moveEndBlock = 0;
+        gBattleScripting.moveendState++;
+        return MOVEEND_RESULT_CONTINUE;
+    }
 
     do
     {

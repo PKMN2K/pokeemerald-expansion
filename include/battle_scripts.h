@@ -1,6 +1,13 @@
 #ifndef GUARD_BATTLE_SCRIPTS_H
 #define GUARD_BATTLE_SCRIPTS_H
 
+extern const u8 BattleScript_PolishedEntryStatus[];
+
+extern const u8 BattleScript_PolishedEndTurnFaint[];
+extern const u8 BattleScript_PolishedEndTurnExp[];
+extern const u8 BattleScript_PolishedEndTurnOutcome[];
+extern const u8 BattleScript_PolishedLeechSeedOoze[];
+
 extern const u8 BattleScript_PolishedPainSplitTargetFirst[];
 
 extern const u8 BattleScript_SupersweetSyrupActivates[];

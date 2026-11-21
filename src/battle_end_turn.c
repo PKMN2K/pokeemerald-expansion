@@ -8,11 +8,144 @@
 #include "battle_stat_change.h"
 #include "battle_gimmick.h"
 #include "battle_scripts.h"
+#include "polished_lifecycle.h"
 #include "constants/battle.h"
 #include "constants/battle_string_ids.h"
 #include "constants/abilities.h"
 #include "constants/items.h"
 #include "constants/moves.h"
+
+// Transient scheduler state only; no party/save layout or native phase IDs change.
+struct PolishedFaintQueue
+{
+    u8 order[MAX_BATTLERS_COUNT];
+    u8 count;
+    u8 index;
+    u8 step;
+};
+static EWRAM_DATA struct PolishedFaintQueue sPolishedTurnFaints = {0};
+static EWRAM_DATA struct PolishedFaintQueue sPolishedEntryFaints = {0};
+static EWRAM_DATA bool8 sPolishedEntryBatch = FALSE;
+static EWRAM_DATA bool8 sPolishedEntryResolving = FALSE;
+static EWRAM_DATA enum BattlerId sPolishedReplacementOrder[2] = {0};
+static EWRAM_DATA u8 sPolishedReplacementIndex = 0;
+static EWRAM_DATA bool8 sPolishedReplacingBoth = FALSE;
+static EWRAM_DATA u8 sPolishedForcedEntry = 0;
+static EWRAM_DATA struct
+{
+    enum BattlerId order[2];
+    enum BattlerId attacker, target, scripting;
+    u8 phase, index, block;
+    bool8 active;
+} sPolishedExitItems = {0};
+static EWRAM_DATA struct
+{
+    u8 phase;
+    bool8 active;
+    bool8 initialized;
+    bool8 batching;
+    bool8 deferringItems;
+} sPolishedEndTurn = {0};
+
+bool32 UsesPolishedLifecycle(void)
+{
+    return UsesPolishedBattleRules(B_BATTLER_0, B_BATTLER_1)
+        && !(gBattleTypeFlags & (BATTLE_TYPE_LINK
+             | BATTLE_TYPE_FRONTIER | BATTLE_TYPE_TRAINER_HILL | BATTLE_TYPE_EREADER_TRAINER
+             | BATTLE_TYPE_SAFARI | BATTLE_TYPE_CATCH_TUTORIAL | BATTLE_TYPE_POKEDUDE));
+}
+
+void ResetPolishedEndTurn(void)
+{
+    memset(&sPolishedEndTurn, 0, sizeof(sPolishedEndTurn));
+    memset(&sPolishedTurnFaints, 0, sizeof(sPolishedTurnFaints));
+    memset(&sPolishedEntryFaints, 0, sizeof(sPolishedEntryFaints));
+    sPolishedEntryBatch = sPolishedEntryResolving = FALSE;
+    sPolishedReplacingBoth = FALSE;
+    sPolishedForcedEntry = 0;
+    memset(&sPolishedExitItems, 0, sizeof(sPolishedExitItems));
+}
+
+void PolishedRecordForcedEntry(enum BattlerId battler, bool32 forced)
+{
+    sPolishedForcedEntry &= ~(1u << battler);
+    if (forced)
+        sPolishedForcedEntry |= 1u << battler;
+}
+
+bool32 PolishedIsForcedEntry(enum BattlerId battler)
+{
+    return (sPolishedForcedEntry & (1u << battler)) != 0;
+}
+
+bool32 PolishedEndTurnDefersFaints(void)
+{
+    return !sPolishedEntryResolving
+        && (sPolishedEntryBatch || (sPolishedEndTurn.active && sPolishedEndTurn.batching));
+}
+
+bool32 PolishedEndTurnDefersItems(void)
+{
+    return sPolishedEndTurn.active && sPolishedEndTurn.deferringItems;
+}
+
+bool32 PolishedQueueEndTurnFaint(enum BattlerId battler)
+{
+    if (!PolishedEndTurnDefersFaints())
+        return FALSE;
+    struct PolishedFaintQueue *queue = sPolishedEntryBatch ? &sPolishedEntryFaints : &sPolishedTurnFaints;
+    if (!IsBattlerAlive(battler) && !gBattleStruct->battlerState[battler].notOnField)
+    {
+        for (u32 i = 0; i < queue->count; i++)
+            if (queue->order[i] == battler)
+                return TRUE;
+        queue->order[queue->count++] = battler;
+    }
+    return TRUE;
+}
+
+void SortPolishedBattlersBySpeed(enum BattlerId *order)
+{
+    struct BattleCalcValues cv = {0};
+    cv.battlerAtk = GetBattlerAtPosition(B_POSITION_PLAYER_LEFT);
+    cv.battlerDef = GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT);
+    for (u32 i = 0; i < gBattlersCount; i++)
+    {
+        cv.abilities[i] = GetBattlerAbility(i);
+        cv.holdEffects[i] = GetBattlerHoldEffect(i);
+    }
+    s32 first = GetWhichBattlerFasterOrTies(&cv, TRUE);
+    enum BattleSide side = first == 0 ? RandomUniform(RNG_POLISHED_END_TURN_SPEED_TIE, 0, 1)
+        : first > 0 ? B_SIDE_PLAYER : B_SIDE_OPPONENT;
+    order[0] = GetBattlerAtPosition(side == B_SIDE_PLAYER ? B_POSITION_PLAYER_LEFT : B_POSITION_OPPONENT_LEFT);
+    order[1] = GetOppositeBattler(order[0]);
+}
+
+void PolishedOrderReplacements(void)
+{
+    if (!UsesPolishedLifecycle())
+        return;
+    SortPolishedBattlersBySpeed(sPolishedReplacementOrder);
+    sPolishedReplacementIndex = 0;
+    sPolishedReplacingBoth = TRUE;
+    gBattlerFainted = sPolishedReplacementOrder[0];
+}
+
+bool32 PolishedNextReplacement(void)
+{
+    if (!sPolishedReplacingBoth)
+        return FALSE;
+    if (++sPolishedReplacementIndex == ARRAY_COUNT(sPolishedReplacementOrder))
+    {
+        sPolishedReplacingBoth = FALSE;
+        gBattlerFainted = gBattlersCount;
+    }
+    else
+    {
+        gBattlerFainted = sPolishedReplacementOrder[sPolishedReplacementIndex];
+    }
+    return TRUE;
+}
 
 static enum BattlerId GetBattlerSideForMessage(enum BattleSide side)
 {
@@ -472,6 +605,11 @@ static bool32 HandleEndTurnFirstEventBlock(enum BattlerId battler)
         gBattleStruct->eventState.endTurnBlock = 0;
         gBattleStruct->eventState.endTurnBattler++;
         break;
+    case FIRST_EVENT_BLOCK_STATUS_ABILITIES:
+        gBattleStruct->eventState.endTurnBlock++;
+        if (sPolishedEndTurn.active)
+            effect = TryImmunityAbilityHealStatus(battler) != IMMUNITY_NO_EFFECT;
+        break;
     }
 
     return effect;
@@ -537,15 +675,19 @@ static bool32 HandleEndTurnLeechSeed(enum BattlerId battler)
         gBattleScripting.animArg1 = receiverBattler;
         gBattleScripting.animArg2 = drainedBattler;
 
-        s32 drainAmount = GetNonDynamaxMaxHP(drainedBattler) / 8;
+        s32 drainAmount = max(1, GetNonDynamaxMaxHP(drainedBattler) / 8);
         s32 healAmount = GetDrainedBigRootHp(receiverBattler, drainAmount);
+        // Source GetHPAbsorption halves even Leech Seed's nominal eighth,
+        // after Big Root, with a one-HP floor. It does not use actual HP lost.
+        if (UsesPolishedLifecycle())
+            healAmount = max(1, healAmount / 2);
 
         if (GetBattlerAbility(drainedBattler) == ABILITY_LIQUID_OOZE)
         {
             SetPassiveDamageAmount(drainedBattler, drainAmount);
             SetPassiveDamageAmount(receiverBattler, healAmount);
             gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_LEECH_SEED_OOZE;
-            BattleScriptCall(BattleScript_LeechSeedTurnDrainLiquidOoze);
+            BattleScriptCall(UsesPolishedLifecycle() ? BattleScript_PolishedLeechSeedOoze : BattleScript_LeechSeedTurnDrainLiquidOoze);
         }
         else if (gBattleMons[receiverBattler].volatiles.healBlockTimer)
         {
@@ -577,7 +719,7 @@ static bool32 HandleEndTurnPoison(enum BattlerId battler)
     {
         if (IsAbilityAndRecord(battler, ability, ABILITY_MAGIC_GUARD))
         {
-            if (isToxicPoison && (gBattleMons[battler].status1 & STATUS1_TOXIC_COUNTER) != STATUS1_TOXIC_TURN(15)) // not 16 turns
+            if (!UsesPolishedLifecycle() && isToxicPoison && (gBattleMons[battler].status1 & STATUS1_TOXIC_COUNTER) != STATUS1_TOXIC_TURN(15)) // not 16 turns
                 gBattleMons[battler].status1 += STATUS1_TOXIC_TURN(1);
         }
         else if (ability == ABILITY_POISON_HEAL)
@@ -624,8 +766,8 @@ static bool32 HandleEndTurnBurn(enum BattlerId battler)
      && IsBattlerPresent(battler)
      && !IsAbilityAndRecord(battler, ability, ABILITY_MAGIC_GUARD))
     {
-        s32 burnDamage = GetNonDynamaxMaxHP(battler) / ((GetConfig(B_BURN_DAMAGE) >= GEN_7 || GetConfig(B_BURN_DAMAGE) == GEN_1) ? 16 : 8);
-        if (ability == ABILITY_HEATPROOF)
+        s32 burnDamage = GetNonDynamaxMaxHP(battler) / ((UsesPolishedLifecycle() || GetConfig(B_BURN_DAMAGE) >= GEN_7 || GetConfig(B_BURN_DAMAGE) == GEN_1) ? 16 : 8);
+        if (ability == ABILITY_HEATPROOF && !UsesPolishedLifecycle())
         {
             if (burnDamage > (burnDamage / 2) + 1) // Record ability if the burn takes less damage than it normally would.
                 RecordAbilityBattle(battler, ABILITY_HEATPROOF);
@@ -1409,6 +1551,11 @@ static bool32 HandleEndTurnThirdEventBlock(enum BattlerId battler)
         gBattleStruct->eventState.endTurnBlock = 0;
         gBattleStruct->eventState.endTurnBattler++;
         break;
+    case THIRD_EVENT_BLOCK_STATUS_ABILITIES:
+        gBattleStruct->eventState.endTurnBlock++;
+        if (sPolishedEndTurn.active)
+            effect = TryImmunityAbilityHealStatus(battler) != IMMUNITY_NO_EFFECT;
+        break;
     }
 
     return effect;
@@ -1581,6 +1728,20 @@ static bool32 HandleEndTurnFaintedMonActions(enum BattlerId battler)
 {
     if (HandleFaintedMonActions())
         return TRUE;
+    // A replacement can faint to hazards after the native faint-action loop
+    // has already visited its slot. Source .endturn_loop repeats selection
+    // until both slots are alive or an outcome is reached.
+    if (sPolishedEndTurn.active && !gBattleOutcome)
+    {
+        for (u32 i = 0; i < gBattlersCount; i++)
+        {
+            if (!IsBattlerAlive(i) && !NoAliveMonsForBattlerSide(i))
+            {
+                gBattleStruct->eventState.faintedAction = FAINTED_ACTIONS_NO_MONS_TO_SWITCH;
+                return FALSE;
+            }
+        }
+    }
     gBattleStruct->eventState.endTurn++;
     return FALSE;
 }
@@ -1684,9 +1845,303 @@ static bool32 HandleEndTurnEmergencyExit(enum BattlerId battler)
     return effect;
 }
 
+// Source order: engine/battle/endturn.asm:HandleBetweenTurnEffects. Optional
+// Expansion-only phases remain available between the corresponding source
+// phases; they are inert in the source campaign. CHECKPOINT never switches.
+static const u8 sPolishedEndTurnOrder[] =
+{
+    ENDTURN_ORDER, ENDTURN_VARIOUS, ENDTURN_POLISHED_CHECKPOINT,
+    ENDTURN_WEATHER, ENDTURN_WEATHER_DAMAGE, ENDTURN_POLISHED_CHECKPOINT,
+    ENDTURN_SEND_OUT_REPLACEMENTS_1,
+    ENDTURN_AFFECTION, ENDTURN_FUTURE_SIGHT, ENDTURN_POLISHED_CHECKPOINT,
+    ENDTURN_WISH, ENDTURN_FIRST_EVENT_BLOCK, ENDTURN_POLISHED_CHECKPOINT,
+    ENDTURN_SEND_OUT_REPLACEMENTS_2, ENDTURN_AQUA_RING, ENDTURN_INGRAIN,
+    ENDTURN_LEECH_SEED, ENDTURN_POLISHED_CHECKPOINT,
+    ENDTURN_POISON, ENDTURN_POLISHED_CHECKPOINT,
+    ENDTURN_BURN, ENDTURN_POLISHED_CHECKPOINT,
+    ENDTURN_FROSTBITE, ENDTURN_NIGHTMARE,
+    ENDTURN_CURSE, ENDTURN_POLISHED_CHECKPOINT,
+    ENDTURN_WRAP, ENDTURN_POLISHED_CHECKPOINT,
+    ENDTURN_SALT_CURE, ENDTURN_OCTOLOCK, ENDTURN_SYRUP_BOMB,
+    ENDTURN_TAUNT, ENDTURN_TORMENT, ENDTURN_ENCORE, ENDTURN_DISABLE,
+    ENDTURN_MAGNET_RISE, ENDTURN_TELEKINESIS, ENDTURN_HEAL_BLOCK,
+    ENDTURN_EMBARGO, ENDTURN_YAWN,
+    ENDTURN_PERISH_SONG, ENDTURN_POLISHED_CHECKPOINT,
+    ENDTURN_ROOST, ENDTURN_SEND_OUT_REPLACEMENTS_3, ENDTURN_SECOND_EVENT_BLOCK,
+    ENDTURN_TRICK_ROOM, ENDTURN_GRAVITY, ENDTURN_WATER_SPORT, ENDTURN_MUD_SPORT,
+    ENDTURN_WONDER_ROOM, ENDTURN_MAGIC_ROOM, ENDTURN_TERRAIN,
+    ENDTURN_THIRD_EVENT_BLOCK, ENDTURN_POLISHED_CHECKPOINT,
+    ENDTURN_POLISHED_LEPPA, ENDTURN_POLISHED_HEALING_ITEMS,
+    ENDTURN_OPPORTUNIST, ENDTURN_MIRROR_HERB, ENDTURN_SEND_OUT_REPLACEMENTS_4,
+    ENDTURN_FORM_CHANGE, ENDTURN_EJECT_PACK, ENDTURN_SEND_OUT_REPLACEMENTS_5,
+    ENDTURN_ARENA_TURN_END, ENDTURN_POLISHED_CHECKPOINT,
+    ENDTURN_FAINTED_MON_ACTIONS, ENDTURN_DYNAMAX,
+    ENDTURN_TRAINER_A_SLIDES, ENDTURN_TRAINER_B_SLIDES, ENDTURN_TRAINER_PARTNER_SLIDES,
+};
+
+static bool32 ResolvePolishedFaintQueue(struct PolishedFaintQueue *queue)
+{
+    // Resolve queued faints in damage order, then EXP, then the whole-party
+    // outcome. A fainted opponent cannot erase the other battler's tick.
+    while (queue->index < queue->count)
+    {
+        gBattleScripting.battler = queue->order[queue->index++];
+        BattleScriptCall(BattleScript_PolishedEndTurnFaint);
+        return TRUE;
+    }
+    if (queue->step == 0)
+    {
+        queue->step++;
+        enum BattlerId foe = GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT);
+        if (!IsBattlerAlive(foe)
+         && !(gBattleStruct->givenExpMons[GetBattlerTrainer(foe) & BIT_FLANK] & (1u << gBattlerPartyIndexes[foe])))
+        {
+            gBattlerTarget = foe;
+            BattleScriptCall(BattleScript_PolishedEndTurnExp);
+            return TRUE;
+        }
+    }
+    if (queue->step == 1)
+    {
+        queue->step++;
+        BattleScriptCall(BattleScript_PolishedEndTurnOutcome);
+        return TRUE;
+    }
+    memset(queue, 0, sizeof(*queue));
+    return FALSE;
+}
+
+void PolishedBeginEntryHazards(void)
+{
+    memset(&sPolishedEntryFaints, 0, sizeof(sPolishedEntryFaints));
+    sPolishedEntryBatch = TRUE;
+    sPolishedEntryResolving = FALSE;
+    // Source suppression is passive and precedes the entry announcement,
+    // including hazards and the Speed comparison for both incoming battlers.
+    for (u32 i = 0; i < gBattlersCount; i++)
+        if (gBattleMons[i].ability == ABILITY_NEUTRALIZING_GAS
+         && !gBattleMons[i].volatiles.gastroAcid && !gBattleStruct->battlerState[i].notOnField)
+            gBattleMons[i].volatiles.neutralizingGas = TRUE;
+}
+
+bool32 PolishedResolveEntryFaints(void)
+{
+    sPolishedEntryBatch = FALSE;
+    sPolishedEntryResolving = TRUE;
+    if (ResolvePolishedFaintQueue(&sPolishedEntryFaints))
+        return TRUE;
+    sPolishedEntryResolving = FALSE;
+    return FALSE;
+}
+
+static bool32 HandlePolishedFaintCheckpoint(void)
+{
+    if (ResolvePolishedFaintQueue(&sPolishedTurnFaints))
+        return TRUE;
+    gBattleStruct->eventState.endTurn++;
+    return FALSE;
+}
+
+static bool32 HandlePolishedScreens(enum BattlerId battler)
+{
+    // Reflect for both sides, then Light Screen for both, etc. Native order is
+    // side-major. Each effect has a new CheckSpeed, even when no timer is set.
+    u32 block = gBattleStruct->eventState.endTurnBlock;
+    if (gBattleStruct->eventState.endTurnBattler == 0)
+        SortPolishedBattlersBySpeed(gBattlerByTurnOrder);
+    battler = gBattlerByTurnOrder[gBattleStruct->eventState.endTurnBattler];
+    gBattleStruct->eventState.battlerSide = GetBattlerSide(battler);
+    bool32 effect = HandleEndTurnSecondEventBlock(battler);
+    gBattleStruct->eventState.battlerSide = 0;
+    gBattleStruct->eventState.endTurnBlock = block;
+    if (++gBattleStruct->eventState.endTurnBattler == gBattlersCount)
+    {
+        gBattleStruct->eventState.endTurnBattler = 0;
+        if (++gBattleStruct->eventState.endTurnBlock > SECOND_EVENT_BLOCK_AURORA_VEIL)
+            gBattleStruct->eventState.endTurn++;
+    }
+    return effect;
+}
+
+static bool32 IsPolishedLeppaActivation(enum HoldEffect effect)
+{
+    return effect == HOLD_EFFECT_RESTORE_PP;
+}
+
+static bool32 IsPolishedHpHealingItem(enum HoldEffect effect)
+{
+    return effect == HOLD_EFFECT_RESTORE_HP || effect == HOLD_EFFECT_RESTORE_PCT_HP
+        || effect == HOLD_EFFECT_CONFUSE_FLAVOR;
+}
+
+static bool32 IsPolishedStatusHealingItem(enum HoldEffect effect)
+{
+    return IsOnStatusChangeActivation(effect) && effect != HOLD_EFFECT_CURE_CONFUSION;
+}
+
+static bool32 IsPolishedStatBerry(enum HoldEffect effect)
+{
+    return IsOnHpThresholdActivation(effect) && !IsPolishedHpHealingItem(effect);
+}
+
+static bool32 IsPolishedConfusionHealingItem(enum HoldEffect effect)
+{
+    return effect == HOLD_EFFECT_CURE_CONFUSION || effect == HOLD_EFFECT_CURE_STATUS;
+}
+
+static const ActivationTiming sPolishedHealingTimings[] =
+{
+    IsPolishedHpHealingItem, IsPolishedStatusHealingItem, IsPolishedStatBerry,
+    IsMirrorHerbActivation, IsPolishedConfusionHealingItem,
+};
+
+bool32 PolishedHandleUnnerveExit(enum BattlerId battler)
+{
+    if (!UsesPolishedLifecycle() || gBattleMons[battler].ability != ABILITY_UNNERVE
+     || !gBattleStruct->battlerState[battler].notOnField)
+        return FALSE;
+    // SuppressUserAbilities runs both sweeps immediately when Unnerve leaves,
+    // including a faint checkpoint between two residual phases. Keep nested
+    // item iteration separate from the enclosing end-turn/entry scheduler.
+    if (!sPolishedExitItems.active)
+    {
+        sPolishedExitItems.active = TRUE;
+        sPolishedExitItems.attacker = gBattlerAttacker;
+        sPolishedExitItems.target = gBattlerTarget;
+        sPolishedExitItems.scripting = gBattleScripting.battler;
+        SortPolishedBattlersBySpeed(sPolishedExitItems.order);
+    }
+    while (sPolishedExitItems.phase < 2)
+    {
+        if (sPolishedExitItems.index == ARRAY_COUNT(sPolishedExitItems.order))
+        {
+            sPolishedExitItems.phase++;
+            sPolishedExitItems.index = 0;
+            if (sPolishedExitItems.phase < 2)
+                SortPolishedBattlersBySpeed(sPolishedExitItems.order);
+            continue;
+        }
+        enum BattlerId holder = sPolishedExitItems.order[sPolishedExitItems.index];
+        ActivationTiming timing = IsPolishedLeppaActivation;
+        if (sPolishedExitItems.phase == 0)
+            sPolishedExitItems.index++;
+        else
+        {
+            timing = sPolishedHealingTimings[sPolishedExitItems.block++];
+            if (sPolishedExitItems.block == ARRAY_COUNT(sPolishedHealingTimings))
+            {
+                sPolishedExitItems.block = 0;
+                sPolishedExitItems.index++;
+            }
+        }
+        if (ItemBattleEffects(holder, 0, GetBattlerHoldEffect(holder), timing) != ITEM_NO_EFFECT)
+            return TRUE;
+    }
+    gBattlerAttacker = sPolishedExitItems.attacker;
+    gBattlerTarget = sPolishedExitItems.target;
+    gBattleScripting.battler = sPolishedExitItems.scripting;
+    memset(&sPolishedExitItems, 0, sizeof(sPolishedExitItems));
+    return FALSE;
+}
+
+static bool32 HandlePolishedHealingItems(enum BattlerId battler)
+{
+    u32 block = gBattleStruct->eventState.endTurnBlock++;
+    if (gBattleStruct->eventState.endTurnBlock == ARRAY_COUNT(sPolishedHealingTimings))
+    {
+        gBattleStruct->eventState.endTurnBlock = 0;
+        gBattleStruct->eventState.endTurnBattler++;
+    }
+    return ItemBattleEffects(battler, 0, GetBattlerHoldEffect(battler), sPolishedHealingTimings[block]) != ITEM_NO_EFFECT;
+}
+
+static bool32 DoPolishedEndTurnEffects(void)
+{
+    for (;;)
+    {
+        if (gBattleOutcome || sPolishedEndTurn.phase == ARRAY_COUNT(sPolishedEndTurnOrder))
+        {
+            ResetPolishedEndTurn();
+            gBattleStruct->eventState.endTurn = ENDTURN_COUNT;
+            return FALSE;
+        }
+        u32 phase = sPolishedEndTurnOrder[sPolishedEndTurn.phase];
+        if (!sPolishedEndTurn.initialized)
+        {
+            sPolishedEndTurn.initialized = TRUE;
+            gBattleStruct->eventState.endTurn = phase;
+            gBattleStruct->eventState.endTurnBattler = 0;
+            gBattleStruct->eventState.battlerSide = 0;
+            gBattleStruct->eventState.endTurnBlock = 0;
+            sPolishedEndTurn.batching = phase != ENDTURN_POLISHED_CHECKPOINT
+                && phase != ENDTURN_FAINTED_MON_ACTIONS && phase != ENDTURN_EJECT_PACK
+                && phase != ENDTURN_SEND_OUT_REPLACEMENTS_1 && phase != ENDTURN_SEND_OUT_REPLACEMENTS_2
+                && phase != ENDTURN_SEND_OUT_REPLACEMENTS_3 && phase != ENDTURN_SEND_OUT_REPLACEMENTS_4
+                && phase != ENDTURN_SEND_OUT_REPLACEMENTS_5;
+            sPolishedEndTurn.deferringItems = phase != ENDTURN_POLISHED_LEPPA
+                && phase != ENDTURN_POLISHED_HEALING_ITEMS && phase != ENDTURN_FAINTED_MON_ACTIONS;
+            if (phase != ENDTURN_ORDER && phase != ENDTURN_POLISHED_CHECKPOINT
+             && phase != ENDTURN_FUTURE_SIGHT && phase != ENDTURN_SECOND_EVENT_BLOCK)
+                SortPolishedBattlersBySpeed(gBattlerByTurnOrder);
+        }
+        // Handlers advance either the phase or the battler. Do not re-enter a
+        // completed phase after its script returns, or re-roll its first tie.
+        if (gBattleStruct->eventState.endTurn != phase
+         || gBattleStruct->eventState.endTurnBattler == gBattlersCount)
+        {
+            sPolishedEndTurn.phase++;
+            sPolishedEndTurn.initialized = FALSE;
+            continue;
+        }
+        enum BattlerId battler = gBattlerAttacker = gBattlerByTurnOrder[gBattleStruct->eventState.endTurnBattler];
+        // Optional Expansion abilities still have their ordinary queued switch
+        // hooks; the source roster does not acquire these implicitly.
+        if (phase > ENDTURN_VARIOUS)
+        {
+            for (u32 i = 0; i < gBattlersCount; i++)
+            {
+                enum BattlerId other = gBattlerByTurnOrder[i];
+                if (!IsBattlerPresent(other))
+                    continue;
+                bool32 switched = HandleEndTurnEmergencyExit(other);
+                gBattleStruct->battlerState[other].wasAboveHalfHp = gBattleMons[other].hp > gBattleMons[other].maxHP / 2;
+                if (switched)
+                    return TRUE;
+            }
+        }
+        bool32 effect;
+        switch (phase)
+        {
+        case ENDTURN_POLISHED_CHECKPOINT:
+            effect = HandlePolishedFaintCheckpoint();
+            break;
+        case ENDTURN_SECOND_EVENT_BLOCK:
+            effect = HandlePolishedScreens(battler);
+            break;
+        case ENDTURN_POLISHED_LEPPA:
+            gBattleStruct->eventState.endTurnBattler++;
+            effect = ItemBattleEffects(battler, 0, GetBattlerHoldEffect(battler), IsPolishedLeppaActivation) != ITEM_NO_EFFECT;
+            break;
+        case ENDTURN_POLISHED_HEALING_ITEMS:
+            effect = HandlePolishedHealingItems(battler);
+            break;
+        default:
+            effect = sEndTurnEffectHandlers[phase](battler);
+            break;
+        }
+        if (effect)
+            return TRUE;
+    }
+}
+
 bool32 DoEndTurnEffects(void)
 {
     enum BattlerId battler = MAX_BATTLERS_COUNT;
+
+    if (gBattleStruct->eventState.endTurn == ENDTURN_ORDER && !sPolishedEndTurn.active)
+        sPolishedEndTurn.active = UsesPolishedLifecycle();
+    if (sPolishedEndTurn.active)
+        return DoPolishedEndTurnEffects();
 
     if (gBattleOutcome != 0 && gBattleStruct->eventState.endTurn < ENDTURN_TRAINER_A_SLIDES) // Skip most stuff if battle's outcome is determined
         gBattleStruct->eventState.endTurn = ENDTURN_TRAINER_A_SLIDES;

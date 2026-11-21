@@ -39426,6 +39426,36 @@
       "path": "test/battle/polished_dynamic_damage.c"
     },
     {
+      "name": "Polished entry Toxic Spikes synchronizes on voluntary entry before curing the entrant",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_entry_status.c"
+    },
+    {
+      "name": "Polished entry forced Toxic Spikes do not trigger Synchronize",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_entry_status.c"
+    },
+    {
+      "name": "Polished entry Synchronize respects the opposing Substitute",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_entry_status.c"
+    },
+    {
+      "name": "Polished entry forced context clears before a later voluntary switch",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_entry_status.c"
+    },
+    {
+      "name": "Polished entry both replacements finish status reflection and cures before entry abilities",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_entry_status.c"
+    },
+    {
+      "name": "Polished entry Mold Breaker Roar bypasses Levitate but keeps Magic Guard against Spikes",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_entry_status.c"
+    },
+    {
       "name": "Polished escape matches all 5184 source word byte carry and attempt vectors",
       "kind": "TEST",
       "path": "test/battle/polished_escape.c"
@@ -39691,9 +39721,184 @@
       "path": "test/battle/polished_friendship.c"
     },
     {
+      "name": "Polished lifecycle Magic Guard freezes the toxic counter",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_lifecycle.c"
+    },
+    {
+      "name": "Polished lifecycle burn is one sixteenth without Heatproof halving",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_lifecycle.c"
+    },
+    {
+      "name": "Polished lifecycle Black Sludge damages a non Poison Magic Guard holder",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_lifecycle.c"
+    },
+    {
+      "name": "Polished lifecycle poison damage still triggers immediate healing berries",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_lifecycle.c"
+    },
+    {
+      "name": "Polished lifecycle Leech Seed restores half its nominal drain after Big Root",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_lifecycle.c"
+    },
+    {
+      "name": "Polished lifecycle Liquid Ooze seed damage bypasses the receiver Magic Guard",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_lifecycle.c"
+    },
+    {
+      "name": "Polished lifecycle poison finishes both ticks before either faint animation",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_lifecycle.c"
+    },
+    {
+      "name": "Polished lifecycle simultaneous final poison knockouts are campaign losses",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_lifecycle.c"
+    },
+    {
+      "name": "Polished lifecycle weather batches simultaneous faints before deciding the result",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_lifecycle.c"
+    },
+    {
+      "name": "Polished lifecycle poison replacement waits until the living opponent burns",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_lifecycle.c"
+    },
+    {
+      "name": "Polished lifecycle Poison Heal advances toxic at full HP",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_lifecycle.c"
+    },
+    {
+      "name": "Polished lifecycle recomputes residual Speed after rain expires",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_lifecycle.c"
+    },
+    {
+      "name": "Polished lifecycle screens expire in current Speed order",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_lifecycle.c"
+    },
+    {
+      "name": "Polished lifecycle optional battle formats retain native scheduling eligibility",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_lifecycle.c"
+    },
+    {
+      "name": "Polished lifecycle Leppa waits until end turn and can be knocked off first",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_lifecycle.c"
+    },
+    {
+      "name": "Polished lifecycle Unnerve faint releases healing before the next residual phase",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_lifecycle.c"
+    },
+    {
+      "name": "Polished lifecycle Unnerve switch releases Leppa before the opposing move",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_lifecycle.c"
+    },
+    {
+      "name": "Polished lifecycle both lethal Future Sight attacks finish before faint resolution",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_lifecycle.c"
+    },
+    {
+      "name": "Polished lifecycle entry item notification precedes entry abilities",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_lifecycle.c"
+    },
+    {
+      "name": "Polished lifecycle seed absorption floors at one and uses nominal damage on a KO",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_lifecycle.c"
+    },
+    {
+      "name": "Polished lifecycle Leppa consumption follows the Harvest recovery phase",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_lifecycle.c"
+    },
+    {
+      "name": "Polished lifecycle Trick Room expiry refreshes Speed before block B",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_lifecycle.c"
+    },
+    {
+      "name": "Polished lifecycle Room Service changes the order of incoming abilities",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_lifecycle.c"
+    },
+    {
       "name": "Polished Noctowl has its source Ghost immunity in a real battle",
       "kind": "SINGLE_BATTLE_TEST",
       "path": "test/battle/polished_species.c"
+    },
+    {
+      "name": "Polished lifecycle Baton Pass preserves incoming source binding counters",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_switch_lifecycle.c"
+    },
+    {
+      "name": "Polished lifecycle Baton Pass keeps the opponent bound to the departing side",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_switch_lifecycle.c"
+    },
+    {
+      "name": "Polished lifecycle Baton Pass releases its Mean Look target but inherits the opponents trap",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_switch_lifecycle.c"
+    },
+    {
+      "name": "Polished lifecycle Baton Pass carries the toxic counter to an already toxic replacement",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_switch_lifecycle.c"
+    },
+    {
+      "name": "Polished lifecycle ordinary switching resets toxic and both sides binding",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_switch_lifecycle.c"
+    },
+    {
+      "name": "Polished lifecycle Spikes precede Toxic Spikes regardless of placement order",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_switch_lifecycle.c"
+    },
+    {
+      "name": "Polished lifecycle both replacements take hazards before entry abilities",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_switch_lifecycle.c"
+    },
+    {
+      "name": "Polished lifecycle simultaneous replacements use the departed battlers Speed order",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_switch_lifecycle.c"
+    },
+    {
+      "name": "Polished lifecycle hazard knockouts repeat replacement without repeating residuals",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_switch_lifecycle.c"
+    },
+    {
+      "name": "Polished lifecycle incoming Gas suppresses hazards before its announcement",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_switch_lifecycle.c"
+    },
+    {
+      "name": "Polished lifecycle entry Unnerve follows a faster entry ability",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_switch_lifecycle.c"
+    },
+    {
+      "name": "Polished lifecycle dual Neutralizing Gas announces once in Speed order",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_switch_lifecycle.c"
     },
     {
       "name": "Polished systems trainer generation preserves source slots stats gender and friendship",
