@@ -4768,3 +4768,61 @@ the fix. All nineteen entry groups pass in both native and source profiles.
 When tightening warning flags on an existing build, force affected objects to
 rebuild (or use a clean build) before treating it as CI-equivalent evidence.
 Battle runtime, production ROMs and the three-suite closure status are unchanged.
+
+## Suite 2 continuation — immediate ability stat-item checkpoints
+
+Continues from `e8ffca27`, whose CI #1635 passed, against the pinned default
+source at `3fa43192379df5c3e7b09a08e4d5d79af4f02f42`. The original three-suite
+plan remains in force; this is another implementation slice within Suite 2.
+
+The source's Download, Tangling Hair, StatUpAbility, Weak Armor, Moody and
+Anger Point routines check Mirror Herb immediately after their stat changes.
+The target now runs these checkpoints before the next hit, entry ability,
+end-turn ability or contact item. A first-hit copy therefore cannot accumulate
+later Justified/Weak Armor boosts. Defiant and Competitive can interrupt a
+multi-stat command; the transient continuation preserves its primary queue,
+actors, scripting state and animation flags while Mirror Herb runs. Selection
+uses the actual ability owner, rather than a stale last-ability record.
+
+Mirror Herb checks require both battlers alive. Switching clears both sides'
+pending Mirror copies before entry; the optional Opportunist queue is retained
+when active. A live test exposed and now guards a pending Moxie boost leaking
+from a fainted holder onto its replacement. Source entry has no general White
+Herb sweep, and source end turn has no White Herb/Pack sweep. Negative stages
+inherited through Baton Pass or created by Moody wait for the next move-end
+or Intimidate checkpoint. Optional Sticky Web's entry response is preserved.
+No party, save or target identifier layouts change.
+
+Fifteen live groups in `test/battle/polished_stat_items.c` cover Download entry
+order; Weak Armor and Justified between hits; nested Defiant/Competitive;
+Tangling Hair/Contrary; Speed Boost before Moody; delayed White Herb and Pack;
+Baton Pass inheritance; Anger Point before Helmet; Moxie/faint/replacement
+boundaries; optional Sticky Web; and the native doubles control. Tickle is an
+explicit optional-content continuation test, not a claimed source move.
+Thirteen authenticated action-contract tests include mutations of each of the
+six source ability checkpoints, the alive gate, switch reset and the absence
+of a general end-turn herb pass.
+
+Suite 2 remains open. In particular, Mirror's complete pending-boost ledger
+(stat caps, item transfers and non-ability checkpoints), the full eligibility
+and generation-independent behavior of each ability, simultaneous voluntary
+entry, remaining voluntary/Pursuit/trap combinations, called moves and other
+unverified effect branches are not certified here. The pre-existing native
+Life Orb/Eject Button KO edge remains open. Exact RNG and presentation remain
+Suite 3 obligations. Passing native tests establishes regression coverage.
+
+Validation: all **1,065 source groups plus six AI timing groups** pass. The full
+native run passes **6,287 groups**, with the existing nine expected failures
+and 585 TODOs. All fifteen new groups pass in both profiles. Both test builds
+use `UNUSED_ERROR=1 DEPRECATED_ERROR=1`; all affected/new objects were rebuilt
+with those strict flags. All 108 source reproducibility checks, twelve ARM
+probes, thirteen action-contract tests and three completion-plan tests pass.
+Both 32 MiB production ROMs build, and all 21 shipping trainer teams and 43
+Pokemon pass their production factory probe. The strict completeness gate
+still exits 2 for all fifteen domains, 4,143 lexical blocks and 133 effect
+families, as required while the remaining branch evidence is open.
+
+The final shipping Johto ROM passes **102 campaign checks and nineteen directed
+warps**, including all starter/rival branches, Sprout Tower, Falkner, rewards,
+Finch, menu-item use and native Save/reset/Continue. Johto ROM SHA-256:
+`f61e4746d8deb53ad9c1c1947811c451faf26988d0d288af05dc15eb2d506aa8`.

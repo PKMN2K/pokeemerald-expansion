@@ -40206,6 +40206,81 @@
       "path": "test/battle/polished_species.c"
     },
     {
+      "name": "Polished stat items copy Download before the slower entry ability",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_stat_items.c"
+    },
+    {
+      "name": "Polished stat items copy Weak Armor after the first hit only",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_stat_items.c"
+    },
+    {
+      "name": "Polished stat items copy Weak Armor before White Herb restores Defense",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_stat_items.c"
+    },
+    {
+      "name": "Polished stat items preserve the primary queue across nested Defiant and Competitive",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_stat_items.c"
+    },
+    {
+      "name": "Polished stat items copy Tangling Hair Contrary boosts between hits",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_stat_items.c"
+    },
+    {
+      "name": "Polished stat items copy Justified between hits and honor Contrary on the holder",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_stat_items.c"
+    },
+    {
+      "name": "Polished stat items copy Speed Boost before the next end turn ability",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_stat_items.c"
+    },
+    {
+      "name": "Polished stat items leave White Herb waiting after Moody",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_stat_items.c"
+    },
+    {
+      "name": "Polished stat items restore Moody's negative stage at the next move checkpoint",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_stat_items.c"
+    },
+    {
+      "name": "Polished stat items defer Moody's Eject Pack to the next action",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_stat_items.c"
+    },
+    {
+      "name": "Polished stat items keep an inherited negative stage until an action checkpoint",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_stat_items.c"
+    },
+    {
+      "name": "Polished stat items retain White Herb on optional Sticky Web entry",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_stat_items.c"
+    },
+    {
+      "name": "Polished stat items copy Anger Point before Rocky Helmet damage",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_stat_items.c"
+    },
+    {
+      "name": "Polished stat items do not copy Moxie onto a fainted holder or its replacement",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_stat_items.c"
+    },
+    {
+      "name": "Polished stat items retain native multihit copying in doubles",
+      "kind": "DOUBLE_BATTLE_TEST",
+      "path": "test/battle/polished_stat_items.c"
+    },
+    {
       "name": "Polished lifecycle Baton Pass preserves incoming source binding counters",
       "kind": "SINGLE_BATTLE_TEST",
       "path": "test/battle/polished_switch_lifecycle.c"
@@ -41159,7 +41234,7 @@
     },
     {
       "manifest": "tools/polished_port/manifests/action_resolution.json",
-      "sha256": "3c8bac7bbfa77437d3f10399c649d6bbd5c621b03651023ed05b8bc7428db5f1"
+      "sha256": "8d2a1a5aa7370df4fe221d188ce886596531da14fee717ea37e09e170a93edd6"
     },
     {
       "manifest": "tools/polished_port/manifests/attack_suite.json",

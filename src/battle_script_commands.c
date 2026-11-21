@@ -3858,6 +3858,13 @@ void BS_PolishedIntimidateItems(void)
         gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
+void BS_PolishedAbilityMirrorHerb(void)
+{
+    NATIVE_ARGS();
+    if (!PolishedAbilityMirrorHerb())
+        gBattlescriptCurrInstr = cmd->nextInstr;
+}
+
 void BS_PolishedGasExit(void)
 {
     NATIVE_ARGS(bool8 active);

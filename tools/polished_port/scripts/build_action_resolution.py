@@ -54,6 +54,23 @@ def validate_source(files):
     assert files['data/abilities/no_intimidate_abilities.asm']['text'].splitlines()[1:] == [
         '\tdb INNER_FOCUS', '\tdb OWN_TEMPO', '\tdb OBLIVIOUS', '\tdb SCRAPPY', '\tdb -1']
     ordered(switching, ['; Do item consumption', 'cp SUCTION_CUPS', '; Figure out which side is switching'])
+    # These ability blocks finish their own stat changes before copying, even
+    # when invoked between hits or inside another stat command.
+    for start, end in (('DownloadAbility:', 'ImposterAbility:'),
+                       ('TanglingHairAbility:', 'EffectSporeAbility:'),
+                       ('StatUpAbility:', 'WeakArmorAbility:'),
+                       ('WeakArmorAbility:', 'FlashFireAbility:'),
+                       ('MoodyAbility:', 'ApplyDamageAbilities_AfterTypeMatchup:'),
+                       ('AngerPointAbility:', 'RunSwitchAbilities:')):
+        ability_block = block(abilities, start, end)
+        assert ability_block.rstrip().endswith('farjp CheckMirrorHerb'), start
+        assert 'call EndAbility' in ability_block, start
+    mirror = block(commands, 'CheckMirrorHerb:', 'EndMoveDamageChecks:')
+    ordered(mirror, ['call HasUserFainted', 'call nz, HasOpponentFainted', 'ret z', 'call SetFastestTurn'])
+    reset = block(core, 'BreakAttractionAndResetMirrorHerb:', 'SpikesDamageBoth:')
+    ordered(reset, ['ResetMirrorHerb:', 'ld hl, wMirrorHerbPendingBoosts', 'ld bc, NUM_LEVEL_STATS - 1', 'rst ByteFill'])
+    endturn = files['engine/battle/endturn.asm']['text']
+    assert not re.search(r'HELD_(WHITE_HERB|EJECT_PACK)|CheckStatHerbs', endturn), 'No generic end-turn stat-herb pass'
     for name in ('baton_pass', 'roar', 'teleport'):
         text = files[f'engine/battle/move_effects/{name}.asm']['text']
         assert 'jmp SetDeferredSwitch' in text, name
@@ -83,7 +100,7 @@ def build():
     ordered(constants, ['MOVEEND_ITEM_ON_STAT_CHANGE,', 'MOVEEND_POLISHED_ACTION_CHECKPOINT,', 'MOVEEND_POLISHED_DEFERRED_SWITCH,', 'MOVEEND_SEND_OUT_REPLACEMENTS,'])
     ordered(constants, ['MOVEEND_LIFE_ORB_SHELL_BELL,', 'MOVEEND_POLISHED_SWITCH_ITEMS,', 'MOVEEND_PICKPOCKET,', 'MOVEEND_POLISHED_STAT_HERBS,', 'MOVEEND_SPRAY_LEPPA_BLUNDER,'])
     assert '[MOVEEND_POLISHED_ACTION_CHECKPOINT] = MoveEndPolishedActionCheckpoint' in runtime
-    paths = ['engine/battle/core.asm', 'engine/battle/effect_commands.asm', 'engine/battle/abilities.asm', 'data/abilities/no_intimidate_abilities.asm', 'data/moves/effects.asm', 'engine/battle/move_effects/baton_pass.asm', 'engine/battle/move_effects/roar.asm', 'engine/battle/move_effects/teleport.asm', 'data/items/attributes.asm']
+    paths = ['engine/battle/core.asm', 'engine/battle/effect_commands.asm', 'engine/battle/abilities.asm', 'engine/battle/endturn.asm', 'data/abilities/no_intimidate_abilities.asm', 'data/moves/effects.asm', 'engine/battle/move_effects/baton_pass.asm', 'engine/battle/move_effects/roar.asm', 'engine/battle/move_effects/teleport.asm', 'data/items/attributes.asm']
     report = dict(source_commit=source.source.PIN, source_variant='default; FAITHFUL undefined', suite=2,
         complete_behavior_parity=False,
         source_anchors={p: files[p]['sha'] if p in files else source.git_hash('blob', move_files[p].encode()) for p in paths},
@@ -103,12 +120,15 @@ def build():
             'Intimidate checks Mirror Herb before White Herb/Pack and a second Mirror Herb pass; its private switch reservation preserves the surrounding action.',
             'Entry Pack switches finish immediately, including replacement hazards and abilities; the interrupted two-entry loop still visits its remaining side.',
             'Gas deactivation runs the Intimidate herb checks but suppresses nested Pack execution. Inner Focus/Own Tempo/Oblivious/Scrappy return before those checks.',
+            'Source Download, Tangling Hair, StatUpAbility, Weak Armor, Moody and Anger Point check Mirror Herb immediately; nested stat commands resume after the copy.',
+            'Mirror Herb requires both battlers alive; switching clears pending copies on both sides before replacement abilities.',
+            'Source entry and end turn have no general White Herb/Pack sweep: inherited or Moody negative stages wait for a move or Intimidate checkpoint.',
             'Healing berries run after recoil/drain and Aftermath before the next contact effect can knock out the user.',
             'Destiny Bond persists through a cancelled repeat choice but clears before any different action; an executed repeat clears and fails.'],
         live_bindings=['src/battle_move_resolution.c', 'src/battle_end_turn.c', 'src/battle_util.c',
-            'src/battle_hold_effects.c', 'src/battle_set_effect.c', 'src/battle_script_commands.c', 'src/battle_switch_in.c', 'data/battle_scripts_1.s'],
+            'src/battle_hold_effects.c', 'src/battle_stat_change.c', 'src/battle_main.c', 'src/battle_set_effect.c', 'src/battle_script_commands.c', 'src/battle_switch_in.c', 'data/battle_scripts_1.s'],
         regression_file='test/battle/polished_action_resolution.c',
-        additional_regression_files=['test/battle/polished_deferred_switch.c', 'test/battle/polished_entry_items.c'],
+        additional_regression_files=['test/battle/polished_deferred_switch.c', 'test/battle/polished_entry_items.c', 'test/battle/polished_stat_items.c'],
         remaining=['All unverified effect branches and command interactions remain owned by Suite 2.',
             'Exact RNG stream and source presentation remain owned by Suite 3; native regression success is not source parity.'])
     return {MANIFEST: json.dumps(report, indent=2)+'\n'}

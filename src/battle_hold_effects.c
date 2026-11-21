@@ -140,6 +140,10 @@ static enum ItemEffect TryConsumeMirrorHerb(enum BattlerId battler)
 {
     enum ItemEffect effect = ITEM_NO_EFFECT;
 
+    if (UsesPolishedLifecycle()
+     && (!IsBattlerAlive(B_BATTLER_0) || !IsBattlerAlive(B_BATTLER_1)))
+        return ITEM_NO_EFFECT;
+
     if (gProtectStructs[battler].eatMirrorHerb)
     {
         for (enum Stat stat = STAT_ATK; stat < NUM_BATTLE_STATS; stat++)

@@ -66,5 +66,39 @@ class ActionResolutionTest(unittest.TestCase):
             action.validate_source(files)
 
 
+    def test_each_ability_requires_its_immediate_mirror_checkpoint(self):
+        for label in ('DownloadAbility:', 'TanglingHairAbility:', 'StatUpAbility:',
+                      'WeakArmorAbility:', 'MoodyAbility:', 'AngerPointAbility:'):
+            with self.subTest(ability=label):
+                files = copy.deepcopy(action.source.authenticated_sources())
+                path = 'engine/battle/abilities.asm'
+                prefix, suffix = files[path]['text'].split(label, 1)
+                files[path]['text'] = prefix + label + suffix.replace('farjp CheckMirrorHerb', 'ret', 1)
+                with self.assertRaises(AssertionError):
+                    action.validate_source(files)
+
+    def test_fainted_mirror_holder_is_rejected(self):
+        files = copy.deepcopy(action.source.authenticated_sources())
+        path = 'engine/battle/effect_commands.asm'
+        prefix, suffix = files[path]['text'].split('CheckMirrorHerb:', 1)
+        files[path]['text'] = prefix + 'CheckMirrorHerb:' + suffix.replace('call nz, HasOpponentFainted', 'nop', 1)
+        with self.assertRaises((AssertionError, ValueError)):
+            action.validate_source(files)
+
+    def test_pending_copies_do_not_survive_switching(self):
+        files = copy.deepcopy(action.source.authenticated_sources())
+        path = 'engine/battle/core.asm'
+        prefix, suffix = files[path]['text'].split('ResetMirrorHerb:', 1)
+        files[path]['text'] = prefix + 'ResetMirrorHerb:' + suffix.replace('rst ByteFill', 'ret', 1)
+        with self.assertRaises((AssertionError, ValueError)):
+            action.validate_source(files)
+
+    def test_generic_endturn_stat_herbs_are_rejected(self):
+        files = copy.deepcopy(action.source.authenticated_sources())
+        files['engine/battle/endturn.asm']['text'] += '\n\tfarcall CheckStatHerbs\n'
+        with self.assertRaises(AssertionError):
+            action.validate_source(files)
+
+
 if __name__ == '__main__':
     unittest.main()

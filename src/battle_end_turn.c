@@ -79,6 +79,7 @@ void ResetPolishedEndTurn(void)
     sPolishedEntryBatch = sPolishedEntryResolving = FALSE;
     sPolishedEntryParentCount = 0;
     ResetPolishedEntryItems();
+    ResetPolishedStatItems();
     sPolishedReplacingBoth = FALSE;
     sPolishedForcedEntry = 0;
     memset(&sPolishedExitItems, 0, sizeof(sPolishedExitItems));
@@ -1596,7 +1597,10 @@ static bool32 HandleEndTurnThirdEventBlock(enum BattlerId battler)
         break;
     }
     case THIRD_EVENT_BLOCK_ITEMS:
-        if (ItemBattleEffects(battler, 0, GetBattlerHoldEffect(battler), IsOrbsWhiteHerbActivation))
+        // HandleStatusOrbs has no White Herb check in the source. Moody's
+        // negative stage persists until a move-end or Intimidate checkpoint.
+        if (!(sPolishedEndTurn.active && GetBattlerHoldEffect(battler) == HOLD_EFFECT_WHITE_HERB)
+         && ItemBattleEffects(battler, 0, GetBattlerHoldEffect(battler), IsOrbsWhiteHerbActivation))
             effect = TRUE;
         gBattleStruct->eventState.endTurnBlock = 0;
         gBattleStruct->eventState.endTurnBattler++;
@@ -1678,6 +1682,12 @@ static bool32 HandleEndTurnFormChange(enum BattlerId battler)
 static bool32 HandleEndTurnEjectPack(enum BattlerId battler)
 {
     gBattleStruct->eventState.endTurn++;
+    if (UsesPolishedLifecycle())
+    {
+        for (u32 i = 0; i < gBattlersCount; i++)
+            gBattleMons[i].volatiles.tryEjectPack = FALSE;
+        return FALSE;
+    }
     return TrySwitchInEjectPack(END_TURN);
 }
 

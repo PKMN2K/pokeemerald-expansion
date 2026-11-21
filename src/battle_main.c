@@ -2986,6 +2986,18 @@ void SwitchInClearSetData(enum BattlerId battler, struct Volatiles *volatilesCop
     enum BattleMoveEffects effect = GetMoveEffect(gCurrentMove);
     bool32 sourceBaton = UsesPolishedLifecycle() && gCurrentMove == MOVE_BATON_PASS;
 
+    if (UsesPolishedLifecycle())
+    {
+        // BreakAttractionAndResetMirrorHerb clears both sides before entry.
+        // A replacement must not inherit a fainted holder's pending Moxie copy.
+        for (enum BattlerId i = 0; i < gBattlersCount; i++)
+        {
+            gProtectStructs[i].eatMirrorHerb = FALSE;
+            if (!gProtectStructs[i].activateOpportunist)
+                memset(&gQueuedStatBoosts[i], 0, sizeof(gQueuedStatBoosts[i]));
+        }
+    }
+
     // Data cleared both on switch and faint
     ClearSetDataOnLeave(battler);
 

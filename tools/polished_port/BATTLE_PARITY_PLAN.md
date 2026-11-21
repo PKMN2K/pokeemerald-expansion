@@ -64,22 +64,29 @@ changes, not certification of all branches in any whole battle domain.
    Any residual/entry mismatch discovered in these interactions remains an
    explicit dependent obligation and must be fixed before final closure.
 
-Suite 2 implementation status: shared action resolution, deferred switching and
-immediate Intimidate entry-item chains implemented; full branch closure pending.
-The current delivery covers per-hit recoil/faint/contact order,
-action-level faint/EXP/outcome checkpoints, source Destiny Bond lifecycle,
-Aftermath/Liquid Ooze eligibility, Substitute boundaries for contact and switch
-items, U-turn reservation precedence and item/Pursuit ordering. Its authenticated
-source contracts and live regression scope are in
-`manifests/action_resolution.json`. This does not close all 133 effect families
-or the entire switching graph. The next delivery unifies U-turn, Baton Pass,
-trainer Teleport/Roar and switch items under one first-wins reservation;
-checks Pack's current negative stages in source Speed order; and separates
-stat-herb effects from switch execution. Seventeen new source/native groups
-cover these boundaries in `test/battle/polished_deferred_switch.c`.
-Entry-triggered Pack chains, all voluntary/Pursuit/trap combinations, called
-move interactions and remaining effect branches still require closure within
-Suite 2. These are existing obligations, not an additional suite.
+Suite 2 implementation status: shared action resolution, deferred switching,
+Intimidate entry-item chains and immediate ability stat-item checkpoints are
+implemented; full branch closure remains pending. The current implementation
+covers per-hit recoil/faint/contact order, action-level faint/EXP/outcome
+checkpoints, source Destiny Bond lifecycle, Aftermath/Liquid Ooze eligibility,
+Substitute boundaries, and first-wins reservations shared by U-turn, Baton
+Pass, trainer Teleport/Roar and switch items. Pack checks current negative
+stages in source Speed order; switch execution follows the action checkpoint.
+
+Intimidate's private item passes can complete nested replacement chains while
+preserving the surrounding action. Download, Tangling Hair, StatUpAbility,
+Weak Armor, Moody and Anger Point now have immediate Mirror Herb checkpoints.
+Nested stat commands preserve their continuation. Mirror Herb requires both
+battlers alive and pending copies clear on switching; generic entry/end-turn
+White Herb and end-turn Pack sweeps no longer consume source items early.
+Optional Sticky Web entry, native profiles and doubles retain controls.
+
+Authenticated contracts and live test bindings are recorded in
+`manifests/action_resolution.json`. Voluntary/Pursuit/trap combinations,
+simultaneous voluntary entry, other ability/item branches, pending-copy
+bookkeeping at stat caps/item transfers, called moves and the remaining
+133-effect branch obligations still require closure within Suite 2. These are
+existing obligations, not an additional suite.
 
 ## Suite 3 — battle contexts and final closure
 

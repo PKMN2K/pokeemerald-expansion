@@ -379,7 +379,11 @@ bool32 DoSwitchInEvents(void)
         while (gBattleStruct->switchInBattlerCounter < gBattlersCount)
         {
             enum BattlerId battler = gBattlersByRawSpeed[gBattleStruct->switchInBattlerCounter++];
-            if (ItemBattleEffects(battler, 0, calcValues.holdEffects[battler], IsWhiteHerbActivation))
+            // Source entry has no general White Herb sweep. Keep the native
+            // response to optional hazards such as Sticky Web; Intimidate
+            // already completed its own source checkpoint and cleared this flag.
+            if ((!UsesPolishedLifecycle() || gBattleMons[battler].volatiles.tryEjectPack)
+             && ItemBattleEffects(battler, 0, calcValues.holdEffects[battler], IsWhiteHerbActivation))
                 return TRUE;
         }
         gBattleStruct->switchInBattlerCounter = 0;

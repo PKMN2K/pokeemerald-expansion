@@ -173,11 +173,13 @@ BattleScript_TarShotMessage::
 BattleScript_AbilityStatChange::
 	call BattleScript_AbilityPopUp
 	trystatchanges BS_EFFECT_BATTLER, STAT_CHANGE_IGNORE_SELF
+	callnative BS_PolishedAbilityMirrorHerb
 	return
 
 BattleScript_DefiantActivates::
 	call BattleScript_AbilityPopUp
 	trybattlerstatchange BS_SCRIPTING, STAT_CHANGE_SECOND_QUEUE
+	callnative BS_PolishedAbilityMirrorHerb
 	return
 
 BattleScript_AdrenalineOrbActivates::

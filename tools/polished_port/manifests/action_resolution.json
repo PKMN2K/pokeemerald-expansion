@@ -7,6 +7,7 @@
     "engine/battle/core.asm": "37e76be94949c77bf7fd12814675a27943c7d85f",
     "engine/battle/effect_commands.asm": "dd1df8310c56895b3165c1e5b5dd26c73a44734c",
     "engine/battle/abilities.asm": "8ea962089921b262a1c3b050c77e5521fba6d921",
+    "engine/battle/endturn.asm": "53dff9c5eff2ca69b0f37f94d52391842a204740",
     "data/abilities/no_intimidate_abilities.asm": "7d63628258c0a8f1734ce27a3ab818a9c15f52f6",
     "data/moves/effects.asm": "112d722b6aa298e518b6ad097bf50bd4ccdc7979",
     "engine/battle/move_effects/baton_pass.asm": "cf948a30d1116a786729f7fc0174bc297e99b464",
@@ -230,6 +231,9 @@
     "Intimidate checks Mirror Herb before White Herb/Pack and a second Mirror Herb pass; its private switch reservation preserves the surrounding action.",
     "Entry Pack switches finish immediately, including replacement hazards and abilities; the interrupted two-entry loop still visits its remaining side.",
     "Gas deactivation runs the Intimidate herb checks but suppresses nested Pack execution. Inner Focus/Own Tempo/Oblivious/Scrappy return before those checks.",
+    "Source Download, Tangling Hair, StatUpAbility, Weak Armor, Moody and Anger Point check Mirror Herb immediately; nested stat commands resume after the copy.",
+    "Mirror Herb requires both battlers alive; switching clears pending copies on both sides before replacement abilities.",
+    "Source entry and end turn have no general White Herb/Pack sweep: inherited or Moody negative stages wait for a move or Intimidate checkpoint.",
     "Healing berries run after recoil/drain and Aftermath before the next contact effect can knock out the user.",
     "Destiny Bond persists through a cancelled repeat choice but clears before any different action; an executed repeat clears and fails."
   ],
@@ -238,6 +242,8 @@
     "src/battle_end_turn.c",
     "src/battle_util.c",
     "src/battle_hold_effects.c",
+    "src/battle_stat_change.c",
+    "src/battle_main.c",
     "src/battle_set_effect.c",
     "src/battle_script_commands.c",
     "src/battle_switch_in.c",
@@ -246,7 +252,8 @@
   "regression_file": "test/battle/polished_action_resolution.c",
   "additional_regression_files": [
     "test/battle/polished_deferred_switch.c",
-    "test/battle/polished_entry_items.c"
+    "test/battle/polished_entry_items.c",
+    "test/battle/polished_stat_items.c"
   ],
   "remaining": [
     "All unverified effect branches and command interactions remain owned by Suite 2.",

@@ -5,6 +5,7 @@
 #include "battle_util.h"
 #include "battle_stat_change.h"
 #include "battle_ai_record.h"
+#include "battle_hold_effects.h"
 #include "battle_anim.h"
 #include "battle_controllers.h"
 #include "battle_ai_util.h"
@@ -35,6 +36,105 @@ static u32 GetNumPositiveStats(struct StatChange *st);
 static u32 GetNumNegativeStats(struct StatChange *st);
 static void SetAdditionalEffectsOnStatChange(struct BattleCalcValues *cv, struct StatChange *st);
 static void MarkStatsAsDone(struct StatChange *st, enum Stat stat);
+
+static EWRAM_DATA struct
+{
+    struct BattleScripting scripting;
+    struct StatStages queue[MAX_BATTLERS_COUNT][NUM_BATTLE_STATS];
+    u8 count[MAX_BATTLERS_COUNT];
+    enum BattlerId order[MAX_BATTLERS_COUNT];
+    enum BattlerId attacker, target, effect, ability;
+    enum Ability lastAbility;
+    enum Item lastItem;
+    u8 index, statBattler, negativeAnim, positiveAnim;
+    bool8 active, ignoreDefiant;
+} sPolishedAbilityHerb = {0};
+
+void ResetPolishedStatItems(void)
+{
+    memset(&sPolishedAbilityHerb, 0, sizeof(sPolishedAbilityHerb));
+}
+
+static bool32 AbilityChecksPolishedMirrorHerb(enum Ability ability)
+{
+    switch (ability)
+    {
+    case ABILITY_DOWNLOAD:
+    case ABILITY_TANGLING_HAIR:
+    case ABILITY_COMPETITIVE:
+    case ABILITY_DEFIANT:
+    case ABILITY_JUSTIFIED:
+    case ABILITY_MOXIE:
+    case ABILITY_SAP_SIPPER:
+    case ABILITY_LIGHTNING_ROD:
+    case ABILITY_RATTLED:
+    case ABILITY_MOTOR_DRIVE:
+    case ABILITY_STEADFAST:
+    case ABILITY_SPEED_BOOST:
+    case ABILITY_WEAK_ARMOR:
+    case ABILITY_MOODY:
+    case ABILITY_ANGER_POINT:
+        return TRUE;
+    default:
+        return FALSE;
+    }
+}
+
+bool32 PolishedAbilityMirrorHerb(void)
+{
+    if (!sPolishedAbilityHerb.active)
+    {
+        if (!UsesPolishedLifecycle() || !AbilityChecksPolishedMirrorHerb(GetBattlerAbility(gBattlerAbility))
+         || !IsBattlerAlive(B_BATTLER_0) || !IsBattlerAlive(B_BATTLER_1))
+            return FALSE;
+        // Defiant/Competitive can interrupt a multi-stat move. Mirror Herb
+        // uses the primary queue, so preserve that continuation while copying.
+        sPolishedAbilityHerb.scripting = gBattleScripting;
+        sPolishedAbilityHerb.attacker = gBattlerAttacker;
+        sPolishedAbilityHerb.target = gBattlerTarget;
+        sPolishedAbilityHerb.effect = gEffectBattler;
+        sPolishedAbilityHerb.ability = gBattlerAbility;
+        sPolishedAbilityHerb.lastAbility = gLastUsedAbility;
+        sPolishedAbilityHerb.lastItem = gLastUsedItem;
+        sPolishedAbilityHerb.statBattler = gBattleStruct->statChangeBattler;
+        sPolishedAbilityHerb.negativeAnim = gBattleStruct->negativeAnimPlayed;
+        sPolishedAbilityHerb.positiveAnim = gBattleStruct->positiveAnimPlayed;
+        sPolishedAbilityHerb.ignoreDefiant = gBattleStruct->ignoreDefiant;
+        for (u32 i = 0; i < gBattlersCount; i++)
+        {
+            memcpy(sPolishedAbilityHerb.queue[i], gSpecialStatuses[i].statStageQueue, sizeof(sPolishedAbilityHerb.queue[i]));
+            sPolishedAbilityHerb.count[i] = gSpecialStatuses[i].statStageAmount;
+        }
+        ClearStatChangeValues();
+        SortPolishedBattlersBySpeed(sPolishedAbilityHerb.order);
+        sPolishedAbilityHerb.index = 0;
+        sPolishedAbilityHerb.active = TRUE;
+    }
+    while (sPolishedAbilityHerb.index < gBattlersCount)
+    {
+        enum BattlerId battler = sPolishedAbilityHerb.order[sPolishedAbilityHerb.index++];
+        if (ItemBattleEffects(battler, 0, GetBattlerHoldEffect(battler), IsMirrorHerbActivation))
+            return TRUE;
+    }
+    for (u32 i = 0; i < gBattlersCount; i++)
+    {
+        memcpy(gSpecialStatuses[i].statStageQueue, sPolishedAbilityHerb.queue[i], sizeof(sPolishedAbilityHerb.queue[i]));
+        gSpecialStatuses[i].statStageAmount = sPolishedAbilityHerb.count[i];
+    }
+    gBattleStruct->statChangeBattler = sPolishedAbilityHerb.statBattler;
+    gBattleStruct->negativeAnimPlayed = sPolishedAbilityHerb.negativeAnim;
+    gBattleStruct->positiveAnimPlayed = sPolishedAbilityHerb.positiveAnim;
+    gBattleStruct->ignoreDefiant = sPolishedAbilityHerb.ignoreDefiant;
+    gBattleScripting = sPolishedAbilityHerb.scripting;
+    gBattlerAttacker = sPolishedAbilityHerb.attacker;
+    gBattlerTarget = sPolishedAbilityHerb.target;
+    gEffectBattler = sPolishedAbilityHerb.effect;
+    gBattlerAbility = sPolishedAbilityHerb.ability;
+    gLastUsedAbility = sPolishedAbilityHerb.lastAbility;
+    gLastUsedItem = sPolishedAbilityHerb.lastItem;
+    sPolishedAbilityHerb.active = FALSE;
+    return FALSE;
+}
 
 enum Stat const sAccurateStatOrder[NUM_BATTLE_STATS] =
 {
