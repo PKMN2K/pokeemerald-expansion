@@ -38256,6 +38256,91 @@
       "path": "test/battle/move_effect/polished_self_move_accuracy.c"
     },
     {
+      "name": "Polished Sketch replaces the selected slot and persists base PP on either side",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/move_effect/polished_sketch.c"
+    },
+    {
+      "name": "Polished Sketch rejects Substitute even with Infiltrator",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/move_effect/polished_sketch.c"
+    },
+    {
+      "name": "Polished Sketch cannot copy cleared Sleep Talk or Metronome history",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/move_effect/polished_sketch.c"
+    },
+    {
+      "name": "Polished Sketch rejects absent history and already known moves",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/move_effect/polished_sketch.c"
+    },
+    {
+      "name": "Polished Sketch can copy an ordinary failed move",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/move_effect/polished_sketch.c"
+    },
+    {
+      "name": "Polished Sketch retains the last executed move when the target cannot act",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/move_effect/polished_sketch.c"
+    },
+    {
+      "name": "Polished Sketch cannot be used by a transformed battler",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/move_effect/polished_sketch.c"
+    },
+    {
+      "name": "Polished Sketch copies survive switching and spend PP from the learned slot",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/move_effect/polished_sketch.c"
+    },
+    {
+      "name": "Polished Sketch preserves other move PP and PP Up bonuses",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/move_effect/polished_sketch.c"
+    },
+    {
+      "name": "Polished Sketch rejects Struggle after the target exhausts every PP",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/move_effect/polished_sketch.c"
+    },
+    {
+      "name": "Polished Sketch cannot copy a failed awake Sleep Talk",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/move_effect/polished_sketch.c"
+    },
+    {
+      "name": "Polished Sketch retains native Substitute behavior in doubles",
+      "kind": "DOUBLE_BATTLE_TEST",
+      "path": "test/battle/move_effect/polished_sketch.c"
+    },
+    {
+      "name": "Polished Sketch retains native behavior with either active gimmick",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/move_effect/polished_sketch.c"
+    },
+    {
+      "name": "Polished Sketch boundary keeps a borrowed move temporary and other party slots intact",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/move_effect/polished_sketch.c"
+    },
+    {
+      "name": "Polished Sketch boundary remaps locks by identity and clears only copied slot PP bonuses",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/move_effect/polished_sketch.c"
+    },
+    {
+      "name": "Polished Sketch boundary rejects link mode and invalid or duplicate Sketch history without mutation",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/move_effect/polished_sketch.c"
+    },
+    {
+      "name": "Polished Sketch clears Choice locks only after replacing the locked move",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/move_effect/polished_sketch.c"
+    },
+    {
       "name": "Polished Sleep Talk selection clears last move before subsequent Disable or Encore",
       "kind": "SINGLE_BATTLE_TEST",
       "path": "test/battle/move_effect/polished_sleep_talk.c"
@@ -41384,7 +41469,7 @@
     },
     {
       "manifest": "tools/polished_port/manifests/action_resolution.json",
-      "sha256": "39710206fee279dc016c3ff515d7940f34e5e6ae793ba85f0cee97ed459f78a6"
+      "sha256": "50405699b0c0ab7330d19ef02e4767bb933be2b96a2767a6bc01ffddd7840bdf"
     },
     {
       "manifest": "tools/polished_port/manifests/attack_suite.json",

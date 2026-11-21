@@ -35,6 +35,24 @@ def validate_source(files):
         'farcall ConsumeUserItem', 'call GetTrueUserAbility', 'cp OWN_TEMPO\n\tret z',
         'bit SUBSTATUS_CONFUSED, [hl]\n\tret nz', 'call BattleRandom', 'and 1\n\tadd 2'])
     assert not re.search(r'\b(?:SAFEGUARD|GUARD_SAFEGUARD)\b', gene), 'Gene bypasses Safeguard'
+    sketch = files['engine/battle/move_effects/sketch.asm']['text']
+    ordered(sketch, ['call ClearLastMove', 'ld a, [wLinkMode]', 'jr z, .not_linked',
+        'call CheckSubstituteOpp', 'bit SUBSTATUS_TRANSFORMED',
+        'ld a, BATTLE_VARS_LAST_COUNTER_MOVE_OPP', 'and a\n\tjr z, .fail',
+        'inc a ; cp STRUGGLE', '.does_user_already_know_move', 'cp b\n\tjr z, .pop_hl_and_fail',
+        'ld hl, Moves + MOVE_PP', 'farcall GetDisableEncoreMoves',
+        'ld a, [wCurMoveNum]', 'ld [hl], b', 'ld [hl], c',
+        'ld a, MON_MOVES', 'cp SKETCH\n\tjr nz, .finished_overwriting_sketch',
+        'farcall SetDisableEncoreMoves'])
+    ordered(sketch.split('cp SKETCH\n\tjr nz, .finished_overwriting_sketch', 1)[1],
+        ['ld [hl], b', 'ld [hl], c', 'farcall SetDisableEncoreMoves'])
+    assert 'INFILTRATOR' not in sketch, 'Sketch cannot bypass Substitute'
+    locks = block(core, 'SetDisableEncoreMoves:', 'SwapBattleMoves:')
+    assert 'Sets d to disabled move ID and e to encored/choiced move ID.' in core
+    assert locks.count('farcall UserKnowsMove') == 2
+    ordered(locks, ['.reset_disable\n', 'ld [bc], a', '.reset_encore\n', 'ld [hl], a'])
+    used_text = files['engine/battle/used_move_text.asm']['text']
+    ordered(used_text, ['dec a\n\tjr z, .charging', 'ld a, BATTLE_VARS_LAST_COUNTER_MOVE', 'ld [hl], a'])
     postfaint = block(commands, 'BattleCommand_postfainteffects:', 'BattleCommand_posthiteffects:')
     ordered(postfaint, ['call HasOpponentFainted', 'bit SUBSTATUS_DESTINY_BOND', 'predef SubtractHPFromUser', '\n.no_dbond\n', 'farjp RunFaintAbilities'])
     faint = block(abilities, 'RunFaintAbilities:', 'RunHitAbilities:')
@@ -118,7 +136,7 @@ def build():
     ordered(constants, ['MOVEEND_ITEM_ON_STAT_CHANGE,', 'MOVEEND_POLISHED_ACTION_CHECKPOINT,', 'MOVEEND_POLISHED_DEFERRED_SWITCH,', 'MOVEEND_SEND_OUT_REPLACEMENTS,'])
     ordered(constants, ['MOVEEND_LIFE_ORB_SHELL_BELL,', 'MOVEEND_POLISHED_SWITCH_ITEMS,', 'MOVEEND_PICKPOCKET,', 'MOVEEND_POLISHED_STAT_HERBS,', 'MOVEEND_SPRAY_LEPPA_BLUNDER,'])
     assert '[MOVEEND_POLISHED_ACTION_CHECKPOINT] = MoveEndPolishedActionCheckpoint' in runtime
-    paths = ['engine/battle/core.asm', 'engine/battle/effect_commands.asm', 'engine/battle/abilities.asm', 'engine/battle/stats.asm', 'engine/battle/endturn.asm', 'data/abilities/no_intimidate_abilities.asm', 'data/moves/effects.asm', 'engine/battle/move_effects/baton_pass.asm', 'engine/battle/move_effects/roar.asm', 'engine/battle/move_effects/teleport.asm', 'data/items/attributes.asm']
+    paths = ['engine/battle/move_effects/sketch.asm', 'engine/battle/used_move_text.asm', 'engine/battle/core.asm', 'engine/battle/effect_commands.asm', 'engine/battle/abilities.asm', 'engine/battle/stats.asm', 'engine/battle/endturn.asm', 'data/abilities/no_intimidate_abilities.asm', 'data/moves/effects.asm', 'engine/battle/move_effects/baton_pass.asm', 'engine/battle/move_effects/roar.asm', 'engine/battle/move_effects/teleport.asm', 'data/items/attributes.asm']
     report = dict(source_commit=source.source.PIN, source_variant='default; FAITHFUL undefined', suite=2,
         complete_behavior_parity=False,
         source_anchors={p: files[p]['sha'] if p in files else source.git_hash('blob', move_files[p].encode()) for p in paths},
@@ -126,6 +144,9 @@ def build():
             postfaint_effect_families=relevant,
             limitation='Command sequences authenticate coverage obligations; they do not certify untested conditional branches.'),
         contracts=[
+            'Sketch clears user history before any failure, uses the opponent counter-move record, and rejects link mode, Substitute (including Infiltrator), transformed users, absent/Struggle history and any already-known move.',
+            'Sketch writes base PP and clears only the replaced slot PP-Up bits. Only a party slot actually containing Sketch is changed permanently; other temporary battle slots and party PP remain separate.',
+            'Sketch remaps Disable/Encore/Choice by move identity, retaining duration when still known and clearing locks whose move was overwritten. Called-move text cannot repopulate cleared source history.',
             'Recoil precedes postfainteffects; Destiny Bond replaces Moxie/Aftermath, otherwise Moxie precedes Aftermath.',
             'Source Aftermath and Liquid Ooze bypass Magic Guard; damage from Helmet and counter berries does not.',
             'Source post-hit items see an exhausted Substitute as broken; Air Balloon also requires a living holder.',
@@ -151,7 +172,7 @@ def build():
         live_bindings=['src/battle_move_resolution.c', 'src/battle_end_turn.c', 'src/battle_util.c',
             'src/battle_hold_effects.c', 'src/battle_stat_change.c', 'src/battle_main.c', 'src/battle_set_effect.c', 'src/battle_script_commands.c', 'src/battle_switch_in.c', 'data/battle_scripts_1.s'],
         regression_file='test/battle/polished_action_resolution.c',
-        additional_regression_files=['test/battle/polished_deferred_switch.c', 'test/battle/polished_entry_items.c', 'test/battle/polished_stat_items.c', 'test/battle/polished_mirror_ledger.c', 'test/battle/polished_berserk_gene.c'],
+        additional_regression_files=['test/battle/polished_deferred_switch.c', 'test/battle/polished_entry_items.c', 'test/battle/polished_stat_items.c', 'test/battle/polished_mirror_ledger.c', 'test/battle/polished_berserk_gene.c', 'test/battle/move_effect/polished_sketch.c'],
         remaining=['All unverified effect branches and command interactions remain owned by Suite 2.',
             'Exact RNG stream and source presentation remain owned by Suite 3; native regression success is not source parity.'])
     return {MANIFEST: json.dumps(report, indent=2)+'\n'}

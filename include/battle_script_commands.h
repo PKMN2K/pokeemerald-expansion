@@ -34,6 +34,7 @@ bool32 TrySetLightScreen(enum BattlerId battler);
 void TrySynchronizeActivation(enum BattlerId battlerAtk, enum BattlerId effectBattler, enum MoveEffect effect, enum StatusTrigger trigger);
 void SetNonVolatileStatus(enum BattlerId battlerAtk, enum BattlerId effectBattler, enum MoveEffect effect, const u8 *battleScript, enum StatusTrigger trigger);
 bool32 CanBattlerSwitch(enum BattlerId battlerId);
+bool32 TryPolishedSketch(void);
 void BattleDestroyYesNoCursorAt(u8 cursorPosition);
 void BattleCreateYesNoCursorAt(u8 cursorPosition);
 void BufferMoveToLearnIntoBattleTextBuff2(void);

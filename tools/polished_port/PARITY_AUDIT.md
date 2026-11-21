@@ -4944,3 +4944,63 @@ Johto ROM SHA-256:
 `74a6dc8890da39fde975912e766ba2e27dd559bf666e369d1b4608dcaf63e58a`.
 Native ROM SHA-256:
 `08e11f4e1650e7f71541c8a2104f4b00e517abdb0ca3df52dee936d3d4298cbe`.
+
+## Suite 2 continuation — Sketch history and permanent move storage
+
+Continues from `e6ec3789`, whose CI #1639 passed, against the pinned default
+source at `3fa43192379df5c3e7b09a08e4d5d79af4f02f42`.
+
+Source Sketch reads the opponent's last counter-move record, which Sleep Talk
+and Metronome clear even when they fail. Displaying a called attack does not
+restore that record. Sketch clears its own history before failure checks,
+rejects actual link mode, any opposing Substitute (including Infiltrator),
+transformed users, absent/Struggle history and already-known moves. Ordinary
+failed moves remain eligible; an opponent unable to act preserves its prior
+executed move. The runtime now follows those rules in source singles without
+active gimmicks. Native profiles, doubles and either active gimmick retain
+native behavior; optional moves retain their native copy bans.
+
+Successful Sketch writes base PP and clears only the replaced slot's PP-Up
+bits. It changes the permanent party slot only if that slot actually contains
+Sketch, without copying unrelated temporary moves or PP into the party.
+Borrowed copies remain temporary. Disable and Encore retain their durations
+and follow the surviving move identity, or clear when that move disappears.
+Choice locks share Encore storage in the source; the separate target Choice
+record is likewise cleared only when its move is replaced. Failed Sketch keeps
+that lock.
+No save layout, stable identifier or content table changes.
+
+Seventeen regression groups include fourteen live battle groups covering both
+sides/all slots, successful and failed history, Substitute/Infiltrator,
+transformed users, duplicate/Struggle rejection, PP preservation, switching, Choice locks
+and native doubles/gimmick controls. Three explicitly seeded production-command
+boundary groups exercise otherwise unreachable borrowed-slot, PP-Up/lock and
+link-mode states. These boundary checks do not claim a real linked battle or
+save/load playback. Four distinguishing failures were reproduced against the
+parent runtime. Twenty-two authenticated action-contract tests include
+mutations of history, failure guards, base PP, party persistence and lock
+remapping.
+
+Suite 2 remains open for Armored Mewtwo's checkpoint, other ability/item
+branches, simultaneous voluntary entry, voluntary/Pursuit/trap combinations,
+general called/copied/transformed history and remaining effect obligations.
+Source link/Tower construction and playback, exact RNG, AI knowledge, source
+messages, animations and presentation remain Suite 3 work. Native regression
+success and the seeded boundary checks do not establish complete source parity.
+
+Validation: all 1,112 source groups plus six AI timing checks pass, as do all
+seventeen new groups in both profiles. The full native catalog passes 6,334
+groups with the same nine expected failures and 585 TODO groups. Both
+production ROMs build with strict
+unused/deprecation diagnostics. All 108 reproducibility commands, twenty-two
+action-contract tests, three completion-plan tests and twelve ARM probes pass.
+The final production factory passes all 21 trainers / 43 Pokemon; the final
+Johto ROM passes all 102 campaign checks and nineteen directed warps, plus the
+twelve garden/presentation checks, without replay-input changes. The strict
+completeness gate still exits 2 for fifteen domains, 4,143 lexical source blocks
+and 133 effect families.
+
+Johto ROM SHA-256:
+`3a5aaefa51d41d744f404f990aed73ae7878dfc6043d14a7dcd7cf34f3364b83`.
+Native ROM SHA-256:
+`f364fa015849ad29fc01e045f7b040619d9e2c0c2d849bea4ab6d61b8111feab`.

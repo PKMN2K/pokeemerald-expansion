@@ -1,5 +1,6 @@
 #include "global.h"
 #include "polished_lifecycle.h"
+#include "polished_moves.h"
 #include "polished_friendship.h"
 #include "constants/polished_contact_status.h"
 #include "constants/polished_battle_foundations.h"
@@ -6558,10 +6559,81 @@ static void Cmd_setalwayshitflag(void)
     }
 }
 
+// Source Sketch copies counter-move history, not the last displayed move.
+// Keep the party update separate: a temporary Sketch may change the battle
+// slot, but only an actual party Sketch can become a permanent learned move.
+bool32 TryPolishedSketch(void)
+{
+    struct BattlePokemon *user = &gBattleMons[gBattlerAttacker];
+    struct Pokemon *mon = GetBattlerMon(gBattlerAttacker);
+    enum Move copied = gLastMoves[gBattlerTarget];
+    u32 slot = gCurrMovePos;
+    u32 i;
+
+    gLastMoves[gBattlerAttacker] = MOVE_NONE;
+    if ((gBattleTypeFlags & BATTLE_TYPE_LINK)
+     || gBattleMons[gBattlerTarget].volatiles.substitute
+     || user->volatiles.transformed
+     || copied == MOVE_NONE || copied == MOVE_UNAVAILABLE || copied >= MOVES_COUNT
+     || copied == MOVE_STRUGGLE
+     || (!gPolishedMovePP[copied] && IsMoveSketchBanned(copied)))
+        return FALSE;
+
+    for (i = 0; i < MAX_MON_MOVES; i++)
+        if (user->moves[i] == copied)
+            return FALSE;
+
+    user->moves[slot] = copied;
+    user->pp[slot] = GetMovePP(copied);
+    // Source PP and its PP-Up bits share one byte; assigning base PP clears
+    // the replaced slot's bonuses, without touching any other move's bits.
+    user->ppBonuses &= ~(3u << (2 * slot));
+    if (GetMonData(mon, MON_DATA_MOVE1 + slot) == MOVE_SKETCH)
+    {
+        u8 bonuses = GetMonData(mon, MON_DATA_PP_BONUSES) & ~(3u << (2 * slot));
+        SetMonData(mon, MON_DATA_MOVE1 + slot, &user->moves[slot]);
+        SetMonData(mon, MON_DATA_PP1 + slot, &user->pp[slot]);
+        SetMonData(mon, MON_DATA_PP_BONUSES, &bonuses);
+        user->volatiles.mimickedMoves &= ~(1u << slot);
+    }
+    else
+        user->volatiles.mimickedMoves |= 1u << slot;
+
+    // Source locks follow move identities when a slot changes. Preserve their
+    // remaining duration if that identity still exists; otherwise clear them.
+    for (i = 0; i < MAX_MON_MOVES; i++)
+        if (user->moves[i] == user->volatiles.disabledMove)
+            break;
+    if (user->volatiles.disabledMove == MOVE_NONE || i == MAX_MON_MOVES)
+        user->volatiles.disabledMove = user->volatiles.disableTimer = 0;
+    for (i = 0; i < MAX_MON_MOVES; i++)
+        if (user->moves[i] == user->volatiles.encoredMove)
+            break;
+    if (user->volatiles.encoredMove == MOVE_NONE || i == MAX_MON_MOVES)
+        user->volatiles.encoredMove = user->volatiles.encoreTimer = user->volatiles.encoredMovePos = 0;
+    else if (user->volatiles.encoredMove != MOVE_NONE)
+        user->volatiles.encoredMovePos = i;
+    // Choice shares the source Encore slot, but is separate in Expansion.
+    for (i = 0; i < MAX_MON_MOVES; i++)
+        if (user->moves[i] == gBattleStruct->choicedMove[gBattlerAttacker])
+            break;
+    if (i == MAX_MON_MOVES)
+        gBattleStruct->choicedMove[gBattlerAttacker] = MOVE_NONE;
+
+    PREPARE_MOVE_BUFFER(gBattleTextBuff1, copied)
+    return TRUE;
+}
+
 // Sketch
 static void Cmd_copymovepermanently(void)
 {
     CMD_ARGS(const u8 *failInstr);
+
+    if (UsesPolishedBattleRules(gBattlerAttacker, gBattlerTarget))
+    {
+        gBattlescriptCurrInstr = TryPolishedSketch() ? cmd->nextInstr : cmd->failInstr;
+        return;
+    }
 
     gChosenMove = MOVE_UNAVAILABLE;
 

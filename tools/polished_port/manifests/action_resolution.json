@@ -4,6 +4,8 @@
   "suite": 2,
   "complete_behavior_parity": false,
   "source_anchors": {
+    "engine/battle/move_effects/sketch.asm": "931b385073f99264ac6c34601f9dffff5b0f01d8",
+    "engine/battle/used_move_text.asm": "37da05df2ba751f067c80e947ca97a0b781bf0e7",
     "engine/battle/core.asm": "37e76be94949c77bf7fd12814675a27943c7d85f",
     "engine/battle/effect_commands.asm": "dd1df8310c56895b3165c1e5b5dd26c73a44734c",
     "engine/battle/abilities.asm": "8ea962089921b262a1c3b050c77e5521fba6d921",
@@ -220,6 +222,9 @@
     "limitation": "Command sequences authenticate coverage obligations; they do not certify untested conditional branches."
   },
   "contracts": [
+    "Sketch clears user history before any failure, uses the opponent counter-move record, and rejects link mode, Substitute (including Infiltrator), transformed users, absent/Struggle history and any already-known move.",
+    "Sketch writes base PP and clears only the replaced slot PP-Up bits. Only a party slot actually containing Sketch is changed permanently; other temporary battle slots and party PP remain separate.",
+    "Sketch remaps Disable/Encore/Choice by move identity, retaining duration when still known and clearing locks whose move was overwritten. Called-move text cannot repopulate cleared source history.",
     "Recoil precedes postfainteffects; Destiny Bond replaces Moxie/Aftermath, otherwise Moxie precedes Aftermath.",
     "Source Aftermath and Liquid Ooze bypass Magic Guard; damage from Helmet and counter berries does not.",
     "Source post-hit items see an exhausted Substitute as broken; Air Balloon also requires a living holder.",
@@ -261,7 +266,8 @@
     "test/battle/polished_entry_items.c",
     "test/battle/polished_stat_items.c",
     "test/battle/polished_mirror_ledger.c",
-    "test/battle/polished_berserk_gene.c"
+    "test/battle/polished_berserk_gene.c",
+    "test/battle/move_effect/polished_sketch.c"
   ],
   "remaining": [
     "All unverified effect branches and command interactions remain owned by Suite 2.",

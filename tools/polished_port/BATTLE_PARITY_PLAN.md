@@ -93,6 +93,14 @@ and existing-confusion checks. Safeguard is bypassed and new confusion uses
 uniform counters of two or three. Native doubles retain entry activation and
 permanent confusion.
 
+Sketch now uses cleared source counter-move history, rejects Substitute even
+with Infiltrator, and preserves the distinction between battle-only and permanent
+party moves. Base PP replaces only the selected slot's PP-Up bits; Disable/Encore/Choice
+follow the surviving move identity. Fourteen live groups cover execution,
+failures, switching, PP and native controls; three seeded production-command
+boundary groups cover temporary slots, locks and actual link-mode rejection.
+Link construction/playback and general called-move history remain later audits.
+
 Authenticated contracts and live test bindings are recorded in
 `manifests/action_resolution.json`. Voluntary/Pursuit/trap combinations,
 simultaneous voluntary entry, other ability/item branches, dedicated

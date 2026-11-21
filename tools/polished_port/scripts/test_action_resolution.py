@@ -34,6 +34,43 @@ class ActionResolutionTest(unittest.TestCase):
                 with self.assertRaises((AssertionError, ValueError)):
                     action.validate_source(files)
 
+    def test_sketch_rejects_wrong_history_and_removed_failure_guards(self):
+        for before, after in (
+                ('call ClearLastMove', 'nop'),
+                ('ld a, [wLinkMode]', 'xor a'),
+                ('call CheckSubstituteOpp', 'xor a'),
+                ('bit SUBSTATUS_TRANSFORMED', 'bit SUBSTATUS_CONFUSED'),
+                ('BATTLE_VARS_LAST_COUNTER_MOVE_OPP', 'BATTLE_VARS_LAST_MOVE_OPP'),
+                ('inc a ; cp STRUGGLE', 'nop'),
+                ('cp b\n\tjr z, .pop_hl_and_fail', 'cp b\n\tnop'),
+                ('call ClearLastMove', 'call ClearLastMove\n\tcp INFILTRATOR')):
+            with self.subTest(mutation=before):
+                files = copy.deepcopy(action.source.authenticated_sources())
+                path = 'engine/battle/move_effects/sketch.asm'
+                files[path]['text'] = files[path]['text'].replace(before, after, 1)
+                with self.assertRaises((AssertionError, ValueError)):
+                    action.validate_source(files)
+
+    def test_sketch_keeps_base_pp_party_guard_and_lock_remapping(self):
+        for before, after in (
+                ('ld hl, Moves + MOVE_PP', 'ld hl, Moves + MOVE_POWER'),
+                ('cp SKETCH\n\tjr nz, .finished_overwriting_sketch', 'cp SKETCH\n\tnop'),
+                ('farcall GetDisableEncoreMoves', 'nop'),
+                ('farcall SetDisableEncoreMoves', 'nop')):
+            with self.subTest(mutation=before):
+                files = copy.deepcopy(action.source.authenticated_sources())
+                path = 'engine/battle/move_effects/sketch.asm'
+                files[path]['text'] = files[path]['text'].replace(before, after, 1)
+                with self.assertRaises((AssertionError, ValueError)):
+                    action.validate_source(files)
+
+    def test_called_move_text_cannot_restore_counter_move_history(self):
+        files = copy.deepcopy(action.source.authenticated_sources())
+        path = 'engine/battle/used_move_text.asm'
+        files[path]['text'] = files[path]['text'].replace('dec a\n\tjr z, .charging', 'dec a\n\tnop', 1)
+        with self.assertRaises((AssertionError, ValueError)):
+            action.validate_source(files)
+
     def test_authenticated_source_and_complete_inventory(self):
         self.assertEqual(set(action.build()), {action.MANIFEST})
 

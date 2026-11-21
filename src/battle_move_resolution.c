@@ -6337,13 +6337,15 @@ static enum Move GetOriginallyUsedMove(enum Move chosenMove)
 
 static enum Move GetRecordedMove(void)
 {
-    // Both source move callers clear last/counter-move history. Called-move
+    // Source move callers and Sketch clear last/counter-move history. Called-move
     // text does not restore it. Apply this at PP deduction as well as move
     // end, including submove failure paths and Cursed Body's intervening hook.
     if (B_POLISHED_MOVE_BALANCE)
     {
         enum BattleMoveEffects effect = GetMoveEffect(GetOriginallyUsedMove(gChosenMove));
         if (effect == EFFECT_SLEEP_TALK || effect == EFFECT_METRONOME)
+            return MOVE_NONE;
+        if (effect == EFFECT_SKETCH && UsesPolishedBattleRules(gBattlerAttacker, gBattlerTarget))
             return MOVE_NONE;
     }
     return gChosenMove;

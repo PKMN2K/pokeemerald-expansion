@@ -1,6 +1,6 @@
 # Whole battle parity suite
 
-The current catalog contains 1,095 source unit/battle groups and six AI timing
+The current catalog contains 1,112 source unit/battle groups and six AI timing
 groups. Run every registered group:
 
 ```sh
