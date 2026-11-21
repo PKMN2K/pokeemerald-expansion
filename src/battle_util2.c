@@ -1,4 +1,5 @@
 #include "global.h"
+#include "polished_friendship.h"
 #include "battle.h"
 #include "battle_anim.h"
 #include "battle_controllers.h"
@@ -101,6 +102,12 @@ void FreeBattleResources(void)
 void AdjustFriendshipOnBattleFaint(enum BattlerId battler)
 {
     enum BattlerId opposingBattlerId;
+
+    // Source CheckFainting skips the player's happiness penalty when the
+    // opposing Pokemon has already fainted, including a lethal recoil KO.
+    if (UsesPolishedFriendship(GetBattlerMon(battler))
+        && !IsBattlerAlive(GetOppositeBattler(battler)))
+        return;
 
     if (IsDoubleBattle())
     {

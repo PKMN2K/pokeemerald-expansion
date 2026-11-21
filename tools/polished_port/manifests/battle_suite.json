@@ -33,7 +33,9 @@
       "engine/battle_anims/pokeball_wobble.asm",
       "engine/pokedex/pokedex.asm",
       "data/growth_rates.asm",
-      "engine/events/whiteout.asm"
+      "engine/events/whiteout.asm",
+      "engine/events/happiness_egg.asm",
+      "data/events/happiness_changes.asm"
     ],
     "limitation": "This is the battle boundary and shared dependencies, not a proof of transitive call-graph closure. External field scripts, UI and data references still require end-to-end evidence."
   },
@@ -4306,6 +4308,20 @@
           "label": "BattleFactoryText_WinHead",
           "line": 696,
           "sha256": "9bd2a87e9fbc7338999c2a809801cb01f809739ca636bd359293c200344f5052",
+          "local_labels": 0,
+          "branch_sites": 0,
+          "behavior": "unverified"
+        }
+      ]
+    },
+    {
+      "path": "data/events/happiness_changes.asm",
+      "git_blob_sha1": "bd515f5c886b68815df66c376bd29a3a2d37346a",
+      "blocks": [
+        {
+          "label": "HappinessChanges",
+          "line": 1,
+          "sha256": "64a012c46d6f22fe704745628f94bc0cc9ab267f6c119bdb7022fa5e50f1e3c0",
           "local_labels": 0,
           "branch_sites": 0,
           "behavior": "unverified"
@@ -19993,6 +20009,60 @@
           "sha256": "7c7285c09a5e347792c6d67c3c7cf2e37e5c11201c791925214c245e6c49e96d",
           "local_labels": 0,
           "branch_sites": 0,
+          "behavior": "unverified"
+        }
+      ]
+    },
+    {
+      "path": "engine/events/happiness_egg.asm",
+      "git_blob_sha1": "be9157bae4334d1d90645f84efe664ce13abdcfb",
+      "blocks": [
+        {
+          "label": "GetFirstPokemonHappiness",
+          "line": 1,
+          "sha256": "5fffbc0dfe5d60d7f7df05017511574dff7481f5159b004195463ae2a05baec7",
+          "local_labels": 2,
+          "branch_sites": 1,
+          "behavior": "unverified"
+        },
+        {
+          "label": "CheckFirstMonIsEgg",
+          "line": 26,
+          "sha256": "d2b0767ac67d5c02e52e244758645b3403168cd502c66d8ade1c6efb1dc51b3c",
+          "local_labels": 1,
+          "branch_sites": 1,
+          "behavior": "unverified"
+        },
+        {
+          "label": "ChangeHappiness",
+          "line": 42,
+          "sha256": "bd790395f9eea083ec2d17a39000d33f0b87fd970e979361d75575b9d4ed33e7",
+          "local_labels": 4,
+          "branch_sites": 8,
+          "behavior": "unverified"
+        },
+        {
+          "label": "GetExtraHappiness",
+          "line": 113,
+          "sha256": "8e7d239c20f2af87d749956f8cec6ddb874b095fe272422998bc38915bd3573f",
+          "local_labels": 2,
+          "branch_sites": 4,
+          "behavior": "unverified"
+        },
+        {
+          "label": "StepHappiness",
+          "line": 153,
+          "sha256": "aa29d8a6c244a88c555ad6ee08f1a8f359414272ba2771150397cd094f3019ed",
+          "local_labels": 1,
+          "branch_sites": 1,
+          "behavior": "unverified"
+        },
+        {
+          "label": "DayCareStep",
+          "line": 166,
+          "sha256": "596d8936c78937d032f25b11d900f216c7777a7c3dd587689b35e7c44591a15e",
+          "local_labels": 12,
+          "branch_sites": 22,
           "behavior": "unverified"
         }
       ]
@@ -39519,6 +39589,106 @@
       "name": "Polished critical evolution counter excludes link battles",
       "kind": "SINGLE_BATTLE_TEST",
       "path": "test/battle/polished_evolution.c"
+    },
+    {
+      "name": "Polished friendship level gains use the source 100 and 160 tiers",
+      "kind": "TEST",
+      "path": "test/battle/polished_friendship.c"
+    },
+    {
+      "name": "Polished friendship applies additive bonuses even when the base gain is zero",
+      "kind": "TEST",
+      "path": "test/battle/polished_friendship.c"
+    },
+    {
+      "name": "Polished friendship penalties have the source high tier and no positive bonuses",
+      "kind": "TEST",
+      "path": "test/battle/polished_friendship.c"
+    },
+    {
+      "name": "Polished friendship growth starts mapped level one Pokemon at zero EXP",
+      "kind": "TEST",
+      "path": "test/battle/polished_friendship.c"
+    },
+    {
+      "name": "Polished friendship matches all 23552 authenticated byte carry cases",
+      "kind": "TEST",
+      "path": "test/battle/polished_friendship.c"
+    },
+    {
+      "name": "Polished friendship level gains distinguish home away and both source boundaries",
+      "kind": "TEST",
+      "path": "test/battle/polished_friendship.c"
+    },
+    {
+      "name": "Polished friendship negative events clamp without item ball or location bonuses",
+      "kind": "TEST",
+      "path": "test/battle/polished_friendship.c"
+    },
+    {
+      "name": "Polished friendship ignores eggs and preserves unmapped species behavior",
+      "kind": "TEST",
+      "path": "test/battle/polished_friendship.c"
+    },
+    {
+      "name": "Polished friendship growth matches every level in all four source curves",
+      "kind": "TEST",
+      "path": "test/battle/polished_friendship.c"
+    },
+    {
+      "name": "Polished friendship growth preserves native extra species and existing EXP records",
+      "kind": "TEST",
+      "path": "test/battle/polished_friendship.c"
+    },
+    {
+      "name": "Polished friendship successful battle items synchronize the live and party values",
+      "kind": "WILD_BATTLE_TEST",
+      "path": "test/battle/polished_friendship.c"
+    },
+    {
+      "name": "Polished friendship failed battle item effects do not reuse prior success",
+      "kind": "WILD_BATTLE_TEST",
+      "path": "test/battle/polished_friendship.c"
+    },
+    {
+      "name": "Polished friendship capped X item boosts award nothing after successful boosts",
+      "kind": "WILD_BATTLE_TEST",
+      "path": "test/battle/polished_friendship.c"
+    },
+    {
+      "name": "Polished friendship boss adapter uses source class and skips fainted party members",
+      "kind": "WILD_BATTLE_TEST",
+      "path": "test/battle/polished_friendship.c"
+    },
+    {
+      "name": "Polished friendship faint threshold is exactly thirty levels and skips an already fainted foe",
+      "kind": "WILD_BATTLE_TEST",
+      "path": "test/battle/polished_friendship.c"
+    },
+    {
+      "name": "Polished friendship preserves native optional doubles",
+      "kind": "DOUBLE_BATTLE_TEST",
+      "path": "test/battle/polished_friendship.c"
+    },
+    {
+      "name": "Polished friendship excludes opponent parties special formats and active gimmicks",
+      "kind": "WILD_BATTLE_TEST",
+      "path": "test/battle/polished_friendship.c"
+    },
+    {
+      "name": "Polished friendship level one EXP awards cross several levels with one happiness event",
+      "kind": "WILD_BATTLE_TEST",
+      "path": "test/battle/polished_friendship.c"
+    },
+    {
+      "name": "Polished friendship applies the strong foe penalty through the live faint and replacement flow",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_friendship.c"
+    },
+    {
+      "name": "Polished friendship lethal recoil skips happiness loss when both active Pokemon faint",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_friendship.c"
     },
     {
       "name": "Polished Noctowl has its source Ghost immunity in a real battle",

@@ -1,0 +1,218 @@
+{
+  "source_commit": "3fa43192379df5c3e7b09a08e4d5d79af4f02f42",
+  "source_variant": "default; FAITHFUL undefined",
+  "source_anchors": {
+    "constants/pokemon_data_constants.asm": "b8bf0452f937d95f6e63bccf055412fe3b4b0b9c",
+    "data/events/happiness_changes.asm": "bd515f5c886b68815df66c376bd29a3a2d37346a",
+    "engine/events/happiness_egg.asm": "be9157bae4334d1d90645f84efe664ce13abdcfb",
+    "engine/pokemon/level_up_happiness.asm": "ef759f2a0e84954c50b5fc40308839eb1e767a9e",
+    "engine/pokemon/experience.asm": "f818312f66d92176cc012ec0c63a3d82ee443ce6",
+    "data/growth_rates.asm": "753af0dc4864c9779ec7c2f429e4f5b726582026",
+    "engine/battle/core.asm": "37e76be94949c77bf7fd12814675a27943c7d85f",
+    "data/trainers/leaders.asm": "8c5841fb721993ebde2d074b8d49fede1d2e60a4",
+    "engine/items/item_effects.asm": "a5dbe8085e512a363d0c27666626040342c756eb"
+  },
+  "events": {
+    "HAPPINESS_GAINLEVEL": [
+      3,
+      2,
+      0
+    ],
+    "HAPPINESS_USEDVITAMIN": [
+      3,
+      1,
+      0
+    ],
+    "HAPPINESS_USEDXITEM": [
+      1,
+      1,
+      0
+    ],
+    "HAPPINESS_USEDEVBERRY": [
+      10,
+      5,
+      0
+    ],
+    "HAPPINESS_GYMBATTLE": [
+      5,
+      3,
+      0
+    ],
+    "HAPPINESS_LEARNMOVE": [
+      1,
+      1,
+      0
+    ],
+    "HAPPINESS_FAINTED": [
+      -1,
+      -1,
+      -1
+    ],
+    "HAPPINESS_POISONFAINT": [
+      -5,
+      -5,
+      -10
+    ],
+    "HAPPINESS_BEATENBYSTRONGFOE": [
+      -5,
+      -5,
+      -10
+    ],
+    "HAPPINESS_OLDERCUT1": [
+      4,
+      4,
+      4
+    ],
+    "HAPPINESS_OLDERCUT2": [
+      8,
+      8,
+      8
+    ],
+    "HAPPINESS_OLDERCUT3": [
+      16,
+      16,
+      16
+    ],
+    "HAPPINESS_YOUNGCUT1": [
+      8,
+      8,
+      8
+    ],
+    "HAPPINESS_YOUNGCUT2": [
+      16,
+      16,
+      16
+    ],
+    "HAPPINESS_YOUNGCUT3": [
+      32,
+      32,
+      32
+    ],
+    "HAPPINESS_BITTERPOWDER": [
+      -5,
+      -5,
+      -10
+    ],
+    "HAPPINESS_ENERGYROOT": [
+      -10,
+      -10,
+      -15
+    ],
+    "HAPPINESS_REVIVALHERB": [
+      -15,
+      -15,
+      -20
+    ],
+    "HAPPINESS_GROOMING": [
+      3,
+      3,
+      1
+    ],
+    "HAPPINESS_GAINLEVELATHOME": [
+      6,
+      4,
+      0
+    ],
+    "HAPPINESS_PHOTOGRAPH": [
+      5,
+      3,
+      2
+    ],
+    "HAPPINESS_BLESSING": [
+      5,
+      3,
+      2
+    ],
+    "HAPPINESS_STEP": [
+      2,
+      1,
+      0
+    ]
+  },
+  "thresholds": [
+    100,
+    160
+  ],
+  "reference_cases": 23552,
+  "reference_sha256": "09c435223203c2284b25cdf902264b6d2e1763a77354e9838e9917764aba806f",
+  "growth_vectors": 400,
+  "boss_classes": [
+    "WILL",
+    "KOGA",
+    "BRUNO",
+    "KAREN",
+    "CHAMPION",
+    "RED",
+    "LEAF",
+    "GIOVANNI",
+    "KARATE_KING",
+    "TOWERTYCOON",
+    "FACTORYHEAD",
+    "LORELEI",
+    "AGATHA",
+    "STEVEN",
+    "CYNTHIA",
+    "DARACH",
+    "CAITLIN",
+    "CANDELA",
+    "BLANCHE",
+    "SPARK_T",
+    "FLANNERY",
+    "MAYLENE",
+    "MARLON",
+    "VALERIE",
+    "KUKUI",
+    "PIERS",
+    "KATY",
+    "YELLOW",
+    "WALKER",
+    "LAWRENCE",
+    "REI",
+    "FALKNER",
+    "WHITNEY",
+    "BUGSY",
+    "MORTY",
+    "CHUCK",
+    "JASMINE",
+    "PRYCE",
+    "CLAIR",
+    "BROCK",
+    "MISTY",
+    "LT_SURGE",
+    "ERIKA",
+    "JANINE",
+    "SABRINA",
+    "BLAINE",
+    "BLUE"
+  ],
+  "registered_boss_bindings": {
+    "TRAINER_POLISHED_LYRA_CHIKORITA": false,
+    "TRAINER_POLISHED_LYRA_CYNDAQUIL": false,
+    "TRAINER_POLISHED_LYRA_TOTODILE": false,
+    "TRAINER_POLISHED_RIVAL_CHIKORITA": false,
+    "TRAINER_POLISHED_RIVAL_CYNDAQUIL": false,
+    "TRAINER_POLISHED_RIVAL_TOTODILE": false,
+    "TRAINER_POLISHED_MIKEY": false,
+    "TRAINER_POLISHED_DON": false,
+    "TRAINER_POLISHED_JOEY": false,
+    "TRAINER_POLISHED_WADE": false,
+    "TRAINER_POLISHED_FINCH": false,
+    "TRAINER_POLISHED_SPROUT_CHOW": false,
+    "TRAINER_POLISHED_SPROUT_NICO": false,
+    "TRAINER_POLISHED_SPROUT_EDMOND": false,
+    "TRAINER_POLISHED_SPROUT_JIN": false,
+    "TRAINER_POLISHED_SPROUT_TROY": false,
+    "TRAINER_POLISHED_SPROUT_NEAL": false,
+    "TRAINER_POLISHED_SPROUT_LI": false,
+    "TRAINER_POLISHED_ROD": false,
+    "TRAINER_POLISHED_ABE": false,
+    "TRAINER_POLISHED_FALKNER": true
+  },
+  "complete_behavior_parity": false,
+  "remaining": [
+    "Walking cadence, vitamins/EV berries/Rare Candy item dispatch, grooming and other field event bindings remain open.",
+    "Full residual/faint/replacement sequencing, unregistered trainers, facility/link rules and battle-end persistence remain open.",
+    "Battle item stat boost magnitude and other item mechanics remain open; this suite binds successful-use happiness only.",
+    "Source location identity uses existing mapped region sections; full geographic provenance and exact presentation/RNG remain open."
+  ]
+}

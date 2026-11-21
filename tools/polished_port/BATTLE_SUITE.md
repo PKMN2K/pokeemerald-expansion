@@ -1,6 +1,6 @@
 # Whole battle parity suite
 
-The current catalog contains 916 source unit/battle groups and six AI timing
+The current catalog contains 936 source unit/battle groups and six AI timing
 groups. Run every registered group:
 
 ```sh
@@ -21,11 +21,11 @@ source groups and expected source failures are rejected.
 
 ## Coverage and remaining work
 
-The source archive contains **340 files authenticated back to the pinned Git
+The source archive contains **342 files authenticated back to the pinned Git
 commit**. It includes every assembly file under the battle engine/data,
 trainer/facility data, item/Pokemon engines, shared home routines, constants and
 macros. Missing or edited blobs/trees fail authentication. The generated ledger
-records **4,136 global lexical blocks**, their exact source hashes, local-label
+records **4,143 global lexical blocks**, their exact source hashes, local-label
 and branch-site counts, **255 moves, 133 effects and 129 command names**, every
 source ability/held-effect identifier and all registered source tests.
 
@@ -408,3 +408,64 @@ The twelve demo checks, twelve roamer Flash assertions, 21 trainer/43 Pokemon
 probe, 72 capture-storage assertions and production-linked move/machine audit
 all passed again. Final Johto ROM SHA-256:
 `422447102b0ac75aba0e89336e588219d3c27660246e0a63cd9743355ff0549a`.
+
+## Source battle friendship and level-one growth
+
+This suite imports all 23 happiness event rows from the pinned default source,
+including the 100/160 tier boundaries, signed penalties and additive raw
+Soothe Bell/Luxury Ball bonuses. Bonuses also apply when the source base gain
+is zero; negative changes receive no extras, and values saturate at 0/255.
+The shared event adapter binds level-up/home gains, teaching/vitamin requests,
+fainting and imported boss battles for mapped player Pokemon. Live battler
+friendship is synchronized so later moves use the updated party value.
+
+Battle X Items, Guard Spec and Dire Hit now award source happiness only after
+successful effects. Repeated/capped failures cannot reuse a previous stat-change
+result. The strong-foe penalty uses the source 30-level boundary and 160-point
+tier; a player faint does not lose happiness when the opposing active Pokemon
+has already fainted. Imported boss eligibility is derived from the source
+class list for all 21 registered trainers: Falkner qualifies, Sprout Elder Li
+does not. Eggs and fainted party members do not receive boss gains. Optional
+unregistered trainers, opponent controllers, extra species, doubles, facilities,
+link battles and active gimmicks keep their scoped native paths.
+
+Source species-data mode creates mapped level-one Pokemon with zero EXP. Party
+and boxed level resolution, battle EXP bars and the summary screen share the
+correct threshold. Levels 2–100 match all four source growth curves. Existing
+saved EXP values and target/save layouts are retained; unmapped species and
+the native species profile keep the native level-one threshold.
+
+Twenty new regression groups include 23,552 independent byte/carry reference
+cases and 400 growth thresholds, tier/home/item boundaries, live successful
+and failed item use, faint/replacement and simultaneous lethal recoil,
+multi-level EXP rewards, party synchronization and optional-format controls.
+The four initial regression cases failed on the parent runtime before fixes.
+The production Flash probe checks zero-EXP level-one records and friendship
+values through save/reset/load; its fixture does not certify all event flows.
+
+This is a scoped suite. Walking cadence, vitamin/EV-berry/Rare Candy item
+dispatch, grooming and other field services, exact location provenance,
+X-item boost magnitude, global faint/residual/replacement ordering, full
+battle-end persistence, presentation and RNG stream remain open. Importing the
+23-row table does not certify every event's gameplay binding. All fifteen
+battle domains and 133 effect families remain open; the enlarged authenticated
+inventory contains 342 files and 4,143 lexical blocks.
+
+Validation: all 936 source groups and six AI timing groups passed. The full
+native regression sweep passed 6,158 groups, with its nine existing expected
+failures and 585 existing TODOs; there were no unexpected failures. All twenty
+new groups also passed in both focused profiles. All 104 source reproducibility
+commands and twelve ARM compiler probes passed. Both production ROMs built.
+
+The Johto ROM passed twelve demo checks, 21 trainer teams/43 Pokemon, the new
+30-assertion friendship/growth Flash probe, 72 capture-storage assertions and
+twelve roamer-storage assertions. The production move/machine audit retains
+zero audited move-data differences and zero mismatches in 43,792 compatibility
+checks, with its 109 known machine/lesson gaps unchanged. The campaign passed
+102 checks and nineteen directed warps, including all starter/rival branches,
+Sprout Tower, Falkner, badge/Roost/Togepi rewards and Save/reset/Continue.
+Strict completeness correctly exits
+2 for fifteen open domains, 4,143 lexical blocks and 133 effect families.
+
+Validated Johto ROM SHA-256:
+`84e3ac873fc3dce29e507ca0327fd183b79bae90bd54da582a174975c39769a4`.

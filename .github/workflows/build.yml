@@ -152,6 +152,8 @@ jobs:
           python3 tools/polished_port/scripts/build_battle_systems.py --check
           python3 tools/polished_port/scripts/build_escape.py --check
           python3 tools/polished_port/scripts/test_escape.py
+          python3 tools/polished_port/scripts/build_friendship.py --check
+          python3 tools/polished_port/scripts/test_friendship.py
           python3 tools/polished_port/scripts/build_trainer_attributes.py --check
           python3 tools/polished_port/scripts/test_battle_systems.py
           python3 tools/polished_port/scripts/build_battle_suite.py --check
@@ -186,6 +188,10 @@ jobs:
       - name: Verify roaming HP and status through Flash saves
         timeout-minutes: 5
         run: python3 tools/polished_port/scripts/test_escape_storage_emulator.py --driver /tmp/johto-demo-driver --output /tmp/johto-validation/escape-storage
+
+      - name: Verify friendship and level one growth through Flash saves
+        timeout-minutes: 5
+        run: python3 tools/polished_port/scripts/test_friendship_storage_emulator.py --driver /tmp/johto-demo-driver --output /tmp/johto-validation/friendship-storage
 
       - name: Exercise source Dark Cave rocks in mGBA
         timeout-minutes: 10

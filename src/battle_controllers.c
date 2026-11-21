@@ -1,4 +1,5 @@
 #include "global.h"
+#include "polished_friendship.h"
 #include "battle.h"
 #include "battle_ai_main.h"
 #include "battle_ai_util.h"
@@ -3258,6 +3259,9 @@ void BtlController_HandleSwitchInTryShinyAnim(enum BattlerId battler)
 
 void UpdateFriendshipFromXItem(enum BattlerId battler)
 {
+    // Source rewards only successful effects, after the item script resolves.
+    if (UsesPolishedBattleItemFriendship(battler, gLastUsedItem))
+        return;
     struct Pokemon *party = GetBattlerParty(battler);
 
     u8 friendship;

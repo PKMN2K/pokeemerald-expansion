@@ -1,4 +1,5 @@
 #include "global.h"
+#include "polished_friendship.h"
 #include "constants/polished_contact_status.h"
 #include "constants/polished_battle_foundations.h"
 #include "polished_evolution.h"
@@ -9640,6 +9641,9 @@ void BS_ItemIncreaseStat(void)
     if (gBattlerPartyIndexes[gBattlerAttacker] != gBattleStruct->itemPartyIndex[gBattlerAttacker])
         gBattlerAttacker = GetPartnerBattler(gBattlerAttacker);
 
+    if (UsesPolishedBattleItemFriendship(gBattlerAttacker, gLastUsedItem))
+        gBattleStruct->moveResultFlags[gBattlerAttacker] &= ~MOVE_RESULT_STAT_CHANGED;
+
     if (GetItemBattleUsage(gLastUsedItem) == EFFECT_ITEM_INCREASE_STAT)
     {
         if (GetConfig(B_X_ITEMS_BUFF) >= GEN_7)
@@ -9654,6 +9658,32 @@ void BS_ItemIncreaseStat(void)
 
     } // else EFFECT_ITEM_INCREASE_ALL_STATS or EFFECT_ITEM_SET_FOCUS_ENERGY
 
+    gBattlescriptCurrInstr = cmd->nextInstr;
+}
+
+void BS_PolishedBattleItemFriendship(void)
+{
+    NATIVE_ARGS();
+    bool32 success = FALSE;
+    if (UsesPolishedBattleItemFriendship(gBattlerAttacker, gLastUsedItem))
+    {
+        switch (GetItemBattleUsage(gLastUsedItem))
+        {
+        case EFFECT_ITEM_INCREASE_STAT:
+            success = (gBattleStruct->moveResultFlags[gBattlerAttacker] & MOVE_RESULT_STAT_CHANGED) != 0;
+            break;
+        case EFFECT_ITEM_SET_MIST:
+            success = gBattleCommunication[MULTISTRING_CHOOSER] == B_MSG_SET_MIST;
+            break;
+        case EFFECT_ITEM_SET_FOCUS_ENERGY:
+            success = gBattleCommunication[MULTISTRING_CHOOSER] == B_MSG_GETTING_PUMPED;
+            break;
+        default:
+            break;
+        }
+        if (success)
+            AdjustFriendship(GetBattlerMon(gBattlerAttacker), FRIENDSHIP_EVENT_BATTLE_ITEM);
+    }
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 

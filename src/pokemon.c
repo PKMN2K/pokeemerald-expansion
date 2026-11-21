@@ -1,4 +1,6 @@
 #include "global.h"
+#include "polished_friendship.h"
+#include "polished_growth.h"
 #include "polished_capture.h"
 #include "polished_forms.h"
 #include "polished_items.h"
@@ -1015,7 +1017,8 @@ void CreateBoxMon(struct BoxPokemon *boxMon, enum Species species, u8 level, u32
         u8 form = PolishedInitialForm(species);
         SetBoxMonData(boxMon, MON_DATA_POLISHED_FORM, &form);
     }
-    SetBoxMonData(boxMon, MON_DATA_EXP, &gExperienceTables[GetSpeciesBaseData(species)->growthRate][level]);
+    value = GetSpeciesExperienceAtLevel(species, level);
+    SetBoxMonData(boxMon, MON_DATA_EXP, &value);
     SetBoxMonData(boxMon, MON_DATA_FRIENDSHIP, &GetSpeciesBaseData(species)->friendship);
     value = GetCurrentRegionMapSectionId();
     SetBoxMonData(boxMon, MON_DATA_MET_LOCATION, &value);
@@ -1489,7 +1492,7 @@ u8 GetLevelFromMonExp(struct Pokemon *mon)
     u32 exp = GetMonData(mon, MON_DATA_EXP);
     s32 level = 1;
 
-    while (level <= MAX_LEVEL && gExperienceTables[GetSpeciesBaseData(species)->growthRate][level] <= exp)
+    while (level <= MAX_LEVEL && GetSpeciesExperienceAtLevel(species, level) <= exp)
         level++;
 
     return level - 1;
@@ -1501,7 +1504,7 @@ u8 GetLevelFromBoxMonExp(struct BoxPokemon *boxMon)
     u32 exp = GetBoxMonData(boxMon, MON_DATA_EXP);
     s32 level = 1;
 
-    while (level <= MAX_LEVEL && gExperienceTables[GetSpeciesBaseData(species)->growthRate][level] <= exp)
+    while (level <= MAX_LEVEL && GetSpeciesExperienceAtLevel(species, level) <= exp)
         level++;
 
     return level - 1;
@@ -3263,6 +3266,13 @@ const struct SpeciesBaseData *GetSpeciesBaseData(enum Species species)
     return &gSpeciesInfo[species].baseData;
 }
 
+u32 GetSpeciesExperienceAtLevel(enum Species species, u32 level)
+{
+    if (level == 1 && UsePolishedSpeciesData() && PolishedGetSpeciesBaseData(species) != NULL)
+        return 0;
+    return gExperienceTables[GetSpeciesBaseData(species)->growthRate][level];
+}
+
 enum Type GetSpeciesType(enum Species species, u8 slot)
 {
     return GetSpeciesBaseData(species)->types[slot];
@@ -4930,6 +4940,9 @@ void AdjustFriendship(struct Pokemon *mon, u8 event)
     s8 mod;
 
     if (ShouldSkipFriendshipChange())
+        return;
+
+    if (PolishedTryAdjustFriendship(mon, event))
         return;
 
     species = GetMonData(mon, MON_DATA_SPECIES_OR_EGG, 0);

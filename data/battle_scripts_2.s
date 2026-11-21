@@ -118,6 +118,7 @@ BattleScript_ItemIncreaseStat::
 	call BattleScript_UseItemMessage
     itemincreasestat
 	trybattlerstatchange BS_ATTACKER, STAT_CHANGE_NO_FLAGS
+	callnative BS_PolishedBattleItemFriendship
 	end
 
 BattleScript_UsePokeFlute::
@@ -142,6 +143,7 @@ BattleScript_PokeFluteEnd::
 BattleScript_ItemSetMist::
 	call BattleScript_UseItemMessage
 	setmist
+	callnative BS_PolishedBattleItemFriendship
 	playmoveanimation MOVE_MIST
 	waitanimation
 	printfromtable gMistUsedStringIds
@@ -154,6 +156,7 @@ BattleScript_ItemSetFocusEnergy::
 	jumpifvolatile BS_ATTACKER, VOLATILE_DRAGON_CHEER, BattleScript_ButItFailed
 	jumpifvolatile BS_ATTACKER, VOLATILE_FOCUS_ENERGY, BattleScript_ButItFailed
 	setfocusenergy BS_ATTACKER
+	callnative BS_PolishedBattleItemFriendship
 	playmoveanimation MOVE_FOCUS_ENERGY
 	waitanimation
 	copybyte sBATTLER, gBattlerAttacker

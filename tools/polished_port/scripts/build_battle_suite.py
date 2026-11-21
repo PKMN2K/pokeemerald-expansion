@@ -33,7 +33,8 @@ EXTRA = ('engine/events/trainer_scripts.asm', 'engine/math/math.asm',
          'data/moves/punching_moves.asm', 'data/moves/launcher_moves.asm',
          'data/moves/slicing_moves.asm', 'data/moves/low_kick_power.asm',
          'data/pokemon/body_data.asm', 'engine/battle_anims/pokeball_wobble.asm',
-         'engine/pokedex/pokedex.asm', 'data/growth_rates.asm', 'engine/events/whiteout.asm')
+         'engine/pokedex/pokedex.asm', 'data/growth_rates.asm', 'engine/events/whiteout.asm',
+         'engine/events/happiness_egg.asm', 'data/events/happiness_changes.asm')
 
 DOMAINS = {
     'setup': ('Battle setup and trainer/wild construction', ['engine/battle/core.asm', 'engine/battle/read_trainer_party.asm', 'engine/battle/read_trainer_dvs.asm', 'engine/battle/read_trainer_attributes.asm'],
