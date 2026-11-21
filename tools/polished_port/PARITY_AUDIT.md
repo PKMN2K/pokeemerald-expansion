@@ -4890,3 +4890,57 @@ The native ROM SHA-256 is
 `12b08c61d3f7b3b74ae8e54980644f643b8ce7eb56de001a194415999d9f4fb6`.
 The strict completeness gate still exits 2 as intended: fifteen domains,
 4,143 lexical source blocks and 133 effect families retain open obligations.
+
+## Suite 2 continuation — Berserk Gene before action selection
+
+Continues from `fd964b10`, whose CI #1637 passed, against the pinned default
+source at `3fa43192379df5c3e7b09a08e4d5d79af4f02f42`.
+
+`HandleBerserkGene` belongs at the start of each source turn, after entry and
+end-turn processing but before AI decisions and the player's action menu.
+The port now visits both holders in current Speed/Trick Room order, completes
+their item effects, then runs the separate two-battler Mirror Herb checkpoint.
+AI turn data is refreshed afterward. A gene gained through Trick, newly
+unsuppressed by Skill Swap, or carried by a replacement waits for this boundary.
+A holder knocked out before the next turn cannot activate it.
+
+A successful two-stage Attack change consumes the gene before checking the
+holder's effective Own Tempo and existing confusion. Contrary and stat caps
+apply; a capped failure keeps the item and is retried on later turns. Safeguard
+is bypassed. New confusion stores an equally likely counter of two or three,
+then uses the ordinary per-action decrement; existing confusion is preserved.
+Native profiles and doubles retain immediate entry activation and permanent
+confusion. No party/save layouts, stable identifiers or content tables change.
+
+Eighteen live regression groups cover both sides, Download/Mirror timing,
+voluntary and simultaneous switching, Speed/Trick Room order, item acquisition,
+stat-cap retries, Contrary, Klutz/Skill Swap, Own Tempo/Gas, Unnerve, Safeguard,
+confusion duration/probability, existing confusion, first-action Full Heal,
+pre-boundary KOs and native doubles. Five distinguishing failures were reproduced
+on the parent runtime before implementation. Nineteen authenticated action
+contract tests include mutations of pre-action order, success-only consumption,
+Speed selection, Own Tempo/existing confusion and the duration mask.
+
+Suite 2 remains open for Armored Mewtwo's dedicated checkpoint, other ability
+and item branches, simultaneous voluntary entry abilities, voluntary/Pursuit/
+trap combinations, called/copied moves and the remaining effect obligations.
+Exact RNG stream/call counts, source messages, animations and presentation remain
+Suite 3 work. The eighteen groups are scoped behavior evidence, not certification
+of every Berserk Gene interaction or complete battle parity.
+
+Validation: all 1,095 source groups plus six AI timing checks pass, and the
+full native sweep passes 6,317 groups with the same nine expected failures and
+585 TODO groups. All eighteen new groups pass in both profiles. Strict unused
+and deprecation diagnostics were enabled for the affected objects and both
+production ROM builds. All 108 reproducibility commands, nineteen action
+contract tests, three completion-plan tests and twelve ARM probes pass.
+The production factory checks all 21 trainers / 43 Pokemon. The rebuilt Johto
+ROM passes all 102 campaign checks and nineteen directed warps, plus the twelve
+garden/presentation checks, without any replay-input changes. The strict
+completeness gate still exits 2 for fifteen domains, 4,143 lexical source blocks
+and 133 effect families; none of those obligations is waived by this suite.
+
+Johto ROM SHA-256:
+`74a6dc8890da39fde975912e766ba2e27dd559bf666e369d1b4608dcaf63e58a`.
+Native ROM SHA-256:
+`08e11f4e1650e7f71541c8a2104f4b00e517abdb0ca3df52dee936d3d4298cbe`.

@@ -6,6 +6,34 @@ import build_action_resolution as action
 
 
 class ActionResolutionTest(unittest.TestCase):
+    def test_gene_and_mirror_must_precede_action_selection(self):
+        for token in ('call HandleBerserkGene', 'farcall CheckMirrorHerb'):
+            with self.subTest(checkpoint=token):
+                files = copy.deepcopy(action.source.authenticated_sources())
+                path = 'engine/battle/core.asm'
+                prefix, turn = files[path]['text'].split('BattleTurn:', 1)
+                turn = turn.replace(token, 'nop', 1)
+                turn = turn.replace('call DetermineMoveOrder', 'call DetermineMoveOrder\n\t' + token, 1)
+                files[path]['text'] = prefix + 'BattleTurn:' + turn
+                with self.assertRaises((AssertionError, ValueError)):
+                    action.validate_source(files)
+
+    def test_gene_requires_consumption_success_and_confusion_guards(self):
+        for before, after in (
+                ('and a\n\tret nz', 'and a\n\tnop'),
+                ('cp OWN_TEMPO\n\tret z', 'cp OWN_TEMPO\n\tnop'),
+                ('bit SUBSTATUS_CONFUSED, [hl]\n\tret nz', 'bit SUBSTATUS_CONFUSED, [hl]\n\tnop'),
+                ('and 1\n\tadd 2', 'and 3\n\tadd 2'),
+                ('call SetFastestTurn', 'nop'),
+                ('cp HELD_BERSERK_GENE', 'cp HELD_BERSERK_GENE\n\tcp GUARD_SAFEGUARD')):
+            with self.subTest(mutation=before):
+                files = copy.deepcopy(action.source.authenticated_sources())
+                path = 'engine/battle/core.asm'
+                prefix, gene = files[path]['text'].split('HandleBerserkGene:', 1)
+                files[path]['text'] = prefix + 'HandleBerserkGene:' + gene.replace(before, after, 1)
+                with self.assertRaises((AssertionError, ValueError)):
+                    action.validate_source(files)
+
     def test_authenticated_source_and_complete_inventory(self):
         self.assertEqual(set(action.build()), {action.MANIFEST})
 

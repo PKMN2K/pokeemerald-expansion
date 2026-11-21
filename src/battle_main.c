@@ -117,6 +117,8 @@ static void BattleStartClearSetData(void);
 static void DoBattleIntro(void);
 static void TryDoEventsBeforeFirstTurn(void);
 static void HandleTurnActionSelectionState(void);
+static void BeginTurnActionSelection(void);
+static void FinishTurnActionPreparation(void);
 static void RunTurnActionsFunctions(void);
 static void SetActionsAndBattlersTurnOrder(void);
 static void UpdateBattlerPartyOrdersOnSwitch(enum BattlerId battler);
@@ -3607,8 +3609,7 @@ static void TryDoEventsBeforeFirstTurn(void)
         BattlePutTextOnWindow(gText_EmptyString3, B_WIN_MSG);
         AssignUsableGimmicks();
         SetShellSideArmCategory();
-        SetAiLogicDataForTurn(gAiLogicData); // get assumed abilities, hold effects, etc of all battlers
-        gBattleMainFunc = HandleTurnActionSelectionState;
+        gBattleMainFunc = BeginTurnActionSelection;
         ResetSentPokesToOpponentValue();
 
         for (i = 0; i < BATTLE_COMMUNICATION_ENTRIES_COUNT; i++)
@@ -3722,8 +3723,7 @@ bool32 EndTurnEvents(void) // Called from Battle Script
     BattlePutTextOnWindow(gText_EmptyString3, B_WIN_MSG);
     AssignUsableGimmicks();
     SetShellSideArmCategory();
-    SetAiLogicDataForTurn(gAiLogicData); // get assumed abilities, hold effects, etc of all battlers
-    SetBattleCallback(HandleTurnActionSelectionState);
+    SetBattleCallback(BeginTurnActionSelection);
 
     return FALSE;
 }
@@ -3851,6 +3851,23 @@ enum
     STATE_WAIT_SET_BEFORE_ACTION,
     STATE_SELECTION_SCRIPT_MAY_RUN
 };
+
+static void BeginTurnActionSelection(void)
+{
+    if (gBattleControllerExecFlags)
+        return;
+    gBattleMainFunc = FinishTurnActionPreparation;
+    if (UsesPolishedLifecycle())
+        BattleScriptExecute(BattleScript_PolishedPreActionItems);
+}
+
+static void FinishTurnActionPreparation(void)
+{
+    // Genes and their Mirror copies must be visible to AI decisions as well
+    // as the player's menu and subsequent action ordering.
+    SetAiLogicDataForTurn(gAiLogicData);
+    gBattleMainFunc = HandleTurnActionSelectionState;
+}
 
 static void HandleTurnActionSelectionState(void)
 {

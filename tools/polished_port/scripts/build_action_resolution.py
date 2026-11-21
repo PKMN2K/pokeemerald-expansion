@@ -24,6 +24,17 @@ def validate_source(files):
     commands = files['engine/battle/effect_commands.asm']['text']
     abilities = files['engine/battle/abilities.asm']['text']
     core = files['engine/battle/core.asm']['text']
+    preaction = block(core, 'BattleTurn:', 'SafariBattleTurn:')
+    ordered(preaction, ['call HandleBerserkGene', 'farcall CheckMirrorHerb',
+        'call UpdateBattleMonInParty', 'farcall AIChooseMove', 'call BattleMenu', 'call DetermineMoveOrder'])
+    gene = block(core, 'HandleBerserkGene:', 'CheckOpponentForfeit:')
+    ordered(gene, ['call SetFastestTurn', 'call .do_it', 'call SwitchTurn',
+        'predef GetUserItemAfterUnnerve', 'cp HELD_BERSERK_GENE',
+        'ld b, $10 | ATTACK', 'farcall _ForceRaiseStat',
+        'ld a, [wFailedMessage]', 'and a\n\tret nz', 'farcall UseStatItemText',
+        'farcall ConsumeUserItem', 'call GetTrueUserAbility', 'cp OWN_TEMPO\n\tret z',
+        'bit SUBSTATUS_CONFUSED, [hl]\n\tret nz', 'call BattleRandom', 'and 1\n\tadd 2'])
+    assert not re.search(r'\b(?:SAFEGUARD|GUARD_SAFEGUARD)\b', gene), 'Gene bypasses Safeguard'
     postfaint = block(commands, 'BattleCommand_postfainteffects:', 'BattleCommand_posthiteffects:')
     ordered(postfaint, ['call HasOpponentFainted', 'bit SUBSTATUS_DESTINY_BOND', 'predef SubtractHPFromUser', '\n.no_dbond\n', 'farjp RunFaintAbilities'])
     faint = block(abilities, 'RunFaintAbilities:', 'RunHitAbilities:')
@@ -132,13 +143,15 @@ def build():
             'Mirror pending boosts record actual positive increments independent of held items or recipient caps, saturate at 15, and discard copied/failed/itemless changes at each checkpoint.',
             'Mirror Herb checks current effective items and caps, consumes only after a successful stat change, and cannot trigger an opposing Mirror Herb. Native Opportunist keeps its own queue.',
             'Each source healing-item sweep checks both battlers for Mirror Herb after its stat berry; skipped move-end checks preserve pending boosts until a later source checkpoint.',
+            'Berserk Gene checks both sides in current Speed/Trick Room order before AI and player action selection, followed by a separate Mirror Herb pass. Mid-turn acquisitions and entrants wait until the next turn.',
+            'Berserk Gene consumes only after a successful two-stage Attack change (including Contrary/caps); then it checks effective Own Tempo and existing confusion. Safeguard is bypassed; new confusion counters are uniformly 2 or 3.',
             'Source entry and end turn have no general White Herb/Pack sweep: inherited or Moody negative stages wait for a move or Intimidate checkpoint.',
             'Healing berries run after recoil/drain and Aftermath before the next contact effect can knock out the user.',
             'Destiny Bond persists through a cancelled repeat choice but clears before any different action; an executed repeat clears and fails.'],
         live_bindings=['src/battle_move_resolution.c', 'src/battle_end_turn.c', 'src/battle_util.c',
             'src/battle_hold_effects.c', 'src/battle_stat_change.c', 'src/battle_main.c', 'src/battle_set_effect.c', 'src/battle_script_commands.c', 'src/battle_switch_in.c', 'data/battle_scripts_1.s'],
         regression_file='test/battle/polished_action_resolution.c',
-        additional_regression_files=['test/battle/polished_deferred_switch.c', 'test/battle/polished_entry_items.c', 'test/battle/polished_stat_items.c', 'test/battle/polished_mirror_ledger.c'],
+        additional_regression_files=['test/battle/polished_deferred_switch.c', 'test/battle/polished_entry_items.c', 'test/battle/polished_stat_items.c', 'test/battle/polished_mirror_ledger.c', 'test/battle/polished_berserk_gene.c'],
         remaining=['All unverified effect branches and command interactions remain owned by Suite 2.',
             'Exact RNG stream and source presentation remain owned by Suite 3; native regression success is not source parity.'])
     return {MANIFEST: json.dumps(report, indent=2)+'\n'}

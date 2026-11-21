@@ -6417,6 +6417,23 @@ BattleScript_CouldntFullyProtect::
 	waitmessage B_WAIT_TIME_LONG
 	return
 
+BattleScript_PolishedPreActionItems::
+	callnative BS_PolishedPreActionItems
+	end3
+
+BattleScript_PolishedBerserkGene::
+	call BattleScript_ItemPopUp_Scripting
+	playanimation BS_SCRIPTING, B_ANIM_HELD_ITEM_EFFECT, sB_ANIM_ARG1
+	trybattlerstatchange BS_SCRIPTING, STAT_CHANGE_ITEM
+	removeitem BS_SCRIPTING
+	callnative BS_PolishedBerserkConfusion
+	.4byte BattleScript_PolishedBerserkGene_End
+	volatileanimation BS_SCRIPTING, VOLATILE_CONFUSION
+	printstring STRINGID_PKMNWASCONFUSED
+	waitmessage B_WAIT_TIME_LONG
+BattleScript_PolishedBerserkGene_End:
+	return
+
 BattleScript_BerserkGene::
 	call BattleScript_ItemPopUp_Scripting
 	playanimation BS_SCRIPTING, B_ANIM_HELD_ITEM_EFFECT, sB_ANIM_ARG1

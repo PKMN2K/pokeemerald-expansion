@@ -109,12 +109,57 @@ static enum ItemEffect TryBerserkGene(enum BattlerId battler)
     if (CompareStat(battler, STAT_ATK, MAX_STAT_STAGE, CMP_EQUAL, GetBattlerAbility(battler)))
         return ITEM_NO_EFFECT;
 
+    if (UsesPolishedLifecycle())
+    {
+        SetStatChange(battler, STAT_ATK, 2);
+        BattleScriptCall(BattleScript_PolishedBerserkGene);
+        return ITEM_STATS_CHANGE;
+    }
+
     if (CanBeConfused(battler, battler))
         gBattleMons[battler].volatiles.confusionTimer = PERMANENT_VOLATILE;
 
     SetStatChange(battler, STAT_ATK, 2);
     BattleScriptCall(BattleScript_BerserkGene);
     return ITEM_STATS_CHANGE;
+}
+
+static EWRAM_DATA enum BattlerId sPolishedPreActionOrder[MAX_BATTLERS_COUNT] = {0};
+static EWRAM_DATA u8 sPolishedPreActionIndex = 0;
+
+void ResetPolishedPreActionItems(void)
+{
+    sPolishedPreActionIndex = 0;
+}
+
+static bool32 IsPolishedPreActionActivation(enum HoldEffect holdEffect)
+{
+    return holdEffect == HOLD_EFFECT_BERSERK_GENE;
+}
+
+bool32 PolishedPreActionItems(void)
+{
+    if (!UsesPolishedLifecycle())
+        return FALSE;
+
+    if (sPolishedPreActionIndex == 0)
+    {
+        SortPolishedBattlersBySpeed(sPolishedPreActionOrder);
+        sPolishedPreActionIndex = 1;
+    }
+    // HandleBerserkGene visits both sides in a single Speed/Trick Room order.
+    // Consumption can activate Unburden, but must not reorder this pass.
+    while (sPolishedPreActionIndex <= gBattlersCount)
+    {
+        enum BattlerId battler = sPolishedPreActionOrder[sPolishedPreActionIndex++ - 1];
+        if (ItemBattleEffects(battler, 0, GetBattlerHoldEffect(battler), IsPolishedPreActionActivation))
+            return TRUE;
+    }
+    // Both genes finish before the source's separate Mirror Herb checkpoint.
+    if (PolishedCheckMirrorHerb())
+        return TRUE;
+    ResetPolishedPreActionItems();
+    return FALSE;
 }
 
 static enum ItemEffect RestoreWhiteHerbStats(enum BattlerId battler)
@@ -1041,6 +1086,12 @@ enum ItemEffect ItemBattleEffects(enum BattlerId itemBattler, enum BattlerId bat
         gBattleScripting.battler = gPotentialItemEffectBattler = itemBattler;
         return ITEM_STATS_CHANGE;
     }
+
+    // Source genes activate before action selection, including ones acquired
+    // mid-turn. Entry, Trick/Bestow and generic forced-item checks must wait.
+    if (UsesPolishedLifecycle() && holdEffect == HOLD_EFFECT_BERSERK_GENE
+     && timing != IsPolishedPreActionActivation)
+        return ITEM_NO_EFFECT;
 
     // Source Leppa runs in its end-turn phase (or when Unnerve leaves), not
     // at move end. HP/status berries still trigger from SubtractHP/PostStatus;

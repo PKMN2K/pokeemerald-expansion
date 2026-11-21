@@ -463,6 +463,8 @@ extern const u8 BattleScript_TargetAvoidsAttackConsumeFlingItem[];
 extern const u8 BattleScript_MoveEffectStockpileWoreOff[];
 extern const u8 BattleScript_MoveEffectSpikes[];
 extern const u8 BattleScript_BerserkGene[];
+extern const u8 BattleScript_PolishedBerserkGene[];
+extern const u8 BattleScript_PolishedPreActionItems[];
 extern const u8 BattleScript_TargetFormChangeWithStringNoPopup[];
 extern const u8 BattleScript_UltraBurst[];
 extern const u8 BattleScript_SelectingNotAllowedCurrentMove[];

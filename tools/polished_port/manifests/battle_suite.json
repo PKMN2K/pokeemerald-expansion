@@ -39371,6 +39371,96 @@
       "path": "test/battle/polished_battle_foundations.c"
     },
     {
+      "name": "Polished Berserk Gene resolves after entry abilities and before Mirror Herb",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_berserk_gene.c"
+    },
+    {
+      "name": "Polished Berserk Gene copies its actual boost before the first action",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_berserk_gene.c"
+    },
+    {
+      "name": "Polished Berserk Gene waits until the turn after a voluntary switch",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_berserk_gene.c"
+    },
+    {
+      "name": "Polished Berserk Gene ignores Safeguard and expires within three checks",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_berserk_gene.c"
+    },
+    {
+      "name": "Polished Berserk Gene uses a finite two or three confusion counter",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_berserk_gene.c"
+    },
+    {
+      "name": "Polished Berserk Gene gained through Trick waits until after the current actions",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_berserk_gene.c"
+    },
+    {
+      "name": "Polished Berserk Gene retries a capped holder after a later stat drop",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_berserk_gene.c"
+    },
+    {
+      "name": "Polished Berserk Gene respects Contrary direction and retains a failed item",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_berserk_gene.c"
+    },
+    {
+      "name": "Polished Berserk Gene checks Own Tempo after Neutralizing Gas",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_berserk_gene.c"
+    },
+    {
+      "name": "Polished Berserk Gene preserves native immediate entry and permanent confusion in doubles",
+      "kind": "DOUBLE_BATTLE_TEST",
+      "path": "test/battle/polished_berserk_gene.c"
+    },
+    {
+      "name": "Polished Berserk Gene visits both holders in current Speed order",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_berserk_gene.c"
+    },
+    {
+      "name": "Polished Berserk Gene preserves an existing confusion counter",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_berserk_gene.c"
+    },
+    {
+      "name": "Polished Berserk Gene is not blocked by Unnerve",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_berserk_gene.c"
+    },
+    {
+      "name": "Polished Berserk Gene checks newly unsuppressed Klutz at the next boundary",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_berserk_gene.c"
+    },
+    {
+      "name": "Polished Berserk Gene can be cured by a bag item on the first action",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_berserk_gene.c"
+    },
+    {
+      "name": "Polished Berserk Gene gives each source confusion duration equal probability",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_berserk_gene.c"
+    },
+    {
+      "name": "Polished Berserk Gene uses Trick Room order for simultaneous new holders",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_berserk_gene.c"
+    },
+    {
+      "name": "Polished Berserk Gene does not activate on a holder knocked out before the next turn",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_berserk_gene.c"
+    },
+    {
       "name": "Polished damage matches all source stat compression stage and critical vectors",
       "kind": "SINGLE_BATTLE_TEST",
       "path": "test/battle/polished_damage.c"
@@ -41294,7 +41384,7 @@
     },
     {
       "manifest": "tools/polished_port/manifests/action_resolution.json",
-      "sha256": "89fe95b8daa5f6748931ff6b7bd85d11f62b041a4ace75d5221558dad805fed4"
+      "sha256": "39710206fee279dc016c3ff515d7940f34e5e6ae793ba85f0cee97ed459f78a6"
     },
     {
       "manifest": "tools/polished_port/manifests/attack_suite.json",

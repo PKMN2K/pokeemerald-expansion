@@ -85,10 +85,18 @@ boosts across skipped checks. Each healing sweep copies both sides after its
 stat berry. Optional Sticky Web entry, native Opportunist, native profiles and
 doubles retain controls.
 
+Berserk Gene now runs in the source pre-action phase: both holders finish in
+current Speed/Trick Room order, then Mirror Herb runs before AI/player action
+selection. Entry and mid-turn acquisitions wait until that boundary. Failed
+stat changes preserve the item; successful changes consume it before Own Tempo
+and existing-confusion checks. Safeguard is bypassed and new confusion uses
+uniform counters of two or three. Native doubles retain entry activation and
+permanent confusion.
+
 Authenticated contracts and live test bindings are recorded in
 `manifests/action_resolution.json`. Voluntary/Pursuit/trap combinations,
 simultaneous voluntary entry, other ability/item branches, dedicated
-Berserk Gene/Armored Mewtwo checkpoints, called moves and the remaining
+Armored Mewtwo checkpoint, called moves and the remaining
 133-effect branch obligations still require closure within Suite 2. These are
 existing obligations, not an additional suite.
 

@@ -3865,6 +3865,32 @@ void BS_PolishedAbilityMirrorHerb(void)
         gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
+void BS_PolishedPreActionItems(void)
+{
+    NATIVE_ARGS();
+    if (!PolishedPreActionItems())
+        gBattlescriptCurrInstr = cmd->nextInstr;
+}
+
+void BS_PolishedBerserkConfusion(void)
+{
+    NATIVE_ARGS(const u8 *skip);
+    enum BattlerId battler = gBattleScripting.battler;
+    // HandleBerserkGene bypasses Safeguard and ordinary move immunity gates.
+    // Own Tempo is checked after Gas, and existing confusion is not refreshed.
+    if (GetBattlerAbility(battler) == ABILITY_OWN_TEMPO
+     || gBattleMons[battler].volatiles.confusionTimer)
+    {
+        gBattlescriptCurrInstr = cmd->skip;
+    }
+    else
+    {
+        gBattleMons[battler].volatiles.confusionTimer = RandomUniform(RNG_CONFUSION_TURNS, 2, 3);
+        gEffectBattler = battler; // STRINGID_PKMNWASCONFUSED uses the effect battler.
+        gBattlescriptCurrInstr = cmd->nextInstr;
+    }
+}
+
 void BS_PolishedGasExit(void)
 {
     NATIVE_ARGS(bool8 active);

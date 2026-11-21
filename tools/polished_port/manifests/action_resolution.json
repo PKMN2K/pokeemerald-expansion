@@ -237,6 +237,8 @@
     "Mirror pending boosts record actual positive increments independent of held items or recipient caps, saturate at 15, and discard copied/failed/itemless changes at each checkpoint.",
     "Mirror Herb checks current effective items and caps, consumes only after a successful stat change, and cannot trigger an opposing Mirror Herb. Native Opportunist keeps its own queue.",
     "Each source healing-item sweep checks both battlers for Mirror Herb after its stat berry; skipped move-end checks preserve pending boosts until a later source checkpoint.",
+    "Berserk Gene checks both sides in current Speed/Trick Room order before AI and player action selection, followed by a separate Mirror Herb pass. Mid-turn acquisitions and entrants wait until the next turn.",
+    "Berserk Gene consumes only after a successful two-stage Attack change (including Contrary/caps); then it checks effective Own Tempo and existing confusion. Safeguard is bypassed; new confusion counters are uniformly 2 or 3.",
     "Source entry and end turn have no general White Herb/Pack sweep: inherited or Moody negative stages wait for a move or Intimidate checkpoint.",
     "Healing berries run after recoil/drain and Aftermath before the next contact effect can knock out the user.",
     "Destiny Bond persists through a cancelled repeat choice but clears before any different action; an executed repeat clears and fails."
@@ -258,7 +260,8 @@
     "test/battle/polished_deferred_switch.c",
     "test/battle/polished_entry_items.c",
     "test/battle/polished_stat_items.c",
-    "test/battle/polished_mirror_ledger.c"
+    "test/battle/polished_mirror_ledger.c",
+    "test/battle/polished_berserk_gene.c"
   ],
   "remaining": [
     "All unverified effect branches and command interactions remain owned by Suite 2.",

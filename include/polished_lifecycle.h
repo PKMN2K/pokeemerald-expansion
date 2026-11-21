@@ -22,6 +22,8 @@ bool32 PolishedCheckMirrorHerb(void);
 bool32 PolishedPrepareMirrorHerb(enum BattlerId battler);
 void ResetPolishedMirrorHerbBoosts(void);
 void ResetPolishedStatItems(void);
+void ResetPolishedPreActionItems(void);
+bool32 PolishedPreActionItems(void);
 void ResetPolishedEndTurn(void);
 bool32 PolishedEndTurnDefersFaints(void);
 bool32 PolishedEndTurnDefersItems(void);

@@ -80,6 +80,7 @@ void ResetPolishedEndTurn(void)
     sPolishedEntryParentCount = 0;
     ResetPolishedEntryItems();
     ResetPolishedStatItems();
+    ResetPolishedPreActionItems();
     sPolishedReplacingBoth = FALSE;
     sPolishedForcedEntry = 0;
     memset(&sPolishedExitItems, 0, sizeof(sPolishedExitItems));
