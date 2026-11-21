@@ -168,7 +168,20 @@ def battle_item(game, item, active):
             return
         if task_active(game,'Task_HandleChooseMonInput'):
             selected=game.read(game.sym['gPartyMenu']+9,1)[0]
-            game.press(A if selected==active else LEFT if active==0 else RIGHT,30)
+            # The battle party menu reorders the active Pokemon. Resolve its
+            # visible slot from the live nibble table, as GetPartyIdFromBattleSlot does.
+            order=game.read(game.sym['gBattlePartyCurrentOrder'],3)
+            slots=[nibble for byte in order for nibble in (byte>>4,byte&15)]
+            target=slots.index(active)
+            if selected==target:
+                key=A
+            elif target==0:
+                key=LEFT
+            elif selected==0:
+                key=RIGHT
+            else:
+                key=DOWN if selected<target else UP
+            game.press(key,30)
         else:
             game.press(A,20)
     raise AssertionError(('Battle item stalled',item,count(game,item),before))

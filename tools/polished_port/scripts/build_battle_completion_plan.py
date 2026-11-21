@@ -15,7 +15,7 @@ SUITES = [
          contracts=['Source residual and timer phase order, per-phase Speed comparisons and faint checkpoints.',
                     'Shared entry hazard/item/ability order, deferred replacements and hazard KO loops.',
                     'Source residual arithmetic, Baton Pass state and entry status corrections with live regressions.']),
-    dict(id=2, title='Action and attack resolution', status='shared action resolution implemented; full branch closure pending',
+    dict(id=2, title='Action and attack resolution', status='shared action resolution and deferred switching implemented; full branch closure pending',
          domains=['actions', 'damage', 'moves', 'status', 'abilities', 'items', 'switching', 'fainting'],
          contracts=['All branches of 133 effect families, 129 commands and 255 move identities.',
                     'Action ordering/cancellation, arithmetic, accuracy, statuses, abilities and items.',

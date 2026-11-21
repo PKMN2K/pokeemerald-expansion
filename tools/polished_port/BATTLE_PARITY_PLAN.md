@@ -64,15 +64,21 @@ changes, not certification of all branches in any whole battle domain.
    Any residual/entry mismatch discovered in these interactions remains an
    explicit dependent obligation and must be fixed before final closure.
 
-Suite 2 implementation status: shared action resolution implemented; full branch
-closure pending. The current delivery covers per-hit recoil/faint/contact order,
+Suite 2 implementation status: shared action resolution and deferred switching
+implemented; full branch closure pending. The current delivery covers per-hit recoil/faint/contact order,
 action-level faint/EXP/outcome checkpoints, source Destiny Bond lifecycle,
 Aftermath/Liquid Ooze eligibility, Substitute boundaries for contact and switch
 items, U-turn reservation precedence and item/Pursuit ordering. Its authenticated
 source contracts and live regression scope are in
 `manifests/action_resolution.json`. This does not close all 133 effect families
-or the entire voluntary/forced/Baton Pass/Eject Pack switching graph. Those
-obligations remain in Suite 2, within the existing three-suite plan.
+or the entire switching graph. The next delivery unifies U-turn, Baton Pass,
+trainer Teleport/Roar and switch items under one first-wins reservation;
+checks Pack's current negative stages in source Speed order; and separates
+stat-herb effects from switch execution. Seventeen new source/native groups
+cover these boundaries in `test/battle/polished_deferred_switch.c`.
+Entry-triggered Pack chains, all voluntary/Pursuit/trap combinations, called
+move interactions and remaining effect branches still require closure within
+Suite 2. These are existing obligations, not an additional suite.
 
 ## Suite 3 — battle contexts and final closure
 

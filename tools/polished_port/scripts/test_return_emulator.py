@@ -16,7 +16,7 @@ from test_new_bark_emulator import (map_data, walk, travel as door, actors,
     resident_id, save_game, continue_game, close_resident_dialogue, player_state)
 from test_new_bark_intro_emulator import (layout, var, party, advance,
     script_active, text_matches, task_active, choice_prompt)
-from test_new_bark_battle_emulator import controller, choose_cell, check_portrait
+from test_new_bark_battle_emulator import controller, choose_cell, check_portrait, potion_count
 from test_cherrygrove_emulator import map_id, flag, scene, count_item, leave, finish_tour
 from test_route29_emulator import route_walk
 from test_route30_emulator import travel, state, values
@@ -29,6 +29,7 @@ def constants():
         'theft':'FLAG_POLISHED_ELM_THEFT_REPORTED', 'egg':'FLAG_POLISHED_GAVE_MYSTERY_EGG',
         'quick':'MOVE_QUICK_ATTACK', 'joey':'TRAINER_POLISHED_JOEY', 'trainer_flags':'TRAINER_FLAGS_START',
         'icon':'OBJ_EVENT_GFX_POLISHED_RIVAL'}
+    fields.update({name.lower(): 'MOVE_'+name for name in ('SURF', 'WATER_GUN', 'BITE', 'EMBER', 'VINE_WHIP', 'RAZOR_LEAF', 'RAGE')})
     source = '#include "global.h"\n#include "constants/flags.h"\n#include "constants/opponents.h"\n#include "constants/event_objects.h"\nconst u32 values[] = {'+','.join(fields.values())+'};\n'
     r = subprocess.run(['arm-none-eabi-gcc','-mcpu=arm7tdmi','-mthumb','-mabi=apcs-gnu',
         '-DMODERN=1','-DEMERALD','-std=gnu17','-iquote','include','-iquote','.',
@@ -42,7 +43,7 @@ def rival_name(game):
 
 def battle(game, label, expected, lose=False, portrait=False, iv=30, hp_ev=0):
     observed, portrait_seen = None, False
-    switches = status_turns = 0
+    switches = status_turns = fallback_attacks = potions = 0
     for _ in range(3000):
         if portrait and not portrait_seen and observed is None:
             portrait_seen = check_portrait(game, 'return-'+label, 'rival1' if portrait is True else portrait)
@@ -60,6 +61,13 @@ def battle(game, label, expected, lose=False, portrait=False, iv=30, hp_ev=0):
                 assert [(m['species'],m['level'],m['item'],m['moves']) for m in observed] == expected, observed
                 assert all(m['ivs']==[iv]*6 and m['evs']==[hp_ev,0,0,0,0,0] for m in observed),observed
                 game.screenshot('return-'+label+'-first-turn')
+            active = int.from_bytes(game.read(game.sym['gBattlerPartyIndexes'],2),'little')
+            mon = party(game,details=True)[active]
+            if not lose and 0 < mon['hp'] < mon['max_hp'] and mon['hp'] <= 20 and potion_count(game):
+                from test_falkner_emulator import battle_item
+                battle_item(game,layout()['potion'],active)
+                potions += 1
+                continue
             if lose and sum(bool(m['hp']) for m in party(game,details=True))>1:
                 choose_cell(game,'gActionSelectionCursor',2)
                 switches += 1
@@ -68,7 +76,21 @@ def battle(game, label, expected, lose=False, portrait=False, iv=30, hp_ev=0):
         elif controller(game,'HandleInputChooseMove'):
             if lose:
                 assert game.read(game.sym['gBattleMons']+layout()['battle_pp'],4)[1], (label, switches, status_turns)
-            choose_cell(game,'gMoveSelectionCursor',1 if lose else 0)
+            slot = 1 if lose else 0
+            if not lose:
+                active = int.from_bytes(game.read(game.sym['gBattlerPartyIndexes'],2),'little')
+                mon = party(game,details=True)[active]
+                if 0 < mon['hp'] < mon['max_hp'] and mon['hp'] <= 20 and potion_count(game):
+                    game.press(B,30)  # Back to Fight/Bag before choosing a Potion.
+                    continue
+                pp = game.read(game.sym['gBattleMons']+layout()['battle_pp'],4)
+                if not pp[slot]:
+                    preferred = [constants()[m] for m in ('surf','water_gun','bite','ember','vine_whip','razor_leaf','quick','rage')]
+                    preferred += [layout()['scratch'],layout()['tackle']]
+                    slot = next((i for move in preferred for i,m in enumerate(mon['moves']) if m==move and pp[i]),None)
+                    assert slot is not None, ('No usable attack',label,mon,list(pp))
+                    fallback_attacks += 1
+            choose_cell(game,'gMoveSelectionCursor',slot)
             status_turns += lose
         else:
             game.press(A,30)
@@ -80,7 +102,7 @@ def battle(game, label, expected, lose=False, portrait=False, iv=30, hp_ev=0):
     assert outcome==(2 if lose else 1),(label,outcome)
     assert not portrait or portrait_seen
     return {'party':observed,'outcome':outcome,'portrait_matches_source':portrait_seen if portrait else None,
-            'switches':switches,'status_turns':status_turns}
+            'switches':switches,'status_turns':status_turns,'fallback_attacks':fallback_attacks,'potions':potions}
 
 
 def rival(game, city, y, label, lose=False):

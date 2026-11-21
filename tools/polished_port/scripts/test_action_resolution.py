@@ -23,6 +23,20 @@ class ActionResolutionTest(unittest.TestCase):
         with self.assertRaises(AssertionError):
             action.validate_source(files)
 
+    def test_pack_reservation_must_not_require_a_replacement(self):
+        files = copy.deepcopy(action.source.authenticated_sources())
+        path = 'engine/battle/effect_commands.asm'
+        files[path]['text'] = files[path]['text'].replace('CheckWhiteHerbEjectPack:', 'CheckWhiteHerbEjectPack:\n\tcall CheckAnyOtherAliveMons')
+        with self.assertRaises(AssertionError):
+            action.validate_source(files)
+
+    def test_reversed_stat_herb_order_is_rejected(self):
+        files = copy.deepcopy(action.source.authenticated_sources())
+        path = 'engine/battle/effect_commands.asm'
+        files[path]['text'] = files[path]['text'].replace('call CheckWhiteHerbEjectPack\n\tcall CheckMirrorHerb', 'call CheckMirrorHerb\n\tcall CheckWhiteHerbEjectPack')
+        with self.assertRaises(AssertionError):
+            action.validate_source(files)
+
     def test_magic_guard_in_aftermath_is_rejected(self):
         files = copy.deepcopy(action.source.authenticated_sources())
         path = 'engine/battle/abilities.asm'

@@ -39501,6 +39501,91 @@
       "path": "test/battle/polished_damage.c"
     },
     {
+      "name": "Polished deferred Eject Pack requires a negative stage after a stat drop",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_deferred_switch.c"
+    },
+    {
+      "name": "Polished deferred Eject Pack checks existing negative stages after Trick",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_deferred_switch.c"
+    },
+    {
+      "name": "Polished deferred U turn reservation precedes Weak Armor Eject Pack",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_deferred_switch.c"
+    },
+    {
+      "name": "Polished deferred an ineligible Button reservation still excludes Eject Pack",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_deferred_switch.c"
+    },
+    {
+      "name": "Polished deferred Button reservation wins over the attacker's Eject Pack",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_deferred_switch.c"
+    },
+    {
+      "name": "Polished deferred opponent switch items consume before the user's Suction Cups blocks them",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_deferred_switch.c"
+    },
+    {
+      "name": "Polished deferred the user's own Eject Pack is not blocked by Suction Cups",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_deferred_switch.c"
+    },
+    {
+      "name": "Polished deferred Eject Pack waits for the faint checkpoint",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_deferred_switch.c"
+    },
+    {
+      "name": "Polished deferred Eject Pack stays held after the final opponent faints",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_deferred_switch.c"
+    },
+    {
+      "name": "Polished deferred Baton Pass preserves boosts and does not invite Pursuit",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_deferred_switch.c"
+    },
+    {
+      "name": "Polished deferred Baton Pass and trainer Teleport fail without a reserve",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_deferred_switch.c"
+    },
+    {
+      "name": "Polished deferred trainer Teleport clears boosts without Pursuit interception",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_deferred_switch.c"
+    },
+    {
+      "name": "Polished deferred Roar reserves before the user's negative-stage Eject Pack",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_deferred_switch.c"
+    },
+    {
+      "name": "Polished deferred trainer Teleport is independent of the native generation preset",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_deferred_switch.c"
+    },
+    {
+      "name": "Polished deferred Red Card can trigger again on a later action",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_deferred_switch.c"
+    },
+    {
+      "name": "Polished deferred Mirror Herb resolves before the reserved Eject Pack switch",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_deferred_switch.c"
+    },
+    {
+      "name": "Polished deferred optional Overheat retains native Eject Pack timing",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_deferred_switch.c"
+    },
+    {
       "name": "Polished dynamic damage Low Kick uses strict source weight bands",
       "kind": "SINGLE_BATTLE_TEST",
       "path": "test/battle/polished_dynamic_damage.c"
@@ -41009,7 +41094,7 @@
     },
     {
       "manifest": "tools/polished_port/manifests/action_resolution.json",
-      "sha256": "8a4ed490e88f466a074dd95cd287d6aea19bf14d02c75e1b3fbfc8af96276fa3"
+      "sha256": "12b4ca7c9efa6f3b1416cecece0f87b88e6b628353310d5649a88951f49d85a6"
     },
     {
       "manifest": "tools/polished_port/manifests/attack_suite.json",

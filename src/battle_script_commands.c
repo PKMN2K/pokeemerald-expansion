@@ -5782,6 +5782,13 @@ static void Cmd_forcerandomswitch(void)
         }
         else
         {
+            if (UsesPolishedActionRules(gCurrentMove) && gCurrentMove == MOVE_ROAR
+             && !PolishedExecutingDeferredSwitch())
+            {
+                PolishedReserveSwitch(POLISHED_SWITCH_FORCED, gBattlerTarget);
+                gBattlescriptCurrInstr = BattleScript_PolishedRoarDeferred;
+                return;
+            }
             for (enum BattlerId battler = 0; battler < gBattlersCount; battler++)
                 gBattleMons[battler].volatiles.tryEjectPack = FALSE; // Disable Eject Pack activations
             gBattleStruct->battlerPartyIndexes[gBattlerTarget] = gBattlerPartyIndexes[gBattlerTarget];
@@ -7711,6 +7718,24 @@ static void Cmd_trysetsnatch(void)
         gProtectStructs[gBattlerAttacker].stealMove = TRUE;
         gBattlescriptCurrInstr = cmd->nextInstr;
     }
+}
+
+void BS_PolishedDeferBatonPass(void)
+{
+    NATIVE_ARGS();
+    if (UsesPolishedActionRules(gCurrentMove))
+    {
+        PolishedReserveSwitch(POLISHED_SWITCH_BATON_PASS, gBattlerAttacker);
+        gBattlescriptCurrInstr = BattleScript_MoveEnd;
+    }
+    else
+        gBattlescriptCurrInstr = cmd->nextInstr;
+}
+
+void BS_JumpIfPolishedDeferredSwitch(void)
+{
+    NATIVE_ARGS(const u8 *jump);
+    gBattlescriptCurrInstr = PolishedExecutingDeferredSwitch() ? cmd->jump : cmd->nextInstr;
 }
 
 void BS_PolishedUnnerveExit(void)
@@ -10905,6 +10930,13 @@ static bool32 IsPolishedWildTeleport(void)
         && !(gFieldStatuses & STATUS_FIELD_FAIRY_LOCK)
         && gBattleStruct->battlerState[gBattlerAttacker].commanderSpecies == SPECIES_NONE
         && gBattleMons[gBattlerAttacker].volatiles.semiInvulnerable != STATE_SKY_DROP_TARGET;
+}
+
+void BS_JumpIfPolishedTrainerTeleport(void)
+{
+    NATIVE_ARGS(const u8 *jumpInstr);
+    gBattlescriptCurrInstr = UsesPolishedActionRules(gCurrentMove) && (gBattleTypeFlags & BATTLE_TYPE_TRAINER)
+        ? cmd->jumpInstr : cmd->nextInstr;
 }
 
 void BS_JumpIfPolishedWildTeleport(void)

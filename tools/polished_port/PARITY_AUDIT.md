@@ -4637,3 +4637,67 @@ domains, 4,143 lexical blocks and 133 effect families.
 
 Validated final Johto ROM SHA-256:
 `31935b515a913430e74703c8f037eeee78600b662b9f432fca4b166df0f4c5d4`.
+
+## Suite 2 continuation — deferred switching and stat items
+
+Continues from `cb98d8a2` against the same pinned default source. This remains
+part of Suite 2 in the three-suite plan; no fourth suite or completion waiver
+is introduced.
+
+`SetDeferredSwitch` and `ForceDeferredSwitch` now have a shared live counterpart
+for U-turn, Baton Pass, trainer Teleport/Roar and Button/Card/Pack. The first
+reservation wins, including when it cannot ultimately switch. Move effects
+reserve before end-move items; Button/Card reserve after Life Orb and before
+Pickpocket/stat herbs. Actual eligibility, consumption and departure wait until
+the action's faint/EXP/outcome checkpoint. Replacements do not run the outgoing
+move's stat-item checks again. Trainer Teleport uses source behavior regardless
+of the native generation preset.
+
+Source Eject Pack examines living holders' current negative stages in current
+Speed/Trick Room order. A decrease that leaves every stage neutral or positive
+does not activate it; acquiring Pack with an existing negative stage can.
+White Herb/Pack checks finish before Mirror Herb, then Throat Spray. A Pack
+reservation does not interrupt the remaining herb effects. Source opponent-item
+switches consume the item before checking the original move user's Suction
+Cups, including Button and opponent Pack; own Pack has no such check. Red Card's
+activation latch is reset for the next action. Native optional Overheat retains
+its own timing; native item restoration is accounted for in the test controls.
+
+Seventeen new live groups in `test/battle/polished_deferred_switch.c` cover
+reservation precedence, invalid reservations, existing/neutral stages,
+faint/final-opponent boundaries, Suction Cups consumption, Mirror Herb order,
+Baton Pass transfer/Pursuit behavior, trainer Teleport, Roar and repeated Card
+use. The authenticated contracts and eight source anchors are recorded in
+`manifests/action_resolution.json`; six mutation/contract tests and the existing
+three plan tests pass. The strict gate remains unchanged and exits 2 for all
+fifteen domains, 4,143 lexical source blocks and 133 effect families.
+
+Remaining Suite 2 obligations include entry-triggered Pack/Intimidate chains,
+all voluntary/Pursuit/trap combinations, called-move interactions and the
+unverified effect branches. The earlier native-only Life Orb/Eject Button KO
+edge remains open. Exact source RNG stream and presentation remain Suite 3
+obligations; the current adapters still use Expansion switch UI/animations.
+
+Validation: all **1,037 source groups plus six AI timing groups** and the full
+**6,259-group native regression run** pass. The native run retains nine expected
+failures and 585 TODOs. All **17 new groups pass in both profiles**. The 108
+source reproducibility checks, twelve ARM probes, six action-contract tests and
+three completion-plan tests pass. Both 32 MiB production ROMs build. The final
+source-only Mirror Herb Speed/alive refinement was followed by the complete
+source catalog and both focused 17-group profiles; the full native count is
+from the preceding broad sweep.
+
+The production campaign initially exhausted Surf during Finch's challenge and
+its input driver repeatedly selected that empty slot. The return-battle driver
+now reads live PP, selects an existing usable attack, and uses owned Potions
+through the Bag at low HP, as the later campaign drivers already do. The shared
+item driver resolves the active Pokemon through the live battle-menu slot
+order and never attempts to heal a full-HP Pokemon. It records
+fallback attacks and Potion use. This changes only the replay's controller
+input; it does not patch the ROM, party, HP, PP, items or battle outcome.
+
+The final shipping Johto ROM passed **102 campaign checks and nineteen directed
+warps**, including every starter/rival branch, Sprout Tower, Falkner, rewards,
+menu-item use and native Save/reset/Continue. All 21 production trainer teams
+and 43 Pokemon passed the shipping-factory probe. Final Johto ROM SHA-256:
+`0e146a40c03d6a84546fd9e39a54f01f24c6e08d2457c41b69b4afa48ca03da8`.

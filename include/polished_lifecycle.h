@@ -4,6 +4,18 @@
 #include "global.h"
 #include "constants/battle.h"
 
+enum PolishedSwitchKind
+{
+    POLISHED_SWITCH_NONE,
+    POLISHED_SWITCH_PIVOT,
+    POLISHED_SWITCH_BATON_PASS,
+    POLISHED_SWITCH_FORCED,
+    POLISHED_SWITCH_BUTTON,
+    POLISHED_SWITCH_CARD,
+    POLISHED_SWITCH_PACK,
+};
+void PolishedReserveSwitch(enum PolishedSwitchKind kind, enum BattlerId battler);
+bool32 PolishedExecutingDeferredSwitch(void);
 bool32 UsesPolishedLifecycle(void);
 void ResetPolishedEndTurn(void);
 bool32 PolishedEndTurnDefersFaints(void);

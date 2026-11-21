@@ -27,6 +27,28 @@
 #include "data/polished_self_thaw.h"
 #include "data/polished_multihit.h"
 
+static EWRAM_DATA enum PolishedSwitchKind sPolishedSwitch = POLISHED_SWITCH_NONE;
+static EWRAM_DATA enum BattlerId sPolishedSwitchBattler = 0;
+static EWRAM_DATA u8 sPolishedHerbPass = 0;
+static EWRAM_DATA enum BattlerId sPolishedHerbOrder[MAX_BATTLERS_COUNT] = {0};
+
+void PolishedReserveSwitch(enum PolishedSwitchKind kind, enum BattlerId battler)
+{
+    // The source has one first-wins reservation. Eligibility and consumption
+    // are checked later, even when this reservation cannot ultimately switch.
+    if (sPolishedSwitch == POLISHED_SWITCH_NONE)
+    {
+        sPolishedSwitch = kind;
+        sPolishedSwitchBattler = battler;
+    }
+}
+
+bool32 PolishedExecutingDeferredSwitch(void)
+{
+    return UsesPolishedActionRules(gCurrentMove)
+        && gBattleScripting.moveendState == MOVEEND_POLISHED_DEFERRED_SWITCH;
+}
+
 static void ValidateBattlers(void);
 static enum Move GetOriginallyUsedMove(enum Move chosenMove);
 static enum Move GetRecordedMove(void);
@@ -61,6 +83,9 @@ static bool32 CutThirdOfHp(enum BattlerId battler);
 
 static enum CancelerResult CancelerClearFlags(struct BattleCalcValues *cv)
 {
+    sPolishedSwitch = POLISHED_SWITCH_NONE;
+    if (UsesPolishedActionRules(cv->move))
+        gBattleStruct->redCardActivated = FALSE;
     PolishedBeginActionFaints(cv->move);
     if (UsesPolishedLifecycle() && cv->move != MOVE_DESTINY_BOND)
         gBattleMons[cv->battlerAtk].volatiles.destinyBond = 0;
@@ -3368,12 +3393,11 @@ enum CancelerResult DoAttackCanceler(void)
 // ========
 
 static EWRAM_DATA u8 sPolishedPostFaintStep = 0;
-static EWRAM_DATA bool8 sPolishedPivotReserved = FALSE;
 
 static enum MoveEndResult MoveEndSetValues(struct BattleCalcValues *cv)
 {
     sPolishedPostFaintStep = 0;
-    sPolishedPivotReserved = FALSE;
+    sPolishedHerbPass = 0;
     gBattleScripting.savedDmg += gBattleStruct->moveDamage[cv->battlerDef];
     gBattleStruct->eventState.moveEndBattler = 0;
     gBattleStruct->eventState.moveEndBlock = 0;
@@ -4964,10 +4988,11 @@ static enum MoveEndResult MoveEndCardButton(struct BattleCalcValues *cv)
     {
         // Source switchout reserves before end-move item damage. A later
         // Life Orb KO cancels that switch, without reconsidering Eject Button.
-        sPolishedPivotReserved = cv->moveEffect == EFFECT_HIT_ESCAPE
-            && IsBattlerAlive(cv->battlerAtk) && CanBattlerSwitch(cv->battlerAtk)
-            && !gBattleStruct->unableToUseMove
-            && IsAnyTargetTurnDamaged(cv->battlerAtk, INCLUDING_SUBSTITUTES);
+        if (cv->moveEffect == EFFECT_HIT_ESCAPE
+         && IsBattlerAlive(cv->battlerAtk) && CanBattlerSwitch(cv->battlerAtk)
+         && !gBattleStruct->unableToUseMove
+         && IsAnyTargetTurnDamaged(cv->battlerAtk, INCLUDING_SUBSTITUTES))
+            PolishedReserveSwitch(POLISHED_SWITCH_PIVOT, cv->battlerAtk);
         gBattleScripting.moveendState++;
         return MOVEEND_RESULT_CONTINUE;
     }
@@ -5023,6 +5048,23 @@ static enum MoveEndResult MoveEndLifeOrbShellBell(struct BattleCalcValues *cv)
 
     gBattleScripting.moveendState++;
     return result;
+}
+
+static enum MoveEndResult MoveEndPolishedSwitchItems(struct BattleCalcValues *cv)
+{
+    if (UsesPolishedActionRules(cv->move)
+     && !IsSheerForceAffected(cv->move, cv->abilities[cv->battlerAtk])
+     && IsBattlerAlive(cv->battlerDef)
+     && IsBattlerTurnDamaged(cv->battlerDef, INCLUDING_SUBSTITUTES))
+    {
+        enum HoldEffect effect = GetBattlerHoldEffect(cv->battlerDef);
+        if (effect == HOLD_EFFECT_EJECT_BUTTON)
+            PolishedReserveSwitch(POLISHED_SWITCH_BUTTON, cv->battlerDef);
+        else if (effect == HOLD_EFFECT_RED_CARD)
+            PolishedReserveSwitch(POLISHED_SWITCH_CARD, cv->battlerDef);
+    }
+    gBattleScripting.moveendState++;
+    return MOVEEND_RESULT_CONTINUE;
 }
 
 static enum MoveEndResult MoveEndEmergencyExit(struct BattleCalcValues *cv)
@@ -5151,13 +5193,52 @@ static enum MoveEndResult MoveEndPolishedActionCheckpoint(struct BattleCalcValue
 
 static enum MoveEndResult MoveEndPolishedDeferredSwitch(struct BattleCalcValues *cv)
 {
-    if (UsesPolishedActionRules(cv->move) && !gBattleOutcome)
+    enum PolishedSwitchKind kind = sPolishedSwitch;
+    enum BattlerId holder = sPolishedSwitchBattler;
+    enum BattlerId outgoing = kind == POLISHED_SWITCH_CARD ? cv->battlerAtk : holder;
+    // Consume the reservation before scripts (Pursuit can start another action).
+    sPolishedSwitch = POLISHED_SWITCH_NONE;
+    if (UsesPolishedActionRules(cv->move) && !gBattleOutcome
+     && kind != POLISHED_SWITCH_NONE && IsBattlerAlive(outgoing)
+     && CanBattlerSwitch(outgoing))
     {
-        // switchout reserves the source's one deferred switch before end-move
-        // items. Resolve faints and item damage before executing that switch.
-        if (sPolishedPivotReserved)
+        switch (kind)
+        {
+        case POLISHED_SWITCH_PIVOT:
             return MoveEndHitEscape(cv);
-        return MoveEndCardButton(cv);
+        case POLISHED_SWITCH_BATON_PASS:
+            BattleScriptCall(BattleScript_PolishedBatonPassSwitch);
+            return MOVEEND_RESULT_RUN_SCRIPT;
+        case POLISHED_SWITCH_FORCED:
+            BattleScriptCall(BattleScript_PolishedForcedSwitch);
+            return MOVEEND_RESULT_RUN_SCRIPT;
+        case POLISHED_SWITCH_CARD:
+            if (TryRedCard(cv->battlerAtk, holder, cv->moveEffect))
+                return MOVEEND_RESULT_RUN_SCRIPT;
+            break;
+        case POLISHED_SWITCH_BUTTON:
+        case POLISHED_SWITCH_PACK:
+            // Source SWITCH_OPPITEM checks the original move user's Suction
+            // Cups before changing sides, even for Button/opponent Pack.
+            gBattleScripting.battler = holder;
+            gLastUsedItem = gBattleMons[holder].item;
+            if (holder != cv->battlerAtk && GetBattlerAbility(cv->battlerAtk) == ABILITY_SUCTION_CUPS)
+            {
+                gBattlerAbility = gEffectBattler = cv->battlerAtk;
+                BattleScriptCall(BattleScript_PolishedEjectItemBlocked);
+            }
+            else
+            {
+                gBattleStruct->battlerState[holder].usedEjectItem = TRUE;
+                gSpecialStatuses[holder].queuedSwitch = QUEUED_SWITCH_OPEN_PARTY_SCREEN;
+                gAiLogicData->ejectButtonSwitch = kind == POLISHED_SWITCH_BUTTON;
+                gAiLogicData->ejectPackSwitch = kind == POLISHED_SWITCH_PACK;
+                BattleScriptCall(BattleScript_EjectItemActivates);
+            }
+            return MOVEEND_RESULT_RUN_SCRIPT;
+        default:
+            break;
+        }
     }
     gBattleScripting.moveendState++;
     return MOVEEND_RESULT_CONTINUE;
@@ -5371,18 +5452,48 @@ static inline bool32 TryEjectPack(enum BattlerId battlerAtk, enum BattlerId ejec
 
 static enum MoveEndResult MoveEndItemOnStatChange(struct BattleCalcValues *cv)
 {
+    bool32 source = UsesPolishedActionRules(cv->move);
+    if (source != (gBattleScripting.moveendState == MOVEEND_POLISHED_STAT_HERBS))
+    {
+        gBattleScripting.moveendState++;
+        return MOVEEND_RESULT_CONTINUE;
+    }
+    if (source && IsSheerForceAffected(cv->move, cv->abilities[cv->battlerAtk]))
+    {
+        gBattleScripting.moveendState++;
+        return MOVEEND_RESULT_CONTINUE;
+    }
+    if (source && sPolishedHerbPass == 0 && gBattleStruct->eventState.moveEndBattler == 0)
+        SortPolishedBattlersBySpeed(sPolishedHerbOrder);
+nextPass:
     while (gBattleStruct->eventState.moveEndBattler < gBattlersCount)
     {
-        enum BattlerId battler = gBattlersByRawSpeed[gBattleStruct->eventState.moveEndBattler++];
+        enum BattlerId battler = (source ? sPolishedHerbOrder : gBattlersByRawSpeed)[gBattleStruct->eventState.moveEndBattler++];
+        if (source && !IsBattlerAlive(battler))
+            continue;
 
-        switch (cv->holdEffects[battler])
+        enum HoldEffect effect = source ? GetBattlerHoldEffect(battler) : cv->holdEffects[battler];
+        if (source && (effect == HOLD_EFFECT_MIRROR_HERB) != (sPolishedHerbPass == 1))
+            continue;
+        switch (effect)
         {
         case HOLD_EFFECT_WHITE_HERB:
             if (ItemBattleEffects(battler, 0, cv->holdEffects[battler], IsWhiteHerbActivation))
                 return MOVEEND_RESULT_RUN_SCRIPT;
             break;
         case HOLD_EFFECT_EJECT_PACK:
-            if (TryEjectPack(cv->battlerAtk, battler))
+            if (source)
+            {
+                // Source checks current negative stages, not merely whether
+                // this action lowered a stat. A move/item reservation wins.
+                for (u32 stat = STAT_ATK; stat < NUM_BATTLE_STATS; stat++)
+                    if (gBattleMons[battler].statStages[stat] < DEFAULT_STAT_STAGE)
+                    {
+                        PolishedReserveSwitch(POLISHED_SWITCH_PACK, battler);
+                        break;
+                    }
+            }
+            else if (TryEjectPack(cv->battlerAtk, battler))
                 return MOVEEND_RESULT_RUN_SCRIPT;
             break;
         case HOLD_EFFECT_MIRROR_HERB:
@@ -5394,6 +5505,15 @@ static enum MoveEndResult MoveEndItemOnStatChange(struct BattleCalcValues *cv)
         }
     }
 
+    if (source && sPolishedHerbPass++ == 0
+     && IsBattlerAlive(cv->battlerAtk) && IsBattlerAlive(cv->battlerDef))
+    {
+        // White Herb may have restored Speed. Mirror Herb performs a new
+        // comparison and requires both battlers alive in the source.
+        SortPolishedBattlersBySpeed(sPolishedHerbOrder);
+        gBattleStruct->eventState.moveEndBattler = 0;
+        goto nextPass;
+    }
     for (enum BattlerId i = 0; i < gBattlersCount; i++)
         gBattleMons[i].volatiles.tryEjectPack = FALSE;
 
@@ -5702,6 +5822,7 @@ static enum MoveEndResult (*const sMoveEndHandlers[])(struct BattleCalcValues *c
     [MOVEEND_CARD_BUTTON] = MoveEndCardButton,
     [MOVEEND_FORM_CHANGE] = MoveEndFormChange,
     [MOVEEND_LIFE_ORB_SHELL_BELL] = MoveEndLifeOrbShellBell,
+    [MOVEEND_POLISHED_SWITCH_ITEMS] = MoveEndPolishedSwitchItems,
     [MOVEEND_EMERGENCY_EXIT] = MoveEndEmergencyExit,
     [MOVEEND_HIT_ESCAPE] = MoveEndHitEscape,
     [MOVEEND_PICKPOCKET] = MoveEndPickpocket,
@@ -5710,6 +5831,7 @@ static enum MoveEndResult (*const sMoveEndHandlers[])(struct BattleCalcValues *c
     [MOVEEND_THIRD_MOVE_BLOCK] = MoveEndThirdMoveBlock,
     [MOVEEND_RAMPAGE] = MoveEndRampage,
     [MOVEEND_CONFUSION_AFTER_SKY_DROP] = MoveEndConfusionAfterSkyDrop,
+    [MOVEEND_POLISHED_STAT_HERBS] = MoveEndItemOnStatChange,
     [MOVEEND_SPRAY_LEPPA_BLUNDER] = MoveEndSprayLeppaBlunder,
     [MOVEEND_ITEM_ON_STAT_CHANGE] = MoveEndItemOnStatChange,
     [MOVEEND_POLISHED_ACTION_CHECKPOINT] = MoveEndPolishedActionCheckpoint,

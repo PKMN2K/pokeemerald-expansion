@@ -2238,6 +2238,8 @@ BattleScript_EffectBatonPass::
 	jumpifcantswitch SWITCH_IGNORE_ESCAPE_PREVENTION | BS_ATTACKER, BattleScript_ButItFailed
 	attackanimation
 	waitanimation
+	callnative BS_PolishedDeferBatonPass
+BattleScript_PolishedBatonPassSwitch::
 	returntoball BS_ATTACKER, FALSE
 	switchoutabilities BS_ATTACKER
 	callnative BS_PolishedUnnerveExit
@@ -2255,7 +2257,11 @@ BattleScript_EffectBatonPass::
 	waitstate
 	switchineffects BS_ATTACKER
 	switchinevents
+	callnative BS_JumpIfPolishedDeferredSwitch
+	.4byte BattleScript_PolishedSwitchReturn
 	goto BattleScript_MoveEnd
+BattleScript_PolishedSwitchReturn:
+	return
 
 BattleScript_EffectMorningSun::
 BattleScript_EffectSynthesis::
@@ -2365,6 +2371,8 @@ BattleScript_EffectFutureSight::
 	goto BattleScript_MoveEnd
 
 BattleScript_EffectTeleport::
+	callnative BS_JumpIfPolishedTrainerTeleport
+	.4byte BattleScript_EffectBatonPass
 	callnative BS_JumpIfPolishedWildTeleport
 	.4byte BattleScript_DoEffectTeleport
 	jumpifgenconfiglowerthan CONFIG_B_TELEPORT_BEHAVIOR, GEN_8, BattleScript_EffectTeleportGen7
@@ -3421,6 +3429,15 @@ BattleScript_BideNoEnergyToAttack::
 	waitmessage B_WAIT_TIME_LONG
 	goto BattleScript_ButItFailed
 
+BattleScript_PolishedRoarDeferred::
+	attackanimation
+	waitanimation
+	goto BattleScript_MoveEnd
+
+BattleScript_PolishedForcedSwitch::
+	forcerandomswitch BattleScript_PolishedSwitchReturn
+	return
+
 BattleScript_RoarSuccessSwitch::
 	call BattleScript_RoarSuccessRet
 	getswitchedmondata BS_TARGET
@@ -3433,6 +3450,8 @@ BattleScript_RoarSuccessSwitch::
 	switchineffects BS_TARGET
 	switchinevents
 	jumpifbyte CMP_EQUAL, sSWITCH_CASE, B_SWITCH_RED_CARD, BattleScript_RoarSuccessSwitch_Ret
+	callnative BS_JumpIfPolishedDeferredSwitch
+	.4byte BattleScript_PolishedSwitchReturn
 	setbyte sSWITCH_CASE, B_SWITCH_NORMAL
 	goto BattleScript_MoveEnd
 BattleScript_RoarSuccessSwitch_Ret:
@@ -3449,6 +3468,8 @@ BattleScript_RoarSuccessEndBattle::
 	finishaction
 
 BattleScript_RoarSuccessRet:
+	callnative BS_JumpIfPolishedDeferredSwitch
+	.4byte BattleScript_RoarSuccessRet_Ret
 	jumpifbyte CMP_EQUAL, sSWITCH_CASE, B_SWITCH_HIT, BattleScript_RoarSuccessRet_Ret
 	jumpifbyte CMP_EQUAL, sSWITCH_CASE, B_SWITCH_RED_CARD, BattleScript_RoarSuccessRet_Ret
 	attackanimation
@@ -5971,6 +5992,17 @@ BattleScript_RedCardDynamaxed:
 BattleScript_RedCardEnd:
 	restoretarget
 	restoreattacker
+	return
+
+BattleScript_PolishedEjectItemBlocked::
+	call BattleScript_ItemPopUp_Scripting
+	playanimation BS_SCRIPTING, B_ANIM_HELD_ITEM_EFFECT
+	printstring STRINGID_EJECTBUTTONACTIVATE
+	waitmessage B_WAIT_TIME_LONG
+	removeitem BS_SCRIPTING
+	call BattleScript_AbilityPopUp
+	printstring STRINGID_PKMNANCHORSITSELFWITH
+	waitmessage B_WAIT_TIME_LONG
 	return
 
 BattleScript_EjectItemActivates::
