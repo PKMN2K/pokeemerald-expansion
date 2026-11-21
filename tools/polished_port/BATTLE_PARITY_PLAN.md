@@ -64,8 +64,9 @@ changes, not certification of all branches in any whole battle domain.
    Any residual/entry mismatch discovered in these interactions remains an
    explicit dependent obligation and must be fixed before final closure.
 
-Suite 2 implementation status: shared action resolution and deferred switching
-implemented; full branch closure pending. The current delivery covers per-hit recoil/faint/contact order,
+Suite 2 implementation status: shared action resolution, deferred switching and
+immediate Intimidate entry-item chains implemented; full branch closure pending.
+The current delivery covers per-hit recoil/faint/contact order,
 action-level faint/EXP/outcome checkpoints, source Destiny Bond lifecycle,
 Aftermath/Liquid Ooze eligibility, Substitute boundaries for contact and switch
 items, U-turn reservation precedence and item/Pursuit ordering. Its authenticated

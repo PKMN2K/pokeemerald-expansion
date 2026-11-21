@@ -18,6 +18,7 @@
 #include "battle_gimmick.h"
 #include "battle_hold_effects.h"
 #include "battle_stat_change.h"
+#include "battle_switch_in.h"
 #include "config_changes.h"
 #include "polished_battle.h"
 #include "polished_battle_core.h"
@@ -3639,6 +3640,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
                         continue;
                     SetStatChange(i, STAT_ATK, -1);
                 }
+                PolishedBeginIntimidate(battler);
                 BattleScriptCall(BattleScript_IntimidateActivates); // Sets a flag to check for intim failure. Similar abilities should use BattleScript_AbilityStatChange.
                 effect++;
             }

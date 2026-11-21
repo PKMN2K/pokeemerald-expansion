@@ -8,6 +8,7 @@
 #include "battle_stat_change.h"
 #include "battle_gimmick.h"
 #include "battle_scripts.h"
+#include "battle_switch_in.h"
 #include "polished_lifecycle.h"
 #include "polished_moves.h"
 #include "polished_damage.h"
@@ -34,6 +35,12 @@ static EWRAM_DATA enum BattlerId sPolishedActionAttacker = 0;
 static EWRAM_DATA enum BattlerId sPolishedActionTarget = 0;
 static EWRAM_DATA bool8 sPolishedEntryBatch = FALSE;
 static EWRAM_DATA bool8 sPolishedEntryResolving = FALSE;
+static EWRAM_DATA struct
+{
+    struct PolishedFaintQueue queue;
+    bool8 batch, resolving;
+} sPolishedEntryParents[2 * PARTY_SIZE + 1] = {0};
+static EWRAM_DATA u8 sPolishedEntryParentCount = 0;
 static EWRAM_DATA enum BattlerId sPolishedReplacementOrder[2] = {0};
 static EWRAM_DATA u8 sPolishedReplacementIndex = 0;
 static EWRAM_DATA bool8 sPolishedReplacingBoth = FALSE;
@@ -70,6 +77,8 @@ void ResetPolishedEndTurn(void)
     memset(&sPolishedActionFaints, 0, sizeof(sPolishedActionFaints));
     sPolishedActionBatch = sPolishedActionResolving = FALSE;
     sPolishedEntryBatch = sPolishedEntryResolving = FALSE;
+    sPolishedEntryParentCount = 0;
+    ResetPolishedEntryItems();
     sPolishedReplacingBoth = FALSE;
     sPolishedForcedEntry = 0;
     memset(&sPolishedExitItems, 0, sizeof(sPolishedExitItems));
@@ -1950,6 +1959,20 @@ static bool32 ResolvePolishedFaintQueue(struct PolishedFaintQueue *queue)
     }
     memset(queue, 0, sizeof(*queue));
     return FALSE;
+}
+
+void PolishedPushEntryFaints(void)
+{
+    sPolishedEntryParents[sPolishedEntryParentCount].queue = sPolishedEntryFaints;
+    sPolishedEntryParents[sPolishedEntryParentCount].batch = sPolishedEntryBatch;
+    sPolishedEntryParents[sPolishedEntryParentCount++].resolving = sPolishedEntryResolving;
+}
+
+void PolishedPopEntryFaints(void)
+{
+    sPolishedEntryFaints = sPolishedEntryParents[--sPolishedEntryParentCount].queue;
+    sPolishedEntryBatch = sPolishedEntryParents[sPolishedEntryParentCount].batch;
+    sPolishedEntryResolving = sPolishedEntryParents[sPolishedEntryParentCount].resolving;
 }
 
 void PolishedBeginEntryHazards(void)

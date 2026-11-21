@@ -4711,3 +4711,54 @@ warps**, including every starter/rival branch, Sprout Tower, Falkner, rewards,
 menu-item use and native Save/reset/Continue. All 21 production trainer teams
 and 43 Pokemon passed the shipping-factory probe. Final Johto ROM SHA-256:
 `0e146a40c03d6a84546fd9e39a54f01f24c6e08d2457c41b69b4afa48ca03da8`.
+
+## Suite 2 continuation — Intimidate entry item chains
+
+Continues from `101e53c4` against the same pinned default source. The three-suite
+ownership and strict completeness requirements are unchanged.
+
+Intimidate now runs the source's immediate Mirror Herb check, White Herb/Pack
+pass and second Mirror Herb pass. Each pass uses current Speed/Trick Room
+order. Pack checks current negative stages and reserves before replacement
+availability is tested. Its private reservation leaves the surrounding action's
+reservation intact. The four source Intimidate immunities and Rattled response
+are selected independently of native generation settings.
+
+A selected Pack completes departure, replacement hazards and entry abilities
+before the interrupted entry sequence resumes. Transient frames preserve entry
+counters, pending entrants, Speed order, scripting actors and faint queues.
+The source's two-entry loop still visits its second side after a nested switch,
+so that replacement can activate Intimidate again. Script return capacity now
+accommodates chains across both full parties; save and party layouts are
+unchanged. Neutralizing Gas deactivation runs the stat-item checks but prevents
+nested Pack execution while the outgoing source ability would be the -1 sentinel.
+
+Thirteen new live groups in `test/battle/polished_entry_items.c` cover pending
+weather/Download entrants, repeated replacement Intimidate, Rattled/Mirror/White
+Herb order, current positive/negative stages, native-generation controls,
+U-turn and Skill Swap continuations, Gas departure, hazard KO replacement,
+eight chained Pack departures across full parties, Speed/Trick Room priority
+through Baton Pass/Ingrain, and no-reserve item retention. Both profiles pass
+all thirteen groups plus the six pre-existing entry groups. Nine authenticated
+action-contract tests retain the source order and reservation/suppression
+requirements, including mutation rejection.
+
+This does not close Suite 2. Voluntary/Pursuit/trap combinations, other entry
+ability and copied-ability branches, generic entry/end-turn White Herb timing,
+called moves and unverified effect branches remain open. In particular, two
+voluntary switches currently use separate target entry sequences; the new
+simultaneous-entry tests explicitly use double-faint replacements. The existing
+native-only Life Orb/Eject Button KO edge also remains open. Exact RNG and
+source presentation remain Suite 3 work.
+
+Validation: all **1,050 source groups plus six AI timing groups** pass. The full
+native run passes **6,272 groups**, retaining the same nine expected failures
+and 585 TODOs. All 108 source reproducibility checks, twelve ARM probes, nine
+action-contract tests and three plan tests pass. Both 32 MiB production ROMs
+build; all 21 shipping trainer teams and 43 Pokemon pass their factory probe.
+The final production replay passes **102 campaign checks and nineteen directed
+warps**, including every starter/rival branch, Sprout Tower, Falkner, rewards,
+Finch, menu-item use and native Save/reset/Continue. Johto ROM SHA-256:
+`bad34386bebaf7d3e45961e1546faf653f99f85e69df87b248256d07f4766e47`.
+The strict gate still exits 2: all fifteen domains, 4,143 lexical source blocks
+and 133 effect families retain explicit closure obligations.

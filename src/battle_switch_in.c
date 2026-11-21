@@ -18,6 +18,181 @@ static bool32 FirstEventBlockEvents(struct BattleCalcValues *calcValues);
 static bool32 TryHazardsOnSwitchIn(enum BattlerId battler, enum Ability ability, enum HoldEffect holdEffect, enum Hazards hazardType);
 static bool32 SecondEventBlockEvents(struct BattleCalcValues *calcValues);
 
+// CheckStatHerbsAfterIntimidate has its own reservation and recursively runs
+// DeferredSwitch, preserving any action's already reserved switch. At most one
+// held Pack per party member can be consumed in an entry chain.
+struct PolishedIntimidateFrame
+{
+    struct BattleScripting scripting;
+    enum BattlerId user, attacker, target, effect, ability;
+    enum BattlerId order[MAX_BATTLERS_COUNT];
+    enum BattlerId speedOrder[MAX_BATTLERS_COUNT], rawOrder[MAX_BATTLERS_COUNT];
+    enum Ability lastAbility;
+    enum Item lastItem;
+    enum Move move;
+    u8 phase, index, pack;
+    u8 switchIn, battlerSwitchIn, counter, hazards;
+    u8 entrants;
+    bool8 sorted, intimidate, adrenaline, blocked, switched;
+};
+static EWRAM_DATA struct PolishedIntimidateFrame sPolishedIntimidate[2 * PARTY_SIZE + 1] = {0};
+static EWRAM_DATA u8 sPolishedIntimidateDepth = 0;
+static EWRAM_DATA u8 sPolishedGasExitDepth = 0;
+
+void ResetPolishedEntryItems(void)
+{
+    sPolishedIntimidateDepth = sPolishedGasExitDepth = 0;
+}
+
+void PolishedGasExit(bool32 active)
+{
+    if (!UsesPolishedLifecycle())
+        return;
+    if (active)
+        sPolishedGasExitDepth++;
+    else if (sPolishedGasExitDepth)
+        sPolishedGasExitDepth--;
+}
+
+void PolishedBeginIntimidate(enum BattlerId battler)
+{
+    if (!UsesPolishedLifecycle())
+        return;
+    struct PolishedIntimidateFrame *frame = &sPolishedIntimidate[sPolishedIntimidateDepth++];
+    memset(frame, 0, sizeof(*frame));
+    frame->user = battler;
+    frame->pack = MAX_BATTLERS_COUNT;
+    frame->attacker = gBattlerAttacker;
+    frame->target = gBattlerTarget;
+    frame->effect = gEffectBattler;
+    frame->ability = gBattlerAbility;
+    frame->lastAbility = gLastUsedAbility;
+    frame->lastItem = gLastUsedItem;
+    frame->move = gCurrentMove;
+    frame->scripting = gBattleScripting;
+    enum Ability ability = GetBattlerAbility(GetOppositeBattler(battler));
+    // These four source immunities return before the herb checks. Clear Body,
+    // Mist and a stage already at -6 still reach them.
+    frame->blocked = ability == ABILITY_INNER_FOCUS || ability == ABILITY_OWN_TEMPO
+        || ability == ABILITY_OBLIVIOUS || ability == ABILITY_SCRAPPY;
+}
+
+static void SavePolishedEntryParent(struct PolishedIntimidateFrame *frame)
+{
+    frame->switchIn = gBattleStruct->eventState.switchIn;
+    frame->battlerSwitchIn = gBattleStruct->eventState.battlerSwitchIn;
+    frame->counter = gBattleStruct->switchInBattlerCounter;
+    frame->hazards = gBattleStruct->hazardsCounter;
+    frame->sorted = gBattleStruct->battlersSorted;
+    frame->intimidate = gBattleStruct->intimidateActivated;
+    frame->adrenaline = gBattleStruct->adrenalineOrbActivated;
+    memcpy(frame->speedOrder, gBattlersBySpeed, sizeof(frame->speedOrder));
+    memcpy(frame->rawOrder, gBattlersByRawSpeed, sizeof(frame->rawOrder));
+    for (u32 i = 0; i < gBattlersCount; i++)
+    {
+        if (gBattleStruct->battlerState[i].switchIn)
+            frame->entrants |= 1u << i;
+        gBattleStruct->battlerState[i].switchIn = FALSE;
+    }
+    PolishedPushEntryFaints();
+    frame->switched = TRUE;
+}
+
+static void RestorePolishedEntryParent(struct PolishedIntimidateFrame *frame)
+{
+    gBattleStruct->eventState.switchIn = frame->switchIn;
+    gBattleStruct->eventState.battlerSwitchIn = frame->battlerSwitchIn;
+    gBattleStruct->switchInBattlerCounter = frame->counter;
+    gBattleStruct->hazardsCounter = frame->hazards;
+    gBattleStruct->battlersSorted = frame->sorted;
+    gBattleStruct->intimidateActivated = frame->intimidate;
+    gBattleStruct->adrenalineOrbActivated = frame->adrenaline;
+    memcpy(gBattlersBySpeed, frame->speedOrder, sizeof(frame->speedOrder));
+    memcpy(gBattlersByRawSpeed, frame->rawOrder, sizeof(frame->rawOrder));
+    // RunBothEntryAbilities still visits the second side even if its entrant
+    // changed during the first ability. Preserve that source repeated trigger.
+    for (u32 i = 0; i < gBattlersCount; i++)
+        gBattleStruct->battlerState[i].switchIn = !!(frame->entrants & (1u << i));
+    PolishedPopEntryFaints();
+}
+
+bool32 PolishedIntimidateItems(void)
+{
+    if (!UsesPolishedLifecycle() || !sPolishedIntimidateDepth)
+        return FALSE;
+    struct PolishedIntimidateFrame *frame = &sPolishedIntimidate[sPolishedIntimidateDepth - 1];
+    // Intimidate explicitly calls Mirror Herb, then CheckStatHerbs (White
+    // Herb/Pack followed by a second Mirror Herb pass). Recompare Speed each
+    // time: Rattled, a copied Speed boost or White Herb can change the order.
+    while (!frame->blocked && frame->phase < 3)
+    {
+        bool32 mirror = frame->phase != 1;
+        if (frame->index == 0)
+            SortPolishedBattlersBySpeed(frame->order);
+        if (mirror && (!IsBattlerAlive(frame->user) || !IsBattlerAlive(GetOppositeBattler(frame->user))))
+            frame->index = gBattlersCount;
+        while (frame->index < gBattlersCount)
+        {
+            enum BattlerId battler = frame->order[frame->index++];
+            enum HoldEffect effect = GetBattlerHoldEffect(battler);
+            if (!IsBattlerAlive(battler))
+                continue;
+            if (mirror)
+            {
+                if (ItemBattleEffects(battler, 0, effect, IsMirrorHerbActivation))
+                    return TRUE;
+            }
+            else if (effect == HOLD_EFFECT_WHITE_HERB)
+            {
+                if (ItemBattleEffects(battler, 0, effect, IsWhiteHerbActivation))
+                    return TRUE;
+            }
+            else if (effect == HOLD_EFFECT_EJECT_PACK && frame->pack == MAX_BATTLERS_COUNT)
+            {
+                for (u32 stat = STAT_ATK; stat < NUM_BATTLE_STATS; stat++)
+                    if (gBattleMons[battler].statStages[stat] < DEFAULT_STAT_STAGE)
+                    {
+                        frame->pack = battler;
+                        break;
+                    }
+            }
+        }
+        frame->index = 0;
+        frame->phase++;
+    }
+    if (frame->phase == 3)
+    {
+        frame->phase++;
+        for (u32 i = 0; i < gBattlersCount; i++)
+            gBattleMons[i].volatiles.tryEjectPack = FALSE;
+        // Source checks availability only AFTER selecting the first Pack, and
+        // suppresses nested switches while a departing Gas ability is -1.
+        if (!sPolishedGasExitDepth && !gBattleOutcome && frame->pack != MAX_BATTLERS_COUNT
+         && IsBattlerAlive(frame->pack) && CanBattlerSwitch(frame->pack))
+        {
+            SavePolishedEntryParent(frame);
+            gBattleScripting.battler = frame->pack;
+            gLastUsedItem = gBattleMons[frame->pack].item;
+            gBattleStruct->battlerState[frame->pack].usedEjectItem = TRUE;
+            gAiLogicData->ejectPackSwitch = TRUE;
+            BattleScriptCall(BattleScript_EjectPackActivates_SendReplacement);
+            return TRUE;
+        }
+    }
+    if (frame->switched)
+        RestorePolishedEntryParent(frame);
+    gBattlerAttacker = frame->attacker;
+    gBattlerTarget = frame->target;
+    gEffectBattler = frame->effect;
+    gBattlerAbility = frame->ability;
+    gLastUsedAbility = frame->lastAbility;
+    gLastUsedItem = frame->lastItem;
+    gCurrentMove = frame->move;
+    gBattleScripting = frame->scripting;
+    sPolishedIntimidateDepth--;
+    return FALSE;
+}
+
 static enum Hazards GetPolishedEntryHazard(enum BattleSide side)
 {
     // SpikesDamage always handles Spikes before Toxic Spikes, irrespective

@@ -4769,6 +4769,7 @@ BattleScript_IntimidateActivates::
 	call BattleScript_AbilityPopUp
 	trystatchanges BS_EFFECT_BATTLER, STAT_CHANGE_INTIMIDATE
 	destroyabilitypopup
+	callnative BS_PolishedIntimidateItems
 	return
 
 BattleScript_IntimidateWontDecrease:
@@ -6063,6 +6064,8 @@ BattleScript_PastelVeilEnd:
 	return
 
 BattleScript_NeutralizingGasExits::
+    callnative BS_PolishedGasExit
+    .byte TRUE
     copybyte sSAVED_BATTLER, sBATTLER
     savetarget
     pause B_WAIT_TIME_SHORT
@@ -6079,6 +6082,8 @@ BattleScript_NeutralizingGasExitsLoopIncrement:
     jumpifbytenotequal gBattlerTarget, gBattlersCount, BattleScript_NeutralizingGasExitsLoop
     restoretarget
     copybyte sBATTLER, sSAVED_BATTLER
+    callnative BS_PolishedGasExit
+    .byte FALSE
     return
 
 BattleScript_MagicianActivates::

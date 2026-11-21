@@ -44,6 +44,15 @@ def validate_source(files):
     assert 'CheckAnyOtherAlive' not in herbs, 'Reserve Pack before testing replacement availability'
     stat_order = block(commands, 'CheckStatHerbs:', 'CheckThroatSpray:')
     ordered(stat_order, ['call CheckWhiteHerbEjectPack', 'call CheckMirrorHerb'])
+    intimidate = block(abilities, 'IntimidateAbility:', 'DownloadAbility:')
+    ordered(intimidate, ['NoIntimidateAbilities', '\n.intimidate_ok\n', 'ForceLowerOppStat', 'cp RATTLED', 'call EndAbility', 'farcall CheckMirrorHerb', 'farjp CheckStatHerbsAfterIntimidate'])
+    entry_herbs = block(commands, 'CheckStatHerbsAfterIntimidate:', 'CheckEndMoveEffects:')
+    ordered(entry_herbs, ['push af', 'ld [hl], 0', 'call CheckStatHerbs', 'call GetTrueUserAbility', 'call GetOpponentAbility', 'farcall DeferredSwitch', 'pop af', 'ld [hl], a'])
+    assert entry_herbs.count('inc a\n\tjr z, .no_deferred_switch') == 2, 'Gas deactivation must prevent nested Pack switches'
+    both_entry = block(core, 'RunBothEntryAbilities:', 'RunEntryAbilities:')
+    ordered(both_entry.split('\n.no_double_gas\n', 1)[1], ['call SetFastestTurn', 'farcall RunEntryAbilitiesInner', 'call SwitchTurn', '\n.single_run\n'])
+    assert files['data/abilities/no_intimidate_abilities.asm']['text'].splitlines()[1:] == [
+        '\tdb INNER_FOCUS', '\tdb OWN_TEMPO', '\tdb OBLIVIOUS', '\tdb SCRAPPY', '\tdb -1']
     ordered(switching, ['; Do item consumption', 'cp SUCTION_CUPS', '; Figure out which side is switching'])
     for name in ('baton_pass', 'roar', 'teleport'):
         text = files[f'engine/battle/move_effects/{name}.asm']['text']
@@ -74,7 +83,7 @@ def build():
     ordered(constants, ['MOVEEND_ITEM_ON_STAT_CHANGE,', 'MOVEEND_POLISHED_ACTION_CHECKPOINT,', 'MOVEEND_POLISHED_DEFERRED_SWITCH,', 'MOVEEND_SEND_OUT_REPLACEMENTS,'])
     ordered(constants, ['MOVEEND_LIFE_ORB_SHELL_BELL,', 'MOVEEND_POLISHED_SWITCH_ITEMS,', 'MOVEEND_PICKPOCKET,', 'MOVEEND_POLISHED_STAT_HERBS,', 'MOVEEND_SPRAY_LEPPA_BLUNDER,'])
     assert '[MOVEEND_POLISHED_ACTION_CHECKPOINT] = MoveEndPolishedActionCheckpoint' in runtime
-    paths = ['engine/battle/core.asm', 'engine/battle/effect_commands.asm', 'engine/battle/abilities.asm', 'data/moves/effects.asm', 'engine/battle/move_effects/baton_pass.asm', 'engine/battle/move_effects/roar.asm', 'engine/battle/move_effects/teleport.asm', 'data/items/attributes.asm']
+    paths = ['engine/battle/core.asm', 'engine/battle/effect_commands.asm', 'engine/battle/abilities.asm', 'data/abilities/no_intimidate_abilities.asm', 'data/moves/effects.asm', 'engine/battle/move_effects/baton_pass.asm', 'engine/battle/move_effects/roar.asm', 'engine/battle/move_effects/teleport.asm', 'data/items/attributes.asm']
     report = dict(source_commit=source.source.PIN, source_variant='default; FAITHFUL undefined', suite=2,
         complete_behavior_parity=False,
         source_anchors={p: files[p]['sha'] if p in files else source.git_hash('blob', move_files[p].encode()) for p in paths},
@@ -91,12 +100,15 @@ def build():
             'Button/Card reserve after Life Orb and before Pickpocket/stat herbs; an ineligible first reservation still excludes a later Pack.',
             'Eject Pack checks current negative stages on living holders in current Speed/Trick Room order; White Herb/Pack checks finish before Mirror Herb, then Throat Spray.',
             'Opponent-item switches consume the item before checking the original move user for Suction Cups; own Pack has no opponent-item check.',
+            'Intimidate checks Mirror Herb before White Herb/Pack and a second Mirror Herb pass; its private switch reservation preserves the surrounding action.',
+            'Entry Pack switches finish immediately, including replacement hazards and abilities; the interrupted two-entry loop still visits its remaining side.',
+            'Gas deactivation runs the Intimidate herb checks but suppresses nested Pack execution. Inner Focus/Own Tempo/Oblivious/Scrappy return before those checks.',
             'Healing berries run after recoil/drain and Aftermath before the next contact effect can knock out the user.',
             'Destiny Bond persists through a cancelled repeat choice but clears before any different action; an executed repeat clears and fails.'],
         live_bindings=['src/battle_move_resolution.c', 'src/battle_end_turn.c', 'src/battle_util.c',
-            'src/battle_hold_effects.c', 'src/battle_set_effect.c', 'src/battle_script_commands.c', 'data/battle_scripts_1.s'],
+            'src/battle_hold_effects.c', 'src/battle_set_effect.c', 'src/battle_script_commands.c', 'src/battle_switch_in.c', 'data/battle_scripts_1.s'],
         regression_file='test/battle/polished_action_resolution.c',
-        additional_regression_files=['test/battle/polished_deferred_switch.c'],
+        additional_regression_files=['test/battle/polished_deferred_switch.c', 'test/battle/polished_entry_items.c'],
         remaining=['All unverified effect branches and command interactions remain owned by Suite 2.',
             'Exact RNG stream and source presentation remain owned by Suite 3; native regression success is not source parity.'])
     return {MANIFEST: json.dumps(report, indent=2)+'\n'}

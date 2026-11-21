@@ -3851,6 +3851,20 @@ static void Cmd_switchineffects(void)
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
+void BS_PolishedIntimidateItems(void)
+{
+    NATIVE_ARGS();
+    if (!PolishedIntimidateItems())
+        gBattlescriptCurrInstr = cmd->nextInstr;
+}
+
+void BS_PolishedGasExit(void)
+{
+    NATIVE_ARGS(bool8 active);
+    PolishedGasExit(cmd->active);
+    gBattlescriptCurrInstr = cmd->nextInstr;
+}
+
 static void Cmd_switchinevents(void)
 {
     CMD_ARGS();
@@ -12514,7 +12528,7 @@ void BS_TryDefiantRattled(void)
         }
         break;
     case ABILITY_RATTLED:
-        if (GetConfig(B_UPDATED_INTIMIDATE) >= GEN_8 && gBattleStruct->intimidateActivated)
+        if ((UsesPolishedLifecycle() || GetConfig(B_UPDATED_INTIMIDATE) >= GEN_8) && gBattleStruct->intimidateActivated)
         {
             SetStatChange2(battler, STAT_SPEED, 1);
             gBattlerAbility = battler;

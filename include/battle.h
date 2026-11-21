@@ -291,7 +291,9 @@ struct BattleHistory
 
 struct BattleScriptsStack
 {
-    const u8 *ptr[8];
+    // Source entry abilities can nest through each party's Eject Packs.
+    // Two script continuations per item plus the active stat/animation calls.
+    const u8 *ptr[2 * PARTY_SIZE * 2 + 16];
     u8 size;
 };
 

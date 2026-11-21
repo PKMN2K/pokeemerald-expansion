@@ -1,5 +1,6 @@
 #include "global.h"
 #include "battle.h"
+#include "polished_lifecycle.h"
 #include "battle_scripts.h"
 #include "battle_util.h"
 #include "battle_stat_change.h"
@@ -648,7 +649,7 @@ static bool32 IsIntimidateBlocked(struct BattleCalcValues *cv, struct StatChange
     case ABILITY_SCRAPPY:
     case ABILITY_OWN_TEMPO:
     case ABILITY_OBLIVIOUS:
-        if (GetConfig(B_UPDATED_INTIMIDATE) < GEN_8)
+        if (!UsesPolishedLifecycle() && GetConfig(B_UPDATED_INTIMIDATE) < GEN_8)
             return FALSE;
         PREPARE_STAT_BUFFER(gBattleTextBuff1, st->stat);
         st->script = BattleScript_AbilityNoSpecificStatLoss;

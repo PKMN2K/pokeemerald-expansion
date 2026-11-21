@@ -39726,6 +39726,71 @@
       "path": "test/battle/polished_dynamic_damage.c"
     },
     {
+      "name": "Polished entry Pack replaces a slower entrant before its weather ability",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_entry_items.c"
+    },
+    {
+      "name": "Polished entry both-entry loop revisits the replacement's Intimidate",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_entry_items.c"
+    },
+    {
+      "name": "Polished entry Intimidate copies Rattled before restoring White Herb",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_entry_items.c"
+    },
+    {
+      "name": "Polished entry Intimidate Pack needs a currently negative stage",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_entry_items.c"
+    },
+    {
+      "name": "Polished entry Intimidate immunity is independent of the native generation",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_entry_items.c"
+    },
+    {
+      "name": "Polished entry Intimidate Rattled is independent of the native generation",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_entry_items.c"
+    },
+    {
+      "name": "Polished entry Pack chain preserves the surrounding U turn action",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_entry_items.c"
+    },
+    {
+      "name": "Polished entry Pack triggered by Skill Swap resumes the calling move",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_entry_items.c"
+    },
+    {
+      "name": "Polished entry Gas departure prevents a nested Pack switch",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_entry_items.c"
+    },
+    {
+      "name": "Polished entry Pack replacement can faint to hazards before resuming",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_entry_items.c"
+    },
+    {
+      "name": "Polished entry chained Intimidate Packs fit both full parties",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_entry_items.c"
+    },
+    {
+      "name": "Polished entry Pack selects current stages in Speed and Trick Room order through Ingrain",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_entry_items.c"
+    },
+    {
+      "name": "Polished entry Pack with no living reserve stays held",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_entry_items.c"
+    },
+    {
       "name": "Polished entry Toxic Spikes synchronizes on voluntary entry before curing the entrant",
       "kind": "SINGLE_BATTLE_TEST",
       "path": "test/battle/polished_entry_status.c"
@@ -41094,7 +41159,7 @@
     },
     {
       "manifest": "tools/polished_port/manifests/action_resolution.json",
-      "sha256": "12b4ca7c9efa6f3b1416cecece0f87b88e6b628353310d5649a88951f49d85a6"
+      "sha256": "3c8bac7bbfa77437d3f10399c649d6bbd5c621b03651023ed05b8bc7428db5f1"
     },
     {
       "manifest": "tools/polished_port/manifests/attack_suite.json",

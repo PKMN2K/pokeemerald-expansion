@@ -23,6 +23,8 @@ bool32 PolishedEndTurnDefersItems(void);
 bool32 PolishedQueueEndTurnFaint(enum BattlerId battler);
 void SortPolishedBattlersBySpeed(enum BattlerId *order);
 void PolishedBeginEntryHazards(void);
+void PolishedPushEntryFaints(void);
+void PolishedPopEntryFaints(void);
 bool32 PolishedResolveEntryFaints(void);
 void PolishedOrderReplacements(void);
 bool32 PolishedNextReplacement(void);
