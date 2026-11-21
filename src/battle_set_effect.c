@@ -1,4 +1,5 @@
 #include "global.h"
+#include "polished_lifecycle.h"
 #include "battle.h"
 #include "battle_set_effect.h"
 #include "battle_util.h"
@@ -185,7 +186,8 @@ static void HandleSetEffectAbsorb(struct BattleCalcValues *cv, struct SetEffect 
          && GetActiveGimmick(cv->battlerDef) == GIMMICK_NONE
          && (cv->move == MOVE_ABSORB || cv->move == MOVE_MEGA_DRAIN
           || cv->move == MOVE_LEECH_LIFE || cv->move == MOVE_DRAINING_KISS
-          || cv->move == MOVE_DRAIN_PUNCH || cv->move == MOVE_GIGA_DRAIN))
+          || cv->move == MOVE_DRAIN_PUNCH || cv->move == MOVE_GIGA_DRAIN
+          || cv->move == MOVE_DREAM_EATER))
         {
             // Source: Kiss adds floor(damage/2), then Big Root, then HalveBC.
             healAmount = gBattleStruct->moveDamage[cv->battlerDef];
@@ -199,12 +201,13 @@ static void HandleSetEffectAbsorb(struct BattleCalcValues *cv, struct SetEffect 
         gBattlerAbility = gBattleScripting.battler = cv->battlerDef;
 
         if (cv->abilities[cv->battlerDef] == ABILITY_LIQUID_OOZE
-         && (GetMoveEffect(cv->move)!= EFFECT_DREAM_EATER || GetConfig(B_DREAM_EATER_LIQUID_OOZE) >= GEN_5))
+         && (UsesPolishedActionRules(cv->move) || GetMoveEffect(cv->move)!= EFFECT_DREAM_EATER || GetConfig(B_DREAM_EATER_LIQUID_OOZE) >= GEN_5))
         {
             SetPassiveDamageAmount(cv->battlerAtk, healAmount);
             gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_ABSORB_OOZE;
             BattleScriptPush(se->script);
-            gBattlescriptCurrInstr = BattleScript_EffectAbsorbLiquidOoze;
+            gBattlescriptCurrInstr = UsesPolishedActionRules(cv->move)
+                ? BattleScript_PolishedAbsorbLiquidOoze : BattleScript_EffectAbsorbLiquidOoze;
         }
         else if (!IsBattlerAtMaxHp(cv->battlerAtk) || GetConfig(B_ABSORB_MESSAGE) < GEN_5)
         {

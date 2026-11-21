@@ -1567,6 +1567,17 @@ BattleScript_CantMakeAsleep::
 	setmoveresultflags MOVE_RESULT_FAILED
 	goto BattleScript_MoveEnd
 
+BattleScript_PolishedAbsorbLiquidOoze::
+	call BattleScript_AbilityPopUp
+	healthbarupdate BS_EFFECT_BATTLER
+	datahpupdate BS_EFFECT_BATTLER, ASSURANCE_DOUBLE
+	callnative BS_PolishedPrioritizeFaint
+	.byte BS_EFFECT_BATTLER
+	printfromtable gAbsorbDrainStringIds
+	waitmessage B_WAIT_TIME_LONG
+	tryfaintmon BS_EFFECT_BATTLER
+	return
+
 BattleScript_EffectAbsorbLiquidOoze::
 	call BattleScript_AbilityPopUp
 	jumpifability BS_EFFECT_BATTLER, ABILITY_MAGIC_GUARD, BattleScript_EffectAbsorbRet
@@ -4143,6 +4154,16 @@ BattleScript_AnticipationActivates::
 	waitmessage B_WAIT_TIME_LONG
 	return
 
+BattleScript_PolishedAftermathDmg::
+	pause B_WAIT_TIME_SHORT
+	call BattleScript_AbilityPopUpScripting
+	healthbarupdate BS_ATTACKER
+	datahpupdate BS_ATTACKER, ASSURANCE_DOUBLE
+	callnative BS_PolishedPrioritizeFaint
+	.byte BS_ATTACKER
+	tryfaintmon BS_ATTACKER
+	return
+
 BattleScript_AftermathDmg::
 	pause B_WAIT_TIME_SHORT
 	call BattleScript_AbilityPopUpScripting
@@ -5179,6 +5200,8 @@ BattleScript_RoughSkinActivates::
 BattleScript_RockyHelmetActivates::
 	call BattleScript_ItemPopUp_ScriptingNoFlush
 	call BattleScript_HurtAttacker
+	callnative BS_PolishedPrioritizeFaint
+	.byte BS_ATTACKER
 	return
 
 BattleScript_SpikyShieldEffect::
@@ -5836,6 +5859,8 @@ BattleScript_JabocaRowapBerryActivate_Anim:
 	waitanimation
 BattleScript_JabocaRowapBerryActivate_Dmg:
 	call BattleScript_HurtAttacker
+	callnative BS_PolishedPrioritizeFaint
+	.byte BS_ATTACKER
 	removeitem BS_TARGET
 	return
 

@@ -17,5 +17,9 @@ bool32 PolishedNextReplacement(void);
 bool32 PolishedHandleUnnerveExit(enum BattlerId battler);
 void PolishedRecordForcedEntry(enum BattlerId battler, bool32 forced);
 bool32 PolishedIsForcedEntry(enum BattlerId battler);
+bool32 UsesPolishedActionRules(enum Move move);
+void PolishedBeginActionFaints(enum Move move);
+bool32 PolishedResolveActionFaints(void);
+void PolishedPrioritizeActionFaint(enum BattlerId battler);
 
 #endif

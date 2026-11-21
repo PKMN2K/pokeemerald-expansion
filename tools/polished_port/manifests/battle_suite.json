@@ -38951,6 +38951,221 @@
       "path": "test/battle/polished_accuracy_order.c"
     },
     {
+      "name": "Polished action Aftermath damages Magic Guard on a source contact knockout",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_action_resolution.c"
+    },
+    {
+      "name": "Polished action Aftermath uses the source Feint Attack contact identity",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_action_resolution.c"
+    },
+    {
+      "name": "Polished action Rocky Helmet triggers on the exact Substitute breaking hit",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_action_resolution.c"
+    },
+    {
+      "name": "Polished action Air Balloon waits until Substitute breaks",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_action_resolution.c"
+    },
+    {
+      "name": "Polished action Air Balloon is retained by its fainted holder",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_action_resolution.c"
+    },
+    {
+      "name": "Polished action move recoil precedes Rocky Helmet damage",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_action_resolution.c"
+    },
+    {
+      "name": "Polished action lethal move recoil prevents later Rocky Helmet damage",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_action_resolution.c"
+    },
+    {
+      "name": "Polished action Moxie precedes Aftermath before either faint resolves",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_action_resolution.c"
+    },
+    {
+      "name": "Polished action Destiny Bond replaces the faint ability branch",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_action_resolution.c"
+    },
+    {
+      "name": "Polished action Liquid Ooze bypasses Magic Guard even at full HP",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_action_resolution.c"
+    },
+    {
+      "name": "Polished action Destiny Bond repeated use fails independently of native generation",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_action_resolution.c"
+    },
+    {
+      "name": "Polished action U turn reserves its switch before Eject Button",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_action_resolution.c"
+    },
+    {
+      "name": "Polished action lethal contact items finish damage before first faint on either side",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_action_resolution.c"
+    },
+    {
+      "name": "Polished action Aftermath overrides the direct target first faint",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_action_resolution.c"
+    },
+    {
+      "name": "Polished action ordinary recoil retains the direct target first faint",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_action_resolution.c"
+    },
+    {
+      "name": "Polished action Liquid Ooze overrides the direct target first faint",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_action_resolution.c"
+    },
+    {
+      "name": "Polished action Dream Eater Ooze uses source rounding and ignores native generation",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_action_resolution.c"
+    },
+    {
+      "name": "Polished action source contact items retain Magic Guard protection",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_action_resolution.c"
+    },
+    {
+      "name": "Polished action Aftermath respects contact blockers but is not Mold Breaker suppressed",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_action_resolution.c"
+    },
+    {
+      "name": "Polished action Aftermath rejects noncontact hits",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_action_resolution.c"
+    },
+    {
+      "name": "Polished action Moxie cannot boost a user already knocked out by recoil",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_action_resolution.c"
+    },
+    {
+      "name": "Polished action Destiny Bond suppresses Moxie as well as Aftermath",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_action_resolution.c"
+    },
+    {
+      "name": "Polished action Destiny Bond choice survives flinch but a different choice clears it",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_action_resolution.c"
+    },
+    {
+      "name": "Polished action U turn takes Life Orb damage before the outgoing switch",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_action_resolution.c"
+    },
+    {
+      "name": "Polished action Life Orb self KO cancels the reserved U turn switch",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_action_resolution.c"
+    },
+    {
+      "name": "Polished action recoil is capped by target HP before contact items",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_action_resolution.c"
+    },
+    {
+      "name": "Polished action switch items respond to damage absorbed by Substitute",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_action_resolution.c"
+    },
+    {
+      "name": "Polished action U turn reserves before Red Card and keeps the item unconsumed",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_action_resolution.c"
+    },
+    {
+      "name": "Polished action Eject Button requires a living holder after the action",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_action_resolution.c"
+    },
+    {
+      "name": "Polished action Life Orb recoil precedes Eject Button and Red Card",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_action_resolution.c"
+    },
+    {
+      "name": "Polished action Destiny Bond damage precedes both faint animations",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_action_resolution.c"
+    },
+    {
+      "name": "Polished action Explosion does not trigger an existing Destiny Bond",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_action_resolution.c"
+    },
+    {
+      "name": "Polished action contact multihit stops when the user faints from Helmet",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_action_resolution.c"
+    },
+    {
+      "name": "Polished action shell bell recovery precedes the opposing faint animation",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_action_resolution.c"
+    },
+    {
+      "name": "Polished action Pursuit intercepts U turn after Life Orb exactly once",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_action_resolution.c"
+    },
+    {
+      "name": "Polished action Aftermath still resolves after lethal recoil and changes faint order",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_action_resolution.c"
+    },
+    {
+      "name": "Polished action AI Destiny Bond failure queries cannot clear the live volatile",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_action_resolution.c"
+    },
+    {
+      "name": "Polished action doubles retain native Aftermath Magic Guard handling",
+      "kind": "DOUBLE_BATTLE_TEST",
+      "path": "test/battle/polished_action_resolution.c"
+    },
+    {
+      "name": "Polished action unmapped optional moves retain native Aftermath handling",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_action_resolution.c"
+    },
+    {
+      "name": "Polished action an active optional gimmick retains native Aftermath handling",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_action_resolution.c"
+    },
+    {
+      "name": "Polished action a reserved U turn cancelled by Life Orb does not fall back to Eject Button",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_action_resolution.c"
+    },
+    {
+      "name": "Polished action recoil healing berry prevents the subsequent Aftermath knockout",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_action_resolution.c"
+    },
+    {
+      "name": "Polished action Aftermath healing berry precedes Rocky Helmet",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_action_resolution.c"
+    },
+    {
       "name": "Polished core confusion matches 8112 source arithmetic vectors",
       "kind": "TEST",
       "path": "test/battle/polished_battle_core.c"
@@ -40793,8 +41008,12 @@
       "sha256": "16abc6e82de6eef1a87d87901a6e8ebc23a050a5c288014bb540e9bafa88302f"
     },
     {
+      "manifest": "tools/polished_port/manifests/action_resolution.json",
+      "sha256": "8a4ed490e88f466a074dd95cd287d6aea19bf14d02c75e1b3fbfc8af96276fa3"
+    },
+    {
       "manifest": "tools/polished_port/manifests/attack_suite.json",
-      "sha256": "c5ae5a9594c0a877209a2368cb7101e17511521c732cf52b60a191fe037c343a"
+      "sha256": "71b2522f9458e8fcf06f3df124c868cb1e22406f03ab6adaf3c7f7a5a4e64fa5"
     },
     {
       "manifest": "tools/polished_port/manifests/battle_core.json",

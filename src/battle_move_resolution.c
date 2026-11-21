@@ -61,6 +61,9 @@ static bool32 CutThirdOfHp(enum BattlerId battler);
 
 static enum CancelerResult CancelerClearFlags(struct BattleCalcValues *cv)
 {
+    PolishedBeginActionFaints(cv->move);
+    if (UsesPolishedLifecycle() && cv->move != MOVE_DESTINY_BOND)
+        gBattleMons[cv->battlerAtk].volatiles.destinyBond = 0;
     gBattleMons[cv->battlerAtk].volatiles.grudge = FALSE;
     gBattleMons[cv->battlerAtk].volatiles.glaiveRush = FALSE;
     gBattleStruct->eventState.atkCancelerBattler = 0;
@@ -1301,7 +1304,11 @@ static enum CancelerResult CancelerMoveFailure(struct BattleCalcValues *cv)
     }
     case EFFECT_DESTINY_BOND:
         if (DoesDestinyBondFail(cv->battlerAtk))
+        {
+            if (UsesPolishedLifecycle())
+                gBattleMons[cv->battlerAtk].volatiles.destinyBond = 0;
             battleScript = BattleScript_ButItFailed;
+        }
         break;
     case EFFECT_FIRST_TURN_ONLY:
         if (!IsBattlersFirstTurn(cv->battlerAtk) || gSpecialStatuses[cv->battlerAtk].backUpTarget)
@@ -3360,8 +3367,13 @@ enum CancelerResult DoAttackCanceler(void)
 // Move End
 // ========
 
+static EWRAM_DATA u8 sPolishedPostFaintStep = 0;
+static EWRAM_DATA bool8 sPolishedPivotReserved = FALSE;
+
 static enum MoveEndResult MoveEndSetValues(struct BattleCalcValues *cv)
 {
+    sPolishedPostFaintStep = 0;
+    sPolishedPivotReserved = FALSE;
     gBattleScripting.savedDmg += gBattleStruct->moveDamage[cv->battlerDef];
     gBattleStruct->eventState.moveEndBattler = 0;
     gBattleStruct->eventState.moveEndBlock = 0;
@@ -4326,6 +4338,11 @@ static enum MoveEndResult MoveEndDefrost(struct BattleCalcValues *cv)
 static enum MoveEndResult MoveEndMoveBlockRecoil(struct BattleCalcValues *cv)
 {
     enum MoveEndResult result = MOVEEND_RESULT_CONTINUE;
+    if (UsesPolishedActionRules(cv->move) && gBattleScripting.moveendState != MOVEEND_POLISHED_POST_FAINT)
+    {
+        gBattleScripting.moveendState++;
+        return result;
+    }
 
     switch (cv->moveEffect)
     {
@@ -4403,7 +4420,7 @@ static enum MoveEndResult MoveEndMoveBlockRecoil(struct BattleCalcValues *cv)
                 }
                 // Source divides by three exactly, not a 33 percent approximation.
                 SetPassiveDamageAmount(cv->battlerAtk, divisor
-                    ? gBattleScripting.savedDmg / divisor
+                    ? gBattleStruct->moveDamage[cv->battlerDef] / divisor
                     : gBattleScripting.savedDmg * max(1, GetMoveRecoil(cv->move)) / 100);
             }
             TryUpdateEvolutionTracker(IF_RECOIL_DAMAGE_GE, gBattleStruct->passiveHpUpdate[cv->battlerAtk], MOVE_NONE);
@@ -4417,6 +4434,72 @@ static enum MoveEndResult MoveEndMoveBlockRecoil(struct BattleCalcValues *cv)
 
     gBattleScripting.moveendState++;
     return result;
+}
+
+static enum MoveEndResult MoveEndPolishedPostFaint(struct BattleCalcValues *cv)
+{
+    if (!UsesPolishedActionRules(cv->move))
+    {
+        gBattleScripting.moveendState++;
+        return MOVEEND_RESULT_CONTINUE;
+    }
+    while (sPolishedPostFaintStep < 6)
+    {
+        switch (sPolishedPostFaintStep++)
+        {
+        case 0:
+        {
+            // Source applydamage -> recoil/drain -> postfainteffects ->
+            // posthiteffects. Preserve the first direct KO before recoil.
+            PolishedQueueEndTurnFaint(cv->battlerDef);
+            enum MoveEndResult result = MoveEndMoveBlockRecoil(cv);
+            gBattleScripting.moveendState = MOVEEND_POLISHED_POST_FAINT;
+            if (result != MOVEEND_RESULT_CONTINUE)
+                return result;
+            break;
+        }
+        case 1:
+        case 5:
+            // Source SubtractHP checks healing immediately after recoil/drain
+            // and Aftermath, before the next ability or contact item can KO.
+            if (IsBattlerAlive(cv->battlerAtk)
+             && ItemBattleEffects(cv->battlerAtk, cv->battlerDef,
+                    GetBattlerHoldEffect(cv->battlerAtk), IsOnHpThresholdActivation))
+                return MOVEEND_RESULT_RUN_SCRIPT;
+            break;
+        case 2:
+            if (!IsBattlerAlive(cv->battlerDef)
+             && IsBattlerTurnDamaged(cv->battlerDef, EXCLUDING_SUBSTITUTES)
+             && gBattleMons[cv->battlerDef].volatiles.destinyBond)
+            {
+                // The source Destiny Bond branch returns without Moxie or
+                // Aftermath. Its HP update precedes both faint animations.
+                sPolishedPostFaintStep = 6;
+                if (IsBattlerAlive(cv->battlerAtk))
+                {
+                    gBattleStruct->passiveHpUpdate[cv->battlerAtk] = gBattleMons[cv->battlerAtk].hp;
+                    BattleScriptCall(BattleScript_DestinyBondTakesLife);
+                    return MOVEEND_RESULT_RUN_SCRIPT;
+                }
+            }
+            break;
+        case 3:
+            if (cv->abilities[cv->battlerAtk] == ABILITY_MOXIE
+             && IsBattlerAlive(cv->battlerAtk)
+             && AbilityBattleEffects(ABILITYEFFECT_MOVE_END_FOES_FAINTED, cv->battlerAtk,
+                    cv->abilities[cv->battlerAtk], cv->move, TRUE))
+                return MOVEEND_RESULT_RUN_SCRIPT;
+            break;
+        case 4:
+            if (cv->abilities[cv->battlerDef] == ABILITY_AFTERMATH
+             && AbilityBattleEffects(ABILITYEFFECT_MOVE_END, cv->battlerDef,
+                    cv->abilities[cv->battlerDef], cv->move, TRUE))
+                return MOVEEND_RESULT_RUN_SCRIPT;
+            break;
+        }
+    }
+    gBattleScripting.moveendState++;
+    return MOVEEND_RESULT_CONTINUE;
 }
 
 static enum MoveEndResult MoveEndSheerForce(struct BattleCalcValues *cv)
@@ -4727,7 +4810,8 @@ static enum MoveEndResult MoveEndAbilityEffectFoesFainted(struct BattleCalcValue
 {
     enum MoveEndResult result = MOVEEND_RESULT_CONTINUE;
 
-    if (AbilityBattleEffects(ABILITYEFFECT_MOVE_END_FOES_FAINTED, cv->battlerAtk, cv->abilities[cv->battlerAtk], cv->move, TRUE))
+    if (!(UsesPolishedActionRules(cv->move) && cv->abilities[cv->battlerAtk] == ABILITY_MOXIE)
+     && AbilityBattleEffects(ABILITYEFFECT_MOVE_END_FOES_FAINTED, cv->battlerAtk, cv->abilities[cv->battlerAtk], cv->move, TRUE))
         result = MOVEEND_RESULT_RUN_SCRIPT;
 
     gBattleScripting.moveendState++;
@@ -4832,7 +4916,7 @@ static bool32 TryRedCard(enum BattlerId battlerAtk, enum BattlerId redCardBattle
     if (!IsBattlerAlive(redCardBattler)
      || !IsBattlerAlive(battlerAtk)
      || gBattleStruct->redCardActivated
-     || !IsBattlerTurnDamaged(redCardBattler, EXCLUDING_SUBSTITUTES)
+     || !IsBattlerTurnDamaged(redCardBattler, UsesPolishedActionRules(gCurrentMove) ? INCLUDING_SUBSTITUTES : EXCLUDING_SUBSTITUTES)
      || moveEffect == EFFECT_FUTURE_SIGHT
      || !CanBattlerSwitch(battlerAtk))
         return FALSE;
@@ -4855,7 +4939,8 @@ static bool32 TryRedCard(enum BattlerId battlerAtk, enum BattlerId redCardBattle
 
 static bool32 TryEjectButton(enum BattlerId battlerAtk, u32 ejectButtonBattler, enum BattleMoveEffects moveEffect)
 {
-    if (!IsBattlerTurnDamaged(ejectButtonBattler, EXCLUDING_SUBSTITUTES)
+    if (!IsBattlerTurnDamaged(ejectButtonBattler, UsesPolishedActionRules(gCurrentMove) ? INCLUDING_SUBSTITUTES : EXCLUDING_SUBSTITUTES)
+     || (UsesPolishedActionRules(gCurrentMove) && !IsBattlerAlive(ejectButtonBattler))
      || moveEffect == EFFECT_FUTURE_SIGHT
      || HasAnyBattlerQueuedSwitch()
      || IsBattlerInvolvedInSkyDrop(ejectButtonBattler)
@@ -4875,6 +4960,17 @@ static bool32 TryEjectButton(enum BattlerId battlerAtk, u32 ejectButtonBattler, 
 
 static enum MoveEndResult MoveEndCardButton(struct BattleCalcValues *cv)
 {
+    if (UsesPolishedActionRules(cv->move) && gBattleScripting.moveendState != MOVEEND_POLISHED_DEFERRED_SWITCH)
+    {
+        // Source switchout reserves before end-move item damage. A later
+        // Life Orb KO cancels that switch, without reconsidering Eject Button.
+        sPolishedPivotReserved = cv->moveEffect == EFFECT_HIT_ESCAPE
+            && IsBattlerAlive(cv->battlerAtk) && CanBattlerSwitch(cv->battlerAtk)
+            && !gBattleStruct->unableToUseMove
+            && IsAnyTargetTurnDamaged(cv->battlerAtk, INCLUDING_SUBSTITUTES);
+        gBattleScripting.moveendState++;
+        return MOVEEND_RESULT_CONTINUE;
+    }
     while (gBattleStruct->eventState.moveEndBattler < gBattlersCount)
     {
         enum BattlerId battler = gBattlersByRawSpeed[gBattleStruct->eventState.moveEndBattler++];
@@ -5005,6 +5101,11 @@ static bool32 CanPartingShotTrigger(enum BattlerId battlerAtk)
 static enum MoveEndResult MoveEndHitEscape(struct BattleCalcValues *cv)
 {
     enum MoveEndResult result = MOVEEND_RESULT_CONTINUE;
+    if (UsesPolishedActionRules(cv->move) && gBattleScripting.moveendState != MOVEEND_POLISHED_DEFERRED_SWITCH)
+    {
+        gBattleScripting.moveendState++;
+        return result;
+    }
 
     switch (GetMoveEffect(cv->move))
     {
@@ -5038,6 +5139,28 @@ static enum MoveEndResult MoveEndHitEscape(struct BattleCalcValues *cv)
     gBattleStruct->allowPartingShot = FALSE;
     gBattleScripting.moveendState++;
     return result;
+}
+
+static enum MoveEndResult MoveEndPolishedActionCheckpoint(struct BattleCalcValues *cv)
+{
+    if (PolishedResolveActionFaints())
+        return MOVEEND_RESULT_RUN_SCRIPT;
+    gBattleScripting.moveendState++;
+    return MOVEEND_RESULT_CONTINUE;
+}
+
+static enum MoveEndResult MoveEndPolishedDeferredSwitch(struct BattleCalcValues *cv)
+{
+    if (UsesPolishedActionRules(cv->move) && !gBattleOutcome)
+    {
+        // switchout reserves the source's one deferred switch before end-move
+        // items. Resolve faints and item damage before executing that switch.
+        if (sPolishedPivotReserved)
+            return MoveEndHitEscape(cv);
+        return MoveEndCardButton(cv);
+    }
+    gBattleScripting.moveendState++;
+    return MOVEEND_RESULT_CONTINUE;
 }
 
 static enum MoveEndResult MoveEndPickpocket(struct BattleCalcValues *cv)
@@ -5458,7 +5581,12 @@ static enum MoveEndResult MoveEndClearBits(struct BattleCalcValues *cv)
         SetActiveGimmick(cv->battlerAtk, GIMMICK_NONE);
 
     if (gBattleMons[cv->battlerAtk].volatiles.destinyBond > 0)
-        gBattleMons[cv->battlerAtk].volatiles.destinyBond--;
+    {
+        if (UsesPolishedLifecycle())
+            gBattleMons[cv->battlerAtk].volatiles.destinyBond = 1;
+        else
+            gBattleMons[cv->battlerAtk].volatiles.destinyBond--;
+    }
 
     // check if Stellar type boost should be used up
     if (GetActiveGimmick(cv->battlerAtk) == GIMMICK_TERA
@@ -5538,6 +5666,7 @@ static enum MoveEndResult (*const sMoveEndHandlers[])(struct BattleCalcValues *c
     [MOVEEND_PROTECT_BYPASS_EFFECTS] = MoveEndProtectBypassEffects,
     [MOVEEND_PROTECT_LIKE_EFFECT] = MoveEndProtectLikeEffect,
     [MOVEEND_ABSORB] = MoveEndAbsorb,
+    [MOVEEND_POLISHED_POST_FAINT] = MoveEndPolishedPostFaint,
     [MOVEEND_RAGE] = MoveEndRage,
     [MOVEEND_BEAK_BLAST] = MoveEndBeakBlast,
     [MOVEEND_POLISHED_CONTACT_ATTACKER] = MoveEndPolishedContactAttacker,
@@ -5583,6 +5712,8 @@ static enum MoveEndResult (*const sMoveEndHandlers[])(struct BattleCalcValues *c
     [MOVEEND_CONFUSION_AFTER_SKY_DROP] = MoveEndConfusionAfterSkyDrop,
     [MOVEEND_SPRAY_LEPPA_BLUNDER] = MoveEndSprayLeppaBlunder,
     [MOVEEND_ITEM_ON_STAT_CHANGE] = MoveEndItemOnStatChange,
+    [MOVEEND_POLISHED_ACTION_CHECKPOINT] = MoveEndPolishedActionCheckpoint,
+    [MOVEEND_POLISHED_DEFERRED_SWITCH] = MoveEndPolishedDeferredSwitch,
     [MOVEEND_SEND_OUT_REPLACEMENTS] = MoveEndSendOutReplacements,
     [MOVEEND_CLEAR_BITS] = MoveEndClearBits,
     [MOVEEND_DANCER] = MoveEndDancer,

@@ -4586,3 +4586,64 @@ domain closure remains pending the later suites.
 
 Validated Johto ROM SHA-256:
 `cb255c31a399a03ef468b51ee8d1a9cbf25302e83b4c42a25f72a0bc686ecec0`.
+
+
+## Suite 2 — shared action resolution and faint chains
+
+Source remains default/non-FAITHFUL Polished Crystal v3.2.3 at
+`3fa43192379df5c3e7b09a08e4d5d79af4f02f42`; parent target is `8383cf92`.
+`action_resolution.json` authenticates the relevant source ordering and retains
+all 255 move identities, 133 effect families and 129 command obligations. Four
+negative/source checks and the reproducibility check now run in CI.
+
+Ordinary mapped single-battle actions now queue faints until their end effects
+finish, then resolve faint animations, EXP and whole-party outcomes before
+replacement/pivot handling. Recoil runs before post-faint abilities and uses
+capped per-hit damage. Destiny Bond replaces the Moxie/Aftermath branch;
+otherwise Moxie precedes Aftermath. Recoil keeps the directly struck target's
+first-faint priority, while Aftermath, Liquid Ooze and counter-item damage can
+prioritize the attacker. Immediate healing after recoil/drain and Aftermath can
+prevent a subsequent contact-effect KO. Transient state does not change party
+or save layouts.
+
+Aftermath and Liquid Ooze damage bypass source Magic Guard, including full-HP
+Ooze and Dream Eater with Big Root. Helmet/counter-berry damage retains Magic
+Guard protection. A broken Substitute permits Helmet/Jaboca/Rowap reactions;
+an intact Substitute prevents Air Balloon popping, and a fainted holder keeps
+its Balloon. Source Eject Button/Red Card respond even to damage absorbed by an
+intact Substitute. U-turn reserves its switch before end-move items, takes
+Life Orb damage before departure, and permits queued Pursuit only once. A
+reserved pivot cancelled by Life Orb does not fall back to Eject Button.
+
+Destiny Bond clears at the start of a different chosen action. A cancelled
+repeat choice preserves it; executing a repeat clears it and fails regardless
+of native generation settings. The AI failure query is side-effect free; only
+action execution changes the volatile. Doubles, unmapped optional moves and
+active gimmicks retain native action eligibility, with explicit live controls.
+
+Validation: the final full source catalog passed **1,020 groups plus six AI
+frame-budget groups**. All **43 new action groups passed in both profiles**.
+The broad native run passed **6,235 groups**, with nine existing expected
+failures and 585 existing TODOs; the later additions/source-only refinements
+were checked in the focused 43-group runs. This is a broad native sweep plus
+focused follow-up evidence, not a claim of a second full native sweep.
+All 108 reproducibility checks, four action-contract tests and twelve ARM
+compiler probes passed. Both production ROMs built. The final Johto ROM passed
+102 campaign checks and nineteen directed warps, including all starter/rival
+branches, Sprout Tower, Falkner, rewards and native Save/reset/Continue.
+
+A native-only Life Orb KO while Eject Button has a pending replacement times
+out. A separate checkout reproduced it on the unchanged parent battle runtime,
+so it is not introduced by this delivery. The new source regression verifies
+its corrected reservation behavior; the optional native control uses a
+nonlethal hit. This native edge remains explicitly unverified.
+
+Suite 2 remains open for complete effect/command branch evidence and the full
+voluntary/forced/Baton Pass/Eject Pack switching graph. These are still Suite 2
+obligations within the three-suite plan. Suite 3 retains context, AI-decision,
+RNG/presentation and final integration closure. No whole effect family or domain
+is certified by this delivery: strict completeness still exits 2 for fifteen
+domains, 4,143 lexical blocks and 133 effect families.
+
+Validated final Johto ROM SHA-256:
+`31935b515a913430e74703c8f037eeee78600b662b9f432fca4b166df0f4c5d4`.

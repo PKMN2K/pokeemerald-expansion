@@ -64,6 +64,16 @@ changes, not certification of all branches in any whole battle domain.
    Any residual/entry mismatch discovered in these interactions remains an
    explicit dependent obligation and must be fixed before final closure.
 
+Suite 2 implementation status: shared action resolution implemented; full branch
+closure pending. The current delivery covers per-hit recoil/faint/contact order,
+action-level faint/EXP/outcome checkpoints, source Destiny Bond lifecycle,
+Aftermath/Liquid Ooze eligibility, Substitute boundaries for contact and switch
+items, U-turn reservation precedence and item/Pursuit ordering. Its authenticated
+source contracts and live regression scope are in
+`manifests/action_resolution.json`. This does not close all 133 effect families
+or the entire voluntary/forced/Baton Pass/Eject Pack switching graph. Those
+obligations remain in Suite 2, within the existing three-suite plan.
+
 ## Suite 3 — battle contexts and final closure
 
 1. Finish trainer/wild generation and all special context bindings; source AI

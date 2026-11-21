@@ -133,7 +133,7 @@ def build():
                       'Substitute (including breakage), Protect, immunity, ability/item suppression and fainting order.',
                       'Switching, forced/called/copied moves, multi-turn and multi-hit effects, weather and end-turn state.',
                       'Original battle presentation and source AI decisions.'],
-                  arithmetic_scope='Mapped Recover/Roost, six LeechHit moves and five non-Struggle recoil moves in ordinary singles without either active gimmick. Fresh Snack and Struggle retain their earlier adapters. The arithmetic tests do not certify damage inputs, KO/Substitute damage caps, effect order, full-HP Liquid Ooze gates, Dream Eater or AI estimates.',
+                  arithmetic_scope='Mapped Recover/Roost, six LeechHit moves and five non-Struggle recoil moves in ordinary singles without either active gimmick. Fresh Snack and Struggle retain their earlier adapters. See action_resolution.json for additional live recoil caps/order, Substitute boundaries, full-HP Liquid Ooze and Dream Eater evidence. Unasserted damage inputs and AI estimates remain open.',
                   limits='All moves are inventoried and dispatch-tested. Listed semantic scopes and earlier focused suites are partial evidence; no whole effect is certified. Strict completeness must remain failing until all obligations have evidence.')
     return {source.ROOT/'test/battle/move_effect/polished_attack_vectors.h': '\n'.join(header),
             source.ROOT/'tools/polished_port/manifests/attack_suite.json': json.dumps(report, indent=2)+'\n'}

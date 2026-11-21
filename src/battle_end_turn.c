@@ -9,13 +9,15 @@
 #include "battle_gimmick.h"
 #include "battle_scripts.h"
 #include "polished_lifecycle.h"
+#include "polished_moves.h"
+#include "polished_damage.h"
 #include "constants/battle.h"
 #include "constants/battle_string_ids.h"
 #include "constants/abilities.h"
 #include "constants/items.h"
 #include "constants/moves.h"
 
-// Transient scheduler state only; no party/save layout or native phase IDs change.
+// Transient scheduler state only; no party/save layout changes.
 struct PolishedFaintQueue
 {
     u8 order[MAX_BATTLERS_COUNT];
@@ -25,6 +27,11 @@ struct PolishedFaintQueue
 };
 static EWRAM_DATA struct PolishedFaintQueue sPolishedTurnFaints = {0};
 static EWRAM_DATA struct PolishedFaintQueue sPolishedEntryFaints = {0};
+static EWRAM_DATA struct PolishedFaintQueue sPolishedActionFaints = {0};
+static EWRAM_DATA bool8 sPolishedActionBatch = FALSE;
+static EWRAM_DATA bool8 sPolishedActionResolving = FALSE;
+static EWRAM_DATA enum BattlerId sPolishedActionAttacker = 0;
+static EWRAM_DATA enum BattlerId sPolishedActionTarget = 0;
 static EWRAM_DATA bool8 sPolishedEntryBatch = FALSE;
 static EWRAM_DATA bool8 sPolishedEntryResolving = FALSE;
 static EWRAM_DATA enum BattlerId sPolishedReplacementOrder[2] = {0};
@@ -60,6 +67,8 @@ void ResetPolishedEndTurn(void)
     memset(&sPolishedEndTurn, 0, sizeof(sPolishedEndTurn));
     memset(&sPolishedTurnFaints, 0, sizeof(sPolishedTurnFaints));
     memset(&sPolishedEntryFaints, 0, sizeof(sPolishedEntryFaints));
+    memset(&sPolishedActionFaints, 0, sizeof(sPolishedActionFaints));
+    sPolishedActionBatch = sPolishedActionResolving = FALSE;
     sPolishedEntryBatch = sPolishedEntryResolving = FALSE;
     sPolishedReplacingBoth = FALSE;
     sPolishedForcedEntry = 0;
@@ -80,8 +89,39 @@ bool32 PolishedIsForcedEntry(enum BattlerId battler)
 
 bool32 PolishedEndTurnDefersFaints(void)
 {
-    return !sPolishedEntryResolving
-        && (sPolishedEntryBatch || (sPolishedEndTurn.active && sPolishedEndTurn.batching));
+    return !sPolishedEntryResolving && !sPolishedActionResolving
+        && (sPolishedActionBatch || sPolishedEntryBatch || (sPolishedEndTurn.active && sPolishedEndTurn.batching));
+}
+
+bool32 UsesPolishedActionRules(enum Move move)
+{
+    return UsesPolishedLifecycle() && move < MOVES_COUNT && gPolishedMovePP[move]
+        && !IsPolishedFutureSightImpact(gBattlerAttacker, gBattlerTarget, move);
+}
+
+void PolishedBeginActionFaints(enum Move move)
+{
+    if (UsesPolishedActionRules(move) && !sPolishedActionBatch && !sPolishedEndTurn.active)
+    {
+        memset(&sPolishedActionFaints, 0, sizeof(sPolishedActionFaints));
+        sPolishedActionBatch = TRUE;
+        sPolishedActionResolving = FALSE;
+    }
+}
+
+void PolishedPrioritizeActionFaint(enum BattlerId battler)
+{
+    if (!sPolishedActionBatch || IsBattlerAlive(battler))
+        return;
+    PolishedQueueEndTurnFaint(battler);
+    for (u32 i = 0; i < sPolishedActionFaints.count; i++)
+        if (sPolishedActionFaints.order[i] == battler)
+        {
+            for (u32 j = i; j > 0; j--)
+                sPolishedActionFaints.order[j] = sPolishedActionFaints.order[j - 1];
+            sPolishedActionFaints.order[0] = battler;
+            break;
+        }
 }
 
 bool32 PolishedEndTurnDefersItems(void)
@@ -93,7 +133,8 @@ bool32 PolishedQueueEndTurnFaint(enum BattlerId battler)
 {
     if (!PolishedEndTurnDefersFaints())
         return FALSE;
-    struct PolishedFaintQueue *queue = sPolishedEntryBatch ? &sPolishedEntryFaints : &sPolishedTurnFaints;
+    struct PolishedFaintQueue *queue = sPolishedEntryBatch ? &sPolishedEntryFaints
+        : sPolishedActionBatch ? &sPolishedActionFaints : &sPolishedTurnFaints;
     if (!IsBattlerAlive(battler) && !gBattleStruct->battlerState[battler].notOnField)
     {
         for (u32 i = 0; i < queue->count; i++)
@@ -1939,6 +1980,29 @@ static bool32 HandlePolishedFaintCheckpoint(void)
     if (ResolvePolishedFaintQueue(&sPolishedTurnFaints))
         return TRUE;
     gBattleStruct->eventState.endTurn++;
+    return FALSE;
+}
+
+bool32 PolishedResolveActionFaints(void)
+{
+    if (!sPolishedActionBatch && !sPolishedActionResolving)
+        return FALSE;
+    if (!sPolishedActionResolving)
+    {
+        sPolishedActionAttacker = gBattlerAttacker;
+        sPolishedActionTarget = gBattlerTarget;
+        // Include direct KOs even when a move script bypassed move-end's
+        // ordinary target-faint block. Earlier queued damage keeps its order.
+        PolishedQueueEndTurnFaint(gBattlerTarget);
+        PolishedQueueEndTurnFaint(gBattlerAttacker);
+    }
+    sPolishedActionBatch = FALSE;
+    sPolishedActionResolving = TRUE;
+    if (ResolvePolishedFaintQueue(&sPolishedActionFaints))
+        return TRUE;
+    gBattlerAttacker = sPolishedActionAttacker;
+    gBattlerTarget = sPolishedActionTarget;
+    sPolishedActionResolving = FALSE;
     return FALSE;
 }
 

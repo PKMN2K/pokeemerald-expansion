@@ -189,7 +189,9 @@ static enum ItemEffect TryAirBalloon(enum BattlerId battler, ActivationTiming ti
     if (timing == IsOnTargetHitActivation)
     {
         // If the holder or its substitute is hit by a damaging move (even if it has Disguise), the Air Balloon is destroyed.
-        if (IsBattlerTurnDamaged(battler, INCLUDING_SUBSTITUTES))
+        if (UsesPolishedActionRules(gCurrentMove)
+            ? IsBattlerAlive(battler) && CanHitTriggerContactStatus(gBattlerAttacker, battler, gCurrentMove)
+            : IsBattlerTurnDamaged(battler, INCLUDING_SUBSTITUTES))
         {
             BattleScriptCall(BattleScript_AirBalloonMsgPop);
             effect = ITEM_EFFECT_OTHER;
@@ -210,9 +212,13 @@ static enum ItemEffect TryRockyHelmet(enum BattlerId battlerDef, enum BattlerId 
     enum ItemEffect effect = ITEM_NO_EFFECT;
     enum Ability ability = GetBattlerAbility(battlerAtk);
 
-    if (IsBattlerTurnDamaged(battlerDef, EXCLUDING_SUBSTITUTES)
+    if ((UsesPolishedActionRules(gCurrentMove)
+            ? CanHitTriggerContactStatus(battlerAtk, battlerDef, gCurrentMove)
+            : IsBattlerTurnDamaged(battlerDef, EXCLUDING_SUBSTITUTES))
      && IsBattlerAlive(battlerAtk)
-     && !CanBattlerAvoidContactEffects(battlerAtk, battlerDef, ability, GetBattlerHoldEffect(battlerAtk), gCurrentMove)
+     && (UsesPolishedActionRules(gCurrentMove)
+            ? DoesContactStatusMoveMakeContact(battlerAtk, battlerDef, gCurrentMove, TRUE)
+            : !CanBattlerAvoidContactEffects(battlerAtk, battlerDef, ability, GetBattlerHoldEffect(battlerAtk), gCurrentMove))
      && !IsAbilityAndRecord(battlerAtk, ability, ABILITY_MAGIC_GUARD))
     {
         SetPassiveDamageAmount(battlerAtk, GetNonDynamaxMaxHP(battlerAtk) / 6);
@@ -306,7 +312,9 @@ static enum ItemEffect TryJabocaBerry(enum BattlerId battlerDef, enum BattlerId 
     enum ItemEffect effect = ITEM_NO_EFFECT;
 
     if (IsBattlerAlive(battlerAtk)
-     && IsBattlerTurnDamaged(battlerDef, EXCLUDING_SUBSTITUTES)
+     && (UsesPolishedActionRules(gCurrentMove)
+            ? CanHitTriggerContactStatus(battlerAtk, battlerDef, gCurrentMove)
+            : IsBattlerTurnDamaged(battlerDef, EXCLUDING_SUBSTITUTES))
      && GetMoveEffect(gCurrentMove) != EFFECT_FUTURE_SIGHT
      && IsBattleMovePhysical(gCurrentMove)
      && !IsAbilityAndRecord(battlerAtk, GetBattlerAbility(battlerAtk), ABILITY_MAGIC_GUARD))
@@ -329,7 +337,9 @@ static enum ItemEffect TryRowapBerry(enum BattlerId battlerDef, enum BattlerId b
     enum ItemEffect effect = ITEM_NO_EFFECT;
 
     if (IsBattlerAlive(battlerAtk)
-     && IsBattlerTurnDamaged(battlerDef, EXCLUDING_SUBSTITUTES)
+     && (UsesPolishedActionRules(gCurrentMove)
+            ? CanHitTriggerContactStatus(battlerAtk, battlerDef, gCurrentMove)
+            : IsBattlerTurnDamaged(battlerDef, EXCLUDING_SUBSTITUTES))
      && GetMoveEffect(gCurrentMove) != EFFECT_FUTURE_SIGHT
      && IsBattleMoveSpecial(gCurrentMove)
      && !IsAbilityAndRecord(battlerAtk, GetBattlerAbility(battlerAtk), ABILITY_MAGIC_GUARD))

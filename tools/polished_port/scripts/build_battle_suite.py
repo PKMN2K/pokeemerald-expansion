@@ -183,7 +183,7 @@ def build():
         semantic_evidence_policy='Existing tests establish only their asserted scenarios. Names, dispatch, inventory, code presence, native passes and AI frame budgets do not close a source block or domain.',
         scoped_evidence=[dict(manifest=str(p.relative_to(ROOT)), sha256=hashlib.sha256(p.read_bytes()).hexdigest())
             for p in sorted((ROOT/'tools/polished_port/manifests').glob('*.json'))
-            if p.name in ('attack_suite.json', 'multihit.json', 'contact_status.json', 'contact_volatile.json', 'battle_foundations.json', 'battle_core.json', 'accuracy_order.json', 'battle_systems.json', 'trainer_attributes.json')])
+            if p.name in ('attack_suite.json', 'multihit.json', 'contact_status.json', 'contact_volatile.json', 'battle_foundations.json', 'battle_core.json', 'accuracy_order.json', 'battle_systems.json', 'trainer_attributes.json', 'action_resolution.json')])
     return {MANIFEST: json.dumps(report, indent=2)+'\n', **foundations.build()}
 
 

@@ -346,6 +346,8 @@ extern const u8 BattleScript_IllusionOff[];
 extern const u8 BattleScript_IllusionOffAndTerastallization[];
 extern const u8 BattleScript_DancerActivates[];
 extern const u8 BattleScript_AftermathDmg[];
+extern const u8 BattleScript_PolishedAftermathDmg[];
+extern const u8 BattleScript_PolishedAbsorbLiquidOoze[];
 extern const u8 BattleScript_BattlerFormChange[];
 extern const u8 BattleScript_BattlerFormChangeNoPopup[];
 extern const u8 BattleScript_ZenMode[];

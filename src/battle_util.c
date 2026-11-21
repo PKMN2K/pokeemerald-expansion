@@ -1,4 +1,5 @@
 #include "global.h"
+#include "polished_lifecycle.h"
 #include "polished_escape.h"
 #include "polished_capture.h"
 #include "polished_rewards.h"
@@ -3210,7 +3211,7 @@ bool32 UsesPolishedContactStatusRules(enum BattlerId attacker, enum BattlerId ta
         && GetActiveGimmick(target) == GIMMICK_NONE;
 }
 
-static bool32 CanHitTriggerContactStatus(enum BattlerId attacker, enum BattlerId target, enum Move move)
+bool32 CanHitTriggerContactStatus(enum BattlerId attacker, enum BattlerId target, enum Move move)
 {
     if (IsBattlerTurnDamaged(target, EXCLUDING_SUBSTITUTES))
         return TRUE;
@@ -3225,7 +3226,7 @@ static bool32 CanHitTriggerContactStatus(enum BattlerId attacker, enum BattlerId
         && !gBattleStruct->unableToUseMove;
 }
 
-static bool32 DoesContactStatusMoveMakeContact(enum BattlerId attacker, enum BattlerId target, enum Move move, bool32 defensive)
+bool32 DoesContactStatusMoveMakeContact(enum BattlerId attacker, enum BattlerId target, enum Move move, bool32 defensive)
 {
     enum Ability ability = GetBattlerAbility(attacker);
     enum HoldEffect holdEffect = GetBattlerHoldEffect(attacker);
@@ -4301,14 +4302,20 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
             }
             break;
         case ABILITY_AFTERMATH:
+            if (UsesPolishedActionRules(move) && gBattleScripting.moveendState != MOVEEND_POLISHED_POST_FAINT)
+                break;
             if (!IsBattlerUnaffectedByMove(gBattlerTarget)
              && !gSpecialStatuses[gBattlerAttacker].attackerInParty
              && !IsBattlerAlive(gBattlerTarget)
-             && IsBattlerAlive(gBattlerAttacker)
-             && !CanBattlerAvoidContactEffects(gBattlerAttacker, gBattlerTarget, GetBattlerAbility(gBattlerAttacker), GetBattlerHoldEffect(gBattlerAttacker), move))
+             && (IsBattlerAlive(gBattlerAttacker) || UsesPolishedActionRules(move))
+             && (UsesPolishedActionRules(move)
+                ? DoesContactStatusMoveMakeContact(gBattlerAttacker, gBattlerTarget, move, TRUE)
+                : !CanBattlerAvoidContactEffects(gBattlerAttacker, gBattlerTarget, GetBattlerAbility(gBattlerAttacker), GetBattlerHoldEffect(gBattlerAttacker), move)))
             {
                 if ((battler = IsAbilityOnField(ABILITY_DAMP)))
                 {
+                    if (UsesPolishedActionRules(move))
+                        break; // Source Damp silently prevents this faint ability.
                     gBattleScripting.battler = battler - 1;
                     BattleScriptCall(BattleScript_DampPreventsAftermath);
                 }
@@ -4316,7 +4323,8 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
                 {
                     gBattleScripting.battler = gBattlerTarget;
                     SetPassiveDamageAmount(gBattlerAttacker, GetNonDynamaxMaxHP(gBattlerAttacker) / 4);
-                    BattleScriptCall(BattleScript_AftermathDmg);
+                    BattleScriptCall(UsesPolishedActionRules(move)
+                        ? BattleScript_PolishedAftermathDmg : BattleScript_AftermathDmg);
                 }
                 effect++;
             }
@@ -10408,7 +10416,9 @@ void ClearDamageCalcResults(void)
 
 bool32 DoesDestinyBondFail(enum BattlerId battler)
 {
-    return GetConfig(B_DESTINY_BOND_FAIL) >= GEN_7 && gBattleMons[battler].volatiles.destinyBond;
+    // AI callers also use this query; only the action canceler may clear it.
+    return (UsesPolishedLifecycle() || GetConfig(B_DESTINY_BOND_FAIL) >= GEN_7)
+        && gBattleMons[battler].volatiles.destinyBond;
 }
 
 // This check has always to be the last in a condtion statement because of the recording of AI data.

@@ -12769,3 +12769,10 @@ void BS_TryDoMoveEffectsBeforeMoves(void)
 
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
+
+void BS_PolishedPrioritizeFaint(void)
+{
+    NATIVE_ARGS(u8 battler);
+    PolishedPrioritizeActionFaint(GetBattlerForBattleScript(cmd->battler));
+    gBattlescriptCurrInstr = cmd->nextInstr;
+}
