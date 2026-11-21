@@ -100,5 +100,35 @@ class ActionResolutionTest(unittest.TestCase):
             action.validate_source(files)
 
 
+    def test_pending_boosts_saturate_instead_of_wrapping(self):
+        files = copy.deepcopy(action.source.authenticated_sources())
+        path = 'engine/battle/stats.asm'
+        files[path]['text'] = files[path]['text'].replace('or $f0', 'and $0f')
+        with self.assertRaises((AssertionError, ValueError)):
+            action.validate_source(files)
+
+    def test_pending_boosts_are_recorded_without_requiring_a_herb(self):
+        files = copy.deepcopy(action.source.authenticated_sources())
+        path = 'engine/battle/stats.asm'
+        files[path]['text'] = files[path]['text'].replace('.queue_mirror_herb\n', '.queue_mirror_herb\n\tcall GetOpponentItem\n', 1)
+        with self.assertRaises(AssertionError):
+            action.validate_source(files)
+
+    def test_failed_mirror_copy_does_not_consume_the_item(self):
+        files = copy.deepcopy(action.source.authenticated_sources())
+        path = 'engine/battle/effect_commands.asm'
+        prefix, suffix = files[path]['text'].split('CheckMirrorHerb:', 1)
+        files[path]['text'] = prefix + 'CheckMirrorHerb:' + suffix.replace('call nz, ConsumeUserItem', 'call ConsumeUserItem', 1)
+        with self.assertRaises((AssertionError, ValueError)):
+            action.validate_source(files)
+
+    def test_healing_sweep_copies_stat_berries_before_confusion_healing(self):
+        files = copy.deepcopy(action.source.authenticated_sources())
+        path = 'engine/battle/endturn.asm'
+        files[path]['text'] = files[path]['text'].replace('farcall CheckMirrorHerb ; for stat boost berry', 'nop')
+        with self.assertRaises((AssertionError, ValueError)):
+            action.validate_source(files)
+
+
 if __name__ == '__main__':
     unittest.main()

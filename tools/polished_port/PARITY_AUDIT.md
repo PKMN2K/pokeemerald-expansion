@@ -4826,3 +4826,67 @@ The final shipping Johto ROM passes **102 campaign checks and nineteen directed
 warps**, including all starter/rival branches, Sprout Tower, Falkner, rewards,
 Finch, menu-item use and native Save/reset/Continue. Johto ROM SHA-256:
 `f61e4746d8deb53ad9c1c1947811c451faf26988d0d288af05dc15eb2d506aa8`.
+
+## Suite 2 continuation — Mirror Herb pending boosts and item transfers
+
+Continues from `84e2598b`, whose CI #1636 passed, using the same pinned default
+source at `3fa43192379df5c3e7b09a08e4d5d79af4f02f42`. The original three-suite
+ownership and strict completion requirements remain unchanged.
+
+The source records actual positive stat increments in pending nibbles before
+checking the recipient's held item or current stat limits. A separate transient
+Mirror ledger now mirrors that behavior, saturating each stat at fifteen.
+Native Opportunist retains its existing queue. At a Mirror checkpoint, both
+sides' pending copies are drained even when no herb is held, the effective item
+is suppressed, or every copied stat is capped. Eligibility uses the current
+item and effective ability; the herb is consumed only when at least one stat
+can change. Mirror copies do not feed the opposing Mirror ledger.
+
+This fixes acquiring Mirror Herb through Pickpocket after Contrary Close
+Combat: the new holder can copy the pending defense boosts, including a mixed
+capped/uncapped case, while a completely capped holder keeps its herb. Failed,
+itemless and suppressed checkpoints cannot be replayed after Charm, Trick or
+Skill Swap. Actual increments are recorded after the raiser's cap, before the
+recipient's Simple/Contrary transformation. Accuracy and evasion are included.
+The ledger resets at battle initialization and switching; it is not erased by
+native per-move queue cleanup or end-turn scheduler initialization. A Sheer
+Force-skipped move-end check can therefore leave a berry boost pending until
+the source end-turn check.
+
+Each source healing-item sweep, including Unnerve departure, now performs the
+whole two-battler Mirror check after its stat berry and before confusion
+healing. The existing resumable stat-command continuation is shared with this
+check. No party, save, source identity or optional-content tables change.
+
+Twelve new live groups in `test/battle/polished_mirror_ledger.c` cover late item
+acquisition with zero/partial/full stat caps; expired and fresh boosts after
+Trick; normal/Contrary capped failures and renewed eligibility; Klutz/Skill
+Swap; actual increments with Simple; a skipped-check berry; opposing-herb
+recursion; accuracy/evasion with Contrary; and native Opportunist/doubles
+controls. Seventeen source-contract tests authenticate these rules, including
+mutations of overflow saturation, item-independent recording, success-only
+consumption and the healing-item checkpoint order.
+
+Suite 2 remains open. Dedicated Berserk Gene pre-action and Armored Mewtwo
+checkpoints, complete ability/item eligibility and copied/called-move branches,
+simultaneous voluntary entry, voluntary/Pursuit/trap combinations and the
+remaining effect branches still need closure. This does not certify every
+item-transfer interaction or every source command branch. The earlier native
+Life Orb/Eject Button KO edge remains open; exact RNG and presentation are
+Suite 3 obligations. Passing native tests is regression evidence, not proof of
+complete source parity.
+
+Validation: all 108 reproducibility checks, 17 action-contract tests, three
+completion-plan tests and 12 ARM emulator compiler probes pass. The strict
+source run passes 1,077 groups plus six AI timing checks; the native run
+passes 6,299 groups with nine existing expected failures and 585 existing
+TODO groups. Both 32 MiB ROM profiles build successfully with the strict
+unused/deprecation diagnostics enabled. The production trainer factory
+passes all 21 trainers / 43 Pokemon, and the rebuilt Johto ROM passes all
+102 campaign checks and 19 warp checks through Falkner, the Zephyr Badge,
+Roost, Elm's call, the Togepi Egg and native Save/reset/Continue. Its SHA-256
+is `c7542620300fd2a54084b039b9eb2e6634594ad76e077d0627b5f5518fdc0f5f`.
+The native ROM SHA-256 is
+`12b08c61d3f7b3b74ae8e54980644f643b8ce7eb56de001a194415999d9f4fb6`.
+The strict completeness gate still exits 2 as intended: fifteen domains,
+4,143 lexical source blocks and 133 effect families retain open obligations.

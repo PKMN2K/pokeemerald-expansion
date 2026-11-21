@@ -48,11 +48,42 @@ static EWRAM_DATA struct
     enum Item lastItem;
     u8 index, statBattler, negativeAnim, positiveAnim;
     bool8 active, ignoreDefiant;
-} sPolishedAbilityHerb = {0};
+} sPolishedMirrorCheck = {0};
+
+// Source pending nibbles belong to the recipient, independently of its item
+// and stat caps. Opportunist continues to use the native queue.
+static EWRAM_DATA u8 sPolishedMirrorBoosts[MAX_BATTLERS_COUNT][NUM_BATTLE_STATS] = {0};
+
+void ResetPolishedMirrorHerbBoosts(void)
+{
+    memset(sPolishedMirrorBoosts, 0, sizeof(sPolishedMirrorBoosts));
+}
+
+bool32 PolishedPrepareMirrorHerb(enum BattlerId battler)
+{
+    if (!IsBattlerAlive(B_BATTLER_0) || !IsBattlerAlive(B_BATTLER_1))
+        return FALSE;
+
+    bool32 changed = FALSE;
+    enum Ability ability = GetBattlerAbility(battler);
+    bool32 hasHerb = GetBattlerHoldEffect(battler) == HOLD_EFFECT_MIRROR_HERB;
+    for (enum Stat stat = STAT_ATK; stat < NUM_BATTLE_STATS; stat++)
+    {
+        u32 amount = sPolishedMirrorBoosts[battler][stat];
+        // A failed or itemless checkpoint still discards this pending copy.
+        sPolishedMirrorBoosts[battler][stat] = 0;
+        if (amount && hasHerb && !CompareStat(battler, stat, MAX_STAT_STAGE, CMP_EQUAL, ability))
+        {
+            SetStatChange(battler, stat, amount);
+            changed = TRUE;
+        }
+    }
+    return changed;
+}
 
 void ResetPolishedStatItems(void)
 {
-    memset(&sPolishedAbilityHerb, 0, sizeof(sPolishedAbilityHerb));
+    memset(&sPolishedMirrorCheck, 0, sizeof(sPolishedMirrorCheck));
 }
 
 static bool32 AbilityChecksPolishedMirrorHerb(enum Ability ability)
@@ -82,57 +113,66 @@ static bool32 AbilityChecksPolishedMirrorHerb(enum Ability ability)
 
 bool32 PolishedAbilityMirrorHerb(void)
 {
-    if (!sPolishedAbilityHerb.active)
+    if (!UsesPolishedLifecycle())
+        return FALSE;
+    if (!sPolishedMirrorCheck.active && !AbilityChecksPolishedMirrorHerb(GetBattlerAbility(gBattlerAbility)))
+        return FALSE;
+    return PolishedCheckMirrorHerb();
+}
+
+bool32 PolishedCheckMirrorHerb(void)
+{
+    if (!sPolishedMirrorCheck.active)
     {
-        if (!UsesPolishedLifecycle() || !AbilityChecksPolishedMirrorHerb(GetBattlerAbility(gBattlerAbility))
+        if (!UsesPolishedLifecycle()
          || !IsBattlerAlive(B_BATTLER_0) || !IsBattlerAlive(B_BATTLER_1))
             return FALSE;
         // Defiant/Competitive can interrupt a multi-stat move. Mirror Herb
         // uses the primary queue, so preserve that continuation while copying.
-        sPolishedAbilityHerb.scripting = gBattleScripting;
-        sPolishedAbilityHerb.attacker = gBattlerAttacker;
-        sPolishedAbilityHerb.target = gBattlerTarget;
-        sPolishedAbilityHerb.effect = gEffectBattler;
-        sPolishedAbilityHerb.ability = gBattlerAbility;
-        sPolishedAbilityHerb.lastAbility = gLastUsedAbility;
-        sPolishedAbilityHerb.lastItem = gLastUsedItem;
-        sPolishedAbilityHerb.statBattler = gBattleStruct->statChangeBattler;
-        sPolishedAbilityHerb.negativeAnim = gBattleStruct->negativeAnimPlayed;
-        sPolishedAbilityHerb.positiveAnim = gBattleStruct->positiveAnimPlayed;
-        sPolishedAbilityHerb.ignoreDefiant = gBattleStruct->ignoreDefiant;
+        sPolishedMirrorCheck.scripting = gBattleScripting;
+        sPolishedMirrorCheck.attacker = gBattlerAttacker;
+        sPolishedMirrorCheck.target = gBattlerTarget;
+        sPolishedMirrorCheck.effect = gEffectBattler;
+        sPolishedMirrorCheck.ability = gBattlerAbility;
+        sPolishedMirrorCheck.lastAbility = gLastUsedAbility;
+        sPolishedMirrorCheck.lastItem = gLastUsedItem;
+        sPolishedMirrorCheck.statBattler = gBattleStruct->statChangeBattler;
+        sPolishedMirrorCheck.negativeAnim = gBattleStruct->negativeAnimPlayed;
+        sPolishedMirrorCheck.positiveAnim = gBattleStruct->positiveAnimPlayed;
+        sPolishedMirrorCheck.ignoreDefiant = gBattleStruct->ignoreDefiant;
         for (u32 i = 0; i < gBattlersCount; i++)
         {
-            memcpy(sPolishedAbilityHerb.queue[i], gSpecialStatuses[i].statStageQueue, sizeof(sPolishedAbilityHerb.queue[i]));
-            sPolishedAbilityHerb.count[i] = gSpecialStatuses[i].statStageAmount;
+            memcpy(sPolishedMirrorCheck.queue[i], gSpecialStatuses[i].statStageQueue, sizeof(sPolishedMirrorCheck.queue[i]));
+            sPolishedMirrorCheck.count[i] = gSpecialStatuses[i].statStageAmount;
         }
         ClearStatChangeValues();
-        SortPolishedBattlersBySpeed(sPolishedAbilityHerb.order);
-        sPolishedAbilityHerb.index = 0;
-        sPolishedAbilityHerb.active = TRUE;
+        SortPolishedBattlersBySpeed(sPolishedMirrorCheck.order);
+        sPolishedMirrorCheck.index = 0;
+        sPolishedMirrorCheck.active = TRUE;
     }
-    while (sPolishedAbilityHerb.index < gBattlersCount)
+    while (sPolishedMirrorCheck.index < gBattlersCount)
     {
-        enum BattlerId battler = sPolishedAbilityHerb.order[sPolishedAbilityHerb.index++];
+        enum BattlerId battler = sPolishedMirrorCheck.order[sPolishedMirrorCheck.index++];
         if (ItemBattleEffects(battler, 0, GetBattlerHoldEffect(battler), IsMirrorHerbActivation))
             return TRUE;
     }
     for (u32 i = 0; i < gBattlersCount; i++)
     {
-        memcpy(gSpecialStatuses[i].statStageQueue, sPolishedAbilityHerb.queue[i], sizeof(sPolishedAbilityHerb.queue[i]));
-        gSpecialStatuses[i].statStageAmount = sPolishedAbilityHerb.count[i];
+        memcpy(gSpecialStatuses[i].statStageQueue, sPolishedMirrorCheck.queue[i], sizeof(sPolishedMirrorCheck.queue[i]));
+        gSpecialStatuses[i].statStageAmount = sPolishedMirrorCheck.count[i];
     }
-    gBattleStruct->statChangeBattler = sPolishedAbilityHerb.statBattler;
-    gBattleStruct->negativeAnimPlayed = sPolishedAbilityHerb.negativeAnim;
-    gBattleStruct->positiveAnimPlayed = sPolishedAbilityHerb.positiveAnim;
-    gBattleStruct->ignoreDefiant = sPolishedAbilityHerb.ignoreDefiant;
-    gBattleScripting = sPolishedAbilityHerb.scripting;
-    gBattlerAttacker = sPolishedAbilityHerb.attacker;
-    gBattlerTarget = sPolishedAbilityHerb.target;
-    gEffectBattler = sPolishedAbilityHerb.effect;
-    gBattlerAbility = sPolishedAbilityHerb.ability;
-    gLastUsedAbility = sPolishedAbilityHerb.lastAbility;
-    gLastUsedItem = sPolishedAbilityHerb.lastItem;
-    sPolishedAbilityHerb.active = FALSE;
+    gBattleStruct->statChangeBattler = sPolishedMirrorCheck.statBattler;
+    gBattleStruct->negativeAnimPlayed = sPolishedMirrorCheck.negativeAnim;
+    gBattleStruct->positiveAnimPlayed = sPolishedMirrorCheck.positiveAnim;
+    gBattleStruct->ignoreDefiant = sPolishedMirrorCheck.ignoreDefiant;
+    gBattleScripting = sPolishedMirrorCheck.scripting;
+    gBattlerAttacker = sPolishedMirrorCheck.attacker;
+    gBattlerTarget = sPolishedMirrorCheck.target;
+    gEffectBattler = sPolishedMirrorCheck.effect;
+    gBattlerAbility = sPolishedMirrorCheck.ability;
+    gLastUsedAbility = sPolishedMirrorCheck.lastAbility;
+    gLastUsedItem = sPolishedMirrorCheck.lastItem;
+    sPolishedMirrorCheck.active = FALSE;
     return FALSE;
 }
 
@@ -509,7 +549,14 @@ static enum StatChangeResult IncreaseStat(struct BattleCalcValues *cv, struct St
 
         if (stageIncrease > 0)
         {
-            // Check Mirror Herb / Opportunist
+            bool32 source = UsesPolishedLifecycle();
+            if (source && !st->mirrorHerbActivation)
+            {
+                enum BattlerId recipient = GetOppositeBattler(cv->battlerDef);
+                u32 pending = sPolishedMirrorBoosts[recipient][st->stat] + stageIncrease;
+                sPolishedMirrorBoosts[recipient][st->stat] = min(pending, 15);
+            }
+            // Check native Mirror Herb / optional Opportunist
             for (enum BattlerId battler = 0; battler < gBattlersCount; battler++)
             {
                 if (IsBattlerAlly(battler, cv->battlerDef))
@@ -521,7 +568,7 @@ static enum StatChangeResult IncreaseStat(struct BattleCalcValues *cv, struct St
                 if (cv->abilities[battler] == ABILITY_OPPORTUNIST && !st->opportunistActivation)
                     gProtectStructs[battler].activateOpportunist = TRUE;
 
-                if (cv->holdEffects[battler] == HOLD_EFFECT_MIRROR_HERB && !st->mirrorHerbActivation)
+                if (!source && cv->holdEffects[battler] == HOLD_EFFECT_MIRROR_HERB && !st->mirrorHerbActivation)
                     gProtectStructs[battler].eatMirrorHerb = TRUE;
 
                 if (gProtectStructs[battler].activateOpportunist || gProtectStructs[battler].eatMirrorHerb)

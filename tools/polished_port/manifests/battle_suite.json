@@ -40201,6 +40201,66 @@
       "path": "test/battle/polished_lifecycle.c"
     },
     {
+      "name": "Polished Mirror ledger checks a newly stolen herb against current stat caps",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_mirror_ledger.c"
+    },
+    {
+      "name": "Polished Mirror ledger discards itemless checkpoints before a later Trick",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_mirror_ledger.c"
+    },
+    {
+      "name": "Polished Mirror ledger copies only fresh boosts after acquiring a herb",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_mirror_ledger.c"
+    },
+    {
+      "name": "Polished Mirror ledger clears failed capped copies before the holder has room again",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_mirror_ledger.c"
+    },
+    {
+      "name": "Polished Mirror ledger applies a new boost after an earlier capped copy failed",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_mirror_ledger.c"
+    },
+    {
+      "name": "Polished Mirror ledger clears suppressed item copies before Skill Swap removes Klutz",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_mirror_ledger.c"
+    },
+    {
+      "name": "Polished Mirror ledger records actual increments before the copying holder's Simple",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_mirror_ledger.c"
+    },
+    {
+      "name": "Polished Mirror ledger retains a Sheer Force skipped berry boost until end turn",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_mirror_ledger.c"
+    },
+    {
+      "name": "Polished Mirror ledger prevents copies from feeding the opposing herb",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_mirror_ledger.c"
+    },
+    {
+      "name": "Polished Mirror ledger copies accuracy and evasion with Contrary",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_mirror_ledger.c"
+    },
+    {
+      "name": "Polished Mirror ledger leaves native Opportunist copying independent",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_mirror_ledger.c"
+    },
+    {
+      "name": "Polished Mirror ledger leaves native Pickpocket eligibility in doubles",
+      "kind": "DOUBLE_BATTLE_TEST",
+      "path": "test/battle/polished_mirror_ledger.c"
+    },
+    {
       "name": "Polished Noctowl has its source Ghost immunity in a real battle",
       "kind": "SINGLE_BATTLE_TEST",
       "path": "test/battle/polished_species.c"
@@ -41234,7 +41294,7 @@
     },
     {
       "manifest": "tools/polished_port/manifests/action_resolution.json",
-      "sha256": "8d2a1a5aa7370df4fe221d188ce886596531da14fee717ea37e09e170a93edd6"
+      "sha256": "89fe95b8daa5f6748931ff6b7bd85d11f62b041a4ace75d5221558dad805fed4"
     },
     {
       "manifest": "tools/polished_port/manifests/attack_suite.json",

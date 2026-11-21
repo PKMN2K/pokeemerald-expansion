@@ -79,12 +79,16 @@ Weak Armor, Moody and Anger Point now have immediate Mirror Herb checkpoints.
 Nested stat commands preserve their continuation. Mirror Herb requires both
 battlers alive and pending copies clear on switching; generic entry/end-turn
 White Herb and end-turn Pack sweeps no longer consume source items early.
-Optional Sticky Web entry, native profiles and doubles retain controls.
+An independent Mirror ledger now records actual increments before held-item
+and recipient-cap checks, clears failed/itemless copies, and retains pending
+boosts across skipped checks. Each healing sweep copies both sides after its
+stat berry. Optional Sticky Web entry, native Opportunist, native profiles and
+doubles retain controls.
 
 Authenticated contracts and live test bindings are recorded in
 `manifests/action_resolution.json`. Voluntary/Pursuit/trap combinations,
-simultaneous voluntary entry, other ability/item branches, pending-copy
-bookkeeping at stat caps/item transfers, called moves and the remaining
+simultaneous voluntary entry, other ability/item branches, dedicated
+Berserk Gene/Armored Mewtwo checkpoints, called moves and the remaining
 133-effect branch obligations still require closure within Suite 2. These are
 existing obligations, not an additional suite.
 

@@ -2124,14 +2124,17 @@ bool32 PolishedHandleUnnerveExit(enum BattlerId battler)
             sPolishedExitItems.index++;
         else
         {
-            timing = sPolishedHealingTimings[sPolishedExitItems.block++];
+            timing = sPolishedHealingTimings[sPolishedExitItems.block];
+            if (timing == IsMirrorHerbActivation && PolishedCheckMirrorHerb())
+                return TRUE;
+            sPolishedExitItems.block++;
             if (sPolishedExitItems.block == ARRAY_COUNT(sPolishedHealingTimings))
             {
                 sPolishedExitItems.block = 0;
                 sPolishedExitItems.index++;
             }
         }
-        if (ItemBattleEffects(holder, 0, GetBattlerHoldEffect(holder), timing) != ITEM_NO_EFFECT)
+        if (timing != IsMirrorHerbActivation && ItemBattleEffects(holder, 0, GetBattlerHoldEffect(holder), timing) != ITEM_NO_EFFECT)
             return TRUE;
     }
     gBattlerAttacker = sPolishedExitItems.attacker;
@@ -2143,13 +2146,17 @@ bool32 PolishedHandleUnnerveExit(enum BattlerId battler)
 
 static bool32 HandlePolishedHealingItems(enum BattlerId battler)
 {
-    u32 block = gBattleStruct->eventState.endTurnBlock++;
+    u32 block = gBattleStruct->eventState.endTurnBlock;
+    bool32 mirror = sPolishedHealingTimings[block] == IsMirrorHerbActivation;
+    if (mirror && PolishedCheckMirrorHerb())
+        return TRUE;
+    gBattleStruct->eventState.endTurnBlock++;
     if (gBattleStruct->eventState.endTurnBlock == ARRAY_COUNT(sPolishedHealingTimings))
     {
         gBattleStruct->eventState.endTurnBlock = 0;
         gBattleStruct->eventState.endTurnBattler++;
     }
-    return ItemBattleEffects(battler, 0, GetBattlerHoldEffect(battler), sPolishedHealingTimings[block]) != ITEM_NO_EFFECT;
+    return !mirror && ItemBattleEffects(battler, 0, GetBattlerHoldEffect(battler), sPolishedHealingTimings[block]) != ITEM_NO_EFFECT;
 }
 
 static bool32 DoPolishedEndTurnEffects(void)

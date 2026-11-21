@@ -2780,6 +2780,7 @@ static void ClearSetBScriptingStruct(void)
 static void BattleStartClearSetData(void)
 {
     ResetPolishedEndTurn();
+    ResetPolishedMirrorHerbBoosts();
     s32 i;
 
     TurnValuesCleanUp(FALSE);
@@ -2988,6 +2989,7 @@ void SwitchInClearSetData(enum BattlerId battler, struct Volatiles *volatilesCop
 
     if (UsesPolishedLifecycle())
     {
+        ResetPolishedMirrorHerbBoosts();
         // BreakAttractionAndResetMirrorHerb clears both sides before entry.
         // A replacement must not inherit a fainted holder's pending Moxie copy.
         for (enum BattlerId i = 0; i < gBattlersCount; i++)

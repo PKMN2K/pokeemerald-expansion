@@ -7,6 +7,7 @@
     "engine/battle/core.asm": "37e76be94949c77bf7fd12814675a27943c7d85f",
     "engine/battle/effect_commands.asm": "dd1df8310c56895b3165c1e5b5dd26c73a44734c",
     "engine/battle/abilities.asm": "8ea962089921b262a1c3b050c77e5521fba6d921",
+    "engine/battle/stats.asm": "7b4567cac318ab0af2fa1a98f0ad89507fc21b54",
     "engine/battle/endturn.asm": "53dff9c5eff2ca69b0f37f94d52391842a204740",
     "data/abilities/no_intimidate_abilities.asm": "7d63628258c0a8f1734ce27a3ab818a9c15f52f6",
     "data/moves/effects.asm": "112d722b6aa298e518b6ad097bf50bd4ccdc7979",
@@ -233,6 +234,9 @@
     "Gas deactivation runs the Intimidate herb checks but suppresses nested Pack execution. Inner Focus/Own Tempo/Oblivious/Scrappy return before those checks.",
     "Source Download, Tangling Hair, StatUpAbility, Weak Armor, Moody and Anger Point check Mirror Herb immediately; nested stat commands resume after the copy.",
     "Mirror Herb requires both battlers alive; switching clears pending copies on both sides before replacement abilities.",
+    "Mirror pending boosts record actual positive increments independent of held items or recipient caps, saturate at 15, and discard copied/failed/itemless changes at each checkpoint.",
+    "Mirror Herb checks current effective items and caps, consumes only after a successful stat change, and cannot trigger an opposing Mirror Herb. Native Opportunist keeps its own queue.",
+    "Each source healing-item sweep checks both battlers for Mirror Herb after its stat berry; skipped move-end checks preserve pending boosts until a later source checkpoint.",
     "Source entry and end turn have no general White Herb/Pack sweep: inherited or Moody negative stages wait for a move or Intimidate checkpoint.",
     "Healing berries run after recoil/drain and Aftermath before the next contact effect can knock out the user.",
     "Destiny Bond persists through a cancelled repeat choice but clears before any different action; an executed repeat clears and fails."
@@ -253,7 +257,8 @@
   "additional_regression_files": [
     "test/battle/polished_deferred_switch.c",
     "test/battle/polished_entry_items.c",
-    "test/battle/polished_stat_items.c"
+    "test/battle/polished_stat_items.c",
+    "test/battle/polished_mirror_ledger.c"
   ],
   "remaining": [
     "All unverified effect branches and command interactions remain owned by Suite 2.",

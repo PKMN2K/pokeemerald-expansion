@@ -18,6 +18,9 @@ void PolishedReserveSwitch(enum PolishedSwitchKind kind, enum BattlerId battler)
 bool32 PolishedExecutingDeferredSwitch(void);
 bool32 UsesPolishedLifecycle(void);
 bool32 PolishedAbilityMirrorHerb(void);
+bool32 PolishedCheckMirrorHerb(void);
+bool32 PolishedPrepareMirrorHerb(enum BattlerId battler);
+void ResetPolishedMirrorHerbBoosts(void);
 void ResetPolishedStatItems(void);
 void ResetPolishedEndTurn(void);
 bool32 PolishedEndTurnDefersFaints(void);

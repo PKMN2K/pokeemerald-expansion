@@ -140,10 +140,6 @@ static enum ItemEffect TryConsumeMirrorHerb(enum BattlerId battler)
 {
     enum ItemEffect effect = ITEM_NO_EFFECT;
 
-    if (UsesPolishedLifecycle()
-     && (!IsBattlerAlive(B_BATTLER_0) || !IsBattlerAlive(B_BATTLER_1)))
-        return ITEM_NO_EFFECT;
-
     if (gProtectStructs[battler].eatMirrorHerb)
     {
         for (enum Stat stat = STAT_ATK; stat < NUM_BATTLE_STATS; stat++)
@@ -1033,6 +1029,18 @@ enum ItemEffect ItemBattleEffects(enum BattlerId itemBattler, enum BattlerId bat
 {
     enum ItemEffect effect = ITEM_NO_EFFECT;
     enum Item item;
+
+    // Source CheckMirrorHerb drains pending changes even without a held herb.
+    // Resolve the current item and caps here, after item transfers and drops.
+    if (UsesPolishedLifecycle() && timing == IsMirrorHerbActivation)
+    {
+        if (!PolishedPrepareMirrorHerb(itemBattler))
+            return ITEM_NO_EFFECT;
+        BattleScriptCall(BattleScript_MirrorHerbCopyStatChange);
+        gLastUsedItem = gBattleMons[itemBattler].item;
+        gBattleScripting.battler = gPotentialItemEffectBattler = itemBattler;
+        return ITEM_STATS_CHANGE;
+    }
 
     // Source Leppa runs in its end-turn phase (or when Unnerve leaves), not
     // at move end. HP/status berries still trigger from SubtractHP/PostStatus;

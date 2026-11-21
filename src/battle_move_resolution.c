@@ -5473,7 +5473,13 @@ nextPass:
             continue;
 
         enum HoldEffect effect = source ? GetBattlerHoldEffect(battler) : cv->holdEffects[battler];
-        if (source && (effect == HOLD_EFFECT_MIRROR_HERB) != (sPolishedHerbPass == 1))
+        if (source && sPolishedHerbPass == 1)
+        {
+            if (ItemBattleEffects(battler, 0, effect, IsMirrorHerbActivation))
+                return MOVEEND_RESULT_RUN_SCRIPT;
+            continue;
+        }
+        if (source && effect == HOLD_EFFECT_MIRROR_HERB)
             continue;
         switch (effect)
         {
@@ -5514,6 +5520,8 @@ nextPass:
         gBattleStruct->eventState.moveEndBattler = 0;
         goto nextPass;
     }
+    if (UsesPolishedLifecycle() && IsBattlerAlive(B_BATTLER_0) && IsBattlerAlive(B_BATTLER_1))
+        ResetPolishedMirrorHerbBoosts();
     for (enum BattlerId i = 0; i < gBattlersCount; i++)
         gBattleMons[i].volatiles.tryEjectPack = FALSE;
 
