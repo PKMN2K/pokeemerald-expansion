@@ -37356,6 +37356,106 @@
       "path": "test/battle/move_effect/polished_belly_drum.c"
     },
     {
+      "name": "Polished Curse respects Substitute with the source Infiltrator exception",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/move_effect/polished_curse_trick.c"
+    },
+    {
+      "name": "Polished Curse rejects Fly and Dig even with No Guard",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/move_effect/polished_curse_trick.c"
+    },
+    {
+      "name": "Polished Curse after Protean targets the opponent instead of its user",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/move_effect/polished_curse_trick.c"
+    },
+    {
+      "name": "Polished Trick transfers do not activate Unburden",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/move_effect/polished_curse_trick.c"
+    },
+    {
+      "name": "Polished Trick preserves an Unburden boost already earned by consumption",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/move_effect/polished_curse_trick.c"
+    },
+    {
+      "name": "Polished Curse uses half maximum HP with floor rounding and a minimum of one",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/move_effect/polished_curse_trick.c"
+    },
+    {
+      "name": "Polished Curse can faint its user and persists after replacement",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/move_effect/polished_curse_trick.c"
+    },
+    {
+      "name": "Polished Curse cannot charge HP again for an already cursed opponent",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/move_effect/polished_curse_trick.c"
+    },
+    {
+      "name": "Polished Curse bypasses Protect and Magic Bounce",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/move_effect/polished_curse_trick.c"
+    },
+    {
+      "name": "Polished Curse Magic Guard blocks residual damage but does not block application",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/move_effect/polished_curse_trick.c"
+    },
+    {
+      "name": "Polished Curse residual damage ignores a Substitute created afterward",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/move_effect/polished_curse_trick.c"
+    },
+    {
+      "name": "Polished Curse switching clears the curse while Baton Pass transfers it",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/move_effect/polished_curse_trick.c"
+    },
+    {
+      "name": "Polished Curse non Ghost stat changes honor Contrary Simple and individual caps",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/move_effect/polished_curse_trick.c"
+    },
+    {
+      "name": "Polished Curse non Ghost branch ignores opposing Substitute and hidden state",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/move_effect/polished_curse_trick.c"
+    },
+    {
+      "name": "Polished Curse suppressed Infiltrator cannot bypass Substitute",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/move_effect/polished_curse_trick.c"
+    },
+    {
+      "name": "Polished Curse keeps native Substitute behavior with either active gimmick",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/move_effect/polished_curse_trick.c"
+    },
+    {
+      "name": "Polished Curse keeps native target selection and Substitute behavior in doubles",
+      "kind": "DOUBLE_BATTLE_TEST",
+      "path": "test/battle/move_effect/polished_curse_trick.c"
+    },
+    {
+      "name": "Polished Trick keeps native Unburden behavior for optional Switcheroo",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/move_effect/polished_curse_trick.c"
+    },
+    {
+      "name": "Polished Trick keeps native Unburden behavior with either active gimmick",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/move_effect/polished_curse_trick.c"
+    },
+    {
+      "name": "Polished Trick keeps native Unburden behavior in doubles",
+      "kind": "DOUBLE_BATTLE_TEST",
+      "path": "test/battle/move_effect/polished_curse_trick.c"
+    },
+    {
       "name": "Polished Encore commitment survives Mental Herb in every move slot on both sides",
       "kind": "SINGLE_BATTLE_TEST",
       "path": "test/battle/move_effect/polished_encore_commitment.c"
@@ -41659,7 +41759,7 @@
     },
     {
       "manifest": "tools/polished_port/manifests/action_resolution.json",
-      "sha256": "578173e80387c96c6af75efdd329e9ff91694bfe0e4c546152703224fa0b4de4"
+      "sha256": "001f166c45617c16485ac6ac6fbfd3a98f6895711e757bf20d3f308af826df04"
     },
     {
       "manifest": "tools/polished_port/manifests/attack_suite.json",

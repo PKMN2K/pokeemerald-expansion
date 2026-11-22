@@ -144,10 +144,44 @@ def validate_remaining_source(files):
     ordered(chew, ['jr nc, .eat_berry', '.eat_berry:', 'ld [hl], a', 'ReconsumeHPHealingItem'])
 
 
+def validate_curse_trick_source(files):
+    curse = files['engine/battle/move_effects/curse.asm']['text']
+    ordered(curse, ['call CheckIfUserIsGhostType', 'jr z, .ghost',
+        'ld b, SPEED', 'call ForceLowerStat', 'ld b, ATTACK', 'call ForceRaiseStat',
+        'ld b, DEFENSE', 'jmp ForceRaiseStat', '\n.ghost\n',
+        'call CheckHiddenOpponent', 'jr nz, .failed', 'call CheckSubstituteOpp',
+        'jr nz, .failed', 'BATTLE_VARS_SUBSTATUS1_OPP', 'bit SUBSTATUS_CURSE, [hl]', 'jr nz, .failed',
+        'set SUBSTATUS_CURSE, [hl]', 'call GetHalfMaxHP',
+        'predef SubtractHPFromUser', 'call UpdateUserInParty'])
+    commands = files['engine/battle/effect_commands.asm']['text']
+    hidden = block(commands, 'CheckHiddenOpponent:', 'GetPlayerItem:')
+    assert 'and 1 << SUBSTATUS_FLYING | 1 << SUBSTATUS_UNDERGROUND' in hidden
+    substitute = block(commands, 'CheckSubstituteOpp:', 'CheckUserMove:')
+    ordered(substitute, ['call GetTrueUserAbility', 'cp INFILTRATOR', 'ret z',
+        'BATTLE_VARS_SUBSTATUS4_OPP', 'bit SUBSTATUS_SUBSTITUTE, a'])
+    home = files['home/battle.asm']['text']
+    ordered(home, ['GetQuarterMaxHP::', 'call GetHalfMaxHP', 'jr HalveBC',
+        'GetHalfMaxHP::', 'call GetMaxHP', 'HalveBC::', 'srl b', 'rr c',
+        'FloorBC::', 'ld a, c', 'or b', 'ret nz', 'inc c'])
+    residual = block(files['engine/battle/endturn.asm']['text'], 'HandleCurse:', 'HandleWrap:')
+    ordered(residual, ['call SetFastestTurn', 'bit SUBSTATUS_CURSE, [hl]',
+        'call nz, PreventEndturnDamage', 'ret z', 'call GetQuarterMaxHP', 'predef SubtractHPFromUser'])
+    trick = files['engine/battle/move_effects/trick.asm']['text']
+    ordered(trick, ['call CheckSubstituteOpp', 'cp STICKY_HOLD',
+        'call .UserCanBeTricked', 'call .OpponentCanBeTricked',
+        'ld [hl], a', 'ld a, b', 'ld [de], a', 'call StdBattleTextbox'])
+    assert 'UNBURDEN' not in trick and 'ConsumeUserItem' not in trick, 'Trick is an exchange, not consumption'
+    abilities = files['engine/battle/abilities.asm']['text']
+    unburden = block(abilities, 'UnburdenAbility:', 'QuickFeetAbility:')
+    ordered(unburden, ['bit SUBSTATUS_UNBURDEN, a', 'ret z', 'ln a, 2, 1'])
+    assert 'GetUserItem' not in unburden, 'An earned boost survives receiving an item'
+
+
 def build():
     files = source.authenticated_sources()
     validate_source(files)
     validate_remaining_source(files)
+    validate_curse_trick_source(files)
     move_files, moves, effects = attacks.inventory()
     used = sorted({m['source_effect'] for m in moves})
     command_names = sorted({line.split()[0] for name in used for line in effects[name]['commands']})
@@ -168,7 +202,8 @@ def build():
     ordered(constants, ['MOVEEND_LIFE_ORB_SHELL_BELL,', 'MOVEEND_POLISHED_SWITCH_ITEMS,', 'MOVEEND_PICKPOCKET,', 'MOVEEND_POLISHED_STAT_HERBS,', 'MOVEEND_SPRAY_LEPPA_BLUNDER,'])
     assert '[MOVEEND_POLISHED_ACTION_CHECKPOINT] = MoveEndPolishedActionCheckpoint' in runtime
     paths = ['engine/battle/move_effects/sketch.asm', 'engine/battle/used_move_text.asm', 'engine/battle/core.asm', 'engine/battle/effect_commands.asm', 'engine/battle/abilities.asm', 'engine/battle/stats.asm', 'engine/battle/endturn.asm', 'data/abilities/no_intimidate_abilities.asm', 'data/moves/effects.asm', 'engine/battle/move_effects/baton_pass.asm', 'engine/battle/move_effects/roar.asm', 'engine/battle/move_effects/teleport.asm', 'data/items/attributes.asm']
-    paths += ['engine/battle/move_effects/'+name+'.asm' for name in ('transform', 'skill_swap', 'conversion', 'thief', 'knock_off', 'bug_bite', 'heal_bell')]
+    paths += ['engine/battle/move_effects/'+name+'.asm' for name in ('transform', 'skill_swap', 'conversion', 'thief', 'knock_off', 'bug_bite', 'heal_bell', 'curse', 'trick')]
+    paths += ['home/battle.asm']
     report = dict(source_commit=source.source.PIN, source_variant='default; FAITHFUL undefined', suite=2,
         complete_behavior_parity=False,
         source_anchors={p: files[p]['sha'] if p in files else source.git_hash('blob', move_files[p].encode()) for p in paths},
@@ -176,6 +211,10 @@ def build():
             postfaint_effect_families=relevant,
             limitation='Command sequences authenticate coverage obligations; they do not certify untested conditional branches.'),
         contracts=[
+            'Ghost Curse selects the opponent after type changes, rejects Fly/Dig even with No Guard, and respects Substitute unless the effective user ability is Infiltrator. Rejection spends PP but no HP.',
+            'Curse costs floor(max HP / 2), at least one, may faint its user, and does not charge again for an already cursed target. Source residual checks use floor(max HP / 4), at least one, subject to Magic Guard.',
+            'Non-Ghost Curse lowers Speed before raising Attack and Defense with ordinary cap/Contrary/Simple rules. Ordinary switching clears Curse; Baton Pass transfers it.',
+            'Source Trick does not activate Unburden through an exchange and does not erase a consumption-earned boost on receiving an item. Optional Switcheroo, doubles and active gimmicks retain native behavior. Other item-transfer and Choice-lock branches remain open.',
             'Transform copies raw ability and activates its entry routine after the message except Imposter; repeated transformation is allowed, hidden/transformed/Armored Mewtwo targets and non-Infiltrator Substitute are rejected.',
             'Transform preserves party identity, HP/item/status, remaps surviving move locks and zeroes the Disable countdown; copied PP is five except Sketch (one) and empty slots (zero).',
             'Skill Swap rejects hidden targets and source blacklist abilities, resets Unburden/Flash Fire/Cud Chew, and runs user entry before target entry while excluding Imposter and Cloud Nine.',

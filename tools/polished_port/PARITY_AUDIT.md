@@ -5082,3 +5082,55 @@ Johto ROM SHA-256:
 `c4c52e76f778f1d32620409ca8c6de659800d918e7d502b30e2c5143f5f9bf01`.
 Native ROM SHA-256:
 `a4c9e5b6c3cebbb3083ffed5d0c06bcdc77017d711a00a1f51b11d5730dc02bf`.
+
+## Suite 2 continuation — Curse branches and Trick's Unburden state
+
+Continues from `433f8391` (CI #1642 passed), using pinned default Polished
+Crystal `3fa43192379df5c3e7b09a08e4d5d79af4f02f42`.
+
+Ghost Curse now rejects Fly/Dig even with No Guard and rejects Substitute
+unless the user's effective ability is Infiltrator. Neutralizing Gas suppresses
+that exception. After Protean changes a non-Ghost user to Ghost, Curse addresses
+the opponent as the source command does, rather than retaining the native
+self target selected before the type change. Failed application spends PP but
+no HP. Non-Ghost Curse retains Speed-down, Attack-up, Defense-up order.
+
+Trick no longer activates Unburden merely by exchanging an item for an empty
+slot. It also preserves an existing consumption-earned boost when the holder
+receives an item; the source speed ability tests the volatile flag rather than
+requiring an empty item slot. This change is scoped to source Trick. Optional
+Switcheroo, doubles and either active gimmick retain native behavior. No save,
+party, species, move or item identifiers change.
+
+Twenty live regression groups in `polished_curse_trick.c` cover both sides of
+the Substitute boundary, Infiltrator suppression, hidden targets, Protean,
+odd/minimum HP costs, user fainting and replacement, duplicate rejection and
+PP, Protect/Magic Bounce, Magic Guard suppression of residual damage, a later
+Substitute, ordinary switching/Baton Pass, Contrary/Simple and individual stat
+caps. Trick tests cover both directions of an empty-slot transfer, consumption
+followed by receiving another item with observed turn order, and native
+controls. Five distinguishing groups failed on the parent runtime. Five added
+authenticated-source mutation groups bring action-contract tests to 28.
+
+This is scoped Suite 2 evidence. Complete ability/item eligibility, other
+Unburden item-loss/acquisition triggers, Trick Choice-lock timing and remaining
+effect branches still require source review and live evidence. Exact RNG,
+messages and animations remain Suite 3 obligations. The three-suite ownership
+and strict completion gate remain unchanged; complete battle parity is OPEN.
+
+Validation: all **1,170 source groups plus six AI timing groups** pass. The full
+native run passes **6,392 groups**, retaining the same nine expected failures
+and 585 TODO groups. Both profiles include all twenty new groups. Strict unused
+and deprecation diagnostics are enabled. All 112 reproducibility/check commands
+pass, including 28 action-contract tests, three completion-plan tests and twelve
+ARM compiler probes. Both 32 MiB production ROMs build. The final Johto ROM passes
+all 102 campaign checks, nineteen directed warps and twelve garden checks with
+unchanged replay input, including native Save/reset/Continue. The production
+trainer factory verifies all 22 teams / 44 Pokemon. The strict completeness gate
+still returns its expected exit 2 for fifteen domains, 4,143 lexical source
+blocks and 133 effect families.
+
+Johto ROM SHA-256:
+`bb8a1131bdfd9e0dc9aeaf2d0a4d85317d8f655accbadb3fbb4d1e0833ccc582`.
+Native ROM SHA-256:
+`7e6d4d085cf7597e3f26628b38c05e44a68adf539e5bdecb1f41ab540be0c950`.

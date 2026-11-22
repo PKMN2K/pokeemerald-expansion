@@ -6,6 +6,52 @@ import build_action_resolution as action
 
 
 class ActionResolutionTest(unittest.TestCase):
+    def test_curse_requires_hidden_substitute_and_duplicate_guards(self):
+        for token in ('call CheckHiddenOpponent', 'call CheckSubstituteOpp',
+                      'BATTLE_VARS_SUBSTATUS1_OPP', 'bit SUBSTATUS_CURSE, [hl]',
+                      'call GetHalfMaxHP', 'call UpdateUserInParty'):
+            with self.subTest(token=token):
+                files = copy.deepcopy(action.source.authenticated_sources())
+                path = 'engine/battle/move_effects/curse.asm'
+                files[path]['text'] = files[path]['text'].replace(token, 'nop', 1)
+                with self.assertRaises((AssertionError, ValueError)):
+                    action.validate_curse_trick_source(files)
+
+    def test_curse_substitute_requires_effective_infiltrator(self):
+        files = copy.deepcopy(action.source.authenticated_sources())
+        path = 'engine/battle/effect_commands.asm'
+        prefix, suffix = files[path]['text'].split('CheckSubstituteOpp:', 1)
+        files[path]['text'] = prefix + 'CheckSubstituteOpp:' + suffix.replace('call GetTrueUserAbility', 'call GetUserAbility', 1)
+        with self.assertRaises((AssertionError, ValueError)):
+            action.validate_curse_trick_source(files)
+
+    def test_curse_residual_and_hp_floor_are_authenticated(self):
+        for path, label, before in (
+                ('home/battle.asm', 'FloorBC::', 'inc c'),
+                ('engine/battle/endturn.asm', 'HandleCurse:', 'call nz, PreventEndturnDamage'),
+                ('engine/battle/endturn.asm', 'HandleCurse:', 'call GetQuarterMaxHP')):
+            with self.subTest(token=before):
+                files = copy.deepcopy(action.source.authenticated_sources())
+                prefix, suffix = files[path]['text'].split(label, 1)
+                files[path]['text'] = prefix + label + suffix.replace(before, 'nop', 1)
+                with self.assertRaises((AssertionError, ValueError)):
+                    action.validate_curse_trick_source(files)
+
+    def test_trick_cannot_set_or_clear_unburden_or_consume_items(self):
+        for instruction in ('set SUBSTATUS_UNBURDEN, [hl]', 'res SUBSTATUS_UNBURDEN, [hl]', 'call ConsumeUserItem'):
+            with self.subTest(instruction=instruction):
+                files = copy.deepcopy(action.source.authenticated_sources())
+                files['engine/battle/move_effects/trick.asm']['text'] += '\n\t' + instruction + '\n'
+                with self.assertRaises(AssertionError):
+                    action.validate_curse_trick_source(files)
+
+    def test_unburden_boost_cannot_require_an_empty_item_slot(self):
+        files = copy.deepcopy(action.source.authenticated_sources())
+        path = 'engine/battle/abilities.asm'
+        files[path]['text'] = files[path]['text'].replace('UnburdenAbility:', 'UnburdenAbility:\n\tcall GetUserItem', 1)
+        with self.assertRaises(AssertionError):
+            action.validate_curse_trick_source(files)
+
     def test_remaining_source_contracts_reject_removed_guards(self):
         for path, token in (
                 ('transform', 'call ResetActorDisable'), ('transform', 'cp ARMOR_SUIT'),

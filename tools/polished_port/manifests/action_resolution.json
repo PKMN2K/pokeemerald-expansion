@@ -23,7 +23,10 @@
     "engine/battle/move_effects/thief.asm": "f17d5e8b18246264da90961685fc68cbdacd89fe",
     "engine/battle/move_effects/knock_off.asm": "91ce2e58a6afd7c1c90c684d9033c073738925da",
     "engine/battle/move_effects/bug_bite.asm": "a5d44d18c24ef17d8f8aea94d2e5ff8dd8f843b0",
-    "engine/battle/move_effects/heal_bell.asm": "251ba5aa246794adf3d99674c019a077296cb075"
+    "engine/battle/move_effects/heal_bell.asm": "251ba5aa246794adf3d99674c019a077296cb075",
+    "engine/battle/move_effects/curse.asm": "12f07dcf5b2c9c8225c7412ade4cfaf49bd4b826",
+    "engine/battle/move_effects/trick.asm": "a1902cbc77fa6a92e2037e86eec67c52f1df82f9",
+    "home/battle.asm": "a8edadebfb195fb5c08b97ac4ad343042fe6cec5"
   },
   "inventory": {
     "moves": 255,
@@ -229,6 +232,10 @@
     "limitation": "Command sequences authenticate coverage obligations; they do not certify untested conditional branches."
   },
   "contracts": [
+    "Ghost Curse selects the opponent after type changes, rejects Fly/Dig even with No Guard, and respects Substitute unless the effective user ability is Infiltrator. Rejection spends PP but no HP.",
+    "Curse costs floor(max HP / 2), at least one, may faint its user, and does not charge again for an already cursed target. Source residual checks use floor(max HP / 4), at least one, subject to Magic Guard.",
+    "Non-Ghost Curse lowers Speed before raising Attack and Defense with ordinary cap/Contrary/Simple rules. Ordinary switching clears Curse; Baton Pass transfers it.",
+    "Source Trick does not activate Unburden through an exchange and does not erase a consumption-earned boost on receiving an item. Optional Switcheroo, doubles and active gimmicks retain native behavior. Other item-transfer and Choice-lock branches remain open.",
     "Transform copies raw ability and activates its entry routine after the message except Imposter; repeated transformation is allowed, hidden/transformed/Armored Mewtwo targets and non-Infiltrator Substitute are rejected.",
     "Transform preserves party identity, HP/item/status, remaps surviving move locks and zeroes the Disable countdown; copied PP is five except Sketch (one) and empty slots (zero).",
     "Skill Swap rejects hidden targets and source blacklist abilities, resets Unburden/Flash Fire/Cud Chew, and runs user entry before target entry while excluding Imposter and Cloud Nine.",

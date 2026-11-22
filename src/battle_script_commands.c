@@ -7037,12 +7037,24 @@ static void Cmd_cursetarget(void)
 {
     CMD_ARGS(const u8 *failInstr);
 
+    bool32 sourceCurse = UsesPolishedBattleRules(gBattlerAttacker, GetOppositeBattler(gBattlerAttacker));
+
+    // The source selects the Ghost branch after Protean, then always addresses
+    // the opponent. Native Curse may have selected the user before that change.
+    if (sourceCurse && IS_BATTLER_OF_TYPE(gBattlerAttacker, TYPE_GHOST))
+        gBattlerTarget = GetOppositeBattler(gBattlerAttacker);
+
     if (!IS_BATTLER_OF_TYPE(gBattlerAttacker, TYPE_GHOST))
     {
         gBattleScripting.animTurn = 1; // for move anim
         gBattlescriptCurrInstr = cmd->failInstr;
     }
-    else if (gBattleMons[gBattlerTarget].volatiles.cursed)
+    else if (gBattleMons[gBattlerTarget].volatiles.cursed
+          || (sourceCurse
+           && (gBattleMons[gBattlerTarget].volatiles.semiInvulnerable == STATE_ON_AIR
+            || gBattleMons[gBattlerTarget].volatiles.semiInvulnerable == STATE_UNDERGROUND
+            || (gBattleMons[gBattlerTarget].volatiles.substitute
+             && GetBattlerAbility(gBattlerAttacker) != ABILITY_INFILTRATOR))))
     {
         gBattlescriptCurrInstr = BattleScript_ButItFailed;
     }
@@ -7572,6 +7584,8 @@ static void Cmd_tryswapitems(void)
 {
     CMD_ARGS(const u8 *failInstr);
 
+    bool32 sourceTrick = gCurrentMove == MOVE_TRICK && UsesPolishedBattleRules(gBattlerAttacker, gBattlerTarget);
+
     // opponent can't swap items with player in regular battles
     if (gBattleTypeFlags & BATTLE_TYPE_TRAINER_HILL
         || (!IsOnPlayerSide(gBattlerAttacker)
@@ -7665,14 +7679,22 @@ static void Cmd_tryswapitems(void)
             }
             else if (oldItemAtk == ITEM_NONE && oldItemDef != ITEM_NONE)
             {
-                CheckSetUnburden(gBattlerTarget);
-                gBattleMons[gBattlerAttacker].volatiles.unburdenActive = FALSE;
+                // Source Trick neither consumes an item nor resets a boost
+                // previously earned by consumption, even on receiving an item.
+                if (!sourceTrick)
+                {
+                    CheckSetUnburden(gBattlerTarget);
+                    gBattleMons[gBattlerAttacker].volatiles.unburdenActive = FALSE;
+                }
                 gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_ITEM_SWAP_TAKEN; // nothing -> <- target's item
             }
             else
             {
-                CheckSetUnburden(gBattlerAttacker);
-                gBattleMons[gBattlerTarget].volatiles.unburdenActive = FALSE;
+                if (!sourceTrick)
+                {
+                    CheckSetUnburden(gBattlerAttacker);
+                    gBattleMons[gBattlerTarget].volatiles.unburdenActive = FALSE;
+                }
                 gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_ITEM_SWAP_GIVEN; // attacker's item -> <- nothing
             }
         }
