@@ -177,11 +177,35 @@ def validate_curse_trick_source(files):
     assert 'GetUserItem' not in unburden, 'An earned boost survives receiving an item'
 
 
+def validate_item_unburden_source(files):
+    for name in ('thief', 'knock_off'):
+        text = files[f'engine/battle/move_effects/{name}.asm']['text']
+        assert 'UNBURDEN' not in text, f'{name} preserves both Unburden flags'
+        assert not re.search(r'\bConsume\w*Item\b', text), f'{name} does not consume an item'
+    thief = files['engine/battle/move_effects/thief.asm']['text']
+    ordered(thief, ['call ReceiveBattleItem', 'ret nc', 'xor a', 'ld [bc], a'])
+    knock = files['engine/battle/move_effects/knock_off.asm']['text']
+    ordered(knock, ['call CheckPendingItemLoss', 'ret z', 'call GetOpponentItem', 'xor a', 'ld [hl], a'])
+    commands = files['engine/battle/effect_commands.asm']['text']
+    pickpocket = block(commands, '; Pickpocket', '.EndMoveUserItems:')
+    ordered(pickpocket, ['call HasOpponentFainted', 'call GetOpponentAbilityAfterMoldBreaker',
+        'cp PICKPOCKET', 'call CheckContactMove', 'call SwitchTurn', 'call CanStealItem',
+        'call BattleCommand_thief', 'jmp SwitchTurn'])
+    stolen = block(commands, 'ConsumeStolenOpponentItem::', 'ConsumeUserItem::')
+    ordered(stolen, ['call StackCallOpponentTurn', 'call GetConsumedItemVars', 'jr _ConsumeUserItem'])
+    consume = block(commands, '_ConsumeUserItem::', 'GetConsumedItemVars::')
+    ordered(consume, ['xor a', 'ld [de], a', 'ld [hl], a', '.apply_unburden',
+        'call GetTrueUserAbility', 'cp UNBURDEN', 'ret nz', 'set SUBSTATUS_UNBURDEN, [hl]'])
+    air_balloon = block(commands, '; Burst air balloons', '\n.air_balloon_done\n')
+    ordered(air_balloon, ['call CheckAirBalloon', 'call ConsumeOpponentItem'])
+
+
 def build():
     files = source.authenticated_sources()
     validate_source(files)
     validate_remaining_source(files)
     validate_curse_trick_source(files)
+    validate_item_unburden_source(files)
     move_files, moves, effects = attacks.inventory()
     used = sorted({m['source_effect'] for m in moves})
     command_names = sorted({line.split()[0] for name in used for line in effects[name]['commands']})
@@ -211,6 +235,7 @@ def build():
             postfaint_effect_families=relevant,
             limitation='Command sequences authenticate coverage obligations; they do not certify untested conditional branches.'),
         contracts=[
+            'Source Thief, Pickpocket and Knock Off leave Unburden state unchanged; receiving through Thief preserves an earned boost. Bug Bite consumes the victim berry and activates the victim ability, not the eater. Ordinary consumption and Air Balloon activate effective Unburden; Neutralizing Gas prevents earning the boost and temporarily suppresses an existing boost. Optional Covet, Sticky Barb, Magician, doubles and active gimmicks retain native transfer behavior.',
             'Ghost Curse selects the opponent after type changes, rejects Fly/Dig even with No Guard, and respects Substitute unless the effective user ability is Infiltrator. Rejection spends PP but no HP.',
             'Curse costs floor(max HP / 2), at least one, may faint its user, and does not charge again for an already cursed target. Source residual checks use floor(max HP / 4), at least one, subject to Magic Guard.',
             'Non-Ghost Curse lowers Speed before raising Attack and Defense with ordinary cap/Contrary/Simple rules. Ordinary switching clears Curse; Baton Pass transfers it.',

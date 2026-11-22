@@ -4801,7 +4801,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
                         break;
                     }
 
-                    StealTargetItem(battler, targetBattler, ITEM_NONE);
+                    StealTargetItem(battler, targetBattler, ITEM_NONE, FALSE);
                     gBattlerAbility = battler;
                     gEffectBattler = targetBattler;
                     BattleScriptCall(BattleScript_MagicianActivates);

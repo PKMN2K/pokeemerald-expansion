@@ -5128,3 +5128,55 @@ Johto ROM SHA-256:
 `bb8a1131bdfd9e0dc9aeaf2d0a4d85317d8f655accbadb3fbb4d1e0833ccc582`.
 Native ROM SHA-256:
 `7e6d4d085cf7597e3f26628b38c05e44a68adf539e5bdecb1f41ab540be0c950`.
+
+## Suite 2 continuation — Unburden item transfer and consumption
+
+Continues from `2c529f93` (CI #1643 passed), using default Polished Crystal
+`3fa43192379df5c3e7b09a08e4d5d79af4f02f42`.
+
+Pinned Thief and Knock Off clear held-item storage directly without calling
+item consumption or changing the Unburden volatile. Pickpocket reuses the
+source Thief command. These paths now preserve Unburden state: losing the item
+does not create a boost, and receiving an item through Thief does not erase a
+boost already earned by consumption. The shared transfer helper receives the
+policy from its caller, so optional Sticky Barb still uses native rules even
+when a Thief hit triggers its contact transfer. Covet, Magician, doubles and
+active gimmicks also retain their native Unburden behavior.
+
+Bug Bite follows a different source path: `ConsumeStolenOpponentItem` changes
+to the victim's turn before consuming the berry, so it activates the victim's
+Unburden rather than the eater's. That existing implementation is now covered
+alongside successful own-berry/White Herb consumption, Air Balloon bursting,
+failed removal behind Substitute, suppression while Neutralizing Gas is active,
+and resumption of an earned boost after Gas leaves. Live tests check actual
+next-turn move order as well as held items and volatile flags.
+
+Fourteen battle groups in `test/battle/ability/polished_unburden.c` cover these
+boundaries, including both sides of Thief/Knock Off and effective/ineffective
+Bug Bite berries. Three distinguishing groups reproduced mismatches on the
+parent runtime. Four new authenticated-source mutation groups protect the
+nonconsuming transfers, Pickpocket's command reuse, Bug Bite victim selection
+and effective-ability consumption checks; action-contract coverage is now 32
+groups. Stable save, party, species, item and move identifiers are unchanged.
+
+Suite 2 remains OPEN. Acquisition through Harvest/Pickup after ability changes,
+other ability/item eligibility and persistence branches, and source Choice-lock
+selection/transfer timing still need dedicated source/live coverage. Exact RNG,
+messages and animations remain Suite 3 obligations. This batch does not certify
+all branches of the item system or change the three-suite completion gate.
+
+Validation: all **1,184 source groups plus six AI timing groups** pass. The full
+native run passes **6,406 groups**, with the same nine expected failures and
+585 TODOs (7,000 total). Both profiles execute all fourteen new groups. All
+112 reproducibility/check commands pass, including 32 action-contract groups
+and twelve ARM probes. Strict unused/deprecation builds produce both 32 MiB
+production ROMs. The final Johto ROM passes all 102 campaign checks, nineteen
+directed warps and twelve garden checks with unchanged replay inputs, including
+Save/reset/Continue. Production construction matches all 22 trainer teams /
+44 Pokemon. The strict completeness gate still returns expected exit 2 for
+fifteen domains, 4,143 lexical source blocks and 133 effect families.
+
+Johto ROM SHA-256:
+`ea1d110d2c2cc838b761ddda6d66c664c9b08f89b8007e59b3cf2321aa390403`.
+Native ROM SHA-256:
+`46ec368a8650d6c4240a283515373a29e59cba1239af0bcb76352147a6f17c94`.

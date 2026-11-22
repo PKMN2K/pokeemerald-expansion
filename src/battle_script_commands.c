@@ -1588,7 +1588,7 @@ u32 GetBattlerRawSpeedOrder(enum BattlerId battler)
 }
 
 // battlerStealer steals the item of itemBattler
-void StealTargetItem(enum BattlerId battlerStealer, enum BattlerId itemBattler, enum Item itemOverride)
+void StealTargetItem(enum BattlerId battlerStealer, enum BattlerId itemBattler, enum Item itemOverride, bool32 preserveUnburden)
 {
     if (itemOverride)
     {
@@ -1614,7 +1614,9 @@ void StealTargetItem(enum BattlerId battlerStealer, enum BattlerId itemBattler, 
         RecordItemEffectBattle(battlerStealer, GetItemHoldEffect(gLastUsedItem));
         gBattleMons[battlerStealer].item = gLastUsedItem;
 
-        gBattleMons[battlerStealer].volatiles.unburdenActive = FALSE;
+        // Source Thief/Pickpocket transfer items without changing the volatile.
+        if (!preserveUnburden)
+            gBattleMons[battlerStealer].volatiles.unburdenActive = FALSE;
         BtlController_EmitSetMonData(battlerStealer, B_COMM_TO_CONTROLLER, REQUEST_HELDITEM_BATTLE, 0, sizeof(gLastUsedItem), &gLastUsedItem); // set attacker item
         MarkBattlerForControllerExec(battlerStealer);
     }
@@ -1625,7 +1627,8 @@ void StealTargetItem(enum BattlerId battlerStealer, enum BattlerId itemBattler, 
     PREPARE_MON_NICK_WITH_PREFIX_LOWER_BUFFER(gBattleTextBuff2, itemBattler, gBattlerPartyIndexes[itemBattler]);
 
     RecordItemEffectBattle(itemBattler, HOLD_EFFECT_NONE);
-    CheckSetUnburden(itemBattler);
+    if (!preserveUnburden)
+        CheckSetUnburden(itemBattler);
 
     BtlController_EmitSetMonData(itemBattler, B_COMM_TO_CONTROLLER, REQUEST_HELDITEM_BATTLE, 0, sizeof(gBattleMons[itemBattler].item), &gBattleMons[itemBattler].item);  // remove target item
     MarkBattlerForControllerExec(itemBattler);

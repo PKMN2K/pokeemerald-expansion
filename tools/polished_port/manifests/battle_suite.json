@@ -36961,6 +36961,76 @@
       "path": "test/battle/ability/polished_trapping.c"
     },
     {
+      "name": "Polished Unburden is not activated by Thief or Knock Off on either side",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/ability/polished_unburden.c"
+    },
+    {
+      "name": "Polished Unburden survives receiving a held item through Thief",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/ability/polished_unburden.c"
+    },
+    {
+      "name": "Polished Unburden is not activated when Pickpocket steals its item",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/ability/polished_unburden.c"
+    },
+    {
+      "name": "Polished Unburden failed removal behind Substitute leaves its item and flag unchanged",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/ability/polished_unburden.c"
+    },
+    {
+      "name": "Polished Unburden Bug Bite activates the berry owner rather than its eater",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/ability/polished_unburden.c"
+    },
+    {
+      "name": "Polished Unburden activates after its own berry or White Herb is consumed",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/ability/polished_unburden.c"
+    },
+    {
+      "name": "Polished Unburden activates when its Air Balloon bursts",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/ability/polished_unburden.c"
+    },
+    {
+      "name": "Polished Unburden cannot earn a boost while Neutralizing Gas suppresses it",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/ability/polished_unburden.c"
+    },
+    {
+      "name": "Polished Unburden consumption boost resumes after Neutralizing Gas leaves",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/ability/polished_unburden.c"
+    },
+    {
+      "name": "Polished Unburden optional Covet retains native item loss activation",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/ability/polished_unburden.c"
+    },
+    {
+      "name": "Polished Unburden optional Sticky Barb keeps native activation even on Thief",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/ability/polished_unburden.c"
+    },
+    {
+      "name": "Polished Unburden optional Magician retains native activation",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/ability/polished_unburden.c"
+    },
+    {
+      "name": "Polished Unburden doubles retain native Thief and Knock Off activation",
+      "kind": "DOUBLE_BATTLE_TEST",
+      "path": "test/battle/ability/polished_unburden.c"
+    },
+    {
+      "name": "Polished Unburden active Terastallization retains native item loss activation",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/ability/polished_unburden.c"
+    },
+    {
       "name": "AI thinking time doesn't explode (singles, no flags)",
       "kind": "AI_SINGLE_BATTLE_TEST",
       "path": "test/battle/ai/ai_thinking_time.c"
@@ -41759,7 +41829,7 @@
     },
     {
       "manifest": "tools/polished_port/manifests/action_resolution.json",
-      "sha256": "001f166c45617c16485ac6ac6fbfd3a98f6895711e757bf20d3f308af826df04"
+      "sha256": "4da599c63c7326fd253ea9915a1c57d7fdb89a56d08d4bf0bffaebfe52ef66e2"
     },
     {
       "manifest": "tools/polished_port/manifests/attack_suite.json",

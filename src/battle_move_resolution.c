@@ -4632,7 +4632,9 @@ static enum MoveEndResult MoveEndMoveBlock(struct BattleCalcValues *cv)
                 gBattleMons[battlerDef].item = ITEM_NONE;
                 if (gBattleMons[battlerDef].ability != ABILITY_GORILLA_TACTICS)
                     gBattleStruct->choicedMove[battlerDef] = MOVE_NONE;
-                CheckSetUnburden(battlerDef);
+                // Pinned Knock Off clears the item directly, without consumption.
+                if (!UsesPolishedBattleRules(cv->battlerAtk, battlerDef))
+                    CheckSetUnburden(battlerDef);
 
                 // In Gen 5+, Knock Off removes the target's item rather than rendering it unusable
                 if (B_KNOCK_OFF_REMOVAL >= GEN_5)
@@ -4672,7 +4674,8 @@ static enum MoveEndResult MoveEndMoveBlock(struct BattleCalcValues *cv)
             }
             else
             {
-                StealTargetItem(cv->battlerAtk, battlerDef, ITEM_NONE);  // Attacker steals target item
+                StealTargetItem(cv->battlerAtk, battlerDef, ITEM_NONE,
+                    cv->move == MOVE_THIEF && UsesPolishedBattleRules(cv->battlerAtk, battlerDef));  // Attacker steals target item
 
                 if (!UsesPolishedBattleRules(cv->battlerAtk, battlerDef) && !(GetConfig(B_STEAL_WILD_ITEMS) >= GEN_9
                  && !(gBattleTypeFlags & (BATTLE_TYPE_TRAINER | BATTLE_TYPE_PALACE))))
@@ -5322,11 +5325,11 @@ static enum MoveEndResult MoveEndPickpocket(struct BattleCalcValues *cv)
                 {
                     if (originalAttackerOnField)
                     {
-                        StealTargetItem(battlerDef, cv->battlerAtk, ITEM_NONE);  // Target takes attacker's item
+                        StealTargetItem(battlerDef, cv->battlerAtk, ITEM_NONE, UsesPolishedBattleRules(battlerDef, cv->battlerAtk));  // Target takes attacker's item
                     }
                     else
                     {
-                        StealTargetItem(battlerDef, cv->battlerAtk, itemToSteal); // Don't change cv->battlerAtk's item
+                        StealTargetItem(battlerDef, cv->battlerAtk, itemToSteal, UsesPolishedBattleRules(battlerDef, cv->battlerAtk)); // Don't change cv->battlerAtk's item
 
                         PREPARE_MON_NICK_WITH_PREFIX_LOWER_BUFFER(gBattleTextBuff2, cv->battlerAtk, originalAttackerPartyId);
 

@@ -6,6 +6,42 @@ import build_action_resolution as action
 
 
 class ActionResolutionTest(unittest.TestCase):
+    def test_item_transfers_cannot_consume_or_change_unburden(self):
+        for name in ('thief', 'knock_off'):
+            for instruction in ('set SUBSTATUS_UNBURDEN, [hl]', 'res SUBSTATUS_UNBURDEN, [hl]',
+                                'call ConsumeUserItem', 'call ConsumeOpponentItem'):
+                with self.subTest(name=name, instruction=instruction):
+                    files = copy.deepcopy(action.source.authenticated_sources())
+                    files[f'engine/battle/move_effects/{name}.asm']['text'] += '\n\t' + instruction
+                    with self.assertRaises(AssertionError):
+                        action.validate_item_unburden_source(files)
+
+    def test_pickpocket_must_use_source_thief(self):
+        files = copy.deepcopy(action.source.authenticated_sources())
+        path = 'engine/battle/effect_commands.asm'
+        prefix, suffix = files[path]['text'].split('; Pickpocket', 1)
+        files[path]['text'] = prefix + '; Pickpocket' + suffix.replace('call BattleCommand_thief', 'nop', 1)
+        with self.assertRaises(AssertionError):
+            action.validate_item_unburden_source(files)
+
+    def test_bug_bite_consumption_must_address_the_victim(self):
+        files = copy.deepcopy(action.source.authenticated_sources())
+        path = 'engine/battle/effect_commands.asm'
+        prefix, suffix = files[path]['text'].split('ConsumeStolenOpponentItem::', 1)
+        files[path]['text'] = prefix + 'ConsumeStolenOpponentItem::' + suffix.replace('call StackCallOpponentTurn', 'nop', 1)
+        with self.assertRaises(AssertionError):
+            action.validate_item_unburden_source(files)
+
+    def test_consumption_requires_effective_unburden_and_sets_the_flag(self):
+        for token in ('call GetTrueUserAbility', 'cp UNBURDEN', 'set SUBSTATUS_UNBURDEN, [hl]'):
+            with self.subTest(token=token):
+                files = copy.deepcopy(action.source.authenticated_sources())
+                path = 'engine/battle/effect_commands.asm'
+                prefix, suffix = files[path]['text'].split('_ConsumeUserItem::', 1)
+                files[path]['text'] = prefix + '_ConsumeUserItem::' + suffix.replace(token, 'nop', 1)
+                with self.assertRaises(AssertionError):
+                    action.validate_item_unburden_source(files)
+
     def test_curse_requires_hidden_substitute_and_duplicate_guards(self):
         for token in ('call CheckHiddenOpponent', 'call CheckSubstituteOpp',
                       'BATTLE_VARS_SUBSTATUS1_OPP', 'bit SUBSTATUS_CURSE, [hl]',
