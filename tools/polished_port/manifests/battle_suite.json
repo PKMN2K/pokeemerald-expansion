@@ -36516,6 +36516,106 @@
       "path": "test/battle/ability/polished_flinch_focus.c"
     },
     {
+      "name": "Polished recovery Pickup can recover an item consumed on an earlier turn",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/ability/polished_item_recovery.c"
+    },
+    {
+      "name": "Polished recovery Pickup reads the active opponent party slot after switching",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/ability/polished_item_recovery.c"
+    },
+    {
+      "name": "Polished recovery Pickup does not overwrite a held item",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/ability/polished_item_recovery.c"
+    },
+    {
+      "name": "Polished recovery wild opponents cannot use Pickup",
+      "kind": "WILD_BATTLE_TEST",
+      "path": "test/battle/ability/polished_item_recovery.c"
+    },
+    {
+      "name": "Polished recovery player Pickup cannot recover its own consumed item",
+      "kind": "WILD_BATTLE_TEST",
+      "path": "test/battle/ability/polished_item_recovery.c"
+    },
+    {
+      "name": "Polished recovery player Pickup can recover the wild opponent item",
+      "kind": "WILD_BATTLE_TEST",
+      "path": "test/battle/ability/polished_item_recovery.c"
+    },
+    {
+      "name": "Polished recovery Pickup can recover a consumed White Herb",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/ability/polished_item_recovery.c"
+    },
+    {
+      "name": "Polished recovery removed and force-eaten items do not create Pickup history",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/ability/polished_item_recovery.c"
+    },
+    {
+      "name": "Polished recovery Harvest preserves a consumption-earned Unburden flag after Transform",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/ability/polished_item_recovery.c"
+    },
+    {
+      "name": "Polished recovery Pickup preserves an earned Unburden flag after Transform",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/ability/polished_item_recovery.c"
+    },
+    {
+      "name": "Polished recovery Harvest only restores berries and never replaces a held item",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/ability/polished_item_recovery.c"
+    },
+    {
+      "name": "Polished recovery Harvest has a half chance outside sun",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/ability/polished_item_recovery.c"
+    },
+    {
+      "name": "Polished recovery Harvest is guaranteed in effective sun",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/ability/polished_item_recovery.c"
+    },
+    {
+      "name": "Polished recovery Cloud Nine removes the guaranteed Harvest chance",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/ability/polished_item_recovery.c"
+    },
+    {
+      "name": "Polished recovery Neutralizing Gas blocks Harvest and Pickup",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/ability/polished_item_recovery.c"
+    },
+    {
+      "name": "Polished recovery doubles retain the native Pickup freshness restriction",
+      "kind": "DOUBLE_BATTLE_TEST",
+      "path": "test/battle/ability/polished_item_recovery.c"
+    },
+    {
+      "name": "Polished recovery active Terastallization retains native Pickup freshness",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/ability/polished_item_recovery.c"
+    },
+    {
+      "name": "Polished recovery optional Recycle keeps native Unburden reset",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/ability/polished_item_recovery.c"
+    },
+    {
+      "name": "Polished recovery Harvest clears history before slower Pickup and defers reconsumption",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/ability/polished_item_recovery.c"
+    },
+    {
+      "name": "Polished recovery both Pickup users consume each opponent history exactly once",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/ability/polished_item_recovery.c"
+    },
+    {
       "name": "Polished Magic Bounce activates for every source candidate and respects Mold Breaker",
       "kind": "SINGLE_BATTLE_TEST",
       "path": "test/battle/ability/polished_magic_bounce.c"
@@ -41829,7 +41929,7 @@
     },
     {
       "manifest": "tools/polished_port/manifests/action_resolution.json",
-      "sha256": "4da599c63c7326fd253ea9915a1c57d7fdb89a56d08d4bf0bffaebfe52ef66e2"
+      "sha256": "2922a7420407954ec74cd94e6a0858b541df6a2422b048b5d8cb8f49b4f0375f"
     },
     {
       "manifest": "tools/polished_port/manifests/attack_suite.json",

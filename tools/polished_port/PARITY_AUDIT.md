@@ -5186,3 +5186,55 @@ Johto ROM SHA-256:
 `ea1d110d2c2cc838b761ddda6d66c664c9b08f89b8007e59b3cf2321aa390403`.
 Native ROM SHA-256:
 `46ec368a8650d6c4240a283515373a29e59cba1239af0bcb76352147a6f17c94`.
+
+## Suite 2 continuation — Harvest and Pickup recovery history
+
+Continues from `6a3b346b` (CI #1644 passed), using default Polished Crystal
+`3fa43192379df5c3e7b09a08e4d5d79af4f02f42`.
+
+Source Pickup reads the active opponent's party-slot used-item history without
+a same-turn restriction. It now recovers items consumed on earlier turns,
+including history belonging to a Pokemon that switched out and returned.
+It does not read a benched slot or its own history, and wild opponents cannot
+use it. A held item still prevents recovery. The selected history is cleared
+when transferred, so the two sides cannot reuse the same stored item.
+
+Harvest and Pickup now preserve an earned Unburden volatile after ability
+changes. The source recovery routines only restore held-item storage; they do
+not clear that flag. Optional Recycle remains native, as do doubles and active
+gimmicks. Existing source end-turn scheduling keeps recovery ahead of the final
+healing pass, so a faster Harvest cannot immediately consume its restored berry
+and supply that berry to slower Pickup in the same ability pass.
+
+Twenty live regression groups in `polished_item_recovery.c` cover earlier-turn
+history, switch returns and inactive slots, held-item rejection, both wild
+roles, own-history rejection, nonberry Pickup, nonconsuming removal, Transform
+into each recovery ability, Harvest's berry/sun/50-percent/Cloud Nine rules,
+Neutralizing Gas, two Pickup users, reconsumption order and native controls.
+Six distinguishing groups failed on the parent runtime. Six new source mutation
+groups authenticate those contracts, the party-slot address helpers and the
+end-turn ordering; action-contract coverage is now 38 groups. No save layouts
+or species, move, item or party identifiers change.
+
+Suite 2 remains OPEN for source post-battle item backup/restoration, other
+ability/item eligibility and persistence branches, Choice-lock selection and
+transfer timing, and remaining attack-effect branches. Exact RNG sequence and
+presentation remain Suite 3 obligations. The probability checks here establish
+Harvest's rate and effective-weather gate, not byte-for-byte RNG parity.
+
+Validation: all **1,204 source groups plus six AI timing groups** pass. The full
+native run passes **6,426 groups**, retaining nine expected failures and 585
+TODOs (7,020 total). Both profiles execute all twenty recovery groups. All 112
+reproducibility/check commands pass, including 38 action-contract groups and
+twelve ARM probes. The final contract-test refinement was rechecked separately.
+Both strict unused/deprecation production builds produce 32 MiB ROMs. The Johto
+ROM passes all 102 campaign checks, nineteen directed warps and twelve garden
+checks with unchanged replay inputs, including Save/reset/Continue. Production
+construction matches all 22 trainer teams / 44 Pokemon. The strict completeness
+gate still returns expected exit 2 for fifteen domains, 4,143 lexical source
+blocks and 133 effect families.
+
+Johto ROM SHA-256:
+`03e983afdda703b5f4ecce060d1abed49fe8aabc2aa0e8a16a23eb59b1c12b00`.
+Native ROM SHA-256:
+`88f1c5dc4a4c7803934a417af39ed56ac8ce6806989e18af2a3b758b78b849f4`.

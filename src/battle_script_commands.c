@@ -8352,8 +8352,12 @@ static void Cmd_tryrecycleitem(void)
     CMD_ARGS(const u8 *failInstr);
 
     enum Item *usedHeldItem;
+    enum Ability ability = GetBattlerAbility(gBattlerAttacker);
+    bool32 sourceRecovery = gCurrentMove == MOVE_NONE
+        && (ability == ABILITY_PICKUP || ability == ABILITY_HARVEST)
+        && UsesPolishedBattleRules(gBattlerAttacker, GetOppositeBattler(gBattlerAttacker));
 
-    if (gCurrentMove == MOVE_NONE && GetBattlerAbility(gBattlerAttacker) == ABILITY_PICKUP)
+    if (gCurrentMove == MOVE_NONE && ability == ABILITY_PICKUP)
         usedHeldItem = &GetBattlerPartyState(gBattlerTarget)->usedHeldItem;
     else
         usedHeldItem = &GetBattlerPartyState(gBattlerAttacker)->usedHeldItem;
@@ -8362,7 +8366,9 @@ static void Cmd_tryrecycleitem(void)
         gLastUsedItem = *usedHeldItem;
         *usedHeldItem = ITEM_NONE;
         gBattleMons[gBattlerAttacker].item = gLastUsedItem;
-        gBattleMons[gBattlerAttacker].volatiles.unburdenActive = FALSE;
+        // Source recovery does not reset consumption-earned ability state.
+        if (!sourceRecovery)
+            gBattleMons[gBattlerAttacker].volatiles.unburdenActive = FALSE;
 
         BtlController_EmitSetMonData(gBattlerAttacker, B_COMM_TO_CONTROLLER, REQUEST_HELDITEM_BATTLE, 0, sizeof(gBattleMons[gBattlerAttacker].item), &gBattleMons[gBattlerAttacker].item);
         MarkBattlerForControllerExec(gBattlerAttacker);

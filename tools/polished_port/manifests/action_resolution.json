@@ -232,6 +232,7 @@
     "limitation": "Command sequences authenticate coverage obligations; they do not certify untested conditional branches."
   },
   "contracts": [
+    "Source Pickup recovers only the active opponent party slot history, including earlier turns and switch returns, clears that history once, refuses an occupied recipient and cannot be used by wild opponents. Harvest and Pickup preserve earned Unburden flags after ability changes. Recovery precedes the final healing pass; optional Recycle, doubles and active gimmicks retain native behavior. Post-battle backup restoration and exact RNG consumption remain open.",
     "Source Thief, Pickpocket and Knock Off leave Unburden state unchanged; receiving through Thief preserves an earned boost. Bug Bite consumes the victim berry and activates the victim ability, not the eater. Ordinary consumption and Air Balloon activate effective Unburden; Neutralizing Gas prevents earning the boost and temporarily suppresses an existing boost. Optional Covet, Sticky Barb, Magician, doubles and active gimmicks retain native transfer behavior.",
     "Ghost Curse selects the opponent after type changes, rejects Fly/Dig even with No Guard, and respects Substitute unless the effective user ability is Infiltrator. Rejection spends PP but no HP.",
     "Curse costs floor(max HP / 2), at least one, may faint its user, and does not charge again for an already cursed target. Source residual checks use floor(max HP / 4), at least one, subject to Magic Guard.",

@@ -6,6 +6,60 @@ import build_action_resolution as action
 
 
 class ActionResolutionTest(unittest.TestCase):
+    def test_pickup_requires_wild_gate_and_opponent_history(self):
+        for token, replacement in (('ld a, [wBattleMode]', 'nop'),
+                                   ('call GetOpponentUsedItemAddr', 'call GetUsedItemAddr')):
+            files = copy.deepcopy(action.source.authenticated_sources())
+            path = 'engine/battle/abilities.asm'
+            prefix, suffix = files[path]['text'].split('PickupAbility:', 1)
+            files[path]['text'] = prefix + 'PickupAbility:' + suffix.replace(token, replacement, 1)
+            with self.assertRaises(AssertionError):
+                action.validate_recovery_source(files)
+
+    def test_recovery_must_clear_used_history(self):
+        for label in ('HarvestAbility:', 'PickupAbility:'):
+            files = copy.deepcopy(action.source.authenticated_sources())
+            path = 'engine/battle/abilities.asm'
+            prefix, suffix = files[path]['text'].split(label, 1)
+            files[path]['text'] = prefix + label + suffix.replace('xor a\n\tld [hl], a', 'nop', 1)
+            with self.assertRaises(AssertionError):
+                action.validate_recovery_source(files)
+
+    def test_recovery_cannot_reset_unburden_or_consume_immediately(self):
+        for label in ('HarvestAbility:', 'PickupAbility:', 'RegainItemByAbility:'):
+            for instruction in ('res SUBSTATUS_UNBURDEN, [hl]', 'call ConsumeUserItem'):
+                files = copy.deepcopy(action.source.authenticated_sources())
+                path = 'engine/battle/abilities.asm'
+                files[path]['text'] = files[path]['text'].replace(label, label + '\n\t' + instruction, 1)
+                with self.assertRaises(AssertionError):
+                    action.validate_recovery_source(files)
+
+    def test_harvest_requires_source_weather_probability_and_berry_gate(self):
+        for token in ('call GetWeatherAfterUserUmbrella', 'cp WEATHER_SUN', 'add a', 'cp BERRIES'):
+            files = copy.deepcopy(action.source.authenticated_sources())
+            path = 'engine/battle/abilities.asm'
+            prefix, suffix = files[path]['text'].split('HarvestAbility:', 1)
+            files[path]['text'] = prefix + 'HarvestAbility:' + suffix.replace(token, 'nop', 1)
+            with self.assertRaises(AssertionError):
+                action.validate_recovery_source(files)
+
+    def test_recovery_history_tracks_the_current_party_slot(self):
+        for token in ('call StackCallOpponentTurn', 'ld a, [wCurBattleMon]', 'ld a, [wCurOTMon]'):
+            files = copy.deepcopy(action.source.authenticated_sources())
+            path = 'home/battle.asm'
+            prefix, suffix = files[path]['text'].split('GetOpponentUsedItemAddr::', 1)
+            files[path]['text'] = prefix + 'GetOpponentUsedItemAddr::' + suffix.replace(token, 'xor a', 1)
+            with self.assertRaises(AssertionError):
+                action.validate_recovery_source(files)
+
+    def test_recovered_berry_healing_must_follow_both_ability_passes(self):
+        files = copy.deepcopy(action.source.authenticated_sources())
+        path = 'engine/battle/endturn.asm'
+        text = files[path]['text'].replace('call HandleHealingItems', 'nop', 1)
+        files[path]['text'] = text.replace('call HandleEndturnBlockB', 'call HandleHealingItems\n\tcall HandleEndturnBlockB', 1)
+        with self.assertRaises(AssertionError):
+            action.validate_recovery_source(files)
+
     def test_item_transfers_cannot_consume_or_change_unburden(self):
         for name in ('thief', 'knock_off'):
             for instruction in ('set SUBSTATUS_UNBURDEN, [hl]', 'res SUBSTATUS_UNBURDEN, [hl]',

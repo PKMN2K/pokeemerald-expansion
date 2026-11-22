@@ -200,12 +200,40 @@ def validate_item_unburden_source(files):
     ordered(air_balloon, ['call CheckAirBalloon', 'call ConsumeOpponentItem'])
 
 
+def validate_recovery_source(files):
+    abilities = files['engine/battle/abilities.asm']['text']
+    harvest = block(abilities, 'HarvestAbility:', 'PickupAbility:')
+    pickup = block(abilities, 'PickupAbility:', 'RegainItemByAbility:')
+    regain = block(abilities, 'RegainItemByAbility:', 'GetCappedStats:')
+    for name, text in (('Harvest', harvest), ('Pickup', pickup), ('Regain', regain)):
+        assert 'UNBURDEN' not in text, f'{name} preserves the Unburden volatile'
+        assert not re.search(r'\bConsume\w*Item\b', text), f'{name} does not immediately consume recovery'
+    ordered(harvest, ['call GetWeatherAfterUserUmbrella', 'cp WEATHER_SUN', 'jr z, .ok',
+        'call BattleRandom', 'add a', 'ret c', 'farcall GetUserItem', 'ret nz',
+        'call GetUsedItemAddr', 'farcall CheckItemPocket', 'cp BERRIES', 'ret nz',
+        'xor a', 'ld [hl], a', 'ld a, b', 'ld [de], a', 'call RegainItemByAbility'])
+    ordered(pickup, ['farcall GetUserItem', 'ret nz', 'ldh a, [hBattleTurn]', 'jr z, .player',
+        'ld a, [wBattleMode]', 'dec a', 'ret z', 'call GetOpponentUsedItemAddr',
+        'ld a, [hl]', 'and a', 'ret z', 'ld [de], a', 'xor a', 'ld [hl], a',
+        'call RegainItemByAbility'])
+    assert 'call GetUsedItemAddr' not in pickup, 'Pickup never recovers its own history'
+    history = block(files['home/battle.asm']['text'], 'GetOpponentUsedItemAddr::', 'BattleJumptable::')
+    ordered(history, ['call StackCallOpponentTurn', 'GetUsedItemAddr::', 'ld hl, wPartyUsedItems',
+        'ld a, [wCurBattleMon]', 'ld hl, wOTPartyUsedItems', 'ld a, [wCurOTMon]'])
+    endturn = files['engine/battle/endturn.asm']['text']
+    ordered(block(endturn, 'HandleBetweenTurnEffects:', '.endturn_loop'),
+        ['call HandleEndturnBlockB', 'call HandleLeppaBerry', 'call HandleHealingItems'])
+    ordered(re.split(r'^[A-Za-z_]\w*:', endturn.split('HandleEndturnBlockB:', 1)[1], maxsplit=1, flags=re.M)[0],
+        ['call SetFastestTurn', 'call .do_it', 'call SwitchTurn', 'farcall EndturnAbilitiesB'])
+
+
 def build():
     files = source.authenticated_sources()
     validate_source(files)
     validate_remaining_source(files)
     validate_curse_trick_source(files)
     validate_item_unburden_source(files)
+    validate_recovery_source(files)
     move_files, moves, effects = attacks.inventory()
     used = sorted({m['source_effect'] for m in moves})
     command_names = sorted({line.split()[0] for name in used for line in effects[name]['commands']})
@@ -235,6 +263,7 @@ def build():
             postfaint_effect_families=relevant,
             limitation='Command sequences authenticate coverage obligations; they do not certify untested conditional branches.'),
         contracts=[
+            'Source Pickup recovers only the active opponent party slot history, including earlier turns and switch returns, clears that history once, refuses an occupied recipient and cannot be used by wild opponents. Harvest and Pickup preserve earned Unburden flags after ability changes. Recovery precedes the final healing pass; optional Recycle, doubles and active gimmicks retain native behavior. Post-battle backup restoration and exact RNG consumption remain open.',
             'Source Thief, Pickpocket and Knock Off leave Unburden state unchanged; receiving through Thief preserves an earned boost. Bug Bite consumes the victim berry and activates the victim ability, not the eater. Ordinary consumption and Air Balloon activate effective Unburden; Neutralizing Gas prevents earning the boost and temporarily suppresses an existing boost. Optional Covet, Sticky Barb, Magician, doubles and active gimmicks retain native transfer behavior.',
             'Ghost Curse selects the opponent after type changes, rejects Fly/Dig even with No Guard, and respects Substitute unless the effective user ability is Infiltrator. Rejection spends PP but no HP.',
             'Curse costs floor(max HP / 2), at least one, may faint its user, and does not charge again for an already cursed target. Source residual checks use floor(max HP / 4), at least one, subject to Magic Guard.',

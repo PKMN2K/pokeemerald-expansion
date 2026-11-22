@@ -3831,10 +3831,24 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
             switch (gLastUsedAbility)
             {
             case ABILITY_PICKUP:
-                if (gBattleMons[battler].item == ITEM_NONE
-                 && PickupHasValidTarget(battler))
+                if (gBattleMons[battler].item == ITEM_NONE)
                 {
-                    gBattlerTarget = RandomUniformExcept(RNG_PICKUP, 0, gBattlersCount - 1, CantPickupItem);
+                    enum BattlerId opponent = GetOppositeBattler(battler);
+                    if (UsesPolishedBattleRules(battler, opponent))
+                    {
+                        // Pinned Pickup reads the active opponent's persistent
+                        // used-item slot, never its own or a benched party slot.
+                        if ((!IsOnPlayerSide(battler) && !(gBattleTypeFlags & BATTLE_TYPE_TRAINER))
+                         || GetBattlerPartyState(opponent)->usedHeldItem == ITEM_NONE)
+                            break;
+                        gBattlerTarget = opponent;
+                    }
+                    else
+                    {
+                        if (!PickupHasValidTarget(battler))
+                            break;
+                        gBattlerTarget = RandomUniformExcept(RNG_PICKUP, 0, gBattlersCount - 1, CantPickupItem);
+                    }
                     gLastUsedItem = GetBattlerPartyState(gBattlerTarget)->usedHeldItem;
                     BattleScriptCall(BattleScript_PickupActivates);
                     effect++;
