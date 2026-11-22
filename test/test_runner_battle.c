@@ -3159,6 +3159,12 @@ void Move(u32 sourceLine, struct BattlePokemon *battler, struct MoveContext ctx)
     }
 }
 
+void ConversionChoice(u32 sourceLine, struct BattlePokemon *battler, u32 slot)
+{
+    INVALID_IF(DATA.turnState != TURN_OPEN, "CONVERSION_CHOICE outside TURN");
+    PushBattlerAction(sourceLine, battler - gBattleMons, RECORDED_CONVERSION_SLOT, slot);
+}
+
 void ForcedMove(u32 sourceLine, struct BattlePokemon *battler)
 {
     enum BattlerId battlerId = battler - gBattleMons;

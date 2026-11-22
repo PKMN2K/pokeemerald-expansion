@@ -1156,6 +1156,9 @@ enum { TURN_CLOSED, TURN_OPEN, TURN_CLOSING };
 #define SCORE_GT_VAL(battler, ...) Score(__LINE__, battler, CMP_GREATER_THAN, TRUE, (struct TestAIScoreStruct) { R_APPEND_TRUE(__VA_ARGS__) } )
 #define SCORE_LT_VAL(battler, ...) Score(__LINE__, battler, CMP_LESS_THAN, TRUE, (struct TestAIScoreStruct) { R_APPEND_TRUE(__VA_ARGS__) } )
 
+#define CONVERSION_CHOICE(battler, slot) ConversionChoice(__LINE__, battler, slot)
+void ConversionChoice(u32 sourceLine, struct BattlePokemon *battler, u32 slot);
+
 #define FORCED_MOVE(battler) ForcedMove(__LINE__, battler)
 #define SWITCH(battler, partyIndex) Switch(__LINE__, battler, partyIndex)
 #define SKIP_TURN(battler) SkipTurn(__LINE__, battler)

@@ -364,5 +364,16 @@ static const struct PolishedTrainerEntry sPolishedTrainerEntries[] = {
             },
         },
     },
+    {
+        .trainer = TRAINER_POLISHED_GIOVANNI1, .count = 1, .baseMoney = 25,
+        .items = {ITEM_MAX_POTION, ITEM_NONE}, .mons = {
+            {
+                .species = SPECIES_MEWTWO_ARMORED, .abilitySlot = 1,
+                .nature = NATURE_MODEST, .gender = TRAINER_MON_RANDOM_GENDER,
+                .iv = TRAINER_PARTY_IVS(30, 30, 30, 30, 30, 30),
+                .ev = {53, 53, 53, 53, 53, 53},
+            },
+        },
+    },
 };
 #endif

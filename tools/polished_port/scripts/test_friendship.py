@@ -24,7 +24,7 @@ class FriendshipTest(unittest.TestCase):
         self.assertEqual(report['events']['HAPPINESS_GAINLEVELATHOME'], [6, 4, 0])
         self.assertEqual(report['events']['HAPPINESS_GYMBATTLE'], [5, 3, 0])
         bosses = report['registered_boss_bindings']
-        self.assertEqual([k for k,v in bosses.items() if v], ['TRAINER_POLISHED_FALKNER'])
+        self.assertEqual([k for k,v in bosses.items() if v], ['TRAINER_POLISHED_FALKNER', 'TRAINER_POLISHED_GIOVANNI1'])
         self.assertFalse(bosses['TRAINER_POLISHED_SPROUT_LI'])
 
     def test_scoped_reproducible_reference(self):

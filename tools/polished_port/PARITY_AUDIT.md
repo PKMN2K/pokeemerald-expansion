@@ -5004,3 +5004,81 @@ Johto ROM SHA-256:
 `3a5aaefa51d41d744f404f990aed73ae7878dfc6043d14a7dcd7cf34f3364b83`.
 Native ROM SHA-256:
 `f364fa015849ad29fc01e045f7b040619d9e2c0c2d849bea4ab6d61b8111feab`.
+
+## Suite 2 consolidated copy, selection, item and switching batch
+
+Pinned default source remains authoritative. This batch addresses the named
+remaining action gaps together: Transform/Imposter, Skill Swap, Conversion,
+Cud Chew/Recycle, Heal Bell, wild Thief/Pickpocket, Knock Off/Bug Bite timing,
+voluntary switch ordering, Pursuit/trap interactions and Giovanni1's opening.
+
+Transform permits repeated transformations, rejects the source protected
+targets, copies the stored ability, activates its entry routine, preserves the
+original party identity and remaps surviving move locks. Skill Swap rejects
+hidden targets and clears Unburden, Flash Fire and pending Cud Chew on both
+sides; it runs user then target entry, excluding Imposter and Cloud Nine.
+Cud Chew has its own full item-ID record rather than consuming Recycle history.
+Heal Bell cures active and benched Soundproof holders under the source rules.
+
+Conversion now opens the actual player move-selection controller to choose a
+known move's listed type, including zero-PP moves. Invalid/current-type choices
+retry; only Conversion spends PP. Battle-test recording has a distinct choice
+tag. Enemy wild selection chooses an eligible slot. Smart trainer AI, link
+transport and broader recording compatibility remain explicit Suite 3 work.
+
+Two chosen switches resolve in source Speed/Trick Room and turn-order-item
+order, completing each entry before the next switch. Previous references to
+"simultaneous voluntary entry" were incorrect. The simultaneous entry path is
+for initial entry and simultaneous faint replacements. Dedicated controls cover
+Pursuit before/during a pivot, outgoing KOs, no repeated attack on a replacement,
+and U-turn escaping Mean Look.
+
+Wild theft gives an empty holder the item and sends a second item to the bag,
+subject to capacity; wild opponents cannot steal. Sticky Hold stops theft only
+while its holder lives. Knock Off/Bug Bite reserve eligible items before damage
+can trigger HP/stat berries. Bug Bite excludes the six EV berries and respects
+Unnerve, including with Mold Breaker (Unnerve is absent from the source's
+Mold Breaker suppression list). A successful stolen-berry effect arms Cud Chew.
+
+Giovanni1 and Armor Suit use appended IDs. The source team, form, gender, nature,
+ability, nickname, moves, held item and badge-scaled level are registered. Its
+one initial boost checkpoint runs Attack, Defense, Speed, Special Attack and
+Special Defense, then Mirror Herb, before entry abilities. Reentry cannot repeat
+it. Source story/map integration, trainer art, Armor Suit icon and source battle
+animation/presentation are still unported; these additions are not claimed as a
+playable Giovanni story phase. Existing save identifiers are not renumbered.
+
+Thirty-eight new groups include a deliberately seeded full-bag eligibility
+boundary; they do not claim a full-bag UI sequence. Source authentication and
+negative mutation controls cover the new contracts. A separate production-linked
+fixture uses real controller input for Conversion, rather than battle-test playback.
+Full certification of every conditional branch across all 133 effect families
+remains OPEN in Suite 2. This batch does not move those obligations into Suite 3
+or weaken the strict completeness gate.
+
+Validation: the complete source catalog passes **1,150/1,150** groups plus all
+six AI timing groups. The final 38 new groups pass in both source and native
+profiles after the controller and fixture refinements. The full native run
+passed all 6,334 existing groups and 35 of the new groups; the other three
+new fixtures had contradictory turn order, a hidden-target expectation that
+needed No Guard, or an implicit move invalidated by Imposter. Those fixtures
+were corrected and all 38 rerun successfully. The native catalog retains its
+nine expected failures and 585 TODO groups; this is regression evidence, not
+source-parity closure.
+
+All 112 workflow reproducibility/check commands pass, including 23 action
+contract tests, three completion-plan tests and twelve ARM compiler probes.
+Both production ROMs build with strict unused/deprecation diagnostics. The
+production factory verifies all 22 registered trainers / 44 Pokemon, including
+Giovanni1's genderless Mewtwo, nickname, held item and four moves. The real
+Conversion controller retries an invalid type, accepts a zero-PP Water move,
+displays its actual PP and spends only Conversion's PP. The final Johto ROM
+passes all 102 campaign checks, nineteen directed warps and twelve garden
+checks, including Save/reset/Continue. The strict completeness gate still
+returns its expected exit 2 for fifteen domains, 4,143 lexical blocks and
+133 effect families.
+
+Johto ROM SHA-256:
+`c4c52e76f778f1d32620409ca8c6de659800d918e7d502b30e2c5143f5f9bf01`.
+Native ROM SHA-256:
+`a4c9e5b6c3cebbb3083ffed5d0c06bcdc77017d711a00a1f51b11d5730dc02bf`.

@@ -1600,10 +1600,12 @@ void StealTargetItem(enum BattlerId battlerStealer, enum BattlerId itemBattler, 
         gBattleMons[itemBattler].item = ITEM_NONE;
     }
 
-    if (GetConfig(B_STEAL_WILD_ITEMS) >= GEN_9
+    bool32 source = UsesPolishedBattleRules(battlerStealer, itemBattler);
+    if ((source && !(gBattleTypeFlags & BATTLE_TYPE_TRAINER) && gBattleMons[battlerStealer].item != ITEM_NONE)
+     || (!source && GetConfig(B_STEAL_WILD_ITEMS) >= GEN_9
      && !(gBattleTypeFlags & (BATTLE_TYPE_TRAINER | BATTLE_TYPE_PALACE))
      && GetMoveEffect(gCurrentMove) == EFFECT_STEAL_ITEM
-     && battlerStealer == gBattlerAttacker) // ensure that Pickpocket isn't activating this
+     && battlerStealer == gBattlerAttacker)) // ensure that Pickpocket isn't activating this
     {
         AddBagItem(gLastUsedItem, 1);
     }
@@ -3866,6 +3868,13 @@ void BS_PolishedAbilityMirrorHerb(void)
         gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
+void BS_PolishedMirrorHerbCheckpoint(void)
+{
+    NATIVE_ARGS();
+    if (!PolishedCheckMirrorHerb())
+        gBattlescriptCurrInstr = cmd->nextInstr;
+}
+
 void BS_PolishedPreActionItems(void)
 {
     NATIVE_ARGS();
@@ -4624,6 +4633,14 @@ static void Cmd_removeitem(void)
         // bug bite / pluck / no item - don't remove current item
         gBattlescriptCurrInstr = cmd->nextInstr;
         return;
+    }
+
+    if (UsesPolishedBattleRules(battler, GetOppositeBattler(battler))
+     && GetBattlerAbility(battler) == ABILITY_CUD_CHEW
+     && GetItemPocket(itemId) == POCKET_BERRIES)
+    {
+        gBattleMons[battler].volatiles.polishedCudChewBerry = itemId;
+        gBattleMons[battler].volatiles.cudChew = TRUE;
     }
 
     // Popped Air Balloon cannot be restored by any means.
@@ -5877,6 +5894,93 @@ static void Cmd_forcerandomswitch(void)
     }
 }
 
+static bool32 PolishedConversionSlotValid(enum BattlerId battler, u32 slot)
+{
+    if (slot >= MAX_MON_MOVES || gBattleMons[battler].moves[slot] == MOVE_NONE)
+        return FALSE;
+    enum Type type = GetMoveType(gBattleMons[battler].moves[slot]);
+    return type != TYPE_MYSTERY && !IS_BATTLER_OF_TYPE(battler, type);
+}
+
+static bool32 PolishedConversionSlotInvalid(u32 slot)
+{
+    return !PolishedConversionSlotValid(gBattlerAttacker, slot);
+}
+
+static bool32 TryPolishedConversion(const u8 *next, const u8 *fail)
+{
+    enum BattlerId battler = gBattlerAttacker;
+    // Link action transport is a separate Suite 3 obligation.
+    if (!UsesPolishedBattleRules(battler, GetOppositeBattler(battler)) || gBattleTypeFlags & BATTLE_TYPE_LINK)
+        return FALSE;
+    if (gBattleControllerExecFlags)
+        return TRUE;
+    u32 slot;
+    for (slot = 0; slot < MAX_MON_MOVES; slot++)
+        if (PolishedConversionSlotValid(battler, slot))
+            break;
+    if (slot == MAX_MON_MOVES)
+    {
+        gBattleStruct->polishedConversionSelecting = 0;
+        gBattlescriptCurrInstr = fail;
+        return TRUE;
+    }
+    if (IsOnPlayerSide(battler))
+    {
+        switch (gBattleStruct->polishedConversionSelecting)
+        {
+        case 0:
+            gBattleStruct->polishedConversionMoveCursor = gMoveSelectionCursor[battler];
+            gMoveSelectionCursor[battler] = 0;
+            gBattleStruct->polishedConversionSelecting = 1;
+            BattleScriptCall(BattleScript_PolishedConversionChoose);
+            return TRUE;
+        case 1:
+        {
+            struct ChooseMoveStruct moveInfo = {0};
+            moveInfo.species = gBattleMons[battler].species;
+            for (u32 i = 0; i < MAX_MON_MOVES; i++)
+            {
+                moveInfo.moves[i] = gBattleMons[battler].moves[i];
+                // Type selection is independent of PP, Disable and Encore.
+                moveInfo.currentPP[i] = gBattleMons[battler].pp[i];
+                moveInfo.maxPP[i] = CalculatePPWithBonus(moveInfo.moves[i], gBattleMons[battler].ppBonuses, i);
+            }
+            for (u32 i = 0; i < 3; i++)
+                moveInfo.monTypes[i] = gBattleMons[battler].types[i];
+            gBattleStruct->polishedConversionSelecting = 2;
+            BtlController_EmitChooseMove(battler, B_COMM_TO_CONTROLLER, FALSE, FALSE, &moveInfo);
+            MarkBattlerForControllerExec(battler);
+            return TRUE;
+        }
+        default:
+            slot = gBattleResources->bufferB[battler][2];
+            if (slot == 0xff) slot = 0xfe; // recording reserves ff for end-of-stream
+            if (!(gBattleTypeFlags & BATTLE_TYPE_RECORDED))
+                RecordedBattle_SetBattlerAction(battler, slot);
+            if (!PolishedConversionSlotValid(battler, slot))
+            {
+                gBattleStruct->polishedConversionSelecting = 1;
+                BattleScriptCall(BattleScript_PolishedConversionInvalid);
+                return TRUE;
+            }
+            gMoveSelectionCursor[battler] = gBattleStruct->polishedConversionMoveCursor;
+            gBattleStruct->polishedConversionSelecting = 0;
+            break;
+        }
+    }
+    else
+    {
+        // Source wild/non-Smart AI selection. Smart AI scoring belongs to Suite 3.
+        slot = RandomUniformExcept(RNG_POLISHED_CONVERSION, 0, MAX_MON_MOVES - 1, PolishedConversionSlotInvalid);
+    }
+    enum Type type = GetMoveType(gBattleMons[battler].moves[slot]);
+    SET_BATTLER_TYPE(battler, type);
+    PREPARE_TYPE_BUFFER(gBattleTextBuff1, type);
+    gBattlescriptCurrInstr = next;
+    return TRUE;
+}
+
 static void Cmd_tryconversiontypechange(void)
 {
     CMD_ARGS(const u8 *failInstr);
@@ -5884,6 +5988,9 @@ static void Cmd_tryconversiontypechange(void)
     u8 validMoves = 0;
     u8 moveChecked = 0;
     u8 moveType = 0;
+
+    if (TryPolishedConversion(cmd->nextInstr, cmd->failInstr))
+        return;
 
     if (GetActiveGimmick(gBattlerAttacker) == GIMMICK_TERA)
     {
@@ -6171,14 +6278,50 @@ static void Cmd_setfocusenergy(void)
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
+static EWRAM_DATA bool8 sPolishedTransformEntryPending = FALSE;
+
+static void PolishedRemapMoveLocks(enum BattlerId battler)
+{
+    struct BattlePokemon *user = &gBattleMons[battler];
+    u32 i;
+    // Source locks follow move identities when a slot changes. Preserve their
+    // remaining duration if that identity still exists; otherwise clear them.
+    for (i = 0; i < MAX_MON_MOVES; i++)
+        if (user->moves[i] == user->volatiles.disabledMove)
+            break;
+    if (user->volatiles.disabledMove == MOVE_NONE || i == MAX_MON_MOVES)
+        user->volatiles.disabledMove = user->volatiles.disableTimer = 0;
+    for (i = 0; i < MAX_MON_MOVES; i++)
+        if (user->moves[i] == user->volatiles.encoredMove)
+            break;
+    if (user->volatiles.encoredMove == MOVE_NONE || i == MAX_MON_MOVES)
+        user->volatiles.encoredMove = user->volatiles.encoreTimer = user->volatiles.encoredMovePos = 0;
+    else if (user->volatiles.encoredMove != MOVE_NONE)
+        user->volatiles.encoredMovePos = i;
+    // Choice shares the source Encore slot, but is separate in Expansion.
+    for (i = 0; i < MAX_MON_MOVES; i++)
+        if (user->moves[i] == gBattleStruct->choicedMove[battler])
+            break;
+    if (i == MAX_MON_MOVES)
+        gBattleStruct->choicedMove[battler] = MOVE_NONE;
+}
+
 static void Cmd_transformdataexecution(void)
 {
     CMD_ARGS();
 
+    bool32 source = UsesPolishedBattleRules(gBattlerAttacker, gBattlerTarget);
+    bool32 wasTransformed = gBattleMons[gBattlerAttacker].volatiles.transformed;
+    sPolishedTransformEntryPending = FALSE;
+    if (source)
+        gLastMoves[gBattlerAttacker] = MOVE_NONE;
     gBattlescriptCurrInstr = cmd->nextInstr;
-    if ((GetConfig(B_TRANSFORM_SEMI_INV_FAIL) >= GEN_2 && IsSemiInvulnerable(gBattlerTarget, EXCLUDE_COMMANDER))
-        || (GetConfig(B_TRANSFORM_TARGET_FAIL) >= GEN_2 && gBattleMons[gBattlerTarget].volatiles.transformed)
-        || (GetConfig(B_TRANSFORM_USER_FAIL) >= GEN_5 && gBattleMons[gBattlerAttacker].volatiles.transformed)
+    if (((source || GetConfig(B_TRANSFORM_SEMI_INV_FAIL) >= GEN_2) && IsSemiInvulnerable(gBattlerTarget, EXCLUDE_COMMANDER))
+        || ((source || GetConfig(B_TRANSFORM_TARGET_FAIL) >= GEN_2) && gBattleMons[gBattlerTarget].volatiles.transformed)
+        || (!source && GetConfig(B_TRANSFORM_USER_FAIL) >= GEN_5 && wasTransformed)
+        || (source && GET_BASE_SPECIES_ID(gBattleMons[gBattlerTarget].species) == SPECIES_MEWTWO
+          && gBattleMons[gBattlerTarget].item == ITEM_POLISHED_ARMOR_SUIT)
+        || (source && gBattleMons[gBattlerTarget].volatiles.substitute && GetBattlerAbility(gBattlerAttacker) != ABILITY_INFILTRATOR)
         || gBattleStruct->illusion[gBattlerTarget].state == ILLUSION_ON)
     {
         gBattleStruct->moveResultFlags[gBattlerTarget] |= MOVE_RESULT_FAILED;
@@ -6190,11 +6333,16 @@ static void Cmd_transformdataexecution(void)
         u8 *battleMonAttacker, *battleMonTarget;
         u8 timesGotHit;
 
-        gChosenMove = MOVE_UNAVAILABLE;
+        if (!source)
+            gChosenMove = MOVE_UNAVAILABLE;
         gBattleMons[gBattlerAttacker].volatiles.transformed = TRUE;
-        gBattleMons[gBattlerAttacker].volatiles.disabledMove = MOVE_NONE;
-        gBattleMons[gBattlerAttacker].volatiles.disableTimer = 0;
-        gBattleMons[gBattlerAttacker].volatiles.transformedMonSpecies = gBattleMons[gBattlerAttacker].species;
+        if (!source)
+        {
+            gBattleMons[gBattlerAttacker].volatiles.disabledMove = MOVE_NONE;
+            gBattleMons[gBattlerAttacker].volatiles.disableTimer = 0;
+        }
+        if (!wasTransformed)
+            gBattleMons[gBattlerAttacker].volatiles.transformedMonSpecies = gBattleMons[gBattlerAttacker].species;
         gBattleMons[gBattlerAttacker].volatiles.transformedMonPID = gBattleMons[gBattlerTarget].personality;
 
         if (B_TRANSFORM_SHINY >= GEN_4)
@@ -6215,7 +6363,19 @@ static void Cmd_transformdataexecution(void)
         for (i = 0; i < offsetof(struct BattlePokemon, pp); i++)
             battleMonAttacker[i] = battleMonTarget[i];
 
-        gBattleMons[gBattlerAttacker].volatiles.overwrittenAbility = GetBattlerAbility(gBattlerTarget);
+        gBattleMons[gBattlerAttacker].volatiles.overwrittenAbility = source
+            ? gBattleMons[gBattlerTarget].ability : GetBattlerAbility(gBattlerTarget);
+        if (source)
+        {
+            gBattleMons[gBattlerAttacker].ppBonuses = 0;
+            // ResetActorDisable clears the countdown before restoring the
+            // surviving move identity (a zero countdown does not expire it).
+            gBattleMons[gBattlerAttacker].volatiles.disableTimer = 0;
+            PolishedRemapMoveLocks(gBattlerAttacker);
+            gBattleMons[gBattlerAttacker].volatiles.traceActivated = FALSE;
+            gBattleMons[gBattlerAttacker].volatiles.weatherAbilityDone = FALSE;
+            sPolishedTransformEntryPending = TRUE;
+        }
         for (i = 0; i < MAX_MON_MOVES; i++)
         {
             u32 pp = GetMovePP(gBattleMons[gBattlerAttacker].moves[i]);
@@ -6234,6 +6394,30 @@ static void Cmd_transformdataexecution(void)
         MarkBattlerForControllerExec(gBattlerAttacker);
         gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_TRANSFORMED;
     }
+}
+
+void BS_PolishedBossStat(void)
+{
+    NATIVE_ARGS(u8 stat);
+    SetStatChange(B_BATTLER_1, cmd->stat, 1);
+    gBattlescriptCurrInstr = cmd->nextInstr;
+}
+
+void BS_PolishedTransformEntry(void)
+{
+    NATIVE_ARGS();
+    gBattlescriptCurrInstr = cmd->nextInstr;
+    if (!sPolishedTransformEntryPending)
+        return;
+    sPolishedTransformEntryPending = FALSE;
+    enum Ability ability = GetBattlerAbility(gBattlerAttacker);
+    if (ability == ABILITY_IMPOSTER || !IsBattlerAlive(gBattlerAttacker))
+        return;
+    if (AbilityBattleEffects(ABILITYEFFECT_NEUTRALIZINGGAS, gBattlerAttacker, ability, MOVE_NONE, TRUE)
+     || AbilityBattleEffects(ABILITYEFFECT_UNNERVE, gBattlerAttacker, ability, MOVE_NONE, TRUE)
+     || AbilityBattleEffects(ABILITYEFFECT_ON_SWITCHIN, gBattlerAttacker, ability, MOVE_NONE, TRUE)
+     || AbilityBattleEffects(ABILITYEFFECT_IMMUNITY, gBattlerAttacker, ability, MOVE_NONE, TRUE))
+        return;
 }
 
 static void Cmd_setsubstitute(void)
@@ -6599,26 +6783,7 @@ bool32 TryPolishedSketch(void)
     else
         user->volatiles.mimickedMoves |= 1u << slot;
 
-    // Source locks follow move identities when a slot changes. Preserve their
-    // remaining duration if that identity still exists; otherwise clear them.
-    for (i = 0; i < MAX_MON_MOVES; i++)
-        if (user->moves[i] == user->volatiles.disabledMove)
-            break;
-    if (user->volatiles.disabledMove == MOVE_NONE || i == MAX_MON_MOVES)
-        user->volatiles.disabledMove = user->volatiles.disableTimer = 0;
-    for (i = 0; i < MAX_MON_MOVES; i++)
-        if (user->moves[i] == user->volatiles.encoredMove)
-            break;
-    if (user->volatiles.encoredMove == MOVE_NONE || i == MAX_MON_MOVES)
-        user->volatiles.encoredMove = user->volatiles.encoreTimer = user->volatiles.encoredMovePos = 0;
-    else if (user->volatiles.encoredMove != MOVE_NONE)
-        user->volatiles.encoredMovePos = i;
-    // Choice shares the source Encore slot, but is separate in Expansion.
-    for (i = 0; i < MAX_MON_MOVES; i++)
-        if (user->moves[i] == gBattleStruct->choicedMove[gBattlerAttacker])
-            break;
-    if (i == MAX_MON_MOVES)
-        gBattleStruct->choicedMove[gBattlerAttacker] = MOVE_NONE;
+    PolishedRemapMoveLocks(gBattlerAttacker);
 
     PREPARE_MOVE_BUFFER(gBattleTextBuff1, copied)
     return TRUE;
@@ -6779,9 +6944,10 @@ static void Cmd_healpartystatus(void)
     u32 toHeal = 0;
     enum BattlerId partner = GetBattlerAtPosition(GetPartnerPosition(GetBattlerPosition(gBattlerAttacker)));
     struct Pokemon *party = GetBattlerParty(gBattlerAttacker);
+    bool32 source = UsesPolishedBattleRules(gBattlerAttacker, GetOppositeBattler(gBattlerAttacker));
     bool32 isSoundMove = IsSoundMove(gCurrentMove);
 
-    if (GetConfig(B_HEAL_BELL_SOUNDPROOF) == GEN_5
+    if (source || GetConfig(B_HEAL_BELL_SOUNDPROOF) == GEN_5
      || GetConfig(B_HEAL_BELL_SOUNDPROOF) >= GEN_8
      || !(isSoundMove && GetBattlerAbility(gBattlerAttacker) == ABILITY_SOUNDPROOF))
     {
@@ -6802,7 +6968,7 @@ static void Cmd_healpartystatus(void)
 
     if (IsBattlerAlive(partner))
     {
-        if (GetConfig(B_HEAL_BELL_SOUNDPROOF) == GEN_5
+        if (source || GetConfig(B_HEAL_BELL_SOUNDPROOF) == GEN_5
          || !(isSoundMove && GetBattlerAbility(partner) == ABILITY_SOUNDPROOF))
         {
             gBattleMons[partner].status1 = 0;
@@ -6828,7 +6994,7 @@ static void Cmd_healpartystatus(void)
             bool32 isAttacker = gBattlerPartyIndexes[gBattlerAttacker] == i;
             bool32 isDoublesPartner = gBattlerPartyIndexes[partner] == i && IsBattlerAlive(partner);
 
-            if (GetConfig(B_HEAL_BELL_SOUNDPROOF) == GEN_5
+            if (source || GetConfig(B_HEAL_BELL_SOUNDPROOF) == GEN_5
              || (GetConfig(B_HEAL_BELL_SOUNDPROOF) >= GEN_8 && isAttacker))
                 ability = ABILITY_NONE;
             else if (GetConfig(B_HEAL_BELL_SOUNDPROOF) > GEN_5 && !isAttacker && !isDoublesPartner)
@@ -7692,12 +7858,20 @@ static void Cmd_tryswapabilities(void)
 {
     CMD_ARGS(const u8 *failInstr);
 
-    if (gAbilitiesInfo[gBattleMons[gBattlerAttacker].ability].cantBeSwapped)
+    bool32 source = UsesPolishedBattleRules(gBattlerAttacker, gBattlerTarget);
+
+    if (source && IsSemiInvulnerable(gBattlerTarget, EXCLUDE_COMMANDER))
+    {
+        gBattlescriptCurrInstr = cmd->failInstr;
+    }
+    else if (gAbilitiesInfo[gBattleMons[gBattlerAttacker].ability].cantBeSwapped
+          || (source && gBattleMons[gBattlerAttacker].ability == ABILITY_NONE))
     {
         RecordAbilityBattle(gBattlerAttacker, gBattleMons[gBattlerAttacker].ability);
         gBattlescriptCurrInstr = cmd->failInstr;
     }
-    else if (gAbilitiesInfo[gBattleMons[gBattlerTarget].ability].cantBeSwapped)
+    else if (gAbilitiesInfo[gBattleMons[gBattlerTarget].ability].cantBeSwapped
+          || (source && gBattleMons[gBattlerTarget].ability == ABILITY_NONE))
     {
         RecordAbilityBattle(gBattlerTarget, gBattleMons[gBattlerTarget].ability);
         gBattlescriptCurrInstr = cmd->failInstr;
@@ -7720,6 +7894,17 @@ static void Cmd_tryswapabilities(void)
             gLastUsedAbility = gBattleMons[gBattlerTarget].ability;
             RemoveAbilityFlags(gBattlerTarget);
             RemoveAbilityFlags(gBattlerAttacker);
+            if (source)
+            {
+                gBattleMons[gBattlerAttacker].volatiles.flashFireBoosted = FALSE;
+                gBattleMons[gBattlerTarget].volatiles.flashFireBoosted = FALSE;
+                gBattleMons[gBattlerAttacker].volatiles.weatherAbilityDone = FALSE;
+                gBattleMons[gBattlerTarget].volatiles.weatherAbilityDone = FALSE;
+                gBattleMons[gBattlerAttacker].volatiles.cudChew = FALSE;
+                gBattleMons[gBattlerTarget].volatiles.cudChew = FALSE;
+                gBattleMons[gBattlerAttacker].volatiles.polishedCudChewBerry = ITEM_NONE;
+                gBattleMons[gBattlerTarget].volatiles.polishedCudChewBerry = ITEM_NONE;
+            }
             gBattleMons[gBattlerTarget].ability = gBattleMons[gBattlerTarget].volatiles.overwrittenAbility = gBattleMons[gBattlerAttacker].ability;
             gBattleMons[gBattlerAttacker].ability = gBattleMons[gBattlerAttacker].volatiles.overwrittenAbility = gLastUsedAbility;
 
@@ -8098,6 +8283,8 @@ bool32 IsSubstituteProtected(enum BattlerId battlerAtk, enum BattlerId battlerDe
         return FALSE;
     else if (GetMoveEffect(move) == EFFECT_DEFOG && GetConfig(B_DEFOG_EFFECT_CLEARING) == GEN_4)
         return FALSE;
+    else if (move == MOVE_TRANSFORM && UsesPolishedBattleRules(battlerAtk, battlerDef))
+        return abilityAtk != ABILITY_INFILTRATOR;
     else if (GetConfig(B_INFILTRATOR_SUBSTITUTE) < GEN_6)
         return TRUE;
     else if (GetMoveEffect(move) == EFFECT_TRANSFORM || GetMoveEffect(move) == EFFECT_SKY_DROP)
@@ -11366,6 +11553,10 @@ void BS_SwitchinAbilities(void)
     enum BattlerId battler = GetBattlerForBattleScript(cmd->battler);
     enum Ability ability = GetBattlerAbility(battler);
     gBattlescriptCurrInstr = cmd->nextInstr;
+    if (gCurrentMove == MOVE_SKILL_SWAP
+     && UsesPolishedBattleRules(gBattlerAttacker, gBattlerTarget)
+     && (ability == ABILITY_IMPOSTER || ability == ABILITY_CLOUD_NINE))
+        return;
     if (AbilityBattleEffects(ABILITYEFFECT_TERA_SHIFT, battler, ability, MOVE_NONE, TRUE)
      || AbilityBattleEffects(ABILITYEFFECT_NEUTRALIZINGGAS, battler, ability, MOVE_NONE, TRUE)
      || AbilityBattleEffects(ABILITYEFFECT_UNNERVE, battler, ability, MOVE_NONE, TRUE)
@@ -12381,8 +12572,15 @@ void BS_ConsumeBerry(void)
     }
     gBattleScripting.overrideBerryRequirements = 1;
     GetBattlerPartyState(battler)->ateBerry = TRUE;
-    if (ItemBattleEffects(battler, 0, GetItemHoldEffect(gLastUsedItem), IsOnBerryActivation))
+    bool32 stolen = gBattlescriptCurrInstr == BattleScript_PolishedBugBiteConsume;
+    enum Item berry = gLastUsedItem;
+    if (ItemBattleEffects(battler, 0, GetItemHoldEffect(berry), IsOnBerryActivation))
     {
+        if (stolen && UsesPolishedBattleRules(battler, GetOppositeBattler(battler)) && GetBattlerAbility(battler) == ABILITY_CUD_CHEW)
+        {
+            gBattleMons[battler].volatiles.polishedCudChewBerry = berry;
+            gBattleMons[battler].volatiles.cudChew = TRUE;
+        }
         gBattleScripting.overrideBerryRequirements = 2;
         return;
     }

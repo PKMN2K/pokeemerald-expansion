@@ -84,6 +84,7 @@ static bool32 CutThirdOfHp(enum BattlerId battler);
 static enum CancelerResult CancelerClearFlags(struct BattleCalcValues *cv)
 {
     sPolishedSwitch = POLISHED_SWITCH_NONE;
+    gBattleStruct->polishedPendingItemLoss = 0;
     if (UsesPolishedActionRules(cv->move))
         gBattleStruct->redCardActivated = FALSE;
     PolishedBeginActionFaints(cv->move);
@@ -3217,6 +3218,16 @@ static bool32 TryMoveDamageUpdate(struct BattleCalcValues *cv)
             u16 hpBefore;
             u16 hpLost;
 
+            // Source marks item loss before SubtractHP's healing sweep. Status
+            // cures still run, but HP/stat berries wait for Knock Off/Bug Bite.
+            if (UsesPolishedBattleRules(cv->battlerAtk, cv->battlerDef)
+             && !gBattleMons[cv->battlerDef].volatiles.substitute
+             && ((cv->moveEffect == EFFECT_KNOCK_OFF
+                  && cv->abilities[cv->battlerDef] != ABILITY_STICKY_HOLD
+                  && CanBattlerGetOrLoseItem(cv->battlerDef, cv->battlerAtk, gBattleMons[cv->battlerDef].item))
+              || (cv->move == MOVE_BUG_BITE && PolishedCanEatTargetBerry(cv->battlerAtk, cv->battlerDef, cv->abilities[cv->battlerDef]))))
+                gBattleStruct->polishedPendingItemLoss |= 1u << cv->battlerDef;
+
             gBideDmg[cv->battlerDef] += gBattleStruct->moveDamage[cv->battlerDef];
             gBideTarget[cv->battlerDef] = cv->battlerAtk;
 
@@ -4600,14 +4611,16 @@ static enum MoveEndResult MoveEndMoveBlock(struct BattleCalcValues *cv)
         case EFFECT_KNOCK_OFF:
             if (gBattleMons[battlerDef].item != ITEM_NONE
              && IsBattlerTurnDamaged(battlerDef, EXCLUDING_SUBSTITUTES)
-             && !(B_KNOCK_OFF_REMOVAL >= GEN_5 && side == B_SIDE_PLAYER && !(gBattleTypeFlags & BATTLE_TYPE_TRAINER))
+             && !(UsesPolishedBattleRules(cv->battlerAtk, battlerDef) && gBattleMons[battlerDef].volatiles.substitute)
+             && !(!UsesPolishedBattleRules(cv->battlerAtk, battlerDef) && B_KNOCK_OFF_REMOVAL >= GEN_5 && side == B_SIDE_PLAYER && !(gBattleTypeFlags & BATTLE_TYPE_TRAINER))
              && CanBattlerGetOrLoseItem(battlerDef, cv->battlerAtk, gBattleMons[battlerDef].item)
-             && !NoAliveMonsForEitherParty())
+             && (UsesPolishedBattleRules(cv->battlerAtk, battlerDef) || !NoAliveMonsForEitherParty()))
             {
                 if (!IsBattlerAlive(cv->battlerAtk) && GetConfig(B_FAINT_MOVE_EFFECT_TIMING) < GEN_CHAMPIONS)
                     break;
 
-                if (cv->abilities[battlerDef] == ABILITY_STICKY_HOLD)
+                if (cv->abilities[battlerDef] == ABILITY_STICKY_HOLD
+                 && (!UsesPolishedBattleRules(cv->battlerAtk, battlerDef) || IsBattlerAlive(battlerDef)))
                 {
                     gBattlerAbility = battlerDef;
                     BattleScriptCall(BattleScript_StickyHoldActivatesRet);
@@ -4640,13 +4653,16 @@ static enum MoveEndResult MoveEndMoveBlock(struct BattleCalcValues *cv)
             break;
         case EFFECT_STEAL_ITEM:
             if (!IsBattlerTurnDamaged(battlerDef, EXCLUDING_SUBSTITUTES)
-             || gBattleMons[cv->battlerAtk].item != ITEM_NONE
+             || (UsesPolishedBattleRules(cv->battlerAtk, battlerDef) && gBattleMons[battlerDef].volatiles.substitute)
+             || (gBattleMons[cv->battlerAtk].item != ITEM_NONE
+              && !(UsesPolishedBattleRules(cv->battlerAtk, battlerDef) && !(gBattleTypeFlags & BATTLE_TYPE_TRAINER) && IsOnPlayerSide(cv->battlerAtk)))
              || gBattleMons[battlerDef].item == ITEM_NONE
              || (!IsBattlerAlive(cv->battlerAtk) && GetConfig(B_FAINT_MOVE_EFFECT_TIMING) < GEN_CHAMPIONS)
              || !CanStealItem(cv->battlerAtk, battlerDef, gBattleMons[battlerDef].item))
                 continue;
 
-            if (cv->abilities[battlerDef] == ABILITY_STICKY_HOLD)
+            if (cv->abilities[battlerDef] == ABILITY_STICKY_HOLD
+                 && (!UsesPolishedBattleRules(cv->battlerAtk, battlerDef) || IsBattlerAlive(battlerDef)))
             {
                 BattleScriptCall(BattleScript_StickyHoldActivatesRet);
                 gBattlerAbility = battlerDef;
@@ -4658,7 +4674,7 @@ static enum MoveEndResult MoveEndMoveBlock(struct BattleCalcValues *cv)
             {
                 StealTargetItem(cv->battlerAtk, battlerDef, ITEM_NONE);  // Attacker steals target item
 
-                if (!(GetConfig(B_STEAL_WILD_ITEMS) >= GEN_9
+                if (!UsesPolishedBattleRules(cv->battlerAtk, battlerDef) && !(GetConfig(B_STEAL_WILD_ITEMS) >= GEN_9
                  && !(gBattleTypeFlags & (BATTLE_TYPE_TRAINER | BATTLE_TYPE_PALACE))))
                 {
                     gBattleMons[cv->battlerAtk].item = gLastUsedItem;
@@ -5294,7 +5310,9 @@ static enum MoveEndResult MoveEndPickpocket(struct BattleCalcValues *cv)
               && cv->abilities[battlerDef] == ABILITY_PICKPOCKET
               && IsMoveMakingContact(cv->battlerAtk, battlerDef, abilityAtk, holdEffectAtk, gCurrentMove)
               && IsBattlerTurnDamaged(battlerDef, EXCLUDING_SUBSTITUTES)
-              && gBattleMons[battlerDef].item == ITEM_NONE
+              && (gBattleMons[battlerDef].item == ITEM_NONE
+               || (UsesPolishedBattleRules(battlerDef, cv->battlerAtk)
+                && !(gBattleTypeFlags & BATTLE_TYPE_TRAINER) && IsOnPlayerSide(battlerDef)))
               && CanStealItem(battlerDef, cv->battlerAtk, itemToSteal))
             {
                 gBattlerTarget = gBattlerAbility = battlerDef;
@@ -6345,7 +6363,7 @@ static enum Move GetRecordedMove(void)
         enum BattleMoveEffects effect = GetMoveEffect(GetOriginallyUsedMove(gChosenMove));
         if (effect == EFFECT_SLEEP_TALK || effect == EFFECT_METRONOME)
             return MOVE_NONE;
-        if (effect == EFFECT_SKETCH && UsesPolishedBattleRules(gBattlerAttacker, gBattlerTarget))
+        if ((effect == EFFECT_SKETCH || effect == EFFECT_TRANSFORM) && UsesPolishedBattleRules(gBattlerAttacker, gBattlerTarget))
             return MOVE_NONE;
     }
     return gChosenMove;
@@ -6596,7 +6614,10 @@ static enum Move GetSleepTalkMove(void)
     } while ((1u << movePosition) & unusableMovesBits);
 
     move = gBattleMons[gBattlerAttacker].moves[movePosition];
-    gCurrMovePos = movePosition;
+    // Source ResetTurn keeps wCurMoveNum on Sleep Talk. Called Sketch or a
+    // lock must not reinterpret the selected slot as the submove's slot.
+    if (!UsesPolishedBattleRules(gBattlerAttacker, gBattlerTarget))
+        gCurrMovePos = movePosition;
 
     return move;
 }

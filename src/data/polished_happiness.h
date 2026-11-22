@@ -27,5 +27,6 @@ static const s8 sPolishedHappinessChanges[POLISHED_HAPPINESS_COUNT][3] = {
 #if !IS_FRLG
 static const u16 sPolishedBossTrainers[] = {
     TRAINER_POLISHED_FALKNER,
+    TRAINER_POLISHED_GIOVANNI1,
 };
 #endif

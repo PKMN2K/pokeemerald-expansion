@@ -566,13 +566,16 @@ static void HandleSetEffectIncinerate(struct BattleCalcValues *cv, struct SetEff
 
 static void HandleSetEffectBugBite(struct BattleCalcValues *cv, struct SetEffect *se)
 {
-    if (GetBattlerHoldEffect(se->effectBattler) == HOLD_EFFECT_JABOCA_BERRY || gSpecialStatuses[se->effectBattler].berryReduced)
+    bool32 source = cv->move == MOVE_BUG_BITE && UsesPolishedBattleRules(cv->battlerAtk, se->effectBattler);
+    if (source && !PolishedCanEatTargetBerry(cv->battlerAtk, se->effectBattler, cv->abilities[se->effectBattler]))
+        return;
+    if (!source && (GetBattlerHoldEffect(se->effectBattler) == HOLD_EFFECT_JABOCA_BERRY || gSpecialStatuses[se->effectBattler].berryReduced))
     {
         // jaboca berry / resist berries trigger instead of being stolen
         gBattlescriptCurrInstr = se->script;
     }
     else if (GetItemPocket(gBattleMons[se->effectBattler].item) == POCKET_BERRIES
-        && cv->abilities[se->effectBattler] != ABILITY_STICKY_HOLD)
+        && (source || cv->abilities[se->effectBattler] != ABILITY_STICKY_HOLD))
     {
         // target loses their berry
         gLastUsedItem = gBattleMons[se->effectBattler].item;

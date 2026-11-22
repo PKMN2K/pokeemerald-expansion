@@ -16,7 +16,14 @@
     "engine/battle/move_effects/baton_pass.asm": "cf948a30d1116a786729f7fc0174bc297e99b464",
     "engine/battle/move_effects/roar.asm": "8080f4af709174e5d30d1a2440d0e4f3aaf775ec",
     "engine/battle/move_effects/teleport.asm": "f35a8303bc87fb78a8a5183248d0fda873cedaa1",
-    "data/items/attributes.asm": "462f69887a4fc6eea7b160892df8b515d306ded1"
+    "data/items/attributes.asm": "462f69887a4fc6eea7b160892df8b515d306ded1",
+    "engine/battle/move_effects/transform.asm": "85725faa931db15a6ae8c944893cdcd89d2a9189",
+    "engine/battle/move_effects/skill_swap.asm": "08331350c504988c4f43cafd50463959e4c13de6",
+    "engine/battle/move_effects/conversion.asm": "c6fb2024df2d73017f0bf728cf0412d83fa45f1d",
+    "engine/battle/move_effects/thief.asm": "f17d5e8b18246264da90961685fc68cbdacd89fe",
+    "engine/battle/move_effects/knock_off.asm": "91ce2e58a6afd7c1c90c684d9033c073738925da",
+    "engine/battle/move_effects/bug_bite.asm": "a5d44d18c24ef17d8f8aea94d2e5ff8dd8f843b0",
+    "engine/battle/move_effects/heal_bell.asm": "251ba5aa246794adf3d99674c019a077296cb075"
   },
   "inventory": {
     "moves": 255,
@@ -222,6 +229,16 @@
     "limitation": "Command sequences authenticate coverage obligations; they do not certify untested conditional branches."
   },
   "contracts": [
+    "Transform copies raw ability and activates its entry routine after the message except Imposter; repeated transformation is allowed, hidden/transformed/Armored Mewtwo targets and non-Infiltrator Substitute are rejected.",
+    "Transform preserves party identity, HP/item/status, remaps surviving move locks and zeroes the Disable countdown; copied PP is five except Sketch (one) and empty slots (zero).",
+    "Skill Swap rejects hidden targets and source blacklist abilities, resets Unburden/Flash Fire/Cud Chew, and runs user entry before target entry while excluding Imposter and Cloud Nine.",
+    "Cud Chew stores the consumed berry independently of Recycle history, delays one end-turn check, and clears its pending berry on Skill Swap; a successful Bug Bite effect can arm it.",
+    "Conversion lets the player choose any known valid move type regardless of PP, retries invalid selections, and preserves the selected action slot; wild selection samples eligible slots. Smart AI/link transport remain Suite 3 obligations.",
+    "Equal-priority voluntary switches resolve by current Speed/Trick Room and Quick Claw/Custap/Lagging Tail. Entries are sequential, not a shared simultaneous-entry pass.",
+    "Wild player Thief/Pickpocket holds the stolen item when empty or sends it to the bag when already holding and space exists. Wild opponents never steal; living Sticky Hold blocks theft, fainted Sticky Hold does not.",
+    "Knock Off and Bug Bite mark pending item loss before damage, suppressing HP/stat berry triggers but retaining status/confusion cures. Bug Bite respects Unnerve after Mold Breaker and the six EV berries.",
+    "Heal Bell heals active and benched party status without a Soundproof exclusion.",
+    "Giovanni1 has one initial Armored Mewtwo stat-boost checkpoint before entry abilities and followed by Mirror Herb; appended trainer/item IDs preserve existing identifiers.",
     "Sketch clears user history before any failure, uses the opponent counter-move record, and rejects link mode, Substitute (including Infiltrator), transformed users, absent/Struggle history and any already-known move.",
     "Sketch writes base PP and clears only the replaced slot PP-Up bits. Only a party slot actually containing Sketch is changed permanently; other temporary battle slots and party PP remain separate.",
     "Sketch remaps Disable/Encore/Choice by move identity, retaining duration when still known and clearing locks whose move was overwritten. Called-move text cannot repopulate cleared source history.",
@@ -267,7 +284,12 @@
     "test/battle/polished_stat_items.c",
     "test/battle/polished_mirror_ledger.c",
     "test/battle/polished_berserk_gene.c",
-    "test/battle/move_effect/polished_sketch.c"
+    "test/battle/move_effect/polished_sketch.c",
+    "test/battle/move_effect/polished_suite2_copy.c",
+    "test/battle/move_effect/polished_suite2_conversion.c",
+    "test/battle/move_effect/polished_suite2_items.c",
+    "test/battle/polished_suite2_boss.c",
+    "test/battle/polished_suite2_switching.c"
   ],
   "remaining": [
     "All unverified effect branches and command interactions remain owned by Suite 2.",

@@ -20,7 +20,7 @@
     {
       "id": 2,
       "title": "Action and attack resolution",
-      "status": "shared action resolution and deferred switching implemented; full branch closure pending",
+      "status": "action, copy, selection, item-loss and switching batches implemented; full branch closure pending",
       "domains": [
         "actions",
         "damage",

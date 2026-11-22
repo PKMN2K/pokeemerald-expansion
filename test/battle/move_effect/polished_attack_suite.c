@@ -28,6 +28,8 @@ SINGLE_BATTLE_TEST("Polished attack suite dispatches every source move on either
                 MOVE(user, move, WITH_RNG(RNG_METRONOME, B_POLISHED_MOVE_BALANCE ? 150 : MOVE_SPLASH));
             else
                 MOVE(user, move, secondaryEffect: FALSE);
+            if (B_POLISHED_MOVE_BALANCE && move == MOVE_CONVERSION && user == player)
+                CONVERSION_CHOICE(user, 0);
             MOVE(target, MOVE_SPLASH);
         }
     } THEN {

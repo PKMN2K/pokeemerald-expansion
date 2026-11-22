@@ -6,6 +6,20 @@ import build_action_resolution as action
 
 
 class ActionResolutionTest(unittest.TestCase):
+    def test_remaining_source_contracts_reject_removed_guards(self):
+        for path, token in (
+                ('transform', 'call ResetActorDisable'), ('transform', 'cp ARMOR_SUIT'),
+                ('skill_swap', 'ld [wPlayerCudChewBerry], a'),
+                ('conversion', 'farcall MoveSelectionScreen'),
+                ('thief', 'call ReceiveItem'), ('bug_bite', 'cp HELD_NO_BUG_BITE'),
+                ('bug_bite', 'call CheckPendingItemLoss')):
+            with self.subTest(path=path, token=token):
+                files = copy.deepcopy(action.source.authenticated_sources())
+                key = 'engine/battle/move_effects/'+path+'.asm'
+                files[key]['text'] = files[key]['text'].replace(token, 'nop', 1)
+                with self.assertRaises((AssertionError, ValueError)):
+                    action.validate_remaining_source(files)
+
     def test_gene_and_mirror_must_precede_action_selection(self):
         for token in ('call HandleBerserkGene', 'farcall CheckMirrorHerb'):
             with self.subTest(checkpoint=token):

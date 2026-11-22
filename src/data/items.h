@@ -16196,6 +16196,18 @@ const struct ItemInfo gItemsInfo[] =
         .iconPic = gItemIcon_PolishedTypeChart,
         .iconPalette = gItemIconPalette_PolishedTypeChart,
     },
+    [ITEM_POLISHED_ARMOR_SUIT] =
+    {
+        .name = ITEM_NAME("Armor Suit"),
+        .price = 0,
+        .description = COMPOUND_STRING("A suit of armor\nfor some POKéMON."),
+        .pocket = POCKET_ITEMS,
+        .type = ITEM_USE_BAG_MENU,
+        .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
+        // Source icon import is tracked with Suite 3 presentation.
+        .iconPic = gItemIcon_QuestionMark,
+        .iconPalette = gItemIconPalette_QuestionMark,
+    },
 #include "polished_held_item_definitions.h"
 #include "polished_rock_smash_item.h"
 };

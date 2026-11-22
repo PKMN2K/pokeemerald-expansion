@@ -1,6 +1,8 @@
 #include "global.h"
+#include "constants/opponents.h"
 #include "polished_lifecycle.h"
 #include "battle.h"
+#include "battle_setup.h"
 #include "battle_hold_effects.h"
 #include "battle_stat_change.h"
 #include "battle_util.h"
@@ -291,6 +293,21 @@ bool32 DoSwitchInEvents(void)
         SortPolishedBattlersBySpeed(gBattlersBySpeed);
         gBattleStruct->switchInBattlerCounter = 0;
         gBattleStruct->eventState.switchIn = SWITCH_IN_EVENTS_FIRST_BLOCK;
+        if (!gBattleStruct->polishedBossEntryDone)
+        {
+            gBattleStruct->polishedBossEntryDone = TRUE;
+#if !IS_FRLG
+            // Source class GIOVANNI/id GIOVANNI1, only the battle's initial
+            // entry checkpoint: after both hazards/items, before abilities.
+            if ((gBattleTypeFlags & BATTLE_TYPE_TRAINER)
+             && TRAINER_BATTLE_PARAM.opponentA == TRAINER_POLISHED_GIOVANNI1)
+            {
+                gBattleScripting.battler = B_BATTLER_1;
+                BattleScriptCall(BattleScript_PolishedArmoredMewtwoEntry);
+                return TRUE;
+            }
+#endif
+        }
         break;
     case SWITCH_IN_EVENTS_NEUTRALIZING_GAS:
         while (gBattleStruct->switchInBattlerCounter < gBattlersCount)

@@ -206,7 +206,8 @@
     "TRAINER_POLISHED_SPROUT_LI": false,
     "TRAINER_POLISHED_ROD": false,
     "TRAINER_POLISHED_ABE": false,
-    "TRAINER_POLISHED_FALKNER": true
+    "TRAINER_POLISHED_FALKNER": true,
+    "TRAINER_POLISHED_GIOVANNI1": true
   },
   "complete_behavior_parity": false,
   "remaining": [

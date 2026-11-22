@@ -2497,7 +2497,8 @@ bool32 CanAbilityAbsorbMove(struct DamageContext *ctx)
             battleScript = AbsorbedByFlashFire(ctx);
         break;
     case ABILITY_SOUNDPROOF:
-        if (IsSoundMove(ctx->move))
+        if (IsSoundMove(ctx->move)
+         && !(ctx->move == MOVE_HEAL_BELL && UsesPolishedBattleRules(ctx->battlerAtk, ctx->battlerDef)))
             battleScript = BattleScript_AbilityProtectedTarget;
         break;
     case ABILITY_BULLETPROOF:
@@ -3353,6 +3354,9 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
                 // Imposter only activates when the battler first switches in
                 if (!gBattleMons[battler].volatiles.overwrittenAbility
                     && IsBattlerAlive(diagonalBattler)
+                    && !(UsesPolishedBattleRules(battler, diagonalBattler)
+                        && GET_BASE_SPECIES_ID(gBattleMons[diagonalBattler].species) == SPECIES_MEWTWO
+                        && gBattleMons[diagonalBattler].item == ITEM_POLISHED_ARMOR_SUIT)
                     && !gBattleMons[diagonalBattler].volatiles.substitute
                     && !gBattleMons[diagonalBattler].volatiles.transformed
                     && !gBattleMons[battler].volatiles.transformed
@@ -4001,6 +4005,20 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
                 }
                 break;
             case ABILITY_CUD_CHEW:
+                if (UsesPolishedBattleRules(battler, GetOppositeBattler(battler)))
+                {
+                    if (gBattleMons[battler].volatiles.cudChew)
+                        gBattleMons[battler].volatiles.cudChew = FALSE;
+                    else if (gBattleMons[battler].volatiles.polishedCudChewBerry != ITEM_NONE)
+                    {
+                        gBattleScripting.battler = battler;
+                        gLastUsedItem = gBattleMons[battler].volatiles.polishedCudChewBerry;
+                        gBattleMons[battler].volatiles.polishedCudChewBerry = ITEM_NONE;
+                        BattleScriptCall(BattleScript_CudChewActivates);
+                        effect++;
+                    }
+                    break;
+                }
                 if (gBattleMons[battler].volatiles.cudChew == TRUE)
                 {
                     gBattleScripting.battler = battler;
@@ -9272,6 +9290,9 @@ bool32 CanBattlerGetOrLoseItem(enum BattlerId fromBattler, enum BattlerId battle
 
     enum HoldEffect holdEffect = GetItemHoldEffect(itemId); // Raw hold effect
 
+    if (UsesPolishedBattleRules(fromBattler, battler) && itemId == ITEM_POLISHED_ARMOR_SUIT
+     && (GET_BASE_SPECIES_ID(fromSpecies) == SPECIES_MEWTWO || GET_BASE_SPECIES_ID(otherSpecies) == SPECIES_MEWTWO))
+        return FALSE;
     if (ItemIsMail(itemId))
         return FALSE;
     else if (itemId == ITEM_ENIGMA_BERRY_E_READER)
@@ -9744,9 +9765,40 @@ void TryRestoreHeldItems(void)
     }
 }
 
+bool32 PolishedCanEatTargetBerry(enum BattlerId user, enum BattlerId target, enum Ability targetAbility)
+{
+    enum Item item = gBattleMons[target].item;
+    if (targetAbility == ABILITY_UNNERVE
+     || (targetAbility == ABILITY_STICKY_HOLD && IsBattlerAlive(target))
+     || GetItemPocket(item) != POCKET_BERRIES)
+        return FALSE;
+    // Pinned HELD_NO_BUG_BITE items; other non-edible berries are still eaten.
+    switch (item)
+    {
+    case ITEM_POMEG_BERRY:
+    case ITEM_KELPSY_BERRY:
+    case ITEM_QUALOT_BERRY:
+    case ITEM_HONDEW_BERRY:
+    case ITEM_GREPA_BERRY:
+    case ITEM_TAMATO_BERRY:
+        return FALSE;
+    default:
+        return TRUE;
+    }
+}
+
 bool32 CanStealItem(enum BattlerId battlerStealing, enum BattlerId battlerItem, enum Item item)
 {
     enum BattleSide stealerSide = GetBattlerSide(battlerStealing);
+
+    if (UsesPolishedBattleRules(battlerStealing, battlerItem)
+     && !(gBattleTypeFlags & BATTLE_TYPE_TRAINER))
+    {
+        if (!IsOnPlayerSide(battlerStealing))
+            return FALSE;
+        if (gBattleMons[battlerStealing].item != ITEM_NONE && !CheckBagHasSpace(item, 1))
+            return FALSE;
+    }
 
     if (gBattleTypeFlags & BATTLE_TYPE_TRAINER_HILL)
         return FALSE;

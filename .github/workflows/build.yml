@@ -185,6 +185,10 @@ jobs:
         timeout-minutes: 5
         run: python3 tools/polished_port/scripts/test_battle_systems_emulator.py --driver /tmp/johto-demo-driver --output /tmp/johto-validation/battle-systems
 
+      - name: Verify production Conversion type selection
+        timeout-minutes: 5
+        run: python3 tools/polished_port/scripts/test_conversion_selection_emulator.py --driver /tmp/johto-demo-driver --output /tmp/johto-validation/conversion-selection
+
       - name: Verify captured forms and legacy ownership through Flash saves
         timeout-minutes: 5
         run: python3 tools/polished_port/scripts/test_capture_storage_emulator.py --driver /tmp/johto-demo-driver --output /tmp/johto-validation/capture-storage

@@ -19,10 +19,10 @@ BINDINGS = {
     'WADE': ('BUG_CATCHER', 'WADE1'), 'FINCH': ('COOLTRAINERM', 'FINCH'),
     **{f'SPROUT_{s}': ('SAGE', s) for s in ('CHOW', 'NICO', 'EDMOND', 'JIN', 'TROY', 'NEAL')},
     'SPROUT_LI': ('ELDER', 'LI'), 'ROD': ('BIRD_KEEPER', 'ROD'), 'ABE': ('BIRD_KEEPER', 'ABE'),
-    'FALKNER': ('FALKNER', '1'),
+    'FALKNER': ('FALKNER', '1'), 'GIOVANNI1': ('GIOVANNI', 'GIOVANNI1'),
 }
 STATS = ('HP', 'Atk', 'Def', 'Spe', 'SAt', 'SDf')
-NATURES = {'ATK_UP_SATK_DOWN': 'ADAMANT', 'DEF_UP_SPE_DOWN': 'RELAXED', 'SATK_UP_SDEF_DOWN': 'RASH'}
+NATURES = {'ATK_UP_SATK_DOWN': 'ADAMANT', 'DEF_UP_SPE_DOWN': 'RELAXED', 'SATK_UP_SDEF_DOWN': 'RASH', 'SATK_UP_ATK_DOWN': 'MODEST'}
 
 
 def spread(text, default):
@@ -57,7 +57,7 @@ def build():
     assert 'MAX_RETURN_HAPPINESS  EQU 160' in files['constants/pokemon_data_constants.asm']
     parties = '\n'.join(archive.source.default_lines(files['data/trainers/parties.asm']))
     base = json.loads(species.build()[species.MANIFEST])['records']
-    base = {r['source_species']: r for r in base if r['source_form'] == 'PLAIN_FORM'}
+    base = {(r['source_species'], r['source_form']): r for r in base}
     mapped = set(re.findall(r'#define TRAINER_POLISHED_(\w+)', (ROOT/'include/constants/opponents.h').read_text()))
     assert mapped == set(BINDINGS), 'New source trainer needs an authenticated attribute binding'
     records = []
@@ -71,10 +71,10 @@ def build():
         mons = []
         for slot, mon in enumerate(body.split('tr_mon ')[1:], 1):
             line = mon.splitlines()[0]
-            match = re.fullmatch(r'(\d+|LEVEL_FROM_BADGES \+ \d+), (?:"[^"]+", )?(\w+)(?: @ \w+)?(?:, (MALE|FEMALE|GENDERLESS))?', line)
+            match = re.fullmatch(r'(\d+|LEVEL_FROM_BADGES \+ \d+), (?:"[^"]+", )?(\w+)(?: @ \w+)?(?:, (MALE|FEMALE|GENDERLESS)(?: \| (\w+))?)?', line)
             assert match, line
-            level, sp, gender = match.groups()
-            data = base[sp]
+            level, sp, gender, form = match.groups()
+            data = base[(sp, form or 'PLAIN_FORM')]
             extra = re.search(r'^tr_extra (.*)', mon, re.M)
             nature, ability = 'HARDY', (0 if personality else ((slot ^ ordinal ^ (data['source_table_index'] & 255)) & 1))
             if extra:
@@ -92,7 +92,7 @@ def build():
                 evs[3] = 0
             mons.append(dict(species=data['target_species'], source_species=sp, source_level=level,
                 ivs=[2*d for d in dvs], evs=evs, ability_slot=ability, ability=data['abilities'][ability],
-                nature='NATURE_'+nature, gender=gender or defaults[cls]['gender'], friendship=160))
+                nature='NATURE_'+nature, gender='GENDERLESS' if data['gender_ratio'] == 255 else gender or defaults[cls]['gender'], friendship=160))
         records.append(dict(target_trainer='TRAINER_POLISHED_'+target, source_class=cls, source_id=ordinal, source_name=name,
             items=['ITEM_'+s if s != '0' else 'ITEM_NONE' for s in defaults[cls]['items']],
             base_reward=defaults[cls]['base_reward'], mons=mons))
@@ -103,7 +103,7 @@ def build():
                 '        .items = {'+', '.join(r['items'])+'}, .mons = {']
         for mon in r['mons']:
             out += ['            {', f'                .species = {mon["species"]}, .abilitySlot = {mon["ability_slot"]},',
-                    f'                .nature = {mon["nature"]}, .gender = TRAINER_MON_{mon["gender"]},',
+                    f'                .nature = {mon["nature"]}, .gender = TRAINER_MON_{"RANDOM_GENDER" if mon["gender"] == "GENDERLESS" else mon["gender"]},',
                     '                .iv = TRAINER_PARTY_IVS('+', '.join(map(str, mon['ivs']))+'),',
                     '                .ev = {'+', '.join(str(mon['evs'][i]) for i in (0,1,2,4,5,3))+'},', '            },']
         out += ['        },', '    },']

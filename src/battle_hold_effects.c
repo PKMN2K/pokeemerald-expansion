@@ -1075,6 +1075,10 @@ enum ItemEffect ItemBattleEffects(enum BattlerId itemBattler, enum BattlerId bat
     enum ItemEffect effect = ITEM_NO_EFFECT;
     enum Item item;
 
+    if (UsesPolishedLifecycle() && (gBattleStruct->polishedPendingItemLoss & (1u << itemBattler))
+     && timing == IsOnHpThresholdActivation && !gBattleScripting.overrideBerryRequirements)
+        return ITEM_NO_EFFECT;
+
     // Source CheckMirrorHerb drains pending changes even without a held herb.
     // Resolve the current item and caps here, after item transfers and drops.
     if (UsesPolishedLifecycle() && timing == IsMirrorHerbActivation)

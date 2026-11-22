@@ -120,6 +120,7 @@
 #define FLAG_POLISHED_ROD 0x4EC
 #define FLAG_POLISHED_ABE 0x4ED
 #define FLAG_POLISHED_FALKNER 0x4EE
+#define FLAG_POLISHED_GIOVANNI1 0x4FF
 #define FLAG_POLISHED_ZEPHYR_BADGE 0x4EF
 #define FLAG_POLISHED_ROOST 0x4F9
 #define FLAG_POLISHED_EGG_CALL 0x4FA
@@ -1407,7 +1408,7 @@
 #define FLAG_DEFEATED_ELITE_4_GLACIA                                0x4FD
 #define FLAG_DEFEATED_ELITE_4_DRAKE                                 0x4FE
 
-#define FLAG_UNUSED_0x4FF                                           0x4FF // Unused Flag
+// Reserved for shared FLAG_POLISHED_GIOVANNI1.
 
 // Trainer Flags
 // The original contiguous range covers trainer IDs 0–863. Route 31 uses

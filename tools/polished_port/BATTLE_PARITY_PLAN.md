@@ -101,12 +101,24 @@ failures, switching, PP and native controls; three seeded production-command
 boundary groups cover temporary slots, locks and actual link-mode rejection.
 Link construction/playback and general called-move history remain later audits.
 
-Authenticated contracts and live test bindings are recorded in
-`manifests/action_resolution.json`. Voluntary/Pursuit/trap combinations,
-simultaneous voluntary entry, other ability/item branches, dedicated
-Armored Mewtwo checkpoint, called moves and the remaining
-133-effect branch obligations still require closure within Suite 2. These are
-existing obligations, not an additional suite.
+The consolidated remaining-action batch adds Transform and Skill Swap state
+and ability activation, player-selected Conversion, Cud Chew's separate berry
+record, Heal Bell, wild theft/Pickpocket, pending Knock Off/Bug Bite consumption,
+and Giovanni1's Armored Mewtwo opening checkpoint. Equal-priority voluntary
+switches now use source Speed/Trick Room and turn-order items, completing each
+entry sequentially. The former "simultaneous voluntary entry" wording was
+incorrect: the shared entry pass applies to initial entry and simultaneous
+faint replacements, not two independently chosen switches. Pursuit interception,
+KO/replacement, U-turn and Mean Look interactions have dedicated live controls.
+
+Authenticated contracts and live bindings remain in
+`manifests/action_resolution.json`. These scenarios do not certify every branch
+of all 133 effect families. Unverified move-command/ability/item combinations
+remain Suite 2 obligations; full branch closure is still OPEN. Conversion's
+Smart AI and link transport, exact RNG calls, recorded/link compatibility, and
+source presentation remain Suite 3 obligations. The appended Giovanni1 trainer
+binding is available for the battle checkpoint and factory probe; its overworld
+story binding and source trainer/item art are not claimed complete.
 
 ## Suite 3 — battle contexts and final closure
 

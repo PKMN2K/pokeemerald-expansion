@@ -12,8 +12,11 @@ MANIFEST = ROOT / 'tools/polished_port/manifests/action_resolution.json'
 
 
 def ordered(text, tokens):
-    positions = [text.index(token) for token in tokens]
-    assert positions == sorted(set(positions)), f'Action order changed: {tokens}'
+    position = 0
+    for token in tokens:
+        found = text.find(token, position)
+        assert found >= 0, f"Missing or reordered source token: {token}"
+        position = found + len(token)
 
 
 def block(text, start, end):
@@ -114,9 +117,37 @@ def validate_source(files):
     assert 'SubtractHPFromUser_OverrideFaintOrder' in drain and 'MAGIC_GUARD' not in drain
 
 
+def validate_remaining_source(files):
+    def read(path): return files[path]['text']
+    transform = read('engine/battle/move_effects/transform.asm')
+    ordered(transform, ['call ClearLastMove', 'bit SUBSTATUS_TRANSFORMED', 'cp MEWTWO', 'cp ARMOR_SUIT', 'cp INFILTRATOR', 'call CheckHiddenOpponent', 'farcall GetDisableEncoreMoves', 'call ResetActorDisable', 'cp SKETCH', 'farcall SetDisableEncoreMoves', 'cp IMPOSTER', 'farjp RunEntryAbilitiesInner'])
+    swap = read('engine/battle/move_effects/skill_swap.asm')
+    ordered(swap, ['call CheckHiddenOpponent', 'call AbilityCanBeSkillSwapped', 'res SUBSTATUS_UNBURDEN', 'res SUBSTATUS_FLASH_FIRE', 'ld [wPlayerCudChewBerry], a', 'ld [wEnemyCudChewBerry], a', 'farcall RunEntryAbilitiesInner_SkillSwap', 'call SwitchTurn', 'farcall RunEntryAbilitiesInner_SkillSwap'])
+    assert 'NoSkillSwapEntryAbilities:\n\tdb IMPOSTER\n\tdb CLOUD_NINE\n\tdb -1' in swap
+    conversion = read('engine/battle/move_effects/conversion.asm')
+    ordered(conversion, ['.choose_move\n', 'ChangeIntoTypeText', 'push de', 'farcall MoveSelectionScreen', 'pop de', 'ld [wCurMoveNum], a', '.validate_choice\n', 'cp UNKNOWN_T', '.invalid_selection\n', 'InvalidTypeChangeText'])
+    assert 'PP' not in conversion and 'DISABLE' not in conversion
+    thief = read('engine/battle/move_effects/thief.asm')
+    ordered(thief, ['call CheckSubstituteOpp', 'call CanStealItem', 'call ReceiveBattleItem', 'ret nc', 'SetBackupItem'])
+    ordered(thief.split('ReceiveBattleItem:', 1)[1], ['jr nz, .holding_item', 'ld [hl], c', '.holding_item\n', 'call ReceiveItem'])
+    ordered(thief.split('CheckStickyHold:', 1)[1], ['call HasOpponentFainted', 'ret z', 'call GetOpponentAbilityAfterMoldBreaker'])
+    bite = read('engine/battle/move_effects/bug_bite.asm')
+    ordered(bite, ['GetOpponentAbilityAfterMoldBreaker', 'cp UNNERVE', 'call CheckStickyHold', 'cp HELD_NO_BUG_BITE', 'cp BERRIES', 'call CheckPendingItemLoss', 'StealHPHealingItem', 'ConsumeStolenOpponentItem'])
+    core = read('engine/battle/core.asm')
+    ordered(block(core, 'HandleUserHealingItems:', '_SubtractHP:'), ['UseHeldStatusHealingItem', 'UseConfusionHealingItem', 'bit SUBSTATUS_PENDING_ITEMLOSS', 'HandleHPHealingItem', 'HandleStatBoostBerry'])
+    boss = block(core, 'BoostGiovannisArmoredMewtwo:', 'LoadWeatherIconSprite:')
+    ordered(boss, ['cp GIOVANNI', 'cp GIOVANNI1', 'ld b, ATTACK', 'ld b, DEFENSE', 'ld b, SPEED', 'ld b, SP_ATTACK', 'ld b, SP_DEFENSE', 'CheckMirrorHerb'])
+    bell = read('engine/battle/move_effects/heal_bell.asm')
+    assert 'SOUNDPROOF' not in bell and 'ld d, PARTY_LENGTH' in bell
+    chew = block(read('engine/battle/abilities.asm'), 'CudChewAbility:', 'HarvestAbility:')
+    assert 'BATTLE_VARS_CUD_CHEW_BERRY' in chew and 'GetUsedItemAddr' not in chew
+    ordered(chew, ['jr nc, .eat_berry', '.eat_berry:', 'ld [hl], a', 'ReconsumeHPHealingItem'])
+
+
 def build():
     files = source.authenticated_sources()
     validate_source(files)
+    validate_remaining_source(files)
     move_files, moves, effects = attacks.inventory()
     used = sorted({m['source_effect'] for m in moves})
     command_names = sorted({line.split()[0] for name in used for line in effects[name]['commands']})
@@ -137,6 +168,7 @@ def build():
     ordered(constants, ['MOVEEND_LIFE_ORB_SHELL_BELL,', 'MOVEEND_POLISHED_SWITCH_ITEMS,', 'MOVEEND_PICKPOCKET,', 'MOVEEND_POLISHED_STAT_HERBS,', 'MOVEEND_SPRAY_LEPPA_BLUNDER,'])
     assert '[MOVEEND_POLISHED_ACTION_CHECKPOINT] = MoveEndPolishedActionCheckpoint' in runtime
     paths = ['engine/battle/move_effects/sketch.asm', 'engine/battle/used_move_text.asm', 'engine/battle/core.asm', 'engine/battle/effect_commands.asm', 'engine/battle/abilities.asm', 'engine/battle/stats.asm', 'engine/battle/endturn.asm', 'data/abilities/no_intimidate_abilities.asm', 'data/moves/effects.asm', 'engine/battle/move_effects/baton_pass.asm', 'engine/battle/move_effects/roar.asm', 'engine/battle/move_effects/teleport.asm', 'data/items/attributes.asm']
+    paths += ['engine/battle/move_effects/'+name+'.asm' for name in ('transform', 'skill_swap', 'conversion', 'thief', 'knock_off', 'bug_bite', 'heal_bell')]
     report = dict(source_commit=source.source.PIN, source_variant='default; FAITHFUL undefined', suite=2,
         complete_behavior_parity=False,
         source_anchors={p: files[p]['sha'] if p in files else source.git_hash('blob', move_files[p].encode()) for p in paths},
@@ -144,6 +176,16 @@ def build():
             postfaint_effect_families=relevant,
             limitation='Command sequences authenticate coverage obligations; they do not certify untested conditional branches.'),
         contracts=[
+            'Transform copies raw ability and activates its entry routine after the message except Imposter; repeated transformation is allowed, hidden/transformed/Armored Mewtwo targets and non-Infiltrator Substitute are rejected.',
+            'Transform preserves party identity, HP/item/status, remaps surviving move locks and zeroes the Disable countdown; copied PP is five except Sketch (one) and empty slots (zero).',
+            'Skill Swap rejects hidden targets and source blacklist abilities, resets Unburden/Flash Fire/Cud Chew, and runs user entry before target entry while excluding Imposter and Cloud Nine.',
+            'Cud Chew stores the consumed berry independently of Recycle history, delays one end-turn check, and clears its pending berry on Skill Swap; a successful Bug Bite effect can arm it.',
+            'Conversion lets the player choose any known valid move type regardless of PP, retries invalid selections, and preserves the selected action slot; wild selection samples eligible slots. Smart AI/link transport remain Suite 3 obligations.',
+            'Equal-priority voluntary switches resolve by current Speed/Trick Room and Quick Claw/Custap/Lagging Tail. Entries are sequential, not a shared simultaneous-entry pass.',
+            'Wild player Thief/Pickpocket holds the stolen item when empty or sends it to the bag when already holding and space exists. Wild opponents never steal; living Sticky Hold blocks theft, fainted Sticky Hold does not.',
+            'Knock Off and Bug Bite mark pending item loss before damage, suppressing HP/stat berry triggers but retaining status/confusion cures. Bug Bite respects Unnerve after Mold Breaker and the six EV berries.',
+            'Heal Bell heals active and benched party status without a Soundproof exclusion.',
+            'Giovanni1 has one initial Armored Mewtwo stat-boost checkpoint before entry abilities and followed by Mirror Herb; appended trainer/item IDs preserve existing identifiers.',
             'Sketch clears user history before any failure, uses the opponent counter-move record, and rejects link mode, Substitute (including Infiltrator), transformed users, absent/Struggle history and any already-known move.',
             'Sketch writes base PP and clears only the replaced slot PP-Up bits. Only a party slot actually containing Sketch is changed permanently; other temporary battle slots and party PP remain separate.',
             'Sketch remaps Disable/Encore/Choice by move identity, retaining duration when still known and clearing locks whose move was overwritten. Called-move text cannot repopulate cleared source history.',
@@ -172,7 +214,7 @@ def build():
         live_bindings=['src/battle_move_resolution.c', 'src/battle_end_turn.c', 'src/battle_util.c',
             'src/battle_hold_effects.c', 'src/battle_stat_change.c', 'src/battle_main.c', 'src/battle_set_effect.c', 'src/battle_script_commands.c', 'src/battle_switch_in.c', 'data/battle_scripts_1.s'],
         regression_file='test/battle/polished_action_resolution.c',
-        additional_regression_files=['test/battle/polished_deferred_switch.c', 'test/battle/polished_entry_items.c', 'test/battle/polished_stat_items.c', 'test/battle/polished_mirror_ledger.c', 'test/battle/polished_berserk_gene.c', 'test/battle/move_effect/polished_sketch.c'],
+        additional_regression_files=['test/battle/polished_deferred_switch.c', 'test/battle/polished_entry_items.c', 'test/battle/polished_stat_items.c', 'test/battle/polished_mirror_ledger.c', 'test/battle/polished_berserk_gene.c', 'test/battle/move_effect/polished_sketch.c', 'test/battle/move_effect/polished_suite2_copy.c', 'test/battle/move_effect/polished_suite2_conversion.c', 'test/battle/move_effect/polished_suite2_items.c', 'test/battle/polished_suite2_boss.c', 'test/battle/polished_suite2_switching.c'],
         remaining=['All unverified effect branches and command interactions remain owned by Suite 2.',
             'Exact RNG stream and source presentation remain owned by Suite 3; native regression success is not source parity.'])
     return {MANIFEST: json.dumps(report, indent=2)+'\n'}

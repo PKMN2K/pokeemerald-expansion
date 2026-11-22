@@ -749,6 +749,10 @@ struct BattleStruct
     u8 intimidateActivated:1;
     u8 allowPartingShot:1;
     u8 adrenalineOrbActivated:1; // prevents looping after an adrenaline stat changed
+    u8 polishedConversionSelecting; // 0: inactive, 1: prompt, 2: controller result
+    u8 polishedConversionMoveCursor;
+    bool8 polishedBossEntryDone;
+    u8 polishedPendingItemLoss;
 };
 
 struct AiBattleData

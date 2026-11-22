@@ -818,6 +818,7 @@ BattleScript_MoveEffectBugBite::
 	waitmessage B_WAIT_TIME_LONG
 	setbyte sBERRY_OVERRIDE, 1   @ override the requirements for eating berries
 	savetarget
+BattleScript_PolishedBugBiteConsume::
 	consumeberry BS_ATTACKER, FALSE
 	setbyte sBERRY_OVERRIDE, 0
 	restoretarget
@@ -1806,6 +1807,7 @@ BattleScript_EffectTransform::
 	waitanimation
 	printfromtable gTransformUsedStringIds
 	waitmessage B_WAIT_TIME_LONG
+	callnative BS_PolishedTransformEntry
 	goto BattleScript_MoveEnd
 
 BattleScript_EffectReflect::
@@ -5195,6 +5197,7 @@ BattleScript_ImposterActivates::
 	waitanimation
 	printstring STRINGID_IMPOSTERTRANSFORM
 	waitmessage B_WAIT_TIME_LONG
+	callnative BS_PolishedTransformEntry
 	restoreattacker
 	restoretarget
 	return
@@ -6602,3 +6605,32 @@ BattleScript_BelchFails::
 	printstring STRINGID_BELCHCANTSELECT
 	waitmessage B_WAIT_TIME_LONG
 	goto BattleScript_MoveEnd
+
+BattleScript_PolishedConversionChoose::
+	printstring STRINGID_POLISHED_CONVERSION_CHOOSE
+	waitmessage B_WAIT_TIME_LONG
+	return
+
+BattleScript_PolishedConversionInvalid::
+	printstring STRINGID_POLISHED_CONVERSION_INVALID
+	waitmessage B_WAIT_TIME_LONG
+	return
+
+BattleScript_PolishedArmoredMewtwoEntry::
+	callnative BS_PolishedBossStat
+	.byte STAT_ATK
+	trybattlerstatchange BS_SCRIPTING, STAT_CHANGE_CERTAIN
+	callnative BS_PolishedBossStat
+	.byte STAT_DEF
+	trybattlerstatchange BS_SCRIPTING, STAT_CHANGE_CERTAIN
+	callnative BS_PolishedBossStat
+	.byte STAT_SPEED
+	trybattlerstatchange BS_SCRIPTING, STAT_CHANGE_CERTAIN
+	callnative BS_PolishedBossStat
+	.byte STAT_SPATK
+	trybattlerstatchange BS_SCRIPTING, STAT_CHANGE_CERTAIN
+	callnative BS_PolishedBossStat
+	.byte STAT_SPDEF
+	trybattlerstatchange BS_SCRIPTING, STAT_CHANGE_CERTAIN
+	callnative BS_PolishedMirrorHerbCheckpoint
+	return

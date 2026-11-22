@@ -61,6 +61,13 @@ bool32 PolishedGenerateTrainerMon(struct Pokemon *mon, const struct TrainerMon *
     source.friendship = 160;
     source.ball = BALL_POKE;
     GenerateMonFromTrainerMon(mon, &source, generator);
+#if !IS_FRLG
+    if (trainer == TRAINER_POLISHED_GIOVANNI1 && slot == 0)
+    {
+        static const u8 nickname[] = _("?????");
+        SetMonData(mon, MON_DATA_NICKNAME, nickname);
+    }
+#endif
     // Duplicate ability names must not collapse the source's stored slot.
     u32 abilitySlot = attrs->abilitySlot;
     SetMonData(mon, MON_DATA_ABILITY_NUM, &abilitySlot);

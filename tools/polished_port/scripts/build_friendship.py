@@ -64,7 +64,7 @@ def build():
     vectors = [[0 if level==1 else a*level**3//b+c*level**2+d*level-e for level in range(1,101)] for a,b,c,d,e in formulas]
     bosses = re.findall(r'^\s*db (\w+)\s*$',text[paths[7]],re.M)
     bindings = {f'TRAINER_POLISHED_{target}': cls in bosses for target,(cls,_) in trainers.BINDINGS.items()}
-    assert len(bindings)==21 and sum(bindings.values())==1
+    assert len(bindings)==22 and sum(bindings.values())==2
     header = ['/* Generated from pinned Polished Crystal happiness constants. */',
               '#ifndef GUARD_CONSTANTS_POLISHED_HAPPINESS_H', '#define GUARD_CONSTANTS_POLISHED_HAPPINESS_H']
     header += [f'#define POLISHED_{event} {i}' for i,event in enumerate(events)]
@@ -103,4 +103,4 @@ if __name__=='__main__':
     for path,content in build().items():
         if args.check: assert path.read_text()==content, f'Regenerate {path}'
         else: path.write_text(content)
-    print('PASS: 23 source happiness events, 23552 byte cases, 400 growth vectors and 21 boss bindings')
+    print('PASS: 23 source happiness events, 23552 byte cases, 400 growth vectors and 22 boss bindings')

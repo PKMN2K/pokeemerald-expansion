@@ -6839,6 +6839,45 @@
           "friendship": 160
         }
       ]
+    },
+    {
+      "target_trainer": "TRAINER_POLISHED_GIOVANNI1",
+      "source_class": "GIOVANNI",
+      "source_id": 1,
+      "source_name": "Giovanni",
+      "items": [
+        "ITEM_MAX_POTION",
+        "ITEM_NONE"
+      ],
+      "base_reward": 25,
+      "mons": [
+        {
+          "species": "SPECIES_MEWTWO_ARMORED",
+          "source_species": "MEWTWO",
+          "source_level": "LEVEL_FROM_BADGES + 24",
+          "ivs": [
+            30,
+            30,
+            30,
+            30,
+            30,
+            30
+          ],
+          "evs": [
+            53,
+            53,
+            53,
+            53,
+            53,
+            53
+          ],
+          "ability_slot": 1,
+          "ability": "ABILITY_INSOMNIA",
+          "nature": "NATURE_MODEST",
+          "gender": "GENDERLESS",
+          "friendship": 160
+        }
+      ]
     }
   ],
   "remaining": "Unregistered source parties and source AI are not implemented by this adapter."

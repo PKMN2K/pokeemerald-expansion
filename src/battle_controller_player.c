@@ -690,6 +690,13 @@ void HandleInputChooseMove(enum BattlerId battler)
         TryToHideMoveInfoWindow();
         PlaySE(SE_SELECT);
 
+        if (gBattleStruct->polishedConversionSelecting)
+        {
+            BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, B_ACTION_EXEC_SCRIPT, gMoveSelectionCursor[battler]);
+            HideGimmickTriggerSprite();
+            BtlController_Complete(battler);
+            return;
+        }
         enum MoveTarget moveTarget = GetBattlerMoveSelectionTargetType(battler, moveInfo->moves[gMoveSelectionCursor[battler]]);
         bool32 isUserOrAlly = moveTarget == TARGET_USER || moveTarget == TARGET_USER_OR_ALLY || moveTarget == TARGET_USER_AND_ALLY;
 
@@ -863,7 +870,7 @@ void HandleInputChooseMove(enum BattlerId battler)
             TryChangeZTrigger(battler, gMoveSelectionCursor[battler]);
         }
     }
-    else if (B_MOVE_REARRANGEMENT_IN_BATTLE < GEN_4 && JOY_NEW(SELECT_BUTTON) && !gBattleStruct->zmove.viewing && !gBattleStruct->descriptionSubmenu)
+    else if (!gBattleStruct->polishedConversionSelecting && B_MOVE_REARRANGEMENT_IN_BATTLE < GEN_4 && JOY_NEW(SELECT_BUTTON) && !gBattleStruct->zmove.viewing && !gBattleStruct->descriptionSubmenu)
     {
         if (gNumberOfMovesToChoose > 1 && !(gBattleTypeFlags & BATTLE_TYPE_LINK))
         {
@@ -906,7 +913,7 @@ void HandleInputChooseMove(enum BattlerId battler)
         gBattleStruct->descriptionSubmenu = TRUE;
         TryMoveSelectionDisplayMoveDescription(battler);
     }
-    else if (JOY_NEW(START_BUTTON))
+    else if (!gBattleStruct->polishedConversionSelecting && JOY_NEW(START_BUTTON))
     {
         if (gBattleStruct->gimmick.usableGimmick[battler] != GIMMICK_NONE
             && !HasTrainerUsedGimmick(battler, gBattleStruct->gimmick.usableGimmick[battler])
@@ -2120,7 +2127,8 @@ void PlayerHandleChooseMove(enum BattlerId battler)
             gBattleStruct->gimmick.triggerSpriteId = 0xFF;
         else if (!IsGimmickTriggerSpriteMatchingBattler(battler))
             DestroyGimmickTriggerSprite();
-        if (!(gBattleStruct->gimmick.usableGimmick[battler] == GIMMICK_Z_MOVE && !gBattleStruct->zmove.viable))
+        if (!gBattleStruct->polishedConversionSelecting
+         && !(gBattleStruct->gimmick.usableGimmick[battler] == GIMMICK_Z_MOVE && !gBattleStruct->zmove.viable))
             CreateGimmickTriggerSprite(battler);
 
         gBattlerControllerFuncs[battler] = HandleChooseMoveAfterDma3;

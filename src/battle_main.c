@@ -4830,6 +4830,12 @@ static void SetActionsAndBattlersTurnOrder(void)
             {
                 calcValues.abilities[battler] = GetBattlerAbility(battler);
                 calcValues.holdEffects[battler] = GetBattlerHoldEffect(battler);
+                if (UsesPolishedBattleRules(battler, GetOppositeBattler(battler))
+                 && gChosenActionByBattler[battler] != B_ACTION_USE_MOVE)
+                {
+                    quickClawRandom[battler] = RandomPercentage(RNG_QUICK_CLAW, GetBattlerHoldEffectParam(battler));
+                    gProtectStructs[battler].laggingTail = calcValues.holdEffects[battler] == HOLD_EFFECT_LAGGING_TAIL;
+                }
             }
             for (battler = 0; battler < gBattlersCount - 1; battler++)
             {
@@ -4838,7 +4844,16 @@ static void SetActionsAndBattlersTurnOrder(void)
                     calcValues.battlerAtk = gBattlerByTurnOrder[battler];
                     calcValues.battlerDef = gBattlerByTurnOrder[battler2];
                     TryChangingTurnOrderEffects(&calcValues, quickClawRandom, quickDrawRandom);
-                    if (gActionsByTurnOrder[battler] != B_ACTION_USE_ITEM
+                    if (UsesPolishedBattleRules(calcValues.battlerAtk, calcValues.battlerDef)
+                     && gActionsByTurnOrder[battler] != B_ACTION_USE_MOVE
+                     && gActionsByTurnOrder[battler2] != B_ACTION_USE_MOVE)
+                    {
+                        // Two NO_MOVE actions have equal source priority +10.
+                        // Resolve them by current Speed/Trick Room and move-order items.
+                        if (GetWhichBattlerFaster(&calcValues, FALSE) == -1)
+                            SwapTurnOrder(battler, battler2);
+                    }
+                    else if (gActionsByTurnOrder[battler] != B_ACTION_USE_ITEM
                         && gActionsByTurnOrder[battler2] != B_ACTION_USE_ITEM
                         && gActionsByTurnOrder[battler] != B_ACTION_SWITCH
                         && gActionsByTurnOrder[battler2] != B_ACTION_SWITCH
@@ -5075,7 +5090,9 @@ static void TryChangingTurnOrderEffects(struct BattleCalcValues *calcValues, u32
 
     // Battler 1
     // Quick Draw
-    if (ability1 == ABILITY_QUICK_DRAW && !IsBattleMoveStatus(gChosenMoveByBattler[battler1]) && quickDrawRandom[battler1])
+    if (ability1 == ABILITY_QUICK_DRAW
+     && (!UsesPolishedBattleRules(battler1, battler2) || gChosenActionByBattler[battler1] == B_ACTION_USE_MOVE)
+     && !IsBattleMoveStatus(gChosenMoveByBattler[battler1]) && quickDrawRandom[battler1])
         gProtectStructs[battler1].quickDraw = TRUE;
     // Quick Claw and Custap Berry
     if (!gProtectStructs[battler1].quickDraw
@@ -5085,7 +5102,9 @@ static void TryChangingTurnOrderEffects(struct BattleCalcValues *calcValues, u32
 
     // Battler 2
     // Quick Draw
-    if (ability2 == ABILITY_QUICK_DRAW && !IsBattleMoveStatus(gChosenMoveByBattler[battler2]) && quickDrawRandom[battler2])
+    if (ability2 == ABILITY_QUICK_DRAW
+     && (!UsesPolishedBattleRules(battler1, battler2) || gChosenActionByBattler[battler2] == B_ACTION_USE_MOVE)
+     && !IsBattleMoveStatus(gChosenMoveByBattler[battler2]) && quickDrawRandom[battler2])
         gProtectStructs[battler2].quickDraw = TRUE;
     // Quick Claw and Custap Berry
     if (!gProtectStructs[battler2].quickDraw
@@ -5104,12 +5123,14 @@ static void CheckChangingTurnOrderEffects(void)
         {
             battler = gBattlerAttacker = gBattleScripting.battler++;
 
-            if (gChosenActionByBattler[battler] == B_ACTION_USE_MOVE
-             && GetMoveEffect(gChosenMoveByBattler[battler]) != EFFECT_FOCUS_PUNCH   // quick claw message doesn't need to activate here
-             && (gProtectStructs[battler].usedCustapBerry || gProtectStructs[battler].quickDraw)
-             && !(gBattleMons[battler].status1 & STATUS1_SLEEP)
-             && !(gBattleMons[gBattlerAttacker].volatiles.truantCounter)
-             && !(gProtectStructs[battler].noValidMoves))
+            bool32 sourceNoMove = UsesPolishedBattleRules(battler, GetOppositeBattler(battler))
+                && gChosenActionByBattler[battler] != B_ACTION_USE_MOVE;
+            if ((sourceNoMove || (gChosenActionByBattler[battler] == B_ACTION_USE_MOVE
+                 && GetMoveEffect(gChosenMoveByBattler[battler]) != EFFECT_FOCUS_PUNCH
+                 && !(gBattleMons[battler].status1 & STATUS1_SLEEP)
+                 && !gBattleMons[battler].volatiles.truantCounter
+                 && !gProtectStructs[battler].noValidMoves))
+             && (gProtectStructs[battler].usedCustapBerry || gProtectStructs[battler].quickDraw))
             {
                 if (gProtectStructs[battler].usedCustapBerry)
                 {

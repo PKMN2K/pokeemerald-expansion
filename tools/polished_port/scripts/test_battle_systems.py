@@ -26,12 +26,14 @@ class BattleSystemsTest(unittest.TestCase):
 
     def test_current_trainer_roster_and_class_defaults(self):
         self.assertEqual(len(self.trainers['classes']), 147)
-        self.assertEqual(len(self.parties), 21)
-        self.assertEqual(sum(len(r['mons']) for r in self.parties.values()), 43)
+        self.assertEqual(len(self.parties), 22)
+        self.assertEqual(sum(len(r['mons']) for r in self.parties.values()), 44)
         lyra = self.parties['TRAINER_POLISHED_LYRA_CYNDAQUIL']['mons'][0]
         self.assertEqual(lyra['ivs'], [22]*6)
         self.assertEqual(lyra['evs'], [0]*6)
         self.assertEqual((lyra['ability_slot'], lyra['gender']), (0, 'FEMALE'))
+        boss = self.parties['TRAINER_POLISHED_GIOVANNI1']['mons'][0]
+        self.assertEqual((boss['species'], boss['gender'], boss['nature']), ('SPECIES_MEWTWO_ARMORED', 'GENDERLESS', 'NATURE_MODEST'))
         for party in self.parties.values():
             self.assertTrue(all(mon['friendship'] == 160 for mon in party['mons']))
 

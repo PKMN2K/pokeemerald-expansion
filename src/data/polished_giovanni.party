@@ -1,0 +1,18 @@
+/* Source GIOVANNI/GIOVANNI1; 28 is zero-badge base 4 + 24. */
+/* Source trainer artwork and story encounter remain Suite 3 bindings. */
+=== TRAINER_POLISHED_GIOVANNI1 ===
+Name: Giovanni
+Class: Leader
+Pic: Leader Giovanni FRLG
+Gender: Male
+Music: Male
+Double Battle: No
+
+Mewtwo Armored @ Polished Armor Suit
+Level: 28
+Nature: Modest
+Ability: Insomnia
+- MOVE_SHADOW_BALL
+- MOVE_PSYSTRIKE
+- MOVE_NASTY_PLOT
+- MOVE_AURA_SPHERE

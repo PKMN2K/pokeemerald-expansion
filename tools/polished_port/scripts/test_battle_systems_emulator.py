@@ -29,6 +29,8 @@ def probe_code(parties):
 #include "new_game.h"
 #include "pokemon.h"
 #include "save.h"
+#include "string_util.h"
+#include "constants/characters.h"
 #include "constants/opponents.h"
 void CreateTrainerPartyForPlayer(void);
 struct ExpectedMon { u16 species, nature, gender; };
@@ -40,7 +42,7 @@ static const struct ExpectedTrainer expected[] = {
         code += '{'+party['target_trainer']+', {'+mons+'}},\n'
     return code + r'''
 };
-EWRAM_DATA volatile u32 gAuditResult[151] = {0};
+EWRAM_DATA volatile u32 gAuditResult[157] = {0};
 EWRAM_DATA volatile u32 gAuditCursor = 0;
 EWRAM_DATA volatile u32 gAuditKind = 0;
 EWRAM_DATA volatile u32 gAuditReady = 0;
@@ -92,6 +94,19 @@ void CB2_MoveMachineAudit(void)
             gAuditResult[offset+19+stat] = GetMonData(mon, MON_DATA_MAX_HP+stat);
         }
     }
+    if (team->trainer == TRAINER_POLISHED_GIOVANNI1)
+    {
+        struct Pokemon *boss = &gParties[B_TRAINER_PLAYER][0];
+        static const u8 expectedName[] = {CHAR_QUESTION_MARK, CHAR_QUESTION_MARK, CHAR_QUESTION_MARK, CHAR_QUESTION_MARK, CHAR_QUESTION_MARK, EOS};
+        u8 name[POKEMON_NAME_LENGTH + 1];
+        GetMonData(boss, MON_DATA_NICKNAME, name);
+        gAuditResult[151] = GetMonData(boss, MON_DATA_HELD_ITEM) == ITEM_POLISHED_ARMOR_SUIT;
+        gAuditResult[152] = StringCompare(name, expectedName) == 0;
+        gAuditResult[153] = GetMonData(boss, MON_DATA_MOVE1) == MOVE_SHADOW_BALL;
+        gAuditResult[154] = GetMonData(boss, MON_DATA_MOVE2) == MOVE_PSYSTRIKE;
+        gAuditResult[155] = GetMonData(boss, MON_DATA_MOVE3) == MOVE_NASTY_PLOT;
+        gAuditResult[156] = GetMonData(boss, MON_DATA_MOVE4) == MOVE_AURA_SPHERE;
+    }
     gAuditReady = 1;
 }
 '''
@@ -101,7 +116,7 @@ def expected_stats(mon, base, level):
     # Source modern-EV formula, in HP/Atk/Def/Spe/SAt/SDf order. All current
     # registered natures are covered explicitly; new natures require review.
     boosts = {'NATURE_HARDY': (0, 0), 'NATURE_ADAMANT': (1, 4),
-              'NATURE_RELAXED': (2, 3), 'NATURE_RASH': (4, 5)}
+              'NATURE_RELAXED': (2, 3), 'NATURE_RASH': (4, 5), 'NATURE_MODEST': (4, 1)}
     raised, lowered = boosts[mon['nature']]
     result = []
     for i, (stat, iv, ev) in enumerate(zip(base['stats'], mon['ivs'], mon['evs'], strict=True)):
@@ -129,7 +144,7 @@ def main():
         game = Game(args.driver.resolve(), elf, elf, output, directory)
         try:
             for cursor, party in enumerate(parties):
-                row = sample(game, 0, cursor, 151)
+                row = sample(game, 0, cursor, 157)
                 assert row[0] == len(party['mons']), (party['target_trainer'], row[0])
                 for slot, mon in enumerate(party['mons']):
                     level = int(mon['source_level'].split('+')[-1]) + (4 if 'LEVEL_FROM_BADGES' in mon['source_level'] else 0)
@@ -137,6 +152,8 @@ def main():
                                 *expected_stats(mon, bases[mon['species']], level)]
                     actual = row[1+slot*25:1+(slot+1)*25]
                     assert actual == expected, (party['target_trainer'], slot, actual, expected)
+                if party['target_trainer'] == 'TRAINER_POLISHED_GIOVANNI1':
+                    assert row[151:157] == [1] * 6, ('Giovanni item/nickname/moves', row[151:157])
                 checked.append(dict(trainer=party['target_trainer'], pokemon=row[0]))
                 print('PASS: production trainer', party['target_trainer'], row[0], flush=True)
         finally:

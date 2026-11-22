@@ -38421,6 +38421,166 @@
       "path": "test/battle/move_effect/polished_sound_priority.c"
     },
     {
+      "name": "Polished Suite 2 Conversion selects any known moves listed type without using its PP",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/move_effect/polished_suite2_conversion.c"
+    },
+    {
+      "name": "Polished Suite 2 Conversion reopens selection after a current type empty slot or cancel",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/move_effect/polished_suite2_conversion.c"
+    },
+    {
+      "name": "Polished Suite 2 Conversion fails without opening a menu when no new type exists",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/move_effect/polished_suite2_conversion.c"
+    },
+    {
+      "name": "Polished Suite 2 wild Conversion selects a valid later slot",
+      "kind": "WILD_BATTLE_TEST",
+      "path": "test/battle/move_effect/polished_suite2_conversion.c"
+    },
+    {
+      "name": "Polished Suite 2 Transform preserves HP item status and party moves while copying stats types and PP",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/move_effect/polished_suite2_copy.c"
+    },
+    {
+      "name": "Polished Suite 2 Transform activates the copied entry ability",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/move_effect/polished_suite2_copy.c"
+    },
+    {
+      "name": "Polished Suite 2 Transform permits a second transformation and restores the original party identity",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/move_effect/polished_suite2_copy.c"
+    },
+    {
+      "name": "Polished Suite 2 Transform rejects a transformed target",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/move_effect/polished_suite2_copy.c"
+    },
+    {
+      "name": "Polished Suite 2 Transform respects Substitute and Infiltrator",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/move_effect/polished_suite2_copy.c"
+    },
+    {
+      "name": "Polished Suite 2 Transform and Imposter cannot copy Armored Mewtwo",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/move_effect/polished_suite2_copy.c"
+    },
+    {
+      "name": "Polished Suite 2 Transform copies stored Neutralizing Gas and clears its move history",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/move_effect/polished_suite2_copy.c"
+    },
+    {
+      "name": "Polished Suite 2 Skill Swap rejects Neutralizing Gas",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/move_effect/polished_suite2_copy.c"
+    },
+    {
+      "name": "Polished Suite 2 Skill Swap rejects a hidden target",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/move_effect/polished_suite2_copy.c"
+    },
+    {
+      "name": "Polished Suite 2 Skill Swap runs the users entry ability before the targets",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/move_effect/polished_suite2_copy.c"
+    },
+    {
+      "name": "Polished Suite 2 Cud Chew keeps its berry separate from Recycle history",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/move_effect/polished_suite2_copy.c"
+    },
+    {
+      "name": "Polished Suite 2 Skill Swap clears pending Cud Chew on both sides",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/move_effect/polished_suite2_copy.c"
+    },
+    {
+      "name": "Polished Suite 2 two voluntary switches resolve entries sequentially",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/move_effect/polished_suite2_copy.c"
+    },
+    {
+      "name": "Polished Suite 2 Heal Bell clears active and benched Soundproof status",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/move_effect/polished_suite2_copy.c"
+    },
+    {
+      "name": "Polished Suite 2 Transform remaps a surviving Disable identity and clears its countdown",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/move_effect/polished_suite2_copy.c"
+    },
+    {
+      "name": "Polished Suite 2 voluntary switches obey Trick Room Lagging Tail and Custap",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/move_effect/polished_suite2_copy.c"
+    },
+    {
+      "name": "Polished Suite 2 Quick Claw can order two voluntary switches",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/move_effect/polished_suite2_copy.c"
+    },
+    {
+      "name": "Polished Suite 2 wild Thief holds stolen items when empty and bags them when already holding",
+      "kind": "WILD_BATTLE_TEST",
+      "path": "test/battle/move_effect/polished_suite2_items.c"
+    },
+    {
+      "name": "Polished Suite 2 Thief bypasses Sticky Hold only after the holder faints",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/move_effect/polished_suite2_items.c"
+    },
+    {
+      "name": "Polished Suite 2 trainer Thief cannot take a second held item",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/move_effect/polished_suite2_items.c"
+    },
+    {
+      "name": "Polished Suite 2 a wild opponent cannot use Thief to take the players item",
+      "kind": "WILD_BATTLE_TEST",
+      "path": "test/battle/move_effect/polished_suite2_items.c"
+    },
+    {
+      "name": "Polished Suite 2 Knock Off removes the pending healing berry before its HP trigger",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/move_effect/polished_suite2_items.c"
+    },
+    {
+      "name": "Polished Suite 2 Bug Bite reserves a healing berry for its attacker",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/move_effect/polished_suite2_items.c"
+    },
+    {
+      "name": "Polished Suite 2 Bug Bite cannot eat EV berries or bypass an active Unnerve",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/move_effect/polished_suite2_items.c"
+    },
+    {
+      "name": "Polished Suite 2 Bug Bite cannot bypass Unnerve with Mold Breaker",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/move_effect/polished_suite2_items.c"
+    },
+    {
+      "name": "Polished Suite 2 Bug Bite arms Cud Chew only after a successful berry effect",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/move_effect/polished_suite2_items.c"
+    },
+    {
+      "name": "Polished Suite 2 wild Pickpocket bags a stolen item while already holding one",
+      "kind": "WILD_BATTLE_TEST",
+      "path": "test/battle/move_effect/polished_suite2_items.c"
+    },
+    {
+      "name": "Polished Suite 2 theft eligibility rejects a full bag without removing the opponents item",
+      "kind": "WILD_BATTLE_TEST",
+      "path": "test/battle/move_effect/polished_suite2_items.c"
+    },
+    {
       "name": "Polished Teleport uses the pinned source move description",
       "kind": "SINGLE_BATTLE_TEST",
       "path": "test/battle/move_effect/polished_teleport.c"
@@ -40516,6 +40676,36 @@
       "path": "test/battle/polished_stat_items.c"
     },
     {
+      "name": "Polished Suite 2 Armored Mewtwo opening boost precedes Mirror Herb and entry abilities",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_suite2_boss.c"
+    },
+    {
+      "name": "Polished Suite 2 Armored Mewtwo boost is trainer specific and never repeats on reentry",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_suite2_boss.c"
+    },
+    {
+      "name": "Polished Suite 2 Armor Suit is essential when either battler is Mewtwo",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_suite2_boss.c"
+    },
+    {
+      "name": "Polished Suite 2 voluntary Pursuit intercepts exactly once including an outgoing KO",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_suite2_switching.c"
+    },
+    {
+      "name": "Polished Suite 2 Pursuit before or during U-turn never attacks the replacement",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_suite2_switching.c"
+    },
+    {
+      "name": "Polished Suite 2 U-turn escapes Mean Look and clears the outgoing trap",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_suite2_switching.c"
+    },
+    {
       "name": "Polished lifecycle Baton Pass preserves incoming source binding counters",
       "kind": "SINGLE_BATTLE_TEST",
       "path": "test/battle/polished_switch_lifecycle.c"
@@ -41469,7 +41659,7 @@
     },
     {
       "manifest": "tools/polished_port/manifests/action_resolution.json",
-      "sha256": "50405699b0c0ab7330d19ef02e4767bb933be2b96a2767a6bc01ffddd7840bdf"
+      "sha256": "578173e80387c96c6af75efdd329e9ff91694bfe0e4c546152703224fa0b4de4"
     },
     {
       "manifest": "tools/polished_port/manifests/attack_suite.json",
@@ -41501,7 +41691,7 @@
     },
     {
       "manifest": "tools/polished_port/manifests/trainer_attributes.json",
-      "sha256": "d0a1716f81a024d482d26937238993409e194d7e329fd05a7cb037ba186f1b8e"
+      "sha256": "5d7e0832a6265c61ecaf3e30ec11c1b0e7c71cb35229a11a4a3264e2b98e2907"
     }
   ]
 }
