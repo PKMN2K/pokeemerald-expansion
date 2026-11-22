@@ -5238,3 +5238,16 @@ Johto ROM SHA-256:
 `03e983afdda703b5f4ecce060d1abed49fe8aabc2aa0e8a16a23eb59b1c12b00`.
 Native ROM SHA-256:
 `88f1c5dc4a4c7803934a417af39ed56ac8ce6806989e18af2a3b758b78b849f4`.
+
+## Next step changed to Suite 2 closure
+
+After `8e340802` and successful CI #1646, the user requested that the next step
+close Suite 2. `tools/polished_port/BATTLE_PARITY_PLAN.md` and the generated
+`battle_completion_suites.json` now define one consolidated closure pass for
+all eight owned domains and all 133 effect families / 129 commands / 255 moves.
+The next implementation must reconcile the existing evidence, finish the full
+gap list and validate closure; it is not another separately finished item or
+ability batch. Ownership validation rejects moving any Suite 2 domain to a
+neighboring suite. Suite 2 remains open until that implementation and its
+branch-evidence review are complete. This is a planning and ownership change,
+not a claim of additional engine parity.

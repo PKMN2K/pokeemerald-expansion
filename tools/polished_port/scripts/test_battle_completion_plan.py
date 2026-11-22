@@ -22,6 +22,18 @@ class CompletionPlanTest(unittest.TestCase):
             with self.assertRaises(AssertionError):
                 plan.validate_ownership(suites)
 
+    def test_suite2_domains_cannot_be_moved_to_another_suite(self):
+        for target in (0, 2):
+            for domain in plan.SUITE2_DOMAINS:
+                with self.subTest(target=target + 1, domain=domain):
+                    suites = copy.deepcopy(plan.SUITES)
+                    suites[1]['domains'].remove(domain)
+                    suites[target]['domains'].append(domain)
+                    # The partition remains complete and unique; the closure
+                    # guard must still reject shifting the unfinished owner.
+                    with self.assertRaisesRegex(AssertionError, 'cannot be reassigned'):
+                        plan.validate_ownership(suites)
+
     def test_removed_checkpoint_or_early_healing_is_rejected(self):
         src = plan.source.authenticated_sources()['engine/battle/endturn.asm']['text']
         target = (plan.ROOT / 'src/battle_end_turn.c').read_text()

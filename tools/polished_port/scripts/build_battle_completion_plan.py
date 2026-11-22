@@ -9,13 +9,14 @@ import build_battle_suite as source
 ROOT = source.ROOT
 MANIFEST = ROOT / 'tools/polished_port/manifests/battle_completion_suites.json'
 LIFECYCLE = ROOT / 'tools/polished_port/manifests/battle_lifecycle.json'
+SUITE2_DOMAINS = frozenset(('actions', 'damage', 'moves', 'status', 'abilities', 'items', 'switching', 'fainting'))
 SUITES = [
     dict(id=1, title='End-turn, entry and replacement foundations', status='implemented and regression-validated; domain closure pending',
          domains=['field'],
          contracts=['Source residual and timer phase order, per-phase Speed comparisons and faint checkpoints.',
                     'Shared entry hazard/item/ability order, deferred replacements and hazard KO loops.',
                     'Source residual arithmetic, Baton Pass state and entry status corrections with live regressions.']),
-    dict(id=2, title='Action and attack resolution', status='action, copy, selection, item-loss and switching batches implemented; full branch closure pending',
+    dict(id=2, title='Action and attack resolution', status='consolidated closure pass is the next implementation step; full branch closure pending',
          domains=['actions', 'damage', 'moves', 'status', 'abilities', 'items', 'switching', 'fainting'],
          contracts=['All branches of 133 effect families, 129 commands and 255 move identities.',
                     'Action ordering/cancellation, arithmetic, accuracy, statuses, abilities and items.',
@@ -56,6 +57,7 @@ def validate_ownership(suites):
     assert len(domains) == len(set(domains)), 'Duplicate domain ownership'
     assert set(domains) == set(source.DOMAINS), 'Missing or unknown domain ownership'
     assert all(s['contracts'] for s in suites)
+    assert set(suites[1]['domains']) == SUITE2_DOMAINS, 'Suite 2 obligations cannot be reassigned to close the suite'
 
 
 def validate_schedule(source_text, target_text, constants_text):
@@ -84,6 +86,27 @@ def build():
         complete_behavior_parity=False, suites=SUITES,
         effect_family_owner=2, source_move_count=255, source_effect_count=133, source_command_count=129,
         audit_inventory='tools/polished_port/manifests/battle_suite.json',
+        next_step=dict(
+            suite_id=2,
+            goal='Close Suite 2 as one consolidated implementation milestone.',
+            requested_from_target='8e3408022f98f85ec110bab6b9c1ce827b0c5492',
+            plan='tools/polished_port/BATTLE_PARITY_PLAN.md',
+            completion_status='not yet closed',
+            scope='All eight Suite 2 domains, all 133 effect families, all 129 commands and all 255 source moves; every owned branch and interaction.',
+            known_followups=[
+                'Source held-item backup/restoration and inventory/party persistence, including consumption, theft/exchange and recovery.',
+                'Choice-lock selection, acquisition/loss/exchange timing, cancellation and move-history interactions.',
+                'All other unverified owned action, arithmetic, status, ability/item, switching and faint-chain branches; the two named followups are not the complete gap list.'],
+            work=[
+                'Reconcile existing scoped evidence against every owned source obligation and enumerate concrete missing cases before fixing them.',
+                'Implement the complete gap list, with distinguishing source-anchored branch tests and optional native controls; keep internal checkpoints within this closure pass.',
+                'Produce an explicit source-to-runtime-to-test closure record for all owned obligations, including documented source-variant exclusions.',
+                'Run source/native regressions, deterministic/source checks, production builds, campaign and Save/Continue validation, then verify CI for the implementation head.'],
+            acceptance=[
+                'No Suite 2 obligation remains unverified, deferred or reassigned to Suite 3.',
+                'Every owned success, failure, boundary, ordering and persistence branch has authenticated source interpretation, live target binding and distinguishing evidence.',
+                'Suite 2 completion is derived from reviewed evidence; counts, test names, dispatch presence and native regression passes alone cannot close it.',
+                'Suite 1 and Suite 3 retain their original ownership and honest status; closing Suite 2 is not a claim of complete battle or game parity.']),
         closure_policy='No suite closes until every owned obligation has authenticated source, live bindings and distinguishing branch evidence. Passing regression tests alone does not certify parity.')
     paths = ['engine/battle/endturn.asm', 'engine/battle/core.asm', 'engine/battle/abilities.asm',
              'engine/battle/effect_commands.asm', 'home/battle.asm']

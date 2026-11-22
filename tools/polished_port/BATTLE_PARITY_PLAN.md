@@ -137,6 +137,39 @@ story binding and source trainer/item art are not claimed complete.
    domain/block/effect obligation with source evidence before strict
    completeness is allowed to pass.
 
+## Next implementation milestone: close Suite 2
+
+Requested from `8e340802` after CI #1646 passed. The next implementation step
+is a consolidated **Suite 2 closure pass**, replacing the sequence of separately
+finished feature batches. Internal checkpoints may be used, but the next
+milestone is closure of the existing Suite 2 scope. Suite 2 is not closed yet.
+
+The pass owns actions, damage, moves, status, abilities, items, switching and
+fainting, including all branches of 133 effect families, 129 commands and 255
+source move identities. Keep exactly three suites and preserve their ownership.
+Do not move unfinished Suite 2 behavior into Suite 3 to obtain closure.
+
+1. Reconcile the existing source contracts and 1,204 Polished regression groups
+   with every owned source obligation. Build a concrete missing-case list; the
+   current generic open inventory is not a completed branch review.
+2. Complete item backup/restoration and party/inventory persistence; Choice-lock
+   selection, item transfer and cancellation timing; and every other uncovered
+   owned branch. Those named followups are starting points, not the whole scope.
+3. Fix the complete list and add distinguishing tests for success/failure,
+   arithmetic boundaries, suppression, event order, switches, faints and
+   persistence. Retain controls for optional native content and battle modes.
+4. Record authenticated source interpretation, exact live bindings and branch
+   evidence for every owned obligation. Document genuine source-variant
+   exclusions. Do not infer completion from names, inventory or test counts.
+5. Run all source/native regressions, deterministic/source checks, production
+   builds, campaign and Save/reset/Continue checks. Verify CI at the final
+   implementation head. Mark Suite 2 closed only when no owned obligation is
+   unverified, deferred or reassigned.
+
+This planning change does not certify new engine behavior or alter the current
+completion result. Suite 1 foundations and Suite 3 contexts, AI, RNG and
+presentation retain their existing ownership and open obligations.
+
 ## Ownership and evidence
 
 `manifests/battle_completion_suites.json` assigns all fifteen major domains
