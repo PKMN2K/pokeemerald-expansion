@@ -19,7 +19,7 @@ bool32 UsesPolishedEscapeRules(enum BattlerId battler)
         && gBattleMons[battler].volatiles.semiInvulnerable != STATE_SKY_DROP_TARGET;
 }
 
-u32 PolishedEscapeThreshold(u16 playerSpeed, u16 enemySpeed, u8 previousAttempts)
+static u32 EscapeRollLimit(u16 playerSpeed, u16 enemySpeed, u8 previousAttempts)
 {
     u32 divisor = (enemySpeed >> 2) & 255;
     if (playerSpeed >= enemySpeed || divisor == 0)
@@ -28,7 +28,14 @@ u32 PolishedEscapeThreshold(u16 playerSpeed, u16 enemySpeed, u8 previousAttempts
     // The incremented attempt byte is decremented before adding each 30, so
     // wrapping attempt 255 to zero still adds 30 up to 255 times.
     u32 value = (u16)(playerSpeed * 32) / divisor;
-    return min(256, value + 30 * previousAttempts + 1);
+    // A limit of 255 still executes BattleRandom and CP. Only overflow
+    // (or the earlier unconditional exits) bypasses the draw.
+    return min(256, value + 30 * previousAttempts);
+}
+
+u32 PolishedEscapeThreshold(u16 playerSpeed, u16 enemySpeed, u8 previousAttempts)
+{
+    return min(256, EscapeRollLimit(playerSpeed, enemySpeed, previousAttempts) + 1);
 }
 
 bool32 CanPolishedEnemyFlee(enum BattlerId battler)
@@ -118,8 +125,8 @@ bool32 TryPolishedRun(enum BattlerId battler)
         enum BattlerId opponent = GetOppositeBattler(battler);
         u32 speed = GetBattlerTotalSpeedStat(battler, GetBattlerAbilityIgnoreMoldBreaker(battler), GetBattlerHoldEffect(battler));
         u32 enemySpeed = GetBattlerTotalSpeedStat(opponent, GetBattlerAbilityIgnoreMoldBreaker(opponent), GetBattlerHoldEffect(opponent));
-        u32 threshold = PolishedEscapeThreshold(speed, enemySpeed, gBattleStruct->runTries++);
-        success = threshold == 256 || RandomUniform(RNG_POLISHED_ESCAPE, 0, MAX_u8) < threshold;
+        u32 limit = EscapeRollLimit(speed, enemySpeed, gBattleStruct->runTries++);
+        success = limit == 256 || RandomUniform(RNG_POLISHED_ESCAPE, 0, MAX_u8) <= limit;
     }
     if (success)
     {
