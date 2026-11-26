@@ -163,6 +163,29 @@ TEST("Polished systems Safari escape uses raw low byte Speed before bait and ang
     EXPECT_EQ(PolishedSafariFleeThreshold(63, 30, 0, 1), 252);
 }
 
+SINGLE_BATTLE_TEST("Polished Safari bait and rock consume every rejected draw and one accepted draw")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_CLEFFA);
+    } WHEN { TURN {} }
+    THEN {
+        SeedRng(0); // First roll is zero: one turn of bait.
+        u32 before = gRngValue.ctr;
+        PolishedSafariBaitOrRock(FALSE);
+        EXPECT_EQ(gBattleStruct->safariPkblThrowCounter, 1);
+        EXPECT_EQ(gRngValue.ctr - before, 1);
+
+        SeedRng(5); // Low three bits are 6, 5, 7, 4: five turns of anger.
+        before = gRngValue.ctr;
+        gBattleStruct->safariGoNearCounter = 252;
+        PolishedSafariBaitOrRock(TRUE);
+        EXPECT_EQ(gBattleStruct->safariGoNearCounter, 255);
+        EXPECT_EQ(gBattleStruct->safariPkblThrowCounter, 0);
+        EXPECT_EQ(gRngValue.ctr - before, 4);
+    }
+}
+
 SINGLE_BATTLE_TEST("Polished systems Safari bait can reach zero rate and anger expiry restores the base")
 {
     GIVEN {

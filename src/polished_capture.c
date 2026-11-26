@@ -227,7 +227,12 @@ void PolishedSafariBaitOrRock(bool32 rock)
         gBattleStruct->safariGoNearCounter = 0;
     }
     // The source rejection-samples three bits for a uniform 1..5 duration.
-    *counter = min(255, *counter + RandomUniform(RNG_POLISHED_SAFARI_DURATION, 1, 5));
+    u32 roll;
+    do
+    {
+        roll = Random() & 7;
+    } while (roll >= 5);
+    *counter = min(255, *counter + roll + 1);
 }
 
 u32 PolishedSafariReaction(void)
