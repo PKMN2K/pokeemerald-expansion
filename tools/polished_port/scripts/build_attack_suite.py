@@ -26,6 +26,24 @@ DIRECT = {'EFFECT_NORMAL_HIT', 'EFFECT_ALWAYS_HIT', 'EFFECT_PRIORITY_HIT',
           'EFFECT_PSYSTRIKE', 'EFFECT_BRICK_BREAK', 'EFFECT_PAY_DAY', 'EFFECT_TRI_ATTACK'}
 
 
+def suite2_reconciliation():
+    # Implementation review and execution evidence are recorded separately
+    # from the conservative whole-context flags retained by this inventory.
+    return dict(
+        implementation_status='reconciled',
+        scope='Suite 2 action/damage/move/status/ability/item mechanics and switching/fainting, including selectable source mechanics.',
+        closure_review='tools/polished_port/SUITE2_CLOSURE_REVIEW.md',
+        validation_record='tools/polished_port/SUITE2_VALIDATION.json',
+        interpretation='The closure review binds the original Suite 2 mechanical scope to authenticated source branches, runtime adapters and distinguishing regressions. The validation record identifies the implementation and executed gates; an inventory or a new runner invocation does not itself establish closure.',
+        documented_deviations=[dict(
+            id='light_metal_zero_weight_nontermination',
+            reachable=True,
+            source_behavior='Light Metal can halve an authenticated weight of one to zero, after which the source Low Kick table scan can fail to terminate.',
+            target_behavior='The target retains a bounded native fallback for this modified-ability input.',
+            disposition='Deliberate nontermination deviation; neither an unreachable exclusion nor a passing case of literal source parity.',
+            review='tools/polished_port/SUITE2_ABILITY_ITEM_RECONCILIATION.md')])
+
+
 def inventory():
     files = source.sources()
     effects = [l.split()[1] for l in source.default_lines(files['constants/move_effect_constants.asm'])
@@ -127,14 +145,22 @@ def build():
                   source_variant='default (FAITHFUL undefined)', moves=moves,
                   effects=[dict(effect=e, moves=names, **scripts[e], complete_behavior_parity=False)
                            for e, names in sorted(groups.items())],
-                  shared_open_obligations=[
+                  suite2_reconciliation=suite2_reconciliation(),
+                  original_shared_obligations=[
                       'Complete damage/stat formula, critical hits, type/STAB, accuracy/evasion and RNG distributions.',
                       'Every source effect success/failure branch, prerequisites, durations, cancellation and turn ordering.',
                       'Substitute (including breakage), Protect, immunity, ability/item suppression and fainting order.',
                       'Switching, forced/called/copied moves, multi-turn and multi-hit effects, weather and end-turn state.',
                       'Original battle presentation and source AI decisions.'],
-                  arithmetic_scope='Mapped Recover/Roost, six LeechHit moves and five non-Struggle recoil moves in ordinary singles without either active gimmick. Fresh Snack and Struggle retain their earlier adapters. See action_resolution.json for additional live recoil caps/order, Substitute boundaries, full-HP Liquid Ooze and Dream Eater evidence. Unasserted damage inputs and AI estimates remain open.',
-                  limits='All moves are inventoried and dispatch-tested. Listed semantic scopes and earlier focused suites are partial evidence; no whole effect is certified. Strict completeness must remain failing until all obligations have evidence.')
+                  shared_open_obligations=[
+                      'Suite 3: trainer/wild generation, special battle-context bindings and source option UI/Predict disclosure; the selectable source mechanics themselves are reconciled by Suite 2.',
+                      'Suite 3: source AI scoring, knowledge, move/item/switch selection and tie decisions. AI frame-budget tests establish performance only.',
+                      'Suite 3: capture/escape/roamer arithmetic and context flows, rewards, postbattle ability dispatch, evolution/learning options and their campaign persistence boundaries; Suite 2 terminal item cleanup remains reconciled in its own ledger.',
+                      'Suite 3: Tower/link construction, restrictions, outcomes and synchronization. Native extra formats remain optional capabilities.',
+                      'Suite 3: exact shared RNG stream and call counts across complete contexts. Reviewed Suite 2 branch probabilities do not establish stream equivalence.',
+                      'Suite 3: source artwork, messages, animation and observable timing, with production/campaign/save-reset-Continue evidence for the complete contexts.'],
+                  arithmetic_scope='This generator retains its focused Recover/Roost, six LeechHit and five non-Struggle recoil vectors for ordinary singles without active gimmicks. Fresh Snack and Struggle use their earlier adapters. Broader source arithmetic, modifier order, caps and branch predicates are reconciled in SUITE2_CLOSURE_REVIEW.md and the referenced action/damage ledgers; full-context AI estimates, exact RNG and presentation retain Suite 3 ownership.',
+                  limits='Per-move and per-effect complete_behavior_parity remains false for conservative full-context, exact-RNG and presentation certification. It does not label the reconciled Suite 2 mechanical branches unexamined. Original shared scope is preserved separately from the remaining Suite 3 obligations and the documented reachable nontermination deviation. Strict completeness remains unchanged and must fail until all whole-battle obligations have evidence.')
     return {source.ROOT/'test/battle/move_effect/polished_attack_vectors.h': '\n'.join(header),
             source.ROOT/'tools/polished_port/manifests/attack_suite.json': json.dumps(report, indent=2)+'\n'}
 
@@ -148,4 +174,4 @@ if __name__ == '__main__':
             assert path.read_text() == expected, f'Regenerate {path}'
         else:
             path.write_text(expected)
-    print('PASS: 255 source attacks, 133 effects and ordered scripts inventoried; complete behavior parity remains open')
+    print('PASS: 255 source attacks, 133 effects and ordered scripts inventoried; Suite 2 implementation reconciled in its closure record; whole-context behavior parity remains open')

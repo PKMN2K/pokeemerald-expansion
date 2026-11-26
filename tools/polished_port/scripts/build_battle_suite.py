@@ -172,6 +172,10 @@ def build():
     report = dict(source_repository='Rangi42/polishedcrystal', source_commit=source.PIN,
         source_variant='default release, FAITHFUL undefined; lexical inventory retains alternate branches as a conservative superset',
         complete_behavior_parity=False,
+        suite2_reconciliation=manifest['suite2_reconciliation'],
+        original_shared_obligations=manifest['original_shared_obligations'],
+        shared_open_obligations=manifest['shared_open_obligations'],
+        inventory_status_interpretation='Domain status, lexical block behavior and per-effect flags remain conservative whole-battle certification fields. Domain obligations retain their original inventory scope. Reviewed Suite 2 mechanical branches are reconciled in the closure review and validation record, while original Suite 3 contexts, AI, exact RNG and presentation remain open; the unchanged inventory flags do not mean every reviewed mechanical branch is unexamined.',
         inventory_scope=dict(directory_prefixes=list(PREFIXES), additional_files=list(EXTRA),
             limitation='This is the battle boundary and shared dependencies, not a proof of transitive call-graph closure. External field scripts, UI and data references still require end-to-end evidence.'),
         domains=[dict(id=key, title=title, source_anchors=anchors, status='open', obligations=obligations) for key, (title, anchors, obligations) in DOMAINS.items()],
@@ -180,7 +184,7 @@ def build():
         source_commands=sorted({c for e in manifest['effects'] for c in (line.split()[0] for line in e['commands'])}),
         unverified_effects=[e['effect'] for e in manifest['effects'] if not e['complete_behavior_parity']],
         regression_tests=catalog,
-        semantic_evidence_policy='Existing tests establish only their asserted scenarios. Names, dispatch, inventory, code presence, native passes and AI frame budgets do not close a source block or domain.',
+        semantic_evidence_policy='Existing tests establish only their asserted scenarios. Names, dispatch, inventory, code presence, native passes and AI frame budgets do not close a source block or domain. Suite 2 implementation reconciliation additionally records authenticated branch review, runtime bindings and distinguishing evidence in its linked ledger; this does not certify every whole-battle context or the documented reachable deviation.',
         scoped_evidence=[dict(manifest=str(p.relative_to(ROOT)), sha256=hashlib.sha256(p.read_bytes()).hexdigest())
             for p in sorted((ROOT/'tools/polished_port/manifests').glob('*.json'))
             if p.name in ('attack_suite.json', 'multihit.json', 'contact_status.json', 'contact_volatile.json', 'battle_foundations.json', 'battle_core.json', 'accuracy_order.json', 'battle_systems.json', 'trainer_attributes.json', 'action_resolution.json')])
@@ -211,6 +215,7 @@ if __name__ == '__main__':
             path.write_text(content)
     report = json.loads(outputs[MANIFEST])
     print(f'PASS: {len(report["source_files"])} authenticated source files; {len(report["domains"])} battle domains; {len(report["regression_tests"])} registered test groups')
+    print('Reviewed Suite 2 implementation: reconciled; whole-battle inventory/strict completeness remains OPEN. See SUITE2_CLOSURE_REVIEW.md and SUITE2_VALIDATION.json.')
     if args.strict_completeness:
         try:
             require_complete(report)

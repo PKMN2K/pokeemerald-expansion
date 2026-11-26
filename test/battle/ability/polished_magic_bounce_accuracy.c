@@ -1,7 +1,7 @@
 #include "global.h"
 #include "test/battle.h"
 
-SINGLE_BATTLE_TEST("Polished Magic Bounce accuracy skips the returned status move roll")
+SINGLE_BATTLE_TEST("Polished Magic Bounce accuracy preserves original status misses through reflection")
 {
     struct BattlePokemon *user = player, *target = opponent;
     enum Move move = MOVE_TOXIC;
@@ -20,29 +20,28 @@ SINGLE_BATTLE_TEST("Polished Magic Bounce accuracy skips the returned status mov
         TURN { MOVE(user, move, WITH_RNG(RNG_ACCURACY, FALSE)); }
     } SCENE {
         ABILITY_POPUP(target, ABILITY_MAGIC_BOUNCE);
-        if (B_POLISHED_MOVE_BALANCE) ANIMATION(ANIM_TYPE_MOVE, move, target);
-        else NOT ANIMATION(ANIM_TYPE_MOVE, move, target);
+        NOT ANIMATION(ANIM_TYPE_MOVE, move, target);
     } THEN {
-        EXPECT_EQ(!!(user->status1 & status), !!B_POLISHED_MOVE_BALANCE);
+        EXPECT_EQ(user->status1 & status, 0);
         EXPECT_EQ(target->status1, STATUS1_NONE);
         EXPECT_EQ(user->pp[0], 1);
         EXPECT_EQ(target->pp[0], 2);
     }
 }
 
-SINGLE_BATTLE_TEST("Polished Magic Bounce accuracy skips the returned stat drop roll")
+SINGLE_BATTLE_TEST("Polished Magic Bounce accuracy preserves original stat misses through reflection")
 {
-    static const struct { enum Move move; u32 stat, amount; } drops[] = {
-        {MOVE_LEER, STAT_DEF, 1}, {MOVE_GROWL, STAT_ATK, 1}, {MOVE_SCREECH, STAT_DEF, 2},
-        {MOVE_CHARM, STAT_ATK, 2}, {MOVE_SMOKESCREEN, STAT_ACC, 1},
-        {MOVE_SCARY_FACE, STAT_SPEED, 2}, {MOVE_STRING_SHOT, STAT_SPEED, 2},
+    static const struct { enum Move move; u32 stat; } drops[] = {
+        {MOVE_LEER, STAT_DEF}, {MOVE_GROWL, STAT_ATK}, {MOVE_SCREECH, STAT_DEF},
+        {MOVE_CHARM, STAT_ATK}, {MOVE_SMOKESCREEN, STAT_ACC},
+        {MOVE_SCARY_FACE, STAT_SPEED}, {MOVE_STRING_SHOT, STAT_SPEED},
     };
     struct BattlePokemon *user = player, *target = opponent;
     enum Move move = MOVE_NONE;
-    u32 stat = STAT_DEF, amount = 0;
+    u32 stat = STAT_DEF;
     for (u32 side = 0; side < 2; side++)
         for (u32 entry = 0; entry < ARRAY_COUNT(drops); entry++)
-            PARAMETRIZE { user = side ? opponent : player; target = side ? player : opponent; move = drops[entry].move; stat = drops[entry].stat; amount = drops[entry].amount; }
+            PARAMETRIZE { user = side ? opponent : player; target = side ? player : opponent; move = drops[entry].move; stat = drops[entry].stat; }
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET) { Ability(user == player ? ABILITY_NONE : ABILITY_MAGIC_BOUNCE); Item(ITEM_BRIGHT_POWDER); Speed(100); }
         OPPONENT(SPECIES_WOBBUFFET) { Ability(user == opponent ? ABILITY_NONE : ABILITY_MAGIC_BOUNCE); Item(ITEM_BRIGHT_POWDER); Speed(50); }
@@ -50,26 +49,29 @@ SINGLE_BATTLE_TEST("Polished Magic Bounce accuracy skips the returned stat drop 
         TURN { MOVE(user, move, WITH_RNG(RNG_ACCURACY, FALSE)); }
     } SCENE {
         ABILITY_POPUP(target, ABILITY_MAGIC_BOUNCE);
-        if (B_POLISHED_MOVE_BALANCE) ANIMATION(ANIM_TYPE_MOVE, move, target);
-        else NOT ANIMATION(ANIM_TYPE_MOVE, move, target);
+        NOT ANIMATION(ANIM_TYPE_MOVE, move, target);
     } THEN {
-        EXPECT_EQ(user->statStages[stat], DEFAULT_STAT_STAGE - (B_POLISHED_MOVE_BALANCE ? amount : 0));
+        EXPECT_EQ(user->statStages[stat], DEFAULT_STAT_STAGE);
         EXPECT_EQ(target->statStages[stat], DEFAULT_STAT_STAGE);
     }
 }
 
-SINGLE_BATTLE_TEST("Polished Magic Bounce accuracy skips confusion seed and source Foresight rolls")
+SINGLE_BATTLE_TEST("Polished Magic Bounce accuracy preserves confusion seed and source Foresight misses")
 {
     struct BattlePokemon *user = player, *target = opponent;
     enum Move move = MOVE_SUPERSONIC;
     for (u32 side = 0; side < 2; side++)
         for (u32 kind = 0; kind < 3; kind++)
             PARAMETRIZE { user = side ? opponent : player; target = side ? player : opponent; move = kind == 0 ? MOVE_SUPERSONIC : kind == 1 ? MOVE_LEECH_SEED : MOVE_FORESIGHT; }
-    bool32 lands = B_POLISHED_MOVE_BALANCE || move == MOVE_FORESIGHT;
+    bool32 lands = !B_POLISHED_MOVE_BALANCE && move == MOVE_FORESIGHT;
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Ability(user == player ? ABILITY_NONE : ABILITY_MAGIC_BOUNCE); Speed(user == player ? 50 : 100); }
-        OPPONENT(SPECIES_WOBBUFFET) { Ability(user == opponent ? ABILITY_NONE : ABILITY_MAGIC_BOUNCE); Speed(user == opponent ? 50 : 100); }
+        PLAYER(SPECIES_WOBBUFFET) { Ability(user == player ? ABILITY_NONE : ABILITY_MAGIC_BOUNCE); Item(ITEM_BRIGHT_POWDER); Speed(user == player ? 50 : 100); }
+        OPPONENT(SPECIES_WOBBUFFET) { Ability(user == opponent ? ABILITY_NONE : ABILITY_MAGIC_BOUNCE); Item(ITEM_BRIGHT_POWDER); Speed(user == opponent ? 50 : 100); }
     } WHEN {
+        // Source Foresight has 255 accuracy, so lower its original chance
+        // below 100%. Native Foresight still bypasses the accuracy roll.
+        if (move == MOVE_FORESIGHT)
+            for (u32 turn = 0; turn < 6; turn++) TURN { MOVE(target, MOVE_DOUBLE_TEAM); }
         TURN { MOVE(user, move, WITH_RNG(RNG_ACCURACY, FALSE)); }
     } SCENE {
         ABILITY_POPUP(target, ABILITY_MAGIC_BOUNCE);
@@ -78,7 +80,31 @@ SINGLE_BATTLE_TEST("Polished Magic Bounce accuracy skips confusion seed and sour
     } THEN {
         if (move == MOVE_SUPERSONIC) EXPECT_EQ(!!user->volatiles.confusionTimer, lands);
         if (move == MOVE_LEECH_SEED) EXPECT_EQ(!!user->volatiles.leechSeed, lands);
-        if (move == MOVE_FORESIGHT) EXPECT(user->volatiles.foresight);
+        if (move == MOVE_FORESIGHT) EXPECT_EQ(!!user->volatiles.foresight, lands);
+    }
+}
+
+SINGLE_BATTLE_TEST("Polished Magic Bounce accuracy reuses an original status hit without a reflected roll")
+{
+    struct BattlePokemon *user = player, *target = opponent;
+    PARAMETRIZE { user = player; target = opponent; }
+    PARAMETRIZE { user = opponent; target = player; }
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) { Ability(user == player ? ABILITY_NONE : ABILITY_MAGIC_BOUNCE); Item(user == player ? ITEM_BRIGHT_POWDER : ITEM_NONE); Speed(user == player ? 50 : 100); MovesWithPP({MOVE_CONFUSE_RAY, 2}); }
+        OPPONENT(SPECIES_WOBBUFFET) { Ability(user == opponent ? ABILITY_NONE : ABILITY_MAGIC_BOUNCE); Item(user == opponent ? ITEM_BRIGHT_POWDER : ITEM_NONE); Speed(user == opponent ? 50 : 100); MovesWithPP({MOVE_CONFUSE_RAY, 2}); }
+    } WHEN {
+        // The original target has no accuracy modifier: Confuse Ray is a
+        // certain hit. Only a new reflected roll would see Bright Powder.
+        TURN { MOVE(user, MOVE_CONFUSE_RAY, WITH_RNG(RNG_ACCURACY, FALSE)); }
+    } SCENE {
+        ABILITY_POPUP(target, ABILITY_MAGIC_BOUNCE);
+        if (B_POLISHED_MOVE_BALANCE) ANIMATION(ANIM_TYPE_MOVE, MOVE_CONFUSE_RAY, target);
+        else NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_CONFUSE_RAY, target);
+    } THEN {
+        EXPECT_EQ(!!user->volatiles.confusionTimer, !!B_POLISHED_MOVE_BALANCE);
+        EXPECT_EQ((u32)target->volatiles.confusionTimer, 0);
+        EXPECT_EQ(user->pp[0], 1);
+        EXPECT_EQ(target->pp[0], 2);
     }
 }
 
@@ -91,12 +117,12 @@ SINGLE_BATTLE_TEST("Polished Magic Bounce accuracy restores ordinary rolls after
         PLAYER(SPECIES_WOBBUFFET) { Ability(user == player ? ABILITY_NONE : ABILITY_MAGIC_BOUNCE); Item(ITEM_BRIGHT_POWDER); Speed(100); MovesWithPP({MOVE_LEER, 3}); }
         OPPONENT(SPECIES_WOBBUFFET) { Ability(user == opponent ? ABILITY_NONE : ABILITY_MAGIC_BOUNCE); Item(ITEM_BRIGHT_POWDER); Speed(50); MovesWithPP({MOVE_LEER, 3}); }
     } WHEN {
-        TURN { MOVE(user, MOVE_LEER, WITH_RNG(RNG_ACCURACY, FALSE)); }
+        TURN { MOVE(user, MOVE_LEER, hit: TRUE); }
         TURN { MOVE(target, MOVE_LEER, WITH_RNG(RNG_ACCURACY, FALSE)); }
     } SCENE {
         ABILITY_POPUP(target, ABILITY_MAGIC_BOUNCE);
     } THEN {
-        EXPECT_EQ(user->statStages[STAT_DEF], DEFAULT_STAT_STAGE - !!B_POLISHED_MOVE_BALANCE);
+        EXPECT_EQ(user->statStages[STAT_DEF], DEFAULT_STAT_STAGE - 1);
         EXPECT_EQ(target->statStages[STAT_DEF], DEFAULT_STAT_STAGE);
         EXPECT_EQ(user->pp[0], 2);
         EXPECT_EQ(target->pp[0], 2);
@@ -121,12 +147,47 @@ SINGLE_BATTLE_TEST("Polished Magic Bounce accuracy retains returned status immun
         PLAYER(user == player ? species : SPECIES_WOBBUFFET) { Ability(user == player ? ability : ABILITY_MAGIC_BOUNCE); Speed(user == player ? 50 : 100); }
         OPPONENT(user == opponent ? species : SPECIES_WOBBUFFET) { Ability(user == opponent ? ability : ABILITY_MAGIC_BOUNCE); Speed(user == opponent ? 50 : 100); }
     } WHEN {
-        TURN { MOVE(user, move, WITH_RNG(RNG_ACCURACY, FALSE)); }
+        TURN { MOVE(user, move, hit: TRUE); }
     } SCENE {
         ABILITY_POPUP(target, ABILITY_MAGIC_BOUNCE);
     } THEN {
         EXPECT_EQ(user->status1, STATUS1_NONE);
         EXPECT_EQ(target->status1, STATUS1_NONE);
+    }
+}
+
+SINGLE_BATTLE_TEST("Polished Magic Bounce accuracy retains original type immunity through reflection")
+{
+    struct BattlePokemon *user = player, *target = opponent;
+    enum Move move = MOVE_TOXIC;
+    bool32 immune = FALSE, hit = FALSE;
+    for (u32 side = 0; side < 2; side++)
+        for (u32 kind = 0; kind < 2; kind++)
+            for (u32 immunity = 0; immunity < 2; immunity++)
+                for (u32 lands = 0; lands < 2; lands++)
+                    PARAMETRIZE {
+                        user = side ? opponent : player; target = side ? player : opponent;
+                        move = kind ? MOVE_THUNDER_WAVE : MOVE_TOXIC; immune = immunity; hit = lands;
+                    }
+    enum Species reflector = !immune ? SPECIES_WOBBUFFET : move == MOVE_TOXIC ? SPECIES_SKARMORY : SPECIES_DIGLETT;
+    u32 status = move == MOVE_TOXIC ? STATUS1_TOXIC_POISON : STATUS1_PARALYSIS;
+    bool32 lands = hit && (!B_POLISHED_MOVE_BALANCE || !immune);
+    GIVEN {
+        PLAYER(target == player ? reflector : SPECIES_WOBBUFFET) { Ability(user == player ? ABILITY_NONE : ABILITY_MAGIC_BOUNCE); Item(ITEM_BRIGHT_POWDER); Speed(user == player ? 50 : 100); MovesWithPP({move, 2}); }
+        OPPONENT(target == opponent ? reflector : SPECIES_WOBBUFFET) { Ability(user == opponent ? ABILITY_NONE : ABILITY_MAGIC_BOUNCE); Item(ITEM_BRIGHT_POWDER); Speed(user == opponent ? 50 : 100); MovesWithPP({move, 2}); }
+    } WHEN {
+        // checkpowder/resettypematchup precedes source bounceback. The
+        // original immunity remains wAttackMissed after the sides reverse.
+        TURN { MOVE(user, move, WITH_RNG(RNG_ACCURACY, hit)); }
+    } SCENE {
+        ABILITY_POPUP(target, ABILITY_MAGIC_BOUNCE);
+        if (lands) ANIMATION(ANIM_TYPE_MOVE, move, target);
+        else NOT ANIMATION(ANIM_TYPE_MOVE, move, target);
+    } THEN {
+        EXPECT_EQ(!!(user->status1 & status), lands);
+        EXPECT_EQ(target->status1, STATUS1_NONE);
+        EXPECT_EQ(user->pp[0], 1);
+        EXPECT_EQ(target->pp[0], 2);
     }
 }
 
@@ -207,26 +268,29 @@ SINGLE_BATTLE_TEST("Polished Magic Bounce accuracy recognizes Magic Bounce befor
     } SCENE {
         ABILITY_POPUP(target, ABILITY_MAGIC_BOUNCE);
     } THEN {
-        EXPECT_EQ(!!(user->status1 & STATUS1_TOXIC_POISON), !!B_POLISHED_MOVE_BALANCE);
+        EXPECT_EQ(user->status1 & STATUS1_TOXIC_POISON, 0);
         EXPECT_EQ(target->status1, STATUS1_NONE);
     }
 }
 
-SINGLE_BATTLE_TEST("Polished Magic Bounce accuracy ignores raised evasion on the original user")
+SINGLE_BATTLE_TEST("Polished Magic Bounce accuracy reuses the original hit despite reflected evasion")
 {
     struct BattlePokemon *user = player, *target = opponent;
     PARAMETRIZE { user = player; target = opponent; }
     PARAMETRIZE { user = opponent; target = player; }
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Ability(user == player ? ABILITY_NONE : ABILITY_MAGIC_BOUNCE); Item(ITEM_BRIGHT_POWDER); Speed(user == player ? 50 : 100); }
-        OPPONENT(SPECIES_WOBBUFFET) { Ability(user == opponent ? ABILITY_NONE : ABILITY_MAGIC_BOUNCE); Item(ITEM_BRIGHT_POWDER); Speed(user == opponent ? 50 : 100); }
+        PLAYER(SPECIES_WOBBUFFET) { Ability(user == player ? ABILITY_NONE : ABILITY_MAGIC_BOUNCE); Item(user == player ? ITEM_BRIGHT_POWDER : ITEM_NONE); Speed(user == player ? 50 : 100); }
+        OPPONENT(SPECIES_WOBBUFFET) { Ability(user == opponent ? ABILITY_NONE : ABILITY_MAGIC_BOUNCE); Item(user == opponent ? ITEM_BRIGHT_POWDER : ITEM_NONE); Speed(user == opponent ? 50 : 100); }
     } WHEN {
         for (u32 turns = 0; turns < 6; turns++) TURN { MOVE(user, MOVE_DOUBLE_TEAM); }
-        TURN { MOVE(user, MOVE_SING, WITH_RNG(RNG_ACCURACY, FALSE)); }
+        TURN { MOVE(user, MOVE_LEER, WITH_RNG(RNG_ACCURACY, FALSE)); }
     } SCENE {
         ABILITY_POPUP(target, ABILITY_MAGIC_BOUNCE);
+        if (B_POLISHED_MOVE_BALANCE) ANIMATION(ANIM_TYPE_MOVE, MOVE_LEER, target);
+        else NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_LEER, target);
     } THEN {
         EXPECT_EQ(user->statStages[STAT_EVASION], MAX_STAT_STAGE);
-        EXPECT_EQ(!!(user->status1 & STATUS1_SLEEP), !!B_POLISHED_MOVE_BALANCE);
+        EXPECT_EQ(user->statStages[STAT_DEF], DEFAULT_STAT_STAGE - !!B_POLISHED_MOVE_BALANCE);
+        EXPECT_EQ(target->statStages[STAT_DEF], DEFAULT_STAT_STAGE);
     }
 }

@@ -1,0 +1,586 @@
+{
+  "schema_version": 1,
+  "validated_at": "2026-11-26T15:35:45.379179-05:00",
+  "source_commit": "3fa43192379df5c3e7b09a08e4d5d79af4f02f42",
+  "source_variant": "v3.2.3 default; FAITHFUL undefined",
+  "implementation_status": "Suite 2 implementation and local acceptance complete with the documented nontermination deviation",
+  "complete_battle_behavior_parity": false,
+  "runtime_and_test_snapshot": {
+    "base_commit": "2f2859623b217fa03b9b8fa916626ed77cfef7b8",
+    "scopes": [
+      "src",
+      "include",
+      "data",
+      "test"
+    ],
+    "sha256": "ba8c3fe373110b51a1021aad77df43aacabb21422d5be774f82b3d4492beef95"
+  },
+  "suite2_scope": {
+    "domains": [
+      "actions",
+      "damage",
+      "moves",
+      "status",
+      "abilities",
+      "items",
+      "switching",
+      "fainting"
+    ],
+    "commands": 129,
+    "effect_families": 133,
+    "mapped_moves": 255
+  },
+  "review_records": [
+    "tools/polished_port/SUITE2_CLOSURE_REVIEW.md",
+    "tools/polished_port/SUITE2_MOVE_RECONCILIATION.md",
+    "tools/polished_port/SUITE2_MOVE_RECONCILIATION.json",
+    "tools/polished_port/SUITE2_ABILITY_ITEM_RECONCILIATION.md",
+    "tools/polished_port/SUITE2_SWITCHING_FAINTING_RECONCILIATION.md"
+  ],
+  "full_regressions": {
+    "source_groups": 1524,
+    "ai_groups": 6,
+    "runs": [
+      {
+        "command": [
+          "make",
+          "-j8",
+          "-O",
+          "TEST=1",
+          "UNUSED_ERROR=1",
+          "DEPRECATED_ERROR=1",
+          "check",
+          "POLISHED_MOVE_BALANCE_TEST=0",
+          "TESTS="
+        ],
+        "returncode": 0,
+        "seconds": 614.02,
+        "status": "passed",
+        "counts": {
+          "TO_DO": 585,
+          "EXPECT_FAILING": 9,
+          "PASSED": 6746,
+          "TOTAL": 7340
+        },
+        "log": {
+          "path": "full-closure/native.log",
+          "sha256": "a84c577f70424bd159a1261bc1b10bd4c769f268f90afe4a47429e1233aef38a"
+        }
+      },
+      {
+        "command": [
+          "make",
+          "-j8",
+          "-O",
+          "TEST=1",
+          "UNUSED_ERROR=1",
+          "DEPRECATED_ERROR=1",
+          "check",
+          "POLISHED_MOVE_BALANCE_TEST=1",
+          "TESTS=Polished"
+        ],
+        "returncode": 0,
+        "seconds": 393.79,
+        "status": "passed",
+        "counts": {
+          "PASSED": 1524,
+          "TOTAL": 1524
+        },
+        "log": {
+          "path": "full-closure/source.log",
+          "sha256": "2710697081d9a4812409ead0b875364c7e4fc5600fef679590686f154dd5c478"
+        }
+      },
+      {
+        "command": [
+          "make",
+          "-j8",
+          "-O",
+          "TEST=1",
+          "UNUSED_ERROR=1",
+          "DEPRECATED_ERROR=1",
+          "check",
+          "POLISHED_MOVE_BALANCE_TEST=1",
+          "TESTS=Cud Chew will activate Kee Berry effect again on the next turn"
+        ],
+        "returncode": 0,
+        "seconds": 3.79,
+        "status": "passed",
+        "counts": {
+          "PASSED": 1,
+          "TOTAL": 1
+        },
+        "log": {
+          "path": "full-closure/source-cud-kee.log",
+          "sha256": "fc560aa7dd7675e67e459a6661a3fb6486fd74f4fcd973a6b39ed5e3506b5f95"
+        }
+      },
+      {
+        "command": [
+          "make",
+          "-j8",
+          "-O",
+          "TEST=1",
+          "UNUSED_ERROR=1",
+          "DEPRECATED_ERROR=1",
+          "check",
+          "POLISHED_MOVE_BALANCE_TEST=1",
+          "TESTS=AI thinking time"
+        ],
+        "returncode": 0,
+        "seconds": 2.22,
+        "status": "passed",
+        "counts": {
+          "PASSED": 6,
+          "TOTAL": 6
+        },
+        "log": {
+          "path": "full-closure/ai.log",
+          "sha256": "209522c5c84eece516d085b1cfa68ba46a0ae8e0d373e2275d76dd43aad8b767"
+        }
+      }
+    ],
+    "source_inventory_sha256": "8f4f7b0bb0b9132a5a315719b80d8a3ac46fea9a35d05b160f5071e678c9fbed",
+    "tested_worktree_diff_sha256": "f53ab8f51f4b68b362bd09e324037851133acd1114c13b14e8d1a51f2dfbe917"
+  },
+  "final_weakness_policy_focused": [
+    {
+      "profile": "source",
+      "passed_groups": 8,
+      "log": {
+        "path": "weakness-policy-v12-1.log",
+        "sha256": "95f07e07eab1c99872847193feefd93c95d87a2ec88d9ba0e0d18b3accf7c947"
+      }
+    },
+    {
+      "profile": "native",
+      "passed_groups": 8,
+      "log": {
+        "path": "weakness-policy-v12-0.log",
+        "sha256": "2cfc2ed00b0358be41204b289d8ea4fd40c9d70fe5d44bc08a978d9e511040db"
+      }
+    }
+  ],
+  "source_guards": {
+    "test_methods": 73,
+    "new_policy_mutation_cases": 144,
+    "log": {
+      "path": "policy-timing-source-guards.log",
+      "sha256": "88612a44dbd74ca9e3f870bd252103fe8a441912f8c87be255ae328d991cb3e8"
+    }
+  },
+  "reproducibility": {
+    "commands": 108,
+    "builder_checks": 77,
+    "source_test_commands": 31,
+    "command_list_sha256": "48f8647d4dbdaff266566402449310cdb27082a5920fc58a07de70983a8845b0",
+    "log": {
+      "path": "repro-closure-final.log",
+      "sha256": "a4cfe2a92bf0dc2fe742fac765e10936c0f4937adce30bc4ebbe6169509d5d8e"
+    }
+  },
+  "arm_header_probes": {
+    "passed": 12,
+    "log": {
+      "path": "header-probes-closure.log",
+      "sha256": "2e312b93c30c2ed69a43f9f0b95b812c97f1efe7773c106f9c5b6aa7cb78b9de"
+    }
+  },
+  "production_builds": [
+    {
+      "profile": "native",
+      "command": [
+        "make",
+        "-j8",
+        "-O",
+        "UNUSED_ERROR=1",
+        "DEPRECATED_ERROR=1"
+      ],
+      "returncode": 0,
+      "seconds": 38.76,
+      "sha256": {
+        ".gba": "1971794264d722ce5340393f868b8bedfba51526be4df41163ae8628547c5ce2",
+        ".elf": "c7d67306fee2a447f7f1bb91e106bff1d5d5072505dd362352c65add1f1aef20",
+        ".map": "31c192584fdb62e29e82f359735d9f92237bbb176423d4cb2d9178ae3065e5c8"
+      },
+      "log": {
+        "path": "production-final/build-native.log",
+        "sha256": "1c4dec6145650c422ccf218bc7c6d7595645521fd411a4e191e64b592737be67"
+      }
+    },
+    {
+      "profile": "source",
+      "command": [
+        "make",
+        "-j8",
+        "-O",
+        "UNUSED_ERROR=1",
+        "DEPRECATED_ERROR=1",
+        "POLISHED_JOHTO_DEMO=1"
+      ],
+      "returncode": 0,
+      "seconds": 36.08,
+      "sha256": {
+        ".gba": "e67efdcb0726180608ba0dc0417caeb7ec2738aa4085be1e487a3d0caeb49b57",
+        ".elf": "faf6c03c07a8a2a9c9d416a56137bc45a09fcd362f74a1bd8bbb50a003bf36f7",
+        ".map": "8180761b6c28ebed823d0b8c521c9472e5c4c5a74082b531f258ad4cb9b98a4b"
+      },
+      "log": {
+        "path": "production-final/build-source.log",
+        "sha256": "342a09e435adc720677856dbbd4acf3925775cc542f72c997fe2b311dfffb6df"
+      }
+    }
+  ],
+  "production_probes": [
+    {
+      "name": "shift-source",
+      "command": [
+        "python3",
+        "/workspace/scratch/3c785aeb2760/polished-emerald/tools/polished_port/scripts/test_shift_switch_emulator.py",
+        "--driver",
+        "/workspace/scratch/daf7712eb9ba/validation/mgba-driver",
+        "--profile",
+        "source",
+        "--output",
+        "/workspace/scratch/daf7712eb9ba/validation/production-final/shift-source-v2"
+      ],
+      "returncode": 0,
+      "corrected_fixture": true,
+      "log": {
+        "path": "production-final/shift-source-v2.log",
+        "sha256": "2a889a4d27574684257d35ee6239c6bbe10f275815ba593b81174abfb4643baa"
+      }
+    },
+    {
+      "name": "shift-native",
+      "command": [
+        "python3",
+        "/workspace/scratch/3c785aeb2760/polished-emerald/tools/polished_port/scripts/test_shift_switch_emulator.py",
+        "--driver",
+        "/workspace/scratch/daf7712eb9ba/validation/mgba-driver",
+        "--profile",
+        "native",
+        "--output",
+        "/workspace/scratch/daf7712eb9ba/validation/production-final/shift-native-v2"
+      ],
+      "returncode": 0,
+      "corrected_fixture": true,
+      "log": {
+        "path": "production-final/shift-native-v2.log",
+        "sha256": "e2ae12594eda1bd386d4ec82d81cc782975b7408e5d2cd25f89ce9d9a41ea28a"
+      }
+    },
+    {
+      "name": "battle-systems",
+      "command": [
+        "python3",
+        "/workspace/scratch/3c785aeb2760/polished-emerald/tools/polished_port/scripts/test_battle_systems_emulator.py",
+        "--driver",
+        "/workspace/scratch/daf7712eb9ba/validation/mgba-driver",
+        "--output",
+        "/workspace/scratch/daf7712eb9ba/validation/production-final/battle-systems"
+      ],
+      "returncode": 0,
+      "seconds": 2.28,
+      "log": {
+        "path": "production-final/battle-systems.log",
+        "sha256": "92dec72807a32f1862b136072a6d8af6cff3cc45cb9b05a21affaa681a06accc"
+      }
+    },
+    {
+      "name": "conversion-selection",
+      "command": [
+        "python3",
+        "/workspace/scratch/3c785aeb2760/polished-emerald/tools/polished_port/scripts/test_conversion_selection_emulator.py",
+        "--driver",
+        "/workspace/scratch/daf7712eb9ba/validation/mgba-driver",
+        "--output",
+        "/workspace/scratch/daf7712eb9ba/validation/production-final/conversion-selection"
+      ],
+      "returncode": 0,
+      "seconds": 2.27,
+      "log": {
+        "path": "production-final/conversion-selection.log",
+        "sha256": "6f8356aeaced9a586654f94b4632f6be7f41c9a37e9f730143fae93acbc9d3f8"
+      }
+    },
+    {
+      "name": "capture-storage",
+      "command": [
+        "python3",
+        "/workspace/scratch/3c785aeb2760/polished-emerald/tools/polished_port/scripts/test_capture_storage_emulator.py",
+        "--driver",
+        "/workspace/scratch/daf7712eb9ba/validation/mgba-driver",
+        "--output",
+        "/workspace/scratch/daf7712eb9ba/validation/production-final/capture-storage"
+      ],
+      "returncode": 0,
+      "seconds": 1.97,
+      "log": {
+        "path": "production-final/capture-storage.log",
+        "sha256": "23f3176ec71d076d4f8cb798fd3c7a8c28ea930fe12c64803d3aa6ed4990075d"
+      }
+    },
+    {
+      "name": "escape-storage",
+      "command": [
+        "python3",
+        "/workspace/scratch/3c785aeb2760/polished-emerald/tools/polished_port/scripts/test_escape_storage_emulator.py",
+        "--driver",
+        "/workspace/scratch/daf7712eb9ba/validation/mgba-driver",
+        "--output",
+        "/workspace/scratch/daf7712eb9ba/validation/production-final/escape-storage"
+      ],
+      "returncode": 0,
+      "seconds": 1.63,
+      "log": {
+        "path": "production-final/escape-storage.log",
+        "sha256": "aeb20607d9da895c0be621111040779087cb8440260966ead46fd5bd0044eab0"
+      }
+    },
+    {
+      "name": "friendship-storage",
+      "command": [
+        "python3",
+        "/workspace/scratch/3c785aeb2760/polished-emerald/tools/polished_port/scripts/test_friendship_storage_emulator.py",
+        "--driver",
+        "/workspace/scratch/daf7712eb9ba/validation/mgba-driver",
+        "--output",
+        "/workspace/scratch/daf7712eb9ba/validation/production-final/friendship-storage"
+      ],
+      "returncode": 0,
+      "seconds": 1.52,
+      "log": {
+        "path": "production-final/friendship-storage.log",
+        "sha256": "4c3b58650fda822847b2135ebc57e06101702394c5b7a601d930cd3462865bc0"
+      }
+    },
+    {
+      "name": "fixed-damage-display",
+      "command": [
+        "python3",
+        "/workspace/scratch/3c785aeb2760/polished-emerald/tools/polished_port/scripts/test_fixed_damage_display_emulator.py",
+        "--driver",
+        "/workspace/scratch/daf7712eb9ba/validation/mgba-driver",
+        "--output",
+        "/workspace/scratch/daf7712eb9ba/validation/production-final/fixed-damage-display"
+      ],
+      "returncode": 0,
+      "seconds": 2.93,
+      "log": {
+        "path": "production-final/fixed-damage-display.log",
+        "sha256": "5667360bbeedbbef2d750a4bd7c296390831ef58efa76ae7371f60d0bfd1c28e"
+      }
+    },
+    {
+      "name": "retaliation-display",
+      "command": [
+        "python3",
+        "/workspace/scratch/3c785aeb2760/polished-emerald/tools/polished_port/scripts/test_retaliation_display_emulator.py",
+        "--driver",
+        "/workspace/scratch/daf7712eb9ba/validation/mgba-driver",
+        "--output",
+        "/workspace/scratch/daf7712eb9ba/validation/production-final/retaliation-display"
+      ],
+      "returncode": 0,
+      "seconds": 3.08,
+      "log": {
+        "path": "production-final/retaliation-display.log",
+        "sha256": "21f41eaa00c624e99360dd66bdb1df0f30e2e0f01f198aff84ceb9c8fc642762"
+      }
+    },
+    {
+      "name": "self-move-accuracy-display",
+      "command": [
+        "python3",
+        "/workspace/scratch/3c785aeb2760/polished-emerald/tools/polished_port/scripts/test_self_move_accuracy_display_emulator.py",
+        "--driver",
+        "/workspace/scratch/daf7712eb9ba/validation/mgba-driver",
+        "--output",
+        "/workspace/scratch/daf7712eb9ba/validation/production-final/self-move-accuracy-display"
+      ],
+      "returncode": 0,
+      "seconds": 3.03,
+      "log": {
+        "path": "production-final/self-move-accuracy-display.log",
+        "sha256": "bb67ae2a1ca95488e62b424b19283808b2789012a0fa4aa1a53410dcf26c05b6"
+      }
+    },
+    {
+      "name": "typeless-moves-display",
+      "command": [
+        "python3",
+        "/workspace/scratch/3c785aeb2760/polished-emerald/tools/polished_port/scripts/test_typeless_moves_display_emulator.py",
+        "--driver",
+        "/workspace/scratch/daf7712eb9ba/validation/mgba-driver",
+        "--output",
+        "/workspace/scratch/daf7712eb9ba/validation/production-final/typeless-moves-display"
+      ],
+      "returncode": 0,
+      "seconds": 3.49,
+      "log": {
+        "path": "production-final/typeless-moves-display.log",
+        "sha256": "19e04cb40966e62a7a02a5bbef021bc777a2b9caba43f04388c18890004bdc31"
+      }
+    },
+    {
+      "name": "metronome-pool",
+      "command": [
+        "python3",
+        "/workspace/scratch/3c785aeb2760/polished-emerald/tools/polished_port/scripts/test_metronome_pool_emulator.py",
+        "--driver",
+        "/workspace/scratch/daf7712eb9ba/validation/mgba-driver",
+        "--output",
+        "/workspace/scratch/daf7712eb9ba/validation/production-final/metronome-pool"
+      ],
+      "returncode": 0,
+      "seconds": 1.47,
+      "log": {
+        "path": "production-final/metronome-pool.log",
+        "sha256": "a75df2772c7136283051753bb7f8c89cd54aabae17eaabe301ece0f40e0fd59a"
+      }
+    },
+    {
+      "name": "evolution-native",
+      "command": [
+        "python3",
+        "/workspace/scratch/3c785aeb2760/polished-emerald/tools/polished_port/scripts/test_battle_evolution_emulator.py",
+        "--driver",
+        "/workspace/scratch/daf7712eb9ba/validation/mgba-driver",
+        "--output",
+        "/workspace/scratch/daf7712eb9ba/validation/production-final/evolution-native",
+        "--elf",
+        "pokeemerald-test.elf"
+      ],
+      "returncode": 0,
+      "seconds": 3.6,
+      "log": {
+        "path": "production-final/evolution-native.log",
+        "sha256": "d60e13bf3ad3f311c57ad7234a1492378217598af192f144edcc8bac367b6760"
+      }
+    },
+    {
+      "name": "evolution-source",
+      "command": [
+        "python3",
+        "/workspace/scratch/3c785aeb2760/polished-emerald/tools/polished_port/scripts/test_battle_evolution_emulator.py",
+        "--driver",
+        "/workspace/scratch/daf7712eb9ba/validation/mgba-driver",
+        "--output",
+        "/workspace/scratch/daf7712eb9ba/validation/production-final/evolution-source",
+        "--elf",
+        "pokeemerald-polished-moves-test.elf",
+        "--polished-rules"
+      ],
+      "returncode": 0,
+      "seconds": 3.64,
+      "log": {
+        "path": "production-final/evolution-source.log",
+        "sha256": "d60e13bf3ad3f311c57ad7234a1492378217598af192f144edcc8bac367b6760"
+      }
+    },
+    {
+      "name": "evolution-forms",
+      "command": [
+        "python3",
+        "/workspace/scratch/3c785aeb2760/polished-emerald/tools/polished_port/scripts/test_form_evolution_emulator.py",
+        "--driver",
+        "/workspace/scratch/daf7712eb9ba/validation/mgba-driver",
+        "--output",
+        "/workspace/scratch/daf7712eb9ba/validation/production-final/evolution-forms",
+        "--elf",
+        "pokeemerald-test.elf"
+      ],
+      "returncode": 0,
+      "seconds": 3.09,
+      "log": {
+        "path": "production-final/evolution-forms.log",
+        "sha256": "05c7c9fbb8f641880cba1cb3a1af823570cc9799b104008c0c82d5c0c3d46ad9"
+      }
+    },
+    {
+      "name": "johto-campaign",
+      "command": [
+        "python3",
+        "/workspace/scratch/3c785aeb2760/polished-emerald/tools/polished_port/scripts/test_johto_demo_emulator.py",
+        "--driver",
+        "/workspace/scratch/daf7712eb9ba/validation/mgba-driver",
+        "--output",
+        "/workspace/scratch/daf7712eb9ba/validation/production-final/johto-campaign",
+        "--rom",
+        "pokeemerald-johto-demo.gba",
+        "--elf",
+        "pokeemerald-johto-demo.elf"
+      ],
+      "returncode": 0,
+      "seconds": 6.85,
+      "log": {
+        "path": "production-final/johto-campaign.log",
+        "sha256": "195cbda3480e7ea7c96a263dab2e519e79d32141de38f64c0882461d94a485ba"
+      }
+    },
+    {
+      "name": "new-bark",
+      "command": [
+        "python3",
+        "/workspace/scratch/3c785aeb2760/polished-emerald/tools/polished_port/scripts/test_new_bark_emulator.py",
+        "--driver",
+        "/workspace/scratch/daf7712eb9ba/validation/mgba-driver",
+        "--rom",
+        "/workspace/scratch/3c785aeb2760/polished-emerald/pokeemerald-johto-demo.gba",
+        "--elf",
+        "/workspace/scratch/3c785aeb2760/polished-emerald/pokeemerald-johto-demo.elf",
+        "--output",
+        "/workspace/scratch/daf7712eb9ba/validation/production-final/new-bark-v3"
+      ],
+      "returncode": 0,
+      "seconds": 446.74,
+      "output": "/workspace/scratch/daf7712eb9ba/validation/production-final/new-bark-v3",
+      "input_sha256": {
+        "pokeemerald-johto-demo.gba": "e67efdcb0726180608ba0dc0417caeb7ec2738aa4085be1e487a3d0caeb49b57",
+        "pokeemerald-johto-demo.elf": "faf6c03c07a8a2a9c9d416a56137bc45a09fcd362f74a1bd8bbb50a003bf36f7"
+      },
+      "inputs_unchanged": true,
+      "log": {
+        "path": "production-final/new-bark-v3.log",
+        "sha256": "2438cf49122972e9f3be7f7f88afce0ec1dda74e2601778cfa266a502eacfd87"
+      }
+    }
+  ],
+  "shift_and_wild_faint_input": {
+    "source": {
+      "compiled_fixture_cases": 9,
+      "real_input_branches": 13,
+      "report_sha256": "5325aa4821f9d3b114a6e9e819b037140e7814bbd401b9fd58ad4e8722a63f45",
+      "production_rom_sha256": "e67efdcb0726180608ba0dc0417caeb7ec2738aa4085be1e487a3d0caeb49b57"
+    },
+    "native": {
+      "compiled_fixture_cases": 9,
+      "real_input_branches": 13,
+      "report_sha256": "8c8d1f36f26ea87aa1b226661acb33d451fa542cc1fb3685d9992f9cb0c5b7b4",
+      "production_rom_sha256": "1971794264d722ce5340393f868b8bedfba51526be4df41163ae8628547c5ce2"
+    }
+  },
+  "full_campaign": {
+    "passed_checks": 102,
+    "verified_warp_events": 19,
+    "report_sha256": "722df147e611606f35c36acbd45cdb1e57e8e8641ec29816580c156ba429359b",
+    "rom_sha256": "e67efdcb0726180608ba0dc0417caeb7ec2738aa4085be1e487a3d0caeb49b57"
+  },
+  "inventory_exclusions": {
+    "unused_default_effect_constants": 19,
+    "details": "Enumerated in SUITE2_MOVE_RECONCILIATION; no default source move uses these constants."
+  },
+  "deliberate_deviations": [
+    {
+      "name": "Weight-one Light Metal nontermination",
+      "disposition": "The source input is reachable and can fail to terminate. The target deliberately terminates; this is a recorded behavior deviation, not an inventory exclusion or a parity pass."
+    }
+  ],
+  "published_head_ci": {
+    "workflow": ".github/workflows/build.yml",
+    "required_head": "The Git commit containing this validation record",
+    "evidence": "GitHub Actions records the immutable head SHA and job conclusions; the final handoff links that run."
+  },
+  "interpretation": "Counts are execution evidence. Suite 2 closure additionally relies on the authenticated branch-to-runtime reconciliation. Suite 1, the six original Suite 3 domains and the whole-battle strict completeness gate retain their separate status."
+}

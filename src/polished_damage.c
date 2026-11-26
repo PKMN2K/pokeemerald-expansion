@@ -151,8 +151,10 @@ static u32 OffensiveAbility(struct DamageContext *ctx, u32 value, u32 power)
             { numerator = 3; denominator = 2; }
         break;
     case ABILITY_RIVALRY:
-        if (GetBattlerGender(a) != MON_GENDERLESS && GetBattlerGender(d) != MON_GENDERLESS)
-            { numerator = GetBattlerGender(a) == GetBattlerGender(d) ? 5 : 3; denominator = 4; }
+        if (AreBattlersOfSameGender(a, d))
+            { numerator = 5; denominator = 4; }
+        else if (AreBattlersOfOppositeGender(a, d))
+            { numerator = 3; denominator = 4; }
         break;
     case ABILITY_SHEER_FORCE:
         if (flags & 8) { numerator = 13; denominator = 10; }
@@ -169,7 +171,10 @@ static u32 OffensiveAbility(struct DamageContext *ctx, u32 value, u32 power)
         if (flags & 1) { numerator = 6; denominator = 5; }
         break;
     case ABILITY_TOUGH_CLAWS:
-        if (IsMoveMakingContact(a, d, ability, ctx->holdEffects[a], ctx->move))
+        // Source ToughClawsAbility uses CheckContactMove, whose Protective
+        // Pads branch excludes contact here as well as for reactive effects.
+        if (ctx->holdEffects[a] != HOLD_EFFECT_PROTECTIVE_PADS
+         && IsMoveMakingContact(a, d, ability, ctx->holdEffects[a], ctx->move))
             { numerator = 13; denominator = 10; }
         break;
     case ABILITY_MEGA_LAUNCHER:
@@ -307,7 +312,7 @@ u32 PolishedDamageBeforeRoll(struct DamageContext *ctx, u32 power)
     case HOLD_EFFECT_LIFE_ORB: damage = PolishedDamageScale(damage, 13, 10); break;
     case HOLD_EFFECT_METRONOME:
         if (ctx->move != MOVE_FUTURE_SIGHT)
-            damage = PolishedDamageScale(damage, 5 + min(5, user->volatiles.metronomeItemCounter), 5);
+            damage = PolishedDamageScale(damage, 5 + min(5, gBattleStruct->polishedMetronomeCount[a]), 5);
         break;
     case HOLD_EFFECT_PUNCHING_GLOVE:
         if (sPolishedDamageFlags[ctx->move] & 1) damage = PolishedDamageScale(damage, 11, 10);
@@ -349,7 +354,7 @@ u32 PolishedDamageBeforeRoll(struct DamageContext *ctx, u32 power)
         || (ctx->move == MOVE_VENOSHOCK && (target->status1 & STATUS1_PSN_ANY))
         || (ctx->move == MOVE_AVALANCHE && (gProtectStructs[a].revengeDoubled & (1u << d)));
     if (twice) damage = min(65535, damage * 2);
-    if (ctx->move == MOVE_ROLLOUT)
+    if (ctx->move == MOVE_ROLLOUT && !(user->status1 & STATUS1_SLEEP))
     {
         u32 n = user->volatiles.rolloutTimer + user->volatiles.defenseCurl;
         while (n--) damage = min(65535, damage * 2);

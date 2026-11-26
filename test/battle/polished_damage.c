@@ -299,9 +299,10 @@ SINGLE_BATTLE_TEST("Polished damage Rollout multiplies the completed formula and
             ctx.move = MOVE_ROLLOUT; ctx.moveType = TYPE_NORMAL; ctx.battlerDef = 1;
             ctx.typeEffectivenessModifier = UQ_4_12(1.0);
             u32 base = 22 * GetMovePower(MOVE_ROLLOUT) * 101 / 73 / 50 + 2;
-            for (u32 curled = 0; curled <= 1; curled++) for (u32 hits = 0; hits < 5; hits++) {
+            for (u32 asleep = 0; asleep <= 1; asleep++) for (u32 curled = 0; curled <= 1; curled++) for (u32 hits = 0; hits < 5; hits++) {
+                player->status1 = asleep ? STATUS1_SLEEP : STATUS1_NONE;
                 player->volatiles.rolloutTimer = hits; player->volatiles.defenseCurl = curled;
-                EXPECT_EQ(CalculateMoveDamageVars(&ctx), base << (hits + curled));
+                EXPECT_EQ(CalculateMoveDamageVars(&ctx), base << (asleep ? 0 : hits + curled));
             }
         }
     }

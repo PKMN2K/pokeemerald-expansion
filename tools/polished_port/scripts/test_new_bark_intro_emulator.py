@@ -33,6 +33,7 @@ def layout():
         "pokedex_forms": "offsetof(struct SaveBlock2, pokedex.polishedCaughtForms)",
         "pokedex_forms_size": "sizeof(((struct SaveBlock2 *)0)->pokedex.polishedCaughtForms)",
         "tackle": "MOVE_TACKLE", "growl": "MOVE_GROWL", "leer": "MOVE_LEER", "scratch": "MOVE_SCRATCH",
+        "bite": "MOVE_BITE", "exp_getter_mon": "offsetof(struct BattleStruct, expGetterMonId)",
         "secure": "offsetof(struct BoxPokemon, secure)",
         "checksum": "offsetof(struct BoxPokemon, checksum)",
         "substruct_size": "sizeof(union PokemonSubstruct)",
@@ -49,6 +50,7 @@ def layout():
         "learn_move_opcode": "B_SCR_OP_YESNOBOXLEARNMOVE",
         "stop_learning_opcode": "B_SCR_OP_YESNOBOXSTOPLEARNINGMOVE",
         "yes_no_opcode": "B_SCR_OP_YESNOBOX",
+        "battle_type_trainer": "BATTLE_TYPE_TRAINER",
     }
     source = ('#include "global.h"\n#include "battle.h"\n#include "constants/items.h"\n#include "constants/species.h"\n'
               '#include "constants/vars.h"\n#include "constants/flags.h"\n#include "constants/battle_script_commands.h"\n'

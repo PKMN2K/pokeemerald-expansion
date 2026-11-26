@@ -173,6 +173,7 @@ BattleScript_TarShotMessage::
 BattleScript_AbilityStatChange::
 	call BattleScript_AbilityPopUp
 	trystatchanges BS_EFFECT_BATTLER, STAT_CHANGE_IGNORE_SELF
+BattleScript_PolishedAngerPointMirrorHerb::
 	callnative BS_PolishedAbilityMirrorHerb
 	return
 
@@ -1317,14 +1318,19 @@ BattleScript_EffectTrickRoom::
 
 BattleScript_TryRoomServiceLoop:
 	savetarget
-	setbyte gBattlerTarget, 0
+	callnative BS_NextRoomServiceBattler
+	.byte TRUE
+	.4byte BattleScript_RoomServiceLoop_End
 BattleScript_RoomServiceLoop:
 	copybyte sBATTLER, gBattlerTarget
 	tryroomservice BS_TARGET, BattleScript_RoomServiceLoop_NextBattler
 	removeitem BS_TARGET
 BattleScript_RoomServiceLoop_NextBattler:
-	addbyte gBattlerTarget, 0x1
-	jumpifbytenotequal gBattlerTarget, gBattlersCount, BattleScript_RoomServiceLoop
+	callnative BS_NextRoomServiceBattler
+	.byte FALSE
+	.4byte BattleScript_RoomServiceLoop_End
+	goto BattleScript_RoomServiceLoop
+BattleScript_RoomServiceLoop_End:
 	restoretarget
 	return
 
@@ -1452,8 +1458,10 @@ BattleScript_EffectHit::
 	attackcanceler
 	critmessage
 	waitmessage B_WAIT_TIME_LONG
+	callnative BS_PolishedCriticalAngerPoint
 	resultmessage
 	waitmessage B_WAIT_TIME_LONG
+	callnative BS_PolishedSuperEffectiveItem
 	setadditionaleffects
 BattleScript_MoveEnd::
 	moveendall
@@ -1598,6 +1606,9 @@ BattleScript_EffectAbsorbRet:
 BattleScript_Explosion::
 	tryexplosion
 	setatkhptozero
+	waitstate
+	callnative BS_PolishedUnnerveExit
+	.byte BS_ATTACKER
 	return
 
 BattleScript_FaintAttackerForExplosion::
@@ -1749,11 +1760,17 @@ BattleScript_RecoilIfMiss::
 	printstring STRINGID_PKMNCRASHED
 	waitmessage B_WAIT_TIME_LONG
 	jumpifability BS_ATTACKER, ABILITY_MAGIC_GUARD, BattleScript_RecoilEnd
+BattleScript_RecoilIfMissDamage:
 	healthbarupdate BS_ATTACKER
 	datahpupdate BS_ATTACKER, ASSURANCE_DOUBLE
 	tryfaintmon BS_ATTACKER
 BattleScript_RecoilEnd:
 	return
+
+BattleScript_PolishedRecoilIfMiss::
+	printstring STRINGID_PKMNCRASHED
+	waitmessage B_WAIT_TIME_LONG
+	goto BattleScript_RecoilIfMissDamage
 
 BattleScript_EffectMist::
 	attackcanceler
@@ -2603,6 +2620,7 @@ BattleScript_EffectRecycle::
 BattleScript_BreakScreens::
 	playmoveanimation MOVE_NONE @use current move
 	waitanimation
+BattleScript_PolishedBreakScreens::
 BattleScript_BreakScreensRetReflect:
 	jumpifbyte CMP_BITMASK, cMULTISTRING_CHOOSER, B_MSG_BREAK_REFLECT, BattleScript_BreakReflect
 BattleScript_BreakScreensRetLightScreen:
@@ -2794,7 +2812,10 @@ BattleScript_FaintedMonTryChoose:
 	jumpifbattletype BATTLE_TYPE_DOUBLE, BattleScript_FaintedMonSendOutNew
 	jumpifword CMP_COMMON_BITS, gHitMarker, HITMARKER_PLAYER_FAINTED, BattleScript_FaintedMonSendOutNew
 	jumpifbyte CMP_EQUAL, sBATTLE_STYLE, OPTIONS_BATTLE_STYLE_SET, BattleScript_FaintedMonSendOutNew
+	callnative BS_PolishedShiftSwitchPrompt
+	.4byte BattleScript_FaintedMonOfferShift
 	jumpifcantswitch BS_PLAYER1, BattleScript_FaintedMonSendOutNew
+BattleScript_FaintedMonOfferShift:
 	setbyte sILLUSION_NICK_HACK, 1
 @ Yes/No for sending out a new Pokémon when the opponent is switching
 	printstring STRINGID_ENEMYABOUTTOSWITCHPKMN
@@ -2805,7 +2826,7 @@ BattleScript_FaintedMonTryChoose:
 	setatktoplayer0
 	openpartyscreen BS_ATTACKER | PARTY_SCREEN_OPTIONAL, BattleScript_FaintedMonSendOutNew
 	switchhandleorder BS_ATTACKER, 2
-	jumpifbyte CMP_EQUAL, gBattleCommunication, PARTY_SIZE, BattleScript_FaintedMonSendOutNew
+	jumpifbyte CMP_EQUAL, gBattleCommunication, PARTY_SIZE, BattleScript_FaintedMonShiftCancelled
 @ Switch Pokémon before opponent
 	atknameinbuff1
 	resetswitchinabilitybits
@@ -2817,6 +2838,8 @@ BattleScript_FaintedMonTryChoose:
 	waitstate
 	returnatktoball
 	waitstate
+	callnative BS_PolishedShiftSwitchEntry
+	.4byte BattleScript_HandleFaintedMonLoop
 	drawpartystatussummary BS_ATTACKER
 	getswitchedmondata BS_ATTACKER
 	switchindataupdate BS_ATTACKER
@@ -2849,6 +2872,10 @@ BattleScript_FaintedMonSendOutNewEnd:
 	cancelallactions
 BattleScript_FaintedMonEnd::
 	end
+BattleScript_FaintedMonShiftCancelled:
+	callnative BS_PolishedShiftSwitchPrompt
+	.4byte BattleScript_FaintedMonOfferShift
+	goto BattleScript_FaintedMonSendOutNew
 BattleScript_FaintedMonShiftSwitched:
 	copybyte sSAVED_BATTLER, gBattlerTarget
 	switchineffects BS_ATTACKER
@@ -2880,6 +2907,10 @@ BattleScript_HandleFaintedMonLoop::
 	switchineffects BS_FAINTED_MULTIPLE_1
 	jumpifbytenotequal gBattlerFainted, gBattlersCount, BattleScript_HandleFaintedMonLoop
 BattleScript_HandleFaintedMonMultipleEnd::
+	jumpifbyte CMP_EQUAL, sSHIFT_SWITCHED, 0, BattleScript_FaintedMonMultipleEntryEvents
+@ Both entrants must be loaded before recording the living Shift participant.
+	resetsentmonsvalue
+BattleScript_FaintedMonMultipleEntryEvents:
 	switchinevents
 	trytrainerslidemsglaston BS_FAINTED_MULTIPLE_2
 	trytrainerslidemsglaston BS_FAINTED_MULTIPLE_1
@@ -3494,6 +3525,13 @@ BattleScript_MistProtected::
 
 BattleScript_RageIsBuilding::
 	trybattlerstatchange BS_TARGET, STAT_CHANGE_NO_FLAGS
+	goto BattleScript_RageIsBuildingMessage
+
+BattleScript_PolishedRageIsBuilding::
+	@ Source Rage is a forced self boost. The broken doll's native volatile
+	@ survives until move end, but must not reject this already eligible boost.
+	trybattlerstatchange BS_TARGET, STAT_CHANGE_CERTAIN
+BattleScript_RageIsBuildingMessage:
 	printstring STRINGID_PKMNRAGEBUILDING
 	waitmessage B_WAIT_TIME_LONG
 BattleScript_RageIsBuildingEnd:
@@ -3718,12 +3756,15 @@ BattleScript_RemoveHazardsRet:
 BattleScript_MonTookFutureAttack::
 	printstring STRINGID_PKMNTOOKATTACK
 	waitmessage B_WAIT_TIME_LONG
+BattleScript_PolishedFutureAttackHit::
 	futuresighttargetfailure BattleScript_DoFutureAttackResult
 	critmessage
 	waitmessage B_WAIT_TIME_LONG
+	callnative BS_PolishedCriticalAngerPoint
 BattleScript_DoFutureAttackResult:
 	resultmessage
 	waitmessage B_WAIT_TIME_LONG
+	callnative BS_PolishedSuperEffectiveItem
 BattleScript_FutureAttackEnd::
 	setadditionaleffects
 	moveendall
@@ -4123,6 +4164,14 @@ BattleScript_CudChewActivates::
 	pause B_WAIT_TIME_SHORTEST
 	call BattleScript_AbilityPopUp
 	setbyte sBERRY_OVERRIDE, 1 @ override the requirements for eating berries
+	consumeberry BS_ATTACKER, FALSE
+	setbyte sBERRY_OVERRIDE, 0
+	return
+
+BattleScript_PolishedCudChewActivates::
+	pause B_WAIT_TIME_SHORTEST
+	setbyte sBERRY_OVERRIDE, 1
+BattleScript_PolishedCudChewConsume::
 	consumeberry BS_ATTACKER, FALSE
 	setbyte sBERRY_OVERRIDE, 0
 	return
@@ -4736,6 +4785,7 @@ BattleScript_SolarPowerActivates::
 	call BattleScript_AbilityPopUp
 	healthbarupdate BS_ATTACKER
 	datahpupdate BS_ATTACKER, ASSURANCE_DOUBLE
+	callnative BS_PolishedWeatherDamageItems
 	tryfaintmon BS_ATTACKER
 	return
 
@@ -5001,6 +5051,13 @@ BattleScript_MoveStatDrain::
 	pause B_WAIT_TIME_SHORT
 	call BattleScript_AbilityPopUp
 	trybattlerstatchange BS_SCRIPTING, STAT_CHANGE_NO_FLAGS
+	return
+
+BattleScript_PolishedAbsorptionFullHp::
+	pause B_WAIT_TIME_SHORT
+	call BattleScript_AbilityPopUp
+	printstring STRINGID_PKMNHPFULL
+	waitmessage B_WAIT_TIME_LONG
 	return
 
 BattleScript_AbilityProtectedTarget::
@@ -5334,6 +5391,12 @@ BattleScript_TruantLoafingAround::
 	flushtextbox
 	call BattleScript_AbilityPopUp
 	goto BattleScript_MoveUsedLoafingAroundMsg
+
+BattleScript_PolishedDisobedienceNap::
+	printstring STRINGID_PKMNBEGANTONAP
+	waitmessage B_WAIT_TIME_LONG
+	updatestatusicon BS_ATTACKER
+	goto BattleScript_MoveEnd
 
 BattleScript_IgnoresAndFallsAsleep::
 	printstring STRINGID_PKMNBEGANTONAP

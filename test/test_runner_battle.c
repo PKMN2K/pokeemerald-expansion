@@ -735,11 +735,15 @@ static u32 BattleTest_RandomUniform(enum RandomTag tag, u32 lo, u32 hi, bool32 (
     {
         enum BattlerId battlerId = gBattlerByTurnOrder[gCurrentTurnActionNumber];
         turn = &DATA.battleRecordTurns[gBattleResults.battleTurnCounter][battlerId];
-        if (turn && turn->rng.tag == tag)
+        const struct RiggedRNG *rigged = &turn->rng;
+        if (gSpecialStatuses[battlerId].multiHitOn
+         && turn->rngAfterFirstHit.tag != RNG_NONE && turn->rngAfterFirstHit.tag == tag)
+            rigged = &turn->rngAfterFirstHit;
+        if (rigged->tag == tag)
         {
-            if (reject && reject(turn->rng.value))
-                Test_ExitWithResult(TEST_RESULT_INVALID, SourceLine(0), "WITH_RNG specified a rejected value (%d)", turn->rng.value);
-            return turn->rng.value;
+            if (reject && reject(rigged->value))
+                Test_ExitWithResult(TEST_RESULT_INVALID, SourceLine(0), "WITH_RNG specified a rejected value (%d)", rigged->value);
+            return rigged->value;
         }
     }
 
@@ -3122,6 +3126,8 @@ void Move(u32 sourceLine, struct BattlePokemon *battler, struct MoveContext ctx)
         DATA.battleRecordTurns[DATA.turns][battlerId].secondaryEffect = 1 + ctx.secondaryEffect;
     if (ctx.explicitRNG)
         DATA.battleRecordTurns[DATA.turns][battlerId].rng = ctx.rng;
+    if (ctx.explicitRNGAfterFirstHit)
+        DATA.battleRecordTurns[DATA.turns][battlerId].rngAfterFirstHit = ctx.rngAfterFirstHit;
 
     u32 shellSideArmCount = 0;
     for (u32 i = 0; i < STATE->battlersCount; i++)

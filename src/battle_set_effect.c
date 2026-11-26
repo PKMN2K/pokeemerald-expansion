@@ -263,13 +263,27 @@ static void HandleSetEffectUproar(struct BattleCalcValues *cv, struct SetEffect 
 
 static void HandleSetEffectPayday(struct BattleCalcValues *cv, struct SetEffect *se)
 {
-    if (IsOnPlayerSide(cv->battlerAtk))
+    bool32 source = cv->move == MOVE_PAY_DAY && UsesPolishedActionRules(cv->move);
+    // CheckSubstituteOpp honors the effective user's Infiltrator. Otherwise
+    // the current doll after damage blocks coins until that hit breaks it.
+    if (source && cv->abilities[cv->battlerAtk] != ABILITY_INFILTRATOR
+     && gBattleMons[cv->battlerDef].volatiles.substitute
+     && gBattleMons[cv->battlerDef].volatiles.substituteHP != 0)
     {
-        u16 payday = gPaydayMoney;
+        gBattlescriptCurrInstr = se->script;
+        return;
+    }
+
+    if (source || IsOnPlayerSide(cv->battlerAtk))
+    {
         enum MoveTarget moveTarget = GetBattlerMoveTargetType(cv->battlerAtk, cv->move);
-        gPaydayMoney += (gBattleMons[cv->battlerAtk].level * 5);
-        if (payday > gPaydayMoney)
-            gPaydayMoney = 0xFFFF;
+        u32 amount = gBattleMons[cv->battlerAtk].level * 5;
+        // Five byte-add/carry loops wrap the source's unsigned 24-bit bank.
+        // Expansion's optional effects retain their native 16-bit cap.
+        if (source)
+            gPaydayMoney = (gPaydayMoney + amount) & 0xFFFFFF;
+        else
+            gPaydayMoney = min(0xFFFF, gPaydayMoney + amount);
 
         // For a move that hits multiple targets (i.e. Make it Rain)
         // we only want to print the message on the final hit
@@ -445,7 +459,8 @@ static void HandleSetEffectRemoveStatus(struct BattleCalcValues *cv, struct SetE
 static void HandleSetEffectThrash(struct BattleCalcValues *cv, struct SetEffect *se)
 {
     // Petal Dance (dance move) doesn't lock mons that copy the move with Dancer
-    if (gSpecialStatuses[se->effectBattler].dancerUsedMove || gBattleMons[se->effectBattler].volatiles.rampageTurns)
+    if (gSpecialStatuses[se->effectBattler].dancerUsedMove || gBattleMons[se->effectBattler].volatiles.rampageTurns
+     || (UsesPolishedActionRules(cv->move) && gBattleMons[se->effectBattler].status1 & STATUS1_SLEEP))
     {
         gBattlescriptCurrInstr = se->script;
     }
@@ -453,7 +468,7 @@ static void HandleSetEffectThrash(struct BattleCalcValues *cv, struct SetEffect 
     {
         gBattleMons[se->effectBattler].volatiles.multipleTurns = TRUE;
         gLockedMoves[se->effectBattler] = cv->move;
-        gBattleMons[se->effectBattler].volatiles.rampageTurns = RandomUniform(RNG_RAMPAGE_TURNS, 2, B_RAMPAGE_TURNS);
+        gBattleMons[se->effectBattler].volatiles.rampageTurns = RandomUniform(RNG_RAMPAGE_TURNS, 2, UsesPolishedActionRules(cv->move) ? 3 : B_RAMPAGE_TURNS);
     }
 }
 
@@ -579,6 +594,8 @@ static void HandleSetEffectBugBite(struct BattleCalcValues *cv, struct SetEffect
     {
         // target loses their berry
         gLastUsedItem = gBattleMons[se->effectBattler].item;
+        if (source)
+            PolishedConsumeBackupItem(se->effectBattler, gLastUsedItem);
         gBattleMons[se->effectBattler].item = ITEM_NONE;
         CheckSetUnburden(se->effectBattler);
 
@@ -1111,10 +1128,7 @@ static void HandleSetEffectConfusePayDaySide(struct BattleCalcValues *cv, struct
 {
     if (gBattleTypeFlags & BATTLE_TYPE_TRAINER && IsOnPlayerSide(cv->battlerAtk))
     {
-        u32 payday = gPaydayMoney;
-        gPaydayMoney += (gBattleMons[cv->battlerAtk].level * 100);
-        if (payday > gPaydayMoney)
-            gPaydayMoney = 0xFFFF;
+        gPaydayMoney = min(0xFFFF, gPaydayMoney + gBattleMons[cv->battlerAtk].level * 100);
         gBattleCommunication[CURSOR_POSITION] = 1; // add "Coins scattered." message
     }
 
@@ -1312,6 +1326,7 @@ static void HandleSetEffectSandblastSide(struct BattleCalcValues *cv, struct Set
 static void HandleSetEffectBreakScreen(struct BattleCalcValues *cv, struct SetEffect *se)
 {
     enum BattleSide side;
+    bool32 source = IsPolishedBrickBreak(cv->move, cv->battlerAtk, cv->battlerDef);
 
     if (B_BRICK_BREAK >= GEN_4)
         side = GetBattlerSide(cv->battlerDef); // From Gen 4 onwards, Brick Break can remove screens on the user's side if used on an ally
@@ -1322,13 +1337,15 @@ static void HandleSetEffectBreakScreen(struct BattleCalcValues *cv, struct SetEf
     {
         bool32 failed;
 
-        if (B_BRICK_BREAK >= GEN_5)
+        if (source || B_BRICK_BREAK >= GEN_5)
             failed = gBattleStruct->moveResultFlags[cv->battlerDef] & MOVE_RESULT_NO_EFFECT;
         else
             failed = FALSE;
 
         if (!failed)
         {
+            if (source)
+                gBattleCommunication[MULTISTRING_CHOOSER] = 0;
             if (gSideTimers[side].reflectTimer)
                 gBattleCommunication[MULTISTRING_CHOOSER] |= 1 << 0;
             if (gSideTimers[side].lightscreenTimer)
@@ -1337,11 +1354,22 @@ static void HandleSetEffectBreakScreen(struct BattleCalcValues *cv, struct SetEf
                 gBattleCommunication[MULTISTRING_CHOOSER] |= 1 << 2;
 
             gSideStatuses[side] &= ~SIDE_STATUS_SCREEN_ANY;
-            gBattleScripting.animTurn = 1;
-            gBattleScripting.animTargetsHit = 1;
-            gBattleStruct->attackAnimPlayed = TRUE; // The whole brick break animation is covered by the move so don't play twice
+            if (source)
+            {
+                // Source clears the packed screen counters after applydamage,
+                // even when that hit knocked out the target.
+                gSideTimers[side].reflectTimer = 0;
+                gSideTimers[side].lightscreenTimer = 0;
+                gSideTimers[side].auroraVeilTimer = 0;
+            }
+            else
+            {
+                gBattleScripting.animTurn = 1;
+                gBattleScripting.animTargetsHit = 1;
+                gBattleStruct->attackAnimPlayed = TRUE; // The whole brick break animation is covered by the move so don't play twice
+            }
             BattleScriptPush(se->script);
-            gBattlescriptCurrInstr = BattleScript_BreakScreens;
+            gBattlescriptCurrInstr = source ? BattleScript_PolishedBreakScreens : BattleScript_BreakScreens;
         }
         else
         {
@@ -1538,7 +1566,9 @@ void SetMoveEffect(struct BattleCalcValues *cv, struct SetEffect *se)
           && IsSheerForceAffected(cv->move, cv->abilities[cv->battlerAtk])
           && !(se->moveEffect == MOVE_EFFECT_ORDER_UP && gBattleStruct->battlerState[cv->battlerAtk].commanderSpecies != SPECIES_NONE))
         se->moveEffect = MOVE_EFFECT_NONE;
-    else if (!IsBattlerAlive(se->effectBattler) && !IgnoreTargetingForMoveEffect(se->moveEffect))
+    else if (!IsBattlerAlive(se->effectBattler) && !IgnoreTargetingForMoveEffect(se->moveEffect)
+          && !(se->moveEffect == MOVE_EFFECT_BREAK_SCREEN
+            && IsPolishedBrickBreak(cv->move, cv->battlerAtk, cv->battlerDef)))
         se->moveEffect = MOVE_EFFECT_NONE;
     else if (DoesSubstituteBlockMoveEffectOnTarget(cv->battlerAtk, se->effectBattler, se->moveEffect))
         se->moveEffect = MOVE_EFFECT_NONE;
@@ -1620,6 +1650,13 @@ static inline bool32 IgnoreTargetingForMoveEffect(enum MoveEffect moveEffect) //
 
 static bool32 DoesSubstituteBlockMoveEffectOnTarget(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum MoveEffect moveEffect)
 {
+    // Source Bug Bite runs its consume command even after posthiteffects
+    // returns for an intact Substitute. Unlike Thief/Knock Off it has no
+    // CheckSubstituteOpp guard of its own.
+    if (gCurrentMove == MOVE_BUG_BITE && moveEffect == MOVE_EFFECT_BUG_BITE
+     && UsesPolishedBattleRules(battlerAtk, battlerDef))
+        return FALSE;
+
     if (B_POLISHED_MOVE_BALANCE && gCurrentMove == MOVE_MEAN_LOOK
      && moveEffect == MOVE_EFFECT_PREVENT_ESCAPE
      && IsPolishedMeanLook(gCurrentMove, battlerAtk, battlerDef))

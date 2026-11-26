@@ -1,6 +1,8 @@
 #include "global.h"
 #include "item_use.h"
 #include "battle.h"
+#include "battle_util.h"
+#include "polished_lifecycle.h"
 #include "battle_anim.h"
 #include "battle_stat_change.h"
 #include "battle_pyramid.h"
@@ -1173,7 +1175,8 @@ static bool32 IteamHealsMonVolatile(enum BattlerId battler, enum Item itemId)
 {
     const u8 *effect = GetItemEffect(itemId);
     if (effect[3] & ITEM3_STATUS_ALL)
-        return (gBattleMons[battler].volatiles.infatuation || gBattleMons[battler].volatiles.confusionTimer > 0);
+        return ((!PolishedMedicinePreservesInfatuation(itemId) && gBattleMons[battler].volatiles.infatuation)
+             || gBattleMons[battler].volatiles.confusionTimer > 0);
     else if (effect[0] & ITEM0_INFATUATION)
         return gBattleMons[battler].volatiles.infatuation;
     else if (effect[3] & ITEM3_CONFUSION)
@@ -1282,14 +1285,16 @@ bool32 CannotUseItemsInBattle(enum Item itemId, struct Pokemon *mon)
             cannotUse = TRUE;
         break;
     case EFFECT_ITEM_CURE_STATUS:
-        if (!((GetMonData(mon, MON_DATA_STATUS) & GetItemStatus1Mask(itemId))
+        if ((UsesPolishedStatusMedicine(itemId) && hp == 0)
+         || !((GetMonData(mon, MON_DATA_STATUS) & GetItemStatus1Mask(itemId))
             || SelectedMonHasVolatile(itemId)))
             cannotUse = TRUE;
         break;
     case EFFECT_ITEM_HEAL_AND_CURE_STATUS:
-        if ((hp == 0 || hp == GetMonData(mon, MON_DATA_MAX_HP))
+        if ((UsesPolishedStatusMedicine(itemId) && hp == 0)
+         || ((hp == 0 || hp == GetMonData(mon, MON_DATA_MAX_HP))
             && !((GetMonData(mon, MON_DATA_STATUS) & GetItemStatus1Mask(itemId))
-            || SelectedMonHasVolatile(itemId)))
+            || SelectedMonHasVolatile(itemId))))
             cannotUse = TRUE;
         break;
     case EFFECT_ITEM_REVIVE:

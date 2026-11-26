@@ -177,17 +177,26 @@ SINGLE_BATTLE_TEST("Polished Magic Bounce priority leaves dynamically retyped mo
     static const enum Move moves[] = {MOVE_LEER, MOVE_FLASH, MOVE_SCARY_FACE, MOVE_SMOKESCREEN};
     struct BattlePokemon *user = player, *target = opponent;
     enum Move move = MOVE_LEER;
+    bool32 hit = FALSE;
     for (u32 entry = 0; entry < ARRAY_COUNT(moves); entry++)
         for (u32 side = 0; side < 2; side++)
-            PARAMETRIZE { move = moves[entry]; user = side ? opponent : player; target = side ? player : opponent; }
+            for (u32 lands = 0; lands < 2; lands++)
+                PARAMETRIZE { move = moves[entry]; user = side ? opponent : player; target = side ? player : opponent; hit = lands; }
     GIVEN {
-        PLAYER(target == player ? SPECIES_UMBREON : SPECIES_WOBBUFFET) { Speed(user == player ? 50 : 100); Ability(user == player ? ABILITY_PRANKSTER : ABILITY_MAGIC_BOUNCE); }
-        OPPONENT(target == opponent ? SPECIES_UMBREON : SPECIES_WOBBUFFET) { Speed(user == opponent ? 50 : 100); Ability(user == opponent ? ABILITY_PRANKSTER : ABILITY_MAGIC_BOUNCE); }
+        PLAYER(target == player ? SPECIES_UMBREON : SPECIES_WOBBUFFET) { Speed(user == player ? 50 : 100); Ability(user == player ? ABILITY_PRANKSTER : ABILITY_MAGIC_BOUNCE); Item(ITEM_BRIGHT_POWDER); }
+        OPPONENT(target == opponent ? SPECIES_UMBREON : SPECIES_WOBBUFFET) { Speed(user == opponent ? 50 : 100); Ability(user == opponent ? ABILITY_PRANKSTER : ABILITY_MAGIC_BOUNCE); Item(ITEM_BRIGHT_POWDER); }
     } WHEN {
-        TURN { MOVE(target, MOVE_ION_DELUGE); MOVE(user, move, hit: TRUE); }
+        TURN { MOVE(target, MOVE_ION_DELUGE); MOVE(user, move, WITH_RNG(RNG_ACCURACY, hit)); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_ION_DELUGE, target);
         ABILITY_POPUP(target, ABILITY_MAGIC_BOUNCE);
+        if (hit) ANIMATION(ANIM_TYPE_MOVE, move, target);
+        else NOT ANIMATION(ANIM_TYPE_MOVE, move, target);
+    } THEN {
+        enum Stat stat = move == MOVE_LEER ? STAT_DEF : move == MOVE_SCARY_FACE ? STAT_SPEED : STAT_ACC;
+        u32 amount = move == MOVE_SCARY_FACE ? 2 : 1;
+        EXPECT_EQ(user->statStages[stat], DEFAULT_STAT_STAGE - (hit ? amount : 0));
+        EXPECT_EQ(target->statStages[stat], DEFAULT_STAT_STAGE);
     }
 }
 

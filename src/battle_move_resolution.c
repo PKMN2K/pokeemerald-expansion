@@ -63,6 +63,8 @@ static bool32 TryActivatePowderStatus(enum Move move);
 static void CalculateMagnitudeDamage(void);
 static void UpdateStallMons(struct BattleCalcValues *cv);
 static enum CancelerResult CancelerFlinch(struct BattleCalcValues *cv);
+static bool32 UsesPolishedPreEffectAccuracy(struct BattleCalcValues *cv);
+static bool32 UsesPolishedPrimaryStatAccuracy(struct BattleCalcValues *cv);
 
 // Submoves
 static enum Move GetMirrorMoveMove(void);
@@ -83,8 +85,12 @@ static bool32 CutThirdOfHp(enum BattlerId battler);
 
 static enum CancelerResult CancelerClearFlags(struct BattleCalcValues *cv)
 {
+    for (enum BattlerId battler = 0; battler < gBattlersCount; battler++)
+        gSpecialStatuses[battler].polishedBerserkPending = FALSE;
     sPolishedSwitch = POLISHED_SWITCH_NONE;
     gBattleStruct->polishedPendingItemLoss = 0;
+    gBattleStruct->polishedAccuracyState = POLISHED_ACCURACY_UNCHECKED;
+    gBattleStruct->polishedDisobedientBattlers &= ~(1u << cv->battlerAtk);
     if (UsesPolishedActionRules(cv->move))
         gBattleStruct->redCardActivated = FALSE;
     PolishedBeginActionFaints(cv->move);
@@ -171,13 +177,21 @@ static enum CancelerResult CancelerAsleepOrFrozen(struct BattleCalcValues *cv)
     // waking, Sleep Talk, or any natural or move-based thaw.
     // Recheck the acting battler's active ability, after suppression but without
     // the previous attacker's Mold Breaker bypass.
-    if (gBattleMons[cv->battlerAtk].status1 & (STATUS1_SLEEP | STATUS1_FREEZE)
-     && gBattleMons[cv->battlerAtk].volatiles.flinched
+    if (gBattleMons[cv->battlerAtk].volatiles.flinched
      && UsesPolishedStatusActionRules(cv->battlerAtk))
     {
         enum CancelerResult flinchResult = CancelerFlinch(cv);
         if (flinchResult != CANCELER_RESULT_SUCCESS)
             return flinchResult;
+    }
+
+    if ((gBattleMons[cv->battlerAtk].status1 & STATUS1_FREEZE)
+     && sPolishedSelfThawMoves[cv->move] && UsesPolishedStatusActionRules(cv->battlerAtk))
+    {
+        DefrostBattler(cv->battlerAtk, STATUS1_FREEZE);
+        BattleScriptCall(BattleScript_BattlerDefrosted);
+        gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_DEFROSTED;
+        return CANCELER_RESULT_RUN_SCRIPT_AND_INCREMENT;
     }
 
     if (gBattleMons[cv->battlerAtk].status1 & STATUS1_SLEEP)
@@ -261,11 +275,36 @@ static enum CancelerResult CancelerAsleepOrFrozen(struct BattleCalcValues *cv)
     return result;
 }
 
+static void PolishedIncreaseMetronomeCount(enum BattlerId battler, enum Move move)
+{
+    if (gBattleStruct->polishedMetronomeMove[battler] == move)
+        gBattleStruct->polishedMetronomeCount[battler] = min(5,
+            gBattleStruct->polishedMetronomeCount[battler] + 1);
+    else
+    {
+        gBattleStruct->polishedMetronomeCount[battler] = 0;
+        if (move != MOVE_STRUGGLE)
+            gBattleStruct->polishedMetronomeMove[battler] = move;
+    }
+}
+
 static enum CancelerResult CancelerObedience(struct BattleCalcValues *cv)
 {
-    if (!gBattleMons[cv->battlerAtk].volatiles.multipleTurns)
+    // IncreaseMetronomeCount runs after CheckTurn, before checkobedience/PP
+    // and hit/effect failures. It tracks the caller, and a called charging
+    // continuation does not run it again. Item possession is irrelevant.
+    if (UsesPolishedActionRules(cv->move)
+     && !(gBattleStruct->polishedCalledMoveBattlers & (1u << cv->battlerAtk))
+     && !gBattleStruct->bouncedMoveIsUsed && !gBattleStruct->snatchedMoveIsUsed
+     && !IsPolishedFutureSightImpact(cv->battlerAtk, cv->battlerDef, cv->move))
+        PolishedIncreaseMetronomeCount(cv->battlerAtk, cv->move);
+    if (!gBattleMons[cv->battlerAtk].volatiles.multipleTurns
+     && !(UsesPolishedActionRules(cv->move)
+       && (gBattleStruct->polishedCalledMoveBattlers & (1u << cv->battlerAtk))))
     {
         enum Obedience obedienceResult = GetAttackerObedienceForAction();
+        if (obedienceResult != OBEYS && UsesPolishedStatusActionRules(cv->battlerAtk))
+            gBattleStruct->polishedDisobedientBattlers |= 1u << cv->battlerAtk;
         switch (obedienceResult)
         {
         case OBEYS:
@@ -290,9 +329,28 @@ static enum CancelerResult CancelerObedience(struct BattleCalcValues *cv)
             dmgCtx.isSelfInflicted = TRUE;
             dmgCtx.fixedBasePower = 40;
             gBattleStruct->moveDamage[cv->battlerAtk] = CalculateMoveDamage(&dmgCtx);
+            if (UsesPolishedStatusActionRules(cv->battlerAtk))
+            {
+                gBattleStruct->passiveHpUpdate[cv->battlerAtk] = gBattleStruct->moveDamage[cv->battlerAtk];
+                if (UsesPolishedLifecycle())
+                {
+                    gBattleStruct->polishedSelfHitBattlers |= 1u << cv->battlerAtk;
+                    gBattleStruct->polishedSelfHitHpWrites |= 1u << cv->battlerAtk;
+                }
+            }
             gBattlescriptCurrInstr = BattleScript_IgnoresAndHitsItself;
             return CANCELER_RESULT_FAILURE; // Move doesn't fail but mon hits itself
         case DISOBEYS_FALL_ASLEEP:
+            if (UsesPolishedStatusActionRules(cv->battlerAtk))
+            {
+                // Source napping overwrites status and bypasses ordinary sleep
+                // immunities; the nonzero three-bit timer is uniform 1..7.
+                gBattleMons[cv->battlerAtk].status1 = RandomUniform(RNG_POLISHED_OBEDIENCE_SLEEP, 1, 7);
+                gBattleStruct->polishedNappingBattlers |= 1u << cv->battlerAtk;
+                RequestNonVolatileChange(cv->battlerAtk);
+                gBattlescriptCurrInstr = BattleScript_PolishedDisobedienceNap;
+                return CANCELER_RESULT_FAILURE;
+            }
             if (IsSleepClauseEnabled())
                 gBattleStruct->battlerState[cv->battlerAtk].sleepClauseEffectExempt = TRUE;
             gBattlescriptCurrInstr = BattleScript_IgnoresAndFallsAsleep;
@@ -305,6 +363,10 @@ static enum CancelerResult CancelerObedience(struct BattleCalcValues *cv)
             return CANCELER_RESULT_FAILURE;
         case DISOBEYS_RANDOM_MOVE:
             gCurrentMove = gCalledMove = gBattleMons[cv->battlerAtk].moves[gCurrMovePos];
+            // Source UseInstead re-enters DoMove, including its separate
+            // IncreaseMetronomeCount, before resolving the alternate move.
+            if (UsesPolishedActionRules(gCalledMove))
+                PolishedIncreaseMetronomeCount(cv->battlerAtk, gCalledMove);
             gBattlescriptCurrInstr = GetMoveBattleScript(gCalledMove);
             BattleScriptCall(BattleScript_IgnoresAndUsesRandomMove);
             gBattlerTarget = GetBattleMoveTarget(gCalledMove, TARGET_NONE);
@@ -316,6 +378,10 @@ static enum CancelerResult CancelerObedience(struct BattleCalcValues *cv)
 
 static enum CancelerResult CancelerPowerPoints(struct BattleCalcValues *cv)
 {
+    if (UsesPolishedActionRules(cv->move)
+     && (gBattleStruct->polishedCalledMoveBattlers & (1u << cv->battlerAtk)))
+        return CANCELER_RESULT_SUCCESS;
+
     if (gBattleMons[cv->battlerAtk].pp[gCurrMovePos] == 0
      && cv->move != MOVE_STRUGGLE
      && !gSpecialStatuses[cv->battlerAtk].dancerUsedMove
@@ -400,18 +466,6 @@ static enum CancelerResult CancelerFlinch(struct BattleCalcValues *cv)
 
 static enum CancelerResult CancelerDisabled(struct BattleCalcValues *cv)
 {
-    // Source self-thaw follows flinch but precedes Disable/confusion/infatuation.
-    if (gBattleMons[cv->battlerAtk].status1 & STATUS1_FREEZE
-     && sPolishedSelfThawMoves[cv->move]
-     && UsesPolishedStatusActionRules(cv->battlerAtk))
-    {
-        DefrostBattler(cv->battlerAtk, STATUS1_FREEZE);
-        BattleScriptCall(BattleScript_BattlerDefrosted);
-        gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_DEFROSTED;
-        // Resume this stage after the script so Disable still checks the move.
-        return CANCELER_RESULT_RUN_SCRIPT;
-    }
-
     if (GetActiveGimmick(cv->battlerAtk) != GIMMICK_Z_MOVE
      && gBattleMons[cv->battlerAtk].volatiles.disabledMove == cv->move
      && gBattleMons[cv->battlerAtk].volatiles.disabledMove != MOVE_NONE)
@@ -511,6 +565,11 @@ static enum CancelerResult CancelerConfused(struct BattleCalcValues *cv)
                 dmgCtx.abilities[gBattlerAttacker] = cv->abilities[gBattlerAttacker];
                 dmgCtx.holdEffects[gBattlerAttacker] = cv->holdEffects[gBattlerAttacker];
                 gBattleStruct->passiveHpUpdate[cv->battlerAtk] = CalculateMoveDamage(&dmgCtx);
+                if (UsesPolishedLifecycle())
+                {
+                    gBattleStruct->polishedSelfHitBattlers |= 1u << cv->battlerAtk;
+                    gBattleStruct->polishedSelfHitHpWrites |= 1u << cv->battlerAtk;
+                }
                 gBattlescriptCurrInstr = BattleScript_MoveUsedIsConfused;
                 return CANCELER_RESULT_FAILURE;
             }
@@ -1093,17 +1152,25 @@ static enum CancelerResult CancelerPPDeduction(struct BattleCalcValues *cv)
      || cv->move == MOVE_STRUGGLE)
         return CANCELER_RESULT_SUCCESS;
 
-    s32 ppToDeduct = 1;
+    bool32 sourceCalled = UsesPolishedActionRules(cv->move)
+        && (gBattleStruct->polishedCalledMoveBattlers & (1u << cv->battlerAtk));
+    s32 ppToDeduct = sourceCalled ? 0 : 1;
     enum MoveTarget moveTarget = GetBattlerMoveTargetType(cv->battlerAtk, cv->move);
     u32 movePosition = gCurrMovePos;
+    enum BattleMoveEffects chosenEffect = GetMoveEffect(GetOriginallyUsedMove(gChosenMove));
+    bool32 sourceCaller = UsesPolishedActionRules(gChosenMove)
+        && UsesPolishedBattleRules(cv->battlerAtk, GetOppositeBattler(cv->battlerAtk))
+        && (chosenEffect == EFFECT_METRONOME || chosenEffect == EFFECT_SLEEP_TALK);
 
     if (gBattleStruct->submoveAnnouncement == SUBMOVE_SUCCESS)
         movePosition = gChosenMovePos;
 
-    if (IsSpreadMove(moveTarget)
+    // Source caller scripts have no hastarget/Pressure command. Their nested
+    // scripts run with wCharging=1 and cannot consume additional caller PP.
+    if (!sourceCalled && !sourceCaller && (IsSpreadMove(moveTarget)
      || moveTarget == TARGET_ALL_BATTLERS
      || moveTarget == TARGET_FIELD
-     || MoveForcesPressure(cv->move))
+     || MoveForcesPressure(cv->move)))
     {
         for (u32 i = 0; i < gBattlersCount; i++)
         {
@@ -1111,13 +1178,14 @@ static enum CancelerResult CancelerPPDeduction(struct BattleCalcValues *cv)
                 ppToDeduct += (GetBattlerAbility(i) == ABILITY_PRESSURE);
         }
     }
-    else if (moveTarget != TARGET_OPPONENTS_FIELD)
+    else if (!sourceCalled && !sourceCaller && moveTarget != TARGET_OPPONENTS_FIELD)
     {
         if (cv->battlerAtk != cv->battlerDef && GetBattlerAbility(cv->battlerDef) == ABILITY_PRESSURE)
              ppToDeduct++;
     }
 
-    // For item Metronome, echoed voice
+    // Maintain native history independently, including before a midbattle
+    // gimmick activation changes the active damage rules.
     if (cv->move != gLastResultingMoves[cv->battlerAtk] || gBattleStruct->unableToUseMove)
         gBattleMons[cv->battlerAtk].volatiles.metronomeItemCounter = 0;
 
@@ -1125,6 +1193,12 @@ static enum CancelerResult CancelerPPDeduction(struct BattleCalcValues *cv)
         gBattleMons[cv->battlerAtk].pp[movePosition] -= ppToDeduct;
     else
         gBattleMons[cv->battlerAtk].pp[movePosition] = 0;
+
+    // Record source ResetTurn=1 after the original caller pays its PP.
+    // It persists through locked continuations, and Magic Bounce can also
+    // set it before a later own action. The next free selection clears it.
+    if (sourceCaller && gBattleStruct->submoveAnnouncement == SUBMOVE_SUCCESS)
+        gBattleStruct->polishedCalledMoveBattlers |= 1u << cv->battlerAtk;
 
     gLastMoves[cv->battlerAtk] = GetRecordedMove();
 
@@ -1646,7 +1720,9 @@ static enum CancelerResult CancelerPriorityBlock(struct BattleCalcValues *cv)
         return CANCELER_RESULT_SUCCESS;
 
     bool32 effect = FALSE;
-    s32 priority = GetChosenMovePriority(cv->battlerAtk, cv->abilities[cv->battlerAtk]);
+    s32 priority = UsesPolishedActionRules(cv->move)
+        ? GetBattleMovePriority(cv->battlerAtk, cv->abilities[cv->battlerAtk], cv->move)
+        : GetChosenMovePriority(cv->battlerAtk, cv->abilities[cv->battlerAtk]);
     enum MoveTarget moveTarget = GetBattlerMoveTargetType(cv->battlerAtk, cv->move);
 
     if (priority <= 0 || moveTarget == TARGET_FIELD || moveTarget == TARGET_OPPONENTS_FIELD)
@@ -1663,6 +1739,10 @@ static enum CancelerResult CancelerPriorityBlock(struct BattleCalcValues *cv)
             continue;
 
         ability = cv->abilities[battler];
+        // The source checks accuracy before Armor Tail in these scripts.
+        // Resolve that source guard alongside checkpriority after the roll.
+        if (ability == ABILITY_ARMOR_TAIL && UsesPolishedPreEffectAccuracy(cv))
+            continue;
         if (IsDazzlingAbility(ability))
         {
             effect = TRUE;
@@ -2241,11 +2321,135 @@ static bool32 UsesPolishedCorrosionPowderRules(struct BattleCalcValues *cv)
         && (!gBattleStruct->bouncedMoveIsUsed || gBattleStruct->bouncedMoveIsMagicBounce);
 }
 
+static bool32 UsesPolishedPreEffectAccuracy(struct BattleCalcValues *cv)
+{
+    if (!UsesPolishedActionRules(cv->move)
+     || (gBattleStruct->bouncedMoveIsUsed && !gBattleStruct->bouncedMoveIsMagicBounce)
+     || (!gBattleStruct->bouncedMoveIsUsed && gProtectStructs[cv->battlerDef].bounceMove
+       && cv->abilities[cv->battlerDef] != ABILITY_MAGIC_BOUNCE))
+        return FALSE;
+
+    // The generated inventory binds checkpriority -> bounceback. Mean Look
+    // is its sole source script without the preceding checkhit command.
+    // Trick and Pain Split have the same early pair without bounceback.
+    if (cv->move == MOVE_TRICK || cv->move == MOVE_PAIN_SPLIT)
+        return GetBattleMoveType(cv->move) == GetMoveType(cv->move);
+
+    // Damaging source scripts need this early check only when checkpriority
+    // will end the action. Keep ordinary multihit accuracy/loop state native
+    // to its existing source adapter. Sucker Punch's precondition runs earlier.
+    if (!IsBattleMoveStatus(cv->move))
+        return (cv->abilities[cv->battlerDef] == ABILITY_ARMOR_TAIL
+             && GetBattleMovePriority(cv->battlerAtk, cv->abilities[cv->battlerAtk], cv->move) > 0)
+            || (cv->abilities[cv->battlerDef] == ABILITY_SOUNDPROOF
+             && cv->abilities[cv->battlerAtk] != ABILITY_PRANKSTER && IsSoundMove(cv->move));
+
+    return cv->move != MOVE_MEAN_LOOK
+        && sPolishedPreReflectionPriorityTypes[cv->move] != 0
+        && sPolishedPreReflectionPriorityTypes[cv->move] == GetBattleMoveType(cv->move) + 1;
+}
+
+static bool32 PolishedChecksPowderMatchup(struct BattleCalcValues *cv)
+{
+    if ((cv->move == MOVE_TOXIC || cv->move == MOVE_POISONPOWDER)
+     && cv->abilities[cv->battlerAtk] == ABILITY_CORROSION)
+        return FALSE;
+    return cv->move == MOVE_THUNDER_WAVE || cv->move == MOVE_TOXIC
+        || cv->move == MOVE_POISONPOWDER || cv->move == MOVE_STUN_SPORE
+        || cv->move == MOVE_SLEEP_POWDER || cv->move == MOVE_SPORE;
+}
+
+static bool32 PolishedPowderTypeOrItemBlocks(struct BattleCalcValues *cv)
+{
+    return IsPowderMove(cv->move)
+        && (IS_BATTLER_OF_TYPE(cv->battlerDef, TYPE_GRASS)
+         || cv->holdEffects[cv->battlerDef] == HOLD_EFFECT_SAFETY_GOGGLES);
+}
+
+static bool32 PolishedPreEffectTypeImmunity(struct BattleCalcValues *cv)
+{
+    if (!PolishedChecksPowderMatchup(cv))
+        return FALSE;
+    if (PolishedPowderTypeOrItemBlocks(cv))
+        return TRUE;
+    if (cv->holdEffects[cv->battlerDef] == HOLD_EFFECT_RING_TARGET)
+        return FALSE;
+
+    enum Type types[3];
+    GetBattlerTypes(cv->battlerDef, FALSE, types);
+    for (u32 i = 0; i < ARRAY_COUNT(types); i++)
+        if (GetTypeModifier(GetBattleMoveType(cv->move), types[i]) == UQ_4_12(0.0))
+            return TRUE;
+    return FALSE;
+}
+
+static bool32 PolishedManualMissMessage(struct BattleCalcValues *cv)
+{
+    if (!UsesPolishedActionRules(cv->move)
+     || (gBattleStruct->bouncedMoveIsUsed && !gBattleStruct->bouncedMoveIsMagicBounce)
+     || GetBattleMoveType(cv->move) != GetMoveType(cv->move))
+        return FALSE;
+    // These commands print their own failure text, without the source helper
+    // that consumes Blunder Policy. Earlier checkpriority is a separate path.
+    switch (cv->move)
+    {
+    case MOVE_LEECH_SEED:
+    case MOVE_ATTRACT:
+    case MOVE_FORESIGHT:
+    case MOVE_SUPERSONIC:
+    case MOVE_CONFUSE_RAY:
+    case MOVE_SWEET_KISS:
+    case MOVE_TRICK:
+        return TRUE;
+    default:
+        return FALSE;
+    }
+}
+
+static bool32 PolishedPriorityWouldBlock(struct BattleCalcValues *cv, s32 priority)
+{
+    if (priority > 0 && cv->abilities[cv->battlerDef] == ABILITY_ARMOR_TAIL)
+        return TRUE;
+    if (cv->abilities[cv->battlerAtk] == ABILITY_PRANKSTER)
+        return IsBattleMoveStatus(cv->move) && IS_BATTLER_OF_TYPE(cv->battlerDef, TYPE_DARK);
+    return cv->abilities[cv->battlerDef] == ABILITY_SOUNDPROOF && IsSoundMove(cv->move);
+}
+
+static enum CancelerResult PolishedAccuracyFailure(struct BattleCalcValues *cv)
+{
+    if (gBattleStruct->polishedAccuracyState == POLISHED_ACCURACY_MISSED)
+    {
+        gBattleStruct->moveResultFlags[cv->battlerDef] |= MOVE_RESULT_MISSED;
+        if (cv->holdEffects[cv->battlerAtk] == HOLD_EFFECT_BLUNDER_POLICY)
+            gBattleStruct->blunderPolicy = TRUE;
+        BattleScriptCall(BattleScript_BattlerAvoidedAttack);
+    }
+    else if (gBattleStruct->polishedAccuracyState == POLISHED_ACCURACY_IMMUNE)
+    {
+        gBattleStruct->moveResultFlags[cv->battlerDef] |= MOVE_RESULT_DOESNT_AFFECT_FOE;
+        gBattleScripting.battler = cv->battlerDef;
+        BattleScriptCall(BattleScript_DoesntAffectScripting);
+    }
+    else if (gBattleStruct->polishedAccuracyState == POLISHED_ACCURACY_PROTECTED)
+    {
+        gBattleStruct->moveResultFlags[cv->battlerDef] |= MOVE_RESULT_PROTECTED;
+        BattleScriptCall(BattleScript_TargetProtected);
+    }
+    else
+    {
+        gBattleStruct->moveResultFlags[cv->battlerDef] |= MOVE_RESULT_FAILED;
+        BattleScriptCall(BattleScript_ButItFailedRet);
+    }
+    return TargetAvoidedAttack(cv->battlerAtk, cv->battlerDef);
+}
+
 static enum CancelerResult CancelerTargetFailure(struct BattleCalcValues *cv)
 {
     bool32 bounced = FALSE;
     enum MoveTarget moveTarget = GetBattlerMoveTargetType(cv->battlerAtk, cv->move);
-    s32 movePriority = GetChosenMovePriority(cv->battlerAtk, cv->abilities[cv->battlerAtk]);
+    s32 movePriority = UsesPolishedActionRules(cv->move)
+        ? GetBattleMovePriority(cv->battlerAtk, cv->abilities[cv->battlerAtk], cv->move)
+        : GetChosenMovePriority(cv->battlerAtk, cv->abilities[cv->battlerAtk]);
 
     struct DamageContext ctx = {0};
     SetDamageContextValues(&ctx, cv);
@@ -2327,6 +2531,27 @@ static enum CancelerResult CancelerTargetFailure(struct BattleCalcValues *cv)
             }
         }
         gBattleStruct->eventState.moveEndBlock++;
+    case TARGET_FAILURE_POLISHED_ACCURACY:
+        for (enum BattlerId battler = B_BATTLER_0; battler < gBattlersCount; battler++)
+        {
+            cv->battlerDef = GetTargetBySlot(cv->battlerAtk, battler);
+            if (ShouldSkipFailureCheckOnBattler(cv->battlerAtk, cv->battlerDef)
+             || !UsesPolishedPreEffectAccuracy(cv)
+             || gBattleStruct->polishedAccuracyState != POLISHED_ACCURACY_UNCHECKED)
+                continue;
+
+            // Do not publish a target failure or consume the user's Policy
+            // yet: bounceback can carry this same failure to the reflector.
+            if (cv->move == MOVE_PAIN_SPLIT && gProtectStructs[cv->battlerDef].protected == PROTECT_NORMAL)
+                gBattleStruct->polishedAccuracyState = POLISHED_ACCURACY_PROTECTED;
+            else if (cv->move == MOVE_SWAGGER
+             && IsSubstituteProtected(cv->battlerAtk, cv->battlerDef, cv->abilities[cv->battlerAtk], cv->move))
+                gBattleStruct->polishedAccuracyState = POLISHED_ACCURACY_SUBSTITUTE;
+            else
+                gBattleStruct->polishedAccuracyState = DoesMoveMissTarget(cv)
+                    ? POLISHED_ACCURACY_MISSED : POLISHED_ACCURACY_HIT;
+        }
+        gBattleStruct->eventState.moveEndBlock++;
     case TARGET_FAILURE_BOUNCE:
         for (enum BattlerId battler = B_BATTLER_0; battler < gBattlersCount; battler++)
         {
@@ -2334,6 +2559,67 @@ static enum CancelerResult CancelerTargetFailure(struct BattleCalcValues *cv)
 
             if (ShouldSkipFailureCheckOnBattler(cv->battlerAtk, cv->battlerDef))
                 continue;
+
+            if (UsesPolishedPreEffectAccuracy(cv))
+            {
+                bool32 typeImmune = PolishedPreEffectTypeImmunity(cv);
+                // checkpowder/resettypematchup preserves a previous miss,
+                // but an original hit can become IMMUNE before bounceback.
+                if (typeImmune && gBattleStruct->polishedAccuracyState == POLISHED_ACCURACY_HIT)
+                    gBattleStruct->polishedAccuracyState = POLISHED_ACCURACY_IMMUNE;
+
+                // Sing runs this nullification before checkpriority. The
+                // ordinary Soundproof priority exception does not cover it.
+                // The reflected script reruns these commands, not checkhit.
+                bool32 nullifies = cv->move == MOVE_SING && cv->abilities[cv->battlerDef] == ABILITY_SOUNDPROOF;
+                bool32 overcoat = PolishedChecksPowderMatchup(cv) && IsPowderMove(cv->move)
+                    && !PolishedPowderTypeOrItemBlocks(cv) && cv->abilities[cv->battlerDef] == ABILITY_OVERCOAT;
+                if (PolishedChecksPowderMatchup(cv) && !typeImmune
+                 && cv->abilities[cv->battlerDef] == ABILITY_LIGHTNING_ROD && GetBattleMoveType(cv->move) == TYPE_ELECTRIC)
+                    nullifies = TRUE;
+                if (nullifies || overcoat)
+                {
+                    ctx.battlerDef = cv->battlerDef;
+                    if (overcoat ? IsPowderMoveBlocked(&ctx) : CanAbilityAbsorbMove(&ctx))
+                    {
+                        gBattleStruct->moveResultFlags[cv->battlerDef] |= MOVE_RESULT_FAILED;
+                        return TargetAvoidedAttack(cv->battlerAtk, cv->battlerDef);
+                    }
+                }
+            }
+
+            if (UsesPolishedPreEffectAccuracy(cv) && PolishedPriorityWouldBlock(cv, movePriority))
+            {
+                // checkpriority preserves an earlier wAttackMissed code.
+                if (gBattleStruct->polishedAccuracyState == POLISHED_ACCURACY_MISSED
+                 || gBattleStruct->polishedAccuracyState == POLISHED_ACCURACY_SUBSTITUTE
+                 || gBattleStruct->polishedAccuracyState == POLISHED_ACCURACY_IMMUNE
+                 || gBattleStruct->polishedAccuracyState == POLISHED_ACCURACY_PROTECTED)
+                    return PolishedAccuracyFailure(cv);
+
+                if (movePriority > 0 && cv->abilities[cv->battlerDef] == ABILITY_ARMOR_TAIL)
+                {
+                    gBattleStruct->moveResultFlags[cv->battlerDef] |= MOVE_RESULT_FAILED;
+                    gLastUsedAbility = ABILITY_ARMOR_TAIL;
+                    gBattlerAbility = cv->battlerDef;
+                    RecordAbilityBattle(cv->battlerDef, ABILITY_ARMOR_TAIL);
+                    gBattlescriptCurrInstr = BattleScript_PokemonCannotUseMove;
+                    return CANCELER_RESULT_FAILURE;
+                }
+
+                gBattleStruct->moveResultFlags[cv->battlerDef] |= MOVE_RESULT_FAILED;
+                gBattleScripting.battler = cv->battlerDef;
+                if (cv->abilities[cv->battlerAtk] == ABILITY_PRANKSTER)
+                    BattleScriptCall(BattleScript_DoesntAffectScripting);
+                else
+                {
+                    gLastUsedAbility = ABILITY_SOUNDPROOF;
+                    gBattlerAbility = cv->battlerDef;
+                    RecordAbilityBattle(cv->battlerDef, ABILITY_SOUNDPROOF);
+                    BattleScriptCall(BattleScript_AbilityProtectedTarget);
+                }
+                return TargetAvoidedAttack(cv->battlerAtk, cv->battlerDef);
+            }
 
             // Source scripts check priority before bounceback, except hazards.
             // Use the actual attacker, including during a returned move.
@@ -2374,11 +2660,17 @@ static enum CancelerResult CancelerTargetFailure(struct BattleCalcValues *cv)
             if (ShouldSkipFailureCheckOnBattler(cv->battlerAtk, cv->battlerDef))
                 continue;
 
+            if (UsesPolishedPreEffectAccuracy(cv)
+             && gBattleStruct->polishedAccuracyState == POLISHED_ACCURACY_MISSED
+             && (UsesPolishedPrimaryStatAccuracy(cv) || PolishedPreEffectTypeImmunity(cv)))
+                return PolishedAccuracyFailure(cv);
+
             // The source Prankster branch returns before checking Soundproof.
             // Keep the exception in execution, outside shared AI estimates.
             if (cv->abilities[cv->battlerAtk] == ABILITY_PRANKSTER
              && cv->abilities[cv->battlerDef] == ABILITY_SOUNDPROOF
              && !IS_BATTLER_OF_TYPE(cv->battlerDef, TYPE_DARK)
+             && cv->move != MOVE_SING
              && UsesPolishedSoundPriorityRules(cv))
                 continue;
 
@@ -2594,6 +2886,11 @@ static enum CancelerResult CancelerMultihitMoves(struct BattleCalcValues *cv)
 
 static enum CancelerResult CancelerSubstitute(struct BattleCalcValues *cv)
 {
+    // Source primary status commands own their Substitute decision after
+    // Safeguard and type checks, but before immunity-ability announcements.
+    if (cv->moveEffect == EFFECT_NON_VOLATILE_STATUS && UsesPolishedActionRules(cv->move))
+        return CANCELER_RESULT_SUCCESS;
+
     // Source poison-status Corrosion skips the status-stage Substitute gate.
     if (UsesPolishedCorrosionStatusRules(cv->battlerAtk, cv->battlerDef, cv->move))
         return CANCELER_RESULT_SUCCESS;
@@ -2681,6 +2978,11 @@ static enum CancelerResult CancelerAccuracyCheck(struct BattleCalcValues *cv)
         return CANCELER_RESULT_END;
     }
 
+    // painsplit ignores wAttackMissed after checkpriority has had its chance
+    // to report it. Its own CheckHiddenOpponent remains a separate gate.
+    if (cv->move == MOVE_PAIN_SPLIT && UsesPolishedActionRules(cv->move))
+        return CANCELER_RESULT_SUCCESS;
+
     enum SmartTargetState {
         INITIAL_STATE,
         MISSED_FIRST_TARGET,
@@ -2706,12 +3008,17 @@ static enum CancelerResult CancelerAccuracyCheck(struct BattleCalcValues *cv)
         if (ShouldSkipFailureCheckOnBattler(cv->battlerAtk, cv->battlerDef))
             continue;
 
+        if (UsesPolishedPreEffectAccuracy(cv)
+         && gBattleStruct->polishedAccuracyState == POLISHED_ACCURACY_IMMUNE)
+            return PolishedAccuracyFailure(cv);
+
         if (DoesMoveMissTarget(cv))
         {
             gBattleStruct->moveResultFlags[cv->battlerDef] |= MOVE_RESULT_MISSED;
 
             if (cv->holdEffects[cv->battlerAtk] == HOLD_EFFECT_BLUNDER_POLICY
              && cv->moveEffect != EFFECT_OHKO
+             && !PolishedManualMissMessage(cv)
              && !isMultiHitOn)
                 gBattleStruct->blunderPolicy = TRUE;
 
@@ -2816,7 +3123,9 @@ static enum CancelerResult CancelerPreAttackMoveEffect(struct BattleCalcValues *
             const struct AdditionalEffect *additionalEffect = GetMoveAdditionalEffectById(cv->move, gBattleStruct->additionalEffectsCounter);
             gBattleStruct->additionalEffectsCounter++;
 
-            if (!additionalEffect->preAttackEffect)
+            if (!additionalEffect->preAttackEffect
+             || (additionalEffect->moveEffect == MOVE_EFFECT_BREAK_SCREEN
+              && IsPolishedBrickBreak(cv->move, cv->battlerAtk, cv->battlerDef)))
                 continue;
 
             bool32 isSelf = gEffectBattler == cv->battlerAtk;
@@ -3172,6 +3481,17 @@ static enum CancelerResult CancelerHealthBarUpdate(struct BattleCalcValues *cv)
 
 static bool32 TryMoveDamageUpdate(struct BattleCalcValues *cv)
 {
+    // Both source item commands reserve their target item before damage.
+    // Knock Off uses CheckSubstituteOpp (including Infiltrator); Bug Bite
+    // deliberately has no Substitute check, even when damage hits the doll.
+    if (UsesPolishedBattleRules(cv->battlerAtk, cv->battlerDef)
+     && ((cv->move == MOVE_KNOCK_OFF
+          && !DoesSubstituteBlockMove(cv->battlerAtk, cv->battlerDef, cv->move)
+          && cv->abilities[cv->battlerDef] != ABILITY_STICKY_HOLD
+          && CanBattlerGetOrLoseItem(cv->battlerDef, cv->battlerAtk, gBattleMons[cv->battlerDef].item))
+      || (cv->move == MOVE_BUG_BITE && PolishedCanEatTargetBerry(cv->battlerAtk, cv->battlerDef, cv->abilities[cv->battlerDef]))))
+        gBattleStruct->polishedPendingItemLoss |= 1u << cv->battlerDef;
+
     if (DoesSubstituteBlockMove(cv->battlerAtk, cv->battlerDef, cv->move) && gBattleMons[cv->battlerDef].volatiles.substituteHP)
     {
         if (gBattleMons[cv->battlerDef].volatiles.substituteHP >= gBattleStruct->moveDamage[cv->battlerDef])
@@ -3218,16 +3538,6 @@ static bool32 TryMoveDamageUpdate(struct BattleCalcValues *cv)
             u16 hpBefore;
             u16 hpLost;
 
-            // Source marks item loss before SubtractHP's healing sweep. Status
-            // cures still run, but HP/stat berries wait for Knock Off/Bug Bite.
-            if (UsesPolishedBattleRules(cv->battlerAtk, cv->battlerDef)
-             && !gBattleMons[cv->battlerDef].volatiles.substitute
-             && ((cv->moveEffect == EFFECT_KNOCK_OFF
-                  && cv->abilities[cv->battlerDef] != ABILITY_STICKY_HOLD
-                  && CanBattlerGetOrLoseItem(cv->battlerDef, cv->battlerAtk, gBattleMons[cv->battlerDef].item))
-              || (cv->move == MOVE_BUG_BITE && PolishedCanEatTargetBerry(cv->battlerAtk, cv->battlerDef, cv->abilities[cv->battlerDef]))))
-                gBattleStruct->polishedPendingItemLoss |= 1u << cv->battlerDef;
-
             gBideDmg[cv->battlerDef] += gBattleStruct->moveDamage[cv->battlerDef];
             gBideTarget[cv->battlerDef] = cv->battlerAtk;
 
@@ -3248,6 +3558,18 @@ static bool32 TryMoveDamageUpdate(struct BattleCalcValues *cv)
             }
 
             hpLost = hpBefore - gBattleMons[cv->battlerDef].hp;
+            if (hpLost != 0)
+                gBattleStruct->polishedSelfHitBattlers &= ~(1u << cv->battlerDef);
+            if (UsesPolishedHitCheckpoint(cv->move) && cv->abilities[cv->battlerDef] == ABILITY_BERSERK)
+            {
+                // DealDamageToOpponent remembers the crossing before ordinary
+                // healing items. Each later hit clears it if HP remains above
+                // half; an Enigma heal can clear it before Berserk resolves.
+                if (hpBefore > gBattleMons[cv->battlerDef].maxHP / 2)
+                    gSpecialStatuses[cv->battlerDef].polishedBerserkPending = TRUE;
+                if (gBattleMons[cv->battlerDef].hp > gBattleMons[cv->battlerDef].maxHP / 2)
+                    gSpecialStatuses[cv->battlerDef].polishedBerserkPending = FALSE;
+            }
             if (hpLost != 0)
                 gBattleStruct->innardsOutHpLost[cv->battlerDef] += hpLost;
 
@@ -3300,6 +3622,85 @@ static enum CancelerResult CancelerMoveDamageUpdate(struct BattleCalcValues *cv)
     cv->battlerDef = gBattlerTarget;
     gBattleStruct->eventState.moveEndBattler = 0;
     return CANCELER_RESULT_RUN_SCRIPT_AND_INCREMENT; // Update hp
+}
+
+static bool32 CanRunPolishedDamageItems(struct BattleCalcValues *cv)
+{
+    return UsesPolishedHitCheckpoint(cv->move)
+        && IsBattlerTurnDamaged(cv->battlerDef, EXCLUDING_SUBSTITUTES)
+        && gBattleStruct->moveDamage[cv->battlerDef] > 0
+        && !IsBattlerUnaffectedByMove(cv->battlerDef)
+        && !gBattleStruct->unableToUseMove;
+}
+
+static enum CancelerResult CancelerPolishedDamageHealing(struct BattleCalcValues *cv)
+{
+    bool32 afterBerserk = gBattleStruct->eventState.atkCanceler == CANCELER_POLISHED_DAMAGE_HEALING_AFTER;
+
+    if (!CanRunPolishedDamageItems(cv)
+     || (cv->abilities[cv->battlerDef] == ABILITY_BERSERK) != afterBerserk)
+        return CANCELER_RESULT_SUCCESS;
+
+    // HandleUserHealingItems is part of SubtractHP, before criticaltext.
+    // Keep optional native items at their native checkpoints. The shared
+    // dispatcher preserves Unnerve and the pending Knock Off/Bug Bite gate;
+    // status/confusion cures precede that pending-loss check in the source.
+    switch (gBattleMons[cv->battlerDef].item)
+    {
+    case ITEM_ORAN_BERRY:
+    case ITEM_SITRUS_BERRY:
+    case ITEM_FIGY_BERRY:
+    case ITEM_BERRY_JUICE:
+    case ITEM_CHERI_BERRY:
+    case ITEM_CHESTO_BERRY:
+    case ITEM_PECHA_BERRY:
+    case ITEM_RAWST_BERRY:
+    case ITEM_ASPEAR_BERRY:
+    case ITEM_PERSIM_BERRY:
+    case ITEM_LUM_BERRY:
+    case ITEM_LIECHI_BERRY:
+    case ITEM_GANLON_BERRY:
+    case ITEM_SALAC_BERRY:
+    case ITEM_PETAYA_BERRY:
+    case ITEM_APICOT_BERRY:
+    case ITEM_LANSAT_BERRY:
+    case ITEM_STARF_BERRY:
+        if (ItemBattleEffects(cv->battlerDef, cv->battlerAtk, cv->holdEffects[cv->battlerDef], IsOnStatusChangeActivation)
+         || ItemBattleEffects(cv->battlerDef, cv->battlerAtk, cv->holdEffects[cv->battlerDef], IsOnHpThresholdActivation))
+            return CANCELER_RESULT_RUN_SCRIPT_AND_INCREMENT;
+        break;
+    default:
+        break;
+    }
+
+    return CANCELER_RESULT_SUCCESS;
+}
+
+static enum CancelerResult CancelerPolishedDamageEnigma(struct BattleCalcValues *cv)
+{
+    // CheckEnigmaBerry is outside HandleUserHealingItems: it ignores pending
+    // item loss and may restore HP from zero before any actual faint handling.
+    if (CanRunPolishedDamageItems(cv)
+     && cv->holdEffects[cv->battlerDef] == HOLD_EFFECT_ENIGMA_BERRY
+     && ItemBattleEffects(cv->battlerDef, cv->battlerAtk, HOLD_EFFECT_ENIGMA_BERRY, IsPolishedDamageEnigmaActivation))
+        return CANCELER_RESULT_RUN_SCRIPT_AND_INCREMENT;
+
+    return CANCELER_RESULT_SUCCESS;
+}
+
+static enum CancelerResult CancelerPolishedDamageBerserk(struct BattleCalcValues *cv)
+{
+    // The source resolves a single hit after Enigma and before ordinary
+    // healing. Both ordinary multihit and Parental Bond defer until the loop
+    // ends; their existing pending bit preserves the pre-healing crossing.
+    if (CanRunPolishedDamageItems(cv)
+     && cv->abilities[cv->battlerDef] == ABILITY_BERSERK
+     && gMultiHitCounter == 0
+     && (gSpecialStatuses[cv->battlerAtk].attackerInParty || cv->abilities[cv->battlerAtk] != ABILITY_PARENTAL_BOND)
+     && AbilityBattleEffects(ABILITYEFFECT_COLOR_CHANGE, cv->battlerDef, ABILITY_BERSERK, cv->move, TRUE))
+        return CANCELER_RESULT_RUN_SCRIPT_AND_INCREMENT;
+
+    return CANCELER_RESULT_SUCCESS;
 }
 
 static enum CancelerResult (*const sMoveSuccessOrderCancelers[])(struct BattleCalcValues *cv) =
@@ -3362,6 +3763,10 @@ static enum CancelerResult (*const sMoveSuccessOrderCancelers[])(struct BattleCa
     [CANCELER_SKIP_FRAME] = CancelerSkipFrame,
     [CANCELER_HEALTH_BAR_UPDATE] = CancelerHealthBarUpdate,
     [CANCELER_MOVE_DAMAGE_UPDATE] = CancelerMoveDamageUpdate,
+    [CANCELER_POLISHED_DAMAGE_HEALING_BEFORE] = CancelerPolishedDamageHealing,
+    [CANCELER_POLISHED_DAMAGE_ENIGMA] = CancelerPolishedDamageEnigma,
+    [CANCELER_POLISHED_DAMAGE_BERSERK] = CancelerPolishedDamageBerserk,
+    [CANCELER_POLISHED_DAMAGE_HEALING_AFTER] = CancelerPolishedDamageHealing,
 };
 
 enum CancelerResult DoAttackCanceler(void)
@@ -3383,7 +3788,34 @@ enum CancelerResult DoAttackCanceler(void)
 
     while (gBattleStruct->eventState.atkCanceler < CANCELER_END && result == CANCELER_RESULT_SUCCESS)
     {
-        result = sMoveSuccessOrderCancelers[gBattleStruct->eventState.atkCanceler](&cv);
+        enum CancelerState state = gBattleStruct->eventState.atkCanceler;
+        bool32 skip = FALSE;
+        if (UsesPolishedStatusActionRules(cv.battlerAtk))
+        {
+            // CheckTurn: recharge, flinch, sleep/freeze, confusion, attraction,
+            // Disable, paralysis. CheckObedience follows before PP consumption.
+            switch (state)
+            {
+            case CANCELER_POWER_POINTS: state = CANCELER_CONFUSED; break;
+            case CANCELER_OBEDIENCE: state = CANCELER_INFATUATION; break;
+            case CANCELER_FLINCH:
+            case CANCELER_CONFUSED: skip = TRUE; break;
+            case CANCELER_INFATUATION: state = CANCELER_OBEDIENCE; break;
+            case CANCELER_Z_MOVES: state = CANCELER_POWER_POINTS; break;
+            default: break;
+            }
+        }
+        result = skip ? CANCELER_RESULT_SUCCESS : sMoveSuccessOrderCancelers[state](&cv);
+        if (result == CANCELER_RESULT_FAILURE && UsesPolishedStatusActionRules(cv.battlerAtk)
+         && (state == CANCELER_RECHARGE || state == CANCELER_ASLEEP_OR_FROZEN
+          || state == CANCELER_FLINCH || state == CANCELER_CONFUSED
+          || state == CANCELER_INFATUATION || state == CANCELER_DISABLED
+          || state == CANCELER_PARALYZED))
+        {
+            gBattleMons[cv.battlerAtk].volatiles.destinyBond = 0; // Source CantMove, including a repeated choice.
+            CancelMultiTurnMoves(cv.battlerAtk);
+        }
+
 
         if (result != CANCELER_RESULT_RUN_SCRIPT)
             gBattleStruct->eventState.atkCanceler++;
@@ -3591,6 +4023,8 @@ static enum MoveEndResult MoveEndAbsorb(struct BattleCalcValues *cv)
          && !IsAbilityAndRecord(cv->battlerAtk, cv->abilities[cv->battlerAtk], ABILITY_MAGIC_GUARD))
         {
             s32 recoil = (GetNonDynamaxMaxHP(cv->battlerAtk) + 1) / 2; // Half of Max HP Rounded UP
+            if (UsesPolishedActionRules(cv->move))
+                recoil = max(1, GetNonDynamaxMaxHP(cv->battlerAtk) / 2);
             SetPassiveDamageAmount(cv->battlerAtk, recoil);
             gSpecialStatuses[cv->battlerAtk].mindBlownRecoil = TRUE;
             TryUpdateEvolutionTracker(IF_RECOIL_DAMAGE_GE, gBattleStruct->passiveHpUpdate[cv->battlerAtk], MOVE_NONE);
@@ -3609,18 +4043,28 @@ static enum MoveEndResult MoveEndAbsorb(struct BattleCalcValues *cv)
 static enum MoveEndResult MoveEndRage(struct BattleCalcValues *cv)
 {
     enum MoveEndResult result = MOVEEND_RESULT_CONTINUE;
+    bool32 source = UsesPolishedActionRules(cv->move);
+
+    // Source posthiteffects checks hit abilities, Fire thaw and Air Balloon
+    // before Rage. Keep the native phase for every optional native action.
+    if (source && gBattleScripting.moveendState != MOVEEND_POLISHED_POST_HIT)
+    {
+        gBattleScripting.moveendState++;
+        return MOVEEND_RESULT_CONTINUE;
+    }
 
     if (gBattleMons[cv->battlerDef].volatiles.rage
      && IsBattlerAlive(cv->battlerDef)
      && cv->battlerAtk != cv->battlerDef
      && !IsBattlerAlly(cv->battlerAtk, cv->battlerDef)
-     && IsBattlerTurnDamaged(cv->battlerDef, EXCLUDING_SUBSTITUTES)
+     && (source ? CanHitTriggerContactStatus(cv->battlerAtk, cv->battlerDef, cv->move)
+                : IsBattlerTurnDamaged(cv->battlerDef, EXCLUDING_SUBSTITUTES))
      && !IsBattleMoveStatus(cv->move)
      && CompareStat(cv->battlerDef, STAT_ATK, MAX_STAT_STAGE, CMP_LESS_THAN, cv->abilities[cv->battlerDef]))
     {
         // Does rage show any anim or does it just increase by one and print the rage message?
         SetStatChange(gBattlerTarget, STAT_ATK, 1);
-        BattleScriptCall(BattleScript_RageIsBuilding);
+        BattleScriptCall(source ? BattleScript_PolishedRageIsBuilding : BattleScript_RageIsBuilding);
         result = MOVEEND_RESULT_RUN_SCRIPT;
     }
 
@@ -3672,6 +4116,66 @@ static enum MoveEndResult MoveEndAbilities(struct BattleCalcValues *cv)
 
     gBattleScripting.moveendState++;
     return result;
+}
+
+static enum MoveEndResult TryPolishedIncomingThaw(struct BattleCalcValues *cv, bool32 burnCommand)
+{
+    if (!UsesPolishedActionRules(cv->move)
+     || !(gBattleMons[cv->battlerDef].status1 & STATUS1_FREEZE)
+     || !IsBattlerTurnDamaged(cv->battlerDef, EXCLUDING_SUBSTITUTES)
+     || IsBattlerUnaffectedByMove(cv->battlerDef)
+     || gBattleStruct->unableToUseMove)
+        return MOVEEND_RESULT_CONTINUE;
+
+    if (burnCommand)
+    {
+        // These are the complete default-source scripts containing burntarget.
+        // Its frozen-target branch ignores the effect-chance result, Shield
+        // Dust, Covert Cloak, the current type and either participant's HP.
+        // Tri Attack deliberately jumps to BurnTarget instead (no defrosting).
+        switch (cv->move)
+        {
+        case MOVE_FIRE_PUNCH:
+        case MOVE_FLARE_BLITZ:
+        case MOVE_EMBER:
+        case MOVE_FLAMETHROWER:
+        case MOVE_SCALD:
+        case MOVE_FIRE_BLAST:
+        case MOVE_SACRED_FIRE:
+            if (cv->abilities[cv->battlerAtk] == ABILITY_SHEER_FORCE)
+                return MOVEEND_RESULT_CONTINUE;
+            break;
+        default:
+            return MOVEEND_RESULT_CONTINUE;
+        }
+    }
+    else if (!IsBattlerAlive(cv->battlerDef) || GetBattleMoveType(cv->move) != TYPE_FIRE)
+        return MOVEEND_RESULT_CONTINUE;
+
+    DefrostBattler(cv->battlerDef, STATUS1_FREEZE);
+    gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_DEFROSTED;
+    BattleScriptCall(BattleScript_BattlerDefrosted);
+    return MOVEEND_RESULT_RUN_SCRIPT;
+}
+
+static enum MoveEndResult MoveEndPolishedPostHit(struct BattleCalcValues *cv)
+{
+    if (UsesPolishedActionRules(cv->move))
+    {
+        // Status/item clearing makes these resumable without a second phase
+        // counter. MoveEndRage advances the state exactly once at the end.
+        enum MoveEndResult result = TryPolishedIncomingThaw(cv, FALSE);
+        if (result != MOVEEND_RESULT_CONTINUE)
+            return result;
+        if (GetBattlerHoldEffect(cv->battlerDef) == HOLD_EFFECT_AIR_BALLOON
+         && ItemBattleEffects(cv->battlerDef, cv->battlerAtk,
+                HOLD_EFFECT_AIR_BALLOON, IsOnTargetHitActivation))
+            return MOVEEND_RESULT_RUN_SCRIPT;
+        return MoveEndRage(cv);
+    }
+
+    gBattleScripting.moveendState++;
+    return MOVEEND_RESULT_CONTINUE;
 }
 
 static enum MoveEndResult MoveEndResistBerryMessage(struct BattleCalcValues *cv)
@@ -3758,6 +4262,14 @@ static enum MoveEndResult MoveEndStatusImmunityAbilities(struct BattleCalcValues
 
     for (enum BattlerId battler = 0; battler < gBattlersCount; battler++)
     {
+        if (!(gBattleMons[battler].status1 & STATUS1_SLEEP))
+            gBattleStruct->polishedNappingBattlers &= ~(1u << battler);
+        // Source napping writes status directly and never calls PostStatus.
+        // Genuine entry/ability-change cures still run in their own hooks.
+        if ((gBattleStruct->polishedNappingBattlers & (1u << battler))
+         && UsesPolishedStatusActionRules(battler)
+         && (GetBattlerAbility(battler) == ABILITY_INSOMNIA || GetBattlerAbility(battler) == ABILITY_VITAL_SPIRIT))
+            continue;
         if (AbilityBattleEffects(ABILITYEFFECT_IMMUNITY, battler, 0, 0, TRUE))
             result = MOVEEND_RESULT_RUN_SCRIPT;
     }
@@ -4224,6 +4736,8 @@ static enum MoveEndResult MoveEndBouncedMove(struct BattleCalcValues *cv)
             gBattlerTarget = cv->battlerAtk;
             gBattlerAttacker = bounceBattler;
             gBattleStruct->bouncedMoveIsUsed = TRUE;
+            if (gBattleStruct->bouncedMoveIsMagicBounce && UsesPolishedActionRules(cv->move))
+                gBattleStruct->polishedCalledMoveBattlers |= 1u << bounceBattler;
             for (enum BattlerId i = B_BATTLER_0; i < gBattlersCount; i++)
             {
                 gBattleStruct->savedMoveResultFlags[i] = gBattleStruct->moveResultFlags[i];
@@ -4308,7 +4822,11 @@ static enum MoveEndResult MoveEndMultihitMove(struct BattleCalcValues *cv)
                 gBattleScripting.animTargetsHit = 0;
                 gBattleScripting.moveendState = 0;
                 gSpecialStatuses[cv->battlerAtk].multiHitOn = TRUE;
-                BattleScriptPush(GetMoveBattleScript(cv->move));
+                // The source loops within Future Sight from checkhit. Its
+                // active Parental Bond user still gets criticaltext on hit 2;
+                // re-entering the scheduling script would skip that checkpoint.
+                BattleScriptPush(IsPolishedFutureSightImpact(cv->battlerAtk, cv->battlerDef, cv->move)
+                    ? BattleScript_PolishedFutureAttackHit : GetMoveBattleScript(cv->move));
                 gBattlescriptCurrInstr = BattleScript_FlushMessageBox;
                 return MOVEEND_RESULT_BREAK;
             }
@@ -4340,7 +4858,8 @@ static enum MoveEndResult MoveEndDefrost(struct BattleCalcValues *cv)
 
         if (!(gBattleMons[battler].status1 & STATUS1_ICY_ANY)
          || !IsBattlerTurnDamaged(battler, EXCLUDING_SUBSTITUTES)
-         || !IsBattlerAlive(battler))
+         || !IsBattlerAlive(battler)
+         || ((gBattleMons[battler].status1 & STATUS1_FREEZE) && UsesPolishedActionRules(cv->move)))
             continue;
 
         if (gBattleMons[battler].status1 & STATUS1_FREEZE)
@@ -4411,7 +4930,14 @@ static enum MoveEndResult MoveEndMoveBlockRecoil(struct BattleCalcValues *cv)
                 recoil = 1;
             }
             SetPassiveDamageAmount(cv->battlerAtk, recoil);
-            BattleScriptCall(BattleScript_RecoilIfMiss);
+            if (UsesPolishedActionRules(cv->move) && UsesPolishedLifecycle())
+            {
+                // Source Jump Kick failure shares TakeOpponentDamage with
+                // confusion and therefore also skips immediate healing items.
+                gBattleStruct->polishedSelfHitBattlers |= 1u << cv->battlerAtk;
+                gBattleStruct->polishedSelfHitHpWrites |= 1u << cv->battlerAtk;
+            }
+            BattleScriptCall(UsesPolishedActionRules(cv->move) ? BattleScript_PolishedRecoilIfMiss : BattleScript_RecoilIfMiss);
             result = MOVEEND_RESULT_RUN_SCRIPT;
         }
         break;
@@ -4533,6 +5059,11 @@ static enum MoveEndResult MoveEndPolishedPostFaint(struct BattleCalcValues *cv)
             break;
         }
     }
+    // burntarget follows postfainteffects even if either battler just fainted.
+    // The ordinary current-Fire check is later, after hit abilities.
+    enum MoveEndResult result = TryPolishedIncomingThaw(cv, TRUE);
+    if (result != MOVEEND_RESULT_CONTINUE)
+        return result;
     gBattleScripting.moveendState++;
     return MOVEEND_RESULT_CONTINUE;
 }
@@ -4583,6 +5114,10 @@ static enum MoveEndResult MoveEndMoveBlock(struct BattleCalcValues *cv)
         if (battlerDef == cv->battlerAtk)
             continue;
 
+        bool32 sourceItemMove = (cv->move == MOVE_KNOCK_OFF || cv->move == MOVE_THIEF)
+            && UsesPolishedBattleRules(cv->battlerAtk, battlerDef);
+        bool32 itemMoveHit = IsBattlerTurnDamaged(battlerDef, sourceItemMove ? INCLUDING_SUBSTITUTES : EXCLUDING_SUBSTITUTES)
+            && (!sourceItemMove || !(gBattleStruct->moveResultFlags[battlerDef] & MOVE_RESULT_NO_EFFECT));
         switch (cv->moveEffect)
         {
         case EFFECT_SPIT_UP:
@@ -4610,13 +5145,13 @@ static enum MoveEndResult MoveEndMoveBlock(struct BattleCalcValues *cv)
             break;
         case EFFECT_KNOCK_OFF:
             if (gBattleMons[battlerDef].item != ITEM_NONE
-             && IsBattlerTurnDamaged(battlerDef, EXCLUDING_SUBSTITUTES)
-             && !(UsesPolishedBattleRules(cv->battlerAtk, battlerDef) && gBattleMons[battlerDef].volatiles.substitute)
+             && itemMoveHit
+             && !(sourceItemMove && DoesSubstituteBlockMove(cv->battlerAtk, battlerDef, cv->move))
              && !(!UsesPolishedBattleRules(cv->battlerAtk, battlerDef) && B_KNOCK_OFF_REMOVAL >= GEN_5 && side == B_SIDE_PLAYER && !(gBattleTypeFlags & BATTLE_TYPE_TRAINER))
              && CanBattlerGetOrLoseItem(battlerDef, cv->battlerAtk, gBattleMons[battlerDef].item)
              && (UsesPolishedBattleRules(cv->battlerAtk, battlerDef) || !NoAliveMonsForEitherParty()))
             {
-                if (!IsBattlerAlive(cv->battlerAtk) && GetConfig(B_FAINT_MOVE_EFFECT_TIMING) < GEN_CHAMPIONS)
+                if (!sourceItemMove && !IsBattlerAlive(cv->battlerAtk) && GetConfig(B_FAINT_MOVE_EFFECT_TIMING) < GEN_CHAMPIONS)
                     break;
 
                 if (cv->abilities[battlerDef] == ABILITY_STICKY_HOLD
@@ -4654,12 +5189,12 @@ static enum MoveEndResult MoveEndMoveBlock(struct BattleCalcValues *cv)
             }
             break;
         case EFFECT_STEAL_ITEM:
-            if (!IsBattlerTurnDamaged(battlerDef, EXCLUDING_SUBSTITUTES)
-             || (UsesPolishedBattleRules(cv->battlerAtk, battlerDef) && gBattleMons[battlerDef].volatiles.substitute)
+            if (!itemMoveHit
+             || (sourceItemMove && DoesSubstituteBlockMove(cv->battlerAtk, battlerDef, cv->move))
              || (gBattleMons[cv->battlerAtk].item != ITEM_NONE
               && !(UsesPolishedBattleRules(cv->battlerAtk, battlerDef) && !(gBattleTypeFlags & BATTLE_TYPE_TRAINER) && IsOnPlayerSide(cv->battlerAtk)))
              || gBattleMons[battlerDef].item == ITEM_NONE
-             || (!IsBattlerAlive(cv->battlerAtk) && GetConfig(B_FAINT_MOVE_EFFECT_TIMING) < GEN_CHAMPIONS)
+             || (!sourceItemMove && !IsBattlerAlive(cv->battlerAtk) && GetConfig(B_FAINT_MOVE_EFFECT_TIMING) < GEN_CHAMPIONS)
              || !CanStealItem(cv->battlerAtk, battlerDef, gBattleMons[battlerDef].item))
                 continue;
 
@@ -5204,6 +5739,18 @@ static enum MoveEndResult MoveEndHitEscape(struct BattleCalcValues *cv)
 
 static enum MoveEndResult MoveEndPolishedActionCheckpoint(struct BattleCalcValues *cv)
 {
+    if (gBattleStruct->polishedDisobedientBattlers & (1u << cv->battlerAtk))
+    {
+        // EndDisobedience runs after an alternate move too. It clears the
+        // source last/counter move and the entire shared Encore/Choice slot.
+        gBattleStruct->polishedDisobedientBattlers &= ~(1u << cv->battlerAtk);
+        gLastMoves[cv->battlerAtk] = MOVE_NONE;
+        gLastResultingMoves[cv->battlerAtk] = MOVE_NONE;
+        gBattleStruct->polishedChoiceMove[cv->battlerAtk] = MOVE_NONE;
+        gBattleMons[cv->battlerAtk].volatiles.encoredMove = MOVE_NONE;
+        gBattleMons[cv->battlerAtk].volatiles.encoreTimer = 0;
+        gBattleMons[cv->battlerAtk].volatiles.encoredMovePos = 0;
+    }
     if (PolishedResolveActionFaints())
         return MOVEEND_RESULT_RUN_SCRIPT;
     gBattleScripting.moveendState++;
@@ -5221,6 +5768,11 @@ static enum MoveEndResult MoveEndPolishedDeferredSwitch(struct BattleCalcValues 
      && kind != POLISHED_SWITCH_NONE && IsBattlerAlive(outgoing)
      && CanBattlerSwitch(outgoing))
     {
+        // Source only selects SpikesDamage_CheckMoldBreaker for Roar's
+        // exact forced-target flags. Item entries use ordinary SpikesDamage,
+        // even when the move attacker or outgoing holder has Mold Breaker.
+        if (kind == POLISHED_SWITCH_CARD || kind == POLISHED_SWITCH_BUTTON || kind == POLISHED_SWITCH_PACK)
+            gBattleStruct->moldBreakerActive = FALSE;
         switch (kind)
         {
         case POLISHED_SWITCH_PIVOT:
@@ -5586,17 +6138,20 @@ static enum MoveEndResult MoveEndRampage(struct BattleCalcValues *cv)
     if ((B_POLISHED_MOVE_BALANCE && IsPolishedFutureSightImpact(cv->battlerAtk, cv->battlerDef, cv->move))
      || gBattleMons[cv->battlerAtk].volatiles.rampageTurns == 0
      || gSpecialStatuses[cv->battlerAtk].dancerUsedMove
-     || B_RAMPAGE_CONFUSION < GEN_5)
+     || (!UsesPolishedActionRules(cv->move) && GetConfig(B_RAMPAGE_CONFUSION) < GEN_5)
+     || (UsesPolishedActionRules(cv->move) && !IsBattlerAlive(cv->battlerAtk)))
     {
         result = MOVEEND_RESULT_CONTINUE;
     }
     else if (--gBattleMons[cv->battlerAtk].volatiles.rampageTurns == 0)
     {
         CancelMultiTurnMoves(cv->battlerAtk);
-        if (CanBeConfused(cv->battlerAtk, cv->battlerAtk))
+        if (UsesPolishedActionRules(cv->move)
+          ? (!gBattleMons[cv->battlerAtk].volatiles.confusionTimer && GetBattlerAbility(cv->battlerAtk) != ABILITY_OWN_TEMPO)
+          : CanBeConfused(cv->battlerAtk, cv->battlerAtk))
         {
             gBattleScripting.battler = cv->battlerAtk;
-            gBattleMons[cv->battlerAtk].volatiles.confusionTimer = RandomUniform(RNG_CONFUSION_TURNS, 2, B_CONFUSION_TURNS); // 2-5 turns
+            gBattleMons[cv->battlerAtk].volatiles.confusionTimer = RandomUniform(RNG_CONFUSION_TURNS, 2, UsesPolishedActionRules(cv->move) ? 5 : B_CONFUSION_TURNS);
             BattleScriptCall(BattleScript_ConfusionAfterRampage);
             result = MOVEEND_RESULT_BREAK;
         }
@@ -5604,6 +6159,12 @@ static enum MoveEndResult MoveEndRampage(struct BattleCalcValues *cv)
     else if (IsBattlerUnaffectedByMove(cv->battlerDef))
     {
         CancelMultiTurnMoves(cv->battlerAtk);
+        if (UsesPolishedActionRules(cv->move))
+        {
+            gLockedMoves[cv->battlerAtk] = MOVE_NONE;
+            gBattleMons[cv->battlerAtk].volatiles.multipleTurns = FALSE;
+            gBattleMons[cv->battlerAtk].volatiles.rampageTurns = 0;
+        }
         result = MOVEEND_RESULT_CONTINUE;
     }
 
@@ -5720,6 +6281,7 @@ static enum MoveEndResult MoveEndClearBits(struct BattleCalcValues *cv)
     gBattleStruct->toxicChainPriority = FALSE;
     gBattleStruct->flungItem = FLUNG_ITEM_NONE;
     gBattleStruct->blunderPolicy = FALSE;
+    gBattleStruct->polishedAccuracyState = POLISHED_ACCURACY_UNCHECKED;
     gBattleScripting.animTurn = 0;
     gBattleScripting.animTargetsHit = 0;
 
@@ -5820,6 +6382,7 @@ static enum MoveEndResult (*const sMoveEndHandlers[])(struct BattleCalcValues *c
     [MOVEEND_BEAK_BLAST] = MoveEndBeakBlast,
     [MOVEEND_POLISHED_CONTACT_ATTACKER] = MoveEndPolishedContactAttacker,
     [MOVEEND_ABILITIES] = MoveEndAbilities,
+    [MOVEEND_POLISHED_POST_HIT] = MoveEndPolishedPostHit,
     [MOVEEND_RESIST_BERRY_MESSAGE] = MoveEndResistBerryMessage,
     [MOVEEND_FORM_CHANGE_ON_HIT] = MoveEndFormChangeOnHit,
     [MOVEEND_ABILITIES_ATTACKER] = MoveEndAbilitiesAttacker,
@@ -5938,10 +6501,39 @@ static bool32 ShouldSkipStatChangeResolution(enum BattlerId battlerAtk)
     return numUnaffectedTargets == gBattlersCount;
 }
 
+static bool32 UsesPolishedPrimaryStatAccuracy(struct BattleCalcValues *cv)
+{
+    if (!UsesPolishedPreEffectAccuracy(cv))
+        return FALSE;
+
+    // Complete default-source scripts with checkhit before loweroppstat or
+    // raiseoppstat. Self buffs and damaging secondary changes are separate.
+    switch (cv->move)
+    {
+    case MOVE_LEER:
+    case MOVE_GROWL:
+    case MOVE_STRING_SHOT:
+    case MOVE_SCREECH:
+    case MOVE_SMOKESCREEN:
+    case MOVE_FLASH:
+    case MOVE_SCARY_FACE:
+    case MOVE_CHARM:
+    case MOVE_SWAGGER:
+        return TRUE;
+    default:
+        return FALSE;
+    }
+}
+
 static enum MoveResult StatChangeSubstitute(struct BattleCalcValues *cv)
 {
     if (ShouldSkipStatChangeResolution(cv->battlerAtk))
         return MOVE_RESULT_DONE;
+
+    // FarChangeStat owns the ordinary target doll check, after checkhit.
+    // Swagger is the source checkhit exception and rejects the doll first.
+    if (UsesPolishedPrimaryStatAccuracy(cv) && cv->move != MOVE_SWAGGER)
+        return MOVE_RESULT_CONTINUE;
 
     for (enum BattlerId battler = 0; battler < gBattlersCount; battler++)
     {
@@ -6008,6 +6600,29 @@ static enum MoveResult StatChangeCanAnyChange(struct BattleCalcValues *cv)
 
         st.certain = cv->battlerAtk == cv->battlerDef;
 
+        if (UsesPolishedPrimaryStatAccuracy(cv) && !st.certain
+         && !(cv->move == MOVE_SWAGGER
+           && IsSubstituteProtected(cv->battlerAtk, cv->battlerDef, cv->abilities[cv->battlerAtk], cv->move))
+         && DoesMoveMissTarget(cv))
+        {
+            // An accuracy miss wins over caps and defensive stat abilities.
+            // In particular, it can consume Blunder Policy at a stat floor.
+            gBattleStruct->moveResultFlags[cv->battlerDef] = MOVE_RESULT_MISSED;
+            if (cv->holdEffects[cv->battlerAtk] == HOLD_EFFECT_BLUNDER_POLICY)
+                gBattleStruct->blunderPolicy = TRUE;
+            continue;
+        }
+
+        if (UsesPolishedPrimaryStatAccuracy(cv) && !st.certain
+         && IsSubstituteProtected(cv->battlerAtk, cv->battlerDef, cv->abilities[cv->battlerAtk], cv->move))
+        {
+            // FarChangeStat checks the current doll only after the original
+            // accuracy result. Native stat resolution skips this shared check
+            // with ignoreCertainFailure because it normally runs earlier.
+            gBattleStruct->moveResultFlags[cv->battlerDef] = MOVE_RESULT_DOESNT_AFFECT_FOE;
+            continue;
+        }
+
         if (CanAnyStatChange(cv, &st))
             gBattleStruct->moveResultFlags[cv->battlerDef] = MOVE_RESULT_ATTEMPT_STAT_CHANGE;
         else
@@ -6026,6 +6641,9 @@ static enum MoveResult StatChangeCanAnyChange(struct BattleCalcValues *cv)
 
 static enum MoveResult StatChangeAccuracy(struct BattleCalcValues *cv)
 {
+    if (UsesPolishedPrimaryStatAccuracy(cv))
+        return MOVE_RESULT_CONTINUE;
+
     for (enum BattlerId battler = 0; battler < gBattlersCount; battler++)
     {
         if (ShouldSkipStatChangeOnBattler(cv->battlerAtk, battler)
@@ -6361,13 +6979,20 @@ static enum Move GetRecordedMove(void)
     // Source move callers and Sketch clear last/counter-move history. Called-move
     // text does not restore it. Apply this at PP deduction as well as move
     // end, including submove failure paths and Cursed Body's intervening hook.
-    if (B_POLISHED_MOVE_BALANCE)
+    if (UsesPolishedActionRules(gChosenMove))
     {
         enum BattleMoveEffects effect = GetMoveEffect(GetOriginallyUsedMove(gChosenMove));
+        // Source IN_ABILITY returns before even the caller's history clear
+        // can apply to the reflector. Preserve its own previous record.
+        if (gBattleStruct->bouncedMoveIsUsed
+         && (gBattleStruct->polishedCalledMoveBattlers & (1u << gBattlerAttacker)))
+            return gLastMoves[gBattlerAttacker];
         if (effect == EFFECT_SLEEP_TALK || effect == EFFECT_METRONOME)
             return MOVE_NONE;
         if ((effect == EFFECT_SKETCH || effect == EFFECT_TRANSFORM) && UsesPolishedBattleRules(gBattlerAttacker, gBattlerTarget))
             return MOVE_NONE;
+        if (gBattleStruct->polishedCalledMoveBattlers & (1u << gBattlerAttacker))
+            return gLastMoves[gBattlerAttacker];
     }
     return gChosenMove;
 }
@@ -6387,6 +7012,10 @@ static void SetSameMoveTurnValues(enum BattleMoveEffects moveEffect)
             gBattleMons[gBattlerAttacker].volatiles.furyCutterCounter = 0;
         break;
     case EFFECT_ROLLOUT:
+        // Source rolloutpower returns before either the counter or lock update
+        // while asleep, including a Rollout selected by Sleep Talk.
+        if (UsesPolishedActionRules(gCurrentMove) && (gBattleMons[gBattlerAttacker].status1 & STATUS1_SLEEP))
+            break;
         if (increment && ++gBattleMons[gBattlerAttacker].volatiles.rolloutTimer < 5)
         {
             gBattleMons[gBattlerAttacker].volatiles.multipleTurns = TRUE;
@@ -6408,6 +7037,11 @@ static void SetSameMoveTurnValues(enum BattleMoveEffects moveEffect)
         break;
     }
 
+    if (!UsesPolishedActionRules(gCurrentMove))
+    {
+        gBattleStruct->polishedMetronomeMove[gBattlerAttacker] = MOVE_NONE;
+        gBattleStruct->polishedMetronomeCount[gBattlerAttacker] = 0;
+    }
     if (increment)
         gBattleMons[gBattlerAttacker].volatiles.metronomeItemCounter++;
     else

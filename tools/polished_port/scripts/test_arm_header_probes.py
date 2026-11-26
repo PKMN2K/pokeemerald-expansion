@@ -37,7 +37,12 @@ def run():
                     isinstance(value, ast.Constant) and value.value == "arm-none-eabi-gcc"
                     for value in ast.walk(node)):
                 continue
-            assert not node.args.args and not node.args.kwonlyargs, (path.name, node.name)
+            # Layout extractors are zero-argument compile-only probes. The
+            # production fixture linkers also invoke GCC, but take code and
+            # profile inputs and require a completed shipping ROM/map. Their
+            # scripts exercise them after the production build instead.
+            if node.args.args or node.args.kwonlyargs:
+                continue
             probe = getattr(importlib.import_module(path.stem), node.name)
             try:
                 values = probe()
@@ -47,7 +52,7 @@ def run():
             assert isinstance(values, dict) and values, (path.name, node.name)
             count += 1
             print(f"PASS: {path.name}:{node.name} ({len(values)} values)", flush=True)
-    assert count >= 9, "Emulator compiler probes were not discovered"
+    assert count >= 12, "Emulator compiler probes were not discovered"
     print(f"PASS: all {count} emulator compiler probes", flush=True)
 
 

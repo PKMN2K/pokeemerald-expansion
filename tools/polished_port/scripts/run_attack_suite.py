@@ -21,6 +21,14 @@ import build_attack_suite as vectors
 ROOT = vectors.source.ROOT
 ANSI = re.compile(r'\x1b\[[0-9;]*m')
 
+# These existing native-named fixtures were individually reconciled with the
+# source path. Run them under the source build too; their native run alone is
+# not evidence for that path. Keep exact names and expected counts fail-closed.
+REVIEWED_SHARED_TESTS = [
+    dict(label='source-cud-kee', name='Cud Chew will activate Kee Berry effect again on the next turn',
+         path='test/battle/ability/cud_chew.c', count=1),
+]
+
 
 def test_catalog():
     result = []
@@ -83,6 +91,10 @@ def main():
     manifest_path = ROOT/'tools/polished_port/manifests/attack_suite.json'
     manifest = json.loads(manifest_path.read_text())
     catalog = test_catalog()
+    for test in REVIEWED_SHARED_TESTS:
+        body = (ROOT / test['path']).read_text()
+        names = re.findall(r'\b(?:TEST|\w*BATTLE_TEST)\("([^"\n]+)"', body)
+        assert names.count(test['name']) == test['count'], f'Changed reviewed shared fixture: {test["name"]}'
     source_count = sum(t['name'].startswith('Polished') for t in catalog)
     ai_count = len(catalog) - source_count
     assert source_count >= 503 and ai_count == 6
@@ -91,6 +103,9 @@ def main():
                   manifest_sha256=hashlib.sha256(manifest_path.read_bytes()).hexdigest(),
                   source_moves=len(manifest['moves']), source_effects=len(manifest['effects']),
                   source_test_groups=source_count, ai_test_groups=ai_count, tests=catalog,
+                  reviewed_shared_source_tests=REVIEWED_SHARED_TESTS,
+                  suite2_reconciliation=manifest['suite2_reconciliation'],
+                  original_shared_obligations=manifest['original_shared_obligations'],
                   complete_behavior_parity=False, unverified_effects=[e['effect'] for e in manifest['effects']
                       if not e['complete_behavior_parity']], shared_open_obligations=manifest['shared_open_obligations'],
                   execution='not run' if args.check else 'running', runs=[])
@@ -106,8 +121,10 @@ def main():
         jobs = []
         if args.native_regression:
             jobs.append(('native', ['POLISHED_MOVE_BALANCE_TEST=0', 'TESTS='], None))
-        jobs += [('source', ['POLISHED_MOVE_BALANCE_TEST=1', 'TESTS=Polished'], source_count),
-                 ('ai', ['POLISHED_MOVE_BALANCE_TEST=1', 'TESTS=AI thinking time'], ai_count)]
+        jobs += [('source', ['POLISHED_MOVE_BALANCE_TEST=1', 'TESTS=Polished'], source_count)]
+        jobs += [(test['label'], ['POLISHED_MOVE_BALANCE_TEST=1', 'TESTS=' + test['name']], test['count'])
+                 for test in REVIEWED_SHARED_TESTS]
+        jobs += [('ai', ['POLISHED_MOVE_BALANCE_TEST=1', 'TESTS=AI thinking time'], ai_count)]
         for label, extra, count in jobs:
             result = run(base+extra, args.output/(label+'.log'), args.timeout, count)
             report['runs'].append(result)
@@ -120,7 +137,10 @@ def main():
         report['execution'] = 'passed'
         save()
     print(f"255 moves / 133 effects; {source_count} source groups + {ai_count} AI groups; execution: {report['execution']}")
-    print(f"Complete source attack parity: OPEN ({len(report['unverified_effects'])} effects retain unverified branches/interactions).")
+    review = report['suite2_reconciliation']
+    print(f"Reviewed Suite 2 mechanical implementation: {review['implementation_status'].upper()}; review: {review['closure_review']}; validation: {review['validation_record']}.")
+    print(f"Complete source attack parity: OPEN ({len(report['unverified_effects'])} conservative full-context flags; Suite 3 contexts, AI, exact RNG and presentation remain open).")
+    print('Documented deviation: reachable Light Metal zero-weight nontermination uses a bounded target fallback; literal source parity is not claimed for that input.')
     print(report_path)
     return 2 if args.strict_completeness and report['unverified_effects'] else 0
 

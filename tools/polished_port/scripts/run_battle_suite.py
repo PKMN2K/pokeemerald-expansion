@@ -18,6 +18,7 @@ ROOT = coverage.ROOT
 
 
 def markdown(report):
+    review = report['suite2_reconciliation']
     rows = ['# Whole battle parity suite', '',
             f'Source: `{report["source_commit"]}`. Target: `{report["target_commit"]}`.', '',
             f'Regression execution: **{report["execution"]}**. Complete battle parity: **OPEN**.', '',
@@ -25,7 +26,19 @@ def markdown(report):
             f'{report["source_moves"]} moves; {report["source_effects"]} effects; {report["source_test_groups"]} source test groups.', '',
             'Inventory and passing scenarios do not certify every branch. Lexical blocks include data labels, aliases and conditional variants. '
             'The six AI groups measure frame budgets, not source decision parity.', '',
-            '| Domain | Status | Remaining behavioral evidence |', '| --- | --- | --- |']
+            '## Reviewed Suite 2 implementation', '',
+            f'Mechanical implementation: **{review["implementation_status"]}**. '
+            f'Review: `{review["closure_review"]}`. Validation: `{review["validation_record"]}`.', '',
+            review['interpretation'], '',
+            '## Documented source deviation', '']
+    for deviation in review['documented_deviations']:
+        rows.append(f'- {deviation["source_behavior"]} {deviation["target_behavior"]} {deviation["disposition"]} '
+                    f'Source review: `{deviation["review"]}`.')
+    rows += ['', '## Original Suite 3 obligations remaining open', '']
+    rows += ['- ' + obligation for obligation in report['shared_open_obligations']]
+    rows += ['', '## Conservative whole-battle inventory', '',
+             report['inventory_status_interpretation'], '',
+             '| Domain | Whole-battle status | Original inventory scope |', '| --- | --- | --- |']
     for domain in report['domains']:
         rows.append(f'| {domain["title"]} | {domain["status"]} | {" ".join(domain["obligations"])} |')
     rows += ['', 'The machine-readable report contains the exact test catalog, source manifest hash, logs and execution results.', '']
@@ -59,6 +72,10 @@ def main():
         source_moves=inventory['source_moves'], source_effects=inventory['source_effects'],
         source_test_groups=sum(t['name'].startswith('Polished') for t in inventory['regression_tests']),
         domains=inventory['domains'], unverified_effects=inventory['unverified_effects'],
+        suite2_reconciliation=inventory['suite2_reconciliation'],
+        original_shared_obligations=inventory['original_shared_obligations'],
+        shared_open_obligations=inventory['shared_open_obligations'],
+        inventory_status_interpretation=inventory['inventory_status_interpretation'],
         complete_behavior_parity=False, execution='not run' if args.check else 'running', runs=[])
     def save():
         (args.output/'battle-suite.json').write_text(json.dumps(report, indent=2)+'\n')
@@ -89,7 +106,8 @@ def main():
     try:
         coverage.require_complete(inventory)
     except AssertionError as error:
-        print(error)
+        print('Whole-battle strict completeness remains OPEN; the reviewed Suite 2 implementation is recorded separately above.')
+        print('Conservative inventory detail:', error)
         return 2 if args.strict_completeness else 0
     return 0
 

@@ -158,14 +158,13 @@ def build():
                'Ordinary reflection is blocked by Substitute unless the move is in the explicit bypass or sound list, or its original user has Infiltrator.',
                'Roar is a sound exception: Substitute does not prevent its reflection.',
                'Mold Breaker suppresses Magic Bounce; reflected moves cannot bounce again.',
-               'Magic Bounce sets IN_ABILITY around ResetTurn, so the returned move skips the accuracy roll; ordinary later actions still check accuracy.',
+               'Magic Bounce sets IN_ABILITY around ResetTurn, so the returned move skips a new accuracy roll and retains the original wAttackMissed result. An original miss is not converted to a hit; ordinary later actions clear the result and check accuracy.',
                'Twenty-nine source reflection candidates check priority before bounceback; their Dark immunity prevents Magic Bounce activation. Spikes and Toxic Spikes omit checkpriority.',
-               'Growl, Roar, Sing, Supersonic and Screech check priority before reflection. Their Prankster branch checks Dark immunity and returns before Soundproof; positive-priority Armor Tail still blocks the four priority-zero moves after Prankster raises them.'],
+               'Growl, Roar, Sing, Supersonic and Screech check priority before reflection. The checkpriority Prankster branch checks Dark immunity and returns before its Soundproof check; Sing additionally runs checkpowder/CheckNullificationAbilities earlier, so Soundproof still blocks Sing. Positive-priority Armor Tail blocks the four priority-zero moves after Prankster raises them.'],
         adapter='Retain the matching native reflection-candidate accessor, verified against independently generated source expectations for all 255 moves. Use the pinned PP registry for source membership and a generated 16-entry Substitute exception table. Track the reflection origin in an existing battle-only padding bit so source Magic Bounce skips returned accuracy without changing Magic Coat. Derive the five Normal-type sound status moves whose scripts check priority before reflection; apply source Prankster Dark/Soundproof ordering only during execution. Derive source types for all 29 candidates with pre-reflection priority checks and apply their Dark immunity before Magic Bounce in singles without active gimmicks. The 24 newly covered moves retain native Magic Coat ordering and shared AI estimates.',
-        gaps=['Reflected-effect execution and non-accuracy hit gates, other conditional pre-reflection gates, full timing/priority/ability ordering, AI and presentation remain separate audits.',
-              'The original pre-reflection hit-check RNG consumption and source random stream are not imported by the returned-accuracy adapter.',
-              'Ability-triggered nested move execution is outside this ordinary-move scope.',
-              'Optional moves, doubles and active gimmicks retain native reflection paths. Magic Coat keeps native returned accuracy and the tested ordering for the 24 newly covered moves; combinations with the five earlier sound priority adapters remain unaudited.'])
+        gaps=['This historical static-candidacy adapter does not certify whole move or ability parity. The later Suite 2 command reconciliation and action_resolution manifest own original miss/immunity preservation, manual miss routing and script-specific nullification evidence.',
+              'The exact shared source RNG stream and call-state parity, AI and source presentation retain their original integration owners.',
+              'Optional moves, doubles, active gimmicks and Magic Coat retain their documented native boundaries; the consolidated Suite 2 review records the distinguishing execution controls.'])
     return {TABLE: table, EXPECTATIONS: header, MANIFEST: json.dumps(report, indent=2) + '\n'}
 
 

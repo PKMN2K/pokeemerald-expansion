@@ -404,6 +404,22 @@ static bool32 HandleEndTurnAffection(enum BattlerId battler)
 
     gBattleStruct->eventState.endTurnBattler++;
 
+    if (UsesPolishedLifecycle())
+    {
+        // HandleAffectionSelfCure is ordered after weather and before Future
+        // Sight, checks either party, and is independent of ability suppression.
+        if (IsBattlerAlive(battler) && GetPolishedAffectionLevel(battler) >= 2
+         && RandomUniform(RNG_POLISHED_AFFECTION_CURE, 0, 4) == 0
+         && gBattleMons[battler].status1 != STATUS1_NONE)
+        {
+            gBattlerAttacker = battler;
+            gBattleCommunication[MULTISTRING_CHOOSER] = 1;
+            BattleScriptCall(BattleScript_AffectionBasedStatusHeal);
+            return TRUE;
+        }
+        return FALSE;
+    }
+
     if (!B_AFFECTION_MECHANICS
      || !IsOnPlayerSide(battler))
         return effect;
@@ -598,7 +614,8 @@ static bool32 HandleEndTurnFirstEventBlock(enum BattlerId battler)
         gBattleStruct->eventState.endTurnBlock++;
         break;
     case FIRST_EVENT_BLOCK_THRASH:
-        if (B_RAMPAGE_CONFUSION < GEN_5
+        if (!UsesPolishedBattleRules(battler, GetOppositeBattler(battler))
+         && GetConfig(B_RAMPAGE_CONFUSION) < GEN_5
          && gBattleMons[battler].volatiles.rampageTurns
          && gBattleMons[battler].volatiles.semiInvulnerable != STATE_SKY_DROP_TARGET)
         {
@@ -659,7 +676,10 @@ static bool32 HandleEndTurnFirstEventBlock(enum BattlerId battler)
         break;
     case FIRST_EVENT_BLOCK_STATUS_ABILITIES:
         gBattleStruct->eventState.endTurnBlock++;
-        if (sPolishedEndTurn.active)
+        if (sPolishedEndTurn.active
+         && !((gBattleStruct->polishedNappingBattlers & (1u << battler))
+           && (gBattleMons[battler].status1 & STATUS1_SLEEP)
+           && (GetBattlerAbility(battler) == ABILITY_INSOMNIA || GetBattlerAbility(battler) == ABILITY_VITAL_SPIRIT)))
             effect = TryImmunityAbilityHealStatus(battler) != IMMUNITY_NO_EFFECT;
         break;
     }
@@ -1608,7 +1628,10 @@ static bool32 HandleEndTurnThirdEventBlock(enum BattlerId battler)
         break;
     case THIRD_EVENT_BLOCK_STATUS_ABILITIES:
         gBattleStruct->eventState.endTurnBlock++;
-        if (sPolishedEndTurn.active)
+        if (sPolishedEndTurn.active
+         && !((gBattleStruct->polishedNappingBattlers & (1u << battler))
+           && (gBattleMons[battler].status1 & STATUS1_SLEEP)
+           && (GetBattlerAbility(battler) == ABILITY_INSOMNIA || GetBattlerAbility(battler) == ABILITY_VITAL_SPIRIT)))
             effect = TryImmunityAbilityHealStatus(battler) != IMMUNITY_NO_EFFECT;
         break;
     }
@@ -2095,18 +2118,22 @@ static const ActivationTiming sPolishedHealingTimings[] =
 
 bool32 PolishedHandleUnnerveExit(enum BattlerId battler)
 {
-    if (!UsesPolishedLifecycle() || gBattleMons[battler].ability != ABILITY_UNNERVE
-     || !gBattleStruct->battlerState[battler].notOnField)
-        return FALSE;
     // SuppressUserAbilities runs both sweeps immediately when Unnerve leaves,
     // including a faint checkpoint between two residual phases. Keep nested
     // item iteration separate from the enclosing end-turn/entry scheduler.
     if (!sPolishedExitItems.active)
     {
+        if (!UsesPolishedLifecycle() || gBattleMons[battler].ability != ABILITY_UNNERVE
+         || (!gBattleStruct->battlerState[battler].notOnField && gBattleMons[battler].hp != 0))
+            return FALSE;
         sPolishedExitItems.active = TRUE;
         sPolishedExitItems.attacker = gBattlerAttacker;
         sPolishedExitItems.target = gBattlerTarget;
         sPolishedExitItems.scripting = gBattleScripting.battler;
+        // HP zero alone does not disable Unnerve before faint cleanup. Source
+        // selfdestruct explicitly clears the stored ability before both sweeps.
+        if (!gBattleStruct->battlerState[battler].notOnField)
+            gBattleMons[battler].ability = ABILITY_NONE;
         SortPolishedBattlersBySpeed(sPolishedExitItems.order);
     }
     while (sPolishedExitItems.phase < 2)
@@ -2120,6 +2147,7 @@ bool32 PolishedHandleUnnerveExit(enum BattlerId battler)
             continue;
         }
         enum BattlerId holder = sPolishedExitItems.order[sPolishedExitItems.index];
+        gBattleStruct->polishedSelfHitBattlers &= ~(1u << holder);
         ActivationTiming timing = IsPolishedLeppaActivation;
         if (sPolishedExitItems.phase == 0)
             sPolishedExitItems.index++;
@@ -2147,6 +2175,7 @@ bool32 PolishedHandleUnnerveExit(enum BattlerId battler)
 
 static bool32 HandlePolishedHealingItems(enum BattlerId battler)
 {
+    gBattleStruct->polishedSelfHitBattlers &= ~(1u << battler);
     u32 block = gBattleStruct->eventState.endTurnBlock;
     bool32 mirror = sPolishedHealingTimings[block] == IsMirrorHerbActivation;
     if (mirror && PolishedCheckMirrorHerb())

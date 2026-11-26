@@ -28,7 +28,7 @@ AI_SINGLE_BATTLE_TEST("Polished patterned Magikarp evolves through the real batt
     }
 }
 
-AI_SINGLE_BATTLE_TEST("Polished evolution refreshes source types, consumes the held item and runs the new entry ability")
+AI_SINGLE_BATTLE_TEST("Polished evolution refreshes source types, preserves the source active item and runs the new entry ability")
 {
     GIVEN {
         WITH_CONFIG(POLISHED_EVOLUTIONS, TRUE);
@@ -52,8 +52,8 @@ AI_SINGLE_BATTLE_TEST("Polished evolution refreshes source types, consumes the h
         EXPECT_EQ(player->species, SPECIES_POLITOED);
         EXPECT_EQ(player->types[1], TYPE_GRASS);
         EXPECT_EQ(player->ability, ABILITY_DRIZZLE);
-        EXPECT_EQ(player->item, ITEM_NONE);
-        EXPECT_EQ(GetMonData(&gParties[B_TRAINER_PLAYER][0], MON_DATA_HELD_ITEM), ITEM_NONE);
+        EXPECT_EQ(player->item, B_POLISHED_MOVE_BALANCE ? ITEM_KINGS_ROCK : ITEM_NONE);
+        EXPECT_EQ(GetMonData(&gParties[B_TRAINER_PLAYER][0], MON_DATA_HELD_ITEM), B_POLISHED_MOVE_BALANCE ? ITEM_KINGS_ROCK : ITEM_NONE);
         EXPECT_EQ(player->moves[3], MOVE_GIGA_DRAIN);
         EXPECT(gBattleWeather & B_WEATHER_RAIN);
     }

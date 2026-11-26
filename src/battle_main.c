@@ -204,7 +204,7 @@ EWRAM_DATA u8 gBideTarget[MAX_BATTLERS_COUNT] = {0};
 EWRAM_DATA u32 gSideStatuses[NUM_BATTLE_SIDES] = {0};
 EWRAM_DATA struct SideTimer gSideTimers[NUM_BATTLE_SIDES] = {0};
 EWRAM_DATA u16 gPauseCounterBattle = 0;
-EWRAM_DATA u16 gPaydayMoney = 0;
+EWRAM_DATA u32 gPaydayMoney = 0;
 EWRAM_DATA u8 gBattleCommunication[BATTLE_COMMUNICATION_ENTRIES_COUNT] = {0};
 EWRAM_DATA u8 gBattleOutcome = 0;
 EWRAM_DATA struct ProtectStruct gProtectStructs[MAX_BATTLERS_COUNT] = {0};
@@ -2783,6 +2783,7 @@ static void BattleStartClearSetData(void)
 {
     ResetPolishedEndTurn();
     ResetPolishedMirrorHerbBoosts();
+    gBattleStruct->polishedCalledMoveBattlers = 0;
     s32 i;
 
     TurnValuesCleanUp(FALSE);
@@ -2810,6 +2811,9 @@ static void BattleStartClearSetData(void)
         gPalaceSelectionBattleScripts[i] = NULL;
         gBattleStruct->lastTakenMove[i] = MOVE_NONE;
         gBattleStruct->choicedMove[i] = MOVE_NONE;
+        gBattleStruct->polishedChoiceMove[i] = MOVE_NONE;
+        gBattleStruct->polishedMetronomeMove[i] = MOVE_NONE;
+        gBattleStruct->polishedMetronomeCount[i] = 0;
         gBattleStruct->lastTakenMoveFrom[i][0] = MOVE_NONE;
         gBattleStruct->lastTakenMoveFrom[i][1] = MOVE_NONE;
         gBattleStruct->lastTakenMoveFrom[i][2] = MOVE_NONE;
@@ -2883,6 +2887,8 @@ static void BattleStartClearSetData(void)
         {
             gBattleStruct->partyState[trainer][i].usedHeldItem = ITEM_NONE;
             gBattleStruct->itemLost[trainer][i].originalItem = GetMonData(&gParties[trainer][i], MON_DATA_HELD_ITEM);
+            if (trainer == B_TRAINER_PLAYER)
+                gBattleStruct->polishedItemBackup[i] = gBattleStruct->itemLost[trainer][i].originalItem;
             gPartyCriticalHits[i] = 0;
         }
     }
@@ -2936,6 +2942,13 @@ static void ClearSetDataOnLeave(enum BattlerId battler)
     gBattleStruct->battlerState[battler].canPickupItem = FALSE;
     gBattleStruct->battlerState[battler].wasAboveHalfHp = gBattleMons[battler].hp > gBattleMons[battler].maxHP / 2;
     gBattleStruct->choicedMove[battler] = MOVE_NONE;
+    gBattleStruct->polishedChoiceMove[battler] = MOVE_NONE;
+    gBattleStruct->polishedMetronomeMove[battler] = MOVE_NONE;
+    gBattleStruct->polishedMetronomeCount[battler] = 0;
+    gBattleStruct->polishedNappingBattlers &= ~(1u << battler);
+    gBattleStruct->polishedSelfHitBattlers &= ~(1u << battler);
+    gBattleStruct->polishedSelfHitHpWrites &= ~(1u << battler);
+    gBattleStruct->polishedCalledMoveBattlers &= ~(1u << battler);
     gBattleStruct->palaceFlags &= ~(1u << battler);
 
     gLastMoves[battler] = MOVE_NONE;
@@ -2988,6 +3001,8 @@ void SwitchInClearSetData(enum BattlerId battler, struct Volatiles *volatilesCop
 {
     enum BattleMoveEffects effect = GetMoveEffect(gCurrentMove);
     bool32 sourceBaton = UsesPolishedLifecycle() && gCurrentMove == MOVE_BATON_PASS;
+    enum Move sourceMetronomeMove = gBattleStruct->polishedMetronomeMove[battler];
+    u32 sourceMetronomeCount = gBattleStruct->polishedMetronomeCount[battler];
 
     if (UsesPolishedLifecycle())
     {
@@ -3004,6 +3019,14 @@ void SwitchInClearSetData(enum BattlerId battler, struct Volatiles *volatilesCop
 
     // Data cleared both on switch and faint
     ClearSetDataOnLeave(battler);
+
+    // Enemy Baton Pass skips NewEnemyMonStatus. Player sendout separately
+    // clears SelectedMove, so only the enemy inherits caller usage history.
+    if (sourceBaton && !IsOnPlayerSide(battler))
+    {
+        gBattleStruct->polishedMetronomeMove[battler] = sourceMetronomeMove;
+        gBattleStruct->polishedMetronomeCount[battler] = sourceMetronomeCount;
+    }
 
     ClearIllusionMon(battler);
     if (effect != EFFECT_BATON_PASS)
@@ -3089,6 +3112,7 @@ void SwitchInClearSetData(enum BattlerId battler, struct Volatiles *volatilesCop
 
     // Reset damage to prevent things like red card activating if the switched-in mon is holding it
     gSpecialStatuses[battler].damagedByAttack = FALSE;
+    gSpecialStatuses[battler].polishedBerserkPending = FALSE;
 
     // Clear selected party ID so Revival Blessing doesn't get confused.
     gSelectedMonPartyId = PARTY_SIZE;
@@ -3120,15 +3144,29 @@ void FaintClearSetData(enum BattlerId battler)
 
     bool32 keepTransformed = gBattleMons[battler].volatiles.transformed;
     enum Species originalSpecies = gBattleMons[battler].volatiles.transformedMonSpecies;
+    bool32 keepTrapped = UsesPolishedLifecycle() && gBattleMons[battler].volatiles.escapePrevention;
+    enum BattlerId trapper = gBattleMons[battler].volatiles.battlerPreventingEscape;
     memset(&gBattleMons[battler].volatiles, 0, sizeof(struct Volatiles));
     gBattleMons[battler].volatiles.transformed = keepTransformed; // Edge case: Keep Transformed status to prevent triggering FORM_CHANGE_FAINT on transformed mons.
     gBattleMons[battler].volatiles.transformedMonSpecies = originalSpecies; // Also keep transformed species for ev and exp calculation
+    // Source keeps the opposing trap user's CANT_RUN when its victim faints.
+    // Declining the wild replacement prompt still checks that Mean Look;
+    // SendInUserPkmn, rather than the faint, releases the trapped side.
+    if (keepTrapped)
+    {
+        gBattleMons[battler].volatiles.escapePrevention = TRUE;
+        gBattleMons[battler].volatiles.battlerPreventingEscape = trapper;
+    }
 
     for (enum BattlerId i = 0; i < gBattlersCount; i++)
     {
         if (gBattleMons[i].volatiles.battlerWithSureHit == battler + 1)
             gBattleMons[i].volatiles.battlerWithSureHit = 0;
-        if (gBattleMons[i].volatiles.escapePrevention && gBattleMons[i].volatiles.battlerPreventingEscape == battler)
+        // Source FaintUserPokemon keeps the trap user's CANT_RUN flag until
+        // SendInUserPkmn clears it. A pending opposing Teleport/roamer escape
+        // still sees Mean Look between this faint and the replacement.
+        if (!UsesPolishedLifecycle() && gBattleMons[i].volatiles.escapePrevention
+         && gBattleMons[i].volatiles.battlerPreventingEscape == battler)
             gBattleMons[i].volatiles.escapePrevention = FALSE;
     }
 
@@ -4744,6 +4782,52 @@ static void SetActionsAndBattlersTurnOrder(void)
 {
     s32 turnOrderId = 0;
     enum BattlerId battler, battler2;
+
+    // SetChoiceLock runs at selection, even without a Choice item and even if
+    // the action will later fail. Forced continuation does not select anew.
+    for (battler = 0; battler < gBattlersCount; battler++)
+    {
+        // Source action selection resets Protect/Endure before cancellation,
+        // including non-move actions and callers such as Sleep Talk. An
+        // interrupted Protect/Endure itself preserves the previous count.
+        // Optional native protection moves retain their native counter path.
+        enum Move chosenMove = GetBattlerChosenMove(battler);
+        if (gChosenActionByBattler[battler] != B_ACTION_USE_MOVE
+         || !gBattleMons[battler].volatiles.multipleTurns)
+            gBattleStruct->polishedCalledMoveBattlers &= ~(1u << battler);
+
+        if (UsesPolishedBattleRules(battler, GetOppositeBattler(battler)))
+        {
+            if (gChosenActionByBattler[battler] != B_ACTION_USE_MOVE || chosenMove != MOVE_RAGE)
+                gBattleMons[battler].volatiles.rage = FALSE;
+            // Source MoveSelectionScreen drops a stale Metronome identity
+            // after learning/Transform. Forced continuations skip that menu.
+            if (IsOnPlayerSide(battler)
+             && gChosenActionByBattler[battler] == B_ACTION_USE_MOVE
+             && !gBattleMons[battler].volatiles.multipleTurns
+             && !gBattleMons[battler].volatiles.rechargeTimer)
+            {
+                u32 slot;
+                for (slot = 0; slot < MAX_MON_MOVES; slot++)
+                    if (gBattleMons[battler].moves[slot] == gBattleStruct->polishedMetronomeMove[battler])
+                        break;
+                if (slot == MAX_MON_MOVES)
+                    gBattleStruct->polishedMetronomeMove[battler] = MOVE_NONE;
+            }
+        }
+        if (UsesPolishedBattleRules(battler, GetOppositeBattler(battler))
+         && (gChosenActionByBattler[battler] != B_ACTION_USE_MOVE
+          || (chosenMove < MOVES_COUNT && gPolishedMovePP[chosenMove]
+           && (chosenMove != MOVE_PROTECT && chosenMove != MOVE_ENDURE))))
+            gBattleMons[battler].volatiles.consecutiveMoveUses = 0;
+
+        if (UsesPolishedBattleRules(battler, GetOppositeBattler(battler))
+         && gChosenActionByBattler[battler] == B_ACTION_USE_MOVE
+         && !gBattleMons[battler].volatiles.multipleTurns
+         && !gBattleMons[battler].volatiles.rechargeTimer
+         && gChosenMoveByBattler[battler] != MOVE_STRUGGLE)
+            gBattleStruct->polishedChoiceMove[battler] = GetBattlerChosenMove(battler);
+    }
 
     if (gBattleTypeFlags & BATTLE_TYPE_SAFARI)
     {

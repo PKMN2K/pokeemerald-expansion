@@ -122,7 +122,7 @@
     "Non-Poison Black Sludge ignores Magic Guard. Seed restores half nominal drain after Big Root and Ooze ignores receiver Magic Guard.",
     "Baton Pass preserves binding/Toxic counters, inherits a trap from the opponent, and frees the departing users Mean Look target; source CANT_RUN is stored on the trap user.",
     "Both sides finish hazards and entry items before entry abilities; Spikes precede Toxic Spikes. Replacements repeat after hazard KOs.",
-    "Ordinary Toxic Spikes entry synchronizes before berries; forced entry skips reflection; Substitute blocks the returned status.",
+    "Ordinary and item-forced Toxic Spikes entry synchronize before berries; only Roar-style forced-target entry skips reflection and applies Mold Breaker to hazards. Substitute blocks the returned status.",
     "Simultaneous campaign knockouts count as losses. Optional battle contexts keep native behavior."
   ],
   "live_bindings": [
@@ -176,8 +176,9 @@
       ]
     }
   ],
+  "suite2_interaction_review": "tools/polished_port/SUITE2_CLOSURE_REVIEW.md",
   "remaining": [
-    "Suite 2 owns remaining switching/Pursuit/action-faint chains and all move/status/ability/item branches, including interactions with these shared phases.",
+    "Whole-battle field-domain closure remains separate from the implemented Suite 1 foundations and reconciled Suite 2 interactions.",
     "Exact RNG stream, source messages/animations/timing and Tower/link-specific contracts belong to Suite 3."
   ]
 }

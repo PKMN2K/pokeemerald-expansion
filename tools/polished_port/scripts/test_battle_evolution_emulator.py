@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Press B in the real evolution UI and verify a safe return to the battle.
 
-Uses the compiled native battle-test fixture. Only the test runner's selection
+Uses a compiled native or source-rules battle-test fixture. Only the test runner's selection
 and headless flags are patched, exactly as `make check` does; gameplay memory,
 party data, scripts and the evolution implementation are never overwritten.
 """
@@ -45,6 +45,7 @@ def main():
     parser.add_argument("--driver", type=Path, required=True)
     parser.add_argument("--elf", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
+    parser.add_argument("--polished-rules", action="store_true", help="Expect the source-rules fixture held-item behavior")
     args = parser.parse_args()
     args.output.mkdir(parents=True, exist_ok=True)
     c = constants()
@@ -93,7 +94,10 @@ def main():
                 def battle_half(field):
                     return struct.unpack("<H", game.read(game.sym["gBattleMons"] + c[field], 2))[0]
                 assert battle_half("species") == expected_species
-                assert battle_half("item") == expected_item
+                # EvolveDuringBattle skips the active Item field; the temporary
+                # evolved party record has consumed it, but the live item and
+                # battle-start backup survive until the source restore path.
+                assert battle_half("item") == (c["kings_rock"] if args.polished_rules else expected_item)
                 assert battle_half("ability") == c["swift_swim" if cancel else "drizzle"]
                 assert not game.read(game.sym["gLeveledUpInBattle"], 1)[0] & 1
                 assert bool(game.u32(game.sym["gBattleWeather"]) & c["rain"]) == (not cancel)

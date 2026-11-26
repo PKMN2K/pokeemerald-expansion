@@ -31,7 +31,7 @@ static bool32 IsMirrorArmorReflected(struct BattleCalcValues *cv, struct StatCha
 // Utitily
 static void AdjustStatStage(struct BattleCalcValues *cv, struct StatChange *st);
 static bool32 CanAbilityPreventStatLoss(enum Ability ability);
-static bool32 AbilityPreventsSpecificStatDrop(enum Ability ability, enum Stat stat);
+static bool32 AbilityPreventsSpecificStatDrop(enum Ability ability, enum Stat stat, bool32 source);
 static u32 GetNumPositiveStats(struct StatChange *st);
 static u32 GetNumNegativeStats(struct StatChange *st);
 static void SetAdditionalEffectsOnStatChange(struct BattleCalcValues *cv, struct StatChange *st);
@@ -433,13 +433,22 @@ enum StatChangeResult TryStatChange(struct BattleCalcValues *cv, struct StatChan
     return result;
 }
 
+static bool32 UsesPolishedStatCommandRules(struct BattleCalcValues *cv)
+{
+    // Secondary changes use MOVE_NONE to request stage adjustment when their
+    // queued change is applied. They still run the current source move's
+    // FarChangeStat guards, including its unconditional Illuminate protection.
+    return UsesPolishedActionRules(cv->move == MOVE_NONE ? gCurrentMove : cv->move);
+}
+
 static enum StatChangeResult CanDecreaseStat(struct BattleCalcValues *cv, struct StatChange *st)
 {
     if (IsMistProtected(cv, st)
      || IsIntimidateBlocked(cv, st)
      || IsFlowerVeilBlocked(cv, st)
-     || IsClearAmuletBlocked(cv, st)
-     || IsAbilityBlocked(cv, st)
+     || (UsesPolishedStatCommandRules(cv)
+         ? IsAbilityBlocked(cv, st) || IsClearAmuletBlocked(cv, st)
+         : IsClearAmuletBlocked(cv, st) || IsAbilityBlocked(cv, st))
      || IsMirrorArmorReflected(cv, st))
         return STAT_CHANGE_DIDNT_WORK;
     return STAT_CHANGE_WORKED;
@@ -713,7 +722,10 @@ static bool32 IsMistProtected(struct BattleCalcValues *cv, struct StatChange *st
     if (st->certain)
         return FALSE;
 
-    if (!IsBattlerAlly(cv->battlerDef, cv->battlerAtk) && cv->abilities[cv->battlerAtk] == ABILITY_INFILTRATOR)
+    // The source's Guard Spec guard is unconditional at FarChangeStat's
+    // lowering check; Infiltrator only bypasses its preceding doll check.
+    if (!UsesPolishedStatCommandRules(cv)
+     && !IsBattlerAlly(cv->battlerDef, cv->battlerAtk) && cv->abilities[cv->battlerAtk] == ABILITY_INFILTRATOR)
         return FALSE;
 
     if (!st->onlyChecking)
@@ -842,7 +854,7 @@ static bool32 IsAbilityBlocked(struct BattleCalcValues *cv, struct StatChange *s
             st->script = BattleScript_AbilityNoStatLoss;
         }
     }
-    else if (AbilityPreventsSpecificStatDrop(cv->abilities[cv->battlerDef], st->stat))
+    else if (AbilityPreventsSpecificStatDrop(cv->abilities[cv->battlerDef], st->stat, UsesPolishedStatCommandRules(cv)))
     {
         if (!st->onlyChecking)
         {
@@ -962,12 +974,12 @@ static bool32 CanAbilityPreventStatLoss(enum Ability ability)
     }
 }
 
-static bool32 AbilityPreventsSpecificStatDrop(enum Ability ability, enum Stat stat)
+static bool32 AbilityPreventsSpecificStatDrop(enum Ability ability, enum Stat stat, bool32 source)
 {
     switch (ability)
     {
     case ABILITY_ILLUMINATE:
-        if (B_ILLUMINATE_EFFECT < GEN_9)
+        if (!source && GetConfig(B_ILLUMINATE_EFFECT) < GEN_9)
             return FALSE;
     case ABILITY_KEEN_EYE:
     case ABILITY_MINDS_EYE:
@@ -1153,8 +1165,10 @@ static void SetAdditionalEffectsOnStatChange(struct BattleCalcValues *cv, struct
     case EFFECT_DEFENSE_CURL:
         gBattleMons[cv->battlerDef].volatiles.defenseCurl = TRUE;
         break;
-    case EFFECT_MINIMIZE: // Write a tests that fails on max stat
-        if (gBattleStruct->moveResultFlags[cv->battlerDef] & MOVE_RESULT_STAT_CHANGED)
+    case EFFECT_MINIMIZE:
+        // Source runs minimize after ForceRaiseStat even when Evasion is capped.
+        if (UsesPolishedActionRules(cv->move)
+         || (gBattleStruct->moveResultFlags[cv->battlerDef] & MOVE_RESULT_STAT_CHANGED))
             gBattleMons[cv->battlerDef].volatiles.minimize = TRUE;
         break;
     case EFFECT_NO_RETREAT:

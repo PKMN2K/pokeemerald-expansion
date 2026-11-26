@@ -137,7 +137,7 @@ struct SpecialStatus
     u8 multiHitOn:1;
     u8 teraShellAbilityDone:1;
     u8 backUpTarget:3;
-    u8 padding1:1;
+    u8 polishedBerserkPending:1;
     // End of byte
     enum QueuedSwitch queuedSwitch;
     struct StatStages statStageQueue[NUM_BATTLE_STATS];
@@ -647,6 +647,17 @@ struct BattleStruct
     void (*savedCallback)(void);
     enum Item chosenItem[MAX_BATTLERS_COUNT];
     enum Move choicedMove[MAX_BATTLERS_COUNT];
+    u8 polishedDisobedientBattlers;
+    u8 polishedCalledMoveBattlers; // Source ResetTurn=1 persists until a fresh selection or replacement.
+    u8 polishedAccuracyState; // Source wAttackMissed survives Magic Bounce's ResetTurn.
+    u8 polishedNappingBattlers;
+    u8 polishedSelfHitBattlers; // Defer confusion/disobedience/crash berries until a source healing checkpoint.
+    u8 polishedSelfHitHpWrites; // The pending self-damage HP write must not release that deferral.
+    bool8 polishedPerishSongSprayEligible; // Source priority failure, before the repeated-timer effect failure.
+    enum Move polishedChoiceMove[MAX_BATTLERS_COUNT]; // Source selection history, independent of held item.
+    enum Move polishedMetronomeMove[MAX_BATTLERS_COUNT]; // Source last DoMove identity; failures still count.
+    u8 polishedMetronomeCount[MAX_BATTLERS_COUNT]; // Source pre-action count; native post-action history remains independent.
+    enum Item polishedItemBackup[PARTY_SIZE]; // Source post-battle restoration, not native stolen-item history.
     u8 switchInBattlerCounter;
     u16 lastTakenMoveFrom[MAX_BATTLERS_COUNT][MAX_BATTLERS_COUNT]; // a 2-D array [target][attacker]
     union {
@@ -1067,7 +1078,7 @@ extern u8 gBideTarget[MAX_BATTLERS_COUNT];
 extern u32 gSideStatuses[NUM_BATTLE_SIDES];
 extern struct SideTimer gSideTimers[NUM_BATTLE_SIDES];
 extern u16 gPauseCounterBattle;
-extern u16 gPaydayMoney;
+extern u32 gPaydayMoney;
 extern u8 gBattleCommunication[BATTLE_COMMUNICATION_ENTRIES_COUNT];
 extern u8 gBattleOutcome;
 extern struct ProtectStruct gProtectStructs[MAX_BATTLERS_COUNT];

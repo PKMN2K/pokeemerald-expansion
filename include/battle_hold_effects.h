@@ -28,11 +28,22 @@ extern const struct HoldEffectInfo gHoldEffectsInfo[];
 typedef bool32 (*ActivationTiming)(enum HoldEffect holdEffect);
 enum ItemEffect ItemBattleEffects(enum BattlerId itemBattler, enum BattlerId battler, enum HoldEffect holdEffect, ActivationTiming timing);
 
+enum PolishedWeaknessPolicyPhase
+{
+    POLISHED_POLICY_ABSENT,
+    POLISHED_POLICY_BEFORE_HIT_EFFECTS,
+    POLISHED_POLICY_AFTER_HIT_EFFECTS,
+    POLISHED_POLICY_NATIVE,
+};
+
+enum PolishedWeaknessPolicyPhase GetPolishedWeaknessPolicyPhase(enum Move move);
+bool32 IsPolishedWeaknessPolicyActivation(enum HoldEffect holdEffect);
 bool32 IsOnSwitchInActivation(enum HoldEffect holdEffect);
 bool32 IsMirrorHerbActivation(enum HoldEffect holdEffect);
 bool32 IsWhiteHerbActivation(enum HoldEffect holdEffect);
 bool32 IsOnStatusChangeActivation(enum HoldEffect holdEffect);
 bool32 IsOnHpThresholdActivation(enum HoldEffect holdEffect);
+bool32 IsPolishedDamageEnigmaActivation(enum HoldEffect holdEffect);
 bool32 IsKeeMarangaBerryActivation(enum HoldEffect holdEffect);
 bool32 IsOnTargetHitActivation(enum HoldEffect holdEffect);
 bool32 IsOnAttackerAfterHitActivation(enum HoldEffect holdEffect);

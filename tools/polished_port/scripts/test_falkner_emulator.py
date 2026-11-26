@@ -10,7 +10,8 @@ from build_new_bark import ROOT, source_files
 from test_johto_demo_emulator import A, B, UP, DOWN, LEFT, RIGHT
 from test_new_bark_emulator import map_data, actors, save_game, continue_game, walk as indoor_walk
 from test_new_bark_intro_emulator import layout, advance, task_active, text_matches, party, script_active, choice_prompt
-from test_new_bark_battle_emulator import controller, choose_cell, check_portrait
+from test_new_bark_battle_emulator import (controller, choose_cell, check_portrait,
+    optional_trainer_shift_prompt)
 from test_cherrygrove_emulator import map_id, flag, leave, interact, money
 from test_violet_houses_emulator import enter, walk_city
 from test_violet_mart_emulator import count, select_bag_item, open_shop, purchase, close_shop, stock
@@ -145,7 +146,7 @@ def settle(game, report):
             assert slot is not None, (name, mon)
             attempted, last_slot = signature, slot
             choose_cell(game, "gMoveSelectionCursor", slot)
-        elif not on_field and controller(game, "PlayerHandleYesNoInput"):
+        elif not on_field and optional_trainer_shift_prompt(game):
             game.press(B, 20)
         else:
             game.press(A, 12)

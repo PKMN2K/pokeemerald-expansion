@@ -16,7 +16,8 @@ from test_new_bark_emulator import (map_data, walk, travel as door, actors,
     resident_id, save_game, continue_game, close_resident_dialogue, player_state)
 from test_new_bark_intro_emulator import (layout, var, party, advance,
     script_active, text_matches, task_active, choice_prompt)
-from test_new_bark_battle_emulator import controller, choose_cell, check_portrait, potion_count
+from test_new_bark_battle_emulator import (controller, choose_cell, check_portrait,
+    potion_count, optional_trainer_shift_prompt, learn_source_bite)
 from test_cherrygrove_emulator import map_id, flag, scene, count_item, leave, finish_tour
 from test_route29_emulator import route_walk
 from test_route30_emulator import travel, state, values
@@ -44,16 +45,26 @@ def rival_name(game):
 def battle(game, label, expected, lose=False, portrait=False, iv=30, hp_ev=0):
     observed, portrait_seen = None, False
     switches = status_turns = fallback_attacks = potions = 0
+    learned_moves = []
     for _ in range(3000):
         if portrait and not portrait_seen and observed is None:
             portrait_seen = check_portrait(game, 'return-'+label, 'rival1' if portrait is True else portrait)
-        if task_active(game,'Task_HandleChooseMonInput'):
+        opcode = game.read(game.u32(game.sym['gBattlescriptCurrInstr']), 1)[0]
+        if opcode == layout()['learn_move_opcode']:
+            move = int.from_bytes(game.read(game.sym['gMoveToLearn'], 2), 'little')
+            if move == layout()['bite']:
+                learned_moves.append(learn_source_bite(game))
+            else:
+                game.press(B, 20)
+        elif opcode == layout()['stop_learning_opcode']:
+            game.press(A, 20)
+        elif task_active(game,'Task_HandleChooseMonInput'):
             healthy = [i for i,m in enumerate(party(game,details=True)) if m['hp']]
             assert healthy
             target = healthy[0] if len(healthy)==1 else 1
             selected = game.read(game.sym['gPartyMenu']+9,1)[0]
             game.press(A if selected==target else RIGHT if target==1 else LEFT,30)
-        elif controller(game,'PlayerHandleYesNoInput'):
+        elif optional_trainer_shift_prompt(game):
             game.press(B,30)  # Decline the optional shift between enemy Pokemon.
         elif controller(game,'HandleInputChooseAction'):
             if observed is None:
@@ -102,7 +113,8 @@ def battle(game, label, expected, lose=False, portrait=False, iv=30, hp_ev=0):
     assert outcome==(2 if lose else 1),(label,outcome)
     assert not portrait or portrait_seen
     return {'party':observed,'outcome':outcome,'portrait_matches_source':portrait_seen if portrait else None,
-            'switches':switches,'status_turns':status_turns,'fallback_attacks':fallback_attacks,'potions':potions}
+            'switches':switches,'status_turns':status_turns,'fallback_attacks':fallback_attacks,'potions':potions,
+            'learned_moves':learned_moves}
 
 
 def rival(game, city, y, label, lose=False):

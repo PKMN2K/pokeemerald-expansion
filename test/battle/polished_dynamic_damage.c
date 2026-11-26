@@ -218,6 +218,7 @@ SINGLE_BATTLE_TEST("Polished dynamic damage Future Sight never receives Analytic
             ctx.abilities[0] = ABILITY_ANALYTIC; ctx.holdEffects[0] = HOLD_EFFECT_METRONOME;
             for (u32 count = 0; count <= 5; count++) {
                 gBattleMons[0].volatiles.metronomeItemCounter = count;
+                gBattleStruct->polishedMetronomeCount[0] = count;
                 EXPECT_EQ(CalculateMoveDamageVars(&ctx), 22 * 120 * 101 / 73 / 50 + 2);
             }
         }
@@ -326,6 +327,7 @@ SINGLE_BATTLE_TEST("Polished dynamic damage Future Sight preserves selected move
             EXPECT_EQ(gLastResultingMoves[0], MOVE_TACKLE);
             EXPECT_EQ(gLastLandedMoves[1], MOVE_TACKLE);
             EXPECT_EQ((u32)player->volatiles.metronomeItemCounter, 2);
+            EXPECT_EQ(gBattleStruct->polishedMetronomeCount[0], 1);
         }
     }
 }

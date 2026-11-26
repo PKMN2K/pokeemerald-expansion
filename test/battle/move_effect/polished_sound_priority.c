@@ -22,7 +22,7 @@ SINGLE_BATTLE_TEST("Polished sound priority applies Prankster Dark and Soundproo
             for (u32 kind = 0; kind < 3; kind++)
                 for (u32 type = 0; type < 2; type++)
                     PARAMETRIZE { move = sSoundMoves[entry]; user = side ? opponent : player; target = side ? player : opponent; ability = kind == 2 ? ABILITY_MOLD_BREAKER : kind ? ABILITY_PRANKSTER : ABILITY_NONE; dark = type; }
-    bool32 succeeds = ability == ABILITY_MOLD_BREAKER || (B_POLISHED_MOVE_BALANCE && ability == ABILITY_PRANKSTER && !dark);
+    bool32 succeeds = ability == ABILITY_MOLD_BREAKER || (B_POLISHED_MOVE_BALANCE && ability == ABILITY_PRANKSTER && !dark && move != MOVE_SING);
     GIVEN {
         PLAYER(target == player && dark ? SPECIES_UMBREON : SPECIES_WOBBUFFET) { Speed(100); Ability(user == player ? ability : ABILITY_SOUNDPROOF); MovesWithPP({move, 2}); }
         OPPONENT(target == opponent && dark ? SPECIES_UMBREON : SPECIES_WOBBUFFET) { Speed(50); Ability(user == opponent ? ability : ABILITY_SOUNDPROOF); MovesWithPP({move, 2}); }
@@ -103,10 +103,10 @@ SINGLE_BATTLE_TEST("Polished sound priority respects Protect and the sound Subst
     } SCENE {
         if (substitute) ANIMATION(ANIM_TYPE_MOVE, MOVE_SUBSTITUTE, target);
         else ANIMATION(ANIM_TYPE_MOVE, MOVE_PROTECT, target);
-        if (substitute && B_POLISHED_MOVE_BALANCE) ANIMATION(ANIM_TYPE_MOVE, move, user);
+        if (substitute && B_POLISHED_MOVE_BALANCE && move != MOVE_SING) ANIMATION(ANIM_TYPE_MOVE, move, user);
         else NOT ANIMATION(ANIM_TYPE_MOVE, move, user);
     } THEN {
-        ExpectSoundEffect(target, move, substitute && B_POLISHED_MOVE_BALANCE);
+        ExpectSoundEffect(target, move, substitute && B_POLISHED_MOVE_BALANCE && move != MOVE_SING);
         if (substitute) EXPECT_GT((u32)target->volatiles.substituteHP, 0);
     }
 }

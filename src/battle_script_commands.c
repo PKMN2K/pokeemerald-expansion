@@ -1231,12 +1231,28 @@ static void Cmd_datahpupdate(void)
     if (gBattleControllerExecFlags)
         return;
 
+    // The self-hit's own HP write keeps its deferral. Other actual HP changes
+    // resume SubtractHP/PostStatus healing at their normal source checkpoint.
+    if (gBattleStruct->polishedSelfHitHpWrites & (1u << battler))
+        gBattleStruct->polishedSelfHitHpWrites &= ~(1u << battler);
+    else if (gBattleStruct->passiveHpUpdate[battler] != 0)
+        gBattleStruct->polishedSelfHitBattlers &= ~(1u << battler);
+
     if (gBattleStruct->passiveHpUpdate[battler] < 0)
     {
         // Negative damage is HP gain
         gBattleMons[battler].hp += -gBattleStruct->passiveHpUpdate[battler];
         if (gBattleMons[battler].hp > gBattleMons[battler].maxHP)
             gBattleMons[battler].hp = gBattleMons[battler].maxHP;
+        // CheckEnigmaBerry precedes the source's Berserk threshold decision.
+        // Other healing berries run after that decision, including the final
+        // ordinary berry heal of a multihit move. The held item is still present
+        // here; removeitem runs after this HP update in the berry script.
+        if (UsesPolishedHitCheckpoint(gCurrentMove)
+         && gLastUsedItem == ITEM_ENIGMA_BERRY
+         && gBattleMons[battler].item == ITEM_ENIGMA_BERRY
+         && gBattleMons[battler].hp > gBattleMons[battler].maxHP / 2)
+            gSpecialStatuses[battler].polishedBerserkPending = FALSE;
     }
     else
     {
@@ -1291,6 +1307,23 @@ static void Cmd_critmessage(void)
         }
         gBattlescriptCurrInstr = cmd->nextInstr;
     }
+}
+
+void BS_PolishedCriticalAngerPoint(void)
+{
+    NATIVE_ARGS();
+
+    gBattlescriptCurrInstr = cmd->nextInstr;
+    TryPolishedCriticalAngerPoint();
+}
+
+void BS_PolishedSuperEffectiveItem(void)
+{
+    NATIVE_ARGS();
+
+    gBattlescriptCurrInstr = cmd->nextInstr;
+    if (GetPolishedWeaknessPolicyPhase(gCurrentMove) == POLISHED_POLICY_BEFORE_HIT_EFFECTS)
+        ItemBattleEffects(gBattlerTarget, gBattlerAttacker, GetBattlerHoldEffect(gBattlerTarget), IsPolishedWeaknessPolicyActivation);
 }
 
 static void Cmd_effectivenesssound(void)
@@ -1474,7 +1507,8 @@ static void Cmd_resultmessage(void)
             {
                 stringId = STRINGID_BUTITFAILED;
             }
-            else if (B_AFFECTION_MECHANICS == TRUE && (*moveResultFlags & MOVE_RESULT_FOE_ENDURED_AFFECTION))
+            else if ((B_AFFECTION_MECHANICS == TRUE || UsesPolishedBattleRules(gBattlerAttacker, gBattlerTarget))
+                  && (*moveResultFlags & MOVE_RESULT_FOE_ENDURED_AFFECTION))
             {
                 *moveResultFlags &= ~MOVE_RESULT_FOE_ENDURED_AFFECTION;
                 BattleScriptCall(BattleScript_AffectionBasedEndurance);
@@ -1620,6 +1654,10 @@ void StealTargetItem(enum BattlerId battlerStealer, enum BattlerId itemBattler, 
         BtlController_EmitSetMonData(battlerStealer, B_COMM_TO_CONTROLLER, REQUEST_HELDITEM_BATTLE, 0, sizeof(gLastUsedItem), &gLastUsedItem); // set attacker item
         MarkBattlerForControllerExec(battlerStealer);
     }
+
+    // Record the actual wild acquisition even during temporary native rules.
+    if (!(gBattleTypeFlags & BATTLE_TYPE_TRAINER))
+        PolishedSetBackupItem(battlerStealer, FALSE);
 
     if (itemOverride) // don't change flags for unintended battler
         return;
@@ -1823,7 +1861,9 @@ void SetNonVolatileStatus(enum BattlerId battlerAtk, enum BattlerId effectBattle
 
 static bool32 CanApplyAdditionalEffect(const struct AdditionalEffect *additionalEffect)
 {
-    if (additionalEffect->preAttackEffect)
+    if (additionalEffect->preAttackEffect
+     && !(additionalEffect->moveEffect == MOVE_EFFECT_BREAK_SCREEN
+       && IsPolishedBrickBreak(gCurrentMove, gBattlerAttacker, gBattlerTarget)))
         return FALSE;
 
     if (additionalEffect->pledgeCombo && gBattleStruct->pledgeState != PLEDGE_COMBO_ATTACK)
@@ -3770,7 +3810,12 @@ static void UpdateSentMonFlags(enum BattlerId battler)
     gHitMarker &= ~HITMARKER_FAINTED(battler);
     gSpecialStatuses[battler].faintedHasReplacement = FALSE;
     gBattleStruct->battlerState[battler].switchIn = TRUE;
-    PolishedRecordForcedEntry(battler, gProtectStructs[battler].forcedSwitch);
+    // Source only uses its no-Synchronize hazard path for Roar's exact
+    // DEFERRED|TARGET|FORCED reservation. Red Card selects randomly too, but
+    // its OPPITEM reservation goes through ordinary SpikesDamage instead.
+    PolishedRecordForcedEntry(battler, gProtectStructs[battler].forcedSwitch
+        && !(gBattleScripting.switchCase == B_SWITCH_RED_CARD
+            && UsesPolishedActionRules(gCurrentMove)));
     gProtectStructs[battler].forcedSwitch = FALSE;
 
     // There is a hack here to ensure the truant counter will be 0 when the battler's next turn starts.
@@ -3795,6 +3840,32 @@ void BS_PolishedOrderReplacements(void)
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
+void BS_PolishedShiftSwitchPrompt(void)
+{
+    NATIVE_ARGS(const u8 *prompt);
+    // OfferSwitch only requires another living party member. In particular,
+    // a fainted Mean Look user still owns its trap until the replacements.
+    if (UsesPolishedLifecycle() && CanBattlerSwitch(GetBattlerAtPosition(B_POSITION_PLAYER_LEFT)))
+        gBattlescriptCurrInstr = cmd->prompt;
+    else
+        gBattlescriptCurrInstr = cmd->nextInstr;
+}
+
+void BS_PolishedShiftSwitchEntry(void)
+{
+    NATIVE_ARGS(const u8 *sendInBoth);
+    if (UsesPolishedLifecycle())
+    {
+        // Departure abilities have run, but neither incoming mon has been
+        // loaded. Source SetFastestTurn compares these departed battlers.
+        gBattleScripting.shiftSwitched = TRUE;
+        PolishedOrderReplacements();
+        gBattlescriptCurrInstr = cmd->sendInBoth;
+    }
+    else
+        gBattlescriptCurrInstr = cmd->nextInstr;
+}
+
 void BS_PolishedEntryStatus(void)
 {
     NATIVE_ARGS();
@@ -3804,8 +3875,8 @@ void BS_PolishedEntryStatus(void)
     if (!UsesPolishedLifecycle())
         return;
 
-    // SpikesDamage calls PostStatusWithSynchronize for ordinary entry and
-    // PostStatus for forced entry. Reflection precedes the entrant's berry.
+    // SpikesDamage calls PostStatusWithSynchronize for ordinary and Red Card
+    // entry, while Roar calls PostStatus. Reflection precedes the berry.
     gEffectBattler = battler;
     if (!PolishedIsForcedEntry(battler) && GetBattlerAbility(battler) == ABILITY_SYNCHRONIZE)
     {
@@ -4126,6 +4197,7 @@ static void Cmd_yesnoboxlearnmove(void)
 
                     PREPARE_MOVE_BUFFER(gBattleTextBuff2, move)
 
+                    PolishedForgetMoveLocks(movePosition);
                     RemoveMonPPBonus(&gParties[B_TRAINER_PLAYER][gBattleStruct->expGetterMonId], movePosition);
                     SetMonMoveSlot(&gParties[B_TRAINER_PLAYER][gBattleStruct->expGetterMonId], gMoveToLearn, movePosition);
 
@@ -4646,7 +4718,9 @@ static void Cmd_removeitem(void)
         gBattleMons[battler].volatiles.cudChew = TRUE;
     }
 
-    // Popped Air Balloon cannot be restored by any means.
+    PolishedConsumeBackupItem(battler, itemId);
+
+    // Popped Air Balloon cannot be restored from used-item history.
     // Corroded items cannot be restored either.
     if (GetBattlerHoldEffect(battler) != HOLD_EFFECT_AIR_BALLOON
      && GetMoveEffect(gCurrentMove) != EFFECT_CORROSIVE_GAS)
@@ -5368,9 +5442,8 @@ static void Cmd_setprotectlike(void)
         gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_PROTECTED_ITSELF;
     }
 
-    if (B_POLISHED_MOVE_BALANCE
-     && (gCurrentMove == MOVE_PROTECT || gCurrentMove == MOVE_ENDURE)
-     && GetActiveGimmick(gBattlerAttacker) == GIMMICK_NONE)
+    if (UsesPolishedBattleRules(gBattlerAttacker, GetOppositeBattler(gBattlerAttacker))
+     && (gCurrentMove == MOVE_PROTECT || gCurrentMove == MOVE_ENDURE))
         gBattleMons[gBattlerAttacker].volatiles.consecutiveMoveUses = min(
             gBattleMons[gBattlerAttacker].volatiles.consecutiveMoveUses + 1, POLISHED_PROTECT_MAX_USES);
     else
@@ -5399,6 +5472,16 @@ static void Cmd_setatkhptozero(void)
         return;
 
     gBattleMons[gBattlerAttacker].hp = 0;
+    if (UsesPolishedActionRules(gCurrentMove))
+    {
+        // selfdestruct updates the party before damage and clears these states
+        // even if the target subsequently protects or is immune.
+        gBattleMons[gBattlerAttacker].status1 = 0;
+        gBattleMons[gBattlerAttacker].volatiles.leechSeed = 0;
+        gBattleMons[gBattlerTarget].volatiles.destinyBond = 0;
+        SetMonData(GetBattlerMon(gBattlerAttacker), MON_DATA_STATUS, &gBattleMons[gBattlerAttacker].status1);
+        PolishedPrioritizeActionFaint(gBattlerAttacker);
+    }
     BtlController_EmitSetMonData(gBattlerAttacker, B_COMM_TO_CONTROLLER, REQUEST_HP_BATTLE, 0, sizeof(gBattleMons[gBattlerAttacker].hp), &gBattleMons[gBattlerAttacker].hp);
     MarkBattlerForControllerExec(gBattlerAttacker);
 
@@ -5716,10 +5799,13 @@ static void Cmd_forcerandomswitch(void)
     s32 validMonsCount = 0;
 
     bool32 redCardForcedSwitch = FALSE;
+    bool32 sourceRedCard = gBattleScripting.switchCase == B_SWITCH_RED_CARD
+        && UsesPolishedActionRules(gCurrentMove);
 
     // Red card checks against wild Pokémon. If we have reached here, the player has a mon to switch into
     // Red card swaps attacker with target to get the animation correct, so here we check attacker which is really the target. Thanks GF...
     if (gBattleScripting.switchCase == B_SWITCH_RED_CARD
+      && !sourceRedCard
       && !(gBattleTypeFlags & BATTLE_TYPE_TRAINER)
       && !IsOnPlayerSide(gBattlerAttacker))   // Check opponent's red card activating
     {
@@ -5750,6 +5836,9 @@ static void Cmd_forcerandomswitch(void)
     // wild double battles when an opposing Pokémon uses it against one of the two alive player mons
     // wild double battle when a player Pokémon uses it against its partner
     if ((gBattleTypeFlags & BATTLE_TYPE_TRAINER)
+        // Source Red Card uses ForceDeferredSwitch in wild battles too. Its
+        // player target selects a reserve instead of ending the encounter.
+        || (sourceRedCard && IsOnPlayerSide(gBattlerTarget))
         || (WILD_DOUBLE_BATTLE
             && !IsOnPlayerSide(gBattlerAttacker)
             && IsOnPlayerSide(gBattlerTarget)
@@ -6151,6 +6240,18 @@ static void Cmd_tryinfatuating(void)
     CMD_ARGS(const u8 *failInstr);
     enum BattlerId battler;
 
+    // Source Attract checks gender, hidden state and an existing infatuation
+    // before announcing Oblivious. No Guard only bypasses its earlier hit check.
+    if (gCurrentMove == MOVE_ATTRACT && UsesPolishedActionRules(gCurrentMove)
+     && (!AreBattlersOfOppositeGender(gBattlerAttacker, gBattlerTarget)
+      || gBattleMons[gBattlerTarget].volatiles.semiInvulnerable == STATE_ON_AIR
+      || gBattleMons[gBattlerTarget].volatiles.semiInvulnerable == STATE_UNDERGROUND
+      || gBattleMons[gBattlerTarget].volatiles.infatuation))
+    {
+        gBattlescriptCurrInstr = cmd->failInstr;
+        return;
+    }
+
     battler = IsAbilityOnSide(gBattlerTarget, ABILITY_AROMA_VEIL);
     if (battler)
     {
@@ -6271,7 +6372,8 @@ static void Cmd_setfocusenergy(void)
     }
     else
     {
-        if (GetConfig(B_FOCUS_ENERGY_CRIT_RATIO) >= GEN_3
+        if ((gCurrentMove == MOVE_FOCUS_ENERGY && UsesPolishedActionRules(gCurrentMove))
+         || GetConfig(B_FOCUS_ENERGY_CRIT_RATIO) >= GEN_3
          || GetConfig(B_CRIT_CHANCE) == GEN_1)
             gBattleMons[battler].volatiles.focusEnergy = TRUE;
         else
@@ -6282,6 +6384,23 @@ static void Cmd_setfocusenergy(void)
 }
 
 static EWRAM_DATA bool8 sPolishedTransformEntryPending = FALSE;
+
+void PolishedForgetMoveLocks(u32 slot)
+{
+    enum BattlerId battler = GetBattlerAtPosition(B_POSITION_PLAYER_LEFT);
+    if (!UsesPolishedBattleRules(battler, GetOppositeBattler(battler)) || slot >= MAX_MON_MOVES)
+        return;
+    struct BattlePokemon *user = &gBattleMons[battler];
+    enum Move forgotten = user->moves[slot];
+    // Source LearnMove clears the active player's packed slot locks, including
+    // when a benched EXP recipient forgets that slot. Do this before replacement.
+    if (user->volatiles.disabledMove == forgotten)
+        user->volatiles.disabledMove = user->volatiles.disableTimer = 0;
+    if (user->volatiles.encoredMove == forgotten)
+        user->volatiles.encoredMove = user->volatiles.encoreTimer = user->volatiles.encoredMovePos = 0;
+    if (gBattleStruct->polishedChoiceMove[battler] == forgotten)
+        gBattleStruct->polishedChoiceMove[battler] = MOVE_NONE;
+}
 
 static void PolishedRemapMoveLocks(enum BattlerId battler)
 {
@@ -6301,7 +6420,12 @@ static void PolishedRemapMoveLocks(enum BattlerId battler)
         user->volatiles.encoredMove = user->volatiles.encoreTimer = user->volatiles.encoredMovePos = 0;
     else if (user->volatiles.encoredMove != MOVE_NONE)
         user->volatiles.encoredMovePos = i;
-    // Choice shares the source Encore slot, but is separate in Expansion.
+    for (i = 0; i < MAX_MON_MOVES; i++)
+        if (user->moves[i] == gBattleStruct->polishedChoiceMove[battler])
+            break;
+    if (i == MAX_MON_MOVES)
+        gBattleStruct->polishedChoiceMove[battler] = MOVE_NONE;
+    // Keep native history valid for optional gimmicks as well.
     for (i = 0; i < MAX_MON_MOVES; i++)
         if (user->moves[i] == gBattleStruct->choicedMove[battler])
             break;
@@ -6370,6 +6494,13 @@ static void Cmd_transformdataexecution(void)
             ? gBattleMons[gBattlerTarget].ability : GetBattlerAbility(gBattlerTarget);
         if (source)
         {
+            // The source copies its current type bytes, including Roost's
+            // temporary removal. Only the original Roost user restores them
+            // at end turn; the transformed copy keeps the copied types.
+            enum Type types[3];
+            GetBattlerTypes(gBattlerTarget, TRUE, types);
+            for (i = 0; i < ARRAY_COUNT(types); i++)
+                gBattleMons[gBattlerAttacker].types[i] = types[i];
             gBattleMons[gBattlerAttacker].ppBonuses = 0;
             // ResetActorDisable clears the countdown before restoring the
             // surviving move identity (a zero countdown does not expire it).
@@ -6575,7 +6706,9 @@ static void Cmd_trysetencore(void)
 
     if (gLastMoves[gBattlerTarget] == MOVE_NONE
      || gLastMoves[gBattlerTarget] == MOVE_UNAVAILABLE
-     || IsMoveEncoreBanned(gLastMoves[gBattlerTarget])
+     || (UsesPolishedBattleRules(gBattlerAttacker, gBattlerTarget)
+         ? (gLastMoves[gBattlerTarget] == MOVE_ENCORE || gLastMoves[gBattlerTarget] == MOVE_STRUGGLE)
+         : IsMoveEncoreBanned(gLastMoves[gBattlerTarget]))
      || i == MAX_MON_MOVES
      || gBattleMons[gBattlerTarget].pp[i] == 0
      || gBattleMons[gBattlerTarget].volatiles.encoredMove != MOVE_NONE
@@ -6587,6 +6720,8 @@ static void Cmd_trysetencore(void)
     {
         gBattleMons[gBattlerTarget].volatiles.encoredMove = gBattleMons[gBattlerTarget].moves[i];
         gBattleMons[gBattlerTarget].volatiles.encoredMovePos = i;
+        if (UsesPolishedBattleRules(gBattlerAttacker, gBattlerTarget))
+            gBattleStruct->polishedChoiceMove[gBattlerTarget] = gBattleMons[gBattlerTarget].moves[i];
 
         // If the target's selected move is not the same as the move being Encored into,
         // the target will select a random opposing target
@@ -6759,7 +6894,7 @@ bool32 TryPolishedSketch(void)
 
     gLastMoves[gBattlerAttacker] = MOVE_NONE;
     if ((gBattleTypeFlags & BATTLE_TYPE_LINK)
-     || gBattleMons[gBattlerTarget].volatiles.substitute
+     || (gBattleMons[gBattlerTarget].volatiles.substitute && GetBattlerAbility(gBattlerAttacker) != ABILITY_INFILTRATOR)
      || user->volatiles.transformed
      || copied == MOVE_NONE || copied == MOVE_UNAVAILABLE || copied >= MOVES_COUNT
      || copied == MOVE_STRUGGLE
@@ -7094,13 +7229,14 @@ static void Cmd_setvolatile(void)
     CMD_ARGS(u8 battler, u8 _volatile, u8 value);
 
     enum BattlerId battler = GetBattlerForBattleScript(cmd->battler);
-    // Source Foresight rejects Fly/Dig at the effect itself, even when an
-    // earlier hit check passed through No Guard or Lock-On.
+    // Source Foresight rejects a repeat or Fly/Dig at the effect itself,
+    // independently of the native repeat preset and No Guard/Lock-On.
     if (B_POLISHED_MOVE_BALANCE && cmd->_volatile == VOLATILE_FORESIGHT
      && gCurrentMove == MOVE_FORESIGHT && !IsDoubleBattle()
      && GetActiveGimmick(gBattlerAttacker) == GIMMICK_NONE
      && GetActiveGimmick(battler) == GIMMICK_NONE
-     && (gBattleMons[battler].volatiles.semiInvulnerable == STATE_ON_AIR
+     && (gBattleMons[battler].volatiles.foresight
+         || gBattleMons[battler].volatiles.semiInvulnerable == STATE_ON_AIR
          || gBattleMons[battler].volatiles.semiInvulnerable == STATE_UNDERGROUND))
     {
         gBattlescriptCurrInstr = BattleScript_ButItFailed;
@@ -7116,6 +7252,14 @@ static void Cmd_trysetperishsong(void)
     CMD_ARGS(const u8 *failInstr);
 
     s32 notAffectedCount = 0;
+
+    if (UsesPolishedActionRules(gCurrentMove) && IsPolishedPerishSong(gCurrentMove, gBattlerAttacker))
+    {
+        // Source checkpriority writes wAttackMissed even if the user's timer
+        // succeeds. An already-active pair only prints failure, preserving the
+        // priority result for CheckThroatSpray instead of failing the item too.
+        gBattleStruct->polishedPerishSongSprayEligible = !IsBattlerUnaffectedByMove(GetOppositeBattler(gBattlerAttacker));
+    }
 
     for (enum BattlerId i = 0; i < gBattlersCount; i++)
     {
@@ -7642,6 +7786,11 @@ static void Cmd_tryswapitems(void)
 
             gBattleMons[gBattlerAttacker].item = oldItemDef;
             gBattleMons[gBattlerTarget].item = oldItemAtk;
+            if (!(gBattleTypeFlags & BATTLE_TYPE_TRAINER))
+            {
+                PolishedSetBackupItem(gBattlerAttacker, TRUE);
+                PolishedSetBackupItem(gBattlerTarget, TRUE);
+            }
 
             RecordItemEffectBattle(gBattlerAttacker, GetItemHoldEffect(oldItemDef));
             RecordItemEffectBattle(gBattlerTarget, GetItemHoldEffect(oldItemAtk));
@@ -8310,6 +8459,10 @@ bool32 IsSubstituteProtected(enum BattlerId battlerAtk, enum BattlerId battlerDe
         return FALSE;
     else if (move == MOVE_TRANSFORM && UsesPolishedBattleRules(battlerAtk, battlerDef))
         return abilityAtk != ABILITY_INFILTRATOR;
+    else if (move < MOVES_COUNT && gPolishedMovePP[move]
+          && UsesPolishedBattleRules(battlerAtk, battlerDef)
+          && IsAbilityAndRecord(battlerAtk, abilityAtk, ABILITY_INFILTRATOR))
+        return FALSE;
     else if (GetConfig(B_INFILTRATOR_SUBSTITUTE) < GEN_6)
         return TRUE;
     else if (GetMoveEffect(move) == EFFECT_TRANSFORM || GetMoveEffect(move) == EFFECT_SKY_DROP)
@@ -8353,8 +8506,9 @@ static void Cmd_tryrecycleitem(void)
 
     enum Item *usedHeldItem;
     enum Ability ability = GetBattlerAbility(gBattlerAttacker);
-    bool32 sourceRecovery = gCurrentMove == MOVE_NONE
-        && (ability == ABILITY_PICKUP || ability == ABILITY_HARVEST)
+    bool32 abilityRecovery = gCurrentMove == MOVE_NONE
+        && (ability == ABILITY_PICKUP || ability == ABILITY_HARVEST);
+    bool32 sourceRecovery = abilityRecovery
         && UsesPolishedBattleRules(gBattlerAttacker, GetOppositeBattler(gBattlerAttacker));
 
     if (gCurrentMove == MOVE_NONE && ability == ABILITY_PICKUP)
@@ -8366,6 +8520,8 @@ static void Cmd_tryrecycleitem(void)
         gLastUsedItem = *usedHeldItem;
         *usedHeldItem = ITEM_NONE;
         gBattleMons[gBattlerAttacker].item = gLastUsedItem;
+        if (abilityRecovery && (ability == ABILITY_HARVEST || !(gBattleTypeFlags & BATTLE_TYPE_TRAINER)))
+            PolishedSetBackupItem(gBattlerAttacker, FALSE);
         // Source recovery does not reset consumption-earned ability state.
         if (!sourceRecovery)
             gBattleMons[gBattlerAttacker].volatiles.unburdenActive = FALSE;
@@ -8917,7 +9073,10 @@ static void Cmd_givecaughtmon(void)
     switch (state)
     {
     case GIVECAUGHTMON_CHECK_PARTY_SIZE:
-        if (CalculatePlayerPartyCount() == PARTY_SIZE && B_CATCH_SWAP_INTO_PARTY >= GEN_7)
+        // Source PokeBallEffect sends a full-party catch straight to storage.
+        // Its six existing item backups stay attached to their party members.
+        if (CalculatePlayerPartyCount() == PARTY_SIZE && B_CATCH_SWAP_INTO_PARTY >= GEN_7
+         && !UsesPolishedCaptureRules(gBattlerAttacker, GetCatchingBattler()))
         {
             PrepareStringBattleWithWait(STRINGID_SENDCAUGHTMONPARTYORBOX, gBattlerAttacker);
             gBattleCommunication[MULTIUSE_STATE] = GIVECAUGHTMON_ASK_ADD_TO_PARTY;
@@ -8996,6 +9155,7 @@ static void Cmd_givecaughtmon(void)
                     StringCopy(gStringVar1, GetBoxNamePtr(GetPCBoxToSendMon()));
                     ZeroMonData(&gParties[B_TRAINER_PLAYER][gSelectedMonPartyId]);
                     gBattleStruct->itemLost[B_TRAINER_PLAYER][gSelectedMonPartyId].originalItem = ITEM_NONE;
+                    gBattleStruct->polishedItemBackup[gSelectedMonPartyId] = ITEM_NONE;
                     gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_SWAPPED_INTO_PARTY;
                     gSelectedMonPartyId = PARTY_SIZE;
                     gBattleCommunication[MULTIUSE_STATE] = GIVECAUGHTMON_GIVE_AND_SHOW_MSG;
@@ -9050,7 +9210,10 @@ static void Cmd_givecaughtmon(void)
 
         // Copy changedSpecies to allow caught mon to revert to its original species.
         if (emptySlot != PARTY_SIZE)
+        {
             gBattleStruct->partyState[B_SIDE_PLAYER][emptySlot].changedSpecies = GetBattlerPartyState(GetCatchingBattler())->changedSpecies;
+            gBattleStruct->polishedItemBackup[emptySlot] = GetMonData(&gParties[B_TRAINER_PLAYER][emptySlot], MON_DATA_HELD_ITEM);
+        }
 
         gBattleResults.caughtMonSpecies = GetMonData(caughtMon, MON_DATA_SPECIES);
         GetMonData(caughtMon, MON_DATA_NICKNAME, gBattleResults.caughtMonNick);
@@ -10031,6 +10194,13 @@ void BS_ItemCureStatus(void)
     bool32 statusChanged = FALSE;
     struct Pokemon *party = GetBattlerParty(gBattlerAttacker);
 
+    if (UsesPolishedStatusMedicine(gLastUsedItem)
+     && GetMonData(&party[gBattleStruct->itemPartyIndex[gBattlerAttacker]], MON_DATA_HP) == 0)
+    {
+        gBattlescriptCurrInstr = cmd->noStatusInstr;
+        return;
+    }
+
     // Heal volatile conditions if battler is active.
     if (gBattleStruct->itemPartyIndex[gBattlerAttacker] == gBattlerPartyIndexes[gBattlerAttacker])
     {
@@ -10085,7 +10255,7 @@ void BS_ItemIncreaseStat(void)
 
     if (GetItemBattleUsage(gLastUsedItem) == EFFECT_ITEM_INCREASE_STAT)
     {
-        if (GetConfig(B_X_ITEMS_BUFF) >= GEN_7)
+        if (UsesPolishedBattleRules(gBattlerAttacker, GetOppositeBattler(gBattlerAttacker)) || GetConfig(B_X_ITEMS_BUFF) >= GEN_7)
             SetStatChange(gBattlerAttacker, GetItemEffect(gLastUsedItem)[1], 2);
         else
             SetStatChange(gBattlerAttacker, GetItemEffect(gLastUsedItem)[1], 1);
@@ -10121,7 +10291,11 @@ void BS_PolishedBattleItemFriendship(void)
             break;
         }
         if (success)
+        {
+            if (GetItemBattleUsage(gLastUsedItem) == EFFECT_ITEM_INCREASE_STAT)
+                ResetPolishedMirrorHerbBoosts();
             AdjustFriendship(GetBattlerMon(gBattlerAttacker), FRIENDSHIP_EVENT_BATTLE_ITEM);
+        }
     }
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
@@ -12454,6 +12628,36 @@ void BS_ActivateItemEffects(void)
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
+static EWRAM_DATA enum BattlerId sRoomServiceOrder[MAX_BATTLERS_COUNT] = {0};
+static EWRAM_DATA u8 sRoomServiceIndex = 0;
+
+void BS_NextRoomServiceBattler(void)
+{
+    NATIVE_ARGS(bool8 first, const u8 *endInstr);
+    if (cmd->first)
+    {
+        sRoomServiceIndex = 0;
+        for (u32 i = 0; i < gBattlersCount; i++)
+            sRoomServiceOrder[i] = i;
+        // CheckSpeed runs after Trick Room is enabled, and is evaluated once
+        // before either holder's Speed drops. Native formats keep index order.
+        if (gCurrentMove == MOVE_TRICK_ROOM && (gFieldStatuses & STATUS_FIELD_TRICK_ROOM)
+         && UsesPolishedBattleRules(gBattlerAttacker, GetOppositeBattler(gBattlerAttacker)))
+            SortPolishedBattlersBySpeed(sRoomServiceOrder);
+    }
+    else
+    {
+        sRoomServiceIndex++;
+    }
+    if (sRoomServiceIndex == gBattlersCount)
+    {
+        gBattlescriptCurrInstr = cmd->endInstr;
+        return;
+    }
+    gBattlerTarget = sRoomServiceOrder[sRoomServiceIndex];
+    gBattlescriptCurrInstr = cmd->nextInstr;
+}
+
 void BS_TryRoomService(void)
 {
     NATIVE_ARGS(u8 battler, const u8 *failInstr);
@@ -12604,6 +12808,7 @@ void BS_ConsumeBerry(void)
     gBattleScripting.overrideBerryRequirements = 1;
     GetBattlerPartyState(battler)->ateBerry = TRUE;
     bool32 stolen = gBattlescriptCurrInstr == BattleScript_PolishedBugBiteConsume;
+    bool32 sourceCudChew = gBattlescriptCurrInstr == BattleScript_PolishedCudChewConsume;
     enum Item berry = gLastUsedItem;
     if (ItemBattleEffects(battler, 0, GetItemHoldEffect(berry), IsOnBerryActivation))
     {
@@ -12613,6 +12818,13 @@ void BS_ConsumeBerry(void)
             gBattleMons[battler].volatiles.cudChew = TRUE;
         }
         gBattleScripting.overrideBerryRequirements = 2;
+        if (sourceCudChew)
+        {
+            // Source reconsumption announces the ability only after a berry
+            // handler succeeds. Failed retries still clear the pending berry.
+            gBattlerAbility = battler;
+            BattleScriptCall(BattleScript_AbilityPopUp);
+        }
         return;
     }
     gBattlescriptCurrInstr = cmd->nextInstr;
@@ -12643,7 +12855,13 @@ void BS_JumpIfAbilityPreventsRest(void)
     NATIVE_ARGS(u8 battler, const u8 *jumpInstr);
     enum BattlerId battler = GetBattlerForBattleScript(cmd->battler);
     enum Ability ability = GetBattlerAbility(battler);
-    if (GetConfig(B_LEAF_GUARD_PREVENTS_REST) >= GEN_5 && IsLeafGuardProtected(battler, ability))
+    // Source BattleCommand_heal calls IsOpponentLeafGuardActive with the
+    // Rest user still active: its own ability, but the opponent's Umbrella.
+    bool32 leafGuard = UsesPolishedBattleRules(battler, GetOppositeBattler(battler))
+        ? (ability == ABILITY_LEAF_GUARD && IsBattlerWeatherAffected(
+            GetBattlerHoldEffect(GetOppositeBattler(battler)), GetWeather(), B_WEATHER_SUN))
+        : (GetConfig(B_LEAF_GUARD_PREVENTS_REST) >= GEN_5 && IsLeafGuardProtected(battler, ability));
+    if (leafGuard)
         gBattlescriptCurrInstr = cmd->jumpInstr;
     else if (IsShieldsDownProtected(battler, ability))
         gBattlescriptCurrInstr = cmd->jumpInstr;
@@ -13155,4 +13373,15 @@ void BS_PolishedPrioritizeFaint(void)
     NATIVE_ARGS(u8 battler);
     PolishedPrioritizeActionFaint(GetBattlerForBattleScript(cmd->battler));
     gBattlescriptCurrInstr = cmd->nextInstr;
+}
+
+void BS_PolishedWeatherDamageItems(void)
+{
+    NATIVE_ARGS();
+    gBattlescriptCurrInstr = cmd->nextInstr;
+    // SolarPowerWeatherAbility calls ordinary SubtractHPFromUser, including
+    // its healing items, before the other battler's weather effect runs.
+    if (UsesPolishedLifecycle()
+     && ItemBattleEffects(gBattlerAttacker, 0, GetBattlerHoldEffect(gBattlerAttacker), IsOnStatusChangeActivation) == ITEM_NO_EFFECT)
+        ItemBattleEffects(gBattlerAttacker, 0, GetBattlerHoldEffect(gBattlerAttacker), IsOnHpThresholdActivation);
 }

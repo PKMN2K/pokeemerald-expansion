@@ -65,6 +65,42 @@ def controller(game, name):
     return game.u32(game.sym['gBattlerControllerFuncs']) in [value | 1 for value in game.sym[name + '@all']]
 
 
+def optional_trainer_shift_prompt(game):
+    """Recognize the ready script-owned Shift question, not a wild replacement."""
+    if not game.u32(game.sym['gBattleTypeFlags']) & layout()['battle_type_trainer']:
+        return False
+    instruction = game.u32(game.sym['gBattlescriptCurrInstr'])
+    # Cmd_yesnobox reads input itself; PlayerHandleYesNoInput is not involved.
+    # The earlier wild "Use next Pokemon?" yesnobox is outside this range.
+    return (game.sym['BattleScript_FaintedMonOfferShift'] <= instruction
+            < game.sym['BattleScript_FaintedMonSendOutNew']
+            and game.read(instruction, 1)[0] == layout()['yes_no_opcode']
+            and game.read(game.sym['gBattleCommunication'], 1)[0] == 1)
+
+
+def learn_source_bite(game):
+    """Replace Leer through the real selector whenever Totodile reaches level 13."""
+    move = int.from_bytes(game.read(game.sym['gMoveToLearn'], 2), 'little')
+    assert move == layout()['bite']
+    battle = game.u32(game.sym['gBattleStruct'])
+    learner = game.read(battle + layout()['exp_getter_mon'], 1)[0]
+    mon = party(game, details=True)[learner]
+    assert mon['species'] == layout()['Totodile'] and mon['level'] == 13, mon
+    slot = mon['moves'].index(layout()['leer'])
+    advance(game, lambda: task_active(game, 'Task_HandleReplaceMoveInput'))
+    game.frames(30)
+    for _ in range(slot):
+        game.press(DOWN, 30)
+    game.press(A, 120)
+    advance(game, lambda: party(game, details=True)[learner]['moves'][slot] == move)
+    expected = list(mon['moves'])
+    expected[slot] = move
+    assert party(game, details=True)[learner]['moves'] == expected
+    print('PASS: Totodile learns source Bite at level 13 through the real move selector', flush=True)
+    return {'party_index': learner, 'level': mon['level'], 'move': move,
+            'before': mon['moves'], 'after': expected}
+
+
 def choose_cell(game, symbol, target):
     for _ in range(4):
         current = game.read(game.sym[symbol], 1)[0]
@@ -90,7 +126,9 @@ def finish_battle(game, maps, label, lose=False, expected=None):
     for frame in range(2500 if lose else 1500):
         if not portrait_seen and observed is None:
             portrait_seen = check_portrait(game, label)
-        if task_active(game, 'Task_HandleChooseMonInput'):
+        if optional_trainer_shift_prompt(game):
+            game.press(B, 30)
+        elif task_active(game, 'Task_HandleChooseMonInput'):
             # Real forced or voluntary switch; never keep selecting a fainted
             # lead. This demo has exactly the original Totodile and the gift.
             mons = party(game, details=True)

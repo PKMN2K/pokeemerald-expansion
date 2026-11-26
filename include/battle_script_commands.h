@@ -1,6 +1,8 @@
 #ifndef GUARD_BATTLE_SCRIPT_COMMANDS_H
 #define GUARD_BATTLE_SCRIPT_COMMANDS_H
 
+void PolishedForgetMoveLocks(u32 slot);
+
 #include "constants/battle_script_commands.h"
 #include "battle_set_effect.h"
 
@@ -35,6 +37,7 @@ void TrySynchronizeActivation(enum BattlerId battlerAtk, enum BattlerId effectBa
 void SetNonVolatileStatus(enum BattlerId battlerAtk, enum BattlerId effectBattler, enum MoveEffect effect, const u8 *battleScript, enum StatusTrigger trigger);
 bool32 CanBattlerSwitch(enum BattlerId battlerId);
 bool32 TryPolishedSketch(void);
+void BS_PolishedSuperEffectiveItem(void);
 void BattleDestroyYesNoCursorAt(u8 cursorPosition);
 void BattleCreateYesNoCursorAt(u8 cursorPosition);
 void BufferMoveToLearnIntoBattleTextBuff2(void);

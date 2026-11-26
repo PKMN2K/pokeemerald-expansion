@@ -93,7 +93,10 @@ SINGLE_BATTLE_TEST("Polished Corrosion powder preserves Magic Bounce on an immun
     } SCENE {
         ABILITY_POPUP(target, ABILITY_MAGIC_BOUNCE);
     } THEN {
-        ExpectPowderStatus(user, move, TRUE);
+        // Source checkpowder runs before bounceback, and ResetTurn retains its
+        // immunity result. Only Corrosion PoisonPowder skipped the original
+        // Grass/Goggles check; the other powders bounce but remain ineffective.
+        ExpectPowderStatus(user, move, !B_POLISHED_MOVE_BALANCE || move == MOVE_POISONPOWDER);
         EXPECT_EQ(target->status1, STATUS1_NONE);
     }
 }

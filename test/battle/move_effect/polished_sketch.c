@@ -28,23 +28,34 @@ SINGLE_BATTLE_TEST("Polished Sketch replaces the selected slot and persists base
     }
 }
 
-SINGLE_BATTLE_TEST("Polished Sketch rejects Substitute even with Infiltrator")
+SINGLE_BATTLE_TEST("Polished Sketch Substitute rejection honors effective Infiltrator on either side")
 {
-    enum Ability ability = ABILITY_NONE;
-    PARAMETRIZE { ability = ABILITY_NONE; }
-    PARAMETRIZE { ability = ABILITY_INFILTRATOR; }
+    bool32 enemy = FALSE, infiltrator = FALSE, gas = FALSE;
+    for (u32 side = 0; side < 2; side++)
+        for (u32 bypass = 0; bypass < 2; bypass++)
+            for (u32 suppressed = 0; suppressed < 2; suppressed++)
+                PARAMETRIZE { enemy = side; infiltrator = bypass; gas = suppressed; }
+    struct BattlePokemon *user = enemy ? opponent : player;
+    struct BattlePokemon *target = enemy ? player : opponent;
+    bool32 copied = !B_POLISHED_MOVE_BALANCE || (infiltrator && !gas);
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Ability(ability); Speed(50); Moves(MOVE_SKETCH); }
-        OPPONENT(SPECIES_WOBBUFFET) { Ability(ABILITY_NONE); Speed(100); }
+        PLAYER(SPECIES_WOBBUFFET) {
+            Ability(enemy ? (gas ? ABILITY_NEUTRALIZING_GAS : ABILITY_NONE) : (infiltrator ? ABILITY_INFILTRATOR : ABILITY_NONE));
+            Speed(enemy ? 100 : 50); if (!enemy) Moves(MOVE_SKETCH);
+        }
+        OPPONENT(SPECIES_WOBBUFFET) {
+            Ability(!enemy ? (gas ? ABILITY_NEUTRALIZING_GAS : ABILITY_NONE) : (infiltrator ? ABILITY_INFILTRATOR : ABILITY_NONE));
+            Speed(enemy ? 50 : 100); if (enemy) Moves(MOVE_SKETCH);
+        }
     } WHEN {
-        TURN { MOVE(opponent, MOVE_SUBSTITUTE); MOVE(player, MOVE_SKETCH); }
+        TURN { MOVE(target, MOVE_SUBSTITUTE); MOVE(user, MOVE_SKETCH); }
     } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_SUBSTITUTE, opponent);
-        if (B_POLISHED_MOVE_BALANCE) NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_SKETCH, player);
-        else ANIMATION(ANIM_TYPE_MOVE, MOVE_SKETCH, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SUBSTITUTE, target);
+        if (copied) ANIMATION(ANIM_TYPE_MOVE, MOVE_SKETCH, user);
+        else NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_SKETCH, user);
     } THEN {
-        EXPECT_EQ(player->moves[0], B_POLISHED_MOVE_BALANCE ? MOVE_SKETCH : MOVE_SUBSTITUTE);
-        EXPECT_EQ(player->pp[0], B_POLISHED_MOVE_BALANCE ? 0 : GetMovePP(MOVE_SUBSTITUTE));
+        EXPECT_EQ(user->moves[0], copied ? MOVE_SUBSTITUTE : MOVE_SKETCH);
+        EXPECT_EQ(user->pp[0], copied ? GetMovePP(MOVE_SUBSTITUTE) : 0);
     }
 }
 

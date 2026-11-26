@@ -1,6 +1,37 @@
 #include "global.h"
 #include "test/battle.h"
 
+SINGLE_BATTLE_TEST("Polished Suite 2 Transform keeps the target's current Roost types after end turn")
+{
+    bool32 fullHP = FALSE;
+    PARAMETRIZE { fullHP = FALSE; }
+    PARAMETRIZE { fullHP = TRUE; }
+    GIVEN {
+        PLAYER(SPECIES_DITTO) { Ability(ABILITY_NONE); Speed(50); MaxHP(1000); HP(1000); Moves(MOVE_TRANSFORM); }
+        OPPONENT(SPECIES_SKARMORY) { Ability(ABILITY_NONE); Speed(100); MaxHP(1000); HP(fullHP ? 1000 : 500); Moves(MOVE_ROOST, MOVE_EARTHQUAKE); }
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_ROOST); MOVE(player, MOVE_TRANSFORM); }
+        TURN { MOVE(opponent, MOVE_EARTHQUAKE); }
+    } SCENE {
+        if (!fullHP) ANIMATION(ANIM_TYPE_MOVE, MOVE_ROOST, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_TRANSFORM, player);
+        if (B_POLISHED_MOVE_BALANCE && !fullHP) {
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_EARTHQUAKE, opponent);
+            HP_BAR(player);
+        } else {
+            NONE_OF {
+                ANIMATION(ANIM_TYPE_MOVE, MOVE_EARTHQUAKE, opponent);
+                HP_BAR(player);
+            }
+        }
+    } THEN {
+        EXPECT_EQ(player->types[0], TYPE_STEEL);
+        EXPECT_EQ(player->types[1], B_POLISHED_MOVE_BALANCE && !fullHP ? TYPE_MYSTERY : TYPE_FLYING);
+        EXPECT_EQ(opponent->types[1], TYPE_FLYING);
+        EXPECT_EQ((u32)player->volatiles.roostActive, FALSE);
+    }
+}
+
 SINGLE_BATTLE_TEST("Polished Suite 2 Transform preserves HP item status and party moves while copying stats types and PP")
 {
     u32 bonuses = 0xff;

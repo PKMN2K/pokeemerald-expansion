@@ -89,7 +89,10 @@ void PolishedReloadBattleMonAfterEvolution(enum BattlerId battler, bool32 evolve
         gBattleSpritesDataPtr->battlerData[battler].transformSpecies = SPECIES_NONE;
     if (evolved)
     {
-        battleMon->item = GetMonData(mon, MON_DATA_HELD_ITEM);
+        // EvolveDuringBattle explicitly skips Item when reloading the active
+        // source mon. Its backup also survives until RestoreBattleItems.
+        if (!UsesPolishedBattleRules(battler, GetOppositeBattler(battler)))
+            battleMon->item = GetMonData(mon, MON_DATA_HELD_ITEM);
         battleMon->ability = GetMonAbility(mon);
         battleMon->volatiles.overwrittenAbility = ABILITY_NONE;
         battleMon->volatiles.gastroAcid = FALSE;

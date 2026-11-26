@@ -3,6 +3,39 @@
   "source_commit": "3fa43192379df5c3e7b09a08e4d5d79af4f02f42",
   "source_variant": "default release, FAITHFUL undefined; lexical inventory retains alternate branches as a conservative superset",
   "complete_behavior_parity": false,
+  "suite2_reconciliation": {
+    "implementation_status": "reconciled",
+    "scope": "Suite 2 action/damage/move/status/ability/item mechanics and switching/fainting, including selectable source mechanics.",
+    "closure_review": "tools/polished_port/SUITE2_CLOSURE_REVIEW.md",
+    "validation_record": "tools/polished_port/SUITE2_VALIDATION.json",
+    "interpretation": "The closure review binds the original Suite 2 mechanical scope to authenticated source branches, runtime adapters and distinguishing regressions. The validation record identifies the implementation and executed gates; an inventory or a new runner invocation does not itself establish closure.",
+    "documented_deviations": [
+      {
+        "id": "light_metal_zero_weight_nontermination",
+        "reachable": true,
+        "source_behavior": "Light Metal can halve an authenticated weight of one to zero, after which the source Low Kick table scan can fail to terminate.",
+        "target_behavior": "The target retains a bounded native fallback for this modified-ability input.",
+        "disposition": "Deliberate nontermination deviation; neither an unreachable exclusion nor a passing case of literal source parity.",
+        "review": "tools/polished_port/SUITE2_ABILITY_ITEM_RECONCILIATION.md"
+      }
+    ]
+  },
+  "original_shared_obligations": [
+    "Complete damage/stat formula, critical hits, type/STAB, accuracy/evasion and RNG distributions.",
+    "Every source effect success/failure branch, prerequisites, durations, cancellation and turn ordering.",
+    "Substitute (including breakage), Protect, immunity, ability/item suppression and fainting order.",
+    "Switching, forced/called/copied moves, multi-turn and multi-hit effects, weather and end-turn state.",
+    "Original battle presentation and source AI decisions."
+  ],
+  "shared_open_obligations": [
+    "Suite 3: trainer/wild generation, special battle-context bindings and source option UI/Predict disclosure; the selectable source mechanics themselves are reconciled by Suite 2.",
+    "Suite 3: source AI scoring, knowledge, move/item/switch selection and tie decisions. AI frame-budget tests establish performance only.",
+    "Suite 3: capture/escape/roamer arithmetic and context flows, rewards, postbattle ability dispatch, evolution/learning options and their campaign persistence boundaries; Suite 2 terminal item cleanup remains reconciled in its own ledger.",
+    "Suite 3: Tower/link construction, restrictions, outcomes and synchronization. Native extra formats remain optional capabilities.",
+    "Suite 3: exact shared RNG stream and call counts across complete contexts. Reviewed Suite 2 branch probabilities do not establish stream equivalence.",
+    "Suite 3: source artwork, messages, animation and observable timing, with production/campaign/save-reset-Continue evidence for the complete contexts."
+  ],
+  "inventory_status_interpretation": "Domain status, lexical block behavior and per-effect flags remain conservative whole-battle certification fields. Domain obligations retain their original inventory scope. Reviewed Suite 2 mechanical branches are reconciled in the closure review and validation record, while original Suite 3 contexts, AI, exact RNG and presentation remain open; the unchanged inventory flags do not mean every reviewed mechanical branch is unexamined.",
   "inventory_scope": {
     "directory_prefixes": [
       "engine/battle/",
@@ -35871,6 +35904,61 @@
   ],
   "regression_tests": [
     {
+      "name": "Polished absorption Sap Sipper skips source Grass status moves",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/ability/polished_absorption.c"
+    },
+    {
+      "name": "Polished absorption Volt Absorb and Motor Drive skip source Thunder Wave",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/ability/polished_absorption.c"
+    },
+    {
+      "name": "Polished absorption Lightning Rod blocks damage and status despite older native presets",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/ability/polished_absorption.c"
+    },
+    {
+      "name": "Polished absorption Ground immunity takes precedence over electric absorption",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/ability/polished_absorption.c"
+    },
+    {
+      "name": "Polished absorption retains source damage absorption and exact recovery flooring",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/ability/polished_absorption.c"
+    },
+    {
+      "name": "Polished absorption source Bulletproof is not in the Mold Breaker suppression list",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/ability/polished_absorption.c"
+    },
+    {
+      "name": "Polished absorption Weak Armor always grants two Speed stages",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/ability/polished_absorption.c"
+    },
+    {
+      "name": "Polished absorption optional doubles retain native Sap Sipper status immunity",
+      "kind": "DOUBLE_BATTLE_TEST",
+      "path": "test/battle/ability/polished_absorption.c"
+    },
+    {
+      "name": "Polished absorption full HP recovery abilities announce that HP is full",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/ability/polished_absorption.c"
+    },
+    {
+      "name": "Polished absorption capped stat abilities retain immunity and report no effect",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/ability/polished_absorption.c"
+    },
+    {
+      "name": "Polished absorption frozen Flash Fire ignores the native legacy eligibility preset",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/ability/polished_absorption.c"
+    },
+    {
       "name": "Polished contact source Effect Spore byte selection differs from the native percentage roll",
       "kind": "SINGLE_BATTLE_TEST",
       "path": "test/battle/ability/polished_contact_status.c"
@@ -36351,6 +36439,31 @@
       "path": "test/battle/ability/polished_corrosion_substitute.c"
     },
     {
+      "name": "Polished Cud Chew silently expires a healing retry at full HP",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/ability/polished_cud_chew.c"
+    },
+    {
+      "name": "Polished Cud Chew announces a status retry only when it can cure the new status",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/ability/polished_cud_chew.c"
+    },
+    {
+      "name": "Polished Cud Chew silently expires Lansat while its critical boost is still active",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/ability/polished_cud_chew.c"
+    },
+    {
+      "name": "Polished Cud Chew silently expires a stat retry after reaching the cap",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/ability/polished_cud_chew.c"
+    },
+    {
+      "name": "Polished Cud Chew retries confusion once and silently expires an ineffective Persim",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/ability/polished_cud_chew.c"
+    },
+    {
       "name": "Polished Cursed Body checks remaining PP in every slot on both sides",
       "kind": "SINGLE_BATTLE_TEST",
       "path": "test/battle/ability/polished_cursed_body.c"
@@ -36441,6 +36554,151 @@
       "path": "test/battle/ability/polished_cursed_body_substitute.c"
     },
     {
+      "name": "Polished departure Natural Cure uses the effective ability and the departing party slot",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/ability/polished_departure_abilities.c"
+    },
+    {
+      "name": "Polished departure Natural Cure follows Skill Swap acquisition and loss",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/ability/polished_departure_abilities.c"
+    },
+    {
+      "name": "Polished endturn Shed Skin uses the source 77 of 256 byte outcomes",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/ability/polished_endturn_abilities.c"
+    },
+    {
+      "name": "Polished endturn Shed Skin uses its full byte distribution on either side",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/ability/polished_endturn_abilities.c"
+    },
+    {
+      "name": "Polished endturn Shed Skin is suppressed by Neutralizing Gas",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/ability/polished_endturn_abilities.c"
+    },
+    {
+      "name": "Polished endturn Ice Body heals during source Dig and Fly charging",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/ability/polished_endturn_abilities.c"
+    },
+    {
+      "name": "Polished endturn Ice Body respects weather and ability suppression while digging",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/ability/polished_endturn_abilities.c"
+    },
+    {
+      "name": "Polished endturn weather recovery floors its amount and stops at full HP",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/ability/polished_endturn_abilities.c"
+    },
+    {
+      "name": "Polished endturn Hydration uses the holder Umbrella and active weather",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/ability/polished_endturn_abilities.c"
+    },
+    {
+      "name": "Polished endturn Moody raises one of five stats under older native presets",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/ability/polished_endturn_abilities.c"
+    },
+    {
+      "name": "Polished endturn Moody lowers a distinct stat from its source candidate pool",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/ability/polished_endturn_abilities.c"
+    },
+    {
+      "name": "Polished endturn optional doubles keep native Ice Body hiding behavior",
+      "kind": "DOUBLE_BATTLE_TEST",
+      "path": "test/battle/ability/polished_endturn_abilities.c"
+    },
+    {
+      "name": "Polished endturn Moody skips a fully capped source stat mask",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/ability/polished_endturn_abilities.c"
+    },
+    {
+      "name": "Polished endturn Moody clips the sole eligible raise and lowers a different stat",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/ability/polished_endturn_abilities.c"
+    },
+    {
+      "name": "Polished endturn Moody excludes a raised stat from the sole eligible lower",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/ability/polished_endturn_abilities.c"
+    },
+    {
+      "name": "Polished entry closure Trace immediately applies copied Magma Armor only to freeze",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/ability/polished_entry_closure.c"
+    },
+    {
+      "name": "Polished entry closure Trace retries after each source blacklist ability leaves",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/ability/polished_entry_closure.c"
+    },
+    {
+      "name": "Polished entry closure Magma Armor gained by Skill Swap cures freeze before the pending action",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/ability/polished_entry_closure.c"
+    },
+    {
+      "name": "Polished entry closure Magma Armor waits for Neutralizing Gas to leave",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/ability/polished_entry_closure.c"
+    },
+    {
+      "name": "Polished entry closure Frisk checks current held items and Gas suppression for either side",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/ability/polished_entry_closure.c"
+    },
+    {
+      "name": "Polished entry closure Frisk acquired after Trick reveals the replacement item",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/ability/polished_entry_closure.c"
+    },
+    {
+      "name": "Polished entry closure Screen Cleaner removes both sides screens but preserves Mist and Safeguard",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/ability/polished_entry_closure.c"
+    },
+    {
+      "name": "Polished entry closure Screen Cleaner gained with only Mist and Safeguard stays silent",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/ability/polished_entry_closure.c"
+    },
+    {
+      "name": "Polished Forewarn uses the source listed power for dynamic and fixed damage moves",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/ability/polished_entry_information.c"
+    },
+    {
+      "name": "Polished Forewarn compares Counter at 120 despite the source comment saying 160",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/ability/polished_entry_information.c"
+    },
+    {
+      "name": "Polished Forewarn does not activate against only status moves",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/ability/polished_entry_information.c"
+    },
+    {
+      "name": "Polished Forewarn chooses equal source powers uniformly",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/ability/polished_entry_information.c"
+    },
+    {
+      "name": "Polished Forewarn retains native handling when optional moves are present",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/ability/polished_entry_information.c"
+    },
+    {
+      "name": "Polished Anticipation ignores Thunder Wave despite its super effective type",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/ability/polished_entry_information.c"
+    },
+    {
       "name": "Polished flinch focus rechecks active Inner Focus after all source flinch moves with Mold Breaker",
       "kind": "SINGLE_BATTLE_TEST",
       "path": "test/battle/ability/polished_flinch_focus.c"
@@ -36514,6 +36772,81 @@
       "name": "Polished flinch focus retains optional Ability Shield protection",
       "kind": "SINGLE_BATTLE_TEST",
       "path": "test/battle/ability/polished_flinch_focus.c"
+    },
+    {
+      "name": "Polished hit stats Justified Rattled and Weak Armor activate on the exact Substitute break",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/ability/polished_hit_stat_abilities.c"
+    },
+    {
+      "name": "Polished hit stats breaking Substitute preserves Gas suppression but ignores Mold Breaker",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/ability/polished_hit_stat_abilities.c"
+    },
+    {
+      "name": "Polished hit stats Anger Point and its Mirror Herb copy include intact and broken Substitutes",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/ability/polished_hit_stat_abilities.c"
+    },
+    {
+      "name": "Polished hit stats immediate Liechi consumption precedes critical text and Anger Point caps",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/ability/polished_hit_stat_abilities.c"
+    },
+    {
+      "name": "Polished hit stats Anger Point resolves during critical text before the burn command thaws",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/ability/polished_hit_stat_abilities.c"
+    },
+    {
+      "name": "Polished hit stats lethal Enigma restores its holder before faint effects and its pending action",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/ability/polished_hit_stat_abilities.c"
+    },
+    {
+      "name": "Polished hit stats Future Sight consumes Liechi before critical text and Anger Point",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/ability/polished_hit_stat_abilities.c"
+    },
+    {
+      "name": "Polished hit stats Future Sight Parental Bond repeats and cancels Berserk after intermediate healing",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/ability/polished_hit_stat_abilities.c"
+    },
+    {
+      "name": "Polished hit stats immediate Enigma precedes reserved Knock Off and Bug Bite loss",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/ability/polished_hit_stat_abilities.c"
+    },
+    {
+      "name": "Polished hit stats optional doubles retain native Anger Point Substitute rejection",
+      "kind": "DOUBLE_BATTLE_TEST",
+      "path": "test/battle/ability/polished_hit_stat_abilities.c"
+    },
+    {
+      "name": "Polished hit stats Berserk remains suppressed by Sheer Force under Champions presets",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/ability/polished_hit_stat_abilities.c"
+    },
+    {
+      "name": "Polished hit stats Enigma heals before Berserk while ordinary healing waits",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/ability/polished_hit_stat_abilities.c"
+    },
+    {
+      "name": "Polished hit stats optional doubles retain native Champions Berserk with Sheer Force",
+      "kind": "DOUBLE_BATTLE_TEST",
+      "path": "test/battle/ability/polished_hit_stat_abilities.c"
+    },
+    {
+      "name": "Polished hit stats Berserk remembers final ordinary berry healing across multihit and Parental Bond",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/ability/polished_hit_stat_abilities.c"
+    },
+    {
+      "name": "Polished hit stats suppressed Berserk cannot leak across a new action a canceled hit or replacement",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/ability/polished_hit_stat_abilities.c"
     },
     {
       "name": "Polished recovery Pickup can recover an item consumed on an earlier turn",
@@ -36671,17 +37004,22 @@
       "path": "test/battle/ability/polished_magic_bounce.c"
     },
     {
-      "name": "Polished Magic Bounce accuracy skips the returned status move roll",
+      "name": "Polished Magic Bounce accuracy preserves original status misses through reflection",
       "kind": "SINGLE_BATTLE_TEST",
       "path": "test/battle/ability/polished_magic_bounce_accuracy.c"
     },
     {
-      "name": "Polished Magic Bounce accuracy skips the returned stat drop roll",
+      "name": "Polished Magic Bounce accuracy preserves original stat misses through reflection",
       "kind": "SINGLE_BATTLE_TEST",
       "path": "test/battle/ability/polished_magic_bounce_accuracy.c"
     },
     {
-      "name": "Polished Magic Bounce accuracy skips confusion seed and source Foresight rolls",
+      "name": "Polished Magic Bounce accuracy preserves confusion seed and source Foresight misses",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/ability/polished_magic_bounce_accuracy.c"
+    },
+    {
+      "name": "Polished Magic Bounce accuracy reuses an original status hit without a reflected roll",
       "kind": "SINGLE_BATTLE_TEST",
       "path": "test/battle/ability/polished_magic_bounce_accuracy.c"
     },
@@ -36692,6 +37030,11 @@
     },
     {
       "name": "Polished Magic Bounce accuracy retains returned status immunities",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/ability/polished_magic_bounce_accuracy.c"
+    },
+    {
+      "name": "Polished Magic Bounce accuracy retains original type immunity through reflection",
       "kind": "SINGLE_BATTLE_TEST",
       "path": "test/battle/ability/polished_magic_bounce_accuracy.c"
     },
@@ -36716,7 +37059,7 @@
       "path": "test/battle/ability/polished_magic_bounce_accuracy.c"
     },
     {
-      "name": "Polished Magic Bounce accuracy ignores raised evasion on the original user",
+      "name": "Polished Magic Bounce accuracy reuses the original hit despite reflected evasion",
       "kind": "SINGLE_BATTLE_TEST",
       "path": "test/battle/ability/polished_magic_bounce_accuracy.c"
     },
@@ -37261,6 +37604,41 @@
       "path": "test/battle/hold_effect/polished_items.c"
     },
     {
+      "name": "Polished Leppa held recovery consumes only the selected slots packed PP Ups",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/hold_effect/polished_leppa.c"
+    },
+    {
+      "name": "Polished Leppa stolen recovery compares and wraps the raw packed PP byte",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/hold_effect/polished_leppa.c"
+    },
+    {
+      "name": "Polished Leppa Cud Chew recovery preserves source packed byte wrap",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/hold_effect/polished_leppa.c"
+    },
+    {
+      "name": "Polished Leppa stolen recovery selects the first nonfull slot before a later empty slot",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/hold_effect/polished_leppa.c"
+    },
+    {
+      "name": "Polished Leppa Cud Chew reconsumption also selects the first nonfull slot",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/hold_effect/polished_leppa.c"
+    },
+    {
+      "name": "Polished Leppa uses transformed PP without restoring the original party move",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/hold_effect/polished_leppa.c"
+    },
+    {
+      "name": "Polished Leppa restores the exhausted caller slot after Pressure without spending the called move PP",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/hold_effect/polished_leppa.c"
+    },
+    {
       "name": "Polished status orbs bypass Safeguard without consuming the item or dealing immediate residual damage",
       "kind": "SINGLE_BATTLE_TEST",
       "path": "test/battle/hold_effect/polished_status_orbs.c"
@@ -37326,6 +37704,106 @@
       "path": "test/battle/hold_effect/polished_status_orbs.c"
     },
     {
+      "name": "Polished survival Focus Band uses its raw thirty byte outcomes",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/hold_effect/polished_survival_items.c"
+    },
+    {
+      "name": "Polished survival Focus Band checks byte twenty nine versus thirty",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/hold_effect/polished_survival_items.c"
+    },
+    {
+      "name": "Polished survival a failed Focus Band roll cannot fall back to Sturdy",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/hold_effect/polished_survival_items.c"
+    },
+    {
+      "name": "Polished survival Focus Sash is consumed before Sturdy",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/hold_effect/polished_survival_items.c"
+    },
+    {
+      "name": "Polished survival Sturdy ignores older native presets and respects Mold Breaker",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/hold_effect/polished_survival_items.c"
+    },
+    {
+      "name": "Polished survival Endure takes precedence over held survival items",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/hold_effect/polished_survival_items.c"
+    },
+    {
+      "name": "Polished survival False Swipe does not consume Focus Sash or activate Sturdy",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/hold_effect/polished_survival_items.c"
+    },
+    {
+      "name": "Polished survival damaged Focus Sash and Sturdy holders faint normally",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/hold_effect/polished_survival_items.c"
+    },
+    {
+      "name": "Polished survival optional doubles retain native Sturdy before Focus Sash",
+      "kind": "DOUBLE_BATTLE_TEST",
+      "path": "test/battle/hold_effect/polished_survival_items.c"
+    },
+    {
+      "name": "Polished survival Focus Sash is consumed on the first lethal hit and cannot save the second",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/hold_effect/polished_survival_items.c"
+    },
+    {
+      "name": "Polished survival a nonlethal first hit makes Focus Sash ineligible for the lethal second hit",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/hold_effect/polished_survival_items.c"
+    },
+    {
+      "name": "Polished survival Focus Band rolls again after surviving the first multihit strike",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/hold_effect/polished_survival_items.c"
+    },
+    {
+      "name": "Polished Weakness Policy precedes ordinary hit abilities and their Mirror Herb checkpoint",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/hold_effect/polished_weakness_policy.c"
+    },
+    {
+      "name": "Polished Weakness Policy follows the final ordinary multihit ability checkpoint",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/hold_effect/polished_weakness_policy.c"
+    },
+    {
+      "name": "Polished Weakness Policy cannot retry after a secondary reopens a capped stat",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/hold_effect/polished_weakness_policy.c"
+    },
+    {
+      "name": "Polished Weakness Policy accepts super effective False Swipe with zero HP loss",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/hold_effect/polished_weakness_policy.c"
+    },
+    {
+      "name": "Polished Weakness Policy uses the first Parental Bond strike before its hit ability",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/hold_effect/polished_weakness_policy.c"
+    },
+    {
+      "name": "Polished Weakness Policy applies source caps at the delayed Future Sight checkpoint",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/hold_effect/polished_weakness_policy.c"
+    },
+    {
+      "name": "Polished Weakness Policy reaches the early checkpoint after Explosion faints its user",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/hold_effect/polished_weakness_policy.c"
+    },
+    {
+      "name": "Polished Weakness Policy skips a late multihit checkpoint after contact knocks out its user",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/hold_effect/polished_weakness_policy.c"
+    },
+    {
       "name": "Polished healing applies source HP amounts to player and opponent",
       "kind": "SINGLE_BATTLE_TEST",
       "path": "test/battle/item_effect/polished_healing.c"
@@ -37339,6 +37817,36 @@
       "name": "Polished healing berries restore at least one HP in battle",
       "kind": "SINGLE_BATTLE_TEST",
       "path": "test/battle/item_effect/polished_healing.c"
+    },
+    {
+      "name": "Polished medicine closure all-status cures confusion while preserving source attraction",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/item_effect/polished_medicine_closure.c"
+    },
+    {
+      "name": "Polished medicine closure matching cures update active and bench statuses on either side",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/item_effect/polished_medicine_closure.c"
+    },
+    {
+      "name": "Polished medicine closure bag eligibility rejects dead mismatched and ineffective targets",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/item_effect/polished_medicine_closure.c"
+    },
+    {
+      "name": "Polished medicine closure bag eligibility does not treat attraction as a source all-status cure",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/item_effect/polished_medicine_closure.c"
+    },
+    {
+      "name": "Polished medicine closure manual PP healing preserves PP Ups and leaves temporary moves unchanged",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/item_effect/polished_medicine_closure.c"
+    },
+    {
+      "name": "Polished medicine closure PP bag eligibility checks all four slots and source maxima",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/item_effect/polished_medicine_closure.c"
     },
     {
       "name": "Polished medicine updates party and live happiness on both battle sides",
@@ -37379,6 +37887,16 @@
       "name": "Polished move PP restoration updates the targeted partner only",
       "kind": "DOUBLE_BATTLE_TEST",
       "path": "test/battle/item_effect/polished_move_pp.c"
+    },
+    {
+      "name": "Polished X items always raise two stages independently of the native preset",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/item_effect/polished_x_items.c"
+    },
+    {
+      "name": "Polished X item boosts cannot be copied by a later Mirror Herb checkpoint",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/item_effect/polished_x_items.c"
     },
     {
       "name": "Polished Pain Split matches source rounding, caps, HP order and party updates",
@@ -37524,6 +38042,181 @@
       "name": "Polished Belly Drum retains native Contrary limits and healing for Z-moves",
       "kind": "SINGLE_BATTLE_TEST",
       "path": "test/battle/move_effect/polished_belly_drum.c"
+    },
+    {
+      "name": "Polished command closure Growth uses effective user weather and independent stat caps",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/move_effect/polished_command_closure.c"
+    },
+    {
+      "name": "Polished command closure Haze resets all seven stages on both sides",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/move_effect/polished_command_closure.c"
+    },
+    {
+      "name": "Polished command closure Haze preserves Focus Energy Minimize and Defense Curl",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/move_effect/polished_command_closure.c"
+    },
+    {
+      "name": "Polished command closure capped Defense Curl still boosts Rollout",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/move_effect/polished_command_closure.c"
+    },
+    {
+      "name": "Polished command closure Sucker Punch checks attack status earlier action and item selection",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/move_effect/polished_command_closure.c"
+    },
+    {
+      "name": "Polished command closure Transform rejects hidden targets with No Guard under the oldest preset",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/move_effect/polished_command_closure.c"
+    },
+    {
+      "name": "Polished command closure Skill Swap clears both earned Flash Fire and Unburden states",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/move_effect/polished_command_closure.c"
+    },
+    {
+      "name": "Polished command closure Skill Swap skips Cloud Nine reentry after the swap announcement",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/move_effect/polished_command_closure.c"
+    },
+    {
+      "name": "Polished command closure Skill Swap does not activate a newly acquired Imposter",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/move_effect/polished_command_closure.c"
+    },
+    {
+      "name": "Polished command closure rampage preserves existing confusion on its final action",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/move_effect/polished_command_closure.c"
+    },
+    {
+      "name": "Polished command closure rampage confuses after a final protected action under an old preset",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/move_effect/polished_command_closure.c"
+    },
+    {
+      "name": "Polished command closure a final rampage contact knockout never confuses the fainted user",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/move_effect/polished_command_closure.c"
+    },
+    {
+      "name": "Polished command closure Future Sight cannot finish a running rampage",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/move_effect/polished_command_closure.c"
+    },
+    {
+      "name": "Polished command closure Substitute honors minimum equal-cost and repeated creation boundaries",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/move_effect/polished_command_closure.c"
+    },
+    {
+      "name": "Polished command closure screen durations and failed refresh stay independent with Light Clay",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/move_effect/polished_command_closure.c"
+    },
+    {
+      "name": "Polished command closure Brick Break removes both screens only after a successful hit",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/move_effect/polished_command_closure.c"
+    },
+    {
+      "name": "Polished command closure Brick Break clears screens after HP damage including a lethal hit",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/move_effect/polished_command_closure.c"
+    },
+    {
+      "name": "Polished command closure Safeguard rejects refresh and expires after exactly five turns",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/move_effect/polished_command_closure.c"
+    },
+    {
+      "name": "Polished command Attract rejects Fly and Dig even when either battler has No Guard",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/move_effect/polished_command_edges.c"
+    },
+    {
+      "name": "Polished command Attract checks gender before announcing Oblivious",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/move_effect/polished_command_edges.c"
+    },
+    {
+      "name": "Polished command Attract retains an existing infatuation when its repeat fails",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/move_effect/polished_command_edges.c"
+    },
+    {
+      "name": "Polished command Foresight rejects a repeat under the native generation three preset",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/move_effect/polished_command_edges.c"
+    },
+    {
+      "name": "Polished command Minimize sets its volatile even when Evasion is already capped",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/move_effect/polished_command_edges.c"
+    },
+    {
+      "name": "Polished command Focus Energy keeps two source stages under the native generation two preset",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/move_effect/polished_command_edges.c"
+    },
+    {
+      "name": "Polished command sleeping Rollout skips the Defense Curl damage multiplier",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/move_effect/polished_command_edges.c"
+    },
+    {
+      "name": "Polished command Bug Bite consumes through an intact Substitute while optional Pluck stays native",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/move_effect/polished_command_edges.c"
+    },
+    {
+      "name": "Polished command Thief and Knock Off check the current Substitute after damage and honor Infiltrator",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/move_effect/polished_command_edges.c"
+    },
+    {
+      "name": "Polished command Infiltrator Knock Off reserves the targets healing berry before HP damage",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/move_effect/polished_command_edges.c"
+    },
+    {
+      "name": "Polished command item attacks preserve items after a miss or Protect",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/move_effect/polished_command_edges.c"
+    },
+    {
+      "name": "Polished command identity Attract uses original party genders after either participant transforms",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/move_effect/polished_command_identity.c"
+    },
+    {
+      "name": "Polished command identity Cute Charm uses party genders after either participant transforms",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/move_effect/polished_command_identity.c"
+    },
+    {
+      "name": "Polished command identity Rivalry retains original opposite and genderless identities after Transform",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/move_effect/polished_command_identity.c"
+    },
+    {
+      "name": "Polished command identity Room Service snapshots Speed order after direct Trick Room activation",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/move_effect/polished_command_identity.c"
+    },
+    {
+      "name": "Polished command identity capped Room Service holders keep their items on activation",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/move_effect/polished_command_identity.c"
+    },
+    {
+      "name": "Polished command identity Room Service does not activate when Trick Room is toggled off or expires",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/move_effect/polished_command_identity.c"
     },
     {
       "name": "Polished Curse respects Substitute with the source Infiltrator exception",
@@ -38116,6 +38809,26 @@
       "path": "test/battle/move_effect/polished_multihit.c"
     },
     {
+      "name": "Polished Pay Day accumulates coins from either actor and rejects misses and Protect",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/move_effect/polished_pay_day.c"
+    },
+    {
+      "name": "Polished Pay Day checks the surviving Substitute and honors Infiltrator",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/move_effect/polished_pay_day.c"
+    },
+    {
+      "name": "Polished Pay Day still accumulates coins when its damage faints the target",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/move_effect/polished_pay_day.c"
+    },
+    {
+      "name": "Polished Pay Day production effect wraps its source 24 bit accumulator and retains native caps",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/move_effect/polished_pay_day.c"
+    },
+    {
       "name": "Polished Perish Song separates user countdown from opponent ability immunity",
       "kind": "SINGLE_BATTLE_TEST",
       "path": "test/battle/move_effect/polished_perish_song.c"
@@ -38161,6 +38874,41 @@
       "path": "test/battle/move_effect/polished_perish_song.c"
     },
     {
+      "name": "Polished command posthit Rage follows Anger Point and cannot boost after its critical cap",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/move_effect/polished_post_hit.c"
+    },
+    {
+      "name": "Polished command posthit runs Justified then Air Balloon then Rage before later hit items",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/move_effect/polished_post_hit.c"
+    },
+    {
+      "name": "Polished command posthit Rage uses the current Substitute after the breaking hit",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/move_effect/polished_post_hit.c"
+    },
+    {
+      "name": "Polished Protect interruption preserves the source consecutive probability",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/move_effect/polished_protect_chain.c"
+    },
+    {
+      "name": "Polished Protect counter resets when another selected move cannot execute",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/move_effect/polished_protect_chain.c"
+    },
+    {
+      "name": "Polished Protect counter resets on a player item action",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/move_effect/polished_protect_chain.c"
+    },
+    {
+      "name": "Polished Protect and Endure called by Sleep Talk reset at each selection",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/move_effect/polished_protect_chain.c"
+    },
+    {
       "name": "Polished Protect chain first use protects or endures on both sides",
       "kind": "SINGLE_BATTLE_TEST",
       "path": "test/battle/move_effect/polished_protect_chain.c"
@@ -38203,6 +38951,21 @@
     {
       "name": "Polished Protect chain retains native consecutive odds for optional Detect",
       "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/move_effect/polished_protect_chain.c"
+    },
+    {
+      "name": "Polished Protect optional doubles retain native consecutive odds and count",
+      "kind": "DOUBLE_BATTLE_TEST",
+      "path": "test/battle/move_effect/polished_protect_chain.c"
+    },
+    {
+      "name": "Polished Protect either active gimmick retains native consecutive odds and count",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/move_effect/polished_protect_chain.c"
+    },
+    {
+      "name": "Polished Protect disobedient alternate move preserves the selected protection chain",
+      "kind": "WILD_BATTLE_TEST",
       "path": "test/battle/move_effect/polished_protect_chain.c"
     },
     {
@@ -38531,7 +39294,7 @@
       "path": "test/battle/move_effect/polished_sketch.c"
     },
     {
-      "name": "Polished Sketch rejects Substitute even with Infiltrator",
+      "name": "Polished Sketch Substitute rejection honors effective Infiltrator on either side",
       "kind": "SINGLE_BATTLE_TEST",
       "path": "test/battle/move_effect/polished_sketch.c"
     },
@@ -38691,6 +39454,86 @@
       "path": "test/battle/move_effect/polished_sound_priority.c"
     },
     {
+      "name": "Polished command stat accuracy precedes caps for every primary target stat script",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/move_effect/polished_stat_command_order.c"
+    },
+    {
+      "name": "Polished command stat accuracy keeps the exact ninety percent capped Growl cutoff",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/move_effect/polished_stat_command_order.c"
+    },
+    {
+      "name": "Polished command stat accuracy misses precede every source defensive stat guard",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/move_effect/polished_stat_command_order.c"
+    },
+    {
+      "name": "Polished command stat accuracy precedes ordinary Substitute but keeps Swagger early rejection",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/move_effect/polished_stat_command_order.c"
+    },
+    {
+      "name": "Polished command stat accuracy leaves self buffs and optional target stat moves native",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/move_effect/polished_stat_command_order.c"
+    },
+    {
+      "name": "Polished command stat accuracy preserves either established native gimmick",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/move_effect/polished_stat_command_order.c"
+    },
+    {
+      "name": "Polished command Guard Spec stops source Infiltrator while optional stat moves keep native bypass",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/move_effect/polished_stat_command_order.c"
+    },
+    {
+      "name": "Polished command Illuminate protects source accuracy drops under legacy presets and respects suppression",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/move_effect/polished_stat_command_order.c"
+    },
+    {
+      "name": "Polished command stat misses precede Soundproof Armor Tail and Prankster Dark nullification",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/move_effect/polished_stat_command_order.c"
+    },
+    {
+      "name": "Polished command reflected original miss gives Blunder Policy only to the reflector",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/move_effect/polished_stat_command_order.c"
+    },
+    {
+      "name": "Polished command source stat ability precedes Clear Amulet while misses precede both",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/move_effect/polished_stat_command_order.c"
+    },
+    {
+      "name": "Polished command manual miss text does not consume Blunder Policy",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/move_effect/polished_stat_command_order.c"
+    },
+    {
+      "name": "Polished command Sing nullification overrides a miss before the separate priority helper",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/move_effect/polished_stat_command_order.c"
+    },
+    {
+      "name": "Polished command Trick and Pain Split retain distinct manual and priority miss paths",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/move_effect/polished_stat_command_order.c"
+    },
+    {
+      "name": "Polished command damaging misses precede Armor Tail and Soundproof after Sucker Punch eligibility",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/move_effect/polished_stat_command_order.c"
+    },
+    {
+      "name": "Polished command called priority uses the actual script move against Armor Tail",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/move_effect/polished_stat_command_order.c"
+    },
+    {
       "name": "Polished Suite 2 Conversion selects any known moves listed type without using its PP",
       "kind": "SINGLE_BATTLE_TEST",
       "path": "test/battle/move_effect/polished_suite2_conversion.c"
@@ -38709,6 +39552,11 @@
       "name": "Polished Suite 2 wild Conversion selects a valid later slot",
       "kind": "WILD_BATTLE_TEST",
       "path": "test/battle/move_effect/polished_suite2_conversion.c"
+    },
+    {
+      "name": "Polished Suite 2 Transform keeps the target's current Roost types after end turn",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/move_effect/polished_suite2_copy.c"
     },
     {
       "name": "Polished Suite 2 Transform preserves HP item status and party moves while copying stats types and PP",
@@ -39466,6 +40314,111 @@
       "path": "test/battle/polished_accuracy_order.c"
     },
     {
+      "name": "Polished forgetting a slot clears only its active player locks, including bench learning",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_action_boundaries.c"
+    },
+    {
+      "name": "Polished rampage called by Sleep Talk never locks the sleeping user",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_action_boundaries.c"
+    },
+    {
+      "name": "Polished Rollout called by Sleep Talk never advances the sleeping user lock",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_action_boundaries.c"
+    },
+    {
+      "name": "Polished rampage clears its lock when the middle turn is protected",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_action_boundaries.c"
+    },
+    {
+      "name": "Polished rampage confuses on final-turn flinch despite an older native preset",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_action_boundaries.c"
+    },
+    {
+      "name": "Polished Explosion releases Unnerve berries before attack damage",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_action_boundaries.c"
+    },
+    {
+      "name": "Polished Explosion clears status before fainting and respects Damp prevention",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_action_boundaries.c"
+    },
+    {
+      "name": "Polished Rest uses the opponent Umbrella for Leaf Guard independent of generation",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_action_boundaries.c"
+    },
+    {
+      "name": "Polished Rest rechecks weather and ability suppression for Leaf Guard",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_action_boundaries.c"
+    },
+    {
+      "name": "Polished Rest replaces poison and heals before its immediate berry cure",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_action_boundaries.c"
+    },
+    {
+      "name": "Polished retaliation uses only the last incoming strike",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_action_boundaries.c"
+    },
+    {
+      "name": "Polished retaliation Parental Bond repeats the same doubled amount",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_action_boundaries.c"
+    },
+    {
+      "name": "Polished charging moves pay PP once including Pressure with continuation or Power Herb",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_action_boundaries.c"
+    },
+    {
+      "name": "Polished Solar Beam sunlight skips charging without consuming Power Herb",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_action_boundaries.c"
+    },
+    {
+      "name": "Polished charging interruption releases Fly Dig and Solar Beam without a second PP cost",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_action_boundaries.c"
+    },
+    {
+      "name": "Polished charging called by Metronome preserves caller PP and cleared history against Pressure",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_action_boundaries.c"
+    },
+    {
+      "name": "Polished Rest rejection preserves HP and status for both battlers",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_action_boundaries.c"
+    },
+    {
+      "name": "Polished called charging history ends on the next selection or replacement",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_action_boundaries.c"
+    },
+    {
+      "name": "Polished called attacks spend only caller PP against Pressure",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_action_boundaries.c"
+    },
+    {
+      "name": "Polished retaliation saturates doubled source damage at the 16-bit boundary",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_action_boundaries.c"
+    },
+    {
+      "name": "Polished charging starts against a fainted opponent and resumes only after replacement",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_action_boundaries.c"
+    },
+    {
       "name": "Polished action Aftermath damages Magic Guard on a source contact knockout",
       "kind": "SINGLE_BATTLE_TEST",
       "path": "test/battle/polished_action_resolution.c"
@@ -39576,7 +40529,7 @@
       "path": "test/battle/polished_action_resolution.c"
     },
     {
-      "name": "Polished action Destiny Bond choice survives flinch but a different choice clears it",
+      "name": "Polished action Destiny Bond is cleared by flinch even when the repeated choice is Destiny Bond",
       "kind": "SINGLE_BATTLE_TEST",
       "path": "test/battle/polished_action_resolution.c"
     },
@@ -39679,6 +40632,96 @@
       "name": "Polished action Aftermath healing berry precedes Rocky Helmet",
       "kind": "SINGLE_BATTLE_TEST",
       "path": "test/battle/polished_action_resolution.c"
+    },
+    {
+      "name": "Polished affection reads both true parties at every friendship threshold",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_affection.c"
+    },
+    {
+      "name": "Polished affection excludes actual link and frontier battles",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_affection.c"
+    },
+    {
+      "name": "Polished affection leaves either active optional gimmick native",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_affection.c"
+    },
+    {
+      "name": "Polished affection does not introduce source effects into optional doubles",
+      "kind": "DOUBLE_BATTLE_TEST",
+      "path": "test/battle/polished_affection.c"
+    },
+    {
+      "name": "Polished affection doubles the critical numerator independently at stages zero one and two",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_affection.c"
+    },
+    {
+      "name": "Polished affection after Transform retains the transforming party friendship",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_affection.c"
+    },
+    {
+      "name": "Polished affection Future Sight reads its original user party slot after replacement",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_affection.c"
+    },
+    {
+      "name": "Polished affection independently evades one of ten otherwise accurate hits on either side",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_affection.c"
+    },
+    {
+      "name": "Polished affection evasion requires its enabled maximum level and still triggers Blunder Policy",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_affection.c"
+    },
+    {
+      "name": "Polished affection passing evasion still performs the ordinary accuracy roll",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_affection.c"
+    },
+    {
+      "name": "Polished affection is bypassed by perfect accuracy rules before its independent roll",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_affection.c"
+    },
+    {
+      "name": "Polished affection cures each primary status with one of five outcomes on either side",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_affection.c"
+    },
+    {
+      "name": "Polished affection cure starts at friendship two hundred twenty and ignores ability suppression",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_affection.c"
+    },
+    {
+      "name": "Polished affection self cure precedes an already scheduled Future Sight",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_affection.c"
+    },
+    {
+      "name": "Polished affection endurance uses level plus one of twenty outcomes before Focus Sash",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_affection.c"
+    },
+    {
+      "name": "Polished affection endurance has exact strict cutoffs and stays disabled without its option",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_affection.c"
+    },
+    {
+      "name": "Polished affection endurance respects Endure and False Swipe before items and Sturdy",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_affection.c"
+    },
+    {
+      "name": "Polished affection endurance rolls again for each lethal multihit strike",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_affection.c"
     },
     {
       "name": "Polished core confusion matches 8112 source arithmetic vectors",
@@ -39976,6 +41019,96 @@
       "path": "test/battle/polished_berserk_gene.c"
     },
     {
+      "name": "Polished category option uses source table types before battle type conversion",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_category_option.c"
+    },
+    {
+      "name": "Polished category option routes actual damage into Counter or Mirror Coat",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_category_option.c"
+    },
+    {
+      "name": "Polished category option leaves optional moves and either active gimmick native",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_category_option.c"
+    },
+    {
+      "name": "Polished Choice history records selection before flinching or move failure",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_choice.c"
+    },
+    {
+      "name": "Polished Choice history is updated by each free selection in every slot",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_choice.c"
+    },
+    {
+      "name": "Polished Choice Trick retains the selected Trick when acquiring a Choice item",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_choice.c"
+    },
+    {
+      "name": "Polished Choice history survives item removal and changes on the next free selection",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_choice.c"
+    },
+    {
+      "name": "Polished Choice Encore changes history even when Mental Herb immediately cures it",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_choice.c"
+    },
+    {
+      "name": "Polished Choice Encore history remains after its duration expires",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_choice.c"
+    },
+    {
+      "name": "Polished Choice switching resets the incoming battlers history",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_choice.c"
+    },
+    {
+      "name": "Polished Choice Transform clears history when the selected move is absent in copied moves",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_choice.c"
+    },
+    {
+      "name": "Polished Choice Transform preserves history if the copied moves still include Transform",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_choice.c"
+    },
+    {
+      "name": "Polished Choice called moves retain the selected caller history",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_choice.c"
+    },
+    {
+      "name": "Polished Choice Gorilla Tactics gained after acting restricts the previously selected move",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_choice.c"
+    },
+    {
+      "name": "Polished cleanup actual loss restores every removed party berry before blackout",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_cleanup_closure.c"
+    },
+    {
+      "name": "Polished cleanup actual wild loss distinguishes removed berries eaten berries and nonberries",
+      "kind": "WILD_BATTLE_TEST",
+      "path": "test/battle/polished_cleanup_closure.c"
+    },
+    {
+      "name": "Polished cleanup full party capture preserves current boxed items and existing backups",
+      "kind": "WILD_BATTLE_TEST",
+      "path": "test/battle/polished_cleanup_closure.c"
+    },
+    {
+      "name": "Polished cleanup full party capture keeps the optional native swap prompt",
+      "kind": "WILD_BATTLE_TEST",
+      "path": "test/battle/polished_cleanup_closure.c"
+    },
+    {
       "name": "Polished damage matches all source stat compression stage and critical vectors",
       "kind": "SINGLE_BATTLE_TEST",
       "path": "test/battle/polished_damage.c"
@@ -40104,6 +41237,51 @@
       "name": "Polished damage AI cached native modifiers match fresh rolls and reset per calculation",
       "kind": "DOUBLE_BATTLE_TEST",
       "path": "test/battle/polished_damage.c"
+    },
+    {
+      "name": "Polished damage closure Guts includes statused physical attacks and excludes special or suppressed boosts",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_damage_closure.c"
+    },
+    {
+      "name": "Polished damage closure Analytic follows actual prior actions including priority switching and cancellation",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_damage_closure.c"
+    },
+    {
+      "name": "Polished damage closure pinch abilities check exact HP type and suppression",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_damage_closure.c"
+    },
+    {
+      "name": "Polished damage closure Rivalry preserves both genderless branches and exact fractions",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_damage_closure.c"
+    },
+    {
+      "name": "Polished damage closure Sand Force checks weather type Gas and Cloud Nine but not Umbrella",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_damage_closure.c"
+    },
+    {
+      "name": "Polished damage closure Tough Claws uses the source Protective Pads contact gate",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_damage_closure.c"
+    },
+    {
+      "name": "Polished damage closure Steely Spirit checks current move type and effective ability",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_damage_closure.c"
+    },
+    {
+      "name": "Polished damage closure Galvanize boosts only converted moves before STAB under older native presets",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_damage_closure.c"
+    },
+    {
+      "name": "Polished damage closure Adaptability modifies STAB after the base constant and respects Gas",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_damage_closure.c"
     },
     {
       "name": "Polished deferred Eject Pack requires a negative stage after a stat drop",
@@ -40566,7 +41744,7 @@
       "path": "test/battle/polished_evolution.c"
     },
     {
-      "name": "Polished evolution refreshes source types, consumes the held item and runs the new entry ability",
+      "name": "Polished evolution refreshes source types, preserves the source active item and runs the new entry ability",
       "kind": "AI_SINGLE_BATTLE_TEST",
       "path": "test/battle/polished_evolution.c"
     },
@@ -40689,6 +41867,66 @@
       "name": "Polished friendship lethal recoil skips happiness loss when both active Pokemon faint",
       "kind": "SINGLE_BATTLE_TEST",
       "path": "test/battle/polished_friendship.c"
+    },
+    {
+      "name": "Polished item closure sun damage heals before the other weather holder",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_item_branch_closure.c"
+    },
+    {
+      "name": "Polished item closure sun abilities honor holder Umbrella and weather suppression",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_item_branch_closure.c"
+    },
+    {
+      "name": "Polished item closure stat and critical berries use inclusive Gluttony pinch boundaries",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_item_branch_closure.c"
+    },
+    {
+      "name": "Polished item closure Starf uniformly selects only uncapped battle stats",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_item_branch_closure.c"
+    },
+    {
+      "name": "Polished item closure Starf rejects all raw capped candidates before Contrary",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_item_branch_closure.c"
+    },
+    {
+      "name": "Polished item closure Weakness Policy consumes only for an actual stat change",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_item_branch_closure.c"
+    },
+    {
+      "name": "Polished item closure Weakness Policy applies through dolls and only to super effective hits",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_item_branch_closure.c"
+    },
+    {
+      "name": "Polished item closure Weakness Policy waits for the final ordinary multi hit",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_item_branch_closure.c"
+    },
+    {
+      "name": "Polished item closure defend hit berries respect category caps dolls and Sheer Force",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_item_branch_closure.c"
+    },
+    {
+      "name": "Polished item closure retaliation berries distinguish category doll and immunity gates",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_item_branch_closure.c"
+    },
+    {
+      "name": "Polished item closure Throat Spray preserves sound failure and cap gates",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_item_branch_closure.c"
+    },
+    {
+      "name": "Polished item closure Perish Song Spray distinguishes priority failure from repeated timers",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_item_branch_closure.c"
     },
     {
       "name": "Polished lifecycle Magic Guard freezes the toxic counter",
@@ -40866,6 +42104,221 @@
       "path": "test/battle/polished_mirror_ledger.c"
     },
     {
+      "name": "Polished move history Metronome records the disobedient alternate action",
+      "kind": "WILD_BATTLE_TEST",
+      "path": "test/battle/polished_move_history.c"
+    },
+    {
+      "name": "Polished move history Metronome retains attempted repeats across Protect and misses",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_move_history.c"
+    },
+    {
+      "name": "Polished move history Metronome ignores a flinched selection of another move",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_move_history.c"
+    },
+    {
+      "name": "Polished move history Metronome counts the caller when its called move changes",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_move_history.c"
+    },
+    {
+      "name": "Polished move history Metronome saturates after five increments",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_move_history.c"
+    },
+    {
+      "name": "Polished move history Metronome resets for an executed different move and switching",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_move_history.c"
+    },
+    {
+      "name": "Polished move history Rage survives an interrupted repeat without starting on failure",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_move_history.c"
+    },
+    {
+      "name": "Polished move history using a player item clears Rage before the opponent attacks",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_move_history.c"
+    },
+    {
+      "name": "Polished move history Magic Bounce preserves source charging through a later own action",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_move_history.c"
+    },
+    {
+      "name": "Polished move history Metronome retains native boost when either side activates a gimmick",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_move_history.c"
+    },
+    {
+      "name": "Polished move history only enemy Baton Pass retains Metronome caller history",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_move_history.c"
+    },
+    {
+      "name": "Polished obedience uses Johto badge thresholds including unchanged intermediate badges",
+      "kind": "WILD_BATTLE_TEST",
+      "path": "test/battle/polished_obedience.c"
+    },
+    {
+      "name": "Polished obedience checks the source trainer ID without OT name or high word",
+      "kind": "WILD_BATTLE_TEST",
+      "path": "test/battle/polished_obedience.c"
+    },
+    {
+      "name": "Polished obedience first accepted roll uses the exact cap boundary",
+      "kind": "WILD_BATTLE_TEST",
+      "path": "test/battle/polished_obedience.c"
+    },
+    {
+      "name": "Polished obedience does not affect an outsider at the exact badge cap",
+      "kind": "WILD_BATTLE_TEST",
+      "path": "test/battle/polished_obedience.c"
+    },
+    {
+      "name": "Polished obedience can choose another move despite a Choice restriction",
+      "kind": "WILD_BATTLE_TEST",
+      "path": "test/battle/polished_obedience.c"
+    },
+    {
+      "name": "Polished obedience with no alternate PP loafs without spending selected PP",
+      "kind": "WILD_BATTLE_TEST",
+      "path": "test/battle/polished_obedience.c"
+    },
+    {
+      "name": "Polished obedience napping overwrites poison below the source outcome boundary",
+      "kind": "WILD_BATTLE_TEST",
+      "path": "test/battle/polished_obedience.c"
+    },
+    {
+      "name": "Polished obedience self damage occurs between the two source outcome boundaries",
+      "kind": "WILD_BATTLE_TEST",
+      "path": "test/battle/polished_obedience.c"
+    },
+    {
+      "name": "Polished action checks confusion before a newly applied Disable",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_obedience.c"
+    },
+    {
+      "name": "Polished obedience an active Disable prevents all alternate move choices",
+      "kind": "WILD_BATTLE_TEST",
+      "path": "test/battle/polished_obedience.c"
+    },
+    {
+      "name": "Polished obedience does not run before flinch or spend selected PP",
+      "kind": "WILD_BATTLE_TEST",
+      "path": "test/battle/polished_obedience.c"
+    },
+    {
+      "name": "Polished action sleep cancellation clears a repeated Destiny Bond",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_obedience.c"
+    },
+    {
+      "name": "Polished obedience napping bypasses Insomnia and Vital Spirit without a generic cure",
+      "kind": "WILD_BATTLE_TEST",
+      "path": "test/battle/polished_obedience.c"
+    },
+    {
+      "name": "Polished obedience traded as OT option bypasses only the foreign player check",
+      "kind": "WILD_BATTLE_TEST",
+      "path": "test/battle/polished_obedience.c"
+    },
+    {
+      "name": "Polished obedience traded as OT option preserves either active native gimmick",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_obedience.c"
+    },
+    {
+      "name": "Polished persistence restores removed berries but not eaten berries",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_persistence.c"
+    },
+    {
+      "name": "Polished persistence consumes berries permanently and restores nonberries",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_persistence.c"
+    },
+    {
+      "name": "Polished persistence trainer Trick restores the original berry",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_persistence.c"
+    },
+    {
+      "name": "Polished persistence wild Trick overwrites even a nonempty backup",
+      "kind": "WILD_BATTLE_TEST",
+      "path": "test/battle/polished_persistence.c"
+    },
+    {
+      "name": "Polished persistence wild Thief retains a held or bagged stolen item",
+      "kind": "WILD_BATTLE_TEST",
+      "path": "test/battle/polished_persistence.c"
+    },
+    {
+      "name": "Polished persistence eating a stolen berry does not erase a different original item",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_persistence.c"
+    },
+    {
+      "name": "Polished persistence Harvest replenishes the backup after consumption",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_persistence.c"
+    },
+    {
+      "name": "Polished persistence trainer Pickup returns a recovered opponent item",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_persistence.c"
+    },
+    {
+      "name": "Polished persistence wild Pickup fills only an empty backup",
+      "kind": "WILD_BATTLE_TEST",
+      "path": "test/battle/polished_persistence.c"
+    },
+    {
+      "name": "Polished persistence restores each party slot including a switched out holder",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_persistence.c"
+    },
+    {
+      "name": "Polished persistence a newly caught party member retains its current item",
+      "kind": "WILD_BATTLE_TEST",
+      "path": "test/battle/polished_persistence.c"
+    },
+    {
+      "name": "Polished persistence a berry consumed during Dynamax stays consumed after it ends",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_persistence.c"
+    },
+    {
+      "name": "Polished persistence native Pickup during Dynamax retains its acquired item",
+      "kind": "WILD_BATTLE_TEST",
+      "path": "test/battle/polished_persistence.c"
+    },
+    {
+      "name": "Polished self hit Hi Jump Kick crashes defer berries and bypass Magic Guard while optional moves stay native",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_self_hit_items.c"
+    },
+    {
+      "name": "Polished self hit berries wait for actual damage or the final healing sweep",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_self_hit_items.c"
+    },
+    {
+      "name": "Polished self hit defers HP and stat berries past a harmless action into residual healing",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_self_hit_items.c"
+    },
+    {
+      "name": "Polished self hit from disobedience waits for the pending opponents actual damage",
+      "kind": "WILD_BATTLE_TEST",
+      "path": "test/battle/polished_self_hit_items.c"
+    },
+    {
       "name": "Polished Noctowl has its source Ghost immunity in a real battle",
       "kind": "SINGLE_BATTLE_TEST",
       "path": "test/battle/polished_species.c"
@@ -40956,7 +42409,12 @@
       "path": "test/battle/polished_suite2_boss.c"
     },
     {
-      "name": "Polished Suite 2 Armor Suit is essential when either battler is Mewtwo",
+      "name": "Polished Suite 2 Armor Suit is essential only for either party Armored Mewtwo form",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_suite2_boss.c"
+    },
+    {
+      "name": "Polished Suite 2 Armor Suit eligibility retains the party form after Transform",
       "kind": "SINGLE_BATTLE_TEST",
       "path": "test/battle/polished_suite2_boss.c"
     },
@@ -40974,6 +42432,81 @@
       "name": "Polished Suite 2 U-turn escapes Mean Look and clears the outgoing trap",
       "kind": "SINGLE_BATTLE_TEST",
       "path": "test/battle/polished_suite2_switching.c"
+    },
+    {
+      "name": "Polished switch closure wild Red Card switches the player before the pending enemy action",
+      "kind": "WILD_BATTLE_TEST",
+      "path": "test/battle/polished_switch_closure.c"
+    },
+    {
+      "name": "Polished switch closure wild Red Card retains itself without a living player reserve",
+      "kind": "WILD_BATTLE_TEST",
+      "path": "test/battle/polished_switch_closure.c"
+    },
+    {
+      "name": "Polished switch closure optional wild Red Card attacks retain native encounter termination",
+      "kind": "WILD_BATTLE_TEST",
+      "path": "test/battle/polished_switch_closure.c"
+    },
+    {
+      "name": "Polished switch closure trainer Red Card uniformly selects each living reserve",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_switch_closure.c"
+    },
+    {
+      "name": "Polished switch closure wild Red Card uniformly selects each living reserve",
+      "kind": "WILD_BATTLE_TEST",
+      "path": "test/battle/polished_switch_closure.c"
+    },
+    {
+      "name": "Polished switch closure a fainted Mean Look user still traps the pending Teleport",
+      "kind": "WILD_BATTLE_TEST",
+      "path": "test/battle/polished_switch_closure.c"
+    },
+    {
+      "name": "Polished switch closure replacement releases the fainted Mean Look users trap",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_switch_closure.c"
+    },
+    {
+      "name": "Polished switch closure a last party faint ends battle before the pending Teleport",
+      "kind": "WILD_BATTLE_TEST",
+      "path": "test/battle/polished_switch_closure.c"
+    },
+    {
+      "name": "Polished switch closure Red Card Toxic Spikes synchronize before curing the entrant",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_switch_closure.c"
+    },
+    {
+      "name": "Polished switch closure wild Red Card uses ordinary entry status reflection",
+      "kind": "WILD_BATTLE_TEST",
+      "path": "test/battle/polished_switch_closure.c"
+    },
+    {
+      "name": "Polished switch closure Red Card does not carry outgoing Mold Breaker into entry hazards",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_switch_closure.c"
+    },
+    {
+      "name": "Polished switch closure Eject Button does not carry attacking Mold Breaker into entry hazards",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_switch_closure.c"
+    },
+    {
+      "name": "Polished switch closure Roar discards the outgoing targets pending Roar",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_switch_closure.c"
+    },
+    {
+      "name": "Polished switch closure Eject Button discards the outgoing targets pending attack",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_switch_closure.c"
+    },
+    {
+      "name": "Polished switch closure Pursuit knockout prevents the outgoing Regenerator recovery",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_switch_closure.c"
     },
     {
       "name": "Polished lifecycle Baton Pass preserves incoming source binding counters",
@@ -41291,6 +42824,61 @@
       "path": "test/battle/status1/polished_frozen_flinch.c"
     },
     {
+      "name": "Polished incoming thaw follows all seven burn commands after Normalize despite secondary blockers",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/status1/polished_incoming_thaw.c"
+    },
+    {
+      "name": "Polished incoming thaw separates effective Sheer Force from the current Fire type and native preset",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/status1/polished_incoming_thaw.c"
+    },
+    {
+      "name": "Polished incoming thaw places burn commands before hit abilities and current Fire before Air Balloon",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/status1/polished_incoming_thaw.c"
+    },
+    {
+      "name": "Polished incoming thaw rejects intact and broken Substitute hits but allows Infiltrator real damage",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/status1/polished_incoming_thaw.c"
+    },
+    {
+      "name": "Polished incoming thaw rejects misses immunity and an interrupted action",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/status1/polished_incoming_thaw.c"
+    },
+    {
+      "name": "Polished incoming thaw burn command still clears a fainted target before its faint animation",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/status1/polished_incoming_thaw.c"
+    },
+    {
+      "name": "Polished incoming thaw Flare Blitz follows lethal recoil without requiring a living user",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/status1/polished_incoming_thaw.c"
+    },
+    {
+      "name": "Polished incoming thaw Tri Attack burn branch never defrosts under the legacy native preset",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/status1/polished_incoming_thaw.c"
+    },
+    {
+      "name": "Polished incoming thaw either established native gimmick keeps Normalize on native thaw rules",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/status1/polished_incoming_thaw.c"
+    },
+    {
+      "name": "Polished incoming thaw optional Flame Wheel preserves the legacy native burn rule",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/status1/polished_incoming_thaw.c"
+    },
+    {
+      "name": "Polished incoming thaw optional doubles keep normalized burn moves native",
+      "kind": "DOUBLE_BATTLE_TEST",
+      "path": "test/battle/status1/polished_incoming_thaw.c"
+    },
+    {
       "name": "Polished self-thaw precedes confusion whether the user attacks or hits itself",
       "kind": "SINGLE_BATTLE_TEST",
       "path": "test/battle/status1/polished_self_thaw.c"
@@ -41414,6 +43002,51 @@
       "name": "Polished sleeping flinch preserves party sleep when switched out after flinching",
       "kind": "SINGLE_BATTLE_TEST",
       "path": "test/battle/status1/polished_sleeping_flinch.c"
+    },
+    {
+      "name": "Polished status gates apply shared Infiltrator Substitute rules independently of native presets",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/status1/polished_status_gates.c"
+    },
+    {
+      "name": "Polished status gates preserve the native Infiltrator Substitute preset in doubles",
+      "kind": "DOUBLE_BATTLE_TEST",
+      "path": "test/battle/status1/polished_status_gates.c"
+    },
+    {
+      "name": "Polished status gates preserve the native Infiltrator Substitute preset with either active gimmick",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/status1/polished_status_gates.c"
+    },
+    {
+      "name": "Polished status gates keep Electric paralysis immunity independent of native presets",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/status1/polished_status_gates.c"
+    },
+    {
+      "name": "Polished status gates check primary Safeguard before status type and ability rejection",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/status1/polished_status_gates.c"
+    },
+    {
+      "name": "Polished status gates preserve Safeguard Infiltrator and Mold Breaker distinctions",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/status1/polished_status_gates.c"
+    },
+    {
+      "name": "Polished status gates retain type rejection before Substitute and immunity after it",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/status1/polished_status_gates.c"
+    },
+    {
+      "name": "Polished status gates leave native doubles Electric paralysis presets available",
+      "kind": "DOUBLE_BATTLE_TEST",
+      "path": "test/battle/status1/polished_status_gates.c"
+    },
+    {
+      "name": "Polished status gates leave either active gimmick on native Electric paralysis presets",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/status1/polished_status_gates.c"
     },
     {
       "name": "Polished mid-battle evolution excludes wild, final opponent, link, facility and native profiles",
@@ -41921,7 +43554,7 @@
       "path": "test/polished_typeless_moves.c"
     }
   ],
-  "semantic_evidence_policy": "Existing tests establish only their asserted scenarios. Names, dispatch, inventory, code presence, native passes and AI frame budgets do not close a source block or domain.",
+  "semantic_evidence_policy": "Existing tests establish only their asserted scenarios. Names, dispatch, inventory, code presence, native passes and AI frame budgets do not close a source block or domain. Suite 2 implementation reconciliation additionally records authenticated branch review, runtime bindings and distinguishing evidence in its linked ledger; this does not certify every whole-battle context or the documented reachable deviation.",
   "scoped_evidence": [
     {
       "manifest": "tools/polished_port/manifests/accuracy_order.json",
@@ -41929,11 +43562,11 @@
     },
     {
       "manifest": "tools/polished_port/manifests/action_resolution.json",
-      "sha256": "2922a7420407954ec74cd94e6a0858b541df6a2422b048b5d8cb8f49b4f0375f"
+      "sha256": "e684376c793ff6d34cc721abb6e5323111c1fcd67db0165784fe988ccc3e9c66"
     },
     {
       "manifest": "tools/polished_port/manifests/attack_suite.json",
-      "sha256": "71b2522f9458e8fcf06f3df124c868cb1e22406f03ab6adaf3c7f7a5a4e64fa5"
+      "sha256": "8ca2039a3c2b63971edc20e76dfbd1549538ae6a427d2dc5fa1ec144601ba428"
     },
     {
       "manifest": "tools/polished_port/manifests/battle_core.json",

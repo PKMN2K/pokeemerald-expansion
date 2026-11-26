@@ -11,7 +11,8 @@ from polished_sprout import TRAINERS, PILLAR_TILES
 from test_johto_demo_emulator import A, B, UP, DOWN, LEFT, RIGHT
 from test_new_bark_emulator import map_data, actors, save_game, continue_game, close_resident_dialogue, player_state
 from test_new_bark_intro_emulator import layout, advance, task_active, text_matches, party, script_active
-from test_new_bark_battle_emulator import controller, choose_cell, check_portrait
+from test_new_bark_battle_emulator import (controller, choose_cell, check_portrait,
+    optional_trainer_shift_prompt, learn_source_bite)
 from test_cherrygrove_emulator import map_id, flag, leave, interact
 from test_violet_houses_emulator import enter, walk_city
 from test_violet_mart_emulator import count, open_bag_item, open_shop, purchase, close_shop, stock
@@ -83,20 +84,7 @@ def settle(game, report):
         if opcode == constants()["B_SCR_OP_YESNOBOXLEARNMOVE"]:
             move = int.from_bytes(game.read(game.sym["gMoveToLearn"], 2), "little")
             if move == constants()["MOVE_BITE"]:
-                mon = party(game, details=True)[0]
-                assert mon["level"] == 13, mon  # Pinned source Totodile learn level.
-                slot = mon["moves"].index(constants()["MOVE_LEER"])
-                advance(game, lambda: task_active(game, "Task_HandleReplaceMoveInput"))
-                game.frames(30)
-                for _ in range(slot):
-                    game.press(DOWN, 30)
-                game.press(A, 120)
-                advance(game, lambda: party(game, details=True)[0]["moves"][slot] == move)
-                expected = list(mon["moves"])
-                expected[slot] = move
-                assert party(game, details=True)[0]["moves"] == expected
-                report["learned_bite_at"] = mon["level"]
-                print("PASS: Totodile learns source Bite at level 13 through the real move selector", flush=True)
+                report["learned_bite_at"] = learn_source_bite(game)['level']
             else:
                 game.press(B, 20)
         elif opcode == constants()["B_SCR_OP_YESNOBOXSTOPLEARNINGMOVE"]:
@@ -147,7 +135,7 @@ def settle(game, report):
             assert slot is not None, (name, mon)
             attempted, last_slot = signature, slot
             choose_cell(game, "gMoveSelectionCursor", slot)
-        elif not on_field and controller(game, "PlayerHandleYesNoInput"):
+        elif not on_field and optional_trainer_shift_prompt(game):
             game.press(B, 20)
         else:
             game.press(A, 12)

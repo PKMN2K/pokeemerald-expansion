@@ -710,6 +710,7 @@ struct BattlerTurn
     u8 criticalHit:2;
     u8 secondaryEffect:2;
     struct RiggedRNG rng;
+    struct RiggedRNG rngAfterFirstHit;
 };
 
 struct ExpectedAIAction
@@ -1166,6 +1167,9 @@ void ConversionChoice(u32 sourceLine, struct BattlePokemon *battler, u32 slot);
 #define USE_ITEM(battler, ...) UseItem(__LINE__, battler, (struct ItemContext) { R_APPEND_TRUE(__VA_ARGS__) })
 #define GIVE_PLAYER_ITEM(item, quantity) GivePlayerItem(__LINE__, item, quantity)
 #define WITH_RNG(tag, value) rng: ((struct RiggedRNG) { tag, value })
+// Uniform RNG override for subsequent hits of this attack. The first hit
+// still uses WITH_RNG (or the ordinary tagged/default test behavior).
+#define WITH_RNG_AFTER_FIRST_HIT(tag, value) rngAfterFirstHit: ((struct RiggedRNG) { tag, value })
 #define TIE_BREAK_SCORE(rngTag, scoreTieRes, value) TieBreakScore(__LINE__, rngTag, scoreTieRes, value)
 #define TIE_BREAK_TARGET(targetTieRes, value) TieBreakTarget(__LINE__, targetTieRes, value)
 
@@ -1194,6 +1198,8 @@ struct MoveContext
     bool8 explicitTarget;
     struct RiggedRNG rng;
     bool8 explicitRNG;
+    struct RiggedRNG rngAfterFirstHit;
+    bool8 explicitRNGAfterFirstHit;
 };
 
 struct ItemContext

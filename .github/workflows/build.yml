@@ -189,6 +189,12 @@ jobs:
         timeout-minutes: 5
         run: python3 tools/polished_port/scripts/test_conversion_selection_emulator.py --driver /tmp/johto-demo-driver --output /tmp/johto-validation/conversion-selection
 
+      - name: Verify Shift replacement and wild faint prompts in both production profiles
+        timeout-minutes: 10
+        run: |
+          python3 tools/polished_port/scripts/test_shift_switch_emulator.py --driver /tmp/johto-demo-driver --profile source --output /tmp/johto-validation/shift-source
+          python3 tools/polished_port/scripts/test_shift_switch_emulator.py --driver /tmp/johto-demo-driver --profile native --output /tmp/johto-validation/shift-native
+
       - name: Verify captured forms and legacy ownership through Flash saves
         timeout-minutes: 5
         run: python3 tools/polished_port/scripts/test_capture_storage_emulator.py --driver /tmp/johto-demo-driver --output /tmp/johto-validation/capture-storage
@@ -1247,6 +1253,7 @@ jobs:
         run: |
           gcc -std=gnu11 -O2 -Wall -Wextra -Werror tools/polished_port/tests/mgba_johto_driver.c -lmgba -o /tmp/evolution-input-driver
           python3 tools/polished_port/scripts/test_battle_evolution_emulator.py --driver /tmp/evolution-input-driver --elf pokeemerald-test.elf --output /tmp/evolution-input-validation
+          python3 tools/polished_port/scripts/test_battle_evolution_emulator.py --driver /tmp/evolution-input-driver --elf pokeemerald-polished-moves-test.elf --polished-rules --output /tmp/evolution-input-validation/source-rules
           python3 tools/polished_port/scripts/test_form_evolution_emulator.py --driver /tmp/evolution-input-driver --elf pokeemerald-test.elf --output /tmp/evolution-input-validation/forms
 
       - name: Upload battle evolution evidence

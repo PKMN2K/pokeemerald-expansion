@@ -298,7 +298,7 @@ SINGLE_BATTLE_TEST("Polished action Destiny Bond suppresses Moxie as well as Aft
     }
 }
 
-SINGLE_BATTLE_TEST("Polished action Destiny Bond choice survives flinch but a different choice clears it")
+SINGLE_BATTLE_TEST("Polished action Destiny Bond is cleared by flinch even when the repeated choice is Destiny Bond")
 {
     u32 move = MOVE_DESTINY_BOND;
     PARAMETRIZE { move = MOVE_DESTINY_BOND; }
@@ -311,7 +311,7 @@ SINGLE_BATTLE_TEST("Polished action Destiny Bond choice survives flinch but a di
         TURN { MOVE(player, MOVE_DESTINY_BOND); SWITCH(opponent, 1); }
         TURN { MOVE(opponent, MOVE_FAKE_OUT); MOVE(player, move); }
     } THEN {
-        if (B_POLISHED_MOVE_BALANCE) EXPECT_EQ((u32)player->volatiles.destinyBond, move == MOVE_DESTINY_BOND ? 1 : 0);
+        if (B_POLISHED_MOVE_BALANCE) EXPECT_EQ((u32)player->volatiles.destinyBond, 0);
     }
 }
 

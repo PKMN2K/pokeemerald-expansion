@@ -37,8 +37,8 @@ here are foundational evidence for those later switching/fainting closures.
   Toxic Spikes; passive Gas before hazards; Speed-ordered entry abilities.
   Preserve source Baton Pass binding/Toxic counters and correctly translate
   the source trap-user bit to Emerald's trapped-target representation.
-- Run ordinary entry's Toxic Spikes Synchronize before the entrant's berry;
-  forced entry skips reflection. Preserve opposing Substitute and immunity
+- Run ordinary and item-forced entry's Toxic Spikes Synchronize before the
+  entrant's berry; Roar-style forced-target entry skips reflection. Preserve opposing Substitute and immunity
   checks. Repeat replacements after hazard KOs without repeating residuals.
 - Run source/native catalogs, AI budgets, source authentication, both ROM
   builds, production probes and the playable campaign with Save/Continue.
@@ -64,14 +64,28 @@ changes, not certification of all branches in any whole battle domain.
    Any residual/entry mismatch discovered in these interactions remains an
    explicit dependent obligation and must be fixed before final closure.
 
-Suite 2 implementation status: shared action resolution, deferred switching,
+Suite 2 implementation status: **closed with the documented source nontermination
+deviation**. `SUITE2_CLOSURE_REVIEW.md` records the branch reconciliation and
+`SUITE2_VALIDATION.json` records the frozen candidate, complete catalogs and
+production acceptance. The GitHub Actions run for the containing commit records
+published-head verification. Shared action resolution, deferred switching,
 Intimidate entry-item chains and immediate ability stat-item checkpoints are
-implemented; full branch closure remains pending. The current implementation
+implemented. The current implementation
 covers per-hit recoil/faint/contact order, action-level faint/EXP/outcome
 checkpoints, source Destiny Bond lifecycle, Aftermath/Liquid Ooze eligibility,
 Substitute boundaries, and first-wins reservations shared by U-turn, Baton
 Pass, trainer Teleport/Roar and switch items. Pack checks current negative
 stages in source Speed order; switch execution follows the action checkpoint.
+
+The resumed closure work also covers item-backup and Choice history, source
+obedience/cancellation, entry-information abilities and X items, forgetting,
+rampage/Explosion and in-battle evolution boundaries. Subsequent reviewed
+branches correct Metronome/Rage and Protect chains, caller PP and charging,
+Counter saturation, Rest/Roost/Transform, end-turn and absorption abilities,
+survival items, wild Red Card, item-entry hazards and fainted Mean Look lifetime.
+The closure review records source decisions, runtime functions, distinguishing
+evidence and final execution. It retains the reachable Light Metal nontermination
+exception explicitly; safe source quirks, including packed Leppa wrap, remain reproduced.
 
 Intimidate's private item passes can complete nested replacement chains while
 preserving the surrounding action. Download, Tangling Hair, StatUpAbility,
@@ -93,13 +107,14 @@ and existing-confusion checks. Safeguard is bypassed and new confusion uses
 uniform counters of two or three. Native doubles retain entry activation and
 permanent confusion.
 
-Sketch now uses cleared source counter-move history, rejects Substitute even
-with Infiltrator, and preserves the distinction between battle-only and permanent
+Sketch now uses cleared source counter-move history, rejects Substitute unless
+the effective user ability is Infiltrator, and preserves the distinction between battle-only and permanent
 party moves. Base PP replaces only the selected slot's PP-Up bits; Disable/Encore/Choice
 follow the surviving move identity. Fourteen live groups cover execution,
 failures, switching, PP and native controls; three seeded production-command
 boundary groups cover temporary slots, locks and actual link-mode rejection.
-Link construction/playback and general called-move history remain later audits.
+Called-move history is reconciled in the consolidated Suite 2 action and move
+ledgers. Link construction and playback retain the Suite 3 integration owner.
 
 The consolidated remaining-action batch adds Transform and Skill Swap state
 and ability activation, player-selected Conversion, Cud Chew's separate berry
@@ -112,13 +127,26 @@ faint replacements, not two independently chosen switches. Pursuit interception,
 KO/replacement, U-turn and Mean Look interactions have dedicated live controls.
 
 Authenticated contracts and live bindings remain in
-`manifests/action_resolution.json`. These scenarios do not certify every branch
-of all 133 effect families. Unverified move-command/ability/item combinations
-remain Suite 2 obligations; full branch closure is still OPEN. Conversion's
+`manifests/action_resolution.json`. The consolidated review reconciles all 133
+effect families, 129 commands and 255 moves with their live bindings and branch
+evidence; the final catalogs validate the frozen implementation. The conservative
+whole-battle inventory continues to include the original broader contexts and
+observable-sequence obligations. Conversion's
 Smart AI and link transport, exact RNG calls, recorded/link compatibility, and
 source presentation remain Suite 3 obligations. The appended Giovanni1 trainer
 binding is available for the battle checkpoint and factory probe; its overworld
 story binding and source trainer/item art are not claimed complete.
+
+The current reconciliation also covers all used commands/effect scripts in
+`SUITE2_MOVE_RECONCILIATION.md` and all source ability/held-effect identities in
+`SUITE2_ABILITY_ITEM_RECONCILIATION.md`. These ledgers identify named behavior
+fixtures and the final execution record. Selectable source affection and
+type-based physical/special categories are included in Suite 2 mechanics; their
+source option menus retain the existing Suite 3 setup owner. Likewise the
+accepted Shift/Predict replacement order and wild faint prompt transitions
+retain Suite 2 ownership and passed production real-input probes in both profiles.
+Neither the default Set style nor a default-disabled option excludes a reachable
+mechanical branch from this suite.
 
 ## Suite 3 — battle contexts and final closure
 
@@ -137,38 +165,29 @@ story binding and source trainer/item art are not claimed complete.
    domain/block/effect obligation with source evidence before strict
    completeness is allowed to pass.
 
-## Next implementation milestone: close Suite 2
+## Completed milestone and next suite
 
-Requested from `8e340802` after CI #1646 passed. The next implementation step
-is a consolidated **Suite 2 closure pass**, replacing the sequence of separately
-finished feature batches. Internal checkpoints may be used, but the next
-milestone is closure of the existing Suite 2 scope. Suite 2 is not closed yet.
+The consolidated Suite 2 pass requested from `8e340802` and resumed from
+`2f285962` is complete as an implementation milestone. Its source scope remains
+actions, damage, moves, status, abilities, items, switching and fainting. The
+complete move/command, ability/item and switching/fainting ledgers provide the
+source interpretations, live bindings and distinguishing evidence. None of
+these mechanical obligations was reassigned to Suite 3.
 
-The pass owns actions, damage, moves, status, abilities, items, switching and
-fainting, including all branches of 133 effect families, 129 commands and 255
-source move identities. Keep exactly three suites and preserve their ownership.
-Do not move unfinished Suite 2 behavior into Suite 3 to obtain closure.
+`SUITE2_VALIDATION.json` records the complete source/native runs, reviewed shared
+fixture, AI performance controls, source guards, reproducibility, ARM probes,
+both shipping builds and production/campaign/Save/reset/Continue checks. The
+associated Actions run verifies the exact published implementation commit.
+Inventory counts and passing tests are supporting evidence for the reconciliation.
 
-1. Reconcile the existing source contracts and 1,204 Polished regression groups
-   with every owned source obligation. Build a concrete missing-case list; the
-   current generic open inventory is not a completed branch review.
-2. Complete item backup/restoration and party/inventory persistence; Choice-lock
-   selection, item transfer and cancellation timing; and every other uncovered
-   owned branch. Those named followups are starting points, not the whole scope.
-3. Fix the complete list and add distinguishing tests for success/failure,
-   arithmetic boundaries, suppression, event order, switches, faints and
-   persistence. Retain controls for optional native content and battle modes.
-4. Record authenticated source interpretation, exact live bindings and branch
-   evidence for every owned obligation. Document genuine source-variant
-   exclusions. Do not infer completion from names, inventory or test counts.
-5. Run all source/native regressions, deterministic/source checks, production
-   builds, campaign and Save/reset/Continue checks. Verify CI at the final
-   implementation head. Mark Suite 2 closed only when no owned obligation is
-   unverified, deferred or reassigned.
+Nineteen unused effect constants are true default-build inventory exclusions.
+The reachable weight-one/Light Metal nontermination is a deliberate terminating
+deviation, retained in the closure record and final parity assessment. Source
+selectable mechanics were included despite their default-disabled settings.
 
-This planning change does not certify new engine behavior or alter the current
-completion result. Suite 1 foundations and Suite 3 contexts, AI, RNG and
-presentation retain their existing ownership and open obligations.
+The **next planned implementation suite is Suite 3**, with the six original
+domains and work listed above. Suite 1 retains its implemented-foundations status;
+complete battle parity and the strict completeness gate remain OPEN.
 
 ## Ownership and evidence
 

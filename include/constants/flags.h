@@ -122,6 +122,22 @@
 #define FLAG_POLISHED_FALKNER 0x4EE
 #define FLAG_POLISHED_GIOVANNI1 0x4FF
 #define FLAG_POLISHED_ZEPHYR_BADGE 0x4EF
+// Remaining Johto badge slots were unused in both target variants.
+#define FLAG_POLISHED_HIVE_BADGE 0x2AA
+#define FLAG_POLISHED_PLAIN_BADGE 0x2AB
+#define FLAG_POLISHED_FOG_BADGE 0x2AC
+#define FLAG_POLISHED_STORM_BADGE 0x2AD
+#define FLAG_POLISHED_MINERAL_BADGE 0x2AE
+#define FLAG_POLISHED_GLACIER_BADGE 0x2AF
+#define FLAG_POLISHED_RISING_BADGE 0x2B0
+// Source affection is optional and disabled in the default initial options.
+// An unset flag preserves that behavior for existing saves.
+#define FLAG_POLISHED_AFFECTION 0x2B1
+// Source initial option defaults to the modern split. The unset flag keeps
+// existing saves at that default; Suite 3 owns the source option menu.
+#define FLAG_POLISHED_CLASSIC_CATEGORIES 0x2B2
+// Source traded-as-OT starts disabled; an unset flag preserves existing saves.
+#define FLAG_POLISHED_TRADED_AS_OT 0x2B3
 #define FLAG_POLISHED_ROOST 0x4F9
 #define FLAG_POLISHED_EGG_CALL 0x4FA
 #define FLAG_POLISHED_EGG_GIVEN 0x28E
@@ -808,16 +824,16 @@
 #define FLAG_UNUSED_0x2A7  0x2A7 // Unused Flag
 #define FLAG_UNUSED_0x2A8  0x2A8 // Unused Flag
 #define FLAG_UNUSED_0x2A9  0x2A9 // Unused Flag
-#define FLAG_UNUSED_0x2AA  0x2AA // Unused Flag
-#define FLAG_UNUSED_0x2AB  0x2AB // Unused Flag
-#define FLAG_UNUSED_0x2AC  0x2AC // Unused Flag
-#define FLAG_UNUSED_0x2AD  0x2AD // Unused Flag
-#define FLAG_UNUSED_0x2AE  0x2AE // Unused Flag
-#define FLAG_UNUSED_0x2AF  0x2AF // Unused Flag
-#define FLAG_UNUSED_0x2B0  0x2B0 // Unused Flag
-#define FLAG_UNUSED_0x2B1  0x2B1 // Unused Flag
-#define FLAG_UNUSED_0x2B2  0x2B2 // Unused Flag
-#define FLAG_UNUSED_0x2B3  0x2B3 // Unused Flag
+// Reserved for shared FLAG_POLISHED_HIVE_BADGE.
+// Reserved for shared FLAG_POLISHED_PLAIN_BADGE.
+// Reserved for shared FLAG_POLISHED_FOG_BADGE.
+// Reserved for shared FLAG_POLISHED_STORM_BADGE.
+// Reserved for shared FLAG_POLISHED_MINERAL_BADGE.
+// Reserved for shared FLAG_POLISHED_GLACIER_BADGE.
+// Reserved for shared FLAG_POLISHED_RISING_BADGE.
+// Reserved for shared FLAG_POLISHED_AFFECTION.
+// Reserved for shared FLAG_POLISHED_CLASSIC_CATEGORIES.
+// Reserved for shared FLAG_POLISHED_TRADED_AS_OT.
 #define FLAG_UNUSED_0x2B4  0x2B4 // Unused Flag
 #define FLAG_UNUSED_0x2B5  0x2B5 // Unused Flag
 #define FLAG_UNUSED_0x2B6  0x2B6 // Unused Flag

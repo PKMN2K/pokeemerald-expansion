@@ -10,15 +10,30 @@
 #include "battle_scripts.h"
 #include "item.h"
 #include "polished_items.h"
+#include "polished_moves.h"
+#include "polished_damage.h"
 #include "string_util.h"
 #include "data/hold_effects.h"
+#include "data/polished_entry_abilities.h"
 #include "constants/berry.h"
 
+enum PolishedWeaknessPolicyPhase GetPolishedWeaknessPolicyPhase(enum Move move)
+{
+    if (!UsesPolishedHitCheckpoint(move))
+        return POLISHED_POLICY_NATIVE;
+    if (move >= MOVES_COUNT
+     || (move == MOVE_FUTURE_SIGHT && !IsPolishedFutureSightImpact(gBattlerAttacker, gBattlerTarget, move)))
+        return POLISHED_POLICY_ABSENT;
+    return sPolishedWeaknessPolicyPhases[move];
+}
+
+bool32 IsPolishedWeaknessPolicyActivation(enum HoldEffect holdEffect) { return holdEffect == HOLD_EFFECT_WEAKNESS_POLICY; }
 bool32 IsOnSwitchInActivation(enum HoldEffect holdEffect)          { return gHoldEffectsInfo[holdEffect].onSwitchIn; }
 bool32 IsMirrorHerbActivation(enum HoldEffect holdEffect)          { return gHoldEffectsInfo[holdEffect].mirrorHerb; }
 bool32 IsWhiteHerbActivation(enum HoldEffect holdEffect)           { return gHoldEffectsInfo[holdEffect].whiteHerb; }
 bool32 IsOnStatusChangeActivation(enum HoldEffect holdEffect)      { return gHoldEffectsInfo[holdEffect].onStatusChange; }
 bool32 IsOnHpThresholdActivation(enum HoldEffect holdEffect)       { return gHoldEffectsInfo[holdEffect].onHpThreshold; }
+bool32 IsPolishedDamageEnigmaActivation(enum HoldEffect holdEffect) { return holdEffect == HOLD_EFFECT_ENIGMA_BERRY; }
 bool32 IsKeeMarangaBerryActivation(enum HoldEffect holdEffect)     { return gHoldEffectsInfo[holdEffect].keeMarangaBerry; }
 bool32 IsOnTargetHitActivation(enum HoldEffect holdEffect)         { return gHoldEffectsInfo[holdEffect].onTargetAfterHit; }
 bool32 IsOnAttackerAfterHitActivation(enum HoldEffect holdEffect)  { return gHoldEffectsInfo[holdEffect].onAttackerAfterHit; }
@@ -279,13 +294,31 @@ static enum ItemEffect TryRockyHelmet(enum BattlerId battlerDef, enum BattlerId 
 static enum ItemEffect TryWeaknessPolicy(enum BattlerId battlerDef)
 {
     enum ItemEffect effect = ITEM_NO_EFFECT;
+    enum PolishedWeaknessPolicyPhase phase = GetPolishedWeaknessPolicyPhase(gCurrentMove);
+    bool32 source = phase != POLISHED_POLICY_NATIVE;
 
-    if (IsBattlerTurnDamaged(battlerDef, EXCLUDING_SUBSTITUTES)
+    // Source supereffectivetext runs through a doll, only on the final normal
+    // multihit strike and never on Parental Bond's second strike. Its two stat
+    // attempts consume the policy only if at least one can actually change.
+    if (source
+     && ((phase == POLISHED_POLICY_AFTER_HIT_EFFECTS && !IsBattlerAlive(gBattlerAttacker))
+      || (gMultiHitCounter > 1 && gSpecialStatuses[gBattlerAttacker].parentalBondState == PARENTAL_BOND_OFF)
+      || gSpecialStatuses[gBattlerAttacker].parentalBondState == PARENTAL_BOND_2ND_HIT
+      || (!CompareStat(battlerDef, STAT_ATK, MAX_STAT_STAGE, CMP_LESS_THAN, GetBattlerAbility(battlerDef))
+       && !CompareStat(battlerDef, STAT_SPATK, MAX_STAT_STAGE, CMP_LESS_THAN, GetBattlerAbility(battlerDef)))))
+        return effect;
+
+    // A source False Swipe can write zero HP damage and still reach its
+    // super-effective command. The item wrapper already requires a survivor.
+    if ((source ? !IsBattlerUnaffectedByMove(battlerDef) : IsBattlerTurnDamaged(battlerDef, EXCLUDING_SUBSTITUTES))
      && gBattleStruct->moveResultFlags[battlerDef] & MOVE_RESULT_HIGH_EFFECTIVENESS)
     {
         SetStatChange(battlerDef, STAT_ATK, 2);
         SetStatChange(battlerDef, STAT_SPATK, 2);
-        BattleScriptCall(BattleScript_ItemStatChange);
+        // Source SwitchTurn makes these user stat changes, so the holder's
+        // Substitute cannot block them. Keep the native item script outside
+        // the source action scope.
+        BattleScriptCall(source ? BattleScript_ConsumableItemStatRaise : BattleScript_ItemStatChange);
         effect = ITEM_STATS_CHANGE;
     }
 
@@ -503,11 +536,15 @@ static enum ItemEffect TryMentalHerb(enum BattlerId battler, ActivationTiming ti
 static enum ItemEffect TryThroatSpray(enum BattlerId battlerAtk)
 {
     enum ItemEffect effect = ITEM_NO_EFFECT;
+    bool32 affected = UsesPolishedActionRules(gCurrentMove) && IsPolishedPerishSong(gCurrentMove, battlerAtk)
+        ? gBattleStruct->polishedPerishSongSprayEligible
+        : (IsAnyTargetTurnDamaged(battlerAtk, INCLUDING_SUBSTITUTES)
+        || (GetBattleMoveCategory(gCurrentMove) == DAMAGE_CATEGORY_STATUS && IsAnyTargetAffected()));
 
     if (IsSoundMove(gCurrentMove)
      && gBattleStruct->battlerState[battlerAtk].originalBattlerPartyId == PARTY_SIZE
      && !gBattleStruct->unableToUseMove
-     && (IsAnyTargetTurnDamaged(battlerAtk, INCLUDING_SUBSTITUTES) || (GetBattleMoveCategory(gCurrentMove) == DAMAGE_CATEGORY_STATUS && IsAnyTargetAffected()))
+     && affected
      && CompareStat(battlerAtk, STAT_SPATK, MAX_STAT_STAGE, CMP_LESS_THAN, GetBattlerAbility(battlerAtk))
      && !NoAliveMonsForEitherParty())   // Don't activate if battle will end
     {
@@ -527,7 +564,8 @@ static enum ItemEffect DamagedStatBoostBerryEffect(enum BattlerId battlerDef, en
         return effect;
 
     if (gBattleScripting.overrideBerryRequirements
-     || (GetBattleMoveCategory(gCurrentMove) == category && IsBattlerTurnDamaged(battlerDef, EXCLUDING_SUBSTITUTES)))
+     || (GetBattleMoveCategory(gCurrentMove) == category
+      && IsBattlerTurnDamaged(battlerDef, UsesPolishedActionRules(gCurrentMove) ? INCLUDING_SUBSTITUTES : EXCLUDING_SUBSTITUTES)))
     {
         if (GetBattlerAbility(battlerDef) == ABILITY_RIPEN)
         {
@@ -883,16 +921,34 @@ static enum ItemEffect ItemRestorePp(enum BattlerId battler, enum Item itemId)
     u32 changedPP = 0;
     u32 restoreMove = MAX_MON_MOVES;
     u32 missingMove = MAX_MON_MOVES;
-    u32 ppBonuses = GetMonData(mon, MON_DATA_PP_BONUSES);
     bool32 override = gBattleScripting.overrideBerryRequirements;
+    bool32 source = UsesPolishedLifecycle();
+    u32 ppBonuses = source ? gBattleMons[battler].ppBonuses : GetMonData(mon, MON_DATA_PP_BONUSES);
     enum Ability ability = GetBattlerAbility(battler);
 
     for (u32 i = 0; i < MAX_MON_MOVES; i++)
     {
-        enum Move move = GetMonData(mon, MON_DATA_MOVE1 + i);
-        u32 currentPP = GetMonData(mon, MON_DATA_PP1 + i);
+        enum Move move = source ? gBattleMons[battler].moves[i] : GetMonData(mon, MON_DATA_MOVE1 + i);
+        u32 currentPP = source ? gBattleMons[battler].pp[i] : GetMonData(mon, MON_DATA_PP1 + i);
         if (move == MOVE_NONE)
+        {
+            if (source)
+                break;
             continue;
+        }
+
+        // Stolen/reconsumed Leppa uses GetNonfullPPMove, a single ordered
+        // scan comparing the maximum with the raw source PP byte, including
+        // its PP Ups. Even a full boosted slot therefore qualifies. Keep
+        // optional Expansion moves' independent, wider PP representation.
+        u32 maxPP = CalculatePPWithBonus(move, ppBonuses, i);
+        u32 packedPP = currentPP | (((ppBonuses >> (2 * i)) & 3) << 6);
+        if (source && override
+         && (PolishedGetMovePP(move) ? packedPP != maxPP : currentPP < maxPP))
+        {
+            restoreMove = i;
+            break;
+        }
 
         if (currentPP == 0)
         {
@@ -914,17 +970,27 @@ static enum ItemEffect ItemRestorePp(enum BattlerId battler, enum Item itemId)
 
     if (restoreMove != MAX_MON_MOVES)
     {
-        enum Move move = GetMonData(mon, MON_DATA_MOVE1 + restoreMove);
-        u32 currentPP = GetMonData(mon, MON_DATA_PP1 + restoreMove);
+        enum Move move = source ? gBattleMons[battler].moves[restoreMove] : GetMonData(mon, MON_DATA_MOVE1 + restoreMove);
+        u32 currentPP = source ? gBattleMons[battler].pp[restoreMove] : GetMonData(mon, MON_DATA_PP1 + restoreMove);
         u32 maxPP = CalculatePPWithBonus(move, ppBonuses, restoreMove);
         u32 ppRestored = GetItemHoldEffectParam(itemId);
+        bool32 packedSourcePP = source && PolishedGetMovePP(move);
 
         if (ability == ABILITY_RIPEN)
         {
             ppRestored *= 2;
             gBattlerAbility = battler;
         }
-        changedPP = currentPP + ppRestored;
+        // LeppaRestorePP adds to the unmasked byte, wraps at 256, clamps to
+        // the old boosted maximum, then stores only that new PP value. This
+        // source quirk clears this slot's PP Ups, including at zero PP.
+        if (packedSourcePP)
+        {
+            u32 packedPP = currentPP | (((ppBonuses >> (2 * restoreMove)) & 3) << 6);
+            changedPP = (packedPP + ppRestored) & 0xff;
+        }
+        else
+            changedPP = currentPP + ppRestored;
         if (changedPP > maxPP)
             changedPP = maxPP;
 
@@ -933,10 +999,27 @@ static enum ItemEffect ItemRestorePp(enum BattlerId battler, enum Item itemId)
         BattleScriptCall(BattleScript_BerryPPHeal);
 
         gBattleScripting.battler = battler;
-        BtlController_EmitSetMonData(battler, B_COMM_TO_CONTROLLER, restoreMove + REQUEST_PPMOVE1_BATTLE, 0, 1, &changedPP);
-        MarkBattlerForControllerExec(battler);
-        if (MOVE_IS_PERMANENT(battler, restoreMove))
+        if (!source || MOVE_IS_PERMANENT(battler, restoreMove))
+        {
+            if (packedSourcePP)
+            {
+                // Read the other party slots instead of copying temporary
+                // battle slots (Mimic/Transform) back into the saved mon.
+                u8 ppData[MAX_MON_MOVES + 1];
+                for (u32 i = 0; i < MAX_MON_MOVES; i++)
+                    ppData[i] = GetMonData(mon, MON_DATA_PP1 + i);
+                ppData[restoreMove] = changedPP;
+                ppData[MAX_MON_MOVES] = GetMonData(mon, MON_DATA_PP_BONUSES) & ~(3 << (2 * restoreMove));
+                BtlController_EmitSetMonData(battler, B_COMM_TO_CONTROLLER, REQUEST_PP_DATA_BATTLE, 0, sizeof(ppData), ppData);
+            }
+            else
+                BtlController_EmitSetMonData(battler, B_COMM_TO_CONTROLLER, restoreMove + REQUEST_PPMOVE1_BATTLE, 0, 1, &changedPP);
+            MarkBattlerForControllerExec(battler);
+        }
+        if (source || MOVE_IS_PERMANENT(battler, restoreMove))
             gBattleMons[battler].pp[restoreMove] = changedPP;
+        if (packedSourcePP)
+            gBattleMons[battler].ppBonuses &= ~(3 << (2 * restoreMove));
         effect = ITEM_PP_CHANGE;
     }
     return effect;
@@ -1018,15 +1101,23 @@ static enum ItemEffect CriticalHitRatioUp(enum BattlerId battler, enum Item item
     return effect;
 }
 
+static bool32 PolishedStarfCantSelectStat(u32 stat)
+{
+    // GetCappedStats builds a raw +6 mask before Contrary is considered.
+    return gBattleMons[gBattlerAttacker].statStages[stat] == MAX_STAT_STAGE;
+}
+
 static enum ItemEffect RandomStatRaiseBerry(enum BattlerId battler, enum Item itemId)
 {
     enum ItemEffect effect = ITEM_NO_EFFECT;
     enum Stat stat;
     enum Ability ability = GetBattlerAbility(battler);
+    bool32 source = UsesPolishedLifecycle();
 
     for (stat = STAT_ATK; stat < NUM_STATS; stat++)
     {
-        if (CompareStat(battler, stat, MAX_STAT_STAGE, CMP_LESS_THAN, ability))
+        if (source ? gBattleMons[battler].statStages[stat] < MAX_STAT_STAGE
+                   : CompareStat(battler, stat, MAX_STAT_STAGE, CMP_LESS_THAN, ability))
             break;
     }
 
@@ -1038,8 +1129,14 @@ static enum ItemEffect RandomStatRaiseBerry(enum BattlerId battler, enum Item it
         u32 savedAttacker = gBattlerAttacker;
         // MoodyCantRaiseStat requires that the battler is set to gBattlerAttacker
         gBattlerAttacker = gBattleScripting.battler = battler;
-        stat = RandomUniformExcept(RNG_RANDOM_STAT_UP, STAT_ATK, NUM_STATS - 1, MoodyCantRaiseStat);
+        stat = RandomUniformExcept(RNG_RANDOM_STAT_UP, STAT_ATK, NUM_STATS - 1,
+            source ? PolishedStarfCantSelectStat : MoodyCantRaiseStat);
         gBattlerAttacker = savedAttacker;
+
+        // A source candidate at -6 still fails after Contrary reverses the
+        // change. It does not retry a different stat or consume the berry.
+        if (source && !CompareStat(battler, stat, MAX_STAT_STAGE, CMP_LESS_THAN, ability))
+            return effect;
 
         if (ability == ABILITY_RIPEN)
         {
@@ -1075,8 +1172,33 @@ enum ItemEffect ItemBattleEffects(enum BattlerId itemBattler, enum BattlerId bat
     enum ItemEffect effect = ITEM_NO_EFFECT;
     enum Item item;
 
+    if (holdEffect == HOLD_EFFECT_WEAKNESS_POLICY && timing == IsOnTargetHitActivation)
+    {
+        enum PolishedWeaknessPolicyPhase phase = GetPolishedWeaknessPolicyPhase(gCurrentMove);
+        // Ordinary source scripts already tried at effectiveness text, even
+        // when caps prevented consumption. Only the seven ordinary multihit
+        // moves place that command after hit effects; absent scripts never do.
+        if (phase != POLISHED_POLICY_NATIVE && phase != POLISHED_POLICY_AFTER_HIT_EFFECTS)
+            return ITEM_NO_EFFECT;
+    }
+
+    // HitConfusion/TakeOpponentDamage use SubtractHPFromUser_SkipItems.
+    // Generic move-end passes must not turn that into an immediate HP/stat
+    // berry trigger, including after a later action that deals no HP damage.
+    // Real damage, residual damage and explicit source healing sweeps release
+    // the deferral; forced berry effects retain their own activation rules.
+    if (UsesPolishedLifecycle() && (gBattleStruct->polishedSelfHitBattlers & (1u << itemBattler))
+     && timing == IsOnHpThresholdActivation && !gBattleScripting.overrideBerryRequirements)
+        return ITEM_NO_EFFECT;
+
     if (UsesPolishedLifecycle() && (gBattleStruct->polishedPendingItemLoss & (1u << itemBattler))
      && timing == IsOnHpThresholdActivation && !gBattleScripting.overrideBerryRequirements)
+        return ITEM_NO_EFFECT;
+
+    // CheckEnigmaBerry runs immediately after attacking damage. It is not a
+    // general post-hit item, and losing Unnerve later cannot retry that hit.
+    if (UsesPolishedHitCheckpoint(gCurrentMove) && holdEffect == HOLD_EFFECT_ENIGMA_BERRY
+     && timing == IsOnTargetHitActivation)
         return ITEM_NO_EFFECT;
 
     // Source CheckMirrorHerb drains pending changes even without a held herb.
@@ -1115,6 +1237,8 @@ enum ItemEffect ItemBattleEffects(enum BattlerId itemBattler, enum BattlerId bat
         return effect;
 
     if (!IsBattlerAlive(itemBattler)
+     && !(UsesPolishedHitCheckpoint(gCurrentMove) && timing == IsPolishedDamageEnigmaActivation
+          && holdEffect == HOLD_EFFECT_ENIGMA_BERRY)
      && holdEffect != HOLD_EFFECT_ROWAP_BERRY // Hacky workaround for them right now
      && holdEffect != HOLD_EFFECT_JABOCA_BERRY
      && holdEffect != HOLD_EFFECT_ROCKY_HELMET
