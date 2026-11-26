@@ -42609,6 +42609,11 @@
       "path": "test/battle/polished_systems.c"
     },
     {
+      "name": "Polished Safari bait and rock consume every rejected draw and one accepted draw",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_systems.c"
+    },
+    {
       "name": "Polished systems Safari bait can reach zero rate and anger expiry restores the base",
       "kind": "SINGLE_BATTLE_TEST",
       "path": "test/battle/polished_systems.c"
