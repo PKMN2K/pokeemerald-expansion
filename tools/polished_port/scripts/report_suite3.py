@@ -148,6 +148,12 @@ def check_probe(path, rom_hash, pin):
                 data['portraits_and_palettes'], data['inver_omissions'], data['saved_trainer_flags'], data['inverse_matchups']) != (956, 2659, 1912, 154, 7, 934, 324):
             raise ValueError('missing full source trainer, portrait, or saved flag evidence')
     if path.parent.name == 'suite3-contexts':
+        smart = data['smart_field_ai']
+        if (smart['cases'] != 861 or {name: case['scores'] for name, case in smart['battles'].items()} !=
+                {'low': [102, 99], 'full': [98, 101], 'low_control': [100, 100], 'full_control': [100, 100],
+                 'sun': [103, 100], 'sun_umbrella': [102, 100]}
+                or smart['battles']['low']['move'] != 'Recover' or smart['battles']['full']['move'] != 'Rain Dance'):
+            raise ValueError('missing Smart trainer field and recovery score or move-selection evidence')
         if (not all(row['link_records_reloaded'] for row in data['outcomes'].values())
                 or data['trainer_setup_cases'] != 640 or data['legendary_blocked'] != ['Run', 'Teleport', 'Roar']):
             raise ValueError('missing Pay Day, link standings, Setup scoring or legendary exit evidence')

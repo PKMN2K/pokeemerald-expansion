@@ -14,6 +14,9 @@ enum PolishedAiLayers
 u32 PolishedTrainerAiLayers(u32 trainer, u32 badges);
 void PolishedScoreSetup(const enum Move *moves, u32 limitations, bool32 playerFirstTurn,
                        bool32 enemyGhost, s32 *score);
+struct BattlePokemon;
+void PolishedScoreSmartFieldMoves(const struct BattlePokemon *user, const struct BattlePokemon *target,
+                                 u32 limitations, u32 weather, u32 userWeather, s32 *scores);
 void PolishedScoreTrainerPolicies(u32 layers, const enum Move *moves, u32 limitations,
                                   u32 hp, u32 maxHP, bool32 hasTakenTurn, s32 *score);
 #endif

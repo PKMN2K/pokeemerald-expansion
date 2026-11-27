@@ -1043,6 +1043,13 @@ static struct ChosenAction ChooseMoveOrAction_Singles(enum BattlerId battler)
             PolishedScoreSetup(gBattleMons[battler].moves, gAiLogicData->moveLimitations[battler],
                               IsBattlersFirstTurn(opposingBattler), IS_BATTLER_OF_TYPE(battler, TYPE_GHOST),
                               gAiThinkingStruct->score);
+        if (layers & POLISHED_AI_SMART)
+        {
+            u32 userWeather = GetAttackerWeather(GetBattlerHoldEffect(battler), GetBattlerAbility(battler), GetWeather());
+            PolishedScoreSmartFieldMoves(&gBattleMons[battler], &gBattleMons[opposingBattler],
+                                         gAiLogicData->moveLimitations[battler], gBattleWeather, userWeather,
+                                         gAiThinkingStruct->score);
+        }
         PolishedScoreTrainerPolicies(layers, gBattleMons[battler].moves, gAiLogicData->moveLimitations[battler],
                                      gBattleMons[battler].hp, gBattleMons[battler].maxHP, TRUE, gAiThinkingStruct->score);
     }
