@@ -150,6 +150,14 @@ mechanical branch from this suite.
 
 ## Suite 3 — battle contexts and final closure
 
+A push to `polished-crystal-port` runs all six areas in the existing CI workflow.
+The **Suite 3 battle contexts and integration** job checks the source and native
+battle catalogs, AI timing, production emulator probes, campaign, and
+Save/reset/Continue results from that run. Its summary gives a result and the
+reviewed parity status for each area. The `polished-suite-3` artifact identifies
+the individual checks and remaining obligations. Manual CI runs can also select
+**Require reviewed whole-battle parity** to enforce the existing strict gate.
+
 1. Finish trainer/wild generation and all special context bindings; source AI
    scoring, knowledge, selection, item use, switching and tie decisions.
 2. Finish capture/escape/roamers and reward/persistence flows: party/box/Dex

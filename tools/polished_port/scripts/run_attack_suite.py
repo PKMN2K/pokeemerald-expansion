@@ -78,6 +78,7 @@ def run(command, log_path, timeout, expected):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--check', action='store_true')
+    parser.add_argument('--keep-going', action='store_true', help='Run independent catalogs after a failure')
     parser.add_argument('--strict-completeness', action='store_true')
     parser.add_argument('--native-regression', action='store_true')
     parser.add_argument('--output', type=Path, default=Path('/tmp/polished-attack-suite'))
@@ -133,7 +134,10 @@ def main():
                 report['execution'] = 'failed'
                 save()
                 print(result['error'])
-                return 1
+                if not args.keep_going:
+                    return 1
+        if report['execution'] == 'failed':
+            return 1
         report['execution'] = 'passed'
         save()
     print(f"255 moves / 133 effects; {source_count} source groups + {ai_count} AI groups; execution: {report['execution']}")

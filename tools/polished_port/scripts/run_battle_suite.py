@@ -48,6 +48,7 @@ def markdown(report):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--check', action='store_true')
+    parser.add_argument('--keep-going', action='store_true', help='Run independent catalogs after a failure')
     parser.add_argument('--strict-completeness', action='store_true')
     parser.add_argument('--native-regression', action='store_true')
     parser.add_argument('--output', type=Path, default=Path('/tmp/polished-battle-suite'))
@@ -85,7 +86,8 @@ def main():
     # current consumers keep working. It selects every Polished unit/battle test.
     command = [sys.executable, str(ROOT/'tools/polished_port/scripts/run_attack_suite.py'),
                '--output', str(args.output), '--jobs', str(args.jobs), '--timeout', str(args.timeout)]
-    for flag, enabled in (('--check', args.check), ('--native-regression', args.native_regression)):
+    for flag, enabled in (('--check', args.check), ('--native-regression', args.native_regression),
+                          ('--keep-going', args.keep_going)):
         if enabled:
             command.append(flag)
     if args.driver:

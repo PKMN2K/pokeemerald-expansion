@@ -8,6 +8,11 @@ on:
       - polished-crystal-port
   pull_request:
   workflow_dispatch:
+    inputs:
+      require_complete_battle_parity:
+        description: Require reviewed whole-battle parity for this run
+        type: boolean
+        default: false
 
 env:
   GAME_REVISION: 0
@@ -174,36 +179,45 @@ jobs:
         timeout-minutes: 20
         run: make -j$(nproc) -O POLISHED_JOHTO_DEMO=1
 
+      - name: Build the Johto mGBA input driver
+        id: johto_driver
+        run: gcc -std=gnu11 -O2 -Wall -Wextra -Werror tools/polished_port/tests/mgba_johto_driver.c -lmgba -o /tmp/johto-demo-driver
+
       - name: Exercise Johto maps in mGBA
         timeout-minutes: 20
         run: |
-          gcc -std=gnu11 -O2 -Wall -Wextra -Werror tools/polished_port/tests/mgba_johto_driver.c -lmgba -o /tmp/johto-demo-driver
           python3 tools/polished_port/scripts/test_johto_demo_emulator.py --driver /tmp/johto-demo-driver --rom pokeemerald-johto-demo.gba --elf pokeemerald-johto-demo.elf --output /tmp/johto-validation
           python3 tools/polished_port/scripts/test_new_bark_emulator.py --driver /tmp/johto-demo-driver --rom pokeemerald-johto-demo.gba --elf pokeemerald-johto-demo.elf --output /tmp/johto-validation/new-bark
 
       - name: Verify production source trainer attributes
+        if: ${{ !cancelled() && steps.johto_driver.outcome == 'success' }}
         timeout-minutes: 5
         run: python3 tools/polished_port/scripts/test_battle_systems_emulator.py --driver /tmp/johto-demo-driver --output /tmp/johto-validation/battle-systems
 
       - name: Verify production Conversion type selection
+        if: ${{ !cancelled() && steps.johto_driver.outcome == 'success' }}
         timeout-minutes: 5
         run: python3 tools/polished_port/scripts/test_conversion_selection_emulator.py --driver /tmp/johto-demo-driver --output /tmp/johto-validation/conversion-selection
 
       - name: Verify Shift replacement and wild faint prompts in both production profiles
+        if: ${{ !cancelled() && steps.johto_driver.outcome == 'success' }}
         timeout-minutes: 10
         run: |
           python3 tools/polished_port/scripts/test_shift_switch_emulator.py --driver /tmp/johto-demo-driver --profile source --output /tmp/johto-validation/shift-source
           python3 tools/polished_port/scripts/test_shift_switch_emulator.py --driver /tmp/johto-demo-driver --profile native --output /tmp/johto-validation/shift-native
 
       - name: Verify captured forms and legacy ownership through Flash saves
+        if: ${{ !cancelled() && steps.johto_driver.outcome == 'success' }}
         timeout-minutes: 5
         run: python3 tools/polished_port/scripts/test_capture_storage_emulator.py --driver /tmp/johto-demo-driver --output /tmp/johto-validation/capture-storage
 
       - name: Verify roaming HP and status through Flash saves
+        if: ${{ !cancelled() && steps.johto_driver.outcome == 'success' }}
         timeout-minutes: 5
         run: python3 tools/polished_port/scripts/test_escape_storage_emulator.py --driver /tmp/johto-demo-driver --output /tmp/johto-validation/escape-storage
 
       - name: Verify friendship and level one growth through Flash saves
+        if: ${{ !cancelled() && steps.johto_driver.outcome == 'success' }}
         timeout-minutes: 5
         run: python3 tools/polished_port/scripts/test_friendship_storage_emulator.py --driver /tmp/johto-demo-driver --output /tmp/johto-validation/friendship-storage
 
@@ -234,6 +248,7 @@ jobs:
         run: python3 tools/polished_port/scripts/test_typeless_moves_display_emulator.py --driver /tmp/johto-demo-driver --output /tmp/johto-validation/typeless-moves-display
 
       - name: Verify every source Metronome draw in production objects
+        if: ${{ !cancelled() && steps.johto_driver.outcome == 'success' }}
         timeout-minutes: 5
         run: python3 tools/polished_port/scripts/test_metronome_pool_emulator.py --driver /tmp/johto-demo-driver --output /tmp/johto-validation/metronome-pool
 
@@ -254,6 +269,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: polished-johto-demo-${{ github.sha }}
+          overwrite: true
           if-no-files-found: error
           path: |
             pokeemerald-johto-demo.gba
@@ -1232,23 +1248,31 @@ jobs:
           /tmp/test_johto_animation_native
 
       - name: Test
+        id: native
         env:
           GAME_VERSION: EMERALD
           TEST: 1
-        run: make -j$(nproc) check
+        shell: bash
+        run: |
+          mkdir -p /tmp/polished-battle-suite
+          make -j$(nproc) check 2>&1 | tee /tmp/polished-battle-suite/native.log
 
       - name: Test whole source battle catalog and AI frame budgets
+        id: catalog
+        if: ${{ !cancelled() && (steps.native.outcome == 'success' || steps.native.outcome == 'failure') }}
         timeout-minutes: 30
-        run: python3 tools/polished_port/scripts/run_battle_suite.py --output /tmp/polished-battle-suite
+        run: python3 tools/polished_port/scripts/run_battle_suite.py --keep-going --output /tmp/polished-battle-suite
 
       - name: Upload battle coverage, remaining obligations and execution evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: polished-battle-suite
+          overwrite: true
           path: /tmp/polished-battle-suite
 
       - name: Exercise evolution completion and cancellation in mGBA
+        if: ${{ !cancelled() && (steps.catalog.outcome == 'success' || steps.catalog.outcome == 'failure') }}
         timeout-minutes: 5
         run: |
           gcc -std=gnu11 -O2 -Wall -Wextra -Werror tools/polished_port/tests/mgba_johto_driver.c -lmgba -o /tmp/evolution-input-driver
@@ -1261,14 +1285,52 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: battle-evolution-evidence
+          overwrite: true
           path: /tmp/evolution-input-validation
+
+  suite-3:
+    name: Suite 3 battle contexts and integration
+    needs: [build-emerald, test]
+    if: ${{ !cancelled() && github.actor != 'allcontributors[bot]' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download battle, campaign and evolution evidence from this run
+        uses: actions/download-artifact@v4
+        with:
+          pattern: '{polished-battle-suite,battle-evolution-evidence,polished-johto-demo-${{ github.sha }}}'
+          path: ${{ runner.temp }}/suite-3-inputs
+
+      - name: Verify Suite 3 evidence and report remaining obligations
+        if: ${{ !cancelled() }}
+        env:
+          SUITE3_JOBS: ${{ toJSON(needs) }}
+        run: >-
+          python3 tools/polished_port/scripts/report_suite3.py
+          --inputs "$RUNNER_TEMP/suite-3-inputs"
+          --output "$RUNNER_TEMP/polished-suite-3"
+
+      - name: Upload Suite 3 report
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: polished-suite-3
+          path: ${{ runner.temp }}/polished-suite-3
+          if-no-files-found: error
+          overwrite: true
+
+      - name: Require reviewed whole-battle parity
+        if: ${{ inputs.require_complete_battle_parity }}
+        run: python3 tools/polished_port/scripts/build_battle_suite.py --check --strict-completeness
 
   # Gate job: satisfies the "build" branch protection rule.
   # Passes only when all parallel build/test jobs succeed.
   build:
     if: github.actor != 'allcontributors[bot]'
     runs-on: ubuntu-latest
-    needs: [build-emerald, build-firered, build-leafgreen, release, test]
+    needs: [build-emerald, build-firered, build-leafgreen, release, test, suite-3]
     steps:
       - name: All builds passed
         run: echo "All builds and tests passed."
@@ -1286,7 +1348,6 @@ jobs:
   allcontributors:
     if: github.actor == 'allcontributors[bot]'
     runs-on: ubuntu-latest
-    needs: []
     steps:
       - name: Automatically pass for allcontributors
         run: echo "CI automatically passes for allcontributors" && exit 0
