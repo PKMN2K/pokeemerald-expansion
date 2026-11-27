@@ -100,7 +100,9 @@ def run(driver, output):
     record = dict(source_commit=source.trainers.archive.source.PIN, tiers=[61, 140, 143, 88],
                   production_rom_sha256=hashlib.sha256((ROOT/'pokeemerald-johto-demo.gba').read_bytes()).hexdigest(),
                   sets=len(sets), generated_teams=len(steps), third_slot_history_repeats=repeats,
-                  retained_history_slots=len(history), difficulty_rows=8, point_award_cases=65, flash_bp=50000)
+                  retained_history_slots=len(history), difficulty_rows=8, point_award_cases=65, flash_bp=50000,
+                  player_registration_cases=11, player_battle_levels=[50, 50, 50],
+                  restored_roster_levels=[1, 33, 44, 100, 55, 77])
     (output/'report.json').write_text(json.dumps(record, indent=2)+'\n')
     print(f'PASS: {len(steps)} production Tower parties, every one of 432 sets, eight difficulty rows and three retained teams after Flash reset')
 

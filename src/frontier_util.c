@@ -2083,6 +2083,20 @@ static void AppendIfValid(enum Species species, enum Item heldItem, u16 hp, enum
     (*count)++;
 }
 
+#if POLISHED_JOHTO_DEMO
+// The confirmation dialog overwrites VAR_RESULT before opening the ban list.
+static EWRAM_DATA bool8 sShowingPolishedTowerBans = FALSE;
+#endif
+
+static bool32 IsBannedFromSelectedChallenge(enum Species species)
+{
+#if POLISHED_JOHTO_DEMO
+    if (sShowingPolishedTowerBans)
+        return species != SPECIES_NONE && species != SPECIES_EGG && IsPolishedTowerSpeciesBanned(species);
+#endif
+    return gSpeciesInfo[GET_BASE_SPECIES_ID(species)].isFrontierBanned;
+}
+
 // gSpecialVar_Result is the level mode before and after calls to this function
 // gSpecialVar_0x8004 is used to store the return value instead (TRUE if there are insufficient eligible mons)
 // The names of ineligible Pokémon that have been caught are also buffered to print
@@ -2116,33 +2130,41 @@ static void CheckPartyIneligibility(void)
         break;
     }
 
-    monIdLooper = 0;
-    do
+#if POLISHED_JOHTO_DEMO
+    sShowingPolishedTowerBans = IsPolishedTowerLevelMode(gSpecialVar_Result);
+    if (sShowingPolishedTowerBans)
+        numEligibleMons = PolishedHasEligibleTowerTeam() ? toChoose : 0;
+    else
+#endif
     {
-        monId = monIdLooper;
-        numEligibleMons = 0;
+        monIdLooper = 0;
         do
         {
-            enum Species species = GetMonData(&gParties[B_TRAINER_PLAYER][monId], MON_DATA_SPECIES_OR_EGG);
-            enum Item heldItem = GetMonData(&gParties[B_TRAINER_PLAYER][monId], MON_DATA_HELD_ITEM);
-            u8 level = GetMonData(&gParties[B_TRAINER_PLAYER][monId], MON_DATA_LEVEL);
-            u16 hp = GetMonData(&gParties[B_TRAINER_PLAYER][monId], MON_DATA_HP);
-            if (VarGet(VAR_FRONTIER_FACILITY) == FRONTIER_FACILITY_PYRAMID)
+            monId = monIdLooper;
+            numEligibleMons = 0;
+            do
             {
-                if (heldItem == ITEM_NONE)
+                enum Species species = GetMonData(&gParties[B_TRAINER_PLAYER][monId], MON_DATA_SPECIES_OR_EGG);
+                enum Item heldItem = GetMonData(&gParties[B_TRAINER_PLAYER][monId], MON_DATA_HELD_ITEM);
+                u8 level = GetMonData(&gParties[B_TRAINER_PLAYER][monId], MON_DATA_LEVEL);
+                u16 hp = GetMonData(&gParties[B_TRAINER_PLAYER][monId], MON_DATA_HP);
+                if (VarGet(VAR_FRONTIER_FACILITY) == FRONTIER_FACILITY_PYRAMID)
+                {
+                    if (heldItem == ITEM_NONE)
+                        AppendIfValid(species, heldItem, hp, gSpecialVar_Result, level, speciesArray, itemArray, &numEligibleMons);
+                }
+                else
+                {
                     AppendIfValid(species, heldItem, hp, gSpecialVar_Result, level, speciesArray, itemArray, &numEligibleMons);
-            }
-            else
-            {
-                AppendIfValid(species, heldItem, hp, gSpecialVar_Result, level, speciesArray, itemArray, &numEligibleMons);
-            }
-            monId++;
-            if (monId >= PARTY_SIZE)
-                monId = 0;
-        } while (monId != monIdLooper);
+                }
+                monId++;
+                if (monId >= PARTY_SIZE)
+                    monId = 0;
+            } while (monId != monIdLooper);
 
-        monIdLooper++;
-    } while (monIdLooper < PARTY_SIZE && numEligibleMons < toChoose);
+            monIdLooper++;
+        } while (monIdLooper < PARTY_SIZE && numEligibleMons < toChoose);
+    }
 
     if (numEligibleMons < toChoose)
     {
@@ -2157,7 +2179,7 @@ static void CheckPartyIneligibility(void)
             if (!IsSpeciesEnabled(i))
                 continue;
             baseSpecies = GET_BASE_SPECIES_ID(i);
-            if (baseSpecies == i && gSpeciesInfo[baseSpecies].isFrontierBanned)
+            if (baseSpecies == i && IsBannedFromSelectedChallenge(baseSpecies))
             {
                 if (GetSetPokedexFlag(SpeciesToNationalPokedexNum(baseSpecies), FLAG_GET_CAUGHT))
                     totalCaughtBanned++;
@@ -2169,7 +2191,7 @@ static void CheckPartyIneligibility(void)
             enum Species species = GetMonData(&gParties[B_TRAINER_PLAYER][i], MON_DATA_SPECIES_OR_EGG);
             if (species == SPECIES_EGG || species == SPECIES_NONE)
                 continue;
-            if (gSpeciesInfo[GET_BASE_SPECIES_ID(species)].isFrontierBanned)
+            if (IsBannedFromSelectedChallenge(species))
             {
                 bool32 addToList = TRUE;
                 for (j = 0; j < totalPartyBanned; j++)
@@ -3382,7 +3404,7 @@ static u16 *MakeCaughtBannedSpeciesList(u32 totalBannedSpecies)
             continue;
 
         enum Species baseSpecies = GET_BASE_SPECIES_ID(i);
-        if (baseSpecies == i && gSpeciesInfo[baseSpecies].isFrontierBanned)
+        if (baseSpecies == i && IsBannedFromSelectedChallenge(baseSpecies))
         {
             if (GetSetPokedexFlag(SpeciesToNationalPokedexNum(baseSpecies), FLAG_GET_CAUGHT))
             {

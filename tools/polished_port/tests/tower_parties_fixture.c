@@ -11,6 +11,7 @@
 #include "move.h"
 #include "new_game.h"
 #include "pokemon.h"
+#include "polished_growth.h"
 #include "random.h"
 #include "save.h"
 #include "constants/battle_frontier.h"
@@ -73,6 +74,102 @@ static void CheckTowerPoints(void)
     CheckValue(frontier->towerWinStreaks[0][0], 0, 31);
 }
 
+static void MakePartySlot(u32 slot, enum Species species, u8 level, enum Item item)
+{
+    struct Pokemon *mon = &gParties[B_TRAINER_PLAYER][slot];
+    CreateMon(mon, species, level, 0x12345678 + slot, OTID_STRUCT_PRESET(0));
+    SetMonData(mon, MON_DATA_HELD_ITEM, &item);
+}
+
+static void CheckLobbyEntry(bool32 expected)
+{
+    gSpecialVar_Result = FRONTIER_LVL_50;
+    gSpecialVar_0x8004 = FRONTIER_UTIL_FUNC_CHECK_INELIGIBLE;
+    CallFrontierUtilFunc();
+    CheckValue(gSpecialVar_0x8004 == FALSE, expected, 33);
+}
+
+static void SelectThree(void)
+{
+    const u16 chosen[] = {5, 4, 1};
+    memcpy(gSaveBlock2Ptr->frontier.selectedPartyMons, chosen, sizeof(chosen));
+    gSpecialVar_0x8004 = FRONTIER_UTIL_FUNC_SET_PARTY_ORDER;
+    gSpecialVar_0x8005 = FRONTIER_PARTY_SIZE;
+    CallFrontierUtilFunc();
+}
+
+static void CheckOriginalRoster(void)
+{
+    static const u8 levels[] = {1, 33, 44, 100, 55, 77};
+    static const u16 species[] = {SPECIES_GYARADOS, SPECIES_GYARADOS_RED, SPECIES_MARILL,
+                                  SPECIES_RAIKOU, SPECIES_ARTICUNO, SPECIES_MEW};
+    LoadPlayerParty();
+    CheckValue(gPartiesCount[B_TRAINER_PLAYER], PARTY_SIZE, 40);
+    for (u32 i = 0; i < PARTY_SIZE; i++)
+    {
+        struct Pokemon *mon = &gParties[B_TRAINER_PLAYER][i];
+        CheckValue(GetMonData(mon, MON_DATA_LEVEL), levels[i], 41);
+        CheckValue(GetMonData(mon, MON_DATA_HELD_ITEM), (i == 2 || i == 3) ? ITEM_LEFTOVERS : ITEM_NONE, 46);
+        CheckValue(GetMonData(mon, MON_DATA_SPECIES), species[i], 42);
+        CheckValue(GetMonData(mon, MON_DATA_EXP), GetSpeciesExperienceAtLevel(species[i], levels[i]), 43);
+    }
+}
+
+static void CheckPlayerRegistration(void)
+{
+    static const u16 banned[] = {SPECIES_MEWTWO, SPECIES_MEWTWO_ARMORED, SPECIES_MEW,
+                                 SPECIES_LUGIA, SPECIES_HO_OH, SPECIES_CELEBI};
+    const u32 zero = 0, one = 1;
+    ZeroPlayerPartyMons();
+    MakePartySlot(0, SPECIES_GYARADOS, 1, ITEM_NONE);
+    MakePartySlot(1, SPECIES_GYARADOS_RED, 33, ITEM_NONE);
+    MakePartySlot(2, SPECIES_MARILL, 44, ITEM_NONE);
+    CheckLobbyEntry(FALSE); // Only two distinct base species.
+    for (u32 i = 0; i < ARRAY_COUNT(banned); i++)
+    {
+        MakePartySlot(3, banned[i], 12, ITEM_NONE);
+        CheckLobbyEntry(FALSE);
+    }
+    MakePartySlot(3, SPECIES_RAIKOU, 100, ITEM_NONE);
+    SetMonData(&gParties[B_TRAINER_PLAYER][3], MON_DATA_IS_EGG, &one);
+    CheckLobbyEntry(FALSE);
+    SetMonData(&gParties[B_TRAINER_PLAYER][3], MON_DATA_IS_EGG, &zero);
+    SetMonData(&gParties[B_TRAINER_PLAYER][3], MON_DATA_HP, &zero);
+    CheckLobbyEntry(TRUE); // Fainted, above level 50, and no held items.
+    enum Item item = ITEM_LEFTOVERS;
+    SetMonData(&gParties[B_TRAINER_PLAYER][2], MON_DATA_HELD_ITEM, &item);
+    SetMonData(&gParties[B_TRAINER_PLAYER][3], MON_DATA_HELD_ITEM, &item);
+    CheckLobbyEntry(FALSE);
+    MakePartySlot(4, SPECIES_ARTICUNO, 55, ITEM_NONE);
+    MakePartySlot(5, SPECIES_MEW, 77, ITEM_NONE);
+    CheckLobbyEntry(TRUE);
+    gPartiesCount[B_TRAINER_PLAYER] = PARTY_SIZE;
+    SavePlayerParty();
+    SelectThree();
+    FillFrontierTrainerParty(FRONTIER_PARTY_SIZE);
+    static const u16 expected[] = {SPECIES_ARTICUNO, SPECIES_RAIKOU, SPECIES_GYARADOS};
+    CheckValue(gPartiesCount[B_TRAINER_PLAYER], FRONTIER_PARTY_SIZE, 34);
+    for (u32 i = 0; i < FRONTIER_PARTY_SIZE; i++)
+    {
+        struct Pokemon *mon = &gParties[B_TRAINER_PLAYER][i];
+        CheckValue(GetMonData(mon, MON_DATA_SPECIES), expected[i], 35);
+        CheckValue(GetMonData(mon, MON_DATA_LEVEL), 50, 36);
+        CheckValue(GetMonData(mon, MON_DATA_EXP), GetSpeciesExperienceAtLevel(expected[i], 50), 37);
+        CheckValue(GetMonData(mon, MON_DATA_HP), GetMonData(mon, MON_DATA_MAX_HP), 38);
+        CheckValue(GetMonData(mon, MON_DATA_MAX_HP) > 1, TRUE, 39);
+    }
+    SetMonData(&gParties[B_TRAINER_PLAYER][1], MON_DATA_HELD_ITEM, &zero);
+    SetMonMoveSlot(&gParties[B_TRAINER_PLAYER][1], MOVE_SPLASH, 0);
+    FillFrontierTrainerParty(FRONTIER_PARTY_SIZE);
+    CheckValue(GetMonData(&gParties[B_TRAINER_PLAYER][1], MON_DATA_HELD_ITEM), ITEM_LEFTOVERS, 44);
+    CheckValue(GetMonData(&gParties[B_TRAINER_PLAYER][1], MON_DATA_MOVE1),
+               GetMonData(GetSavedPlayerPartyMon(3), MON_DATA_MOVE1), 45);
+    CheckOriginalRoster();
+    ZeroPlayerPartyMons();
+    gPartiesCount[B_TRAINER_PLAYER] = 0;
+    PolishedResetTowerHistory();
+}
+
 void CB2_MoveMachineAudit(void)
 {
     if (gTowerAudit[2] || gTowerAudit[0] >= 2)
@@ -89,6 +186,7 @@ void CB2_MoveMachineAudit(void)
             for (u32 i = 0; i < ARRAY_COUNT(sFinalHistory); i++)
                 CheckValue(gSaveBlock3Ptr->polishedTowerHistory[i], sFinalHistory[i], 25);
             CheckValue(gSaveBlock2Ptr->frontier.battlePoints, 50000, 32);
+            CheckOriginalRoster();
             gTowerAudit[0] = 3;
             return;
         }
@@ -98,20 +196,35 @@ void CB2_MoveMachineAudit(void)
         VarSet(VAR_FRONTIER_FACILITY, FRONTIER_FACILITY_TOWER);
         VarSet(VAR_FRONTIER_BATTLE_MODE, FRONTIER_MODE_SINGLES);
         gSaveBlock2Ptr->frontier.lvlMode = FRONTIER_LVL_50;
+        CheckPlayerRegistration();
         gTowerAudit[0] = 1;
     }
     u32 index = gTowerAudit[1];
     if (index == ARRAY_COUNT(sExpectedParties))
     {
         CheckTowerPoints();
+        CheckOriginalRoster();
         CheckValue(TrySavingData(SAVE_NORMAL), SAVE_STATUS_OK, 26);
+        SelectThree();
+        // Pause with the in-battle party at forced level and without its item.
+        struct Pokemon *mon = &gParties[B_TRAINER_PLAYER][1];
+        u32 level = 50, exp = GetSpeciesExperienceAtLevel(SPECIES_RAIKOU, level), empty = 0;
+        SetMonData(mon, MON_DATA_EXP, &exp);
+        CalculateMonStats(mon);
+        SetMonData(mon, MON_DATA_HELD_ITEM, &empty);
+        SaveGameFrontier();
         gTowerAudit[0] = 2;
         return;
     }
     u32 wins = sExpectedParties[index].wins;
     gSaveBlock2Ptr->frontier.towerWinStreaks[FRONTIER_MODE_SINGLES][FRONTIER_LVL_50] = wins;
+    // VBlank advances the shipping PRNG. Isolate the seeded draw sequence
+    // from the emulator frame on which this particular case starts.
+    u16 interrupts = REG_IME;
+    REG_IME = 0;
     SeedRng(index + 1);
     FillFrontierTrainerParty(FRONTIER_PARTY_SIZE);
+    REG_IME = interrupts;
     for (u32 i = 0; i < FRONTIER_PARTY_SIZE; i++)
     {
         u32 set = sExpectedParties[index].sets[i];

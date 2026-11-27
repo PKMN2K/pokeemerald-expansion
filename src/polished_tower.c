@@ -5,6 +5,8 @@
 #include "event_data.h"
 #include "pokemon.h"
 #include "polished_tower.h"
+#include "polished_pokemon_data.h"
+#include "polished_growth.h"
 #include "random.h"
 #include "trainer_util.h"
 #include "tv.h"
@@ -20,11 +22,72 @@ struct PolishedTowerSet
 
 #include "data/polished_tower_sets.h"
 
-bool32 IsPolishedTowerChallenge(void)
+bool32 IsPolishedTowerLevelMode(u32 mode)
 {
-    return gSaveBlock2Ptr->frontier.lvlMode == FRONTIER_LVL_50
+    return mode == FRONTIER_LVL_50
         && VarGet(VAR_FRONTIER_FACILITY) == FRONTIER_FACILITY_TOWER
         && VarGet(VAR_FRONTIER_BATTLE_MODE) == FRONTIER_MODE_SINGLES;
+}
+
+bool32 IsPolishedTowerChallenge(void)
+{
+    return IsPolishedTowerLevelMode(gSaveBlock2Ptr->frontier.lvlMode);
+}
+
+bool32 IsPolishedTowerSpeciesBanned(enum Species species)
+{
+    if (species == SPECIES_NONE || species == SPECIES_EGG)
+        return TRUE;
+    enum Species base = GET_BASE_SPECIES_ID(species);
+    switch (base)
+    {
+    case SPECIES_MEWTWO:
+    case SPECIES_MEW:
+    case SPECIES_LUGIA:
+    case SPECIES_HO_OH:
+    case SPECIES_CELEBI:
+        return TRUE;
+    default:
+        // Expansion-only species retain their configured facility rules.
+        return !PolishedGetSpeciesBaseData(species) && gSpeciesInfo[species].isFrontierBanned;
+    }
+}
+
+enum TowerEntryConflict PolishedTowerEntryConflict(enum Species first, enum Item firstItem, enum Species second, enum Item secondItem)
+{
+    if (GET_BASE_SPECIES_ID(first) == GET_BASE_SPECIES_ID(second))
+        return TOWER_ENTRY_DUPLICATE_SPECIES;
+    if (firstItem != ITEM_NONE && firstItem == secondItem)
+        return TOWER_ENTRY_DUPLICATE_ITEM;
+    return TOWER_ENTRY_OK;
+}
+
+bool32 PolishedHasEligibleTowerTeam(void)
+{
+    enum Species species[PARTY_SIZE];
+    enum Item items[PARTY_SIZE];
+    u32 count = 0;
+    for (u32 i = 0; i < PARTY_SIZE; i++)
+    {
+        struct Pokemon *mon = &gParties[B_TRAINER_PLAYER][i];
+        enum Species candidate = GetMonData(mon, MON_DATA_SPECIES_OR_EGG);
+        if (IsPolishedTowerSpeciesBanned(candidate))
+            continue;
+        species[count] = candidate;
+        items[count++] = GetMonData(mon, MON_DATA_HELD_ITEM);
+    }
+    // Up to twenty triples. A greedy choice can hide a valid registration.
+    for (u32 i = 0; i < count; i++)
+        for (u32 j = i + 1; j < count; j++)
+        {
+            if (PolishedTowerEntryConflict(species[i], items[i], species[j], items[j]))
+                continue;
+            for (u32 k = j + 1; k < count; k++)
+                if (!PolishedTowerEntryConflict(species[i], items[i], species[k], items[k])
+                    && !PolishedTowerEntryConflict(species[j], items[j], species[k], items[k]))
+                    return TRUE;
+        }
+    return FALSE;
 }
 
 #define TOWER_HISTORY_VERSION 0x50435431
@@ -107,6 +170,20 @@ void PolishedSettleTowerPoints(void)
 
 void PolishedBuildTowerParty(u32 wins)
 {
+    // Each battle starts from the lobby registration, including held items
+    // and move slots. Keep the original party in the regular save block.
+    for (u32 i = 0; i < min(gPartiesCount[B_TRAINER_PLAYER], FRONTIER_PARTY_SIZE); i++)
+    {
+        struct Pokemon *mon = &gParties[B_TRAINER_PLAYER][i];
+        u32 slot = gSaveBlock2Ptr->frontier.selectedPartyMons[i];
+        if (slot && slot <= *GetSavedPlayerPartyCount())
+            *mon = *GetSavedPlayerPartyMon(slot - 1);
+        enum Species species = GetMonData(mon, MON_DATA_SPECIES);
+        u32 experience = GetSpeciesExperienceAtLevel(species, FRONTIER_MAX_LEVEL_50);
+        SetMonData(mon, MON_DATA_EXP, &experience);
+        CalculateMonStats(mon);
+        HealPokemon(mon);
+    }
     u32 difficulty = TowerDifficulty(wins);
     u32 mask = sTowerTierMasks[difficulty][Random() & 1];
     u8 tiers[FRONTIER_PARTY_SIZE];

@@ -29,6 +29,7 @@
 #include "fldeff_misc.h"
 #include "follower_npc.h"
 #include "frontier_util.h"
+#include "polished_tower.h"
 #include "gpu_regs.h"
 #include "graphics.h"
 #include "international_string_util.h"
@@ -7309,6 +7310,10 @@ static bool8 GetBattleEntryEligibility(struct Pokemon *mon)
 {
     enum Species species;
 
+#if POLISHED_JOHTO_DEMO
+    if (IsPolishedTowerLevelMode(gSpecialVar_0x8004))
+        return !IsPolishedTowerSpeciesBanned(GetMonData(mon, MON_DATA_SPECIES_OR_EGG));
+#endif
     if (GetMonData(mon, MON_DATA_IS_EGG)
         || GetMonData(mon, MON_DATA_LEVEL) > GetBattleEntryLevelCap()
         || (gSaveBlock1Ptr->location.mapGroup == MAP_GROUP(MAP_BATTLE_FRONTIER_BATTLE_PYRAMID_LOBBY)
@@ -7362,6 +7367,18 @@ static u8 CheckBattleEntriesAndGetMessage(void)
         enum Item item = GetMonData(&party[order[i] - 1], MON_DATA_HELD_ITEM);
         for (j = i + 1; j < maxBattlers; j++)
         {
+#if POLISHED_JOHTO_DEMO
+            if (IsPolishedTowerLevelMode(gSpecialVar_0x8004))
+            {
+                struct Pokemon *other = &party[order[j] - 1];
+                switch (PolishedTowerEntryConflict(species, item, GetMonData(other, MON_DATA_SPECIES), GetMonData(other, MON_DATA_HELD_ITEM)))
+                {
+                case TOWER_ENTRY_DUPLICATE_SPECIES: return PARTY_MSG_MONS_CANT_BE_SAME;
+                case TOWER_ENTRY_DUPLICATE_ITEM:   return PARTY_MSG_NO_SAME_HOLD_ITEMS;
+                case TOWER_ENTRY_OK:               continue;
+                }
+            }
+#endif
             if (species == GetMonData(&party[order[j] - 1], MON_DATA_SPECIES))
                 return PARTY_MSG_MONS_CANT_BE_SAME;
             if (item != ITEM_NONE && item == GetMonData(&party[order[j] - 1], MON_DATA_HELD_ITEM))

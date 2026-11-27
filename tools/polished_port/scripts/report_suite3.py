@@ -110,6 +110,8 @@ def check_probe(path, rom_hash, pin):
             raise ValueError('missing serial choice retry or next-turn synchronization')
     if path.parent.name == 'tower-parties':
         if (data['sets'] != 432 or data['generated_teams'] < 700 or data['retained_history_slots'] != 9
+                or data['player_registration_cases'] != 11 or data['player_battle_levels'] != [50, 50, 50]
+                or data['restored_roster_levels'] != [1, 33, 44, 100, 55, 77]
                 or data['point_award_cases'] != 65 or data['flash_bp'] != 50000
                 or data['difficulty_rows'] != 8 or not data['third_slot_history_repeats']):
             raise ValueError('missing Tower sets, tier, third-slot repeat or Flash history evidence')
