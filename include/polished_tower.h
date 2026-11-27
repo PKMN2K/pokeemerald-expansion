@@ -2,6 +2,17 @@
 #define GUARD_POLISHED_TOWER_H
 
 #if POLISHED_JOHTO_DEMO
+struct PolishedTowerSet
+{
+    u16 species, baseSpecies, item, moves[MAX_MON_MOVES];
+    u32 iv;
+    u8 gender, nature, abilitySlot;
+};
+
+bool32 IsPolishedFactoryChallenge(void);
+void PolishedGenerateFactoryRentals(void);
+const struct PolishedTowerSet *PolishedGetRentalSet(u16 id);
+bool32 PolishedCreateRentalMon(struct Pokemon *mon, u16 id);
 bool32 IsPolishedTowerLevelMode(u32 mode);
 bool32 IsPolishedTowerChallenge(void);
 bool32 IsPolishedTowerSpeciesBanned(enum Species species);

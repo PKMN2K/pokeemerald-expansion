@@ -1,6 +1,7 @@
 #include "global.h"
 #include "battle.h"
 #include "battle_factory.h"
+#include "polished_tower.h"
 #include "battle_factory_screen.h"
 #include "event_data.h"
 #include "battle_setup.h"
@@ -190,7 +191,12 @@ static void SetBattleFactoryData(void)
     case FACTORY_DATA_WIN_STREAK_SWAPS:
         if (sPerformedRentalSwap == TRUE)
         {
-            gSaveBlock2Ptr->frontier.factoryRentsCount[battleMode][lvlMode] = gSpecialVar_0x8006;
+            u16 swaps = gSpecialVar_0x8006;
+#if POLISHED_JOHTO_DEMO
+            if (IsPolishedFactoryChallenge())
+                swaps = min(swaps, 99);
+#endif
+            gSaveBlock2Ptr->frontier.factoryRentsCount[battleMode][lvlMode] = swaps;
             sPerformedRentalSwap = FALSE;
         }
         break;
@@ -218,6 +224,10 @@ static void FactoryDummy2(void)
 
 static void SelectInitialRentalMons(void)
 {
+#if POLISHED_JOHTO_DEMO
+    if (IsPolishedFactoryChallenge())
+        sPerformedRentalSwap = FALSE; // Drafting the initial three is free.
+#endif
     ZeroPlayerPartyMons();
     DoBattleFactorySelectScreen();
 }
@@ -230,6 +240,16 @@ static void SwapRentalMons(void)
 static void SetPerformedRentalSwap(void)
 {
     sPerformedRentalSwap = TRUE;
+}
+
+static enum Species GetRentalSpecies(u16 id)
+{
+#if POLISHED_JOHTO_DEMO
+    const struct PolishedTowerSet *set = PolishedGetRentalSet(id);
+    if (set != NULL)
+        return set->species;
+#endif
+    return gFacilityTrainerMons[id].species;
 }
 
 static void GenerateOpponentMons(void)
@@ -272,7 +292,7 @@ static void GenerateOpponentMons(void)
         // Ensure none of the opponent's Pokémon are the same as the potential rental Pokémon for the player
         for (j = 0; j < (int)ARRAY_COUNT(gSaveBlock2Ptr->frontier.rentalMons); j++)
         {
-            if (gFacilityTrainerMons[monId].species == gFacilityTrainerMons[gSaveBlock2Ptr->frontier.rentalMons[j].monId].species)
+            if (gFacilityTrainerMons[monId].species == GetRentalSpecies(gSaveBlock2Ptr->frontier.rentalMons[j].monId))
                 break;
         }
         if (j != (int)ARRAY_COUNT(gSaveBlock2Ptr->frontier.rentalMons))
@@ -359,6 +379,10 @@ static void SetPlayerAndOpponentParties(void)
         for (i = 0; i < FRONTIER_PARTY_SIZE; i++)
         {
             monId = gSaveBlock2Ptr->frontier.rentalMons[i].monId;
+#if POLISHED_JOHTO_DEMO
+            if (PolishedCreateRentalMon(&gParties[B_TRAINER_PLAYER][i], monId))
+                continue;
+#endif
             ivs = gSaveBlock2Ptr->frontier.rentalMons[i].ivs;
 
             CreateFacilityMon(&gFacilityTrainerMons[monId], monLevel, ivs, READ_OTID_FROM_SAVE, FLAG_FRONTIER_MON_FACTORY, &gParties[B_TRAINER_PLAYER][i]);
@@ -411,6 +435,13 @@ static void GenerateInitialRentalMons(void)
         factoryBattleMode = FRONTIER_MODE_SINGLES;
 
     gFacilityTrainerMons = gBattleFrontierMons;
+#if POLISHED_JOHTO_DEMO
+    if (IsPolishedFactoryChallenge())
+    {
+        PolishedGenerateFactoryRentals();
+        return;
+    }
+#endif
     if (gSaveBlock2Ptr->frontier.lvlMode != FRONTIER_LVL_50)
     {
         factoryLvlMode = FRONTIER_LVL_OPEN;
@@ -617,9 +648,16 @@ static void RestorePlayerPartyHeldItems(void)
 
     for (i = 0; i < FRONTIER_PARTY_SIZE; i++)
     {
-        SetMonData(&gParties[B_TRAINER_PLAYER][i],
-                   MON_DATA_HELD_ITEM,
-                   &gFacilityTrainerMons[gSaveBlock2Ptr->frontier.rentalMons[i].monId].heldItem);
+        u16 id = gSaveBlock2Ptr->frontier.rentalMons[i].monId;
+#if POLISHED_JOHTO_DEMO
+        const struct PolishedTowerSet *set = PolishedGetRentalSet(id);
+        if (set != NULL)
+        {
+            SetMonData(&gParties[B_TRAINER_PLAYER][i], MON_DATA_HELD_ITEM, &set->item);
+            continue;
+        }
+#endif
+        SetMonData(&gParties[B_TRAINER_PLAYER][i], MON_DATA_HELD_ITEM, &gFacilityTrainerMons[id].heldItem);
     }
 }
 

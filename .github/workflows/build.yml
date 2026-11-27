@@ -210,6 +210,11 @@ jobs:
         timeout-minutes: 5
         run: python3 tools/polished_port/scripts/test_tower_parties_emulator.py --driver /tmp/johto-demo-driver --output /tmp/johto-validation/tower-parties
 
+      - name: Verify Factory rental drafts, selection and Flash recovery
+        if: ${{ !cancelled() && steps.johto_driver.outcome == 'success' }}
+        timeout-minutes: 5
+        run: python3 tools/polished_port/scripts/test_factory_rentals_emulator.py --driver /tmp/johto-demo-driver --output /tmp/johto-validation/factory-rentals
+
       - name: Verify production source trainer attributes
         if: ${{ !cancelled() && steps.johto_driver.outcome == 'success' }}
         timeout-minutes: 5

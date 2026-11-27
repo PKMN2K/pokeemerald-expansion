@@ -2,6 +2,7 @@
 #include "battle.h"
 #include "battle_factory_screen.h"
 #include "battle_factory.h"
+#include "polished_tower.h"
 #include "sprite.h"
 #include "event_data.h"
 #include "overworld.h"
@@ -196,7 +197,7 @@ static u8 Select_DeclineChosenMons(void);
 static u8 Select_OptionSummary(void);
 static u8 Select_OptionOthers(void);
 static u8 Select_OptionRentDeselect(void);
-static bool32 Select_AreSpeciesValid(u16);
+static bool32 Select_AreSpeciesValid(u8);
 
 // Swap screen
 static void CB2_InitSwapScreen(void);
@@ -1731,6 +1732,10 @@ static void CreateFrontierFactorySelectableMons(u8 firstMonId)
     {
         u16 monId = gSaveBlock2Ptr->frontier.rentalMons[i].monId;
         sFactorySelectScreen->mons[i + firstMonId].monId = monId;
+#if POLISHED_JOHTO_DEMO
+        if (PolishedCreateRentalMon(&sFactorySelectScreen->mons[i + firstMonId].monData, monId))
+            continue;
+#endif
         if (i < rentalRank)
             ivs = GetFactoryMonFixedIV(challengeNum + 1, FALSE);
         else
@@ -1902,8 +1907,7 @@ static u8 Select_RunMenuOptionFunc(void)
 static u8 Select_OptionRentDeselect(void)
 {
     u8 selectedId = sFactorySelectScreen->mons[sFactorySelectScreen->cursorPos].selectedId;
-    u16 monId  = sFactorySelectScreen->mons[sFactorySelectScreen->cursorPos].monId;
-    if (selectedId == 0 && !Select_AreSpeciesValid(monId))
+    if (selectedId == 0 && !Select_AreSpeciesValid(sFactorySelectScreen->cursorPos))
     {
         Select_PrintCantSelectSameMon();
         Select_ErasePopupMenu(SELECT_WIN_OPTIONS);
@@ -2206,10 +2210,10 @@ static void Select_SetWinRegs(s16 mWin0H, s16 nWin0H, s16 mWin0V, s16 nWin0V)
     SetGpuReg(REG_OFFSET_WINOUT, WINOUT_WIN01_BG0 | WINOUT_WIN01_BG1 | WINOUT_WIN01_BG2 | WINOUT_WIN01_CLR | WINOUT_WIN01_OBJ);
 }
 
-static bool32 Select_AreSpeciesValid(u16 monId)
+static bool32 Select_AreSpeciesValid(u8 slot)
 {
     u8 i, j;
-    enum Species species = gFacilityTrainerMons[monId].species;
+    enum Species species = GetMonData(&sFactorySelectScreen->mons[slot].monData, MON_DATA_SPECIES);
     u8 selectState = sFactorySelectScreen->selectingMonsState;
 
     for (i = 1; i < selectState; i++)
@@ -2218,7 +2222,7 @@ static bool32 Select_AreSpeciesValid(u16 monId)
         {
             if (sFactorySelectScreen->mons[j].selectedId == i)
             {
-                if (gFacilityTrainerMons[sFactorySelectScreen->mons[j].monId].species == species)
+                if (GetMonData(&sFactorySelectScreen->mons[j].monData, MON_DATA_SPECIES) == species)
                     return FALSE;
 
                 break;
@@ -4118,7 +4122,14 @@ static bool8 Swap_AlreadyHasSameSpecies(u8 monId)
 
     for (i = 0; i < FRONTIER_PARTY_SIZE; i++)
     {
-        if (i != sFactorySwapScreen->playerMonId && (u16)(GetMonData(&gParties[B_TRAINER_PLAYER][i], MON_DATA_SPECIES)) == species)
+        if (i == sFactorySwapScreen->playerMonId)
+            continue;
+        enum Species other = GetMonData(&gParties[B_TRAINER_PLAYER][i], MON_DATA_SPECIES);
+#if POLISHED_JOHTO_DEMO
+        if (IsPolishedFactoryChallenge() && GET_BASE_SPECIES_ID(other) == GET_BASE_SPECIES_ID(species))
+            return TRUE;
+#endif
+        if (other == species)
             return TRUE;
     }
     return FALSE;

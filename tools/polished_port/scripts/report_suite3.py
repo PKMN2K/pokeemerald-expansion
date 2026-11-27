@@ -37,7 +37,7 @@ DOMAIN_CHECKS = {
         ['Polished action AI Destiny Bond failure queries cannot clear the live volatile',
          'Polished escape roamer AI and action execution both reject sleep and freeze']),
     'facility_link': (
-        ['suite3-contexts/report.json', 'tower-parties/report.json', 'link-conversion/report.json'],
+        ['suite3-contexts/report.json', 'tower-parties/report.json', 'factory-rentals/report.json', 'link-conversion/report.json'],
         ["Polished linked Conversion plays both trainers' choices and leaves the next turn aligned",
          'Polished affection excludes actual link and frontier battles',
          'Polished critical evolution counter excludes link battles',
@@ -108,6 +108,12 @@ def check_probe(path, rom_hash, pin):
                 or len(data['tackle_pp_before']) != 2 or len(data['tackle_pp_after']) != 2
                 or any(before - after != 1 for before, after in zip(data['tackle_pp_before'], data['tackle_pp_after']))):
             raise ValueError('missing serial choice retry or next-turn synchronization')
+    if path.parent.name == 'factory-rentals':
+        if (data['drafts'] < 40 or data['draft_rows'] != list(range(2, 9))
+                or not data['repeated_item_drafts'] or not data['whole_draft_retries']
+                or data['tower_factory_carry_cases'] != 6 or data['flash_rentals'] != 3
+                or data['selection_order'] != [5, 2, 4]):
+            raise ValueError('missing Factory rental draft, streak, Flash or selection evidence')
     if path.parent.name == 'tower-parties':
         if (data['sets'] != 432 or data['generated_teams'] < 700 or data['retained_history_slots'] != 9
                 or data['player_registration_cases'] != 11 or data['player_battle_levels'] != [50, 50, 50]

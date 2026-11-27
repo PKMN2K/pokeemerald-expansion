@@ -15,14 +15,27 @@
 #include "constants/battle_frontier.h"
 #include "constants/frontier_util.h"
 
-struct PolishedTowerSet
-{
-    u16 species, baseSpecies, item, moves[MAX_MON_MOVES];
-    u32 iv;
-    u8 gender, nature, abilitySlot;
-};
-
+#include "constants/battle_frontier_mons.h"
 #include "data/polished_tower_sets.h"
+
+// Keep pre-port Factory and Tent indices valid in existing saves.
+#define POLISHED_RENTAL_BASE 0x8000
+STATIC_ASSERT(NUM_FRONTIER_MONS <= POLISHED_RENTAL_BASE, FactoryIndexOverlap);
+STATIC_ASSERT(POLISHED_RENTAL_BASE + ARRAY_COUNT(sTowerSets) <= 0xffff, FactoryIndexOverflow);
+
+bool32 IsPolishedFactoryChallenge(void)
+{
+    return gSaveBlock2Ptr->frontier.lvlMode == FRONTIER_LVL_50
+        && VarGet(VAR_FRONTIER_FACILITY) == FRONTIER_FACILITY_FACTORY
+        && VarGet(VAR_FRONTIER_BATTLE_MODE) == FRONTIER_MODE_SINGLES;
+}
+
+const struct PolishedTowerSet *PolishedGetRentalSet(u16 id)
+{
+    if (id < POLISHED_RENTAL_BASE || id >= POLISHED_RENTAL_BASE + ARRAY_COUNT(sTowerSets))
+        return NULL;
+    return &sTowerSets[id - POLISHED_RENTAL_BASE];
+}
 
 bool32 IsPolishedTowerLevelMode(u32 mode)
 {
@@ -121,11 +134,9 @@ static bool32 IsLegalTowerTeam(const u16 *team)
     return TRUE;
 }
 
-static void CreateTowerMon(struct Pokemon *mon, u32 index, u32 wins, struct TrainerGenerator *generator)
+static void CreateTowerMon(struct Pokemon *mon, u32 index, u32 ev, struct TrainerGenerator *generator)
 {
     const struct PolishedTowerSet *set = &sTowerSets[index];
-    u32 ev = min(wins, 16u) * 16;
-    ev = min(ev, 252u) / 3; // DefaultOptions selects modern EVs.
     u8 evs[NUM_STATS] = {ev, ev, ev, ev, ev, ((set->iv >> 15) & 31) ? ev : 0};
     struct TrainerMon definition = {
         .species = set->species, .heldItem = set->item, .lvl = 50, .ball = BALL_POKE,
@@ -138,6 +149,63 @@ static void CreateTowerMon(struct Pokemon *mon, u32 index, u32 wins, struct Trai
     SetMonData(mon, MON_DATA_ABILITY_NUM, &set->abilitySlot);
 }
 
+bool32 PolishedCreateRentalMon(struct Pokemon *mon, u16 id)
+{
+    if (!PolishedGetRentalSet(id))
+        return FALSE;
+    struct TrainerGenerator generator = {.name = {EOS}, .otID = OTID_STRUCT_PRESET(READ_OTID_FROM_SAVE),
+        .localRngState = LocalRandomSeed(id)};
+    CreateTowerMon(mon, id - POLISHED_RENTAL_BASE, 84, &generator);
+    return TRUE;
+}
+
+static void ShuffleTiers(u8 *tiers, u32 count)
+{
+    for (u32 last = count - 1; last > 0; last--)
+    {
+        u32 pick = PolishedRandomRange(last + 1);
+        u8 temp;
+        SWAP(tiers[last], tiers[pick], temp);
+    }
+}
+
+static u16 DrawSet(u32 tier)
+{
+    u32 start = sTowerTierOffsets[tier];
+    return start + PolishedRandomRange(sTowerTierOffsets[tier + 1] - start);
+}
+
+void PolishedGenerateFactoryRentals(void)
+{
+    struct BattleFrontier *frontier = &gSaveBlock2Ptr->frontier;
+    u32 wins = frontier->factoryWinStreaks[FRONTIER_MODE_SINGLES][FRONTIER_LVL_50] + 5u;
+    u32 swaps = frontier->factoryRentsCount[FRONTIER_MODE_SINGLES][FRONTIER_LVL_50];
+    u32 row = min(7u, wins / 7 + (wins % 7) / 3 + swaps / 6);
+    u8 tiers[PARTY_SIZE];
+    for (u32 i = 0; i < PARTY_SIZE; i++)
+        tiers[i] = (sTowerTierMasks[row][i / FRONTIER_PARTY_SIZE] >> (2 * (i % FRONTIER_PARTY_SIZE))) & 3;
+    ShuffleTiers(tiers, PARTY_SIZE);
+
+    // NewRentalTeam retries the whole draw with the same shuffled tiers.
+    // Rental legality compares base species and permits repeated held items.
+    u16 team[PARTY_SIZE];
+    bool32 legal;
+    do
+    {
+        legal = TRUE;
+        for (u32 i = 0; i < PARTY_SIZE; i++)
+        {
+            u16 set = DrawSet(tiers[i]);
+            for (u32 j = 0; j < i; j++)
+                if (sTowerSets[set].baseSpecies == sTowerSets[team[j]].baseSpecies)
+                    legal = FALSE;
+            team[i] = set;
+        }
+    } while (!legal);
+    for (u32 i = 0; i < PARTY_SIZE; i++)
+        frontier->rentalMons[i].monId = POLISHED_RENTAL_BASE + team[i];
+}
+
 static u32 TowerDifficulty(u32 wins)
 {
     static const u8 offsets[] = {0, 1, 1, 2, 2, 3, 4};
@@ -146,10 +214,24 @@ static u32 TowerDifficulty(u32 wins)
 
 // The release compares the high byte first, then compares low bytes even
 // when the old high byte was greater. Its Tower record is not a numeric max.
-static u16 UpdateTowerRecord(u16 record, u16 wins)
+static u16 UpdateTowerRecord(struct BattleFrontier *frontier, u16 record, u16 wins)
 {
     if ((wins >> 8) > (record >> 8))
+    {
+        // After copying both record bytes, .check_record reads one byte
+        // further: the high byte of the current rental streak in source WRAM.
+        u16 *streak = &frontier->factoryWinStreaks[FRONTIER_MODE_SINGLES][FRONTIER_LVL_50];
+        bool32 active = frontier->winStreakActiveFlags & STREAK_FACTORY_SINGLES_50;
+        u16 current = active ? *streak : 0;
+        if ((u8)wins > (current >> 8))
+        {
+            *streak = ((u8)wins << 8) | (u8)current;
+            if (!active)
+                frontier->factoryRentsCount[FRONTIER_MODE_SINGLES][FRONTIER_LVL_50] = 0;
+            frontier->winStreakActiveFlags |= STREAK_FACTORY_SINGLES_50;
+        }
         return wins;
+    }
     return (record & 0xff00) | max((u8)record, (u8)wins);
 }
 
@@ -182,7 +264,7 @@ void PolishedSettleTowerPoints(void)
         if (points)
             IncrementDailyBattlePoints(points);
         u16 *record = &frontier->towerRecordWinStreaks[FRONTIER_MODE_SINGLES][FRONTIER_LVL_50];
-        *record = UpdateTowerRecord(*record, wins);
+        *record = UpdateTowerRecord(frontier, *record, wins);
         if (frontier->challengeStatus != CHALLENGE_STATUS_WON)
             frontier->towerWinStreaks[FRONTIER_MODE_SINGLES][FRONTIER_LVL_50] = 0;
         frontier->challengeStatus = 0;
@@ -228,19 +310,11 @@ void PolishedBuildTowerParty(u32 wins)
         PolishedResetTowerHistory();
     for (u32 i = 0; i < FRONTIER_PARTY_SIZE; i++, mask >>= 2)
         tiers[i] = mask & 3;
-    for (u32 last = FRONTIER_PARTY_SIZE - 1; last > 0; last--)
-    {
-        u32 pick = PolishedRandomRange(last + 1);
-        u8 temp;
-        SWAP(tiers[last], tiers[pick], temp);
-    }
+    ShuffleTiers(tiers, FRONTIER_PARTY_SIZE);
     do
     {
         for (u32 i = 0; i < FRONTIER_PARTY_SIZE; i++)
-        {
-            u32 start = sTowerTierOffsets[tiers[i]];
-            team[i] = start + PolishedRandomRange(sTowerTierOffsets[tiers[i] + 1] - start);
-        }
+            team[i] = DrawSet(tiers[i]);
     } while (!IsLegalTowerTeam(team));
 
     memmove(history, history + FRONTIER_PARTY_SIZE, sizeof(gSaveBlock3Ptr->polishedTowerHistory) - sizeof(team));
@@ -249,7 +323,7 @@ void PolishedBuildTowerParty(u32 wins)
     for (u32 i = 0; i < FRONTIER_PARTY_SIZE; i++)
     {
         history[ARRAY_COUNT(gSaveBlock3Ptr->polishedTowerHistory) - FRONTIER_PARTY_SIZE + i] = team[i] + 1;
-        CreateTowerMon(&gParties[B_TRAINER_OPPONENT_A][i], team[i], wins, &generator);
+        CreateTowerMon(&gParties[B_TRAINER_OPPONENT_A][i], team[i], min(wins * 16, 252u) / 3, &generator);
     }
 }
 #endif

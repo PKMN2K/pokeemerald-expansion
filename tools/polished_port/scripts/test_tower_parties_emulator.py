@@ -63,16 +63,20 @@ def expected_teams(tiers, masks):
     raise ValueError('deterministic replay did not visit all four source tiers')
 
 
-def fixture(sets, steps, history):
+def source_set_rows(sets):
     mons = []
     for m in sets:
         iv = ', '.join(map(str, m['iv']))
         moves = ', '.join(m['moves'])
         mons.append(f'    {{{m["species"]}, {m["item"]}, {{{moves}}}, TRAINER_PARTY_IVS({iv}), '
                     f'MON_{m["gender"]}, {m["nature"]}, {m["ability"]}}},')
+    return '\n'.join(mons)
+
+
+def fixture(sets, steps, history):
     rows = [f'    {{{wins}, {{{", ".join(str(x) for x in team)}}}}},' for wins, team in steps]
     return (ROOT/'tools/polished_port/tests/tower_parties_fixture.c').read_text().replace(
-        '/* SOURCE SETS */', '\n'.join(mons)).replace('/* EXPECTED PARTIES */', '\n'.join(rows)).replace(
+        '/* SOURCE SETS */', source_set_rows(sets)).replace('/* EXPECTED PARTIES */', '\n'.join(rows)).replace(
         '/* FINAL HISTORY */', ', '.join(str(index + 1) for index in history))
 
 
