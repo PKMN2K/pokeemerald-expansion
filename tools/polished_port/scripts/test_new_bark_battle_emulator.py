@@ -79,14 +79,14 @@ def optional_trainer_shift_prompt(game):
 
 
 def learn_source_bite(game):
-    """Replace Leer through the real selector whenever Totodile reaches level 13."""
+    """Replace Rage with Bite and keep Leer available for the Violet blackout."""
     move = int.from_bytes(game.read(game.sym['gMoveToLearn'], 2), 'little')
     assert move == layout()['bite']
     battle = game.u32(game.sym['gBattleStruct'])
     learner = game.read(battle + layout()['exp_getter_mon'], 1)[0]
     mon = party(game, details=True)[learner]
     assert mon['species'] == layout()['Totodile'] and mon['level'] == 13, mon
-    slot = mon['moves'].index(layout()['leer'])
+    slot = mon['moves'].index(layout()['rage'])
     advance(game, lambda: task_active(game, 'Task_HandleReplaceMoveInput'))
     game.frames(30)
     for _ in range(slot):

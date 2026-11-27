@@ -36,13 +36,13 @@ DOMAIN_CHECKS = {
         ['Polished action AI Destiny Bond failure queries cannot clear the live volatile',
          'Polished escape roamer AI and action execution both reject sleep and freeze']),
     'facility_link': (
-        [],
+        ['link-conversion/report.json'],
         ["Polished linked Conversion plays both trainers' choices and leaves the next turn aligned",
          'Polished affection excludes actual link and frontier battles',
          'Polished critical evolution counter excludes link battles',
          'Polished Sketch boundary rejects link mode and invalid or duplicate Sketch history without mutation']),
     'presentation_rng': (
-        ['conversion-selection/report.json', 'metronome-pool/report.json', 'new-bark/validation.json',
+        ['link-conversion/report.json', 'conversion-selection/report.json', 'metronome-pool/report.json', 'new-bark/validation.json',
          'shift-source/shift-switch-validation.json', 'shift-native/shift-switch-validation.json'],
         ['Polished Safari bait and rock consume every rejected draw and one accepted draw']),
 }
@@ -94,10 +94,16 @@ def check_probe(path, rom_hash, pin):
         raise ValueError('missing probe results')
     if data.get('source_commit', pin) != pin:
         raise ValueError('unexpected source commit')
+    if path.parent.name == 'link-conversion':
+        if (data['choices'] != [1, 2] or len(set(data['types'])) != 2
+                or len(data['tackle_pp_before']) != 2 or len(data['tackle_pp_after']) != 2
+                or any(before - after != 1 for before, after in zip(data['tackle_pp_before'], data['tackle_pp_after']))):
+            raise ValueError('missing serial choice retry or next-turn synchronization')
     if path.parent.name == 'suite3-contexts':
         if (data['seeded_reward_cases'] < 127 or data['wild_factory_cases'] < 96
-                or data['trainer_medicine_cases'] < 12 or not data['win'] or not data['escape']
-                or data['flash_reloads'] != 2):
+                or data['trainer_medicine_cases'] < 15 or data['flash_reloads'] != 4
+                or {name: row['outcome'] for name, row in data['outcomes'].items()}
+                   != {'win': 1, 'capture': 7, 'escape': 4, 'loss': 2}):
             raise ValueError('missing wild generation, medicine, outcome or Flash results')
     if path.name == 'shift-switch-validation.json':
         profile = path.parent.name.removeprefix('shift-')

@@ -33,7 +33,7 @@ def layout():
         "pokedex_forms": "offsetof(struct SaveBlock2, pokedex.polishedCaughtForms)",
         "pokedex_forms_size": "sizeof(((struct SaveBlock2 *)0)->pokedex.polishedCaughtForms)",
         "tackle": "MOVE_TACKLE", "growl": "MOVE_GROWL", "leer": "MOVE_LEER", "scratch": "MOVE_SCRATCH",
-        "bite": "MOVE_BITE", "exp_getter_mon": "offsetof(struct BattleStruct, expGetterMonId)",
+        "bite": "MOVE_BITE", "rage": "MOVE_RAGE", "exp_getter_mon": "offsetof(struct BattleStruct, expGetterMonId)",
         "secure": "offsetof(struct BoxPokemon, secure)",
         "checksum": "offsetof(struct BoxPokemon, checksum)",
         "substruct_size": "sizeof(union PokemonSubstruct)",

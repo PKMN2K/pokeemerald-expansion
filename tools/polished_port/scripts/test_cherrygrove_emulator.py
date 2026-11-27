@@ -138,8 +138,14 @@ def sea_battle(game, lose=False, water_table=None, area="cherrygrove"):
             else:
                 choose_cell(game,"gActionSelectionCursor",3)
         elif controller(game,"HandleInputChooseMove"):
-            assert lose and game.read(game.sym["gBattleMons"]+layout()["battle_pp"],4)[1]
-            choose_cell(game,"gMoveSelectionCursor",1)
+            assert lose
+            active = int.from_bytes(game.read(game.sym["gBattlerPartyIndexes"], 2), "little")
+            moves = party(game, details=True)[active]["moves"]
+            pp = game.read(game.sym["gBattleMons"] + layout()["battle_pp"], 4)
+            safe = next((slot for slot, move in enumerate(moves)
+                         if move in (layout()["leer"], layout()["growl"]) and pp[slot]), None)
+            assert safe is not None, (area, "No non-damaging move for blackout", moves, list(pp))
+            choose_cell(game, "gMoveSelectionCursor", safe)
         else:
             game.press(A,30)
     game.command(f"save {game.output / (area+'-water-failure.state')}")

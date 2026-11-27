@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Check wild construction, postbattle rewards, real win/escape, and Flash reload."""
+"""Check wild construction, postbattle rewards, real win, capture, escape, loss and Flash reload."""
 import argparse
 import hashlib
 import json
@@ -11,7 +11,7 @@ import tempfile
 from audit_moves_machines import ROOT, compile_probe
 from build_battle_suite import authenticated_sources
 from build_pokemon_learnsets import PIN
-from test_johto_demo_emulator import Game, A
+from test_johto_demo_emulator import Game, A, B
 from test_new_bark_battle_emulator import choose_cell, controller
 
 
@@ -98,36 +98,59 @@ def run(driver, output):
     code = code.replace('/* GENERATED_MEDICINE_CASES */', 'static const struct MedicineCase medicine[] = {\n' + '\n'.join(medicine) + '\n    };')
     with tempfile.TemporaryDirectory(prefix='polished-contexts-') as tmp:
         directory = Path(tmp)
-        elf = compile_probe(ROOT, directory, code)
-        for escape in (False, True):
-            state = directory/('escape' if escape else 'win')
+        outcomes = {}
+        for name, expected in (('win', 1), ('capture', 7), ('escape', 4), ('loss', 2)):
+            if name in ('win', 'loss'):
+                build = directory / ('winnable' if name == 'win' else 'blackout')
+                build.mkdir()
+                elf = compile_probe(ROOT, build, f"#define PROBE_LOSS {int(name == 'loss')}\n" + code)
+            state = directory / name
             state.mkdir()
             game = Game(driver, elf, elf, output, state)
             try:
                 def result():
-                    return struct.unpack('<7I', game.read(game.sym['gContextResult'], 28))
-                def wait(predicate, label):
+                    return struct.unpack('<10I', game.read(game.sym['gContextResult'], 40))
+                def wait(predicate, label, key=A):
                     for frame in range(3000):
                         if predicate(): return
-                        game.frames(4, A if frame % 8 == 0 else 0)
+                        game.frames(4, key if frame % 8 == 0 else 0)
                     raise AssertionError((label, result()))
                 wait(lambda: controller(game, 'HandleInputChooseAction'), 'action')
                 assert result()[:3] == (1, 0, 0) and result()[6] == 0, result()
-                choose_cell(game, 'gActionSelectionCursor', 3 if escape else 0)
-                if not escape:
-                    wait(lambda: controller(game, 'HandleInputChooseMove'), 'move')
-                    choose_cell(game, 'gMoveSelectionCursor', 0)
-                wait(lambda: result()[0] == 2, 'battle outcome')
-                assert result()[3:6] == (4 if escape else 1, 16 if escape else 0, 1), result()
+                eligible = name in ('win', 'capture')
+                game.snapshot("before-action")
+                # A legitimate win can produce zero Honey. Exercise an award through
+                # a real battle by varying input timing, keeping every outcome check.
+                for delay in range(16):
+                    if delay:
+                        game.restore("before-action")
+                        game.frames(7 * delay)
+                    if name == 'capture':
+                        game.press(256, 8)  # R throws the only ball in the bag.
+                    else:
+                        choose_cell(game, 'gActionSelectionCursor', 3 if name == 'escape' else 0)
+                        if name != 'escape':
+                            wait(lambda: controller(game, 'HandleInputChooseMove'), 'move')
+                            choose_cell(game, 'gMoveSelectionCursor', 0)
+                    wait(lambda: result()[0] == 2, 'battle outcome', B if name == 'capture' else A)
+                    after = result()
+                    assert after[3:6] == (expected, 0 if eligible else 16, 1), (name, after)
+                    assert after[8:] == (int(name == 'capture'), 1), (name, after)
+                    if not eligible or after[7]:
+                        break
+                assert (after[7] > 0) == eligible, (name, after)
                 game.command('reset')
                 wait(lambda: result()[0] == 3, 'Flash load')
-                assert result()[2] == 0 and result()[4] == (16 if escape else 0), result()
+                loaded = result()
+                assert loaded[2] == 0 and loaded[4] == after[4] and loaded[7:] == after[7:], (name, after, loaded)
+                outcomes[name] = dict(outcome=expected, status=after[4], honey_in_bag=after[7],
+                                      magikarp_delivered=bool(after[8]), everstone_retained=bool(after[9]))
             finally:
                 game.close()
     report = dict(source_commit=PIN, production_rom_sha256=hashlib.sha256((ROOT/'pokeemerald-johto-demo.gba').read_bytes()).hexdigest(),
-                  seeded_reward_cases=len(fixtures), wild_factory_cases=96, trainer_medicine_cases=len(medicine), win=True, escape=True, flash_reloads=2)
+                  seeded_reward_cases=len(fixtures), wild_factory_cases=96, trainer_medicine_cases=len(medicine), outcomes=outcomes, flash_reloads=len(outcomes))
     (output/'report.json').write_text(json.dumps(report, indent=2)+'\n')
-    print(f'PASS: {len(fixtures)} reward cases, {len(medicine)} trainer medicine cases, wild and roamer construction, real win/escape and two Flash reloads')
+    print(f'PASS: {len(fixtures)} reward cases, {len(medicine)} trainer medicine cases, wild and roamer construction, real win/capture/escape/loss and four Flash reloads')
 
 
 if __name__ == '__main__':

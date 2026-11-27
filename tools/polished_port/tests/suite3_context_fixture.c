@@ -18,7 +18,7 @@
 
 struct RewardCase { u16 seed, level; enum Item expected; u16 nextDraw; bool8 honey; };
 /* GENERATED_REWARD_CASES */
-EWRAM_DATA volatile u32 gContextResult[7] = {0};
+EWRAM_DATA volatile u32 gContextResult[10] = {0};
 
 static void CheckRewards(void)
 {
@@ -125,11 +125,19 @@ static void CheckFactories(void)
     gContextResult[2] = 4;
 }
 
+static void ReadPartyAndBag(void)
+{
+    gContextResult[4] = GetMonData(&gParties[B_TRAINER_PLAYER][1], MON_DATA_STATUS);
+    gContextResult[7] = CountTotalItemQuantityInBag(ITEM_HONEY);
+    gContextResult[8] = GetMonData(&gParties[B_TRAINER_PLAYER][5], MON_DATA_SPECIES) == SPECIES_MAGIKARP;
+    gContextResult[9] = GetMonData(&gParties[B_TRAINER_PLAYER][2], MON_DATA_HELD_ITEM) == ITEM_EVERSTONE;
+}
+
 static void BattleDone(void)
 {
     if (gContextResult[0] == 2) return;
     gContextResult[3] = gBattleOutcome;
-    gContextResult[4] = GetMonData(&gParties[B_TRAINER_PLAYER][1], MON_DATA_STATUS);
+    ReadPartyAndBag();
     gContextResult[5] = TrySavingData(SAVE_NORMAL) == SAVE_STATUS_OK;
     gContextResult[0] = 2;
 }
@@ -146,7 +154,7 @@ void CB2_MoveMachineAudit(void)
     {
         CreateRoamerMonInstance(0);
         gContextResult[2] = GetMonData(&gParties[B_TRAINER_OPPONENT_A][0], MON_DATA_ABILITY_NUM) != 2;
-        gContextResult[4] = GetMonData(&gParties[B_TRAINER_PLAYER][1], MON_DATA_STATUS);
+        ReadPartyAndBag();
         gContextResult[0] = 3;
         return;
     }
@@ -164,8 +172,32 @@ void CB2_MoveMachineAudit(void)
     SetMonData(&gParties[B_TRAINER_PLAYER][1], MON_DATA_ABILITY_NUM, &slot);
     SetMonData(&gParties[B_TRAINER_PLAYER][1], MON_DATA_STATUS, &status);
     CreateRandomMon(&gParties[B_TRAINER_OPPONENT_A][0], SPECIES_MAGIKARP, 2);
-    gPartiesCount[B_TRAINER_PLAYER] = 2;
+    for (u32 i = 2; i < 5; i++)
+    {
+        struct Pokemon *mon = &gParties[B_TRAINER_PLAYER][i];
+        CreateRandomMon(mon, SPECIES_TEDDIURSA, 100);
+        u32 honeyGather = 2;
+        enum Item held = ITEM_EVERSTONE;
+        SetMonData(mon, MON_DATA_ABILITY_NUM, &honeyGather);
+        SetMonData(mon, MON_DATA_HELD_ITEM, &held);
+    }
+    ClearBag();
+    AddBagItem(ITEM_MASTER_BALL, 3);
+    gPartiesCount[B_TRAINER_PLAYER] = 5;
     gPartiesCount[B_TRAINER_OPPONENT_A] = 1;
+    if (PROBE_LOSS)
+    {
+        for (u32 i = 0; i < 5; i++)
+        {
+            u32 hp = i == 0 ? 1 : 0;
+            SetMonData(&gParties[B_TRAINER_PLAYER][i], MON_DATA_HP, &hp);
+        }
+        struct Pokemon *opponent = &gParties[B_TRAINER_OPPONENT_A][0];
+        CreateRandomMon(opponent, SPECIES_RATICATE, 100);
+        SetMonMoveSlot(opponent, MOVE_QUICK_ATTACK, 0);
+        for (u32 i = 1; i < MAX_MON_MOVES; i++)
+            SetMonMoveSlot(opponent, MOVE_NONE, i);
+    }
     gSaveBlock2Ptr->optionsTextSpeed = OPTIONS_TEXT_SPEED_FAST;
     gBattleTypeFlags = 0;
     gMain.savedCallback = BattleDone;
