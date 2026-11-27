@@ -9,6 +9,8 @@ struct PolishedExpContext
 };
 
 bool32 UsesPolishedPostBattleAbilities(void);
+bool32 PolishedHasPayDayCoins(void);
+u32 PolishedCollectPayDay(u32 coins, bool32 amuletCoin);
 enum Item PolishedApplyPostBattleAbility(struct Pokemon *mon);
 u32 PolishedExperience(const struct PolishedExpContext *ctx);
 bool32 UsesPolishedRewardRules(enum BattlerId defeated);

@@ -4,6 +4,8 @@
 #include "battle_controllers.h"
 #include "pokemon.h"
 #include "item.h"
+#include "money.h"
+#include "polished_tower.h"
 #include "polished_pokemon_data.h"
 #include "polished_rewards.h"
 #include "random.h"
@@ -145,6 +147,29 @@ bool32 UsesPolishedPostBattleAbilities(void)
         && !(gBattleTypeFlags & (BATTLE_TYPE_LINK | BATTLE_TYPE_RECORDED | BATTLE_TYPE_RECORDED_LINK
             | BATTLE_TYPE_FRONTIER | BATTLE_TYPE_TRAINER_HILL | BATTLE_TYPE_EREADER_TRAINER
             | BATTLE_TYPE_CATCH_TUTORIAL));
+}
+
+bool32 PolishedHasPayDayCoins(void)
+{
+    if (!gBattleStruct->polishedPayDay || gBattleStruct->moneyMultiplierMove || !gPaydayMoney)
+        return FALSE;
+#if POLISHED_JOHTO_DEMO
+    if ((gBattleTypeFlags & BATTLE_TYPE_BATTLE_TOWER)
+        && !(gBattleTypeFlags & (BATTLE_TYPE_LINK | BATTLE_TYPE_RECORDED | BATTLE_TYPE_RECORDED_LINK))
+        && UsesPolishedBattleRules(B_BATTLER_0, B_BATTLER_1) && IsPolishedTowerChallenge())
+        return TRUE;
+#endif
+    return UsesPolishedPostBattleAbilities();
+}
+
+u32 PolishedCollectPayDay(u32 coins, bool32 amuletCoin)
+{
+    // CheckPayDay saturates the doubled pot. AddBattleMoneyToAccount drops
+    // the carry from its three-byte addition before applying the wallet cap.
+    u32 payout = amuletCoin ? min(0xFFFFFF, coins * 2) : coins;
+    u32 wallet = (GetMoney(&gSaveBlock1Ptr->money) + payout) & 0xFFFFFF;
+    SetMoney(&gSaveBlock1Ptr->money, min(wallet, MAX_MONEY));
+    return payout;
 }
 
 static enum Item GetPickupItem(u32 level)

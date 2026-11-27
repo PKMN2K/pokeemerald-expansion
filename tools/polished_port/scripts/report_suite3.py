@@ -118,7 +118,9 @@ def check_probe(path, rom_hash, pin):
         if (data['seeded_reward_cases'] < 127 or data['wild_factory_cases'] < 96
                 or data['roamer_movement_cases'] < 280 or data['roamer_encounter_bytes'] != 256
                 or data['simultaneous_beasts'] != 2 or data['wild_gender_cases'] != 576 or data['trainer_tie_cases'] != 192 or data['trainer_policy_cases'] != 256
-                or data['trainer_medicine_cases'] < 15 or data['flash_reloads'] != 4
+                or data['trainer_medicine_cases'] < 15 or data['flash_reloads'] != 4 or data['payout_cases'] != 70
+                or {name: row['wallet_after_reset'] for name, row in data['outcomes'].items()}
+                   != {'win': 1200923, 'capture': 1200923, 'escape': 1200123, 'loss': 1188243}
                 or {name: row['outcome'] for name, row in data['outcomes'].items()}
                    != {'win': 1, 'capture': 7, 'escape': 4, 'loss': 2}):
             raise ValueError('missing wild generation, medicine, outcome or Flash results')

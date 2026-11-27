@@ -1,7 +1,11 @@
 #ifndef GUARD_MONEY_H
 #define GUARD_MONEY_H
 
+#if POLISHED_JOHTO_DEMO
+#define MAX_MONEY 9999999
+#else
 #define MAX_MONEY 999999 // Can be increased to INT_MAX
+#endif
 
 #define MAX_MONEY_DIGITS ((MAX_MONEY > 999999999) ? 10 : \
         (MAX_MONEY > 99999999) ? 9 : \

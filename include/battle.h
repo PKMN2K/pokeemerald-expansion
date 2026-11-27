@@ -600,7 +600,8 @@ struct BattleStruct
     u8 expOrderId:3;
     u8 teamGotExpMsgPrinted:1; // The 'Rest of your team got msg' has been printed.
     u8 polishedLevelUp:1; // Current EXP recipient leveled up; consumed before the next recipient.
-    u8 padding0:3;
+    u8 polishedPayDay:1; // The source move scattered coins in this battle.
+    u8 padding0:2;
     u8 givenExpMons[2]; // Bits for enemy party's Pokémon that gave exp to player's party.
     u8 expSentInMons; // As bits for player party mons - not including exp share mons.
     u8 wildVictorySong;

@@ -281,7 +281,10 @@ static void HandleSetEffectPayday(struct BattleCalcValues *cv, struct SetEffect 
         // Five byte-add/carry loops wrap the source's unsigned 24-bit bank.
         // Expansion's optional effects retain their native 16-bit cap.
         if (source)
+        {
+            gBattleStruct->polishedPayDay = TRUE;
             gPaydayMoney = (gPaydayMoney + amount) & 0xFFFFFF;
+        }
         else
             gPaydayMoney = min(0xFFFF, gPaydayMoney + amount);
 

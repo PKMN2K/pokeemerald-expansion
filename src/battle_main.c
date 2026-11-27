@@ -2874,6 +2874,7 @@ static void BattleStartClearSetData(void)
     gBattleStruct->safariEscapeFactor = 3;
     gBattleStruct->wildVictorySong = 0;
     gBattleStruct->moneyMultiplier = 1;
+    gBattleStruct->polishedPayDay = FALSE;
 
     gBattleStruct->givenExpMons[0] = 0;
     gBattleStruct->givenExpMons[1] = 0;
@@ -5552,6 +5553,16 @@ static void HandleEndTurn_FinishBattle(void)
         if (UsesPolishedPostBattleAbilities() && (gBattleOutcome == B_OUTCOME_WON || gBattleOutcome == B_OUTCOME_CAUGHT))
             sPostBattlePartyCursor = PARTY_SIZE;
         gBattleMainFunc = FinishBattleAfterPartyAbilities;
+        if ((gBattleOutcome == B_OUTCOME_WON || gBattleOutcome == B_OUTCOME_CAUGHT) && PolishedHasPayDayCoins())
+        {
+            u32 payout = PolishedCollectPayDay(gPaydayMoney, gBattleStruct->moneyMultiplierItem);
+            // text_decimal prints the low six digits, including interior zeros.
+            ConvertIntToDecimalStringN(gBattleTextBuff1, payout % 1000000,
+                payout >= 1000000 ? STR_CONV_MODE_LEADING_ZEROS : STR_CONV_MODE_LEFT_ALIGN, 6);
+            gBattleStruct->polishedPayDay = FALSE;
+            BattleScriptExecute(BattleScript_PolishedPayDay);
+            return;
+        }
         FinishBattleAfterPartyAbilities();
     }
     else

@@ -179,6 +179,17 @@ def roam_cases():
     return list(seen.values()), list(encounters.values())
 
 
+def payout_cases():
+    # CheckPayDay saturates doubling. The three-byte wallet addition discards
+    # its carry before AddBattleMoneyToAccount compares against 9,999,999.
+    for wallet in (0, 1, 999998, 9999998, 9999999):
+        for pot in (0, 400, 65536, 1000001, 0x7fffff, 0x800000, 0xffffff):
+            for doubled in (0, 1):
+                paid = min(0xffffff, pot * (1 + doubled))
+                balance = min(9999999, (wallet + paid) & 0xffffff)
+                yield f'        {{{wallet}, {pot}, {doubled}, {paid}, {balance}}},'
+
+
 def medicine_cases():
     rows = []
     def case(seed, hp, level, index, count, status='0'):
@@ -218,6 +229,8 @@ def run(driver, output):
     for tag, name, rows in [('MOVEMENT', 'sMovement', movement), ('ENCOUNTER', 'sEncounter', encounters)]:
         values = ',\n'.join('    {' + ', '.join(map(str, row)) + '}' for row in rows)
         code = code.replace(f'/* GENERATED_{tag}_CASES */', f'static const u16 {name}[][{len(rows[0])}] = {{\n{values}\n}};')
+    payouts = list(payout_cases())
+    code = code.replace('/* PAYOUT CASES */', '\n'.join(payouts))
     medicine = medicine_cases()
     policies = ai_policy_cases()
     code = code.replace('/* POLICY CASES */', '\n'.join(policies))
@@ -248,6 +261,14 @@ def run(driver, output):
                 wait(lambda: controller(game, 'HandleInputChooseAction'), 'action')
                 assert result()[:3] == (1, 0, 0) and result()[6] == 0, result()
                 eligible = name in ('win', 'capture')
+                # Scatter coins with the actual move before every outcome. Focus Sash
+                # keeps the first wild opponent alive for the win, capture and escape.
+                choose_cell(game, 'gActionSelectionCursor', 0)
+                wait(lambda: controller(game, 'HandleInputChooseMove'), 'Pay Day move')
+                choose_cell(game, 'gMoveSelectionCursor', 0)
+                wait(lambda: game.u32(game.sym['gPaydayMoney']) == 400, 'scattered coins')
+                if name != 'loss':
+                    wait(lambda: controller(game, 'HandleInputChooseAction'), 'second action')
                 game.snapshot("before-action")
                 # A legitimate win can produce zero Honey. Exercise an award through
                 # a real battle by varying input timing, keeping every outcome check.
@@ -257,11 +278,11 @@ def run(driver, output):
                         game.frames(7 * delay)
                     if name == 'capture':
                         game.press(256, 8)  # R throws the only ball in the bag.
-                    else:
+                    elif name != 'loss':
                         choose_cell(game, 'gActionSelectionCursor', 3 if name == 'escape' else 0)
                         if name != 'escape':
                             wait(lambda: controller(game, 'HandleInputChooseMove'), 'move')
-                            choose_cell(game, 'gMoveSelectionCursor', 0)
+                            choose_cell(game, 'gMoveSelectionCursor', 1)
                     wait(lambda: result()[0] == 2, 'battle outcome', B if name == 'capture' else A)
                     after = result()
                     assert after[3:6] == (expected, 0 if eligible else 16, 1), (name, after)
@@ -270,19 +291,24 @@ def run(driver, output):
                     if not eligible or after[7]:
                         break
                 assert (after[7] > 0) == eligible, (name, after)
+                wallet = game.u32(game.sym['gWalletResult'])
+                wallet_delta = {'win': 800, 'capture': 800, 'escape': 0, 'loss': -99 * 120}
+                expected_wallet = 1200123 + wallet_delta[name]
+                assert wallet == expected_wallet, (name, wallet, expected_wallet)
                 game.command('reset')
                 wait(lambda: result()[0] == 3, 'Flash load')
                 loaded = result()
                 assert loaded[2] == 0 and loaded[4] == after[4] and loaded[7:] == after[7:], (name, after, loaded)
-                outcomes[name] = dict(outcome=expected, status=after[4], honey_in_bag=after[7],
+                assert game.u32(game.sym['gWalletResult']) == wallet, (name, 'saved wallet')
+                outcomes[name] = dict(outcome=expected, wallet_after_reset=wallet, status=after[4], honey_in_bag=after[7],
                                       magikarp_delivered=bool(after[8]), everstone_retained=bool(after[9]))
             finally:
                 game.close()
     report = dict(source_commit=PIN, production_rom_sha256=hashlib.sha256((ROOT/'pokeemerald-johto-demo.gba').read_bytes()).hexdigest(),
-                  seeded_reward_cases=len(fixtures), wild_factory_cases=96, wild_gender_cases=len(genders), trainer_tie_cases=len(ties), trainer_policy_cases=len(policies), trainer_medicine_cases=len(medicine), roamer_movement_cases=len(movement),
+                  seeded_reward_cases=len(fixtures), payout_cases=len(payouts), wild_factory_cases=96, wild_gender_cases=len(genders), trainer_tie_cases=len(ties), trainer_policy_cases=len(policies), trainer_medicine_cases=len(medicine), roamer_movement_cases=len(movement),
                   roamer_encounter_bytes=len(encounters), simultaneous_beasts=2, outcomes=outcomes, flash_reloads=len(outcomes))
     (output/'report.json').write_text(json.dumps(report, indent=2)+'\n')
-    print(f'PASS: {len(fixtures)} reward cases, {len(genders)} wild gender cases, {len(ties)} trainer tie cases, {len(policies)} scoring cases, {len(medicine)} trainer medicine cases, {len(movement)} roamer movements, 256 encounter bytes, two saved beasts, real win/capture/escape/loss and four Flash reloads')
+    print(f'PASS: {len(fixtures)} reward cases, {len(payouts)} payout cases, {len(genders)} wild gender cases, {len(ties)} trainer tie cases, {len(policies)} scoring cases, {len(medicine)} trainer medicine cases, {len(movement)} roamer movements, 256 encounter bytes, two saved beasts, real win/capture/escape/loss and four Flash reloads')
 
 
 if __name__ == '__main__':

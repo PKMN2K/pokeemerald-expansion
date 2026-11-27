@@ -4358,8 +4358,8 @@ static void Cmd_getmoneyreward(void)
             s32 i, count;
             for (i = 0; i < PARTY_SIZE; i++)
             {
-                if (GetMonData(&gParties[B_TRAINER_PLAYER][i], MON_DATA_SPECIES_OR_EGG) != SPECIES_NONE
-                && GetMonData(&gParties[B_TRAINER_PLAYER][i], MON_DATA_SPECIES_OR_EGG) != SPECIES_EGG)
+                enum Species species = GetMonData(&gParties[B_TRAINER_PLAYER][i], MON_DATA_SPECIES_OR_EGG);
+                if (species != SPECIES_NONE && (B_POLISHED_MOVE_BALANCE || species != SPECIES_EGG))
                 {
                     if (GetMonData(&gParties[B_TRAINER_PLAYER][i], MON_DATA_LEVEL) > sPartyLevel)
                         sPartyLevel = GetMonData(&gParties[B_TRAINER_PLAYER][i], MON_DATA_LEVEL);
@@ -6175,7 +6175,7 @@ static void Cmd_givepaydaymoney(void)
 {
     CMD_ARGS();
 
-    if (!(gBattleTypeFlags & (BATTLE_TYPE_LINK | BATTLE_TYPE_RECORDED_LINK)) && gPaydayMoney != 0)
+    if (!(gBattleTypeFlags & (BATTLE_TYPE_LINK | BATTLE_TYPE_RECORDED_LINK)) && gPaydayMoney != 0 && !PolishedHasPayDayCoins())
     {
         u32 bonusMoney = gPaydayMoney * gBattleStruct->moneyMultiplier;
         AddMoney(&gSaveBlock1Ptr->money, bonusMoney);

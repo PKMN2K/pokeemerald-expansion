@@ -7,6 +7,8 @@
 #include "battle_ai_items.h"
 #include "battle_ai_main.h"
 #include "item.h"
+#include "event_data.h"
+#include "money.h"
 #include "load_save.h"
 #include "main.h"
 #include "new_game.h"
@@ -22,6 +24,32 @@
 struct RewardCase { u16 seed, level; enum Item expected; u16 nextDraw; bool8 honey; };
 /* GENERATED_REWARD_CASES */
 EWRAM_DATA volatile u32 gContextResult[12] = {0};
+EWRAM_DATA volatile u32 gWalletResult;
+
+static void CheckPayouts(void)
+{
+    static const struct {u32 wallet, coins, doubled, payout, balance;} cases[] = {
+/* PAYOUT CASES */
+    };
+    for (u32 i = 0; i < ARRAY_COUNT(cases); i++)
+    {
+        SetMoney(&gSaveBlock1Ptr->money, cases[i].wallet);
+        u32 payout = PolishedCollectPayDay(cases[i].coins, cases[i].doubled);
+        if (payout != cases[i].payout || GetMoney(&gSaveBlock1Ptr->money) != cases[i].balance)
+        {
+            gContextResult[1] = 3000 + i;
+            return;
+        }
+    }
+    SetMoney(&gSaveBlock1Ptr->money, 999995);
+    AddMoney(&gSaveBlock1Ptr->money, 6);
+    if (GetMoney(&gSaveBlock1Ptr->money) != 1000001)
+        gContextResult[1] = 4000;
+    AddMoney(&gSaveBlock1Ptr->money, 9999999);
+    if (GetMoney(&gSaveBlock1Ptr->money) != 9999999)
+        gContextResult[1] = 4001;
+}
+
 
 static void CheckRewards(void)
 {
@@ -281,6 +309,7 @@ static u32 CheckRoamingRoutes(void)
 
 static void ReadPartyAndBag(void)
 {
+    gWalletResult = GetMoney(&gSaveBlock1Ptr->money);
     for (u32 i = 0; i < 2; i++)
     {
         struct Roamer *beast = GetRoamerByIndex(i);
@@ -321,6 +350,8 @@ void CB2_MoveMachineAudit(void)
     NewGameInitData();
     SeedRng(42);
     CheckRewards();
+    if (!gContextResult[1])
+        CheckPayouts();
     CheckMedicine();
     if (!gContextResult[6])
         CheckTrainerTies();
@@ -334,16 +365,25 @@ void CB2_MoveMachineAudit(void)
     ZeroPlayerPartyMons();
     ZeroEnemyPartyMons();
     CreateRandomMon(&gParties[B_TRAINER_PLAYER][0], SPECIES_RATICATE, 80);
-    SetMonMoveSlot(&gParties[B_TRAINER_PLAYER][0], MOVE_TACKLE, 0);
+    SetMonMoveSlot(&gParties[B_TRAINER_PLAYER][0], MOVE_PAY_DAY, 0);
+    SetMonMoveSlot(&gParties[B_TRAINER_PLAYER][0], MOVE_TACKLE, 1);
+    enum Item amulet = ITEM_AMULET_COIN;
+    SetMonData(&gParties[B_TRAINER_PLAYER][0], MON_DATA_HELD_ITEM, &amulet);
     CreateRandomMon(&gParties[B_TRAINER_PLAYER][1], SPECIES_STARYU, 20);
     u32 slot = 1, status = STATUS1_BURN;
     SetMonData(&gParties[B_TRAINER_PLAYER][1], MON_DATA_ABILITY_NUM, &slot);
     SetMonData(&gParties[B_TRAINER_PLAYER][1], MON_DATA_STATUS, &status);
-    CreateRandomMon(&gParties[B_TRAINER_OPPONENT_A][0], SPECIES_MAGIKARP, 2);
+    struct Pokemon *opponent = &gParties[B_TRAINER_OPPONENT_A][0];
+    CreateRandomMon(opponent, SPECIES_MAGIKARP, 2);
+    enum Item sash = ITEM_FOCUS_SASH;
+    SetMonData(opponent, MON_DATA_HELD_ITEM, &sash);
+    SetMonMoveSlot(opponent, MOVE_SPLASH, 0);
+    for (u32 i = 1; i < MAX_MON_MOVES; i++)
+        SetMonMoveSlot(opponent, MOVE_NONE, i);
     for (u32 i = 2; i < 5; i++)
     {
         struct Pokemon *mon = &gParties[B_TRAINER_PLAYER][i];
-        CreateRandomMon(mon, SPECIES_TEDDIURSA, 100);
+        CreateRandomMon(mon, SPECIES_TEDDIURSA, PROBE_LOSS ? 20 : 100);
         u32 honeyGather = 2;
         enum Item held = ITEM_EVERSTONE;
         SetMonData(mon, MON_DATA_ABILITY_NUM, &honeyGather);
@@ -360,12 +400,19 @@ void CB2_MoveMachineAudit(void)
             u32 hp = i == 0 ? 1 : 0;
             SetMonData(&gParties[B_TRAINER_PLAYER][i], MON_DATA_HP, &hp);
         }
-        struct Pokemon *opponent = &gParties[B_TRAINER_OPPONENT_A][0];
-        CreateRandomMon(opponent, SPECIES_RATICATE, 100);
-        SetMonMoveSlot(opponent, MOVE_QUICK_ATTACK, 0);
+        // LoseMoney scans every occupied party slot, including an unhatched Egg.
+        struct Pokemon *egg = &gParties[B_TRAINER_PLAYER][5];
+        CreateRandomMon(egg, SPECIES_PICHU, 99);
+        u8 isEgg = TRUE;
+        SetMonData(egg, MON_DATA_IS_EGG, &isEgg);
+        gPartiesCount[B_TRAINER_PLAYER] = 6;
+        VarSet(VAR_POLISHED_EARNED_BADGES, 0x1ff);
+        CreateRandomMon(opponent, SPECIES_SNORLAX, 80);
+        SetMonMoveSlot(opponent, MOVE_BODY_SLAM, 0);
         for (u32 i = 1; i < MAX_MON_MOVES; i++)
             SetMonMoveSlot(opponent, MOVE_NONE, i);
     }
+    SetMoney(&gSaveBlock1Ptr->money, 1200123);
     gSaveBlock2Ptr->optionsTextSpeed = OPTIONS_TEXT_SPEED_FAST;
     gBattleTypeFlags = 0;
     gMain.savedCallback = BattleDone;
