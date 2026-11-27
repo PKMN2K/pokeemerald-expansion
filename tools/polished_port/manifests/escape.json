@@ -2,7 +2,9 @@
   "source_commit": "3fa43192379df5c3e7b09a08e4d5d79af4f02f42",
   "source_variant": "default; FAITHFUL undefined",
   "source_anchors": {
-    "engine/battle/core.asm": "37e76be94949c77bf7fd12814675a27943c7d85f"
+    "engine/battle/core.asm": "37e76be94949c77bf7fd12814675a27943c7d85f",
+    "engine/overworld/wildmons.asm": "661988ed652ec219dd918a71739e96671c21b93e",
+    "data/wild/roammon_maps.asm": "5556f0542da64d951f8d38e830d3c8de900f3625"
   },
   "vectors": 5184,
   "vector_sha256": "792d4b77e58c9e10f4642e5a86cf224b49696fca1bed1130c12414ebcde19f17",
@@ -20,7 +22,7 @@
   "complete_behavior_parity": false,
   "remaining": [
     "Source special battle-type bindings, trainer forfeiture, replacement-menu escape and full Safari/controller flow remain open.",
-    "Roamer creation, source map routes, full save/encounter lifecycle and outcome sequencing remain open; native HP capacity is preserved.",
+    "Beast route movement and grass eligibility use the source graph. The Johto profile supports both beasts concurrently. Story release, unported map bindings and the full encounter lifecycle remain open.",
     "Exact random-stream call order and source text/animation timing remain unverified."
   ]
 }

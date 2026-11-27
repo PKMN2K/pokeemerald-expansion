@@ -192,8 +192,8 @@ Shift and Set. The combined job requires these reports for setup and presentatio
 
 | Area | Implemented in the GBA port | Remaining closure work |
 | --- | --- | --- |
-| Setup | Wild, scripted and roaming encounters generate six source DVs. Legendary encounters guarantee three perfect DVs. Roamers preserve their ability slot across Flash reload. Sprout Tower Bellsprout can carry Growth. | The adapter binds 22 of the 955 default-source trainer party definitions. Other trainer parties, special encounter types, form-specific gender and the full encounter lifecycle remain open. |
-| Capture and escape | Dusk Ball applies the cave bonus in Dark Cave. The source time comparison cannot activate the bonus in outdoor maps. Sprout Tower is a dungeon in the source. | Special battle exits and remaining scripted capture and roamer outcomes. |
+| Setup | Wild, scripted and roaming encounters generate six source DVs. Legendary encounters guarantee three perfect DVs. Roamers preserve their ability slot across Flash reload. Sprout Tower Bellsprout can carry Growth. | The source defines 956 trainer parties when Inver’s separate pool is included. The adapter binds 22. The CI report lists the 934 unbound class and party IDs. Other trainer parties, special encounter types, form-specific gender and the full encounter lifecycle remain open. |
+| Capture and escape | Dusk Ball applies the cave bonus in Dark Cave. The source time comparison cannot activate the bonus in outdoor maps. Sprout Tower is a dungeon in the source. Raikou and Entei share the source 16-route graph, use grass encounter odds of 25/256 each when present, and persist separately in Flash. | Burned Tower release, 13 outstanding GBA route bindings, remaining scripted capture outcomes and special battle exits. |
 | Rewards | After a win or capture, the party is processed in reverse slot order after held items are restored. Natural Cure, Pickup and Honey Gather use the source conditions. | Special scripted rewards, all experience and loss branches, and their persistence. |
 | AI | Ordinary wild move selection filters unavailable moves. Registered trainers with medicine use source priority, health and status thresholds and the party's maximum level. Conversion rerolls invalid slots for wild and Smart trainers. | Source move scoring, switching, opponent knowledge, and item policies for unregistered trainers. |
 | Facility and link | Tower battles force Set for that battle. Compatible two-player link singles carry both players' Conversion choices and preserve them in the recording. | Tower party generation and streak progression, all facility rules, and synchronization across the remaining link actions. |
@@ -204,7 +204,7 @@ and recorded and live two-player Conversion alongside the existing campaign and 
 The serial probe connects two emulated GBAs, negotiates the protocol over the cable,
 retries an invalid guest choice and checks both battlers' Tackle PP on the following turn.
 The contexts probe verifies 127 seeded reward cases, 15 trainer medicine decisions,
-96 wild and scripted encounters, and four Flash reloads covering win, capture, escape and defeat. Capture also checks delivery of the caught Pokémon and Honey to the bag.
+96 wild and scripted encounters, all 280 adjacent and random-jump cases with the player on Route 29, and every possible roaming encounter byte. Four Flash reloads cover win, capture, escape and defeat. Capture checks the caught Pokémon in the party and Honey in the bag.
 
 ## Completed milestone and next suite
 

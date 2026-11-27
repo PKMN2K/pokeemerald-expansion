@@ -64,7 +64,7 @@
 enum __attribute__((packed)) CategoryOWE
 {
     // If Roamers are used, they will exist as values, implicitly, within this enum.
-    OWE_CATEGORY_MASS_OUTBREAK = ROAMER_COUNT,
+    OWE_CATEGORY_MASS_OUTBREAK = ACTIVE_ROAMER_SLOTS,
     OWE_CATEGORY_FEEBAS,
     OWE_CATEGORY_WILD,
     OWE_CATEGORY_UNDEFINED
@@ -82,8 +82,8 @@ struct InfoOWE
 };
 
 
-#if WE_OW_ENCOUNTERS == TRUE && ROAMER_COUNT > OWE_MAX_ROAMERS
-#error "ROAMER_COUNT needs to be less than OWE_MAX_ROAMERS due to it being stored in the u8 field warpArrowSpriteId"
+#if WE_OW_ENCOUNTERS == TRUE && ACTIVE_ROAMER_SLOTS > OWE_MAX_ROAMERS
+#error "ACTIVE_ROAMER_SLOTS needs to be less than OWE_MAX_ROAMERS due to it being stored in the u8 field warpArrowSpriteId"
 #endif
 
 #if OW_POKEMON_OBJECT_EVENTS == FALSE && WE_OW_ENCOUNTERS == TRUE
@@ -378,7 +378,7 @@ void StartWildBattleWithOWE(struct ScriptContext *ctx)
         return;
     }
 
-    if (category < ROAMER_COUNT && StartWildBattleWithOWE_CheckRoamer(category))
+    if (category < ACTIVE_ROAMER_SLOTS && StartWildBattleWithOWE_CheckRoamer(category))
         return;
 
     enum Species speciesId = OW_SPECIES(owe);
@@ -494,7 +494,7 @@ static bool32 CreateEnemyPartyOWE(struct InfoOWE *info, s32 x, s32 y)
 
     if (info->category == OWE_CATEGORY_UNDEFINED)
     {
-        if (TryStartRoamerEncounter() && !OWE_DoesOWERoamerExist())
+        if (TryStartRoamerEncounterInArea(wildArea == WILD_AREA_LAND) && !OWE_DoesOWERoamerExist())
         {
             info->category = gEncounteredRoamerIndex;
             return TRUE;
@@ -537,7 +537,7 @@ static bool32 OWE_DoesOWERoamerExist(void)
 
 static bool32 StartWildBattleWithOWE_CheckRoamer(enum CategoryOWE category)
 {
-    if (category < ROAMER_COUNT
+    if (category < ACTIVE_ROAMER_SLOTS
      && IsRoamerAt(category, gSaveBlock1Ptr->location.mapGroup, gSaveBlock1Ptr->location.mapNum))
     {
         CreateRoamerMonInstance(category);
@@ -650,7 +650,7 @@ void TryTriggerOverworldWildEncounter(struct ObjectEvent *obstacle, struct Objec
 
     struct ObjectEvent *wildMon = playerFollowerIsColliderOWE ? obstacle : collider;
     enum CategoryOWE category = GetOWECategory(wildMon);
-    if (category < ROAMER_COUNT
+    if (category < ACTIVE_ROAMER_SLOTS
      && !IsRoamerAt(category, gSaveBlock1Ptr->location.mapGroup, gSaveBlock1Ptr->location.mapNum))
     {
         RemoveObjectEvent(wildMon);
@@ -1028,7 +1028,7 @@ void OnOverworldWildEncounterDespawn(struct ObjectEvent *owe)
     if (type == OWE_NONE)
         return;
 
-    if (owe->sOverworldEncounterCategory < ROAMER_COUNT)
+    if (owe->sOverworldEncounterCategory < ACTIVE_ROAMER_SLOTS)
         RoamerMove(owe->sOverworldEncounterCategory);
 
     owe->sOverworldEncounterLevel = 0;

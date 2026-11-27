@@ -1,4 +1,6 @@
 #include "global.h"
+#include "constants/maps.h"
+#include "battle.h"
 #include "wild_encounter.h"
 #include "polished_escape.h"
 #include "polished_pokemon_data.h"
@@ -18,9 +20,25 @@ enum
     MAP_NUM, // map number
 };
 
-#define ROAMER(index) (&gSaveBlock1Ptr->roamer[index])
-EWRAM_DATA static u8 sLocationHistory[ROAMER_COUNT][3][2] = {0};
-EWRAM_DATA static u8 sRoamerLocation[ROAMER_COUNT][2] = {0};
+struct Roamer *GetRoamerByIndex(u32 index)
+{
+#if POLISHED_JOHTO_DEMO && ROAMER_COUNT < 2
+    if (index >= ROAMER_COUNT)
+    {
+        if (gSaveBlock3Ptr->polishedRoamerMagic != 0x50524231) // PRB1
+        {
+            memset(gSaveBlock3Ptr->extraRoamers, 0, sizeof(gSaveBlock3Ptr->extraRoamers));
+            gSaveBlock3Ptr->polishedRoamerMagic = 0x50524231;
+        }
+        return &gSaveBlock3Ptr->extraRoamers[index - ROAMER_COUNT];
+    }
+#endif
+    return &gSaveBlock1Ptr->roamer[index];
+}
+
+#define ROAMER(index) GetRoamerByIndex(index)
+EWRAM_DATA static u8 sLocationHistory[ACTIVE_ROAMER_SLOTS][3][2] = {0};
+EWRAM_DATA static u8 sRoamerLocation[ACTIVE_ROAMER_SLOTS][2] = {0};
 EWRAM_DATA u8 gEncounteredRoamerIndex = 0;
 
 #define ___ MAP_NUM(MAP_UNDEFINED) // For empty spots in the location table
@@ -66,11 +84,85 @@ static const u8 sRoamerLocations[][6] =
 #define NUM_LOCATION_SETS (ARRAY_COUNT(sRoamerLocations) - 1)
 #define NUM_LOCATIONS_PER_SET (ARRAY_COUNT(sRoamerLocations[0]))
 
+struct PolishedRoamMap
+{
+    u8 route;
+    u8 count;
+    u8 destinations[4];
+};
+
+#include "data/polished_roam_maps.h"
+
+static u32 StartingBeastRoute(const struct Roamer *beast)
+{
+    if (!P_POLISHED_SPECIES_DATA)
+        return 0;
+    if (beast->species == SPECIES_RAIKOU)
+        return 42;
+    if (beast->species == SPECIES_ENTEI)
+        return 37;
+    return 0;
+}
+
+// The complete graph uses source route IDs even before a route has a GBA map.
+static u16 BeastRouteMap(u32 route)
+{
+    switch (route)
+    {
+    case 29: return MAP_POLISHED_ROUTE_29;
+    case 30: return MAP_POLISHED_ROUTE_30;
+    case 31: return MAP_POLISHED_ROUTE_31;
+    default: return MAP_UNDEFINED;
+    }
+}
+
+static u32 BeastRoute(const struct Roamer *beast)
+{
+    for (u32 i = 0; i < ARRAY_COUNT(sPolishedRoamMaps); i++)
+        if (sPolishedRoamMaps[i].route == beast->polishedRoamRoute)
+            return beast->polishedRoamRoute;
+    return StartingBeastRoute(beast); // A legacy save has no source route byte.
+}
+
+static void JumpBeast(struct Roamer *beast)
+{
+    u16 playerMap = (u8)gSaveBlock1Ptr->location.mapGroup << 8 | (u8)gSaveBlock1Ptr->location.mapNum;
+    u32 route;
+    do
+        route = sPolishedRoamMaps[Random() & 15].route;
+    while (playerMap != MAP_UNDEFINED && BeastRouteMap(route) == playerMap);
+    beast->polishedRoamRoute = route;
+}
+
+static void MoveBeast(struct Roamer *beast)
+{
+    u32 route = BeastRoute(beast);
+    for (u32 i = 0; i < ARRAY_COUNT(sPolishedRoamMaps); i++)
+    {
+        const struct PolishedRoamMap *map = &sPolishedRoamMaps[i];
+        if (map->route != route)
+            continue;
+        u32 roll;
+        do
+        {
+            roll = Random() & 31;
+            if (!roll)
+            {
+                JumpBeast(beast);
+                return;
+            }
+            roll &= 3;
+        } while (roll >= map->count);
+        beast->polishedRoamRoute = map->destinations[roll];
+        return;
+    }
+}
+
 void DeactivateAllRoamers(void)
 {
     u32 i;
 
-    for (i = 0; i < ROAMER_COUNT; i++)
+    for (i = 0; i < ACTIVE_ROAMER_SLOTS; i++)
         SetRoamerInactive(i);
 }
 
@@ -89,7 +181,7 @@ void MoveAllRoamersToOtherLocationSets(void)
 {
     u32 i;
 
-    for (i = 0; i < ROAMER_COUNT; i++)
+    for (i = 0; i < ACTIVE_ROAMER_SLOTS; i++)
         RoamerMoveToOtherLocationSet(i);
 }
 
@@ -97,7 +189,7 @@ void MoveAllRoamers(void)
 {
     u32 i;
 
-    for (i = 0; i < ROAMER_COUNT; i++)
+    for (i = 0; i < ACTIVE_ROAMER_SLOTS; i++)
         RoamerMove(i);
 }
 
@@ -129,6 +221,9 @@ static void CreateInitialRoamerMon(u8 index, enum Species species, u8 level)
     ROAMER(index)->tough = GetMonData(&gParties[B_TRAINER_OPPONENT_A][0], MON_DATA_TOUGH);
     ROAMER(index)->shiny = GetMonData(&gParties[B_TRAINER_OPPONENT_A][0], MON_DATA_IS_SHINY);
     ROAMER(index)->active = TRUE;
+    ROAMER(index)->polishedRoamRoute = StartingBeastRoute(ROAMER(index));
+    if (ROAMER(index)->polishedRoamRoute)
+        return;
     sRoamerLocation[index][MAP_GRP] = ROAMER_MAP_GROUP;
     sRoamerLocation[index][MAP_NUM] = sRoamerLocations[Random() % NUM_LOCATION_SETS][0];
 }
@@ -137,19 +232,19 @@ static u8 GetFirstInactiveRoamerIndex(void)
 {
     u32 i;
 
-    for (i = 0; i < ROAMER_COUNT; i++)
+    for (i = 0; i < ACTIVE_ROAMER_SLOTS; i++)
     {
         if (!ROAMER(i)->active)
             return i;
     }
-    return ROAMER_COUNT;
+    return ACTIVE_ROAMER_SLOTS;
 }
 
 bool8 TryAddRoamer(enum Species species, u8 level)
 {
     u8 index = GetFirstInactiveRoamerIndex();
 
-    if (index < ROAMER_COUNT)
+    if (index < ACTIVE_ROAMER_SLOTS)
     {
         // Create the roamer and stop searching
         CreateInitialRoamerMon(index, species, level);
@@ -173,7 +268,7 @@ void UpdateLocationHistoryForRoamer(void)
 {
     u32 i;
 
-    for (i = 0; i < ROAMER_COUNT; i++)
+    for (i = 0; i < ACTIVE_ROAMER_SLOTS; i++)
     {
         sLocationHistory[i][2][MAP_GRP] = sLocationHistory[i][1][MAP_GRP];
         sLocationHistory[i][2][MAP_NUM] = sLocationHistory[i][1][MAP_NUM];
@@ -193,6 +288,12 @@ void RoamerMoveToOtherLocationSet(u32 roamerIndex)
     if (!ROAMER(roamerIndex)->active)
         return;
 
+    if (StartingBeastRoute(ROAMER(roamerIndex)))
+    {
+        JumpBeast(ROAMER(roamerIndex));
+        return;
+    }
+
     sRoamerLocation[roamerIndex][MAP_GRP] = ROAMER_MAP_GROUP;
 
     // Choose a location set that starts with a map
@@ -211,6 +312,16 @@ void RoamerMoveToOtherLocationSet(u32 roamerIndex)
 
 void RoamerMove(u32 roamerIndex)
 {
+    if (ROAMER(roamerIndex)->active && StartingBeastRoute(ROAMER(roamerIndex)))
+    {
+        MoveBeast(ROAMER(roamerIndex));
+        return;
+    }
+
+#if POLISHED_JOHTO_DEMO && ROAMER_COUNT < 2
+    if (roamerIndex >= ROAMER_COUNT && !ROAMER(roamerIndex)->active)
+        return;
+#endif
     u8 locSet = 0;
 
     if ((Random() % 16) == 0)
@@ -246,6 +357,11 @@ void RoamerMove(u32 roamerIndex)
 
 bool8 IsRoamerAt(u32 roamerIndex, u8 mapGroup, u8 mapNum)
 {
+    if (ROAMER(roamerIndex)->active && StartingBeastRoute(ROAMER(roamerIndex)))
+    {
+        u16 map = BeastRouteMap(BeastRoute(ROAMER(roamerIndex)));
+        return map != MAP_UNDEFINED && MAP_GROUP(map) == mapGroup && MAP_NUM(map) == mapNum;
+    }
     if (ROAMER(roamerIndex)->active && mapGroup == sRoamerLocation[roamerIndex][MAP_GRP] && mapNum == sRoamerLocation[roamerIndex][MAP_NUM])
         return TRUE;
     else
@@ -274,20 +390,59 @@ void CreateRoamerMonInstance(u32 roamerIndex)
     SetMonData(mon, MON_DATA_IS_SHINY, &ROAMER(roamerIndex)->shiny);
 }
 
-bool8 TryStartRoamerEncounter(void)
+bool8 TryStartRoamerEncounterInArea(bool32 ordinaryLand)
 {
     u32 i;
+    u32 selection = 0;
+    bool32 rolled = FALSE;
 
-    for (i = 0; i < ROAMER_COUNT; i++)
+    for (i = 0; i < ACTIVE_ROAMER_SLOTS; i++)
     {
-        if (IsRoamerAt(i, gSaveBlock1Ptr->location.mapGroup, gSaveBlock1Ptr->location.mapNum) == TRUE && (Random() % 4) == 0)
+        if (!ROAMER(i)->active)
+            continue;
+        if (StartingBeastRoute(ROAMER(i)))
         {
-            CreateRoamerMonInstance(i);
-            gEncounteredRoamerIndex = i;
-            return TRUE;
+            if (!ordinaryLand)
+                continue;
+            if (!rolled)
+            {
+                u8 byte = Random();
+                selection = byte < 100 ? byte & 3 : 0;
+                rolled = TRUE;
+            }
+            if (selection != (ROAMER(i)->species == SPECIES_RAIKOU ? 1u : 2u))
+                continue;
+            if (!IsRoamerAt(i, gSaveBlock1Ptr->location.mapGroup, gSaveBlock1Ptr->location.mapNum))
+                continue;
         }
+        else if (!IsRoamerAt(i, gSaveBlock1Ptr->location.mapGroup, gSaveBlock1Ptr->location.mapNum) || Random() % 4 != 0)
+            continue;
+        CreateRoamerMonInstance(i);
+        gEncounteredRoamerIndex = i;
+        return TRUE;
     }
     return FALSE;
+}
+
+bool8 TryStartRoamerEncounter(void)
+{
+    return TryStartRoamerEncounterInArea(TRUE);
+}
+
+// ExitBattle also gives both beasts a 1/16 movement roll after other battles.
+void MovePolishedRoamingBeasts(bool32 roamingBattle)
+{
+    bool32 rolled = FALSE;
+    for (u32 i = 0; i < ACTIVE_ROAMER_SLOTS; i++)
+    {
+        struct Roamer *beast = ROAMER(i);
+        if (!beast->active || !StartingBeastRoute(beast))
+            continue;
+        if (!roamingBattle && !rolled && (Random() & 15))
+            return;
+        rolled = TRUE;
+        MoveBeast(beast);
+    }
 }
 
 void UpdateRoamerHPStatus(struct Pokemon *mon)
@@ -300,7 +455,18 @@ void UpdateRoamerHPStatus(struct Pokemon *mon)
     ROAMER(gEncounteredRoamerIndex)->statusA = status;
     ROAMER(gEncounteredRoamerIndex)->statusB = status >> 8;
 
-    RoamerMoveToOtherLocationSet(gEncounteredRoamerIndex);
+    if (StartingBeastRoute(ROAMER(gEncounteredRoamerIndex)))
+    {
+        if (gBattleOutcome == B_OUTCOME_WON || gBattleOutcome == B_OUTCOME_CAUGHT)
+        {
+            ROAMER(gEncounteredRoamerIndex)->hp = 0;
+            SetRoamerInactive(gEncounteredRoamerIndex);
+        }
+        else
+            MovePolishedRoamingBeasts(TRUE);
+    }
+    else
+        RoamerMoveToOtherLocationSet(gEncounteredRoamerIndex);
 }
 
 void SetRoamerInactive(u32 roamerIndex)
@@ -310,6 +476,13 @@ void SetRoamerInactive(u32 roamerIndex)
 
 void GetRoamerLocation(u32 roamerIndex, u8 *mapGroup, u8 *mapNum)
 {
+    if (ROAMER(roamerIndex)->active && StartingBeastRoute(ROAMER(roamerIndex)))
+    {
+        u16 map = BeastRouteMap(BeastRoute(ROAMER(roamerIndex)));
+        *mapGroup = MAP_GROUP(map);
+        *mapNum = MAP_NUM(map);
+        return;
+    }
     *mapGroup = sRoamerLocation[roamerIndex][MAP_GRP];
     *mapNum = sRoamerLocation[roamerIndex][MAP_NUM];
 }

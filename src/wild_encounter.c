@@ -851,7 +851,7 @@ bool8 StandardWildEncounter(u16 curMetatileBehavior, u16 prevMetatileBehavior)
 
             if (TryStartRoamerEncounter())
             {
-                roamer = &gSaveBlock1Ptr->roamer[gEncounteredRoamerIndex];
+                roamer = GetRoamerByIndex(gEncounteredRoamerIndex);
                 if (!IsWildLevelAllowedByRepel(roamer->level))
                     return FALSE;
 
@@ -900,9 +900,9 @@ bool8 StandardWildEncounter(u16 curMetatileBehavior, u16 prevMetatileBehavior)
             else if (WildEncounterCheck(gWildMonHeaders[headerId].encounterTypes[timeOfDay].waterMonsInfo->encounterRate, FALSE) != TRUE)
                 return FALSE;
 
-            if (TryStartRoamerEncounter())
+            if (TryStartRoamerEncounterInArea(FALSE))
             {
-                roamer = &gSaveBlock1Ptr->roamer[gEncounteredRoamerIndex];
+                roamer = GetRoamerByIndex(gEncounteredRoamerIndex);
                 if (!IsWildLevelAllowedByRepel(roamer->level))
                     return FALSE;
 
@@ -1022,7 +1022,7 @@ bool8 SweetScentWildEncounter(void)
             if (gWildMonHeaders[headerId].encounterTypes[timeOfDay].landMonsInfo == NULL)
                 return FALSE;
 
-            if (TryStartRoamerEncounter())
+            if (TryStartRoamerEncounterInArea(FALSE))
             {
                 BattleSetup_StartRoamerBattle();
                 return TRUE;
@@ -1045,7 +1045,7 @@ bool8 SweetScentWildEncounter(void)
             if (gWildMonHeaders[headerId].encounterTypes[timeOfDay].waterMonsInfo == NULL)
                 return FALSE;
 
-            if (TryStartRoamerEncounter())
+            if (TryStartRoamerEncounterInArea(FALSE))
             {
                 BattleSetup_StartRoamerBattle();
                 return TRUE;

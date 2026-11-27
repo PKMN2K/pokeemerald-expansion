@@ -37,6 +37,14 @@ class BattleSystemsTest(unittest.TestCase):
         for party in self.parties.values():
             self.assertTrue(all(mon['friendship'] == 160 for mon in party['mons']))
 
+    def test_party_coverage_includes_separately_assembled_inver(self):
+        coverage = self.trainers['party_coverage']
+        self.assertEqual(coverage['source_parties'], 956)
+        self.assertEqual(coverage['bound_parties'], len(self.parties))
+        self.assertEqual(sum(map(len, coverage['unbound_by_class'].values())), 956 - len(self.parties))
+        self.assertIn('1', coverage['unbound_by_class']['INVER'])
+        self.assertNotIn('GIOVANNI1', coverage['unbound_by_class']['GIOVANNI'])
+
     def test_custom_personality_and_party_wide_ev_flags(self):
         joey = self.parties['TRAINER_POLISHED_JOEY']['mons'][0]
         self.assertEqual(joey['ivs'], [30]*6)

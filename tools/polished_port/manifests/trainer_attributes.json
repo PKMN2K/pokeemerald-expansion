@@ -6880,5 +6880,1231 @@
       ]
     }
   ],
+  "party_coverage": {
+    "source_parties": 956,
+    "bound_parties": 22,
+    "unbound_by_class": {
+      "CARRIE": [
+        "1"
+      ],
+      "CAL": [
+        "1"
+      ],
+      "JACKY": [
+        "1"
+      ],
+      "FALKNER": [
+        "2"
+      ],
+      "BUGSY": [
+        "1",
+        "2"
+      ],
+      "WHITNEY": [
+        "1",
+        "2"
+      ],
+      "MORTY": [
+        "1",
+        "2"
+      ],
+      "CHUCK": [
+        "1",
+        "2"
+      ],
+      "JASMINE": [
+        "1",
+        "2"
+      ],
+      "PRYCE": [
+        "1",
+        "2"
+      ],
+      "CLAIR": [
+        "1",
+        "2"
+      ],
+      "WILL": [
+        "1",
+        "2"
+      ],
+      "KOGA": [
+        "1",
+        "2"
+      ],
+      "BRUNO": [
+        "1",
+        "2"
+      ],
+      "KAREN": [
+        "1",
+        "2"
+      ],
+      "CHAMPION": [
+        "LANCE",
+        "LANCE2"
+      ],
+      "BROCK": [
+        "1",
+        "2"
+      ],
+      "MISTY": [
+        "1",
+        "2"
+      ],
+      "LT_SURGE": [
+        "1",
+        "2"
+      ],
+      "ERIKA": [
+        "1",
+        "2"
+      ],
+      "JANINE": [
+        "1",
+        "2"
+      ],
+      "SABRINA": [
+        "1",
+        "2"
+      ],
+      "BLAINE": [
+        "1",
+        "2"
+      ],
+      "BLUE": [
+        "1",
+        "2"
+      ],
+      "RED": [
+        "1"
+      ],
+      "LEAF": [
+        "1"
+      ],
+      "RIVAL1": [
+        "RIVAL1_4",
+        "RIVAL1_5",
+        "RIVAL1_6",
+        "RIVAL1_7",
+        "RIVAL1_8",
+        "RIVAL1_9",
+        "RIVAL1_10",
+        "RIVAL1_11",
+        "RIVAL1_12",
+        "RIVAL1_13",
+        "RIVAL1_14",
+        "RIVAL1_15"
+      ],
+      "RIVAL2": [
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6"
+      ],
+      "LYRA1": [
+        "LYRA1_4",
+        "LYRA1_5",
+        "LYRA1_6",
+        "LYRA1_7",
+        "LYRA1_8",
+        "LYRA1_9",
+        "LYRA1_10",
+        "LYRA1_11",
+        "LYRA1_12"
+      ],
+      "LYRA2": [
+        "1",
+        "2",
+        "3"
+      ],
+      "YOUNGSTER": [
+        "JOEY2",
+        "JOEY3",
+        "JOEY4",
+        "JOEY5",
+        "ALBERT",
+        "GORDON",
+        "WARREN",
+        "JIMMY",
+        "OWEN",
+        "JASON",
+        "YOUNGSTER_JOSH",
+        "REGIS",
+        "ALFIE",
+        "OLIVER",
+        "CHAZ",
+        "TYLER",
+        "ARDEN"
+      ],
+      "BUG_CATCHER": [
+        "WADE2",
+        "WADE3",
+        "WADE4",
+        "WADE5",
+        "ARNIE1",
+        "ARNIE2",
+        "ARNIE3",
+        "ARNIE4",
+        "ARNIE5",
+        "BENNY",
+        "AL",
+        "JOSH",
+        "KEN",
+        "WAYNE",
+        "OSCAR"
+      ],
+      "CAMPER": [
+        "TODD1",
+        "TODD2",
+        "TODD3",
+        "TODD4",
+        "TODD5",
+        "ROLAND",
+        "IVAN",
+        "BARRY",
+        "LLOYD",
+        "DEAN",
+        "SID",
+        "TED",
+        "JOHN",
+        "JERRY",
+        "SPENCER",
+        "QUENTIN",
+        "GRANT",
+        "CRAIG",
+        "FELIX",
+        "TANNER",
+        "CLARK",
+        "PEDRO",
+        "AMOS"
+      ],
+      "PICNICKER": [
+        "LIZ1",
+        "LIZ2",
+        "LIZ3",
+        "LIZ4",
+        "LIZ5",
+        "GINA1",
+        "GINA2",
+        "GINA3",
+        "GINA4",
+        "GINA5",
+        "ERIN1",
+        "ERIN2",
+        "ERIN3",
+        "TIFFANY1",
+        "TIFFANY2",
+        "TIFFANY3",
+        "TIFFANY4",
+        "KIM",
+        "CINDY",
+        "HOPE",
+        "SHARON",
+        "DEBRA",
+        "HEIDI",
+        "EDNA",
+        "TANYA",
+        "LILY",
+        "PIPER",
+        "GINGER",
+        "CHEYENNE",
+        "ADRIAN",
+        "ZANE"
+      ],
+      "TWINS": [
+        "AMYANDMIMI1",
+        "AMYANDMIMI2",
+        "ANNANDANNE1",
+        "ANNANDANNE2",
+        "JOANDZOE1",
+        "JOANDZOE2",
+        "MEGANDPEG1",
+        "MEGANDPEG2",
+        "LEAANDPIA1",
+        "LEAANDPIA2",
+        "DAYANDDANI1",
+        "DAYANDDANI2",
+        "KAYANDTIA1",
+        "KAYANDTIA2"
+      ],
+      "FISHER": [
+        "RALPH1",
+        "RALPH2",
+        "RALPH3",
+        "RALPH4",
+        "RALPH5",
+        "TULLY1",
+        "TULLY2",
+        "TULLY3",
+        "TULLY4",
+        "WILTON1",
+        "WILTON2",
+        "WILTON3",
+        "JUSTIN",
+        "ARNOLD",
+        "KYLE",
+        "HENRY",
+        "MARVIN",
+        "ANDRE",
+        "RAYMOND",
+        "EDGAR",
+        "JONAH",
+        "MARTIN",
+        "STEPHEN",
+        "BARNEY",
+        "SCOTT",
+        "PATON",
+        "KILEY",
+        "FRANCIS",
+        "LEROY",
+        "KYLER",
+        "MURPHY",
+        "LIAM",
+        "GIDEON",
+        "HALL",
+        "DALLAS"
+      ],
+      "BIRD_KEEPER": [
+        "VANCE1",
+        "VANCE2",
+        "VANCE3",
+        "JOSE1",
+        "JOSE2",
+        "JOSE3",
+        "THEO",
+        "TOBY",
+        "DENIS",
+        "HANK",
+        "ROY",
+        "BORIS",
+        "BOB",
+        "PETER",
+        "PERRY",
+        "BRET",
+        "MICK",
+        "POWELL",
+        "BIRD_KEEPER_TONY",
+        "JULIAN",
+        "BIRD_KEEPER_JUSTIN",
+        "GAIL",
+        "BIRD_KEEPER_JOSH",
+        "BERT",
+        "ERNIE",
+        "KINSLEY",
+        "EASTON",
+        "BRYAN",
+        "TRENT"
+      ],
+      "HIKER": [
+        "ANTHONY1",
+        "ANTHONY2",
+        "ANTHONY3",
+        "ANTHONY4",
+        "ANTHONY5",
+        "PARRY1",
+        "PARRY2",
+        "PARRY3",
+        "RUSSELL",
+        "PHILLIP",
+        "LEONARD",
+        "BENJAMIN",
+        "ERIK",
+        "MICHAEL",
+        "TIMOTHY",
+        "BAILEY",
+        "TIM",
+        "NOLAND",
+        "SIDNEY",
+        "KENNY",
+        "JIM",
+        "DANIEL",
+        "EDWIN",
+        "DEVIN",
+        "SEAMUS",
+        "TONY",
+        "MARCOS",
+        "GERARD",
+        "DENT",
+        "BRUCE",
+        "DWIGHT",
+        "LESTER",
+        "GRADY",
+        "STEVE",
+        "DERRICK",
+        "FLOYD"
+      ],
+      "GRUNTM": [
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "7",
+        "8",
+        "9",
+        "10",
+        "11",
+        "12",
+        "13",
+        "14",
+        "15",
+        "16",
+        "17",
+        "18",
+        "19",
+        "20",
+        "21",
+        "22",
+        "23",
+        "24",
+        "25",
+        "26",
+        "27",
+        "28",
+        "29",
+        "30",
+        "31"
+      ],
+      "GRUNTF": [
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6"
+      ],
+      "POKEFANM": [
+        "DEREK1",
+        "DEREK2",
+        "DEREK3",
+        "WILLIAM",
+        "ROBERT",
+        "JOSHUA",
+        "CARTER",
+        "TREVOR",
+        "BRANDON",
+        "JEREMY",
+        "COLIN",
+        "ALEX",
+        "REX",
+        "ALLAN"
+      ],
+      "POKEFANF": [
+        "BEVERLY1",
+        "BEVERLY2",
+        "BEVERLY3",
+        "RUTH",
+        "GEORGIA",
+        "JAIME",
+        "BOONE",
+        "ELEANOR"
+      ],
+      "OFFICERM": [
+        "KEITH",
+        "DIRK"
+      ],
+      "OFFICERF": [
+        "JAMIE",
+        "MARA",
+        "JENNY"
+      ],
+      "NURSE": [
+        "BEATRICE",
+        "KEIKO",
+        "JOY",
+        "WINIFRED"
+      ],
+      "POKEMANIAC": [
+        "BRENT1",
+        "BRENT2",
+        "BRENT3",
+        "BRENT4",
+        "LARRY",
+        "ANDREW",
+        "CALVIN",
+        "SHANE",
+        "BEN",
+        "RON",
+        "ETHAN",
+        "ISSAC",
+        "DONALD",
+        "ZACH",
+        "ENZO",
+        "MILLER",
+        "AIDAN"
+      ],
+      "COSPLAYER": [
+        "CLARA",
+        "CHLOE",
+        "BROOKE",
+        "KUROKO",
+        "LYRIC"
+      ],
+      "SUPER_NERD": [
+        "STAN",
+        "ERIC",
+        "SAM",
+        "TOM",
+        "PAT",
+        "SHAWN",
+        "TERU",
+        "HUGH",
+        "MARKUS",
+        "CARY",
+        "WALDO",
+        "MERLE",
+        "LUIS",
+        "JOVAN",
+        "MIGUEL",
+        "RORY",
+        "GREGG",
+        "FOOTE",
+        "DAVE",
+        "KOUTA"
+      ],
+      "LASS": [
+        "DANA1",
+        "DANA2",
+        "DANA3",
+        "DANA4",
+        "DANA5",
+        "CATHY",
+        "AMANDA",
+        "KRISE",
+        "CONNIE",
+        "LINDA",
+        "LAURA",
+        "SHANNON",
+        "MICHELLE",
+        "ELLEN",
+        "IRIS",
+        "MIRIAM",
+        "ABIGAIL",
+        "LAYLA",
+        "ROSE",
+        "MEADOW",
+        "JENNIFER",
+        "GINA",
+        "ALICE",
+        "DUPLICA",
+        "MAVIS"
+      ],
+      "BEAUTY": [
+        "VICTORIA",
+        "SAMANTHA",
+        "CASSIE",
+        "JULIA",
+        "VALENCIA",
+        "OLIVIA",
+        "CALLIE",
+        "CASSANDRA",
+        "CHARLOTTE",
+        "BRIDGET",
+        "VERONICA",
+        "BEAUTY_NICOLE",
+        "RACHAEL",
+        "IOANA"
+      ],
+      "BUG_MANIAC": [
+        "LOU",
+        "ROB",
+        "ED",
+        "DOUG",
+        "DANE",
+        "DION",
+        "STACEY",
+        "ELLIS",
+        "ABNER",
+        "KENTA",
+        "ROBBY",
+        "PIERRE",
+        "DYLAN",
+        "KAI"
+      ],
+      "RUIN_MANIAC": [
+        "JONES",
+        "LELAND",
+        "PETRY",
+        "GLYN",
+        "SMILTE"
+      ],
+      "FIREBREATHER": [
+        "OTIS",
+        "DICK",
+        "NED",
+        "BURT",
+        "BILL",
+        "WALT",
+        "RAY",
+        "LYLE",
+        "JAY",
+        "OLEG",
+        "TALA"
+      ],
+      "JUGGLER": [
+        "IRWIN1",
+        "FRITZ",
+        "HORTON"
+      ],
+      "SCHOOLBOY": [
+        "JACK1",
+        "JACK2",
+        "JACK3",
+        "JACK4",
+        "JACK5",
+        "ALAN1",
+        "ALAN2",
+        "ALAN3",
+        "ALAN4",
+        "ALAN5",
+        "CHAD1",
+        "CHAD2",
+        "CHAD3",
+        "CHAD4",
+        "CHAD5",
+        "KIPP",
+        "JOHNNY",
+        "DANNY",
+        "TOMMY",
+        "DUDLEY",
+        "JOE",
+        "BILLY",
+        "NATE",
+        "RICKY",
+        "SHERMAN",
+        "SCHOOLBOY_CONNOR",
+        "TORIN",
+        "TRAVIS"
+      ],
+      "SCHOOLGIRL": [
+        "MOLLY",
+        "ELIZA",
+        "FAITH",
+        "SARAH",
+        "ISABEL",
+        "IMOGEN"
+      ],
+      "PSYCHIC_T": [
+        "NATHAN",
+        "FRANKLIN",
+        "HERMAN",
+        "FIDEL",
+        "GREG",
+        "NORMAN",
+        "MARK",
+        "PHIL",
+        "RICHARD",
+        "GILBERT",
+        "JARED",
+        "RODNEY",
+        "LEON",
+        "URI",
+        "VIRGIL"
+      ],
+      "HEX_MANIAC": [
+        "TAMARA",
+        "ASHLEY",
+        "AMY",
+        "LUNA",
+        "NATALIE",
+        "VIVIAN",
+        "ESTHER",
+        "MATILDA",
+        "BETHANY",
+        "CORYN"
+      ],
+      "SAGE": [
+        "JEFFREY",
+        "PING"
+      ],
+      "MEDIUM": [
+        "MARTHA",
+        "GRACE",
+        "REBECCA",
+        "DORIS"
+      ],
+      "KIMONO_GIRL": [
+        "NAOKO",
+        "SAYO",
+        "ZUKI",
+        "KUNI",
+        "MIKI",
+        "MAKO",
+        "AMI",
+        "MINA"
+      ],
+      "ELDER": [
+        "GAKU",
+        "MASA",
+        "KOJI"
+      ],
+      "SR_AND_JR": [
+        "JOANDCATH1",
+        "JOANDCATH2",
+        "IVYANDAMY1",
+        "IVYANDAMY2",
+        "BEAANDMAY1",
+        "BEAANDMAY2"
+      ],
+      "COUPLE": [
+        "GAILANDELI1",
+        "GAILANDELI2",
+        "DUFFANDEDA1",
+        "DUFFANDEDA2",
+        "FOXANDRAE1",
+        "FOXANDRAE2",
+        "MOEANDLULU1",
+        "MOEANDLULU2",
+        "VICANDTARA1",
+        "VICANDTARA2",
+        "TIMANDSUE1",
+        "TIMANDSUE2",
+        "JOEANDJO1",
+        "JOEANDJO2"
+      ],
+      "GENTLEMAN": [
+        "PRESTON",
+        "EDWARD",
+        "GREGORY",
+        "ALFRED",
+        "MILTON",
+        "CAMUS",
+        "GEOFFREY"
+      ],
+      "RICH_BOY": [
+        "WINSTON",
+        "GERALD",
+        "IRVING",
+        "TOBIN"
+      ],
+      "LADY": [
+        "JESSICA"
+      ],
+      "BREEDER": [
+        "JULIE",
+        "THERESA",
+        "JODY",
+        "CARLENE",
+        "SOPHIE",
+        "BRENDA"
+      ],
+      "BAKER": [
+        "CHELSIE",
+        "SHARYN",
+        "MARGARET",
+        "OLGA"
+      ],
+      "COWGIRL": [
+        "ANNIE",
+        "APRIL",
+        "DANIELA"
+      ],
+      "SAILOR": [
+        "HUEY1",
+        "HUEY2",
+        "HUEY3",
+        "HUEY4",
+        "EUGENE",
+        "TERRELL",
+        "KENT",
+        "ERNEST",
+        "JEFF",
+        "GARRETT",
+        "KENNETH",
+        "STANLY",
+        "HARRY",
+        "PARKER",
+        "EDDIE",
+        "HARVEY"
+      ],
+      "SWIMMERM": [
+        "HAROLD",
+        "SIMON",
+        "RANDALL",
+        "CHARLIE",
+        "GEORGE",
+        "BERKE",
+        "KIRK",
+        "MATHEW",
+        "HAL",
+        "JEROME",
+        "TUCKER",
+        "RICK",
+        "CAMERON",
+        "SETH",
+        "JAMES",
+        "WALTER",
+        "LEWIS",
+        "MICHEL",
+        "LUCAS",
+        "FRANK",
+        "NADAR",
+        "CONRAD",
+        "ROMEO",
+        "MALCOLM",
+        "ARMAND",
+        "THOMAS",
+        "SWIMMERM_LUIS",
+        "ELMO",
+        "DUANE",
+        "ESTEBAN",
+        "EZRA",
+        "ASHE"
+      ],
+      "SWIMMERF": [
+        "ELAINE",
+        "PAULA",
+        "KAYLEE",
+        "SUSIE",
+        "DENISE",
+        "KARA",
+        "WENDY",
+        "MARY",
+        "DAWN",
+        "NICOLE",
+        "LORI",
+        "NIKKI",
+        "DIANA",
+        "BRIANA",
+        "VIOLA",
+        "KATIE",
+        "JILL",
+        "LISA",
+        "ALISON",
+        "STEPHANIE",
+        "CAROLINE",
+        "NATALIA",
+        "BARBARA",
+        "SALLY",
+        "TARA",
+        "MAYU",
+        "LEONA",
+        "CHELAN",
+        "KENDRA",
+        "WODA",
+        "RACHEL",
+        "MARINA"
+      ],
+      "BURGLAR": [
+        "DUNCAN",
+        "ORSON",
+        "COREY",
+        "PETE",
+        "LOUIS"
+      ],
+      "PI": [
+        "LOOKER"
+      ],
+      "SCIENTIST": [
+        "LOWELL",
+        "DENNETT",
+        "LINDEN",
+        "OSKAR",
+        "BRAYDON",
+        "CARL",
+        "DEXTER",
+        "JOSEPH",
+        "NIGEL",
+        "PIOTR",
+        "SANDERS"
+      ],
+      "ROCKET_SCIENTIST": [
+        "ROSS",
+        "MITCH",
+        "JED",
+        "MARC",
+        "RICH"
+      ],
+      "BOARDER": [
+        "RONALD",
+        "BRAD",
+        "DOUGLAS",
+        "SHAUN",
+        "BRYCE",
+        "STEFAN",
+        "MAX"
+      ],
+      "SKIER": [
+        "ROXANNE",
+        "CLARISSA",
+        "CADY",
+        "MARIA",
+        "BECKY"
+      ],
+      "BLACKBELT_T": [
+        "KENJI1",
+        "YOSHI",
+        "LAO",
+        "NOB",
+        "LUNG",
+        "WAI",
+        "INIGO",
+        "MANFORD",
+        "ANDER",
+        "TAKEO",
+        "RYLAN"
+      ],
+      "BATTLE_GIRL": [
+        "SUBARU",
+        "DIANE",
+        "KAGAMI",
+        "NOZOMI",
+        "RONDA",
+        "PADMA",
+        "EMY",
+        "SASHA"
+      ],
+      "DRAGON_TAMER": [
+        "PAUL",
+        "DARIN",
+        "ADAM",
+        "ERICK",
+        "KAZU",
+        "AEGON"
+      ],
+      "ENGINEER": [
+        "SMITH",
+        "BERNIE",
+        "CAMDEN",
+        "LANG",
+        "HUGO",
+        "HOWARD",
+        "GRADEN",
+        "GUSTAV",
+        "NICOLAS"
+      ],
+      "TEACHER_F": [
+        "COLETTE",
+        "HILLARY",
+        "SHIRLEY",
+        "KATHRYN",
+        "CLARICE",
+        "SERENA"
+      ],
+      "TEACHER_M": [
+        "NOLAN"
+      ],
+      "GUITARISTM": [
+        "CLYDE",
+        "VINCENT",
+        "ROGER",
+        "EZEKIEL",
+        "BIFF",
+        "GEDDY"
+      ],
+      "GUITARISTF": [
+        "JANET",
+        "MORGAN",
+        "RITSUKO",
+        "WANDA",
+        "JACLYN"
+      ],
+      "BIKER": [
+        "DWAYNE",
+        "HARRIS",
+        "ZEKE",
+        "CHARLES",
+        "REILLY",
+        "JOEL",
+        "GLENN",
+        "DALE",
+        "JACOB",
+        "AIDEN",
+        "DAN",
+        "TEDDY",
+        "TYRONE"
+      ],
+      "ROUGHNECK": [
+        "BRIAN",
+        "THERON",
+        "MARKEY"
+      ],
+      "TAMER": [
+        "BRETT",
+        "VINCE",
+        "OSWALD",
+        "JORDAN"
+      ],
+      "ARTIST": [
+        "REINA",
+        "ALINA",
+        "MARLENE",
+        "RIN"
+      ],
+      "AROMA_LADY": [
+        "DAHLIA",
+        "BRYONY",
+        "HEATHER",
+        "HOLLY",
+        "PEONY"
+      ],
+      "SIGHTSEERM": [
+        "JASKA",
+        "BLAISE",
+        "GARETH",
+        "CHESTER",
+        "HARI"
+      ],
+      "SIGHTSEERF": [
+        "ROSIE",
+        "KAMILA",
+        "NOELLE",
+        "PILAR",
+        "LENIE"
+      ],
+      "SIGHTSEERS": [
+        "LIANDSU1",
+        "LIANDSU2",
+        "CYANDVI1",
+        "CYANDVI2"
+      ],
+      "COOLTRAINERM": [
+        "GAVEN1",
+        "GAVEN2",
+        "GAVEN3",
+        "NICK",
+        "AARON",
+        "CODY",
+        "MIKE",
+        "RYAN",
+        "BLAKE",
+        "ANDY",
+        "SEAN",
+        "KEVIN",
+        "ALLEN",
+        "FRENCH",
+        "HENRI",
+        "CONNOR",
+        "KIERAN",
+        "PETRIE",
+        "COOLTRAINERM_COREY",
+        "COOLTRAINERM_RAYMOND",
+        "FERGUS",
+        "DARIC"
+      ],
+      "COOLTRAINERF": [
+        "BETH1",
+        "BETH2",
+        "BETH3",
+        "REENA1",
+        "REENA2",
+        "REENA3",
+        "GWEN",
+        "LOIS",
+        "FRAN",
+        "LOLA",
+        "KATE",
+        "IRENE",
+        "KELLY",
+        "JOYCE",
+        "MEGAN",
+        "CAROL",
+        "QUINN",
+        "EMMA",
+        "CYBIL",
+        "JENN",
+        "SALMA",
+        "BONITA",
+        "SERA",
+        "NEESHA",
+        "CHIARA"
+      ],
+      "ACE_DUO": [
+        "ELANANDIDA1",
+        "ELANANDIDA2",
+        "ARAANDBELA1",
+        "ARAANDBELA2",
+        "THOMANDKAE1",
+        "THOMANDKAE2",
+        "ZACANDJEN1",
+        "ZACANDJEN2",
+        "JAKEANDBRI1",
+        "JAKEANDBRI2",
+        "DANANDCARA1",
+        "DANANDCARA2"
+      ],
+      "VETERANM": [
+        "MATT",
+        "REMY",
+        "BARKHORN",
+        "EN"
+      ],
+      "VETERANF": [
+        "JOANNE",
+        "JONET",
+        "LITVYAK",
+        "MADOKA"
+      ],
+      "PROTON": [
+        "PROTON1",
+        "PROTON2"
+      ],
+      "PETREL": [
+        "PETREL1",
+        "PETREL2"
+      ],
+      "ARCHER": [
+        "ARCHER1",
+        "ARCHER2"
+      ],
+      "ARIANA": [
+        "ARIANA1",
+        "ARIANA2"
+      ],
+      "GIOVANNI": [
+        "GIOVANNI2"
+      ],
+      "PROF_OAK": [
+        "1"
+      ],
+      "PROF_ELM": [
+        "1",
+        "2",
+        "3",
+        "4"
+      ],
+      "PROF_IVY": [
+        "1"
+      ],
+      "MYSTICALMAN": [
+        "EUSINE"
+      ],
+      "KARATE_KING": [
+        "KIYO"
+      ],
+      "TOWERTYCOON": [
+        "1",
+        "2"
+      ],
+      "FACTORYHEAD": [
+        "1",
+        "2"
+      ],
+      "JESSIE_JAMES": [
+        "1"
+      ],
+      "LORELEI": [
+        "1",
+        "2",
+        "3"
+      ],
+      "AGATHA": [
+        "1",
+        "2"
+      ],
+      "STEVEN": [
+        "1",
+        "2"
+      ],
+      "CYNTHIA": [
+        "1",
+        "2"
+      ],
+      "INVER": [
+        "1"
+      ],
+      "CHERYL": [
+        "1",
+        "2",
+        "3"
+      ],
+      "RILEY": [
+        "1",
+        "2"
+      ],
+      "BUCK": [
+        "1",
+        "2"
+      ],
+      "MARLEY": [
+        "1",
+        "2",
+        "3"
+      ],
+      "MIRA": [
+        "1",
+        "2"
+      ],
+      "ANABEL": [
+        "1",
+        "2"
+      ],
+      "DARACH": [
+        "1"
+      ],
+      "CAITLIN": [
+        "1"
+      ],
+      "CANDELA": [
+        "1"
+      ],
+      "BLANCHE": [
+        "1"
+      ],
+      "SPARK_T": [
+        "1"
+      ],
+      "FLANNERY": [
+        "1",
+        "2"
+      ],
+      "MAYLENE": [
+        "1",
+        "2"
+      ],
+      "MARLON": [
+        "1",
+        "2",
+        "3"
+      ],
+      "VALERIE": [
+        "1",
+        "2",
+        "3"
+      ],
+      "KUKUI": [
+        "1",
+        "2"
+      ],
+      "PIERS": [
+        "1",
+        "2"
+      ],
+      "KATY": [
+        "1",
+        "2"
+      ],
+      "VICTOR": [
+        "1"
+      ],
+      "BILL_T": [
+        "1"
+      ],
+      "YELLOW": [
+        "1",
+        "2"
+      ],
+      "WALKER": [
+        "1",
+        "2"
+      ],
+      "IMAKUNI": [
+        "1"
+      ],
+      "LAWRENCE": [
+        "1",
+        "2"
+      ],
+      "REI": [
+        "1",
+        "2",
+        "3"
+      ]
+    }
+  },
   "remaining": "Unregistered source parties and source AI are not implemented by this adapter."
 }

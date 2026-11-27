@@ -254,6 +254,27 @@ struct NPCFollower
 #include "constants/items.h"
 #define ITEM_FLAGS_COUNT ((ITEMS_COUNT / 8) + ((ITEMS_COUNT % 8) ? 1 : 0))
 
+struct Roamer
+{
+    /*0x00*/ u32 ivs;
+    /*0x04*/ u32 personality;
+    /*0x08*/ enum Species species;
+    /*0x0A*/ u16 hp;
+    /*0x0C*/ u8 level;
+    /*0x0D*/ u8 statusA;
+    /*0x0E*/ u8 cool;
+    /*0x0F*/ u8 beauty;
+    /*0x10*/ u8 cute;
+    /*0x11*/ u8 smart;
+    /*0x12*/ u8 tough;
+    /*0x13*/ bool8 active;
+    /*0x14*/ u8 statusB; // Stores frostbite
+    /*0x15*/ bool8 shiny;
+    /*0x16*/ u8 polishedAbilitySlotPlusOne; // Zero preserves personality-based legacy slots.
+    /*0x17*/ u8 polishedRoamRoute; // Source route number; zero in older saves.
+    /*0x18*/ u8 filler[0x4];
+};
+
 struct SaveBlock3
 {
 #if OW_USE_FAKE_RTC
@@ -271,6 +292,10 @@ struct SaveBlock3
     u8 dexNavChain;
 #if APRICORN_TREE_COUNT > 0
     u8 apricornTrees[NUM_APRICORN_TREE_BYTES];
+#endif
+#if POLISHED_JOHTO_DEMO && ROAMER_COUNT < 2
+    u32 polishedRoamerMagic;
+    struct Roamer extraRoamers[2 - ROAMER_COUNT];
 #endif
 }; /* max size 1624 bytes */
 
@@ -698,25 +723,6 @@ struct Pokeblock
     u8 feel;
 };
 
-struct Roamer
-{
-    /*0x00*/ u32 ivs;
-    /*0x04*/ u32 personality;
-    /*0x08*/ enum Species species;
-    /*0x0A*/ u16 hp;
-    /*0x0C*/ u8 level;
-    /*0x0D*/ u8 statusA;
-    /*0x0E*/ u8 cool;
-    /*0x0F*/ u8 beauty;
-    /*0x10*/ u8 cute;
-    /*0x11*/ u8 smart;
-    /*0x12*/ u8 tough;
-    /*0x13*/ bool8 active;
-    /*0x14*/ u8 statusB; // Stores frostbite
-    /*0x15*/ bool8 shiny;
-    /*0x16*/ u8 polishedAbilitySlotPlusOne; // Zero preserves personality-based legacy slots.
-    /*0x17*/ u8 filler[0x5];
-};
 
 struct RamScriptData
 {

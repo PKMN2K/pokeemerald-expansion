@@ -3,6 +3,7 @@
 import argparse
 import hashlib
 import json
+import re
 
 import build_battle_suite as source
 
@@ -34,6 +35,21 @@ def threshold(player, enemy, previous):
             return 256
 
 
+def roam_routes():
+    raw = (ROOT/'tools/polished_port/fixtures/roammon_maps.asm').read_bytes()
+    assert source.git_hash('blob', raw) == '5556f0542da64d951f8d38e830d3c8de900f3625', 'Wrong pinned RoamMaps'
+    rows = [list(map(int, re.findall(r'ROUTE_(\d+)', line)))
+            for line in raw.decode().splitlines() if line.lstrip().startswith('roam_map ROUTE_')]
+    routes = [row[0] for row in rows]
+    assert len(set(routes)) == len(rows) == 16 and all(1 <= len(row[1:]) <= 4 for row in rows)
+    assert all(n in routes for row in rows for n in row[1:])
+    header = ['/* Generated from data/wild/roammon_maps.asm at the Polished Crystal source pin. */',
+              'static const struct PolishedRoamMap sPolishedRoamMaps[] = {']
+    for route, *adjacent in rows:
+        header.append('    {' + f'{route}, {len(adjacent)}, {{' + ', '.join(map(str, adjacent)) + '}},')
+    return '\n'.join(header + ['};', ''])
+
+
 def build():
     files = source.authenticated_sources()
     core = files['engine/battle/core.asm']['text']
@@ -60,7 +76,9 @@ def build():
     text += ['    {' + ', '.join(map(str, row)) + '},' for row in vectors]
     text += ['};', '']
     manifest = dict(source_commit=source.source.PIN, source_variant='default; FAITHFUL undefined',
-        source_anchors={'engine/battle/core.asm': files['engine/battle/core.asm']['sha']},
+        source_anchors={'engine/battle/core.asm': files['engine/battle/core.asm']['sha'],
+                        'engine/overworld/wildmons.asm': '661988ed652ec219dd918a71739e96671c21b93e',
+                        'data/wild/roammon_maps.asm': '5556f0542da64d951f8d38e830d3c8de900f3625'},
         vectors=len(vectors), vector_sha256=hashlib.sha256(json.dumps(vectors).encode()).hexdigest(),
         contracts=['Use effective Speed without Quick Claw; training EV items do not reduce source Speed.',
                    'Increment the byte attempt counter before comparing Speed; only prior attempts add 30.',
@@ -73,9 +91,9 @@ def build():
                    'Enemy escape ignores Smoke Ball; a source roamer retains ordinary poison after toxic poison.'],
         complete_behavior_parity=False,
         remaining=['Source special battle-type bindings, trainer forfeiture, replacement-menu escape and full Safari/controller flow remain open.',
-                   'Roamer creation, source map routes, full save/encounter lifecycle and outcome sequencing remain open; native HP capacity is preserved.',
+                   'Beast route movement and grass eligibility use the source graph. The Johto profile supports both beasts concurrently. Story release, unported map bindings and the full encounter lifecycle remain open.',
                    'Exact random-stream call order and source text/animation timing remain unverified.'])
-    return {VECTORS: '\n'.join(text), MANIFEST: json.dumps(manifest, indent=2)+'\n'}
+    return {ROOT/'src/data/polished_roam_maps.h': roam_routes(), VECTORS: '\n'.join(text), MANIFEST: json.dumps(manifest, indent=2)+'\n'}
 
 
 if __name__ == '__main__':

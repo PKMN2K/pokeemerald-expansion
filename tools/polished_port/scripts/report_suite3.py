@@ -10,6 +10,7 @@ import subprocess
 
 import build_battle_completion_plan as plan
 import build_battle_suite as coverage
+import build_trainer_attributes as trainers
 import run_attack_suite as battle
 
 # Paths below are relative to the production emulator artifact. Each probe
@@ -101,7 +102,8 @@ def check_probe(path, rom_hash, pin):
             raise ValueError('missing serial choice retry or next-turn synchronization')
     if path.parent.name == 'suite3-contexts':
         if (data['seeded_reward_cases'] < 127 or data['wild_factory_cases'] < 96
-                or data['trainer_medicine_cases'] < 15 or data['flash_reloads'] != 4
+                or data['roamer_movement_cases'] < 280 or data['roamer_encounter_bytes'] != 256
+                or data['simultaneous_beasts'] != 2 or data['trainer_medicine_cases'] < 15 or data['flash_reloads'] != 4
                 or {name: row['outcome'] for name, row in data['outcomes'].items()}
                    != {'win': 1, 'capture': 7, 'escape': 4, 'loss': 2}):
             raise ValueError('missing wild generation, medicine, outcome or Flash results')
@@ -146,6 +148,12 @@ def collect(inputs, jobs, target):
     except (ValueError, OSError) as error:
         errors.append(f'Expected one production Johto ROM in this run: {error}')
 
+    trainer_coverage = json.loads(trainers.MANIFEST.read_text())['party_coverage']
+    missing_trainers = sum(map(len, trainer_coverage['unbound_by_class'].values()))
+    if trainer_coverage['bound_parties'] + missing_trainers != trainer_coverage['source_parties']:
+        errors.append('trainer bindings and unbound parties do not reconcile')
+    if missing_trainers and (inventory['complete_behavior_parity'] or domains['setup']['status'] == 'complete'):
+        errors.append('battle setup was marked complete with unbound trainer parties')
     rows = []
     for key in owned:
         paths, cases = DOMAIN_CHECKS[key]
@@ -177,7 +185,7 @@ def collect(inputs, jobs, target):
     return dict(suite_id=3, target_commit=target, source_commit=inventory['source_commit'],
                 run_id=os.getenv('GITHUB_RUN_ID'), run_attempt=os.getenv('GITHUB_RUN_ATTEMPT'),
                 execution='failed' if errors else 'passed', jobs=jobs, production_rom_sha256=rom_hash,
-                catalog_counts=counts, domains=rows, shared_open_obligations=inventory['shared_open_obligations'],
+                catalog_counts=counts, trainer_party_coverage=trainer_coverage, domains=rows, shared_open_obligations=inventory['shared_open_obligations'],
                 complete_behavior_parity=inventory['complete_behavior_parity'], errors=errors)
 
 
@@ -189,6 +197,9 @@ def markdown(report):
     lines += ['| Area | Checks in this run | Reviewed parity |', '| --- | --- | --- |']
     for row in report['domains']:
         lines.append(f"| {row['title']} | {row['execution']} | {row['status']} |")
+    trainers = report['trainer_party_coverage']
+    lines += ['', f"Trainer party bindings cover **{trainers['bound_parties']} of {trainers['source_parties']}** "
+                  "default-source parties, including rematches. The JSON report lists unbound parties by source class."]
     lines += ['', '### Battle catalogs', '', '| Catalog | Passed | Registered |', '| --- | ---: | ---: |']
     titles = {'native': 'Native', 'source': 'Polished Crystal', 'ai': 'AI frame budgets'}
     titles.update({test['label']: test['name'] for test in battle.REVIEWED_SHARED_TESTS})

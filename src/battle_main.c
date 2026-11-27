@@ -5707,6 +5707,8 @@ static void ReturnFromBattleToOverworld(void)
 
     if (gBattleTypeFlags & BATTLE_TYPE_ROAMER)
     {
+        enum Species species = GetMonData(&gParties[B_TRAINER_OPPONENT_A][0], MON_DATA_SPECIES);
+        bool32 sourceBeast = P_POLISHED_SPECIES_DATA && (species == SPECIES_RAIKOU || species == SPECIES_ENTEI);
         UpdateRoamerHPStatus(&gParties[B_TRAINER_OPPONENT_A][0]);
         ZeroEnemyPartyMons();
 
@@ -5718,8 +5720,13 @@ static void ReturnFromBattleToOverworld(void)
         if ((gBattleOutcome == B_OUTCOME_WON) || gBattleOutcome == B_OUTCOME_CAUGHT ||
             gBattleOutcome == B_OUTCOME_DREW)
 #endif
-            SetRoamerInactive(gEncounteredRoamerIndex);
+        {
+            if (!sourceBeast)
+                SetRoamerInactive(gEncounteredRoamerIndex);
+        }
     }
+    else if (P_POLISHED_SPECIES_DATA)
+        MovePolishedRoamingBeasts(FALSE);
 
     m4aSongNumStop(SE_LOW_HEALTH);
     SetMainCallback2(gMain.savedCallback);

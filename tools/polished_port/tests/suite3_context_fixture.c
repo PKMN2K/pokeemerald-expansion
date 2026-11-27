@@ -2,6 +2,7 @@
 // and item checks. Only the test entry point and starting parties are replaced.
 #include "global.h"
 #include "battle.h"
+#include "constants/maps.h"
 #include "battle_main.h"
 #include "battle_ai_items.h"
 #include "item.h"
@@ -18,7 +19,7 @@
 
 struct RewardCase { u16 seed, level; enum Item expected; u16 nextDraw; bool8 honey; };
 /* GENERATED_REWARD_CASES */
-EWRAM_DATA volatile u32 gContextResult[10] = {0};
+EWRAM_DATA volatile u32 gContextResult[12] = {0};
 
 static void CheckRewards(void)
 {
@@ -125,8 +126,73 @@ static void CheckFactories(void)
     gContextResult[2] = 4;
 }
 
+/* GENERATED_MOVEMENT_CASES */
+/* GENERATED_ENCOUNTER_CASES */
+
+static u32 CheckRoamingRoutes(void)
+{
+    struct Roamer *raikou = GetRoamerByIndex(0);
+    if (!TryAddRoamer(SPECIES_ENTEI, 40) || TryAddRoamer(SPECIES_ENTEI, 40))
+        return 5;
+    struct Roamer *entei = GetRoamerByIndex(1);
+    if (raikou->polishedRoamRoute != 42 || entei->polishedRoamRoute != 37)
+        return 6;
+    struct WarpData player = gSaveBlock1Ptr->location;
+    gSaveBlock1Ptr->location.mapGroup = MAP_GROUP(MAP_POLISHED_ROUTE_29);
+    gSaveBlock1Ptr->location.mapNum = MAP_NUM(MAP_POLISHED_ROUTE_29);
+    u16 ime = REG_IME;
+    REG_IME = 0;
+    u32 failure = 0;
+    for (u32 i = 0; i < ARRAY_COUNT(sMovement); i++)
+    {
+        const u16 *c = sMovement[i];
+        // Legacy zero route bytes use the species' source starting route.
+        raikou->polishedRoamRoute = c[1] == 42 ? 0 : c[1];
+        SeedRng(c[0]);
+        RoamerMove(0);
+        if (raikou->polishedRoamRoute != c[2] || Random() != c[3])
+        {
+            failure = 1000 + i;
+            break;
+        }
+    }
+    raikou->polishedRoamRoute = entei->polishedRoamRoute = 29;
+    for (u32 i = 0; !failure && i < ARRAY_COUNT(sEncounter); i++)
+    {
+        const u16 *c = sEncounter[i];
+        u32 byte = c[1];
+        u32 slot = byte < 100 ? byte & 3 : 0;
+        bool32 expected = slot == 1 || slot == 2;
+        SeedRng(c[0]);
+        u16 first = Random();
+        SeedRng(c[0]);
+        if (TryStartRoamerEncounterInArea(FALSE) || Random() != first)
+            failure = 2000 + i;
+        SeedRng(c[0]);
+        if (TryStartRoamerEncounter() != expected
+            || (expected && (gEncounteredRoamerIndex != slot - 1
+              || GetMonData(&gParties[B_TRAINER_OPPONENT_A][0], MON_DATA_SPECIES) != (slot == 1 ? SPECIES_RAIKOU : SPECIES_ENTEI)))
+            || (!expected && Random() != c[2]))
+            failure = 3000 + i;
+    }
+    raikou->polishedRoamRoute = 30;
+    entei->polishedRoamRoute = 31;
+    if (!IsRoamerAt(0, MAP_GROUP(MAP_POLISHED_ROUTE_30), MAP_NUM(MAP_POLISHED_ROUTE_30))
+        || !IsRoamerAt(1, MAP_GROUP(MAP_POLISHED_ROUTE_31), MAP_NUM(MAP_POLISHED_ROUTE_31)))
+        failure = 7;
+    gSaveBlock1Ptr->location = player;
+    REG_IME = ime;
+    return failure;
+}
+
 static void ReadPartyAndBag(void)
 {
+    for (u32 i = 0; i < 2; i++)
+    {
+        struct Roamer *beast = GetRoamerByIndex(i);
+        gContextResult[10 + i] = beast->active && beast->species == (i == 0 ? SPECIES_RAIKOU : SPECIES_ENTEI)
+            ? beast->polishedRoamRoute : 0;
+    }
     gContextResult[4] = GetMonData(&gParties[B_TRAINER_PLAYER][1], MON_DATA_STATUS);
     gContextResult[7] = CountTotalItemQuantityInBag(ITEM_HONEY);
     gContextResult[8] = GetMonData(&gParties[B_TRAINER_PLAYER][5], MON_DATA_SPECIES) == SPECIES_MAGIKARP;
@@ -163,6 +229,8 @@ void CB2_MoveMachineAudit(void)
     CheckRewards();
     CheckMedicine();
     CheckFactories();
+    if (!gContextResult[2])
+        gContextResult[2] = CheckRoamingRoutes();
     ZeroPlayerPartyMons();
     ZeroEnemyPartyMons();
     CreateRandomMon(&gParties[B_TRAINER_PLAYER][0], SPECIES_RATICATE, 80);

@@ -35,6 +35,39 @@ def spread(text, default):
     return values
 
 
+def source_party_text(files, path='data/trainers/parties.asm'):
+    # The main table includes Inver's variable-length pool from a separate ROM
+    # section. Pointer/macro definitions contain no emitted trainer parties.
+    lines = []
+    for line in archive.source.default_lines(files[path]):
+        include = re.fullmatch(r'INCLUDE "([^"]+)"', line)
+        if not include:
+            lines.append(line)
+        elif include[1] not in ('data/trainers/party_pointers.asm', 'data/trainers/macros.asm'):
+            lines.extend(source_party_text(files, include[1]).splitlines())
+    return '\n'.join(lines)
+
+
+def party_coverage(parties):
+    identities = []
+    current = None
+    for line in parties.splitlines():
+        if group := re.fullmatch(r'def_trainer_class (\w+)', line):
+            current = group[1]
+        elif line.startswith('def_trainer '):
+            trainer = re.fullmatch(r'def_trainer (\w+), "[^"]+"', line)
+            assert trainer and current, line
+            identities.append((current, trainer[1]))
+    source = set(identities)
+    bound = set(BINDINGS.values())
+    assert len(identities) == len(source) and len(bound) == len(BINDINGS) and bound <= source
+    missing = {}
+    for group, trainer in identities:
+        if (group, trainer) not in bound:
+            missing.setdefault(group, []).append(trainer)
+    return dict(source_parties=len(source), bound_parties=len(bound), unbound_by_class=missing)
+
+
 def build():
     files = {p: r['text'] for p, r in archive.authenticated_sources().items()}
     plural_check = files['engine/battle/core.asm'].split('CheckPluralTrainer:', 1)[1].split('\n\tret', 1)[0]
@@ -58,7 +91,7 @@ def build():
     assert 'ldh a, [hMoveMon]' in files['engine/battle/read_trainer_dvs.asm']
     assert 'inc a\n\tld [de], a\n\tldh [hMoveMon], a' in files['engine/pokemon/move_mon.asm']
     assert 'MAX_RETURN_HAPPINESS  EQU 160' in files['constants/pokemon_data_constants.asm']
-    parties = '\n'.join(archive.source.default_lines(files['data/trainers/parties.asm']))
+    parties = source_party_text(files)
     base = json.loads(species.build()[species.MANIFEST])['records']
     base = {(r['source_species'], r['source_form']): r for r in base}
     mapped = set(re.findall(r'#define TRAINER_POLISHED_(\w+)', (ROOT/'include/constants/opponents.h').read_text()))
@@ -118,7 +151,7 @@ def build():
         out += ['        },', '    },']
     out += ['};', '#endif', '']
     report = dict(source_commit=archive.source.PIN, source_variant='default; FAITHFUL undefined', classes=defaults,
-        bindings=records, remaining='Unregistered source parties and source AI are not implemented by this adapter.')
+        bindings=records, party_coverage=party_coverage(parties), remaining='Unregistered source parties and source AI are not implemented by this adapter.')
     return {ROOT/'src/data/polished_trainers.h': '\n'.join(out), MANIFEST: json.dumps(report, indent=2)+'\n'}
 
 

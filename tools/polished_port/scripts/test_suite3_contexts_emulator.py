@@ -59,6 +59,39 @@ def cases():
     return list(seen.values())
 
 
+def roam_cases():
+    raw = (ROOT/'tools/polished_port/fixtures/roammon_maps.asm').read_text()
+    graph = {}
+    for line in raw.splitlines():
+        if line.strip().startswith('roam_map ROUTE_'):
+            start, *near = map(int, re.findall(r'ROUTE_(\d+)', line))
+            graph[start] = near
+    routes = list(graph)
+    seen = {}
+    encounters = {}
+    for seed in range(12000):
+        rng = draws(seed)
+        first = next(rng)
+        byte = first & 255
+        encounters.setdefault(byte, (seed, byte, next(rng)))
+        for start, neighbors in graph.items():
+            rng = draws(seed)
+            while True:
+                index = next(rng) & 31
+                if index == 0:
+                    while (dest := routes[next(rng) & 15]) == 29:
+                        pass
+                    break
+                if (index & 3) < len(neighbors):
+                    dest = neighbors[index & 3]
+                    break
+            seen.setdefault((start, index == 0, dest), (seed, start, dest, next(rng)))
+        if len(seen) == 15 * len(routes) + sum(map(len, graph.values())) and len(encounters) == 256:
+            break
+    assert len(seen) == 15 * len(routes) + sum(map(len, graph.values())) and len(encounters) == 256
+    return list(seen.values()), list(encounters.values())
+
+
 def medicine_cases():
     rows = []
     def case(seed, hp, level, index, count, status='0'):
@@ -94,6 +127,10 @@ def run(driver, output):
     code = (ROOT/'tools/polished_port/tests/suite3_context_fixture.c').read_text()
     rows = ['    {%d, %d, ITEM_%s, %d, %d},' % row for row in fixtures]
     code = code.replace('/* GENERATED_REWARD_CASES */', 'static const struct RewardCase sCases[] = {\n' + '\n'.join(rows) + '\n};')
+    movement, encounters = roam_cases()
+    for tag, name, rows in [('MOVEMENT', 'sMovement', movement), ('ENCOUNTER', 'sEncounter', encounters)]:
+        values = ',\n'.join('    {' + ', '.join(map(str, row)) + '}' for row in rows)
+        code = code.replace(f'/* GENERATED_{tag}_CASES */', f'static const u16 {name}[][{len(rows[0])}] = {{\n{values}\n}};')
     medicine = medicine_cases()
     code = code.replace('/* GENERATED_MEDICINE_CASES */', 'static const struct MedicineCase medicine[] = {\n' + '\n'.join(medicine) + '\n    };')
     with tempfile.TemporaryDirectory(prefix='polished-contexts-') as tmp:
@@ -109,7 +146,7 @@ def run(driver, output):
             game = Game(driver, elf, elf, output, state)
             try:
                 def result():
-                    return struct.unpack('<10I', game.read(game.sym['gContextResult'], 40))
+                    return struct.unpack('<12I', game.read(game.sym['gContextResult'], 48))
                 def wait(predicate, label, key=A):
                     for frame in range(3000):
                         if predicate(): return
@@ -135,7 +172,8 @@ def run(driver, output):
                     wait(lambda: result()[0] == 2, 'battle outcome', B if name == 'capture' else A)
                     after = result()
                     assert after[3:6] == (expected, 0 if eligible else 16, 1), (name, after)
-                    assert after[8:] == (int(name == 'capture'), 1), (name, after)
+                    assert all(r in (*range(29, 40), *range(42, 47)) for r in after[10:]), (name, after)
+                    assert after[8:10] == (int(name == 'capture'), 1), (name, after)
                     if not eligible or after[7]:
                         break
                 assert (after[7] > 0) == eligible, (name, after)
@@ -148,9 +186,10 @@ def run(driver, output):
             finally:
                 game.close()
     report = dict(source_commit=PIN, production_rom_sha256=hashlib.sha256((ROOT/'pokeemerald-johto-demo.gba').read_bytes()).hexdigest(),
-                  seeded_reward_cases=len(fixtures), wild_factory_cases=96, trainer_medicine_cases=len(medicine), outcomes=outcomes, flash_reloads=len(outcomes))
+                  seeded_reward_cases=len(fixtures), wild_factory_cases=96, trainer_medicine_cases=len(medicine), roamer_movement_cases=len(movement),
+                  roamer_encounter_bytes=len(encounters), simultaneous_beasts=2, outcomes=outcomes, flash_reloads=len(outcomes))
     (output/'report.json').write_text(json.dumps(report, indent=2)+'\n')
-    print(f'PASS: {len(fixtures)} reward cases, {len(medicine)} trainer medicine cases, wild and roamer construction, real win/capture/escape/loss and four Flash reloads')
+    print(f'PASS: {len(fixtures)} reward cases, {len(medicine)} trainer medicine cases, {len(movement)} roamer movements, 256 encounter bytes, two saved beasts, real win/capture/escape/loss and four Flash reloads')
 
 
 if __name__ == '__main__':

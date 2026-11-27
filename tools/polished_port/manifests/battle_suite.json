@@ -43609,7 +43609,7 @@
     },
     {
       "manifest": "tools/polished_port/manifests/trainer_attributes.json",
-      "sha256": "5d7e0832a6265c61ecaf3e30ec11c1b0e7c71cb35229a11a4a3264e2b98e2907"
+      "sha256": "b74a5ce536650e6fd39f6c64880e77514c3127dc19c145fc0a2f14dc0ccb22e7"
     }
   ]
 }
