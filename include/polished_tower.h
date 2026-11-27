@@ -8,7 +8,9 @@ bool32 IsPolishedTowerSpeciesBanned(enum Species species);
 enum TowerEntryConflict { TOWER_ENTRY_OK, TOWER_ENTRY_DUPLICATE_SPECIES, TOWER_ENTRY_DUPLICATE_ITEM };
 enum TowerEntryConflict PolishedTowerEntryConflict(enum Species first, enum Item firstItem, enum Species second, enum Item secondItem);
 bool32 PolishedHasEligibleTowerTeam(void);
+void BufferPolishedTowerStreaks(void);
 void PolishedSettleTowerPoints(void);
+void PolishedForfeitInterruptedTowerSet(void);
 void PolishedResetTowerHistory(void);
 void PolishedBuildTowerParty(u32 wins);
 #endif

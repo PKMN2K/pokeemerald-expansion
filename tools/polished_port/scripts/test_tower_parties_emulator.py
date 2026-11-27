@@ -11,6 +11,7 @@ import tempfile
 import build_tower_parties as source
 from audit_moves_machines import compile_probe
 from test_johto_demo_emulator import Game
+from test_shift_switch_emulator import ENGLISH
 
 ROOT = source.ROOT
 
@@ -83,10 +84,11 @@ def run(driver, output):
         elf = compile_probe(ROOT, directory, fixture(sets, steps, history))
         game = Game(driver, elf, elf, output, directory)
         try:
-            for stage in (2, 3):
+            boards = []
+            for stage in (2, 3, 4):
                 for _ in range(1200):
                     game.frames(16)
-                    state = struct.unpack('<6I', game.read(game.sym['gTowerAudit'], 24))
+                    state = struct.unpack('<7I', game.read(game.sym['gTowerAudit'], 28))
                     assert state[2] == 0, state
                     if state[0] == stage:
                         break
@@ -94,6 +96,14 @@ def run(driver, output):
                     raise AssertionError(('Tower replay timeout', state))
                 if stage == 2:
                     assert state[1] == len(steps), state
+                    streak_cases = state[6]
+                    assert streak_cases == 10, state
+                text = game.read(game.sym['gStringVar4'], 80).split(b'\xff', 1)[0]
+                lines = [''.join(ENGLISH.get(byte, '?') for byte in line) for line in text.split(b'\xfe')]
+                expected = (10005, 10003) if stage == 2 else (0, 10005)
+                assert lines == [f'Streak: {expected[0]} wins', f'Record: {expected[1]} wins'], lines
+                boards.append(lines)
+                if stage != 4:
                     game.command('reset')
         finally:
             game.close()
@@ -102,9 +112,10 @@ def run(driver, output):
                   sets=len(sets), generated_teams=len(steps), third_slot_history_repeats=repeats,
                   retained_history_slots=len(history), difficulty_rows=8, point_award_cases=65, flash_bp=50000,
                   player_registration_cases=11, player_battle_levels=[50, 50, 50],
-                  restored_roster_levels=[1, 33, 44, 100, 55, 77])
+                  restored_roster_levels=[1, 33, 44, 100, 55, 77],
+                  streak_cases=streak_cases, streak_board_after_resets=boards[1:])
     (output/'report.json').write_text(json.dumps(record, indent=2)+'\n')
-    print(f'PASS: {len(steps)} production Tower parties, every one of 432 sets, eight difficulty rows and three retained teams after Flash reset')
+    print(f'PASS: {len(steps)} production Tower parties, all 432 sets, {streak_cases} streak cases and an interrupted personal record after two Flash resets')
 
 
 if __name__ == '__main__':

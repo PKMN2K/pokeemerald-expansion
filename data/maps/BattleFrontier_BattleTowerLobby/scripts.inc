@@ -47,7 +47,7 @@ BattleFrontier_BattleTowerLobby_EventScript_GetChallengeStatus::
 
 BattleFrontier_BattleTowerLobby_EventScript_QuitWithoutSaving::
 #if POLISHED_JOHTO_DEMO
-	callnative PolishedSettleTowerPoints
+	callnative PolishedForfeitInterruptedTowerSet
 #endif
 	lock
 	faceplayer

@@ -3,6 +3,7 @@
 #include "battle.h"
 #include "data.h"
 #include "event_data.h"
+#include "frontier_util.h"
 #include "pokemon.h"
 #include "polished_tower.h"
 #include "polished_pokemon_data.h"
@@ -12,6 +13,7 @@
 #include "tv.h"
 #include "string_util.h"
 #include "constants/battle_frontier.h"
+#include "constants/frontier_util.h"
 
 struct PolishedTowerSet
 {
@@ -142,6 +144,23 @@ static u32 TowerDifficulty(u32 wins)
     return min(7u, wins / 7 + offsets[wins % 7]);
 }
 
+// The release compares the high byte first, then compares low bytes even
+// when the old high byte was greater. Its Tower record is not a numeric max.
+static u16 UpdateTowerRecord(u16 record, u16 wins)
+{
+    if ((wins >> 8) > (record >> 8))
+        return wins;
+    return (record & 0xff00) | max((u8)record, (u8)wins);
+}
+
+void BufferPolishedTowerStreaks(void)
+{
+    const struct BattleFrontier *frontier = &gSaveBlock2Ptr->frontier;
+    ConvertIntToDecimalStringN(gStringVar1, frontier->towerWinStreaks[FRONTIER_MODE_SINGLES][FRONTIER_LVL_50], STR_CONV_MODE_LEFT_ALIGN, 5);
+    ConvertIntToDecimalStringN(gStringVar2, frontier->towerRecordWinStreaks[FRONTIER_MODE_SINGLES][FRONTIER_LVL_50], STR_CONV_MODE_LEFT_ALIGN, 5);
+    StringExpandPlaceholders(gStringVar4, COMPOUND_STRING("Streak: {STR_VAR_1} wins\nRecord: {STR_VAR_2} wins"));
+}
+
 void PolishedSettleTowerPoints(void)
 {
     if (!IsPolishedTowerChallenge())
@@ -155,12 +174,15 @@ void PolishedSettleTowerPoints(void)
         u16 wins = frontier->towerWinStreaks[FRONTIER_MODE_SINGLES][FRONTIER_LVL_50];
         // Each completed battle already advanced the native streak. The source
         // commits all of their BP in the lobby, including an incomplete set.
+        u16 openingStreak = wins - stages;
         for (u32 i = 0; i < stages; i++)
-            points += 1 + TowerDifficulty((u16)(wins - stages + i));
+            points += 1 + TowerDifficulty(openingStreak + i);
         frontier->battlePoints = min(MAX_BATTLE_FRONTIER_POINTS, frontier->battlePoints + points);
         frontier->cardBattlePoints = min(0xffffu, frontier->cardBattlePoints + points);
         if (points)
             IncrementDailyBattlePoints(points);
+        u16 *record = &frontier->towerRecordWinStreaks[FRONTIER_MODE_SINGLES][FRONTIER_LVL_50];
+        *record = UpdateTowerRecord(*record, wins);
         if (frontier->challengeStatus != CHALLENGE_STATUS_WON)
             frontier->towerWinStreaks[FRONTIER_MODE_SINGLES][FRONTIER_LVL_50] = 0;
         frontier->challengeStatus = 0;
@@ -168,8 +190,21 @@ void PolishedSettleTowerPoints(void)
     ConvertIntToDecimalStringN(gStringVar1, points, STR_CONV_MODE_LEFT_ALIGN, 2);
 }
 
+void PolishedForfeitInterruptedTowerSet(void)
+{
+    if (!IsPolishedTowerChallenge() || gSaveBlock2Ptr->frontier.challengeStatus != CHALLENGE_STATUS_SAVING)
+        return;
+    PolishedSettleTowerPoints();
+    gSaveBlock2Ptr->frontier.winStreakActiveFlags &= ~STREAK_TOWER_SINGLES_50;
+    SaveGameFrontier();
+}
+
 void PolishedBuildTowerParty(u32 wins)
 {
+    // A set that starts near 65535 retains its difficulty until settlement,
+    // even when the GBA's running 16-bit streak wraps during that set.
+    u32 stages = gSaveBlock2Ptr->frontier.curChallengeBattleNum;
+    wins = (u16)(wins - stages) + stages;
     // Each battle starts from the lobby registration, including held items
     // and move slots. Keep the original party in the regular save block.
     for (u32 i = 0; i < min(gPartiesCount[B_TRAINER_PLAYER], FRONTIER_PARTY_SIZE); i++)

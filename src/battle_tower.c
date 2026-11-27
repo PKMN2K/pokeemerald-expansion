@@ -786,6 +786,16 @@ static void SetTowerBattleWon(void)
 
     gSaveBlock2Ptr->frontier.curChallengeBattleNum++;
     SaveCurrentWinStreak();
+#if POLISHED_JOHTO_DEMO
+    if (IsPolishedTowerChallenge())
+    {
+        // BT_IncrementCurTrainer writes each defeated opponent to cartridge SRAM.
+        // A reset before the next fight must settle the wins already earned.
+        gSaveBlock2Ptr->frontier.challengeStatus = gSaveBlock2Ptr->frontier.curChallengeBattleNum == FRONTIER_STAGES_PER_CHALLENGE
+            ? CHALLENGE_STATUS_WON : CHALLENGE_STATUS_SAVING;
+        SaveGameFrontier();
+    }
+#endif
     gSpecialVar_Result = gSaveBlock2Ptr->frontier.curChallengeBattleNum;
 }
 
@@ -1644,6 +1654,10 @@ u16 GetCurrentBattleTowerWinStreak(enum FrontierLevelMode lvlMode, u8 battleMode
 {
     u16 winStreak = gSaveBlock2Ptr->frontier.towerWinStreaks[battleMode][lvlMode];
 
+#if POLISHED_JOHTO_DEMO
+    if (battleMode == FRONTIER_MODE_SINGLES && lvlMode == FRONTIER_LVL_50)
+        return winStreak;
+#endif
     if (winStreak > MAX_STREAK)
         return MAX_STREAK;
     else
@@ -1672,9 +1686,9 @@ static void AwardBattleTowerRibbons(void)
     s32 i;
     u32 partyIndex;
 #ifdef BUGFIX
-    struct RibbonCounter ribbons[MAX_FRONTIER_PARTY_SIZE];
+    struct RibbonCounter ribbons[MAX_FRONTIER_PARTY_SIZE] = {0};
 #else
-    struct RibbonCounter ribbons[3]; // BUG: 4 Pokémon can receive ribbons in a double battle mode.
+    struct RibbonCounter ribbons[3] = {0}; // BUG: 4 Pokémon can receive ribbons in a double battle mode.
 #endif
     u8 ribbonType = 0;
     enum FrontierLevelMode lvlMode = gSaveBlock2Ptr->frontier.lvlMode;

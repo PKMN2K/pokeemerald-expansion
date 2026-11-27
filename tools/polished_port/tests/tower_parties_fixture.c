@@ -1,6 +1,8 @@
 #include "global.h"
 #include "battle.h"
 #include "battle_frontier.h"
+#include "battle_tower.h"
+#include "constants/battle_tower.h"
 #include "data.h"
 #include "event_data.h"
 #include "load_save.h"
@@ -27,7 +29,7 @@ static const struct {u16 wins, sets[3];} sExpectedParties[] = {
 /* EXPECTED PARTIES */
 };
 static const u16 sFinalHistory[] = {/* FINAL HISTORY */};
-EWRAM_DATA volatile u32 gTowerAudit[6] = {0};
+EWRAM_DATA volatile u32 gTowerAudit[7] = {0};
 
 static void CheckValue(u32 actual, u32 expected, u32 field)
 {
@@ -72,6 +74,58 @@ static void CheckTowerPoints(void)
     PolishedSettleTowerPoints();
     CheckValue(frontier->battlePoints, 50000, 30);
     CheckValue(frontier->towerWinStreaks[0][0], 0, 31);
+}
+
+static void IncrementTowerStreak(void)
+{
+    gSpecialVar_0x8004 = FRONTIER_UTIL_FUNC_INCREMENT_STREAK;
+    CallFrontierUtilFunc();
+}
+
+static void CheckTowerStreaks(void)
+{
+    // v3.2.3 Special_BattleTower_CommitChallengeResult updates the record
+    // before clearing a lost set. Compare low bytes even with an older high byte.
+    static const struct {
+        u16 opening, previousRecord, expectedCurrent, expectedRecord;
+        u8 wins, status, points;
+    } cases[] = {
+        {0, 0, 0, 3, 3, CHALLENGE_STATUS_LOST, 5},
+        {7, 8, 0, 13, 6, CHALLENGE_STATUS_LOST, 21},
+        {14, 18, 0, 18, 0, CHALLENGE_STATUS_LOST, 0},
+        {14, 18, 0, 19, 5, CHALLENGE_STATUS_SAVING, 21},
+        {7, 0, 14, 14, 7, CHALLENGE_STATUS_WON, 27},
+        {252, 255, 259, 259, 7, CHALLENGE_STATUS_WON, 56},
+        {0, 257, 0, 259, 3, CHALLENGE_STATUS_LOST, 5},
+        {9996, 9999, 10003, 10003, 7, CHALLENGE_STATUS_WON, 56},
+        {65534, 65534, 5, 65534, 7, CHALLENGE_STATUS_WON, 56},
+        {14, 18, 17, 18, 3, CHALLENGE_STATUS_PAUSED, 0},
+    };
+    struct BattleFrontier *frontier = &gSaveBlock2Ptr->frontier;
+    for (u32 i = 0; i < ARRAY_COUNT(cases); i++)
+    {
+        frontier->towerWinStreaks[0][0] = cases[i].opening;
+        frontier->towerRecordWinStreaks[0][0] = cases[i].previousRecord;
+        for (u32 win = 0; win < cases[i].wins; win++)
+            IncrementTowerStreak();
+        frontier->curChallengeBattleNum = cases[i].wins;
+        frontier->challengeStatus = cases[i].status;
+        frontier->battlePoints = 0;
+        PolishedSettleTowerPoints();
+        CheckValue(frontier->battlePoints, cases[i].points, 47);
+        CheckValue(GetCurrentBattleTowerWinStreak(FRONTIER_LVL_50, FRONTIER_MODE_SINGLES), cases[i].expectedCurrent, 48);
+        CheckValue(frontier->towerRecordWinStreaks[0][0], cases[i].expectedRecord, 49);
+        CheckValue(frontier->challengeStatus, cases[i].status == CHALLENGE_STATUS_PAUSED ? CHALLENGE_STATUS_PAUSED : 0, 50);
+        PolishedSettleTowerPoints();
+        CheckValue(frontier->battlePoints, cases[i].points, 51);
+        gTowerAudit[6]++;
+    }
+    // Open Level retains its native cap and settlement path.
+    frontier->lvlMode = FRONTIER_LVL_OPEN;
+    frontier->towerWinStreaks[0][FRONTIER_LVL_OPEN] = MAX_STREAK;
+    IncrementTowerStreak();
+    CheckValue(frontier->towerWinStreaks[0][FRONTIER_LVL_OPEN], MAX_STREAK, 52);
+    frontier->lvlMode = FRONTIER_LVL_50;
 }
 
 static void MakePartySlot(u32 slot, enum Species species, u8 level, enum Item item)
@@ -183,11 +237,32 @@ void CB2_MoveMachineAudit(void)
         MoveSaveBlocks_ResetHeap();
         if (LoadGameSave(SAVE_NORMAL) == SAVE_STATUS_OK)
         {
+            struct BattleFrontier *frontier = &gSaveBlock2Ptr->frontier;
             for (u32 i = 0; i < ARRAY_COUNT(sFinalHistory); i++)
                 CheckValue(gSaveBlock3Ptr->polishedTowerHistory[i], sFinalHistory[i], 25);
-            CheckValue(gSaveBlock2Ptr->frontier.battlePoints, 50000, 32);
             CheckOriginalRoster();
-            gTowerAudit[0] = 3;
+            if (frontier->challengeStatus == CHALLENGE_STATUS_SAVING)
+            {
+                CheckValue(frontier->curChallengeBattleNum, 2, 53);
+                CheckValue(frontier->towerWinStreaks[0][0], 10005, 54);
+                CheckValue(frontier->towerRecordWinStreaks[0][0], 10003, 55);
+                CheckValue(frontier->battlePoints, 49990, 56);
+                CheckValue(frontier->cardBattlePoints, 0, 62);
+                PolishedForfeitInterruptedTowerSet();
+                gTowerAudit[0] = 3;
+            }
+            else
+            {
+                CheckValue(frontier->challengeStatus, 0, 57);
+                PolishedForfeitInterruptedTowerSet();
+                gTowerAudit[0] = 4;
+            }
+            CheckValue(gSaveBlock2Ptr->frontier.battlePoints, 50000, 32);
+            CheckValue(frontier->cardBattlePoints, 16, 63);
+            CheckValue(frontier->towerWinStreaks[0][0], 0, 58);
+            CheckValue(frontier->towerRecordWinStreaks[0][0], 10005, 59);
+            CheckValue(frontier->winStreakActiveFlags & STREAK_TOWER_SINGLES_50, 0, 60);
+            BufferPolishedTowerStreaks();
             return;
         }
         NewGameInitData();
@@ -203,16 +278,31 @@ void CB2_MoveMachineAudit(void)
     if (index == ARRAY_COUNT(sExpectedParties))
     {
         CheckTowerPoints();
+        CheckTowerStreaks();
         CheckOriginalRoster();
+        struct BattleFrontier *frontier = &gSaveBlock2Ptr->frontier;
+        frontier->curChallengeBattleNum = 0;
+        frontier->challengeStatus = CHALLENGE_STATUS_SAVING;
+        frontier->winStreakActiveFlags |= STREAK_TOWER_SINGLES_50;
+        frontier->towerWinStreaks[0][0] = frontier->towerRecordWinStreaks[0][0] = 10003;
+        frontier->battlePoints = 49990;
+        frontier->cardBattlePoints = 0;
         CheckValue(TrySavingData(SAVE_NORMAL), SAVE_STATUS_OK, 26);
         SelectThree();
-        // Pause with the in-battle party at forced level and without its item.
+        // Reset after two victories, without choosing Save and Quit.
         struct Pokemon *mon = &gParties[B_TRAINER_PLAYER][1];
         u32 level = 50, exp = GetSpeciesExperienceAtLevel(SPECIES_RAIKOU, level), empty = 0;
         SetMonData(mon, MON_DATA_EXP, &exp);
         CalculateMonStats(mon);
         SetMonData(mon, MON_DATA_HELD_ITEM, &empty);
-        SaveGameFrontier();
+        for (u32 i = 0; i < 2; i++)
+        {
+            IncrementTowerStreak();
+            gSpecialVar_0x8004 = BATTLE_TOWER_FUNC_SET_BATTLE_WON;
+            CallBattleTowerFunc();
+            CheckValue(gSpecialVar_Result, i + 1, 61);
+        }
+        BufferPolishedTowerStreaks();
         gTowerAudit[0] = 2;
         return;
     }

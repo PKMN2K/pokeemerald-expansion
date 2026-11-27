@@ -1150,8 +1150,18 @@ static void ShowTowerResultsWindow(u8 battleMode)
     AddTextPrinterParameterized(gRecordsWindowId, FONT_NORMAL, gText_Lv502, 16, 49, TEXT_SKIP_DRAW, NULL);
     AddTextPrinterParameterized(gRecordsWindowId, FONT_NORMAL, gText_OpenLv, 16, 97, TEXT_SKIP_DRAW, NULL);
     PrintHyphens(10);
-    TowerPrintPrevOrCurrentStreak(battleMode, FRONTIER_LVL_50, 72, 132, 49);
-    TowerPrintRecordStreak(battleMode, FRONTIER_LVL_50, 72, 132, 65);
+#if POLISHED_JOHTO_DEMO
+    if (battleMode == FRONTIER_MODE_SINGLES)
+    {
+        BufferPolishedTowerStreaks();
+        AddTextPrinterParameterized(gRecordsWindowId, FONT_NORMAL, gStringVar4, 72, 49, TEXT_SKIP_DRAW, NULL);
+    }
+    else
+#endif
+    {
+        TowerPrintPrevOrCurrentStreak(battleMode, FRONTIER_LVL_50, 72, 132, 49);
+        TowerPrintRecordStreak(battleMode, FRONTIER_LVL_50, 72, 132, 65);
+    }
     TowerPrintPrevOrCurrentStreak(battleMode, FRONTIER_LVL_OPEN, 72, 132, 97);
     TowerPrintRecordStreak(battleMode, FRONTIER_LVL_OPEN, 72, 132, 113);
     PutWindowTilemap(gRecordsWindowId);
@@ -2247,7 +2257,11 @@ static void IncrementWinStreak(void)
     switch (facility)
     {
     case FRONTIER_FACILITY_TOWER:
-        if (gSaveBlock2Ptr->frontier.towerWinStreaks[battleMode][lvlMode] < MAX_STREAK)
+        if (gSaveBlock2Ptr->frontier.towerWinStreaks[battleMode][lvlMode] < MAX_STREAK
+#if POLISHED_JOHTO_DEMO
+            || IsPolishedTowerChallenge()
+#endif
+        )
         {
             gSaveBlock2Ptr->frontier.towerWinStreaks[battleMode][lvlMode]++;
             if (battleMode == FRONTIER_MODE_SINGLES)
