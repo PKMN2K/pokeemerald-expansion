@@ -8848,7 +8848,7 @@ static u32 GetBattleMonCatchRate(struct BattlePokemon *battleMon)
     return GetSpeciesBaseData(species)->catchRate;
 }
 
-static u32 ComputeCaptureOdds(u32 wildMonBattler, u32 playerBattler)
+u32 ComputeCaptureOdds(u32 wildMonBattler, u32 playerBattler)
 {
     if (UsesPolishedCaptureRules(playerBattler, wildMonBattler))
         return GetPolishedCaptureOdds(playerBattler, wildMonBattler);

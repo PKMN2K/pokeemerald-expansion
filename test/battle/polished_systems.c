@@ -6,6 +6,7 @@
 #include "polished_rewards.h"
 #include "pokedex.h"
 #include "battle_util.h"
+#include "battle_script_commands.h"
 #include "constants/battle_string_ids.h"
 #include "polished_trainers.h"
 #include "data.h"
@@ -527,25 +528,36 @@ SINGLE_BATTLE_TEST("Polished systems active Pokerus doubles the power item befor
 
 WILD_BATTLE_TEST("Polished Dusk Ball triples catch probability in Dark Cave and uses normal odds in Sprout Tower")
 {
-    ASSUME(B_POLISHED_MOVE_BALANCE);
     GIVEN {
+        WITH_CONFIG(B_MISSING_BADGE_CATCH_MALUS, GEN_7);
+        WITH_CONFIG(B_LOW_LEVEL_CATCH_BONUS, GEN_7);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_RAIKOU);
     } WHEN {
         TURN { MOVE(player, MOVE_SPLASH); MOVE(opponent, MOVE_SPLASH); }
     } THEN {
         u16 savedLayout = gMapHeader.mapLayoutId;
+        bool32 savedCave = gMapHeader.cave;
         enum Item savedItem = gLastUsedItem;
+        u16 savedThrownBall = gLastThrownBall;
+        // Native Dusk Balls honor the cave flag. Johto uses the source environment.
+        gMapHeader.cave = TRUE;
         gMapHeader.mapLayoutId = LAYOUT_POLISHED_SPROUT_TOWER_1F;
-        gLastUsedItem = ITEM_POKE_BALL;
-        u32 base = GetPolishedCaptureOdds(B_BATTLER_0, B_BATTLER_1);
-        gLastUsedItem = ITEM_DUSK_BALL;
-        EXPECT_EQ(GetPolishedCaptureOdds(B_BATTLER_0, B_BATTLER_1), base);
+        gLastThrownBall = gLastUsedItem = ITEM_POKE_BALL;
+        u32 base = ComputeCaptureOdds(B_BATTLER_1, B_BATTLER_0);
+        gLastThrownBall = gLastUsedItem = ITEM_DUSK_BALL;
+        u32 sprout = ComputeCaptureOdds(B_BATTLER_1, B_BATTLER_0);
+        if (B_POLISHED_MOVE_BALANCE)
+            EXPECT_EQ(sprout, base);
+        else
+            EXPECT_GT(sprout, base);
         gMapHeader.mapLayoutId = LAYOUT_POLISHED_NEW_BARK_TOWN;
-        EXPECT_EQ(GetPolishedCaptureOdds(B_BATTLER_0, B_BATTLER_1), base);
+        EXPECT_EQ(ComputeCaptureOdds(B_BATTLER_1, B_BATTLER_0), sprout);
         gMapHeader.mapLayoutId = LAYOUT_POLISHED_DARK_CAVE_VIOLET_ENTRANCE;
-        EXPECT_EQ(GetPolishedCaptureOdds(B_BATTLER_0, B_BATTLER_1), 3 * base);
+        EXPECT_EQ(ComputeCaptureOdds(B_BATTLER_1, B_BATTLER_0), B_POLISHED_MOVE_BALANCE ? 3 * base : sprout);
         gMapHeader.mapLayoutId = savedLayout;
         gLastUsedItem = savedItem;
+        gLastThrownBall = savedThrownBall;
+        gMapHeader.cave = savedCave;
     }
 }

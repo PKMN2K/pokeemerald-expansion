@@ -1,6 +1,7 @@
 #ifndef GUARD_BATTLE_SCRIPT_COMMANDS_H
 #define GUARD_BATTLE_SCRIPT_COMMANDS_H
 
+u32 ComputeCaptureOdds(u32 wildMonBattler, u32 playerBattler);
 void PolishedForgetMoveLocks(u32 slot);
 
 #include "constants/battle_script_commands.h"
