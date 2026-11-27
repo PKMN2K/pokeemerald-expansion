@@ -6669,6 +6669,12 @@ BattleScript_BelchFails::
 	waitmessage B_WAIT_TIME_LONG
 	goto BattleScript_MoveEnd
 
+BattleScript_PolishedPickedUpItem::
+	printstring STRINGID_POLISHED_PICKED_UP_ITEM
+	waitmessage B_WAIT_TIME_LONG
+	waitabilitypopup
+	end
+
 BattleScript_PolishedConversionChoose::
 	printstring STRINGID_POLISHED_CONVERSION_CHOOSE
 	waitmessage B_WAIT_TIME_LONG

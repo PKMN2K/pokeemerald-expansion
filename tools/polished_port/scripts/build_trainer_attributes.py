@@ -103,6 +103,10 @@ def build():
            'static const struct PolishedTrainerEntry sPolishedTrainerEntries[] = {']
     for r in records:
         out += ['    {', f'        .trainer = {r["target_trainer"]}, .count = {len(r["mons"])}, .baseMoney = {r["base_reward"]},']
+        if any(item != 'ITEM_NONE' for item in r['items']):
+            assert 'CONTEXT_USE' in defaults[r['source_class']]['source_switch_flags']
+            assert set(r['items']) <= {'ITEM_NONE', 'ITEM_FULL_RESTORE', 'ITEM_MAX_POTION', 'ITEM_HYPER_POTION',
+                                       'ITEM_SUPER_POTION', 'ITEM_POTION', 'ITEM_FULL_HEAL'}, r['target_trainer']
         if r['source_class'] in plural_classes:
             out.append('        .pluralName = TRUE,')
         out.append('        .items = {'+', '.join(r['items'])+'}, .mons = {')

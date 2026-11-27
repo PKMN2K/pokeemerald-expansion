@@ -97,6 +97,16 @@ rng_value_t LocalRandomSeed(u32 seed)
     return result;
 }
 
+u32 PolishedRandomRange(u32 range)
+{
+    // Source byte rejection sampling for non-power-of-two ranges.
+    u32 roll, limit = 256 - (256 % range);
+    do
+        roll = Random() & 0xff;
+    while (roll >= limit);
+    return roll % range;
+}
+
 void AdvanceRandom(void)
 {
     if (sRngLoopUnlocked == TRUE)

@@ -17,26 +17,28 @@ import run_attack_suite as battle
 # required in addition to these distinguishing cases from each owned domain.
 DOMAIN_CHECKS = {
     'setup': (
-        ['battle-systems/report.json', 'new-bark/sprout-validation.json', 'new-bark/falkner-validation.json',
+        ['suite3-contexts/report.json', 'battle-systems/report.json', 'new-bark/sprout-validation.json', 'new-bark/falkner-validation.json',
          'shift-source/shift-switch-validation.json', 'shift-native/shift-switch-validation.json'],
         ['Polished systems trainer generation preserves source slots stats gender and friendship',
          'Polished systems trainer ability selection uses source species byte trainer ID and one based slot']),
     'capture_escape': (
-        ['capture-storage/report.json', 'escape-storage/report.json', 'shift-source/shift-switch-validation.json',
+        ['suite3-contexts/report.json', 'capture-storage/report.json', 'escape-storage/report.json', 'shift-source/shift-switch-validation.json',
          'shift-native/shift-switch-validation.json'],
-        ['Polished systems Friend Ball delivers source friendship with capture EXP',
+        ['Polished Dusk Ball triples catch probability in Dark Cave and uses normal odds in Sprout Tower',
+         'Polished systems Friend Ball delivers source friendship with capture EXP',
          'Polished escape resolves inclusive random boundaries and repeated attempts through Run']),
     'rewards': (
-        ['friendship-storage/report.json', 'new-bark/battle-loss.json'],
+        ['suite3-contexts/report.json', 'friendship-storage/report.json', 'new-bark/battle-loss.json'],
         ['Polished systems EXP combines participant and held share fractions before rounding',
          'Polished systems Safari rewards exclude the unsent lead and retain held shares']),
     'ai': (
-        [],
+        ['suite3-contexts/report.json'],
         ['Polished action AI Destiny Bond failure queries cannot clear the live volatile',
          'Polished escape roamer AI and action execution both reject sleep and freeze']),
     'facility_link': (
         [],
-        ['Polished affection excludes actual link and frontier battles',
+        ["Polished linked Conversion plays both trainers' choices and leaves the next turn aligned",
+         'Polished affection excludes actual link and frontier battles',
          'Polished critical evolution counter excludes link battles',
          'Polished Sketch boundary rejects link mode and invalid or duplicate Sketch history without mutation']),
     'presentation_rng': (
@@ -92,6 +94,11 @@ def check_probe(path, rom_hash, pin):
         raise ValueError('missing probe results')
     if data.get('source_commit', pin) != pin:
         raise ValueError('unexpected source commit')
+    if path.parent.name == 'suite3-contexts':
+        if (data['seeded_reward_cases'] < 127 or data['wild_factory_cases'] < 96
+                or data['trainer_medicine_cases'] < 12 or not data['win'] or not data['escape']
+                or data['flash_reloads'] != 2):
+            raise ValueError('missing wild generation, medicine, outcome or Flash results')
     if path.name == 'shift-switch-validation.json':
         profile = path.parent.name.removeprefix('shift-')
         if data['profile'] != profile or bool(data['fixture_source_rules']) != (profile == 'source'):

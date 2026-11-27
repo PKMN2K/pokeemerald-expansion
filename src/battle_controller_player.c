@@ -675,6 +675,12 @@ static bool32 CanSelectBattler(enum MoveTarget target)
     return FALSE;
 }
 
+static bool32 IsGuestConversionMenu(enum BattlerId battler)
+{
+    return gBattleResources->bufferA[battler][3] && (gBattleTypeFlags & BATTLE_TYPE_LINK)
+        && !(gBattleTypeFlags & BATTLE_TYPE_IS_MASTER);
+}
+
 void HandleInputChooseMove(enum BattlerId battler)
 {
     u32 canSelectTarget = 0;
@@ -690,9 +696,11 @@ void HandleInputChooseMove(enum BattlerId battler)
         TryToHideMoveInfoWindow();
         PlaySE(SE_SELECT);
 
-        if (gBattleStruct->polishedConversionSelecting)
+        if (gBattleResources->bufferA[battler][3])
         {
             BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, B_ACTION_EXEC_SCRIPT, gMoveSelectionCursor[battler]);
+            if (IsGuestConversionMenu(battler))
+                gMoveSelectionCursor[battler] = gBattleStruct->polishedConversionMoveCursor;
             HideGimmickTriggerSprite();
             BtlController_Complete(battler);
             return;
@@ -799,6 +807,8 @@ void HandleInputChooseMove(enum BattlerId battler)
         else
         {
             BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, B_ACTION_EXEC_SCRIPT, 0xFFFF);
+            if (IsGuestConversionMenu(battler))
+                gMoveSelectionCursor[battler] = gBattleStruct->polishedConversionMoveCursor;
             HideGimmickTriggerSprite();
             BtlController_Complete(battler);
             TryToHideMoveInfoWindow();
@@ -870,7 +880,7 @@ void HandleInputChooseMove(enum BattlerId battler)
             TryChangeZTrigger(battler, gMoveSelectionCursor[battler]);
         }
     }
-    else if (!gBattleStruct->polishedConversionSelecting && B_MOVE_REARRANGEMENT_IN_BATTLE < GEN_4 && JOY_NEW(SELECT_BUTTON) && !gBattleStruct->zmove.viewing && !gBattleStruct->descriptionSubmenu)
+    else if (!gBattleResources->bufferA[battler][3] && B_MOVE_REARRANGEMENT_IN_BATTLE < GEN_4 && JOY_NEW(SELECT_BUTTON) && !gBattleStruct->zmove.viewing && !gBattleStruct->descriptionSubmenu)
     {
         if (gNumberOfMovesToChoose > 1 && !(gBattleTypeFlags & BATTLE_TYPE_LINK))
         {
@@ -913,7 +923,7 @@ void HandleInputChooseMove(enum BattlerId battler)
         gBattleStruct->descriptionSubmenu = TRUE;
         TryMoveSelectionDisplayMoveDescription(battler);
     }
-    else if (!gBattleStruct->polishedConversionSelecting && JOY_NEW(START_BUTTON))
+    else if (!gBattleResources->bufferA[battler][3] && JOY_NEW(START_BUTTON))
     {
         if (gBattleStruct->gimmick.usableGimmick[battler] != GIMMICK_NONE
             && !HasTrainerUsedGimmick(battler, gBattleStruct->gimmick.usableGimmick[battler])
@@ -2107,6 +2117,11 @@ static void PlayerChooseMoveInBattlePalace(enum BattlerId battler)
 
 void PlayerHandleChooseMove(enum BattlerId battler)
 {
+    if (IsGuestConversionMenu(battler))
+    {
+        gBattleStruct->polishedConversionMoveCursor = gMoveSelectionCursor[battler];
+        gMoveSelectionCursor[battler] = 0;
+    }
     if (gBattleTypeFlags & BATTLE_TYPE_PALACE)
     {
         gBattleStruct->arenaMindPoints[battler] = 8;
@@ -2127,7 +2142,7 @@ void PlayerHandleChooseMove(enum BattlerId battler)
             gBattleStruct->gimmick.triggerSpriteId = 0xFF;
         else if (!IsGimmickTriggerSpriteMatchingBattler(battler))
             DestroyGimmickTriggerSprite();
-        if (!gBattleStruct->polishedConversionSelecting
+        if (!gBattleResources->bufferA[battler][3]
          && !(gBattleStruct->gimmick.usableGimmick[battler] == GIMMICK_Z_MOVE && !gBattleStruct->zmove.viable))
             CreateGimmickTriggerSprite(battler);
 

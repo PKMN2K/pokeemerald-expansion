@@ -1088,7 +1088,9 @@ void BtlController_EmitChooseMove(enum BattlerId battler, u32 bufferId, bool8 is
     gBattleResources->transferBuffer[0] = CONTROLLER_CHOOSEMOVE;
     gBattleResources->transferBuffer[1] = isDoubleBattle;
     gBattleResources->transferBuffer[2] = noPPNumber;
-    gBattleResources->transferBuffer[3] = 0;
+    // The link guest runs only its controller. Carry the menu purpose in
+    // the reserved byte of this command, independent of the host script state.
+    gBattleResources->transferBuffer[3] = gBattleStruct->polishedConversionSelecting != 0;
     for (i = 0; i < sizeof(*movePPData); i++)
         gBattleResources->transferBuffer[4 + i] = *((u8 *)(movePPData) + i);
     PrepareBufferDataTransfer(battler, bufferId, gBattleResources->transferBuffer, sizeof(*movePPData) + 4);

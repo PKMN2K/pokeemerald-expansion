@@ -12,6 +12,7 @@
 #include "data.h"
 #include "item.h"
 #include "polished_items.h"
+#include "polished_trainers.h"
 #include "party_menu.h"
 #include "pokemon.h"
 #include "random.h"
@@ -25,6 +26,49 @@
 // this file's functions
 static bool32 AI_ShouldHeal(enum BattlerId battler, u32 healAmount);
 static u32 GetHPHealAmount(enum Item item, u8 itemEffectParam, struct Pokemon *mon);
+
+static void UseTrainerItem(enum BattlerId battler, u32 itemIndex)
+{
+    if (gBattleStruct->itemPartyIndex[battler] == PARTY_SIZE)
+        gBattleStruct->itemPartyIndex[battler] = gBattlerPartyIndexes[battler];
+    BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, B_ACTION_USE_ITEM, 0);
+    gBattleStruct->chosenItem[battler] = gBattleHistory->trainerItems[itemIndex];
+    gBattleHistory->trainerItems[itemIndex] = ITEM_NONE;
+}
+
+// Every registered trainer with inventory uses CONTEXT_USE in v3.2.3.
+// AI_Items scans medicine priority first, then the two inventory slots.
+u32 PolishedChooseTrainerMedicine(const struct BattlePokemon *active, struct Pokemon *party, const enum Item *items)
+{
+    for (u32 i = 0; i < PARTY_SIZE; i++)
+        if (GetMonData(&party[i], MON_DATA_LEVEL) > active->level)
+            return MAX_TRAINER_ITEMS; // Includes defeated higher-level teammates.
+
+    static const enum Item priority[] = {ITEM_FULL_RESTORE, ITEM_MAX_POTION, ITEM_HYPER_POTION,
+        ITEM_SUPER_POTION, ITEM_POTION, ITEM_FULL_HEAL};
+    for (u32 choice = 0; choice < ARRAY_COUNT(priority); choice++)
+    {
+        u32 index;
+        for (index = 0; index < MAX_TRAINER_ITEMS; index++)
+            if (items[index] == priority[choice])
+                break;
+        if (index == MAX_TRAINER_ITEMS)
+            continue;
+        if (priority[choice] != ITEM_FULL_HEAL && 2 * active->hp <= active->maxHP)
+            if (4 * active->hp <= active->maxHP || (Random() & 0xff) < 50)
+                return index;
+        if (priority[choice] == ITEM_FULL_RESTORE || priority[choice] == ITEM_FULL_HEAL)
+        {
+            u32 status = active->status1;
+            if ((status & STATUS1_TOXIC_POISON) && (status & STATUS1_TOXIC_COUNTER) >= STATUS1_TOXIC_TURN(4)
+                && (Random() & 0xff) < 128)
+                return index;
+            if (status & (STATUS1_SLEEP | STATUS1_FREEZE))
+                return index;
+        }
+    }
+    return MAX_TRAINER_ITEMS;
+}
 
 bool32 ShouldUseItem(enum BattlerId battler)
 {
@@ -41,6 +85,18 @@ bool32 ShouldUseItem(enum BattlerId battler)
 
     if (gBattleMons[battler].volatiles.embargoTimer)
         return FALSE;
+
+    if (!IsOnPlayerSide(battler) && UsesPolishedBattleRules(battler, GetOppositeBattler(battler))
+        && PolishedGetTrainerItems(TRAINER_BATTLE_PARAM.opponentA) != NULL)
+    {
+        if (gBattleTypeFlags & (BATTLE_TYPE_LINK | BATTLE_TYPE_RECORDED_LINK | BATTLE_TYPE_FRONTIER))
+            return FALSE;
+        u32 index = PolishedChooseTrainerMedicine(&gBattleMons[battler], GetBattlerParty(battler), gBattleHistory->trainerItems);
+        if (index == MAX_TRAINER_ITEMS)
+            return FALSE;
+        UseTrainerItem(battler, index);
+        return TRUE;
+    }
 
     if (AiExpectsToFaintPlayer(battler))
         return FALSE;
@@ -173,12 +229,7 @@ bool32 ShouldUseItem(enum BattlerId battler)
         }
         if (shouldUse)
         {
-            // Set selected party ID to current battler if none chosen.
-            if (gBattleStruct->itemPartyIndex[battler] == PARTY_SIZE)
-                gBattleStruct->itemPartyIndex[battler] = gBattlerPartyIndexes[battler];
-            BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, B_ACTION_USE_ITEM, 0);
-            gBattleStruct->chosenItem[battler] = item;
-            gBattleHistory->trainerItems[itemIndex] = 0;
+            UseTrainerItem(battler, itemIndex);
             return shouldUse;
         }
     }

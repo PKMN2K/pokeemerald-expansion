@@ -127,6 +127,8 @@ s32 MoveBattleBar(enum BattlerId battler, u8 healthboxSpriteId, u8 whichBar, u8 
 u8 GetScaledHPFraction(s16 hp, s16 maxhp, u8 scale);
 u8 GetHPBarLevel(s16 hp, s16 maxhp);
 bool32 IsAnyAbilityPopUpActive(void);
+struct Pokemon;
+void CreateAbilityPopUpForMon(enum BattlerId battler, enum Ability ability, bool32 isDoubleBattle, struct Pokemon *mon);
 void CreateAbilityPopUp(enum BattlerId battlerId, enum Ability ability, bool32 isDoubleBattle);
 void DestroyAbilityPopUp(enum BattlerId battlerId);
 bool32 CanThrowLastUsedBall(void);

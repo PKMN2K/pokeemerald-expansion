@@ -76,3 +76,23 @@ WILD_BATTLE_TEST("Polished Suite 2 wild Conversion selects a valid later slot")
         EXPECT_EQ(opponent->types[0], B_POLISHED_MOVE_BALANCE ? TYPE_FIRE : TYPE_NORMAL);
     }
 }
+
+SINGLE_BATTLE_TEST("Polished linked Conversion plays both trainers' choices and leaves the next turn aligned")
+{
+    ASSUME(B_POLISHED_MOVE_BALANCE);
+    GIVEN {
+        PLAYER(SPECIES_PORYGON) { Moves(MOVE_CONVERSION, MOVE_EMBER, MOVE_TACKLE); }
+        OPPONENT(SPECIES_PORYGON) { Moves(MOVE_CONVERSION, MOVE_TACKLE, MOVE_WATER_GUN); }
+    } WHEN {
+        TURN {
+            MOVE(player, MOVE_CONVERSION); CONVERSION_CHOICE(player, 1);
+            MOVE(opponent, MOVE_CONVERSION); CONVERSION_CHOICE(opponent, 0); CONVERSION_CHOICE(opponent, 2);
+        }
+        TURN { MOVE(player, MOVE_TACKLE); MOVE(opponent, MOVE_TACKLE); }
+    } THEN {
+        EXPECT_EQ(player->types[0], TYPE_FIRE);
+        EXPECT_EQ(opponent->types[0], TYPE_WATER);
+        EXPECT_EQ(player->pp[2], GetMovePP(MOVE_TACKLE) - 1);
+        EXPECT_EQ(opponent->pp[1], GetMovePP(MOVE_TACKLE) - 1);
+    }
+}

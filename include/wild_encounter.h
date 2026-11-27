@@ -66,6 +66,7 @@ bool8 IsWildLevelAllowedByRepel(u8 wildLevel);
 bool8 IsAbilityAllowingEncounter(u8 level);
 bool8 TryDoDoubleWildBattle(void);
 u32 CalculateChainFishingShinyRolls(void);
+bool32 TryCreatePolishedWildMon(struct Pokemon *mon, enum Species species, u8 level);
 void CreateWildMon(enum Species species, u8 level);
 void CreateWildMonWithForm(enum Species species, u8 level, u8 sourceForm);
 bool8 TryGenerateWildMon(const struct WildPokemonInfo *wildMonInfo, enum WildPokemonArea area, u8 flags);

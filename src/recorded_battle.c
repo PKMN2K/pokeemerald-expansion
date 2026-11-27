@@ -68,11 +68,22 @@ static bool32 CopyRecordedBattleFromSave(struct RecordedBattleSave *);
 static void RecordedBattle_RestoreSavedParties(void);
 static void CB2_RecordedBattle(void);
 
+static EWRAM_DATA bool8 sPolishedLinkChoices = FALSE;
+
+bool32 RecordedBattle_HasPolishedLinkChoices(void)
+{
+    return sPolishedLinkChoices;
+}
+
 void RecordedBattle_Init(u8 mode)
 {
     s32 i, j;
 
     sRecordMode = mode;
+    if (mode == B_RECORD_MODE_RECORDING)
+        sPolishedLinkChoices = B_POLISHED_MOVE_BALANCE && (gBattleTypeFlags & BATTLE_TYPE_LINK)
+            && !IsDoubleBattle() && gLinkPlayers[0].polishedBattleProtocol == LINK_POLISHED_CONVERSION
+            && gLinkPlayers[1].polishedBattleProtocol == LINK_POLISHED_CONVERSION;
     sIsPlaybackFinished = FALSE;
 
     for (i = 0; i < MAX_BATTLERS_COUNT; i++)
@@ -349,6 +360,7 @@ bool32 MoveRecordedBattleToSaveData(void)
     battleSave->frontierFacility = sFrontierFacility;
     battleSave->frontierBrainSymbol = sFrontierBrainSymbol;
     battleSave->battleScene = gSaveBlock2Ptr->optionsBattleSceneOff;
+    battleSave->polishedLinkChoices = sPolishedLinkChoices;
     battleSave->textSpeed = gSaveBlock2Ptr->optionsTextSpeed;
 
     if (TRAINER_BATTLE_PARAM.opponentA >= TRAINER_RECORD_MIXING_FRIEND && TRAINER_BATTLE_PARAM.opponentA < TRAINER_RECORD_MIXING_APPRENTICE)
@@ -528,6 +540,7 @@ void SetVariablesForRecordedBattle(struct RecordedBattleSave *src)
     sFrontierBrainSymbol = src->frontierBrainSymbol;
     sBattleScene = src->battleScene;
     sTextSpeed = src->textSpeed;
+    sPolishedLinkChoices = src->polishedLinkChoices;
 
     for (i = 0; i < PLAYER_NAME_LENGTH + 1; i++)
         sRecordMixFriendName[i] = src->recordMixFriendName[i];

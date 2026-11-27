@@ -194,6 +194,11 @@ jobs:
         timeout-minutes: 5
         run: python3 tools/polished_port/scripts/test_battle_systems_emulator.py --driver /tmp/johto-demo-driver --output /tmp/johto-validation/battle-systems
 
+      - name: Verify wild construction, trainer medicine and postbattle rewards in production
+        if: ${{ !cancelled() && steps.johto_driver.outcome == 'success' }}
+        timeout-minutes: 6
+        run: python3 tools/polished_port/scripts/test_suite3_contexts_emulator.py --driver /tmp/johto-demo-driver --output /tmp/johto-validation/suite3-contexts
+
       - name: Verify production Conversion type selection
         if: ${{ !cancelled() && steps.johto_driver.outcome == 'success' }}
         timeout-minutes: 5

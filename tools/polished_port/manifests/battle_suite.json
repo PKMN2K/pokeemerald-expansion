@@ -39554,6 +39554,11 @@
       "path": "test/battle/move_effect/polished_suite2_conversion.c"
     },
     {
+      "name": "Polished linked Conversion plays both trainers' choices and leaves the next turn aligned",
+      "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/move_effect/polished_suite2_conversion.c"
+    },
+    {
       "name": "Polished Suite 2 Transform keeps the target's current Roost types after end turn",
       "kind": "SINGLE_BATTLE_TEST",
       "path": "test/battle/move_effect/polished_suite2_copy.c"
@@ -42701,6 +42706,11 @@
     {
       "name": "Polished systems active Pokerus doubles the power item before stat and total EV caps",
       "kind": "SINGLE_BATTLE_TEST",
+      "path": "test/battle/polished_systems.c"
+    },
+    {
+      "name": "Polished Dusk Ball triples catch probability in Dark Cave and uses normal odds in Sprout Tower",
+      "kind": "WILD_BATTLE_TEST",
       "path": "test/battle/polished_systems.c"
     },
     {

@@ -2580,15 +2580,12 @@ static void PrintOnAbilityPopUp(const u8 *str, u32 spriteId1, u32 spriteId2, u32
     }
 }
 
-static void PrintBattlerOnAbilityPopUp(enum BattlerId battler, u8 spriteId1, u8 spriteId2)
+static void PrintBattlerOnAbilityPopUp(enum BattlerId battler, u8 spriteId1, u8 spriteId2, struct Pokemon *mon)
 {
     u32 totalChar = 0, lastChar;
-    struct Pokemon *illusionMon = GetIllusionMonPtr(battler);
-
-    if (illusionMon != NULL)
-        GetMonData(illusionMon, MON_DATA_NICKNAME, gStringVar1);
-    else
-        GetMonData(GetBattlerMon(battler), MON_DATA_NICKNAME, gStringVar1);
+    if (mon == NULL)
+        mon = GetIllusionMonPtr(battler);
+    GetMonData(mon != NULL ? mon : GetBattlerMon(battler), MON_DATA_NICKNAME, gStringVar1);
 
     while (gStringVar1[totalChar] != EOS)
         totalChar++;
@@ -2646,14 +2643,18 @@ bool32 IsAnyAbilityPopUpActive(void)
 
 void CreateAbilityPopUp(enum BattlerId battler, enum Ability ability, bool32 isDoubleBattle)
 {
+    if (gBattleScripting.abilityPopupOverwrite)
+        ability = gBattleScripting.abilityPopupOverwrite;
+    CreateAbilityPopUpForMon(battler, ability, isDoubleBattle, NULL);
+}
+
+void CreateAbilityPopUpForMon(enum BattlerId battler, enum Ability ability, bool32 isDoubleBattle, struct Pokemon *mon)
+{
     u8 *spriteIds;
     u32 xSlide, tileTag;
     enum BattlerPosition battlerPosition = GetBattlerPosition(battler);
     struct SpriteTemplate template;
     const s16 (*coords)[2];
-
-    if (gBattleScripting.abilityPopupOverwrite)
-        ability = gBattleScripting.abilityPopupOverwrite;
 
     if (gTestRunnerEnabled)
     {
@@ -2703,7 +2704,7 @@ void CreateAbilityPopUp(enum BattlerId battler, enum Ability ability, bool32 isD
     gSprites[spriteIds[0]].sBattlerId = battler;
     gSprites[spriteIds[1]].sBattlerId = battler;
 
-    PrintBattlerOnAbilityPopUp(battler, spriteIds[0], spriteIds[1]);
+    PrintBattlerOnAbilityPopUp(battler, spriteIds[0], spriteIds[1], mon);
     PrintAbilityOnAbilityPopUp(ability, spriteIds[0], spriteIds[1]);
 }
 
@@ -2861,7 +2862,7 @@ void CreateItemPopUp(enum BattlerId battler)
     gSprites[spriteIds[0]].sBattlerId = battler;
     gSprites[spriteIds[1]].sBattlerId = battler;
 
-    PrintBattlerOnAbilityPopUp(battler, spriteIds[0], spriteIds[1]);
+    PrintBattlerOnAbilityPopUp(battler, spriteIds[0], spriteIds[1], NULL);
     PrintItemOnItemPopUp(gLastUsedItem, spriteIds[0], spriteIds[1]);
 }
 

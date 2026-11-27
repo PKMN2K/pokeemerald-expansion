@@ -188,6 +188,22 @@ the incoming nickname in Switch, the full Predict message on the initial and
 repeated offer, and the immediate send-out in Set. The native profile exercises
 Shift and Set. The combined job requires these reports for setup and presentation.
 
+### Current Suite 3 implementation
+
+| Area | Implemented in the GBA port | Remaining closure work |
+| --- | --- | --- |
+| Setup | Wild, scripted and roaming encounters generate six source DVs. Legendary encounters guarantee three perfect DVs. Roamers preserve their ability slot across Flash reload. Sprout Tower Bellsprout can carry Growth. | Unregistered trainer parties, special encounter types, form-specific gender and the full encounter lifecycle. |
+| Capture and escape | Dusk Ball applies the cave bonus in Dark Cave. The source time comparison cannot activate the bonus in outdoor maps. Sprout Tower is a dungeon in the source. | Special battle exits and remaining scripted capture and roamer outcomes. |
+| Rewards | After a win or capture, the party is processed in reverse slot order after held items are restored. Natural Cure, Pickup and Honey Gather use the source conditions. | End-to-end capture and other scripted outcomes, all reward and loss branches, and their persistence. |
+| AI | Ordinary wild move selection filters unavailable moves. Registered trainers with medicine use source priority, health and status thresholds and the party's maximum level. Conversion rerolls invalid slots for wild and Smart trainers. | Source move scoring, switching, opponent knowledge, and item policies for unregistered trainers. |
+| Facility and link | Tower battles force Set for that battle. Compatible two-player link singles carry both players' Conversion choices and preserve them in the recording. | Tower party generation and streak progression, all facility rules, and live two-console synchronization. |
+| Presentation and RNG | Pickup and Honey Gather show the party member and awarded item. Seeded production probes check item results and the next draw. | The shared Game Boy RNG stream, complete draw order, message sequence, artwork, animation and timing. |
+
+The combined run requires the production contexts report, the Dusk Ball map test
+and two-player recorded Conversion alongside the existing campaign and catalogs.
+The contexts probe verifies 127 seeded reward cases, 15 trainer medicine decisions,
+96 wild and scripted encounters, and Flash reload after a win and an escape.
+
 ## Completed milestone and next suite
 
 The consolidated Suite 2 pass requested from `8e340802` and resumed from

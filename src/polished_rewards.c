@@ -6,6 +6,7 @@
 #include "item.h"
 #include "polished_pokemon_data.h"
 #include "polished_rewards.h"
+#include "random.h"
 
 u32 PolishedExperience(const struct PolishedExpContext *ctx)
 {
@@ -121,4 +122,81 @@ void PolishedGainBattleEVs(struct Pokemon *mon, enum Species defeatedSpecies)
         total += gain;
         SetMonData(mon, MON_DATA_HP_EV + i, &evs[i]);
     }
+}
+
+// Polished Crystal v3.2.3, data/items/pickup_items.asm.
+static const enum Item sPickupItems[] = {
+    ITEM_POTION, ITEM_ANTIDOTE, ITEM_SUPER_POTION, ITEM_GREAT_BALL,
+    ITEM_REPEL, ITEM_ESCAPE_ROPE, ITEM_FULL_HEAL, ITEM_HYPER_POTION,
+    ITEM_ULTRA_BALL, ITEM_REVIVE, ITEM_RARE_CANDY, ITEM_DUSK_STONE,
+    ITEM_SHINY_STONE, ITEM_MAX_ETHER, ITEM_FULL_RESTORE, ITEM_MAX_REVIVE,
+    ITEM_PP_UP, ITEM_MAX_ELIXIR,
+};
+
+static const enum Item sRarePickupItems[] = {
+    ITEM_HYPER_POTION, ITEM_NUGGET, ITEM_KINGS_ROCK, ITEM_FULL_RESTORE,
+    ITEM_ETHER, ITEM_LUCKY_EGG, ITEM_DESTINY_KNOT, ITEM_ELIXIR,
+    ITEM_BIG_NUGGET, ITEM_LEFTOVERS, ITEM_BOTTLE_CAP,
+};
+
+bool32 UsesPolishedPostBattleAbilities(void)
+{
+    return UsesPolishedBattleRules(B_BATTLER_0, B_BATTLER_1)
+        && !(gBattleTypeFlags & (BATTLE_TYPE_LINK | BATTLE_TYPE_RECORDED | BATTLE_TYPE_RECORDED_LINK
+            | BATTLE_TYPE_FRONTIER | BATTLE_TYPE_TRAINER_HILL | BATTLE_TYPE_EREADER_TRAINER
+            | BATTLE_TYPE_CATCH_TUTORIAL));
+}
+
+static enum Item GetPickupItem(u32 level)
+{
+    u32 tier = min((level - 1) / 10, 9);
+    u32 roll = PolishedRandomRange(100);
+    if (roll < 2)
+        return sRarePickupItems[tier + ((Random() & 0xff) < 128)];
+
+    static const u8 thresholds[] = {6, 10, 20, 30, 40, 50, 60, 70};
+    for (u32 i = 0; i < ARRAY_COUNT(thresholds); i++)
+        if (roll < thresholds[i])
+            tier++;
+    return sPickupItems[tier];
+}
+
+enum Item PolishedApplyPostBattleAbility(struct Pokemon *mon)
+{
+    enum Species species = GetMonData(mon, MON_DATA_SPECIES_OR_EGG);
+    if (species == SPECIES_NONE || species == SPECIES_EGG)
+        return ITEM_NONE;
+
+    enum Item reward;
+    switch (GetMonAbility(mon))
+    {
+    case ABILITY_NATURAL_CURE:
+    {
+        u32 status = STATUS1_NONE;
+        SetMonData(mon, MON_DATA_STATUS, &status);
+        return ITEM_NONE;
+    }
+    case ABILITY_HONEY_GATHER:
+    {
+        u32 divisor = PolishedRandomRange(20) + 1;
+        // The release compares the integer quotient with 11, including at level 1.
+        if ((GetMonData(mon, MON_DATA_LEVEL) + 9) / divisor < 11)
+            return ITEM_NONE;
+        reward = ITEM_HONEY;
+        break;
+    }
+    case ABILITY_PICKUP:
+        if (PolishedRandomRange(10) != 0)
+            return ITEM_NONE;
+        reward = GetPickupItem(GetMonData(mon, MON_DATA_LEVEL));
+        break;
+    default:
+        return ITEM_NONE;
+    }
+
+    if (GetMonData(mon, MON_DATA_HELD_ITEM) == ITEM_NONE)
+        SetMonData(mon, MON_DATA_HELD_ITEM, &reward);
+    else if (!AddBagItem(reward, 1))
+        return ITEM_NONE;
+    return reward;
 }

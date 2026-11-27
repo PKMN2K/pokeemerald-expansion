@@ -127,11 +127,14 @@ void CreateScriptedWildMon(enum Species species, u8 level, enum Item item)
     u8 form = PolishedSelectWildForm(&species, 0);
 
     ZeroEnemyPartyMons();
-    u32 personality = GetMonPersonality(species,
-        GetSynchronizedGender(STATIC_WILDMON_ORIGIN, species),
-        GetSynchronizedNature(STATIC_WILDMON_ORIGIN, species),
-        RANDOM_UNOWN_LETTER);
-    CreateMonWithIVs(&gParties[B_TRAINER_OPPONENT_A][0], species, level, personality, OTID_STRUCT_PLAYER_ID, USE_RANDOM_IVS);
+    if (!TryCreatePolishedWildMon(&gParties[B_TRAINER_OPPONENT_A][0], species, level))
+    {
+        u32 personality = GetMonPersonality(species,
+            GetSynchronizedGender(STATIC_WILDMON_ORIGIN, species),
+            GetSynchronizedNature(STATIC_WILDMON_ORIGIN, species),
+            RANDOM_UNOWN_LETTER);
+        CreateMonWithIVs(&gParties[B_TRAINER_OPPONENT_A][0], species, level, personality, OTID_STRUCT_PLAYER_ID, USE_RANDOM_IVS);
+    }
     if (form != 0)
         SetMonData(&gParties[B_TRAINER_OPPONENT_A][0], MON_DATA_POLISHED_FORM, &form);
     GiveMonInitialMoveset(&gParties[B_TRAINER_OPPONENT_A][0]);

@@ -714,7 +714,8 @@ struct Roamer
     /*0x13*/ bool8 active;
     /*0x14*/ u8 statusB; // Stores frostbite
     /*0x15*/ bool8 shiny;
-    /*0x16*/ u8 filler[0x6];
+    /*0x16*/ u8 polishedAbilitySlotPlusOne; // Zero preserves personality-based legacy slots.
+    /*0x17*/ u8 filler[0x5];
 };
 
 struct RamScriptData

@@ -70,6 +70,7 @@ static inline u16 Random2(void)
     return Random2_32() >> 16;
 }
 
+u32 PolishedRandomRange(u32 range);
 void AdvanceRandom(void);
 
 extern rng_value_t gRngValue;

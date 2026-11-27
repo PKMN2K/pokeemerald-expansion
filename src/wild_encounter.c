@@ -1,5 +1,7 @@
 #include "global.h"
 #include "polished_forms.h"
+#include "polished_pokemon_data.h"
+#include "dexnav.h"
 #include "battle_setup.h"
 #include "battle_pike.h"
 #include "battle_pyramid.h"
@@ -535,6 +537,83 @@ static u8 PickWildMonNature(enum Species species)
     return GetSynchronizedNature(WILDMON_ORIGIN, species);
 }
 
+static bool32 HasPolishedLegendaryDVs(enum Species species)
+{
+    // LegendaryMons includes the following UberMons list, with wildcard forms.
+    switch (GET_BASE_SPECIES_ID(species))
+    {
+    case SPECIES_ARTICUNO:
+    case SPECIES_ZAPDOS:
+    case SPECIES_MOLTRES:
+    case SPECIES_RAIKOU:
+    case SPECIES_ENTEI:
+    case SPECIES_SUICUNE:
+    case SPECIES_MEWTWO:
+    case SPECIES_MEW:
+    case SPECIES_LUGIA:
+    case SPECIES_HO_OH:
+    case SPECIES_CELEBI:
+        return TRUE;
+    default:
+        return FALSE;
+    }
+}
+
+bool32 TryCreatePolishedWildMon(struct Pokemon *mon, enum Species species, u8 level)
+{
+    if (!P_POLISHED_SPECIES_DATA || gDexNavSpecies != SPECIES_NONE)
+        return FALSE;
+    const struct SpeciesBaseData *base = PolishedGetSpeciesBaseData(species);
+    if (base == NULL)
+        return FALSE;
+
+    // Each source byte contains two DVs, in HP/Atk, Def/Spe, SAt/SDf order.
+    // The trainer adapter uses two IV points for each source DV.
+    u32 ivs = 0;
+    for (u32 pair = 0; pair < NUM_STATS / 2; pair++)
+    {
+        u8 packed = Random();
+        ivs |= (u32)((packed >> 4) * 2) << (10 * pair);
+        ivs |= (u32)((packed & 15) * 2) << (10 * pair + 5);
+    }
+    if (HasPolishedLegendaryDVs(species))
+    {
+        u32 mask;
+        do
+            mask = (Random() & 0xff) >> 2;
+        while (__builtin_popcount(mask) != 3);
+        for (u32 stat = 0; stat < NUM_STATS; stat++)
+            if (mask & (1u << (NUM_STATS - 1 - stat)))
+                ivs |= (u32)30 << (5 * stat);
+    }
+
+    struct Pokemon *lead = &gParties[B_TRAINER_PLAYER][0];
+    enum Ability leadAbility = GetMonAbility(lead);
+    u32 nature = leadAbility == ABILITY_SYNCHRONIZE ? GetNature(lead) : PolishedRandomRange(NUM_NATURES);
+    u8 roll = Random();
+    u32 abilitySlot = roll < 13 ? 2 : !(roll & 1);
+    bool32 shiny = (Random() & 0xff) == 0
+        && (Random() & 0xff) < (CheckBagHasItem(ITEM_SHINY_CHARM, 1) ? 48 : 16);
+    if (FlagGet(P_FLAG_FORCE_NO_SHINY))
+        shiny = FALSE;
+    else if (FlagGet(P_FLAG_FORCE_SHINY))
+        shiny = TRUE;
+
+    u32 genderRoll;
+    if (!GetMonData(lead, MON_DATA_SANITY_IS_EGG) && leadAbility == ABILITY_CUTE_CHARM && PolishedRandomRange(3))
+        genderRoll = GetMonGender(lead) == MON_FEMALE ? 7 : 0;
+    else
+        genderRoll = Random() & 7;
+    u32 gender = genderRoll * 32 < base->genderRatio ? MON_FEMALE : MON_MALE;
+    u32 personality = GetMonPersonality(species, gender, nature, RANDOM_UNOWN_LETTER);
+    CreateMon(mon, species, level, personality, OTID_STRUCT_PRESET(READ_OTID_FROM_SAVE));
+    SetMonData(mon, MON_DATA_IVS, &ivs);
+    SetMonData(mon, MON_DATA_ABILITY_NUM, &abilitySlot);
+    SetMonData(mon, MON_DATA_IS_SHINY, &shiny);
+    CalculateMonStats(mon);
+    return TRUE;
+}
+
 void CreateWildMon(enum Species species, u8 level)
 {
     CreateWildMonWithForm(species, level, 0);
@@ -544,11 +623,27 @@ void CreateWildMonWithForm(enum Species species, u8 level, u8 sourceForm)
 {
     u8 form = PolishedSelectWildForm(&species, sourceForm);
     ZeroEnemyPartyMons();
-    u32 personality = GetMonPersonality(species, GetSynchronizedGender(WILDMON_ORIGIN, species), PickWildMonNature(species), RANDOM_UNOWN_LETTER);
-    CreateMonWithIVs(&gParties[B_TRAINER_OPPONENT_A][0], species, level, personality, OTID_STRUCT_PLAYER_ID, USE_RANDOM_IVS);
+    if (!TryCreatePolishedWildMon(&gParties[B_TRAINER_OPPONENT_A][0], species, level))
+    {
+        u32 personality = GetMonPersonality(species, GetSynchronizedGender(WILDMON_ORIGIN, species), PickWildMonNature(species), RANDOM_UNOWN_LETTER);
+        CreateMonWithIVs(&gParties[B_TRAINER_OPPONENT_A][0], species, level, personality, OTID_STRUCT_PLAYER_ID, USE_RANDOM_IVS);
+    }
     if (form != 0)
         SetMonData(&gParties[B_TRAINER_OPPONENT_A][0], MON_DATA_POLISHED_FORM, &form);
     GiveMonInitialMoveset(&gParties[B_TRAINER_OPPONENT_A][0]);
+    // CheckUniqueWildMove starts at slot two and replaces slot one if full.
+    if (P_POLISHED_SPECIES_DATA && species == SPECIES_BELLSPROUT
+        && (gMapHeader.mapLayoutId == LAYOUT_POLISHED_SPROUT_TOWER_1F
+         || gMapHeader.mapLayoutId == LAYOUT_POLISHED_SPROUT_TOWER_2F
+         || gMapHeader.mapLayoutId == LAYOUT_POLISHED_SPROUT_TOWER_3F)
+        && (Random() & 0x80))
+    {
+        struct Pokemon *mon = &gParties[B_TRAINER_OPPONENT_A][0];
+        u32 slot = 1;
+        while (slot < MAX_MON_MOVES && GetMonData(mon, MON_DATA_MOVE1 + slot) != MOVE_NONE)
+            slot++;
+        SetMonMoveSlot(mon, MOVE_GROWTH, slot % MAX_MON_MOVES);
+    }
 }
 
 #ifdef BUGFIX

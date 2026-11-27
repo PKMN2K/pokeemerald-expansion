@@ -192,6 +192,7 @@ static const u8 sText_TerrainReturnedToNormal[] = _("The terrain returned to nor
 
 const u8 *const gBattleStringsTable[STRINGID_COUNT] =
 {
+    [STRINGID_POLISHED_PICKED_UP_ITEM] = COMPOUND_STRING("{B_BUFF1} picked up {B_BUFF2}."),
     [STRINGID_POLISHED_CONVERSION_CHOOSE] = COMPOUND_STRING("Change into which move's type?"),
     [STRINGID_POLISHED_CONVERSION_INVALID] = COMPOUND_STRING("Cannot change into that type!"),
     [STRINGID_TRAINER1LOSETEXT]                     = COMPOUND_STRING("{B_TRAINER1_LOSE_TEXT}"),

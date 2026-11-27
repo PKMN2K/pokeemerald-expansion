@@ -5,7 +5,7 @@
 #include "pokedex.h"
 #include "item.h"
 #include "overworld.h"
-#include "rtc.h"
+#include "constants/layouts.h"
 #include "wild_encounter.h"
 #include "random.h"
 #include "safari_zone.h"
@@ -263,7 +263,6 @@ u32 GetPolishedCaptureOdds(enum BattlerId user, enum BattlerId target)
     enum Species original = GetMonData(GetBattlerMon(target), MON_DATA_SPECIES);
     const struct SpeciesBaseData *base = PolishedGetSpeciesBaseData(original);
     struct BattlePokemon *mon = &gBattleMons[target];
-    enum TimeOfDay time = GetTimeOfDay();
     InitializeCatchRate(original);
     struct PolishedCaptureContext ctx = {
         .ball = ItemIdToBallId(gLastUsedItem),
@@ -274,7 +273,9 @@ u32 GetPolishedCaptureOdds(enum BattlerId user, enum BattlerId target)
         .userLevel = gBattleMons[user].level, .targetLevel = mon->level,
         .baseSpeed = base->baseSpeed, .type1 = mon->types[0], .type2 = mon->types[1],
         .fishing = gIsFishingEncounter, .surfing = gIsSurfingEncounter,
-        .dusk = time == TIME_EVENING || time == TIME_NIGHT || gMapHeader.cave || gMapHeader.mapType == MAP_TYPE_UNDERGROUND,
+        // DuskBallMultiplier compares time indices 0..3 with masks 8 and 4.
+        // Only the CAVE environment can reach its multiplier in v3.2.3.
+        .dusk = gMapHeader.mapLayoutId == LAYOUT_POLISHED_DARK_CAVE_VIOLET_ENTRANCE,
         .caught = PolishedWasCaught(original),
         .moonEvolution = sPolishedMoonBallSpecies[original],
         // The pinned Love Ball compares masked user form with the unmasked

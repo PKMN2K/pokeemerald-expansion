@@ -8,6 +8,8 @@ struct PolishedExpContext
     bool8 participant, holder, traded, trainer, luckyEgg;
 };
 
+bool32 UsesPolishedPostBattleAbilities(void);
+enum Item PolishedApplyPostBattleAbility(struct Pokemon *mon);
 u32 PolishedExperience(const struct PolishedExpContext *ctx);
 bool32 UsesPolishedRewardRules(enum BattlerId defeated);
 bool32 PolishedIsTraded(struct Pokemon *mon);

@@ -2,6 +2,7 @@
 #include "polished_lifecycle.h"
 #include "polished_escape.h"
 #include "polished_capture.h"
+#include "polished_rewards.h"
 #include "constants/polished_hidden_power.h"
 #if B_POLISHED_HIDDEN_POWER
 #include "data/polished_hidden_power_types.h"
@@ -137,6 +138,8 @@ static void HandleEndTurn_BattleLost(void);
 static void HandleEndTurn_RanFromBattle(void);
 static void HandleEndTurn_MonFled(void);
 static void HandleEndTurn_FinishBattle(void);
+static void FinishBattleAfterPartyAbilities(void);
+static EWRAM_DATA u8 sPostBattlePartyCursor = 0;
 
 EWRAM_DATA u16 gBattle_BG0_X = 0;
 EWRAM_DATA u16 gBattle_BG0_Y = 0;
@@ -2775,7 +2778,8 @@ static void ClearSetBScriptingStruct(void)
     #if TESTING
     gBattleScripting.battleStyle = OPTIONS_BATTLE_STYLE_SET;
     #else
-    gBattleScripting.battleStyle = GetBattleStyleOption();
+    gBattleScripting.battleStyle = B_POLISHED_MOVE_BALANCE && (gBattleTypeFlags & BATTLE_TYPE_BATTLE_TOWER)
+        ? OPTIONS_BATTLE_STYLE_SET : GetBattleStyleOption();
     #endif
     gBattleScripting.expOnCatch = (GetConfig(B_EXP_CATCH) >= GEN_6);
     gBattleScripting.specialTrainerBattleType = specialBattleType;
@@ -5531,8 +5535,6 @@ static void HandleEndTurn_FinishBattle(void)
             TryPutBreakingNewsOnAir();
         }
 
-        BeginFastPaletteFade(3);
-        FadeOutMapMusic(5);
         TryRestoreHeldItems();
 
         for (u32 i = 0; i < PARTY_SIZE; i++)
@@ -5543,23 +5545,50 @@ static void HandleEndTurn_FinishBattle(void)
             if (!changedForm && B_RECALCULATE_STATS >= GEN_5)
                 CalculateMonStats(&gParties[B_TRAINER_PLAYER][i]);
         }
-        RecordedBattle_SetPlaybackFinished();
-        if (gTestRunnerEnabled)
-            TestRunner_Battle_AfterLastTurn();
-
-        // Set Battle Controllers to BATTLE_CONTROLLER_NONE
-        for (enum BattlerId i = 0; i < MAX_BATTLERS_COUNT; i++)
-        {
-            gBattlerBattleController[i] = BATTLE_CONTROLLER_NONE;
-        }
-
-        gBattleMainFunc = FreeResetData_ReturnToOvOrDoEvolutions;
-        gCB2_AfterEvolution = BattleMainCB2;
+        sPostBattlePartyCursor = 0;
+        if (UsesPolishedPostBattleAbilities() && (gBattleOutcome == B_OUTCOME_WON || gBattleOutcome == B_OUTCOME_CAUGHT))
+            sPostBattlePartyCursor = PARTY_SIZE;
+        gBattleMainFunc = FinishBattleAfterPartyAbilities;
+        FinishBattleAfterPartyAbilities();
     }
     else
     {
         RunBattleScriptCommands();
     }
+}
+
+static void FinishBattleAfterPartyAbilities(void)
+{
+    while (sPostBattlePartyCursor)
+    {
+        u32 slot = --sPostBattlePartyCursor;
+        struct Pokemon *mon = &gParties[B_TRAINER_PLAYER][slot];
+        enum Item item = PolishedApplyPostBattleAbility(mon);
+        if (item != ITEM_NONE)
+        {
+            enum BattlerId player = GetBattlerAtPosition(B_POSITION_PLAYER_LEFT);
+            PREPARE_MON_NICK_BUFFER(gBattleTextBuff1, player, slot);
+            PREPARE_ITEM_BUFFER(gBattleTextBuff2, item);
+            CreateAbilityPopUpForMon(player, GetMonAbility(mon), FALSE, mon);
+            BattleScriptExecute(BattleScript_PolishedPickedUpItem);
+            return;
+        }
+    }
+
+    BeginFastPaletteFade(3);
+    FadeOutMapMusic(5);
+    RecordedBattle_SetPlaybackFinished();
+    if (gTestRunnerEnabled)
+        TestRunner_Battle_AfterLastTurn();
+
+    // Set Battle Controllers to BATTLE_CONTROLLER_NONE
+    for (enum BattlerId i = 0; i < MAX_BATTLERS_COUNT; i++)
+    {
+        gBattlerBattleController[i] = BATTLE_CONTROLLER_NONE;
+    }
+
+    gBattleMainFunc = FreeResetData_ReturnToOvOrDoEvolutions;
+    gCB2_AfterEvolution = BattleMainCB2;
 }
 
 static void FreeResetData_ReturnToOvOrDoEvolutions(void)

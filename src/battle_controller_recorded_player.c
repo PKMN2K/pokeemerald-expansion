@@ -359,7 +359,7 @@ static void RecordedPlayerHandleChooseAction(enum BattlerId battler)
 
 static void RecordedPlayerHandleChooseMove(enum BattlerId battler)
 {
-    if (gBattleStruct->polishedConversionSelecting)
+    if (gBattleResources->bufferA[battler][3])
     {
         BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, B_ACTION_EXEC_SCRIPT, RecordedBattle_GetBattlerAction(RECORDED_CONVERSION_SLOT, battler));
         BtlController_Complete(battler);

@@ -5994,16 +5994,12 @@ static bool32 PolishedConversionSlotValid(enum BattlerId battler, u32 slot)
     return type != TYPE_MYSTERY && !IS_BATTLER_OF_TYPE(battler, type);
 }
 
-static bool32 PolishedConversionSlotInvalid(u32 slot)
-{
-    return !PolishedConversionSlotValid(gBattlerAttacker, slot);
-}
-
 static bool32 TryPolishedConversion(const u8 *next, const u8 *fail)
 {
     enum BattlerId battler = gBattlerAttacker;
-    // Link action transport is a separate Suite 3 obligation.
-    if (!UsesPolishedBattleRules(battler, GetOppositeBattler(battler)) || gBattleTypeFlags & BATTLE_TYPE_LINK)
+    bool32 linked = (gBattleTypeFlags & (BATTLE_TYPE_LINK | BATTLE_TYPE_RECORDED_LINK)) != 0;
+    if (!UsesPolishedBattleRules(battler, GetOppositeBattler(battler))
+        || (linked && !RecordedBattle_HasPolishedLinkChoices()))
         return FALSE;
     if (gBattleControllerExecFlags)
         return TRUE;
@@ -6017,7 +6013,7 @@ static bool32 TryPolishedConversion(const u8 *next, const u8 *fail)
         gBattlescriptCurrInstr = fail;
         return TRUE;
     }
-    if (IsOnPlayerSide(battler))
+    if (linked || IsOnPlayerSide(battler))
     {
         switch (gBattleStruct->polishedConversionSelecting)
         {
@@ -6063,8 +6059,11 @@ static bool32 TryPolishedConversion(const u8 *next, const u8 *fail)
     }
     else
     {
-        // Source wild/non-Smart AI selection. Smart AI scoring belongs to Suite 3.
-        slot = RandomUniformExcept(RNG_POLISHED_CONVERSION, 0, MAX_MON_MOVES - 1, PolishedConversionSlotInvalid);
+        // AI_Conversion in the pinned release uses the same two-bit draw
+        // as wild and non-Smart trainers. Each rejected slot costs a draw.
+        do
+            slot = Random() & (MAX_MON_MOVES - 1);
+        while (!PolishedConversionSlotValid(battler, slot));
     }
     enum Type type = GetMoveType(gBattleMons[battler].moves[slot]);
     SET_BATTLER_TYPE(battler, type);
@@ -8303,7 +8302,8 @@ static void Cmd_pickup(void)
     u8 lvlDivBy10;
     enum Ability ability;
 
-    if (!InBattlePike()) // No items in Battle Pike.
+    // The source party pass runs after RestoreBattleItems, including on capture.
+    if (!UsesPolishedPostBattleAbilities() && !InBattlePike()) // No items in Battle Pike.
     {
         bool32 isInPyramid = CurrentBattlePyramidLocation() != PYRAMID_LOCATION_NONE;
         for (i = 0; i < PARTY_SIZE; i++)

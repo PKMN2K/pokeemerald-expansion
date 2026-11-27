@@ -24,7 +24,7 @@ struct RecordedBattleSave
     u16 battleScene:1;
     u16 textSpeed:3;
     u16 playersGender:4; // 1 bit per player; please don't hate me
-    u16 padding:1;
+    u16 polishedLinkChoices:1; // Older records have no extra Conversion bytes.
     u64 AI_scripts[MAX_BATTLERS_COUNT];
     u8 recordMixFriendName[PLAYER_NAME_LENGTH + 1];
     u8 recordMixFriendClass;
@@ -61,6 +61,7 @@ extern u8 gRecordedBattleMultiplayerId;
 #define B_RECORD_MODE_RECORDING 1
 #define B_RECORD_MODE_PLAYBACK 2
 
+bool32 RecordedBattle_HasPolishedLinkChoices(void);
 void RecordedBattle_Init(u8 mode);
 void RecordedBattle_SetTrainerInfo(void);
 void RecordedBattle_SetBattlerAction(enum BattlerId battler, u8 action);

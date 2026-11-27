@@ -1,4 +1,5 @@
 #include "global.h"
+#include "wild_encounter.h"
 #include "polished_escape.h"
 #include "polished_pokemon_data.h"
 #include "event_data.h"
@@ -103,12 +104,17 @@ void MoveAllRoamers(void)
 static void CreateInitialRoamerMon(u8 index, enum Species species, u8 level)
 {
     ClearRoamerLocationHistory(index);
-    u32 personality = GetMonPersonality(species,
-        GetSynchronizedGender(ROAMER_ORIGIN, species),
-        GetSynchronizedNature(ROAMER_ORIGIN, species),
-        RANDOM_UNOWN_LETTER);
-    CreateMonWithIVs(&gParties[B_TRAINER_OPPONENT_A][0], species, level, personality, OTID_STRUCT_PLAYER_ID, USE_RANDOM_IVS);
+    if (!TryCreatePolishedWildMon(&gParties[B_TRAINER_OPPONENT_A][0], species, level))
+    {
+        u32 personality = GetMonPersonality(species,
+            GetSynchronizedGender(ROAMER_ORIGIN, species),
+            GetSynchronizedNature(ROAMER_ORIGIN, species),
+            RANDOM_UNOWN_LETTER);
+        CreateMonWithIVs(&gParties[B_TRAINER_OPPONENT_A][0], species, level, personality, OTID_STRUCT_PLAYER_ID, USE_RANDOM_IVS);
+    }
     GiveMonInitialMoveset(&gParties[B_TRAINER_OPPONENT_A][0]);
+    ROAMER(index)->polishedAbilitySlotPlusOne = P_POLISHED_SPECIES_DATA && PolishedGetSpeciesBaseData(species) != NULL
+        ? 1 + GetMonData(&gParties[B_TRAINER_OPPONENT_A][0], MON_DATA_ABILITY_NUM) : 0;
     ROAMER(index)->ivs = GetMonData(&gParties[B_TRAINER_OPPONENT_A][0], MON_DATA_IVS);
     ROAMER(index)->personality = GetMonData(&gParties[B_TRAINER_OPPONENT_A][0], MON_DATA_PERSONALITY);
     ROAMER(index)->species = species;
@@ -252,6 +258,12 @@ void CreateRoamerMonInstance(u32 roamerIndex)
     struct Pokemon *mon = &gParties[B_TRAINER_OPPONENT_A][0];
     ZeroEnemyPartyMons();
     CreateMonWithIVsPersonality(mon, ROAMER(roamerIndex)->species, ROAMER(roamerIndex)->level, ROAMER(roamerIndex)->ivs, ROAMER(roamerIndex)->personality);
+    u32 slot = ROAMER(roamerIndex)->polishedAbilitySlotPlusOne;
+    if (P_POLISHED_SPECIES_DATA && slot >= 1 && slot <= 3 && PolishedGetSpeciesBaseData(ROAMER(roamerIndex)->species) != NULL)
+    {
+        slot--;
+        SetMonData(mon, MON_DATA_ABILITY_NUM, &slot);
+    }
     SetMonData(mon, MON_DATA_STATUS, &status);
     SetMonData(mon, MON_DATA_HP, &ROAMER(roamerIndex)->hp);
     SetMonData(mon, MON_DATA_COOL, &ROAMER(roamerIndex)->cool);

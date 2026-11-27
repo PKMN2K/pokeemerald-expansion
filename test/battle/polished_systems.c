@@ -12,6 +12,8 @@
 #include "random.h"
 #include "trainer_util.h"
 #include "constants/opponents.h"
+#include "constants/layouts.h"
+#include "overworld.h"
 
 #if !IS_FRLG
 TEST("Polished systems trainer generation preserves source slots stats gender and friendship")
@@ -520,5 +522,30 @@ SINGLE_BATTLE_TEST("Polished systems active Pokerus doubles the power item befor
         SetMonData(mon, MON_DATA_DEF_EV, &value);
         PolishedGainBattleEVs(mon, SPECIES_CATERPIE);
         EXPECT_EQ(GetMonData(mon, MON_DATA_HP_EV), 251);
+    }
+}
+
+WILD_BATTLE_TEST("Polished Dusk Ball triples catch probability in Dark Cave and uses normal odds in Sprout Tower")
+{
+    ASSUME(B_POLISHED_MOVE_BALANCE);
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_RAIKOU);
+    } WHEN {
+        TURN { MOVE(player, MOVE_SPLASH); MOVE(opponent, MOVE_SPLASH); }
+    } THEN {
+        u16 savedLayout = gMapHeader.mapLayoutId;
+        enum Item savedItem = gLastUsedItem;
+        gMapHeader.mapLayoutId = LAYOUT_POLISHED_SPROUT_TOWER_1F;
+        gLastUsedItem = ITEM_POKE_BALL;
+        u32 base = GetPolishedCaptureOdds(B_BATTLER_0, B_BATTLER_1);
+        gLastUsedItem = ITEM_DUSK_BALL;
+        EXPECT_EQ(GetPolishedCaptureOdds(B_BATTLER_0, B_BATTLER_1), base);
+        gMapHeader.mapLayoutId = LAYOUT_POLISHED_NEW_BARK_TOWN;
+        EXPECT_EQ(GetPolishedCaptureOdds(B_BATTLER_0, B_BATTLER_1), base);
+        gMapHeader.mapLayoutId = LAYOUT_POLISHED_DARK_CAVE_VIOLET_ENTRANCE;
+        EXPECT_EQ(GetPolishedCaptureOdds(B_BATTLER_0, B_BATTLER_1), 3 * base);
+        gMapHeader.mapLayoutId = savedLayout;
+        gLastUsedItem = savedItem;
     }
 }
