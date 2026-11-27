@@ -25,6 +25,9 @@ BattleFrontier_BattleFactoryLobby_EventScript_GetChallengeStatus::
 	end
 
 BattleFrontier_BattleFactoryLobby_EventScript_QuitWithoutSaving::
+#if POLISHED_JOHTO_DEMO
+	callnative PolishedForfeitInterruptedFactorySet
+#endif
 	lockall
 	msgbox BattleFrontier_BattleFactoryLobby_Text_DidntSaveBeforeQuitting, MSGBOX_DEFAULT
 	closemessage
@@ -64,6 +67,9 @@ BattleFrontier_BattleFactoryLobby_EventScript_GiveBattlePoints::
 	end
 
 BattleFrontier_BattleFactoryLobby_EventScript_LostChallenge::
+#if POLISHED_JOHTO_DEMO
+	callnative PolishedSettleFactoryPoints
+#endif
 	lockall
 	message BattleFrontier_BattleFactoryLobby_Text_ReturnMonsSaveResults
 	waitmessage

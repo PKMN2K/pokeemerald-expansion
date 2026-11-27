@@ -2,6 +2,7 @@
 #include "battle.h"
 #include "battle_factory.h"
 #include "polished_tower.h"
+#include "string_util.h"
 #include "battle_factory_screen.h"
 #include "event_data.h"
 #include "battle_setup.h"
@@ -202,6 +203,30 @@ static void SetBattleFactoryData(void)
         break;
     }
 }
+
+#if POLISHED_JOHTO_DEMO
+void TryRecordPolishedFactoryWin(void)
+{
+    gSpecialVar_Result = 0;
+    if (!IsPolishedFactoryChallenge())
+        return;
+    struct BattleFrontier *frontier = &gSaveBlock2Ptr->frontier;
+    u16 *streak = &frontier->factoryWinStreaks[FRONTIER_MODE_SINGLES][FRONTIER_LVL_50];
+    u16 opening = *streak - frontier->curChallengeBattleNum;
+    u32 points = 1 + PolishedFactoryDifficulty(opening + frontier->curChallengeBattleNum);
+    u16 *swaps = &frontier->factoryRentsCount[FRONTIER_MODE_SINGLES][FRONTIER_LVL_50];
+    if (sPerformedRentalSwap)
+        *swaps = (u8)(*swaps + 1);
+    sPerformedRentalSwap = FALSE;
+    (*streak)++;
+    frontier->curChallengeBattleNum++;
+    frontier->challengeStatus = frontier->curChallengeBattleNum == FRONTIER_STAGES_PER_CHALLENGE
+                              ? CHALLENGE_STATUS_WON : CHALLENGE_STATUS_SAVING;
+    SaveGameFrontier();
+    ConvertIntToDecimalStringN(gStringVar1, points, STR_CONV_MODE_LEFT_ALIGN, 1);
+    gSpecialVar_Result = frontier->curChallengeBattleNum;
+}
+#endif
 
 static void SaveFactoryChallenge(void)
 {

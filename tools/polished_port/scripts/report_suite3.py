@@ -37,7 +37,7 @@ DOMAIN_CHECKS = {
         ['Polished action AI Destiny Bond failure queries cannot clear the live volatile',
          'Polished escape roamer AI and action execution both reject sleep and freeze']),
     'facility_link': (
-        ['suite3-contexts/report.json', 'tower-parties/report.json', 'factory-rentals/report.json', 'link-conversion/report.json'],
+        ['suite3-contexts/report.json', 'tower-parties/report.json', 'factory-rentals/report.json', 'factory-points/report.json', 'link-conversion/report.json'],
         ["Polished linked Conversion plays both trainers' choices and leaves the next turn aligned",
          'Polished affection excludes actual link and frontier battles',
          'Polished critical evolution counter excludes link battles',
@@ -108,6 +108,16 @@ def check_probe(path, rom_hash, pin):
                 or len(data['tackle_pp_before']) != 2 or len(data['tackle_pp_after']) != 2
                 or any(before - after != 1 for before, after in zip(data['tackle_pp_before'], data['tackle_pp_after']))):
             raise ValueError('missing serial choice retry or next-turn synchronization')
+    if path.parent.name == 'factory-points':
+        cases = data['cases']
+        expected = {'loss': 5, 'factory-head': 26, 'interruption': 16,
+                    'pause-resume': 7, 'wallet-and-wrap': 16, 'long-streak': 56}
+        if (data['prefix_cases'] != 64 or data['complete_set_awards'] != [12, 19, 26, 33, 40, 47, 53, 56]
+                or {name: case['earned'] for name, case in cases.items()} != expected
+                or any(case['verified_reloads'] != 2 for case in cases.values())
+                or cases['factory-head']['streak'] != 21 or cases['long-streak']['record'] != 10003
+                or cases['wallet-and-wrap']['wallet'] != 50000 or cases['wallet-and-wrap']['card'] != 65535):
+            raise ValueError('missing Factory BP, streak, lobby or Flash evidence')
     if path.parent.name == 'factory-rentals':
         if (data['drafts'] < 40 or data['draft_rows'] != list(range(2, 9))
                 or not data['repeated_item_drafts'] or not data['whole_draft_retries']

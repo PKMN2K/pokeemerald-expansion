@@ -1968,6 +1968,11 @@ static void GiveBattlePoints(void)
         PolishedSettleTowerPoints();
         return;
     }
+    if (IsPolishedFactoryChallenge())
+    {
+        PolishedSettleFactoryPoints();
+        return;
+    }
 #endif
     s32 challengeNum = 0;
     s32 lvlMode = gSaveBlock2Ptr->frontier.lvlMode;

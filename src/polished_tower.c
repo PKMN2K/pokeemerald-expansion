@@ -212,7 +212,7 @@ static void DrawOpponentTeam(u16 *team, u32 difficulty, bool32 rental)
         history[ARRAY_COUNT(gSaveBlock3Ptr->polishedTowerHistory) - FRONTIER_PARTY_SIZE + i] = team[i] + 1;
 }
 
-static u32 FactoryDifficulty(u32 wins)
+u32 PolishedFactoryDifficulty(u32 wins)
 {
     return min(7u, wins / 7 + (wins % 7) / 3);
 }
@@ -227,7 +227,7 @@ void PolishedGenerateFactoryOpponent(void)
 {
     u32 wins = FactoryOpeningStreak() + gSaveBlock2Ptr->frontier.curChallengeBattleNum;
     u16 team[FRONTIER_PARTY_SIZE];
-    DrawOpponentTeam(team, FactoryDifficulty(wins), TRUE);
+    DrawOpponentTeam(team, PolishedFactoryDifficulty(wins), TRUE);
     for (u32 i = 0; i < FRONTIER_PARTY_SIZE; i++)
         gFrontierTempParty[i] = POLISHED_RENTAL_BASE + team[i];
 }
@@ -300,7 +300,7 @@ void PolishedGenerateFactoryRentals(void)
     struct BattleFrontier *frontier = &gSaveBlock2Ptr->frontier;
     u32 wins = frontier->factoryWinStreaks[FRONTIER_MODE_SINGLES][FRONTIER_LVL_50] + 5u;
     u32 swaps = frontier->factoryRentsCount[FRONTIER_MODE_SINGLES][FRONTIER_LVL_50];
-    u32 row = min(7u, FactoryDifficulty(wins) + swaps / 6);
+    u32 row = min(7u, PolishedFactoryDifficulty(wins) + swaps / 6);
     u8 tiers[PARTY_SIZE];
     for (u32 i = 0; i < PARTY_SIZE; i++)
         tiers[i] = (sTowerTierMasks[row][i / FRONTIER_PARTY_SIZE] >> (2 * (i % FRONTIER_PARTY_SIZE))) & 3;
@@ -333,11 +333,18 @@ static u32 TowerDifficulty(u32 wins)
 }
 
 // The release compares the high byte first, then compares low bytes even
-// when the old high byte was greater. Its Tower record is not a numeric max.
-static u16 UpdateTowerRecord(struct BattleFrontier *frontier, u16 record, u16 wins)
+// when the old high byte was greater. Both facilities use that ordering.
+static u16 UpdateFacilityRecord(struct BattleFrontier *frontier, u16 record, u16 wins, bool32 rental)
 {
     if ((wins >> 8) > (record >> 8))
     {
+        if (rental)
+        {
+            // The byte after the Factory record is the ongoing swap count.
+            u16 *swaps = &frontier->factoryRentsCount[FRONTIER_MODE_SINGLES][FRONTIER_LVL_50];
+            *swaps = max(*swaps, (u8)wins);
+            return wins;
+        }
         // After copying both record bytes, .check_record reads one byte
         // further: the high byte of the current rental streak in source WRAM.
         u16 *streak = &frontier->factoryWinStreaks[FRONTIER_MODE_SINGLES][FRONTIER_LVL_50];
@@ -363,33 +370,64 @@ void BufferPolishedTowerStreaks(void)
     StringExpandPlaceholders(gStringVar4, COMPOUND_STRING("Streak: {STR_VAR_1} wins\nRecord: {STR_VAR_2} wins"));
 }
 
-void PolishedSettleTowerPoints(void)
+static void SettleFacilityPoints(bool32 rental)
 {
-    if (!IsPolishedTowerChallenge())
-        return;
     struct BattleFrontier *frontier = &gSaveBlock2Ptr->frontier;
     u32 points = 0;
     if (frontier->challengeStatus == CHALLENGE_STATUS_WON || frontier->challengeStatus == CHALLENGE_STATUS_LOST
         || frontier->challengeStatus == CHALLENGE_STATUS_SAVING)
     {
+        u16 *streak = rental ? &frontier->factoryWinStreaks[FRONTIER_MODE_SINGLES][FRONTIER_LVL_50]
+                             : &frontier->towerWinStreaks[FRONTIER_MODE_SINGLES][FRONTIER_LVL_50];
+        u16 *record = rental ? &frontier->factoryRecordWinStreaks[FRONTIER_MODE_SINGLES][FRONTIER_LVL_50]
+                             : &frontier->towerRecordWinStreaks[FRONTIER_MODE_SINGLES][FRONTIER_LVL_50];
+        u16 *swaps = &frontier->factoryRentsCount[FRONTIER_MODE_SINGLES][FRONTIER_LVL_50];
         u32 stages = min(frontier->curChallengeBattleNum, FRONTIER_STAGES_PER_CHALLENGE);
-        u16 wins = frontier->towerWinStreaks[FRONTIER_MODE_SINGLES][FRONTIER_LVL_50];
-        // Each completed battle already advanced the native streak. The source
-        // commits all of their BP in the lobby, including an incomplete set.
-        u16 openingStreak = wins - stages;
+        u16 openingStreak = *streak - stages;
         for (u32 i = 0; i < stages; i++)
-            points += 1 + TowerDifficulty(openingStreak + i);
+            points += 1 + (rental ? PolishedFactoryDifficulty(openingStreak + i) : TowerDifficulty(openingStreak + i));
         frontier->battlePoints = min(MAX_BATTLE_FRONTIER_POINTS, frontier->battlePoints + points);
         frontier->cardBattlePoints = min(0xffffu, frontier->cardBattlePoints + points);
         if (points)
             IncrementDailyBattlePoints(points);
-        u16 *record = &frontier->towerRecordWinStreaks[FRONTIER_MODE_SINGLES][FRONTIER_LVL_50];
-        *record = UpdateTowerRecord(frontier, *record, wins);
+        if (rental)
+            *swaps = min((u8)*swaps, 99); // The release applies the cap before .check_record.
+        u16 newRecord = UpdateFacilityRecord(frontier, *record, *streak, rental);
+        if (rental && newRecord != *record)
+            frontier->factoryRecordRentsCount[FRONTIER_MODE_SINGLES][FRONTIER_LVL_50] = *swaps;
+        *record = newRecord;
         if (frontier->challengeStatus != CHALLENGE_STATUS_WON)
-            frontier->towerWinStreaks[FRONTIER_MODE_SINGLES][FRONTIER_LVL_50] = 0;
+        {
+            *streak = 0;
+            if (rental)
+            {
+                *swaps = 0;
+                frontier->winStreakActiveFlags &= ~STREAK_FACTORY_SINGLES_50;
+            }
+        }
         frontier->challengeStatus = 0;
     }
     ConvertIntToDecimalStringN(gStringVar1, points, STR_CONV_MODE_LEFT_ALIGN, 2);
+}
+
+void PolishedSettleTowerPoints(void)
+{
+    if (IsPolishedTowerChallenge())
+        SettleFacilityPoints(FALSE);
+}
+
+void PolishedSettleFactoryPoints(void)
+{
+    if (IsPolishedFactoryChallenge())
+        SettleFacilityPoints(TRUE);
+}
+
+void PolishedForfeitInterruptedFactorySet(void)
+{
+    if (!IsPolishedFactoryChallenge() || gSaveBlock2Ptr->frontier.challengeStatus != CHALLENGE_STATUS_SAVING)
+        return;
+    SettleFacilityPoints(TRUE);
+    SaveGameFrontier();
 }
 
 void PolishedForfeitInterruptedTowerSet(void)

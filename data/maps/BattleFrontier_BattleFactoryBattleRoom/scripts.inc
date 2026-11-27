@@ -89,6 +89,10 @@ BattleFrontier_BattleFactoryBattleRoom_EventScript_WarpToLobbyLost::
 	goto BattleFrontier_BattleFactoryBattleRoom_EventScript_WarpToLobby
 
 BattleFrontier_BattleFactoryBattleRoom_EventScript_DefeatedOpponent::
+#if POLISHED_JOHTO_DEMO
+	callnative TryRecordPolishedFactoryWin
+	goto_if_ne VAR_RESULT, 0, BattleFrontier_BattleFactoryBattleRoom_EventScript_PolishedVictory
+#endif
 	factory_get FACTORY_DATA_WIN_STREAK_SWAPS
 	goto_if_eq VAR_RESULT, MAX_STREAK, BattleFrontier_BattleFactoryBattleRoom_EventScript_IncrementWinStreak
 	addvar VAR_RESULT, 1
@@ -100,6 +104,7 @@ BattleFrontier_BattleFactoryBattleRoom_EventScript_IncrementBattleNum::
 	frontier_get FRONTIER_DATA_BATTLE_NUM
 	addvar VAR_RESULT, 1
 	frontier_set FRONTIER_DATA_BATTLE_NUM, VAR_RESULT
+BattleFrontier_BattleFactoryBattleRoom_EventScript_AfterVictory::
 	switch VAR_RESULT
 	case FRONTIER_STAGES_PER_CHALLENGE, BattleFrontier_BattleFactoryBattleRoom_EventScript_WarpToLobbyWon
 	setvar VAR_0x8006, 1
@@ -108,6 +113,16 @@ BattleFrontier_BattleFactoryBattleRoom_EventScript_IncrementBattleNum::
 BattleFrontier_BattleFactoryBattleRoom_EventScript_WarpToLobbyWon::
 	frontier_set FRONTIER_DATA_CHALLENGE_STATUS, CHALLENGE_STATUS_WON
 	goto BattleFrontier_BattleFactoryBattleRoom_EventScript_WarpToLobby
+
+#if POLISHED_JOHTO_DEMO
+BattleFrontier_BattleFactoryBattleRoom_EventScript_PolishedVictory::
+	msgbox BattleFrontier_BattleFactoryBattleRoom_Text_PolishedEarnedPoints, MSGBOX_DEFAULT
+	frontier_get FRONTIER_DATA_BATTLE_NUM
+	goto BattleFrontier_BattleFactoryBattleRoom_EventScript_AfterVictory
+
+BattleFrontier_BattleFactoryBattleRoom_Text_PolishedEarnedPoints:
+	.string "{PLAYER} earned {STR_VAR_1} BP!$"
+#endif
 
 BattleFrontier_BattleFactoryBattleRoom_EventScript_BattleNoland::
 	switch VAR_TEMP_F
@@ -174,6 +189,10 @@ BattleFrontier_BattleFactoryBattleRoom_EventScript_DoNolandBattle::
 	return
 
 BattleFrontier_BattleFactoryBattleRoom_EventScript_DefeatedNoland::
+#if POLISHED_JOHTO_DEMO
+	callnative TryRecordPolishedFactoryWin
+	goto_if_ne VAR_RESULT, 0, BattleFrontier_BattleFactoryBattleRoom_EventScript_PolishedVictory
+#endif
 	factory_get FACTORY_DATA_WIN_STREAK_SWAPS
 	goto_if_eq VAR_RESULT, MAX_STREAK, BattleFrontier_BattleFactoryBattleRoom_EventScript_IncrementWinStreak
 	addvar VAR_RESULT, 1

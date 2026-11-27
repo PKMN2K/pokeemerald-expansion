@@ -2,6 +2,9 @@
 #define GUARD_BATTLE_FACTORY_H
 
 void CallBattleFactoryFunction(void);
+#if POLISHED_JOHTO_DEMO
+void TryRecordPolishedFactoryWin(void);
+#endif
 bool8 InBattleFactory(void);
 u8 GetFactoryMonFixedIV(u8 challengeNum, bool8 isLastBattle);
 void FillFactoryBrainParty(void);
