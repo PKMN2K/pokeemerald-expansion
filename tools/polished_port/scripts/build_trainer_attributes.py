@@ -37,7 +37,10 @@ def spread(text, default):
 
 def build():
     files = {p: r['text'] for p, r in archive.authenticated_sources().items()}
+    plural_check = files['engine/battle/core.asm'].split('CheckPluralTrainer:', 1)[1].split('\n\tret', 1)[0]
+    plural_classes = set(re.findall(r'^\s*cp (\w+)$', plural_check, re.M))
     classes = re.findall(r'^\s*trainerclass (\w+)', files['constants/trainer_constants.asm'].split('DEF NUM_TRAINER_CLASSES', 1)[0], re.M)[1:]
+    assert plural_classes and plural_classes <= set(classes), 'Unexpected source trainer plurality checks'
     class_rows = [line for line in archive.source.default_lines(files['data/trainers/dvs.asm']) if line.startswith('db ')]
     assert len(classes) == len(class_rows)
     defaults = {}
@@ -99,8 +102,10 @@ def build():
     out = ['/* Generated from authenticated default source trainer macros and class data. */', '#if !IS_FRLG',
            'static const struct PolishedTrainerEntry sPolishedTrainerEntries[] = {']
     for r in records:
-        out += ['    {', f'        .trainer = {r["target_trainer"]}, .count = {len(r["mons"])}, .baseMoney = {r["base_reward"]},',
-                '        .items = {'+', '.join(r['items'])+'}, .mons = {']
+        out += ['    {', f'        .trainer = {r["target_trainer"]}, .count = {len(r["mons"])}, .baseMoney = {r["base_reward"]},']
+        if r['source_class'] in plural_classes:
+            out.append('        .pluralName = TRUE,')
+        out.append('        .items = {'+', '.join(r['items'])+'}, .mons = {')
         for mon in r['mons']:
             out += ['            {', f'                .species = {mon["species"]}, .abilitySlot = {mon["ability_slot"]},',
                     f'                .nature = {mon["nature"]}, .gender = TRAINER_MON_{"RANDOM_GENDER" if mon["gender"] == "GENDERLESS" else mon["gender"]},',

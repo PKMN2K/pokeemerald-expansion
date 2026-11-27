@@ -16,6 +16,7 @@
 #include "link.h"
 #include "menu.h"
 #include "palette.h"
+#include "polished_trainers.h"
 #include "recorded_battle.h"
 #include "string_util.h"
 #include "strings.h"
@@ -2803,6 +2804,30 @@ void BufferStringBattle(enum StringID stringID, enum BattlerId battler)
     case STRINGID_TRAINERSLIDE:
         stringPtr = gBattleStruct->trainerSlideMsg;
         break;
+#if POLISHED_JOHTO_DEMO
+    case STRINGID_ENEMYABOUTTOSWITCHPKMN:
+    {
+        bool32 plural = PolishedTrainerHasPluralName(TRAINER_BATTLE_PARAM.opponentA);
+        gBattleScripting.illusionNickHack = FALSE;
+        if (gBattleScripting.battleStyle == OPTIONS_BATTLE_STYLE_PREDICT)
+            stringPtr = plural
+                ? COMPOUND_STRING("{B_TRAINER1_NAME_WITH_CLASS} are about to switch Pokémon.\pWill you switch your Pokémon?")
+                : COMPOUND_STRING("{B_TRAINER1_NAME_WITH_CLASS} is about to switch Pokémon.\pWill you switch your Pokémon?");
+        else
+        {
+            // The player's party menu reuses B_BUFF2. Resolve the opponent's
+            // reserved party slot on every offer, including after cancellation.
+            enum BattlerId foe = GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT);
+            u32 slot = gBattleStruct->monToSwitchIntoId[foe];
+            GetMonData(&GetBattlerParty(foe)[slot], MON_DATA_NICKNAME, gStringVar2);
+            StringGet_Nickname(gStringVar2);
+            stringPtr = plural
+                ? COMPOUND_STRING("{B_TRAINER1_NAME_WITH_CLASS} are about to use {B_COPY_VAR_2}.\pWill you switch your Pokémon?")
+                : COMPOUND_STRING("{B_TRAINER1_NAME_WITH_CLASS} is about to use {B_COPY_VAR_2}.\pWill you switch your Pokémon?");
+        }
+        break;
+    }
+#endif
     default: // load a string from the table
         if (stringID >= STRINGID_COUNT)
         {

@@ -17,7 +17,8 @@ import run_attack_suite as battle
 # required in addition to these distinguishing cases from each owned domain.
 DOMAIN_CHECKS = {
     'setup': (
-        ['battle-systems/report.json', 'new-bark/sprout-validation.json', 'new-bark/falkner-validation.json'],
+        ['battle-systems/report.json', 'new-bark/sprout-validation.json', 'new-bark/falkner-validation.json',
+         'shift-source/shift-switch-validation.json', 'shift-native/shift-switch-validation.json'],
         ['Polished systems trainer generation preserves source slots stats gender and friendship',
          'Polished systems trainer ability selection uses source species byte trainer ID and one based slot']),
     'capture_escape': (
@@ -39,7 +40,8 @@ DOMAIN_CHECKS = {
          'Polished critical evolution counter excludes link battles',
          'Polished Sketch boundary rejects link mode and invalid or duplicate Sketch history without mutation']),
     'presentation_rng': (
-        ['conversion-selection/report.json', 'metronome-pool/report.json', 'new-bark/validation.json'],
+        ['conversion-selection/report.json', 'metronome-pool/report.json', 'new-bark/validation.json',
+         'shift-source/shift-switch-validation.json', 'shift-native/shift-switch-validation.json'],
         ['Polished Safari bait and rock consume every rejected draw and one accepted draw']),
 }
 EVOLUTION_REPORTS = ('evolution-input-validation.json', 'source-rules/evolution-input-validation.json',
@@ -94,6 +96,11 @@ def check_probe(path, rom_hash, pin):
         profile = path.parent.name.removeprefix('shift-')
         if data['profile'] != profile or bool(data['fixture_source_rules']) != (profile == 'source'):
             raise ValueError('incorrect Shift battle profile')
+        default = 'set' if profile == 'source' else 'shift'
+        required = {'set', 'switch', 'predict'} if profile == 'source' else {'set', 'shift'}
+        options = [check['setup']['options'] for check in data['checks'] if 'options' in check['setup']]
+        if {o['selected'] for o in options if o['flash_reload'] and o['default'] == default} != required:
+            raise ValueError('missing battle style menu and Flash reload evidence')
         if profile == 'native':
             if data['production_rom'] != 'pokeemerald.gba' or not data['checks']:
                 raise ValueError('missing native Shift control')

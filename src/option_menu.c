@@ -78,8 +78,20 @@ static const u8 gText_TextSpeedMid[]       = _("{COLOR GREEN}{SHADOW LIGHT_GREEN
 static const u8 gText_TextSpeedFast[]      = _("{COLOR GREEN}{SHADOW LIGHT_GREEN}FAST");
 static const u8 gText_BattleSceneOn[]      = _("{COLOR GREEN}{SHADOW LIGHT_GREEN}ON");
 static const u8 gText_BattleSceneOff[]     = _("{COLOR GREEN}{SHADOW LIGHT_GREEN}OFF");
-static const u8 gText_BattleStyleShift[]   = _("{COLOR GREEN}{SHADOW LIGHT_GREEN}SHIFT");
 static const u8 gText_BattleStyleSet[]     = _("{COLOR GREEN}{SHADOW LIGHT_GREEN}SET");
+#if POLISHED_JOHTO_DEMO
+static const struct
+{
+    const u8 *name;
+    u8 left, right;
+} sPolishedBattleStyles[] = {
+    [OPTIONS_BATTLE_STYLE_SET] = {gText_BattleStyleSet, OPTIONS_BATTLE_STYLE_PREDICT, OPTIONS_BATTLE_STYLE_SHIFT},
+    [OPTIONS_BATTLE_STYLE_SHIFT] = {COMPOUND_STRING("{COLOR GREEN}{SHADOW LIGHT_GREEN}SWITCH"), OPTIONS_BATTLE_STYLE_SET, OPTIONS_BATTLE_STYLE_PREDICT},
+    [OPTIONS_BATTLE_STYLE_PREDICT] = {COMPOUND_STRING("{COLOR GREEN}{SHADOW LIGHT_GREEN}PREDICT"), OPTIONS_BATTLE_STYLE_SHIFT, OPTIONS_BATTLE_STYLE_SET},
+};
+#else
+static const u8 gText_BattleStyleShift[]   = _("{COLOR GREEN}{SHADOW LIGHT_GREEN}SHIFT");
+#endif
 static const u8 gText_SoundMono[]          = _("{COLOR GREEN}{SHADOW LIGHT_GREEN}MONO");
 static const u8 gText_SoundStereo[]        = _("{COLOR GREEN}{SHADOW LIGHT_GREEN}STEREO");
 static const u8 gText_FrameType[]          = _("{COLOR GREEN}{SHADOW LIGHT_GREEN}TYPE");
@@ -246,7 +258,7 @@ void CB2_InitOptionMenu(void)
         gTasks[taskId].tMenuSelection = 0;
         gTasks[taskId].tTextSpeed = gSaveBlock2Ptr->optionsTextSpeed;
         gTasks[taskId].tBattleSceneOff = gSaveBlock2Ptr->optionsBattleSceneOff;
-        gTasks[taskId].tBattleStyle = gSaveBlock2Ptr->optionsBattleStyle;
+        gTasks[taskId].tBattleStyle = GetBattleStyleOption();
         gTasks[taskId].tSound = gSaveBlock2Ptr->optionsSound;
         gTasks[taskId].tButtonMode = gSaveBlock2Ptr->optionsButtonMode;
         gTasks[taskId].tWindowFrameType = gSaveBlock2Ptr->optionsWindowFrameType;
@@ -368,7 +380,7 @@ static void Task_OptionMenuSave(u8 taskId)
 {
     gSaveBlock2Ptr->optionsTextSpeed = gTasks[taskId].tTextSpeed;
     gSaveBlock2Ptr->optionsBattleSceneOff = gTasks[taskId].tBattleSceneOff;
-    gSaveBlock2Ptr->optionsBattleStyle = gTasks[taskId].tBattleStyle;
+    SetBattleStyleOption(gTasks[taskId].tBattleStyle);
     gSaveBlock2Ptr->optionsSound = gTasks[taskId].tSound;
     gSaveBlock2Ptr->optionsButtonMode = gTasks[taskId].tButtonMode;
     gSaveBlock2Ptr->optionsWindowFrameType = gTasks[taskId].tWindowFrameType;
@@ -480,12 +492,32 @@ static void BattleScene_DrawChoices(u8 selection)
     DrawOptionMenuChoice(gText_BattleSceneOff, GetStringRightAlignXOffset(FONT_NORMAL, gText_BattleSceneOff, 198), YPOS_BATTLESCENE, styles[1]);
 }
 
+u8 GetBattleStyleOption(void)
+{
+    if (POLISHED_JOHTO_DEMO && gSaveBlock2Ptr->optionsBattleStyle == OPTIONS_BATTLE_STYLE_SHIFT
+        && gSaveBlock2Ptr->optionsBattlePredict)
+        return OPTIONS_BATTLE_STYLE_PREDICT;
+    return gSaveBlock2Ptr->optionsBattleStyle;
+}
+
+void SetBattleStyleOption(u8 style)
+{
+    // Keep the original Set/Shift bit so existing saves retain their selection.
+    gSaveBlock2Ptr->optionsBattleStyle = (style == OPTIONS_BATTLE_STYLE_SET);
+    if (POLISHED_JOHTO_DEMO)
+        gSaveBlock2Ptr->optionsBattlePredict = (style == OPTIONS_BATTLE_STYLE_PREDICT);
+}
+
 static u8 BattleStyle_ProcessInput(u8 selection)
 {
     if (JOY_NEW(DPAD_LEFT | DPAD_RIGHT))
     {
-        selection ^= 1;
         sArrowPressed = TRUE;
+#if POLISHED_JOHTO_DEMO
+        return JOY_NEW(DPAD_LEFT) ? sPolishedBattleStyles[selection].left : sPolishedBattleStyles[selection].right;
+#else
+        selection ^= 1;
+#endif
     }
 
     return selection;
@@ -493,6 +525,10 @@ static u8 BattleStyle_ProcessInput(u8 selection)
 
 static void BattleStyle_DrawChoices(u8 selection)
 {
+#if POLISHED_JOHTO_DEMO
+    FillWindowPixelRect(WIN_OPTIONS, PIXEL_FILL(1), 104, YPOS_BATTLESTYLE, 96, 16);
+    DrawOptionMenuChoice(sPolishedBattleStyles[selection].name, 104, YPOS_BATTLESTYLE, 1);
+#else
     u8 styles[2];
 
     styles[0] = 0;
@@ -501,6 +537,7 @@ static void BattleStyle_DrawChoices(u8 selection)
 
     DrawOptionMenuChoice(gText_BattleStyleShift, 104, YPOS_BATTLESTYLE, styles[0]);
     DrawOptionMenuChoice(gText_BattleStyleSet, GetStringRightAlignXOffset(FONT_NORMAL, gText_BattleStyleSet, 198), YPOS_BATTLESTYLE, styles[1]);
+#endif
 }
 
 static u8 Sound_ProcessInput(u8 selection)

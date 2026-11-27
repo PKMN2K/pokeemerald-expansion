@@ -13,6 +13,7 @@ struct PolishedTrainerAttributes
 
 const struct PolishedTrainerAttributes *PolishedGetTrainerAttributes(u32 trainer, u32 slot);
 const enum Item *PolishedGetTrainerItems(u32 trainer);
+bool32 PolishedTrainerHasPluralName(u32 trainer);
 u32 PolishedGetTrainerBaseMoney(u32 trainer);
 bool32 PolishedGenerateTrainerMon(struct Pokemon *mon, const struct TrainerMon *definition,
     struct TrainerGenerator *generator, u32 trainer, u32 slot);

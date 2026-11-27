@@ -8,11 +8,13 @@
 #include "load_save.h"
 #include "main.h"
 #include "new_game.h"
+#include "option_menu.h"
 #include "palette.h"
 #include "party_menu.h"
 #include "pokemon.h"
 #include "save.h"
 #include "constants/battle_script_commands.h"
+#include "constants/characters.h"
 #include "constants/flags.h"
 #include "constants/opponents.h"
 
@@ -20,6 +22,7 @@
 #define SHIFT_PROBE_RESERVE 0
 #define SHIFT_PROBE_SET_MODE 0
 #define SHIFT_PROBE_WILD_FAINT 0
+#define SHIFT_PROBE_OPTIONS 0
 
 const volatile u32 gShiftSwitchProbeLayout[] = {
     sizeof(struct BattlePokemon),
@@ -47,6 +50,7 @@ const volatile u32 gShiftSwitchProbeLayout[] = {
     PARTY_SIZE,
     GIMMICK_NONE,
     sizeof(struct PaletteFadeControl),
+    offsetof(struct BattleScripting, battleStyle),
 };
 const volatile struct Volatiles gShiftSwitchTrapMask = { .escapePrevention = TRUE };
 const volatile struct PaletteFadeControl gShiftSwitchFadeMask = { .active = TRUE };
@@ -74,6 +78,15 @@ static void SetProbeMon(struct Pokemon *mon, enum Species species, u32 hp, u32 s
 }
 
 static void CB2_ShiftSwitchDone(void) {}
+static void StartProbeBattle(void);
+
+EWRAM_DATA volatile u32 gShiftSwitchSaveResult = SAVE_STATUS_EMPTY;
+
+static void SaveProbeOptions(void)
+{
+    gShiftSwitchSaveResult = TrySavingData(SAVE_NORMAL);
+    SetMainCallback2(CB2_ShiftSwitchDone);
+}
 
 void CB2_MoveMachineAudit(void)
 {
@@ -86,14 +99,33 @@ void CB2_MoveMachineAudit(void)
     Save_ResetSaveCounters();
     Sav2_ClearSetDefault();
     MoveSaveBlocks_ResetHeap();
+    if (SHIFT_PROBE_OPTIONS && LoadGameSave(SAVE_NORMAL) == SAVE_STATUS_OK)
+    {
+        // The observer reopens the saved choice, then leaves the menu for battle.
+        gMain.savedCallback = StartProbeBattle;
+        SetMainCallback2(CB2_InitOptionMenu);
+        return;
+    }
     NewGameInitData();
     // Native GEN_9 obedience also checks the met level of owned Pokemon.
     // The Rain Badge makes this level-50 setup obey in both production builds.
     FlagSet(FLAG_BADGE08_GET);
     gSaveBlock2Ptr->optionsTextSpeed = OPTIONS_TEXT_SPEED_FAST;
     gSaveBlock2Ptr->optionsBattleSceneOff = TRUE;
+    if (SHIFT_PROBE_OPTIONS)
+    {
+        gMain.savedCallback = SaveProbeOptions;
+        SetMainCallback2(CB2_InitOptionMenu);
+        return;
+    }
+    // Exercise the original save encoding used before Predict was available.
     gSaveBlock2Ptr->optionsBattleStyle = SHIFT_PROBE_SET_MODE
         ? OPTIONS_BATTLE_STYLE_SET : OPTIONS_BATTLE_STYLE_SHIFT;
+    StartProbeBattle();
+}
+
+static void StartProbeBattle(void)
+{
     ZeroPlayerPartyMons();
     ZeroEnemyPartyMons();
     SetProbeMon(&gParties[B_TRAINER_PLAYER][0], SPECIES_CHANSEY, 160, 50, MOVE_SPIKES);
@@ -106,6 +138,8 @@ void CB2_MoveMachineAudit(void)
     SetProbeMon(&gParties[B_TRAINER_OPPONENT_A][0], SPECIES_SKARMORY, 40, 100,
         SHIFT_PROBE_TRAP ? MOVE_MEAN_LOOK : MOVE_SPIKES);
     SetProbeMon(&gParties[B_TRAINER_OPPONENT_A][1], SPECIES_NINETALES, 160, 25, MOVE_SPLASH);
+    static const u8 nickname[POKEMON_NAME_LENGTH + 1] = {CHAR_E, CHAR_m, CHAR_b, CHAR_e, CHAR_r, EOS};
+    SetMonData(&gParties[B_TRAINER_OPPONENT_A][1], MON_DATA_NICKNAME, nickname);
     gPartiesCount[B_TRAINER_PLAYER] = SHIFT_PROBE_RESERVE == 1 ? 1 : 2;
     gPartiesCount[B_TRAINER_OPPONENT_A] = 2;
     TRAINER_BATTLE_PARAM.opponentA = TRAINER_POLISHED_JOEY;

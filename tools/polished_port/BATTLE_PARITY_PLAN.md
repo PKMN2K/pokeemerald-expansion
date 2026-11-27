@@ -173,6 +173,21 @@ the individual checks and remaining obligations. Manual CI runs can also select
    domain/block/effect obligation with source evidence before strict
    completeness is allowed to pass.
 
+Johto's Battle Style follows `DefaultOptions` and `Options_BattleStyle` in
+Polished Crystal v3.2.3. New games start in Set. The menu cycles through Set,
+Switch and Predict. After a trainer's Pokémon faints, Switch names the incoming
+party member and Predict asks the same question without revealing its identity.
+The prompt uses the trainer's source class for singular or plural wording.
+Existing saves keep their Set or Switch choice.
+[Source menu](https://github.com/Rangi42/polishedcrystal/blob/3fa43192379df5c3e7b09a08e4d5d79af4f02f42/engine/menus/options_menu.asm#L208-L259)
+and [trainer prompt](https://github.com/Rangi42/polishedcrystal/blob/3fa43192379df5c3e7b09a08e4d5d79af4f02f42/engine/battle/core.asm#L2873-L2928).
+
+The production emulator exercises the Options menu in both directions, writes
+cartridge Flash, resets and reopens the selected style before battle. It checks
+the incoming nickname in Switch, the full Predict message on the initial and
+repeated offer, and the immediate send-out in Set. The native profile exercises
+Shift and Set. The combined job requires these reports for setup and presentation.
+
 ## Completed milestone and next suite
 
 The consolidated Suite 2 pass requested from `8e340802` and resumed from

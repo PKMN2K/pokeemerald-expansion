@@ -1,19 +1,20 @@
 #!/usr/bin/env python3
 """Drive source/native Shift and wild faint prompts with real input.
 
-Only a linked setup fixture constructs parties and selects the saved battle
-style. After battle initialization, the driver reads state and supplies keys;
-it never patches gameplay memory, controller results, scripts or party choices.
+The driver selects battle styles through Options, reloads cartridge Flash and
+checks the resulting prompt. It supplies buttons and reads production state.
 """
 import argparse
 import hashlib
 import json
 from pathlib import Path
+import re
 import struct
 import subprocess
 import tempfile
 
-from test_johto_demo_emulator import Game, ROOT, A, B, RIGHT
+from build_pokemon_learnsets import PIN
+from test_johto_demo_emulator import Game, ROOT, A, B, DOWN, LEFT, RIGHT
 from test_new_bark_battle_emulator import controller, choose_cell
 from test_new_bark_intro_emulator import task_active
 
@@ -22,7 +23,13 @@ LAYOUT = ("battle_size", "species", "hp", "max_hp", "stages", "volatiles",
           "volatile_size", "party_size", "party_status", "party_slot",
           "yesno_opcode", "attack", "chansey", "arcanine", "skarmory", "ninetales",
           "party_hp", "outcome_ran", "outcome_lost", "active_gimmicks",
-          "player_trainer", "opponent_trainer", "party_count", "gimmick_none", "fade_size")
+          "player_trainer", "opponent_trainer", "party_count", "gimmick_none", "fade_size", "battle_style")
+
+STYLE_BITS = {"shift": 0, "switch": 0, "set": 1 << 9, "predict": 1 << 12}
+STYLE_IDS = {"shift": 0, "switch": 0, "set": 1, "predict": 2}
+ENGLISH = {int(value, 16): char for char, value in re.findall(
+    r"^'(.)'\s*=\s*([0-9A-F]{2})", (ROOT / "charmap.txt").read_text().split("@ Hiragana")[0], re.M)}
+ENGLISH.update(dict.fromkeys((0x39, 0xFA, 0xFB, 0xFE), " "))  # Nonbreaking space and dialogue breaks
 
 PROFILES = {
     "source": dict(stem="pokeemerald-johto-demo", build="emerald-johto-demo", demo=1),
@@ -243,6 +250,63 @@ def prepare(game, observer, expect_prompt):
     observer.reset_observation()
 
 
+def option_row(game):
+    # Only the visible value cell. Cycling back to Set must erase longer names.
+    path = game.tmp / "option.ppm"
+    game.frames(2)
+    game.command(f"shot {path}")
+    pixels = path.read_bytes().split(b"\n", 3)[3]
+    return b"".join(pixels[(y * 240 + 120) * 3:(y * 240 + 216) * 3] for y in range(72, 88))
+
+
+def select_and_reload_style(game, observer, source, target):
+    order = ("set", "switch", "predict") if source else ("shift", "set")
+    style_mask = STYLE_BITS["set"] | STYLE_BITS["predict"]
+
+    def options_word():
+        return int.from_bytes(game.read(game.u32(game.sym["gSaveBlock2Ptr"]) + 0x14, 2), "little")
+
+    def open_style_row():
+        observer.wait(lambda: task_active(game, "Task_OptionMenuProcessInput"), "options input")
+        observer.key(DOWN)
+        observer.key(DOWN)
+
+    open_style_row()
+    original = options_word()
+    assert original & style_mask == STYLE_BITS[order[0]], ("fresh battle style", original, order)
+    rows = {}
+    for style in order:
+        rows[style] = option_row(game)
+        observer.key(RIGHT)
+    assert len(set(rows.values())) == len(order), "battle style labels look identical"
+    for style in (order[0], *reversed(order[1:])):
+        assert option_row(game) == rows[style], ("option redraw or reverse order", style)
+        observer.key(LEFT)
+    for _ in range(order.index(target)):
+        observer.key(RIGHT)
+    assert option_row(game) == rows[target]
+    game.screenshot("options-" + target)
+    observer.key(B)
+    observer.wait(lambda: game.u32(game.sym["gShiftSwitchSaveResult"]), "write options to Flash")
+    assert game.u32(game.sym["gShiftSwitchSaveResult"]) == 1
+    expected = (original & ~style_mask) | STYLE_BITS[target]
+    assert options_word() == expected, ("saved options word", target, options_word(), expected)
+    game.command("reset")
+    open_style_row()
+    assert options_word() == expected and option_row(game) == rows[target], ("reloaded option", target)
+    observer.key(B)
+    return dict(default=order[0], selected=target, saved_options=expected, flash_reload=True)
+
+
+def check_prompt_text(game, style):
+    raw = game.read(game.sym["gDisplayedStringBattle"], 256).split(b"\xff", 1)[0]
+    shown = " ".join("".join(ENGLISH.get(byte, "�") for byte in raw).split())
+    announcement = {"predict": "switch Pokémon", "switch": "use Ember", "shift": "send out Ember"}[style]
+    expected = f"YOUNGSTER Joey is about to {announcement}. Will you switch your Pokémon?"
+    assert shown == expected, ("switch disclosure", shown, expected)
+    return shown
+
+
 def run_case(driver, output, profile, name, definitions):
     source = profile == "source"
     code = (ROOT / "tools/polished_port/tests/shift_switch_fixture.c").read_text()
@@ -255,8 +319,13 @@ def run_case(driver, output, profile, name, definitions):
         checks = []
         try:
             observer = Observer(game, source)
+            style = {"set-mode": "set", "predict-mode": "predict"}.get(name, "switch" if source else "shift")
+            options = select_and_reload_style(game, observer, source, style) if definitions.get("OPTIONS") else None
             expected_prompt = not definitions.get("RESERVE", 0) and not definitions.get("SET_MODE", 0)
             prepare(game, observer, expected_prompt)
+            assert game.read(game.sym["gBattleScripting"] + observer.layout["battle_style"], 1)[0] == STYLE_IDS[style]
+            if options:
+                observer.setup["options"] = options
             if not expected_prompt:
                 assert observer.indexes() == (0, 1)
                 assert observer.lead_status() != 0
@@ -265,6 +334,7 @@ def run_case(driver, output, profile, name, definitions):
             trap = bool(definitions.get("TRAP", 0))
             if trap:
                 assert observer.mons()[0]["trapped"] == source, ("faint trap before prompt", observer.mons())
+            observer.setup["prompt"] = check_prompt_text(game, style)
             game.screenshot("shift-" + name + "-prompt")
             game.snapshot("prompt")
             cases = ("accept",) if trap else ("accept", "decline", "cancel")
@@ -286,6 +356,7 @@ def run_case(driver, output, profile, name, definitions):
                     observer.wait(lambda: observer.prompt() or observer.action_menu(), "party cancellation continuation", advance=True)
                     assert observer.prompt() == source, ("source cancel must reoffer", source, observer.indexes())
                     if source:
+                        assert check_prompt_text(game, style) == observer.setup["prompt"]
                         game.screenshot("shift-" + name + "-reoffered")
                         observer.key(A)
                         observer.choose_reserve()
@@ -402,10 +473,13 @@ def main():
     args = parser.parse_args()
     args.output.mkdir(parents=True, exist_ok=True)
     checks = []
-    for name, definitions in (("ordinary", {}), ("fainted-trapper", {"TRAP": 1}),
-                              ("no-reserve", {"RESERVE": 1}), ("fainted-reserve", {"RESERVE": 2}),
-                              ("set-mode", {"SET_MODE": 1})):
-        print(f"Checking {args.profile} Shift: {name}", flush=True)
+    trainer_cases = [("ordinary", {"OPTIONS": 1}), ("fainted-trapper", {"TRAP": 1}),
+                     ("no-reserve", {"RESERVE": 1}), ("fainted-reserve", {"RESERVE": 2}),
+                     ("set-mode", {"SET_MODE": 1, "OPTIONS": 1})]
+    if args.profile == "source":
+        trainer_cases.append(("predict-mode", {"OPTIONS": 1}))
+    for name, definitions in trainer_cases:
+        print(f"Checking {args.profile} trainer replacement: {name}", flush=True)
         checks.extend(dict(check, context="trainer_shift") for check in
             run_case(args.driver.resolve(), args.output.resolve(), args.profile, name, definitions))
     for name, definitions in (("ordinary", {}), ("trapped-victim", {"TRAP": 1}),
@@ -413,16 +487,19 @@ def main():
         print(f"Checking {args.profile} wild faint prompt: {name}", flush=True)
         checks.extend(dict(check, context="wild_faint") for check in
             run_wild_case(args.driver.resolve(), args.output.resolve(), args.profile, name, definitions))
-    assert len(checks) == 13 and len({(check["context"], check["case"]) for check in checks}) == 9
+    cases = len(trainer_cases) + 4
+    assert len(checks) == (16 if args.profile == "source" else 13)
+    assert len({(check["context"], check["case"]) for check in checks}) == cases
     selected = PROFILES[args.profile]
-    report = dict(fixture_only=True, profile=args.profile, fixture_source_rules=selected["demo"],
-        setup_after_init="read-only assertions; observer supplies real input only", cases=9, branches=13, checks=checks,
+    report = dict(fixture_only=True, source_commit=PIN, profile=args.profile, fixture_source_rules=selected["demo"],
+        setup_after_init="read-only assertions; observer supplies real input only", cases=cases, branches=len(checks), checks=checks,
         production_rom=selected["stem"] + ".gba",
         production_rom_sha256=hashlib.sha256((ROOT / (selected["stem"] + ".gba")).read_bytes()).hexdigest(),
         production_map_sha256=hashlib.sha256((ROOT / (selected["stem"] + ".map")).read_bytes()).hexdigest(),
-        source_contract="OfferSwitch + AskUseNextPokemon + HandleBetweenTurnEffects; real prompt/replacement mechanics, not source option UI/Predict text or escape RNG arithmetic")
+        source_contract="DefaultOptions, Options_BattleStyle, OfferSwitch, AskUseNextPokemon and HandleBetweenTurnEffects")
     (args.output / "shift-switch-validation.json").write_text(json.dumps(report, indent=2) + "\n")
-    print("PASS: real Shift and wild faint acceptance/decline/cancel, reserves, both faint trap lifetimes, departed order, shared hazards, Natural Cure and participants", flush=True)
+    print(f"PASS: {args.profile} battle styles through Flash reload, trainer disclosure and wild faint prompts "
+          f"({cases} cases, {len(checks)} branches)", flush=True)
 
 
 if __name__ == "__main__":

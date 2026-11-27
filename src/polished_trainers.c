@@ -10,39 +10,44 @@ struct PolishedTrainerEntry
 {
     u16 trainer;
     u8 count, baseMoney;
+    bool8 pluralName;
     enum Item items[MAX_TRAINER_ITEMS];
     struct PolishedTrainerAttributes mons[PARTY_SIZE];
 };
 #include "data/polished_trainers.h"
 
-const struct PolishedTrainerAttributes *PolishedGetTrainerAttributes(u32 trainer, u32 slot)
+static const struct PolishedTrainerEntry *FindPolishedTrainer(u32 trainer)
 {
 #if !IS_FRLG
     for (u32 i = 0; i < ARRAY_COUNT(sPolishedTrainerEntries); i++)
-        if (sPolishedTrainerEntries[i].trainer == trainer && slot < sPolishedTrainerEntries[i].count)
-            return &sPolishedTrainerEntries[i].mons[slot];
+        if (sPolishedTrainerEntries[i].trainer == trainer)
+            return &sPolishedTrainerEntries[i];
 #endif
     return NULL;
+}
+
+bool32 PolishedTrainerHasPluralName(u32 trainer)
+{
+    const struct PolishedTrainerEntry *entry = FindPolishedTrainer(trainer);
+    return entry != NULL && entry->pluralName;
+}
+
+const struct PolishedTrainerAttributes *PolishedGetTrainerAttributes(u32 trainer, u32 slot)
+{
+    const struct PolishedTrainerEntry *entry = FindPolishedTrainer(trainer);
+    return entry != NULL && slot < entry->count ? &entry->mons[slot] : NULL;
 }
 
 const enum Item *PolishedGetTrainerItems(u32 trainer)
 {
-#if !IS_FRLG
-    for (u32 i = 0; i < ARRAY_COUNT(sPolishedTrainerEntries); i++)
-        if (sPolishedTrainerEntries[i].trainer == trainer)
-            return sPolishedTrainerEntries[i].items;
-#endif
-    return NULL;
+    const struct PolishedTrainerEntry *entry = FindPolishedTrainer(trainer);
+    return entry != NULL ? entry->items : NULL;
 }
 
 u32 PolishedGetTrainerBaseMoney(u32 trainer)
 {
-#if !IS_FRLG
-    for (u32 i = 0; i < ARRAY_COUNT(sPolishedTrainerEntries); i++)
-        if (sPolishedTrainerEntries[i].trainer == trainer)
-            return sPolishedTrainerEntries[i].baseMoney;
-#endif
-    return 0;
+    const struct PolishedTrainerEntry *entry = FindPolishedTrainer(trainer);
+    return entry != NULL ? entry->baseMoney : 0;
 }
 
 bool32 PolishedGenerateTrainerMon(struct Pokemon *mon, const struct TrainerMon *definition,
