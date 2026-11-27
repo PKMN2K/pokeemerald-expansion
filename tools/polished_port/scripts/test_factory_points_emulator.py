@@ -10,7 +10,7 @@ from pathlib import Path
 
 import build_tower_parties as source
 from audit_moves_machines import compile_probe
-from test_johto_demo_emulator import A, B, DOWN, LEFT, RIGHT, START, UP, Game
+from test_johto_demo_emulator import A, B, DOWN, LEFT, RIGHT, START, UP, Game, png_from_ppm
 from test_shift_switch_emulator import ENGLISH
 
 
@@ -47,11 +47,23 @@ def reboot(game):
 
 
 def victory(game, points, name):
-    game.frames(100)
-    raw = game.read(game.sym['gStringVar4'], 90).split(b'\xff', 1)[0]
-    shown = ''.join(ENGLISH.get(byte, '?') for byte in raw)
-    assert shown == f'Red earned {points} BP!', (name, shown)
-    game.screenshot(name)
+    for _ in range(100):
+        game.frames(10)
+        raw = game.read(game.sym['gStringVar4'], 90).split(b'\xff', 1)[0]
+        shown = ''.join(ENGLISH.get(byte, '?') for byte in raw)
+        if shown == f'Red earned {points} BP!':
+            break
+    else:
+        raise AssertionError((name, shown))
+    # Flash writes can occupy hundreds of frames. Allow the text printer time
+    # to draw the entire message after the script actually expands it.
+    game.frames(120)
+    frame = game.output / (name + '.ppm')
+    game.command(f'shot {frame}')
+    pixels = frame.read_bytes().split(b'\n', 3)[3]
+    line = b''.join(pixels[(y * 240 + 12) * 3:(y * 240 + 120) * 3] for y in range(121, 139))
+    assert len(set(zip(line[::3], line[1::3], line[2::3]))) >= 3, (name, 'missing dialogue pixels')
+    png_from_ppm(frame)
 
 
 def replay(game, awards, name, start, opening, stages, end):
