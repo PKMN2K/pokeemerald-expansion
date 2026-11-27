@@ -31,6 +31,93 @@ def draws(seed):
             yield result >> 16
 
 
+def gender_cases():
+    # Source identification uses one-based species numbers. These mixed-gender
+    # targets distinguish extension mismatch, the variant table and the egg gate.
+    cases = [
+        ('JIGGLYPUFF', 'FEMALE', 'CUTE_CHARM', False, 'PIDGEY', 4),
+        ('JIGGLYPUFF', 'MALE', 'CUTE_CHARM', False, 'PIDGEY', 4),
+        ('ABRA', 'MALE', 'SYNCHRONIZE', False, 'GROWLITHE', 2),
+        ('ABRA', 'MALE', 'SYNCHRONIZE', True, 'GROWLITHE', 2),
+        ('MISMAGIUS', 'FEMALE', 'NONE', False, 'GLOOM', 6),
+        ('MISMAGIUS', 'FEMALE', 'NONE', False, 'EXEGGCUTE', 11),
+        ('MISMAGIUS', 'FEMALE', 'NONE', False, 'KABUTO', 10),
+        ('URSALUNA_BLOODMOON', 'MALE', 'NONE', False, 'URSALUNA', 0),
+        ('PIDGEY', 'MALE', 'NONE', False, 'URSALUNA', 8),
+    ]
+    rows = []
+    for lead, lead_gender, ability, egg, target, ratio in cases:
+        for seed in range(1,65):
+            rolls = (x & 255 for x in draws(seed))
+            for _ in range(3):
+                next(rolls)  # Six DVs
+            if ability == 'SYNCHRONIZE' and not egg:
+                nature = 'NATURE_HARDY'
+            else:
+                nature = str(next(x % 25 for x in rolls if x < 250))
+            next(rolls)  # Ability slot
+            if next(rolls) == 0:
+                next(rolls)  # Shiny check
+            if ability == 'CUTE_CHARM' and next(x % 3 for x in rolls if x < 255):
+                gender_roll = 0  # The release compares the packed lead byte to FEMALE.
+            else:
+                gender_roll = next(rolls) & 7
+            gender = 'MON_FEMALE' if gender_roll < ratio else 'MON_MALE'
+            rows.append(f'{{SPECIES_{lead}, SPECIES_{target}, ABILITY_{ability}, MON_{lead_gender}, {int(egg)}, {seed}, {nature}, {gender}}},')
+    return rows
+
+
+def ai_tie_cases():
+    # Highest native score corresponds to the source's lowest score. Rejected
+    # positions retain their place in the four-slot draw after usable packing.
+    scenarios = [
+        (('TACKLE','GROWL','LEER','BITE'), 0, (20,25,20,25)),
+        (('TACKLE','GROWL','LEER','BITE'), 1, (25,20,25,20)),
+        (('TACKLE','NONE','LEER','NONE'), 0, (20,0,20,0)),
+        (('TACKLE','GROWL','LEER','BITE'), 0, (-3,-3,-3,-3)),
+        (('TACKLE','GROWL','TACKLE','NONE'), 1, (0,5,9,0)),
+        (('TACKLE','GROWL','LEER','BITE'), 15, (20,20,20,20)),
+    ]
+    rows = []
+    for moves, limitations, scores in scenarios:
+        usable = [i for i,m in enumerate(moves) if m != 'NONE' and not limitations & (1<<i)]
+        for seed in range(1,33):
+            stream = draws(seed)
+            index = 4
+            if usable:
+                best = max(scores[i] for i in usable)
+                allowed = {slot for slot,i in enumerate(usable) if scores[i] == best}
+                chosen = next(roll & 3 for roll in stream if roll & 3 in allowed)
+                index = moves.index(moves[usable[chosen]])
+            rows.append('{{'+', '.join('MOVE_'+m for m in moves)+'}, {'+', '.join(map(str,scores))+'}, '
+                        +f'{limitations}, {seed}, {index}, {next(stream)}'+'},')
+    return rows
+
+
+def ai_policy_cases():
+    # Reflect is a stall move, Conversion and Substitute are in both move
+    # lists, and Tackle is a damaging negative control.
+    rows = []
+    for mask in (8, 32, 128, 168):
+        for hp in (25, 26, 50, 51):
+            for limit in (0, 2):
+                for seed in range(1,9):
+                    stream = draws(seed)
+                    stall = bool(mask & 32) and hp <= 50 and (hp <= 25 or next(stream)&255 >= 128)
+                    cautious = bool(mask & 128)
+                    scores = [100]*4
+                    for i in range(3):
+                        if limit & (1<<i):
+                            continue
+                        scores[i] -= 2 * bool(mask & 8) + stall
+                        if cautious and i != 2:
+                            cautious = (next(stream)&255) < 230
+                            scores[i] -= cautious
+                    rows.append('{'+f'{mask}, {hp}, {limit}, {seed}, {next(stream)}, '+
+                                '{'+', '.join(map(str,scores))+'}},')
+    return rows
+
+
 def cases():
     tables = authenticated_sources()['data/items/pickup_items.asm']['text'].split('RarePickupTable:')
     base, rare = (re.findall(r'^\s*db (\w+)\s*$', part, re.M) for part in tables)
@@ -132,6 +219,12 @@ def run(driver, output):
         values = ',\n'.join('    {' + ', '.join(map(str, row)) + '}' for row in rows)
         code = code.replace(f'/* GENERATED_{tag}_CASES */', f'static const u16 {name}[][{len(rows[0])}] = {{\n{values}\n}};')
     medicine = medicine_cases()
+    policies = ai_policy_cases()
+    code = code.replace('/* POLICY CASES */', '\n'.join(policies))
+    ties = ai_tie_cases()
+    code = code.replace('/* TIE CASES */', '\n'.join(ties))
+    genders = gender_cases()
+    code = code.replace('/* GENDER CASES */', '\n'.join(genders))
     code = code.replace('/* GENERATED_MEDICINE_CASES */', 'static const struct MedicineCase medicine[] = {\n' + '\n'.join(medicine) + '\n    };')
     with tempfile.TemporaryDirectory(prefix='polished-contexts-') as tmp:
         directory = Path(tmp)
@@ -186,10 +279,10 @@ def run(driver, output):
             finally:
                 game.close()
     report = dict(source_commit=PIN, production_rom_sha256=hashlib.sha256((ROOT/'pokeemerald-johto-demo.gba').read_bytes()).hexdigest(),
-                  seeded_reward_cases=len(fixtures), wild_factory_cases=96, trainer_medicine_cases=len(medicine), roamer_movement_cases=len(movement),
+                  seeded_reward_cases=len(fixtures), wild_factory_cases=96, wild_gender_cases=len(genders), trainer_tie_cases=len(ties), trainer_policy_cases=len(policies), trainer_medicine_cases=len(medicine), roamer_movement_cases=len(movement),
                   roamer_encounter_bytes=len(encounters), simultaneous_beasts=2, outcomes=outcomes, flash_reloads=len(outcomes))
     (output/'report.json').write_text(json.dumps(report, indent=2)+'\n')
-    print(f'PASS: {len(fixtures)} reward cases, {len(medicine)} trainer medicine cases, {len(movement)} roamer movements, 256 encounter bytes, two saved beasts, real win/capture/escape/loss and four Flash reloads')
+    print(f'PASS: {len(fixtures)} reward cases, {len(genders)} wild gender cases, {len(ties)} trainer tie cases, {len(policies)} scoring cases, {len(medicine)} trainer medicine cases, {len(movement)} roamer movements, 256 encounter bytes, two saved beasts, real win/capture/escape/loss and four Flash reloads')
 
 
 if __name__ == '__main__':

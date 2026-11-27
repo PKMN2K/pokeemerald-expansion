@@ -163,6 +163,7 @@ jobs:
           python3 tools/polished_port/scripts/build_trainer_attributes.py --check
           python3 tools/polished_port/scripts/build_trainer_roster.py --check
           python3 tools/polished_port/scripts/build_tower_parties.py --check
+          python3 tools/polished_port/scripts/build_wild_gender.py --check
           python3 tools/polished_port/scripts/build_trainer_portraits.py --check
           python3 tools/polished_port/scripts/test_battle_systems.py
           python3 tools/polished_port/scripts/build_battle_suite.py --check

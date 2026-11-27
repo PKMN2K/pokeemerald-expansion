@@ -3,6 +3,18 @@
 
 // Marker on roster entries whose unqualified source Arbok changes with the region.
 #define POLISHED_REGIONAL_ARBOK (1u << 31)
+#if POLISHED_JOHTO_DEMO
+enum PolishedAiLayers
+{
+    POLISHED_AI_BASIC = 1 << 0, POLISHED_AI_SETUP = 1 << 1, POLISHED_AI_TYPES = 1 << 2,
+    POLISHED_AI_OFFENSIVE = 1 << 3, POLISHED_AI_SMART = 1 << 4, POLISHED_AI_OPPORTUNIST = 1 << 5,
+    POLISHED_AI_AGGRESSIVE = 1 << 6, POLISHED_AI_CAUTIOUS = 1 << 7, POLISHED_AI_STATUS = 1 << 8,
+    POLISHED_AI_RISKY = 1 << 9,
+};
+u32 PolishedTrainerAiLayers(u32 trainer, u32 badges);
+void PolishedScoreTrainerPolicies(u32 layers, const enum Move *moves, u32 limitations,
+                                  u32 hp, u32 maxHP, bool32 hasTakenTurn, s32 *score);
+#endif
 struct TrainerMon;
 struct TrainerGenerator;
 struct PolishedTrainerAttributes

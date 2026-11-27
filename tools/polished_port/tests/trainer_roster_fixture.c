@@ -10,6 +10,7 @@
 #include "new_game.h"
 #include "move.h"
 #include "pokemon.h"
+#include "polished_trainers.h"
 #include "random.h"
 #include "save.h"
 
@@ -25,7 +26,7 @@ struct ExpectedMon
 static const struct ExpectedMon sMons[] = {
 /* MONS */
 };
-struct Team { u16 trainer, first; u8 count; };
+struct Team { u16 trainer, first; u8 count; u16 layers; };
 static const struct Team sTeams[] = {
 /* TEAMS */
 };
@@ -50,6 +51,16 @@ static void Check(u32 actual, u32 expected, u32 field)
 
 static void CheckTeam(const struct Team *t, u32 badges)
 {
+    if (!badges)
+    {
+        static const u16 added[] = {1, 0, 4, 0, 256, 0, 2, 0, 64 | 512, 0, 0, 0, 0, 0, 0, 0, 16};
+        u32 expected = t->layers;
+        for (u32 count = 0; count < ARRAY_COUNT(added); count++)
+        {
+            expected |= added[count];
+            Check(PolishedTrainerAiLayers(t->trainer, count), (expected & 64) ? expected & ~4u : expected, 42);
+        }
+    }
     gSpecialVar_0x8004 = t->trainer;
     CreateTrainerPartyForPlayer();
     u32 count = min(PARTY_SIZE, t->count);

@@ -993,6 +993,33 @@ static void DoAIScoreProcessing(enum BattlerId battlerAtk, enum BattlerId battle
         AI_CompareDamagingMoves(battlerAtk, battlerDef);
 }
 
+// _AIChooseMove packs usable slots first, leaves holes where a scored move
+// lost, rejects unoccupied two-bit draws and resolves duplicate IDs by first slot.
+u32 PolishedChooseScoredMoveSlot(const enum Move *moves, u32 limitations, const s32 *scores)
+{
+    u8 slots[MAX_MON_MOVES], count = 0;
+    s32 best = INT_MIN;
+    for (u32 i = 0; i < MAX_MON_MOVES; i++)
+    {
+        if (moves[i] == MOVE_NONE || (limitations & (1u << i)))
+            continue;
+        slots[count++] = i;
+        if (scores && scores[i] > best)
+            best = scores[i];
+    }
+    if (!count)
+        return MAX_MON_MOVES;
+    u32 pick;
+    do
+        pick = Random() & (MAX_MON_MOVES - 1);
+    while (pick >= count || (scores && scores[slots[pick]] != best));
+    enum Move move = moves[slots[pick]];
+    for (u32 i = 0; i < MAX_MON_MOVES; i++)
+        if (moves[i] == move)
+            return i;
+    return MAX_MON_MOVES;
+}
+
 static struct ChosenAction ChooseMoveOrAction_Singles(enum BattlerId battler)
 {
     u8 currentMoveArray[MAX_MON_MOVES];
@@ -1002,6 +1029,20 @@ static struct ChosenAction ChooseMoveOrAction_Singles(enum BattlerId battler)
     gAiLogicData->partnerMove = MOVE_NONE;   // no ally
 
     DoAIScoreProcessing(battler, opposingBattler);
+
+#if POLISHED_JOHTO_DEMO
+    bool32 sourceTrainer = !IsOnPlayerSide(battler) && (gBattleTypeFlags & BATTLE_TYPE_TRAINER)
+        && !(gBattleTypeFlags & (BATTLE_TYPE_FRONTIER | BATTLE_TYPE_LINK | BATTLE_TYPE_RECORDED | BATTLE_TYPE_SECRET_BASE))
+        && PolishedGetTrainerItems(TRAINER_BATTLE_PARAM.opponentA) != NULL;
+    if (sourceTrainer)
+    {
+        u32 badges = __builtin_popcount(VarGet(VAR_POLISHED_EARNED_BADGES));
+        u32 layers = PolishedTrainerAiLayers(TRAINER_BATTLE_PARAM.opponentA, badges);
+        // IncrementTurnsTaken runs before AIChooseMove, including the initial turn.
+        PolishedScoreTrainerPolicies(layers, gBattleMons[battler].moves, gAiLogicData->moveLimitations[battler],
+                                     gBattleMons[battler].hp, gBattleMons[battler].maxHP, TRUE, gAiThinkingStruct->score);
+    }
+#endif
 
     for (u32 moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
     {
@@ -1035,6 +1076,15 @@ static struct ChosenAction ChooseMoveOrAction_Singles(enum BattlerId battler)
     gBattleTestRunnerState->data.trial.scoreTieCount = numOfBestMoves;
     #endif
 
+#if POLISHED_JOHTO_DEMO
+    if (sourceTrainer)
+    {
+        u32 slot = PolishedChooseScoredMoveSlot(gBattleMons[battler].moves, gAiLogicData->moveLimitations[battler],
+                                                gAiThinkingStruct->score);
+        if (slot < MAX_MON_MOVES)
+            return (struct ChosenAction){.moveIndex = slot, .target = opposingBattler};
+    }
+#endif
     struct ChosenAction chosen = {
         .moveIndex = consideredMoveArray[RandomUniform(RNG_AI_SCORE_TIE_SINGLES, 0, numOfBestMoves - 1)],
         .target = opposingBattler,

@@ -17,7 +17,49 @@ struct PolishedTrainerEntry
 };
 #include "data/polished_trainers.h"
 #if POLISHED_JOHTO_DEMO
+enum SourceMovePolicy { SOURCE_STATUS_MOVE = 1, SOURCE_STALL_MOVE = 2, SOURCE_RESIDUAL_MOVE = 4 };
+#include "data/polished_trainer_ai.h"
 #include "data/polished_trainer_roster.h"
+
+u32 PolishedTrainerAiLayers(u32 trainer, u32 badges)
+{
+    if (trainer >= TRAINERS_COUNT)
+        return 0;
+    u32 layers = sTrainerAiLayers[trainer] | POLISHED_AI_BASIC;
+    if (badges >= 2) layers |= POLISHED_AI_TYPES;
+    if (badges >= 4) layers |= POLISHED_AI_STATUS;
+    if (badges >= 6) layers |= POLISHED_AI_SETUP;
+    if (badges >= 8) layers |= POLISHED_AI_AGGRESSIVE | POLISHED_AI_RISKY;
+    if (badges >= 16) layers |= POLISHED_AI_SMART;
+    if (layers & POLISHED_AI_AGGRESSIVE)
+        layers &= ~POLISHED_AI_TYPES;
+    return layers;
+}
+
+void PolishedScoreTrainerPolicies(u32 layers, const enum Move *moves, u32 limitations,
+                                  u32 hp, u32 maxHP, bool32 hasTakenTurn, s32 *score)
+{
+    bool32 stall = (layers & POLISHED_AI_OPPORTUNIST) && 2 * hp <= maxHP
+        && (4 * hp <= maxHP || (Random() & 255) >= 128);
+    bool32 residual = hasTakenTurn && (layers & POLISHED_AI_CAUTIOUS);
+    for (u32 i = 0; i < MAX_MON_MOVES; i++)
+    {
+        if (moves[i] == MOVE_NONE || moves[i] >= MOVES_COUNT_ALL || (limitations & (1u << i)))
+            continue;
+        u32 policy = sSourceMovePolicies[moves[i]];
+        if ((layers & POLISHED_AI_OFFENSIVE) && (policy & SOURCE_STATUS_MOVE))
+            score[i] -= 2;
+        if (stall && (policy & SOURCE_STALL_MOVE))
+            score[i]--;
+        if (residual && (policy & SOURCE_RESIDUAL_MOVE))
+        {
+            // AI_Cautious returns from its entire scan after a failed byte.
+            residual = (Random() & 255) < 230;
+            if (residual) score[i]--;
+        }
+    }
+}
+
 STATIC_ASSERT(ARRAY_COUNT(sRosterEntries) == POLISHED_ROSTER_COUNT, PolishedRosterCount);
 #endif
 

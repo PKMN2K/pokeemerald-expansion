@@ -430,28 +430,6 @@ static void OpponentHandleChooseAction(enum BattlerId battler)
     BtlController_Complete(battler);
 }
 
-// _AIChooseMove packs usable moves at the start of a four-slot table,
-// samples that table with rejection, then looks up the first matching move.
-static u32 ChoosePolishedWildSlot(const enum Move *moves, u32 unusable)
-{
-    u32 eligible[MAX_MON_MOVES], count = 0;
-    for (u32 i = 0; i < MAX_MON_MOVES; i++)
-        if (moves[i] != MOVE_NONE && !(unusable & (1u << i)))
-            eligible[count++] = i;
-    if (count == 0)
-        return MAX_MON_MOVES; // The normal action path already chose Struggle.
-
-    u32 index;
-    do
-        index = Random() & (MAX_MON_MOVES - 1);
-    while (index >= count);
-    enum Move move = moves[eligible[index]];
-    for (u32 i = 0; i < MAX_MON_MOVES; i++)
-        if (moves[i] == move)
-            return i;
-    return MAX_MON_MOVES;
-}
-
 static void OpponentHandleChooseMove(enum BattlerId battler)
 {
     if (gBattleTypeFlags & (BATTLE_TYPE_TRAINER | BATTLE_TYPE_FIRST_BATTLE | BATTLE_TYPE_SAFARI | BATTLE_TYPE_ROAMER)
@@ -489,12 +467,12 @@ static void OpponentHandleChooseMove(enum BattlerId battler)
             u32 restrictions = MOVE_LIMITATION_PP | MOVE_LIMITATION_DISABLED
                 | MOVE_LIMITATION_CHOICE_ITEM | MOVE_LIMITATION_ASSAULT_VEST;
             u32 unusable = CheckMoveLimitations(battler, 0, restrictions);
-            chosenMoveIndex = ChoosePolishedWildSlot(moveInfo->moves, unusable);
+            chosenMoveIndex = PolishedChooseScoredMoveSlot(moveInfo->moves, unusable, NULL);
             if (gBattleMons[battler].volatiles.encoredMove != MOVE_NONE)
             {
                 unusable = CheckMoveLimitations(battler, unusable, MOVE_LIMITATION_ENCORE);
                 if (unusable & (1u << chosenMoveIndex))
-                    chosenMoveIndex = ChoosePolishedWildSlot(moveInfo->moves, unusable);
+                    chosenMoveIndex = PolishedChooseScoredMoveSlot(moveInfo->moves, unusable, NULL);
             }
             if (chosenMoveIndex == MAX_MON_MOVES)
             {

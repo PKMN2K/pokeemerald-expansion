@@ -130,6 +130,34 @@ def roster():
     return classes, records
 
 
+def ai_data(classes, records):
+    files = {p:r['text'] for p,r in archive.authenticated_sources().items()}
+    order = re.findall(r'^\s*fardw AI_(\w+)', files['engine/battle/ai/move.asm'], re.M)
+    assert len(order) == 10
+    masks = {'AI_'+name.upper():1<<i for i,name in enumerate(order)}
+    masks['NO_AI'] = 0
+    lines = [MARK, 'static const u16 sTrainerAiLayers[TRAINERS_COUNT] = {']
+    for row in records:
+        flags = classes[row['cls']]['source_ai_layers']
+        lines.append(f'    [{row["key"]}] = {sum(masks[f] for f in flags)},')
+    lines.extend(['};', 'static const u8 sSourceMovePolicies[MOVES_COUNT_ALL] = {'])
+    moves = archive.source.move_targets(archive.source.sources())
+    move_data = archive.source.default_lines(archive.source.sources()['data/moves/moves.asm'].split('Moves::',1)[1])
+    zero = set()
+    for line in move_data:
+        match = re.match(r'move (\w+),\s*\w+,\s*(\d+),', line)
+        if match and int(match[2]) == 0:
+            zero.add(match[1])
+    def move_list(file):
+        return set(re.findall(r'^\s*db (\w+)\s*$', files['data/battle/ai/'+file+'_moves.asm'], re.M))
+    stall, residual = move_list('stall'), move_list('residual')
+    assert len(zero)>50 and len(stall)>20 and len(residual)==10
+    for move in sorted(zero | stall | residual):
+        flags = [name for name,group in [('SOURCE_STATUS_MOVE',zero),('SOURCE_STALL_MOVE',stall),('SOURCE_RESIDUAL_MOVE',residual)] if move in group]
+        lines.append(f'    [{moves[move]}] = ' + ' | '.join(flags) + ',')
+    return lines + ['};']
+
+
 def build():
     classes, records = roster()
     ids = [MARK, '#ifndef GUARD_POLISHED_TRAINER_IDS_H', '#define GUARD_POLISHED_TRAINER_IDS_H', '']
@@ -189,7 +217,7 @@ def build():
     attrs += ['};']
     assert rivals == [r['key'] for r in extra if r['cls'] in ('RIVAL1','RIVAL2')]
     ids += ['', '#endif']
-    return {k:'\n'.join(v)+'\n' for k,v in ((IDS,ids),(DATA,defs),(ATTRS,attrs),(CLASSES,class_init),(CLASS_IDS,class_ids))}
+    return {k:'\n'.join(v)+'\n' for k,v in ((IDS,ids),(DATA,defs),(ATTRS,attrs),(CLASSES,class_init),(CLASS_IDS,class_ids),(ROOT/'src/data/polished_trainer_ai.h',ai_data(classes,records)))}
 
 
 if __name__ == '__main__':

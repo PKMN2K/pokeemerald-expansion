@@ -49,7 +49,10 @@ def fixture(classes, records, directory):
             evs = '{'+', '.join(map(str,m['evs']))+'}'
             mons.append(f'    {{{m["species"]}, {m["item"]}, {m["nature"]}, MON_{m["gender"]}, {m["ability"]}, '
                         f'{int(m["shiny"])}, {{{levels[0]}, {levels[1]}}}, {spread}, {evs}, {{{", ".join(moves)}}}}},')
-        teams.append(f'    {{{r["key"]}, {first}, {len(r["mons"])}}},')
+        layers = ('BASIC','SETUP','TYPES','OFFENSIVE','SMART','OPPORTUNIST','AGGRESSIVE','CAUTIOUS','STATUS','RISKY')
+        flags = classes[r['cls']]['source_ai_layers']
+        mask = sum(1<<i for i,name in enumerate(layers) if 'AI_'+name in flags)
+        teams.append(f'    {{{r["key"]}, {first}, {len(r["mons"])}, {mask}}},')
     encoded = (ROOT/'tools/polished_port/fixtures/battle_logic/inverse_type_matchups.asm').read_bytes()
     assert hashlib.sha1(b'blob '+str(len(encoded)).encode()+b'\x00'+encoded).hexdigest() == 'cf12f3cfd04f51b88b01c96b43b32902d3c31cdb'
     table = {(a,b):v for a,b,v in re.findall(r'^\s*db (\w+),\s*(\w+),\s*(\w+)', encoded.decode(), re.M)}
@@ -91,7 +94,7 @@ def run(driver, output):
             game.close()
     data = dict(source_commit=roster.archive.source.PIN, production_rom_sha256=hashlib.sha256((ROOT/'pokeemerald-johto-demo.gba').read_bytes()).hexdigest(),
                 source_parties=len(records), roster_entries=sum(len(r['mons']) for r in records), party_builds=checked[4],
-                portraits_and_palettes=checked[5], inver_omissions=7, inverse_matchups=324, saved_trainer_flags=saved[7])
+                portraits_and_palettes=checked[5], inver_omissions=7, inverse_matchups=324, saved_trainer_flags=saved[7], trainer_badge_policies=17*len(records))
     (output/'report.json').write_text(json.dumps(data,indent=2)+'\n')
     print('PASS: 956 trainer records at zero and sixteen badges, all seven Inver omissions, 154 portraits/palettes and 934 flags after Flash reset')
 

@@ -109,13 +109,16 @@ def check_probe(path, rom_hash, pin):
                 or data['difficulty_rows'] != 8 or not data['third_slot_history_repeats']):
             raise ValueError('missing Tower sets, tier, third-slot repeat or Flash history evidence')
     if path.parent.name == 'trainer-roster':
+        if data['trainer_badge_policies'] != 16252:
+            raise ValueError('missing source trainer class and badge policy combinations')
         if (data['source_parties'], data['roster_entries'], data['party_builds'],
                 data['portraits_and_palettes'], data['inver_omissions'], data['saved_trainer_flags'], data['inverse_matchups']) != (956, 2659, 1912, 154, 7, 934, 324):
             raise ValueError('missing full source trainer, portrait, or saved flag evidence')
     if path.parent.name == 'suite3-contexts':
         if (data['seeded_reward_cases'] < 127 or data['wild_factory_cases'] < 96
                 or data['roamer_movement_cases'] < 280 or data['roamer_encounter_bytes'] != 256
-                or data['simultaneous_beasts'] != 2 or data['trainer_medicine_cases'] < 15 or data['flash_reloads'] != 4
+                or data['simultaneous_beasts'] != 2 or data['wild_gender_cases'] != 576 or data['trainer_tie_cases'] != 192 or data['trainer_policy_cases'] != 256
+                or data['trainer_medicine_cases'] < 15 or data['flash_reloads'] != 4
                 or {name: row['outcome'] for name, row in data['outcomes'].items()}
                    != {'win': 1, 'capture': 7, 'escape': 4, 'loss': 2}):
             raise ValueError('missing wild generation, medicine, outcome or Flash results')

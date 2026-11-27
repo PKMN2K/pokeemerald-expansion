@@ -5,12 +5,14 @@
 #include "constants/maps.h"
 #include "battle_main.h"
 #include "battle_ai_items.h"
+#include "battle_ai_main.h"
 #include "item.h"
 #include "load_save.h"
 #include "main.h"
 #include "new_game.h"
 #include "pokemon.h"
 #include "polished_rewards.h"
+#include "polished_trainers.h"
 #include "random.h"
 #include "roamer.h"
 #include "save.h"
@@ -83,6 +85,98 @@ static void CheckMedicine(void)
             return;
         }
     }
+}
+
+static void CheckTrainerPolicies(void)
+{
+    static const struct {u16 mask, hp, unavailable, seed, next, scores[4];} cases[] = {
+/* POLICY CASES */
+    };
+    const enum Move moves[] = {MOVE_CONVERSION, MOVE_SUBSTITUTE, MOVE_REFLECT, MOVE_TACKLE};
+    for (u32 i = 0; i < ARRAY_COUNT(cases); i++)
+    {
+        s32 scores[] = {100,100,100,100};
+        u16 interrupts = REG_IME;
+        REG_IME = 0;
+        SeedRng(cases[i].seed);
+        PolishedScoreTrainerPolicies(cases[i].mask, moves, cases[i].unavailable, cases[i].hp, 100, TRUE, scores);
+        u16 next = Random();
+        REG_IME = interrupts;
+        for (u32 j = 0; j < MAX_MON_MOVES; j++)
+            if (scores[j] != cases[i].scores[j] || next != cases[i].next)
+            {
+                gContextResult[6] = 2000 + i;
+                return;
+            }
+    }
+}
+
+static void CheckTrainerTies(void)
+{
+    static const struct {enum Move moves[4]; s32 scores[4]; u16 mask, seed, slot, next;} cases[] = {
+/* TIE CASES */
+    };
+    for (u32 i = 0; i < ARRAY_COUNT(cases); i++)
+    {
+        u16 interrupts = REG_IME;
+        REG_IME = 0;
+        SeedRng(cases[i].seed);
+        u32 slot = PolishedChooseScoredMoveSlot(cases[i].moves, cases[i].mask, cases[i].scores);
+        u16 next = Random();
+        REG_IME = interrupts;
+        if (slot != cases[i].slot || next != cases[i].next)
+        {
+            gContextResult[6] = 1000 + i;
+            break;
+        }
+    }
+}
+
+static void CheckWildGender(void)
+{
+    static const struct {u16 lead, target, ability; u8 leadGender, egg, seed, nature, gender;} cases[] = {
+/* GENDER CASES */
+    };
+    struct Pokemon *lead = &gParties[B_TRAINER_PLAYER][0];
+    struct Pokemon *wild = &gParties[B_TRAINER_OPPONENT_A][0];
+    for (u32 i = 0; i < ARRAY_COUNT(cases); i++)
+    {
+        if (cases[i].seed == 1)
+        {
+            u32 pid = GetMonPersonality(cases[i].lead, cases[i].leadGender, NATURE_HARDY, RANDOM_UNOWN_LETTER);
+            CreateMon(lead, cases[i].lead, 10, pid, OTID_STRUCT_PRESET(0));
+            if (cases[i].ability)
+            {
+                u32 slot = 0;
+                while (slot < NUM_ABILITY_SLOTS && GetSpeciesAbility(cases[i].lead, slot) != cases[i].ability)
+                    slot++;
+                if (slot == NUM_ABILITY_SLOTS)
+                {
+                    gContextResult[2] = 5000 + i;
+                    break;
+                }
+                SetMonData(lead, MON_DATA_ABILITY_NUM, &slot);
+            }
+            SetMonData(lead, MON_DATA_IS_EGG, &cases[i].egg);
+        }
+        // An unrelated field VBlank must not consume a seeded reference byte.
+        u16 interrupts = REG_IME;
+        REG_IME = 0;
+        SeedRng(cases[i].seed);
+        bool32 created = TryCreatePolishedWildMon(wild, cases[i].target, 5);
+        REG_IME = interrupts;
+        if (!created || GetNature(wild) != cases[i].nature || GetMonGender(wild) != cases[i].gender)
+        {
+            gContextResult[3] = GetNature(wild);
+            gContextResult[4] = GetMonGender(wild);
+            gContextResult[7] = cases[i].nature;
+            gContextResult[8] = cases[i].gender;
+            gContextResult[9] = GetMonAbility(lead);
+            gContextResult[2] = 2000 + i;
+            break;
+        }
+    }
+    ZeroPlayerPartyMons();
 }
 
 static void CheckFactories(void)
@@ -228,7 +322,13 @@ void CB2_MoveMachineAudit(void)
     SeedRng(42);
     CheckRewards();
     CheckMedicine();
-    CheckFactories();
+    if (!gContextResult[6])
+        CheckTrainerTies();
+    if (!gContextResult[6])
+        CheckTrainerPolicies();
+    CheckWildGender();
+    if (!gContextResult[2])
+        CheckFactories();
     if (!gContextResult[2])
         gContextResult[2] = CheckRoamingRoutes();
     ZeroPlayerPartyMons();

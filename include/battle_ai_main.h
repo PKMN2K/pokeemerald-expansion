@@ -1,6 +1,8 @@
 #ifndef GUARD_BATTLE_AI_MAIN_H
 #define GUARD_BATTLE_AI_MAIN_H
 
+u32 PolishedChooseScoredMoveSlot(const enum Move *moves, u32 limitations, const s32 *scores);
+
 
 typedef s32 (*AiScoreFunc)(u32, u32, u32, s32);
 

@@ -559,6 +559,35 @@ static bool32 HasPolishedLegendaryDVs(enum Species species)
     }
 }
 
+#if POLISHED_JOHTO_DEMO
+#include "data/polished_wild_gender.h"
+
+static u32 SourceLeadForm(struct Pokemon *lead, enum Species species)
+{
+    if (species >= NUM_SPECIES || !sWildGenderIdentities[species].species)
+        return 0;
+    u32 form = sWildGenderIdentities[species].form;
+    u32 hiddenForm = PolishedGetBoxMonForm(&lead->box);
+    return hiddenForm ? (form & 0x20) | hiddenForm : form;
+}
+
+static u32 WildGenderRatio(enum Species target, u32 leadForm, u32 targetRatio)
+{
+    // Add a new Pokémon uses the enemy species byte and the lead's form byte.
+    u32 low = sWildGenderIdentities[target].species;
+    u32 index = low - 1 + ((leadForm & 0x20) ? 256 : 0);
+    for (u32 i = 0; i < ARRAY_COUNT(sWildGenderVariants); i++)
+        if (sWildGenderVariants[i].species == low && sWildGenderVariants[i].form == leadForm)
+            return sWildGenderVariants[i].ratio;
+    if (low && index < ARRAY_COUNT(sWildGenderRatios))
+        return sWildGenderRatios[index];
+    // The original address can cross from ROM into CGB VRAM for a mismatched
+    // extension byte. Until the corresponding tile memory is ported, retain
+    // the target species ratio for that case and for Expansion additions.
+    return (targetRatio + 31) / 32;
+}
+#endif
+
 bool32 TryCreatePolishedWildMon(struct Pokemon *mon, enum Species species, u8 level)
 {
     if (!P_POLISHED_SPECIES_DATA || gDexNavSpecies != SPECIES_NONE)
@@ -588,7 +617,9 @@ bool32 TryCreatePolishedWildMon(struct Pokemon *mon, enum Species species, u8 le
     }
 
     struct Pokemon *lead = &gParties[B_TRAINER_PLAYER][0];
-    enum Ability leadAbility = GetMonAbility(lead);
+    enum Species leadSpecies = GetMonData(lead, MON_DATA_SPECIES);
+    bool32 hasLeadAbility = leadSpecies != SPECIES_NONE && leadSpecies != SPECIES_EGG && !GetMonData(lead, MON_DATA_IS_EGG);
+    enum Ability leadAbility = hasLeadAbility ? GetMonAbility(lead) : ABILITY_NONE;
     u32 nature = leadAbility == ABILITY_SYNCHRONIZE ? GetNature(lead) : PolishedRandomRange(NUM_NATURES);
     u8 roll = Random();
     u32 abilitySlot = roll < 13 ? 2 : !(roll & 1);
@@ -600,11 +631,25 @@ bool32 TryCreatePolishedWildMon(struct Pokemon *mon, enum Species species, u8 le
         shiny = TRUE;
 
     u32 genderRoll;
-    if (!GetMonData(lead, MON_DATA_SANITY_IS_EGG) && leadAbility == ABILITY_CUTE_CHARM && PolishedRandomRange(3))
-        genderRoll = GetMonGender(lead) == MON_FEMALE ? 7 : 0;
+#if POLISHED_JOHTO_DEMO
+    u32 leadForm = SourceLeadForm(lead, leadSpecies);
+    u32 ratio = WildGenderRatio(species, leadForm, base->genderRatio);
+#else
+    u32 ratio = (base->genderRatio + 31) / 32;
+#endif
+    if (leadAbility == ABILITY_CUTE_CHARM && PolishedRandomRange(3))
+    {
+        bool32 female = GetMonGender(lead) == MON_FEMALE;
+#if POLISHED_JOHTO_DEMO
+        // cp FEMALE compares the entire packed gender/form byte.
+        if (leadSpecies < NUM_SPECIES && sWildGenderIdentities[leadSpecies].species)
+            female = female && leadForm == 0;
+#endif
+        genderRoll = female ? 7 : 0;
+    }
     else
         genderRoll = Random() & 7;
-    u32 gender = genderRoll * 32 < base->genderRatio ? MON_FEMALE : MON_MALE;
+    u32 gender = genderRoll < ratio ? MON_FEMALE : MON_MALE;
     u32 personality = GetMonPersonality(species, gender, nature, RANDOM_UNOWN_LETTER);
     CreateMon(mon, species, level, personality, OTID_STRUCT_PRESET(READ_OTID_FROM_SAVE));
     SetMonData(mon, MON_DATA_IVS, &ivs);
