@@ -3,6 +3,7 @@
 
 #if POLISHED_JOHTO_DEMO
 bool32 IsPolishedTowerChallenge(void);
+void PolishedSettleTowerPoints(void);
 void PolishedResetTowerHistory(void);
 void PolishedBuildTowerParty(u32 wins);
 #endif

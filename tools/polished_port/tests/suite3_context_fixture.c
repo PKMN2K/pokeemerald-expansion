@@ -4,6 +4,11 @@
 #include "battle.h"
 #include "constants/maps.h"
 #include "battle_main.h"
+#include "battle_records.h"
+#include "constants/game_stat.h"
+#include "link.h"
+#include "overworld.h"
+#include "trainer_card.h"
 #include "battle_ai_items.h"
 #include "battle_ai_main.h"
 #include "item.h"
@@ -23,7 +28,7 @@
 
 struct RewardCase { u16 seed, level; enum Item expected; u16 nextDraw; bool8 honey; };
 /* GENERATED_REWARD_CASES */
-EWRAM_DATA volatile u32 gContextResult[12] = {0};
+EWRAM_DATA volatile u32 gContextResult[13] = {0};
 EWRAM_DATA volatile u32 gWalletResult;
 
 static void CheckPayouts(void)
@@ -134,6 +139,30 @@ static void CheckTrainerPolicies(void)
             if (scores[j] != cases[i].scores[j] || next != cases[i].next)
             {
                 gContextResult[6] = 2000 + i;
+                return;
+            }
+    }
+}
+
+static void CheckSetup(void)
+{
+    static const struct {u8 first, ghost, unavailable, seed; u16 next, scores[4];} cases[] = {
+/* SETUP CASES */
+    };
+    const enum Move moves[] = {MOVE_FOCUS_ENERGY, MOVE_GROWL, MOVE_CURSE, MOVE_TACKLE};
+    for (u32 i = 0; i < ARRAY_COUNT(cases); i++)
+    {
+        s32 scores[] = {100,100,100,100};
+        u16 interrupts = REG_IME;
+        REG_IME = 0;
+        SeedRng(cases[i].seed);
+        PolishedScoreSetup(moves, cases[i].unavailable, cases[i].first, cases[i].ghost, scores);
+        u16 next = Random();
+        REG_IME = interrupts;
+        for (u32 j = 0; j < MAX_MON_MOVES; j++)
+            if (scores[j] != cases[i].scores[j] || next != cases[i].next)
+            {
+                gContextResult[6] = 3000 + i;
                 return;
             }
     }
@@ -307,6 +336,54 @@ static u32 CheckRoamingRoutes(void)
     return failure;
 }
 
+// Enter results through the same public callback used by cable singles.
+static void LinkResult(u8 name, u16 id, u8 outcome)
+{
+    gTrainerCards[1].playerName[0] = name;
+    gTrainerCards[1].playerName[1] = EOS;
+    gTrainerCards[1].trainerId = id;
+    gLinkPlayers[1].language = id & 7;
+    gBattleOutcome = outcome;
+    UpdatePlayerLinkBattleRecords(1);
+}
+
+static bool32 LinkRecordsMatch(void)
+{
+    static const u16 ids[] = {11, 12, 15, 13, 21};
+    static const u8 names[] = {0xbc, 0xbd, 0xbb, 0xbe, 0xbc};
+    struct LinkBattleRecords *records = &gSaveBlock1Ptr->linkBattleRecords;
+    for (u32 i = 0; i < ARRAY_COUNT(ids); i++)
+        if (records->entries[i].trainerId != ids[i] || records->entries[i].name[0] != names[i]
+            || records->languages[i] != (ids[i] & 7))
+            return FALSE;
+    return records->entries[0].wins == 9999 && records->entries[0].losses == 1
+        && records->entries[1].wins == 1 && records->entries[1].draws == 1
+        && records->entries[2].wins == 1 && records->entries[2].losses == 1
+        && records->entries[3].wins == 1 && records->entries[4].draws == 1
+        && GetGameStat(GAME_STAT_LINK_BATTLE_WINS) == 9999
+        && GetGameStat(GAME_STAT_LINK_BATTLE_LOSSES) == 2
+        && GetGameStat(GAME_STAT_LINK_BATTLE_DRAWS) == 2;
+}
+
+static void CheckLinkRecords(void)
+{
+    ClearPlayerLinkBattleRecords();
+    gBattleTypeFlags = BATTLE_TYPE_LINK | BATTLE_TYPE_TRAINER;
+    for (u32 i = 0; i < 5; i++)
+        LinkResult(0xbb + i, 10 + i, B_OUTCOME_WON);
+    LinkResult(0xbc, 11, B_OUTCOME_LOST);
+    LinkResult(0xbd, 12, B_OUTCOME_DREW);
+    // The fifth slot is evicted. The same public name with a new ID is distinct.
+    LinkResult(0xbb, 15, B_OUTCOME_WON);
+    LinkResult(0xbb, 15, B_OUTCOME_LOST);
+    LinkResult(0xbc, 21, B_OUTCOME_DREW);
+    gSaveBlock1Ptr->linkBattleRecords.entries[0].wins = 9999;
+    SetGameStat(GAME_STAT_LINK_BATTLE_WINS, 9999);
+    LinkResult(0xbc, 11, B_OUTCOME_WON);
+    gBattleTypeFlags = 0;
+    gBattleOutcome = 0;
+}
+
 static void ReadPartyAndBag(void)
 {
     gWalletResult = GetMoney(&gSaveBlock1Ptr->money);
@@ -316,6 +393,7 @@ static void ReadPartyAndBag(void)
         gContextResult[10 + i] = beast->active && beast->species == (i == 0 ? SPECIES_RAIKOU : SPECIES_ENTEI)
             ? beast->polishedRoamRoute : 0;
     }
+    gContextResult[12] = LinkRecordsMatch();
     gContextResult[4] = GetMonData(&gParties[B_TRAINER_PLAYER][1], MON_DATA_STATUS);
     gContextResult[7] = CountTotalItemQuantityInBag(ITEM_HONEY);
     gContextResult[8] = GetMonData(&gParties[B_TRAINER_PLAYER][5], MON_DATA_SPECIES) == SPECIES_MAGIKARP;
@@ -348,6 +426,7 @@ void CB2_MoveMachineAudit(void)
         return;
     }
     NewGameInitData();
+    CheckLinkRecords();
     SeedRng(42);
     CheckRewards();
     if (!gContextResult[1])
@@ -357,6 +436,8 @@ void CB2_MoveMachineAudit(void)
         CheckTrainerTies();
     if (!gContextResult[6])
         CheckTrainerPolicies();
+    if (!gContextResult[6])
+        CheckSetup();
     CheckWildGender();
     if (!gContextResult[2])
         CheckFactories();
@@ -415,6 +496,15 @@ void CB2_MoveMachineAudit(void)
     SetMoney(&gSaveBlock1Ptr->money, 1200123);
     gSaveBlock2Ptr->optionsTextSpeed = OPTIONS_TEXT_SPEED_FAST;
     gBattleTypeFlags = 0;
+#if PROBE_LEGENDARY
+    gBattleTypeFlags = BATTLE_TYPE_LEGENDARY;
+    struct Pokemon *ghost = &gParties[B_TRAINER_PLAYER][0];
+    CreateRandomMon(ghost, SPECIES_GENGAR, 80);
+    SetMonMoveSlot(ghost, MOVE_TELEPORT, 0);
+    SetMonMoveSlot(ghost, MOVE_ROAR, 1);
+    enum Item smoke = ITEM_SMOKE_BALL;
+    SetMonData(ghost, MON_DATA_HELD_ITEM, &smoke);
+#endif
     gMain.savedCallback = BattleDone;
     gContextResult[0] = 1;
     SetMainCallback2(CB2_InitBattle);

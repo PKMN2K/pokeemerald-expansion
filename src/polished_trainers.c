@@ -17,7 +17,8 @@ struct PolishedTrainerEntry
 };
 #include "data/polished_trainers.h"
 #if POLISHED_JOHTO_DEMO
-enum SourceMovePolicy { SOURCE_STATUS_MOVE = 1, SOURCE_STALL_MOVE = 2, SOURCE_RESIDUAL_MOVE = 4 };
+enum SourceMovePolicy { SOURCE_STATUS_MOVE = 1, SOURCE_STALL_MOVE = 2, SOURCE_RESIDUAL_MOVE = 4,
+                        SOURCE_RAISE_STAT = 8, SOURCE_LOWER_STAT = 16 };
 #include "data/polished_trainer_ai.h"
 #include "data/polished_trainer_roster.h"
 
@@ -34,6 +35,28 @@ u32 PolishedTrainerAiLayers(u32 trainer, u32 badges)
     if (layers & POLISHED_AI_AGGRESSIVE)
         layers &= ~POLISHED_AI_TYPES;
     return layers;
+}
+
+void PolishedScoreSetup(const enum Move *moves, u32 limitations, bool32 playerFirstTurn,
+                       bool32 enemyGhost, s32 *score)
+{
+    // BattleTurn increments the enemy counter before choosing its move, but
+    // increments the player's counter afterwards. Curse takes the stat-up
+    // branch only when the USER is Ghost in the default release.
+    for (u32 slot = 0; slot < MAX_MON_MOVES; slot++)
+    {
+        enum Move move = moves[slot];
+        if (move >= MOVES_COUNT_ALL || (limitations & (1u << slot)))
+            continue;
+        u32 policy = sSourceMovePolicies[move];
+        if (!(policy & (SOURCE_RAISE_STAT | SOURCE_LOWER_STAT)) && !(move == MOVE_CURSE && enemyGhost))
+            continue;
+        u32 roll = Random() & 255;
+        if (playerFirstTurn && (policy & SOURCE_LOWER_STAT))
+            score[slot] += (roll >= 128) * 2;
+        else if (roll >= 30)  // 12 percent as assembled: 12 * 255 / 100.
+            score[slot] -= 2;
+    }
 }
 
 void PolishedScoreTrainerPolicies(u32 layers, const enum Move *moves, u32 limitations,

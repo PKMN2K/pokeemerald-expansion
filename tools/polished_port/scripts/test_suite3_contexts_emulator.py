@@ -12,6 +12,7 @@ from audit_moves_machines import ROOT, compile_probe
 from build_battle_suite import authenticated_sources
 from build_pokemon_learnsets import PIN
 from test_johto_demo_emulator import Game, A, B
+from test_shift_switch_emulator import ENGLISH
 from test_new_bark_battle_emulator import choose_cell, controller
 
 
@@ -91,6 +92,29 @@ def ai_tie_cases():
                 index = moves.index(moves[usable[chosen]])
             rows.append('{{'+', '.join('MOVE_'+m for m in moves)+'}, {'+', '.join(map(str,scores))+'}, '
                         +f'{limitations}, {seed}, {index}, {next(stream)}'+'},')
+    return rows
+
+
+def setup_cases():
+    # Focus Energy lies within the source stat-up effect interval. Growl is
+    # a stat-down, Curse uses the user's Ghost type, and Tackle draws nothing.
+    rows = []
+    for first in (0, 1):
+        for ghost in (0, 1):
+            for limit in (0, 1, 2, 4, 7):
+                for seed in range(1, 33):
+                    rng = draws(seed)
+                    scores = [100] * 4
+                    for slot in range(2 + ghost):
+                        if limit & (1 << slot):
+                            continue
+                        roll = next(rng) & 255
+                        if slot == 1 and first:
+                            scores[slot] += 2 * (roll >= 128)
+                        else:
+                            scores[slot] -= 2 * (roll >= 30)
+                    rows.append('{' + f'{first}, {ghost}, {limit}, {seed}, {next(rng)}, '
+                                + '{' + ', '.join(map(str, scores)) + '}},')
     return rows
 
 
@@ -219,6 +243,42 @@ def medicine_cases():
     return rows
 
 
+def displayed(game):
+    raw = game.read(game.sym['gDisplayedStringBattle'], 128).split(b'\xff', 1)[0]
+    return ' '.join(''.join(ENGLISH.get(value, '?') for value in raw).split())
+
+
+def trapped_legendary(driver, directory, code, output):
+    work = directory / 'legendary'
+    work.mkdir()
+    elf = compile_probe(ROOT, work, '#define PROBE_LOSS 0\n#define PROBE_LEGENDARY 1\n' + code)
+    game = Game(driver, elf, elf, output, work)
+    try:
+        def wait_for(predicate, label):
+            for step in range(4000):
+                if predicate():
+                    return
+                game.frames(3, A if step % 10 == 0 else 0)
+            raise AssertionError((label, displayed(game), game.u32(game.sym['gBattleOutcome'])))
+        wait_for(lambda: displayed(game).casefold() == 'magikarp appeared!', 'legendary introduction')
+        def action():
+            wait_for(lambda: controller(game, 'HandleInputChooseAction'), 'legendary action menu')
+        action()
+        choose_cell(game, 'gActionSelectionCursor', 3)
+        wait_for(lambda: 'escape!' in displayed(game), 'Ghost holding Smoke Ball must stay')
+        action()
+        for slot in (0, 1):
+            choose_cell(game, 'gActionSelectionCursor', 0)
+            wait_for(lambda: controller(game, 'HandleInputChooseMove'), 'legendary move menu')
+            choose_cell(game, 'gMoveSelectionCursor', slot)
+            wait_for(lambda: 'But it failed!' in displayed(game), 'legendary escape move')
+            action()
+        assert game.read(game.sym['gBattleOutcome'], 1) == bytes([0])
+        return ['Run', 'Teleport', 'Roar']
+    finally:
+        game.close()
+
+
 def run(driver, output):
     output.mkdir(parents=True, exist_ok=True)
     fixtures = cases()
@@ -232,6 +292,8 @@ def run(driver, output):
     payouts = list(payout_cases())
     code = code.replace('/* PAYOUT CASES */', '\n'.join(payouts))
     medicine = medicine_cases()
+    setup = setup_cases()
+    code = code.replace('/* SETUP CASES */', '\n'.join(setup))
     policies = ai_policy_cases()
     code = code.replace('/* POLICY CASES */', '\n'.join(policies))
     ties = ai_tie_cases()
@@ -241,6 +303,7 @@ def run(driver, output):
     code = code.replace('/* GENERATED_MEDICINE_CASES */', 'static const struct MedicineCase medicine[] = {\n' + '\n'.join(medicine) + '\n    };')
     with tempfile.TemporaryDirectory(prefix='polished-contexts-') as tmp:
         directory = Path(tmp)
+        blocked = trapped_legendary(driver, directory, code, output)
         outcomes = {}
         for name, expected in (('win', 1), ('capture', 7), ('escape', 4), ('loss', 2)):
             if name in ('win', 'loss'):
@@ -252,12 +315,13 @@ def run(driver, output):
             game = Game(driver, elf, elf, output, state)
             try:
                 def result():
-                    return struct.unpack('<12I', game.read(game.sym['gContextResult'], 48))
+                    return struct.unpack('<13I', game.read(game.sym['gContextResult'], 52))
                 def wait(predicate, label, key=A):
                     for frame in range(3000):
                         if predicate(): return
                         game.frames(4, key if frame % 8 == 0 else 0)
                     raise AssertionError((label, result()))
+                wait(lambda: displayed(game).casefold() == ('a wild snorlax appeared!' if name == 'loss' else 'a wild magikarp appeared!'), 'wild introduction')
                 wait(lambda: controller(game, 'HandleInputChooseAction'), 'action')
                 assert result()[:3] == (1, 0, 0) and result()[6] == 0, result()
                 eligible = name in ('win', 'capture')
@@ -286,11 +350,12 @@ def run(driver, output):
                     wait(lambda: result()[0] == 2, 'battle outcome', B if name == 'capture' else A)
                     after = result()
                     assert after[3:6] == (expected, 0 if eligible else 16, 1), (name, after)
-                    assert all(r in (*range(29, 40), *range(42, 47)) for r in after[10:]), (name, after)
+                    assert all(r in (*range(29, 40), *range(42, 47)) for r in after[10:12]), (name, after)
                     assert after[8:10] == (int(name == 'capture'), 1), (name, after)
                     if not eligible or after[7]:
                         break
                 assert (after[7] > 0) == eligible, (name, after)
+                assert after[12] == 1, ('link standings', after)
                 wallet = game.u32(game.sym['gWalletResult'])
                 wallet_delta = {'win': 800, 'capture': 800, 'escape': 0, 'loss': -99 * 120}
                 expected_wallet = 1200123 + wallet_delta[name]
@@ -301,11 +366,11 @@ def run(driver, output):
                 assert loaded[2] == 0 and loaded[4] == after[4] and loaded[7:] == after[7:], (name, after, loaded)
                 assert game.u32(game.sym['gWalletResult']) == wallet, (name, 'saved wallet')
                 outcomes[name] = dict(outcome=expected, wallet_after_reset=wallet, status=after[4], honey_in_bag=after[7],
-                                      magikarp_delivered=bool(after[8]), everstone_retained=bool(after[9]))
+                                      magikarp_delivered=bool(after[8]), everstone_retained=bool(after[9]), link_records_reloaded=bool(loaded[12]))
             finally:
                 game.close()
     report = dict(source_commit=PIN, production_rom_sha256=hashlib.sha256((ROOT/'pokeemerald-johto-demo.gba').read_bytes()).hexdigest(),
-                  seeded_reward_cases=len(fixtures), payout_cases=len(payouts), wild_factory_cases=96, wild_gender_cases=len(genders), trainer_tie_cases=len(ties), trainer_policy_cases=len(policies), trainer_medicine_cases=len(medicine), roamer_movement_cases=len(movement),
+                  legendary_blocked=blocked, trainer_setup_cases=len(setup), seeded_reward_cases=len(fixtures), payout_cases=len(payouts), wild_factory_cases=96, wild_gender_cases=len(genders), trainer_tie_cases=len(ties), trainer_policy_cases=len(policies), trainer_medicine_cases=len(medicine), roamer_movement_cases=len(movement),
                   roamer_encounter_bytes=len(encounters), simultaneous_beasts=2, outcomes=outcomes, flash_reloads=len(outcomes))
     (output/'report.json').write_text(json.dumps(report, indent=2)+'\n')
     print(f'PASS: {len(fixtures)} reward cases, {len(payouts)} payout cases, {len(genders)} wild gender cases, {len(ties)} trainer tie cases, {len(policies)} scoring cases, {len(medicine)} trainer medicine cases, {len(movement)} roamer movements, 256 encounter bytes, two saved beasts, real win/capture/escape/loss and four Flash reloads')

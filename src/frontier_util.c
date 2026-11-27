@@ -1,5 +1,6 @@
 #include "global.h"
 #include "frontier_util.h"
+#include "polished_tower.h"
 #include "easy_chat.h"
 #include "event_data.h"
 #include "battle_setup.h"
@@ -1951,6 +1952,13 @@ u8 GetPlayerSymbolCountForFacility(u8 facility)
 
 static void GiveBattlePoints(void)
 {
+#if POLISHED_JOHTO_DEMO
+    if (IsPolishedTowerChallenge())
+    {
+        PolishedSettleTowerPoints();
+        return;
+    }
+#endif
     s32 challengeNum = 0;
     s32 lvlMode = gSaveBlock2Ptr->frontier.lvlMode;
     s32 facility = VarGet(VAR_FRONTIER_FACILITY);

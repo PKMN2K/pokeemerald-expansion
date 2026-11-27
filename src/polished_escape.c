@@ -6,6 +6,13 @@
 #include "random.h"
 #include "polished_escape.h"
 
+bool32 IsPolishedTrappedLegendary(void)
+{
+    return B_POLISHED_MOVE_BALANCE && (gBattleTypeFlags & BATTLE_TYPE_LEGENDARY)
+        && !(gBattleTypeFlags & (BATTLE_TYPE_TRAINER | BATTLE_TYPE_LINK | BATTLE_TYPE_ROAMER
+                               | BATTLE_TYPE_FRONTIER | BATTLE_TYPE_DOUBLE));
+}
+
 bool32 UsesPolishedEscapeRules(enum BattlerId battler)
 {
     return UsesPolishedBattleRules(battler, GetOppositeBattler(battler))

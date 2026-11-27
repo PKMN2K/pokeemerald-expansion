@@ -7,6 +7,7 @@
 #include "polished_evolution.h"
 #include "polished_items.h"
 #include "polished_capture.h"
+#include "polished_escape.h"
 #include "polished_rewards.h"
 #include "polished_trainers.h"
 #include "constants/polished_move_restrictions.h"
@@ -11287,7 +11288,7 @@ void BS_JumpIfRoarFails(void)
              && !IsOnPlayerSide(gBattlerAttacker)
              && !IsOnPlayerSide(gBattlerTarget))
         gBattlescriptCurrInstr = cmd->jumpInstr;
-    else if (FlagGet(WE_FLAG_NO_RUNNING))
+    else if (FlagGet(WE_FLAG_NO_RUNNING) || IsPolishedTrappedLegendary())
         gBattlescriptCurrInstr = cmd->jumpInstr;
     else
         gBattlescriptCurrInstr = cmd->nextInstr;
@@ -11434,7 +11435,8 @@ static bool32 IsPolishedWildTeleport(void)
     // or field restrictions. Special encounter classification remains separate.
     return B_POLISHED_MOVE_BALANCE
         && gCurrentMove == MOVE_TELEPORT
-        && !(gBattleTypeFlags & ~(BATTLE_TYPE_IS_MASTER | BATTLE_TYPE_RECORDED | BATTLE_TYPE_RECORDED_IS_MASTER))
+        && !(gBattleTypeFlags & ~(BATTLE_TYPE_IS_MASTER | BATTLE_TYPE_RECORDED | BATTLE_TYPE_RECORDED_IS_MASTER
+            | BATTLE_TYPE_LEGENDARY))
         && GetActiveGimmick(gBattlerAttacker) == GIMMICK_NONE
         && GetActiveGimmick(GetOppositeBattler(gBattlerAttacker)) == GIMMICK_NONE
         && !gBattleMons[gBattlerAttacker].volatiles.root
@@ -11463,7 +11465,7 @@ void BS_IsRunningImpossible(void)
     {
         // Source Teleport checks Run Away, Mean Look and ability trapping only.
         // Wrap and escape items do not participate. Failure uses the plain text.
-        bool32 allowed = !FlagGet(WE_FLAG_NO_RUNNING)
+        bool32 allowed = !FlagGet(WE_FLAG_NO_RUNNING) && !IsPolishedTrappedLegendary()
             && (GetBattlerAbilityIgnoreMoldBreaker(gBattlerAttacker) == ABILITY_RUN_AWAY
              || (!gBattleMons[gBattlerAttacker].volatiles.escapePrevention
               && !IsAbilityPreventingEscape(gBattlerAttacker)));

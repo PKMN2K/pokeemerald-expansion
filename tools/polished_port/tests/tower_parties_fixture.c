@@ -4,6 +4,9 @@
 #include "data.h"
 #include "event_data.h"
 #include "load_save.h"
+#include "frontier_util.h"
+#include "constants/frontier_util.h"
+#include "polished_tower.h"
 #include "main.h"
 #include "move.h"
 #include "new_game.h"
@@ -35,6 +38,41 @@ static void CheckValue(u32 actual, u32 expected, u32 field)
     }
 }
 
+static void CheckTowerPoints(void)
+{
+    static const u8 expected[8][7] = {
+        {1,2,2,3,3,4,5}, {2,3,3,4,4,5,6}, {3,4,4,5,5,6,7}, {4,5,5,6,6,7,8},
+        {5,6,6,7,7,8,8}, {6,7,7,8,8,8,8}, {7,8,8,8,8,8,8}, {8,8,8,8,8,8,8}
+    };
+    struct BattleFrontier *frontier = &gSaveBlock2Ptr->frontier;
+    for (u32 round = 0; round < 8; round++)
+    {
+        u32 points = 0;
+        for (u32 count = 0; count <= 7; count++)
+        {
+            if (count)
+                points += expected[round][count-1];
+            frontier->challengeStatus = count == 7 ? CHALLENGE_STATUS_WON : CHALLENGE_STATUS_LOST;
+            frontier->curChallengeBattleNum = count;
+            frontier->towerWinStreaks[0][0] = round * 7 + count;
+            frontier->battlePoints = 0;
+            gSpecialVar_0x8004 = FRONTIER_UTIL_FUNC_GIVE_BATTLE_POINTS;
+            CallFrontierUtilFunc();
+            CheckValue(frontier->battlePoints, points, 27);
+            CheckValue(frontier->towerWinStreaks[0][0], count == 7 ? round * 7 + count : 0, 28);
+            CallFrontierUtilFunc();
+            CheckValue(frontier->battlePoints, points, 29);
+        }
+    }
+    frontier->battlePoints = 49998;
+    frontier->towerWinStreaks[0][0] = 259;
+    frontier->curChallengeBattleNum = 2;
+    frontier->challengeStatus = CHALLENGE_STATUS_SAVING;
+    PolishedSettleTowerPoints();
+    CheckValue(frontier->battlePoints, 50000, 30);
+    CheckValue(frontier->towerWinStreaks[0][0], 0, 31);
+}
+
 void CB2_MoveMachineAudit(void)
 {
     if (gTowerAudit[2] || gTowerAudit[0] >= 2)
@@ -50,6 +88,7 @@ void CB2_MoveMachineAudit(void)
         {
             for (u32 i = 0; i < ARRAY_COUNT(sFinalHistory); i++)
                 CheckValue(gSaveBlock3Ptr->polishedTowerHistory[i], sFinalHistory[i], 25);
+            CheckValue(gSaveBlock2Ptr->frontier.battlePoints, 50000, 32);
             gTowerAudit[0] = 3;
             return;
         }
@@ -64,6 +103,7 @@ void CB2_MoveMachineAudit(void)
     u32 index = gTowerAudit[1];
     if (index == ARRAY_COUNT(sExpectedParties))
     {
+        CheckTowerPoints();
         CheckValue(TrySavingData(SAVE_NORMAL), SAVE_STATUS_OK, 26);
         gTowerAudit[0] = 2;
         return;

@@ -31,6 +31,7 @@
 #include "palette.h"
 #include "pokeball.h"
 #include "pokemon.h"
+#include "polished_mon_pictures.h"
 #include "pokemon_sprite_visualizer.h"
 #include "pokemon_storage_system.h"
 #include "pokemon_summary_screen.h"
@@ -4539,6 +4540,11 @@ static u8 CreateMonSprite(struct Pokemon *unused)
     gSprites[spriteId].callback = SpriteCB_Pokemon;
     gSprites[spriteId].oam.priority = 0;
 
+#if POLISHED_JOHTO_DEMO
+    if (HasPolishedMonPicture(summary->species2))
+        gSprites[spriteId].hFlip = GetFormSpeciesId(summary->species2, 0) != SPECIES_UNOWN;
+    else
+#endif
     if (!IsMonSpriteNotFlipped(summary->species2))
         gSprites[spriteId].hFlip = TRUE;
     else
@@ -4554,6 +4560,20 @@ static void SpriteCB_Pokemon(struct Sprite *sprite)
     if (!gPaletteFade.active && sprite->data[2] != 1)
     {
         sprite->data[1] = IsMonSpriteNotFlipped(sprite->data[0]);
+#if POLISHED_JOHTO_DEMO
+        if (summary->isEgg)
+        {
+            StartPolishedEggAnimation(sprite, summary->friendship);
+            return;
+        }
+        if (HasPolishedMonPicture(summary->species2)
+            && (!GetMonData(&sMonSummaryScreen->currentMon, MON_DATA_HP)
+                || (GetMonData(&sMonSummaryScreen->currentMon, MON_DATA_STATUS) & (STATUS1_SLEEP | STATUS1_FREEZE))))
+        {
+            sprite->callback = SpriteCallbackDummy;
+            return;
+        }
+#endif
         PlayMonCry();
         PokemonSummaryDoMonAnimation(sprite, sprite->data[0], summary->isEgg);
     }

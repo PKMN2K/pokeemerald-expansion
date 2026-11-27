@@ -7,6 +7,8 @@
 #include "polished_tower.h"
 #include "random.h"
 #include "trainer_util.h"
+#include "tv.h"
+#include "string_util.h"
 #include "constants/battle_frontier.h"
 
 struct PolishedTowerSet
@@ -71,10 +73,41 @@ static void CreateTowerMon(struct Pokemon *mon, u32 index, u32 wins, struct Trai
     SetMonData(mon, MON_DATA_ABILITY_NUM, &set->abilitySlot);
 }
 
+static u32 TowerDifficulty(u32 wins)
+{
+    static const u8 offsets[] = {0, 1, 1, 2, 2, 3, 4};
+    return min(7u, wins / 7 + offsets[wins % 7]);
+}
+
+void PolishedSettleTowerPoints(void)
+{
+    if (!IsPolishedTowerChallenge())
+        return;
+    struct BattleFrontier *frontier = &gSaveBlock2Ptr->frontier;
+    u32 points = 0;
+    if (frontier->challengeStatus == CHALLENGE_STATUS_WON || frontier->challengeStatus == CHALLENGE_STATUS_LOST
+        || frontier->challengeStatus == CHALLENGE_STATUS_SAVING)
+    {
+        u32 stages = min(frontier->curChallengeBattleNum, FRONTIER_STAGES_PER_CHALLENGE);
+        u16 wins = frontier->towerWinStreaks[FRONTIER_MODE_SINGLES][FRONTIER_LVL_50];
+        // Each completed battle already advanced the native streak. The source
+        // commits all of their BP in the lobby, including an incomplete set.
+        for (u32 i = 0; i < stages; i++)
+            points += 1 + TowerDifficulty((u16)(wins - stages + i));
+        frontier->battlePoints = min(MAX_BATTLE_FRONTIER_POINTS, frontier->battlePoints + points);
+        frontier->cardBattlePoints = min(0xffffu, frontier->cardBattlePoints + points);
+        if (points)
+            IncrementDailyBattlePoints(points);
+        if (frontier->challengeStatus != CHALLENGE_STATUS_WON)
+            frontier->towerWinStreaks[FRONTIER_MODE_SINGLES][FRONTIER_LVL_50] = 0;
+        frontier->challengeStatus = 0;
+    }
+    ConvertIntToDecimalStringN(gStringVar1, points, STR_CONV_MODE_LEFT_ALIGN, 2);
+}
+
 void PolishedBuildTowerParty(u32 wins)
 {
-    static const u8 pointOffsets[] = {0, 1, 1, 2, 2, 3, 4};
-    u32 difficulty = min(7u, wins / 7 + pointOffsets[wins % 7]);
+    u32 difficulty = TowerDifficulty(wins);
     u32 mask = sTowerTierMasks[difficulty][Random() & 1];
     u8 tiers[FRONTIER_PARTY_SIZE];
     u16 team[FRONTIER_PARTY_SIZE];

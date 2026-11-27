@@ -1,4 +1,5 @@
 #include "global.h"
+#include "polished_mon_pictures.h"
 #include "battle.h"
 #include "battle_anim.h"
 #include "battle_interface.h"
@@ -136,6 +137,10 @@ u8 GetBattlerYDelta(enum BattlerId battler, enum Species species)
     struct BattleSpriteInfo *spriteInfo;
     u8 ret;
     species = SanitizeSpeciesId(species);
+#if POLISHED_JOHTO_DEMO
+    if (HasPolishedMonPicture(species))
+        return 0; // The source tilemap already includes its alignment.
+#endif
 
     if (IsContest())
     {
@@ -171,6 +176,10 @@ u8 GetBattlerYDelta(enum BattlerId battler, enum Species species)
 u8 GetBattlerElevation(enum BattlerId battler, enum Species species)
 {
     u8 ret = 0;
+#if POLISHED_JOHTO_DEMO
+    if (HasPolishedMonPicture(species))
+        return 0;
+#endif
     if (!IsOnPlayerSide(battler))
     {
         if (!IsContest())
@@ -1880,6 +1889,10 @@ static u16 GetBattlerYDeltaFromSpriteId(u8 spriteId)
                 else
                     species = spriteInfo[battler].transformSpecies;
 
+#if POLISHED_JOHTO_DEMO
+                if (HasPolishedMonPicture(species))
+                    return 0;
+#endif
                 if (IsOnPlayerSide(i))
                     return gSpeciesInfo[species].backPicYOffset;
                 else
@@ -2146,6 +2159,15 @@ s16 GetBattlerSpriteCoordAttr(enum BattlerId battler, u8 attr)
             y_offset = gSpeciesInfo[species].frontPicYOffset;
         }
     }
+
+#if POLISHED_JOHTO_DEMO
+    if (HasPolishedMonPicture(species))
+    {
+        u32 width = GetPolishedMonPictureWidth(species, !IsContest() && !IsOnPlayerSide(battler));
+        size = MON_COORDS_SIZE(width, width);
+        y_offset = 0;
+    }
+#endif
 
     switch (attr)
     {

@@ -1,4 +1,5 @@
 #include "global.h"
+#include "polished_mon_pictures.h"
 #include "polished_friendship.h"
 #include "polished_growth.h"
 #include "polished_capture.h"
@@ -1867,6 +1868,11 @@ void SetMultiuseSpriteTemplateToPokemon(enum Species speciesTag, enum BattlerPos
             speciesTag = speciesTag - SPECIES_SHINY_TAG;
 
         speciesTag = SanitizeSpeciesId(speciesTag);
+#if POLISHED_JOHTO_DEMO
+        if (HasPolishedMonPicture(speciesTag))
+            gMultiuseSpriteTemplate.anims = gAnims_MonPic;
+        else
+#endif
         if (gSpeciesInfo[speciesTag].frontAnimFrames != NULL)
             gMultiuseSpriteTemplate.anims = gSpeciesInfo[speciesTag].frontAnimFrames;
         else
@@ -5351,6 +5357,11 @@ const u16 *GetMonSpritePalFromSpeciesIsEgg(enum Species species, bool32 isShiny,
 {
     species = SanitizeSpeciesId(species);
 
+#if POLISHED_JOHTO_DEMO
+    if (HasPolishedMonPicture(species))
+        return GetPolishedMonPalette(isEgg ? SPECIES_EGG : species, isShiny);
+#endif
+
     if (isEgg)
     {
         if (gSpeciesInfo[species].eggId != EGG_ID_NONE)
@@ -5657,6 +5668,18 @@ void DoMonFrontSpriteAnimation(struct Sprite *sprite, enum Species species, bool
         pan = 0;
         break;
     }
+#if POLISHED_JOHTO_DEMO
+    if (HasPolishedMonPicture(species))
+    {
+        if (!noCry)
+            PlayCry_Normal(species, pan);
+        if (panModeAnimFlag & SKIP_FRONT_ANIM || (gBattleTypeFlags & BATTLE_TYPE_GHOST) || gTestRunnerHeadless)
+            sprite->callback = SpriteCallbackDummy;
+        else
+            StartPolishedMonAnimation(sprite, species, FALSE);
+        return;
+    }
+#endif
     if (panModeAnimFlag & SKIP_FRONT_ANIM || (gBattleTypeFlags & BATTLE_TYPE_GHOST))
     {
         // No animation, only check if cry needs to be played
@@ -5691,6 +5714,13 @@ void DoMonFrontSpriteAnimation(struct Sprite *sprite, enum Species species, bool
 
 void PokemonSummaryDoMonAnimation(struct Sprite *sprite, enum Species species, bool8 oneFrame)
 {
+#if POLISHED_JOHTO_DEMO
+    if (HasPolishedMonPicture(species))
+    {
+        StartPolishedMonAnimation(sprite, species, TRUE);
+        return;
+    }
+#endif
     if (!oneFrame && HasTwoFramesAnimation(species))
         StartSpriteAnim(sprite, 1);
     if (gSpeciesInfo[species].frontAnimDelay != 0)
@@ -5719,6 +5749,13 @@ void StopPokemonAnimationDelayTask(void)
 
 void BattleAnimateBackSprite(struct Sprite *sprite, enum Species species)
 {
+#if POLISHED_JOHTO_DEMO
+    if (HasPolishedMonPicture(species))
+    {
+        sprite->callback = SpriteCallbackDummy;
+        return;
+    }
+#endif
     if (gHitMarker & HITMARKER_NO_ANIMATIONS && !(gBattleTypeFlags & (BATTLE_TYPE_LINK | BATTLE_TYPE_RECORDED_LINK)))
     {
         sprite->callback = SpriteCallbackDummy;
@@ -5817,6 +5854,10 @@ void HandleSetPokedexFlagFromMon(struct Pokemon *mon, u32 caseId)
 
 bool8 HasTwoFramesAnimation(enum Species species)
 {
+#if POLISHED_JOHTO_DEMO
+    if (HasPolishedMonPicture(species))
+        return FALSE;
+#endif
     return P_TWO_FRAME_FRONT_SPRITES
         && gSpeciesInfo[species].frontAnimFrames != sAnims_SingleFramePlaceHolder
         && species != SPECIES_UNOWN

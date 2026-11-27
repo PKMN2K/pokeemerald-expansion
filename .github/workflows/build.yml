@@ -165,6 +165,7 @@ jobs:
           python3 tools/polished_port/scripts/build_tower_parties.py --check
           python3 tools/polished_port/scripts/build_wild_gender.py --check
           python3 tools/polished_port/scripts/build_trainer_portraits.py --check
+          python3 tools/polished_port/scripts/build_mon_pictures.py --check
           python3 tools/polished_port/scripts/test_battle_systems.py
           python3 tools/polished_port/scripts/build_battle_suite.py --check
           python3 tools/polished_port/scripts/test_battle_suite.py
@@ -193,6 +194,11 @@ jobs:
         run: |
           python3 tools/polished_port/scripts/test_johto_demo_emulator.py --driver /tmp/johto-demo-driver --rom pokeemerald-johto-demo.gba --elf pokeemerald-johto-demo.elf --output /tmp/johto-validation
           python3 tools/polished_port/scripts/test_new_bark_emulator.py --driver /tmp/johto-demo-driver --rom pokeemerald-johto-demo.gba --elf pokeemerald-johto-demo.elf --output /tmp/johto-validation/new-bark
+
+      - name: Verify all source Pokemon pictures, palettes and front animation playback
+        if: ${{ !cancelled() && steps.johto_driver.outcome == 'success' }}
+        timeout-minutes: 8
+        run: python3 tools/polished_port/scripts/test_mon_pictures_emulator.py --driver /tmp/johto-demo-driver --output /tmp/johto-validation/mon-pictures
 
       - name: Verify all source trainer parties, portraits and saved battle flags
         if: ${{ !cancelled() && steps.johto_driver.outcome == 'success' }}

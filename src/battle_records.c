@@ -131,6 +131,16 @@ static s32 FindLinkBattleRecord(struct LinkBattleRecord *records, const u8 *name
     return LINK_B_RECORDS_COUNT;
 }
 
+static void SwapLinkBattleRecords(struct LinkBattleRecords *records, u32 i, u32 j)
+{
+    struct LinkBattleRecord record = records->entries[i];
+    records->entries[i] = records->entries[j];
+    records->entries[j] = record;
+    u8 language = records->languages[i];
+    records->languages[i] = records->languages[j];
+    records->languages[j] = language;
+}
+
 static void SortLinkBattleRecords(struct LinkBattleRecords *records)
 {
     s32 i, j;
@@ -143,18 +153,7 @@ static void SortLinkBattleRecords(struct LinkBattleRecords *records)
             s32 totalBattlesJ = GetLinkBattleRecordTotalBattles(&records->entries[j]);
 
             if (totalBattlesI > totalBattlesJ)
-            {
-                struct LinkBattleRecord temp1;
-                u8 temp2;
-
-                temp1 = records->entries[i];
-                records->entries[i] = records->entries[j];
-                records->entries[j] = temp1;
-
-                temp2 = records->languages[i];
-                records->languages[i] = records->languages[j];
-                records->languages[j] = temp2;
-            }
+                SwapLinkBattleRecords(records, i, j);
         }
     }
 }
@@ -204,11 +203,56 @@ static void UpdateLinkBattleGameStats(s32 battleOutcome)
         IncrementGameStat(stat);
 }
 
+#if POLISHED_JOHTO_DEMO
+static void UpdatePolishedLinkRecord(struct LinkBattleRecords *records, const u8 *name, u16 trainerId,
+                                     s32 outcome, enum BattlerId battler)
+{
+    // AddLastBattleToLinkRecord stops at the first blank slot or exact
+    // identity match. With five occupied slots a newcomer replaces the last.
+    u32 index = 0;
+    while (index < LINK_B_RECORDS_COUNT)
+    {
+        struct LinkBattleRecord *record = &records->entries[index];
+        if (record->name[0] == EOS
+            || (record->trainerId == trainerId && !StringCompareN(record->name, name, PLAYER_NAME_LENGTH)))
+            break;
+        index++;
+    }
+    if (index == LINK_B_RECORDS_COUNT || records->entries[index].name[0] == EOS)
+    {
+        index = min(index, LINK_B_RECORDS_COUNT - 1);
+        struct LinkBattleRecord *record = &records->entries[index];
+        ClearLinkBattleRecord(record);
+        StringCopyN(record->name, name, PLAYER_NAME_LENGTH);
+        record->trainerId = trainerId;
+        records->languages[index] = gLinkPlayers[battler].language;
+    }
+    UpdateLinkBattleRecord(&records->entries[index], outcome);
+    // The source swaps the FIRST inverted pair, then returns. A full sort
+    // produces different ordering among tied opponents and on older saves.
+    for (u32 first = 0; first < LINK_B_RECORDS_COUNT; first++)
+        for (u32 next = first + 1; next < LINK_B_RECORDS_COUNT; next++)
+            if (GetLinkBattleRecordTotalBattles(&records->entries[next])
+                > GetLinkBattleRecordTotalBattles(&records->entries[first]))
+            {
+                SwapLinkBattleRecords(records, first, next);
+                return;
+            }
+}
+#endif
+
 static void UpdateLinkBattleRecords(struct LinkBattleRecords *records, const u8 *name, u16 trainerId, s32 battleOutcome, enum BattlerId battler)
 {
     s32 index;
 
     UpdateLinkBattleGameStats(battleOutcome);
+#if POLISHED_JOHTO_DEMO
+    if (!(gBattleTypeFlags & (BATTLE_TYPE_DOUBLE | BATTLE_TYPE_MULTI)))
+    {
+        UpdatePolishedLinkRecord(records, name, trainerId, battleOutcome, battler);
+        return;
+    }
+#endif
     SortLinkBattleRecords(records);
     index = FindLinkBattleRecord(records->entries, name, trainerId);
     if (index == LINK_B_RECORDS_COUNT)

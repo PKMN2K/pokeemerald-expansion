@@ -1,4 +1,5 @@
 #include "global.h"
+#include "polished_mon_pictures.h"
 #include "polished_lifecycle.h"
 #include "polished_escape.h"
 #include "polished_capture.h"
@@ -2479,7 +2480,12 @@ void SpriteCB_FaintOpponentMon(struct Sprite *sprite)
     species = SanitizeSpeciesId(species);
     if (species == SPECIES_UNOWN)
         species = GetUnownSpeciesId(personality);
-    yOffset = gSpeciesInfo[species].frontPicYOffset;
+#if POLISHED_JOHTO_DEMO
+    if (HasPolishedMonPicture(species))
+        yOffset = 0;
+    else
+#endif
+        yOffset = gSpeciesInfo[species].frontPicYOffset;
 
     sprite->data[3] = 8 - yOffset / 8;
     sprite->data[4] = 1;
@@ -3781,7 +3787,7 @@ u8 IsRunningFromBattleImpossible(enum BattlerId battler)
     enum HoldEffect holdEffect;
     u32 i;
 
-    if (FlagGet(WE_FLAG_NO_RUNNING))
+    if (FlagGet(WE_FLAG_NO_RUNNING) || IsPolishedTrappedLegendary())
     {
         gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_CANT_ESCAPE;
         return BATTLE_RUN_FORBIDDEN;

@@ -143,17 +143,31 @@ def ai_data(classes, records):
     lines.extend(['};', 'static const u8 sSourceMovePolicies[MOVES_COUNT_ALL] = {'])
     moves = archive.source.move_targets(archive.source.sources())
     move_data = archive.source.default_lines(archive.source.sources()['data/moves/moves.asm'].split('Moves::',1)[1])
-    zero = set()
+    effects = [line.split()[1] for line in archive.source.default_lines(
+        archive.source.sources()['constants/move_effect_constants.asm']) if line.startswith('const EFFECT_')]
+    up = set(effects[effects.index('EFFECT_ATTACK_UP'):effects.index('EFFECT_ATTACK_DOWN')])
+    down = set(effects[effects.index('EFFECT_ATTACK_DOWN'):effects.index('EFFECT_EVASION_DOWN_2') + 1])
+    zero, raise_stat, lower_stat = set(), set(), set()
     for line in move_data:
-        match = re.match(r'move (\w+),\s*\w+,\s*(\d+),', line)
-        if match and int(match[2]) == 0:
-            zero.add(match[1])
+        match = re.match(r'move (\w+),\s*(\w+),\s*(\d+),', line)
+        if not match:
+            continue
+        name, effect, power = match.groups()
+        if int(power) == 0:
+            zero.add(name)
+        if effect in up:
+            raise_stat.add(name)
+        if effect in down:
+            lower_stat.add(name)
     def move_list(file):
         return set(re.findall(r'^\s*db (\w+)\s*$', files['data/battle/ai/'+file+'_moves.asm'], re.M))
     stall, residual = move_list('stall'), move_list('residual')
     assert len(zero)>50 and len(stall)>20 and len(residual)==10
-    for move in sorted(zero | stall | residual):
-        flags = [name for name,group in [('SOURCE_STATUS_MOVE',zero),('SOURCE_STALL_MOVE',stall),('SOURCE_RESIDUAL_MOVE',residual)] if move in group]
+    groups = [('SOURCE_STATUS_MOVE', zero), ('SOURCE_STALL_MOVE', stall),
+              ('SOURCE_RESIDUAL_MOVE', residual), ('SOURCE_RAISE_STAT', raise_stat),
+              ('SOURCE_LOWER_STAT', lower_stat)]
+    for move in sorted(set.union(*(group for _, group in groups))):
+        flags = [name for name, group in groups if move in group]
         lines.append(f'    [{moves[move]}] = ' + ' | '.join(flags) + ',')
     return lines + ['};']
 

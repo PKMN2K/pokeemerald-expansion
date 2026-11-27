@@ -46,6 +46,9 @@ BattleFrontier_BattleTowerLobby_EventScript_GetChallengeStatus::
 	end
 
 BattleFrontier_BattleTowerLobby_EventScript_QuitWithoutSaving::
+#if POLISHED_JOHTO_DEMO
+	callnative PolishedSettleTowerPoints
+#endif
 	lock
 	faceplayer
 	msgbox BattleFrontier_BattleTowerLobby_Text_DidntSaveBeforeQuitting, MSGBOX_DEFAULT
@@ -93,6 +96,9 @@ BattleFrontier_BattleTowerLobby_EventScript_LookForwardToChallenge::
 	end
 
 BattleFrontier_BattleTowerLobby_EventScript_LostChallenge::
+#if POLISHED_JOHTO_DEMO
+	callnative PolishedSettleTowerPoints
+#endif
 	goto_if_ne VAR_FRONTIER_BATTLE_MODE, FRONTIER_MODE_MULTIS, BattleFrontier_BattleTowerLobby_EventScript_CancelWinStreak
 	goto_if_set FLAG_CHOSEN_MULTI_BATTLE_NPC_PARTNER, BattleFrontier_BattleTowerLobby_EventScript_CancelWinStreak
 	tower_get TOWER_DATA_WIN_STREAK

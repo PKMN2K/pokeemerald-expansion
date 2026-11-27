@@ -1,4 +1,5 @@
 #include "global.h"
+#include "polished_mon_pictures.h"
 #include "malloc.h"
 #include "data.h"
 #include "decompress.h"
@@ -1133,6 +1134,13 @@ void LoadSpecialPokePic(void *dest, enum Species species, u32 personality, bool8
 void LoadSpecialPokePicIsEgg(void *dest, enum Species species, u32 personality, bool8 isFrontPic, bool32 isEgg)
 {
     species = SanitizeSpeciesId(species);
+#if POLISHED_JOHTO_DEMO
+    if (HasPolishedMonPicture(species))
+    {
+        LoadPolishedMonPicture(dest, isEgg ? SPECIES_EGG : species, isFrontPic);
+        return;
+    }
+#endif
     if (species == SPECIES_UNOWN)
         species = GetUnownSpeciesId(personality);
 

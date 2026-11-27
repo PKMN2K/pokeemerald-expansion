@@ -37,13 +37,13 @@ DOMAIN_CHECKS = {
         ['Polished action AI Destiny Bond failure queries cannot clear the live volatile',
          'Polished escape roamer AI and action execution both reject sleep and freeze']),
     'facility_link': (
-        ['tower-parties/report.json', 'link-conversion/report.json'],
+        ['suite3-contexts/report.json', 'tower-parties/report.json', 'link-conversion/report.json'],
         ["Polished linked Conversion plays both trainers' choices and leaves the next turn aligned",
          'Polished affection excludes actual link and frontier battles',
          'Polished critical evolution counter excludes link battles',
          'Polished Sketch boundary rejects link mode and invalid or duplicate Sketch history without mutation']),
     'presentation_rng': (
-        ['trainer-roster/report.json', 'battle-art/report.json', 'link-conversion/report.json', 'conversion-selection/report.json', 'metronome-pool/report.json', 'new-bark/validation.json',
+        ['mon-pictures/report.json', 'trainer-roster/report.json', 'battle-art/report.json', 'link-conversion/report.json', 'conversion-selection/report.json', 'metronome-pool/report.json', 'new-bark/validation.json',
          'shift-source/shift-switch-validation.json', 'shift-native/shift-switch-validation.json'],
         ['Polished Safari bait and rock consume every rejected draw and one accepted draw']),
 }
@@ -95,6 +95,10 @@ def check_probe(path, rom_hash, pin):
         raise ValueError('missing probe results')
     if data.get('source_commit', pin) != pin:
         raise ValueError('unexpected source commit')
+    if path.parent.name == 'mon-pictures':
+        if (data['identities'], data['egg'], data['palettes'], data['playback_sequences'],
+                data['expansion_control']) != (391, True, 784, 784, 'RAYQUAZA') or (data['playback_steps'], data['stationary_egg_from_cycle']) != (12733, 11):
+            raise ValueError('missing source picture, palette or animation evidence')
     if path.parent.name == 'battle-art':
         if (len(set(data['verified_items'])) != 243 or 'ITEM_POLISHED_ARMOR_SUIT' not in data['verified_items']
                 or not data['item_vram_checked'] or data['registered_trainer_portraits'] != ['GIOVANNI1'] or not data['expansion_item_fallback']):
@@ -106,6 +110,7 @@ def check_probe(path, rom_hash, pin):
             raise ValueError('missing serial choice retry or next-turn synchronization')
     if path.parent.name == 'tower-parties':
         if (data['sets'] != 432 or data['generated_teams'] < 700 or data['retained_history_slots'] != 9
+                or data['point_award_cases'] != 65 or data['flash_bp'] != 50000
                 or data['difficulty_rows'] != 8 or not data['third_slot_history_repeats']):
             raise ValueError('missing Tower sets, tier, third-slot repeat or Flash history evidence')
     if path.parent.name == 'trainer-roster':
@@ -115,6 +120,9 @@ def check_probe(path, rom_hash, pin):
                 data['portraits_and_palettes'], data['inver_omissions'], data['saved_trainer_flags'], data['inverse_matchups']) != (956, 2659, 1912, 154, 7, 934, 324):
             raise ValueError('missing full source trainer, portrait, or saved flag evidence')
     if path.parent.name == 'suite3-contexts':
+        if (not all(row['link_records_reloaded'] for row in data['outcomes'].values())
+                or data['trainer_setup_cases'] != 640 or data['legendary_blocked'] != ['Run', 'Teleport', 'Roar']):
+            raise ValueError('missing Pay Day, link standings, Setup scoring or legendary exit evidence')
         if (data['seeded_reward_cases'] < 127 or data['wild_factory_cases'] < 96
                 or data['roamer_movement_cases'] < 280 or data['roamer_encounter_bytes'] != 256
                 or data['simultaneous_beasts'] != 2 or data['wild_gender_cases'] != 576 or data['trainer_tie_cases'] != 192 or data['trainer_policy_cases'] != 256

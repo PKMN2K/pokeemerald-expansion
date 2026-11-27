@@ -17,6 +17,7 @@
 #include "menu.h"
 #include "palette.h"
 #include "polished_trainers.h"
+#include "wild_encounter.h"
 #include "recorded_battle.h"
 #include "string_util.h"
 #include "strings.h"
@@ -88,6 +89,14 @@ static const u8 sText_WildFled[] = _("{PLAY_SE SE_FLEE}{B_LINK_OPPONENT1_NAME} f
 static const u8 sText_TwoWildFled[] = _("{PLAY_SE SE_FLEE}{B_LINK_OPPONENT1_NAME} and {B_LINK_OPPONENT2_NAME} fled!"); //not in gen 5+, replaced with match was forfeited text
 static const u8 sText_PlayerDefeatedLinkTrainerTrainer1[] = _("You defeated {B_TRAINER1_NAME_WITH_CLASS}!\p");
 static const u8 sText_OpponentMon1Appeared[] = _("{B_OPPONENT_MON1_NAME} appeared!\p");
+#if POLISHED_JOHTO_DEMO
+static const u8 sText_PolishedWildAppeared[] = _("A wild {B_OPPONENT_MON1_NAME}\nappeared!\p");
+static const u8 sText_PolishedLegendaryAppeared[] = _("{B_OPPONENT_MON1_NAME}\nappeared!\p");
+static const u8 sText_PolishedGhostAppeared[] = _("A Ghost\nappeared!\p");
+static const u8 sText_PolishedHooked[] = _("The hooked\n{B_OPPONENT_MON1_NAME}\lattacked!\p");
+static const u8 sText_PolishedTrainerBattle[] = _("{B_TRAINER1_NAME_WITH_CLASS}\nwants to battle!\p");
+static const u8 sText_PolishedTrainersBattle[] = _("{B_TRAINER1_NAME_WITH_CLASS}\nwant to battle!\p");
+#endif
 static const u8 sText_WildPkmnAppeared[] = _("You encountered a wild {B_OPPONENT_MON1_NAME}!\p");
 static const u8 sText_LegendaryPkmnAppeared[] = _("You encountered a wild {B_OPPONENT_MON1_NAME}!\p");
 static const u8 sText_WildPkmnAppearedPause[] = _("You encountered a wild {B_OPPONENT_MON1_NAME}!{PAUSE 127}");
@@ -2456,6 +2465,30 @@ void BufferStringBattle(enum StringID stringID, enum BattlerId battler)
     switch (stringID)
     {
     case STRINGID_INTROMSG: // first battle msg
+#if POLISHED_JOHTO_DEMO
+        if (!IsDoubleBattle() && !(gBattleTypeFlags & (BATTLE_TYPE_LINK | BATTLE_TYPE_RECORDED_LINK
+            | BATTLE_TYPE_FRONTIER | BATTLE_TYPE_TRAINER_HILL | BATTLE_TYPE_CATCH_TUTORIAL)))
+        {
+            if (!(gBattleTypeFlags & BATTLE_TYPE_TRAINER))
+            {
+                if (gBattleTypeFlags & BATTLE_TYPE_GHOST)
+                    stringPtr = sText_PolishedGhostAppeared;
+                else if (gBattleTypeFlags & (BATTLE_TYPE_LEGENDARY | BATTLE_TYPE_ROAMER))
+                    stringPtr = sText_PolishedLegendaryAppeared;
+                else if (gIsFishingEncounter)
+                    stringPtr = sText_PolishedHooked;
+                else
+                    stringPtr = sText_PolishedWildAppeared;
+                break;
+            }
+            if (PolishedGetTrainerAttributes(TRAINER_BATTLE_PARAM.opponentA, 0))
+            {
+                stringPtr = PolishedTrainerHasPluralName(TRAINER_BATTLE_PARAM.opponentA)
+                    ? sText_PolishedTrainersBattle : sText_PolishedTrainerBattle;
+                break;
+            }
+        }
+#endif
         if (gBattleTypeFlags & BATTLE_TYPE_TRAINER)
         {
             if (gBattleTypeFlags & (BATTLE_TYPE_LINK | BATTLE_TYPE_RECORDED_LINK))

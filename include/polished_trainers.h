@@ -12,6 +12,8 @@ enum PolishedAiLayers
     POLISHED_AI_RISKY = 1 << 9,
 };
 u32 PolishedTrainerAiLayers(u32 trainer, u32 badges);
+void PolishedScoreSetup(const enum Move *moves, u32 limitations, bool32 playerFirstTurn,
+                       bool32 enemyGhost, s32 *score);
 void PolishedScoreTrainerPolicies(u32 layers, const enum Move *moves, u32 limitations,
                                   u32 hp, u32 maxHP, bool32 hasTakenTurn, s32 *score);
 #endif
