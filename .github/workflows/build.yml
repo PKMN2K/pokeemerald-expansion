@@ -161,6 +161,9 @@ jobs:
           python3 tools/polished_port/scripts/build_friendship.py --check
           python3 tools/polished_port/scripts/test_friendship.py
           python3 tools/polished_port/scripts/build_trainer_attributes.py --check
+          python3 tools/polished_port/scripts/build_trainer_roster.py --check
+          python3 tools/polished_port/scripts/build_tower_parties.py --check
+          python3 tools/polished_port/scripts/build_trainer_portraits.py --check
           python3 tools/polished_port/scripts/test_battle_systems.py
           python3 tools/polished_port/scripts/build_battle_suite.py --check
           python3 tools/polished_port/scripts/test_battle_suite.py
@@ -189,6 +192,16 @@ jobs:
         run: |
           python3 tools/polished_port/scripts/test_johto_demo_emulator.py --driver /tmp/johto-demo-driver --rom pokeemerald-johto-demo.gba --elf pokeemerald-johto-demo.elf --output /tmp/johto-validation
           python3 tools/polished_port/scripts/test_new_bark_emulator.py --driver /tmp/johto-demo-driver --rom pokeemerald-johto-demo.gba --elf pokeemerald-johto-demo.elf --output /tmp/johto-validation/new-bark
+
+      - name: Verify all source trainer parties, portraits and saved battle flags
+        if: ${{ !cancelled() && steps.johto_driver.outcome == 'success' }}
+        timeout-minutes: 8
+        run: python3 tools/polished_port/scripts/test_trainer_roster_emulator.py --driver /tmp/johto-demo-driver --output /tmp/johto-validation/trainer-roster
+
+      - name: Verify all source Tower sets, tier selection and saved opponent history
+        if: ${{ !cancelled() && steps.johto_driver.outcome == 'success' }}
+        timeout-minutes: 5
+        run: python3 tools/polished_port/scripts/test_tower_parties_emulator.py --driver /tmp/johto-demo-driver --output /tmp/johto-validation/tower-parties
 
       - name: Verify production source trainer attributes
         if: ${{ !cancelled() && steps.johto_driver.outcome == 'success' }}

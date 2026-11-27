@@ -17,6 +17,17 @@
 #define TRAINER_LINK_OPPONENT               0xFF01
 #define TRAINER_UNION_ROOM                  0xFF02
 
+#include "constants/polished_trainer_pics.h"
+#if POLISHED_JOHTO_DEMO
+#define POLISHED_ACTIVE_PIC_COUNT POLISHED_PIC_COUNT
+#define POLISHED_ACTIVE_CLASS_COUNT POLISHED_CLASS_COUNT
+#else
+#define POLISHED_ACTIVE_PIC_COUNT 0
+#define POLISHED_ACTIVE_CLASS_COUNT 0
+#endif
+
+#include "constants/polished_trainer_classes.h"
+
 enum __attribute__((packed)) TrainerPicID
 {
     TRAINER_PIC_NONE,
@@ -187,7 +198,7 @@ enum __attribute__((packed)) TrainerPicID
     TRAINER_PIC_POLISHED_FALKNER,
     TRAINER_PIC_POLISHED_BIRD_KEEPER,
     TRAINER_PIC_POLISHED_GIOVANNI,
-    TRAINER_PIC_COUNT,
+    TRAINER_PIC_COUNT = TRAINER_PIC_POLISHED_GIOVANNI + 1 + POLISHED_ACTIVE_PIC_COUNT,
 };
 
 enum
@@ -534,7 +545,7 @@ enum TrainerClassID
 
     TRAINER_CLASS_SAGE,
     TRAINER_CLASS_ELDER,
-    TRAINER_CLASS_COUNT,
+    TRAINER_CLASS_COUNT = TRAINER_CLASS_ELDER + 1 + POLISHED_ACTIVE_CLASS_COUNT,
 };
 
 #define TRAINER_ENCOUNTER_MUSIC_MALE         0 // Used for Youngsters, Bug Catchers, male School Kids, Sailors, male running and cycling Triathletes, male Pokémon Breeders, and Campers

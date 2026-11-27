@@ -1,6 +1,8 @@
 #ifndef GUARD_POLISHED_TRAINERS_H
 #define GUARD_POLISHED_TRAINERS_H
 
+// Marker on roster entries whose unqualified source Arbok changes with the region.
+#define POLISHED_REGIONAL_ARBOK (1u << 31)
 struct TrainerMon;
 struct TrainerGenerator;
 struct PolishedTrainerAttributes

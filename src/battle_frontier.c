@@ -8,6 +8,7 @@
 #include "battle_factory.h"
 #include "battle_partner.h"
 #include "battle_tower.h"
+#include "polished_tower.h"
 #include "battle_transition.h"
 #include "event_data.h"
 #include "frontier_util.h"
@@ -189,6 +190,15 @@ void FacilityTrainerBattle(struct ScriptContext *ctx)
 void FillFrontierTrainerParty(u8 monsCount)
 {
     ZeroEnemyPartyMons();
+#if POLISHED_JOHTO_DEMO
+    if (gBattleTypeFlags == (BATTLE_TYPE_TRAINER | BATTLE_TYPE_BATTLE_TOWER)
+        && gBattleScripting.specialTrainerBattleType == FACILITY_BATTLE_TOWER
+        && monsCount == FRONTIER_PARTY_SIZE && IsPolishedTowerChallenge())
+    {
+        PolishedBuildTowerParty(GetCurrentFacilityWinStreak());
+        return;
+    }
+#endif
     FillTrainerParty(TRAINER_BATTLE_PARAM.opponentA, B_TRAINER_OPPONENT_A, monsCount);
 }
 

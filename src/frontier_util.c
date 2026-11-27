@@ -3030,7 +3030,7 @@ u16 GetBattleFacilityTrainerGfxId(u16 trainerId)
     }
 }
 
-u8 GetFrontierTrainerFrontSpriteId(u16 trainerId)
+enum TrainerPicID GetFrontierTrainerFrontSpriteId(u16 trainerId)
 {
     if (IsExtendedTrainerId(trainerId))
         return GetTrainerPicFromId(trainerId);

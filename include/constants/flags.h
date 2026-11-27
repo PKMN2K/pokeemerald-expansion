@@ -1430,6 +1430,8 @@
 // The original contiguous range covers trainer IDs 0–863. Route 31 uses
 // dedicated persistent flags outside this range (see GetTrainerFlagId).
 
+// Virtual flags backed by SaveBlock3. Keep all original event/partner IDs stable.
+#define POLISHED_ROSTER_FLAG_START 0x3000
 #define TRAINER_FLAGS_START                                         0x500
 #define TRAINER_FLAGS_END                                           (TRAINER_FLAGS_START + MAX_TRAINERS_COUNT - 1) // 0x85F
 

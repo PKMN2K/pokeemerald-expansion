@@ -5,6 +5,7 @@
 #include "trainer_util.h"
 #include "constants/opponents.h"
 #include "polished_trainers.h"
+#include "regions.h"
 
 struct PolishedTrainerEntry
 {
@@ -12,13 +13,21 @@ struct PolishedTrainerEntry
     u8 count, baseMoney;
     bool8 pluralName;
     enum Item items[MAX_TRAINER_ITEMS];
-    struct PolishedTrainerAttributes mons[PARTY_SIZE];
+    struct PolishedTrainerAttributes mons[PARTY_SIZE + 1]; // Inver selects six of seven.
 };
 #include "data/polished_trainers.h"
+#if POLISHED_JOHTO_DEMO
+#include "data/polished_trainer_roster.h"
+STATIC_ASSERT(ARRAY_COUNT(sRosterEntries) == POLISHED_ROSTER_COUNT, PolishedRosterCount);
+#endif
 
 static const struct PolishedTrainerEntry *FindPolishedTrainer(u32 trainer)
 {
 #if !IS_FRLG
+#if POLISHED_JOHTO_DEMO
+    if (trainer >= POLISHED_ROSTER_FIRST && trainer < TRAINERS_COUNT)
+        return &sRosterEntries[trainer - POLISHED_ROSTER_FIRST];
+#endif
     for (u32 i = 0; i < ARRAY_COUNT(sPolishedTrainerEntries); i++)
         if (sPolishedTrainerEntries[i].trainer == trainer)
             return &sPolishedTrainerEntries[i];
@@ -58,6 +67,10 @@ bool32 PolishedGenerateTrainerMon(struct Pokemon *mon, const struct TrainerMon *
         return FALSE;
     assertf(definition->species == attrs->species, "Source trainer binding differs from party species");
     struct TrainerMon source = *definition;
+#if POLISHED_JOHTO_DEMO
+    if (source.species == SPECIES_ARBOK && (source.tags & POLISHED_REGIONAL_ARBOK) && GetCurrentRegion() == REGION_KANTO)
+        source.species = SPECIES_ARBOK_KANTO;
+#endif
     source.iv = attrs->iv;
     source.ev = attrs->ev;
     source.nature = attrs->nature;

@@ -26,6 +26,9 @@
 #include "constants/items.h"
 #include "constants/moves.h"
 #include "config/save.h"
+#if POLISHED_JOHTO_DEMO
+#include "constants/polished_trainer_ids.h"
+#endif
 
 // Prevent cross-jump optimization.
 #define BLOCK_CROSS_JUMP asm("");
@@ -296,6 +299,12 @@ struct SaveBlock3
 #if POLISHED_JOHTO_DEMO && ROAMER_COUNT < 2
     u32 polishedRoamerMagic;
     struct Roamer extraRoamers[2 - ROAMER_COUNT];
+#endif
+#if POLISHED_JOHTO_DEMO
+    u32 polishedTrainerFlagsVersion;
+    u8 polishedTrainerFlags[(POLISHED_ROSTER_COUNT + 7) / 8];
+    u32 polishedTowerVersion;
+    u16 polishedTowerHistory[9]; // Three teams, with one-based set indices.
 #endif
 }; /* max size 1624 bytes */
 

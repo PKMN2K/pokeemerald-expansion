@@ -2,6 +2,7 @@
 """Independent pinned-source vectors and negative controls for shared systems."""
 import json
 import unittest
+from pathlib import Path
 from unittest.mock import patch
 
 import build_battle_systems as systems
@@ -40,10 +41,12 @@ class BattleSystemsTest(unittest.TestCase):
     def test_party_coverage_includes_separately_assembled_inver(self):
         coverage = self.trainers['party_coverage']
         self.assertEqual(coverage['source_parties'], 956)
-        self.assertEqual(coverage['bound_parties'], len(self.parties))
-        self.assertEqual(sum(map(len, coverage['unbound_by_class'].values())), 956 - len(self.parties))
-        self.assertIn('1', coverage['unbound_by_class']['INVER'])
-        self.assertNotIn('GIOVANNI1', coverage['unbound_by_class']['GIOVANNI'])
+        self.assertEqual(coverage['bound_parties'], 956)
+        self.assertEqual(coverage['existing_campaign_ids'], len(self.parties))
+        self.assertEqual(coverage['unbound_by_class'], {})
+        aliases = (Path(__file__).resolve().parents[3]/'include/constants/polished_trainer_ids.h').read_text()
+        self.assertIn('#define TRAINER_PC_INVER_1 ', aliases)
+        self.assertIn('#define TRAINER_PC_GIOVANNI_GIOVANNI1 TRAINER_POLISHED_GIOVANNI1', aliases)
 
     def test_custom_personality_and_party_wide_ev_flags(self):
         joey = self.parties['TRAINER_POLISHED_JOEY']['mons'][0]

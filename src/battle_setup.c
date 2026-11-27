@@ -889,7 +889,8 @@ static u16 GetSumOfPlayerPartyLevel(u8 numMons)
 u8 GetPolishedTrainerLevel(u16 trainerId, u8 level)
 {
 #if !IS_FRLG
-    if (trainerId == TRAINER_POLISHED_FINCH || trainerId == TRAINER_POLISHED_GIOVANNI1)
+    bool32 legacyLevels = trainerId == TRAINER_POLISHED_FINCH || trainerId == TRAINER_POLISHED_GIOVANNI1;
+    if (legacyLevels || (trainerId >= POLISHED_ROSTER_FIRST && trainerId < TRAINERS_COUNT && level > MAX_LEVEL))
     {
         u8 badges = 0, base;
         // The garden grants Emerald's Surf permission before a Johto badge
@@ -901,7 +902,12 @@ u8 GetPolishedTrainerLevel(u16 trainerId, u8 level)
             badges++;
         }
         if (JohtoHeadbuttGetBadgeBaseLevel(badges, &base))
-            return level + base - 4; // Finch's party stores its zero-badge levels.
+        {
+            // Older party definitions store their zero-badge levels. The full
+            // roster stores the source level byte (178 plus a signed offset).
+            s32 adjusted = (s32)base + level - (legacyLevels ? 4 : 178);
+            return max(2, min(MAX_LEVEL - 1, adjusted));
+        }
     }
 #endif
     return level;
@@ -1104,7 +1110,7 @@ static void TryUpdateGymLeaderRematchFromTrainer(void)
 // Post-partner trainer IDs use spare persistent bits in the original save.
 static const u16 sExtraTrainerFlags[] = {FLAG_POLISHED_ROUTE31_WADE, FLAG_POLISHED_ROUTE31_FINCH,
     FLAG_POLISHED_SPROUT_CHOW, FLAG_POLISHED_SPROUT_NICO, FLAG_POLISHED_SPROUT_EDMOND, FLAG_POLISHED_SPROUT_JIN, FLAG_POLISHED_SPROUT_TROY, FLAG_POLISHED_SPROUT_NEAL, FLAG_POLISHED_SPROUT_LI, FLAG_POLISHED_ROD, FLAG_POLISHED_ABE, FLAG_POLISHED_FALKNER, FLAG_POLISHED_GIOVANNI1};
-STATIC_ASSERT(ARRAY_COUNT(sExtraTrainerFlags) == TRAINERS_COUNT - TRAINER_POLISHED_WADE, MissingTrainerFlags);
+STATIC_ASSERT(ARRAY_COUNT(sExtraTrainerFlags) == POLISHED_ROSTER_FIRST - TRAINER_POLISHED_WADE, MissingTrainerFlags);
 #endif
 
 u16 GetTrainerFlagId(u16 trainerId)
@@ -1114,7 +1120,11 @@ u16 GetTrainerFlagId(u16 trainerId)
 #if !IS_FRLG
     // IDs immediately after the original roster belong to battle partners.
     // Map only real additional trainers; zero is the engine's inert flag.
-    if (trainerId >= TRAINER_POLISHED_WADE && trainerId < TRAINERS_COUNT)
+#if POLISHED_JOHTO_DEMO
+    if (trainerId >= POLISHED_ROSTER_FIRST && trainerId < TRAINERS_COUNT)
+        return POLISHED_ROSTER_FLAG_START + trainerId - POLISHED_ROSTER_FIRST;
+#endif
+    if (trainerId >= TRAINER_POLISHED_WADE && trainerId < POLISHED_ROSTER_FIRST)
         return sExtraTrainerFlags[trainerId - TRAINER_POLISHED_WADE];
 #endif
     return 0;
@@ -2301,10 +2311,28 @@ static void GenerateNPCParty(struct Pokemon *party, const struct Trainer *traine
             monsCount = PARTY_SIZE / 2;
     }
 
-    u32 monIndices[monsCount];
+    if (monsCount == 0)
+        return; // Source name-only records have no fixed party.
+
+    u32 monIndices[PARTY_SIZE];
     struct TrainerGenerator *trainerGen = AllocZeroed(sizeof(struct TrainerGenerator));
     MakeTrainerGenerator(trainerGen, trainer);
-    DoTrainerPartyPool(trainer, monIndices, monsCount, gBattleTypeFlags);
+#if POLISHED_JOHTO_DEMO
+    if (trainerId == TRAINER_PC_INVER_1)
+    {
+        // PickPsychicInverParty uses shuffled indices 6,5,...,1 in that order.
+        u8 indices[7] = {0, 1, 2, 3, 4, 5, 6};
+        for (u32 last = 6; last != 0; last--)
+        {
+            u32 pos = PolishedRandomRange(last + 1);
+            u8 temp;
+            SWAP(indices[last], indices[pos], temp);
+            monIndices[6 - last] = indices[last];
+        }
+    }
+    else
+#endif
+        DoTrainerPartyPool(trainer, monIndices, monsCount, gBattleTypeFlags);
 
     for (i = 0; i < monsCount; i++)
     {

@@ -2,6 +2,7 @@
 #define GUARD_DATA_H
 
 #include "constants/moves.h"
+#include "constants/characters.h"
 #include "constants/trainers.h"
 #include "constants/battle.h"
 #include "constants/pokeball.h"
@@ -149,7 +150,7 @@ struct Trainer
 
 struct TrainerClass
 {
-    u8 name[13];
+    u8 name[14]; // Longest imported class is Pokémon Prof. plus the terminator.
     u8 money;
     u16 ball;
 };
@@ -320,6 +321,11 @@ static inline const u8 *GetTrainerClassNameFromId(u16 trainerId)
 
 static inline const u8 *GetTrainerNameFromId(u16 trainerId)
 {
+#if POLISHED_JOHTO_DEMO
+    if (trainerId >= TRAINER_PC_RIVAL1_RIVAL1_4 && trainerId <= TRAINER_PC_RIVAL2_6
+        && gSaveBlock2Ptr->polishedRivalName[0] != 0 && gSaveBlock2Ptr->polishedRivalName[0] != EOS)
+        return gSaveBlock2Ptr->polishedRivalName;
+#endif
     return GetTrainerStructFromId(trainerId)->trainerName;
 }
 

@@ -621,8 +621,15 @@ const union AnimCmd *const sBackAnims_OldManPokedude[] = {
         .animation = anim,                                                                   \
     }}
 
+#if POLISHED_JOHTO_DEMO
+static const u32 sPolishedTrainerArt[] = INCBIN_U32("graphics/trainers/front_pics/polished_roster.bin");
+#endif
+
 const struct TrainerPicInfo gTrainerPicInfo[TRAINER_PIC_COUNT] =
 {
+#if POLISHED_JOHTO_DEMO
+#include "polished_trainer_pics.h"
+#endif
     [TRAINER_PIC_NONE] =
     {
         .frontPic = TRAINER_FRONT_PIC(gTrainerFrontPic_None, gTrainerPalette_None),

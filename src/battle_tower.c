@@ -1,4 +1,5 @@
 #include "global.h"
+#include "polished_tower.h"
 #include "battle_tower.h"
 #include "apprentice.h"
 #include "event_data.h"
@@ -715,6 +716,10 @@ static void InitTowerChallenge(void)
     gSaveBlock2Ptr->frontier.challengePaused = FALSE;
     gSaveBlock2Ptr->frontier.disableRecordBattle = FALSE;
     ResetFrontierTrainerIds();
+#if POLISHED_JOHTO_DEMO
+    if (IsPolishedTowerChallenge())
+        PolishedResetTowerHistory();
+#endif
     if (!(gSaveBlock2Ptr->frontier.winStreakActiveFlags & sWinStreakFlags[battleMode][lvlMode]))
         gSaveBlock2Ptr->frontier.towerWinStreaks[battleMode][lvlMode] = 0;
 

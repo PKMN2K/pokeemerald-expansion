@@ -61,11 +61,17 @@ def party_coverage(parties):
     source = set(identities)
     bound = set(BINDINGS.values())
     assert len(identities) == len(source) and len(bound) == len(BINDINGS) and bound <= source
+    # Every generated party has an explicit source-class/identity alias, including
+    # the campaign IDs that existed before the full roster import.
+    header = (ROOT/'include/constants/polished_trainer_ids.h').read_text()
+    registered = set(re.findall(r'^#define (TRAINER_PC_\w+) ', header, re.M))
     missing = {}
     for group, trainer in identities:
-        if (group, trainer) not in bound:
+        if f'TRAINER_PC_{group}_{trainer}' not in registered:
             missing.setdefault(group, []).append(trainer)
-    return dict(source_parties=len(source), bound_parties=len(bound), unbound_by_class=missing)
+    missing_count = sum(map(len, missing.values()))
+    return dict(source_parties=len(source), bound_parties=len(source)-missing_count,
+                existing_campaign_ids=len(bound), unbound_by_class=missing)
 
 
 def build():
@@ -151,7 +157,7 @@ def build():
         out += ['        },', '    },']
     out += ['};', '#endif', '']
     report = dict(source_commit=archive.source.PIN, source_variant='default; FAITHFUL undefined', classes=defaults,
-        bindings=records, party_coverage=party_coverage(parties), remaining='Unregistered source parties and source AI are not implemented by this adapter.')
+        bindings=records, party_coverage=party_coverage(parties), remaining='All source party identities are registered. Complete source AI and overworld encounter script bindings remain separate obligations.')
     return {ROOT/'src/data/polished_trainers.h': '\n'.join(out), MANIFEST: json.dumps(report, indent=2)+'\n'}
 
 

@@ -4,6 +4,7 @@
 #include "data.h"
 #include "graphics.h"
 #include "trainer_pools.h"
+#include "polished_trainers.h"
 #include "battle_transition.h"
 #include "constants/abilities.h"
 #include "constants/items.h"
@@ -233,6 +234,9 @@ const struct Trainer gTrainers[DIFFICULTY_COUNT][TRAINERS_COUNT] =
 #include "data/trainers_frlg.h"
 #else
 #include "data/trainers.h"
+#if POLISHED_JOHTO_DEMO
+#include "data/polished_trainer_parties.h"
+#endif
 #endif
 };
 #endif

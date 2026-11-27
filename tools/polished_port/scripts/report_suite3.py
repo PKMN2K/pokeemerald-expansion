@@ -18,7 +18,7 @@ import run_attack_suite as battle
 # required in addition to these distinguishing cases from each owned domain.
 DOMAIN_CHECKS = {
     'setup': (
-        ['suite3-contexts/report.json', 'battle-systems/report.json', 'new-bark/sprout-validation.json', 'new-bark/falkner-validation.json',
+        ['trainer-roster/report.json', 'suite3-contexts/report.json', 'battle-systems/report.json', 'new-bark/sprout-validation.json', 'new-bark/falkner-validation.json',
          'shift-source/shift-switch-validation.json', 'shift-native/shift-switch-validation.json'],
         ['Polished systems trainer generation preserves source slots stats gender and friendship',
          'Polished systems trainer ability selection uses source species byte trainer ID and one based slot']),
@@ -37,13 +37,13 @@ DOMAIN_CHECKS = {
         ['Polished action AI Destiny Bond failure queries cannot clear the live volatile',
          'Polished escape roamer AI and action execution both reject sleep and freeze']),
     'facility_link': (
-        ['link-conversion/report.json'],
+        ['tower-parties/report.json', 'link-conversion/report.json'],
         ["Polished linked Conversion plays both trainers' choices and leaves the next turn aligned",
          'Polished affection excludes actual link and frontier battles',
          'Polished critical evolution counter excludes link battles',
          'Polished Sketch boundary rejects link mode and invalid or duplicate Sketch history without mutation']),
     'presentation_rng': (
-        ['battle-art/report.json', 'link-conversion/report.json', 'conversion-selection/report.json', 'metronome-pool/report.json', 'new-bark/validation.json',
+        ['trainer-roster/report.json', 'battle-art/report.json', 'link-conversion/report.json', 'conversion-selection/report.json', 'metronome-pool/report.json', 'new-bark/validation.json',
          'shift-source/shift-switch-validation.json', 'shift-native/shift-switch-validation.json'],
         ['Polished Safari bait and rock consume every rejected draw and one accepted draw']),
 }
@@ -104,6 +104,14 @@ def check_probe(path, rom_hash, pin):
                 or len(data['tackle_pp_before']) != 2 or len(data['tackle_pp_after']) != 2
                 or any(before - after != 1 for before, after in zip(data['tackle_pp_before'], data['tackle_pp_after']))):
             raise ValueError('missing serial choice retry or next-turn synchronization')
+    if path.parent.name == 'tower-parties':
+        if (data['sets'] != 432 or data['generated_teams'] < 700 or data['retained_history_slots'] != 9
+                or data['difficulty_rows'] != 8 or not data['third_slot_history_repeats']):
+            raise ValueError('missing Tower sets, tier, third-slot repeat or Flash history evidence')
+    if path.parent.name == 'trainer-roster':
+        if (data['source_parties'], data['roster_entries'], data['party_builds'],
+                data['portraits_and_palettes'], data['inver_omissions'], data['saved_trainer_flags'], data['inverse_matchups']) != (956, 2659, 1912, 154, 7, 934, 324):
+            raise ValueError('missing full source trainer, portrait, or saved flag evidence')
     if path.parent.name == 'suite3-contexts':
         if (data['seeded_reward_cases'] < 127 or data['wild_factory_cases'] < 96
                 or data['roamer_movement_cases'] < 280 or data['roamer_encounter_bytes'] != 256

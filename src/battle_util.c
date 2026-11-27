@@ -6546,6 +6546,17 @@ enum ProtectType GetProtectType(enum ProtectMethod method)
     return FALSE;
 }
 
+static bool32 IsInverseBattleActive(void)
+{
+#if POLISHED_JOHTO_DEMO
+    if (gMain.inBattle && (gBattleTypeFlags & BATTLE_TYPE_TRAINER)
+        && !(gBattleTypeFlags & (BATTLE_TYPE_MORE_THAN_TWO_BATTLERS | BATTLE_TYPE_LINK | BATTLE_TYPE_FRONTIER | BATTLE_TYPE_RECORDED))
+        && TRAINER_BATTLE_PARAM.opponentA == TRAINER_PC_INVER_1)
+        return TRUE;
+#endif
+    return B_FLAG_INVERSE_BATTLE != 0 && FlagGet(B_FLAG_INVERSE_BATTLE);
+}
+
 enum InverseBattleCheck
 {
     INVERSE_BATTLE,
@@ -6583,7 +6594,7 @@ static bool32 IsBattlerGroundedInverseCheck(enum BattlerId battler, enum Ability
         return TRUE;
     if (IsBattlerUngroundedByAbilityItemOrEffect(battler, ability, holdEffect))
         return FALSE;
-    if (IS_BATTLER_OF_TYPE(battler, TYPE_FLYING) && (checkInverse != INVERSE_BATTLE || !FlagGet(B_FLAG_INVERSE_BATTLE)))
+    if (IS_BATTLER_OF_TYPE(battler, TYPE_FLYING) && (checkInverse != INVERSE_BATTLE || !IsInverseBattleActive()))
         return FALSE;
     return TRUE;
 }
@@ -9133,7 +9144,7 @@ static inline uq4_12_t CalcTypeEffectivenessMultiplierInternal(struct DamageCont
         && ctx->holdEffects[ctx->battlerDef] == HOLD_EFFECT_IRON_BALL
         && IS_BATTLER_OF_TYPE(ctx->battlerDef, TYPE_FLYING)
         && !IsBattlerGrounded(ctx->battlerDef, ctx->abilities[ctx->battlerDef], HOLD_EFFECT_NONE) // We want to ignore Iron Ball so skip item check
-        && !FlagGet(B_FLAG_INVERSE_BATTLE))
+        && !IsInverseBattleActive())
     {
         modifier = UQ_4_12(1.0);
     }
@@ -9254,7 +9265,7 @@ uq4_12_t GetOverworldTypeEffectiveness(struct Pokemon *mon, enum Type moveType)
 
 uq4_12_t GetTypeModifier(enum Type atkType, enum Type defType)
 {
-    if (B_FLAG_INVERSE_BATTLE != 0 && FlagGet(B_FLAG_INVERSE_BATTLE))
+    if (IsInverseBattleActive())
         return GetInverseTypeMultiplier(gTypeEffectivenessTable[atkType][defType]);
     return gTypeEffectivenessTable[atkType][defType];
 }

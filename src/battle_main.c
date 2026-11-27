@@ -429,6 +429,9 @@ const struct TrainerClass gTrainerClasses[TRAINER_CLASS_COUNT] =
     [TRAINER_CLASS_RUIN_MANIAC_FRLG] =     { _("RUIN MANIAC"), 12 },
     [TRAINER_CLASS_LADY_FRLG] =            { _("LADY"), 50 },
     [TRAINER_CLASS_PAINTER_FRLG] =         { _("PAINTER"), 4 },
+#if POLISHED_JOHTO_DEMO
+#include "data/polished_trainer_classes.h"
+#endif
     [TRAINER_CLASS_SAGE] =                { _("SAGE"), 2 },
     [TRAINER_CLASS_ELDER] =               { _("ELDER"), 3 },
 };

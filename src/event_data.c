@@ -208,6 +208,17 @@ u8 *GetFlagPointer(u16 id)
 {
     if (id == 0)
         return NULL;
+#if POLISHED_JOHTO_DEMO
+    else if (id >= POLISHED_ROSTER_FLAG_START && id < POLISHED_ROSTER_FLAG_START + POLISHED_ROSTER_COUNT)
+    {
+        if (gSaveBlock3Ptr->polishedTrainerFlagsVersion != 0x50545231)
+        {
+            memset(gSaveBlock3Ptr->polishedTrainerFlags, 0, sizeof(gSaveBlock3Ptr->polishedTrainerFlags));
+            gSaveBlock3Ptr->polishedTrainerFlagsVersion = 0x50545231;
+        }
+        return &gSaveBlock3Ptr->polishedTrainerFlags[(id - POLISHED_ROSTER_FLAG_START) / 8];
+    }
+#endif
     else if (id < SPECIAL_FLAGS_START)
         return &gSaveBlock1Ptr->flags[id / 8];
 #if TESTING

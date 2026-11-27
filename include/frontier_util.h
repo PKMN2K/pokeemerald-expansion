@@ -32,7 +32,7 @@ u8 GetFrontierTrainerFixedIvs(u16 trainerId);
 u16 GetRandomScaledFrontierTrainerId(u8 challengeNum, u8 battleNum);
 void SetBattleFacilityTrainerGfxId(u16 trainerId, u8 tempVarId);
 u16 GetBattleFacilityTrainerGfxId(u16 trainerId);
-u8 GetFrontierTrainerFrontSpriteId(u16 trainerId);
+enum TrainerPicID GetFrontierTrainerFrontSpriteId(u16 trainerId);
 enum TrainerClassID GetFrontierOpponentClass(u16 trainerId);
 u8 GetFrontierTrainerFacilityClass(u16 trainerId);
 void GetFrontierTrainerName(u8 *dst, u16 trainerId);
