@@ -29,7 +29,7 @@ DOMAIN_CHECKS = {
          'Polished systems Friend Ball delivers source friendship with capture EXP',
          'Polished escape resolves inclusive random boundaries and repeated attempts through Run']),
     'rewards': (
-        ['suite3-contexts/report.json', 'friendship-storage/report.json', 'new-bark/battle-loss.json'],
+        ['suite3-contexts/report.json', 'factory-points/report.json', 'friendship-storage/report.json', 'new-bark/battle-loss.json'],
         ['Polished systems EXP combines participant and held share fractions before rounding',
          'Polished systems Safari rewards exclude the unsent lead and retain held shares']),
     'ai': (
@@ -100,7 +100,8 @@ def check_probe(path, rom_hash, pin):
                 data['expansion_control']) != (391, True, 784, 784, 'RAYQUAZA') or (data['playback_steps'], data['stationary_egg_from_cycle']) != (12733, 11):
             raise ValueError('missing source picture, palette or animation evidence')
     if path.parent.name == 'battle-art':
-        if (len(set(data['verified_items'])) != 243 or 'ITEM_POLISHED_ARMOR_SUIT' not in data['verified_items']
+        if (len(set(data['verified_items'])) != 244
+                or not {'ITEM_POLISHED_ARMOR_SUIT', 'ITEM_POLISHED_MINT_LEAF'} <= set(data['verified_items'])
                 or not data['item_vram_checked'] or data['registered_trainer_portraits'] != ['GIOVANNI1'] or not data['expansion_item_fallback']):
             raise ValueError('missing decoded source item tiles, palettes or Giovanni portrait')
     if path.parent.name == 'link-conversion':
@@ -115,6 +116,9 @@ def check_probe(path, rom_hash, pin):
         if (data['prefix_cases'] != 64 or data['complete_set_awards'] != [12, 19, 26, 33, 40, 47, 53, 56]
                 or {name: case['earned'] for name, case in cases.items()} != expected
                 or any(case['verified_reloads'] != 2 for case in cases.values())
+                or {name: case['mint_leaves'] for name, case in cases.items()} != {name: int(name == 'factory-head') for name in expected}
+                or {name: (case['ability_patches'], case['earned'], case['verified_reloads']) for name, case in data['tower'].items()}
+                   != {'win': (1, 20, 2), 'full': (0, 20, 2), 'loss': (0, 15, 2)}
                 or cases['factory-head']['streak'] != 21 or cases['long-streak']['record'] != 10003
                 or cases['wallet-and-wrap']['wallet'] != 50000 or cases['wallet-and-wrap']['card'] != 65535):
             raise ValueError('missing Factory BP, streak, lobby or Flash evidence')

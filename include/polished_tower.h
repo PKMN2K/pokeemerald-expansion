@@ -22,6 +22,7 @@ enum TowerEntryConflict { TOWER_ENTRY_OK, TOWER_ENTRY_DUPLICATE_SPECIES, TOWER_E
 enum TowerEntryConflict PolishedTowerEntryConflict(enum Species first, enum Item firstItem, enum Species second, enum Item secondItem);
 bool32 PolishedHasEligibleTowerTeam(void);
 void BufferPolishedTowerStreaks(void);
+void GetPolishedFacilityClearPrize(void);
 void PolishedSettleTowerPoints(void);
 void PolishedSettleFactoryPoints(void);
 void PolishedForfeitInterruptedFactorySet(void);

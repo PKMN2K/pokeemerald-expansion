@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Verify Factory BP awards, native victory/lobby scripts and Flash checkpoints."""
+"""Verify Factory BP and both facilities’ seven-win prizes through the lobby and Flash."""
 import argparse
 import hashlib
 import json
@@ -14,9 +14,9 @@ from test_johto_demo_emulator import A, B, DOWN, LEFT, RIGHT, START, UP, Game, p
 from test_shift_switch_emulator import ENGLISH
 
 
-def source_awards():
+def source_awards(facility):
     asm = source.trainers.archive.authenticated_sources()['engine/events/battle_tower/load_trainer.asm']['text']
-    rows = re.findall(r'^; Challenge run (\d+): ([\d, ]+), (\d+) total', asm.split('; FACTORY\n', 1)[1], re.M)
+    rows = re.findall(r'^; Challenge run (\d+): ([\d, ]+), (\d+) total', asm.split('; ' + facility + '\n', 1)[1].split('; FACTORY\n', 1)[0], re.M)
     result = []
     for group, entries, total in rows:
         points = list(map(int, entries.split(', ')))
@@ -27,7 +27,7 @@ def source_awards():
 
 
 def state(game):
-    values = struct.unpack('<15I', game.read(game.sym['gSettlement'], 60))
+    values = struct.unpack('<17I', game.read(game.sym['gSettlement'], 68))
     assert not values[1], ('Factory fixture error, actual and expected', *values[1:4])
     return values
 
@@ -66,6 +66,53 @@ def victory(game, points, name):
     png_from_ppm(frame)
 
 
+def settle_in_lobby(game, end, prize_message=None, restart_during_award=False):
+    game.press(end)
+    saw_message = False
+    restarted = False
+    for _ in range(200):
+        current = state(game)
+        if current[5] == 0 and (end == B or current[13]):
+            assert prize_message is None or saw_message, (prize_message, current)
+            assert restarted == restart_during_award
+            return current
+        raw = game.read(game.sym['gStringVar4'], 120).split(b'\xff', 1)[0]
+        shown = ''.join(ENGLISH.get(byte, '?') for byte in raw)
+        if prize_message and prize_message in shown:
+            saw_message = True
+            if restart_during_award and not restarted:
+                assert sum(current[15:17]) == 1
+                restored = reboot(game)
+                assert restored[5] == 3 and restored[15:17] == (0, 0), restored
+                restarted = True
+                saw_message = False
+                game.press(end)
+                continue
+        game.press(A, 24)
+    raise AssertionError(('Lobby did not finish settlement', current, shown))
+
+
+def tower_replay(game, awards, case):
+    full = case == 'full'
+    loss = case == 'loss'
+    phase(game, 1)
+    select = 4
+    game.press(select | {'full': DOWN, 'loss': LEFT, 'win': 0}[case])
+    stages = 6 if loss else 7
+    phase(game, 2, stages)
+    saved = reboot(game)
+    assert saved[5:7] == (1 if loss else 3, stages) and saved[15:17] == (0, 0), saved
+    message = {'win': 'Red gained AbilityPatch.', 'full': 'The Item Pocket is full', 'loss': None}[case]
+    expected = (0, int(not full and not loss))
+    current = settle_in_lobby(game, A if loss else RIGHT, message, restart_during_award=not full and not loss)
+    points = sum(awards[0][:stages])
+    for _ in range(2):
+        assert current[15:17] == expected and current[7:9] == (10 + points, 20 + points), current
+        current = reboot(game)
+    assert current[5] == 0 and current[15:17] == expected and current[7:9] == (10 + points, 20 + points), current
+    return dict(ability_patches=current[16], earned=points, verified_reloads=2)
+
+
 def replay(game, awards, name, start, opening, stages, end):
     initial = phase(game, 1)
     assert initial[4] == 64
@@ -88,14 +135,12 @@ def replay(game, awards, name, start, opening, stages, end):
     wins = (opening + stages) & 0xffff
     saved = reboot(game)
     assert saved[5:13] == (3 if won else 1, stages, wallet, card, wins, opening, 1, 1), (name, saved)
-    game.press(end)
-    for _ in range(160):
-        current = state(game)
-        if current[5] == 0 and (end == B or current[13]):
-            break
-        game.press(A, 32)
-    else:
-        raise AssertionError(('Factory lobby did not save settlement', name, current))
+    prize_message = None
+    if won:
+        prize_message = 'The Item Pocket is full' if start == DOWN else 'Red gained Mint Leaf.'
+    current = settle_in_lobby(game, end, prize_message, restart_during_award=won and start != DOWN)
+    leaves = int(won and start != DOWN)
+    assert current[15:17] == (leaves, 0), (name, current)
     points = sum(award(i) for i in range(stages))
     record = wins if wins >= opening else opening
     expected = (min(50000, wallet + points), min(65535, card + points), wins if won else 0,
@@ -104,13 +149,14 @@ def replay(game, awards, name, start, opening, stages, end):
     for _ in range(2):
         current = reboot(game)
         assert current[5] == 0 and current[7:13] == expected, (name, current, expected)
-        assert current[14] == int(record != opening), (name, current)
+        assert current[14] == int(record != opening) and current[15:17] == (leaves, 0), (name, current)
     return dict(completed=stages, earned=points, wallet=current[7], card=current[8],
-                streak=current[9], record=current[10], swaps=current[11], verified_reloads=2)
+                streak=current[9], record=current[10], swaps=current[11], mint_leaves=leaves, verified_reloads=2)
 
 
 def run(driver, output):
-    awards = source_awards()
+    awards = source_awards('FACTORY')
+    tower_awards = source_awards('TOWER')
     output.mkdir(parents=True, exist_ok=True)
     code = (source.ROOT/'tools/polished_port/tests/factory_points_fixture.c').read_text()
     code = code.replace('/* SOURCE AWARDS */', '\n'.join('    {' + ', '.join(map(str, row)) + '},' for row in awards))
@@ -128,11 +174,18 @@ def run(driver, output):
                 cases[name] = replay(game, awards, name, start, opening, stages, end)
             finally:
                 game.close()
+        tower = {}
+        for name in ('win', 'full', 'loss'):
+            game = Game(driver, elf, elf, output, directory)
+            try:
+                tower[name] = tower_replay(game, tower_awards, name)
+            finally:
+                game.close()
     report = dict(source_commit=source.trainers.archive.source.PIN,
                   production_rom_sha256=hashlib.sha256((source.ROOT/'pokeemerald-johto-demo.gba').read_bytes()).hexdigest(),
-                  prefix_cases=64, complete_set_awards=list(map(sum, awards)), cases=cases)
+                  prefix_cases=64, complete_set_awards=list(map(sum, awards)), cases=cases, tower=tower)
     (output/'report.json').write_text(json.dumps(report, indent=2) + '\n')
-    print(f'PASS: 64 Factory award prefixes and {len(cases)} battle/lobby and Flash replays')
+    print(f'PASS: 64 Factory award prefixes, {len(cases)} Factory and {len(tower)} Tower lobby/Flash replays')
 
 
 if __name__ == '__main__':

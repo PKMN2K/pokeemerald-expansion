@@ -42,6 +42,10 @@ BattleFrontier_BattleFactoryLobby_EventScript_QuitWithoutSaving::
 
 BattleFrontier_BattleFactoryLobby_EventScript_WonChallenge::
 	lockall
+#if POLISHED_JOHTO_DEMO
+	callnative GetPolishedFacilityClearPrize
+	goto_if_ne VAR_RESULT, ITEM_NONE, BattleFrontier_BattleFactoryLobby_EventScript_PolishedPrize
+#endif
 	frontier_isbrain
 	goto_if_eq VAR_RESULT, TRUE, BattleFrontier_BattleFactoryLobby_EventScript_DefeatedFactoryHead
 	msgbox BattleFrontier_BattleFactoryLobby_Text_CongratsSevenWins, MSGBOX_DEFAULT
@@ -55,6 +59,9 @@ BattleFrontier_BattleFactoryLobby_EventScript_GiveBattlePoints::
 	msgbox BattleFrontier_BattleFactoryLobby_Text_AwardBattlePoints, MSGBOX_DEFAULT
 	frontier_givepoints
 	msgbox BattleFrontier_Text_ObtainedXBattlePoints, MSGBOX_GETPOINTS
+#if POLISHED_JOHTO_DEMO
+BattleFrontier_BattleFactoryLobby_EventScript_SaveClear::
+#endif
 	message BattleFrontier_BattleFactoryLobby_Text_ExchangeMonsAndSave
 	waitmessage
 	frontier_checkairshow
@@ -65,6 +72,13 @@ BattleFrontier_BattleFactoryLobby_EventScript_GiveBattlePoints::
 	waitse
 	goto BattleFrontier_BattleFactoryLobby_EventScript_AskRecordBattle
 	end
+
+#if POLISHED_JOHTO_DEMO
+BattleFrontier_BattleFactoryLobby_EventScript_PolishedPrize::
+	call BattleFrontier_EventScript_GivePolishedClearPrize
+	frontier_givepoints
+	goto BattleFrontier_BattleFactoryLobby_EventScript_SaveClear
+#endif
 
 BattleFrontier_BattleFactoryLobby_EventScript_LostChallenge::
 #if POLISHED_JOHTO_DEMO

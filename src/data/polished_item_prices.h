@@ -1,6 +1,7 @@
 /* Generated from pinned default Polished Crystal item attributes. */
 /* Zero denotes native fallback for items absent from the source mapping. */
 static const u32 sPolishedMappedItemPrices[ITEMS_COUNT] = {
+    [ITEM_ABILITY_PATCH] = 1000, /* ABILITYPATCH */
     [ITEM_AMULET_COIN] = 10000, /* AMULET_COIN */
     [ITEM_ANTIDOTE] = 200, /* ANTIDOTE */
     [ITEM_ASPEAR_BERRY] = 10, /* ASPEAR_BERRY */
@@ -53,6 +54,7 @@ static const u32 sPolishedMappedItemPrices[ITEMS_COUNT] = {
     [ITEM_POLISHED_ESCAPE_ROPE] = 1000, /* ESCAPE_ROPE */
     [ITEM_POLISHED_FLOWER_MAIL] = 50, /* FLOWER_MAIL */
     [ITEM_POLISHED_GOLD_LEAF] = 500, /* GOLD_LEAF */
+    [ITEM_POLISHED_MINT_LEAF] = 300, /* MINT_LEAF */
     [ITEM_POLISHED_PINK_BOW] = 1000, /* PINK_BOW */
     [ITEM_POLISHED_SILVER_LEAF] = 500, /* SILVER_LEAF */
     [ITEM_POTION] = 200, /* POTION */

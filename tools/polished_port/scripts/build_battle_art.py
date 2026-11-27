@@ -10,17 +10,17 @@ import tempfile
 import zipfile
 
 from build_pokemon_held_items import ALIASES, ROOT, catalog, sources
-from build_item_prices import MART_ALIASES
+from build_item_prices import FACILITY_PRIZES, MART_ALIASES
 from build_pokemon_learnsets import PIN
 from convert_player_walking import _read_png_2bit_grayscale, _write_indexed_4bit_png
 from polished_route30 import palette
 
 ARCHIVE = ROOT / 'tools/polished_port/fixtures/battle_art.zip'
-ARCHIVE_SHA256 = '010e24aa3562ebf5d5db755d0e686a3b04c1a571eaad4e4cf268ca29e8e8b10e'
+ARCHIVE_SHA256 = 'e8256122df1c937cf8b6306454a87dea5349fb533250adb9173dcf2cee0dd6ed'
 PICTURES = ROOT / 'graphics/items/icons/polished_battle_icons.bin'
 TABLE = ROOT / 'src/data/polished_battle_icons.h'
 ALIASED_ITEMS = {
-    **ALIASES, **{s: pair[0].removeprefix('ITEM_') for s, pair in MART_ALIASES.items()},
+    **ALIASES, **{s: pair[0].removeprefix('ITEM_') for s, pair in (MART_ALIASES | FACILITY_PRIZES).items()},
     'PEWTERCRUNCH': 'PEWTER_CRUNCHIES', 'MULCH': 'POLISHED_MULCH', 'SWEET_HONEY': 'HONEY',
     'ABILITY_CAP': 'ABILITY_CAPSULE', 'METRONOME_I': 'METRONOME', 'WEAK_POLICY': 'WEAKNESS_POLICY',
     'SAFE_GOGGLES': 'SAFETY_GOGGLES', 'PROTECT_PADS': 'PROTECTIVE_PADS', 'HEAVY_BOOTS': 'HEAVY_DUTY_BOOTS',
@@ -28,7 +28,7 @@ ALIASED_ITEMS = {
     'ODD_SOUVENIR': 'POLISHED_ODD_SOUVENIR', 'BRICK_PIECE': 'POLISHED_BRICK_PIECE',
 }
 # These source items currently have no corresponding ordinary GBA item.
-UNBOUND = set('MINT_LEAF SLOWPOKETAIL SURF_MAIL LITEBLUEMAIL PORTRAITMAIL LOVELY_MAIL EON_MAIL MORPH_MAIL BLUESKY_MAIL MUSIC_MAIL MIRAGE_MAIL'.split())
+UNBOUND = set('SLOWPOKETAIL SURF_MAIL LITEBLUEMAIL PORTRAITMAIL LOVELY_MAIL EON_MAIL MORPH_MAIL BLUESKY_MAIL MUSIC_MAIL MIRAGE_MAIL'.split())
 
 
 def mapping():

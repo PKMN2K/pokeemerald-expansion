@@ -63,6 +63,10 @@ BattleFrontier_BattleTowerLobby_EventScript_QuitWithoutSaving::
 BattleFrontier_BattleTowerLobby_EventScript_WonChallenge::
 	lock
 	faceplayer
+#if POLISHED_JOHTO_DEMO
+	callnative GetPolishedFacilityClearPrize
+	goto_if_ne VAR_RESULT, ITEM_NONE, BattleFrontier_BattleTowerLobby_EventScript_PolishedPrize
+#endif
 	frontier_isbrain
 	goto_if_eq VAR_RESULT, TRUE, BattleFrontier_BattleTowerLobby_EventScript_DefeatedMaiden
 	message BattleFrontier_BattleTowerLobby_Text_CongratsBeatenSeven
@@ -94,6 +98,46 @@ BattleFrontier_BattleTowerLobby_EventScript_LookForwardToChallenge::
 	callnative UpdateFollowingPokemon
 	release
 	end
+
+#if POLISHED_JOHTO_DEMO
+BattleFrontier_BattleTowerLobby_EventScript_PolishedPrize::
+	call BattleFrontier_EventScript_GivePolishedClearPrize
+	frontier_givepoints
+	call BattleFrontier_BattleTowerLobby_EventScript_AskSaveBattle
+	goto BattleFrontier_BattleTowerLobby_EventScript_LookForwardToChallenge
+
+BattleFrontier_EventScript_GivePolishedClearPrize::
+	copyvar VAR_0x8006, VAR_RESULT
+	msgbox BattleFrontier_Text_PolishedClearPrize, MSGBOX_DEFAULT
+	bufferitemname STR_VAR_2, VAR_0x8006
+	additem VAR_0x8006, 1
+	goto_if_eq VAR_RESULT, FALSE, BattleFrontier_EventScript_PolishedPrizePocketFull
+	showitemdescription
+	playfanfare MUS_OBTAIN_ITEM
+	msgbox BattleFrontier_Text_PolishedGainedPrize, MSGBOX_DEFAULT
+	waitfanfare
+	msgbox BattleFrontier_Text_PolishedPutPrizeAway, MSGBOX_DEFAULT
+	hideitemdescription
+	return
+
+BattleFrontier_EventScript_PolishedPrizePocketFull:
+	msgbox BattleFrontier_Text_PolishedGainedPrize, MSGBOX_DEFAULT
+	msgbox BattleFrontier_Text_PolishedPrizePocketFull, MSGBOX_DEFAULT
+	return
+
+BattleFrontier_Text_PolishedGainedPrize:
+	.string "{PLAYER} gained\n{STR_VAR_2}.$"
+
+BattleFrontier_Text_PolishedPutPrizeAway:
+	.string "{PLAYER} put the {STR_VAR_2} in\nthe Item Pocket.$"
+
+BattleFrontier_Text_PolishedPrizePocketFull:
+	.string "The Item Pocket\nis full…$"
+
+BattleFrontier_Text_PolishedClearPrize:
+	.string "Congratulations!\pYou've beaten all the trainers!\p"
+	.string "For that, you get this great prize!$"
+#endif
 
 BattleFrontier_BattleTowerLobby_EventScript_LostChallenge::
 #if POLISHED_JOHTO_DEMO

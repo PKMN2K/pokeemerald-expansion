@@ -410,6 +410,19 @@ static void SettleFacilityPoints(bool32 rental)
     ConvertIntToDecimalStringN(gStringVar1, points, STR_CONV_MODE_LEFT_ALIGN, 2);
 }
 
+void GetPolishedFacilityClearPrize(void)
+{
+    const struct BattleFrontier *frontier = &gSaveBlock2Ptr->frontier;
+    gSpecialVar_Result = ITEM_NONE;
+    if (frontier->challengeStatus != CHALLENGE_STATUS_WON
+        || frontier->curChallengeBattleNum != FRONTIER_STAGES_PER_CHALLENGE)
+        return;
+    if (IsPolishedFactoryChallenge())
+        gSpecialVar_Result = ITEM_POLISHED_MINT_LEAF;
+    else if (IsPolishedTowerChallenge())
+        gSpecialVar_Result = ITEM_ABILITY_PATCH;
+}
+
 void PolishedSettleTowerPoints(void)
 {
     if (IsPolishedTowerChallenge())

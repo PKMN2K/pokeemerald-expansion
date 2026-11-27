@@ -6,7 +6,7 @@ import re
 from pathlib import Path
 
 from build_pokemon_held_items import catalog, sources
-from build_item_prices import MART_ALIASES, SOURCE
+from build_item_prices import FACILITY_PRIZES, MART_ALIASES, SOURCE
 
 ROOT = Path(__file__).resolve().parents[3]
 OUTPUT = ROOT / "src/data/polished_item_descriptions.h"
@@ -34,10 +34,10 @@ def build():
         assert row["source_description"] == pinned[token]["source_description"], token
         entries[target] = (token, convert_description(row["source_description"]))
     assert len(entries) == 70
-    for token, (target, _) in MART_ALIASES.items():
+    for token, (target, _) in (MART_ALIASES | FACILITY_PRIZES).items():
         assert target not in entries
         entries[target] = (token, convert_description(pinned[token]["source_description"]))
-    assert len(entries) == 81
+    assert len(entries) == 83
     names = set(re.findall(r"\bITEM_\w+", (ROOT / "include/constants/items.h").read_text()))
     assert set(entries) <= names
     output = ["/* Generated from SHA-pinned default Polished Crystal item descriptions. */",
@@ -59,7 +59,7 @@ def main():
         assert OUTPUT.read_bytes() == data, "Regenerate Polished Crystal item descriptions"
     else:
         OUTPUT.write_bytes(data)
-    print("PASS: 81 source item descriptions and explicit GBA glyph substitutions")
+    print("PASS: 83 source item descriptions and explicit GBA glyph substitutions")
 
 
 if __name__ == "__main__":

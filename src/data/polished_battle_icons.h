@@ -226,23 +226,24 @@ static const u8 sPolishedIconIndex[ITEMS_COUNT] = {
     [ITEM_LINKING_CORD] = 224,
     [ITEM_POLISHED_SILVER_LEAF] = 225,
     [ITEM_POLISHED_GOLD_LEAF] = 226,
-    [ITEM_BOTTLE_CAP] = 227,
-    [ITEM_NUGGET] = 228,
-    [ITEM_BIG_NUGGET] = 229,
-    [ITEM_TINY_MUSHROOM] = 230,
-    [ITEM_BIG_MUSHROOM] = 231,
-    [ITEM_BALMMUSHROOM] = 232,
-    [ITEM_PEARL] = 233,
-    [ITEM_BIG_PEARL] = 234,
-    [ITEM_PEARL_STRING] = 235,
-    [ITEM_STARDUST] = 236,
-    [ITEM_STAR_PIECE] = 237,
-    [ITEM_POLISHED_BRICK_PIECE] = 238,
-    [ITEM_RARE_BONE] = 239,
-    [ITEM_HELIX_FOSSIL] = 240,
-    [ITEM_DOME_FOSSIL] = 241,
-    [ITEM_OLD_AMBER] = 242,
-    [ITEM_POLISHED_FLOWER_MAIL] = 243,
+    [ITEM_POLISHED_MINT_LEAF] = 227,
+    [ITEM_BOTTLE_CAP] = 228,
+    [ITEM_NUGGET] = 229,
+    [ITEM_BIG_NUGGET] = 230,
+    [ITEM_TINY_MUSHROOM] = 231,
+    [ITEM_BIG_MUSHROOM] = 232,
+    [ITEM_BALMMUSHROOM] = 233,
+    [ITEM_PEARL] = 234,
+    [ITEM_BIG_PEARL] = 235,
+    [ITEM_PEARL_STRING] = 236,
+    [ITEM_STARDUST] = 237,
+    [ITEM_STAR_PIECE] = 238,
+    [ITEM_POLISHED_BRICK_PIECE] = 239,
+    [ITEM_RARE_BONE] = 240,
+    [ITEM_HELIX_FOSSIL] = 241,
+    [ITEM_DOME_FOSSIL] = 242,
+    [ITEM_OLD_AMBER] = 243,
+    [ITEM_POLISHED_FLOWER_MAIL] = 244,
 };
 static const struct PolishedItemIcon sPolishedItemIcons[] = {
     {0},
@@ -472,21 +473,22 @@ static const struct PolishedItemIcon sPolishedItemIcons[] = {
     {8345, {0x7fff, 0x56b5, 0x2529}}, /* LINKING_CORD */
     {8383, {0x7fff, 0x5b13, 0x3e0c}}, /* SILVER_LEAF */
     {8383, {0x7fff, 0x233f, 0x065b}}, /* GOLD_LEAF */
-    {8424, {0x7fff, 0x62f6, 0x49ed}}, /* BOTTLE_CAP */
-    {8457, {0x7fff, 0x273f, 0x09d3}}, /* NUGGET */
-    {8491, {0x7fff, 0x273f, 0x09d3}}, /* BIG_NUGGET */
-    {8535, {0x7fff, 0x2ddf, 0x10fa}}, /* TINYMUSHROOM */
-    {8563, {0x7fff, 0x2ddf, 0x10fa}}, /* BIG_MUSHROOM */
-    {8604, {0x7fff, 0x2bff, 0x167d}}, /* BALMMUSHROOM */
-    {8640, {0x7fff, 0x6333, 0x462f}}, /* PEARL */
-    {8668, {0x7fff, 0x6333, 0x462f}}, /* BIG_PEARL */
-    {8708, {0x7fff, 0x6333, 0x462f}}, /* PEARL_STRING */
+    {8424, {0x7fff, 0x332d, 0x2269}}, /* MINT_LEAF */
+    {8468, {0x7fff, 0x62f6, 0x49ed}}, /* BOTTLE_CAP */
+    {8501, {0x7fff, 0x273f, 0x09d3}}, /* NUGGET */
+    {8535, {0x7fff, 0x273f, 0x09d3}}, /* BIG_NUGGET */
+    {8579, {0x7fff, 0x2ddf, 0x10fa}}, /* TINYMUSHROOM */
+    {8607, {0x7fff, 0x2ddf, 0x10fa}}, /* BIG_MUSHROOM */
+    {8648, {0x7fff, 0x2bff, 0x167d}}, /* BALMMUSHROOM */
+    {8684, {0x7fff, 0x6333, 0x462f}}, /* PEARL */
+    {8712, {0x7fff, 0x6333, 0x462f}}, /* BIG_PEARL */
+    {8752, {0x7fff, 0x6333, 0x462f}}, /* PEARL_STRING */
     {1761, {0x7fff, 0x39db, 0x6a6c}}, /* STARDUST */
-    {8744, {0x7fff, 0x529e, 0x39db}}, /* STAR_PIECE */
-    {8775, {0x7fff, 0x2adf, 0x0999}}, /* BRICK_PIECE */
+    {8788, {0x7fff, 0x529e, 0x39db}}, /* STAR_PIECE */
+    {8819, {0x7fff, 0x2adf, 0x0999}}, /* BRICK_PIECE */
     {6819, {0x7fff, 0x575a, 0x4273}}, /* RARE_BONE */
-    {8799, {0x7fff, 0x01f4, 0x014f}}, /* HELIX_FOSSIL */
-    {8856, {0x7fff, 0x01f4, 0x014f}}, /* DOME_FOSSIL */
-    {8909, {0x7fff, 0x02de, 0x01d6}}, /* OLD_AMBER */
-    {8958, {0x7fff, 0x2ff4, 0x027f}}, /* FLOWER_MAIL */
+    {8843, {0x7fff, 0x01f4, 0x014f}}, /* HELIX_FOSSIL */
+    {8900, {0x7fff, 0x01f4, 0x014f}}, /* DOME_FOSSIL */
+    {8953, {0x7fff, 0x02de, 0x01d6}}, /* OLD_AMBER */
+    {9002, {0x7fff, 0x2ff4, 0x027f}}, /* FLOWER_MAIL */
 };

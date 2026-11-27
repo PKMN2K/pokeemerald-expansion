@@ -2,6 +2,7 @@
 /* Source #mon -> POKéMON and bold PP glyphs -> PP (GBA text). */
 /* COMPOUND_STRING produces a pointer, not a u8 array initializer. */
 static const u8 *const sPolishedItemDescriptions[ITEMS_COUNT] = {
+    [ITEM_ABILITY_PATCH] = COMPOUND_STRING("Switches to a\nrare ability."),
     [ITEM_AMULET_COIN] = COMPOUND_STRING("Doubles monetary\nearnings. (Hold)"),
     [ITEM_ANTIDOTE] = COMPOUND_STRING("Cures poisoned\nPOKéMON."),
     [ITEM_ASPEAR_BERRY] = COMPOUND_STRING("A self-cure for\nfreezing. (Hold)"),
@@ -54,6 +55,7 @@ static const u8 *const sPolishedItemDescriptions[ITEMS_COUNT] = {
     [ITEM_POLISHED_ESCAPE_ROPE] = COMPOUND_STRING("Use for escaping\nfrom caves, etc."),
     [ITEM_POLISHED_FLOWER_MAIL] = COMPOUND_STRING("Flower-print Mail.\n(Hold)"),
     [ITEM_POLISHED_GOLD_LEAF] = COMPOUND_STRING("A strange, gold-\ncolored leaf."),
+    [ITEM_POLISHED_MINT_LEAF] = COMPOUND_STRING("A fragrant sprig\nof mint."),
     [ITEM_POLISHED_PINK_BOW] = COMPOUND_STRING("Powers up Fairy-\ntype moves. (Hold)"),
     [ITEM_POLISHED_SILVER_LEAF] = COMPOUND_STRING("A strange, silver-\ncolored leaf."),
     [ITEM_POTION] = COMPOUND_STRING("Restores POKéMON\nHP by 20."),

@@ -24,6 +24,11 @@ MART_ALIASES = {
     "FLOWER_MAIL": ("ITEM_POLISHED_FLOWER_MAIL", 50),
 }
 
+FACILITY_PRIZES = {
+    "ABILITYPATCH": ("ITEM_ABILITY_PATCH", 1000),
+    "MINT_LEAF": ("ITEM_POLISHED_MINT_LEAF", 300),
+}
+
 
 def build():
     doc = json.loads(SOURCE.read_text())
@@ -32,13 +37,13 @@ def build():
     assert len(rows) == 70
     from build_pokemon_held_items import catalog, sources
     source_items = catalog(sources())
-    for source_name, (target_item, expected_price) in MART_ALIASES.items():
+    for source_name, (target_item, expected_price) in (MART_ALIASES | FACILITY_PRIZES).items():
         assert target_item not in {r["target_item"] for r in rows}, target_item
         attributes = source_items[source_name]["source_attributes"]
         assert int(attributes[0]) == expected_price, (source_name, attributes[0])
         rows.append({"source_item": source_name, "target_item": target_item,
                      "source_attributes": attributes})
-    assert len(rows) == 81
+    assert len(rows) == 83
     names = set(re.findall(r"\bITEM_\w+", (ROOT / "include/constants/items.h").read_text()))
     assert len({r["target_item"] for r in rows}) == len(rows)
     out = ["/* Generated from pinned default Polished Crystal item attributes. */",
@@ -63,7 +68,7 @@ def main():
         assert OUTPUT.read_bytes() == data, "Regenerate source mapped item prices"
     else:
         OUTPUT.write_bytes(data)
-    print("PASS: 81 pinned source item prices (70 mapped held items plus all 11 Violet Mart items)")
+    print("PASS: 83 pinned prices for held items, Violet Mart stock and facility prizes")
 
 
 if __name__ == "__main__":

@@ -1558,8 +1558,13 @@ const struct ItemInfo gItemsInfo[] =
 
     [ITEM_ABILITY_PATCH] =
     {
+#if POLISHED_JOHTO_DEMO
+        .name = ITEM_NAME("AbilityPatch"),
+        .pluralName = ITEM_PLURAL_NAME("AbilityPatches"),
+#else
         .name = ITEM_NAME("Ability Patch"),
         .pluralName = ITEM_PLURAL_NAME("Ability Patches"),
+#endif
         .price = (I_PRICE >= GEN_9) ? 250000 : 20,
         .holdEffectParam = 0,
         .description = COMPOUND_STRING(
@@ -16195,6 +16200,18 @@ const struct ItemInfo gItemsInfo[] =
         .fieldUseFunc = ItemUse_TypeChart,
         .iconPic = gItemIcon_PolishedTypeChart,
         .iconPalette = gItemIconPalette_PolishedTypeChart,
+    },
+    [ITEM_POLISHED_MINT_LEAF] =
+    {
+        .name = ITEM_NAME("Mint Leaf"),
+        .pluralName = ITEM_PLURAL_NAME("Mint Leaves"),
+        .price = 300,
+        .description = COMPOUND_STRING("A fragrant sprig\nof mint."),
+        .pocket = POCKET_ITEMS,
+        .type = ITEM_USE_BAG_MENU,
+        .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
+        .iconPic = gItemIcon_QuestionMark,
+        .iconPalette = gItemIconPalette_QuestionMark,
     },
     [ITEM_POLISHED_ARMOR_SUIT] =
     {

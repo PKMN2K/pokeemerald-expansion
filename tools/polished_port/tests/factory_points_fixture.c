@@ -1,10 +1,12 @@
 #include "global.h"
 #include "battle.h"
 #include "battle_factory.h"
+#include "battle_tower.h"
 #include "bg.h"
 #include "event_data.h"
 #include "field_message_box.h"
 #include "frontier_util.h"
+#include "item.h"
 #include "load_save.h"
 #include "main.h"
 #include "menu.h"
@@ -17,6 +19,7 @@
 #include "string_util.h"
 #include "task.h"
 #include "constants/battle_factory.h"
+#include "constants/battle_tower.h"
 #include "constants/battle_frontier.h"
 #include "constants/frontier_util.h"
 
@@ -26,11 +29,14 @@ extern const u8 BattleFrontier_BattleFactoryLobby_EventScript_WonChallenge[];
 extern const u8 BattleFrontier_BattleFactoryLobby_EventScript_LostChallenge[];
 extern const u8 BattleFrontier_BattleFactoryLobby_EventScript_QuitWithoutSaving[];
 
+extern const u8 BattleFrontier_BattleTowerLobby_EventScript_WonChallenge[];
+extern const u8 BattleFrontier_BattleTowerLobby_EventScript_LostChallenge[];
+
 static const u8 sAwards[][7] = {
 /* SOURCE AWARDS */
 };
 enum {BOOT, READY, VICTORY, RELOADED, LOBBY, PAUSED};
-EWRAM_DATA volatile u32 gSettlement[15] = {0};
+EWRAM_DATA volatile u32 gSettlement[17] = {0};
 
 static void Check(u32 actual, u32 expected, u32 field)
 {
@@ -108,13 +114,61 @@ static void CheckAwards(void)
     PolishedSettleFactoryPoints();
     Check(f->battlePoints, balance, 12);
     Check(gSpecialVar_Result, 0, 13);
+    // A won status alone is insufficient outside a completed Level 50 singles set.
+    f->challengeStatus = CHALLENGE_STATUS_WON;
+    f->curChallengeBattleNum = FRONTIER_STAGES_PER_CHALLENGE;
+    GetPolishedFacilityClearPrize();
+    Check(gSpecialVar_Result, ITEM_NONE, 23);
     VarSet(VAR_FRONTIER_BATTLE_MODE, FRONTIER_MODE_SINGLES);
+    f->lvlMode = FRONTIER_LVL_OPEN;
+    GetPolishedFacilityClearPrize();
+    Check(gSpecialVar_Result, ITEM_NONE, 24);
+    f->lvlMode = FRONTIER_LVL_50;
+    f->curChallengeBattleNum--;
+    GetPolishedFacilityClearPrize();
+    Check(gSpecialVar_Result, ITEM_NONE, 25);
+    Check(GetItemSellPrice(ITEM_POLISHED_MINT_LEAF), 150, 26);
+    Check(GetItemSellPrice(ITEM_ABILITY_PATCH), 500, 27);
 }
 
 static void StartScript(const u8 *script, u32 phase)
 {
     ScriptContext_SetupScript(script);
     gSettlement[0] = phase;
+}
+
+static void FillItemsPocket(void)
+{
+    struct BagPocket *pocket = &gBagPockets[POCKET_ITEMS];
+    for (u32 i = 0; i < pocket->capacity; i++)
+        BagPocket_SetSlotItemIdAndCount(pocket, i, ITEM_NUGGET, MAX_BAG_ITEM_CAPACITY);
+    Check(CheckBagHasSpace(ITEM_POLISHED_MINT_LEAF, 1), FALSE, 20);
+    Check(CheckBagHasSpace(ITEM_ABILITY_PATCH, 1), FALSE, 21);
+}
+
+static void StartTowerReplay(u16 keys)
+{
+    struct BattleFrontier *f = &gSaveBlock2Ptr->frontier;
+    VarSet(VAR_FRONTIER_FACILITY, FRONTIER_FACILITY_TOWER);
+    gSpecialVar_0x8004 = BATTLE_TOWER_FUNC_INIT;
+    CallBattleTowerFunc();
+    for (u32 i = 0; i < FRONTIER_PARTY_SIZE; i++)
+    {
+        CreateMon(&gParties[B_TRAINER_PLAYER][i], SPECIES_CHIKORITA, 17, i + 1, OTID_STRUCT_PRESET(0));
+        f->selectedPartyMons[i] = i + 1;
+    }
+    gPartiesCount[B_TRAINER_PLAYER] = FRONTIER_PARTY_SIZE;
+    SavePlayerParty();
+    if (keys & DPAD_DOWN)
+        FillItemsPocket();
+    Check(TrySavingData(SAVE_NORMAL), SAVE_STATUS_OK, 22);
+    f->curChallengeBattleNum = keys & DPAD_LEFT ? 5 : 6;
+    f->towerWinStreaks[0][0] = f->curChallengeBattleNum + 1;
+    f->battlePoints = 10;
+    f->cardBattlePoints = 20;
+    gSpecialVar_0x8004 = BATTLE_TOWER_FUNC_SET_BATTLE_WON;
+    CallBattleTowerFunc();
+    gSettlement[0] = VICTORY;
 }
 
 static void StartChallenge(u16 keys)
@@ -135,6 +189,8 @@ static void StartChallenge(u16 keys)
     CreateMon(&gParties[B_TRAINER_PLAYER][0], SPECIES_CHIKORITA, 17, 123, OTID_STRUCT_PRESET(0));
     gPartiesCount[B_TRAINER_PLAYER] = 1;
     SavePlayerParty();
+    if (keys & DPAD_DOWN)
+        FillItemsPocket();
     Check(TrySavingData(SAVE_NORMAL), SAVE_STATUS_OK, 14);
     CreateMon(&gParties[B_TRAINER_PLAYER][0], SPECIES_POLIWRATH, 50, 456, OTID_STRUCT_PRESET(0));
     for (u32 n = 1; n < count; n++)
@@ -192,7 +248,9 @@ void CB2_MoveMachineAudit(void)
     }
     struct BattleFrontier *f = &gSaveBlock2Ptr->frontier;
     u16 keys = gMain.newKeys;
-    if (gSettlement[0] == READY && keys)
+    if (gSettlement[0] == READY && (keys & SELECT_BUTTON))
+        StartTowerReplay(keys);
+    else if (gSettlement[0] == READY && keys)
         StartChallenge(keys);
     else if (gSettlement[0] == VICTORY && (keys & START_BUTTON))
     {
@@ -213,12 +271,14 @@ void CB2_MoveMachineAudit(void)
         else if (keys & A_BUTTON)
         {
             f->challengeStatus = CHALLENGE_STATUS_LOST;
-            StartScript(BattleFrontier_BattleFactoryLobby_EventScript_LostChallenge, LOBBY);
+            StartScript(IsPolishedTowerChallenge() ? BattleFrontier_BattleTowerLobby_EventScript_LostChallenge
+                                                 : BattleFrontier_BattleFactoryLobby_EventScript_LostChallenge, LOBBY);
         }
         else if (keys & B_BUTTON)
             StartScript(BattleFrontier_BattleFactoryLobby_EventScript_QuitWithoutSaving, LOBBY);
         else if (keys & DPAD_RIGHT)
-            StartScript(BattleFrontier_BattleFactoryLobby_EventScript_WonChallenge, LOBBY);
+            StartScript(IsPolishedTowerChallenge() ? BattleFrontier_BattleTowerLobby_EventScript_WonChallenge
+                                                 : BattleFrontier_BattleFactoryLobby_EventScript_WonChallenge, LOBBY);
     }
     if (gSettlement[0] == VICTORY || gSettlement[0] == LOBBY)
     {
@@ -236,4 +296,6 @@ void CB2_MoveMachineAudit(void)
     gSettlement[12] = !!(f->winStreakActiveFlags & STREAK_FACTORY_SINGLES_50);
     gSettlement[13] = f->challengePaused;
     gSettlement[14] = f->factoryRecordRentsCount[0][0];
+    gSettlement[15] = CountTotalItemQuantityInBag(ITEM_POLISHED_MINT_LEAF);
+    gSettlement[16] = CountTotalItemQuantityInBag(ITEM_ABILITY_PATCH);
 }
