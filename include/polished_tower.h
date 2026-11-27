@@ -11,6 +11,8 @@ struct PolishedTowerSet
 
 bool32 IsPolishedFactoryChallenge(void);
 void PolishedGenerateFactoryRentals(void);
+void PolishedGenerateFactoryOpponent(void);
+void BufferPolishedFactoryScout(void);
 const struct PolishedTowerSet *PolishedGetRentalSet(u16 id);
 bool32 PolishedCreateRentalMon(struct Pokemon *mon, u16 id);
 bool32 IsPolishedTowerLevelMode(u32 mode);

@@ -2311,7 +2311,10 @@ static void CopySwappedMonData(void)
 
     gParties[B_TRAINER_PLAYER][sFactorySwapScreen->playerMonId] = gParties[B_TRAINER_OPPONENT_A][sFactorySwapScreen->enemyMonId];
     friendship = 0;
-    SetMonData(&gParties[B_TRAINER_PLAYER][sFactorySwapScreen->playerMonId], MON_DATA_FRIENDSHIP, &friendship);
+#if POLISHED_JOHTO_DEMO
+    if (!PolishedGetRentalSet(gSaveBlock2Ptr->frontier.rentalMons[sFactorySwapScreen->enemyMonId + FRONTIER_PARTY_SIZE].monId))
+#endif
+        SetMonData(&gParties[B_TRAINER_PLAYER][sFactorySwapScreen->playerMonId], MON_DATA_FRIENDSHIP, &friendship);
     gSaveBlock2Ptr->frontier.rentalMons[sFactorySwapScreen->playerMonId].monId = gSaveBlock2Ptr->frontier.rentalMons[sFactorySwapScreen->enemyMonId + FRONTIER_PARTY_SIZE].monId;
     gSaveBlock2Ptr->frontier.rentalMons[sFactorySwapScreen->playerMonId].ivs = gSaveBlock2Ptr->frontier.rentalMons[sFactorySwapScreen->enemyMonId + FRONTIER_PARTY_SIZE].ivs;
     gSaveBlock2Ptr->frontier.rentalMons[sFactorySwapScreen->playerMonId].personality = GetMonData(&gParties[B_TRAINER_OPPONENT_A][sFactorySwapScreen->enemyMonId], MON_DATA_PERSONALITY);

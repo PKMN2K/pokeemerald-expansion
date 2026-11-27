@@ -264,6 +264,11 @@ static void GenerateOpponentMons(void)
     u32 winStreak = gSaveBlock2Ptr->frontier.factoryWinStreaks[battleMode][lvlMode];
     u32 challengeNum = winStreak / FRONTIER_STAGES_PER_CHALLENGE;
     gFacilityTrainers = gBattleFrontierTrainers;
+#if POLISHED_JOHTO_DEMO
+    bool32 polished = IsPolishedFactoryChallenge();
+    if (polished)
+        PolishedGenerateFactoryOpponent();
+#endif
 
     do
     {
@@ -280,6 +285,10 @@ static void GenerateOpponentMons(void)
     if (gSaveBlock2Ptr->frontier.curChallengeBattleNum < FRONTIER_STAGES_PER_CHALLENGE - 1)
         gSaveBlock2Ptr->frontier.trainerIds[gSaveBlock2Ptr->frontier.curChallengeBattleNum] = trainerId;
 
+#if POLISHED_JOHTO_DEMO
+    if (polished)
+        return;
+#endif
     i = 0;
     while (i != FRONTIER_PARTY_SIZE)
     {
@@ -344,11 +353,16 @@ static void SetRentalsToOpponentParty(void)
 
     for (i = 0; i < FRONTIER_PARTY_SIZE; i++)
     {
-        gSaveBlock2Ptr->frontier.rentalMons[i + FRONTIER_PARTY_SIZE].monId = gFrontierTempParty[i];
+        u16 id = gFrontierTempParty[i];
+        struct Pokemon *mon = &gParties[B_TRAINER_OPPONENT_A][i];
+#if POLISHED_JOHTO_DEMO
+        if (!PolishedCreateRentalMon(mon, id))
+#endif
+            SetMonData(mon, MON_DATA_HELD_ITEM, &gFacilityTrainerMons[id].heldItem);
+        gSaveBlock2Ptr->frontier.rentalMons[i + FRONTIER_PARTY_SIZE].monId = id;
         gSaveBlock2Ptr->frontier.rentalMons[i + FRONTIER_PARTY_SIZE].ivs = GetBoxMonData(&gParties[B_TRAINER_OPPONENT_A][i].box, MON_DATA_ATK_IV);
         gSaveBlock2Ptr->frontier.rentalMons[i + FRONTIER_PARTY_SIZE].personality = GetMonData(&gParties[B_TRAINER_OPPONENT_A][i], MON_DATA_PERSONALITY);
         gSaveBlock2Ptr->frontier.rentalMons[i + FRONTIER_PARTY_SIZE].abilityNum = GetBoxMonData(&gParties[B_TRAINER_OPPONENT_A][i].box, MON_DATA_ABILITY_NUM);
-        SetMonData(&gParties[B_TRAINER_OPPONENT_A][i], MON_DATA_HELD_ITEM, &gFacilityTrainerMons[gFrontierTempParty[i]].heldItem);
     }
 }
 
@@ -396,6 +410,10 @@ static void SetPlayerAndOpponentParties(void)
         for (i = 0; i < FRONTIER_PARTY_SIZE; i++)
         {
             monId = gSaveBlock2Ptr->frontier.rentalMons[i + FRONTIER_PARTY_SIZE].monId;
+#if POLISHED_JOHTO_DEMO
+            if (PolishedCreateRentalMon(&gParties[B_TRAINER_OPPONENT_A][i], monId))
+                continue;
+#endif
             ivs = gSaveBlock2Ptr->frontier.rentalMons[i + FRONTIER_PARTY_SIZE].ivs;
             CreateFacilityMon(&gFacilityTrainerMons[monId], monLevel, ivs, READ_OTID_FROM_SAVE, FLAG_FRONTIER_MON_FACTORY, &gParties[B_TRAINER_OPPONENT_A][i]);
         }
@@ -521,7 +539,7 @@ static void GetOpponentMostCommonMonType(void)
         typeCounts[i] = 0;
     for (i = 0; i < FRONTIER_PARTY_SIZE; i++)
     {
-        enum Species species = gFacilityTrainerMons[gFrontierTempParty[i]].species;
+        enum Species species = GetRentalSpecies(gFrontierTempParty[i]);
         typeCounts[GetSpeciesType(species, 0)]++;
         if (GetSpeciesType(species, 0) != GetSpeciesType(species, 1))
             typeCounts[GetSpeciesType(species, 1)]++;
@@ -571,9 +589,19 @@ static void GetOpponentBattleStyle(void)
     for (i = 0; i < FRONTIER_PARTY_SIZE; i++)
     {
         u16 monId = gFrontierTempParty[i];
+#if POLISHED_JOHTO_DEMO
+        const struct PolishedTowerSet *set = PolishedGetRentalSet(monId);
+#endif
         for (j = 0; j < MAX_MON_MOVES; j++)
         {
-            u8 battleStyle = GetMoveBattleStyle(gFacilityTrainerMons[monId].moves[j]);
+            enum Move move;
+#if POLISHED_JOHTO_DEMO
+            if (set != NULL)
+                move = set->moves[j];
+            else
+#endif
+                move = gFacilityTrainerMons[monId].moves[j];
+            u8 battleStyle = GetMoveBattleStyle(move);
             stylePoints[battleStyle]++;
         }
     }
@@ -650,12 +678,8 @@ static void RestorePlayerPartyHeldItems(void)
     {
         u16 id = gSaveBlock2Ptr->frontier.rentalMons[i].monId;
 #if POLISHED_JOHTO_DEMO
-        const struct PolishedTowerSet *set = PolishedGetRentalSet(id);
-        if (set != NULL)
-        {
-            SetMonData(&gParties[B_TRAINER_PLAYER][i], MON_DATA_HELD_ITEM, &set->item);
+        if (PolishedCreateRentalMon(&gParties[B_TRAINER_PLAYER][i], id))
             continue;
-        }
 #endif
         SetMonData(&gParties[B_TRAINER_PLAYER][i], MON_DATA_HELD_ITEM, &gFacilityTrainerMons[id].heldItem);
     }
@@ -838,6 +862,15 @@ static void FillFactoryFrontierTrainerParty(u16 trainerId, u8 firstMonId)
     u8 level;
     u8 fixedIV;
     u32 otID;
+
+#if POLISHED_JOHTO_DEMO
+    if (IsPolishedFactoryChallenge() && PolishedGetRentalSet(gFrontierTempParty[0]))
+    {
+        for (i = 0; i < FRONTIER_PARTY_SIZE; i++)
+            PolishedCreateRentalMon(&gParties[B_TRAINER_OPPONENT_A][firstMonId + i], gFrontierTempParty[i]);
+        return;
+    }
+#endif
 
     if (trainerId < FRONTIER_TRAINERS_COUNT)
     {

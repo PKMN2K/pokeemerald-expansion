@@ -112,8 +112,12 @@ def check_probe(path, rom_hash, pin):
         if (data['drafts'] < 40 or data['draft_rows'] != list(range(2, 9))
                 or not data['repeated_item_drafts'] or not data['whole_draft_retries']
                 or data['tower_factory_carry_cases'] != 6 or data['flash_rentals'] != 3
-                or data['selection_order'] != [5, 2, 4]):
-            raise ValueError('missing Factory rental draft, streak, Flash or selection evidence')
+                or data['selection_order'] != [5, 2, 4] or data['opponent_teams'] != data['drafts'] * 7
+                or len(data['scout_messages']) != 6 or min(data['scout_messages']) <= 0
+                or sum(data['scout_messages']) != data['opponent_teams']
+                or not all(data[k] for k in ('rental_rejections', 'history_rejections', 'third_slot_repeats', 'other_shared_type_ignored'))
+                or data['attendant_dialogue'] != 'You can expect to see Sneasel, Mr. Rime and Yanma.'):
+            raise ValueError('missing Factory draft, opponents, scouting, streak, Flash or selection evidence')
     if path.parent.name == 'tower-parties':
         if (data['sets'] != 432 or data['generated_teams'] < 700 or data['retained_history_slots'] != 9
                 or data['player_registration_cases'] != 11 or data['player_battle_levels'] != [50, 50, 50]

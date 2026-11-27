@@ -2,6 +2,20 @@
 #include "battle.h"
 #include "battle_factory.h"
 #include "battle_frontier.h"
+#include "battle_main.h"
+#include "battle_setup.h"
+#include "bg.h"
+#include "field_message_box.h"
+#include "gpu_regs.h"
+#include "menu.h"
+#include "palette.h"
+#include "script.h"
+#include "task.h"
+#include "window.h"
+#include "string_util.h"
+#include "constants/characters.h"
+#include "constants/trainers.h"
+#include "constants/battle_frontier_mons.h"
 #include "constants/battle_factory.h"
 #include "constants/battle_frontier.h"
 #include "constants/frontier_util.h"
@@ -26,6 +40,13 @@ static const struct {
 static const struct {u16 wins, swaps, team[PARTY_SIZE];} sDrafts[] = {
 /* DRAFT CASES */
 };
+static const struct {u16 opening, team[3]; u8 hint, type;} sOpponents[] = {
+/* OPPONENT CASES */
+};
+static const u8 sScoutText[][100] = {
+/* SCOUT TEXT */
+};
+EWRAM_DATA volatile u32 gCheckedOpponents = 0;
 EWRAM_DATA volatile u32 gRentalAudit[8] = {0};
 const u32 gRentalStride = sizeof(struct RentalMon);
 
@@ -114,8 +135,108 @@ static void CheckMon(struct Pokemon *mon, u16 id)
         Check(GetMonData(mon, MON_DATA_HP_EV + i), i == STAT_SPEED && !(sSets[id].iv & (31 << 15)) ? 0 : 84, 17);
 }
 
+static void CheckScout(u32 index)
+{
+    // Expand the pinned release's dialogue against this independently replayed
+    // team. Normalize the GBA textbox line breaks before comparing it.
+    u8 expected[128];
+    u32 hint = sOpponents[index].hint;
+    const u16 *team = sOpponents[index].team;
+    StringCopy(gStringVar1, GetSpeciesName(sSets[team[0]].species));
+    StringCopy(gStringVar2, GetSpeciesName(sSets[team[1]].species));
+    StringCopy(gStringVar3, GetSpeciesName(sSets[team[2]].species));
+    if (hint == 2 || hint == 3)
+        StringCopy(gStringVar2, GetMoveName(sSets[team[0]].moves[0]));
+    if (hint == 5)
+        StringCopy(gStringVar1, gTypesInfo[sOpponents[index].type].name);
+    StringExpandPlaceholders(expected, sScoutText[hint]);
+    BufferPolishedFactoryScout();
+    Check(gSpecialVar_Result, TRUE, 30);
+    for (u8 *c = gStringVar4; *c != EOS; c++)
+        if (*c == CHAR_NEWLINE || *c == CHAR_PROMPT_SCROLL)
+            *c = CHAR_SPACE;
+    Check(StringCompare(gStringVar4, expected) == 0, TRUE, 31);
+}
+
+static void BattleOpponent(u32 index)
+{
+    struct BattleFrontier *f = &gSaveBlock2Ptr->frontier;
+    u32 stage = index % FRONTIER_STAGES_PER_CHALLENGE;
+    f->curChallengeBattleNum = stage;
+    f->factoryWinStreaks[0][0] = sOpponents[index].opening + stage;
+    u16 ime = REG_IME;
+    REG_IME = 0;
+    SeedRng(index + 500);
+    Factory(BATTLE_FACTORY_FUNC_GENERATE_OPPONENT_MONS);
+    REG_IME = ime;
+    for (u32 i = 0; i < FRONTIER_PARTY_SIZE; i++)
+        Check(gFrontierTempParty[i], 0x8000 + sOpponents[index].team[i], 27);
+    CheckScout(index);
+    // The boss battle must use the same team the attendant previewed.
+    if (stage == 6)
+        TRAINER_BATTLE_PARAM.opponentA = TRAINER_FRONTIER_BRAIN;
+    FillFactoryTrainerParty();
+    for (u32 i = 0; i < FRONTIER_PARTY_SIZE; i++)
+        CheckMon(&gParties[B_TRAINER_OPPONENT_A][i], sOpponents[index].team[i]);
+    // A consumed item or changed move must not become part of the swap offer.
+    u16 empty = ITEM_NONE;
+    SetMonData(&gParties[B_TRAINER_OPPONENT_A][0], MON_DATA_HELD_ITEM, &empty);
+    SetMonMoveSlot(&gParties[B_TRAINER_OPPONENT_A][0], MOVE_SPLASH, 0);
+    Factory(BATTLE_FACTORY_FUNC_SET_OPPONENT_MONS);
+    CheckMon(&gParties[B_TRAINER_OPPONENT_A][0], sOpponents[index].team[0]);
+    for (u32 i = 0; i < FRONTIER_PARTY_SIZE; i++)
+        Check(f->rentalMons[FRONTIER_PARTY_SIZE + i].monId, 0x8000 + sOpponents[index].team[i], 28);
+}
+
+extern const u8 BattleFrontier_BattleFactoryPreBattleRoom_EventScript_ScoutOpponent[];
+
+static void ShowScoutDialogue(void)
+{
+    static const struct BgTemplate bg = {.bg = 0, .charBaseIndex = 2, .mapBaseIndex = 31};
+    static u16 tilemap[32 * 32];
+    ResetTasks();
+    ResetBgsAndClearDma3BusyFlags(0);
+    InitBgsFromTemplates(0, &bg, 1);
+    SetBgTilemapBuffer(0, tilemap);
+    InitStandardTextBoxWindows();
+    InitTextBoxGfxAndPrinters();
+    InitFieldMessageBox();
+    SetVBlankCallback(TransferPlttBuffer);
+    ShowBg(0);
+    ScriptContext_SetupScript(BattleFrontier_BattleFactoryPreBattleRoom_EventScript_ScoutOpponent);
+    gRentalAudit[0] = 2;
+}
+
 void CB2_MoveMachineAudit(void)
 {
+    if (gRentalAudit[0] == 2)
+    {
+        static bool8 sawFieldMessage;
+        ScriptContext_RunScript();
+        if (GetFieldMessageBoxMode() == FIELD_MESSAGE_BOX_NORMAL)
+            sawFieldMessage = TRUE;
+        RunTasks();
+        DoScheduledBgTilemapCopiesToVram();
+        if (!JOY_NEW(START_BUTTON))
+            return;
+        Check(sawFieldMessage, TRUE, 34);
+        ScriptContext_Init();
+        FreeAllWindowBuffers();
+        ResetTasks();
+        SetVBlankCallback(NULL);
+        Draw(0);
+        gRentalAudit[7] = offsetof(struct SaveBlock2, frontier.rentalMons);
+        gRentalAudit[0] = 3;
+        // The script marks a swap just before opening the selector. Confirm
+        // that the initial choice does not earn one towards the next draft.
+        Factory(BATTLE_FACTORY_FUNC_SET_SWAPPED);
+        Factory(BATTLE_FACTORY_FUNC_SELECT_RENT_MONS);
+        gSpecialVar_0x8005 = FACTORY_DATA_WIN_STREAK_SWAPS;
+        gSpecialVar_0x8006 = 1;
+        Factory(BATTLE_FACTORY_FUNC_SET_DATA);
+        Check(gSaveBlock2Ptr->frontier.factoryRentsCount[0][0], 0, 24);
+        return;
+    }
     if (gRentalAudit[0] || gRentalAudit[1])
         return;
     SetSaveBlocksPointers(0);
@@ -136,25 +257,24 @@ void CB2_MoveMachineAudit(void)
         {
             CheckMon(&gParties[B_TRAINER_PLAYER][i], sDrafts[0].team[i]);
             u16 id = f->rentalMons[i + FRONTIER_PARTY_SIZE].monId;
-            Check(GetMonData(&gParties[B_TRAINER_OPPONENT_A][i], MON_DATA_SPECIES), gBattleFrontierMons[id].species, 18);
+            Check(id, 0x8000 + sOpponents[0].team[i], 18);
+            CheckMon(&gParties[B_TRAINER_OPPONENT_A][i], sOpponents[0].team[i]);
+            Check(gSaveBlock3Ptr->polishedTowerHistory[6 + i], sOpponents[0].team[i] + 1, 29);
             gRentalAudit[6]++;
         }
-        // A pre-port rental swapped into the player party retains its native ID.
+        BattleOpponent(1);
+        // A defeated opponent set survives rebuilding the player's party.
         f->rentalMons[1] = f->rentalMons[4];
         gSpecialVar_0x8005 = 1;
         Factory(BATTLE_FACTORY_FUNC_SET_PARTIES);
+        CheckMon(&gParties[B_TRAINER_PLAYER][1], sOpponents[1].team[1]);
+        // A pre-port rental retains its native ID on either side.
+        f->rentalMons[1].monId = f->rentalMons[4].monId = FRONTIER_MON_GRIMER;
+        gSpecialVar_0x8005 = 0;
+        Factory(BATTLE_FACTORY_FUNC_SET_PARTIES);
+        Check(GetMonData(&gParties[B_TRAINER_OPPONENT_A][1], MON_DATA_SPECIES), SPECIES_GRIMER, 33);
         Check(GetMonData(&gParties[B_TRAINER_PLAYER][1], MON_DATA_SPECIES), gBattleFrontierMons[f->rentalMons[1].monId].species, 19);
-        Draw(0);
-        gRentalAudit[7] = offsetof(struct SaveBlock2, frontier.rentalMons);
-        gRentalAudit[0] = 2;
-        // The script marks a swap just before opening the selector. Confirm
-        // that the initial choice does not earn one towards the next draft.
-        Factory(BATTLE_FACTORY_FUNC_SET_SWAPPED);
-        Factory(BATTLE_FACTORY_FUNC_SELECT_RENT_MONS);
-        gSpecialVar_0x8005 = FACTORY_DATA_WIN_STREAK_SWAPS;
-        gSpecialVar_0x8006 = 1;
-        Factory(BATTLE_FACTORY_FUNC_SET_DATA);
-        Check(f->factoryRentsCount[0][0], 0, 24);
+        ShowScoutDialogue();
         return;
     }
 
@@ -171,6 +291,13 @@ void CB2_MoveMachineAudit(void)
             Check(PolishedCreateRentalMon(&mon, f->rentalMons[j].monId), TRUE, 20);
             CheckMon(&mon, sDrafts[i].team[j]);
         }
+        for (u32 stage = 0; stage < FRONTIER_STAGES_PER_CHALLENGE; stage++)
+        {
+            BattleOpponent(i * FRONTIER_STAGES_PER_CHALLENGE + stage);
+            gCheckedOpponents++;
+            if (gRentalAudit[1])
+                return;
+        }
         gRentalAudit[4]++;
     }
 
@@ -183,9 +310,7 @@ void CB2_MoveMachineAudit(void)
     Check(PolishedGetRentalSet(f->rentalMons[0].monId) == NULL, TRUE, 22);
     VarSet(VAR_FRONTIER_BATTLE_MODE, FRONTIER_MODE_SINGLES);
     Draw(0);
-    Factory(BATTLE_FACTORY_FUNC_GENERATE_OPPONENT_MONS);
-    FillFactoryTrainerParty();
-    Factory(BATTLE_FACTORY_FUNC_SET_OPPONENT_MONS);
+    BattleOpponent(0);
     gSpecialVar_0x8005 = 1;
     Factory(BATTLE_FACTORY_FUNC_SET_PARTIES);
     u16 empty = ITEM_NONE;

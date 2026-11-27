@@ -1,6 +1,9 @@
 #include "global.h"
 #if POLISHED_JOHTO_DEMO
 #include "battle.h"
+#include "battle_frontier.h"
+#include "battle_main.h"
+#include "move.h"
 #include "data.h"
 #include "event_data.h"
 #include "frontier_util.h"
@@ -106,14 +109,20 @@ bool32 PolishedHasEligibleTowerTeam(void)
 }
 
 #define TOWER_HISTORY_VERSION 0x50435431
+#define FACTORY_HISTORY_VERSION 0x50434631
+
+static void ResetOpponentHistory(u32 version)
+{
+    memset(gSaveBlock3Ptr->polishedTowerHistory, 0, sizeof(gSaveBlock3Ptr->polishedTowerHistory));
+    gSaveBlock3Ptr->polishedTowerVersion = version;
+}
 
 void PolishedResetTowerHistory(void)
 {
-    memset(gSaveBlock3Ptr->polishedTowerHistory, 0, sizeof(gSaveBlock3Ptr->polishedTowerHistory));
-    gSaveBlock3Ptr->polishedTowerVersion = TOWER_HISTORY_VERSION;
+    ResetOpponentHistory(TOWER_HISTORY_VERSION);
 }
 
-static bool32 IsLegalTowerTeam(const u16 *team)
+static bool32 IsLegalOpponentTeam(const u16 *team, bool32 rental)
 {
     for (u32 slot = 0; slot < FRONTIER_PARTY_SIZE; slot++)
     {
@@ -121,15 +130,21 @@ static bool32 IsLegalTowerTeam(const u16 *team)
         for (u32 earlier = 0; earlier < slot; earlier++)
         {
             const struct PolishedTowerSet *other = &sTowerSets[team[earlier]];
-            if (set->baseSpecies == other->baseSpecies || (set->item != ITEM_NONE && set->item == other->item))
+            if (set->baseSpecies == other->baseSpecies || (!rental && set->item != ITEM_NONE && set->item == other->item))
                 return FALSE;
         }
         // CheckSetRepeats decrements b before AND after the inner loop.
         // With three candidates only the first two are compared to history.
         if (slot < FRONTIER_PARTY_SIZE - 1)
+        {
+            if (rental)
+                for (u32 i = 0; i < PARTY_SIZE; i++)
+                    if (gSaveBlock2Ptr->frontier.rentalMons[i].monId == POLISHED_RENTAL_BASE + team[slot])
+                        return FALSE;
             for (u32 i = 0; i < ARRAY_COUNT(gSaveBlock3Ptr->polishedTowerHistory); i++)
                 if (gSaveBlock3Ptr->polishedTowerHistory[i] == team[slot] + 1)
                     return FALSE;
+        }
     }
     return TRUE;
 }
@@ -175,12 +190,117 @@ static u16 DrawSet(u32 tier)
     return start + PolishedRandomRange(sTowerTierOffsets[tier + 1] - start);
 }
 
+static void DrawOpponentTeam(u16 *team, u32 difficulty, bool32 rental)
+{
+    u32 mask = sTowerTierMasks[difficulty][Random() & 1];
+    u8 tiers[FRONTIER_PARTY_SIZE];
+    u16 *history = gSaveBlock3Ptr->polishedTowerHistory;
+    u32 version = rental ? FACTORY_HISTORY_VERSION : TOWER_HISTORY_VERSION;
+    if (gSaveBlock3Ptr->polishedTowerVersion != version || (rental && !gSaveBlock2Ptr->frontier.curChallengeBattleNum))
+        ResetOpponentHistory(version);
+    for (u32 i = 0; i < FRONTIER_PARTY_SIZE; i++, mask >>= 2)
+        tiers[i] = mask & 3;
+    ShuffleTiers(tiers, FRONTIER_PARTY_SIZE);
+    do
+    {
+        for (u32 i = 0; i < FRONTIER_PARTY_SIZE; i++)
+            team[i] = DrawSet(tiers[i]);
+    } while (!IsLegalOpponentTeam(team, rental));
+
+    memmove(history, history + FRONTIER_PARTY_SIZE, sizeof(gSaveBlock3Ptr->polishedTowerHistory) - FRONTIER_PARTY_SIZE * sizeof(*team));
+    for (u32 i = 0; i < FRONTIER_PARTY_SIZE; i++)
+        history[ARRAY_COUNT(gSaveBlock3Ptr->polishedTowerHistory) - FRONTIER_PARTY_SIZE + i] = team[i] + 1;
+}
+
+static u32 FactoryDifficulty(u32 wins)
+{
+    return min(7u, wins / 7 + (wins % 7) / 3);
+}
+
+static u16 FactoryOpeningStreak(void)
+{
+    const struct BattleFrontier *f = &gSaveBlock2Ptr->frontier;
+    return f->factoryWinStreaks[FRONTIER_MODE_SINGLES][FRONTIER_LVL_50] - f->curChallengeBattleNum;
+}
+
+void PolishedGenerateFactoryOpponent(void)
+{
+    u32 wins = FactoryOpeningStreak() + gSaveBlock2Ptr->frontier.curChallengeBattleNum;
+    u16 team[FRONTIER_PARTY_SIZE];
+    DrawOpponentTeam(team, FactoryDifficulty(wins), TRUE);
+    for (u32 i = 0; i < FRONTIER_PARTY_SIZE; i++)
+        gFrontierTempParty[i] = POLISHED_RENTAL_BASE + team[i];
+}
+
+static enum Type FactoryPreferredType(const struct PolishedTowerSet *const *team)
+{
+    // The release fills its type array in reverse party order. Its counter
+    // advances HL but never DE, so only the third mon's primary type is tested.
+    enum Type candidate = GetSpeciesType(team[FRONTIER_PARTY_SIZE - 1]->species, 0);
+    for (u32 i = 0; i < FRONTIER_PARTY_SIZE - 1; i++)
+        if (GetSpeciesType(team[i]->species, 0) == candidate || GetSpeciesType(team[i]->species, 1) == candidate)
+            return candidate;
+    return TYPE_NONE;
+}
+
+void BufferPolishedFactoryScout(void)
+{
+    gSpecialVar_Result = FALSE;
+    if (!IsPolishedFactoryChallenge())
+        return;
+    const struct PolishedTowerSet *team[FRONTIER_PARTY_SIZE];
+    for (u32 i = 0; i < FRONTIER_PARTY_SIZE; i++)
+    {
+        team[i] = PolishedGetRentalSet(gFrontierTempParty[i]);
+        if (!team[i])
+            return;
+    }
+    u32 wins = FactoryOpeningStreak();
+    const u8 *text;
+    if (wins < 14)
+    {
+        StringCopy(gStringVar1, GetSpeciesName(team[0]->species));
+        StringCopy(gStringVar2, GetSpeciesName(team[1]->species));
+        if (wins < 7)
+        {
+            StringCopy(gStringVar3, GetSpeciesName(team[2]->species));
+            text = COMPOUND_STRING("You can expect to see\n{STR_VAR_1}, {STR_VAR_2}\land {STR_VAR_3}.");
+        }
+        else
+            text = COMPOUND_STRING("You can expect to see\n{STR_VAR_1} and {STR_VAR_2}.");
+    }
+    else if (wins < 28)
+    {
+        StringCopy(gStringVar1, GetMoveName(team[0]->moves[0]));
+        if (wins < 21)
+        {
+            StringCopy(gStringVar2, GetSpeciesName(team[0]->species));
+            text = COMPOUND_STRING("You can expect to see a {STR_VAR_2}\nwith {STR_VAR_1}.");
+        }
+        else
+            text = COMPOUND_STRING("You can expect to see a Pokémon\nwith {STR_VAR_1}.");
+    }
+    else
+    {
+        enum Type type = FactoryPreferredType(team);
+        if (type == TYPE_NONE)
+            text = COMPOUND_STRING("The opponent doesn't have a\ntype preference.");
+        else
+        {
+            StringCopy(gStringVar1, gTypesInfo[type].name);
+            text = COMPOUND_STRING("The opponent favors\n{STR_VAR_1}-type Pokémon.");
+        }
+    }
+    StringExpandPlaceholders(gStringVar4, text);
+    gSpecialVar_Result = TRUE;
+}
+
 void PolishedGenerateFactoryRentals(void)
 {
     struct BattleFrontier *frontier = &gSaveBlock2Ptr->frontier;
     u32 wins = frontier->factoryWinStreaks[FRONTIER_MODE_SINGLES][FRONTIER_LVL_50] + 5u;
     u32 swaps = frontier->factoryRentsCount[FRONTIER_MODE_SINGLES][FRONTIER_LVL_50];
-    u32 row = min(7u, wins / 7 + (wins % 7) / 3 + swaps / 6);
+    u32 row = min(7u, FactoryDifficulty(wins) + swaps / 6);
     u8 tiers[PARTY_SIZE];
     for (u32 i = 0; i < PARTY_SIZE; i++)
         tiers[i] = (sTowerTierMasks[row][i / FRONTIER_PARTY_SIZE] >> (2 * (i % FRONTIER_PARTY_SIZE))) & 3;
@@ -301,28 +421,12 @@ void PolishedBuildTowerParty(u32 wins)
         CalculateMonStats(mon);
         HealPokemon(mon);
     }
-    u32 difficulty = TowerDifficulty(wins);
-    u32 mask = sTowerTierMasks[difficulty][Random() & 1];
-    u8 tiers[FRONTIER_PARTY_SIZE];
     u16 team[FRONTIER_PARTY_SIZE];
-    u16 *history = gSaveBlock3Ptr->polishedTowerHistory;
-    if (gSaveBlock3Ptr->polishedTowerVersion != TOWER_HISTORY_VERSION)
-        PolishedResetTowerHistory();
-    for (u32 i = 0; i < FRONTIER_PARTY_SIZE; i++, mask >>= 2)
-        tiers[i] = mask & 3;
-    ShuffleTiers(tiers, FRONTIER_PARTY_SIZE);
-    do
-    {
-        for (u32 i = 0; i < FRONTIER_PARTY_SIZE; i++)
-            team[i] = DrawSet(tiers[i]);
-    } while (!IsLegalTowerTeam(team));
-
-    memmove(history, history + FRONTIER_PARTY_SIZE, sizeof(gSaveBlock3Ptr->polishedTowerHistory) - sizeof(team));
+    DrawOpponentTeam(team, TowerDifficulty(wins), FALSE);
     struct TrainerGenerator generator = {.name = {EOS}, .otID = OTID_STRUCT_PRESET(0),
         .localRngState = LocalRandomSeed(team[0] + 1)};
     for (u32 i = 0; i < FRONTIER_PARTY_SIZE; i++)
     {
-        history[ARRAY_COUNT(gSaveBlock3Ptr->polishedTowerHistory) - FRONTIER_PARTY_SIZE + i] = team[i] + 1;
         CreateTowerMon(&gParties[B_TRAINER_OPPONENT_A][i], team[i], min(wins * 16, 252u) / 3, &generator);
     }
 }
