@@ -10,6 +10,17 @@
 #include "sprite.h"
 #include "constants/items.h"
 
+#if POLISHED_JOHTO_DEMO
+struct PolishedItemIcon
+{
+    u16 wordOffset;
+    u16 palette[16] ALIGNED(4);
+};
+
+static const u32 sPolishedIconTiles[] = INCBIN_U32("graphics/items/icons/polished_battle_icons.bin");
+#include "data/polished_battle_icons.h"
+#endif
+
 // EWRAM vars
 EWRAM_DATA u8 *gItemIconDecompressionBuffer = NULL;
 EWRAM_DATA u8 *gItemIcon4x4Buffer = NULL;
@@ -162,6 +173,8 @@ const void *GetItemIconPic(enum Item itemId)
     if (itemId >= ITEMS_COUNT)
         return gItemsInfo[0].iconPic;
 #if POLISHED_JOHTO_DEMO
+    if (sPolishedIconIndex[itemId])
+        return &sPolishedIconTiles[sPolishedItemIcons[sPolishedIconIndex[itemId]].wordOffset];
     if (IsPolishedTM(itemId))
         return gItemsInfo[itemId].iconPic;
 #endif
@@ -182,6 +195,8 @@ const u16 *GetItemIconPalette(enum Item itemId)
     if (itemId >= ITEMS_COUNT)
         return gItemsInfo[0].iconPalette;
 #if POLISHED_JOHTO_DEMO
+    if (sPolishedIconIndex[itemId])
+        return sPolishedItemIcons[sPolishedIconIndex[itemId]].palette;
     if (IsPolishedTM(itemId))
         return gItemsInfo[itemId].iconPalette;
 #endif

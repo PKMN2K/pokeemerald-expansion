@@ -66,6 +66,7 @@ jobs:
 
       - name: Verify reproducible Johto demo assets
         run: |
+          python3 tools/polished_port/scripts/build_battle_art.py --check
           python3 tools/polished_port/scripts/build_johto_demo.py --check
           python3 tools/polished_port/scripts/build_new_bark.py --check
           python3 tools/polished_port/scripts/test_route29.py
@@ -203,6 +204,11 @@ jobs:
         if: ${{ !cancelled() && steps.johto_driver.outcome == 'success' }}
         timeout-minutes: 5
         run: python3 tools/polished_port/scripts/test_link_conversion_emulator.py --output /tmp/johto-validation/link-conversion
+
+      - name: Compare source item and trainer art in the Johto ROM
+        if: ${{ !cancelled() && steps.johto_driver.outcome == 'success' }}
+        timeout-minutes: 5
+        run: python3 tools/polished_port/scripts/test_battle_art_emulator.py --driver /tmp/johto-demo-driver --output /tmp/johto-validation/battle-art
 
       - name: Verify production Conversion type selection
         if: ${{ !cancelled() && steps.johto_driver.outcome == 'success' }}

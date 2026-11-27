@@ -5044,9 +5044,8 @@ Giovanni1 and Armor Suit use appended IDs. The source team, form, gender, nature
 ability, nickname, moves, held item and badge-scaled level are registered. Its
 one initial boost checkpoint runs Attack, Defense, Speed, Special Attack and
 Special Defense, then Mirror Herb, before entry abilities. Reentry cannot repeat
-it. Source story/map integration, trainer art, Armor Suit icon and source battle
-animation/presentation are still unported; these additions are not claimed as a
-playable Giovanni story phase. Existing save identifiers are not renumbered.
+it. Suite 3 supplies the source Giovanni portrait and Armor Suit icon. The
+story encounter and its battle animation still require their map and presentation bindings. Existing save identifiers are not renumbered.
 
 Thirty-eight new groups include a deliberately seeded full-bag eligibility
 boundary; they do not claim a full-bag UI sequence. Source authentication and

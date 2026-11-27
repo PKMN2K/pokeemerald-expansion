@@ -135,7 +135,7 @@ observable-sequence obligations. Conversion's
 Smart AI and link transport, exact RNG calls, recorded/link compatibility, and
 source presentation remain Suite 3 obligations. The appended Giovanni1 trainer
 binding is available for the battle checkpoint and factory probe; its overworld
-story binding and source trainer/item art are not claimed complete.
+story encounter still awaits its map. Giovanni and the Armor Suit now use their source artwork.
 
 The current reconciliation also covers all used commands/effect scripts in
 `SUITE2_MOVE_RECONCILIATION.md` and all source ability/held-effect identities in
@@ -197,7 +197,7 @@ Shift and Set. The combined job requires these reports for setup and presentatio
 | Rewards | After a win or capture, the party is processed in reverse slot order after held items are restored. Natural Cure, Pickup and Honey Gather use the source conditions. | Special scripted rewards, all experience and loss branches, and their persistence. |
 | AI | Ordinary wild move selection filters unavailable moves. Registered trainers with medicine use source priority, health and status thresholds and the party's maximum level. Conversion rerolls invalid slots for wild and Smart trainers. | Source move scoring, switching, opponent knowledge, and item policies for unregistered trainers. |
 | Facility and link | Tower battles force Set for that battle. Compatible two-player link singles carry both players' Conversion choices and preserve them in the recording. | Tower party generation and streak progression, all facility rules, and synchronization across the remaining link actions. |
-| Presentation and RNG | Pickup and Honey Gather show the party member and awarded item. Seeded production probes check item results and the next draw. | The shared Game Boy RNG stream, complete draw order, message sequence, artwork, animation and timing. |
+| Presentation and RNG | Pickup and Honey Gather show the party member and awarded item. Seeded production probes check item results and the next draw. The Johto bag and storage use source tiles and palettes for 243 ordinary item identities. Giovanni uses his source portrait. | The shared Game Boy RNG stream, complete draw order, message sequence, artwork, animation and timing. |
 
 The combined run requires the production contexts report, the Dusk Ball map test
 and recorded and live two-player Conversion alongside the existing campaign and catalogs.

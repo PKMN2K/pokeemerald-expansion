@@ -476,6 +476,8 @@ const u16 gTrainerPalette_PolishedBugCatcher[] = INCGFX_U16("graphics/trainers/p
 const u32 gTrainerFrontPic_PolishedSage[] = INCGFX_U32("graphics/trainers/front_pics/polished_sage.png", ".4bpp.smol");
 const u16 gTrainerPalette_PolishedSage[] = INCGFX_U16("graphics/trainers/palettes/polished_sage.pal", ".gbapal");
 
+static const u32 sTrainerFrontPic_PolishedGiovanni[] = INCGFX_U32("graphics/trainers/front_pics/polished_giovanni.png", ".4bpp.smol");
+static const u16 sTrainerPalette_PolishedGiovanni[] = INCGFX_U16("graphics/trainers/palettes/polished_giovanni.pal", ".gbapal");
 const u32 gTrainerFrontPic_PolishedFalkner[] = INCGFX_U32("graphics/trainers/front_pics/polished_falkner.png", ".4bpp.smol");
 const u16 gTrainerPalette_PolishedFalkner[] = INCGFX_U16("graphics/trainers/palettes/polished_falkner.pal", ".gbapal");
 const u32 gTrainerFrontPic_PolishedBirdKeeper[] = INCGFX_U32("graphics/trainers/front_pics/polished_bird_keeper.png", ".4bpp.smol");
@@ -1273,6 +1275,10 @@ const struct TrainerPicInfo gTrainerPicInfo[TRAINER_PIC_COUNT] =
     [TRAINER_PIC_POLISHED_SAGE] =
     {
         .frontPic = TRAINER_FRONT_PIC(gTrainerFrontPic_PolishedSage, gTrainerPalette_PolishedSage),
+    },
+    [TRAINER_PIC_POLISHED_GIOVANNI] =
+    {
+        .frontPic = TRAINER_FRONT_PIC(sTrainerFrontPic_PolishedGiovanni, sTrainerPalette_PolishedGiovanni),
     },
     [TRAINER_PIC_POLISHED_FALKNER] =
     {

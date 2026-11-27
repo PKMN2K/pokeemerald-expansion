@@ -43,7 +43,7 @@ DOMAIN_CHECKS = {
          'Polished critical evolution counter excludes link battles',
          'Polished Sketch boundary rejects link mode and invalid or duplicate Sketch history without mutation']),
     'presentation_rng': (
-        ['link-conversion/report.json', 'conversion-selection/report.json', 'metronome-pool/report.json', 'new-bark/validation.json',
+        ['battle-art/report.json', 'link-conversion/report.json', 'conversion-selection/report.json', 'metronome-pool/report.json', 'new-bark/validation.json',
          'shift-source/shift-switch-validation.json', 'shift-native/shift-switch-validation.json'],
         ['Polished Safari bait and rock consume every rejected draw and one accepted draw']),
 }
@@ -95,6 +95,10 @@ def check_probe(path, rom_hash, pin):
         raise ValueError('missing probe results')
     if data.get('source_commit', pin) != pin:
         raise ValueError('unexpected source commit')
+    if path.parent.name == 'battle-art':
+        if (len(set(data['verified_items'])) != 243 or 'ITEM_POLISHED_ARMOR_SUIT' not in data['verified_items']
+                or not data['item_vram_checked'] or data['registered_trainer_portraits'] != ['GIOVANNI1'] or not data['expansion_item_fallback']):
+            raise ValueError('missing decoded source item tiles, palettes or Giovanni portrait')
     if path.parent.name == 'link-conversion':
         if (data['choices'] != [1, 2] or len(set(data['types'])) != 2
                 or len(data['tackle_pp_before']) != 2 or len(data['tackle_pp_after']) != 2

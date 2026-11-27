@@ -1,9 +1,9 @@
 /* Source GIOVANNI/GIOVANNI1; 28 is zero-badge base 4 + 24. */
-/* Source trainer artwork and story encounter remain Suite 3 bindings. */
+/* Giovanni uses the pinned 56x56 source portrait. */
 === TRAINER_POLISHED_GIOVANNI1 ===
 Name: Giovanni
 Class: Leader
-Pic: Leader Giovanni FRLG
+Pic: Polished Giovanni
 Gender: Male
 Music: Male
 Double Battle: No

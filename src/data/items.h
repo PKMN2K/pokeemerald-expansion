@@ -16204,7 +16204,7 @@ const struct ItemInfo gItemsInfo[] =
         .pocket = POCKET_ITEMS,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
-        // Source icon import is tracked with Suite 3 presentation.
+        // The Johto icon resolver supplies the source Armor Suit tiles and palette.
         .iconPic = gItemIcon_QuestionMark,
         .iconPalette = gItemIconPalette_QuestionMark,
     },
