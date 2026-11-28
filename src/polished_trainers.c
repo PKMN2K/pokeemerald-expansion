@@ -202,6 +202,52 @@ void PolishedScoreSmartMoves(const struct BattlePokemon *user, const struct Batt
             else if ((Random() & 255) >= 50)
                 scores[slot]--;
             break;
+        case MOVE_AERIAL_ACE:
+        case MOVE_SWIFT:
+        case MOVE_FEINT_ATTACK:
+        case MOVE_AURA_SPHERE:
+        case MOVE_DISARMING_VOICE:
+            if ((user->statStages[STAT_ACC] < DEFAULT_STAT_STAGE - 2
+              || target->statStages[STAT_EVASION] >= DEFAULT_STAT_STAGE + 3) && (Random() & 255) >= 50)
+                scores[slot] += 2;
+            break;
+        case MOVE_SUPERSONIC:
+        case MOVE_CONFUSE_RAY:
+        case MOVE_SWEET_KISS:
+            if (2u * target->hp <= target->maxHP)
+            {
+                if ((Random() & 255) >= 25)
+                    scores[slot]--;
+                if (4u * target->hp <= target->maxHP)
+                    scores[slot]--;
+            }
+            break;
+        case MOVE_SWAGGER:
+        case MOVE_ATTRACT:
+            if (context->targetFirstTurn)
+                scores[slot] += (Random() & 255) < 200; // 79 percent - 1 in the source.
+            else
+                scores[slot] -= (Random() & 255) >= 50;
+            break;
+        case MOVE_STOMP:
+        case MOVE_BODY_SLAM:
+            if (target->volatiles.minimize && (Random() & 255) >= 50)
+                scores[slot]++;
+            break;
+        case MOVE_FLARE_BLITZ:
+        case MOVE_SACRED_FIRE:
+            if (user->status1 & STATUS1_FREEZE)
+                scores[slot] += 5;
+            break;
+        case MOVE_AMNESIA:
+            if (2u * user->hp <= user->maxHP || user->statStages[STAT_SPDEF] >= DEFAULT_STAT_STAGE + 4)
+                scores[slot]--;
+            else if (user->statStages[STAT_SPDEF] < DEFAULT_STAT_STAGE + 2 && (Random() & 255) >= 50)
+                scores[slot] += 2;
+            break;
+        case MOVE_SLEEP_TALK:
+            scores[slot] += (user->status1 & STATUS1_SLEEP) >= (context->earlyBird ? 3u : 2u) ? 10 : -10;
+            break;
         case MOVE_LEECH_SEED:
         case MOVE_TOXIC:
             if (2u * target->hp <= target->maxHP)

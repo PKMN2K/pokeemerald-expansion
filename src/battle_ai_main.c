@@ -1050,6 +1050,7 @@ static struct ChosenAction ChooseMoveOrAction_Singles(enum BattlerId battler)
             struct PolishedSmartAiContext context = {
                 .weather = gBattleWeather,
                 .userWeather = GetAttackerWeather(holdEffect, ability, GetWeather()),
+                .earlyBird = ability == ABILITY_EARLY_BIRD,
                 .userSpeed = GetBattlerTotalSpeedStat(battler, ability, holdEffect),
                 .targetSpeed = GetBattlerTotalSpeedStat(opposingBattler, GetBattlerAbility(opposingBattler),
                                                         GetBattlerHoldEffect(opposingBattler)),

@@ -157,8 +157,11 @@ def check_probe(path, rom_hash, pin):
             'room_active': ([90, 100], 'Splash'), 'player_reserve': ([97, 99], 'Pain Split'),
             'fainted_reserve': ([100, 99], 'Explosion'), 'egg_reserve': ([100, 99], 'Explosion'),
             'both_reserves': ([100, 99], 'Explosion'),
+            'asleep': ([110, 100], 'Sleep Talk'), 'early_bird': ([90, 100], 'Splash'),
+            'gas': ([110, 100], 'Sleep Talk'), 'frozen': ([105, 102], 'Sacred Fire'),
+            'thawed': ([100, 102], 'Recover'),
         }
-        if smart['cases'] != 2099 or smart['battles'].keys() != expected.keys():
+        if smart['cases'] != 2385 or smart['battles'].keys() != expected.keys():
             raise ValueError('missing Smart trainer scoring cases or battles')
         for name, (scores, move) in expected.items():
             battle = smart['battles'][name]

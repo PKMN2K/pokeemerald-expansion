@@ -23,6 +23,9 @@ static const struct {
     u16 targetMaxHP;
     u8 attackStage;
     bool8 lastMonAgainstReserve;
+    s8 accuracy, evasion, spDefense; // Stage offsets from neutral.
+    bool8 minimized, earlyBird;
+    u32 status;
 } sCases[] = {
 /* SOURCE CASES */
 };
@@ -32,6 +35,7 @@ const volatile u32 gSmartLayout[] = {
     offsetof(struct AiBattleData, finalScore[B_BATTLER_1][B_BATTLER_0]),
     offsetof(struct BattleResults, battleTurnCounter),
     MOVE_RECOVER, MOVE_RAIN_DANCE, MOVE_POLISHED_HEALING_LIGHT, MOVE_TRICK_ROOM, MOVE_SPLASH, MOVE_EXPLOSION, MOVE_PAIN_SPLIT,
+    MOVE_SLEEP_TALK, MOVE_SACRED_FIRE,
 };
 
 static void CheckScores(void)
@@ -44,9 +48,15 @@ static void CheckScores(void)
         struct BattlePokemon target = {.hp = sCases[i].targetHP, .maxHP = sCases[i].targetMaxHP};
         s32 scores[] = {100, 100, 100, 100};
         user.statStages[STAT_ATK] = sCases[i].attackStage;
+        user.statStages[STAT_ACC] = DEFAULT_STAT_STAGE + sCases[i].accuracy;
+        user.statStages[STAT_SPDEF] = DEFAULT_STAT_STAGE + sCases[i].spDefense;
+        user.status1 = sCases[i].status;
+        target.statStages[STAT_EVASION] = DEFAULT_STAT_STAGE + sCases[i].evasion;
+        target.volatiles.minimize = sCases[i].minimized;
         memcpy(user.moves, sCases[i].moves, sizeof(user.moves));
         SeedRng(sCases[i].seed);
         struct PolishedSmartAiContext context = {
+            .earlyBird = sCases[i].earlyBird,
             .weather = sCases[i].weather, .userWeather = sCases[i].userWeather,
             .userSpeed = sCases[i].userSpeed, .targetSpeed = sCases[i].targetSpeed,
             .trickRoom = sCases[i].trickRoom, .targetFirstTurn = sCases[i].targetFirstTurn,
@@ -131,6 +141,30 @@ static void SetExplosionParties(u16 keys)
     }
 }
 
+static void SetStatusParties(u16 keys)
+{
+    struct Pokemon *player = &gParties[B_TRAINER_PLAYER][0];
+    struct Pokemon *trainer = &gParties[B_TRAINER_OPPONENT_A][0];
+    u32 status;
+    if (keys & DPAD_LEFT)
+    {
+        SetMon(player, SPECIES_MAGIKARP, 150, MOVE_SPLASH, MOVE_NONE);
+        SetMon(trainer, SPECIES_STARYU, 20, MOVE_SACRED_FIRE, MOVE_RECOVER);
+        status = (keys & START_BUTTON) ? STATUS1_NONE : STATUS1_FREEZE;
+    }
+    else
+    {
+        bool32 gas = (keys & DPAD_RIGHT) != 0;
+        u32 ability = gas || (keys & B_BUTTON); // Doduo's second slot is Early Bird.
+        SetMon(player, SPECIES_KOFFING, 150, MOVE_SPLASH, MOVE_NONE);
+        SetMonData(player, MON_DATA_ABILITY_NUM, &gas);
+        SetMon(trainer, SPECIES_DODUO, 150, MOVE_SLEEP_TALK, MOVE_SPLASH);
+        SetMonData(trainer, MON_DATA_ABILITY_NUM, &ability);
+        status = STATUS1_SLEEP_TURN(2);
+    }
+    SetMonData(trainer, MON_DATA_STATUS, &status);
+}
+
 void CB2_MoveMachineAudit(void)
 {
     (void)gSmartLayout[0];
@@ -153,7 +187,9 @@ void CB2_MoveMachineAudit(void)
     gSaveBlock2Ptr->optionsTextSpeed = OPTIONS_TEXT_SPEED_FAST;
     gSaveBlock2Ptr->optionsBattleSceneOff = TRUE;
     gPartiesCount[B_TRAINER_PLAYER] = gPartiesCount[B_TRAINER_OPPONENT_A] = 1;
-    if (keys & SELECT_BUTTON)
+    if (keys & R_BUTTON)
+        SetStatusParties(keys);
+    else if (keys & SELECT_BUTTON)
         SetExplosionParties(keys);
     else
         SetFieldParties(keys, sun);
