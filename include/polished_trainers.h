@@ -42,8 +42,16 @@ u8 PolishedBestReserveScore(enum BattlerId user, enum BattlerId target);
 bool32 PolishedSmartCanSwitch(enum BattlerId battler);
 s32 PolishedScoreReactiveMove(const struct BattlePokemon *user, const struct BattlePokemon *target, u32 slot,
                              struct PolishedSmartAiContext *context);
+struct PolishedBasicAiContext
+{
+    u32 userSide, targetSide, weather, userSpeed, targetSpeed;
+    u8 spikes, toxicSpikes;
+    bool8 trickRoom, userGhost, oppositeGender, futureSight, userPartyHP, targetPartyHP;
+};
+void PolishedReadBasicBattle(enum BattlerId user, enum BattlerId target, struct PolishedBasicAiContext *ctx);
+void PolishedScoreTypeMoves(enum BattlerId user, enum BattlerId target, u32 limitations, s32 *scores);
 void PolishedScoreBasicMoves(const struct BattlePokemon *user, const struct BattlePokemon *target,
-                            u32 limitations, u32 userSide, u32 targetSide, u32 weather, s32 *scores);
+                            u32 limitations, const struct PolishedBasicAiContext *ctx, s32 *scores);
 void PolishedScoreSmartMoves(const struct BattlePokemon *user, const struct BattlePokemon *target,
                             u32 limitations, struct PolishedSmartAiContext *context, s32 *scores);
 void PolishedScoreTrainerPolicies(u32 layers, const enum Move *moves, u32 limitations,

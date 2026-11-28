@@ -1051,14 +1051,17 @@ static struct ChosenAction ChooseMoveOrAction_Singles(enum BattlerId battler)
     {
         u32 badges = __builtin_popcount(VarGet(VAR_POLISHED_EARNED_BADGES));
         u32 layers = PolishedTrainerAiLayers(TRAINER_BATTLE_PARAM.opponentA, badges);
+        struct PolishedBasicAiContext basic;
+        PolishedReadBasicBattle(battler, opposingBattler, &basic);
         PolishedScoreBasicMoves(&gBattleMons[battler], &gBattleMons[opposingBattler], gAiLogicData->moveLimitations[battler],
-                               gSideStatuses[GetBattlerSide(battler)], gSideStatuses[GetBattlerSide(opposingBattler)],
-                               gBattleWeather, gAiThinkingStruct->score);
+                               &basic, gAiThinkingStruct->score);
         // IncrementTurnsTaken runs before AIChooseMove, including the initial turn.
         if (layers & POLISHED_AI_SETUP)
             PolishedScoreSetup(gBattleMons[battler].moves, gAiLogicData->moveLimitations[battler],
                               IsBattlersFirstTurn(opposingBattler), IS_BATTLER_OF_TYPE(battler, TYPE_GHOST),
                               gAiThinkingStruct->score);
+        if (layers & POLISHED_AI_TYPES)
+            PolishedScoreTypeMoves(battler, opposingBattler, gAiLogicData->moveLimitations[battler], gAiThinkingStruct->score);
         if (layers & POLISHED_AI_SMART)
         {
             enum HoldEffect holdEffect = GetBattlerHoldEffect(battler);
@@ -1078,10 +1081,7 @@ static struct ChosenAction ChooseMoveOrAction_Singles(enum BattlerId battler)
                 .spikes = gSideTimers[GetBattlerSide(battler)].spikesAmount,
                 .partyHasStatus = GetMoveSlot(gBattleMons[battler].moves, MOVE_HEAL_BELL) < MAX_MON_MOVES
                                && PolishedPartyHasStatus(battler),
-                .userSpeed = GetBattlerTotalSpeedStat(battler, ability, holdEffect),
-                .targetSpeed = GetBattlerTotalSpeedStat(opposingBattler, GetBattlerAbility(opposingBattler),
-                                                        GetBattlerHoldEffect(opposingBattler)),
-                .trickRoom = (gFieldStatuses & STATUS_FIELD_TRICK_ROOM) != 0,
+                .userSpeed = basic.userSpeed, .targetSpeed = basic.targetSpeed, .trickRoom = basic.trickRoom,
                 .targetFirstTurn = IsBattlersFirstTurn(opposingBattler),
                 .lastMonAgainstReserve = GetMoveSlot(gBattleMons[battler].moves, MOVE_EXPLOSION) < MAX_MON_MOVES
                                       && CountUsablePartyMons(battler) == 0 && CountUsablePartyMons(opposingBattler) > 0,

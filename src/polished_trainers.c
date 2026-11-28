@@ -75,22 +75,25 @@ static s32 SmartHealingScore(u32 hp, u32 maxHP)
     return -2;
 }
 
-bool32 PolishedSmartUserIsFaster(const struct PolishedSmartAiContext *context)
+static bool32 AiUserIsFaster(u32 userSpeed, u32 targetSpeed, bool32 trickRoom)
 {
-    if (context->userSpeed == context->targetSpeed)
+    if (userSpeed == targetSpeed)
     {
         // CheckSpeed draws once per tie. AICompareSpeed clears carry for either result.
         Random();
         return FALSE;
     }
-    if (context->trickRoom)
-        return context->userSpeed < context->targetSpeed;
-    return context->userSpeed > context->targetSpeed;
+    return trickRoom ? userSpeed < targetSpeed : userSpeed > targetSpeed;
+}
+
+bool32 PolishedSmartUserIsFaster(const struct PolishedSmartAiContext *context)
+{
+    return AiUserIsFaster(context->userSpeed, context->targetSpeed, context->trickRoom);
 }
 
 // AI_Basic applies AIDiscourageMove once when the move is redundant.
 static bool32 IsRedundantBasicMove(enum Move move, const struct BattlePokemon *user,
-                                   const struct BattlePokemon *target, u32 userSide, u32 targetSide, u32 weather)
+                                   const struct BattlePokemon *target, const struct PolishedBasicAiContext *ctx)
 {
     switch (move)
     {
@@ -100,7 +103,13 @@ static bool32 IsRedundantBasicMove(enum Move move, const struct BattlePokemon *u
     case MOVE_SLEEP_POWDER:
     case MOVE_HYPNOSIS:
     case MOVE_SPORE:
-        return (targetSide & SIDE_STATUS_SAFEGUARD) || (target->status1 & STATUS1_ANY);
+    case MOVE_POISON_POWDER:
+    case MOVE_TOXIC:
+    case MOVE_GLARE:
+    case MOVE_THUNDER_WAVE:
+    case MOVE_STUN_SPORE:
+    case MOVE_WILL_O_WISP:
+        return (ctx->targetSide & SIDE_STATUS_SAFEGUARD) || (target->status1 & STATUS1_ANY);
     case MOVE_RECOVER:
     case MOVE_REST:
     case MOVE_ROOST:
@@ -111,30 +120,70 @@ static bool32 IsRedundantBasicMove(enum Move move, const struct BattlePokemon *u
     case MOVE_SUNNY_DAY:
     case MOVE_SANDSTORM:
     case MOVE_HAIL:
-        return (weather & (1u << GetMoveWeatherType(move))) != 0;
+        return (ctx->weather & (1u << GetMoveWeatherType(move))) != 0;
     case MOVE_REFLECT:
-        return (userSide & SIDE_STATUS_REFLECT) != 0;
+        return (ctx->userSide & SIDE_STATUS_REFLECT) != 0;
     case MOVE_LIGHT_SCREEN:
-        return (userSide & SIDE_STATUS_LIGHTSCREEN) != 0;
+        return (ctx->userSide & SIDE_STATUS_LIGHTSCREEN) != 0;
     case MOVE_SAFEGUARD:
-        return (userSide & SIDE_STATUS_SAFEGUARD) != 0;
+        return (ctx->userSide & SIDE_STATUS_SAFEGUARD) != 0;
     case MOVE_CONFUSE_RAY:
     case MOVE_SUPERSONIC:
     case MOVE_SWEET_KISS:
-        return target->volatiles.confusionTimer || (targetSide & SIDE_STATUS_SAFEGUARD);
+        return target->volatiles.confusionTimer || (ctx->targetSide & SIDE_STATUS_SAFEGUARD);
     case MOVE_SWAGGER:
         return target->volatiles.confusionTimer != 0;
+    case MOVE_ROAR:
+        return !ctx->targetPartyHP;
+    case MOVE_TELEPORT:
+    case MOVE_BATON_PASS:
+        return !ctx->userPartyHP;
+    case MOVE_FOCUS_ENERGY:
+        return user->volatiles.focusEnergy != 0;
+    case MOVE_TRANSFORM:
+        return user->volatiles.transformed;
+    case MOVE_SUBSTITUTE:
+        return user->volatiles.substituteHP != 0;
+    case MOVE_LEECH_SEED:
+        return target->volatiles.leechSeed;
+    case MOVE_DISABLE:
+        return target->volatiles.disableTimer != 0;
+    case MOVE_ENCORE:
+        return target->volatiles.encoreTimer != 0;
+    case MOVE_SLEEP_TALK:
+        return !(user->status1 & STATUS1_SLEEP);
+    case MOVE_MEAN_LOOK:
+        // The source stores CANT_RUN on the trapper. The GBA stores it on the victim.
+        return target->volatiles.escapePrevention;
+    case MOVE_CURSE:
+        return ctx->userGhost && target->volatiles.cursed;
+    case MOVE_SPIKES:
+        return ctx->spikes == 3;
+    case MOVE_TOXIC_SPIKES:
+        return ctx->toxicSpikes == 2;
+    case MOVE_FORESIGHT:
+        return target->volatiles.foresight;
+    case MOVE_PERISH_SONG:
+        return target->volatiles.perishSong;
+    case MOVE_ATTRACT:
+        return !ctx->oppositeGender || target->volatiles.infatuation;
+    case MOVE_FUTURE_SIGHT:
+        return ctx->futureSight;
+    case MOVE_TRICK_ROOM:
+        return AiUserIsFaster(ctx->userSpeed, ctx->targetSpeed, ctx->trickRoom);
+    case MOVE_DESTINY_BOND:
+        return user->volatiles.destinyBond;
     default:
         return FALSE;
     }
 }
 
 void PolishedScoreBasicMoves(const struct BattlePokemon *user, const struct BattlePokemon *target,
-                            u32 limitations, u32 userSide, u32 targetSide, u32 weather, s32 *scores)
+                            u32 limitations, const struct PolishedBasicAiContext *ctx, s32 *scores)
 {
     for (u32 slot = 0; slot < MAX_MON_MOVES; slot++)
         if (!(limitations & (1u << slot))
-         && IsRedundantBasicMove(user->moves[slot], user, target, userSide, targetSide, weather))
+         && IsRedundantBasicMove(user->moves[slot], user, target, ctx))
             scores[slot] -= 10;
 }
 

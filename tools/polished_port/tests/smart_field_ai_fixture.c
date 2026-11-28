@@ -25,7 +25,8 @@ struct TacticsInput {
     u8 spikes, hidden, stat;
     s8 userOffset, targetOffset;
     bool8 ghost, partyStatus, safeguard, reflect, lightScreen, ownSafeguard;
-    u8 targetConfused;
+    u8 targetConfused, targetSpikes, toxicSpikes;
+    bool8 focusEnergy, transformed, substitute, disabled, encored, meanLook, futureSight, destinyBond, oppositeGender;
     bool8 targetWrapped, targetInLove, targetIdentified, targetRolling, targetLockOn;
     bool8 userWrapped, userSeeded, userRage, userProtected, userInLove, userConfused;
 };
@@ -58,6 +59,7 @@ const volatile u32 gSmartLayout[] = {
     offsetof(struct BattleStruct, polishedChoiceMove[B_BATTLER_1]),
     MOVE_QUICK_ATTACK, MOVE_ROAR, MOVE_PERISH_SONG, MOVE_ENCORE, MOVE_COUNTER, MOVE_MIRROR_COAT,
     MOVE_REFLECT, MOVE_LIGHT_SCREEN, MOVE_CONFUSE_RAY, MOVE_SWAGGER, MOVE_SUNNY_DAY,
+    MOVE_ICE_BEAM, MOVE_CRUNCH, MOVE_FOCUS_ENERGY, MOVE_LEECH_SEED, MOVE_BATON_PASS,
 };
 
 static void CheckScores(void)
@@ -93,6 +95,13 @@ static void CheckScores(void)
         target.statStages[STAT_ACC] += t->targetAccuracy;
         target.volatiles.leechSeed = t->targetSeeded;
         target.volatiles.confusionTimer = t->targetConfused;
+        user.volatiles.focusEnergy = t->focusEnergy;
+        user.volatiles.transformed = t->transformed;
+        user.volatiles.substituteHP = t->substitute;
+        user.volatiles.destinyBond = t->destinyBond;
+        target.volatiles.disableTimer = t->disabled;
+        target.volatiles.encoreTimer = t->encored;
+        target.volatiles.escapePrevention = t->meanLook;
         target.status1 = t->targetStatus;
         target.volatiles.wrapTurns = t->targetWrapped;
         target.volatiles.infatuation = t->targetInLove;
@@ -126,8 +135,14 @@ static void CheckScores(void)
         TRAINER_BATTLE_PARAM.opponentA = t->inverse ? TRAINER_PC_INVER_1 : 0;
         u32 userSide = (t->reflect ? SIDE_STATUS_REFLECT : 0) | (t->lightScreen ? SIDE_STATUS_LIGHTSCREEN : 0)
                     | (t->ownSafeguard ? SIDE_STATUS_SAFEGUARD : 0);
-        PolishedScoreBasicMoves(&user, &target, sCases[i].mask, userSide,
-                               t->safeguard ? SIDE_STATUS_SAFEGUARD : 0, context.weather, scores);
+        struct PolishedBasicAiContext basic = {
+            .userSide = userSide, .targetSide = t->safeguard ? SIDE_STATUS_SAFEGUARD : 0, .weather = context.weather,
+            .userSpeed = context.userSpeed, .targetSpeed = context.targetSpeed, .trickRoom = context.trickRoom,
+            .userGhost = t->userGhost, .oppositeGender = t->oppositeGender, .futureSight = t->futureSight,
+            .userPartyHP = t->userReserve, .targetPartyHP = t->targetReserve,
+            .spikes = t->targetSpikes, .toxicSpikes = t->toxicSpikes,
+        };
+        PolishedScoreBasicMoves(&user, &target, sCases[i].mask, &basic, scores);
         for (u32 slot = 0; slot < MAX_MON_MOVES; slot++)
             if (scores[slot] != ((sCases[i].basicDiscouraged & (1u << slot)) ? 90 : 100))
             {
@@ -211,7 +226,30 @@ static void SetBasicParties(u16 keys)
 {
     struct Pokemon *player = &gParties[B_TRAINER_PLAYER][0];
     struct Pokemon *trainer = &gParties[B_TRAINER_OPPONENT_A][0];
-    if (keys & DPAD_LEFT)
+    if (keys & START_BUTTON)
+    {
+        SetMon(player, (keys & A_BUTTON) ? SPECIES_DRAGONITE : SPECIES_SLOWPOKE, 150, MOVE_SPLASH, MOVE_NONE);
+        SetMon(trainer, SPECIES_STARYU, 150, MOVE_ICE_BEAM, MOVE_CRUNCH);
+    }
+    else if (keys & DPAD_RIGHT)
+    {
+        SetMon(player, SPECIES_MAGIKARP, 150, MOVE_SPLASH, MOVE_NONE);
+        SetMon(trainer, SPECIES_STARYU, 150, MOVE_FOCUS_ENERGY, MOVE_LEECH_SEED);
+    }
+    else if (keys & (A_BUTTON | B_BUTTON))
+    {
+        SetMon(player, SPECIES_MAGIKARP, 150, MOVE_SPLASH, MOVE_NONE);
+        SetMon(trainer, SPECIES_STARYU, 150, MOVE_ROAR, MOVE_BATON_PASS);
+        if (keys & A_BUTTON)
+        {
+            // The source HP scan also sees a nonzero HP word in an Egg slot.
+            u32 egg = TRUE;
+            SetMon(&player[1], SPECIES_MAGIKARP, 150, MOVE_SPLASH, MOVE_NONE);
+            SetMonData(&player[1], MON_DATA_IS_EGG, &egg);
+            gPartiesCount[B_TRAINER_PLAYER] = 2;
+        }
+    }
+    else if (keys & DPAD_LEFT)
     {
         u32 drought = 2;
         SetMon(player, SPECIES_NINETALES, 150, MOVE_SPLASH, MOVE_NONE);
@@ -345,6 +383,8 @@ static void SetReactiveParties(u16 keys)
     if ((keys & SELECT_BUTTON) && (keys & (DPAD_LEFT | DPAD_RIGHT)))
     {
         bool32 grass = keys & DPAD_RIGHT;
+        SetMon(&player[1], SPECIES_MAGIKARP, 150, MOVE_SPLASH, MOVE_NONE);
+        gPartiesCount[B_TRAINER_PLAYER] = 2;
         SetMon(trainer, SPECIES_STARYU, 40, MOVE_ROAR, MOVE_RECOVER);
         SetMon(&trainer[1], grass ? SPECIES_BULBASAUR : SPECIES_CHARMANDER, 150, grass ? MOVE_ABSORB : MOVE_FLAMETHROWER, MOVE_NONE);
         gPartiesCount[B_TRAINER_OPPONENT_A] = 2;
@@ -417,7 +457,12 @@ void CB2_MoveMachineAudit(void)
         return;
     bool32 reactive = (keys & (L_BUTTON | R_BUTTON | START_BUTTON)) == (L_BUTTON | R_BUTTON | START_BUTTON);
     bool32 basic = (keys & (L_BUTTON | R_BUTTON | SELECT_BUTTON)) == (R_BUTTON | SELECT_BUTTON);
-    VarSet(VAR_POLISHED_EARNED_BADGES, (basic || (!reactive && (keys & (DPAD_UP | DPAD_DOWN)))) ? 0 : 0xffff);
+    u32 badges = 0xffff;
+    if (basic)
+        badges = (keys & START_BUTTON) ? 3 : 0;
+    else if (!reactive && (keys & (DPAD_UP | DPAD_DOWN)))
+        badges = 0;
+    VarSet(VAR_POLISHED_EARNED_BADGES, badges);
     gSaveBlock2Ptr->optionsTextSpeed = OPTIONS_TEXT_SPEED_FAST;
     gSaveBlock2Ptr->optionsBattleSceneOff = TRUE;
     gPartiesCount[B_TRAINER_PLAYER] = gPartiesCount[B_TRAINER_OPPONENT_A] = 1;

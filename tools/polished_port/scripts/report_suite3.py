@@ -157,15 +157,15 @@ def check_probe(path, rom_hash, pin):
             'low': ([102, 99], 'Recover'), 'full': ([88, 101], 'Rain Dance'),
             'low_control': ([100, 100], None), 'full_control': ([90, 100], 'Rain Dance'),
             'sun': ([103, 100], 'HealingLight'), 'sun_umbrella': ([102, 100], 'HealingLight'),
-            'faster': ([90, 100], 'Splash'), 'player_scarf': ([103, 100], 'Trick Room'),
-            'room_active': ([90, 100], 'Splash'), 'player_reserve': ([97, 99], 'Pain Split'),
+            'faster': ([80, 100], 'Splash'), 'player_scarf': ([103, 100], 'Trick Room'),
+            'room_active': ([80, 100], 'Splash'), 'player_reserve': ([97, 99], 'Pain Split'),
             'fainted_reserve': ([100, 99], 'Explosion'), 'egg_reserve': ([100, 99], 'Explosion'),
             'both_reserves': ([100, 99], 'Explosion'),
             'asleep': ([110, 100], 'Sleep Talk'), 'early_bird': ([90, 100], 'Splash'),
             'gas': ([110, 100], 'Sleep Talk'), 'frozen': ([105, 102], 'Sacred Fire'),
             'thawed': ([100, 102], 'Recover'),
         }
-        if smart['cases'] != 5233 or smart['battles'].keys() != (expected.keys() | tactics_cases.BATTLE_OUTCOMES.keys()
+        if smart['cases'] != 5395 or smart['battles'].keys() != (expected.keys() | tactics_cases.BATTLE_OUTCOMES.keys()
                                                           | matchup_cases.BATTLES | reactive_cases.BATTLES | basic_cases.BATTLES):
             raise ValueError('missing Smart trainer scoring cases or battles')
         basic_cases.check_battles(smart['battles'])
@@ -177,7 +177,7 @@ def check_probe(path, rom_hash, pin):
             if battle['scores'] != scores or (move is not None and battle['move'] != move):
                 raise ValueError(f'incorrect Smart trainer scores or move in {name}')
         if (not all(row['link_records_reloaded'] for row in data['outcomes'].values())
-                or data['trainer_setup_cases'] != 640 or data['legendary_blocked'] != ['Run', 'Teleport', 'Roar']):
+                or data['trainer_type_cases'] != 936 or data['trainer_setup_cases'] != 640 or data['legendary_blocked'] != ['Run', 'Teleport', 'Roar']):
             raise ValueError('missing Pay Day, link standings, Setup scoring or legendary exit evidence')
         if (data['seeded_reward_cases'] < 127 or data['wild_factory_cases'] < 96
                 or data['roamer_movement_cases'] < 280 or data['roamer_encounter_bytes'] != 256

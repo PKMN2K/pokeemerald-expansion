@@ -141,8 +141,8 @@ BATTLES = {'priority_below', 'priority_equal', 'priority_faster', 'perish_first'
 def check_battles(battles):
     fixed = {
         'priority_below': ('Quick Attack', (103,102)), 'priority_equal': ('Recover', (100,102)),
-        'priority_faster': ('Recover', (100,102)), 'perish_first': ('Perish Song',(103,99)),
-        'roar_first': ('Perish Song',(100,103)), 'perish_alone': ('Roar',(95,100)),
+        'priority_faster': ('Recover', (100,102)), 'perish_first': ('Perish Song',(103,89)),
+        'roar_first': ('Perish Song',(90,103)), 'perish_alone': ('Perish Song',(95,90)),
         'encore_history': ('Destiny Bond',(90,99)),
         'fire_reserve': ('Recover',(100,102)), 'grass_reserve': ('Recover',(100,102)),
         'fire_reserve_next': ('Roar',(100,98)), 'grass_reserve_next': ('Roar',(99,98)),
@@ -152,7 +152,7 @@ def check_battles(battles):
         b = battles[name]
         assert b['move'] == move and tuple(b['scores']) == scores, (name, b)
     b = battles['encore_history_next']
-    assert b['move'] == 'Encore' and b['scores'][0] in (100,102) and b['scores'][1] == 99, b
+    assert b['move'] == 'Encore' and b['scores'][0] in (100,102) and b['scores'][1] == 89, b
     for name, slot, move in (('physical_history', 0, 'Counter'), ('special_history', 1, 'Mirror Coat')):
         assert tuple(battles[name]['scores']) == (99,99), (name, battles[name])
         b = battles[name+'_next']

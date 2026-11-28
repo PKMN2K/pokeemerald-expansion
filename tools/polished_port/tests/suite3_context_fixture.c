@@ -2,8 +2,11 @@
 // and item checks. Only the test entry point and starting parties are replaced.
 #include "global.h"
 #include "battle.h"
+#include "battle_util2.h"
+#include "constants/opponents.h"
 #include "constants/maps.h"
 #include "battle_main.h"
+#include "battle_setup.h"
 #include "battle_records.h"
 #include "constants/game_stat.h"
 #include "link.h"
@@ -166,6 +169,43 @@ static void CheckSetup(void)
                 return;
             }
     }
+}
+
+static void CheckTrainerTypes(void)
+{
+    static const struct {
+        enum Move moves[MAX_MON_MOVES];
+        s8 delta[MAX_MON_MOVES];
+        enum Type first, second;
+        u8 inverse, mask;
+        enum Move previous;
+        enum Ability attacker, defender;
+    } cases[] = {
+/* TYPE CASES */
+    };
+    AllocateBattleResources();
+    gMain.inBattle = TRUE;
+    gBattleTypeFlags = BATTLE_TYPE_TRAINER;
+    for (u32 i = 0; i < ARRAY_COUNT(cases) && !gContextResult[6]; i++)
+    {
+        s32 scores[MAX_MON_MOVES] = {100, 100, 100, 100};
+        TRAINER_BATTLE_PARAM.opponentA = cases[i].inverse ? TRAINER_PC_INVER_1 : TRAINER_POLISHED_JOEY;
+        memcpy(gBattleMons[B_BATTLER_1].moves, cases[i].moves, sizeof(cases[i].moves));
+        gBattleMons[B_BATTLER_0].types[0] = cases[i].first;
+        gBattleMons[B_BATTLER_0].types[1] = cases[i].second;
+        gBattleMons[B_BATTLER_0].types[2] = TYPE_MYSTERY;
+        gBattleMons[B_BATTLER_0].ability = cases[i].defender;
+        gBattleMons[B_BATTLER_1].ability = cases[i].attacker;
+        gBattleStruct->polishedChoiceMove[B_BATTLER_1] = cases[i].previous;
+        PolishedScoreTypeMoves(B_BATTLER_1, B_BATTLER_0, cases[i].mask, scores);
+        for (u32 j = 0; j < MAX_MON_MOVES; j++)
+            if (scores[j] != 100 + cases[i].delta[j])
+                gContextResult[6] = 4000 + i;
+    }
+    gMain.inBattle = FALSE;
+    gBattleTypeFlags = 0;
+    TRAINER_BATTLE_PARAM.opponentA = 0;
+    FreeBattleResources();
 }
 
 static void CheckTrainerTies(void)
@@ -438,6 +478,8 @@ void CB2_MoveMachineAudit(void)
         CheckTrainerPolicies();
     if (!gContextResult[6])
         CheckSetup();
+    if (!gContextResult[6])
+        CheckTrainerTypes();
     CheckWildGender();
     if (!gContextResult[2])
         CheckFactories();

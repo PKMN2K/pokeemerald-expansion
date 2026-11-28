@@ -59,12 +59,9 @@ static enum Ability DefendingAbility(const struct MatchupMon *user, const struct
     return ability;
 }
 
-// The source evaluates unmodified move data here, including Hidden Power's unknown type.
-static uq4_12_t SmartMatchup(enum Move move, enum Type type, const struct MatchupMon *user, const struct MatchupMon *target)
+static uq4_12_t ChartMatchup(enum Type type, enum Ability attacker, const struct MatchupMon *target)
 {
     uq4_12_t total = UQ_4_12(1.0);
-    enum Ability defender = DefendingAbility(user, target);
-    enum Ability attacker = ActiveAbility(user, target);
     for (u32 i = 0; i < ARRAY_COUNT(target->types); i++)
     {
         enum Type defense = target->types[i];
@@ -78,6 +75,14 @@ static uq4_12_t SmartMatchup(enum Move move, enum Type type, const struct Matchu
             mod = UQ_4_12(1.0);
         total = uq4_12_multiply(total, mod);
     }
+    return total;
+}
+
+// The source evaluates unmodified move data here, including Hidden Power's unknown type.
+static uq4_12_t SmartMatchup(enum Move move, enum Type type, const struct MatchupMon *user, const struct MatchupMon *target)
+{
+    uq4_12_t total = ChartMatchup(type, ActiveAbility(user, target), target);
+    enum Ability defender = DefendingAbility(user, target);
     if (type == TYPE_GROUND && target->item != HOLD_EFFECT_IRON_BALL
      && (defender == ABILITY_LEVITATE || target->item == HOLD_EFFECT_AIR_BALLOON
       || (target->activeFlying && target->item != HOLD_EFFECT_RING_TARGET && GetTypeModifier(TYPE_GROUND, TYPE_FLYING) == 0)))
@@ -91,6 +96,64 @@ static uq4_12_t SmartMatchup(enum Move move, enum Type type, const struct Matchu
      || (type == TYPE_WATER && (defender == ABILITY_DRY_SKIN || defender == ABILITY_WATER_ABSORB)))
         return 0;
     return total;
+}
+
+// DoCheckAnyOtherAliveMons reads the HP of every other occupied party slot.
+static bool32 OtherPartySlotHasHP(enum BattlerId battler)
+{
+    struct Pokemon *party = GetBattlerParty(battler);
+    for (u32 i = 0; i < gPartiesCount[GetBattlerTrainer(battler)]; i++)
+        if (i != gBattlerPartyIndexes[battler] && GetMonData(&party[i], MON_DATA_HP))
+            return TRUE;
+    return FALSE;
+}
+
+void PolishedReadBasicBattle(enum BattlerId user, enum BattlerId target, struct PolishedBasicAiContext *ctx)
+{
+    enum Move *moves = gBattleMons[user].moves;
+    u32 side = GetBattlerSide(target);
+    *ctx = (struct PolishedBasicAiContext){
+        .userSide = gSideStatuses[GetBattlerSide(user)], .targetSide = gSideStatuses[side], .weather = gBattleWeather,
+        .spikes = gSideTimers[side].spikesAmount, .toxicSpikes = gSideTimers[side].toxicSpikesAmount,
+        .futureSight = gBattleStruct->futureSight[target].counter != 0,
+        .userSpeed = GetBattlerTotalSpeedStat(user, GetBattlerAbility(user), GetBattlerHoldEffect(user)),
+        .targetSpeed = GetBattlerTotalSpeedStat(target, GetBattlerAbility(target), GetBattlerHoldEffect(target)),
+        .trickRoom = (gFieldStatuses & STATUS_FIELD_TRICK_ROOM) != 0,
+        .userGhost = IS_BATTLER_OF_TYPE(user, TYPE_GHOST),
+        .oppositeGender = GetMoveSlot(moves, MOVE_ATTRACT) < MAX_MON_MOVES && AreBattlersOfOppositeGender(user, target),
+        .userPartyHP = (GetMoveSlot(moves, MOVE_TELEPORT) < MAX_MON_MOVES || GetMoveSlot(moves, MOVE_BATON_PASS) < MAX_MON_MOVES)
+                    && OtherPartySlotHasHP(user),
+        .targetPartyHP = GetMoveSlot(moves, MOVE_ROAR) < MAX_MON_MOVES && OtherPartySlotHasHP(target),
+    };
+}
+
+void PolishedScoreTypeMoves(enum BattlerId user, enum BattlerId target, u32 limitations, s32 *scores)
+{
+    const enum Move *moves = gBattleMons[user].moves;
+    struct MatchupMon attacker = ReadActiveMon(user), defender = ReadActiveMon(target);
+    enum Ability ability = DefendingAbility(&attacker, &defender);
+    // AIGetEnemyMove updates the candidate's data. BATTLE_VARS_MOVE still holds the prior selection.
+    u32 selectedFlags = sSmartMoves[gBattleStruct->polishedChoiceMove[user]].flags;
+    bool32 immune = (ability == ABILITY_SOUNDPROOF && (selectedFlags & SMART_SOUND))
+                 || (ability == ABILITY_BULLETPROOF && (selectedFlags & SMART_BULLET));
+    for (u32 i = 0; i < MAX_MON_MOVES; i++)
+    {
+        enum Type type = sSmartMoves[moves[i]].type;
+        if ((limitations & (1u << i)) || (type != TYPE_ICE && type != TYPE_DARK))
+            continue;
+        uq4_12_t matchup = ChartMatchup(type, ActiveAbility(&attacker, &defender), &defender);
+        if (immune || !matchup)
+            scores[i] -= 10;
+        else if (matchup > UQ_4_12(1.0))
+            scores[i] += (sSmartMoves[moves[i]].flags & SMART_ATTACK) != 0;
+        else if (matchup < UQ_4_12(1.0))
+            for (u32 j = 0; j < MAX_MON_MOVES; j++)
+                if (!(limitations & (1u << j)) && sSmartMoves[moves[j]].type != type && (sSmartMoves[moves[j]].flags & SMART_ATTACK))
+                {
+                    scores[i]--;
+                    break;
+                }
+    }
 }
 
 static s32 BestAttackingMatchup(const enum Move *moves, bool32 inferStab, const struct MatchupMon *user,

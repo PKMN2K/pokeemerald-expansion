@@ -13,6 +13,7 @@ from build_battle_suite import authenticated_sources
 from build_pokemon_learnsets import PIN
 from test_johto_demo_emulator import Game, A, B
 from test_shift_switch_emulator import ENGLISH
+from type_ai_cases import cases as type_cases
 from test_smart_field_ai import replay as replay_smart_field_ai
 from test_new_bark_battle_emulator import choose_cell, controller
 
@@ -293,6 +294,8 @@ def run(driver, output):
     payouts = list(payout_cases())
     code = code.replace('/* PAYOUT CASES */', '\n'.join(payouts))
     medicine = medicine_cases()
+    types = list(type_cases())
+    code = code.replace('/* TYPE CASES */', '\n'.join(types))
     setup = setup_cases()
     code = code.replace('/* SETUP CASES */', '\n'.join(setup))
     policies = ai_policy_cases()
@@ -374,7 +377,7 @@ def run(driver, output):
             finally:
                 game.close()
     report = dict(source_commit=PIN, production_rom_sha256=hashlib.sha256((ROOT/'pokeemerald-johto-demo.gba').read_bytes()).hexdigest(),
-                  smart_field_ai=smart_field_ai, legendary_blocked=blocked, trainer_setup_cases=len(setup), seeded_reward_cases=len(fixtures), payout_cases=len(payouts), wild_factory_cases=96, wild_gender_cases=len(genders), trainer_tie_cases=len(ties), trainer_policy_cases=len(policies), trainer_medicine_cases=len(medicine), roamer_movement_cases=len(movement),
+                  smart_field_ai=smart_field_ai, legendary_blocked=blocked, trainer_setup_cases=len(setup), trainer_type_cases=len(types), seeded_reward_cases=len(fixtures), payout_cases=len(payouts), wild_factory_cases=96, wild_gender_cases=len(genders), trainer_tie_cases=len(ties), trainer_policy_cases=len(policies), trainer_medicine_cases=len(medicine), roamer_movement_cases=len(movement),
                   roamer_encounter_bytes=len(encounters), simultaneous_beasts=2, outcomes=outcomes, flash_reloads=len(outcomes))
     (output/'report.json').write_text(json.dumps(report, indent=2)+'\n')
     print(f'PASS: {len(fixtures)} reward cases, {len(payouts)} payout cases, {len(genders)} wild gender cases, {len(ties)} trainer tie cases, {len(policies)} scoring cases, {len(medicine)} trainer medicine cases, {len(movement)} roamer movements, 256 encounter bytes, two saved beasts, real win/capture/escape/loss and four Flash reloads')
