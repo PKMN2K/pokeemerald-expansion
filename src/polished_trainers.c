@@ -74,8 +74,21 @@ static s32 SmartHealingScore(u32 hp, u32 maxHP)
     return -2;
 }
 
-void PolishedScoreSmartFieldMoves(const struct BattlePokemon *user, const struct BattlePokemon *target,
-                                 u32 limitations, u32 weather, u32 userWeather, s32 *scores)
+static bool32 SmartUserIsFaster(const struct PolishedSmartAiContext *context)
+{
+    if (context->userSpeed == context->targetSpeed)
+    {
+        // CheckSpeed draws once per tie. AICompareSpeed clears carry for either result.
+        Random();
+        return FALSE;
+    }
+    if (context->trickRoom)
+        return context->userSpeed < context->targetSpeed;
+    return context->userSpeed > context->targetSpeed;
+}
+
+void PolishedScoreSmartMoves(const struct BattlePokemon *user, const struct BattlePokemon *target,
+                            u32 limitations, const struct PolishedSmartAiContext *context, s32 *scores)
 {
     for (u32 slot = 0; slot < MAX_MON_MOVES; slot++)
     {
@@ -90,24 +103,24 @@ void PolishedScoreSmartFieldMoves(const struct BattlePokemon *user, const struct
         case MOVE_POLISHED_FRESH_SNACK:
         case MOVE_POLISHED_HEALING_LIGHT:
             scores[slot] += SmartHealingScore(user->hp, user->maxHP);
-            if (move == MOVE_POLISHED_HEALING_LIGHT && userWeather != B_WEATHER_NONE)
-                scores[slot] += (userWeather & B_WEATHER_SUN) ? 1 : -1;
+            if (move == MOVE_POLISHED_HEALING_LIGHT && context->userWeather != B_WEATHER_NONE)
+                scores[slot] += (context->userWeather & B_WEATHER_SUN) ? 1 : -1;
             break;
         case MOVE_RAIN_DANCE:
         case MOVE_SUNNY_DAY:
         case MOVE_SANDSTORM:
         case MOVE_HAIL:
-            if (weather & (1u << GetMoveWeatherType(move)))
+            if (context->weather & (1u << GetMoveWeatherType(move)))
                 scores[slot] -= 10;
             else
             {
-                scores[slot] += (weather == B_WEATHER_NONE) ? 1 : 2;
+                scores[slot] += (context->weather == B_WEATHER_NONE) ? 1 : 2;
                 if (2u * user->hp <= user->maxHP)
                     scores[slot] -= 2;
             }
             break;
         case MOVE_THUNDER:
-            if ((weather & B_WEATHER_SUN) && (Random() & 255) >= 25)
+            if ((context->weather & B_WEATHER_SUN) && (Random() & 255) >= 25)
                 scores[slot]--;
             break;
         case MOVE_LIGHT_SCREEN:
@@ -118,6 +131,31 @@ void PolishedScoreSmartFieldMoves(const struct BattlePokemon *user, const struct
         case MOVE_SAFEGUARD:
             if (2u * target->hp <= target->maxHP && (Random() & 255) >= 50)
                 scores[slot]--;
+            break;
+        case MOVE_AGILITY:
+        case MOVE_SCARY_FACE:
+        case MOVE_STRING_SHOT:
+            if (SmartUserIsFaster(context))
+                scores[slot] -= 10;
+            break;
+        case MOVE_TRICK_ROOM:
+            if (SmartUserIsFaster(context))
+                scores[slot] -= 10;
+            else if (!context->trickRoom)
+                scores[slot] += 3;
+            break;
+        case MOVE_THUNDER_WAVE:
+        case MOVE_GLARE:
+        case MOVE_STUN_SPORE:
+            if (4u * target->hp <= target->maxHP)
+                scores[slot] -= (Random() & 255) >= 128;
+            else if (!SmartUserIsFaster(context) && 4u * user->hp > user->maxHP && (Random() & 255) >= 50)
+                scores[slot] += 2;
+            break;
+        case MOVE_ICY_WIND:
+            if (4u * user->hp > user->maxHP && context->targetFirstTurn
+             && !SmartUserIsFaster(context) && (Random() & 255) >= 30)
+                scores[slot] += 2;
             break;
         case MOVE_LEECH_SEED:
         case MOVE_TOXIC:

@@ -18,6 +18,8 @@ static const struct {
     u16 weather, userWeather;
     u8 mask;
     s8 delta[4];
+    u16 userSpeed, targetSpeed;
+    bool8 trickRoom, targetFirstTurn;
 } sCases[] = {
 /* SOURCE CASES */
 };
@@ -25,7 +27,8 @@ static const struct {
 EWRAM_DATA volatile u32 gSmartAudit[3] = {0};
 const volatile u32 gSmartLayout[] = {
     offsetof(struct AiBattleData, finalScore[B_BATTLER_1][B_BATTLER_0]),
-    MOVE_RECOVER, MOVE_RAIN_DANCE, MOVE_POLISHED_HEALING_LIGHT,
+    offsetof(struct BattleResults, battleTurnCounter),
+    MOVE_RECOVER, MOVE_RAIN_DANCE, MOVE_POLISHED_HEALING_LIGHT, MOVE_TRICK_ROOM, MOVE_SPLASH,
 };
 
 static void CheckScores(void)
@@ -39,7 +42,12 @@ static void CheckScores(void)
         s32 scores[] = {100, 100, 100, 100};
         memcpy(user.moves, sCases[i].moves, sizeof(user.moves));
         SeedRng(sCases[i].seed);
-        PolishedScoreSmartFieldMoves(&user, &target, sCases[i].mask, sCases[i].weather, sCases[i].userWeather, scores);
+        struct PolishedSmartAiContext context = {
+            .weather = sCases[i].weather, .userWeather = sCases[i].userWeather,
+            .userSpeed = sCases[i].userSpeed, .targetSpeed = sCases[i].targetSpeed,
+            .trickRoom = sCases[i].trickRoom, .targetFirstTurn = sCases[i].targetFirstTurn,
+        };
+        PolishedScoreSmartMoves(&user, &target, sCases[i].mask, &context, scores);
         u16 next = Random();
         for (u32 slot = 0; slot < MAX_MON_MOVES; slot++)
             if (scores[slot] != 100 + sCases[i].delta[slot] || next != sCases[i].next)
@@ -94,8 +102,24 @@ void CB2_MoveMachineAudit(void)
         u32 drought = 2;
         SetMonData(&gParties[B_TRAINER_PLAYER][0], MON_DATA_ABILITY_NUM, &drought);
     }
-    SetMon(&gParties[B_TRAINER_OPPONENT_A][0], SPECIES_STARYU, (sun || (keys & (A_BUTTON | DPAD_UP))) ? 20 : 150,
+    bool32 lowHP = sun || (!(keys & START_BUTTON) && (keys & (A_BUTTON | DPAD_UP)));
+    SetMon(&gParties[B_TRAINER_OPPONENT_A][0], SPECIES_STARYU, lowHP ? 20 : 150,
            sun ? MOVE_POLISHED_HEALING_LIGHT : MOVE_RECOVER, MOVE_RAIN_DANCE);
+    if (keys & START_BUTTON)
+    {
+        struct Pokemon *player = &gParties[B_TRAINER_PLAYER][0];
+        struct Pokemon *trainer = &gParties[B_TRAINER_OPPONENT_A][0];
+        u32 playerSpeed = 100, trainerSpeed = 120;
+        SetMonData(player, MON_DATA_SPEED, &playerSpeed);
+        SetMonData(trainer, MON_DATA_SPEED, &trainerSpeed);
+        SetMonMoveSlot(trainer, MOVE_TRICK_ROOM, 0);
+        SetMonMoveSlot(trainer, MOVE_SPLASH, 1);
+        if (keys & B_BUTTON)
+        {
+            enum Item scarf = ITEM_CHOICE_SCARF;
+            SetMonData(player, MON_DATA_HELD_ITEM, &scarf);
+        }
+    }
     if (keys & DPAD_RIGHT)
     {
         enum Item umbrella = ITEM_UTILITY_UMBRELLA;

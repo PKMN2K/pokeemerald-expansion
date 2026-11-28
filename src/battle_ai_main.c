@@ -1045,10 +1045,19 @@ static struct ChosenAction ChooseMoveOrAction_Singles(enum BattlerId battler)
                               gAiThinkingStruct->score);
         if (layers & POLISHED_AI_SMART)
         {
-            u32 userWeather = GetAttackerWeather(GetBattlerHoldEffect(battler), GetBattlerAbility(battler), GetWeather());
-            PolishedScoreSmartFieldMoves(&gBattleMons[battler], &gBattleMons[opposingBattler],
-                                         gAiLogicData->moveLimitations[battler], gBattleWeather, userWeather,
-                                         gAiThinkingStruct->score);
+            enum HoldEffect holdEffect = GetBattlerHoldEffect(battler);
+            enum Ability ability = GetBattlerAbility(battler);
+            struct PolishedSmartAiContext context = {
+                .weather = gBattleWeather,
+                .userWeather = GetAttackerWeather(holdEffect, ability, GetWeather()),
+                .userSpeed = GetBattlerTotalSpeedStat(battler, ability, holdEffect),
+                .targetSpeed = GetBattlerTotalSpeedStat(opposingBattler, GetBattlerAbility(opposingBattler),
+                                                        GetBattlerHoldEffect(opposingBattler)),
+                .trickRoom = (gFieldStatuses & STATUS_FIELD_TRICK_ROOM) != 0,
+                .targetFirstTurn = IsBattlersFirstTurn(opposingBattler),
+            };
+            PolishedScoreSmartMoves(&gBattleMons[battler], &gBattleMons[opposingBattler],
+                                    gAiLogicData->moveLimitations[battler], &context, gAiThinkingStruct->score);
         }
         PolishedScoreTrainerPolicies(layers, gBattleMons[battler].moves, gAiLogicData->moveLimitations[battler],
                                      gBattleMons[battler].hp, gBattleMons[battler].maxHP, TRUE, gAiThinkingStruct->score);
