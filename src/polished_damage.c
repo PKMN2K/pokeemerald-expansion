@@ -119,7 +119,7 @@ static bool32 MovesAfterTarget(struct DamageContext *ctx)
     return HasBattlerActedThisTurn(ctx->battlerDef);
 }
 
-static u32 OffensiveAbility(struct DamageContext *ctx, u32 value, u32 power)
+static u32 OffensiveAbility(struct DamageContext *ctx, u32 value, u32 power, bool32 ateBoost, bool32 smartPreview)
 {
     enum BattlerId a = ctx->battlerAtk, d = ctx->battlerDef;
     enum Ability ability = ctx->abilities[a];
@@ -160,7 +160,9 @@ static u32 OffensiveAbility(struct DamageContext *ctx, u32 value, u32 power)
         if (flags & 8) { numerator = 13; denominator = 10; }
         break;
     case ABILITY_ANALYTIC:
-        if (ctx->move != MOVE_FUTURE_SIGHT && MovesAfterTarget(ctx))
+        // AIDamageCalc runs before DetermineMoveOrder and reads the previous turn's order.
+        if (ctx->move != MOVE_FUTURE_SIGHT && (smartPreview
+         ? (!gBattleResults.battleTurnCounter || gBattlerByTurnOrder[0] != a) : MovesAfterTarget(ctx)))
             { numerator = 13; denominator = 10; }
         break;
     case ABILITY_SOLAR_POWER:
@@ -196,7 +198,7 @@ static u32 OffensiveAbility(struct DamageContext *ctx, u32 value, u32 power)
         break;
     case ABILITY_PIXILATE:
     case ABILITY_GALVANIZE:
-        if (gBattleStruct->battlerState[a].ateBoost) { numerator = 6; denominator = 5; }
+        if (ateBoost) { numerator = 6; denominator = 5; }
         break;
     case ABILITY_STEELY_SPIRIT:
         if (type == TYPE_STEEL) { numerator = 3; denominator = 2; }
@@ -233,7 +235,7 @@ static u32 DefensiveAbility(struct DamageContext *ctx, u32 value, bool32 physica
     return value;
 }
 
-u32 PolishedDamageBeforeRoll(struct DamageContext *ctx, u32 power)
+static u32 DamageBeforeRoll(struct DamageContext *ctx, u32 power, bool32 secondHit, bool32 ateBoost, bool32 smartPreview)
 {
     enum BattlerId a = ctx->battlerAtk, d = ctx->battlerDef;
     const struct BattlePokemon *user = &gBattleMons[a], *target = &gBattleMons[d];
@@ -256,7 +258,8 @@ u32 PolishedDamageBeforeRoll(struct DamageContext *ctx, u32 power)
         break;
     default: break;
     }
-    gBattleMovePower = power;
+    if (!smartPreview)
+        gBattleMovePower = power;
     if (power == 0)
         return 1;
 
@@ -283,7 +286,7 @@ u32 PolishedDamageBeforeRoll(struct DamageContext *ctx, u32 power)
         damage = PolishedDamageStage(damage, attackStage);
     if (ctx->abilities[a] != ABILITY_UNAWARE && (!ctx->isCrit || defenseStage < DEFAULT_STAT_STAGE))
         damage = PolishedDamageStage(damage, 12 - defenseStage);
-    damage = OffensiveAbility(ctx, damage, power);
+    damage = OffensiveAbility(ctx, damage, power, ateBoost, smartPreview);
     damage = DefensiveAbility(ctx, damage, physicalDefense);
     if (physical && (user->status1 & STATUS1_BURN) && ctx->abilities[a] != ABILITY_GUTS)
         damage = PolishedDamageScale(damage, 1, 2);
@@ -339,7 +342,7 @@ u32 PolishedDamageBeforeRoll(struct DamageContext *ctx, u32 power)
             matchup /= 2;
     }
     damage *= matchup;
-    if (gSpecialStatuses[a].parentalBondState == PARENTAL_BOND_2ND_HIT)
+    if (secondHit)
         damage = PolishedDamageScale(damage, 1, 4);
     if (ctx->abilities[a] == ABILITY_TINTED_LENS && ctx->typeEffectivenessModifier < UQ_4_12(1.0))
         damage = PolishedDamageScale(damage, 2, 1);
@@ -361,6 +364,23 @@ u32 PolishedDamageBeforeRoll(struct DamageContext *ctx, u32 power)
     }
     return damage;
 }
+
+u32 PolishedDamageBeforeRoll(struct DamageContext *ctx, u32 power)
+{
+    enum BattlerId a = ctx->battlerAtk;
+    return DamageBeforeRoll(ctx, power, gSpecialStatuses[a].parentalBondState == PARENTAL_BOND_2ND_HIT,
+                            gBattleStruct->battlerState[a].ateBoost, FALSE);
+}
+
+#if POLISHED_JOHTO_DEMO
+u16 PolishedPriorityDamageBeforeRoll(struct DamageContext *ctx, u32 power, bool32 ateBoost)
+{
+    u32 damage = DamageBeforeRoll(ctx, power, FALSE, ateBoost, TRUE);
+    if (ctx->abilities[ctx->battlerAtk] == ABILITY_PARENTAL_BOND)
+        damage += DamageBeforeRoll(ctx, power, TRUE, ateBoost, TRUE);
+    return min(damage, 65535);
+}
+#endif
 
 u32 PolishedDamageAfterRoll(struct DamageContext *ctx, u32 damage)
 {

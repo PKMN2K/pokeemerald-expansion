@@ -125,6 +125,7 @@ enum Ability GetBattlerAbilityInternal(enum BattlerId battler, bool32 ignoreMold
 enum Ability GetBattlerAbility(enum BattlerId battler);
 u32 IsAbilityOnSide(enum BattlerId battler, enum Ability ability);
 u32 IsAbilityOnField(enum Ability ability);
+bool32 IsTrappedByPolishedAbility(enum BattlerId battler);
 u32 IsAbilityPreventingEscape(enum BattlerId battler);
 bool32 IsBattlerProtected(struct BattleCalcValues *cv);
 enum ProtectType GetProtectType(enum ProtectMethod method);

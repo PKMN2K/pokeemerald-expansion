@@ -2800,6 +2800,7 @@ static void BattleStartClearSetData(void)
     ResetPolishedEndTurn();
     ResetPolishedMirrorHerbBoosts();
 #if POLISHED_JOHTO_DEMO
+    gPolishedAiSwitchScore = 0;
     memset(gPolishedPlayerUsedMoves, 0, sizeof(gPolishedPlayerUsedMoves));
 #endif
     gBattleStruct->polishedCalledMoveBattlers = 0;

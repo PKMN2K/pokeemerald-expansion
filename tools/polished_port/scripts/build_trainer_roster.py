@@ -3,6 +3,7 @@
 import argparse
 from collections import Counter
 from functools import lru_cache
+import hashlib
 import json
 import re
 
@@ -172,6 +173,36 @@ def ai_data(classes, records):
     return lines + ['};']
 
 
+def smart_move_data():
+    source_files = archive.source.sources()
+    battle = archive.authenticated_sources()
+    moves = archive.source.move_targets(source_files)
+    def members(text):
+        return set(re.findall(r'^\s*db (\w+)\s*$', text, re.M))
+    useful = members(battle['data/battle/ai/useful_moves.asm']['text'])
+    encore = members(battle['data/battle/ai/encore_moves.asm']['text'])
+    sounds = members(source_files['data/moves/sound_moves.asm'])
+    raw = (ROOT / 'tools/polished_port/fixtures/battle_logic/bullet_moves.asm').read_bytes()
+    assert hashlib.sha1(b'blob ' + str(len(raw)).encode() + b'\0' + raw).hexdigest() == 'b5e148463a4ea229fbe28cb673cae15a9636265e'
+    bullets = members(raw.decode())
+    assert len(useful) == 23 and len(encore) == 21
+    lines = [MARK, 'static const struct SmartMove sSmartMoves[MOVES_COUNT_ALL] = {']
+    for line in archive.source.default_lines(source_files['data/moves/moves.asm']):
+        if not line.startswith('move '):
+            continue
+        name, effect, power, kind, _, _, _, category = (x.strip() for x in line[5:].split(','))
+        flags = [tag for enabled, tag in ((int(power), 'SMART_ATTACK'), (category == 'SPECIAL', 'SMART_SPECIAL'),
+                 (name in useful, 'SMART_USEFUL'), (name in encore, 'SMART_ENCORE'), (name in sounds, 'SMART_SOUND'),
+                 (effect == 'EFFECT_PRIORITY_HIT', 'SMART_PRIORITY'), (name in bullets, 'SMART_BULLET')) if enabled]
+        move_type = 'TYPE_' + ('MYSTERY' if kind == 'UNKNOWN_T' else kind)
+        lines.append(f'    [{moves[name]}] = {{{move_type}, {" | ".join(flags) or "0"}}},')
+    assert len(lines) == 257
+    lines.extend(['};', 'static const bool8 sSmartMoldBreakerIgnores[ABILITIES_COUNT] = {'])
+    for ability in sorted(members(battle['data/abilities/mold_breaker_suppressed_abilities.asm']['text'])):
+        lines.append(f'    [ABILITY_{ability}] = TRUE,')
+    return lines + ['};']
+
+
 def build():
     classes, records = roster()
     ids = [MARK, '#ifndef GUARD_POLISHED_TRAINER_IDS_H', '#define GUARD_POLISHED_TRAINER_IDS_H', '']
@@ -231,7 +262,7 @@ def build():
     attrs += ['};']
     assert rivals == [r['key'] for r in extra if r['cls'] in ('RIVAL1','RIVAL2')]
     ids += ['', '#endif']
-    return {k:'\n'.join(v)+'\n' for k,v in ((IDS,ids),(DATA,defs),(ATTRS,attrs),(CLASSES,class_init),(CLASS_IDS,class_ids),(ROOT/'src/data/polished_trainer_ai.h',ai_data(classes,records)))}
+    return {k:'\n'.join(v)+'\n' for k,v in ((IDS,ids),(DATA,defs),(ATTRS,attrs),(CLASSES,class_init),(CLASS_IDS,class_ids),(ROOT/'src/data/polished_trainer_ai.h',ai_data(classes,records)),(ROOT/'src/data/polished_smart_ai.h',smart_move_data()))}
 
 
 if __name__ == '__main__':

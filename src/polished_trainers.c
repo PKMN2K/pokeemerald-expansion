@@ -75,7 +75,7 @@ static s32 SmartHealingScore(u32 hp, u32 maxHP)
     return -2;
 }
 
-static bool32 SmartUserIsFaster(const struct PolishedSmartAiContext *context)
+bool32 PolishedSmartUserIsFaster(const struct PolishedSmartAiContext *context)
 {
     if (context->userSpeed == context->targetSpeed)
     {
@@ -207,7 +207,7 @@ static s32 SmartHazeScore(const struct BattlePokemon *user, const struct BattleP
 }
 
 void PolishedScoreSmartMoves(const struct BattlePokemon *user, const struct BattlePokemon *target,
-                            u32 limitations, const struct PolishedSmartAiContext *context, s32 *scores)
+                            u32 limitations, struct PolishedSmartAiContext *context, s32 *scores)
 {
     for (u32 slot = 0; slot < MAX_MON_MOVES; slot++)
     {
@@ -233,7 +233,7 @@ void PolishedScoreSmartMoves(const struct BattlePokemon *user, const struct Batt
         case MOVE_DIG:
             if (target->volatiles.semiInvulnerable == STATE_ON_AIR || target->volatiles.semiInvulnerable == STATE_UNDERGROUND)
             {
-                if (SmartUserIsFaster(context))
+                if (PolishedSmartUserIsFaster(context))
                     scores[slot] += 3;
             }
             else if (!context->powerHerb && context->seenProtection)
@@ -250,7 +250,7 @@ void PolishedScoreSmartMoves(const struct BattlePokemon *user, const struct Batt
             break;
         case MOVE_HIGH_JUMP_KICK:
             if (context->userAbility != ABILITY_NO_GUARD && context->targetAbility != ABILITY_NO_GUARD
-             && SmartUserIsFaster(context) && (target->volatiles.semiInvulnerable == STATE_ON_AIR
+             && PolishedSmartUserIsFaster(context) && (target->volatiles.semiInvulnerable == STATE_ON_AIR
                                             || target->volatiles.semiInvulnerable == STATE_UNDERGROUND))
                 scores[slot] -= 10;
             break;
@@ -261,7 +261,7 @@ void PolishedScoreSmartMoves(const struct BattlePokemon *user, const struct Batt
             bool32 gust = move == MOVE_GUST;
             if (context->targetSelectedMove != (gust ? MOVE_FLY : MOVE_DIG))
                 break;
-            bool32 faster = SmartUserIsFaster(context);
+            bool32 faster = PolishedSmartUserIsFaster(context);
             if (target->volatiles.semiInvulnerable == (gust ? STATE_ON_AIR : STATE_UNDERGROUND))
                 scores[slot] += faster ? 2 : 0;
             else if (!faster && (Random() & 255) >= 128)
@@ -306,11 +306,11 @@ void PolishedScoreSmartMoves(const struct BattlePokemon *user, const struct Batt
         case MOVE_AGILITY:
         case MOVE_SCARY_FACE:
         case MOVE_STRING_SHOT:
-            if (SmartUserIsFaster(context))
+            if (PolishedSmartUserIsFaster(context))
                 scores[slot] -= 10;
             break;
         case MOVE_TRICK_ROOM:
-            if (SmartUserIsFaster(context))
+            if (PolishedSmartUserIsFaster(context))
                 scores[slot] -= 10;
             else if (!context->trickRoom)
                 scores[slot] += 3;
@@ -320,12 +320,12 @@ void PolishedScoreSmartMoves(const struct BattlePokemon *user, const struct Batt
         case MOVE_STUN_SPORE:
             if (4u * target->hp <= target->maxHP)
                 scores[slot] -= (Random() & 255) >= 128;
-            else if (!SmartUserIsFaster(context) && 4u * user->hp > user->maxHP && (Random() & 255) >= 50)
+            else if (!PolishedSmartUserIsFaster(context) && 4u * user->hp > user->maxHP && (Random() & 255) >= 50)
                 scores[slot] += 2;
             break;
         case MOVE_ICY_WIND:
             if (4u * user->hp > user->maxHP && context->targetFirstTurn
-             && !SmartUserIsFaster(context) && (Random() & 255) >= 30)
+             && !PolishedSmartUserIsFaster(context) && (Random() & 255) >= 30)
                 scores[slot] += 2;
             break;
         case MOVE_SUBSTITUTE:
@@ -476,7 +476,7 @@ void PolishedScoreSmartMoves(const struct BattlePokemon *user, const struct Batt
             break;
         case MOVE_FUTURE_SIGHT:
             scores[slot]--;
-            if (SmartUserIsFaster(context) && (target->volatiles.semiInvulnerable == STATE_ON_AIR
+            if (PolishedSmartUserIsFaster(context) && (target->volatiles.semiInvulnerable == STATE_ON_AIR
                                            || target->volatiles.semiInvulnerable == STATE_UNDERGROUND))
                 scores[slot] += 3;
             break;
@@ -507,6 +507,7 @@ void PolishedScoreSmartMoves(const struct BattlePokemon *user, const struct Batt
                 scores[slot]--;
             break;
         default:
+            scores[slot] += PolishedScoreReactiveMove(user, target, slot, context);
             break;
         }
     }

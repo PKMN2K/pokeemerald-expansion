@@ -5461,6 +5461,12 @@ static bool32 PolishedAbilityCanTrap(enum BattlerId target, enum BattlerId trapp
     }
 }
 
+bool32 IsTrappedByPolishedAbility(enum BattlerId battler)
+{
+    enum BattlerId opponent = GetOppositeBattler(battler);
+    return PolishedAbilityCanTrap(battler, opponent) && !PolishedAbilityCanTrap(opponent, battler);
+}
+
 u32 IsAbilityPreventingEscape(enum BattlerId battler)
 {
     if (B_POLISHED_MOVE_BALANCE && gBattleMons[battler].ability == ABILITY_RUN_AWAY
@@ -5473,8 +5479,7 @@ u32 IsAbilityPreventingEscape(enum BattlerId battler)
     {
         enum BattlerId opponent = GetOppositeBattler(battler);
         // Source CheckIfTrappedByAbility cancels only mutually eligible traps.
-        if (PolishedAbilityCanTrap(battler, opponent)
-         && !PolishedAbilityCanTrap(opponent, battler))
+        if (IsTrappedByPolishedAbility(battler))
             return opponent + 1;
         return 0;
     }

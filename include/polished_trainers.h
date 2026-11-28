@@ -27,13 +27,25 @@ struct PolishedSmartAiContext
     enum Type targetTypes[3];
     enum Ability userAbility, targetAbility;
     bool8 powerHerb, targetRing, seenProtection;
+    enum Move targetLastMove;
+    uq4_12_t targetMatchup;
+    u16 priorityDamage[MAX_MON_MOVES];
+    u8 switchScore, bestReserveScore;
+    bool8 userGhost, userReserve, targetReserve, targetShedShell, targetTrapped, targetCharging;
 };
 extern enum Move gPolishedPlayerUsedMoves[MAX_MON_MOVES];
 void PolishedRecordPlayerMove(enum Move move);
+extern u8 gPolishedAiSwitchScore;
+bool32 PolishedSmartUserIsFaster(const struct PolishedSmartAiContext *context);
+void PolishedReadSmartBattle(enum BattlerId user, enum BattlerId target, struct PolishedSmartAiContext *context);
+u8 PolishedBestReserveScore(enum BattlerId user, enum BattlerId target);
+bool32 PolishedSmartCanSwitch(enum BattlerId battler);
+s32 PolishedScoreReactiveMove(const struct BattlePokemon *user, const struct BattlePokemon *target, u32 slot,
+                             struct PolishedSmartAiContext *context);
 void PolishedScoreBasicSleepMoves(const struct BattlePokemon *user, const struct BattlePokemon *target,
                                  u32 limitations, bool32 safeguard, s32 *scores);
 void PolishedScoreSmartMoves(const struct BattlePokemon *user, const struct BattlePokemon *target,
-                            u32 limitations, const struct PolishedSmartAiContext *context, s32 *scores);
+                            u32 limitations, struct PolishedSmartAiContext *context, s32 *scores);
 void PolishedScoreTrainerPolicies(u32 layers, const enum Move *moves, u32 limitations,
                                   u32 hp, u32 maxHP, bool32 hasTakenTurn, s32 *score);
 #endif

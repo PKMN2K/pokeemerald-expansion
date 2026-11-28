@@ -14,7 +14,10 @@
 
 struct TacticsInput {
     u32 targetStatus;
-    enum Move selected;
+    enum Move selected, last, seen0, seen1, seen2, seen3;
+    u16 damage, matchup;
+    u8 cached, best;
+    bool8 userGhost, userReserve, targetReserve, shell, trapped, charged, cursed, perish;
     enum Type type1, type2;
     enum Ability userAbility, targetAbility;
     bool8 powerHerb, ring, inverse, seenProtection, targetSeeded;
@@ -52,6 +55,7 @@ const volatile u32 gSmartLayout[] = {
     MOVE_RECOVER, MOVE_RAIN_DANCE, MOVE_POLISHED_HEALING_LIGHT, MOVE_TRICK_ROOM, MOVE_SPLASH, MOVE_EXPLOSION, MOVE_PAIN_SPLIT,
     MOVE_SLEEP_TALK, MOVE_SACRED_FIRE, MOVE_SPORE, MOVE_DREAM_EATER, MOVE_HEAL_BELL, MOVE_DESTINY_BOND, MOVE_SOLAR_BEAM, MOVE_GIGA_DRAIN, MOVE_GUST, MOVE_EARTHQUAKE,
     offsetof(struct BattleStruct, polishedChoiceMove[B_BATTLER_1]),
+    MOVE_QUICK_ATTACK, MOVE_ROAR, MOVE_PERISH_SONG, MOVE_ENCORE, MOVE_COUNTER, MOVE_MIRROR_COAT,
 };
 
 static void CheckScores(void)
@@ -89,14 +93,22 @@ static void CheckScores(void)
         target.status1 = t->targetStatus;
         target.volatiles.wrapTurns = t->targetWrapped;
         target.volatiles.infatuation = t->targetInLove;
+        target.volatiles.cursed = t->cursed;
+        target.volatiles.perishSong = t->perish;
         target.volatiles.foresight = t->targetIdentified;
         target.volatiles.rolloutTimer = t->targetRolling;
         target.volatiles.lockOn = t->targetLockOn;
         target.volatiles.semiInvulnerable = t->hidden;
         memcpy(user.moves, sCases[i].moves, sizeof(user.moves));
+        const enum Move seen[] = {t->seen0, t->seen1, t->seen2, t->seen3};
+        memcpy(gPolishedPlayerUsedMoves, seen, sizeof(seen));
         SeedRng(sCases[i].seed);
         struct PolishedSmartAiContext context = {
             .targetTypes = {t->type1 ? t->type1 : TYPE_NORMAL, t->type2 ? t->type2 : TYPE_NORMAL, TYPE_MYSTERY},
+            .targetLastMove = t->last, .targetMatchup = t->matchup, .switchScore = t->cached, .bestReserveScore = t->best,
+            .priorityDamage = {t->damage, t->damage, t->damage, t->damage},
+            .userGhost = t->userGhost, .userReserve = t->userReserve, .targetReserve = t->targetReserve,
+            .targetShedShell = t->shell, .targetTrapped = t->trapped, .targetCharging = t->charged,
             .targetSelectedMove = t->selected, .userAbility = t->userAbility, .targetAbility = t->targetAbility,
             .powerHerb = t->powerHerb, .targetRing = t->ring, .seenProtection = t->seenProtection,
             .earlyBird = sCases[i].earlyBird, .spikes = t->spikes,
@@ -121,6 +133,7 @@ static void CheckScores(void)
                 return;
             }
     }
+    memset(gPolishedPlayerUsedMoves, 0, sizeof(gPolishedPlayerUsedMoves));
     // A duplicate keeps its original position; a fifth distinct move evicts the oldest.
     const enum Move observed[] = {MOVE_PROTECT, MOVE_ENDURE, MOVE_SPLASH, MOVE_GUST, MOVE_PROTECT, MOVE_DIG};
     const enum Move expected[] = {MOVE_ENDURE, MOVE_SPLASH, MOVE_GUST, MOVE_DIG};
@@ -285,6 +298,66 @@ static void SetTacticsParties(u16 keys)
     }
 }
 
+static void SetReactiveParties(u16 keys)
+{
+    struct Pokemon *player = &gParties[B_TRAINER_PLAYER][0];
+    struct Pokemon *trainer = &gParties[B_TRAINER_OPPONENT_A][0];
+    SetMon(player, SPECIES_MAGIKARP, 150, MOVE_SPLASH, MOVE_NONE);
+    if ((keys & SELECT_BUTTON) && (keys & (DPAD_LEFT | DPAD_RIGHT)))
+    {
+        bool32 grass = keys & DPAD_RIGHT;
+        SetMon(trainer, SPECIES_STARYU, 40, MOVE_ROAR, MOVE_RECOVER);
+        SetMon(&trainer[1], grass ? SPECIES_BULBASAUR : SPECIES_CHARMANDER, 150, grass ? MOVE_ABSORB : MOVE_FLAMETHROWER, MOVE_NONE);
+        gPartiesCount[B_TRAINER_OPPONENT_A] = 2;
+    }
+    else if ((keys & SELECT_BUTTON) && (keys & (DPAD_UP | DPAD_DOWN)))
+    {
+        u32 ability = (keys & DPAD_UP) ? 2 : 0; // Parental Bond or Early Bird.
+        u32 hp = 34, stat = 100, slow = 40;
+        SetMon(trainer, SPECIES_KANGASKHAN, 20, MOVE_QUICK_ATTACK, MOVE_RECOVER);
+        SetMonData(player, MON_DATA_HP, &hp);
+        SetMonData(player, MON_DATA_DEF, &stat);
+        SetMonData(player, MON_DATA_SPEED, &stat);
+        SetMonData(trainer, MON_DATA_ATK, &stat);
+        SetMonData(trainer, MON_DATA_SPEED, &slow);
+        SetMonData(trainer, MON_DATA_ABILITY_NUM, &ability);
+    }
+    else if (keys & SELECT_BUTTON)
+    {
+        SetMon(trainer, SPECIES_STARYU, 150, MOVE_COUNTER, MOVE_MIRROR_COAT);
+        SetMonMoveSlot(player, (keys & A_BUTTON) ? MOVE_TACKLE : MOVE_WATER_GUN, 0);
+    }
+    else if (keys & (DPAD_LEFT | DPAD_RIGHT | DPAD_DOWN))
+    {
+        bool32 roarFirst = keys & DPAD_RIGHT;
+        SetMon(trainer, SPECIES_STARYU, 150, roarFirst ? MOVE_ROAR : MOVE_PERISH_SONG,
+               roarFirst ? MOVE_PERISH_SONG : MOVE_ROAR);
+        if (!(keys & DPAD_DOWN))
+        {
+            SetMon(&trainer[1], SPECIES_STARYU, 150, MOVE_SURF, MOVE_NONE);
+            gPartiesCount[B_TRAINER_OPPONENT_A] = 2;
+        }
+    }
+    else if (keys & DPAD_UP)
+    {
+        SetMon(trainer, SPECIES_STARYU, 150, MOVE_ENCORE, MOVE_DESTINY_BOND);
+        u32 fast = 160;
+        SetMonData(trainer, MON_DATA_SPEED, &fast);
+    }
+    else
+    {
+        // Level 50, 40 power and equal offensive/defensive stats give 19 damage before the roll.
+        u32 hp = (keys & A_BUTTON) ? 18 : 19;
+        u32 stat = 100, speed = (keys & A_BUTTON) && (keys & B_BUTTON) ? 160 : 40;
+        SetMon(trainer, SPECIES_STARYU, 20, MOVE_QUICK_ATTACK, MOVE_RECOVER);
+        SetMonData(player, MON_DATA_HP, &hp);
+        SetMonData(player, MON_DATA_DEF, &stat);
+        SetMonData(player, MON_DATA_SPEED, &stat);
+        SetMonData(trainer, MON_DATA_ATK, &stat);
+        SetMonData(trainer, MON_DATA_SPEED, &speed);
+    }
+}
+
 void CB2_MoveMachineAudit(void)
 {
     (void)gSmartLayout[0];
@@ -303,11 +376,14 @@ void CB2_MoveMachineAudit(void)
     bool32 sun = keys & (DPAD_LEFT | DPAD_RIGHT);
     if (!(keys & (A_BUTTON | B_BUTTON | DPAD_UP | DPAD_DOWN)) && !sun)
         return;
-    VarSet(VAR_POLISHED_EARNED_BADGES, (keys & (DPAD_UP | DPAD_DOWN)) ? 0 : 0xffff);
+    bool32 reactive = (keys & (L_BUTTON | R_BUTTON | START_BUTTON)) == (L_BUTTON | R_BUTTON | START_BUTTON);
+    VarSet(VAR_POLISHED_EARNED_BADGES, (!reactive && (keys & (DPAD_UP | DPAD_DOWN))) ? 0 : 0xffff);
     gSaveBlock2Ptr->optionsTextSpeed = OPTIONS_TEXT_SPEED_FAST;
     gSaveBlock2Ptr->optionsBattleSceneOff = TRUE;
     gPartiesCount[B_TRAINER_PLAYER] = gPartiesCount[B_TRAINER_OPPONENT_A] = 1;
-    if ((keys & (L_BUTTON | R_BUTTON)) == (L_BUTTON | R_BUTTON))
+    if (reactive)
+        SetReactiveParties(keys);
+    else if ((keys & (L_BUTTON | R_BUTTON)) == (L_BUTTON | R_BUTTON))
         SetMatchupParties(keys);
     else if (keys & L_BUTTON)
         SetTacticsParties(keys);

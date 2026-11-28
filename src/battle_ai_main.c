@@ -1087,8 +1087,12 @@ static struct ChosenAction ChooseMoveOrAction_Singles(enum BattlerId battler)
                                       && CountUsablePartyMons(battler) == 0 && CountUsablePartyMons(opposingBattler) > 0,
             };
             GetBattlerTypes(opposingBattler, FALSE, context.targetTypes);
+            PolishedReadSmartBattle(battler, opposingBattler, &context);
             PolishedScoreSmartMoves(&gBattleMons[battler], &gBattleMons[opposingBattler],
                                     gAiLogicData->moveLimitations[battler], &context, gAiThinkingStruct->score);
+            // AI_MaybeSwitch follows AIChooseMove. All release classes have a switch policy.
+            gPolishedAiSwitchScore = context.userReserve && PolishedSmartCanSwitch(battler)
+                                   ? context.bestReserveScore : context.switchScore;
         }
         PolishedScoreTrainerPolicies(layers, gBattleMons[battler].moves, gAiLogicData->moveLimitations[battler],
                                      gBattleMons[battler].hp, gBattleMons[battler].maxHP, TRUE, gAiThinkingStruct->score);

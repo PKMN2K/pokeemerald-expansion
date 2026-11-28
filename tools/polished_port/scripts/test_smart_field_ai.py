@@ -4,6 +4,7 @@ from typing import NamedTuple
 import re
 import struct
 
+import smart_ai_reactive_cases as reactive_cases
 import smart_ai_matchup_cases as matchup_cases
 import smart_ai_tactics_cases as tactics_cases
 
@@ -153,20 +154,32 @@ def hp_cases(row, draws):
 
 
 def cases(draws):
-    asm = authenticated_sources()['engine/battle/ai/scoring.asm']['text']
+    battle = authenticated_sources()
+    asm = battle['engine/battle/ai/scoring.asm']['text']
     effects = set(re.findall(r'^\s*dbw EFFECT_(\w+),\s+AI_Smart_(?:Heal|Roost|HealingLight|LightScreen|Reflect|Safeguard|Thunder|RainDance|SunnyDay|Sandstorm|Hail|Toxic|LeechSeed|SpeedControl|SpeedDownHit|TrickRoom|Paralyze|Substitute|DestinyBond|BellyDrum|PainSplit|Explosion|HyperBeam|Pursuit)$', asm, re.M))
     smart_table = dict(re.findall(r'^\s*dbw EFFECT_(\w+),\s+AI_Smart_(\w+)$', asm, re.M))
-    handlers = STATUS_HANDLERS | tactics_cases.HANDLERS | matchup_cases.HANDLERS
+    handlers = STATUS_HANDLERS | tactics_cases.HANDLERS | matchup_cases.HANDLERS | reactive_cases.HANDLERS
     status_moves = {handler: set() for handler in handlers}
     files = source.sources()
     mapped = source.move_targets(files)
+    def source_list(name):
+        return {mapped[m] for m in re.findall(r'^\s*db (\w+)\s*$', battle['data/battle/ai/' + name + '_moves.asm']['text'], re.M)}
+    categories = {}
+    source_moves = categories, source_list('useful'), source_list('encore')
     moves = set()
+    routed = set()
     for line in source.default_lines(files['data/moves/moves.asm']):
         record = re.match(r'move (\w+),\s*EFFECT_(\w+),', line)
+        if record:
+            parts = [field.strip() for field in line[5:].split(',')]
+            categories[mapped[record[1]]] = parts[-1] if int(parts[2]) else None
+            if record[2] in smart_table:
+                routed.add(record[1])
         if record and smart_table.get(record[2]) in handlers:
             status_moves[smart_table[record[2]]].add(record[1])
         if record and record[2] in effects:
             moves.add(record[1])
+    assert len(routed) == 97 and routed == moves | set.union(*status_moves.values())
     assert status_moves == handlers
     assert moves == (set(SETTERS) | RECOVERY | SPEED_CONTROL | PARALYZE | HP_MOVES |
                      {'REFLECT', 'LIGHT_SCREEN', 'SAFEGUARD', 'THUNDER', 'TOXIC', 'LEECH_SEED',
@@ -177,6 +190,7 @@ def cases(draws):
         tactics = tactics or {}
         usable = {move for i, move in enumerate(slots) if not mask & (1 << i)}
         stream = draws(seed)
+        switch_cache = [tactics.get('cached', 0)]
         deltas = []
         for slot, move in enumerate(slots):
             delta = 0
@@ -227,6 +241,8 @@ def cases(draws):
                 delta = tactics_cases.score(move, tactics, usable, hp, maximum, first, speeds, room, state, stream)
             elif move in matchup_cases.MOVES:
                 delta = matchup_cases.score(move, tactics, usable, hp, maximum, target, target_max, weather, speeds, room, stream)
+            elif move in reactive_cases.MOVES:
+                delta = reactive_cases.score(move, tactics, hp, maximum, target, speeds, room, stream, source_moves, switch_cache)
             deltas.append(str(delta))
         inputs = ', '.join(f'.{key} = {value}' for key, value in tactics.items()) or '0'
         return ('{{' + ', '.join(mapped[m] for m in slots) + '}, '
@@ -277,6 +293,7 @@ def cases(draws):
     yield from status_cases(row, draws)
     yield from tactics_cases.cases(row, draws, StatusState)
     yield from matchup_cases.cases(row, draws)
+    yield from reactive_cases.cases(row, draws, source_moves)
 
 
 def replay(driver, directory, output, draws):
@@ -284,6 +301,7 @@ def replay(driver, directory, output, draws):
     code = (ROOT/'tools/polished_port/tests/smart_field_ai_fixture.c').read_text()
     elf = compile_probe(ROOT, directory, code.replace('/* SOURCE CASES */', '\n'.join(rows)))
     result = {}
+    reactive_keys = L_BUTTON | R_BUTTON | START
     for name, key in (('low', A), ('full', B), ('low_control', UP), ('full_control', DOWN),
                       ('sun', LEFT), ('sun_umbrella', RIGHT), ('faster', START | A), ('player_scarf', START | B),
                       ('player_reserve', SELECT | A), ('fainted_reserve', SELECT | B),
@@ -296,24 +314,36 @@ def replay(driver, directory, output, draws):
                       ('unseen_protect', L_BUTTON | R_BUTTON | A), ('shown_protect', L_BUTTON | R_BUTTON | B),
                       ('shown_endure', L_BUTTON | R_BUTTON | LEFT), ('herb_protect', L_BUTTON | R_BUTTON | RIGHT),
                       ('drain_water', L_BUTTON | R_BUTTON | SELECT | A), ('drain_sipper', L_BUTTON | R_BUTTON | SELECT | B),
-                      ('player_fly', L_BUTTON | R_BUTTON | SELECT | LEFT), ('player_dig', L_BUTTON | R_BUTTON | SELECT | RIGHT)):
+                      ('player_fly', L_BUTTON | R_BUTTON | SELECT | LEFT), ('player_dig', L_BUTTON | R_BUTTON | SELECT | RIGHT),
+                      ('priority_below', reactive_keys | A), ('priority_equal', reactive_keys | B),
+                      ('priority_faster', reactive_keys | A | B), ('perish_first', reactive_keys | LEFT),
+                      ('roar_first', reactive_keys | RIGHT), ('perish_alone', reactive_keys | DOWN),
+                      ('encore_history', reactive_keys | UP), ('physical_history', reactive_keys | SELECT | A),
+                      ('special_history', reactive_keys | SELECT | B),
+                      ('fire_reserve', reactive_keys | SELECT | LEFT), ('grass_reserve', reactive_keys | SELECT | RIGHT),
+                      ('bond_damage', reactive_keys | SELECT | UP), ('single_damage', reactive_keys | SELECT | DOWN)):
         game = Game(driver, elf, elf, output, directory)
         try:
             game.frames(160)
             audit = struct.unpack('<3I', game.read(game.sym['gSmartAudit'], 12))
             assert audit == (len(rows), 0, 0), audit
             (offset, counter, recover, rain, light, room, splash, explosion, split, sleep_talk, sacred_fire,
-             spore, dream, bell, bond, solar, giga, gust, quake, choice_offset) = struct.unpack('<20I', game.read(game.sym['gSmartLayout'], 80))
+             spore, dream, bell, bond, solar, giga, gust, quake, choice_offset,
+             quick, roar, perish, encore, counter_move, coat) = struct.unpack('<26I', game.read(game.sym['gSmartLayout'], 104))
             names = {recover: 'Recover', rain: 'Rain Dance', light: 'HealingLight', room: 'Trick Room', splash: 'Splash',
                      explosion: 'Explosion', split: 'Pain Split', sleep_talk: 'Sleep Talk', sacred_fire: 'Sacred Fire',
-                     spore: 'Spore', dream: 'Dream Eater', bell: 'Heal Bell', bond: 'Destiny Bond', solar: 'Solar Beam', giga: 'Giga Drain', gust: 'Gust', quake: 'Earthquake'}
+                     spore: 'Spore', dream: 'Dream Eater', bell: 'Heal Bell', bond: 'Destiny Bond', solar: 'Solar Beam', giga: 'Giga Drain', gust: 'Gust', quake: 'Earthquake',
+                     quick: 'Quick Attack', roar: 'Roar', perish: 'Perish Song', encore: 'Encore',
+                     counter_move: 'Counter', coat: 'Mirror Coat'}
             # Capture the announced move before self-KO or Sleep Talk's called move.
             history = game.sym['gLastPrintedMoves' if key & (SELECT | R_BUTTON | L_BUTTON) else 'gLastMoves']
             game.press(key)
             turns = (name, 'room_active') if name == 'player_scarf' else (name,)
             matchup_replay = name in matchup_cases.PROTECTION_BATTLES
             locked_replay = name in matchup_cases.LOCKED_BATTLES
-            if matchup_replay or locked_replay:
+            history_replay = name in reactive_cases.HISTORY_BATTLES
+            repeat = matchup_replay or locked_replay or history_replay
+            if repeat:
                 turns = (name, name + '_next')
             for index, turn in enumerate(turns):
                 menus = () if locked_replay and index else ('HandleInputChooseAction', 'HandleInputChooseMove')
@@ -331,11 +361,11 @@ def replay(driver, directory, output, draws):
                 for _ in range(500):
                     move = int.from_bytes(game.read(history + 2, 2), 'little')
                     finished = game.read(game.sym['gBattleResults'] + counter, 1)[0] > index
-                    if (matchup_replay or locked_replay) and index and finished:
+                    if repeat and index and finished:
                         # Solar Beam can spend this turn charging before its attack text.
                         move = int.from_bytes(game.read(game.u32(game.sym['gBattleStruct']) + choice_offset, 2), 'little')
                         break
-                    if move in names and (index == 0 or (not (matchup_replay or locked_replay) and (names[move] != result[name]['move'] or finished))):
+                    if move in names and (index == 0 or (not repeat and (names[move] != result[name]['move'] or finished))):
                         break
                     game.press(A, 6)
                 else:
@@ -364,4 +394,5 @@ def replay(driver, directory, output, draws):
     assert result['thawed'] == dict(move='Recover', scores=(100, 102)), result
     tactics_cases.check_battles(result)
     matchup_cases.check_battles(result)
+    reactive_cases.check_battles(result)
     return dict(cases=len(rows), battles=result)

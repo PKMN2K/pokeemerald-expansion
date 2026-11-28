@@ -4,6 +4,9 @@
 struct DamageContext;
 bool32 UsesPolishedDamageRules(struct DamageContext *ctx);
 u32 PolishedDamageBeforeRoll(struct DamageContext *ctx, u32 power);
+#if POLISHED_JOHTO_DEMO
+u16 PolishedPriorityDamageBeforeRoll(struct DamageContext *ctx, u32 power, bool32 ateBoost);
+#endif
 u32 PolishedDamageAfterRoll(struct DamageContext *ctx, u32 damage);
 u32 PolishedBattleWeight(enum Species species);
 u32 PolishedLowKickPower(u32 weight);

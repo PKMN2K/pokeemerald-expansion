@@ -1,4 +1,5 @@
 #include "global.h"
+#include "polished_trainers.h"
 #include "battle.h"
 #include "battle_ai_switch.h"
 #include "battle_ai_util.h"
@@ -559,6 +560,12 @@ static void OpponentHandleChoosePokemon(enum BattlerId battler)
         if (IsDoubleBattle())
             SetBattlerAiData(GetBattlerAtPosition(B_POSITION_PLAYER_RIGHT), gAiLogicData);
 
+#if POLISHED_JOHTO_DEMO
+        if (!IsDoubleBattle() && (gBattleTypeFlags & BATTLE_TYPE_TRAINER)
+         && !(gBattleTypeFlags & (BATTLE_TYPE_FRONTIER | BATTLE_TYPE_LINK | BATTLE_TYPE_RECORDED | BATTLE_TYPE_SECRET_BASE))
+         && PolishedGetTrainerItems(TRAINER_BATTLE_PARAM.opponentA) != NULL)
+            gPolishedAiSwitchScore = PolishedBestReserveScore(battler, GetOppositeBattler(battler));
+#endif
         chosenMonId = GetMostSuitableMonToSwitchInto(battler, switchType);
         if (chosenMonId == PARTY_SIZE) // Advanced logic failed so we pick the next available battler
         {
