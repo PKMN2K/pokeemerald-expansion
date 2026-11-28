@@ -18,7 +18,8 @@ SCENARIOS = ('basic_screens', 'basic_confusion', 'basic_weather', 'basic_seed_fo
 BATTLES = {name + suffix for name in SCENARIOS for suffix in ('', '_next')} | {
     'basic_egg_hp', 'basic_no_reserves', 'types_dragon', 'types_psychic',
     'types_umbreon', 'types_umbreon_ring', 'types_wyrdeer', 'types_wyrdeer_ring', 'types_powder', 'types_goggles',
-    'types_bug_dark', 'types_cut_fairy', 'types_hidden_power', 'types_rock'}
+    'types_bug_dark', 'types_cut_fairy', 'types_hidden_power', 'types_rock', 'types_damp', 'types_no_damp',
+    'types_damp_breaker', 'types_fairy_rage', 'types_fairy_rage_ring', 'types_spore_sipper', 'types_spore_goggles', 'types_pixilate'}
 
 
 def check_source(assembly, status_effects, move_records):
@@ -167,3 +168,11 @@ def check_battles(results):
     check('types_cut_fairy', (99, 101), ('Cut',))
     check('types_hidden_power', (100, 101), ('Aerial Ace',))
     check('types_rock', (101, 100), ('Rock Slide',))
+    check('types_damp', (90, 99), ('Rock Slide',))
+    check('types_no_damp', (100, 99), ('Explosion',))
+    check('types_damp_breaker', (100, 99), ('Explosion',))
+    check('types_fairy_rage', (90, 99), ('Bug Buzz',))
+    check('types_fairy_rage_ring', (100, 99), ('Dragon Rage',))
+    check('types_spore_sipper', (100, 99, 90), ('Spore',))
+    check('types_spore_goggles', (90, 99, 90), ('Bug Buzz',))
+    check('types_pixilate', (90, 101), ('Moonblast',))

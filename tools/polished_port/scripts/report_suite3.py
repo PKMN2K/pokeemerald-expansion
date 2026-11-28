@@ -177,7 +177,7 @@ def check_probe(path, rom_hash, pin):
             if battle['scores'] != scores or (move is not None and battle['move'] != move):
                 raise ValueError(f'incorrect Smart trainer scores or move in {name}')
         if (not all(row['link_records_reloaded'] for row in data['outcomes'].values())
-                or data['trainer_type_cases'] != 5055 or data['trainer_setup_cases'] != 640 or data['legendary_blocked'] != ['Run', 'Teleport', 'Roar']):
+                or data['trainer_type_cases'] != 7187 or data['trainer_setup_cases'] != 640 or data['legendary_blocked'] != ['Run', 'Teleport', 'Roar']):
             raise ValueError('missing Pay Day, link standings, Setup scoring or legendary exit evidence')
         if (data['seeded_reward_cases'] < 127 or data['wild_factory_cases'] < 96
                 or data['roamer_movement_cases'] < 280 or data['roamer_encounter_bytes'] != 256

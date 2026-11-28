@@ -340,7 +340,11 @@ def replay(driver, directory, output, draws):
                       ('types_wyrdeer', type_keys | LEFT), ('types_wyrdeer_ring', type_keys | LEFT | B),
                       ('types_powder', type_keys | RIGHT), ('types_goggles', type_keys | RIGHT | B),
                       ('types_bug_dark', type_keys | LEFT | A), ('types_cut_fairy', type_keys | UP | A),
-                      ('types_hidden_power', type_keys | RIGHT | A), ('types_rock', type_keys | UP | B)):
+                      ('types_hidden_power', type_keys | RIGHT | A), ('types_rock', type_keys | UP | B),
+                      ('types_damp', type_keys | UP | LEFT), ('types_no_damp', type_keys | UP | LEFT | A),
+                      ('types_damp_breaker', type_keys | UP | LEFT | B), ('types_fairy_rage', type_keys | UP | RIGHT),
+                      ('types_fairy_rage_ring', type_keys | UP | RIGHT | A), ('types_spore_sipper', type_keys | DOWN | LEFT),
+                      ('types_spore_goggles', type_keys | DOWN | LEFT | A), ('types_pixilate', type_keys | DOWN | RIGHT)):
         game = Game(driver, elf, elf, output, directory)
         try:
             game.frames(160)
@@ -350,8 +354,8 @@ def replay(driver, directory, output, draws):
              spore, dream, bell, bond, solar, giga, gust, quake, choice_offset,
              quick, roar, perish, encore, counter_move, coat, reflect, screen, confuse_ray, swagger, sunny_day,
              ice_beam, crunch, focus, seed, baton, foresight, brick_break, psychic, shadow_ball,
-             powder, dark_pulse, bug_buzz, cut, hidden_power, aerial_ace, rock_slide) = struct.unpack(
-                 '<47I', game.read(game.sym['gSmartLayout'], 188))
+             powder, dark_pulse, bug_buzz, cut, hidden_power, aerial_ace, rock_slide, dragon_rage, dragon_claw, hyper_voice, moonblast) = struct.unpack(
+                 '<51I', game.read(game.sym['gSmartLayout'], 204))
             names = {recover: 'Recover', rain: 'Rain Dance', light: 'HealingLight', room: 'Trick Room', splash: 'Splash',
                      explosion: 'Explosion', split: 'Pain Split', sleep_talk: 'Sleep Talk', sacred_fire: 'Sacred Fire',
                      spore: 'Spore', dream: 'Dream Eater', bell: 'Heal Bell', bond: 'Destiny Bond', solar: 'Solar Beam', giga: 'Giga Drain', gust: 'Gust', quake: 'Earthquake',
@@ -361,7 +365,8 @@ def replay(driver, directory, output, draws):
                      crunch: 'Crunch', focus: 'Focus Energy', seed: 'Leech Seed', baton: 'Baton Pass',
                      foresight: 'Foresight', brick_break: 'Brick Break', psychic: 'Psychic', shadow_ball: 'Shadow Ball',
                      powder: 'PoisonPowder', dark_pulse: 'Dark Pulse', bug_buzz: 'Bug Buzz', cut: 'Cut',
-                     hidden_power: 'Hidden Power', aerial_ace: 'Aerial Ace', rock_slide: 'Rock Slide'}
+                     hidden_power: 'Hidden Power', aerial_ace: 'Aerial Ace', rock_slide: 'Rock Slide',
+                     dragon_rage: 'Dragon Rage', dragon_claw: 'Dragon Claw', hyper_voice: 'Hyper Voice', moonblast: 'Moonblast'}
             # Capture the announced move before self-KO or Sleep Talk's called move.
             history = game.sym['gLastPrintedMoves' if key & (SELECT | R_BUTTON | L_BUTTON) else 'gLastMoves']
             game.press(key)
@@ -397,7 +402,7 @@ def replay(driver, directory, output, draws):
                     game.press(A, 6)
                 else:
                     raise AssertionError((turn, 'trainer failed to execute a move', move))
-                num_slots = 3 if name in ('types_powder', 'types_goggles') else 2
+                num_slots = 3 if name in ('types_powder', 'types_goggles', 'types_spore_sipper', 'types_spore_goggles') else 2
                 scores = struct.unpack(f'<{num_slots}i', game.read(game.u32(game.sym['gAiBattleData']) + offset, 4 * num_slots))
                 assert move in names, (turn, move, scores)
                 result[turn] = dict(move=names[move], scores=scores)

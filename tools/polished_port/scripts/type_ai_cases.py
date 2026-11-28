@@ -7,7 +7,7 @@ from build_battle_suite import ROOT, authenticated_sources, source
 
 
 SCORED_TYPES = {'ICE': 11, 'DARK': 11, 'FIGHTING': 17, 'GHOST': 10, 'PSYCHIC': 21,
-                'FLYING': 12, 'BUG': 8, 'STEEL': 8, 'ROCK': 8, 'POISON': 9, 'UNKNOWN_T': 3}
+                'FLYING': 12, 'BUG': 8, 'STEEL': 8, 'ROCK': 8, 'POISON': 9, 'UNKNOWN_T': 3, 'DRAGON': 6, 'FAIRY': 7}
 
 
 def read_chart(text):
@@ -45,12 +45,17 @@ def cases():
     mapped = source.move_targets(files)
     mapped['NONE'] = 'MOVE_NONE'
     moves = {}
+    group = {}
+    explosions = set()
     for line in source.default_lines(files['data/moves/moves.asm']):
         if line.startswith('move '):
-            name, _, power, kind, *_ = (x.strip() for x in line[5:].split(','))
+            name, effect, power, kind, _, _, _, category = (x.strip() for x in line[5:].split(','))
             moves[name] = (kind, int(power))
-    group = [name for name, (kind, _) in moves.items() if kind in SCORED_TYPES]
-    assert Counter(moves[name][0] for name in group) == SCORED_TYPES
+            if effect == 'EFFECT_EXPLOSION':
+                explosions.add(name)
+            if kind in SCORED_TYPES or (kind == 'NORMAL' and category != 'STATUS') or (kind == 'GRASS' and category == 'STATUS'):
+                group[name] = kind
+    assert Counter(group.values()) == {**SCORED_TYPES, 'NORMAL': 31, 'GRASS': 4}
     fixtures = ROOT / 'tools/polished_port/fixtures/battle_logic'
     charts = (read_chart(files['data/types/type_matchups.asm']), read_chart((fixtures / 'inverse_type_matchups.asm').read_text()))
     types = sorted(charts[0])
@@ -75,9 +80,9 @@ def cases():
         for i, move in enumerate(slots):
             kind, power = moves.get(move, (None, 0))
             delta = 0
-            if kind in SCORED_TYPES and not mask & (1 << i):
+            if move in group and not mask & (1 << i):
                 value = matchup(charts[inverse].get(kind, ()), defenses, bypass_ghost, item == 'RING_TARGET')
-                if value == 0 or nullified or (move in powders and powder_immune):
+                if value == 0 or nullified or (move in powders and powder_immune) or (active == 'DAMP' and move in explosions):
                     delta = -10
                 elif value > 10 and power:
                     delta = 1
@@ -90,7 +95,8 @@ def cases():
                 + f'ABILITY_{attacker}, ABILITY_{defender}, ITEM_{item}, {int(identified)}' + '},')
 
     for name, defense, inverse in product(group, types, (False, True)):
-        yield row((name, 'TACKLE', 'NONE', 'NONE'), (defense, defense), inverse)
+        alternative = 'ICE_BEAM' if group[name] == 'NORMAL' else 'TACKLE'
+        yield row((name, alternative, 'NONE', 'NONE'), (defense, defense), inverse)
     for defenses, mask, inverse in product((('WATER', 'PSYCHIC'), ('DRAGON', 'FLYING'), ('FIRE', 'STEEL')),
                                            (0, 2, 4, 6, 8, 14, 15), (False, True)):
         for slots in (('ICE_BEAM', 'NONE', 'CRUNCH', 'HAZE'), ('NASTY_PLOT', 'ICE_PUNCH', 'BITE', 'HAIL'),
@@ -122,3 +128,26 @@ def cases():
                                            (0, 1, 2, 4, 6, 8, 12, 15), (False, True)):
         for slots in (('CUT', 'AIR_SLASH', 'X_SCISSOR', 'HIDDEN_POWER'), ('SANDSTORM', 'TOXIC_SPIKES', 'ROOST', 'STRUGGLE')):
             yield row(slots, defenses, inverse, mask)
+
+    # Damp reads the candidate effect. Soundproof and Bulletproof read the previous selection.
+    for defender, previous, attacker, mask in product(
+            ('DAMP', 'SOUNDPROOF', 'BULLETPROOF'), ('NONE', 'EXPLOSION', 'HYPER_VOICE', 'SHADOW_BALL'),
+            ('NONE', 'MOLD_BREAKER', 'NEUTRALIZING_GAS'), (0, 1, 2, 8)):
+        yield row(('EXPLOSION', 'HYPER_VOICE', 'DISARM_VOICE', 'SUPER_FANG'), ('NORMAL', 'NORMAL'),
+                  mask=mask, previous=previous, attacker=attacker, defender=defender)
+
+    for defenses, item, inverse, attacker, identified in product(
+            (('GHOST', 'ROCK'), ('GHOST', 'GHOST'), ('FAIRY', 'DRAGON'), ('STEEL', 'FAIRY')),
+            ('NONE', 'RING_TARGET'), (False, True), ('NONE', 'SCRAPPY', 'MINDS_EYE', 'PIXILATE'), (False, True)):
+        yield row(('SONIC_BOOM', 'DRAGON_RAGE', 'DRAGON_DANCE', 'MOONBLAST'), defenses, inverse,
+                  item=item, attacker=attacker, identified=identified)
+
+    for defenses, defender, item, attacker in product(
+            (('GRASS', 'WATER'), ('WATER', 'WATER'), ('FIRE', 'FLYING')),
+            ('NONE', 'OVERCOAT', 'SAP_SIPPER'), ('NONE', 'SAFETY_GOGGLES'), ('NONE', 'MOLD_BREAKER')):
+        yield row(('LEECH_SEED', 'STUN_SPORE', 'SLEEP_POWDER', 'SPORE'), defenses,
+                  item=item, attacker=attacker, defender=defender)
+    for defenses, mask, inverse in product((('STEEL', 'STEEL'), ('FAIRY', 'GHOST'), ('DRAGON', 'DARK')),
+                                           (0, 2, 4, 6, 8, 12, 14, 15), (False, True)):
+        yield row(('RETURN', 'EXTREMESPEED', 'SWEET_KISS', 'DRAGON_CLAW'), defenses, inverse, mask)
+        yield row(('LEECH_SEED', 'DRAGONBREATH', 'DAZZLINGLEAM', 'CHARM'), defenses, inverse, mask)

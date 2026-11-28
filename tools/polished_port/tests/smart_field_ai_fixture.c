@@ -62,6 +62,7 @@ const volatile u32 gSmartLayout[] = {
     MOVE_ICE_BEAM, MOVE_CRUNCH, MOVE_FOCUS_ENERGY, MOVE_LEECH_SEED, MOVE_BATON_PASS,
     MOVE_FORESIGHT, MOVE_BRICK_BREAK, MOVE_PSYCHIC, MOVE_SHADOW_BALL,
     MOVE_POISONPOWDER, MOVE_DARK_PULSE, MOVE_BUG_BUZZ, MOVE_CUT, MOVE_HIDDEN_POWER, MOVE_AERIAL_ACE, MOVE_ROCK_SLIDE,
+    MOVE_DRAGON_RAGE, MOVE_DRAGON_CLAW, MOVE_HYPER_VOICE, MOVE_MOONBLAST,
 };
 
 static void CheckScores(void)
@@ -282,6 +283,51 @@ static void SetTypeParties(struct Pokemon *player, struct Pokemon *trainer, u16 
         SetMon(player, SPECIES_SCYTHER, 150, MOVE_SPLASH, MOVE_NONE);
         SetMon(trainer, SPECIES_STARYU, 150, MOVE_ROCK_SLIDE, MOVE_CUT);
         break;
+    case DPAD_UP | DPAD_LEFT:
+    case DPAD_UP | DPAD_LEFT | A_BUTTON:
+    case DPAD_UP | DPAD_LEFT | B_BUTTON:
+    {
+        u32 quagsireSlot = (keys & A_BUTTON) != 0; // Damp or Water Absorb.
+        u32 pinsirSlot = (keys & B_BUTTON) != 0; // Hyper Cutter or Mold Breaker.
+        SetMon(player, SPECIES_QUAGSIRE, 150, MOVE_SPLASH, MOVE_NONE);
+        SetMonData(player, MON_DATA_ABILITY_NUM, &quagsireSlot);
+        SetMon(trainer, SPECIES_PINSIR, 150, MOVE_EXPLOSION, MOVE_ROCK_SLIDE);
+        SetMonData(trainer, MON_DATA_ABILITY_NUM, &pinsirSlot);
+        break;
+    }
+    case DPAD_UP | DPAD_RIGHT:
+    case DPAD_UP | DPAD_RIGHT | A_BUTTON:
+        SetMon(player, SPECIES_CLEFABLE, 150, MOVE_SPLASH, MOVE_NONE);
+        SetMon(trainer, SPECIES_STARYU, 150, MOVE_DRAGON_RAGE, MOVE_BUG_BUZZ);
+        if (keys & A_BUTTON)
+        {
+            enum Item ring = ITEM_RING_TARGET;
+            SetMonData(player, MON_DATA_HELD_ITEM, &ring);
+        }
+        break;
+    case DPAD_DOWN | DPAD_LEFT:
+    case DPAD_DOWN | DPAD_LEFT | A_BUTTON:
+    {
+        u32 sapSipper = 2;
+        SetMon(player, SPECIES_MARILL, 150, MOVE_SPLASH, MOVE_NONE);
+        SetMonData(player, MON_DATA_ABILITY_NUM, &sapSipper);
+        if (keys & A_BUTTON)
+        {
+            enum Item goggles = ITEM_SAFETY_GOGGLES;
+            SetMonData(player, MON_DATA_HELD_ITEM, &goggles);
+        }
+        SetMon(trainer, SPECIES_STARYU, 150, MOVE_SPORE, MOVE_BUG_BUZZ);
+        SetMonMoveSlot(trainer, MOVE_DRAGON_CLAW, 2);
+        break;
+    }
+    case DPAD_DOWN | DPAD_RIGHT:
+    {
+        u32 pixilate = 2;
+        SetMon(player, SPECIES_ANNIHILAPE, 150, MOVE_SPLASH, MOVE_NONE);
+        SetMon(trainer, SPECIES_SYLVEON, 150, MOVE_HYPER_VOICE, MOVE_MOONBLAST);
+        SetMonData(trainer, MON_DATA_ABILITY_NUM, &pixilate);
+        break;
+    }
     default:
         SetMon(player, (keys & A_BUTTON) ? SPECIES_DRAGONITE : SPECIES_SLOWPOKE, 150, MOVE_SPLASH, MOVE_NONE);
         SetMon(trainer, SPECIES_STARYU, 150, MOVE_ICE_BEAM, MOVE_CRUNCH);
