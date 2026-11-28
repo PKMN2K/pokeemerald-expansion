@@ -21,8 +21,11 @@ struct PolishedSmartAiContext
     u32 userSpeed, targetSpeed;
     bool8 trickRoom, targetFirstTurn;
     bool8 lastMonAgainstReserve;
-    bool8 earlyBird;
+    bool8 earlyBird, targetGhost, partyHasStatus;
+    u8 spikes;
 };
+void PolishedScoreBasicSleepMoves(const struct BattlePokemon *user, const struct BattlePokemon *target,
+                                 u32 limitations, bool32 safeguard, s32 *scores);
 void PolishedScoreSmartMoves(const struct BattlePokemon *user, const struct BattlePokemon *target,
                             u32 limitations, const struct PolishedSmartAiContext *context, s32 *scores);
 void PolishedScoreTrainerPolicies(u32 layers, const enum Move *moves, u32 limitations,

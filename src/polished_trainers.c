@@ -87,6 +87,42 @@ static bool32 SmartUserIsFaster(const struct PolishedSmartAiContext *context)
     return context->userSpeed > context->targetSpeed;
 }
 
+static bool32 IsPolishedSleepMove(enum Move move)
+{
+    return move == MOVE_SING || move == MOVE_SLEEP_POWDER || move == MOVE_HYPNOSIS || move == MOVE_SPORE;
+}
+
+void PolishedScoreBasicSleepMoves(const struct BattlePokemon *user, const struct BattlePokemon *target,
+                                 u32 limitations, bool32 safeguard, s32 *scores)
+{
+    for (u32 slot = 0; slot < MAX_MON_MOVES; slot++)
+    {
+        if (limitations & (1u << slot))
+            continue;
+        enum Move move = user->moves[slot];
+        if ((move == MOVE_DREAM_EATER && !(target->status1 & STATUS1_SLEEP))
+         || (IsPolishedSleepMove(move) && (safeguard || (target->status1 & STATUS1_ANY))))
+            scores[slot] -= 10;
+    }
+}
+
+// wAIMoves is packed after CheckUsableMove excludes disabled and empty slots.
+static bool32 SmartHasUsableMove(const struct BattlePokemon *user, u32 limitations, enum Move move)
+{
+    for (u32 slot = 0; slot < MAX_MON_MOVES; slot++)
+        if (!(limitations & (1u << slot)) && user->moves[slot] == move)
+            return TRUE;
+    return FALSE;
+}
+
+static s32 SmartHazeScore(const struct BattlePokemon *user, const struct BattlePokemon *target)
+{
+    for (u32 stat = STAT_ATK; stat <= STAT_EVASION; stat++)
+        if (user->statStages[stat] < DEFAULT_STAT_STAGE - 2 || target->statStages[stat] >= DEFAULT_STAT_STAGE + 3)
+            return (Random() & 255) >= 40;
+    return -1;
+}
+
 void PolishedScoreSmartMoves(const struct BattlePokemon *user, const struct BattlePokemon *target,
                             u32 limitations, const struct PolishedSmartAiContext *context, s32 *scores)
 {
@@ -247,6 +283,88 @@ void PolishedScoreSmartMoves(const struct BattlePokemon *user, const struct Batt
             break;
         case MOVE_SLEEP_TALK:
             scores[slot] += (user->status1 & STATUS1_SLEEP) >= (context->earlyBird ? 3u : 2u) ? 10 : -10;
+            break;
+        case MOVE_SING:
+        case MOVE_SLEEP_POWDER:
+        case MOVE_HYPNOSIS:
+        case MOVE_SPORE:
+            if (SmartHasUsableMove(user, limitations, MOVE_DREAM_EATER) && (Random() & 255) >= 128)
+                scores[slot] += 2;
+            break;
+        case MOVE_DREAM_EATER:
+            if ((Random() & 255) >= 25)
+                scores[slot] += 3;
+            break;
+        case MOVE_WRAP:
+        case MOVE_FIRE_SPIN:
+        case MOVE_WHIRLPOOL:
+            if (!target->volatiles.wrapTurns && !context->targetGhost
+             && ((target->status1 & STATUS1_TOXIC_POISON) || target->volatiles.infatuation
+              || target->volatiles.foresight || target->volatiles.rolloutTimer || context->targetFirstTurn))
+            {
+                if (4u * user->hp > user->maxHP && (Random() & 255) >= 128)
+                    scores[slot] += 2;
+            }
+            else if ((Random() & 255) >= 128)
+                scores[slot]--;
+            break;
+        case MOVE_RAPID_SPIN:
+            if ((user->volatiles.wrapTurns || user->volatiles.leechSeed || context->spikes == 3)
+             && (Random() & 255) >= 50)
+                scores[slot] += 2;
+            break;
+        case MOVE_FORESIGHT:
+            if (user->statStages[STAT_ACC] < DEFAULT_STAT_STAGE - 2
+             || target->statStages[STAT_EVASION] >= DEFAULT_STAT_STAGE + 3 || context->targetGhost)
+                scores[slot] += (Random() & 255) >= 100 ? 2 : 0;
+            else if ((Random() & 255) >= 20)
+                scores[slot]--;
+            break;
+        case MOVE_HAZE:
+            scores[slot] += SmartHazeScore(user, target);
+            break;
+        case MOVE_ROLLOUT:
+            if (user->volatiles.infatuation || user->volatiles.confusionTimer || (user->status1 & STATUS1_PARALYSIS)
+             || 4u * user->hp <= user->maxHP || user->statStages[STAT_ACC] < DEFAULT_STAT_STAGE
+             || target->statStages[STAT_EVASION] > DEFAULT_STAT_STAGE)
+                scores[slot] -= (Random() & 255) >= 50;
+            else if ((Random() & 255) < 200)
+                scores[slot] += 2;
+            break;
+        case MOVE_RAGE:
+            if (user->volatiles.rage)
+                scores[slot] += (Random() & 255) >= 128;
+            else if (2u * user->hp <= user->maxHP)
+                scores[slot]--;
+            else if ((Random() & 255) < 50)
+                scores[slot]++;
+            break;
+        case MOVE_FUTURE_SIGHT:
+            scores[slot]--;
+            if (SmartUserIsFaster(context) && (target->volatiles.semiInvulnerable == STATE_ON_AIR
+                                           || target->volatiles.semiInvulnerable == STATE_UNDERGROUND))
+                scores[slot] += 3;
+            break;
+        case MOVE_ENDURE:
+            if (user->volatiles.consecutiveMoveUses || user->hp == user->maxHP)
+                scores[slot] -= 2;
+            else if (4u * user->hp > user->maxHP)
+                scores[slot]--;
+            else if (SmartHasUsableMove(user, limitations, MOVE_REVERSAL))
+                scores[slot] += (Random() & 255) >= 50 ? 3 : 0;
+            else if (target->volatiles.lockOn && (Random() & 255) >= 128)
+                scores[slot] += 2;
+            break;
+        case MOVE_HEAL_BELL:
+            if (context->partyHasStatus)
+            {
+                if (user->status1 & STATUS1_ANY)
+                    scores[slot]++;
+                if ((user->status1 & (STATUS1_SLEEP | STATUS1_FREEZE)) && (Random() & 255) >= 128)
+                    scores[slot] += 2;
+            }
+            else if (!(user->status1 & STATUS1_ANY))
+                scores[slot] -= 10;
             break;
         case MOVE_LEECH_SEED:
         case MOVE_TOXIC:

@@ -1020,6 +1020,19 @@ u32 PolishedChooseScoredMoveSlot(const enum Move *moves, u32 limitations, const 
     return MAX_MON_MOVES;
 }
 
+#if POLISHED_JOHTO_DEMO
+static bool32 PolishedPartyHasStatus(enum BattlerId battler)
+{
+    struct Pokemon *party = GetBattlerParty(battler);
+    u32 count = gPartiesCount[GetBattlerTrainer(battler)];
+    for (u32 i = 0; i < count; i++)
+        if (GetMonData(&party[i], MON_DATA_HP) && (GetMonData(&party[i], MON_DATA_STATUS) & STATUS1_ANY)
+         && !GetMonData(&party[i], MON_DATA_IS_EGG))
+            return TRUE;
+    return FALSE;
+}
+#endif
+
 static struct ChosenAction ChooseMoveOrAction_Singles(enum BattlerId battler)
 {
     u8 currentMoveArray[MAX_MON_MOVES];
@@ -1038,6 +1051,9 @@ static struct ChosenAction ChooseMoveOrAction_Singles(enum BattlerId battler)
     {
         u32 badges = __builtin_popcount(VarGet(VAR_POLISHED_EARNED_BADGES));
         u32 layers = PolishedTrainerAiLayers(TRAINER_BATTLE_PARAM.opponentA, badges);
+        PolishedScoreBasicSleepMoves(&gBattleMons[battler], &gBattleMons[opposingBattler],
+                                     gAiLogicData->moveLimitations[battler], gSideStatuses[GetBattlerSide(opposingBattler)] & SIDE_STATUS_SAFEGUARD,
+                                     gAiThinkingStruct->score);
         // IncrementTurnsTaken runs before AIChooseMove, including the initial turn.
         if (layers & POLISHED_AI_SETUP)
             PolishedScoreSetup(gBattleMons[battler].moves, gAiLogicData->moveLimitations[battler],
@@ -1051,6 +1067,10 @@ static struct ChosenAction ChooseMoveOrAction_Singles(enum BattlerId battler)
                 .weather = gBattleWeather,
                 .userWeather = GetAttackerWeather(holdEffect, ability, GetWeather()),
                 .earlyBird = ability == ABILITY_EARLY_BIRD,
+                .targetGhost = IS_BATTLER_OF_TYPE(opposingBattler, TYPE_GHOST),
+                .spikes = gSideTimers[GetBattlerSide(battler)].spikesAmount,
+                .partyHasStatus = GetMoveSlot(gBattleMons[battler].moves, MOVE_HEAL_BELL) < MAX_MON_MOVES
+                               && PolishedPartyHasStatus(battler),
                 .userSpeed = GetBattlerTotalSpeedStat(battler, ability, holdEffect),
                 .targetSpeed = GetBattlerTotalSpeedStat(opposingBattler, GetBattlerAbility(opposingBattler),
                                                         GetBattlerHoldEffect(opposingBattler)),

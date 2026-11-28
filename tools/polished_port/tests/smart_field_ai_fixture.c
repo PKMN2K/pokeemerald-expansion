@@ -12,6 +12,15 @@
 #include "save.h"
 #include "constants/opponents.h"
 
+struct TacticsInput {
+    u32 targetStatus;
+    u8 spikes, hidden, stat;
+    s8 userOffset, targetOffset;
+    bool8 ghost, partyStatus, safeguard;
+    bool8 targetWrapped, targetInLove, targetIdentified, targetRolling, targetLockOn;
+    bool8 userWrapped, userSeeded, userRage, userProtected, userInLove, userConfused;
+};
+
 static const struct {
     enum Move moves[4];
     u16 hp, maxHP, targetHP, seed, next;
@@ -26,6 +35,7 @@ static const struct {
     s8 accuracy, evasion, spDefense; // Stage offsets from neutral.
     bool8 minimized, earlyBird;
     u32 status;
+    struct TacticsInput tactics;
 } sCases[] = {
 /* SOURCE CASES */
 };
@@ -35,7 +45,7 @@ const volatile u32 gSmartLayout[] = {
     offsetof(struct AiBattleData, finalScore[B_BATTLER_1][B_BATTLER_0]),
     offsetof(struct BattleResults, battleTurnCounter),
     MOVE_RECOVER, MOVE_RAIN_DANCE, MOVE_POLISHED_HEALING_LIGHT, MOVE_TRICK_ROOM, MOVE_SPLASH, MOVE_EXPLOSION, MOVE_PAIN_SPLIT,
-    MOVE_SLEEP_TALK, MOVE_SACRED_FIRE,
+    MOVE_SLEEP_TALK, MOVE_SACRED_FIRE, MOVE_SPORE, MOVE_DREAM_EATER, MOVE_HEAL_BELL, MOVE_DESTINY_BOND,
 };
 
 static void CheckScores(void)
@@ -47,21 +57,44 @@ static void CheckScores(void)
         struct BattlePokemon user = {.hp = sCases[i].hp, .maxHP = sCases[i].maxHP};
         struct BattlePokemon target = {.hp = sCases[i].targetHP, .maxHP = sCases[i].targetMaxHP};
         s32 scores[] = {100, 100, 100, 100};
+        const struct TacticsInput *t = &sCases[i].tactics;
+        for (u32 stat = STAT_ATK; stat <= STAT_EVASION; stat++)
+            user.statStages[stat] = target.statStages[stat] = DEFAULT_STAT_STAGE;
         user.statStages[STAT_ATK] = sCases[i].attackStage;
         user.statStages[STAT_ACC] = DEFAULT_STAT_STAGE + sCases[i].accuracy;
         user.statStages[STAT_SPDEF] = DEFAULT_STAT_STAGE + sCases[i].spDefense;
         user.status1 = sCases[i].status;
         target.statStages[STAT_EVASION] = DEFAULT_STAT_STAGE + sCases[i].evasion;
         target.volatiles.minimize = sCases[i].minimized;
+        if (t->stat != STAT_HP)
+        {
+            user.statStages[t->stat] = DEFAULT_STAT_STAGE + t->userOffset;
+            target.statStages[t->stat] = DEFAULT_STAT_STAGE + t->targetOffset;
+        }
+        user.volatiles.wrapTurns = t->userWrapped;
+        user.volatiles.leechSeed = t->userSeeded;
+        user.volatiles.rage = t->userRage;
+        user.volatiles.consecutiveMoveUses = t->userProtected;
+        user.volatiles.infatuation = t->userInLove;
+        user.volatiles.confusionTimer = t->userConfused;
+        target.status1 = t->targetStatus;
+        target.volatiles.wrapTurns = t->targetWrapped;
+        target.volatiles.infatuation = t->targetInLove;
+        target.volatiles.foresight = t->targetIdentified;
+        target.volatiles.rolloutTimer = t->targetRolling;
+        target.volatiles.lockOn = t->targetLockOn;
+        target.volatiles.semiInvulnerable = t->hidden;
         memcpy(user.moves, sCases[i].moves, sizeof(user.moves));
         SeedRng(sCases[i].seed);
         struct PolishedSmartAiContext context = {
-            .earlyBird = sCases[i].earlyBird,
+            .earlyBird = sCases[i].earlyBird, .spikes = t->spikes,
+            .targetGhost = t->ghost, .partyHasStatus = t->partyStatus,
             .weather = sCases[i].weather, .userWeather = sCases[i].userWeather,
             .userSpeed = sCases[i].userSpeed, .targetSpeed = sCases[i].targetSpeed,
             .trickRoom = sCases[i].trickRoom, .targetFirstTurn = sCases[i].targetFirstTurn,
             .lastMonAgainstReserve = sCases[i].lastMonAgainstReserve,
         };
+        PolishedScoreBasicSleepMoves(&user, &target, sCases[i].mask, t->safeguard, scores);
         PolishedScoreSmartMoves(&user, &target, sCases[i].mask, &context, scores);
         u16 next = Random();
         for (u32 slot = 0; slot < MAX_MON_MOVES; slot++)
@@ -165,6 +198,36 @@ static void SetStatusParties(u16 keys)
     SetMonData(trainer, MON_DATA_STATUS, &status);
 }
 
+static void SetTacticsParties(u16 keys)
+{
+    struct Pokemon *player = &gParties[B_TRAINER_PLAYER][0];
+    struct Pokemon *trainer = &gParties[B_TRAINER_OPPONENT_A][0];
+    SetMon(player, SPECIES_MAGIKARP, 150, MOVE_SPLASH, MOVE_NONE);
+    if (keys & (DPAD_LEFT | DPAD_RIGHT))
+    {
+        struct Pokemon *reserve = &gParties[B_TRAINER_OPPONENT_A][1];
+        u32 poison = STATUS1_POISON;
+        SetMon(trainer, SPECIES_STARYU, 150, MOVE_HEAL_BELL, MOVE_DESTINY_BOND);
+        SetMon(reserve, SPECIES_STARYU, (keys & DPAD_LEFT) ? 0 : 100, MOVE_SPLASH, MOVE_NONE);
+        SetMonData(reserve, MON_DATA_STATUS, &poison);
+        gPartiesCount[B_TRAINER_OPPONENT_A] = 2;
+    }
+    else
+    {
+        SetMon(trainer, SPECIES_STARYU, 150, MOVE_SPORE, MOVE_DREAM_EATER);
+        if (keys & (B_BUTTON | DPAD_DOWN))
+        {
+            u32 sleep = STATUS1_SLEEP_TURN(4);
+            SetMonData(player, MON_DATA_STATUS, &sleep);
+        }
+        if (keys & START_BUTTON)
+        {
+            u32 pp = 0;
+            SetMonData(trainer, MON_DATA_PP2, &pp);
+        }
+    }
+}
+
 void CB2_MoveMachineAudit(void)
 {
     (void)gSmartLayout[0];
@@ -187,7 +250,9 @@ void CB2_MoveMachineAudit(void)
     gSaveBlock2Ptr->optionsTextSpeed = OPTIONS_TEXT_SPEED_FAST;
     gSaveBlock2Ptr->optionsBattleSceneOff = TRUE;
     gPartiesCount[B_TRAINER_PLAYER] = gPartiesCount[B_TRAINER_OPPONENT_A] = 1;
-    if (keys & R_BUTTON)
+    if (keys & L_BUTTON)
+        SetTacticsParties(keys);
+    else if (keys & R_BUTTON)
         SetStatusParties(keys);
     else if (keys & SELECT_BUTTON)
         SetExplosionParties(keys);

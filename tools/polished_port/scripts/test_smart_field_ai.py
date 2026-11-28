@@ -4,6 +4,8 @@ from typing import NamedTuple
 import re
 import struct
 
+import smart_ai_tactics_cases as tactics_cases
+
 from audit_moves_machines import ROOT, compile_probe
 from build_battle_suite import authenticated_sources, source
 from test_johto_demo_emulator import A, B, DOWN, LEFT, RIGHT, START, UP, Game
@@ -19,6 +21,7 @@ HP_MOVES = {'SUBSTITUTE', 'DESTINY_BOND', 'BELLY_DRUM', 'PAIN_SPLIT', 'EXPLOSION
 SELECT = 4
 
 R_BUTTON = 256
+L_BUTTON = 512
 STATUS_HANDLERS = {
     'AlwaysHit': {'AERIAL_ACE', 'SWIFT', 'FEINT_ATTACK', 'AURA_SPHERE', 'DISARM_VOICE'},
     'Confuse': {'SUPERSONIC', 'CONFUSE_RAY', 'SWEET_KISS'},
@@ -152,23 +155,26 @@ def cases(draws):
     asm = authenticated_sources()['engine/battle/ai/scoring.asm']['text']
     effects = set(re.findall(r'^\s*dbw EFFECT_(\w+),\s+AI_Smart_(?:Heal|Roost|HealingLight|LightScreen|Reflect|Safeguard|Thunder|RainDance|SunnyDay|Sandstorm|Hail|Toxic|LeechSeed|SpeedControl|SpeedDownHit|TrickRoom|Paralyze|Substitute|DestinyBond|BellyDrum|PainSplit|Explosion|HyperBeam|Pursuit)$', asm, re.M))
     smart_table = dict(re.findall(r'^\s*dbw EFFECT_(\w+),\s+AI_Smart_(\w+)$', asm, re.M))
-    status_moves = {handler: set() for handler in STATUS_HANDLERS}
+    handlers = STATUS_HANDLERS | tactics_cases.HANDLERS
+    status_moves = {handler: set() for handler in handlers}
     files = source.sources()
     mapped = source.move_targets(files)
     moves = set()
     for line in source.default_lines(files['data/moves/moves.asm']):
         record = re.match(r'move (\w+),\s*EFFECT_(\w+),', line)
-        if record and smart_table.get(record[2]) in STATUS_HANDLERS:
+        if record and smart_table.get(record[2]) in handlers:
             status_moves[smart_table[record[2]]].add(record[1])
         if record and record[2] in effects:
             moves.add(record[1])
-    assert status_moves == STATUS_HANDLERS
+    assert status_moves == handlers
     assert moves == (set(SETTERS) | RECOVERY | SPEED_CONTROL | PARALYZE | HP_MOVES |
                      {'REFLECT', 'LIGHT_SCREEN', 'SAFEGUARD', 'THUNDER', 'TOXIC', 'LEECH_SEED',
                       'TRICK_ROOM', 'ICY_WIND', 'BUBBLE_BEAM', 'BULLDOZE'})
 
     def row(slots, hp, maximum, target, weather, effective, mask, seed, speeds=(0, 0), room=False, first=False,
-            target_max=100, attack_stage=0, last_against_reserve=False, state=StatusState()):
+            target_max=100, attack_stage=0, last_against_reserve=False, state=StatusState(), tactics=None):
+        tactics = tactics or {}
+        usable = {move for i, move in enumerate(slots) if not mask & (1 << i)}
         stream = draws(seed)
         deltas = []
         for slot, move in enumerate(slots):
@@ -216,12 +222,15 @@ def cases(draws):
                 delta = hp_score(move, hp, maximum, target, target_max, attack_stage, last_against_reserve, stream)
             elif move in STATUS_MOVES:
                 delta = status_score(move, hp, maximum, target, target_max, first, state, stream)
+            elif move in tactics_cases.MOVES:
+                delta = tactics_cases.score(move, tactics, usable, hp, maximum, first, speeds, room, state, stream)
             deltas.append(str(delta))
+        inputs = ', '.join(f'.{key} = {value}' for key, value in tactics.items()) or '0'
         return ('{{' + ', '.join(mapped[m] for m in slots) + '}, '
                 + f'{hp}, {maximum}, {target}, {seed}, {next(stream)}, {WEATHER[weather]}, {WEATHER[effective]}, {mask}, '
                 + '{' + ', '.join(deltas) + '}, ' + f'{speeds[0]}, {speeds[1]}, {int(room)}, {int(first)}, '
                 + f'{target_max}, DEFAULT_STAT_STAGE + ({attack_stage}), {int(last_against_reserve)}, '
-                + f'{state.accuracy}, {state.evasion}, {state.sp_defense}, {int(state.minimized)}, {int(state.early_bird)}, {state.status}' + '},')
+                + f'{state.accuracy}, {state.evasion}, {state.sp_defense}, {int(state.minimized)}, {int(state.early_bird)}, {state.status}, ' + '{' + inputs + '}},')
 
     for maximum in (1, 95, 100, 251, 714):
         third = max(1, maximum // 3)
@@ -263,6 +272,7 @@ def cases(draws):
 
     yield from hp_cases(row, draws)
     yield from status_cases(row, draws)
+    yield from tactics_cases.cases(row, draws, StatusState)
 
 
 def replay(driver, directory, output, draws):
@@ -275,18 +285,22 @@ def replay(driver, directory, output, draws):
                       ('player_reserve', SELECT | A), ('fainted_reserve', SELECT | B),
                       ('egg_reserve', SELECT | LEFT), ('both_reserves', SELECT | RIGHT),
                       ('asleep', R_BUTTON | A), ('early_bird', R_BUTTON | B), ('gas', R_BUTTON | RIGHT),
-                      ('frozen', R_BUTTON | LEFT), ('thawed', R_BUTTON | START | LEFT)):
+                      ('frozen', R_BUTTON | LEFT), ('thawed', R_BUTTON | START | LEFT),
+                      ('awake_target', L_BUTTON | A), ('sleeping_target', L_BUTTON | B), ('no_dream_pp', L_BUTTON | START | A),
+                      ('awake_basic', L_BUTTON | UP), ('sleeping_basic', L_BUTTON | DOWN),
+                      ('poisoned_reserve', L_BUTTON | RIGHT), ('fainted_poisoned_reserve', L_BUTTON | LEFT)):
         game = Game(driver, elf, elf, output, directory)
         try:
             game.frames(160)
             audit = struct.unpack('<3I', game.read(game.sym['gSmartAudit'], 12))
             assert audit == (len(rows), 0, 0), audit
-            offset, counter, recover, rain, light, room, splash, explosion, split, sleep_talk, sacred_fire = struct.unpack(
-                '<11I', game.read(game.sym['gSmartLayout'], 44))
+            (offset, counter, recover, rain, light, room, splash, explosion, split, sleep_talk, sacred_fire,
+             spore, dream, bell, bond) = struct.unpack('<15I', game.read(game.sym['gSmartLayout'], 60))
             names = {recover: 'Recover', rain: 'Rain Dance', light: 'HealingLight', room: 'Trick Room', splash: 'Splash',
-                     explosion: 'Explosion', split: 'Pain Split', sleep_talk: 'Sleep Talk', sacred_fire: 'Sacred Fire'}
+                     explosion: 'Explosion', split: 'Pain Split', sleep_talk: 'Sleep Talk', sacred_fire: 'Sacred Fire',
+                     spore: 'Spore', dream: 'Dream Eater', bell: 'Heal Bell', bond: 'Destiny Bond'}
             # Capture the announced move before self-KO or Sleep Talk's called move.
-            history = game.sym['gLastPrintedMoves' if key & (SELECT | R_BUTTON) else 'gLastMoves']
+            history = game.sym['gLastPrintedMoves' if key & (SELECT | R_BUTTON | L_BUTTON) else 'gLastMoves']
             game.press(key)
             turns = (name, 'room_active') if name == 'player_scarf' else (name,)
             for index, turn in enumerate(turns):
@@ -328,4 +342,5 @@ def replay(driver, directory, output, draws):
     assert result['early_bird'] == dict(move='Splash', scores=(90, 100)), result
     assert result['frozen'] == dict(move='Sacred Fire', scores=(105, 102)), result
     assert result['thawed'] == dict(move='Recover', scores=(100, 102)), result
+    tactics_cases.check_battles(result)
     return dict(cases=len(rows), battles=result)
