@@ -12,6 +12,7 @@ import build_battle_completion_plan as plan
 import build_battle_suite as coverage
 import build_trainer_attributes as trainers
 import run_attack_suite as battle
+import smart_ai_matchup_cases as matchup_cases
 import smart_ai_tactics_cases as tactics_cases
 
 # Paths below are relative to the production emulator artifact. Each probe
@@ -162,9 +163,10 @@ def check_probe(path, rom_hash, pin):
             'gas': ([110, 100], 'Sleep Talk'), 'frozen': ([105, 102], 'Sacred Fire'),
             'thawed': ([100, 102], 'Recover'),
         }
-        if smart['cases'] != 2820 or smart['battles'].keys() != (expected.keys() | tactics_cases.BATTLE_OUTCOMES.keys()):
+        if smart['cases'] != 3648 or smart['battles'].keys() != (expected.keys() | tactics_cases.BATTLE_OUTCOMES.keys() | matchup_cases.BATTLES):
             raise ValueError('missing Smart trainer scoring cases or battles')
         tactics_cases.check_battles(smart['battles'])
+        matchup_cases.check_battles(smart['battles'])
         for name, (scores, move) in expected.items():
             battle = smart['battles'][name]
             if battle['scores'] != scores or (move is not None and battle['move'] != move):

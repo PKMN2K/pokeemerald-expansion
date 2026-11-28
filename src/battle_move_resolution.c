@@ -16,6 +16,7 @@
 #include "battle_controllers.h"
 #include "move.h"
 #include "polished_metronome.h"
+#include "polished_trainers.h"
 #include "constants/polished_metronome_struggle.h"
 #include "constants/polished_freeze.h"
 #include "constants/polished_battle_foundations.h"
@@ -801,6 +802,10 @@ static enum CancelerResult CancelerAttackstring(struct BattleCalcValues *cv)
         gBattleStruct->battlerState[gBattlerAttacker].lastMoveTarget = gBattlerTarget;
         gLastPrintedMoves[gBattlerAttacker] = gChosenMove;
         RecordKnownMove(gBattlerAttacker, gChosenMove);
+#if POLISHED_JOHTO_DEMO
+        if (!IsDoubleBattle() && IsOnPlayerSide(cv->battlerAtk))
+            PolishedRecordPlayerMove(cv->move);
+#endif
     }
     return CANCELER_RESULT_RUN_SCRIPT_AND_INCREMENT;
 }

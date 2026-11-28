@@ -23,7 +23,13 @@ struct PolishedSmartAiContext
     bool8 lastMonAgainstReserve;
     bool8 earlyBird, targetGhost, partyHasStatus;
     u8 spikes;
+    enum Move targetSelectedMove;
+    enum Type targetTypes[3];
+    enum Ability userAbility, targetAbility;
+    bool8 powerHerb, targetRing, seenProtection;
 };
+extern enum Move gPolishedPlayerUsedMoves[MAX_MON_MOVES];
+void PolishedRecordPlayerMove(enum Move move);
 void PolishedScoreBasicSleepMoves(const struct BattlePokemon *user, const struct BattlePokemon *target,
                                  u32 limitations, bool32 safeguard, s32 *scores);
 void PolishedScoreSmartMoves(const struct BattlePokemon *user, const struct BattlePokemon *target,

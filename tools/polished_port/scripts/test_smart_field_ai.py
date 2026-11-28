@@ -4,6 +4,7 @@ from typing import NamedTuple
 import re
 import struct
 
+import smart_ai_matchup_cases as matchup_cases
 import smart_ai_tactics_cases as tactics_cases
 
 from audit_moves_machines import ROOT, compile_probe
@@ -155,7 +156,7 @@ def cases(draws):
     asm = authenticated_sources()['engine/battle/ai/scoring.asm']['text']
     effects = set(re.findall(r'^\s*dbw EFFECT_(\w+),\s+AI_Smart_(?:Heal|Roost|HealingLight|LightScreen|Reflect|Safeguard|Thunder|RainDance|SunnyDay|Sandstorm|Hail|Toxic|LeechSeed|SpeedControl|SpeedDownHit|TrickRoom|Paralyze|Substitute|DestinyBond|BellyDrum|PainSplit|Explosion|HyperBeam|Pursuit)$', asm, re.M))
     smart_table = dict(re.findall(r'^\s*dbw EFFECT_(\w+),\s+AI_Smart_(\w+)$', asm, re.M))
-    handlers = STATUS_HANDLERS | tactics_cases.HANDLERS
+    handlers = STATUS_HANDLERS | tactics_cases.HANDLERS | matchup_cases.HANDLERS
     status_moves = {handler: set() for handler in handlers}
     files = source.sources()
     mapped = source.move_targets(files)
@@ -224,6 +225,8 @@ def cases(draws):
                 delta = status_score(move, hp, maximum, target, target_max, first, state, stream)
             elif move in tactics_cases.MOVES:
                 delta = tactics_cases.score(move, tactics, usable, hp, maximum, first, speeds, room, state, stream)
+            elif move in matchup_cases.MOVES:
+                delta = matchup_cases.score(move, tactics, usable, hp, maximum, target, target_max, weather, speeds, room, stream)
             deltas.append(str(delta))
         inputs = ', '.join(f'.{key} = {value}' for key, value in tactics.items()) or '0'
         return ('{{' + ', '.join(mapped[m] for m in slots) + '}, '
@@ -273,6 +276,7 @@ def cases(draws):
     yield from hp_cases(row, draws)
     yield from status_cases(row, draws)
     yield from tactics_cases.cases(row, draws, StatusState)
+    yield from matchup_cases.cases(row, draws)
 
 
 def replay(driver, directory, output, draws):
@@ -288,23 +292,32 @@ def replay(driver, directory, output, draws):
                       ('frozen', R_BUTTON | LEFT), ('thawed', R_BUTTON | START | LEFT),
                       ('awake_target', L_BUTTON | A), ('sleeping_target', L_BUTTON | B), ('no_dream_pp', L_BUTTON | START | A),
                       ('awake_basic', L_BUTTON | UP), ('sleeping_basic', L_BUTTON | DOWN),
-                      ('poisoned_reserve', L_BUTTON | RIGHT), ('fainted_poisoned_reserve', L_BUTTON | LEFT)):
+                      ('poisoned_reserve', L_BUTTON | RIGHT), ('fainted_poisoned_reserve', L_BUTTON | LEFT),
+                      ('unseen_protect', L_BUTTON | R_BUTTON | A), ('shown_protect', L_BUTTON | R_BUTTON | B),
+                      ('shown_endure', L_BUTTON | R_BUTTON | LEFT), ('herb_protect', L_BUTTON | R_BUTTON | RIGHT),
+                      ('drain_water', L_BUTTON | R_BUTTON | SELECT | A), ('drain_sipper', L_BUTTON | R_BUTTON | SELECT | B),
+                      ('player_fly', L_BUTTON | R_BUTTON | SELECT | LEFT), ('player_dig', L_BUTTON | R_BUTTON | SELECT | RIGHT)):
         game = Game(driver, elf, elf, output, directory)
         try:
             game.frames(160)
             audit = struct.unpack('<3I', game.read(game.sym['gSmartAudit'], 12))
             assert audit == (len(rows), 0, 0), audit
             (offset, counter, recover, rain, light, room, splash, explosion, split, sleep_talk, sacred_fire,
-             spore, dream, bell, bond) = struct.unpack('<15I', game.read(game.sym['gSmartLayout'], 60))
+             spore, dream, bell, bond, solar, giga, gust, quake, choice_offset) = struct.unpack('<20I', game.read(game.sym['gSmartLayout'], 80))
             names = {recover: 'Recover', rain: 'Rain Dance', light: 'HealingLight', room: 'Trick Room', splash: 'Splash',
                      explosion: 'Explosion', split: 'Pain Split', sleep_talk: 'Sleep Talk', sacred_fire: 'Sacred Fire',
-                     spore: 'Spore', dream: 'Dream Eater', bell: 'Heal Bell', bond: 'Destiny Bond'}
+                     spore: 'Spore', dream: 'Dream Eater', bell: 'Heal Bell', bond: 'Destiny Bond', solar: 'Solar Beam', giga: 'Giga Drain', gust: 'Gust', quake: 'Earthquake'}
             # Capture the announced move before self-KO or Sleep Talk's called move.
             history = game.sym['gLastPrintedMoves' if key & (SELECT | R_BUTTON | L_BUTTON) else 'gLastMoves']
             game.press(key)
             turns = (name, 'room_active') if name == 'player_scarf' else (name,)
+            matchup_replay = name in matchup_cases.PROTECTION_BATTLES
+            locked_replay = name in matchup_cases.LOCKED_BATTLES
+            if matchup_replay or locked_replay:
+                turns = (name, name + '_next')
             for index, turn in enumerate(turns):
-                for symbol in ('HandleInputChooseAction', 'HandleInputChooseMove'):
+                menus = () if locked_replay and index else ('HandleInputChooseAction', 'HandleInputChooseMove')
+                for symbol in menus:
                     for _ in range(500):
                         if controller(game, symbol):
                             break
@@ -312,16 +325,23 @@ def replay(driver, directory, output, draws):
                     else:
                         raise AssertionError((turn, symbol))
                     assert game.read(game.sym['gBattleResults'] + counter, 1)[0] == index, turn
-                    choose_cell(game, 'gActionSelectionCursor' if symbol.endswith('Action') else 'gMoveSelectionCursor', 0)
+                    is_action = symbol.endswith('Action')
+                    slot = int(not is_action and matchup_replay and (index == 1 or name == 'unseen_protect'))
+                    choose_cell(game, 'gActionSelectionCursor' if is_action else 'gMoveSelectionCursor', slot)
                 for _ in range(500):
                     move = int.from_bytes(game.read(history + 2, 2), 'little')
                     finished = game.read(game.sym['gBattleResults'] + counter, 1)[0] > index
-                    if move in names and (index == 0 or names[move] != result[name]['move'] or finished):
+                    if (matchup_replay or locked_replay) and index and finished:
+                        # Solar Beam can spend this turn charging before its attack text.
+                        move = int.from_bytes(game.read(game.u32(game.sym['gBattleStruct']) + choice_offset, 2), 'little')
+                        break
+                    if move in names and (index == 0 or (not (matchup_replay or locked_replay) and (names[move] != result[name]['move'] or finished))):
                         break
                     game.press(A, 6)
                 else:
                     raise AssertionError((turn, 'trainer failed to execute a move', move))
                 scores = struct.unpack('<2i', game.read(game.u32(game.sym['gAiBattleData']) + offset, 8))
+                assert move in names, (turn, move, scores)
                 result[turn] = dict(move=names[move], scores=scores)
         finally:
             game.close()
@@ -343,4 +363,5 @@ def replay(driver, directory, output, draws):
     assert result['frozen'] == dict(move='Sacred Fire', scores=(105, 102)), result
     assert result['thawed'] == dict(move='Recover', scores=(100, 102)), result
     tactics_cases.check_battles(result)
+    matchup_cases.check_battles(result)
     return dict(cases=len(rows), battles=result)

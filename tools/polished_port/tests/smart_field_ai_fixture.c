@@ -14,6 +14,11 @@
 
 struct TacticsInput {
     u32 targetStatus;
+    enum Move selected;
+    enum Type type1, type2;
+    enum Ability userAbility, targetAbility;
+    bool8 powerHerb, ring, inverse, seenProtection, targetSeeded;
+    s8 userEvasion, targetAccuracy;
     u8 spikes, hidden, stat;
     s8 userOffset, targetOffset;
     bool8 ghost, partyStatus, safeguard;
@@ -45,7 +50,8 @@ const volatile u32 gSmartLayout[] = {
     offsetof(struct AiBattleData, finalScore[B_BATTLER_1][B_BATTLER_0]),
     offsetof(struct BattleResults, battleTurnCounter),
     MOVE_RECOVER, MOVE_RAIN_DANCE, MOVE_POLISHED_HEALING_LIGHT, MOVE_TRICK_ROOM, MOVE_SPLASH, MOVE_EXPLOSION, MOVE_PAIN_SPLIT,
-    MOVE_SLEEP_TALK, MOVE_SACRED_FIRE, MOVE_SPORE, MOVE_DREAM_EATER, MOVE_HEAL_BELL, MOVE_DESTINY_BOND,
+    MOVE_SLEEP_TALK, MOVE_SACRED_FIRE, MOVE_SPORE, MOVE_DREAM_EATER, MOVE_HEAL_BELL, MOVE_DESTINY_BOND, MOVE_SOLAR_BEAM, MOVE_GIGA_DRAIN, MOVE_GUST, MOVE_EARTHQUAKE,
+    offsetof(struct BattleStruct, polishedChoiceMove[B_BATTLER_1]),
 };
 
 static void CheckScores(void)
@@ -77,6 +83,9 @@ static void CheckScores(void)
         user.volatiles.consecutiveMoveUses = t->userProtected;
         user.volatiles.infatuation = t->userInLove;
         user.volatiles.confusionTimer = t->userConfused;
+        user.statStages[STAT_EVASION] += t->userEvasion;
+        target.statStages[STAT_ACC] += t->targetAccuracy;
+        target.volatiles.leechSeed = t->targetSeeded;
         target.status1 = t->targetStatus;
         target.volatiles.wrapTurns = t->targetWrapped;
         target.volatiles.infatuation = t->targetInLove;
@@ -87,6 +96,9 @@ static void CheckScores(void)
         memcpy(user.moves, sCases[i].moves, sizeof(user.moves));
         SeedRng(sCases[i].seed);
         struct PolishedSmartAiContext context = {
+            .targetTypes = {t->type1 ? t->type1 : TYPE_NORMAL, t->type2 ? t->type2 : TYPE_NORMAL, TYPE_MYSTERY},
+            .targetSelectedMove = t->selected, .userAbility = t->userAbility, .targetAbility = t->targetAbility,
+            .powerHerb = t->powerHerb, .targetRing = t->ring, .seenProtection = t->seenProtection,
             .earlyBird = sCases[i].earlyBird, .spikes = t->spikes,
             .targetGhost = t->ghost, .partyHasStatus = t->partyStatus,
             .weather = sCases[i].weather, .userWeather = sCases[i].userWeather,
@@ -94,6 +106,9 @@ static void CheckScores(void)
             .trickRoom = sCases[i].trickRoom, .targetFirstTurn = sCases[i].targetFirstTurn,
             .lastMonAgainstReserve = sCases[i].lastMonAgainstReserve,
         };
+        gMain.inBattle = t->inverse;
+        gBattleTypeFlags = t->inverse ? BATTLE_TYPE_TRAINER : 0;
+        TRAINER_BATTLE_PARAM.opponentA = t->inverse ? TRAINER_PC_INVER_1 : 0;
         PolishedScoreBasicSleepMoves(&user, &target, sCases[i].mask, t->safeguard, scores);
         PolishedScoreSmartMoves(&user, &target, sCases[i].mask, &context, scores);
         u16 next = Random();
@@ -106,6 +121,15 @@ static void CheckScores(void)
                 return;
             }
     }
+    // A duplicate keeps its original position; a fifth distinct move evicts the oldest.
+    const enum Move observed[] = {MOVE_PROTECT, MOVE_ENDURE, MOVE_SPLASH, MOVE_GUST, MOVE_PROTECT, MOVE_DIG};
+    const enum Move expected[] = {MOVE_ENDURE, MOVE_SPLASH, MOVE_GUST, MOVE_DIG};
+    for (u32 i = 0; i < ARRAY_COUNT(observed); i++)
+        PolishedRecordPlayerMove(observed[i]);
+    if (memcmp(gPolishedPlayerUsedMoves, expected, sizeof(expected)))
+        gSmartAudit[1] = ARRAY_COUNT(sCases) + 1;
+    gMain.inBattle = FALSE;
+    gBattleTypeFlags = 0;
     REG_IME = ime;
 }
 
@@ -198,6 +222,39 @@ static void SetStatusParties(u16 keys)
     SetMonData(trainer, MON_DATA_STATUS, &status);
 }
 
+static void SetMatchupParties(u16 keys)
+{
+    struct Pokemon *player = &gParties[B_TRAINER_PLAYER][0];
+    struct Pokemon *trainer = &gParties[B_TRAINER_OPPONENT_A][0];
+    if ((keys & SELECT_BUTTON) && (keys & (DPAD_RIGHT | DPAD_LEFT)))
+    {
+        bool32 fly = keys & DPAD_LEFT;
+        SetMon(player, SPECIES_SNORLAX, 150, fly ? MOVE_FLY : MOVE_DIG, MOVE_SPLASH);
+        SetMon(trainer, SPECIES_STARYU, 150, fly ? MOVE_GUST : MOVE_EARTHQUAKE, MOVE_DESTINY_BOND);
+        u32 slow = 40, fast = 160, defense = 350;
+        SetMonData(player, MON_DATA_SPEED, &slow);
+        SetMonData(player, MON_DATA_DEF, &defense);
+        SetMonData(trainer, MON_DATA_SPEED, &fast);
+    }
+    else if (keys & SELECT_BUTTON)
+    {
+        u32 abilitySlot = (keys & B_BUTTON) ? 2 : 0; // Marill: Sap Sipper or Thick Fat.
+        SetMon(player, SPECIES_MARILL, 150, MOVE_SPLASH, MOVE_NONE);
+        SetMonData(player, MON_DATA_ABILITY_NUM, &abilitySlot);
+        SetMon(trainer, SPECIES_STARYU, 100, MOVE_GIGA_DRAIN, MOVE_DESTINY_BOND);
+    }
+    else
+    {
+        SetMon(player, SPECIES_MAGIKARP, 150, (keys & DPAD_LEFT) ? MOVE_ENDURE : MOVE_PROTECT, MOVE_SPLASH);
+        SetMon(trainer, SPECIES_STARYU, 40, MOVE_SOLAR_BEAM, MOVE_RECOVER);
+        if (keys & DPAD_RIGHT)
+        {
+            enum Item herb = ITEM_POWER_HERB;
+            SetMonData(trainer, MON_DATA_HELD_ITEM, &herb);
+        }
+    }
+}
+
 static void SetTacticsParties(u16 keys)
 {
     struct Pokemon *player = &gParties[B_TRAINER_PLAYER][0];
@@ -250,7 +307,9 @@ void CB2_MoveMachineAudit(void)
     gSaveBlock2Ptr->optionsTextSpeed = OPTIONS_TEXT_SPEED_FAST;
     gSaveBlock2Ptr->optionsBattleSceneOff = TRUE;
     gPartiesCount[B_TRAINER_PLAYER] = gPartiesCount[B_TRAINER_OPPONENT_A] = 1;
-    if (keys & L_BUTTON)
+    if ((keys & (L_BUTTON | R_BUTTON)) == (L_BUTTON | R_BUTTON))
+        SetMatchupParties(keys);
+    else if (keys & L_BUTTON)
         SetTacticsParties(keys);
     else if (keys & R_BUTTON)
         SetStatusParties(keys);

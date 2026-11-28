@@ -1064,6 +1064,13 @@ static struct ChosenAction ChooseMoveOrAction_Singles(enum BattlerId battler)
             enum HoldEffect holdEffect = GetBattlerHoldEffect(battler);
             enum Ability ability = GetBattlerAbility(battler);
             struct PolishedSmartAiContext context = {
+                .targetSelectedMove = gBattleStruct->polishedChoiceMove[opposingBattler],
+                .userAbility = GetBattlerAbilityIgnoreMoldBreaker(battler),
+                .targetAbility = GetBattlerAbilityIgnoreMoldBreaker(opposingBattler),
+                .targetRing = GetBattlerHoldEffect(opposingBattler) == HOLD_EFFECT_RING_TARGET,
+                .powerHerb = holdEffect == HOLD_EFFECT_POWER_HERB,
+                .seenProtection = GetMoveSlot(gPolishedPlayerUsedMoves, MOVE_PROTECT) < MAX_MON_MOVES
+                               || GetMoveSlot(gPolishedPlayerUsedMoves, MOVE_ENDURE) < MAX_MON_MOVES,
                 .weather = gBattleWeather,
                 .userWeather = GetAttackerWeather(holdEffect, ability, GetWeather()),
                 .earlyBird = ability == ABILITY_EARLY_BIRD,
@@ -1079,6 +1086,7 @@ static struct ChosenAction ChooseMoveOrAction_Singles(enum BattlerId battler)
                 .lastMonAgainstReserve = GetMoveSlot(gBattleMons[battler].moves, MOVE_EXPLOSION) < MAX_MON_MOVES
                                       && CountUsablePartyMons(battler) == 0 && CountUsablePartyMons(opposingBattler) > 0,
             };
+            GetBattlerTypes(opposingBattler, FALSE, context.targetTypes);
             PolishedScoreSmartMoves(&gBattleMons[battler], &gBattleMons[opposingBattler],
                                     gAiLogicData->moveLimitations[battler], &context, gAiThinkingStruct->score);
         }

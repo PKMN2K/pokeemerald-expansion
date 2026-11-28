@@ -1,6 +1,7 @@
 #include "global.h"
 #include "pokemon.h"
 #include "move.h"
+#include "battle_util.h"
 #include "data.h"
 #include "random.h"
 #include "trainer_util.h"
@@ -115,6 +116,88 @@ static bool32 SmartHasUsableMove(const struct BattlePokemon *user, u32 limitatio
     return FALSE;
 }
 
+// UpdateUsedMoves keeps the four most recently introduced distinct moves.
+EWRAM_DATA enum Move gPolishedPlayerUsedMoves[MAX_MON_MOVES] = {0};
+
+void PolishedRecordPlayerMove(enum Move move)
+{
+    for (u32 i = 0; i < MAX_MON_MOVES; i++)
+    {
+        if (gPolishedPlayerUsedMoves[i] == move)
+            return;
+        if (gPolishedPlayerUsedMoves[i] == MOVE_NONE)
+        {
+            gPolishedPlayerUsedMoves[i] = move;
+            return;
+        }
+    }
+    for (u32 i = 1; i < MAX_MON_MOVES; i++)
+        gPolishedPlayerUsedMoves[i - 1] = gPolishedPlayerUsedMoves[i];
+    gPolishedPlayerUsedMoves[MAX_MON_MOVES - 1] = move;
+}
+
+static s32 SmartDrainScore(enum Move move, bool32 full, const struct PolishedSmartAiContext *context,
+                          const struct BattlePokemon *target)
+{
+    enum Type type = GetMoveType(move);
+    s32 matchup = 0; // Signed number of type-chart doublings.
+    for (u32 i = 0; i < ARRAY_COUNT(context->targetTypes); i++)
+    {
+        enum Type def = context->targetTypes[i];
+        if (def == TYPE_MYSTERY || def == TYPE_NONE || (i && def == context->targetTypes[0])
+         || (i == 2 && def == context->targetTypes[1]))
+            continue;
+        uq4_12_t mod = GetTypeModifier(type, def);
+        if (mod == 0)
+        {
+            if (context->targetRing || (type == TYPE_FIGHTING && def == TYPE_GHOST
+             && (target->volatiles.foresight || context->userAbility == ABILITY_SCRAPPY || context->userAbility == ABILITY_MINDS_EYE)))
+                continue;
+            matchup = -1;
+            break;
+        }
+        matchup += (mod > UQ_4_12(1.0)) - (mod < UQ_4_12(1.0));
+    }
+    if (type == TYPE_GRASS && context->targetAbility == ABILITY_SAP_SIPPER && context->userAbility != ABILITY_MOLD_BREAKER)
+        matchup = -1;
+    if (matchup < 0)
+        return (Random() & 255) >= 100 ? -1 : 0;
+    return matchup > 0 && !full && (Random() & 255) >= 50;
+}
+
+static s32 SmartAccuracyEvasionScore(const struct BattlePokemon *user, const struct BattlePokemon *target, bool32 evasion)
+{
+    const struct BattlePokemon *mon = evasion ? user : target;
+    bool32 toxic = target->status1 & STATUS1_TOXIC_POISON;
+    s32 score = 0;
+    if (evasion && user->statStages[STAT_EVASION] == MAX_STAT_STAGE)
+        return -10;
+    if (mon->hp == mon->maxHP && (evasion || 2u * user->hp > user->maxHP))
+    {
+        if (toxic || (Random() & 255) < 178)
+            return 2;
+    }
+    else if (4u * mon->hp <= mon->maxHP)
+        score = -2;
+    else if ((Random() & 255) < 10)
+        return 2;
+    else if (2u * mon->hp > mon->maxHP)
+    {
+        if ((Random() & 255) < 50)
+            return 2;
+    }
+    else if ((Random() & 255) >= 128)
+        score = -2;
+
+    if (toxic)
+        return score + ((Random() & 255) >= 80 ? 2 : 0);
+    if (target->volatiles.leechSeed)
+        return score + ((Random() & 255) >= 128);
+    if (target->statStages[STAT_ACC] >= user->statStages[STAT_EVASION] && target->volatiles.rolloutTimer)
+        return score + 2;
+    return score - 1;
+}
+
 static s32 SmartHazeScore(const struct BattlePokemon *user, const struct BattlePokemon *target)
 {
     for (u32 stat = STAT_ATK; stat <= STAT_EVASION; stat++)
@@ -133,6 +216,58 @@ void PolishedScoreSmartMoves(const struct BattlePokemon *user, const struct Batt
         enum Move move = user->moves[slot];
         switch (move)
         {
+        case MOVE_ABSORB:
+        case MOVE_MEGA_DRAIN:
+        case MOVE_GIGA_DRAIN:
+        case MOVE_DRAIN_PUNCH:
+        case MOVE_DRAINING_KISS:
+        case MOVE_LEECH_LIFE:
+            scores[slot] += SmartDrainScore(move, user->hp == user->maxHP, context, target);
+            break;
+        case MOVE_DOUBLE_TEAM:
+        case MOVE_SMOKESCREEN:
+        case MOVE_FLASH:
+            scores[slot] += SmartAccuracyEvasionScore(user, target, move == MOVE_DOUBLE_TEAM);
+            break;
+        case MOVE_FLY:
+        case MOVE_DIG:
+            if (target->volatiles.semiInvulnerable == STATE_ON_AIR || target->volatiles.semiInvulnerable == STATE_UNDERGROUND)
+            {
+                if (SmartUserIsFaster(context))
+                    scores[slot] += 3;
+            }
+            else if (!context->powerHerb && context->seenProtection)
+                scores[slot] -= 10;
+            break;
+        case MOVE_SOLAR_BEAM:
+            if (!(context->weather & B_WEATHER_SUN))
+            {
+                if (SmartHasUsableMove(user, limitations, MOVE_SUNNY_DAY))
+                    scores[slot] -= 2;
+                else if (!context->powerHerb && context->seenProtection)
+                    scores[slot] -= 10;
+            }
+            break;
+        case MOVE_HIGH_JUMP_KICK:
+            if (context->userAbility != ABILITY_NO_GUARD && context->targetAbility != ABILITY_NO_GUARD
+             && SmartUserIsFaster(context) && (target->volatiles.semiInvulnerable == STATE_ON_AIR
+                                            || target->volatiles.semiInvulnerable == STATE_UNDERGROUND))
+                scores[slot] -= 10;
+            break;
+        case MOVE_GUST:
+        case MOVE_EARTHQUAKE:
+        case MOVE_MAGNITUDE:
+        {
+            bool32 gust = move == MOVE_GUST;
+            if (context->targetSelectedMove != (gust ? MOVE_FLY : MOVE_DIG))
+                break;
+            bool32 faster = SmartUserIsFaster(context);
+            if (target->volatiles.semiInvulnerable == (gust ? STATE_ON_AIR : STATE_UNDERGROUND))
+                scores[slot] += faster ? 2 : 0;
+            else if (!faster && (Random() & 255) >= 128)
+                scores[slot]++;
+            break;
+        }
         case MOVE_RECOVER:
         case MOVE_REST:
         case MOVE_ROOST:

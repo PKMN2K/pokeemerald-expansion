@@ -6506,6 +6506,10 @@ static void Cmd_transformdataexecution(void)
             // surviving move identity (a zero countdown does not expire it).
             gBattleMons[gBattlerAttacker].volatiles.disableTimer = 0;
             PolishedRemapMoveLocks(gBattlerAttacker);
+#if POLISHED_JOHTO_DEMO
+            if (IsOnPlayerSide(gBattlerAttacker))
+                memcpy(gPolishedPlayerUsedMoves, gBattleMons[gBattlerAttacker].moves, sizeof(gPolishedPlayerUsedMoves));
+#endif
             gBattleMons[gBattlerAttacker].volatiles.traceActivated = FALSE;
             gBattleMons[gBattlerAttacker].volatiles.weatherAbilityDone = FALSE;
             sPolishedTransformEntryPending = TRUE;

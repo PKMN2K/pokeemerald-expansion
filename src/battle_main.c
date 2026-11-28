@@ -19,6 +19,7 @@
 #include "battle_interface.h"
 #include "battle_main.h"
 #include "polished_moves.h"
+#include "polished_trainers.h"
 #include "data/polished_priorities.h"
 #include "battle_message.h"
 #include "battle_pyramid.h"
@@ -2798,6 +2799,9 @@ static void BattleStartClearSetData(void)
 {
     ResetPolishedEndTurn();
     ResetPolishedMirrorHerbBoosts();
+#if POLISHED_JOHTO_DEMO
+    memset(gPolishedPlayerUsedMoves, 0, sizeof(gPolishedPlayerUsedMoves));
+#endif
     gBattleStruct->polishedCalledMoveBattlers = 0;
     s32 i;
 
@@ -2958,6 +2962,10 @@ static void ClearSetDataOnLeave(enum BattlerId battler)
     gBattleStruct->battlerState[battler].canPickupItem = FALSE;
     gBattleStruct->battlerState[battler].wasAboveHalfHp = gBattleMons[battler].hp > gBattleMons[battler].maxHP / 2;
     gBattleStruct->choicedMove[battler] = MOVE_NONE;
+#if POLISHED_JOHTO_DEMO
+    if (IsOnPlayerSide(battler))
+        memset(gPolishedPlayerUsedMoves, 0, sizeof(gPolishedPlayerUsedMoves));
+#endif
     gBattleStruct->polishedChoiceMove[battler] = MOVE_NONE;
     gBattleStruct->polishedMetronomeMove[battler] = MOVE_NONE;
     gBattleStruct->polishedMetronomeCount[battler] = 0;
