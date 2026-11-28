@@ -24,7 +24,8 @@ struct TacticsInput {
     s8 userEvasion, targetAccuracy;
     u8 spikes, hidden, stat;
     s8 userOffset, targetOffset;
-    bool8 ghost, partyStatus, safeguard;
+    bool8 ghost, partyStatus, safeguard, reflect, lightScreen, ownSafeguard;
+    u8 targetConfused;
     bool8 targetWrapped, targetInLove, targetIdentified, targetRolling, targetLockOn;
     bool8 userWrapped, userSeeded, userRage, userProtected, userInLove, userConfused;
 };
@@ -33,7 +34,7 @@ static const struct {
     enum Move moves[4];
     u16 hp, maxHP, targetHP, seed, next;
     u16 weather, userWeather;
-    u8 mask;
+    u8 mask, basicDiscouraged;
     s8 delta[4];
     u16 userSpeed, targetSpeed;
     bool8 trickRoom, targetFirstTurn;
@@ -56,6 +57,7 @@ const volatile u32 gSmartLayout[] = {
     MOVE_SLEEP_TALK, MOVE_SACRED_FIRE, MOVE_SPORE, MOVE_DREAM_EATER, MOVE_HEAL_BELL, MOVE_DESTINY_BOND, MOVE_SOLAR_BEAM, MOVE_GIGA_DRAIN, MOVE_GUST, MOVE_EARTHQUAKE,
     offsetof(struct BattleStruct, polishedChoiceMove[B_BATTLER_1]),
     MOVE_QUICK_ATTACK, MOVE_ROAR, MOVE_PERISH_SONG, MOVE_ENCORE, MOVE_COUNTER, MOVE_MIRROR_COAT,
+    MOVE_REFLECT, MOVE_LIGHT_SCREEN, MOVE_CONFUSE_RAY, MOVE_SWAGGER, MOVE_SUNNY_DAY,
 };
 
 static void CheckScores(void)
@@ -90,6 +92,7 @@ static void CheckScores(void)
         user.statStages[STAT_EVASION] += t->userEvasion;
         target.statStages[STAT_ACC] += t->targetAccuracy;
         target.volatiles.leechSeed = t->targetSeeded;
+        target.volatiles.confusionTimer = t->targetConfused;
         target.status1 = t->targetStatus;
         target.volatiles.wrapTurns = t->targetWrapped;
         target.volatiles.infatuation = t->targetInLove;
@@ -121,7 +124,18 @@ static void CheckScores(void)
         gMain.inBattle = t->inverse;
         gBattleTypeFlags = t->inverse ? BATTLE_TYPE_TRAINER : 0;
         TRAINER_BATTLE_PARAM.opponentA = t->inverse ? TRAINER_PC_INVER_1 : 0;
-        PolishedScoreBasicSleepMoves(&user, &target, sCases[i].mask, t->safeguard, scores);
+        u32 userSide = (t->reflect ? SIDE_STATUS_REFLECT : 0) | (t->lightScreen ? SIDE_STATUS_LIGHTSCREEN : 0)
+                    | (t->ownSafeguard ? SIDE_STATUS_SAFEGUARD : 0);
+        PolishedScoreBasicMoves(&user, &target, sCases[i].mask, userSide,
+                               t->safeguard ? SIDE_STATUS_SAFEGUARD : 0, context.weather, scores);
+        for (u32 slot = 0; slot < MAX_MON_MOVES; slot++)
+            if (scores[slot] != ((sCases[i].basicDiscouraged & (1u << slot)) ? 90 : 100))
+            {
+                gSmartAudit[1] = i + 1;
+                gSmartAudit[2] = slot + MAX_MON_MOVES + 1;
+                REG_IME = ime;
+                return;
+            }
         PolishedScoreSmartMoves(&user, &target, sCases[i].mask, &context, scores);
         u16 next = Random();
         for (u32 slot = 0; slot < MAX_MON_MOVES; slot++)
@@ -190,6 +204,31 @@ static void SetFieldParties(u16 keys, bool32 sun)
     {
         enum Item umbrella = ITEM_UTILITY_UMBRELLA;
         SetMonData(&gParties[B_TRAINER_OPPONENT_A][0], MON_DATA_HELD_ITEM, &umbrella);
+    }
+}
+
+static void SetBasicParties(u16 keys)
+{
+    struct Pokemon *player = &gParties[B_TRAINER_PLAYER][0];
+    struct Pokemon *trainer = &gParties[B_TRAINER_OPPONENT_A][0];
+    if (keys & DPAD_LEFT)
+    {
+        u32 drought = 2;
+        SetMon(player, SPECIES_NINETALES, 150, MOVE_SPLASH, MOVE_NONE);
+        SetMonData(player, MON_DATA_ABILITY_NUM, &drought);
+        SetMon(trainer, SPECIES_STARYU, 150, MOVE_SUNNY_DAY, MOVE_RAIN_DANCE);
+    }
+    else if (keys & DPAD_DOWN)
+    {
+        u32 speed = 250;
+        SetMon(player, SPECIES_MAGIKARP, 150, MOVE_SAFEGUARD, MOVE_NONE);
+        SetMonData(player, MON_DATA_SPEED, &speed);
+        SetMon(trainer, SPECIES_STARYU, 150, MOVE_CONFUSE_RAY, MOVE_SWAGGER);
+    }
+    else
+    {
+        SetMon(player, SPECIES_MAGIKARP, 150, MOVE_REFLECT, MOVE_NONE);
+        SetMon(trainer, SPECIES_STARYU, 150, MOVE_REFLECT, MOVE_LIGHT_SCREEN);
     }
 }
 
@@ -377,11 +416,14 @@ void CB2_MoveMachineAudit(void)
     if (!(keys & (A_BUTTON | B_BUTTON | DPAD_UP | DPAD_DOWN)) && !sun)
         return;
     bool32 reactive = (keys & (L_BUTTON | R_BUTTON | START_BUTTON)) == (L_BUTTON | R_BUTTON | START_BUTTON);
-    VarSet(VAR_POLISHED_EARNED_BADGES, (!reactive && (keys & (DPAD_UP | DPAD_DOWN))) ? 0 : 0xffff);
+    bool32 basic = (keys & (L_BUTTON | R_BUTTON | SELECT_BUTTON)) == (R_BUTTON | SELECT_BUTTON);
+    VarSet(VAR_POLISHED_EARNED_BADGES, (basic || (!reactive && (keys & (DPAD_UP | DPAD_DOWN)))) ? 0 : 0xffff);
     gSaveBlock2Ptr->optionsTextSpeed = OPTIONS_TEXT_SPEED_FAST;
     gSaveBlock2Ptr->optionsBattleSceneOff = TRUE;
     gPartiesCount[B_TRAINER_PLAYER] = gPartiesCount[B_TRAINER_OPPONENT_A] = 1;
-    if (reactive)
+    if (basic)
+        SetBasicParties(keys);
+    else if (reactive)
         SetReactiveParties(keys);
     else if ((keys & (L_BUTTON | R_BUTTON)) == (L_BUTTON | R_BUTTON))
         SetMatchupParties(keys);

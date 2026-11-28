@@ -88,23 +88,54 @@ bool32 PolishedSmartUserIsFaster(const struct PolishedSmartAiContext *context)
     return context->userSpeed > context->targetSpeed;
 }
 
-static bool32 IsPolishedSleepMove(enum Move move)
+// AI_Basic applies AIDiscourageMove once when the move is redundant.
+static bool32 IsRedundantBasicMove(enum Move move, const struct BattlePokemon *user,
+                                   const struct BattlePokemon *target, u32 userSide, u32 targetSide, u32 weather)
 {
-    return move == MOVE_SING || move == MOVE_SLEEP_POWDER || move == MOVE_HYPNOSIS || move == MOVE_SPORE;
+    switch (move)
+    {
+    case MOVE_DREAM_EATER:
+        return !(target->status1 & STATUS1_SLEEP);
+    case MOVE_SING:
+    case MOVE_SLEEP_POWDER:
+    case MOVE_HYPNOSIS:
+    case MOVE_SPORE:
+        return (targetSide & SIDE_STATUS_SAFEGUARD) || (target->status1 & STATUS1_ANY);
+    case MOVE_RECOVER:
+    case MOVE_REST:
+    case MOVE_ROOST:
+    case MOVE_POLISHED_FRESH_SNACK:
+    case MOVE_POLISHED_HEALING_LIGHT:
+        return user->hp == user->maxHP;
+    case MOVE_RAIN_DANCE:
+    case MOVE_SUNNY_DAY:
+    case MOVE_SANDSTORM:
+    case MOVE_HAIL:
+        return (weather & (1u << GetMoveWeatherType(move))) != 0;
+    case MOVE_REFLECT:
+        return (userSide & SIDE_STATUS_REFLECT) != 0;
+    case MOVE_LIGHT_SCREEN:
+        return (userSide & SIDE_STATUS_LIGHTSCREEN) != 0;
+    case MOVE_SAFEGUARD:
+        return (userSide & SIDE_STATUS_SAFEGUARD) != 0;
+    case MOVE_CONFUSE_RAY:
+    case MOVE_SUPERSONIC:
+    case MOVE_SWEET_KISS:
+        return target->volatiles.confusionTimer || (targetSide & SIDE_STATUS_SAFEGUARD);
+    case MOVE_SWAGGER:
+        return target->volatiles.confusionTimer != 0;
+    default:
+        return FALSE;
+    }
 }
 
-void PolishedScoreBasicSleepMoves(const struct BattlePokemon *user, const struct BattlePokemon *target,
-                                 u32 limitations, bool32 safeguard, s32 *scores)
+void PolishedScoreBasicMoves(const struct BattlePokemon *user, const struct BattlePokemon *target,
+                            u32 limitations, u32 userSide, u32 targetSide, u32 weather, s32 *scores)
 {
     for (u32 slot = 0; slot < MAX_MON_MOVES; slot++)
-    {
-        if (limitations & (1u << slot))
-            continue;
-        enum Move move = user->moves[slot];
-        if ((move == MOVE_DREAM_EATER && !(target->status1 & STATUS1_SLEEP))
-         || (IsPolishedSleepMove(move) && (safeguard || (target->status1 & STATUS1_ANY))))
+        if (!(limitations & (1u << slot))
+         && IsRedundantBasicMove(user->moves[slot], user, target, userSide, targetSide, weather))
             scores[slot] -= 10;
-    }
 }
 
 // wAIMoves is packed after CheckUsableMove excludes disabled and empty slots.

@@ -30,17 +30,15 @@ def check_battles(battles):
 
 
 def score(move, flags, usable, hp, maximum, first, speeds, room, state, stream):
-    """Higher scores win in the GBA engine. Sleep moves include the earlier Basic layer."""
+    """Higher scores win in the GBA engine."""
     def roll():
         return next(stream) & 255
 
     target_status = flags.get('targetStatus', 0)
     if move in HANDLERS['Sleep']:
-        basic = -10 if target_status or flags.get('safeguard') else 0
-        return basic + (2 if 'DREAM_EATER' in usable and roll() >= 128 else 0)
+        return 2 if 'DREAM_EATER' in usable and roll() >= 128 else 0
     if move == 'DREAM_EATER':
-        asleep = isinstance(target_status, int) and target_status & 7
-        return (0 if asleep else -10) + 3 * int(roll() >= 25)
+        return 3 * int(roll() >= 25)
     if move in HANDLERS['Bind']:
         favorable = (first or target_status == 'STATUS1_TOXIC_POISON' or flags.get('targetInLove')
                      or flags.get('targetIdentified') or flags.get('targetRolling'))

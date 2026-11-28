@@ -4,6 +4,7 @@ from typing import NamedTuple
 import re
 import struct
 
+import basic_ai_field_cases as basic_cases
 import smart_ai_reactive_cases as reactive_cases
 import smart_ai_matchup_cases as matchup_cases
 import smart_ai_tactics_cases as tactics_cases
@@ -15,8 +16,8 @@ from test_new_bark_battle_emulator import choose_cell, controller
 
 WEATHER = {'clear': 'B_WEATHER_NONE', 'rain': 'B_WEATHER_RAIN_NORMAL',
            'sun': 'B_WEATHER_SUN_NORMAL', 'sand': 'B_WEATHER_SANDSTORM', 'hail': 'B_WEATHER_HAIL'}
-SETTERS = {'RAIN_DANCE': 'rain', 'SUNNY_DAY': 'sun', 'SANDSTORM': 'sand', 'HAIL': 'hail'}
-RECOVERY = {'RECOVER', 'REST', 'FRESH_SNACK', 'ROOST', 'HEALINGLIGHT'}
+SETTERS = basic_cases.SETTERS
+RECOVERY = basic_cases.RECOVERY
 SPEED_CONTROL = {'AGILITY', 'STRING_SHOT', 'SCARY_FACE'}
 PARALYZE = {'GLARE', 'THUNDER_WAVE', 'STUN_SPORE'}
 HP_MOVES = {'SUBSTITUTE', 'DESTINY_BOND', 'BELLY_DRUM', 'PAIN_SPLIT', 'EXPLOSION', 'HYPER_BEAM', 'GIGA_IMPACT', 'PURSUIT'}
@@ -161,6 +162,8 @@ def cases(draws):
     handlers = STATUS_HANDLERS | tactics_cases.HANDLERS | matchup_cases.HANDLERS | reactive_cases.HANDLERS
     status_moves = {handler: set() for handler in handlers}
     files = source.sources()
+    basic_cases.check_source(battle['engine/battle/ai/redundant.asm']['text'],
+                             source.default_lines(files['data/moves/moves.asm']))
     mapped = source.move_targets(files)
     def source_list(name):
         return {mapped[m] for m in re.findall(r'^\s*db (\w+)\s*$', battle['data/battle/ai/' + name + '_moves.asm']['text'], re.M)}
@@ -192,6 +195,7 @@ def cases(draws):
         stream = draws(seed)
         switch_cache = [tactics.get('cached', 0)]
         deltas = []
+        discouraged = 0
         for slot, move in enumerate(slots):
             delta = 0
             if mask & (1 << slot):
@@ -243,10 +247,15 @@ def cases(draws):
                 delta = matchup_cases.score(move, tactics, usable, hp, maximum, target, target_max, weather, speeds, room, stream)
             elif move in reactive_cases.MOVES:
                 delta = reactive_cases.score(move, tactics, hp, maximum, target, speeds, room, stream, source_moves, switch_cache)
+            if not mask & (1 << slot):
+                basic_delta = basic_cases.penalty(move, hp, maximum, weather, tactics)
+                delta += basic_delta
+                if basic_delta:
+                    discouraged |= 1 << slot
             deltas.append(str(delta))
         inputs = ', '.join(f'.{key} = {value}' for key, value in tactics.items()) or '0'
         return ('{{' + ', '.join(mapped[m] for m in slots) + '}, '
-                + f'{hp}, {maximum}, {target}, {seed}, {next(stream)}, {WEATHER[weather]}, {WEATHER[effective]}, {mask}, '
+                + f'{hp}, {maximum}, {target}, {seed}, {next(stream)}, {WEATHER[weather]}, {WEATHER[effective]}, {mask}, {discouraged}, '
                 + '{' + ', '.join(deltas) + '}, ' + f'{speeds[0]}, {speeds[1]}, {int(room)}, {int(first)}, '
                 + f'{target_max}, DEFAULT_STAT_STAGE + ({attack_stage}), {int(last_against_reserve)}, '
                 + f'{state.accuracy}, {state.evasion}, {state.sp_defense}, {int(state.minimized)}, {int(state.early_bird)}, {state.status}, ' + '{' + inputs + '}},')
@@ -289,6 +298,7 @@ def cases(draws):
                 seed = next(n for n in range(65536) if next(islice(draws(n), skip, None)) & 255 == byte)
                 yield row(slots, 26, 100, target, 'clear', 'clear', 0, seed, speeds, False, True)
 
+    yield from basic_cases.cases(row, StatusState)
     yield from hp_cases(row, draws)
     yield from status_cases(row, draws)
     yield from tactics_cases.cases(row, draws, StatusState)
@@ -321,7 +331,9 @@ def replay(driver, directory, output, draws):
                       ('encore_history', reactive_keys | UP), ('physical_history', reactive_keys | SELECT | A),
                       ('special_history', reactive_keys | SELECT | B),
                       ('fire_reserve', reactive_keys | SELECT | LEFT), ('grass_reserve', reactive_keys | SELECT | RIGHT),
-                      ('bond_damage', reactive_keys | SELECT | UP), ('single_damage', reactive_keys | SELECT | DOWN)):
+                      ('bond_damage', reactive_keys | SELECT | UP), ('single_damage', reactive_keys | SELECT | DOWN),
+                      ('basic_screens', R_BUTTON | SELECT | UP), ('basic_confusion', R_BUTTON | SELECT | DOWN),
+                      ('basic_weather', R_BUTTON | SELECT | LEFT)):
         game = Game(driver, elf, elf, output, directory)
         try:
             game.frames(160)
@@ -329,12 +341,14 @@ def replay(driver, directory, output, draws):
             assert audit == (len(rows), 0, 0), audit
             (offset, counter, recover, rain, light, room, splash, explosion, split, sleep_talk, sacred_fire,
              spore, dream, bell, bond, solar, giga, gust, quake, choice_offset,
-             quick, roar, perish, encore, counter_move, coat) = struct.unpack('<26I', game.read(game.sym['gSmartLayout'], 104))
+             quick, roar, perish, encore, counter_move, coat, reflect, screen, confuse_ray, swagger, sunny_day) = struct.unpack(
+                 '<31I', game.read(game.sym['gSmartLayout'], 124))
             names = {recover: 'Recover', rain: 'Rain Dance', light: 'HealingLight', room: 'Trick Room', splash: 'Splash',
                      explosion: 'Explosion', split: 'Pain Split', sleep_talk: 'Sleep Talk', sacred_fire: 'Sacred Fire',
                      spore: 'Spore', dream: 'Dream Eater', bell: 'Heal Bell', bond: 'Destiny Bond', solar: 'Solar Beam', giga: 'Giga Drain', gust: 'Gust', quake: 'Earthquake',
                      quick: 'Quick Attack', roar: 'Roar', perish: 'Perish Song', encore: 'Encore',
-                     counter_move: 'Counter', coat: 'Mirror Coat'}
+                     counter_move: 'Counter', coat: 'Mirror Coat', reflect: 'Reflect', screen: 'Light Screen',
+                     confuse_ray: 'Confuse Ray', swagger: 'Swagger', sunny_day: 'Sunny Day'}
             # Capture the announced move before self-KO or Sleep Talk's called move.
             history = game.sym['gLastPrintedMoves' if key & (SELECT | R_BUTTON | L_BUTTON) else 'gLastMoves']
             game.press(key)
@@ -342,7 +356,7 @@ def replay(driver, directory, output, draws):
             matchup_replay = name in matchup_cases.PROTECTION_BATTLES
             locked_replay = name in matchup_cases.LOCKED_BATTLES
             history_replay = name in reactive_cases.HISTORY_BATTLES
-            repeat = matchup_replay or locked_replay or history_replay
+            repeat = matchup_replay or locked_replay or history_replay or name in basic_cases.SCENARIOS
             if repeat:
                 turns = (name, name + '_next')
             for index, turn in enumerate(turns):
@@ -392,6 +406,7 @@ def replay(driver, directory, output, draws):
     assert result['early_bird'] == dict(move='Splash', scores=(90, 100)), result
     assert result['frozen'] == dict(move='Sacred Fire', scores=(105, 102)), result
     assert result['thawed'] == dict(move='Recover', scores=(100, 102)), result
+    basic_cases.check_battles(result)
     tactics_cases.check_battles(result)
     matchup_cases.check_battles(result)
     reactive_cases.check_battles(result)

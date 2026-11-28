@@ -1051,9 +1051,9 @@ static struct ChosenAction ChooseMoveOrAction_Singles(enum BattlerId battler)
     {
         u32 badges = __builtin_popcount(VarGet(VAR_POLISHED_EARNED_BADGES));
         u32 layers = PolishedTrainerAiLayers(TRAINER_BATTLE_PARAM.opponentA, badges);
-        PolishedScoreBasicSleepMoves(&gBattleMons[battler], &gBattleMons[opposingBattler],
-                                     gAiLogicData->moveLimitations[battler], gSideStatuses[GetBattlerSide(opposingBattler)] & SIDE_STATUS_SAFEGUARD,
-                                     gAiThinkingStruct->score);
+        PolishedScoreBasicMoves(&gBattleMons[battler], &gBattleMons[opposingBattler], gAiLogicData->moveLimitations[battler],
+                               gSideStatuses[GetBattlerSide(battler)], gSideStatuses[GetBattlerSide(opposingBattler)],
+                               gBattleWeather, gAiThinkingStruct->score);
         // IncrementTurnsTaken runs before AIChooseMove, including the initial turn.
         if (layers & POLISHED_AI_SETUP)
             PolishedScoreSetup(gBattleMons[battler].moves, gAiLogicData->moveLimitations[battler],

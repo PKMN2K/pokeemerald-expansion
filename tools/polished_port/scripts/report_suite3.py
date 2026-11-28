@@ -12,6 +12,7 @@ import build_battle_completion_plan as plan
 import build_battle_suite as coverage
 import build_trainer_attributes as trainers
 import run_attack_suite as battle
+import basic_ai_field_cases as basic_cases
 import smart_ai_reactive_cases as reactive_cases
 import smart_ai_matchup_cases as matchup_cases
 import smart_ai_tactics_cases as tactics_cases
@@ -153,8 +154,8 @@ def check_probe(path, rom_hash, pin):
     if path.parent.name == 'suite3-contexts':
         smart = data['smart_field_ai']
         expected = {
-            'low': ([102, 99], 'Recover'), 'full': ([98, 101], 'Rain Dance'),
-            'low_control': ([100, 100], None), 'full_control': ([100, 100], None),
+            'low': ([102, 99], 'Recover'), 'full': ([88, 101], 'Rain Dance'),
+            'low_control': ([100, 100], None), 'full_control': ([90, 100], 'Rain Dance'),
             'sun': ([103, 100], 'HealingLight'), 'sun_umbrella': ([102, 100], 'HealingLight'),
             'faster': ([90, 100], 'Splash'), 'player_scarf': ([103, 100], 'Trick Room'),
             'room_active': ([90, 100], 'Splash'), 'player_reserve': ([97, 99], 'Pain Split'),
@@ -164,9 +165,10 @@ def check_probe(path, rom_hash, pin):
             'gas': ([110, 100], 'Sleep Talk'), 'frozen': ([105, 102], 'Sacred Fire'),
             'thawed': ([100, 102], 'Recover'),
         }
-        if smart['cases'] != 5065 or smart['battles'].keys() != (expected.keys() | tactics_cases.BATTLE_OUTCOMES.keys()
-                                                          | matchup_cases.BATTLES | reactive_cases.BATTLES):
+        if smart['cases'] != 5233 or smart['battles'].keys() != (expected.keys() | tactics_cases.BATTLE_OUTCOMES.keys()
+                                                          | matchup_cases.BATTLES | reactive_cases.BATTLES | basic_cases.BATTLES):
             raise ValueError('missing Smart trainer scoring cases or battles')
+        basic_cases.check_battles(smart['battles'])
         tactics_cases.check_battles(smart['battles'])
         matchup_cases.check_battles(smart['battles'])
         reactive_cases.check_battles(smart['battles'])
