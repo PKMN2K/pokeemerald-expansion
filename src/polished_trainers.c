@@ -157,6 +157,51 @@ void PolishedScoreSmartMoves(const struct BattlePokemon *user, const struct Batt
              && !SmartUserIsFaster(context) && (Random() & 255) >= 30)
                 scores[slot] += 2;
             break;
+        case MOVE_SUBSTITUTE:
+            if (2u * user->hp <= user->maxHP)
+                scores[slot] -= 10;
+            break;
+        case MOVE_DESTINY_BOND:
+            if (4u * user->hp > user->maxHP)
+                scores[slot]--;
+            break;
+        case MOVE_PAIN_SPLIT:
+            if (2u * user->hp > target->hp)
+                scores[slot]--;
+            break;
+        case MOVE_BELLY_DRUM:
+            if (user->statStages[STAT_ATK] >= DEFAULT_STAT_STAGE + 3)
+                scores[slot] -= 5;
+            else if (user->hp != user->maxHP)
+                scores[slot] -= (2u * user->hp <= user->maxHP) ? 6 : 1;
+            break;
+        case MOVE_EXPLOSION:
+            if (context->lastMonAgainstReserve || 2u * user->hp > user->maxHP
+             || (4u * user->hp > user->maxHP && (Random() & 255) >= 20))
+                scores[slot] -= 3;
+            break;
+        case MOVE_HYPER_BEAM:
+        case MOVE_GIGA_IMPACT:
+            if (2u * user->hp > user->maxHP)
+            {
+                if ((Random() & 255) < 40)
+                    break;
+                scores[slot]--;
+                if ((Random() & 255) >= 128)
+                    scores[slot]--;
+            }
+            else if (4u * user->hp <= user->maxHP && (Random() & 255) >= 128)
+                scores[slot]++;
+            break;
+        case MOVE_PURSUIT:
+            if (4u * target->hp <= target->maxHP)
+            {
+                if ((Random() & 255) >= 128)
+                    scores[slot] += 2;
+            }
+            else if ((Random() & 255) >= 50)
+                scores[slot]--;
+            break;
         case MOVE_LEECH_SEED:
         case MOVE_TOXIC:
             if (2u * target->hp <= target->maxHP)

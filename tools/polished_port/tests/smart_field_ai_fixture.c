@@ -20,6 +20,9 @@ static const struct {
     s8 delta[4];
     u16 userSpeed, targetSpeed;
     bool8 trickRoom, targetFirstTurn;
+    u16 targetMaxHP;
+    u8 attackStage;
+    bool8 lastMonAgainstReserve;
 } sCases[] = {
 /* SOURCE CASES */
 };
@@ -28,7 +31,7 @@ EWRAM_DATA volatile u32 gSmartAudit[3] = {0};
 const volatile u32 gSmartLayout[] = {
     offsetof(struct AiBattleData, finalScore[B_BATTLER_1][B_BATTLER_0]),
     offsetof(struct BattleResults, battleTurnCounter),
-    MOVE_RECOVER, MOVE_RAIN_DANCE, MOVE_POLISHED_HEALING_LIGHT, MOVE_TRICK_ROOM, MOVE_SPLASH,
+    MOVE_RECOVER, MOVE_RAIN_DANCE, MOVE_POLISHED_HEALING_LIGHT, MOVE_TRICK_ROOM, MOVE_SPLASH, MOVE_EXPLOSION, MOVE_PAIN_SPLIT,
 };
 
 static void CheckScores(void)
@@ -38,14 +41,16 @@ static void CheckScores(void)
     for (u32 i = 0; i < ARRAY_COUNT(sCases); i++)
     {
         struct BattlePokemon user = {.hp = sCases[i].hp, .maxHP = sCases[i].maxHP};
-        struct BattlePokemon target = {.hp = sCases[i].targetHP, .maxHP = 100};
+        struct BattlePokemon target = {.hp = sCases[i].targetHP, .maxHP = sCases[i].targetMaxHP};
         s32 scores[] = {100, 100, 100, 100};
+        user.statStages[STAT_ATK] = sCases[i].attackStage;
         memcpy(user.moves, sCases[i].moves, sizeof(user.moves));
         SeedRng(sCases[i].seed);
         struct PolishedSmartAiContext context = {
             .weather = sCases[i].weather, .userWeather = sCases[i].userWeather,
             .userSpeed = sCases[i].userSpeed, .targetSpeed = sCases[i].targetSpeed,
             .trickRoom = sCases[i].trickRoom, .targetFirstTurn = sCases[i].targetFirstTurn,
+            .lastMonAgainstReserve = sCases[i].lastMonAgainstReserve,
         };
         PolishedScoreSmartMoves(&user, &target, sCases[i].mask, &context, scores);
         u16 next = Random();
@@ -75,27 +80,8 @@ static void SetMon(struct Pokemon *mon, enum Species species, u32 hp, enum Move 
     SetMonMoveSlot(mon, MOVE_NONE, 3);
 }
 
-void CB2_MoveMachineAudit(void)
+static void SetFieldParties(u16 keys, bool32 sun)
 {
-    (void)gSmartLayout[0];
-    if (!gSmartAudit[0])
-    {
-        SetSaveBlocksPointers(0);
-        ResetMenuAndMonGlobals();
-        Save_ResetSaveCounters();
-        Sav2_ClearSetDefault();
-        MoveSaveBlocks_ResetHeap();
-        NewGameInitData();
-        CheckScores();
-        gSmartAudit[0] = ARRAY_COUNT(sCases);
-    }
-    u16 keys = gMain.newKeys;
-    bool32 sun = keys & (DPAD_LEFT | DPAD_RIGHT);
-    if (!(keys & (A_BUTTON | B_BUTTON | DPAD_UP | DPAD_DOWN)) && !sun)
-        return;
-    VarSet(VAR_POLISHED_EARNED_BADGES, (keys & (DPAD_UP | DPAD_DOWN)) ? 0 : 0xffff);
-    gSaveBlock2Ptr->optionsTextSpeed = OPTIONS_TEXT_SPEED_FAST;
-    gSaveBlock2Ptr->optionsBattleSceneOff = TRUE;
     SetMon(&gParties[B_TRAINER_PLAYER][0], sun ? SPECIES_NINETALES : SPECIES_MAGIKARP, 150, MOVE_SPLASH, MOVE_NONE);
     if (sun)
     {
@@ -125,7 +111,52 @@ void CB2_MoveMachineAudit(void)
         enum Item umbrella = ITEM_UTILITY_UMBRELLA;
         SetMonData(&gParties[B_TRAINER_OPPONENT_A][0], MON_DATA_HELD_ITEM, &umbrella);
     }
+}
+
+static void SetExplosionParties(u16 keys)
+{
+    SetMon(&gParties[B_TRAINER_PLAYER][0], SPECIES_MAGIKARP, 59, MOVE_SPLASH, MOVE_NONE);
+    SetMon(&gParties[B_TRAINER_OPPONENT_A][0], SPECIES_STARYU, 30, MOVE_EXPLOSION, MOVE_PAIN_SPLIT);
+    SetMon(&gParties[B_TRAINER_PLAYER][1], SPECIES_MAGIKARP, (keys & B_BUTTON) ? 0 : 150, MOVE_SPLASH, MOVE_NONE);
+    gPartiesCount[B_TRAINER_PLAYER] = 2;
+    if (keys & DPAD_LEFT)
+    {
+        u32 egg = TRUE;
+        SetMonData(&gParties[B_TRAINER_PLAYER][1], MON_DATA_IS_EGG, &egg);
+    }
+    if (keys & DPAD_RIGHT)
+    {
+        SetMon(&gParties[B_TRAINER_OPPONENT_A][1], SPECIES_STARYU, 150, MOVE_SPLASH, MOVE_NONE);
+        gPartiesCount[B_TRAINER_OPPONENT_A] = 2;
+    }
+}
+
+void CB2_MoveMachineAudit(void)
+{
+    (void)gSmartLayout[0];
+    if (!gSmartAudit[0])
+    {
+        SetSaveBlocksPointers(0);
+        ResetMenuAndMonGlobals();
+        Save_ResetSaveCounters();
+        Sav2_ClearSetDefault();
+        MoveSaveBlocks_ResetHeap();
+        NewGameInitData();
+        CheckScores();
+        gSmartAudit[0] = ARRAY_COUNT(sCases);
+    }
+    u16 keys = gMain.newKeys;
+    bool32 sun = keys & (DPAD_LEFT | DPAD_RIGHT);
+    if (!(keys & (A_BUTTON | B_BUTTON | DPAD_UP | DPAD_DOWN)) && !sun)
+        return;
+    VarSet(VAR_POLISHED_EARNED_BADGES, (keys & (DPAD_UP | DPAD_DOWN)) ? 0 : 0xffff);
+    gSaveBlock2Ptr->optionsTextSpeed = OPTIONS_TEXT_SPEED_FAST;
+    gSaveBlock2Ptr->optionsBattleSceneOff = TRUE;
     gPartiesCount[B_TRAINER_PLAYER] = gPartiesCount[B_TRAINER_OPPONENT_A] = 1;
+    if (keys & SELECT_BUTTON)
+        SetExplosionParties(keys);
+    else
+        SetFieldParties(keys, sun);
     TRAINER_BATTLE_PARAM.opponentA = TRAINER_POLISHED_JOEY;
     gBattleTypeFlags = BATTLE_TYPE_TRAINER;
     SetMainCallback2(CB2_InitBattle);

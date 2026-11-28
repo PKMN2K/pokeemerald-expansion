@@ -20,6 +20,7 @@ struct PolishedSmartAiContext
     u32 weather, userWeather;
     u32 userSpeed, targetSpeed;
     bool8 trickRoom, targetFirstTurn;
+    bool8 lastMonAgainstReserve;
 };
 void PolishedScoreSmartMoves(const struct BattlePokemon *user, const struct BattlePokemon *target,
                             u32 limitations, const struct PolishedSmartAiContext *context, s32 *scores);

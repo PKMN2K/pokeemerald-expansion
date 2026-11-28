@@ -1,4 +1,4 @@
-"""Exercise the pinned Smart AI field, recovery and Speed handlers in the Johto ROM."""
+"""Exercise the pinned Smart AI trainer move scores in the Johto ROM."""
 from itertools import islice, product
 import re
 import struct
@@ -14,11 +14,73 @@ SETTERS = {'RAIN_DANCE': 'rain', 'SUNNY_DAY': 'sun', 'SANDSTORM': 'sand', 'HAIL'
 RECOVERY = {'RECOVER', 'REST', 'FRESH_SNACK', 'ROOST', 'HEALINGLIGHT'}
 SPEED_CONTROL = {'AGILITY', 'STRING_SHOT', 'SCARY_FACE'}
 PARALYZE = {'GLARE', 'THUNDER_WAVE', 'STUN_SPORE'}
+HP_MOVES = {'SUBSTITUTE', 'DESTINY_BOND', 'BELLY_DRUM', 'PAIN_SPLIT', 'EXPLOSION', 'HYPER_BEAM', 'GIGA_IMPACT', 'PURSUIT'}
+SELECT = 4
+
+
+def hp_score(move, hp, maximum, target, target_max, attack_stage, last_against_reserve, stream):
+    half = 2 * hp <= maximum
+    quarter = 4 * hp <= maximum
+    if move == 'SUBSTITUTE':
+        return -10 * half
+    if move == 'DESTINY_BOND':
+        return -int(not quarter)
+    if move == 'PAIN_SPLIT':
+        return -int(target < 2 * hp)
+    if move == 'BELLY_DRUM':
+        if attack_stage >= 3:
+            return -5
+        return -(1 + 5 * half) if hp < maximum else 0
+    if move == 'EXPLOSION':
+        if last_against_reserve or not half:
+            return -3
+        return -3 if not quarter and next(stream) & 255 >= 20 else 0
+    if move == 'PURSUIT':
+        if 4 * target <= target_max:
+            return 2 * int(next(stream) & 255 >= 128)
+        return -int(next(stream) & 255 >= 50)
+    assert move in ('HYPER_BEAM', 'GIGA_IMPACT')
+    if not half and next(stream) & 255 >= 40:
+        return -1 - int(next(stream) & 255 >= 128)
+    return int(quarter and next(stream) & 255 >= 128)
+
+
+def hp_cases(row, draws):
+    fixed = ('SUBSTITUTE', 'DESTINY_BOND', 'BELLY_DRUM', 'PAIN_SPLIT')
+    for maximum in (100, 301, 714):
+        for hp in (1, maximum // 4, maximum // 4 + 1, maximum // 2, maximum // 2 + 1, maximum - 1, maximum):
+            for diff, stage, mask in product((-1, 0, 1), (-6, 2, 3, 6), (0, 6)):
+                yield row(fixed, hp, maximum, 2 * hp + diff, 'clear', 'clear', mask, 1,
+                          target_max=2 * maximum + 1, attack_stage=stage)
+
+    mixed = ('EXPLOSION', 'HYPER_BEAM', 'GIGA_IMPACT', 'PURSUIT')
+    for hp, target, last, mask in product((25, 26, 50, 51), (75, 76), (False, True), (0, 1, 5, 15)):
+        for slots in (mixed, mixed[::-1]):
+            yield row(slots, hp, 100, target, 'clear', 'clear', mask, 7, target_max=301, last_against_reserve=last)
+
+    # Force each random branch on both sides of its threshold, including the
+    # conditional second penalty for recharge moves at high HP.
+    trials = [('EXPLOSION', 50, 100, 20, False),
+              ('PURSUIT', 100, 25, 128, False), ('PURSUIT', 100, 26, 50, False)]
+    for move in ('HYPER_BEAM', 'GIGA_IMPACT'):
+        trials.extend(((move, 25, 100, 128, False), (move, 51, 100, 40, False),
+                       (move, 51, 100, 128, True)))
+    for move, hp, target, cutoff, second_draw in trials:
+        for byte in (cutoff - 1, cutoff):
+            for seed in range(65536):
+                stream = draws(seed)
+                if second_draw and next(stream) & 255 < 40:
+                    continue
+                if next(stream) & 255 == byte:
+                    break
+            else:
+                raise AssertionError((move, byte))
+            yield row((move, 'REFLECT', 'PURSUIT', 'DESTINY_BOND'), hp, 100, target, 'clear', 'clear', 0, seed)
 
 
 def cases(draws):
     asm = authenticated_sources()['engine/battle/ai/scoring.asm']['text']
-    effects = set(re.findall(r'^\s*dbw EFFECT_(\w+),\s+AI_Smart_(?:Heal|Roost|HealingLight|LightScreen|Reflect|Safeguard|Thunder|RainDance|SunnyDay|Sandstorm|Hail|Toxic|LeechSeed|SpeedControl|SpeedDownHit|TrickRoom|Paralyze)$', asm, re.M))
+    effects = set(re.findall(r'^\s*dbw EFFECT_(\w+),\s+AI_Smart_(?:Heal|Roost|HealingLight|LightScreen|Reflect|Safeguard|Thunder|RainDance|SunnyDay|Sandstorm|Hail|Toxic|LeechSeed|SpeedControl|SpeedDownHit|TrickRoom|Paralyze|Substitute|DestinyBond|BellyDrum|PainSplit|Explosion|HyperBeam|Pursuit)$', asm, re.M))
     files = source.sources()
     mapped = source.move_targets(files)
     moves = set()
@@ -26,11 +88,12 @@ def cases(draws):
         record = re.match(r'move (\w+),\s*EFFECT_(\w+),', line)
         if record and record[2] in effects:
             moves.add(record[1])
-    assert moves == (set(SETTERS) | RECOVERY | SPEED_CONTROL | PARALYZE |
+    assert moves == (set(SETTERS) | RECOVERY | SPEED_CONTROL | PARALYZE | HP_MOVES |
                      {'REFLECT', 'LIGHT_SCREEN', 'SAFEGUARD', 'THUNDER', 'TOXIC', 'LEECH_SEED',
                       'TRICK_ROOM', 'ICY_WIND', 'BUBBLE_BEAM', 'BULLDOZE'})
 
-    def row(slots, hp, maximum, target, weather, effective, mask, seed, speeds=(0, 0), room=False, first=False):
+    def row(slots, hp, maximum, target, weather, effective, mask, seed, speeds=(0, 0), room=False, first=False,
+            target_max=100, attack_stage=0, last_against_reserve=False):
         stream = draws(seed)
         deltas = []
         for slot, move in enumerate(slots):
@@ -51,13 +114,13 @@ def cases(draws):
                 delta = -int(next(stream) & 255 >= 25)
             elif move in ('LIGHT_SCREEN', 'REFLECT') and hp < maximum:
                 delta = -int(next(stream) & 255 >= 20)
-            elif move == 'SAFEGUARD' and target <= 50:
+            elif move == 'SAFEGUARD' and 2 * target <= target_max:
                 delta = -int(next(stream) & 255 >= 50)
-            elif move in ('TOXIC', 'LEECH_SEED') and target <= 50:
+            elif move in ('TOXIC', 'LEECH_SEED') and 2 * target <= target_max:
                 delta = -1
             elif move in SPEED_CONTROL | PARALYZE | {'ICY_WIND', 'TRICK_ROOM'}:
                 low_user = 4 * hp <= maximum
-                low_target = target <= 25
+                low_target = 4 * target <= target_max
                 compares = not ((move == 'ICY_WIND' and (low_user or not first)) or
                                 (move in PARALYZE and low_target))
                 if compares and speeds[0] == speeds[1]:
@@ -74,10 +137,13 @@ def cases(draws):
                     delta = -int(next(stream) & 255 >= 128)
                 elif not faster and not low_user:
                     delta = 2 * int(next(stream) & 255 >= 50)
+            elif move in HP_MOVES:
+                delta = hp_score(move, hp, maximum, target, target_max, attack_stage, last_against_reserve, stream)
             deltas.append(str(delta))
         return ('{{' + ', '.join(mapped[m] for m in slots) + '}, '
                 + f'{hp}, {maximum}, {target}, {seed}, {next(stream)}, {WEATHER[weather]}, {WEATHER[effective]}, {mask}, '
-                + '{' + ', '.join(deltas) + '}, ' + f'{speeds[0]}, {speeds[1]}, {int(room)}, {int(first)}' + '},')
+                + '{' + ', '.join(deltas) + '}, ' + f'{speeds[0]}, {speeds[1]}, {int(room)}, {int(first)}, '
+                + f'{target_max}, DEFAULT_STAT_STAGE + ({attack_stage}), {int(last_against_reserve)}' + '},')
 
     for maximum in (1, 95, 100, 251, 714):
         third = max(1, maximum // 3)
@@ -117,6 +183,8 @@ def cases(draws):
                 seed = next(n for n in range(65536) if next(islice(draws(n), skip, None)) & 255 == byte)
                 yield row(slots, 26, 100, target, 'clear', 'clear', 0, seed, speeds, False, True)
 
+    yield from hp_cases(row, draws)
+
 
 def replay(driver, directory, output, draws):
     rows = list(cases(draws))
@@ -124,14 +192,20 @@ def replay(driver, directory, output, draws):
     elf = compile_probe(ROOT, directory, code.replace('/* SOURCE CASES */', '\n'.join(rows)))
     result = {}
     for name, key in (('low', A), ('full', B), ('low_control', UP), ('full_control', DOWN),
-                      ('sun', LEFT), ('sun_umbrella', RIGHT), ('faster', START | A), ('player_scarf', START | B)):
+                      ('sun', LEFT), ('sun_umbrella', RIGHT), ('faster', START | A), ('player_scarf', START | B),
+                      ('player_reserve', SELECT | A), ('fainted_reserve', SELECT | B),
+                      ('egg_reserve', SELECT | LEFT), ('both_reserves', SELECT | RIGHT)):
         game = Game(driver, elf, elf, output, directory)
         try:
             game.frames(160)
             audit = struct.unpack('<3I', game.read(game.sym['gSmartAudit'], 12))
             assert audit == (len(rows), 0, 0), audit
-            offset, counter, recover, rain, light, room, splash = struct.unpack('<7I', game.read(game.sym['gSmartLayout'], 28))
-            names = {recover: 'Recover', rain: 'Rain Dance', light: 'HealingLight', room: 'Trick Room', splash: 'Splash'}
+            offset, counter, recover, rain, light, room, splash, explosion, split = struct.unpack(
+                '<9I', game.read(game.sym['gSmartLayout'], 36))
+            names = {recover: 'Recover', rain: 'Rain Dance', light: 'HealingLight', room: 'Trick Room', splash: 'Splash',
+                     explosion: 'Explosion', split: 'Pain Split'}
+            # Explosion can finish the battle before the regular last-move update.
+            history = game.sym['gLastPrintedMoves' if key & SELECT else 'gLastMoves']
             game.press(key)
             turns = (name, 'room_active') if name == 'player_scarf' else (name,)
             for index, turn in enumerate(turns):
@@ -145,7 +219,7 @@ def replay(driver, directory, output, draws):
                     assert game.read(game.sym['gBattleResults'] + counter, 1)[0] == index, turn
                     choose_cell(game, 'gActionSelectionCursor' if symbol.endswith('Action') else 'gMoveSelectionCursor', 0)
                 for _ in range(500):
-                    move = int.from_bytes(game.read(game.sym['gLastMoves'] + 2, 2), 'little')
+                    move = int.from_bytes(game.read(history + 2, 2), 'little')
                     finished = game.read(game.sym['gBattleResults'] + counter, 1)[0] > index
                     if move in names and (index == 0 or names[move] != result[name]['move'] or finished):
                         break
@@ -165,4 +239,7 @@ def replay(driver, directory, output, draws):
     assert result['faster'] == dict(move='Splash', scores=(90, 100)), result
     assert result['player_scarf'] == dict(move='Trick Room', scores=(103, 100)), result
     assert result['room_active'] == dict(move='Splash', scores=(90, 100)), result
+    assert result['player_reserve'] == dict(move='Pain Split', scores=(97, 99)), result
+    for name in ('fainted_reserve', 'egg_reserve', 'both_reserves'):
+        assert result[name] == dict(move='Explosion', scores=(100, 99)), result
     return dict(cases=len(rows), battles=result)

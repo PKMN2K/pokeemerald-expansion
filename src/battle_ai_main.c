@@ -1055,6 +1055,8 @@ static struct ChosenAction ChooseMoveOrAction_Singles(enum BattlerId battler)
                                                         GetBattlerHoldEffect(opposingBattler)),
                 .trickRoom = (gFieldStatuses & STATUS_FIELD_TRICK_ROOM) != 0,
                 .targetFirstTurn = IsBattlersFirstTurn(opposingBattler),
+                .lastMonAgainstReserve = GetMoveSlot(gBattleMons[battler].moves, MOVE_EXPLOSION) < MAX_MON_MOVES
+                                      && CountUsablePartyMons(battler) == 0 && CountUsablePartyMons(opposingBattler) > 0,
             };
             PolishedScoreSmartMoves(&gBattleMons[battler], &gBattleMons[opposingBattler],
                                     gAiLogicData->moveLimitations[battler], &context, gAiThinkingStruct->score);
