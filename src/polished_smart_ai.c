@@ -131,6 +131,8 @@ void PolishedScoreTypeMoves(enum BattlerId user, enum BattlerId target, u32 limi
 {
     static const bool8 scoredTypes[NUMBER_OF_MON_TYPES] = {
         [TYPE_ICE] = TRUE, [TYPE_DARK] = TRUE, [TYPE_FIGHTING] = TRUE, [TYPE_GHOST] = TRUE, [TYPE_PSYCHIC] = TRUE,
+        [TYPE_FLYING] = TRUE, [TYPE_BUG] = TRUE, [TYPE_STEEL] = TRUE, [TYPE_ROCK] = TRUE, [TYPE_POISON] = TRUE,
+        [TYPE_MYSTERY] = TRUE,
     };
     const enum Move *moves = gBattleMons[user].moves;
     struct MatchupMon attacker = ReadActiveMon(user), defender = ReadActiveMon(target);
@@ -138,15 +140,17 @@ void PolishedScoreTypeMoves(enum BattlerId user, enum BattlerId target, u32 limi
     enum Ability ability = DefendingAbility(&attacker, &defender);
     // AIGetEnemyMove updates the candidate's data. BATTLE_VARS_MOVE still holds the prior selection.
     u32 selectedFlags = sSmartMoves[gBattleStruct->polishedChoiceMove[user]].flags;
-    bool32 immune = (ability == ABILITY_SOUNDPROOF && (selectedFlags & SMART_SOUND))
-                 || (ability == ABILITY_BULLETPROOF && (selectedFlags & SMART_BULLET));
+    bool32 powderImmune = ability == ABILITY_OVERCOAT || defender.item == HOLD_EFFECT_SAFETY_GOGGLES
+                       || IS_BATTLER_OF_TYPE(target, TYPE_GRASS);
+    bool32 previousMoveImmune = (ability == ABILITY_SOUNDPROOF && (selectedFlags & SMART_SOUND))
+                             || (ability == ABILITY_BULLETPROOF && (selectedFlags & SMART_BULLET));
     for (u32 i = 0; i < MAX_MON_MOVES; i++)
     {
         enum Type type = sSmartMoves[moves[i]].type;
         if ((limitations & (1u << i)) || !scoredTypes[type])
             continue;
         uq4_12_t matchup = ChartMatchup(type, userAbility, &defender);
-        if (immune || !matchup)
+        if (!matchup || previousMoveImmune || (powderImmune && IsPowderMove(moves[i])))
             scores[i] -= 10;
         else if (matchup > UQ_4_12(1.0))
             scores[i] += (sSmartMoves[moves[i]].flags & SMART_ATTACK) != 0;

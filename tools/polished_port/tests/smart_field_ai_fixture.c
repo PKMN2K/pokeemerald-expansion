@@ -61,6 +61,7 @@ const volatile u32 gSmartLayout[] = {
     MOVE_REFLECT, MOVE_LIGHT_SCREEN, MOVE_CONFUSE_RAY, MOVE_SWAGGER, MOVE_SUNNY_DAY,
     MOVE_ICE_BEAM, MOVE_CRUNCH, MOVE_FOCUS_ENERGY, MOVE_LEECH_SEED, MOVE_BATON_PASS,
     MOVE_FORESIGHT, MOVE_BRICK_BREAK, MOVE_PSYCHIC, MOVE_SHADOW_BALL,
+    MOVE_POISONPOWDER, MOVE_DARK_PULSE, MOVE_BUG_BUZZ, MOVE_CUT, MOVE_HIDDEN_POWER, MOVE_AERIAL_ACE, MOVE_ROCK_SLIDE,
 };
 
 static void CheckScores(void)
@@ -223,40 +224,77 @@ static void SetFieldParties(u16 keys, bool32 sun)
     }
 }
 
+static void SetTypeParties(struct Pokemon *player, struct Pokemon *trainer, u16 keys)
+{
+    switch (keys & (DPAD_UP | DPAD_DOWN | DPAD_LEFT | DPAD_RIGHT | A_BUTTON | B_BUTTON))
+    {
+    case DPAD_UP:
+        SetMon(player, SPECIES_ANNIHILAPE, 150, MOVE_SPLASH, MOVE_NONE);
+        SetMon(trainer, SPECIES_STARYU, 150, MOVE_FORESIGHT, MOVE_BRICK_BREAK);
+        break;
+    case DPAD_DOWN:
+    case DPAD_DOWN | B_BUTTON:
+    case DPAD_LEFT:
+    case DPAD_LEFT | B_BUTTON:
+        if (keys & DPAD_DOWN)
+        {
+            SetMon(player, SPECIES_UMBREON, 150, MOVE_SPLASH, MOVE_NONE);
+            SetMon(trainer, SPECIES_STARYU, 150, MOVE_PSYCHIC, MOVE_SHADOW_BALL);
+        }
+        else
+        {
+            SetMon(player, SPECIES_WYRDEER, 150, MOVE_SPLASH, MOVE_NONE);
+            SetMon(trainer, SPECIES_STARYU, 150, MOVE_SHADOW_BALL, MOVE_BRICK_BREAK);
+        }
+        if (keys & B_BUTTON)
+        {
+            enum Item ring = ITEM_RING_TARGET;
+            SetMonData(player, MON_DATA_HELD_ITEM, &ring);
+        }
+        break;
+    case DPAD_RIGHT:
+    case DPAD_RIGHT | B_BUTTON:
+        SetMon(player, SPECIES_UMBREON, 150, MOVE_SPLASH, MOVE_NONE);
+        SetMon(trainer, SPECIES_STARYU, 150, MOVE_POISONPOWDER, MOVE_DARK_PULSE);
+        SetMonMoveSlot(trainer, MOVE_PSYCHIC, 2);
+        if (keys & B_BUTTON)
+        {
+            enum Item goggles = ITEM_SAFETY_GOGGLES;
+            SetMonData(player, MON_DATA_HELD_ITEM, &goggles);
+        }
+        break;
+    case DPAD_LEFT | A_BUTTON:
+    case DPAD_UP | A_BUTTON:
+        SetMon(player, (keys & DPAD_UP) ? SPECIES_CLEFABLE : SPECIES_UMBREON, 150, MOVE_SPLASH, MOVE_NONE);
+        SetMon(trainer, SPECIES_STARYU, 150, MOVE_BUG_BUZZ, MOVE_CUT);
+        break;
+    case DPAD_RIGHT | A_BUTTON:
+    {
+        // Six odd source DVs give Hidden Power the Fairy type when used.
+        u32 iv = 31;
+        SetMon(player, SPECIES_HERACROSS, 150, MOVE_SPLASH, MOVE_NONE);
+        SetMon(trainer, SPECIES_STARYU, 150, MOVE_HIDDEN_POWER, MOVE_AERIAL_ACE);
+        for (u32 i = 0; i < NUM_STATS; i++)
+            SetMonData(trainer, MON_DATA_HP_IV + i, &iv);
+        break;
+    }
+    case DPAD_UP | B_BUTTON:
+        SetMon(player, SPECIES_SCYTHER, 150, MOVE_SPLASH, MOVE_NONE);
+        SetMon(trainer, SPECIES_STARYU, 150, MOVE_ROCK_SLIDE, MOVE_CUT);
+        break;
+    default:
+        SetMon(player, (keys & A_BUTTON) ? SPECIES_DRAGONITE : SPECIES_SLOWPOKE, 150, MOVE_SPLASH, MOVE_NONE);
+        SetMon(trainer, SPECIES_STARYU, 150, MOVE_ICE_BEAM, MOVE_CRUNCH);
+        break;
+    }
+}
+
 static void SetBasicParties(u16 keys)
 {
     struct Pokemon *player = &gParties[B_TRAINER_PLAYER][0];
     struct Pokemon *trainer = &gParties[B_TRAINER_OPPONENT_A][0];
     if (keys & START_BUTTON)
-    {
-        if (keys & DPAD_UP)
-        {
-            SetMon(player, SPECIES_ANNIHILAPE, 150, MOVE_SPLASH, MOVE_NONE);
-            SetMon(trainer, SPECIES_STARYU, 150, MOVE_FORESIGHT, MOVE_BRICK_BREAK);
-            return;
-        }
-        if (keys & (DPAD_DOWN | DPAD_LEFT))
-        {
-            if (keys & DPAD_DOWN)
-            {
-                SetMon(player, SPECIES_UMBREON, 150, MOVE_SPLASH, MOVE_NONE);
-                SetMon(trainer, SPECIES_STARYU, 150, MOVE_PSYCHIC, MOVE_SHADOW_BALL);
-            }
-            else
-            {
-                SetMon(player, SPECIES_WYRDEER, 150, MOVE_SPLASH, MOVE_NONE);
-                SetMon(trainer, SPECIES_STARYU, 150, MOVE_SHADOW_BALL, MOVE_BRICK_BREAK);
-            }
-            if (keys & B_BUTTON)
-            {
-                enum Item ring = ITEM_RING_TARGET;
-                SetMonData(player, MON_DATA_HELD_ITEM, &ring);
-            }
-            return;
-        }
-        SetMon(player, (keys & A_BUTTON) ? SPECIES_DRAGONITE : SPECIES_SLOWPOKE, 150, MOVE_SPLASH, MOVE_NONE);
-        SetMon(trainer, SPECIES_STARYU, 150, MOVE_ICE_BEAM, MOVE_CRUNCH);
-    }
+        SetTypeParties(player, trainer, keys);
     else if (keys & DPAD_RIGHT)
     {
         SetMon(player, SPECIES_MAGIKARP, 150, MOVE_SPLASH, MOVE_NONE);

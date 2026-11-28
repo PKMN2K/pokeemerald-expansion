@@ -309,6 +309,7 @@ def replay(driver, directory, output, draws):
     code = (ROOT/'tools/polished_port/tests/smart_field_ai_fixture.c').read_text()
     elf = compile_probe(ROOT, directory, code.replace('/* SOURCE CASES */', '\n'.join(rows)))
     result = {}
+    type_keys = R_BUTTON | SELECT | START
     reactive_keys = L_BUTTON | R_BUTTON | START
     for name, key in (('low', A), ('full', B), ('low_control', UP), ('full_control', DOWN),
                       ('sun', LEFT), ('sun_umbrella', RIGHT), ('faster', START | A), ('player_scarf', START | B),
@@ -333,10 +334,13 @@ def replay(driver, directory, output, draws):
                       ('basic_screens', R_BUTTON | SELECT | UP), ('basic_confusion', R_BUTTON | SELECT | DOWN),
                       ('basic_weather', R_BUTTON | SELECT | LEFT), ('basic_seed_focus', R_BUTTON | SELECT | RIGHT),
                       ('basic_egg_hp', R_BUTTON | SELECT | A), ('basic_no_reserves', R_BUTTON | SELECT | B),
-                      ('types_dragon', R_BUTTON | SELECT | START | A), ('types_psychic', R_BUTTON | SELECT | START | B),
-                      ('types_foresight', R_BUTTON | SELECT | START | UP),
-                      ('types_umbreon', R_BUTTON | SELECT | START | DOWN), ('types_umbreon_ring', R_BUTTON | SELECT | START | DOWN | B),
-                      ('types_wyrdeer', R_BUTTON | SELECT | START | LEFT), ('types_wyrdeer_ring', R_BUTTON | SELECT | START | LEFT | B)):
+                      ('types_dragon', type_keys | A), ('types_psychic', type_keys | B),
+                      ('types_foresight', type_keys | UP),
+                      ('types_umbreon', type_keys | DOWN), ('types_umbreon_ring', type_keys | DOWN | B),
+                      ('types_wyrdeer', type_keys | LEFT), ('types_wyrdeer_ring', type_keys | LEFT | B),
+                      ('types_powder', type_keys | RIGHT), ('types_goggles', type_keys | RIGHT | B),
+                      ('types_bug_dark', type_keys | LEFT | A), ('types_cut_fairy', type_keys | UP | A),
+                      ('types_hidden_power', type_keys | RIGHT | A), ('types_rock', type_keys | UP | B)):
         game = Game(driver, elf, elf, output, directory)
         try:
             game.frames(160)
@@ -345,8 +349,9 @@ def replay(driver, directory, output, draws):
             (offset, counter, recover, rain, light, room, splash, explosion, split, sleep_talk, sacred_fire,
              spore, dream, bell, bond, solar, giga, gust, quake, choice_offset,
              quick, roar, perish, encore, counter_move, coat, reflect, screen, confuse_ray, swagger, sunny_day,
-             ice_beam, crunch, focus, seed, baton, foresight, brick_break, psychic, shadow_ball) = struct.unpack(
-                 '<40I', game.read(game.sym['gSmartLayout'], 160))
+             ice_beam, crunch, focus, seed, baton, foresight, brick_break, psychic, shadow_ball,
+             powder, dark_pulse, bug_buzz, cut, hidden_power, aerial_ace, rock_slide) = struct.unpack(
+                 '<47I', game.read(game.sym['gSmartLayout'], 188))
             names = {recover: 'Recover', rain: 'Rain Dance', light: 'HealingLight', room: 'Trick Room', splash: 'Splash',
                      explosion: 'Explosion', split: 'Pain Split', sleep_talk: 'Sleep Talk', sacred_fire: 'Sacred Fire',
                      spore: 'Spore', dream: 'Dream Eater', bell: 'Heal Bell', bond: 'Destiny Bond', solar: 'Solar Beam', giga: 'Giga Drain', gust: 'Gust', quake: 'Earthquake',
@@ -354,7 +359,9 @@ def replay(driver, directory, output, draws):
                      counter_move: 'Counter', coat: 'Mirror Coat', reflect: 'Reflect', screen: 'Light Screen',
                      confuse_ray: 'Confuse Ray', swagger: 'Swagger', sunny_day: 'Sunny Day', ice_beam: 'Ice Beam',
                      crunch: 'Crunch', focus: 'Focus Energy', seed: 'Leech Seed', baton: 'Baton Pass',
-                     foresight: 'Foresight', brick_break: 'Brick Break', psychic: 'Psychic', shadow_ball: 'Shadow Ball'}
+                     foresight: 'Foresight', brick_break: 'Brick Break', psychic: 'Psychic', shadow_ball: 'Shadow Ball',
+                     powder: 'PoisonPowder', dark_pulse: 'Dark Pulse', bug_buzz: 'Bug Buzz', cut: 'Cut',
+                     hidden_power: 'Hidden Power', aerial_ace: 'Aerial Ace', rock_slide: 'Rock Slide'}
             # Capture the announced move before self-KO or Sleep Talk's called move.
             history = game.sym['gLastPrintedMoves' if key & (SELECT | R_BUTTON | L_BUTTON) else 'gLastMoves']
             game.press(key)
@@ -390,7 +397,8 @@ def replay(driver, directory, output, draws):
                     game.press(A, 6)
                 else:
                     raise AssertionError((turn, 'trainer failed to execute a move', move))
-                scores = struct.unpack('<2i', game.read(game.u32(game.sym['gAiBattleData']) + offset, 8))
+                num_slots = 3 if name in ('types_powder', 'types_goggles') else 2
+                scores = struct.unpack(f'<{num_slots}i', game.read(game.u32(game.sym['gAiBattleData']) + offset, 4 * num_slots))
                 assert move in names, (turn, move, scores)
                 result[turn] = dict(move=names[move], scores=scores)
         finally:

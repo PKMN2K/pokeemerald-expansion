@@ -17,7 +17,8 @@ ACTIVE_FLAGS = {
 SCENARIOS = ('basic_screens', 'basic_confusion', 'basic_weather', 'basic_seed_focus', 'types_foresight')
 BATTLES = {name + suffix for name in SCENARIOS for suffix in ('', '_next')} | {
     'basic_egg_hp', 'basic_no_reserves', 'types_dragon', 'types_psychic',
-    'types_umbreon', 'types_umbreon_ring', 'types_wyrdeer', 'types_wyrdeer_ring'}
+    'types_umbreon', 'types_umbreon_ring', 'types_wyrdeer', 'types_wyrdeer_ring', 'types_powder', 'types_goggles',
+    'types_bug_dark', 'types_cut_fairy', 'types_hidden_power', 'types_rock'}
 
 
 def check_source(assembly, status_effects, move_records):
@@ -160,3 +161,9 @@ def check_battles(results):
     check('types_umbreon_ring', (100, 99), ('Psychic',))
     check('types_wyrdeer', (90, 100), ('Brick Break',))
     check('types_wyrdeer_ring', (101, 100), ('Shadow Ball',))
+    check('types_powder', (100, 99, 90), ('PoisonPowder',))
+    check('types_goggles', (90, 99, 90), ('Dark Pulse',))
+    check('types_bug_dark', (101, 100), ('Bug Buzz',))
+    check('types_cut_fairy', (99, 101), ('Cut',))
+    check('types_hidden_power', (100, 101), ('Aerial Ace',))
+    check('types_rock', (101, 100), ('Rock Slide',))
