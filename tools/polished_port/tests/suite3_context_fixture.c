@@ -180,6 +180,7 @@ static void CheckTrainerTypes(void)
         u8 inverse, mask;
         enum Move previous;
         enum Ability attacker, defender;
+        bool8 ring, identified;
     } cases[] = {
 /* TYPE CASES */
     };
@@ -195,6 +196,8 @@ static void CheckTrainerTypes(void)
         gBattleMons[B_BATTLER_0].types[1] = cases[i].second;
         gBattleMons[B_BATTLER_0].types[2] = TYPE_MYSTERY;
         gBattleMons[B_BATTLER_0].ability = cases[i].defender;
+        gBattleMons[B_BATTLER_0].item = cases[i].ring ? ITEM_RING_TARGET : ITEM_NONE;
+        gBattleMons[B_BATTLER_0].volatiles.foresight = cases[i].identified;
         gBattleMons[B_BATTLER_1].ability = cases[i].attacker;
         gBattleStruct->polishedChoiceMove[B_BATTLER_1] = cases[i].previous;
         PolishedScoreTypeMoves(B_BATTLER_1, B_BATTLER_0, cases[i].mask, scores);

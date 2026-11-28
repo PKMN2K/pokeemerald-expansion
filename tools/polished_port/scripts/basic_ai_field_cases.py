@@ -14,9 +14,10 @@ ACTIVE_FLAGS = {
     'FORESIGHT': 'targetIdentified', 'PERISH_SONG': 'perish', 'FUTURE_SIGHT': 'futureSight',
     'DESTINY_BOND': 'destinyBond',
 }
-SCENARIOS = ('basic_screens', 'basic_confusion', 'basic_weather', 'basic_seed_focus')
+SCENARIOS = ('basic_screens', 'basic_confusion', 'basic_weather', 'basic_seed_focus', 'types_foresight')
 BATTLES = {name + suffix for name in SCENARIOS for suffix in ('', '_next')} | {
-    'basic_egg_hp', 'basic_no_reserves', 'types_dragon', 'types_psychic'}
+    'basic_egg_hp', 'basic_no_reserves', 'types_dragon', 'types_psychic',
+    'types_umbreon', 'types_umbreon_ring', 'types_wyrdeer', 'types_wyrdeer_ring'}
 
 
 def check_source(assembly, status_effects, move_records):
@@ -153,3 +154,9 @@ def check_battles(results):
     check('basic_no_reserves', (90, 90), ('Roar', 'Baton Pass'))
     check('types_dragon', (101, 100), ('Ice Beam',))
     check('types_psychic', (99, 101), ('Crunch',))
+    check('types_foresight', (100, 90), ('Foresight',))
+    check('types_foresight_next', (90, 100), ('Brick Break',))
+    check('types_umbreon', (90, 99), ('Shadow Ball',))
+    check('types_umbreon_ring', (100, 99), ('Psychic',))
+    check('types_wyrdeer', (90, 100), ('Brick Break',))
+    check('types_wyrdeer_ring', (101, 100), ('Shadow Ball',))

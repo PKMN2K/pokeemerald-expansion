@@ -333,7 +333,10 @@ def replay(driver, directory, output, draws):
                       ('basic_screens', R_BUTTON | SELECT | UP), ('basic_confusion', R_BUTTON | SELECT | DOWN),
                       ('basic_weather', R_BUTTON | SELECT | LEFT), ('basic_seed_focus', R_BUTTON | SELECT | RIGHT),
                       ('basic_egg_hp', R_BUTTON | SELECT | A), ('basic_no_reserves', R_BUTTON | SELECT | B),
-                      ('types_dragon', R_BUTTON | SELECT | START | A), ('types_psychic', R_BUTTON | SELECT | START | B)):
+                      ('types_dragon', R_BUTTON | SELECT | START | A), ('types_psychic', R_BUTTON | SELECT | START | B),
+                      ('types_foresight', R_BUTTON | SELECT | START | UP),
+                      ('types_umbreon', R_BUTTON | SELECT | START | DOWN), ('types_umbreon_ring', R_BUTTON | SELECT | START | DOWN | B),
+                      ('types_wyrdeer', R_BUTTON | SELECT | START | LEFT), ('types_wyrdeer_ring', R_BUTTON | SELECT | START | LEFT | B)):
         game = Game(driver, elf, elf, output, directory)
         try:
             game.frames(160)
@@ -342,15 +345,16 @@ def replay(driver, directory, output, draws):
             (offset, counter, recover, rain, light, room, splash, explosion, split, sleep_talk, sacred_fire,
              spore, dream, bell, bond, solar, giga, gust, quake, choice_offset,
              quick, roar, perish, encore, counter_move, coat, reflect, screen, confuse_ray, swagger, sunny_day,
-             ice_beam, crunch, focus, seed, baton) = struct.unpack(
-                 '<36I', game.read(game.sym['gSmartLayout'], 144))
+             ice_beam, crunch, focus, seed, baton, foresight, brick_break, psychic, shadow_ball) = struct.unpack(
+                 '<40I', game.read(game.sym['gSmartLayout'], 160))
             names = {recover: 'Recover', rain: 'Rain Dance', light: 'HealingLight', room: 'Trick Room', splash: 'Splash',
                      explosion: 'Explosion', split: 'Pain Split', sleep_talk: 'Sleep Talk', sacred_fire: 'Sacred Fire',
                      spore: 'Spore', dream: 'Dream Eater', bell: 'Heal Bell', bond: 'Destiny Bond', solar: 'Solar Beam', giga: 'Giga Drain', gust: 'Gust', quake: 'Earthquake',
                      quick: 'Quick Attack', roar: 'Roar', perish: 'Perish Song', encore: 'Encore',
                      counter_move: 'Counter', coat: 'Mirror Coat', reflect: 'Reflect', screen: 'Light Screen',
                      confuse_ray: 'Confuse Ray', swagger: 'Swagger', sunny_day: 'Sunny Day', ice_beam: 'Ice Beam',
-                     crunch: 'Crunch', focus: 'Focus Energy', seed: 'Leech Seed', baton: 'Baton Pass'}
+                     crunch: 'Crunch', focus: 'Focus Energy', seed: 'Leech Seed', baton: 'Baton Pass',
+                     foresight: 'Foresight', brick_break: 'Brick Break', psychic: 'Psychic', shadow_ball: 'Shadow Ball'}
             # Capture the announced move before self-KO or Sleep Talk's called move.
             history = game.sym['gLastPrintedMoves' if key & (SELECT | R_BUTTON | L_BUTTON) else 'gLastMoves']
             game.press(key)

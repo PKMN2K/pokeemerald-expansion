@@ -129,8 +129,12 @@ void PolishedReadBasicBattle(enum BattlerId user, enum BattlerId target, struct 
 
 void PolishedScoreTypeMoves(enum BattlerId user, enum BattlerId target, u32 limitations, s32 *scores)
 {
+    static const bool8 scoredTypes[NUMBER_OF_MON_TYPES] = {
+        [TYPE_ICE] = TRUE, [TYPE_DARK] = TRUE, [TYPE_FIGHTING] = TRUE, [TYPE_GHOST] = TRUE, [TYPE_PSYCHIC] = TRUE,
+    };
     const enum Move *moves = gBattleMons[user].moves;
     struct MatchupMon attacker = ReadActiveMon(user), defender = ReadActiveMon(target);
+    enum Ability userAbility = ActiveAbility(&attacker, &defender);
     enum Ability ability = DefendingAbility(&attacker, &defender);
     // AIGetEnemyMove updates the candidate's data. BATTLE_VARS_MOVE still holds the prior selection.
     u32 selectedFlags = sSmartMoves[gBattleStruct->polishedChoiceMove[user]].flags;
@@ -139,9 +143,9 @@ void PolishedScoreTypeMoves(enum BattlerId user, enum BattlerId target, u32 limi
     for (u32 i = 0; i < MAX_MON_MOVES; i++)
     {
         enum Type type = sSmartMoves[moves[i]].type;
-        if ((limitations & (1u << i)) || (type != TYPE_ICE && type != TYPE_DARK))
+        if ((limitations & (1u << i)) || !scoredTypes[type])
             continue;
-        uq4_12_t matchup = ChartMatchup(type, ActiveAbility(&attacker, &defender), &defender);
+        uq4_12_t matchup = ChartMatchup(type, userAbility, &defender);
         if (immune || !matchup)
             scores[i] -= 10;
         else if (matchup > UQ_4_12(1.0))

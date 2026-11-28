@@ -60,6 +60,7 @@ const volatile u32 gSmartLayout[] = {
     MOVE_QUICK_ATTACK, MOVE_ROAR, MOVE_PERISH_SONG, MOVE_ENCORE, MOVE_COUNTER, MOVE_MIRROR_COAT,
     MOVE_REFLECT, MOVE_LIGHT_SCREEN, MOVE_CONFUSE_RAY, MOVE_SWAGGER, MOVE_SUNNY_DAY,
     MOVE_ICE_BEAM, MOVE_CRUNCH, MOVE_FOCUS_ENERGY, MOVE_LEECH_SEED, MOVE_BATON_PASS,
+    MOVE_FORESIGHT, MOVE_BRICK_BREAK, MOVE_PSYCHIC, MOVE_SHADOW_BALL,
 };
 
 static void CheckScores(void)
@@ -228,6 +229,31 @@ static void SetBasicParties(u16 keys)
     struct Pokemon *trainer = &gParties[B_TRAINER_OPPONENT_A][0];
     if (keys & START_BUTTON)
     {
+        if (keys & DPAD_UP)
+        {
+            SetMon(player, SPECIES_ANNIHILAPE, 150, MOVE_SPLASH, MOVE_NONE);
+            SetMon(trainer, SPECIES_STARYU, 150, MOVE_FORESIGHT, MOVE_BRICK_BREAK);
+            return;
+        }
+        if (keys & (DPAD_DOWN | DPAD_LEFT))
+        {
+            if (keys & DPAD_DOWN)
+            {
+                SetMon(player, SPECIES_UMBREON, 150, MOVE_SPLASH, MOVE_NONE);
+                SetMon(trainer, SPECIES_STARYU, 150, MOVE_PSYCHIC, MOVE_SHADOW_BALL);
+            }
+            else
+            {
+                SetMon(player, SPECIES_WYRDEER, 150, MOVE_SPLASH, MOVE_NONE);
+                SetMon(trainer, SPECIES_STARYU, 150, MOVE_SHADOW_BALL, MOVE_BRICK_BREAK);
+            }
+            if (keys & B_BUTTON)
+            {
+                enum Item ring = ITEM_RING_TARGET;
+                SetMonData(player, MON_DATA_HELD_ITEM, &ring);
+            }
+            return;
+        }
         SetMon(player, (keys & A_BUTTON) ? SPECIES_DRAGONITE : SPECIES_SLOWPOKE, 150, MOVE_SPLASH, MOVE_NONE);
         SetMon(trainer, SPECIES_STARYU, 150, MOVE_ICE_BEAM, MOVE_CRUNCH);
     }
